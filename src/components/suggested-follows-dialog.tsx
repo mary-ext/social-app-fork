@@ -435,7 +435,6 @@ function FollowProfileCardInner({
 							<ProfileCard.FollowButton
 								profile={profile}
 								moderationOpts={moderationOpts}
-								logContext="SuggestedFollowsDialog"
 								shape="round"
 								onPress={() => {
 									onFollow?.();

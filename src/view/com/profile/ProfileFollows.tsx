@@ -19,24 +19,8 @@ import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { List } from '../util/List';
 import { ProfileCardWithFollowBtn } from './ProfileCard';
 
-function renderItem({
-	item,
-	index,
-	contextProfileDid,
-}: {
-	item: ActorDefs.ProfileView;
-	index: number;
-	contextProfileDid: string | undefined;
-}) {
-	return (
-		<ProfileCardWithFollowBtn
-			key={item.did}
-			profile={item}
-			noBorder={index === 0}
-			position={index + 1}
-			contextProfileDid={contextProfileDid}
-		/>
-	);
+function renderItem({ item, index }: { item: ActorDefs.ProfileView; index: number }) {
+	return <ProfileCardWithFollowBtn key={item.did} profile={item} noBorder={index === 0} />;
 }
 
 function keyExtractor(item: { did: string }) {
@@ -94,12 +78,6 @@ export function ProfileFollows({ name }: { name: string }) {
 		}
 	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
 
-	const renderItemWithContext = useCallback(
-		({ item, index }: { item: ActorDefs.ProfileView; index: number }) =>
-			renderItem({ item, index, contextProfileDid: resolvedDid }),
-		[resolvedDid],
-	);
-
 	if (follows.length < 1) {
 		return (
 			<ListMaybePlaceholder
@@ -126,7 +104,7 @@ export function ProfileFollows({ name }: { name: string }) {
 	return (
 		<List
 			data={follows}
-			renderItem={renderItemWithContext}
+			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			refreshing={isPTRing}
 			onRefresh={() => void onRefresh()}

@@ -417,7 +417,6 @@ function Inner({
 	const profileShadow = useProfileShadow(profile);
 	const { follow, unfollow } = useFollowMethods({
 		profile: profileShadow,
-		logContext: 'ProfileHoverCard',
 	});
 	const isBlockedUser =
 		profile.viewer?.blocking || profile.viewer?.blockedBy || profile.viewer?.blockingByList;

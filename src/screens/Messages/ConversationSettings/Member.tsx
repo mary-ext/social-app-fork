@@ -48,7 +48,7 @@ export function Member({
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 
-	const [queueFollow] = useProfileFollowMutationQueue(profile, 'GroupChat');
+	const [queueFollow] = useProfileFollowMutationQueue(profile);
 	const requireAuth = useRequireAuth();
 
 	const removeMemberPrompt = Prompt.usePromptControl();

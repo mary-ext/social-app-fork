@@ -256,7 +256,6 @@ export function ProfileGrid({
 										<ProfileCard.FollowButton
 											profile={profile.actor}
 											moderationOpts={moderationOpts}
-											logContext="FeedInterstitial"
 											withIcon={false}
 											style={[a.rounded_sm]}
 											onFollow={() => {}}

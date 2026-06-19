@@ -3,27 +3,17 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import type { Shadow } from '#/state/cache/types';
-import {
-	type ProfileFollowLogContext,
-	type ProfileUnfollowLogContext,
-	useProfileFollowMutationQueue,
-} from '#/state/queries/profile';
+import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useRequireAuth } from '#/state/session';
 
 import { logger } from '#/logger';
 
 import * as Toast from '#/components/Toast';
 
-export function useFollowMethods({
-	profile,
-	logContext,
-}: {
-	profile: Shadow<AnyProfileView>;
-	logContext: ProfileFollowLogContext & ProfileUnfollowLogContext;
-}) {
+export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> }) {
 	const { t: l } = useLingui();
 	const requireAuth = useRequireAuth();
-	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, logContext);
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
 	const follow = useCallback(() => {
 		requireAuth(async () => {

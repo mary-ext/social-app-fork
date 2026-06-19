@@ -679,7 +679,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 	const { t: l } = useLingui();
 	const { currentAccount, hasSession } = useSession();
 	const profileShadow = useProfileShadow(profile);
-	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profileShadow, 'ProfileCard');
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profileShadow);
 
 	// Don't show button if not logged in or for own profile
 	if (!hasSession || profile.did === currentAccount?.did) {
@@ -951,7 +951,6 @@ function ExpandedAuthorProfileCard({
 					<ProfileCard.FollowButton
 						profile={author.profile}
 						moderationOpts={moderationOpts}
-						logContext="ProfileCard"
 						size="tiny"
 						variant={isFollowing ? 'ghost' : 'solid'}
 						color={isFollowing ? 'secondary' : 'primary_subtle'}

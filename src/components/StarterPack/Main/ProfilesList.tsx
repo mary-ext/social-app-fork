@@ -67,7 +67,7 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 	const renderItem = ({ item }: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
 		return (
 			<View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>
-				<ProfileCard profile={item} moderationOpts={moderationOpts} logContext="StarterPackProfilesList" />
+				<ProfileCard profile={item} moderationOpts={moderationOpts} />
 			</View>
 		);
 	};

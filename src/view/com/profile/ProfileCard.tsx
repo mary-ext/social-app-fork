@@ -10,16 +10,10 @@ import * as ProfileCard from '#/components/ProfileCard';
 export function ProfileCardWithFollowBtn({
 	profile,
 	noBorder,
-	logContext = 'ProfileCard',
-	position,
-	contextProfileDid,
 	onPress,
 }: {
 	profile: AnyProfileView;
 	noBorder?: boolean;
-	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
-	position?: number;
-	contextProfileDid?: string;
 	onPress?: (e: GestureResponderEvent) => void;
 }) {
 	const t = useTheme();
@@ -29,14 +23,7 @@ export function ProfileCardWithFollowBtn({
 
 	return (
 		<View style={[a.py_md, a.px_xl, !noBorder && [a.border_t, t.atoms.border_contrast_low]]}>
-			<ProfileCard.Default
-				profile={profile}
-				moderationOpts={moderationOpts}
-				logContext={logContext}
-				position={position}
-				contextProfileDid={contextProfileDid}
-				onPress={onPress}
-			/>
+			<ProfileCard.Default profile={profile} moderationOpts={moderationOpts} onPress={onPress} />
 		</View>
 	);
 }

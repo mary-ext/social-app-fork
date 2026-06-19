@@ -143,7 +143,6 @@ function Inner({
 	const [descriptionRT] = useRichText(profile.description ?? '');
 	const profileShadow = useProfileShadow(profile);
 	const { follow, unfollow } = useFollowMethods({
-		logContext: 'ProfileHoverCard',
 		profile: profileShadow,
 	});
 	const isBlockedUser =

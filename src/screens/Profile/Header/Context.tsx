@@ -104,7 +104,7 @@ export function ProfileHeaderProvider({
 	const profile = useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed);
 	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
 	const live = useActorStatus(profile);
-	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, 'ProfileHeader');
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 	const [, queueUnblock] = useProfileBlockMutationQueue(profile);
 
 	const isMe = currentAccount?.did === profile.did;

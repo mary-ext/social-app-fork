@@ -87,7 +87,7 @@ let ProfileMenu = ({
 
 	const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile);
 	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
-	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, 'ProfileMenu');
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
 	const blockPromptHandle = WebPrompt.usePromptHandle();
 	const mutePromptHandle = WebPrompt.usePromptHandle();

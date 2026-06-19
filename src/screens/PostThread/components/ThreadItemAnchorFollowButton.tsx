@@ -45,7 +45,7 @@ function PostThreadFollowBtnLoaded({
 	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const profile = useProfileShadow(profileUnshadowed);
-	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, 'PostThreadItem');
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 	const requireAuth = useRequireAuth();
 
 	const isFollowing = !!profile.viewer?.following;

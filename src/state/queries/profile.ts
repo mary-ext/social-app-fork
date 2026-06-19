@@ -52,23 +52,6 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 export const profilesQueryKeyRoot = 'profiles';
 export const profilesQueryKey = (handles: string[]) => [profilesQueryKeyRoot, handles];
 
-export type ProfileFollowLogContext =
-	| 'RecommendedFollowsItem'
-	| 'PostThreadItem'
-	| 'ProfileCard'
-	| 'ProfileHeader'
-	| 'ProfileHeaderSuggestedFollows'
-	| 'ProfileMenu'
-	| 'ProfileHoverCard'
-	| 'AvatarButton'
-	| 'StarterPackProfilesList'
-	| 'FeedInterstitial'
-	| 'SuggestedFollowsDialog'
-	| 'ExploreSuggestedAccounts'
-	| 'GroupChat';
-
-export type ProfileUnfollowLogContext = ProfileFollowLogContext | 'Chat';
-
 export function useProfileQuery({
 	did,
 	staleTime = STALE.SECONDS.FIFTEEN,
@@ -232,19 +215,14 @@ export function useProfileUpdateMutation() {
 	});
 }
 
-export function useProfileFollowMutationQueue(
-	profile: Shadow<AnyProfileView>,
-	logContext: ProfileFollowLogContext,
-	position?: number,
-	contextProfileDid?: string,
-) {
+export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
 	const did = profile.did;
 	const initialFollowingUri = profile.viewer?.following;
-	const followMutation = useProfileFollowMutation(logContext, profile, position, contextProfileDid);
-	const unfollowMutation = useProfileUnfollowMutation(logContext);
+	const followMutation = useProfileFollowMutation();
+	const unfollowMutation = useProfileUnfollowMutation();
 
 	const queueToggle = useToggleMutationQueue({
 		initialState: initialFollowingUri,
@@ -339,12 +317,7 @@ export function useProfileFollowMutationQueue(
 	return [queueFollow, queueUnfollow] as const;
 }
 
-function useProfileFollowMutation(
-	_logContext: ProfileFollowLogContext,
-	_profile: Shadow<AnyProfileView>,
-	_position?: number,
-	_contextProfileDid?: string,
-) {
+function useProfileFollowMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 
@@ -363,7 +336,7 @@ function useProfileFollowMutation(
 	});
 }
 
-function useProfileUnfollowMutation(_logContext: ProfileUnfollowLogContext) {
+function useProfileUnfollowMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	return useMutation<void, Error, { did: string; followUri: string }>({

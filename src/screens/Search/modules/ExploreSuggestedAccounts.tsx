@@ -79,7 +79,6 @@ let SuggestedProfileCard = ({
 									profile={profile}
 									moderationOpts={moderationOpts}
 									withIcon={false}
-									logContext="ExploreSuggestedAccounts"
 									onFollow={() => {}}
 								/>
 							</ProfileCard.Header>

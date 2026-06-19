@@ -22,11 +22,7 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import {
-	type ProfileFollowLogContext,
-	type ProfileUnfollowLogContext,
-	useProfileFollowMutationQueue,
-} from '#/state/queries/profile';
+import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
@@ -47,29 +43,17 @@ import { useActorStatus } from '#/features/liveNow';
 export function Default({
 	profile,
 	moderationOpts,
-	logContext = 'ProfileCard',
 	testID,
-	position,
-	contextProfileDid,
 	onPress,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
-	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
 	testID?: string;
-	position?: number;
-	contextProfileDid?: string;
 	onPress?: (e: GestureResponderEvent) => void;
 }) {
 	return (
 		<Link testID={testID} profile={profile} onPress={onPress}>
-			<Card
-				profile={profile}
-				moderationOpts={moderationOpts}
-				logContext={logContext}
-				position={position}
-				contextProfileDid={contextProfileDid}
-			/>
+			<Card profile={profile} moderationOpts={moderationOpts} />
 		</Link>
 	);
 }
@@ -77,28 +61,16 @@ export function Default({
 export function Card({
 	profile,
 	moderationOpts,
-	logContext = 'ProfileCard',
-	position,
-	contextProfileDid,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
-	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
-	position?: number;
-	contextProfileDid?: string;
 }) {
 	return (
 		<Outer>
 			<Header>
 				<Avatar profile={profile} moderationOpts={moderationOpts} />
 				<NameAndHandle profile={profile} moderationOpts={moderationOpts} />
-				<FollowButton
-					profile={profile}
-					moderationOpts={moderationOpts}
-					logContext={logContext}
-					position={position}
-					contextProfileDid={contextProfileDid}
-				/>
+				<FollowButton profile={profile} moderationOpts={moderationOpts} />
 			</Header>
 
 			<Labels profile={profile} moderationOpts={moderationOpts} />
@@ -405,12 +377,9 @@ export function DescriptionPlaceholder({ numberOfLines = 3 }: { numberOfLines?: 
 export type FollowButtonProps = {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
-	logContext: ProfileFollowLogContext & ProfileUnfollowLogContext;
 	colorInverted?: boolean;
 	onFollow?: () => void;
 	withIcon?: boolean;
-	position?: number;
-	contextProfileDid?: string;
 } & Partial<ButtonProps>;
 
 export function FollowButton(props: FollowButtonProps) {
@@ -422,24 +391,16 @@ export function FollowButton(props: FollowButtonProps) {
 export function FollowButtonInner({
 	profile: profileUnshadowed,
 	moderationOpts,
-	logContext,
 	onPress: onPressProp,
 	onFollow,
 	colorInverted,
 	withIcon = true,
-	position,
-	contextProfileDid,
 	...rest
 }: FollowButtonProps) {
 	const { t: l } = useLingui();
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = moderateProfile(profile, moderationOpts);
-	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
-		profile,
-		logContext,
-		position,
-		contextProfileDid,
-	);
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 	const isRound = Boolean(rest.shape && rest.shape === 'round');
 
 	const onPressFollow = async (e: GestureResponderEvent) => {
