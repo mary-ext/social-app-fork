@@ -38,11 +38,6 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 	// if we ever allow someone other than the owner to invite people, this will need to change
 	const otherUser = convoState.convo.primaryMember;
 
-	const lastMessage =
-		convoState.convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView'
-			? convoState.convo.view.lastMessage
-			: null;
-
 	if (!moderationOpts) {
 		return null;
 	}
@@ -61,9 +56,9 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 			<View style={[a.flex_row, a.gap_md, a.w_full, otherUser && a.pt_sm]}>
 				{otherUser && (
 					<RejectMenu
-						label={lastMessage ? l`Block or report` : l`Block`}
+						label={l`Block or report`}
 						icon={true}
-						convo={convoState.convo.view}
+						convo={convoState.convo}
 						profile={otherUser}
 						color="negative_subtle"
 						size="large"

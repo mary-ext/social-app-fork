@@ -68,7 +68,7 @@ export function RequestListItem({ convo: convoView }: { convo: ChatBskyConvoDefs
 							<>
 								{canAcceptRequest ? <AcceptChatButton convo={convo.view} currentScreen="list" /> : null}
 								<RejectMenu
-									convo={convo.view}
+									convo={convo}
 									profile={convo.primaryMember}
 									showDeleteConvo
 									currentScreen="list"

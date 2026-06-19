@@ -11,10 +11,14 @@ import { useAcceptConversation } from '#/state/queries/messages/accept-conversat
 import { precacheConvoQuery } from '#/state/queries/messages/conversation';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
 
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
+import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
+import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
+import { getConvoReportSubject, type ConvoWithDetails } from '#/components/dms/util';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { CircleX_Stroke2_Corner0_Rounded } from '#/components/icons/CircleX';
@@ -38,17 +42,18 @@ export function RejectMenu({
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
 	label?: string;
 	icon?: boolean;
-	convo: ChatBskyConvoDefs.ConvoView;
+	convo: ConvoWithDetails;
 	profile: ChatBskyActorDefs.ProfileViewBasic;
 	showDeleteConvo?: boolean;
 	currentScreen: 'list' | 'conversation';
 }) {
 	const { t: l } = useLingui();
+	const { currentAccount } = useSession();
 	const shadowedProfile = useProfileShadow(profile);
 	const navigation = useNavigation<NavigationProp>();
 	const queryClient = useQueryClient();
 
-	const { mutate: leaveConvo } = useLeaveConvo(convo.id, {
+	const { mutate: leaveConvo } = useLeaveConvo(convo.view.id, {
 		onMutate: () => {
 			if (currentScreen === 'conversation') {
 				navigation.dispatch(StackActions.pop());
@@ -99,8 +104,9 @@ export function RejectMenu({
 	const reportControl = useDialogControl();
 	const blockOrDeleteControl = useDialogControl();
 
-	const lastMessage =
-		convo.lastMessage?.$type === 'chat.bsky.convo.defs#messageView' ? convo.lastMessage : null;
+	const reportSubject = getConvoReportSubject(convo, currentAccount?.did);
+	const reportMessage = reportSubject && 'message' in reportSubject ? reportSubject.message : null;
+	const reportDid = reportSubject && 'did' in reportSubject ? reportSubject.did : null;
 
 	return (
 		<>
@@ -139,10 +145,7 @@ export function RejectMenu({
 							</Menu.ItemText>
 							<Menu.ItemIcon icon={PersonXIcon} />
 						</Menu.Item>
-						{/* note: last message will almost certainly be defined, since you can't
-              delete messages for other people and it's impossible for a convo on this
-              screen to have a message sent by you */}
-						{lastMessage && (
+						{reportSubject && (
 							<Menu.Item label={l`Report conversation`} onPress={reportControl.open}>
 								<Menu.ItemText>
 									<Trans>Report conversation</Trans>
@@ -153,17 +156,17 @@ export function RejectMenu({
 					</Menu.Group>
 				</Menu.Outer>
 			</Menu.Root>
-			{lastMessage && (
+			{reportMessage ? (
 				<>
 					<ReportDialog
 						subject={{
 							view: 'convo',
-							convoId: convo.id,
-							message: lastMessage,
+							convoId: convo.view.id,
+							message: reportMessage,
 						}}
 						control={reportControl}
 						onAfterSubmit={() => {
-							const sender = convo.members.find((member) => member.did === lastMessage.sender.did);
+							const sender = convo.view.members.find((member) => member.did === reportMessage.sender.did);
 							if (sender) {
 								unstableCacheProfileView(queryClient, sender);
 							}
@@ -174,12 +177,29 @@ export function RejectMenu({
 						control={blockOrDeleteControl}
 						currentScreen={currentScreen}
 						params={{
-							convoId: convo.id,
-							did: lastMessage.sender.did,
+							convoId: convo.view.id,
+							did: reportMessage.sender.did,
 						}}
 					/>
 				</>
-			)}
+			) : reportDid ? (
+				<>
+					<ReportConversationDialog
+						control={reportControl}
+						convoId={convo.view.id}
+						did={reportDid}
+						onAfterSubmit={blockOrDeleteControl.open}
+					/>
+					<AfterReportConversationDialog
+						control={blockOrDeleteControl}
+						currentScreen={currentScreen}
+						params={{
+							convoId: convo.view.id,
+							did: reportDid,
+						}}
+					/>
+				</>
+			) : null}
 		</>
 	);
 }

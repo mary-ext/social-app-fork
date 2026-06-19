@@ -744,7 +744,7 @@ msgid "<0>{0}</0> members"
 msgstr ""
 
 #. Text identifying the person who added you to a group chat
-#: src/screens/Messages/components/ChatStatusInfo.tsx:135
+#: src/screens/Messages/components/ChatStatusInfo.tsx:130
 msgid "<0>{displayName}</0><1><2/></1><3> added you</3>"
 msgstr "<0>{displayName}</0><1><2/></1><3> added you</3>"
 
@@ -814,7 +814,7 @@ msgid "Abusive or discriminatory behavior"
 msgstr ""
 
 #. Accept a chat request
-#: src/screens/Messages/components/RequestButtons.tsx:255
+#: src/screens/Messages/components/RequestButtons.tsx:275
 msgid "Accept"
 msgstr ""
 
@@ -824,7 +824,7 @@ msgctxt "button"
 msgid "Accept"
 msgstr "Accept"
 
-#: src/screens/Messages/components/RequestButtons.tsx:249
+#: src/screens/Messages/components/RequestButtons.tsx:269
 msgid "Accept chat request"
 msgstr ""
 
@@ -875,7 +875,7 @@ msgid "Account and privacy settings"
 msgstr "Account and privacy settings"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:337
-#: src/screens/Messages/components/RequestButtons.tsx:86
+#: src/screens/Messages/components/RequestButtons.tsx:91
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:110
 #: src/view/com/profile/ProfileMenu.tsx:164
 msgctxt "toast"
@@ -1567,7 +1567,6 @@ msgstr ""
 #: src/components/moderation/BlockDialog.tsx:162
 #: src/components/moderation/BlockDialog.tsx:175
 #: src/components/moderation/BlockDialog.tsx:191
-#: src/screens/Messages/components/ChatStatusInfo.tsx:64
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:201
 msgid "Block"
 msgstr ""
@@ -1576,12 +1575,12 @@ msgstr ""
 msgid "Block {displayName}"
 msgstr "Block {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:271
-#: src/components/dms/ConvoMenu.tsx:275
+#: src/components/dms/ConvoMenu.tsx:274
+#: src/components/dms/ConvoMenu.tsx:278
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:530
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
-#: src/screens/Messages/components/RequestButtons.tsx:136
-#: src/screens/Messages/components/RequestButtons.tsx:138
+#: src/screens/Messages/components/RequestButtons.tsx:142
+#: src/screens/Messages/components/RequestButtons.tsx:144
 #: src/view/com/profile/ProfileMenu.tsx:365
 #: src/view/com/profile/ProfileMenu.tsx:372
 msgid "Block account"
@@ -1611,7 +1610,7 @@ msgstr "Block and leave"
 msgid "Block list"
 msgstr ""
 
-#: src/screens/Messages/components/ChatStatusInfo.tsx:64
+#: src/screens/Messages/components/ChatStatusInfo.tsx:59
 msgid "Block or report"
 msgstr ""
 
@@ -1876,8 +1875,8 @@ msgstr ""
 msgid "Chat"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:73
-#: src/screens/Messages/components/RequestButtons.tsx:298
+#: src/screens/Messages/components/RequestButtons.tsx:78
+#: src/screens/Messages/components/RequestButtons.tsx:318
 msgctxt "toast"
 msgid "Chat deleted"
 msgstr ""
@@ -1895,7 +1894,7 @@ msgstr "Chat invite link no longer available"
 msgid "Chat locked"
 msgstr "Chat locked"
 
-#: src/components/dms/ConvoMenu.tsx:206
+#: src/components/dms/ConvoMenu.tsx:209
 msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
@@ -1921,7 +1920,7 @@ msgstr ""
 msgid "Chat requests"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:80
+#: src/components/dms/ConvoMenu.tsx:85
 #: src/Navigation.tsx:708
 #: src/screens/Messages/ChatList.tsx:426
 #: src/screens/Messages/ChatList.tsx:459
@@ -1945,7 +1944,7 @@ msgstr "Chat title changed to {0}"
 msgid "Chat unlocked"
 msgstr "Chat unlocked"
 
-#: src/components/dms/ConvoMenu.tsx:208
+#: src/components/dms/ConvoMenu.tsx:211
 msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
@@ -2216,7 +2215,7 @@ msgstr ""
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
-#: src/screens/Messages/components/ChatListItem.tsx:311
+#: src/screens/Messages/components/ChatListItem.tsx:309
 msgid "Conversation deleted"
 msgstr ""
 
@@ -2346,7 +2345,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:212
+#: src/components/dms/ConvoMenu.tsx:215
 msgid "Could not mute chat"
 msgstr ""
 
@@ -2517,15 +2516,15 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:310
-#: src/screens/Messages/components/RequestButtons.tsx:312
+#: src/screens/Messages/components/RequestButtons.tsx:330
+#: src/screens/Messages/components/RequestButtons.tsx:332
 msgid "Delete chat"
 msgstr ""
 
 #: src/components/dms/AfterReportDialog.tsx:183
 #: src/components/dms/AfterReportDialog.tsx:186
-#: src/screens/Messages/components/RequestButtons.tsx:129
-#: src/screens/Messages/components/RequestButtons.tsx:131
+#: src/screens/Messages/components/RequestButtons.tsx:135
+#: src/screens/Messages/components/RequestButtons.tsx:137
 msgid "Delete conversation"
 msgstr ""
 
@@ -2577,7 +2576,7 @@ msgstr ""
 msgid "Deleted"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:104
+#: src/components/dms/MessagesListHeader.tsx:102
 #: src/screens/Messages/components/ChatListItem.tsx:125
 #: src/screens/Messages/ConversationSettings/Member.tsx:89
 msgid "Deleted Account"
@@ -3180,7 +3179,7 @@ msgstr ""
 msgid "Extremist content"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:224
+#: src/screens/Messages/components/RequestButtons.tsx:244
 msgctxt "toast"
 msgid "Failed to accept chat"
 msgstr ""
@@ -3220,8 +3219,8 @@ msgstr "Failed to create invite link"
 msgid "Failed to create starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:59
-#: src/screens/Messages/components/RequestButtons.tsx:285
+#: src/screens/Messages/components/RequestButtons.tsx:64
+#: src/screens/Messages/components/RequestButtons.tsx:305
 msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
@@ -3880,7 +3879,7 @@ msgstr ""
 msgid "Go to conversation with {0}"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:255
+#: src/components/dms/ConvoMenu.tsx:258
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:70
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:180
 #: src/view/shell/desktop/LeftNav.tsx:317
@@ -3892,7 +3891,7 @@ msgstr ""
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
-#: src/components/dms/ConvoMenu.tsx:252
+#: src/components/dms/ConvoMenu.tsx:255
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:63
 msgid "Go to user's profile"
 msgstr ""
@@ -4490,7 +4489,7 @@ msgid "Leave"
 msgstr ""
 
 #. Leave a conversation (reject a chat invitation)
-#: src/screens/Messages/components/ChatStatusInfo.tsx:75
+#: src/screens/Messages/components/ChatStatusInfo.tsx:70
 msgctxt "Button"
 msgid "Leave"
 msgstr "Leave"
@@ -4506,10 +4505,10 @@ msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:210
 #: src/components/dms/AfterReportConversationDialog.tsx:213
-#: src/components/dms/ConvoMenu.tsx:234
 #: src/components/dms/ConvoMenu.tsx:237
-#: src/components/dms/ConvoMenu.tsx:287
+#: src/components/dms/ConvoMenu.tsx:240
 #: src/components/dms/ConvoMenu.tsx:290
+#: src/components/dms/ConvoMenu.tsx:293
 #: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave conversation"
 msgstr ""
@@ -4881,8 +4880,8 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:244
 #: src/components/dms/ConvoMenu.tsx:247
+#: src/components/dms/ConvoMenu.tsx:250
 msgid "Mark as read"
 msgstr ""
 
@@ -4951,7 +4950,7 @@ msgstr ""
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:311
+#: src/screens/Messages/components/ChatListItem.tsx:309
 msgid "Message deleted"
 msgstr ""
 
@@ -5157,8 +5156,8 @@ msgstr "Mute account?"
 msgid "Mute accounts"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:259
 #: src/components/dms/ConvoMenu.tsx:262
+#: src/components/dms/ConvoMenu.tsx:265
 msgid "Mute conversation"
 msgstr ""
 
@@ -5804,8 +5803,8 @@ msgstr ""
 msgid "Open group chat"
 msgstr "Open group chat"
 
-#: src/components/dms/MessagesListHeader.tsx:175
-#: src/components/dms/MessagesListHeader.tsx:209
+#: src/components/dms/MessagesListHeader.tsx:161
+#: src/components/dms/MessagesListHeader.tsx:195
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
@@ -6521,11 +6520,11 @@ msgid "Reconnect"
 msgstr ""
 
 #. Reject a chat request, this opens a menu with options
-#: src/screens/Messages/components/RequestButtons.tsx:120
+#: src/screens/Messages/components/RequestButtons.tsx:126
 msgid "Reject"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:108
+#: src/screens/Messages/components/RequestButtons.tsx:114
 msgid "Reject chat request"
 msgstr ""
 
@@ -6844,10 +6843,10 @@ msgstr ""
 msgid "Report account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:278
 #: src/components/dms/ConvoMenu.tsx:281
-#: src/screens/Messages/components/RequestButtons.tsx:146
-#: src/screens/Messages/components/RequestButtons.tsx:148
+#: src/components/dms/ConvoMenu.tsx:284
+#: src/screens/Messages/components/RequestButtons.tsx:149
+#: src/screens/Messages/components/RequestButtons.tsx:151
 msgid "Report conversation"
 msgstr ""
 
@@ -8448,7 +8447,7 @@ msgstr "This chat has ended"
 msgid "This chat is full"
 msgstr "This chat is full"
 
-#: src/screens/Messages/components/ChatListItem.tsx:362
+#: src/screens/Messages/components/ChatListItem.tsx:359
 #: src/screens/Messages/components/ChatLocked.tsx:68
 msgid "This chat is locked"
 msgstr "This chat is locked"
@@ -8572,7 +8571,7 @@ msgstr ""
 msgid "This list is empty."
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:323
+#: src/screens/Messages/components/ChatListItem.tsx:321
 msgid "This message is hidden"
 msgstr "This message is hidden"
 
@@ -8861,8 +8860,8 @@ msgstr ""
 msgid "Unblock {displayName}"
 msgstr "Unblock {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:271
-#: src/components/dms/ConvoMenu.tsx:275
+#: src/components/dms/ConvoMenu.tsx:274
+#: src/components/dms/ConvoMenu.tsx:278
 #: src/view/com/profile/ProfileMenu.tsx:365
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "Unblock account"
@@ -8968,7 +8967,7 @@ msgstr ""
 msgid "Unmute account?"
 msgstr "Unmute account?"
 
-#: src/components/dms/ConvoMenu.tsx:262
+#: src/components/dms/ConvoMenu.tsx:265
 msgid "Unmute conversation"
 msgstr ""
 
@@ -9271,7 +9270,7 @@ msgstr ""
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
-#: src/components/dms/MessagesListHeader.tsx:122
+#: src/components/dms/MessagesListHeader.tsx:114
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:173
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
