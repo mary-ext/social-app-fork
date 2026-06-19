@@ -1,10 +1,12 @@
 import type { ChatBskyGroupRequestJoin } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from './list-conversation-requests';
 
 export function useRequestJoinGroupChat({
 	onSuccess,
@@ -13,6 +15,7 @@ export function useRequestJoinGroupChat({
 	onSuccess?: (data: ChatBskyGroupRequestJoin.$output) => void;
 	onError?: (error: Error) => void;
 } = {}) {
+	const queryClient = useQueryClient();
 	const { chat } = useClients();
 
 	return useMutation({
@@ -22,6 +25,8 @@ export function useRequestJoinGroupChat({
 			return await ok(chat.post('chat.bsky.group.requestJoin', { input: { code } }));
 		},
 		onSuccess: (data) => {
+			// surface the new pending request in the outgoing-requests inbox
+			void queryClient.invalidateQueries({ queryKey: [CONVO_REQUEST_LIST_KEY] });
 			onSuccess?.(data);
 		},
 		onError: (error) => {
