@@ -54,17 +54,6 @@ export const defaultTheme: Theme = {
 			border: colors.red4,
 		},
 	},
-	shapes: {
-		button: {
-			// TODO
-		},
-		bigButton: {
-			// TODO
-		},
-		smallButton: {
-			// TODO
-		},
-	},
 	typography: {
 		'2xl-thin': {
 			fontSize: 18,

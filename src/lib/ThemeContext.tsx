@@ -1,5 +1,5 @@
 import { type ReactNode, createContext, useContext } from 'react';
-import type { TextStyle, ViewStyle } from 'react-native';
+import type { TextStyle } from 'react-native';
 
 import type { ThemeName } from '#/alf';
 
@@ -19,9 +19,6 @@ export type PaletteColor = {
 	[k: string]: string;
 };
 export type Palette = Record<PaletteColorName, PaletteColor>;
-
-export type ShapeName = 'button' | 'bigButton' | 'smallButton';
-export type Shapes = Record<ShapeName, ViewStyle>;
 
 /** @deprecated use typography atoms from `#/alf` */
 export type TypographyVariant =
@@ -70,7 +67,6 @@ export type Typography = Record<TypographyVariant, TextStyle>;
 export interface Theme {
 	colorScheme: ColorScheme;
 	palette: Palette;
-	shapes: Shapes;
 	typography: Typography;
 }
 
