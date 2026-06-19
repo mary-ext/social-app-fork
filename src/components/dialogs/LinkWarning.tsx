@@ -20,7 +20,6 @@ export function LinkWarningDialog() {
 	return (
 		<Dialog.Outer
 			control={linkWarningDialogControl.control}
-			nativeOptions={{ preventExpansion: true }}
 			webOptions={{ alignCenter: true }}
 			onClose={linkWarningDialogControl.clear}
 		>
@@ -38,7 +37,7 @@ export function CustomLinkWarningDialog({
 	link?: { href: string; displayText: string; share?: boolean };
 }) {
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<LinkWarningDialogInner link={link} />
 		</Dialog.Outer>

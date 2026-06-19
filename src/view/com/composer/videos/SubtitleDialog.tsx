@@ -53,7 +53,7 @@ export function SubtitleDialogBtn(props: Props) {
 				<ButtonIcon icon={CCIcon} />
 				<ButtonText>{<Trans>Captions & alt text</Trans>}</ButtonText>
 			</Button>
-			<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+			<Dialog.Outer control={control}>
 				<Dialog.Handle />
 				<SubtitleDialogInner {...props} />
 			</Dialog.Outer>

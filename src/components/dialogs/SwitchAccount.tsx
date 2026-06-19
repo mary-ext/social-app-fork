@@ -40,7 +40,7 @@ export function SwitchAccountDialog({ control }: { control: Dialog.DialogControl
 	}, [signinDialogControl, control]);
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<Dialog.ScrollableInner label={l`Switch account`}>
 				<View style={[a.gap_lg]}>

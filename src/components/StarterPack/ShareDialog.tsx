@@ -27,7 +27,7 @@ interface Props {
 
 export function ShareDialog(props: Props) {
 	return (
-		<Dialog.Outer control={props.control} nativeOptions={{ preventExpansion: true }}>
+		<Dialog.Outer control={props.control}>
 			<Dialog.Handle />
 			<ShareDialogInner {...props} />
 		</Dialog.Outer>

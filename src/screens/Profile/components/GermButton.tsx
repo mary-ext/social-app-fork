@@ -200,7 +200,7 @@ function GermSelfButton({ did }: { did: string }) {
 					<Trans>Germ DM</Trans>
 				</Text>
 			</Button>
-			<Dialog.Outer control={selfExplanationDialogControl} nativeOptions={{ preventExpansion: true }}>
+			<Dialog.Outer control={selfExplanationDialogControl}>
 				<Dialog.Handle />
 				<Dialog.ScrollableInner label={l`Germ DM Link`} style={[{ maxWidth: 400, borderRadius: 36 }]}>
 					<View style={[a.flex_row, a.align_center, { gap: 6 }]}>

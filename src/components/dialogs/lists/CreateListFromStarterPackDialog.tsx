@@ -79,11 +79,7 @@ export function CreateListFromStarterPackDialog({
 
 	return (
 		<>
-			<Dialog.Outer
-				control={control}
-				testID="createListFromStarterPackDialog"
-				nativeOptions={{ preventExpansion: true }}
-			>
+			<Dialog.Outer control={control} testID="createListFromStarterPackDialog">
 				<Dialog.Handle />
 				<Dialog.ScrollableInner label={l`Create list from starter pack`} style={{ maxWidth: 400 }}>
 					<View style={[a.gap_lg]}>
@@ -130,7 +126,7 @@ export function CreateListFromStarterPackDialog({
 					avatar: starterPack.list?.avatar,
 				}}
 			/>
-			<Dialog.Outer control={loadingDialogControl} nativeOptions={{ preventDismiss: true }}>
+			<Dialog.Outer control={loadingDialogControl}>
 				<Dialog.Handle />
 				<Dialog.ScrollableInner label={l`Adding members to list...`} style={{ maxWidth: 400 }}>
 					<View style={[a.align_center, a.gap_lg, a.py_5xl]}>

@@ -29,7 +29,7 @@ export function GoLiveDisabledDialog({
 	status: AppBskyActorDefs.StatusView;
 }) {
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<DialogInner control={control} status={status} />
 		</Dialog.Outer>

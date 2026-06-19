@@ -57,7 +57,7 @@ type Item =
 
 export function SuggestedFollowsDialog({ control }: { control: Dialog.DialogOuterProps['control'] }) {
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ fullHeight: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<DialogInner />
 		</Dialog.Outer>

@@ -21,7 +21,7 @@ export function QrCodeDialog({
 	const { t: l } = useLingui();
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<Dialog.ScrollableInner label={l`Create a QR code for a starter pack`}>
 				<View style={[a.flex_1, a.align_center, a.gap_5xl]}>

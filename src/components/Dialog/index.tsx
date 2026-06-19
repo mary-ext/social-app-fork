@@ -107,8 +107,6 @@ export function Outer({ children, control, onClose, webOptions }: React.PropsWit
 	const context = useMemo(
 		() => ({
 			close,
-			isNativeDialog: false,
-			nativeSnapPoint: 0,
 			disableDrag: false,
 			setDisableDrag: () => {},
 			isWithinDialog: true,

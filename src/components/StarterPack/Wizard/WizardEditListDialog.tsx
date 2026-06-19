@@ -68,7 +68,7 @@ export function WizardEditListDialog({
 		);
 
 	return (
-		<Dialog.Outer control={control} testID="newChatDialog" nativeOptions={{ fullHeight: true }}>
+		<Dialog.Outer control={control} testID="newChatDialog">
 			<Dialog.Handle />
 			<Dialog.InnerFlatList
 				ref={listRef}

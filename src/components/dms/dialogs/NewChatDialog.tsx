@@ -146,7 +146,7 @@ export function NewChat({
 					onClick={wrappedOnPress}
 				/>
 			)}
-			<Dialog.Outer control={control} testID="newChatDialog" nativeOptions={{ fullHeight: true }}>
+			<Dialog.Outer control={control} testID="newChatDialog">
 				<Dialog.Handle />
 				<InitiateChatFlow
 					title={l`New chat`}

@@ -108,11 +108,7 @@ export function AddMembersLink({
 				)}
 			</Button>
 
-			<Dialog.Outer
-				control={addMembersControl}
-				testID="addChatMembersDialog"
-				nativeOptions={{ fullHeight: true }}
-			>
+			<Dialog.Outer control={addMembersControl} testID="addChatMembersDialog">
 				<Dialog.Handle />
 				<AddMembersFlow
 					convo={convo}

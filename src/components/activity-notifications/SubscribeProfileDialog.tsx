@@ -43,7 +43,7 @@ export function SubscribeProfileDialog({
 	includeProfile?: boolean;
 }) {
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<DialogInner profile={profile} moderationOpts={moderationOpts} includeProfile={includeProfile} />
 		</Dialog.Outer>

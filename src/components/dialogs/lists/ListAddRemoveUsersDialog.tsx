@@ -32,7 +32,7 @@ export function ListAddRemoveUsersDialog({
 	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void | undefined;
 }) {
 	return (
-		<Dialog.Outer control={control} testID="listAddRemoveUsersDialog" nativeOptions={{ fullHeight: true }}>
+		<Dialog.Outer control={control} testID="listAddRemoveUsersDialog">
 			<Dialog.Handle />
 			<DialogInner list={list} onChange={onChange} />
 		</Dialog.Outer>

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { LayoutAnimation, Pressable, type ScrollView, useWindowDimensions, View } from 'react-native';
+import { LayoutAnimation, Pressable, type ScrollView, View } from 'react-native';
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
@@ -42,7 +42,6 @@ export function ReactionsDialog({
 }) {
 	const { t: l } = useLingui();
 
-	const { height: screenHeight } = useWindowDimensions();
 	const { currentAccount } = useSession();
 	const convo = useConvoActive();
 
@@ -79,11 +78,6 @@ export function ReactionsDialog({
 			onClose={() => {
 				setSelected('all');
 				onClose?.();
-			}}
-			nativeOptions={{
-				preventExpansion: true,
-				minHeight: screenHeight / 2,
-				maxHeight: screenHeight / 2,
 			}}
 		>
 			<Dialog.Handle />

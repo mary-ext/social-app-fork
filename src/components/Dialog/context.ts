@@ -5,12 +5,9 @@ import { useDialogStateContext } from '#/state/dialogs';
 import type { DialogContextProps, DialogControlRefProps, DialogOuterProps } from '#/components/Dialog/types';
 
 import { IS_DEV } from '#/env';
-import { BottomSheetSnapPoint } from '#/shims/bottom-sheet';
 
 export const Context = createContext<DialogContextProps>({
 	close: () => {},
-	isNativeDialog: false,
-	nativeSnapPoint: BottomSheetSnapPoint.Hidden,
 	disableDrag: false,
 	setDisableDrag: () => {},
 	isWithinDialog: false,

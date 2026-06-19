@@ -76,7 +76,7 @@ export function MissingFeed({
 					</View>
 				</View>
 			</Button>
-			<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+			<Dialog.Outer control={control}>
 				<Dialog.Handle />
 				<DialogInner uri={uri} type={type} error={error} />
 			</Dialog.Outer>

@@ -40,7 +40,7 @@ export function UserAddRemoveListsDialog({
 	onChange?: (type: 'add' | 'remove', list: AppBskyGraphDefs.ListView) => void;
 }) {
 	return (
-		<Dialog.Outer control={control} testID="userAddRemoveListsDialog" nativeOptions={{ fullHeight: true }}>
+		<Dialog.Outer control={control} testID="userAddRemoveListsDialog">
 			<Dialog.Handle />
 			<DialogInner profile={profile} onChange={onChange} />
 		</Dialog.Outer>

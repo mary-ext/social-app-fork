@@ -9,8 +9,6 @@ import * as Dialog from '#/components/Dialog';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
 
-import type { BottomSheetViewProps } from '#/shims/bottom-sheet';
-
 export {
 	type DialogControlProps as PromptControlProps,
 	useDialogControl as usePromptControl,
@@ -29,14 +27,11 @@ export function Outer({
 	children,
 	control,
 	testID,
-	nativeOptions,
 	webOptions,
 	onClose,
 }: React.PropsWithChildren<{
 	control: Dialog.DialogControlProps;
 	testID?: string;
-	/** Native-specific options for the prompt. Extends `BottomSheetViewProps` */
-	nativeOptions?: Omit<BottomSheetViewProps, 'children'>;
 	/** Web-specific options for the prompt */
 	webOptions?: {
 		onBackgroundPress?: (e: GestureResponderEvent) => void;
@@ -54,7 +49,6 @@ export function Outer({
 			testID={testID}
 			onClose={onClose}
 			webOptions={{ alignCenter: true, ...webOptions }}
-			nativeOptions={{ preventExpansion: true, ...nativeOptions }}
 		>
 			<Dialog.Handle />
 			<Context.Provider value={context}>

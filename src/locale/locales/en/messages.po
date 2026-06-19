@@ -1040,7 +1040,7 @@ msgstr ""
 
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:68
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:99
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:119
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:115
 msgid "Add members"
 msgstr "Add members"
 
@@ -1058,7 +1058,7 @@ msgid "Add muted words and tags"
 msgstr ""
 
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:116
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:157
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:153
 #: src/screens/ProfileList/AboutSection.tsx:57
 #: src/screens/ProfileList/AboutSection.tsx:76
 msgid "Add people"
@@ -1122,8 +1122,8 @@ msgstr ""
 msgid "Added to starter pack"
 msgstr ""
 
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:131
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:135
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:139
 msgid "Adding members to list..."
 msgstr ""
 
@@ -1167,14 +1167,14 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: src/components/dms/ReactionsDialog.tsx:257
+#: src/components/dms/ReactionsDialog.tsx:251
 #: src/view/screens/Notifications.tsx:75
 msgid "All"
 msgstr ""
 
 #. Tab label showing the total count of reactions on a chat message.
 #. placeholder {0}: tab.count
-#: src/components/dms/ReactionsDialog.tsx:343
+#: src/components/dms/ReactionsDialog.tsx:337
 msgid "All {0}"
 msgstr "All {0}"
 
@@ -1768,12 +1768,12 @@ msgstr "by <0>{ownerDisplayName}</0>"
 msgid "By you"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:113
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:115
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:109
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:111
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:314
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:316
-#: src/components/Prompt.tsx:121
-#: src/components/Prompt.tsx:122
+#: src/components/Prompt.tsx:115
+#: src/components/Prompt.tsx:116
 #: src/components/web/Prompt/index.tsx:132
 #: src/features/liveNow/components/GoLiveDialog.tsx:214
 #: src/features/liveNow/components/GoLiveDialog.tsx:220
@@ -1847,7 +1847,7 @@ msgstr ""
 msgid "Changes saved"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:101
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:97
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
 msgstr ""
 
@@ -2028,8 +2028,8 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:128
-#: src/components/Dialog/index.tsx:314
+#: src/components/Dialog/index.tsx:126
+#: src/components/Dialog/index.tsx:312
 msgid "Close active dialog"
 msgstr ""
 
@@ -2114,8 +2114,8 @@ msgstr ""
 msgid "Configured in <0>moderation settings</0>."
 msgstr ""
 
-#: src/components/Prompt.tsx:171
-#: src/components/Prompt.tsx:175
+#: src/components/Prompt.tsx:165
+#: src/components/Prompt.tsx:169
 #: src/components/web/Prompt/index.tsx:106
 msgid "Confirm"
 msgstr ""
@@ -2380,8 +2380,8 @@ msgstr ""
 msgid "Create group chat"
 msgstr "Create group chat"
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:108
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:110
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:104
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:106
 msgid "Create list"
 msgstr ""
 
@@ -2389,8 +2389,8 @@ msgstr ""
 msgid "Create list from members"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:88
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:91
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:84
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:87
 msgid "Create list from starter pack"
 msgstr ""
 
@@ -3300,7 +3300,7 @@ msgid "Failed to reconnect Germ DM. Error: {message}"
 msgstr "Failed to reconnect Germ DM. Error: {message}"
 
 #: src/components/dms/ActionsWrapper.tsx:72
-#: src/components/dms/ReactionsDialog.tsx:170
+#: src/components/dms/ReactionsDialog.tsx:164
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
@@ -3773,8 +3773,8 @@ msgstr ""
 msgid "Glorification of violence"
 msgstr ""
 
-#: src/components/dialogs/LinkWarning.tsx:93
-#: src/components/dialogs/LinkWarning.tsx:95
+#: src/components/dialogs/LinkWarning.tsx:92
+#: src/components/dialogs/LinkWarning.tsx:94
 #: src/components/Layout/Header/index.tsx:108
 #: src/components/moderation/ScreenHider.tsx:81
 #: src/components/moderation/ScreenHider.tsx:93
@@ -4476,8 +4476,8 @@ msgstr "Leave group chat"
 msgid "Leave this group chat"
 msgstr "Leave this group chat"
 
-#: src/components/dialogs/LinkWarning.tsx:71
-#: src/components/dialogs/LinkWarning.tsx:75
+#: src/components/dialogs/LinkWarning.tsx:70
+#: src/components/dialogs/LinkWarning.tsx:74
 msgid "Leaving Bluesky"
 msgstr ""
 
@@ -5816,7 +5816,7 @@ msgid "Opens image picker"
 msgstr ""
 
 #. placeholder {0}: link?.href ?? ''
-#: src/components/dialogs/LinkWarning.tsx:85
+#: src/components/dialogs/LinkWarning.tsx:84
 msgid "Opens link {0}"
 msgstr ""
 
@@ -6399,8 +6399,8 @@ msgstr "Re-enable invite link"
 msgid "Re-enable link"
 msgstr "Re-enable link"
 
-#: src/components/dms/ReactionsDialog.tsx:63
-#: src/components/dms/ReactionsDialog.tsx:92
+#: src/components/dms/ReactionsDialog.tsx:62
+#: src/components/dms/ReactionsDialog.tsx:86
 msgid "Reactions"
 msgstr "Reactions"
 
@@ -7483,8 +7483,8 @@ msgstr ""
 msgid "Share image"
 msgstr "Share image"
 
-#: src/components/dialogs/LinkWarning.tsx:84
-#: src/components/dialogs/LinkWarning.tsx:91
+#: src/components/dialogs/LinkWarning.tsx:83
+#: src/components/dialogs/LinkWarning.tsx:90
 msgid "Share link"
 msgstr ""
 
@@ -8022,12 +8022,12 @@ msgstr ""
 msgid "Tap to join this group chat immediately"
 msgstr "Tap to join this group chat immediately"
 
-#: src/components/dms/ReactionsDialog.tsx:182
+#: src/components/dms/ReactionsDialog.tsx:176
 msgid "Tap to remove"
 msgstr "Tap to remove"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/ReactionsDialog.tsx:198
+#: src/components/dms/ReactionsDialog.tsx:192
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
@@ -8040,11 +8040,11 @@ msgid "Tap to retry"
 msgstr "Tap to retry"
 
 #. placeholder {0}: tab.value
-#: src/components/dms/ReactionsDialog.tsx:317
+#: src/components/dms/ReactionsDialog.tsx:311
 msgid "Tap to show {0} reactions"
 msgstr "Tap to show {0} reactions"
 
-#: src/components/dms/ReactionsDialog.tsx:317
+#: src/components/dms/ReactionsDialog.tsx:311
 msgid "Tap to show all reactions"
 msgstr "Tap to show all reactions"
 
@@ -8455,7 +8455,7 @@ msgstr ""
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
-#: src/components/dialogs/LinkWarning.tsx:78
+#: src/components/dialogs/LinkWarning.tsx:77
 msgid "This link is taking you to the following website:"
 msgstr ""
 
@@ -8584,7 +8584,7 @@ msgstr ""
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 msgstr "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:95
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:91
 msgid "This will create a new list with the same name, description, and members as this starter pack."
 msgstr ""
 
@@ -9300,8 +9300,8 @@ msgstr ""
 msgid "Violent or threatening content"
 msgstr ""
 
-#: src/components/dialogs/LinkWarning.tsx:84
-#: src/components/dialogs/LinkWarning.tsx:91
+#: src/components/dialogs/LinkWarning.tsx:83
+#: src/components/dialogs/LinkWarning.tsx:90
 msgid "Visit site"
 msgstr ""
 

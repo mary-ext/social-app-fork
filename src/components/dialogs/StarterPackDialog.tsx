@@ -64,7 +64,7 @@ export function StarterPackDialog({ control, targetDid, enabled }: StarterPackDi
 	const wrappedNavToWizard = navToWizard;
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ fullHeight: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<StarterPackList onStartWizard={wrappedNavToWizard} targetDid={targetDid} enabled={enabled} />
 		</Dialog.Outer>

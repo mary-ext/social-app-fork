@@ -51,7 +51,7 @@ export function GroupChatJoinDialog({
 	code?: string;
 }) {
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<GroupChatJoinDialogInner control={control} code={code} />
 		</Dialog.Outer>

@@ -8,7 +8,6 @@ import type {
 
 import type { ViewStyleProp } from '#/alf';
 
-import type { BottomSheetViewProps, BottomSheetSnapPoint } from '#/shims/bottom-sheet';
 type A11yProps = Required<AccessibilityProps>;
 
 /**
@@ -19,7 +18,7 @@ type A11yProps = Required<AccessibilityProps>;
  * example. If this type was not added, we would need to create a function to wrap `.open()` with.
  */
 export type DialogControlRefProps = {
-	open: (options?: DialogControlOpenOptions & Partial<GestureResponderEvent>) => void;
+	open: (options?: Partial<GestureResponderEvent>) => void;
 	close: (callback?: () => void) => void;
 };
 
@@ -32,8 +31,6 @@ export type DialogControlProps = DialogControlRefProps & {
 
 export type DialogContextProps = {
 	close: DialogControlProps['close'];
-	isNativeDialog: boolean;
-	nativeSnapPoint: BottomSheetSnapPoint;
 	disableDrag: boolean;
 	setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>;
 	// in the event that the hook is used outside of a dialog
@@ -41,20 +38,9 @@ export type DialogContextProps = {
 	isHeightConstrained: boolean;
 };
 
-export type DialogControlOpenOptions = {
-	/**
-	 * NATIVE ONLY
-	 *
-	 * Optional index of the snap point to open the bottom sheet to. Defaults to 0, which is the first snap
-	 * point (i.e. "open").
-	 */
-	index?: number;
-};
-
 export type DialogOuterProps = {
 	control: DialogControlProps;
 	onClose?: () => void;
-	nativeOptions?: Omit<BottomSheetViewProps, 'children'>;
 	webOptions?: {
 		alignCenter?: boolean;
 		onBackgroundPress?: (e: GestureResponderEvent) => void;
