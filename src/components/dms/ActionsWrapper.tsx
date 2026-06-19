@@ -2,8 +2,11 @@ import { useCallback, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
+
+import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useConvoActive } from '#/state/messages/convo';
@@ -71,7 +74,16 @@ export function ActionsWrapper({
 			) {
 				convo.removeReaction(message.id, emoji).catch(() => Toast.show(l`Failed to remove emoji reaction`));
 			} else {
-				if (hasReachedReactionLimit(message, currentAccount?.did)) return;
+				if (hasReachedReactionLimit(message, currentAccount?.did)) {
+					Toast.show(
+						l`You cannot add more than ${plural(EMOJI_REACTION_LIMIT, {
+							one: '# emoji reaction',
+							other: '# emoji reactions',
+						})}`,
+						{ type: 'info' },
+					);
+					return;
+				}
 				convo.addReaction(message.id, emoji).catch(() =>
 					Toast.show(l`Failed to add emoji reaction`, {
 						type: 'error',

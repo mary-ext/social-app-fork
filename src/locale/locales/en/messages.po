@@ -1024,7 +1024,7 @@ msgstr ""
 msgid "Add another post to thread"
 msgstr ""
 
-#: src/components/dms/ActionsWrapper.tsx:113
+#: src/components/dms/ActionsWrapper.tsx:125
 msgid "Add emoji reaction"
 msgstr ""
 
@@ -2439,7 +2439,7 @@ msgstr ""
 msgid "Create or edit list"
 msgstr "Create or edit list"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:449
+#: src/screens/Messages/ConversationSettings/index.tsx:458
 msgid "Create or modify an invite link for this group chat"
 msgstr "Create or modify an invite link for this group chat"
 
@@ -2462,7 +2462,7 @@ msgstr ""
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
 #: src/screens/Messages/components/InviteLinkDialog.tsx:295
-#: src/screens/Messages/ConversationSettings/index.tsx:416
+#: src/screens/Messages/ConversationSettings/index.tsx:425
 msgid "Created {0}"
 msgstr ""
 
@@ -2891,7 +2891,7 @@ msgstr ""
 msgid "Edit My Feeds"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:439
+#: src/screens/Messages/ConversationSettings/index.tsx:448
 msgid "Edit name"
 msgstr "Edit name"
 
@@ -2918,7 +2918,7 @@ msgstr ""
 msgid "Edit starter pack"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:438
+#: src/screens/Messages/ConversationSettings/index.tsx:447
 msgid "Edit this group chat’s name"
 msgstr "Edit this group chat’s name"
 
@@ -3189,7 +3189,7 @@ msgstr ""
 msgid "Failed to accept join request"
 msgstr "Failed to accept join request"
 
-#: src/components/dms/ActionsWrapper.tsx:76
+#: src/components/dms/ActionsWrapper.tsx:88
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -3247,7 +3247,7 @@ msgstr "Failed to disable invite link"
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:304
+#: src/screens/Messages/ConversationSettings/index.tsx:313
 msgid "Failed to edit group chat name"
 msgstr "Failed to edit group chat name"
 
@@ -3269,7 +3269,7 @@ msgstr "Failed to join the group chat. Please try again."
 
 #: src/screens/Messages/components/ChatEnded.tsx:42
 #: src/screens/Messages/components/ChatLocked.tsx:60
-#: src/screens/Messages/ConversationSettings/index.tsx:328
+#: src/screens/Messages/ConversationSettings/index.tsx:337
 msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
@@ -3320,7 +3320,7 @@ msgstr ""
 msgid "Failed to load suggested follows"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:349
+#: src/screens/Messages/ConversationSettings/index.tsx:358
 msgid "Failed to lock group chat"
 msgstr "Failed to lock group chat"
 
@@ -3328,7 +3328,7 @@ msgstr "Failed to lock group chat"
 msgid "Failed to mark all requests as read"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:318
+#: src/screens/Messages/ConversationSettings/index.tsx:327
 msgid "Failed to mute group chat"
 msgstr "Failed to mute group chat"
 
@@ -3340,7 +3340,7 @@ msgstr ""
 msgid "Failed to reconnect Germ DM. Error: {message}"
 msgstr "Failed to reconnect Germ DM. Error: {message}"
 
-#: src/components/dms/ActionsWrapper.tsx:72
+#: src/components/dms/ActionsWrapper.tsx:75
 #: src/components/dms/ReactionsDialog.tsx:164
 msgid "Failed to remove emoji reaction"
 msgstr ""
@@ -3391,7 +3391,7 @@ msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
 #: src/screens/Messages/components/ChatLocked.tsx:50
-#: src/screens/Messages/ConversationSettings/index.tsx:354
+#: src/screens/Messages/ConversationSettings/index.tsx:363
 msgid "Failed to unlock group chat"
 msgstr "Failed to unlock group chat"
 
@@ -3930,33 +3930,33 @@ msgstr "Group chat"
 msgid "Group chat invite link dialog"
 msgstr "Group chat invite link dialog"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:341
+#: src/screens/Messages/ConversationSettings/index.tsx:350
 msgctxt "toast"
 msgid "Group chat locked"
 msgstr "Group chat locked"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:311
+#: src/screens/Messages/ConversationSettings/index.tsx:320
 msgctxt "toast"
 msgid "Group chat muted"
 msgstr "Group chat muted"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:299
+#: src/screens/Messages/ConversationSettings/index.tsx:308
 msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Group chat name updated"
 
 #: src/Navigation.tsx:692
-#: src/screens/Messages/ConversationSettings/index.tsx:84
+#: src/screens/Messages/ConversationSettings/index.tsx:93
 msgid "Group chat settings"
 msgstr "Group chat settings"
 
 #: src/screens/Messages/components/ChatLocked.tsx:42
-#: src/screens/Messages/ConversationSettings/index.tsx:343
+#: src/screens/Messages/ConversationSettings/index.tsx:352
 msgctxt "toast"
 msgid "Group chat unlocked"
 msgstr "Group chat unlocked"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:313
+#: src/screens/Messages/ConversationSettings/index.tsx:322
 msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
@@ -4296,7 +4296,7 @@ msgstr "Invalid rescind request."
 #: src/screens/Messages/components/InviteLinkDialog.tsx:283
 #: src/screens/Messages/components/InviteLinkDialog.tsx:446
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
-#: src/screens/Messages/ConversationSettings/index.tsx:452
+#: src/screens/Messages/ConversationSettings/index.tsx:461
 msgid "Invite link"
 msgstr "Invite link"
 
@@ -4485,7 +4485,7 @@ msgid "Learn more."
 msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:56
-#: src/screens/Messages/ConversationSettings/index.tsx:478
+#: src/screens/Messages/ConversationSettings/index.tsx:487
 msgid "Leave"
 msgstr ""
 
@@ -4525,7 +4525,7 @@ msgstr "Leave conversation"
 msgid "Leave group chat"
 msgstr "Leave group chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:477
+#: src/screens/Messages/ConversationSettings/index.tsx:486
 msgid "Leave this group chat"
 msgstr "Leave this group chat"
 
@@ -4809,7 +4809,7 @@ msgstr ""
 msgid "Loading video"
 msgstr "Loading video"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:462
+#: src/screens/Messages/ConversationSettings/index.tsx:471
 msgid "Lock"
 msgstr "Lock"
 
@@ -4821,11 +4821,11 @@ msgstr "Lock group chat"
 msgid "Lock group chat?"
 msgstr "Lock group chat?"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:461
+#: src/screens/Messages/ConversationSettings/index.tsx:470
 msgid "Lock this group chat"
 msgstr "Lock this group chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:462
+#: src/screens/Messages/ConversationSettings/index.tsx:471
 msgid "Locked"
 msgstr "Locked"
 
@@ -5127,7 +5127,7 @@ msgid "Music"
 msgstr ""
 
 #: src/components/moderation/mute-account-prompt.tsx:56
-#: src/screens/Messages/ConversationSettings/index.tsx:431
+#: src/screens/Messages/ConversationSettings/index.tsx:440
 msgid "Mute"
 msgstr "Mute"
 
@@ -5174,7 +5174,7 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:430
+#: src/screens/Messages/ConversationSettings/index.tsx:439
 msgid "Mute this group chat"
 msgstr "Mute this group chat"
 
@@ -5212,7 +5212,7 @@ msgstr ""
 msgid "Mute words & tags"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:431
+#: src/screens/Messages/ConversationSettings/index.tsx:440
 msgid "Muted"
 msgstr "Muted"
 
@@ -6835,7 +6835,7 @@ msgstr ""
 #: src/features/liveNow/components/LiveStatus.tsx:195
 #: src/features/liveNow/components/LiveStatus.tsx:197
 #: src/features/liveNow/components/LiveStatusDialog.tsx:164
-#: src/screens/Messages/ConversationSettings/index.tsx:470
+#: src/screens/Messages/ConversationSettings/index.tsx:479
 msgid "Report"
 msgstr ""
 
@@ -6896,7 +6896,7 @@ msgstr ""
 msgid "Report this feed"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:469
+#: src/screens/Messages/ConversationSettings/index.tsx:478
 msgid "Report this group chat"
 msgstr "Report this group chat"
 
@@ -7851,7 +7851,7 @@ msgid "Something wasn't quite right with the data you're trying to report. Pleas
 msgstr ""
 
 #: src/screens/Messages/Conversation.tsx:100
-#: src/screens/Messages/ConversationSettings/index.tsx:106
+#: src/screens/Messages/ConversationSettings/index.tsx:115
 #: src/screens/Messages/JoinRequests.tsx:68
 msgid "Something went wrong"
 msgstr ""
@@ -8454,7 +8454,7 @@ msgid "This chat is locked"
 msgstr "This chat is locked"
 
 #: src/screens/Messages/components/ChatLocked.tsx:46
-#: src/screens/Messages/ConversationSettings/index.tsx:351
+#: src/screens/Messages/ConversationSettings/index.tsx:360
 msgid "This chat is locked by a moderation action"
 msgstr "This chat is locked by a moderation action"
 
@@ -8629,7 +8629,7 @@ msgstr ""
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:126
+#: src/screens/Messages/ConversationSettings/index.tsx:135
 #: src/screens/Messages/JoinRequests.tsx:92
 msgid "This screen is only available for group conversations."
 msgstr "This screen is only available for group conversations."
@@ -8937,7 +8937,7 @@ msgstr ""
 msgid "Unlock chat"
 msgstr "Unlock chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:461
+#: src/screens/Messages/ConversationSettings/index.tsx:470
 msgid "Unlock this group chat"
 msgstr "Unlock this group chat"
 
@@ -8977,7 +8977,7 @@ msgstr ""
 msgid "Unmute list"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:430
+#: src/screens/Messages/ConversationSettings/index.tsx:439
 msgid "Unmute this group chat"
 msgstr "Unmute this group chat"
 
@@ -9347,7 +9347,7 @@ msgstr "View publication"
 msgid "View the avatar"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:450
+#: src/screens/Messages/ConversationSettings/index.tsx:459
 msgid "View the invite link for this group chat"
 msgstr "View the invite link for this group chat"
 
@@ -9450,7 +9450,7 @@ msgstr ""
 msgid "We couldn’t load this conversation’s join requests"
 msgstr "We couldn’t load this conversation’s join requests"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:107
+#: src/screens/Messages/ConversationSettings/index.tsx:116
 msgid "We couldn’t load this conversation’s settings"
 msgstr "We couldn’t load this conversation’s settings"
 
@@ -9607,7 +9607,7 @@ msgstr ""
 msgid "Writers"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:125
+#: src/screens/Messages/ConversationSettings/index.tsx:134
 #: src/screens/Messages/JoinRequests.tsx:91
 msgid "Wrong kind of conversation"
 msgstr "Wrong kind of conversation"
@@ -9735,6 +9735,10 @@ msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in t
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
 msgid "You can update this later from your settings."
 msgstr ""
+
+#: src/components/dms/ActionsWrapper.tsx:79
+msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
+msgstr "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:93
 msgid "You cannot create a group chat yet."
