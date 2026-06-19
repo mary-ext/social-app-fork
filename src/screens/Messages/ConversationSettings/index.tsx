@@ -74,11 +74,20 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesConversation
 
 export function MessagesConversationSettingsScreen({ route }: Props) {
 	const convoId = route.params.conversation;
+	const navigation = useNavigation<NavigationProp>();
 
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>
-				<Layout.Header.BackButton />
+				<Layout.Header.BackButton
+					onPress={(evt) => {
+						// deep-linking straight to settings leaves no back entry; send back to the conversation
+						if (!navigation.canGoBack()) {
+							evt.preventDefault();
+							navigation.navigate('MessagesConversation', { conversation: convoId });
+						}
+					}}
+				/>
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>
 						<Trans>Group chat settings</Trans>
@@ -422,7 +431,7 @@ function SettingsHeader({
 						})}
 					</Trans>
 				</Text>
-				<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_2xl, a.pt_2xl]}>
+				<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_2xl, a.pt_2xl, a.flex_wrap]}>
 					<SettingsButton
 						color={convo.view.muted ? 'negative_subtle' : 'secondary'}
 						disabled={isMuting || lockStatus !== 'unlocked'}
