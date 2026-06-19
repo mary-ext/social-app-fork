@@ -1,4 +1,4 @@
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
@@ -9,7 +9,6 @@ import { JOIN_REQUESTS_THRESHOLD } from '#/state/queries/messages/list-join-requ
 
 import { atoms as a, tokens, useTheme } from '#/alf';
 
-import { GlassView } from '#/components/GlassView';
 import { Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon } from '#/components/icons/Envelope';
 import { TimesLarge_Stroke2_Corner0_Rounded as CloseIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
@@ -42,16 +41,18 @@ export function RequestStatus({
 				},
 			]}
 		>
-			<GlassView
-				style={[a.flex_1, a.rounded_full, a.flex_row, a.align_center]}
-				isInteractive
-				glassEffectStyle="regular"
-				tintColor={t.palette.primary_50}
-				fallbackStyle={{
-					backgroundColor: t.palette.primary_50,
-					borderWidth: 1,
-					borderColor: t.palette.primary_100,
-				}}
+			<View
+				style={[
+					{
+						backgroundColor: t.palette.primary_50,
+						borderWidth: 1,
+						borderColor: t.palette.primary_100,
+					},
+					a.flex_1,
+					a.rounded_full,
+					a.flex_row,
+					a.align_center,
+				]}
 			>
 				<Pressable
 					accessibilityRole="button"
@@ -84,7 +85,7 @@ export function RequestStatus({
 				>
 					<CloseIcon size="md" fill={t.palette.primary_500} />
 				</Pressable>
-			</GlassView>
+			</View>
 		</Animated.View>
 	);
 }

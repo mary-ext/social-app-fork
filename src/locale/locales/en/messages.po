@@ -329,7 +329,7 @@ msgstr "{count, plural, =0 {No requests to join} one {# request to join} other {
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "{count, plural, one {# chat update} other {# chat updates}}"
 
-#: src/screens/Messages/components/RequestStatus.tsx:71
+#: src/screens/Messages/components/RequestStatus.tsx:72
 msgid "{count, plural, one {# new join request} other {# new join requests}}"
 msgstr "{count, plural, one {# new join request} other {# new join requests}}"
 
@@ -538,7 +538,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
 #. Displayed when the number of requests is greater than 20
-#: src/screens/Messages/components/RequestStatus.tsx:67
+#: src/screens/Messages/components/RequestStatus.tsx:68
 msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 
@@ -2033,7 +2033,7 @@ msgstr ""
 msgid "Close active dialog"
 msgstr ""
 
-#: src/screens/Messages/components/RequestStatus.tsx:79
+#: src/screens/Messages/components/RequestStatus.tsx:80
 msgid "Close banner"
 msgstr "Close banner"
 
@@ -2051,7 +2051,7 @@ msgstr ""
 msgid "Close image viewer"
 msgstr ""
 
-#: src/screens/Messages/components/RequestStatus.tsx:80
+#: src/screens/Messages/components/RequestStatus.tsx:81
 msgid "Close the incoming requests banner"
 msgstr "Close the incoming requests banner"
 
@@ -4709,7 +4709,7 @@ msgstr ""
 msgid "Loading"
 msgstr "Loading"
 
-#: src/screens/Messages/components/MessageComposer.tsx:141
+#: src/screens/Messages/components/MessageComposer.tsx:133
 msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
@@ -4871,7 +4871,7 @@ msgstr ""
 msgid "Menu"
 msgstr "Menu"
 
-#: src/screens/Messages/components/MessageComposer.tsx:142
+#: src/screens/Messages/components/MessageComposer.tsx:134
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:186
 msgctxt "action"
 msgid "Message"
@@ -4910,11 +4910,11 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:138
+#: src/screens/Messages/components/MessageComposer.tsx:130
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:76
+#: src/screens/Messages/components/MessageComposer.tsx:74
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
@@ -5713,7 +5713,7 @@ msgstr ""
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:120
+#: src/screens/Messages/components/MessageComposer.tsx:112
 #: src/view/com/composer/Composer.tsx:1793
 msgid "Open emoji picker"
 msgstr ""
@@ -7374,7 +7374,7 @@ msgstr ""
 msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:206
+#: src/screens/Messages/components/MessageComposer.tsx:192
 msgid "Send message"
 msgstr ""
 
@@ -9201,11 +9201,11 @@ msgstr ""
 msgid "View incoming group chat requests"
 msgstr "View incoming group chat requests"
 
-#: src/screens/Messages/components/RequestStatus.tsx:58
+#: src/screens/Messages/components/RequestStatus.tsx:59
 msgid "View incoming requests"
 msgstr "View incoming requests"
 
-#: src/screens/Messages/components/RequestStatus.tsx:59
+#: src/screens/Messages/components/RequestStatus.tsx:60
 msgid "View incoming requests to join this group chat"
 msgstr "View incoming requests to join this group chat"
 

@@ -16,13 +16,11 @@ import { atoms as a, tokens, useTheme, utils } from '#/alf';
 import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import * as EmojiPicker from '#/components/EmojiPicker';
-import { GlassView } from '#/components/GlassView';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 
-import { GlassContainer } from '#/shims/glass-effect';
 import { LinearGradient } from '#/shims/linear-gradient';
 import { useKeyboardHandler, useReanimatedKeyboardAnimation } from '#/shims/native-keyboard-controller';
 
@@ -100,14 +98,8 @@ export function MessageComposer({
 	return (
 		<ComposerContainer>
 			<View collapsable={false} ref={undefined}>
-				<GlassContainer style={[a.w_full, a.flex_row, a.gap_sm, a.align_end]} spacing={tokens.space.sm}>
-					<GlassView
-						isInteractive
-						glassEffectStyle="regular"
-						style={[a.flex_1, a.rounded_xl, { minHeight: MIN_HEIGHT }]}
-						tintColor={t.palette.contrast_50}
-						fallbackStyle={[t.atoms.bg_contrast_50]}
-					>
+				<View style={[a.w_full, a.flex_row, a.gap_sm, a.align_end]}>
+					<View style={[t.atoms.bg_contrast_50, a.flex_1, a.rounded_xl, { minHeight: MIN_HEIGHT }]}>
 						{children}
 						<View style={[a.flex_1]}>
 							{loading ? null : (
@@ -171,9 +163,9 @@ export function MessageComposer({
 								}}
 							/>
 						</View>
-					</GlassView>
+					</View>
 					<SubmitButton onPress={handleSubmit} disabled={submitDisabled} loading={loading} />
-				</GlassContainer>
+				</View>
 			</View>
 		</ComposerContainer>
 	);
@@ -192,14 +184,8 @@ function SubmitButton({
 	const t = useTheme();
 
 	return (
-		<GlassView
-			isInteractive
-			glassEffectStyle="regular"
-			style={[a.rounded_full]}
-			tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
-			fallbackStyle={{
-				backgroundColor: disabled ? t.palette.contrast_100 : t.palette.primary_500,
-			}}
+		<View
+			style={[{ backgroundColor: disabled ? t.palette.contrast_100 : t.palette.primary_500 }, a.rounded_full]}
 		>
 			<Pressable
 				accessibilityRole="button"
@@ -216,7 +202,7 @@ function SubmitButton({
 					<PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
 				)}
 			</Pressable>
-		</GlassView>
+		</View>
 	);
 }
 
