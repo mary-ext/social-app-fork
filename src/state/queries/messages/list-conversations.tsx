@@ -542,6 +542,11 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							);
 							break;
 						}
+						case 'chat.bsky.convo.defs#logEditGroup': {
+							// group details changed but aren't included in the log event, refetch to get them
+							debouncedRefetch();
+							break;
+						}
 						case 'chat.bsky.convo.defs#logCreateJoinLink':
 						case 'chat.bsky.convo.defs#logEditJoinLink':
 						case 'chat.bsky.convo.defs#logEnableJoinLink':
@@ -551,7 +556,8 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							break;
 						}
 						case 'chat.bsky.convo.defs#logApproveJoinRequest':
-						case 'chat.bsky.convo.defs#logRejectJoinRequest': {
+						case 'chat.bsky.convo.defs#logRejectJoinRequest':
+						case 'chat.bsky.convo.defs#logWithdrawIncomingJoinRequest': {
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
 								updateGroupConvoJoinRequestCount(log, old, -1),
 							);
@@ -560,6 +566,12 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						case 'chat.bsky.convo.defs#logIncomingJoinRequest': {
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
 								updateGroupConvoJoinRequestCount(log, old, 1),
+							);
+							break;
+						}
+						case 'chat.bsky.convo.defs#logReadJoinRequests': {
+							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
+								zeroGroupConvoUnreadJoinRequestCount(log, old),
 							);
 							break;
 						}
@@ -789,6 +801,30 @@ function updateGroupConvoJoinRequestCount(
 				kind: {
 					...convo.kind,
 					joinRequestCount: next === 0 ? undefined : next,
+				},
+				rev: log.rev,
+			};
+		}),
+	);
+}
+
+function zeroGroupConvoUnreadJoinRequestCount(
+	log: { convoId: string; rev: string },
+	old: ConvoListQueryData | undefined,
+) {
+	return optimisticUpdate(
+		log.convoId,
+		old,
+		withRevGuard(log.rev, (convo) => {
+			// unread join-request count is only meaningful for group convos
+			if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+				return { ...convo, rev: log.rev };
+			}
+			return {
+				...convo,
+				kind: {
+					...convo.kind,
+					unreadJoinRequestCount: 0,
 				},
 				rev: log.rev,
 			};
