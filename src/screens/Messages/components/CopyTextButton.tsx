@@ -24,7 +24,8 @@ export function CopyTextButton({
 
 	useEffect(() => {
 		if (hasBeenCopied) {
-			const timeout = setTimeout(() => setHasBeenCopied(false), 100);
+			// the confirmation appears and disappears instantly (no fade), so keep it up long enough to read
+			const timeout = setTimeout(() => setHasBeenCopied(false), 2000);
 			return () => clearTimeout(timeout);
 		}
 	}, [hasBeenCopied]);

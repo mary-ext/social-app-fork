@@ -2218,7 +2218,7 @@ msgstr "Conversation not found."
 msgid "Copied to clipboard"
 msgstr ""
 
-#: src/screens/Messages/components/CopyTextButton.tsx:49
+#: src/screens/Messages/components/CopyTextButton.tsx:50
 msgid "Copied!"
 msgstr ""
 
