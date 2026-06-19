@@ -35,9 +35,6 @@ function SendViaChatDialogInner({
 	const { mutate: createChat } = useGetConvoForMembers({
 		onSuccess: (data) => {
 			onSelectChat(data.convo.id);
-
-			if (!data.convo.lastMessage) {
-			}
 		},
 		onError: (error) => {
 			logger.error('Failed to share post to chat', { message: error });

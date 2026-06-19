@@ -34,9 +34,6 @@ export function NewChat({
 	const { mutate: createChat } = useGetConvoForMembers({
 		onSuccess: (data) => {
 			onNewChat(data.convo.id);
-
-			if (!data.convo.lastMessage) {
-			}
 		},
 		onError: (error) => {
 			logger.error('Failed to create chat', { safeMessage: error });
