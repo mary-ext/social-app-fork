@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
@@ -90,75 +89,69 @@ export function MessageComposer({
 
 	return (
 		<ComposerContainer>
-			<View collapsable={false} ref={undefined}>
-				<View style={[a.w_full, a.flex_row, a.gap_sm, a.align_end]}>
-					<View style={[t.atoms.bg_contrast_50, a.flex_1, a.rounded_xl, { minHeight: MIN_HEIGHT }]}>
-						{children}
-						<View style={[a.flex_1]}>
-							{loading ? null : (
-								<>
-									<EmojiPicker.Trigger
-										handle={emojiPickerHandle}
-										render={
-											<button
-												type="button"
-												aria-label={l`Open emoji picker`}
-												className={styles.emojiButton}
-											/>
-										}
-									>
-										<EmojiSmileIcon size="md" fill="currentColor" />
-									</EmojiPicker.Trigger>
-									<EmojiPicker.Root
-										handle={emojiPickerHandle}
-										onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
-										nextFocusRef={() => composerInternalApiRef.current?.input?.element}
-									>
-										<EmojiPicker.Picker />
-									</EmojiPicker.Root>
-								</>
-							)}
-							<Composer
-								nativeID={textInputId}
-								label={l`Message input field`}
-								placeholder={
-									loading
-										? l({ message: 'Loading chat...', context: 'placeholder' })
-										: l({ message: 'Message', context: 'action' })
-								}
-								autocompletePlacement="top-start"
-								internalApiRef={composerInternalApiRef}
-								defaultValue={text}
-								editable={!loading}
-								autoFocus={true}
-								maxRows={12}
-								outerStyle={[a.flex_1]}
-								contentTextStyle={[a.text_md, a.leading_snug]}
-								contentPaddingStyle={{
-									paddingLeft: 16,
-									paddingTop: 10,
-									paddingBottom: 10,
-									paddingRight: 16 + 20,
-								}}
-								onChange={handleChange}
-								onFacetCommitted={(facet) => {
-									if (
-										facet.type === 'url' &&
-										(isBskyPostUrl(facet.value) || isBskyChatInviteUrl(facet.value))
-									) {
-										setEmbed(facet.value);
+			<View style={[a.w_full, a.flex_row, a.gap_sm, a.align_end]}>
+				<View style={[t.atoms.bg_contrast_50, a.flex_1, a.rounded_xl, { minHeight: MIN_HEIGHT }]}>
+					{children}
+					<View style={[a.flex_1]}>
+						{loading ? null : (
+							<>
+								<EmojiPicker.Trigger
+									handle={emojiPickerHandle}
+									render={
+										<button type="button" aria-label={l`Open emoji picker`} className={styles.emojiButton} />
 									}
-								}}
-								onRequestSubmit={(req) => {
-									if (req.platform === 'web' && req.shiftKey) return;
-									req.nativeEvent.preventDefault();
-									handleSubmit();
-								}}
-							/>
-						</View>
+								>
+									<EmojiSmileIcon size="md" fill="currentColor" />
+								</EmojiPicker.Trigger>
+								<EmojiPicker.Root
+									handle={emojiPickerHandle}
+									onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
+									nextFocusRef={() => composerInternalApiRef.current?.input?.element}
+								>
+									<EmojiPicker.Picker />
+								</EmojiPicker.Root>
+							</>
+						)}
+						<Composer
+							nativeID={textInputId}
+							label={l`Message input field`}
+							placeholder={
+								loading
+									? l({ message: 'Loading chat...', context: 'placeholder' })
+									: l({ message: 'Message', context: 'action' })
+							}
+							autocompletePlacement="top-start"
+							internalApiRef={composerInternalApiRef}
+							defaultValue={text}
+							editable={!loading}
+							autoFocus={true}
+							maxRows={12}
+							outerStyle={[a.flex_1]}
+							contentTextStyle={[a.text_md, a.leading_snug]}
+							contentPaddingStyle={{
+								paddingLeft: 16,
+								paddingTop: 10,
+								paddingBottom: 10,
+								paddingRight: 16 + 20,
+							}}
+							onChange={handleChange}
+							onFacetCommitted={(facet) => {
+								if (
+									facet.type === 'url' &&
+									(isBskyPostUrl(facet.value) || isBskyChatInviteUrl(facet.value))
+								) {
+									setEmbed(facet.value);
+								}
+							}}
+							onRequestSubmit={(req) => {
+								if (req.platform === 'web' && req.shiftKey) return;
+								req.nativeEvent.preventDefault();
+								handleSubmit();
+							}}
+						/>
 					</View>
-					<SubmitButton onPress={handleSubmit} disabled={submitDisabled} loading={loading} />
 				</View>
+				<SubmitButton onPress={handleSubmit} disabled={submitDisabled} loading={loading} />
 			</View>
 		</ComposerContainer>
 	);
@@ -199,9 +192,7 @@ function SubmitButton({
 	);
 }
 
-// TODO: remove export when MessageInput is deleted
-export function ComposerContainer({ children }: { children: React.ReactNode }) {
-	useSafeAreaInsets();
+function ComposerContainer({ children }: { children: React.ReactNode }) {
 	const t = useTheme();
 
 	return (
@@ -226,8 +217,6 @@ export function ComposerContainer({ children }: { children: React.ReactNode }) {
 			>
 				{children}
 			</LinearGradient>
-			{/* covers the gap between the keyboard and the input during keyboard animation */}
-			{false}
 		</>
 	);
 }
