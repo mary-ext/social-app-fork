@@ -918,10 +918,6 @@ msgstr ""
 msgid "Account options"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:128
-msgid "Account provider"
-msgstr ""
-
 #: src/screens/Settings/components/AccountsSection.tsx:278
 msgid "Account removed from quick access"
 msgstr ""
@@ -1679,21 +1675,8 @@ msgstr "Blocking won't stop this labeler's labels from being applied to your acc
 msgid "Blog"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:132
-#: src/components/dialogs/ServerInput.tsx:133
-msgid "Bluesky"
-msgstr ""
-
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:508
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr ""
-
-#: src/components/dialogs/ServerInput.tsx:192
-msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr ""
-
-#: src/components/dialogs/ServerInput.tsx:143
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:275
@@ -1756,9 +1739,8 @@ msgid "Button to go back to the home timeline"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#. placeholder {0}: sanitizeHandle(handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
-#: src/components/LabelingServiceCard/index.tsx:52
+#. placeholder {0}: sanitizeHandle(labeler.creator.handle, '@')
 #: src/components/moderation/ReportDialog/index.tsx:772
 #: src/screens/Moderation/index.tsx:293
 #: src/screens/Search/components/StarterPackCard.tsx:91
@@ -1983,10 +1965,6 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:201
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
-
-#: src/components/dialogs/ServerInput.tsx:124
-msgid "Choose your account provider"
-msgstr ""
 
 #: src/view/screens/Feeds.tsx:640
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
@@ -2461,11 +2439,6 @@ msgstr ""
 msgid "Culture"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:135
-#: src/components/dialogs/ServerInput.tsx:136
-msgid "Custom"
-msgstr ""
-
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:199
 msgid "Dangerous challenges or activities"
 msgstr ""
@@ -2717,8 +2690,6 @@ msgid "Does not include nudity."
 msgstr ""
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:259
-#: src/components/dialogs/ServerInput.tsx:213
-#: src/components/dialogs/ServerInput.tsx:216
 #: src/components/dms/AfterReportConversationDialog.tsx:146
 #: src/components/dms/AfterReportDialog.tsx:132
 #: src/view/com/composer/labels/LabelsBtn.tsx:173
@@ -4142,10 +4113,6 @@ msgstr ""
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Account & privacy</0>."
 msgstr "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Account & privacy</0>."
 
-#: src/components/dialogs/ServerInput.tsx:190
-msgid "If you're a developer, you can host your own server."
-msgstr ""
-
 #. Ignore a request to join a chat
 #: src/screens/Messages/JoinRequests.tsx:409
 msgctxt "button"
@@ -4442,10 +4409,6 @@ msgstr ""
 msgid "Learn more about Bluesky"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:198
-msgid "Learn more about self hosting your PDS."
-msgstr ""
-
 #: src/components/moderation/ContentHider.tsx:180
 msgid "Learn more about the moderation applied to this content"
 msgstr ""
@@ -4469,7 +4432,6 @@ msgstr ""
 msgid "Learn more about your Germ DM link"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:201
 #: src/components/moderation/ContentHider.tsx:189
 msgid "Learn more."
 msgstr ""
@@ -4566,7 +4528,6 @@ msgstr ""
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
 
-#: src/components/LabelingServiceCard/index.tsx:73
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:426
 #: src/screens/Profile/Header/Labeler.tsx:185
 #: src/screens/Profile/Header/Labeler.tsx:190
@@ -6977,7 +6938,6 @@ msgstr "Requests to join"
 msgid "Require alt text before posting"
 msgstr ""
 
-#: src/components/LabelingServiceCard/index.tsx:63
 #: src/screens/Moderation/index.tsx:300
 msgid "Required in your region"
 msgstr ""
@@ -7437,10 +7397,6 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:74
 msgid "Sent at {0}"
 msgstr "Sent at {0}"
-
-#: src/components/dialogs/ServerInput.tsx:154
-msgid "Server address"
-msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:381
 msgid "Set precisely which groups of people can reply to your post"
@@ -9297,8 +9253,6 @@ msgid "View the invite link for this group chat"
 msgstr "View the invite link for this group chat"
 
 #. placeholder {0}: creator.handle
-#. placeholder {0}: labeler.creator.handle
-#: src/components/LabelingServiceCard/index.tsx:122
 #: src/screens/Moderation/index.tsx:279
 msgid "View the labeling service provided by @{0}"
 msgstr ""
