@@ -6,7 +6,11 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from './list-conversation-requests';
+import {
+	type ConvoRequestListQueryData,
+	optimisticDelete as optimisticDeleteRequest,
+	RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
+} from './list-conversation-requests';
 import {
 	type ConvoListItem,
 	type ConvoListQueryData,
@@ -45,6 +49,13 @@ export function useAcceptConversation(
 			const prevConvoListQueries = queryClient.getQueriesData<ConvoListQueryData>({
 				queryKey: [CONVO_LIST_ROOT_KEY],
 			});
+			// the request inbox is a separate cache; drop the accepted request from it too
+			const prevRequestsQueries = queryClient.getQueriesData<ConvoRequestListQueryData>({
+				queryKey: [CONVO_REQUEST_LIST_KEY],
+			});
+			queryClient.setQueriesData<ConvoRequestListQueryData>({ queryKey: [CONVO_REQUEST_LIST_KEY] }, (old) =>
+				optimisticDeleteRequest(convoId, old),
+			);
 			let convoBeingAccepted: ConvoListItem | null = null;
 			for (const [, data] of queryClient.getQueriesData<ConvoListQueryData>({
 				queryKey: CONVO_LIST_PARTIAL_KEY('request'),
@@ -83,7 +94,7 @@ export function useAcceptConversation(
 				);
 			}
 			onMutate?.();
-			return { prevConvoListQueries };
+			return { prevConvoListQueries, prevRequestsQueries };
 		},
 		onSuccess: (data) => {
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
@@ -97,7 +108,13 @@ export function useAcceptConversation(
 					queryClient.setQueryData(queryKey, prevData);
 				}
 			}
+			if (context?.prevRequestsQueries) {
+				for (const [queryKey, prevData] of context.prevRequestsQueries) {
+					queryClient.setQueryData(queryKey, prevData);
+				}
+			}
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
+			void queryClient.invalidateQueries({ queryKey: [CONVO_REQUEST_LIST_KEY] });
 			onError?.(error);
 		},
 	});
