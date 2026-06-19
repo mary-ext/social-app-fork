@@ -794,15 +794,17 @@ msgstr ""
 msgid "a message"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:45
-#: src/components/dms/dialogs/NewChatDialog.tsx:84
+#: src/components/dms/dialogs/NewChatDialog.tsx:42
+#: src/components/dms/dialogs/NewChatDialog.tsx:81
 #: src/components/dms/LeaveConvoPrompt.tsx:37
+#: src/components/moderation/BlockDialog.tsx:250
+#: src/components/moderation/BlockDialog.tsx:272
 #: src/screens/Messages/JoinRequests.tsx:161
 #: src/screens/Messages/JoinRequests.tsx:195
 msgid "A network error occurred. Please check your internet connection."
 msgstr "A network error occurred. Please check your internet connection."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:100
+#: src/components/dms/dialogs/NewChatDialog.tsx:97
 msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
 
@@ -1057,8 +1059,8 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:116
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:153
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:112
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
 #: src/screens/ProfileList/AboutSection.tsx:57
 #: src/screens/ProfileList/AboutSection.tsx:76
 msgid "Add people"
@@ -1326,15 +1328,15 @@ msgstr "An invite link lets people join this group chat without being added dire
 msgid "An issue not included in these options"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:82
+#: src/components/dms/dialogs/NewChatDialog.tsx:79
 msgid "An issue occurred creating the group chat, please try again."
 msgstr "An issue occurred creating the group chat, please try again."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:43
+#: src/components/dms/dialogs/NewChatDialog.tsx:40
 msgid "An issue occurred starting the chat, please try again."
 msgstr "An issue occurred starting the chat, please try again."
 
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:44
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:41
 msgid "An issue occurred while trying to open the chat"
 msgstr ""
 
@@ -1554,9 +1556,12 @@ msgid "Banned user returning"
 msgstr ""
 
 #: src/components/moderation/block-account-prompt.tsx:62
+#: src/components/moderation/BlockDialog.tsx:159
+#: src/components/moderation/BlockDialog.tsx:162
+#: src/components/moderation/BlockDialog.tsx:175
+#: src/components/moderation/BlockDialog.tsx:191
 #: src/screens/Messages/components/ChatStatusInfo.tsx:64
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:196
-#: src/screens/Messages/ConversationSettings/prompts.tsx:141
 msgid "Block"
 msgstr ""
 
@@ -1576,7 +1581,7 @@ msgid "Block account"
 msgstr ""
 
 #: src/components/moderation/block-account-prompt.tsx:40
-#: src/screens/Messages/ConversationSettings/prompts.tsx:138
+#: src/components/moderation/BlockDialog.tsx:127
 msgid "Block account?"
 msgstr "Block account?"
 
@@ -1645,7 +1650,7 @@ msgstr ""
 msgid "Blocked Accounts"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:139
+#: src/components/moderation/BlockDialog.tsx:138
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -1664,6 +1669,10 @@ msgstr ""
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:96
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
+
+#: src/components/moderation/BlockDialog.tsx:133
+msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
+msgstr "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 
 #: src/components/moderation/block-account-prompt.tsx:57
 msgid "Blocking won't stop this labeler's labels from being applied to your account."
@@ -1772,6 +1781,7 @@ msgstr ""
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:111
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:314
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:316
+#: src/components/moderation/BlockDialog.tsx:166
 #: src/components/Prompt.tsx:115
 #: src/components/Prompt.tsx:116
 #: src/components/web/Prompt/index.tsx:132
@@ -1881,7 +1891,16 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:61
+#: src/components/moderation/BlockDialog.tsx:252
+#: src/components/moderation/BlockDialog.tsx:274
+msgid "Chat not found."
+msgstr "Chat not found."
+
+#: src/components/moderation/BlockDialog.tsx:254
+msgid "Chat owners cannot leave a group chat."
+msgstr "Chat owners cannot leave a group chat."
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:58
 msgid "Chat recipient is not followed by the sender."
 msgstr "Chat recipient is not followed by the sender."
 
@@ -1980,15 +1999,15 @@ msgstr ""
 msgid "Click for information"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:111
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:107
 msgid "Click here to add people to this group chat"
 msgstr "Click here to add people to this group chat"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:126
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:122
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Click here to create or manage an invite link for this group chat"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:127
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:123
 msgid "Click here to view the invite link for this group chat"
 msgstr "Click here to view the invite link for this group chat"
 
@@ -2040,6 +2059,7 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:202
 #: src/components/dialogs/LanguageSelectDialog.tsx:254
 #: src/components/dialogs/LanguageSelectDialog.tsx:277
+#: src/components/moderation/BlockDialog.tsx:164
 #: src/components/verification/VerificationsDialog.tsx:84
 #: src/components/verification/VerifierDialog.tsx:75
 #: src/components/web/Dialog/Popup.tsx:80
@@ -2303,6 +2323,10 @@ msgstr ""
 msgid "Could not leave chat"
 msgstr ""
 
+#: src/components/moderation/BlockDialog.tsx:248
+msgid "Could not leave chat."
+msgstr "Could not leave chat."
+
 #: src/screens/Profile/ProfileFeed/index.tsx:52
 msgid "Could not load feed"
 msgstr ""
@@ -2320,6 +2344,10 @@ msgstr ""
 #: src/view/com/composer/videos/VideoPreview.tsx:64
 msgid "Could not process your video"
 msgstr ""
+
+#: src/components/moderation/BlockDialog.tsx:270
+msgid "Could not remove member."
+msgstr "Could not remove member."
 
 #. placeholder {0}: cleanError(error)
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:228
@@ -2436,6 +2464,10 @@ msgstr ""
 #: src/lib/interests.ts:56
 msgid "Culture"
 msgstr ""
+
+#: src/components/moderation/BlockDialog.tsx:326
+msgid "Current chat"
+msgstr "Current chat"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:199
 msgid "Dangerous challenges or activities"
@@ -4251,7 +4283,7 @@ msgstr "Invalid rescind request."
 #: src/screens/Messages/components/InviteLinkDialog.tsx:277
 #: src/screens/Messages/components/InviteLinkDialog.tsx:283
 #: src/screens/Messages/components/InviteLinkDialog.tsx:446
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
 #: src/screens/Messages/ConversationSettings/index.tsx:426
 msgid "Invite link"
 msgstr "Invite link"
@@ -4340,6 +4372,11 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:187
 msgid "Keep me posted"
 msgstr ""
+
+#: src/components/moderation/BlockDialog.tsx:312
+#: src/components/moderation/BlockDialog.tsx:320
+msgid "Kick member"
+msgstr "Kick member"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source)
 #: src/components/moderation/ContentHider.tsx:186
@@ -4447,6 +4484,8 @@ msgstr "Leave"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:107
 #: src/components/dms/MessagesListBlockedFooter.tsx:115
+#: src/components/moderation/BlockDialog.tsx:332
+#: src/components/moderation/BlockDialog.tsx:340
 #: src/screens/Messages/components/ChatEnded.tsx:69
 #: src/screens/Messages/components/ChatLocked.tsx:111
 msgid "Leave chat"
@@ -4480,6 +4519,10 @@ msgstr "Leave this group chat"
 #: src/components/dialogs/LinkWarning.tsx:74
 msgid "Leaving Bluesky"
 msgstr ""
+
+#: src/components/moderation/BlockDialog.tsx:240
+msgid "Left group chat."
+msgstr "Left group chat."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Let me choose"
@@ -4848,6 +4891,10 @@ msgstr ""
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
+#: src/components/moderation/BlockDialog.tsx:262
+msgid "Member removed from group chat."
+msgstr "Member removed from group chat."
+
 #. The heading above the list of chat members.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:36
 msgid "Members"
@@ -5177,6 +5224,10 @@ msgstr ""
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr ""
 
+#: src/components/moderation/BlockDialog.tsx:147
+msgid "Mutual group chats"
+msgstr "Mutual group chats"
+
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:71
 msgid "My favorite feeds and people - join me!"
 msgstr "My favorite feeds and people - join me!"
@@ -5227,8 +5278,8 @@ msgstr ""
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:145
-#: src/components/dms/dialogs/NewChatDialog.tsx:152
+#: src/components/dms/dialogs/NewChatDialog.tsx:142
+#: src/components/dms/dialogs/NewChatDialog.tsx:149
 #: src/screens/Messages/ChatList.tsx:133
 #: src/screens/Messages/ChatList.tsx:134
 #: src/screens/Messages/ChatList.tsx:326
@@ -5238,19 +5289,19 @@ msgid "New chat"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(members[0]!)
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:63
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:59
 msgid "New chat with {0}"
 msgstr "New chat with {0}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0]!)
 #. placeholder {1}: createSanitizedDisplayName(members[1]!)
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:66
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:62
 msgid "New chat with {0} and {1}"
 msgstr "New chat with {0} and {1}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0]!)
 #. placeholder {1}: createSanitizedDisplayName(members[1]!)
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:69
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 
@@ -5609,11 +5660,11 @@ msgstr ""
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:108
+#: src/components/dms/dialogs/NewChatDialog.tsx:105
 msgid "One of the selected recipients does not allow group chats."
 msgstr "One of the selected recipients does not allow group chats."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:92
+#: src/components/dms/dialogs/NewChatDialog.tsx:89
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
@@ -7386,7 +7437,7 @@ msgstr ""
 msgid "Send message"
 msgstr ""
 
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:66
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:63
 msgid "Send post to..."
 msgstr ""
 
@@ -7970,11 +8021,11 @@ msgstr ""
 msgid "Suggestive"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:88
+#: src/components/dms/dialogs/NewChatDialog.tsx:85
 msgid "Suspended accounts cannot participate in a group chat."
 msgstr "Suspended accounts cannot participate in a group chat."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:49
+#: src/components/dms/dialogs/NewChatDialog.tsx:46
 msgid "Suspended accounts cannot participate in chat."
 msgstr "Suspended accounts cannot participate in chat."
 
@@ -8104,6 +8155,7 @@ msgid "That's all, folks!"
 msgstr ""
 
 #: src/components/moderation/block-account-prompt.tsx:30
+#: src/components/moderation/BlockDialog.tsx:131
 #: src/screens/Profile/Header/Actions.tsx:94
 msgid "The account will be able to interact with you after unblocking."
 msgstr ""
@@ -8292,6 +8344,10 @@ msgstr "They can't mention you or reply to your posts"
 #: src/components/moderation/block-account-prompt.tsx:48
 msgid "They can't see your posts and you won't see theirs or any replies to them"
 msgstr "They can't see your posts and you won't see theirs or any replies to them"
+
+#: src/components/moderation/BlockDialog.tsx:303
+msgid "They own this chat"
+msgstr "They own this chat"
 
 #: src/components/moderation/mute-account-prompt.tsx:43
 msgid "They won't know they've been muted"
@@ -8550,7 +8606,7 @@ msgstr ""
 msgid "This user doesn't have any followers."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:53
+#: src/components/dms/dialogs/NewChatDialog.tsx:50
 msgid "This user has blocked you and cannot be messaged."
 msgstr "This user has blocked you and cannot be messaged."
 
@@ -8560,7 +8616,7 @@ msgstr "This user has blocked you and cannot be messaged."
 msgid "This user has blocked you. You cannot view their content."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:57
+#: src/components/dms/dialogs/NewChatDialog.tsx:54
 msgid "This user has disabled chat and cannot be messaged."
 msgstr "This user has disabled chat and cannot be messaged."
 
@@ -8720,11 +8776,11 @@ msgstr ""
 msgid "Unable to fetch join requests."
 msgstr "Unable to fetch join requests."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:104
+#: src/components/dms/dialogs/NewChatDialog.tsx:101
 msgid "Unable to find a selected recipient."
 msgstr "Unable to find a selected recipient."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:65
+#: src/components/dms/dialogs/NewChatDialog.tsx:62
 msgid "Unable to find the selected recipient."
 msgstr "Unable to find the selected recipient."
 
@@ -8744,6 +8800,10 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:94
 #: src/components/dms/MessagesListBlockedFooter.tsx:102
 #: src/components/moderation/block-account-prompt.tsx:32
+#: src/components/moderation/BlockDialog.tsx:159
+#: src/components/moderation/BlockDialog.tsx:162
+#: src/components/moderation/BlockDialog.tsx:175
+#: src/components/moderation/BlockDialog.tsx:191
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:196
 #: src/screens/Profile/Header/Actions.tsx:83
 #: src/screens/Profile/Header/Actions.tsx:93
@@ -8769,6 +8829,7 @@ msgid "Unblock account"
 msgstr ""
 
 #: src/components/moderation/block-account-prompt.tsx:29
+#: src/components/moderation/BlockDialog.tsx:127
 msgid "Unblock account?"
 msgstr "Unblock account?"
 
@@ -9635,7 +9696,7 @@ msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in t
 msgid "You can update this later from your settings."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:96
+#: src/components/dms/dialogs/NewChatDialog.tsx:93
 msgid "You cannot create a group chat yet."
 msgstr "You cannot create a group chat yet."
 
@@ -9775,6 +9836,10 @@ msgstr ""
 msgid "You may only add up to 3 feeds"
 msgstr ""
 
+#: src/components/moderation/BlockDialog.tsx:276
+msgid "You must be a chat owner to remove a member."
+msgstr "You must be a chat owner to remove a member."
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:292
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
@@ -9782,6 +9847,10 @@ msgstr ""
 #: src/components/moderation/ReportDialog/action.ts:23
 msgid "You must be signed in to submit a report"
 msgstr "You must be signed in to submit a report"
+
+#: src/components/moderation/BlockDialog.tsx:299
+msgid "You own this chat"
+msgstr "You own this chat"
 
 #. placeholder {0}: reaction.value
 #: src/components/dms/MessageItem.tsx:250

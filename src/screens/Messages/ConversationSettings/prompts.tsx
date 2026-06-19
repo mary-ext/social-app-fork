@@ -122,24 +122,3 @@ export function LeaveChatPrompt({
 		/>
 	);
 }
-
-export function BlockMemberPrompt({
-	control,
-	onConfirm,
-}: {
-	control: Dialog.DialogOuterProps['control'];
-	onConfirm: () => void;
-}) {
-	const { t: l } = useLingui();
-
-	return (
-		<Prompt.Basic
-			control={control}
-			title={l`Block account?`}
-			description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
-			onConfirm={onConfirm}
-			confirmButtonCta={l`Block`}
-			confirmButtonColor="negative"
-		/>
-	);
-}
