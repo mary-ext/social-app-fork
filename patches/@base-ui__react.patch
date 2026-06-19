@@ -13,3 +13,24 @@ index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1
    return /*#__PURE__*/_jsx("div", {
      ref: ref,
      role: "presentation"
+diff --git a/esm/utils/popups/popupStoreUtils.js b/esm/utils/popups/popupStoreUtils.js
+index 924a6feaa1a96f5690b1e0a4ba471ddf0b31516a..ae450ff784798ec2849dfd23f11bcb3f8b18b377 100644
+--- a/esm/utils/popups/popupStoreUtils.js
++++ b/esm/utils/popups/popupStoreUtils.js
+@@ -111,16 +111,6 @@ export function useTriggerDataForwarding(triggerId, triggerElementRef, store, st
+       });
+       return;
+     }
+-    if (activeTriggerId == null && open) {
+-      // If a popup is already open, a detached trigger can mount before any active trigger
+-      // has been established. Claim the first registered trigger so trigger-owned focus
+-      // management and ARIA relationships work.
+-      store.update({
+-        activeTriggerId: triggerId,
+-        activeTriggerElement: element,
+-        ...stateUpdates
+-      });
+-    }
+   });
+   useIsoLayoutEffect(() => {
+     if (isMountedByThisTrigger) {
