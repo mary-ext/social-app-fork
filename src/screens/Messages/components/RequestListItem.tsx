@@ -31,7 +31,7 @@ export function RequestListItem({ convo: convoView }: { convo: ChatBskyConvoDefs
 	return (
 		<View style={[a.relative, a.flex_1]}>
 			<ChatListItem convo={convo.view} showMenu={false}>
-				{convo.primaryMember && (
+				{convo.kind === 'direct' && (
 					<View style={[a.pt_xs, a.pb_2xs]}>
 						<KnownFollowers
 							profile={convo.primaryMember}
