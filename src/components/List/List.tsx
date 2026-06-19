@@ -51,8 +51,6 @@ export type ListProps<ItemT> = {
 	 * reuses it, so the estimate only governs rows that have never been on screen.
 	 */
 	estimateHeight?: number;
-	/** Top padding that keeps content clear of a sticky header; also sizes the scrolled-down detector. */
-	headerOffset?: number;
 	/** Fires when the rendered content's size changes (via `ResizeObserver`). */
 	onContentSizeChange?: (width: number, height: number) => void;
 	onEndReached?: () => void;
@@ -60,7 +58,7 @@ export type ListProps<ItemT> = {
 	onEndReachedThreshold?: number;
 	/** Fires per row once it has been sufficiently visible long enough to count as seen. */
 	onItemSeen?: (item: ItemT) => void;
-	/** Fires when the list scrolls past (or back above) its {@link headerOffset}-tall top band. */
+	/** Fires when the list scrolls past (or back above) the top of its content. */
 	onScrolledDownChange?: (isScrolledDown: boolean) => void;
 	onStartReached?: () => void;
 	/** Lookahead before the start, in multiples of the viewport height. */
@@ -81,7 +79,6 @@ export function List<ItemT>({
 	ListFooterComponent,
 	ListHeaderComponent,
 	estimateHeight,
-	headerOffset,
 	onContentSizeChange,
 	onEndReached,
 	onEndReachedThreshold,
@@ -136,17 +133,10 @@ export function List<ItemT>({
 		<div
 			ref={containerRef}
 			className={clsx(css.container, skipOffscreen && css.skipOffscreen)}
-			style={{
-				paddingTop: headerOffset,
-				...(skipOffscreen && assignInlineVars({ [css.estimateHeightVar]: `${estimateHeight}px` })),
-			}}
+			style={skipOffscreen ? assignInlineVars({ [css.estimateHeightVar]: `${estimateHeight}px` }) : undefined}
 		>
 			{onScrolledDownChange && (
-				<Visibility
-					className={css.aboveTheFold}
-					onVisibleChange={onAboveTheFoldChange}
-					style={{ height: headerOffset }}
-				/>
+				<Visibility className={css.aboveTheFold} onVisibleChange={onAboveTheFoldChange} />
 			)}
 			{onStartReached && !isEmpty && (
 				<EdgeVisibility

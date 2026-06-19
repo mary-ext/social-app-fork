@@ -1073,7 +1073,7 @@ msgstr ""
 msgid "Add people to list"
 msgstr ""
 
-#: src/screens/Home/NoFeedsPinned.tsx:94
+#: src/screens/Home/NoFeedsPinned.tsx:82
 msgid "Add recommended feeds"
 msgstr ""
 
@@ -1447,7 +1447,7 @@ msgid "Appearance"
 msgstr ""
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:41
-#: src/screens/Home/NoFeedsPinned.tsx:87
+#: src/screens/Home/NoFeedsPinned.tsx:75
 msgid "Apply default recommended feeds"
 msgstr ""
 
@@ -1721,8 +1721,8 @@ msgstr ""
 msgid "Browse more accounts"
 msgstr ""
 
-#: src/screens/Home/NoFeedsPinned.tsx:98
-#: src/screens/Home/NoFeedsPinned.tsx:105
+#: src/screens/Home/NoFeedsPinned.tsx:86
+#: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Browse other feeds"
 msgstr ""
 
@@ -4733,7 +4733,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:149
 #: src/screens/Profile/Sections/Feed.tsx:78
 #: src/screens/ProfileList/FeedSection.tsx:82
-#: src/view/com/feeds/FeedPage.tsx:130
+#: src/view/com/feeds/FeedPage.tsx:127
 msgid "Load new posts"
 msgstr ""
 
@@ -4826,7 +4826,7 @@ msgstr ""
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
 msgstr ""
 
-#: src/screens/Home/NoFeedsPinned.tsx:80
+#: src/screens/Home/NoFeedsPinned.tsx:68
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
 msgstr ""
 
@@ -5330,7 +5330,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:135
+#: src/view/com/feeds/FeedPage.tsx:132
 #: src/view/shell/desktop/LeftNav.tsx:554
 msgctxt "action"
 msgid "New post"
@@ -8242,7 +8242,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:890
-#: src/view/com/posts/PostFeed.tsx:480
+#: src/view/com/posts/PostFeed.tsx:478
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -9489,7 +9489,7 @@ msgstr "Who can join this group chat and how"
 msgid "Who can reply"
 msgstr ""
 
-#: src/screens/Home/NoFeedsPinned.tsx:77
+#: src/screens/Home/NoFeedsPinned.tsx:65
 #: src/screens/Messages/ChatList.tsx:278
 #: src/screens/Messages/Inbox.tsx:149
 msgid "Whoops!"

@@ -36,8 +36,8 @@ export const row = style({
 });
 
 /**
- * Top band, as tall as the header offset, observed to tell whether the list has scrolled past its header.
- * Inert so it never intercepts pointer or paint.
+ * Zero-height marker pinned to the content top, observed to tell whether the list has scrolled away from the
+ * top. Inert so it never intercepts pointer or paint.
  */
 export const aboveTheFold = style({
 	insetInline: 0,

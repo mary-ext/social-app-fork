@@ -119,7 +119,6 @@ let PostFeed = ({
 	renderEmptyState,
 	renderEndOfFeed,
 	testID,
-	headerOffset = 0,
 	ListHeaderComponent,
 	savedFeedConfig,
 }: {
@@ -134,7 +133,6 @@ let PostFeed = ({
 	renderEmptyState: () => React.ReactElement;
 	renderEndOfFeed?: () => React.ReactElement;
 	testID?: string;
-	headerOffset?: number;
 	ListHeaderComponent?: () => React.ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }): React.ReactNode => {
@@ -542,7 +540,7 @@ let PostFeed = ({
 		 * A bit of padding at the bottom of the feed as you scroll and when you reach the end, so that content
 		 * isn't cut off by the bottom of the screen.
 		 */
-		const offset = Math.max(headerOffset, 32) * 1;
+		const offset = 32;
 
 		return isFetchingNextPage ? (
 			<View style={[styles.feedFooter]}>
@@ -554,7 +552,7 @@ let PostFeed = ({
 		) : (
 			<View style={{ height: offset }} />
 		);
-	}, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset]);
+	}, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed]);
 
 	const onItemSeen = useCallback(
 		(item: FeedRow) => {
@@ -573,7 +571,6 @@ let PostFeed = ({
 				renderItem={renderItem}
 				ListFooterComponent={<FeedFooter />}
 				ListHeaderComponent={ListHeaderComponent && <ListHeaderComponent />}
-				headerOffset={headerOffset}
 				onScrolledDownChange={handleScrolledDownChange}
 				onEndReached={() => void onEndReached()}
 				onEndReachedThreshold={2}

@@ -14,7 +14,6 @@ import { CenteredView } from '#/view/com/util/Views';
 
 import { atoms as a } from '#/alf';
 
-import { useHeaderOffset } from '#/components/hooks/useHeaderOffset';
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Text } from '#/components/Typography';
@@ -23,7 +22,6 @@ import { LinkButton } from '#/components/web/Link';
 
 export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { t: l } = useLingui();
-	const headerOffset = useHeaderOffset();
 	const { isPending, mutateAsync: overwriteSavedFeeds } = useOverwriteSavedFeedsMutation();
 
 	const addRecommendedFeeds = useCallback(async () => {
@@ -61,17 +59,7 @@ export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQuer
 
 	return (
 		<CenteredView sideBorders style={[a.h_full_vh]}>
-			<View
-				style={[
-					a.align_center,
-					a.h_full_vh,
-					a.py_3xl,
-					a.px_xl,
-					{
-						paddingTop: headerOffset + a.py_3xl.paddingTop,
-					},
-				]}
-			>
+			<View style={[a.align_center, a.h_full_vh, a.py_3xl, a.px_xl]}>
 				<View style={[a.align_center, a.gap_sm, a.pb_xl]}>
 					<Text style={[a.text_xl, a.font_semi_bold]}>
 						<Trans>Whoops!</Trans>

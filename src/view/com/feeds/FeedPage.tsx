@@ -24,7 +24,6 @@ import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { useTheme } from '#/alf';
 
-import { useHeaderOffset } from '#/components/hooks/useHeaderOffset';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
 
@@ -54,7 +53,6 @@ export function FeedPage({
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
-	const headerOffset = useHeaderOffset();
 	const feedFeedback = useFeedFeedback(feedInfo, hasSession);
 	const scrollElRef = useRef<ListMethods>(null);
 	const [hasNew, setHasNew] = useState(false);
@@ -70,9 +68,9 @@ export function FeedPage({
 	const scrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
-			offset: -headerOffset,
+			offset: 0,
 		});
-	}, [headerOffset]);
+	}, []);
 
 	const onSoftReset = useCallback(() => {
 		const isScreenFocused =
@@ -122,7 +120,6 @@ export function FeedPage({
 					onHasNew={setHasNew}
 					renderEmptyState={renderEmptyState}
 					renderEndOfFeed={renderEndOfFeed}
-					headerOffset={headerOffset}
 					savedFeedConfig={savedFeedConfig}
 				/>
 			</FeedFeedbackProvider>
