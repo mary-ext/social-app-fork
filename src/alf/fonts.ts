@@ -59,6 +59,3 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
 		style.letterSpacing = 0.25;
 	}
 }
-
-/** Here only for bundling purposes, not actually used. */
-export { DO_NOT_USE } from '#/alf/util/unusedUseFonts';
