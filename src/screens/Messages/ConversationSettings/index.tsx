@@ -30,6 +30,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, type ButtonColor, ButtonIcon } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
+import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
+import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
@@ -290,8 +292,7 @@ function SettingsHeader({
 	const { joinLink } = convo.details;
 	const isJoinLinkEnabled = isOwner || joinLink?.enabledStatus === 'enabled';
 
-	// TODO Enable this once the feature is working end-to-end. -dsb
-	const isReportLinkEnabled = false;
+	const reportSubjectDid = convo.primaryMember?.did;
 
 	const { mutate: editGroupName, isPending: isEditingName } = useEditGroupChatName(convo.view.id, {
 		onSuccess: () => {
@@ -373,13 +374,12 @@ function SettingsHeader({
 	const lockChatPrompt = Prompt.usePromptControl();
 	const leaveChatPrompt = Prompt.usePromptControl();
 	const leaveAndLockChatPrompt = Prompt.usePromptControl();
+	const reportControl = Prompt.usePromptControl();
+	const deleteControl = Prompt.usePromptControl();
 
 	const handleToggleMute = () => {
 		muteConvo({ mute: !convo.view.muted });
 	};
-
-	// TODO Need to implement this when the backend is ready. -dsb
-	const handleReportChat = () => {};
 
 	const handlePromptName = () => {
 		setNewGroupName(groupName);
@@ -463,14 +463,14 @@ function SettingsHeader({
 							onPress={lockStatus === 'locked' ? handleUnlock : lockChatPrompt.open}
 						/>
 					) : null}
-					{!isOwner && isReportLinkEnabled && (
+					{!isOwner && reportSubjectDid ? (
 						<SettingsButton
 							icon={FlagIcon}
 							label={l`Report this group chat`}
 							text={l`Report`}
-							onPress={handleReportChat}
+							onPress={reportControl.open}
 						/>
-					)}
+					) : null}
 					<SettingsButton
 						disabled={isLeaving || (isOwner && isLocking)}
 						icon={ArrowBoxLeftIcon}
@@ -503,6 +503,21 @@ function SettingsHeader({
 				groupName={groupName}
 				onConfirm={() => void leaveAndLockConvo()}
 			/>
+			{reportSubjectDid ? (
+				<>
+					<ReportConversationDialog
+						control={reportControl}
+						convoId={convo.view.id}
+						did={reportSubjectDid}
+						onAfterSubmit={deleteControl.open}
+					/>
+					<AfterReportConversationDialog
+						control={deleteControl}
+						currentScreen="conversation"
+						params={{ convoId: convo.view.id, did: reportSubjectDid }}
+					/>
+				</>
+			) : null}
 		</>
 	);
 }
