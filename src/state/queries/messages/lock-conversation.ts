@@ -12,15 +12,18 @@ export function useLockConvo(
 		onSuccess,
 		onError,
 	}: {
-		onSuccess?: (data: ChatBskyConvoLockConvo.$output) => void;
-		onError?: (error: Error, variables: { lock: boolean }) => void;
+		onSuccess?: (
+			data: ChatBskyConvoLockConvo.$output,
+			variables: { lock: boolean; silent?: boolean },
+		) => void;
+		onError?: (error: Error, variables: { lock: boolean; silent?: boolean }) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
 	const { chat } = useClients();
 
 	return useMutation({
-		mutationFn: async ({ lock }: { lock: boolean }) => {
+		mutationFn: async ({ lock }: { lock: boolean; silent?: boolean }) => {
 			if (!convoId) throw new Error('No convoId provided');
 			if (!chat) throw new Error('Not signed in');
 			if (lock) {
@@ -52,8 +55,8 @@ export function useLockConvo(
 				};
 			});
 		},
-		onSuccess: (data) => {
-			onSuccess?.(data);
+		onSuccess: (data, variables) => {
+			onSuccess?.(data, variables);
 		},
 		onError: (e, variables, context) => {
 			if (convoId && context) {

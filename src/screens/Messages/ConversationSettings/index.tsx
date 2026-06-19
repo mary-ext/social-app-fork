@@ -52,7 +52,7 @@ import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { AddMembersLink } from './AddMembersLink';
 import { Member, MemberPlaceholder } from './Member';
 import { MembersAndRequests } from './MembersAndRequests';
-import { EditNamePrompt, LeaveChatPrompt, LockChatPrompt } from './prompts';
+import { EditNamePrompt, LeaveAndLockChatPrompt, LeaveChatPrompt, LockChatPrompt } from './prompts';
 
 type Item =
 	| { type: 'MEMBERS_AND_REQUESTS'; key: string }
@@ -328,9 +328,14 @@ function SettingsHeader({
 		},
 	});
 
-	const { mutate: lockConvo, isPending: isLocking } = useLockConvo(convo.view.id, {
-		onSuccess: (data) => {
+	const {
+		mutate: lockConvo,
+		mutateAsync: lockConvoAsync,
+		isPending: isLocking,
+	} = useLockConvo(convo.view.id, {
+		onSuccess: (data, { silent }) => {
 			if (data.convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return;
+			if (silent) return;
 			if (data.convo.kind.lockStatus === 'locked') {
 				Toast.show(l({ message: 'Group chat locked', context: 'toast' }));
 			} else {
@@ -350,10 +355,24 @@ function SettingsHeader({
 		},
 	});
 
+	const leaveAndLockConvo = async () => {
+		try {
+			if (lockStatus === 'unlocked') {
+				await lockConvoAsync({ lock: true, silent: true });
+			}
+		} catch {
+			// handled by onError in useLockConvo
+			return;
+		}
+		// owners can only leave a locked chat
+		leaveConvo();
+	};
+
 	const inviteLinkDialog = Dialog.useDialogControl();
 	const editNamePrompt = Prompt.usePromptControl();
 	const lockChatPrompt = Prompt.usePromptControl();
 	const leaveChatPrompt = Prompt.usePromptControl();
+	const leaveAndLockChatPrompt = Prompt.usePromptControl();
 
 	const handleToggleMute = () => {
 		muteConvo({ mute: !convo.view.muted });
@@ -452,15 +471,13 @@ function SettingsHeader({
 							onPress={handleReportChat}
 						/>
 					)}
-					{!isOwner && (
-						<SettingsButton
-							disabled={isLeaving}
-							icon={ArrowBoxLeftIcon}
-							label={l`Leave this group chat`}
-							text={l`Leave`}
-							onPress={leaveChatPrompt.open}
-						/>
-					)}
+					<SettingsButton
+						disabled={isLeaving || (isOwner && isLocking)}
+						icon={ArrowBoxLeftIcon}
+						label={l`Leave this group chat`}
+						text={l`Leave`}
+						onPress={isOwner ? leaveAndLockChatPrompt.open : leaveChatPrompt.open}
+					/>
 				</View>
 			</View>
 			<EditNamePrompt
@@ -481,6 +498,11 @@ function SettingsHeader({
 			)}
 			<LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
 			<LeaveChatPrompt control={leaveChatPrompt} groupName={groupName} onConfirm={leaveConvo} />
+			<LeaveAndLockChatPrompt
+				control={leaveAndLockChatPrompt}
+				groupName={groupName}
+				onConfirm={() => void leaveAndLockConvo()}
+			/>
 		</>
 	);
 }
