@@ -16,7 +16,6 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useSession } from '#/state/session';
 
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
 
@@ -82,7 +81,6 @@ function ProfileHeaderReady({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const { currentAccount } = useSession();
 	const profile = useProfileShadow(convo.primaryMember);
 
 	const moderation = moderateProfile(profile, moderationOpts);
@@ -108,12 +106,6 @@ function ProfileHeaderReady({
 				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 			);
 	const handle = isDeletedAccount ? null : sanitizeHandle(profile.handle, '@');
-
-	const latestReportableMessage =
-		convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView' &&
-		convo.view.lastMessage.sender?.did !== currentAccount?.did
-			? convo.view.lastMessage
-			: undefined;
 
 	return (
 		<Wrapper
@@ -150,13 +142,7 @@ function ProfileHeaderReady({
 				</Link>
 			}
 			settings={
-				<ConvoMenu
-					convo={convo.view}
-					profile={profile}
-					currentScreen="conversation"
-					blockInfo={blockInfo}
-					latestReportableMessage={latestReportableMessage}
-				/>
+				<ConvoMenu convo={convo} profile={profile} currentScreen="conversation" blockInfo={blockInfo} />
 			}
 		/>
 	);

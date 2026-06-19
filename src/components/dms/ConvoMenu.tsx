@@ -12,6 +12,7 @@ import type { Shadow } from '#/state/cache/types';
 import { useConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
 import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
 
 import { type ViewStyleProp, atoms as a } from '#/alf';
 
@@ -21,6 +22,7 @@ import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
+import { getConvoReportSubject, type ConvoWithDetails } from '#/components/dms/util';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
 import { Bubble_Stroke2_Corner2_Rounded as BubbleIcon } from '#/components/icons/Bubble';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
@@ -45,10 +47,9 @@ let ConvoMenu = ({
 	showMarkAsRead,
 	hideTrigger,
 	blockInfo,
-	latestReportableMessage,
 	style,
 }: {
-	convo: ChatBskyConvoDefs.ConvoView;
+	convo: ConvoWithDetails;
 	profile: Shadow<AnyProfileView>;
 	control?: Menu.MenuControlProps;
 	currentScreen: 'list' | 'conversation';
@@ -58,11 +59,15 @@ let ConvoMenu = ({
 		listBlocks: BlockingModerationCause[];
 		userBlock?: BlockingModerationCause;
 	};
-	latestReportableMessage?: ChatBskyConvoDefs.MessageView;
 	style?: ViewStyleProp['style'];
 }): React.ReactNode => {
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
+	const { currentAccount } = useSession();
+
+	const reportSubject = getConvoReportSubject(convo, currentAccount?.did);
+	const reportMessage = reportSubject && 'message' in reportSubject ? reportSubject.message : null;
+	const reportDid = reportSubject && 'did' in reportSubject ? reportSubject.did : null;
 
 	const leaveConvoControl = Prompt.usePromptControl();
 	const reportControl = Prompt.usePromptControl();
@@ -104,27 +109,25 @@ let ConvoMenu = ({
 						profile={profile}
 						showMarkAsRead={showMarkAsRead}
 						blockInfo={blockInfo}
-						convo={convo}
+						convo={convo.view}
 						leaveConvoControl={leaveConvoControl}
 						reportControl={reportControl}
 						blockedByListControl={blockedByListControl}
 					/>
 				</Menu.Outer>
 			</Menu.Root>
-			<LeaveConvoPrompt control={leaveConvoControl} convoId={convo.id} currentScreen={currentScreen} />
-			{latestReportableMessage ? (
+			<LeaveConvoPrompt control={leaveConvoControl} convoId={convo.view.id} currentScreen={currentScreen} />
+			{reportMessage ? (
 				<>
 					<ReportDialog
 						subject={{
 							view: 'convo',
-							convoId: convo.id,
-							message: latestReportableMessage,
+							convoId: convo.view.id,
+							message: reportMessage,
 						}}
 						control={reportControl}
 						onAfterSubmit={() => {
-							const sender = convo.members.find(
-								(member) => member.did === latestReportableMessage.sender.did,
-							);
+							const sender = convo.view.members.find((member) => member.did === reportMessage.sender.did);
 							if (sender) {
 								unstableCacheProfileView(queryClient, sender);
 							}
@@ -135,29 +138,29 @@ let ConvoMenu = ({
 						control={blockOrDeleteControl}
 						currentScreen={currentScreen}
 						params={{
-							convoId: convo.id,
-							did: latestReportableMessage.sender.did,
+							convoId: convo.view.id,
+							did: reportMessage.sender.did,
 						}}
 					/>
 				</>
-			) : (
+			) : reportDid ? (
 				<>
 					<ReportConversationDialog
 						control={reportControl}
-						convoId={convo.id}
-						did={profile.did}
+						convoId={convo.view.id}
+						did={reportDid}
 						onAfterSubmit={deleteControl.open}
 					/>
 					<AfterReportConversationDialog
 						control={deleteControl}
 						currentScreen={currentScreen}
 						params={{
-							convoId: convo.id,
-							did: profile.did,
+							convoId: convo.view.id,
+							did: reportDid,
 						}}
 					/>
 				</>
-			)}
+			) : null}
 			<BlockedByListDialog control={blockedByListControl} listBlocks={listBlocks} />
 		</>
 	);

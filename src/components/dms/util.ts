@@ -237,3 +237,40 @@ export function parseConvoView(
 		return null;
 	}
 }
+
+export type ReportSubject =
+	| { convoId: string; did: string }
+	| { convoId: string; message: ChatBskyConvoDefs.MessageView; view: 'convo' };
+
+/**
+ * Derives the moderation report subject for a conversation. A group always reports the group itself (via its
+ * owner); a direct chat reports the other user's most recent message when there is a reportable one,
+ * otherwise the user. Returns null only when a group has no resolvable owner.
+ *
+ * @param convo parsed conversation
+ * @param ownDid the viewer's did, used to skip the viewer's own last message
+ * @returns the report subject, or null when none can be derived
+ */
+export function getConvoReportSubject(
+	convo: ConvoWithDetails,
+	ownDid: string | undefined,
+): ReportSubject | null {
+	if (convo.kind === 'group') {
+		if (!convo.primaryMember) {
+			return null;
+		}
+		return { convoId: convo.view.id, did: convo.primaryMember.did };
+	}
+
+	const lastMessage = convo.view.lastMessage;
+	const reportableMessage =
+		lastMessage?.$type === 'chat.bsky.convo.defs#messageView' && lastMessage.sender?.did !== ownDid
+			? lastMessage
+			: null;
+
+	if (reportableMessage) {
+		return { convoId: convo.view.id, message: reportableMessage, view: 'convo' };
+	}
+
+	return { convoId: convo.view.id, did: convo.primaryMember.did };
+}
