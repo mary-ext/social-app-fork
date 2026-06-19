@@ -1,12 +1,7 @@
 import { atoms } from './atoms';
 import type { ShadowStyle } from './atoms/types';
-import { DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE, invertPalette, type Palette } from './palette';
+import { invertPalette, type Palette } from './palette';
 import { alpha } from './utils/alpha';
-
-export const themes = createThemes({
-	defaultPalette: DEFAULT_PALETTE,
-	subduedPalette: DEFAULT_SUBDUED_PALETTE,
-});
 
 export type ThemeAtoms = {
 	text: {
