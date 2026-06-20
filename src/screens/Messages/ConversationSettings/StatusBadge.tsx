@@ -1,41 +1,31 @@
-import { Pressable, type StyleProp, View, type ViewStyle } from 'react-native';
+import type { ComponentPropsWithoutRef, Ref } from 'react';
+import { clsx } from 'clsx';
 
-import { atoms as a, useTheme } from '#/alf';
+import * as styles from '#/screens/Messages/ConversationSettings/StatusBadge.css';
 
-import type { TriggerChildProps } from '#/components/Menu/types';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
-export function StatusBadge({
-	label,
-	style,
-	pressableProps,
-}: {
+type Props = Omit<ComponentPropsWithoutRef<'button'>, 'color'> & {
 	label: string;
-	style?: StyleProp<ViewStyle>;
-	pressableProps?: TriggerChildProps['props'];
-}) {
-	const t = useTheme();
+	/** Render an interactive `<button>` (e.g. to back a menu Trigger) instead of a static badge. */
+	interactive?: boolean;
+	ref?: Ref<HTMLButtonElement>;
+};
 
-	const badgeStyle = [
-		a.rounded_xs,
-		t.atoms.bg_contrast_50,
-		{
-			paddingTop: 3,
-			paddingBottom: 3,
-			paddingLeft: 6,
-			paddingRight: 6,
-		},
-		style,
-	];
+export function StatusBadge({ className, interactive = false, label, ref, ...rest }: Props) {
+	const content = (
+		<Text size="sm" weight="semiBold" color="textContrastMedium">
+			{label}
+		</Text>
+	);
 
-	const labelText = <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>{label}</Text>;
-
-	if (pressableProps) {
-		return (
-			<Pressable style={badgeStyle} {...pressableProps}>
-				{labelText}
-			</Pressable>
-		);
+	if (!interactive) {
+		return <span className={clsx(styles.badge, className)}>{content}</span>;
 	}
-	return <View style={badgeStyle}>{labelText}</View>;
+
+	return (
+		<button ref={ref} className={clsx(styles.trigger, className)} {...rest}>
+			{content}
+		</button>
+	);
 }

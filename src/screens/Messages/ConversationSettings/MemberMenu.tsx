@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Pressable } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -14,8 +13,6 @@ import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { canBeMessaged, type ConvoWithDetails } from '#/components/dms/util';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
@@ -25,10 +22,11 @@ import {
 	PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
 	PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person';
-import * as Menu from '#/components/Menu';
 import { BlockDialog } from '#/components/moderation/BlockDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Menu from '#/components/web/Menu';
 
 import { RemoveMemberPrompt } from './prompts';
 import { StatusBadge } from './StatusBadge';
@@ -47,7 +45,6 @@ export function MemberMenu({
 	isOwner: boolean;
 }) {
 	const navigation = useNavigation<NavigationProp>();
-	const t = useTheme();
 	const { t: l } = useLingui();
 
 	const blockMemberPrompt = Prompt.usePromptControl();
@@ -88,8 +85,6 @@ export function MemberMenu({
 		}
 	};
 
-	const handleMessageMember = messageMember;
-
 	const handleBlockMember = async () => {
 		if (profile.viewer?.blocking) {
 			try {
@@ -126,52 +121,39 @@ export function MemberMenu({
 
 	return (
 		<>
-			<Menu.Root>
-				<Menu.Trigger label={l`Open chat member options for ${displayName}`}>
-					{({ props, state, control: menuControl }) => {
-						const isActive = state.hovered || state.pressed || menuControl.isOpen;
-						const triggerProps = {
-							...props,
-							onPress: () => {
-								setMenuDidOpen(true);
-								props.onPress();
-							},
-						};
-						return type === 'owner' ? (
+			<Menu.Root
+				onOpenChange={(open) => {
+					if (open) {
+						setMenuDidOpen(true);
+					}
+				}}
+			>
+				<Menu.Trigger
+					render={
+						type === 'owner' ? (
 							<StatusBadge
-								label={type === 'owner' ? l`Admin` : l`Invited`}
-								pressableProps={triggerProps}
-								style={[
-									isActive
-										? {
-												backgroundColor: t.palette.contrast_0,
-											}
-										: null,
-								]}
+								label={l`Admin`}
+								interactive
+								aria-label={l`Open chat member options for ${displayName}`}
 							/>
 						) : (
-							<Pressable
-								{...triggerProps}
-								style={[
-									a.rounded_full,
-									a.p_sm,
-									isActive
-										? {
-												backgroundColor: t.palette.contrast_0,
-											}
-										: null,
-								]}
+							<Button
+								label={l`Open chat member options for ${displayName}`}
+								size="small"
+								variant="ghost"
+								color="secondary"
+								shape="round"
 							>
-								<EllipsisIcon style={[t.atoms.text_contrast_medium]} size="md" />
-							</Pressable>
-						);
-					}}
-				</Menu.Trigger>
-				<Menu.Outer>
+								<ButtonIcon icon={EllipsisIcon} size="md" />
+							</Button>
+						)
+					}
+				/>
+				<Menu.Popup label={l`Chat member options`} align="end">
 					<Menu.Group>
 						<Menu.Item
 							label={l`View ${displayName}’s profile`}
-							onPress={() => {
+							onClick={() => {
 								navigation.navigate('Profile', { name: profile.did });
 							}}
 						>
@@ -181,7 +163,7 @@ export function MemberMenu({
 							</Menu.ItemText>
 						</Menu.Item>
 						{canMessageMember ? (
-							<Menu.Item label={l`Message ${displayName}`} onPress={handleMessageMember}>
+							<Menu.Item label={l`Message ${displayName}`} onClick={messageMember}>
 								<Menu.ItemIcon icon={MessageIcon} />
 								<Menu.ItemText>
 									<Trans context="action">Message</Trans>
@@ -189,13 +171,15 @@ export function MemberMenu({
 							</Menu.Item>
 						) : null}
 					</Menu.Group>
-					<Menu.Divider />
+					<Menu.Separator />
 					<Menu.Group>
 						{canBlockMember ? (
 							<Menu.Item
 								destructive
 								label={profile.viewer?.blocking ? l`Unblock ${displayName}` : l`Block ${displayName}`}
-								onPress={profile.viewer?.blocking ? handleBlockMember : blockMemberPrompt.open}
+								onClick={() =>
+									void (profile.viewer?.blocking ? handleBlockMember() : blockMemberPrompt.open())
+								}
 							>
 								<Menu.ItemIcon icon={profile.viewer?.blocking ? PersonCheck : PersonXIcon} />
 								<Menu.ItemText>{profile.viewer?.blocking ? l`Unblock` : l`Block`}</Menu.ItemText>
@@ -205,7 +189,7 @@ export function MemberMenu({
 							<Menu.Item
 								destructive
 								label={l`Remove ${displayName} from this group chat`}
-								onPress={removeMemberPrompt.open}
+								onClick={() => removeMemberPrompt.open()}
 							>
 								<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 								<Menu.ItemText>
@@ -214,7 +198,7 @@ export function MemberMenu({
 							</Menu.Item>
 						) : null}
 					</Menu.Group>
-				</Menu.Outer>
+				</Menu.Popup>
 			</Menu.Root>
 			<BlockDialog
 				control={blockMemberPrompt}
