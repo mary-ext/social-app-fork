@@ -20,8 +20,6 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-// @ts-expect-error no type definition
-import ProgressCircle from 'react-native-progress/Circle';
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
@@ -92,6 +90,7 @@ import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
+import { ProgressCircle } from '#/components/progress-circle';
 import { Spinner } from '#/components/Spinner';
 import { Text as WebText } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -1775,7 +1774,7 @@ function ComposerFooter({
 					onSelectLanguage={onSelectLanguage}
 					nudgeAt={languageNudgeAt}
 				/>
-				<CharProgress count={post.shortenedGraphemeLength} style={{ width: 65 }} />
+				<CharProgress count={post.shortenedGraphemeLength} style={{ width: 54 }} />
 			</View>
 		</View>
 	);
@@ -2034,8 +2033,7 @@ function VideoUploadToolbar({ state }: { state: VideoState }) {
 		<ToolbarWrapper style={[a.flex_row, a.align_center, { paddingVertical: 5 }]}>
 			<ProgressCircle
 				size={30}
-				borderWidth={1}
-				borderColor={t.atoms.border_contrast_low.borderColor}
+				trackColor={t.atoms.border_contrast_low.borderColor}
 				color={state.status === 'error' ? t.palette.negative_500 : t.palette.primary_500}
 				progress={wheelProgress}
 			/>
