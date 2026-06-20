@@ -1,11 +1,11 @@
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useMediaQuery } from 'react-responsive';
 
 import { HITSLOP_20 } from '#/lib/constants';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
 import { useMinimalShellFabTransform } from '#/lib/hooks/useMinimalShellTransform';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
+import { useMediaQuery } from '#/lib/media-query';
 import { clamp } from '#/lib/numbers';
 
 import { useSession } from '#/state/session';
@@ -45,7 +45,7 @@ export function LoadLatestBtn({
 	const { state: hovered, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
 
 	// move button inline if it starts overlapping the left nav
-	const isTallViewport = useMediaQuery({ minHeight: 700 });
+	const isTallViewport = useMediaQuery('(height >= 700px)');
 
 	// Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
 	// it on both tablet and mobile since the shell shows the bottom bar there too.

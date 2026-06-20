@@ -1,14 +1,15 @@
 import { useMemo } from 'react';
-import { useMediaQuery } from 'react-responsive';
+
+import { useMediaQuery } from '#/lib/media-query';
 
 export type Breakpoint = 'gtPhone' | 'gtMobile' | 'gtTablet';
 
 export function useBreakpoints(): Record<Breakpoint, boolean> & {
 	activeBreakpoint: Breakpoint | undefined;
 } {
-	const gtPhone = useMediaQuery({ minWidth: 500 });
-	const gtMobile = useMediaQuery({ minWidth: 800 });
-	const gtTablet = useMediaQuery({ minWidth: 1300 });
+	const gtPhone = useMediaQuery('(width >= 500px)');
+	const gtMobile = useMediaQuery('(width >= 800px)');
+	const gtTablet = useMediaQuery('(width >= 1300px)');
 	return useMemo(() => {
 		let active: Breakpoint | undefined;
 		if (gtTablet) {
@@ -29,9 +30,9 @@ export function useBreakpoints(): Record<Breakpoint, boolean> & {
 
 /** Fine-tuned breakpoints for the shell layout */
 export function useLayoutBreakpoints() {
-	const rightNavVisible = useMediaQuery({ minWidth: 1100 });
-	const centerColumnOffset = useMediaQuery({ minWidth: 1100, maxWidth: 1300 });
-	const leftNavMinimal = useMediaQuery({ maxWidth: 1300 });
+	const rightNavVisible = useMediaQuery('(width >= 1100px)');
+	const centerColumnOffset = useMediaQuery('(1100px <= width <= 1300px)');
+	const leftNavMinimal = useMediaQuery('(width <= 1300px)');
 
 	return {
 		rightNavVisible,
