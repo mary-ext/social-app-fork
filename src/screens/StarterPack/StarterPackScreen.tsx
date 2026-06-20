@@ -401,7 +401,7 @@ function Header({
 								setActiveStarterPack({
 									uri: starterPack.uri,
 								});
-								signinDialogControl.open({});
+								signinDialogControl.openWithPayload({});
 							}}
 							variant="solid"
 							color="primary"

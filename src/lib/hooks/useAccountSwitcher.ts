@@ -27,7 +27,7 @@ export function useAccountSwitcher() {
 				logger.error(`switch account: selectAccount failed`, {
 					message: e instanceof Error ? e.message : String(e),
 				});
-				signinDialogControl.open({ requestedAccount: account });
+				signinDialogControl.openWithPayload({ requestedAccount: account });
 				Toast.show(l`Please sign in as @${account.handle}`, {
 					type: 'warning',
 				});

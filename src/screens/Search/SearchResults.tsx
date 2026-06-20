@@ -253,7 +253,7 @@ let SearchScreenPostResults = ({
 
 	const showSignIn = () => {
 		closeAllActiveElements();
-		signinDialogControl.open({});
+		signinDialogControl.openWithPayload({});
 	};
 
 	if (!hasSession) {

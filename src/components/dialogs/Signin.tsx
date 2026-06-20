@@ -1,78 +1,66 @@
-import { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { type KeyboardEvent, useCallback, useState } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
 import { AccountList } from '#/components/AccountList';
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
-import * as TextField from '#/components/forms/TextField';
+import { type SigninDialogPayload, useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import * as css from '#/components/dialogs/Signin.css';
 import { At_Stroke2_Corner0_Rounded as AtIcon } from '#/components/icons/At';
 import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon } from '#/components/icons/Chevron';
 import { Loader } from '#/components/Loader';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 export function SigninDialog() {
+	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 	return (
-		<Dialog.Outer control={signinDialogControl.control} onClose={signinDialogControl.clear}>
-			<Dialog.Handle />
-			<SigninDialogInner />
-		</Dialog.Outer>
+		<Dialog.Root handle={signinDialogControl}>
+			{({ payload }: { payload: SigninDialogPayload | undefined }) =>
+				payload ? (
+					<Dialog.Popup label={l`Sign in to Bluesky`} size="narrow">
+						<SigninDialogInner close={() => signinDialogControl.close()} payload={payload} />
+						<Dialog.Close />
+					</Dialog.Popup>
+				) : null
+			}
+		</Dialog.Root>
 	);
 }
 
-function SigninDialogInner() {
-	const { t: l } = useLingui();
-	const { gtMobile } = useBreakpoints();
+function SigninDialogInner({ close, payload }: { close: () => void; payload: SigninDialogPayload }) {
 	const { accounts } = useSession();
-	const { signinDialogControl } = useGlobalDialogsControlContext();
-	const payload = signinDialogControl.value;
-	const requestedAccount = payload?.requestedAccount;
-	const showStoredAccounts = payload?.showStoredAccounts ?? true;
+	const requestedAccount = payload.requestedAccount;
+	const showStoredAccounts = payload.showStoredAccounts ?? true;
 	const hasStoredAccounts = showStoredAccounts && accounts.length > 0;
 
-	// The dialog stays mounted between opens, so the entry screen is derived
-	// rather than fixed: stored accounts get the chooser, everything else the
-	// new-account form.
+	// The render-prop subtree remounts on each open, so the entry screen is derived once from the
+	// payload: stored accounts get the chooser, everything else the new-account form.
 	const [screen, setScreen] = useState<'choose' | 'new'>(() =>
 		hasStoredAccounts && !requestedAccount ? 'choose' : 'new',
 	);
-	useEffect(() => {
-		setScreen(hasStoredAccounts && !requestedAccount ? 'choose' : 'new');
-	}, [hasStoredAccounts, requestedAccount]);
 
+	if (screen === 'choose') {
+		return <ChooseAccountScreen close={close} onSelectOther={() => setScreen('new')} />;
+	}
 	return (
-		<Dialog.ScrollableInner
-			label={l`Sign in to Bluesky`}
-			style={[gtMobile ? { width: 'auto', maxWidth: 560 } : a.w_full]}
-		>
-			{screen === 'choose' ? (
-				<ChooseAccountScreen onSelectOther={() => setScreen('new')} />
-			) : (
-				<NewAccountScreen
-					initialHandle={requestedAccount?.handle ?? ''}
-					onBack={hasStoredAccounts ? () => setScreen('choose') : undefined}
-				/>
-			)}
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+		<NewAccountScreen
+			initialHandle={requestedAccount?.handle ?? ''}
+			onBack={hasStoredAccounts ? () => setScreen('choose') : undefined}
+		/>
 	);
 }
 
-function ChooseAccountScreen({ onSelectOther }: { onSelectOther: () => void }) {
-	const t = useTheme();
+function ChooseAccountScreen({ close, onSelectOther }: { close: () => void; onSelectOther: () => void }) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { login, switchAccount } = useSessionApi();
-	const { signinDialogControl } = useGlobalDialogsControlContext();
 	const [pendingDid, setPendingDid] = useState<string | null>(null);
 
 	const onSelectAccount = useCallback(
@@ -81,7 +69,7 @@ function ChooseAccountScreen({ onSelectOther }: { onSelectOther: () => void }) {
 				return;
 			}
 			if (account.did === currentAccount?.did) {
-				signinDialogControl.control.close();
+				close();
 				Toast.show(l`Already signed in as @${account.handle}`);
 				return;
 			}
@@ -97,31 +85,31 @@ function ChooseAccountScreen({ onSelectOther }: { onSelectOther: () => void }) {
 				setPendingDid(null);
 			}
 		},
-		[currentAccount?.did, l, login, pendingDid, switchAccount, signinDialogControl.control],
+		[close, currentAccount?.did, l, login, pendingDid, switchAccount],
 	);
 
 	return (
-		<View style={[a.gap_2xl]}>
-			<View style={[a.gap_sm]}>
-				<Text style={[a.font_semi_bold, a.text_2xl]}>
+		<div className={css.outer}>
+			<div className={css.heading}>
+				<Text size="_2xl" weight="semiBold">
 					<Trans>Sign in</Trans>
 				</Text>
-				<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+				<Text color="textContrastHigh">
 					<Trans>Choose an account to sign in with.</Trans>
 				</Text>
-			</View>
+			</div>
+
 			<AccountList
 				onSelectAccount={(account) => void onSelectAccount(account)}
 				onSelectOther={onSelectOther}
 				otherLabel={l`Sign in to another account`}
 				pendingDid={pendingDid}
 			/>
-		</View>
+		</div>
 	);
 }
 
 function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; onBack?: () => void }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { login } = useSessionApi();
 	const [identifier, setIdentifier] = useState(initialHandle);
@@ -148,41 +136,55 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 		}
 	}, [identifier, l, login]);
 
+	const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			void onSubmit();
+		}
+	};
+
 	return (
-		<View style={[a.gap_2xl]}>
-			<View style={[a.gap_sm]}>
-				<Text style={[a.font_semi_bold, a.text_2xl]}>
+		<div className={css.outer}>
+			<div className={css.heading}>
+				<Text size="_2xl" weight="semiBold">
 					<Trans>Sign in</Trans>
 				</Text>
-				<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+				<Text color="textContrastHigh">
 					<Trans>Sign in with your Bluesky account.</Trans>
 				</Text>
-			</View>
-			<View style={[a.gap_md]}>
-				<View>
+			</div>
+			<div className={css.form}>
+				<TextField.Root isInvalid={!!error}>
 					<TextField.LabelText>
 						<Trans>Handle or DID</Trans>
 					</TextField.LabelText>
-					<TextField.Root isInvalid={!!error}>
-						<TextField.Icon icon={AtIcon} />
-						<Dialog.Input
+					<div className={css.field}>
+						<span className={css.fieldIcon}>
+							<AtIcon size="md" fill="currentColor" />
+						</span>
+						<TextField.Input
 							autoCapitalize="none"
-							autoCorrect={false}
-							editable={!isSubmitting}
+							className={css.fieldInput}
 							label={l`Handle or DID`}
 							onChangeText={setIdentifier}
-							onSubmitEditing={() => void onSubmit()}
+							onKeyDown={onKeyDown}
 							placeholder={l`e.g. alice.bsky.social`}
 							value={identifier}
 						/>
-					</TextField.Root>
-					{error && <Text style={[a.text_sm, a.pt_xs, t.atoms.text_contrast_medium]}>{error}</Text>}
-				</View>
+					</div>
+
+					{error && (
+						<Text className={css.error} color="textContrastMedium" size="sm">
+							{error}
+						</Text>
+					)}
+				</TextField.Root>
+
 				<Button
 					color="primary"
 					disabled={isSubmitting}
 					label={l`Sign in`}
-					onPress={() => void onSubmit()}
+					onClick={() => void onSubmit()}
 					size="large"
 					variant="solid"
 				>
@@ -199,7 +201,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 						color="secondary"
 						disabled={isSubmitting}
 						label={l`Back to your accounts`}
-						onPress={onBack}
+						onClick={onBack}
 						size="large"
 						variant="ghost"
 					>
@@ -209,7 +211,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 						</ButtonText>
 					</Button>
 				)}
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }

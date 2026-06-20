@@ -290,7 +290,7 @@ function AddAccountRow({ className }: { className?: string }) {
 
 	const onAddAnotherAccount = () => {
 		closeEverything();
-		signinDialogControl.open({ showStoredAccounts: false });
+		signinDialogControl.openWithPayload({ showStoredAccounts: false });
 	};
 
 	return (

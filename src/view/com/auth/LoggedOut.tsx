@@ -52,7 +52,7 @@ export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 	}, [onDismiss]);
 
 	const showSignIn = useCallback(() => {
-		signinDialogControl.open({});
+		signinDialogControl.openWithPayload({});
 	}, [signinDialogControl]);
 
 	return (

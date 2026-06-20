@@ -1,7 +1,7 @@
-import { Fragment, useCallback } from 'react';
-import { View } from 'react-native';
+import { useCallback } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -9,14 +9,12 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
+import * as css from '#/components/AccountList.css';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -33,163 +31,108 @@ export function AccountList({
 	pendingDid: string | null;
 }) {
 	const { currentAccount, accounts } = useSession();
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { data: profiles } = useProfilesQuery({
 		handles: accounts.map((acc) => acc.did),
 	});
 
-	const onPressAddAccount = useCallback(() => {
-		onSelectOther?.();
-	}, [onSelectOther]);
-
 	return (
-		<View
-			pointerEvents={pendingDid ? 'none' : 'auto'}
-			style={[a.rounded_lg, a.overflow_hidden, a.border, t.atoms.border_contrast_low]}
-		>
+		// pointer-events locked while an account resumes so a second pick can't race the first.
+		<div className={css.container} style={pendingDid ? { pointerEvents: 'none' } : undefined}>
 			{accounts.map((account) => (
-				<Fragment key={account.did}>
-					<AccountItem
-						profile={profiles?.profiles.find((p) => p.did === account.did)}
-						account={account}
-						onSelect={onSelectAccount}
-						isCurrentAccount={account.did === currentAccount?.did}
-						isPendingAccount={account.did === pendingDid}
-					/>
-					<View style={[a.border_b, t.atoms.border_contrast_low]} />
-				</Fragment>
+				<AccountItem
+					key={account.did}
+					account={account}
+					isCurrentAccount={account.did === currentAccount?.did}
+					isPendingAccount={account.did === pendingDid}
+					onSelect={onSelectAccount}
+					profile={profiles?.profiles.find((p) => p.did === account.did)}
+				/>
 			))}
 			{onSelectOther && (
-				<Button
-					testID="chooseAddAccountBtn"
-					style={[a.flex_1]}
-					onPress={pendingDid ? undefined : onPressAddAccount}
-					label={l`Sign in to account that is not listed`}
+				<button
+					aria-label={l`Sign in to account that is not listed`}
+					className={css.row}
+					onClick={onSelectOther}
+					type="button"
 				>
-					{({ hovered, pressed }) => (
-						<View
-							style={[
-								a.flex_1,
-								a.flex_row,
-								a.align_center,
-								a.p_lg,
-								a.gap_sm,
-								(hovered || pressed) && t.atoms.bg_contrast_25,
-							]}
-						>
-							<View
-								style={[
-									t.atoms.bg_contrast_25,
-									a.rounded_full,
-									{ width: 48, height: 48 },
-									a.justify_center,
-									a.align_center,
-									(hovered || pressed) && t.atoms.bg_contrast_50,
-								]}
-							>
-								<PlusIcon style={[t.atoms.text_contrast_low]} size="md" />
-							</View>
-							<Text style={[a.flex_1, a.leading_tight, a.text_md, a.font_medium]}>
-								{otherLabel ?? <Trans>Other account</Trans>}
-							</Text>
-							<ChevronIcon size="md" style={[t.atoms.text_contrast_low]} />
-						</View>
-					)}
-				</Button>
+					<span className={css.addAvatar}>
+						<PlusIcon width={20} height={20} fill="currentColor" />
+					</span>
+					<Text className={css.info} size="md" weight="medium">
+						{otherLabel ?? <Trans>Other account</Trans>}
+					</Text>
+					<span className={css.chevron}>
+						<ChevronIcon width={20} height={20} fill="currentColor" />
+					</span>
+				</button>
 			)}
-		</View>
+		</div>
 	);
 }
 
 function AccountItem({
-	profile,
 	account,
-	onSelect,
 	isCurrentAccount,
 	isPendingAccount,
+	onSelect,
+	profile,
 }: {
-	profile?: AppBskyActorDefs.ProfileViewDetailed;
 	account: SessionAccount;
-	onSelect: (account: SessionAccount) => void;
 	isCurrentAccount: boolean;
 	isPendingAccount: boolean;
+	onSelect: (account: SessionAccount) => void;
+	profile?: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { isActive: live } = useActorStatus(profile);
 
-	const onPress = useCallback(() => {
+	const onClick = useCallback(() => {
 		onSelect(account);
 	}, [account, onSelect]);
 
 	return (
-		<Button
-			testID={`chooseAccountBtn-${account.handle}`}
-			key={account.did}
-			style={[a.w_full]}
-			onPress={onPress}
-			label={
+		<button
+			aria-label={
 				isCurrentAccount
 					? l`Continue as ${account.handle} (currently signed in)`
 					: l`Sign in as ${account.handle}`
 			}
+			className={clsx(css.row, isPendingAccount && css.rowActive)}
+			onClick={onClick}
+			type="button"
 		>
-			{({ hovered, pressed }) => (
-				<View
-					style={[
-						a.flex_1,
-						a.flex_row,
-						a.align_center,
-						a.p_lg,
-						a.gap_sm,
-						(hovered || pressed || isPendingAccount) && t.atoms.bg_contrast_25,
-					]}
-				>
-					<UserAvatar
-						avatar={profile?.avatar}
-						size={48}
-						type={profile?.associated?.labeler ? 'labeler' : 'user'}
-						live={live}
-						hideLiveBadge
-					/>
-
-					<View style={[a.flex_1, a.gap_2xs, a.pr_2xl]}>
-						<View style={[a.flex_row, a.align_center, a.gap_xs]}>
-							<Text emoji style={[a.font_medium, a.leading_tight, a.text_md]} numberOfLines={1}>
-								{sanitizeDisplayName(profile?.displayName || profile?.handle || account.handle)}
-							</Text>
-							{profile && (
-								<View style={[{ marginTop: -2 }]}>
-									<ProfileBadges profile={profile} size="sm" />
-								</View>
-							)}
-						</View>
-						<Text style={[a.leading_tight, t.atoms.text_contrast_medium, a.text_sm]}>
-							{sanitizeHandle(account.handle, '@')}
-						</Text>
-					</View>
-
-					{isCurrentAccount ? (
-						<View
-							style={[
-								{
-									width: 20,
-									height: 20,
-									backgroundColor: t.palette.positive_500,
-								},
-								a.rounded_full,
-								a.justify_center,
-								a.align_center,
-							]}
-						>
-							<CheckIcon size="xs" style={[{ color: t.palette.white }]} />
-						</View>
-					) : (
-						<ChevronIcon size="md" style={[t.atoms.text_contrast_low]} />
+			<UserAvatar
+				avatar={profile?.avatar}
+				hideLiveBadge
+				live={live}
+				size={48}
+				type={profile?.associated?.labeler ? 'labeler' : 'user'}
+			/>
+			<span className={css.info}>
+				<span className={css.nameRow}>
+					<Text className={css.name} numberOfLines={1} size="md" weight="medium">
+						{sanitizeDisplayName(profile?.displayName || profile?.handle || account.handle)}
+					</Text>
+					{profile && (
+						<span className={css.badges}>
+							<ProfileBadges profile={profile} size="sm" />
+						</span>
 					)}
-				</View>
+				</span>
+				<Text color="textContrastMedium" size="sm">
+					{sanitizeHandle(account.handle, '@')}
+				</Text>
+			</span>
+			{isCurrentAccount ? (
+				<span className={css.check}>
+					<CheckIcon width={12} height={12} fill="currentColor" />
+				</span>
+			) : (
+				<span className={css.chevron}>
+					<ChevronIcon width={20} height={20} fill="currentColor" />
+				</span>
 			)}
-		</Button>
+		</button>
 	);
 }

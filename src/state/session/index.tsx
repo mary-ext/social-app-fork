@@ -373,7 +373,7 @@ export function useRequireAuth() {
 				fn();
 			} else {
 				closeAll();
-				signinDialogControl.open({});
+				signinDialogControl.openWithPayload({});
 			}
 		},
 		[hasSession, signinDialogControl, closeAll],

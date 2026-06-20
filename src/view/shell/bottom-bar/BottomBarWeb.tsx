@@ -63,7 +63,7 @@ export function BottomBarWeb() {
 
 	const showSignIn = useCallback(() => {
 		closeAllActiveElements();
-		signinDialogControl.open({});
+		signinDialogControl.openWithPayload({});
 	}, [signinDialogControl, closeAllActiveElements]);
 
 	const onLongPressProfile = useCallback(() => {

@@ -21,7 +21,7 @@ let NavSignInCard = ({}: {}): React.ReactNode => {
 
 	const showSignIn = useCallback(() => {
 		closeAllActiveElements();
-		signinDialogControl.open({});
+		signinDialogControl.openWithPayload({});
 	}, [signinDialogControl, closeAllActiveElements]);
 
 	return (

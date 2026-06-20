@@ -236,7 +236,7 @@ function SwitchMenuItems({
 
 	const onAddAnotherAccount = () => {
 		closeEverything();
-		signinDialogControl.open({ showStoredAccounts: false });
+		signinDialogControl.openWithPayload({ showStoredAccounts: false });
 	};
 
 	return (

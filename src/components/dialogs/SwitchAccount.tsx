@@ -35,7 +35,7 @@ export function SwitchAccountDialog({ control }: { control: Dialog.DialogControl
 
 	const onPressAddAccount = useCallback(() => {
 		control.close(() => {
-			signinDialogControl.open({ showStoredAccounts: false });
+			signinDialogControl.openWithPayload({ showStoredAccounts: false });
 		});
 	}, [signinDialogControl, control]);
 

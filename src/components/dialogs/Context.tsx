@@ -46,7 +46,7 @@ type ControlsContext = {
 	composerDialogControl: DialogHandle<ComposerOpts>;
 	lightboxControl: LightboxControl;
 	mutedWordsDialogControl: Control;
-	signinDialogControl: StatefulControl<SigninDialogPayload>;
+	signinDialogControl: DialogHandle<SigninDialogPayload>;
 	linkWarningDialogControl: DialogHandle<LinkWarningPayload>;
 	reportDialogControl: StatefulControl<{ subject: ReportSubject }>;
 };
@@ -66,7 +66,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const composerDialogControl = useDialogHandle<ComposerOpts>();
 	const lightboxControl = useDialogHandle<LightboxPayload>();
 	const mutedWordsDialogControl = Dialog.useDialogControl();
-	const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>();
+	const signinDialogControl = useDialogHandle<SigninDialogPayload>();
 	const linkWarningDialogControl = useDialogHandle<LinkWarningPayload>();
 	const reportDialogControl = useStatefulDialogControl<{
 		subject: ReportSubject;
