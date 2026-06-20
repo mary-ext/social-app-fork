@@ -38,6 +38,7 @@ import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
 
 let ConvoMenu = ({
 	convo,
@@ -70,7 +71,7 @@ let ConvoMenu = ({
 	const reportDid = reportSubject && 'did' in reportSubject ? reportSubject.did : null;
 
 	const leaveConvoControl = Prompt.usePromptControl();
-	const reportControl = Prompt.usePromptControl();
+	const reportControl = useDialogHandle();
 	const blockedByListControl = Prompt.usePromptControl();
 	const blockOrDeleteControl = Prompt.usePromptControl();
 	const deleteControl = Prompt.usePromptControl();
@@ -187,7 +188,7 @@ function MenuContent({
 	};
 	leaveConvoControl: Prompt.PromptControlProps;
 	canReport: boolean;
-	reportControl: Prompt.PromptControlProps;
+	reportControl: DialogHandle;
 	blockedByListControl: Prompt.PromptControlProps;
 }) {
 	const navigation = useNavigation<NavigationProp>();
@@ -282,7 +283,7 @@ function MenuContent({
 					</Menu.Item>
 				)}
 				{canReport && (
-					<Menu.Item destructive label={l`Report conversation`} onPress={reportControl.open}>
+					<Menu.Item destructive label={l`Report conversation`} onPress={() => reportControl.open(null)}>
 						<Menu.ItemIcon icon={Flag} />
 						<Menu.ItemText>
 							<Trans>Report conversation</Trans>

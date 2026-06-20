@@ -1,5 +1,5 @@
-import type { DialogControlProps } from '#/components/Dialog';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import type { DialogHandle } from '#/components/web/Dialog';
 
 export function ReportConversationDialog({
 	control,
@@ -7,7 +7,7 @@ export function ReportConversationDialog({
 	did,
 	onAfterSubmit,
 }: {
-	control: DialogControlProps;
+	control: DialogHandle;
 	convoId: string;
 	did: string;
 	onAfterSubmit?: () => void;

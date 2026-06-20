@@ -463,7 +463,7 @@ function OverflowMenu({
 
 	const isOwn = starterPack.creator.did === currentAccount?.did;
 
-	const onDeleteStarterPack = async () => {
+	const onDeleteStarterPack = () => {
 		if (!starterPack.list) {
 			logger.error(`Unable to delete starterpack because list is missing`);
 			return;
@@ -549,7 +549,7 @@ function OverflowMenu({
 								</Menu.Item>
 							</Menu.Group>
 
-							<Menu.Item label={l`Report starter pack`} onPress={() => reportDialogControl.open()}>
+							<Menu.Item label={l`Report starter pack`} onPress={() => reportDialogControl.open(null)}>
 								<Menu.ItemText>
 									<Trans>Report starter pack</Trans>
 								</Menu.ItemText>

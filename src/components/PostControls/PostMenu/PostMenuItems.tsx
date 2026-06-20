@@ -531,7 +531,7 @@ let PostMenuItems = ({
 										</Menu.Item>
 									)}
 
-									<Menu.Item label={l`Report post`} onClick={() => reportDialogControl.open()}>
+									<Menu.Item label={l`Report post`} onClick={() => reportDialogControl.open(null)}>
 										<Menu.ItemText>{l`Report post`}</Menu.ItemText>
 										<Menu.ItemIcon icon={Warning} position="right" />
 									</Menu.Item>

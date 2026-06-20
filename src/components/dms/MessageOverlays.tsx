@@ -14,6 +14,7 @@ import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import { usePromptControl } from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 type MessageDialogsContextType = {
 	openDeleteMessage: (message: ChatBskyConvoDefs.MessageView) => void;
@@ -40,7 +41,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const convo = useConvoActive();
 
 	const deleteControl = usePromptControl();
-	const reportControl = usePromptControl();
+	const reportControl = useDialogHandle();
 	const afterReportControl = usePromptControl();
 	const reactionsControl = useDialogControl();
 
@@ -63,7 +64,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const openReportMessage = useCallback(
 		(message: ChatBskyConvoDefs.MessageView, senderProfile: AnyProfileView | undefined) => {
 			setReportTarget({ message, senderProfile });
-			reportControl.open();
+			reportControl.open(null);
 		},
 		[reportControl],
 	);

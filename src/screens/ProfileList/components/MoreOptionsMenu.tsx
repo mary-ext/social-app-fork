@@ -164,7 +164,7 @@ export function MoreOptionsMenu({
 						</Menu.Group>
 					) : (
 						<Menu.Group>
-							<Menu.Item label={l`Report list`} onClick={() => reportDialogControl.open()}>
+							<Menu.Item label={l`Report list`} onClick={() => reportDialogControl.open(null)}>
 								<Menu.ItemText>
 									<Trans>Report list</Trans>
 								</Menu.ItemText>

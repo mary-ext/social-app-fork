@@ -1,133 +1,76 @@
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 
-import { OTHER_REPORT_REASONS } from '#/components/moderation/ReportDialog/const';
 import type {
 	ReportCategoryConfig,
 	ReportOption,
 } from '#/components/moderation/ReportDialog/utils/useReportOptions';
 
 export type ReportState = {
-	selectedCategory?: ReportCategoryConfig;
-	selectedOption?: ReportOption;
-	selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed;
-	details?: string;
-	detailsOpen: boolean;
-	activeStepIndex1: number;
+	category?: ReportCategoryConfig;
+	/** Free-text context; always a string so the character counter can read its length unconditionally. */
+	details: string;
 	error?: string;
+	/** Caller-overridden moderation service; when unset the form defaults to the first supported labeler. */
+	labeler?: AppBskyLabelerDefs.LabelerViewDetailed;
+	reason?: ReportOption;
 };
+
+/** Which screen the current state maps to: pick a category, pick a reason within it, then the submit form. */
+export type ReportStep = 'categories' | 'form' | 'reasons';
 
 export type ReportAction =
-	| {
-			type: 'selectCategory';
-			option: ReportCategoryConfig;
-			otherOption: ReportOption;
-	  }
-	| {
-			type: 'clearCategory';
-	  }
-	| {
-			type: 'selectOption';
-			option: ReportOption;
-	  }
-	| {
-			type: 'clearOption';
-	  }
-	| {
-			type: 'selectLabeler';
-			labeler: AppBskyLabelerDefs.LabelerViewDetailed;
-	  }
-	| {
-			type: 'clearLabeler';
-	  }
-	| {
-			type: 'setDetails';
-			details: string;
-	  }
-	| {
-			type: 'setError';
-			error: string;
-	  }
-	| {
-			type: 'clearError';
-	  }
-	| {
-			type: 'showDetails';
-	  };
+	| { type: 'clearCategory' }
+	| { type: 'clearError' }
+	| { type: 'clearReason' }
+	| { category: ReportCategoryConfig; otherOption: ReportOption; type: 'selectCategory' }
+	| { labeler: AppBskyLabelerDefs.LabelerViewDetailed; type: 'selectLabeler' }
+	| { reason: ReportOption; type: 'selectReason' }
+	| { details: string; type: 'setDetails' }
+	| { error: string; type: 'setError' };
 
 export const initialState: ReportState = {
-	selectedCategory: undefined,
-	selectedOption: undefined,
-	selectedLabeler: undefined,
-	details: undefined,
-	detailsOpen: false,
-	activeStepIndex1: 1,
+	details: '',
 };
+
+/**
+ * Maps a state to its visible step. The `other` category has a single implicit reason and is committed
+ * straight to the form by {@link reducer}, so a category without a reason always means the reason list.
+ */
+export function stepFor(state: ReportState): ReportStep {
+	if (!state.category) {
+		return 'categories';
+	}
+	if (!state.reason) {
+		return 'reasons';
+	}
+	return 'form';
+}
 
 export function reducer(state: ReportState, action: ReportAction): ReportState {
 	switch (action.type) {
-		case 'selectCategory':
-			return {
-				...state,
-				selectedCategory: action.option,
-				activeStepIndex1: action.option.key === 'other' ? 3 : 2,
-				selectedOption: action.option.key === 'other' ? action.otherOption : undefined,
-			};
 		case 'clearCategory':
-			return {
-				...state,
-				selectedCategory: undefined,
-				selectedOption: undefined,
-				selectedLabeler: undefined,
-				activeStepIndex1: 1,
-				detailsOpen: false,
-			};
-		case 'selectOption':
-			return {
-				...state,
-				selectedOption: action.option,
-				activeStepIndex1: 3,
-				detailsOpen: OTHER_REPORT_REASONS.has(action.option.reason),
-			};
-		case 'clearOption':
-			return {
-				...state,
-				selectedOption: undefined,
-				selectedLabeler: undefined,
-				activeStepIndex1: 2,
-				detailsOpen: false,
-			};
-		case 'selectLabeler':
-			return {
-				...state,
-				selectedLabeler: action.labeler,
-				activeStepIndex1: 4,
-				detailsOpen: state.selectedOption ? OTHER_REPORT_REASONS.has(state.selectedOption?.reason) : false,
-			};
-		case 'clearLabeler':
-			return {
-				...state,
-				selectedLabeler: undefined,
-				activeStepIndex1: 3,
-			};
-		case 'setDetails':
-			return {
-				...state,
-				details: action.details,
-			};
-		case 'setError':
-			return {
-				...state,
-				error: action.error,
-			};
+			return { ...state, category: undefined, labeler: undefined, reason: undefined };
 		case 'clearError':
+			return { ...state, error: undefined };
+		case 'clearReason':
+			return { ...state, labeler: undefined, reason: undefined };
+		case 'selectCategory': {
+			// `other` has no reason list of its own — commit its single reason and land on the form.
+			const isOther = action.category.key === 'other';
 			return {
 				...state,
-				error: undefined,
+				category: action.category,
+				labeler: undefined,
+				reason: isOther ? action.otherOption : undefined,
 			};
-		case 'showDetails':
-			return {
-				...state,
-				detailsOpen: true,
-			};
+		}
+		case 'selectLabeler':
+			return { ...state, labeler: action.labeler };
+		case 'selectReason':
+			return { ...state, labeler: undefined, reason: action.reason };
+		case 'setDetails':
+			return { ...state, details: action.details };
+		case 'setError':
+			return { ...state, error: action.error };
 	}
 }

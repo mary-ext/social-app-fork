@@ -147,7 +147,7 @@ export function LiveStatus({
 							label={l`Report this livestream`}
 							{...createStaticClick(() => {
 								function open() {
-									reportDialogControl.open({
+									reportDialogControl.openWithPayload({
 										subject: {
 											...status,
 											$type: 'app.bsky.actor.defs#statusView',

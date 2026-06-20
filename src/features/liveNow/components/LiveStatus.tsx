@@ -100,7 +100,7 @@ export function LiveStatus({
 
 	const onReport = useCallback(() => {
 		onRequestClose?.();
-		reportDialogControl.open({
+		reportDialogControl.openWithPayload({
 			subject: {
 				...status,
 				$type: 'app.bsky.actor.defs#statusView',

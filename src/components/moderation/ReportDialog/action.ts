@@ -1,7 +1,9 @@
 import type { ComAtprotoModerationCreateReport } from '@atcute/atproto';
+import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
+import type { ToolsOzoneReportDefs } from '@atcute/ozone';
 import { useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
@@ -10,7 +12,6 @@ import { useClients } from '#/state/session';
 import { logger } from '#/logger';
 
 import { NEW_TO_OLD_REASONS_MAP } from './const';
-import type { ReportState } from './state';
 import type { ParsedReportSubject } from './types';
 
 export function useSubmitReportMutation() {
@@ -18,21 +19,24 @@ export function useSubmitReportMutation() {
 	const { pds } = useClients();
 
 	return useMutation({
-		async mutationFn({ subject, state }: { subject: ParsedReportSubject; state: ReportState }) {
+		async mutationFn({
+			details,
+			labeler,
+			reason,
+			subject,
+		}: {
+			details?: string;
+			labeler: AppBskyLabelerDefs.LabelerViewDetailed;
+			reason: ToolsOzoneReportDefs.ReasonType;
+			subject: ParsedReportSubject;
+		}) {
 			if (!pds) {
 				throw new Error(l`You must be signed in to submit a report`);
 			}
-			if (!state.selectedOption) {
-				throw new Error(l`Please select a reason for this report`);
-			}
-			if (!state.selectedLabeler) {
-				throw new Error(l`Please select a moderation service`);
-			}
 
-			const labeler = state.selectedLabeler;
 			const labelerSupportedReasonTypes = labeler.reasonTypes || [];
 
-			let reasonType = state.selectedOption.reason;
+			let reasonType = reason;
 			const backwardsCompatibleReasonType = NEW_TO_OLD_REASONS_MAP[reasonType]!;
 			const supportsNewReasonType = labelerSupportedReasonTypes.includes(reasonType);
 			const supportsOldReasonType = labelerSupportedReasonTypes.includes(backwardsCompatibleReasonType);
@@ -52,7 +56,7 @@ export function useSubmitReportMutation() {
 				case 'account': {
 					report = {
 						reasonType,
-						reason: state.details,
+						reason: details,
 						subject: {
 							$type: 'com.atproto.admin.defs#repoRef',
 							did: subject.did as Did,
@@ -67,7 +71,7 @@ export function useSubmitReportMutation() {
 				case 'starterPack': {
 					report = {
 						reasonType,
-						reason: state.details,
+						reason: details,
 						subject: {
 							$type: 'com.atproto.repo.strongRef',
 							uri: subject.uri as ResourceUri,
@@ -79,7 +83,7 @@ export function useSubmitReportMutation() {
 				case 'convoMessage': {
 					report = {
 						reasonType,
-						reason: state.details,
+						reason: details,
 						// chat.bsky.convo.defs#messageRef is not in the createReport lexicon's
 						// subject union, but the chat moderation service accepts it
 						subject: {
@@ -94,7 +98,7 @@ export function useSubmitReportMutation() {
 				case 'convo': {
 					report = {
 						reasonType,
-						reason: state.details,
+						reason: details,
 						// chat.bsky.convo.defs#convoRef is not in the createReport lexicon's
 						// subject union, but the chat moderation service accepts it
 						subject: {

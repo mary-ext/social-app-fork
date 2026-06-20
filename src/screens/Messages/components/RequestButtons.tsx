@@ -28,6 +28,7 @@ import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 export function RejectMenu({
 	convo,
@@ -101,7 +102,7 @@ export function RejectMenu({
 		leaveConvo();
 	}, [queueBlock, leaveConvo, l]);
 
-	const reportControl = useDialogControl();
+	const reportControl = useDialogHandle();
 	const blockOrDeleteControl = useDialogControl();
 
 	const reportSubject = getConvoReportSubject(convo, currentAccount?.did);
@@ -146,7 +147,7 @@ export function RejectMenu({
 							<Menu.ItemIcon icon={PersonXIcon} />
 						</Menu.Item>
 						{reportSubject && (
-							<Menu.Item label={l`Report conversation`} onPress={reportControl.open}>
+							<Menu.Item label={l`Report conversation`} onPress={() => reportControl.open(null)}>
 								<Menu.ItemText>
 									<Trans>Report conversation</Trans>
 								</Menu.ItemText>

@@ -49,6 +49,7 @@ import { Loader } from '#/components/Loader';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { AddMembersLink } from './AddMembersLink';
@@ -383,7 +384,7 @@ function SettingsHeader({
 	const lockChatPrompt = Prompt.usePromptControl();
 	const leaveChatPrompt = Prompt.usePromptControl();
 	const leaveAndLockChatPrompt = Prompt.usePromptControl();
-	const reportControl = Prompt.usePromptControl();
+	const reportControl = useDialogHandle();
 	const deleteControl = Prompt.usePromptControl();
 
 	const handleToggleMute = () => {
@@ -477,7 +478,7 @@ function SettingsHeader({
 							icon={FlagIcon}
 							label={l`Report this group chat`}
 							text={l`Report`}
-							onPress={reportControl.open}
+							onPress={() => reportControl.open(null)}
 						/>
 					) : null}
 					<SettingsButton

@@ -202,7 +202,7 @@ let ProfileMenu = ({
 	}, [l, queueUnfollow]);
 
 	const onPressReportAccount = useCallback(() => {
-		reportDialogControl.open();
+		reportDialogControl.open(null);
 	}, [reportDialogControl]);
 
 	const onPressShareATUri = useCallback(() => {
