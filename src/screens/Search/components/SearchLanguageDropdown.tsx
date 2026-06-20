@@ -6,10 +6,10 @@ import { useLanguagePrefs } from '#/state/preferences';
 import { languageName } from '#/locale/helpers';
 import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
 import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';
-import * as Menu from '#/components/Menu';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Menu from '#/components/web/Menu';
 
 export function SearchLanguageDropdown({
 	value,
@@ -61,41 +61,42 @@ export function SearchLanguageDropdown({
 
 	return (
 		<Menu.Root>
-			<Menu.Trigger label={l`Filter search by language (currently: ${currentLanguageLabel})`}>
-				{({ props }) => (
+			<Menu.Trigger
+				render={
 					<Button
-						{...props}
-						label={props.accessibilityLabel}
+						label={l`Filter search by language (currently: ${currentLanguageLabel})`}
 						size="small"
-						color={'secondary'}
-						variant={'solid'}
+						color="secondary"
+						variant="solid"
 					>
 						<ButtonIcon icon={EarthIcon} />
 						<ButtonText>{currentLanguageLabel}</ButtonText>
 						<ButtonIcon icon={ChevronDownIcon} />
 					</Button>
-				)}
-			</Menu.Trigger>
-			<Menu.Outer>
-				<Menu.LabelText>
-					<Trans>Filter search by language</Trans>
-				</Menu.LabelText>
-				<Menu.Item label={l`All languages`} onPress={() => onChange('')}>
-					<Menu.ItemText>
-						<Trans>All languages</Trans>
-					</Menu.ItemText>
-					<Menu.ItemRadio selected={value === ''} />
-				</Menu.Item>
-				<Menu.Divider />
+				}
+			/>
+			<Menu.Popup label={l`Filter search by language`}>
+				<Menu.Group>
+					<Menu.LabelText>
+						<Trans>Filter search by language</Trans>
+					</Menu.LabelText>
+					<Menu.Item label={l`All languages`} onClick={() => onChange('')}>
+						<Menu.ItemText>
+							<Trans>All languages</Trans>
+						</Menu.ItemText>
+						<Menu.ItemRadio selected={value === ''} />
+					</Menu.Item>
+				</Menu.Group>
+				<Menu.Separator />
 				<Menu.Group>
 					{languages.map((lang) => (
-						<Menu.Item key={lang.key} label={lang.label} onPress={() => onChange(lang.value)}>
+						<Menu.Item key={lang.key} label={lang.label} onClick={() => onChange(lang.value)}>
 							<Menu.ItemText>{lang.label}</Menu.ItemText>
 							<Menu.ItemRadio selected={value === lang.value} />
 						</Menu.Item>
 					))}
 				</Menu.Group>
-			</Menu.Outer>
+			</Menu.Popup>
 		</Menu.Root>
 	);
 }

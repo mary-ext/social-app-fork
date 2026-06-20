@@ -3494,11 +3494,12 @@ msgstr ""
 msgid "File saved successfully!"
 msgstr ""
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:78
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:81
 msgid "Filter search by language"
 msgstr ""
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:64
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:67
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr ""
 
