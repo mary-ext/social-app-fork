@@ -4,8 +4,6 @@ import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-export const wrapper = style({ marginTop: space.sm });
-
 export const card = style({
 	backgroundColor: colors.bg,
 	borderColor: vars.palette.contrast_100,

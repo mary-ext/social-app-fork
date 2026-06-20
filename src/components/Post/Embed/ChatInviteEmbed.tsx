@@ -1,5 +1,4 @@
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
-import { clsx } from 'clsx';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';
 import { ExternalEmbed } from '#/components/ExternalEmbed';
@@ -16,17 +15,15 @@ export function ChatInviteEmbed({
 	code,
 	link,
 	onOpen,
-	className,
 }: {
 	code: string;
 	link: AppBskyEmbedExternal.ViewExternal;
 	onOpen?: () => void;
-	className?: string;
 }) {
 	const { status, preview, action, joinDialog } = ChatInvite.useChatInvite({ code });
 
 	if (status === 'error') {
-		return <ExternalEmbed link={link} onOpen={onOpen} />;
+		return <ExternalEmbed link={link} onOpen={onOpen} className={css.spacing} />;
 	}
 
 	return (
@@ -36,7 +33,7 @@ export function ChatInviteEmbed({
 				preview={preview}
 				action={action}
 				onOpen={onOpen}
-				className={clsx(css.spacing, className)}
+				className={css.spacing}
 			/>
 			{joinDialog}
 		</>

@@ -134,7 +134,7 @@ function MediaEmbed({
 					}
 					activeClassName={css.activeMargin}
 				>
-					<ExternalEmbed link={embed.view.external} onOpen={rest.onOpen} />
+					<ExternalEmbed link={embed.view.external} onOpen={rest.onOpen} className={css.externalCardGap} />
 				</ContentHider>
 			);
 		}

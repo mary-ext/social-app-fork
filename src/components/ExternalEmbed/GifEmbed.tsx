@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
 
@@ -19,10 +20,11 @@ export type GifEmbedProps = {
 	altText: string;
 	isPreferredAltText: boolean;
 	hideAlt?: boolean;
+	className?: string;
 };
 
 /** Autoplaying GIF (tenor/klipy), rendered as a muted looping `<video>` with play/pause + GIF/ALT badges. */
-export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt }: GifEmbedProps) {
+export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, className }: GifEmbedProps) {
 	const { t: l } = useLingui();
 	const [autoplayDisabled] = useAutoplayDisabled();
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -67,7 +69,7 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt }
 	const resolvedAlt = !hideAlt && isPreferredAltText ? altText : undefined;
 
 	return (
-		<div className={styles.outer}>
+		<div className={clsx(styles.outer, className)}>
 			<div className={styles.sizer} style={assignInlineVars({ [styles.padVar]: pad })}>
 				<div className={styles.abs}>
 					<div className={styles.box} style={assignInlineVars({ [styles.ratioVar]: String(constrained) })}>

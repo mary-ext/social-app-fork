@@ -22,10 +22,11 @@ export type ExternalEmbedProps = {
 	link: AppBskyEmbedExternal.ViewExternal;
 	onOpen?: () => void;
 	hideAlt?: boolean;
+	className?: string;
 };
 
 /** Web-native external embed: a plain link card, an embedded gif/iframe player, or an autoplaying gif. */
-export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
+export function ExternalEmbed({ link, onOpen, hideAlt, className }: ExternalEmbedProps) {
 	const { t: l } = useLingui();
 	const externalEmbedPrefs = useExternalEmbedsPrefs();
 	const niceUrl = toNiceDomain(link.uri);
@@ -54,15 +55,14 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 	if (embedPlayerParams?.source === 'tenor' || embedPlayerParams?.source === 'klipy') {
 		const parsedAlt = parseAltFromGIFDescription(link.description);
 		return (
-			<div className={styles.wrapper}>
-				<GifEmbed
-					params={embedPlayerParams}
-					thumb={link.thumb}
-					altText={parsedAlt.alt}
-					isPreferredAltText={parsedAlt.isPreferred}
-					hideAlt={hideAlt}
-				/>
-			</div>
+			<GifEmbed
+				params={embedPlayerParams}
+				thumb={link.thumb}
+				altText={parsedAlt.alt}
+				isPreferredAltText={parsedAlt.isPreferred}
+				hideAlt={hideAlt}
+				className={className}
+			/>
 		);
 	}
 
@@ -71,45 +71,41 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 	if (embedPlayerParams) {
 		const hideTitle = !!embedPlayerParams.isGif || !!embedPlayerParams.dimensions;
 		return (
-			<div className={styles.wrapper}>
-				<div className={styles.card}>
-					{embedPlayerParams.isGif ? (
-						<ExternalGif link={link} params={embedPlayerParams} />
-					) : (
-						<ExternalPlayer link={link} params={embedPlayerParams} />
-					)}
-					<a
-						className={clsx(styles.body, styles.bodyWithMedia, styles.bodyLink)}
-						href={link.uri}
-						target="_blank"
-						rel="noopener noreferrer"
-						aria-label={ariaLabel}
-						onClick={onClick}
-					>
-						<CardBody link={link} niceUrl={niceUrl} hideTitle={hideTitle} />
-					</a>
-				</div>
+			<div className={clsx(styles.card, className)}>
+				{embedPlayerParams.isGif ? (
+					<ExternalGif link={link} params={embedPlayerParams} />
+				) : (
+					<ExternalPlayer link={link} params={embedPlayerParams} />
+				)}
+				<a
+					className={clsx(styles.body, styles.bodyWithMedia, styles.bodyLink)}
+					href={link.uri}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label={ariaLabel}
+					onClick={onClick}
+				>
+					<CardBody link={link} niceUrl={niceUrl} hideTitle={hideTitle} />
+				</a>
 			</div>
 		);
 	}
 
 	// Plain link card — the whole card is the link.
 	return (
-		<div className={styles.wrapper}>
-			<a
-				className={styles.card}
-				href={link.uri}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label={ariaLabel}
-				onClick={onClick}
-			>
-				{imageUri ? <EmbedThumb src={imageUri} /> : null}
-				<div className={clsx(styles.body, imageUri && styles.bodyWithMedia)}>
-					<CardBody link={link} niceUrl={niceUrl} />
-				</div>
-			</a>
-		</div>
+		<a
+			className={clsx(styles.card, className)}
+			href={link.uri}
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label={ariaLabel}
+			onClick={onClick}
+		>
+			{imageUri ? <EmbedThumb src={imageUri} /> : null}
+			<div className={clsx(styles.body, imageUri && styles.bodyWithMedia)}>
+				<CardBody link={link} niceUrl={niceUrl} />
+			</div>
+		</a>
 	);
 }
 

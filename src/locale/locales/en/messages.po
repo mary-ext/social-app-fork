@@ -1247,7 +1247,7 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:133
+#: src/components/ExternalEmbed/GifEmbed.tsx:135
 #: src/components/ImageEmbed/MediaBadges.tsx:71
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:57
 #: src/view/com/composer/GifAltText.tsx:101
@@ -1264,7 +1264,7 @@ msgstr ""
 msgid "Alt text"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:138
+#: src/components/ExternalEmbed/GifEmbed.tsx:140
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:62
 msgid "Alt Text"
 msgstr ""
@@ -2045,7 +2045,7 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:200
 #: src/components/dms/AfterReportDialog.tsx:202
 #: src/components/dms/InitiateChatFlow.tsx:494
-#: src/components/ExternalEmbed/GifEmbed.tsx:142
+#: src/components/ExternalEmbed/GifEmbed.tsx:144
 #: src/components/intents/GroupChatJoinDialog.tsx:217
 #: src/components/intents/GroupChatJoinDialog.tsx:246
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:66
@@ -3812,7 +3812,7 @@ msgstr ""
 msgid "Get started"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:86
+#: src/components/ExternalEmbed/GifEmbed.tsx:88
 #: src/components/MediaPreview.tsx:130
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:36
 #: src/view/com/composer/drafts/DraftItem.tsx:217
@@ -4788,7 +4788,7 @@ msgid "Loading drafts"
 msgstr "Loading drafts"
 
 #: src/components/ExternalEmbed/ExternalGif.tsx:67
-#: src/components/ExternalEmbed/GifEmbed.tsx:82
+#: src/components/ExternalEmbed/GifEmbed.tsx:84
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Loading GIF"
 msgstr "Loading GIF"
@@ -5817,7 +5817,7 @@ msgstr "Open group chat"
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
-#: src/components/ExternalEmbed/index.tsx:51
+#: src/components/ExternalEmbed/index.tsx:52
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:150
 msgid "Open link to {niceUrl}"
 msgstr ""
@@ -5990,7 +5990,7 @@ msgstr "Party GIFs"
 msgid "Pause"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:79
+#: src/components/ExternalEmbed/GifEmbed.tsx:81
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
 msgid "Pause GIF"
 msgstr ""
@@ -6118,7 +6118,7 @@ msgstr ""
 msgid "Play {0}"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:79
+#: src/components/ExternalEmbed/GifEmbed.tsx:81
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
 msgid "Play GIF"
 msgstr ""
@@ -7609,7 +7609,7 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:129
+#: src/components/ExternalEmbed/GifEmbed.tsx:131
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:53
 msgid "Show alt text"
 msgstr ""
