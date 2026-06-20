@@ -2,8 +2,6 @@ import { t } from '@lingui/core/macro';
 
 import * as Toast from '#/components/Toast';
 
-import { setStringAsync } from '#/shims/clipboard';
-
 /**
  * This function shares a URL using the native Share API if available, or copies it to the clipboard and
  * displays a toast message if not (mostly on web)
@@ -13,7 +11,7 @@ import { setStringAsync } from '#/shims/clipboard';
 export async function shareUrl(url: string) {
 	// React Native Share is not supported by web. Web Share API
 	// has increasing but not full support, so default to clipboard
-	void setStringAsync(url);
+	void navigator.clipboard.writeText(url);
 	Toast.show(t`Copied to clipboard`, {
 		type: 'success',
 	});
@@ -26,7 +24,7 @@ export async function shareUrl(url: string) {
  * @param {string} text - A string representing the text that needs to be shared or copied to the clipboard.
  */
 export async function shareText(text: string) {
-	await setStringAsync(text);
+	await navigator.clipboard.writeText(text);
 	Toast.show(t`Copied to clipboard`, {
 		type: 'success',
 	});

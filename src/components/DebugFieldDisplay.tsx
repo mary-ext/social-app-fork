@@ -6,7 +6,6 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
-import * as Clipboard from '#/shims/clipboard';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 /**
@@ -37,7 +36,7 @@ export function DebugFieldDisplay<T extends { debug?: { [x: string]: unknown } }
 				cancelButtonCta="Close"
 				confirmButtonCta="Copy"
 				onConfirm={() => {
-					void Clipboard.setStringAsync(JSON.stringify(subject.debug, null, 2));
+					void navigator.clipboard.writeText(JSON.stringify(subject.debug, null, 2));
 					Toast.show('Copied to clipboard', { type: 'success' });
 				}}
 			/>

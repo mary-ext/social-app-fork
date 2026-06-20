@@ -22,8 +22,6 @@ import { Language_Stroke2_Corner2_Rounded as LanguageIcon } from '#/components/i
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Toast from '#/components/Toast';
 
-import * as Clipboard from '#/shims/clipboard';
-
 export let MessageContextMenu = ({
 	message,
 	senderProfile,
@@ -47,7 +45,7 @@ export let MessageContextMenu = ({
 	const onCopyMessage = useCallback(() => {
 		const str = richTextToString({ text: message.text, facets: message.facets ?? [] }, true);
 
-		void Clipboard.setStringAsync(str);
+		void navigator.clipboard.writeText(str);
 		Toast.show(l`Copied to clipboard`, {
 			type: 'success',
 		});

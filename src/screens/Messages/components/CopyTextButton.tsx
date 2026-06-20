@@ -8,8 +8,6 @@ import { Button, ButtonIcon, type ButtonProps } from '#/components/Button';
 import { SquareBehindSquare_Stroke2_Corner2_Rounded as CopyIcon } from '#/components/icons/SquareBehindSquare4';
 import { Text } from '#/components/Typography';
 
-import * as Clipboard from '#/shims/clipboard';
-
 export function CopyTextButton({
 	children,
 	disabled,
@@ -32,7 +30,7 @@ export function CopyTextButton({
 
 	const onPress = useCallback(
 		(evt: GestureResponderEvent) => {
-			void Clipboard.setStringAsync(value);
+			void navigator.clipboard.writeText(value);
 			setHasBeenCopied(true);
 			onPressProp?.(evt);
 		},

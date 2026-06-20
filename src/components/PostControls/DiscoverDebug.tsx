@@ -3,7 +3,6 @@ import { t } from '@lingui/core/macro';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
-import * as Clipboard from '#/shims/clipboard';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
 import * as css from './DiscoverDebug.css';
@@ -23,7 +22,7 @@ export function DiscoverDebug({ feedContext }: { feedContext: string | undefined
 			className={css.label}
 			onClick={(e) => {
 				e.stopPropagation();
-				void Clipboard.setStringAsync(feedContext);
+				void navigator.clipboard.writeText(feedContext);
 				Toast.show(t`Copied to clipboard`);
 			}}
 		>

@@ -17,8 +17,6 @@ import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/compon
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import * as Toast from '#/components/Toast';
 
-import * as Clipboard from '#/shims/clipboard';
-
 export type ChatInvitePreview = ChatBskyGroupDefs.JoinLinkPreviewView;
 
 /**
@@ -114,7 +112,7 @@ export function useChatInvite({
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
-					void Clipboard.setStringAsync(`https://bsky.app/chat/${preview.code}`);
+					void navigator.clipboard.writeText(`https://bsky.app/chat/${preview.code}`);
 					Toast.show(l`Copied to clipboard`, { type: 'success' });
 				},
 			};

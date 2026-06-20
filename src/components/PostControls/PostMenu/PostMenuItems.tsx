@@ -73,8 +73,6 @@ import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
-import * as Clipboard from '#/shims/clipboard';
-
 let PostMenuItems = ({
 	post,
 	postFeedContext,
@@ -211,7 +209,7 @@ let PostMenuItems = ({
 	const onCopyPostText = () => {
 		const str = richTextToString(richText, true);
 
-		void Clipboard.setStringAsync(str);
+		void navigator.clipboard.writeText(str);
 		Toast.show(l`Copied to clipboard`, {
 			type: 'success',
 		});
