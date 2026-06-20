@@ -6,13 +6,14 @@ import debounce from 'lodash.debounce';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useNonReactiveObject } from '#/lib/hooks/useNonReactiveObject';
+import { detectLanguagesAsync } from '#/lib/language-detection';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
 
 import { logger } from '#/logger';
 
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
-import { codeToLanguageName } from '#/locale/helpers';
+import { code3ToCode2, codeToLanguageName } from '#/locale/helpers';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -22,7 +23,10 @@ import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/G
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
 
-import { guessLanguageAsync, type LanguageResult } from '#/shims/bsky-guess-language';
+type LanguageResult = {
+	confidence: number;
+	language: string;
+};
 
 /**
  * Extracts the primary language subtag from a BCP-47 language tag (e.g. `en-US` → `en`), or `undefined` if
@@ -55,9 +59,6 @@ const NOISE_FLOOR = 0.1;
  * browser-based detection spreads probability across many candidates.
  *
  * Per-language carve-outs override the platform-level acceptance threshold.
- *
- * Web detection currently runs through a stub (`#/shims/bsky-guess-language`), so these values are inert
- * until a real detector is wired in.
  */
 const DEFAULT_CONFIG: LanguageDetectionConfig = {
 	acceptanceThreshold: 0.97,
@@ -415,21 +416,23 @@ async function guessLanguage(
 	certain: LanguageResult[];
 	uncertain: LanguageResult[];
 }> {
-	const suggestions = await guessLanguageAsync(text);
+	const detections = await detectLanguagesAsync(text);
 	const certain: LanguageResult[] = [];
 	const uncertain: LanguageResult[] = [];
 
-	for (const suggestion of suggestions) {
-		const isDeviceLocale = deviceLanguageCodes.includes(suggestion.language);
-		const override = config.overrides[suggestion.language];
+	for (const [code, probability] of detections) {
+		// the model emits ISO 639-3 codes; the rest of the suggestion pipeline works in 2-letter subtags
+		const language = code3ToCode2(code);
+		const isDeviceLocale = deviceLanguageCodes.includes(language);
+		const override = config.overrides[language];
 		const threshold = isDeviceLocale
 			? (override?.deviceLocaleAcceptanceThreshold ?? config.deviceLocaleAcceptanceThreshold)
 			: (override?.acceptanceThreshold ?? config.acceptanceThreshold);
 
-		if (suggestion.confidence >= threshold) {
-			certain.push(suggestion);
-		} else if (suggestion.confidence >= NOISE_FLOOR) {
-			uncertain.push(suggestion);
+		if (probability >= threshold) {
+			certain.push({ confidence: probability, language });
+		} else if (probability >= NOISE_FLOOR) {
+			uncertain.push({ confidence: probability, language });
 		}
 	}
 

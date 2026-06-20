@@ -518,7 +518,7 @@ msgid "{following} following"
 msgstr ""
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:61
-#: src/components/dms/InitiateChatFlow.tsx:797
+#: src/components/dms/InitiateChatFlow.tsx:798
 msgid "{handle} can’t be added"
 msgstr "{handle} can’t be added"
 
@@ -526,7 +526,7 @@ msgstr "{handle} can’t be added"
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:765
+#: src/components/dms/InitiateChatFlow.tsx:766
 msgid "{handle} can’t be messaged"
 msgstr "{handle} can’t be messaged"
 
@@ -837,7 +837,7 @@ msgstr "Accept join request"
 msgid "Accept Request"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:382
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:383
 msgid "Accept this language suggestion"
 msgstr ""
 
@@ -1028,7 +1028,7 @@ msgstr ""
 msgid "Add emoji reaction"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:400
+#: src/components/dms/AddMembersFlow.tsx:401
 msgid "Add group chat members"
 msgstr "Add group chat members"
 
@@ -1501,7 +1501,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:287
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:288
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr ""
 
@@ -1527,10 +1527,10 @@ msgstr "Automation label"
 msgid "Autoplay videos and GIFs"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:430
-#: src/components/dms/AddMembersFlow.tsx:433
-#: src/components/dms/InitiateChatFlow.tsx:643
-#: src/components/dms/InitiateChatFlow.tsx:647
+#: src/components/dms/AddMembersFlow.tsx:431
+#: src/components/dms/AddMembersFlow.tsx:434
+#: src/components/dms/InitiateChatFlow.tsx:644
+#: src/components/dms/InitiateChatFlow.tsx:648
 #: src/components/moderation/LabelsOnMeDialog.tsx:270
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
 #: src/screens/Messages/components/ChatDisabled.tsx:155
@@ -1575,8 +1575,8 @@ msgstr ""
 msgid "Block {displayName}"
 msgstr "Block {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:274
-#: src/components/dms/ConvoMenu.tsx:278
+#: src/components/dms/ConvoMenu.tsx:277
+#: src/components/dms/ConvoMenu.tsx:281
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:530
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
 #: src/screens/Messages/components/RequestButtons.tsx:142
@@ -1894,7 +1894,7 @@ msgstr "Chat invite link no longer available"
 msgid "Chat locked"
 msgstr "Chat locked"
 
-#: src/components/dms/ConvoMenu.tsx:209
+#: src/components/dms/ConvoMenu.tsx:212
 msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
@@ -1944,7 +1944,7 @@ msgstr "Chat title changed to {0}"
 msgid "Chat unlocked"
 msgstr "Chat unlocked"
 
-#: src/components/dms/ConvoMenu.tsx:211
+#: src/components/dms/ConvoMenu.tsx:214
 msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
@@ -2028,7 +2028,7 @@ msgstr ""
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:180
 #: src/components/dialogs/SearchablePeopleList.tsx:307
 #: src/components/dialogs/StarterPackDialog.tsx:156
-#: src/components/dms/AddMembersFlow.tsx:316
+#: src/components/dms/AddMembersFlow.tsx:315
 #: src/components/dms/AfterReportConversationDialog.tsx:82
 #: src/components/dms/AfterReportConversationDialog.tsx:84
 #: src/components/dms/AfterReportConversationDialog.tsx:227
@@ -2037,7 +2037,7 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:92
 #: src/components/dms/AfterReportDialog.tsx:200
 #: src/components/dms/AfterReportDialog.tsx:202
-#: src/components/dms/InitiateChatFlow.tsx:493
+#: src/components/dms/InitiateChatFlow.tsx:492
 #: src/components/ExternalEmbed/GifEmbed.tsx:142
 #: src/components/intents/GroupChatJoinDialog.tsx:214
 #: src/components/intents/GroupChatJoinDialog.tsx:243
@@ -2210,8 +2210,8 @@ msgstr ""
 msgid "Continue thread..."
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:287
-#: src/components/dms/InitiateChatFlow.tsx:444
+#: src/components/dms/AddMembersFlow.tsx:286
+#: src/components/dms/InitiateChatFlow.tsx:443
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
@@ -2345,7 +2345,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:215
+#: src/components/dms/ConvoMenu.tsx:218
 msgid "Could not mute chat"
 msgstr ""
 
@@ -2375,7 +2375,7 @@ msgstr "Couldn’t load GIFs"
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:94
 #: src/components/dialogs/StarterPackDialog.tsx:180
-#: src/components/dms/InitiateChatFlow.tsx:452
+#: src/components/dms/InitiateChatFlow.tsx:451
 #: src/components/StarterPack/ProfileStarterPacks.tsx:265
 msgid "Create"
 msgstr ""
@@ -2412,7 +2412,7 @@ msgstr ""
 msgid "Create another"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:451
+#: src/components/dms/InitiateChatFlow.tsx:450
 msgid "Create group chat"
 msgstr "Create group chat"
 
@@ -2495,7 +2495,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:392
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:393
 msgid "Decline this language suggestion"
 msgstr "Decline this language suggestion"
 
@@ -3879,7 +3879,7 @@ msgstr ""
 msgid "Go to conversation with {0}"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:258
+#: src/components/dms/ConvoMenu.tsx:261
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:70
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:180
 #: src/view/shell/desktop/LeftNav.tsx:317
@@ -3891,7 +3891,7 @@ msgstr ""
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
-#: src/components/dms/ConvoMenu.tsx:255
+#: src/components/dms/ConvoMenu.tsx:258
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:63
 msgid "Go to user's profile"
 msgstr ""
@@ -3970,12 +3970,12 @@ msgid "Group is locked"
 msgstr "Group is locked"
 
 #: src/components/dms/InitiateChatFlow.tsx:240
-#: src/components/dms/InitiateChatFlow.tsx:510
+#: src/components/dms/InitiateChatFlow.tsx:509
 #: src/screens/Messages/ConversationSettings/prompts.tsx:51
 msgid "Group name"
 msgstr "Group name"
 
-#: src/components/dms/InitiateChatFlow.tsx:526
+#: src/components/dms/InitiateChatFlow.tsx:525
 #: src/screens/Messages/ConversationSettings/prompts.tsx:64
 msgid "Group name is too long. The maximum number of characters is {MAX_GROUP_NAME_GRAPHEME_LENGTH}."
 msgstr "Group name is too long. The maximum number of characters is {MAX_GROUP_NAME_GRAPHEME_LENGTH}."
@@ -4505,10 +4505,10 @@ msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:210
 #: src/components/dms/AfterReportConversationDialog.tsx:213
-#: src/components/dms/ConvoMenu.tsx:237
 #: src/components/dms/ConvoMenu.tsx:240
-#: src/components/dms/ConvoMenu.tsx:290
-#: src/components/dms/ConvoMenu.tsx:293
+#: src/components/dms/ConvoMenu.tsx:243
+#: src/components/dms/ConvoMenu.tsx:295
+#: src/components/dms/ConvoMenu.tsx:298
 #: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave conversation"
 msgstr ""
@@ -4769,7 +4769,7 @@ msgstr ""
 msgid "Loading"
 msgstr "Loading"
 
-#: src/screens/Messages/components/MessageComposer.tsx:126
+#: src/screens/Messages/components/MessageComposer.tsx:120
 msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
@@ -4880,8 +4880,8 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
+#: src/components/dms/ConvoMenu.tsx:253
 msgid "Mark as read"
 msgstr ""
 
@@ -4935,7 +4935,7 @@ msgstr ""
 msgid "Menu"
 msgstr "Menu"
 
-#: src/screens/Messages/components/MessageComposer.tsx:127
+#: src/screens/Messages/components/MessageComposer.tsx:121
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:187
 msgctxt "action"
 msgid "Message"
@@ -4974,11 +4974,11 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:123
+#: src/screens/Messages/components/MessageComposer.tsx:117
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:67
+#: src/screens/Messages/components/MessageComposer.tsx:66
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
@@ -5156,8 +5156,8 @@ msgstr "Mute account?"
 msgid "Mute accounts"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:262
 #: src/components/dms/ConvoMenu.tsx:265
+#: src/components/dms/ConvoMenu.tsx:268
 msgid "Mute conversation"
 msgstr ""
 
@@ -5333,8 +5333,8 @@ msgstr "New group chat"
 
 #. Button used to create a new group chat.
 #. Button used to create a new group chat.
-#: src/components/dms/InitiateChatFlow.tsx:675
-#: src/components/dms/InitiateChatFlow.tsx:711
+#: src/components/dms/InitiateChatFlow.tsx:676
+#: src/components/dms/InitiateChatFlow.tsx:712
 msgctxt "action"
 msgid "New group chat"
 msgstr "New group chat"
@@ -5390,8 +5390,8 @@ msgstr ""
 msgid "News"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:288
-#: src/components/dms/InitiateChatFlow.tsx:445
+#: src/components/dms/AddMembersFlow.tsx:287
+#: src/components/dms/InitiateChatFlow.tsx:444
 #: src/screens/StarterPack/Wizard/index.tsx:168
 #: src/screens/StarterPack/Wizard/index.tsx:172
 #: src/screens/StarterPack/Wizard/index.tsx:336
@@ -5516,8 +5516,8 @@ msgid "No reposts yet"
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:238
-#: src/components/dms/AddMembersFlow.tsx:226
-#: src/components/dms/InitiateChatFlow.tsx:337
+#: src/components/dms/AddMembersFlow.tsx:225
+#: src/components/dms/InitiateChatFlow.tsx:336
 #: src/components/suggested-follows-dialog.tsx:169
 msgid "No results"
 msgstr ""
@@ -5661,7 +5661,7 @@ msgstr ""
 
 #: src/components/BotAccountAlert.tsx:40
 #: src/components/BotAccountAlert.tsx:42
-#: src/components/dms/InitiateChatFlow.tsx:623
+#: src/components/dms/InitiateChatFlow.tsx:624
 #: src/components/dms/MessageItem.tsx:589
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:512
 msgid "Okay"
@@ -5781,7 +5781,7 @@ msgstr ""
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:105
+#: src/screens/Messages/components/MessageComposer.tsx:101
 #: src/view/com/composer/Composer.tsx:1759
 msgid "Open emoji picker"
 msgstr ""
@@ -6843,8 +6843,8 @@ msgstr ""
 msgid "Report account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:281
-#: src/components/dms/ConvoMenu.tsx:284
+#: src/components/dms/ConvoMenu.tsx:285
+#: src/components/dms/ConvoMenu.tsx:288
 #: src/screens/Messages/components/RequestButtons.tsx:149
 #: src/screens/Messages/components/RequestButtons.tsx:151
 msgid "Report conversation"
@@ -7410,7 +7410,7 @@ msgstr ""
 msgid "Select GIF \"{0}\""
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:616
+#: src/components/dms/InitiateChatFlow.tsx:617
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
@@ -7463,7 +7463,7 @@ msgstr ""
 msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:185
+#: src/screens/Messages/components/MessageComposer.tsx:178
 msgid "Send message"
 msgstr ""
 
@@ -7920,12 +7920,12 @@ msgstr ""
 msgid "Start adding people!"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:616
+#: src/components/dms/InitiateChatFlow.tsx:617
 msgid "Start chat"
 msgstr "Start chat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:376
-#: src/components/dms/InitiateChatFlow.tsx:747
+#: src/components/dms/InitiateChatFlow.tsx:748
 msgid "Start chat with {displayName}"
 msgstr ""
 
@@ -8033,8 +8033,8 @@ msgstr "Successfully joined the group chat!"
 msgid "Successfully verified"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:217
-#: src/components/dms/InitiateChatFlow.tsx:325
+#: src/components/dms/AddMembersFlow.tsx:216
+#: src/components/dms/InitiateChatFlow.tsx:324
 msgid "Suggested"
 msgstr "Suggested"
 
@@ -8229,7 +8229,7 @@ msgstr "The member limit has been reached."
 msgid "The pasted image couldn't be added to your post."
 msgstr "The pasted image couldn't be added to your post."
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:321
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:322
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 msgstr "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 
@@ -8860,8 +8860,8 @@ msgstr ""
 msgid "Unblock {displayName}"
 msgstr "Unblock {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:274
-#: src/components/dms/ConvoMenu.tsx:278
+#: src/components/dms/ConvoMenu.tsx:277
+#: src/components/dms/ConvoMenu.tsx:281
 #: src/view/com/profile/ProfileMenu.tsx:365
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "Unblock account"
@@ -8967,7 +8967,7 @@ msgstr ""
 msgid "Unmute account?"
 msgstr "Unmute account?"
 
-#: src/components/dms/ConvoMenu.tsx:265
+#: src/components/dms/ConvoMenu.tsx:268
 msgid "Unmute conversation"
 msgstr ""
 
@@ -9992,11 +9992,11 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:621
+#: src/components/dms/InitiateChatFlow.tsx:622
 msgid "Your account is too new"
 msgstr "Your account is too new"
 
-#: src/components/dms/InitiateChatFlow.tsx:622
+#: src/components/dms/InitiateChatFlow.tsx:623
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Your account must be at least 7 days old to create a new group chat."
 

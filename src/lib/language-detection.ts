@@ -49,3 +49,18 @@ export const detectLanguages = (text: string): Detection[] => {
 	}
 	return [];
 };
+
+/**
+ * Detects the languages present in `text`, waiting for the weights to load first.
+ *
+ * Unlike {@link detectLanguages}, this never returns empty merely because loading is still in flight — it
+ * awaits the load and then detects. An empty array means either genuine "undetermined" or a failed load.
+ *
+ * @param text text to analyze
+ * @returns probability-sorted detections, or an empty array when detection is undetermined or weights failed
+ *   to load
+ */
+export const detectLanguagesAsync = async (text: string): Promise<Detection[]> => {
+	await initializeLanguageDetection();
+	return state === 'ready' ? detect(text) : [];
+};
