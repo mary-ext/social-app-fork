@@ -4,7 +4,7 @@ import { usePalette } from '#/lib/hooks/usePalette';
 
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon } from '#/components/icons/ArrowRotate';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import { Button } from './forms/Button';
 import { Text } from './text/Text';
@@ -13,7 +13,7 @@ export function LoadMoreRetryBtn({ label, onPress }: { label: string; onPress: (
 	const pal = usePalette('default');
 	return (
 		<Button type="default-light" onPress={onPress} style={styles.loadMoreRetry}>
-			<ArrowRotateCounterClockwiseIcon width={18} fill={vars.palette.contrast_700} />
+			<ArrowRotateCounterClockwiseIcon width={18} fill={colors.textContrastMedium} />
 			<Text style={[pal.textLight, styles.label]}>{label}</Text>
 		</Button>
 	);

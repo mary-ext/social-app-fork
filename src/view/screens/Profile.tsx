@@ -36,7 +36,7 @@ import { ProfileHeader, ProfileHeaderLoading } from '#/screens/Profile/Header';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 import { ProfileLabelsSection } from '#/screens/Profile/Sections/Labels';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a } from '#/alf';
 
 import { useRichText } from '#/components/hooks/useRichText';
 import { Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon } from '#/components/icons/CircleAndSquare';
@@ -51,6 +51,7 @@ import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPack
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { navigate } from '#/Navigation';
+import { colors } from '#/styles/colors';
 
 import * as css from './Profile.css';
 
@@ -160,7 +161,6 @@ function ProfileScreenLoaded({
 	hideBackButton: boolean;
 	isPlaceholderProfile: boolean;
 }) {
-	const t = useTheme();
 	const profile = useProfileShadow(profileUnshadowed);
 	const { hasSession, currentAccount } = useSession();
 	const { openComposer } = useOpenComposer();
@@ -409,7 +409,7 @@ function ProfileScreenLoaded({
 			/>
 			{hasSession && (
 				<FAB
-					icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+					icon={<EditBigIcon size="lg" fill={colors.white} />}
 					label={l`New post`}
 					onClick={onPressCompose}
 				/>

@@ -7,6 +7,8 @@ import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/B
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 type EmptyStateIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
 export type EmptyStateIcon = React.ComponentType<{
@@ -42,7 +44,7 @@ export function EmptyState({
 	const t = useTheme();
 	const { gtMobile, gtTablet } = useBreakpoints();
 
-	const placeholderIcon = <EditIcon size="2xl" fill={t.atoms.text_contrast_medium.color} />;
+	const placeholderIcon = <EditIcon size="2xl" fill={colors.textContrastMedium} />;
 
 	const renderIcon = () => {
 		if (icon === null) {

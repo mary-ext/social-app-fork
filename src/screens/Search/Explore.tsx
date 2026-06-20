@@ -59,6 +59,8 @@ import * as ProfileCard from '#/components/ProfileCard';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import * as ModuleHeader from './components/ModuleHeader';
 import { SuggestedAccountsTabBar, SuggestedProfileCard } from './modules/ExploreSuggestedAccounts';
 
@@ -811,7 +813,7 @@ export function Explore({
 					return (
 						<View style={[a.border_t, a.pt_md, a.px_md, t.atoms.border_contrast_low]}>
 							<View style={[a.flex_row, a.gap_md, a.p_lg, a.rounded_sm, t.atoms.bg_contrast_25]}>
-								<CircleInfo size="md" fill={t.palette.negative_400} />
+								<CircleInfo size="md" fill={colors.negative_400} />
 								<View style={[a.flex_1, a.gap_sm]}>
 									<Text style={[a.font_semi_bold, a.leading_snug]}>{item.message}</Text>
 									<Text style={[a.italic, a.leading_snug, t.atoms.text_contrast_medium]}>{item.error}</Text>

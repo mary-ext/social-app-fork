@@ -63,6 +63,7 @@ import { Text } from '#/components/Typography';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { Image } from '#/shims/image';
+import { colors } from '#/styles/colors';
 type StarterPackScreeProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>;
 type StarterPackScreenShortProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPackShort'>;
 
@@ -601,7 +602,7 @@ function OverflowMenu({
 							</Text>
 							<Text style={[a.leading_snug]}>{cleanError(deleteError)}</Text>
 						</View>
-						<CircleInfo size="sm" fill={t.palette.negative_400} />
+						<CircleInfo size="sm" fill={colors.negative_400} />
 					</View>
 				)}
 				<Prompt.Actions>

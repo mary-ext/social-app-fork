@@ -22,6 +22,8 @@ import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Settings from '#/components/SettingsCards';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { ErrorState } from '../ErrorState';
 
 interface LabelsSectionProps {
@@ -130,7 +132,7 @@ function LabelerListHeader({
 			</Text>
 			{labelerInfo?.creator.viewer?.blocking ? (
 				<View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
-					<CircleInfo size="sm" fill={t.atoms.text_contrast_medium.color} />
+					<CircleInfo size="sm" fill={colors.textContrastMedium} />
 					<Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
 						<Trans>Blocking does not prevent this labeler from placing labels on your account.</Trans>
 					</Text>

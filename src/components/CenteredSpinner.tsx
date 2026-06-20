@@ -4,7 +4,7 @@ import * as styles from '#/components/CenteredSpinner.css';
 import type { Props as IconProps } from '#/components/icons/common';
 import { Spinner } from '#/components/Spinner';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 type CenteredSpinnerProps = {
 	/** Accessible label announced by the spinner's `progressbar` role (e.g. "Loading GIFs"). */
@@ -19,7 +19,7 @@ type CenteredSpinnerProps = {
 export function CenteredSpinner({ label, size, fill = false }: CenteredSpinnerProps) {
 	return (
 		<div className={clsx(styles.center, fill && styles.fill)}>
-			<Spinner color={vars.palette.contrast_500} label={label} size={size} />
+			<Spinner color={colors.contrast_500} label={label} size={size} />
 		</div>
 	);
 }

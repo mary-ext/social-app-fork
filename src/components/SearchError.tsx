@@ -6,7 +6,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 export function SearchError({ title, children }: { title?: string; children?: React.ReactNode }) {
 	const { gtMobile } = useBreakpoints();
@@ -23,7 +23,7 @@ export function SearchError({ title, children }: { title?: string; children?: Re
 					},
 				]}
 			>
-				<XIcon width={32} fill={vars.palette.contrast_400} />
+				<XIcon width={32} fill={colors.textContrastLow} />
 				<View style={[a.align_center, { maxWidth: gtMobile ? 394 : 294 }, gtMobile ? a.gap_md : a.gap_sm]}>
 					<Text style={[a.font_semi_bold, a.text_lg, a.text_center, a.leading_snug]}>{title}</Text>
 					{children}

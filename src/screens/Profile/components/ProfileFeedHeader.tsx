@@ -21,8 +21,6 @@ import { logger } from '#/logger';
 
 import { formatCount } from '#/view/com/util/numeric/format';
 
-import { useTheme } from '#/alf';
-
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
@@ -48,11 +46,11 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Menu from '#/components/web/Menu';
 
+import { colors } from '#/styles/colors';
+
 import * as styles from './ProfileFeedHeader.css';
 
 export function ProfileFeedHeaderSkeleton() {
-	const t = useTheme();
-
 	return (
 		<Layout.Header.Outer>
 			<Layout.Header.BackButton />
@@ -61,7 +59,7 @@ export function ProfileFeedHeaderSkeleton() {
 			</Layout.Header.Content>
 			<Layout.Header.Slot>
 				<div className={styles.skeletonPin}>
-					<Pin size="lg" fill={t.atoms.text_contrast_low.color} />
+					<Pin size="lg" fill={colors.textContrastLow} />
 				</div>
 			</Layout.Header.Slot>
 		</Layout.Header.Outer>
@@ -69,7 +67,6 @@ export function ProfileFeedHeaderSkeleton() {
 }
 
 export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
-	const t = useTheme();
 	const { t: l, i18n } = useLingui();
 	const { hasSession } = useSession();
 	const infoControl = Dialog.useDialogHandle();
@@ -183,7 +180,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 									{sanitizeHandle(info.creatorHandle, '@')}
 								</Text>
 								<span className={styles.infoButtonLikes}>
-									<HeartFilled size="xs" fill={likeUri ? t.palette.pink : t.atoms.text_contrast_low.color} />
+									<HeartFilled size="xs" fill={likeUri ? colors.pink : colors.textContrastLow} />
 									<Text size="sm" color="textContrastMedium" numberOfLines={1}>
 										{formatCount(i18n, likeCount)}
 									</Text>
@@ -191,7 +188,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 							</span>
 						</span>
 
-						<Ellipsis size="md" fill={t.atoms.text_contrast_low.color} />
+						<Ellipsis size="md" fill={colors.textContrastLow} />
 					</button>
 				</Layout.Header.Content>
 
@@ -208,7 +205,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 											shape="round"
 											color="secondary"
 										>
-											<PinFilled size="lg" fill={t.palette.primary_500} />
+											<PinFilled size="lg" fill={colors.primary_500} />
 										</Button>
 									}
 								/>
@@ -298,7 +295,6 @@ function DialogInner({
 	closeDialog: () => void;
 	onPressReport: () => void;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { hasSession } = useSession();
 	const { mutateAsync: likeFeed, isPending: isLikePending } = useLikeMutation();
@@ -398,7 +394,7 @@ function DialogInner({
 							onClick={() => void onToggleLiked()}
 							className={styles.dialogActionButton}
 						>
-							{isLiked ? <HeartFilled size="sm" fill={t.palette.pink} /> : <ButtonIcon icon={Heart} />}
+							{isLiked ? <HeartFilled size="sm" fill={colors.pink} /> : <ButtonIcon icon={Heart} />}
 
 							<ButtonText>{isLiked ? <Trans>Unlike</Trans> : <Trans>Like</Trans>}</ButtonText>
 						</Button>

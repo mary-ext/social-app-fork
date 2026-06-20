@@ -5,7 +5,7 @@ import { atoms as a, useTheme } from '#/alf';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './ChatFooter.css';
 
@@ -43,7 +43,7 @@ export function ChatFooter({
 						},
 					]}
 				>
-					<Icon size="md" fill={vars.palette.contrast_700} className={css.icon} />
+					<Icon size="md" fill={colors.textContrastMedium} className={css.icon} />
 					<View style={[a.flex_1]}>
 						<Text numberOfLines={1} style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
 							{heading}

@@ -18,7 +18,7 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './TextField.css';
 
@@ -268,18 +268,18 @@ export function LabelText({ nativeID, children }: React.PropsWithChildren<{ nati
 export function Icon({ icon: Comp }: { icon: React.ComponentType<SVGIconProps> }) {
 	const ctx = useContext(Context);
 
-	let fill = vars.palette.contrast_500;
+	let fill = colors.contrast_500;
 	if (ctx.hovered) {
-		fill = vars.palette.contrast_800;
+		fill = colors.contrast_800;
 	}
 	if (ctx.focused) {
-		fill = vars.palette.primary_500;
+		fill = colors.primary_500;
 	}
 	if (ctx.isInvalid && ctx.hovered) {
-		fill = vars.palette.negative_500;
+		fill = colors.negative_500;
 	}
 	if (ctx.isInvalid && ctx.focused) {
-		fill = vars.palette.negative_500;
+		fill = colors.negative_500;
 	}
 
 	return (

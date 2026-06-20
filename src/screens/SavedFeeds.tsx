@@ -38,7 +38,7 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>;
 export function SavedFeeds({}: Props) {
@@ -379,7 +379,7 @@ function FollowingFeedCard() {
 					},
 				]}
 			>
-				<FilterTimeline width={22} fill={vars.palette.white} />
+				<FilterTimeline width={22} fill={colors.white} />
 			</View>
 			<View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
 				<Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>

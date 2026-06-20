@@ -34,6 +34,8 @@ import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { colors } from '#/styles/colors';
+
 import { useSubmitReportMutation } from './action';
 import {
 	BSKY_LABELER_ONLY_REPORT_REASONS,
@@ -325,7 +327,7 @@ function Inner(props: ReportDialogProps) {
 															issue?
 														</Trans>
 													</Text>
-													<SquareArrowTopRight size="sm" fill={t.atoms.text.color} />
+													<SquareArrowTopRight size="sm" fill={colors.text} />
 												</View>
 											)}
 										</Link>

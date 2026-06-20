@@ -39,6 +39,8 @@ import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { InviteLinkDialog } from './components/InviteLinkDialog';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesJoinRequests'>;
@@ -290,7 +292,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			<>
 				<Header count={requestCount} hasMoreRequests={hasNextPage} />
 				<View style={[a.flex_1, a.align_center, a.justify_center, a.gap_sm, a.p_lg]}>
-					<ErrorIcon size="3xl" fill={t.atoms.text_contrast_high.color} />
+					<ErrorIcon size="3xl" fill={colors.textContrastHigh} />
 					<Text style={[a.leading_snug, a.text_center, a.px_lg, a.text_md, t.atoms.text_contrast_high]}>
 						<Trans>Unable to fetch join requests.</Trans>
 					</Text>

@@ -12,6 +12,8 @@ import { Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon } from '#/components/i
 import { TimesLarge_Stroke2_Corner0_Rounded as CloseIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 export function RequestStatus({
 	top,
 	count,
@@ -59,7 +61,7 @@ export function RequestStatus({
 					style={[a.flex_1, a.flex_row, a.align_center, a.p_lg]}
 					onPress={onPress}
 				>
-					<EnvelopeIcon size="md" fill={t.palette.primary_500} />
+					<EnvelopeIcon size="md" fill={colors.primary_500} />
 					<Text style={[a.flex_1, a.ml_sm, a.text_sm, a.font_semi_bold, { color: t.palette.primary_500 }]}>
 						{count > JOIN_REQUESTS_THRESHOLD
 							? l({
@@ -80,7 +82,7 @@ export function RequestStatus({
 					onPress={onDismiss}
 					style={[a.p_lg]}
 				>
-					<CloseIcon size="md" fill={t.palette.primary_500} />
+					<CloseIcon size="md" fill={colors.primary_500} />
 				</Pressable>
 			</View>
 		</View>

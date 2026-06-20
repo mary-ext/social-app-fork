@@ -7,6 +7,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import type { AutocompleteItemProps } from './types';
 
 export function AutocompleteItemSearch({ active, isFirst, isLast, props, item }: AutocompleteItemProps) {
@@ -40,7 +42,7 @@ export function AutocompleteItemSearch({ active, isFirst, isLast, props, item }:
 					},
 				]}
 			>
-				<MagnifyingGlassIcon fill={t.atoms.text_contrast_low.color} size="xl" />
+				<MagnifyingGlassIcon fill={colors.textContrastLow} size="xl" />
 			</View>
 			<Text style={[a.text_md, a.leading_snug]}>{item.value}</Text>
 		</SiftItem>

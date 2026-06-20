@@ -12,12 +12,12 @@ import { logger } from '#/logger';
 
 import { FAB } from '#/view/com/util/fab/FAB';
 
-import { useTheme } from '#/alf';
-
 import * as Dialog from '#/components/Dialog';
 import { InitiateChatFlow } from '#/components/dms/InitiateChatFlow';
 import { MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon } from '#/components/icons/Message';
 import * as Toast from '#/components/Toast';
+
+import { colors } from '#/styles/colors';
 
 export function NewChat({
 	control,
@@ -26,7 +26,6 @@ export function NewChat({
 	control: Dialog.DialogControlProps;
 	onNewChat: (chatId: string) => void;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { data: chatStatus } = useChatActorStatusQuery();
 	const chatDisabled = !!chatStatus?.chatDisabled;
@@ -138,7 +137,7 @@ export function NewChat({
 		<>
 			{!chatDisabled && (
 				<FAB
-					icon={<NewChatIcon size="lg" fill={t.palette.white} />}
+					icon={<NewChatIcon size="lg" fill={colors.white} />}
 					label={l`New chat`}
 					onClick={wrappedOnPress}
 				/>

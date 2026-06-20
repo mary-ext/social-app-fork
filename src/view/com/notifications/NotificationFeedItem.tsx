@@ -82,7 +82,7 @@ import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { Tooltip } from '#/components/web/Tooltip';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './NotificationFeedItem.css';
 
@@ -256,7 +256,7 @@ let NotificationFeedItem = ({
 
 	let a11yLabel = '';
 	let notificationContent: React.ReactElement;
-	let icon = <HeartIconFilled size="xl" fill={vars.palette.pink} />;
+	let icon = <HeartIconFilled size="xl" fill={colors.pink} />;
 
 	if (item.type === 'post-like') {
 		a11yLabel = hasMultipleAuthors
@@ -302,7 +302,7 @@ let NotificationFeedItem = ({
 		) : (
 			<Trans>{firstAuthorLink} reposted your post</Trans>
 		);
-		icon = <RepostIcon size="xl" fill={vars.palette.positive_500} />;
+		icon = <RepostIcon size="xl" fill={colors.positive_500} />;
 	} else if (item.type === 'follow') {
 		if (isFollowBack && !hasMultipleAuthors) {
 			/*
@@ -334,11 +334,11 @@ let NotificationFeedItem = ({
 				<Trans>{firstAuthorLink} followed you</Trans>
 			);
 		}
-		icon = <PersonPlusIcon size="xl" fill={vars.palette.primary_500} />;
+		icon = <PersonPlusIcon size="xl" fill={colors.primary_500} />;
 	} else if (item.type === 'contact-match') {
 		a11yLabel = l`Your contact ${firstAuthorName} is on Bluesky`;
 		notificationContent = <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>;
-		icon = <ContactsIconFilled size="xl" fill={vars.palette.primary_500} />;
+		icon = <ContactsIconFilled size="xl" fill={colors.primary_500} />;
 	} else if (item.type === 'feedgen-like') {
 		a11yLabel = hasMultipleAuthors
 			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
@@ -433,7 +433,7 @@ let NotificationFeedItem = ({
 		) : (
 			<Trans>{firstAuthorLink} removed their verification from your account</Trans>
 		);
-		icon = <VerifiedCheck size="xl" fill={vars.palette.contrast_500} />;
+		icon = <VerifiedCheck size="xl" fill={colors.contrast_500} />;
 	} else if (item.type === 'like-via-repost') {
 		a11yLabel = hasMultipleAuthors
 			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
@@ -478,7 +478,7 @@ let NotificationFeedItem = ({
 		) : (
 			<Trans>{firstAuthorLink} reposted your repost</Trans>
 		);
-		icon = <RepostIcon size="xl" fill={vars.palette.positive_500} />;
+		icon = <RepostIcon size="xl" fill={colors.positive_500} />;
 	} else if (item.type === 'subscribed-post') {
 		const postsCount = 1 + (item.additional?.length || 0);
 		a11yLabel = hasMultipleAuthors
@@ -506,7 +506,7 @@ let NotificationFeedItem = ({
 				New <Plural value={postsCount} one="post" other="posts" /> from {firstAuthorLink}
 			</Trans>
 		);
-		icon = <BellRingingIcon size="xl" fill={vars.palette.primary_500} />;
+		icon = <BellRingingIcon size="xl" fill={colors.primary_500} />;
 	} else {
 		return null;
 	}
@@ -838,7 +838,7 @@ function CondensedAuthorsList({
 					accessibilityLabel={l`Hide user list`}
 					accessibilityHint={l`Collapses list of users for a given notification`}
 				>
-					<ChevronUpIcon size="md" fill={vars.palette.contrast_900} className={css.chevronUp} />
+					<ChevronUpIcon size="md" fill={colors.textContrastHigh} className={css.chevronUp} />
 					<Text style={[a.text_md, t.atoms.text_contrast_high]}>
 						<Trans context="action">Hide</Trans>
 					</Text>
@@ -877,7 +877,7 @@ function CondensedAuthorsList({
 						+{authors.length - MAX_AUTHORS}
 					</Text>
 				) : undefined}
-				<ChevronDownIcon size="md" fill={vars.palette.contrast_700} className={css.chevronDown} />
+				<ChevronDownIcon size="md" fill={colors.textContrastMedium} className={css.chevronDown} />
 			</View>
 		</TouchableOpacity>
 	);

@@ -52,6 +52,8 @@ import * as Layout from '#/components/Layout';
 import * as ProfileCard from '#/components/ProfileCard';
 import { H1, H3, P, Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { ScreenHider } from '../../components/moderation/ScreenHider';
 import { NotificationFeedItem } from '../com/notifications/NotificationFeedItem';
 import { PostFeedItem } from '../com/posts/PostFeedItem';
@@ -829,7 +831,7 @@ function Flag({ v, label }: { v: boolean | undefined; label: string }) {
 					},
 				]}
 			>
-				{v && <Check size="xs" fill={t.palette.contrast_900} />}
+				{v && <Check size="xs" fill={colors.textContrastHigh} />}
 			</View>
 			<P style={a.text_xs}>{label}</P>
 		</View>

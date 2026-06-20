@@ -5,7 +5,7 @@ import { atoms as a } from '#/alf';
 import { type Props, useCommonSVGProps } from '#/components/icons/common';
 import { Loader_Stroke2_Corner0_Rounded as Icon } from '#/components/icons/Loader';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './Loader.css';
 
@@ -19,7 +19,7 @@ export function Loader(props: Props) {
 				<Icon
 					{...props}
 					className={css.fill}
-					fill={props.fill ?? vars.palette.contrast_900}
+					fill={props.fill ?? colors.textContrastHigh}
 					style={props.style}
 				/>
 			</div>

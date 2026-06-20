@@ -28,12 +28,12 @@ import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
 import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/components/ProfileFeedHeader';
 
-import { useTheme } from '#/alf';
-
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import * as Layout from '#/components/Layout';
 import type { ListMethods } from '#/components/List/List';
+
+import { colors } from '#/styles/colors';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>;
 export function ProfileFeedScreen(props: Props) {
@@ -97,7 +97,6 @@ export function ProfileFeedScreenInner({
 	const { hasSession } = useSession();
 	const { openComposer } = useOpenComposer();
 	const isScreenFocused = useIsFocused();
-	const t = useTheme();
 
 	useSetTitle(feedInfo?.displayName);
 
@@ -149,7 +148,7 @@ export function ProfileFeedScreenInner({
 			)}
 			{hasSession && (
 				<FAB
-					icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+					icon={<EditBigIcon size="lg" fill={colors.white} />}
 					label={l`New post`}
 					onClick={() => openComposer({ logContext: 'Fab' })}
 				/>

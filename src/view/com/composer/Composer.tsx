@@ -53,7 +53,7 @@ import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
-import { colors } from '#/lib/styles';
+import { colors as legacyColors } from '#/lib/styles';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
 import { emitPostCreated } from '#/state/events';
@@ -103,7 +103,7 @@ import * as Prompt from '#/components/web/Prompt';
 
 import type { Gif } from '#/features/gifPicker/types';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as topBarStyles from './Composer.css';
 import { ComposerToolbarButton } from './ComposerToolbarButton';
@@ -1378,7 +1378,7 @@ function ComposerTopBar({
 						<WebText color="textContrastMedium" size="md_sub">
 							{publishingStage}
 						</WebText>
-						<Spinner color={vars.palette.contrast_700} label={l`Publishing`} size="md" />
+						<Spinner color={colors.textContrastMedium} label={l`Publishing`} size="md" />
 					</div>
 				) : (
 					<div className={topBarStyles.buttonRow}>
@@ -1871,7 +1871,7 @@ const styles = StyleSheet.create({
 	errorLine: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: colors.red1,
+		backgroundColor: legacyColors.red1,
 		borderRadius: 6,
 		marginHorizontal: 16,
 		paddingHorizontal: 12,
@@ -1889,8 +1889,8 @@ const styles = StyleSheet.create({
 	},
 	errorIcon: {
 		borderWidth: StyleSheet.hairlineWidth,
-		borderColor: colors.red4,
-		color: colors.red4,
+		borderColor: legacyColors.red4,
+		color: legacyColors.red4,
 		borderRadius: 30,
 		width: 16,
 		height: 16,
@@ -1942,7 +1942,7 @@ function ErrorBanner({
 		<View style={[a.px_lg, a.pb_sm]}>
 			<View style={[a.px_md, a.py_sm, a.gap_xs, a.rounded_sm, t.atoms.bg_contrast_25]}>
 				<View style={[a.relative, a.flex_row, a.gap_sm, { paddingRight: 48 }]}>
-					<CircleInfoIcon fill={t.palette.negative_400} />
+					<CircleInfoIcon fill={colors.negative_400} />
 					<Text style={[a.flex_1, a.leading_snug, { paddingTop: 1 }]}>{error}</Text>
 					<Button
 						label={l`Dismiss error`}

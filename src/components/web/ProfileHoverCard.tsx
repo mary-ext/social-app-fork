@@ -42,7 +42,7 @@ import * as css from '#/components/web/ProfileHoverCard.css';
 
 import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatus';
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 export type ProfileHoverCardProps = {
 	/**
@@ -125,7 +125,7 @@ const Card = memo(function Card({ did }: { did: string }) {
 
 	return (
 		<div className={clsx(css.card, css.loading)}>
-			<Spinner color={vars.palette.contrast_500} label={l`Loading`} size="xl" />
+			<Spinner color={colors.contrast_500} label={l`Loading`} size="xl" />
 		</div>
 	);
 });

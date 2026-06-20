@@ -20,7 +20,7 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 export function AddMembersLink({
 	convo,
@@ -95,13 +95,13 @@ export function AddMembersLink({
 									},
 								]}
 							>
-								<PlusIcon fill={vars.palette.contrast_900} size="sm" />
+								<PlusIcon fill={colors.textContrastHigh} size="sm" />
 							</View>
 							<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, a.mx_sm, t.atoms.text]}>
 								<Trans>Add members</Trans>
 							</Text>
 						</View>
-						{isAddPending ? <Loader size="md" /> : <ChevronIcon fill={vars.palette.contrast_700} size="md" />}
+						{isAddPending ? <Loader size="md" /> : <ChevronIcon fill={colors.textContrastMedium} size="md" />}
 					</View>
 				)}
 			</Button>

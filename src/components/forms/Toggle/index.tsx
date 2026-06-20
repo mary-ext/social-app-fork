@@ -9,6 +9,8 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { CheckThick_Stroke2_Corner0_Rounded as Checkmark } from '#/components/icons/Check';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 export type ItemState = {
 	name: string;
 	selected: boolean;
@@ -363,7 +365,7 @@ export function Checkbox() {
 				hovered ? baseHoverStyles : {},
 			]}
 		>
-			{selected && <Checkmark width={14} fill={t.palette.white} />}
+			{selected && <Checkmark width={14} fill={colors.white} />}
 		</View>
 	);
 }

@@ -18,6 +18,8 @@ import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { colors } from '#/styles/colors';
+
 type WebViewStyle = ViewStyle & {
 	overflowY?: 'auto';
 };
@@ -131,7 +133,7 @@ export function DesktopFeeds() {
 							>
 								<Plus
 									style={{ width: 16, height: 16 }}
-									fill={isActive || hovered ? t.atoms.text.color : t.atoms.text_contrast_medium.color}
+									fill={isActive || hovered ? colors.text : colors.textContrastMedium}
 								/>
 							</View>
 							<Text
@@ -201,7 +203,7 @@ function FeedItem({
 						},
 					]}
 				>
-					<FilterTimeline style={{ width: 14, height: 14 }} fill={t.palette.white} />
+					<FilterTimeline style={{ width: 14, height: 14 }} fill={colors.white} />
 				</View>
 			) : (
 				<UserAvatar

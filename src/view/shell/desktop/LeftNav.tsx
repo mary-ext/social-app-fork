@@ -75,7 +75,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { router } from '#/routes';
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './LeftNav.css';
 
@@ -185,7 +185,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 											</View>
 											<EllipsisIcon
 												aria-hidden={true}
-												fill={vars.palette.contrast_700}
+												fill={colors.textContrastMedium}
 												className={css.ellipsisIcon}
 												style={{ opacity: active ? 1 : 0 }}
 												size="sm"
@@ -438,7 +438,7 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 					},
 				]}
 			>
-				<Icon aria-hidden={true} width={NAV_ICON_WIDTH} fill={vars.palette.contrast_1000} />
+				<Icon aria-hidden={true} width={NAV_ICON_WIDTH} fill={colors.text} />
 				{typeof count === 'string' && count ? (
 					<View
 						style={[

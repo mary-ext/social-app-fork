@@ -30,6 +30,8 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { colors } from '#/styles/colors';
+
 export function UserAddRemoveListsDialog({
 	control,
 	profile,
@@ -126,7 +128,7 @@ function DialogInner({
 									{ width: 32, height: 32 },
 								]}
 							>
-								<ListIcon size="md" fill={t.atoms.text_contrast_low.color} />
+								<ListIcon size="md" fill={colors.textContrastLow} />
 							</View>
 							<Text
 								style={[

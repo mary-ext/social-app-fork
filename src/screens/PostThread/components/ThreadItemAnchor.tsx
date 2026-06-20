@@ -29,7 +29,7 @@ import type { PostSource } from '#/state/unstable-post-source';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a } from '#/alf';
 
 import { Button } from '#/components/Button';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
@@ -55,6 +55,7 @@ import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
 import { useActorStatus } from '#/features/liveNow';
+import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemAnchor.css';
 
@@ -459,7 +460,6 @@ function ExpandedPostDetails({
 }
 
 function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
-	const t = useTheme();
 	const { t: l, i18n } = useLingui();
 	const control = Prompt.usePromptControl();
 
@@ -484,7 +484,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 			>
 				{({ hovered, pressed }) => (
 					<div className={clsx(css.archivedPill, (hovered || pressed) && css.archivedPillActive)}>
-						<CalendarClockIcon fill={t.palette.yellow} size="sm" aria-hidden />
+						<CalendarClockIcon fill={colors.yellow} size="sm" aria-hidden />
 						<Text size="xs" weight="semiBold" color="textContrastMedium">
 							<Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
 						</Text>

@@ -21,7 +21,7 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 
 import { LinearGradient } from '#/shims/linear-gradient';
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as styles from './MessageComposer.css';
 
@@ -184,9 +184,9 @@ function SubmitButton({
 				disabled={disabled}
 			>
 				{loading ? (
-					<Loader size="md" fill={vars.palette.white} className={styles.sendIcon} />
+					<Loader size="md" fill={colors.white} className={styles.sendIcon} />
 				) : (
-					<PaperPlaneIcon size="md" fill={vars.palette.white} className={styles.sendIcon} />
+					<PaperPlaneIcon size="md" fill={colors.white} className={styles.sendIcon} />
 				)}
 			</Pressable>
 		</View>

@@ -40,6 +40,8 @@ import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { ChatProfileTabs } from './ChatProfileTabs';
 import { EmptyMemberList } from './components/EmptyMemberList';
 import { GroupChatProfileCard } from './components/GroupChatProfileCard';
@@ -705,7 +707,7 @@ function NewGroupChatButton({ onPress, dimmed = false }: { onPress: () => void; 
 							},
 						]}
 					>
-						<PersonGroupIcon size="md" fill={t.palette.contrast_1000} />
+						<PersonGroupIcon size="md" fill={colors.text} />
 					</View>
 					<View style={[a.flex_grow]}>
 						<Text style={[a.text_md, a.font_medium, a.leading_snug, t.atoms.text]}>
@@ -714,7 +716,7 @@ function NewGroupChatButton({ onPress, dimmed = false }: { onPress: () => void; 
 							</Trans>
 						</Text>
 					</View>
-					<ChevronRightIcon size="md" fill={t.palette.contrast_1000} />
+					<ChevronRightIcon size="md" fill={colors.text} />
 				</View>
 			)}
 		</Button>

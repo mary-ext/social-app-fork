@@ -16,7 +16,7 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon } from '#/components/icons/Arrow';
 import { SubtleHover } from '#/components/SubtleHover';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './LoadLatestBtn.css';
 
@@ -90,7 +90,7 @@ export function LoadLatestBtn({
 				<SubtleHover hover={hovered} style={[a.rounded_full]} />
 				<ArrowIcon
 					size="md"
-					fill={showIndicator ? vars.palette.primary_500 : vars.palette.contrast_700}
+					fill={showIndicator ? colors.primary_500 : colors.textContrastMedium}
 					className={css.icon}
 				/>
 			</PressableScale>

@@ -34,6 +34,8 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
 type StarterPackDialogItem = StarterPackWithMembership | { type: 'starter_pack_dialog_loader' };
 
@@ -73,12 +75,10 @@ export function StarterPackDialog({ control, targetDid, enabled }: StarterPackDi
 
 function Empty({ onStartWizard }: { onStartWizard: () => void }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
-
 	return (
 		<View style={[a.gap_2xl, { paddingTop: 100 }]}>
 			<View style={[a.gap_xs, a.align_center]}>
-				<StarterPack width={48} fill={t.atoms.border_contrast_medium.borderColor} />
+				<StarterPack width={48} fill={colors.contrast_200} />
 				<Text style={[a.text_center]}>
 					<Trans>You have no starter packs.</Trans>
 				</Text>

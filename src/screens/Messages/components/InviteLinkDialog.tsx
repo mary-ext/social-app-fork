@@ -32,6 +32,8 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { CopyTextButton } from './CopyTextButton';
 import { EditTextButton } from './EditTextButton';
 
@@ -399,7 +401,7 @@ export function InviteLinkDialog({
 			content = (
 				<>
 					<View style={[a.align_center, a.justify_center, a.mb_lg]}>
-						<ChainLinkBrokenIcon fill={t.palette.negative_500} size="3xl" />
+						<ChainLinkBrokenIcon fill={colors.negative_500} size="3xl" />
 					</View>
 					<Text style={[a.flex_1, a.pb_sm, a.text_center, a.text_lg, a.font_bold, a.leading_snug]}>
 						<Trans>Disable this invite link?</Trans>

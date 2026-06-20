@@ -7,7 +7,7 @@ import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { Spinner } from '#/components/Spinner';
 import * as Dialog from '#/components/web/Dialog';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import type { CancelRef } from '../com/composer/Composer';
 import * as styles from './Composer.css';
@@ -41,7 +41,7 @@ export function ComposerDialog() {
 						<Suspense
 							fallback={
 								<div className={styles.placeholder}>
-									<Spinner color={vars.palette.contrast_500} label={l`Loading`} />
+									<Spinner color={colors.contrast_500} label={l`Loading`} />
 								</div>
 							}
 						>

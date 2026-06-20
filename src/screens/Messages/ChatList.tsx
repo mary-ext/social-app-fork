@@ -43,6 +43,8 @@ import { Link } from '#/components/Link';
 import { ListFooter } from '#/components/Lists';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatListItem } from './components/ChatListItem';
 import { InboxRequests } from './components/InboxRequests';
@@ -273,7 +275,7 @@ export function ChatList({
 						{isError ? (
 							<>
 								<View style={[a.pt_3xl, a.align_center]}>
-									<CircleInfoIcon width={48} fill={t.atoms.text_contrast_low.color} />
+									<CircleInfoIcon width={48} fill={colors.textContrastLow} />
 									<Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
 										<Trans>Whoops!</Trans>
 									</Text>

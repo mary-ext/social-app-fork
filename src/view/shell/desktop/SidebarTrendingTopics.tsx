@@ -14,6 +14,7 @@ import { TrendingTopicLink } from '#/components/TrendingTopics';
 import { Text } from '#/components/Typography';
 
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
+import { colors } from '#/styles/colors';
 
 const TRENDING_LIMIT = 5;
 
@@ -39,7 +40,7 @@ function Inner() {
 		<>
 			<View style={[a.p_lg, a.rounded_md, a.border, t.atoms.border_contrast_low]}>
 				<View style={[a.flex_row, a.align_center, a.gap_xs, a.pb_md]}>
-					<TrendingIcon width={16} height={16} fill={t.atoms.text.color} />
+					<TrendingIcon width={16} height={16} fill={colors.text} />
 					<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
 						<Trans>Trending</Trans>
 					</Text>

@@ -24,6 +24,7 @@ import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
 
 import type { Gif } from '#/features/gifPicker/types';
+import { colors } from '#/styles/colors';
 
 export function GifAltTextDialog({
 	gif,
@@ -92,9 +93,9 @@ export function GifAltTextDialogLoaded({
 				]}
 			>
 				{altText ? (
-					<Check size="xs" fill={t.palette.white} style={a.ml_xs} />
+					<Check size="xs" fill={colors.white} style={a.ml_xs} />
 				) : (
-					<Plus size="sm" fill={t.palette.white} />
+					<Plus size="sm" fill={colors.white} />
 				)}
 				<Text style={[a.font_semi_bold, { color: t.palette.white }]} accessible={false}>
 					<Trans>ALT</Trans>
@@ -175,7 +176,7 @@ function AltTextInner({
 
 					{altText.length > MAX_ALT_TEXT && (
 						<View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
-							<CircleInfo fill={t.palette.negative_500} />
+							<CircleInfo fill={colors.negative_500} />
 							<Text style={[a.italic, a.leading_snug, t.atoms.text_contrast_medium]}>
 								<Trans>
 									Alt text will be truncated.{' '}

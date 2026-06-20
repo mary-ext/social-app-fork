@@ -11,6 +11,8 @@ import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Loc
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 export function ThreadItemPostNoUnauthenticated({
 	item,
 }: {
@@ -39,7 +41,7 @@ export function ThreadItemPostNoUnauthenticated({
 			</View>
 			<Skele.Row style={[a.align_center, a.gap_md]}>
 				<Skele.Circle size={LINEAR_AVI_WIDTH}>
-					<LockIcon size="md" fill={t.atoms.text_contrast_medium.color} />
+					<LockIcon size="md" fill={colors.textContrastMedium} />
 				</Skele.Circle>
 
 				<Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>

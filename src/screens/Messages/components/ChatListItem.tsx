@@ -51,7 +51,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './ChatListItem.css';
 import { useIsWithinSplitView } from './splitView/context';
@@ -543,7 +543,7 @@ function BaseChatItem({
 												]}
 											>
 												{' '}
-												<BellStroke size="xs" fill={vars.palette.contrast_700} />
+												<BellStroke size="xs" fill={colors.textContrastMedium} />
 											</Text>
 										)}
 										{hasUnread && (
@@ -587,7 +587,7 @@ function BaseChatItem({
 										{LastMessageIcon && (
 											<LastMessageIcon
 												size="xs"
-												fill={hasUnread ? vars.palette.contrast_900 : vars.palette.contrast_700}
+												fill={hasUnread ? colors.textContrastHigh : colors.textContrastMedium}
 												className={css.lastMessageIcon}
 											/>
 										)}

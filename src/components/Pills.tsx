@@ -16,6 +16,8 @@ import {
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { colors } from '#/styles/colors';
+
 export type AppModerationCause =
 	| ModerationCause
 	| {
@@ -115,7 +117,7 @@ export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelP
 						]}
 					>
 						{isBlueskyLabel || !isLabeler ? (
-							<desc.icon width={avi} fill={t.atoms.text_contrast_medium.color} />
+							<desc.icon width={avi} fill={colors.textContrastMedium} />
 						) : (
 							<UserAvatar avatar={desc.sourceAvi} type="user" size={avi} />
 						)}

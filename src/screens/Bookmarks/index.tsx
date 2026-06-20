@@ -28,6 +28,8 @@ import * as Skele from '#/components/Skeleton';
 import * as toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>;
 
 export function BookmarksScreen({}: Props) {
@@ -208,7 +210,7 @@ function BookmarkNotFound({
 			]}
 		>
 			<Skele.Circle size={42}>
-				<QuestionIcon size="lg" fill={t.atoms.text_contrast_low.color} />
+				<QuestionIcon size="lg" fill={colors.textContrastLow} />
 			</Skele.Circle>
 			<View style={[a.flex_1, a.gap_2xs]}>
 				<View style={[a.flex_row, a.gap_xs]}>

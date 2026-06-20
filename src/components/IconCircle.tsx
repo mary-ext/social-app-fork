@@ -6,7 +6,7 @@ import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 import type { Props } from '#/components/icons/common';
 import type { Growth_Stroke2_Corner0_Rounded as Growth } from '#/components/icons/Growth';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 export function IconCircle({
 	icon: Icon,
@@ -34,7 +34,7 @@ export function IconCircle({
 				style,
 			]}
 		>
-			<Icon size={size} fill={vars.palette.primary_500} style={iconStyle} />
+			<Icon size={size} fill={colors.primary_500} style={iconStyle} />
 		</View>
 	);
 }

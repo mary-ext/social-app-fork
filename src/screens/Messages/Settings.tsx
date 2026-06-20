@@ -23,7 +23,7 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './Settings.css';
 
@@ -172,11 +172,11 @@ export function MessagesSettingsScreenInner({}: Props) {
 								exportCarHandle.open(null);
 							}}
 						>
-							<CarIcon className={css.carIcon} fill={vars.palette.contrast_1000} size="lg" />
+							<CarIcon className={css.carIcon} fill={colors.text} size="lg" />
 							<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
 								<Trans>Export chat data</Trans>
 							</Text>
-							<ChevronRightIcon className={css.chevron} fill={vars.palette.contrast_1000} size="md" />
+							<ChevronRightIcon className={css.chevron} fill={colors.text} size="md" />
 						</Toggle.Item>
 					</View>
 					<Divider style={{ marginVertical: 10 }} />

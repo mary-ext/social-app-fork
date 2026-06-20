@@ -32,6 +32,8 @@ import { InlineLinkText, Link } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
+import { colors } from '#/styles/colors';
+
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
 // But let's at least persist it during the sesssion.
@@ -40,7 +42,6 @@ let lastActiveTab: 'all' | 'mentions' = 'all';
 type Props = NativeStackScreenProps<NotificationsTabNavigatorParams, 'Notifications'>;
 export function NotificationsScreen({}: Props) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const { openComposer } = useOpenComposer();
 	const unreadNotifs = useUnreadNotifications();
 	const hasNew = !!unreadNotifs;
@@ -133,7 +134,7 @@ export function NotificationsScreen({}: Props) {
 				}
 			/>
 			<FAB
-				icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+				icon={<EditBigIcon size="lg" fill={colors.white} />}
 				label={l`New post`}
 				onClick={() => openComposer({ logContext: 'Fab' })}
 			/>

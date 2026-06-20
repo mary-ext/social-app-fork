@@ -21,10 +21,10 @@ import { PostFeed } from '#/view/com/posts/PostFeed';
 import { FAB } from '#/view/com/util/fab/FAB';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
-import { useTheme } from '#/alf';
-
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
+
+import { colors } from '#/styles/colors';
 
 const POLL_FREQ = 60e3; // 60sec
 
@@ -55,7 +55,6 @@ export function FeedPage({
 	const feedFeedback = useFeedFeedback(feedInfo, hasSession);
 	const scrollElRef = useRef<ListMethods>(null);
 	const [hasNew, setHasNew] = useState(false);
-	const t = useTheme();
 
 	const scrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({
@@ -120,7 +119,7 @@ export function FeedPage({
 			)}
 			{hasSession && (
 				<FAB
-					icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+					icon={<EditBigIcon size="lg" fill={colors.white} />}
 					label={l({ message: `New post`, context: 'action' })}
 					onClick={onPressCompose}
 				/>

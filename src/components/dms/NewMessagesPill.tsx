@@ -7,7 +7,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon } from '#/components/icons/Arrow';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void }) {
 	const t = useTheme();
@@ -53,7 +53,7 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 				accessibilityHint={l`Scrolls the conversation to the most recent message`}
 				onPress={onPress}
 			>
-				<ArrowDownIcon size="md" fill={vars.palette.contrast_1000} />
+				<ArrowDownIcon size="md" fill={colors.text} />
 			</Pressable>
 		</View>
 	);

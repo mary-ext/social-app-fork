@@ -25,6 +25,8 @@ import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/ico
 import * as ListCard from '#/components/ListCard';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { ErrorMessage } from '../util/error/ErrorMessage';
 import { List } from '../util/List';
 
@@ -130,7 +132,7 @@ export function MyLists({
 								},
 							]}
 						>
-							<ListIcon size="2xl" fill={t.atoms.text_contrast_medium.color} />
+							<ListIcon size="2xl" fill={colors.textContrastMedium} />
 						</View>
 						<Text
 							style={[

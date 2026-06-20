@@ -14,6 +14,8 @@ import { Hashtag_Stroke2_Corner0_Rounded } from '#/components/icons/Hashtag';
 import { TrendingTopic, TrendingTopicLink, TrendingTopicSkeleton } from '#/components/TrendingTopics';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 // Note: This module is not currently used and may be removed in the future.
 
 export function ExploreRecommendations() {
@@ -35,11 +37,7 @@ function Inner() {
 			>
 				<View style={[a.flex_1, a.gap_sm]}>
 					<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-						<Hashtag_Stroke2_Corner0_Rounded
-							size="lg"
-							fill={t.palette.primary_500}
-							style={{ marginLeft: -2 }}
-						/>
+						<Hashtag_Stroke2_Corner0_Rounded size="lg" fill={colors.primary_500} style={{ marginLeft: -2 }} />
 						<Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
 							<Trans>Recommended</Trans>
 						</Text>

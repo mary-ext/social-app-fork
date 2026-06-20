@@ -35,6 +35,8 @@ import { ListFooter } from '#/components/Lists';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
 import { RequestListItem } from './components/RequestListItem';
 import { useIsWithinSplitView } from './components/splitView/context';
@@ -156,7 +158,7 @@ function RequestList({
 						{isError ? (
 							<>
 								<View style={[a.pt_3xl, a.align_center]}>
-									<CircleInfoIcon width={48} fill={t.atoms.text_contrast_low.color} />
+									<CircleInfoIcon width={48} fill={colors.textContrastLow} />
 									<Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
 										<Trans>Whoops!</Trans>
 									</Text>

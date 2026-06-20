@@ -27,7 +27,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { Image } from '#/shims/image';
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 export function LiveStatus({
 	status,
@@ -91,7 +91,7 @@ export function LiveStatus({
 						{embed.external.title || embed.external.uri}
 					</Text>
 					<View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-						<Globe_Stroke2_Corner0_Rounded size="xs" fill={vars.palette.contrast_700} />
+						<Globe_Stroke2_Corner0_Rounded size="xs" fill={colors.textContrastMedium} />
 						<Text numberOfLines={1} style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
 							{toNiceDomain(embed.external.uri)}
 						</Text>
@@ -137,7 +137,7 @@ export function LiveStatus({
 				)}
 				<View style={[a.flex_row, a.align_center, a.justify_between, a.w_full, a.pt_sm]}>
 					<View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
-						<CircleInfoIcon size="sm" fill={vars.palette.contrast_400} />
+						<CircleInfoIcon size="sm" fill={colors.textContrastLow} />
 						<Text style={[t.atoms.text_contrast_low, a.text_sm]}>
 							<Trans>Live feature is in beta</Trans>
 						</Text>
@@ -179,7 +179,7 @@ function ModeratedImage() {
 	return (
 		<View style={[a.p_lg, a.py_xl, a.align_center, a.justify_center, t.atoms.bg_contrast_25]}>
 			<View style={[a.align_center, a.gap_sm, { maxWidth: 200 }]}>
-				<ImageIcon size="lg" fill={vars.palette.contrast_700} />
+				<ImageIcon size="lg" fill={colors.textContrastMedium} />
 				<Text style={[a.italic, a.leading_snug, a.text_center, t.atoms.text_contrast_medium]}>
 					{hider.meta.allowOverride ? (
 						<Trans comment="Image has been moderated and user has the option of showing it temporarily">

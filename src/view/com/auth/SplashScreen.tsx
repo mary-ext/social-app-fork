@@ -17,6 +17,7 @@ import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
 import { useKawaiiMode } from '#/storage/hooks/kawaii';
+import { colors } from '#/styles/colors';
 
 export const SplashScreen = ({
 	onDismiss,
@@ -69,7 +70,7 @@ export const SplashScreen = ({
 
 							{!kawaii && (
 								<View style={[a.pb_sm, a.pt_5xl]}>
-									<Logotype width={161} fill={t.atoms.text.color} />
+									<Logotype width={161} fill={colors.text} />
 								</View>
 							)}
 

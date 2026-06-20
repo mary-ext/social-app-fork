@@ -5,11 +5,13 @@ import type { ThreadItem } from '#/state/queries/usePostThread';
 
 import { OUTER_SPACE } from '#/screens/PostThread/const';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a } from '#/alf';
 
 import { ArrowTopCircle_Stroke2_Corner0_Rounded as UpIcon } from '#/components/icons/ArrowTopCircle';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Text';
+
+import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemReadMoreUp.css';
 
@@ -18,7 +20,6 @@ export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
 }: {
 	item: Extract<ThreadItem, { type: 'readMoreUp' }>;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 
 	return (
@@ -39,10 +40,7 @@ export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
 					<div>
 						<div className={css.rowTop}>
 							<div className={css.iconCell}>
-								<UpIcon
-									fill={interacted ? t.atoms.text_contrast_high.color : t.atoms.text_contrast_low.color}
-									width={24}
-								/>
+								<UpIcon fill={interacted ? colors.textContrastHigh : colors.textContrastLow} width={24} />
 							</div>
 							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
 								<Trans>Continue thread...</Trans>

@@ -25,7 +25,7 @@ import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 
 import { account, useStorage } from '#/storage';
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import { AutocompleteResults } from './components/AutocompleteResults';
 import { SearchHistory } from './components/SearchHistory';
@@ -456,7 +456,7 @@ let SearchScreenInner = ({
 				)}
 
 				<View style={[a.align_center, a.justify_center, a.py_4xl, a.gap_lg]}>
-					<MagnifyingGlassIcon strokeWidth={3} size={60} color={vars.palette.contrast_700} />
+					<MagnifyingGlassIcon strokeWidth={3} size={60} color={colors.textContrastMedium} />
 					<Text style={[t.atoms.text_contrast_medium, a.text_md]}>
 						<Trans>Find posts, users, and feeds on Bluesky</Trans>
 					</Text>

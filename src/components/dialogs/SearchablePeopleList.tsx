@@ -31,6 +31,8 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 import { AvatarBubbles } from '../AvatarBubbles';
 import { Error } from '../Error';
 import { ProfileBadges } from '../ProfileBadges';
@@ -538,7 +540,7 @@ function SearchInput({
 
 	return (
 		<View {...webProps} style={[a.flex_row, a.align_center, a.gap_sm]}>
-			<Search size="md" fill={interacted ? t.palette.primary_500 : t.palette.contrast_300} />
+			<Search size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
 				placeholder={l`Search`}

@@ -9,7 +9,7 @@ import { s } from '#/lib/styles';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import { Button } from '../util/forms/Button';
 import { Text } from '../util/text/Text';
@@ -37,7 +37,7 @@ export function FollowingEndOfFeed() {
 					<Text type="lg-medium" style={palInverted.text}>
 						<Trans>Find accounts to follow</Trans>
 					</Text>
-					<ChevronRightIcon width={14} fill={vars.palette.contrast_0} />
+					<ChevronRightIcon width={14} fill={colors.textInverted} />
 				</Button>
 
 				<Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
@@ -47,7 +47,7 @@ export function FollowingEndOfFeed() {
 					<Text type="lg-medium" style={palInverted.text}>
 						<Trans>Discover new custom feeds</Trans>
 					</Text>
-					<ChevronRightIcon width={14} fill={vars.palette.contrast_0} />
+					<ChevronRightIcon width={14} fill={colors.textInverted} />
 				</Button>
 			</View>
 		</View>

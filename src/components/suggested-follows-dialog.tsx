@@ -25,6 +25,8 @@ import { boostInterests, InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
+import { colors } from '#/styles/colors';
+
 type WebViewProps = ComponentProps<typeof View> & {
 	onMouseEnter?: () => void;
 	onMouseLeave?: () => void;
@@ -484,7 +486,7 @@ function SearchInput({
 			})}
 			style={[a.flex_row, a.align_center, a.gap_sm, a.px_lg, a.py_xs]}
 		>
-			<SearchIcon size="md" fill={interacted ? t.palette.primary_500 : t.palette.contrast_300} />
+			<SearchIcon size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
 				placeholder={l`Search by name or interest`}

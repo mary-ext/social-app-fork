@@ -5,7 +5,7 @@ import { useTheme } from '#/alf';
 
 import { DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon } from '#/components/icons/DotGrid';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import * as css from './index.css';
 
@@ -126,7 +126,7 @@ export function SortableList<T>({
 							userSelect: 'none',
 						}}
 					>
-						<GripIcon size="lg" fill={vars.palette.contrast_700} className={css.icon} />
+						<GripIcon size="lg" fill={colors.textContrastMedium} className={css.icon} />
 					</div>
 				);
 

@@ -43,7 +43,7 @@ import {
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
-import { vars } from '#/styles/contract.css';
+import { colors } from '#/styles/colors';
 
 import { styles } from './BottomBarStyles';
 import * as css from './BottomBarWeb.css';
@@ -87,12 +87,7 @@ export function BottomBarWeb() {
 							{({ isActive }) => {
 								const Icon = isActive ? HomeFilled : Home;
 								return (
-									<Icon
-										aria-hidden={true}
-										width={iconWidth + 1}
-										fill={vars.palette.contrast_1000}
-										className={css.icon}
-									/>
+									<Icon aria-hidden={true} width={iconWidth + 1} fill={colors.text} className={css.icon} />
 								);
 							}}
 						</NavItem>
@@ -103,7 +98,7 @@ export function BottomBarWeb() {
 									<Icon
 										aria-hidden={true}
 										width={iconWidth + 2}
-										fill={vars.palette.contrast_1000}
+										fill={colors.text}
 										className={css.searchIcon}
 									/>
 								);
@@ -124,7 +119,7 @@ export function BottomBarWeb() {
 											<Icon
 												aria-hidden={true}
 												width={iconWidth - 1}
-												fill={vars.palette.contrast_1000}
+												fill={colors.text}
 												className={css.icon}
 											/>
 										);
@@ -138,12 +133,7 @@ export function BottomBarWeb() {
 									{({ isActive }) => {
 										const Icon = isActive ? BellFilled : Bell;
 										return (
-											<Icon
-												aria-hidden={true}
-												width={iconWidth}
-												fill={vars.palette.contrast_1000}
-												className={css.icon}
-											/>
+											<Icon aria-hidden={true} width={iconWidth} fill={colors.text} className={css.icon} />
 										);
 									}}
 								</NavItem>
@@ -196,7 +186,7 @@ export function BottomBarWeb() {
 							<View style={[a.flex_row, a.align_center, a.gap_md]}>
 								<Logo width={32} />
 								<View style={{ paddingTop: 4 }}>
-									<Logotype width={80} fill={t.atoms.text.color} />
+									<Logotype width={80} fill={colors.text} />
 								</View>
 							</View>
 

@@ -38,6 +38,8 @@ import { Loader } from '#/components/Loader';
 import * as Hider from '#/components/moderation/Hider';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
+import { colors } from '#/styles/colors';
+
 import { AboutSection } from './AboutSection';
 import { ErrorScreen } from './components/ErrorScreen';
 import { Header } from './components/Header';
@@ -201,7 +203,7 @@ function ProfileListScreenLoaded({
 							header={renderHeader()}
 						/>
 						<FAB
-							icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+							icon={<EditBigIcon size="lg" fill={colors.white} />}
 							label={l`New post`}
 							onClick={() => openComposer({ logContext: 'Fab' })}
 						/>
@@ -224,7 +226,7 @@ function ProfileListScreenLoaded({
 					<Layout.Center style={[a.border_b, t.atoms.border_contrast_low]}>{renderHeader()}</Layout.Center>
 					<AboutSection list={list} onPressAddUser={addUserDialogControl.open} />
 					<FAB
-						icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+						icon={<EditBigIcon size="lg" fill={colors.white} />}
 						label={l`New post`}
 						onClick={() => openComposer({ logContext: 'Fab' })}
 					/>

@@ -6,6 +6,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
 
+import { colors } from '#/styles/colors';
+
 type WebViewProps = {
 	onMouseEnter?: () => void;
 	onMouseLeave?: () => void;
@@ -34,7 +36,7 @@ export function UserSearchInput({
 
 	return (
 		<View {...webProps} style={[a.flex_row, a.align_center, a.gap_sm]}>
-			<SearchIcon size="md" fill={interacted ? t.palette.primary_500 : t.palette.contrast_300} />
+			<SearchIcon size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
 				placeholder={l`Search for people`}
