@@ -24,6 +24,7 @@ import {
 	useUpsertLiveStatusMutation,
 } from '#/features/liveNow';
 import { LinkPreview } from '#/features/liveNow/components/LinkPreview';
+import { colors } from '#/styles/colors';
 
 import * as styles from './EditLiveDialog.css';
 
@@ -108,9 +109,7 @@ function DialogInner({
 					<Trans>You are Live</Trans>
 				</Text>
 				<div className={styles.expiryRow}>
-					<span className={styles.clockIcon}>
-						<ClockIcon fill="currentColor" size="sm" />
-					</span>
+					<ClockIcon fill={colors.textContrastHigh} size="sm" />
 					<Text color="textContrastHigh" size="md">
 						{typeof record?.durationMinutes === 'number' ? (
 							<Trans>

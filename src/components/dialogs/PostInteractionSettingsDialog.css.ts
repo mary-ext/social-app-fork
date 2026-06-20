@@ -31,12 +31,7 @@ export const disabledNotice = style({
 	paddingInline: 12,
 });
 
-export const disabledNoticeIcon = style({
-	alignItems: 'center',
-	color: vars.palette.contrast_400,
-	display: 'flex',
-	flexShrink: 0,
-});
+export const disabledNoticeIcon = style({ flexShrink: 0 });
 
 export const flex1 = style({ flex: 1 });
 

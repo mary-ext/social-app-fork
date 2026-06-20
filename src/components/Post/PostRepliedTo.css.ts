@@ -11,8 +11,6 @@ export const row = style({
 });
 
 export const icon = style({
-	color: vars.palette.contrast_700,
-	display: 'flex',
 	flexShrink: 0,
 	position: 'relative',
 	top: -1,

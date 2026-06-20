@@ -94,7 +94,7 @@ export const menuButton = style({
 });
 
 export const menuIcon = style({
-	display: 'flex',
+	display: 'block',
 	position: 'relative',
 	zIndex: 1,
 });
@@ -129,7 +129,6 @@ export const tagText = style({
 });
 
 export const tagIcon = style({
-	display: 'flex',
 	flexShrink: 0,
 });
 

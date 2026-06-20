@@ -43,12 +43,6 @@ export const domainRow = style({
 	gap: 2,
 });
 
-export const globe = style({
-	alignItems: 'center',
-	color: vars.palette.contrast_400,
-	display: 'inline-flex',
-});
-
 const skeleton = {
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: 6,

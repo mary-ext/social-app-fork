@@ -8,9 +8,7 @@ export function PlayButtonIcon({ size = 32 }: { size?: number }) {
 	return (
 		<span className={styles.wrap} style={assignInlineVars({ [styles.sizeVar]: `${size}px` })}>
 			<span className={styles.circle} />
-			<span className={styles.icon}>
-				<PlayIcon width={size} fill="currentColor" />
-			</span>
+			<PlayIcon className={styles.icon} width={size} fill="currentColor" />
 		</span>
 	);
 }

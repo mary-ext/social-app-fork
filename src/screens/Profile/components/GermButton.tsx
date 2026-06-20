@@ -29,6 +29,8 @@ import { Text } from '#/components/Typography';
 import { useDialogHandle } from '#/components/web/Dialog';
 import { ExternalLink } from '#/components/web/Link';
 
+import { colors } from '#/styles/colors';
+
 import germLogoUrl from '../../../../assets/images/germ_logo.webp';
 import * as css from './GermButton.css';
 
@@ -85,9 +87,7 @@ function GermLink({ url }: { url: string }) {
 				<WebText className={css.label} size="sm" weight="medium">
 					<Trans>Germ DM</Trans>
 				</WebText>
-				<span className={css.arrow}>
-					<ArrowTopRightIcon width={14} height={14} fill="currentColor" />
-				</span>
+				<ArrowTopRightIcon className={css.arrow} width={14} height={14} fill={colors.text} />
 			</ExternalLink>
 			<CustomLinkWarningDialog handle={linkWarningHandle} />
 		</>

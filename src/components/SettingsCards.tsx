@@ -82,11 +82,7 @@ export function Section({
 }
 
 export function Icon({ icon: IconCmp }: { icon: ComponentType<IconProps> }) {
-	return (
-		<span className={styles.icon}>
-			<IconCmp size="md" fill="currentColor" />
-		</span>
-	);
+	return <IconCmp className={styles.icon} size="md" fill="currentColor" />;
 }
 
 /**
@@ -158,9 +154,7 @@ export function ButtonRow({
 		>
 			{children}
 			<span className={styles.trailing}>
-				<span className={styles.chevron}>
-					<ChevronRightIcon size="sm" fill="currentColor" />
-				</span>
+				<ChevronRightIcon className={styles.chevron} size="sm" fill="currentColor" />
 			</span>
 		</button>
 	);
@@ -215,9 +209,7 @@ export function LinkRow({
 		<LinkRowRaw className={clsx(styles.row, className)} label={label} to={to}>
 			{children}
 			<span className={styles.trailing}>
-				<span className={styles.chevron}>
-					<ChevronRightIcon size="sm" fill="currentColor" />
-				</span>
+				<ChevronRightIcon className={styles.chevron} size="sm" fill="currentColor" />
 			</span>
 		</LinkRowRaw>
 	);
@@ -275,13 +267,11 @@ export function CollapsibleRow({
 				</Text>
 				<span className={styles.trailing}>
 					{!open && trailing}
-					<span className={styles.chevron}>
-						{open ? (
-							<ChevronUpIcon fill="currentColor" size="sm" />
-						) : (
-							<ChevronDownIcon fill="currentColor" size="sm" />
-						)}
-					</span>
+					{open ? (
+						<ChevronUpIcon className={styles.chevron} fill="currentColor" size="sm" />
+					) : (
+						<ChevronDownIcon className={styles.chevron} fill="currentColor" size="sm" />
+					)}
 				</span>
 			</Collapsible.Trigger>
 			<Collapsible.Panel className={styles.panel}>
@@ -397,9 +387,7 @@ export function SelectRow<T extends string>({
 							{selected?.label}
 						</Text>
 					)}
-					<span className={styles.chevron}>
-						<ChevronDownIcon size="sm" fill="currentColor" />
-					</span>
+					<ChevronDownIcon className={styles.chevron} size="sm" fill="currentColor" />
 				</span>
 			</Select.Trigger>
 			<Select.Content

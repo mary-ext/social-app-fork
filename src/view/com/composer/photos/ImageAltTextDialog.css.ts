@@ -34,7 +34,6 @@ export const warningRow = style({
 });
 
 export const warningIcon = style({
-	color: vars.palette.negative_500,
 	flexShrink: 0,
 });
 

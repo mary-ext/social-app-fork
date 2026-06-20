@@ -14,8 +14,6 @@ export const root = style({
 	position: 'relative',
 });
 
-export const heart = style({ display: 'flex' });
-
 const circle = style({
 	borderRadius: '50%',
 	height: sizeVar,

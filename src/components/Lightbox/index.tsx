@@ -264,9 +264,7 @@ function Chrome() {
 			<div className={styles.topLeft}>
 				<Menu.Root>
 					<Menu.Trigger className={styles.circle} aria-label={l`Image options`}>
-						<span className={styles.rotated}>
-							<EllipsisIcon size="md" fill="currentColor" />
-						</span>
+						<EllipsisIcon size="md" fill="currentColor" className={styles.rotated} />
 					</Menu.Trigger>
 					<Menu.Popup label={l`Image options`}>
 						<Menu.Item label={l`Share image`} onClick={() => void onShare()}>

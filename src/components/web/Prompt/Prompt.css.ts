@@ -104,9 +104,7 @@ export const row = style({
 });
 
 export const rowIcon = style({
-	color: vars.palette.contrast_500,
 	flexShrink: 0,
-	lineHeight: 0,
 });
 
 export const rowText = style({

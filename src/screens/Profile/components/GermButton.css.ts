@@ -27,7 +27,5 @@ export const label = style({
 });
 
 export const arrow = style({
-	color: colors.text,
-	display: 'inline-flex',
 	marginInline: space._2xs,
 });

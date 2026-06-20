@@ -166,7 +166,7 @@ msgid "{0} · {1}"
 msgstr ""
 
 #. placeholder {0}: desc.name
-#: src/components/moderation/ContentHider.tsx:95
+#: src/components/moderation/ContentHider.tsx:97
 msgid "{0} (Account)"
 msgstr ""
 
@@ -204,7 +204,7 @@ msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
-#: src/features/liveNow/components/LiveStatus.tsx:56
+#: src/features/liveNow/components/LiveStatus.tsx:57
 msgid "{0} is live"
 msgstr ""
 
@@ -915,12 +915,12 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:256
-#: src/screens/Settings/components/AccountsSection.tsx:259
+#: src/screens/Settings/components/AccountsSection.tsx:254
+#: src/screens/Settings/components/AccountsSection.tsx:257
 msgid "Account options"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:277
+#: src/screens/Settings/components/AccountsSection.tsx:275
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -947,8 +947,8 @@ msgid "Accounts"
 msgstr "Accounts"
 
 #: src/components/verification/VerifierDialog.tsx:51
-msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
-msgstr ""
+msgid "Accounts with a scalloped blue check mark <0/> can verify others. These trusted verifiers are selected by Bluesky."
+msgstr "Accounts with a scalloped blue check mark <0/> can verify others. These trusted verifiers are selected by Bluesky."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:141
 #: src/screens/Settings/NotificationSettings/index.tsx:223
@@ -1000,8 +1000,8 @@ msgstr ""
 #: src/view/com/composer/GifAltText.tsx:210
 #: src/view/com/composer/photos/Gallery.tsx:177
 #: src/view/com/composer/photos/Gallery.tsx:215
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:38
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:55
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:40
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:57
 msgid "Add alt text"
 msgstr ""
 
@@ -1009,8 +1009,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:295
-#: src/screens/Settings/components/AccountsSection.tsx:302
+#: src/screens/Settings/components/AccountsSection.tsx:293
+#: src/screens/Settings/components/AccountsSection.tsx:300
 #: src/view/shell/desktop/LeftNav.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:259
 msgid "Add another account"
@@ -1147,7 +1147,7 @@ msgstr ""
 msgid "Adult content"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:126
+#: src/components/moderation/ContentHider.tsx:128
 #: src/lib/moderation/useGlobalLabelStrings.ts:29
 #: src/lib/moderation/useModerationCauseDescription.ts:135
 #: src/view/com/composer/labels/LabelsBtn.tsx:97
@@ -1243,7 +1243,7 @@ msgid "Allow your followers to reply"
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/components/dialogs/Signin.tsx:73
+#: src/components/dialogs/Signin.tsx:75
 msgid "Already signed in as @{0}"
 msgstr ""
 
@@ -1257,8 +1257,8 @@ msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:34
 #: src/view/com/composer/GifAltText.tsx:161
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:107
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:111
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:109
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:113
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 #: src/view/com/composer/videos/SubtitleDialog.tsx:103
 msgid "Alt text"
@@ -1513,8 +1513,8 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:31
-#: src/components/BotBadge.tsx:44
+#: src/components/BotAccountAlert.tsx:32
+#: src/components/BotBadge.tsx:42
 msgid "Automated account"
 msgstr "Automated account"
 
@@ -1540,8 +1540,8 @@ msgstr ""
 #: src/screens/Messages/Inbox.tsx:206
 #: src/screens/Profile/Header/Shell.tsx:78
 #: src/screens/StarterPack/Wizard/index.tsx:279
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:74
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:81
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:76
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:83
 msgid "Back"
 msgstr ""
 
@@ -1810,8 +1810,8 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:1371
 #: src/view/com/composer/photos/EditImageDialog.tsx:59
 #: src/view/com/composer/photos/EditImageDialog.tsx:65
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:43
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:49
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:45
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:51
 #: src/view/shell/desktop/LeftNav.tsx:214
 msgid "Cancel"
 msgstr ""
@@ -1969,7 +1969,7 @@ msgstr ""
 msgid "Child Sexual Abuse Material (CSAM)"
 msgstr ""
 
-#: src/components/dialogs/Signin.tsx:98
+#: src/components/dialogs/Signin.tsx:100
 msgid "Choose an account to sign in with."
 msgstr "Choose an account to sign in with."
 
@@ -2002,7 +2002,7 @@ msgstr "Choose who can join this group chat and how."
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
-#: src/components/web/forms/SearchInput.tsx:61
+#: src/components/web/forms/SearchInput.tsx:59
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -2053,10 +2053,10 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:108
 #: src/components/suggested-follows-dialog.tsx:324
 #: src/components/verification/VerificationsDialog.tsx:86
-#: src/components/verification/VerifierDialog.tsx:77
+#: src/components/verification/VerifierDialog.tsx:75
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:37
-#: src/features/liveNow/components/EditLiveDialog.tsx:186
-#: src/features/liveNow/components/EditLiveDialog.tsx:192
+#: src/features/liveNow/components/EditLiveDialog.tsx:185
+#: src/features/liveNow/components/EditLiveDialog.tsx:191
 #: src/screens/Messages/components/InviteLinkDialog.tsx:457
 #: src/screens/Messages/components/InviteLinkDialog.tsx:459
 msgid "Close"
@@ -2076,13 +2076,13 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:277
 #: src/components/moderation/BlockDialog.tsx:164
 #: src/components/verification/VerificationsDialog.tsx:84
-#: src/components/verification/VerifierDialog.tsx:75
+#: src/components/verification/VerifierDialog.tsx:73
 #: src/components/web/Dialog/Popup.tsx:80
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:35
 msgid "Close dialog"
 msgstr ""
 
-#: src/components/Lightbox/index.tsx:288
+#: src/components/Lightbox/index.tsx:286
 msgid "Close image viewer"
 msgstr ""
 
@@ -2205,7 +2205,7 @@ msgid "Context menu backdrop, click to close the menu."
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/components/AccountList.tsx:98
+#: src/components/AccountList.tsx:97
 msgid "Continue as {0} (currently signed in)"
 msgstr ""
 
@@ -2607,7 +2607,7 @@ msgid "Description"
 msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:157
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:102
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:104
 msgid "Descriptive alt text"
 msgstr ""
 
@@ -2669,7 +2669,7 @@ msgstr "Disable this invite link?"
 #: src/view/com/composer/Composer.tsx:1075
 #: src/view/com/composer/Composer.tsx:1113
 #: src/view/com/composer/Composer.tsx:1313
-#: src/view/com/composer/drafts/DraftItem.tsx:132
+#: src/view/com/composer/drafts/DraftItem.tsx:130
 #: src/view/com/composer/drafts/DraftsButton.tsx:113
 msgid "Discard"
 msgstr ""
@@ -2680,7 +2680,7 @@ msgid "Discard changes?"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1074
-#: src/view/com/composer/drafts/DraftItem.tsx:129
+#: src/view/com/composer/drafts/DraftItem.tsx:127
 #: src/view/com/composer/drafts/DraftsButton.tsx:85
 msgid "Discard draft?"
 msgstr ""
@@ -2757,8 +2757,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
+#: src/components/Lightbox/index.tsx:276
 #: src/components/Lightbox/index.tsx:278
-#: src/components/Lightbox/index.tsx:280
 msgid "Download image"
 msgstr "Download image"
 
@@ -2777,8 +2777,8 @@ msgstr ""
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:61
 #: src/view/com/composer/drafts/DraftsButton.tsx:71
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:70
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:87
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:72
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:89
 msgid "Drafts"
 msgstr ""
 
@@ -2905,8 +2905,8 @@ msgstr "Edit name"
 msgid "Edit People"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:88
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:117
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:90
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:119
 msgid "Edit post interaction settings"
 msgstr ""
 
@@ -3008,7 +3008,7 @@ msgstr ""
 msgid "Enter fullscreen"
 msgstr ""
 
-#: src/components/dialogs/Signin.tsx:122
+#: src/components/dialogs/Signin.tsx:124
 msgid "Enter your handle or DID."
 msgstr "Enter your handle or DID."
 
@@ -3082,7 +3082,7 @@ msgstr ""
 msgid "Exit fullscreen"
 msgstr ""
 
-#: src/components/Lightbox/index.tsx:297
+#: src/components/Lightbox/index.tsx:295
 msgid "Expand alt text"
 msgstr ""
 
@@ -3122,7 +3122,7 @@ msgstr ""
 
 #. placeholder {0}: displayDuration(i18n, minutesUntilExpiry)
 #. placeholder {1}: i18n.date(expiryDateTime, { hour: 'numeric', minute: '2-digit', hour12: true, })
-#: src/features/liveNow/components/EditLiveDialog.tsx:116
+#: src/features/liveNow/components/EditLiveDialog.tsx:115
 msgid "Expires in {0} at {1}"
 msgstr ""
 
@@ -3737,7 +3737,7 @@ msgstr "Generate new invite link"
 msgid "Generate new link"
 msgstr "Generate new link"
 
-#: src/screens/Profile/components/GermButton.tsx:86
+#: src/screens/Profile/components/GermButton.tsx:88
 #: src/screens/Profile/components/GermButton.tsx:196
 msgid "Germ DM"
 msgstr ""
@@ -3815,7 +3815,7 @@ msgstr ""
 #: src/components/ExternalEmbed/GifEmbed.tsx:86
 #: src/components/MediaPreview.tsx:130
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:36
-#: src/view/com/composer/drafts/DraftItem.tsx:221
+#: src/view/com/composer/drafts/DraftItem.tsx:217
 msgid "GIF"
 msgstr ""
 
@@ -3996,7 +3996,7 @@ msgstr "Group name is too long. The maximum number of characters is {MAX_GROUP_N
 msgid "Hacking or system attacks"
 msgstr ""
 
-#: src/components/dialogs/Signin.tsx:159
+#: src/components/dialogs/Signin.tsx:161
 #: src/components/dialogs/Signin.tsx:168
 msgid "Handle or DID"
 msgstr "Handle or DID"
@@ -4177,7 +4177,7 @@ msgstr "Ignore join request"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: images.length
-#: src/components/Lightbox/index.tsx:318
+#: src/components/Lightbox/index.tsx:316
 msgid "Image {0} of {1}"
 msgstr ""
 
@@ -4202,7 +4202,7 @@ msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
 #: src/components/Lightbox/index.tsx:266
-#: src/components/Lightbox/index.tsx:271
+#: src/components/Lightbox/index.tsx:269
 msgid "Image options"
 msgstr "Image options"
 
@@ -4449,7 +4449,7 @@ msgid "Latest"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:99
-#: src/components/verification/VerifierDialog.tsx:72
+#: src/components/verification/VerifierDialog.tsx:70
 #: src/screens/Moderation/VerificationSettings.tsx:41
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
 msgctxt "english-only-resource"
@@ -4474,7 +4474,7 @@ msgid "Learn more about this warning"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:91
-#: src/components/verification/VerifierDialog.tsx:64
+#: src/components/verification/VerifierDialog.tsx:62
 msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
@@ -4572,7 +4572,7 @@ msgstr ""
 msgid "Like this feed"
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:166
+#: src/screens/Profile/Header/Labeler.tsx:168
 msgid "Like this labeler"
 msgstr ""
 
@@ -4595,8 +4595,8 @@ msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:380
-#: src/screens/Profile/Header/Labeler.tsx:185
-#: src/screens/Profile/Header/Labeler.tsx:190
+#: src/screens/Profile/Header/Labeler.tsx:183
+#: src/screens/Profile/Header/Labeler.tsx:188
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
@@ -4732,13 +4732,13 @@ msgstr ""
 msgid "LIVE"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:192
+#: src/features/liveNow/components/LiveStatus.tsx:189
 #: src/features/liveNow/components/LiveStatusDialog.tsx:142
 msgid "Live feature is in beta"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:133
-#: src/features/liveNow/components/EditLiveDialog.tsx:138
+#: src/features/liveNow/components/EditLiveDialog.tsx:132
+#: src/features/liveNow/components/EditLiveDialog.tsx:137
 #: src/features/liveNow/components/GoLiveDialog.tsx:119
 #: src/features/liveNow/components/GoLiveDialog.tsx:124
 msgid "Live link"
@@ -4782,8 +4782,8 @@ msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:103
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:107
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:105
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:109
 msgid "Loading drafts"
 msgstr "Loading drafts"
 
@@ -4806,8 +4806,8 @@ msgstr "Loading image"
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:214
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:218
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5420,7 +5420,7 @@ msgstr ""
 msgid "No drafts yet"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:125
+#: src/features/liveNow/components/EditLiveDialog.tsx:124
 msgid "No expiry set"
 msgstr ""
 
@@ -5664,12 +5664,12 @@ msgstr ""
 msgid "Oh no!"
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:62
+#: src/screens/Profile/Header/Labeler.tsx:64
 msgid "OK"
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:40
-#: src/components/BotAccountAlert.tsx:42
+#: src/components/BotAccountAlert.tsx:39
+#: src/components/BotAccountAlert.tsx:41
 #: src/components/dms/InitiateChatFlow.tsx:626
 #: src/components/dms/MessageItem.tsx:589
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:512
@@ -5804,7 +5804,7 @@ msgstr ""
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:75
+#: src/screens/Profile/components/GermButton.tsx:77
 msgid "Open Germ DM"
 msgstr ""
 
@@ -5838,15 +5838,15 @@ msgstr ""
 msgid "Open post options menu"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:171
-#: src/features/liveNow/components/LiveStatus.tsx:180
+#: src/features/liveNow/components/LiveStatus.tsx:170
+#: src/features/liveNow/components/LiveStatus.tsx:179
 #: src/features/liveNow/components/LiveStatusDialog.tsx:123
 #: src/features/liveNow/components/LiveStatusDialog.tsx:133
 msgid "Open profile"
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:48
-#: src/components/BotAccountAlert.tsx:56
+#: src/components/BotAccountAlert.tsx:47
+#: src/components/BotAccountAlert.tsx:55
 msgid "Open settings"
 msgstr "Open settings"
 
@@ -5919,7 +5919,7 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#: src/components/AccountList.tsx:63
+#: src/components/AccountList.tsx:64
 msgid "Other account"
 msgstr ""
 
@@ -6553,7 +6553,7 @@ msgstr "Reload to update"
 #: src/screens/Messages/ConversationSettings/Member.tsx:152
 #: src/screens/Messages/ConversationSettings/prompts.tsx:166
 #: src/screens/Moderation/index.tsx:209
-#: src/screens/Settings/components/AccountsSection.tsx:272
+#: src/screens/Settings/components/AccountsSection.tsx:270
 #: src/view/com/posts/PostFeedErrorMessage.tsx:188
 msgid "Remove"
 msgstr ""
@@ -6579,8 +6579,8 @@ msgstr "Remove {displayName}?"
 msgid "Remove {historyItem}"
 msgstr ""
 
+#: src/screens/Settings/components/AccountsSection.tsx:258
 #: src/screens/Settings/components/AccountsSection.tsx:260
-#: src/screens/Settings/components/AccountsSection.tsx:262
 msgid "Remove account"
 msgstr ""
 
@@ -6628,7 +6628,7 @@ msgstr "Remove from chat"
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:279
+#: src/screens/Settings/components/AccountsSection.tsx:277
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -6650,8 +6650,8 @@ msgstr ""
 msgid "Remove image"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:199
-#: src/features/liveNow/components/EditLiveDialog.tsx:205
+#: src/features/liveNow/components/EditLiveDialog.tsx:198
+#: src/features/liveNow/components/EditLiveDialog.tsx:204
 msgid "Remove live status"
 msgstr ""
 
@@ -6744,22 +6744,22 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:46
+#: src/components/Post/PostRepliedTo.tsx:48
 msgctxt "description"
 msgid "Replied to <0/>"
 msgstr "Replied to <0/>"
 
-#: src/components/Post/PostRepliedTo.tsx:36
+#: src/components/Post/PostRepliedTo.tsx:38
 msgctxt "description"
 msgid "Replied to a blocked post"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:38
+#: src/components/Post/PostRepliedTo.tsx:40
 msgctxt "description"
 msgid "Replied to a post"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:43
+#: src/components/Post/PostRepliedTo.tsx:45
 msgctxt "description"
 msgid "Replied to you"
 msgstr ""
@@ -6835,8 +6835,8 @@ msgid "Reply was successfully hidden"
 msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:116
-#: src/features/liveNow/components/LiveStatus.tsx:195
-#: src/features/liveNow/components/LiveStatus.tsx:197
+#: src/features/liveNow/components/LiveStatus.tsx:192
+#: src/features/liveNow/components/LiveStatus.tsx:194
 #: src/features/liveNow/components/LiveStatusDialog.tsx:165
 #: src/screens/Messages/ConversationSettings/index.tsx:479
 msgid "Report"
@@ -7086,8 +7086,8 @@ msgstr "Sad GIFs"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:333
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:509
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
-#: src/features/liveNow/components/EditLiveDialog.tsx:173
-#: src/features/liveNow/components/EditLiveDialog.tsx:179
+#: src/features/liveNow/components/EditLiveDialog.tsx:172
+#: src/features/liveNow/components/EditLiveDialog.tsx:178
 #: src/screens/Messages/ConversationSettings/prompts.tsx:73
 #: src/screens/Profile/Header/EditProfileDialog.tsx:205
 #: src/screens/Profile/Header/EditProfileDialog.tsx:214
@@ -7096,8 +7096,8 @@ msgstr "Sad GIFs"
 #: src/view/com/composer/GifAltText.tsx:202
 #: src/view/com/composer/photos/EditImageDialog.tsx:78
 #: src/view/com/composer/photos/EditImageDialog.tsx:84
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:63
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:69
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:65
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:71
 msgid "Save"
 msgstr ""
 
@@ -7571,8 +7571,8 @@ msgstr ""
 msgid "Share anyway"
 msgstr ""
 
+#: src/components/Lightbox/index.tsx:270
 #: src/components/Lightbox/index.tsx:272
-#: src/components/Lightbox/index.tsx:274
 msgid "Share image"
 msgstr "Share image"
 
@@ -7701,8 +7701,8 @@ msgstr "Show the content"
 msgid "Shows information about when this post was created"
 msgstr ""
 
-#: src/components/dialogs/Signin.tsx:95
-#: src/components/dialogs/Signin.tsx:150
+#: src/components/dialogs/Signin.tsx:97
+#: src/components/dialogs/Signin.tsx:152
 #: src/components/dialogs/Signin.tsx:186
 #: src/components/dialogs/Signin.tsx:195
 #: src/screens/Hashtag.tsx:193
@@ -7719,7 +7719,7 @@ msgid "Sign in"
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/components/AccountList.tsx:99
+#: src/components/AccountList.tsx:98
 msgid "Sign in as {0}"
 msgstr ""
 
@@ -7727,15 +7727,15 @@ msgstr ""
 msgid "Sign in failed. Please try again."
 msgstr "Sign in failed. Please try again."
 
-#: src/components/AccountList.tsx:54
+#: src/components/AccountList.tsx:55
 msgid "Sign in to account that is not listed"
 msgstr ""
 
-#: src/components/dialogs/Signin.tsx:105
+#: src/components/dialogs/Signin.tsx:107
 msgid "Sign in to another account"
 msgstr "Sign in to another account"
 
-#: src/components/dialogs/Signin.tsx:27
+#: src/components/dialogs/Signin.tsx:29
 msgid "Sign in to Bluesky"
 msgstr "Sign in to Bluesky"
 
@@ -7744,7 +7744,7 @@ msgstr "Sign in to Bluesky"
 msgid "Sign in to view post"
 msgstr ""
 
-#: src/components/dialogs/Signin.tsx:153
+#: src/components/dialogs/Signin.tsx:155
 msgid "Sign in with your Bluesky account."
 msgstr "Sign in with your Bluesky account."
 
@@ -8017,11 +8017,11 @@ msgstr ""
 msgid "Subscribe to account activity"
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:107
+#: src/screens/Profile/Header/Labeler.tsx:109
 msgid "Subscribe to Labeler"
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:102
+#: src/screens/Profile/Header/Labeler.tsx:104
 msgid "Subscribe to this labeler"
 msgstr ""
 
@@ -8066,8 +8066,8 @@ msgstr "Suspended accounts cannot participate in chat."
 
 #: src/components/dialogs/SwitchAccount.tsx:45
 #: src/components/dialogs/SwitchAccount.tsx:48
-#: src/screens/Settings/components/AccountsSection.tsx:170
-#: src/screens/Settings/components/AccountsSection.tsx:173
+#: src/screens/Settings/components/AccountsSection.tsx:168
+#: src/screens/Settings/components/AccountsSection.tsx:171
 #: src/view/shell/desktop/LeftNav.tsx:246
 msgid "Switch account"
 msgstr ""
@@ -8082,11 +8082,11 @@ msgid "Switch to {0}"
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/components/AccountsSection.tsx:221
+#: src/screens/Settings/components/AccountsSection.tsx:219
 msgid "Switch to @{0}"
 msgstr "Switch to @{0}"
 
-#: src/screens/Settings/components/AccountsSection.tsx:251
+#: src/screens/Settings/components/AccountsSection.tsx:249
 msgid "Switching account"
 msgstr "Switching account"
 
@@ -8279,7 +8279,7 @@ msgid "There was an issue contacting the server"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:317
-#: src/screens/Profile/Header/Labeler.tsx:152
+#: src/screens/Profile/Header/Labeler.tsx:154
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr ""
 
@@ -8333,7 +8333,7 @@ msgstr ""
 msgid "There was an issue! {0}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:193
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:195
 #: src/screens/List/ListHiddenScreen.tsx:61
 #: src/screens/List/ListHiddenScreen.tsx:71
 #: src/screens/List/ListHiddenScreen.tsx:89
@@ -8401,7 +8401,7 @@ msgstr ""
 msgid "This account has a checkmark because it's been verified by trusted sources."
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:27
+#: src/components/BotAccountAlert.tsx:28
 msgid "This account has been marked as automated by its owner."
 msgstr "This account has been marked as automated by its owner."
 
@@ -8491,7 +8491,7 @@ msgstr "This conversation is locked."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:130
+#: src/view/com/composer/drafts/DraftItem.tsx:128
 msgid "This draft will be permanently deleted."
 msgstr ""
 
@@ -8541,7 +8541,7 @@ msgstr "This invite link has been disabled."
 msgid "This invite link is invalid"
 msgstr "This invite link is invalid"
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:158
+#: src/features/liveNow/components/EditLiveDialog.tsx:157
 #: src/features/liveNow/components/GoLiveDialog.tsx:139
 msgid "This is not a valid link"
 msgstr ""
@@ -8702,7 +8702,7 @@ msgid "This will delete \"{0}\" from your muted words. You can always add it bac
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/components/AccountsSection.tsx:273
+#: src/screens/Settings/components/AccountsSection.tsx:271
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -8832,7 +8832,7 @@ msgstr "Unable to find the selected recipient."
 msgid "Unable to resolve handle"
 msgstr ""
 
-#: src/components/dialogs/Signin.tsx:134
+#: src/components/dialogs/Signin.tsx:136
 msgid "Unable to start sign in. Please try again."
 msgstr "Unable to start sign in. Please try again."
 
@@ -9034,7 +9034,7 @@ msgstr ""
 msgid "Unpinned list"
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:107
+#: src/screens/Profile/Header/Labeler.tsx:109
 msgid "Unsubscribe"
 msgstr ""
 
@@ -9043,7 +9043,7 @@ msgstr ""
 msgid "Unsubscribe from list"
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:102
+#: src/screens/Profile/Header/Labeler.tsx:104
 msgid "Unsubscribe from this labeler"
 msgstr ""
 
@@ -9423,8 +9423,8 @@ msgstr ""
 msgid "Warn"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:147
-#: src/features/liveNow/components/LiveStatus.tsx:153
+#: src/features/liveNow/components/LiveStatus.tsx:146
+#: src/features/liveNow/components/LiveStatus.tsx:152
 #: src/features/liveNow/components/LiveStatusDialog.tsx:101
 #: src/features/liveNow/components/LiveStatusDialog.tsx:110
 msgid "Watch now"
@@ -9506,7 +9506,7 @@ msgstr ""
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:56
+#: src/screens/Profile/Header/Labeler.tsx:58
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr ""
 
@@ -9616,7 +9616,7 @@ msgstr ""
 msgid "Wrong kind of conversation"
 msgstr "Wrong kind of conversation"
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:152
+#: src/features/liveNow/components/EditLiveDialog.tsx:151
 #: src/features/liveNow/components/GoLiveDialog.tsx:133
 msgid "www.mylivestream.tv"
 msgstr ""
@@ -9663,8 +9663,8 @@ msgstr "You are blocking this person"
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:42
-#: src/features/liveNow/components/EditLiveDialog.tsx:108
+#: src/features/liveNow/components/EditLiveDialog.tsx:43
+#: src/features/liveNow/components/EditLiveDialog.tsx:109
 msgid "You are Live"
 msgstr ""
 
@@ -9788,7 +9788,7 @@ msgstr ""
 msgid "You have hidden this post."
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:26
+#: src/components/BotAccountAlert.tsx:27
 msgid "You have marked this account as automated. You can remove it at any time from your account settings."
 msgstr "You have marked this account as automated. You can remove it at any time from your account settings."
 

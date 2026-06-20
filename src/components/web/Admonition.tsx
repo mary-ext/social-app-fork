@@ -8,6 +8,8 @@ import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/ico
 import { Text } from '#/components/Text';
 import * as styles from '#/components/web/Admonition.css';
 
+import { colors } from '#/styles/colors';
+
 type AdmonitionType = 'apology' | 'error' | 'info' | 'tip' | 'warning';
 
 const ICONS = {
@@ -16,6 +18,14 @@ const ICONS = {
 	info: CircleInfoIcon,
 	tip: CircleInfoIcon,
 	warning: WarningIcon,
+};
+
+const ICON_FILL: Record<AdmonitionType, string> = {
+	apology: colors.textContrastMedium,
+	error: colors.negative_500,
+	info: colors.textContrastMedium,
+	tip: colors.primary_500,
+	warning: colors.yellow,
 };
 
 export function Admonition({
@@ -31,9 +41,7 @@ export function Admonition({
 	return (
 		<div className={clsx(styles.outer, styles.border[type], className)}>
 			<div className={styles.row}>
-				<span className={clsx(styles.iconWrap, styles.iconColor[type])}>
-					<Icon fill="currentColor" size="md" />
-				</span>
+				<Icon className={styles.iconWrap} fill={ICON_FILL[type]} size="md" />
 				<div className={styles.content}>
 					<Text>{children}</Text>
 				</div>

@@ -123,9 +123,7 @@ function CurrentAccountRow({
 					{sanitizeHandle(profile.handle, '@')}
 				</Text>
 			</div>
-			<span className={cardStyles.chevron}>
-				<ChevronRightIcon fill="currentColor" size="sm" />
-			</span>
+			<ChevronRightIcon className={cardStyles.chevron} fill="currentColor" size="sm" />
 		</Settings.LinkRowRaw>
 	);
 }

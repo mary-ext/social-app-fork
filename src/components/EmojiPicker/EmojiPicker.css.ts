@@ -11,7 +11,6 @@ const rotate = keyframes({
 // `position:absolute; inset:0` and would stretch across the whole placeholder.
 export const spinner = style({
 	animation: `${rotate} 500ms linear infinite`,
-	display: 'inline-flex',
 });
 
 // sit above the Base UI Sheet (backdrop/viewport are zIndex 10), like the web Menu popup.

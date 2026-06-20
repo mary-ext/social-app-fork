@@ -1,7 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
-
 // the form dialog is a touch narrower than the default Popup. unlayered, so it wins over the Popup's
 // `components`-layered `size` maxWidth with no specificity hack.
 export const popup = style({
@@ -29,13 +27,6 @@ export const expiryRow = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 4,
-});
-
-// the clock affordance; an SVG `fill` reads the wrapper's `color`.
-export const clockIcon = style({
-	alignItems: 'center',
-	color: vars.palette.contrast_900,
-	display: 'flex',
 });
 
 export const fields = style({

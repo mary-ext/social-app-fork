@@ -11,9 +11,7 @@ export const field = style({
 // leading search icon, vertically centered and non-interactive so clicks fall through to the input. its
 // color tracks the input's interaction state (accent on focus).
 export const icon = style({
-	alignItems: 'center',
 	color: vars.palette.contrast_500,
-	display: 'flex',
 	insetInlineStart: 12,
 	pointerEvents: 'none',
 	position: 'absolute',

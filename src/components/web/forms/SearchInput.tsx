@@ -40,9 +40,7 @@ export function SearchInput({
 
 	return (
 		<div className={styles.field}>
-			<span className={styles.icon}>
-				<MagnifyingGlassIcon size="md" fill="currentColor" />
-			</span>
+			<MagnifyingGlassIcon className={styles.icon} size="md" fill="currentColor" />
 			<TextField.Input
 				autoFocus={autoFocus}
 				className={clsx(styles.input, showClear && styles.inputWithClear)}

@@ -90,9 +90,7 @@ function Badge({
 				handle={control}
 				onClick={(e) => e.stopPropagation()}
 			>
-				<span className={css.icon} style={{ color: fill }}>
-					<VerificationCheck fill="currentColor" verifier={isVerifier} width={width} />
-				</span>
+				<VerificationCheck fill={fill} verifier={isVerifier} width={width} />
 			</Dialog.Trigger>
 			<VerificationsDialog handle={verificationsControl} profile={profile} verificationState={state} />
 			<VerifierDialog handle={verifierControl} profile={profile} verificationState={state} />

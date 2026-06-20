@@ -58,9 +58,6 @@ export const check = style({
 });
 
 export const chevron = style({
-	alignItems: 'center',
-	color: colors.textContrastLow,
-	display: 'flex',
 	flexShrink: 0,
 });
 

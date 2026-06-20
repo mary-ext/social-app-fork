@@ -50,10 +50,8 @@ export function VerifierDialog({
 						<Text size="md">
 							<Trans>
 								Accounts with a scalloped blue check mark{' '}
-								<span className={css.inlineCheck}>
-									<VerifierCheck width={14} />
-								</span>{' '}
-								can verify others. These trusted verifiers are selected by Bluesky.
+								<VerifierCheck className={css.inlineCheck} width={14} /> can verify others. These trusted
+								verifiers are selected by Bluesky.
 							</Trans>
 						</Text>
 					</div>

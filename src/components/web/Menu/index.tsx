@@ -112,9 +112,11 @@ export function ItemIcon({
 	position?: 'left' | 'right';
 }) {
 	return (
-		<span className={clsx(styles.itemIcon, position === 'right' && styles.itemIconRight)}>
-			<Icon size="md" fill="currentColor" />
-		</span>
+		<Icon
+			size="md"
+			fill={styles.iconColor}
+			className={clsx(styles.itemIcon, position === 'right' && styles.itemIconRight)}
+		/>
 	);
 }
 

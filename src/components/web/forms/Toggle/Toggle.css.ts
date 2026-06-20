@@ -114,9 +114,7 @@ export const panelText = style(
 
 export const panelIcon = style(
 	layered(components, {
-		alignItems: 'center',
 		color: vars.palette.contrast_700,
-		display: 'flex',
 		flexShrink: 0,
 		selectors: {
 			[`[data-checked] &, ${panelActive} &`]: { color: vars.palette.contrast_1000 },

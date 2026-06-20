@@ -27,6 +27,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import * as css from '#/features/liveNow/components/LiveStatus.css';
+import { colors } from '#/styles/colors';
 
 /**
  * A touch-only dialog that surfaces a live status (no hover affordance on touch devices). Open it
@@ -132,9 +133,7 @@ export function LiveStatus({
 						{embed.external.title || embed.external.uri}
 					</Text>
 					<div className={css.domain}>
-						<span className={css.mutedIcon}>
-							<GlobeIcon width={12} height={12} fill="currentColor" />
-						</span>
+						<GlobeIcon width={12} height={12} fill={colors.textContrastMedium} />
 						<Text color="textContrastMedium" numberOfLines={1} size="sm">
 							{toNiceDomain(embed.external.uri)}
 						</Text>
@@ -185,9 +184,7 @@ export function LiveStatus({
 
 				<div className={css.betaRow}>
 					<div className={css.beta}>
-						<span className={css.betaIcon}>
-							<CircleInfoIcon width={16} height={16} fill="currentColor" />
-						</span>
+						<CircleInfoIcon width={16} height={16} fill={colors.textContrastLow} />
 						<Text color="textContrastLow" size="sm">
 							<Trans>Live feature is in beta</Trans>
 						</Text>

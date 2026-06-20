@@ -6,6 +6,8 @@ import * as css from '#/components/BotBadge.css';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 import * as Dialog from '#/components/web/Dialog';
 
+import { colors } from '#/styles/colors';
+
 export function isBotAccount(profile: { did: string; labels?: { src: string; val: string }[] }): boolean {
 	return profile.labels?.some((l) => l.val === 'bot' && l.src === profile.did) ?? false;
 }
@@ -23,11 +25,7 @@ export function BotBadge({
 		return null;
 	}
 
-	return (
-		<span className={css.icon}>
-			<RobotIcon width={width} fill="currentColor" />
-		</span>
-	);
+	return <RobotIcon width={width} fill={colors.textContrastMedium} className={css.icon} />;
 }
 
 export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; width: number }) {

@@ -3,8 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 
 export const icon = style({
-	color: colors.textContrastMedium,
-	display: 'inline-flex',
+	display: 'inline-block',
 });
 
 export const button = style({

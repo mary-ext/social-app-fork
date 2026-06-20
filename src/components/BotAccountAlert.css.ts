@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
 export const body = style({
@@ -9,9 +8,7 @@ export const body = style({
 });
 
 export const icon = style({
-	color: colors.textContrastMedium,
-	display: 'flex',
-	justifyContent: 'center',
+	alignSelf: 'center',
 	paddingBottom: space.md,
 });
 

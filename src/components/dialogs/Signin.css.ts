@@ -1,7 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
-
 export const error = style({
 	marginTop: 4,
 });
@@ -13,9 +11,7 @@ export const field = style({
 
 // leading @ icon, vertically centered and non-interactive so clicks fall through to the input.
 export const fieldIcon = style({
-	alignItems: 'center',
-	color: vars.palette.contrast_500,
-	display: 'flex',
+	display: 'block',
 	insetInlineStart: 12,
 	pointerEvents: 'none',
 	position: 'absolute',

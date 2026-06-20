@@ -9,7 +9,3 @@ export const button = style({
 	padding: 0,
 	transition: 'transform 0.1s',
 });
-
-export const icon = style({
-	display: 'inline-flex',
-});

@@ -212,9 +212,11 @@ export function PressableItem({
 export function ItemIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
 	const { destructive } = useContext(ItemContext);
 	return (
-		<span className={clsx(styles.itemIcon, destructive && styles.destructiveIcon)}>
-			<Icon size="lg" fill="currentColor" />
-		</span>
+		<Icon
+			size="lg"
+			fill="currentColor"
+			className={clsx(styles.itemIcon, destructive && styles.destructiveIcon)}
+		/>
 	);
 }
 
@@ -240,9 +242,11 @@ export function BadgeText({ children }: { children: ReactNode }) {
 export function Chevron() {
 	const { destructive } = useContext(ItemContext);
 	return (
-		<span className={clsx(styles.chevron, destructive && styles.destructiveIcon)}>
-			<ChevronRightIcon size="md" fill="currentColor" />
-		</span>
+		<ChevronRightIcon
+			size="md"
+			fill="currentColor"
+			className={clsx(styles.chevron, destructive && styles.destructiveIcon)}
+		/>
 	);
 }
 

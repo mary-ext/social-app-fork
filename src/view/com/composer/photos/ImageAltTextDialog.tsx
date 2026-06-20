@@ -15,6 +15,8 @@ import * as TextField from '#/components/TextField';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { colors } from '#/styles/colors';
+
 import * as styles from './ImageAltTextDialog.css';
 
 type Props = {
@@ -113,9 +115,7 @@ const ImageAltTextInner = ({
 
 					{altText.length > MAX_ALT_TEXT && (
 						<div className={styles.warningRow}>
-							<span className={styles.warningIcon}>
-								<CircleInfo fill="currentColor" size="sm" />
-							</span>
+							<CircleInfo className={styles.warningIcon} fill={colors.negative_500} size="sm" />
 							<Text className={styles.warningText} color="textContrastMedium" size="sm">
 								<Trans>
 									Alt text will be truncated.{' '}

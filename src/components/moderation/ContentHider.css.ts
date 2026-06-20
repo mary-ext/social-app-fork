@@ -52,10 +52,7 @@ export const blurButton = style({
 	},
 });
 
-// SVG inherits the row's muted color via `currentColor` (a CSS var can't resolve in a `fill` attribute).
 export const iconWrap = style({
-	color: vars.palette.contrast_700,
-	display: 'inline-flex',
 	flexShrink: 0,
 });
 

@@ -49,7 +49,7 @@ export function AnimatedLikeIcon({
 	const shouldAnimate = hasBeenToggled && !reducedMotion;
 	const prevIsLiked = useRef(isLiked);
 
-	const heartRef = useRef<HTMLDivElement>(null);
+	const heartRef = useRef<SVGSVGElement>(null);
 	const circle1Ref = useRef<HTMLDivElement>(null);
 	const circle2Ref = useRef<HTMLDivElement>(null);
 
@@ -68,9 +68,7 @@ export function AnimatedLikeIcon({
 	return (
 		<div className={styles.root} style={assignInlineVars({ [styles.sizeVar]: `${size}px` })}>
 			{isLiked ? (
-				<div ref={heartRef} className={styles.heart}>
-					<HeartIconFilled fill="currentColor" width={size} />
-				</div>
+				<HeartIconFilled ref={heartRef} fill="currentColor" width={size} />
 			) : (
 				<HeartIconOutline fill="currentColor" width={size} />
 			)}

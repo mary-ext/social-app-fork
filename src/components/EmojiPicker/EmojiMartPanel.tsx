@@ -11,9 +11,7 @@ const EmojiMartPicker = lazy(() => import('@emoji-mart/react'));
 function PickerPlaceholder() {
 	return (
 		<div className={styles.placeholder}>
-			<span className={styles.spinner}>
-				<LoaderIcon size="3xl" fill="currentColor" />
-			</span>
+			<LoaderIcon className={styles.spinner} size="3xl" fill="currentColor" />
 		</div>
 	);
 }

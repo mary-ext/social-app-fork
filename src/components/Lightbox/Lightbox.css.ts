@@ -104,12 +104,8 @@ export const circle = style({
 export const topLeft = style({ position: 'absolute', top: 20, left: 20, zIndex: 1 });
 export const topRight = style({ position: 'absolute', top: 20, right: 20, zIndex: 1 });
 
-/**
- * Vertical-ellipsis icon for the options trigger. `display: flex` tightly wraps the icon — an inline SVG
- * carries a baseline/descender gap that makes the box taller than the icon, and rotating that asymmetric box
- * 90° shifts the icon off-centre.
- */
-export const rotated = style({ display: 'flex', transform: 'rotate(90deg)' });
+/** Rotates the options-trigger ellipsis icon 90° to vertical. */
+export const rotated = style({ transform: 'rotate(90deg)' });
 
 /** Side paging button: larger blurred-glass round button, shrinks on narrow viewports. */
 export const navButton = style({

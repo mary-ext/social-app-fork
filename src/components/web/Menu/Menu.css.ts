@@ -69,10 +69,6 @@ export const itemText = style({
 });
 
 export const itemIcon = style({
-	alignItems: 'center',
-	// the icon paints with `fill="currentColor"`; var() does not resolve in an SVG fill attribute
-	color: iconColor,
-	display: 'flex',
 	flexShrink: 0,
 	marginLeft: -2,
 });

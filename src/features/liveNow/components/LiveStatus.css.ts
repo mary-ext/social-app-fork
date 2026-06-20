@@ -60,12 +60,6 @@ export const domain = style({
 	gap: space._2xs,
 });
 
-// host for an icon coloured through `currentColor`
-export const mutedIcon = style({
-	color: vars.palette.contrast_700,
-	display: 'flex',
-});
-
 export const watchButton = style({
 	width: '100%',
 });
@@ -90,11 +84,6 @@ export const beta = style({
 	flex: 1,
 	flexDirection: 'row',
 	gap: space.xs,
-});
-
-export const betaIcon = style({
-	color: vars.palette.contrast_400,
-	display: 'flex',
 });
 
 // a text link that triggers an action rather than navigating, so it can't be an <a>. flex (not the default

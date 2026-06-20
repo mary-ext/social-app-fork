@@ -27,6 +27,8 @@ import { Button } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Prompt from '#/components/web/Prompt';
 
+import { colors } from '#/styles/colors';
+
 import { EditProfileButton } from './Actions';
 import { ProfileHeaderBio } from './Bio';
 import { ProfileHeaderProvider, useProfileHeader } from './Context';
@@ -169,13 +171,9 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 				size="small"
 			>
 				{likeUri ? (
-					<span className={css.heartLiked}>
-						<HeartFilled width={18} height={18} fill="currentColor" />
-					</span>
+					<HeartFilled width={18} height={18} fill={colors.negative_400} />
 				) : (
-					<span className={css.heartDefault}>
-						<Heart width={18} height={18} fill="currentColor" />
-					</span>
+					<Heart width={18} height={18} fill={colors.textContrastMedium} />
 				)}
 			</Button>
 

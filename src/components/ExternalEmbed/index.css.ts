@@ -97,7 +97,6 @@ export const domainRow = style({
 
 export const globe = style({
 	color: vars.palette.contrast_400,
-	display: 'inline-flex',
 	transitionProperty: 'color',
 	selectors: {
 		[`${card}:hover &`]: { color: vars.palette.contrast_700 },

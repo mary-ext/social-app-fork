@@ -118,9 +118,7 @@ export function DraftItem({
 					className={styles.menuButton}
 					aria-label={l`More options`}
 				>
-					<span className={styles.menuIcon}>
-						<DotsIcon width={16} height={16} fill="currentColor" />
-					</span>
+					<DotsIcon className={styles.menuIcon} width={16} height={16} fill="currentColor" />
 				</Prompt.Trigger>
 			</div>
 
@@ -147,9 +145,7 @@ function DraftMetadataTag({
 }) {
 	return (
 		<div className={clsx(styles.tagRow, display === 'warning' ? styles.tagWarning : styles.tagInfo)}>
-			<span className={styles.tagIcon}>
-				<Icon width={16} height={16} fill="currentColor" />
-			</span>
+			<Icon className={styles.tagIcon} width={16} height={16} fill="currentColor" />
 			<Text size="sm" className={styles.tagText}>
 				{text}
 			</Text>

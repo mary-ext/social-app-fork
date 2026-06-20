@@ -5,6 +5,8 @@ import { EmbedThumb } from '#/components/EmbedThumb';
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { Text } from '#/components/Text';
 
+import { colors } from '#/styles/colors';
+
 import * as styles from './LinkPreview.css';
 
 export function LinkPreview({ linkMeta, loading }: { linkMeta?: LinkMeta; loading: boolean }) {
@@ -26,9 +28,7 @@ export function LinkPreview({ linkMeta, loading }: { linkMeta?: LinkMeta; loadin
 							{linkMeta.title || linkMeta.url}
 						</Text>
 						<div className={styles.domainRow}>
-							<span className={styles.globe}>
-								<GlobeIcon fill="currentColor" size="xs" />
-							</span>
+							<GlobeIcon fill={colors.textContrastLow} size="xs" />
 							<Text color="textContrastMedium" numberOfLines={1} size="xs">
 								{toNiceDomain(linkMeta.url)}
 							</Text>

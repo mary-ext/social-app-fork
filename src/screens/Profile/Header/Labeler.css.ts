@@ -64,13 +64,3 @@ export const likedBy = style({
 	paddingBlock: 5,
 	paddingInline: 10,
 });
-
-export const heartLiked = style({
-	color: colors.negative_400,
-	display: 'inline-flex',
-});
-
-export const heartDefault = style({
-	color: colors.textContrastMedium,
-	display: 'inline-flex',
-});

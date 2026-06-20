@@ -41,6 +41,8 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as WebDialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 
+import { colors } from '#/styles/colors';
+
 export type PostInteractionSettingsFormProps = {
 	canSave?: boolean;
 	onSave: () => void;
@@ -328,9 +330,7 @@ export function PostInteractionSettingsForm({
 			<div className={styles.replySection}>
 				{replySettingsDisabled && (
 					<div className={styles.disabledNotice}>
-						<span className={styles.disabledNoticeIcon}>
-							<CircleInfo size="md" fill="currentColor" />
-						</span>
+						<CircleInfo className={styles.disabledNoticeIcon} size="md" fill={colors.textContrastLow} />
 						<Text className={styles.flex1} color="textContrastMedium" size="sm">
 							<Trans>Reply settings are chosen by the author of the thread</Trans>
 						</Text>

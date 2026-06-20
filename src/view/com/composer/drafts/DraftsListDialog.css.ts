@@ -45,11 +45,6 @@ export const empty = style({
 	paddingInline: space.xl,
 });
 
-export const emptyIcon = style({
-	color: vars.palette.contrast_400,
-	display: 'flex',
-});
-
 export const footerNote = style({
 	alignItems: 'center',
 	display: 'flex',

@@ -17,6 +17,8 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { colors } from '#/styles/colors';
+
 export function SigninDialog() {
 	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
@@ -159,9 +161,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 						<Trans>Handle or DID</Trans>
 					</TextField.LabelText>
 					<div className={css.field}>
-						<span className={css.fieldIcon}>
-							<AtIcon size="md" fill="currentColor" />
-						</span>
+						<AtIcon className={css.fieldIcon} size="md" fill={colors.contrast_500} />
 						<TextField.Input
 							autoCapitalize="none"
 							className={css.fieldInput}

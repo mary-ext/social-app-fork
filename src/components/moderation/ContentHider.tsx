@@ -19,6 +19,8 @@ import {
 	useModerationDetailsDialogControl,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
+import { colors } from '#/styles/colors';
+
 import * as styles from './ContentHider.css';
 
 type ContentHiderProps = {
@@ -136,9 +138,7 @@ function ContentHiderActive({
 
 	const triggerInner = (
 		<>
-			<span className={styles.iconWrap}>
-				<desc.icon size="md" fill="currentColor" />
-			</span>
+			<desc.icon size="md" fill={colors.textContrastMedium} className={styles.iconWrap} />
 			<Text
 				size="md"
 				weight="medium"

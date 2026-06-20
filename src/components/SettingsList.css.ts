@@ -75,13 +75,13 @@ export const itemText = style({
 
 export const chevron = style({
 	color: vars.palette.contrast_500,
-	display: 'flex',
+	display: 'block',
 	flexShrink: 0,
 });
 
 export const itemIcon = style({
 	color: vars.palette.contrast_1000,
-	display: 'flex',
+	display: 'block',
 	flexShrink: 0,
 });
 

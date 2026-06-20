@@ -16,7 +16,5 @@ export const outer = style({
 });
 
 export const icon = style({
-	color: vars.palette.contrast_700,
-	display: 'flex',
 	flexShrink: 0,
 });

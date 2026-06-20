@@ -15,6 +15,8 @@ import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 
+import { colors } from '#/styles/colors';
+
 import * as css from './PostRepliedTo.css';
 
 export function PostRepliedTo({
@@ -57,9 +59,7 @@ export function PostRepliedTo({
 
 	return (
 		<div className={clsx(css.row, className)}>
-			<span className={css.icon}>
-				<ArrowCornerDownRightIcon fill="currentColor" size="xs" />
-			</span>
+			<ArrowCornerDownRightIcon className={css.icon} fill={colors.textContrastMedium} size="xs" />
 			<Text className={css.label} color="textContrastMedium" numberOfLines={1} size="sm">
 				{label}
 			</Text>

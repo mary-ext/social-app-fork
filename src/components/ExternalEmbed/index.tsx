@@ -139,9 +139,7 @@ function CardBody({
 			<div className={styles.domainWrap}>
 				<div className={styles.divider} />
 				<div className={styles.domainRow}>
-					<span className={styles.globe}>
-						<Globe size="xs" fill="currentColor" />
-					</span>
+					<Globe size="xs" fill="currentColor" className={styles.globe} />
 					<Text size="xs" numberOfLines={1} className={styles.domain}>
 						{niceUrl}
 					</Text>

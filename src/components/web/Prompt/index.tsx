@@ -8,6 +8,8 @@ import * as buttonStyles from '#/components/web/Button.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 import * as styles from '#/components/web/Prompt/Prompt.css';
 
+import { colors } from '#/styles/colors';
+
 type Color = 'negative' | 'negative_subtle' | 'primary' | 'secondary';
 
 export const Trigger = AlertDialog.Trigger;
@@ -74,9 +76,7 @@ export function Rows({ children }: { children: ReactNode }) {
 export function Row({ children, icon: Icon }: { children: ReactNode; icon: ComponentType<IconProps> }) {
 	return (
 		<div className={styles.row}>
-			<span className={styles.rowIcon}>
-				<Icon width={22} height={22} fill="currentColor" />
-			</span>
+			<Icon className={styles.rowIcon} width={22} height={22} fill={colors.contrast_500} />
 			<span className={styles.rowText}>{children}</span>
 		</div>
 	);

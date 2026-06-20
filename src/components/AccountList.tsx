@@ -18,6 +18,7 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
+import { colors } from '#/styles/colors';
 
 export function AccountList({
 	onSelectAccount,
@@ -62,9 +63,7 @@ export function AccountList({
 					<Text className={css.info} size="md" weight="medium">
 						{otherLabel ?? <Trans>Other account</Trans>}
 					</Text>
-					<span className={css.chevron}>
-						<ChevronIcon width={20} height={20} fill="currentColor" />
-					</span>
+					<ChevronIcon className={css.chevron} width={20} height={20} fill={colors.textContrastLow} />
 				</button>
 			)}
 		</div>
@@ -129,9 +128,7 @@ function AccountItem({
 					<CheckIcon width={12} height={12} fill="currentColor" />
 				</span>
 			) : (
-				<span className={css.chevron}>
-					<ChevronIcon width={20} height={20} fill="currentColor" />
-				</span>
+				<ChevronIcon className={css.chevron} width={20} height={20} fill={colors.textContrastLow} />
 			)}
 		</button>
 	);

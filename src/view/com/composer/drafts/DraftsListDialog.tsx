@@ -10,6 +10,8 @@ import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { colors } from '#/styles/colors';
+
 import { DraftItem } from './DraftItem';
 import * as styles from './DraftsListDialog.css';
 import { useDeleteDraftMutation, useDraftsQuery } from './state/queries';
@@ -108,9 +110,7 @@ export function DraftsListDialog({
 							</div>
 						) : (
 							<div className={styles.empty}>
-								<span className={styles.emptyIcon}>
-									<PageXIcon width={48} height={48} fill="currentColor" />
-								</span>
+								<PageXIcon width={48} height={48} fill={colors.textContrastLow} />
 								<Text size="md" weight="medium" color="textContrastHigh" align="center">
 									<Trans>No drafts yet</Trans>
 								</Text>

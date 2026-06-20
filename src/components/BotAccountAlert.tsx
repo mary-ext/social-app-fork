@@ -10,6 +10,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
 import { navigate } from '#/Navigation';
+import { colors } from '#/styles/colors';
 
 export function BotAccountAlert({
 	handle,
@@ -30,9 +31,7 @@ export function BotAccountAlert({
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup label={l`Automated account`} size="narrow">
 				<div className={css.body}>
-					<span className={css.icon}>
-						<RobotIcon width={48} fill="currentColor" />
-					</span>
+					<RobotIcon className={css.icon} width={48} fill={colors.textContrastMedium} />
 					<Text align="center" className={css.text} color="textContrastHigh" size="md">
 						{description}
 					</Text>

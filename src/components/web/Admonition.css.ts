@@ -29,16 +29,7 @@ export const row = style({
 });
 
 export const iconWrap = style({
-	display: 'flex',
 	flexShrink: 0,
-});
-
-export const iconColor = styleVariants({
-	apology: { color: vars.palette.contrast_700 },
-	error: { color: vars.palette.negative_500 },
-	info: { color: vars.palette.contrast_700 },
-	tip: { color: vars.palette.primary_500 },
-	warning: { color: vars.palette.yellow },
 });
 
 export const content = style({
