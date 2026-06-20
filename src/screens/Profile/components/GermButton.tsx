@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 import { isNetworkError } from '#/lib/strings/errors';
+import { safeUrlParse } from '#/lib/strings/url-helpers';
 
 import { RQKEY } from '#/state/queries/profile';
 import { useClients, useSession } from '#/state/session';
@@ -269,12 +270,8 @@ function constructGermUrl(
 }
 
 function isCustomGermDomain(url: string) {
-	try {
-		const urlp = new URL(url);
-		return urlp.hostname !== 'landing.ger.mx';
-	} catch {
-		return false;
-	}
+	const urlp = safeUrlParse(url);
+	return urlp === null || urlp.hostname !== 'landing.ger.mx';
 }
 
 async function whenAppViewReady(
