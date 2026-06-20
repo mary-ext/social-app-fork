@@ -83,7 +83,6 @@
 		"react-native-svg": "15.12.1",
 		"react-native-web": "^0.21.2",
 		"react-remove-scroll-bar": "^2.3.8",
-		"react-textarea-autosize": "^8.5.9",
 		"sonner": "^2.0.7",
 		"tldts": "^6.1.86",
 		"unicode-segmenter": "0.14.5"

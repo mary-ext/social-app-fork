@@ -10,8 +10,8 @@ import {
 	useId,
 	useMemo,
 } from 'react';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
-import TextareaAutosize from 'react-textarea-autosize';
 
 import { LabelText as BaseLabelText } from '#/components/Text';
 import * as styles from '#/components/TextField.css';
@@ -120,19 +120,19 @@ export function Input({
 
 	if (multiline) {
 		return (
-			<TextareaAutosize
+			<textarea
 				aria-label={label}
 				autoFocus={autoFocus}
 				className={cls}
 				defaultValue={defaultValue}
 				id={inputId}
 				maxLength={maxLength}
-				maxRows={maxRows}
-				minRows={minRows}
 				onBlur={onBlur}
 				onChange={onChange}
 				onFocus={onFocus}
 				placeholder={placeholder}
+				rows={minRows}
+				style={maxRows ? assignInlineVars({ [styles.maxRowsVar]: String(maxRows) }) : undefined}
 				value={value}
 			/>
 		);
