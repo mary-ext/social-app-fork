@@ -1,12 +1,10 @@
-import { useLingui, Trans } from '@lingui/react/macro';
-
-import { HITSLOP_10 } from '#/lib/constants';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { ThreadPreferences } from '#/state/queries/preferences/useThreadPreferences';
 
-import { Button, ButtonIcon } from '#/components/Button';
 import { SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider } from '#/components/icons/SettingsSlider';
-import * as Menu from '#/components/Menu';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Menu from '#/components/web/Menu';
 
 export function HeaderDropdown({
 	sort,
@@ -17,32 +15,21 @@ export function HeaderDropdown({
 	const { t: l } = useLingui();
 	return (
 		<Menu.Root>
-			<Menu.Trigger label={l`Thread options`}>
-				{({ props: { onPress, ...props } }) => (
-					<Button
-						label={l`Thread options`}
-						size="small"
-						variant="ghost"
-						color="secondary"
-						shape="round"
-						hitSlop={HITSLOP_10}
-						onPress={() => {
-							onPress();
-						}}
-						{...props}
-					>
+			<Menu.Trigger
+				render={
+					<Button label={l`Thread options`} size="small" variant="ghost" color="secondary" shape="round">
 						<ButtonIcon icon={SettingsSlider} size="md" />
 					</Button>
-				)}
-			</Menu.Trigger>
-			<Menu.Outer>
-				<Menu.LabelText>
-					<Trans>Show replies as</Trans>
-				</Menu.LabelText>
+				}
+			/>
+			<Menu.Popup label={l`Thread options`} align="end">
 				<Menu.Group>
+					<Menu.LabelText>
+						<Trans>Show replies as</Trans>
+					</Menu.LabelText>
 					<Menu.Item
 						label={l`Linear`}
-						onPress={() => {
+						onClick={() => {
 							setView('linear');
 						}}
 					>
@@ -53,7 +40,7 @@ export function HeaderDropdown({
 					</Menu.Item>
 					<Menu.Item
 						label={l`Threaded`}
-						onPress={() => {
+						onClick={() => {
 							setView('tree');
 						}}
 					>
@@ -63,14 +50,14 @@ export function HeaderDropdown({
 						<Menu.ItemRadio selected={view === 'tree'} />
 					</Menu.Item>
 				</Menu.Group>
-				<Menu.Divider />
-				<Menu.LabelText>
-					<Trans>Reply sorting</Trans>
-				</Menu.LabelText>
+				<Menu.Separator />
 				<Menu.Group>
+					<Menu.LabelText>
+						<Trans>Reply sorting</Trans>
+					</Menu.LabelText>
 					<Menu.Item
 						label={l`Top replies first`}
-						onPress={() => {
+						onClick={() => {
 							setSort('top');
 						}}
 					>
@@ -81,7 +68,7 @@ export function HeaderDropdown({
 					</Menu.Item>
 					<Menu.Item
 						label={l`Oldest replies first`}
-						onPress={() => {
+						onClick={() => {
 							setSort('oldest');
 						}}
 					>
@@ -92,7 +79,7 @@ export function HeaderDropdown({
 					</Menu.Item>
 					<Menu.Item
 						label={l`Newest replies first`}
-						onPress={() => {
+						onClick={() => {
 							setSort('newest');
 						}}
 					>
@@ -102,7 +89,7 @@ export function HeaderDropdown({
 						<Menu.ItemRadio selected={sort === 'newest'} />
 					</Menu.Item>
 				</Menu.Group>
-			</Menu.Outer>
+			</Menu.Popup>
 		</Menu.Root>
 	);
 }
