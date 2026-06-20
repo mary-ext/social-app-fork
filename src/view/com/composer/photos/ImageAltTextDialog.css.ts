@@ -26,19 +26,23 @@ export const form = style({
 	padding: 16,
 });
 
-export const warningRow = style({
-	display: 'flex',
-	flexDirection: 'row',
-	gap: 4,
-	marginTop: 8,
-});
-
-export const warningIcon = style({
+// fixed-width figures so the running count doesn't jitter as digits change
+export const counter = style({
 	flexShrink: 0,
+	fontVariantNumeric: 'tabular-nums',
 });
 
-export const warningText = style({
-	fontStyle: 'italic',
+// visually hidden but exposed to assistive tech, for the over-limit live region
+export const srOnly = style({
+	border: 0,
+	clip: 'rect(0, 0, 0, 0)',
+	height: 1,
+	margin: -1,
+	overflow: 'hidden',
+	padding: 0,
+	position: 'absolute',
+	whiteSpace: 'nowrap',
+	width: 1,
 });
 
 // muted Save label while there's nothing to save (matches EditProfileDialog's inactive save)

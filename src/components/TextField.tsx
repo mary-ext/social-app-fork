@@ -46,11 +46,23 @@ export function Root({
 	);
 }
 
-export function LabelText({ children, htmlFor }: { children: ReactNode; htmlFor?: string }) {
+export function LabelText({
+	accessory,
+	children,
+	htmlFor,
+}: {
+	/**
+	 * Optional content rendered to the trailing edge of the label, as a sibling of the `<label>` so it stays
+	 * out of the field's accessible name.
+	 */
+	accessory?: ReactNode;
+	children: ReactNode;
+	htmlFor?: string;
+}) {
 	const { id } = useContext(FieldContext);
-	return (
+	const label = (
 		<BaseLabelText
-			className={styles.label}
+			className={accessory === undefined ? styles.label : undefined}
 			color="textContrastMedium"
 			htmlFor={htmlFor ?? id}
 			size="md_sub"
@@ -59,11 +71,26 @@ export function LabelText({ children, htmlFor }: { children: ReactNode; htmlFor?
 			{children}
 		</BaseLabelText>
 	);
+
+	if (accessory === undefined) {
+		return label;
+	}
+
+	// a flex row pairing the <label> with a sibling accessory, not a text leaf — the *Text-returns-<Text> rule doesn't apply
+	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
+	return (
+		<div className={styles.labelRow}>
+			{label}
+			{accessory}
+		</div>
+	);
 }
 
 export type InputProps = {
 	/** Accessible name. */
 	label: string;
+	/** Id of an element describing the field, wired to `aria-describedby` (e.g. a character counter or hint). */
+	describedBy?: string;
 	autoFocus?: boolean;
 	value?: string;
 	defaultValue?: string;
@@ -92,6 +119,7 @@ export type InputProps = {
 
 export function Input({
 	label,
+	describedBy,
 	autoFocus,
 	value,
 	defaultValue,
@@ -121,6 +149,8 @@ export function Input({
 	if (multiline) {
 		return (
 			<textarea
+				aria-describedby={describedBy}
+				aria-invalid={invalid || undefined}
 				aria-label={label}
 				autoFocus={autoFocus}
 				className={cls}
@@ -140,6 +170,8 @@ export function Input({
 
 	return (
 		<input
+			aria-describedby={describedBy}
+			aria-invalid={invalid || undefined}
 			aria-label={label}
 			autoCapitalize={autoCapitalize}
 			autoComplete={autoComplete}

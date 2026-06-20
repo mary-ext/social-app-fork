@@ -27,6 +27,15 @@ export const label = style({
 	marginBottom: 8,
 });
 
+// label paired with a trailing accessory (e.g. a character counter): the accessory sits as a sibling of the
+// `<label>` so it stays out of the field's accessible name, and the row carries the label's usual bottom margin.
+export const labelRow = style({
+	alignItems: 'baseline',
+	display: 'flex',
+	justifyContent: 'space-between',
+	marginBottom: 8,
+});
+
 export const input = style(
 	layered(components, {
 		appearance: 'none',
