@@ -122,6 +122,20 @@ export const button = recipe(
 				variant: 'solid',
 			},
 			{
+				// subtle primary action (e.g. a list's "Subscribe"): tinted fill rather than a full-strength
+				// primary button.
+				color: 'primary_subtle',
+				style: {
+					backgroundColor: vars.palette.primary_50,
+					color: vars.palette.primary_600,
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.primary_100 },
+						'&:disabled': { color: vars.palette.primary_200, opacity: 1 },
+					},
+				},
+				variant: 'solid',
+			},
+			{
 				color: 'negative',
 				style: {
 					backgroundColor: 'transparent',
@@ -172,7 +186,14 @@ export const button = recipe(
 		],
 		defaultVariants: { color: 'primary', shape: 'default', size: 'small', variant: 'solid' },
 		variants: {
-			color: { negative: {}, negative_subtle: {}, primary: {}, secondary: {}, secondary_inverted: {} },
+			color: {
+				negative: {},
+				negative_subtle: {},
+				primary: {},
+				primary_subtle: {},
+				secondary: {},
+				secondary_inverted: {},
+			},
 			shape: { default: {}, rectangular: {}, round: {} },
 			size: {
 				large: { gap: 6, paddingBlock: 12, paddingInline: 24, vars: { [fontSizeVar]: fontSize.md } },
