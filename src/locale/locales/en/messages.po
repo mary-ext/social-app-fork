@@ -1591,8 +1591,8 @@ msgstr ""
 msgid "Block account?"
 msgstr "Block account?"
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:77
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:79
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:72
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:74
 msgid "Block accounts"
 msgstr ""
 
@@ -1606,7 +1606,7 @@ msgctxt "button"
 msgid "Block and leave"
 msgstr "Block and leave"
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:98
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:93
 msgid "Block list"
 msgstr ""
 
@@ -1614,7 +1614,7 @@ msgstr ""
 msgid "Block or report"
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:95
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:90
 msgid "Block these accounts?"
 msgstr ""
 
@@ -1672,7 +1672,7 @@ msgstr "Blocked message hidden"
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:96
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:91
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -4625,7 +4625,7 @@ msgstr ""
 msgid "List avatar"
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:40
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:38
 msgctxt "toast"
 msgid "List blocked"
 msgstr ""
@@ -4678,7 +4678,7 @@ msgstr ""
 msgid "List must have a name."
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:29
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:27
 msgctxt "toast"
 msgid "List muted"
 msgstr ""
@@ -5152,8 +5152,8 @@ msgstr ""
 msgid "Mute account?"
 msgstr "Mute account?"
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:71
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:73
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:66
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:68
 msgid "Mute accounts"
 msgstr ""
 
@@ -5166,11 +5166,11 @@ msgstr ""
 msgid "Mute in:"
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:91
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:86
 msgid "Mute list"
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:88
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:83
 msgid "Mute these accounts?"
 msgstr ""
 
@@ -5238,7 +5238,7 @@ msgstr ""
 msgid "Muted words & tags"
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:89
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:84
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 msgid "Submit report"
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:64
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:59
 msgid "Subscribe"
 msgstr ""
 
@@ -8022,7 +8022,8 @@ msgstr ""
 msgid "Subscribe to this labeler"
 msgstr ""
 
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:51
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:52
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:64
 msgid "Subscribe to this list"
 msgstr ""
 
@@ -8337,8 +8338,8 @@ msgstr ""
 #: src/screens/ProfileList/components/Header.tsx:100
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:110
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:119
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:31
-#: src/screens/ProfileList/components/SubscribeMenu.tsx:42
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:29
+#: src/screens/ProfileList/components/SubscribeMenu.tsx:40
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
