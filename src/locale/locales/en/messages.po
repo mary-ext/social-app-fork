@@ -149,7 +149,7 @@ msgstr ""
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:420
+#: src/screens/StarterPack/StarterPackScreen.tsx:416
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr ""
 
@@ -1181,7 +1181,7 @@ msgstr ""
 msgid "All {0}"
 msgstr "All {0}"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:334
+#: src/screens/StarterPack/StarterPackScreen.tsx:330
 msgid "All accounts have been followed!"
 msgstr ""
 
@@ -1304,8 +1304,8 @@ msgstr ""
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:293
-#: src/screens/StarterPack/StarterPackScreen.tsx:320
+#: src/screens/StarterPack/StarterPackScreen.tsx:289
+#: src/screens/StarterPack/StarterPackScreen.tsx:316
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
@@ -1462,7 +1462,7 @@ msgstr ""
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:584
+#: src/screens/StarterPack/StarterPackScreen.tsx:580
 msgid "Are you sure you want to delete this starter pack?"
 msgstr ""
 
@@ -2273,12 +2273,12 @@ msgid "Copy DID"
 msgstr ""
 
 #: src/components/dms/ChatInvite/use-chat-invite.tsx:109
-#: src/components/StarterPack/ShareDialog.tsx:81
-#: src/screens/StarterPack/StarterPackScreen.tsx:553
+#: src/components/StarterPack/ShareDialog.tsx:79
+#: src/screens/StarterPack/StarterPackScreen.tsx:549
 msgid "Copy link"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:87
+#: src/components/StarterPack/ShareDialog.tsx:85
 msgid "Copy Link"
 msgstr ""
 
@@ -2297,7 +2297,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:549
+#: src/screens/StarterPack/StarterPackScreen.tsx:545
 msgid "Copy link to starter pack"
 msgstr ""
 
@@ -2392,12 +2392,8 @@ msgstr ""
 msgid "Create a list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:533
+#: src/screens/StarterPack/StarterPackScreen.tsx:529
 msgid "Create a list from this starter pack"
-msgstr ""
-
-#: src/components/StarterPack/QrCodeDialog.tsx:26
-msgid "Create a QR code for a starter pack"
 msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:155
@@ -2428,7 +2424,7 @@ msgstr "Create group chat"
 msgid "Create list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:540
+#: src/screens/StarterPack/StarterPackScreen.tsx:536
 msgid "Create list from members"
 msgstr ""
 
@@ -2517,9 +2513,9 @@ msgstr ""
 #: src/components/dms/MessageOverlays.tsx:168
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:566
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:221
-#: src/screens/StarterPack/StarterPackScreen.tsx:528
-#: src/screens/StarterPack/StarterPackScreen.tsx:617
-#: src/screens/StarterPack/StarterPackScreen.tsx:694
+#: src/screens/StarterPack/StarterPackScreen.tsx:524
+#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:690
 msgid "Delete"
 msgstr ""
 
@@ -2562,12 +2558,12 @@ msgstr ""
 msgid "Delete post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:521
-#: src/screens/StarterPack/StarterPackScreen.tsx:684
+#: src/screens/StarterPack/StarterPackScreen.tsx:517
+#: src/screens/StarterPack/StarterPackScreen.tsx:680
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:581
+#: src/screens/StarterPack/StarterPackScreen.tsx:577
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -2823,7 +2819,7 @@ msgid "Eating disorders"
 msgstr ""
 
 #: src/screens/Messages/components/EditTextButton.tsx:46
-#: src/screens/StarterPack/StarterPackScreen.tsx:516
+#: src/screens/StarterPack/StarterPackScreen.tsx:512
 #: src/screens/StarterPack/Wizard/index.tsx:292
 #: src/screens/StarterPack/Wizard/index.tsx:294
 msgid "Edit"
@@ -2920,7 +2916,7 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:507
+#: src/screens/StarterPack/StarterPackScreen.tsx:503
 msgid "Edit starter pack"
 msgstr ""
 
@@ -3240,7 +3236,7 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:652
+#: src/screens/StarterPack/StarterPackScreen.tsx:648
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -3477,7 +3473,7 @@ msgstr ""
 #: src/Navigation.tsx:740
 #: src/screens/SavedFeeds.tsx:96
 #: src/screens/Search/SearchResults.tsx:71
-#: src/screens/StarterPack/StarterPackScreen.tsx:172
+#: src/screens/StarterPack/StarterPackScreen.tsx:171
 #: src/view/screens/Feeds.tsx:479
 #: src/view/screens/Profile.tsx:343
 #: src/view/shell/desktop/LeftNav.tsx:647
@@ -3583,8 +3579,8 @@ msgstr "Follow {displayName}"
 msgid "Follow account"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:373
-#: src/screens/StarterPack/StarterPackScreen.tsx:382
+#: src/screens/StarterPack/StarterPackScreen.tsx:369
+#: src/screens/StarterPack/StarterPackScreen.tsx:378
 msgid "Follow all"
 msgstr ""
 
@@ -3850,7 +3846,7 @@ msgstr ""
 #: src/screens/List/ListHiddenScreen.tsx:196
 #: src/screens/Profile/ErrorState.tsx:49
 #: src/screens/Profile/ErrorState.tsx:54
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
+#: src/screens/StarterPack/StarterPackScreen.tsx:704
 msgid "Go Back"
 msgstr ""
 
@@ -4328,7 +4324,7 @@ msgstr "Invite link edited"
 msgid "Invite link enabled"
 msgstr "Invite link enabled"
 
-#: src/components/StarterPack/ShareDialog.tsx:61
+#: src/components/StarterPack/ShareDialog.tsx:59
 msgid "Invite people to this starter pack!"
 msgstr ""
 
@@ -4374,7 +4370,6 @@ msgstr "Join group chat"
 msgid "Join request rescinded."
 msgstr "Join request rescinded."
 
-#: src/components/StarterPack/QrCode.tsx:42
 #: src/view/shell/nav-sign-in-card.tsx:30
 msgid "Join the conversation"
 msgstr ""
@@ -5682,10 +5677,6 @@ msgstr ""
 msgid "Oldest replies first"
 msgstr ""
 
-#: src/components/StarterPack/QrCode.tsx:57
-msgid "on<0><1/><2><3/></2></0>"
-msgstr ""
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:104
 msgid "One of the selected recipients does not allow group chats."
 msgstr "One of the selected recipients does not allow group chats."
@@ -5854,7 +5845,7 @@ msgstr "Open settings"
 msgid "Open share menu"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:492
+#: src/screens/StarterPack/StarterPackScreen.tsx:488
 msgid "Open starter pack menu"
 msgstr ""
 
@@ -6001,7 +5992,7 @@ msgstr ""
 
 #: src/screens/ProfileList/index.tsx:185
 #: src/screens/Search/SearchResults.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:167
+#: src/screens/StarterPack/StarterPackScreen.tsx:166
 msgid "People"
 msgstr ""
 
@@ -6297,7 +6288,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:209
 #: src/screens/ProfileList/index.tsx:173
-#: src/screens/StarterPack/StarterPackScreen.tsx:177
+#: src/screens/StarterPack/StarterPackScreen.tsx:176
 #: src/view/screens/Profile.tsx:246
 msgid "Posts"
 msgstr ""
@@ -6878,8 +6869,8 @@ msgstr ""
 msgid "Report post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:558
-#: src/screens/StarterPack/StarterPackScreen.tsx:560
+#: src/screens/StarterPack/StarterPackScreen.tsx:554
+#: src/screens/StarterPack/StarterPackScreen.tsx:556
 msgid "Report starter pack"
 msgstr ""
 
@@ -6942,7 +6933,7 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:47
 #: src/components/PostControls/RepostButton.tsx:58
 #: src/components/PostControls/RepostButton.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:487
+#: src/screens/StarterPack/StarterPackScreen.tsx:483
 msgid "Repost or quote post"
 msgstr ""
 
@@ -7060,7 +7051,7 @@ msgstr ""
 
 #: src/components/Error.tsx:71
 #: src/screens/List/ListHiddenScreen.tsx:190
-#: src/screens/StarterPack/StarterPackScreen.tsx:701
+#: src/screens/StarterPack/StarterPackScreen.tsx:697
 msgid "Return to previous page"
 msgstr ""
 
@@ -7562,7 +7553,7 @@ msgstr ""
 #: src/screens/Hashtag.tsx:110
 #: src/screens/Messages/components/InviteLinkDialog.tsx:356
 #: src/screens/Messages/components/InviteLinkDialog.tsx:364
-#: src/screens/StarterPack/StarterPackScreen.tsx:368
+#: src/screens/StarterPack/StarterPackScreen.tsx:364
 #: src/screens/Topic.tsx:78
 msgid "Share"
 msgstr ""
@@ -7581,24 +7572,19 @@ msgstr "Share image"
 msgid "Share link"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:52
+#: src/components/StarterPack/ShareDialog.tsx:50
 msgid "Share link dialog"
-msgstr ""
-
-#: src/components/StarterPack/ShareDialog.tsx:90
-#: src/components/StarterPack/ShareDialog.tsx:101
-msgid "Share QR code"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:358
 msgid "Share this feed"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:360
+#: src/screens/StarterPack/StarterPackScreen.tsx:356
 msgid "Share this starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:64
+#: src/components/StarterPack/ShareDialog.tsx:62
 msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr ""
 
@@ -7707,8 +7693,8 @@ msgstr ""
 #: src/components/dialogs/Signin.tsx:195
 #: src/screens/Hashtag.tsx:193
 #: src/screens/Search/SearchResults.tsx:261
-#: src/screens/StarterPack/StarterPackScreen.tsx:400
-#: src/screens/StarterPack/StarterPackScreen.tsx:412
+#: src/screens/StarterPack/StarterPackScreen.tsx:396
+#: src/screens/StarterPack/StarterPackScreen.tsx:408
 #: src/view/com/auth/SplashScreen.tsx:89
 #: src/view/com/auth/SplashScreen.tsx:96
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
@@ -7953,7 +7939,7 @@ msgstr ""
 msgid "Starter pack by you"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:663
+#: src/screens/StarterPack/StarterPackScreen.tsx:659
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -8176,10 +8162,10 @@ msgstr ""
 msgid "Thank you for your feedback! It has been sent to the feed operator."
 msgstr ""
 
+#: src/screens/StarterPack/StarterPackScreen.tsx:93
 #: src/screens/StarterPack/StarterPackScreen.tsx:94
-#: src/screens/StarterPack/StarterPackScreen.tsx:95
+#: src/screens/StarterPack/StarterPackScreen.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:131
-#: src/screens/StarterPack/StarterPackScreen.tsx:132
 #: src/screens/StarterPack/Wizard/index.tsx:96
 #: src/screens/StarterPack/Wizard/index.tsx:106
 msgid "That starter pack could not be found."
@@ -8248,7 +8234,7 @@ msgstr "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try ag
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:674
+#: src/screens/StarterPack/StarterPackScreen.tsx:670
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -8812,7 +8798,7 @@ msgstr ""
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:601
+#: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Unable to delete"
 msgstr ""
 
@@ -9626,7 +9612,7 @@ msgstr ""
 msgid "Yes GIFs"
 msgstr "Yes GIFs"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:609
 msgid "Yes, delete this starter pack"
 msgstr ""
 

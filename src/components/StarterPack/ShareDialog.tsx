@@ -11,7 +11,6 @@ import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { type DialogControlProps } from '#/components/Dialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import { QrCode_Stroke2_Corner0_Rounded as QrCodeIcon } from '#/components/icons/QrCode';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
 
@@ -21,7 +20,6 @@ interface Props {
 	starterPack: AppBskyGraphDefs.StarterPackView;
 	link?: string;
 	imageLoaded?: boolean;
-	qrDialogControl: DialogControlProps;
 	control: DialogControlProps;
 }
 
@@ -34,7 +32,7 @@ export function ShareDialog(props: Props) {
 	);
 }
 
-function ShareDialogInner({ starterPack, link, imageLoaded, qrDialogControl, control }: Props) {
+function ShareDialogInner({ starterPack, link, imageLoaded, control }: Props) {
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const { gtMobile } = useBreakpoints();
@@ -85,21 +83,6 @@ function ShareDialogInner({ starterPack, link, imageLoaded, qrDialogControl, con
 							>
 								<ButtonIcon icon={ChainLinkIcon} />
 								<ButtonText>{<Trans>Copy Link</Trans>}</ButtonText>
-							</Button>
-							<Button
-								label={l`Share QR code`}
-								color="primary_subtle"
-								size="large"
-								onPress={() => {
-									control.close(() => {
-										qrDialogControl.open();
-									});
-								}}
-							>
-								<ButtonIcon icon={QrCodeIcon} />
-								<ButtonText>
-									<Trans>Share QR code</Trans>
-								</ButtonText>
 							</Button>
 						</View>
 					</View>

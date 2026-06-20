@@ -56,7 +56,6 @@ import { RichText } from '#/components/RichText';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
 import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
-import { QrCodeDialog } from '#/components/StarterPack/QrCodeDialog';
 import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
@@ -180,14 +179,11 @@ function StarterPackScreenLoaded({
 	]);
 	const [activeTab, setActiveTab] = useState<'feeds' | 'people' | 'posts'>('people');
 
-	const qrCodeDialogControl = useDialogControl();
 	const shareDialogControl = useDialogControl();
 
 	const shortenLink = useShortenLink();
 	const [link, setLink] = useState<string>();
 	const [imageLoaded, setImageLoaded] = useState(false);
-
-	useEffect(() => {}, [starterPack.uri]);
 
 	const onOpenShareDialog = useCallback(() => {
 		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
@@ -221,10 +217,8 @@ function StarterPackScreenLoaded({
 				}
 			/>
 
-			<QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} link={link} />
 			<ShareDialog
 				control={shareDialogControl}
-				qrDialogControl={qrCodeDialogControl}
 				starterPack={starterPack}
 				link={link}
 				imageLoaded={imageLoaded}
