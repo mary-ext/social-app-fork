@@ -13,8 +13,6 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { Button, ButtonIcon } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLink } from '#/components/icons/ChainLink';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotGridIcon } from '#/components/icons/DotGrid';
@@ -24,11 +22,12 @@ import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/components/icons/Speaker';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import * as Menu from '#/components/web/Menu';
+import * as Prompt from '#/components/web/Prompt';
 
 export function MoreOptionsMenu({
 	list,
@@ -40,7 +39,7 @@ export function MoreOptionsMenu({
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const editListHandle = Dialog.useDialogHandle();
-	const deleteListPromptControl = useDialogControl();
+	const deleteListPromptHandle = Prompt.usePromptHandle();
 	const reportDialogControl = useReportDialogControl();
 	const navigation = useNavigation<NavigationProp>();
 
@@ -123,28 +122,21 @@ export function MoreOptionsMenu({
 	return (
 		<>
 			<Menu.Root>
-				<Menu.Trigger label={l`More options`}>
-					{({ props }) => (
-						<Button
-							label={props.accessibilityLabel}
-							testID="moreOptionsBtn"
-							size="small"
-							color="secondary"
-							shape="round"
-							{...props}
-						>
+				<Menu.Trigger
+					render={
+						<Button label={l`More options`} size="small" color="secondary" shape="round">
 							<ButtonIcon icon={DotGridIcon} />
 						</Button>
-					)}
-				</Menu.Trigger>
-				<Menu.Outer showCancel>
+					}
+				/>
+				<Menu.Popup label={l`More options`} align="end">
 					<Menu.Group>
-						<Menu.Item label={l`Copy link to list`} onPress={onPressShare}>
+						<Menu.Item label={l`Copy link to list`} onClick={onPressShare}>
 							<Menu.ItemText>{<Trans>Copy link to list</Trans>}</Menu.ItemText>
 							<Menu.ItemIcon position="right" icon={ChainLink} />
 						</Menu.Item>
 						{savedFeedConfig && (
-							<Menu.Item label={l`Remove from my feeds`} onPress={() => void onRemoveFromSavedFeeds()}>
+							<Menu.Item label={l`Remove from my feeds`} onClick={() => void onRemoveFromSavedFeeds()}>
 								<Menu.ItemText>
 									<Trans>Remove from my feeds</Trans>
 								</Menu.ItemText>
@@ -153,17 +145,17 @@ export function MoreOptionsMenu({
 						)}
 					</Menu.Group>
 
-					<Menu.Divider />
+					<Menu.Separator />
 
 					{isOwner ? (
 						<Menu.Group>
-							<Menu.Item label={l`Edit list details`} onPress={() => editListHandle.open(null)}>
+							<Menu.Item label={l`Edit list details`} onClick={() => editListHandle.open(null)}>
 								<Menu.ItemText>
 									<Trans>Edit list details</Trans>
 								</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={PencilLineIcon} />
 							</Menu.Item>
-							<Menu.Item label={l`Delete list`} onPress={deleteListPromptControl.open}>
+							<Menu.Item label={l`Delete list`} onClick={() => deleteListPromptHandle.open(null)}>
 								<Menu.ItemText>
 									<Trans>Delete list</Trans>
 								</Menu.ItemText>
@@ -172,7 +164,7 @@ export function MoreOptionsMenu({
 						</Menu.Group>
 					) : (
 						<Menu.Group>
-							<Menu.Item label={l`Report list`} onPress={reportDialogControl.open}>
+							<Menu.Item label={l`Report list`} onClick={() => reportDialogControl.open()}>
 								<Menu.ItemText>
 									<Trans>Report list</Trans>
 								</Menu.ItemText>
@@ -183,9 +175,9 @@ export function MoreOptionsMenu({
 
 					{isModList && isPinned && (
 						<>
-							<Menu.Divider />
+							<Menu.Separator />
 							<Menu.Group>
-								<Menu.Item label={l`Unpin moderation list`} onPress={() => void onUnpinModList()}>
+								<Menu.Item label={l`Unpin moderation list`} onClick={() => void onUnpinModList()}>
 									<Menu.ItemText>
 										<Trans>Unpin moderation list</Trans>
 									</Menu.ItemText>
@@ -197,10 +189,10 @@ export function MoreOptionsMenu({
 
 					{isCurateList && (isBlocking || isMuting) && (
 						<>
-							<Menu.Divider />
+							<Menu.Separator />
 							<Menu.Group>
 								{isBlocking && (
-									<Menu.Item label={l`Unblock list`} onPress={() => void onUnsubscribeBlock()}>
+									<Menu.Item label={l`Unblock list`} onClick={() => void onUnsubscribeBlock()}>
 										<Menu.ItemText>
 											<Trans>Unblock list</Trans>
 										</Menu.ItemText>
@@ -208,7 +200,7 @@ export function MoreOptionsMenu({
 									</Menu.Item>
 								)}
 								{isMuting && (
-									<Menu.Item label={l`Unmute list`} onPress={() => void onUnsubscribeMute()}>
+									<Menu.Item label={l`Unmute list`} onClick={() => void onUnsubscribeMute()}>
 										<Menu.ItemText>
 											<Trans>Unmute list</Trans>
 										</Menu.ItemText>
@@ -218,11 +210,11 @@ export function MoreOptionsMenu({
 							</Menu.Group>
 						</>
 					)}
-				</Menu.Outer>
+				</Menu.Popup>
 			</Menu.Root>
 			<CreateOrEditListDialog handle={editListHandle} list={list} />
 			<Prompt.Basic
-				control={deleteListPromptControl}
+				handle={deleteListPromptHandle}
 				title={l`Delete this list?`}
 				description={l`If you delete this list, you won't be able to recover it.`}
 				onConfirm={() => void onPressDelete()}

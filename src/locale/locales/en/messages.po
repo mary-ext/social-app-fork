@@ -2275,8 +2275,8 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:142
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:143
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:134
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:135
 msgid "Copy link to list"
 msgstr ""
 
@@ -2509,7 +2509,7 @@ msgstr ""
 
 #: src/components/dms/MessageOverlays.tsx:168
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:566
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:229
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:221
 #: src/screens/StarterPack/StarterPackScreen.tsx:527
 #: src/screens/StarterPack/StarterPackScreen.tsx:616
 #: src/screens/StarterPack/StarterPackScreen.tsx:693
@@ -2536,8 +2536,8 @@ msgstr ""
 msgid "Delete for me"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:166
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:168
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:158
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:160
 msgid "Delete list"
 msgstr ""
 
@@ -2564,7 +2564,7 @@ msgstr ""
 msgid "Delete starter pack?"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:226
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:218
 msgid "Delete this list?"
 msgstr ""
 
@@ -2871,8 +2871,8 @@ msgstr "Edit invite link"
 msgid "Edit link settings"
 msgstr "Edit link settings"
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:160
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:162
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:152
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:154
 msgid "Edit list details"
 msgstr ""
 
@@ -3394,7 +3394,7 @@ msgstr ""
 msgid "Failed to unlock group chat"
 msgstr "Failed to unlock group chat"
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:99
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:98
 msgid "Failed to unpin list"
 msgstr ""
 
@@ -4142,7 +4142,7 @@ msgstr ""
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:227
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:219
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
@@ -4653,7 +4653,7 @@ msgstr ""
 msgid "List creator"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:85
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:84
 msgctxt "toast"
 msgid "List deleted"
 msgstr ""
@@ -4692,13 +4692,13 @@ msgid "List name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The ma
 msgstr ""
 
 #: src/screens/ProfileList/components/Header.tsx:98
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:117
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:116
 msgctxt "toast"
 msgid "List unblocked"
 msgstr ""
 
 #: src/screens/ProfileList/components/Header.tsx:89
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:108
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:107
 msgctxt "toast"
 msgid "List unmuted"
 msgstr ""
@@ -5103,7 +5103,8 @@ msgstr ""
 msgid "More languages..."
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:126
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:127
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:132
 #: src/view/com/composer/drafts/DraftItem.tsx:119
 #: src/view/com/profile/ProfileMenu.tsx:232
 #: src/view/com/profile/ProfileMenu.tsx:238
@@ -6619,8 +6620,8 @@ msgstr "Remove from chat"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:279
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:282
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:147
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:149
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:139
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:141
 #: src/screens/SavedFeeds.tsx:329
 msgid "Remove from my feeds"
 msgstr ""
@@ -6711,7 +6712,7 @@ msgid "Removed from starter pack"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:108
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:69
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:68
 #: src/view/com/posts/FeedShutdownMsg.tsx:43
 msgid "Removed from your feeds"
 msgstr ""
@@ -6861,8 +6862,8 @@ msgstr ""
 msgid "Report feed"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:175
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:177
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:169
 msgid "Report list"
 msgstr ""
 
@@ -8270,7 +8271,7 @@ msgstr "There was a problem with your internet connection, please try again"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:157
 #: src/screens/ProfileList/components/Header.tsx:79
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:71
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:70
 #: src/screens/SavedFeeds.tsx:81
 msgid "There was an issue contacting the server"
 msgstr ""
@@ -8336,8 +8337,8 @@ msgstr ""
 #: src/screens/List/ListHiddenScreen.tsx:89
 #: src/screens/ProfileList/components/Header.tsx:91
 #: src/screens/ProfileList/components/Header.tsx:100
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:110
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:119
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:109
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:118
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:29
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:40
 msgid "There was an issue. Please check your internet connection and try again."
@@ -8878,8 +8879,8 @@ msgstr "Unblock account?"
 msgid "Unblock Account?"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:203
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:205
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:195
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:197
 msgid "Unblock list"
 msgstr ""
 
@@ -8973,8 +8974,8 @@ msgstr "Unmute account?"
 msgid "Unmute conversation"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:211
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:213
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:203
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:205
 msgid "Unmute list"
 msgstr ""
 
@@ -9013,8 +9014,8 @@ msgstr ""
 msgid "Unpin from profile"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:188
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:190
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:180
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:182
 msgid "Unpin moderation list"
 msgstr ""
 
@@ -9027,7 +9028,7 @@ msgstr ""
 msgid "Unpinned from your feeds"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:97
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:96
 msgid "Unpinned list"
 msgstr ""
 
