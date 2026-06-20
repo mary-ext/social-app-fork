@@ -2,28 +2,16 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// square frame, full-bleed to the sheet's content borders, letterboxing the contained image
-export const imageBox = style({
-	alignItems: 'center',
-	aspectRatio: '1',
-	backgroundColor: vars.palette.contrast_50,
-	display: 'flex',
-	justifyContent: 'center',
-	overflow: 'hidden',
-	width: '100%',
-});
-
-export const image = style({
-	height: '100%',
-	objectFit: 'contain',
-	width: '100%',
+export const gifBox = style({
+	padding: 16,
 });
 
 export const form = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 12,
-	padding: 16,
+	paddingBlockEnd: 16,
+	paddingInline: 16,
 });
 
 // fixed-width figures so the running count doesn't jitter as digits change

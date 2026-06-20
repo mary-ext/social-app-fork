@@ -70,7 +70,7 @@ import { ComposerReplyTo } from '#/view/com/composer/ComposerReplyTo';
 import { DraftsButton } from '#/view/com/composer/drafts/DraftsButton';
 import { ExternalEmbedGif, ExternalEmbedLink } from '#/view/com/composer/ExternalEmbed';
 import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn';
-import { GifAltTextDialog } from '#/view/com/composer/GifAltText';
+import { GifAltText } from '#/view/com/composer/GifAltText';
 import { LabelsBtn } from '#/view/com/composer/labels/LabelsBtn';
 import { Gallery } from '#/view/com/composer/photos/Gallery';
 import { SelectGifBtn } from '#/view/com/composer/photos/SelectGifBtn';
@@ -1468,7 +1468,7 @@ function ComposerEmbeds({
 			{embed.media?.type === 'gif' && (
 				<View style={[a.relative, a.mt_lg]} key={embed.media.gif.url}>
 					<ExternalEmbedGif gif={embed.media.gif} onRemove={() => dispatch({ type: 'embed_remove_gif' })} />
-					<GifAltTextDialog
+					<GifAltText
 						gif={embed.media.gif}
 						altText={embed.media.alt ?? ''}
 						onSubmit={(altText: string) => {

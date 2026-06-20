@@ -235,11 +235,13 @@ msgid "{0} of {1}"
 msgstr ""
 
 #. placeholder {0}: altText.length
+#: src/view/com/composer/GifAltText.tsx:124
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:45
 msgid "{0} of {MAX_ALT_TEXT} characters"
 msgstr "{0} of {MAX_ALT_TEXT} characters"
 
 #. placeholder {0}: altText.length
+#: src/view/com/composer/GifAltText.tsx:123
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:44
 msgid "{0} of {MAX_ALT_TEXT} characters, over the limit"
 msgstr "{0} of {MAX_ALT_TEXT} characters, over the limit"
@@ -1005,9 +1007,9 @@ msgstr ""
 msgid "Add account"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:78
-#: src/view/com/composer/GifAltText.tsx:117
-#: src/view/com/composer/GifAltText.tsx:210
+#: src/view/com/composer/GifAltText.tsx:49
+#: src/view/com/composer/GifAltText.tsx:81
+#: src/view/com/composer/GifAltText.tsx:149
 #: src/view/com/composer/photos/Gallery.tsx:177
 #: src/view/com/composer/photos/Gallery.tsx:215
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:27
@@ -1260,13 +1262,14 @@ msgstr ""
 #: src/components/ExternalEmbed/GifEmbed.tsx:135
 #: src/components/ImageEmbed/MediaBadges.tsx:71
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:57
-#: src/view/com/composer/GifAltText.tsx:101
+#: src/view/com/composer/GifAltText.tsx:70
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:34
-#: src/view/com/composer/GifAltText.tsx:161
+#: src/view/com/composer/GifAltText.tsx:196
+#: src/view/com/composer/GifAltText.tsx:200
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:117
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:121
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
@@ -1279,19 +1282,15 @@ msgstr ""
 msgid "Alt Text"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:105
+#: src/view/com/composer/GifAltText.tsx:75
 #: src/view/com/composer/photos/Gallery.tsx:125
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr ""
 
+#: src/view/com/composer/GifAltText.tsx:206
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:127
 msgid "Alt text is over the character limit."
 msgstr "Alt text is over the character limit."
-
-#. placeholder {0}: i18n.number(MAX_ALT_TEXT)
-#: src/view/com/composer/GifAltText.tsx:181
-msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
-msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:395
 msgid "An error occurred"
@@ -1821,6 +1820,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:111
 #: src/view/com/composer/Composer.tsx:1369
 #: src/view/com/composer/Composer.tsx:1371
+#: src/view/com/composer/GifAltText.tsx:137
+#: src/view/com/composer/GifAltText.tsx:143
 #: src/view/com/composer/photos/EditImageDialog.tsx:59
 #: src/view/com/composer/photos/EditImageDialog.tsx:65
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:58
@@ -2615,7 +2616,7 @@ msgstr "Deleted message"
 msgid "Description"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:157
+#: src/view/com/composer/GifAltText.tsx:189
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:110
 msgid "Descriptive alt text"
 msgstr ""
@@ -7096,8 +7097,8 @@ msgstr "Sad GIFs"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:205
 #: src/screens/Profile/Header/EditProfileDialog.tsx:214
 #: src/screens/SavedFeeds.tsx:108
-#: src/view/com/composer/GifAltText.tsx:192
-#: src/view/com/composer/GifAltText.tsx:202
+#: src/view/com/composer/GifAltText.tsx:157
+#: src/view/com/composer/GifAltText.tsx:163
 #: src/view/com/composer/photos/EditImageDialog.tsx:78
 #: src/view/com/composer/photos/EditImageDialog.tsx:84
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:78
