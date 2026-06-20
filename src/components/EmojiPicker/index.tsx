@@ -1,7 +1,7 @@
 import { createContext, type ReactNode, type RefObject, useContext, useMemo, useRef, useState } from 'react';
 import { Popover } from '@base-ui/react/popover';
 
-import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter';
+import { emojiInserted } from '#/view/com/composer/text-input/textInputWebEmitter';
 
 import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
 import type { Emoji } from '#/components/EmojiPicker/types';
@@ -25,8 +25,8 @@ export type RootProps = {
 	/** Detached handle linking the {@link Trigger} to this Root (see Base UI Popover detached triggers). */
 	handle: EmojiPickerHandle;
 	/**
-	 * Called when the user selects an emoji. Fires in addition to the `textInputWebEmitter` event, so callers
-	 * that only need the text insertion can omit it.
+	 * Called when the user selects an emoji. Fires in addition to the `emojiInserted` event, so callers that
+	 * only need the text insertion can omit it.
 	 */
 	onEmojiSelect?: (emoji: Emoji) => void;
 	/** Preload emoji data on mount so the picker opens instantly. Defaults to `true`. */
@@ -51,8 +51,8 @@ export function useEmojiPickerHandle(): EmojiPickerHandle {
 }
 
 /**
- * Emoji picker on Base UI `Popover` — opens above a Base UI dialog (non-modal, zIndex 11). On select, emits a
- * `textInputWebEmitter` event for web text inputs plus the optional `onEmojiSelect`.
+ * Emoji picker on Base UI `Popover` — opens above a Base UI dialog (non-modal, zIndex 11). On select, emits
+ * an `emojiInserted` event for web text inputs plus the optional `onEmojiSelect`.
  */
 export function Root({ children, handle, onEmojiSelect, preloadOnMount = true, nextFocusRef }: RootProps) {
 	useWebPreloadEmoji({ immediate: preloadOnMount });
@@ -63,7 +63,7 @@ export function Root({ children, handle, onEmojiSelect, preloadOnMount = true, n
 	const value = useMemo(
 		() => ({
 			onEmojiSelect: (emoji: Emoji) => {
-				textInputWebEmitter.emit('emoji-inserted', emoji);
+				emojiInserted.emit(emoji);
 				onEmojiSelect?.(emoji);
 			},
 			close: () => actionsRef.current?.close(),

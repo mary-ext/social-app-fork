@@ -5,7 +5,7 @@ import { useLingui } from '@lingui/react/macro';
 import { HITSLOP_10 } from '#/lib/constants';
 import { mergeRefs } from '#/lib/merge-refs';
 
-import { listenFocusSearch } from '#/state/events';
+import { focusSearch } from '#/state/events';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -30,7 +30,7 @@ export function SearchInput({ value, label, onClearText, hotkey, ref, ...rest }:
 
 	useEffect(() => {
 		if (!hotkey) return;
-		return listenFocusSearch(() => {
+		return focusSearch.subscribe(() => {
 			internalRef.current?.focus();
 		});
 	}, [hotkey]);

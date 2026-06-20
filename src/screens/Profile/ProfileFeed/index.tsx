@@ -10,7 +10,7 @@ import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
-import { listenSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { type FeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
@@ -121,7 +121,7 @@ export function ProfileFeedScreenInner({
 		if (!isScreenFocused) {
 			return;
 		}
-		return listenSoftReset(onScrollToTop);
+		return softReset.subscribe(onScrollToTop);
 	}, [onScrollToTop, isScreenFocused]);
 
 	const renderPostsEmpty = useCallback(() => {

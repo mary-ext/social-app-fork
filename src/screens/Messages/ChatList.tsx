@@ -10,7 +10,7 @@ import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import type { MessagesTabNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
-import { listenSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
 import { useMessagesEventBus } from '#/state/messages/events';
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
@@ -262,7 +262,7 @@ export function ChatList({
 		if (!isScreenFocused) {
 			return;
 		}
-		return listenSoftReset(() => void onSoftReset());
+		return softReset.subscribe(() => void onSoftReset());
 	}, [onSoftReset, isScreenFocused]);
 
 	if (conversations.length === 0) {

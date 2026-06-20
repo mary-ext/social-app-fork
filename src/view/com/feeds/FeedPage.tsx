@@ -10,7 +10,7 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { getRootNavigation, getTabState, TabState } from '#/lib/routes/helpers';
 import type { AllNavigatorParams } from '#/lib/routes/types';
 
-import { listenSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import type { FeedSourceInfo } from '#/state/queries/feed';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
@@ -78,7 +78,7 @@ export function FeedPage({
 		if (!isPageFocused) {
 			return;
 		}
-		return listenSoftReset(onSoftReset);
+		return softReset.subscribe(onSoftReset);
 	}, [onSoftReset, isPageFocused]);
 
 	const onPressCompose = useCallback(() => {

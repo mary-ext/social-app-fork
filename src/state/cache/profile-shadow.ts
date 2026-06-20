@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyNotificationDefs } from '@atcute/bluesky';
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import type { QueryClient } from '@tanstack/react-query';
-import { EventEmitter } from 'eventemitter3';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
+import { KeyedEventEmitter } from '#/lib/keyed-event-emitter';
 
 import { findAllProfilesInQueryData as findAllProfilesInActivitySubscriptionsQueryData } from '#/state/queries/activity-subscriptions';
 import { findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData } from '#/state/queries/actor-search';
@@ -46,20 +47,20 @@ export interface ProfileShadow {
 	activitySubscription: AppBskyNotificationDefs.ActivitySubscription | undefined;
 }
 
-const shadows: WeakMap<AnyProfileView, Partial<ProfileShadow>> = new WeakMap();
-const emitter = new EventEmitter();
-
 type ShadowUpdateEventPayload = { did: string; shadow: Partial<ProfileShadow> };
+
+const shadows: WeakMap<AnyProfileView, Partial<ProfileShadow>> = new WeakMap();
+// per-did shadow updates, keyed by did
+const emitter = new KeyedEventEmitter<[Partial<ProfileShadow>]>();
+// every shadow update, regardless of did
+const globalEmitter = new SimpleEventEmitter<[ShadowUpdateEventPayload]>();
 
 /**
  * Subscribe to all profile shadow updates, regardless of did. Useful for non-React consumers like the Convo
  * agent. Returns an unlisten function.
  */
 export function listenProfileShadowUpdate(listener: (payload: ShadowUpdateEventPayload) => void): () => void {
-	emitter.addListener('shadow-update', listener);
-	return () => {
-		emitter.removeListener('shadow-update', listener);
-	};
+	return globalEmitter.subscribe(listener);
 }
 
 export function useProfileShadow<TProfileView extends AnyProfileView>(
@@ -76,10 +77,7 @@ export function useProfileShadow<TProfileView extends AnyProfileView>(
 		function onUpdate() {
 			setShadow(shadows.get(profile));
 		}
-		emitter.addListener(profile.did, onUpdate);
-		return () => {
-			emitter.removeListener(profile.did, onUpdate);
-		};
+		return emitter.subscribe(profile.did, onUpdate);
 	}, [profile]);
 
 	return useMemo(() => {
@@ -111,10 +109,7 @@ export function useMaybeProfileShadow<TProfileView extends AnyProfileView>(
 			if (!profile) return;
 			setShadow(shadows.get(profile));
 		}
-		emitter.addListener(profile.did, onUpdate);
-		return () => {
-			emitter.removeListener(profile.did, onUpdate);
-		};
+		return emitter.subscribe(profile.did, onUpdate);
 	}, [profile]);
 
 	return useMemo(() => {
@@ -174,14 +169,11 @@ export function usePostAuthorShadowFilter(data?: FeedPage[]) {
 					return next;
 				});
 			}
-			emitter.addListener(did, onUpdate);
-			unsubs.push(() => {
-				emitter.removeListener(did, onUpdate);
-			});
+			unsubs.push(emitter.subscribe(did, onUpdate));
 		}
 
 		return () => {
-			unsubs.map((fn) => fn());
+			unsubs.forEach((fn) => fn());
 		};
 	}, [trackedDids]);
 
@@ -205,10 +197,7 @@ export function updateProfileShadow(queryClient: QueryClient, did: string, value
 	}
 	batchedUpdates(() => {
 		emitter.emit(did, value);
-		emitter.emit('shadow-update', {
-			did,
-			shadow: value,
-		} satisfies ShadowUpdateEventPayload);
+		globalEmitter.emit({ did, shadow: value });
 	});
 }
 

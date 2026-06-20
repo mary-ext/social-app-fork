@@ -8,7 +8,7 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import type { NativeStackScreenProps, NotificationsTabNavigatorParams } from '#/lib/routes/types';
 
-import { emitSoftReset, listenSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { RQKEY as NOTIFS_RQKEY } from '#/state/queries/notifications/feed';
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
 import { useUnreadNotifications, useUnreadNotificationsApi } from '#/state/queries/notifications/unread';
@@ -108,7 +108,7 @@ export function NotificationsScreen({}: Props) {
 				sections={sections}
 				value={activeTab}
 				onValueChange={onTabChange}
-				onTabReselect={() => emitSoftReset()}
+				onTabReselect={() => softReset.emit()}
 				header={
 					<Layout.Header.Outer noBottomBorder sticky={false}>
 						<Layout.Header.MenuButton />
@@ -209,7 +209,7 @@ function NotificationsTab({
 		if (!isFocusedAndActive) {
 			return;
 		}
-		return listenSoftReset(onPressLoadLatest);
+		return softReset.subscribe(onPressLoadLatest);
 	}, [onPressLoadLatest, isFocusedAndActive]);
 
 	return (

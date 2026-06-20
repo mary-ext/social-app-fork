@@ -19,7 +19,7 @@ import { cleanError } from '#/lib/strings/errors';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { listenSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useLabelerInfoQuery } from '#/state/queries/labeler';
 import { resetProfilePostsQueries } from '#/state/queries/post-feed';
@@ -382,7 +382,7 @@ function ProfileScreenLoaded({
 	// the selected tab, falling back to the first section until the user picks one (`showPostsTab` is
 	// always true, so the list is never empty)
 	// the profile is window-scrolled, so soft-reset just returns the page to the top
-	useFocusEffect(useCallback(() => listenSoftReset(() => window.scrollTo(0, 0)), []));
+	useFocusEffect(useCallback(() => softReset.subscribe(() => window.scrollTo(0, 0)), []));
 
 	return (
 		<ScreenHider

@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { AppState } from 'react-native';
 import { ok } from '@atcute/client';
 import { useQueryClient } from '@tanstack/react-query';
-import { EventEmitter } from 'eventemitter3';
 
 import BroadcastChannel from '#/lib/broadcast';
 
@@ -19,8 +18,6 @@ import { fetchPage } from './util';
 const UPDATE_INTERVAL = 30 * 1e3; // 30sec
 
 const broadcast = new BroadcastChannel('NOTIFS_BROADCAST_CHANNEL');
-
-const emitter = new EventEmitter();
 
 type StateContext = string;
 
@@ -55,18 +52,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		data: undefined,
 		unreadCount: 0,
 	});
-
-	useEffect(() => {
-		function markAsUnusable() {
-			if (cacheRef.current) {
-				cacheRef.current.usableInFeed = false;
-			}
-		}
-		emitter.addListener('invalidate', markAsUnusable);
-		return () => {
-			emitter.removeListener('invalidate', markAsUnusable);
-		};
-	}, []);
 
 	// periodic sync
 	useEffect(() => {

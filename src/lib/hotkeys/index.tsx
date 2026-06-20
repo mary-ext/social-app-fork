@@ -3,7 +3,7 @@ import { HotkeysProvider, useHotkeys, useHotkeysContext } from 'react-hotkeys-ho
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 
-import { emitFocusSearch } from '#/state/events';
+import { focusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
 
 enum Hotkeys {
@@ -61,7 +61,7 @@ function useKeyboardShortcuts() {
 		[openComposer],
 	);
 
-	useHotkeys(Hotkeys.FOCUS_SEARCH, () => handleKey(emitFocusSearch), {
+	useHotkeys(Hotkeys.FOCUS_SEARCH, () => handleKey(() => focusSearch.emit()), {
 		scopes: ['global'],
 		preventDefault: true,
 		description: l`Focus the search field`,

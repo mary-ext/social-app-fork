@@ -4,7 +4,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { listenSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
@@ -46,7 +46,7 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 		if (!isScreenFocused) {
 			return;
 		}
-		return listenSoftReset(onScrollToTop);
+		return softReset.subscribe(onScrollToTop);
 	}, [onScrollToTop, isScreenFocused]);
 
 	const renderPostsEmpty = useCallback(() => {

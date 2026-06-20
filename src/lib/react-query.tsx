@@ -10,7 +10,7 @@ import {
 
 import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
-import { listenNetworkConfirmed, listenNetworkLost } from '#/state/events';
+import { networkConfirmed, networkLost } from '#/state/events';
 import { isQueryPersisted } from '#/state/queries/util';
 
 declare global {
@@ -44,12 +44,12 @@ let receivedNetworkLost = false;
 let receivedNetworkConfirmed = false;
 let isNetworkStateUnclear = false;
 
-listenNetworkLost(() => {
+networkLost.subscribe(() => {
 	receivedNetworkLost = true;
 	onlineManager.setOnline(false);
 });
 
-listenNetworkConfirmed(() => {
+networkConfirmed.subscribe(() => {
 	receivedNetworkConfirmed = true;
 	onlineManager.setOnline(true);
 });

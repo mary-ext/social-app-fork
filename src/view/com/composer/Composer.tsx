@@ -56,7 +56,7 @@ import { cleanError } from '#/lib/strings/errors';
 import { colors as legacyColors } from '#/lib/styles';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
-import { emitPostCreated } from '#/state/events';
+import { postCreated } from '#/state/events';
 import { type ComposerImage, createComposerImage } from '#/state/gallery';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -814,7 +814,7 @@ export const ComposePost = ({
 			return;
 		}
 		if (postUri && !replyTo) {
-			emitPostCreated();
+			postCreated.emit();
 		}
 		// Clean up draft and its media after successful publish
 		if (composerState.draftId && composerState.originalLocalRefs) {

@@ -5,7 +5,7 @@ import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { getCurrentRoute } from '#/lib/routes/helpers';
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { emitSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
 import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed';
 
@@ -96,7 +96,7 @@ export function DesktopFeeds() {
 							setSelectedFeed(feed);
 							navigation.navigate('Home');
 							if (route.name === 'Home' && feed === selectedFeed) {
-								emitSoftReset();
+								softReset.emit();
 							}
 						}}
 					/>

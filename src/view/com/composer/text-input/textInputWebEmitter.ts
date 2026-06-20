@@ -1,3 +1,6 @@
-import { EventEmitter } from 'eventemitter3';
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-export const textInputWebEmitter = new EventEmitter();
+import type { Emoji } from '#/components/EmojiPicker/types';
+
+/** The user picked an emoji from the picker; the active web text input inserts it. */
+export const emojiInserted = new SimpleEventEmitter<[Emoji]>();

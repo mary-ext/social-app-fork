@@ -1,55 +1,19 @@
-import { EventEmitter } from 'eventemitter3';
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-type UnlistenFn = () => void;
+/** Focus the search input. */
+export const focusSearch = new SimpleEventEmitter<[]>();
 
-const emitter = new EventEmitter();
+/** The network came back after being lost. */
+export const networkConfirmed = new SimpleEventEmitter<[]>();
 
-// a "soft reset" typically means scrolling to top and loading latest
-// but it can depend on the screen
-export function emitSoftReset() {
-	emitter.emit('soft-reset');
-}
-export function listenSoftReset(fn: () => void): UnlistenFn {
-	emitter.on('soft-reset', fn);
-	return () => emitter.off('soft-reset', fn);
-}
+/** The network connection was lost. */
+export const networkLost = new SimpleEventEmitter<[]>();
 
-export function emitSessionDropped() {
-	emitter.emit('session-dropped');
-}
-export function listenSessionDropped(fn: () => void): UnlistenFn {
-	emitter.on('session-dropped', fn);
-	return () => emitter.off('session-dropped', fn);
-}
+/** A post was created by the user. */
+export const postCreated = new SimpleEventEmitter<[]>();
 
-export function emitNetworkConfirmed() {
-	emitter.emit('network-confirmed');
-}
-export function listenNetworkConfirmed(fn: () => void): UnlistenFn {
-	emitter.on('network-confirmed', fn);
-	return () => emitter.off('network-confirmed', fn);
-}
+/** The active session was dropped (e.g. failed token refresh). */
+export const sessionDropped = new SimpleEventEmitter<[]>();
 
-export function emitNetworkLost() {
-	emitter.emit('network-lost');
-}
-export function listenNetworkLost(fn: () => void): UnlistenFn {
-	emitter.on('network-lost', fn);
-	return () => emitter.off('network-lost', fn);
-}
-
-export function emitPostCreated() {
-	emitter.emit('post-created');
-}
-export function listenPostCreated(fn: () => void): UnlistenFn {
-	emitter.on('post-created', fn);
-	return () => emitter.off('post-created', fn);
-}
-
-export function emitFocusSearch() {
-	emitter.emit('focus-search');
-}
-export function listenFocusSearch(fn: () => void): UnlistenFn {
-	emitter.on('focus-search', fn);
-	return () => emitter.off('focus-search', fn);
-}
+/** A "soft reset" — typically scroll to top and load latest, though the exact behavior depends on the screen. */
+export const softReset = new SimpleEventEmitter<[]>();

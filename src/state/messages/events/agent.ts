@@ -1,6 +1,6 @@
 import type { ChatBskyConvoGetLog } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { EventEmitter } from 'eventemitter3';
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import { nanoid } from 'nanoid/non-secure';
 
 import { networkRetry } from '#/lib/async/retry';
@@ -24,7 +24,7 @@ export class MessagesEventBus {
 	private id: string;
 
 	private chat: Client;
-	private emitter = new EventEmitter<{ event: [MessagesEventBusEvent] }>();
+	private emitter = new SimpleEventEmitter<[MessagesEventBusEvent]>();
 
 	private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing;
 	private latestRev: string | undefined = undefined;
@@ -82,10 +82,10 @@ export class MessagesEventBus {
 			}
 		};
 
-		this.emitter.on('event', handle);
+		this.emitter.subscribe(handle);
 
 		return () => {
-			this.emitter.off('event', handle);
+			this.emitter.unsubscribe(handle);
 		};
 	}
 
@@ -113,13 +113,13 @@ export class MessagesEventBus {
 					case MessagesEventBusDispatchEvent.Ready: {
 						this.status = MessagesEventBusStatus.Ready;
 						this.resetPoll();
-						this.emitter.emit('event', { type: 'connect' });
+						this.emitter.emit({ type: 'connect' });
 						break;
 					}
 					case MessagesEventBusDispatchEvent.Background: {
 						this.status = MessagesEventBusStatus.Backgrounded;
 						this.resetPoll();
-						this.emitter.emit('event', { type: 'connect' });
+						this.emitter.emit({ type: 'connect' });
 						break;
 					}
 					case MessagesEventBusDispatchEvent.Suspend: {
@@ -128,7 +128,7 @@ export class MessagesEventBus {
 					}
 					case MessagesEventBusDispatchEvent.Error: {
 						this.status = MessagesEventBusStatus.Error;
-						this.emitter.emit('event', { type: 'error', error: action.payload });
+						this.emitter.emit({ type: 'error', error: action.payload });
 						break;
 					}
 				}
@@ -149,7 +149,7 @@ export class MessagesEventBus {
 					case MessagesEventBusDispatchEvent.Error: {
 						this.status = MessagesEventBusStatus.Error;
 						this.stopPoll();
-						this.emitter.emit('event', { type: 'error', error: action.payload });
+						this.emitter.emit({ type: 'error', error: action.payload });
 						break;
 					}
 					case MessagesEventBusDispatchEvent.UpdatePoll: {
@@ -174,7 +174,7 @@ export class MessagesEventBus {
 					case MessagesEventBusDispatchEvent.Error: {
 						this.status = MessagesEventBusStatus.Error;
 						this.stopPoll();
-						this.emitter.emit('event', { type: 'error', error: action.payload });
+						this.emitter.emit({ type: 'error', error: action.payload });
 						break;
 					}
 					case MessagesEventBusDispatchEvent.UpdatePoll: {
@@ -199,7 +199,7 @@ export class MessagesEventBus {
 					case MessagesEventBusDispatchEvent.Error: {
 						this.status = MessagesEventBusStatus.Error;
 						this.stopPoll();
-						this.emitter.emit('event', { type: 'error', error: action.payload });
+						this.emitter.emit({ type: 'error', error: action.payload });
 						break;
 					}
 				}
@@ -245,7 +245,7 @@ export class MessagesEventBus {
 			 */
 			this.status = MessagesEventBusStatus.Ready;
 			this.resetPoll();
-			this.emitter.emit('event', { type: 'connect' });
+			this.emitter.emit({ type: 'connect' });
 		}
 	}
 
@@ -409,7 +409,7 @@ export class MessagesEventBus {
 		 */
 		if (needsEmit) {
 			try {
-				this.emitter.emit('event', { type: 'logs', logs: batch });
+				this.emitter.emit({ type: 'logs', logs: batch });
 			} catch (e) {
 				logger.error(`subscriber error handling chat events`, {
 					safeMessage: e instanceof Error ? e.message : String(e),

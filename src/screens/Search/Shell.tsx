@@ -10,7 +10,7 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { MagnifyingGlassIcon } from '#/lib/icons';
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { listenSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { unstableCacheProfileView, useProfilesQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
@@ -259,7 +259,7 @@ export function SearchScreenShell({
 
 	useFocusEffect(
 		useCallback(() => {
-			return listenSoftReset(onSoftReset);
+			return softReset.subscribe(onSoftReset);
 		}, [onSoftReset]),
 	);
 

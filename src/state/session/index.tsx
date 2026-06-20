@@ -4,7 +4,7 @@ import { deleteStoredSession, OAuthResponseError, TokenRefreshError } from '@atc
 
 import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
-import { listenSessionDropped } from '#/state/events';
+import { sessionDropped } from '#/state/events';
 import type { SessionAccount, SessionApiContext, SessionStateContext } from '#/state/session/types';
 
 import { logger } from '#/logger';
@@ -189,7 +189,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 			// A session dropped by live traffic during validation fails the resume;
 			// the global dropped-session listener stays off until this settles.
-			const unlistenDropped = listenSessionDropped(() => {
+			const unlistenDropped = sessionDropped.subscribe(() => {
 				if (!cancelled) {
 					failResume();
 				}
@@ -253,7 +253,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		if (currentDid === undefined || status === 'resuming' || status === 'validating') {
 			return;
 		}
-		return listenSessionDropped(() => {
+		return sessionDropped.subscribe(() => {
 			dropToGuestSession(accounts, setClients, setCurrentDid, setStatus);
 		});
 	}, [accounts, currentDid, status]);

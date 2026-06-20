@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import type { AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import type { QueryClient } from '@tanstack/react-query';
-import { EventEmitter } from 'eventemitter3';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
+import { KeyedEventEmitter } from '#/lib/keyed-event-emitter';
 
 import { findAllPostsInQueryData as findAllPostsInBookmarksQueryData } from '#/state/queries/bookmarks/useBookmarksQuery';
 import { findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData } from '#/state/queries/explore-feed-previews';
@@ -29,7 +29,7 @@ export interface PostShadow {
 
 export const POST_TOMBSTONE = Symbol('PostTombstone');
 
-const emitter = new EventEmitter();
+const emitter = new KeyedEventEmitter<[]>();
 const shadows: WeakMap<AppBskyFeedDefs.PostView, Partial<PostShadow>> = new WeakMap();
 
 /** Use with caution! This function returns the raw shadow data for a post. Prefer using `usePostShadow`. */
@@ -51,10 +51,7 @@ export function usePostShadow(
 		function onUpdate() {
 			setShadow(shadows.get(post));
 		}
-		emitter.addListener(post.uri, onUpdate);
-		return () => {
-			emitter.removeListener(post.uri, onUpdate);
-		};
+		return emitter.subscribe(post.uri, onUpdate);
 	}, [post, setShadow]);
 
 	return useMemo(() => {

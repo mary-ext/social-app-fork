@@ -1,6 +1,6 @@
 import type { OAuthUserAgent } from '@atcute/oauth-browser-client';
 
-import { emitNetworkConfirmed, emitNetworkLost, emitSessionDropped } from '#/state/events';
+import { networkConfirmed, networkLost, sessionDropped } from '#/state/events';
 
 /**
  * A fetch handler shape compatible with both `@atproto/api`'s session manager and `@atcute/client`'s `Client`
@@ -21,10 +21,10 @@ export function withNetworkEvents<Args extends unknown[]>(
 	return async (...args) => {
 		try {
 			const response = await fetchFn(...args);
-			emitNetworkConfirmed();
+			networkConfirmed.emit();
 			return response;
 		} catch (e) {
-			emitNetworkLost();
+			networkLost.emit();
 			throw e;
 		}
 	};
@@ -46,7 +46,7 @@ export function createOAuthFetchHandler(oauthAgent: OAuthUserAgent): FetchHandle
 		// out of it means that refresh failed and the session is unusable.
 		if (!dropped && isInvalidTokenResponse(response)) {
 			dropped = true;
-			emitSessionDropped();
+			sessionDropped.emit();
 		}
 		return response;
 	});

@@ -9,7 +9,7 @@ import type {
 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { $type, Did } from '@atcute/lexicons';
-import { EventEmitter } from 'eventemitter3';
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import { nanoid } from 'nanoid/non-secure';
 
 import { networkRetry } from '#/lib/async/retry';
@@ -137,7 +137,7 @@ export class Convo {
 
 	private lastActiveTimestamp: number | undefined;
 
-	private emitter = new EventEmitter<{ event: [ConvoEvent] }>();
+	private emitter = new SimpleEventEmitter<[ConvoEvent]>();
 
 	convoId: string;
 	convo: ConvoWithDetails | undefined;
@@ -1162,7 +1162,7 @@ export class Convo {
 
 				switch (e.description) {
 					case 'block between recipient and sender':
-						this.emitter.emit('event', {
+						this.emitter.emit({
 							type: 'invalidate-block-state',
 							accountDids: [this.senderUserDid, ...this.recipients!.map((r) => r.did)],
 						});
@@ -1279,10 +1279,10 @@ export class Convo {
 	}
 
 	on(handler: (event: ConvoEvent) => void) {
-		this.emitter.on('event', handler);
+		this.emitter.subscribe(handler);
 
 		return () => {
-			this.emitter.off('event', handler);
+			this.emitter.unsubscribe(handler);
 		};
 	}
 

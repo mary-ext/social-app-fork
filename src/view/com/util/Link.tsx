@@ -18,7 +18,7 @@ import { getTabState, TabState } from '#/lib/routes/helpers';
 import { convertBskyAppUrlIfNeeded, isExternalUrl, isMisleadingLink } from '#/lib/strings/url-helpers';
 import type { TypographyVariant } from '#/lib/ThemeContext';
 
-import { emitSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 
 import { WebAuxClickWrapper } from '#/view/com/util/WebAuxClickWrapper';
 
@@ -335,7 +335,7 @@ export function onPressInner(
 				const state = navigation.getState();
 				const tabState = getTabState(state, routeName);
 				if (tabState === TabState.InsideAtRoot) {
-					emitSoftReset();
+					softReset.emit();
 				} else {
 					// note: 'navigate' actually acts the same as 'push' nowadays
 					// therefore we need to add 'pop' -sfn

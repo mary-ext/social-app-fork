@@ -9,7 +9,7 @@ import {
 	type LinkFacetMatch,
 	suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util';
-import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter';
+import { emojiInserted } from '#/view/com/composer/text-input/textInputWebEmitter';
 
 import { atoms as a, useAlf } from '#/alf';
 
@@ -89,21 +89,8 @@ export function TextInput({
 		if (!isActive) {
 			return;
 		}
-		textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted);
-		return () => {
-			textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted);
-		};
+		return emojiInserted.subscribe(onEmojiInserted);
 	}, [isActive, onEmojiInserted]);
-
-	useEffect(() => {
-		if (!isActive) {
-			return;
-		}
-		textInputWebEmitter.addListener('media-pasted', onPhotoPasted);
-		return () => {
-			textInputWebEmitter.removeListener('media-pasted', onPhotoPasted);
-		};
-	}, [isActive, onPhotoPasted]);
 
 	useEffect(() => {
 		if (!isActive) {

@@ -6,7 +6,7 @@ import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { HomeTabNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
 
-import { emitSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -210,7 +210,7 @@ function HomeScreenReady({
 			sections={sections}
 			value={selectedFeed ?? sections[0]?.id ?? ''}
 			onValueChange={onValueChange}
-			onTabReselect={() => emitSoftReset()}
+			onTabReselect={() => softReset.emit()}
 			header={<HomeHeaderLayout />}
 		/>
 	);

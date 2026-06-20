@@ -9,7 +9,7 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
-import { listenPostCreated } from '#/state/events';
+import { postCreated } from '#/state/events';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { STALE } from '#/state/queries';
 import {
@@ -222,7 +222,7 @@ let PostFeed = ({
 		}
 	}, [queryClient, feed, myDid]);
 	useEffect(() => {
-		return listenPostCreated(onPostCreated);
+		return postCreated.subscribe(onPostCreated);
 	}, [onPostCreated]);
 
 	useEffect(() => {

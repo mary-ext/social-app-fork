@@ -14,7 +14,7 @@ import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
 
-import { emitSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { useFetchHandle } from '#/state/queries/handle';
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
@@ -301,7 +301,7 @@ function SwitcherMenuProfileLink() {
 			e.preventDefault();
 			context.control.close();
 			if (isCurrent) {
-				emitSoftReset();
+				softReset.emit();
 			} else {
 				const [screen, params] = router.matchPath(profileLink);
 				// @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
@@ -395,7 +395,7 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 			}
 			e.preventDefault();
 			if (isCurrent) {
-				emitSoftReset();
+				softReset.emit();
 			} else {
 				const [screen, params] = router.matchPath(href);
 				// @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly

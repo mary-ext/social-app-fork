@@ -10,7 +10,7 @@ import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { emitSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 
 import { TextLink } from '#/view/com/util/Link';
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
@@ -107,7 +107,7 @@ export function ProfileSubpageHeader({
 							href={href}
 							style={[pal.text, { fontWeight: '600' }]}
 							text={title || ''}
-							onPress={emitSoftReset}
+							onPress={() => softReset.emit()}
 							numberOfLines={4}
 						/>
 					)}

@@ -6,7 +6,7 @@ import { HITSLOP_10 } from '#/lib/constants';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { emitSoftReset } from '#/state/events';
+import { softReset } from '#/state/events';
 import { useSession } from '#/state/session';
 
 import { Logo } from '#/view/icons/Logo';
@@ -38,7 +38,7 @@ export function HomeHeaderLayoutMobile() {
 						if (IS_DEV) {
 							navigate('Debug');
 						} else {
-							emitSoftReset();
+							softReset.emit();
 						}
 					}}
 				>
