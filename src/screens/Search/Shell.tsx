@@ -1,5 +1,5 @@
 import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { type StyleProp, type TextInput, View, type ViewStyle } from 'react-native';
+import { type TextInput, View, type ViewStyle } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
@@ -25,6 +25,7 @@ import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 
 import { account, useStorage } from '#/storage';
+import { vars } from '#/styles/contract.css';
 
 import { AutocompleteResults } from './components/AutocompleteResults';
 import { SearchHistory } from './components/SearchHistory';
@@ -455,11 +456,7 @@ let SearchScreenInner = ({
 				)}
 
 				<View style={[a.align_center, a.justify_center, a.py_4xl, a.gap_lg]}>
-					<MagnifyingGlassIcon
-						strokeWidth={3}
-						size={60}
-						style={t.atoms.text_contrast_medium as StyleProp<ViewStyle>}
-					/>
+					<MagnifyingGlassIcon strokeWidth={3} size={60} color={vars.palette.contrast_700} />
 					<Text style={[t.atoms.text_contrast_medium, a.text_md]}>
 						<Trans>Find posts, users, and feeds on Bluesky</Trans>
 					</Text>

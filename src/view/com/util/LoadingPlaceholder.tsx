@@ -12,6 +12,10 @@ import {
 } from '#/components/icons/Heart2';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 
+import { vars } from '#/styles/contract.css';
+
+import * as css from './LoadingPlaceholder.css';
+
 export function LoadingPlaceholder({
 	width,
 	height,
@@ -38,7 +42,6 @@ export function LoadingPlaceholder({
 }
 
 export function PostLoadingPlaceholder({ style }: { style?: StyleProp<ViewStyle> }) {
-	const t = useTheme();
 	return (
 		<View style={[styles.post, style]}>
 			<LoadingPlaceholder
@@ -60,41 +63,17 @@ export function PostLoadingPlaceholder({ style }: { style?: StyleProp<ViewStyle>
 				<View style={styles.postCtrls}>
 					<View style={[styles.postCtrl, { marginLeft: -6 }]}>
 						<View style={styles.postBtn}>
-							<Bubble
-								style={[
-									{
-										color: t.palette.contrast_500,
-									},
-									{ pointerEvents: 'none' },
-								]}
-								width={18}
-							/>
+							<Bubble fill={vars.palette.contrast_500} className={css.icon} width={18} />
 						</View>
 					</View>
 					<View style={styles.postCtrl}>
 						<View style={styles.postBtn}>
-							<Repost
-								style={[
-									{
-										color: t.palette.contrast_500,
-									},
-									{ pointerEvents: 'none' },
-								]}
-								width={18}
-							/>
+							<Repost fill={vars.palette.contrast_500} className={css.icon} width={18} />
 						</View>
 					</View>
 					<View style={styles.postCtrl}>
 						<View style={styles.postBtn}>
-							<HeartIconOutline
-								style={[
-									{
-										color: t.palette.contrast_500,
-									},
-									{ pointerEvents: 'none' },
-								]}
-								width={18}
-							/>
+							<HeartIconOutline fill={vars.palette.contrast_500} className={css.icon} width={18} />
 						</View>
 					</View>
 					<View style={styles.postCtrl}>
@@ -122,11 +101,10 @@ export function PostFeedLoadingPlaceholder() {
 }
 
 export function NotificationLoadingPlaceholder({ style }: { style?: StyleProp<ViewStyle> }) {
-	const t = useTheme();
 	return (
 		<View style={[styles.notification, style]}>
 			<View style={[{ width: 60 }, a.align_end, a.pr_sm, a.pt_2xs]}>
-				<HeartIconFilled size="xl" style={{ color: t.palette.contrast_50 }} />
+				<HeartIconFilled size="xl" fill={vars.palette.contrast_50} />
 			</View>
 			<View style={{ flex: 1 }}>
 				<View style={[a.flex_row, s.mb10]}>

@@ -11,6 +11,8 @@ import { Button, ButtonText } from '#/components/Button';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Text } from '#/components/Typography';
 
+import { vars } from '#/styles/contract.css';
+
 export function ErrorState({ error }: { error: string }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -26,7 +28,7 @@ export function ErrorState({ error }: { error: string }) {
 
 	return (
 		<View style={[a.px_xl]}>
-			<CircleInfo width={48} style={[t.atoms.text_contrast_low]} />
+			<CircleInfo width={48} fill={vars.palette.contrast_400} />
 			<Text style={[a.text_xl, a.font_semi_bold, a.pb_md, a.pt_xl]}>
 				<Trans>Hmmmm, we couldn't load that moderation service.</Trans>
 			</Text>

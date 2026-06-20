@@ -8,3 +8,7 @@ export const postAlerts = style({
 	overflow: 'hidden',
 	paddingBottom: space._2xs,
 });
+
+export const lastMessageIcon = style({
+	marginRight: 2,
+});

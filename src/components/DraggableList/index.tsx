@@ -1,22 +1,18 @@
 import { useState } from 'react';
-import { type TextStyle, View, type ViewStyle } from 'react-native';
+import { View, type ViewStyle } from 'react-native';
 
 import { useTheme } from '#/alf';
 
 import { DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon } from '#/components/icons/DotGrid';
 
-type WebTextStyle = TextStyle & {
-	pointerEvents?: 'none';
-};
+import { vars } from '#/styles/contract.css';
+
+import * as css from './index.css';
 
 type WebViewStyle = ViewStyle & {
 	boxShadow?: string;
 	scale?: number;
 	transition?: string;
-};
-
-const webTextStyle = (style: WebTextStyle): TextStyle => {
-	return style;
 };
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
@@ -130,11 +126,7 @@ export function SortableList<T>({
 							userSelect: 'none',
 						}}
 					>
-						<GripIcon
-							size="lg"
-							fill={t.atoms.text_contrast_medium.color}
-							style={webTextStyle({ pointerEvents: 'none' })}
-						/>
+						<GripIcon size="lg" fill={vars.palette.contrast_700} className={css.icon} />
 					</div>
 				);
 

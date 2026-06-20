@@ -18,6 +18,8 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
+import { vars } from '#/styles/contract.css';
+
 type Props = {
 	testID?: string;
 	profiles: AnyProfileView[];
@@ -135,7 +137,7 @@ function Tab({
 				{({ hovered, pressed, focused }) => (
 					<XIcon
 						size="sm"
-						style={[hovered || pressed || focused ? t.atoms.text : t.atoms.text_contrast_high]}
+						fill={hovered || pressed || focused ? vars.palette.contrast_1000 : vars.palette.contrast_900}
 					/>
 				)}
 			</Button>

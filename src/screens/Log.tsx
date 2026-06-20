@@ -20,6 +20,8 @@ import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/ico
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 
+import { vars } from '#/styles/contract.css';
+
 export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log'>) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -69,7 +71,7 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 									accessibilityHint={l`Opens additional details for a debug entry`}
 								>
 									{entry.level === 'warn' || entry.level === 'error' ? (
-										<WarningIcon size="sm" fill={t.palette.negative_500} />
+										<WarningIcon size="sm" fill={vars.palette.negative_500} />
 									) : (
 										<CircleInfoIcon size="sm" />
 									)}
@@ -82,9 +84,9 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 									{entry.metadata &&
 										Object.keys(entry.metadata).length > 0 &&
 										(expanded.includes(entry.id) ? (
-											<ChevronTopIcon size="sm" style={[t.atoms.text_contrast_low]} />
+											<ChevronTopIcon size="sm" fill={vars.palette.contrast_400} />
 										) : (
-											<ChevronBottomIcon size="sm" style={[t.atoms.text_contrast_low]} />
+											<ChevronBottomIcon size="sm" fill={vars.palette.contrast_400} />
 										))}
 									<Text style={[{ minWidth: 40 }, t.atoms.text_contrast_medium]}>
 										{timeAgo(entry.timestamp, tick)}

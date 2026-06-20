@@ -15,6 +15,10 @@ import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
+import { vars } from '#/styles/contract.css';
+
+import * as css from './SystemMessageItem.css';
+
 export function SystemMessageItem({
 	item,
 	relatedProfiles,
@@ -34,7 +38,7 @@ export function SystemMessageItem({
 
 	const row = (
 		<View style={[a.w_full, a.flex_row, a.align_center, a.justify_center, a.px_md, a.mt_md]}>
-			<Icon size="xs" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
+			<Icon size="xs" fill={vars.palette.contrast_700} className={css.icon} />
 			<Text
 				style={[
 					a.text_xs,

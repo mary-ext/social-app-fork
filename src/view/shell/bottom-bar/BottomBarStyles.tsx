@@ -51,12 +51,7 @@ export const styles = StyleSheet.create({
 		marginRight: 'auto',
 	},
 	ctrlIconSizingWrapper: {},
-	homeIcon: {},
 	feedsIcon: {},
-	searchIcon: {
-		top: -1,
-	},
-	bellIcon: {},
 	profileIcon: {
 		borderRadius: 100,
 		borderWidth: 1,
@@ -67,7 +62,6 @@ export const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: 'transparent',
 	},
-	messagesIcon: {},
 	onProfile: {
 		borderWidth: 1,
 		borderRadius: 100,

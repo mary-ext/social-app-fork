@@ -16,6 +16,10 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon } from '#/components/icons/Arrow';
 import { SubtleHover } from '#/components/SubtleHover';
 
+import { vars } from '#/styles/contract.css';
+
+import * as css from './LoadLatestBtn.css';
+
 type WebViewStyle = Omit<ViewStyle, 'left'> & {
 	left?: string;
 };
@@ -86,7 +90,8 @@ export function LoadLatestBtn({
 				<SubtleHover hover={hovered} style={[a.rounded_full]} />
 				<ArrowIcon
 					size="md"
-					style={[a.z_10, showIndicator ? { color: t.palette.primary_500 } : t.atoms.text_contrast_medium]}
+					fill={showIndicator ? vars.palette.primary_500 : vars.palette.contrast_700}
+					className={css.icon}
 				/>
 			</PressableScale>
 		</View>

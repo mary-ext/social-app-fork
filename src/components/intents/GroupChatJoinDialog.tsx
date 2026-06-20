@@ -41,7 +41,10 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { vars } from '#/styles/contract.css';
+
 import { ProfileBadges } from '../ProfileBadges';
+import * as css from './GroupChatJoinDialog.css';
 
 export function GroupChatJoinDialog({
 	control,
@@ -198,7 +201,7 @@ function GroupChatJoinDialogContent({
 	if (error) {
 		return (
 			<>
-				<ChainLinkBrokenIcon fill={t.palette.primary_500} size="3xl" />
+				<ChainLinkBrokenIcon fill={vars.palette.primary_500} size="3xl" />
 				<Text style={[a.text_center, a.text_lg, a.font_semi_bold]}>
 					<Trans>This invite link is invalid</Trans>
 				</Text>
@@ -225,7 +228,7 @@ function GroupChatJoinDialogContent({
 			<>
 				<View style={[a.py_lg, a.align_center]}>
 					<View style={[a.gap_sm, a.align_center, a.mt_lg]}>
-						<WarningIcon size="3xl" fill={t.atoms.text_contrast_high.color} />
+						<WarningIcon size="3xl" fill={vars.palette.contrast_900} />
 						<Text style={[a.mb_2xs, a.text_center, a.text_lg, a.font_medium, t.atoms.text_contrast_high]}>
 							<Trans>Chat invite link no longer available</Trans>
 						</Text>
@@ -294,7 +297,7 @@ function GroupChatJoinDialogContent({
 							</Trans>
 						</Text>
 						<View style={[a.flex_row, a.ml_md]}>
-							<PersonGroupIcon size="xs" style={[a.mr_xs, t.atoms.text, { marginTop: -2 }]} />
+							<PersonGroupIcon size="xs" fill={vars.palette.contrast_1000} className={css.personGroupIcon} />
 						</View>
 						<Text style={[a.text_center, a.text_xs, a.leading_snug]}>
 							{joinLinkPreview.joinRule === 'followedByOwner' ? l`Followers can join` : l`Anyone can join`}

@@ -14,8 +14,11 @@ import { useSession } from '#/state/session';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 
+import { vars } from '#/styles/contract.css';
+
 import { Button } from '../util/forms/Button';
 import { Text } from '../util/text/Text';
+import * as css from './CustomFeedEmptyState.css';
 
 export function CustomFeedEmptyState() {
 	const feedFeedback = useFeedFeedbackContext();
@@ -42,7 +45,7 @@ export function CustomFeedEmptyState() {
 	return (
 		<View style={styles.emptyContainer}>
 			<View style={styles.emptyIconContainer}>
-				<MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
+				<MagnifyingGlassIcon color={vars.palette.contrast_1000} className={css.icon} size={62} />
 			</View>
 			<Text type="xl-medium" style={[s.textCenter, pal.text]}>
 				<Trans>This feed is empty! You may need to follow more users or tune your language settings.</Trans>
@@ -51,7 +54,7 @@ export function CustomFeedEmptyState() {
 				<Text type="lg-medium" style={palInverted.text}>
 					<Trans>Find accounts to follow</Trans>
 				</Text>
-				<ChevronRightIcon width={14} style={palInverted.text} />
+				<ChevronRightIcon width={14} fill={vars.palette.contrast_0} />
 			</Button>
 		</View>
 	);
@@ -64,10 +67,6 @@ const styles = StyleSheet.create({
 	},
 	emptyIconContainer: {
 		marginBottom: 16,
-	},
-	emptyIcon: {
-		marginLeft: 'auto',
-		marginRight: 'auto',
 	},
 	emptyBtn: {
 		marginVertical: 20,

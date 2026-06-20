@@ -19,6 +19,8 @@ import { atoms as a, flatten, select, useTheme } from '#/alf';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
 
+import * as css from './Button.css';
+
 /**
  * The `Button` component, and some extensions of it like `Link` are intended to be generic and therefore
  * apply no styles by default. These `VariantProps` are what control the `Button`'s presentation, and are
@@ -860,15 +862,7 @@ export function ButtonIcon({
 					},
 				]}
 			>
-				<Comp
-					width={iconSize}
-					style={[
-						{
-							color: textStyles.color,
-							pointerEvents: 'none',
-						},
-					]}
-				/>
+				<Comp width={iconSize} fill={textStyles.color as string} className={css.icon} />
 			</View>
 		</View>
 	);
@@ -905,7 +899,7 @@ function StackedButtonInnerText({ children, icon: Icon }: Pick<StackedButtonProp
 	const textStyles = useSharedButtonTextStyles();
 	return (
 		<>
-			<Icon width={24} fill={textStyles.color} />
+			<Icon width={24} fill={textStyles.color as string} />
 			<ButtonText>{children}</ButtonText>
 		</>
 	);

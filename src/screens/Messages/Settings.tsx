@@ -23,6 +23,10 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
 
+import { vars } from '#/styles/contract.css';
+
+import * as css from './Settings.css';
+
 type AllowIncoming = 'all' | 'none' | 'following';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>;
@@ -168,11 +172,11 @@ export function MessagesSettingsScreenInner({}: Props) {
 								exportCarHandle.open(null);
 							}}
 						>
-							<CarIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
+							<CarIcon className={css.carIcon} fill={vars.palette.contrast_1000} size="lg" />
 							<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
 								<Trans>Export chat data</Trans>
 							</Text>
-							<ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="md" />
+							<ChevronRightIcon className={css.chevron} fill={vars.palette.contrast_1000} size="md" />
 						</Toggle.Item>
 					</View>
 					<Divider style={{ marginVertical: 10 }} />

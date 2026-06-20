@@ -45,6 +45,8 @@ import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 import * as ListCard from '#/components/ListCard';
 
+import { vars } from '#/styles/contract.css';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>;
 
 type FlatlistSlice =
@@ -103,7 +105,6 @@ type FlatlistSlice =
 
 export function FeedsScreen(_props: Props) {
 	const pal = usePalette('default');
-	const t = useTheme();
 	const { openComposer } = useOpenComposer();
 	const { isMobile } = useWebMediaQueries();
 	const [query, setQuery] = useState('');
@@ -512,7 +513,7 @@ export function FeedsScreen(_props: Props) {
 			</Layout.Center>
 			{hasSession && (
 				<FAB
-					icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+					icon={<EditBigIcon size="lg" fill={vars.palette.white} />}
 					label={l`New post`}
 					onClick={onPressCompose}
 				/>
@@ -543,15 +544,7 @@ function FollowingFeed() {
 						},
 					]}
 				>
-					<FilterTimeline
-						style={[
-							{
-								width: 18,
-								height: 18,
-							},
-						]}
-						fill={t.palette.white}
-					/>
+					<FilterTimeline width={18} fill={vars.palette.white} />
 				</View>
 				<FeedCard.TitleAndByline title={l({ message: 'Following', context: 'feed-name' })} />
 			</FeedCard.Header>
@@ -572,7 +565,7 @@ function SavedFeed({ savedFeed }: { savedFeed: SavedFeedItem & { type: 'feed' | 
 						<FeedCard.Avatar src={savedFeed.view.avatar} size={28} />
 						<FeedCard.TitleAndByline title={savedFeed.view.displayName} />
 
-						<ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
+						<ChevronRight size="sm" fill={vars.palette.contrast_400} />
 					</FeedCard.Header>
 				</View>
 			)}
@@ -588,7 +581,7 @@ function SavedFeed({ savedFeed }: { savedFeed: SavedFeedItem & { type: 'feed' | 
 						<ListCard.Avatar src={savedFeed.view.avatar} size={28} />
 						<ListCard.TitleAndByline title={savedFeed.view.name} />
 
-						<ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
+						<ChevronRight size="sm" fill={vars.palette.contrast_400} />
 					</ListCard.Header>
 				</View>
 			)}

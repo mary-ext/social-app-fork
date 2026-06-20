@@ -21,6 +21,9 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
+import { vars } from '#/styles/contract.css';
+
+import * as css from './ChatDisabled.css';
 
 export function ChatDisabled({
 	shape = 'pill',
@@ -43,7 +46,7 @@ export function ChatDisabled({
 					},
 				]}
 			>
-				<WarningIcon fill={t.atoms.text.color} size="lg" style={[a.mb_xs]} />
+				<WarningIcon fill={vars.palette.contrast_1000} size="lg" className={css.warningIcon} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
 					<Trans>Your chats have been disabled</Trans>
 				</Text>

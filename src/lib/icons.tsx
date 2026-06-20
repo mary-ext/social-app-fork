@@ -1,30 +1,30 @@
 import type { CSSProperties } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
-
-import { flatten } from '#/alf';
 
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
 export function MagnifyingGlassIcon({
+	className,
 	color = 'currentColor',
 	size,
 	strokeWidth = 2,
 	style,
 }: {
+	className?: string;
 	color?: string;
 	size?: number | string;
 	strokeWidth?: number;
-	style?: StyleProp<ViewStyle>;
+	style?: CSSProperties;
 }) {
 	return (
 		<svg
+			className={className}
 			fill="none"
 			viewBox="0 0 24 24"
 			strokeWidth={strokeWidth}
 			stroke={color}
 			width={size || 24}
 			height={size || 24}
-			style={flatten(style) as CSSProperties}
+			style={style}
 		>
 			<path
 				strokeLinecap="round"

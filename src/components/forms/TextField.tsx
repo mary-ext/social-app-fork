@@ -18,6 +18,10 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
 
+import { vars } from '#/styles/contract.css';
+
+import * as css from './TextField.css';
+
 type WebRootProps = {
 	onClick?: () => void;
 	onMouseOut?: () => void;
@@ -262,50 +266,25 @@ export function LabelText({ nativeID, children }: React.PropsWithChildren<{ nati
 }
 
 export function Icon({ icon: Comp }: { icon: React.ComponentType<SVGIconProps> }) {
-	const t = useTheme();
 	const ctx = useContext(Context);
-	const { hover, focus, errorHover, errorFocus } = useMemo(() => {
-		const hover: TextStyle[] = [
-			{
-				color: t.palette.contrast_800,
-			},
-		];
-		const focus: TextStyle[] = [
-			{
-				color: t.palette.primary_500,
-			},
-		];
-		const errorHover: TextStyle[] = [
-			{
-				color: t.palette.negative_500,
-			},
-		];
-		const errorFocus: TextStyle[] = [
-			{
-				color: t.palette.negative_500,
-			},
-		];
 
-		return {
-			hover,
-			focus,
-			errorHover,
-			errorFocus,
-		};
-	}, [t]);
+	let fill = vars.palette.contrast_500;
+	if (ctx.hovered) {
+		fill = vars.palette.contrast_800;
+	}
+	if (ctx.focused) {
+		fill = vars.palette.primary_500;
+	}
+	if (ctx.isInvalid && ctx.hovered) {
+		fill = vars.palette.negative_500;
+	}
+	if (ctx.isInvalid && ctx.focused) {
+		fill = vars.palette.negative_500;
+	}
 
 	return (
 		<View style={[a.z_20, a.pr_xs]}>
-			<Comp
-				size="md"
-				style={[
-					{ color: t.palette.contrast_500, pointerEvents: 'none', flexShrink: 0 },
-					ctx.hovered ? hover : {},
-					ctx.focused ? focus : {},
-					ctx.isInvalid && ctx.hovered ? errorHover : {},
-					ctx.isInvalid && ctx.focused ? errorFocus : {},
-				]}
-			/>
+			<Comp size="md" fill={fill} className={css.icon} />
 		</View>
 	);
 }

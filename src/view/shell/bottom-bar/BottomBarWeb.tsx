@@ -43,7 +43,10 @@ import {
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { vars } from '#/styles/contract.css';
+
 import { styles } from './BottomBarStyles';
+import * as css from './BottomBarWeb.css';
 
 export function BottomBarWeb() {
 	const { t: l } = useLingui();
@@ -87,7 +90,8 @@ export function BottomBarWeb() {
 									<Icon
 										aria-hidden={true}
 										width={iconWidth + 1}
-										style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
+										fill={vars.palette.contrast_1000}
+										className={css.icon}
 									/>
 								);
 							}}
@@ -99,7 +103,8 @@ export function BottomBarWeb() {
 									<Icon
 										aria-hidden={true}
 										width={iconWidth + 2}
-										style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
+										fill={vars.palette.contrast_1000}
+										className={css.searchIcon}
 									/>
 								);
 							}}
@@ -119,7 +124,8 @@ export function BottomBarWeb() {
 											<Icon
 												aria-hidden={true}
 												width={iconWidth - 1}
-												style={[styles.ctrlIcon, t.atoms.text, styles.messagesIcon]}
+												fill={vars.palette.contrast_1000}
+												className={css.icon}
 											/>
 										);
 									}}
@@ -135,7 +141,8 @@ export function BottomBarWeb() {
 											<Icon
 												aria-hidden={true}
 												width={iconWidth}
-												style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
+												fill={vars.palette.contrast_1000}
+												className={css.icon}
 											/>
 										);
 									}}

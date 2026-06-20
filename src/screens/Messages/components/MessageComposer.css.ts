@@ -27,3 +27,8 @@ export const emojiButton = style({
 		'&[data-popup-open]': { color: vars.palette.primary_500 },
 	},
 });
+
+// nudges the send-button icon (paper plane / spinner) up to sit optically centered.
+export const sendIcon = style({
+	marginBottom: 2,
+});

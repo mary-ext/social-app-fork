@@ -20,6 +20,9 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Typography';
 
+import { vars } from '#/styles/contract.css';
+
+import * as css from './SubtitleDialog.css';
 import { SubtitleFilePicker } from './SubtitleFilePicker';
 
 const MAX_NUM_CAPTIONS = 1;
@@ -190,7 +193,6 @@ function SubtitleFileRow({
 	style: StyleProp<ViewStyle>;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 
 	const handleValueChange = useCallback(
 		(lang: string) => {
@@ -206,9 +208,9 @@ function SubtitleFileRow({
 			<View style={[a.flex_1, a.gap_xs, a.justify_center]}>
 				<View style={[a.flex_row, a.align_center, a.gap_sm]}>
 					{language === '' ? (
-						<WarningIcon style={a.flex_shrink_0} fill={t.palette.negative_500} size="sm" />
+						<WarningIcon className={css.icon} fill={vars.palette.negative_500} size="sm" />
 					) : (
-						<PageTextIcon style={[t.atoms.text, a.flex_shrink_0]} size="sm" />
+						<PageTextIcon className={css.icon} fill={vars.palette.contrast_1000} size="sm" />
 					)}
 					<Text style={[a.flex_1, a.leading_snug, a.font_semi_bold, a.mb_2xs]} numberOfLines={1}>
 						{file.name}

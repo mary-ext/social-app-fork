@@ -28,7 +28,7 @@ export function ErrorMessage({
 		<Layout.Center>
 			<View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
 				<View style={[styles.errorIcon, { backgroundColor: theme.palette.error.icon }]}>
-					<WarningIcon width={16} style={pal.text} />
+					<WarningIcon width={16} fill={pal.text.color as string} />
 				</View>
 				<Text type="sm-medium" style={[styles.message, pal.text]} numberOfLines={numberOfLines}>
 					{message}
@@ -42,7 +42,7 @@ export function ErrorMessage({
 						accessibilityLabel={l`Retry`}
 						accessibilityHint={l`Retries the last action, which errored out`}
 					>
-						<ArrowRotateClockwiseIcon width={18} style={{ color: theme.palette.error.icon }} />
+						<ArrowRotateClockwiseIcon width={18} fill={theme.palette.error.icon} />
 					</TouchableOpacity>
 				)}
 			</View>

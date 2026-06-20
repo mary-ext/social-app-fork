@@ -11,6 +11,8 @@ import { StarterPack as StarterPackIcon } from '#/components/icons/StarterPack';
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
+import * as css from './TrendingTopics.css';
+
 export function TrendingTopic({
 	topic: raw,
 	size,
@@ -45,7 +47,7 @@ export function TrendingTopic({
 			]}
 		>
 			{hasIcon && topic.type === 'starter-pack' && (
-				<StarterPackIcon gradient="sky" width={iconSize} style={{ marginLeft: -3, marginVertical: -1 }} />
+				<StarterPackIcon gradient="sky" width={iconSize} className={css.icon} />
 			)}
 
 			{/*

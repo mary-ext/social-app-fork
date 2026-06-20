@@ -10,8 +10,11 @@ import { s } from '#/lib/styles';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 
+import { vars } from '#/styles/contract.css';
+
 import { Button } from '../util/forms/Button';
 import { Text } from '../util/text/Text';
+import * as css from './FollowingEmptyState.css';
 
 export function FollowingEmptyState() {
 	const pal = usePalette('default');
@@ -30,7 +33,7 @@ export function FollowingEmptyState() {
 		<View style={styles.container}>
 			<View style={styles.inner}>
 				<View style={styles.iconContainer}>
-					<MagnifyingGlassIcon style={[styles.icon, pal.text]} size={62} />
+					<MagnifyingGlassIcon color={vars.palette.contrast_1000} className={css.icon} size={62} />
 				</View>
 				<Text type="xl-medium" style={[s.textCenter, pal.text]}>
 					<Trans>Your following feed is empty! Follow more users to see what's happening.</Trans>
@@ -39,7 +42,7 @@ export function FollowingEmptyState() {
 					<Text type="lg-medium" style={palInverted.text}>
 						<Trans>Find accounts to follow</Trans>
 					</Text>
-					<ChevronRightIcon width={14} style={palInverted.text} />
+					<ChevronRightIcon width={14} fill={vars.palette.contrast_0} />
 				</Button>
 
 				<Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
@@ -49,7 +52,7 @@ export function FollowingEmptyState() {
 					<Text type="lg-medium" style={palInverted.text}>
 						<Trans>Discover new custom feeds</Trans>
 					</Text>
-					<ChevronRightIcon width={14} style={palInverted.text} />
+					<ChevronRightIcon width={14} fill={vars.palette.contrast_0} />
 				</Button>
 			</View>
 		</View>
@@ -69,10 +72,6 @@ const styles = StyleSheet.create({
 	},
 	iconContainer: {
 		marginBottom: 16,
-	},
-	icon: {
-		marginLeft: 'auto',
-		marginRight: 'auto',
 	},
 	emptyBtn: {
 		marginVertical: 20,

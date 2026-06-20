@@ -24,6 +24,10 @@ import {
 } from '#/components/icons/Person';
 import { Text } from '#/components/Typography';
 
+import { vars } from '#/styles/contract.css';
+
+import * as css from './MessagesListBlockedFooter.css';
+
 export function MessagesListBlockedFooter({
 	recipient: initialRecipient,
 	convoId,
@@ -78,7 +82,7 @@ export function MessagesListBlockedFooter({
 					},
 				]}
 			>
-				<PersonXIcon fill={t.atoms.text.color} size="lg" style={[a.mb_xs]} />
+				<PersonXIcon fill={vars.palette.contrast_1000} size="lg" className={css.icon} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
 					{isGroup
 						? l`You are blocking the chat owner`

@@ -1,9 +1,12 @@
+import type { CSSProperties } from 'react';
 import { View } from 'react-native';
 
-import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
+import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 
 import type { Props } from '#/components/icons/common';
 import type { Growth_Stroke2_Corner0_Rounded as Growth } from '#/components/icons/Growth';
+
+import { vars } from '#/styles/contract.css';
 
 export function IconCircle({
 	icon: Icon,
@@ -13,7 +16,7 @@ export function IconCircle({
 }: ViewStyleProp & {
 	icon: typeof Growth;
 	size?: Props['size'];
-	iconStyle?: TextStyleProp['style'];
+	iconStyle?: CSSProperties;
 }) {
 	const t = useTheme();
 
@@ -31,7 +34,7 @@ export function IconCircle({
 				style,
 			]}
 		>
-			<Icon size={size} style={[{ color: t.palette.primary_500 }, iconStyle]} />
+			<Icon size={size} fill={vars.palette.primary_500} style={iconStyle} />
 		</View>
 	);
 }
