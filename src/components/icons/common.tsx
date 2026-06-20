@@ -1,15 +1,15 @@
-import { StyleSheet, type TextProps } from 'react-native';
-import { type PathProps, type SvgProps, Defs, LinearGradient, Stop } from 'react-native-svg';
+import type { CSSProperties, ReactNode, SVGProps } from 'react';
+import { type ColorValue, StyleSheet, type TextProps, type TextStyle } from 'react-native';
 import { nanoid } from 'nanoid/non-secure';
 
 import { tokens, useTheme } from '#/alf';
 
 export type Props = {
-	fill?: PathProps['fill'];
-	style?: TextProps['style'];
-	size?: keyof typeof sizes;
+	fill?: ColorValue;
 	gradient?: keyof typeof tokens.gradients;
-} & Omit<SvgProps, 'style' | 'size'>;
+	size?: keyof typeof sizes;
+	style?: TextProps['style'];
+} & Omit<SVGProps<SVGSVGElement>, 'fill' | 'style'>;
 
 export const sizes = {
 	'2xs': 8,
@@ -23,34 +23,62 @@ export const sizes = {
 	'4xl': 64,
 } as const;
 
+// StyleSheet.flatten leaves a few react-native-only shorthands that DOM inline
+// styles don't understand; translate the ones icons actually receive and drop
+// the pointer-events values (box-only/box-none) that have no CSS equivalent.
+const rnStyleToDom = (style: TextStyle | undefined): CSSProperties | undefined => {
+	if (!style) {
+		return undefined;
+	}
+	const { marginHorizontal, marginVertical, paddingHorizontal, paddingVertical, pointerEvents, ...keep } =
+		style as Record<string, unknown>;
+	const domStyle: Record<string, unknown> = { ...keep };
+	if (marginVertical != null) {
+		domStyle.marginBlock = marginVertical;
+	}
+	if (marginHorizontal != null) {
+		domStyle.marginInline = marginHorizontal;
+	}
+	if (paddingVertical != null) {
+		domStyle.paddingBlock = paddingVertical;
+	}
+	if (paddingHorizontal != null) {
+		domStyle.paddingInline = paddingHorizontal;
+	}
+	if (pointerEvents === 'auto' || pointerEvents === 'none') {
+		domStyle.pointerEvents = pointerEvents;
+	}
+	return domStyle as CSSProperties;
+};
+
 export function useCommonSVGProps(props: Props) {
 	const t = useTheme();
-	const { fill, size, gradient, ...rest } = props;
-	const style = StyleSheet.flatten(rest.style);
-	const _size = Number(size ? sizes[size] : rest.width || sizes.md);
-	let _fill = fill || style?.color || t.palette.primary_500;
-	let gradientDef = null;
+	const { fill, gradient, size, style, width, ...rest } = props;
+	const flat = StyleSheet.flatten(style);
+	const _size = Number(size ? sizes[size] : width || sizes.md);
+	let _fill = (fill || flat?.color || t.palette.primary_500) as string;
+	let gradientDef: ReactNode = null;
 
 	if (gradient && tokens.gradients[gradient]) {
 		const id = gradient + '_' + nanoid();
 		const config = tokens.gradients[gradient];
 		_fill = `url(#${id})`;
 		gradientDef = (
-			<Defs>
-				<LinearGradient id={id} x1="0" y1="0" x2="100%" y2="0" gradientTransform="rotate(45)">
-					{config.values.map(([stop, fill]) => (
-						<Stop key={stop} offset={stop} stopColor={fill} />
+			<defs>
+				<linearGradient id={id} x1="0" y1="0" x2="100%" y2="0" gradientTransform="rotate(45)">
+					{config.values.map(([stop, color]) => (
+						<stop key={stop} offset={stop} stopColor={color} />
 					))}
-				</LinearGradient>
-			</Defs>
+				</linearGradient>
+			</defs>
 		);
 	}
 
 	return {
 		fill: _fill,
-		size: _size,
-		style,
 		gradient: gradientDef,
+		size: _size,
+		style: rnStyleToDom(flat),
 		...rest,
 	};
 }
