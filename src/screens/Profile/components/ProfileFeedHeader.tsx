@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
@@ -22,11 +21,8 @@ import { logger } from '#/logger';
 
 import { formatCount } from '#/view/com/util/numeric/format';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { useTheme } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { Divider } from '#/components/Divider';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
@@ -41,14 +37,18 @@ import {
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
-import * as Layout from '#/components/Layout';
-import { InlineLinkText } from '#/components/Link';
-import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import * as Layout from '#/components/web/Layout';
+import { InlineLinkText } from '#/components/web/Link';
+import * as Menu from '#/components/web/Menu';
+
+import * as styles from './ProfileFeedHeader.css';
 
 export function ProfileFeedHeaderSkeleton() {
 	const t = useTheme();
@@ -57,23 +57,12 @@ export function ProfileFeedHeaderSkeleton() {
 		<Layout.Header.Outer>
 			<Layout.Header.BackButton />
 			<Layout.Header.Content>
-				<View style={[a.w_full, a.rounded_sm, t.atoms.bg_contrast_25, { height: 40 }]} />
+				<div className={styles.skeletonBar} />
 			</Layout.Header.Content>
 			<Layout.Header.Slot>
-				<View
-					style={[
-						a.justify_center,
-						a.align_center,
-						a.rounded_full,
-						t.atoms.bg_contrast_25,
-						{
-							height: 34,
-							width: 34,
-						},
-					]}
-				>
+				<div className={styles.skeletonPin}>
 					<Pin size="lg" fill={t.atoms.text_contrast_low.color} />
-				</View>
+				</div>
 			</Layout.Header.Slot>
 		</Layout.Header.Outer>
 	);
@@ -83,10 +72,17 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 	const t = useTheme();
 	const { t: l, i18n } = useLingui();
 	const { hasSession } = useSession();
-	const { gtMobile } = useBreakpoints();
-	const infoControl = Dialog.useDialogControl();
+	const infoControl = Dialog.useDialogHandle();
+	const reportDialogControl = useReportDialogControl();
 
 	const { data: preferences } = usePreferencesQuery();
+
+	// the report dialog is still on the RNW Radix surface (z-index 10) and can't overlay this web dialog
+	// (z-index 100), so close this one before opening it.
+	const onPressReport = useCallback(() => {
+		infoControl.close();
+		reportDialogControl.open();
+	}, [infoControl, reportDialogControl]);
 
 	const [likeUri, setLikeUri] = useState(info.likeUri || '');
 	const likeCount =
@@ -163,149 +159,96 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 
 	return (
 		<>
-			<Layout.Center style={[t.atoms.bg, a.z_10, a.sticky, a.z_10, { top: 0 }]}>
-				<Layout.Header.Outer>
-					<Layout.Header.BackButton />
-					<Layout.Header.Content align="left">
-						<Button
-							label={l`Open feed info screen`}
-							style={[
-								a.justify_start,
-								{
-									paddingVertical: 2,
-									paddingRight: 8,
-								},
-							]}
-							onPress={() => {
-								infoControl.open();
-							}}
-						>
-							{({ hovered, pressed }) => (
-								<>
-									<View
-										style={[
-											a.absolute,
-											a.inset_0,
-											a.rounded_sm,
-											a.transition_all,
-											t.atoms.bg_contrast_25,
-											{
-												opacity: 0,
-												left: -2,
-												right: 0,
-											},
-											pressed && {
-												opacity: 1,
-											},
-											hovered && {
-												opacity: 1,
-												transform: [{ scaleX: 1.01 }, { scaleY: 1.1 }],
-											},
-										]}
-									/>
+			<Layout.Header.Outer>
+				<Layout.Header.BackButton />
+				<Layout.Header.Content>
+					<button
+						className={styles.infoButton}
+						aria-label={l`Open feed info screen`}
+						onClick={() => infoControl.open(null)}
+					>
+						{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
 
-									<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-										{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
-
-										<View style={[a.flex_1]}>
-											<Text
-												style={[a.text_md, a.font_bold, a.leading_snug, gtMobile && a.text_lg]}
-												numberOfLines={2}
-												emoji
-											>
-												{info.displayName}
-											</Text>
-											<View style={[a.flex_row, { gap: 6 }]}>
-												<Text
-													style={[a.flex_shrink, a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
-													numberOfLines={1}
-												>
-													{sanitizeHandle(info.creatorHandle, '@')}
-												</Text>
-												<View style={[a.flex_row, a.align_center, { gap: 2 }]}>
-													<HeartFilled
-														size="xs"
-														fill={likeUri ? t.palette.pink : t.atoms.text_contrast_low.color}
-													/>
-													<Text
-														style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
-														numberOfLines={1}
-													>
-														{formatCount(i18n, likeCount)}
-													</Text>
-												</View>
-											</View>
-										</View>
-
-										<Ellipsis size="md" fill={t.atoms.text_contrast_low.color} />
-									</View>
-								</>
-							)}
-						</Button>
-					</Layout.Header.Content>
-
-					{hasSession && (
-						<Layout.Header.Slot>
-							{isPinned ? (
-								<Menu.Root>
-									<Menu.Trigger label={l`Open feed options menu`}>
-										{({ props }) => {
-											return (
-												<Button
-													{...props}
-													label={l`Open feed options menu`}
-													size="small"
-													variant="ghost"
-													shape="square"
-													color="secondary"
-												>
-													<PinFilled size="lg" fill={t.palette.primary_500} />
-												</Button>
-											);
-										}}
-									</Menu.Trigger>
-
-									<Menu.Outer>
-										<Menu.Item
-											disabled={isFeedStateChangePending}
-											label={l`Unpin from home`}
-											onPress={() => void onTogglePinned()}
-										>
-											<Menu.ItemText>{l`Unpin from home`}</Menu.ItemText>
-											<Menu.ItemIcon icon={X} position="right" />
-										</Menu.Item>
-										<Menu.Item
-											disabled={isFeedStateChangePending}
-											label={isSaved ? l`Remove from my feeds` : l`Save to my feeds`}
-											onPress={() => void onToggleSaved()}
-										>
-											<Menu.ItemText>{isSaved ? l`Remove from my feeds` : l`Save to my feeds`}</Menu.ItemText>
-											<Menu.ItemIcon icon={isSaved ? Trash : Plus} position="right" />
-										</Menu.Item>
-									</Menu.Outer>
-								</Menu.Root>
-							) : (
-								<Button
-									label={l`Pin to Home`}
-									size="small"
-									variant="ghost"
-									shape="square"
-									color="secondary"
-									onPress={() => void onTogglePinned()}
+						<span className={styles.infoButtonText}>
+							<Text weight="bold" numberOfLines={2} className={styles.infoButtonTitle}>
+								{info.displayName}
+							</Text>
+							<span className={styles.infoButtonMeta}>
+								<Text
+									size="sm"
+									color="textContrastMedium"
+									numberOfLines={1}
+									className={styles.infoButtonHandle}
 								>
-									<ButtonIcon icon={Pin} size="lg" />
-								</Button>
-							)}
-						</Layout.Header.Slot>
-					)}
-				</Layout.Header.Outer>
-			</Layout.Center>
-			<Dialog.Outer control={infoControl}>
-				<Dialog.Handle />
-				<Dialog.ScrollableInner
-					label={l`Feed menu`}
-					style={[gtMobile ? { width: 'auto', minWidth: 450 } : a.w_full]}
-				>
+									{sanitizeHandle(info.creatorHandle, '@')}
+								</Text>
+								<span className={styles.infoButtonLikes}>
+									<HeartFilled size="xs" fill={likeUri ? t.palette.pink : t.atoms.text_contrast_low.color} />
+									<Text size="sm" color="textContrastMedium" numberOfLines={1}>
+										{formatCount(i18n, likeCount)}
+									</Text>
+								</span>
+							</span>
+						</span>
+
+						<Ellipsis size="md" fill={t.atoms.text_contrast_low.color} />
+					</button>
+				</Layout.Header.Content>
+
+				{hasSession && (
+					<Layout.Header.Slot>
+						{isPinned ? (
+							<Menu.Root>
+								<Menu.Trigger
+									render={
+										<Button
+											label={l`Open feed options menu`}
+											size="small"
+											variant="ghost"
+											shape="round"
+											color="secondary"
+										>
+											<PinFilled size="lg" fill={t.palette.primary_500} />
+										</Button>
+									}
+								/>
+
+								<Menu.Popup label={l`Feed options`} align="end">
+									<Menu.Item
+										disabled={isFeedStateChangePending}
+										label={l`Unpin from home`}
+										onClick={() => void onTogglePinned()}
+									>
+										<Menu.ItemText>{l`Unpin from home`}</Menu.ItemText>
+										<Menu.ItemIcon icon={X} position="right" />
+									</Menu.Item>
+									<Menu.Item
+										disabled={isFeedStateChangePending}
+										label={isSaved ? l`Remove from my feeds` : l`Save to my feeds`}
+										onClick={() => void onToggleSaved()}
+									>
+										<Menu.ItemText>{isSaved ? l`Remove from my feeds` : l`Save to my feeds`}</Menu.ItemText>
+										<Menu.ItemIcon icon={isSaved ? Trash : Plus} position="right" />
+									</Menu.Item>
+								</Menu.Popup>
+							</Menu.Root>
+						) : (
+							<Button
+								label={l`Pin to Home`}
+								size="small"
+								variant="ghost"
+								shape="round"
+								color="secondary"
+								onClick={() => void onTogglePinned()}
+							>
+								<ButtonIcon icon={Pin} size="lg" />
+							</Button>
+						)}
+					</Layout.Header.Slot>
+				)}
+			</Layout.Header.Outer>
+			<Dialog.Root handle={infoControl}>
+				<Dialog.Popup label={l`Feed menu`} className={styles.dialogPopup}>
 					<DialogInner
 						info={info}
 						likeUri={likeUri}
@@ -314,9 +257,22 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 						isPinned={isPinned}
 						onTogglePinned={() => void onTogglePinned()}
 						isFeedStateChangePending={isFeedStateChangePending}
+						closeDialog={() => infoControl.close()}
+						onPressReport={onPressReport}
 					/>
-				</Dialog.ScrollableInner>
-			</Dialog.Outer>
+				</Dialog.Popup>
+			</Dialog.Root>
+			{hasSession && info.view && (
+				<ReportDialog
+					control={reportDialogControl}
+					subject={
+						{
+							...info.view,
+							$type: 'app.bsky.feed.defs#generatorView',
+						} as unknown as React.ComponentProps<typeof ReportDialog>['subject']
+					}
+				/>
+			)}
 		</>
 	);
 }
@@ -329,6 +285,8 @@ function DialogInner({
 	isPinned,
 	onTogglePinned,
 	isFeedStateChangePending,
+	closeDialog,
+	onPressReport,
 }: {
 	info: FeedSourceFeedInfo;
 	likeUri: string;
@@ -337,12 +295,12 @@ function DialogInner({
 	isPinned: boolean;
 	onTogglePinned: () => void;
 	isFeedStateChangePending: boolean;
+	closeDialog: () => void;
+	onPressReport: () => void;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const { hasSession } = useSession();
-	const control = Dialog.useDialogContext();
-	const reportDialogControl = useReportDialogControl();
 	const { mutateAsync: likeFeed, isPending: isLikePending } = useLikeMutation();
 	const { mutateAsync: unlikeFeed, isPending: isUnlikePending } = useUnlikeMutation();
 
@@ -374,34 +332,31 @@ function DialogInner({
 		void shareUrl(url);
 	}, [info]);
 
-	const onPressReport = useCallback(() => {
-		reportDialogControl.open();
-	}, [reportDialogControl]);
-
 	return (
-		<View style={[a.gap_md]}>
-			<View style={[a.flex_row, a.align_center, a.gap_md]}>
+		<div className={styles.dialogBody}>
+			<div className={styles.dialogHeaderRow}>
 				<UserAvatar type="algo" size={48} avatar={info.avatar} />
 
-				<View style={[a.flex_1, a.gap_2xs]}>
-					<Text style={[a.text_2xl, a.font_bold, a.leading_tight]} numberOfLines={2} emoji>
+				<div className={styles.dialogNameColumn}>
+					<Text size="_2xl" weight="bold" numberOfLines={2} className={styles.dialogTitle}>
 						{info.displayName}
 					</Text>
-					<Text style={[a.text_sm, a.leading_relaxed, t.atoms.text_contrast_medium]} numberOfLines={1}>
+					<Text size="sm" color="textContrastMedium" numberOfLines={1}>
 						<Trans>
-							By{' '}
+							by{' '}
 							<InlineLinkText
 								label={l`View ${info.creatorHandle}'s profile`}
 								to={makeProfileLink({ did: info.creatorDid })}
-								style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}
+								size="sm"
+								color="textContrastMedium"
 								numberOfLines={1}
-								onPress={() => control.close()}
+								onPress={closeDialog}
 							>
 								{sanitizeHandle(info.creatorHandle, '@')}
 							</InlineLinkText>
 						</Trans>
 					</Text>
-				</View>
+				</div>
 
 				<Button
 					label={l`Share this feed`}
@@ -409,36 +364,39 @@ function DialogInner({
 					variant="ghost"
 					color="secondary"
 					shape="round"
-					onPress={onPressShare}
+					onClick={onPressShare}
 				>
 					<ButtonIcon icon={Share} size="lg" />
 				</Button>
-			</View>
+			</div>
+
 			<RichText size="md" value={info.description} />
-			<View style={[a.flex_row, a.gap_sm, a.align_center]}>
+
+			<div className={styles.dialogLikedByRow}>
 				{typeof likeCount === 'number' && (
 					<InlineLinkText
 						label={l`View users who like this feed`}
 						to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
-						style={[a.underline, t.atoms.text_contrast_medium]}
-						onPress={() => control.close()}
+						size="md_sub"
+						color="textContrastMedium"
+						onPress={closeDialog}
 					>
 						<Trans>
 							Liked by <Plural value={likeCount} one="# user" other="# users" />
 						</Trans>
 					</InlineLinkText>
 				)}
-			</View>
+			</div>
 			{hasSession && (
 				<>
-					<View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
+					<div className={styles.dialogActionsRow}>
 						<Button
 							disabled={isLikePending || isUnlikePending}
 							label={l`Like this feed`}
 							size="small"
 							color="secondary"
-							onPress={() => void onToggleLiked()}
-							style={[a.flex_1]}
+							onClick={() => void onToggleLiked()}
+							className={styles.dialogActionButton}
 						>
 							{isLiked ? <HeartFilled size="sm" fill={t.palette.pink} /> : <ButtonIcon icon={Heart} />}
 
@@ -449,19 +407,19 @@ function DialogInner({
 							label={isPinned ? l`Unpin feed` : l`Pin feed`}
 							size="small"
 							color={isPinned ? 'secondary' : 'primary'}
-							onPress={onTogglePinned}
-							style={[a.flex_1]}
+							onClick={onTogglePinned}
+							className={styles.dialogActionButton}
 						>
 							<ButtonText>{isPinned ? <Trans>Unpin feed</Trans> : <Trans>Pin feed</Trans>}</ButtonText>
-							<ButtonIcon icon={Pin} position="right" />
+							<ButtonIcon icon={Pin} />
 						</Button>
-					</View>
+					</div>
 
-					<View style={[a.pt_xs, a.gap_lg]}>
-						<Divider />
+					<div className={styles.dialogReportSection}>
+						<div className={styles.dialogDivider} />
 
-						<View style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between]}>
-							<Text style={[a.italic, t.atoms.text_contrast_medium]}>
+						<div className={styles.dialogReportRow}>
+							<Text size="md_sub" color="textContrastMedium" className={styles.dialogWrongText}>
 								<Trans>Something wrong? Let us know.</Trans>
 							</Text>
 
@@ -470,29 +428,17 @@ function DialogInner({
 								size="small"
 								variant="solid"
 								color="secondary"
-								onPress={onPressReport}
+								onClick={onPressReport}
 							>
 								<ButtonText>
 									<Trans>Report feed</Trans>
 								</ButtonText>
-								<ButtonIcon icon={CircleInfo} position="right" />
+								<ButtonIcon icon={CircleInfo} />
 							</Button>
-						</View>
-
-						{info.view && (
-							<ReportDialog
-								control={reportDialogControl}
-								subject={
-									{
-										...info.view,
-										$type: 'app.bsky.feed.defs#generatorView',
-									} as unknown as React.ComponentProps<typeof ReportDialog>['subject']
-								}
-							/>
-						)}
-					</View>
+						</div>
+					</div>
 				</>
 			)}
-		</View>
+		</div>
 	);
 }
