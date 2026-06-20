@@ -29,6 +29,13 @@ export type SigninDialogPayload = {
 	showStoredAccounts?: boolean;
 };
 
+/** Payload opening the global link-warning dialog: the destination and its visible text (optionally shared). */
+export type LinkWarningPayload = {
+	href: string;
+	displayText: string;
+	share?: boolean;
+};
+
 type ControlsContext = {
 	/**
 	 * The composer's Base UI {@link DialogHandle}-backed dialog. Opened from triggers all over the app (no
@@ -40,11 +47,7 @@ type ControlsContext = {
 	lightboxControl: LightboxControl;
 	mutedWordsDialogControl: Control;
 	signinDialogControl: StatefulControl<SigninDialogPayload>;
-	linkWarningDialogControl: StatefulControl<{
-		href: string;
-		displayText: string;
-		share?: boolean;
-	}>;
+	linkWarningDialogControl: DialogHandle<LinkWarningPayload>;
 	reportDialogControl: StatefulControl<{ subject: ReportSubject }>;
 };
 
@@ -64,11 +67,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const lightboxControl = useDialogHandle<LightboxPayload>();
 	const mutedWordsDialogControl = Dialog.useDialogControl();
 	const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>();
-	const linkWarningDialogControl = useStatefulDialogControl<{
-		href: string;
-		displayText: string;
-		share?: boolean;
-	}>();
+	const linkWarningDialogControl = useDialogHandle<LinkWarningPayload>();
 	const reportDialogControl = useStatefulDialogControl<{
 		subject: ReportSubject;
 	}>();

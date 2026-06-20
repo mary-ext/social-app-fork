@@ -18,12 +18,14 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
+import type { LinkWarningPayload } from '#/components/dialogs/Context';
 import { CustomLinkWarningDialog } from '#/components/dialogs/LinkWarning';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Loader } from '#/components/Loader';
 import { Text as WebText } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { useDialogHandle } from '#/components/web/Dialog';
 import { ExternalLink } from '#/components/web/Link';
 
 import germLogoUrl from '../../../../assets/images/germ_logo.webp';
@@ -62,7 +64,7 @@ export function GermButton({
 
 function GermLink({ url }: { url: string }) {
 	const { t: l } = useLingui();
-	const linkWarningControl = Dialog.useDialogControl();
+	const linkWarningHandle = useDialogHandle<LinkWarningPayload>();
 
 	return (
 		<>
@@ -73,7 +75,7 @@ function GermLink({ url }: { url: string }) {
 				onPress={() => {
 					// a custom domain can't be verified as a real Germ link, so route it through our own warning
 					if (isCustomGermDomain(url)) {
-						linkWarningControl.open();
+						linkWarningHandle.openWithPayload({ displayText: '', href: url, share: false });
 						return false;
 					}
 				}}
@@ -86,14 +88,7 @@ function GermLink({ url }: { url: string }) {
 					<ArrowTopRightIcon width={14} height={14} fill="currentColor" />
 				</span>
 			</ExternalLink>
-			<CustomLinkWarningDialog
-				control={linkWarningControl}
-				link={{
-					displayText: '',
-					href: url,
-					share: false,
-				}}
-			/>
+			<CustomLinkWarningDialog handle={linkWarningHandle} />
 		</>
 	);
 }

@@ -170,7 +170,7 @@ export function useLink({
 			e.preventDefault();
 
 			if (requiresWarning) {
-				linkWarningDialogControl.open({
+				linkWarningDialogControl.openWithPayload({
 					displayText,
 					href,
 				});

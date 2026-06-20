@@ -185,7 +185,7 @@ const useContentLink = ({
 
 			if (displayText && isExternal && isMisleadingLink(href, displayText)) {
 				e.preventDefault();
-				linkWarningDialogControl.open({ displayText, href });
+				linkWarningDialogControl.openWithPayload({ displayText, href });
 				return;
 			}
 

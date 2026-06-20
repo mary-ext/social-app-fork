@@ -1,103 +1,77 @@
-import { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { useEffect, useState } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { shareUrl } from '#/lib/sharing';
 import { splitApexDomain } from '#/lib/strings/url-helpers';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { Text } from '#/components/Typography';
-
-import { useGlobalDialogsControlContext } from './Context';
+import { type LinkWarningPayload, useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import * as css from '#/components/dialogs/LinkWarning.css';
+import { Text } from '#/components/Text';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 export function LinkWarningDialog() {
 	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
-
-	return (
-		<Dialog.Outer
-			control={linkWarningDialogControl.control}
-			webOptions={{ alignCenter: true }}
-			onClose={linkWarningDialogControl.clear}
-		>
-			<Dialog.Handle />
-			<LinkWarningDialogInner link={linkWarningDialogControl.value} />
-		</Dialog.Outer>
-	);
+	return <LinkWarningDialogBase handle={linkWarningDialogControl} />;
 }
 
-export function CustomLinkWarningDialog({
-	control,
-	link,
-}: {
-	control: Dialog.DialogControlProps;
-	link?: { href: string; displayText: string; share?: boolean };
-}) {
-	return (
-		<Dialog.Outer control={control}>
-			<Dialog.Handle />
-			<LinkWarningDialogInner link={link} />
-		</Dialog.Outer>
-	);
+export function CustomLinkWarningDialog({ handle }: { handle: Dialog.DialogHandle<LinkWarningPayload> }) {
+	return <LinkWarningDialogBase handle={handle} />;
 }
 
-function LinkWarningDialogInner({ link }: { link?: { href: string; displayText: string; share?: boolean } }) {
-	const control = Dialog.useDialogContext();
-	const { t: l } = useLingui();
-	const t = useTheme();
-	const openLink = useOpenLink();
-	const { gtMobile } = useBreakpoints();
-
-	const onPressVisit = useCallback(() => {
-		control.close(() => {
-			if (!link) return;
-			if (link.share) {
-				void shareUrl(link.href);
-			} else {
-				void openLink(link.href);
+function LinkWarningDialogBase({ handle }: { handle: Dialog.DialogHandle<LinkWarningPayload> }) {
+	return (
+		<Dialog.Root handle={handle}>
+			{({ payload }: { payload: LinkWarningPayload | undefined }) =>
+				payload ? <LinkWarningPopup close={() => handle.close()} link={payload} /> : null
 			}
-		});
-	}, [control, link, openLink]);
+		</Dialog.Root>
+	);
+}
 
-	const onCancel = useCallback(() => {
-		control.close();
-	}, [control]);
+function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarningPayload }) {
+	const { t: l } = useLingui();
+	const openLink = useOpenLink();
+
+	const onPressVisit = () => {
+		if (link.share) {
+			void shareUrl(link.href);
+		} else {
+			void openLink(link.href);
+		}
+		close();
+	};
 
 	return (
-		<Dialog.ScrollableInner style={{ maxWidth: 450 }} label={l`Leaving Bluesky`}>
-			<View style={[a.gap_2xl]}>
-				<View style={[a.gap_sm]}>
-					<Text style={[a.font_bold, a.text_2xl]}>
+		<Dialog.Popup label={l`Leaving Bluesky`} size="narrow">
+			<div className={css.outer}>
+				<div className={css.content}>
+					<Text size="_2xl" weight="bold">
 						<Trans>Leaving Bluesky</Trans>
 					</Text>
-					<Text style={[t.atoms.text_contrast_high, a.text_md, a.leading_snug]}>
+					<Text color="textContrastHigh">
 						<Trans>This link is taking you to the following website:</Trans>
 					</Text>
-					{link && <LinkBox href={link.href} />}
-				</View>
-				<View style={[a.flex_1, a.gap_sm, gtMobile && [a.flex_row_reverse, a.justify_start]]}>
-					<Button
-						label={link?.share ? l`Share link` : l`Visit site`}
-						accessibilityHint={l`Opens link ${link?.href ?? ''}`}
-						onPress={onPressVisit}
-						size="large"
-						variant="solid"
-						color="primary"
-					>
-						<ButtonText>{link?.share ? <Trans>Share link</Trans> : <Trans>Visit site</Trans>}</ButtonText>
-					</Button>
-					<Button label={l`Go back`} onPress={onCancel} size="large" variant="ghost" color="secondary">
+					<LinkBox href={link.href} />
+				</div>
+				<div className={css.actions}>
+					<Button color="secondary" label={l`Go back`} onClick={close} variant="ghost">
 						<ButtonText>
 							<Trans>Go back</Trans>
 						</ButtonText>
 					</Button>
-				</View>
-			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+					<Button
+						color="primary"
+						label={link.share ? l`Share link` : l`Visit site`}
+						onClick={onPressVisit}
+						variant="solid"
+					>
+						<ButtonText>{link.share ? <Trans>Share link</Trans> : <Trans>Visit site</Trans>}</ButtonText>
+					</Button>
+				</div>
+			</div>
+		</Dialog.Popup>
 	);
 }
 
@@ -115,10 +89,9 @@ function unsplitUrlParts(href: string): [string, string, string] {
 }
 
 function LinkBox({ href }: { href: string }) {
-	const t = useTheme();
 	/*
-	 * Apex-domain splitting needs the lazily-loaded public-suffix list. Until it
-	 * resolves — and for URLs that fail to parse — the hostname is shown unsplit.
+	 * Apex-domain splitting needs the lazily-loaded public-suffix list. Until it resolves — and for URLs
+	 * that fail to parse — the hostname is shown unsplit.
 	 */
 	const [[scheme, hostname, rest], setParts] = useState<[string, string, string]>(() =>
 		unsplitUrlParts(href),
@@ -146,21 +119,12 @@ function LinkBox({ href }: { href: string }) {
 	}, [href]);
 
 	return (
-		<View
-			style={[
-				t.atoms.bg,
-				t.atoms.border_contrast_medium,
-				a.px_md,
-				{ paddingVertical: 10 },
-				a.rounded_sm,
-				a.border,
-			]}
-		>
-			<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+		<div className={css.linkBox}>
+			<Text className={css.linkText} color="textContrastMedium">
 				{scheme}
-				<Text style={[a.text_md, a.leading_snug, t.atoms.text, a.font_semi_bold]}>{hostname}</Text>
+				<Text weight="semiBold">{hostname}</Text>
 				{rest}
 			</Text>
-		</View>
+		</div>
 	);
 }

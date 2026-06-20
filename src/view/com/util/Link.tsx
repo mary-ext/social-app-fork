@@ -205,7 +205,7 @@ export const TextLink = memo(function TextLink({
 				!disableMismatchWarning && isMisleadingLink(href, typeof text === 'string' ? text : '');
 			if (requiresWarning) {
 				e?.preventDefault?.();
-				linkWarningDialogControl.open({
+				linkWarningDialogControl.openWithPayload({
 					displayText: typeof text === 'string' ? text : '',
 					href,
 				});
