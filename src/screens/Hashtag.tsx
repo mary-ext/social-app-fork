@@ -14,7 +14,6 @@ import { enforceLen } from '#/lib/strings/helpers';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
-import { useCloseAllActiveElements } from '#/state/util';
 
 import { Post } from '#/view/com/post/Post';
 import { List } from '#/view/com/util/List';
@@ -180,11 +179,9 @@ function HashtagScreenTab({
 		void fetchNextPage();
 	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
 
-	const closeAllActiveElements = useCloseAllActiveElements();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
 	const showSignIn = () => {
-		closeAllActiveElements();
 		signinDialogControl.openWithPayload({});
 	};
 

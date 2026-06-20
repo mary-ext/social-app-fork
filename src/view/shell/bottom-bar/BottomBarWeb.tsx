@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
 import { plural } from '@lingui/core/macro';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigationState } from '@react-navigation/native';
 
 import { useHideBottomBarBorder } from '#/lib/hooks/useHideBottomBarBorder';
@@ -13,7 +13,6 @@ import { useUnreadMessageCount } from '#/state/queries/messages/list-conversatio
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
-import { useCloseAllActiveElements } from '#/state/util';
 
 import { Link } from '#/view/com/util/Link';
 import { Logo } from '#/view/icons/Logo';
@@ -26,16 +25,16 @@ import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { SwitchAccountDialog } from '#/components/dialogs/SwitchAccount';
 import {
-	Bell_Filled_Corner0_Rounded as BellFilled,
 	Bell_Stroke2_Corner0_Rounded as Bell,
+	Bell_Filled_Corner0_Rounded as BellFilled,
 } from '#/components/icons/Bell';
 import {
-	HomeOpen_Filled_Corner0_Rounded as HomeFilled,
 	HomeOpen_Stoke2_Corner0_Rounded as Home,
+	HomeOpen_Filled_Corner0_Rounded as HomeFilled,
 } from '#/components/icons/HomeOpen';
 import {
-	MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
 	MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
+	MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
 } from '#/components/icons/MagnifyingGlass';
 import {
 	Message_Stroke2_Corner0_Rounded as Message,
@@ -51,7 +50,6 @@ export function BottomBarWeb() {
 	const { hasSession, currentAccount } = useSession();
 	const t = useTheme();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
-	const closeAllActiveElements = useCloseAllActiveElements();
 	const hideBorder = useHideBottomBarBorder();
 	const accountSwitchControl = useDialogControl();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
@@ -62,9 +60,8 @@ export function BottomBarWeb() {
 	const notificationCountStr = useUnreadNotifications();
 
 	const showSignIn = useCallback(() => {
-		closeAllActiveElements();
 		signinDialogControl.openWithPayload({});
-	}, [signinDialogControl, closeAllActiveElements]);
+	}, [signinDialogControl]);
 
 	const onLongPressProfile = useCallback(() => {
 		accountSwitchControl.open();

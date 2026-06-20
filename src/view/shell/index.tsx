@@ -34,6 +34,7 @@ function ShellInner() {
 		const unsubscribe = navigator.addListener('state', () => {
 			closeAllActiveElements();
 		});
+
 		return unsubscribe;
 	}, [navigator, closeAllActiveElements]);
 

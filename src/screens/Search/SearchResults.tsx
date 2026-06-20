@@ -12,7 +12,6 @@ import { useActorSearch } from '#/state/queries/actor-search';
 import { usePopularFeedsSearch } from '#/state/queries/feed';
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
-import { useCloseAllActiveElements } from '#/state/util';
 
 import { Post } from '#/view/com/post/Post';
 import { ProfileCardWithFollowBtn } from '#/view/com/profile/ProfileCard';
@@ -248,11 +247,9 @@ let SearchScreenPostResults = ({
 		return temp;
 	}, [posts, isFetchingNextPage]);
 
-	const closeAllActiveElements = useCloseAllActiveElements();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
 	const showSignIn = () => {
-		closeAllActiveElements();
 		signinDialogControl.openWithPayload({});
 	};
 

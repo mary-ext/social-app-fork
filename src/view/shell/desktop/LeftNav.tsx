@@ -20,7 +20,6 @@ import { useUnreadMessageCount } from '#/state/queries/messages/list-conversatio
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
-import { useCloseAllActiveElements } from '#/state/util';
 
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { PressableWithHover } from '#/view/com/util/PressableWithHover';
@@ -36,7 +35,7 @@ import {
 	Bell_Filled_Corner0_Rounded as BellFilledIcon,
 	Bell_Stroke2_Corner0_Rounded as BellIcon,
 } from '#/components/icons/Bell';
-import { Bookmark as BookmarkIcon, BookmarkFilled as BookmarkFilledIcon } from '#/components/icons/Bookmark';
+import { BookmarkFilled as BookmarkFilledIcon, Bookmark as BookmarkIcon } from '#/components/icons/Bookmark';
 import {
 	BulletList_Filled_Corner0_Rounded as ListFilledIcon,
 	BulletList_Stroke2_Corner0_Rounded as ListIcon,
@@ -57,8 +56,8 @@ import {
 	MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon,
 } from '#/components/icons/MagnifyingGlass';
 import {
-	Message_Stroke2_Corner0_Rounded as MessageIcon,
 	Message_Stroke2_Corner0_Rounded_Filled as MessageFilledIcon,
+	Message_Stroke2_Corner0_Rounded as MessageIcon,
 } from '#/components/icons/Message';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import {
@@ -232,10 +231,8 @@ function SwitchMenuItems({
 }) {
 	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
-	const closeEverything = useCloseAllActiveElements();
 
 	const onAddAnotherAccount = () => {
-		closeEverything();
 		signinDialogControl.openWithPayload({ showStoredAccounts: false });
 	};
 

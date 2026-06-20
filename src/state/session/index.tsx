@@ -6,7 +6,6 @@ import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
 import { listenSessionDropped } from '#/state/events';
 import type { SessionAccount, SessionApiContext, SessionStateContext } from '#/state/session/types';
-import { useCloseAllActiveElements } from '#/state/util';
 
 import { logger } from '#/logger';
 
@@ -364,7 +363,6 @@ export function useSessionApi() {
 
 export function useRequireAuth() {
 	const { hasSession } = useSession();
-	const closeAll = useCloseAllActiveElements();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
 	return useCallback(
@@ -372,11 +370,10 @@ export function useRequireAuth() {
 			if (hasSession) {
 				fn();
 			} else {
-				closeAll();
 				signinDialogControl.openWithPayload({});
 			}
 		},
-		[hasSession, signinDialogControl, closeAll],
+		[hasSession, signinDialogControl],
 	);
 }
 

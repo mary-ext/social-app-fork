@@ -1,8 +1,6 @@
 import { memo, useCallback } from 'react';
 import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
-
-import { useCloseAllActiveElements } from '#/state/util';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import { Logo } from '#/view/icons/Logo';
 
@@ -17,12 +15,10 @@ import { Text } from '#/components/Typography';
 let NavSignInCard = ({}: {}): React.ReactNode => {
 	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
-	const closeAllActiveElements = useCloseAllActiveElements();
 
 	const showSignIn = useCallback(() => {
-		closeAllActiveElements();
 		signinDialogControl.openWithPayload({});
-	}, [signinDialogControl, closeAllActiveElements]);
+	}, [signinDialogControl]);
 
 	return (
 		<View style={[{ maxWidth: 245 }]}>

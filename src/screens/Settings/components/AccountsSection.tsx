@@ -18,7 +18,6 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
-import { useCloseAllActiveElements } from '#/state/util';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
@@ -286,10 +285,8 @@ function OtherAccountRow({
 function AddAccountRow({ className }: { className?: string }) {
 	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
-	const closeEverything = useCloseAllActiveElements();
 
 	const onAddAnotherAccount = () => {
-		closeEverything();
 		signinDialogControl.openWithPayload({ showStoredAccounts: false });
 	};
 
