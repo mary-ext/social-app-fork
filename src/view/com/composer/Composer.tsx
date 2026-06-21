@@ -648,7 +648,7 @@ export const ComposePost = ({
 		}
 	}, [onPressCancel, onClose]);
 
-	const missingAltError = useMemo(() => {
+	const missingAltError = ((): string | undefined => {
 		if (!requireAltTextEnabled) {
 			return;
 		}
@@ -666,7 +666,7 @@ export const ComposePost = ({
 				}
 			}
 		}
-	}, [thread, requireAltTextEnabled, l]);
+	})();
 
 	const canPost =
 		!missingAltError &&

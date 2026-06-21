@@ -535,24 +535,19 @@ let PostFeed = ({
 	);
 
 	const shouldRenderEndOfFeed = !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed;
-	const FeedFooter = useCallback(() => {
-		/**
-		 * A bit of padding at the bottom of the feed as you scroll and when you reach the end, so that content
-		 * isn't cut off by the bottom of the screen.
-		 */
-		const offset = 32;
-
-		return isFetchingNextPage ? (
-			<View style={[styles.feedFooter]}>
-				<ActivityIndicator />
-				<View style={{ height: offset }} />
-			</View>
-		) : shouldRenderEndOfFeed ? (
-			<View style={{ minHeight: offset }}>{renderEndOfFeed()}</View>
-		) : (
+	// A bit of padding at the bottom of the feed as you scroll and when you reach the end, so that
+	// content isn't cut off by the bottom of the screen.
+	const offset = 32;
+	const feedFooter = isFetchingNextPage ? (
+		<View style={[styles.feedFooter]}>
+			<ActivityIndicator />
 			<View style={{ height: offset }} />
-		);
-	}, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed]);
+		</View>
+	) : shouldRenderEndOfFeed ? (
+		<View style={{ minHeight: offset }}>{renderEndOfFeed()}</View>
+	) : (
+		<View style={{ height: offset }} />
+	);
 
 	const onItemSeen = useCallback(
 		(item: FeedRow) => {
@@ -569,7 +564,7 @@ let PostFeed = ({
 				keyExtractor={(item: FeedRow) => item.key}
 				estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 				renderItem={renderItem}
-				ListFooterComponent={<FeedFooter />}
+				ListFooterComponent={feedFooter}
 				ListHeaderComponent={ListHeaderComponent && <ListHeaderComponent />}
 				onScrolledDownChange={handleScrolledDownChange}
 				onEndReached={() => void onEndReached()}

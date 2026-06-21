@@ -280,24 +280,24 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 			didFireHover.current = true;
 			dispatch('hovered-target');
 		}
-	}, [prefetchIfNeeded]);
+	}, [dispatch, prefetchIfNeeded]);
 
 	const onPointerLeaveTarget = useCallback(() => {
 		didFireHover.current = false;
 		dispatch('unhovered-target');
-	}, []);
+	}, [dispatch]);
 
 	const onPointerEnterCard = useCallback(() => {
 		dispatch('hovered-card');
-	}, []);
+	}, [dispatch]);
 
 	const onPointerLeaveCard = useCallback(() => {
 		dispatch('unhovered-card');
-	}, []);
+	}, [dispatch]);
 
 	const onPress = useCallback(() => {
 		dispatch('pressed');
-	}, []);
+	}, [dispatch]);
 
 	const isVisible =
 		currentState.stage === 'showing' ||

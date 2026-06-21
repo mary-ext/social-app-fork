@@ -134,7 +134,7 @@ function ContentHiderActive({
 			return desc.name;
 		}
 		return [...new Set(selfBlurNames)].join(', ');
-	}, [l, modui?.blurs, blur, desc.name, desc.isSubjectAccount, labelDefs, i18n.locale, globalLabelStrings]);
+	}, [l, modui.blurs, blur, desc.name, desc.isSubjectAccount, labelDefs, i18n.locale, globalLabelStrings]);
 
 	const triggerInner = (
 		<>

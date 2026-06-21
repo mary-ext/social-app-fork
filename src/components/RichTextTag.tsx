@@ -75,7 +75,7 @@ export function RichTextTag({
 	// mute records that exactly match the tag in question
 	const removeableMuteWords = useMemo(() => {
 		return preferences?.moderationPrefs.mutedWords?.filter((word) => word.value === tag) ?? [];
-	}, [tag, preferences?.moderationPrefs?.mutedWords]);
+	}, [tag, preferences?.moderationPrefs.mutedWords]);
 
 	return (
 		<Menu.Root>

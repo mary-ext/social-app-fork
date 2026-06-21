@@ -53,7 +53,7 @@ export function PostThread({ uri }: { uri: string }) {
 	 * One query to rule them all
 	 */
 	const thread = usePostThread({ anchor: uri });
-	const { anchor, hasParents } = useMemo(() => {
+	const { anchor, hasParents } = (() => {
 		let hasParents = false;
 		for (const item of thread.data.items) {
 			if (item.type === 'threadPost' && item.depth === 0) {
@@ -62,7 +62,7 @@ export function PostThread({ uri }: { uri: string }) {
 			hasParents = true;
 		}
 		return { hasParents };
-	}, [thread.data.items]);
+	})();
 
 	const { openComposer } = useOpenComposer();
 	const optimisticOnPostReply = useNonReactiveCallback((payload: OnPostSuccessData) => {

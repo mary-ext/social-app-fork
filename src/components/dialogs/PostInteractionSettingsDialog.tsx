@@ -279,7 +279,7 @@ export function PostInteractionSettingsForm({
 	const everyoneCanReply = !!threadgateAllowUISettings.find((v) => v.type === 'everybody');
 	const numberOfListsSelected = threadgateAllowUISettings.filter((v) => v.type === 'list').length;
 
-	const toggleGroupValues = useMemo(() => {
+	const toggleGroupValues = ((): string[] => {
 		const values: string[] = [];
 		for (const setting of threadgateAllowUISettings) {
 			switch (setting.type) {
@@ -304,7 +304,7 @@ export function PostInteractionSettingsForm({
 			}
 		}
 		return values;
-	}, [threadgateAllowUISettings]);
+	})();
 
 	const toggleGroupOnChange = (values: string[]) => {
 		const settings: ThreadgateAllowUISetting[] = [];
