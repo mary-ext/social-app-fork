@@ -15,6 +15,8 @@ export type LightboxPayload = { images: LightboxImage[]; index: number };
 export type LightboxControl = DialogHandle<LightboxPayload>;
 
 export type SigninDialogPayload = {
+	/** Whether the chooser frames itself as signing in (default) or switching the active account. */
+	intent?: 'signin' | 'switch';
 	requestedAccount?: SessionAccount;
 	showStoredAccounts?: boolean;
 };

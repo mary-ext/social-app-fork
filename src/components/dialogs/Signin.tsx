@@ -49,7 +49,13 @@ function SigninDialogInner({ close, payload }: { close: () => void; payload: Sig
 	);
 
 	if (screen === 'choose') {
-		return <ChooseAccountScreen close={close} onSelectOther={() => setScreen('new')} />;
+		return (
+			<ChooseAccountScreen
+				close={close}
+				intent={payload.intent ?? 'signin'}
+				onSelectOther={() => setScreen('new')}
+			/>
+		);
 	}
 	return (
 		<NewAccountScreen
@@ -59,7 +65,15 @@ function SigninDialogInner({ close, payload }: { close: () => void; payload: Sig
 	);
 }
 
-function ChooseAccountScreen({ close, onSelectOther }: { close: () => void; onSelectOther: () => void }) {
+function ChooseAccountScreen({
+	close,
+	intent,
+	onSelectOther,
+}: {
+	close: () => void;
+	intent: 'signin' | 'switch';
+	onSelectOther: () => void;
+}) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { login, switchAccount } = useSessionApi();
@@ -93,12 +107,20 @@ function ChooseAccountScreen({ close, onSelectOther }: { close: () => void; onSe
 	return (
 		<div className={css.outer}>
 			<div className={css.heading}>
-				<Text size="_2xl" weight="semiBold">
-					<Trans>Sign in</Trans>
-				</Text>
-				<Text color="textContrastHigh">
-					<Trans>Choose an account to sign in with.</Trans>
-				</Text>
+				{intent === 'switch' ? (
+					<Text size="_2xl" weight="semiBold">
+						<Trans>Switch account</Trans>
+					</Text>
+				) : (
+					<>
+						<Text size="_2xl" weight="semiBold">
+							<Trans>Sign in</Trans>
+						</Text>
+						<Text color="textContrastHigh">
+							<Trans>Choose an account to sign in with.</Trans>
+						</Text>
+					</>
+				)}
 			</div>
 
 			<AccountList

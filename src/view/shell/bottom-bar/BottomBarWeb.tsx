@@ -21,9 +21,7 @@ import { Logotype } from '#/view/icons/Logotype';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
-import { SwitchAccountDialog } from '#/components/dialogs/SwitchAccount';
 import {
 	Bell_Stroke2_Corner0_Rounded as Bell,
 	Bell_Filled_Corner0_Rounded as BellFilled,
@@ -54,7 +52,6 @@ export function BottomBarWeb() {
 	const t = useTheme();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 	const hideBorder = useHideBottomBarBorder();
-	const accountSwitchControl = useDialogControl();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 	const isLabeler = profile?.associated?.labeler;
 	const iconWidth = 26;
@@ -67,141 +64,133 @@ export function BottomBarWeb() {
 	}, [signinDialogControl]);
 
 	const onLongPressProfile = useCallback(() => {
-		accountSwitchControl.open();
-	}, [accountSwitchControl]);
+		signinDialogControl.openWithPayload({ intent: 'switch' });
+	}, [signinDialogControl]);
 
 	return (
-		<>
-			<SwitchAccountDialog control={accountSwitchControl} />
-			<View
-				role="navigation"
-				style={[
-					styles.bottomBar,
-					t.atoms.bg,
-					hideBorder ? { borderColor: t.atoms.bg.backgroundColor } : t.atoms.border_contrast_low,
-				]}
-			>
-				{hasSession ? (
-					<>
-						<NavItem routeName="Home" href="/">
-							{({ isActive }) => {
-								const Icon = isActive ? HomeFilled : Home;
-								return (
-									<Icon aria-hidden={true} width={iconWidth + 1} fill={colors.text} className={css.icon} />
-								);
-							}}
-						</NavItem>
-						<NavItem routeName="Search" href="/search">
-							{({ isActive }) => {
-								const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass;
-								return (
-									<Icon
-										aria-hidden={true}
-										width={iconWidth + 2}
-										fill={colors.text}
-										className={css.searchIcon}
-									/>
-								);
-							}}
-						</NavItem>
+		<View
+			role="navigation"
+			style={[
+				styles.bottomBar,
+				t.atoms.bg,
+				hideBorder ? { borderColor: t.atoms.bg.backgroundColor } : t.atoms.border_contrast_low,
+			]}
+		>
+			{hasSession ? (
+				<>
+					<NavItem routeName="Home" href="/">
+						{({ isActive }) => {
+							const Icon = isActive ? HomeFilled : Home;
+							return (
+								<Icon aria-hidden={true} width={iconWidth + 1} fill={colors.text} className={css.icon} />
+							);
+						}}
+					</NavItem>
+					<NavItem routeName="Search" href="/search">
+						{({ isActive }) => {
+							const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass;
+							return (
+								<Icon
+									aria-hidden={true}
+									width={iconWidth + 2}
+									fill={colors.text}
+									className={css.searchIcon}
+								/>
+							);
+						}}
+					</NavItem>
 
-						{hasSession && (
-							<>
-								<NavItem
-									routeName="Messages"
-									href="/messages"
-									notificationCount={unreadMessageCount.numUnread}
-									hasNew={unreadMessageCount.hasNew}
-								>
-									{({ isActive }) => {
-										const Icon = isActive ? MessageFilled : Message;
-										return (
-											<Icon
-												aria-hidden={true}
-												width={iconWidth - 1}
-												fill={colors.text}
-												className={css.icon}
+					{hasSession && (
+						<>
+							<NavItem
+								routeName="Messages"
+								href="/messages"
+								notificationCount={unreadMessageCount.numUnread}
+								hasNew={unreadMessageCount.hasNew}
+							>
+								{({ isActive }) => {
+									const Icon = isActive ? MessageFilled : Message;
+									return (
+										<Icon aria-hidden={true} width={iconWidth - 1} fill={colors.text} className={css.icon} />
+									);
+								}}
+							</NavItem>
+							<NavItem
+								routeName="Notifications"
+								href="/notifications"
+								notificationCount={notificationCountStr}
+							>
+								{({ isActive }) => {
+									const Icon = isActive ? BellFilled : Bell;
+									return (
+										<Icon aria-hidden={true} width={iconWidth} fill={colors.text} className={css.icon} />
+									);
+								}}
+							</NavItem>
+							<NavItem
+								routeName="Profile"
+								href={currentAccount ? makeProfileLink({ did: currentAccount.did }) : '/'}
+								onLongPress={onLongPressProfile}
+							>
+								{({ isActive }) => (
+									<View style={styles.ctrlIconSizingWrapper}>
+										<View
+											style={[
+												styles.ctrlIcon,
+												isLabeler ? styles.profileIconSquare : styles.profileIcon,
+												isActive && [
+													isLabeler ? styles.onProfileSquare : styles.onProfile,
+													{ borderColor: t.atoms.text.color },
+												],
+											]}
+										>
+											<UserAvatar
+												avatar={profile?.avatar}
+												size={iconWidth - 3}
+												type={profile?.associated?.labeler ? 'labeler' : 'user'}
 											/>
-										);
-									}}
-								</NavItem>
-								<NavItem
-									routeName="Notifications"
-									href="/notifications"
-									notificationCount={notificationCountStr}
-								>
-									{({ isActive }) => {
-										const Icon = isActive ? BellFilled : Bell;
-										return (
-											<Icon aria-hidden={true} width={iconWidth} fill={colors.text} className={css.icon} />
-										);
-									}}
-								</NavItem>
-								<NavItem
-									routeName="Profile"
-									href={currentAccount ? makeProfileLink({ did: currentAccount.did }) : '/'}
-									onLongPress={onLongPressProfile}
-								>
-									{({ isActive }) => (
-										<View style={styles.ctrlIconSizingWrapper}>
-											<View
-												style={[
-													styles.ctrlIcon,
-													isLabeler ? styles.profileIconSquare : styles.profileIcon,
-													isActive && [
-														isLabeler ? styles.onProfileSquare : styles.onProfile,
-														{ borderColor: t.atoms.text.color },
-													],
-												]}
-											>
-												<UserAvatar
-													avatar={profile?.avatar}
-													size={iconWidth - 3}
-													type={profile?.associated?.labeler ? 'labeler' : 'user'}
-												/>
-											</View>
 										</View>
-									)}
-								</NavItem>
-							</>
-						)}
-					</>
-				) : (
-					<>
-						<View
-							style={[
-								a.w_full,
-								a.flex_row,
-								a.align_center,
-								a.justify_between,
-								a.gap_sm,
-								{
-									paddingTop: 14,
-									paddingBottom: 14,
-									paddingLeft: 14,
-									paddingRight: 6,
-								},
-							]}
-						>
-							<View style={[a.flex_row, a.align_center, a.gap_md]}>
-								<Logo width={32} />
-								<View style={{ paddingTop: 4 }}>
-									<Logotype width={80} fill={colors.text} />
-								</View>
-							</View>
-
-							<View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-								<Button onPress={showSignIn} label={l`Sign in`} size="small" variant="solid" color="primary">
-									<ButtonText>
-										<Trans>Sign in</Trans>
-									</ButtonText>
-								</Button>
+									</View>
+								)}
+							</NavItem>
+						</>
+					)}
+				</>
+			) : (
+				<>
+					<View
+						style={[
+							a.w_full,
+							a.flex_row,
+							a.align_center,
+							a.justify_between,
+							a.gap_sm,
+							{
+								paddingTop: 14,
+								paddingBottom: 14,
+								paddingLeft: 14,
+								paddingRight: 6,
+							},
+						]}
+					>
+						<View style={[a.flex_row, a.align_center, a.gap_md]}>
+							<Logo width={32} />
+							<View style={{ paddingTop: 4 }}>
+								<Logotype width={80} fill={colors.text} />
 							</View>
 						</View>
-					</>
-				)}
-			</View>
-		</>
+
+						<View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+							<Button onPress={showSignIn} label={l`Sign in`} size="small" variant="solid" color="primary">
+								<ButtonText>
+									<Trans>Sign in</Trans>
+								</ButtonText>
+							</Button>
+						</View>
+					</View>
+				</>
+			)}
+		</View>
 	);
 }
 
