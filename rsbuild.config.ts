@@ -16,7 +16,6 @@ const serverPort = 19006;
 const transpiledPaths = [
 	path.resolve(root, 'index.tsx'),
 	path.resolve(root, 'node_modules/react-native'),
-	path.resolve(root, 'node_modules/react-native-progress'),
 	path.resolve(root, 'node_modules/react-native-safe-area-context'),
 	path.resolve(root, 'node_modules/react-native-svg'),
 	path.resolve(root, 'src'),
@@ -38,48 +37,30 @@ export default defineConfig(({ envMode }) => {
 	return {
 		plugins: [
 			pluginReact(),
+			// Babel's sole remaining job is React Compiler — the only part of the pipeline without a
+			// Rust/SWC equivalent. Rspack's native React Compiler (rsbuild 2.1.0) can't replace it yet:
+			// it surfaces every compiler bail-out as a hard build error, ignoring `panicThreshold`
+			// (web-infra-dev/rspack#14517), which breaks on the many components — including react-native-web
+			// internals — that the compiler declines to optimize.
 			pluginBabel({
 				// vanilla-extract `.css.ts` files are build-evaluated by VanillaExtractPlugin, not runtime
-				// code — keep them out of the babel pipeline (notably react-compiler) entirely.
+				// code — keep them out of react-compiler entirely.
 				exclude: /\.css\.ts$/,
 				include: transpiledPaths,
 				babelLoaderOptions(options, { addPlugins }) {
 					options.presets = [];
+					// babel-plugin-react-compiler parses but can't strip TypeScript syntax, so do that first.
 					options.overrides = [
 						{
-							plugins: ['@babel/plugin-syntax-jsx'],
-							test: /node_modules[/\\]react-native-progress[/\\].*\.jsx?$/,
-						},
-						{
-							plugins: [
-								[
-									'@babel/plugin-transform-typescript',
-									{
-										allowNamespaces: true,
-										isTSX: false,
-									},
-								],
-							],
+							plugins: [['@babel/plugin-transform-typescript', { allowNamespaces: true, isTSX: false }]],
 							test: /\.[cm]?ts$/,
 						},
 						{
-							plugins: [
-								[
-									'@babel/plugin-transform-typescript',
-									{
-										allowNamespaces: true,
-										isTSX: true,
-									},
-								],
-							],
+							plugins: [['@babel/plugin-transform-typescript', { allowNamespaces: true, isTSX: true }]],
 							test: /\.[cm]?tsx$/,
 						},
 					];
-					addPlugins([
-						'@lingui/babel-plugin-lingui-macro',
-						'babel-plugin-react-compiler',
-						...(envMode === 'production' ? ['transform-remove-console'] : []),
-					]);
+					addPlugins(['babel-plugin-react-compiler']);
 				},
 			}),
 		],
@@ -135,7 +116,20 @@ export default defineConfig(({ envMode }) => {
 			cleanDistPath: true,
 			distPath: { root: 'web-build' },
 		},
+		performance: {
+			// strip console.* from production bundles (replaces babel-plugin-transform-remove-console)
+			removeConsole: envMode === 'production',
+		},
 		tools: {
+			swc: {
+				jsc: {
+					experimental: {
+						// lingui macros (`msg`, `t`, `<Trans>`, `plural`) are expanded by the SWC Wasm plugin
+						// instead of @lingui/babel-plugin-lingui-macro.
+						plugins: [['@lingui/swc-plugin', {}]],
+					},
+				},
+			},
 			rspack(config) {
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());

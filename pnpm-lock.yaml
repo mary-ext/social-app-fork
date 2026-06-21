@@ -210,21 +210,18 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@babel/plugin-syntax-jsx':
-        specifier: ^7.29.7
-        version: 7.29.7(@babel/core@7.29.7)
       '@babel/plugin-transform-typescript':
         specifier: ^7.29.7
         version: 7.29.7(@babel/core@7.29.7)
       '@eslint/js':
         specifier: ^9.39.4
         version: 9.39.4
-      '@lingui/babel-plugin-lingui-macro':
-        specifier: ^6.4.0
-        version: 6.4.0
       '@lingui/cli':
         specifier: ^6.4.0
         version: 6.4.0(patch_hash=e7273d643ca9d73752af9d830adff8248d7ac29219b192b9b34d4409407bd636)
+      '@lingui/swc-plugin':
+        specifier: ^6.4.0
+        version: 6.4.0(@lingui/core@6.4.0)
       '@rsbuild/core':
         specifier: ^2.0.15
         version: 2.0.15
@@ -236,7 +233,7 @@ importers:
         version: 2.1.0(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))
       '@rsdoctor/rspack-plugin':
         specifier: ^1.5.15
-        version: 1.5.15(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
+        version: 1.5.15(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
       '@types/lodash.chunk':
         specifier: ^4.2.9
         version: 4.2.9
@@ -267,9 +264,6 @@ importers:
       babel-plugin-react-compiler:
         specifier: 1.0.0
         version: 1.0.0
-      babel-plugin-transform-remove-console:
-        specifier: ^6.9.4
-        version: 6.9.4
       eslint:
         specifier: ^9.39.4
         version: 9.39.4(jiti@2.7.0)
@@ -753,6 +747,9 @@ packages:
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
 
+  '@emnapi/core@1.11.1':
+    resolution: {integrity: sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ==}
+
   '@emnapi/runtime@1.10.0':
     resolution: {integrity: sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA==}
 
@@ -761,6 +758,9 @@ packages:
 
   '@emnapi/wasi-threads@1.2.1':
     resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==}
+
+  '@emnapi/wasi-threads@1.2.2':
+    resolution: {integrity: sha512-c95qOXkHdydNKhscBTebqEC1CVAZpyqOfVfBzQ1qgzyl3gfeldUjIggDbIZgDKsHLgnsM+igH7TJ/eAasaVuMA==}
 
   '@emoji-mart/data@1.2.1':
     resolution: {integrity: sha512-no2pQMWiBy6gpBEiqGeU77/bFejDqUTRY7KX+0+iur13op3bqUsXdnwoZs6Xb1zbv0gAj5VvS1PWoUUckSr5Dw==}
@@ -1574,6 +1574,18 @@ packages:
       react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
       babel-plugin-macros:
+        optional: true
+
+  '@lingui/swc-plugin@6.4.0':
+    resolution: {integrity: sha512-Naz0MVa23DHFLSbmQjUWzCwzH3vSLkw8Uvqln5Bhgw2raRKT2X4O+zHTBpegeYwRCMsdPCQZXymNxpfu46/0vg==}
+    peerDependencies:
+      '@lingui/core': 5 || 6
+      '@swc/core': '*'
+      next: '*'
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      next:
         optional: true
 
   '@mary-ext/simple-event-emitter@1.0.2':
@@ -3316,9 +3328,6 @@ packages:
 
   babel-plugin-syntax-hermes-parser@0.29.1:
     resolution: {integrity: sha512-2WFYnoWGdmih1I1J5eIqxATOeycOqRwYxAQBu3cUu/rhwInwHUg7k60AFNbuGjSDL8tje5GDrAnxzRLcu2pYcA==}
-
-  babel-plugin-transform-remove-console@6.9.4:
-    resolution: {integrity: sha512-88blrUrMX3SPiGkT1GnvVY8E/7A+k6oj3MNvUtTIxJflFzXTw1bHkuJ/y039ouhFMp2prRn5cQGzokViYi1dsg==}
 
   babel-preset-current-node-syntax@1.2.0:
     resolution: {integrity: sha512-E/VlAEzRrsLEb2+dv8yp3bo4scof3l9nR4lrld+Iy5NyVqgVYUJnDAmunkhPMisRI32Qc4iRiz425d8vM++2fg==}
@@ -6297,6 +6306,12 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
+  '@emnapi/core@1.11.1':
+    dependencies:
+      '@emnapi/wasi-threads': 1.2.2
+      tslib: 2.8.1
+    optional: true
+
   '@emnapi/runtime@1.10.0':
     dependencies:
       tslib: 2.8.1
@@ -6308,6 +6323,11 @@ snapshots:
     optional: true
 
   '@emnapi/wasi-threads@1.2.1':
+    dependencies:
+      tslib: 2.8.1
+    optional: true
+
+  '@emnapi/wasi-threads@1.2.2':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -6903,6 +6923,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@lingui/swc-plugin@6.4.0(@lingui/core@6.4.0)':
+    dependencies:
+      '@lingui/conf': 6.4.0
+      '@lingui/core': 6.4.0
+
   '@mary-ext/simple-event-emitter@1.0.2': {}
 
   '@messageformat/date-skeleton@1.1.0': {}
@@ -6925,9 +6950,9 @@ snapshots:
       '@tybys/wasm-util': 0.10.2
     optional: true
 
-  '@napi-rs/wasm-runtime@1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)':
+  '@napi-rs/wasm-runtime@1.1.5(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:
-      '@emnapi/core': 1.10.0
+      '@emnapi/core': 1.11.1
       '@emnapi/runtime': 1.11.1
       '@tybys/wasm-util': 0.10.2
     optional: true
@@ -7779,7 +7804,7 @@ snapshots:
       metro: 0.83.3
       metro-config: 0.83.3
       metro-core: 0.83.3
-      semver: 7.8.4
+      semver: 7.8.5
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -7912,14 +7937,14 @@ snapshots:
 
   '@rsdoctor/client@1.5.15': {}
 
-  '@rsdoctor/core@1.5.15(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)':
+  '@rsdoctor/core@1.5.15(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)':
     dependencies:
       '@rsbuild/plugin-check-syntax': 1.6.1(@rsbuild/core@2.0.15)
       '@rsdoctor/graph': 1.5.15(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
       '@rsdoctor/sdk': 1.5.15(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
       '@rsdoctor/types': 1.5.15(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
       '@rsdoctor/utils': 1.5.15(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
-      '@rspack/resolver': 0.2.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)
+      '@rspack/resolver': 0.2.8(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
       browserslist-load-config: 1.0.3
       es-toolkit: 1.47.1
       filesize: 11.0.17
@@ -7947,9 +7972,9 @@ snapshots:
       - '@rspack/core'
       - webpack
 
-  '@rsdoctor/rspack-plugin@1.5.15(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)':
+  '@rsdoctor/rspack-plugin@1.5.15(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)':
     dependencies:
-      '@rsdoctor/core': 1.5.15(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
+      '@rsdoctor/core': 1.5.15(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@rsbuild/core@2.0.15)(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
       '@rsdoctor/graph': 1.5.15(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
       '@rsdoctor/sdk': 1.5.15(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
       '@rsdoctor/types': 1.5.15(@rspack/core@2.0.8(@swc/helpers@0.5.23))(webpack@5.107.2)
@@ -8090,9 +8115,9 @@ snapshots:
   '@rspack/resolver-binding-linux-x64-musl@0.2.8':
     optional: true
 
-  '@rspack/resolver-binding-wasm32-wasi@0.2.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)':
+  '@rspack/resolver-binding-wasm32-wasi@0.2.8(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)
+      '@napi-rs/wasm-runtime': 1.1.5(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -8107,7 +8132,7 @@ snapshots:
   '@rspack/resolver-binding-win32-x64-msvc@0.2.8':
     optional: true
 
-  '@rspack/resolver@0.2.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)':
+  '@rspack/resolver@0.2.8(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     optionalDependencies:
       '@rspack/resolver-binding-darwin-arm64': 0.2.8
       '@rspack/resolver-binding-darwin-x64': 0.2.8
@@ -8115,7 +8140,7 @@ snapshots:
       '@rspack/resolver-binding-linux-arm64-musl': 0.2.8
       '@rspack/resolver-binding-linux-x64-gnu': 0.2.8
       '@rspack/resolver-binding-linux-x64-musl': 0.2.8
-      '@rspack/resolver-binding-wasm32-wasi': 0.2.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)
+      '@rspack/resolver-binding-wasm32-wasi': 0.2.8(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
       '@rspack/resolver-binding-win32-arm64-msvc': 0.2.8
       '@rspack/resolver-binding-win32-ia32-msvc': 0.2.8
       '@rspack/resolver-binding-win32-x64-msvc': 0.2.8
@@ -8783,8 +8808,6 @@ snapshots:
   babel-plugin-syntax-hermes-parser@0.29.1:
     dependencies:
       hermes-parser: 0.29.1
-
-  babel-plugin-transform-remove-console@6.9.4: {}
 
   babel-preset-current-node-syntax@1.2.0(@babel/core@7.29.7):
     dependencies:
@@ -9878,7 +9901,7 @@ snapshots:
 
   is-bun-module@2.0.0:
     dependencies:
-      semver: 7.8.4
+      semver: 7.8.5
 
   is-callable@1.2.7: {}
 
