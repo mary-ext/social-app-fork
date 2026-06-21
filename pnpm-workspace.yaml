@@ -22,6 +22,14 @@ minimumReleaseAgeExclude:
   - '@atcute/*'
   - '@oomfware/*'
   - '@mary-ext/*'
+  - '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260621.1'
+  - '@typescript/native-preview-darwin-x64@7.0.0-dev.20260621.1'
+  - '@typescript/native-preview-linux-arm64@7.0.0-dev.20260621.1'
+  - '@typescript/native-preview-linux-arm@7.0.0-dev.20260621.1'
+  - '@typescript/native-preview-linux-x64@7.0.0-dev.20260621.1'
+  - '@typescript/native-preview-win32-arm64@7.0.0-dev.20260621.1'
+  - '@typescript/native-preview-win32-x64@7.0.0-dev.20260621.1'
+  - '@typescript/native-preview@7.0.0-dev.20260621.1'
 patchedDependencies:
   '@base-ui/react': patches/@base-ui__react.patch
   '@react-navigation/native-stack': patches/@react-navigation__native-stack.patch
