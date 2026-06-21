@@ -49,9 +49,7 @@ import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/
 import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
-import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
-import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
@@ -59,6 +57,9 @@ import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
 import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
+import * as Menu from '#/components/web/Menu';
+import * as Prompt from '#/components/web/Prompt';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { Image } from '#/shims/image';
@@ -435,10 +436,9 @@ function OverflowMenu({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const { gtMobile } = useBreakpoints();
 	const { currentAccount } = useSession();
 	const reportDialogControl = useReportDialogControl();
-	const deleteDialogControl = useDialogControl();
+	const deleteHandle = Prompt.usePromptHandle();
 	const convertToListDialogControl = useDialogControl();
 	const navigation = useNavigation<NavigationProp>();
 
@@ -448,13 +448,12 @@ function OverflowMenu({
 		error: deleteError,
 	} = useDeleteStarterPackMutation({
 		onSuccess: () => {
-			deleteDialogControl.close(() => {
-				if (navigation.canGoBack()) {
-					navigation.popToTop();
-				} else {
-					navigation.navigate('Home');
-				}
-			});
+			deleteHandle.close();
+			if (navigation.canGoBack()) {
+				navigation.popToTop();
+			} else {
+				navigation.navigate('Home');
+			}
 		},
 		onError: (e) => {
 			logger.error('Failed to delete starter pack', { safeMessage: e });
@@ -478,29 +477,25 @@ function OverflowMenu({
 	return (
 		<>
 			<Menu.Root>
-				<Menu.Trigger label={l`Repost or quote post`}>
-					{({ props }) => (
-						<Button
-							{...props}
-							testID="headerDropdownBtn"
+				<Menu.Trigger
+					render={
+						<WebButton
 							label={l`Open starter pack menu`}
-							hitSlop={HITSLOP_20}
 							variant="solid"
 							color="secondary"
 							size="small"
 							shape="round"
 						>
-							<ButtonIcon icon={Ellipsis} />
-						</Button>
-					)}
-				</Menu.Trigger>
-				<Menu.Outer style={{ minWidth: 170 }}>
+							<WebButtonIcon icon={Ellipsis} />
+						</WebButton>
+					}
+				/>
+				<Menu.Popup label={l`Starter pack options`} minWidth={170} align="end">
 					{isOwn ? (
 						<>
 							<Menu.Item
 								label={l`Edit starter pack`}
-								testID="editStarterPackLinkBtn"
-								onPress={() => {
+								onClick={() => {
 									navigation.navigate('StarterPackEdit', {
 										rkey: routeParams.rkey,
 									});
@@ -511,13 +506,7 @@ function OverflowMenu({
 								</Menu.ItemText>
 								<Menu.ItemIcon icon={Pencil} position="right" />
 							</Menu.Item>
-							<Menu.Item
-								label={l`Delete starter pack`}
-								testID="deleteStarterPackBtn"
-								onPress={() => {
-									deleteDialogControl.open();
-								}}
-							>
+							<Menu.Item label={l`Delete starter pack`} onClick={() => deleteHandle.open(null)}>
 								<Menu.ItemText>
 									<Trans>Delete</Trans>
 								</Menu.ItemText>
@@ -525,8 +514,7 @@ function OverflowMenu({
 							</Menu.Item>
 							<Menu.Item
 								label={l`Create a list from this starter pack`}
-								testID="convertToListBtn"
-								onPress={() => {
+								onClick={() => {
 									convertToListDialogControl.open();
 								}}
 							>
@@ -539,17 +527,15 @@ function OverflowMenu({
 					) : (
 						<>
 							<Menu.Group>
-								<Menu.Item
-									label={l`Copy link to starter pack`}
-									testID="shareStarterPackLinkBtn"
-									onPress={onOpenShareDialog}
-								>
-									<Menu.ItemText>{<Trans>Copy link</Trans>}</Menu.ItemText>
+								<Menu.Item label={l`Copy link to starter pack`} onClick={onOpenShareDialog}>
+									<Menu.ItemText>
+										<Trans>Copy link</Trans>
+									</Menu.ItemText>
 									<Menu.ItemIcon icon={ChainLinkIcon} position="right" />
 								</Menu.Item>
 							</Menu.Group>
 
-							<Menu.Item label={l`Report starter pack`} onPress={() => reportDialogControl.open(null)}>
+							<Menu.Item label={l`Report starter pack`} onClick={() => reportDialogControl.open(null)}>
 								<Menu.ItemText>
 									<Trans>Report starter pack</Trans>
 								</Menu.ItemText>
@@ -557,7 +543,7 @@ function OverflowMenu({
 							</Menu.Item>
 						</>
 					)}
-				</Menu.Outer>
+				</Menu.Popup>
 			</Menu.Root>
 			{starterPack.list && (
 				<ReportDialog
@@ -570,13 +556,15 @@ function OverflowMenu({
 					}
 				/>
 			)}
-			<Prompt.Outer control={deleteDialogControl}>
-				<Prompt.TitleText>
-					<Trans>Delete starter pack?</Trans>
-				</Prompt.TitleText>
-				<Prompt.DescriptionText>
-					<Trans>Are you sure you want to delete this starter pack?</Trans>
-				</Prompt.DescriptionText>
+			<Prompt.Outer handle={deleteHandle}>
+				<Prompt.Content>
+					<Prompt.TitleText>
+						<Trans>Delete starter pack?</Trans>
+					</Prompt.TitleText>
+					<Prompt.DescriptionText>
+						<Trans>Are you sure you want to delete this starter pack?</Trans>
+					</Prompt.DescriptionText>
+				</Prompt.Content>
 				{deleteError && (
 					<View
 						style={[
@@ -600,18 +588,13 @@ function OverflowMenu({
 					</View>
 				)}
 				<Prompt.Actions>
-					<Button
-						variant="solid"
-						color="negative"
-						size={gtMobile ? 'small' : 'large'}
-						label={l`Yes, delete this starter pack`}
+					<Prompt.Action
 						onPress={() => void onDeleteStarterPack()}
-					>
-						<ButtonText>
-							<Trans>Delete</Trans>
-						</ButtonText>
-						{isDeletePending && <ButtonIcon icon={Loader} />}
-					</Button>
+						color="negative"
+						cta={l`Delete`}
+						icon={isDeletePending ? Loader : undefined}
+						shouldCloseOnPress={false}
+					/>
 					<Prompt.Cancel />
 				</Prompt.Actions>
 			</Prompt.Outer>
