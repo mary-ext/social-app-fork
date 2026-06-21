@@ -17,6 +17,7 @@ export const router = new Router<AllNavigatableRoutes>({
 	Moderation: '/moderation',
 	ModerationModlists: '/moderation/modlists',
 	ModerationMutedAccounts: '/moderation/muted-accounts',
+	ModerationMutedWords: '/moderation/muted-words',
 	ModerationBlockedAccounts: '/moderation/blocked-accounts',
 	ModerationInteractionSettings: '/moderation/interaction-settings',
 	ModerationVerificationSettings: '/moderation/verification-settings',

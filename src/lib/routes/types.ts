@@ -13,6 +13,7 @@ export type CommonNavigatorParams = {
 	Moderation: undefined;
 	ModerationModlists: undefined;
 	ModerationMutedAccounts: undefined;
+	ModerationMutedWords: undefined;
 	ModerationBlockedAccounts: undefined;
 	ModerationInteractionSettings: undefined;
 	ModerationVerificationSettings: undefined;

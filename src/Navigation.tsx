@@ -167,6 +167,11 @@ const ModerationMutedAccounts = lazy(() =>
 		default: m.ModerationMutedAccounts,
 	})),
 );
+const ModerationMutedWords = lazy(() =>
+	import('#/screens/Moderation/MutedWords').then((m) => ({
+		default: m.MutedWordsScreen,
+	})),
+);
 const ModerationScreen = lazy(() =>
 	import('#/screens/Moderation').then((m) => ({ default: m.ModerationScreen })),
 );
@@ -482,6 +487,14 @@ const FlatNavigator = () => {
 				getComponent={() => ModerationMutedAccounts}
 				options={{
 					title: title(defineMessage`Muted Accounts`),
+					requireAuth: true,
+				}}
+			/>
+			<Flat.Screen
+				name="ModerationMutedWords"
+				getComponent={() => ModerationMutedWords}
+				options={{
+					title: title(defineMessage`Muted Words & Tags`),
 					requireAuth: true,
 				}}
 			/>

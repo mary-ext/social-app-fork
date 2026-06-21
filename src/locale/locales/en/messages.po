@@ -170,18 +170,6 @@ msgstr ""
 msgid "{0} (Account)"
 msgstr ""
 
-#. Pattern: {wordValue} in tags
-#. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:342
-msgid "{0} <0>in <1>tags</1></0>"
-msgstr ""
-
-#. Pattern: {wordValue} in text, tags
-#. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:332
-msgid "{0} <0>in <1>text & tags</1></0>"
-msgstr ""
-
 #. placeholder {0}: createSanitizedDisplayName(members[0]!)
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:45
 msgid "{0} added to chat"
@@ -621,7 +609,7 @@ msgstr "{name}'s favorite feeds and people - join me!"
 msgid "{name}'s starter pack"
 msgstr "{name}'s starter pack"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:255
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:248
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -792,21 +780,21 @@ msgstr "10+"
 msgid "10+ requests"
 msgstr "10+ requests"
 
-#: src/components/dialogs/MutedWords.tsx:169
-#: src/components/dialogs/MutedWords.tsx:380
-#: src/components/dialogs/MutedWords.tsx:382
+#: src/components/dialogs/MutedWords.tsx:61
+#: src/screens/Moderation/MutedWords.tsx:170
+#: src/screens/Moderation/MutedWords.tsx:172
 msgid "24 hours"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:185
-#: src/components/dialogs/MutedWords.tsx:390
-#: src/components/dialogs/MutedWords.tsx:392
+#: src/components/dialogs/MutedWords.tsx:63
+#: src/screens/Moderation/MutedWords.tsx:180
+#: src/screens/Moderation/MutedWords.tsx:182
 msgid "30 days"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:177
-#: src/components/dialogs/MutedWords.tsx:385
-#: src/components/dialogs/MutedWords.tsx:387
+#: src/components/dialogs/MutedWords.tsx:62
+#: src/screens/Moderation/MutedWords.tsx:175
+#: src/screens/Moderation/MutedWords.tsx:177
 msgid "7 days"
 msgstr ""
 
@@ -876,11 +864,11 @@ msgstr "Access requested! The group owner will review your request."
 msgid "Accessibility"
 msgstr ""
 
-#: src/Navigation.tsx:628
+#: src/Navigation.tsx:641
 msgid "Accessibility Settings"
 msgstr ""
 
-#: src/Navigation.tsx:644
+#: src/Navigation.tsx:657
 #: src/screens/Settings/AccountSettings.tsx:45
 #: src/screens/Settings/Settings.tsx:56
 msgid "Account & privacy"
@@ -977,11 +965,16 @@ msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:145
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:284
-#: src/components/dialogs/MutedWords.tsx:251
+#: src/components/dialogs/MutedWords.tsx:177
 #: src/components/dialogs/StarterPackDialog.tsx:303
 #: src/components/dialogs/StarterPackDialog.tsx:311
 msgid "Add"
 msgstr ""
+
+#: src/screens/Moderation/MutedWords.tsx:62
+msgctxt "action"
+msgid "Add"
+msgstr "Add"
 
 #. placeholder {0}: 8 - items.length
 #: src/screens/StarterPack/Wizard/index.tsx:513
@@ -1001,6 +994,10 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:85
 msgid "Add a content warning"
 msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:34
+msgid "Add a muted word or tag"
+msgstr "Add a muted word or tag"
 
 #: src/features/liveNow/components/GoLiveDialog.tsx:99
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
@@ -1067,13 +1064,14 @@ msgstr ""
 msgid "Add members"
 msgstr "Add members"
 
-#: src/components/dialogs/MutedWords.tsx:246
-msgid "Add mute word with chosen settings"
-msgstr ""
+#: src/components/dialogs/MutedWords.tsx:117
+#: src/screens/Moderation/MutedWords.tsx:56
+msgid "Add muted word"
+msgstr "Add muted word"
 
-#: src/components/dialogs/MutedWords.tsx:118
-msgid "Add muted words and tags"
-msgstr ""
+#: src/components/dialogs/MutedWords.tsx:172
+msgid "Add muted word with chosen settings"
+msgstr "Add muted word with chosen settings"
 
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:112
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
@@ -1140,7 +1138,7 @@ msgstr ""
 msgid "Added to starter pack"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:254
+#: src/components/dialogs/MutedWords.tsx:180
 msgid "Adding"
 msgstr "Adding"
 
@@ -1189,7 +1187,7 @@ msgstr ""
 msgid "Adult sexual abuse content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:224
+#: src/screens/Moderation/index.tsx:219
 msgid "Advanced"
 msgstr ""
 
@@ -1459,7 +1457,7 @@ msgstr ""
 msgid "Appeal this decision"
 msgstr ""
 
-#: src/Navigation.tsx:636
+#: src/Navigation.tsx:649
 #: src/screens/Settings/AppearanceSettings.tsx:52
 #: src/screens/Settings/Settings.tsx:70
 #: src/screens/Settings/Settings.tsx:72
@@ -1520,7 +1518,7 @@ msgstr "Are you sure you want to rescind your request to join {0}?"
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:322
+#: src/screens/Moderation/MutedWords.tsx:132
 msgid "Are you sure?"
 msgstr ""
 
@@ -1670,11 +1668,11 @@ msgstr "Block user and/or leave this conversation"
 msgid "Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:169
+#: src/screens/Moderation/index.tsx:164
 msgid "Blocked accounts"
 msgstr ""
 
-#: src/Navigation.tsx:492
+#: src/Navigation.tsx:505
 #: src/view/screens/ModerationBlockedAccounts.tsx:81
 msgid "Blocked Accounts"
 msgstr ""
@@ -1777,7 +1775,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
-#: src/screens/Moderation/index.tsx:293
+#: src/screens/Moderation/index.tsx:288
 #: src/screens/Search/components/StarterPackCard.tsx:91
 #: src/screens/Search/Explore.tsx:849
 msgid "By {0}"
@@ -1880,6 +1878,10 @@ msgstr "Change"
 msgid "Change app language"
 msgstr "Change app language"
 
+#: src/screens/Moderation/MutedWords.tsx:168
+msgid "Change duration"
+msgstr "Change duration"
+
 #: src/components/moderation/ReportDialog/index.tsx:488
 msgid "Change moderation service"
 msgstr ""
@@ -1892,7 +1894,7 @@ msgstr ""
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
 msgstr ""
 
-#: src/Navigation.tsx:686
+#: src/Navigation.tsx:699
 #: src/view/shell/desktop/LeftNav.tsx:638
 #: src/view/shell/Drawer.tsx:152
 msgid "Chat"
@@ -1939,7 +1941,7 @@ msgstr "Chat owners cannot leave a group chat."
 msgid "Chat recipient is not followed by the sender."
 msgstr "Chat recipient is not followed by the sender."
 
-#: src/Navigation.tsx:716
+#: src/Navigation.tsx:729
 msgid "Chat request inbox"
 msgstr ""
 
@@ -1948,7 +1950,7 @@ msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:86
-#: src/Navigation.tsx:708
+#: src/Navigation.tsx:721
 #: src/screens/Messages/ChatList.tsx:428
 #: src/screens/Messages/ChatList.tsx:461
 msgid "Chat settings"
@@ -2189,7 +2191,7 @@ msgstr ""
 msgid "Content and media"
 msgstr ""
 
-#: src/Navigation.tsx:660
+#: src/Navigation.tsx:673
 msgid "Content and Media"
 msgstr ""
 
@@ -2197,7 +2199,7 @@ msgstr ""
 msgid "Content Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:178
+#: src/screens/Moderation/index.tsx:173
 msgid "Content filters"
 msgstr ""
 
@@ -2423,7 +2425,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:155
 #: src/components/StarterPack/ProfileStarterPacks.tsx:251
-#: src/Navigation.tsx:756
+#: src/Navigation.tsx:769
 msgid "Create a starter pack"
 msgstr ""
 
@@ -2744,9 +2746,9 @@ msgstr ""
 msgid "Display name"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:230
-msgid "Do not apply this mute word to users you follow"
-msgstr ""
+#: src/components/dialogs/MutedWords.tsx:160
+msgid "Do not apply this muted word to users you follow"
+msgstr "Do not apply this muted word to users you follow"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 msgid "Does not include nudity."
@@ -2804,9 +2806,9 @@ msgstr ""
 msgid "Drop to add images"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:148
-msgid "Duration:"
-msgstr ""
+#: src/components/dialogs/MutedWords.tsx:149
+msgid "Duration"
+msgstr "Duration"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:249
 msgid "e.g. Alice Lastname"
@@ -2910,7 +2912,7 @@ msgstr ""
 msgid "Edit moderation list"
 msgstr ""
 
-#: src/Navigation.tsx:612
+#: src/Navigation.tsx:625
 #: src/view/screens/Feeds.tsx:486
 msgid "Edit My Feeds"
 msgstr ""
@@ -2954,7 +2956,7 @@ msgstr ""
 msgid "Edit who can reply"
 msgstr ""
 
-#: src/Navigation.tsx:764
+#: src/Navigation.tsx:777
 msgid "Edit your starter pack"
 msgstr ""
 
@@ -2979,7 +2981,7 @@ msgstr ""
 msgid "Enable {0} only"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:184
+#: src/screens/Moderation/index.tsx:179
 msgid "Enable adult content"
 msgstr ""
 
@@ -3017,10 +3019,10 @@ msgstr ""
 msgid "Ensure you have selected a language for each caption file."
 msgstr "Ensure you have selected a language for each caption file."
 
-#: src/components/dialogs/MutedWords.tsx:133
-#: src/components/dialogs/MutedWords.tsx:134
-msgid "Enter a word or tag"
-msgstr ""
+#: src/components/dialogs/MutedWords.tsx:129
+#: src/components/dialogs/MutedWords.tsx:130
+msgid "Enter a word or phrase"
+msgstr "Enter a word or phrase"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Enter fullscreen"
@@ -3088,13 +3090,13 @@ msgstr "Everyone"
 msgid "Everything else"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:236
+#: src/components/dialogs/MutedWords.tsx:164
 msgid "Exclude users you follow"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:417
-msgid "Excludes users you follow"
-msgstr ""
+#: src/screens/Moderation/MutedWords.tsx:116
+msgid "Excludes people you follow"
+msgstr "Excludes people you follow"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Exit fullscreen"
@@ -3120,12 +3122,12 @@ msgstr ""
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:360
+#: src/screens/Moderation/MutedWords.tsx:113
 msgid "Expired"
 msgstr ""
 
-#. placeholder {0}: formatDistance(expiryDate, new Date(), { addSuffix: true, })
-#: src/components/dialogs/MutedWords.tsx:406
+#. placeholder {0}: formatDistance(expiryDate, new Date(), { addSuffix: true })
+#: src/screens/Moderation/MutedWords.tsx:114
 msgid "Expires {0}"
 msgstr ""
 
@@ -3153,7 +3155,7 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/Navigation.tsx:435
+#: src/Navigation.tsx:440
 #: src/screens/Search/Shell.tsx:316
 #: src/view/shell/desktop/LeftNav.tsx:617
 #: src/view/shell/Drawer.tsx:138
@@ -3195,7 +3197,7 @@ msgstr ""
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr ""
 
-#: src/Navigation.tsx:620
+#: src/Navigation.tsx:633
 #: src/screens/Settings/ExternalMediaPreferences.tsx:26
 msgid "External Media Preferences"
 msgstr ""
@@ -3449,7 +3451,7 @@ msgstr ""
 msgid "False information about elections"
 msgstr ""
 
-#: src/Navigation.tsx:578
+#: src/Navigation.tsx:591
 msgid "Feed"
 msgstr ""
 
@@ -3492,7 +3494,7 @@ msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr ""
 
-#: src/Navigation.tsx:740
+#: src/Navigation.tsx:753
 #: src/screens/SavedFeeds.tsx:96
 #: src/screens/Search/SearchResults.tsx:71
 #: src/screens/StarterPack/StarterPackScreen.tsx:171
@@ -3542,7 +3544,7 @@ msgstr ""
 
 #. placeholder {0}: labelStrings.name
 #: src/components/moderation/LabelPreference.tsx:137
-#: src/screens/Moderation/index.tsx:256
+#: src/screens/Moderation/index.tsx:251
 msgid "Filtering for {0}"
 msgstr "Filtering for {0}"
 
@@ -3643,7 +3645,7 @@ msgstr ""
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr ""
 
-#: src/Navigation.tsx:533
+#: src/Navigation.tsx:546
 msgid "Followers"
 msgstr "Followers"
 
@@ -3656,7 +3658,7 @@ msgstr "Followers can join"
 msgid "Followers of @{0} that you know"
 msgstr ""
 
-#: src/Navigation.tsx:543
+#: src/Navigation.tsx:556
 #: src/screens/Profile/KnownFollowers.tsx:88
 #: src/screens/Profile/KnownFollowers.tsx:105
 msgid "Followers you know"
@@ -3669,7 +3671,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.tsx:473
 #: src/components/web/ProfileHoverCard.tsx:186
 #: src/components/web/ProfileHoverCard.tsx:192
-#: src/Navigation.tsx:538
+#: src/Navigation.tsx:551
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:133
 #: src/screens/Profile/Header/Actions.tsx:35
 #: src/view/com/notifications/NotificationFeedItem.tsx:731
@@ -3723,9 +3725,9 @@ msgstr ""
 msgid "For You"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:161
-#: src/components/dialogs/MutedWords.tsx:395
-#: src/components/dialogs/MutedWords.tsx:397
+#: src/components/dialogs/MutedWords.tsx:60
+#: src/screens/Moderation/MutedWords.tsx:185
+#: src/screens/Moderation/MutedWords.tsx:187
 msgid "Forever"
 msgstr ""
 
@@ -3975,7 +3977,7 @@ msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Group chat name updated"
 
-#: src/Navigation.tsx:692
+#: src/Navigation.tsx:705
 #: src/screens/Messages/ConversationSettings/index.tsx:94
 msgid "Group chat settings"
 msgstr "Group chat settings"
@@ -4037,7 +4039,7 @@ msgstr ""
 msgid "Harming or endangering minors"
 msgstr ""
 
-#: src/Navigation.tsx:675
+#: src/Navigation.tsx:688
 msgid "Hashtag"
 msgstr ""
 
@@ -4061,7 +4063,7 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:153
 #: src/components/moderation/LabelPreference.tsx:73
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:574
-#: src/screens/Moderation/index.tsx:254
+#: src/screens/Moderation/index.tsx:249
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:107
 msgid "Hide"
 msgstr ""
@@ -4144,8 +4146,8 @@ msgstr ""
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
-#: src/Navigation.tsx:430
-#: src/Navigation.tsx:455
+#: src/Navigation.tsx:435
+#: src/Navigation.tsx:460
 #: src/view/shell/desktop/LeftNav.tsx:608
 #: src/view/shell/Drawer.tsx:145
 #: src/view/shell/Drawer.tsx:210
@@ -4299,7 +4301,7 @@ msgstr "Installing update…"
 msgid "Interaction limited"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:146
+#: src/screens/Moderation/index.tsx:144
 msgid "Interaction settings"
 msgstr ""
 
@@ -4446,7 +4448,7 @@ msgstr ""
 msgid "Labels on your content"
 msgstr ""
 
-#: src/Navigation.tsx:521
+#: src/Navigation.tsx:534
 msgid "Language Settings"
 msgstr ""
 
@@ -4594,8 +4596,8 @@ msgstr ""
 msgid "Like this labeler"
 msgstr ""
 
-#: src/Navigation.tsx:583
-#: src/Navigation.tsx:588
+#: src/Navigation.tsx:596
+#: src/Navigation.tsx:601
 msgid "Liked by"
 msgstr ""
 
@@ -4642,7 +4644,7 @@ msgstr ""
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
-#: src/Navigation.tsx:548
+#: src/Navigation.tsx:561
 msgid "List"
 msgstr ""
 
@@ -4728,7 +4730,7 @@ msgctxt "toast"
 msgid "List unmuted"
 msgstr ""
 
-#: src/Navigation.tsx:465
+#: src/Navigation.tsx:470
 #: src/view/screens/Lists.tsx:47
 #: src/view/screens/Profile.tsx:241
 #: src/view/screens/Profile.tsx:377
@@ -4784,8 +4786,8 @@ msgstr ""
 
 #: src/components/dms/ChatInvite/Loading.tsx:17
 #: src/components/web/ProfileHoverCard.tsx:128
-#: src/screens/Moderation/index.tsx:78
-#: src/screens/Moderation/index.tsx:217
+#: src/screens/Moderation/index.tsx:77
+#: src/screens/Moderation/index.tsx:212
 #: src/screens/Moderation/VerificationSettings.tsx:55
 #: src/screens/ModerationInteractionSettings/index.tsx:51
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:56
@@ -4835,7 +4837,7 @@ msgstr ""
 msgid "Loading video"
 msgstr "Loading video"
 
-#: src/components/dialogs/MutedWords.tsx:277
+#: src/screens/Moderation/MutedWords.tsx:70
 msgid "Loading your muted words"
 msgstr "Loading your muted words"
 
@@ -4859,7 +4861,7 @@ msgstr "Lock this group chat"
 msgid "Locked"
 msgstr "Locked"
 
-#: src/Navigation.tsx:606
+#: src/Navigation.tsx:619
 msgid "Log"
 msgstr ""
 
@@ -4893,17 +4895,18 @@ msgstr "Love GIFs"
 msgid "Make one for me"
 msgstr ""
 
+#: src/components/dialogs/MutedWords.tsx:197
+#: src/components/dialogs/MutedWords.tsx:201
+msgid "Manage all muted words"
+msgstr "Manage all muted words"
+
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
 #: src/screens/Settings/ContentAndMediaSettings.tsx:62
 msgid "Manage saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:172
+#: src/screens/Moderation/index.tsx:167
 msgid "Manage verification settings"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:40
-msgid "Manage your muted words and tags"
 msgstr ""
 
 #: src/screens/Messages/Inbox.tsx:283
@@ -5017,7 +5020,7 @@ msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:449
+#: src/Navigation.tsx:454
 msgid "Messages"
 msgstr ""
 
@@ -5041,8 +5044,8 @@ msgstr ""
 msgid "Missing media"
 msgstr ""
 
-#: src/Navigation.tsx:470
-#: src/screens/Moderation/index.tsx:70
+#: src/Navigation.tsx:475
+#: src/screens/Moderation/index.tsx:69
 msgid "Moderation"
 msgstr ""
 
@@ -5084,11 +5087,11 @@ msgid "Moderation list updated"
 msgstr ""
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:108
-#: src/screens/Moderation/index.tsx:159
+#: src/screens/Moderation/index.tsx:154
 msgid "Moderation lists"
 msgstr ""
 
-#: src/Navigation.tsx:476
+#: src/Navigation.tsx:481
 #: src/view/screens/ModerationModlists.tsx:47
 msgid "Moderation Lists"
 msgstr ""
@@ -5101,11 +5104,11 @@ msgstr "Moderation playground"
 msgid "moderation settings"
 msgstr ""
 
-#: src/Navigation.tsx:599
+#: src/Navigation.tsx:612
 msgid "Moderation states"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:140
+#: src/screens/Moderation/index.tsx:138
 msgid "Moderation tools"
 msgstr ""
 
@@ -5193,13 +5196,17 @@ msgstr ""
 msgid "Mute conversation"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:194
-msgid "Mute in:"
-msgstr ""
+#: src/components/dialogs/MutedWords.tsx:157
+msgid "Mute in"
+msgstr "Mute in"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:86
 msgid "Mute list"
 msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:120
+msgid "Mute one word, phrase, @username or hashtag."
+msgstr "Mute one word, phrase, @username or hashtag."
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:83
 msgid "Mute these accounts?"
@@ -5208,30 +5215,6 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/index.tsx:440
 msgid "Mute this group chat"
 msgstr "Mute this group chat"
-
-#: src/components/dialogs/MutedWords.tsx:165
-msgid "Mute this word for 24 hours"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:181
-msgid "Mute this word for 30 days"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:173
-msgid "Mute this word for 7 days"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:203
-msgid "Mute this word in post text and tags"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:212
-msgid "Mute this word in tags only"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:157
-msgid "Mute this word until you unmute it"
-msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:447
@@ -5243,15 +5226,16 @@ msgstr ""
 msgid "Mute words & tags"
 msgstr ""
 
+#: src/components/dialogs/MutedWords.tsx:98
 #: src/screens/Messages/ConversationSettings/index.tsx:441
 msgid "Muted"
 msgstr "Muted"
 
-#: src/screens/Moderation/index.tsx:164
+#: src/screens/Moderation/index.tsx:159
 msgid "Muted accounts"
 msgstr ""
 
-#: src/Navigation.tsx:484
+#: src/Navigation.tsx:489
 #: src/view/screens/ModerationMutedAccounts.tsx:84
 msgid "Muted Accounts"
 msgstr ""
@@ -5265,9 +5249,14 @@ msgstr ""
 msgid "Muted by \"{0}\""
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:154
-msgid "Muted words & tags"
-msgstr ""
+#: src/screens/Moderation/index.tsx:149
+#: src/screens/Moderation/MutedWords.tsx:51
+msgid "Muted words"
+msgstr "Muted words"
+
+#: src/Navigation.tsx:497
+msgid "Muted Words & Tags"
+msgstr "Muted Words & Tags"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:84
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -5626,7 +5615,7 @@ msgstr ""
 msgid "Not followed by anyone you’re following"
 msgstr "Not followed by anyone you’re following"
 
-#: src/Navigation.tsx:460
+#: src/Navigation.tsx:465
 #: src/view/screens/Profile.tsx:125
 msgid "Not Found"
 msgstr ""
@@ -5644,14 +5633,14 @@ msgid "Nothing saved yet"
 msgstr ""
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:36
-#: src/Navigation.tsx:652
-#: src/Navigation.tsx:733
+#: src/Navigation.tsx:665
+#: src/Navigation.tsx:746
 #: src/view/screens/Notifications.tsx:123
 msgid "Notification settings"
 msgstr ""
 
-#: src/Navigation.tsx:441
-#: src/Navigation.tsx:725
+#: src/Navigation.tsx:446
+#: src/Navigation.tsx:738
 #: src/screens/Notifications/ActivityList.tsx:27
 #: src/screens/Settings/NotificationSettings/index.tsx:52
 #: src/screens/Settings/Settings.tsx:62
@@ -5844,10 +5833,6 @@ msgstr ""
 msgid "Open moderation playground"
 msgstr "Open moderation playground"
 
-#: src/screens/Moderation/index.tsx:150
-msgid "Open muted words and tags settings"
-msgstr ""
-
 #: src/screens/Search/components/StarterPackCard.tsx:105
 msgid "Open pack"
 msgstr ""
@@ -5927,9 +5912,11 @@ msgstr ""
 msgid "Opens this draft in the composer"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:226
-msgid "Options:"
-msgstr ""
+#. placeholder {0}: word.value
+#: src/screens/Moderation/MutedWords.tsx:156
+#: src/screens/Moderation/MutedWords.tsx:165
+msgid "Options for \"{0}\""
+msgstr "Options for \"{0}\""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:237
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:241
@@ -6157,7 +6144,7 @@ msgstr ""
 msgid "Please confirm your email address to upload videos."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:84
+#: src/components/dialogs/MutedWords.tsx:90
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr ""
 
@@ -6188,10 +6175,10 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/Navigation.tsx:558
-#: src/Navigation.tsx:563
-#: src/Navigation.tsx:568
-#: src/Navigation.tsx:573
+#: src/Navigation.tsx:571
+#: src/Navigation.tsx:576
+#: src/Navigation.tsx:581
+#: src/Navigation.tsx:586
 msgid "Post"
 msgstr "Post"
 
@@ -6267,7 +6254,7 @@ msgstr ""
 msgid "Post interaction settings"
 msgstr ""
 
-#: src/Navigation.tsx:500
+#: src/Navigation.tsx:513
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
 msgstr ""
@@ -6310,10 +6297,6 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:176
 #: src/view/screens/Profile.tsx:246
 msgid "Posts"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:121
-msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:73
@@ -6376,7 +6359,7 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
-#: src/Navigation.tsx:528
+#: src/Navigation.tsx:541
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:193
 #: src/view/shell/Drawer.tsx:248
@@ -6553,7 +6536,6 @@ msgstr "Reload to update"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:145
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:284
-#: src/components/dialogs/MutedWords.tsx:325
 #: src/components/dialogs/StarterPackDialog.tsx:303
 #: src/components/dialogs/StarterPackDialog.tsx:311
 #: src/components/FeedCard.tsx:289
@@ -6562,7 +6544,9 @@ msgstr "Reload to update"
 #: src/screens/Bookmarks/index.tsx:228
 #: src/screens/Messages/ConversationSettings/Member.tsx:152
 #: src/screens/Messages/ConversationSettings/prompts.tsx:166
-#: src/screens/Moderation/index.tsx:209
+#: src/screens/Moderation/index.tsx:204
+#: src/screens/Moderation/MutedWords.tsx:135
+#: src/screens/Moderation/MutedWords.tsx:194
 #: src/screens/Settings/components/AccountsSection.tsx:270
 #: src/view/com/posts/PostFeedErrorMessage.tsx:188
 msgid "Remove"
@@ -6665,9 +6649,9 @@ msgstr ""
 msgid "Remove live status"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:426
-msgid "Remove mute word from your list"
-msgstr ""
+#: src/screens/Moderation/MutedWords.tsx:192
+msgid "Remove muted word"
+msgstr "Remove muted word"
 
 #: src/screens/Search/components/SearchHistory.tsx:165
 msgid "Remove profile"
@@ -6677,7 +6661,7 @@ msgstr ""
 msgid "Remove this feed from your saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:202
+#: src/screens/Moderation/index.tsx:197
 msgid "Remove unavailable moderation services"
 msgstr ""
 
@@ -6729,29 +6713,12 @@ msgstr ""
 msgid "Removed from your feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:130
+#: src/screens/Moderation/index.tsx:128
 msgid "Removed unavailable services"
 msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:29
 msgid "Removed verification"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:433
-msgid "Removing"
-msgstr "Removing"
-
-#: src/components/dialogs/MutedWords.tsx:370
-msgid "Renew"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:375
-#: src/components/dialogs/MutedWords.tsx:378
-msgid "Renew duration"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:368
-msgid "Renew mute word"
 msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:115
@@ -7040,7 +7007,7 @@ msgstr "Requested"
 msgid "Requests"
 msgstr "Requests"
 
-#: src/Navigation.tsx:700
+#: src/Navigation.tsx:713
 #: src/screens/Messages/JoinRequests.tsx:363
 msgid "Requests to join"
 msgstr "Requests to join"
@@ -7050,7 +7017,7 @@ msgstr "Requests to join"
 msgid "Require alt text before posting"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:300
+#: src/screens/Moderation/index.tsx:295
 msgid "Required in your region"
 msgstr ""
 
@@ -7183,7 +7150,7 @@ msgstr ""
 msgid "Saved Feeds"
 msgstr ""
 
-#: src/Navigation.tsx:772
+#: src/Navigation.tsx:785
 #: src/screens/Bookmarks/index.tsx:44
 msgid "Saved Posts"
 msgstr ""
@@ -7245,7 +7212,7 @@ msgstr "Scrolls the conversation to the most recent message"
 #: src/components/dialogs/SearchablePeopleList.tsx:546
 #: src/components/forms/SearchInput.tsx:44
 #: src/components/forms/SearchInput.tsx:46
-#: src/Navigation.tsx:553
+#: src/Navigation.tsx:566
 #: src/screens/Search/Shell.tsx:316
 #: src/screens/Search/Shell.tsx:453
 msgid "Search"
@@ -7452,9 +7419,9 @@ msgstr ""
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
-#: src/components/dialogs/MutedWords.tsx:152
-msgid "Select how long to mute this word for."
-msgstr ""
+#: src/components/dialogs/MutedWords.tsx:145
+msgid "Select how long to mute this word for"
+msgstr "Select how long to mute this word for"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:225
 msgid "Select language..."
@@ -7477,9 +7444,9 @@ msgstr ""
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:198
-msgid "Select what content this mute word should apply to."
-msgstr ""
+#: src/components/dialogs/MutedWords.tsx:153
+msgid "Select what content this muted word should apply to"
+msgstr "Select what content this muted word should apply to"
 
 #: src/screens/Settings/InterestsSettings.tsx:150
 msgid "Select your interests from the options below"
@@ -7523,7 +7490,7 @@ msgstr ""
 msgid "Set who can reply to your post"
 msgstr ""
 
-#: src/Navigation.tsx:515
+#: src/Navigation.tsx:528
 #: src/screens/Settings/Settings.tsx:44
 #: src/view/shell/desktop/LeftNav.tsx:686
 #: src/view/shell/Drawer.tsx:200
@@ -7626,7 +7593,7 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:153
 #: src/components/moderation/LabelPreference.tsx:74
 #: src/components/moderation/PostHider.tsx:102
-#: src/screens/Moderation/index.tsx:252
+#: src/screens/Moderation/index.tsx:247
 msgid "Show"
 msgstr ""
 
@@ -7732,8 +7699,8 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:406
 #: src/view/com/auth/SplashScreen.tsx:89
 #: src/view/com/auth/SplashScreen.tsx:96
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:190
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:192
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:184
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:186
 #: src/view/shell/nav-sign-in-card.tsx:34
 #: src/view/shell/nav-sign-in-card.tsx:36
 msgid "Sign in"
@@ -7816,7 +7783,7 @@ msgstr ""
 msgid "Software Dev"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:196
+#: src/screens/Moderation/index.tsx:191
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
 
@@ -7888,7 +7855,7 @@ msgstr "Something went wrong loading the moderation services."
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:83
+#: src/screens/Moderation/index.tsx:82
 #: src/screens/Profile/Sections/Labels.tsx:120
 msgid "Something went wrong, please try again."
 msgstr ""
@@ -7957,8 +7924,8 @@ msgstr "Start chat"
 msgid "Start chat with {displayName}"
 msgstr ""
 
-#: src/Navigation.tsx:745
-#: src/Navigation.tsx:750
+#: src/Navigation.tsx:758
+#: src/Navigation.tsx:763
 #: src/screens/StarterPack/Wizard/index.tsx:167
 msgid "Starter Pack"
 msgstr ""
@@ -7998,7 +7965,7 @@ msgstr ""
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/Navigation.tsx:593
+#: src/Navigation.tsx:606
 msgid "Storybook"
 msgstr ""
 
@@ -8122,7 +8089,7 @@ msgstr ""
 msgid "System log"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:216
+#: src/components/dialogs/MutedWords.tsx:67
 msgid "Tags only"
 msgstr ""
 
@@ -8184,7 +8151,7 @@ msgstr ""
 msgid "Tell us a little more"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:207
+#: src/components/dialogs/MutedWords.tsx:66
 msgid "Text & tags"
 msgstr ""
 
@@ -8719,7 +8686,7 @@ msgid "This will create a new list with the same name, description, and members 
 msgstr ""
 
 #. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:323
+#: src/screens/Moderation/MutedWords.tsx:133
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
@@ -8759,7 +8726,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:180
+#: src/screens/Moderation/index.tsx:175
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
@@ -8775,7 +8742,7 @@ msgstr ""
 msgid "Top replies first"
 msgstr ""
 
-#: src/Navigation.tsx:680
+#: src/Navigation.tsx:693
 msgid "Topic"
 msgstr ""
 
@@ -9209,11 +9176,11 @@ msgstr ""
 msgid "Verification failed, please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:174
+#: src/screens/Moderation/index.tsx:169
 msgid "Verification settings"
 msgstr ""
 
-#: src/Navigation.tsx:508
+#: src/Navigation.tsx:521
 #: src/screens/Moderation/VerificationSettings.tsx:30
 msgid "Verification Settings"
 msgstr ""
@@ -9378,7 +9345,7 @@ msgid "View the invite link for this group chat"
 msgstr "View the invite link for this group chat"
 
 #. placeholder {0}: creator.handle
-#: src/screens/Moderation/index.tsx:279
+#: src/screens/Moderation/index.tsx:274
 msgid "View the labeling service provided by @{0}"
 msgstr ""
 
@@ -9390,11 +9357,11 @@ msgstr ""
 msgid "View users who like this feed"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:167
+#: src/screens/Moderation/index.tsx:162
 msgid "View your blocked accounts"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:142
+#: src/screens/Moderation/index.tsx:140
 msgid "View your default post interaction settings"
 msgstr ""
 
@@ -9403,13 +9370,17 @@ msgstr ""
 msgid "View your feeds and explore more"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:157
+#: src/screens/Moderation/index.tsx:152
 msgid "View your moderation lists"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:162
+#: src/screens/Moderation/index.tsx:157
 msgid "View your muted accounts"
 msgstr ""
+
+#: src/screens/Moderation/index.tsx:147
+msgid "View your muted words"
+msgstr "View your muted words"
 
 #: src/screens/Settings/components/AccountsSection.tsx:105
 msgid "View your profile"
@@ -9441,7 +9412,7 @@ msgid "Volume"
 msgstr ""
 
 #: src/components/moderation/LabelPreference.tsx:75
-#: src/screens/Moderation/index.tsx:253
+#: src/screens/Moderation/index.tsx:248
 msgid "Warn"
 msgstr ""
 
@@ -9492,7 +9463,7 @@ msgstr "We recommend the theme font for the best experience."
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:221
+#: src/screens/Moderation/index.tsx:216
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
@@ -9508,10 +9479,6 @@ msgstr "We’re having network issues, try again"
 
 #: src/screens/ProfileList/index.tsx:81
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:281
-msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:276
@@ -9872,9 +9839,9 @@ msgstr ""
 msgid "You haven't made any custom feeds yet."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:293
-msgid "You haven't muted any words or tags yet"
-msgstr ""
+#: src/screens/Moderation/MutedWords.tsx:88
+msgid "You haven't muted any words or tags yet. Use the + button above to add one."
+msgstr "You haven't muted any words or tags yet. Use the + button above to add one."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:57
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:59
@@ -9971,6 +9938,10 @@ msgstr ""
 msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "You won’t be able to rejoin unless you’re invited."
 
+#: src/screens/Moderation/MutedWords.tsx:76
+msgid "You won't see or receive any new notifications for posts that include muted words."
+msgstr "You won't see or receive any new notifications for posts that include muted words."
+
 #. When the last message in a chat was made by you.
 #: src/components/dms/getMessageInfo.ts:71
 msgid "You: {message}"
@@ -10055,7 +10026,7 @@ msgstr ""
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr ""
 
-#: src/Navigation.tsx:668
+#: src/Navigation.tsx:681
 #: src/screens/Settings/ContentAndMediaSettings.tsx:64
 #: src/screens/Settings/ContentAndMediaSettings.tsx:66
 #: src/screens/Settings/InterestsSettings.tsx:42
@@ -10067,7 +10038,7 @@ msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:273
+#: src/screens/Moderation/MutedWords.tsx:80
 msgid "Your muted words"
 msgstr ""
 

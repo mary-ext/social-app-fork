@@ -26,7 +26,6 @@ import { isNonConfigurableModerationAuthority } from '#/state/session/additional
 
 import { logger } from '#/logger';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
 import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign';
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
@@ -93,7 +92,6 @@ export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorP
 
 function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { t: l } = useLingui();
-	const { mutedWordsDialogControl } = useGlobalDialogsControlContext();
 	const { data: labelers, error: labelersError, isLoading: isLabelersLoading } = useMyLabelersQuery();
 	const { isPending: isRemovingLabelers, mutateAsync: removeLabelers } = useRemoveLabelersMutation();
 	const { mutateAsync: setAdultContentPref, variables: optimisticAdultContent } =
@@ -146,13 +144,10 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 					<Settings.Label titleText={<Trans>Interaction settings</Trans>} />
 				</Settings.LinkRow>
 
-				<Settings.ButtonRow
-					label={l`Open muted words and tags settings`}
-					onPress={() => mutedWordsDialogControl.open(null)}
-				>
+				<Settings.LinkRow label={l`View your muted words`} to="/moderation/muted-words">
 					<Settings.Icon icon={Filter} />
-					<Settings.Label titleText={<Trans>Muted words & tags</Trans>} />
-				</Settings.ButtonRow>
+					<Settings.Label titleText={<Trans>Muted words</Trans>} />
+				</Settings.LinkRow>
 
 				<Settings.LinkRow label={l`View your moderation lists`} to="/moderation/modlists">
 					<Settings.Icon icon={Group} />

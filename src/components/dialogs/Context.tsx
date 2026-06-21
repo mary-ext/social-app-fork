@@ -28,6 +28,15 @@ export type LinkWarningPayload = {
 	share?: boolean;
 };
 
+/**
+ * Payload opening the global muted-words dialog. `showManageLink` reveals a link through to the muted-words
+ * management screen — passed from openers that aren't already on it (e.g. a post's overflow menu), omitted
+ * from the screen's own add button.
+ */
+export type MutedWordsDialogPayload = {
+	showManageLink?: boolean;
+};
+
 type ControlsContext = {
 	/**
 	 * The composer's Base UI {@link DialogHandle}-backed dialog. Opened from triggers all over the app (no
@@ -37,7 +46,7 @@ type ControlsContext = {
 	 */
 	composerDialogControl: DialogHandle<ComposerOpts>;
 	lightboxControl: LightboxControl;
-	mutedWordsDialogControl: DialogHandle;
+	mutedWordsDialogControl: DialogHandle<MutedWordsDialogPayload>;
 	signinDialogControl: DialogHandle<SigninDialogPayload>;
 	linkWarningDialogControl: DialogHandle<LinkWarningPayload>;
 	reportDialogControl: DialogHandle<{ subject: ReportSubject }>;
@@ -57,7 +66,7 @@ export function useGlobalDialogsControlContext() {
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const composerDialogControl = useDialogHandle<ComposerOpts>();
 	const lightboxControl = useDialogHandle<LightboxPayload>();
-	const mutedWordsDialogControl = useDialogHandle();
+	const mutedWordsDialogControl = useDialogHandle<MutedWordsDialogPayload>();
 	const signinDialogControl = useDialogHandle<SigninDialogPayload>();
 	const linkWarningDialogControl = useDialogHandle<LinkWarningPayload>();
 	const reportDialogControl = useDialogHandle<{ subject: ReportSubject }>();
