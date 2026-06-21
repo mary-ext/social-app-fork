@@ -87,6 +87,23 @@ export const panelAdjacent = styleVariants(
 	(rule) => layered(components, rule),
 );
 
+/**
+ * A tighter panel (less padding, flat 8px corners, no min height) for dense toggle stacks. Inline padding
+ * relaxes from 8 to 12 past the gtMobile breakpoint, and {@link panelText}/{@link panelIcon} shrink in step.
+ */
+export const panelSmall = style(
+	layered(components, {
+		borderRadius: 8,
+		gap: 4,
+		minHeight: 0,
+		paddingBlock: 8,
+		paddingInline: 8,
+		'@media': {
+			'(min-width: 800px)': { paddingInline: 12 },
+		},
+	}),
+);
+
 export const panelTextWithIcon = style(
 	layered(components, {
 		alignItems: 'center',
@@ -108,6 +125,10 @@ export const panelText = style(
 				color: vars.palette.contrast_1000,
 				fontWeight: 500,
 			},
+			[`${panelSmall} &`]: {
+				fontSize: fontSize.md_sub,
+				lineHeight: roundToPx(`calc(${fontSize.md_sub} * 1.3)`),
+			},
 		},
 	}),
 );
@@ -118,6 +139,9 @@ export const panelIcon = style(
 		flexShrink: 0,
 		selectors: {
 			[`[data-checked] &, ${panelActive} &`]: { color: vars.palette.contrast_1000 },
+			// shrink the 20px md glyph to 16px (the original's `sm`) inside a small panel; CSS dimensions
+			// win over the SVG width/height attributes.
+			[`${panelSmall} &`]: { height: 16, width: 16 },
 		},
 	}),
 );

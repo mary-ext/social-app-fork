@@ -166,6 +166,7 @@ export const button = recipe(
 			// dimensions matter: a 34px box overflows the 33px header slot, nudging the centered icon off-axis.
 			{ shape: 'round', size: 'large', style: { height: 44, padding: 0, width: 44 } },
 			{ shape: 'round', size: 'small', style: { height: 33, padding: 0, width: 33 } },
+			{ shape: 'round', size: 'tiny', style: { height: 25, padding: 0, width: 25 } },
 			// `rectangular` squares off the pill (use beside form fields), with tighter padding than the
 			// default shape. emitted after `size` so its padding/borderRadius/gap win.
 			{

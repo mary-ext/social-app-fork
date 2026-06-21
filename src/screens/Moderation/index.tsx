@@ -148,7 +148,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 				<Settings.ButtonRow
 					label={l`Open muted words and tags settings`}
-					onPress={() => mutedWordsDialogControl.open()}
+					onPress={() => mutedWordsDialogControl.open(null)}
 				>
 					<Settings.Icon icon={Filter} />
 					<Settings.Label titleText={<Trans>Muted words & tags</Trans>} />

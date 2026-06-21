@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
-import { type TextStyle, View } from 'react-native';
+import { type KeyboardEvent, useCallback, useState } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
 
@@ -14,48 +14,39 @@ import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
-import { Divider } from '#/components/Divider';
-import * as Toggle from '#/components/forms/Toggle';
+import * as styles from '#/components/dialogs/MutedWords.css';
 import { useFormatDistance } from '#/components/hooks/dates';
 import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag';
 import { PageText_Stroke2_Corner0_Rounded as PageText } from '#/components/icons/PageText';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
-import { Loader } from '#/components/Loader';
-import * as Menu from '#/components/Menu';
-import * as Prompt from '#/components/Prompt';
-import { Text } from '#/components/Typography';
-
-type WebTextStyle = TextStyle & {
-	overflowWrap?: 'break-word';
-	wordBreak?: 'break-word';
-};
-
-const webTextStyle = (style: WebTextStyle): TextStyle => {
-	return style;
-};
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import * as Toggle from '#/components/web/forms/Toggle';
+import * as Menu from '#/components/web/Menu';
+import * as Prompt from '#/components/web/Prompt';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
 export function MutedWordsDialog() {
-	const { mutedWordsDialogControl: control } = useGlobalDialogsControlContext();
+	const { t: l } = useLingui();
+	const { mutedWordsDialogControl: handle } = useGlobalDialogsControlContext();
 	return (
-		<Dialog.Outer control={control}>
-			<Dialog.Handle />
-			<MutedWordsInner />
-		</Dialog.Outer>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup label={l`Manage your muted words and tags`}>
+				<Dialog.Close />
+				<MutedWordsInner />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
 function MutedWordsInner() {
-	const t = useTheme();
 	const { t: l } = useLingui();
-	const { gtMobile } = useBreakpoints();
 	const {
 		isLoading: isPreferencesLoading,
 		data: preferences,
@@ -110,26 +101,35 @@ function MutedWordsInner() {
 			logger.error(`Failed to save muted word`, { message });
 			setError(message);
 		}
-	}, [l, field, targets, addMutedWord, setField, durations, excludeFollowing]);
+	}, [l, field, targets, addMutedWord, durations, excludeFollowing]);
+
+	const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			void submit();
+		}
+	};
 
 	return (
-		<Dialog.ScrollableInner label={l`Manage your muted words and tags`}>
-			<View>
-				<Text style={[a.text_md, a.font_semi_bold, a.pb_sm, t.atoms.text_contrast_high]}>
-					<Trans>Add muted words and tags</Trans>
-				</Text>
-				<Text style={[a.pb_lg, a.leading_snug, t.atoms.text_contrast_medium]}>
-					<Trans>
-						Posts can be muted based on their text, their tags, or both. We recommend avoiding common words
-						that appear in many posts, since it can result in no posts being shown.
-					</Trans>
-				</Text>
-				<View style={[a.pb_sm]}>
-					<Dialog.Input
-						autoCorrect={false}
+		<div className={styles.body}>
+			<div className={styles.addSection}>
+				<div className={styles.intro}>
+					<Text size="md" weight="semiBold" color="textContrastHigh">
+						<Trans>Add muted words and tags</Trans>
+					</Text>
+					<Text size="md_sub" color="textContrastMedium" leading="snug">
+						<Trans>
+							Posts can be muted based on their text, their tags, or both. We recommend avoiding common words
+							that appear in many posts, since it can result in no posts being shown.
+						</Trans>
+					</Text>
+				</div>
+
+				<TextField.Root>
+					<TextField.Input
 						autoCapitalize="none"
 						autoComplete="off"
-						returnKeyType="done"
+						autoFocus
 						label={l`Enter a word or tag`}
 						placeholder={l`Enter a word or tag`}
 						value={field}
@@ -139,218 +139,174 @@ function MutedWordsInner() {
 							}
 							setField(value);
 						}}
-						onSubmitEditing={() => void submit()}
+						onKeyDown={onKeyDown}
 					/>
-				</View>
-				<View style={[a.pb_xl, a.gap_sm]}>
+				</TextField.Root>
+
+				<div className={styles.group}>
+					<Text size="sm" weight="semiBold" color="textContrastMedium">
+						<Trans>Duration:</Trans>
+					</Text>
 					<Toggle.Group
+						className={styles.durationGrid}
 						label={l`Select how long to mute this word for.`}
 						type="radio"
 						values={durations}
 						onChange={setDurations}
 					>
-						<Text style={[a.pb_xs, a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-							<Trans>Duration:</Trans>
-						</Text>
-
-						<View style={[gtMobile && [a.flex_row, a.align_center, a.justify_start], a.gap_sm]}>
-							<View style={[a.flex_1, a.flex_row, a.justify_start, a.align_center, a.gap_sm]}>
-								<Toggle.Item label={l`Mute this word until you unmute it`} name="forever" style={[a.flex_1]}>
-									<TargetToggle>
-										<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-											<Toggle.Radio />
-											<Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-												<Trans>Forever</Trans>
-											</Toggle.LabelText>
-										</View>
-									</TargetToggle>
-								</Toggle.Item>
-
-								<Toggle.Item label={l`Mute this word for 24 hours`} name="24_hours" style={[a.flex_1]}>
-									<TargetToggle>
-										<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-											<Toggle.Radio />
-											<Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-												<Trans>24 hours</Trans>
-											</Toggle.LabelText>
-										</View>
-									</TargetToggle>
-								</Toggle.Item>
-							</View>
-
-							<View style={[a.flex_1, a.flex_row, a.justify_start, a.align_center, a.gap_sm]}>
-								<Toggle.Item label={l`Mute this word for 7 days`} name="7_days" style={[a.flex_1]}>
-									<TargetToggle>
-										<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-											<Toggle.Radio />
-											<Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-												<Trans>7 days</Trans>
-											</Toggle.LabelText>
-										</View>
-									</TargetToggle>
-								</Toggle.Item>
-
-								<Toggle.Item label={l`Mute this word for 30 days`} name="30_days" style={[a.flex_1]}>
-									<TargetToggle>
-										<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-											<Toggle.Radio />
-											<Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-												<Trans>30 days</Trans>
-											</Toggle.LabelText>
-										</View>
-									</TargetToggle>
-								</Toggle.Item>
-							</View>
-						</View>
+						<Toggle.RadioItem label={l`Mute this word until you unmute it`} value="forever">
+							<Toggle.Panel size="small">
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>
+									<Trans>Forever</Trans>
+								</Toggle.PanelText>
+							</Toggle.Panel>
+						</Toggle.RadioItem>
+						<Toggle.RadioItem label={l`Mute this word for 24 hours`} value="24_hours">
+							<Toggle.Panel size="small">
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>
+									<Trans>24 hours</Trans>
+								</Toggle.PanelText>
+							</Toggle.Panel>
+						</Toggle.RadioItem>
+						<Toggle.RadioItem label={l`Mute this word for 7 days`} value="7_days">
+							<Toggle.Panel size="small">
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>
+									<Trans>7 days</Trans>
+								</Toggle.PanelText>
+							</Toggle.Panel>
+						</Toggle.RadioItem>
+						<Toggle.RadioItem label={l`Mute this word for 30 days`} value="30_days">
+							<Toggle.Panel size="small">
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>
+									<Trans>30 days</Trans>
+								</Toggle.PanelText>
+							</Toggle.Panel>
+						</Toggle.RadioItem>
 					</Toggle.Group>
+				</div>
 
+				<div className={styles.group}>
+					<Text size="sm" weight="semiBold" color="textContrastMedium">
+						<Trans>Mute in:</Trans>
+					</Text>
 					<Toggle.Group
+						className={styles.radioRow}
 						label={l`Select what content this mute word should apply to.`}
 						type="radio"
 						values={targets}
 						onChange={setTargets}
 					>
-						<Text style={[a.pb_xs, a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-							<Trans>Mute in:</Trans>
-						</Text>
-
-						<View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
-							<Toggle.Item label={l`Mute this word in post text and tags`} name="content" style={[a.flex_1]}>
-								<TargetToggle>
-									<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-										<Toggle.Radio />
-										<Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-											<Trans>Text & tags</Trans>
-										</Toggle.LabelText>
-									</View>
-									<PageText size="sm" />
-								</TargetToggle>
-							</Toggle.Item>
-
-							<Toggle.Item label={l`Mute this word in tags only`} name="tag" style={[a.flex_1]}>
-								<TargetToggle>
-									<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-										<Toggle.Radio />
-										<Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-											<Trans>Tags only</Trans>
-										</Toggle.LabelText>
-									</View>
-									<Hashtag size="sm" />
-								</TargetToggle>
-							</Toggle.Item>
-						</View>
+						<Toggle.RadioItem label={l`Mute this word in post text and tags`} value="content">
+							<Toggle.Panel size="small">
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>
+									<Trans>Text & tags</Trans>
+								</Toggle.PanelText>
+								<Toggle.PanelIcon icon={PageText} />
+							</Toggle.Panel>
+						</Toggle.RadioItem>
+						<Toggle.RadioItem label={l`Mute this word in tags only`} value="tag">
+							<Toggle.Panel size="small">
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>
+									<Trans>Tags only</Trans>
+								</Toggle.PanelText>
+								<Toggle.PanelIcon icon={Hashtag} />
+							</Toggle.Panel>
+						</Toggle.RadioItem>
 					</Toggle.Group>
+				</div>
 
-					<View>
-						<Text style={[a.pb_xs, a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-							<Trans>Options:</Trans>
-						</Text>
-						<Toggle.Item
-							label={l`Do not apply this mute word to users you follow`}
-							name="exclude_following"
-							style={[a.flex_row, a.justify_between]}
-							value={excludeFollowing}
-							onChange={setExcludeFollowing}
-						>
-							<TargetToggle>
-								<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-									<Toggle.Checkbox />
-									<Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-										<Trans>Exclude users you follow</Trans>
-									</Toggle.LabelText>
-								</View>
-							</TargetToggle>
-						</Toggle.Item>
-					</View>
-
-					<View style={[a.pt_xs]}>
-						<Button
-							disabled={isPending || !field}
-							label={l`Add mute word with chosen settings`}
-							size="large"
-							color="primary"
-							variant="solid"
-							onPress={() => void submit()}
-						>
-							<ButtonText>
-								<Trans>Add</Trans>
-							</ButtonText>
-							<ButtonIcon icon={isPending ? Loader : Plus} position="right" />
-						</Button>
-					</View>
-
-					{error && (
-						<View
-							style={[
-								a.mb_lg,
-								a.flex_row,
-								a.rounded_sm,
-								a.p_md,
-								a.mb_xs,
-								t.atoms.bg_contrast_25,
-								{
-									backgroundColor: t.palette.negative_400,
-								},
-							]}
-						>
-							<Text style={[a.italic, { color: t.palette.white }]}>{error}</Text>
-						</View>
-					)}
-				</View>
-				<Divider />
-				<View style={[a.pt_2xl]}>
-					<Text style={[a.text_md, a.font_semi_bold, a.pb_md, t.atoms.text_contrast_high]}>
-						<Trans>Your muted words</Trans>
+				<div className={styles.group}>
+					<Text size="sm" weight="semiBold" color="textContrastMedium">
+						<Trans>Options:</Trans>
 					</Text>
+					<Toggle.Item
+						checked={excludeFollowing}
+						label={l`Do not apply this mute word to users you follow`}
+						onChange={setExcludeFollowing}
+					>
+						<Toggle.Panel size="small">
+							<Toggle.CheckboxIndicator />
+							<Toggle.PanelText>
+								<Trans>Exclude users you follow</Trans>
+							</Toggle.PanelText>
+						</Toggle.Panel>
+					</Toggle.Item>
+				</div>
 
-					{isPreferencesLoading ? (
-						<Loader />
-					) : preferencesError || !preferences ? (
-						<View style={[a.py_md, a.px_lg, a.rounded_md, t.atoms.bg_contrast_25]}>
-							<Text style={[a.italic, t.atoms.text_contrast_high]}>
-								<Trans>
-									We're sorry, but we weren't able to load your muted words at this time. Please try again.
-								</Trans>
-							</Text>
-						</View>
-					) : preferences.moderationPrefs.mutedWords.length ? (
-						[...preferences.moderationPrefs.mutedWords]
-							.reverse()
-							.map((word, i) => (
-								<MutedWordRow
-									key={word.value + i}
-									word={word}
-									style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
-								/>
-							))
+				<Button
+					className={styles.addButton}
+					color="primary"
+					disabled={isPending || !field}
+					label={l`Add mute word with chosen settings`}
+					size="large"
+					onClick={() => void submit()}
+				>
+					<ButtonText>
+						<Trans>Add</Trans>
+					</ButtonText>
+					{isPending ? (
+						<Spinner color="currentColor" label={l`Adding`} size="sm" />
 					) : (
-						<View style={[a.py_md, a.px_lg, a.rounded_md, t.atoms.bg_contrast_25]}>
-							<Text style={[a.italic, t.atoms.text_contrast_high]}>
-								<Trans>You haven't muted any words or tags yet</Trans>
-							</Text>
-						</View>
+						<ButtonIcon icon={Plus} />
 					)}
-				</View>
-			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+				</Button>
+
+				{error && (
+					<div className={styles.error}>
+						<Text className={styles.errorText} color="white">
+							{error}
+						</Text>
+					</div>
+				)}
+			</div>
+
+			<div className={styles.divider} />
+
+			<div className={styles.listSection}>
+				<Text size="md" weight="semiBold" color="textContrastHigh">
+					<Trans>Your muted words</Trans>
+				</Text>
+
+				{isPreferencesLoading ? (
+					<Spinner color="currentColor" label={l`Loading your muted words`} />
+				) : preferencesError || !preferences ? (
+					<div className={styles.notice}>
+						<Text className={styles.noticeText} color="textContrastHigh">
+							<Trans>
+								We're sorry, but we weren't able to load your muted words at this time. Please try again.
+							</Trans>
+						</Text>
+					</div>
+				) : preferences.moderationPrefs.mutedWords.length ? (
+					[...preferences.moderationPrefs.mutedWords]
+						.reverse()
+						.map((word, i) => <MutedWordRow key={word.value + i} word={word} alt={i % 2 === 0} />)
+				) : (
+					<div className={styles.notice}>
+						<Text className={styles.noticeText} color="textContrastHigh">
+							<Trans>You haven't muted any words or tags yet</Trans>
+						</Text>
+					</div>
+				)}
+			</div>
+		</div>
 	);
 }
 
-function MutedWordRow({ style, word }: ViewStyleProp & { word: AppBskyActorDefs.MutedWord }) {
-	const t = useTheme();
+function MutedWordRow({ alt, word }: { alt: boolean; word: AppBskyActorDefs.MutedWord }) {
 	const { t: l } = useLingui();
 	const { isPending, mutateAsync: removeMutedWord } = useRemoveMutedWordMutation();
 	const { mutateAsync: updateMutedWord } = useUpdateMutedWordMutation();
-	const control = Prompt.usePromptControl();
+	const removeHandle = Prompt.usePromptHandle();
 	const expiryDate = word.expiresAt ? new Date(word.expiresAt) : undefined;
 	const isExpired = expiryDate && expiryDate < new Date();
 	const formatDistance = useFormatDistance();
-
-	const remove = useCallback(async () => {
-		control.close();
-		void removeMutedWord(word);
-	}, [removeMutedWord, word, control]);
 
 	const renew = (days?: number) => {
 		void updateMutedWord({
@@ -362,101 +318,91 @@ function MutedWordRow({ style, word }: ViewStyleProp & { word: AppBskyActorDefs.
 	return (
 		<>
 			<Prompt.Basic
-				control={control}
+				handle={removeHandle}
 				title={l`Are you sure?`}
 				description={l`This will delete "${word.value}" from your muted words. You can always add it back later.`}
-				onConfirm={() => void remove()}
+				onConfirm={() => void removeMutedWord(word)}
 				confirmButtonCta={l`Remove`}
 				confirmButtonColor="negative"
 			/>
-			<View style={[a.flex_row, a.justify_between, a.py_md, a.px_lg, a.rounded_md, a.gap_md, style]}>
-				<View style={[a.flex_1, a.gap_xs]}>
-					<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-						<Text
-							style={[
-								a.flex_1,
-								a.leading_snug,
-								a.font_semi_bold,
-								webTextStyle({
-									overflowWrap: 'break-word',
-									wordBreak: 'break-word',
-								}),
-							]}
-						>
-							{word.targets.find((t) => t === 'content') ? (
-								<Trans comment="Pattern: {wordValue} in text, tags">
-									{word.value}{' '}
-									<Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
-										in <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>text & tags</Text>
+			<div className={clsx(styles.row, alt && styles.rowAlt)}>
+				<div className={styles.rowContent}>
+					<Text className={styles.word} weight="semiBold" leading="snug">
+						{word.targets.includes('content') ? (
+							<Trans comment="Pattern: {wordValue} in text, tags">
+								{word.value}{' '}
+								<Text weight="normal" color="textContrastMedium">
+									in{' '}
+									<Text weight="semiBold" color="textContrastMedium">
+										text & tags
 									</Text>
-								</Trans>
-							) : (
-								<Trans comment="Pattern: {wordValue} in tags">
-									{word.value}{' '}
-									<Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
-										in <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>tags</Text>
+								</Text>
+							</Trans>
+						) : (
+							<Trans comment="Pattern: {wordValue} in tags">
+								{word.value}{' '}
+								<Text weight="normal" color="textContrastMedium">
+									in{' '}
+									<Text weight="semiBold" color="textContrastMedium">
+										tags
 									</Text>
-								</Trans>
-							)}
-						</Text>
-					</View>
+								</Text>
+							</Trans>
+						)}
+					</Text>
 
 					{(expiryDate || word.actorTarget === 'exclude-following') && (
-						<View style={[a.flex_1, a.flex_row, a.align_center, a.flex_wrap]}>
+						<div className={styles.metaRow}>
 							{expiryDate &&
 								(isExpired ? (
 									<>
-										<Text style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+										<Text size="xs" color="textContrastMedium" leading="snug">
 											<Trans>Expired</Trans>
 										</Text>
-										<Text style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>{' · '}</Text>
+										<Text size="xs" color="textContrastMedium" leading="snug">
+											{' · '}
+										</Text>
 										<Menu.Root>
-											<Menu.Trigger label={l`Renew mute word`}>
-												{({ props }) => (
-													<Text
-														{...props}
-														style={[
-															a.text_xs,
-															a.leading_snug,
-															a.font_semi_bold,
-															{ color: t.palette.primary_500 },
-														]}
-													>
-														<Trans>Renew</Trans>
-													</Text>
-												)}
-											</Menu.Trigger>
-											<Menu.Outer>
-												<Menu.LabelText>
-													<Trans>Renew duration</Trans>
-												</Menu.LabelText>
+											<Menu.Trigger
+												render={
+													<button aria-label={l`Renew mute word`} className={styles.renewLink} type="button">
+														<Text size="xs" weight="semiBold" color="primary_500" leading="snug">
+															<Trans>Renew</Trans>
+														</Text>
+													</button>
+												}
+											/>
+											<Menu.Popup label={l`Renew duration`}>
 												<Menu.Group>
-													<Menu.Item label={l`24 hours`} onPress={() => renew(1)}>
+													<Menu.LabelText>
+														<Trans>Renew duration</Trans>
+													</Menu.LabelText>
+													<Menu.Item label={l`24 hours`} onClick={() => renew(1)}>
 														<Menu.ItemText>
 															<Trans>24 hours</Trans>
 														</Menu.ItemText>
 													</Menu.Item>
-													<Menu.Item label={l`7 days`} onPress={() => renew(7)}>
+													<Menu.Item label={l`7 days`} onClick={() => renew(7)}>
 														<Menu.ItemText>
 															<Trans>7 days</Trans>
 														</Menu.ItemText>
 													</Menu.Item>
-													<Menu.Item label={l`30 days`} onPress={() => renew(30)}>
+													<Menu.Item label={l`30 days`} onClick={() => renew(30)}>
 														<Menu.ItemText>
 															<Trans>30 days</Trans>
 														</Menu.ItemText>
 													</Menu.Item>
-													<Menu.Item label={l`Forever`} onPress={() => renew()}>
+													<Menu.Item label={l`Forever`} onClick={() => renew()}>
 														<Menu.ItemText>
 															<Trans>Forever</Trans>
 														</Menu.ItemText>
 													</Menu.Item>
 												</Menu.Group>
-											</Menu.Outer>
+											</Menu.Popup>
 										</Menu.Root>
 									</>
 								) : (
-									<Text style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+									<Text size="xs" color="textContrastMedium" leading="snug">
 										<Trans>
 											Expires{' '}
 											{formatDistance(expiryDate, new Date(), {
@@ -466,60 +412,30 @@ function MutedWordRow({ style, word }: ViewStyleProp & { word: AppBskyActorDefs.
 									</Text>
 								))}
 							{word.actorTarget === 'exclude-following' && (
-								<Text style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+								<Text size="xs" color="textContrastMedium" leading="snug">
 									{expiryDate ? ' · ' : ''}
 									<Trans>Excludes users you follow</Trans>
 								</Text>
 							)}
-						</View>
+						</div>
 					)}
-				</View>
+				</div>
 
 				<Button
-					label={l`Remove mute word from your list`}
-					size="tiny"
-					shape="round"
-					variant="outline"
 					color="secondary"
-					onPress={() => control.open()}
-					style={[a.ml_sm]}
+					label={l`Remove mute word from your list`}
+					onClick={() => removeHandle.open(null)}
+					shape="round"
+					size="tiny"
+					variant="ghost"
 				>
-					<ButtonIcon icon={isPending ? Loader : X} />
+					{isPending ? (
+						<Spinner color="currentColor" label={l`Removing`} size="sm" />
+					) : (
+						<ButtonIcon icon={X} />
+					)}
 				</Button>
-			</View>
+			</div>
 		</>
-	);
-}
-
-function TargetToggle({ children }: React.PropsWithChildren<{}>) {
-	const t = useTheme();
-	const ctx = Toggle.useItemContext();
-	const { gtMobile } = useBreakpoints();
-	return (
-		<View
-			style={[
-				a.flex_row,
-				a.align_center,
-				a.justify_between,
-				a.gap_xs,
-				a.flex_1,
-				a.py_sm,
-				a.px_sm,
-				gtMobile && a.px_md,
-				a.rounded_sm,
-				t.atoms.bg_contrast_25,
-				(ctx.hovered || ctx.focused) && t.atoms.bg_contrast_50,
-				ctx.selected && [
-					{
-						backgroundColor: t.palette.primary_50,
-					},
-				],
-				ctx.disabled && {
-					opacity: 0.8,
-				},
-			]}
-		>
-			{children}
-		</View>
 	);
 }

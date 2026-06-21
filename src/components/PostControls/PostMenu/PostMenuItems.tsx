@@ -203,7 +203,7 @@ let PostMenuItems = ({
 	};
 
 	const onToggleWordsAndTagsMute = () => {
-		mutedWordsDialogControl.open();
+		mutedWordsDialogControl.open(null);
 	};
 
 	const onCopyPostText = () => {

@@ -5,11 +5,8 @@ import type { ComposerOpts } from '#/lib/hooks/useOpenComposer';
 
 import type { SessionAccount } from '#/state/session';
 
-import * as Dialog from '#/components/Dialog';
 import type { ReportSubject } from '#/components/moderation/ReportDialog';
 import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
-
-type Control = Dialog.DialogControlProps;
 
 /** Payload opening the global lightbox: the image list and the index to start on. */
 export type LightboxPayload = { images: LightboxImage[]; index: number };
@@ -38,7 +35,7 @@ type ControlsContext = {
 	 */
 	composerDialogControl: DialogHandle<ComposerOpts>;
 	lightboxControl: LightboxControl;
-	mutedWordsDialogControl: Control;
+	mutedWordsDialogControl: DialogHandle;
 	signinDialogControl: DialogHandle<SigninDialogPayload>;
 	linkWarningDialogControl: DialogHandle<LinkWarningPayload>;
 	reportDialogControl: DialogHandle<{ subject: ReportSubject }>;
@@ -58,7 +55,7 @@ export function useGlobalDialogsControlContext() {
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const composerDialogControl = useDialogHandle<ComposerOpts>();
 	const lightboxControl = useDialogHandle<LightboxPayload>();
-	const mutedWordsDialogControl = Dialog.useDialogControl();
+	const mutedWordsDialogControl = useDialogHandle();
 	const signinDialogControl = useDialogHandle<SigninDialogPayload>();
 	const linkWarningDialogControl = useDialogHandle<LinkWarningPayload>();
 	const reportDialogControl = useDialogHandle<{ subject: ReportSubject }>();

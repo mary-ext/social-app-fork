@@ -150,14 +150,23 @@ export function PanelGroup({ children }: { children: ReactNode }) {
 export function Panel({
 	active,
 	adjacent = 'none',
+	size = 'default',
 	children,
 }: {
 	active?: boolean;
 	adjacent?: 'both' | 'leading' | 'none' | 'trailing';
+	/** `small` tightens padding/height and squares the corners to a flat radius (skips `adjacent`). */
+	size?: 'default' | 'small';
 	children: ReactNode;
 }) {
 	return (
-		<span className={clsx(styles.panel, styles.panelAdjacent[adjacent], active && styles.panelActive)}>
+		<span
+			className={clsx(
+				styles.panel,
+				size === 'small' ? styles.panelSmall : styles.panelAdjacent[adjacent],
+				active && styles.panelActive,
+			)}
+		>
 			{children}
 		</span>
 	);
