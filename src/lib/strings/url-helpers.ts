@@ -4,21 +4,13 @@ import { BSKY_SERVICE } from '#/lib/constants';
 import { startUriToStarterPackUri } from '#/lib/strings/starter-pack';
 
 const BSKY_APP_HOST = 'https://bsky.app';
-const BSKY_TRUSTED_HOSTS = [
-	'bsky\\.app',
-	'bsky\\.social',
-	'blueskyweb\\.xyz',
-	'blueskyweb\\.zendesk\\.com',
+const BSKY_TRUSTED_HOSTS = new Set([
+	'blueskyweb.xyz',
+	'blueskyweb.zendesk.com',
+	'bsky.app',
+	'bsky.social',
 	...(import.meta.env.DEV ? ['localhost:19006', 'localhost:8100'] : []),
-];
-
-/*
- * This will allow any BSKY_TRUSTED_HOSTS value by itself or with a subdomain.
- * It will also allow relative paths like /profile as well as #.
- */
-const TRUSTED_REGEX = new RegExp(
-	`^(http(s)?://(([\\w-]+\\.)?${BSKY_TRUSTED_HOSTS.join('|([\\w-]+\\.)?')})|/|#)`,
-);
+]);
 
 export function makeRecordUri(didOrName: string, collection: string, rkey: string) {
 	return `at://${didOrName}/${collection}/${rkey}`;
@@ -78,8 +70,20 @@ export function isExternalUrl(url: string): boolean {
 	return external;
 }
 
+/**
+ * Whether a link target is trusted, i.e. safe to navigate to without a leaving-the-app warning. Relative
+ * paths and in-app anchors are trusted; an absolute URL is trusted only when its host matches an entry in
+ * {@link BSKY_TRUSTED_HOSTS} exactly — a subdomain such as `endpoints.bsky.app` is not trusted.
+ *
+ * @param url the link target
+ * @returns whether the target is trusted
+ */
 function isTrustedUrl(url: string): boolean {
-	return TRUSTED_REGEX.test(url);
+	if (url.startsWith('/') || url.startsWith('#')) {
+		return true;
+	}
+	const parsed = safeUrlParse(url);
+	return parsed !== null && BSKY_TRUSTED_HOSTS.has(parsed.host);
 }
 
 export function isBskyPostUrl(url: string): boolean {
