@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
-import { fontSize } from '#/styles/tokens.css';
+import { fontSize, zIndex } from '#/styles/tokens.css';
 
 export const trigger = style(
 	layered(components, {
@@ -52,7 +52,8 @@ export const icon = style(
 
 export const positioner = style(
 	layered(components, {
-		zIndex: 10,
+		// the `menu` tier so a select opened inside a dialog paints over it, matching menus & autocomplete
+		zIndex: zIndex.menu,
 	}),
 );
 
