@@ -59,7 +59,7 @@ export default defineConfig(({ envMode }) => {
 							test: /\.[cm]?tsx$/,
 						},
 					];
-					addPlugins(['babel-plugin-react-compiler']);
+					addPlugins(['@lingui/babel-plugin-lingui-macro', 'babel-plugin-react-compiler']);
 				},
 			}),
 		],
@@ -120,15 +120,6 @@ export default defineConfig(({ envMode }) => {
 			removeConsole: envMode === 'production',
 		},
 		tools: {
-			swc: {
-				jsc: {
-					experimental: {
-						// lingui macros (`msg`, `t`, `<Trans>`, `plural`) are expanded by the SWC Wasm plugin
-						// instead of @lingui/babel-plugin-lingui-macro.
-						plugins: [['@lingui/swc-plugin', {}]],
-					},
-				},
-			},
 			rspack(config) {
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());

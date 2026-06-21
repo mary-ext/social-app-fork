@@ -213,12 +213,12 @@ importers:
       '@eslint/js':
         specifier: ^9.39.4
         version: 9.39.4
+      '@lingui/babel-plugin-lingui-macro':
+        specifier: ^6.4.0
+        version: 6.4.0
       '@lingui/cli':
         specifier: ^6.4.0
         version: 6.4.0(patch_hash=e7273d643ca9d73752af9d830adff8248d7ac29219b192b9b34d4409407bd636)
-      '@lingui/swc-plugin':
-        specifier: ^6.4.0
-        version: 6.4.0(@lingui/core@6.4.0)
       '@rsbuild/core':
         specifier: ^2.0.15
         version: 2.0.15
@@ -1571,18 +1571,6 @@ packages:
       react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
       babel-plugin-macros:
-        optional: true
-
-  '@lingui/swc-plugin@6.4.0':
-    resolution: {integrity: sha512-Naz0MVa23DHFLSbmQjUWzCwzH3vSLkw8Uvqln5Bhgw2raRKT2X4O+zHTBpegeYwRCMsdPCQZXymNxpfu46/0vg==}
-    peerDependencies:
-      '@lingui/core': 5 || 6
-      '@swc/core': '*'
-      next: '*'
-    peerDependenciesMeta:
-      '@swc/core':
-        optional: true
-      next:
         optional: true
 
   '@mary-ext/simple-event-emitter@1.0.2':
@@ -6919,11 +6907,6 @@ snapshots:
       react: 19.2.7
     transitivePeerDependencies:
       - supports-color
-
-  '@lingui/swc-plugin@6.4.0(@lingui/core@6.4.0)':
-    dependencies:
-      '@lingui/conf': 6.4.0
-      '@lingui/core': 6.4.0
 
   '@mary-ext/simple-event-emitter@1.0.2': {}
 
