@@ -25,6 +25,7 @@ export const profileTrigger = style({
 	paddingBlock: 0,
 	paddingInlineEnd: space.md,
 	paddingInlineStart: space.lg,
+	textAlign: 'left',
 	transitionDelay: '50ms',
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color',
@@ -68,7 +69,10 @@ export const avatarWrap = style({
 // name + handle, hidden until the trigger is active; the negative margin tucks it under the resting avatar so
 // it slides out from behind as the avatar shrinks.
 export const identity = style({
+	alignItems: 'start',
+	display: 'flex',
 	flex: 1,
+	flexDirection: 'column',
 	marginLeft: -space.xl,
 	opacity: 0,
 	transitionDelay: '50ms',
