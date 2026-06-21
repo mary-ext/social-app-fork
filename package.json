@@ -40,7 +40,7 @@
 		"@atcute/ozone": "4.0.4",
 		"@atcute/tid": "^1.1.2",
 		"@atcute/xrpc-server": "^2.0.0",
-		"@base-ui/react": "^1.5.0",
+		"@base-ui/react": "^1.6.0",
 		"@braintree/sanitize-url": "^6.0.4",
 		"@emoji-mart/data": "^1.2.1",
 		"@emoji-mart/react": "^1.1.1",

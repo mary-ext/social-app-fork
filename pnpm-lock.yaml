@@ -15,7 +15,7 @@ overrides:
   unicode-segmenter: 0.14.5
 
 patchedDependencies:
-  '@base-ui/react': 867dd75a17d34ef00265de5b75ae7133266ed640bcf994e4c7c49d730fcc3225
+  '@base-ui/react': c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00
   '@react-navigation/native-stack': a4cdb79a0fb2df5d81643aa346e5aff8e334c20cd7062e63f426f3232bb0a571
   '@vanilla-extract/css': 7879825473edcd40270679a127c740fc1eb705c6d13f31bf607d9272b0be02e5
 
@@ -78,8 +78,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@atcute/cid@2.4.1)(@atcute/lexicons@2.0.1)(typescript@6.0.3)
       '@base-ui/react':
-        specifier: ^1.5.0
-        version: 1.5.0(patch_hash=867dd75a17d34ef00265de5b75ae7133266ed640bcf994e4c7c49d730fcc3225)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^1.6.0
+        version: 1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@braintree/sanitize-url':
         specifier: ^6.0.4
         version: 6.0.4
@@ -112,7 +112,7 @@ importers:
         version: 0.2.1
       '@oomfware/lightbox':
         specifier: ^0.1.6
-        version: 0.1.6(@base-ui/react@1.5.0(patch_hash=867dd75a17d34ef00265de5b75ae7133266ed640bcf994e4c7c49d730fcc3225)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 0.1.6(@base-ui/react@1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@react-navigation/native':
         specifier: ^7.3.0
         version: 7.3.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
@@ -679,8 +679,8 @@ packages:
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
 
-  '@base-ui/react@1.5.0':
-    resolution: {integrity: sha512-z1gSAlced1yY+iM+mHDEtIkD8UI3Ebs52MuBPxvV6f5hRutk+xvCH/wuB7hDqDzK9JG5FoMz5nhrqtSs1wjt1A==}
+  '@base-ui/react@1.6.0':
+    resolution: {integrity: sha512-/jzjTWJYXhRFO45Bev9lc3cHbmjzCMpUqbMZ2AgKy/z25mY9B6shGSNcXcjQar9n5doM0KYW1W8fcFv2jZBuMw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@date-fns/tz': ^1.2.0
@@ -696,8 +696,8 @@ packages:
       date-fns:
         optional: true
 
-  '@base-ui/utils@0.2.9':
-    resolution: {integrity: sha512-x/PDDCYzoqPpjrdyb3VcyylTI2IjUXEtYDGi5foh7KsnmNJIIaVwA2GLgDH1dps1GgXiJbA60hM+AyuTfQzIvw==}
+  '@base-ui/utils@0.3.1':
+    resolution: {integrity: sha512-gFFiltORVmW/N6IILTGxizP3PBpVpysqML1ALY5Vk0mH+7faVkCknOU31goYHN5Aoek2dkjxva1XOD2Ce9WuIg==}
     peerDependencies:
       '@types/react': ^17 || ^18 || ^19
       react: ^17 || ^18 || ^19
@@ -6378,10 +6378,10 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@base-ui/react@1.5.0(patch_hash=867dd75a17d34ef00265de5b75ae7133266ed640bcf994e4c7c49d730fcc3225)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@base-ui/react@1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@babel/runtime': 7.29.7
-      '@base-ui/utils': 0.2.9(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@base-ui/utils': 0.3.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@floating-ui/react-dom': 2.1.8(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@floating-ui/utils': 0.2.11
       react: 19.2.7
@@ -6391,7 +6391,7 @@ snapshots:
       '@types/react': 19.2.17
       date-fns: 4.4.0
 
-  '@base-ui/utils@0.2.9(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@base-ui/utils@0.3.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@floating-ui/utils': 0.2.11
@@ -7079,13 +7079,13 @@ snapshots:
 
   '@oomfware/lang-detect@0.2.1': {}
 
-  '@oomfware/lightbox@0.1.6(@base-ui/react@1.5.0(patch_hash=867dd75a17d34ef00265de5b75ae7133266ed640bcf994e4c7c49d730fcc3225)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@oomfware/lightbox@0.1.6(@base-ui/react@1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@mary-ext/simple-event-emitter': 1.0.2
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     optionalDependencies:
-      '@base-ui/react': 1.5.0(patch_hash=867dd75a17d34ef00265de5b75ae7133266ed640bcf994e4c7c49d730fcc3225)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@base-ui/react': 1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
   '@oxfmt/binding-android-arm-eabi@0.50.0':
     optional: true

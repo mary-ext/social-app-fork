@@ -4,13 +4,13 @@ rationale for each hunk in `@base-ui__react.patch`. keep this in sync when the p
 re-evaluate every hunk on an `@base-ui/react` upgrade — line offsets and the surrounding code may
 have shifted, and upstream may have fixed the issue.
 
-## `esm/utils/InternalBackdrop.js` — drop the `cutout` clip-path
+## `utils/InternalBackdrop.mjs` — drop the `cutout` clip-path
 
 removes the branch that punches a polygon hole in the internal backdrop around a `cutout` element.
 the fork does not use the cutout feature, and the per-frame `getBoundingClientRect` + `clipPath`
 recompute is dead cost.
 
-## `esm/utils/popups/popupStoreUtils.js` — drop the mid-registration trigger claim
+## `utils/popups/popupStoreUtils.mjs` — drop the mid-registration trigger claim
 
 deletes the `if (activeTriggerId == null && open)` block in `useTriggerDataForwarding`. upstream
 uses it so that when a popup is already open with no active trigger, the first detached trigger to
