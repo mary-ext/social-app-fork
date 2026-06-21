@@ -70,11 +70,11 @@
 		"lodash.chunk": "^4.2.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
-		"nanoid": "^5.1.11",
+		"nanoid": "^5.1.14",
 		"radix-ui": "^1.6.0",
 		"react": "19.2.7",
 		"react-dom": "19.2.7",
-		"react-hotkeys-hook": "5.2.4",
+		"react-hotkeys-hook": "5.3.2",
 		"react-image-crop": "^11.0.10",
 		"react-native": "0.81.5",
 		"react-native-safe-area-context": "~5.6.2",
@@ -121,7 +121,7 @@
 		"svgo": "^3.3.3",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.61.0",
-		"wrangler": "^4.0.0"
+		"wrangler": "^4.103.0"
 	},
 	"browserslist": {
 		"production": [
