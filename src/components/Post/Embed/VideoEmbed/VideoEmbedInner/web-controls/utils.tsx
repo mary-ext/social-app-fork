@@ -19,7 +19,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 
 	useEffect(() => {
 		if (!ref.current) return;
-		// eslint-disable-next-line react-compiler/react-compiler -- `ref` is a ref param; mutating the element it points at is intended
+		// `ref` is a ref param; mutating the element it points at is intended
 		ref.current.volume = volume;
 	}, [ref, volume]);
 

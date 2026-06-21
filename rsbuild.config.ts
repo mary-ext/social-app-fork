@@ -77,7 +77,7 @@ export default defineConfig(({ envMode }) => {
 					];
 					addPlugins([
 						'@lingui/babel-plugin-lingui-macro',
-						['babel-plugin-react-compiler', { target: '19' }],
+						'babel-plugin-react-compiler',
 						...(envMode === 'production' ? ['transform-remove-console'] : []),
 					]);
 				},

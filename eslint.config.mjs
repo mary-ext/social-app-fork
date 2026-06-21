@@ -5,7 +5,6 @@ import bskyInternal from 'eslint-plugin-bsky-internal';
 import importX from 'eslint-plugin-import-x';
 import lingui from 'eslint-plugin-lingui';
 import react from 'eslint-plugin-react';
-import reactCompiler from 'eslint-plugin-react-compiler';
 import reactHooks from 'eslint-plugin-react-hooks';
 // @ts-expect-error no types
 import reactNative from 'eslint-plugin-react-native';
@@ -51,7 +50,6 @@ export default defineConfig(
 			'react-native-a11y': reactNativeA11y,
 			// @ts-expect-error - not sure why
 			lingui,
-			'react-compiler': reactCompiler,
 			'bsky-internal': bskyInternal,
 		},
 		languageOptions: {
@@ -118,7 +116,6 @@ export default defineConfig(
 			'react/prop-types': 'off',
 			'react-native/no-inline-styles': 'off',
 			...reactNativeA11y.configs.all.rules,
-			'react-compiler/react-compiler': 'warn',
 			// TODO: Fix these and set to error
 			'react-hooks/set-state-in-effect': 'warn',
 			'react-hooks/purity': 'warn',

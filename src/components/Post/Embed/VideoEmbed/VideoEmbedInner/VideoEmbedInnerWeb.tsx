@@ -63,7 +63,7 @@ export function VideoEmbedInnerWeb({
 						muted={embed.presentation === 'gif' || !focused}
 						aria-labelledby={embed.alt ? figId : undefined}
 						onTimeUpdate={(e) => {
-							// eslint-disable-next-line react-compiler/react-compiler, react-hooks/immutability -- `lastKnownTime` is a ref prop; writing `.current` is intended
+							// eslint-disable-next-line react-hooks/immutability -- `lastKnownTime` is a ref prop; writing `.current` is intended
 							lastKnownTime.current = e.currentTarget.currentTime;
 						}}
 						loop={loop}
@@ -191,7 +191,7 @@ function useHLS({
 				if (track.cues) {
 					for (let j = 0; j < track.cues.length; j++) {
 						const cue = track.cues[j] as VTTCue;
-						// eslint-disable-next-line react-compiler/react-compiler -- mutating live DOM VTTCue objects read off the video element
+						// mutating live DOM VTTCue objects read off the video element
 						cue.snapToLines = false;
 						cue.line = line;
 					}

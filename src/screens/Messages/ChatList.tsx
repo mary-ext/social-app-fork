@@ -230,7 +230,7 @@ export function ChatList({
 			offset: 0,
 		});
 		if (isWithinSplitView) {
-			// eslint-disable-next-line react-compiler/react-compiler -- module-level singleton persists scroll across remounts by design
+			// module-level singleton persists scroll across remounts by design
 			splitViewLeftScroll.current = 0;
 			restoredRef.current = true;
 		}
