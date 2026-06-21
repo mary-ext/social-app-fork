@@ -282,8 +282,8 @@ importers:
         specifier: ^4.16.2
         version: 4.16.2(@typescript-eslint/utils@8.61.0(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.4(jiti@2.7.0))
       eslint-plugin-lingui:
-        specifier: ^0.12.0
-        version: 0.12.0(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
+        specifier: ^0.14.0
+        version: 0.14.0(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
       eslint-plugin-react:
         specifier: ^7.37.5
         version: 7.37.5(eslint@9.39.4(jiti@2.7.0))
@@ -291,8 +291,8 @@ importers:
         specifier: 19.1.0-rc.2
         version: 19.1.0-rc.2(eslint@9.39.4(jiti@2.7.0))
       eslint-plugin-react-hooks:
-        specifier: 7.0.1
-        version: 7.0.1(eslint@9.39.4(jiti@2.7.0))
+        specifier: 7.1.1
+        version: 7.1.1(eslint@9.39.4(jiti@2.7.0))
       eslint-plugin-react-native:
         specifier: ^5.0.0
         version: 5.0.0(eslint@9.39.4(jiti@2.7.0))
@@ -3877,11 +3877,11 @@ packages:
       eslint-import-resolver-node:
         optional: true
 
-  eslint-plugin-lingui@0.12.0:
-    resolution: {integrity: sha512-2+9P3thudGIBI10sDWYUIrGs3HIP09gv0XF98RDzZs34GAsAsGTUoSgrttKS1knAU5dwbrFKhNKu2LMrjRECag==}
+  eslint-plugin-lingui@0.14.0:
+    resolution: {integrity: sha512-LI4uZ8yp8OxnKjZTv6iPEKQjQToYszJxBPnZ9ZP1TCjFi+arSFrynyQblwj6YhHiaFpsnr1fU/nK8SSpcHa2rA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      eslint: ^8.37.0 || ^9.0.0
+      eslint: ^8.37.0 || ^9 || ^10
       typescript: ^5.0.0 || ^6.0.0
 
   eslint-plugin-react-compiler@19.1.0-rc.2:
@@ -3890,11 +3890,11 @@ packages:
     peerDependencies:
       eslint: '>=7'
 
-  eslint-plugin-react-hooks@7.0.1:
-    resolution: {integrity: sha512-O0d0m04evaNzEPoSW+59Mezf8Qt0InfgGIBJnpC0h3NH/WjUAR7BIKUfysC6todmtiZ/A0oUVS8Gce0WhBrHsA==}
+  eslint-plugin-react-hooks@7.1.1:
+    resolution: {integrity: sha512-f2I7Gw6JbvCexzIInuSbZpfdQ44D7iqdWX01FKLvrPgqxoE7oMj8clOfto8U6vYiz4yd5oKu39rRSVOe1zRu0g==}
     engines: {node: '>=18'}
     peerDependencies:
-      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
+      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0 || ^10.0.0
 
   eslint-plugin-react-native-a11y@3.5.1:
     resolution: {integrity: sha512-vqnXZpAiov0lxYNfEYgwABpkiBYRrt0dbtOafPkw6QaFeA0uZ+s3w9opeEMoFmV36WFxLiCxHb9fvOJ+EUc2xQ==}
@@ -8744,9 +8744,9 @@ snapshots:
     dependencies:
       acorn: 8.17.0
 
-  acorn-jsx@5.3.2(acorn@8.16.0):
+  acorn-jsx@5.3.2(acorn@8.17.0):
     dependencies:
-      acorn: 8.16.0
+      acorn: 8.17.0
 
   acorn-walk@8.3.5:
     dependencies:
@@ -9599,7 +9599,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-lingui@0.12.0(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3):
+  eslint-plugin-lingui@0.14.0(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.61.0(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
       eslint: 9.39.4(jiti@2.7.0)
@@ -9620,7 +9620,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-react-hooks@7.0.1(eslint@9.39.4(jiti@2.7.0)):
+  eslint-plugin-react-hooks@7.1.1(eslint@9.39.4(jiti@2.7.0)):
     dependencies:
       '@babel/core': 7.29.7
       '@babel/parser': 7.29.7
@@ -9731,8 +9731,8 @@ snapshots:
 
   espree@10.4.0:
     dependencies:
-      acorn: 8.16.0
-      acorn-jsx: 5.3.2(acorn@8.16.0)
+      acorn: 8.17.0
+      acorn-jsx: 5.3.2(acorn@8.17.0)
       eslint-visitor-keys: 4.2.1
 
   esprima@4.0.1: {}
