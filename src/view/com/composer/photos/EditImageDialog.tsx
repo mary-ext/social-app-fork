@@ -1,21 +1,12 @@
-import 'react-image-crop/dist/ReactCrop.css';
+import { lazy, Suspense } from 'react';
+import { useLingui } from '@lingui/react/macro';
 
-import { type CSSProperties, useCallback, useImperativeHandle, useRef, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
-import ReactCrop, { type PercentCrop } from 'react-image-crop';
-
-import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
-
-import {
-	type ComposerImage,
-	type ImageSource,
-	type ImageTransformation,
-	manipulateImage,
-} from '#/state/gallery';
+import type { ComposerImage } from '#/state/gallery';
 
 import { Spinner } from '#/components/Spinner';
-import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+
+import { colors } from '#/styles/colors';
 
 import * as styles from './EditImageDialog.css';
 
@@ -27,175 +18,31 @@ export type EditImageDialogProps = {
 	circularCrop?: boolean;
 };
 
+// react-image-crop (plus its stylesheet) is a sizable dependency only needed once someone actually crops
+// an image, so the cropper body loads on first open rather than riding along in every composer/profile-edit
+// chunk that mounts this dialog.
+const EditImageDialogInner = lazy(() =>
+	import('./EditImageDialogInner').then((m) => ({ default: m.EditImageDialogInner })),
+);
+
 export function EditImageDialog(props: EditImageDialogProps) {
 	const { t: l } = useLingui();
 	return (
 		<Dialog.Root disablePointerDismissal handle={props.handle}>
 			<Dialog.Popup scroll="body" label={l`Edit image`}>
-				<DialogInner {...props} />
+				<Suspense
+					fallback={
+						<Dialog.Body>
+							<div className={styles.loadingHeader} />
+							<div className={styles.loadingBody}>
+								<Spinner color={colors.contrast_500} label={l`Loading`} />
+							</div>
+						</Dialog.Body>
+					}
+				>
+					<EditImageDialogInner {...props} />
+				</Suspense>
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
-
-function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: EditImageDialogProps) {
-	const { t: l } = useLingui();
-	const [pending, setPending] = useState(false);
-	const ref = useRef<{ save: () => Promise<void> }>(null);
-
-	const onPressSave = async () => {
-		setPending(true);
-		await ref.current?.save();
-		setPending(false);
-	};
-
-	return (
-		<>
-			<Dialog.Header.Outer>
-				<Dialog.Header.Slot>
-					<Button
-						color="primary"
-						disabled={pending}
-						label={l`Cancel`}
-						onClick={() => handle.close()}
-						size="small"
-						variant="ghost"
-					>
-						<ButtonText size="md">
-							<Trans>Cancel</Trans>
-						</ButtonText>
-					</Button>
-				</Dialog.Header.Slot>
-				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>
-						<Trans>Edit image</Trans>
-					</Dialog.Header.TitleText>
-				</Dialog.Header.Content>
-				<Dialog.Header.Slot>
-					<Button
-						color="primary"
-						disabled={pending}
-						label={l`Save`}
-						onClick={() => void onPressSave()}
-						size="small"
-						variant="ghost"
-					>
-						<ButtonText size="md">
-							<Trans>Save</Trans>
-						</ButtonText>
-						{pending && <Spinner color="currentColor" label={l`Saving`} size="sm" />}
-					</Button>
-				</Dialog.Header.Slot>
-			</Dialog.Header.Outer>
-
-			<Dialog.Body>
-				{image && (
-					<EditImageInner
-						aspectRatio={aspectRatio}
-						circularCrop={circularCrop}
-						handle={handle}
-						image={image}
-						key={image.source.id}
-						onChange={onChange}
-						saveRef={ref}
-					/>
-				)}
-			</Dialog.Body>
-		</>
-	);
-}
-
-function EditImageInner({
-	image,
-	onChange,
-	saveRef,
-	handle,
-	circularCrop = false,
-	aspectRatio,
-}: Required<Pick<EditImageDialogProps, 'image'>> &
-	Omit<EditImageDialogProps, 'image'> & {
-		saveRef: React.RefObject<{ save: () => Promise<void> } | null>;
-	}) {
-	const source = image.source;
-	const sourceUrl = useBlobUrl(source.blob);
-
-	const initialCrop = getInitialCrop(source, image.manips);
-	const [crop, setCrop] = useState(initialCrop);
-	const sourceDimensions =
-		source.width > 0 && source.height > 0
-			? {
-					height: source.height,
-					width: source.width,
-				}
-			: undefined;
-
-	const onPressSubmit = useCallback(async () => {
-		const result = await manipulateImage(image, {
-			crop:
-				crop && (crop.width || crop.height) !== 0
-					? {
-							originX: (crop.x * source.width) / 100,
-							originY: (crop.y * source.height) / 100,
-							width: (crop.width * source.width) / 100,
-							height: (crop.height * source.height) / 100,
-						}
-					: undefined,
-		});
-
-		onChange(result);
-		handle.close();
-	}, [crop, image, source, handle, onChange]);
-
-	useImperativeHandle(
-		saveRef,
-		() => ({
-			save: onPressSubmit,
-		}),
-		[onPressSubmit],
-	);
-
-	return (
-		<div className={styles.imageBox}>
-			<div className={styles.cropArea}>
-				<ReactCrop
-					aspect={aspectRatio}
-					circularCrop={circularCrop}
-					className="ReactCrop--no-animate"
-					crop={crop}
-					onChange={(_pixelCrop, percentCrop) => setCrop(percentCrop)}
-				>
-					<img alt="" src={sourceUrl} {...sourceDimensions} style={imageStyle} />
-				</ReactCrop>
-			</div>
-		</div>
-	);
-}
-
-// cap the image to the square frame (the `cropArea` query container), so the cropper hugs the image rather
-// than letting the crop overlay extend into the letterbox. `width`/`height: auto` override the intrinsic-size
-// attributes (spread from `sourceDimensions`) so the two `max-*` constraints preserve aspect ratio instead of
-// clamping each axis independently into a square
-const imageStyle = {
-	display: 'block',
-	height: 'auto',
-	maxHeight: '100cqh',
-	maxWidth: '100cqw',
-	width: 'auto',
-} satisfies CSSProperties;
-
-const getInitialCrop = (
-	source: ImageSource,
-	manips: ImageTransformation | undefined,
-): PercentCrop | undefined => {
-	const initialArea = manips?.crop;
-
-	if (initialArea) {
-		return {
-			unit: '%',
-			x: (initialArea.originX / source.width) * 100,
-			y: (initialArea.originY / source.height) * 100,
-			width: (initialArea.width / source.width) * 100,
-			height: (initialArea.height / source.height) * 100,
-		};
-	}
-};
