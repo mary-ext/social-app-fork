@@ -1,13 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
+import { type MouseEvent, useCallback, useMemo, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
+import { clsx } from 'clsx';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useReducedMotion } from '#/lib/reduced-motion';
 import { getCurrentRoute, isTab } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
@@ -25,10 +25,9 @@ import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { PressableWithHover } from '#/view/com/util/PressableWithHover';
 import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
 
-import { atoms as a, tokens, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
+import { atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import type { DialogControlProps } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
 import {
@@ -68,10 +67,12 @@ import {
 	UserCircle_Filled_Corner0_Rounded as UserCircleFilledIcon,
 	UserCircle_Stroke2_Corner0_Rounded as UserCircleIcon,
 } from '#/components/icons/UserCircle';
-import * as Menu from '#/components/Menu';
-import * as Prompt from '#/components/Prompt';
+import { Text as WebText } from '#/components/Text';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
+import { useInternalLink } from '#/components/web/Link';
+import * as Menu from '#/components/web/Menu';
+import * as Prompt from '#/components/web/Prompt';
 
 import { useActorStatus } from '#/features/liveNow';
 import { router } from '#/routes';
@@ -101,10 +102,8 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 		handles: accounts.map((acc) => acc.did),
 	});
 	const profiles = data?.profiles;
-	const reduceMotion = useReducedMotion();
-	const signOutPromptControl = Prompt.usePromptControl();
+	const signOutPromptHandle = Prompt.usePromptHandle();
 	const { t: l } = useLingui();
-	const t = useTheme();
 
 	const profile = profiles?.find((p) => p.did === currentAccount!.did);
 	const otherAccounts = accounts
@@ -120,83 +119,43 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 		<View style={[a.pb_md, !minimal && [a.w_full, a.align_start]]}>
 			{!isLoading && profile ? (
 				<Menu.Root>
-					<Menu.Trigger label={l`Switch accounts`}>
-						{({ props, state, control }) => {
-							const active = state.hovered || state.focused || control.isOpen;
-							return (
-								<Button
-									label={props.accessibilityLabel}
-									{...props}
-									style={[
-										a.w_full,
-										a.transition_color,
-										active ? t.atoms.bg_contrast_25 : a.transition_delay_50ms,
-										a.rounded_full,
-										a.justify_between,
-										a.align_center,
-										a.flex_row,
-										{ gap: 6 },
-										!minimal && [a.pl_lg, a.pr_md],
-									]}
-								>
-									<View
-										style={[
-											!reduceMotion && [
-												a.transition_transform,
-												{ transitionDuration: '250ms' },
-												!active && a.transition_delay_50ms,
-											],
-											a.relative,
-											a.z_10,
-											active && {
-												transform: [{ scale: !minimal ? 2 / 3 : 0.8 }, { translateX: !minimal ? -22 : 0 }],
-											},
-										]}
-									>
-										<UserAvatar
-											avatar={profile.avatar}
-											size={LARGE_ELEMENT_SIZE}
-											type={profile?.associated?.labeler ? 'labeler' : 'user'}
-											live={live}
+					<Menu.Trigger
+						render={
+							<button
+								type="button"
+								aria-label={l`Switch accounts`}
+								className={clsx(css.profileTrigger, minimal && css.profileTriggerMinimal)}
+							>
+								<div className={css.avatarWrap}>
+									<UserAvatar
+										avatar={profile.avatar}
+										size={LARGE_ELEMENT_SIZE}
+										type={profile?.associated?.labeler ? 'labeler' : 'user'}
+										live={live}
+									/>
+								</div>
+								{!minimal && (
+									<>
+										<div className={css.identity}>
+											<WebText size="sm" weight="bold" numberOfLines={1}>
+												{sanitizeDisplayName(profile.displayName || profile.handle)}
+											</WebText>
+											<WebText size="xs" color="textContrastMedium" numberOfLines={1}>
+												{sanitizeHandle(profile.handle, '@')}
+											</WebText>
+										</div>
+										<EllipsisIcon
+											aria-hidden={true}
+											fill={colors.textContrastMedium}
+											className={css.ellipsisIcon}
+											size="sm"
 										/>
-									</View>
-									{!minimal && (
-										<>
-											<View
-												style={[
-													a.flex_1,
-													a.transition_opacity,
-													!active && a.transition_delay_50ms,
-													{
-														marginLeft: tokens.space.xl * -1,
-														opacity: active ? 1 : 0,
-													},
-												]}
-											>
-												<Text style={[a.font_bold, a.text_sm, a.leading_snug]} numberOfLines={1}>
-													{sanitizeDisplayName(profile.displayName || profile.handle)}
-												</Text>
-												<Text
-													style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}
-													numberOfLines={1}
-												>
-													{sanitizeHandle(profile.handle, '@')}
-												</Text>
-											</View>
-											<EllipsisIcon
-												aria-hidden={true}
-												fill={colors.textContrastMedium}
-												className={css.ellipsisIcon}
-												style={{ opacity: active ? 1 : 0 }}
-												size="sm"
-											/>
-										</>
-									)}
-								</Button>
-							);
-						}}
-					</Menu.Trigger>
-					<SwitchMenuItems accounts={otherAccounts} signOutPromptControl={signOutPromptControl} />
+									</>
+								)}
+							</button>
+						}
+					/>
+					<SwitchMenuItems accounts={otherAccounts} signOutPromptHandle={signOutPromptHandle} />
 				</Menu.Root>
 			) : (
 				<LoadingPlaceholder
@@ -206,7 +165,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 				/>
 			)}
 			<Prompt.Basic
-				control={signOutPromptControl}
+				handle={signOutPromptHandle}
 				title={l`Sign out?`}
 				description={l`You will be signed out of all your accounts.`}
 				onConfirm={() => logoutEveryAccount()}
@@ -220,7 +179,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 
 function SwitchMenuItems({
 	accounts,
-	signOutPromptControl,
+	signOutPromptHandle,
 }: {
 	accounts:
 		| {
@@ -228,7 +187,7 @@ function SwitchMenuItems({
 				profile?: AppBskyActorDefs.ProfileViewDetailed;
 		  }[]
 		| undefined;
-	signOutPromptControl: DialogControlProps;
+	signOutPromptHandle: Prompt.PromptHandle;
 }) {
 	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
@@ -238,7 +197,7 @@ function SwitchMenuItems({
 	};
 
 	return (
-		<Menu.Outer>
+		<Menu.Popup label={l`Switch accounts`} minWidth={150}>
 			{accounts && accounts.length > 0 && (
 				<>
 					<Menu.Group>
@@ -249,31 +208,29 @@ function SwitchMenuItems({
 							<SwitchMenuItem key={other.account.did} account={other.account} profile={other.profile} />
 						))}
 					</Menu.Group>
-					<Menu.Divider />
+					<Menu.Separator />
 				</>
 			)}
 			<SwitcherMenuProfileLink />
-			<Menu.Item label={l`Add another account`} onPress={onAddAnotherAccount}>
+			<Menu.Item label={l`Add another account`} onClick={onAddAnotherAccount}>
 				<Menu.ItemIcon icon={PlusIcon} />
 				<Menu.ItemText>
 					<Trans>Add another account</Trans>
 				</Menu.ItemText>
 			</Menu.Item>
-			<Menu.Item label={l`Sign out`} onPress={signOutPromptControl.open}>
+			<Menu.Item label={l`Sign out`} onClick={() => signOutPromptHandle.open(null)}>
 				<Menu.ItemIcon icon={LeaveIcon} />
 				<Menu.ItemText>
 					<Trans>Sign out</Trans>
 				</Menu.ItemText>
 			</Menu.Item>
-		</Menu.Outer>
+		</Menu.Popup>
 	);
 }
 
 function SwitcherMenuProfileLink() {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
-	const navigation = useNavigation();
-	const context = Menu.useMenuContext();
 	const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/';
 	const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink]);
 	const currentRouteInfo = useNavigationState((state) => {
@@ -293,30 +250,24 @@ function SwitcherMenuProfileLink() {
 		}
 	}, [currentAccount?.handle, currentRouteInfo, pathName]);
 
-	const onProfilePress = useCallback(
-		(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-			if (e.ctrlKey || e.metaKey || e.altKey) {
+	const onPress = useCallback(
+		(e: MouseEvent<HTMLElement>) => {
+			// a modified/middle click opens the profile in a new tab — let the anchor's default handle it
+			if (e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) {
 				return;
 			}
-			e.preventDefault();
-			context.control.close();
+			// already viewing this profile: soft-reset the screen rather than re-navigate to it
 			if (isCurrent) {
 				softReset.emit();
-			} else {
-				const [screen, params] = router.matchPath(profileLink);
-				// @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
-				navigation.navigate(screen, params, { pop: true });
+				return false;
 			}
 		},
-		[navigation, profileLink, isCurrent, context],
+		[isCurrent],
 	);
+	const bindings = useInternalLink({ action: 'navigate', onPress, to: profileLink });
+
 	return (
-		<Menu.Item
-			label={l`Go to profile`}
-			// @ts-expect-error The function signature differs on web -inb
-			onPress={onProfilePress}
-			href={profileLink}
-		>
+		<Menu.Item label={l`Go to profile`} render={<a href={bindings.href} onClick={bindings.onClick} />}>
 			<Menu.ItemIcon icon={UserCircleIcon} />
 			<Menu.ItemText>
 				<Trans>Go to profile</Trans>
@@ -339,20 +290,16 @@ function SwitchMenuItem({
 	return (
 		<Menu.Item
 			disabled={!!pendingDid}
-			style={[a.gap_sm, { minWidth: 150 }]}
-			key={account.did}
 			label={l`Switch to ${sanitizeHandle(profile?.handle ?? account.handle, '@')}`}
-			onPress={() => void onPressSwitchAccount(account)}
+			onClick={() => void onPressSwitchAccount(account)}
 		>
-			<View>
-				<UserAvatar
-					avatar={profile?.avatar}
-					size={20}
-					type={profile?.associated?.labeler ? 'labeler' : 'user'}
-					live={live}
-					hideLiveBadge
-				/>
-			</View>
+			<UserAvatar
+				avatar={profile?.avatar}
+				size={20}
+				type={profile?.associated?.labeler ? 'labeler' : 'user'}
+				live={live}
+				hideLiveBadge
+			/>
 			<Menu.ItemText>{sanitizeHandle(profile?.handle ?? account.handle, '@')}</Menu.ItemText>
 		</Menu.Item>
 	);

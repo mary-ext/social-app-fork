@@ -46,6 +46,8 @@ export const item = style({
 	outline: 0,
 	paddingBlock: 8,
 	paddingInline: 10,
+	// keep link-rendered items (e.g. an `<a>`) from showing the UA underline
+	textDecoration: 'none',
 	userSelect: 'none',
 	vars: { [iconColor]: vars.palette.contrast_700 },
 	selectors: {

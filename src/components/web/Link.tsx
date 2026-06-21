@@ -71,7 +71,13 @@ const useNavigateToPath = () => {
 	);
 };
 
-const useInternalLink = ({
+/**
+ * Resolves the `href`/`onClick` bindings for an in-app-route link without rendering an anchor, so a non-`<a>`
+ * element (e.g. a Base UI menu item rendered as a link) can carry real link semantics — middle/cmd-click
+ * opens a new tab, a plain click navigates through `react-navigation`. Return `false` from `onPress` to
+ * cancel navigation.
+ */
+export const useInternalLink = ({
 	action = 'push',
 	onPress,
 	to,

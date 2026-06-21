@@ -1,4 +1,4 @@
-import { type ComponentType, type ReactNode, useState } from 'react';
+import { type ComponentType, type ReactElement, type ReactNode, useState } from 'react';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import { clsx } from 'clsx';
 
@@ -71,6 +71,7 @@ export function Item({
 	closeOnClick,
 	destructive = false,
 	disabled,
+	render,
 }: {
 	children: ReactNode;
 	/** Overrides the label used for keyboard typeahead (defaults to the item's text). */
@@ -81,6 +82,11 @@ export function Item({
 	closeOnClick?: boolean;
 	destructive?: boolean;
 	disabled?: boolean;
+	/**
+	 * Renders the item as a custom element (e.g. an `<a>` for a link item), keeping menu-item styling, keyboard
+	 * navigation, and close-on-click. Base UI chains the element's own `onClick` with its internal one.
+	 */
+	render?: ReactElement;
 }) {
 	return (
 		<BaseMenu.Item
@@ -90,6 +96,7 @@ export function Item({
 			onMouseEnter={onMouseEnter}
 			closeOnClick={closeOnClick}
 			disabled={disabled}
+			render={render}
 		>
 			{children}
 		</BaseMenu.Item>
