@@ -136,7 +136,7 @@ export function isBskyStarterPackUrl(url: string): boolean {
 			const urlp = new URL(url);
 			return /starter-pack\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname);
 		} catch {
-			console.error('Unexpected error in isBskyStartUrl()', url);
+			console.error('Unexpected error in isBskyStarterPackUrl()', url);
 		}
 	}
 	return false;
