@@ -459,26 +459,24 @@ export function PostThread({ uri }: { uri: string }) {
 			{thread.state.error ? (
 				<ThreadError error={thread.state.error} onRetry={() => void thread.actions.refetch()} />
 			) : (
-				<Layout.Center>
-					<List
-						ref={listRef}
-						data={deferredSlices}
-						renderItem={renderItem}
-						keyExtractor={keyExtractor}
-						estimateHeight={ITEM_HEIGHT_ESTIMATE}
-						onContentSizeChange={onContentSizeChangeWebOnly}
-						onStartReached={onStartReached}
-						onStartReachedThreshold={1}
-						onEndReached={onEndReached}
-						onEndReachedThreshold={4}
-						ListFooterComponent={
-							<div
-								className={clsx(css.footer, isTombstoneView && css.footerNoBorder)}
-								style={{ height: defaultListFooterHeight ?? FALLBACK_FOOTER_HEIGHT }}
-							/>
-						}
-					/>
-				</Layout.Center>
+				<List
+					ref={listRef}
+					data={deferredSlices}
+					renderItem={renderItem}
+					keyExtractor={keyExtractor}
+					estimateHeight={ITEM_HEIGHT_ESTIMATE}
+					onContentSizeChange={onContentSizeChangeWebOnly}
+					onStartReached={onStartReached}
+					onStartReachedThreshold={1}
+					onEndReached={onEndReached}
+					onEndReachedThreshold={4}
+					ListFooterComponent={
+						<div
+							className={clsx(css.footer, isTombstoneView && css.footerNoBorder)}
+							style={{ height: defaultListFooterHeight ?? FALLBACK_FOOTER_HEIGHT }}
+						/>
+					}
+				/>
 			)}
 			{!gtMobile && canReply && hasSession && <MobileComposePrompt onPressReply={onReplyToAnchor} />}
 		</PostThreadContextProvider>

@@ -1,6 +1,5 @@
 import { fallbackVar, style } from '@vanilla-extract/css';
 
-import { CENTER_COLUMN_WIDTH } from '#/components/web/Layout/const';
 import { bottomBarHeightVar } from '#/components/web/Shell/Shell.css';
 
 export const screen = style({
@@ -22,13 +21,7 @@ export const screenNoInset = style({
 });
 
 export const content = style({
-	width: '100%',
-});
-
-/** Centers the screen content within the shell's center column. */
-export const center = style({
-	boxSizing: 'border-box',
-	marginInline: 'auto',
-	maxWidth: CENTER_COLUMN_WIDTH,
-	width: '100%',
+	display: 'flex',
+	flexDirection: 'column',
+	flexGrow: 1,
 });

@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, memo } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/web/Layout/Layout.css';
@@ -10,32 +10,21 @@ export type ScreenProps = ComponentPropsWithoutRef<'div'> & {
 };
 
 /** Outermost component of every screen. */
-export const Screen = memo(function Screen({ noInsetTop, className, children, ...rest }: ScreenProps) {
+export const Screen = ({ noInsetTop, className, children, ...rest }: ScreenProps) => {
 	return (
 		<div className={clsx(styles.screen, noInsetTop && styles.screenNoInset, className)} {...rest}>
 			{children}
 		</div>
 	);
-});
+};
 
 export type ContentProps = ComponentPropsWithoutRef<'div'>;
 
 /** Default content region for simple pages. */
-export const Content = memo(function Content({ className, children, ...rest }: ContentProps) {
+export const Content = ({ className, children, ...rest }: ContentProps) => {
 	return (
 		<div className={clsx(styles.content, className)} {...rest}>
-			<Center>{children}</Center>
-		</div>
-	);
-});
-
-export type CenterProps = ComponentPropsWithoutRef<'div'>;
-
-/** Centers content within the shell's center column. */
-export const Center = memo(function Center({ className, children, ...rest }: CenterProps) {
-	return (
-		<div className={clsx(styles.center, className)} {...rest}>
 			{children}
 		</div>
 	);
-});
+};
