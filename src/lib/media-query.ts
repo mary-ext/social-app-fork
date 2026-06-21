@@ -14,10 +14,14 @@ const getStore = (query: string): MediaQueryStore => {
 		const emitter = new SimpleEventEmitter<[]>();
 
 		const mql = window.matchMedia(query);
-		mql.onchange = () => emitter.emit();
 
 		store = {
 			subscribe(listener) {
+				if (!emitter.hasListeners()) {
+					mql.onchange = () => emitter.emit();
+					cache.set(query, store!);
+				}
+
 				const unsubscribe = emitter.subscribe(listener);
 
 				return () => {
