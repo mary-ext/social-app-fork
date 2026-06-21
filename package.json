@@ -98,7 +98,7 @@
 		"@types/lodash.chunk": "^4.2.9",
 		"@types/lodash.debounce": "^4.0.9",
 		"@types/lodash.throttle": "^4.1.9",
-		"@types/node": "^24.13.1",
+		"@types/node": "^24.13.2",
 		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",
 		"@typescript/native-preview": "7.0.0-dev.20260621.1",
