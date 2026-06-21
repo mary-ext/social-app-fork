@@ -609,7 +609,7 @@ msgstr "{name}'s favorite feeds and people - join me!"
 msgid "{name}'s starter pack"
 msgstr "{name}'s starter pack"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:248
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:263
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -7699,8 +7699,8 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:406
 #: src/view/com/auth/SplashScreen.tsx:89
 #: src/view/com/auth/SplashScreen.tsx:96
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:184
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:186
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:192
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
 #: src/view/shell/nav-sign-in-card.tsx:34
 #: src/view/shell/nav-sign-in-card.tsx:36
 msgid "Sign in"
