@@ -32,5 +32,6 @@ minimumReleaseAgeExclude:
   - '@typescript/native-preview@7.0.0-dev.20260621.1'
 patchedDependencies:
   '@base-ui/react': patches/@base-ui__react.patch
+  '@lingui/cli': patches/@lingui__cli.patch
   '@react-navigation/native-stack': patches/@react-navigation__native-stack.patch
   '@vanilla-extract/css': patches/@vanilla-extract__css.patch
