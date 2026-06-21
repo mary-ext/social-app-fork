@@ -7,12 +7,12 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
 import type { $type, Handle } from '@atcute/lexicons';
 
+import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { ScrollProvider } from '#/lib/ScrollContext';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
@@ -612,8 +612,6 @@ function ChatScrollComponent({
 }: ScrollViewProps & {
 	ref?: React.RefObject<ScrollView>;
 }) {
-	useSafeAreaInsets();
-
 	return (
 		<ScrollView
 			ref={ref}

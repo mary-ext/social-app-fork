@@ -3,7 +3,6 @@ import '#/styles/reset.css';
 import '#/styles/theme.css';
 
 import { Fragment, useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useLingui } from '@lingui/react/macro';
 
 import { Provider as HotkeysProvider } from '#/lib/hotkeys';
@@ -77,18 +76,16 @@ function InnerApp() {
 														<HiddenRepliesProvider>
 															<UnreadNotifsProvider>
 																<MutedThreadsProvider>
-																	<SafeAreaProvider>
-																		<ServiceConfigProvider>
-																			<HideBottomBarBorderProvider>
-																				<IntentDialogProvider>
-																					<HotkeysProvider>
-																						<Shell />
-																						<ToastOutlet />
-																					</HotkeysProvider>
-																				</IntentDialogProvider>
-																			</HideBottomBarBorderProvider>
-																		</ServiceConfigProvider>
-																	</SafeAreaProvider>
+																	<ServiceConfigProvider>
+																		<HideBottomBarBorderProvider>
+																			<IntentDialogProvider>
+																				<HotkeysProvider>
+																					<Shell />
+																					<ToastOutlet />
+																				</HotkeysProvider>
+																			</IntentDialogProvider>
+																		</HideBottomBarBorderProvider>
+																	</ServiceConfigProvider>
 																</MutedThreadsProvider>
 															</UnreadNotifsProvider>
 														</HiddenRepliesProvider>

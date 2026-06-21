@@ -1,10 +1,11 @@
 import { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
+
+import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 
 import { STALE } from '#/state/queries';
 import { profilesQueryKey } from '#/state/queries/profile';

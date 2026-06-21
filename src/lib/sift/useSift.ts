@@ -2,7 +2,8 @@
 
 import { useCallback, useId, useRef, useState } from 'react';
 import type { ViewStyle } from 'react-native';
-import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useSafeAreaFrame, useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 
 import { computeStyles } from './computeStyles';
 

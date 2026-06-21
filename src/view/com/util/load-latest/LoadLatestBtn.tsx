@@ -1,8 +1,8 @@
 import { StyleSheet, View, type ViewStyle } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HITSLOP_20 } from '#/lib/constants';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
+import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useMinimalShellFabTransform } from '#/lib/hooks/useMinimalShellTransform';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { useMediaQuery } from '#/lib/media-query';

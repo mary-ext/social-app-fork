@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLingui } from '@lingui/react/macro';
+
+import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 
 import { atoms as a, useTheme } from '#/alf';
 

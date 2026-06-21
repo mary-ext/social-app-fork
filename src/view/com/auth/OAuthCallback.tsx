@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLingui } from '@lingui/react/macro';
 
+import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useCallOnce } from '#/lib/once';
 
 import { useSessionApi } from '#/state/session';

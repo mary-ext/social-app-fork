@@ -3858,7 +3858,7 @@ msgstr ""
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:80
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
 #: src/screens/ProfileList/components/ErrorScreen.tsx:39
-#: src/view/com/auth/LoggedOut.tsx:66
+#: src/view/com/auth/LoggedOut.tsx:67
 #: src/view/com/profile/ProfileFollowers.tsx:89
 #: src/view/com/profile/ProfileFollowers.tsx:90
 #: src/view/screens/NotFound.tsx:51
@@ -7193,7 +7193,7 @@ msgstr ""
 msgid "Scroll right"
 msgstr ""
 
-#: src/components/dms/NewMessagesPill.tsx:52
+#: src/components/dms/NewMessagesPill.tsx:53
 msgid "Scroll to latest messages"
 msgstr "Scroll to latest messages"
 
@@ -7205,7 +7205,7 @@ msgstr "Scroll to the message this is replying to"
 msgid "Scroll to top"
 msgstr ""
 
-#: src/components/dms/NewMessagesPill.tsx:53
+#: src/components/dms/NewMessagesPill.tsx:54
 msgid "Scrolls the conversation to the most recent message"
 msgstr "Scrolls the conversation to the most recent message"
 
@@ -10066,7 +10066,7 @@ msgstr "Your report will be sent to <0>{title}</0>."
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/App.tsx:56
+#: src/App.tsx:55
 msgid "Your session expired. Please sign in again."
 msgstr "Your session expired. Please sign in again."
 

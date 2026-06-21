@@ -7,7 +7,8 @@ import {
 	type ViewProps,
 	type ViewStyle,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
 

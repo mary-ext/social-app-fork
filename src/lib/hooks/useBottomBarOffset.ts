@@ -1,5 +1,4 @@
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { clamp } from '#/lib/numbers';
 

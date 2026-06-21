@@ -16,7 +16,6 @@ const serverPort = 19006;
 const transpiledPaths = [
 	path.resolve(root, 'index.tsx'),
 	path.resolve(root, 'node_modules/react-native'),
-	path.resolve(root, 'node_modules/react-native-safe-area-context'),
 	path.resolve(root, 'node_modules/react-native-svg'),
 	path.resolve(root, 'src'),
 ];

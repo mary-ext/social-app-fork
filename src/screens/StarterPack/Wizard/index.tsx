@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Keyboard, ScrollView, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -9,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
+import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
