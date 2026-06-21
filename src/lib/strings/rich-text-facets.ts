@@ -2,7 +2,7 @@ import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import RichtextBuilder from '@atcute/bluesky-richtext-builder';
 import { type Token, tokenize } from '@atcute/bluesky-richtext-parser';
 import type { Did, GenericUri } from '@atcute/lexicons';
-import { countGraphemes } from 'unicode-segmenter/grapheme';
+import { getGraphemeLength } from '@atcute/util-text';
 
 import { toShortUrl } from './url-helpers';
 
@@ -41,7 +41,7 @@ export function getShortenedLength(text: string): number {
 	for (const token of tokenize(text)) {
 		shortened += token.type === 'autolink' ? toShortUrl(token.url) : token.raw;
 	}
-	return countGraphemes(shortened);
+	return getGraphemeLength(shortened);
 }
 
 /**

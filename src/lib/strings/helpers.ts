@@ -1,4 +1,4 @@
-import { countGraphemes } from 'unicode-segmenter/grapheme';
+import { isGraphemeLengthInRange } from '@atcute/util-text';
 
 export function enforceLen(
 	str: string,
@@ -26,7 +26,7 @@ export function enforceLen(
 }
 
 export function isOverMaxGraphemeCount({ text, maxCount }: { text: string; maxCount: number }) {
-	return countGraphemes(text) > maxCount;
+	return !isGraphemeLengthInRange(text, 0, maxCount);
 }
 
 export function countLines(str: string | undefined): number {

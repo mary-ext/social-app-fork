@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
+import { getGraphemeLength } from '@atcute/util-text';
 import { useLingui } from '@lingui/react/macro';
-import { countGraphemes } from 'unicode-segmenter/grapheme';
 
 import { HITSLOP_10, MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants';
 import { isBskyChatInviteUrl, isBskyPostUrl } from '#/lib/strings/url-helpers';
@@ -62,7 +62,7 @@ export function MessageComposer({
 	const onSubmit = (message: string, replyTo: ChatBskyConvoDefs.MessageView | null) => {
 		if (loading) return;
 		if (!hasEmbed && message.trim() === '') return;
-		const graphemeCount = countGraphemes(message);
+		const graphemeCount = getGraphemeLength(message);
 		if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
 			Toast.show(l`Message is too long (${graphemeCount}/${MAX_DM_GRAPHEME_LENGTH})`, { type: 'error' });
 			return;

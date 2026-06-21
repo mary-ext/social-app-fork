@@ -24,11 +24,11 @@ import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { isGraphemeLengthInRange } from '@atcute/util-text';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
-import { countGraphemes } from 'unicode-segmenter/grapheme';
 
 import * as apilib from '#/lib/api/index';
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
@@ -295,8 +295,8 @@ export const ComposePost = ({
 
 	// Clear error when composer content changes, but only if all posts are
 	// back within the character limit.
-	const allPostsWithinLimit = thread.posts.every(
-		(post) => countGraphemes(post.text) <= MAX_DRAFT_GRAPHEME_LENGTH,
+	const allPostsWithinLimit = thread.posts.every((post) =>
+		isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH),
 	);
 
 	const activePost = thread.posts[composerState.activePostIndex]!;
@@ -528,7 +528,7 @@ export const ComposePost = ({
 
 	const validateDraftTextOrError = useCallback((): boolean => {
 		const tooLong = composerState.thread.posts.some(
-			(post) => countGraphemes(post.text) > MAX_DRAFT_GRAPHEME_LENGTH,
+			(post) => !isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH),
 		);
 		if (tooLong) {
 			setError(
