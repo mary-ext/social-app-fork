@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, type ListRenderItemInfo, StyleSheet, View } from 'react-native';
+import { type ReactNode, useCallback, useMemo } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
-import { s } from '#/lib/styles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries/notifications/feed';
@@ -13,13 +11,15 @@ import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { List, type ListProps, type ListRef } from '#/view/com/util/List';
 import { NotificationFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
 import { Bell_Stroke2_Corner0_Rounded as BellIcon } from '#/components/icons/Bell';
+import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 
 import { NotificationFeedItem } from './NotificationFeedItem';
+
+const NOTIFICATION_ITEM_HEIGHT_ESTIMATE = 120;
 
 const EMPTY_FEED_ITEM = { _reactKey: '__empty__' } as const;
 const LOAD_MORE_ERROR_ITEM = { _reactKey: '__load_more_error__' } as const;
@@ -40,21 +40,15 @@ export function NotificationFeed({
 	filter,
 	enabled,
 	scrollElRef,
-	onPressTryAgain,
 	onScrolledDownChange,
 	ListHeaderComponent,
-	refreshNotifications,
 }: {
 	filter: 'all' | 'mentions';
 	enabled: boolean;
 	scrollElRef?: ListRef;
-	onPressTryAgain?: () => void;
 	onScrolledDownChange: (isScrolledDown: boolean) => void;
-	ListHeaderComponent?: ListProps['ListHeaderComponent'];
-	refreshNotifications: () => Promise<void>;
+	ListHeaderComponent?: ReactNode;
 }) {
-	const initialNumToRender = useInitialNumToRender();
-	const [isPTRing, setIsPTRing] = useState(false);
 	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const { data, isFetching, isFetched, isError, error, hasNextPage, isFetchingNextPage, fetchNextPage } =
@@ -87,19 +81,6 @@ export function NotificationFeed({
 		}
 		return arr;
 	}, [isFetched, isError, isEmpty, data]);
-
-	const onRefresh = useCallback(async () => {
-		try {
-			setIsPTRing(true);
-			await refreshNotifications();
-		} catch (err) {
-			logger.error('Failed to refresh notifications feed', {
-				message: err,
-			});
-		} finally {
-			setIsPTRing(false);
-		}
-	}, [refreshNotifications, setIsPTRing]);
 
 	const onEndReached = useCallback(async () => {
 		if (isFetching || !hasNextPage || isError) return;
@@ -143,48 +124,28 @@ export function NotificationFeed({
 		[moderationOpts, l, onPressRetryLoadMore, filter],
 	);
 
-	const FeedFooter = useCallback(
-		() =>
-			isFetchingNextPage ? (
-				<View style={styles.feedFooter}>
-					<ActivityIndicator />
-				</View>
-			) : (
-				<View />
-			),
-		[isFetchingNextPage],
-	);
-
-	useEffect(() => {
-		if (!enabled) {
-			setIsPTRing(false);
-		}
-	}, [enabled]);
+	const feedFooter = isFetchingNextPage ? (
+		<View style={styles.feedFooter}>
+			<ActivityIndicator />
+		</View>
+	) : null;
 
 	return (
-		<View style={s.hContentRegion}>
-			{error && <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />}
+		<>
+			{error && <ErrorMessage message={cleanError(error)} />}
 			<List
-				testID="notifsFeed"
 				ref={scrollElRef}
 				data={items}
+				estimateHeight={NOTIFICATION_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(item) => item._reactKey}
 				renderItem={renderItem}
 				ListHeaderComponent={ListHeaderComponent}
-				ListFooterComponent={FeedFooter}
-				refreshing={isPTRing}
-				onRefresh={() => void onRefresh()}
+				ListFooterComponent={feedFooter}
 				onEndReached={() => void onEndReached()}
 				onEndReachedThreshold={2}
 				onScrolledDownChange={onScrolledDownChange}
-				contentContainerStyle={s.contentContainer}
-				desktopFixedHeight
-				initialNumToRender={initialNumToRender}
-				windowSize={11}
-				sideBorders={false}
-				removeClippedSubviews={true}
 			/>
-		</View>
+		</>
 	);
 }
 

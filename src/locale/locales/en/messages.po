@@ -4770,7 +4770,7 @@ msgstr ""
 msgid "Load more suggested feeds"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:228
+#: src/view/screens/Notifications.tsx:227
 msgid "Load new notifications"
 msgstr ""
 
@@ -5477,7 +5477,7 @@ msgstr ""
 msgid "No messages yet"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeed.tsx:132
+#: src/view/com/notifications/NotificationFeed.tsx:113
 msgid "No notifications yet!"
 msgstr ""
 
@@ -8274,7 +8274,7 @@ msgstr ""
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeed.tsx:124
+#: src/view/com/notifications/NotificationFeed.tsx:105
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
@@ -9400,7 +9400,7 @@ msgstr ""
 msgid "Visit site"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:250
+#: src/view/screens/Notifications.tsx:249
 msgid "Visit your notification settings"
 msgstr ""
 
@@ -9757,7 +9757,7 @@ msgstr "You have been previously removed from this group and can’t join it usi
 msgid "You have blocked this user. You cannot view their content."
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:246
+#: src/view/screens/Notifications.tsx:245
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr ""
 

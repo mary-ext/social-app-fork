@@ -18,7 +18,6 @@ import { logger } from '#/logger';
 
 import { NotificationFeed } from '#/view/com/notifications/NotificationFeed';
 import { FAB } from '#/view/com/util/fab/FAB';
-import type { ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -29,6 +28,7 @@ import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/ico
 import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
 import * as Layout from '#/components/Layout';
 import { InlineLinkText, Link } from '#/components/Link';
+import { type ListMethods } from '#/components/List/List';
 import { Loader } from '#/components/Loader';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
@@ -217,7 +217,6 @@ function NotificationsTab({
 			<NotificationFeed
 				enabled={isFocusedAndActive}
 				filter={filter}
-				refreshNotifications={() => checkUnread({ invalidate: true })}
 				onScrolledDownChange={setIsScrolledDown}
 				scrollElRef={scrollElRef}
 				ListHeaderComponent={
