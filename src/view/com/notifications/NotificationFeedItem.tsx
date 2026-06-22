@@ -1,13 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import {
-	Animated,
-	type GestureResponderEvent,
-	type LayoutChangeEvent,
-	Pressable,
-	StyleSheet,
-	TouchableOpacity,
-	View,
-} from 'react-native';
+import { memo, type MouseEvent, useCallback, useMemo, useState } from 'react';
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
@@ -26,19 +17,18 @@ import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
+import { Collapsible } from '@base-ui/react/collapsible';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { MAX_POST_LINES } from '#/lib/constants';
-import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
 import { forceLTR } from '#/lib/strings/bidi';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { niceDate } from '#/lib/strings/time';
-import { s } from '#/lib/styles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { FeedNotification } from '#/state/queries/notifications/feed';
@@ -53,9 +43,9 @@ import { Post } from '#/view/com/post/Post';
 import { formatCount } from '#/view/com/util/numeric/format';
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 
-import { atoms as a, useTheme } from '#/alf';
+import { useTheme } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { BlockLink } from '#/components/BlockLink';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import {
@@ -69,17 +59,16 @@ import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icon
 import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
 import { StarterPack } from '#/components/icons/StarterPack';
 import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
-import { InlineLinkText, Link } from '#/components/Link';
 import * as MediaPreview from '#/components/MediaPreview';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import * as ProfileCard from '#/components/ProfileCard';
-import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Notification as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
-import { SubtleHover } from '#/components/SubtleHover';
-import { Text as WebText } from '#/components/Text';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { InlineLinkText } from '#/components/web/Link';
+import * as ProfileCard from '#/components/web/ProfileCard';
+import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { Tooltip } from '#/components/web/Tooltip';
 
 import { colors } from '#/styles/colors';
@@ -109,7 +98,6 @@ let NotificationFeedItem = ({
 	const t = useTheme();
 	const { t: l, i18n } = useLingui();
 	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
-	const [isHoveringAuthorsList, setIsHoveringAuthorsList] = useState(false);
 	const itemHref = useMemo(() => {
 		switch (item.type) {
 			case 'post-like':
@@ -153,14 +141,6 @@ let NotificationFeedItem = ({
 
 		return '';
 	}, [item]);
-
-	const onToggleAuthorsExpanded = (e?: GestureResponderEvent) => {
-		if (e) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
-		setIsAuthorsExpanded((currentlyExpanded) => !currentlyExpanded);
-	};
 
 	const onBeforePress = useCallback(() => {
 		unstableCacheProfileView(queryClient, item.notification.author);
@@ -207,7 +187,7 @@ let NotificationFeedItem = ({
 
 	if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
 		// don't render anything if the target post was deleted or unfindable
-		return <View />;
+		return null;
 	}
 
 	if (item.type === 'reply' || item.type === 'mention' || item.type === 'quote') {
@@ -216,37 +196,35 @@ let NotificationFeedItem = ({
 		}
 		const isHighlighted = highlightUnread && !item.notification.isRead;
 		return (
-			<View testID={`feedItem-by-${item.notification.author.handle}`}>
-				<Post
-					post={item.subject}
-					style={
-						isHighlighted
-							? {
-									backgroundColor: t.palette.primary_25,
-									borderColor: t.palette.primary_100,
-								}
-							: undefined
-					}
-					hideTopBorder={hideTopBorder}
-				/>
-			</View>
+			<Post
+				post={item.subject}
+				style={
+					isHighlighted
+						? {
+								backgroundColor: t.palette.primary_25,
+								borderColor: t.palette.primary_100,
+							}
+						: undefined
+				}
+				hideTopBorder={hideTopBorder}
+			/>
 		);
 	}
 
 	const firstAuthorLink = (
-		<ProfileHoverCard did={firstAuthor.profile.did} inline>
+		<ProfileHoverCard did={firstAuthor.profile.did}>
 			<InlineLinkText
 				key={firstAuthor.href}
-				style={[t.atoms.text, a.font_semi_bold, a.text_md, a.leading_tight]}
 				to={firstAuthor.href}
-				disableMismatchWarning
-				emoji
 				label={l`Go to ${firstAuthorName}'s profile`}
+				color="text"
+				weight="semiBold"
+				size="md"
 			>
 				{forceLTR(firstAuthorName)}
-				<View style={[a.relative, { paddingLeft: 3, paddingRight: 2, top: 2 }]}>
+				<span className={css.badgeWrap}>
 					<ProfileBadges profile={firstAuthor.profile} size="md" />
-				</View>
+				</span>
 			</InlineLinkText>
 		</ProfileHoverCard>
 	);
@@ -256,7 +234,7 @@ let NotificationFeedItem = ({
 
 	let a11yLabel = '';
 	let notificationContent: React.ReactElement;
-	let icon = <HeartIconFilled size="xl" fill={colors.pink} />;
+	let icon = <HeartIconFilled size="lg" fill={colors.pink} />;
 
 	if (item.type === 'post-like') {
 		a11yLabel = hasMultipleAuthors
@@ -268,7 +246,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -290,7 +268,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -302,7 +280,7 @@ let NotificationFeedItem = ({
 		) : (
 			<Trans>{firstAuthorLink} reposted your post</Trans>
 		);
-		icon = <RepostIcon size="xl" fill={colors.positive_500} />;
+		icon = <RepostIcon size="lg" fill={colors.positive_500} />;
 	} else if (item.type === 'follow') {
 		if (isFollowBack && !hasMultipleAuthors) {
 			/*
@@ -321,7 +299,7 @@ let NotificationFeedItem = ({
 			notificationContent = hasMultipleAuthors ? (
 				<Trans>
 					{firstAuthorLink} and{' '}
-					<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+					<Text weight="semiBold">
 						<Plural
 							value={additionalAuthorsCount}
 							one={`${formattedAuthorsCount} other`}
@@ -334,11 +312,11 @@ let NotificationFeedItem = ({
 				<Trans>{firstAuthorLink} followed you</Trans>
 			);
 		}
-		icon = <PersonPlusIcon size="xl" fill={colors.primary_500} />;
+		icon = <PersonPlusIcon size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'contact-match') {
 		a11yLabel = l`Your contact ${firstAuthorName} is on Bluesky`;
 		notificationContent = <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>;
-		icon = <ContactsIconFilled size="xl" fill={colors.primary_500} />;
+		icon = <ContactsIconFilled size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'feedgen-like') {
 		a11yLabel = hasMultipleAuthors
 			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
@@ -349,7 +327,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -371,7 +349,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -383,11 +361,7 @@ let NotificationFeedItem = ({
 		) : (
 			<Trans>{firstAuthorLink} signed up with your starter pack</Trans>
 		);
-		icon = (
-			<View style={{ height: 30, width: 30 }}>
-				<StarterPack width={30} gradient="sky" />
-			</View>
-		);
+		icon = <StarterPack width={24} gradient="sky" />;
 	} else if (item.type === 'verified') {
 		a11yLabel = hasMultipleAuthors
 			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
@@ -398,7 +372,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -421,7 +395,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -444,7 +418,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -466,7 +440,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -493,7 +467,7 @@ let NotificationFeedItem = ({
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				New posts from {firstAuthorLink} and{' '}
-				<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+				<Text weight="semiBold">
 					<Plural
 						value={additionalAuthorsCount}
 						one={`${formattedAuthorsCount} other`}
@@ -512,163 +486,172 @@ let NotificationFeedItem = ({
 	}
 	a11yLabel += ` · ${niceTimestamp}`;
 
+	const card = (
+		<div className={css.outer({ topBorder: !hideTopBorder, unread: !item.notification.isRead })}>
+			<div className={css.iconColumn}>{icon}</div>
+
+			<div className={css.content}>
+				<AuthorsList
+					authors={authors}
+					isExpanded={isAuthorsExpanded}
+					onOpenChange={setIsAuthorsExpanded}
+					moderationOpts={moderationOpts}
+					showDmButton={item.type === 'starterpack-joined'}
+				/>
+
+				<Text className={css.notifText}>
+					{notificationContent}
+					<TimeElapsed timestamp={item.notification.indexedAt}>
+						{({ timeElapsed }) => (
+							<>
+								{/* make sure there's whitespace around the middot -sfn */}
+								<Text color="textContrastMedium"> &middot; </Text>
+								<Tooltip label={niceTimestamp}>
+									<Text color="textContrastMedium">{timeElapsed}</Text>
+								</Tooltip>
+							</>
+						)}
+					</TimeElapsed>
+				</Text>
+
+				{(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
+				(item.type === 'contact-match' && !item.notification.author.viewer?.following) ? (
+					<FollowBackButton profile={item.notification.author} />
+				) : null}
+
+				{item.type === 'post-like' ||
+				item.type === 'repost' ||
+				item.type === 'like-via-repost' ||
+				item.type === 'repost-via-repost' ||
+				item.type === 'subscribed-post' ? (
+					<div className={css.additionalWrap}>
+						<AdditionalPostText post={item.subject} />
+					</div>
+				) : null}
+
+				{item.type === 'feedgen-like' && item.subjectUri ? (
+					<FeedSourceCard
+						feedUri={item.subjectUri}
+						link={false}
+						style={[
+							t.atoms.bg,
+							t.atoms.border_contrast_low,
+							{ borderRadius: 8, borderWidth: 1, marginTop: 6, padding: 12 },
+						]}
+						showLikes
+					/>
+				) : null}
+				{item.type === 'starterpack-joined' ? (
+					<div className={css.starterPackBox}>
+						<StarterPackCard starterPack={item.subject} />
+					</div>
+				) : null}
+			</div>
+		</div>
+	);
+
+	if (!itemHref) {
+		return card;
+	}
+
 	return (
-		<Link
-			label={a11yLabel}
-			testID={`feedItem-by-${item.notification.author.handle}`}
-			style={[
-				a.flex_row,
-				a.align_start,
-				{ padding: 10 },
-				a.pr_lg,
-				t.atoms.border_contrast_low,
-				item.notification.isRead
-					? undefined
-					: {
-							backgroundColor: t.palette.primary_25,
-							borderColor: t.palette.primary_100,
-						},
-				!hideTopBorder && a.border_t,
-				a.overflow_hidden,
-			]}
-			to={itemHref}
-			accessible={!isAuthorsExpanded}
-			accessibilityActions={
-				hasMultipleAuthors
-					? [
-							{
-								name: 'toggleAuthorsExpanded',
-								label: isAuthorsExpanded ? l`Collapse list of users` : l`Expand list of users`,
-							},
-						]
-					: [
-							{
-								name: 'viewProfile',
-								label: l`View ${authors[0]!.profile.displayName || authors[0]!.profile.handle}'s profile`,
-							},
-						]
-			}
-			onAccessibilityAction={(e) => {
-				if (e.nativeEvent.actionName === 'activate') {
-					onBeforePress();
-				}
-				if (e.nativeEvent.actionName === 'toggleAuthorsExpanded') {
-					onToggleAuthorsExpanded();
-				}
-			}}
-		>
-			{({ hovered }) => (
-				<>
-					<SubtleHover hover={hovered && !isHoveringAuthorsList} />
-					<View style={[styles.layoutIcon, a.pr_sm]}>
-						{/* TODO: Prevent conditional rendering and move toward composable
-          notifications for clearer accessibility labeling */}
-						{icon}
-					</View>
-					<View style={[a.flex_1]}>
-						<ExpandListPressable
-							hasMultipleAuthors={hasMultipleAuthors}
-							onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-							onHoverIn={() => setIsHoveringAuthorsList(true)}
-							onHoverOut={() => setIsHoveringAuthorsList(false)}
-						>
-							<CondensedAuthorsList
-								visible={!isAuthorsExpanded}
-								authors={authors}
-								onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-								showDmButton={item.type === 'starterpack-joined'}
-							/>
-							<ExpandedAuthorsList
-								visible={isAuthorsExpanded}
-								authors={authors}
-								moderationOpts={moderationOpts}
-							/>
-							<Text
-								style={[a.flex_row, a.flex_wrap, { paddingTop: 6 }, a.self_start, a.text_md, a.leading_snug]}
-								accessibilityHint=""
-								accessibilityLabel={a11yLabel}
-							>
-								{notificationContent}
-								<TimeElapsed timestamp={item.notification.indexedAt}>
-									{({ timeElapsed }) => (
-										<>
-											{/* make sure there's whitespace around the middot -sfn */}
-											<Text style={[a.text_md, t.atoms.text_contrast_medium]}> &middot; </Text>
-											<Tooltip label={niceTimestamp}>
-												<WebText color="textContrastMedium" size="md">
-													{timeElapsed}
-												</WebText>
-											</Tooltip>
-										</>
-									)}
-								</TimeElapsed>
-							</Text>
-						</ExpandListPressable>
-						{(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
-						(item.type === 'contact-match' && !item.notification.author.viewer?.following) ? (
-							<FollowBackButton profile={item.notification.author} />
-						) : null}
-						{item.type === 'post-like' ||
-						item.type === 'repost' ||
-						item.type === 'like-via-repost' ||
-						item.type === 'repost-via-repost' ||
-						item.type === 'subscribed-post' ? (
-							<View style={[a.pt_2xs]}>
-								<AdditionalPostText post={item.subject} />
-							</View>
-						) : null}
-						{item.type === 'feedgen-like' && item.subjectUri ? (
-							<FeedSourceCard
-								feedUri={item.subjectUri}
-								link={false}
-								style={[t.atoms.bg, t.atoms.border_contrast_low, a.border, a.p_md, styles.feedcard]}
-								showLikes
-							/>
-						) : null}
-						{item.type === 'starterpack-joined' ? (
-							<View>
-								<View style={[a.border, a.p_sm, a.rounded_sm, a.mt_sm, t.atoms.border_contrast_low]}>
-									<StarterPackCard starterPack={item.subject} />
-								</View>
-							</View>
-						) : null}
-					</View>
-				</>
-			)}
-		</Link>
+		<BlockLink to={itemHref} label={a11yLabel} onBeforePress={onBeforePress}>
+			{card}
+		</BlockLink>
 	);
 };
 NotificationFeedItem = memo(NotificationFeedItem);
 export { NotificationFeedItem };
 
-function ExpandListPressable({
-	hasMultipleAuthors,
-	children,
-	onToggleAuthorsExpanded,
-	onHoverIn,
-	onHoverOut,
+function AuthorsList({
+	authors,
+	isExpanded,
+	onOpenChange,
+	moderationOpts,
+	showDmButton,
 }: {
-	hasMultipleAuthors: boolean;
-	children: React.ReactNode;
-	onToggleAuthorsExpanded: (e: GestureResponderEvent) => void;
-	onHoverIn?: () => void;
-	onHoverOut?: () => void;
+	authors: Author[];
+	isExpanded: boolean;
+	onOpenChange: (open: boolean) => void;
+	moderationOpts: ModerationOptions;
+	showDmButton: boolean;
 }) {
-	if (hasMultipleAuthors) {
+	const { t: l } = useLingui();
+
+	// a single author needs no toggle: just the avatar (and the say-hello affordance for starter packs)
+	if (authors.length < 2) {
 		return (
-			<Pressable
-				onPress={onToggleAuthorsExpanded}
-				onHoverIn={onHoverIn}
-				onHoverOut={onHoverOut}
-				style={[styles.expandedAuthorsTrigger]}
-				accessible={false}
-			>
-				{children}
-			</Pressable>
+			<div className={css.avatarsRow}>
+				<PreviewableUserAvatar
+					size={css.NOTIF_AVI_SIZE}
+					profile={authors[0]!.profile}
+					moderation={getDisplayRestrictions(authors[0]!.moderation, DisplayContext.ProfileMedia)}
+					type={authors[0]!.profile.associated?.labeler ? 'labeler' : 'user'}
+				/>
+				{showDmButton ? <SayHelloBtn profile={authors[0]!.profile} /> : null}
+			</div>
 		);
-	} else {
-		return <>{children}</>;
 	}
+
+	return (
+		<Collapsible.Root open={isExpanded} onOpenChange={onOpenChange}>
+			<Collapsible.Trigger
+				// a non-native button so the trigger can hold the interactive previewable avatars; an avatar's
+				// own click `preventDefault`s, which Base UI honors and so skips the toggle
+				nativeButton={false}
+				render={<div />}
+				className={css.authorsTrigger}
+				aria-label={isExpanded ? l`Collapse list of users` : l`Expand list of users`}
+				data-authors-trigger
+			>
+				{isExpanded ? (
+					<>
+						<div className={css.authorChevron}>
+							<ChevronUpIcon size="sm" fill={colors.textContrastHigh} />
+						</div>
+						<Text color="textContrastHigh" weight="semiBold">
+							<Trans context="action">Hide</Trans>
+						</Text>
+					</>
+				) : (
+					<>
+						{authors.slice(0, MAX_AUTHORS).map((author) => (
+							<PreviewableUserAvatar
+								key={author.href}
+								size={css.NOTIF_AVI_SIZE}
+								profile={author.profile}
+								moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
+								type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+							/>
+						))}
+
+						{authors.length > MAX_AUTHORS ? (
+							<Text weight="semiBold" color="textContrastMedium" className={css.moreCount}>
+								+{authors.length - MAX_AUTHORS}
+							</Text>
+						) : null}
+
+						<div className={css.authorChevron}>
+							<ChevronDownIcon size="sm" fill={colors.textContrastMedium} />
+						</div>
+					</>
+				)}
+			</Collapsible.Trigger>
+
+			<Collapsible.Panel className={css.expandPanel}>
+				<div className={css.expandContent}>
+					{authors.map((author, i) => (
+						<ExpandedAuthorProfileCard
+							key={author.profile.did}
+							author={author}
+							moderationOpts={moderationOpts}
+							isLast={i === authors.length - 1}
+						/>
+					))}
+				</div>
+			</Collapsible.Panel>
+		</Collapsible.Root>
+	);
 }
 
 function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
@@ -682,8 +665,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 		return null;
 	}
 
-	const onPressFollow = async (e: GestureResponderEvent) => {
-		e.preventDefault();
+	const onPressFollow = async (e: MouseEvent<HTMLButtonElement>) => {
 		e.stopPropagation();
 
 		try {
@@ -698,8 +680,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 		}
 	};
 
-	const onPressUnfollow = async (e: GestureResponderEvent) => {
-		e.preventDefault();
+	const onPressUnfollow = async (e: MouseEvent<HTMLButtonElement>) => {
 		e.stopPropagation();
 
 		try {
@@ -734,14 +715,13 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 	});
 
 	return (
-		<View style={[a.pt_sm]}>
+		<div className={css.followBtnWrap}>
 			{isFollowing ? (
 				<Button
 					label={followingLabel}
 					color="secondary"
 					size="small"
-					style={[a.self_start]}
-					onPress={(e) => void onPressUnfollow(e)}
+					onClick={(e) => void onPressUnfollow(e)}
 				>
 					<ButtonIcon icon={CheckIcon} />
 					<ButtonText>
@@ -753,14 +733,13 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 					label={isFollowedBy ? l`Follow back` : l`Follow`}
 					color="primary"
 					size="small"
-					style={[a.self_start]}
-					onPress={(e) => void onPressFollow(e)}
+					onClick={(e) => void onPressFollow(e)}
 				>
 					<ButtonIcon icon={PlusIcon} />
 					<ButtonText>{isFollowedBy ? <Trans>Follow back</Trans> : <Trans>Follow</Trans>}</ButtonText>
 				</Button>
 			)}
-		</View>
+		</div>
 	);
 }
 
@@ -803,127 +782,14 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			variant="ghost"
 			color="primary"
 			size="small"
-			style={[a.self_center, { marginLeft: 'auto' }]}
+			className={css.sayHelloBtn}
 			disabled={isLoading}
-			onPress={() => void onPressSayHello()}
+			onClick={() => void onPressSayHello()}
 		>
 			<ButtonText>
 				<Trans>Say hello!</Trans>
 			</ButtonText>
 		</Button>
-	);
-}
-
-function CondensedAuthorsList({
-	visible,
-	authors,
-	onToggleAuthorsExpanded,
-	showDmButton = true,
-}: {
-	visible: boolean;
-	authors: Author[];
-	onToggleAuthorsExpanded: (e: GestureResponderEvent) => void;
-	showDmButton?: boolean;
-}) {
-	const t = useTheme();
-	const { t: l } = useLingui();
-
-	if (!visible) {
-		return (
-			<View style={[a.flex_row, a.align_center]}>
-				<TouchableOpacity
-					style={styles.expandedAuthorsCloseBtn}
-					onPress={onToggleAuthorsExpanded}
-					accessibilityRole="button"
-					accessibilityLabel={l`Hide user list`}
-					accessibilityHint={l`Collapses list of users for a given notification`}
-				>
-					<ChevronUpIcon size="md" fill={colors.textContrastHigh} className={css.chevronUp} />
-					<Text style={[a.text_md, t.atoms.text_contrast_high]}>
-						<Trans context="action">Hide</Trans>
-					</Text>
-				</TouchableOpacity>
-			</View>
-		);
-	}
-	if (authors.length === 1) {
-		return (
-			<View style={[a.flex_row, a.align_center]}>
-				<PreviewableUserAvatar
-					size={35}
-					profile={authors[0]!.profile}
-					moderation={getDisplayRestrictions(authors[0]!.moderation, DisplayContext.ProfileMedia)}
-					type={authors[0]!.profile.associated?.labeler ? 'labeler' : 'user'}
-				/>
-				{showDmButton ? <SayHelloBtn profile={authors[0]!.profile} /> : null}
-			</View>
-		);
-	}
-	return (
-		<TouchableOpacity accessibilityRole="none" onPress={onToggleAuthorsExpanded}>
-			<View style={[a.flex_row, a.align_center]}>
-				{authors.slice(0, MAX_AUTHORS).map((author) => (
-					<View key={author.href} style={s.mr5}>
-						<PreviewableUserAvatar
-							size={35}
-							profile={author.profile}
-							moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
-							type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-						/>
-					</View>
-				))}
-				{authors.length > MAX_AUTHORS ? (
-					<Text style={[a.font_semi_bold, { paddingLeft: 6 }, t.atoms.text_contrast_medium]}>
-						+{authors.length - MAX_AUTHORS}
-					</Text>
-				) : undefined}
-				<ChevronDownIcon size="md" fill={colors.textContrastMedium} className={css.chevronDown} />
-			</View>
-		</TouchableOpacity>
-	);
-}
-
-function ExpandedAuthorsList({
-	visible,
-	authors,
-	moderationOpts,
-}: {
-	visible: boolean;
-	authors: Author[];
-	moderationOpts: ModerationOptions;
-}) {
-	const heightInterp = useAnimatedValue(visible ? 1 : 0);
-	const [measuredHeight, setMeasuredHeight] = useState(0);
-	useEffect(() => {
-		Animated.timing(heightInterp, {
-			toValue: visible ? 1 : 0,
-			duration: 200,
-			useNativeDriver: false,
-		}).start();
-	}, [heightInterp, visible]);
-	const onInnerLayout = (e: LayoutChangeEvent) => {
-		if (measuredHeight === 0) {
-			setMeasuredHeight(e.nativeEvent.layout.height);
-		}
-	};
-
-	const heightStyle = {
-		height: Animated.multiply(heightInterp, measuredHeight),
-		opacity: heightInterp,
-	};
-	return (
-		<Animated.View style={[a.overflow_hidden, heightStyle]}>
-			<View onLayout={onInnerLayout} style={[a.pt_sm, a.pb_md]}>
-				{authors.map((author, i) => (
-					<ExpandedAuthorProfileCard
-						key={author.profile.did}
-						author={author}
-						moderationOpts={moderationOpts}
-						isLast={i === authors.length - 1}
-					/>
-				))}
-			</View>
-		</Animated.View>
 	);
 }
 
@@ -939,7 +805,7 @@ function ExpandedAuthorProfileCard({
 	const profile = useProfileShadow(author.profile);
 	const isFollowing = !!profile.viewer?.following;
 	return (
-		<ProfileCard.Link profile={author.profile} style={isLast ? undefined : a.pb_md}>
+		<ProfileCard.Link profile={author.profile} className={isLast ? undefined : css.expandCardGap}>
 			<ProfileCard.Outer>
 				<ProfileCard.Header>
 					<ProfileCard.Avatar profile={author.profile} moderationOpts={moderationOpts} />
@@ -947,7 +813,7 @@ function ExpandedAuthorProfileCard({
 					<ProfileCard.FollowButton
 						profile={author.profile}
 						moderationOpts={moderationOpts}
-						size="tiny"
+						size="small"
 						variant={isFollowing ? 'ghost' : 'solid'}
 						color={isFollowing ? 'secondary' : 'primary_subtle'}
 						withIcon={isFollowing}
@@ -959,58 +825,26 @@ function ExpandedAuthorProfileCard({
 }
 
 function AdditionalPostText({ post }: { post?: AppBskyFeedDefs.PostView }) {
-	const t = useTheme();
-	if (post) {
-		const record = post.record as AppBskyFeedPost.Main;
-		const text = record.text;
-
-		return (
-			<>
-				{text?.length > 0 && (
-					<Text
-						emoji
-						style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
-						numberOfLines={MAX_POST_LINES}
-					>
-						{text}
-					</Text>
-				)}
-				<MediaPreview.Embed embed={post.embed} style={styles.additionalPostImages} />
-			</>
-		);
+	if (!post) {
+		return null;
 	}
-}
+	const record = post.record as AppBskyFeedPost.Main;
+	const text = record.text;
 
-const styles = StyleSheet.create({
-	layoutIcon: {
-		width: 60,
-		alignItems: 'flex-end',
-		paddingTop: 2,
-	},
-	icon: {
-		marginRight: 10,
-		marginTop: 4,
-	},
-	additionalPostImages: {
-		marginTop: 5,
-		marginLeft: 2,
-		opacity: 0.8,
-	},
-	feedcard: {
-		borderRadius: 8,
-		marginTop: 6,
-	},
-	addedContainer: {
-		paddingTop: 4,
-		paddingLeft: 36,
-	},
-	expandedAuthorsTrigger: {
-		zIndex: 1,
-	},
-	expandedAuthorsCloseBtn: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		paddingTop: 10,
-		paddingBottom: 6,
-	},
-});
+	return (
+		<>
+			{text?.length > 0 && (
+				<Text
+					size="md_sub"
+					color="textContrastMedium"
+					numberOfLines={MAX_POST_LINES}
+					className={css.additionalPostText}
+				>
+					{text}
+				</Text>
+			)}
+
+			<MediaPreview.Embed embed={post.embed} style={{ marginLeft: 2, marginTop: 5, opacity: 0.8 }} />
+		</>
+	);
+}

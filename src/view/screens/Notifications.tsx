@@ -28,7 +28,7 @@ import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/ico
 import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
 import * as Layout from '#/components/Layout';
 import { InlineLinkText, Link } from '#/components/Link';
-import { type ListMethods } from '#/components/List/List';
+import type { ListMethods } from '#/components/List/List';
 import { Loader } from '#/components/Loader';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
