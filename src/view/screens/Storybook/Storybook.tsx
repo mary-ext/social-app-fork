@@ -16,7 +16,6 @@ import { Dialogs } from './Dialogs';
 import { Forms } from './Forms';
 import { Icons } from './Icons';
 import { Links } from './Links';
-import { Settings } from './Settings';
 import { Shadows } from './Shadows';
 import { Spacing } from './Spacing';
 import { Theming } from './Theming';
@@ -95,7 +94,6 @@ export default function Storybook() {
 						<Breakpoints />
 						<Dialogs />
 						<Admonitions />
-						<Settings />
 
 						<Button
 							color="primary"

@@ -7,7 +7,6 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
 import { AutosizedTextarea } from '#/components/forms/AutosizedTextarea';
-import { DateField, LabelText } from '#/components/forms/DateField';
 import * as SegmentedControl from '#/components/forms/SegmentedControl';
 import * as TextField from '#/components/forms/TextField';
 import * as Toggle from '#/components/forms/Toggle';
@@ -25,7 +24,6 @@ export function Forms() {
 	const [segmentedControlValue, setSegmentedControlValue] = useState<'hide' | 'warn' | 'show'>('warn');
 
 	const [value, setValue] = useState('');
-	const [date, setDate] = useState('2001-01-01');
 	const [lang, setLang] = useState('en');
 	const langItems = APP_LANGUAGES.map((l) => ({ label: l.name, value: l.code2 }));
 
@@ -121,21 +119,6 @@ export function Forms() {
 						value={value}
 						onChangeText={setValue}
 						label="Text field"
-					/>
-				</View>
-
-				<H3>DateField</H3>
-
-				<View style={[a.w_full]}>
-					<LabelText>Date</LabelText>
-					<DateField
-						testID="date"
-						value={date}
-						onChangeDate={(date) => {
-							console.log(date);
-							setDate(date);
-						}}
-						label="Input"
 					/>
 				</View>
 			</View>
