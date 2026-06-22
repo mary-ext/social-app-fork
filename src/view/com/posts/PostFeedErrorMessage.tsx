@@ -23,6 +23,7 @@ import { EmptyState } from '../util/EmptyState';
 import { ErrorMessage } from '../util/error/ErrorMessage';
 import { Button } from '../util/forms/Button';
 import { Text } from '../util/text/Text';
+import * as css from './PostFeedErrorMessage.css';
 
 export enum KnownError {
 	Block = 'Block',
@@ -66,14 +67,7 @@ export function PostFeedErrorMessage({
 	}
 
 	if (knownError === KnownError.Block) {
-		return (
-			<EmptyState
-				icon={WarningIcon}
-				iconSize="2xl"
-				message={l`Posts hidden`}
-				style={{ paddingVertical: 40 }}
-			/>
-		);
+		return <EmptyState icon={WarningIcon} iconSize="2xl" message={l`Posts hidden`} className={css.empty} />;
 	}
 
 	return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;

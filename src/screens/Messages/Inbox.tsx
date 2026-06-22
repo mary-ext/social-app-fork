@@ -40,6 +40,7 @@ import { colors } from '#/styles/colors';
 import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
 import { RequestListItem } from './components/RequestListItem';
 import { useIsWithinSplitView } from './components/splitView/context';
+import * as css from './Inbox.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>;
 
@@ -196,7 +197,7 @@ function RequestList({
 								})}
 								icon={InboxLargeIcon}
 								iconSize="4xl"
-								textStyle={t.atoms.text}
+								messageColor="text"
 								iconColor={t.atoms.text.color}
 								button={
 									isWithinSplitView
@@ -216,7 +217,7 @@ function RequestList({
 												icon: ArrowLeftIcon,
 											}
 								}
-								style={[a.h_full, a.justify_center, a.pb_5xl]}
+								className={css.empty}
 							/>
 						)}
 					</>

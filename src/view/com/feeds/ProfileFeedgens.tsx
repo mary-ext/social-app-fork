@@ -136,10 +136,9 @@ export function ProfileFeedgens({ did, enabled, style, testID }: ProfileFeedgens
 				}
 				return (
 					<EmptyState
-						style={{ width: '100%' }}
 						icon={HashtagWideIcon}
 						message={isSelf ? l`You haven't made any custom feeds yet.` : l`No custom feeds yet`}
-						textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+						messageColor="textContrastMedium"
 						button={
 							isSelf
 								? {

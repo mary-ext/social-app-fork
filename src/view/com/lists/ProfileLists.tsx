@@ -138,7 +138,7 @@ export function ProfileLists({ did, enabled, style, testID }: ProfileListsProps)
 					<EmptyState
 						icon={ListIcon}
 						message={isSelf ? l`You haven't created any lists yet.` : l`No lists`}
-						textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+						messageColor="textContrastMedium"
 						button={
 							isSelf
 								? {

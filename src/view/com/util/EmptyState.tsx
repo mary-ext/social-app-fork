@@ -1,114 +1,95 @@
-import { isValidElement } from 'react';
-import { type StyleProp, type TextStyle, type ViewStyle, View } from 'react-native';
+import { type ComponentProps, type ComponentType, isValidElement, type ReactElement } from 'react';
+import { clsx } from 'clsx';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { useBreakpoints } from '#/alf';
 
-import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
+import type { Props as IconProps } from '#/components/icons/common';
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
-import { Text } from '#/components/Typography';
+import { Text, type TextProps } from '#/components/Text';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { colors } from '#/styles/colors';
 
-type EmptyStateIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+import * as css from './EmptyState.css';
 
-export type EmptyStateIcon = React.ComponentType<{
-	size?: EmptyStateIconSize;
-	style?: { color: string };
-}>;
+type ButtonColor = NonNullable<ComponentProps<typeof Button>['color']>;
+type ButtonSize = NonNullable<ComponentProps<typeof Button>['size']>;
 
-export type EmptyStateButtonProps = Omit<ButtonProps, 'children' | 'label'> & {
+export type EmptyStateIcon = ComponentType<IconProps>;
+
+export type EmptyStateButtonProps = {
+	color?: ButtonColor;
+	icon?: EmptyStateIcon;
 	label: string;
+	onPress: () => void;
+	size?: ButtonSize;
 	text: string;
-	icon?: React.ComponentProps<typeof ButtonIcon>['icon'];
 };
 
 export function EmptyState({
-	testID,
 	icon,
 	iconSize = '3xl',
 	iconColor,
 	message,
-	style,
-	textStyle,
+	messageColor = 'textContrastHigh',
 	button,
+	className,
 }: {
-	testID?: string;
-	icon?: EmptyStateIcon | React.ReactElement | null;
-	iconSize?: EmptyStateIconSize;
+	icon?: EmptyStateIcon | ReactElement | null;
+	iconSize?: IconProps['size'];
 	iconColor?: string;
 	message: string;
-	style?: StyleProp<ViewStyle>;
-	textStyle?: StyleProp<TextStyle>;
+	messageColor?: TextProps['color'];
 	button?: EmptyStateButtonProps;
+	className?: string;
 }) {
-	const t = useTheme();
 	const { gtMobile, gtTablet } = useBreakpoints();
-
-	const placeholderIcon = <EditIcon size="2xl" fill={colors.textContrastMedium} />;
 
 	const renderIcon = () => {
 		if (icon === null) {
 			return null;
 		}
-
 		if (!icon) {
-			return placeholderIcon;
+			return <EditIcon size="2xl" fill={colors.textContrastMedium} />;
 		}
-
 		if (isValidElement(icon)) {
 			return icon;
 		}
-
-		if (typeof icon === 'function' || (typeof icon === 'object' && icon && 'render' in icon)) {
-			const IconComponent = icon;
-			return (
-				<IconComponent size={iconSize} style={{ color: iconColor ?? t.atoms.text_contrast_low.color }} />
-			);
-		}
-
-		return placeholderIcon;
+		const IconComponent = icon as EmptyStateIcon;
+		return <IconComponent size={iconSize} fill={iconColor ?? colors.textContrastLow} />;
 	};
 
 	return (
-		<View testID={testID} style={[a.w_full, style]}>
-			<View
-				style={[
-					a.flex_row,
-					a.align_center,
-					a.justify_center,
-					a.self_center,
-					a.rounded_full,
-					a.mt_5xl,
-					{ height: 64, width: 64 },
-					isValidElement(icon) ? a.bg_transparent : [gtTablet && { marginTop: 50 }],
-				]}
-			>
+		<div className={clsx(css.root, className)}>
+			<div className={clsx(css.iconBox, !isValidElement(icon) && gtTablet && css.iconBoxTablet)}>
 				{renderIcon()}
-			</View>
+			</div>
 			<Text
-				style={[
-					t.atoms.text_contrast_high,
-					{ maxWidth: gtMobile ? '40%' : '60%' },
-					a.pt_xs,
-					a.font_medium,
-					a.text_md,
-					a.leading_snug,
-					a.text_center,
-					a.self_center,
-					!button && a.mb_5xl,
-					textStyle,
-				]}
+				className={clsx(
+					css.message,
+					gtMobile ? css.messageNarrow : css.messageWide,
+					!button && css.messageGap,
+				)}
+				size="md"
+				weight="medium"
+				color={messageColor}
+				align="center"
 			>
 				{message}
 			</Text>
 			{button && (
-				<View style={[a.flex_shrink, a.mt_md, a.self_center, a.mb_5xl]}>
-					<Button {...button}>
+				<div className={css.buttonWrap}>
+					<Button
+						label={button.label}
+						onClick={button.onPress}
+						size={button.size ?? 'small'}
+						color={button.color}
+					>
 						{button.icon && <ButtonIcon icon={button.icon} />}
 						<ButtonText>{button.text}</ButtonText>
 					</Button>
-				</View>
+				</div>
 			)}
-		</View>
+		</div>
 	);
 }

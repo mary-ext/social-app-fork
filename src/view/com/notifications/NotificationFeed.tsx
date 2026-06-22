@@ -1,5 +1,4 @@
 import { type ReactNode, useCallback, useMemo } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -11,13 +10,15 @@ import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { NotificationFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
 import { Bell_Stroke2_Corner0_Rounded as BellIcon } from '#/components/icons/Bell';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
+import { Loader } from '#/components/Loader';
 
+import * as css from './NotificationFeed.css';
 import { NotificationFeedItem } from './NotificationFeedItem';
+import { NotificationFeedLoadingPlaceholder } from './NotificationFeedLoadingPlaceholder';
 
 const NOTIFICATION_ITEM_HEIGHT_ESTIMATE = 120;
 
@@ -110,7 +111,7 @@ export function NotificationFeed({
 				if (item === LOADING_ITEM) {
 					return <NotificationFeedLoadingPlaceholder />;
 				}
-				return <EmptyState icon={BellIcon} message={l`No notifications yet!`} style={styles.emptyState} />;
+				return <EmptyState icon={BellIcon} message={l`No notifications yet!`} className={css.emptyState} />;
 			}
 			return (
 				<NotificationFeedItem
@@ -125,9 +126,9 @@ export function NotificationFeed({
 	);
 
 	const feedFooter = isFetchingNextPage ? (
-		<View style={styles.feedFooter}>
-			<ActivityIndicator />
-		</View>
+		<div className={css.feedFooter}>
+			<Loader />
+		</div>
 	) : null;
 
 	return (
@@ -148,8 +149,3 @@ export function NotificationFeed({
 		</>
 	);
 }
-
-const styles = StyleSheet.create({
-	feedFooter: { paddingTop: 20 },
-	emptyState: { paddingVertical: 40 },
-});

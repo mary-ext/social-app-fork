@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,19 +19,19 @@ import { NotificationFeed } from '#/view/com/notifications/NotificationFeed';
 import { FAB } from '#/view/com/util/fab/FAB';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import { ButtonIcon } from '#/components/Button';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
-import * as Layout from '#/components/Layout';
-import { InlineLinkText, Link } from '#/components/Link';
 import type { ListMethods } from '#/components/List/List';
 import { Loader } from '#/components/Loader';
+import { Admonition } from '#/components/web/Admonition';
+import { ButtonIcon } from '#/components/web/Button';
+import * as Layout from '#/components/web/Layout';
+import { InlineLinkText, LinkButton } from '#/components/web/Link';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { colors } from '#/styles/colors';
+
+import * as css from './Notifications.css';
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
@@ -103,7 +102,7 @@ export function NotificationsScreen({}: Props) {
 	}, [l, hasNew, checkUnreadAll, checkUnreadMentions, isLoadingAll, isLoadingMentions]);
 
 	return (
-		<Layout.Screen testID="notificationsScreen">
+		<Layout.Screen>
 			<Tabs
 				sections={sections}
 				value={activeTab}
@@ -118,17 +117,16 @@ export function NotificationsScreen({}: Props) {
 							</Layout.Header.TitleText>
 						</Layout.Header.Content>
 						<Layout.Header.Slot>
-							<Link
-								to={{ screen: 'NotificationSettings' }}
+							<LinkButton
+								to="/settings/notifications"
 								label={l`Notification settings`}
 								size="small"
 								variant="ghost"
 								color="secondary"
 								shape="round"
-								style={[a.justify_center]}
 							>
 								<ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
-							</Link>
+							</LinkButton>
 						</Layout.Header.Slot>
 					</Layout.Header.Outer>
 				}
@@ -231,7 +229,6 @@ function NotificationsTab({
 }
 
 function DisabledNotificationsWarning({ active }: { active: boolean }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { data } = useNotificationSettingsQuery({ enabled: active });
 
@@ -240,21 +237,18 @@ function DisabledNotificationsWarning({ active }: { active: boolean }) {
 	if (!data.reply.list && !data.quote.list && !data.mention.list) {
 		// mention tab notifications are disabled
 		return (
-			<View style={[a.py_md, a.px_lg, a.border_b, t.atoms.border_contrast_low]}>
+			<div className={css.warning}>
 				<Admonition type="warning">
 					<Trans>
 						You have completely disabled reply, quote, and mention notifications, so this tab will no longer
 						update. To adjust this, visit your{' '}
-						<InlineLinkText
-							label={l`Visit your notification settings`}
-							to={{ screen: 'NotificationSettings' }}
-						>
+						<InlineLinkText label={l`Visit your notification settings`} to="/settings/notifications">
 							notification settings
 						</InlineLinkText>
 						.
 					</Trans>
 				</Admonition>
-			</View>
+			</div>
 		);
 	}
 

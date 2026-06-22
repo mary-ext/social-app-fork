@@ -30,6 +30,8 @@ import { Text } from '#/components/Typography';
 
 import { colors } from '#/styles/colors';
 
+import * as css from './Bookmarks.css';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>;
 
 export function BookmarksScreen({}: Props) {
@@ -243,7 +245,6 @@ function BookmarkItem({
 }
 
 function BookmarksEmpty() {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>();
 
@@ -251,7 +252,7 @@ function BookmarksEmpty() {
 		<EmptyState
 			icon={BookmarkDeleteLarge}
 			message={l`Nothing saved yet`}
-			textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+			messageColor="textContrastMedium"
 			button={{
 				label: l`Button to go back to the home timeline`,
 				text: l`Go home`,
@@ -259,7 +260,7 @@ function BookmarksEmpty() {
 				size: 'small',
 				color: 'secondary',
 			}}
-			style={[a.pt_3xl]}
+			className={css.empty}
 		/>
 	);
 }

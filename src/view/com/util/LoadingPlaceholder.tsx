@@ -6,10 +6,7 @@ import { s } from '#/lib/styles';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Bubble_Stroke2_Corner2_Rounded as Bubble } from '#/components/icons/Bubble';
-import {
-	Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-	Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2';
+import { Heart2_Stroke2_Corner0_Rounded as HeartIconOutline } from '#/components/icons/Heart2';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 
 import { colors } from '#/styles/colors';
@@ -97,41 +94,6 @@ export function PostFeedLoadingPlaceholder() {
 			<PostLoadingPlaceholder />
 			<PostLoadingPlaceholder />
 		</View>
-	);
-}
-
-export function NotificationLoadingPlaceholder({ style }: { style?: StyleProp<ViewStyle> }) {
-	return (
-		<View style={[styles.notification, style]}>
-			<View style={[{ width: 60 }, a.align_end, a.pr_sm, a.pt_2xs]}>
-				<HeartIconFilled size="xl" fill={colors.contrast_50} />
-			</View>
-			<View style={{ flex: 1 }}>
-				<View style={[a.flex_row, s.mb10]}>
-					<LoadingPlaceholder width={35} height={35} style={styles.smallAvatar} />
-				</View>
-				<LoadingPlaceholder width="90%" height={6} style={[s.mb5]} />
-				<LoadingPlaceholder width="70%" height={6} style={[s.mb5]} />
-			</View>
-		</View>
-	);
-}
-
-export function NotificationFeedLoadingPlaceholder() {
-	return (
-		<>
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-			<NotificationLoadingPlaceholder />
-		</>
 	);
 }
 
@@ -284,20 +246,12 @@ const styles = StyleSheet.create({
 		borderRadius: 999,
 		marginRight: 12,
 	},
-	notification: {
-		flexDirection: 'row',
-		padding: 10,
-	},
 	profileCard: {
 		flexDirection: 'row',
 		padding: 10,
 		margin: 1,
 	},
 	profileCardAvi: {
-		borderRadius: 999,
-		marginRight: 10,
-	},
-	smallAvatar: {
 		borderRadius: 999,
 		marginRight: 10,
 	},

@@ -51,7 +51,6 @@ export function ProfileFeedSection({
 		return (
 			<View style={[a.flex_1, a.justify_center, a.align_center]}>
 				<EmptyState
-					style={{ width: '100%' }}
 					icon={emptyStateIcon || EditIcon}
 					iconSize="3xl"
 					message={emptyStateMessage || l`No posts yet`}

@@ -45,6 +45,7 @@ import { Text } from '#/components/Typography';
 
 import { colors } from '#/styles/colors';
 
+import * as css from './ChatList.css';
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatListItem } from './components/ChatListItem';
 import { InboxRequests } from './components/InboxRequests';
@@ -125,7 +126,7 @@ export function MessagesScreenInner({ route }: Props) {
 				<EmptyState
 					message={l`Say hi to someone`}
 					icon={BubbleSmileIcon}
-					textStyle={t.atoms.text}
+					messageColor="text"
 					iconColor={t.atoms.text.color}
 					iconSize="4xl"
 					button={
@@ -140,7 +141,7 @@ export function MessagesScreenInner({ route }: Props) {
 									icon: MessagePlusIcon,
 								}
 					}
-					style={[a.h_full, a.justify_center, a.pb_5xl]}
+					className={css.empty}
 				/>
 				<NewChat onNewChat={onNewChat} control={newChatControl} />
 			</>
@@ -310,16 +311,16 @@ export function ChatList({
 								message={l`Inbox empty`}
 								icon={InboxLargeIcon}
 								iconSize="4xl"
-								textStyle={t.atoms.text}
+								messageColor="text"
 								iconColor={t.atoms.text.color}
-								style={[a.h_full, a.justify_center, { paddingBottom: 120 }]}
+								className={css.emptyTall}
 							/>
 						) : (
 							<EmptyState
 								message={l`Say hi to someone`}
 								icon={BubbleSmileIcon}
 								iconSize="4xl"
-								textStyle={t.atoms.text}
+								messageColor="text"
 								iconColor={t.atoms.text.color}
 								button={
 									chatStatus?.chatDisabled
@@ -333,7 +334,7 @@ export function ChatList({
 												icon: MessagePlusIcon,
 											}
 								}
-								style={[a.h_full, a.justify_center, { paddingBottom: 120 }]}
+								className={css.emptyTall}
 							/>
 						)}
 					</>
