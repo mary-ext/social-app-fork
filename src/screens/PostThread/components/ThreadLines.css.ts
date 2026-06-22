@@ -7,14 +7,6 @@ import { OUTER_SPACE, REPLY_LINE_WIDTH } from '#/components/PostLayout.const';
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-// the tree's reply lines are drawn as box borders (for crisp L-joins), so they brighten one contrast step in
-// the dark/dim themes via a border-color override — matching the `PostLayout.Spine` treatment.
-const darkLine = {
-	'.theme--dark &, .theme--dim &': {
-		borderColor: colors.borderContrastMedium,
-	},
-};
-
 // these boxes set `box-sizing: border-box` so their widths/heights are the total box, letting the borders that
 // draw the spine land on the avatar centers rather than 2px outside them.
 
@@ -30,7 +22,6 @@ export const guide = style({
 	left: 1,
 	position: 'relative',
 	width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-	selectors: darkLine,
 });
 
 /** A level whose ancestor branch has ended — keeps the indent width but draws no line. */
@@ -53,7 +44,6 @@ export const connector = style({
 	position: 'absolute',
 	top: 0,
 	width: OUTER_SPACE,
-	selectors: darkLine,
 });
 
 /** The outgoing child reply line below this post's inline avatar. */
@@ -77,5 +67,4 @@ export const replyChildLine = style({
 	left: -1,
 	position: 'relative',
 	width: '50%',
-	selectors: darkLine,
 });
