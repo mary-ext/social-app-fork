@@ -3434,9 +3434,9 @@ msgstr ""
 msgid "Failed to update settings"
 msgstr ""
 
-#: src/lib/media/video/upload.ts:67
-#: src/lib/media/video/upload.ts:71
-#: src/lib/media/video/upload.ts:80
+#: src/lib/media/video/upload.ts:66
+#: src/lib/media/video/upload.ts:70
+#: src/lib/media/video/upload.ts:79
 msgid "Failed to upload video"
 msgstr ""
 

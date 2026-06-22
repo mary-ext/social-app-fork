@@ -2,7 +2,6 @@ import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 import type { I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
-import { nanoid } from 'nanoid/non-secure';
 
 import { AbortError } from '#/lib/async/cancelable';
 import { ServerError } from '#/lib/media/video/errors';
@@ -35,7 +34,7 @@ export async function uploadVideo({
 
 	const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
 		did,
-		name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
+		name: `${crypto.randomUUID()}.${mimeToExt(video.mimeType)}`,
 	});
 
 	if (signal.aborted) {

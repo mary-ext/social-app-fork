@@ -1,5 +1,4 @@
 import type { CSSProperties, ReactNode, SVGProps } from 'react';
-import { nanoid } from 'nanoid/non-secure';
 
 import { tokens, useTheme } from '#/alf';
 
@@ -30,7 +29,7 @@ export function useCommonSVGProps(props: Props) {
 	let gradientDef: ReactNode = null;
 
 	if (gradient && tokens.gradients[gradient]) {
-		const id = gradient + '_' + nanoid();
+		const id = gradient + '_' + crypto.randomUUID();
 		const config = tokens.gradients[gradient];
 		_fill = `url(#${id})`;
 		gradientDef = (

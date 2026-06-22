@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Toast as BaseToast } from '@base-ui/react/toast';
-import { nanoid } from 'nanoid/non-secure';
 
 import { ToastViewport } from '#/components/Toast/Toast';
 import type { ShowOptions, ToastData } from '#/components/Toast/types';
@@ -26,7 +25,7 @@ export function ToastOutlet() {
  * @param options type, duration, an optional action button, a custom icon, or an explicit id
  */
 export function show(content: ReactNode, { action, duration, icon, id, type = 'default' }: ShowOptions = {}) {
-	const toastId = id ?? nanoid();
+	const toastId = id ?? crypto.randomUUID();
 	manager.add({
 		actionProps: action && {
 			children: action.label,

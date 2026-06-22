@@ -71,7 +71,6 @@
 		"lodash.chunk": "^4.2.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
-		"nanoid": "^5.1.14",
 		"radix-ui": "^1.6.0",
 		"react": "19.2.7",
 		"react-dom": "19.2.7",

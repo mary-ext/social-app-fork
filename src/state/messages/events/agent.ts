@@ -1,7 +1,6 @@
 import type { ChatBskyConvoGetLog } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
-import { nanoid } from 'nanoid/non-secure';
 
 import { networkRetry } from '#/lib/async/retry';
 import { isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
@@ -32,14 +31,14 @@ export class MessagesEventBus {
 	private requestedPollIntervals: Map<string, number> = new Map();
 
 	constructor(params: MessagesEventBusParams) {
-		this.id = nanoid(3);
+		this.id = crypto.randomUUID();
 		this.chat = params.chat;
 
 		void this.init();
 	}
 
 	requestPollInterval(interval: number) {
-		const id = nanoid();
+		const id = crypto.randomUUID();
 		this.requestedPollIntervals.set(id, interval);
 		this.dispatch({
 			event: MessagesEventBusDispatchEvent.UpdatePoll,

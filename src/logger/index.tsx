@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
-
 import { add } from '#/logger/logDump';
 import { consoleTransport } from '#/logger/transports/console';
 import { LogContext, LogLevel, type Metadata, type Transport } from '#/logger/types';
@@ -121,7 +119,7 @@ export class Logger {
 
 		// send every log to syslog
 		add({
-			id: nanoid(),
+			id: crypto.randomUUID(),
 			timestamp,
 			level,
 			context: this.context,

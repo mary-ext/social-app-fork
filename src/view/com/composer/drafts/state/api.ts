@@ -2,7 +2,6 @@
 import type { AppBskyDraftDefs } from '@atcute/bluesky';
 import type { GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { nanoid } from 'nanoid/non-secure';
 
 import { resolveLink } from '#/lib/api/resolve';
 import { getDeviceId } from '#/lib/device-id';
@@ -40,8 +39,8 @@ export type RestoredVideo = {
 };
 
 /**
- * Parse mime type from video localRefPath. Format: `video:${mimeType}:${nanoid()}` (new) or
- * `video:${nanoid()}` (legacy)
+ * Parse mime type from video localRefPath. Format: `video:${mimeType}:${uuid}` (new) or `video:${uuid}`
+ * (legacy)
  */
 function parseVideoMimeType(localRefPath: string): string {
 	const parts = localRefPath.split(':');
@@ -193,7 +192,7 @@ async function restoreDraftImages(
 			// Preserve the original localRefPath for reuse when saving
 			localRefPath: img.localRef.path,
 			source: {
-				id: nanoid(),
+				id: crypto.randomUUID(),
 				blob,
 				width,
 				height,
@@ -212,7 +211,7 @@ function serializeImages(
 		const sourceBlob = (image.transformed ?? image.source).blob;
 		// Reuse existing localRefPath if present (editing draft), otherwise generate new
 		const isReusing = !!image.localRefPath;
-		const localRefPath = image.localRefPath || `image:${nanoid()}`;
+		const localRefPath = image.localRefPath || `image:${crypto.randomUUID()}`;
 		localRefPaths.set(localRefPath, sourceBlob);
 
 		logger.debug('serializing image', {
@@ -233,7 +232,7 @@ function serializeImages(
 
 /**
  * Serialize video to server format with localRef path. The localRef path encodes the mime type:
- * `video:${mimeType}:${nanoid()}`
+ * `video:${mimeType}:${uuid}`
  */
 async function serializeVideo(
 	videoState: VideoState,
@@ -247,7 +246,7 @@ async function serializeVideo(
 	// Encode mime type in the path for restoration
 	const mimeType = videoState.video.mimeType || 'video/mp4';
 	const ext = mimeToExt(mimeType);
-	const localRefPath = `video:${mimeType}:${nanoid()}.${ext}`;
+	const localRefPath = `video:${mimeType}:${crypto.randomUUID()}.${ext}`;
 	localRefPaths.set(localRefPath, videoState.video.blob);
 
 	// Read caption file contents as text

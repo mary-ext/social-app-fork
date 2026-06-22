@@ -10,7 +10,6 @@ import type {
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { $type, Did } from '@atcute/lexicons';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
-import { nanoid } from 'nanoid/non-secure';
 
 import { networkRetry } from '#/lib/async/retry';
 import { isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
@@ -146,7 +145,7 @@ export class Convo {
 	snapshot: ConvoState | undefined;
 
 	constructor(params: ConvoParams) {
-		this.id = nanoid(3);
+		this.id = crypto.randomUUID();
 		this.convoId = params.convoId;
 		this.chat = params.chat;
 		this.events = params.events;
@@ -1007,7 +1006,7 @@ export class Convo {
 
 		logger.debug('send message', {});
 
-		const tempId = nanoid();
+		const tempId = crypto.randomUUID();
 
 		this.pendingMessageFailure = null;
 		this.pendingMessages.set(tempId, {
@@ -1358,7 +1357,7 @@ export class Convo {
 					embed: m.optimisticEmbedView,
 					replyTo: optimisticReplyTo,
 					$type: 'chat.bsky.convo.defs#messageView',
-					id: nanoid(),
+					id: crypto.randomUUID(),
 					rev: '__fake__',
 					sentAt: new Date().toISOString(),
 					sender: {

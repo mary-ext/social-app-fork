@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
-
 import {
 	compressPostImage,
 	compressProfileImage as compressProfileBlob,
@@ -58,7 +56,7 @@ export async function createComposerImage(blob: Blob): Promise<ComposerImageWith
 	return {
 		alt: '',
 		source: {
-			id: nanoid(),
+			id: crypto.randomUUID(),
 			blob,
 			width: image.naturalWidth,
 			height: image.naturalHeight,

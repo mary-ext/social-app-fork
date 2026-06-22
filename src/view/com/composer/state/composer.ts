@@ -1,6 +1,5 @@
 import type { AppBskyDraftDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
-import { nanoid } from 'nanoid/non-secure';
 
 import type { VideoAsset } from '#/lib/media/video/types';
 import type { SelfLabel } from '#/lib/moderation';
@@ -215,7 +214,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			const activePostIndex = state.activePostIndex;
 			const nextPosts = [...state.thread.posts];
 			nextPosts.splice(activePostIndex + 1, 0, {
-				id: nanoid(),
+				id: crypto.randomUUID(),
 				text: '',
 				shortenedGraphemeLength: 0,
 				labels: [],
@@ -649,7 +648,7 @@ export function createComposerState({
 		thread: {
 			posts: [
 				{
-					id: nanoid(),
+					id: crypto.randomUUID(),
 					text: initialText,
 					shortenedGraphemeLength: getShortenedLength(initialText),
 					labels: [],
