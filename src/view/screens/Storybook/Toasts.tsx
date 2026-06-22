@@ -1,143 +1,62 @@
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 import { atoms as a } from '#/alf';
 
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { H1 } from '#/components/Typography';
+import { Button, ButtonText } from '#/components/web/Button';
 
-function DefaultToast({ content, type = 'default' }: { content: string; type?: Toast.ToastType }) {
-	return (
-		<Toast.ToastConfigProvider id="default-toast" type={type}>
-			<Toast.Outer>
-				<Toast.Icon icon={GlobeIcon} />
-				<Toast.Text>{content}</Toast.Text>
-			</Toast.Outer>
-		</Toast.ToastConfigProvider>
-	);
-}
-
-function ToastWithAction() {
-	return (
-		<Toast.Outer>
-			<Toast.Icon icon={GlobeIcon} />
-			<Toast.Text>This toast has an action button</Toast.Text>
-			<Toast.Action label="Action" onPress={() => console.log('Action clicked!')}>
-				Action
-			</Toast.Action>
-		</Toast.Outer>
-	);
-}
-
-function LongToastWithAction() {
-	return (
-		<Toast.Outer>
-			<Toast.Icon icon={GlobeIcon} />
-			<Toast.Text>
-				This is a longer message to test how the toast handles multiple lines of text content.
-			</Toast.Text>
-			<Toast.Action label="Action" onPress={() => console.log('Action clicked!')}>
-				Action
-			</Toast.Action>
-		</Toast.Outer>
-	);
-}
+const EXAMPLES: { label: string; show: () => void }[] = [
+	{ label: 'Default', show: () => Toast.show(`Hey I'm a toast!`) },
+	{
+		label: 'Success with action',
+		show: () =>
+			Toast.show(`Action performed`, {
+				action: { label: 'Undo', onPress: () => console.log('Undo clicked!') },
+				type: 'success',
+			}),
+	},
+	{
+		label: 'Error with action',
+		show: () =>
+			Toast.show(`Something went wrong`, {
+				action: { label: 'Retry', onPress: () => console.log('Retry clicked!') },
+				type: 'error',
+			}),
+	},
+	{
+		label: 'Long message',
+		show: () =>
+			Toast.show(`This is a longer message to test how the toast handles multiple lines of text content.`),
+	},
+	{
+		label: 'Custom icon',
+		show: () => Toast.show(`Now with a custom icon`, { icon: GlobeIcon }),
+	},
+	{
+		label: 'Long duration (6s)',
+		show: () => Toast.show(`This toast will disappear after 6 seconds`, { duration: 6e3 }),
+	},
+	{ label: 'Info', show: () => Toast.show(`I'm providing info!`, { type: 'info' }) },
+	{ label: 'Warning', show: () => Toast.show(`This is a warning toast`, { type: 'warning' }) },
+	{ label: 'Success', show: () => Toast.show(`Success! Yayyyyyyy :)`, { type: 'success' }) },
+	{ label: 'Error', show: () => Toast.show(`This is an error toast :(`, { type: 'error' }) },
+];
 
 export function Toasts() {
 	return (
 		<View style={[a.gap_md]}>
-			<H1>Toast Examples</H1>
+			<Text size="_3xl" weight="bold">
+				Toast Examples
+			</Text>
 
-			<View style={[a.gap_md]}>
-				<Pressable
-					accessibilityRole="button"
-					onPress={() => Toast.show(<ToastWithAction />, { type: 'success' })}
-				>
-					<ToastWithAction />
-				</Pressable>
-				<Pressable
-					accessibilityRole="button"
-					onPress={() => Toast.show(<ToastWithAction />, { type: 'error' })}
-				>
-					<ToastWithAction />
-				</Pressable>
-				<Pressable accessibilityRole="button" onPress={() => Toast.show(<LongToastWithAction />)}>
-					<LongToastWithAction />
-				</Pressable>
-				<Pressable accessibilityRole="button" onPress={() => Toast.show(`Hey I'm a toast!`)}>
-					<DefaultToast content="Hey I'm a toast!" />
-				</Pressable>
-				<Pressable
-					accessibilityRole="button"
-					onPress={() =>
-						Toast.show(`This toast will disappear after 6 seconds`, {
-							duration: 6e3,
-						})
-					}
-				>
-					<DefaultToast content="This toast will disappear after 6 seconds" />
-				</Pressable>
-				<Pressable
-					accessibilityRole="button"
-					onPress={() =>
-						Toast.show(
-							`This is a longer message to test how the toast handles multiple lines of text content.`,
-						)
-					}
-				>
-					<DefaultToast content="This is a longer message to test how the toast handles multiple lines of text content." />
-				</Pressable>
-				<Pressable
-					accessibilityRole="button"
-					onPress={() =>
-						Toast.show(`Success! Yayyyyyyy :)`, {
-							type: 'success',
-						})
-					}
-				>
-					<DefaultToast content="Success! Yayyyyyyy :)" type="success" />
-				</Pressable>
-				<Pressable
-					accessibilityRole="button"
-					onPress={() =>
-						Toast.show(`I'm providing info!`, {
-							type: 'info',
-						})
-					}
-				>
-					<DefaultToast content="I'm providing info!" type="info" />
-				</Pressable>
-				<Pressable
-					accessibilityRole="button"
-					onPress={() =>
-						Toast.show(`This is a warning toast`, {
-							type: 'warning',
-						})
-					}
-				>
-					<DefaultToast content="This is a warning toast" type="warning" />
-				</Pressable>
-				<Pressable
-					accessibilityRole="button"
-					onPress={() =>
-						Toast.show(`This is an error toast :(`, {
-							type: 'error',
-						})
-					}
-				>
-					<DefaultToast content="This is an error toast :(" type="error" />
-				</Pressable>
-
-				<Pressable
-					accessibilityRole="button"
-					onPress={() =>
-						Toast.show(`This is a test of the deprecated API`, {
-							type: 'warning',
-						})
-					}
-				>
-					<DefaultToast content="This is a test of the deprecated API" type="warning" />
-				</Pressable>
+			<View style={[a.gap_sm, a.align_start]}>
+				{EXAMPLES.map(({ label, show }) => (
+					<Button key={label} color="secondary" label={label} onClick={show}>
+						<ButtonText>{label}</ButtonText>
+					</Button>
+				))}
 			</View>
 		</View>
 	);

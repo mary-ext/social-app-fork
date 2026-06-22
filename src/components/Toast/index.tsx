@@ -1,66 +1,44 @@
-import { isValidElement } from 'react';
+import type { ReactNode } from 'react';
+import { Toast as BaseToast } from '@base-ui/react/toast';
 import { nanoid } from 'nanoid/non-secure';
-import { toast as sonner, Toaster } from 'sonner';
 
-import { atoms as a } from '#/alf';
+import { ToastViewport } from '#/components/Toast/Toast';
+import type { ShowOptions, ToastData } from '#/components/Toast/types';
 
-import { DURATION } from '#/components/Toast/const';
-import {
-	Icon as ToastIcon,
-	Outer as ToastOuter,
-	Text as ToastText,
-	ToastConfigProvider,
-} from '#/components/Toast/Toast';
-import type { BaseToastOptions } from '#/components/Toast/types';
+export type { ToastType } from '#/components/Toast/types';
 
-export { DURATION } from '#/components/Toast/const';
-export * from '#/components/Toast/Toast';
-export { type ToastType } from '#/components/Toast/types';
+/** Default auto-dismiss time, in ms. */
+export const DURATION = 3e3;
 
-/** Toasts are rendered in a global outlet, which is placed at the top of the component tree. */
+// the shared manager lives outside React so `show` can be called from anywhere (including non-component
+// code), while the renderer mounted by `ToastOutlet` consumes the same queue.
+const manager = BaseToast.createToastManager<ToastData>();
+
+/** Toasts are rendered in a global outlet, placed once near the top of the component tree. */
 export function ToastOutlet() {
-	return (
-		<Toaster
-			position="bottom-left"
-			gap={a.gap_sm.gap}
-			offset={a.p_xl.padding}
-			mobileOffset={a.p_xl.padding}
-		/>
-	);
+	return <ToastViewport manager={manager} />;
 }
 
-/** Our base toast API, using the `Toast` export of this file. */
-export function show(content: React.ReactNode, { type = 'default', ...options }: BaseToastOptions = {}) {
-	const id = nanoid();
-
-	if (typeof content === 'string') {
-		sonner(
-			<ToastConfigProvider id={id} type={type}>
-				<ToastOuter>
-					<ToastIcon />
-					<ToastText>{content}</ToastText>
-				</ToastOuter>
-			</ToastConfigProvider>,
-			{
-				...options,
-				unstyled: true, // required on web
-				id,
-				duration: options?.duration ?? DURATION,
+/**
+ * Shows a toast.
+ *
+ * @param content the message — a string or any React node
+ * @param options type, duration, an optional action button, a custom icon, or an explicit id
+ */
+export function show(content: ReactNode, { action, duration, icon, id, type = 'default' }: ShowOptions = {}) {
+	const toastId = id ?? nanoid();
+	manager.add({
+		actionProps: action && {
+			children: action.label,
+			onClick: () => {
+				manager.close(toastId);
+				action.onPress();
 			},
-		);
-	} else if (isValidElement(content)) {
-		sonner(
-			<ToastConfigProvider id={id} type={type}>
-				{content}
-			</ToastConfigProvider>,
-			{
-				...options,
-				unstyled: true, // required on web
-				id,
-				duration: options?.duration ?? DURATION,
-			},
-		);
-	} else {
-		throw new Error(`Toast can be a string or a React element, got ${typeof content}`);
-	}
+		},
+		data: { icon },
+		id: toastId,
+		timeout: duration ?? DURATION,
+		title: content,
+		type,
+	});
 }

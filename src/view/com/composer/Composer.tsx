@@ -848,28 +848,26 @@ export const ComposePost = ({
 		onClose();
 		setTimeout(() => {
 			Toast.show(
-				<Toast.Outer>
-					<Toast.Icon />
-					<Toast.Text>
-						{filteredThread.posts.length > 1
-							? l`Your posts were sent`
-							: replyTo
-								? l`Your reply was sent`
-								: l`Your post was sent`}
-					</Toast.Text>
-					{postUri && (
-						<Toast.Action
-							label={l`View post`}
-							onPress={() => {
-								const { repo: name, rkey } = parseCanonicalResourceUri(postUri);
-								navigation.navigate('PostThread', { name, rkey });
-							}}
-						>
-							<Trans context="Action to view the post the user just created">View</Trans>
-						</Toast.Action>
-					)}
-				</Toast.Outer>,
-				{ type: 'success' },
+				filteredThread.posts.length > 1
+					? l`Your posts were sent`
+					: replyTo
+						? l`Your reply was sent`
+						: l`Your post was sent`,
+				{
+					action: postUri
+						? {
+								label: l({
+									context: 'Action to view the post the user just created',
+									message: 'View',
+								}),
+								onPress: () => {
+									const { repo: name, rkey } = parseCanonicalResourceUri(postUri);
+									navigation.navigate('PostThread', { name, rkey });
+								},
+							}
+						: undefined,
+					type: 'success',
+				},
 			);
 		}, 500);
 	}, [

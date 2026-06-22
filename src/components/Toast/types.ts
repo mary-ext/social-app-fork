@@ -1,21 +1,28 @@
-export type ExternalToast = {
-	dismissible?: boolean;
-	duration?: number;
-	id?: string;
-	promiseOptions?: unknown;
+import type { ComponentType } from 'react';
+
+import type { Props as IconProps } from '#/components/icons/common';
+
+export type ToastType = 'default' | 'error' | 'info' | 'success' | 'warning';
+
+/** An optional action button rendered inside a toast (e.g. "Undo", "View"). */
+export type ToastAction = {
+	/** Visible button text, also its accessible name. */
+	label: string;
+	onPress: () => void;
 };
 
-export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info';
-
-/**
- * Not all properties are available on all platforms, so we pick out only those we support. Add more here as
- * needed.
- */
-export type BaseToastOptions = Pick<ExternalToast, 'duration' | 'dismissible' | 'id' | 'promiseOptions'> & {
+export type ShowOptions = {
+	action?: ToastAction;
+	/** Time in ms before auto-dismiss; `0` keeps the toast until dismissed. */
+	duration?: number;
+	/** Overrides the default icon for the toast's {@link ToastType}. */
+	icon?: ComponentType<IconProps>;
+	/** Reusing an id updates the existing toast in place instead of stacking a new one. */
+	id?: string;
 	type?: ToastType;
+};
 
-	/** These methods differ between web/native implementations */
-	onDismiss?: () => void;
-	onPress?: () => void;
-	onAutoClose?: () => void;
+/** Custom per-toast data carried through Base UI's toast manager to the renderer. */
+export type ToastData = {
+	icon?: ComponentType<IconProps>;
 };

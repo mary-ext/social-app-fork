@@ -67,6 +67,7 @@ export const zIndex = {
 	dialog: 100, // dialog backdrop / viewport / close, prompt
 	menu: 110, // menus & autocomplete, and a dialog's outer close — over a dialog
 	tooltip: 120, // tooltip & hover card — over dialogs and menus
+	toast: 130, // transient notifications — above every other overlay so they're never obscured
 } as const;
 
 /** Runtime font-size multiplier; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`. */

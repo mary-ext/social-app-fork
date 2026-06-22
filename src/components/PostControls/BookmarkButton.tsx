@@ -48,22 +48,12 @@ export const BookmarkButton = memo(function BookmarkButton({
 				post,
 			});
 
-			toast.show(
-				<toast.Outer>
-					<toast.Icon />
-					<toast.Text>
-						<Trans>Post saved</Trans>
-					</toast.Text>
-					{!disableUndo && (
-						<toast.Action label={undoLabel} onPress={() => void remove({ disableUndo: true })}>
-							{undoLabel}
-						</toast.Action>
-					)}
-				</toast.Outer>,
-				{
-					type: 'success',
-				},
-			);
+			toast.show(<Trans>Post saved</Trans>, {
+				action: disableUndo
+					? undefined
+					: { label: undoLabel, onPress: () => void remove({ disableUndo: true }) },
+				type: 'success',
+			});
 		} catch (e) {
 			const { raw, clean } = cleanError(e);
 			toast.show(clean || raw || String(e), {
@@ -79,19 +69,12 @@ export const BookmarkButton = memo(function BookmarkButton({
 				uri: post.uri,
 			});
 
-			toast.show(
-				<toast.Outer>
-					<toast.Icon icon={TrashIcon} />
-					<toast.Text>
-						<Trans>Removed from saved posts</Trans>
-					</toast.Text>
-					{!disableUndo && (
-						<toast.Action label={undoLabel} onPress={() => void save({ disableUndo: true })}>
-							{undoLabel}
-						</toast.Action>
-					)}
-				</toast.Outer>,
-			);
+			toast.show(<Trans>Removed from saved posts</Trans>, {
+				action: disableUndo
+					? undefined
+					: { label: undoLabel, onPress: () => void save({ disableUndo: true }) },
+				icon: TrashIcon,
+			});
 		} catch (e) {
 			const { raw, clean } = cleanError(e);
 			toast.show(clean || raw || String(e), {

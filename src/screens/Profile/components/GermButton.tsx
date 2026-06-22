@@ -155,19 +155,9 @@ function GermSelfButton({ did }: { did: string }) {
 
 			selfExplanationDialogControl.close(() => {
 				void queryClient.refetchQueries({ queryKey: RQKEY(did) });
-				Toast.show(
-					<Toast.Outer>
-						<Toast.Icon />
-						<Toast.Text>
-							<Trans>Germ DM disconnected</Trans>
-						</Toast.Text>
-						{previousRecord && (
-							<Toast.Action label={l`Undo`} onPress={() => void undo()}>
-								<Trans>Undo</Trans>
-							</Toast.Action>
-						)}
-					</Toast.Outer>,
-				);
+				Toast.show(<Trans>Germ DM disconnected</Trans>, {
+					action: previousRecord ? { label: l`Undo`, onPress: () => void undo() } : undefined,
+				});
 			});
 		},
 		onError: (error) => {
