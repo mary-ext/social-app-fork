@@ -17,6 +17,7 @@ export const outer = style({
 /** Block link wrapping a card row; the caller supplies the row layout (direction/alignment/gap). */
 export const link = style({
 	color: 'inherit',
+	cursor: 'pointer',
 	display: 'flex',
 	textDecoration: 'none',
 });

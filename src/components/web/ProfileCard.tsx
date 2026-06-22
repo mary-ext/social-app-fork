@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -16,10 +16,18 @@ import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
+import { useProfileShadow } from '#/state/cache/profile-shadow';
+import { useProfileFollowMutationQueue } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
+
+import { BlockLink } from '#/components/BlockLink';
+import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
+import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text, type TextProps } from '#/components/Text';
+import * as Toast from '#/components/Toast';
 import { PreviewableUserAvatar, UserAvatar } from '#/components/UserAvatar';
-import { Link as WebLink } from '#/components/web/Link';
+import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as css from '#/components/web/ProfileCard.css';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -48,18 +56,16 @@ export function Link({
 }) {
 	const { t: l } = useLingui();
 	return (
-		<WebLink
+		// BlockLink (role=link <div>), not an <a>, so the row can hold interactive children (a previewable
+		// avatar, a follow button) without nesting them in an anchor
+		<BlockLink
 			className={clsx(css.link, className)}
 			label={l`View ${profile.displayName || sanitizeHandle(profile.handle)}’s profile`}
-			onPress={(e) => {
-				// the card row can be nested in other clickable surfaces; keep the click from bubbling
-				e.stopPropagation();
-				onPress?.();
-			}}
+			onBeforePress={onPress}
 			to={makeProfileLink({ did: profile.did })}
 		>
-			{children}
-		</WebLink>
+			<div>{children}</div>
+		</BlockLink>
 	);
 }
 
@@ -203,5 +209,103 @@ export function NameAndHandlePlaceholder() {
 			<div className={css.namePlaceholderBar} />
 			<div className={css.handlePlaceholderBar} />
 		</div>
+	);
+}
+
+export type FollowButtonProps = {
+	colorInverted?: boolean;
+	moderationOpts: ModerationOptions;
+	onFollow?: () => void;
+	profile: AnyProfileView;
+	withIcon?: boolean;
+} & Partial<Omit<ButtonProps, 'children' | 'label'>>;
+
+/** Follow/unfollow toggle. Renders nothing for the signed-in user's own profile or when signed out. */
+export function FollowButton(props: FollowButtonProps) {
+	const { currentAccount, hasSession } = useSession();
+	const isMe = props.profile.did === currentAccount?.did;
+	return hasSession && !isMe ? <FollowButtonInner {...props} /> : null;
+}
+
+function FollowButtonInner({
+	colorInverted,
+	moderationOpts,
+	onFollow,
+	profile: profileUnshadowed,
+	withIcon = true,
+	...rest
+}: FollowButtonProps) {
+	const { t: l } = useLingui();
+	const profile = useProfileShadow(profileUnshadowed);
+	const moderation = moderateProfile(profile, moderationOpts);
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
+	const isRound = rest.shape === 'round';
+
+	const name = () =>
+		sanitizeDisplayName(
+			profile.displayName || profile.handle,
+			getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+		);
+
+	const onPressFollow = async (e: MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation();
+		try {
+			await queueFollow();
+			Toast.show(l`Following ${name()}`);
+			onFollow?.();
+		} catch (err) {
+			if (!(err instanceof Error && err.name === 'AbortError')) {
+				Toast.show(l`An issue occurred, please try again.`, { type: 'error' });
+			}
+		}
+	};
+
+	const onPressUnfollow = async (e: MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation();
+		try {
+			await queueUnfollow();
+			Toast.show(l`No longer following ${name()}`);
+		} catch (err) {
+			if (!(err instanceof Error && err.name === 'AbortError')) {
+				Toast.show(l`An issue occurred, please try again.`, { type: 'error' });
+			}
+		}
+	};
+
+	const unfollowLabel = l({
+		message: 'Following',
+		comment: 'User is following this account, click to unfollow',
+	});
+	const followLabel = profile.viewer?.followedBy
+		? l({ message: 'Follow back', comment: 'User is not following this account, click to follow back' })
+		: l({ message: 'Follow', comment: 'User is not following this account, click to follow' });
+
+	if (!profile.viewer) return null;
+	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) return null;
+
+	return profile.viewer.following ? (
+		<Button
+			label={unfollowLabel}
+			size="small"
+			variant="solid"
+			color="secondary"
+			{...rest}
+			onClick={(e) => void onPressUnfollow(e)}
+		>
+			{withIcon && <ButtonIcon icon={CheckIcon} />}
+			{!isRound && <ButtonText>{unfollowLabel}</ButtonText>}
+		</Button>
+	) : (
+		<Button
+			label={followLabel}
+			size="small"
+			variant="solid"
+			color={colorInverted ? 'secondary_inverted' : 'primary'}
+			{...rest}
+			onClick={(e) => void onPressFollow(e)}
+		>
+			{withIcon && <ButtonIcon icon={PlusIcon} />}
+			{!isRound && <ButtonText>{followLabel}</ButtonText>}
+		</Button>
 	);
 }
