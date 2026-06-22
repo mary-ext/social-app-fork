@@ -1192,7 +1192,7 @@ msgid "Advanced"
 msgstr ""
 
 #: src/components/dms/ReactionsDialog.tsx:251
-#: src/view/screens/Notifications.tsx:76
+#: src/view/screens/Notifications.tsx:75
 msgid "All"
 msgstr ""
 
@@ -1560,7 +1560,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:161
 #: src/screens/Messages/components/InviteLinkDialog.tsx:235
 #: src/screens/Messages/components/InviteLinkDialog.tsx:260
-#: src/screens/Messages/Inbox.tsx:206
+#: src/screens/Messages/Inbox.tsx:207
 #: src/screens/Profile/Header/Shell.tsx:78
 #: src/screens/StarterPack/Wizard/index.tsx:279
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:76
@@ -1568,7 +1568,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/screens/Messages/Inbox.tsx:205
+#: src/screens/Messages/Inbox.tsx:206
 msgid "Back to Chats"
 msgstr ""
 
@@ -1731,8 +1731,8 @@ msgstr ""
 msgid "Breaking site rules"
 msgstr ""
 
+#: src/view/com/feeds/ProfileFeedgens.tsx:145
 #: src/view/com/feeds/ProfileFeedgens.tsx:146
-#: src/view/com/feeds/ProfileFeedgens.tsx:147
 msgid "Browse custom feeds"
 msgstr ""
 
@@ -1770,7 +1770,7 @@ msgstr ""
 msgid "Business"
 msgstr ""
 
-#: src/screens/Bookmarks/index.tsx:256
+#: src/screens/Bookmarks/index.tsx:257
 msgid "Button to go back to the home timeline"
 msgstr ""
 
@@ -1947,15 +1947,15 @@ msgstr "Chat recipient is not followed by the sender."
 msgid "Chat request inbox"
 msgstr ""
 
-#: src/screens/Messages/Inbox.tsx:88
+#: src/screens/Messages/Inbox.tsx:89
 msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:92
 #: src/components/dms/ConvoMenu.tsx:99
 #: src/Navigation.tsx:721
-#: src/screens/Messages/ChatList.tsx:428
-#: src/screens/Messages/ChatList.tsx:461
+#: src/screens/Messages/ChatList.tsx:429
+#: src/screens/Messages/ChatList.tsx:462
 msgid "Chat settings"
 msgstr ""
 
@@ -1981,8 +1981,8 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:419
-#: src/screens/Messages/ChatList.tsx:454
+#: src/screens/Messages/ChatList.tsx:420
+#: src/screens/Messages/ChatList.tsx:455
 msgid "Chats"
 msgstr ""
 
@@ -3006,7 +3006,7 @@ msgstr ""
 msgid "Enable trending topics"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:90
+#: src/screens/Profile/Sections/Feed.tsx:89
 msgid "End of feed"
 msgstr ""
 
@@ -3295,8 +3295,8 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
 
-#: src/screens/Messages/ChatList.tsx:292
-#: src/screens/Messages/Inbox.tsx:175
+#: src/screens/Messages/ChatList.tsx:293
+#: src/screens/Messages/Inbox.tsx:176
 msgid "Failed to load conversations"
 msgstr ""
 
@@ -3345,7 +3345,7 @@ msgstr ""
 msgid "Failed to lock group chat"
 msgstr "Failed to lock group chat"
 
-#: src/screens/Messages/Inbox.tsx:276
+#: src/screens/Messages/Inbox.tsx:277
 msgid "Failed to mark all requests as read"
 msgstr ""
 
@@ -3855,7 +3855,7 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:408
 #: src/components/moderation/ScreenHider.tsx:81
 #: src/components/moderation/ScreenHider.tsx:93
-#: src/components/web/Layout/Header.tsx:65
+#: src/components/web/Layout/Header.tsx:70
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:79
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:80
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
@@ -3877,7 +3877,7 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/screens/Bookmarks/index.tsx:257
+#: src/screens/Bookmarks/index.tsx:258
 #: src/view/screens/NotFound.tsx:51
 #: src/view/screens/NotFound.tsx:52
 #: src/view/screens/NotFound.tsx:56
@@ -4116,23 +4116,23 @@ msgstr ""
 msgid "Hide verification badges"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:106
+#: src/view/com/posts/PostFeedErrorMessage.tsx:100
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:102
+#: src/view/com/posts/PostFeedErrorMessage.tsx:96
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:104
+#: src/view/com/posts/PostFeedErrorMessage.tsx:98
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:103
+#: src/view/com/posts/PostFeedErrorMessage.tsx:97
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:101
+#: src/view/com/posts/PostFeedErrorMessage.tsx:95
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr ""
 
@@ -4265,12 +4265,12 @@ msgstr ""
 msgid "In-app, Push, People you follow"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:310
+#: src/screens/Messages/ChatList.tsx:311
 msgid "Inbox empty"
 msgstr "Inbox empty"
 
 #. Title message shown in chat requests inbox when it's empty
-#: src/screens/Messages/Inbox.tsx:193
+#: src/screens/Messages/Inbox.tsx:194
 msgid "Inbox zero!"
 msgstr ""
 
@@ -4771,12 +4771,12 @@ msgstr ""
 msgid "Load more suggested feeds"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:227
+#: src/view/screens/Notifications.tsx:225
 msgid "Load new notifications"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:147
-#: src/screens/Profile/Sections/Feed.tsx:78
+#: src/screens/Profile/Sections/Feed.tsx:77
 #: src/screens/ProfileList/FeedSection.tsx:82
 #: src/view/com/feeds/FeedPage.tsx:118
 msgid "Load new posts"
@@ -4907,8 +4907,8 @@ msgstr ""
 msgid "Manage verification settings"
 msgstr ""
 
-#: src/screens/Messages/Inbox.tsx:283
-#: src/screens/Messages/Inbox.tsx:286
+#: src/screens/Messages/Inbox.tsx:284
+#: src/screens/Messages/Inbox.tsx:287
 msgid "Mark all as read"
 msgstr ""
 
@@ -4917,7 +4917,7 @@ msgstr ""
 msgid "Mark as read"
 msgstr ""
 
-#: src/screens/Messages/Inbox.tsx:271
+#: src/screens/Messages/Inbox.tsx:272
 msgid "Marked all as read"
 msgstr ""
 
@@ -4959,7 +4959,7 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:108
 #: src/screens/Settings/NotificationSettings/index.tsx:204
-#: src/view/screens/Notifications.tsx:90
+#: src/view/screens/Notifications.tsx:89
 msgid "Mentions"
 msgstr ""
 
@@ -5002,7 +5002,7 @@ msgid "Message from @{0}: {1}"
 msgstr ""
 
 #. placeholder {0}: rawError.message
-#: src/view/com/posts/PostFeedErrorMessage.tsx:177
+#: src/view/com/posts/PostFeedErrorMessage.tsx:171
 msgid "Message from server: {0}"
 msgstr ""
 
@@ -5315,11 +5315,11 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:141
 #: src/components/dms/dialogs/NewChatDialog.tsx:148
-#: src/screens/Messages/ChatList.tsx:135
 #: src/screens/Messages/ChatList.tsx:136
-#: src/screens/Messages/ChatList.tsx:328
+#: src/screens/Messages/ChatList.tsx:137
 #: src/screens/Messages/ChatList.tsx:329
-#: src/screens/Messages/ChatList.tsx:438
+#: src/screens/Messages/ChatList.tsx:330
+#: src/screens/Messages/ChatList.tsx:439
 msgid "New chat"
 msgstr ""
 
@@ -5370,7 +5370,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:207
 #: src/screens/ProfileList/index.tsx:230
 #: src/view/screens/Feeds.tsx:517
-#: src/view/screens/Notifications.tsx:138
+#: src/view/screens/Notifications.tsx:136
 #: src/view/screens/Profile.tsx:413
 msgid "New post"
 msgstr ""
@@ -5421,7 +5421,7 @@ msgstr ""
 msgid "Next image"
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:141
+#: src/view/com/feeds/ProfileFeedgens.tsx:140
 msgid "No custom feeds yet"
 msgstr ""
 
@@ -5479,7 +5479,7 @@ msgstr ""
 msgid "No messages yet"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeed.tsx:113
+#: src/view/com/notifications/NotificationFeed.tsx:114
 msgid "No notifications yet!"
 msgstr ""
 
@@ -5512,7 +5512,7 @@ msgstr "No one can send messages"
 msgid "No posts here"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:57
+#: src/screens/Profile/Sections/Feed.tsx:56
 #: src/view/screens/Profile.tsx:252
 msgid "No posts yet"
 msgstr ""
@@ -5627,14 +5627,14 @@ msgstr ""
 msgid "Note: This post is only visible to logged-in users."
 msgstr ""
 
-#: src/screens/Bookmarks/index.tsx:253
+#: src/screens/Bookmarks/index.tsx:254
 msgid "Nothing saved yet"
 msgstr ""
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:36
 #: src/Navigation.tsx:665
 #: src/Navigation.tsx:746
-#: src/view/screens/Notifications.tsx:123
+#: src/view/screens/Notifications.tsx:122
 msgid "Notification settings"
 msgstr ""
 
@@ -5644,7 +5644,7 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/index.tsx:52
 #: src/screens/Settings/Settings.tsx:62
 #: src/screens/Settings/Settings.tsx:64
-#: src/view/screens/Notifications.tsx:117
+#: src/view/screens/Notifications.tsx:116
 #: src/view/shell/desktop/LeftNav.tsx:574
 #: src/view/shell/Drawer.tsx:165
 msgid "Notifications"
@@ -5794,6 +5794,7 @@ msgid "Open draft"
 msgstr ""
 
 #: src/components/Layout/Header/index.tsx:137
+#: src/components/web/Layout/Header.tsx:101
 msgid "Open drawer menu"
 msgstr ""
 
@@ -6298,7 +6299,7 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:73
+#: src/view/com/posts/PostFeedErrorMessage.tsx:70
 msgid "Posts hidden"
 msgstr ""
 
@@ -6525,8 +6526,8 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:296
-#: src/screens/Messages/Inbox.tsx:179
+#: src/screens/Messages/ChatList.tsx:297
+#: src/screens/Messages/Inbox.tsx:180
 msgid "Reload conversations"
 msgstr ""
 
@@ -6541,14 +6542,14 @@ msgstr "Reload to update"
 #: src/components/FeedCard.tsx:289
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:89
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:97
-#: src/screens/Bookmarks/index.tsx:228
+#: src/screens/Bookmarks/index.tsx:230
 #: src/screens/Messages/ConversationSettings/Member.tsx:152
 #: src/screens/Messages/ConversationSettings/prompts.tsx:166
 #: src/screens/Moderation/index.tsx:204
 #: src/screens/Moderation/MutedWords.tsx:135
 #: src/screens/Moderation/MutedWords.tsx:194
 #: src/screens/Settings/components/AccountsSection.tsx:270
-#: src/view/com/posts/PostFeedErrorMessage.tsx:188
+#: src/view/com/posts/PostFeedErrorMessage.tsx:182
 msgid "Remove"
 msgstr ""
 
@@ -6602,11 +6603,11 @@ msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:101
 #: src/view/com/posts/FeedShutdownMsg.tsx:106
-#: src/view/com/posts/PostFeedErrorMessage.tsx:150
+#: src/view/com/posts/PostFeedErrorMessage.tsx:144
 msgid "Remove feed"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:185
+#: src/view/com/posts/PostFeedErrorMessage.tsx:179
 msgid "Remove feed?"
 msgstr ""
 
@@ -6632,7 +6633,7 @@ msgid "Remove from saved feeds"
 msgstr ""
 
 #: src/components/PostControls/BookmarkButton.tsx:100
-#: src/screens/Bookmarks/index.tsx:225
+#: src/screens/Bookmarks/index.tsx:227
 msgid "Remove from saved posts"
 msgstr ""
 
@@ -6657,7 +6658,7 @@ msgstr "Remove muted word"
 msgid "Remove profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:186
+#: src/view/com/posts/PostFeedErrorMessage.tsx:180
 msgid "Remove this feed from your saved feeds"
 msgstr ""
 
@@ -6699,7 +6700,7 @@ msgid "Removed from saved feeds"
 msgstr ""
 
 #: src/components/PostControls/BookmarkButton.tsx:72
-#: src/screens/Bookmarks/index.tsx:189
+#: src/screens/Bookmarks/index.tsx:191
 msgid "Removed from saved posts"
 msgstr ""
 
@@ -7030,10 +7031,6 @@ msgstr "Rescind request"
 msgid "Rescind request to join group chat"
 msgstr "Rescind request to join group chat"
 
-#: src/view/com/util/error/ErrorMessage.tsx:43
-msgid "Retries the last action, which errored out"
-msgstr ""
-
 #: src/components/Error.tsx:63
 #: src/components/Lists.tsx:88
 #: src/components/moderation/ReportDialog/index.tsx:356
@@ -7042,13 +7039,13 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:301
 #: src/features/gifPicker/components/GifPickerGrid.tsx:88
 #: src/features/gifPicker/components/GifPickerGrid.tsx:89
-#: src/screens/Messages/ChatList.tsx:302
+#: src/screens/Messages/ChatList.tsx:303
 #: src/screens/Messages/components/MessageListError.tsx:28
-#: src/screens/Messages/Inbox.tsx:185
+#: src/screens/Messages/Inbox.tsx:186
 #: src/screens/Messages/JoinRequests.tsx:308
 #: src/screens/PostThread/components/ThreadError.tsx:43
 #: src/screens/PostThread/components/ThreadError.tsx:45
-#: src/view/com/util/error/ErrorMessage.tsx:42
+#: src/view/com/util/error/ErrorMessage.tsx:30
 #: src/view/com/util/error/ErrorScreen.tsx:59
 #: src/view/screens/Storybook/Admonitions.tsx:53
 msgid "Retry"
@@ -7150,7 +7147,7 @@ msgid "Saved Feeds"
 msgstr ""
 
 #: src/Navigation.tsx:785
-#: src/screens/Bookmarks/index.tsx:44
+#: src/screens/Bookmarks/index.tsx:46
 msgid "Saved Posts"
 msgstr ""
 
@@ -7171,8 +7168,8 @@ msgstr "Saving"
 msgid "Say hello!"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:126
-#: src/screens/Messages/ChatList.tsx:319
+#: src/screens/Messages/ChatList.tsx:127
+#: src/screens/Messages/ChatList.tsx:320
 msgid "Say hi to someone"
 msgstr "Say hi to someone"
 
@@ -8276,7 +8273,7 @@ msgstr ""
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeed.tsx:105
+#: src/view/com/notifications/NotificationFeed.tsx:106
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
@@ -8294,7 +8291,7 @@ msgstr ""
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:130
+#: src/view/com/posts/PostFeedErrorMessage.tsx:124
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr ""
 
@@ -8472,7 +8469,7 @@ msgstr ""
 msgid "This content is hosted by {0}. Do you want to enable external media?"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:105
+#: src/view/com/posts/PostFeedErrorMessage.tsx:99
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
@@ -8504,7 +8501,7 @@ msgstr ""
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:107
+#: src/view/com/posts/PostFeedErrorMessage.tsx:101
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr ""
 
@@ -8606,7 +8603,7 @@ msgstr ""
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
-#: src/screens/Bookmarks/index.tsx:222
+#: src/screens/Bookmarks/index.tsx:224
 msgid "This post was deleted by its author"
 msgstr ""
 
@@ -9316,7 +9313,7 @@ msgstr ""
 #: src/components/web/ProfileHoverCard.tsx:197
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:277
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:298
-#: src/view/com/posts/PostFeedErrorMessage.tsx:152
+#: src/view/com/posts/PostFeedErrorMessage.tsx:146
 #: src/view/com/util/PostMeta.tsx:125
 #: src/view/com/util/PostMeta.tsx:146
 msgid "View profile"
@@ -9400,7 +9397,7 @@ msgstr ""
 msgid "Visit site"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:249
+#: src/view/screens/Notifications.tsx:245
 msgid "Visit your notification settings"
 msgstr ""
 
@@ -9524,8 +9521,8 @@ msgid "Who can reply"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:65
-#: src/screens/Messages/ChatList.tsx:280
-#: src/screens/Messages/Inbox.tsx:163
+#: src/screens/Messages/ChatList.tsx:281
+#: src/screens/Messages/Inbox.tsx:164
 msgid "Whoops!"
 msgstr ""
 
@@ -9757,7 +9754,7 @@ msgstr "You have been previously removed from this group and can’t join it usi
 msgid "You have blocked this user. You cannot view their content."
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:245
+#: src/view/screens/Notifications.tsx:242
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr ""
 
@@ -9828,7 +9825,7 @@ msgstr ""
 msgid "You haven't created any lists yet."
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:141
+#: src/view/com/feeds/ProfileFeedgens.tsx:140
 msgid "You haven't made any custom feeds yet."
 msgstr ""
 
