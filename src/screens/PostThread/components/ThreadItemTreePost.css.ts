@@ -1,11 +1,19 @@
 import { style } from '@vanilla-extract/css';
 
-import { OUTER_SPACE, REPLY_LINE_WIDTH, TREE_AVI_WIDTH, TREE_INDENT } from '#/screens/PostThread/const';
+import { TREE_AVI_WIDTH } from '#/screens/PostThread/const';
+
+import { OUTER_SPACE } from '#/components/PostLayout.const';
 
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
+
+/**
+ * Tree-thread layout. The reply lines (indent guides, connector, child line) live in `./ThreadLines`; this
+ * file owns the indented row structure, body columns, and deleted-post chrome. The tree's layout is
+ * row-oriented and avatar-in-meta, so it doesn't share `#/components/PostLayout`'s column primitives.
+ */
 
 /** The post row; GalleryBleed measures this host and clips the image-carousel bleed to it. */
 export const outerRow = style({
@@ -35,69 +43,6 @@ export const postAlerts = style({
 	paddingBottom: space._2xs,
 });
 
-// #region indent spine
-// these boxes set `box-sizing: border-box` so their widths/heights are the total box, letting the borders
-// that draw the spine land on the avatar centers rather than 2px outside them.
-/** One per ancestor level; its right border draws that ancestor's vertical reply line. */
-export const guide = style({
-	borderRightColor: colors.borderContrastLow,
-	borderRightStyle: 'solid',
-	borderRightWidth: REPLY_LINE_WIDTH,
-	boxSizing: 'border-box',
-	// pin flex-shrink:0; without it the indent guides shrink on crowded rows and the post lands at the
-	// wrong depth.
-	flexShrink: 0,
-	left: 1,
-	position: 'relative',
-	width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-});
-
-/** A level whose ancestor branch has ended — keeps the indent width but draws no line. */
-export const guideSkipped = style({
-	borderRightWidth: 0,
-});
-
-/** The L-shaped connector from the parent's spine into this post (indent > 1). */
-export const connector = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomLeftRadius: borderRadius.sm,
-	borderBottomStyle: 'solid',
-	borderBottomWidth: REPLY_LINE_WIDTH,
-	borderLeftColor: colors.borderContrastLow,
-	borderLeftStyle: 'solid',
-	borderLeftWidth: REPLY_LINE_WIDTH,
-	boxSizing: 'border-box',
-	height: TREE_AVI_WIDTH / 2 + REPLY_LINE_WIDTH / 2 + OUTER_SPACE / 2,
-	left: -1,
-	position: 'absolute',
-	top: 0,
-	width: OUTER_SPACE,
-});
-
-/** The outgoing child reply line below this post's inline avatar. */
-export const replyChildLineColumn = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'column',
-	// fixed-width gutter aligning the child line under the inline avatar; must not shrink.
-	flexShrink: 0,
-	paddingTop: space._2xs,
-	position: 'relative',
-	width: TREE_AVI_WIDTH + space.xs,
-});
-
-export const replyChildLine = style({
-	borderRightColor: colors.borderContrastLow,
-	borderRightStyle: 'solid',
-	borderRightWidth: REPLY_LINE_WIDTH,
-	boxSizing: 'border-box',
-	flex: 1,
-	left: -1,
-	position: 'relative',
-	width: '50%',
-});
-// #endregion
-
 // #region wrappers
 /** The flex-1 column to the right of the indent spine. `position: relative` anchors the connector. */
 export const innerWrapper = style({
@@ -105,25 +50,12 @@ export const innerWrapper = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	// restate min-width:0 down the whole width chain so a wide embed (image gallery) stays clamped to the
-	// row instead of growing the column unbounded.
+	// restate min-width:0 down the whole width chain so a wide embed (image gallery) stays clamped to the row
+	// instead of growing the column unbounded.
 	minWidth: 0,
-	paddingLeft: OUTER_SPACE,
-	paddingRight: OUTER_SPACE,
+	paddingTop: 12,
+	paddingInline: 16,
 	position: 'relative',
-});
-
-export const innerWrapperPadTop = style({
-	paddingTop: OUTER_SPACE / 2,
-});
-
-/** The looser top padding the first post in a group takes when it has no incoming parent line. */
-export const innerWrapperPadTopLoose = style({
-	paddingTop: OUTER_SPACE / 1.5,
-});
-
-export const innerWrapperPadBottom = style({
-	paddingBottom: OUTER_SPACE / 2,
 });
 
 /**
@@ -170,11 +102,9 @@ export const contentColumn = style({
 	flexDirection: 'column',
 	minWidth: 0,
 	paddingLeft: space._2xs,
+	paddingBottom: 12,
 });
 
-export const embed = style({
-	paddingBottom: space.xs,
-});
 // #endregion
 
 // #region deleted
@@ -199,5 +129,15 @@ export const deletedText = style({
 
 export const deletedSpacer = style({
 	height: OUTER_SPACE / 2,
+});
+
+/** Border + padding for the loading skeleton; `OUTER_SPACE / 1.5` matches the old RNW vertical padding. */
+export const skeleton = style({
+	borderTopColor: colors.borderContrastLow,
+	borderTopStyle: 'solid',
+	borderTopWidth: 1,
+	boxSizing: 'border-box',
+	paddingBlock: OUTER_SPACE / 1.5,
+	paddingInline: OUTER_SPACE,
 });
 // #endregion

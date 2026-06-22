@@ -1,49 +1,20 @@
 import { style } from '@vanilla-extract/css';
 
-import { colorMix } from '#/styles/color-mix';
-import { colors } from '#/styles/colors';
-import { vars } from '#/styles/contract.css';
-import { recipe } from '#/styles/recipe';
+import { space } from '#/styles/tokens.css';
 
 /**
- * The feed post row; GalleryBleed measures this host and clips the image-carousel bleed to it. The top border
- * and reclaimed padding vary by the slice's position in the thread, so they're recipe variants the component
- * toggles per render.
+ * Feed-specific layout. The shared row / column / spine / frame structure lives in `#/components/PostLayout`;
+ * what remains here is the repost/pin reason header and the feed's per-element body rhythm.
  */
-export const outer = recipe({
-	base: {
-		borderTopColor: vars.palette.contrast_100,
-		borderTopStyle: 'solid',
-		borderTopWidth: 0,
-		boxSizing: 'border-box',
-		cursor: 'pointer',
-		display: 'flex',
-		flexDirection: 'column',
-		paddingInline: 16,
-		selectors: {
-			'&:hover': {
-				backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
-			},
-		},
-	},
-	variants: {
-		// trailing space below a thread's last child, and below standalone posts
-		bottomSpace: { true: { paddingBottom: 6 } },
-		// the feed's first post hides its top border (the sticky header already separates it), so reclaim the
-		// removed hairline as padding to keep content from shifting up 1px
-		reclaimBorder: { true: { paddingTop: 1 } },
-		topBorder: { true: { borderTopWidth: 1 } },
-	},
-});
 
-/** The repost/pin reason header row above the post; aligns the reason text with the post body. */
+/** The repost/pin reason header row above the post; its leading slot aligns the reason with the post body. */
 export const reasonRow = style({
 	display: 'flex',
 	flexDirection: 'row',
-	gap: 10,
+	gap: space.md,
 });
 
-/** Fixed-width slot above the avatar that carries the thread reply-spine up to the parent. */
+/** Fixed-width slot above the avatar that carries the incoming reply-spine and aligns the reason text. */
 export const spineSlot = style({
 	display: 'flex',
 	flexDirection: 'column',
@@ -57,34 +28,41 @@ export const reason = style({
 	flexDirection: 'column',
 	flexShrink: 1,
 	minWidth: 0,
-	paddingTop: 8,
+	paddingTop: 10,
+	paddingBottom: 2,
 });
 
-/** The thread reply-spine: a 2px vertical bar centered in the avatar column. */
-export const replyLine = style({
-	backgroundColor: vars.palette.contrast_100,
-	flexGrow: 1,
-	marginLeft: 'auto',
-	marginRight: 'auto',
-	width: 2,
-	selectors: {
-		'.theme--dark &, .theme--dim &': {
-			backgroundColor: vars.palette.contrast_200,
-		},
-	},
-});
-
-/** Extra gap below the spine segment that sits above the avatar (in the reason row). */
+/** Gap below the reason-row spine segment that sits above the avatar. */
 export const replyLineTop = style({
-	marginBottom: 4,
+	marginBottom: space.xs,
 });
 
-/** The feed's 1px nudge between the reason row and the avatar/content row. */
+/** Top margin on the outgoing spine below the avatar. */
+export const replyLineParent = style({
+	marginTop: space.xs,
+});
+
+/** Same, nudged down when a live-status ring enlarges the avatar's footprint. */
+export const replyLineParentLive = style({
+	marginTop: space.sm,
+});
+
+/** The 1px nudge between the reason row and the avatar/content row. */
 export const layoutRow = style({
 	marginTop: 1,
 });
 
-/** The feed surface's trailing space below the embed, before the controls. */
-export const embedSpacing = style({
-	paddingBottom: 4,
+/**
+ * Below-meta rhythm for the spacing-free `PostMeta` leaf (the parent owns the spacing). `display: flex` so
+ * the wrapper hugs the row instead of inflating it with the font strut.
+ */
+export const metaSpacing = style({
+	display: 'flex',
+	flexDirection: 'column',
+	paddingBottom: space.xs,
+});
+
+/** Below-row rhythm for `PostRepliedTo`. */
+export const repliedTo = style({
+	paddingBottom: space.xs,
 });

@@ -26,8 +26,7 @@ import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
-import * as PostRow from '#/components/PostRow';
-import * as postRowCss from '#/components/PostRow.css';
+import * as PostLayout from '#/components/PostLayout';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import * as css from './Post.css';
@@ -130,9 +129,9 @@ function PostInner({
 	return (
 		<GalleryBleed>
 			<BlockLink to={itemHref} onBeforePress={onBeforePress}>
-				<div className={clsx(css.outer, !hideTopBorder && css.outerBorder)} style={style}>
-					<PostRow.Row>
-						<PostRow.AvatarColumn>
+				<article className={clsx(css.outer, !hideTopBorder && css.outerBorder)} style={style}>
+					<PostLayout.Row>
+						<PostLayout.AvatarColumn>
 							<PreviewableUserAvatar
 								size={36}
 								profile={post.author}
@@ -140,15 +139,15 @@ function PostInner({
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								tabIndex={-1}
 							/>
-						</PostRow.AvatarColumn>
-						<PostRow.Content
+						</PostLayout.AvatarColumn>
+						<PostLayout.ContentColumn
 							style={maybeApplyGalleryOffsetStyles('meta', {
 								post,
 								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 								additionalCauses: [],
 							})}
 						>
-							<div className={postRowCss.metaSpacing}>
+							<div className={css.metaSpacing}>
 								<PostMeta
 									author={post.author}
 									moderation={moderation}
@@ -157,7 +156,7 @@ function PostInner({
 								/>
 							</div>
 							{replyAuthorDid !== '' && (
-								<PostRepliedTo parentAuthor={replyAuthorDid} className={postRowCss.repliedTo} />
+								<PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />
 							)}
 							<LabelsOnMyPost post={post} />
 							<PostContent
@@ -174,9 +173,9 @@ function PostInner({
 								onPressReply={onPressReply}
 								logContext="Post"
 							/>
-						</PostRow.Content>
-					</PostRow.Row>
-				</div>
+						</PostLayout.ContentColumn>
+					</PostLayout.Row>
+				</article>
 			</BlockLink>
 		</GalleryBleed>
 	);

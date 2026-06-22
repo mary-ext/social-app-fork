@@ -503,9 +503,6 @@ let PostFeed = ({
 						showReplyTo={row.showReplyTo}
 						isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
 						isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-						isThreadLastChild={
-							isThreadChildAt(slice.items, indexInSlice) && slice.items.length === indexInSlice + 1
-						}
 						isParentBlocked={item.isParentBlocked}
 						isParentNotFound={item.isParentNotFound}
 						hideTopBorder={rowIndex === 0 && indexInSlice === 0}

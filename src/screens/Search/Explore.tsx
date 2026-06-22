@@ -873,9 +873,6 @@ export function Explore({
 							showReplyTo={item.showReplyTo}
 							isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
 							isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-							isThreadLastChild={
-								isThreadChildAt(slice.items, indexInSlice) && slice.items.length === indexInSlice + 1
-							}
 							isParentBlocked={subItem.isParentBlocked}
 							isParentNotFound={subItem.isParentNotFound}
 							hideTopBorder={item.hideTopBorder}

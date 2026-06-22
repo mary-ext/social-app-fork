@@ -8,7 +8,6 @@ import type {
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
-import { clsx } from 'clsx';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -31,8 +30,7 @@ import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
-import * as PostRow from '#/components/PostRow';
-import * as postRowCss from '#/components/PostRow.css';
+import * as PostLayout from '#/components/PostLayout';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -47,7 +45,6 @@ interface FeedItemProps {
 	parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 	showReplyTo: boolean;
 	isThreadChild?: boolean;
-	isThreadLastChild?: boolean;
 	isThreadParent?: boolean;
 	feedContext: string | undefined;
 	reqId: string | undefined;
@@ -66,7 +63,6 @@ export function PostFeedItem({
 	parentAuthor,
 	showReplyTo,
 	isThreadChild,
-	isThreadLastChild,
 	isThreadParent,
 	hideTopBorder,
 	isParentBlocked,
@@ -104,7 +100,6 @@ export function PostFeedItem({
 				showReplyTo={showReplyTo}
 				moderation={moderation}
 				isThreadChild={isThreadChild}
-				isThreadLastChild={isThreadLastChild}
 				isThreadParent={isThreadParent}
 				hideTopBorder={hideTopBorder}
 				isParentBlocked={isParentBlocked}
@@ -128,7 +123,6 @@ let FeedItemInner = ({
 	parentAuthor,
 	showReplyTo,
 	isThreadChild,
-	isThreadLastChild,
 	isThreadParent,
 	hideTopBorder,
 	isParentBlocked,
@@ -261,16 +255,10 @@ let FeedItemInner = ({
 	return (
 		<GalleryBleed>
 			<BlockLink to={href} onBeforePress={onBeforePress}>
-				<div
-					className={css.outer({
-						bottomSpace: isThreadLastChild || (!isThreadChild && !isThreadParent),
-						reclaimBorder: hideTopBorder,
-						topBorder: !(hideTopBorder || isThreadChild),
-					})}
-				>
+				<PostLayout.Frame hoverable topBorder={!(hideTopBorder || isThreadChild)}>
 					<div className={css.reasonRow}>
 						<div className={css.spineSlot}>
-							{isThreadChild && <div className={clsx(css.replyLine, css.replyLineTop)} />}
+							{isThreadChild && <PostLayout.Spine className={css.replyLineTop} />}
 						</div>
 						<div className={css.reason}>
 							{reason && (
@@ -279,8 +267,8 @@ let FeedItemInner = ({
 						</div>
 					</div>
 
-					<PostRow.Row className={css.layoutRow}>
-						<PostRow.AvatarColumn>
+					<PostLayout.Row className={css.layoutRow}>
+						<PostLayout.AvatarColumn>
 							<PreviewableUserAvatar
 								size={36}
 								profile={post.author}
@@ -290,16 +278,18 @@ let FeedItemInner = ({
 								live={live}
 								tabIndex={-1}
 							/>
-							{isThreadParent && <div className={css.replyLine} style={{ marginTop: live ? 8 : 4 }} />}
-						</PostRow.AvatarColumn>
-						<PostRow.Content
+							{isThreadParent && (
+								<PostLayout.Spine className={live ? css.replyLineParentLive : css.replyLineParent} />
+							)}
+						</PostLayout.AvatarColumn>
+						<PostLayout.ContentColumn
 							style={maybeApplyGalleryOffsetStyles('meta', {
 								post,
 								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 								additionalCauses: additionalPostAlerts,
 							})}
 						>
-							<div className={postRowCss.metaSpacing}>
+							<div className={css.metaSpacing}>
 								<PostMeta
 									author={post.author}
 									moderation={moderation}
@@ -313,14 +303,13 @@ let FeedItemInner = ({
 									parentAuthor={parentAuthor}
 									isParentBlocked={isParentBlocked}
 									isParentNotFound={isParentNotFound}
-									className={postRowCss.repliedTo}
+									className={css.repliedTo}
 								/>
 							)}
 							<LabelsOnMyPost post={post} />
 							<PostContent
 								additionalCauses={additionalPostAlerts}
 								displayContext="list"
-								embedClassName={css.embedSpacing}
 								ignoreMute
 								moderation={moderation}
 								onOpenEmbed={onOpenEmbed}
@@ -339,11 +328,11 @@ let FeedItemInner = ({
 								onShowLess={onShowLess}
 								viaRepost={viaRepost}
 							/>
-						</PostRow.Content>
+						</PostLayout.ContentColumn>
 
 						<DiscoverDebug feedContext={feedContext} />
-					</PostRow.Row>
-				</div>
+					</PostLayout.Row>
+				</PostLayout.Frame>
 			</BlockLink>
 		</GalleryBleed>
 	);

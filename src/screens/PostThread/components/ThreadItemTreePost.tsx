@@ -1,5 +1,4 @@
 import { memo, useCallback, useMemo } from 'react';
-import { View } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -17,9 +16,7 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { OUTER_SPACE, TREE_AVI_WIDTH } from '#/screens/PostThread/const';
-
-import { atoms as a, useTheme } from '#/alf';
+import { TREE_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
@@ -31,10 +28,11 @@ import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
-import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Text';
+import * as Skele from '#/components/web/Skeleton';
 
 import * as css from './ThreadItemTreePost.css';
+import { ChildReplyLine, Connector, IndentGuides } from './ThreadLines';
 
 export function ThreadItemTreePost({
 	item,
@@ -102,15 +100,11 @@ const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrap
 					item.ui.indent === 1 && !item.ui.showParentReplyLine && css.outerRowBorder,
 				)}
 			>
-				{Array.from(Array(indents)).map((_, n: number) => {
-					const isSkipped = item.ui.skippedIndentIndices.has(n);
-					return (
-						<div
-							key={`${item.value.post.uri}-padding-${n}`}
-							className={clsx(css.guide, isSkipped && css.guideSkipped)}
-						/>
-					);
-				})}
+				<IndentGuides
+					count={indents}
+					keyPrefix={item.value.post.uri}
+					skipped={item.ui.skippedIndentIndices}
+				/>
 				{children}
 			</div>
 		</GalleryBleed>
@@ -125,31 +119,9 @@ const ThreadItemTreePostInnerWrapper = memo(function ThreadItemTreePostInnerWrap
 	children: React.ReactNode;
 }) {
 	return (
-		<div
-			className={clsx(
-				css.innerWrapper,
-				item.ui.indent === 1 && !item.ui.showParentReplyLine
-					? css.innerWrapperPadTopLoose
-					: css.innerWrapperPadTop,
-				((item.ui.indent === 1 && !item.ui.showChildReplyLine) ||
-					(item.ui.isLastChild && !item.ui.precedesChildReadMore)) &&
-					css.innerWrapperPadBottom,
-			)}
-		>
-			{item.ui.indent > 1 && <div className={css.connector} />}
+		<div className={css.innerWrapper}>
+			{item.ui.indent > 1 && <Connector />}
 			{children}
-		</div>
-	);
-});
-
-const ThreadItemTreeReplyChildReplyLine = memo(function ThreadItemTreeReplyChildReplyLine({
-	item,
-}: {
-	item: Extract<ThreadItem, { type: 'threadPost' }>;
-}) {
-	return (
-		<div className={css.replyChildLineColumn}>
-			{item.ui.showChildReplyLine && <div className={css.replyChildLine} />}
 		</div>
 	);
 });
@@ -244,7 +216,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 								showAvatar
 							/>
 							<div className={css.bodyRow}>
-								<ThreadItemTreeReplyChildReplyLine item={item} />
+								<ChildReplyLine show={item.ui.showChildReplyLine} />
 								<div className={css.contentColumn}>
 									<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 									<PostAlerts
@@ -255,17 +227,16 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 									{richText?.text ? (
 										<ClampedPostText authorHandle={post.author.handle} richText={richText} />
 									) : null}
+
 									{post.embed && (
-										<div className={css.embed}>
-											<Embed
-												embed={post.embed}
-												moderation={moderation}
-												viewContext={PostEmbedViewContext.Feed}
-											/>
-										</div>
+										<Embed
+											embed={post.embed}
+											moderation={moderation}
+											viewContext={PostEmbedViewContext.Feed}
+										/>
 									)}
+
 									<PostControls
-										variant="compact"
 										post={postShadow}
 										record={record}
 										richText={richText}
@@ -285,39 +256,32 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 });
 
 export function ThreadItemTreePostSkeleton({ index }: { index: number }) {
-	const t = useTheme();
 	const even = index % 2 === 0;
 	return (
-		<View
-			style={[
-				{ paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE / 1.5 },
-				a.border_t,
-				t.atoms.border_contrast_low,
-			]}
-		>
-			<Skele.Row style={[a.align_start, a.gap_xs]}>
+		<div className={css.skeleton}>
+			<Skele.Row align="start" gap="xs">
 				<Skele.Circle size={TREE_AVI_WIDTH} />
 
-				<Skele.Col style={[a.gap_xs]}>
-					<Skele.Row style={[a.gap_sm]}>
-						<Skele.Text style={[a.text_md, { width: '20%' }]} />
-						<Skele.Text blend style={[a.text_md, { width: '30%' }]} />
+				<Skele.Col gap="xs">
+					<Skele.Row gap="sm">
+						<Skele.Text size="md" width="20%" />
+						<Skele.Text blend size="md" width="30%" />
 					</Skele.Row>
 
 					<Skele.Col>
 						{even ? (
 							<>
-								<Skele.Text blend style={[a.text_md, { width: '100%' }]} />
-								<Skele.Text blend style={[a.text_md, { width: '60%' }]} />
+								<Skele.Text blend size="md" width="100%" />
+								<Skele.Text blend size="md" width="60%" />
 							</>
 						) : (
-							<Skele.Text blend style={[a.text_md, { width: '60%' }]} />
+							<Skele.Text blend size="md" width="60%" />
 						)}
 					</Skele.Col>
 
 					<PostControlsSkeleton />
 				</Skele.Col>
 			</Skele.Row>
-		</View>
+		</div>
 	);
 }

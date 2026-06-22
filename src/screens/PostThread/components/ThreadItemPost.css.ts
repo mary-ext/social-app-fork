@@ -1,32 +1,15 @@
 import { style } from '@vanilla-extract/css';
 
-import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+import { LINEAR_AVI_WIDTH, OUTER_SPACE } from '#/screens/PostThread/const';
 
-import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
-import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-/** The post row; GalleryBleed measures this host and clips the image-carousel bleed to it. */
-export const outerRow = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'column',
-	paddingLeft: OUTER_SPACE,
-	paddingRight: OUTER_SPACE,
-});
-
-/** Top border separating a post from the one above when no parent reply line bridges them. */
-export const outerRowBorder = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
-	borderTopWidth: 1,
-});
-
-/** Trailing space below a post with no following child. */
-export const outerRowPadBottom = style({
-	paddingBottom: OUTER_SPACE / 2,
-});
+/**
+ * Linear-thread-specific layout. The shared row / column / spine / frame structure lives in
+ * `#/components/PostLayout`; what remains here is the incoming/outgoing reply spine geometry, the per-element
+ * body rhythm, and the deleted-post chrome.
+ */
 
 /** Chrome for the PostHider warning row on the linear thread surface. */
 export const hider = style({
@@ -39,18 +22,6 @@ export const hider = style({
 export const hiderIcon = style({
 	marginRight: space.xs,
 });
-
-// #region wrappers
-/** Whole-row hover target; tints translucently behind content so text stays crisp. */
-export const hoverable = style({
-	cursor: 'pointer',
-	selectors: {
-		'&:hover': {
-			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
-		},
-	},
-});
-// #endregion
 
 // #region reply lines
 /** Spacer row above the avatar that carries the incoming parent reply line. */
@@ -66,48 +37,18 @@ export const parentLineColumn = style({
 	width: LINEAR_AVI_WIDTH,
 });
 
+/** Trailing gap below the incoming spine, before the avatar row. */
 export const parentLine = style({
-	backgroundColor: colors.borderContrastLow,
-	flex: 1,
 	marginBottom: space.xs,
-	marginLeft: 'auto',
-	marginRight: 'auto',
-	width: REPLY_LINE_WIDTH,
 });
 
-/** The outgoing child reply line below the avatar, continuing the thread downward. */
+/** Leading gap above the outgoing spine, below the avatar. */
 export const childLine = style({
-	backgroundColor: colors.borderContrastLow,
-	flex: 1,
-	marginLeft: 'auto',
-	marginRight: 'auto',
 	marginTop: space.xs,
-	width: REPLY_LINE_WIDTH,
 });
 // #endregion
 
-// #region post body
-/** The avatar column beside the content. */
-export const row = style({
-	display: 'flex',
-	flexDirection: 'row',
-	gap: space.md,
-});
-
-export const avatarColumn = style({
-	display: 'flex',
-	flexDirection: 'column',
-});
-
-/** `minWidth: 0` lets the clamped text/name ellipsize. */
-export const content = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	minWidth: 0,
-});
-
-/** Below-meta rhythm. `display: flex` so the wrapper doesn't inflate the line box. */
+// #region body rhythm
 export const metaSpacing = style({
 	display: 'flex',
 	flexDirection: 'column',
@@ -149,5 +90,14 @@ export const deletedIcon = style({
 
 export const deletedSpacer = style({
 	height: 4,
+});
+
+/** Padding-block for the loading skeleton; `OUTER_SPACE / 1.5` matches the old RNW vertical padding. */
+export const skeleton = style({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: space.md,
+	paddingBlock: OUTER_SPACE / 1.5,
+	paddingInline: OUTER_SPACE,
 });
 // #endregion

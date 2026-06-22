@@ -2,7 +2,7 @@ import { createVar, fallbackVar, style, styleVariants } from '@vanilla-extract/c
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
-import { borderRadius, fontLeading, fontSize } from '#/styles/tokens.css';
+import { borderRadius, fontLeading, fontSize, space } from '#/styles/tokens.css';
 
 // line box height for the placeholder, set by the `size` variant from the matching `Text` size so the bar
 // occupies the same vertical footprint as the line it stands in for.
@@ -31,6 +31,11 @@ export const bar = style({
 	width: '100%',
 });
 
+/** De-emphasizes a placeholder so a block of them reads as primary line + secondary lines. */
+export const blend = style({
+	opacity: 0.6,
+});
+
 // one variant per `Text` size, each publishing the size's pixel-snapped line-height (`round(font-size ×
 // paired ratio)`) so the placeholder tracks the live typography scale.
 export const size = styleVariants(
@@ -51,4 +56,29 @@ export const circle = style({
 	height: circleSizeVar,
 	justifyContent: 'center',
 	width: circleSizeVar,
+});
+
+export const row = style({
+	display: 'flex',
+	flexDirection: 'row',
+});
+
+export const col = style({
+	display: 'flex',
+	flex: 1,
+	flexDirection: 'column',
+	minWidth: 0,
+});
+
+/** Cross-axis alignment for {@link row}. */
+export const align = styleVariants({
+	center: { alignItems: 'center' },
+	start: { alignItems: 'flex-start' },
+});
+
+/** Gap between children, shared by {@link row} and {@link col}. */
+export const gap = styleVariants({
+	md: { gap: space.md },
+	sm: { gap: space.sm },
+	xs: { gap: space.xs },
 });

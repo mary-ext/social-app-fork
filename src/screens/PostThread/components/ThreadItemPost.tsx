@@ -1,10 +1,8 @@
 import { memo, type ReactNode, useCallback, useMemo } from 'react';
-import { View } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
-import { clsx } from 'clsx';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -17,9 +15,7 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { LINEAR_AVI_WIDTH, OUTER_SPACE } from '#/screens/PostThread/const';
-
-import { atoms as a } from '#/alf';
+import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
@@ -31,9 +27,10 @@ import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
-import * as Skele from '#/components/Skeleton';
+import * as PostLayout from '#/components/PostLayout';
 import { Text } from '#/components/Text';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
+import * as Skele from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';
 
@@ -89,24 +86,19 @@ function ThreadItemPostDeleted({ item, overrides }: Pick<ThreadItemPostProps, 'i
 const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
 	item,
 	overrides,
+	hoverable,
 	children,
 }: Pick<ThreadItemPostProps, 'item' | 'overrides'> & {
+	hoverable?: boolean;
 	children: ReactNode;
 }) {
 	const showTopBorder = !item.ui.showParentReplyLine && overrides?.topBorder !== true;
 
 	return (
 		<GalleryBleed>
-			<div
-				className={clsx(
-					css.outerRow,
-					showTopBorder && css.outerRowBorder,
-					// If there's no next child, add a little padding to bottom
-					!item.ui.showChildReplyLine && !item.ui.precedesChildReadMore && css.outerRowPadBottom,
-				)}
-			>
+			<PostLayout.Frame hoverable={hoverable} topBorder={showTopBorder}>
 				{children}
-			</div>
+			</PostLayout.Frame>
 		</GalleryBleed>
 	);
 });
@@ -118,7 +110,7 @@ const ThreadItemPostParentReplyLine = memo(function ThreadItemPostParentReplyLin
 	return (
 		<div className={css.parentLineRow}>
 			<div className={css.parentLineColumn}>
-				{item.ui.showParentReplyLine && <div className={css.parentLine} />}
+				{item.ui.showParentReplyLine && <PostLayout.Spine className={css.parentLine} />}
 			</div>
 		</div>
 	);
@@ -187,116 +179,114 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 	const { isActive: live } = useActorStatus(post.author);
 
 	return (
-		<div className={css.hoverable}>
-			<ThreadItemPostOuterWrapper item={item} overrides={overrides}>
-				<PostHider
-					to={postHref}
-					disabled={overrides?.moderation === true}
-					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-					hiderClassName={css.hider}
-					iconSize={LINEAR_AVI_WIDTH}
-					iconClassName={css.hiderIcon}
-					profile={post.author}
-					interpretFilterAsBlur
-				>
-					<ThreadItemPostParentReplyLine item={item} />
+		<ThreadItemPostOuterWrapper item={item} overrides={overrides} hoverable>
+			<PostHider
+				to={postHref}
+				disabled={overrides?.moderation === true}
+				modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
+				hiderClassName={css.hider}
+				iconSize={LINEAR_AVI_WIDTH}
+				iconClassName={css.hiderIcon}
+				profile={post.author}
+				interpretFilterAsBlur
+			>
+				<ThreadItemPostParentReplyLine item={item} />
 
-					<div className={css.row}>
-						<div className={css.avatarColumn}>
-							<PreviewableUserAvatar
-								size={LINEAR_AVI_WIDTH}
-								profile={post.author}
-								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-								type={post.author.associated?.labeler ? 'labeler' : 'user'}
-								live={live}
+				<PostLayout.Row>
+					<PostLayout.AvatarColumn>
+						<PreviewableUserAvatar
+							size={LINEAR_AVI_WIDTH}
+							profile={post.author}
+							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+							type={post.author.associated?.labeler ? 'labeler' : 'user'}
+							live={live}
+						/>
+
+						{(item.ui.showChildReplyLine || item.ui.precedesChildReadMore) && (
+							<PostLayout.Spine className={css.childLine} />
+						)}
+					</PostLayout.AvatarColumn>
+
+					<PostLayout.ContentColumn>
+						<div
+							className={css.metaSpacing}
+							style={maybeApplyGalleryOffsetStyles('meta', {
+								post: post,
+								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+								additionalCauses: additionalPostAlerts,
+							})}
+						>
+							<PostMeta
+								author={post.author}
+								moderation={moderation}
+								timestamp={post.indexedAt}
+								postHref={postHref}
 							/>
-
-							{(item.ui.showChildReplyLine || item.ui.precedesChildReadMore) && (
-								<div className={css.childLine} />
-							)}
 						</div>
-
-						<div className={css.content}>
+						<LabelsOnMyPost className={css.labelsOnMe} post={post} />
+						<PostAlerts
+							additionalCauses={additionalPostAlerts}
+							className={css.postAlerts}
+							modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
+						/>
+						{richText?.text ? (
+							<ClampedPostText authorHandle={post.author.handle} richText={richText} />
+						) : undefined}
+						{post.embed && (
 							<div
-								className={css.metaSpacing}
-								style={maybeApplyGalleryOffsetStyles('meta', {
+								className={css.embed}
+								style={maybeApplyGalleryOffsetStyles('embed', {
 									post: post,
 									modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 									additionalCauses: additionalPostAlerts,
 								})}
 							>
-								<PostMeta
-									author={post.author}
-									moderation={moderation}
-									timestamp={post.indexedAt}
-									postHref={postHref}
-								/>
+								<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
 							</div>
-							<LabelsOnMyPost className={css.labelsOnMe} post={post} />
-							<PostAlerts
-								additionalCauses={additionalPostAlerts}
-								className={css.postAlerts}
-								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-							/>
-							{richText?.text ? (
-								<ClampedPostText authorHandle={post.author.handle} richText={richText} />
-							) : undefined}
-							{post.embed && (
-								<div
-									className={css.embed}
-									style={maybeApplyGalleryOffsetStyles('embed', {
-										post: post,
-										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-										additionalCauses: additionalPostAlerts,
-									})}
-								>
-									<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
-								</div>
-							)}
-							<PostControls
-								post={postShadow}
-								record={record}
-								richText={richText}
-								onPressReply={onPressReply}
-								logContext="PostThreadItem"
-								threadgateRecord={threadgateRecord}
-							/>
-							<DebugFieldDisplay subject={post} />
-						</div>
-					</div>
-				</PostHider>
-			</ThreadItemPostOuterWrapper>
-		</div>
+						)}
+						<PostControls
+							post={postShadow}
+							record={record}
+							richText={richText}
+							onPressReply={onPressReply}
+							logContext="PostThreadItem"
+							threadgateRecord={threadgateRecord}
+						/>
+						<DebugFieldDisplay subject={post} />
+					</PostLayout.ContentColumn>
+				</PostLayout.Row>
+			</PostHider>
+		</ThreadItemPostOuterWrapper>
 	);
 });
 
 export function ThreadItemPostSkeleton({ index }: { index: number }) {
 	const even = index % 2 === 0;
 	return (
-		<View style={[{ paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE / 1.5 }, a.gap_md]}>
-			<Skele.Row style={[a.align_start, a.gap_md]}>
+		<div className={css.skeleton}>
+			<Skele.Row align="start" gap="md">
 				<Skele.Circle size={LINEAR_AVI_WIDTH} />
 
-				<Skele.Col style={[a.gap_xs]}>
-					<Skele.Row style={[a.gap_sm]}>
-						<Skele.Text style={[a.text_md, { width: '20%' }]} />
-						<Skele.Text blend style={[a.text_md, { width: '30%' }]} />
+				<Skele.Col gap="xs">
+					<Skele.Row gap="sm">
+						<Skele.Text size="md" width="20%" />
+						<Skele.Text blend size="md" width="30%" />
 					</Skele.Row>
 
 					<Skele.Col>
 						{even ? (
 							<>
-								<Skele.Text blend style={[a.text_md, { width: '100%' }]} />
-								<Skele.Text blend style={[a.text_md, { width: '60%' }]} />
+								<Skele.Text blend size="md" width="100%" />
+								<Skele.Text blend size="md" width="60%" />
 							</>
 						) : (
-							<Skele.Text blend style={[a.text_md, { width: '60%' }]} />
+							<Skele.Text blend size="md" width="60%" />
 						)}
 					</Skele.Col>
 
 					<PostControlsSkeleton />
 				</Skele.Col>
 			</Skele.Row>
-		</View>
+		</div>
 	);
 }
