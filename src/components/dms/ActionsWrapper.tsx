@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { plural } from '@lingui/core/macro';
@@ -36,7 +36,6 @@ export function ActionsWrapper({
 	moderationOpts: ModerationOptions | undefined;
 	children: React.ReactNode;
 }) {
-	const viewRef = useRef(null);
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const convo = useConvoActive();
@@ -102,7 +101,6 @@ export function ActionsWrapper({
 			onFocus={onFocus}
 			onBlur={onMouseLeave}
 			style={[a.flex_1, isFromSelf ? a.flex_row : a.flex_row_reverse]}
-			ref={viewRef}
 		>
 			<View
 				style={[
@@ -131,24 +129,22 @@ export function ActionsWrapper({
 						)}
 					/>
 				)}
-				<MessageContextMenu message={message} senderProfile={senderProfile} moderationOpts={moderationOpts}>
-					{({ props, state, control }) => {
-						const showMenuTrigger = showActions || control.isOpen ? 1 : 0;
-						return (
-							<Pressable
-								{...props}
-								style={[
-									{ opacity: showMenuTrigger },
-									a.p_xs,
-									a.rounded_full,
-									(state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-								]}
-							>
-								<DotsHorizontalIcon size="md" style={t.atoms.text_contrast_medium} />
-							</Pressable>
-						);
-					}}
-				</MessageContextMenu>
+				<MessageContextMenu
+					message={message}
+					senderProfile={senderProfile}
+					moderationOpts={moderationOpts}
+					render={(props, state) => (
+						<button
+							{...props}
+							type="button"
+							aria-label={l`Message options`}
+							className={clsx(props.className, reactionStyles.trigger)}
+							style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
+						>
+							<DotsHorizontalIcon size="md" style={t.atoms.text_contrast_medium} />
+						</button>
+					)}
+				/>
 			</View>
 			<View style={[{ maxWidth: '80%' }, isFromSelf ? a.align_end : a.align_start]}>{children}</View>
 		</View>

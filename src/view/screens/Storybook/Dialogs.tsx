@@ -9,7 +9,6 @@ import { atoms as a } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
-import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { H3, P, Text } from '#/components/Typography';
 
@@ -17,7 +16,6 @@ export function Dialogs() {
 	const scrollable = Dialog.useDialogControl();
 	const basic = Dialog.useDialogControl();
 	const prompt = Prompt.usePromptControl();
-	const withMenu = Dialog.useDialogControl();
 	const testDialog = Dialog.useDialogControl();
 	const { closeAllDialogs } = useDialogStateControlContext();
 	const unmountTestDialog = Dialog.useDialogControl();
@@ -68,7 +66,6 @@ export function Dialogs() {
 					scrollable.open();
 					prompt.open();
 					basic.open();
-					withMenu.open();
 				}}
 				label="Open basic dialog"
 			>
@@ -97,16 +94,6 @@ export function Dialogs() {
 				label="Open basic dialog"
 			>
 				<ButtonText>Open basic dialog</ButtonText>
-			</Button>
-
-			<Button
-				variant="outline"
-				color="primary"
-				size="small"
-				onPress={() => withMenu.open()}
-				label="Open dialog with menu in it"
-			>
-				<ButtonText>Open dialog with menu in it</ButtonText>
 			</Button>
 
 			<Button variant="solid" color="primary" size="small" onPress={() => prompt.open()} label="Open prompt">
@@ -171,38 +158,6 @@ export function Dialogs() {
 				<Dialog.Inner label="test">
 					<H3 nativeID="dialog-title">Dialog</H3>
 					<P nativeID="dialog-description">A basic dialog</P>
-				</Dialog.Inner>
-			</Dialog.Outer>
-
-			<Dialog.Outer control={withMenu}>
-				<Dialog.Inner label="test">
-					<H3 nativeID="dialog-title">Dialog with Menu</H3>
-					<Menu.Root>
-						<Menu.Trigger label="Open menu">
-							{({ props }) => (
-								<Button
-									style={a.mt_2xl}
-									label="Open menu"
-									color="primary"
-									variant="solid"
-									size="large"
-									{...props}
-								>
-									<ButtonText>Open Menu</ButtonText>
-								</Button>
-							)}
-						</Menu.Trigger>
-						<Menu.Outer>
-							<Menu.Group>
-								<Menu.Item label="Item 1" onPress={() => console.log('item 1')}>
-									<Menu.ItemText>Item 1</Menu.ItemText>
-								</Menu.Item>
-								<Menu.Item label="Item 2" onPress={() => console.log('item 2')}>
-									<Menu.ItemText>Item 2</Menu.ItemText>
-								</Menu.Item>
-							</Menu.Group>
-						</Menu.Outer>
-					</Menu.Root>
 				</Dialog.Inner>
 			</Dialog.Outer>
 

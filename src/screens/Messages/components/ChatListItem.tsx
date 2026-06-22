@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import {
@@ -44,12 +44,12 @@ import { Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen } from '#/compone
 import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 import { Trash_Stroke2_Corner0_Rounded } from '#/components/icons/Trash';
 import { Link } from '#/components/Link';
-import { useMenuControl } from '#/components/Menu';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { createPortalGroup } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
+import { useMenuHandle } from '#/components/web/Menu';
 
 import { colors } from '#/styles/colors';
 
@@ -264,7 +264,9 @@ function BaseChatItem({
 	const t = useTheme();
 	const { t: l, i18n } = useLingui();
 	const { currentAccount } = useSession();
-	const menuControl = useMenuControl();
+	const menuControl = useMenuHandle();
+	const menuTriggerId = useId();
+	const [menuOpen, setMenuOpen] = useState(false);
 	const leaveConvoControl = useDialogControl();
 	const { mutate: markAsRead } = useMarkAsReadMutation();
 	const { gtMobile } = useBreakpoints();
@@ -392,17 +394,16 @@ function BaseChatItem({
 			precacheConvoQuery(queryClient, convo.view);
 			if (isDeletedAccount) {
 				e.preventDefault();
-				menuControl.open();
+				// the menu (and its trigger) only mounts when `showMenu && primaryProfile`; opening a handle with
+				// no registered trigger throws, so gate on the same condition.
+				if (showMenu && primaryProfile) {
+					menuControl.open(menuTriggerId);
+				}
 				return false;
-			} else {
 			}
 		},
-		[isDeletedAccount, menuControl, queryClient, convo],
+		[isDeletedAccount, showMenu, primaryProfile, menuControl, menuTriggerId, queryClient, convo],
 	);
-
-	const onLongPress = useCallback(() => {
-		menuControl.open();
-	}, [menuControl]);
 
 	const markReadAction = {
 		threshold: 120,
@@ -465,11 +466,8 @@ function BaseChatItem({
 						action={isWithinLeftPanel ? 'navigate' : 'push'}
 						label={title}
 						accessibilityHint={accessibilityHint}
-						accessibilityActions={undefined}
 						onPressIn={() => precacheConvoQuery(queryClient, convo.view)}
 						onPress={onPress}
-						onLongPress={undefined}
-						onAccessibilityAction={showMenu ? onLongPress : undefined}
 					>
 						{({ hovered, pressed, focused }) => (
 							<View
@@ -619,9 +617,10 @@ function BaseChatItem({
 							convo={convo}
 							profile={primaryProfile}
 							control={menuControl}
+							triggerId={menuTriggerId}
+							onOpenChange={setMenuOpen}
 							currentScreen="list"
 							showMarkAsRead={convo.view.unreadCount > 0}
-							hideTrigger={false}
 							blockInfo={blockInfo}
 							style={[
 								a.absolute,
@@ -630,7 +629,7 @@ function BaseChatItem({
 								a.justify_center,
 								{
 									right: tokens.space.lg,
-									opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
+									opacity: !gtMobile || showActions || menuOpen ? 1 : 0,
 								},
 							]}
 						/>

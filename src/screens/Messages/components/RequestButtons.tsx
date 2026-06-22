@@ -25,10 +25,16 @@ import { CircleX_Stroke2_Corner0_Rounded } from '#/components/icons/CircleX';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import { Loader } from '#/components/Loader';
-import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
+import {
+	Button as WebButton,
+	ButtonIcon as WebButtonIcon,
+	type ButtonProps as WebButtonProps,
+	ButtonText as WebButtonText,
+} from '#/components/web/Button';
 import { useDialogHandle } from '#/components/web/Dialog';
+import * as Menu from '#/components/web/Menu';
 
 export function RejectMenu({
 	convo,
@@ -39,8 +45,11 @@ export function RejectMenu({
 	icon = false,
 	showDeleteConvo,
 	currentScreen,
-	...props
-}: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
+	className,
+}: {
+	color?: WebButtonProps['color'];
+	size?: WebButtonProps['size'];
+	className?: string;
 	label?: string;
 	icon?: boolean;
 	convo: ConvoWithDetails;
@@ -112,50 +121,44 @@ export function RejectMenu({
 	return (
 		<>
 			<Menu.Root>
-				<Menu.Trigger label={l`Reject chat request`}>
-					{({ props: triggerProps }) => (
-						<Button
-							{...triggerProps}
-							{...props}
-							label={triggerProps.accessibilityLabel}
-							color={color}
-							size={size}
-						>
-							{icon ? <ButtonIcon icon={FlagIcon} /> : null}
-							<ButtonText>
+				<Menu.Trigger
+					render={
+						<WebButton label={l`Reject chat request`} color={color} size={size} className={className}>
+							{icon ? <WebButtonIcon icon={FlagIcon} /> : null}
+							<WebButtonText>
 								{label || (
 									<Trans comment="Reject a chat request, this opens a menu with options">Reject</Trans>
 								)}
-							</ButtonText>
-						</Button>
-					)}
-				</Menu.Trigger>
-				<Menu.Outer showCancel>
+							</WebButtonText>
+						</WebButton>
+					}
+				/>
+				<Menu.Popup label={l`Reject chat request`}>
 					<Menu.Group>
 						{showDeleteConvo && (
-							<Menu.Item label={l`Delete conversation`} onPress={onPressDelete}>
+							<Menu.Item label={l`Delete conversation`} onClick={onPressDelete}>
 								<Menu.ItemText>
 									<Trans>Delete conversation</Trans>
 								</Menu.ItemText>
-								<Menu.ItemIcon icon={CircleX_Stroke2_Corner0_Rounded} />
+								<Menu.ItemIcon icon={CircleX_Stroke2_Corner0_Rounded} position="right" />
 							</Menu.Item>
 						)}
-						<Menu.Item label={l`Block account`} onPress={onPressBlock}>
+						<Menu.Item label={l`Block account`} onClick={onPressBlock}>
 							<Menu.ItemText>
 								<Trans>Block account</Trans>
 							</Menu.ItemText>
-							<Menu.ItemIcon icon={PersonXIcon} />
+							<Menu.ItemIcon icon={PersonXIcon} position="right" />
 						</Menu.Item>
 						{reportSubject && (
-							<Menu.Item label={l`Report conversation`} onPress={() => reportControl.open(null)}>
+							<Menu.Item label={l`Report conversation`} onClick={() => reportControl.open(null)}>
 								<Menu.ItemText>
 									<Trans>Report conversation</Trans>
 								</Menu.ItemText>
-								<Menu.ItemIcon icon={FlagIcon} />
+								<Menu.ItemIcon icon={FlagIcon} position="right" />
 							</Menu.Item>
 						)}
 					</Menu.Group>
-				</Menu.Outer>
+				</Menu.Popup>
 			</Menu.Root>
 			{reportMessage ? (
 				<>

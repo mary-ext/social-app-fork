@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { Keyboard, View } from 'react-native';
+import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -14,9 +14,8 @@ import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { type ViewStyleProp, atoms as a } from '#/alf';
+import type { ViewStyleProp } from '#/alf';
 
-import { Button, ButtonIcon } from '#/components/Button';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
@@ -34,28 +33,32 @@ import {
 	PersonX_Stroke2_Corner0_Rounded as PersonX,
 } from '#/components/icons/Person';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
-import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+import { Button, ButtonIcon } from '#/components/web/Button';
 import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
+import * as Menu from '#/components/web/Menu';
 
 let ConvoMenu = ({
 	convo,
 	profile,
 	control,
+	triggerId,
+	onOpenChange,
 	currentScreen,
 	showMarkAsRead,
-	hideTrigger,
 	blockInfo,
 	style,
 }: {
 	convo: ConvoWithDetails;
 	profile: Shadow<AnyProfileView>;
-	control?: Menu.MenuControlProps;
+	control?: Menu.MenuHandle;
+	/** DOM id of the trigger, so a detached opener (the chat row) can anchor the menu to it. */
+	triggerId?: string;
+	onOpenChange?: (open: boolean) => void;
 	currentScreen: 'list' | 'conversation';
 	showMarkAsRead?: boolean;
-	hideTrigger?: boolean;
 	blockInfo: {
 		listBlocks: BlockingModerationCause[];
 		userBlock?: BlockingModerationCause;
@@ -80,32 +83,20 @@ let ConvoMenu = ({
 
 	return (
 		<>
-			<Menu.Root control={control}>
-				{!hideTrigger && (
-					<View style={[style]}>
-						<Menu.Trigger label={l`Chat settings`}>
-							{({ props }) => (
-								<Button
-									label={props.accessibilityLabel}
-									{...props}
-									onPress={() => {
-										Keyboard.dismiss();
-										props.onPress();
-									}}
-									size="small"
-									color="secondary"
-									shape="round"
-									variant="ghost"
-									style={[a.bg_transparent]}
-								>
-									<ButtonIcon icon={DotsHorizontalIcon} size="md" />
-								</Button>
-							)}
-						</Menu.Trigger>
-					</View>
-				)}
+			<Menu.Root handle={control} onOpenChange={onOpenChange}>
+				<View style={[style]}>
+					<Menu.Trigger
+						handle={control}
+						id={triggerId}
+						render={
+							<Button label={l`Chat settings`} size="small" color="secondary" shape="round" variant="ghost">
+								<ButtonIcon icon={DotsHorizontalIcon} size="md" />
+							</Button>
+						}
+					/>
+				</View>
 
-				<Menu.Outer>
+				<Menu.Popup label={l`Chat settings`}>
 					<MenuContent
 						profile={profile}
 						showMarkAsRead={showMarkAsRead}
@@ -116,7 +107,7 @@ let ConvoMenu = ({
 						reportControl={reportControl}
 						blockedByListControl={blockedByListControl}
 					/>
-				</Menu.Outer>
+				</Menu.Popup>
 			</Menu.Root>
 			<LeaveConvoPrompt control={leaveConvoControl} convoId={convo.view.id} currentScreen={currentScreen} />
 			{reportMessage ? (
@@ -238,7 +229,7 @@ function MenuContent({
 	}, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock]);
 
 	return isDeletedAccount ? (
-		<Menu.Item destructive label={l`Leave conversation`} onPress={leaveConvoControl.open}>
+		<Menu.Item destructive label={l`Leave conversation`} onClick={leaveConvoControl.open}>
 			<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 			<Menu.ItemText>
 				<Trans>Leave conversation</Trans>
@@ -248,7 +239,7 @@ function MenuContent({
 		<>
 			<Menu.Group>
 				{showMarkAsRead && (
-					<Menu.Item label={l`Mark as read`} onPress={() => markAsRead({ convoId })}>
+					<Menu.Item label={l`Mark as read`} onClick={() => markAsRead({ convoId })}>
 						<Menu.ItemIcon icon={BubbleIcon} />
 						<Menu.ItemText>
 							<Trans>Mark as read</Trans>
@@ -256,34 +247,34 @@ function MenuContent({
 					</Menu.Item>
 				)}
 				{isGroupConvo ? null : (
-					<Menu.Item label={l`Go to user's profile`} onPress={onNavigateToProfile}>
+					<Menu.Item label={l`Go to user's profile`} onClick={onNavigateToProfile}>
 						<Menu.ItemIcon icon={Person} />
 						<Menu.ItemText>
 							<Trans>Go to profile</Trans>
 						</Menu.ItemText>
 					</Menu.Item>
 				)}
-				<Menu.Item label={l`Mute conversation`} onPress={() => muteConvo({ mute: !convo?.muted })}>
+				<Menu.Item label={l`Mute conversation`} onClick={() => muteConvo({ mute: !convo?.muted })}>
 					<Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
 					<Menu.ItemText>
 						{convo?.muted ? <Trans>Unmute conversation</Trans> : <Trans>Mute conversation</Trans>}
 					</Menu.ItemText>
 				</Menu.Item>
 			</Menu.Group>
-			<Menu.Divider />
+			<Menu.Separator />
 			<Menu.Group>
 				{isGroupConvo ? null : (
 					<Menu.Item
 						destructive
 						label={isBlocking ? l`Unblock account` : l`Block account`}
-						onPress={toggleBlock}
+						onClick={toggleBlock}
 					>
 						<Menu.ItemIcon icon={isBlocking ? PersonCheck : PersonX} />
 						<Menu.ItemText>{isBlocking ? l`Unblock account` : l`Block account`}</Menu.ItemText>
 					</Menu.Item>
 				)}
 				{canReport && (
-					<Menu.Item destructive label={l`Report conversation`} onPress={() => reportControl.open(null)}>
+					<Menu.Item destructive label={l`Report conversation`} onClick={() => reportControl.open(null)}>
 						<Menu.ItemIcon icon={Flag} />
 						<Menu.ItemText>
 							<Trans>Report conversation</Trans>
@@ -291,9 +282,9 @@ function MenuContent({
 					</Menu.Item>
 				)}
 			</Menu.Group>
-			<Menu.Divider />
+			<Menu.Separator />
 			<Menu.Group>
-				<Menu.Item destructive label={l`Leave conversation`} onPress={leaveConvoControl.open}>
+				<Menu.Item destructive label={l`Leave conversation`} onClick={leaveConvoControl.open}>
 					<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 					<Menu.ItemText>
 						<Trans>Leave conversation</Trans>

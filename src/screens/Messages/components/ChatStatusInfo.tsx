@@ -22,6 +22,7 @@ import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 
+import * as styles from './ChatStatusInfo.css';
 import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons';
 
 export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }) {
@@ -63,7 +64,7 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 						color="negative_subtle"
 						size="large"
 						currentScreen="conversation"
-						style={[a.flex_1]}
+						className={styles.rejectButton}
 					/>
 				)}
 				<DeleteChatButton

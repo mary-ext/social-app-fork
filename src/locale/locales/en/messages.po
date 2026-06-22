@@ -752,7 +752,7 @@ msgid "<0>{0}</0> members"
 msgstr ""
 
 #. Text identifying the person who added you to a group chat
-#: src/screens/Messages/components/ChatStatusInfo.tsx:130
+#: src/screens/Messages/components/ChatStatusInfo.tsx:131
 msgid "<0>{displayName}</0><1><2/></1><3> added you</3>"
 msgstr "<0>{displayName}</0><1><2/></1><3> added you</3>"
 
@@ -822,7 +822,7 @@ msgid "Abusive or discriminatory behavior"
 msgstr ""
 
 #. Accept a chat request
-#: src/screens/Messages/components/RequestButtons.tsx:276
+#: src/screens/Messages/components/RequestButtons.tsx:279
 msgid "Accept"
 msgstr ""
 
@@ -832,7 +832,7 @@ msgctxt "button"
 msgid "Accept"
 msgstr "Accept"
 
-#: src/screens/Messages/components/RequestButtons.tsx:270
+#: src/screens/Messages/components/RequestButtons.tsx:273
 msgid "Accept chat request"
 msgstr ""
 
@@ -883,7 +883,7 @@ msgid "Account and privacy settings"
 msgstr "Account and privacy settings"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:335
-#: src/screens/Messages/components/RequestButtons.tsx:92
+#: src/screens/Messages/components/RequestButtons.tsx:101
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:105
 #: src/view/com/profile/ProfileMenu.tsx:164
 msgctxt "toast"
@@ -1041,7 +1041,7 @@ msgstr ""
 msgid "Add any context that would help the moderators."
 msgstr "Add any context that would help the moderators."
 
-#: src/components/dms/ActionsWrapper.tsx:125
+#: src/components/dms/ActionsWrapper.tsx:123
 msgid "Add emoji reaction"
 msgstr ""
 
@@ -1596,12 +1596,12 @@ msgstr ""
 msgid "Block {displayName}"
 msgstr "Block {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:278
-#: src/components/dms/ConvoMenu.tsx:282
+#: src/components/dms/ConvoMenu.tsx:269
+#: src/components/dms/ConvoMenu.tsx:273
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:528
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:529
-#: src/screens/Messages/components/RequestButtons.tsx:143
-#: src/screens/Messages/components/RequestButtons.tsx:145
+#: src/screens/Messages/components/RequestButtons.tsx:146
+#: src/screens/Messages/components/RequestButtons.tsx:148
 #: src/view/com/profile/ProfileMenu.tsx:365
 #: src/view/com/profile/ProfileMenu.tsx:372
 msgid "Block account"
@@ -1631,7 +1631,7 @@ msgstr "Block and leave"
 msgid "Block list"
 msgstr ""
 
-#: src/screens/Messages/components/ChatStatusInfo.tsx:59
+#: src/screens/Messages/components/ChatStatusInfo.tsx:60
 msgid "Block or report"
 msgstr ""
 
@@ -1900,8 +1900,8 @@ msgstr ""
 msgid "Chat"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:79
-#: src/screens/Messages/components/RequestButtons.tsx:319
+#: src/screens/Messages/components/RequestButtons.tsx:88
+#: src/screens/Messages/components/RequestButtons.tsx:322
 msgctxt "toast"
 msgid "Chat deleted"
 msgstr ""
@@ -1923,7 +1923,7 @@ msgstr "Chat locked"
 msgid "Chat member options"
 msgstr "Chat member options"
 
-#: src/components/dms/ConvoMenu.tsx:213
+#: src/components/dms/ConvoMenu.tsx:204
 msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
@@ -1949,7 +1949,8 @@ msgstr ""
 msgid "Chat requests"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:86
+#: src/components/dms/ConvoMenu.tsx:92
+#: src/components/dms/ConvoMenu.tsx:99
 #: src/Navigation.tsx:721
 #: src/screens/Messages/ChatList.tsx:428
 #: src/screens/Messages/ChatList.tsx:461
@@ -1973,7 +1974,7 @@ msgstr "Chat title changed to {0}"
 msgid "Chat unlocked"
 msgstr "Chat unlocked"
 
-#: src/components/dms/ConvoMenu.tsx:215
+#: src/components/dms/ConvoMenu.tsx:206
 msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
@@ -2227,10 +2228,6 @@ msgstr ""
 msgid "Content warnings"
 msgstr ""
 
-#: src/components/Menu/index.tsx:96
-msgid "Context menu backdrop, click to close the menu."
-msgstr ""
-
 #. placeholder {0}: account.handle
 #: src/components/AccountList.tsx:97
 msgid "Continue as {0} (currently signed in)"
@@ -2249,7 +2246,7 @@ msgstr ""
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
-#: src/screens/Messages/components/ChatListItem.tsx:311
+#: src/screens/Messages/components/ChatListItem.tsx:313
 msgid "Conversation deleted"
 msgstr ""
 
@@ -2272,7 +2269,7 @@ msgid "Conversation not found."
 msgstr "Conversation not found."
 
 #: src/components/dms/ChatInvite/use-chat-invite.tsx:116
-#: src/components/dms/MessageContextMenu.tsx:49
+#: src/components/dms/MessageContextMenu.tsx:47
 #: src/components/PostControls/DiscoverDebug.tsx:26
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:213
 #: src/lib/sharing.ts:15
@@ -2328,8 +2325,8 @@ msgstr ""
 msgid "Copy link to starter pack"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:93
-#: src/components/dms/MessageContextMenu.tsx:97
+#: src/components/dms/MessageContextMenu.tsx:83
+#: src/components/dms/MessageContextMenu.tsx:85
 msgid "Copy message text"
 msgstr ""
 
@@ -2379,7 +2376,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:219
+#: src/components/dms/ConvoMenu.tsx:210
 msgid "Could not mute chat"
 msgstr ""
 
@@ -2539,15 +2536,15 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:331
-#: src/screens/Messages/components/RequestButtons.tsx:333
+#: src/screens/Messages/components/RequestButtons.tsx:334
+#: src/screens/Messages/components/RequestButtons.tsx:336
 msgid "Delete chat"
 msgstr ""
 
 #: src/components/dms/AfterReportDialog.tsx:183
 #: src/components/dms/AfterReportDialog.tsx:186
-#: src/screens/Messages/components/RequestButtons.tsx:136
-#: src/screens/Messages/components/RequestButtons.tsx:138
+#: src/screens/Messages/components/RequestButtons.tsx:139
+#: src/screens/Messages/components/RequestButtons.tsx:141
 msgid "Delete conversation"
 msgstr ""
 
@@ -2555,7 +2552,7 @@ msgstr ""
 msgid "Delete Conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:107
+#: src/components/dms/MessageContextMenu.tsx:91
 msgid "Delete for me"
 msgstr ""
 
@@ -2568,7 +2565,7 @@ msgstr ""
 msgid "Delete message"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:103
+#: src/components/dms/MessageContextMenu.tsx:89
 msgid "Delete message for me"
 msgstr ""
 
@@ -3206,7 +3203,7 @@ msgstr ""
 msgid "Extremist content"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:245
+#: src/screens/Messages/components/RequestButtons.tsx:248
 msgctxt "toast"
 msgid "Failed to accept chat"
 msgstr ""
@@ -3215,7 +3212,7 @@ msgstr ""
 msgid "Failed to accept join request"
 msgstr "Failed to accept join request"
 
-#: src/components/dms/ActionsWrapper.tsx:88
+#: src/components/dms/ActionsWrapper.tsx:87
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -3246,8 +3243,8 @@ msgstr "Failed to create invite link"
 msgid "Failed to create starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:65
-#: src/screens/Messages/components/RequestButtons.tsx:306
+#: src/screens/Messages/components/RequestButtons.tsx:74
+#: src/screens/Messages/components/RequestButtons.tsx:309
 msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
@@ -3366,7 +3363,7 @@ msgstr ""
 msgid "Failed to reconnect Germ DM. Error: {message}"
 msgstr "Failed to reconnect Germ DM. Error: {message}"
 
-#: src/components/dms/ActionsWrapper.tsx:75
+#: src/components/dms/ActionsWrapper.tsx:74
 #: src/components/dms/ReactionsDialog.tsx:164
 msgid "Failed to remove emoji reaction"
 msgstr ""
@@ -3912,7 +3909,7 @@ msgstr ""
 msgid "Go to conversation with {0}"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:262
+#: src/components/dms/ConvoMenu.tsx:253
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:70
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:162
 #: src/view/shell/desktop/LeftNav.tsx:270
@@ -3924,7 +3921,7 @@ msgstr ""
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
-#: src/components/dms/ConvoMenu.tsx:259
+#: src/components/dms/ConvoMenu.tsx:250
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:63
 msgid "Go to user's profile"
 msgstr ""
@@ -4517,7 +4514,7 @@ msgid "Leave"
 msgstr ""
 
 #. Leave a conversation (reject a chat invitation)
-#: src/screens/Messages/components/ChatStatusInfo.tsx:70
+#: src/screens/Messages/components/ChatStatusInfo.tsx:71
 msgctxt "Button"
 msgid "Leave"
 msgstr "Leave"
@@ -4533,10 +4530,10 @@ msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:210
 #: src/components/dms/AfterReportConversationDialog.tsx:213
-#: src/components/dms/ConvoMenu.tsx:241
-#: src/components/dms/ConvoMenu.tsx:244
-#: src/components/dms/ConvoMenu.tsx:296
-#: src/components/dms/ConvoMenu.tsx:299
+#: src/components/dms/ConvoMenu.tsx:232
+#: src/components/dms/ConvoMenu.tsx:235
+#: src/components/dms/ConvoMenu.tsx:287
+#: src/components/dms/ConvoMenu.tsx:290
 #: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave conversation"
 msgstr ""
@@ -4914,8 +4911,8 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:251
-#: src/components/dms/ConvoMenu.tsx:254
+#: src/components/dms/ConvoMenu.tsx:242
+#: src/components/dms/ConvoMenu.tsx:245
 msgid "Mark as read"
 msgstr ""
 
@@ -4984,7 +4981,7 @@ msgstr ""
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:311
+#: src/screens/Messages/components/ChatListItem.tsx:313
 msgid "Message deleted"
 msgstr ""
 
@@ -4999,7 +4996,7 @@ msgstr "Message failed to send."
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:64
+#: src/components/dms/MessageContextMenu.tsx:63
 msgid "Message from @{0}: {1}"
 msgstr ""
 
@@ -5016,7 +5013,7 @@ msgstr ""
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
-#: src/components/dms/MessageContextMenu.tsx:63
+#: src/components/dms/ActionsWrapper.tsx:140
 msgid "Message options"
 msgstr ""
 
@@ -5191,8 +5188,8 @@ msgstr "Mute account?"
 msgid "Mute accounts"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:266
-#: src/components/dms/ConvoMenu.tsx:269
+#: src/components/dms/ConvoMenu.tsx:257
+#: src/components/dms/ConvoMenu.tsx:260
 msgid "Mute conversation"
 msgstr ""
 
@@ -5476,7 +5473,7 @@ msgstr ""
 msgid "No media yet"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:301
+#: src/screens/Messages/components/ChatListItem.tsx:303
 msgid "No messages yet"
 msgstr ""
 
@@ -6517,11 +6514,12 @@ msgid "Reconnect"
 msgstr ""
 
 #. Reject a chat request, this opens a menu with options
-#: src/screens/Messages/components/RequestButtons.tsx:127
+#: src/screens/Messages/components/RequestButtons.tsx:130
 msgid "Reject"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:115
+#: src/screens/Messages/components/RequestButtons.tsx:126
+#: src/screens/Messages/components/RequestButtons.tsx:136
 msgid "Reject chat request"
 msgstr ""
 
@@ -6770,8 +6768,8 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:77
-#: src/components/dms/MessageContextMenu.tsx:79
+#: src/components/dms/MessageContextMenu.tsx:73
+#: src/components/dms/MessageContextMenu.tsx:75
 #: src/components/PostControls/index.tsx:196
 msgid "Reply"
 msgstr "Reply"
@@ -6816,7 +6814,7 @@ msgstr ""
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:116
+#: src/components/dms/MessageContextMenu.tsx:96
 #: src/components/moderation/ReportDialog/index.tsx:124
 #: src/features/liveNow/components/LiveStatus.tsx:192
 #: src/features/liveNow/components/LiveStatus.tsx:194
@@ -6834,10 +6832,10 @@ msgstr "Report a copyright violation, legal request, or regulatory compliance is
 msgid "Report account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:286
-#: src/components/dms/ConvoMenu.tsx:289
-#: src/screens/Messages/components/RequestButtons.tsx:150
-#: src/screens/Messages/components/RequestButtons.tsx:152
+#: src/components/dms/ConvoMenu.tsx:277
+#: src/components/dms/ConvoMenu.tsx:280
+#: src/screens/Messages/components/RequestButtons.tsx:153
+#: src/screens/Messages/components/RequestButtons.tsx:155
 msgid "Report conversation"
 msgstr ""
 
@@ -6863,7 +6861,7 @@ msgstr "Report for {0}"
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:112
+#: src/components/dms/MessageContextMenu.tsx:94
 msgid "Report message"
 msgstr ""
 
@@ -7477,7 +7475,7 @@ msgid "Send via direct message"
 msgstr ""
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
-#: src/components/dms/MessageContextMenu.tsx:72
+#: src/components/dms/MessageContextMenu.tsx:69
 msgid "Sent at {0}"
 msgstr "Sent at {0}"
 
@@ -8445,7 +8443,7 @@ msgstr "This chat has ended"
 msgid "This chat is full"
 msgstr "This chat is full"
 
-#: src/screens/Messages/components/ChatListItem.tsx:361
+#: src/screens/Messages/components/ChatListItem.tsx:363
 #: src/screens/Messages/components/ChatLocked.tsx:68
 msgid "This chat is locked"
 msgstr "This chat is locked"
@@ -8569,7 +8567,7 @@ msgstr ""
 msgid "This list is empty."
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:323
+#: src/screens/Messages/components/ChatListItem.tsx:325
 msgid "This message is hidden"
 msgstr "This message is hidden"
 
@@ -8750,8 +8748,8 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:85
-#: src/components/dms/MessageContextMenu.tsx:89
+#: src/components/dms/MessageContextMenu.tsx:79
+#: src/components/dms/MessageContextMenu.tsx:81
 #: src/components/Post/Translated/index.tsx:37
 #: src/components/Post/Translated/index.tsx:43
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:404
@@ -8858,8 +8856,8 @@ msgstr ""
 msgid "Unblock {displayName}"
 msgstr "Unblock {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:278
-#: src/components/dms/ConvoMenu.tsx:282
+#: src/components/dms/ConvoMenu.tsx:269
+#: src/components/dms/ConvoMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:365
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "Unblock account"
@@ -8965,7 +8963,7 @@ msgstr ""
 msgid "Unmute account?"
 msgstr "Unmute account?"
 
-#: src/components/dms/ConvoMenu.tsx:269
+#: src/components/dms/ConvoMenu.tsx:260
 msgid "Unmute conversation"
 msgstr ""
 
@@ -9264,7 +9262,7 @@ msgstr ""
 
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
 #: src/components/ProfileCard.tsx:106
-#: src/components/web/ProfileCard.tsx:52
+#: src/components/web/ProfileCard.tsx:53
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
@@ -9729,7 +9727,7 @@ msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in t
 msgid "You can update this later from your settings."
 msgstr ""
 
-#: src/components/dms/ActionsWrapper.tsx:79
+#: src/components/dms/ActionsWrapper.tsx:78
 msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
 msgstr "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
 
@@ -10066,7 +10064,7 @@ msgstr "Your report will be sent to <0>{title}</0>."
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/App.tsx:55
+#: src/App.tsx:54
 msgid "Your session expired. Please sign in again."
 msgstr "Your session expired. Please sign in again."
 
