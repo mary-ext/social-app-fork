@@ -8,8 +8,6 @@ import { recipe } from '#/styles/recipe';
 export const NOTIF_AVI_SIZE = 32;
 export const POST_AVI_SIZE = 36;
 export const ICON_SIZE = 24;
-export const ROW_GAP = 8;
-export const ROW_PADDING = 12;
 
 export const outer = recipe({
 	base: {
@@ -22,9 +20,9 @@ export const outer = recipe({
 		display: 'flex',
 		flexDirection: 'row',
 		overflow: 'hidden',
-		gap: ROW_GAP,
-		paddingBlock: ROW_PADDING,
-		paddingInline: ROW_PADDING,
+		gap: 12,
+		paddingBlock: 12,
+		paddingInline: 16,
 		position: 'relative',
 		selectors: {
 			'&:hover': { backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover) },

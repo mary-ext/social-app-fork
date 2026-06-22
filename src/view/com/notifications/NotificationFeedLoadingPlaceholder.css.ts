@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 
-import { NOTIF_AVI_SIZE, ROW_GAP, ROW_PADDING } from './NotificationFeedItem.css';
+import { NOTIF_AVI_SIZE } from './NotificationFeedItem.css';
 
 // mirrors the box model of the real item's `outer`, minus the interactive chrome. the icon column and
 // content layout are shared verbatim by importing the item's own classes in the .tsx.
@@ -15,9 +15,9 @@ export const item = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: ROW_GAP,
-	paddingBlock: ROW_PADDING,
-	paddingInline: ROW_PADDING,
+	gap: 12,
+	paddingBlock: 12,
+	paddingInline: 16,
 });
 
 export const itemTopBorder = style({ borderTopWidth: 1 });

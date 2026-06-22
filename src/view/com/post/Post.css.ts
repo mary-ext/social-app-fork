@@ -13,9 +13,9 @@ export const outer = style({
 	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'column',
-	paddingLeft: 10,
-	paddingRight: 15,
-	paddingTop: 10,
+	paddingLeft: 16,
+	paddingRight: 16,
+	paddingTop: 12,
 	selectors: {
 		'&:hover': {
 			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
