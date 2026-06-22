@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react';
-import { Text as RNText, View } from 'react-native';
 import type {
 	AnyProfileView,
 	AppBskyFeedDefs,
@@ -29,8 +28,6 @@ import type { PostSource } from '#/state/unstable-post-source';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 
-import { atoms as a } from '#/alf';
-
 import { Button } from '#/components/Button';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon } from '#/components/icons/CalendarClock';
@@ -42,16 +39,17 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { TranslatedPost } from '#/components/Post/Translated';
-import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
+import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
 import { useFormatPostStatCount } from '#/components/PostControls/util';
+import * as PostLayout from '#/components/PostLayout';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
-import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Text';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
+import * as Skele from '#/components/web/Skeleton';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -115,7 +113,7 @@ function ThreadItemAnchorParentReplyLine({ isRoot }: { isRoot: boolean }) {
 	return !isRoot ? (
 		<div className={css.parentLineRow}>
 			<div className={css.parentLineColumn}>
-				<div className={css.parentLine} />
+				<PostLayout.Spine />
 			</div>
 		</div>
 	) : null;
@@ -255,7 +253,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 		<>
 			<ThreadItemAnchorParentReplyLine isRoot={isRoot} />
 			<GalleryBleed>
-				<div className={clsx(css.outer, isRoot && css.outerRootPad)}>
+				<PostLayout.Frame rootPad={isRoot}>
 					<div className={css.avatarRow}>
 						<div>
 							<PreviewableUserAvatar
@@ -412,25 +410,24 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 								) : null}
 							</div>
 						) : null}
-						<div className={css.controlsWrap}>
-							<FeedFeedbackProvider value={feedFeedback}>
-								<PostControls
-									big
-									post={postShadow}
-									record={record}
-									richText={richText}
-									onPressReply={onPressReply}
-									logContext="PostThreadItem"
-									threadgateRecord={threadgateRecord}
-									feedContext={postSource?.post?.feedContext}
-									reqId={postSource?.post?.reqId}
-									viaRepost={viaRepost}
-								/>
-							</FeedFeedbackProvider>
-						</div>
+
+						<FeedFeedbackProvider value={feedFeedback}>
+							<AnchorPostControls
+								post={postShadow}
+								record={record}
+								richText={richText}
+								onPressReply={onPressReply}
+								logContext="PostThreadItem"
+								threadgateRecord={threadgateRecord}
+								feedContext={postSource?.post?.feedContext}
+								reqId={postSource?.post?.reqId}
+								viaRepost={viaRepost}
+							/>
+						</FeedFeedbackProvider>
+
 						<DebugFieldDisplay subject={post} />
 					</div>
-				</div>
+				</PostLayout.Frame>
 			</GalleryBleed>
 		</>
 	);
@@ -500,8 +497,8 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 					<Prompt.DescriptionText>
 						<Trans>
 							This post claims to have been created on{' '}
-							<RNText style={[a.font_semi_bold]}>{niceDate(i18n, createdAt)}</RNText>, but was first seen by
-							Bluesky on <RNText style={[a.font_semi_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
+							<Text weight="semiBold">{niceDate(i18n, createdAt)}</Text>, but was first seen by Bluesky on{' '}
+							<Text weight="semiBold">{niceDate(i18n, indexedAt)}</Text>.
 						</Trans>
 					</Prompt.DescriptionText>
 					<Prompt.DescriptionText>
@@ -529,24 +526,24 @@ function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost
 
 export function ThreadItemAnchorSkeleton() {
 	return (
-		<View style={[a.p_lg, a.gap_md]}>
-			<Skele.Row style={[a.align_center, a.gap_md]}>
+		<div className={css.skeleton}>
+			<Skele.Row align="center" gap="md">
 				<Skele.Circle size={42} />
 
 				<Skele.Col>
-					<Skele.Text style={[a.text_lg, { width: '20%' }]} />
-					<Skele.Text blend style={[a.text_md, { width: '40%' }]} />
+					<Skele.Text size="lg" width="20%" />
+					<Skele.Text blend size="md" width="40%" />
 				</Skele.Col>
 			</Skele.Row>
 
-			<View>
-				<Skele.Text style={[a.text_xl, { width: '100%' }]} />
-				<Skele.Text style={[a.text_xl, { width: '60%' }]} />
-			</View>
+			<div>
+				<Skele.Text size="xl" width="100%" />
+				<Skele.Text size="xl" width="60%" />
+			</div>
 
-			<Skele.Text style={[a.text_sm, { width: '50%' }]} />
+			<Skele.Text size="sm" width="50%" />
 
-			<PostControlsSkeleton big />
-		</View>
+			<AnchorPostControlsSkeleton />
+		</div>
 	);
 }

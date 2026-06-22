@@ -1,40 +1,26 @@
-import { memo } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
 
 import type { Shadow } from '#/state/cache/post-shadow';
-import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useRequireAuth } from '#/state/session';
 
-import { useTheme } from '#/alf';
-
-import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as toast from '#/components/Toast';
 
-import { PostControlButton, PostControlButtonIcon } from './PostControlButton';
-
-export const BookmarkButton = memo(function BookmarkButton({
-	post,
-	big,
-	logContext: _logContext,
-}: {
-	post: Shadow<AppBskyFeedDefs.PostView>;
-	big?: boolean;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
-}): React.ReactNode {
-	const t = useTheme();
+/**
+ * The save/remove-bookmark action shared by both action-bar sizes. Returns the toggle state, its accessible
+ * label, and a press handler; the rendering component owns the button chrome and the filled/outline icon.
+ */
+export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 	const { t: l } = useLingui();
 	const { mutateAsync: bookmark } = useBookmarkMutation();
 	const cleanError = useCleanError();
 	const requireAuth = useRequireAuth();
-	const { feedDescriptor: _feedDescriptor } = useFeedFeedbackContext();
 
-	const { viewer } = post;
-	const isBookmarked = !!viewer?.bookmarked;
+	const isBookmarked = !!post.viewer?.bookmarked;
 
 	const undoLabel = l({
 		message: `Undo`,
@@ -83,7 +69,7 @@ export const BookmarkButton = memo(function BookmarkButton({
 		}
 	};
 
-	const onHandlePress = () =>
+	const onToggle = () =>
 		requireAuth(async () => {
 			if (isBookmarked) {
 				await remove();
@@ -92,16 +78,9 @@ export const BookmarkButton = memo(function BookmarkButton({
 			}
 		});
 
-	return (
-		<PostControlButton
-			big={big}
-			active={isBookmarked}
-			activeColor={t.palette.primary_500}
-			label={isBookmarked ? l`Remove from saved posts` : l`Add to saved posts`}
-			tooltip={l`Bookmark`}
-			onClick={onHandlePress}
-		>
-			<PostControlButtonIcon icon={isBookmarked ? BookmarkFilled : Bookmark} />
-		</PostControlButton>
-	);
-});
+	return {
+		isBookmarked,
+		label: isBookmarked ? l`Remove from saved posts` : l`Add to saved posts`,
+		onToggle,
+	};
+}

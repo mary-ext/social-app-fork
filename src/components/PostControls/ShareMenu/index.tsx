@@ -1,25 +1,25 @@
-import { memo, useState } from 'react';
+import { type ReactElement, useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 
-import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import * as Menu from '#/components/web/Menu';
 
-import { PostControlButton, PostControlButtonIcon } from '../PostControlButton';
 import { ShareMenuItems } from './ShareMenuItems';
 
-let ShareMenuButton = ({
+/**
+ * The share menu. The caller supplies the trigger button via `render` so each action-bar size owns its own
+ * button chrome.
+ */
+export const ShareMenu = ({
+	render,
 	post,
-	big,
 	onShare,
 }: {
+	render: ReactElement;
 	post: Shadow<AppBskyFeedDefs.PostView>;
-	big?: boolean;
 	onShare: () => void;
 }): React.ReactNode => {
-	const { t: l } = useLingui();
 	// the items run a stack of hooks; only mount them once the menu has been opened.
 	const [hasBeenOpen, setHasBeenOpen] = useState(false);
 
@@ -31,17 +31,8 @@ let ShareMenuButton = ({
 				}
 			}}
 		>
-			<Menu.Trigger
-				render={
-					<PostControlButton label={l`Open share menu`} tooltip={l`Share`} big={big}>
-						<PostControlButtonIcon icon={ArrowShareRightIcon} />
-					</PostControlButton>
-				}
-			/>
+			<Menu.Trigger render={render} />
 			{hasBeenOpen && <ShareMenuItems post={post} onShare={onShare} />}
 		</Menu.Root>
 	);
 };
-
-ShareMenuButton = memo(ShareMenuButton);
-export { ShareMenuButton };

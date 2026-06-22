@@ -708,28 +708,28 @@ msgstr ""
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.likeCount)
 #. placeholder {1}: post.likeCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:395
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:393
 msgid "<0>{0}</0> {1, plural, one {like} other {likes}}"
 msgstr ""
 
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:379
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:377
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr ""
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:363
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:361
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr ""
 
 #. Save count display, the <0> tags enclose the number of saves in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.bookmarkCount)
 #. placeholder {1}: post.bookmarkCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:405
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:403
 msgid "<0>{0}</0> {1, plural, one {save} other {saves}}"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr ""
 msgid "Add to lists"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:100
+#: src/components/PostControls/useBookmark.tsx:83
 msgid "Add to saved posts"
 msgstr ""
 
@@ -1472,12 +1472,12 @@ msgid "Apply default recommended feeds"
 msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:489
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:486
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:477
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:498
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:474
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:495
 msgid "Archived post"
 msgstr ""
 
@@ -1711,7 +1711,7 @@ msgstr "Blocking won't stop this labeler's labels from being applied to your acc
 msgid "Blog"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:508
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:505
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -1719,7 +1719,8 @@ msgstr ""
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:101
+#: src/components/PostControls/AnchorPostControls/index.tsx:199
+#: src/components/PostControls/index.tsx:258
 msgid "Bookmark"
 msgstr "Bookmark"
 
@@ -1848,9 +1849,9 @@ msgstr "Cancel reply"
 msgid "Cancel search"
 msgstr ""
 
-#: src/components/PostControls/index.tsx:84
-#: src/components/PostControls/index.tsx:113
-#: src/components/PostControls/index.tsx:141
+#: src/components/PostControls/shared.ts:66
+#: src/components/PostControls/shared.ts:95
+#: src/components/PostControls/shared.ts:123
 #: src/lib/hooks/useOpenComposer.tsx:83
 msgid "Cannot interact with a blocked user"
 msgstr ""
@@ -4575,14 +4576,17 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
-#: src/components/PostControls/index.tsx:220
+#: src/components/PostControls/AnchorPostControls/index.tsx:164
+#: src/components/PostControls/index.tsx:214
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:398
 msgid "Like"
 msgstr ""
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
+#. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:232
+#: src/components/PostControls/AnchorPostControls/index.tsx:176
+#: src/components/PostControls/index.tsx:226
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -4629,7 +4633,7 @@ msgstr ""
 msgid "Likes of your reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:391
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:389
 msgid "Likes on this post"
 msgstr ""
 
@@ -5116,7 +5120,8 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/index.tsx:50
+#: src/components/PostControls/AnchorPostControls/index.tsx:223
+#: src/components/PostControls/index.tsx:282
 msgid "More"
 msgstr "More"
 
@@ -5682,7 +5687,7 @@ msgstr ""
 #: src/components/BotAccountAlert.tsx:41
 #: src/components/dms/InitiateChatFlow.tsx:626
 #: src/components/dms/MessageItem.tsx:589
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:512
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:509
 msgid "Okay"
 msgstr ""
 
@@ -5837,7 +5842,8 @@ msgstr "Open moderation playground"
 msgid "Open pack"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/index.tsx:50
+#: src/components/PostControls/AnchorPostControls/index.tsx:223
+#: src/components/PostControls/index.tsx:282
 msgid "Open post options menu"
 msgstr ""
 
@@ -5853,7 +5859,8 @@ msgstr ""
 msgid "Open settings"
 msgstr "Open settings"
 
-#: src/components/PostControls/ShareMenu/index.tsx:36
+#: src/components/PostControls/AnchorPostControls/index.tsx:208
+#: src/components/PostControls/index.tsx:267
 msgid "Open share menu"
 msgstr ""
 
@@ -6232,9 +6239,9 @@ msgstr ""
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:106
-#: src/screens/PostThread/components/ThreadItemPost.tsx:80
-#: src/screens/PostThread/components/ThreadItemTreePost.tsx:79
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:104
+#: src/screens/PostThread/components/ThreadItemPost.tsx:77
+#: src/screens/PostThread/components/ThreadItemTreePost.tsx:77
 msgid "Post has been deleted"
 msgstr ""
 
@@ -6282,7 +6289,7 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:51
+#: src/components/PostControls/useBookmark.tsx:37
 msgid "Post saved"
 msgstr ""
 
@@ -6422,8 +6429,8 @@ msgstr ""
 msgid "Push, People you follow"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:70
-#: src/components/PostControls/RepostButton.tsx:73
+#: src/components/PostControls/RepostMenu.tsx:54
+#: src/components/PostControls/RepostMenu.tsx:57
 #: src/view/com/composer/drafts/DraftItem.tsx:88
 msgid "Quote post"
 msgstr ""
@@ -6436,8 +6443,8 @@ msgstr ""
 msgid "Quote post was successfully detached"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:70
-#: src/components/PostControls/RepostButton.tsx:73
+#: src/components/PostControls/RepostMenu.tsx:54
+#: src/components/PostControls/RepostMenu.tsx:57
 msgid "Quote posts disabled"
 msgstr ""
 
@@ -6447,7 +6454,7 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:375
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:373
 msgid "Quotes of this post"
 msgstr ""
 
@@ -6632,7 +6639,7 @@ msgstr ""
 msgid "Remove from saved feeds"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:100
+#: src/components/PostControls/useBookmark.tsx:83
 #: src/screens/Bookmarks/index.tsx:227
 msgid "Remove from saved posts"
 msgstr ""
@@ -6699,7 +6706,7 @@ msgstr ""
 msgid "Removed from saved feeds"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:72
+#: src/components/PostControls/useBookmark.tsx:58
 #: src/screens/Bookmarks/index.tsx:191
 msgid "Removed from saved posts"
 msgstr ""
@@ -6773,7 +6780,8 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:73
 #: src/components/dms/MessageContextMenu.tsx:75
-#: src/components/PostControls/index.tsx:196
+#: src/components/PostControls/AnchorPostControls/index.tsx:138
+#: src/components/PostControls/index.tsx:179
 msgid "Reply"
 msgstr "Reply"
 
@@ -6783,8 +6791,10 @@ msgid "Reply"
 msgstr ""
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
+#. Accessibility label for the reply button, verb form followed by number of replies and noun form
 #. placeholder {0}: post.replyCount || 0
-#: src/components/PostControls/index.tsx:188
+#: src/components/PostControls/AnchorPostControls/index.tsx:130
+#: src/components/PostControls/index.tsx:171
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -6931,20 +6941,20 @@ msgstr ""
 msgid "Reporting for"
 msgstr "Reporting for"
 
-#: src/components/PostControls/RepostButton.tsx:48
-#: src/components/PostControls/RepostButton.tsx:84
+#: src/components/PostControls/AnchorPostControls/index.tsx:152
+#: src/components/PostControls/index.tsx:197
 msgid "Repost"
 msgstr "Repost"
 
-#: src/components/PostControls/RepostButton.tsx:60
-#: src/components/PostControls/RepostButton.tsx:64
+#: src/components/PostControls/RepostMenu.tsx:44
+#: src/components/PostControls/RepostMenu.tsx:48
 msgctxt "action"
 msgid "Repost"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:47
-#: src/components/PostControls/RepostButton.tsx:58
-#: src/components/PostControls/RepostButton.tsx:83
+#: src/components/PostControls/AnchorPostControls/index.tsx:151
+#: src/components/PostControls/index.tsx:196
+#: src/components/PostControls/RepostMenu.tsx:42
 msgid "Repost or quote post"
 msgstr ""
 
@@ -6967,7 +6977,7 @@ msgstr ""
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:359
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:357
 msgid "Reposts of this post"
 msgstr ""
 
@@ -7546,7 +7556,8 @@ msgstr ""
 msgid "Sexually Suggestive"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/index.tsx:36
+#: src/components/PostControls/AnchorPostControls/index.tsx:208
+#: src/components/PostControls/index.tsx:267
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:81
 #: src/screens/Hashtag.tsx:110
 #: src/screens/Messages/components/InviteLinkDialog.tsx:356
@@ -7681,7 +7692,7 @@ msgstr ""
 msgid "Show the content"
 msgstr "Show the content"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:478
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:475
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -8277,7 +8288,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:892
+#: src/screens/Search/Explore.tsx:889
 #: src/view/com/posts/PostFeed.tsx:478
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
@@ -8595,7 +8606,7 @@ msgstr "This person is blocking you"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:501
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:498
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -8880,13 +8891,13 @@ msgstr ""
 msgid "Undo"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:39
+#: src/components/PostControls/useBookmark.tsx:25
 msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:60
-#: src/components/PostControls/RepostButton.tsx:64
+#: src/components/PostControls/RepostMenu.tsx:44
+#: src/components/PostControls/RepostMenu.tsx:48
 msgid "Undo repost"
 msgstr ""
 
@@ -8921,8 +8932,10 @@ msgid "Unlike"
 msgstr ""
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
+#. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:224
+#: src/components/PostControls/AnchorPostControls/index.tsx:168
+#: src/components/PostControls/index.tsx:218
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -9311,8 +9324,8 @@ msgstr ""
 #: src/components/web/ProfileHoverCard.tsx:162
 #: src/components/web/ProfileHoverCard.tsx:181
 #: src/components/web/ProfileHoverCard.tsx:197
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:277
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:298
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:275
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:296
 #: src/view/com/posts/PostFeedErrorMessage.tsx:146
 #: src/view/com/util/PostMeta.tsx:125
 #: src/view/com/util/PostMeta.tsx:146

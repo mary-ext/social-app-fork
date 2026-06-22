@@ -36,15 +36,14 @@ const circle2Keyframes: Keyframe[] = [
 ];
 
 export function AnimatedLikeIcon({
+	size = 18,
 	isLiked,
-	big,
 	hasBeenToggled,
 }: {
+	size?: number;
 	isLiked: boolean;
-	big?: boolean;
 	hasBeenToggled: boolean;
 }) {
-	const size = big ? 22 : 18;
 	const reducedMotion = useReducedMotion();
 	const shouldAnimate = hasBeenToggled && !reducedMotion;
 	const prevIsLiked = useRef(isLiked);

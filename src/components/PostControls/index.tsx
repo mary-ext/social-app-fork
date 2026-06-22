@@ -1,35 +1,131 @@
-import { memo, useMemo, useState } from 'react';
-import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import {
+	type ComponentType,
+	createContext,
+	type CSSProperties,
+	type MouseEvent,
+	type ReactNode,
+	type Ref,
+	useContext,
+} from 'react';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { CountWheel } from '#/lib/custom-animations/CountWheel';
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
 
-import type { Shadow } from '#/state/cache/types';
-import { useFeedFeedbackContext } from '#/state/feed-feedback';
-import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/queries/post';
-import { useRequireAuth } from '#/state/session';
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
-import { useBreakpoints, useTheme } from '#/alf';
-
+import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
+import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
+import type { Props as IconProps } from '#/components/icons/common';
+import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Reply as Bubble } from '#/components/icons/Reply';
+import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import { useFormatPostStatCount } from '#/components/PostControls/util';
 import * as Skele from '#/components/Skeleton';
-import * as Toast from '#/components/Toast';
+import { Text } from '#/components/Text';
+import { Tooltip } from '#/components/web/Tooltip';
 
-import { BookmarkButton } from './BookmarkButton';
 import * as css from './index.css';
-import { PostControlButton, PostControlButtonIcon, PostControlButtonText } from './PostControlButton';
-import { PostMenuButton } from './PostMenu';
-import { RepostButton } from './RepostButton';
-import { ShareMenuButton } from './ShareMenu';
+import { PostOverflowMenu } from './PostMenu';
+import { RepostMenu } from './RepostMenu';
+import { type PostControlsProps, usePostControlsActions, useSecondaryControlSpacingStyles } from './shared';
+import { ShareMenu } from './ShareMenu';
+import { useBookmark } from './useBookmark';
 
-let PostControls = ({
-	big,
+const PostControlContext = createContext<{ active?: boolean }>({});
+PostControlContext.displayName = 'PostControlContext';
+
+type PostControlButtonProps = {
+	/** Accessible name; becomes the `aria-label`. */
+	label: string;
+	/** Visible hover/focus hint; defaults to {@link label}. Pass `null` to suppress the tooltip. */
+	tooltip?: string | null;
+	children: ReactNode;
+	active?: boolean;
+	/** Color applied when `active`; icon + count inherit it via `currentColor`. */
+	activeColor?: string;
+	disabled?: boolean;
+	onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+	className?: string;
+	style?: CSSProperties;
+	ref?: Ref<HTMLButtonElement>;
+};
+
+/**
+ * The compact post-control action button: a plain `<button>` that can render standalone (pass `onClick`) or
+ * back a `Menu.Trigger render={...}`. The big thread anchor has its own button — see `AnchorPostControls`.
+ */
+function PostControlButton({
+	active,
+	activeColor,
+	children,
+	className,
+	label,
+	onClick,
+	style,
+	tooltip,
+	...rest
+}: PostControlButtonProps) {
+	const button = (
+		// Base UI's `Menu.Trigger render={...}` and `Tooltip` both clone this with their own props
+		// (aria/data/handlers/id/ref) merged in, so spread them all onto the button — forwarding only the
+		// ref wouldn't open the menu.
+		<button
+			type="button"
+			aria-label={label}
+			className={clsx(css.button, className)}
+			style={active && activeColor ? { color: activeColor, ...style } : style}
+			onClick={onClick}
+			{...rest}
+		>
+			<PostControlContext.Provider value={{ active }}>{children}</PostControlContext.Provider>
+		</button>
+	);
+
+	if (tooltip === null) {
+		return button;
+	}
+	return <Tooltip label={tooltip ?? label}>{button}</Tooltip>;
+}
+
+/**
+ * Wraps a control's icon in the hover-highlighted circle so the hover/focus chrome lands on the icon alone.
+ * Use directly for a custom icon (e.g. the animated like heart); {@link PostControlButtonIcon} is the
+ * shorthand for a plain icon component.
+ */
+function PostControlButtonIconBox({ children }: { children: ReactNode }) {
+	return <span className={css.iconCircle}>{children}</span>;
+}
+
+/** A plain icon in the hover circle, inheriting the button color via `currentColor`. */
+function PostControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
+	return (
+		<PostControlButtonIconBox>
+			<Icon width={18} height={18} fill="currentColor" style={a.pointer_events_none} />
+		</PostControlButtonIconBox>
+	);
+}
+
+/** A count/label beside the icon, inheriting the button color and bolding when active. */
+function PostControlButtonText({ children }: { children: ReactNode }) {
+	const { active } = useContext(PostControlContext);
+	return (
+		<Text
+			className={css.text}
+			leading="none"
+			selectable={false}
+			size="md_sub"
+			weight={active ? 'semiBold' : undefined}
+		>
+			{children}
+		</Text>
+	);
+}
+
+/** The compact post action bar used on the feed and thread rows. */
+export function PostControls({
 	post,
 	record,
 	richText,
@@ -41,140 +137,27 @@ let PostControls = ({
 	threadgateRecord,
 	onShowLess,
 	viaRepost,
-	variant,
-}: {
-	big?: boolean;
-	post: Shadow<AppBskyFeedDefs.PostView>;
-	record: AppBskyFeedPost.Main;
-	richText: Richtext;
-	feedContext?: string | undefined;
-	reqId?: string | undefined;
-	onPressReply: () => void;
-	onPostReply?: (postUri: string | undefined) => void;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
-	threadgateRecord?: AppBskyFeedThreadgate.Main;
-	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-	viaRepost?: { uri: string; cid: string };
-	variant?: 'compact' | 'normal' | 'large';
-}): React.ReactNode => {
+}: PostControlsProps): React.ReactNode {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const { openComposer } = useOpenComposer();
-	const { feedDescriptor } = useFeedFeedbackContext();
-	const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, viaRepost, feedDescriptor, logContext);
-	const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
-		post,
-		viaRepost,
-		feedDescriptor,
-		logContext,
-	);
-	const requireAuth = useRequireAuth();
-	const { sendInteraction } = useFeedFeedbackContext();
-	const isBlocked = Boolean(
-		post.author.viewer?.blocking || post.author.viewer?.blockedBy || post.author.viewer?.blockingByList,
-	);
-	const replyDisabled = post.viewer?.replyDisabled;
-	const { gtPhone } = useBreakpoints();
 	const formatPostStatCount = useFormatPostStatCount();
 
-	const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false);
+	const {
+		hasLikeIconBeenToggled,
+		onPressToggleLike,
+		onQuote,
+		onRepost,
+		onShare,
+		replyDisabled,
+		requireAuth,
+	} = usePostControlsActions({ post, feedContext, reqId, viaRepost, logContext, onPostReply });
+	const bookmark = useBookmark(post);
 
-	const onPressToggleLike = async () => {
-		if (isBlocked) {
-			Toast.show(l`Cannot interact with a blocked user`, {
-				type: 'warning',
-			});
-			return;
-		}
-
-		try {
-			setHasLikeIconBeenToggled(true);
-			if (!post.viewer?.like) {
-				sendInteraction({
-					item: post.uri,
-					event: 'app.bsky.feed.defs#interactionLike',
-					feedContext,
-					reqId,
-				});
-				await queueLike();
-			} else {
-				await queueUnlike();
-			}
-		} catch (err) {
-			const e = err as Error;
-			if (e?.name !== 'AbortError') {
-				throw e;
-			}
-		}
-	};
-
-	const onRepost = async () => {
-		if (isBlocked) {
-			Toast.show(l`Cannot interact with a blocked user`, {
-				type: 'warning',
-			});
-			return;
-		}
-
-		try {
-			if (!post.viewer?.repost) {
-				sendInteraction({
-					item: post.uri,
-					event: 'app.bsky.feed.defs#interactionRepost',
-					feedContext,
-					reqId,
-				});
-				await queueRepost();
-			} else {
-				await queueUnrepost();
-			}
-		} catch (err) {
-			const e = err as Error;
-			if (e?.name !== 'AbortError') {
-				throw e;
-			}
-		}
-	};
-
-	const onQuote = () => {
-		if (isBlocked) {
-			Toast.show(l`Cannot interact with a blocked user`, {
-				type: 'warning',
-			});
-			return;
-		}
-
-		sendInteraction({
-			item: post.uri,
-			event: 'app.bsky.feed.defs#interactionQuote',
-			feedContext,
-			reqId,
-		});
-		openComposer({
-			quote: post,
-			onPost: onPostReply,
-			logContext: 'QuotePost',
-		});
-	};
-
-	const onShare = () => {
-		sendInteraction({
-			item: post.uri,
-			event: 'app.bsky.feed.defs#interactionShare',
-			feedContext,
-			reqId,
-		});
-	};
-
-	const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
-		variant,
-		big,
-		gtPhone,
-	});
+	const repostCount = (post.repostCount ?? 0) + (post.quoteCount ?? 0);
 
 	return (
-		<div className={clsx(css.outer, !big && css.outerPad)}>
-			<div className={clsx(css.primaryGroup, big ? css.primaryOffsetBig : css.primaryOffset)}>
+		<div className={css.root}>
+			<div className={css.primaryGroup}>
 				<div className={clsx(css.primaryItem, replyDisabled && css.replyDisabled)}>
 					<PostControlButton
 						onClick={
@@ -194,7 +177,6 @@ let PostControls = ({
 								'Accessibility label for the reply button, verb form followed by number of replies and noun form',
 						})}
 						tooltip={l`Reply`}
-						big={big}
 					>
 						<PostControlButtonIcon icon={Bubble} />
 						{typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
@@ -202,19 +184,31 @@ let PostControls = ({
 						)}
 					</PostControlButton>
 				</div>
+
 				<div className={css.primaryItem}>
-					<RepostButton
+					<RepostMenu
 						isReposted={!!post.viewer?.repost}
-						repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
 						onRepost={() => void onRepost()}
 						onQuote={onQuote}
-						big={big}
 						embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+						render={
+							<PostControlButton
+								label={l`Repost or quote post`}
+								tooltip={l`Repost`}
+								active={!!post.viewer?.repost}
+								activeColor={t.palette.positive_500}
+							>
+								<PostControlButtonIcon icon={Repost} />
+								{repostCount > 0 && (
+									<PostControlButtonText>{formatPostStatCount(repostCount)}</PostControlButtonText>
+								)}
+							</PostControlButton>
+						}
 					/>
 				</div>
+
 				<div className={css.primaryItem}>
 					<PostControlButton
-						big={big}
 						active={Boolean(post.viewer?.like)}
 						activeColor={t.palette.pink}
 						tooltip={l`Like`}
@@ -239,11 +233,12 @@ let PostControls = ({
 									})
 						}
 					>
-						<AnimatedLikeIcon
-							isLiked={Boolean(post.viewer?.like)}
-							big={big}
-							hasBeenToggled={hasLikeIconBeenToggled}
-						/>
+						<PostControlButtonIconBox>
+							<AnimatedLikeIcon
+								isLiked={Boolean(post.viewer?.like)}
+								hasBeenToggled={hasLikeIconBeenToggled}
+							/>
+						</PostControlButtonIconBox>
 						<CountWheel
 							count={post.likeCount ?? 0}
 							isToggled={Boolean(post.viewer?.like)}
@@ -255,51 +250,55 @@ let PostControls = ({
 					</PostControlButton>
 				</div>
 			</div>
-			<div
-				className={clsx(css.secondaryGroup, big ? css.secondaryOffsetBig : css.secondaryOffset)}
-				style={secondaryControlSpacingStyles}
-			>
-				<BookmarkButton post={post} big={big} logContext={logContext} />
-				<ShareMenuButton post={post} big={big} onShare={onShare} />
-				<PostMenuButton
+			<div className={css.secondaryGroup}>
+				<PostControlButton
+					active={bookmark.isBookmarked}
+					activeColor={t.palette.primary_500}
+					label={bookmark.label}
+					tooltip={l`Bookmark`}
+					onClick={bookmark.onToggle}
+				>
+					<PostControlButtonIcon icon={bookmark.isBookmarked ? BookmarkFilled : Bookmark} />
+				</PostControlButton>
+				<ShareMenu
+					post={post}
+					onShare={onShare}
+					render={
+						<PostControlButton label={l`Open share menu`} tooltip={l`Share`}>
+							<PostControlButtonIcon icon={ArrowShareRightIcon} />
+						</PostControlButton>
+					}
+				/>
+				<PostOverflowMenu
 					post={post}
 					postFeedContext={feedContext}
 					postReqId={reqId}
-					big={big}
 					record={record}
 					richText={richText}
 					threadgateRecord={threadgateRecord}
 					onShowLess={onShowLess}
 					logContext={logContext}
+					render={
+						<PostControlButton label={l`Open post options menu`} tooltip={l`More`}>
+							<PostControlButtonIcon icon={DotsHorizontal} />
+						</PostControlButton>
+					}
 				/>
 			</div>
 		</div>
 	);
-};
-PostControls = memo(PostControls);
-export { PostControls };
+}
 
-export function PostControlsSkeleton({
-	big,
-	variant,
-}: {
-	big?: boolean;
-	variant?: 'compact' | 'normal' | 'large';
-}) {
+export function PostControlsSkeleton() {
 	const { gtPhone } = useBreakpoints();
 
-	const rowHeight = big ? 32 : 28;
 	const padding = 4;
-	const size = rowHeight - padding * 2;
+	const size = 28 - padding * 2;
 
-	const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
-		variant,
-		big,
-		gtPhone,
-	});
+	const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({ gtPhone });
 
 	return (
-		<div className={css.outer}>
+		<div className={css.root}>
 			<div className={css.primaryGroup}>
 				<div className={css.primaryItem} style={{ marginLeft: -padding, padding }}>
 					<Skele.Pill blend size={size} />
@@ -324,21 +323,4 @@ export function PostControlsSkeleton({
 			</div>
 		</div>
 	);
-}
-
-function useSecondaryControlSpacingStyles({
-	variant,
-	big,
-	gtPhone,
-}: {
-	variant?: 'compact' | 'normal' | 'large';
-	big?: boolean;
-	gtPhone: boolean;
-}) {
-	return useMemo(() => {
-		let gap = 0; // default, we want `gap` to be defined on the resulting object
-		if (variant !== 'compact') gap = 4;
-		if (big || gtPhone) gap = 8;
-		return { gap };
-	}, [variant, big, gtPhone]);
 }

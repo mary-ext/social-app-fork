@@ -1,23 +1,11 @@
 import { style } from '@vanilla-extract/css';
 
-import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
+
+import { OUTER_SPACE } from '#/components/PostLayout.const';
 
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
-
-/** The anchor post row; GalleryBleed measures this host and clips the image-carousel bleed to it. */
-export const outer = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'column',
-	paddingLeft: OUTER_SPACE,
-	paddingRight: OUTER_SPACE,
-});
-
-/** Extra top space when the anchor is the thread root. */
-export const outerRootPad = style({
-	paddingTop: space.lg,
-});
 
 export const contentHiderChild = style({
 	paddingTop: 8,
@@ -83,14 +71,6 @@ export const parentLineColumn = style({
 	flexDirection: 'column',
 	width: LINEAR_AVI_WIDTH,
 });
-
-export const parentLine = style({
-	backgroundColor: colors.borderContrastLow,
-	flexGrow: 1,
-	marginLeft: 'auto',
-	marginRight: 'auto',
-	width: REPLY_LINE_WIDTH,
-});
 // #endregion
 
 // #region header row
@@ -110,7 +90,6 @@ export const followCell = style({
 export const body = style({
 	display: 'flex',
 	flexDirection: 'column',
-	paddingBottom: space.sm,
 });
 
 /** Trailing room around the embed when there's post text above it. */
@@ -137,13 +116,6 @@ export const statsRow = style({
 	paddingBottom: space.md,
 	paddingTop: space.md,
 	rowGap: space.sm,
-});
-
-/** Nudges the big control bar left so the leading icon optically aligns with the text above. */
-export const controlsWrap = style({
-	marginLeft: -5,
-	paddingBottom: space._2xs,
-	paddingTop: space.sm,
 });
 // #endregion
 
@@ -214,3 +186,11 @@ export const deletedIcon = style({
 	width: LINEAR_AVI_WIDTH,
 });
 // #endregion
+
+/** Padding + rhythm for the loading skeleton. */
+export const skeleton = style({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: space.md,
+	padding: space.lg,
+});
