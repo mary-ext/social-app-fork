@@ -34,6 +34,10 @@ import * as Skele from '#/components/web/Skeleton';
 import * as css from './ThreadItemTreePost.css';
 import { ChildReplyLine, Connector, IndentGuides } from './ThreadLines';
 
+/** A root-level reply with no parent reply line carries the outer row border that opens its subtree. */
+const showsTopBorder = (item: Extract<ThreadItem, { type: 'threadPost' }>) =>
+	item.ui.indent === 1 && !item.ui.showParentReplyLine;
+
 export function ThreadItemTreePost({
 	item,
 	overrides,
@@ -43,7 +47,6 @@ export function ThreadItemTreePost({
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
 	overrides?: {
 		moderation?: boolean;
-		topBorder?: boolean;
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
@@ -94,12 +97,7 @@ const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrap
 
 	return (
 		<GalleryBleed>
-			<div
-				className={clsx(
-					css.outerRow,
-					item.ui.indent === 1 && !item.ui.showParentReplyLine && css.outerRowBorder,
-				)}
-			>
+			<div className={clsx(css.outerRow, showsTopBorder(item) && css.outerRowBorder)}>
 				<IndentGuides
 					count={indents}
 					keyPrefix={item.value.post.uri}
@@ -119,7 +117,7 @@ const ThreadItemTreePostInnerWrapper = memo(function ThreadItemTreePostInnerWrap
 	children: React.ReactNode;
 }) {
 	return (
-		<div className={css.innerWrapper}>
+		<div className={clsx(css.innerWrapper, showsTopBorder(item) && css.innerWrapperBordered)}>
 			{item.ui.indent > 1 && <Connector />}
 			{children}
 		</div>
@@ -137,7 +135,6 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 	postShadow: Shadow<AppBskyFeedDefs.PostView>;
 	overrides?: {
 		moderation?: boolean;
-		topBorder?: boolean;
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
@@ -217,7 +214,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 							/>
 							<div className={css.bodyRow}>
 								<ChildReplyLine show={item.ui.showChildReplyLine} />
-								<div className={css.contentColumn}>
+								<div className={clsx(css.contentColumn, item.ui.isLastChild && css.contentColumnLastChild)}>
 									<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 									<PostAlerts
 										additionalCauses={additionalPostAlerts}
