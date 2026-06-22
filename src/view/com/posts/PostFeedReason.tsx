@@ -1,9 +1,8 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
+import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useSession } from '#/state/session';
 
@@ -25,11 +24,9 @@ const reasonText = {
 
 export function PostFeedReason({
 	reason,
-	moderation,
 	onOpenReposter,
 }: {
 	reason: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin;
-	moderation?: ModerationDecision;
 	onOpenReposter?: () => void;
 }) {
 	const { t: l } = useLingui();
@@ -39,11 +36,7 @@ export function PostFeedReason({
 	if (reason.$type === 'app.bsky.feed.defs#reasonRepost') {
 		const by = reason.by;
 		const isOwner = by.did === currentAccount?.did;
-		const reposter = createSanitizedDisplayName(
-			by,
-			false,
-			moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-		);
+		const reposter = sanitizeHandle(by.handle);
 		return (
 			<div className={css.includeReason}>
 				<RepostIcon fill="currentColor" width={13} height={13} />

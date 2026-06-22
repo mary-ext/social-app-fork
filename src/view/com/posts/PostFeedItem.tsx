@@ -261,9 +261,7 @@ let FeedItemInner = ({
 							{isThreadChild && <PostLayout.Spine className={css.replyLineTop} />}
 						</div>
 						<div className={css.reason}>
-							{reason && (
-								<PostFeedReason reason={reason} moderation={moderation} onOpenReposter={onOpenReposter} />
-							)}
+							{reason && <PostFeedReason reason={reason} onOpenReposter={onOpenReposter} />}
 						</div>
 					</div>
 

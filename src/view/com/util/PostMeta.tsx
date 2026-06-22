@@ -6,9 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { niceDate } from '#/lib/strings/time';
 
@@ -18,7 +16,7 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text, type TextProps } from '#/components/Text';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
-import { type InlineLinkUnderline, InlineLinkText } from '#/components/web/Link';
+import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { Tooltip } from '#/components/web/Tooltip';
 
@@ -41,11 +39,10 @@ type AuthorLinkProps = Pick<
 	/** Sets the link's `tabindex`; pass `-1` to keep it clickable but out of the tab order. */
 	tabIndex?: number;
 	to: string;
-	underline?: InlineLinkUnderline;
 };
 
 /** A link in the meta row that collapses to plain {@link Text} when the surrounding row is non-interactive. */
-function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, underline, ...text }: AuthorLinkProps) {
+function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, ...text }: AuthorLinkProps) {
 	// the ref lands on a different element per branch (`<span>` vs `<a>`); Base UI hands us a generic
 	// element ref either way, so narrow it at the boundary.
 	if (disabled) {
@@ -58,7 +55,6 @@ function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, underline, ..
 			ref={ref as Ref<HTMLAnchorElement>}
 			tabIndex={tabIndex}
 			to={to}
-			underline={underline}
 			{...text}
 		/>
 	);
@@ -80,7 +76,6 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 	const { i18n, t: l } = useLingui();
 
 	const author = useProfileShadow(opts.author);
-	const displayName = author.displayName || author.handle;
 	const handle = author.handle;
 	const profileLink = makeProfileLink(author);
 	const queryClient = useQueryClient();
@@ -119,29 +114,9 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 			<div className={css.author}>
 				<ProfileHoverCard did={author.did}>
 					<AuthorLink
-						className={css.name}
-						color="text"
-						disabled={disabled}
-						label={l`View profile`}
-						numberOfLines={1}
-						onPress={onBeforePressAuthor}
-						size="md"
-						to={profileLink}
-						weight="semiBold"
-					>
-						{forceLTR(
-							sanitizeDisplayName(
-								displayName,
-								opts.moderation && getDisplayRestrictions(opts.moderation, DisplayContext.ProfileBio),
-							),
-						)}
-					</AuthorLink>
-				</ProfileHoverCard>
-				<ProfileBadges className={css.badges} profile={author} size="sm" />
-				<ProfileHoverCard did={author.did}>
-					<AuthorLink
 						className={css.handle}
-						color="textContrastMedium"
+						color="textContrastHigh"
+						weight="semiBold"
 						disabled={disabled}
 						label={l`View profile`}
 						numberOfLines={1}
@@ -149,17 +124,18 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 						size="md"
 						tabIndex={-1}
 						to={profileLink}
-						underline="none"
 					>
-						{NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+						{sanitizeHandle(handle)}
 					</AuthorLink>
 				</ProfileHoverCard>
+
+				<ProfileBadges className={css.badges} profile={author} size="sm" />
 
 				<TimeElapsed timestamp={opts.timestamp}>
 					{({ timeElapsed }) => (
 						<span className={css.timestamp}>
 							<Text aria-hidden color="textContrastMedium" size="md">
-								·{NON_BREAKING_SPACE}
+								{NON_BREAKING_SPACE}
 							</Text>
 							<Tooltip label={timestampLabel}>
 								<AuthorLink

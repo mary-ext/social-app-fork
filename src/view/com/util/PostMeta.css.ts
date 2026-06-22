@@ -18,7 +18,7 @@ export const avatar = style({
 
 export const badges = style({
 	alignSelf: 'center',
-	paddingLeft: 2,
+	paddingLeft: 6,
 });
 
 // every shrinkable item below also sets `minWidth: 0` to defeat the `min-width: auto` flex default, which
@@ -29,13 +29,6 @@ export const author = style({
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 1,
-	minWidth: 0,
-});
-
-// the display name holds its intrinsic width but never exceeds 70% so the handle always keeps room.
-export const name = style({
-	flexShrink: 0,
-	maxWidth: '70%',
 	minWidth: 0,
 });
 

@@ -6103,7 +6103,7 @@ msgstr ""
 msgid "Pin to your profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:69
+#: src/view/com/posts/PostFeedReason.tsx:62
 msgid "Pinned"
 msgstr ""
 
@@ -6734,22 +6734,22 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:48
+#: src/components/Post/PostRepliedTo.tsx:47
 msgctxt "description"
 msgid "Replied to <0/>"
 msgstr "Replied to <0/>"
 
-#: src/components/Post/PostRepliedTo.tsx:38
+#: src/components/Post/PostRepliedTo.tsx:37
 msgctxt "description"
 msgid "Replied to a blocked post"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:40
+#: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
 msgid "Replied to a post"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:45
+#: src/components/Post/PostRepliedTo.tsx:44
 msgctxt "description"
 msgid "Replied to you"
 msgstr ""
@@ -6962,13 +6962,13 @@ msgstr ""
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:55
-#: src/view/com/posts/PostFeedReason.tsx:57
+#: src/view/com/posts/PostFeedReason.tsx:48
+#: src/view/com/posts/PostFeedReason.tsx:50
 msgid "Reposted by {reposter}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:55
-#: src/view/com/posts/PostFeedReason.tsx:57
+#: src/view/com/posts/PostFeedReason.tsx:48
+#: src/view/com/posts/PostFeedReason.tsx:50
 msgid "Reposted by you"
 msgstr ""
 
@@ -9327,8 +9327,7 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:275
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:296
 #: src/view/com/posts/PostFeedErrorMessage.tsx:146
-#: src/view/com/util/PostMeta.tsx:125
-#: src/view/com/util/PostMeta.tsx:146
+#: src/view/com/util/PostMeta.tsx:121
 msgid "View profile"
 msgstr ""
 

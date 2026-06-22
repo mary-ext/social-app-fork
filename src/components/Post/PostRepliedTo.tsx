@@ -3,7 +3,6 @@ import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { STALE } from '#/state/queries';
@@ -68,9 +67,9 @@ export function PostRepliedTo({
 }
 
 /**
- * The replied-to author's display name as an inline profile link wrapped in a hover card, falling back to a
- * shimmer while loading and to plain text on error. The hover card only arms once the profile resolves, so
- * the loading and error states stay inert.
+ * The replied-to author's handle as an inline profile link wrapped in a hover card, falling back to a shimmer
+ * while loading and to plain text on error. The hover card only arms once the profile resolves, so the
+ * loading and error states stay inert.
  */
 function ParentAuthorName({ did }: { did: string }) {
 	const { data: profile, isError } = useProfileQuery({ did, staleTime: STALE.INFINITY });
@@ -84,7 +83,7 @@ function ParentAuthorName({ did }: { did: string }) {
 	}
 
 	if (profile) {
-		const name = sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle));
+		const name = sanitizeHandle(profile.handle);
 		return (
 			<ProfileHoverCard did={did}>
 				<InlineLinkText color="textContrastMedium" label={name} size="sm" to={makeProfileLink(profile)}>
