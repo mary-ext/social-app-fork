@@ -1,35 +1,17 @@
-import { StyleSheet } from 'react-native';
-
-import { usePalette } from '#/lib/hooks/usePalette';
-
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon } from '#/components/icons/ArrowRotate';
+import { Text } from '#/components/Text';
 
 import { colors } from '#/styles/colors';
 
-import { Button } from './forms/Button';
-import { Text } from './text/Text';
+import * as css from './LoadMoreRetryBtn.css';
 
 export function LoadMoreRetryBtn({ label, onPress }: { label: string; onPress: () => void }) {
-	const pal = usePalette('default');
 	return (
-		<Button type="default-light" onPress={onPress} style={styles.loadMoreRetry}>
+		<button aria-label={label} className={css.button} onClick={onPress} type="button">
 			<ArrowRotateCounterClockwiseIcon width={18} fill={colors.textContrastMedium} />
-			<Text style={[pal.textLight, styles.label]}>{label}</Text>
-		</Button>
+			<Text className={css.label} color="textContrastMedium">
+				{label}
+			</Text>
+		</button>
 	);
 }
-
-const styles = StyleSheet.create({
-	loadMoreRetry: {
-		flexDirection: 'row',
-		gap: 14,
-		alignItems: 'center',
-		borderRadius: 0,
-		marginTop: 1,
-		paddingVertical: 12,
-		paddingHorizontal: 20,
-	},
-	label: {
-		flex: 1,
-	},
-});
