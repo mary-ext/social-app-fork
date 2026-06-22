@@ -1,32 +1,18 @@
-import { StyleSheet, View, type ViewStyle } from 'react-native';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
-import { HITSLOP_20 } from '#/lib/constants';
-import { PressableScale } from '#/lib/custom-animations/PressableScale';
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
-import { useMinimalShellFabTransform } from '#/lib/hooks/useMinimalShellTransform';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { useMediaQuery } from '#/lib/media-query';
 import { clamp } from '#/lib/numbers';
 
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon } from '#/components/icons/Arrow';
-import { SubtleHover } from '#/components/SubtleHover';
 
 import { colors } from '#/styles/colors';
 
 import * as css from './LoadLatestBtn.css';
-
-type WebViewStyle = Omit<ViewStyle, 'left'> & {
-	left?: string;
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
-};
 
 export function LoadLatestBtn({
 	onPress,
@@ -39,10 +25,7 @@ export function LoadLatestBtn({
 }) {
 	const { hasSession } = useSession();
 	const { isDesktop, isTablet, isMobile, isTabletOrMobile } = useWebMediaQueries();
-	const fabMinimalShellTransform = useMinimalShellFabTransform();
 	const insets = useSafeAreaInsets();
-	const t = useTheme();
-	const { state: hovered, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
 
 	// move button inline if it starts overlapping the left nav
 	const isTallViewport = useMediaQuery('(height >= 700px)');
@@ -51,58 +34,31 @@ export function LoadLatestBtn({
 	// it on both tablet and mobile since the shell shows the bottom bar there too.
 	const showBottomBar = hasSession ? isMobile : isTabletOrMobile;
 
-	const bottomPosition = isTablet ? { bottom: 50 } : { bottom: clamp(insets.bottom, 15, 60) + 15 };
+	const bottom = isTablet ? 50 : clamp(insets.bottom, 15, 60) + 15;
 
 	return (
-		<View
-			testID="loadLatestBtn"
-			style={[
-				a.fixed,
-				a.z_20,
-				{ left: 18 },
-				isDesktop && (isTallViewport ? styles.loadLatestOutOfLine : styles.loadLatestInline),
-				isTablet && styles.loadLatestInline,
-				bottomPosition,
-				showBottomBar && fabMinimalShellTransform,
-			]}
+		<div
+			className={clsx(
+				css.outer,
+				isDesktop && (isTallViewport ? css.leftOutOfLine : css.leftInline),
+				isTablet && css.leftInline,
+				showBottomBar && css.lifted,
+			)}
+			style={assignInlineVars({ [css.bottomVar]: `${bottom}px` })}
 		>
-			<PressableScale
-				style={[
-					{
-						width: 42,
-						height: 42,
-					},
-					a.rounded_full,
-					a.align_center,
-					a.justify_center,
-					a.border,
-					t.atoms.border_contrast_low,
-					showIndicator ? { backgroundColor: t.palette.primary_50 } : t.atoms.bg,
-				]}
-				onPress={onPress}
-				hitSlop={HITSLOP_20}
-				accessibilityLabel={label}
-				accessibilityHint=""
-				targetScale={0.9}
-				onPointerEnter={onHoverIn}
-				onPointerLeave={onHoverOut}
+			<button
+				aria-label={label}
+				className={clsx(css.button, showIndicator && css.indicator)}
+				onClick={onPress}
+				type="button"
 			>
-				<SubtleHover hover={hovered} style={[a.rounded_full]} />
+				<div className={css.hover} />
 				<ArrowIcon
+					className={css.icon}
 					size="md"
 					fill={showIndicator ? colors.primary_500 : colors.textContrastMedium}
-					className={css.icon}
 				/>
-			</PressableScale>
-		</View>
+			</button>
+		</div>
 	);
 }
-
-const styles = StyleSheet.create({
-	loadLatestInline: webViewStyle({
-		left: 'calc(50vw - 282px)',
-	}),
-	loadLatestOutOfLine: webViewStyle({
-		left: 'calc(50vw - 382px)',
-	}),
-});
