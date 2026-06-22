@@ -40,13 +40,17 @@ type LinkBindings = {
 	target?: string;
 };
 
-// a modified click (middle/aux button or a held modifier) means the user wants the browser's default — open a
-// new tab — so the link lets the native `<a href>` handle it instead of intercepting for client-side nav.
-const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
+/**
+ * Whether a click should defer to the browser's default action (open in a new tab) rather than being
+ * intercepted for client-side navigation: a middle/aux button or a held modifier. An `<a href>` lets such
+ * clicks fall through to the native handler; a non-anchor link must replicate the new-tab open itself.
+ */
+export const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
 	return e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
 };
 
-const useNavigateToPath = () => {
+/** Returns a function that navigates to an in-app route `path` via the given React Navigation `StackAction`. */
+export const useNavigateToPath = () => {
 	const navigation = useNavigationDeduped();
 	return useCallback(
 		(path: string, action: LinkAction) => {

@@ -260,7 +260,7 @@ let FeedItemInner = ({
 
 	return (
 		<GalleryBleed>
-			<BlockLink href={href} onBeforePress={onBeforePress}>
+			<BlockLink to={href} onBeforePress={onBeforePress}>
 				<div
 					className={css.outer({
 						bottomSpace: isThreadLastChild || (!isThreadChild && !isThreadParent),

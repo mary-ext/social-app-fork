@@ -329,7 +329,7 @@ export function QuoteEmbed({
 								{contents}
 							</div>
 						) : (
-							<BlockLink href={itemHref} label={itemTitle} onBeforePress={onBeforePress}>
+							<BlockLink to={itemHref} label={itemTitle} onBeforePress={onBeforePress}>
 								<div className={clsx(css.quoteBody, !active && css.quotePad)}>{contents}</div>
 							</BlockLink>
 						)

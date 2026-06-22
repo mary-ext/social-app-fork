@@ -8,14 +8,11 @@ import {
 	type ReactNode,
 	type Ref,
 } from 'react';
-import { sanitizeUrl } from '@braintree/sanitize-url';
 import { clsx } from 'clsx';
 
-import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
-import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { mergeRefs } from '#/lib/merge-refs';
 
-import { onPressInner } from '#/view/com/util/Link';
+import { isModifiedClick, useNavigateToPath } from '#/components/web/Link';
 
 // elements that handle their own press, plus regions that opt out via {@link noRowLink}; a click landing
 // on one must not also navigate the row
@@ -36,7 +33,8 @@ type BlockLinkChildProps = HTMLAttributes<HTMLElement> & {
 type BlockLinkProps = {
 	/** The single host element to make clickable; its own box becomes the row. */
 	children: ReactNode;
-	href: string;
+	/** An in-app route path, e.g. `/profile/alice/post/abc`. Must start with a single `/`. */
+	to: string;
 	/**
 	 * When set, the row itself becomes a focusable `role="link"` with this accessible name (Enter activates).
 	 * Use it where the row is the only way to reach the target; omit it where inner links already provide
@@ -51,7 +49,7 @@ type BlockLinkProps = {
 };
 
 /**
- * A web-native clickable post-row region: navigates to `href` when its body is clicked, while letting nested
+ * A web-native clickable post-row region: navigates to `to` when its body is clicked, while letting nested
  * interactive elements and portalled popups (Base UI menus/dialogs) behave normally.
  *
  * Renders no element of its own — it clones its single child (which must be a DOM element) and attaches the
@@ -62,7 +60,7 @@ type BlockLinkProps = {
  */
 export function BlockLink({
 	children,
-	href,
+	to,
 	label,
 	className,
 	ref,
@@ -70,12 +68,23 @@ export function BlockLink({
 	onPointerEnter,
 	onPointerLeave,
 }: BlockLinkProps) {
-	const navigation = useNavigationDeduped();
-	const openLink = useOpenLink();
+	const navigateToPath = useNavigateToPath();
+
+	if (import.meta.env.DEV && (!to.startsWith('/') || to.startsWith('//'))) {
+		throw new Error(
+			`BlockLink \`to\` must be an app route path starting with a single '/'; got ${JSON.stringify(to)}.`,
+		);
+	}
 
 	const go = (e?: MouseEvent<HTMLElement>) => {
 		onBeforePress?.();
-		onPressInner(navigation, sanitizeUrl(href), 'push', (href) => void openLink(href), e);
+		// a modified/middle click opens the route in a new same-origin tab (no native `<a>` to fall through to);
+		// a plain click navigates in place
+		if (e && isModifiedClick(e)) {
+			window.open(to, '_blank');
+			return;
+		}
+		navigateToPath(to, 'push');
 	};
 
 	const onClick = (e: MouseEvent<HTMLElement>) => {

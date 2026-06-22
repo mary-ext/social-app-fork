@@ -129,7 +129,7 @@ function PostInner({
 
 	return (
 		<GalleryBleed>
-			<BlockLink href={itemHref} onBeforePress={onBeforePress}>
+			<BlockLink to={itemHref} onBeforePress={onBeforePress}>
 				<div className={clsx(css.outer, !hideTopBorder && css.outerBorder)} style={style}>
 					<PostRow.Row>
 						<PostRow.AvatarColumn>

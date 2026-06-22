@@ -225,7 +225,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 		<ThreadItemTreePostOuterWrapper item={item}>
 			<div className={css.hoverable}>
 				<PostHider
-					href={postHref}
+					to={postHref}
 					disabled={overrides?.moderation === true}
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 					iconSize={42}
