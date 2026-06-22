@@ -1,5 +1,6 @@
 import { type ComponentType, type ReactElement, type ReactNode, useState } from 'react';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import type { Props as IconProps } from '#/components/icons/common';
@@ -54,7 +55,9 @@ export function Popup({
 				<BaseMenu.Popup
 					aria-label={label}
 					className={styles.popup}
-					style={minWidth ? { minWidth } : undefined}
+					style={
+						minWidth !== undefined ? assignInlineVars({ [styles.minWidthVar]: `${minWidth}px` }) : undefined
+					}
 				>
 					{children}
 				</BaseMenu.Popup>
@@ -134,7 +137,10 @@ export function ItemRadio({ selected }: { selected: boolean }) {
 
 export function LabelText({ children, maxWidth }: { children: ReactNode; maxWidth?: number }) {
 	return (
-		<BaseMenu.GroupLabel className={styles.groupLabel} style={maxWidth ? { maxWidth } : undefined}>
+		<BaseMenu.GroupLabel
+			className={styles.groupLabel}
+			style={maxWidth !== undefined ? assignInlineVars({ [styles.maxWidthVar]: `${maxWidth}px` }) : undefined}
+		>
 			{children}
 		</BaseMenu.GroupLabel>
 	);

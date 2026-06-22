@@ -1,7 +1,10 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
+
+/** Placeholder edge length in px, wired inline so it scales to the `size` prop. */
+export const avatarSizeVar = createVar();
 
 export const outer = style({
 	display: 'flex',
@@ -21,6 +24,8 @@ export const link = style({
 export const avatarPlaceholder = style({
 	background: colors.contrast_50,
 	borderRadius: borderRadius.full,
+	height: avatarSizeVar,
+	width: avatarSizeVar,
 });
 
 export const nameAndHandlePlaceholder = style({

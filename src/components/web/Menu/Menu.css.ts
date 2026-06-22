@@ -1,10 +1,16 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { fontSize, zIndex } from '#/styles/tokens.css';
 
 /** Icon tint, kept one notch lighter than the item text and overridden for destructive/disabled items. */
 export const iconColor = createVar();
+
+/** Floor on the popup width, wired inline; defaults to fitting the content. */
+export const minWidthVar = createVar();
+
+/** Ceiling on a group label's width, wired inline; defaults to unbounded. */
+export const maxWidthVar = createVar();
 
 export const positioner = style({
 	// sit above the dialog viewport; a menu opened from inside a dialog must overlay it
@@ -19,6 +25,7 @@ export const popup = style({
 	boxSizing: 'border-box',
 	maxHeight: 'var(--available-height)',
 	maxWidth: 'min(var(--available-width), 320px)',
+	minWidth: fallbackVar(minWidthVar, 'auto'),
 	outline: 0,
 	overflowY: 'auto',
 	padding: 4,
@@ -86,6 +93,7 @@ export const groupLabel = style({
 	fontSize: fontSize.sm,
 	fontWeight: 600,
 	lineHeight: 1.3,
+	maxWidth: fallbackVar(maxWidthVar, 'none'),
 	paddingBlock: 8,
 	paddingInline: 10,
 });

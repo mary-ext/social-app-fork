@@ -7,6 +7,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -190,7 +191,9 @@ export function Handle({ profile }: { profile: AnyProfileView }) {
 
 /** Skeleton circle standing in for an avatar while a profile loads. */
 export function AvatarPlaceholder({ size = 40 }: { size?: number }) {
-	return <div className={css.avatarPlaceholder} style={{ height: size, width: size }} />;
+	return (
+		<div className={css.avatarPlaceholder} style={assignInlineVars({ [css.avatarSizeVar]: `${size}px` })} />
+	);
 }
 
 /** Skeleton name + handle bars standing in for the name column while a profile loads. */

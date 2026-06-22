@@ -1,3 +1,4 @@
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/web/Skeleton.css';
@@ -13,7 +14,14 @@ export function Text({
 	width?: number | string;
 }) {
 	return (
-		<div className={clsx(styles.text, styles.size[size])} style={{ width }}>
+		<div
+			className={clsx(styles.text, styles.size[size])}
+			style={
+				width !== undefined
+					? assignInlineVars({ [styles.widthVar]: typeof width === 'number' ? `${width}px` : width })
+					: undefined
+			}
+		>
 			<div className={styles.bar} />
 		</div>
 	);
@@ -21,5 +29,5 @@ export function Text({
 
 /** Loading placeholder for a circular element (e.g. an avatar), sized to `size` pixels. */
 export function Circle({ size }: { size: number }) {
-	return <div className={styles.circle} style={{ height: size, width: size }} />;
+	return <div className={styles.circle} style={assignInlineVars({ [styles.circleSizeVar]: `${size}px` })} />;
 }

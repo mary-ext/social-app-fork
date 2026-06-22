@@ -1,4 +1,4 @@
-import { createVar, style, styleVariants } from '@vanilla-extract/css';
+import { createVar, fallbackVar, style, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
@@ -8,12 +8,19 @@ import { borderRadius, fontLeading, fontSize } from '#/styles/tokens.css';
 // occupies the same vertical footprint as the line it stands in for.
 const lineHeightVar = createVar();
 
+/** Bar width, wired inline; defaults to filling the available width. */
+export const widthVar = createVar();
+
+/** Circle edge length in px, wired inline so the circle scales to the `size` prop. */
+export const circleSizeVar = createVar();
+
 export const text = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexShrink: 0,
 	height: lineHeightVar,
 	maxWidth: '100%',
+	width: fallbackVar(widthVar, 'auto'),
 });
 
 // the bar fills 70% of the line box, centered by the flex parent — the same 15%/15% inset the line had.
@@ -41,5 +48,7 @@ export const circle = style({
 	borderRadius: '50%',
 	display: 'flex',
 	flexShrink: 0,
+	height: circleSizeVar,
 	justifyContent: 'center',
+	width: circleSizeVar,
 });
