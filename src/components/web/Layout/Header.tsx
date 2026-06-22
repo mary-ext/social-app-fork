@@ -5,7 +5,12 @@ import { clsx } from 'clsx';
 
 import type { NavigationProp } from '#/lib/routes/types';
 
+import { useSetDrawerOpen } from '#/state/shell/drawer-open';
+
+import { useBreakpoints } from '#/alf';
+
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
+import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/Layout/Header.css';
@@ -66,10 +71,41 @@ export function BackButton() {
 				variant="ghost"
 				color="secondary"
 				shape="round"
-				className={styles.backButton}
+				className={styles.edgeButton}
 				onClick={onClick}
 			>
 				<ButtonIcon icon={ArrowLeft} size="lg" />
+			</Button>
+		</Slot>
+	);
+}
+
+/** Opens the drawer nav on narrow viewports; renders nothing once the side nav takes over. */
+export function MenuButton() {
+	const { t: l } = useLingui();
+	const { gtMobile } = useBreakpoints();
+	const setDrawerOpen = useSetDrawerOpen();
+
+	const onClick = useCallback(() => {
+		(document.activeElement as HTMLElement | null)?.blur();
+		setDrawerOpen(true);
+	}, [setDrawerOpen]);
+
+	if (gtMobile) {
+		return null;
+	}
+
+	return (
+		<Slot>
+			<Button
+				label={l`Open drawer menu`}
+				variant="ghost"
+				color="secondary"
+				shape="round"
+				className={styles.edgeButton}
+				onClick={onClick}
+			>
+				<ButtonIcon icon={Menu} size="lg" />
 			</Button>
 		</Slot>
 	);

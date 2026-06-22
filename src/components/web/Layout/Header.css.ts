@@ -57,7 +57,8 @@ export const slot = style({
 	zIndex: zIndex.stickyRaised,
 });
 
-export const backButton = style({
+// shared left-edge offset for the header's leading icon button (back / menu), nudging it to optical alignment.
+export const edgeButton = style({
 	marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET,
 });
 
