@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
-import { fontSize } from '#/styles/tokens.css';
+import { fontSize, zIndex } from '#/styles/tokens.css';
 
 export const root = style(
 	layered(components, {
@@ -25,7 +25,7 @@ export const list = style(
 		overflowX: 'auto',
 		position: 'sticky',
 		top: 0,
-		zIndex: 10,
+		zIndex: zIndex.sticky,
 		// dragging the row to scroll it shouldn't select the tab labels
 		userSelect: 'none',
 		// hide the horizontal scrollbar — tabs scroll into view programmatically
