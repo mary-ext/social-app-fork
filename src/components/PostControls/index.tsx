@@ -17,7 +17,6 @@ import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
-import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import type { Props as IconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Reply as Bubble } from '#/components/icons/Reply';
@@ -32,7 +31,6 @@ import { PostOverflowMenu } from './PostMenu';
 import { RepostMenu } from './RepostMenu';
 import { type PostControlsProps, usePostControlsActions, useSecondaryControlSpacingStyles } from './shared';
 import { ShareMenu } from './ShareMenu';
-import { useBookmark } from './useBookmark';
 
 const PostControlContext = createContext<{ active?: boolean }>({});
 PostControlContext.displayName = 'PostControlContext';
@@ -151,7 +149,6 @@ export function PostControls({
 		replyDisabled,
 		requireAuth,
 	} = usePostControlsActions({ post, feedContext, reqId, viaRepost, logContext, onPostReply });
-	const bookmark = useBookmark(post);
 
 	const repostCount = (post.repostCount ?? 0) + (post.quoteCount ?? 0);
 
@@ -251,15 +248,6 @@ export function PostControls({
 				</div>
 			</div>
 			<div className={css.secondaryGroup}>
-				<PostControlButton
-					active={bookmark.isBookmarked}
-					activeColor={t.palette.primary_500}
-					label={bookmark.label}
-					tooltip={l`Bookmark`}
-					onClick={bookmark.onToggle}
-				>
-					<PostControlButtonIcon icon={bookmark.isBookmarked ? BookmarkFilled : Bookmark} />
-				</PostControlButton>
 				<ShareMenu
 					post={post}
 					onShare={onShare}
@@ -310,7 +298,6 @@ export function PostControlsSkeleton() {
 				</div>
 			</div>
 			<div className={css.secondaryGroup} style={secondaryControlSpacingStyles}>
-				<Skele.Circle blend size={css.ICON_SIZE} />
 				<Skele.Circle blend size={css.ICON_SIZE} />
 				<Skele.Circle blend size={css.ICON_SIZE} />
 			</div>

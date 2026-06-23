@@ -8,7 +8,6 @@ import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
-import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import type { Props as IconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Reply as Bubble } from '#/components/icons/Reply';
@@ -20,7 +19,6 @@ import { PostOverflowMenu } from '../PostMenu';
 import { RepostMenu } from '../RepostMenu';
 import { type PostControlsProps, usePostControlsActions } from '../shared';
 import { ShareMenu } from '../ShareMenu';
-import { useBookmark } from '../useBookmark';
 import * as css from './index.css';
 
 type AnchorControlButtonProps = {
@@ -114,7 +112,6 @@ let AnchorPostControls = ({
 		replyDisabled,
 		requireAuth,
 	} = usePostControlsActions({ post, feedContext, reqId, viaRepost, logContext, onPostReply });
-	const bookmark = useBookmark(post);
 
 	return (
 		<div className={css.root}>
@@ -192,15 +189,6 @@ let AnchorPostControls = ({
 				</AnchorControlButtonIconBox>
 			</AnchorControlButton>
 
-			<AnchorControlButton
-				active={bookmark.isBookmarked}
-				activeColor={t.palette.primary_500}
-				label={bookmark.label}
-				tooltip={l`Bookmark`}
-				onClick={bookmark.onToggle}
-			>
-				<AnchorControlButtonIcon icon={bookmark.isBookmarked ? BookmarkFilled : Bookmark} />
-			</AnchorControlButton>
 			<ShareMenu
 				post={post}
 				onShare={onShare}
@@ -238,7 +226,6 @@ export function AnchorPostControlsSkeleton() {
 
 	return (
 		<div className={css.root}>
-			<Skele.Circle blend size={size} />
 			<Skele.Circle blend size={size} />
 			<Skele.Circle blend size={size} />
 			<Skele.Circle blend size={size} />

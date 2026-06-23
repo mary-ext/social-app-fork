@@ -15,12 +15,15 @@ import { useSession } from '#/state/session';
 
 import { useDialogControl } from '#/components/Dialog';
 import { SendViaChatDialog } from '#/components/dms/dialogs/ShareViaChatDialog';
+import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/PaperPlane';
 import * as Menu from '#/components/web/Menu';
 
 import { useDevMode } from '#/storage/hooks/dev-mode';
+
+import { useBookmark } from '../useBookmark';
 
 interface ShareMenuItemsProps {
 	onShare: () => void;
@@ -33,6 +36,7 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 	const navigation = useNavigation<NavigationProp>();
 	const sendViaChatControl = useDialogControl();
 	const [devModeEnabled] = useDevMode();
+	const bookmark = useBookmark(post);
 
 	const postUri = post.uri;
 	const postAuthor = useProfileShadow(post.author as AnyProfileView);
@@ -79,6 +83,13 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 	return (
 		<>
 			<Menu.Popup label={l`Share`} align="end">
+				<Menu.Item label={bookmark.label} onClick={bookmark.onToggle}>
+					<Menu.ItemText>{bookmark.label}</Menu.ItemText>
+					<Menu.ItemIcon icon={bookmark.isBookmarked ? BookmarkFilled : Bookmark} position="right" />
+				</Menu.Item>
+
+				<Menu.Separator />
+
 				{!hideInPWI && copyLinkItem}
 
 				{hasSession && (

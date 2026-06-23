@@ -1719,11 +1719,6 @@ msgstr ""
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:199
-#: src/components/PostControls/index.tsx:258
-msgid "Bookmark"
-msgstr "Bookmark"
-
 #: src/lib/interests.ts:53
 msgid "Books"
 msgstr ""
@@ -2285,8 +2280,8 @@ msgstr ""
 msgid "Copy at:// URI"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:119
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:121
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:132
 msgid "Copy author DID"
 msgstr ""
 
@@ -2310,8 +2305,8 @@ msgstr ""
 msgid "Copy link to list"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:71
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:73
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:75
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
 msgid "Copy link to post"
 msgstr ""
 
@@ -2329,8 +2324,8 @@ msgstr ""
 msgid "Copy message text"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:113
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:115
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:124
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:126
 msgid "Copy post at:// URI"
 msgstr ""
 
@@ -4576,8 +4571,8 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:164
-#: src/components/PostControls/index.tsx:214
+#: src/components/PostControls/AnchorPostControls/index.tsx:161
+#: src/components/PostControls/index.tsx:211
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:398
 msgid "Like"
 msgstr ""
@@ -4585,8 +4580,8 @@ msgstr ""
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/AnchorPostControls/index.tsx:176
-#: src/components/PostControls/index.tsx:226
+#: src/components/PostControls/AnchorPostControls/index.tsx:173
+#: src/components/PostControls/index.tsx:223
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -5120,8 +5115,8 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:223
-#: src/components/PostControls/index.tsx:282
+#: src/components/PostControls/AnchorPostControls/index.tsx:211
+#: src/components/PostControls/index.tsx:270
 msgid "More"
 msgstr "More"
 
@@ -5628,7 +5623,7 @@ msgstr ""
 msgid "Note about sharing"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:104
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:115
 msgid "Note: This post is only visible to logged-in users."
 msgstr ""
 
@@ -5842,8 +5837,8 @@ msgstr "Open moderation playground"
 msgid "Open pack"
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:223
-#: src/components/PostControls/index.tsx:282
+#: src/components/PostControls/AnchorPostControls/index.tsx:211
+#: src/components/PostControls/index.tsx:270
 msgid "Open post options menu"
 msgstr ""
 
@@ -5859,8 +5854,8 @@ msgstr ""
 msgid "Open settings"
 msgstr "Open settings"
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:208
-#: src/components/PostControls/index.tsx:267
+#: src/components/PostControls/AnchorPostControls/index.tsx:196
+#: src/components/PostControls/index.tsx:255
 msgid "Open share menu"
 msgstr ""
 
@@ -6780,8 +6775,8 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:73
 #: src/components/dms/MessageContextMenu.tsx:75
-#: src/components/PostControls/AnchorPostControls/index.tsx:138
-#: src/components/PostControls/index.tsx:179
+#: src/components/PostControls/AnchorPostControls/index.tsx:135
+#: src/components/PostControls/index.tsx:176
 msgid "Reply"
 msgstr "Reply"
 
@@ -6793,8 +6788,8 @@ msgstr ""
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
 #. placeholder {0}: post.replyCount || 0
-#: src/components/PostControls/AnchorPostControls/index.tsx:130
-#: src/components/PostControls/index.tsx:171
+#: src/components/PostControls/AnchorPostControls/index.tsx:127
+#: src/components/PostControls/index.tsx:168
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -6941,8 +6936,8 @@ msgstr ""
 msgid "Reporting for"
 msgstr "Reporting for"
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:152
-#: src/components/PostControls/index.tsx:197
+#: src/components/PostControls/AnchorPostControls/index.tsx:149
+#: src/components/PostControls/index.tsx:194
 msgid "Repost"
 msgstr "Repost"
 
@@ -6952,8 +6947,8 @@ msgctxt "action"
 msgid "Repost"
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:151
-#: src/components/PostControls/index.tsx:196
+#: src/components/PostControls/AnchorPostControls/index.tsx:148
+#: src/components/PostControls/index.tsx:193
 #: src/components/PostControls/RepostMenu.tsx:42
 msgid "Repost or quote post"
 msgstr ""
@@ -7478,8 +7473,8 @@ msgstr ""
 msgid "Send post to..."
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:86
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:92
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:97
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:103
 msgid "Send via direct message"
 msgstr ""
 
@@ -7556,9 +7551,9 @@ msgstr ""
 msgid "Sexually Suggestive"
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:208
-#: src/components/PostControls/index.tsx:267
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:81
+#: src/components/PostControls/AnchorPostControls/index.tsx:196
+#: src/components/PostControls/index.tsx:255
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:85
 #: src/screens/Hashtag.tsx:110
 #: src/screens/Messages/components/InviteLinkDialog.tsx:356
 #: src/screens/Messages/components/InviteLinkDialog.tsx:364
@@ -8934,8 +8929,8 @@ msgstr ""
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/AnchorPostControls/index.tsx:168
-#: src/components/PostControls/index.tsx:218
+#: src/components/PostControls/AnchorPostControls/index.tsx:165
+#: src/components/PostControls/index.tsx:215
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
