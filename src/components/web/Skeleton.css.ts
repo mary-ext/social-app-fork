@@ -4,8 +4,10 @@ import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
 import { borderRadius, fontLeading, fontSize, space } from '#/styles/tokens.css';
 
-// line box height for the placeholder, set by the `size` variant from the matching `Text` size so the bar
-// occupies the same vertical footprint as the line it stands in for.
+// the bar stands in for a line of text: its height tracks the size's font-size (the visible glyph mass) and
+// the box keeps the full line-height, so a column of bars holds the same vertical rhythm as the `Text` it
+// replaces. both are set per `size` variant from the matching `Text` size.
+const fontSizeVar = createVar();
 const lineHeightVar = createVar();
 
 /** Bar width, wired inline; defaults to filling the available width. */
@@ -23,11 +25,12 @@ export const text = style({
 	width: fallbackVar(widthVar, 'auto'),
 });
 
-// the bar fills 70% of the line box, centered by the flex parent — the same 15%/15% inset the line had.
+// the bar is sized to the font-size and vertically centered by the flex parent, so the leftover line-height
+// splits into equal margins above and below — the same place the glyphs sit within a real line box.
 export const bar = style({
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: borderRadius.md,
-	height: roundToPx(`calc(${lineHeightVar} * 0.7)`),
+	height: roundToPx(fontSizeVar),
 	width: '100%',
 });
 
@@ -36,13 +39,18 @@ export const blend = style({
 	opacity: 0.6,
 });
 
-// one variant per `Text` size, each publishing the size's pixel-snapped line-height (`round(font-size ×
-// paired ratio)`) so the placeholder tracks the live typography scale.
+// one variant per `Text` size, each publishing the size's font-size and its pixel-snapped line-height
+// (`round(font-size × paired ratio)`) so the placeholder tracks the live typography scale.
 export const size = styleVariants(
 	Object.fromEntries(
 		(Object.keys(fontLeading) as (keyof typeof fontLeading)[]).map((key) => [
 			key,
-			{ vars: { [lineHeightVar]: roundToPx(`calc(${fontSize[key]} * ${fontLeading[key]})`) } },
+			{
+				vars: {
+					[fontSizeVar]: fontSize[key],
+					[lineHeightVar]: roundToPx(`calc(${fontSize[key]} * ${fontLeading[key]})`),
+				},
+			},
 		]),
 	) as { [K in keyof typeof fontLeading]: { vars: Record<string, string> } },
 );
