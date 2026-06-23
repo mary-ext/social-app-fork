@@ -11,39 +11,29 @@ export const contentHiderChild = style({
 	paddingTop: 8,
 });
 
-// the author column sits between the avatar and the follow button. min-width:0 lets it shrink so the
-// clamped name/handle ellipsize instead of shoving the follow button off the row.
-export const header = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	minWidth: 0,
-});
-
-export const nameRow = style({
+// the handle + badges beside the avatar. min-width:0 lets the clamped handle ellipsize instead of
+// pushing the trailing controls off the row.
+export const identity = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-});
-
-// the badges keep their intrinsic size; only the name beside them shrinks.
-export const badges = style({
-	flexShrink: 0,
-	paddingLeft: space.xs,
-});
-
-// the display name shrinks within the name row so its clamp ellipsizes instead of shoving the badges out.
-export const displayName = style({
 	minWidth: 0,
 });
 
-// isolate the handle's bidi so an RTL display name above it can't flip the `@handle`. hugs its content
-// (rather than stretching the header column) and never exceeds the column width.
+// the badges keep their intrinsic size; only the handle beside them shrinks.
+export const badges = style({
+	flexShrink: 0,
+	paddingLeft: space.xs,
+
+	':empty': {
+		display: 'none',
+	},
+});
+
+// the handle is the anchor's identity line; it shrinks within the identity row so its clamp ellipsizes
+// instead of shoving the badges out.
 export const handle = style({
-	alignSelf: 'flex-start',
-	direction: 'ltr',
-	maxWidth: '100%',
-	unicodeBidi: 'isolate',
+	minWidth: 0,
 });
 
 export const labelsOnMe = style({
@@ -75,15 +65,34 @@ export const parentLineColumn = style({
 
 // #region header row
 export const avatarRow = style({
+	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	justifyContent: 'space-between',
 	paddingBottom: space.md,
 });
 
-/** Vertically centers the follow button against the avatar/identity block. */
-export const followCell = style({
-	alignSelf: 'center',
+// the avatar + identity cluster on the left; min-width:0 lets it shrink so the handle ellipsizes
+// rather than pushing the trailing controls off the row.
+export const primary = style({
+	alignItems: 'center',
+	display: 'flex',
+	flexDirection: 'row',
+	gap: space.md,
+	minWidth: 0,
+});
+
+// the trailing controls on the right; holds its intrinsic width against the shrinking primary cluster.
+export const secondary = style({
+	alignItems: 'center',
+	display: 'flex',
+	flexDirection: 'row',
+	flexShrink: 0,
+
+	':empty': {
+		display: 'none',
+	},
 });
 
 /** The post body below the header row. */

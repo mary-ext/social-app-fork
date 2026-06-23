@@ -708,28 +708,28 @@ msgstr ""
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.likeCount)
 #. placeholder {1}: post.likeCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:393
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:375
 msgid "<0>{0}</0> {1, plural, one {like} other {likes}}"
 msgstr ""
 
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:377
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:359
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr ""
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:361
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:343
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr ""
 
 #. Save count display, the <0> tags enclose the number of saves in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.bookmarkCount)
 #. placeholder {1}: post.bookmarkCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:403
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:385
 msgid "<0>{0}</0> {1, plural, one {save} other {saves}}"
 msgstr ""
 
@@ -1472,12 +1472,12 @@ msgid "Apply default recommended feeds"
 msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:486
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:468
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:474
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:495
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:456
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:477
 msgid "Archived post"
 msgstr ""
 
@@ -1711,7 +1711,7 @@ msgstr "Blocking won't stop this labeler's labels from being applied to your acc
 msgid "Blog"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:505
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:487
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -4633,7 +4633,7 @@ msgstr ""
 msgid "Likes of your reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:389
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:371
 msgid "Likes on this post"
 msgstr ""
 
@@ -5687,7 +5687,7 @@ msgstr ""
 #: src/components/BotAccountAlert.tsx:41
 #: src/components/dms/InitiateChatFlow.tsx:626
 #: src/components/dms/MessageItem.tsx:589
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:509
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:491
 msgid "Okay"
 msgstr ""
 
@@ -6239,9 +6239,9 @@ msgstr ""
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:104
-#: src/screens/PostThread/components/ThreadItemPost.tsx:77
-#: src/screens/PostThread/components/ThreadItemTreePost.tsx:80
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:105
+#: src/screens/PostThread/components/ThreadItemPost.tsx:79
+#: src/screens/PostThread/components/ThreadItemTreePost.tsx:82
 msgid "Post has been deleted"
 msgstr ""
 
@@ -6454,7 +6454,7 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:373
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:355
 msgid "Quotes of this post"
 msgstr ""
 
@@ -6977,7 +6977,7 @@ msgstr ""
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:357
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:339
 msgid "Reposts of this post"
 msgstr ""
 
@@ -7692,7 +7692,7 @@ msgstr ""
 msgid "Show the content"
 msgstr "Show the content"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:475
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:457
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -8606,7 +8606,7 @@ msgstr "This person is blocking you"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:498
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:480
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -9325,7 +9325,6 @@ msgstr ""
 #: src/components/web/ProfileHoverCard.tsx:181
 #: src/components/web/ProfileHoverCard.tsx:197
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:275
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:296
 #: src/view/com/posts/PostFeedErrorMessage.tsx:146
 #: src/view/com/util/PostMeta.tsx:121
 msgid "View profile"

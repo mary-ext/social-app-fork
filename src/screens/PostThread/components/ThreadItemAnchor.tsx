@@ -14,7 +14,6 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { triangularRandom } from '#/lib/numbers';
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { niceDate } from '#/lib/strings/time';
@@ -257,7 +256,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 			<GalleryBleed>
 				<PostLayout.Frame rootPad={isRoot}>
 					<div className={css.avatarRow}>
-						<div>
+						<div className={css.primary}>
 							<PreviewableUserAvatar
 								size={42}
 								profile={post.author}
@@ -267,47 +266,28 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 								onBeforePress={onOpenAuthor}
 								tabIndex={-1}
 							/>
-						</div>
-						<div className={css.header}>
-							<div className={css.nameRow}>
+
+							<div className={css.identity}>
 								<ProfileHoverCard did={post.author.did}>
 									<InlineLinkText
-										className={css.displayName}
-										color="text"
+										className={css.handle}
+										color="textContrastHigh"
 										label={l`View profile`}
 										numberOfLines={1}
 										onPress={onOpenAuthor}
-										size="lg"
+										size="md"
 										to={authorHref}
 										weight="semiBold"
 									>
-										{sanitizeDisplayName(
-											post.author.displayName || sanitizeHandle(post.author.handle),
-											getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-										)}
+										{sanitizeHandle(post.author.handle)}
 									</InlineLinkText>
 								</ProfileHoverCard>
 								<div className={css.badges}>
 									<ProfileBadges profile={authorShadow} size="md" interactive />
 								</div>
 							</div>
-							<ProfileHoverCard did={post.author.did}>
-								<InlineLinkText
-									className={css.handle}
-									color="textContrastMedium"
-									label={l`View profile`}
-									numberOfLines={1}
-									onPress={onOpenAuthor}
-									size="md"
-									tabIndex={-1}
-									to={authorHref}
-									underline="none"
-								>
-									{sanitizeHandle(post.author.handle, '@')}
-								</InlineLinkText>
-							</ProfileHoverCard>
 						</div>
-						<div className={css.followCell}>
+						<div className={css.secondary}>
 							<ThreadItemAnchorFollowButton did={post.author.did} enabled={showFollowButton} />
 						</div>
 					</div>
@@ -543,12 +523,9 @@ export function ThreadItemAnchorSkeleton() {
 	return (
 		<PostLayout.Frame rootPad>
 			<div className={css.avatarRow}>
-				<Skele.Circle size={42} />
-				<div className={css.header}>
-					<div className={css.nameRow}>
-						<Skele.Text size="lg" width="45%" />
-					</div>
-					<Skele.Text blend size="md" width="60%" />
+				<div className={css.primary}>
+					<Skele.Circle size={42} />
+					<Skele.Text size="md" width={140} />
 				</div>
 			</div>
 
