@@ -292,34 +292,27 @@ export function PostControls({
 export function PostControlsSkeleton() {
 	const { gtPhone } = useBreakpoints();
 
-	const padding = 4;
-	const size = 28 - padding * 2;
-
 	const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({ gtPhone });
 
+	// the rest-state row shows the bare icons, so the bars stand in at `ICON_SIZE` — the live `iconCircle` is
+	// only the hover target and pulls itself back to that footprint with a negative margin.
 	return (
 		<div className={css.root}>
 			<div className={css.primaryGroup}>
-				<div className={css.primaryItem} style={{ marginLeft: -padding, padding }}>
-					<Skele.Pill blend size={size} />
+				<div className={css.primaryItem}>
+					<Skele.Pill blend size={css.ICON_SIZE} />
 				</div>
-				<div className={css.primaryItem} style={{ padding }}>
-					<Skele.Pill blend size={size} />
+				<div className={css.primaryItem}>
+					<Skele.Pill blend size={css.ICON_SIZE} />
 				</div>
-				<div className={css.primaryItem} style={{ padding }}>
-					<Skele.Pill blend size={size} />
+				<div className={css.primaryItem}>
+					<Skele.Pill blend size={css.ICON_SIZE} />
 				</div>
 			</div>
 			<div className={css.secondaryGroup} style={secondaryControlSpacingStyles}>
-				<div style={{ padding }}>
-					<Skele.Circle blend size={size} />
-				</div>
-				<div style={{ padding }}>
-					<Skele.Circle blend size={size} />
-				</div>
-				<div style={{ padding }}>
-					<Skele.Circle blend size={size} />
-				</div>
+				<Skele.Circle blend size={css.ICON_SIZE} />
+				<Skele.Circle blend size={css.ICON_SIZE} />
+				<Skele.Circle blend size={css.ICON_SIZE} />
 			</div>
 		</div>
 	);
