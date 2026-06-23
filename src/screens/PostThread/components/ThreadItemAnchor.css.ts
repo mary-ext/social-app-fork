@@ -186,11 +186,3 @@ export const deletedIcon = style({
 	width: LINEAR_AVI_WIDTH,
 });
 // #endregion
-
-/** Padding + rhythm for the loading skeleton. */
-export const skeleton = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.md,
-	padding: space.lg,
-});

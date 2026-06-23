@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { LINEAR_AVI_WIDTH, OUTER_SPACE } from '#/screens/PostThread/const';
+import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
@@ -92,12 +92,4 @@ export const deletedSpacer = style({
 	height: 4,
 });
 
-/** Padding-block for the loading skeleton; `OUTER_SPACE / 1.5` matches the old RNW vertical padding. */
-export const skeleton = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.md,
-	paddingBlock: OUTER_SPACE / 1.5,
-	paddingInline: OUTER_SPACE,
-});
 // #endregion

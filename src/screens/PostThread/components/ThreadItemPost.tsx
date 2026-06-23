@@ -260,33 +260,32 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 	);
 });
 
+// per-index last-line widths; these skeletons render per item without a freezing memo, so a deterministic
+// pick keeps each row stable across re-renders (a `Math.random` would reshuffle and flicker).
+const LAST_LINE_WIDTHS = [55, 70, 45, 85, 60];
+
 export function ThreadItemPostSkeleton({ index }: { index: number }) {
-	const even = index % 2 === 0;
+	const lineCount = 1 + (index % 3);
+	const lastWidth = LAST_LINE_WIDTHS[index % LAST_LINE_WIDTHS.length] ?? 60;
+	// rebuilt on the real linear layout (`PostLayout` row + content column), so spacing tracks the live post.
 	return (
-		<div className={css.skeleton}>
-			<Skele.Row align="start" gap="md">
-				<Skele.Circle size={LINEAR_AVI_WIDTH} />
-
-				<Skele.Col gap="xs">
-					<Skele.Row gap="sm">
-						<Skele.Text size="md" width="20%" />
-						<Skele.Text blend size="md" width="30%" />
-					</Skele.Row>
-
+		<PostLayout.Frame topBorder>
+			<PostLayout.Row>
+				<PostLayout.AvatarColumn>
+					<Skele.Circle size={LINEAR_AVI_WIDTH} />
+				</PostLayout.AvatarColumn>
+				<PostLayout.ContentColumn>
+					<div className={css.metaSpacing}>
+						<Skele.Text size="md" width="25%" />
+					</div>
 					<Skele.Col>
-						{even ? (
-							<>
-								<Skele.Text blend size="md" width="100%" />
-								<Skele.Text blend size="md" width="60%" />
-							</>
-						) : (
-							<Skele.Text blend size="md" width="60%" />
-						)}
+						{Array.from({ length: lineCount }, (_, i) => (
+							<Skele.Text key={i} blend size="md" width={i === lineCount - 1 ? `${lastWidth}%` : '100%'} />
+						))}
 					</Skele.Col>
-
 					<PostControlsSkeleton />
-				</Skele.Col>
-			</Skele.Row>
-		</div>
+				</PostLayout.ContentColumn>
+			</PostLayout.Row>
+		</PostLayout.Frame>
 	);
 }

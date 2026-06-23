@@ -525,25 +525,31 @@ function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost
 }
 
 export function ThreadItemAnchorSkeleton() {
+	// rebuilt on the real anchor layout: a `Frame` with the avatar/name row, a `lg` body (the live `RichText`
+	// renders `lg`, not `xl`), the bordered stats row, and the big anchor controls.
 	return (
-		<div className={css.skeleton}>
-			<Skele.Row align="center" gap="md">
+		<PostLayout.Frame rootPad>
+			<div className={css.avatarRow}>
 				<Skele.Circle size={42} />
-
-				<Skele.Col>
-					<Skele.Text size="lg" width="20%" />
-					<Skele.Text blend size="md" width="40%" />
-				</Skele.Col>
-			</Skele.Row>
-
-			<div>
-				<Skele.Text size="xl" width="100%" />
-				<Skele.Text size="xl" width="60%" />
+				<div className={css.header}>
+					<div className={css.nameRow}>
+						<Skele.Text size="lg" width="45%" />
+					</div>
+					<Skele.Text blend size="md" width="60%" />
+				</div>
 			</div>
 
-			<Skele.Text size="sm" width="50%" />
+			<div className={css.body}>
+				<Skele.Text blend size="lg" width="100%" />
+				<Skele.Text blend size="lg" width="100%" />
+				<Skele.Text blend size="lg" width="70%" />
+			</div>
+
+			<div className={css.statsRow}>
+				<Skele.Text size="md" width={120} />
+			</div>
 
 			<AnchorPostControlsSkeleton />
-		</div>
+		</PostLayout.Frame>
 	);
 }

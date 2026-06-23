@@ -149,13 +149,13 @@ export const deletedSpacer = style({
 	height: OUTER_SPACE / 2,
 });
 
-/** Border + padding for the loading skeleton; `OUTER_SPACE / 1.5` matches the old RNW vertical padding. */
+/** Loading-skeleton box: a flat 16px-horizontal / 12px-vertical pad, since the skeleton has no indent guides. */
 export const skeleton = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
-	borderTopWidth: 1,
 	boxSizing: 'border-box',
-	paddingBlock: OUTER_SPACE / 1.5,
+	display: 'flex',
+	flexDirection: 'column',
+	paddingBlock: space.md,
 	paddingInline: OUTER_SPACE,
 });
+
 // #endregion
