@@ -63,7 +63,8 @@ a fork of Bluesky app, gutted down to only support web platform, with some featu
 ### commit workflow
 
 - when a commit touches a file containing lingui macros (`msg`, `t`, `<Trans>`, `plural`), run
-  `pnpm intl:extract` before committing and include the updated `messages.po` in the same commit
+  `pnpm intl:extract` before committing and include the updated `messages.po` in the same commit,
+  even if it may not relate to the current change.
 
 we use conventional commits with these rules:
 
