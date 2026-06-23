@@ -17,7 +17,6 @@ export const primaryGroup = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',
-	maxWidth: 320,
 });
 
 /** One of the three equal-width primary slots, its button pinned to the leading edge. */
