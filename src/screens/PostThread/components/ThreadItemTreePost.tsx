@@ -259,21 +259,27 @@ const LAST_LINE_WIDTHS = [55, 70, 45, 85, 60];
 export function ThreadItemTreePostSkeleton({ index }: { index: number }) {
 	const lineCount = 1 + (index % 3);
 	const lastWidth = LAST_LINE_WIDTHS[index % LAST_LINE_WIDTHS.length] ?? 60;
-	// the tree avatar is inline in the meta row (`PostMeta showAvatar`) with the body full-width below. tree
-	// replies flow tight and borderless, so the skeleton is a flat 16/12 padded box rather than the real
-	// item's indent-guide nesting.
+	// the tree avatar is inline in the meta row (`PostMeta showAvatar`); the body sits in a column indented past
+	// the avatar gutter (the empty `ChildReplyLine` column), aligned under the handle, exactly like the live
+	// item — minus the ancestor indent guides a skeleton has no tree to draw. each flat row stands for a
+	// standalone root reply that both opens and closes its subtree, so it takes the last-child (loose) bottom pad.
 	return (
 		<div className={css.skeleton}>
 			<Skele.Row align="center" gap="xs">
 				<Skele.Circle size={TREE_AVI_WIDTH} />
 				<Skele.Text size="md" width="25%" />
 			</Skele.Row>
-			<Skele.Col>
-				{Array.from({ length: lineCount }, (_, i) => (
-					<Skele.Text key={i} blend size="md" width={i === lineCount - 1 ? `${lastWidth}%` : '100%'} />
-				))}
-			</Skele.Col>
-			<PostControlsSkeleton />
+			<div className={css.bodyRow}>
+				<ChildReplyLine show={false} />
+				<div className={clsx(css.contentColumn, css.contentColumnLastChild)}>
+					<Skele.Col>
+						{Array.from({ length: lineCount }, (_, i) => (
+							<Skele.Text key={i} blend size="md" width={i === lineCount - 1 ? `${lastWidth}%` : '100%'} />
+						))}
+					</Skele.Col>
+					<PostControlsSkeleton />
+				</div>
+			</div>
 		</div>
 	);
 }

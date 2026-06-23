@@ -268,8 +268,10 @@ export function ThreadItemPostSkeleton({ index }: { index: number }) {
 	const lineCount = 1 + (index % 3);
 	const lastWidth = LAST_LINE_WIDTHS[index % LAST_LINE_WIDTHS.length] ?? 60;
 	// rebuilt on the real linear layout (`PostLayout` row + content column), so spacing tracks the live post.
+	// the live item always carries the empty `parentLineRow` spacer above the avatar, so mirror it here too.
 	return (
 		<PostLayout.Frame topBorder>
+			<div className={css.parentLineRow} />
 			<PostLayout.Row>
 				<PostLayout.AvatarColumn>
 					<Skele.Circle size={LINEAR_AVI_WIDTH} />

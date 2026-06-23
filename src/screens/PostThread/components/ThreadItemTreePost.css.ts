@@ -149,13 +149,22 @@ export const deletedSpacer = style({
 	height: OUTER_SPACE / 2,
 });
 
-/** Loading-skeleton box: a flat 16px-horizontal / 12px-vertical pad, since the skeleton has no indent guides. */
+/**
+ * Loading-skeleton box: the live item's bordered `outerRow` + `innerWrapper`, minus the ancestor indent
+ * guides a skeleton has no tree to draw. Keeps the 16px horizontal gutter; the body column carries the bottom
+ * pad.
+ */
 export const skeleton = style({
+	borderTopColor: colors.borderContrastLow,
+	borderTopStyle: 'solid',
+	borderTopWidth: 1,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
-	paddingBlock: space.md,
 	paddingInline: OUTER_SPACE,
+	// a flat skeleton row stands in for a root-level reply (a subtree opener), which carries the border and the
+	// looser top pad in the live item.
+	paddingTop: PADDING_LOOSE,
 });
 
 // #endregion
