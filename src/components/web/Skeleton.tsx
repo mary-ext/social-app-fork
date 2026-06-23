@@ -67,3 +67,31 @@ export function Col({
 export function Circle({ size }: { size: number }) {
 	return <div className={styles.circle} style={assignInlineVars({ [styles.circleSizeVar]: `${size}px` })} />;
 }
+
+/**
+ * A paragraph of text-line placeholders: full-width lines closing on a shorter final line, the way wrapped
+ * post text fills its column. Renders inside a {@link Col}.
+ */
+export function Lines({
+	blend = true,
+	count,
+	lastWidth,
+	size = 'md',
+}: {
+	/** De-emphasize the lines so they read as secondary text. On by default. */
+	blend?: boolean;
+	/** Number of lines to render. */
+	count: number;
+	/** Width of the final, partial line, as a percentage. */
+	lastWidth: number;
+	/** The {@link Text} size every line renders at. */
+	size?: keyof typeof styles.size;
+}) {
+	return (
+		<Col>
+			{Array.from({ length: count }, (_, i) => (
+				<Text key={i} blend={blend} size={size} width={i === count - 1 ? `${lastWidth}%` : '100%'} />
+			))}
+		</Col>
+	);
+}

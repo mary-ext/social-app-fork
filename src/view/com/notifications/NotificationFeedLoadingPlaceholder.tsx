@@ -53,15 +53,7 @@ function NotificationLoadingPlaceholder({
 					<Skele.Text size="md" width={`${actionWidth}%`} />
 				</div>
 				<div className={itemCss.additionalWrap}>
-					{Array.from({ length: subjectLines }, (_, i) => (
-						// full-width lines with a partial last line, the way wrapped text fills the column
-						<Skele.Text
-							key={i}
-							blend
-							size="md_sub"
-							width={i === subjectLines - 1 ? `${subjectWidth}%` : '100%'}
-						/>
-					))}
+					<Skele.Lines count={subjectLines} lastWidth={subjectWidth} size="md_sub" />
 					{galleryCount > 0 ? (
 						<div className={css.gallery}>
 							{Array.from({ length: galleryCount }, (_, i) => (

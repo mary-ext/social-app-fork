@@ -27,10 +27,12 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
+import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { Text } from '#/components/Text';
 import * as Skele from '#/components/web/Skeleton';
 
+import { threadTextShape } from './skeleton-shape';
 import * as css from './ThreadItemTreePost.css';
 import { ChildReplyLine, Connector, IndentGuides } from './ThreadLines';
 
@@ -252,13 +254,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 	);
 });
 
-// per-index last-line widths; these render per item without a freezing memo, so a deterministic pick keeps
-// each row stable across re-renders (a `Math.random` would reshuffle and flicker).
-const LAST_LINE_WIDTHS = [55, 70, 45, 85, 60];
-
 export function ThreadItemTreePostSkeleton({ index }: { index: number }) {
-	const lineCount = 1 + (index % 3);
-	const lastWidth = LAST_LINE_WIDTHS[index % LAST_LINE_WIDTHS.length] ?? 60;
+	const { lastWidth, lineCount } = threadTextShape(index);
+	const embed = EmbedSkeleton.threadShape(index);
 	// the tree avatar is inline in the meta row (`PostMeta showAvatar`); the body sits in a column indented past
 	// the avatar gutter (the empty `ChildReplyLine` column), aligned under the handle, exactly like the live
 	// item — minus the ancestor indent guides a skeleton has no tree to draw. each flat row stands for a
@@ -272,11 +270,8 @@ export function ThreadItemTreePostSkeleton({ index }: { index: number }) {
 			<div className={css.bodyRow}>
 				<ChildReplyLine show={false} />
 				<div className={clsx(css.contentColumn, css.contentColumnLastChild)}>
-					<Skele.Col>
-						{Array.from({ length: lineCount }, (_, i) => (
-							<Skele.Text key={i} blend size="md" width={i === lineCount - 1 ? `${lastWidth}%` : '100%'} />
-						))}
-					</Skele.Col>
+					<Skele.Lines count={lineCount} lastWidth={lastWidth} size="md" />
+					{embed ? <EmbedSkeleton.Reply shape={embed} /> : null}
 					<PostControlsSkeleton />
 				</div>
 			</div>

@@ -26,6 +26,7 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
+import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as PostLayout from '#/components/PostLayout';
 import { Text } from '#/components/Text';
@@ -34,6 +35,7 @@ import * as Skele from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';
 
+import { threadTextShape } from './skeleton-shape';
 import * as css from './ThreadItemPost.css';
 
 export type ThreadItemPostProps = {
@@ -260,13 +262,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 	);
 });
 
-// per-index last-line widths; these skeletons render per item without a freezing memo, so a deterministic
-// pick keeps each row stable across re-renders (a `Math.random` would reshuffle and flicker).
-const LAST_LINE_WIDTHS = [55, 70, 45, 85, 60];
-
 export function ThreadItemPostSkeleton({ index }: { index: number }) {
-	const lineCount = 1 + (index % 3);
-	const lastWidth = LAST_LINE_WIDTHS[index % LAST_LINE_WIDTHS.length] ?? 60;
+	const { lastWidth, lineCount } = threadTextShape(index);
+	const embed = EmbedSkeleton.threadShape(index);
 	// rebuilt on the real linear layout (`PostLayout` row + content column), so spacing tracks the live post.
 	// the live item always carries the empty `parentLineRow` spacer above the avatar, so mirror it here too.
 	return (
@@ -280,11 +278,8 @@ export function ThreadItemPostSkeleton({ index }: { index: number }) {
 					<div className={css.metaSpacing}>
 						<Skele.Text size="md" width="25%" />
 					</div>
-					<Skele.Col>
-						{Array.from({ length: lineCount }, (_, i) => (
-							<Skele.Text key={i} blend size="md" width={i === lineCount - 1 ? `${lastWidth}%` : '100%'} />
-						))}
-					</Skele.Col>
+					<Skele.Lines count={lineCount} lastWidth={lastWidth} size="md" />
+					{embed ? <EmbedSkeleton.Reply shape={embed} /> : null}
 					<PostControlsSkeleton />
 				</PostLayout.ContentColumn>
 			</PostLayout.Row>

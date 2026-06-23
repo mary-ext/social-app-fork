@@ -12,6 +12,7 @@ import { clsx } from 'clsx';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
+import { triangularRandom } from '#/lib/numbers';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -38,6 +39,7 @@ import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
+import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { TranslatedPost } from '#/components/Post/Translated';
 import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
 import { useFormatPostStatCount } from '#/components/PostControls/util';
@@ -525,8 +527,19 @@ function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost
 }
 
 export function ThreadItemAnchorSkeleton() {
+	// a random body shape + embed mix, frozen so it doesn't reshuffle on re-render: we can't know the focused
+	// post's length or whether it carries media, so draw it the way the feed placeholder draws each row.
+	const { embed, lastWidth, lineCount } = useMemo(
+		() => ({
+			embed: EmbedSkeleton.randomShape(),
+			lastWidth: triangularRandom(40, 90, 5),
+			lineCount: triangularRandom(1, 6),
+		}),
+		[],
+	);
 	// rebuilt on the real anchor layout: a `Frame` with the avatar/name row, a `lg` body (the live `RichText`
-	// renders `lg`, not `xl`), the bordered stats row, and the big anchor controls.
+	// renders `lg`, not `xl`) optionally closing on a media embed, then the date footer, the bordered stats row,
+	// and the big anchor controls. a body embed takes the anchor's uncropped (full-bleed, 1:4) treatment.
 	return (
 		<PostLayout.Frame rootPad>
 			<div className={css.avatarRow}>
@@ -540,9 +553,11 @@ export function ThreadItemAnchorSkeleton() {
 			</div>
 
 			<div className={css.body}>
-				<Skele.Text blend size="lg" width="100%" />
-				<Skele.Text blend size="lg" width="100%" />
-				<Skele.Text blend size="lg" width="70%" />
+				<Skele.Lines count={lineCount} lastWidth={lastWidth} size="lg" />
+				{embed ? <EmbedSkeleton.Anchor shape={embed} /> : null}
+				<div className={css.expandedDetails}>
+					<Skele.Text blend size="md_sub" width={150} />
+				</div>
 			</div>
 
 			<div className={css.statsRow}>
