@@ -5,14 +5,6 @@ import { s } from '#/lib/styles';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { Bubble_Stroke2_Corner2_Rounded as Bubble } from '#/components/icons/Bubble';
-import { Heart2_Stroke2_Corner0_Rounded as HeartIconOutline } from '#/components/icons/Heart2';
-import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
-
-import { colors } from '#/styles/colors';
-
-import * as css from './LoadingPlaceholder.css';
-
 export function LoadingPlaceholder({
 	width,
 	height,
@@ -35,65 +27,6 @@ export function LoadingPlaceholder({
 				style,
 			]}
 		/>
-	);
-}
-
-export function PostLoadingPlaceholder({ style }: { style?: StyleProp<ViewStyle> }) {
-	return (
-		<View style={[styles.post, style]}>
-			<LoadingPlaceholder
-				width={42}
-				height={42}
-				style={[
-					styles.avatar,
-					{
-						position: 'relative',
-						top: -6,
-					},
-				]}
-			/>
-			<View style={[a.flex_1]}>
-				<LoadingPlaceholder width={100} height={6} style={{ marginBottom: 10 }} />
-				<LoadingPlaceholder width="95%" height={6} style={{ marginBottom: 8 }} />
-				<LoadingPlaceholder width="95%" height={6} style={{ marginBottom: 8 }} />
-				<LoadingPlaceholder width="80%" height={6} style={{ marginBottom: 11 }} />
-				<View style={styles.postCtrls}>
-					<View style={[styles.postCtrl, { marginLeft: -6 }]}>
-						<View style={styles.postBtn}>
-							<Bubble fill={colors.contrast_500} className={css.icon} width={18} />
-						</View>
-					</View>
-					<View style={styles.postCtrl}>
-						<View style={styles.postBtn}>
-							<Repost fill={colors.contrast_500} className={css.icon} width={18} />
-						</View>
-					</View>
-					<View style={styles.postCtrl}>
-						<View style={styles.postBtn}>
-							<HeartIconOutline fill={colors.contrast_500} className={css.icon} width={18} />
-						</View>
-					</View>
-					<View style={styles.postCtrl}>
-						<View style={[styles.postBtn, { minHeight: 30 }]} />
-					</View>
-				</View>
-			</View>
-		</View>
-	);
-}
-
-export function PostFeedLoadingPlaceholder() {
-	return (
-		<View>
-			<PostLoadingPlaceholder />
-			<PostLoadingPlaceholder />
-			<PostLoadingPlaceholder />
-			<PostLoadingPlaceholder />
-			<PostLoadingPlaceholder />
-			<PostLoadingPlaceholder />
-			<PostLoadingPlaceholder />
-			<PostLoadingPlaceholder />
-		</View>
 	);
 }
 
@@ -219,28 +152,6 @@ export function ChatListLoadingPlaceholder() {
 const styles = StyleSheet.create({
 	loadingPlaceholder: {
 		borderRadius: 6,
-	},
-	post: {
-		flexDirection: 'row',
-		alignItems: 'flex-start',
-		paddingHorizontal: 10,
-		paddingTop: 20,
-		paddingBottom: 5,
-		paddingRight: 15,
-	},
-	postCtrls: {
-		opacity: 0.5,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-	},
-	postCtrl: {
-		flex: 1,
-	},
-	postBtn: {
-		flex: 1,
-		flexDirection: 'row',
-		alignItems: 'center',
-		padding: 5,
 	},
 	avatar: {
 		borderRadius: 999,

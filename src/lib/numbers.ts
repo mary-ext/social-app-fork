@@ -18,6 +18,17 @@ export function triangularRandom(min: number, max: number, step = 1): number {
 }
 
 /**
+ * Uniform random number in `[min, max)`.
+ *
+ * @param min lower bound, inclusive
+ * @param max upper bound, exclusive
+ * @returns a value in `[min, max)`
+ */
+export function randomInRange(min: number, max: number): number {
+	return min + Math.random() * (max - min);
+}
+
+/**
  * Picks an index into `weights` at random, each index chosen with probability proportional to its weight.
  *
  * @param weights non-negative weights with at least one positive entry

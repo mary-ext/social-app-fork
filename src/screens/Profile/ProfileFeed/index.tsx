@@ -20,11 +20,11 @@ import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
+import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { FAB } from '#/view/com/util/fab/FAB';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
-import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
 import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/components/ProfileFeedHeader';
 

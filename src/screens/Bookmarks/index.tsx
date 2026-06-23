@@ -13,9 +13,9 @@ import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutati
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
 
 import { Post } from '#/view/com/post/Post';
+import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { List } from '#/view/com/util/List';
-import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
 import { atoms as a, useTheme } from '#/alf';
 

@@ -6241,7 +6241,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:104
 #: src/screens/PostThread/components/ThreadItemPost.tsx:77
-#: src/screens/PostThread/components/ThreadItemTreePost.tsx:77
+#: src/screens/PostThread/components/ThreadItemTreePost.tsx:80
 msgid "Post has been deleted"
 msgstr ""
 

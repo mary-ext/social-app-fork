@@ -24,7 +24,7 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
 import { SuggestedFollows } from '#/components/FeedInterstitials';
