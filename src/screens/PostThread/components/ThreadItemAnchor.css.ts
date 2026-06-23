@@ -23,7 +23,7 @@ export const identity = style({
 // the badges keep their intrinsic size; only the handle beside them shrinks.
 export const badges = style({
 	flexShrink: 0,
-	paddingLeft: space.xs,
+	paddingLeft: 6,
 
 	':empty': {
 		display: 'none',
