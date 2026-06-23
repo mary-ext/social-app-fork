@@ -1,6 +1,8 @@
 import { View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
+import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
+
 import { atoms as a, useTheme } from '#/alf';
 
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
@@ -15,7 +17,7 @@ export function ThreadItemAnchorNoUnauthenticated() {
 	return (
 		<View style={[a.p_lg, a.gap_md]}>
 			<Skele.Row style={[a.align_center, a.gap_md]}>
-				<Skele.Circle size={42}>
+				<Skele.Circle size={LINEAR_AVI_WIDTH}>
 					<LockIcon size="md" fill={colors.textContrastMedium} />
 				</Skele.Circle>
 

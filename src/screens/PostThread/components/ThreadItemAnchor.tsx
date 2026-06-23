@@ -27,6 +27,7 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 import type { PostSource } from '#/state/unstable-post-source';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
+import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { Button } from '#/components/Button';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
@@ -258,7 +259,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 					<div className={css.avatarRow}>
 						<div className={css.primary}>
 							<PreviewableUserAvatar
-								size={42}
+								size={LINEAR_AVI_WIDTH}
 								profile={post.author}
 								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -524,7 +525,7 @@ export function ThreadItemAnchorSkeleton() {
 		<PostLayout.Frame rootPad>
 			<div className={css.avatarRow}>
 				<div className={css.primary}>
-					<Skele.Circle size={42} />
+					<Skele.Circle size={LINEAR_AVI_WIDTH} />
 					<Skele.Text size="md" width={140} />
 				</div>
 			</div>
