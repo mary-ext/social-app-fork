@@ -657,12 +657,12 @@ msgstr ""
 msgid "{userName} is a trusted verifier"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:41
+#: src/components/verification/VerificationsDialog.tsx:37
 msgid "{userName} is verified"
 msgstr ""
 
 #. Possessive, meaning "the verifications of {userName}"
-#: src/components/verification/VerificationsDialog.tsx:42
+#: src/components/verification/VerificationsDialog.tsx:38
 msgid "{userName}'s verifications"
 msgstr ""
 
@@ -885,12 +885,12 @@ msgstr "Account and privacy settings"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:335
 #: src/screens/Messages/components/RequestButtons.tsx:101
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:105
-#: src/view/com/profile/ProfileMenu.tsx:164
+#: src/view/com/profile/ProfileMenu.tsx:157
 msgctxt "toast"
 msgid "Account blocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:179
+#: src/view/com/profile/ProfileMenu.tsx:172
 msgctxt "toast"
 msgid "Account followed"
 msgstr ""
@@ -904,7 +904,7 @@ msgid "Account is deactivated"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:366
-#: src/view/com/profile/ProfileMenu.tsx:136
+#: src/view/com/profile/ProfileMenu.tsx:129
 msgctxt "toast"
 msgid "Account muted"
 msgstr ""
@@ -934,18 +934,18 @@ msgstr ""
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:92
 #: src/screens/Profile/Header/Context.tsx:168
-#: src/view/com/profile/ProfileMenu.tsx:152
+#: src/view/com/profile/ProfileMenu.tsx:145
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:193
+#: src/view/com/profile/ProfileMenu.tsx:186
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:352
-#: src/view/com/profile/ProfileMenu.tsx:124
+#: src/view/com/profile/ProfileMenu.tsx:117
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
@@ -1104,8 +1104,8 @@ msgstr ""
 msgid "Add this feed to your feeds"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:288
-#: src/view/com/profile/ProfileMenu.tsx:290
+#: src/view/com/profile/ProfileMenu.tsx:274
+#: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Add to lists"
 msgstr ""
 
@@ -1114,8 +1114,8 @@ msgid "Add to saved posts"
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:153
-#: src/view/com/profile/ProfileMenu.tsx:282
-#: src/view/com/profile/ProfileMenu.tsx:284
+#: src/view/com/profile/ProfileMenu.tsx:268
+#: src/view/com/profile/ProfileMenu.tsx:270
 msgid "Add to starter packs"
 msgstr ""
 
@@ -1612,8 +1612,8 @@ msgstr "Block {displayName}"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:529
 #: src/screens/Messages/components/RequestButtons.tsx:146
 #: src/screens/Messages/components/RequestButtons.tsx:148
-#: src/view/com/profile/ProfileMenu.tsx:365
-#: src/view/com/profile/ProfileMenu.tsx:372
+#: src/view/com/profile/ProfileMenu.tsx:328
+#: src/view/com/profile/ProfileMenu.tsx:335
 msgid "Block account"
 msgstr ""
 
@@ -2087,7 +2087,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:101
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:108
 #: src/components/suggested-follows-dialog.tsx:324
-#: src/components/verification/VerificationsDialog.tsx:86
+#: src/components/verification/VerificationsDialog.tsx:82
 #: src/components/verification/VerifierDialog.tsx:75
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:37
 #: src/features/liveNow/components/EditLiveDialog.tsx:185
@@ -2110,7 +2110,7 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:254
 #: src/components/dialogs/LanguageSelectDialog.tsx:277
 #: src/components/moderation/BlockDialog.tsx:164
-#: src/components/verification/VerificationsDialog.tsx:84
+#: src/components/verification/VerificationsDialog.tsx:80
 #: src/components/verification/VerifierDialog.tsx:73
 #: src/components/web/Dialog/Popup.tsx:80
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:35
@@ -2284,8 +2284,8 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:393
-#: src/view/com/profile/ProfileMenu.tsx:395
+#: src/view/com/profile/ProfileMenu.tsx:356
+#: src/view/com/profile/ProfileMenu.tsx:358
 msgid "Copy at:// URI"
 msgstr ""
 
@@ -2294,8 +2294,8 @@ msgstr ""
 msgid "Copy author DID"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:399
-#: src/view/com/profile/ProfileMenu.tsx:401
+#: src/view/com/profile/ProfileMenu.tsx:362
+#: src/view/com/profile/ProfileMenu.tsx:364
 msgid "Copy DID"
 msgstr ""
 
@@ -2319,8 +2319,8 @@ msgstr ""
 msgid "Copy link to post"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:241
-#: src/view/com/profile/ProfileMenu.tsx:251
+#: src/view/com/profile/ProfileMenu.tsx:227
+#: src/view/com/profile/ProfileMenu.tsx:237
 msgid "Copy link to profile"
 msgstr ""
 
@@ -2903,8 +2903,8 @@ msgstr "Edit link settings"
 msgid "Edit list details"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:300
-#: src/view/com/profile/ProfileMenu.tsx:315
+#: src/view/com/profile/ProfileMenu.tsx:286
+#: src/view/com/profile/ProfileMenu.tsx:301
 msgid "Edit live status"
 msgstr ""
 
@@ -3384,10 +3384,6 @@ msgstr ""
 msgid "Failed to remove group chat member"
 msgstr "Failed to remove group chat member"
 
-#: src/components/verification/VerificationRemovePrompt.tsx:31
-msgid "Failed to remove verification"
-msgstr ""
-
 #: src/components/intents/GroupChatJoinDialog.tsx:170
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:35
 msgid "Failed to rescind your request. Please try again."
@@ -3608,8 +3604,8 @@ msgstr ""
 msgid "Follow {displayName}"
 msgstr "Follow {displayName}"
 
-#: src/view/com/profile/ProfileMenu.tsx:271
-#: src/view/com/profile/ProfileMenu.tsx:275
+#: src/view/com/profile/ProfileMenu.tsx:257
+#: src/view/com/profile/ProfileMenu.tsx:261
 msgid "Follow account"
 msgstr ""
 
@@ -3901,8 +3897,8 @@ msgstr ""
 msgid "Go home"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:301
-#: src/view/com/profile/ProfileMenu.tsx:317
+#: src/view/com/profile/ProfileMenu.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:303
 msgid "Go live"
 msgstr ""
 
@@ -3913,8 +3909,8 @@ msgstr ""
 msgid "Go Live"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:298
-#: src/view/com/profile/ProfileMenu.tsx:313
+#: src/view/com/profile/ProfileMenu.tsx:284
+#: src/view/com/profile/ProfileMenu.tsx:299
 msgid "Go live (disabled)"
 msgstr ""
 
@@ -4483,7 +4479,7 @@ msgstr ""
 msgid "Latest"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:99
+#: src/components/verification/VerificationsDialog.tsx:95
 #: src/components/verification/VerifierDialog.tsx:70
 #: src/screens/Moderation/VerificationSettings.tsx:41
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
@@ -4508,7 +4504,7 @@ msgstr ""
 msgid "Learn more about this warning"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:91
+#: src/components/verification/VerificationsDialog.tsx:87
 #: src/components/verification/VerifierDialog.tsx:62
 msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
@@ -5158,8 +5154,8 @@ msgstr ""
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:127
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:132
 #: src/view/com/composer/drafts/DraftItem.tsx:119
-#: src/view/com/profile/ProfileMenu.tsx:232
-#: src/view/com/profile/ProfileMenu.tsx:238
+#: src/view/com/profile/ProfileMenu.tsx:218
+#: src/view/com/profile/ProfileMenu.tsx:224
 msgid "More options"
 msgstr ""
 
@@ -5196,8 +5192,8 @@ msgstr "Mute {prefixedTag}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:518
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
-#: src/view/com/profile/ProfileMenu.tsx:350
-#: src/view/com/profile/ProfileMenu.tsx:357
+#: src/view/com/profile/ProfileMenu.tsx:313
+#: src/view/com/profile/ProfileMenu.tsx:320
 msgid "Mute account"
 msgstr ""
 
@@ -5644,7 +5640,7 @@ msgstr "Not followed by anyone you’re following"
 msgid "Not Found"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:438
+#: src/view/com/profile/ProfileMenu.tsx:401
 msgid "Note about sharing"
 msgstr ""
 
@@ -6713,17 +6709,6 @@ msgstr ""
 msgid "Remove user from list"
 msgstr ""
 
-#: src/components/verification/VerificationRemovePrompt.tsx:43
-#: src/components/verification/VerificationsDialog.tsx:163
-#: src/view/com/profile/ProfileMenu.tsx:327
-#: src/view/com/profile/ProfileMenu.tsx:331
-msgid "Remove verification"
-msgstr ""
-
-#: src/components/verification/VerificationRemovePrompt.tsx:46
-msgid "Remove your verification for this account?"
-msgstr ""
-
 #: src/components/Post/Embed/index.tsx:235
 msgid "Removed by author"
 msgstr ""
@@ -6758,10 +6743,6 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:128
 msgid "Removed unavailable services"
-msgstr ""
-
-#: src/components/verification/VerificationRemovePrompt.tsx:29
-msgid "Removed verification"
 msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:115
@@ -6873,8 +6854,8 @@ msgstr ""
 msgid "Report a copyright violation, legal request, or regulatory compliance issue"
 msgstr "Report a copyright violation, legal request, or regulatory compliance issue"
 
-#: src/view/com/profile/ProfileMenu.tsx:378
-#: src/view/com/profile/ProfileMenu.tsx:380
+#: src/view/com/profile/ProfileMenu.tsx:341
+#: src/view/com/profile/ProfileMenu.tsx:343
 msgid "Report account"
 msgstr ""
 
@@ -7333,8 +7314,8 @@ msgstr ""
 msgid "Search my posts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:255
-#: src/view/com/profile/ProfileMenu.tsx:257
+#: src/view/com/profile/ProfileMenu.tsx:241
+#: src/view/com/profile/ProfileMenu.tsx:243
 msgid "Search posts"
 msgstr ""
 
@@ -7604,7 +7585,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:441
+#: src/view/com/profile/ProfileMenu.tsx:404
 msgid "Share anyway"
 msgstr ""
 
@@ -7843,7 +7824,7 @@ msgstr ""
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:78
+#: src/components/verification/VerificationsDialog.tsx:74
 msgid "Some of your verifications are invalid."
 msgstr ""
 
@@ -8083,10 +8064,6 @@ msgstr ""
 #: src/components/intents/GroupChatJoinDialog.tsx:115
 msgid "Successfully joined the group chat!"
 msgstr "Successfully joined the group chat!"
-
-#: src/components/verification/VerificationCreatePrompt.tsx:38
-msgid "Successfully verified"
-msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:216
 #: src/components/dms/InitiateChatFlow.tsx:326
@@ -8378,12 +8355,12 @@ msgstr ""
 #: src/screens/Profile/Header/Context.tsx:137
 #: src/screens/Profile/Header/Context.tsx:159
 #: src/screens/Profile/Header/Context.tsx:173
-#: src/view/com/profile/ProfileMenu.tsx:128
-#: src/view/com/profile/ProfileMenu.tsx:140
-#: src/view/com/profile/ProfileMenu.tsx:156
-#: src/view/com/profile/ProfileMenu.tsx:168
-#: src/view/com/profile/ProfileMenu.tsx:183
-#: src/view/com/profile/ProfileMenu.tsx:197
+#: src/view/com/profile/ProfileMenu.tsx:121
+#: src/view/com/profile/ProfileMenu.tsx:133
+#: src/view/com/profile/ProfileMenu.tsx:149
+#: src/view/com/profile/ProfileMenu.tsx:161
+#: src/view/com/profile/ProfileMenu.tsx:176
+#: src/view/com/profile/ProfileMenu.tsx:190
 msgid "There was an issue! {0}"
 msgstr ""
 
@@ -8451,7 +8428,7 @@ msgstr "They won't know they've been muted"
 msgid "This {screenDescription} has been flagged:"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:56
+#: src/components/verification/VerificationsDialog.tsx:52
 msgid "This account has a checkmark because it's been verified by trusted sources."
 msgstr ""
 
@@ -8459,7 +8436,7 @@ msgstr ""
 msgid "This account has been marked as automated by its owner."
 msgstr "This account has been marked as automated by its owner."
 
-#: src/components/verification/VerificationsDialog.tsx:58
+#: src/components/verification/VerificationsDialog.tsx:54
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr ""
 
@@ -8474,10 +8451,6 @@ msgstr ""
 #: src/view/com/auth/OAuthCallback.tsx:44
 msgid "This account is not active."
 msgstr "This account is not active."
-
-#: src/components/verification/VerificationCreatePrompt.tsx:54
-msgid "This action can be undone at any time."
-msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:236
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -8679,7 +8652,7 @@ msgstr ""
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:439
+#: src/view/com/profile/ProfileMenu.tsx:402
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
@@ -8694,10 +8667,6 @@ msgstr "This screen is only available for group conversations."
 
 #: src/features/liveNow/index.tsx:195
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
-msgstr ""
-
-#: src/components/verification/VerificationCreatePrompt.tsx:83
-msgid "This user does not have a display name, and therefore cannot be verified."
 msgstr ""
 
 #: src/view/com/profile/ProfileFollowers.tsx:82
@@ -8925,8 +8894,8 @@ msgstr "Unblock {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:269
 #: src/components/dms/ConvoMenu.tsx:273
-#: src/view/com/profile/ProfileMenu.tsx:365
-#: src/view/com/profile/ProfileMenu.tsx:370
+#: src/view/com/profile/ProfileMenu.tsx:328
+#: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Unblock account"
 msgstr ""
 
@@ -8963,8 +8932,8 @@ msgstr ""
 msgid "Unfollow {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:271
-#: src/view/com/profile/ProfileMenu.tsx:275
+#: src/view/com/profile/ProfileMenu.tsx:257
+#: src/view/com/profile/ProfileMenu.tsx:261
 msgid "Unfollow account"
 msgstr ""
 
@@ -8972,7 +8941,7 @@ msgstr ""
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:134
+#: src/components/verification/VerificationsDialog.tsx:125
 msgid "Unknown verifier"
 msgstr ""
 
@@ -9022,8 +8991,8 @@ msgstr "Unmute {prefixedTag}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:518
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
-#: src/view/com/profile/ProfileMenu.tsx:350
-#: src/view/com/profile/ProfileMenu.tsx:355
+#: src/view/com/profile/ProfileMenu.tsx:313
+#: src/view/com/profile/ProfileMenu.tsx:318
 msgid "Unmute account"
 msgstr ""
 
@@ -9242,10 +9211,6 @@ msgstr ""
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
-#: src/components/verification/VerificationCreatePrompt.tsx:41
-msgid "Verification failed, please try again."
-msgstr ""
-
 #: src/screens/Moderation/index.tsx:169
 msgid "Verification settings"
 msgstr ""
@@ -9259,19 +9224,8 @@ msgstr ""
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:67
+#: src/components/verification/VerificationsDialog.tsx:63
 msgid "Verified by:"
-msgstr ""
-
-#: src/components/verification/VerificationCreatePrompt.tsx:73
-#: src/components/verification/VerificationCreatePrompt.tsx:76
-#: src/view/com/profile/ProfileMenu.tsx:337
-#: src/view/com/profile/ProfileMenu.tsx:341
-msgid "Verify account"
-msgstr ""
-
-#: src/components/verification/VerificationCreatePrompt.tsx:52
-msgid "Verify this account?"
 msgstr ""
 
 #: src/view/com/composer/state/video.ts:345
@@ -9731,7 +9685,7 @@ msgstr ""
 msgid "You are now live!"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:38
+#: src/components/verification/VerificationsDialog.tsx:34
 msgid "You are verified"
 msgstr ""
 
@@ -10132,6 +10086,6 @@ msgstr "Your session expired. Please sign in again."
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 
-#: src/components/verification/VerificationsDialog.tsx:39
+#: src/components/verification/VerificationsDialog.tsx:35
 msgid "Your verifications"
 msgstr ""

@@ -24,8 +24,6 @@ import { useDialogControl } from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon } from '#/components/icons/CircleCheck';
-import { CircleX_Stroke2_Corner0_Rounded as CircleXIcon } from '#/components/icons/CircleX';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
 import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag';
@@ -44,11 +42,7 @@ import { StarterPack } from '#/components/icons/StarterPack';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
-import { useFullVerificationState } from '#/components/verification';
-import { VerificationCreatePrompt } from '#/components/verification/VerificationCreatePrompt';
-import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
@@ -81,7 +75,6 @@ let ProfileMenu = ({
 	const isFollowingBlockedAccount = isFollowing && isBlocked;
 	const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked;
 	const [devModeEnabled] = useDevMode();
-	const verification = useFullVerificationState({ profile });
 	const { canGoLive } = useLiveNowConfig();
 	const status = useActorStatus(profile);
 
@@ -217,13 +210,6 @@ let ProfileMenu = ({
 		navigation.navigate('ProfileSearch', { name: profile.did });
 	}, [navigation, profile.did]);
 
-	const verificationCreatePromptControl = Prompt.usePromptControl();
-	const verificationRemovePromptControl = WebPrompt.usePromptHandle();
-	const currentAccountVerifications =
-		profile.verification?.verifications?.filter((v) => {
-			return v.issuer === currentAccount?.did;
-		}) ?? [];
-
 	return (
 		<>
 			<Menu.Root>
@@ -320,29 +306,6 @@ let ProfileMenu = ({
 										<Menu.ItemIcon icon={LiveIcon} />
 									</Menu.Item>
 								)}
-								{verification.viewer.role === 'verifier' &&
-									!verification.profile.isViewer &&
-									(verification.viewer.hasIssuedVerification ? (
-										<Menu.Item
-											label={l`Remove verification`}
-											onClick={() => verificationRemovePromptControl.open(null)}
-										>
-											<Menu.ItemText>
-												<Trans>Remove verification</Trans>
-											</Menu.ItemText>
-											<Menu.ItemIcon icon={CircleXIcon} />
-										</Menu.Item>
-									) : (
-										<Menu.Item
-											label={l`Verify account`}
-											onClick={() => verificationCreatePromptControl.open()}
-										>
-											<Menu.ItemText>
-												<Trans>Verify account</Trans>
-											</Menu.ItemText>
-											<Menu.ItemIcon icon={CircleCheckIcon} />
-										</Menu.Item>
-									))}
 								{!isSelf && (
 									<>
 										{!profile.viewer?.blocking && !profile.viewer?.mutedByList && (
@@ -439,12 +402,6 @@ let ProfileMenu = ({
 				description={l`This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.`}
 				onConfirm={onPressShare}
 				confirmButtonCta={l`Share anyway`}
-			/>
-			<VerificationCreatePrompt control={verificationCreatePromptControl} profile={profile} />
-			<VerificationRemovePrompt
-				handle={verificationRemovePromptControl}
-				profile={profile}
-				verifications={currentAccountVerifications}
 			/>
 			{status.isDisabled ? (
 				<GoLiveDisabledDialog control={goLiveDisabledDialogControl} status={status} />

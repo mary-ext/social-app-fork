@@ -6,19 +6,15 @@ import { getUserDisplayName } from '#/lib/getUserDisplayName';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
-import { useSession } from '#/state/session';
 
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { Text } from '#/components/Text';
 import type { FullVerificationState } from '#/components/verification';
-import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
 import * as css from '#/components/verification/VerificationsDialog.css';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import * as Prompt from '#/components/web/Prompt';
 
 export function VerificationsDialog({
 	handle,
@@ -69,7 +65,7 @@ export function VerificationsDialog({
 
 						<div className={css.list}>
 							{profile.verification.verifications.map((v) => (
-								<VerifierCard key={v.uri} outerHandle={handle} subject={profile} verification={v} />
+								<VerifierCard key={v.uri} outerHandle={handle} verification={v} />
 							))}
 						</div>
 
@@ -108,19 +104,14 @@ export function VerificationsDialog({
 
 function VerifierCard({
 	outerHandle,
-	subject,
 	verification,
 }: {
 	outerHandle: Dialog.DialogHandle;
-	subject: AnyProfileView;
 	verification: AppBskyActorDefs.VerificationView;
 }) {
-	const { i18n, t: l } = useLingui();
-	const { currentAccount } = useSession();
+	const { i18n } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const { data: profile, error } = useProfileQuery({ did: verification.issuer });
-	const verificationRemovePromptControl = Prompt.usePromptHandle();
-	const canAdminister = verification.issuer === currentAccount?.did;
 
 	return (
 		<div style={{ opacity: verification.isValid ? 1 : 0.5 }}>
@@ -139,39 +130,23 @@ function VerifierCard({
 							</div>
 						</>
 					) : profile && moderationOpts ? (
-						<>
-							<ProfileCard.Link
-								className={css.cardRow}
-								onPress={() => {
-									outerHandle.close();
-								}}
-								profile={profile}
-							>
-								<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
-								<div className={css.nameColumn}>
-									<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
-									<Text color="textContrastMedium" numberOfLines={1}>
-										{i18n.date(new Date(verification.createdAt), {
-											dateStyle: 'long',
-										})}
-									</Text>
-								</div>
-							</ProfileCard.Link>
-							{canAdminister && (
-								<Button
-									color="negative"
-									label={l`Remove verification`}
-									onClick={() => {
-										verificationRemovePromptControl.open(null);
-									}}
-									shape="round"
-									size="small"
-									variant="ghost"
-								>
-									<ButtonIcon icon={TrashIcon} />
-								</Button>
-							)}
-						</>
+						<ProfileCard.Link
+							className={css.cardRow}
+							onPress={() => {
+								outerHandle.close();
+							}}
+							profile={profile}
+						>
+							<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
+							<div className={css.nameColumn}>
+								<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
+								<Text color="textContrastMedium" numberOfLines={1}>
+									{i18n.date(new Date(verification.createdAt), {
+										dateStyle: 'long',
+									})}
+								</Text>
+							</div>
+						</ProfileCard.Link>
 					) : (
 						<>
 							<ProfileCard.AvatarPlaceholder />
@@ -180,12 +155,6 @@ function VerifierCard({
 					)}
 				</ProfileCard.Header>
 			</ProfileCard.Outer>
-			<VerificationRemovePrompt
-				handle={verificationRemovePromptControl}
-				onConfirm={() => outerHandle.close()}
-				profile={subject}
-				verifications={[verification]}
-			/>
 		</div>
 	);
 }
