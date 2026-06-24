@@ -1,94 +1,79 @@
-import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { shareUrl } from '#/lib/sharing';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { type DialogControlProps } from '#/components/Dialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Loader } from '#/components/Loader';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
-import { Image } from '#/shims/image';
+import * as styles from './ShareDialog.css';
 
-interface Props {
-	starterPack: AppBskyGraphDefs.StarterPackView;
-	link?: string;
+type Props = {
+	handle: Dialog.DialogHandle;
 	imageLoaded?: boolean;
-	control: DialogControlProps;
-}
+	link?: string;
+	starterPack: AppBskyGraphDefs.StarterPackView;
+};
 
-export function ShareDialog(props: Props) {
+export function ShareDialog({ handle, ...props }: Props) {
+	const { t: l } = useLingui();
 	return (
-		<Dialog.Outer control={props.control}>
-			<Dialog.Handle />
-			<ShareDialogInner {...props} />
-		</Dialog.Outer>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup label={l`Share link dialog`}>
+				<Dialog.Close />
+				<ShareDialogInner handle={handle} {...props} />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
-function ShareDialogInner({ starterPack, link, imageLoaded, control }: Props) {
+function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 	const { t: l } = useLingui();
-	const t = useTheme();
-	const { gtMobile } = useBreakpoints();
-
 	const imageUrl = getStarterPackOgCard(starterPack);
 
-	const onShareLink = async () => {
+	const onShareLink = () => {
 		if (!link) return;
 		void shareUrl(link);
-		control.close();
+		handle.close();
 	};
 
+	if (!imageLoaded || !link) {
+		return (
+			<div className={styles.loading}>
+				<Loader size="xl" />
+			</div>
+		);
+	}
+
 	return (
-		<>
-			<Dialog.ScrollableInner label={l`Share link dialog`}>
-				{!imageLoaded || !link ? (
-					<View style={[a.align_center, a.justify_center, { minHeight: 350 }]}>
-						<Loader size="xl" />
-					</View>
-				) : (
-					<View style={[!gtMobile && a.gap_lg]}>
-						<View style={[a.gap_sm, gtMobile && a.pb_lg]}>
-							<Text style={[a.font_semi_bold, a.text_2xl]}>
-								<Trans>Invite people to this starter pack!</Trans>
-							</Text>
-							<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-								<Trans>Share this starter pack and help people join your community on Bluesky.</Trans>
-							</Text>
-						</View>
-						<Image
-							source={{ uri: imageUrl }}
-							style={[
-								a.rounded_sm,
-								a.aspect_card,
-								{
-									transform: [{ scale: gtMobile ? 0.85 : 1 }],
-									marginTop: gtMobile ? -20 : 0,
-								},
-							]}
-							accessibilityIgnoresInvertColors={true}
-						/>
-						<View style={[a.gap_md, gtMobile && [a.gap_sm, a.justify_center, a.flex_row, a.flex_wrap]]}>
-							<Button
-								label={l`Copy link`}
-								color="primary_subtle"
-								size="large"
-								onPress={() => void onShareLink()}
-							>
-								<ButtonIcon icon={ChainLinkIcon} />
-								<ButtonText>{<Trans>Copy Link</Trans>}</ButtonText>
-							</Button>
-						</View>
-					</View>
-				)}
-				<Dialog.Close />
-			</Dialog.ScrollableInner>
-		</>
+		<div className={styles.content}>
+			<div className={styles.header}>
+				<Text size="_2xl" weight="semiBold">
+					<Trans>Invite people to this starter pack!</Trans>
+				</Text>
+				<Text color="textContrastMedium" size="md">
+					<Trans>Share this starter pack and help people join your community on Bluesky.</Trans>
+				</Text>
+			</div>
+			<img alt="" className={styles.image} src={imageUrl} />
+			<div className={styles.actions}>
+				<Button
+					color="primary_subtle"
+					label={l`Copy link`}
+					onClick={onShareLink}
+					size="large"
+					variant="solid"
+				>
+					<ButtonIcon icon={ChainLinkIcon} />
+					<ButtonText>
+						<Trans>Copy Link</Trans>
+					</ButtonText>
+				</Button>
+			</div>
+		</div>
 	);
 }

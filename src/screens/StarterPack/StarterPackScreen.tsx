@@ -58,6 +58,7 @@ import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 import { type Section, Tabs } from '#/components/web/Tabs';
@@ -180,7 +181,7 @@ function StarterPackScreenLoaded({
 	]);
 	const [activeTab, setActiveTab] = useState<'feeds' | 'people' | 'posts'>('people');
 
-	const shareDialogControl = useDialogControl();
+	const shareDialogHandle = Dialog.useDialogHandle();
 
 	const shortenLink = useShortenLink();
 	const [link, setLink] = useState<string>();
@@ -198,14 +199,14 @@ function StarterPackScreenLoaded({
 			.catch(() => {
 				setImageLoaded(true);
 			});
-		shareDialogControl.open();
-	}, [shareDialogControl, shortenLink, starterPack]);
+		shareDialogHandle.open(null);
+	}, [shareDialogHandle, shortenLink, starterPack]);
 
 	useEffect(() => {
 		if (routeParams.new) {
 			onOpenShareDialog();
 		}
-	}, [onOpenShareDialog, routeParams.new, shareDialogControl]);
+	}, [onOpenShareDialog, routeParams.new]);
 
 	return (
 		<>
@@ -219,7 +220,7 @@ function StarterPackScreenLoaded({
 			/>
 
 			<ShareDialog
-				control={shareDialogControl}
+				handle={shareDialogHandle}
 				starterPack={starterPack}
 				link={link}
 				imageLoaded={imageLoaded}
