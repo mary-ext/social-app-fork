@@ -20,22 +20,19 @@ export function ChatInviteEmbed({
 	link: AppBskyEmbedExternal.ViewExternal;
 	onOpen?: () => void;
 }) {
-	const { status, preview, action, joinDialog } = ChatInvite.useChatInvite({ code });
+	const { status, preview, action } = ChatInvite.useChatInvite({ code });
 
 	if (status === 'error') {
 		return <ExternalEmbed link={link} onOpen={onOpen} className={css.spacing} />;
 	}
 
 	return (
-		<>
-			<JoinRequestEmbedBody
-				status={status}
-				preview={preview}
-				action={action}
-				onOpen={onOpen}
-				className={css.spacing}
-			/>
-			{joinDialog}
-		</>
+		<JoinRequestEmbedBody
+			status={status}
+			preview={preview}
+			action={action}
+			onOpen={onOpen}
+			className={css.spacing}
+		/>
 	);
 }

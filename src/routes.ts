@@ -59,6 +59,8 @@ export const router = new Router<AllNavigatableRoutes>({
 	MessagesConversation: '/messages/:conversation',
 	MessagesConversationSettings: '/messages/:conversation/settings',
 	MessagesJoinRequests: '/messages/:conversation/requests',
+	// group chat invites — renders Home and opens the join dialog (see GroupChatJoinDialog)
+	GroupChatJoin: '/chat/:code',
 	// starter packs
 	Start: '/start/:name/:rkey',
 	StarterPackEdit: '/starter-pack/edit/:rkey',

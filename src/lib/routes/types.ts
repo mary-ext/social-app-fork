@@ -51,6 +51,7 @@ export type CommonNavigatorParams = {
 	MessagesJoinRequests: { conversation: string };
 	MessagesSettings: undefined;
 	MessagesInbox: undefined;
+	GroupChatJoin: { code: string };
 	NotificationsActivityList: { posts: string };
 	LegacyNotificationSettings: undefined;
 	Feeds: undefined;

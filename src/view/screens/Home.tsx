@@ -31,7 +31,7 @@ import { useDemoMode } from '#/storage/hooks/demo-mode';
 // screen rather than switching feeds, so it has no panel of its own
 const FEEDS_DISCOVERY_TAB = '__feeds__';
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>;
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'GroupChatJoin' | 'Home' | 'Start'>;
 export function HomeScreen(props: Props) {
 	const { data: preferences } = usePreferencesQuery();
 	const { currentAccount } = useSession();
@@ -40,7 +40,14 @@ export function HomeScreen(props: Props) {
 
 	useEffect(() => {
 		const params = props.route.params;
-		if (currentAccount && props.route.name === 'Start' && params?.name && params?.rkey) {
+		if (
+			currentAccount &&
+			props.route.name === 'Start' &&
+			params &&
+			'name' in params &&
+			params.name &&
+			params.rkey
+		) {
 			navigation.navigate('StarterPack', {
 				rkey: params.rkey,
 				name: params.name,

@@ -32,7 +32,6 @@ import { ThemeProvider as Alf } from '#/alf';
 import { useColorModeTheme } from '#/alf/util/useColorModeTheme';
 
 import { useStarterPackEntry } from '#/components/hooks/useStarterPackEntry';
-import { Provider as IntentDialogProvider } from '#/components/intents/IntentDialogs';
 import { Provider as PortalProvider } from '#/components/Portal';
 import { Provider as ActiveVideoProvider } from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext';
 import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
@@ -76,12 +75,10 @@ function InnerApp() {
 															<MutedThreadsProvider>
 																<ServiceConfigProvider>
 																	<HideBottomBarBorderProvider>
-																		<IntentDialogProvider>
-																			<HotkeysProvider>
-																				<Shell />
-																				<ToastOutlet />
-																			</HotkeysProvider>
-																		</IntentDialogProvider>
+																		<HotkeysProvider>
+																			<Shell />
+																			<ToastOutlet />
+																		</HotkeysProvider>
 																	</HideBottomBarBorderProvider>
 																</ServiceConfigProvider>
 															</MutedThreadsProvider>

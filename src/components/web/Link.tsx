@@ -12,7 +12,12 @@ import { clsx } from 'clsx';
 
 import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import type { AllNavigatorParams, RouteParams } from '#/lib/routes/types';
-import { convertBskyAppUrlIfNeeded, isMisleadingLink, safeUrlParse } from '#/lib/strings/url-helpers';
+import {
+	convertBskyAppUrlIfNeeded,
+	getChatInviteCodeFromUrl,
+	isMisleadingLink,
+	safeUrlParse,
+} from '#/lib/strings/url-helpers';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import type { TextProps } from '#/components/Text';
@@ -116,6 +121,7 @@ export const useInternalLink = ({
 // internal href, and nothing for a genuinely external or modified click (the native anchor opens those).
 const useExternalNav = (rawHref: string, action: LinkAction) => {
 	const navigateToPath = useNavigateToPath();
+	const { groupChatJoinControl } = useGlobalDialogsControlContext();
 
 	const href = useMemo(() => {
 		const parsed = safeUrlParse(rawHref);
@@ -130,9 +136,17 @@ const useExternalNav = (rawHref: string, action: LinkAction) => {
 			}
 
 			e.preventDefault();
+
+			// a group-chat invite opens the join dialog in place rather than navigating to /chat/<code>.
+			const chatInviteCode = getChatInviteCodeFromUrl(href);
+			if (chatInviteCode) {
+				groupChatJoinControl.openWithPayload({ code: chatInviteCode });
+				return;
+			}
+
 			navigateToPath(href, action);
 		},
-		[action, href, isExternal, navigateToPath],
+		[action, groupChatJoinControl, href, isExternal, navigateToPath],
 	);
 
 	return { href, isExternal, navigate };

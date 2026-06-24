@@ -460,6 +460,11 @@ const FlatNavigator = () => {
 				options={{ title: title(defineMessage`Home`) }}
 			/>
 			<Flat.Screen
+				name="GroupChatJoin"
+				getComponent={() => HomeScreen}
+				options={{ title: title(defineMessage`Home`) }}
+			/>
+			<Flat.Screen
 				name="NotFound"
 				getComponent={() => NotFoundScreen}
 				options={{ title: title(defineMessage`Not Found`) }}

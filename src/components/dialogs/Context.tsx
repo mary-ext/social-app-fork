@@ -45,6 +45,8 @@ type ControlsContext = {
 	 * the `Dialog.Root` payload render-prop. The registry id is the constant `COMPOSER_DIALOG_ID`.
 	 */
 	composerDialogControl: DialogHandle<ComposerOpts>;
+	/** The group-chat join dialog; open with `openWithPayload({ code })` from a `bsky.app/chat/<code>` link. */
+	groupChatJoinControl: DialogHandle<{ code: string }>;
 	lightboxControl: LightboxControl;
 	mutedWordsDialogControl: DialogHandle<MutedWordsDialogPayload>;
 	signinDialogControl: DialogHandle<SigninDialogPayload>;
@@ -65,6 +67,7 @@ export function useGlobalDialogsControlContext() {
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const composerDialogControl = useDialogHandle<ComposerOpts>();
+	const groupChatJoinControl = useDialogHandle<{ code: string }>();
 	const lightboxControl = useDialogHandle<LightboxPayload>();
 	const mutedWordsDialogControl = useDialogHandle<MutedWordsDialogPayload>();
 	const signinDialogControl = useDialogHandle<SigninDialogPayload>();
@@ -74,6 +77,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const ctx = useMemo<ControlsContext>(
 		() => ({
 			composerDialogControl,
+			groupChatJoinControl,
 			lightboxControl,
 			mutedWordsDialogControl,
 			signinDialogControl,
@@ -82,6 +86,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		}),
 		[
 			composerDialogControl,
+			groupChatJoinControl,
 			lightboxControl,
 			mutedWordsDialogControl,
 			signinDialogControl,

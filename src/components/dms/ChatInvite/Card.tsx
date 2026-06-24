@@ -1,6 +1,5 @@
 import { Plural, Trans } from '@lingui/react/macro';
 
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -19,8 +18,7 @@ import type { ChatInvitePreview } from './use-chat-invite';
 export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 	if (!preview) return null;
 
-	const ownerDisplayName = createSanitizedDisplayName(preview.owner);
-	const ownerHandle = sanitizeHandle(preview.owner.handle, '@');
+	const ownerHandle = sanitizeHandle(preview.owner.handle);
 	const avatarProfiles = preview.convo?.members ?? [preview.owner];
 
 	return (
@@ -30,6 +28,7 @@ export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 				<Text size="md" weight="medium" numberOfLines={1}>
 					{preview.name}
 				</Text>
+
 				<div className={css.metaRow}>
 					<Text size="xs" weight="medium" color="textContrastMedium" numberOfLines={1}>
 						<Trans>Group chat</Trans>
@@ -44,25 +43,21 @@ export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 
 				<div className={css.ownerRow}>
 					<Text size="md_sub" weight="medium" numberOfLines={1} className={css.shrink}>
-						<Trans comment="The group chat creator">
+						<Trans comment="The group chat creator, in the format 'by {handle}'.">
 							by{' '}
 							<InlineLinkText
 								to={makeProfileLink(preview.owner)}
-								label={ownerDisplayName}
+								label={ownerHandle}
 								size="md_sub"
 								color="text"
 								weight="medium"
 							>
-								{ownerDisplayName}
+								{ownerHandle}
 							</InlineLinkText>
 						</Trans>
 					</Text>
 
 					<ProfileBadges profile={preview.owner} size="sm" />
-
-					<Text size="md_sub" color="textContrastMedium" numberOfLines={1} className={css.shrink}>
-						{ownerHandle}
-					</Text>
 				</div>
 			</div>
 		</div>

@@ -7,14 +7,13 @@ import type { NavigationProp } from '#/lib/routes/types';
 import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useSession } from '#/state/session';
 
-import * as Dialog from '#/components/Dialog';
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
 import { ChainLink_Stroke2_Corner0_Rounded as LinkIcon } from '#/components/icons/ChainLink';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
-import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import * as Toast from '#/components/Toast';
 
 export type ChatInvitePreview = ChatBskyGroupDefs.JoinLinkPreviewView;
@@ -46,8 +45,6 @@ export type ChatInviteAction = {
 
 export type ChatInvite = {
 	action: ChatInviteAction | undefined;
-	/** The join-confirmation dialog; render it alongside the invite UI (it owns the control the action opens). */
-	joinDialog: React.ReactNode;
 	preview: ChatInvitePreview | undefined;
 	status: ChatInviteStatus;
 };
@@ -73,7 +70,7 @@ export function useChatInvite({
 	const { hasSession } = useSession();
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
-	const joinDialogControl = Dialog.useDialogControl();
+	const { groupChatJoinControl } = useGlobalDialogsControlContext();
 
 	const { data, error, isPending } = useJoinLinkPreviewsQuery({
 		codes: [code],
@@ -155,7 +152,7 @@ export function useChatInvite({
 				color,
 				disabled: !canJoin,
 				onPress: () => {
-					joinDialogControl.open();
+					groupChatJoinControl.openWithPayload({ code });
 				},
 			};
 		}
@@ -163,7 +160,6 @@ export function useChatInvite({
 
 	return {
 		action,
-		joinDialog: <GroupChatJoinDialog control={joinDialogControl} code={code} />,
 		preview,
 		status,
 	};

@@ -30,7 +30,7 @@ let MessageItemInviteEmbed = ({
 }): React.ReactNode => {
 	const t = useTheme();
 	const convo = useConvoActive();
-	const { status, preview, action, joinDialog } = ChatInvite.useChatInvite({
+	const { status, preview, action } = ChatInvite.useChatInvite({
 		code: embed.joinLinkPreview.code,
 		initialPreview: embed.joinLinkPreview,
 		currentConvoId: convo.convo.view.id,
@@ -71,7 +71,6 @@ let MessageItemInviteEmbed = ({
 					]}
 				>
 					<MessageItemInviteEmbedBody status={status} preview={preview} action={action} />
-					{joinDialog}
 				</View>
 			</View>
 		</MessageContextProvider>
