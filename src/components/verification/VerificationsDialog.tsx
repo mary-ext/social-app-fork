@@ -6,9 +6,10 @@ import { getUserDisplayName } from '#/lib/getUserDisplayName';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
 
 import { Text } from '#/components/Text';
-import type { FullVerificationState } from '#/components/verification';
+import { useSimpleVerificationState } from '#/components/verification';
 import * as css from '#/components/verification/VerificationsDialog.css';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
@@ -19,21 +20,21 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 export function VerificationsDialog({
 	handle,
 	profile,
-	verificationState,
 }: {
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
-	verificationState: FullVerificationState;
 }) {
 	const { t: l } = useLingui();
+	const { currentAccount } = useSession();
 
+	const { isVerified } = useSimpleVerificationState({ profile });
+	const isViewer = profile.did === currentAccount?.did;
 	const userName = getUserDisplayName(profile);
-	const state = verificationState;
-	const label = state.profile.isViewer
-		? state.profile.isVerified
+	const label = isViewer
+		? isVerified
 			? l`You are verified`
 			: l`Your verifications`
-		: state.profile.isVerified
+		: isVerified
 			? l`${userName} is verified`
 			: l({
 					comment: `Possessive, meaning "the verifications of {userName}"`,
@@ -48,7 +49,7 @@ export function VerificationsDialog({
 						{label}
 					</Text>
 					<Text size="md">
-						{state.profile.isVerified ? (
+						{isVerified ? (
 							<Trans>This account has a checkmark because it's been verified by trusted sources.</Trans>
 						) : (
 							<Trans>
@@ -69,7 +70,7 @@ export function VerificationsDialog({
 							))}
 						</div>
 
-						{profile.verification.verifications.some((v) => !v.isValid) && state.profile.isViewer && (
+						{profile.verification.verifications.some((v) => !v.isValid) && isViewer && (
 							<Admonition className={css.admonitionSpacing} type="warning">
 								<Trans>Some of your verifications are invalid.</Trans>
 							</Admonition>

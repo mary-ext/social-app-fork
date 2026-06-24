@@ -1,9 +1,12 @@
+import { useMemo } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import type { Shadow } from '#/state/cache/types';
+import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
+import { useSession } from '#/state/session';
 
-import { type FullVerificationState, useFullVerificationState } from '#/components/verification';
+import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
 import * as css from '#/components/verification/VerificationCheckButton.css';
 import { VerificationsDialog } from '#/components/verification/VerificationsDialog';
@@ -12,7 +15,70 @@ import * as Dialog from '#/components/web/Dialog';
 
 import { colors } from '#/styles/colors';
 
-export function shouldShowVerificationCheckButton(state: FullVerificationState) {
+type FullVerificationState = {
+	profile: {
+		role: 'default' | 'verifier';
+		isVerified: boolean;
+		wasVerified: boolean;
+		isViewer: boolean;
+		showBadge: boolean;
+	};
+	viewer:
+		| {
+				role: 'default';
+				isVerified: boolean;
+		  }
+		| {
+				role: 'verifier';
+				isVerified: boolean;
+				hasIssuedVerification: boolean;
+		  };
+};
+
+// Fuses the viewed profile's verification state with the viewer's own (am I a verifier, did I verify
+// this account) — the badge's visibility decision needs both perspectives at once.
+function useFullVerificationState({ profile }: { profile: AnyProfileView }): FullVerificationState {
+	const { currentAccount } = useSession();
+	const currentAccountProfile = useCurrentAccountProfile();
+	const profileState = useSimpleVerificationState({ profile });
+	const viewerState = useSimpleVerificationState({
+		profile: currentAccountProfile,
+	});
+
+	return useMemo(() => {
+		const verifications = profile.verification?.verifications || [];
+		const wasVerified =
+			profileState.role === 'default' && !profileState.isVerified && verifications.length > 0;
+		const hasIssuedVerification = Boolean(
+			viewerState &&
+			viewerState.role === 'verifier' &&
+			profileState.role === 'default' &&
+			verifications.find((v) => v.issuer === currentAccount?.did),
+		);
+
+		return {
+			profile: {
+				...profileState,
+				wasVerified,
+				isViewer: profile.did === currentAccount?.did,
+				showBadge: profileState.showBadge,
+			},
+			viewer:
+				viewerState.role === 'verifier'
+					? {
+							role: 'verifier',
+							isVerified: viewerState.isVerified,
+							hasIssuedVerification,
+						}
+					: {
+							role: 'default',
+							isVerified: viewerState.isVerified,
+						},
+		};
+	}, [profile, currentAccount, profileState, viewerState]);
+}
+
+function shouldShowVerificationCheckButton(state: FullVerificationState) {
 	let ok = false;
 
 	if (state.profile.role === 'default') {
@@ -92,8 +158,8 @@ function Badge({
 			>
 				<VerificationCheck fill={fill} verifier={isVerifier} width={width} />
 			</Dialog.Trigger>
-			<VerificationsDialog handle={verificationsControl} profile={profile} verificationState={state} />
-			<VerifierDialog handle={verifierControl} profile={profile} verificationState={state} />
+			<VerificationsDialog handle={verificationsControl} profile={profile} />
+			<VerifierDialog handle={verifierControl} profile={profile} />
 		</>
 	);
 }

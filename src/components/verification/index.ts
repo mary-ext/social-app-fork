@@ -2,69 +2,6 @@ import { useMemo } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
-import { useSession } from '#/state/session';
-
-export type FullVerificationState = {
-	profile: {
-		role: 'default' | 'verifier';
-		isVerified: boolean;
-		wasVerified: boolean;
-		isViewer: boolean;
-		showBadge: boolean;
-	};
-	viewer:
-		| {
-				role: 'default';
-				isVerified: boolean;
-		  }
-		| {
-				role: 'verifier';
-				isVerified: boolean;
-				hasIssuedVerification: boolean;
-		  };
-};
-
-export function useFullVerificationState({ profile }: { profile: AnyProfileView }): FullVerificationState {
-	const { currentAccount } = useSession();
-	const currentAccountProfile = useCurrentAccountProfile();
-	const profileState = useSimpleVerificationState({ profile });
-	const viewerState = useSimpleVerificationState({
-		profile: currentAccountProfile,
-	});
-
-	return useMemo(() => {
-		const verifications = profile.verification?.verifications || [];
-		const wasVerified =
-			profileState.role === 'default' && !profileState.isVerified && verifications.length > 0;
-		const hasIssuedVerification = Boolean(
-			viewerState &&
-			viewerState.role === 'verifier' &&
-			profileState.role === 'default' &&
-			verifications.find((v) => v.issuer === currentAccount?.did),
-		);
-
-		return {
-			profile: {
-				...profileState,
-				wasVerified,
-				isViewer: profile.did === currentAccount?.did,
-				showBadge: profileState.showBadge,
-			},
-			viewer:
-				viewerState.role === 'verifier'
-					? {
-							role: 'verifier',
-							isVerified: viewerState.isVerified,
-							hasIssuedVerification,
-						}
-					: {
-							role: 'default',
-							isVerified: viewerState.isVerified,
-						},
-		};
-	}, [profile, currentAccount, profileState, viewerState]);
-}
 
 export type SimpleVerificationState = {
 	role: 'default' | 'verifier';
