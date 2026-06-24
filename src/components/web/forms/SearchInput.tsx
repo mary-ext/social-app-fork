@@ -59,9 +59,10 @@ export function SearchInput({
 					label={l`Clear search`}
 					onClick={onClear}
 					shape="round"
-					size="small"
+					size="tiny"
+					variant="ghost"
 				>
-					<ButtonIcon icon={XIcon} size="sm" />
+					<ButtonIcon icon={XIcon} size="xs" />
 				</Button>
 			)}
 		</div>

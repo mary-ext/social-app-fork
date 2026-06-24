@@ -31,7 +31,7 @@ export const input = style({
 
 // extra trailing room for the clear button when it is shown.
 export const inputWithClear = style({
-	paddingInlineEnd: 44,
+	paddingInlineEnd: 36,
 });
 
 export const clear = style({
