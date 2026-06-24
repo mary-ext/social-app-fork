@@ -87,10 +87,26 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 		return undefined;
 	};
 
+	const title = pick('og:title', 'twitter:title') ?? (decodeHtmlEntities(titleText).trim() || undefined);
+	let description = pick('og:description', 'twitter:description', 'description');
+
+	if (title && description) {
+		// some CMSes prepend the title verbatim to the description; strip the redundant prefix so the
+		// card doesn't render the title twice. only act on a clean separator-delimited prefix that
+		// leaves real text behind, to avoid clipping a description that merely opens with the same words.
+		const rest = description.slice(title.length);
+		if (description.toLowerCase().startsWith(title.toLowerCase()) && /^[\s\p{P}]/u.test(rest)) {
+			const stripped = rest.replace(/^[\s\p{P}]+/u, '');
+			if (stripped) {
+				description = stripped;
+			}
+		}
+	}
+
 	return {
 		associatedUris: associatedUris.length ? associatedUris : undefined,
-		description: pick('og:description', 'twitter:description', 'description'),
+		description,
 		image: pick('og:image', 'og:image:url', 'og:image:secure_url', 'twitter:image', 'twitter:image:src'),
-		title: pick('og:title', 'twitter:title') ?? (decodeHtmlEntities(titleText).trim() || undefined),
+		title,
 	};
 };
