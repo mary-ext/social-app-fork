@@ -5,10 +5,10 @@ import { useLingui } from '@lingui/react/macro';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
-import { useDialogControl } from '#/components/Dialog';
 import { BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon } from '#/components/icons/BellPlus';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 /** Round bell button opening the activity-subscription dialog. */
 export function SubscribeProfileButton({
@@ -19,7 +19,7 @@ export function SubscribeProfileButton({
 	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
-	const subscribeDialogControl = useDialogControl();
+	const handle = Dialog.useDialogHandle();
 
 	const name = createSanitizedDisplayName(profile, true);
 	const isSubscribed =
@@ -28,20 +28,15 @@ export function SubscribeProfileButton({
 
 	return (
 		<>
-			<Button
-				color="secondary"
-				label={l`Get notified when ${name} posts`}
-				onClick={() => subscribeDialogControl.open()}
-				shape="round"
-				size="small"
-			>
-				<ButtonIcon icon={Icon} size="md" />
-			</Button>
-			<SubscribeProfileDialog
-				control={subscribeDialogControl}
-				moderationOpts={moderationOpts}
-				profile={profile}
+			<Dialog.Trigger
+				handle={handle}
+				render={
+					<Button color="secondary" label={l`Get notified when ${name} posts`} shape="round" size="small">
+						<ButtonIcon icon={Icon} size="md" />
+					</Button>
+				}
 			/>
+			<SubscribeProfileDialog handle={handle} moderationOpts={moderationOpts} profile={profile} />
 		</>
 	);
 }

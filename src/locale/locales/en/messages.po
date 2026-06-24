@@ -1892,7 +1892,7 @@ msgstr "Change duration"
 msgid "Change moderation service"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:148
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "Changes saved"
 msgstr ""
 
@@ -2392,7 +2392,7 @@ msgid "Could not remove member."
 msgstr "Could not remove member."
 
 #. placeholder {0}: cleanError(error)
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:228
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Could not save changes: {0}"
 msgstr ""
 
@@ -3834,15 +3834,15 @@ msgstr "Get notifications when people repost your reposts."
 msgid "Get notifications when there's activity on posts you're subscribed to."
 msgstr "Get notifications when there's activity on posts you're subscribed to."
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:183
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:57
 msgid "Get notified of new posts from {name}"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:190
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:177
 msgid "Get notified of this account’s activity"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:33
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:34
 msgid "Get notified when {name} posts"
 msgstr ""
 
@@ -4424,7 +4424,7 @@ msgstr ""
 msgid "Keep editing"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:187
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Keep me posted"
 msgstr ""
 
@@ -5692,6 +5692,8 @@ msgstr ""
 msgid "Objects"
 msgstr "Objects"
 
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:211
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:215
 #: src/screens/Settings/NotificationSettings/index.tsx:289
 msgid "Off"
 msgstr ""
@@ -6322,17 +6324,25 @@ msgctxt "toast"
 msgid "Post unpinned"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:209
 #: src/screens/ProfileList/index.tsx:173
 #: src/screens/StarterPack/StarterPackScreen.tsx:177
 #: src/view/screens/Profile.tsx:246
 msgid "Posts"
 msgstr ""
 
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:199
+msgid "Posts and replies"
+msgstr "Posts and replies"
+
 #: src/view/com/posts/PostFeedErrorMessage.tsx:70
 msgid "Posts hidden"
 msgstr ""
+
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:203
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:207
+msgid "Posts only"
+msgstr "Posts only"
 
 #: src/screens/Settings/Settings.tsx:53
 msgid "Preferences"
@@ -6787,8 +6797,6 @@ msgstr "Replied-to message from {senderName}, tap to scroll to it"
 msgid "Replied-to message, tap to scroll to it"
 msgstr "Replied-to message, tap to scroll to it"
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:214
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 #: src/screens/Settings/NotificationSettings/index.tsx:97
 #: src/screens/Settings/NotificationSettings/index.tsx:198
 #: src/view/screens/Profile.tsx:269
@@ -7137,8 +7145,8 @@ msgstr "Sad GIFs"
 msgid "Save"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:166
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:173
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:156
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:163
 #: src/screens/SavedFeeds.tsx:104
 #: src/screens/SavedFeeds.tsx:108
 #: src/view/com/composer/Composer.tsx:1105
@@ -8055,7 +8063,7 @@ msgstr "Subscribe to {publicationTitle} on {0}"
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:201
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:190
 msgid "Subscribe to account activity"
 msgstr ""
 
@@ -9972,7 +9980,7 @@ msgid "You will be signed out of all your accounts."
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:124
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:115
 msgid "You will no longer receive notifications for {0}"
 msgstr ""
 
@@ -9998,7 +10006,7 @@ msgid "You: {message}"
 msgstr "You: {message}"
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:144
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:135
 msgid "You'll start receiving notifications for {0}!"
 msgstr ""
 

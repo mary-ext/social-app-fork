@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
 import type {
 	AnyProfileView,
 	AppBskyNotificationDefs,
@@ -20,83 +19,75 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import * as Toggle from '#/components/forms/Toggle';
 import { Loader } from '#/components/Loader';
-import * as ProfileCard from '#/components/ProfileCard';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import * as Toggle from '#/components/web/forms/Toggle';
+import * as ProfileCard from '#/components/web/ProfileCard';
+
+import * as styles from './SubscribeProfileDialog.css';
+
+type SubscriptionChoice = 'all' | 'off' | 'posts';
+
+// the three reachable subscription states; `reply` can't be set without `post`.
+const CHOICE_STATES: Record<SubscriptionChoice, { post: boolean; reply: boolean }> = {
+	all: { post: true, reply: true },
+	off: { post: false, reply: false },
+	posts: { post: true, reply: false },
+};
 
 export function SubscribeProfileDialog({
-	control,
+	handle,
 	profile,
 	moderationOpts,
 	includeProfile,
 }: {
-	control: Dialog.DialogControlProps;
-	profile: AnyProfileView;
-	moderationOpts: ModerationOptions;
-	includeProfile?: boolean;
-}) {
-	return (
-		<Dialog.Outer control={control}>
-			<Dialog.Handle />
-			<DialogInner profile={profile} moderationOpts={moderationOpts} includeProfile={includeProfile} />
-		</Dialog.Outer>
-	);
-}
-
-function DialogInner({
-	profile,
-	moderationOpts,
-	includeProfile,
-}: {
+	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
 	includeProfile?: boolean;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
+	const name = createSanitizedDisplayName(profile, false);
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup className={styles.popup} label={l`Get notified of new posts from ${name}`}>
+				<DialogInner
+					handle={handle}
+					profile={profile}
+					moderationOpts={moderationOpts}
+					includeProfile={includeProfile}
+				/>
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+function DialogInner({
+	handle,
+	profile,
+	moderationOpts,
+	includeProfile,
+}: {
+	handle: Dialog.DialogHandle;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
+	includeProfile?: boolean;
+}) {
+	const { t: l } = useLingui();
 	const { appview } = useClients();
-	const control = Dialog.useDialogContext();
 	const queryClient = useQueryClient();
 	const initialState = parseActivitySubscription(profile.viewer?.activitySubscription);
 	const [state, setState] = useState(initialState);
 
-	const values = useMemo(() => {
-		const { post, reply } = state;
-		const res = [];
-		if (post) res.push('post');
-		if (reply) res.push('reply');
-		return res;
-	}, [state]);
+	const selected: SubscriptionChoice = state.post ? (state.reply ? 'all' : 'posts') : 'off';
 
-	const onChange = (newValues: string[]) => {
-		setState((oldValues) => {
-			// ensure you can't have reply without post
-			if (!oldValues.reply && newValues.includes('reply')) {
-				return {
-					post: true,
-					reply: true,
-				};
-			}
-
-			if (oldValues.post && !newValues.includes('post')) {
-				return {
-					post: false,
-					reply: false,
-				};
-			}
-
-			return {
-				post: newValues.includes('post'),
-				reply: newValues.includes('reply'),
-			};
-		});
+	const onSelect = ([value]: string[]) => {
+		setState(CHOICE_STATES[value as SubscriptionChoice]);
 	};
 
 	const {
@@ -115,42 +106,41 @@ function DialogInner({
 			);
 		},
 		onSuccess: (_data, activitySubscription) => {
-			control.close(() => {
-				updateProfileShadow(queryClient, profile.did, {
-					activitySubscription,
+			handle.close();
+			updateProfileShadow(queryClient, profile.did, {
+				activitySubscription,
+			});
+
+			if (!activitySubscription.post && !activitySubscription.reply) {
+				Toast.show(l`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`, {
+					type: 'success',
 				});
 
-				if (!activitySubscription.post && !activitySubscription.reply) {
-					Toast.show(l`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`, {
+				// filter out the subscription
+				queryClient.setQueryData(
+					RQKEY_getActivitySubscriptions,
+					(old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.$output>) => {
+						if (!old) return old;
+						return {
+							...old,
+							pages: old.pages.map((page) => ({
+								...page,
+								subscriptions: page.subscriptions.filter((item) => item.did !== profile.did),
+							})),
+						};
+					},
+				);
+			} else {
+				if (!initialState.post && !initialState.reply) {
+					Toast.show(l`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`, {
 						type: 'success',
 					});
-
-					// filter out the subscription
-					queryClient.setQueryData(
-						RQKEY_getActivitySubscriptions,
-						(old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.$output>) => {
-							if (!old) return old;
-							return {
-								...old,
-								pages: old.pages.map((page) => ({
-									...page,
-									subscriptions: page.subscriptions.filter((item) => item.did !== profile.did),
-								})),
-							};
-						},
-					);
 				} else {
-					if (!initialState.post && !initialState.reply) {
-						Toast.show(l`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`, {
-							type: 'success',
-						});
-					} else {
-						Toast.show(l`Changes saved`, {
-							type: 'success',
-						});
-					}
+					Toast.show(l`Changes saved`, {
+						type: 'success',
+					});
 				}
-			});
+			}
 		},
 		onError: (err) => {
 			logger.error('Could not save activity subscription', { message: err });
@@ -165,7 +155,7 @@ function DialogInner({
 			return {
 				label: l`Save changes`,
 				color: hasAny ? 'primary' : 'negative',
-				onPress: () => saveChanges(state),
+				onClick: () => saveChanges(state),
 				disabled: isSaving,
 			};
 		} else {
@@ -175,67 +165,70 @@ function DialogInner({
 				disabled: true,
 			};
 		}
-	}, [state, initialState, control, l, isSaving, saveChanges]);
-
-	const name = createSanitizedDisplayName(profile, false);
+	}, [state, initialState, l, isSaving, saveChanges]);
 
 	return (
-		<Dialog.ScrollableInner style={{ maxWidth: 400 }} label={l`Get notified of new posts from ${name}`}>
-			<View style={[a.gap_lg]}>
-				<View style={[a.gap_xs]}>
-					<Text style={[a.font_bold, a.text_2xl]}>
-						<Trans>Keep me posted</Trans>
-					</Text>
-					<Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-						<Trans>Get notified of this account’s activity</Trans>
-					</Text>
-				</View>
+		<div className={styles.content}>
+			<div className={styles.header}>
+				<Text size="_2xl" weight="bold">
+					<Trans>Keep me posted</Trans>
+				</Text>
+				<Text color="textContrastMedium" size="md">
+					<Trans>Get notified of this account’s activity</Trans>
+				</Text>
+			</div>
 
-				{includeProfile && (
-					<ProfileCard.Header>
-						<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
-						<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
-					</ProfileCard.Header>
-				)}
+			{includeProfile && (
+				<ProfileCard.Header>
+					<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
+					<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
+				</ProfileCard.Header>
+			)}
 
-				<Toggle.Group label={l`Subscribe to account activity`} values={values} onChange={onChange}>
-					<View style={[a.gap_sm]}>
-						<Toggle.Item
-							label={l`Posts`}
-							name="post"
-							style={[a.flex_1, a.py_xs, a.flex_row_reverse, a.gap_sm]}
-						>
-							<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
-								<Trans>Posts</Trans>
-							</Toggle.LabelText>
-							<Toggle.Switch />
-						</Toggle.Item>
-						<Toggle.Item
-							label={l`Replies`}
-							name="reply"
-							style={[a.flex_1, a.py_xs, a.flex_row_reverse, a.gap_sm]}
-						>
-							<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
-								<Trans>Replies</Trans>
-							</Toggle.LabelText>
-							<Toggle.Switch />
-						</Toggle.Item>
-					</View>
-				</Toggle.Group>
+			<Toggle.Group
+				className={styles.radioList}
+				label={l`Subscribe to account activity`}
+				onChange={onSelect}
+				type="radio"
+				values={[selected]}
+			>
+				<Toggle.RadioItem label={l`Posts and replies`} value="all">
+					<Toggle.Panel>
+						<Toggle.RadioIndicator />
+						<Toggle.PanelText>
+							<Trans>Posts and replies</Trans>
+						</Toggle.PanelText>
+					</Toggle.Panel>
+				</Toggle.RadioItem>
+				<Toggle.RadioItem label={l`Posts only`} value="posts">
+					<Toggle.Panel>
+						<Toggle.RadioIndicator />
+						<Toggle.PanelText>
+							<Trans>Posts only</Trans>
+						</Toggle.PanelText>
+					</Toggle.Panel>
+				</Toggle.RadioItem>
+				<Toggle.RadioItem label={l`Off`} value="off">
+					<Toggle.Panel>
+						<Toggle.RadioIndicator />
+						<Toggle.PanelText>
+							<Trans>Off</Trans>
+						</Toggle.PanelText>
+					</Toggle.Panel>
+				</Toggle.RadioItem>
+			</Toggle.Group>
 
-				{error && (
-					<Admonition type="error">
-						<Trans>Could not save changes: {cleanError(error)}</Trans>
-					</Admonition>
-				)}
+			{error && (
+				<Admonition type="error">
+					<Trans>Could not save changes: {cleanError(error)}</Trans>
+				</Admonition>
+			)}
 
-				<Button {...buttonProps} size="large" variant="solid">
-					<ButtonText>{buttonProps.label}</ButtonText>
-					{isSaving && <ButtonIcon icon={Loader} />}
-				</Button>
-			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+			<Button {...buttonProps} size="large" variant="solid">
+				<ButtonText>{buttonProps.label}</ButtonText>
+				{isSaving && <ButtonIcon icon={Loader} />}
+			</Button>
+		</div>
 	);
 }
 
