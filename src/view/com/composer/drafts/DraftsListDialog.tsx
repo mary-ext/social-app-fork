@@ -17,13 +17,23 @@ import * as styles from './DraftsListDialog.css';
 import { useDeleteDraftMutation, useDraftsQuery } from './state/queries';
 import type { DraftSummary } from './state/schema';
 
-export function DraftsListDialog({
-	handle,
-	onSelectDraft,
-}: {
+type DraftsListDialogProps = {
 	handle: Dialog.DialogHandle;
 	onSelectDraft: (draft: DraftSummary) => void;
-}) {
+};
+
+export function DraftsListDialog({ handle, onSelectDraft }: DraftsListDialogProps) {
+	const { t: l } = useLingui();
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup scroll="body" label={l`Drafts`}>
+				<DialogInner handle={handle} onSelectDraft={onSelectDraft} />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 	const { t: l } = useLingui();
 	const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useDraftsQuery();
 	const { mutate: deleteDraft } = useDeleteDraftMutation();
@@ -68,66 +78,58 @@ export function DraftsListDialog({
 	}, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
 	return (
-		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" label={l`Drafts`}>
-				<Dialog.Header.Outer>
-					<Dialog.Header.Slot>
-						<Button
-							label={l`Back`}
-							onClick={() => handle.close()}
-							size="small"
-							color="primary"
-							variant="ghost"
-						>
-							<ButtonText size="md">
-								<Trans>Back</Trans>
-							</ButtonText>
-						</Button>
-					</Dialog.Header.Slot>
-					<Dialog.Header.Content>
-						<Dialog.Header.TitleText>
-							<Trans>Drafts</Trans>
-						</Dialog.Header.TitleText>
-					</Dialog.Header.Content>
-					<Dialog.Header.Slot />
-				</Dialog.Header.Outer>
-				<Dialog.List
-					className={styles.list}
-					data={drafts}
-					keyExtractor={(draft) => draft.id}
-					renderItem={(draft) => (
-						<div className={styles.itemWrap}>
-							<DraftItem draft={draft} onSelect={handleSelectDraft} onDelete={handleDeleteDraft} />
+		<>
+			<Dialog.Header.Outer>
+				<Dialog.Header.Slot>
+					<Button label={l`Back`} onClick={() => handle.close()} size="small" color="primary" variant="ghost">
+						<ButtonText size="md">
+							<Trans>Back</Trans>
+						</ButtonText>
+					</Button>
+				</Dialog.Header.Slot>
+				<Dialog.Header.Content>
+					<Dialog.Header.TitleText>
+						<Trans>Drafts</Trans>
+					</Dialog.Header.TitleText>
+				</Dialog.Header.Content>
+				<Dialog.Header.Slot />
+			</Dialog.Header.Outer>
+			<Dialog.List
+				className={styles.list}
+				data={drafts}
+				keyExtractor={(draft) => draft.id}
+				renderItem={(draft) => (
+					<div className={styles.itemWrap}>
+						<DraftItem draft={draft} onSelect={handleSelectDraft} onDelete={handleDeleteDraft} />
+					</div>
+				)}
+				onEndReached={onEndReached}
+				isFetchingNextPage={isFetchingNextPage}
+				loadingLabel={l`Loading drafts`}
+				ListEmptyComponent={
+					isLoading ? (
+						<div className={styles.loading}>
+							<CenteredSpinner label={l`Loading drafts`} size="lg" />
 						</div>
-					)}
-					onEndReached={onEndReached}
-					isFetchingNextPage={isFetchingNextPage}
-					loadingLabel={l`Loading drafts`}
-					ListEmptyComponent={
-						isLoading ? (
-							<div className={styles.loading}>
-								<CenteredSpinner label={l`Loading drafts`} size="lg" />
-							</div>
-						) : (
-							<div className={styles.empty}>
-								<PageXIcon width={48} height={48} fill={colors.textContrastLow} />
-								<Text size="md" weight="medium" color="textContrastHigh" align="center">
-									<Trans>No drafts yet</Trans>
-								</Text>
-							</div>
-						)
-					}
-					ListFooterComponent={
-						drafts.length > 5 ? (
-							<div className={styles.footerNote}>
-								<Text align="center" color="textContrastMedium">
-									<Trans>So many thoughts, you should post one</Trans>
-								</Text>
-							</div>
-						) : null
-					}
-				/>
-			</Dialog.Popup>
-		</Dialog.Root>
+					) : (
+						<div className={styles.empty}>
+							<PageXIcon width={48} height={48} fill={colors.textContrastLow} />
+							<Text size="md" weight="medium" color="textContrastHigh" align="center">
+								<Trans>No drafts yet</Trans>
+							</Text>
+						</div>
+					)
+				}
+				ListFooterComponent={
+					drafts.length > 5 ? (
+						<div className={styles.footerNote}>
+							<Text align="center" color="textContrastMedium">
+								<Trans>So many thoughts, you should post one</Trans>
+							</Text>
+						</div>
+					) : null
+				}
+			/>
+		</>
 	);
 }

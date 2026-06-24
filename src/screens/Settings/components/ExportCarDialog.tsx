@@ -21,6 +21,18 @@ import * as styles from './ExportCarDialog.css';
 
 export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	const { t: l } = useLingui();
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup className={styles.popup} label={l`Export my profile data`}>
+				<DialogInner />
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+function DialogInner() {
+	const { t: l } = useLingui();
 	const { chat, pds } = useClients();
 	const { currentAccount } = useSession();
 	const [loading, setLoading] = useState<'chat' | 'repo' | false>(false);
@@ -75,72 +87,67 @@ export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	}, [l, chat]);
 
 	return (
-		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={l`Export my profile data`}>
-				<div className={styles.content}>
-					<Text className={styles.title} size="_2xl" weight="bold">
-						<Trans>Export my profile data</Trans>
-					</Text>
-					<Text className={styles.body} color="textContrastHigh" size="sm">
-						<Trans>
-							Your account repository, containing all public data records, can be downloaded as a "CAR" file.
-							This file does not include media embeds, such as images, or your private data, which must be
-							fetched separately.
-						</Trans>
-					</Text>
+		<div className={styles.content}>
+			<Text className={styles.title} size="_2xl" weight="bold">
+				<Trans>Export my profile data</Trans>
+			</Text>
+			<Text className={styles.body} color="textContrastHigh" size="sm">
+				<Trans>
+					Your account repository, containing all public data records, can be downloaded as a "CAR" file. This
+					file does not include media embeds, such as images, or your private data, which must be fetched
+					separately.
+				</Trans>
+			</Text>
 
-					<Button
-						color="primary"
-						disabled={!!loading}
-						label={l`Download profile data`}
-						onClick={() => void download()}
-						size="large"
+			<Button
+				color="primary"
+				disabled={!!loading}
+				label={l`Download profile data`}
+				onClick={() => void download()}
+				size="large"
+			>
+				<ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
+				<ButtonText>
+					<Trans context="button">Download profile data</Trans>
+				</ButtonText>
+			</Button>
+
+			<Text className={styles.heading} size="_2xl" weight="bold">
+				<Trans>Export my chat data</Trans>
+			</Text>
+			<Text className={styles.body} color="textContrastHigh" size="sm">
+				<Trans>
+					You can also download your chat data as a "JSONL" file. This file only includes chat messages that
+					you have sent and does not include chat messages that you have received.
+				</Trans>
+			</Text>
+
+			<Button
+				color="primary"
+				disabled={!!loading}
+				label={l`Download chat data`}
+				onClick={() => void downloadChatData()}
+				size="large"
+			>
+				<ButtonIcon icon={loading === 'chat' ? Loader : DownloadIcon} />
+				<ButtonText>
+					<Trans context="button">Download chat data</Trans>
+				</ButtonText>
+			</Button>
+
+			<Text className={styles.footnote} color="textContrastMedium" size="sm">
+				<Trans>
+					This feature is in beta. You can read more about repository exports in{' '}
+					<ExternalInlineLinkText
+						label={l`View blogpost for more details`}
+						size="sm"
+						href="https://docs.bsky.app/blog/repo-export"
 					>
-						<ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
-						<ButtonText>
-							<Trans context="button">Download profile data</Trans>
-						</ButtonText>
-					</Button>
-
-					<Text className={styles.heading} size="_2xl" weight="bold">
-						<Trans>Export my chat data</Trans>
-					</Text>
-					<Text className={styles.body} color="textContrastHigh" size="sm">
-						<Trans>
-							You can also download your chat data as a "JSONL" file. This file only includes chat messages
-							that you have sent and does not include chat messages that you have received.
-						</Trans>
-					</Text>
-
-					<Button
-						color="primary"
-						disabled={!!loading}
-						label={l`Download chat data`}
-						onClick={() => void downloadChatData()}
-						size="large"
-					>
-						<ButtonIcon icon={loading === 'chat' ? Loader : DownloadIcon} />
-						<ButtonText>
-							<Trans context="button">Download chat data</Trans>
-						</ButtonText>
-					</Button>
-
-					<Text className={styles.footnote} color="textContrastMedium" size="sm">
-						<Trans>
-							This feature is in beta. You can read more about repository exports in{' '}
-							<ExternalInlineLinkText
-								label={l`View blogpost for more details`}
-								size="sm"
-								href="https://docs.bsky.app/blog/repo-export"
-							>
-								this blogpost
-							</ExternalInlineLinkText>
-							.
-						</Trans>
-					</Text>
-				</div>
-				<Dialog.Close />
-			</Dialog.Popup>
-		</Dialog.Root>
+						this blogpost
+					</ExternalInlineLinkText>
+					.
+				</Trans>
+			</Text>
+		</div>
 	);
 }

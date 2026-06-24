@@ -20,6 +20,17 @@ export function BotAccountAlert({
 	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup label={l`Automated account`} size="narrow">
+				<DialogInner handle={handle} profile={profile} />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
+	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const isSelf = profile.did === currentAccount?.did;
@@ -28,37 +39,33 @@ export function BotAccountAlert({
 		: l`This account has been marked as automated by its owner.`;
 
 	return (
-		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={l`Automated account`} size="narrow">
-				<div className={css.body}>
-					<RobotIcon className={css.icon} width={48} fill={colors.textContrastMedium} />
-					<Text align="center" className={css.text} color="textContrastHigh" size="md">
-						{description}
-					</Text>
-					<div className={css.actions}>
-						<Button color="primary" label={l`Okay`} onClick={() => handle.close()} size="large">
-							<ButtonText>
-								<Trans>Okay</Trans>
-							</ButtonText>
-						</Button>
-						{isSelf && (
-							<Button
-								color="secondary"
-								label={l`Open settings`}
-								onClick={() => {
-									handle.close();
-									void navigate('AccountSettings');
-								}}
-								size="large"
-							>
-								<ButtonText>
-									<Trans>Open settings</Trans>
-								</ButtonText>
-							</Button>
-						)}
-					</div>
-				</div>
-			</Dialog.Popup>
-		</Dialog.Root>
+		<div className={css.body}>
+			<RobotIcon className={css.icon} width={48} fill={colors.textContrastMedium} />
+			<Text align="center" className={css.text} color="textContrastHigh" size="md">
+				{description}
+			</Text>
+			<div className={css.actions}>
+				<Button color="primary" label={l`Okay`} onClick={() => handle.close()} size="large">
+					<ButtonText>
+						<Trans>Okay</Trans>
+					</ButtonText>
+				</Button>
+				{isSelf && (
+					<Button
+						color="secondary"
+						label={l`Open settings`}
+						onClick={() => {
+							handle.close();
+							void navigate('AccountSettings');
+						}}
+						size="large"
+					>
+						<ButtonText>
+							<Trans>Open settings</Trans>
+						</ButtonText>
+					</Button>
+				)}
+			</div>
+		</div>
 	);
 }

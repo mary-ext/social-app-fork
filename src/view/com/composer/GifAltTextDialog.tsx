@@ -28,30 +28,38 @@ type Props = {
 export function GifAltTextDialog({ altText, gif, handle, onSubmit }: Props): React.ReactNode {
 	const { t: l } = useLingui();
 
-	const { data } = useResolveGifQuery(gif);
-	const thumb = useBlobUrl(data?.thumb?.source.blob);
-	const params = data ? parseEmbedPlayerFromUrl(data.uri) : undefined;
-	const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt;
-
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
 			<Dialog.Popup scroll="body" label={l`Add alt text`}>
-				{params ? (
-					<DialogInner
-						handle={handle}
-						initialAlt={altText || vendorAltText}
-						onSubmit={onSubmit}
-						params={params}
-						thumb={thumb}
-						vendorAltText={vendorAltText}
-					/>
-				) : null}
+				<DialogInner altText={altText} gif={gif} handle={handle} onSubmit={onSubmit} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
-type DialogInnerProps = {
+function DialogInner({ altText, gif, handle, onSubmit }: Props): React.ReactNode {
+	const { data } = useResolveGifQuery(gif);
+	const thumb = useBlobUrl(data?.thumb?.source.blob);
+	const params = data ? parseEmbedPlayerFromUrl(data.uri) : undefined;
+	const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt;
+
+	if (!params) {
+		return null;
+	}
+
+	return (
+		<GifAltTextForm
+			handle={handle}
+			initialAlt={altText || vendorAltText}
+			onSubmit={onSubmit}
+			params={params}
+			thumb={thumb}
+			vendorAltText={vendorAltText}
+		/>
+	);
+}
+
+type GifAltTextFormProps = {
 	handle: Dialog.DialogHandle;
 	initialAlt: string;
 	onSubmit: (alt: string) => void;
@@ -60,14 +68,14 @@ type DialogInnerProps = {
 	vendorAltText: string;
 };
 
-const DialogInner = ({
+const GifAltTextForm = ({
 	handle,
 	initialAlt,
 	onSubmit,
 	params,
 	thumb,
 	vendorAltText,
-}: DialogInnerProps): React.ReactNode => {
+}: GifAltTextFormProps): React.ReactNode => {
 	const { t: l } = useLingui();
 	const [altText, setAltText] = useState(initialAlt);
 	const counterId = useId();

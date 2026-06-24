@@ -223,13 +223,13 @@ msgid "{0} of {1}"
 msgstr ""
 
 #. placeholder {0}: altText.length
-#: src/view/com/composer/GifAltTextDialog.tsx:80
+#: src/view/com/composer/GifAltTextDialog.tsx:88
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:45
 msgid "{0} of {MAX_ALT_TEXT} characters"
 msgstr "{0} of {MAX_ALT_TEXT} characters"
 
 #. placeholder {0}: altText.length
-#: src/view/com/composer/GifAltTextDialog.tsx:79
+#: src/view/com/composer/GifAltTextDialog.tsx:87
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:44
 msgid "{0} of {MAX_ALT_TEXT} characters, over the limit"
 msgstr "{0} of {MAX_ALT_TEXT} characters, over the limit"
@@ -653,16 +653,16 @@ msgstr "{requestCount}+ requests"
 msgid "{type}h ago"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:30
+#: src/components/verification/VerifierDialog.tsx:42
 msgid "{userName} is a trusted verifier"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:38
+#: src/components/verification/VerificationsDialog.tsx:51
 msgid "{userName} is verified"
 msgstr ""
 
 #. Possessive, meaning "the verifications of {userName}"
-#: src/components/verification/VerificationsDialog.tsx:39
+#: src/components/verification/VerificationsDialog.tsx:52
 msgid "{userName}'s verifications"
 msgstr ""
 
@@ -954,7 +954,7 @@ msgstr ""
 msgid "Accounts"
 msgstr "Accounts"
 
-#: src/components/verification/VerifierDialog.tsx:49
+#: src/components/verification/VerifierDialog.tsx:59
 msgid "Accounts with a scalloped blue check mark <0/> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr "Accounts with a scalloped blue check mark <0/> can verify others. These trusted verifiers are selected by Bluesky."
 
@@ -1013,8 +1013,8 @@ msgid "Add a user to this list"
 msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:34
-#: src/view/com/composer/GifAltTextDialog.tsx:38
-#: src/view/com/composer/GifAltTextDialog.tsx:105
+#: src/view/com/composer/GifAltTextDialog.tsx:33
+#: src/view/com/composer/GifAltTextDialog.tsx:113
 #: src/view/com/composer/photos/Gallery.tsx:177
 #: src/view/com/composer/photos/Gallery.tsx:215
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:27
@@ -1281,8 +1281,8 @@ msgid "ALT"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:34
-#: src/view/com/composer/GifAltTextDialog.tsx:152
-#: src/view/com/composer/GifAltTextDialog.tsx:156
+#: src/view/com/composer/GifAltTextDialog.tsx:160
+#: src/view/com/composer/GifAltTextDialog.tsx:164
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:117
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:121
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
@@ -1300,7 +1300,7 @@ msgstr ""
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr ""
 
-#: src/view/com/composer/GifAltTextDialog.tsx:162
+#: src/view/com/composer/GifAltTextDialog.tsx:170
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:127
 msgid "Alt text is over the character limit."
 msgstr "Alt text is over the character limit."
@@ -1342,7 +1342,7 @@ msgstr ""
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:38
+#: src/components/verification/VerifierDialog.tsx:48
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
@@ -1544,7 +1544,7 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:32
+#: src/components/BotAccountAlert.tsx:25
 #: src/components/BotBadge.tsx:42
 msgid "Automated account"
 msgstr "Automated account"
@@ -1571,8 +1571,8 @@ msgstr ""
 #: src/screens/Messages/Inbox.tsx:207
 #: src/screens/Profile/Header/Shell.tsx:78
 #: src/screens/StarterPack/Wizard/index.tsx:279
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:76
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:83
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:84
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:86
 msgid "Back"
 msgstr ""
 
@@ -1830,8 +1830,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:111
 #: src/view/com/composer/Composer.tsx:1366
 #: src/view/com/composer/Composer.tsx:1368
-#: src/view/com/composer/GifAltTextDialog.tsx:93
-#: src/view/com/composer/GifAltTextDialog.tsx:99
+#: src/view/com/composer/GifAltTextDialog.tsx:101
+#: src/view/com/composer/GifAltTextDialog.tsx:107
 #: src/view/com/composer/photos/EditImageDialogInner.tsx:42
 #: src/view/com/composer/photos/EditImageDialogInner.tsx:48
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:58
@@ -2083,8 +2083,8 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:101
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:108
 #: src/components/suggested-follows-dialog.tsx:324
-#: src/components/verification/VerificationsDialog.tsx:83
-#: src/components/verification/VerifierDialog.tsx:73
+#: src/components/verification/VerificationsDialog.tsx:95
+#: src/components/verification/VerifierDialog.tsx:82
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:37
 #: src/features/liveNow/components/EditLiveDialog.tsx:185
 #: src/features/liveNow/components/EditLiveDialog.tsx:191
@@ -2106,8 +2106,8 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:254
 #: src/components/dialogs/LanguageSelectDialog.tsx:277
 #: src/components/moderation/BlockDialog.tsx:164
-#: src/components/verification/VerificationsDialog.tsx:81
-#: src/components/verification/VerifierDialog.tsx:71
+#: src/components/verification/VerificationsDialog.tsx:93
+#: src/components/verification/VerifierDialog.tsx:80
 #: src/components/web/Dialog/Popup.tsx:80
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:35
 msgid "Close dialog"
@@ -2616,7 +2616,7 @@ msgstr "Deleted message"
 msgid "Description"
 msgstr ""
 
-#: src/view/com/composer/GifAltTextDialog.tsx:145
+#: src/view/com/composer/GifAltTextDialog.tsx:153
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:110
 msgid "Descriptive alt text"
 msgstr ""
@@ -2762,11 +2762,11 @@ msgstr ""
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:118
+#: src/screens/Settings/components/ExportCarDialog.tsx:128
 msgid "Download chat data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:124
+#: src/screens/Settings/components/ExportCarDialog.tsx:134
 msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
@@ -2776,11 +2776,11 @@ msgstr "Download chat data"
 msgid "Download image"
 msgstr "Download image"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:95
+#: src/screens/Settings/components/ExportCarDialog.tsx:105
 msgid "Download profile data"
 msgstr "Download profile data"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:101
+#: src/screens/Settings/components/ExportCarDialog.tsx:111
 msgctxt "button"
 msgid "Download profile data"
 msgstr "Download profile data"
@@ -2791,8 +2791,8 @@ msgstr ""
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:61
 #: src/view/com/composer/drafts/DraftsButton.tsx:71
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:72
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:89
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:29
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:92
 msgid "Drafts"
 msgstr ""
 
@@ -2975,7 +2975,7 @@ msgid "Emoji categories"
 msgstr "Emoji categories"
 
 #. placeholder {0}: externalEmbedLabels[source]
-#: src/components/dialogs/EmbedConsent.tsx:76
+#: src/components/dialogs/EmbedConsent.tsx:85
 msgid "Enable {0} only"
 msgstr ""
 
@@ -2987,8 +2987,8 @@ msgstr ""
 msgid "Enable captions"
 msgstr "Enable captions"
 
-#: src/components/dialogs/EmbedConsent.tsx:69
-#: src/components/dialogs/EmbedConsent.tsx:71
+#: src/components/dialogs/EmbedConsent.tsx:78
+#: src/components/dialogs/EmbedConsent.tsx:80
 msgid "Enable external media"
 msgstr ""
 
@@ -3000,7 +3000,7 @@ msgstr ""
 msgid "Enable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:74
+#: src/components/dialogs/EmbedConsent.tsx:83
 msgid "Enable this source only"
 msgstr ""
 
@@ -3051,8 +3051,8 @@ msgstr "Error loading preference"
 msgid "Error message"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:47
-#: src/screens/Settings/components/ExportCarDialog.tsx:71
+#: src/screens/Settings/components/ExportCarDialog.tsx:59
+#: src/screens/Settings/components/ExportCarDialog.tsx:83
 msgid "Error occurred while saving file"
 msgstr ""
 
@@ -3166,7 +3166,7 @@ msgid "Export chat data"
 msgstr "Export chat data"
 
 #: src/screens/Messages/Settings.tsx:168
-#: src/screens/Settings/components/ExportCarDialog.tsx:106
+#: src/screens/Settings/components/ExportCarDialog.tsx:116
 msgid "Export my chat data"
 msgstr "Export my chat data"
 
@@ -3175,8 +3175,8 @@ msgstr "Export my chat data"
 msgid "Export my data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:79
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:26
+#: src/screens/Settings/components/ExportCarDialog.tsx:92
 msgid "Export my profile data"
 msgstr "Export my profile data"
 
@@ -3185,12 +3185,12 @@ msgstr "Export my profile data"
 msgid "External media"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:48
-#: src/components/dialogs/EmbedConsent.tsx:50
+#: src/components/dialogs/EmbedConsent.tsx:25
+#: src/components/dialogs/EmbedConsent.tsx:59
 msgid "External Media"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:61
+#: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:35
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr ""
@@ -3514,8 +3514,8 @@ msgstr ""
 msgid "Feeds we think you might like."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:43
-#: src/screens/Settings/components/ExportCarDialog.tsx:67
+#: src/screens/Settings/components/ExportCarDialog.tsx:55
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
 msgid "File saved successfully!"
 msgstr ""
 
@@ -4474,8 +4474,8 @@ msgstr ""
 msgid "Latest"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:96
-#: src/components/verification/VerifierDialog.tsx:68
+#: src/components/verification/VerificationsDialog.tsx:108
+#: src/components/verification/VerifierDialog.tsx:77
 #: src/screens/Moderation/VerificationSettings.tsx:41
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
 msgctxt "english-only-resource"
@@ -4499,8 +4499,8 @@ msgstr ""
 msgid "Learn more about this warning"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:88
-#: src/components/verification/VerifierDialog.tsx:60
+#: src/components/verification/VerificationsDialog.tsx:100
+#: src/components/verification/VerifierDialog.tsx:69
 msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
@@ -4812,8 +4812,8 @@ msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:105
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:109
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:108
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:112
 msgid "Loading drafts"
 msgstr "Loading drafts"
 
@@ -5437,7 +5437,7 @@ msgstr ""
 msgid "No custom feeds yet"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:115
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:118
 msgid "No drafts yet"
 msgstr ""
 
@@ -5588,8 +5588,8 @@ msgstr ""
 msgid "No text"
 msgstr "No text"
 
-#: src/components/dialogs/EmbedConsent.tsx:79
-#: src/components/dialogs/EmbedConsent.tsx:81
+#: src/components/dialogs/EmbedConsent.tsx:88
+#: src/components/dialogs/EmbedConsent.tsx:90
 msgid "No thanks"
 msgstr ""
 
@@ -5700,8 +5700,8 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:39
-#: src/components/BotAccountAlert.tsx:41
+#: src/components/BotAccountAlert.tsx:48
+#: src/components/BotAccountAlert.tsx:50
 #: src/components/dms/InitiateChatFlow.tsx:626
 #: src/components/dms/MessageItem.tsx:589
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:492
@@ -5871,8 +5871,8 @@ msgstr ""
 msgid "Open profile"
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:47
-#: src/components/BotAccountAlert.tsx:55
+#: src/components/BotAccountAlert.tsx:56
+#: src/components/BotAccountAlert.tsx:64
 msgid "Open settings"
 msgstr "Open settings"
 
@@ -7108,8 +7108,8 @@ msgstr "Sad GIFs"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:205
 #: src/screens/Profile/Header/EditProfileDialog.tsx:214
 #: src/screens/SavedFeeds.tsx:108
-#: src/view/com/composer/GifAltTextDialog.tsx:113
-#: src/view/com/composer/GifAltTextDialog.tsx:119
+#: src/view/com/composer/GifAltTextDialog.tsx:121
+#: src/view/com/composer/GifAltTextDialog.tsx:127
 #: src/view/com/composer/photos/EditImageDialogInner.tsx:61
 #: src/view/com/composer/photos/EditImageDialogInner.tsx:67
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:78
@@ -7803,7 +7803,7 @@ msgstr ""
 msgid "Smileys & People"
 msgstr "Smileys & People"
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:124
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:127
 msgid "So many thoughts, you should post one"
 msgstr ""
 
@@ -7815,7 +7815,7 @@ msgstr ""
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:75
+#: src/components/verification/VerificationsDialog.tsx:87
 msgid "Some of your verifications are invalid."
 msgstr ""
 
@@ -8411,15 +8411,15 @@ msgstr "They won't know they've been muted"
 msgid "This {screenDescription} has been flagged:"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:53
+#: src/components/verification/VerificationsDialog.tsx:65
 msgid "This account has a checkmark because it's been verified by trusted sources."
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:28
+#: src/components/BotAccountAlert.tsx:39
 msgid "This account has been marked as automated by its owner."
 msgstr "This account has been marked as automated by its owner."
 
-#: src/components/verification/VerificationsDialog.tsx:55
+#: src/components/verification/VerificationsDialog.tsx:67
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr ""
 
@@ -8485,7 +8485,7 @@ msgid "This content has received a general warning from moderators."
 msgstr ""
 
 #. placeholder {0}: externalEmbedLabels[source]
-#: src/components/dialogs/EmbedConsent.tsx:55
+#: src/components/dialogs/EmbedConsent.tsx:64
 msgid "This content is hosted by {0}. Do you want to enable external media?"
 msgstr ""
 
@@ -8509,7 +8509,7 @@ msgstr ""
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 msgstr "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:129
+#: src/screens/Settings/components/ExportCarDialog.tsx:139
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr ""
 
@@ -8798,6 +8798,10 @@ msgstr ""
 msgid "Trolling"
 msgstr ""
 
+#: src/components/verification/VerifierDialog.tsx:29
+msgid "Trusted verifier information for {userName}"
+msgstr "Trusted verifier information for {userName}"
+
 #: src/screens/Search/SearchResults.tsx:152
 msgctxt "english-only-resource"
 msgid "Try a different search term, or <0>read about how to use search filters</0>."
@@ -8924,7 +8928,7 @@ msgstr ""
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:126
+#: src/components/verification/VerificationsDialog.tsx:136
 msgid "Unknown verifier"
 msgstr ""
 
@@ -9203,11 +9207,15 @@ msgstr ""
 msgid "Verification Settings"
 msgstr ""
 
+#: src/components/verification/VerificationsDialog.tsx:31
+msgid "Verifications for {userName}"
+msgstr "Verifications for {userName}"
+
 #: src/screens/Moderation/VerificationSettings.tsx:38
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:64
+#: src/components/verification/VerificationsDialog.tsx:76
 msgid "Verified by:"
 msgstr ""
 
@@ -9283,7 +9291,7 @@ msgstr "View {publicationTitle}"
 msgid "View blocked user's profile"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:132
+#: src/screens/Settings/components/ExportCarDialog.tsx:142
 msgid "View blogpost for more details"
 msgstr ""
 
@@ -9626,7 +9634,7 @@ msgstr ""
 msgid "Yesterday"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:30
+#: src/components/verification/VerifierDialog.tsx:42
 msgid "You are a trusted verifier"
 msgstr ""
 
@@ -9668,7 +9676,7 @@ msgstr ""
 msgid "You are now live!"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:35
+#: src/components/verification/VerificationsDialog.tsx:48
 msgid "You are verified"
 msgstr ""
 
@@ -9681,7 +9689,7 @@ msgstr ""
 msgid "You can also discover new Custom Feeds to follow."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:109
+#: src/screens/Settings/components/ExportCarDialog.tsx:119
 msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
 msgstr ""
 
@@ -9772,7 +9780,7 @@ msgstr ""
 msgid "You have hidden this post."
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:27
+#: src/components/BotAccountAlert.tsx:38
 msgid "You have marked this account as automated. You can remove it at any time from your account settings."
 msgstr "You have marked this account as automated. You can remove it at any time from your account settings."
 
@@ -9993,7 +10001,7 @@ msgstr "Your account is too new"
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Your account must be at least 7 days old to create a new group chat."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:85
+#: src/screens/Settings/components/ExportCarDialog.tsx:95
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
@@ -10069,6 +10077,6 @@ msgstr "Your session expired. Please sign in again."
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 
-#: src/components/verification/VerificationsDialog.tsx:36
+#: src/components/verification/VerificationsDialog.tsx:49
 msgid "Your verifications"
 msgstr ""

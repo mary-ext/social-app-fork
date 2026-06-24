@@ -25,6 +25,19 @@ export function VerificationsDialog({
 	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
+	const userName = getUserDisplayName(profile);
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup label={l`Verifications for ${userName}`} size="narrow">
+				<DialogInner handle={handle} profile={profile} />
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
+	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const { isVerified } = useSimpleVerificationState({ profile });
@@ -42,64 +55,61 @@ export function VerificationsDialog({
 				});
 
 	return (
-		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={label} size="narrow">
-				<div className={css.header}>
-					<Text className={css.title} size="_2xl" weight="semiBold">
-						{label}
+		<>
+			<div className={css.header}>
+				<Text className={css.title} size="_2xl" weight="semiBold">
+					{label}
+				</Text>
+				<Text size="md">
+					{isVerified ? (
+						<Trans>This account has a checkmark because it's been verified by trusted sources.</Trans>
+					) : (
+						<Trans>
+							This account has one or more attempted verifications, but it is not currently verified.
+						</Trans>
+					)}
+				</Text>
+			</div>
+			{profile.verification ? (
+				<div className={css.section}>
+					<Text color="textContrastMedium" size="sm">
+						<Trans>Verified by:</Trans>
 					</Text>
-					<Text size="md">
-						{isVerified ? (
-							<Trans>This account has a checkmark because it's been verified by trusted sources.</Trans>
-						) : (
-							<Trans>
-								This account has one or more attempted verifications, but it is not currently verified.
-							</Trans>
-						)}
-					</Text>
-				</div>
-				{profile.verification ? (
-					<div className={css.section}>
-						<Text color="textContrastMedium" size="sm">
-							<Trans>Verified by:</Trans>
-						</Text>
 
-						<div className={css.list}>
-							{profile.verification.verifications.map((v) => (
-								<VerifierCard key={v.uri} outerHandle={handle} verification={v} />
-							))}
-						</div>
-
-						{profile.verification.verifications.some((v) => !v.isValid) && isViewer && (
-							<Admonition className={css.admonitionSpacing} type="warning">
-								<Trans>Some of your verifications are invalid.</Trans>
-							</Admonition>
-						)}
+					<div className={css.list}>
+						{profile.verification.verifications.map((v) => (
+							<VerifierCard key={v.uri} outerHandle={handle} verification={v} />
+						))}
 					</div>
-				) : null}
-				<div className={css.actions}>
-					<Button color="primary" label={l`Close dialog`} onClick={() => handle.close()} size="small">
-						<ButtonText>
-							<Trans>Close</Trans>
-						</ButtonText>
-					</Button>
-					<ExternalLinkButton
-						color="secondary"
-						label={l({
-							context: `english-only-resource`,
-							message: `Learn more about verification on Bluesky`,
-						})}
-						size="small"
-						href={urls.website.blog.initialVerificationAnnouncement}
-					>
-						<ButtonText>
-							<Trans context="english-only-resource">Learn more</Trans>
-						</ButtonText>
-					</ExternalLinkButton>
+
+					{profile.verification.verifications.some((v) => !v.isValid) && isViewer && (
+						<Admonition className={css.admonitionSpacing} type="warning">
+							<Trans>Some of your verifications are invalid.</Trans>
+						</Admonition>
+					)}
 				</div>
-				<Dialog.Close />
-			</Dialog.Popup>
-		</Dialog.Root>
+			) : null}
+			<div className={css.actions}>
+				<Button color="primary" label={l`Close dialog`} onClick={() => handle.close()} size="small">
+					<ButtonText>
+						<Trans>Close</Trans>
+					</ButtonText>
+				</Button>
+				<ExternalLinkButton
+					color="secondary"
+					label={l({
+						context: `english-only-resource`,
+						message: `Learn more about verification on Bluesky`,
+					})}
+					size="small"
+					href={urls.website.blog.initialVerificationAnnouncement}
+				>
+					<ButtonText>
+						<Trans context="english-only-resource">Learn more</Trans>
+					</ButtonText>
+				</ExternalLinkButton>
+			</div>
+		</>
 	);
 }
 

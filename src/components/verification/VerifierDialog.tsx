@@ -23,6 +23,18 @@ export function VerifierDialog({
 	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
+	const userName = getUserDisplayName(profile);
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup label={l`Trusted verifier information for ${userName}`} size="narrow">
+				<DialogInner handle={handle} profile={profile} />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
+	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const isSelf = profile.did === currentAccount?.did;
@@ -30,52 +42,47 @@ export function VerifierDialog({
 	const label = isSelf ? l`You are a trusted verifier` : l`${userName} is a trusted verifier`;
 
 	return (
-		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={label} size="narrow">
-				<div className={css.content}>
-					<div className={css.imageBox}>
-						<img
-							alt={l`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`}
-							className={css.image}
-							src={announcementImage}
-						/>
-					</div>
+		<div className={css.content}>
+			<div className={css.imageBox}>
+				<img
+					alt={l`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`}
+					className={css.image}
+					src={announcementImage}
+				/>
+			</div>
 
-					<div className={css.textBlock}>
-						<Text className={css.title} size="_2xl" weight="semiBold">
-							{label}
-						</Text>
-						<Text size="md">
-							<Trans>
-								Accounts with a scalloped blue check mark{' '}
-								<VerifierCheck className={css.inlineCheck} width={14} /> can verify others. These trusted
-								verifiers are selected by Bluesky.
-							</Trans>
-						</Text>
-					</div>
+			<div className={css.textBlock}>
+				<Text className={css.title} size="_2xl" weight="semiBold">
+					{label}
+				</Text>
+				<Text size="md">
+					<Trans>
+						Accounts with a scalloped blue check mark <VerifierCheck className={css.inlineCheck} width={14} />{' '}
+						can verify others. These trusted verifiers are selected by Bluesky.
+					</Trans>
+				</Text>
+			</div>
 
-					<div className={css.actions}>
-						<ExternalLinkButton
-							color="primary"
-							label={l({
-								context: `english-only-resource`,
-								message: `Learn more about verification on Bluesky`,
-							})}
-							size="small"
-							href={urls.website.blog.initialVerificationAnnouncement}
-						>
-							<ButtonText>
-								<Trans context="english-only-resource">Learn more</Trans>
-							</ButtonText>
-						</ExternalLinkButton>
-						<Button color="secondary" label={l`Close dialog`} onClick={() => handle.close()} size="small">
-							<ButtonText>
-								<Trans>Close</Trans>
-							</ButtonText>
-						</Button>
-					</div>
-				</div>
-			</Dialog.Popup>
-		</Dialog.Root>
+			<div className={css.actions}>
+				<ExternalLinkButton
+					color="primary"
+					label={l({
+						context: `english-only-resource`,
+						message: `Learn more about verification on Bluesky`,
+					})}
+					size="small"
+					href={urls.website.blog.initialVerificationAnnouncement}
+				>
+					<ButtonText>
+						<Trans context="english-only-resource">Learn more</Trans>
+					</ButtonText>
+				</ExternalLinkButton>
+				<Button color="secondary" label={l`Close dialog`} onClick={() => handle.close()} size="small">
+					<ButtonText>
+						<Trans>Close</Trans>
+					</ButtonText>
+				</Button>
+			</div>
+		</div>
 	);
 }
