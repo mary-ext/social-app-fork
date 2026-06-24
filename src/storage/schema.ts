@@ -15,6 +15,8 @@ export type Device = {
 	 * metrics tracking.
 	 */
 	deviceId?: string;
+	/** selected emoji skin tone (1 = default/yellow, 2–6 = the five Fitzpatrick tones). */
+	emojiSkinTone?: number;
 	externalEmbeds?: Partial<Record<EmbedPlayerSource, 'hide' | 'show'>>;
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
@@ -23,6 +25,8 @@ export type Device = {
 	languagePrefs?: LanguagePrefs;
 	largeAltBadgeEnabled?: boolean;
 	pdsAddressHistory?: string[];
+	/** recently picked emoji ids, most recent first. */
+	recentEmojis?: string[];
 	requireAltTextEnabled?: boolean;
 	subtitlesEnabled?: boolean;
 	trendingBetaEnabled: boolean;

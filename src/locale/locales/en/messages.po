@@ -958,6 +958,10 @@ msgstr "Accounts"
 msgid "Accounts with a scalloped blue check mark <0/> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr "Accounts with a scalloped blue check mark <0/> can verify others. These trusted verifiers are selected by Bluesky."
 
+#: src/components/EmojiPicker/categories.ts:58
+msgid "Activity"
+msgstr "Activity"
+
 #: src/screens/Settings/NotificationSettings/index.tsx:141
 #: src/screens/Settings/NotificationSettings/index.tsx:223
 msgid "Activity from others"
@@ -1394,6 +1398,10 @@ msgstr ""
 #: src/lib/interests.ts:51
 msgid "Animals"
 msgstr ""
+
+#: src/components/EmojiPicker/categories.ts:64
+msgid "Animals & Nature"
+msgstr "Animals & Nature"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:365
 msgid "Anyone"
@@ -2027,6 +2035,7 @@ msgstr "Choose who can join this group chat and how."
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
+#: src/components/EmojiPicker/components/SearchBar.tsx:31
 #: src/components/web/forms/SearchInput.tsx:59
 msgid "Clear search"
 msgstr "Clear search"
@@ -2967,6 +2976,10 @@ msgstr "Embedded player"
 msgid "Embedded video player"
 msgstr ""
 
+#: src/components/EmojiPicker/components/CategoryNav.tsx:27
+msgid "Emoji categories"
+msgstr "Emoji categories"
+
 #. placeholder {0}: externalEmbedLabels[source]
 #: src/components/dialogs/EmbedConsent.tsx:76
 msgid "Enable {0} only"
@@ -3561,6 +3574,10 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
+#: src/components/EmojiPicker/categories.ts:60
+msgid "Flags"
+msgstr "Flags"
+
 #: src/lib/hotkeys/index.tsx:67
 msgid "Focus the search field"
 msgstr "Focus the search field"
@@ -3717,6 +3734,10 @@ msgstr ""
 #: src/lib/interests.ts:60
 msgid "Food"
 msgstr ""
+
+#: src/components/EmojiPicker/categories.ts:62
+msgid "Food & Drink"
+msgstr "Food & Drink"
 
 #: src/components/suggested-follows-dialog.tsx:90
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:47
@@ -5429,6 +5450,10 @@ msgstr ""
 msgid "No drafts yet"
 msgstr ""
 
+#: src/components/EmojiPicker/EmojiPanel.tsx:97
+msgid "No emojis found"
+msgstr "No emojis found"
+
 #: src/features/liveNow/components/EditLiveDialog.tsx:124
 msgid "No expiry set"
 msgstr ""
@@ -5662,6 +5687,10 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:117
 msgid "Nudity"
 msgstr ""
+
+#: src/components/EmojiPicker/categories.ts:66
+msgid "Objects"
+msgstr "Objects"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:289
 msgid "Off"
@@ -6507,6 +6536,7 @@ msgid "Recent searches"
 msgstr "Recent searches"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:170
+#: src/components/EmojiPicker/categories.ts:72
 msgid "Recently used"
 msgstr ""
 
@@ -7229,6 +7259,10 @@ msgstr ""
 msgid "Search by name or interest"
 msgstr ""
 
+#: src/components/EmojiPicker/components/SearchBar.tsx:26
+msgid "Search emojis"
+msgstr "Search emojis"
+
 #: src/view/screens/Feeds.tsx:410
 msgid "Search feeds"
 msgstr ""
@@ -7761,6 +7795,14 @@ msgstr ""
 msgid "Signing in..."
 msgstr "Signing in..."
 
+#: src/components/EmojiPicker/components/SkinToneButton.tsx:26
+msgid "Skin tone"
+msgstr "Skin tone"
+
+#: src/components/EmojiPicker/components/SkinToneButton.tsx:35
+msgid "Skin tone {value}"
+msgstr "Skin tone {value}"
+
 #: src/screens/StarterPack/Wizard/index.tsx:176
 msgid "Skip"
 msgstr ""
@@ -7776,6 +7818,10 @@ msgstr "slide"
 #: src/screens/Settings/AppearanceSettings.tsx:108
 msgid "Smaller"
 msgstr ""
+
+#: src/components/EmojiPicker/categories.ts:68
+msgid "Smileys & People"
+msgstr "Smileys & People"
 
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:124
 msgid "So many thoughts, you should post one"
@@ -8085,6 +8131,10 @@ msgstr "Switch to @{0}"
 #: src/screens/Settings/components/AccountsSection.tsx:249
 msgid "Switching account"
 msgstr "Switching account"
+
+#: src/components/EmojiPicker/categories.ts:74
+msgid "Symbols"
+msgstr "Symbols"
 
 #: src/screens/Settings/AppearanceSettings.tsx:65
 msgid "System"
@@ -8761,6 +8811,10 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:405
 msgid "Translate"
 msgstr ""
+
+#: src/components/EmojiPicker/categories.ts:70
+msgid "Travel & Places"
+msgstr "Travel & Places"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:110
 #: src/screens/Settings/ContentAndMediaSettings.tsx:117

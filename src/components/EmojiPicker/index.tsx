@@ -6,7 +6,7 @@ import { emojiInserted } from '#/view/com/composer/text-input/textInputWebEmitte
 import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
 import type { Emoji } from '#/components/EmojiPicker/types';
 
-import { EmojiMartPanel } from './EmojiMartPanel';
+import { EmojiPanel } from './EmojiPanel';
 import * as styles from './EmojiPicker.css';
 
 export type { Emoji } from '#/components/EmojiPicker/types';
@@ -107,7 +107,7 @@ export function Picker({ keepOpenWhenShiftHeld = true }: PickerProps) {
 					// keep the picker's internal scroll from bubbling to the dialog behind it
 					onWheel={(e) => e.stopPropagation()}
 				>
-					<EmojiMartPanel
+					<EmojiPanel
 						onEmojiSelect={(emoji, shiftHeld) => {
 							onEmojiSelect(emoji);
 							if (!keepOpenWhenShiftHeld || !shiftHeld) {

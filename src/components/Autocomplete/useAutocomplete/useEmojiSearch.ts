@@ -1,24 +1,22 @@
 import { useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import type { AutocompleteEmoji } from '#/components/Autocomplete/types';
-import { loadEmojiMart } from '#/components/EmojiPicker/preload';
+import { emojiDataQuery } from '#/components/EmojiPicker/data';
 
-/**
- * Returns an emoji search function backed by emoji-mart's own search index. The library and its data are
- * lazy-loaded on first use.
- */
+/** returns an emoji search function over the shared emoji dataset. */
 export function useEmojiSearch(): (query: string, limit?: number) => Promise<AutocompleteEmoji[]> {
-	return useCallback(async (query: string, limit: number = 8) => {
-		const searchIndex = await loadEmojiMart();
-		const results: AutocompleteEmoji['emoji'][] | null = await searchIndex.search(query, {
-			maxResults: limit,
-			caller: 'useEmojiSearch',
-		});
-		return (results ?? []).map((emoji) => ({
-			key: emoji.id,
-			type: 'emoji' as const,
-			value: emoji.skins[0]!.native,
-			emoji,
-		}));
-	}, []);
+	const queryClient = useQueryClient();
+	return useCallback(
+		async (query: string, limit: number = 8) => {
+			const { search } = await queryClient.fetchQuery(emojiDataQuery());
+			return search(query, limit).map((emoji) => ({
+				emoji,
+				key: emoji.id,
+				type: 'emoji' as const,
+				value: emoji.skins[0]!.native,
+			}));
+		},
+		[queryClient],
+	);
 }

@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
 
-import { EmojiMartPanel } from '#/components/EmojiPicker/EmojiMartPanel';
+import { EmojiPanel } from '#/components/EmojiPicker/EmojiPanel';
 import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 
@@ -52,7 +52,7 @@ export function EmojiReactionPicker({
 				<Popover.Positioner sideOffset={5} collisionPadding={{ bottom: 5, left: 5, right: 5 }}>
 					<Popover.Popup className={styles.popup}>
 						{expanded ? (
-							<EmojiMartPanel onEmojiSelect={(emoji) => handleSelect(emoji.native)} />
+							<EmojiPanel onEmojiSelect={(emoji) => handleSelect(emoji.native)} />
 						) : (
 							<QuickReactions message={message} onSelect={handleSelect} onExpand={() => setExpanded(true)} />
 						)}
