@@ -1,53 +1,19 @@
 import { createVar, style } from '@vanilla-extract/css';
 
+import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
+
 import { vars } from '#/styles/contract.css';
 import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius } from '#/styles/tokens.css';
 
-/** Inner-box aspect ratio (constrained crop) — the bounding-box ratio, not the raw image ratio. */
+/** Image aspect ratio (width / height), driving the box's shape and — for the constrained path — its width. */
 export const ratioVar = createVar();
-/** `paddingTop` percentage that drives the constrained bounding-box height. */
-export const padVar = createVar();
-/** Button aspect ratio for the uncropped (crop=none) full-bleed path. */
-export const maxRatioVar = createVar();
 
-export const outer = style({ width: '100%' });
-
-export const sizer = style({
-	overflow: 'hidden',
-	paddingTop: padVar,
-	// the absolute `abs` child must anchor to this padded box, not escape to a further-up positioned
-	// ancestor (which would lift the image up into the top margin).
-	position: 'relative',
-});
-
-export const abs = style({
-	bottom: 0,
-	display: 'flex',
-	flexDirection: 'row',
-	left: 0,
-	position: 'absolute',
-	right: 0,
-	top: 0,
-});
-
-export const innerBox = style({
-	backgroundColor: vars.palette.contrast_25,
-	borderRadius: borderRadius.md,
-	boxSizing: 'border-box',
-	height: '100%',
-	overflow: 'hidden',
-	position: 'relative',
-});
-
-export const innerBoxConstrained = style({ aspectRatio: ratioVar });
-export const innerBoxFullBleed = style({ width: '100%' });
-
-const pressableBase = style([
+const base = style([
 	mediaBorder,
 	{
 		appearance: 'none',
-		background: 'transparent',
+		backgroundColor: vars.palette.contrast_25,
 		borderRadius: borderRadius.md,
 		cursor: 'pointer',
 		display: 'block',
@@ -66,14 +32,21 @@ const pressableBase = style([
 	},
 ]);
 
-/** Press target inside the constrained bounding box. */
-export const pressable = style([pressableBase, { height: '100%', width: '100%' }]);
-
-/** Press target for the uncropped path — it owns the aspect ratio and the placeholder background. */
-export const pressableBleed = style([
-	pressableBase,
-	{ aspectRatio: maxRatioVar, backgroundColor: vars.palette.contrast_25, width: '100%' },
+/**
+ * Feed crop: the image keeps its ratio but never exceeds {@link MAX_MEDIA_HEIGHT} tall — clamping the width
+ * to `height * ratio` shrinks a portrait so it caps out at that height and sits narrow, while landscape fills
+ * the column.
+ */
+export const constrained = style([
+	base,
+	{ aspectRatio: ratioVar, width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${ratioVar}))` },
 ]);
+
+/** Uncropped path (thread anchor): the image keeps its ratio at full column width, no height cap. */
+export const uncapped = style([base, { aspectRatio: ratioVar, width: '100%' }]);
+
+/** Square crop (record-with-media quote): a compact 1:1 thumbnail, the image cover-cropped to fill it. */
+export const square = style([base, { aspectRatio: '1', width: '100%' }]);
 
 export const image = style({
 	display: 'block',

@@ -60,5 +60,7 @@ export const item = style([
 
 export const image = style({
 	display: 'block',
+	height: '100%',
 	objectFit: 'cover',
+	width: '100%',
 });

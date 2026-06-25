@@ -1,9 +1,11 @@
 import { createVar, style } from '@vanilla-extract/css';
 
+import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
+
 import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-/** `aspect-ratio` (width / height) driving the inner box's height. */
+/** `aspect-ratio` (width / height) driving the inner box's height and the outer box's height-capped width. */
 export const aspectVar = createVar();
 /** `url(...)` of the video thumbnail, painted as the box background while loading. */
 export const thumbVar = createVar();
@@ -20,13 +22,16 @@ export const viewport = style({
 // separate boxes means the border-box inset never skews the video's ratio. the box has no fill of its
 // own, so at the rounded corners the page background shows through — a contrasting skeleton fill here
 // would instead leave a stray seam between the border and the clipped video.
+//
+// width caps the height: a portrait video narrows to `MAX_MEDIA_HEIGHT * ratio` (so it tops out at that
+// height and sits narrow), while landscape fills the column.
 export const box = style([
 	mediaBorder,
 	{
 		borderRadius: borderRadius.md,
 		overflow: 'hidden',
 		position: 'relative',
-		width: '100%',
+		width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${aspectVar}))`,
 	},
 ]);
 

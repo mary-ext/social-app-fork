@@ -4,9 +4,10 @@ import { useLingui } from '@lingui/react/macro';
 import type { LightboxImage } from '@oomfware/lightbox';
 
 import type { LightboxControl } from '#/components/dialogs/Context';
+import { CAROUSEL_HEIGHT_CHAT } from '#/components/ImageEmbed/carousel/const';
 import { useKeyboardHandlers } from '#/components/ImageEmbed/carousel/useKeyboardHandlers';
 import { usePointerHandlers } from '#/components/ImageEmbed/carousel/usePointerHandlers';
-import { computeDims, getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
+import { computeDims, deriveCarouselHeight, getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import * as styles from '#/components/ImageEmbed/Gallery.css';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
 import { useGalleryBleed } from '#/components/images/Gallery';
@@ -27,42 +28,17 @@ export type GalleryProps = {
 	viewContext?: PostEmbedViewContext;
 };
 
-/** Resolve the carousel's content height from the viewport width via breakpoints. */
-function useContentHeight(isWithinChat: boolean) {
-	const [height, setHeight] = useState(() => measureContentHeight(isWithinChat));
-	useEffect(() => {
-		if (isWithinChat) {
-			setHeight(120);
-			return;
-		}
-		const update = () => setHeight(measureContentHeight(false));
-		update();
-		window.addEventListener('resize', update);
-		return () => window.removeEventListener('resize', update);
-	}, [isWithinChat]);
-	return height;
-}
-
-function measureContentHeight(isWithinChat: boolean) {
-	if (isWithinChat) {
-		return 120;
-	}
-	if (window.innerWidth >= 800) {
-		return 300;
-	} else if (window.innerWidth >= 500) {
-		return 260;
-	} else {
-		return 200;
-	}
-}
-
 export function Gallery({ images, control, lightboxImages, onPressIn, viewContext }: GalleryProps) {
 	const { t: l } = useLingui();
 	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const isWithinQuote = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
 	const hideBadges = isWithinQuote;
-	const contentHeight = useContentHeight(isWithinChat);
+	// One row height for the whole strip, derived from the first two images' orientation (chat bubbles use a
+	// fixed compact height instead). Items then take their own clamped width within it.
+	const contentHeight = isWithinChat
+		? CAROUSEL_HEIGHT_CHAT
+		: deriveCarouselHeight(getAspectRatio(images[0]?.aspectRatio), getAspectRatio(images[1]?.aspectRatio));
 
 	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor (by diffing bounding
 	// rects) so it can extend past the post's content column.
@@ -216,6 +192,10 @@ function GalleryImage({
 			type="button"
 			ref={(node: HTMLElement | null) => setItemRef(index, node)}
 			className={styles.item}
+			// Size the tile itself (border-box) so its on-screen width matches `dims.width` — the value the pager
+			// sums for snap offsets. Letting the image's intrinsic width drive it instead leaves the tile a
+			// border-width wider than `dims.width`, drifting the snap anchor by that much per image.
+			style={{ height: dims.height, width: dims.width }}
 			tabIndex={index === 0 ? 0 : -1}
 			aria-roledescription={l`slide`}
 			aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}
@@ -225,8 +205,6 @@ function GalleryImage({
 				className={styles.image}
 				src={image.thumb}
 				alt={image.alt}
-				width={dims.width}
-				height={dims.height}
 				loading={index === 0 ? 'eager' : 'lazy'}
 				onLoad={(e) => {
 					const ar = getAspectRatio({

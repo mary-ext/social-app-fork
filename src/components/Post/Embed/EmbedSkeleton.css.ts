@@ -12,18 +12,13 @@ export const single = style({
 	width: '100%',
 });
 
-/** Constrained single-image tile (reply/feed surfaces): fills the `AutoSizedImage` sizer/abs box. */
-export const constrainedTile = style({
+/**
+ * Single-image tile: owns its aspect ratio and width inline (height-capped on a reply, full-width on the
+ * anchor).
+ */
+export const singleTile = style({
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: borderRadius.md,
-	height: '100%',
-});
-
-/** Uncropped single-image tile (anchor surface): one full-width box owning its (1:4-clamped) aspect ratio. */
-export const bleedTile = style({
-	backgroundColor: vars.palette.contrast_50,
-	borderRadius: borderRadius.md,
-	width: '100%',
 });
 
 /**

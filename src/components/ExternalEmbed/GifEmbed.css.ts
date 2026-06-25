@@ -1,31 +1,15 @@
 import { createVar, style } from '@vanilla-extract/css';
 
+import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
+
 import { vars } from '#/styles/contract.css';
 import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius } from '#/styles/tokens.css';
 
-/** Inner-box aspect ratio (the gif ratio clamped to a 1:2 minimum). */
+/** The gif's aspect ratio (width / height), driving the box's shape and its height-capped width. */
 export const ratioVar = createVar();
-/** `paddingTop` percentage driving the bounding-box height. */
-export const padVar = createVar();
 
 export const outer = style({ width: '100%' });
-
-export const sizer = style({
-	overflow: 'hidden',
-	paddingTop: padVar,
-	position: 'relative',
-});
-
-export const abs = style({
-	bottom: 0,
-	display: 'flex',
-	flexDirection: 'row',
-	left: 0,
-	position: 'absolute',
-	right: 0,
-	top: 0,
-});
 
 export const playButton = style({
 	alignItems: 'center',
@@ -53,9 +37,11 @@ export const box = style([
 		aspectRatio: ratioVar,
 		backgroundColor: '#000',
 		borderRadius: borderRadius.md,
-		height: '100%',
 		overflow: 'hidden',
 		position: 'relative',
+		// width caps the height: a portrait gif narrows to `MAX_MEDIA_HEIGHT * ratio` (topping out at that
+		// height), while landscape fills the column.
+		width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${ratioVar}))`,
 		selectors: {
 			// ring the tile itself so the outline follows its `borderRadius` concentrically (1px in from the
 			// hairline border it carries); inset so the body's `GalleryBleed` clip can't trim it.

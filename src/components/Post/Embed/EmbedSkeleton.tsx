@@ -1,22 +1,12 @@
-import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { randomInRange, weightedRandomIndex } from '#/lib/numbers';
 
-import { clamp, randomInRange, weightedRandomIndex } from '#/lib/numbers';
-
-import * as imgCss from '#/components/ImageEmbed/AutoSizedImage.css';
-import { MAX_ASPECT_RATIO, MIN_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
+import { clampAspectRatio, deriveCarouselHeight } from '#/components/ImageEmbed/carousel/utils';
+import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 
 import * as css from './EmbedSkeleton.css';
 
 /** A frozen media-embed shape for a loading placeholder: one image at some aspect, or a multi-image carousel. */
 export type Shape = { aspect: number; type: 'single' } | { tiles: number[]; type: 'carousel' };
-
-// the carousel's desktop content height — `Gallery`'s `measureContentHeight` at viewport width >= 800px.
-const CAROUSEL_HEIGHT = 300;
-
-// single-image aspect floors per surface: a reply clamps to 1:2 (`AutoSizedImage` constrained crop), the
-// anchor to 1:4 (its uncropped `crop="none"` path).
-const REPLY_MIN_ASPECT = 1 / 2;
-const ANCHOR_MIN_ASPECT = 1 / 4;
 
 // embed kind per post: none dominates, then a single image, then a multi-image carousel.
 const EMBED_KIND_WEIGHTS = [6, 3, 1];
@@ -43,10 +33,10 @@ export function randomShape(): Shape | null {
 			return { aspect: randomAspect(), type: 'single' };
 		case 2:
 			return {
-				// the carousel clamps every tile to [2/3, 3/2], so draw within those bounds directly
-				tiles: Array.from({ length: 2 + weightedRandomIndex(CAROUSEL_COUNT_WEIGHTS) }, () =>
-					logAspect(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO),
-				),
+				// draw raw aspects (the tiles clamp their own width): the first two drive the row height, and
+				// real landscape/portrait sets routinely sit past the clamp limits, so drawing within them would
+				// peg every placeholder to the tallest bucket.
+				tiles: Array.from({ length: 2 + weightedRandomIndex(CAROUSEL_COUNT_WEIGHTS) }, randomAspect),
 				type: 'carousel',
 			};
 		default:
@@ -64,7 +54,7 @@ const THREAD_SHAPES: (Shape | null)[] = [
 	null,
 	{ aspect: 0.75, type: 'single' },
 	null,
-	{ tiles: [1.3, 0.9, 1.5, 1.1], type: 'carousel' },
+	{ tiles: [1.6, 1.5, 0.8, 1.2], type: 'carousel' },
 	null,
 ];
 
@@ -78,33 +68,32 @@ export const threadShape = (index: number): Shape | null =>
 	THREAD_SHAPES[index % THREAD_SHAPES.length] ?? null;
 
 function ConstrainedSingle({ aspect }: { aspect: number }) {
-	// mirrors `AutoSizedImage`'s constrained box: `paddingTop` sets the height and the tile takes it via
-	// `aspect-ratio`, so landscape fills the width while a portrait sits left-aligned and narrow.
-	const ratio = Math.max(aspect, REPLY_MIN_ASPECT);
-	const pad = `${Math.min(1 / ratio, 1) * 100}%`;
+	// mirrors `AutoSizedImage`'s constrained box: the tile keeps its ratio but caps at `MAX_MEDIA_HEIGHT`, so
+	// landscape fills the width while a portrait sits left-aligned and narrow.
 	return (
-		<div className={imgCss.sizer} style={assignInlineVars({ [imgCss.padVar]: pad })}>
-			<div className={imgCss.abs}>
-				<div className={css.constrainedTile} style={{ aspectRatio: ratio }} />
-			</div>
-		</div>
+		<div
+			className={css.singleTile}
+			style={{ aspectRatio: aspect, width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${aspect}))` }}
+		/>
 	);
 }
 
 function BleedSingle({ aspect }: { aspect: number }) {
-	// the anchor's uncropped (`crop="none"`) path: one full-width box owning the 1:4-clamped aspect ratio.
-	return <div className={css.bleedTile} style={{ aspectRatio: Math.max(aspect, ANCHOR_MIN_ASPECT) }} />;
+	// the anchor's uncropped (`crop="none"`) path: one full-width box owning the image's own aspect ratio.
+	return <div className={css.singleTile} style={{ aspectRatio: aspect, width: '100%' }} />;
 }
 
 function CarouselStrip({ tiles }: { tiles: number[] }) {
-	// a fixed-height strip of tiles, each as wide as its clamped aspect, clipped to the column like the real one.
+	// a strip at the carousel's derived row height, each tile as wide as its clamped aspect, clipped to the
+	// column like the real one.
+	const height = deriveCarouselHeight(tiles[0], tiles[1]);
 	return (
-		<div className={css.carousel} style={{ height: CAROUSEL_HEIGHT }}>
+		<div className={css.carousel} style={{ height }}>
 			{tiles.map((aspect, i) => (
 				<div
 					key={i}
 					className={css.carouselTile}
-					style={{ width: Math.floor(CAROUSEL_HEIGHT * clamp(aspect, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO)) }}
+					style={{ width: Math.floor(height * clampAspectRatio(aspect)) }}
 				/>
 			))}
 		</div>
@@ -112,8 +101,8 @@ function CarouselStrip({ tiles }: { tiles: number[] }) {
 }
 
 /**
- * Media-embed placeholder on a reply row (feed/linear/tree): a single image is 1:2-clamped (constrained
- * crop).
+ * Media-embed placeholder on a reply row (feed/linear/tree): a single image keeps its ratio, height-capped
+ * (constrained crop).
  */
 export function Reply({ shape }: { shape: Shape }) {
 	if (shape.type === 'carousel') {
@@ -126,7 +115,10 @@ export function Reply({ shape }: { shape: Shape }) {
 	);
 }
 
-/** Media-embed placeholder on the focused anchor post: a single image is 1:4-clamped (uncropped full-bleed). */
+/**
+ * Media-embed placeholder on the focused anchor post: a single image keeps its ratio at full width
+ * (uncropped).
+ */
 export function Anchor({ shape }: { shape: Shape }) {
 	if (shape.type === 'carousel') {
 		return <CarouselStrip tiles={shape.tiles} />;

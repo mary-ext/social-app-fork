@@ -68,20 +68,12 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 		}
 	}
 
-	// the box keeps the video's shape but is never taller than square (1:1) in feeds, so portrait
-	// videos don't dominate.
-	const boxAspectRatio = Math.max(aspectRatio ?? 1, 1);
+	// the box keeps the video's own shape (`index.css` caps the height by clamping the box width), so a
+	// portrait video sits narrow rather than dominating the column.
+	const boxAspectRatio = aspectRatio ?? 1;
 
 	const contents = (
-		<div
-			ref={ref}
-			className={styles.contents}
-			style={assignInlineVars({
-				[styles.aspectVar]: String(boxAspectRatio),
-				[styles.thumbVar]: `url(${embed.thumbnail})`,
-			})}
-			{...noRowLink}
-		>
+		<div ref={ref} className={styles.contents} {...noRowLink}>
 			<ErrorBoundary renderError={renderError} key={key}>
 				<OnlyNearScreen>
 					<VideoEmbedInnerWeb
@@ -102,7 +94,15 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 				sendPosition={isGif ? noop : sendPosition}
 				isAnyViewActive={currentActiveView !== null}
 			>
-				<div className={styles.box}>{contents}</div>
+				<div
+					className={styles.box}
+					style={assignInlineVars({
+						[styles.aspectVar]: String(boxAspectRatio),
+						[styles.thumbVar]: `url(${embed.thumbnail})`,
+					})}
+				>
+					{contents}
+				</div>
 			</ViewportObserver>
 		</div>
 	);

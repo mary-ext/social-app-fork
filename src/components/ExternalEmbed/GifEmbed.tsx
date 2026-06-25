@@ -62,57 +62,51 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 			aspectRatio = ratio;
 		}
 	}
-	const constrained = Math.max(aspectRatio, 1 / 2);
-	const pad = `${Math.min(1 / constrained, 1) * 100}%`;
 
 	const useSources = !!params.playerSources && params.playerSources.length > 0;
 	const resolvedAlt = !hideAlt && isPreferredAltText ? altText : undefined;
 
 	return (
 		<div className={clsx(styles.outer, className)}>
-			<div className={styles.sizer} style={assignInlineVars({ [styles.padVar]: pad })}>
-				<div className={styles.abs}>
-					<div className={styles.box} style={assignInlineVars({ [styles.ratioVar]: String(constrained) })}>
-						<div className={styles.inset}>
-							{!isPlaying && <div aria-hidden className={styles.dimInner} />}
-							<button
-								type="button"
-								className={styles.playButton}
-								aria-label={isPlaying ? l`Pause GIF` : l`Play GIF`}
-								onClick={onPress}
-							>
-								{!isLoaded ? <Spinner label={l`Loading GIF`} /> : !isPlaying ? <PlayButtonIcon /> : null}
-							</button>
-							<div className={styles.gifBadge}>
-								<Text size="xs" weight="bold" className={styles.badgeText}>
-									<Trans>GIF</Trans>
-								</Text>
-							</div>
-							{resolvedAlt ? <AltBadge text={resolvedAlt} /> : null}
-							<video
-								ref={videoRef}
-								className={styles.video}
-								src={useSources ? undefined : params.playerUri}
-								poster={thumb}
-								autoPlay={!autoplayDisabled ? true : undefined}
-								preload={!autoplayDisabled ? 'auto' : undefined}
-								playsInline
-								loop
-								muted
-								aria-label={altText}
-								onCanPlay={() => setIsLoaded(true)}
-								onPlay={() => setIsPlaying(true)}
-								onPause={() => setIsPlaying(false)}
-							>
-								{useSources
-									? params.playerSources!.map((source) => (
-											<source key={source.src} src={source.src} type={source.type} />
-										))
-									: null}
-							</video>
-							{!isPlaying && <div aria-hidden className={styles.dimOuter} />}
-						</div>
+			<div className={styles.box} style={assignInlineVars({ [styles.ratioVar]: String(aspectRatio) })}>
+				<div className={styles.inset}>
+					{!isPlaying && <div aria-hidden className={styles.dimInner} />}
+					<button
+						type="button"
+						className={styles.playButton}
+						aria-label={isPlaying ? l`Pause GIF` : l`Play GIF`}
+						onClick={onPress}
+					>
+						{!isLoaded ? <Spinner label={l`Loading GIF`} /> : !isPlaying ? <PlayButtonIcon /> : null}
+					</button>
+					<div className={styles.gifBadge}>
+						<Text size="xs" weight="bold" className={styles.badgeText}>
+							<Trans>GIF</Trans>
+						</Text>
 					</div>
+					{resolvedAlt ? <AltBadge text={resolvedAlt} /> : null}
+					<video
+						ref={videoRef}
+						className={styles.video}
+						src={useSources ? undefined : params.playerUri}
+						poster={thumb}
+						autoPlay={!autoplayDisabled ? true : undefined}
+						preload={!autoplayDisabled ? 'auto' : undefined}
+						playsInline
+						loop
+						muted
+						aria-label={altText}
+						onCanPlay={() => setIsLoaded(true)}
+						onPlay={() => setIsPlaying(true)}
+						onPause={() => setIsPlaying(false)}
+					>
+						{useSources
+							? params.playerSources!.map((source) => (
+									<source key={source.src} src={source.src} type={source.type} />
+								))
+							: null}
+					</video>
+					{!isPlaying && <div aria-hidden className={styles.dimOuter} />}
 				</div>
 			</div>
 		</div>

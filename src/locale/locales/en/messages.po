@@ -1219,7 +1219,7 @@ msgstr ""
 msgid "All languages will be shown in your feeds"
 msgstr "All languages will be shown in your feeds"
 
-#: src/view/screens/Feeds.tsx:596
+#: src/view/screens/Feeds.tsx:599
 msgid "All the feeds you've saved, right in one place."
 msgstr ""
 
@@ -1270,7 +1270,7 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:135
+#: src/components/ExternalEmbed/GifEmbed.tsx:129
 #: src/components/ImageEmbed/MediaBadges.tsx:71
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:57
 #: src/view/com/composer/GifAltText.tsx:55
@@ -1288,7 +1288,7 @@ msgstr ""
 msgid "Alt text"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:140
+#: src/components/ExternalEmbed/GifEmbed.tsx:134
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:62
 msgid "Alt Text"
 msgstr ""
@@ -1862,7 +1862,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/ImageEmbed/Gallery.tsx:147
+#: src/components/ImageEmbed/Gallery.tsx:123
 msgid "carousel"
 msgstr "carousel"
 
@@ -2025,7 +2025,7 @@ msgstr ""
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
 
-#: src/view/screens/Feeds.tsx:614
+#: src/view/screens/Feeds.tsx:617
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
@@ -2074,7 +2074,7 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:200
 #: src/components/dms/AfterReportDialog.tsx:202
 #: src/components/dms/InitiateChatFlow.tsx:494
-#: src/components/ExternalEmbed/GifEmbed.tsx:144
+#: src/components/ExternalEmbed/GifEmbed.tsx:138
 #: src/components/intents/GroupChatJoinDialog.tsx:226
 #: src/components/intents/GroupChatJoinDialog.tsx:257
 #: src/components/moderation/ReportDialog/index.tsx:422
@@ -2717,7 +2717,7 @@ msgstr ""
 msgid "Discover new feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:611
+#: src/view/screens/Feeds.tsx:614
 msgid "Discover New Feeds"
 msgstr ""
 
@@ -2906,7 +2906,7 @@ msgid "Edit moderation list"
 msgstr ""
 
 #: src/Navigation.tsx:630
-#: src/view/screens/Feeds.tsx:482
+#: src/view/screens/Feeds.tsx:485
 msgid "Edit My Feeds"
 msgstr ""
 
@@ -3490,7 +3490,7 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:96
 #: src/screens/Search/SearchResults.tsx:71
 #: src/screens/StarterPack/StarterPackScreen.tsx:173
-#: src/view/screens/Feeds.tsx:475
+#: src/view/screens/Feeds.tsx:478
 #: src/view/screens/Profile.tsx:343
 #: src/view/shell/desktop/LeftNav.tsx:594
 #: src/view/shell/Drawer.tsx:172
@@ -3673,7 +3673,7 @@ msgid "Following"
 msgstr ""
 
 #: src/screens/SavedFeeds.tsx:386
-#: src/view/screens/Feeds.tsx:545
+#: src/view/screens/Feeds.tsx:548
 msgctxt "feed-name"
 msgid "Following"
 msgstr ""
@@ -3834,7 +3834,7 @@ msgstr ""
 msgid "Get started"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:88
+#: src/components/ExternalEmbed/GifEmbed.tsx:84
 #: src/components/MediaPreview.tsx:130
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:36
 #: src/view/com/composer/drafts/DraftItem.tsx:217
@@ -4207,12 +4207,12 @@ msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/ImageEmbed/Gallery.tsx:221
+#: src/components/ImageEmbed/Gallery.tsx:201
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
 #. placeholder {0}: images.length
-#: src/components/ImageEmbed/Gallery.tsx:148
+#: src/components/ImageEmbed/Gallery.tsx:124
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -4816,7 +4816,7 @@ msgid "Loading drafts"
 msgstr "Loading drafts"
 
 #: src/components/ExternalEmbed/ExternalGif.tsx:67
-#: src/components/ExternalEmbed/GifEmbed.tsx:84
+#: src/components/ExternalEmbed/GifEmbed.tsx:80
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Loading GIF"
 msgstr "Loading GIF"
@@ -5282,7 +5282,7 @@ msgstr "Mutual group chats"
 msgid "My favorite feeds and people - join me!"
 msgstr "My favorite feeds and people - join me!"
 
-#: src/view/screens/Feeds.tsx:593
+#: src/view/screens/Feeds.tsx:596
 msgid "My Feeds"
 msgstr ""
 
@@ -5383,7 +5383,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:152
 #: src/screens/ProfileList/index.tsx:207
 #: src/screens/ProfileList/index.tsx:230
-#: src/view/screens/Feeds.tsx:513
+#: src/view/screens/Feeds.tsx:516
 #: src/view/screens/Notifications.tsx:136
 #: src/view/screens/Profile.tsx:413
 msgid "New post"
@@ -5573,7 +5573,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:436
+#: src/view/screens/Feeds.tsx:438
 msgid "No results found for \"{query}\""
 msgstr ""
 
@@ -6025,7 +6025,7 @@ msgstr "Party GIFs"
 msgid "Pause"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:81
+#: src/components/ExternalEmbed/GifEmbed.tsx:77
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
 msgid "Pause GIF"
 msgstr ""
@@ -6154,7 +6154,7 @@ msgstr ""
 msgid "Play {0}"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:81
+#: src/components/ExternalEmbed/GifEmbed.tsx:77
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
 msgid "Play GIF"
 msgstr ""
@@ -7264,7 +7264,7 @@ msgstr ""
 msgid "Search emojis"
 msgstr "Search emojis"
 
-#: src/view/screens/Feeds.tsx:411
+#: src/view/screens/Feeds.tsx:413
 msgid "Search feeds"
 msgstr ""
 
@@ -7643,7 +7643,7 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:131
+#: src/components/ExternalEmbed/GifEmbed.tsx:125
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:53
 msgid "Show alt text"
 msgstr ""
@@ -7821,7 +7821,7 @@ msgstr ""
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
-#: src/components/ImageEmbed/Gallery.tsx:220
+#: src/components/ImageEmbed/Gallery.tsx:200
 msgid "slide"
 msgstr "slide"
 
