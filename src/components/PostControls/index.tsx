@@ -38,8 +38,8 @@ PostControlContext.displayName = 'PostControlContext';
 type PostControlButtonProps = {
 	/** Accessible name; becomes the `aria-label`. */
 	label: string;
-	/** Visible hover/focus hint; defaults to {@link label}. Pass `null` to suppress the tooltip. */
-	tooltip?: string | null;
+	/** Visible hover/focus hint. Pass `null` to suppress it (e.g. when a wrapping menu owns the tooltip). */
+	tooltip: string | null;
 	children: ReactNode;
 	active?: boolean;
 	/** Color applied when `active`; icon + count inherit it via `currentColor`. */
@@ -85,7 +85,7 @@ function PostControlButton({
 	if (tooltip === null) {
 		return button;
 	}
-	return <Tooltip label={tooltip ?? label}>{button}</Tooltip>;
+	return <Tooltip label={tooltip}>{button}</Tooltip>;
 }
 
 /**
@@ -188,10 +188,11 @@ export function PostControls({
 						onRepost={() => void onRepost()}
 						onQuote={onQuote}
 						embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+						tooltip={l`Repost`}
 						render={
 							<PostControlButton
 								label={l`Repost or quote post`}
-								tooltip={l`Repost`}
+								tooltip={null}
 								active={!!post.viewer?.repost}
 								activeColor={t.palette.positive_500}
 							>
@@ -251,8 +252,9 @@ export function PostControls({
 				<ShareMenu
 					post={post}
 					onShare={onShare}
+					tooltip={l`Share`}
 					render={
-						<PostControlButton label={l`Open share menu`} tooltip={l`Share`}>
+						<PostControlButton label={l`Open share menu`} tooltip={null}>
 							<PostControlButtonIcon icon={ArrowShareRightIcon} />
 						</PostControlButton>
 					}
@@ -266,8 +268,9 @@ export function PostControls({
 					threadgateRecord={threadgateRecord}
 					onShowLess={onShowLess}
 					logContext={logContext}
+					tooltip={l`More`}
 					render={
-						<PostControlButton label={l`Open post options menu`} tooltip={l`More`}>
+						<PostControlButton label={l`Open post options menu`} tooltip={null}>
 							<PostControlButtonIcon icon={DotsHorizontal} />
 						</PostControlButton>
 					}

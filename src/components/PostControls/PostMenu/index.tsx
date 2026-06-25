@@ -6,6 +6,7 @@ import type { Richtext } from '#/lib/strings/rich-text-facets';
 import type { Shadow } from '#/state/cache/post-shadow';
 
 import * as Menu from '#/components/web/Menu';
+import { Tooltip } from '#/components/web/Tooltip';
 
 import { PostMenuItems } from './PostMenuItems';
 
@@ -15,6 +16,7 @@ import { PostMenuItems } from './PostMenuItems';
  */
 export const PostOverflowMenu = ({
 	render,
+	tooltip,
 	post,
 	postFeedContext,
 	postReqId,
@@ -25,6 +27,8 @@ export const PostOverflowMenu = ({
 	logContext,
 }: {
 	render: ReactElement;
+	/** Hover/focus hint for the trigger; the tooltip wraps the menu trigger so it survives the menu wiring. */
+	tooltip: string;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
 	postReqId: string | undefined;
@@ -45,7 +49,9 @@ export const PostOverflowMenu = ({
 				}
 			}}
 		>
-			<Menu.Trigger render={render} />
+			<Tooltip label={tooltip}>
+				<Menu.Trigger render={render} />
+			</Tooltip>
 			{hasBeenOpen && (
 				<PostMenuItems
 					post={post}

@@ -4593,8 +4593,8 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:161
-#: src/components/PostControls/index.tsx:211
+#: src/components/PostControls/AnchorPostControls/index.tsx:162
+#: src/components/PostControls/index.tsx:212
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:398
 msgid "Like"
 msgstr ""
@@ -4602,8 +4602,8 @@ msgstr ""
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/AnchorPostControls/index.tsx:173
-#: src/components/PostControls/index.tsx:223
+#: src/components/PostControls/AnchorPostControls/index.tsx:174
+#: src/components/PostControls/index.tsx:224
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -5141,8 +5141,8 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:211
-#: src/components/PostControls/index.tsx:270
+#: src/components/PostControls/AnchorPostControls/index.tsx:212
+#: src/components/PostControls/index.tsx:271
 msgid "More"
 msgstr "More"
 
@@ -5877,8 +5877,8 @@ msgstr "Open moderation playground"
 msgid "Open pack"
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:211
-#: src/components/PostControls/index.tsx:270
+#: src/components/PostControls/AnchorPostControls/index.tsx:214
+#: src/components/PostControls/index.tsx:273
 msgid "Open post options menu"
 msgstr ""
 
@@ -5894,8 +5894,8 @@ msgstr ""
 msgid "Open settings"
 msgstr "Open settings"
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:196
-#: src/components/PostControls/index.tsx:255
+#: src/components/PostControls/AnchorPostControls/index.tsx:198
+#: src/components/PostControls/index.tsx:257
 msgid "Open share menu"
 msgstr ""
 
@@ -6476,8 +6476,8 @@ msgstr ""
 msgid "Push, People you follow"
 msgstr ""
 
-#: src/components/PostControls/RepostMenu.tsx:54
-#: src/components/PostControls/RepostMenu.tsx:57
+#: src/components/PostControls/RepostMenu.tsx:60
+#: src/components/PostControls/RepostMenu.tsx:63
 #: src/view/com/composer/drafts/DraftItem.tsx:88
 msgid "Quote post"
 msgstr ""
@@ -6490,8 +6490,8 @@ msgstr ""
 msgid "Quote post was successfully detached"
 msgstr ""
 
-#: src/components/PostControls/RepostMenu.tsx:54
-#: src/components/PostControls/RepostMenu.tsx:57
+#: src/components/PostControls/RepostMenu.tsx:60
+#: src/components/PostControls/RepostMenu.tsx:63
 msgid "Quote posts disabled"
 msgstr ""
 
@@ -6987,20 +6987,20 @@ msgstr ""
 msgid "Reporting for"
 msgstr "Reporting for"
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:149
-#: src/components/PostControls/index.tsx:194
+#: src/components/PostControls/AnchorPostControls/index.tsx:146
+#: src/components/PostControls/index.tsx:191
 msgid "Repost"
 msgstr "Repost"
 
-#: src/components/PostControls/RepostMenu.tsx:44
-#: src/components/PostControls/RepostMenu.tsx:48
+#: src/components/PostControls/RepostMenu.tsx:50
+#: src/components/PostControls/RepostMenu.tsx:54
 msgctxt "action"
 msgid "Repost"
 msgstr ""
 
-#: src/components/PostControls/AnchorPostControls/index.tsx:148
-#: src/components/PostControls/index.tsx:193
-#: src/components/PostControls/RepostMenu.tsx:42
+#: src/components/PostControls/AnchorPostControls/index.tsx:149
+#: src/components/PostControls/index.tsx:194
+#: src/components/PostControls/RepostMenu.tsx:48
 msgid "Repost or quote post"
 msgstr ""
 
@@ -8969,8 +8969,8 @@ msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr ""
 
-#: src/components/PostControls/RepostMenu.tsx:44
-#: src/components/PostControls/RepostMenu.tsx:48
+#: src/components/PostControls/RepostMenu.tsx:50
+#: src/components/PostControls/RepostMenu.tsx:54
 msgid "Undo repost"
 msgstr ""
 
@@ -9007,8 +9007,8 @@ msgstr ""
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/AnchorPostControls/index.tsx:165
-#: src/components/PostControls/index.tsx:215
+#: src/components/PostControls/AnchorPostControls/index.tsx:166
+#: src/components/PostControls/index.tsx:216
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 

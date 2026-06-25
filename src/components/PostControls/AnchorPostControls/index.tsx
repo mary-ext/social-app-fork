@@ -25,8 +25,8 @@ type AnchorControlButtonProps = {
 	className?: string;
 	/** Accessible name; becomes the `aria-label`. */
 	label: string;
-	/** Visible hover/focus hint; defaults to {@link label}. Pass `null` to suppress the tooltip. */
-	tooltip?: string | null;
+	/** Visible hover/focus hint. Pass `null` to suppress it (e.g. when a wrapping menu owns the tooltip). */
+	tooltip: string | null;
 	children: ReactNode;
 	active?: boolean;
 	/** Color applied when `active`; the icon inherits it via `currentColor`. */
@@ -65,7 +65,7 @@ function AnchorControlButton({
 	if (tooltip === null) {
 		return button;
 	}
-	return <Tooltip label={tooltip ?? label}>{button}</Tooltip>;
+	return <Tooltip label={tooltip}>{button}</Tooltip>;
 }
 
 /** Wraps an icon in the hover-highlighted {@link css.iconCircle} so the chrome lands on the icon alone. */
@@ -143,10 +143,11 @@ let AnchorPostControls = ({
 				onRepost={() => void onRepost()}
 				onQuote={onQuote}
 				embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+				tooltip={l`Repost`}
 				render={
 					<AnchorControlButton
 						label={l`Repost or quote post`}
-						tooltip={l`Repost`}
+						tooltip={null}
 						active={!!post.viewer?.repost}
 						activeColor={t.palette.positive_500}
 					>
@@ -192,8 +193,9 @@ let AnchorPostControls = ({
 			<ShareMenu
 				post={post}
 				onShare={onShare}
+				tooltip={l`Share`}
 				render={
-					<AnchorControlButton label={l`Open share menu`} tooltip={l`Share`}>
+					<AnchorControlButton label={l`Open share menu`} tooltip={null}>
 						<AnchorControlButtonIcon icon={ArrowShareRightIcon} />
 					</AnchorControlButton>
 				}
@@ -207,8 +209,9 @@ let AnchorPostControls = ({
 				threadgateRecord={threadgateRecord}
 				onShowLess={onShowLess}
 				logContext={logContext}
+				tooltip={l`More`}
 				render={
-					<AnchorControlButton label={l`Open post options menu`} tooltip={l`More`}>
+					<AnchorControlButton label={l`Open post options menu`} tooltip={null}>
 						<AnchorControlButtonIcon icon={DotsHorizontal} />
 					</AnchorControlButton>
 				}

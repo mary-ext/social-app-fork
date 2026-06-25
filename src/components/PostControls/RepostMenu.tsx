@@ -6,6 +6,7 @@ import { useRequireAuth, useSession } from '#/state/session';
 import { CloseQuote_Stroke2_Corner1_Rounded as Quote } from '#/components/icons/Quote';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import * as Menu from '#/components/web/Menu';
+import { Tooltip } from '#/components/web/Tooltip';
 
 /**
  * The repost/quote menu. The caller supplies the trigger button via `render` so each action-bar size owns its
@@ -14,12 +15,15 @@ import * as Menu from '#/components/web/Menu';
  */
 export const RepostMenu = ({
 	render,
+	tooltip,
 	isReposted,
 	onRepost,
 	onQuote,
 	embeddingDisabled,
 }: {
 	render: ReactElement;
+	/** Hover/focus hint for the trigger; the tooltip wraps the menu trigger so it survives the menu wiring. */
+	tooltip: string;
 	isReposted: boolean;
 	onRepost: () => void;
 	onQuote: () => void;
@@ -38,7 +42,9 @@ export const RepostMenu = ({
 				}
 			}}
 		>
-			<Menu.Trigger render={render} />
+			<Tooltip label={tooltip}>
+				<Menu.Trigger render={render} />
+			</Tooltip>
 			<Menu.Popup label={l`Repost or quote post`} align="center" minWidth={170}>
 				<Menu.Item
 					label={isReposted ? l`Undo repost` : l({ message: `Repost`, context: `action` })}

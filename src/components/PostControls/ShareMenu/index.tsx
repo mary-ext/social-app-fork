@@ -4,6 +4,7 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { Shadow } from '#/state/cache/post-shadow';
 
 import * as Menu from '#/components/web/Menu';
+import { Tooltip } from '#/components/web/Tooltip';
 
 import { ShareMenuItems } from './ShareMenuItems';
 
@@ -13,10 +14,13 @@ import { ShareMenuItems } from './ShareMenuItems';
  */
 export const ShareMenu = ({
 	render,
+	tooltip,
 	post,
 	onShare,
 }: {
 	render: ReactElement;
+	/** Hover/focus hint for the trigger; the tooltip wraps the menu trigger so it survives the menu wiring. */
+	tooltip: string;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	onShare: () => void;
 }): React.ReactNode => {
@@ -31,7 +35,9 @@ export const ShareMenu = ({
 				}
 			}}
 		>
-			<Menu.Trigger render={render} />
+			<Tooltip label={tooltip}>
+				<Menu.Trigger render={render} />
+			</Tooltip>
 			{hasBeenOpen && <ShareMenuItems post={post} onShare={onShare} />}
 		</Menu.Root>
 	);
