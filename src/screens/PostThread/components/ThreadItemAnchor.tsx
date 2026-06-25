@@ -45,12 +45,12 @@ import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/Pos
 import { useFormatPostStatCount } from '#/components/PostControls/util';
 import * as PostLayout from '#/components/PostLayout';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
+import * as Prompt from '#/components/web/Prompt';
 import * as Skele from '#/components/web/Skeleton';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
@@ -441,7 +441,7 @@ function ExpandedPostDetails({
 
 function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	const { t: l, i18n } = useLingui();
-	const control = Prompt.usePromptControl();
+	const handle = Prompt.usePromptHandle();
 
 	const indexedAt = new Date(post.indexedAt);
 	const createdAt = new Date((post.record as AppBskyFeedPost.Main).createdAt);
@@ -459,7 +459,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 				onPress={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
-					control.open();
+					handle.open(null);
 				}}
 			>
 				{({ hovered, pressed }) => (
@@ -472,7 +472,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 				)}
 			</Button>
 
-			<Prompt.Outer control={control}>
+			<Prompt.Outer handle={handle}>
 				<Prompt.Content>
 					<Prompt.TitleText>
 						<Trans>Archived post</Trans>
