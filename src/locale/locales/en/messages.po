@@ -4884,11 +4884,11 @@ msgstr "Locked"
 msgid "Log"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:76
+#: src/view/shell/desktop/RightNav.tsx:71
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:72
+#: src/view/shell/desktop/RightNav.tsx:67
 #: src/view/shell/Drawer.tsx:328
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
@@ -7965,8 +7965,8 @@ msgstr ""
 msgid "Sort replies"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:65
-#: src/view/shell/desktop/RightNav.tsx:67
+#: src/view/shell/desktop/RightNav.tsx:60
+#: src/view/shell/desktop/RightNav.tsx:62
 msgid "Source code"
 msgstr "Source code"
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -8,12 +8,17 @@ import { useSession } from '#/state/session';
 
 import { BottomBarWeb } from '#/view/shell/bottom-bar/BottomBarWeb';
 import { DesktopLeftNav } from '#/view/shell/desktop/LeftNav';
-import { DesktopRightNav } from '#/view/shell/desktop/RightNav';
 import { Drawer } from '#/view/shell/Drawer';
 
 import { useLayoutBreakpoints } from '#/alf';
 
 import * as styles from '#/components/web/Shell/Shell.css';
+
+// the right nav only renders past the right-nav breakpoint and off Messages, so defer its chunk until
+// a layout that actually shows it.
+const DesktopRightNav = lazy(() =>
+	import('#/view/shell/desktop/RightNav').then((m) => ({ default: m.DesktopRightNav })),
+);
 
 export type WebShellProps = {
 	children: React.ReactNode;
@@ -71,7 +76,11 @@ export function WebShell({ children, routeName }: WebShellProps) {
 					{children}
 				</main>
 				<div className={clsx(styles.rail, styles.railRight, showRightNav && styles.railRightFluid)}>
-					<DesktopRightNav routeName={routeName} />
+					{showRightNav && (
+						<Suspense fallback={null}>
+							<DesktopRightNav routeName={routeName} />
+						</Suspense>
+					)}
 				</div>
 			</div>
 			{showBottomBar && (

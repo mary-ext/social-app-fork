@@ -41,15 +41,10 @@ export function DesktopRightNav({ routeName }: { routeName: string }) {
 	const { hasSession } = useSession();
 	const kawaii = useKawaiiMode();
 	const isSearchScreen = routeName === 'Search';
-	const isMessagesRelatedScreen = routeName.startsWith('Messages');
 	const webqueryParams = useWebQueryParams();
 	const searchQuery = webqueryParams?.q;
 	const showExploreScreenDuplicatedContent = !isSearchScreen || (isSearchScreen && !!searchQuery);
-	const { rightNavVisible, leftNavMinimal } = useLayoutBreakpoints();
-
-	if (!rightNavVisible || isMessagesRelatedScreen) {
-		return null;
-	}
+	const { leftNavMinimal } = useLayoutBreakpoints();
 
 	return (
 		<div className={css.root}>
