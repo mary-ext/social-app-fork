@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { type MouseEvent, useCallback } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
@@ -52,27 +52,48 @@ export function TitleText({ children }: { children: React.ReactNode }) {
 	);
 }
 
-export function BackButton() {
+/**
+ * The header's leading back button. By default it pops the navigation stack, falling back to Home at the
+ * root. Pass `onClick` to run a custom action instead — call `evt.preventDefault()` within it to suppress the
+ * default pop (e.g. a logical "back" that stays on the screen).
+ *
+ * @param label accessible name for the button
+ * @param onClick custom click handler; call `evt.preventDefault()` to skip the default back navigation
+ */
+export function BackButton({
+	label,
+	onClick,
+}: {
+	label?: string;
+	onClick?: (evt: MouseEvent<HTMLButtonElement>) => void;
+} = {}) {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
-	const onClick = useCallback(() => {
-		if (navigation.canGoBack()) {
-			navigation.goBack();
-		} else {
-			navigation.navigate('Home');
-		}
-	}, [navigation]);
+	const handleClick = useCallback(
+		(evt: MouseEvent<HTMLButtonElement>) => {
+			onClick?.(evt);
+			if (evt.defaultPrevented) {
+				return;
+			}
+			if (navigation.canGoBack()) {
+				navigation.goBack();
+			} else {
+				navigation.navigate('Home');
+			}
+		},
+		[navigation, onClick],
+	);
 
 	return (
 		<Slot>
 			<Button
-				label={l`Go back`}
+				label={label ?? l`Go back`}
 				variant="ghost"
 				color="secondary"
 				shape="round"
 				className={styles.edgeButton}
-				onClick={onClick}
+				onClick={handleClick}
 			>
 				<ButtonIcon icon={ArrowLeft} size="lg" />
 			</Button>

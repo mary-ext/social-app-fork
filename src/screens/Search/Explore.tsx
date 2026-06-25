@@ -182,7 +182,6 @@ export function Explore({
 	focusSearchInput,
 }: {
 	focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void;
-	headerHeight: number;
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();

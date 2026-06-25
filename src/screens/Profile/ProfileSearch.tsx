@@ -40,7 +40,6 @@ export const ProfileSearchScreen = ({ route }: Props) => {
 			}
 			fixedParams={fixedParams}
 			queryParam={queryParam}
-			testID="searchPostsScreen"
 		/>
 	);
 };

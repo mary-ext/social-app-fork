@@ -58,20 +58,8 @@ export type Account = {
 	/** Recently selected GIFs in the GIF picker. Most recent first, capped at 20. */
 	recentGifs?: Gif[];
 
-	/**
-	 * @deprecated superseded by {@link Account.searchHistory}; still read by the legacy search screen until it
-	 *   is removed.
-	 */
-	searchAccountHistory?: string[];
-
 	/** Unified search history (queries and visited profiles), most recent first. */
 	searchHistory?: SearchHistoryEntry[];
-
-	/**
-	 * @deprecated superseded by {@link Account.searchHistory}; still read by the legacy search screen until it
-	 *   is removed.
-	 */
-	searchTermHistory?: string[];
 };
 
 export type Auth = {

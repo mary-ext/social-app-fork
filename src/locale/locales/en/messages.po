@@ -1211,9 +1211,6 @@ msgid "All accounts have been followed!"
 msgstr ""
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:173
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:60
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:83
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:85
 msgid "All languages"
 msgstr ""
 
@@ -1580,6 +1577,10 @@ msgstr ""
 msgid "Back to Chats"
 msgstr ""
 
+#: src/screens/Search/Shell.tsx:142
+msgid "Back to Explore"
+msgstr "Back to Explore"
+
 #: src/components/dialogs/Signin.tsx:225
 #: src/components/dialogs/Signin.tsx:232
 msgid "Back to your accounts"
@@ -1826,7 +1827,6 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/prompts.tsx:168
 #: src/screens/Profile/Header/EditProfileDialog.tsx:192
 #: src/screens/Profile/Header/EditProfileDialog.tsx:194
-#: src/screens/Search/Shell.tsx:355
 #: src/screens/Settings/Settings.tsx:111
 #: src/view/com/composer/Composer.tsx:1366
 #: src/view/com/composer/Composer.tsx:1368
@@ -1843,10 +1843,6 @@ msgstr ""
 #: src/screens/Messages/components/MessageInputReply.tsx:72
 msgid "Cancel reply"
 msgstr "Cancel reply"
-
-#: src/screens/Search/Shell.tsx:345
-msgid "Cancel search"
-msgstr ""
 
 #: src/components/PostControls/shared.ts:66
 #: src/components/PostControls/shared.ts:95
@@ -2033,7 +2029,7 @@ msgstr ""
 
 #: src/components/EmojiPicker/components/SearchBar.tsx:31
 #: src/components/web/forms/SearchInput.tsx:59
-#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:616
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:664
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -3155,7 +3151,6 @@ msgid "Explicit sexual images."
 msgstr ""
 
 #: src/Navigation.tsx:440
-#: src/screens/Search/Shell.tsx:316
 #: src/view/shell/desktop/LeftNav.tsx:564
 #: src/view/shell/Drawer.tsx:138
 #: src/view/shell/Drawer.tsx:224
@@ -3520,15 +3515,6 @@ msgstr ""
 msgid "File saved successfully!"
 msgstr ""
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:78
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:81
-msgid "Filter search by language"
-msgstr ""
-
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:67
-msgid "Filter search by language (currently: {currentLanguageLabel})"
-msgstr ""
-
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:61
 msgid "Filter who can opt to receive notifications for your activity"
 msgstr "Filter who can opt to receive notifications for your activity"
@@ -3557,7 +3543,7 @@ msgstr ""
 msgid "Find people to follow"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:461
+#: src/screens/Search/Shell.tsx:224
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
@@ -3867,7 +3853,7 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:408
 #: src/components/moderation/ScreenHider.tsx:81
 #: src/components/moderation/ScreenHider.tsx:93
-#: src/components/web/Layout/Header.tsx:70
+#: src/components/web/Layout/Header.tsx:91
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:79
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:80
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
@@ -5834,7 +5820,7 @@ msgid "Open draft"
 msgstr ""
 
 #: src/components/Layout/Header/index.tsx:137
-#: src/components/web/Layout/Header.tsx:101
+#: src/components/web/Layout/Header.tsx:122
 msgid "Open drawer menu"
 msgstr ""
 
@@ -6558,10 +6544,6 @@ msgstr "Recent"
 msgid "Recent GIFs"
 msgstr "Recent GIFs"
 
-#: src/screens/Search/components/SearchHistory.tsx:52
-msgid "Recent searches"
-msgstr "Recent searches"
-
 #: src/components/dialogs/LanguageSelectDialog.tsx:170
 #: src/components/EmojiPicker/categories.ts:72
 msgid "Recently used"
@@ -6635,10 +6617,6 @@ msgstr "Remove {displayName} from this group chat"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:164
 msgid "Remove {displayName}?"
 msgstr "Remove {displayName}?"
-
-#: src/screens/Search/components/SearchHistory.tsx:96
-msgid "Remove {historyItem}"
-msgstr ""
 
 #: src/screens/Settings/components/AccountsSection.tsx:258
 #: src/screens/Settings/components/AccountsSection.tsx:260
@@ -6723,10 +6701,6 @@ msgstr ""
 #: src/screens/Moderation/MutedWords.tsx:192
 msgid "Remove muted word"
 msgstr "Remove muted word"
-
-#: src/screens/Search/components/SearchHistory.tsx:165
-msgid "Remove profile"
-msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:180
 msgid "Remove this feed from your saved feeds"
@@ -7264,11 +7238,10 @@ msgstr "Scrolls the conversation to the most recent message"
 #: src/components/dialogs/SearchablePeopleList.tsx:546
 #: src/components/forms/SearchInput.tsx:44
 #: src/components/forms/SearchInput.tsx:46
-#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:143
-#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:610
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:170
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:658
 #: src/Navigation.tsx:571
-#: src/screens/Search/Shell.tsx:316
-#: src/screens/Search/Shell.tsx:453
+#: src/screens/Search/Shell.tsx:216
 msgid "Search"
 msgstr ""
 
@@ -7300,10 +7273,6 @@ msgstr ""
 msgid "Search for \"{interestsDisplayName}\" (active)"
 msgstr ""
 
-#: src/screens/Search/components/AutocompleteResults.tsx:46
-msgid "Search for \"{searchText}\""
-msgstr ""
-
 #. placeholder {0}: row.query
 #: src/components/web/SearchAutocomplete/SearchRow.tsx:16
 msgid "Search for <0>{0}</0>"
@@ -7329,7 +7298,7 @@ msgstr "Search for people"
 msgid "Search for posts and users on Bluesky"
 msgstr "Search for posts and users on Bluesky"
 
-#: src/screens/Search/Shell.tsx:338
+#: src/screens/Search/Shell.tsx:161
 msgid "Search for posts, users, or feeds"
 msgstr ""
 
@@ -9325,9 +9294,7 @@ msgid "View {0}'s avatar"
 msgstr ""
 
 #. placeholder {0}: info.creatorHandle
-#. placeholder {0}: profile.handle
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:343
-#: src/screens/Search/components/SearchProfileCard.tsx:39
 msgid "View {0}'s profile"
 msgstr ""
 

@@ -105,21 +105,39 @@ type SearchAutocompleteProps = {
 	onSubmit: (query: string) => void;
 };
 
+type SearchAutocompleteFieldProps = SearchAutocompleteProps & {
+	/** mount the live field immediately rather than the cheap idle placeholder, without grabbing focus on mount. */
+	eager?: boolean;
+	/** seed text for the field; re-seeds the field whenever it changes (e.g. navigating between searches). */
+	initialQuery?: string;
+	/** placeholder shown while the field is empty. */
+	placeholder?: string;
+};
+
 /**
- * the right-rail search entry point. while idle it renders a cheap placeholder field, so none of the
- * autocomplete's hooks, history reads, or typeahead fetches run until the user actually engages search. the
- * first focus (click, tab, or the `/` hotkey) mounts {@link ActiveSearchAutocomplete} and hands focus to its
- * input; once activated it stays mounted, since search is touched rarely and keeping it warm avoids
- * re-hydrating recents on every reopen.
+ * a search entry point. while idle it renders a cheap placeholder field, so none of the autocomplete's hooks,
+ * history reads, or typeahead fetches run until the user actually engages search. the first focus (click,
+ * tab, or the `/` hotkey) mounts {@link ActiveSearchAutocomplete} and hands focus to its input; once activated
+ * it stays mounted, since search is touched rarely and keeping it warm avoids re-hydrating recents on every
+ * reopen. the right rail uses this idle form; pass `eager` to skip straight to the live field (the search
+ * screen, which mounts already populated from the URL).
  *
+ * @param eager mount the live field at once, seeded but unfocused, instead of the lazy placeholder
+ * @param initialQuery text to seed the live field with (and re-seed on change)
  * @param onNavigate navigates to an in-app route path (a profile, post, or other record matched from the
  *   query text)
  * @param onNavigateToProfile opens a profile chosen from the default typeahead
  * @param onSubmit runs a search for the given query
+ * @param placeholder placeholder shown while the field is empty
  */
-export function SearchAutocomplete(props: SearchAutocompleteProps) {
+export function SearchAutocomplete({
+	eager,
+	initialQuery,
+	placeholder,
+	...props
+}: SearchAutocompleteFieldProps) {
 	const { t } = useLingui();
-	const [active, setActive] = useState(false);
+	const [active, setActive] = useState(eager ?? false);
 	const placeholderRef = useRef<HTMLInputElement | null>(null);
 
 	// the global `/` hotkey wakes an idle field; once active, ActiveSearchAutocomplete owns the subscription
@@ -131,7 +149,16 @@ export function SearchAutocomplete(props: SearchAutocompleteProps) {
 	}, []);
 
 	if (active) {
-		return <ActiveSearchAutocomplete {...props} />;
+		// an eager field is already populated from context, so it shouldn't grab focus or pop the suggestions
+		// open on mount; a lazily-woken one just received user intent, so it does both.
+		return (
+			<ActiveSearchAutocomplete
+				{...props}
+				autoFocus={!eager}
+				initialQuery={initialQuery}
+				placeholder={placeholder}
+			/>
+		);
 	}
 
 	return (
@@ -140,7 +167,7 @@ export function SearchAutocomplete(props: SearchAutocompleteProps) {
 			<input
 				className={styles.input}
 				onFocus={() => setActive(true)}
-				placeholder={t`Search`}
+				placeholder={placeholder ?? t`Search`}
 				ref={placeholderRef}
 			/>
 		</div>
@@ -152,9 +179,16 @@ export function SearchAutocomplete(props: SearchAutocompleteProps) {
  * switches between a default view (search + profile typeahead + operator options), an actor list
  * (`from:`/`to:`/`mentions:`), and a calendar grid (`since:`/`until:`). the calendar shares the input and its
  * keyboard navigation by toggling the `grid` layout in place rather than remounting, so focus is never lost.
- * mounted on demand by {@link SearchAutocomplete}, so it claims focus on mount.
+ * mounted on demand by {@link SearchAutocomplete}; it claims focus on mount when `autoFocus` is set.
  */
-function ActiveSearchAutocomplete({ onNavigate, onNavigateToProfile, onSubmit }: SearchAutocompleteProps) {
+function ActiveSearchAutocomplete({
+	autoFocus,
+	initialQuery = '',
+	onNavigate,
+	onNavigateToProfile,
+	onSubmit,
+	placeholder,
+}: SearchAutocompleteProps & { autoFocus: boolean; initialQuery?: string; placeholder?: string }) {
 	const { t } = useLingui();
 	const { currentAccount } = useSession();
 	const { data: meProfile } = useProfileQuery({ did: currentAccount?.did });
@@ -188,17 +222,31 @@ function ActiveSearchAutocomplete({ onNavigate, onNavigateToProfile, onSubmit }:
 		});
 	}, []);
 
-	// mounted only on user intent, so claim focus on mount and open the popup; the layout effect transfers
-	// focus before paint, keeping the swap from the placeholder field seamless.
+	// when lazily woken (rail), claim focus on mount and open the popup; the layout effect transfers focus
+	// before paint, keeping the swap from the placeholder field seamless. an eager field (search screen) mounts
+	// pre-seeded from the URL, so it stays unfocused with the popup closed.
 	useLayoutEffect(() => {
-		inputRef.current?.focus();
-	}, []);
+		if (autoFocus) {
+			inputRef.current?.focus();
+		}
+	}, [autoFocus]);
 
-	const [query, setQuery] = useState('');
-	const [caret, setCaret] = useState(0);
+	const [query, setQuery] = useState(initialQuery);
+	const [caret, setCaret] = useState(initialQuery.length);
 	const [open, setOpen] = useState(false);
 	const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(new Date()));
 	const [trackedSnapKey, setTrackedSnapKey] = useState<string | null>(null);
+
+	// re-seed the field when the seeded query changes out from under us — navigating between searches on the
+	// search screen reuses this instance with a new URL query. the rail keeps a constant empty seed, so this
+	// never fires there.
+	const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery);
+	if (initialQuery !== prevInitialQuery) {
+		setPrevInitialQuery(initialQuery);
+		setQuery(initialQuery);
+		setCaret(initialQuery.length);
+		setOpen(false);
+	}
 
 	const today = useMemo(() => new Date(), []);
 
@@ -607,7 +655,7 @@ function ActiveSearchAutocomplete({ onNavigate, onNavigateToProfile, onSubmit }:
 					onKeyDown={onInputKeyDown}
 					onKeyDownCapture={onInputKeyDownCapture}
 					onKeyUp={syncCaret}
-					placeholder={t`Search`}
+					placeholder={placeholder ?? t`Search`}
 					ref={inputRef}
 				/>
 				<div className={styles.clear}>

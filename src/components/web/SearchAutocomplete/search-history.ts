@@ -18,7 +18,7 @@ const entryKey = (entry: SearchHistoryEntry): string =>
  */
 export function useSearchHistory() {
 	const { currentAccount } = useSession();
-	// fall back to a shared 'pwi' (public web interface) bucket when signed out, matching the legacy screen.
+	// fall back to a shared 'pwi' (public web interface) bucket when signed out.
 	const [history = [], setHistory] = useStorage(account, [currentAccount?.did ?? 'pwi', 'searchHistory']);
 
 	const record = (entry: SearchHistoryEntry) => {

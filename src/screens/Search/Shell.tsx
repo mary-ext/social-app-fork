@@ -1,47 +1,30 @@
 import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { type TextInput, View, type ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import { useQueryClient } from '@tanstack/react-query';
 
-import { HITSLOP_10, HITSLOP_20 } from '#/lib/constants';
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { MagnifyingGlassIcon } from '#/lib/icons';
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { softReset } from '#/state/events';
-import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
-import { unstableCacheProfileView, useProfilesQuery } from '#/state/queries/profile';
+import { focusSearch, softReset } from '#/state/events';
 import { useSession } from '#/state/session';
 
 import { makeSearchQuery, type Params, parseSearchQuery } from '#/screens/Search/utils';
 
-import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
-import { Button, ButtonText } from '#/components/Button';
-import { SearchInput } from '#/components/forms/SearchInput';
-import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
+import * as Layout from '#/components/web/Layout';
+import { useNavigateToPath } from '#/components/web/Link';
+import { SearchAutocomplete } from '#/components/web/SearchAutocomplete/SearchAutocomplete';
 
-import { account, useStorage } from '#/storage';
 import { colors } from '#/styles/colors';
 
-import { AutocompleteResults } from './components/AutocompleteResults';
-import { SearchHistory } from './components/SearchHistory';
-import { SearchLanguageDropdown } from './components/SearchLanguageDropdown';
 import { Explore } from './Explore';
 import { SearchResults, type SearchTabId } from './SearchResults';
 
-type WebViewStyle = Omit<ViewStyle, 'position'> & {
-	position?: 'sticky';
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
-};
-
-type TabParam = 'user' | 'profile' | 'feed' | 'latest';
+type TabParam = 'feed' | 'latest' | 'profile' | 'user';
 
 // Map tab parameter to tab id
 function getTabId(tabParam?: TabParam): SearchTabId {
@@ -60,143 +43,58 @@ function getTabId(tabParam?: TabParam): SearchTabId {
 
 export function SearchScreenShell({
 	queryParam,
-	testID,
 	fixedParams,
 	navButton = 'menu',
 	inputPlaceholder,
-	isExplore,
 }: {
 	queryParam: string;
-	testID: string;
 	fixedParams?: Params;
 	navButton?: 'back' | 'menu';
 	inputPlaceholder?: string;
-	isExplore?: boolean;
 }) {
-	const t = useTheme();
-	const { gtMobile } = useBreakpoints();
+	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const route = useRoute();
-	const textInput = useRef<TextInput>(null);
-	const { t: l } = useLingui();
-	const { currentAccount } = useSession();
-	const queryClient = useQueryClient();
+	const navigateToPath = useNavigateToPath();
 
 	// Get tab parameter from route params
 	const tabParam = (route.params as { q?: string; tab?: TabParam })?.tab;
 	const [activeTab, setActiveTab] = useState(() => getTabId(tabParam));
 
-	// Query terms
-	const [searchText, setSearchText] = useState<string>(queryParam);
-	const searchTextRef = useRef(searchText);
-	const updateSearchText = useCallback((text: string) => {
-		searchTextRef.current = text;
-		setSearchText(text);
-	}, []);
-	const { data: autocompleteData, isFetching: isAutocompleteFetching } = useActorAutocompleteQuery(
-		searchText,
-		true,
-	);
+	const { query, queryWithParams } = useQueryManager({ fixedParams, initialQuery: queryParam });
 
-	const [showAutocomplete, setShowAutocomplete] = useState(false);
-
-	const [termHistory = [], setTermHistory] = useStorage(account, [
-		currentAccount?.did ?? 'pwi',
-		'searchTermHistory',
-	] as const);
-	const [accountHistory = [], setAccountHistory] = useStorage(account, [
-		currentAccount?.did ?? 'pwi',
-		'searchAccountHistory',
-	]);
-
-	const { data: accountHistoryProfiles } = useProfilesQuery({
-		handles: accountHistory,
-		maintainData: true,
-	});
-
-	const updateSearchHistory = useCallback(
-		(item: string) => {
-			if (!item) return;
-			const newSearchHistory = [item, ...termHistory.filter((search) => search !== item)].slice(0, 6);
-			setTermHistory(newSearchHistory);
-		},
-		[termHistory, setTermHistory],
-	);
-
-	const updateProfileHistory = useCallback(
-		(item: AnyProfileView) => {
-			const newAccountHistory = [item.did, ...accountHistory.filter((p) => p !== item.did)].slice(0, 10);
-			setAccountHistory(newAccountHistory);
-		},
-		[accountHistory, setAccountHistory],
-	);
-
-	const deleteSearchHistoryItem = useCallback(
-		(item: string) => {
-			setTermHistory(termHistory.filter((search) => search !== item));
-		},
-		[termHistory, setTermHistory],
-	);
-	const deleteProfileHistoryItem = useCallback(
-		(item: AnyProfileView) => {
-			setAccountHistory(accountHistory.filter((p) => p !== item.did));
-		},
-		[accountHistory, setAccountHistory],
-	);
-
-	const { params, query, queryWithParams } = useQueryManager({
-		initialQuery: queryParam,
-		fixedParams,
-	});
-	const showFilters = Boolean(queryWithParams && !showAutocomplete);
-
-	// web only - measure header height for sticky positioning
+	// measure the sticky header so the tab bar below it can offset itself by that height
 	const [headerHeight, setHeaderHeight] = useState(0);
-	const headerRef = useRef(null);
+	const headerRef = useRef<HTMLDivElement | null>(null);
 	useLayoutEffect(() => {
-		if (!headerRef.current) return;
-		const measurement = (headerRef.current as Element).getBoundingClientRect();
-		setHeaderHeight(measurement.height);
+		const el = headerRef.current;
+		if (!el) return;
+		const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
+		measure();
+		const observer = new ResizeObserver(measure);
+		observer.observe(el);
+		return () => observer.disconnect();
 	}, []);
 
-	useFocusEffect(
-		useNonReactiveCallback(() => {
-			updateSearchText(queryParam);
-		}),
-	);
-
-	const onPressClearQuery = useCallback(() => {
-		scrollToTopWeb();
-		updateSearchText('');
-		textInput.current?.focus();
-	}, [updateSearchText]);
-
-	const onChangeText = useCallback(
-		(text: string) => {
+	const navigateToQuery = useCallback(
+		(nextQuery: string) => {
 			scrollToTopWeb();
-			updateSearchText(text);
+			// @ts-expect-error route params are not typesafe
+			navigation.push(route.name, { ...route.params, q: nextQuery });
 		},
-		[updateSearchText],
+		[navigation, route.name, route.params],
 	);
 
-	const navigateToItem = useCallback(
-		(item: string) => {
-			scrollToTopWeb();
-			setShowAutocomplete(false);
-			updateSearchHistory(item);
-
-			// @ts-expect-error route is not typesafe
-			navigation.push(route.name, { ...route.params, q: item });
+	const navigateToProfile = useCallback(
+		(profile: AnyProfileView) => {
+			navigation.navigate('Profile', { name: profile.did });
 		},
-		[updateSearchHistory, navigation, route],
+		[navigation],
 	);
 
-	const onPressCancelSearch = useCallback(() => {
-		scrollToTopWeb();
-		textInput.current?.blur();
-		setShowAutocomplete(false);
-		// Empty params resets the URL to be /search rather than /search?q=
-		// Also clear the tab parameter
+	const navigateToExplore = useCallback(() => {
+		// drop back to the explore page: clear the query and tab, keeping any other route params (e.g. a profile
+		// name on the profile-search variant)
 		const {
 			q: _q,
 			tab: _tab,
@@ -204,58 +102,19 @@ export function SearchScreenShell({
 		} = (route.params ?? {}) as {
 			[key: string]: string;
 		};
-		// @ts-expect-error route is not typesafe
-		navigation.replace(route.name, parameters);
-	}, [setShowAutocomplete, updateSearchText, navigation, route.params, route.name]);
-
-	const onSubmit = (_source: 'typed' | 'autocomplete') => () => {
-		navigateToItem(searchTextRef.current);
-	};
-
-	const onAutocompleteResultPress = useCallback(() => {
-		setShowAutocomplete(false);
-	}, []);
-
-	const handleHistoryItemClick = useCallback(
-		(item: string) => {
-			updateSearchText(item);
-			navigateToItem(item);
-		},
-		[navigateToItem, updateSearchText],
-	);
-
-	const handleProfileClick = useCallback(
-		(profile: AnyProfileView) => {
-			unstableCacheProfileView(queryClient, profile);
-			// Slight delay to avoid updating during push nav animation.
-			setTimeout(() => {
-				updateProfileHistory(profile);
-			}, 400);
-		},
-		[updateProfileHistory, queryClient],
-	);
+		// @ts-expect-error route params are not typesafe
+		navigation.push(route.name, parameters);
+	}, [navigation, route.name, route.params]);
 
 	const onSoftReset = useCallback(() => {
-		if (showAutocomplete) {
-			// the recent searches / autocomplete panel is open — close it, returning to explore
-			onPressCancelSearch();
-		} else if (queryWithParams) {
-			// viewing search results — navigate to /search rather than /search?q=,
-			// also dropping the tab parameter
-			const {
-				q: _q,
-				tab: _tab,
-				...parameters
-			} = (route.params ?? {}) as {
-				[key: string]: string;
-			};
-			// @ts-expect-error route is not typesafe
-			navigation.push(route.name, parameters);
+		if (queryWithParams) {
+			// viewing search results — drop back to the explore page
+			navigateToExplore();
 		} else {
-			// already on the explore page — focus the search input
-			textInput.current?.focus();
+			// already on the explore page — focus the search field
+			focusSearch.emit();
 		}
-	}, [navigation, onPressCancelSearch, queryWithParams, route.name, route.params, showAutocomplete]);
+	}, [navigateToExplore, queryWithParams]);
 
 	useFocusEffect(
 		useCallback(() => {
@@ -263,146 +122,51 @@ export function SearchScreenShell({
 		}, [onSoftReset]),
 	);
 
-	const onSearchInputFocus = useCallback(() => {
-		// Prevent a jump on iPad by ensuring that
-		// the initial focused render has no result list.
-		requestAnimationFrame(() => {
-			setShowAutocomplete(true);
-		});
-	}, [setShowAutocomplete]);
-
 	const focusSearchInput = useCallback(
 		(tab?: TabParam) => {
-			textInput.current?.focus();
+			focusSearch.emit();
 
-			// If a tab is specified, set the tab parameter
+			// If a tab is specified, set the tab parameter so a subsequent search lands on it
 			if (tab) {
 				navigation.setParams({ ...route.params, tab });
 			}
 		},
-		[navigation, route],
+		[navigation, route.params],
 	);
 
-	const showHeader = !gtMobile || navButton !== 'menu';
+	const navButtonNode =
+		navButton === 'back' ? (
+			<Layout.Header.BackButton />
+		) : queryWithParams ? (
+			<Layout.Header.BackButton
+				label={l`Back to Explore`}
+				onClick={(evt) => {
+					evt.preventDefault();
+					navigateToExplore();
+				}}
+			/>
+		) : (
+			<Layout.Header.MenuButton />
+		);
 
 	return (
-		<Layout.Screen testID={testID}>
-			<View
-				ref={headerRef}
-				onLayout={(evt) => {
-					setHeaderHeight(evt.nativeEvent.layout.height);
-				}}
-				style={[
-					a.relative,
-					a.z_10,
-					webViewStyle({
-						position: 'sticky',
-						top: 0,
-					}),
-				]}
-			>
-				<Layout.Center style={t.atoms.bg}>
-					{showHeader && (
-						<View
-							// HACK: shift up search input. we can't remove the top padding
-							// on the search input because it messes up the layout animation
-							// if we add it only when the header is hidden
-							style={{ marginBottom: tokens.space.xs * -1 }}
-						>
-							<Layout.Header.Outer noBottomBorder>
-								{navButton === 'menu' ? <Layout.Header.MenuButton /> : <Layout.Header.BackButton />}
-								<Layout.Header.Content align="left">
-									<Layout.Header.TitleText>
-										{isExplore ? <Trans>Explore</Trans> : <Trans>Search</Trans>}
-									</Layout.Header.TitleText>
-								</Layout.Header.Content>
-								{showFilters ? (
-									<SearchLanguageDropdown value={params.lang} onChange={params.setLang} />
-								) : (
-									<Layout.Header.Slot />
-								)}
-							</Layout.Header.Outer>
-						</View>
-					)}
-					<View style={[a.px_lg, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
-						<View style={[a.gap_sm]}>
-							<View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
-								<View style={[a.flex_1]}>
-									<SearchInput
-										ref={textInput}
-										value={searchText}
-										onFocus={onSearchInputFocus}
-										onChangeText={onChangeText}
-										onClearText={onPressClearQuery}
-										onSubmitEditing={onSubmit('typed')}
-										placeholder={inputPlaceholder ?? l`Search for posts, users, or feeds`}
-										hitSlop={{ ...HITSLOP_20, top: 0 }}
-										hotkey={true}
-									/>
-								</View>
-								{showAutocomplete && (
-									<Button
-										label={l`Cancel search`}
-										size="large"
-										variant="ghost"
-										color="secondary"
-										shape="rectangular"
-										style={[a.px_sm]}
-										onPress={onPressCancelSearch}
-										hitSlop={HITSLOP_10}
-									>
-										<ButtonText>
-											<Trans>Cancel</Trans>
-										</ButtonText>
-									</Button>
-								)}
-							</View>
-
-							{showFilters && !showHeader && (
-								<View style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
-									<SearchLanguageDropdown value={params.lang} onChange={params.setLang} />
-								</View>
-							)}
-						</View>
-					</View>
-				</Layout.Center>
-			</View>
-			<View
-				style={{
-					display: showAutocomplete && !fixedParams ? 'flex' : 'none',
-					flex: 1,
-				}}
-			>
-				{searchText.length > 0 ? (
-					<AutocompleteResults
-						isAutocompleteFetching={isAutocompleteFetching}
-						autocompleteData={autocompleteData}
-						searchText={searchText}
-						onSubmit={onSubmit('autocomplete')}
-						onResultPress={onAutocompleteResultPress}
-						onProfileClick={handleProfileClick}
+		<Layout.Screen>
+			<Layout.Header.Outer noBottomBorder ref={headerRef}>
+				{navButtonNode}
+				<Layout.Header.Content>
+					<SearchAutocomplete
+						eager
+						// trailing space so the caret opens on a fresh token, ready to append an operator/filter
+						initialQuery={queryParam ? queryParam + ' ' : queryParam}
+						placeholder={inputPlaceholder ?? l`Search for posts, users, or feeds`}
+						onNavigate={(path) => navigateToPath(path, 'push')}
+						onNavigateToProfile={navigateToProfile}
+						onSubmit={navigateToQuery}
 					/>
-				) : (
-					<SearchHistory
-						searchHistory={termHistory}
-						selectedProfiles={
-							accountHistoryProfiles?.profiles.filter((p) => accountHistory.includes(p.did)) ?? []
-						}
-						onItemClick={handleHistoryItemClick}
-						onProfileClick={handleProfileClick}
-						onRemoveItemClick={deleteSearchHistoryItem}
-						onRemoveProfileClick={deleteProfileHistoryItem}
-					/>
-				)}
-			</View>
-			<View
-				style={{
-					display: showAutocomplete ? 'none' : 'flex',
-					flex: 1,
-				}}
-			>
+				</Layout.Header.Content>
+			</Layout.Header.Outer>
+			<View style={a.flex_1}>
 				<SearchScreenInner
-					key={params.lang}
 					activeTab={activeTab}
 					setActiveTab={setActiveTab}
 					query={query}
@@ -443,70 +207,36 @@ let SearchScreenInner = ({
 			onTabChange={setActiveTab}
 		/>
 	) : hasSession ? (
-		<Explore focusSearchInput={focusSearchInput} headerHeight={headerHeight} />
+		<Explore focusSearchInput={focusSearchInput} />
 	) : (
-		<Layout.Center>
-			<View style={a.flex_1}>
-				{gtTablet && (
-					<View style={[a.border_b, t.atoms.border_contrast_low, a.px_lg, a.pt_sm, a.pb_lg]}>
-						<Text style={[a.text_2xl, a.font_bold]}>
-							<Trans>Search</Trans>
-						</Text>
-					</View>
-				)}
-
-				<View style={[a.align_center, a.justify_center, a.py_4xl, a.gap_lg]}>
-					<MagnifyingGlassIcon strokeWidth={3} size={60} color={colors.textContrastMedium} />
-					<Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-						<Trans>Find posts, users, and feeds on Bluesky</Trans>
+		<Layout.Content>
+			{gtTablet && (
+				<View style={[a.border_b, t.atoms.border_contrast_low, a.px_lg, a.pt_sm, a.pb_lg]}>
+					<Text style={[a.text_2xl, a.font_bold]}>
+						<Trans>Search</Trans>
 					</Text>
 				</View>
+			)}
+
+			<View style={[a.align_center, a.justify_center, a.py_4xl, a.gap_lg]}>
+				<MagnifyingGlassIcon strokeWidth={3} size={60} color={colors.textContrastMedium} />
+				<Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+					<Trans>Find posts, users, and feeds on Bluesky</Trans>
+				</Text>
 			</View>
-		</Layout.Center>
+		</Layout.Content>
 	);
 };
 SearchScreenInner = memo(SearchScreenInner);
 
-function useQueryManager({ initialQuery, fixedParams }: { initialQuery: string; fixedParams?: Params }) {
-	const { query, params: initialParams } = useMemo(() => {
-		return parseSearchQuery(initialQuery || '');
-	}, [initialQuery]);
-	const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery);
-	const [lang, setLang] = useState(initialParams.lang || '');
-
-	if (initialQuery !== prevInitialQuery) {
-		// handle new queryParam change (from manual search entry)
-		setPrevInitialQuery(initialQuery);
-		setLang(initialParams.lang || '');
-	}
-
-	const params = useMemo(
-		() => ({
-			// default stuff
-			...initialParams,
-			// managed stuff
-			lang,
-			...fixedParams,
-		}),
-		[lang, initialParams, fixedParams],
-	);
-	const handlers = useMemo(
-		() => ({
-			setLang,
-		}),
-		[setLang],
-	);
-
+function useQueryManager({ fixedParams, initialQuery }: { fixedParams?: Params; initialQuery: string }) {
 	return useMemo(() => {
+		const { params, query } = parseSearchQuery(initialQuery || '');
 		return {
 			query,
-			queryWithParams: makeSearchQuery(query, params),
-			params: {
-				...params,
-				...handlers,
-			},
+			queryWithParams: makeSearchQuery(query, { ...params, ...fixedParams }),
 		};
-	}, [query, params, handlers]);
+	}, [fixedParams, initialQuery]);
 }
 
 function scrollToTopWeb() {
