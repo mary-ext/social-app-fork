@@ -159,13 +159,7 @@ function PostInner({
 								<PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />
 							)}
 							<LabelsOnMyPost post={post} />
-							<PostContent
-								className={css.contentBottom}
-								displayContext="view"
-								moderation={moderation}
-								post={post}
-								richText={richText}
-							/>
+							<PostContent displayContext="view" moderation={moderation} post={post} richText={richText} />
 							<PostControls
 								post={post}
 								record={record}

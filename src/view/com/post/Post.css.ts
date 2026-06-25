@@ -30,11 +30,6 @@ export const outerBorder = style({
 	borderTopWidth: 1,
 });
 
-/** The standalone surface's trailing space below the gated content, before the controls. */
-export const contentBottom = style({
-	marginBottom: 2,
-});
-
 /**
  * Below-meta rhythm for the spacing-free `PostMeta` leaf. `display: flex` so the wrapper hugs the row instead
  * of inflating it with the font strut.
