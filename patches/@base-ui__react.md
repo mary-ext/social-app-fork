@@ -29,3 +29,36 @@ auto-claims the sole trigger of a single-trigger handle, guarded by `triggerCoun
 evaluated after the commit settles. so the legitimate single-trigger race stays covered, while a
 multi-trigger handle is simply left with no active trigger (focus returns to the document rather
 than to an unrelated trigger).
+
+## `combobox/root/AriaCombobox.mjs` + `autocomplete/root/AutocompleteRoot.d.mts` — expose `setActiveIndex` on `actionsRef`
+
+adds `setActiveIndex(index)` to the imperative handle built in `AriaCombobox` (alongside `unmount`),
+delegating to the existing internal `setIndices({ activeIndex, type: 'none' })`, and declares it on
+`AutocompleteRootActions`.
+
+Base UI Autocomplete owns the highlighted index and exposes no controlled/imperative way to set it
+(`onItemHighlighted` only observes; `autoHighlight` only targets the first item). the right-rail
+search calendar (`src/components/web/SearchAutocomplete`) needs to drive it: open with today (or the
+first of a partially-typed month) highlighted, and roll the highlight across months at the grid
+edges via sentinel cells. the store already has `setIndices`; this just surfaces it through the
+`actionsRef` the consumer already passes. re-check on upgrade — if upstream adds a first-class
+highlighted-index API, drop this hunk for it.
+
+## `combobox/root/AriaCombobox.mjs` + `combobox/root/AriaCombobox.d.mts` — add an `autoUnmount` opt-out
+
+changes the `useOpenChangeComplete` gate from `enabled: !props.actionsRef` to
+`enabled: !props.actionsRef || props.autoUnmount === true`, and declares the `autoUnmount?: boolean`
+prop on `ComboboxRootProps` (so it flows to `AutocompleteRoot` via the shared props type).
+`autoUnmount` only does anything when `actionsRef` is set — without it the popup always
+auto-unmounts (and `=== true` keeps `enabled` a boolean, since `useOpenChangeComplete` defaults a
+missing `enabled` to `true`).
+
+upstream couples two unrelated concerns: passing `actionsRef` (the only way to reach the
+`setActiveIndex` handle above) also opts out of the built-in unmount-on-close, handing the consumer
+the contract to call `actions.unmount()` after its own exit animation. the right-rail search
+(`src/components/web/SearchAutocomplete`) needs `actionsRef` for the calendar but has no reason to
+own unmount timing — without this, the popup's `mounted` never flips false and the suggestions
+linger in the DOM after every blur/escape/outside-press. `autoUnmount` restores the automatic
+unmount (which already awaits the close transition via `useAnimationsFinished`, so a future CSS exit
+animation still works) while keeping the imperative handle. re-check on upgrade — if upstream
+decouples the auto-unmount from `actionsRef`, drop this hunk for it.

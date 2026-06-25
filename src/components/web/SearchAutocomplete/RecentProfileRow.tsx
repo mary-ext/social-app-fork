@@ -1,0 +1,44 @@
+import { Autocomplete } from '@base-ui/react/autocomplete';
+import { useLingui } from '@lingui/react/macro';
+
+import { sanitizeHandle } from '#/lib/strings/handles';
+
+import { Text } from '#/components/Text';
+import { UserAvatar } from '#/components/UserAvatar';
+
+import type { SearchHistoryEntry } from '#/storage';
+
+import type { ListRow } from './model';
+import * as styles from './RecentProfileRow.css';
+import { RecentRemoveButton } from './RecentRemoveButton';
+
+/** a recent-history profile, with a control to drop it from the stored history. */
+export function RecentProfileRow({
+	onRemoveRecent,
+	row,
+}: {
+	onRemoveRecent: (entry: SearchHistoryEntry) => void;
+	row: Extract<ListRow, { kind: 'recent-profile' }>;
+}) {
+	const { t } = useLingui();
+
+	return (
+		<div className={styles.row}>
+			<Autocomplete.Item className={styles.item} value={row}>
+				<UserAvatar avatar={row.profile.avatar} className={styles.avatar} size={36} type="user" />
+				<span className={styles.text}>
+					<Text numberOfLines={1} weight="medium">
+						{sanitizeHandle(row.profile.handle)}
+					</Text>
+					<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
+						{row.profile.displayName || row.profile.handle}
+					</Text>
+				</span>
+			</Autocomplete.Item>
+			<RecentRemoveButton
+				label={t`Remove ${sanitizeHandle(row.profile.handle)} from recent searches`}
+				onRemove={() => onRemoveRecent({ did: row.profile.did, kind: 'profile' })}
+			/>
+		</div>
+	);
+}

@@ -2033,6 +2033,7 @@ msgstr ""
 
 #: src/components/EmojiPicker/components/SearchBar.tsx:31
 #: src/components/web/forms/SearchInput.tsx:59
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:593
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -3748,6 +3749,10 @@ msgstr ""
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
+#: src/components/web/SearchAutocomplete/model.ts:140
+msgid "From user"
+msgstr "From user"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:272
 msgid "Generate a starter pack"
 msgstr ""
@@ -3915,6 +3920,11 @@ msgstr ""
 #: src/view/com/notifications/NotificationFeedItem.tsx:219
 msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
+
+#. placeholder {0}: row.name
+#: src/components/web/SearchAutocomplete/GotoRow.tsx:16
+msgid "Go to <0>{0}</0>"
+msgstr "Go to <0>{0}</0>"
 
 #. placeholder {0}: profile.handle
 #: src/screens/Messages/components/ChatListItem.tsx:150
@@ -4968,6 +4978,10 @@ msgstr "Members can still read chat history but can’t send new messages."
 msgid "mentioned users"
 msgstr ""
 
+#: src/components/web/SearchAutocomplete/model.ts:136
+msgid "Mentioning user"
+msgstr "Mentioning user"
+
 #: src/screens/Settings/NotificationSettings/index.tsx:108
 #: src/screens/Settings/NotificationSettings/index.tsx:204
 #: src/view/screens/Notifications.tsx:89
@@ -5433,6 +5447,10 @@ msgstr ""
 msgid "Next image"
 msgstr ""
 
+#: src/components/web/SearchAutocomplete/CalendarBody.tsx:64
+msgid "Next month"
+msgstr "Next month"
+
 #: src/view/com/feeds/ProfileFeedgens.tsx:140
 msgid "No custom feeds yet"
 msgstr ""
@@ -5884,6 +5902,10 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:484
 msgid "Open starter pack menu"
 msgstr ""
+
+#: src/components/web/SearchAutocomplete/LinkRow.tsx:17
+msgid "Open URL in app"
+msgstr "Open URL in app"
 
 #. placeholder {0}: feedInfo.displayName
 #: src/view/shell/desktop/Feeds.tsx:179
@@ -6359,6 +6381,10 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
+#: src/components/web/SearchAutocomplete/CalendarBody.tsx:46
+msgid "Previous month"
+msgstr "Previous month"
+
 #: src/screens/Settings/LanguageSettings.tsx:126
 msgid "Primary language"
 msgstr ""
@@ -6523,6 +6549,10 @@ msgstr ""
 msgid "Receive push notifications"
 msgstr ""
 
+#: src/components/web/SearchAutocomplete/model.ts:276
+msgid "Recent"
+msgstr "Recent"
+
 #. Accessibility label for the icon-only pill that shows previously selected GIFs in the GIF picker.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:35
 msgid "Recent GIFs"
@@ -6581,6 +6611,13 @@ msgstr "Reload to update"
 #: src/view/com/posts/PostFeedErrorMessage.tsx:182
 msgid "Remove"
 msgstr ""
+
+#. placeholder {0}: row.query
+#. placeholder {0}: sanitizeHandle(row.profile.handle)
+#: src/components/web/SearchAutocomplete/RecentProfileRow.tsx:39
+#: src/components/web/SearchAutocomplete/RecentQueryRow.tsx:30
+msgid "Remove {0} from recent searches"
+msgstr "Remove {0} from recent searches"
 
 #: src/components/dms/ChatProfileTabs.tsx:133
 msgid "Remove {displayName} from group chat"
@@ -6655,6 +6692,10 @@ msgstr ""
 #: src/screens/Settings/components/AccountsSection.tsx:277
 msgid "Remove from quick access?"
 msgstr ""
+
+#: src/components/web/SearchAutocomplete/RecentProfilePendingRow.tsx:33
+msgid "Remove from recent searches"
+msgstr "Remove from recent searches"
 
 #: src/screens/List/ListHiddenScreen.tsx:142
 #: src/screens/List/ListHiddenScreen.tsx:147
@@ -7223,6 +7264,8 @@ msgstr "Scrolls the conversation to the most recent message"
 #: src/components/dialogs/SearchablePeopleList.tsx:546
 #: src/components/forms/SearchInput.tsx:44
 #: src/components/forms/SearchInput.tsx:46
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:142
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:587
 #: src/Navigation.tsx:571
 #: src/screens/Search/Shell.tsx:316
 #: src/screens/Search/Shell.tsx:453
@@ -7261,6 +7304,11 @@ msgstr ""
 msgid "Search for \"{searchText}\""
 msgstr ""
 
+#. placeholder {0}: row.query
+#: src/components/web/SearchAutocomplete/SearchRow.tsx:16
+msgid "Search for <0>{0}</0>"
+msgstr "Search for <0>{0}</0>"
+
 #: src/screens/StarterPack/Wizard/index.tsx:468
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
@@ -7276,6 +7324,10 @@ msgstr ""
 #: src/components/dms/components/UserSearchInput.tsx:42
 msgid "Search for people"
 msgstr "Search for people"
+
+#: src/components/web/SearchAutocomplete/HeroRow.tsx:16
+msgid "Search for posts and users on Bluesky"
+msgstr "Search for posts and users on Bluesky"
 
 #: src/screens/Search/Shell.tsx:338
 msgid "Search for posts, users, or feeds"
@@ -7304,6 +7356,10 @@ msgstr ""
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search my posts"
 msgstr ""
+
+#: src/components/web/SearchAutocomplete/model.ts:294
+msgid "Search options"
+msgstr "Search options"
 
 #: src/view/com/profile/ProfileMenu.tsx:241
 #: src/view/com/profile/ProfileMenu.tsx:243
@@ -8738,6 +8794,10 @@ msgstr ""
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:21
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr ""
+
+#: src/components/web/SearchAutocomplete/model.ts:138
+msgid "To user"
+msgstr "To user"
 
 #: src/components/dms/DateDivider.tsx:29
 msgid "Today"

@@ -1,3 +1,62 @@
+diff --git a/autocomplete/root/AutocompleteRoot.d.mts b/autocomplete/root/AutocompleteRoot.d.mts
+index 356d2952138041c49fa50375a5747a079a40dc40..b02dbba4c08e6f79143b3ea2ae2ba08e5ec18603 100644
+--- a/autocomplete/root/AutocompleteRoot.d.mts
++++ b/autocomplete/root/AutocompleteRoot.d.mts
+@@ -25,6 +25,8 @@ export declare function AutocompleteRoot<ItemValue>(props: Omit<AutocompleteRoot
+ export interface AutocompleteRootState extends AriaComboboxState {}
+ export interface AutocompleteRootActions {
+   unmount: () => void;
++  /** Highlights the list item at the given index (or clears it with `null`). */
++  setActiveIndex: (index: number | null) => void;
+ }
+ export type AutocompleteRootChangeEventReason = AriaCombobox.ChangeEventReason;
+ export type AutocompleteRootChangeEventDetails = AriaCombobox.ChangeEventDetails;
+diff --git a/combobox/root/AriaCombobox.d.mts b/combobox/root/AriaCombobox.d.mts
+index 4d021fc2379be9d70c2e517c82d8b8e0cc4b3778..0ca590dfee651031a91f8f5db70b9fdbf517e0a4 100644
+--- a/combobox/root/AriaCombobox.d.mts
++++ b/combobox/root/AriaCombobox.d.mts
+@@ -113,6 +113,13 @@ interface ComboboxRootProps<ItemValue> {
+    * Call this after any externally controlled closing animation finishes.
+    */
+   actionsRef?: React.RefObject<AriaCombobox.Actions | null> | undefined;
++  /**
++   * Only meaningful alongside `actionsRef`, which otherwise opts into manual unmounting (call
++   * `actions.unmount()` after your closing animation finishes). Set this to `true` to keep the popup
++   * unmounting automatically once its closing transition finishes while still using `actionsRef`.
++   * Without `actionsRef` the popup always unmounts automatically and this has no effect.
++   */
++  autoUnmount?: boolean | undefined;
+   /**
+    * Callback fired when an item is highlighted or unhighlighted.
+    * Receives the highlighted item value (or `undefined` if no item is highlighted) and event details with a `reason` property describing why the highlight changed.
+diff --git a/combobox/root/AriaCombobox.mjs b/combobox/root/AriaCombobox.mjs
+index e05fa9fcb6a4a3315def8cf7f48c11e273441f96..bd080834a1115a889908fb380df23de3da5e996e 100644
+--- a/combobox/root/AriaCombobox.mjs
++++ b/combobox/root/AriaCombobox.mjs
+@@ -625,7 +625,7 @@ export function AriaCombobox(props) {
+     return popupRef;
+   }, [inline, positionerElement]);
+   useOpenChangeComplete({
+-    enabled: !props.actionsRef,
++    enabled: !props.actionsRef || props.autoUnmount === true,
+     open,
+     ref: resolvedPopupRef,
+     onComplete() {
+@@ -635,8 +635,12 @@ export function AriaCombobox(props) {
+     }
+   });
+   React.useImperativeHandle(props.actionsRef, () => ({
+-    unmount: handleUnmount
+-  }), [handleUnmount]);
++    unmount: handleUnmount,
++    setActiveIndex: index => setIndices({
++      activeIndex: index,
++      type: 'none'
++    })
++  }), [handleUnmount, setIndices]);
+   useIsoLayoutEffect(function syncSelectedIndex() {
+     if (open || selectionMode === 'none') {
+       return;
 diff --git a/utils/InternalBackdrop.mjs b/utils/InternalBackdrop.mjs
 index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1558641ce 100644
 --- a/utils/InternalBackdrop.mjs

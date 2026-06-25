@@ -46,14 +46,32 @@ export type LanguagePrefs = {
 	primaryLanguage: string;
 };
 
-export type Account = {
-	searchTermHistory?: string[];
-	searchAccountHistory?: string[];
+/**
+ * One entry in the unified, recency-ordered search history. New entry kinds (feeds, starter packs, …) extend
+ * this union without splitting the stored list.
+ */
+export type SearchHistoryEntry = { did: string; kind: 'profile' } | { kind: 'query'; query: string };
 
+export type Account = {
 	lastSelectedHomeFeed?: string;
 
 	/** Recently selected GIFs in the GIF picker. Most recent first, capped at 20. */
 	recentGifs?: Gif[];
+
+	/**
+	 * @deprecated superseded by {@link Account.searchHistory}; still read by the legacy search screen until it
+	 *   is removed.
+	 */
+	searchAccountHistory?: string[];
+
+	/** Unified search history (queries and visited profiles), most recent first. */
+	searchHistory?: SearchHistoryEntry[];
+
+	/**
+	 * @deprecated superseded by {@link Account.searchHistory}; still read by the legacy search screen until it
+	 *   is removed.
+	 */
+	searchTermHistory?: string[];
 };
 
 export type Auth = {

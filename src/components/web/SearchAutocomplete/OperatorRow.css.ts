@@ -1,0 +1,5 @@
+import { style } from '@vanilla-extract/css';
+
+import * as shared from './shared.css';
+
+export const row = style([shared.row]);

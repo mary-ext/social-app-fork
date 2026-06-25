@@ -14,7 +14,7 @@ overrides:
   metro-source-map: 0.83.3
 
 patchedDependencies:
-  '@base-ui/react': c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00
+  '@base-ui/react': 5e1a53d17620466ec86d924f87c34acd336985dff55ea0c465442ad013fbcba0
   '@lingui/cli': e7273d643ca9d73752af9d830adff8248d7ac29219b192b9b34d4409407bd636
   '@react-navigation/native-stack': a4cdb79a0fb2df5d81643aa346e5aff8e334c20cd7062e63f426f3232bb0a571
   '@vanilla-extract/css': 7879825473edcd40270679a127c740fc1eb705c6d13f31bf607d9272b0be02e5
@@ -41,6 +41,9 @@ importers:
       '@atcute/bluesky-richtext-segmenter':
         specifier: ^3.0.0
         version: 3.0.0
+      '@atcute/bluesky-search-parser':
+        specifier: ^0.1.2
+        version: 0.1.2
       '@atcute/cbor':
         specifier: ^2.3.4
         version: 2.3.4(@atcute/cid@2.4.1)
@@ -82,7 +85,7 @@ importers:
         version: 2.0.0(@atcute/cid@2.4.1)(@atcute/lexicons@2.0.1)(typescript@6.0.3)
       '@base-ui/react':
         specifier: ^1.6.0
-        version: 1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 1.6.0(patch_hash=5e1a53d17620466ec86d924f87c34acd336985dff55ea0c465442ad013fbcba0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@braintree/sanitize-url':
         specifier: ^7.1.2
         version: 7.1.2
@@ -104,6 +107,9 @@ importers:
       '@mary/color-fns':
         specifier: jsr:^0.1.3
         version: '@jsr/mary__color-fns@0.1.3'
+      '@mary/date-fns':
+        specifier: jsr:^0.1.4
+        version: '@jsr/mary__date-fns@0.1.4'
       '@mary/exif-rm':
         specifier: jsr:^0.2.2
         version: '@jsr/mary__exif-rm@0.2.2'
@@ -112,7 +118,7 @@ importers:
         version: 0.2.1
       '@oomfware/lightbox':
         specifier: ^0.1.6
-        version: 0.1.6(@base-ui/react@1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 0.1.6(@base-ui/react@1.6.0(patch_hash=5e1a53d17620466ec86d924f87c34acd336985dff55ea0c465442ad013fbcba0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@react-navigation/native':
         specifier: ^7.3.0
         version: 7.3.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
@@ -319,6 +325,9 @@ packages:
 
   '@atcute/bluesky-richtext-segmenter@3.0.0':
     resolution: {integrity: sha512-NhZTUKtFpeBBbILwAcxj5u4RobIoHOmGw3CAaaEFNebKYSvmTecrXJ7XufHw5DFOUdr8SiKXQVRQxGAxulMNWg==}
+
+  '@atcute/bluesky-search-parser@0.1.2':
+    resolution: {integrity: sha512-JEIBRK99paOOp8pTeXC3OuR1Vdokr8H1jcaauMfAMxAH7Ty6L8qS02Yr3NnX/6d558SzF9i0Z5pipeMnErECxA==}
 
   '@atcute/bluesky@4.0.10':
     resolution: {integrity: sha512-NcGZ9m6G3+WL1IBLkT1Zty/Ph1iqdxgjYs44FbTrdm2TlLUMTzjc2WG1UNA//DyBVPJVNpJPpK7yKjU4ZLNGVA==}
@@ -1507,6 +1516,9 @@ packages:
 
   '@jsr/mary__color-fns@0.1.3':
     resolution: {integrity: sha512-bTuY9P/fNYQZrPubKzGIeH2NSGe+x5ZG50UnZ9860gR06D6DHHUw5OogzFXM1nrYfdTlR1qGNVH08kAiHK629A==, tarball: https://npm.jsr.io/~/11/@jsr/mary__color-fns/0.1.3.tgz}
+
+  '@jsr/mary__date-fns@0.1.4':
+    resolution: {integrity: sha512-CvHto7h6YJInW5MIBKAttcoc8d6gfavMPc4vsWID50fsNYpKp6sQb1ZPYmwN4G5O5UR3uG9+0TyKz4hSRu1gFA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__date-fns/0.1.4.tgz}
 
   '@jsr/mary__exif-rm@0.2.2':
     resolution: {integrity: sha512-+ZpLaC+1CyqWhH608Sqd6/yTG0pOlokn2tCXha7s1SMQ+GLKo4Nn/PskTeeP9Pt+6gNYSu6ednoSlRvXb2ZGxg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__exif-rm/0.2.2.tgz}
@@ -5758,6 +5770,8 @@ snapshots:
 
   '@atcute/bluesky-richtext-segmenter@3.0.0': {}
 
+  '@atcute/bluesky-search-parser@0.1.2': {}
+
   '@atcute/bluesky@4.0.10(@atcute/lexicons@2.0.1)':
     dependencies:
       '@atcute/atproto': 4.0.2(@atcute/lexicons@2.0.1)
@@ -6202,7 +6216,7 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@base-ui/react@1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@base-ui/react@1.6.0(patch_hash=5e1a53d17620466ec86d924f87c34acd336985dff55ea0c465442ad013fbcba0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@base-ui/utils': 0.3.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -6799,6 +6813,8 @@ snapshots:
 
   '@jsr/mary__color-fns@0.1.3': {}
 
+  '@jsr/mary__date-fns@0.1.4': {}
+
   '@jsr/mary__exif-rm@0.2.2': {}
 
   '@lingui/babel-plugin-extract-messages@6.4.0':
@@ -6909,13 +6925,13 @@ snapshots:
 
   '@oomfware/lang-detect@0.2.1': {}
 
-  '@oomfware/lightbox@0.1.6(@base-ui/react@1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@oomfware/lightbox@0.1.6(@base-ui/react@1.6.0(patch_hash=5e1a53d17620466ec86d924f87c34acd336985dff55ea0c465442ad013fbcba0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@mary-ext/simple-event-emitter': 1.0.2
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     optionalDependencies:
-      '@base-ui/react': 1.6.0(patch_hash=c8ff15d3494bea18e285cb1a58d711b2146c0a938623d3fee07b9656bf64fb00)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@base-ui/react': 1.6.0(patch_hash=5e1a53d17620466ec86d924f87c34acd336985dff55ea0c465442ad013fbcba0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
   '@oxfmt/binding-android-arm-eabi@0.55.0':
     optional: true
