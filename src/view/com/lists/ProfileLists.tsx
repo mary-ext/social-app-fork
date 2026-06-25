@@ -24,8 +24,6 @@ import { List } from '#/view/com/util/List';
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import * as ListCard from '#/components/ListCard';
 import { ListFooter } from '#/components/Lists';
@@ -56,7 +54,6 @@ interface ProfileListsProps {
 
 export function ProfileLists({ did, enabled, style, testID }: ProfileListsProps) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const [isPTRing, setIsPTRing] = useState(false);
 	const { height } = useWindowDimensions();
 	const opts = useMemo(() => ({ enabled }), [enabled]);
@@ -154,15 +151,11 @@ export function ProfileLists({ did, enabled, style, testID }: ProfileListsProps)
 				);
 			}
 			if (preferences) {
-				return (
-					<View style={[a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
-						<ListCard.Default view={item} />
-					</View>
-				);
+				return <ListCard.Default view={item} />;
 			}
 			return null;
 		},
-		[l, t, error, refetch, onPressRetryLoadMore, preferences, navigation, isSelf],
+		[l, error, refetch, onPressRetryLoadMore, preferences, navigation, isSelf],
 	);
 
 	const ProfileListsFooter = useCallback(() => {

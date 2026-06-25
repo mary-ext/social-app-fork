@@ -5,8 +5,6 @@ import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 
 import { List } from '#/view/com/util/List';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import * as FeedCard from '#/components/FeedCard';
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
@@ -19,14 +17,9 @@ interface FeedsListProps {
 
 export function FeedsList({ feeds }: FeedsListProps) {
 	const bottomBarOffset = useBottomBarOffset(20);
-	const t = useTheme();
 
 	const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) => {
-		return (
-			<View style={[a.p_lg, a.border_t, t.atoms.border_contrast_low]}>
-				<FeedCard.Default view={item} />
-			</View>
-		);
+		return <FeedCard.Default view={item} />;
 	};
 
 	return (

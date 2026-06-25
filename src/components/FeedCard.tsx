@@ -1,51 +1,52 @@
-import { useCallback, useEffect, useMemo } from 'react';
-import { type GestureResponderEvent, View } from 'react-native';
-import type { AnyProfileView, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
+import { type ReactNode, useEffect, useMemo } from 'react';
+import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { precacheFeedFromGeneratorView } from '#/state/queries/feed';
-import {
-	useAddSavedFeedsMutation,
-	usePreferencesQuery,
-	useRemoveFeedMutation,
-} from '#/state/queries/preferences';
+import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
+import { BlockLink } from '#/components/BlockLink';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
-import { Link as InternalLink, type LinkProps } from '#/components/Link';
-import { Loader } from '#/components/Loader';
-import * as Prompt from '#/components/Prompt';
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { RichText } from '#/components/RichText';
-import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Prompt from '#/components/web/Prompt';
+import * as Skeleton from '#/components/web/Skeleton';
 
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from './icons/Trash';
+import * as css from './FeedCard.css';
 
 type Props = {
-	view: AppBskyFeedDefs.GeneratorView;
 	onPress?: () => void;
+	view: AppBskyFeedDefs.GeneratorView;
 };
 
-export function Default(props: Props) {
-	const { view } = props;
+export function Default({
+	className,
+	onPress,
+	topBorder,
+	view,
+}: Props & {
+	className?: string;
+	topBorder?: boolean;
+}) {
 	return (
-		<Link {...props}>
+		<Link className={clsx(css.defaultRow({ topBorder }), className)} onPress={onPress} view={view}>
 			<Outer>
 				<Header>
 					<Avatar src={view.avatar} />
-					<TitleAndByline title={view.displayName} creator={view.creator} />
-					<SaveButton view={view} pin />
+					<TitleAndByline creator={view.creator} title={view.displayName} />
+					<SaveButton pin view={view} />
 				</Header>
+
 				<Description description={view.description} />
 				<Likes count={view.likeCount || 0} />
 			</Outer>
@@ -53,215 +54,141 @@ export function Default(props: Props) {
 	);
 }
 
-export function Link({ view, children, ...props }: Props & Omit<LinkProps, 'to' | 'label'>) {
+export function Link({
+	children,
+	className,
+	onPress,
+	view,
+}: Props & {
+	children: ReactNode;
+	className?: string;
+}) {
 	const queryClient = useQueryClient();
 
-	const href = useMemo(() => {
-		return createProfileFeedHref({ feed: view });
-	}, [view]);
+	const href = useMemo(() => createProfileFeedHref({ feed: view }), [view]);
 
 	useEffect(() => {
 		precacheFeedFromGeneratorView(queryClient, view);
-	}, [view, queryClient]);
+	}, [queryClient, view]);
 
 	return (
-		<InternalLink label={view.displayName} to={href} style={[a.flex_col]} {...props}>
-			{children}
-		</InternalLink>
+		<BlockLink
+			className={clsx(css.link, className)}
+			label={view.displayName}
+			onBeforePress={onPress}
+			to={href}
+		>
+			<div>{children}</div>
+		</BlockLink>
 	);
 }
 
-export function Outer({ children }: { children: React.ReactNode }) {
-	return <View style={[a.w_full, a.gap_sm]}>{children}</View>;
+export function Outer({ children, className }: { children: ReactNode; className?: string }) {
+	return <div className={clsx(css.outer, className)}>{children}</div>;
 }
 
-export function Header({ children }: { children: React.ReactNode }) {
-	return <View style={[a.flex_row, a.align_center, a.gap_sm]}>{children}</View>;
+export function Header({ children, className }: { children: ReactNode; className?: string }) {
+	return <div className={clsx(css.header, className)}>{children}</div>;
 }
 
-export type AvatarProps = { src: string | undefined; size?: number };
+export type AvatarProps = { size?: number; src: string | undefined };
 
-export function Avatar({ src, size = 40 }: AvatarProps) {
-	return <UserAvatar type="algo" size={size} avatar={src} />;
+export function Avatar({ size = 40, src }: AvatarProps) {
+	return <UserAvatar avatar={src} size={size} type="algo" />;
 }
 
 export function AvatarPlaceholder({ size = 40 }: Omit<AvatarProps, 'src'>) {
-	const t = useTheme();
-	return (
-		<View
-			style={[
-				t.atoms.bg_contrast_25,
-				{
-					width: size,
-					height: size,
-					borderRadius: 8,
-				},
-			]}
-		/>
-	);
+	return <Skeleton.Square size={size} />;
 }
 
-export function TitleAndByline({ title, creator }: { title: string; creator?: AnyProfileView }) {
-	const t = useTheme();
-
+export function TitleAndByline({ creator, title }: { creator?: AnyProfileView; title: string }) {
 	return (
-		<View style={[a.flex_1]}>
-			<Text emoji style={[a.text_md, a.font_semi_bold, a.leading_snug]} numberOfLines={1}>
+		<div className={css.titleColumn}>
+			<Text numberOfLines={1} weight="medium">
 				{title}
 			</Text>
 			{creator && (
-				<Text style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
+				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 					<Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
 				</Text>
 			)}
-		</View>
+		</div>
 	);
 }
 
 export function TitleAndBylinePlaceholder({ creator }: { creator?: boolean }) {
-	const t = useTheme();
-
 	return (
-		<View style={[a.flex_1, a.gap_xs]}>
-			<View
-				style={[
-					a.rounded_xs,
-					t.atoms.bg_contrast_50,
-					{
-						width: '60%',
-						height: 14,
-					},
-				]}
-			/>
-
-			{creator && (
-				<View
-					style={[
-						a.rounded_xs,
-						t.atoms.bg_contrast_25,
-						{
-							width: '40%',
-							height: 10,
-						},
-					]}
-				/>
-			)}
-		</View>
+		<Skeleton.Col>
+			<Skeleton.Text size="md" width="60%" />
+			{creator && <Skeleton.Text blend size="md" width="40%" />}
+		</Skeleton.Col>
 	);
 }
 
 export function Description({ description }: { description?: string }) {
-	if (!description) return null;
+	if (!description) {
+		return null;
+	}
 	return <RichText disableLinks value={description} />;
 }
 
 export function Likes({ count }: { count: number }) {
-	const t = useTheme();
 	return (
-		<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.font_semi_bold]}>
+		<Text color="textContrastMedium" size="sm" weight="semiBold">
 			<Trans>
-				Liked by <Plural value={count || 0} one="# user" other="# users" />
+				Liked by <Plural one="# user" other="# users" value={count || 0} />
 			</Trans>
 		</Text>
 	);
 }
 
 export function SaveButton({
-	view,
 	pin,
+	view,
 	...props
 }: {
-	view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView;
 	pin?: boolean;
 	text?: boolean;
+	view: AppBskyFeedDefs.GeneratorView;
 } & Partial<ButtonProps>) {
 	const { hasSession } = useSession();
-	if (!hasSession) return null;
-	return <SaveButtonInner view={view} pin={pin} {...props} />;
+	if (!hasSession) {
+		return null;
+	}
+	return <SaveButtonInner pin={pin} view={view} {...props} />;
 }
 
 function SaveButtonInner({
-	view,
 	pin,
 	text = true,
+	view,
 	...buttonProps
 }: {
-	view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView;
 	pin?: boolean;
 	text?: boolean;
+	view: AppBskyFeedDefs.GeneratorView;
 } & Partial<ButtonProps>) {
 	const { t: l } = useLingui();
-	const { data: preferences } = usePreferencesQuery();
-	const { isPending: isAddSavedFeedPending, mutateAsync: saveFeeds } = useAddSavedFeedsMutation();
-	const { isPending: isRemovePending, mutateAsync: removeFeed } = useRemoveFeedMutation();
-
-	const uri = view.uri;
-	const type = view.uri.includes('app.bsky.feed.generator') ? 'feed' : 'list';
-
-	const savedFeedConfig = useMemo(() => {
-		return preferences?.savedFeeds?.find((feed) => feed.value === uri);
-	}, [preferences?.savedFeeds, uri]);
-	const removePromptControl = Prompt.usePromptControl();
-	const isPending = isAddSavedFeedPending || isRemovePending;
-
-	const toggleSave = useCallback(
-		async (e: GestureResponderEvent) => {
-			e.preventDefault();
-			e.stopPropagation();
-
-			try {
-				if (savedFeedConfig) {
-					await removeFeed(savedFeedConfig);
-				} else {
-					await saveFeeds([
-						{
-							type,
-							value: uri,
-							pinned: !!pin,
-						},
-					]);
-				}
-				Toast.show(l({ message: 'Feeds updated!', context: 'toast' }));
-			} catch (err) {
-				logger.error(err instanceof Error ? err : String(err), {
-					message: `FeedCard: failed to update feeds`,
-					pin,
-				});
-				Toast.show(l`Failed to update feeds`, {
-					type: 'error',
-				});
-			}
-		},
-		[l, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
-	);
-
-	const onPromptRemoveFeed = useCallback(
-		(e: GestureResponderEvent) => {
-			e.preventDefault();
-			e.stopPropagation();
-
-			removePromptControl.open();
-		},
-		[removePromptControl],
-	);
+	const removePromptHandle = Prompt.usePromptHandle();
+	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ pin, type: 'feed', uri: view.uri });
 
 	return (
 		<>
 			<Button
+				color={isSaved ? 'secondary' : 'primary'}
 				disabled={isPending}
 				label={l`Add this feed to your feeds`}
+				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
 				size="small"
 				variant="solid"
-				color={savedFeedConfig ? 'secondary' : 'primary'}
-				onPress={(e: GestureResponderEvent) => (savedFeedConfig ? onPromptRemoveFeed(e) : void toggleSave(e))}
 				{...buttonProps}
 			>
-				{savedFeedConfig ? (
+				{isSaved ? (
 					<>
 						{isPending ? (
-							<ButtonIcon size="md" icon={Loader} />
+							<Spinner color="currentColor" label={null} size="sm" />
 						) : (
-							!text && <ButtonIcon size="md" icon={TrashIcon} />
+							!text && <ButtonIcon icon={TrashIcon} size="md" />
 						)}
 						{text && (
 							<ButtonText>
@@ -271,7 +198,11 @@ function SaveButtonInner({
 					</>
 				) : (
 					<>
-						<ButtonIcon size="md" icon={isPending ? Loader : PinIcon} />
+						{isPending ? (
+							<Spinner color="currentColor" label={null} size="sm" />
+						) : (
+							<ButtonIcon icon={PinIcon} size="md" />
+						)}
 						{text && (
 							<ButtonText>
 								<Trans>Pin feed</Trans>
@@ -282,12 +213,12 @@ function SaveButtonInner({
 			</Button>
 
 			<Prompt.Basic
-				control={removePromptControl}
-				title={l`Remove from your feeds?`}
-				description={l`Are you sure you want to remove this from your feeds?`}
-				onConfirm={(e: GestureResponderEvent) => void toggleSave(e)}
-				confirmButtonCta={l`Remove`}
 				confirmButtonColor="negative"
+				confirmButtonCta={l`Remove`}
+				description={l`Are you sure you want to remove this from your feeds?`}
+				handle={removePromptHandle}
+				onConfirm={() => void toggleSave()}
+				title={l`Remove from your feeds?`}
 			/>
 		</>
 	);

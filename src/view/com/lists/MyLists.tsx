@@ -151,13 +151,7 @@ export function MyLists({
 					</View>
 				);
 			}
-			return renderItem ? (
-				renderItem(item, index)
-			) : (
-				<View style={[index !== 0 && a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
-					<ListCard.Default view={item} />
-				</View>
-			);
+			return renderItem ? renderItem(item, index) : <ListCard.Default topBorder={index !== 0} view={item} />;
 		},
 		[t, renderItem, error, onRefresh, emptyText],
 	);

@@ -1,4 +1,6 @@
+import { useCallback, useMemo } from 'react';
 import type { LabelPreference } from '@atcute/bluesky-moderation';
+import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
@@ -33,6 +35,10 @@ import { createQueryKey } from '#/state/queries/util';
 import { useClients, useSession } from '#/state/session';
 import { saveLabelers } from '#/state/session/agent-config';
 import { setSubscribedLabelers } from '#/state/session/labelers';
+
+import { logger } from '#/logger';
+
+import * as Toast from '#/components/Toast';
 
 export * from '#/state/queries/preferences/const';
 export * from '#/state/queries/preferences/moderation';
@@ -203,6 +209,59 @@ export function useRemoveFeedMutation() {
 			});
 		},
 	});
+}
+
+/**
+ * Tracks whether a feed or list is in the user's saved feeds and toggles it, surfacing a toast on either
+ * outcome.
+ *
+ * @param pin whether a freshly saved feed should also be pinned
+ * @param type the saved-feed kind, `feed` for a generator or `list` for a list
+ * @param uri the feed generator or list URI, matched against the saved-feeds config
+ * @returns `isSaved` current saved state, `isPending` while a mutation is in flight, and `toggleSave` to add
+ *   or remove it
+ */
+export function useToggleSavedFeed({
+	pin,
+	type,
+	uri,
+}: {
+	pin?: boolean;
+	type: 'feed' | 'list';
+	uri: string;
+}) {
+	const { t: l } = useLingui();
+	const { data: preferences } = usePreferencesQuery();
+	const { isPending: isAddPending, mutateAsync: saveFeeds } = useAddSavedFeedsMutation();
+	const { isPending: isRemovePending, mutateAsync: removeFeed } = useRemoveFeedMutation();
+
+	const savedFeedConfig = useMemo(
+		() => preferences?.savedFeeds?.find((feed) => feed.value === uri),
+		[preferences?.savedFeeds, uri],
+	);
+
+	const toggleSave = useCallback(async () => {
+		try {
+			if (savedFeedConfig) {
+				await removeFeed(savedFeedConfig);
+			} else {
+				await saveFeeds([{ pinned: !!pin, type, value: uri }]);
+			}
+			Toast.show(l({ message: 'Feeds updated!', context: 'toast' }));
+		} catch (err) {
+			logger.error(err instanceof Error ? err : String(err), {
+				message: 'failed to update saved feeds',
+				pin,
+			});
+			Toast.show(l`Failed to update feeds`, { type: 'error' });
+		}
+	}, [l, pin, removeFeed, saveFeeds, savedFeedConfig, type, uri]);
+
+	return {
+		isPending: isAddPending || isRemovePending,
+		isSaved: !!savedFeedConfig,
+		toggleSave,
+	};
 }
 
 export function useReplaceForYouWithDiscoverFeedMutation() {

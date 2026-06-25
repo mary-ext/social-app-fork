@@ -24,8 +24,6 @@ import { List } from '#/view/com/util/List';
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import * as FeedCard from '#/components/FeedCard';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { ListFooter } from '#/components/Lists';
@@ -56,7 +54,6 @@ interface ProfileFeedgensProps {
 
 export function ProfileFeedgens({ did, enabled, style, testID }: ProfileFeedgensProps) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const [isPTRing, setIsPTRing] = useState(false);
 	const { height } = useWindowDimensions();
 	const opts = useMemo(() => ({ enabled }), [enabled]);
@@ -154,15 +151,11 @@ export function ProfileFeedgens({ did, enabled, style, testID }: ProfileFeedgens
 				);
 			}
 			if (preferences) {
-				return (
-					<View style={[a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
-						<FeedCard.Default view={item} />
-					</View>
-				);
+				return <FeedCard.Default view={item} />;
 			}
 			return null;
 		},
-		[l, t, error, refetch, onPressRetryLoadMore, preferences, navigation, isSelf],
+		[l, error, refetch, onPressRetryLoadMore, preferences, navigation, isSelf],
 	);
 
 	const ProfileFeedgensFooter = useCallback(() => {

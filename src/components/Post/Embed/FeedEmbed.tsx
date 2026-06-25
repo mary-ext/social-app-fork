@@ -3,14 +3,12 @@ import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import * as FeedCard from '#/components/FeedCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
 
 import type { EmbedType } from '#/types/embed';
 
-import * as css from './index.css';
+import * as css from './FeedEmbed.css';
 import type { CommonProps } from './types';
 
 export function FeedEmbed({
@@ -18,13 +16,12 @@ export function FeedEmbed({
 }: CommonProps & {
 	embed: EmbedType<'feed'>;
 }) {
-	const t = useTheme();
 	const view = embed.view;
 	return (
-		<FeedCard.Link view={view} style={[a.border, t.atoms.border_contrast_low, a.p_sm, a.rounded_md]}>
+		<FeedCard.Link className={css.card} view={view}>
 			<FeedCard.Outer>
 				<FeedCard.Header>
-					<FeedCard.Avatar src={view.avatar} size={48} />
+					<FeedCard.Avatar src={view.avatar} size={40} />
 					<FeedCard.TitleAndByline title={view.displayName} creator={view.creator} />
 				</FeedCard.Header>
 			</FeedCard.Outer>
@@ -44,7 +41,7 @@ export function ModeratedFeedEmbed({
 	return (
 		<ContentHider
 			modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
-			childContainerClassName={css.revealedPadXs}
+			childContainerClassName={css.revealedPad}
 		>
 			<FeedEmbed embed={embed} />
 		</ContentHider>

@@ -31,7 +31,6 @@ import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 import { atoms as a, useTheme } from '#/alf';
 
 import { ButtonIcon } from '#/components/Button';
-import { Divider } from '#/components/Divider';
 import * as FeedCard from '#/components/FeedCard';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { IconCircle } from '#/components/IconCircle';
@@ -46,6 +45,8 @@ import { Link } from '#/components/Link';
 import * as ListCard from '#/components/ListCard';
 
 import { colors } from '#/styles/colors';
+
+import * as css from './Feeds.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>;
 
@@ -354,6 +355,8 @@ export function FeedsScreen(_props: Props) {
 	]);
 
 	const searchBarIndex = items.findIndex((item) => item.type === 'popularFeedsHeader');
+	// the search header sits directly above the first popular feed, so it doesn't need its own top divider
+	const firstPopularFeedIndex = items.findIndex((item) => item.type === 'popularFeed');
 
 	const onChangeSearchFocus = useCallback(
 		(focus: boolean) => {
@@ -373,7 +376,7 @@ export function FeedsScreen(_props: Props) {
 	);
 
 	const renderItem = useCallback(
-		({ item }: { item: FlatlistSlice }) => {
+		({ index, item }: { index: number; item: FlatlistSlice }) => {
 			if (item.type === 'error') {
 				return <ErrorMessage message={item.error} />;
 			} else if (item.type === 'popularFeedsLoadingMore') {
@@ -421,12 +424,7 @@ export function FeedsScreen(_props: Props) {
 			} else if (item.type === 'popularFeedsLoading') {
 				return <FeedFeedLoadingPlaceholder />;
 			} else if (item.type === 'popularFeed') {
-				return (
-					<View style={[a.px_lg, a.pt_lg, a.gap_lg]}>
-						<FeedCard.Default view={item.feed} />
-						<Divider />
-					</View>
-				);
+				return <FeedCard.Default topBorder={index !== firstPopularFeedIndex} view={item.feed} />;
 			} else if (item.type === 'popularFeedsNoResults') {
 				return (
 					<View
@@ -459,6 +457,7 @@ export function FeedsScreen(_props: Props) {
 		},
 		[
 			l,
+			firstPopularFeedIndex,
 			pal.border,
 			pal.textLight,
 			query,
@@ -553,38 +552,23 @@ function FollowingFeed() {
 }
 
 function SavedFeed({ savedFeed }: { savedFeed: SavedFeedItem & { type: 'feed' | 'list' } }) {
-	const t = useTheme();
-
-	const commonStyle = [a.w_full, a.flex_1, a.px_lg, a.py_md, a.border_b, t.atoms.border_contrast_low];
-
 	return savedFeed.type === 'feed' ? (
-		<FeedCard.Link testID={`saved-feed-${savedFeed.view.displayName}`} {...savedFeed}>
-			{({ hovered, pressed }) => (
-				<View style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
-					<FeedCard.Header>
-						<FeedCard.Avatar src={savedFeed.view.avatar} size={28} />
-						<FeedCard.TitleAndByline title={savedFeed.view.displayName} />
+		<FeedCard.Link className={css.savedFeedRow} view={savedFeed.view}>
+			<FeedCard.Header>
+				<FeedCard.Avatar src={savedFeed.view.avatar} size={28} />
+				<FeedCard.TitleAndByline title={savedFeed.view.displayName} />
 
-						<ChevronRight size="sm" fill={colors.textContrastLow} />
-					</FeedCard.Header>
-				</View>
-			)}
+				<ChevronRight size="sm" fill={colors.textContrastLow} />
+			</FeedCard.Header>
 		</FeedCard.Link>
 	) : (
-		<ListCard.Link
-			testID={`saved-feed-${savedFeed.view.name}`}
-			{...(savedFeed as unknown as React.ComponentProps<typeof ListCard.Link>)}
-		>
-			{({ hovered, pressed }) => (
-				<View style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
-					<ListCard.Header>
-						<ListCard.Avatar src={savedFeed.view.avatar} size={28} />
-						<ListCard.TitleAndByline title={savedFeed.view.name} />
+		<ListCard.Link className={css.savedFeedRow} view={savedFeed.view}>
+			<ListCard.Header>
+				<ListCard.Avatar src={savedFeed.view.avatar} size={28} />
+				<ListCard.TitleAndByline title={savedFeed.view.name} />
 
-						<ChevronRight size="sm" fill={colors.textContrastLow} />
-					</ListCard.Header>
-				</View>
-			)}
+				<ChevronRight size="sm" fill={colors.textContrastLow} />
+			</ListCard.Header>
 		</ListCard.Link>
 	);
 }

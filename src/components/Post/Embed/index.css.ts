@@ -66,11 +66,6 @@ export const quoteMetaPad = style({
 	paddingBottom: 4,
 });
 
-// ModeratedFeedEmbed / ModeratedListEmbed: lift the revealed card off the blur toggle.
-export const revealedPadXs = style({
-	paddingTop: 4,
-});
-
 // QuoteEmbed card chrome — always applied; carries the border + radius.
 export const quoteCard = style({
 	border: `1px solid ${vars.palette.contrast_100}`,

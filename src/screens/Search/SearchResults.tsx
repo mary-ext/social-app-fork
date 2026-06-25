@@ -394,8 +394,6 @@ function SearchScreenProfileButton({ position, profile }: { position: number; pr
 }
 
 let SearchScreenFeedsResults = ({ query, active }: { query: string; active: boolean }): React.ReactNode => {
-	const t = useTheme();
-
 	const { data: results, isFetched } = usePopularFeedsSearch({
 		query,
 		enabled: active,
@@ -408,9 +406,7 @@ let SearchScreenFeedsResults = ({ query, active }: { query: string; active: bool
 					data={results}
 					renderItem={({ item, index }: { item: AtcAppBskyFeedDefs.GeneratorView; index: number }) => (
 						// the sticky tab bar already draws the divider above the first row
-						<View style={[index !== 0 && [a.border_t, t.atoms.border_contrast_low], a.px_lg, a.py_lg]}>
-							<SearchFeedCard view={item} />
-						</View>
+						<FeedCard.Default topBorder={index !== 0} view={item} />
 					)}
 					keyExtractor={(item: AtcAppBskyFeedDefs.GeneratorView) => item.uri}
 					desktopFixedHeight
@@ -425,7 +421,3 @@ let SearchScreenFeedsResults = ({ query, active }: { query: string; active: bool
 	);
 };
 SearchScreenFeedsResults = memo(SearchScreenFeedsResults);
-
-function SearchFeedCard({ view }: { view: AtcAppBskyFeedDefs.GeneratorView }) {
-	return <FeedCard.Default view={view} />;
-}

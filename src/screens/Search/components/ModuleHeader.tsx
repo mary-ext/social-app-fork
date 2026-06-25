@@ -142,7 +142,7 @@ export function PinButton({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 				size="large"
 				color="secondary"
 				variant="ghost"
-				shape="square"
+				shape="round"
 				text={false}
 			/>
 		</View>

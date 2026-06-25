@@ -754,16 +754,14 @@ export function Explore({
 				}
 				case 'feed': {
 					return (
-						<View style={[a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
-							<FeedCard.Default
-								view={item.feed}
-								onPress={() => {
-									if (!useFullExperience) {
-										return;
-									}
-								}}
-							/>
-						</View>
+						<FeedCard.Default
+							view={item.feed}
+							onPress={() => {
+								if (!useFullExperience) {
+									return;
+								}
+							}}
+						/>
 					);
 				}
 				case 'starterPack': {

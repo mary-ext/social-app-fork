@@ -1100,7 +1100,8 @@ msgstr ""
 msgid "Add the default feed of only people you follow"
 msgstr ""
 
-#: src/components/FeedCard.tsx:252
+#: src/components/FeedCard.tsx:180
+#: src/components/ListCard.tsx:198
 msgid "Add this feed to your feeds"
 msgstr ""
 
@@ -1218,7 +1219,7 @@ msgstr ""
 msgid "All languages will be shown in your feeds"
 msgstr "All languages will be shown in your feeds"
 
-#: src/view/screens/Feeds.tsx:615
+#: src/view/screens/Feeds.tsx:596
 msgid "All the feeds you've saved, right in one place."
 msgstr ""
 
@@ -1512,7 +1513,8 @@ msgstr ""
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participants."
 msgstr "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participants."
 
-#: src/components/FeedCard.tsx:287
+#: src/components/FeedCard.tsx:218
+#: src/components/ListCard.tsx:236
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
@@ -1736,8 +1738,8 @@ msgstr ""
 msgid "Breaking site rules"
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:145
-#: src/view/com/feeds/ProfileFeedgens.tsx:146
+#: src/view/com/feeds/ProfileFeedgens.tsx:142
+#: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "Browse custom feeds"
 msgstr ""
 
@@ -1784,7 +1786,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
 #: src/screens/Moderation/index.tsx:288
 #: src/screens/Search/components/StarterPackCard.tsx:91
-#: src/screens/Search/Explore.tsx:848
+#: src/screens/Search/Explore.tsx:846
 msgid "By {0}"
 msgstr ""
 
@@ -2023,7 +2025,7 @@ msgstr ""
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
 
-#: src/view/screens/Feeds.tsx:633
+#: src/view/screens/Feeds.tsx:614
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
@@ -2405,8 +2407,8 @@ msgstr "Couldn’t load GIFs"
 msgid "Create"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:145
-#: src/view/com/lists/ProfileLists.tsx:146
+#: src/view/com/lists/ProfileLists.tsx:142
+#: src/view/com/lists/ProfileLists.tsx:143
 msgid "Create a list"
 msgstr ""
 
@@ -2715,7 +2717,7 @@ msgstr ""
 msgid "Discover new feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:630
+#: src/view/screens/Feeds.tsx:611
 msgid "Discover New Feeds"
 msgstr ""
 
@@ -2904,7 +2906,7 @@ msgid "Edit moderation list"
 msgstr ""
 
 #: src/Navigation.tsx:630
-#: src/view/screens/Feeds.tsx:486
+#: src/view/screens/Feeds.tsx:482
 msgid "Edit My Feeds"
 msgstr ""
 
@@ -3415,7 +3417,7 @@ msgstr "Failed to unlock group chat"
 msgid "Failed to unpin list"
 msgstr ""
 
-#: src/components/FeedCard.tsx:230
+#: src/state/queries/preferences/index.ts:256
 msgid "Failed to update feeds"
 msgstr ""
 
@@ -3448,7 +3450,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
-#: src/components/FeedCard.tsx:114
+#: src/components/FeedCard.tsx:112
 #: src/state/queries/feed.ts:120
 #: src/view/com/feeds/FeedSourceCard.tsx:117
 msgid "Feed by {0}"
@@ -3488,7 +3490,7 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:96
 #: src/screens/Search/SearchResults.tsx:71
 #: src/screens/StarterPack/StarterPackScreen.tsx:173
-#: src/view/screens/Feeds.tsx:479
+#: src/view/screens/Feeds.tsx:475
 #: src/view/screens/Profile.tsx:343
 #: src/view/shell/desktop/LeftNav.tsx:594
 #: src/view/shell/Drawer.tsx:172
@@ -3500,8 +3502,8 @@ msgstr ""
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0>See this guide</0> for more information."
 msgstr ""
 
-#: src/components/FeedCard.tsx:224
 #: src/screens/SavedFeeds.tsx:76
+#: src/state/queries/preferences/index.ts:250
 msgctxt "toast"
 msgid "Feeds updated!"
 msgstr ""
@@ -3671,7 +3673,7 @@ msgid "Following"
 msgstr ""
 
 #: src/screens/SavedFeeds.tsx:386
-#: src/view/screens/Feeds.tsx:549
+#: src/view/screens/Feeds.tsx:545
 msgctxt "feed-name"
 msgid "Following"
 msgstr ""
@@ -4061,7 +4063,7 @@ msgstr ""
 msgid "Here's what happens if you do:"
 msgstr "Here's what happens if you do:"
 
-#: src/components/ListCard.tsx:116
+#: src/components/ListCard.tsx:136
 msgid "Hidden list"
 msgstr ""
 
@@ -4614,7 +4616,7 @@ msgstr ""
 
 #. placeholder {0}: count || 0
 #. placeholder {0}: feed.likeCount || 0
-#: src/components/FeedCard.tsx:162
+#: src/components/FeedCard.tsx:138
 #: src/view/com/feeds/FeedSourceCard.tsx:126
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
@@ -4664,7 +4666,7 @@ msgstr ""
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
-#: src/components/ListCard.tsx:129
+#: src/components/ListCard.tsx:149
 #: src/view/com/feeds/FeedSourceCard.tsx:119
 msgid "List by {0}"
 msgstr ""
@@ -5073,7 +5075,7 @@ msgid "Moderation list"
 msgstr "Moderation list"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#: src/components/ListCard.tsx:128
+#: src/components/ListCard.tsx:148
 msgid "Moderation list by {0}"
 msgstr ""
 
@@ -5280,7 +5282,7 @@ msgstr "Mutual group chats"
 msgid "My favorite feeds and people - join me!"
 msgstr "My favorite feeds and people - join me!"
 
-#: src/view/screens/Feeds.tsx:612
+#: src/view/screens/Feeds.tsx:593
 msgid "My Feeds"
 msgstr ""
 
@@ -5381,7 +5383,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:152
 #: src/screens/ProfileList/index.tsx:207
 #: src/screens/ProfileList/index.tsx:230
-#: src/view/screens/Feeds.tsx:517
+#: src/view/screens/Feeds.tsx:513
 #: src/view/screens/Notifications.tsx:136
 #: src/view/screens/Profile.tsx:413
 msgid "New post"
@@ -5437,7 +5439,7 @@ msgstr ""
 msgid "Next month"
 msgstr "Next month"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:140
+#: src/view/com/feeds/ProfileFeedgens.tsx:137
 msgid "No custom feeds yet"
 msgstr ""
 
@@ -5477,7 +5479,7 @@ msgstr "No GIFs to show right now. Try again in a moment."
 msgid "No likes yet"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:140
+#: src/view/com/lists/ProfileLists.tsx:137
 msgid "No lists"
 msgstr ""
 
@@ -5571,7 +5573,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:440
+#: src/view/screens/Feeds.tsx:436
 msgid "No results found for \"{query}\""
 msgstr ""
 
@@ -6103,7 +6105,8 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
-#: src/components/FeedCard.tsx:277
+#: src/components/FeedCard.tsx:208
+#: src/components/ListCard.tsx:226
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:402
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:408
 #: src/screens/SavedFeeds.tsx:342
@@ -6580,7 +6583,8 @@ msgstr "Reload to update"
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:284
 #: src/components/dialogs/StarterPackDialog.tsx:303
 #: src/components/dialogs/StarterPackDialog.tsx:311
-#: src/components/FeedCard.tsx:289
+#: src/components/FeedCard.tsx:217
+#: src/components/ListCard.tsx:235
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:89
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:97
 #: src/screens/Bookmarks/index.tsx:230
@@ -6685,7 +6689,8 @@ msgstr ""
 msgid "Remove from saved posts"
 msgstr ""
 
-#: src/components/FeedCard.tsx:286
+#: src/components/FeedCard.tsx:221
+#: src/components/ListCard.tsx:239
 msgid "Remove from your feeds?"
 msgstr ""
 
@@ -7259,7 +7264,7 @@ msgstr ""
 msgid "Search emojis"
 msgstr "Search emojis"
 
-#: src/view/screens/Feeds.tsx:410
+#: src/view/screens/Feeds.tsx:411
 msgid "Search feeds"
 msgstr ""
 
@@ -8326,7 +8331,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:888
+#: src/screens/Search/Explore.tsx:886
 #: src/view/com/posts/PostFeed.tsx:478
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
@@ -8335,8 +8340,8 @@ msgstr ""
 msgid "There was an issue fetching the list. Tap here to try again."
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:129
-#: src/view/com/lists/ProfileLists.tsx:129
+#: src/view/com/feeds/ProfileFeedgens.tsx:126
+#: src/view/com/lists/ProfileLists.tsx:126
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
@@ -9043,7 +9048,8 @@ msgstr ""
 msgid "Unpin"
 msgstr ""
 
-#: src/components/FeedCard.tsx:268
+#: src/components/FeedCard.tsx:195
+#: src/components/ListCard.tsx:213
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:402
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:408
 #: src/screens/SavedFeeds.tsx:259
@@ -9861,11 +9867,11 @@ msgstr ""
 msgid "You haven't created a starter pack yet!"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:140
+#: src/view/com/lists/ProfileLists.tsx:137
 msgid "You haven't created any lists yet."
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:140
+#: src/view/com/feeds/ProfileFeedgens.tsx:137
 msgid "You haven't made any custom feeds yet."
 msgstr ""
 
