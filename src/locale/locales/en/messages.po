@@ -2033,7 +2033,7 @@ msgstr ""
 
 #: src/components/EmojiPicker/components/SearchBar.tsx:31
 #: src/components/web/forms/SearchInput.tsx:59
-#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:593
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:616
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -7264,8 +7264,8 @@ msgstr "Scrolls the conversation to the most recent message"
 #: src/components/dialogs/SearchablePeopleList.tsx:546
 #: src/components/forms/SearchInput.tsx:44
 #: src/components/forms/SearchInput.tsx:46
-#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:142
-#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:587
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:143
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:610
 #: src/Navigation.tsx:571
 #: src/screens/Search/Shell.tsx:316
 #: src/screens/Search/Shell.tsx:453

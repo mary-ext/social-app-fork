@@ -1,5 +1,6 @@
 import {
 	type KeyboardEvent,
+	type PointerEvent,
 	useCallback,
 	useEffect,
 	useLayoutEffect,
@@ -501,10 +502,32 @@ function ActiveSearchAutocomplete({ onNavigate, onNavigateToProfile, onSubmit }:
 	};
 
 	const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-		// a highlighted item handles Enter itself (via its onClick); otherwise Enter runs the raw query.
+		// a highlighted item handles Enter itself (via item-press); otherwise Enter runs the raw query.
 		if (event.key === 'Enter' && !highlightedRef.current) {
 			event.preventDefault();
 			submit(query);
+		}
+	};
+
+	// commit dispatches the *highlighted* item (see onValueChange), which mouse hover and arrow keys keep in
+	// sync with what's pressed — but touch/pen produce no hover, so a tap would otherwise commit the stale
+	// auto-highlighted row (or nothing, when the empty state highlights none). move the highlight onto the
+	// pressed row here, before the item-press fires, so the tap commits what was actually tapped. the pressed
+	// row's position among the rendered options/cells is its flat highlight index (chrome rows carry no such
+	// role, and the calendar's day cells sit in row-major order — both matching the `items` order Base UI
+	// highlights against).
+	const onListPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+		if (event.pointerType === 'mouse') {
+			return;
+		}
+		const pressed = (event.target as HTMLElement).closest('[role="option"], [role="gridcell"]');
+		if (!pressed) {
+			return;
+		}
+		const cells = event.currentTarget.querySelectorAll('[role="option"], [role="gridcell"]');
+		const index = Array.prototype.indexOf.call(cells, pressed);
+		if (index >= 0) {
+			actionsRef.current?.setActiveIndex(index);
 		}
 	};
 
@@ -601,7 +624,11 @@ function ActiveSearchAutocomplete({ onNavigate, onNavigateToProfile, onSubmit }:
 			<Autocomplete.Portal>
 				<Autocomplete.Positioner align="end" className={styles.positioner} sideOffset={6}>
 					<Autocomplete.Popup className={styles.popup} ref={popupRef}>
-						<Autocomplete.List className={styles.list} role={result.kind === 'date' ? 'grid' : 'listbox'}>
+						<Autocomplete.List
+							className={styles.list}
+							onPointerDown={onListPointerDown}
+							role={result.kind === 'date' ? 'grid' : 'listbox'}
+						>
 							{result.kind === 'date' ? (
 								<CalendarBody days={result.days} onGoToMonth={goToMonth} visibleMonth={result.visibleMonth} />
 							) : (
