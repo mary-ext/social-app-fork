@@ -5,6 +5,12 @@ import { detectLanguages } from '#/lib/language-detection';
 
 import { AppLanguage, type Language, LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3 } from './languages';
 
+/**
+ * Minimum top-candidate probability for a from-text detection to count. Below this the detector is just
+ * picking the tallest blade of grass in low-signal noise, so we treat the post's language as undetermined.
+ */
+const DETECTION_FLOOR = 0.2;
+
 export function code3ToCode2(lang: string): string {
 	if (lang.length === 3) {
 		return LANGUAGES_MAP_CODE3[lang]?.code2 || lang;
@@ -78,15 +84,21 @@ export function getPostLanguage(post: AppBskyFeedDefs.PostView): string | undefi
 	}
 
 	// run the language model
-	let langsProbabilityMap = detectLanguages(postText);
+	const detections = detectLanguages(postText);
 
-	// filter down using declared languages
+	// with declared languages, trust the author and just pick whichever they declared scores highest —
+	// no confidence floor, since the set is already constrained to what they said the post is in
 	if (candidates.length) {
-		langsProbabilityMap = langsProbabilityMap.filter(([lang]) => candidates.includes(code3ToCode2(lang)));
+		const match = detections.find(([lang]) => candidates.includes(code3ToCode2(lang)));
+		return match ? code3ToCode2(match[0]) : undefined;
 	}
 
-	if (langsProbabilityMap[0]) {
-		return code3ToCode2(langsProbabilityMap[0][0]);
+	// detecting from text alone: the model emits a deliberately flat softmax, so low-signal text (emoji,
+	// numbers, code, keysmash) still yields an argmax — just a near-floor one. gate on it so such posts read
+	// as "undetermined" rather than getting a confident-but-meaningless language
+	const top = detections[0];
+	if (top && top[1] >= DETECTION_FLOOR) {
+		return code3ToCode2(top[0]);
 	}
 }
 

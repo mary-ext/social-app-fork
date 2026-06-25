@@ -144,6 +144,9 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 	return style as unknown as ViewStyle;
 };
 
+/** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
+const NUDGE_COOLDOWN_MS = 10_000;
+
 function applyGalleryCap(
 	currentCount: number,
 	incoming: ComposerImage[],
@@ -275,9 +278,8 @@ export const ComposePost = ({
 	const [languageNudgeAt, setLanguageNudgeAt] = useState(0);
 	const onLanguageNudge = () => {
 		const now = Date.now();
-		// ignore back-to-back nudges within 10s; only update state (and
-		// therefore re-pulse) once the cooldown has elapsed
-		setLanguageNudgeAt((prev) => (now - prev > 10_000 ? now : prev));
+		// only update state (and therefore re-pulse) once the cooldown has elapsed
+		setLanguageNudgeAt((prev) => (now - prev > NUDGE_COOLDOWN_MS ? now : prev));
 	};
 
 	const [composerState, composerDispatch] = useReducer(

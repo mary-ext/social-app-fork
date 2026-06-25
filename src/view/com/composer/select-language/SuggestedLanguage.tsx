@@ -6,13 +6,12 @@ import debounce from 'lodash.debounce';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useNonReactiveObject } from '#/lib/hooks/useNonReactiveObject';
-import { detectLanguagesAsync } from '#/lib/language-detection';
+import { type Detection, detectLanguagesAsync } from '#/lib/language-detection';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
 
 import { logger } from '#/logger';
 
-import { deviceLanguageCodes } from '#/locale/deviceLocales';
 import { code3ToCode2, codeToLanguageName } from '#/locale/helpers';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -22,11 +21,6 @@ import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/C
 import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
-
-type LanguageResult = {
-	confidence: number;
-	language: string;
-};
 
 /**
  * Extracts the primary language subtag from a BCP-47 language tag (e.g. `en-US` → `en`), or `undefined` if
@@ -40,67 +34,30 @@ function getPrimaryLanguageSubtag(lang: string): string | undefined {
 	}
 }
 
-type LanguageDetectionPerLanguageConfig = {
-	acceptanceThreshold?: number;
-	deviceLocaleAcceptanceThreshold?: number;
-};
-
-type LanguageDetectionConfig = {
-	acceptanceThreshold: number;
-	deviceLocaleAcceptanceThreshold: number;
-	overrides: Record<string, LanguageDetectionPerLanguageConfig>;
-};
-
 const MIN_TEXT_LENGTH = 20;
-const NOISE_FLOOR = 0.1;
 
-/**
- * Detection tuning defaults. The noise floor and acceptance bar sit higher than on native (MLKit) because
- * browser-based detection spreads probability across many candidates.
+/*
+ * The detector emits a deliberately flat softmax over ~50 languages, so absolute probability is a weak
+ * signal: a clean, unambiguous detection peaks around 0.4–0.65, while pure noise (emoji, numbers, keysmash)
+ * stays near 0. Separation discriminates far better than height, so we decide on the margin between the top
+ * two candidates rather than an absolute acceptance bar.
  *
- * Per-language carve-outs override the platform-level acceptance threshold.
+ * - top candidate below NUDGE_FLOOR → not enough signal to say anything.
+ * - at or above the floor, margin at or above SUGGEST_MARGIN → one clear winner; show the suggestion.
+ * - at or above the floor, margin below it → real text the model can't pin down (a confusable pair like
+ *   da/nb, or genuinely mixed-language text); nudge instead of asserting.
+ *
+ * Values are empirically tuned: across a multi-language corpus the margin gate yields no confident-but-wrong
+ * suggestions, while the floor keeps confusable Latin clusters (cs/sk, da/no/sv) as nudges rather than silence
+ * without letting low-signal noise (emoji, numbers, keysmash) cross it.
  */
-const DEFAULT_CONFIG: LanguageDetectionConfig = {
-	acceptanceThreshold: 0.97,
-	/*
-	 * Device locales are an independent prior — the OS tells us which
-	 * languages the user has installed, separate from what the model sees
-	 * in the text. Combining the two lets us accept a candidate at lower
-	 * model confidence when the language is one the user actually reads.
-	 * It also fails softer: a wrong suggestion for a language the user
-	 * knows ("are you writing in Spanish?") is easier to dismiss than one
-	 * for a language they don't ("are you writing in Japanese?"), so we
-	 * can afford to be more aggressive there.
-	 *
-	 * Native-only. On web we keep the bar at 0.97 because (a) the detector's
-	 * confidence is tightly bimodal — a score of 0.85 means the model
-	 * doesn't know, not that it's "mostly sure" — and (b) the browser's
-	 * locale signal is noisier (navigator.languages usually includes
-	 * English regardless of what the user actually reads).
-	 */
-	deviceLocaleAcceptanceThreshold: 0.97,
-	/*
-	 * Per-language carve-outs for known confusable pairs / clusters. The
-	 * acceptance bar is raised above the platform baseline because these
-	 * are languages the detector is known to misclassify or over-commit on.
-	 *
-	 * The device-locale bar is also raised for most tightly-confusable
-	 * pairs: if the user has both languages in the pair installed (common
-	 * for id/ms or nb/da speakers), the device-locale prior no longer
-	 * discriminates between them, so we can't afford to drop the bar as
-	 * aggressively.
-	 *
-	 * Web thresholds are stricter than the old native defaults because browser
-	 * language detection is less reliable for these tightly-confusable pairs.
-	 */
-	overrides: {
-		// Example
-		// id: {
-		//   acceptanceThreshold: 0.99,
-		//   deviceLocaleAcceptanceThreshold: 0.97,
-		// },
-	},
-};
+const NUDGE_FLOOR = 0.2;
+const SUGGEST_MARGIN = 0.2;
+
+type DetectionVerdict =
+	| { kind: 'ambiguous'; language: string }
+	| { kind: 'confident'; language: string }
+	| { kind: 'none' };
 
 export function SuggestedLanguage({
 	text,
@@ -145,12 +102,8 @@ export function SuggestedLanguage({
 		setHasInteracted(true);
 	};
 
-	/** Merge in remote config (eventually) */
-	const config = useMemo(() => DEFAULT_CONFIG, []);
-
 	/** Create non-reactive ref for debounced detection method. */
 	const detectionPropsRef = useNonReactiveObject({
-		config,
 		currentLanguages,
 	});
 
@@ -167,30 +120,31 @@ export function SuggestedLanguage({
 		return debounce(async (text: string) => {
 			try {
 				const currLangs = detectionPropsRef.current.currentLanguages;
-				const { certain, uncertain } = await guessLanguage(text, detectionPropsRef.current.config);
-				const topCandidate = certain.at(0)?.language;
-				if (
-					certain.length === 1 &&
-					uncertain.length === 0 &&
-					topCandidate !== undefined &&
-					!currLangs.includes(topCandidate) &&
-					!declinedSuggLangsRef.current.includes(topCandidate)
-				) {
-					// we have a single confident candidate with no competitors — show it!
-					setSuggLang(topCandidate);
-				} else {
-					const nextBestCandidate = uncertain.at(0)?.language;
-					// ambiguous results — if the top candidate isn't already
-					// selected or previously declined, nudge the user
-					if (
-						nextBestCandidate !== undefined &&
-						!currLangs.includes(nextBestCandidate) &&
-						!declinedSuggLangsRef.current.includes(nextBestCandidate)
-					) {
-						handleOnNudge();
+				const verdict = classifyDetection(await detectLanguagesAsync(text));
+				switch (verdict.kind) {
+					case 'confident': {
+						// one clear winner — show the suggestion, unless it's already selected or was declined
+						const fresh =
+							!currLangs.includes(verdict.language) &&
+							!declinedSuggLangsRef.current.includes(verdict.language);
+						setSuggLang(fresh ? verdict.language : undefined);
+						break;
 					}
-
-					setSuggLang(undefined);
+					case 'ambiguous': {
+						// real text the model can't pin down — hint via the button pulse rather than asserting a language
+						if (
+							!currLangs.includes(verdict.language) &&
+							!declinedSuggLangsRef.current.includes(verdict.language)
+						) {
+							handleOnNudge();
+						}
+						setSuggLang(undefined);
+						break;
+					}
+					case 'none': {
+						setSuggLang(undefined);
+						break;
+					}
 				}
 			} catch (e) {
 				logger.error('Error detecting language', { safeMessage: e });
@@ -400,43 +354,23 @@ function LanguageSuggestionButton({
 }
 
 /**
- * Run detection and partition candidates into "certain" (confident enough to suggest on their own) and
- * "uncertain" (above the noise floor but not confident enough to suggest). Callers decide what to do with the
- * shape: a single certain candidate with no uncertain competitors is a strong suggestion; everything else is
- * ambiguous.
+ * Classify a probability-sorted detection list into a suggestion verdict, deciding on the margin between the
+ * top two candidates rather than absolute probability — see {@link NUDGE_FLOOR} / {@link SUGGEST_MARGIN}.
  *
- * The acceptance threshold is resolved per candidate with this precedence: 1. Per-language override (e.g.
- * maybe `id` requires higher confidence) 2. Device-locale bar (lower on native — the user likely writes in a
- * language they have installed) 3. Platform-level bar
+ * @param detections probability-sorted detections from the model (ISO 639-3 codes)
+ * @returns `confident` with a single clear winner, `ambiguous` when there's signal but no winner, or `none`
+ *   when the text is too low-signal to say anything
  */
-async function guessLanguage(
-	text: string,
-	config: LanguageDetectionConfig,
-): Promise<{
-	certain: LanguageResult[];
-	uncertain: LanguageResult[];
-}> {
-	const detections = await detectLanguagesAsync(text);
-	const certain: LanguageResult[] = [];
-	const uncertain: LanguageResult[] = [];
-
-	for (const [code, probability] of detections) {
-		// the model emits ISO 639-3 codes; the rest of the suggestion pipeline works in 2-letter subtags
-		const language = code3ToCode2(code);
-		const isDeviceLocale = deviceLanguageCodes.includes(language);
-		const override = config.overrides[language];
-		const threshold = isDeviceLocale
-			? (override?.deviceLocaleAcceptanceThreshold ?? config.deviceLocaleAcceptanceThreshold)
-			: (override?.acceptanceThreshold ?? config.acceptanceThreshold);
-
-		if (probability >= threshold) {
-			certain.push({ confidence: probability, language });
-		} else if (probability >= NOISE_FLOOR) {
-			uncertain.push({ confidence: probability, language });
-		}
+function classifyDetection(detections: Detection[]): DetectionVerdict {
+	const top = detections[0];
+	if (!top || top[1] < NUDGE_FLOOR) {
+		return { kind: 'none' };
 	}
 
-	return { certain, uncertain };
+	// the model emits ISO 639-3 codes; the rest of the suggestion pipeline works in 2-letter subtags
+	const language = code3ToCode2(top[0]);
+	const margin = top[1] - (detections[1]?.[1] ?? 0);
+	return margin >= SUGGEST_MARGIN ? { kind: 'confident', language } : { kind: 'ambiguous', language };
 }
 
 /**

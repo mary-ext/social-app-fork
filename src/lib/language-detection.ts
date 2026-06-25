@@ -1,5 +1,7 @@
 import { detect, type Detection, initialize } from '@oomfware/lang-detect';
 
+export type { Detection } from '@oomfware/lang-detect';
+
 type State = 'idle' | 'loading' | 'ready';
 
 let state: State = 'idle';
