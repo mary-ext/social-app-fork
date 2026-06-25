@@ -13,8 +13,11 @@ const lineHeightVar = createVar();
 /** Bar width, wired inline; defaults to filling the available width. */
 export const widthVar = createVar();
 
-/** Circle edge length in px, wired inline so the circle scales to the `size` prop. */
-export const circleSizeVar = createVar();
+/** Box edge length in px, wired inline so a circle/square scales to the `size` prop. */
+export const boxSizeVar = createVar();
+
+/** Square corner radius in px, wired inline. */
+export const squareRadiusVar = createVar();
 
 export const text = style({
 	alignItems: 'center',
@@ -61,9 +64,17 @@ export const circle = style({
 	borderRadius: '50%',
 	display: 'flex',
 	flexShrink: 0,
-	height: circleSizeVar,
+	height: boxSizeVar,
 	justifyContent: 'center',
-	width: circleSizeVar,
+	width: boxSizeVar,
+});
+
+export const square = style({
+	backgroundColor: vars.palette.contrast_50,
+	borderRadius: squareRadiusVar,
+	flexShrink: 0,
+	height: boxSizeVar,
+	width: boxSizeVar,
 });
 
 export const row = style({

@@ -4,6 +4,8 @@ import { clsx } from 'clsx';
 
 import * as styles from '#/components/web/Skeleton.css';
 
+import { borderRadius } from '#/styles/tokens.css';
+
 /** Loading placeholder for a line of {@link Text}: a rounded bar sized to the matching `size`'s line box. */
 export function Text({
 	blend,
@@ -63,9 +65,22 @@ export function Col({
 	return <div className={clsx(styles.col, gap && styles.gap[gap], className)}>{children}</div>;
 }
 
-/** Loading placeholder for a circular element (e.g. an avatar), sized to `size` pixels. */
+/** Loading placeholder for a circular element (e.g. a user avatar), sized to `size` pixels. */
 export function Circle({ size }: { size: number }) {
-	return <div className={styles.circle} style={assignInlineVars({ [styles.circleSizeVar]: `${size}px` })} />;
+	return <div className={styles.circle} style={assignInlineVars({ [styles.boxSizeVar]: `${size}px` })} />;
+}
+
+/**
+ * Loading placeholder for a rounded-square element (e.g. a feed/list avatar), sized to `size` pixels with a
+ * `radius` corner (defaults to the small token).
+ */
+export function Square({ radius = borderRadius.xs, size }: { radius?: number; size: number }) {
+	return (
+		<div
+			className={styles.square}
+			style={assignInlineVars({ [styles.boxSizeVar]: `${size}px`, [styles.squareRadiusVar]: `${radius}px` })}
+		/>
+	);
 }
 
 /**

@@ -41,6 +41,8 @@ export function WebShell({ children, routeName }: WebShellProps) {
 	const isSplitView = routeName.startsWith('Messages') && rightNavVisible;
 	const fixedViewport = isSplitView || (routeName === 'MessagesConversation' && !rightNavVisible);
 
+	const showRightNav = rightNavVisible && !routeName.startsWith('Messages');
+
 	const barRef = useRef<HTMLDivElement>(null);
 	const [barHeight, setBarHeight] = useState(0);
 	useEffect(() => {
@@ -68,7 +70,7 @@ export function WebShell({ children, routeName }: WebShellProps) {
 				>
 					{children}
 				</main>
-				<div className={`${styles.rail} ${styles.railRight}`}>
+				<div className={clsx(styles.rail, styles.railRight, showRightNav && styles.railRightFluid)}>
 					<DesktopRightNav routeName={routeName} />
 				</div>
 			</div>

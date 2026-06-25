@@ -4083,7 +4083,7 @@ msgstr ""
 #: src/components/moderation/LabelPreference.tsx:73
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:574
 #: src/screens/Moderation/index.tsx:249
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:107
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "Hide"
 msgstr ""
 
@@ -4124,7 +4124,7 @@ msgstr ""
 msgid "Hide this reply?"
 msgstr ""
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:81
 msgid "Hide trending topics?"
 msgstr ""
 
@@ -4884,11 +4884,11 @@ msgstr "Locked"
 msgid "Log"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:84
+#: src/view/shell/desktop/RightNav.tsx:76
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:81
+#: src/view/shell/desktop/RightNav.tsx:72
 #: src/view/shell/Drawer.tsx:328
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
@@ -5150,8 +5150,8 @@ msgstr "More"
 msgid "More emojis"
 msgstr "More emojis"
 
-#: src/view/shell/desktop/Feeds.tsx:107
-#: src/view/shell/desktop/Feeds.tsx:151
+#: src/view/shell/desktop/Feeds.tsx:92
+#: src/view/shell/desktop/Feeds.tsx:97
 msgid "More feeds"
 msgstr ""
 
@@ -5908,7 +5908,7 @@ msgid "Open URL in app"
 msgstr "Open URL in app"
 
 #. placeholder {0}: feedInfo.displayName
-#: src/view/shell/desktop/Feeds.tsx:179
+#: src/view/shell/desktop/Feeds.tsx:115
 msgid "Opens {0} feed"
 msgstr ""
 
@@ -7965,8 +7965,8 @@ msgstr ""
 msgid "Sort replies"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:75
-#: src/view/shell/desktop/RightNav.tsx:76
+#: src/view/shell/desktop/RightNav.tsx:65
+#: src/view/shell/desktop/RightNav.tsx:67
 msgid "Source code"
 msgstr "Source code"
 
@@ -8841,7 +8841,7 @@ msgstr "Travel & Places"
 msgid "Tree view"
 msgstr ""
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:45
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:49
 msgid "Trending"
 msgstr ""
 
@@ -8850,7 +8850,7 @@ msgstr ""
 msgid "Trending GIFs"
 msgstr "Trending GIFs"
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:52
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:56
 msgid "Trending options"
 msgstr ""
 
@@ -9788,7 +9788,7 @@ msgstr "You can read chat history but can't send new messages."
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:106
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
 msgid "You can update this later from your settings."
 msgstr ""
 

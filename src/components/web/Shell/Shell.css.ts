@@ -60,24 +60,31 @@ export const rail = style({
 	display: 'flex',
 	flexDirection: 'column',
 	maxHeight: '100dvh',
-	// the rail scrolls vertically, which makes it a scroll container with 0 horizontal min-content; pin its
-	// min-width to its content so a `1fr` track grows to fit it (shifting the center column) instead of the
-	// rail overflowing the viewport at the tablet band.
-	minWidth: 'max-content',
 	overflowY: 'auto',
 	position: 'sticky',
 	scrollbarWidth: 'thin',
 	top: 0,
 });
 
-/** Left rail hugs the right edge of its track (against the center column). */
+/**
+ * Left rail hugs the right edge of its track (against the center column). Scrolling makes it a scroll
+ * container with 0 horizontal min-content, so its `min-width` is pinned to its content — the `1fr` track
+ * grows to fit it rather than the rail overflowing.
+ */
 export const railLeft = style({
 	justifySelf: 'end',
+	minWidth: 'max-content',
 });
 
 /** Right rail hugs the left edge of its track (against the center column). */
 export const railRight = style({
 	justifySelf: 'start',
+});
+
+export const railRightFluid = style({
+	maxWidth: 300 + 24 * 2,
+	minWidth: 280,
+	width: '100%',
 });
 
 /**

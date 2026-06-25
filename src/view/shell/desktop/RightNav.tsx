@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -9,14 +8,16 @@ import { DesktopFeeds } from '#/view/shell/desktop/Feeds';
 import { DesktopSearch } from '#/view/shell/desktop/Search';
 import { SidebarTrendingTopics } from '#/view/shell/desktop/SidebarTrendingTopics';
 
-import { atoms as a, useGutters, useLayoutBreakpoints, useTheme } from '#/alf';
+import { useLayoutBreakpoints } from '#/alf';
 
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
-import { InlineLinkText } from '#/components/Link';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { ExternalInlineLinkText, InlineLinkText } from '#/components/web/Link';
 
 import { SOURCE_CODE_URL } from '#/env/common';
 import { useKawaiiMode } from '#/storage/hooks/kawaii';
+
+import * as css from './RightNav.css';
 
 function useWebQueryParams() {
 	const navigation = useNavigation();
@@ -36,51 +37,42 @@ function useWebQueryParams() {
 }
 
 export function DesktopRightNav({ routeName }: { routeName: string }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { hasSession } = useSession();
 	const kawaii = useKawaiiMode();
-	const gutters = useGutters(['base', 0, 'base', 'wide']);
 	const isSearchScreen = routeName === 'Search';
 	const isMessagesRelatedScreen = routeName.startsWith('Messages');
 	const webqueryParams = useWebQueryParams();
 	const searchQuery = webqueryParams?.q;
 	const showExploreScreenDuplicatedContent = !isSearchScreen || (isSearchScreen && !!searchQuery);
-	const { rightNavVisible, centerColumnOffset, leftNavMinimal } = useLayoutBreakpoints();
+	const { rightNavVisible, leftNavMinimal } = useLayoutBreakpoints();
 
 	if (!rightNavVisible || isMessagesRelatedScreen) {
 		return null;
 	}
 
-	const width = centerColumnOffset ? 250 : 300;
-
 	return (
-		<View
-			style={[
-				gutters,
-				a.gap_lg,
-				a.pr_2xs,
-				/** Compensate for the right padding above (2px) to retain intended width. */
-				{ width: width + gutters.paddingLeft + 2 },
-			]}
-		>
+		<div className={css.root}>
 			{!isSearchScreen && <DesktopSearch />}
-			{hasSession && (
-				<>
-					<DesktopFeeds />
-				</>
-			)}
+
+			{hasSession && <DesktopFeeds />}
 			{showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
-			<Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
-				<InlineLinkText to={SOURCE_CODE_URL} style={[t.atoms.text_contrast_medium]} label={l`Source code`}>
-					{l`Source code`}
-				</InlineLinkText>
-			</Text>
+
+			<ExternalInlineLinkText
+				href={SOURCE_CODE_URL}
+				color="textContrastMedium"
+				size="sm"
+				label={l`Source code`}
+			>
+				{l`Source code`}
+			</ExternalInlineLinkText>
+
 			{kawaii && (
-				<Text style={[t.atoms.text_contrast_medium, { marginTop: 12 }]}>
+				<Text color="textContrastMedium" size="sm">
 					<Trans>
 						Logo by{' '}
 						<InlineLinkText
+							size="sm"
 							label={l`Logo by @sawaratsuki.bsky.social`}
 							to="/profile/did:plc:du3w3sxieoct4kidddf6rpby"
 						>
@@ -89,11 +81,8 @@ export function DesktopRightNav({ routeName }: { routeName: string }) {
 					</Trans>
 				</Text>
 			)}
-			{!hasSession && leftNavMinimal && (
-				<View style={[a.w_full, { height: 32 }]}>
-					<AppLanguageDropdown />
-				</View>
-			)}
-		</View>
+
+			{!hasSession && leftNavMinimal && <AppLanguageDropdown />}
+		</div>
 	);
 }

@@ -1,20 +1,21 @@
-import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import { useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
+import { type TrendingTopic, useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon } from '#/components/Button';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
-import * as Prompt from '#/components/Prompt';
-import { TrendingTopicLink } from '#/components/TrendingTopics';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { useTopic } from '#/components/TrendingTopics';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import { Link } from '#/components/web/Link';
+import * as Prompt from '#/components/web/Prompt';
+import * as Skeleton from '#/components/web/Skeleton';
 
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 import { colors } from '#/styles/colors';
+
+import * as css from './SidebarTrendingTopics.css';
 
 const TRENDING_LIMIT = 5;
 
@@ -25,9 +26,8 @@ export function SidebarTrendingTopics() {
 }
 
 function Inner() {
-	const t = useTheme();
 	const { t: l } = useLingui();
-	const trendingPrompt = Prompt.usePromptControl();
+	const trendingPrompt = Prompt.usePromptHandle();
 	const { setTrendingDisabled } = useTrendingSettingsApi();
 	const { data: trending, error, isLoading } = useTrendingTopics();
 	const noTopics = !isLoading && !error && !trending?.topics?.length;
@@ -36,12 +36,16 @@ function Inner() {
 		setTrendingDisabled(true);
 	};
 
-	return error || noTopics ? null : (
+	if (error || noTopics) {
+		return null;
+	}
+
+	return (
 		<>
-			<View style={[a.p_lg, a.rounded_md, a.border, t.atoms.border_contrast_low]}>
-				<View style={[a.flex_row, a.align_center, a.gap_xs, a.pb_md]}>
+			<div className={css.card}>
+				<div className={css.header}>
 					<TrendingIcon width={16} height={16} fill={colors.text} />
-					<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
+					<Text size="md" weight="semiBold" className={css.title}>
 						<Trans>Trending</Trans>
 					</Text>
 					<Button
@@ -50,63 +54,49 @@ function Inner() {
 						color="secondary"
 						shape="round"
 						label={l`Trending options`}
-						onPress={() => trendingPrompt.open()}
-						style={[a.bg_transparent, { marginTop: -6, marginRight: -6 }]}
+						onClick={() => trendingPrompt.open(null)}
+						className={css.optionsButton}
 					>
 						<ButtonIcon icon={Ellipsis} size="xs" />
 					</Button>
-				</View>
+				</div>
 
-				<View style={[a.gap_xs]}>
-					{isLoading ? (
-						Array(TRENDING_LIMIT)
-							.fill(0)
-							.map((_n, i) => (
-								<View key={i} style={[a.flex_row, a.align_center, a.gap_sm]}>
-									<Text style={[a.text_sm, t.atoms.text_contrast_low, { minWidth: 16 }]}>{i + 1}.</Text>
-									<View
-										style={[
-											a.rounded_xs,
-											t.atoms.bg_contrast_50,
-											{ height: 14, width: i % 2 === 0 ? 80 : 100 },
-										]}
-									/>
-								</View>
+				<div className={css.body}>
+					{isLoading
+						? Array.from({ length: TRENDING_LIMIT }, (_, i) => (
+								<Skeleton.Row key={i} align="center" gap="xs">
+									<Text size="sm" className={css.index}>
+										{i + 1}.
+									</Text>
+									<Skeleton.Text size="sm" width={i % 2 === 0 ? 80 : 100} />
+								</Skeleton.Row>
 							))
-					) : !trending?.topics ? null : (
-						<>
-							{trending.topics.slice(0, TRENDING_LIMIT).map((topic, i) => (
-								<TrendingTopicLink key={topic.link} topic={topic} style={[a.self_start]} onPress={() => {}}>
-									{({ hovered }) => (
-										<View style={[a.flex_row, a.align_center, a.gap_xs]}>
-											<Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_low, { minWidth: 16 }]}>
-												{i + 1}.
-											</Text>
-											<Text
-												style={[
-													a.text_sm,
-													a.leading_snug,
-													hovered ? [t.atoms.text, a.underline] : t.atoms.text_contrast_medium,
-												]}
-												numberOfLines={1}
-											>
-												{topic.displayName ?? topic.topic}
-											</Text>
-										</View>
-									)}
-								</TrendingTopicLink>
-							))}
-						</>
-					)}
-				</View>
-			</View>
+						: trending?.topics
+								?.slice(0, TRENDING_LIMIT)
+								.map((topic, i) => <TopicLink key={topic.link} index={i} topic={topic} />)}
+				</div>
+			</div>
 			<Prompt.Basic
-				control={trendingPrompt}
+				handle={trendingPrompt}
 				title={l`Hide trending topics?`}
 				description={l`You can update this later from your settings.`}
 				confirmButtonCta={l`Hide`}
 				onConfirm={onConfirmHide}
 			/>
 		</>
+	);
+}
+
+function TopicLink({ index, topic }: { index: number; topic: TrendingTopic }) {
+	const { label, url } = useTopic(topic);
+	return (
+		<Link to={url} label={label} className={css.topicLink}>
+			<Text size="sm" className={css.index}>
+				{index + 1}.
+			</Text>
+			<Text size="sm" numberOfLines={1} className={css.topicName}>
+				{topic.displayName ?? topic.topic}
+			</Text>
+		</Link>
 	);
 }
