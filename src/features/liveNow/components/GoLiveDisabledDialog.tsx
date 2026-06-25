@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -11,36 +10,40 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { Loader } from '#/components/Loader';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 
+import * as styles from './GoLiveDisabledDialog.css';
+
 export function GoLiveDisabledDialog({
-	control,
+	handle,
 	status,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
+	const { t: l } = useLingui();
 	return (
-		<Dialog.Outer control={control}>
-			<Dialog.Handle />
-			<DialogInner control={control} status={status} />
-		</Dialog.Outer>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup className={styles.popup} label={l`Appeal livestream suspension`}>
+				<DialogInner handle={handle} status={status} />
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
-export function DialogInner({
-	control,
+function DialogInner({
+	handle,
 	status,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
 	const { t: l } = useLingui();
@@ -83,7 +86,7 @@ export function DialogInner({
 			});
 		},
 		onSuccess: () => {
-			control.close();
+			handle.close();
 			Toast.show(l({ message: 'Appeal submitted', context: 'toast' }), {
 				type: 'success',
 			});
@@ -93,48 +96,39 @@ export function DialogInner({
 	const onSubmit = useCallback(() => mutate(), [mutate]);
 
 	return (
-		<Dialog.ScrollableInner label={l`Appeal livestream suspension`} style={[{ maxWidth: 400 }]}>
-			<View style={[a.gap_lg]}>
-				<View style={[a.gap_md]}>
-					<Text style={[a.flex_1, a.text_2xl, a.font_semi_bold, a.leading_snug, a.pr_4xl]}>
-						<Trans>Going live is currently disabled for your account</Trans>
-					</Text>
-					<Text style={[a.text_md, a.leading_snug]}>
-						<Trans>
-							You are currently blocked from using the Go Live feature. To appeal this moderation decision,
-							please submit the form below.
-						</Trans>
-					</Text>
-					<Text style={[a.text_md, a.leading_snug]}>
-						<Trans>This appeal will be sent to Bluesky's moderation service.</Trans>
-					</Text>
-				</View>
+		<div className={styles.container}>
+			<div className={styles.header}>
+				<Text className={styles.title} size="_2xl" weight="semiBold">
+					<Trans>Going live is currently disabled for your account</Trans>
+				</Text>
+				<Text size="md">
+					<Trans>
+						You are currently blocked from using the Go Live feature. To appeal this moderation decision,
+						please submit the form below.
+					</Trans>
+				</Text>
+				<Text size="md">
+					<Trans>This appeal will be sent to Bluesky's moderation service.</Trans>
+				</Text>
+			</div>
 
-				<View style={[a.gap_md]}>
-					<Dialog.Input
-						label={l`Text input field`}
-						placeholder={l`Please explain why you think your Go Live access was incorrectly disabled.`}
-						value={details}
-						onChangeText={setDetails}
-						autoFocus={true}
-						numberOfLines={3}
-						multiline
-						maxLength={300}
-					/>
-					<Button
-						testID="submitBtn"
-						variant="solid"
-						color="primary"
-						size="large"
-						onPress={onSubmit}
-						label={l`Submit`}
-					>
-						<ButtonText>{l`Submit`}</ButtonText>
-						{isPending && <ButtonIcon icon={Loader} />}
-					</Button>
-				</View>
-			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+			<div className={styles.fields}>
+				<TextField.Input
+					autoFocus
+					label={l`Text input field`}
+					maxLength={300}
+					minRows={3}
+					multiline
+					onChangeText={setDetails}
+					placeholder={l`Please explain why you think your Go Live access was incorrectly disabled.`}
+					value={details}
+				/>
+
+				<Button color="primary" label={l`Submit`} onClick={onSubmit} size="large" variant="solid">
+					<ButtonText>{l`Submit`}</ButtonText>
+					{isPending && <ButtonIcon icon={Loader} />}
+				</Button>
+			</div>
+		</div>
 	);
 }

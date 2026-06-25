@@ -86,7 +86,7 @@ let ProfileMenu = ({
 	const mutePromptHandle = WebPrompt.usePromptHandle();
 	const loggedOutWarningPromptHandle = WebPrompt.usePromptHandle();
 	const goLiveDialogHandle = useDialogHandle();
-	const goLiveDisabledDialogControl = useDialogControl();
+	const goLiveDisabledDialogHandle = useDialogHandle();
 	const addToStarterPacksDialogControl = useDialogControl();
 
 	const showLoggedOutWarning = useMemo(() => {
@@ -288,7 +288,7 @@ let ProfileMenu = ({
 										}
 										onClick={() => {
 											if (status.isDisabled) {
-												goLiveDisabledDialogControl.open();
+												goLiveDisabledDialogHandle.open(null);
 											} else {
 												goLiveDialogHandle.open(null);
 											}
@@ -404,7 +404,7 @@ let ProfileMenu = ({
 				confirmButtonCta={l`Share anyway`}
 			/>
 			{status.isDisabled ? (
-				<GoLiveDisabledDialog control={goLiveDisabledDialogControl} status={status} />
+				<GoLiveDisabledDialog handle={goLiveDisabledDialogHandle} status={status} />
 			) : status.isActive ? (
 				<EditLiveDialog
 					embed={status.embed as AppBskyEmbedExternal.View}

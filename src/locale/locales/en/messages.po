@@ -1446,12 +1446,12 @@ msgstr ""
 msgid "Appeal \"{0}\" label"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:96
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:34
 msgid "Appeal livestream suspension"
 msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:223
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:87
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:90
 #: src/screens/Messages/components/ChatDisabled.tsx:124
 msgctxt "toast"
 msgid "Appeal submitted"
@@ -1784,7 +1784,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
 #: src/screens/Moderation/index.tsx:288
 #: src/screens/Search/components/StarterPackCard.tsx:91
-#: src/screens/Search/Explore.tsx:849
+#: src/screens/Search/Explore.tsx:848
 msgid "By {0}"
 msgstr ""
 
@@ -2711,7 +2711,7 @@ msgstr ""
 msgid "Discover new custom feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:404
+#: src/screens/Search/Explore.tsx:403
 msgid "Discover new feeds"
 msgstr ""
 
@@ -3299,16 +3299,16 @@ msgstr "Failed to leave group chat"
 msgid "Failed to load conversations"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:480
-#: src/screens/Search/Explore.tsx:525
-#: src/screens/Search/Explore.tsx:571
+#: src/screens/Search/Explore.tsx:479
+#: src/screens/Search/Explore.tsx:524
+#: src/screens/Search/Explore.tsx:570
 msgid "Failed to load feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:440
-#: src/screens/Search/Explore.tsx:494
-#: src/screens/Search/Explore.tsx:539
-#: src/screens/Search/Explore.tsx:585
+#: src/screens/Search/Explore.tsx:439
+#: src/screens/Search/Explore.tsx:493
+#: src/screens/Search/Explore.tsx:538
+#: src/screens/Search/Explore.tsx:584
 msgid "Failed to load feeds preferences"
 msgstr ""
 
@@ -3329,14 +3329,14 @@ msgstr "Failed to load preference."
 msgid "Failed to load profiles"
 msgstr "Failed to load profiles"
 
-#: src/screens/Search/Explore.tsx:433
-#: src/screens/Search/Explore.tsx:487
-#: src/screens/Search/Explore.tsx:532
-#: src/screens/Search/Explore.tsx:578
+#: src/screens/Search/Explore.tsx:432
+#: src/screens/Search/Explore.tsx:486
+#: src/screens/Search/Explore.tsx:531
+#: src/screens/Search/Explore.tsx:577
 msgid "Failed to load suggested feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:342
+#: src/screens/Search/Explore.tsx:341
 msgid "Failed to load suggested follows"
 msgstr ""
 
@@ -3397,7 +3397,7 @@ msgid "Failed to save your interests."
 msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:217
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:81
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:84
 #: src/screens/Messages/components/ChatDisabled.tsx:118
 msgid "Failed to submit appeal, please try again."
 msgstr ""
@@ -3934,7 +3934,7 @@ msgstr "Go to the group chat named \"{chatName}\""
 msgid "Go to user's profile"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:100
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:102
 msgid "Going live is currently disabled for your account"
 msgstr ""
 
@@ -4773,8 +4773,8 @@ msgstr ""
 msgid "Load more"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:469
-#: src/screens/Search/Explore.tsx:560
+#: src/screens/Search/Explore.tsx:468
+#: src/screens/Search/Explore.tsx:559
 msgid "Load more suggested feeds"
 msgstr ""
 
@@ -5562,7 +5562,7 @@ msgid "No results"
 msgstr ""
 
 #. placeholder {0}: interestsDisplayNames[selectedInterest]
-#: src/screens/Search/Explore.tsx:748
+#: src/screens/Search/Explore.tsx:747
 msgid "No results for \"{0}\"."
 msgstr ""
 
@@ -5579,7 +5579,7 @@ msgstr ""
 msgid "No results found for “<0>{query}</0>”."
 msgstr "No results found for “<0>{query}</0>”."
 
-#: src/screens/Search/Explore.tsx:750
+#: src/screens/Search/Explore.tsx:749
 msgid "No results."
 msgstr ""
 
@@ -6185,7 +6185,7 @@ msgstr ""
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:116
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:123
 msgid "Please explain why you think your Go Live access was incorrectly disabled."
 msgstr ""
 
@@ -7282,11 +7282,11 @@ msgstr "Search for <0>{0}</0>"
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:329
+#: src/screens/Search/Explore.tsx:328
 msgid "Search for more accounts"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:407
+#: src/screens/Search/Explore.tsx:406
 msgid "Search for more feeds"
 msgstr ""
 
@@ -8005,7 +8005,7 @@ msgstr ""
 msgid "Starter pack options"
 msgstr "Starter pack options"
 
-#: src/screens/Search/Explore.tsx:614
+#: src/screens/Search/Explore.tsx:613
 #: src/view/screens/Profile.tsx:348
 msgid "Starter Packs"
 msgstr ""
@@ -8028,8 +8028,8 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:273
 #: src/components/moderation/LabelsOnMeDialog.tsx:274
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:130
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:132
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:127
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:128
 #: src/screens/Messages/components/ChatDisabled.tsx:170
 #: src/screens/Messages/components/ChatDisabled.tsx:173
 msgid "Submit"
@@ -8086,7 +8086,7 @@ msgstr "Successfully joined the group chat!"
 msgid "Suggested"
 msgstr "Suggested"
 
-#: src/screens/Search/Explore.tsx:326
+#: src/screens/Search/Explore.tsx:325
 msgid "Suggested accounts"
 msgstr ""
 
@@ -8206,7 +8206,7 @@ msgid "Text & tags"
 msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:258
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:115
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:118
 #: src/screens/Messages/components/ChatDisabled.tsx:141
 msgid "Text input field"
 msgstr ""
@@ -8326,7 +8326,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:889
+#: src/screens/Search/Explore.tsx:888
 #: src/view/com/posts/PostFeed.tsx:478
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
@@ -8464,7 +8464,7 @@ msgstr "This account is not active."
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:109
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:111
 #: src/screens/Messages/components/ChatDisabled.tsx:137
 msgid "This appeal will be sent to Bluesky's moderation service."
 msgstr ""
@@ -9678,7 +9678,7 @@ msgstr "You are blocking the chat owner"
 msgid "You are blocking this person"
 msgstr "You are blocking this person"
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:103
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:105
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
 msgstr ""
 
