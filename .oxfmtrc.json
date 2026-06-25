@@ -95,7 +95,7 @@
 			}
 		]
 	},
-	"ignorePatterns": ["pnpm-lock.yaml", "src/locale/locales"],
+	"ignorePatterns": ["pnpm-lock.yaml", "node_modules", "src/locale/locales"],
 	"overrides": [
 		{
 			"files": ["tsconfig*.json"],
