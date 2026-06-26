@@ -132,7 +132,7 @@ type CachedPromise<T> = Promise<T> & { value: undefined | T };
 const promiseForHls = import(
 	// @ts-ignore
 	'hls.js/dist/hls.min'
-).then((mod) => mod.default) as CachedPromise<typeof HlsTypes.default>;
+).then((mod: { default: typeof HlsTypes.default }) => mod.default) as CachedPromise<typeof HlsTypes.default>;
 promiseForHls.value = undefined;
 void promiseForHls.then((Hls) => {
 	promiseForHls.value = Hls;
@@ -151,6 +151,10 @@ function useHLS({
 	videoRef: React.RefObject<HTMLVideoElement | null>;
 	setHlsLoading: (v: boolean) => void;
 }) {
+	// Hls is the hls.js constructor class loaded asynchronously. the state holds the class itself, used
+	// as `Hls.Events.*`, `new Hls(...)`, `Hls.isSupported()` — an uppercase name is correct for a
+	// constructor. react/hook-use-state enforces a lowercase-start value name and can't fit this shape.
+	// eslint-disable-next-line react/hook-use-state
 	const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(() => promiseForHls.value);
 	useEffect(() => {
 		if (!Hls) {
@@ -286,7 +290,7 @@ function useHLS({
 
 		hls.on(Hls.Events.ERROR, (_event, data) => {
 			if (data.fatal) {
-				if (data.details === 'manifestLoadError' && data.response?.code === 404) {
+				if (data.details === Hls.ErrorDetails.MANIFEST_LOAD_ERROR && data.response?.code === 404) {
 					setError(new VideoNotFoundError());
 				} else {
 					setError(data.error);
@@ -303,7 +307,7 @@ function useHLS({
 			hls.detachMedia();
 			hls.destroy();
 		};
-	}, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls]);
+	}, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls, updateCuePositions]);
 
 	const flushOnLoop = useNonReactiveCallback(() => {
 		if (!Hls) return;
