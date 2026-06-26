@@ -64,7 +64,6 @@ export type ComposerProps = {
 	contentPadding?: ContentPadding;
 	/** Layout for the editor box within its row (the consumer owns positioning). */
 	className?: string;
-	disableEmojiFacets?: boolean;
 	autocompletePlacement?: Placement;
 	internalApiRef?: Ref<ComposerInternalApi>;
 	accessibilityLabel?: string;
@@ -91,7 +90,6 @@ export function Composer({
 	minRows = 2,
 	contentPadding = NO_PADDING,
 	className,
-	disableEmojiFacets = false,
 	autocompletePlacement,
 	internalApiRef,
 	accessibilityLabel,
@@ -106,7 +104,7 @@ export function Composer({
 }: ComposerProps) {
 	const tapper = useTapper({
 		initialText: defaultValue ?? '',
-		facets: disableEmojiFacets ? ['mention', 'tag', 'url'] : ['emoji', 'mention', 'tag', 'url'],
+		facets: ['emoji', 'mention', 'tag', 'url'],
 	});
 	const [activeFacet, setActiveFacet] = useState<TapperActiveFacet | null>(null);
 
@@ -127,15 +125,6 @@ export function Composer({
 	const selectItem = (item: AutocompleteItem) => {
 		activeFacet?.replace(item.value);
 	};
-
-	// `:smile:` — once the user types the closing colon, commit the top emoji match.
-	useEffect(() => {
-		if (activeFacet?.type === 'emoji' && !!activeFacet.value.length && activeFacet.raw.endsWith(':')) {
-			if (items[0]) {
-				activeFacet.replace(items[0].value, { noTrailingSpace: true });
-			}
-		}
-	}, [items, activeFacet]);
 
 	useImperativeHandle(
 		internalApiRef,
@@ -247,7 +236,8 @@ export function Composer({
 											facetAnchorRef.current = el;
 										}
 									}}
-									className={node.type === 'facet' ? styles.facet : undefined}
+									// emoji facets exist only to drive autocomplete; render them as plain text.
+									className={node.type === 'facet' && node.facetType !== 'emoji' ? styles.facet : undefined}
 								>
 									{node.raw}
 								</span>
