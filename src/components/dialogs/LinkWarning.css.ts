@@ -21,11 +21,6 @@ export const linkBox = style({
 	paddingInline: 12,
 });
 
-// long URLs break mid-string rather than overflowing the box.
-export const linkText = style({
-	overflowWrap: 'break-word',
-});
-
 export const outer = style({
 	display: 'flex',
 	flexDirection: 'column',

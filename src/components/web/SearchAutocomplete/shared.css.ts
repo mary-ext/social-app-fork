@@ -32,10 +32,9 @@ export const icon = style({
 	flexShrink: 0,
 });
 
-// let the label shrink within the flex row and break long unbroken values (e.g. a pasted URL) instead of overflowing.
+// let the label shrink within the flex row instead of overflowing.
 export const label = style({
 	minWidth: 0,
-	overflowWrap: 'break-word',
 });
 
 // a recent-history row: the base row with trailing room reserved for the floating remove button so long

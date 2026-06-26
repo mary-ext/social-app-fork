@@ -2,19 +2,8 @@ import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { fontSizeVar, sizeLeadingVar } from '#/components/Text.css';
 
-import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { fontSize, lineHeight } from '#/styles/tokens.css';
-
-// richtext keeps the value's authored newlines and runs of whitespace, wraps at the container edge, and
-// breaks long unbroken tokens (e.g. URLs) rather than overflowing. both properties inherit, so the inline
-// links/mentions/tags pick them up from the host element.
-export const content = style(
-	layered(components, {
-		overflowWrap: 'break-word',
-		whiteSpace: 'pre-wrap',
-	}),
-);
 
 // mentions and tags render as atomic inline-blocks so they wrap to the next line whole rather than
 // breaking mid-handle at an internal hyphen/dot. a handle wider than the column still wraps within it

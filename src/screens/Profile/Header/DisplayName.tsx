@@ -1,5 +1,4 @@
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
-import { clsx } from 'clsx';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -20,7 +19,7 @@ export function ProfileHeaderDisplayName({ tight = false }: { tight?: boolean })
 
 	return (
 		<Text
-			className={clsx(css.displayName, tight && css.displayNameTight)}
+			className={tight ? css.displayNameTight : undefined}
 			color="text"
 			size={gtMobile ? '_4xl' : '_3xl'}
 			weight="bold"

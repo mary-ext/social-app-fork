@@ -8,7 +8,7 @@ import { parseLinkableUrl, toShortUrl } from '#/lib/strings/url-helpers';
 
 import { isOnlyEmoji } from '#/alf/typography';
 
-import { atomicSegment, content, emoji } from '#/components/RichText.css';
+import { atomicSegment, emoji } from '#/components/RichText.css';
 import { RichTextTag } from '#/components/RichTextTag';
 import { Text, type TextProps } from '#/components/Text';
 import {
@@ -76,7 +76,7 @@ export function RichText({
 		return (
 			<Text
 				align={align}
-				className={clsx(content, emoji({ scale: emojiScale, size }), className)}
+				className={clsx(emoji({ scale: emojiScale, size }), className)}
 				color={color}
 				leading={leading}
 				selectable={selectable}
@@ -181,7 +181,7 @@ export function RichText({
 	return (
 		<Text
 			align={align}
-			className={clsx(content, className)}
+			className={className}
 			color={color}
 			leading={leading}
 			numberOfLines={numberOfLines}

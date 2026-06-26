@@ -50,7 +50,9 @@ export const text = recipe(
 			// lands on the pixel grid rather than a fractional CSS value
 			lineHeight: roundToPx(`calc(${fontSizeScale} * ${leading})`),
 			margin: 0,
+			overflowWrap: 'break-word',
 			padding: 0,
+			whiteSpace: 'pre-wrap',
 		},
 		defaultVariants: { color: 'text', leading: 'snug', size: 'md' },
 		variants: {

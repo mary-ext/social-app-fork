@@ -840,12 +840,7 @@ function AdditionalPostText({ post }: { post?: AppBskyFeedDefs.PostView }) {
 	return (
 		<>
 			{text?.length > 0 && (
-				<Text
-					size="md_sub"
-					color="textContrastMedium"
-					numberOfLines={MAX_POST_LINES}
-					className={css.additionalPostText}
-				>
+				<Text size="md_sub" color="textContrastMedium" numberOfLines={MAX_POST_LINES}>
 					{text}
 				</Text>
 			)}

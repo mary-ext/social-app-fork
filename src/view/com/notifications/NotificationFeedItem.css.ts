@@ -143,10 +143,6 @@ export const additionalWrap = style({
 	paddingTop: 2,
 });
 
-export const additionalPostText = style({
-	overflowWrap: 'break-word',
-});
-
 export const starterPackBox = style({
 	borderColor: colors.borderContrastLow,
 	borderRadius: 8,

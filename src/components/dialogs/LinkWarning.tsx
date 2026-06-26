@@ -120,7 +120,7 @@ function LinkBox({ href }: { href: string }) {
 
 	return (
 		<div className={css.linkBox}>
-			<Text className={css.linkText} color="textContrastMedium">
+			<Text color="textContrastMedium">
 				{scheme}
 				<Text weight="semiBold">{hostname}</Text>
 				{rest}
