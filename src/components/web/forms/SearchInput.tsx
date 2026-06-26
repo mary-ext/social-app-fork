@@ -1,4 +1,4 @@
-import type { KeyboardEventHandler, Ref } from 'react';
+import type { FocusEventHandler, KeyboardEventHandler, Ref } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
@@ -19,6 +19,7 @@ export function SearchInput({
 	maxLength,
 	onChangeText,
 	onClear,
+	onFocus,
 	onKeyDown,
 	placeholder,
 	value,
@@ -31,6 +32,7 @@ export function SearchInput({
 	onChangeText: (value: string) => void;
 	/** Clears the query. The trailing (×) button is shown only while `value` is non-empty and this is set. */
 	onClear?: () => void;
+	onFocus?: FocusEventHandler<HTMLInputElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	placeholder?: string;
 	value: string;
@@ -48,6 +50,7 @@ export function SearchInput({
 				label={label}
 				maxLength={maxLength}
 				onChangeText={onChangeText}
+				onFocus={onFocus}
 				onKeyDown={onKeyDown}
 				placeholder={placeholder}
 				value={value}

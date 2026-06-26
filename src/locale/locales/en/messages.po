@@ -1219,7 +1219,7 @@ msgstr ""
 msgid "All languages will be shown in your feeds"
 msgstr "All languages will be shown in your feeds"
 
-#: src/view/screens/Feeds.tsx:599
+#: src/view/screens/Feeds.tsx:414
 msgid "All the feeds you've saved, right in one place."
 msgstr ""
 
@@ -2025,12 +2025,12 @@ msgstr ""
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
 
-#: src/view/screens/Feeds.tsx:617
+#: src/view/screens/Feeds.tsx:432
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
 #: src/components/EmojiPicker/components/SearchBar.tsx:31
-#: src/components/web/forms/SearchInput.tsx:59
+#: src/components/web/forms/SearchInput.tsx:62
 #: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:664
 msgid "Clear search"
 msgstr "Clear search"
@@ -2717,7 +2717,7 @@ msgstr ""
 msgid "Discover new feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:614
+#: src/view/screens/Feeds.tsx:429
 msgid "Discover New Feeds"
 msgstr ""
 
@@ -2906,7 +2906,7 @@ msgid "Edit moderation list"
 msgstr ""
 
 #: src/Navigation.tsx:630
-#: src/view/screens/Feeds.tsx:485
+#: src/view/screens/Feeds.tsx:320
 msgid "Edit My Feeds"
 msgstr ""
 
@@ -3490,7 +3490,7 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:96
 #: src/screens/Search/SearchResults.tsx:71
 #: src/screens/StarterPack/StarterPackScreen.tsx:173
-#: src/view/screens/Feeds.tsx:478
+#: src/view/screens/Feeds.tsx:314
 #: src/view/screens/Profile.tsx:341
 #: src/view/shell/desktop/LeftNav.tsx:594
 #: src/view/shell/Drawer.tsx:170
@@ -3673,7 +3673,7 @@ msgid "Following"
 msgstr ""
 
 #: src/screens/SavedFeeds.tsx:386
-#: src/view/screens/Feeds.tsx:548
+#: src/view/screens/Feeds.tsx:366
 msgctxt "feed-name"
 msgid "Following"
 msgstr ""
@@ -4818,7 +4818,11 @@ msgstr "Loading image"
 msgid "Loading lists..."
 msgstr ""
 
-#: src/view/com/posts/PostFeed.tsx:500
+#: src/view/screens/Feeds.tsx:336
+msgid "Loading more feeds"
+msgstr "Loading more feeds"
+
+#: src/view/com/posts/PostFeed.tsx:499
 msgid "Loading more posts"
 msgstr "Loading more posts"
 
@@ -5251,7 +5255,7 @@ msgstr "Mutual group chats"
 msgid "My favorite feeds and people - join me!"
 msgstr "My favorite feeds and people - join me!"
 
-#: src/view/screens/Feeds.tsx:596
+#: src/view/screens/Feeds.tsx:411
 msgid "My Feeds"
 msgstr ""
 
@@ -5352,7 +5356,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:152
 #: src/screens/ProfileList/index.tsx:207
 #: src/screens/ProfileList/index.tsx:230
-#: src/view/screens/Feeds.tsx:516
+#: src/view/screens/Feeds.tsx:346
 #: src/view/screens/Notifications.tsx:136
 #: src/view/screens/Profile.tsx:413
 msgid "New post"
@@ -5542,7 +5546,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:438
+#: src/view/screens/Feeds.tsx:295
 msgid "No results found for \"{query}\""
 msgstr ""
 
@@ -7233,7 +7237,8 @@ msgstr ""
 msgid "Search emojis"
 msgstr "Search emojis"
 
-#: src/view/screens/Feeds.tsx:413
+#: src/view/screens/Feeds.tsx:277
+#: src/view/screens/Feeds.tsx:281
 msgid "Search feeds"
 msgstr ""
 
@@ -8301,7 +8306,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:886
-#: src/view/com/posts/PostFeed.tsx:450
+#: src/view/com/posts/PostFeed.tsx:449
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
