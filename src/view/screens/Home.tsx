@@ -25,8 +25,6 @@ import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
 import * as Layout from '#/components/web/Layout';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
-import { useDemoMode } from '#/storage/hooks/demo-mode';
-
 // the feed-discovery tab nudging the user toward the Feeds screen, shown logged-out and when the only
 // pinned feed is Following; selecting it opens that screen rather than switching feeds, so it has no
 // panel of its own
@@ -83,7 +81,6 @@ function HomeScreenReady({
 	const { hasSession } = useSession();
 	const navigation = useNavigation<NavigationProp>();
 	const setSelectedFeed = useSetSelectedFeed();
-	const [demoMode] = useDemoMode();
 
 	const allFeeds = useMemo(() => pinnedFeedInfos.map((f) => f.feedDescriptor), [pinnedFeedInfos]);
 	const selectedFeed = useSelectedFeed() ?? allFeeds[0];
@@ -96,37 +93,6 @@ function HomeScreenReady({
 	const whatsHotFeed: FeedDescriptor = `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`;
 
 	const sections = useMemo<Section<string>[]>(() => {
-		if (demoMode) {
-			return [
-				{
-					id: 'demo',
-					label: 'Following',
-					render: (focused) => (
-						<FeedPage
-							testID="demoFeedPage"
-							isPageFocused={focused}
-							feed="demo"
-							renderEmptyState={renderCustomFeedEmptyState}
-							feedInfo={pinnedFeedInfos[0]!}
-						/>
-					),
-				},
-				{
-					id: whatsHotFeed,
-					label: 'Discover',
-					render: (focused) => (
-						<FeedPage
-							testID="customFeedPage"
-							isPageFocused={focused}
-							feed={whatsHotFeed}
-							renderEmptyState={renderCustomFeedEmptyState}
-							feedInfo={pinnedFeedInfos[0]!}
-						/>
-					),
-				},
-			];
-		}
-
 		if (!hasSession) {
 			return [
 				{
@@ -180,14 +146,7 @@ function HomeScreenReady({
 			feedSections.push({ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', render: () => null });
 		}
 		return feedSections;
-	}, [
-		demoMode,
-		hasSession,
-		pinnedFeedInfos,
-		whatsHotFeed,
-		renderFollowingEmptyState,
-		renderCustomFeedEmptyState,
-	]);
+	}, [hasSession, pinnedFeedInfos, whatsHotFeed, renderFollowingEmptyState, renderCustomFeedEmptyState]);
 
 	const onValueChange = useCallback(
 		(value: string) => {

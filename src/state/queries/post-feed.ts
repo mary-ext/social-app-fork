@@ -24,7 +24,6 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 import { FeedTuner } from '#/lib/api/feed-manip';
 import { AuthorFeedAPI } from '#/lib/api/feed/author';
 import { CustomFeedAPI } from '#/lib/api/feed/custom';
-import { DemoFeedAPI } from '#/lib/api/feed/demo';
 import { FollowingFeedAPI } from '#/lib/api/feed/following';
 import { LikesFeedAPI } from '#/lib/api/feed/likes';
 import { ListFeedAPI } from '#/lib/api/feed/list';
@@ -66,8 +65,7 @@ export type FeedDescriptor =
 	| `feedgen|${FeedUri}`
 	| `likes|${ActorDid}`
 	| `list|${ListUri}`
-	| `posts|${PostsUriList}`
-	| 'demo';
+	| `posts|${PostsUriList}`;
 
 type RQPageParam = { cursor: string | undefined; api: FeedAPI } | undefined;
 
@@ -434,8 +432,6 @@ function createApi({
 			appview,
 			feedParams: { uris: uriList.split(',') } as AppBskyFeedGetPosts.$params,
 		});
-	} else if (feedDesc === 'demo') {
-		return new DemoFeedAPI();
 	} else {
 		// shouldnt happen
 		return new FollowingFeedAPI({ appview });

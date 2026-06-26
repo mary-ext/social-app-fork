@@ -7,7 +7,6 @@ export type Device = {
 	colorMode?: 'dark' | 'light' | 'system';
 	darkTheme?: 'dark' | 'dim';
 	debugFeedContextEnabled?: boolean;
-	demoMode: boolean;
 	devMode: boolean;
 	disableAutoplay?: boolean;
 	/**
