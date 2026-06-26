@@ -1,5 +1,4 @@
 import { type MouseEvent, useCallback, useMemo, useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -10,7 +9,7 @@ import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { getCurrentRoute, isTab } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
 
@@ -21,13 +20,10 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 
-import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
-import { PressableWithHover } from '#/view/com/util/PressableWithHover';
 import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
 
-import { atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
+import { useBreakpoints, useLayoutBreakpoints } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
 import {
@@ -67,10 +63,10 @@ import {
 	UserCircle_Filled_Corner0_Rounded as UserCircleFilledIcon,
 	UserCircle_Stroke2_Corner0_Rounded as UserCircleIcon,
 } from '#/components/icons/UserCircle';
-import { Text as WebText } from '#/components/Text';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
-import { useInternalLink } from '#/components/web/Link';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { isModifiedClick, Link, useInternalLink } from '#/components/web/Link';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
@@ -78,22 +74,10 @@ import { useActorStatus } from '#/features/liveNow';
 import { router } from '#/routes';
 import { colors } from '#/styles/colors';
 
+import { LARGE_ELEMENT_SIZE, NAV_ICON_WIDTH } from './LeftNav.const';
 import * as css from './LeftNav.css';
 
-const LARGE_ELEMENT_SIZE = 48;
-const NAV_ICON_WIDTH = 28;
-
-export const LEFT_NAV_MINIMAL_WIDTH = 80;
-const LEFT_NAV_PWI_WIDTH = 245;
-const LEFT_NAV_STANDARD_WIDTH = 240;
-
-type WebViewStyle = ViewStyle & {
-	overflowX?: 'hidden';
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style;
-};
+export { LEFT_NAV_MINIMAL_WIDTH } from './LeftNav.const';
 
 function ProfileCard({ minimal }: { minimal: boolean }) {
 	const { currentAccount, accounts } = useSession();
@@ -116,7 +100,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 	const { isActive: live } = useActorStatus(profile);
 
 	return (
-		<View style={[a.pb_md, !minimal && [a.w_full, a.align_start]]}>
+		<div className={clsx(css.profileCard, !minimal && css.profileCardFull)}>
 			{!isLoading && profile ? (
 				<Menu.Root>
 					<Menu.Trigger
@@ -137,12 +121,13 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 								{!minimal && (
 									<>
 										<div className={css.identity}>
-											<WebText size="sm" weight="bold" numberOfLines={1}>
+											<Text size="sm" weight="semiBold" numberOfLines={1}>
+												{sanitizeHandle(profile.handle)}
+											</Text>
+
+											<Text size="xs" color="textContrastMedium" numberOfLines={1}>
 												{sanitizeDisplayName(profile.displayName || profile.handle)}
-											</WebText>
-											<WebText size="xs" color="textContrastMedium" numberOfLines={1}>
-												{sanitizeHandle(profile.handle, '@')}
-											</WebText>
+											</Text>
 										</div>
 										<EllipsisIcon
 											aria-hidden={true}
@@ -158,11 +143,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 					<SwitchMenuItems accounts={otherAccounts} signOutPromptHandle={signOutPromptHandle} />
 				</Menu.Root>
 			) : (
-				<LoadingPlaceholder
-					width={LARGE_ELEMENT_SIZE}
-					height={LARGE_ELEMENT_SIZE}
-					style={[a.rounded_full, !minimal && a.ml_lg]}
-				/>
+				<div className={clsx(css.avatarPlaceholder, !minimal && css.avatarPlaceholderInset)} />
 			)}
 			<Prompt.Basic
 				handle={signOutPromptHandle}
@@ -173,7 +154,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 				cancelButtonCta={l`Cancel`}
 				confirmButtonColor="negative"
 			/>
-		</View>
+		</div>
 	);
 }
 
@@ -317,7 +298,6 @@ interface NavItemProps {
 	minimal: boolean;
 }
 function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
@@ -328,122 +308,57 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 		}
 		return getCurrentRoute(state);
 	});
-	let isCurrent =
+	const isCurrent =
 		currentRouteInfo.name === 'Profile'
 			? isTab(currentRouteInfo.name, pathName) &&
 				(currentRouteInfo.params as CommonNavigatorParams['Profile']).name === currentAccount?.did
 			: isTab(currentRouteInfo.name, pathName);
 	const isRelated = currentRouteInfo.name.startsWith(pathName);
-	const navigation = useNavigation<NavigationProp>();
-	const onPressWrapped = useCallback(
-		(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-			if (e.ctrlKey || e.metaKey || e.altKey) {
+
+	const onPress = useCallback(
+		(e: MouseEvent<HTMLElement>) => {
+			// a modified/middle click opens a new tab — let the anchor's default handle it
+			if (isModifiedClick(e)) {
 				return;
 			}
-			e.preventDefault();
+			// already on this tab: soft-reset the screen rather than re-navigate to it
 			if (isCurrent) {
 				softReset.emit();
-			} else {
-				const [screen, params] = router.matchPath(href);
-				// @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
-				navigation.navigate(screen, params, { pop: true });
+				return false;
 			}
 		},
-		[navigation, href, isCurrent],
+		[isCurrent],
 	);
 
 	const Icon = isCurrent || isRelated ? icons.active : icons.inactive;
 
 	return (
-		<PressableWithHover
-			style={[
-				a.flex_row,
-				a.align_center,
-				a.p_md,
-				a.rounded_full,
-				a.gap_sm,
-				a.outline_inset_1,
-				a.transition_color,
-			]}
-			hoverStyle={t.atoms.bg_contrast_25}
-			// @ts-expect-error the function signature differs on web -prf
-			onPress={onPressWrapped}
-			href={href}
-			dataSet={{ noUnderline: 1 }}
-			role="link"
-			accessibilityLabel={label}
-			accessibilityHint=""
-		>
-			<View
-				style={[
-					a.align_center,
-					a.justify_center,
-					a.z_10,
-					{
-						width: 24,
-						height: 24,
-					},
-				]}
-			>
+		<Link to={href} action="navigate" onPress={onPress} label={label} className={css.navItem}>
+			<div className={css.iconBox}>
 				<Icon aria-hidden={true} width={NAV_ICON_WIDTH} fill={colors.text} />
 				{typeof count === 'string' && count ? (
-					<View
-						style={[
-							a.absolute,
-							a.inset_0,
-							{ right: -20 }, // more breathing room
-						]}
+					<Text
+						aria-label={l`${plural(count, {
+							one: '# unread item',
+							other: '# unread items',
+						})}`}
+						size="sm"
+						weight="semiBold"
+						color="white"
+						className={css.badge}
 					>
-						<Text
-							accessibilityLabel={l`${plural(count, {
-								one: '# unread item',
-								other: '# unread items',
-							})}`}
-							accessibilityHint=""
-							accessible={true}
-							numberOfLines={1}
-							style={[
-								a.absolute,
-								a.text_xs,
-								a.font_semi_bold,
-								a.rounded_full,
-								a.text_center,
-								a.leading_tight,
-								a.z_20,
-								{
-									top: '-10%',
-									left: count.length === 1 ? 12 : 8,
-									backgroundColor: t.palette.primary_500,
-									color: t.palette.white,
-									lineHeight: a.text_sm.fontSize,
-									paddingHorizontal: 4,
-									paddingVertical: 1,
-									minWidth: 16,
-								},
-							]}
-						>
-							{count}
-						</Text>
-					</View>
+						{count}
+					</Text>
 				) : hasNew ? (
-					<View
-						style={[
-							a.absolute,
-							a.rounded_full,
-							a.z_20,
-							{
-								backgroundColor: t.palette.primary_500,
-								width: 8,
-								height: 8,
-								right: -2,
-								top: -4,
-							},
-						]}
-					/>
+					<div className={css.hasNewDot} />
 				) : null}
-			</View>
-			{!minimal && <Text style={[a.text_xl, isCurrent ? a.font_bold : a.font_normal]}>{label}</Text>}
-		</PressableWithHover>
+			</div>
+			{!minimal && (
+				<Text size="xl" leading="none" weight={isCurrent ? 'bold' : 'normal'}>
+					{label}
+				</Text>
+			)}
+		</Link>
 	);
 }
 
@@ -484,14 +399,14 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 	const onPressCompose = async () => openComposer({ mention: await getProfileHandle(), logContext: 'Fab' });
 
 	return (
-		<View style={minimal ? [a.px_sm, a.pt_lg] : [a.flex_row, a.pl_md, a.pt_lg]}>
+		<div className={minimal ? css.composeRowMinimal : css.composeRow}>
 			<Button
 				disabled={isFetchingHandle}
 				label={l`Compose new post`}
-				onPress={() => void onPressCompose()}
+				onClick={() => void onPressCompose()}
 				size="large"
 				color="primary"
-				style={[a.rounded_full, minimal && { width: LARGE_ELEMENT_SIZE, height: LARGE_ELEMENT_SIZE }]}
+				className={minimal ? css.composeButtonMinimal : undefined}
 			>
 				<ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
 				{!minimal && (
@@ -500,7 +415,7 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 					</ButtonText>
 				)}
 			</Button>
-		</View>
+		</div>
 	);
 }
 
@@ -523,25 +438,13 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 	}
 
 	return (
-		<View
-			role="navigation"
-			style={[
-				a.p_lg,
-				{ width: LEFT_NAV_STANDARD_WIDTH },
-				!hasSession && !leftNavMinimal && { width: LEFT_NAV_PWI_WIDTH },
-				leftNavMinimal && [
-					{ width: LEFT_NAV_MINIMAL_WIDTH },
-					a.align_center,
-					webViewStyle({ overflowX: 'hidden' }),
-				],
-			]}
-		>
+		<nav className={clsx(css.root, leftNavMinimal ? css.rootMinimal : !hasSession && css.rootPwi)}>
 			{hasSession ? (
 				<ProfileCard minimal={leftNavMinimal} />
 			) : !leftNavMinimal ? (
-				<View style={[a.pt_xl]}>
+				<div className={css.signInWrap}>
 					<NavSignInCard />
-				</View>
+				</div>
 			) : null}
 			{hasSession && (
 				<>
@@ -636,6 +539,6 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					<ComposeBtn minimal={leftNavMinimal} />
 				</>
 			)}
-		</View>
+		</nav>
 	);
 }
