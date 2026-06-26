@@ -5203,7 +5203,7 @@ msgstr "Mute this group chat"
 msgid "Mute thread"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:84
+#: src/components/dialogs/MutedWords.tsx:83
 #: src/screens/Messages/ConversationSettings/index.tsx:441
 msgid "Muted"
 msgstr "Muted"

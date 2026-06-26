@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useCallback, useState } from 'react';
+import { type KeyboardEvent, useState } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
@@ -27,13 +27,13 @@ export function MutedWordsDialog({ handle }: { handle: Dialog.DialogHandle }) {
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup label={l`Add a muted word or tag`} size="narrow">
 				<Dialog.Close />
-				<DialogInner />
+				<DialogInner handle={handle} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
-function DialogInner() {
+function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const { t: l } = useLingui();
 	const { isPending, mutateAsync: addMutedWord } = useUpsertMutedWordsMutation();
 	const [field, setField] = useState('');
@@ -53,7 +53,7 @@ function DialogInner() {
 		{ label: l`Tags only`, value: 'tag' },
 	];
 
-	const submit = useCallback(async () => {
+	const submit = async () => {
 		const sanitizedValue = sanitizeMutedWordValue(field);
 		const surfaces = ['tag', target === 'content' && 'content'].filter(
 			Boolean,
@@ -80,14 +80,14 @@ function DialogInner() {
 		try {
 			// send raw value and rely on SDK as sanitization source of truth
 			await addMutedWord([{ value: field, targets: surfaces, actorTarget, expiresAt }]);
-			setField('');
 			Toast.show(l`Muted`, { type: 'success' });
+			handle.close();
 		} catch (e) {
 			const message = e instanceof Error ? e.message : String(e);
 			logger.error(`Failed to save muted word`, { message });
 			setError(message);
 		}
-	}, [l, field, target, addMutedWord, duration, excludeFollowing]);
+	};
 
 	const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
