@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+
+import { useConstant } from '#/lib/hooks/use-constant';
 
 type Task<TServerState> = {
 	isOn: boolean;
@@ -26,12 +28,13 @@ export function useToggleMutationQueue<TServerState>({
 	runMutation: (prevState: TServerState, nextIsOn: boolean) => Promise<TServerState>;
 	onSuccess: (finalState: TServerState) => void;
 }) {
-	// We use the queue as a mutable object.
-	// This is safe becuase it is not used for rendering.
-	const [queue] = useState<TaskQueue<TServerState>>({
+	// the queue is a mutable object, mutated in place across toggles and never read during
+	// render (only inside processQueue/queueToggle, which run on user toggle). a useRef would
+	// also work; useConstant keeps the queue.activeTask access unchanged.
+	const queue = useConstant<TaskQueue<TServerState>>(() => ({
 		activeTask: null,
 		queuedTask: null,
-	});
+	}));
 
 	async function processQueue() {
 		if (queue.activeTask) {

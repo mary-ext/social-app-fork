@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { type EventArg, useNavigation } from '@react-navigation/native';
+
+import { useConstant } from '#/lib/hooks/use-constant';
 
 if ('scrollRestoration' in history) {
 	// Tell the brower not to mess with the scroll.
@@ -23,7 +25,7 @@ export function useWebScrollRestoration() {
 	// A stable, mutable container for per-screen scroll positions and the
 	// currently focused screen. Mutated in place because changes must not
 	// trigger re-renders.
-	const [state] = useState(createInitialScrollState);
+	const state = useConstant(createInitialScrollState);
 	const navigation = useNavigation();
 
 	useEffect(() => {
@@ -56,7 +58,7 @@ export function useWebScrollRestoration() {
 				requestAnimationFrame(() => {
 					window.scrollTo(0, scrollY);
 				});
-				// eslint-disable-next-line react-hooks/immutability -- `state` is a stable mutable container held in useState by design
+				// eslint-disable-next-line react-hooks/immutability -- `state` is a stable mutable container held in useConstant by design
 				state.focusedKey = e.target ?? null;
 			},
 		}),

@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';
 
+import { useConstant } from '#/lib/hooks/use-constant';
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
@@ -27,7 +28,7 @@ export function NewskieDialog({
 	const handle = Dialog.useDialogHandle();
 
 	const createdAt = profile.createdAt;
-	const [now] = useState(() => Date.now());
+	const now = useConstant(Date.now);
 	const daysOld = useMemo(() => {
 		if (!createdAt) return Infinity;
 		return differenceInSeconds(now, new Date(createdAt)) / 86400;

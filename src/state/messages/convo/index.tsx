@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from 'react';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useAppState } from '#/lib/appState';
+import { useConstant } from '#/lib/hooks/use-constant';
 
 import { Convo } from '#/state/messages/convo/agent';
 import type {
@@ -95,7 +96,7 @@ function ConvoProviderInner({
 }) {
 	const queryClient = useQueryClient();
 	const events = useMessagesEventBus();
-	const [convo] = useState(() => {
+	const convo = useConstant(() => {
 		const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(getConvoKey(convoId));
 		return new Convo({
 			convoId,

@@ -1,7 +1,9 @@
-import { type ComponentType, type ReactElement, type ReactNode, useState } from 'react';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
+
+import { useConstant } from '#/lib/hooks/use-constant';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import { Text } from '#/components/Text';
@@ -21,7 +23,7 @@ export type MenuHandle<T = void> = BaseMenu.Handle<T>;
 
 /** Component-local menu handle. */
 export function useMenuHandle<T = void>(): MenuHandle<T> {
-	const [handle] = useState(createHandle<T>);
+	const handle = useConstant(createHandle<T>);
 	return handle;
 }
 

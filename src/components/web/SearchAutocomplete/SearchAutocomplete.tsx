@@ -34,6 +34,7 @@ import {
 	type Token,
 	tokenize,
 } from '#/lib/bsky/search';
+import { useConstant } from '#/lib/hooks/use-constant';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { focusSearch } from '#/state/events';
@@ -248,9 +249,9 @@ function ActiveSearchAutocomplete({
 		setOpen(false);
 	}
 
-	// pinned once per mount so the calendar and date math don't drift mid-session; the compiler treats
-	// `new Date()` as impure (clock-reading) and won't memoize a plain const, so this stays explicit.
-	const [today] = useState(() => new Date());
+	// pinned once per mount so the calendar and date math don't drift mid-session; the compiler
+	// treats `new Date()` as impure (clock-reading), so useConstant holds it rather than a const.
+	const today = useConstant(() => new Date());
 
 	const tokens = useMemo(() => tokenize(query), [query]);
 	const active = useMemo(() => findActiveToken(tokens, caret), [tokens, caret]);

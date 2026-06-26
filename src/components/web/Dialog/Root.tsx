@@ -1,5 +1,7 @@
-import { type ReactNode, useId, useRef, useState } from 'react';
+import { type ReactNode, useId, useRef } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+
+import { useConstant } from '#/lib/hooks/use-constant';
 
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 
@@ -15,7 +17,7 @@ export type DialogHandle<T = void> = BaseDialog.Handle<T>;
 
 /** Component-local dialog handle. */
 export function useDialogHandle<T = void>(): DialogHandle<T> {
-	const [handle] = useState(createHandle<T>);
+	const handle = useConstant(createHandle<T>);
 	return handle;
 }
 

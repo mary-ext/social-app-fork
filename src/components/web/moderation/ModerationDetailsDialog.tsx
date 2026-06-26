@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
+import { useConstant } from '#/lib/hooks/use-constant';
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -46,7 +46,7 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 	const desc = useModerationCauseDescription(modcause);
 	const { currentAccount } = useSession();
 	const timeDiff = useGetTimeAgo({ future: true });
-	const [now] = useState(() => Date.now());
+	const now = useConstant(Date.now);
 
 	let name;
 	let description;

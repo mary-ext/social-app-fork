@@ -1,6 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { AppState } from 'react-native';
 import type { Client } from '@atcute/client';
+
+import { useConstant } from '#/lib/hooks/use-constant';
 
 import { MessagesEventBus } from '#/state/messages/events/agent';
 import { useClients, useSession } from '#/state/session';
@@ -28,7 +30,7 @@ export function MessagesEventBusProvider({ children }: { children: React.ReactNo
 }
 
 function MessagesEventBusProviderInner({ chat, children }: { chat: Client; children: React.ReactNode }) {
-	const [bus] = useState(() => new MessagesEventBus({ chat }));
+	const bus = useConstant(() => new MessagesEventBus({ chat }));
 
 	useEffect(() => {
 		bus.resume();

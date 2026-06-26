@@ -1,6 +1,8 @@
-import { type ComponentType, type ReactNode, useId, useState } from 'react';
+import { type ComponentType, type ReactNode, useId } from 'react';
 import { AlertDialog } from '@base-ui/react/alert-dialog';
 import { useLingui } from '@lingui/react/macro';
+
+import { useConstant } from '#/lib/hooks/use-constant';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -22,7 +24,7 @@ export type PromptHandle<T = void> = AlertDialog.Handle<T>;
 
 /** Component-local prompt handle. */
 export function usePromptHandle<T = void>(): PromptHandle<T> {
-	const [handle] = useState(createHandle<T>);
+	const handle = useConstant(createHandle<T>);
 	return handle;
 }
 

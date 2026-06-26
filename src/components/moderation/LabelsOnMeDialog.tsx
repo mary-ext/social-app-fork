@@ -5,6 +5,7 @@ import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
+import { useConstant } from '#/lib/hooks/use-constant';
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useLabelSubject } from '#/lib/moderation';
 import { OzoneReason } from '#/lib/moderation/report-reasons';
@@ -116,7 +117,7 @@ function Label({
 	const { labeler, strings } = useLabelInfo(label);
 	const sourceName = labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src;
 	const timeDiff = useGetTimeAgo({ future: true });
-	const [now] = useState(() => Date.now());
+	const now = useConstant(Date.now);
 
 	return (
 		<div className={styles.card}>

@@ -1,6 +1,8 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+
+import { useConstant } from '#/lib/hooks/use-constant';
 
 import type { FeedSourceInfo } from '#/state/queries/feed';
 
@@ -48,7 +50,7 @@ export function setUnstablePostSource(key: string, source: PostSource) {
  */
 export function useUnstablePostSource(key: string) {
 	const id = useId();
-	const [source] = useState(() => {
+	const source = useConstant(() => {
 		assertValidDevOnly(
 			key,
 			`consumeUnstablePostSource key should be a URI containing a handle, received ${key} — be sure to use buildPostSourceKey when setting the source`,

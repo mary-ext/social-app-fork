@@ -1,5 +1,7 @@
-import { createContext, type ReactNode, type RefObject, useContext, useMemo, useRef, useState } from 'react';
+import { createContext, type ReactNode, type RefObject, useContext, useMemo, useRef } from 'react';
 import { Popover } from '@base-ui/react/popover';
+
+import { useConstant } from '#/lib/hooks/use-constant';
 
 import { emojiInserted } from '#/view/com/composer/text-input/textInputWebEmitter';
 
@@ -46,7 +48,7 @@ export type EmojiPickerHandle = Popover.Handle<void>;
 
 /** Component-local emoji-picker handle. */
 export function useEmojiPickerHandle(): EmojiPickerHandle {
-	const [handle] = useState(createHandle<void>);
+	const handle = useConstant(createHandle<void>);
 	return handle;
 }
 
