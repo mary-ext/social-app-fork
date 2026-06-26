@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyLabelerDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { plural } from '@lingui/core/macro';
@@ -224,14 +224,14 @@ function LabelerBody({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetai
 }
 
 /** Profile header for a labeler account. */
-let LabelerProfileHeader = ({
+export function LabelerProfileHeader({
 	descriptionRT,
 	hideBackButton = false,
 	isPlaceholderProfile,
 	labeler,
 	moderationOpts,
 	profile,
-}: Props): React.ReactNode => {
+}: Props): React.ReactNode {
 	return (
 		<ProfileHeaderProvider
 			descriptionRT={descriptionRT}
@@ -245,7 +245,4 @@ let LabelerProfileHeader = ({
 			</ProfileHeaderShell>
 		</ProfileHeaderProvider>
 	);
-};
-
-LabelerProfileHeader = memo(LabelerProfileHeader);
-export { LabelerProfileHeader };
+}

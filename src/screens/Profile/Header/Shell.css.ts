@@ -25,6 +25,12 @@ export const bannerButton = style({
 	width: '100%',
 });
 
+export const bannerPlaceholder = style({
+	backgroundColor: colors.contrast_50,
+	height: '100%',
+	width: '100%',
+});
+
 export const backButton = style({
 	background: 'none',
 	border: 0,

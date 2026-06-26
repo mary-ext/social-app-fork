@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { clsx } from 'clsx';
@@ -74,13 +74,13 @@ function StandardBody() {
 }
 
 /** Profile header for a regular (non-labeler) account. */
-let StandardProfileHeader = ({
+export function StandardProfileHeader({
 	descriptionRT,
 	hideBackButton = false,
 	isPlaceholderProfile,
 	moderationOpts,
 	profile,
-}: Props): React.ReactNode => {
+}: Props): React.ReactNode {
 	const [showSuggestedFollows, setShowSuggestedFollows] = useState(false);
 	const [hasSeenAllSuggestedFollows, setHasSeenAllSuggestedFollows] = useState(false);
 
@@ -106,7 +106,4 @@ let StandardProfileHeader = ({
 			/>
 		</ProfileHeaderProvider>
 	);
-};
-
-StandardProfileHeader = memo(StandardProfileHeader);
-export { StandardProfileHeader };
+}

@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
@@ -6,8 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
 import type { NavigationProp } from '#/lib/routes/types';
-
-import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
@@ -28,7 +26,7 @@ import * as css from './Shell.css';
  * The fixed profile-header scaffold: banner with back button, the overlapping avatar with its live ring, and
  * the moderation alerts. Variants pass the header body as `children`.
  */
-let ProfileHeaderShell = ({ children }: { children: React.ReactNode }): React.ReactNode => {
+export function ProfileHeaderShell({ children }: { children: React.ReactNode }): React.ReactNode {
 	const { t: l } = useLingui();
 	const {
 		meta: { hideBackButton, isMe, isPlaceholderProfile, live },
@@ -82,7 +80,7 @@ let ProfileHeaderShell = ({ children }: { children: React.ReactNode }): React.Re
 					</button>
 				)}
 				{isPlaceholderProfile ? (
-					<LoadingPlaceholder width="100%" height="100%" style={{ borderRadius: 0 }} />
+					<div className={css.bannerPlaceholder} />
 				) : (
 					<button
 						type="button"
@@ -154,7 +152,4 @@ let ProfileHeaderShell = ({ children }: { children: React.ReactNode }): React.Re
 				))}
 		</div>
 	);
-};
-
-ProfileHeaderShell = memo(ProfileHeaderShell);
-export { ProfileHeaderShell };
+}
