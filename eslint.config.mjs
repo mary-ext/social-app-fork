@@ -29,6 +29,8 @@ export default defineConfig(
 			'src/lib/sw-template.js',
 			'src/locale/locales/_build/**',
 			'src/locale/locales/**/*.js',
+			// compiled lingui catalog (pnpm intl:compile); minified + regenerated, not hand-edited
+			'src/locale/locales/*/messages.ts',
 			'eslint.config.mjs',
 		],
 	},
