@@ -40,6 +40,8 @@ export function SearchInput({ value, label, onClearText, hotkey, ref, ...rest }:
 			<TextField.Root>
 				<TextField.Icon icon={MagnifyingGlassIcon} />
 				<TextField.Input
+					// mergeRefs returns a ref callback that reads/writes .current only at attach time, not during render.
+					// eslint-disable-next-line react-hooks/refs
 					inputRef={mergeRefs([internalRef, ref])}
 					label={label || l`Search`}
 					value={value}

@@ -64,6 +64,8 @@ export function GalleryBleed({ children }: { children: React.ReactNode }) {
 		<Context.Provider value={{ bleedRef: ref, bleedWidth }}>
 			{cloneElement(node, {
 				className: clsx(node.props.className, css.clip),
+				// mergeRefs returns a ref callback that reads/writes .current only at attach time, not during render.
+				// eslint-disable-next-line react-hooks/refs
 				ref: mergeRefs([measureRef, node.props.ref]),
 			})}
 		</Context.Provider>

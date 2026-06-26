@@ -2022,7 +2022,7 @@ msgstr ""
 msgid "Clear search"
 msgstr "Clear search"
 
-#: src/components/forms/SearchInput.tsx:70
+#: src/components/forms/SearchInput.tsx:72
 msgid "Clear search query"
 msgstr ""
 
@@ -7177,8 +7177,8 @@ msgid "Scrolls the conversation to the most recent message"
 msgstr "Scrolls the conversation to the most recent message"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:546
-#: src/components/forms/SearchInput.tsx:44
 #: src/components/forms/SearchInput.tsx:46
+#: src/components/forms/SearchInput.tsx:48
 #: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:171
 #: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:661
 #: src/Navigation.tsx:578
