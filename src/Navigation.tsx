@@ -5,7 +5,6 @@ import {
 	lazy,
 	Suspense,
 	useContext,
-	useEffect,
 	useRef,
 	useState,
 } from 'react';
@@ -363,15 +362,23 @@ function FlatNavigatorLayout({ children, descriptors, state }: FlatNavigatorLayo
 	const activeDescriptor = descriptors[activeRoute.key]!;
 	const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false;
 	const focusedKey = activeRoute.key;
-	const [lruKeys, setLruKeys] = useState<string[]>([]);
+	// seed with the initial focused key so the first route change (A -> B) retains A as mounted, matching the
+	// prior post-mount effect which seeded lruKeys with [focusedKey] on first run.
+	const [lruKeys, setLruKeys] = useState<string[]>(() => [focusedKey]);
 
-	useEffect(() => {
+	// reconcile the LRU key list during render when the focused route or route set changes, so the
+	// mounted-route set below stays consistent within the same commit instead of cascading a second render.
+	const [prevFocusedKey, setPrevFocusedKey] = useState(focusedKey);
+	const [prevRoutes, setPrevRoutes] = useState(state.routes);
+	if (prevFocusedKey !== focusedKey || prevRoutes !== state.routes) {
+		setPrevFocusedKey(focusedKey);
+		setPrevRoutes(state.routes);
 		const routeKeySet = new Set(state.routes.map((r) => r.key));
 		setLruKeys((prev) => {
 			const next = [focusedKey, ...prev.filter((k) => k !== focusedKey && routeKeySet.has(k))];
 			return stringArraysEqual(prev, next) ? prev : next;
 		});
-	}, [focusedKey, state.routes]);
+	}
 
 	if (!hasSession && activeRouteRequiresAuth) {
 		return <LoggedOut />;

@@ -56,9 +56,13 @@ export function AvatarBubbles({
 	const marginOffset = size < 120 ? -2 : 0;
 
 	// Drive the entrance scale from React state so the CSS transition actually re-renders into its end state.
+	// the false->true flip is the animation trigger, so the cascading render is intentional; a CSS keyframe
+	// animation would avoid the extra render but requires reworking the bubbleScaleVar/bubbleAnimated transition
+	// mechanism and can't be visually verified here.
 	const [animatedIn, setAnimatedIn] = useState(false);
 	useEffect(() => {
 		if (animate) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect -- intentional one-shot animation trigger; see comment above
 			setAnimatedIn(true);
 		}
 	}, [animate]);

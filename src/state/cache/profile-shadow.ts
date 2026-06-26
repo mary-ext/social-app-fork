@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyNotificationDefs } from '@atcute/bluesky';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import type { QueryClient } from '@tanstack/react-query';
@@ -129,53 +129,44 @@ export function useMaybeProfileShadow<TProfileView extends AnyProfileView>(
  * intended for removing a post from a feed after you mute the author
  */
 export function usePostAuthorShadowFilter(data?: FeedPage[]) {
-	const [trackedDids, setTrackedDids] = useState<string[]>(
-		() =>
-			data?.flatMap((page) =>
-				page.slices.flatMap((slice) => slice.items.map((item) => item.post.author.did)),
-			) ?? [],
-	);
 	const [authors, setAuthors] = useState(new Map<string, { muted: boolean; blocked: boolean }>());
+	// per-did unsubs for the shadow subscriptions below; bookkeeping only (not render state), so it lives in a
+	// ref. this avoids the trackedDids state -> subscription effect -> authors state cascade the prior version
+	// had: new author DIDs are subscribed incrementally as the feed data changes.
+	const unsubsRef = useRef(new Map<string, () => void>());
 
 	useEffect(() => {
-		setTrackedDids((prev) => {
-			const currentDids = new Set(prev);
-			let hasNew = false;
-			for (const slice of data?.flatMap((page) => page.slices) ?? []) {
-				for (const item of slice.items) {
-					const author = item.post.author;
-					if (!currentDids.has(author.did)) {
-						hasNew = true;
-						currentDids.add(author.did);
-					}
+		const subscribed = unsubsRef.current;
+		for (const slice of data?.flatMap((page) => page.slices) ?? []) {
+			for (const item of slice.items) {
+				const did = item.post.author.did;
+				if (subscribed.has(did)) continue;
+
+				function onUpdate(value: Partial<ProfileShadow>) {
+					setAuthors((prev) => {
+						const prevValue = prev.get(did);
+						const next = new Map(prev);
+						next.set(did, {
+							blocked: Boolean(value.blockingUri ?? prevValue?.blocked ?? false),
+							muted: Boolean(value.muted ?? prevValue?.muted ?? false),
+						});
+						return next;
+					});
 				}
+				subscribed.set(did, emitter.subscribe(did, onUpdate));
 			}
-			return hasNew ? [...currentDids] : prev;
-		});
+		}
 	}, [data]);
 
 	useEffect(() => {
-		const unsubs: Array<() => void> = [];
-
-		for (const did of trackedDids) {
-			function onUpdate(value: Partial<ProfileShadow>) {
-				setAuthors((prev) => {
-					const prevValue = prev.get(did);
-					const next = new Map(prev);
-					next.set(did, {
-						blocked: Boolean(value.blockingUri ?? prevValue?.blocked ?? false),
-						muted: Boolean(value.muted ?? prevValue?.muted ?? false),
-					});
-					return next;
-				});
-			}
-			unsubs.push(emitter.subscribe(did, onUpdate));
-		}
-
+		const subscribed = unsubsRef.current;
 		return () => {
-			unsubs.forEach((fn) => fn());
+			for (const unsub of subscribed.values()) {
+				unsub();
+			}
+			subscribed.clear();
 		};
-	}, [trackedDids]);
+	}, []);
 
 	return useMemo(() => {
 		const dids: Array<string> = [];

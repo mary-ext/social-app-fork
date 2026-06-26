@@ -74,12 +74,15 @@ function LightboxContents({
 	const [chromeVisible, setChromeVisible] = useState(true);
 
 	// each open starts with the chrome shown; Base UI keeps this content mounted after close, so reopening
-	// the same instance would otherwise inherit whatever the last session toggled it to.
-	useEffect(() => {
+	// the same instance would otherwise inherit whatever the last session toggled it to. reset during render
+	// (against the previous open value) so the reopened lightbox never commits a stale hidden-chrome frame.
+	const [prevOpen, setPrevOpen] = useState(open);
+	if (prevOpen !== open) {
+		setPrevOpen(open);
 		if (open) {
 			setChromeVisible(true);
 		}
-	}, [open]);
+	}
 
 	const toggleTimer = useRef<number | null>(null);
 	useEffect(

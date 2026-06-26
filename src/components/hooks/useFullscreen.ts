@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 
 import { IS_WEB_FIREFOX, IS_WEB_SAFARI } from '#/env';
 
@@ -10,7 +10,9 @@ function fullscreenSubscribe(onChange: () => void) {
 export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 	const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () => Boolean(document.fullscreenElement));
 	const scrollYRef = useRef<null | number>(null);
-	const [prevIsFullscreen, setPrevIsFullscreen] = useState(isFullscreen);
+	// transition detection for the scroll-restore side effect, not derived render state — keep it in a ref
+	// so the effect can read the previous value without a synchronous setState.
+	const prevIsFullscreenRef = useRef(isFullscreen);
 
 	const toggleFullscreen = useCallback(() => {
 		if (isFullscreen) {
@@ -24,8 +26,9 @@ export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 	}, [isFullscreen, ref]);
 
 	useEffect(() => {
+		const prevIsFullscreen = prevIsFullscreenRef.current;
 		if (prevIsFullscreen === isFullscreen) return;
-		setPrevIsFullscreen(isFullscreen);
+		prevIsFullscreenRef.current = isFullscreen;
 
 		// Chrome has an issue where it doesn't scroll back to the top after exiting fullscreen
 		// Let's play it safe and do it if not FF or Safari, since anything else will probably be chromium
@@ -37,7 +40,7 @@ export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 				}
 			}, 100);
 		}
-	}, [isFullscreen, prevIsFullscreen]);
+	}, [isFullscreen]);
 
 	return [isFullscreen, toggleFullscreen] as const;
 }
