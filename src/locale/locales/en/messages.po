@@ -1768,7 +1768,7 @@ msgstr ""
 msgid "Business"
 msgstr ""
 
-#: src/screens/Bookmarks/index.tsx:225
+#: src/screens/Bookmarks/index.tsx:224
 msgid "Button to go back to the home timeline"
 msgstr ""
 
@@ -3854,7 +3854,7 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/screens/Bookmarks/index.tsx:226
+#: src/screens/Bookmarks/index.tsx:225
 #: src/view/screens/NotFound.tsx:51
 #: src/view/screens/NotFound.tsx:52
 #: src/view/screens/NotFound.tsx:56
@@ -4763,7 +4763,7 @@ msgstr ""
 msgid "Loading"
 msgstr "Loading"
 
-#: src/screens/Messages/components/MessageComposer.tsx:121
+#: src/screens/Messages/components/MessageComposer.tsx:158
 msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
@@ -4928,7 +4928,7 @@ msgstr ""
 msgid "Menu"
 msgstr "Menu"
 
-#: src/screens/Messages/components/MessageComposer.tsx:122
+#: src/screens/Messages/components/MessageComposer.tsx:159
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:169
 msgctxt "action"
 msgid "Message"
@@ -4967,11 +4967,11 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:118
+#: src/screens/Messages/components/MessageComposer.tsx:154
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:67
+#: src/screens/Messages/components/MessageComposer.tsx:80
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
@@ -5592,7 +5592,7 @@ msgstr ""
 msgid "Note: This post is only visible to logged-in users."
 msgstr ""
 
-#: src/screens/Bookmarks/index.tsx:222
+#: src/screens/Bookmarks/index.tsx:221
 msgid "Nothing saved yet"
 msgstr ""
 
@@ -5763,7 +5763,7 @@ msgstr ""
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:102
+#: src/screens/Messages/components/MessageComposer.tsx:139
 #: src/view/com/composer/Composer.tsx:1758
 msgid "Open emoji picker"
 msgstr ""
@@ -6524,7 +6524,7 @@ msgstr "Reload to update"
 #: src/components/ListCard.tsx:254
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:89
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:97
-#: src/screens/Bookmarks/index.tsx:198
+#: src/screens/Bookmarks/index.tsx:197
 #: src/screens/Messages/ConversationSettings/Member.tsx:152
 #: src/screens/Messages/ConversationSettings/prompts.tsx:166
 #: src/screens/Moderation/index.tsx:204
@@ -6622,7 +6622,7 @@ msgid "Remove from saved feeds"
 msgstr ""
 
 #: src/components/PostControls/useBookmark.tsx:83
-#: src/screens/Bookmarks/index.tsx:195
+#: src/screens/Bookmarks/index.tsx:194
 msgid "Remove from saved posts"
 msgstr ""
 
@@ -6675,7 +6675,7 @@ msgid "Removed from saved feeds"
 msgstr ""
 
 #: src/components/PostControls/useBookmark.tsx:58
-#: src/screens/Bookmarks/index.tsx:171
+#: src/screens/Bookmarks/index.tsx:170
 msgid "Removed from saved posts"
 msgstr ""
 
@@ -7446,7 +7446,7 @@ msgstr ""
 msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:179
+#: src/screens/Messages/components/MessageComposer.tsx:209
 msgid "Send message"
 msgstr ""
 
@@ -8590,7 +8590,7 @@ msgstr ""
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
-#: src/screens/Bookmarks/index.tsx:191
+#: src/screens/Bookmarks/index.tsx:190
 msgid "This post was deleted by its author"
 msgstr ""
 
@@ -9553,6 +9553,10 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:1097
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
+
+#: src/screens/Messages/components/MessageComposer.tsx:155
+msgid "Write a message"
+msgstr "Write a message"
 
 #: src/view/screens/Profile.tsx:256
 #: src/view/screens/Profile.tsx:257

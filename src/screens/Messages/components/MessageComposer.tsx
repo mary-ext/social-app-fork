@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
@@ -10,15 +10,21 @@ import { isBskyChatInviteUrl, isBskyPostUrl } from '#/lib/strings/url-helpers';
 
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
 
+import {
+	detectLinks,
+	type LinkFacetMatch,
+	suggestLinkCardUri,
+} from '#/view/com/composer/text-input/text-input-util';
+
 import { atoms as a, tokens, useTheme, utils } from '#/alf';
 
-import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
+import { Composer, useComposerInternalApiRef } from '#/components/web/Composer';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 import { colors } from '#/styles/colors';
@@ -26,16 +32,17 @@ import { colors } from '#/styles/colors';
 import * as styles from './MessageComposer.css';
 
 const MIN_HEIGHT = 40;
+// vertical padding that centers the composer's single line of `md` text (14px × 1.3 snug line-height =
+// 18.2px) within the MIN_HEIGHT box, so the one-row input is exactly MIN_HEIGHT and matches the send button.
+const COMPOSER_VERTICAL_PADDING = (MIN_HEIGHT - 14 * 1.3) / 2;
 
 export function MessageComposer({
-	textInputId,
 	onSendMessage,
 	hasEmbed,
 	setEmbed,
 	children,
 	loading = false,
 }: {
-	textInputId?: string;
 	onSendMessage: (message: string, replyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>) => void;
 	hasEmbed: boolean;
 	setEmbed: (embedUrl: string | undefined) => void;
@@ -51,6 +58,12 @@ export function MessageComposer({
 
 	const [text, setText] = useState(getDraft);
 	useSaveMessageDraft(text);
+
+	// link-card detection state: tracks each keystroke's detected links so a URL is only staged as an embed
+	// once it stops changing, rather than mid-typing.
+	const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>());
+	const pastSuggestedUris = useRef(new Set<string>());
+	const prevLength = useRef(text.length);
 
 	useEffect(() => {
 		if (!replyTo) return;
@@ -86,6 +99,30 @@ export function MessageComposer({
 
 	const handleChange = (nextText: string) => {
 		setText(nextText);
+
+		// a multi-character jump in length is the tell for a paste, which should be staged immediately rather
+		// than waiting for the URL to stop changing.
+		const mayBePaste = nextText.length > prevLength.current + 1;
+
+		// the DM only embeds bsky posts and chat invites; restrict detection to those so an unrelated link
+		// never shadows an embeddable one in the same message.
+		const nextDetectedUris = new Map<string, LinkFacetMatch>();
+		for (const [uri, match] of detectLinks(nextText)) {
+			if (isBskyChatInviteUrl(uri) || isBskyPostUrl(uri)) {
+				nextDetectedUris.set(uri, match);
+			}
+		}
+		const suggestedUri = suggestLinkCardUri(
+			mayBePaste,
+			nextDetectedUris,
+			prevDetectedUris.current,
+			pastSuggestedUris.current,
+		);
+		prevDetectedUris.current = nextDetectedUris;
+		prevLength.current = nextText.length;
+		if (suggestedUri) {
+			setEmbed(suggestedUri);
+		}
 	};
 
 	return (
@@ -114,8 +151,8 @@ export function MessageComposer({
 							</>
 						)}
 						<Composer
-							nativeID={textInputId}
-							label={l`Message input field`}
+							accessibilityLabel={l`Message input field`}
+							accessibilityHint={l`Write a message`}
 							placeholder={
 								loading
 									? l({ message: 'Loading chat...', context: 'placeholder' })
@@ -124,28 +161,21 @@ export function MessageComposer({
 							autocompletePlacement="top-start"
 							internalApiRef={composerInternalApiRef}
 							defaultValue={text}
-							editable={!loading}
+							disabled={loading}
 							autoFocus={true}
+							fontSize="md"
+							minRows={1}
 							maxRows={12}
-							outerStyle={[a.flex_1]}
-							contentTextStyle={[a.text_md, a.leading_snug]}
-							contentPaddingStyle={{
-								paddingLeft: 16,
-								paddingTop: 10,
-								paddingBottom: 10,
-								paddingRight: 16 + 20,
+							className={styles.editor}
+							contentPadding={{
+								bottom: COMPOSER_VERTICAL_PADDING,
+								left: 16,
+								right: 16 + 20,
+								top: COMPOSER_VERTICAL_PADDING,
 							}}
 							onChange={handleChange}
-							onFacetCommitted={(facet) => {
-								if (
-									facet.type === 'url' &&
-									(isBskyPostUrl(facet.value) || isBskyChatInviteUrl(facet.value))
-								) {
-									setEmbed(facet.value);
-								}
-							}}
 							onRequestSubmit={(req) => {
-								if (req.platform === 'web' && req.shiftKey) return;
+								if (req.shiftKey) return;
 								req.nativeEvent.preventDefault();
 								handleSubmit();
 							}}

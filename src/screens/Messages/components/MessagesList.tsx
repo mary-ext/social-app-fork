@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
 	type LayoutChangeEvent,
 	type NativeScrollEvent,
@@ -134,7 +134,6 @@ export function MessagesList({
 	const { embed: messageEmbed, setEmbed } = useMessageEmbed();
 	const t = useTheme();
 
-	const textInputId = 'chat-input-' + useId();
 	const flatListRef = useRef<ListMethods | null>(null);
 
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => new Set());
@@ -585,7 +584,6 @@ export function MessagesList({
 								<ConversationFooter convoState={convoState} hasAcceptOverride={hasAcceptOverride}>
 									{({ loading }) => (
 										<MessageComposer
-											textInputId={textInputId}
 											onSendMessage={(message, replyTo) => void onSendMessage(message, replyTo)}
 											hasEmbed={!!messageEmbed}
 											setEmbed={setEmbed}

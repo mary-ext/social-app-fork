@@ -1,8 +1,6 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { Emoji } from '@emoji-mart/data';
 
-import type { Sift } from '#/lib/sift';
-
 export type AutocompleteProfile = {
 	key: string;
 	type: 'profile';
@@ -33,8 +31,6 @@ export type AutocompleteSearch = {
 export type AutocompleteItem = AutocompleteProfile | AutocompleteTag | AutocompleteEmoji | AutocompleteSearch;
 
 export type AutocompleteItemType = AutocompleteItem['type'];
-
-export type AutocompleteItemProps = Parameters<Parameters<typeof Sift<AutocompleteItem>>[0]['render']>[0];
 
 export type AutocompleteApi = {
 	query: string;

@@ -1,13 +1,6 @@
-import {
-	type CSSProperties,
-	type Ref,
-	useEffect,
-	useEffectEvent,
-	useImperativeHandle,
-	useRef,
-	useState,
-} from 'react';
+import { type Ref, useEffect, useEffectEvent, useImperativeHandle, useRef, useState } from 'react';
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import type { Placement } from '#/lib/sift';
@@ -15,8 +8,6 @@ import type { Placement } from '#/lib/sift';
 import type { AutocompleteItem } from '#/components/Autocomplete/types';
 import { useAutocomplete } from '#/components/Autocomplete/useAutocomplete';
 import { parseAutocompleteItemType } from '#/components/Autocomplete/util';
-
-import { fontSize, lineHeight } from '#/styles/tokens.css';
 
 import { Autocomplete } from './Autocomplete';
 import * as styles from './Composer.css';
@@ -59,7 +50,15 @@ export type ComposerProps = {
 	placeholder?: string;
 	defaultValue?: string;
 	autoFocus?: boolean;
+	disabled?: boolean;
+	/** Text size for both the textarea and the preview overlay; they must share one size to stay registered. */
+	fontSize?: 'lg' | 'md';
 	minRows?: number;
+	/**
+	 * Caps the editor's visible height at this many rows; beyond it the composer scrolls. Omit to let it grow
+	 * unbounded (the consumer's own scroll container then handles overflow).
+	 */
+	maxRows?: number;
 	contentPadding?: ContentPadding;
 	/** Layout for the editor box within its row (the consumer owns positioning). */
 	className?: string;
@@ -84,7 +83,10 @@ export function Composer({
 	placeholder,
 	defaultValue,
 	autoFocus,
+	disabled,
+	fontSize = 'lg',
 	minRows = 2,
+	maxRows,
 	contentPadding = NO_PADDING,
 	className,
 	autocompletePlacement,
@@ -195,15 +197,17 @@ export function Composer({
 
 	const isComposing = useRef(false);
 
-	const paddingStyle: CSSProperties = {
-		paddingBottom: contentPadding.bottom,
-		paddingLeft: contentPadding.left,
-		paddingRight: contentPadding.right,
-		paddingTop: contentPadding.top,
-	};
-	const minHeight = `calc(${lineHeight.snug} * ${fontSize.lg} * ${minRows} + ${
-		contentPadding.top + contentPadding.bottom
-	}px)`;
+	// feed the per-instance layout inputs to the CSS via vars on `root`; the padding/min-height/max-height
+	// declarations (and the row→height formula) live in Composer.css. `maxRowsVar` is only consumed by the
+	// `capped` class, applied below when `maxRows` is set.
+	const layoutVars = assignInlineVars({
+		[styles.minRowsVar]: String(minRows),
+		[styles.paddingBottomVar]: `${contentPadding.bottom}px`,
+		[styles.paddingLeftVar]: `${contentPadding.left}px`,
+		[styles.paddingRightVar]: `${contentPadding.right}px`,
+		[styles.paddingTopVar]: `${contentPadding.top}px`,
+		...(maxRows !== undefined ? { [styles.maxRowsVar]: String(maxRows) } : {}),
+	});
 
 	return (
 		<BaseAutocomplete.Root
@@ -235,15 +239,16 @@ export function Composer({
 				}
 			}}
 		>
-			<div className={clsx(styles.root, className)}>
-				<div className={styles.overlay} aria-hidden inert>
-					<div className={styles.overlayInner} ref={overlayRef} style={paddingStyle}>
-						{spans.map((span, i) => (
-							<span key={i} className={span.facet ? styles.facet : undefined}>
-								{span.raw}
-							</span>
-						))}
-					</div>
+			<div
+				className={clsx(styles.root({ fontSize }), maxRows !== undefined && styles.capped, className)}
+				style={layoutVars}
+			>
+				<div className={styles.overlay} ref={overlayRef} aria-hidden inert>
+					{spans.map((span, i) => (
+						<span key={i} className={span.facet ? styles.facet : undefined}>
+							{span.raw}
+						</span>
+					))}
 				</div>
 				<BaseAutocomplete.Input
 					// `rows` is textarea-only, so it rides on the render element, not the input-typed props.
@@ -251,8 +256,8 @@ export function Composer({
 					// Base UI types Input for `<input>`; we render a `<textarea>`, so the ref is really a textarea.
 					ref={textareaRef as unknown as Ref<HTMLInputElement>}
 					className={styles.textarea}
-					style={{ ...paddingStyle, minHeight }}
 					placeholder={placeholder}
+					disabled={disabled}
 					aria-label={accessibilityLabel}
 					aria-description={accessibilityHint}
 					autoFocus={autoFocus}

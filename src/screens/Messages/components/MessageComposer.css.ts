@@ -28,6 +28,11 @@ export const emojiButton = style({
 	},
 });
 
+// the composer fills the input box so its whole area is the click target.
+export const editor = style({
+	flex: 1,
+});
+
 // nudges the send-button icon (paper plane / spinner) up to sit optically centered.
 export const sendIcon = style({
 	marginBottom: 2,
