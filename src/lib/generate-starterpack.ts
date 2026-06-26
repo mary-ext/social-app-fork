@@ -1,17 +1,9 @@
 import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
-import type { AnyProfileView, AppBskyActorDefs, AppBskyRichtextFacet } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Did, ResourceUri } from '@atcute/lexicons';
-import { useLingui } from '@lingui/react/macro';
-import { useMutation } from '@tanstack/react-query';
+import type { Did } from '@atcute/lexicons';
 
 import { createRecord } from '#/lib/api/records';
-import { until } from '#/lib/async/until';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
-import { enforceLen } from '#/lib/strings/helpers';
-
-import { useClients, useSession } from '#/state/session';
 
 export const createStarterPackList = async ({
 	name,
@@ -56,83 +48,6 @@ export const createStarterPackList = async ({
 	return list;
 };
 
-export function useGenerateStarterPackMutation({
-	onSuccess,
-	onError,
-}: {
-	onSuccess: ({ uri, cid }: { uri: string; cid: string }) => void;
-	onError: (e: Error) => void;
-}) {
-	const { t: l } = useLingui();
-	const { appview, pds } = useClients();
-	const { currentAccount } = useSession();
-
-	return useMutation<{ uri: string; cid: string }, Error, void>({
-		mutationFn: async () => {
-			const did = currentAccount!.did as Did;
-			let profile: AppBskyActorDefs.ProfileViewDetailed | undefined;
-			let profiles: AppBskyActorDefs.ProfileView[] | undefined;
-
-			await Promise.all([
-				(async () => {
-					profile = await ok(appview.get('app.bsky.actor.getProfile', { params: { actor: did } }));
-				})(),
-				(async () => {
-					const res = await ok(
-						appview.get('app.bsky.actor.searchActors', {
-							params: { limit: 49, q: encodeURIComponent('*') },
-						}),
-					);
-					profiles = res.actors.filter((p) => p.viewer?.following);
-				})(),
-			]);
-
-			if (!profile || !profiles) {
-				throw new Error('ERROR_DATA');
-			}
-
-			// We include ourselves when we make the list
-			if (profiles.length < 7) {
-				throw new Error('NOT_ENOUGH_FOLLOWERS');
-			}
-
-			const displayName = enforceLen(
-				profile.displayName ? sanitizeDisplayName(profile.displayName) : `@${sanitizeHandle(profile.handle)}`,
-				25,
-				true,
-			);
-			const starterPackName = l`${displayName}'s Starter Pack`;
-
-			const list = await createStarterPackList({
-				did,
-				name: starterPackName,
-				pds: pds!,
-				profiles,
-			});
-
-			return await createRecord(pds!, {
-				collection: 'app.bsky.graph.starterpack',
-				record: {
-					$type: 'app.bsky.graph.starterpack',
-					createdAt: new Date().toISOString(),
-					list: list.uri as ResourceUri,
-					name: starterPackName,
-				},
-				repo: did,
-			});
-		},
-		onSuccess: async (data) => {
-			await whenAppViewReady(appview, data.uri, (v) => {
-				return typeof v?.starterPack.uri === 'string';
-			});
-			onSuccess(data);
-		},
-		onError: (error) => {
-			onError(error);
-		},
-	});
-}
-
 function createListItem({
 	did,
 	listUri,
@@ -150,14 +65,4 @@ function createListItem({
 			subject: did,
 		},
 	};
-}
-
-async function whenAppViewReady(
-	appview: Client,
-	uri: string,
-	fn: (res?: { starterPack: { uri: string } }) => boolean,
-) {
-	await until(5, 1e3, fn, () =>
-		ok(appview.get('app.bsky.graph.getStarterPack', { params: { starterPack: uri as ResourceUri } })),
-	);
 }

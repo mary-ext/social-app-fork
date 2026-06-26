@@ -351,7 +351,6 @@ msgstr "{count, plural, other {#+ requests to join}}"
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
-#: src/lib/generate-starterpack.ts:104
 #: src/screens/StarterPack/Wizard/index.tsx:162
 msgid "{displayName}'s Starter Pack"
 msgstr ""
@@ -549,7 +548,7 @@ msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 
 #. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
-#: src/components/StarterPack/StarterPackCard.tsx:112
+#: src/components/StarterPack/StarterPackCard.tsx:116
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr ""
 
@@ -1315,10 +1314,6 @@ msgstr ""
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:294
-msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr ""
-
 #: src/components/Post/Embed/VideoEmbed/index.tsx:196
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
@@ -1726,10 +1721,6 @@ msgstr ""
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:270
-msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr ""
-
 #: src/lib/interests.ts:53
 msgid "Books"
 msgstr ""
@@ -2002,10 +1993,6 @@ msgstr "Choose an account to sign in with."
 
 #: src/screens/StarterPack/Wizard/index.tsx:175
 msgid "Choose Feeds"
-msgstr ""
-
-#: src/components/StarterPack/ProfileStarterPacks.tsx:274
-msgid "Choose for me"
 msgstr ""
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:56
@@ -2403,7 +2390,6 @@ msgstr "Couldn’t load GIFs"
 #: src/components/dialogs/StarterPackDialog.tsx:94
 #: src/components/dialogs/StarterPackDialog.tsx:180
 #: src/components/dms/InitiateChatFlow.tsx:453
-#: src/components/StarterPack/ProfileStarterPacks.tsx:260
 msgid "Create"
 msgstr ""
 
@@ -2416,22 +2402,17 @@ msgstr ""
 msgid "Create a list from this starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:150
-#: src/components/StarterPack/ProfileStarterPacks.tsx:246
+#: src/components/StarterPack/ProfileStarterPacks.tsx:181
 #: src/Navigation.tsx:774
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:364
 #: src/view/screens/Profile.tsx:365
+#: src/view/screens/Profile.tsx:366
 msgid "Create a Starter Pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:232
-msgid "Create a starter pack for me"
-msgstr ""
-
-#: src/components/StarterPack/ProfileStarterPacks.tsx:158
+#: src/components/StarterPack/ProfileStarterPacks.tsx:187
 msgid "Create another"
 msgstr ""
 
@@ -3741,10 +3722,6 @@ msgstr ""
 msgid "From user"
 msgstr "From user"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:267
-msgid "Generate a starter pack"
-msgstr ""
-
 #: src/screens/Messages/components/InviteLinkDialog.tsx:199
 #: src/screens/Messages/components/InviteLinkDialog.tsx:235
 #: src/screens/Messages/components/InviteLinkDialog.tsx:260
@@ -4557,10 +4534,6 @@ msgstr "Leaving this chat will lock it permanently and you won’t be able to re
 msgid "Left group chat."
 msgstr "Left group chat."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:277
-msgid "Let me choose"
-msgstr ""
-
 #: src/screens/Settings/AppearanceSettings.tsx:66
 msgid "Light"
 msgstr ""
@@ -4724,7 +4697,7 @@ msgstr ""
 #: src/Navigation.tsx:475
 #: src/view/screens/Lists.tsx:47
 #: src/view/screens/Profile.tsx:239
-#: src/view/screens/Profile.tsx:379
+#: src/view/screens/Profile.tsx:380
 #: src/view/shell/desktop/LeftNav.tsx:603
 #: src/view/shell/Drawer.tsx:177
 msgid "Lists"
@@ -4881,10 +4854,6 @@ msgstr ""
 #: src/features/gifPicker/components/GifCategoryPills.tsx:55
 msgid "Love GIFs"
 msgstr "Love GIFs"
-
-#: src/components/StarterPack/ProfileStarterPacks.tsx:241
-msgid "Make one for me"
-msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
 #: src/screens/Settings/ContentAndMediaSettings.tsx:62
@@ -5274,8 +5243,8 @@ msgstr ""
 
 #. placeholder {0}: (view.record as AppBskyGraphStarterpack.Main).name
 #. placeholder {0}: record.name
-#: src/components/StarterPack/StarterPackCard.tsx:137
-#: src/components/StarterPack/StarterPackCard.tsx:165
+#: src/components/StarterPack/StarterPackCard.tsx:141
+#: src/components/StarterPack/StarterPackCard.tsx:169
 msgid "Navigate to {0}"
 msgstr ""
 
@@ -5359,7 +5328,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:230
 #: src/view/screens/Feeds.tsx:346
 #: src/view/screens/Notifications.tsx:136
-#: src/view/screens/Profile.tsx:417
+#: src/view/screens/Profile.tsx:418
 msgid "New post"
 msgstr ""
 
@@ -5559,7 +5528,7 @@ msgstr "No results found for “<0>{query}</0>”."
 msgid "No results."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:359
+#: src/view/screens/Profile.tsx:360
 msgid "No Starter Packs yet"
 msgstr ""
 
@@ -5771,8 +5740,6 @@ msgid "Oops, something went wrong!"
 msgstr ""
 
 #: src/components/Lists.tsx:158
-#: src/components/StarterPack/ProfileStarterPacks.tsx:286
-#: src/components/StarterPack/ProfileStarterPacks.tsx:293
 #: src/view/screens/Profile.tsx:123
 msgid "Oops!"
 msgstr ""
@@ -7045,7 +7012,6 @@ msgstr "Rescind request to join group chat"
 #: src/components/moderation/ReportDialog/index.tsx:356
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:25
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:28
-#: src/components/StarterPack/ProfileStarterPacks.tsx:296
 #: src/features/gifPicker/components/GifPickerGrid.tsx:88
 #: src/features/gifPicker/components/GifPickerGrid.tsx:89
 #: src/screens/Messages/ChatList.tsx:303
@@ -7964,7 +7930,7 @@ msgid "Starter Pack"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#: src/components/StarterPack/StarterPackCard.tsx:91
+#: src/components/StarterPack/StarterPackCard.tsx:95
 msgid "Starter pack by {0}"
 msgstr ""
 
@@ -7972,7 +7938,7 @@ msgstr ""
 msgid "Starter pack by <0/>"
 msgstr ""
 
-#: src/components/StarterPack/StarterPackCard.tsx:90
+#: src/components/StarterPack/StarterPackCard.tsx:94
 #: src/view/com/profile/ProfileSubpageHeader.tsx:147
 msgid "Starter pack by you"
 msgstr ""
@@ -7990,15 +7956,11 @@ msgstr "Starter pack options"
 msgid "Starter Packs"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:227
-msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr ""
-
-#: src/components/StarterPack/ProfileStarterPacks.tsx:82
+#: src/components/StarterPack/ProfileStarterPacks.tsx:131
 msgid "Starter packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:358
+#: src/view/screens/Profile.tsx:359
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -8319,6 +8281,10 @@ msgstr ""
 #: src/view/com/lists/ProfileLists.tsx:103
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
+
+#: src/components/StarterPack/ProfileStarterPacks.tsx:118
+msgid "There was an issue fetching your starter packs. Tap here to try again."
+msgstr "There was an issue fetching your starter packs. Tap here to try again."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:124
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
@@ -9132,7 +9098,7 @@ msgstr "Use theme font"
 msgid "Used for the app's interface"
 msgstr "Used for the app's interface"
 
-#: src/view/screens/Profile.tsx:394
+#: src/view/screens/Profile.tsx:395
 msgid "user"
 msgstr "user"
 
@@ -9834,10 +9800,6 @@ msgstr ""
 msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:224
-msgid "You haven't created a starter pack yet!"
-msgstr ""
-
 #: src/view/com/lists/ProfileLists.tsx:114
 msgid "You haven't created any lists yet."
 msgstr ""
@@ -9883,10 +9845,6 @@ msgstr ""
 #: src/components/moderation/BlockDialog.tsx:276
 msgid "You must be a chat owner to remove a member."
 msgstr "You must be a chat owner to remove a member."
-
-#: src/components/StarterPack/ProfileStarterPacks.tsx:287
-msgid "You must be following at least seven other people to generate a starter pack."
-msgstr ""
 
 #: src/components/moderation/ReportDialog/action.ts:34
 msgid "You must be signed in to submit a report"

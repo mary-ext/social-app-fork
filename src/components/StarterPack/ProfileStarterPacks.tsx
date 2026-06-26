@@ -1,300 +1,192 @@
-import { useCallback, useState } from 'react';
-import {
-	type ListRenderItemInfo,
-	type StyleProp,
-	useWindowDimensions,
-	View,
-	type ViewStyle,
-} from 'react-native';
 import type { AnyStarterPackView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { useGenerateStarterPackMutation } from '#/lib/generate-starterpack';
-import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
-import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import type { NavigationProp } from '#/lib/routes/types';
-import { parseStarterPackUri } from '#/lib/strings/starter-pack';
+import { cleanError } from '#/lib/strings/errors';
 
 import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 
 import { logger } from '#/logger';
 
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-import { List } from '#/view/com/util/List';
-import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
+import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
-import { atoms as a, useTheme } from '#/alf';
+import { PlusSmall_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
+import { List, type ListRenderItemInfo } from '#/components/List/List';
+import { ListFooter } from '#/components/Lists';
+import {
+	Default as StarterPackCard,
+	LoadingPlaceholder as StarterPackLoadingPlaceholder,
+} from '#/components/StarterPack/StarterPackCard';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
-import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { LinearGradientBackground } from '#/components/LinearGradientBackground';
-import { Loader } from '#/components/Loader';
-import * as Prompt from '#/components/Prompt';
-import { Default as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
-import { Text } from '#/components/Typography';
+import * as css from './ProfileStarterPacks.css';
 
-interface ProfileFeedgensProps {
+// only governs rows that have never been on screen; the browser reuses the real size once rendered.
+const STARTER_PACK_ITEM_HEIGHT_ESTIMATE = 120;
+
+const LOADING = { _reactKey: '__loading__' } as const;
+const EMPTY = { _reactKey: '__empty__' } as const;
+const ERROR_ITEM = { _reactKey: '__error__' } as const;
+const LOAD_MORE_ERROR_ITEM = { _reactKey: '__load_more_error__' } as const;
+
+type StarterPackItem =
+	| AnyStarterPackView
+	| typeof EMPTY
+	| typeof ERROR_ITEM
+	| typeof LOADING
+	| typeof LOAD_MORE_ERROR_ITEM;
+type StarterPackSentinel = Exclude<StarterPackItem, AnyStarterPackView>;
+
+const isStarterPackSentinel = (item: StarterPackItem): item is StarterPackSentinel => {
+	return '_reactKey' in item;
+};
+
+interface ProfileStarterPacksProps {
 	did: string;
 	enabled?: boolean;
-	style?: StyleProp<ViewStyle>;
-	testID?: string;
 	isMe: boolean;
+	/** Known starter-pack count, used to size the loading skeleton; falls back to a small default. */
+	starterPackCount?: number;
 	emptyStateMessage?: string;
 	emptyStateButton?: EmptyStateButtonProps;
 	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
 }
 
-function keyExtractor(item: AnyStarterPackView) {
-	return item.uri;
-}
-
 export function ProfileStarterPacks({
 	did,
 	enabled,
-	style,
-	testID,
 	isMe,
+	starterPackCount,
 	emptyStateMessage,
 	emptyStateButton,
 	emptyStateIcon,
-}: ProfileFeedgensProps) {
-	const bottomBarOffset = useBottomBarOffset(100);
-	const { height } = useWindowDimensions();
-	const [isPTRing, setIsPTRing] = useState(false);
-	const { data, refetch, isError, hasNextPage, isFetchingNextPage, fetchNextPage } =
-		useActorStarterPacksQuery({ did, enabled });
-	const { isTabletOrDesktop } = useWebMediaQueries();
-
-	const items = data?.pages.flatMap((page) => page.starterPacks);
+}: ProfileStarterPacksProps): React.ReactNode {
 	const { t: l } = useLingui();
+	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
+		useActorStarterPacksQuery({ did, enabled });
+	const isEmpty = !isPending && !data?.pages[0]?.starterPacks.length;
+	const starterPacks = data?.pages.flatMap((page) => page.starterPacks);
+	const hasStarterPacks = !!starterPacks?.length;
 
-	const EmptyComponent = useCallback(() => {
-		if (emptyStateMessage || emptyStateButton || emptyStateIcon) {
-			return (
-				<View style={[a.px_lg, a.align_center, a.justify_center]}>
-					<EmptyState
-						icon={emptyStateIcon}
-						iconSize="3xl"
-						message={
-							emptyStateMessage ??
-							l`Starter packs let you share your favorite feeds and people with your friends.`
-						}
-						button={emptyStateButton}
-					/>
-				</View>
-			);
+	let items: StarterPackItem[] = [];
+	if (isError && isEmpty) {
+		items = items.concat([ERROR_ITEM]);
+	}
+	if (isPending) {
+		items = items.concat([LOADING]);
+	} else if (isEmpty) {
+		items = items.concat([EMPTY]);
+	} else if (data?.pages) {
+		for (const page of data?.pages) {
+			items = items.concat(page.starterPacks);
 		}
-		return <Empty />;
-	}, [l, emptyStateMessage, emptyStateButton, emptyStateIcon]);
+	} else if (isError && !isEmpty) {
+		items = items.concat([LOAD_MORE_ERROR_ITEM]);
+	}
 
-	const onRefresh = useCallback(async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh starter packs', { message: err });
-		}
-		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
+	// events
+	// =
 
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
+
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more starter packs', { message: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
+	};
 
-	const renderItem = useCallback(
-		({ item, index }: ListRenderItemInfo<AnyStarterPackView>) => {
-			return <StarterPackCard starterPack={item} topBorder={isTabletOrDesktop || index !== 0} />;
-		},
-		[isTabletOrDesktop],
-	);
+	const onPressRetryLoadMore = () => {
+		void fetchNextPage();
+	};
+
+	// rendering
+	// =
+
+	const renderItem = ({ index, item }: ListRenderItemInfo<StarterPackItem>) => {
+		if (isStarterPackSentinel(item)) {
+			if (item === ERROR_ITEM) {
+				return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
+			}
+			if (item === LOAD_MORE_ERROR_ITEM) {
+				return (
+					<LoadMoreRetryBtn
+						label={l`There was an issue fetching your starter packs. Tap here to try again.`}
+						onPress={onPressRetryLoadMore}
+					/>
+				);
+			}
+			if (item === LOADING) {
+				return <StarterPackLoadingPlaceholder count={starterPackCount} />;
+			}
+			return (
+				<EmptyState
+					icon={emptyStateIcon}
+					message={
+						emptyStateMessage ??
+						l`Starter packs let you share your favorite feeds and people with your friends.`
+					}
+					button={emptyStateButton}
+				/>
+			);
+		}
+		// the first starter pack card sits flush under the sticky tab bar; drop its top separator so the two
+		// don't draw a doubled line.
+		return <StarterPackCard starterPack={item} topBorder={index !== 0} />;
+	};
 
 	return (
-		<View testID={testID} style={style}>
-			<List
-				testID={testID ? `${testID}-flatlist` : undefined}
-				data={items}
-				renderItem={renderItem}
-				keyExtractor={keyExtractor}
-				refreshing={isPTRing}
-				progressViewOffset={undefined}
-				contentContainerStyle={{
-					minHeight: height,
-					paddingBottom: bottomBarOffset,
-				}}
-				removeClippedSubviews={true}
-				desktopFixedHeight
-				onEndReached={() => void onEndReached()}
-				onRefresh={() => void onRefresh()}
-				ListEmptyComponent={data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder}
-				ListFooterComponent={!!data && items?.length !== 0 && isMe ? CreateAnother : undefined}
-			/>
-		</View>
+		<List
+			data={items}
+			estimateHeight={STARTER_PACK_ITEM_HEIGHT_ESTIMATE}
+			keyExtractor={keyExtractor}
+			renderItem={renderItem}
+			ListFooterComponent={
+				isEmpty ? undefined : hasNextPage || isFetchingNextPage ? (
+					<ListFooter
+						hasNextPage={hasNextPage}
+						isFetchingNextPage={isFetchingNextPage}
+						onRetry={fetchNextPage}
+						error={cleanError(error)}
+						height={180}
+					/>
+				) : isMe && hasStarterPacks ? (
+					<CreateAnother />
+				) : undefined
+			}
+			onEndReached={() => void onEndReached()}
+			onEndReachedThreshold={2}
+		/>
 	);
 }
 
+function keyExtractor(item: StarterPackItem) {
+	return isStarterPackSentinel(item) ? item._reactKey : item.uri;
+}
+
+/** A footer row offering the profile owner a shortcut back to the starter-pack wizard. */
 function CreateAnother() {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const navigation = useNavigation<NavigationProp>();
 
 	return (
-		<View style={[a.pr_md, a.pt_lg, a.gap_lg, a.border_t, t.atoms.border_contrast_low]}>
+		<div className={css.createAnother}>
 			<Button
-				label={l`Create a starter pack`}
-				variant="solid"
 				color="secondary"
+				label={l`Create a starter pack`}
+				onClick={() => navigation.navigate('StarterPackWizard', {})}
 				size="small"
-				style={[a.self_center]}
-				onPress={() => navigation.navigate('StarterPackWizard', {})}
+				variant="solid"
 			>
 				<ButtonText>
 					<Trans>Create another</Trans>
 				</ButtonText>
-				<ButtonIcon icon={Plus} position="right" />
+				<ButtonIcon icon={PlusIcon} />
 			</Button>
-		</View>
-	);
-}
-
-function Empty() {
-	const { t: l } = useLingui();
-	const navigation = useNavigation<NavigationProp>();
-	const confirmDialogControl = useDialogControl();
-	const followersDialogControl = useDialogControl();
-	const errorDialogControl = useDialogControl();
-
-	const [isGenerating, setIsGenerating] = useState(false);
-
-	const { mutate: generateStarterPack } = useGenerateStarterPackMutation({
-		onSuccess: ({ uri }) => {
-			const parsed = parseStarterPackUri(uri);
-			if (parsed) {
-				navigation.push('StarterPack', {
-					name: parsed.name,
-					rkey: parsed.rkey,
-				});
-			}
-			setIsGenerating(false);
-		},
-		onError: (e) => {
-			logger.error('Failed to generate starter pack', { safeMessage: e });
-			setIsGenerating(false);
-			if (e.message.includes('NOT_ENOUGH_FOLLOWERS')) {
-				followersDialogControl.open();
-			} else {
-				errorDialogControl.open();
-			}
-		},
-	});
-
-	const generate = () => {
-		setIsGenerating(true);
-		generateStarterPack();
-	};
-
-	const openConfirmDialog = useCallback(() => {
-		confirmDialogControl.open();
-	}, [confirmDialogControl]);
-	const wrappedOpenConfirmDialog = openConfirmDialog;
-	const navToWizard = useCallback(() => {
-		navigation.navigate('StarterPackWizard', {});
-	}, [navigation]);
-	const wrappedNavToWizard = navToWizard;
-
-	return (
-		<LinearGradientBackground
-			style={[
-				a.px_lg,
-				a.py_lg,
-				a.justify_between,
-				a.gap_lg,
-				a.shadow_lg,
-				{ marginTop: a.border.borderWidth },
-			]}
-		>
-			<View style={[a.gap_xs]}>
-				<Text style={[a.font_semi_bold, a.text_lg, { color: 'white' }]}>
-					<Trans>You haven't created a starter pack yet!</Trans>
-				</Text>
-				<Text style={[a.text_md, { color: 'white' }]}>
-					<Trans>Starter packs let you easily share your favorite feeds and people with your friends.</Trans>
-				</Text>
-			</View>
-			<View style={[a.flex_row, a.gap_md, { marginLeft: 'auto' }]}>
-				<Button
-					label={l`Create a starter pack for me`}
-					variant="ghost"
-					color="primary"
-					size="small"
-					disabled={isGenerating}
-					onPress={wrappedOpenConfirmDialog}
-					style={{ backgroundColor: 'transparent' }}
-				>
-					<ButtonText style={{ color: 'white' }}>
-						<Trans>Make one for me</Trans>
-					</ButtonText>
-					{isGenerating && <Loader size="md" />}
-				</Button>
-				<Button
-					label={l`Create a starter pack`}
-					variant="ghost"
-					color="primary"
-					size="small"
-					disabled={isGenerating}
-					onPress={wrappedNavToWizard}
-					style={{
-						backgroundColor: 'white',
-						borderColor: 'white',
-						width: 100,
-					}}
-					hoverStyle={[{ backgroundColor: '#dfdfdf' }]}
-				>
-					<ButtonText>
-						<Trans>Create</Trans>
-					</ButtonText>
-				</Button>
-			</View>
-			<Prompt.Outer control={confirmDialogControl}>
-				<Prompt.Content>
-					<Prompt.TitleText>
-						<Trans>Generate a starter pack</Trans>
-					</Prompt.TitleText>
-					<Prompt.DescriptionText>
-						<Trans>Bluesky will choose a set of recommended accounts from people in your network.</Trans>
-					</Prompt.DescriptionText>
-				</Prompt.Content>
-				<Prompt.Actions>
-					<Prompt.Action color="primary" cta={l`Choose for me`} onPress={generate} />
-					<Prompt.Action
-						color="secondary"
-						cta={l`Let me choose`}
-						onPress={() => {
-							navigation.navigate('StarterPackWizard', {});
-						}}
-					/>
-				</Prompt.Actions>
-			</Prompt.Outer>
-			<Prompt.Basic
-				control={followersDialogControl}
-				title={l`Oops!`}
-				description={l`You must be following at least seven other people to generate a starter pack.`}
-				onConfirm={() => {}}
-				showCancel={false}
-			/>
-			<Prompt.Basic
-				control={errorDialogControl}
-				title={l`Oops!`}
-				description={l`An error occurred while generating your starter pack. Want to try again?`}
-				onConfirm={generate}
-				confirmButtonCta={l`Retry`}
-			/>
-		</LinearGradientBackground>
+		</div>
 	);
 }

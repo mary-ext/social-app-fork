@@ -353,6 +353,7 @@ function ProfileScreenLoaded({
 					did={profile.did}
 					isMe={isMe}
 					enabled={isFocused}
+					starterPackCount={starterPackCount}
 					emptyStateMessage={
 						isMe
 							? l`Starter Packs let you share your favorite feeds and people with your friends.`
