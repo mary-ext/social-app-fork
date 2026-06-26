@@ -1,0 +1,17 @@
+{
+	"version": "0.0.1",
+	"configurations": [
+		{
+			"name": "web (rsbuild dev)",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": ["dev"],
+			"port": 19006
+		},
+		{
+			"name": "worker (wrangler dev)",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": ["dev:worker"],
+			"port": 8787
+		}
+	]
+}
