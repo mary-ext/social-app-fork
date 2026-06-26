@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { useFocusEffect } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
@@ -57,7 +57,9 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 		once(() => {});
 	}
 
-	const [userUpdatedPrefs, setUserUpdatedPrefs] = useState(false);
+	// latch set in the setters below (event callbacks, not render) and read + cleared after commit.
+	// a plain ref is safe here: it's never read or written during render, only in the effect.
+	const userUpdatedPrefs = useRef(false);
 	const { mutate, isPending: isSaving } = useSetThreadViewPreferencesMutation({
 		onSuccess: (_data, _prefs) => {},
 		onError: (err) => {
@@ -85,33 +87,30 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 		}, [savePrefs]),
 	);
 
-	// when saving is enabled and the user has pending changes, clear the pending flag during render
-	// (render-time adjustment) and fire the debounced save in the effect below.
-	if (save && userUpdatedPrefs) {
-		setUserUpdatedPrefs(false);
-	}
-
-	// the save side effect runs after commit, off the render path. deps include userUpdatedPrefs so it
-	// fires once per pending batch (the render-time clear above flips it back to false next render).
+	// persist a pending user change after commit. the latch is set in the setters and read + cleared
+	// here, off the render path, so the save always observes what the setters wrote. deps include
+	// `sort`/`view` so each value change re-runs and persists the latest values; `savePrefs`
+	// debounces them server-side (leading+trailing).
 	useEffect(() => {
-		if (save && userUpdatedPrefs) {
+		if (save && userUpdatedPrefs.current) {
+			userUpdatedPrefs.current = false;
 			savePrefs({
 				sort,
 				lab_treeViewEnabled: view === 'tree',
 			});
 		}
-	}, [save, userUpdatedPrefs, sort, view, savePrefs]);
+	}, [save, sort, view, savePrefs]);
 
 	const setSortWrapped = useCallback(
 		(next: string) => {
-			setUserUpdatedPrefs(true);
+			userUpdatedPrefs.current = true;
 			setSort(normalizeSort(next));
 		},
 		[setSort],
 	);
 	const setViewWrapped = useCallback(
 		(next: ThreadViewOption) => {
-			setUserUpdatedPrefs(true);
+			userUpdatedPrefs.current = true;
 			setView(next);
 		},
 		[setView],
