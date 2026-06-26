@@ -1,182 +1,124 @@
-import { type CSSProperties, useEffect, useState } from 'react';
-import { clsx } from 'clsx';
-import { createPortal } from 'react-dom';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
+import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
+import { useLingui } from '@lingui/react/macro';
 
-import { useKeyboardHandling } from '#/lib/sift/useKeyboardHandling';
-import type { UseSiftReturn } from '#/lib/sift/useSift';
-import type { TapperActiveFacet } from '#/lib/tapper';
+import type { Placement } from '#/lib/sift';
+import { sanitizeHandle } from '#/lib/strings/handles';
 
-import type { AutocompleteItem } from '#/components/Autocomplete/types';
-import { useAutocomplete } from '#/components/Autocomplete/useAutocomplete';
-import { parseAutocompleteItemType } from '#/components/Autocomplete/util';
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
+
+import type {
+	AutocompleteEmoji,
+	AutocompleteItem,
+	AutocompleteProfile,
+} from '#/components/Autocomplete/types';
+import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { Text } from '#/components/Text';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import * as styles from './Autocomplete.css';
 
+/**
+ * The composer's inline-autocomplete suggestion popup for mentions and emoji. Must be rendered inside the
+ * composer's `BaseAutocomplete.Root`, which owns the input and drives open-state and keyboard navigation.
+ */
 export function Autocomplete({
-	sift,
-	activeFacet,
-	inverted,
-	onDismiss,
+	items,
+	getAnchor,
+	placement = 'bottom',
+	onSelect,
 }: {
-	sift: UseSiftReturn;
-	activeFacet: TapperActiveFacet;
-	inverted?: boolean;
-	onDismiss: () => void;
+	items: AutocompleteItem[];
+	getAnchor: () => Element | null;
+	placement?: Placement;
+	onSelect: (item: AutocompleteItem) => void;
 }) {
-	const { items } = useAutocomplete({
-		type: parseAutocompleteItemType(activeFacet.type),
-		query: activeFacet.value,
-	});
-
-	// `:smile:` — once the user types the closing colon, commit the top emoji match.
-	useEffect(() => {
-		if (activeFacet.type === 'emoji' && !!activeFacet.value.length && activeFacet.raw.endsWith(':')) {
-			if (items[0]) {
-				activeFacet.replace(items[0].value, { noTrailingSpace: true });
-				onDismiss();
-			}
-		}
-	}, [items, activeFacet, onDismiss]);
-
-	if (!items.length) {
-		return null;
-	}
+	const { t: l } = useLingui();
+	const [side, align = 'start'] = placement.split('-') as ['top' | 'bottom', 'start' | 'end' | undefined];
 
 	return (
-		<List
-			sift={sift}
-			items={items}
-			inverted={inverted}
-			onSelect={(item) => {
-				activeFacet.replace(item.value);
-				onDismiss();
-			}}
-			onDismiss={onDismiss}
-		/>
+		<BaseAutocomplete.Portal>
+			<BaseAutocomplete.Positioner
+				anchor={getAnchor}
+				align={align}
+				className={styles.positioner}
+				positionMethod="fixed"
+				side={side}
+				sideOffset={8}
+			>
+				<BaseAutocomplete.Popup
+					className={styles.popup}
+					// keep the textarea focused (and its selection intact) when a row is clicked.
+					onMouseDown={(e) => e.preventDefault()}
+				>
+					{items.length === 0 ? (
+						<CenteredSpinner label={l`Loading`} size="lg" />
+					) : (
+						<BaseAutocomplete.List>
+							{items.map((item) => {
+								switch (item.type) {
+									case 'emoji':
+										return <EmojiItem key={item.key} item={item} onSelect={onSelect} />;
+									case 'profile':
+										return <ProfileItem key={item.key} item={item} onSelect={onSelect} />;
+									default:
+										return null;
+								}
+							})}
+						</BaseAutocomplete.List>
+					)}
+				</BaseAutocomplete.Popup>
+			</BaseAutocomplete.Positioner>
+		</BaseAutocomplete.Portal>
 	);
 }
 
-function List({
-	sift,
-	items,
-	inverted,
+// cloned 1:1 from the search autocomplete's ProfileRow; keep the two in sync.
+function ProfileItem({
+	item,
 	onSelect,
-	onDismiss,
 }: {
-	sift: UseSiftReturn;
-	items: AutocompleteItem[];
-	inverted?: boolean;
+	item: AutocompleteProfile;
 	onSelect: (item: AutocompleteItem) => void;
-	onDismiss: () => void;
 }) {
-	const [activeIndex, setActiveIndex] = useState(0);
+	const moderationOpts = useModerationOpts();
+	const moderation = moderationOpts
+		? getDisplayRestrictions(moderateProfile(item.profile, moderationOpts), DisplayContext.ProfileMedia)
+		: undefined;
 
-	// reset the highlight and reposition the popover whenever the result set changes. `sift.updatePosition`
-	// is stable for the component's lifetime (a useCallback with [] deps in useSift), so it never churns the
-	// subscription here. `useKeyboardHandling` keeps its own latest-callback ref, so the plain arrows below
-	// need no stable identity.
-	useEffect(() => {
-		setActiveIndex(0);
-		void sift.updatePosition();
-	}, [items.length, sift.updatePosition]);
+	return (
+		<BaseAutocomplete.Item className={styles.row} value={item} onClick={() => onSelect(item)}>
+			<UserAvatar
+				avatar={item.profile.avatar}
+				className={styles.avatar}
+				moderation={moderation}
+				size={36}
+				type={item.profile.associated?.labeler ? 'labeler' : 'user'}
+			/>
 
-	const next = () => {
-		if (items.length) setActiveIndex((i) => (i + 1) % items.length);
-	};
-	const prev = () => {
-		if (items.length) setActiveIndex((i) => (i - 1 + items.length) % items.length);
-	};
-	const first = () => {
-		if (items.length) setActiveIndex(0);
-	};
-	const last = () => {
-		if (items.length) setActiveIndex(items.length - 1);
-	};
-
-	useKeyboardHandling({
-		sift,
-		onArrowDown: inverted ? prev : next,
-		onArrowUp: inverted ? next : prev,
-		onHome: inverted ? last : first,
-		onEnd: inverted ? first : last,
-		onSelect: () => onSelect(items[activeIndex]!),
-		onDismiss,
-	});
-
-	const px = (v: number | string | undefined) => (typeof v === 'number' ? `${v}px` : v);
-	// `computeStyles` only ever emits numbers / 'auto' / undefined; the RN ViewStyle type is wider.
-	const ps = sift.popoverStyles as {
-		bottom?: number | 'auto';
-		left?: number;
-		maxHeight?: number;
-		maxWidth?: number;
-		top?: number | 'auto';
-	};
-	const hasStyles = ps.top != null;
-	const positionStyle: CSSProperties = {
-		bottom: px(ps.bottom),
-		left: px(ps.left),
-		maxHeight: px(ps.maxHeight),
-		maxWidth: px(ps.maxWidth),
-		opacity: hasStyles ? 1 : 0,
-		position: 'fixed',
-		top: px(ps.top),
-	};
-
-	const rows = items.map((item, dataIndex) => ({ dataIndex, item }));
-	const visual = inverted ? [...rows].reverse() : rows;
-
-	return createPortal(
-		<div
-			ref={sift.refs.setPopover}
-			role="listbox"
-			id={sift.id}
-			className={styles.popup}
-			style={positionStyle}
-			// keep the textarea focused (and the selection intact) when an item is clicked.
-			onMouseDown={(e) => e.preventDefault()}
-		>
-			{visual.map(({ dataIndex, item }) => (
-				<Row key={item.key} item={item} active={dataIndex === activeIndex} onSelect={() => onSelect(item)} />
-			))}
-		</div>,
-		document.body,
+			<span className={styles.text}>
+				<Text numberOfLines={1} weight="medium">
+					{sanitizeHandle(item.profile.handle)}
+				</Text>
+				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
+					{item.profile.displayName || item.profile.handle}
+				</Text>
+			</span>
+		</BaseAutocomplete.Item>
 	);
 }
 
-function Row({ item, active, onSelect }: { item: AutocompleteItem; active: boolean; onSelect: () => void }) {
-	if (item.type === 'profile') {
-		return (
-			<button
-				type="button"
-				role="option"
-				aria-selected={active}
-				className={clsx(styles.item, styles.profileItem, active && styles.itemActive)}
-				onClick={onSelect}
-			>
-				<img className={styles.avatar} src={item.profile.avatar} alt="" />
-				<span className={styles.profileText}>
-					<span className={styles.displayName}>{item.profile.displayName || item.profile.handle}</span>
-					{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text -- styled <span>, not RN text */}
-					<span className={styles.handle}>@{item.profile.handle}</span>
-				</span>
-			</button>
-		);
-	}
-	if (item.type === 'emoji') {
-		return (
-			<button
-				type="button"
-				role="option"
-				aria-selected={active}
-				className={clsx(styles.item, styles.emojiItem, active && styles.itemActive)}
-				onClick={onSelect}
-			>
-				<span className={styles.emojiGlyph}>{item.value}</span>
-				{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text -- styled <span>, not RN text */}
-				<span className={styles.emojiLabel}>:{item.emoji.id}:</span>
-			</button>
-		);
-	}
-	return null;
+function EmojiItem({
+	item,
+	onSelect,
+}: {
+	item: AutocompleteEmoji;
+	onSelect: (item: AutocompleteItem) => void;
+}) {
+	return (
+		<BaseAutocomplete.Item className={styles.row} value={item} onClick={() => onSelect(item)}>
+			<Text className={styles.emojiGlyph}>{item.value}</Text>
+			<Text>:{item.emoji.id}:</Text>
+		</BaseAutocomplete.Item>
+	);
 }

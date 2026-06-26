@@ -50,14 +50,17 @@ export const textarea = style({
 	caretColor: vars.palette.contrast_1000,
 	color: 'transparent',
 	display: 'block',
+	// CSS `field-sizing` grows the textarea with its content; the inline `minHeight` (from `minRows`) floors
+	// it. there's no max — the dialog's scroll view handles overflow — so the textarea never scrolls
+	// internally and the preview overlay (a sibling layer) needs no scroll syncing.
+	fieldSizing: 'content',
 	margin: 0,
 	outline: 'none',
+	// content always fits (field-sizing), so this only guards against a sub-pixel rounding scrollbar that
+	// would let the textarea scroll out of registration with the overlay.
 	overflowY: 'hidden',
-	overscrollBehavior: 'none',
 	position: 'relative',
 	resize: 'none',
-	scrollbarColor: `${vars.palette.contrast_200} transparent`,
-	scrollbarWidth: 'thin',
 	width: '100%',
 	zIndex: 20,
 	selectors: {

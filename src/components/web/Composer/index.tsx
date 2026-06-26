@@ -7,11 +7,16 @@ import {
 	useRef,
 	useState,
 } from 'react';
+import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/merge-refs';
-import { type Placement, useSift } from '#/lib/sift';
+import type { Placement } from '#/lib/sift';
 import { type TapperActiveFacet, type TapperFacet, useTapper } from '#/lib/tapper';
+
+import type { AutocompleteItem } from '#/components/Autocomplete/types';
+import { useAutocomplete } from '#/components/Autocomplete/useAutocomplete';
+import { parseAutocompleteItemType } from '#/components/Autocomplete/util';
 
 import { fontSize, lineHeight } from '#/styles/tokens.css';
 
@@ -35,7 +40,7 @@ export type ContentPadding = {
 
 /**
  * Imperative API exposed via `internalApiRef` for parents that drive the composer programmatically (clear,
- * insert at cursor, anchor the autocomplete).
+ * insert at cursor).
  */
 export type ComposerInternalApi = {
 	input?: {
@@ -45,7 +50,6 @@ export type ComposerInternalApi = {
 	};
 	clear: () => void;
 	insert: (text: string) => void;
-	setAutocompleteAnchor: (node: Element | null) => void;
 };
 
 export function useComposerInternalApiRef() {
@@ -77,9 +81,8 @@ export type ComposerProps = {
 const NO_PADDING: ContentPadding = { bottom: 0, left: 0, right: 0, top: 0 };
 
 /**
- * Web-native rich composer input: a transparent autosizing `<textarea>` over a facet-colored preview. Built
- * on the platform-neutral Tapper (text model) + Sift (autocomplete positioning). keydown bubbling (Escape →
- * dialog close) is not suppressed.
+ * Web-native rich composer input: an autosizing `<textarea>` over a facet-colored preview, with inline
+ * autocomplete for mentions, hashtags, and emoji. Escape is left to bubble, so a host dialog still closes.
  */
 export function Composer({
 	placeholder,
@@ -105,34 +108,34 @@ export function Composer({
 		initialText: defaultValue ?? '',
 		facets: disableEmojiFacets ? ['mention', 'tag', 'url'] : ['emoji', 'mention', 'tag', 'url'],
 	});
-	const sift = useSift({
-		offset: 8,
-		placement: autocompletePlacement,
-		dynamicWidth: true,
-	});
-
 	const [activeFacet, setActiveFacet] = useState<TapperActiveFacet | null>(null);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const overlayInnerRef = useRef<HTMLDivElement>(null);
+	// the DOM span of the facet currently being typed; Base UI's Positioner anchors the popup to it.
+	const facetAnchorRef = useRef<HTMLElement | null>(null);
 
-	const resize = () => {
-		const el = textareaRef.current;
-		if (!el) {
-			return;
-		}
-		// collapse first so `scrollHeight` reflects the content; the CSS `minHeight` floors the result.
-		el.style.height = '0px';
-		el.style.height = `${Math.ceil(el.scrollHeight)}px`;
-		void sift.updatePosition();
+	const hasFacet = !!activeFacet && activeFacet.type !== 'url';
+	// require at least one character after the trigger (`@m`, not a bare `@`) before querying/opening.
+	const hasQuery = hasFacet && activeFacet.value.length > 0;
+	const { isFetching, items } = useAutocomplete({
+		type: hasFacet ? parseAutocompleteItemType(activeFacet.type) : 'profile',
+		query: hasQuery ? activeFacet.value : '',
+	});
+	// keep the popup open while results load so the spinner has somewhere to show.
+	const autocompleteOpen = hasQuery && (items.length > 0 || isFetching);
+
+	const selectItem = (item: AutocompleteItem) => {
+		activeFacet?.replace(item.value);
 	};
 
-	// resize once the textarea is mounted, whenever the value is set externally (e.g. drafts), and whenever
-	// `minRows` changes (e.g. a post going inactive shrinks from the expanded min-height) — otherwise the
-	// stale inline height from the previous min sticks.
+	// `:smile:` — once the user types the closing colon, commit the top emoji match.
 	useEffect(() => {
-		resize();
-	}, [tapper.state.text, minRows]); // eslint-disable-line react-hooks/exhaustive-deps
+		if (activeFacet?.type === 'emoji' && !!activeFacet.value.length && activeFacet.raw.endsWith(':')) {
+			if (items[0]) {
+				activeFacet.replace(items[0].value, { noTrailingSpace: true });
+			}
+		}
+	}, [items, activeFacet]);
 
 	useImperativeHandle(
 		internalApiRef,
@@ -144,14 +147,10 @@ export function Composer({
 			},
 			clear: () => {
 				tapper.inputProps.onChangeText('');
-				if (overlayInnerRef.current) {
-					overlayInnerRef.current.style.transform = 'translateY(0px)';
-				}
 			},
 			insert: tapper.insert,
-			setAutocompleteAnchor: sift.refs.setAnchor,
 		}),
-		[tapper.inputProps, tapper.insert, sift.refs.setAnchor],
+		[tapper.inputProps, tapper.insert],
 	);
 
 	// fire onChange after mount (parent already knows the initial value).
@@ -197,31 +196,57 @@ export function Composer({
 		contentPadding.top + contentPadding.bottom
 	}px)`;
 
-	// stable across renders (all three ref callbacks are stable) so the textarea isn't detached/reattached
+	// stable across renders (both ref callbacks are stable) so the textarea isn't detached/reattached
 	// on every keystroke.
 	const textareaRefs = useMemo(
-		() =>
-			mergeRefs([
-				textareaRef,
-				tapper.inputProps.ref as Ref<HTMLTextAreaElement>,
-				sift.targetProps.ref as Ref<HTMLTextAreaElement>,
-			]),
-		[tapper.inputProps.ref, sift.targetProps.ref],
+		() => mergeRefs([textareaRef, tapper.inputProps.ref as Ref<HTMLTextAreaElement>]),
+		[tapper.inputProps.ref],
 	);
 
 	return (
-		<>
+		<BaseAutocomplete.Root
+			autoHighlight
+			items={items}
+			// the textarea holds the whole post; the facet substring is the query, so Base UI must not
+			// filter or rewrite the value — we drive both ourselves.
+			mode="none"
+			open={autocompleteOpen}
+			onOpenChange={(open) => {
+				if (!open) {
+					setActiveFacet(null);
+				}
+			}}
+			openOnInputClick={false}
+			value={tapper.state.text}
+			onValueChange={(value, details) => {
+				// route the user's own edits (typing, paste, clear) into Tapper; ignore value changes Base UI
+				// emits from picking a row (`item-press`), which we handle via the item's onClick to splice
+				// into the facet instead.
+				if (details.reason === 'input-change' || details.reason === 'input-clear') {
+					tapper.inputProps.onChangeText(value);
+				}
+			}}
+		>
 			<div className={clsx(styles.root, className)}>
 				<div className={styles.overlay} aria-hidden inert>
-					<div ref={overlayInnerRef} className={styles.overlayInner} style={paddingStyle}>
+					<div className={styles.overlayInner} style={paddingStyle}>
 						{tapper.state.nodes.map((node, i) => {
 							if (node.type === 'text') {
 								return <span key={i}>{node.value}</span>;
 							}
+							const isActiveFacetSpan =
+								!!activeFacet &&
+								node.facetType === activeFacet.type &&
+								node.start === activeFacet.range.start &&
+								node.end === activeFacet.range.end;
 							return (
 								<span
 									key={i}
-									ref={sift.refs.setAnchor}
+									ref={(el) => {
+										if (isActiveFacetSpan) {
+											facetAnchorRef.current = el;
+										}
+									}}
 									className={node.type === 'facet' ? styles.facet : undefined}
 								>
 									{node.raw}
@@ -230,31 +255,22 @@ export function Composer({
 						})}
 					</div>
 				</div>
-				<textarea
-					{...sift.targetProps}
-					ref={textareaRefs}
+				<BaseAutocomplete.Input
+					// `rows` is textarea-only, so it rides on the render element, not the input-typed props.
+					render={<textarea rows={1} />}
+					// Base UI types Input for `<input>`; we render a `<textarea>`, so the ref is really a textarea.
+					ref={textareaRefs as unknown as Ref<HTMLInputElement>}
 					className={styles.textarea}
 					style={{ ...paddingStyle, minHeight }}
-					value={tapper.state.text}
 					placeholder={placeholder}
-					rows={1}
 					aria-label={accessibilityLabel}
 					aria-description={accessibilityHint}
 					autoFocus={autoFocus}
-					onChange={(e) => {
-						tapper.inputProps.onChangeText(e.target.value);
-						resize();
-					}}
 					onSelect={(e) => {
 						const el = e.currentTarget;
 						tapper.inputProps.onSelectionChange({
 							nativeEvent: { selection: { start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 } },
 						});
-					}}
-					onScroll={(e) => {
-						if (overlayInnerRef.current) {
-							overlayInnerRef.current.style.transform = `translateY(${-e.currentTarget.scrollTop}px)`;
-						}
 					}}
 					onKeyDown={(e) => {
 						if (isComposing.current) {
@@ -264,7 +280,8 @@ export function Composer({
 						if (e.key === 'Enter' && e.keyCode === 229) {
 							return;
 						}
-						if (e.key === 'Enter') {
+						// when the popup is open, Base UI consumes Enter to pick the highlighted row.
+						if (e.key === 'Enter' && !e.defaultPrevented) {
 							onRequestSubmit?.({
 								platform: 'web',
 								shiftKey: e.shiftKey,
@@ -287,14 +304,14 @@ export function Composer({
 					}}
 				/>
 			</div>
-			{activeFacet && activeFacet.type !== 'url' && (
+			{autocompleteOpen && (
 				<Autocomplete
-					inverted={autocompletePlacement?.startsWith('top')}
-					sift={sift}
-					activeFacet={activeFacet}
-					onDismiss={() => setActiveFacet(null)}
+					items={items}
+					getAnchor={() => facetAnchorRef.current}
+					placement={autocompletePlacement}
+					onSelect={selectItem}
 				/>
 			)}
-		</>
+		</BaseAutocomplete.Root>
 	);
 }

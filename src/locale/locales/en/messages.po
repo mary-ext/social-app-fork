@@ -4776,6 +4776,7 @@ msgid "Load new posts"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Loading.tsx:17
+#: src/components/web/Composer/Autocomplete.tsx:55
 #: src/components/web/ProfileHoverCard.tsx:128
 #: src/screens/Moderation/index.tsx:77
 #: src/screens/Moderation/index.tsx:212

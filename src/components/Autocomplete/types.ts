@@ -39,4 +39,6 @@ export type AutocompleteItemProps = Parameters<Parameters<typeof Sift<Autocomple
 export type AutocompleteApi = {
 	query: string;
 	items: AutocompleteItem[];
+	/** Whether a request for the current query is in flight (results shown may be stale placeholders). */
+	isFetching: boolean;
 };
