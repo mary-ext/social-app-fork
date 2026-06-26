@@ -244,7 +244,7 @@ export async function processVideo(
 ) {
 	let video: CompressedVideo | undefined;
 	try {
-		video = await compressVideo(asset);
+		video = compressVideo(asset);
 	} catch (e) {
 		const message = getCompressErrorMessage(e, i18n);
 		if (message !== null) {

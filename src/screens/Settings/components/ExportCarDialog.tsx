@@ -45,15 +45,10 @@ function DialogInner() {
 			setLoading('repo');
 			const did = currentAccount.did as Did;
 			const carData = await ok(pds.get('com.atproto.sync.getRepo', { params: { did }, as: 'bytes' }));
-			const saveRes = await saveBytesToDisk(
-				'repo.car',
-				carData as Uint8Array<ArrayBuffer>,
-				'application/vnd.ipld.car',
-			);
+			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
+			saveBytesToDisk('repo.car', carData as Uint8Array<ArrayBuffer>, 'application/vnd.ipld.car');
 
-			if (saveRes) {
-				Toast.show(l`File saved successfully!`);
-			}
+			Toast.show(l`File saved successfully!`);
 		} catch (e) {
 			logger.error('Error occurred while downloading CAR file', { message: e });
 			Toast.show(l`Error occurred while saving file`, { type: 'error' });
@@ -69,15 +64,10 @@ function DialogInner() {
 		try {
 			setLoading('chat');
 			const res = await ok(chat.get('chat.bsky.actor.exportAccountData', { as: 'bytes' }));
-			const saveRes = await saveBytesToDisk(
-				'chat.jsonl',
-				res as Uint8Array<ArrayBuffer>,
-				'application/jsonl',
-			);
+			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
+			saveBytesToDisk('chat.jsonl', res as Uint8Array<ArrayBuffer>, 'application/jsonl');
 
-			if (saveRes) {
-				Toast.show(l`File saved successfully!`);
-			}
+			Toast.show(l`File saved successfully!`);
 		} catch (e) {
 			logger.error('Error occurred while downloading chat data', { message: e });
 			Toast.show(l`Error occurred while saving file`, { type: 'error' });
