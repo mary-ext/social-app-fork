@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
+import { createPortal } from 'react-dom';
 
 import { isUriImage } from '#/lib/media/util';
 
@@ -11,11 +11,8 @@ import {
 } from '#/view/com/composer/text-input/text-input-util';
 import { emojiInserted } from '#/view/com/composer/text-input/textInputWebEmitter';
 
-import { atoms as a, useAlf } from '#/alf';
-
 import type { Emoji } from '#/components/EmojiPicker';
-import { Portal } from '#/components/Portal';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import {
 	Composer as TapperComposer,
 	type SubmitRequest,
@@ -42,7 +39,6 @@ export function TextInput({
 	accessibilityHint,
 	accessibilityLabel,
 }: TextInputProps) {
-	const { theme: t } = useAlf();
 	const apiRef = useComposerInternalApiRef();
 	const activeCompletionRef = useRef(false);
 	const isPastingRef = useRef(false);
@@ -210,58 +206,19 @@ export function TextInput({
 				onPaste={handlePaste}
 			/>
 
-			{isDropping && (
-				<Portal>
-					<View style={dropStyles.dropContainer}>
-						<View style={[t.atoms.bg, t.atoms.border_contrast_low, dropStyles.dropModal]}>
-							<Text
-								style={[
-									a.text_lg,
-									a.font_semi_bold,
-									t.atoms.text_contrast_medium,
-									t.atoms.border_contrast_high,
-									dropStyles.dropText,
-								]}
-							>
-								<Trans>Drop to add images</Trans>
-							</Text>
-						</View>
-					</View>
-				</Portal>
+			{createPortal(
+				<div className={styles.dropScrim({ visible: isDropping })} inert={!isDropping}>
+					<div className={styles.dropCard}>
+						<Text className={styles.dropText} color="textContrastMedium" size="lg" weight="semiBold">
+							<Trans>Drop to add images</Trans>
+						</Text>
+					</div>
+				</div>,
+				document.body,
 			)}
 		</>
 	);
 }
-
-const dropStyles = StyleSheet.create({
-	dropContainer: {
-		alignItems: 'center',
-		backgroundColor: '#0007',
-		bottom: 0,
-		justifyContent: 'center',
-		left: 0,
-		padding: 16,
-		pointerEvents: 'none',
-		// @ts-ignore web only
-		position: 'fixed',
-		right: 0,
-		top: 0,
-	},
-	dropModal: {
-		borderRadius: 16,
-		borderWidth: 1,
-		// @ts-ignore web only
-		boxShadow: 'rgba(0, 0, 0, 0.3) 0px 5px 20px',
-		padding: 8,
-	},
-	dropText: {
-		borderRadius: 8,
-		borderStyle: 'dashed',
-		borderWidth: 2,
-		paddingHorizontal: 36,
-		paddingVertical: 44,
-	},
-});
 
 function hasMediaTransfer(transfer: DataTransfer) {
 	const items = transfer.items;
