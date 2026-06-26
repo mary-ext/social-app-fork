@@ -60,7 +60,7 @@ export type Metadata = {
 	};
 
 	/** Any additional structured data for logger transports. */
-	[key: string]: Serializable | Error | unknown;
+	[key: string]: unknown;
 };
 
 export type Serializable =
