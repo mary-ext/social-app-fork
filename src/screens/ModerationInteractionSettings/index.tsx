@@ -77,8 +77,8 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 		});
 	}, [preferences.postInteractionSettings.postgateEmbeddingRules]);
 
-	const [maybeEditedAllowUI, setAllowUI] = useState(allowUI);
-	const [maybeEditedPostgate, setEditedPostgate] = useState(postgate);
+	const [maybeEditedAllowUI, setMaybeEditedAllowUI] = useState(allowUI);
+	const [maybeEditedPostgate, setMaybeEditedPostgate] = useState(postgate);
 
 	const wasEdited = useMemo(() => {
 		return (
@@ -110,8 +110,8 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 			<PostInteractionSettingsForm
 				canSave={wasEdited}
 				isSaving={isPending}
-				onChangePostgate={setEditedPostgate}
-				onChangeThreadgateAllowUISettings={setAllowUI}
+				onChangePostgate={setMaybeEditedPostgate}
+				onChangeThreadgateAllowUISettings={setMaybeEditedAllowUI}
 				onSave={() => void onSave()}
 				postgate={maybeEditedPostgate}
 				threadgateAllowUISettings={maybeEditedAllowUI}

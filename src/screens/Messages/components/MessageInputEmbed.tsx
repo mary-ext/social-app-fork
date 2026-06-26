@@ -47,6 +47,9 @@ export function useMessageEmbed() {
 	const navigation = useNavigation<NavigationProp>();
 	const embedFromParams = route.params.embed;
 
+	// `setEmbedState` is the raw setter; `setEmbed` below is the wrapped public callback (also a
+	// prop), so the names must differ — the symmetric-pair rule can't apply here
+	// eslint-disable-next-line react/hook-use-state
 	const [embed, setEmbedState] = useState<MessageEmbedState | undefined>(
 		embedFromParams ? { type: 'post', uri: embedFromParams } : undefined,
 	);

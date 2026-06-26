@@ -18,7 +18,7 @@ export function TimeElapsed({
 	const { i18n } = useLingui();
 	const ago = useGetTimeAgo();
 	const tick = useTickEveryMinute();
-	const [timeElapsed, setTimeAgo] = useState(() =>
+	const [timeElapsed, setTimeElapsed] = useState(() =>
 		timeToString ? timeToString(i18n, timestamp) : ago(timestamp, tick),
 	);
 
@@ -28,7 +28,7 @@ export function TimeElapsed({
 	if (prevTick !== tick || prevTimestamp !== timestamp) {
 		setPrevTick(tick);
 		setPrevTimestamp(timestamp);
-		setTimeAgo(timeToString ? timeToString(i18n, timestamp) : ago(timestamp, tick));
+		setTimeElapsed(timeToString ? timeToString(i18n, timestamp) : ago(timestamp, tick));
 	}
 
 	return children({ timeElapsed });

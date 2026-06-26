@@ -23,7 +23,7 @@ const ApiContext = createContext<ApiContext>({
 ApiContext.displayName = 'ThreadgateHiddenRepliesApiContext';
 
 export function Provider({ children }: { children: React.ReactNode }) {
-	const [uris, setHiddenReplyUris] = useState<Set<string>>(new Set());
+	const [uris, setUris] = useState<Set<string>>(new Set());
 	const [recentlyUnhiddenUris, setRecentlyUnhiddenUris] = useState<Set<string>>(new Set());
 
 	const stateCtx = useMemo(
@@ -37,21 +37,21 @@ export function Provider({ children }: { children: React.ReactNode }) {
 	const apiCtx = useMemo(
 		() => ({
 			addHiddenReplyUri(uri: string) {
-				setHiddenReplyUris((prev) => new Set(prev.add(uri)));
+				setUris((prev) => new Set(prev.add(uri)));
 				setRecentlyUnhiddenUris((prev) => {
 					prev.delete(uri);
 					return new Set(prev);
 				});
 			},
 			removeHiddenReplyUri(uri: string) {
-				setHiddenReplyUris((prev) => {
+				setUris((prev) => {
 					prev.delete(uri);
 					return new Set(prev);
 				});
 				setRecentlyUnhiddenUris((prev) => new Set(prev.add(uri)));
 			},
 		}),
-		[setHiddenReplyUris],
+		[setUris],
 	);
 
 	return (

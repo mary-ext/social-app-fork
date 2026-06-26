@@ -104,7 +104,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 	const [scenarioSwitches, setScenarioSwitches] = useState<string[]>([]);
 	const [label, setLabel] = useState<string[]>([LABEL_VALUES[0]!]);
 	const [target, setTarget] = useState<string[]>(['account']);
-	const [visibility, setVisiblity] = useState<string[]>(['warn']);
+	const [visibility, setVisibility] = useState<string[]>(['warn']);
 	const [customLabelDef, setCustomLabelDef] = useState<ComAtprotoLabelDefs.LabelValueDefinition>({
 		identifier: 'custom',
 		blurs: 'content',
@@ -391,7 +391,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 													label="Preference"
 													type="radio"
 													values={visibility}
-													onChange={setVisiblity}
+													onChange={setVisibility}
 												>
 													<View style={[a.flex_row, a.gap_md, a.flex_wrap, a.align_center]}>
 														<Toggle.Item name="hide" label="Hide">

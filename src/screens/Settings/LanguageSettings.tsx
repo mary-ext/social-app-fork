@@ -28,6 +28,9 @@ export function LanguageSettingsScreen({}: Props) {
 
 	// changing langPrefs causes a slow re-render, so we use a local state copy
 	// and update that first to drive the UI on this screen to keep it snappy
+	// the raw setter is `_setContentLanguages`; `setContentLanguages` below wraps it and also
+	// persists to langPrefs, so the names must differ — the symmetric-pair rule can't apply here
+	// eslint-disable-next-line react/hook-use-state
 	const [contentLanguages, _setContentLanguages] = useState(langPrefs.contentLanguages);
 	const setContentLanguages = useCallback(
 		(languages: string[]) => {
