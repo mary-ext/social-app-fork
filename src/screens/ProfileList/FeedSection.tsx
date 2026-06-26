@@ -68,7 +68,6 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 	return (
 		<View>
 			<PostFeed
-				testID="listFeed"
 				enabled={isFocused}
 				feed={feed}
 				pollInterval={60e3}

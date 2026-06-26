@@ -1,9 +1,9 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, AppState, LayoutAnimation, StyleSheet, View } from 'react-native';
+import { memo, useEffect, useRef, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { onAppStateChange } from '#/lib/appState';
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { isNetworkError } from '#/lib/strings/errors';
@@ -27,11 +27,13 @@ import { logger } from '#/logger';
 import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { SuggestedFollows } from '#/components/FeedInterstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 
 import { ComposerPrompt } from '../feeds/ComposerPrompt';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
+import * as css from './PostFeed.css';
 import { PostFeedErrorMessage } from './PostFeedErrorMessage';
 import { PostFeedItem } from './PostFeedItem';
 import { ShowLessFollowup } from './ShowLessFollowup';
@@ -118,7 +120,6 @@ let PostFeed = ({
 	onHasNew,
 	renderEmptyState,
 	renderEndOfFeed,
-	testID,
 	ListHeaderComponent,
 	savedFeedConfig,
 }: {
@@ -132,7 +133,6 @@ let PostFeed = ({
 	onScrolledDownChange?: (isScrolledDown: boolean) => void;
 	renderEmptyState: () => React.ReactElement;
 	renderEndOfFeed?: () => React.ReactElement;
-	testID?: string;
 	ListHeaderComponent?: () => React.ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }): React.ReactNode => {
@@ -145,31 +145,18 @@ let PostFeed = ({
 	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
 
 	const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(() => new Set<string>());
-	const onPressShowLess = useCallback((interaction: AppBskyFeedDefs.Interaction) => {
+	const onPressShowLess = (interaction: AppBskyFeedDefs.Interaction) => {
 		if (interaction.item) {
 			const uri = interaction.item;
 			setHasPressedShowLessUris((prev) => new Set([...prev, uri]));
-			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		}
-	}, []);
+	};
 
-	const opts = useMemo(() => ({ enabled, ignoreFilterFor }), [enabled, ignoreFilterFor]);
-	const {
-		data,
-		isFetching,
-		isFetched,
-		isError,
-		error,
-		refetch,
-		hasNextPage,
-		isFetchingNextPage,
-		fetchNextPage,
-	} = usePostFeedQuery(feed, opts);
+	const opts = { enabled, ignoreFilterFor };
+	const { data, isFetching, isFetched, isError, error, refetch, hasNextPage, fetchNextPage } =
+		usePostFeedQuery(feed, opts);
 	const lastFetchedAt = data?.pages[0]?.fetchedAt;
-	const isEmpty = useMemo(
-		() => !isFetching && !data?.pages?.some((page) => page.slices.length),
-		[isFetching, data],
-	);
+	const isEmpty = !isFetching && !data?.pages?.some((page) => page.slices.length);
 
 	useEffect(() => {
 		if (lastFetchedAt) {
@@ -209,21 +196,20 @@ let PostFeed = ({
 	};
 
 	const myDid = currentAccount?.did || '';
-	const onPostCreated = useCallback(() => {
-		// NOTE
-		// only invalidate if at the top of the feed
-		// changing content when scrolled can trigger some UI freakouts on iOS and android
-		// -sfn
-		if (
-			!isScrolledDownRef.current &&
-			(feed === 'following' || feed === `author|${myDid}|posts_and_author_threads`)
-		) {
-			void queryClient.invalidateQueries({ queryKey: RQKEY(feed) });
-		}
-	}, [queryClient, feed, myDid]);
 	useEffect(() => {
-		return postCreated.subscribe(onPostCreated);
-	}, [onPostCreated]);
+		return postCreated.subscribe(() => {
+			// NOTE
+			// only invalidate if at the top of the feed
+			// changing content when scrolled can trigger some UI freakouts on iOS and android
+			// -sfn
+			if (
+				!isScrolledDownRef.current &&
+				(feed === 'following' || feed === `author|${myDid}|posts_and_author_threads`)
+			) {
+				void queryClient.invalidateQueries({ queryKey: RQKEY(feed) });
+			}
+		});
+	}, [queryClient, feed, myDid]);
 
 	useEffect(() => {
 		if (enabled && !disablePoll) {
@@ -236,24 +222,23 @@ let PostFeed = ({
 	}, [enabled, isEmpty, disablePoll, checkForNew]);
 
 	useEffect(() => {
-		let cleanup1: () => void | undefined, cleanup2: () => void | undefined;
-		const subscription = AppState.addEventListener('change', (nextAppState) => {
+		const subscription = onAppStateChange((nextAppState) => {
 			// check for new on app foreground
 			if (nextAppState === 'active') {
 				void checkForNew();
 			}
 		});
-		cleanup1 = () => subscription.remove();
+		let stopPolling: (() => void) | undefined;
 		if (pollInterval) {
 			// check for new on interval
 			const i = setInterval(() => {
 				void checkForNew();
 			}, pollInterval);
-			cleanup2 = () => clearInterval(i);
+			stopPolling = () => clearInterval(i);
 		}
 		return () => {
-			cleanup1?.();
-			cleanup2?.();
+			subscription.remove();
+			stopPolling?.();
 		};
 	}, [pollInterval, checkForNew]);
 
@@ -262,7 +247,7 @@ let PostFeed = ({
 		feed.startsWith('author|') ? undefined : data?.pages,
 	);
 
-	const feedItems: FeedRow[] = useMemo(() => {
+	const feedItems: FeedRow[] = ((): FeedRow[] => {
 		// wraps a slice item, and replaces it with a showLessFollowup item
 		// if the user has pressed show less on it
 		const sliceItem = (row: Extract<FeedRow, { type: 'sliceItem' }>) => {
@@ -419,25 +404,12 @@ let PostFeed = ({
 		}
 
 		return arr;
-	}, [
-		isFetched,
-		isError,
-		isEmpty,
-		lastFetchedAt,
-		data,
-		feed,
-		feedType,
-		feedUriOrActorDid,
-		feedTab,
-		hasSession,
-		hasPressedShowLessUris,
-		blockedOrMutedAuthors,
-	]);
+	})();
 
 	// events
 	// =
 
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetching || !hasNextPage || isError) return;
 
 		try {
@@ -445,138 +417,110 @@ let PostFeed = ({
 		} catch (err) {
 			logger.error('Failed to load more posts', { message: err });
 		}
-	}, [isFetching, hasNextPage, isError, fetchNextPage]);
+	};
 
-	const onPressTryAgain = useCallback(() => {
+	const onPressTryAgain = () => {
 		void refetch();
 		onHasNew?.(false);
-	}, [refetch, onHasNew]);
+	};
 
-	const onPressRetryLoadMore = useCallback(() => {
+	const onPressRetryLoadMore = () => {
 		void fetchNextPage();
-	}, [fetchNextPage]);
+	};
 
 	// rendering
 	// =
 
-	const renderItem = useCallback(
-		({ item: row, index: rowIndex }: ListRenderItemInfo<FeedRow>) => {
-			if (row.type === 'empty') {
-				return renderEmptyState();
-			} else if (row.type === 'error') {
-				return (
-					<PostFeedErrorMessage
-						feedDesc={feed}
-						error={error ?? undefined}
-						onPressTryAgain={onPressTryAgain}
-						savedFeedConfig={savedFeedConfig}
-					/>
-				);
-			} else if (row.type === 'loadMoreError') {
-				return (
-					<LoadMoreRetryBtn
-						label={l`There was an issue fetching posts. Tap here to try again.`}
-						onPress={onPressRetryLoadMore}
-					/>
-				);
-			} else if (row.type === 'loading') {
-				return <PostFeedLoadingPlaceholder />;
-			} else if (row.type === 'feedShutdownMsg') {
-				return <FeedShutdownMsg feedUri={feedUriOrActorDid} />;
-			} else if (row.type === 'interstitialFollows') {
-				return <SuggestedFollows feed={feed} />;
-			} else if (row.type === 'composerPrompt') {
-				return <ComposerPrompt />;
-			} else if (row.type === 'sliceItem') {
-				const slice = row.slice;
-				const indexInSlice = row.indexInSlice;
-				const item = slice.items[indexInSlice]!;
-				return (
-					<PostFeedItem
-						post={item.post}
-						record={item.record}
-						reason={indexInSlice === 0 ? slice.reason : undefined}
-						feedContext={slice.feedContext}
-						reqId={slice.reqId}
-						moderation={item.moderation}
-						parentAuthor={item.parentAuthor}
-						showReplyTo={row.showReplyTo}
-						isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
-						isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-						isParentBlocked={item.isParentBlocked}
-						isParentNotFound={item.isParentNotFound}
-						hideTopBorder={rowIndex === 0 && indexInSlice === 0}
-						rootPost={slice.items[0]!.post}
-						onShowLess={onPressShowLess}
-					/>
-				);
-			} else if (row.type === 'sliceViewFullThread') {
-				return <ViewFullThread uri={row.uri} />;
-			} else if (row.type === 'showLessFollowup') {
-				return <ShowLessFollowup />;
-			} else {
-				return null;
-			}
-		},
-		[
-			renderEmptyState,
-			feed,
-			error,
-			onPressTryAgain,
-			savedFeedConfig,
-			l,
-			onPressRetryLoadMore,
-			feedUriOrActorDid,
-			onPressShowLess,
-		],
-	);
+	const renderItem = ({ item: row, index: rowIndex }: ListRenderItemInfo<FeedRow>) => {
+		if (row.type === 'empty') {
+			return renderEmptyState();
+		} else if (row.type === 'error') {
+			return (
+				<PostFeedErrorMessage
+					feedDesc={feed}
+					error={error ?? undefined}
+					onPressTryAgain={onPressTryAgain}
+					savedFeedConfig={savedFeedConfig}
+				/>
+			);
+		} else if (row.type === 'loadMoreError') {
+			return (
+				<LoadMoreRetryBtn
+					label={l`There was an issue fetching posts. Tap here to try again.`}
+					onPress={onPressRetryLoadMore}
+				/>
+			);
+		} else if (row.type === 'loading') {
+			return <PostFeedLoadingPlaceholder />;
+		} else if (row.type === 'feedShutdownMsg') {
+			return <FeedShutdownMsg feedUri={feedUriOrActorDid} />;
+		} else if (row.type === 'interstitialFollows') {
+			return <SuggestedFollows feed={feed} />;
+		} else if (row.type === 'composerPrompt') {
+			return <ComposerPrompt />;
+		} else if (row.type === 'sliceItem') {
+			const slice = row.slice;
+			const indexInSlice = row.indexInSlice;
+			const item = slice.items[indexInSlice]!;
+			return (
+				<PostFeedItem
+					post={item.post}
+					record={item.record}
+					reason={indexInSlice === 0 ? slice.reason : undefined}
+					feedContext={slice.feedContext}
+					reqId={slice.reqId}
+					moderation={item.moderation}
+					parentAuthor={item.parentAuthor}
+					showReplyTo={row.showReplyTo}
+					isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+					isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+					isParentBlocked={item.isParentBlocked}
+					isParentNotFound={item.isParentNotFound}
+					hideTopBorder={rowIndex === 0 && indexInSlice === 0}
+					rootPost={slice.items[0]!.post}
+					onShowLess={onPressShowLess}
+				/>
+			);
+		} else if (row.type === 'sliceViewFullThread') {
+			return <ViewFullThread uri={row.uri} />;
+		} else if (row.type === 'showLessFollowup') {
+			return <ShowLessFollowup />;
+		} else {
+			return null;
+		}
+	};
 
 	const shouldRenderEndOfFeed = !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed;
-	// A bit of padding at the bottom of the feed as you scroll and when you reach the end, so that
-	// content isn't cut off by the bottom of the screen.
-	const offset = 32;
-	const feedFooter = isFetchingNextPage ? (
-		<View style={[styles.feedFooter]}>
-			<ActivityIndicator />
-			<View style={{ height: offset }} />
-		</View>
-	) : shouldRenderEndOfFeed ? (
-		<View style={{ minHeight: offset }}>{renderEndOfFeed()}</View>
-	) : (
-		<View style={{ height: offset }} />
-	);
+	// keep a spinner pinned to the bottom while more posts can still load; only swap it for the
+	// end-of-feed marker once there's legitimately nothing left to fetch.
+	const feedFooter = shouldRenderEndOfFeed ? (
+		<div className={css.endOfFeedSlot}>{renderEndOfFeed()}</div>
+	) : hasNextPage && !isError ? (
+		<CenteredSpinner label={l`Loading more posts`} size="xl" />
+	) : null;
 
-	const onItemSeen = useCallback(
-		(item: FeedRow) => {
-			feedFeedback.onItemSeen(item);
-		},
-		[feedFeedback],
-	);
+	const onItemSeen = (item: FeedRow) => {
+		feedFeedback.onItemSeen(item);
+	};
 
 	return (
-		<View testID={testID}>
-			<List
-				ref={scrollElRef}
-				data={feedItems}
-				keyExtractor={(item: FeedRow) => item.key}
-				estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
-				renderItem={renderItem}
-				ListFooterComponent={feedFooter}
-				ListHeaderComponent={ListHeaderComponent && <ListHeaderComponent />}
-				onScrolledDownChange={handleScrolledDownChange}
-				onEndReached={() => void onEndReached()}
-				onEndReachedThreshold={2}
-				onItemSeen={onItemSeen}
-			/>
-		</View>
+		<List
+			ref={scrollElRef}
+			data={feedItems}
+			keyExtractor={(item: FeedRow) => item.key}
+			estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
+			renderItem={renderItem}
+			ListFooterComponent={feedFooter}
+			ListHeaderComponent={ListHeaderComponent && <ListHeaderComponent />}
+			onScrolledDownChange={handleScrolledDownChange}
+			onEndReached={() => void onEndReached()}
+			onEndReachedThreshold={2}
+			onItemSeen={onItemSeen}
+		/>
 	);
 };
 PostFeed = memo(PostFeed);
 export { PostFeed };
-
-const styles = StyleSheet.create({
-	feedFooter: { paddingTop: 20 },
-});
 
 export function isThreadParentAt<T>(arr: Array<T>, i: number) {
 	if (arr.length === 1) {

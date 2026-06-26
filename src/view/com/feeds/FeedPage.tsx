@@ -101,7 +101,6 @@ export function FeedPage({
 		>
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
-					testID={testID ? `${testID}-feed` : undefined}
 					enabled={isPageFocused || shouldPrefetch}
 					feed={feed}
 					pollInterval={POLL_FREQ}

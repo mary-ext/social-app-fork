@@ -3008,7 +3008,7 @@ msgstr ""
 msgid "Enable trending topics"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:89
+#: src/screens/Profile/Sections/Feed.tsx:86
 msgid "End of feed"
 msgstr ""
 
@@ -4769,9 +4769,9 @@ msgid "Load new notifications"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:147
-#: src/screens/Profile/Sections/Feed.tsx:77
-#: src/screens/ProfileList/FeedSection.tsx:82
-#: src/view/com/feeds/FeedPage.tsx:118
+#: src/screens/Profile/Sections/Feed.tsx:76
+#: src/screens/ProfileList/FeedSection.tsx:81
+#: src/view/com/feeds/FeedPage.tsx:117
 msgid "Load new posts"
 msgstr ""
 
@@ -4817,6 +4817,10 @@ msgstr "Loading image"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
 msgid "Loading lists..."
 msgstr ""
+
+#: src/view/com/posts/PostFeed.tsx:500
+msgid "Loading more posts"
+msgstr "Loading more posts"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:218
@@ -5354,7 +5358,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:123
+#: src/view/com/feeds/FeedPage.tsx:122
 #: src/view/shell/desktop/LeftNav.tsx:499
 msgctxt "action"
 msgid "New post"
@@ -8297,7 +8301,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:886
-#: src/view/com/posts/PostFeed.tsx:478
+#: src/view/com/posts/PostFeed.tsx:450
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
