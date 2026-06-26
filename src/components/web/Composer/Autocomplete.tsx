@@ -29,7 +29,7 @@ export function Autocomplete({
 	onSelect,
 }: {
 	items: AutocompleteItem[];
-	getAnchor: () => Element | null;
+	getAnchor: () => Element | { getBoundingClientRect: () => DOMRect } | null;
 	placement?: Placement;
 	onSelect: (item: AutocompleteItem) => void;
 }) {

@@ -44,7 +44,7 @@ export function TextInput({
 }: TextInputProps) {
 	const { theme: t } = useAlf();
 	const apiRef = useComposerInternalApiRef();
-	const activeFacetRef = useRef(false);
+	const activeCompletionRef = useRef(false);
 	const isPastingRef = useRef(false);
 	const pastSuggestedUris = useRef(new Set<string>());
 	const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>());
@@ -141,11 +141,11 @@ export function TextInput({
 		},
 		getCursorPosition: () => undefined,
 		maybeClosePopup: () => {
-			if (!activeFacetRef.current) {
+			if (!activeCompletionRef.current) {
 				return false;
 			}
 			apiRef.current?.input?.blur();
-			activeFacetRef.current = false;
+			activeCompletionRef.current = false;
 			return true;
 		},
 	}));
@@ -198,11 +198,11 @@ export function TextInput({
 					right: hasRightPadding ? 37 : 5,
 					top: 5,
 				}}
-				onActiveFacet={(facet) => {
-					activeFacetRef.current = !!facet;
+				onActiveCompletion={(completion) => {
+					activeCompletionRef.current = !!completion;
 				}}
 				onBlur={() => {
-					activeFacetRef.current = false;
+					activeCompletionRef.current = false;
 				}}
 				onChange={handleTextChange}
 				onFocus={onFocus}

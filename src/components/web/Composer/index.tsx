@@ -2,17 +2,15 @@ import {
 	type CSSProperties,
 	type Ref,
 	useEffect,
+	useEffectEvent,
 	useImperativeHandle,
-	useMemo,
 	useRef,
 	useState,
 } from 'react';
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import { clsx } from 'clsx';
 
-import { mergeRefs } from '#/lib/merge-refs';
 import type { Placement } from '#/lib/sift';
-import { type TapperActiveFacet, type TapperFacet, useTapper } from '#/lib/tapper';
 
 import type { AutocompleteItem } from '#/components/Autocomplete/types';
 import { useAutocomplete } from '#/components/Autocomplete/useAutocomplete';
@@ -22,6 +20,7 @@ import { fontSize, lineHeight } from '#/styles/tokens.css';
 
 import { Autocomplete } from './Autocomplete';
 import * as styles from './Composer.css';
+import { type Completion, buildSpans, findCompletion, rangeFromOffsets } from './rich-text';
 
 export type SubmitRequest = {
 	platform: 'web';
@@ -69,8 +68,7 @@ export type ComposerProps = {
 	accessibilityLabel?: string;
 	accessibilityHint?: string;
 	onChange?: (text: string) => void;
-	onActiveFacet?: (facet: TapperActiveFacet | null) => void;
-	onFacetCommitted?: (facet: TapperFacet) => void;
+	onActiveCompletion?: (completion: Completion | null) => void;
 	onPaste?: (event: ClipboardEvent) => void;
 	onRequestSubmit?: (request: SubmitRequest) => void;
 	onFocus?: () => void;
@@ -79,10 +77,9 @@ export type ComposerProps = {
 
 const NO_PADDING: ContentPadding = { bottom: 0, left: 0, right: 0, top: 0 };
 
-/**
- * Web-native rich composer input: an autosizing `<textarea>` over a facet-colored preview, with inline
- * autocomplete for mentions, hashtags, and emoji. Escape is left to bubble, so a host dialog still closes.
- */
+const noop = () => {};
+
+/** Web-native rich composer input with inline autocomplete for mentions, hashtags, and emoji. */
 export function Composer({
 	placeholder,
 	defaultValue,
@@ -94,36 +91,65 @@ export function Composer({
 	internalApiRef,
 	accessibilityLabel,
 	accessibilityHint,
-	onChange,
-	onActiveFacet,
-	onFacetCommitted,
+	onChange = noop,
+	onActiveCompletion = noop,
 	onPaste,
 	onRequestSubmit,
 	onFocus,
 	onBlur,
 }: ComposerProps) {
-	const tapper = useTapper({
-		initialText: defaultValue ?? '',
-		facets: ['emoji', 'mention', 'tag', 'url'],
+	const [text, setText] = useState(defaultValue ?? '');
+	// the collapsed-selection caret drives completion detection; a range selection has no active completion.
+	const [selection, setSelection] = useState(() => {
+		const end = defaultValue?.length ?? 0;
+		return { start: end, end };
 	});
-	const [activeFacet, setActiveFacet] = useState<TapperActiveFacet | null>(null);
+	// the completion the user explicitly dismissed (Escape/blur); cleared implicitly when the active
+	// completion's identity changes (moving the caret elsewhere, or typing — which grows the query).
+	const [dismissedCompletion, setDismissedCompletion] = useState<string | null>(null);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	// the DOM span of the facet currently being typed; Base UI's Positioner anchors the popup to it.
-	const facetAnchorRef = useRef<HTMLElement | null>(null);
+	const overlayRef = useRef<HTMLDivElement>(null);
 
-	const hasFacet = !!activeFacet && activeFacet.type !== 'url';
+	const spans = buildSpans(text);
+	const completion = selection.start === selection.end ? findCompletion(text, selection.end) : null;
 	// require at least one character after the trigger (`@m`, not a bare `@`) before querying/opening.
-	const hasQuery = hasFacet && activeFacet.value.length > 0;
+	const hasQuery = !!completion && completion.query.length > 0;
+	// the query is part of the identity so a dismissal doesn't outlive an edit: dismissing on `@alic`
+	// must not suppress the popup when the caret later re-enters the committed `@alice.bsky.social`.
+	const completionKey = completion
+		? `${completion.type}:${completion.range.start}:${completion.query}`
+		: null;
+
 	const { isFetching, items } = useAutocomplete({
-		type: hasFacet ? parseAutocompleteItemType(activeFacet.type) : 'profile',
-		query: hasQuery ? activeFacet.value : '',
+		type: completion ? parseAutocompleteItemType(completion.type) : 'profile',
+		query: hasQuery ? completion.query : '',
 	});
 	// keep the popup open while results load so the spinner has somewhere to show.
-	const autocompleteOpen = hasQuery && (items.length > 0 || isFetching);
+	const autocompleteOpen =
+		hasQuery && completionKey !== dismissedCompletion && (items.length > 0 || isFetching);
 
+	const syncSelection = (el: HTMLInputElement | HTMLTextAreaElement) => {
+		setSelection({ start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 });
+	};
+
+	// splice the picked suggestion over the completion range via execCommand so it joins the native undo stack.
 	const selectItem = (item: AutocompleteItem) => {
-		activeFacet?.replace(item.value);
+		const el = textareaRef.current;
+		if (!completion || !el) {
+			return;
+		}
+		// reuse a space already after the completion rather than adding a second one.
+		const spaceFollows = text[completion.range.end] === ' ';
+		el.focus();
+		el.setSelectionRange(completion.range.start, completion.range.end);
+		document.execCommand('insertText', false, spaceFollows ? item.value : item.value + ' ');
+		if (spaceFollows) {
+			// step the caret over the reused space so the next keystroke lands after it.
+			const caret = completion.range.start + item.value.length + 1;
+			el.setSelectionRange(caret, caret);
+			syncSelection(el);
+		}
 	};
 
 	useImperativeHandle(
@@ -135,43 +161,37 @@ export function Composer({
 				blur: () => textareaRef.current?.blur(),
 			},
 			clear: () => {
-				tapper.inputProps.onChangeText('');
+				setText('');
+				setSelection({ start: 0, end: 0 });
 			},
-			insert: tapper.insert,
+			insert: (str: string) => {
+				const el = textareaRef.current;
+				if (!el) {
+					return;
+				}
+				el.focus();
+				document.execCommand('insertText', false, str);
+			},
 		}),
-		[tapper.inputProps, tapper.insert],
+		[],
 	);
 
 	// fire onChange after mount (parent already knows the initial value).
+	const emitChange = useEffectEvent(onChange);
 	const isFirstRender = useRef(true);
 	useEffect(() => {
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
 			return;
 		}
-		onChange?.(tapper.state.text);
-	}, [tapper.state.text, onChange]);
+		emitChange(text);
+	}, [text]);
 
-	// Tapper events
-	const callbackRefs = useRef({ onActiveFacet, onFacetCommitted });
-	callbackRefs.current = { onActiveFacet, onFacetCommitted };
+	// notify the consumer as the active completion changes.
+	const emitCompletion = useEffectEvent(onActiveCompletion);
 	useEffect(() => {
-		const offActiveFacet = tapper.on('activeFacet', (facet) => {
-			setActiveFacet(facet);
-			callbackRefs.current.onActiveFacet?.(facet);
-		});
-		const offFacetCommitted = tapper.on('facetCommitted', (facet) => {
-			callbackRefs.current.onFacetCommitted?.(facet);
-		});
-		const offAfterInsert = tapper.on('afterInsert', () => {
-			tapper.input.focus();
-		});
-		return () => {
-			offActiveFacet();
-			offFacetCommitted();
-			offAfterInsert();
-		};
-	}, [tapper.on, tapper.input]);
+		emitCompletion(completion);
+	}, [completion]);
 
 	const isComposing = useRef(false);
 
@@ -185,83 +205,58 @@ export function Composer({
 		contentPadding.top + contentPadding.bottom
 	}px)`;
 
-	// stable across renders (both ref callbacks are stable) so the textarea isn't detached/reattached
-	// on every keystroke.
-	const textareaRefs = useMemo(
-		() => mergeRefs([textareaRef, tapper.inputProps.ref as Ref<HTMLTextAreaElement>]),
-		[tapper.inputProps.ref],
-	);
-
 	return (
 		<BaseAutocomplete.Root
 			autoHighlight
 			items={items}
-			// the textarea holds the whole post; the facet substring is the query, so Base UI must not
+			// the textarea holds the whole post; the completion substring is the query, so Base UI must not
 			// filter or rewrite the value — we drive both ourselves.
 			mode="none"
 			open={autocompleteOpen}
-			onOpenChange={(open) => {
-				if (!open) {
-					setActiveFacet(null);
+			onOpenChange={(open, details) => {
+				// only a deliberate dismissal should stick; picking a row or arrow-keying through the list
+				// also closes the popup, but must not suppress it from reappearing on the same completion.
+				if (!open && (details.reason === 'escape-key' || details.reason === 'outside-press')) {
+					setDismissedCompletion(completionKey);
 				}
 			}}
 			openOnInputClick={false}
-			value={tapper.state.text}
+			value={text}
 			onValueChange={(value, details) => {
-				// route the user's own edits (typing, paste, clear) into Tapper; ignore value changes Base UI
-				// emits from picking a row (`item-press`), which we handle via the item's onClick to splice
-				// into the facet instead.
+				// route the user's own edits (typing, paste, clear) into our state; ignore value changes Base
+				// UI emits from picking a row (`item-press`), which we handle via the item's onClick to splice
+				// into the completion instead.
 				if (details.reason === 'input-change' || details.reason === 'input-clear') {
-					tapper.inputProps.onChangeText(value);
+					setText(value);
+					const el = textareaRef.current;
+					if (el) {
+						syncSelection(el);
+					}
 				}
 			}}
 		>
 			<div className={clsx(styles.root, className)}>
 				<div className={styles.overlay} aria-hidden inert>
-					<div className={styles.overlayInner} style={paddingStyle}>
-						{tapper.state.nodes.map((node, i) => {
-							if (node.type === 'text') {
-								return <span key={i}>{node.value}</span>;
-							}
-							const isActiveFacetSpan =
-								!!activeFacet &&
-								node.facetType === activeFacet.type &&
-								node.start === activeFacet.range.start &&
-								node.end === activeFacet.range.end;
-							return (
-								<span
-									key={i}
-									ref={(el) => {
-										if (isActiveFacetSpan) {
-											facetAnchorRef.current = el;
-										}
-									}}
-									// emoji facets exist only to drive autocomplete; render them as plain text.
-									className={node.type === 'facet' && node.facetType !== 'emoji' ? styles.facet : undefined}
-								>
-									{node.raw}
-								</span>
-							);
-						})}
+					<div className={styles.overlayInner} ref={overlayRef} style={paddingStyle}>
+						{spans.map((span, i) => (
+							<span key={i} className={span.facet ? styles.facet : undefined}>
+								{span.raw}
+							</span>
+						))}
 					</div>
 				</div>
 				<BaseAutocomplete.Input
 					// `rows` is textarea-only, so it rides on the render element, not the input-typed props.
 					render={<textarea rows={1} />}
 					// Base UI types Input for `<input>`; we render a `<textarea>`, so the ref is really a textarea.
-					ref={textareaRefs as unknown as Ref<HTMLInputElement>}
+					ref={textareaRef as unknown as Ref<HTMLInputElement>}
 					className={styles.textarea}
 					style={{ ...paddingStyle, minHeight }}
 					placeholder={placeholder}
 					aria-label={accessibilityLabel}
 					aria-description={accessibilityHint}
 					autoFocus={autoFocus}
-					onSelect={(e) => {
-						const el = e.currentTarget;
-						tapper.inputProps.onSelectionChange({
-							nativeEvent: { selection: { start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 } },
-						});
-					}}
+					onSelect={(e) => syncSelection(e.currentTarget)}
 					onKeyDown={(e) => {
 						if (isComposing.current) {
 							return;
@@ -284,7 +279,7 @@ export function Composer({
 					onFocus={onFocus}
 					onBlur={() => {
 						onBlur?.();
-						setActiveFacet(null);
+						setDismissedCompletion(completionKey);
 					}}
 					onCompositionStart={() => {
 						isComposing.current = true;
@@ -297,7 +292,14 @@ export function Composer({
 			{autocompleteOpen && (
 				<Autocomplete
 					items={items}
-					getAnchor={() => facetAnchorRef.current}
+					getAnchor={() => {
+						const root = overlayRef.current;
+						if (!root || !completion) {
+							return null;
+						}
+						const range = rangeFromOffsets(root, completion.range.start, completion.range.end);
+						return range && { getBoundingClientRect: () => range.getBoundingClientRect() };
+					}}
 					placement={autocompletePlacement}
 					onSelect={selectItem}
 				/>
