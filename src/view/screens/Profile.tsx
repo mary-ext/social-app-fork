@@ -36,8 +36,6 @@ import { ProfileHeader, ProfileHeaderLoading } from '#/screens/Profile/Header';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 import { ProfileLabelsSection } from '#/screens/Profile/Sections/Labels';
 
-import { atoms as a } from '#/alf';
-
 import { useRichText } from '#/components/hooks/useRichText';
 import { Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon } from '#/components/icons/CircleAndSquare';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
@@ -45,9 +43,9 @@ import { Heart2_Stroke1_Corner0_Rounded as HeartIcon } from '#/components/icons/
 import { Image_Stroke1_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { Message_Stroke1_Corner0_Rounded_Filled as MessageIcon } from '#/components/icons/Message';
 import { VideoClip_Stroke1_Corner0_Rounded as VideoIcon } from '#/components/icons/VideoClip';
-import * as Layout from '#/components/Layout';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
 import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
+import * as Layout from '#/components/web/Layout';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { navigate } from '#/Navigation';
@@ -58,7 +56,7 @@ import * as css from './Profile.css';
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>;
 export function ProfileScreen(props: Props) {
 	return (
-		<Layout.Screen testID="profileScreen" style={[a.pt_0]}>
+		<Layout.Screen noInsetTop>
 			<ProfileScreenInner {...props} />
 		</Layout.Screen>
 	);
