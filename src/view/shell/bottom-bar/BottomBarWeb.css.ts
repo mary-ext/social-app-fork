@@ -38,10 +38,15 @@ export const ctrl = style({
 });
 
 export const badge = style({
+	alignItems: 'center',
 	backgroundColor: colors.primary_500,
-	borderRadius: 12,
+	borderRadius: 9999,
+	boxSizing: 'border-box',
+	display: 'flex',
+	height: 18,
+	justifyContent: 'center',
 	left: '52%',
-	paddingBlock: 3,
+	minWidth: 18,
 	paddingInline: 5,
 	position: 'absolute',
 	top: 8,
