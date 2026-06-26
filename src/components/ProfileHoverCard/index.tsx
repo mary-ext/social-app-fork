@@ -312,6 +312,8 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 	return (
 		<View
 			// @ts-ignore View is being used as div
+			// refs.setReference is a Floating UI ref callback; it runs at attach time, not during render.
+			// eslint-disable-next-line react-hooks/refs
 			ref={refs.setReference}
 			onPointerMove={onPointerMoveTarget}
 			onPointerLeave={onPointerLeaveTarget}
@@ -323,6 +325,8 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 			{isVisible && (
 				<Portal>
 					<div
+						// refs.setFloating is a Floating UI ref callback; it runs at attach time, not during render.
+						// eslint-disable-next-line react-hooks/refs
 						ref={refs.setFloating}
 						style={floatingStyles}
 						onPointerEnter={onPointerEnterCard}

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { useFocusEffect } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
@@ -57,7 +57,7 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 		once(() => {});
 	}
 
-	const userUpdatedPrefs = useRef(false);
+	const [userUpdatedPrefs, setUserUpdatedPrefs] = useState(false);
 	const { mutate, isPending: isSaving } = useSetThreadViewPreferencesMutation({
 		onSuccess: (_data, _prefs) => {},
 		onError: (err) => {
@@ -85,24 +85,33 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 		}, [savePrefs]),
 	);
 
-	if (save && userUpdatedPrefs.current) {
-		savePrefs({
-			sort,
-			lab_treeViewEnabled: view === 'tree',
-		});
-		userUpdatedPrefs.current = false;
+	// when saving is enabled and the user has pending changes, clear the pending flag during render
+	// (render-time adjustment) and fire the debounced save in the effect below.
+	if (save && userUpdatedPrefs) {
+		setUserUpdatedPrefs(false);
 	}
+
+	// the save side effect runs after commit, off the render path. deps include userUpdatedPrefs so it
+	// fires once per pending batch (the render-time clear above flips it back to false next render).
+	useEffect(() => {
+		if (save && userUpdatedPrefs) {
+			savePrefs({
+				sort,
+				lab_treeViewEnabled: view === 'tree',
+			});
+		}
+	}, [save, userUpdatedPrefs, sort, view, savePrefs]);
 
 	const setSortWrapped = useCallback(
 		(next: string) => {
-			userUpdatedPrefs.current = true;
+			setUserUpdatedPrefs(true);
 			setSort(normalizeSort(next));
 		},
 		[setSort],
 	);
 	const setViewWrapped = useCallback(
 		(next: ThreadViewOption) => {
-			userUpdatedPrefs.current = true;
+			setUserUpdatedPrefs(true);
 			setView(next);
 		},
 		[setView],

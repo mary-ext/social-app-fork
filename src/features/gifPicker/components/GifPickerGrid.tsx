@@ -1,4 +1,4 @@
-import { type Ref, useEffect, useImperativeHandle, useRef } from 'react';
+import { type Ref, useEffect, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import { useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -41,9 +41,12 @@ export function GifPickerGrid({
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
 	// keep the observer stable while always calling the latest handler — onEndReached closes over fresh
-	// pagination state on every render.
+	// pagination state on every render. useLayoutEffect (not useEffect) so the ref is current before the
+	// browser can fire the observer callback after a commit.
 	const onEndReachedRef = useRef(onEndReached);
-	onEndReachedRef.current = onEndReached;
+	useLayoutEffect(() => {
+		onEndReachedRef.current = onEndReached;
+	});
 
 	useImperativeHandle(ref, () => ({ scrollToTop: () => scrollRef.current?.scrollTo({ top: 0 }) }), []);
 

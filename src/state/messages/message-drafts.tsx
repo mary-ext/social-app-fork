@@ -36,7 +36,9 @@ export function useSaveMessageDraft(message: string) {
 	const { currentConvoId } = useCurrentConvoId();
 	const { dispatch } = useMessageDraftsContext();
 	const messageRef = useRef(message);
-	messageRef.current = message;
+	useEffect(() => {
+		messageRef.current = message;
+	});
 
 	useEffect(() => {
 		return () => {

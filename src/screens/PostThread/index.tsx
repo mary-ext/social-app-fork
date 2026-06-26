@@ -106,8 +106,6 @@ export function PostThread({ uri }: { uri: string }) {
 	const canReply = !anchor?.value.post?.viewer?.replyDisabled;
 	const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE);
 	const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE);
-	const totalParentCount = useRef(0); // recomputed below
-	const totalChildrenCount = useRef(thread.data.items.length); // recomputed below
 	const listRef = useRef<ListMethods>(null);
 	const anchorRef = useRef<HTMLDivElement | null>(null);
 	const headerRef = useRef<HTMLDivElement | null>(null);
@@ -244,12 +242,22 @@ export function PostThread({ uri }: { uri: string }) {
 		[thread, prepareForParamsUpdate],
 	);
 
+	// total parents/children around the anchor post (depth === 0), used to short-circuit pagination once all
+	// items are loaded. derived from the items rather than stashed in refs, so it stays off the render path.
+	const { totalParents, totalChildren } = useMemo(() => {
+		const anchorIndex = thread.data.items.findIndex((item) => 'depth' in item && item.depth === 0);
+		if (anchorIndex === -1) {
+			return { totalParents: 0, totalChildren: thread.data.items.length };
+		}
+		return { totalParents: anchorIndex, totalChildren: thread.data.items.length - 1 - anchorIndex };
+	}, [thread.data.items]);
+
 	const onStartReached = () => {
 		if (thread.state.isFetching) return;
 		// can be true after `prepareForParamsUpdate` is called
 		if (deferParents) return;
 		// prevent any state mutations if we know we're done
-		if (maxParentCount >= totalParentCount.current) return;
+		if (maxParentCount >= totalParents) return;
 		setMaxParentCount((n) => n + PARENT_CHUNK_SIZE);
 	};
 
@@ -258,7 +266,7 @@ export function PostThread({ uri }: { uri: string }) {
 		// can be true after `prepareForParamsUpdate` is called
 		if (deferParents) return;
 		// prevent any state mutations if we know we're done
-		if (maxChildrenCount >= totalChildrenCount.current) return;
+		if (maxChildrenCount >= totalChildren) return;
 		setMaxChildrenCount((prev) => prev + CHILDREN_CHUNK_SIZE);
 	};
 
@@ -285,11 +293,6 @@ export function PostThread({ uri }: { uri: string }) {
 			 */
 			if (hasDepth && item.depth === 0) {
 				results.push(item);
-
-				// Recalculate total parents current index.
-				totalParentCount.current = i;
-				// Recalculate total children using (length - 1) - current index.
-				totalChildrenCount.current = thread.data.items.length - 1 - i;
 
 				/*
 				 * Walk up the parents, limiting by `maxParentCount`

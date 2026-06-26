@@ -45,7 +45,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 	const [numUnread, setNumUnread] = useState('');
 
-	const checkUnreadRef = useRef<ApiContext['checkUnread'] | null>(null);
 	const cacheRef = useRef<CachedFeedPage>({
 		usableInFeed: false,
 		syncedAt: new Date(),
@@ -53,26 +52,17 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		unreadCount: 0,
 	});
 
-	// periodic sync
-	useEffect(() => {
-		if (!hasSession || !checkUnreadRef.current) {
-			return;
-		}
-		void checkUnreadRef.current(); // fire on init
-		const interval = setInterval(() => void checkUnreadRef.current?.({ isPoll: true }), UPDATE_INTERVAL);
-		return () => clearInterval(interval);
-	}, [hasSession]);
-
 	// listen for broadcasts
 	useEffect(() => {
 		const listener = ({ data }: MessageEvent) => {
+			const event = (data as { event: string }).event;
 			cacheRef.current = {
 				usableInFeed: false,
 				syncedAt: new Date(),
 				data: undefined,
-				unreadCount: data.event === '30+' ? 30 : data.event === '' ? 0 : parseInt(data.event, 10) || 1,
+				unreadCount: event === '30+' ? 30 : event === '' ? 0 : parseInt(event, 10) || 1,
 			};
-			setNumUnread(data.event);
+			setNumUnread(event);
 		};
 		broadcast.addEventListener('message', listener);
 		return () => {
@@ -100,6 +90,10 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			},
 
 			async checkUnread({ invalidate, isPoll }: { invalidate?: boolean; isPoll?: boolean } = {}) {
+				// single-flight guard: only the call that acquires the lock clears it, so an early-returning
+				// call (e.g. a re-fire triggered by an api-identity change while a fetch is in flight) can't
+				// release another request's lock.
+				let acquired = false;
 				try {
 					if (!hasSession) return;
 					if (AppState.currentState !== 'active') {
@@ -117,8 +111,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 					if (isFetchingRef.current) {
 						return;
 					}
-					// Do not move this without ensuring it gets a symmetrical reset in the finally block.
 					isFetchingRef.current = true;
+					acquired = true;
 
 					// count
 					const { page, indexedAt: lastIndexed } = await fetchPage({
@@ -154,7 +148,9 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 					}
 					broadcast.postMessage({ event: unreadCountStr });
 				} finally {
-					isFetchingRef.current = false;
+					if (acquired) {
+						isFetchingRef.current = false;
+					}
 				}
 			},
 
@@ -165,8 +161,18 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				}
 			},
 		};
-	}, [setNumUnread, queryClient, moderationOpts, appview]);
-	checkUnreadRef.current = api.checkUnread;
+	}, [setNumUnread, queryClient, moderationOpts, appview, hasSession]);
+
+	// periodic sync. depends on api (not a ref bridge) so a fresh mount with hasSession has the callback in
+	// hand when this effect first runs — effect order is no longer load-bearing.
+	useEffect(() => {
+		if (!hasSession) {
+			return;
+		}
+		void api.checkUnread(); // fire on init
+		const interval = setInterval(() => void api.checkUnread({ isPoll: true }), UPDATE_INTERVAL);
+		return () => clearInterval(interval);
+	}, [hasSession, api]);
 
 	return (
 		<stateContext.Provider value={numUnread}>

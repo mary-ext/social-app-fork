@@ -18,7 +18,9 @@ export function useRegisterDialog(id: string, close: () => void) {
 	const { setDialogIsOpen } = useDialogStateControlContext();
 
 	const controlRef = useRef<DialogControlRefProps>({ open: () => {}, close });
-	controlRef.current.close = close;
+	useEffect(() => {
+		controlRef.current.close = close;
+	});
 
 	useEffect(() => {
 		const map = activeDialogs.current;

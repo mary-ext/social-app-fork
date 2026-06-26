@@ -129,14 +129,14 @@ msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
-#: src/components/ProfileHoverCard/index.tsx:425
+#: src/components/ProfileHoverCard/index.tsx:429
 #: src/components/web/ProfileHoverCard.tsx:152
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
-#: src/components/ProfileHoverCard/index.tsx:429
+#: src/components/ProfileHoverCard/index.tsx:433
 #: src/components/web/ProfileHoverCard.tsx:153
 #: src/screens/Profile/Header/Metrics.tsx:24
 msgid "{0, plural, one {following} other {following}}"
@@ -511,7 +511,7 @@ msgstr ""
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:515
+#: src/components/ProfileHoverCard/index.tsx:519
 #: src/components/web/ProfileHoverCard.tsx:225
 msgid "{following} following"
 msgstr ""
@@ -844,7 +844,7 @@ msgstr "Accept join request"
 msgid "Accept Request"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:337
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:344
 msgid "Accept this language suggestion"
 msgstr ""
 
@@ -1526,7 +1526,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:242
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:249
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr ""
 
@@ -2492,7 +2492,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:347
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:354
 msgid "Decline this language suggestion"
 msgstr "Decline this language suggestion"
 
@@ -2776,7 +2776,7 @@ msgstr ""
 msgid "Drafts"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.tsx:213
+#: src/view/com/composer/text-input/TextInput.tsx:215
 msgid "Drop to add images"
 msgstr ""
 
@@ -3545,8 +3545,8 @@ msgstr "Focus the search field"
 #. User is not following this account, click to follow
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:460
-#: src/components/ProfileHoverCard/index.tsx:468
-#: src/components/ProfileHoverCard/index.tsx:473
+#: src/components/ProfileHoverCard/index.tsx:472
+#: src/components/ProfileHoverCard/index.tsx:477
 #: src/components/web/ProfileCard.tsx:281
 #: src/components/web/ProfileHoverCard.tsx:186
 #: src/components/web/ProfileHoverCard.tsx:192
@@ -3640,8 +3640,8 @@ msgstr ""
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:451
-#: src/components/ProfileHoverCard/index.tsx:468
-#: src/components/ProfileHoverCard/index.tsx:473
+#: src/components/ProfileHoverCard/index.tsx:472
+#: src/components/ProfileHoverCard/index.tsx:477
 #: src/components/web/ProfileCard.tsx:275
 #: src/components/web/ProfileHoverCard.tsx:186
 #: src/components/web/ProfileHoverCard.tsx:192
@@ -4779,7 +4779,7 @@ msgstr "Loading drafts"
 msgid "Loading GIF"
 msgstr "Loading GIF"
 
-#: src/features/gifPicker/components/GifPickerGrid.tsx:82
+#: src/features/gifPicker/components/GifPickerGrid.tsx:85
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:29
 msgid "Loading GIFs"
 msgstr "Loading GIFs"
@@ -6155,7 +6155,7 @@ msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:447
+#: src/screens/PostThread/index.tsx:450
 msgctxt "description"
 msgid "Post"
 msgstr ""
@@ -7008,8 +7008,8 @@ msgstr "Rescind request to join group chat"
 #: src/components/moderation/ReportDialog/index.tsx:356
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:25
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:28
-#: src/features/gifPicker/components/GifPickerGrid.tsx:88
-#: src/features/gifPicker/components/GifPickerGrid.tsx:89
+#: src/features/gifPicker/components/GifPickerGrid.tsx:91
+#: src/features/gifPicker/components/GifPickerGrid.tsx:92
 #: src/screens/Messages/ChatList.tsx:304
 #: src/screens/Messages/components/MessageListError.tsx:28
 #: src/screens/Messages/Inbox.tsx:186
@@ -8211,7 +8211,7 @@ msgstr "The member limit has been reached."
 msgid "The pasted image couldn't be added to your post."
 msgstr "The pasted image couldn't be added to your post."
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:276
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:283
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 msgstr "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 
@@ -9252,7 +9252,7 @@ msgstr "View {displayName}’s profile"
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
-#: src/components/ProfileHoverCard/index.tsx:454
+#: src/components/ProfileHoverCard/index.tsx:458
 #: src/components/web/ProfileHoverCard.tsx:176
 msgid "View blocked user's profile"
 msgstr ""
@@ -9286,9 +9286,9 @@ msgstr "View incoming requests to join this group chat"
 msgid "View information about these labels"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:440
-#: src/components/ProfileHoverCard/index.tsx:461
-#: src/components/ProfileHoverCard/index.tsx:477
+#: src/components/ProfileHoverCard/index.tsx:444
+#: src/components/ProfileHoverCard/index.tsx:465
+#: src/components/ProfileHoverCard/index.tsx:481
 #: src/components/web/ProfileHoverCard.tsx:162
 #: src/components/web/ProfileHoverCard.tsx:181
 #: src/components/web/ProfileHoverCard.tsx:197

@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode, useEffect, useRef } from 'react';
+import { Fragment, type ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
 import { clsx } from 'clsx';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
@@ -49,8 +49,12 @@ export function List<ItemT>({
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
 	// keep the observer stable while always calling the latest handler — it closes over fresh pagination state.
+	// useLayoutEffect (not useEffect) so the ref is current before the browser can fire the observer callback
+	// after a commit — a passive effect would leave a window where the old observer calls the prior handler.
 	const onEndReachedRef = useRef(onEndReached);
-	onEndReachedRef.current = onEndReached;
+	useLayoutEffect(() => {
+		onEndReachedRef.current = onEndReached;
+	});
 
 	const isEmpty = data.length === 0;
 	// re-observe when the page count changes: a fresh observer reports its current intersection on connect, so

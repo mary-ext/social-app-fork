@@ -117,6 +117,9 @@ export function SuggestedLanguage({
 	 * Main language detection effect
 	 */
 	const detectLanguage = useMemo(() => {
+		// lodash.debounce stores this callback without invoking it, so detectionPropsRef.current is read
+		// only when the debounced function fires from the effect below, never during render.
+		// eslint-disable-next-line react-hooks/refs
 		return debounce(async (text: string) => {
 			try {
 				const currLangs = detectionPropsRef.current.currentLanguages;
@@ -150,14 +153,18 @@ export function SuggestedLanguage({
 				logger.error('Error detecting language', { safeMessage: e });
 			}
 		}, 500);
+		// empty deps are intentional: the debounce timer is built once and reads the latest state via
+		// detectionPropsRef / handleOnNudge (a useNonReactiveCallback) rather than closing over it.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEffect(() => {
-		// show reply prompt if there's not enough text to start using the model
-		if (text.length > 0 && !hasInteracted) {
-			setHasInteracted(true);
-		}
+	// latch interacted-once as soon as there's any text. render-time adjustment so we don't setState
+	// synchronously inside the effect below (which would trip set-state-in-effect).
+	if (text.length > 0 && !hasInteracted) {
+		setHasInteracted(true);
+	}
 
+	useEffect(() => {
 		const textTrimmed = sanitizeTextForDetection(text);
 
 		/*
@@ -180,7 +187,7 @@ export function SuggestedLanguage({
 		return () => {
 			detectLanguage.cancel();
 		};
-	}, [text, hasInteracted, detectLanguage]);
+	}, [text, detectLanguage]);
 
 	/*
 	 * We've detected a language, and the user hasn't already selected it.

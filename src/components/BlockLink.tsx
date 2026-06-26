@@ -154,6 +154,10 @@ export function BlockLink({
 
 	const node = children as ReactElement<BlockLinkChildProps>;
 
+	// cloneElement's props include a merged ref (forwarded ref + child's own ref). mergeRefs returns a ref
+	// callback that reads/writes .current only at attach time, not during render — the rule can't prove that,
+	// hence the suppressions on both the call and the ref prop.
+	// eslint-disable-next-line react-hooks/refs
 	return cloneElement(node, {
 		'aria-label': label,
 		className: clsx(node.props.className, className),
@@ -164,6 +168,7 @@ export function BlockLink({
 		onPointerDownCapture,
 		onPointerEnter,
 		onPointerLeave,
+		// eslint-disable-next-line react-hooks/refs
 		ref: mergeRefs([ref, node.props.ref]),
 		role: label ? 'link' : undefined,
 		tabIndex: label ? 0 : undefined,

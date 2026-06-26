@@ -11,13 +11,13 @@ import {
 } from '#/view/com/composer/text-input/text-input-util';
 import { emojiInserted } from '#/view/com/composer/text-input/textInputWebEmitter';
 
-import type { Emoji } from '#/components/EmojiPicker';
-import { Text } from '#/components/Text';
 import {
 	Composer as TapperComposer,
 	type SubmitRequest,
 	useComposerInternalApiRef,
 } from '#/components/Composer';
+import type { Emoji } from '#/components/EmojiPicker';
+import { Text } from '#/components/Text';
 
 import * as styles from './TextInput.css';
 import type { TextInputProps } from './TextInput.types';
@@ -48,7 +48,9 @@ export function TextInput({
 	const textRef = useRef(text);
 	const [isDropping, setIsDropping] = useState(false);
 
-	textRef.current = text;
+	useEffect(() => {
+		textRef.current = text;
+	});
 
 	const handleTextChange = useCallback(
 		(newText: string) => {
