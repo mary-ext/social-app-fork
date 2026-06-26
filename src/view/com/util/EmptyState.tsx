@@ -55,7 +55,7 @@ export function EmptyState({
 		if (isValidElement(icon)) {
 			return icon;
 		}
-		const IconComponent = icon as EmptyStateIcon;
+		const IconComponent = icon;
 		return <IconComponent size={iconSize} fill={iconColor ?? colors.textContrastLow} />;
 	};
 
