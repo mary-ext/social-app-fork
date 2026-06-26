@@ -1,25 +1,22 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { fallbackVar, style } from '@vanilla-extract/css';
+
+import { bottomBarHeightVar } from '#/components/web/Shell/Shell.css';
 
 import { vars } from '#/styles/contract.css';
 import { zIndex } from '#/styles/tokens.css';
 
-/** Distance from the viewport bottom, wired inline since it derives from the safe-area inset. */
-export const bottomVar = createVar();
-
 export const outer = style({
-	bottom: bottomVar,
+	// sit clear of the bottom bar — its measured height already carries the safe-area inset — and rest the
+	// same distance from the viewport bottom once the bar gives way to the side rails.
+	bottom: `calc(${fallbackVar(bottomBarHeightVar, '0px')} + 30px)`,
 	left: 18,
 	position: 'fixed',
-	transition: 'transform 0.1s',
 	zIndex: zIndex.stickyRaised,
 });
 
 // move the button inline with the feed column once it would otherwise overlap the left nav.
 export const leftInline = style({ left: 'calc(50vw - 282px)' });
 export const leftOutOfLine = style({ left: 'calc(50vw - 382px)' });
-
-// lift above the bottom bar when it is shown (mobile, or tablet without a session).
-export const lifted = style({ transform: 'translateY(-44px)' });
 
 export const button = style({
 	alignItems: 'center',
