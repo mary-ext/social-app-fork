@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -8,6 +7,7 @@ import {
 } from '@atcute/bluesky-moderation';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
+import { useConstant } from '#/lib/hooks/use-constant';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
@@ -34,15 +34,16 @@ export function KnownFollowers({
 	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
 }) {
-	const cache = useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(new Map());
+	// stable per-instance Map; useConstant (not useRef) so reads/writes during render aren't ref accesses.
+	const cache = useConstant(() => new Map<string, AppBskyActorDefs.KnownFollowers>());
 
 	// `knownFollowers` isn't sorted stably, so revalidation can flash a reordered list. Cache the first
 	// value seen for this profile so an in-memory screen keeps a stable order.
-	if (profile.viewer?.knownFollowers && !cache.current.has(profile.did)) {
-		cache.current.set(profile.did, profile.viewer.knownFollowers);
+	if (profile.viewer?.knownFollowers && !cache.has(profile.did)) {
+		cache.set(profile.did, profile.viewer.knownFollowers);
 	}
 
-	const cachedKnownFollowers = cache.current.get(profile.did);
+	const cachedKnownFollowers = cache.get(profile.did);
 
 	if (cachedKnownFollowers && shouldShowKnownFollowers(cachedKnownFollowers)) {
 		return (

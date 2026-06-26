@@ -1310,7 +1310,7 @@ msgstr ""
 msgid "An error occurred while compressing the video."
 msgstr ""
 
-#: src/state/queries/explore-feed-previews.tsx:164
+#: src/state/queries/explore-feed-previews.tsx:168
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
@@ -3590,30 +3590,30 @@ msgid "Follow back"
 msgstr ""
 
 #. placeholder {0}: slice[0]!.profile.displayName
-#: src/components/KnownFollowers.tsx:228
-#: src/components/web/KnownFollowers.tsx:139
+#: src/components/KnownFollowers.tsx:229
+#: src/components/web/KnownFollowers.tsx:140
 msgid "Followed by <0>{0}</0>"
 msgstr ""
 
 #. placeholder {0}: slice[0]!.profile.displayName
 #. placeholder {1}: serverCount - 1
-#: src/components/KnownFollowers.tsx:219
-#: src/components/web/KnownFollowers.tsx:131
+#: src/components/KnownFollowers.tsx:220
+#: src/components/web/KnownFollowers.tsx:132
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
 msgstr ""
 
 #. placeholder {0}: slice[0]!.profile.displayName
 #. placeholder {1}: slice[1]!.profile.displayName
-#: src/components/KnownFollowers.tsx:206
-#: src/components/web/KnownFollowers.tsx:119
+#: src/components/KnownFollowers.tsx:207
+#: src/components/web/KnownFollowers.tsx:120
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
 msgstr ""
 
 #. placeholder {0}: slice[0]!.profile.displayName
 #. placeholder {1}: slice[1]!.profile.displayName
 #. placeholder {2}: serverCount - 2
-#: src/components/KnownFollowers.tsx:194
-#: src/components/web/KnownFollowers.tsx:107
+#: src/components/KnownFollowers.tsx:195
+#: src/components/web/KnownFollowers.tsx:108
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr ""
 
@@ -5575,7 +5575,7 @@ msgstr ""
 msgid "Non-sexual Nudity"
 msgstr ""
 
-#: src/components/KnownFollowers.tsx:249
+#: src/components/KnownFollowers.tsx:250
 msgid "Not followed by anyone you’re following"
 msgstr "Not followed by anyone you’re following"
 
@@ -6298,8 +6298,8 @@ msgstr ""
 msgid "Press to retry"
 msgstr ""
 
-#: src/components/KnownFollowers.tsx:126
-#: src/components/web/KnownFollowers.tsx:95
+#: src/components/KnownFollowers.tsx:127
+#: src/components/web/KnownFollowers.tsx:96
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 

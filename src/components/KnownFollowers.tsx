@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import {
@@ -9,6 +8,7 @@ import {
 } from '@atcute/bluesky-moderation';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
+import { useConstant } from '#/lib/hooks/use-constant';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
@@ -45,7 +45,8 @@ export function KnownFollowers({
 	minimal?: boolean;
 	showIfEmpty?: boolean;
 }) {
-	const cache = useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(new Map());
+	// stable per-instance Map; useConstant (not useRef) so reads/writes during render aren't ref accesses.
+	const cache = useConstant(() => new Map<string, AppBskyActorDefs.KnownFollowers>());
 
 	/*
 	 * Results for `knownFollowers` are not sorted consistently, so when
@@ -54,11 +55,11 @@ export function KnownFollowers({
 	 * screen, or once this one is popped, this cache is empty, so new data is
 	 * displayed.
 	 */
-	if (profile.viewer?.knownFollowers && !cache.current.has(profile.did)) {
-		cache.current.set(profile.did, profile.viewer.knownFollowers);
+	if (profile.viewer?.knownFollowers && !cache.has(profile.did)) {
+		cache.set(profile.did, profile.viewer.knownFollowers);
 	}
 
-	const cachedKnownFollowers = cache.current.get(profile.did);
+	const cachedKnownFollowers = cache.get(profile.did);
 
 	if (cachedKnownFollowers && shouldShowKnownFollowers(cachedKnownFollowers)) {
 		return (

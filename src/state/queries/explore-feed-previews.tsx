@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import type { AppBskyFeedDefs as AtcAppBskyFeedDefs, AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
@@ -8,6 +8,7 @@ import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack
 import { FeedTuner } from '#/lib/api/feed-manip';
 import { CustomFeedAPI } from '#/lib/api/feed/custom';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
+import { useConstant } from '#/lib/hooks/use-constant';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -110,14 +111,17 @@ export function useFeedPreviews(
 	const moderationOpts = useModerationOpts();
 	const enabled = feeds.length > 0 && isEnabled;
 
-	const processedPageCache = useRef(
-		new Map<
-			{
-				feed: AtcAppBskyFeedDefs.GeneratorView;
-				posts: AtcAppBskyFeedDefs.FeedViewPost[];
-			},
-			FeedPreviewItem[]
-		>(),
+	// stable per-instance Map; useConstant (not useRef) so reads/writes inside the data memo (which runs
+	// during render) aren't ref accesses.
+	const processedPageCache = useConstant(
+		() =>
+			new Map<
+				{
+					feed: AtcAppBskyFeedDefs.GeneratorView;
+					posts: AtcAppBskyFeedDefs.FeedViewPost[];
+				},
+				FeedPreviewItem[]
+			>(),
 	);
 
 	const query = useInfiniteQuery({
@@ -173,7 +177,7 @@ export function useFeedPreviews(
 					for (let pageIndex = 0; pageIndex < data.pages.length; pageIndex++) {
 						const page = data.pages[pageIndex]!;
 
-						const cachedPage = processedPageCache.current.get(page);
+						const cachedPage = processedPageCache.get(page);
 						if (cachedPage) {
 							items.push(...cachedPage);
 							continue;
@@ -294,7 +298,7 @@ export function useFeedPreviews(
 							processedPage = [];
 						}
 
-						processedPageCache.current.set(page, processedPage);
+						processedPageCache.set(page, processedPage);
 						items.push(...processedPage);
 					}
 				} else if (isError && !isEmpty) {
@@ -311,7 +315,7 @@ export function useFeedPreviews(
 			}
 
 			return items;
-		}, [enabled, data, isFetched, isError, isPending, moderationOpts, l, error]),
+		}, [enabled, data, isFetched, isError, isPending, moderationOpts, l, error, processedPageCache]),
 	};
 }
 
