@@ -76,7 +76,8 @@ export class Storage<Scopes extends unknown[], Schema> {
 		if (!res) return undefined;
 		// parsed from storage structure `{ data: <value> }`
 		try {
-			return JSON.parse(res).data;
+			const parsed = JSON.parse(res) as { data: Schema[Key] };
+			return parsed.data;
 		} catch {
 			return undefined;
 		}

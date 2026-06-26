@@ -35,17 +35,13 @@ export function createQueryKey<T extends Record<string, unknown>>(
 export function isQueryPersisted(
 	queryKey: QueryKey,
 ): queryKey is StructuredQueryKey<Record<string, unknown>> {
-	return (
-		Array.isArray(queryKey) &&
-		queryKey.length === 3 &&
-		typeof queryKey[0] === 'string' &&
-		typeof queryKey[1] === 'object' &&
-		queryKey[1] !== null &&
-		typeof queryKey[2] === 'object' &&
-		queryKey[2] !== null &&
-		'persistedVersion' in queryKey[2] &&
-		typeof queryKey[2].persistedVersion === 'number'
-	);
+	if (!Array.isArray(queryKey) || queryKey.length !== 3) return false;
+	if (typeof queryKey[0] !== 'string') return false;
+	if (typeof queryKey[1] !== 'object' || queryKey[1] === null) return false;
+	const options = queryKey[2];
+	if (typeof options !== 'object' || options === null) return false;
+	const record = options as Record<string, unknown>;
+	return 'persistedVersion' in record && typeof record.persistedVersion === 'number';
 }
 
 export async function truncateAndInvalidate<T = unknown>(queryClient: QueryClient, queryKey: QueryKey) {
