@@ -5,9 +5,9 @@ import { clsx } from 'clsx';
 
 import type { Placement } from '#/lib/sift';
 
-import type { AutocompleteItem } from '#/components/Autocomplete/types';
-import { useAutocomplete } from '#/components/Autocomplete/useAutocomplete';
-import { parseAutocompleteItemType } from '#/components/Autocomplete/util';
+import type { AutocompleteItem } from '#/components/Composer/Autocomplete/types';
+import { useAutocomplete } from '#/components/Composer/Autocomplete/useAutocomplete';
+import { parseAutocompleteItemType } from '#/components/Composer/Autocomplete/util';
 
 import { Autocomplete } from './Autocomplete';
 import * as styles from './Composer.css';

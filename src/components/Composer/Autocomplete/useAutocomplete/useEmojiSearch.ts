@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
-import type { AutocompleteEmoji } from '#/components/Autocomplete/types';
+import type { AutocompleteEmoji } from '#/components/Composer/Autocomplete/types';
 import { emojiDataQuery } from '#/components/EmojiPicker/data';
 
 /** returns an emoji search function over the shared emoji dataset. */

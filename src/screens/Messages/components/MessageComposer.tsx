@@ -24,7 +24,7 @@ import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
-import { Composer, useComposerInternalApiRef } from '#/components/web/Composer';
+import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 import { colors } from '#/styles/colors';

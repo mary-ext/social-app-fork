@@ -21,7 +21,7 @@ import type {
 	AutocompleteItem,
 	AutocompleteItemType,
 	AutocompleteProfile,
-} from '#/components/Autocomplete/types';
+} from '#/components/Composer/Autocomplete/types';
 
 import { useEmojiSearch } from './useEmojiSearch';
 

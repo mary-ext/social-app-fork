@@ -20,7 +20,7 @@ import {
 	Composer as TapperComposer,
 	type SubmitRequest,
 	useComposerInternalApiRef,
-} from '#/components/web/Composer';
+} from '#/components/Composer';
 
 import * as styles from './TextInput.css';
 import type { TextInputProps } from './TextInput.types';

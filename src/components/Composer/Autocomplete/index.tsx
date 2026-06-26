@@ -11,7 +11,7 @@ import type {
 	AutocompleteEmoji,
 	AutocompleteItem,
 	AutocompleteProfile,
-} from '#/components/Autocomplete/types';
+} from '#/components/Composer/Autocomplete/types';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
