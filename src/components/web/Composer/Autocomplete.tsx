@@ -1,4 +1,4 @@
-import { type CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useState } from 'react';
 import { clsx } from 'clsx';
 import { createPortal } from 'react-dom';
 
@@ -70,32 +70,28 @@ function List({
 	onDismiss: () => void;
 }) {
 	const [activeIndex, setActiveIndex] = useState(0);
-	const activeIndexRef = useRef(0);
-	activeIndexRef.current = activeIndex;
-	const lenRef = useRef(items.length);
-	lenRef.current = items.length;
-	const onSelectRef = useRef(onSelect);
-	onSelectRef.current = onSelect;
-	const updateRef = useRef(sift.updatePosition);
-	updateRef.current = sift.updatePosition;
 
+	// reset the highlight and reposition the popover whenever the result set changes. `sift.updatePosition`
+	// is stable for the component's lifetime (a useCallback with [] deps in useSift), so it never churns the
+	// subscription here. `useKeyboardHandling` keeps its own latest-callback ref, so the plain arrows below
+	// need no stable identity.
 	useEffect(() => {
 		setActiveIndex(0);
-		void updateRef.current();
-	}, [items.length]);
+		void sift.updatePosition();
+	}, [items.length, sift.updatePosition]);
 
-	const next = useCallback(() => {
-		if (lenRef.current) setActiveIndex((i) => (i + 1) % lenRef.current);
-	}, []);
-	const prev = useCallback(() => {
-		if (lenRef.current) setActiveIndex((i) => (i - 1 + lenRef.current) % lenRef.current);
-	}, []);
-	const first = useCallback(() => {
-		if (lenRef.current) setActiveIndex(0);
-	}, []);
-	const last = useCallback(() => {
-		if (lenRef.current) setActiveIndex(lenRef.current - 1);
-	}, []);
+	const next = () => {
+		if (items.length) setActiveIndex((i) => (i + 1) % items.length);
+	};
+	const prev = () => {
+		if (items.length) setActiveIndex((i) => (i - 1 + items.length) % items.length);
+	};
+	const first = () => {
+		if (items.length) setActiveIndex(0);
+	};
+	const last = () => {
+		if (items.length) setActiveIndex(items.length - 1);
+	};
 
 	useKeyboardHandling({
 		sift,
@@ -103,7 +99,7 @@ function List({
 		onArrowUp: inverted ? next : prev,
 		onHome: inverted ? last : first,
 		onEnd: inverted ? first : last,
-		onSelect: () => onSelectRef.current(items[activeIndexRef.current]!),
+		onSelect: () => onSelect(items[activeIndex]!),
 		onDismiss,
 	});
 
@@ -141,12 +137,7 @@ function List({
 			onMouseDown={(e) => e.preventDefault()}
 		>
 			{visual.map(({ dataIndex, item }) => (
-				<Row
-					key={item.key}
-					item={item}
-					active={dataIndex === activeIndex}
-					onSelect={() => onSelectRef.current(item)}
-				/>
+				<Row key={item.key} item={item} active={dataIndex === activeIndex} onSelect={() => onSelect(item)} />
 			))}
 		</div>,
 		document.body,

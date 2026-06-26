@@ -1,4 +1,4 @@
-import { memo, type ReactElement, useCallback, useRef } from 'react';
+import { type ReactElement, useRef } from 'react';
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -89,7 +89,7 @@ export function ProfileHoverCard({ children, did }: ProfileHoverCardProps) {
 	);
 }
 
-const Card = memo(function Card({ did }: { did: string }) {
+function Card({ did }: { did: string }) {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const profile = useProfileQuery({ did });
@@ -97,10 +97,10 @@ const Card = memo(function Card({ did }: { did: string }) {
 	const data = profile.data;
 	const status = useActorStatus(data);
 
-	const onPressOpenProfile = useCallback(() => {
+	const onPressOpenProfile = () => {
 		if (!status.isActive || !data) return;
 		navigation.push('Profile', { name: data.did });
-	}, [data, navigation, status.isActive]);
+	};
 
 	if (data && moderationOpts) {
 		if (status.isActive) {
@@ -128,7 +128,7 @@ const Card = memo(function Card({ did }: { did: string }) {
 			<Spinner color={colors.contrast_500} label={l`Loading`} size="xl" />
 		</div>
 	);
-});
+}
 
 function Inner({
 	moderationOpts,

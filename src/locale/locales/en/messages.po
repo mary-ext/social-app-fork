@@ -2031,7 +2031,7 @@ msgstr ""
 
 #: src/components/EmojiPicker/components/SearchBar.tsx:31
 #: src/components/web/forms/SearchInput.tsx:62
-#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:664
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:666
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -3855,7 +3855,7 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:408
 #: src/components/moderation/ScreenHider.tsx:81
 #: src/components/moderation/ScreenHider.tsx:93
-#: src/components/web/Layout/Header.tsx:91
+#: src/components/web/Layout/Header.tsx:88
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:79
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:80
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
@@ -5795,7 +5795,7 @@ msgid "Open draft"
 msgstr ""
 
 #: src/components/Layout/Header/index.tsx:137
-#: src/components/web/Layout/Header.tsx:122
+#: src/components/web/Layout/Header.tsx:119
 msgid "Open drawer menu"
 msgstr ""
 
@@ -7217,7 +7217,7 @@ msgstr "Scrolls the conversation to the most recent message"
 #: src/components/forms/SearchInput.tsx:44
 #: src/components/forms/SearchInput.tsx:46
 #: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:170
-#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:658
+#: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:660
 #: src/Navigation.tsx:571
 #: src/screens/Search/Shell.tsx:216
 msgid "Search"

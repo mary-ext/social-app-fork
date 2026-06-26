@@ -1,4 +1,4 @@
-import { type MouseEvent, useCallback } from 'react';
+import type { MouseEvent } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
@@ -70,20 +70,17 @@ export function BackButton({
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
-	const handleClick = useCallback(
-		(evt: MouseEvent<HTMLButtonElement>) => {
-			onClick?.(evt);
-			if (evt.defaultPrevented) {
-				return;
-			}
-			if (navigation.canGoBack()) {
-				navigation.goBack();
-			} else {
-				navigation.navigate('Home');
-			}
-		},
-		[navigation, onClick],
-	);
+	const handleClick = (evt: MouseEvent<HTMLButtonElement>) => {
+		onClick?.(evt);
+		if (evt.defaultPrevented) {
+			return;
+		}
+		if (navigation.canGoBack()) {
+			navigation.goBack();
+		} else {
+			navigation.navigate('Home');
+		}
+	};
 
 	return (
 		<Slot>
@@ -107,10 +104,10 @@ export function MenuButton() {
 	const { gtMobile } = useBreakpoints();
 	const setDrawerOpen = useSetDrawerOpen();
 
-	const onClick = useCallback(() => {
+	const onClick = () => {
 		(document.activeElement as HTMLElement | null)?.blur();
 		setDrawerOpen(true);
-	}, [setDrawerOpen]);
+	};
 
 	if (gtMobile) {
 		return null;

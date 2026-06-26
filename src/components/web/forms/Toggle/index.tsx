@@ -1,4 +1,4 @@
-import { type ComponentType, createContext, type ReactNode, useContext, useMemo } from 'react';
+import { type ComponentType, createContext, type ReactNode, useContext } from 'react';
 import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { Radio } from '@base-ui/react/radio';
@@ -42,10 +42,9 @@ export function Group({
 	children: ReactNode;
 }) {
 	const maxReached = type === 'checkbox' && maxSelections != null && values.length >= maxSelections;
-	const context = useMemo(() => ({ maxReached, values }), [maxReached, values]);
 
 	return (
-		<GroupContext.Provider value={context}>
+		<GroupContext.Provider value={{ maxReached, values }}>
 			{type === 'radio' ? (
 				<BaseRadioGroup
 					aria-label={label}

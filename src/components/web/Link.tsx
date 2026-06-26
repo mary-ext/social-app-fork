@@ -1,11 +1,4 @@
-import {
-	type ComponentPropsWithoutRef,
-	type MouseEvent,
-	type ReactNode,
-	type Ref,
-	useCallback,
-	useMemo,
-} from 'react';
+import type { ComponentPropsWithoutRef, MouseEvent, ReactNode, Ref } from 'react';
 import { StackActions } from '@react-navigation/native';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -57,27 +50,24 @@ export const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
 /** Returns a function that navigates to an in-app route `path` via the given React Navigation `StackAction`. */
 export const useNavigateToPath = () => {
 	const navigation = useNavigationDeduped();
-	return useCallback(
-		(path: string, action: LinkAction) => {
-			const [screen, params] = router.matchPath(path) as [keyof AllNavigatorParams, RouteParams];
-			switch (action) {
-				case 'navigate': {
-					// @ts-expect-error the deduped navigate signature omits the trailing options arg
-					navigation.navigate(screen, params, { pop: true });
-					break;
-				}
-				case 'push': {
-					navigation.dispatch(StackActions.push(screen, params));
-					break;
-				}
-				case 'replace': {
-					navigation.dispatch(StackActions.replace(screen, params));
-					break;
-				}
+	return (path: string, action: LinkAction) => {
+		const [screen, params] = router.matchPath(path) as [keyof AllNavigatorParams, RouteParams];
+		switch (action) {
+			case 'navigate': {
+				// @ts-expect-error the deduped navigate signature omits the trailing options arg
+				navigation.navigate(screen, params, { pop: true });
+				break;
 			}
-		},
-		[navigation],
-	);
+			case 'push': {
+				navigation.dispatch(StackActions.push(screen, params));
+				break;
+			}
+			case 'replace': {
+				navigation.dispatch(StackActions.replace(screen, params));
+				break;
+			}
+		}
+	};
 };
 
 /**
@@ -101,18 +91,15 @@ export const useInternalLink = ({
 		);
 	}
 	const navigateToPath = useNavigateToPath();
-	const onClick = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
-			if (onPress?.(e) === false) {
-				e.preventDefault();
-				return;
-			}
-			if (isModifiedClick(e)) return;
+	const onClick = (e: MouseEvent<HTMLElement>) => {
+		if (onPress?.(e) === false) {
 			e.preventDefault();
-			navigateToPath(to, action);
-		},
-		[action, navigateToPath, onPress, to],
-	);
+			return;
+		}
+		if (isModifiedClick(e)) return;
+		e.preventDefault();
+		navigateToPath(to, action);
+	};
 	return { href: to, onClick };
 };
 
@@ -123,31 +110,27 @@ const useExternalNav = (rawHref: string, action: LinkAction) => {
 	const navigateToPath = useNavigateToPath();
 	const { groupChatJoinControl } = useGlobalDialogsControlContext();
 
-	const href = useMemo(() => {
-		const parsed = safeUrlParse(rawHref);
-		return parsed ? convertBskyAppUrlIfNeeded(parsed.href) : undefined;
-	}, [rawHref]);
+	const parsed = safeUrlParse(rawHref);
+	const href = parsed ? convertBskyAppUrlIfNeeded(parsed.href) : undefined;
 
 	const isExternal = !href?.startsWith('/');
-	const navigate = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
-			if (!href || isExternal || isModifiedClick(e)) {
-				return;
-			}
 
-			e.preventDefault();
+	const navigate = (e: MouseEvent<HTMLElement>) => {
+		if (!href || isExternal || isModifiedClick(e)) {
+			return;
+		}
 
-			// a group-chat invite opens the join dialog in place rather than navigating to /chat/<code>.
-			const chatInviteCode = getChatInviteCodeFromUrl(href);
-			if (chatInviteCode) {
-				groupChatJoinControl.openWithPayload({ code: chatInviteCode });
-				return;
-			}
+		e.preventDefault();
 
-			navigateToPath(href, action);
-		},
-		[action, groupChatJoinControl, href, isExternal, navigateToPath],
-	);
+		// a group-chat invite opens the join dialog in place rather than navigating to /chat/<code>.
+		const chatInviteCode = getChatInviteCodeFromUrl(href);
+		if (chatInviteCode) {
+			groupChatJoinControl.openWithPayload({ code: chatInviteCode });
+			return;
+		}
+
+		navigateToPath(href, action);
+	};
 
 	return { href, isExternal, navigate };
 };
@@ -162,16 +145,13 @@ const useExternalLink = ({
 	onPress?: LinkOnPress;
 }): LinkBindings => {
 	const { href, isExternal, navigate } = useExternalNav(rawHref, action);
-	const onClick = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
-			if (onPress?.(e) === false) {
-				e.preventDefault();
-				return;
-			}
-			navigate(e);
-		},
-		[navigate, onPress],
-	);
+	const onClick = (e: MouseEvent<HTMLElement>) => {
+		if (onPress?.(e) === false) {
+			e.preventDefault();
+			return;
+		}
+		navigate(e);
+	};
 	return {
 		href,
 		onClick,
@@ -196,27 +176,24 @@ const useContentLink = ({
 }): LinkBindings => {
 	const { href, isExternal, navigate } = useExternalNav(rawHref, action);
 	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
-	const onClick = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
-			if (onPress?.(e) === false) {
-				e.preventDefault();
-				return;
-			}
+	const onClick = (e: MouseEvent<HTMLElement>) => {
+		if (onPress?.(e) === false) {
+			e.preventDefault();
+			return;
+		}
 
-			if (!href) {
-				return;
-			}
+		if (!href) {
+			return;
+		}
 
-			if (displayText && isExternal && isMisleadingLink(href, displayText)) {
-				e.preventDefault();
-				linkWarningDialogControl.openWithPayload({ displayText, href });
-				return;
-			}
+		if (displayText && isExternal && isMisleadingLink(href, displayText)) {
+			e.preventDefault();
+			linkWarningDialogControl.openWithPayload({ displayText, href });
+			return;
+		}
 
-			navigate(e);
-		},
-		[displayText, href, isExternal, linkWarningDialogControl, navigate, onPress],
-	);
+		navigate(e);
+	};
 	return {
 		href,
 		onClick,

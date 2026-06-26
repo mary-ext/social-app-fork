@@ -248,7 +248,9 @@ function ActiveSearchAutocomplete({
 		setOpen(false);
 	}
 
-	const today = useMemo(() => new Date(), []);
+	// pinned once per mount so the calendar and date math don't drift mid-session; the compiler treats
+	// `new Date()` as impure (clock-reading) and won't memoize a plain const, so this stays explicit.
+	const [today] = useState(() => new Date());
 
 	const tokens = useMemo(() => tokenize(query), [query]);
 	const active = useMemo(() => findActiveToken(tokens, caret), [tokens, caret]);
