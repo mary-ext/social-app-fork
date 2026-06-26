@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -9,87 +11,65 @@ import { CenteredView } from '#/view/com/util/Views';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
-import { Button, ButtonText } from '#/components/Button';
 import { Error } from '#/components/Error';
+import * as css from '#/components/Lists.css';
 import { Loader } from '#/components/Loader';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button, ButtonText } from '#/components/web/Button';
 
 export function ListFooter({
-	isFetchingNextPage,
-	hasNextPage,
-	error,
-	onRetry,
-	height,
-	style,
-	showEndMessage = false,
+	className,
 	endMessageText,
-	renderEndMessage,
+	error,
+	hasNextPage,
+	height,
+	isFetchingNextPage,
+	onRetry,
+	showEndMessage = false,
 }: {
-	isFetchingNextPage?: boolean;
-	hasNextPage?: boolean;
-	error?: string;
-	onRetry?: () => Promise<unknown>;
-	height?: number;
-	style?: StyleProp<ViewStyle>;
-	showEndMessage?: boolean;
+	className?: string;
 	endMessageText?: string;
-	renderEndMessage?: () => React.ReactNode;
+	error?: string;
+	hasNextPage?: boolean;
+	height?: number;
+	isFetchingNextPage?: boolean;
+	onRetry?: () => Promise<unknown>;
+	showEndMessage?: boolean;
 }) {
-	const t = useTheme();
-
 	return (
-		<View
-			style={[
-				a.w_full,
-				a.align_center,
-				a.border_t,
-				a.pb_lg,
-				t.atoms.border_contrast_low,
-				{ height: height ?? 180, paddingTop: 30 },
-				style,
-			]}
+		<div
+			className={clsx(css.footer, className)}
+			style={height != null ? assignInlineVars({ [css.heightVar]: `${height}px` }) : undefined}
 		>
 			{isFetchingNextPage ? (
 				<Loader size="xl" />
 			) : error ? (
-				<ListFooterMaybeError error={error} onRetry={onRetry} />
+				<ListFooterError error={error} onRetry={onRetry} />
 			) : !hasNextPage && showEndMessage ? (
-				renderEndMessage ? (
-					renderEndMessage()
-				) : (
-					<Text style={[a.text_sm, t.atoms.text_contrast_low]}>
-						{endMessageText ?? <Trans>You have reached the end</Trans>}
-					</Text>
-				)
+				<Text color="textContrastLow" size="sm">
+					{endMessageText ?? <Trans>You have reached the end</Trans>}
+				</Text>
 			) : null}
-		</View>
+		</div>
 	);
 }
 
-function ListFooterMaybeError({ error, onRetry }: { error?: string; onRetry?: () => Promise<unknown> }) {
-	const t = useTheme();
+function ListFooterError({ error, onRetry }: { error: string; onRetry?: () => Promise<unknown> }) {
 	const { t: l } = useLingui();
 
-	if (!error) return null;
-
 	return (
-		<View style={[a.w_full, a.px_lg]}>
-			<View style={[a.flex_row, a.gap_md, a.p_md, a.rounded_sm, a.align_center, t.atoms.bg_contrast_25]}>
-				<Text style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={2}>
-					{error ? cleanError(error) : <Trans>Oops, something went wrong!</Trans>}
+		<div className={css.errorOuter}>
+			<div className={css.errorRow}>
+				<Text className={css.errorText} color="textContrastMedium" numberOfLines={2} size="sm">
+					{cleanError(error)}
 				</Text>
-				<Button
-					variant="solid"
-					label={l`Press to retry`}
-					style={[a.align_center, a.justify_center, a.rounded_sm, a.overflow_hidden, a.px_md, a.py_sm]}
-					onPress={() => void onRetry?.()}
-				>
+				<Button label={l`Press to retry`} onClick={() => void onRetry?.()} variant="solid">
 					<ButtonText>
 						<Trans>Retry</Trans>
 					</ButtonText>
 				</Button>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 

@@ -362,7 +362,7 @@ export function ChatList({
 					isFetchingNextPage={isFetchingNextPage}
 					error={cleanError(error)}
 					onRetry={fetchNextPage}
-					style={{ borderColor: 'transparent' }}
+					className={css.footer}
 					hasNextPage={hasNextPage}
 				/>
 			}

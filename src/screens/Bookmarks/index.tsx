@@ -161,7 +161,7 @@ function BookmarksInner() {
 					isFetchingNextPage={isFetchingNextPage}
 					error={cleanedError}
 					onRetry={fetchNextPage}
-					style={[isEmpty && a.border_t_0]}
+					className={isEmpty ? css.footerNoBorder : undefined}
 				/>
 			}
 			initialNumToRender={initialNumToRender}

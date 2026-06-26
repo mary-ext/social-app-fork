@@ -1697,7 +1697,7 @@ msgstr ""
 msgid "Blocked message hidden"
 msgstr "Blocked message hidden"
 
-#: src/screens/Profile/Sections/Labels.tsx:137
+#: src/screens/Profile/Sections/Labels.tsx:138
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
 
@@ -2402,7 +2402,7 @@ msgstr ""
 msgid "Create a list from this starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:181
+#: src/components/StarterPack/ProfileStarterPacks.tsx:180
 #: src/Navigation.tsx:774
 msgid "Create a starter pack"
 msgstr ""
@@ -2412,7 +2412,7 @@ msgstr ""
 msgid "Create a Starter Pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:187
+#: src/components/StarterPack/ProfileStarterPacks.tsx:186
 msgid "Create another"
 msgstr ""
 
@@ -4401,7 +4401,7 @@ msgstr ""
 msgid "Labels added"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:128
+#: src/screens/Profile/Sections/Labels.tsx:129
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
@@ -5511,8 +5511,8 @@ msgstr ""
 msgid "No results for \"{0}\"."
 msgstr ""
 
-#: src/components/Lists.tsx:173
-#: src/components/Lists.tsx:183
+#: src/components/Lists.tsx:153
+#: src/components/Lists.tsx:163
 msgid "No results found"
 msgstr ""
 
@@ -5735,11 +5735,7 @@ msgstr "Only people the chat owner follows can join"
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr ""
 
-#: src/components/Lists.tsx:79
-msgid "Oops, something went wrong!"
-msgstr ""
-
-#: src/components/Lists.tsx:158
+#: src/components/Lists.tsx:138
 #: src/view/screens/Profile.tsx:123
 msgid "Oops!"
 msgstr ""
@@ -5950,8 +5946,8 @@ msgstr "Owner"
 msgid "Owner must lock the group before leaving."
 msgstr "Owner must lock the group before leaving."
 
-#: src/components/Lists.tsx:173
-#: src/components/Lists.tsx:183
+#: src/components/Lists.tsx:153
+#: src/components/Lists.tsx:163
 #: src/view/screens/NotFound.tsx:36
 #: src/view/screens/NotFound.tsx:43
 msgid "Page not found"
@@ -6296,7 +6292,7 @@ msgid "Press to attempt reconnection"
 msgstr ""
 
 #: src/components/Error.tsx:61
-#: src/components/Lists.tsx:83
+#: src/components/Lists.tsx:66
 #: src/screens/Messages/components/MessageListError.tsx:27
 #: src/screens/Messages/JoinRequests.tsx:301
 msgid "Press to retry"
@@ -7008,7 +7004,7 @@ msgid "Rescind request to join group chat"
 msgstr "Rescind request to join group chat"
 
 #: src/components/Error.tsx:63
-#: src/components/Lists.tsx:88
+#: src/components/Lists.tsx:68
 #: src/components/moderation/ReportDialog/index.tsx:356
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:25
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:28
@@ -7855,11 +7851,11 @@ msgid "Something went wrong, please try again"
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:82
-#: src/screens/Profile/Sections/Labels.tsx:120
+#: src/screens/Profile/Sections/Labels.tsx:121
 msgid "Something went wrong, please try again."
 msgstr ""
 
-#: src/components/Lists.tsx:159
+#: src/components/Lists.tsx:139
 msgid "Something went wrong!"
 msgstr ""
 
@@ -7998,7 +7994,7 @@ msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
 #. placeholder {0}: labelerInfo.creator.handle
-#: src/screens/Profile/Sections/Labels.tsx:147
+#: src/screens/Profile/Sections/Labels.tsx:148
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
@@ -8536,7 +8532,7 @@ msgstr ""
 msgid "This label was applied by you."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:143
+#: src/screens/Profile/Sections/Labels.tsx:144
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
@@ -9467,7 +9463,7 @@ msgstr "We’re sorry, but your search could not be completed. Please try again 
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
-#: src/components/Lists.tsx:184
+#: src/components/Lists.tsx:164
 #: src/view/screens/NotFound.tsx:46
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
@@ -9784,7 +9780,7 @@ msgstr ""
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr ""
 
-#: src/components/Lists.tsx:61
+#: src/components/Lists.tsx:50
 msgid "You have reached the end"
 msgstr ""
 

@@ -18,6 +18,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Default as ProfileCard } from '#/components/ProfileCard';
 
+import * as css from './ProfilesList.css';
+
 function keyExtractor(item: { did: string }, index: number) {
 	return `${item.did}-${index}`;
 }
@@ -85,7 +87,7 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 			data={getSortedProfiles()}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			ListFooterComponent={<ListFooter style={{ paddingBottom: bottomBarOffset, borderTopWidth: 0 }} />}
+			ListFooterComponent={<ListFooter className={css.footer} />}
 			showsVerticalScrollIndicator={false}
 			desktopFixedHeight
 			initialNumToRender={initialNumToRender}

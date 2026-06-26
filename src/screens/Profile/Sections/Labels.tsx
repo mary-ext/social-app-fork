@@ -25,6 +25,7 @@ import { Text } from '#/components/Typography';
 import { colors } from '#/styles/colors';
 
 import { ErrorState } from '../ErrorState';
+import * as css from './Labels.css';
 
 interface LabelsSectionProps {
 	isLabelerLoading: boolean;
@@ -80,7 +81,7 @@ export function ProfileLabelsSection({
 						)}
 					</>
 				}
-				ListFooterComponent={<ListFooter height={180} style={a.border_transparent} />}
+				ListFooterComponent={<ListFooter className={css.footer} />}
 			/>
 		</View>
 	);
