@@ -7,13 +7,11 @@ import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } fr
 
 import { MyLists } from '#/view/com/lists/MyLists';
 
-import { atoms as a } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import * as Layout from '#/components/Layout';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import * as Layout from '#/components/web/Layout';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>;
 export function ListsScreen({}: Props) {
@@ -39,28 +37,22 @@ export function ListsScreen({}: Props) {
 	);
 
 	return (
-		<Layout.Screen testID="listsScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
-				<Layout.Header.Content align="left">
+				<Layout.Header.Content>
 					<Layout.Header.TitleText>
 						<Trans>Lists</Trans>
 					</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Button
-					label={l`New list`}
-					testID="newUserListBtn"
-					color="secondary"
-					size="small"
-					onPress={onPressNewList}
-				>
+				<Button label={l`New list`} color="secondary" size="small" variant="solid" onClick={onPressNewList}>
 					<ButtonIcon icon={PlusIcon} />
 					<ButtonText>
 						<Trans context="action">New</Trans>
 					</ButtonText>
 				</Button>
 			</Layout.Header.Outer>
-			<MyLists filter="curate" style={a.flex_grow} />
+			<MyLists filter="curate" />
 			<CreateOrEditListDialog
 				purpose="app.bsky.graph.defs#curatelist"
 				handle={createListHandle}

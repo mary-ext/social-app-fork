@@ -7,13 +7,11 @@ import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } fr
 
 import { MyLists } from '#/view/com/lists/MyLists';
 
-import { atoms as a } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import * as Layout from '#/components/Layout';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import * as Layout from '#/components/web/Layout';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>;
 export function ModerationModlistsScreen({}: Props) {
@@ -39,29 +37,22 @@ export function ModerationModlistsScreen({}: Props) {
 	);
 
 	return (
-		<Layout.Screen testID="moderationModlistsScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
-				<Layout.Header.Content align="left">
+				<Layout.Header.Content>
 					<Layout.Header.TitleText>
 						<Trans>Moderation Lists</Trans>
 					</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Button
-					label={l`New list`}
-					testID="newModListBtn"
-					color="secondary"
-					variant="solid"
-					size="small"
-					onPress={onPressNewList}
-				>
+				<Button label={l`New list`} color="secondary" variant="solid" size="small" onClick={onPressNewList}>
 					<ButtonIcon icon={PlusIcon} />
 					<ButtonText>
 						<Trans context="action">New</Trans>
 					</ButtonText>
 				</Button>
 			</Layout.Header.Outer>
-			<MyLists filter="mod" style={a.flex_grow} />
+			<MyLists filter="mod" />
 			<CreateOrEditListDialog
 				purpose="app.bsky.graph.defs#modlist"
 				handle={createListHandle}

@@ -4695,7 +4695,7 @@ msgid "List unmuted"
 msgstr ""
 
 #: src/Navigation.tsx:475
-#: src/view/screens/Lists.tsx:47
+#: src/view/screens/Lists.tsx:45
 #: src/view/screens/Profile.tsx:239
 #: src/view/screens/Profile.tsx:380
 #: src/view/shell/desktop/LeftNav.tsx:603
@@ -4703,7 +4703,7 @@ msgstr ""
 msgid "Lists"
 msgstr ""
 
-#: src/view/com/lists/MyLists.tsx:83
+#: src/view/com/lists/MyLists.tsx:53
 msgid "Lists allow you to see content from your favorite people."
 msgstr ""
 
@@ -5051,7 +5051,7 @@ msgid "Moderation lists"
 msgstr ""
 
 #: src/Navigation.tsx:486
-#: src/view/screens/ModerationModlists.tsx:47
+#: src/view/screens/ModerationModlists.tsx:45
 msgid "Moderation Lists"
 msgstr ""
 
@@ -5256,8 +5256,8 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: src/view/screens/Lists.tsx:59
-#: src/view/screens/ModerationModlists.tsx:60
+#: src/view/screens/Lists.tsx:51
+#: src/view/screens/ModerationModlists.tsx:51
 msgctxt "action"
 msgid "New"
 msgstr ""
@@ -5318,8 +5318,8 @@ msgstr "New group chat"
 msgid "New group chat with:"
 msgstr "New group chat with:"
 
-#: src/view/screens/Lists.tsx:51
-#: src/view/screens/ModerationModlists.tsx:51
+#: src/view/screens/Lists.tsx:48
+#: src/view/screens/ModerationModlists.tsx:48
 msgid "New list"
 msgstr ""
 
@@ -6358,7 +6358,7 @@ msgstr ""
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
-#: src/view/com/lists/MyLists.tsx:86
+#: src/view/com/lists/MyLists.tsx:55
 msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
@@ -9764,7 +9764,7 @@ msgid "You have muted this user"
 msgstr ""
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:143
-#: src/view/com/lists/MyLists.tsx:89
+#: src/view/com/lists/MyLists.tsx:57
 msgid "You have no lists."
 msgstr ""
 

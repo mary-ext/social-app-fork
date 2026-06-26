@@ -1,34 +1,19 @@
-import { type JSX, useCallback, useMemo, useState } from 'react';
-import {
-	ActivityIndicator,
-	FlatList as RNFlatList,
-	RefreshControl,
-	type StyleProp,
-	View,
-	type ViewStyle,
-} from 'react-native';
 import type { AppBskyGraphDefs as GraphDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
-import { usePalette } from '#/lib/hooks/usePalette';
 import { cleanError } from '#/lib/strings/errors';
-import { s } from '#/lib/styles';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { type MyListsFilter, useMyListsQuery } from '#/state/queries/my-lists';
 
-import { logger } from '#/logger';
-
-import { atoms as a, useTheme } from '#/alf';
-
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
+import { List, type ListRenderItemInfo } from '#/components/List/List';
 import * as ListCard from '#/components/ListCard';
-import { Text } from '#/components/Typography';
+import { ListFooter } from '#/components/Lists';
 
 import { colors } from '#/styles/colors';
 
+import { EmptyState } from '../util/EmptyState';
 import { ErrorMessage } from '../util/error/ErrorMessage';
-import { List } from '../util/List';
 
 const LOADING = { _reactKey: '__loading__' } as const;
 const EMPTY = { _reactKey: '__empty__' } as const;
@@ -41,162 +26,61 @@ const isMyListSentinel = (item: MyListItem): item is MyListSentinel => {
 	return '_reactKey' in item;
 };
 
-export function MyLists({
-	filter,
-	inline,
-	style,
-	renderItem,
-	testID,
-}: {
-	filter: MyListsFilter;
-	inline?: boolean;
-	style?: StyleProp<ViewStyle>;
-	renderItem?: (list: GraphDefs.ListView, index: number) => JSX.Element;
-	testID?: string;
-}) {
-	const pal = usePalette('default');
-	const t = useTheme();
+/** Renders the viewer's own lists, one {@link ListCard.Default} row per list. */
+export function MyLists({ filter }: { filter: MyListsFilter }): React.ReactNode {
 	const { t: l } = useLingui();
-	const moderationOpts = useModerationOpts();
-	const [isPTRing, setIsPTRing] = useState(false);
-	const { data, isFetching, isFetched, isError, error, refetch } = useMyListsQuery(filter);
-	const isEmpty = !isFetching && !data?.length;
+	const { data, isPending, isError, error, refetch } = useMyListsQuery(filter);
+	const isEmpty = !isPending && !data?.length;
 
-	const items = useMemo(() => {
-		let items: MyListItem[] = [];
-		if (isError && isEmpty) {
-			items = items.concat([ERROR_ITEM]);
-		}
-		if ((!isFetched && isFetching) || !moderationOpts) {
-			items = items.concat([LOADING]);
-		} else if (isEmpty) {
-			items = items.concat([EMPTY]);
-		} else if (data) {
-			items = items.concat(data);
-		}
-		return items;
-	}, [isError, isEmpty, isFetched, isFetching, moderationOpts, data]);
-
-	let emptyText;
-	switch (filter) {
-		case 'curate':
-			emptyText = l`Lists allow you to see content from your favorite people.`;
-			break;
-		case 'mod':
-			emptyText = l`Public, sharable lists of users to mute or block in bulk.`;
-			break;
-		default:
-			emptyText = l`You have no lists.`;
-			break;
+	let items: MyListItem[] = [];
+	if (isError && isEmpty) {
+		items = items.concat([ERROR_ITEM]);
 	}
-
-	// events
-	// =
-
-	const onRefresh = useCallback(async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh lists', { message: err });
-		}
-		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
+	if (isPending) {
+		items = items.concat([LOADING]);
+	} else if (isEmpty) {
+		items = items.concat([EMPTY]);
+	} else if (data) {
+		items = items.concat(data);
+	}
 
 	// rendering
 	// =
 
-	const renderItemInner = useCallback(
-		({ item, index }: { item: MyListItem; index: number }) => {
-			if (isMyListSentinel(item)) {
-				if (item === ERROR_ITEM) {
-					return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void onRefresh()} />;
-				}
-				if (item === LOADING) {
-					return (
-						<View style={{ padding: 20 }}>
-							<ActivityIndicator />
-						</View>
-					);
-				}
-				return (
-					<View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_3xl]}>
-						<View
-							style={[
-								a.align_center,
-								a.justify_center,
-								a.rounded_full,
-								{
-									width: 64,
-									height: 64,
-								},
-							]}
-						>
-							<ListIcon size="2xl" fill={colors.textContrastMedium} />
-						</View>
-						<Text
-							style={[
-								a.text_center,
-								a.flex_1,
-								a.text_sm,
-								a.leading_snug,
-								t.atoms.text_contrast_medium,
-								{
-									maxWidth: 200,
-								},
-							]}
-						>
-							{emptyText}
-						</Text>
-					</View>
-				);
-			}
-			return renderItem ? renderItem(item, index) : <ListCard.Default topBorder={index !== 0} view={item} />;
-		},
-		[t, renderItem, error, onRefresh, emptyText],
-	);
+	const emptyText = (() => {
+		switch (filter) {
+			case 'curate':
+				return l`Lists allow you to see content from your favorite people.`;
+			case 'mod':
+				return l`Public, sharable lists of users to mute or block in bulk.`;
+			default:
+				return l`You have no lists.`;
+		}
+	})();
 
-	if (inline) {
-		return (
-			<View testID={testID} style={style}>
-				{items.length > 0 && (
-					<RNFlatList
-						testID={testID ? `${testID}-flatlist` : undefined}
-						data={items}
-						keyExtractor={(item) => (isMyListSentinel(item) ? item._reactKey : item.uri)}
-						renderItem={renderItemInner}
-						refreshControl={
-							<RefreshControl
-								refreshing={isPTRing}
-								onRefresh={() => void onRefresh()}
-								tintColor={pal.colors.text}
-								titleColor={pal.colors.text}
-							/>
-						}
-						contentContainerStyle={[s.contentContainer]}
-						removeClippedSubviews={true}
-					/>
-				)}
-			</View>
-		);
-	} else {
-		return (
-			<View testID={testID} style={style}>
-				{items.length > 0 && (
-					<List
-						testID={testID ? `${testID}-flatlist` : undefined}
-						data={items}
-						keyExtractor={(item) => (isMyListSentinel(item) ? item._reactKey : item.uri)}
-						renderItem={renderItemInner}
-						refreshing={isPTRing}
-						onRefresh={() => void onRefresh()}
-						contentContainerStyle={[s.contentContainer]}
-						removeClippedSubviews={true}
-						desktopFixedHeight
-						sideBorders={false}
-					/>
-				)}
-			</View>
-		);
-	}
+	const renderItem = ({ index, item }: ListRenderItemInfo<MyListItem>) => {
+		if (isMyListSentinel(item)) {
+			if (item === ERROR_ITEM) {
+				return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
+			}
+			if (item === LOADING) {
+				return <ListCard.LoadingPlaceholder count={10} />;
+			}
+			return <EmptyState icon={ListIcon} iconColor={colors.textContrastMedium} message={emptyText} />;
+		}
+		return <ListCard.Default topBorder={index !== 0} view={item} />;
+	};
+
+	return (
+		<List
+			data={items}
+			keyExtractor={keyExtractor}
+			renderItem={renderItem}
+			ListFooterComponent={isEmpty ? null : <ListFooter />}
+		/>
+	);
+}
+
+function keyExtractor(item: MyListItem) {
+	return isMyListSentinel(item) ? item._reactKey : item.uri;
 }
