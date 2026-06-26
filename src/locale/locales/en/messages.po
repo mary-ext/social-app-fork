@@ -844,7 +844,7 @@ msgstr "Accept join request"
 msgid "Accept Request"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:344
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:342
 msgid "Accept this language suggestion"
 msgstr ""
 
@@ -1526,7 +1526,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:249
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:247
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr ""
 
@@ -2492,7 +2492,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:354
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:352
 msgid "Decline this language suggestion"
 msgstr "Decline this language suggestion"
 
@@ -8211,7 +8211,7 @@ msgstr "The member limit has been reached."
 msgid "The pasted image couldn't be added to your post."
 msgstr "The pasted image couldn't be added to your post."
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:283
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:281
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 msgstr "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 

@@ -164,18 +164,16 @@ export function SuggestedLanguage({
 		setHasInteracted(true);
 	}
 
-	useEffect(() => {
-		const textTrimmed = sanitizeTextForDetection(text);
+	// when text drops below the min length, clear any suggestion during render (no detect run on small
+	// posts — results would be inaccurate).
+	const textTrimmed = sanitizeTextForDetection(text);
+	if (textTrimmed.length < MIN_TEXT_LENGTH && suggLang !== undefined) {
+		setSuggLang(undefined);
+	}
 
-		/*
-		 * If text drops under the min length requirement, reset suggestions state
-		 * objects.
-		 *
-		 * And we don't run the language model on small posts, the results are
-		 * likely to be inaccurate.
-		 */
+	useEffect(() => {
+		// no language model run on small posts; see the render-time clear above.
 		if (textTrimmed.length < MIN_TEXT_LENGTH) {
-			setSuggLang(undefined);
 			return;
 		}
 
@@ -187,7 +185,7 @@ export function SuggestedLanguage({
 		return () => {
 			detectLanguage.cancel();
 		};
-	}, [text, detectLanguage]);
+	}, [textTrimmed, detectLanguage]);
 
 	/*
 	 * We've detected a language, and the user hasn't already selected it.

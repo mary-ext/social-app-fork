@@ -90,11 +90,11 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
 type State =
 	| {
 			stage: 'hidden' | 'might-hide' | 'hiding';
-			effect?: () => () => void;
+			effect?: (dispatch: (action: Action) => void) => () => void;
 	  }
 	| {
 			stage: 'might-show' | 'showing';
-			effect?: () => () => void;
+			effect?: (dispatch: (action: Action) => void) => () => void;
 			reason: 'hovered-target' | 'hovered-card';
 	  };
 
@@ -156,7 +156,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 				return {
 					stage: 'might-show',
 					reason,
-					effect() {
+					effect(dispatch) {
 						const id = setTimeout(() => dispatch('hovered-long-enough'), waitMs);
 						return () => {
 							clearTimeout(id);
@@ -182,7 +182,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 				return {
 					stage: 'showing',
 					reason,
-					effect() {
+					effect(dispatch) {
 						function onScroll() {
 							dispatch('scrolled-while-showing');
 						}
@@ -208,7 +208,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 			function mightHide({ waitMs = HIDE_DELAY }: { waitMs?: number } = {}): State {
 				return {
 					stage: 'might-hide',
-					effect() {
+					effect(dispatch) {
 						const id = setTimeout(() => dispatch('unhovered-long-enough'), waitMs);
 						return () => clearTimeout(id);
 					},
@@ -235,7 +235,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 			} = {}): State {
 				return {
 					stage: 'hiding',
-					effect() {
+					effect(dispatch) {
 						const id = setTimeout(() => dispatch('finished-animating-hide'), animationDurationMs);
 						return () => clearTimeout(id);
 					},
@@ -257,9 +257,9 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 	useEffect(() => {
 		if (currentState.effect) {
 			const effect = currentState.effect;
-			return effect();
+			return effect(dispatch);
 		}
-	}, [currentState]);
+	}, [currentState, dispatch]);
 
 	const prefetchProfileQuery = usePrefetchProfileQuery();
 	const prefetchedProfile = useRef(false);
