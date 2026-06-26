@@ -4,9 +4,11 @@ import {
 	isValidElement,
 	type KeyboardEvent,
 	type MouseEvent,
+	type PointerEvent,
 	type ReactElement,
 	type ReactNode,
 	type Ref,
+	useRef,
 } from 'react';
 import { clsx } from 'clsx';
 
@@ -20,9 +22,9 @@ const INTERACTIVE_SELECTOR = 'a, button, [role="button"], [role="link"], [data-n
 
 /**
  * Spread onto any element to exempt clicks within it from {@link BlockLink}'s row navigation. For regions that
- * handle their own clicks but aren't semantic links/buttons — media players, embedded iframes. Only catches
- * clicks whose target is inside the element; a click dispatched on an ancestor (e.g. the post body, after a
- * drag that releases outside the region) still navigates.
+ * handle their own clicks but aren't semantic links/buttons — media players, embedded iframes. Exempts both
+ * clicks landing inside the region and clicks whose press began inside it (e.g. a drag that releases on the
+ * post body), since {@link BlockLink} gates navigation on the press origin, not just the release target.
  */
 export const noRowLink = { 'data-no-row-link': '' };
 
@@ -56,7 +58,8 @@ type BlockLinkProps = {
  * press behavior, keyboard/AT affordances, and forwarded ref/className directly to it, so the child's own box
  * is the row. The click handler checks DOM containment: a portalled menu item is a React (fiber) descendant
  * of the row but not a DOM descendant, so its bubbling click is ignored here rather than triggering
- * navigation.
+ * navigation. It also gates on the press origin (where the pointer went down), not just the release target,
+ * so a drag out of an interactive sub-region onto the row body doesn't navigate.
  */
 export function BlockLink({
 	children,
@@ -69,6 +72,9 @@ export function BlockLink({
 	onPointerLeave,
 }: BlockLinkProps) {
 	const navigateToPath = useNavigateToPath();
+	// where the pointer last went down within the row; read back on click to gate navigation on the press
+	// origin rather than the release target
+	const pressOriginRef = useRef<HTMLElement | null>(null);
 
 	if (import.meta.env.DEV && (!to.startsWith('/') || to.startsWith('//'))) {
 		throw new Error(
@@ -87,10 +93,24 @@ export function BlockLink({
 		navigateToPath(to, 'push');
 	};
 
+	// record where the pointer went down so onClick can consult the press origin. capture phase so a child
+	// can't stop it from reaching us first
+	const onPointerDownCapture = (e: PointerEvent<HTMLElement>) => {
+		pressOriginRef.current = e.target as HTMLElement;
+	};
+
 	const onClick = (e: MouseEvent<HTMLElement>) => {
 		const target = e.target as HTMLElement;
 		// a portalled popup's click bubbles up the component tree but its DOM node lives elsewhere
 		if (!e.currentTarget.contains(target)) {
+			return;
+		}
+		// the browser fires `click` on the nearest common ancestor of the press and release nodes, so a drag
+		// that begins on an interactive sub-region (an image-carousel tile, a button) and releases on the row
+		// body yields a row-targeted click that slips past the target check below. gate on the press origin too.
+		const origin = pressOriginRef.current;
+		const originInteractive = origin?.closest(INTERACTIVE_SELECTOR);
+		if (originInteractive && originInteractive !== e.currentTarget) {
 			return;
 		}
 		// a nested link/button handles its own press; only a click on the row body should navigate
@@ -141,6 +161,7 @@ export function BlockLink({
 		onKeyDown: label ? onKeyDown : undefined,
 		onMouseDown,
 		onMouseUp,
+		onPointerDownCapture,
 		onPointerEnter,
 		onPointerLeave,
 		ref: mergeRefs([ref, node.props.ref]),

@@ -180,15 +180,15 @@ export function usePointerHandlers({
 			el.style.userSelect = '';
 
 			if (wasDragging) {
-				// Suppress the click that follows mouseup after a drag. Listen on `window`, not `el`: when the
-				// release lands outside the carousel (on the post body), the browser dispatches the click on the
-				// nearest common ancestor of the press and release targets — an element above `el` — so an
-				// `el`-scoped listener would miss it and the post-row `BlockLink` would navigate. The fallback
-				// timeout disarms it if the drag ended off-window and no click ever fires (the post-drag click is
-				// dispatched synchronously, before any macrotask, so it can't disarm a real one early).
+				// Suppress the click that follows mouseup after a drag so it doesn't open the lightbox. Scoped to
+				// `el`: a drag releasing on the post body navigates the row otherwise, but `BlockLink` already
+				// ignores clicks whose press began inside the carousel, so we only need to swallow clicks landing
+				// within the carousel here. The fallback timeout disarms the listener if the release produced no
+				// click (the post-drag click is dispatched synchronously, before any macrotask, so it can't disarm
+				// a real one early).
 				const suppressClick = (e: MouseEvent) => e.stopPropagation();
-				window.addEventListener('click', suppressClick, { once: true, capture: true });
-				setTimeout(() => window.removeEventListener('click', suppressClick, { capture: true }), 0);
+				el.addEventListener('click', suppressClick, { once: true, capture: true });
+				setTimeout(() => el.removeEventListener('click', suppressClick, { capture: true }), 0);
 
 				if (overscrollX !== 0) {
 					// Bounce back from overscroll
