@@ -62,3 +62,22 @@ export const titleColumn = style({
 export const italic = style({
 	fontStyle: 'italic',
 });
+
+/**
+ * A non-interactive loading row: same padding and top separator as {@link defaultRow}, but without the
+ * hover/active highlight (a placeholder isn't a press target).
+ */
+export const loadingRow = recipe({
+	base: {
+		padding: space.lg,
+	},
+	variants: {
+		topBorder: {
+			true: {
+				borderTopColor: colors.borderContrastLow,
+				borderTopStyle: 'solid',
+				borderTopWidth: 1,
+			},
+		},
+	},
+});

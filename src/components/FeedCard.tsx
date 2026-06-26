@@ -100,11 +100,8 @@ export function Avatar({ size = 40, src }: AvatarProps) {
 	return <UserAvatar avatar={src} size={size} type="algo" />;
 }
 
-export function AvatarPlaceholder({
-	radius = borderRadius.sm,
-	size = 40,
-}: Omit<AvatarProps, 'src'> & { radius?: number }) {
-	return <Skeleton.Square radius={radius} size={size} />;
+export function AvatarPlaceholder({ size = 40 }: Omit<AvatarProps, 'src'>) {
+	return <Skeleton.Square radius={borderRadius.sm} size={size} />;
 }
 
 export function TitleAndByline({ creator, title }: { creator?: AnyProfileView; title: string }) {

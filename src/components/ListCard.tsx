@@ -11,6 +11,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import { weightedRandomIndex } from '#/lib/numbers';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -28,6 +29,9 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Prompt from '#/components/web/Prompt';
+import * as Skeleton from '#/components/web/Skeleton';
+
+import { borderRadius } from '#/styles/tokens.css';
 
 import * as css from './ListCard.css';
 
@@ -106,8 +110,14 @@ export function Header({ children, className }: { children: ReactNode; className
 	return <div className={clsx(css.header, className)}>{children}</div>;
 }
 
-export function Avatar({ size = 40, src }: { size?: number; src: string | undefined }) {
+export type AvatarProps = { size?: number; src: string | undefined };
+
+export function Avatar({ size = 40, src }: AvatarProps) {
 	return <UserAvatar avatar={src} size={size} type="algo" />;
+}
+
+export function AvatarPlaceholder({ size = 40 }: Omit<AvatarProps, 'src'>) {
+	return <Skeleton.Square radius={borderRadius.sm} size={size} />;
 }
 
 export function TitleAndByline({
@@ -150,6 +160,15 @@ export function TitleAndByline({
 				</Text>
 			)}
 		</div>
+	);
+}
+
+export function TitleAndBylinePlaceholder({ creator }: { creator?: boolean }) {
+	return (
+		<Skeleton.Col>
+			<Skeleton.Text size="md" width="60%" />
+			{creator && <Skeleton.Text blend size="md" width="40%" />}
+		</Skeleton.Col>
 	);
 }
 
@@ -238,6 +257,51 @@ function SaveButtonInner({
 				onConfirm={() => void toggleSave()}
 				title={l`Remove from your feeds?`}
 			/>
+		</>
+	);
+}
+
+// weighted description-line counts: most list descriptions are short (1 line) or empty, with a long
+// tail toward 2–3 lines. index = line count (0–3).
+const DESCRIPTION_LINE_WEIGHTS = [12, 10, 4, 1];
+
+function LoadingRow({ descriptionLines, topBorder }: { descriptionLines: number; topBorder: boolean }) {
+	return (
+		<Skeleton.Col className={css.loadingRow({ topBorder })} gap="md">
+			<Skeleton.Row align="center" gap="md">
+				<AvatarPlaceholder />
+				<TitleAndBylinePlaceholder creator />
+			</Skeleton.Row>
+			{descriptionLines > 0 && <Skeleton.Lines count={descriptionLines} lastWidth={70} size="md" />}
+		</Skeleton.Col>
+	);
+}
+
+// fallback row count when the caller doesn't know how many lists to expect, and a cap so a profile with
+// many lists doesn't render dozens of placeholder rows.
+const DEFAULT_LOADING_ROW_COUNT = 3;
+const MAX_LOADING_ROW_COUNT = 10;
+
+/**
+ * A stack of list-card placeholders for the loading state, mirroring {@link Default}'s layout (avatar,
+ * title/byline, description) so it sits on the same rhythm as the real cards.
+ *
+ * @param count number of placeholder rows; callers should pass the known list count when available (e.g.
+ *   `profile.associated.lists`). Defaults to a small value and is capped so large counts don't render
+ *   excessive rows.
+ */
+export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNode {
+	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
+	const rows = Array.from({ length: rowCount }, () => ({
+		// list descriptions are often empty or short; weight toward 0–1 lines with a tail toward 2–3.
+		descriptionLines: weightedRandomIndex(DESCRIPTION_LINE_WEIGHTS),
+	}));
+
+	return (
+		<>
+			{rows.map((row, i) => (
+				<LoadingRow key={i} descriptionLines={row.descriptionLines} topBorder={i !== 0} />
+			))}
 		</>
 	);
 }

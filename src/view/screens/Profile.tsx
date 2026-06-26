@@ -237,7 +237,9 @@ function ProfileScreenLoaded({
 			hasLabeler && {
 				id: 'lists',
 				label: l`Lists`,
-				render: (isFocused: boolean) => <ProfileLists did={profile.did} enabled={isFocused} />,
+				render: (isFocused: boolean) => (
+					<ProfileLists did={profile.did} enabled={isFocused} listCount={listCount} />
+				),
 			},
 		showPostsTab && {
 			id: 'posts',
@@ -375,7 +377,9 @@ function ProfileScreenLoaded({
 			!hasLabeler && {
 				id: 'lists',
 				label: l`Lists`,
-				render: (isFocused: boolean) => <ProfileLists did={profile.did} enabled={isFocused} />,
+				render: (isFocused: boolean) => (
+					<ProfileLists did={profile.did} enabled={isFocused} listCount={listCount} />
+				),
 			},
 	]);
 

@@ -1100,8 +1100,8 @@ msgstr ""
 msgid "Add the default feed of only people you follow"
 msgstr ""
 
-#: src/components/FeedCard.tsx:191
-#: src/components/ListCard.tsx:198
+#: src/components/FeedCard.tsx:188
+#: src/components/ListCard.tsx:217
 msgid "Add this feed to your feeds"
 msgstr ""
 
@@ -1513,8 +1513,8 @@ msgstr ""
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participants."
 msgstr "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participants."
 
-#: src/components/FeedCard.tsx:229
-#: src/components/ListCard.tsx:236
+#: src/components/FeedCard.tsx:226
+#: src/components/ListCard.tsx:255
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
@@ -2407,8 +2407,8 @@ msgstr "Couldn’t load GIFs"
 msgid "Create"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:142
-#: src/view/com/lists/ProfileLists.tsx:143
+#: src/view/com/lists/ProfileLists.tsx:119
+#: src/view/com/lists/ProfileLists.tsx:120
 msgid "Create a list"
 msgstr ""
 
@@ -2422,8 +2422,8 @@ msgstr ""
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:362
-#: src/view/screens/Profile.tsx:363
+#: src/view/screens/Profile.tsx:364
+#: src/view/screens/Profile.tsx:365
 msgid "Create a Starter Pack"
 msgstr ""
 
@@ -3450,7 +3450,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
-#: src/components/FeedCard.tsx:118
+#: src/components/FeedCard.tsx:115
 #: src/state/queries/feed.ts:120
 #: src/view/com/feeds/FeedSourceCard.tsx:117
 msgid "Feed by {0}"
@@ -3491,7 +3491,7 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:71
 #: src/screens/StarterPack/StarterPackScreen.tsx:173
 #: src/view/screens/Feeds.tsx:314
-#: src/view/screens/Profile.tsx:341
+#: src/view/screens/Profile.tsx:343
 #: src/view/shell/desktop/LeftNav.tsx:594
 #: src/view/shell/Drawer.tsx:170
 #: src/view/shell/Drawer.tsx:215
@@ -4063,7 +4063,7 @@ msgstr ""
 msgid "Here's what happens if you do:"
 msgstr "Here's what happens if you do:"
 
-#: src/components/ListCard.tsx:136
+#: src/components/ListCard.tsx:146
 msgid "Hidden list"
 msgstr ""
 
@@ -4600,7 +4600,7 @@ msgstr ""
 
 #. placeholder {0}: count || 0
 #. placeholder {0}: feed.likeCount || 0
-#: src/components/FeedCard.tsx:149
+#: src/components/FeedCard.tsx:146
 #: src/view/com/feeds/FeedSourceCard.tsx:126
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
@@ -4613,7 +4613,7 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:75
 #: src/screens/Settings/NotificationSettings/index.tsx:186
-#: src/view/screens/Profile.tsx:328
+#: src/view/screens/Profile.tsx:330
 msgid "Likes"
 msgstr ""
 
@@ -4650,7 +4650,7 @@ msgstr ""
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
-#: src/components/ListCard.tsx:149
+#: src/components/ListCard.tsx:159
 #: src/view/com/feeds/FeedSourceCard.tsx:119
 msgid "List by {0}"
 msgstr ""
@@ -4724,7 +4724,7 @@ msgstr ""
 #: src/Navigation.tsx:475
 #: src/view/screens/Lists.tsx:47
 #: src/view/screens/Profile.tsx:239
-#: src/view/screens/Profile.tsx:377
+#: src/view/screens/Profile.tsx:379
 #: src/view/shell/desktop/LeftNav.tsx:603
 #: src/view/shell/Drawer.tsx:177
 msgid "Lists"
@@ -4909,7 +4909,7 @@ msgid "Marked all as read"
 msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/view/screens/Profile.tsx:280
+#: src/view/screens/Profile.tsx:282
 msgid "Media"
 msgstr ""
 
@@ -5053,7 +5053,7 @@ msgid "Moderation list"
 msgstr "Moderation list"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#: src/components/ListCard.tsx:148
+#: src/components/ListCard.tsx:158
 msgid "Moderation list by {0}"
 msgstr ""
 
@@ -5358,7 +5358,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:230
 #: src/view/screens/Feeds.tsx:346
 #: src/view/screens/Notifications.tsx:136
-#: src/view/screens/Profile.tsx:413
+#: src/view/screens/Profile.tsx:417
 msgid "New post"
 msgstr ""
 
@@ -5448,11 +5448,11 @@ msgstr "No GIFs to show right now. Try again in a moment."
 
 #: src/components/LikedByList.tsx:77
 #: src/view/com/post-thread/PostLikedBy.tsx:77
-#: src/view/screens/Profile.tsx:334
+#: src/view/screens/Profile.tsx:336
 msgid "No likes yet"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:137
+#: src/view/com/lists/ProfileLists.tsx:114
 msgid "No lists"
 msgstr ""
 
@@ -5466,7 +5466,7 @@ msgstr ""
 msgid "No longer following {0}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:286
+#: src/view/screens/Profile.tsx:288
 msgid "No media yet"
 msgstr ""
 
@@ -5508,7 +5508,7 @@ msgid "No posts here"
 msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:56
-#: src/view/screens/Profile.tsx:250
+#: src/view/screens/Profile.tsx:252
 msgid "No posts yet"
 msgstr ""
 
@@ -5521,7 +5521,7 @@ msgstr ""
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
 
-#: src/view/screens/Profile.tsx:273
+#: src/view/screens/Profile.tsx:275
 msgid "No replies yet"
 msgstr ""
 
@@ -5558,7 +5558,7 @@ msgstr "No results found for “<0>{query}</0>”."
 msgid "No results."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:357
+#: src/view/screens/Profile.tsx:359
 msgid "No Starter Packs yet"
 msgstr ""
 
@@ -5572,7 +5572,7 @@ msgstr "No text"
 msgid "No thanks"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:310
+#: src/view/screens/Profile.tsx:312
 msgid "No video posts yet"
 msgstr ""
 
@@ -6078,8 +6078,8 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
-#: src/components/FeedCard.tsx:219
-#: src/components/ListCard.tsx:226
+#: src/components/FeedCard.tsx:216
+#: src/components/ListCard.tsx:245
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:402
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:408
 #: src/screens/SavedFeeds.tsx:342
@@ -6196,13 +6196,13 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:290
-#: src/view/screens/Profile.tsx:291
+#: src/view/screens/Profile.tsx:292
+#: src/view/screens/Profile.tsx:293
 msgid "Post a photo"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:314
-#: src/view/screens/Profile.tsx:315
+#: src/view/screens/Profile.tsx:316
+#: src/view/screens/Profile.tsx:317
 msgid "Post a video"
 msgstr ""
 
@@ -6297,7 +6297,7 @@ msgstr ""
 
 #: src/screens/ProfileList/index.tsx:173
 #: src/screens/StarterPack/StarterPackScreen.tsx:178
-#: src/view/screens/Profile.tsx:244
+#: src/view/screens/Profile.tsx:246
 msgid "Posts"
 msgstr ""
 
@@ -6556,8 +6556,8 @@ msgstr "Reload to update"
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:284
 #: src/components/dialogs/StarterPackDialog.tsx:303
 #: src/components/dialogs/StarterPackDialog.tsx:311
-#: src/components/FeedCard.tsx:228
-#: src/components/ListCard.tsx:235
+#: src/components/FeedCard.tsx:225
+#: src/components/ListCard.tsx:254
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:89
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:97
 #: src/screens/Bookmarks/index.tsx:230
@@ -6662,8 +6662,8 @@ msgstr ""
 msgid "Remove from saved posts"
 msgstr ""
 
-#: src/components/FeedCard.tsx:232
-#: src/components/ListCard.tsx:239
+#: src/components/FeedCard.tsx:229
+#: src/components/ListCard.tsx:258
 msgid "Remove from your feeds?"
 msgstr ""
 
@@ -6764,7 +6764,7 @@ msgstr "Replied-to message, tap to scroll to it"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:97
 #: src/screens/Settings/NotificationSettings/index.tsx:198
-#: src/view/screens/Profile.tsx:267
+#: src/view/screens/Profile.tsx:269
 msgid "Replies"
 msgstr ""
 
@@ -7985,7 +7985,7 @@ msgid "Starter pack options"
 msgstr "Starter pack options"
 
 #: src/screens/Search/Explore.tsx:613
-#: src/view/screens/Profile.tsx:348
+#: src/view/screens/Profile.tsx:350
 msgid "Starter Packs"
 msgstr ""
 
@@ -7997,7 +7997,7 @@ msgstr ""
 msgid "Starter packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:356
+#: src/view/screens/Profile.tsx:358
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -8315,7 +8315,7 @@ msgid "There was an issue fetching the list. Tap here to try again."
 msgstr ""
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:103
-#: src/view/com/lists/ProfileLists.tsx:126
+#: src/view/com/lists/ProfileLists.tsx:103
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
@@ -9018,8 +9018,8 @@ msgstr ""
 msgid "Unpin"
 msgstr ""
 
-#: src/components/FeedCard.tsx:206
-#: src/components/ListCard.tsx:213
+#: src/components/FeedCard.tsx:203
+#: src/components/ListCard.tsx:232
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:402
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:408
 #: src/screens/SavedFeeds.tsx:259
@@ -9131,7 +9131,7 @@ msgstr "Use theme font"
 msgid "Used for the app's interface"
 msgstr "Used for the app's interface"
 
-#: src/view/screens/Profile.tsx:390
+#: src/view/screens/Profile.tsx:394
 msgid "user"
 msgstr "user"
 
@@ -9245,7 +9245,7 @@ msgstr ""
 msgid "Video uploaded"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:304
+#: src/view/screens/Profile.tsx:306
 msgid "Videos"
 msgstr ""
 
@@ -9591,8 +9591,8 @@ msgstr ""
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:254
-#: src/view/screens/Profile.tsx:255
+#: src/view/screens/Profile.tsx:256
+#: src/view/screens/Profile.tsx:257
 msgid "Write a post"
 msgstr ""
 
@@ -9837,7 +9837,7 @@ msgstr ""
 msgid "You haven't created a starter pack yet!"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:137
+#: src/view/com/lists/ProfileLists.tsx:114
 msgid "You haven't created any lists yet."
 msgstr ""
 
