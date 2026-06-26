@@ -40,7 +40,6 @@ export function FeedPage({
 	testID?: string;
 	feed: FeedDescriptor;
 	isPageFocused: boolean;
-	isPageAdjacent: boolean;
 	renderEmptyState: () => JSX.Element;
 	renderEndOfFeed?: () => JSX.Element;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
@@ -91,7 +90,6 @@ export function FeedPage({
 		setHasNew(false);
 	}, [scrollToTop, feed, queryClient]);
 
-	const shouldPrefetch = false;
 	const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI;
 	return (
 		<View
@@ -101,7 +99,7 @@ export function FeedPage({
 		>
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
-					enabled={isPageFocused || shouldPrefetch}
+					enabled={isPageFocused}
 					feed={feed}
 					pollInterval={POLL_FREQ}
 					disablePoll={hasNew || !isPageFocused}

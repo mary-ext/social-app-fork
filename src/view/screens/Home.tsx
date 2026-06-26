@@ -104,7 +104,6 @@ function HomeScreenReady({
 						<FeedPage
 							testID="demoFeedPage"
 							isPageFocused={focused}
-							isPageAdjacent={false}
 							feed="demo"
 							renderEmptyState={renderCustomFeedEmptyState}
 							feedInfo={pinnedFeedInfos[0]!}
@@ -118,7 +117,6 @@ function HomeScreenReady({
 						<FeedPage
 							testID="customFeedPage"
 							isPageFocused={focused}
-							isPageAdjacent={false}
 							feed={whatsHotFeed}
 							renderEmptyState={renderCustomFeedEmptyState}
 							feedInfo={pinnedFeedInfos[0]!}
@@ -137,7 +135,6 @@ function HomeScreenReady({
 						<FeedPage
 							testID="customFeedPage"
 							isPageFocused={focused}
-							isPageAdjacent={false}
 							feed={whatsHotFeed}
 							renderEmptyState={renderCustomFeedEmptyState}
 							feedInfo={pinnedFeedInfos[0]!}
@@ -157,7 +154,6 @@ function HomeScreenReady({
 						<FeedPage
 							testID="followingFeedPage"
 							isPageFocused={focused}
-							isPageAdjacent={false}
 							feed={feed}
 							renderEmptyState={renderFollowingEmptyState}
 							renderEndOfFeed={FollowingEndOfFeed}
@@ -167,7 +163,6 @@ function HomeScreenReady({
 						<FeedPage
 							testID="customFeedPage"
 							isPageFocused={focused}
-							isPageAdjacent={false}
 							feed={feed}
 							renderEmptyState={renderCustomFeedEmptyState}
 							savedFeedConfig={feedInfo.savedFeed}
