@@ -27,8 +27,9 @@ import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { useDemoMode } from '#/storage/hooks/demo-mode';
 
-// the feed-discovery tab shown when only the Following feed is pinned; selecting it opens the Feeds
-// screen rather than switching feeds, so it has no panel of its own
+// the feed-discovery tab nudging the user toward the Feeds screen, shown logged-out and when the only
+// pinned feed is Following; selecting it opens that screen rather than switching feeds, so it has no
+// panel of its own
 const FEEDS_DISCOVERY_TAB = '__feeds__';
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'GroupChatJoin' | 'Home' | 'Start'>;
@@ -141,6 +142,7 @@ function HomeScreenReady({
 						/>
 					),
 				},
+				{ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', render: () => null },
 			];
 		}
 
