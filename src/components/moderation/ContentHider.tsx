@@ -1,5 +1,9 @@
 import { type ReactNode, useMemo, useState } from 'react';
-import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
+import {
+	type DisplayRestrictions,
+	type LabelModerationCause,
+	ModerationCauseType,
+} from '@atcute/bluesky-moderation';
 import { Collapsible } from '@base-ui/react/collapsible';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
@@ -100,20 +104,28 @@ function ContentHiderActive({
 			}
 		}
 
-		let hasAdultContentLabel = false;
-		const selfBlurNames = modui.blurs
-			.filter((cause) => {
-				if (cause.type !== ModerationCauseType.Label) {
+		const selfBlurCauses = modui.blurs.filter((cause): cause is LabelModerationCause => {
+			if (cause.type !== ModerationCauseType.Label) {
+				return false;
+			}
+			if (cause.source !== null) {
+				return false;
+			}
+			return true;
+		});
+		// keep only the first adult-content self-label; later ones are dropped so the UI doesn't
+		// stack duplicate "Adult Content" entries.
+		const firstAdultIdx = selfBlurCauses.findIndex((cause) =>
+			ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel),
+		);
+		const selfBlurNames = selfBlurCauses
+			.filter((cause, i) => {
+				if (
+					firstAdultIdx !== -1 &&
+					ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel) &&
+					i !== firstAdultIdx
+				) {
 					return false;
-				}
-				if (cause.source !== null) {
-					return false;
-				}
-				if (ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel)) {
-					if (hasAdultContentLabel) {
-						return false;
-					}
-					hasAdultContentLabel = true;
 				}
 				return true;
 			})

@@ -252,6 +252,7 @@ export function ChatList({
 			const offset = splitViewLeftScroll.current;
 			if (offset > 0 && h >= offset) {
 				scrollElRef.current?.scrollToOffset({ offset, animated: false });
+				// eslint-disable-next-line react-hooks/immutability -- a set-once flag mutated in an event handler; useRef's .current write is the intended escape hatch here
 				restoredRef.current = true;
 			}
 		},

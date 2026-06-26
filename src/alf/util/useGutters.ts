@@ -36,14 +36,18 @@ type Gutters = {
 export function useGutters([all]: [Gutter]): Gutters;
 export function useGutters([vertical, horizontal]: [Gutter, Gutter]): Gutters;
 export function useGutters([top, right, bottom, left]: [Gutter, Gutter, Gutter, Gutter]): Gutters;
-export function useGutters([top, right, bottom, left]: Gutter[]) {
+export function useGutters([topArg, rightArg, bottomArg, leftArg]: Gutter[]) {
 	const { activeBreakpoint } = useBreakpoints();
-	if (right === undefined) {
-		right = bottom = left = top;
-	} else if (bottom === undefined) {
-		bottom = top;
-		left = right;
-	}
+
+	// CSS-shorthand-like spread: 1 value -> all sides; 2 -> vertical/horizontal; 4 -> each side.
+	const top = topArg;
+	const [right, bottom, left] =
+		rightArg === undefined
+			? [top, top, top]
+			: bottomArg === undefined
+				? [rightArg, top, rightArg]
+				: [rightArg, bottomArg, leftArg];
+
 	return useMemo(() => {
 		const breakpoint = activeBreakpoint || 'default';
 		return {

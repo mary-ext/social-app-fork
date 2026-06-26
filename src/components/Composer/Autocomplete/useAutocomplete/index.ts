@@ -45,6 +45,10 @@ export function useAutocomplete({
 	const moderationOpts = useModerationOpts();
 	const emojiSearch = useEmojiSearch();
 
+	// normalized form used for profile search and exact-handle moderation: "foo." and "FOO" should
+	// match "foo". emoji/search fallback still use the raw query.
+	const profileQuery = q.toLowerCase().trim().replace(/\.$/, '');
+
 	const query = useQuery({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: [
@@ -60,11 +64,9 @@ export function useAutocomplete({
 				if (!q) return [];
 
 				// Going from "foo" to "foo." should not clear matches.
-				q = q.toLowerCase().trim().replace(/\.$/, '');
-
 				const data = await ok(
 					appview.get('app.bsky.actor.searchActorsTypeahead', {
-						params: { limit: limit || 8, q },
+						params: { limit: limit || 8, q: profileQuery },
 					}),
 				);
 
@@ -91,7 +93,7 @@ export function useAutocomplete({
 
 					if (item.type === 'profile') {
 						const moderated = moderateProfileItem({
-							query: q,
+							query: profileQuery,
 							item,
 							moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
 						});
@@ -103,7 +105,7 @@ export function useAutocomplete({
 
 				return results;
 			},
-			[q, moderationOpts],
+			[profileQuery, moderationOpts],
 		),
 		placeholderData: keepPreviousData,
 	});

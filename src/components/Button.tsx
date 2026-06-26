@@ -123,7 +123,7 @@ export const Button = forwardRef<View, ButtonProps>(
 	(
 		{
 			children,
-			variant,
+			variant: variantProp,
 			color,
 			size,
 			shape = 'default',
@@ -146,9 +146,7 @@ export const Button = forwardRef<View, ButtonProps>(
 		 * The `variant` prop is deprecated in favor of simply specifying `color`. If a `color` is set, then we
 		 * want to use the existing codepaths for "solid" buttons. This is to maintain backwards compatibility.
 		 */
-		if (!variant && color) {
-			variant = 'solid';
-		}
+		const variant = !variantProp && color ? 'solid' : variantProp;
 
 		const t = useTheme();
 		const [state, setState] = useState({
