@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
 import { type DimensionValue, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
+import { useConstant } from '#/lib/hooks/use-constant';
 import { s } from '#/lib/styles';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -118,7 +118,7 @@ export function FeedFeedLoadingPlaceholder() {
 
 export function ChatListItemLoadingPlaceholder({ style }: { style?: StyleProp<ViewStyle> }) {
 	const t = useTheme();
-	const random = useMemo(() => Math.random(), []);
+	const random = useConstant(() => Math.random());
 	return (
 		<View style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, t.atoms.bg, style]}>
 			<LoadingPlaceholder width={52} height={52} style={a.rounded_full} />

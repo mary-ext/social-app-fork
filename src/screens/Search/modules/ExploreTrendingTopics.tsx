@@ -7,6 +7,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 import { useTrendingConfig } from '#/state/service-config';
+import { useTickEveryMinute } from '#/state/shell';
 
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
@@ -61,9 +62,11 @@ export function TrendRow({
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const gutters = useGutters([0, 'base']);
+	// refresh the freshness badge each minute instead of calling Date.now() during render.
+	const tick = useTickEveryMinute();
 
 	const category = useCategoryDisplayName(trend?.category || 'other');
-	const age = Math.floor((Date.now() - new Date(trend.startedAt || Date.now()).getTime()) / (1000 * 60 * 60));
+	const age = Math.floor((tick - new Date(trend.startedAt || tick).getTime()) / (1000 * 60 * 60));
 	const badgeType = trend.status === 'hot' ? 'hot' : age < 2 ? 'new' : age;
 
 	const actors = useModerateTrendingActors(trend.actors);

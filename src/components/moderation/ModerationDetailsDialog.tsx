@@ -8,6 +8,7 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { listUriToHref } from '#/lib/strings/url-helpers';
 
 import { useSession } from '#/state/session';
+import { useTickEveryMinute } from '#/state/shell';
 
 import { atoms as a, useGutters, useTheme } from '#/alf';
 
@@ -45,6 +46,8 @@ function ModerationDetailsDialogInner({
 	const desc = useModerationCauseDescription(modcause);
 	const { currentAccount } = useSession();
 	const timeDiff = useGetTimeAgo({ future: true });
+	// re-evaluate the expiry countdown each minute; the dialog is short-lived so this is cheap.
+	const tick = useTickEveryMinute();
 
 	let name;
 	let description;
@@ -178,7 +181,7 @@ function ModerationDetailsDialogInner({
 								{modcause.label.exp && (
 									<View>
 										<Text style={[a.leading_snug, a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-											<Trans>Expires in {timeDiff(Date.now(), modcause.label.exp)}</Trans>
+											<Trans>Expires in {timeDiff(tick, modcause.label.exp)}</Trans>
 										</Text>
 									</View>
 								)}

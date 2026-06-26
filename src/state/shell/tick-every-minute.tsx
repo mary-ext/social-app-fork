@@ -6,7 +6,8 @@ const stateContext = createContext<StateContext>(0);
 stateContext.displayName = 'TickEveryMinuteContext';
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
-	const [tick, setTick] = useState(Date.now());
+	// lazy init: Date.now() is impure, so evaluate once at mount rather than on every render.
+	const [tick, setTick] = useState(() => Date.now());
 	useEffect(() => {
 		const i = setInterval(() => {
 			setTick(Date.now());
