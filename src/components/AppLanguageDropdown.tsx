@@ -27,8 +27,9 @@ export function AppLanguageDropdown() {
 				return;
 			}
 
-			if (sanitizedLang !== value) {
-				setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value));
+			const next = sanitizeAppLanguageSetting(value);
+			if (sanitizedLang !== next) {
+				setLangPrefs.setAppLanguage(next);
 			}
 
 			resetPostsFeedQueries(queryClient);

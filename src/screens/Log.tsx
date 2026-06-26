@@ -8,6 +8,7 @@ import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes
 import { useTickEveryMinute } from '#/state/shell';
 
 import { getEntries } from '#/logger/logDump';
+import { LogLevel } from '#/logger/types';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -70,7 +71,7 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 									accessibilityLabel={l`View debug entry`}
 									accessibilityHint={l`Opens additional details for a debug entry`}
 								>
-									{entry.level === 'warn' || entry.level === 'error' ? (
+									{entry.level === LogLevel.Warn || entry.level === LogLevel.Error ? (
 										<WarningIcon size="sm" fill={colors.negative_500} />
 									) : (
 										<CircleInfoIcon size="sm" />
