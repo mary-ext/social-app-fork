@@ -1,11 +1,3 @@
-import { useCallback, useMemo, useState } from 'react';
-import {
-	type ListRenderItemInfo,
-	type StyleProp,
-	useWindowDimensions,
-	View,
-	type ViewStyle,
-} from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -20,13 +12,15 @@ import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { List } from '#/view/com/util/List';
-import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
 import * as FeedCard from '#/components/FeedCard';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
+import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
+
+// only governs rows that have never been on screen; the browser reuses the real size once rendered.
+const FEEDGEN_ITEM_HEIGHT_ESTIMATE = 120;
 
 const LOADING = { _reactKey: '__loading__' } as const;
 const EMPTY = { _reactKey: '__empty__' } as const;
@@ -48,56 +42,40 @@ const isFeedgenSentinel = (item: FeedgenItem): item is FeedgenSentinel => {
 interface ProfileFeedgensProps {
 	did: string;
 	enabled?: boolean;
-	style?: StyleProp<ViewStyle>;
-	testID?: string;
+	/** Known feed-generator count, used to size the loading skeleton; falls back to a small default. */
+	feedCount?: number;
 }
 
-export function ProfileFeedgens({ did, enabled, style, testID }: ProfileFeedgensProps) {
+export function ProfileFeedgens({ did, enabled, feedCount }: ProfileFeedgensProps): React.ReactNode {
 	const { t: l } = useLingui();
-	const [isPTRing, setIsPTRing] = useState(false);
-	const { height } = useWindowDimensions();
-	const opts = useMemo(() => ({ enabled }), [enabled]);
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
-		useProfileFeedgensQuery(did, opts);
+		useProfileFeedgensQuery(did, { enabled });
 	const isEmpty = !isPending && !data?.pages[0]?.feeds.length;
 	const { data: preferences } = usePreferencesQuery();
 	const navigation = useNavigation();
 	const { currentAccount } = useSession();
 	const isSelf = currentAccount?.did === did;
 
-	const items = useMemo(() => {
-		let items: FeedgenItem[] = [];
-		if (isError && isEmpty) {
-			items = items.concat([ERROR_ITEM]);
+	let items: FeedgenItem[] = [];
+	if (isError && isEmpty) {
+		items = items.concat([ERROR_ITEM]);
+	}
+	if (isPending) {
+		items = items.concat([LOADING]);
+	} else if (isEmpty) {
+		items = items.concat([EMPTY]);
+	} else if (data?.pages) {
+		for (const page of data?.pages) {
+			items = items.concat(page.feeds);
 		}
-		if (isPending) {
-			items = items.concat([LOADING]);
-		} else if (isEmpty) {
-			items = items.concat([EMPTY]);
-		} else if (data?.pages) {
-			for (const page of data?.pages) {
-				items = items.concat(page.feeds);
-			}
-		} else if (isError && !isEmpty) {
-			items = items.concat([LOAD_MORE_ERROR_ITEM]);
-		}
-		return items;
-	}, [isError, isEmpty, isPending, data]);
+	} else if (isError && !isEmpty) {
+		items = items.concat([LOAD_MORE_ERROR_ITEM]);
+	}
 
 	// events
 	// =
 
-	const onRefresh = useCallback(async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh feeds', { message: err });
-		}
-		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
-
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
 
 		try {
@@ -105,89 +83,78 @@ export function ProfileFeedgens({ did, enabled, style, testID }: ProfileFeedgens
 		} catch (err) {
 			logger.error('Failed to load more feeds', { message: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
+	};
 
-	const onPressRetryLoadMore = useCallback(() => {
+	const onPressRetryLoadMore = () => {
 		void fetchNextPage();
-	}, [fetchNextPage]);
+	};
 
 	// rendering
 	// =
 
-	const renderItem = useCallback(
-		({ item }: ListRenderItemInfo<FeedgenItem>) => {
-			if (isFeedgenSentinel(item)) {
-				if (item === ERROR_ITEM) {
-					return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
-				}
-				if (item === LOAD_MORE_ERROR_ITEM) {
-					return (
-						<LoadMoreRetryBtn
-							label={l`There was an issue fetching your lists. Tap here to try again.`}
-							onPress={onPressRetryLoadMore}
-						/>
-					);
-				}
-				if (item === LOADING) {
-					return <FeedLoadingPlaceholder />;
-				}
+	const renderItem = ({ index, item }: ListRenderItemInfo<FeedgenItem>) => {
+		if (isFeedgenSentinel(item)) {
+			if (item === ERROR_ITEM) {
+				return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
+			}
+			if (item === LOAD_MORE_ERROR_ITEM) {
 				return (
-					<EmptyState
-						icon={HashtagWideIcon}
-						message={isSelf ? l`You haven't made any custom feeds yet.` : l`No custom feeds yet`}
-						messageColor="textContrastMedium"
-						button={
-							isSelf
-								? {
-										label: l`Browse custom feeds`,
-										text: l`Browse custom feeds`,
-										onPress: () => navigation.navigate('Feeds' as never),
-										size: 'small',
-										color: 'secondary',
-									}
-								: undefined
-						}
+					<LoadMoreRetryBtn
+						label={l`There was an issue fetching your lists. Tap here to try again.`}
+						onPress={onPressRetryLoadMore}
 					/>
 				);
 			}
-			if (preferences) {
-				return <FeedCard.Default view={item} />;
+			if (item === LOADING) {
+				return <FeedCard.LoadingPlaceholder count={feedCount} />;
 			}
-			return null;
-		},
-		[l, error, refetch, onPressRetryLoadMore, preferences, navigation, isSelf],
-	);
-
-	const ProfileFeedgensFooter = useCallback(() => {
-		if (isEmpty) return null;
-		return (
-			<ListFooter
-				hasNextPage={hasNextPage}
-				isFetchingNextPage={isFetchingNextPage}
-				onRetry={fetchNextPage}
-				error={cleanError(error)}
-				height={180}
-			/>
-		);
-	}, [hasNextPage, error, isFetchingNextPage, fetchNextPage, isEmpty]);
+			return (
+				<EmptyState
+					icon={HashtagWideIcon}
+					message={isSelf ? l`You haven't made any custom feeds yet.` : l`No custom feeds yet`}
+					messageColor="textContrastMedium"
+					button={
+						isSelf
+							? {
+									label: l`Browse custom feeds`,
+									text: l`Browse custom feeds`,
+									onPress: () => navigation.navigate('Feeds' as never),
+									size: 'small',
+									color: 'secondary',
+								}
+							: undefined
+					}
+				/>
+			);
+		}
+		if (preferences) {
+			// the first feed card sits flush under the sticky tab bar; drop its top separator so the two
+			// don't draw a doubled line.
+			return <FeedCard.Default view={item} topBorder={index !== 0} />;
+		}
+		return null;
+	};
 
 	return (
-		<View testID={testID} style={style}>
-			<List
-				testID={testID ? `${testID}-flatlist` : undefined}
-				data={items}
-				keyExtractor={keyExtractor}
-				renderItem={renderItem}
-				ListFooterComponent={ProfileFeedgensFooter}
-				refreshing={isPTRing}
-				onRefresh={() => void onRefresh()}
-				progressViewOffset={undefined}
-				removeClippedSubviews={true}
-				desktopFixedHeight
-				onEndReached={() => void onEndReached()}
-				contentContainerStyle={{ minHeight: height }}
-			/>
-		</View>
+		<List
+			data={items}
+			estimateHeight={FEEDGEN_ITEM_HEIGHT_ESTIMATE}
+			keyExtractor={keyExtractor}
+			renderItem={renderItem}
+			ListFooterComponent={
+				isEmpty ? null : (
+					<ListFooter
+						hasNextPage={hasNextPage}
+						isFetchingNextPage={isFetchingNextPage}
+						onRetry={fetchNextPage}
+						error={cleanError(error)}
+						height={180}
+					/>
+				)
+			}
+			onEndReached={() => void onEndReached()}
+			onEndReachedThreshold={2}
+		/>
 	);
 }
 

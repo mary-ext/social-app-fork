@@ -339,7 +339,9 @@ function ProfileScreenLoaded({
 		showFeedsTab && {
 			id: 'feeds',
 			label: l`Feeds`,
-			render: (isFocused: boolean) => <ProfileFeedgens did={profile.did} enabled={isFocused} />,
+			render: (isFocused: boolean) => (
+				<ProfileFeedgens did={profile.did} enabled={isFocused} feedCount={feedGenCount} />
+			),
 		},
 		showStarterPacksTab && {
 			id: 'starterPacks',

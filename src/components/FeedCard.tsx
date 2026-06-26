@@ -5,6 +5,7 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import { weightedRandomIndex } from '#/lib/numbers';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { precacheFeedFromGeneratorView } from '#/state/queries/feed';
@@ -21,6 +22,8 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
+
+import { borderRadius } from '#/styles/tokens.css';
 
 import * as css from './FeedCard.css';
 
@@ -97,8 +100,11 @@ export function Avatar({ size = 40, src }: AvatarProps) {
 	return <UserAvatar avatar={src} size={size} type="algo" />;
 }
 
-export function AvatarPlaceholder({ size = 40 }: Omit<AvatarProps, 'src'>) {
-	return <Skeleton.Square size={size} />;
+export function AvatarPlaceholder({
+	radius = borderRadius.sm,
+	size = 40,
+}: Omit<AvatarProps, 'src'> & { radius?: number }) {
+	return <Skeleton.Square radius={radius} size={size} />;
 }
 
 export function TitleAndByline({ creator, title }: { creator?: AnyProfileView; title: string }) {
@@ -123,6 +129,11 @@ export function TitleAndBylinePlaceholder({ creator }: { creator?: boolean }) {
 			{creator && <Skeleton.Text blend size="md" width="40%" />}
 		</Skeleton.Col>
 	);
+}
+
+/** Placeholder for the "Pin feed" / "Unpin feed" pill in the header. */
+export function SaveButtonPlaceholder() {
+	return <div className={css.saveButtonPlaceholder} />;
 }
 
 export function Description({ description }: { description?: string }) {
@@ -227,4 +238,51 @@ function SaveButtonInner({
 export function createProfileFeedHref({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 	const urip = parseCanonicalResourceUri(feed.uri);
 	return `/profile/${feed.creator.did}/feed/${urip.rkey}`;
+}
+
+// weighted description-line counts: most feed descriptions are short (1 line) or empty, with a long
+// tail toward 2–3 lines. index = line count (0–3).
+const DESCRIPTION_LINE_WEIGHTS = [20, 10, 4, 1];
+
+function LoadingRow({ descriptionLines, topBorder }: { descriptionLines: number; topBorder: boolean }) {
+	return (
+		<Skeleton.Col className={css.loadingRow({ topBorder })} gap="md">
+			<Skeleton.Row align="center" gap="md">
+				<AvatarPlaceholder />
+				<TitleAndBylinePlaceholder creator />
+				<SaveButtonPlaceholder />
+			</Skeleton.Row>
+			{descriptionLines > 0 && <Skeleton.Lines count={descriptionLines} lastWidth={70} size="md" />}
+			<Skeleton.Text size="sm" width="35%" />
+		</Skeleton.Col>
+	);
+}
+
+// fallback row count when the caller doesn't know how many feeds to expect, and a cap so a profile with
+// many feeds doesn't render dozens of placeholder rows.
+const DEFAULT_LOADING_ROW_COUNT = 3;
+const MAX_LOADING_ROW_COUNT = 10;
+
+/**
+ * A stack of feed-card placeholders for the loading state, mirroring {@link Default}'s layout (avatar,
+ * title/byline, save pill, description, like count) so it sits on the same rhythm as the real cards.
+ *
+ * @param count number of placeholder rows; callers should pass the known feed-generator count when available
+ *   (e.g. `profile.associated.feedgens`). Defaults to a small value and is capped so large counts don't
+ *   render excessive rows.
+ */
+export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNode {
+	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
+	const rows = Array.from({ length: rowCount }, () => ({
+		// ~5% of feeds carry no description; the rest cluster around 1 line with a long tail.
+		descriptionLines: weightedRandomIndex(DESCRIPTION_LINE_WEIGHTS),
+	}));
+
+	return (
+		<>
+			{rows.map((row, i) => (
+				<LoadingRow key={i} descriptionLines={row.descriptionLines} topBorder={i !== 0} />
+			))}
+		</>
+	);
 }
