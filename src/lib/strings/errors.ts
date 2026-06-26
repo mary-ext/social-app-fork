@@ -1,11 +1,43 @@
 import { ClientResponseError } from '@atcute/client';
 import { t } from '@lingui/core/macro';
 
+/**
+ * coerces a thrown value into a string suitable for substring matching. plain objects have no useful string
+ * form (String() would yield '[object Object]'), so use Error's own toString() (which keeps the name — e.g.
+ * "AbortError" — that {@link isNetworkError} matches on) for Error instances, pass strings through, and
+ * JSON-serialize the rest. JSON.stringify can return undefined (for undefined / functions / symbols) or throw
+ * (circular refs, BigInt), so guard both.
+ *
+ * @param error the thrown value to stringify
+ * @returns a best-effort string representation, never empty-by-accident
+ */
+export function errorToString(error: unknown): string {
+	if (error instanceof Error) {
+		return error.toString();
+	}
+	if (typeof error === 'string') {
+		return error;
+	}
+	if (
+		typeof error === 'bigint' ||
+		typeof error === 'boolean' ||
+		typeof error === 'number' ||
+		typeof error === 'symbol'
+	) {
+		return String(error);
+	}
+	try {
+		return JSON.stringify(error) ?? '';
+	} catch {
+		return '';
+	}
+}
+
 export function cleanError(error: unknown): string {
 	if (!error) {
 		return '';
 	}
-	const str = typeof error === 'string' ? error : String(error);
+	const str = errorToString(error);
 	if (isNetworkError(str)) {
 		return t`Unable to connect. Please check your internet connection and try again.`;
 	}

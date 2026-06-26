@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';
 import type { NavigationProp } from '#/lib/routes/types';
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError, errorToString } from '#/lib/strings/errors';
 
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';
@@ -212,7 +212,7 @@ function detectKnownError(feedDesc: FeedDescriptor, error: unknown): KnownError 
 	}
 
 	// convert error to string and continue
-	const errorString = typeof error === 'string' ? error : String(error);
+	const errorString = errorToString(error);
 
 	if (errorString.includes(KnownError.FeedSignedInOnly)) {
 		return KnownError.FeedSignedInOnly;
