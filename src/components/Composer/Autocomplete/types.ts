@@ -32,6 +32,12 @@ export type AutocompleteItem = AutocompleteProfile | AutocompleteTag | Autocompl
 
 export type AutocompleteItemType = AutocompleteItem['type'];
 
+/**
+ * Popover placement vocabulary for the composer autocomplete. Mirrors Base UI's `side`/`align` split: a side
+ * (`top`/`bottom`) optionally followed by an alignment (`-start`/`-end`), parsed at the call site.
+ */
+export type Placement = 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end';
+
 export type AutocompleteApi = {
 	query: string;
 	items: AutocompleteItem[];

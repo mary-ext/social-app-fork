@@ -3,9 +3,7 @@ import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import type { Placement } from '#/lib/sift';
-
-import type { AutocompleteItem } from '#/components/Composer/Autocomplete/types';
+import type { AutocompleteItem, Placement } from '#/components/Composer/Autocomplete/types';
 import { useAutocomplete } from '#/components/Composer/Autocomplete/useAutocomplete';
 import { parseAutocompleteItemType } from '#/components/Composer/Autocomplete/util';
 

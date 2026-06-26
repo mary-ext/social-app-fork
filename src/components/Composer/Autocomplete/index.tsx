@@ -2,17 +2,17 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import { useLingui } from '@lingui/react/macro';
 
-import type { Placement } from '#/lib/sift';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import type {
 	AutocompleteEmoji,
 	AutocompleteItem,
 	AutocompleteProfile,
+	Placement,
 } from '#/components/Composer/Autocomplete/types';
-import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 

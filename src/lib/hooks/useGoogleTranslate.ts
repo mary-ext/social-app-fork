@@ -9,9 +9,9 @@ export function useGoogleTranslate() {
 	const openLink = useOpenLink();
 
 	return useCallback(
-		async (text: string, targetLangCode: string, sourceLanguage?: string) => {
+		(text: string, targetLangCode: string, sourceLanguage?: string) => {
 			const translateUrl = getTranslatorLink(text, targetLangCode, sourceLanguage);
-			await openLink(translateUrl);
+			openLink(translateUrl);
 		},
 		[openLink],
 	);
