@@ -48,13 +48,7 @@ export function Popup({
 				{outerClose && <Close outer />}
 				<BaseDialog.Popup
 					aria-label={label}
-					className={clsx(
-						styles.popup,
-						styles.size[size],
-						scroll === 'body' && styles.bounded,
-						scroll === 'body' && fullHeight && styles.fullHeight,
-						className,
-					)}
+					className={clsx(styles.popup({ fullHeight, scroll, size }), className)}
 				>
 					{children}
 				</BaseDialog.Popup>

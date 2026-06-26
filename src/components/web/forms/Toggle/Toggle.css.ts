@@ -1,7 +1,8 @@
-import { style, styleVariants } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
+import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
 import { fontSize } from '#/styles/tokens.css';
 
@@ -42,66 +43,83 @@ export const panelGroup = style(
 	}),
 );
 
-export const panel = style(
-	layered(components, {
-		alignItems: 'center',
-		backgroundColor: vars.palette.contrast_50,
-		boxSizing: 'border-box',
-		display: 'flex',
-		flexDirection: 'row',
-		gap: 8,
-		minHeight: 48,
-		paddingBlock: 12,
-		paddingInline: 12,
-		width: '100%',
-		selectors: {
-			'[data-checked] &': { backgroundColor: vars.palette.primary_50 },
-		},
-	}),
-);
-
-/** Standalone active state for panels not nested in a Base UI toggle (e.g. the lists expander). */
-export const panelActive = style(layered(components, { backgroundColor: vars.palette.primary_50 }));
-
 /**
- * Corner rounding by adjacency: a squared edge sits flush against a neighbouring panel, a rounded edge caps
- * the stack.
+ * The themed surface inside a toggle. `adjacent` rounds corners by position in the stack (a squared edge sits
+ * flush against a neighbour, a rounded edge caps it); `active` forces the checked tint for panels not nested
+ * in a Base UI toggle (e.g. the lists expander); `size: 'small'` tightens padding and flattens corners for
+ * dense stacks. The component also mirrors `size`/`active` onto `data-*` attributes so {@link panelText} and
+ * {@link panelIcon} can react to the panel's state (recipe variant classes are opaque hashes a child can't
+ * select on).
  */
-export const panelAdjacent = styleVariants(
+export const panel = recipe(
 	{
-		both: { borderRadius: 4 },
-		leading: {
-			borderTopLeftRadius: 4,
-			borderTopRightRadius: 4,
-			borderBottomLeftRadius: 12,
-			borderBottomRightRadius: 12,
+		base: {
+			alignItems: 'center',
+			backgroundColor: vars.palette.contrast_50,
+			boxSizing: 'border-box',
+			display: 'flex',
+			flexDirection: 'row',
+			gap: 8,
+			minHeight: 48,
+			paddingBlock: 12,
+			paddingInline: 12,
+			width: '100%',
+			selectors: {
+				'[data-checked] &': { backgroundColor: vars.palette.primary_50 },
+			},
 		},
-		none: { borderRadius: 12 },
-		trailing: {
-			borderTopLeftRadius: 12,
-			borderTopRightRadius: 12,
-			borderBottomLeftRadius: 4,
-			borderBottomRightRadius: 4,
+		variants: {
+			active: {
+				false: {},
+				true: { backgroundColor: vars.palette.primary_50 },
+			},
+			adjacent: {
+				both: { borderRadius: 4 },
+				leading: {
+					borderTopLeftRadius: 4,
+					borderTopRightRadius: 4,
+					borderBottomLeftRadius: 12,
+					borderBottomRightRadius: 12,
+				},
+				none: { borderRadius: 12 },
+				trailing: {
+					borderTopLeftRadius: 12,
+					borderTopRightRadius: 12,
+					borderBottomLeftRadius: 4,
+					borderBottomRightRadius: 4,
+				},
+			},
+			size: {
+				default: {},
+				// less padding, no min height for dense stacks; inline padding relaxes from 8 to 12 past the
+				// gtMobile breakpoint, and panelText/panelIcon shrink in step.
+				small: {
+					gap: 4,
+					minHeight: 0,
+					paddingBlock: 8,
+					paddingInline: 8,
+					'@media': {
+						'(min-width: 800px)': { paddingInline: 12 },
+					},
+				},
+			},
 		},
+		// `small` flattens corners regardless of adjacency (it replaces the per-corner rounding, not adds to it)
+		// — a compound beats both variant groups on source order so the flat 8px wins.
+		compoundVariants: [
+			{
+				size: 'small',
+				style: {
+					borderBottomLeftRadius: 8,
+					borderBottomRightRadius: 8,
+					borderTopLeftRadius: 8,
+					borderTopRightRadius: 8,
+				},
+			},
+		],
+		defaultVariants: { active: false, adjacent: 'none', size: 'default' },
 	},
-	(rule) => layered(components, rule),
-);
-
-/**
- * A tighter panel (less padding, flat 8px corners, no min height) for dense toggle stacks. Inline padding
- * relaxes from 8 to 12 past the gtMobile breakpoint, and {@link panelText}/{@link panelIcon} shrink in step.
- */
-export const panelSmall = style(
-	layered(components, {
-		borderRadius: 8,
-		gap: 4,
-		minHeight: 0,
-		paddingBlock: 8,
-		paddingInline: 8,
-		'@media': {
-			'(min-width: 800px)': { paddingInline: 12 },
-		},
-	}),
+	{ debugId: 'panel', layer: components },
 );
 
 export const panelTextWithIcon = style(
@@ -121,11 +139,11 @@ export const panelText = style(
 		fontSize: fontSize.md,
 		lineHeight: roundToPx(`calc(${fontSize.md} * 1.3)`),
 		selectors: {
-			[`[data-checked] &, ${panelActive} &`]: {
+			'[data-checked] &, [data-active] &': {
 				color: vars.palette.contrast_1000,
 				fontWeight: 500,
 			},
-			[`${panelSmall} &`]: {
+			'[data-size="small"] &': {
 				fontSize: fontSize.md_sub,
 				lineHeight: roundToPx(`calc(${fontSize.md_sub} * 1.3)`),
 			},
@@ -138,10 +156,10 @@ export const panelIcon = style(
 		color: vars.palette.contrast_700,
 		flexShrink: 0,
 		selectors: {
-			[`[data-checked] &, ${panelActive} &`]: { color: vars.palette.contrast_1000 },
+			'[data-checked] &, [data-active] &': { color: vars.palette.contrast_1000 },
 			// shrink the 20px md glyph to 16px (the original's `sm`) inside a small panel; CSS dimensions
 			// win over the SVG width/height attributes.
-			[`${panelSmall} &`]: { height: 16, width: 16 },
+			'[data-size="small"] &': { height: 16, width: 16 },
 		},
 	}),
 );

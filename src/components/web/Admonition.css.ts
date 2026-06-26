@@ -1,23 +1,32 @@
-import { style, styleVariants } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { recipe } from '#/styles/recipe';
 
-export const outer = style({
-	backgroundColor: vars.palette.contrast_0,
-	borderRadius: 8,
-	borderStyle: 'solid',
-	borderWidth: 1,
-	boxSizing: 'border-box',
-	padding: 12,
-	width: '100%',
-});
-
-export const border = styleVariants({
-	apology: { borderColor: vars.palette.contrast_300 },
-	error: { borderColor: vars.palette.negative_500 },
-	info: { borderColor: vars.palette.contrast_300 },
-	tip: { borderColor: vars.palette.primary_500 },
-	warning: { borderColor: vars.palette.yellow },
+/**
+ * A bordered callout box whose accent border tracks its `type`. Unlayered: `className` is the only escape
+ * hatch and is rare enough not to need the `components`-layer override dance.
+ */
+export const outer = recipe({
+	base: {
+		backgroundColor: vars.palette.contrast_0,
+		borderRadius: 8,
+		borderStyle: 'solid',
+		borderWidth: 1,
+		boxSizing: 'border-box',
+		padding: 12,
+		width: '100%',
+	},
+	variants: {
+		type: {
+			apology: { borderColor: vars.palette.contrast_300 },
+			error: { borderColor: vars.palette.negative_500 },
+			info: { borderColor: vars.palette.contrast_300 },
+			tip: { borderColor: vars.palette.primary_500 },
+			warning: { borderColor: vars.palette.yellow },
+		},
+	},
+	defaultVariants: { type: 'info' },
 });
 
 export const row = style({

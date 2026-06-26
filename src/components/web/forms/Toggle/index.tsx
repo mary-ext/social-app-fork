@@ -160,11 +160,9 @@ export function Panel({
 }) {
 	return (
 		<span
-			className={clsx(
-				styles.panel,
-				size === 'small' ? styles.panelSmall : styles.panelAdjacent[adjacent],
-				active && styles.panelActive,
-			)}
+			className={styles.panel({ active, adjacent, size })}
+			data-active={active || undefined}
+			data-size={size}
 		>
 			{children}
 		</span>

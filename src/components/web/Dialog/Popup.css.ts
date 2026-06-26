@@ -1,7 +1,8 @@
-import { style, styleVariants } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
+import { recipe } from '#/styles/recipe';
 import { zIndex } from '#/styles/tokens.css';
 
 export const backdrop = style(
@@ -43,53 +44,59 @@ export const viewport = style(
 	}),
 );
 
-// the default body strategy (`scroll="viewport"`): a plain padded card that grows to its content while the
-// surrounding viewport scrolls. `bounded` overrides this into the height-bounded layout.
-export const popup = style(
-	layered(components, {
-		backgroundColor: vars.palette.contrast_0,
-		border: `1px solid ${vars.palette.contrast_200}`,
-		borderRadius: 12,
-		boxShadow: vars.shadow.dialog,
-		boxSizing: 'border-box',
-		padding: 24,
-		position: 'relative',
-		transitionDuration: '200ms',
-		transitionProperty: 'opacity, transform',
-		transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-		width: '100%',
-		selectors: {
-			'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
-		},
-	}),
-);
-
-// the `scroll="body"` body strategy (orthogonal to `size` + the header slot): a height-bounded flex column
-// whose own `Body`/`List` child scrolls internally while the header/footer slots stay pinned. drops the base
-// card padding (the slots own their padding). declared after `popup` so it wins by source order.
-export const bounded = style(
-	layered(components, {
-		display: 'flex',
-		flexDirection: 'column',
-		maxHeight: '80vh',
-		overflow: 'hidden',
-		padding: 0,
-	}),
-);
-
-// lock a `bounded` popup to its max height regardless of content, so a full-height dialog (e.g. the GIF
-// picker) doesn't shrink to fit a transient loading/empty/error state.
-export const fullHeight = style(layered(components, { height: '80vh' }));
-
-export const size = styleVariants(
+/**
+ * The popup card. The `size` variant caps width; `scroll: 'body'` switches from a padded card that grows with
+ * its content (the surrounding viewport scrolls) into a height-bounded flex column whose own `Body`/`List`
+ * child scrolls internally while the header/footer slots stay pinned (dropping the base card padding, which
+ * the slots own). `fullHeight` locks a `body`-scroll popup to its max height so a transient loading/empty
+ * state can't shrink it.
+ */
+export const popup = recipe(
 	{
-		default: { maxWidth: 600 },
-		narrow: { maxWidth: 400 },
+		base: {
+			backgroundColor: vars.palette.contrast_0,
+			border: `1px solid ${vars.palette.contrast_200}`,
+			borderRadius: 12,
+			boxShadow: vars.shadow.dialog,
+			boxSizing: 'border-box',
+			padding: 24,
+			position: 'relative',
+			transitionDuration: '200ms',
+			transitionProperty: 'opacity, transform',
+			transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+			width: '100%',
+			selectors: {
+				'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+			},
+		},
+		variants: {
+			fullHeight: {
+				true: { height: '80vh' },
+			},
+			scroll: {
+				// the `body` strategy (orthogonal to `size`): a height-bounded flex column whose own
+				// `Body`/`List` child scrolls internally while the header/footer slots stay pinned. drops the base
+				// card padding (the slots own their padding). declared after `base` so it wins by source order.
+				body: {
+					display: 'flex',
+					flexDirection: 'column',
+					maxHeight: '80vh',
+					overflow: 'hidden',
+					padding: 0,
+				},
+				viewport: {},
+			},
+			size: {
+				default: { maxWidth: 600 },
+				narrow: { maxWidth: 400 },
+			},
+		},
+		defaultVariants: { fullHeight: false, scroll: 'viewport', size: 'default' },
 	},
-	(rule) => layered(components, rule),
+	{ debugId: 'dialogPopup', layer: components },
 );
 
-/** Scrollable content region of a `bounded` popup (below a pinned header, above a pinned footer). */
+/** Scrollable content region of a `body`-scroll popup (below a pinned header, above a pinned footer). */
 export const body = style(
 	layered(components, {
 		flex: 1,
@@ -98,7 +105,7 @@ export const body = style(
 	}),
 );
 
-/** Pinned action bar at the bottom of a `bounded` popup. */
+/** Pinned action bar at the bottom of a `body`-scroll popup. */
 export const footer = style(
 	layered(components, {
 		backgroundColor: vars.palette.contrast_0,

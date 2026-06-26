@@ -27,7 +27,7 @@ export function Row({
 	className,
 	size = 'sm',
 }: { children: ReactNode; className?: string } & CommonProps) {
-	return <div className={clsx(styles.row[size], className)}>{children}</div>;
+	return <div className={clsx(styles.row({ size }), className)}>{children}</div>;
 }
 
 export type LabelProps = {
@@ -47,7 +47,7 @@ export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
 		<>
 			<Dialog.Trigger
 				aria-label={desc.name}
-				className={clsx(styles.pill[size], !noBg && styles.pillBg)}
+				className={styles.pill({ bg: !noBg, size })}
 				handle={control}
 				// the pill lives inside a navigable post; keep its click from bubbling to the row's nav handler.
 				onClick={(e) => e.stopPropagation()}

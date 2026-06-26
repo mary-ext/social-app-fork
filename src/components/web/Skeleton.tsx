@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 
 import * as styles from '#/components/web/Skeleton.css';
 
+import type { RecipeVariants } from '#/styles/recipe';
 import { borderRadius } from '#/styles/tokens.css';
 
 /** Loading placeholder for a line of {@link Text}: a rounded bar sized to the matching `size`'s line box. */
@@ -15,13 +16,13 @@ export function Text({
 	/** De-emphasize this line so a paragraph reads as a primary line plus secondary ones. */
 	blend?: boolean;
 	/** The `Text` size the line will render at, so the placeholder matches its height. */
-	size?: keyof typeof styles.size;
+	size?: RecipeVariants<typeof styles.text>['size'];
 	/** Bar width; capped to the container. Omit to fill the available width. */
 	width?: number | string;
 }) {
 	return (
 		<div
-			className={clsx(styles.text, styles.size[size])}
+			className={styles.text({ size })}
 			style={
 				width !== undefined
 					? assignInlineVars({ [styles.widthVar]: typeof width === 'number' ? `${width}px` : width })
@@ -40,16 +41,12 @@ export function Row({
 	className,
 	gap,
 }: {
-	align?: keyof typeof styles.align;
+	align?: RecipeVariants<typeof styles.row>['align'];
 	children?: ReactNode;
 	className?: string;
-	gap?: keyof typeof styles.gap;
+	gap?: RecipeVariants<typeof styles.row>['gap'];
 }) {
-	return (
-		<div className={clsx(styles.row, align && styles.align[align], gap && styles.gap[gap], className)}>
-			{children}
-		</div>
-	);
+	return <div className={clsx(styles.row({ align, gap }), className)}>{children}</div>;
 }
 
 /** A flex-1 vertical flex group of placeholders. */
@@ -60,9 +57,9 @@ export function Col({
 }: {
 	children?: ReactNode;
 	className?: string;
-	gap?: keyof typeof styles.gap;
+	gap?: RecipeVariants<typeof styles.col>['gap'];
 }) {
-	return <div className={clsx(styles.col, gap && styles.gap[gap], className)}>{children}</div>;
+	return <div className={clsx(styles.col({ gap }), className)}>{children}</div>;
 }
 
 /** Loading placeholder for a circular element (e.g. a user avatar), sized to `size` pixels. */
@@ -100,7 +97,7 @@ export function Lines({
 	/** Width of the final, partial line, as a percentage. */
 	lastWidth: number;
 	/** The {@link Text} size every line renders at. */
-	size?: keyof typeof styles.size;
+	size?: RecipeVariants<typeof styles.text>['size'];
 }) {
 	return (
 		<Col>

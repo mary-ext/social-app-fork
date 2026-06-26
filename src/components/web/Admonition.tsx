@@ -39,7 +39,7 @@ export function Admonition({
 }) {
 	const Icon = ICONS[type];
 	return (
-		<div className={clsx(styles.outer, styles.border[type], className)}>
+		<div className={clsx(styles.outer({ type }), className)}>
 			<div className={styles.row}>
 				<Icon className={styles.iconWrap} fill={ICON_FILL[type]} size="md" />
 				<div className={styles.content}>
