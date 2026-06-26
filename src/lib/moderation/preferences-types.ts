@@ -22,7 +22,6 @@ export interface LabelerPreference {
 /** The app's own persisted moderation preferences. */
 export interface ModerationPrefs {
 	adultContentEnabled: boolean;
-	hiddenPosts: string[];
 	labelers: LabelerPreference[];
 	labels: Record<string, LabelVisibility>;
 	mutedWords: AppBskyActorDefs.MutedWord[];

@@ -5,7 +5,7 @@ import type { Did } from '@atcute/lexicons';
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 
-import { useHiddenPosts, useLabelDefinitions } from '#/state/preferences';
+import { useLabelDefinitions } from '#/state/preferences';
 import { DEFAULT_LOGGED_OUT_LABEL_PREFERENCES } from '#/state/queries/preferences/moderation';
 import { useSession } from '#/state/session';
 
@@ -27,7 +27,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const { currentAccount } = useSession();
 	const prefs = usePreferencesQuery();
 	const { labelDefs } = useLabelDefinitions();
-	const hiddenPosts = useHiddenPosts(); // TODO move this into pds-stored prefs
 
 	const userDid = currentAccount?.did;
 	const moderationPrefs = prefs.data?.moderationPrefs;
@@ -46,10 +45,10 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				}));
 		return {
 			viewerDid: userDid as Did | undefined,
-			prefs: toModerationPreferences({ ...moderationPrefs, labelers }, hiddenPosts || []),
+			prefs: toModerationPreferences({ ...moderationPrefs, labelers }),
 			labelDefs,
 		};
-	}, [override, userDid, labelDefs, moderationPrefs, hiddenPosts]);
+	}, [override, userDid, labelDefs, moderationPrefs]);
 
 	return <moderationOptsContext.Provider value={value}>{children}</moderationOptsContext.Provider>;
 }

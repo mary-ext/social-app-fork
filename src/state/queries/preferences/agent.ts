@@ -41,7 +41,6 @@ const prefGuard =
 const isAdultContentPref = prefGuard('app.bsky.actor.defs#adultContentPref');
 const isContentLabelPref = prefGuard('app.bsky.actor.defs#contentLabelPref');
 const isFeedViewPref = prefGuard('app.bsky.actor.defs#feedViewPref');
-const isHiddenPostsPref = prefGuard('app.bsky.actor.defs#hiddenPostsPref');
 const isInterestsPref = prefGuard('app.bsky.actor.defs#interestsPref');
 const isLabelersPref = prefGuard('app.bsky.actor.defs#labelersPref');
 const isMutedWordsPref = prefGuard('app.bsky.actor.defs#mutedWordsPref');
@@ -234,7 +233,6 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 		},
 		moderationPrefs: {
 			adultContentEnabled: false,
-			hiddenPosts: [],
 			labelers: appLabelers.map((did) => ({ did, labels: {} })),
 			labels: { ...DEFAULT_LABEL_SETTINGS },
 			mutedWords: [],
@@ -278,8 +276,6 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 				...word,
 				actorTarget: word.actorTarget || 'all',
 			}));
-		} else if (isHiddenPostsPref(pref)) {
-			prefs.moderationPrefs.hiddenPosts = [...pref.items];
 		} else if (isPostInteractionSettingsPref(pref)) {
 			prefs.postInteractionSettings.threadgateAllowRules = pref.threadgateAllowRules;
 			prefs.postInteractionSettings.postgateEmbeddingRules = pref.postgateEmbeddingRules;

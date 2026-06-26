@@ -3,7 +3,6 @@ import { Provider as ExternalEmbedsProvider } from '#/storage/hooks/external-emb
 import { Provider as LargeAltBadgeProvider } from '#/storage/hooks/large-alt-badge';
 
 export { useExternalEmbedsPrefs, useSetExternalEmbedPref } from '#/storage/hooks/external-embeds';
-export { useHiddenPosts, useHiddenPostsApi } from '#/storage/hooks/hidden-posts';
 export { useLabelDefinitions } from './label-defs';
 export { useLanguagePrefs, useLanguagePrefsApi } from './languages';
 

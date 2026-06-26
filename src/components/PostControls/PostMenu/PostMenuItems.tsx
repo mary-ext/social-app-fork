@@ -20,7 +20,7 @@ import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
-import { useHiddenPosts, useHiddenPostsApi, useLanguagePrefs } from '#/state/preferences';
+import { useLanguagePrefs } from '#/state/preferences';
 import { usePinnedPostMutation } from '#/state/queries/pinned-post';
 import { usePostDeleteMutation, useThreadMuteMutationQueue } from '#/state/queries/post';
 import { useToggleQuoteDetachmentMutation } from '#/state/queries/postgate';
@@ -98,8 +98,6 @@ let PostMenuItems = ({
 	const { mutateAsync: deletePostMutate } = usePostDeleteMutation();
 	const { mutateAsync: pinPostMutate, isPending: isPinPending } = usePinnedPostMutation();
 	const requireSignIn = useRequireAuth();
-	const hiddenPosts = useHiddenPosts();
-	const { hidePost } = useHiddenPostsApi();
 	const feedFeedback = useFeedFeedbackContext();
 	const translate = useGoogleTranslate();
 	const navigation = useNavigation<NavigationProp>();
@@ -108,7 +106,6 @@ let PostMenuItems = ({
 	const mutePromptControl = Prompt.usePromptHandle();
 	const reportDialogControl = useReportDialogControl();
 	const deletePromptControl = Prompt.usePromptHandle();
-	const hidePromptControl = Prompt.usePromptHandle();
 	const postInteractionSettingsHandle = useDialogHandle();
 	const quotePostDetachConfirmControl = Prompt.usePromptHandle();
 	const hideReplyConfirmControl = Prompt.usePromptHandle();
@@ -128,7 +125,6 @@ let PostMenuItems = ({
 	const rootUri = record.reply?.root?.uri || postUri;
 	const isReply = Boolean(record.reply);
 	const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(post, rootUri);
-	const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri);
 	const isAuthor = postAuthor.did === currentAccount?.did;
 	const isRootPostAuthor = parseCanonicalResourceUri(rootUri).repo === currentAccount?.did;
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
@@ -219,10 +215,6 @@ let PostMenuItems = ({
 		void translate(record.text, langPrefs.primaryLanguage);
 	};
 
-	const onHidePost = () => {
-		hidePost({ uri: postUri });
-	};
-
 	const hideInPWI = !!postAuthor.labels?.find((label) => label.val === '!no-unauthenticated');
 
 	const onPressShowMore = () => {
@@ -272,8 +264,7 @@ let PostMenuItems = ({
 		}
 	};
 
-	const canHidePostForMe = !isAuthor && !isPostHidden;
-	const canHideReplyForEveryone = !isAuthor && isRootPostAuthor && !isPostHidden && isReply;
+	const canHideReplyForEveryone = !isAuthor && isRootPostAuthor && isReply;
 	const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer;
 
 	const onToggleReplyVisibility = async () => {
@@ -456,19 +447,10 @@ let PostMenuItems = ({
 					</>
 				)}
 
-				{hasSession && (canHideReplyForEveryone || canDetachQuote || canHidePostForMe) && (
+				{hasSession && (canHideReplyForEveryone || canDetachQuote) && (
 					<>
 						<Menu.Separator />
 						<Menu.Group>
-							{canHidePostForMe && (
-								<Menu.Item
-									label={isReply ? l`Hide reply for me` : l`Hide post for me`}
-									onClick={() => hidePromptControl.open(null)}
-								>
-									<Menu.ItemText>{isReply ? l`Hide reply for me` : l`Hide post for me`}</Menu.ItemText>
-									<Menu.ItemIcon icon={EyeSlash} position="right" />
-								</Menu.Item>
-							)}
 							{canHideReplyForEveryone && (
 								<Menu.Item
 									label={isReplyHiddenByThreadgate ? l`Show reply for everyone` : l`Hide reply for everyone`}
@@ -565,13 +547,6 @@ let PostMenuItems = ({
 				onConfirm={onDeletePost}
 				confirmButtonCta={l`Delete`}
 				confirmButtonColor="negative"
-			/>
-			<Prompt.Basic
-				handle={hidePromptControl}
-				title={isReply ? l`Hide this reply?` : l`Hide this post?`}
-				description={l`This post will be hidden from feeds and threads. This cannot be undone.`}
-				onConfirm={onHidePost}
-				confirmButtonCta={l`Hide`}
 			/>
 			<ReportDialog
 				control={reportDialogControl}

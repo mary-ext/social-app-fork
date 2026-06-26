@@ -263,7 +263,6 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 			prefs: {
 				adultContentEnabled: !noAdult,
 				globalLabelPrefs: { [label[0]!]: visibility[0] as LabelPreference },
-				hiddenPosts: [],
 				keywordFilters: [],
 				prefsByLabelers: {
 					[FAKE_LABELER_DID]: { labelPrefs: { [label[0]!]: visibility[0] as LabelPreference } },
