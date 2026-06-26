@@ -16,11 +16,6 @@ export const intro = style({
 
 export const addButton = style({ width: '100%' });
 
-export const manageRow = style({
-	display: 'flex',
-	justifyContent: 'center',
-});
-
 export const error = style({
 	backgroundColor: vars.palette.negative_400,
 	borderRadius: 8,

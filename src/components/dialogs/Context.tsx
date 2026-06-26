@@ -28,15 +28,6 @@ export type LinkWarningPayload = {
 	share?: boolean;
 };
 
-/**
- * Payload opening the global muted-words dialog. `showManageLink` reveals a link through to the muted-words
- * management screen — passed from openers that aren't already on it (e.g. a post's overflow menu), omitted
- * from the screen's own add button.
- */
-export type MutedWordsDialogPayload = {
-	showManageLink?: boolean;
-};
-
 type ControlsContext = {
 	/**
 	 * The composer's Base UI {@link DialogHandle}-backed dialog. Opened from triggers all over the app (no
@@ -48,7 +39,6 @@ type ControlsContext = {
 	/** The group-chat join dialog; open with `openWithPayload({ code })` from a `bsky.app/chat/<code>` link. */
 	groupChatJoinControl: DialogHandle<{ code: string }>;
 	lightboxControl: LightboxControl;
-	mutedWordsDialogControl: DialogHandle<MutedWordsDialogPayload>;
 	signinDialogControl: DialogHandle<SigninDialogPayload>;
 	linkWarningDialogControl: DialogHandle<LinkWarningPayload>;
 	reportDialogControl: DialogHandle<{ subject: ReportSubject }>;
@@ -69,7 +59,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const composerDialogControl = useDialogHandle<ComposerOpts>();
 	const groupChatJoinControl = useDialogHandle<{ code: string }>();
 	const lightboxControl = useDialogHandle<LightboxPayload>();
-	const mutedWordsDialogControl = useDialogHandle<MutedWordsDialogPayload>();
 	const signinDialogControl = useDialogHandle<SigninDialogPayload>();
 	const linkWarningDialogControl = useDialogHandle<LinkWarningPayload>();
 	const reportDialogControl = useDialogHandle<{ subject: ReportSubject }>();
@@ -79,7 +68,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			composerDialogControl,
 			groupChatJoinControl,
 			lightboxControl,
-			mutedWordsDialogControl,
 			signinDialogControl,
 			linkWarningDialogControl,
 			reportDialogControl,
@@ -88,7 +76,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			composerDialogControl,
 			groupChatJoinControl,
 			lightboxControl,
-			mutedWordsDialogControl,
 			signinDialogControl,
 			linkWarningDialogControl,
 			reportDialogControl,

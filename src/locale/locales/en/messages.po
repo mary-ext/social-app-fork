@@ -573,7 +573,7 @@ msgstr "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum nu
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:297
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:290
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
 msgstr ""
 
@@ -780,21 +780,21 @@ msgstr "10+"
 msgid "10+ requests"
 msgstr "10+ requests"
 
-#: src/components/dialogs/MutedWords.tsx:61
-#: src/screens/Moderation/MutedWords.tsx:170
+#: src/components/dialogs/MutedWords.tsx:47
 #: src/screens/Moderation/MutedWords.tsx:172
+#: src/screens/Moderation/MutedWords.tsx:174
 msgid "24 hours"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:63
-#: src/screens/Moderation/MutedWords.tsx:180
+#: src/components/dialogs/MutedWords.tsx:49
 #: src/screens/Moderation/MutedWords.tsx:182
+#: src/screens/Moderation/MutedWords.tsx:184
 msgid "30 days"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:62
-#: src/screens/Moderation/MutedWords.tsx:175
+#: src/components/dialogs/MutedWords.tsx:48
 #: src/screens/Moderation/MutedWords.tsx:177
+#: src/screens/Moderation/MutedWords.tsx:179
 msgid "7 days"
 msgstr ""
 
@@ -882,7 +882,7 @@ msgstr "Account and privacy"
 msgid "Account and privacy settings"
 msgstr "Account and privacy settings"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:326
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:319
 #: src/screens/Messages/components/RequestButtons.tsx:101
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:105
 #: src/view/com/profile/ProfileMenu.tsx:157
@@ -903,7 +903,7 @@ msgstr ""
 msgid "Account is deactivated"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:357
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:350
 #: src/view/com/profile/ProfileMenu.tsx:129
 msgctxt "toast"
 msgid "Account muted"
@@ -944,7 +944,7 @@ msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:343
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:336
 #: src/view/com/profile/ProfileMenu.tsx:117
 msgctxt "toast"
 msgid "Account unmuted"
@@ -969,13 +969,13 @@ msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:145
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:284
-#: src/components/dialogs/MutedWords.tsx:177
+#: src/components/dialogs/MutedWords.tsx:163
 #: src/components/dialogs/StarterPackDialog.tsx:303
 #: src/components/dialogs/StarterPackDialog.tsx:311
 msgid "Add"
 msgstr ""
 
-#: src/screens/Moderation/MutedWords.tsx:62
+#: src/screens/Moderation/MutedWords.tsx:64
 msgctxt "action"
 msgid "Add"
 msgstr "Add"
@@ -999,7 +999,7 @@ msgstr ""
 msgid "Add a content warning"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:34
+#: src/components/dialogs/MutedWords.tsx:28
 msgid "Add a muted word or tag"
 msgstr "Add a muted word or tag"
 
@@ -1068,12 +1068,12 @@ msgstr ""
 msgid "Add members"
 msgstr "Add members"
 
-#: src/components/dialogs/MutedWords.tsx:117
-#: src/screens/Moderation/MutedWords.tsx:56
+#: src/components/dialogs/MutedWords.tsx:103
+#: src/screens/Moderation/MutedWords.tsx:58
 msgid "Add muted word"
 msgstr "Add muted word"
 
-#: src/components/dialogs/MutedWords.tsx:172
+#: src/components/dialogs/MutedWords.tsx:158
 msgid "Add muted word with chosen settings"
 msgstr "Add muted word with chosen settings"
 
@@ -1143,7 +1143,7 @@ msgstr ""
 msgid "Added to starter pack"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:180
+#: src/components/dialogs/MutedWords.tsx:166
 msgid "Adding"
 msgstr "Adding"
 
@@ -1527,7 +1527,7 @@ msgstr "Are you sure you want to rescind your request to join {0}?"
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
-#: src/screens/Moderation/MutedWords.tsx:132
+#: src/screens/Moderation/MutedWords.tsx:134
 msgid "Are you sure?"
 msgstr ""
 
@@ -1611,8 +1611,8 @@ msgstr "Block {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:269
 #: src/components/dms/ConvoMenu.tsx:273
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:510
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:511
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:498
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:499
 #: src/screens/Messages/components/RequestButtons.tsx:146
 #: src/screens/Messages/components/RequestButtons.tsx:148
 #: src/view/com/profile/ProfileMenu.tsx:328
@@ -1878,7 +1878,7 @@ msgstr "Change"
 msgid "Change app language"
 msgstr "Change app language"
 
-#: src/screens/Moderation/MutedWords.tsx:168
+#: src/screens/Moderation/MutedWords.tsx:170
 msgid "Change duration"
 msgstr "Change duration"
 
@@ -2267,7 +2267,7 @@ msgstr "Conversation not found."
 #: src/components/dms/ChatInvite/use-chat-invite.tsx:113
 #: src/components/dms/MessageContextMenu.tsx:47
 #: src/components/PostControls/DiscoverDebug.tsx:26
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:209
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:202
 #: src/lib/sharing.ts:15
 #: src/lib/sharing.ts:28
 msgid "Copied to clipboard"
@@ -2331,8 +2331,8 @@ msgstr ""
 msgid "Copy post at:// URI"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:400
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:401
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:393
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:394
 msgid "Copy post text"
 msgstr ""
 
@@ -2524,7 +2524,7 @@ msgid "Default"
 msgstr ""
 
 #: src/components/dms/MessageOverlays.tsx:169
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:536
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:221
 #: src/screens/StarterPack/StarterPackScreen.tsx:512
 #: src/screens/StarterPack/StarterPackScreen.tsx:595
@@ -2565,8 +2565,8 @@ msgstr ""
 msgid "Delete message for me"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:533
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:534
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:521
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
 #: src/view/com/composer/Composer.tsx:1278
 msgid "Delete post"
 msgstr ""
@@ -2584,7 +2584,7 @@ msgstr ""
 msgid "Delete this list?"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:545
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:533
 msgid "Delete this post?"
 msgstr ""
 
@@ -2620,12 +2620,12 @@ msgstr ""
 msgid "Descriptive alt text"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:473
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:481
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:469
 msgid "Detach quote"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:567
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:555
 msgid "Detach quote post?"
 msgstr ""
 
@@ -2739,7 +2739,7 @@ msgstr ""
 msgid "Display name"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:160
+#: src/components/dialogs/MutedWords.tsx:146
 msgid "Do not apply this muted word to users you follow"
 msgstr "Do not apply this muted word to users you follow"
 
@@ -2799,7 +2799,7 @@ msgstr ""
 msgid "Drop to add images"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:149
+#: src/components/dialogs/MutedWords.tsx:135
 msgid "Duration"
 msgstr "Duration"
 
@@ -2873,8 +2873,8 @@ msgstr "Edit group name"
 msgid "Edit image"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:526
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:530
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:518
 msgid "Edit interaction settings"
 msgstr ""
 
@@ -3016,8 +3016,8 @@ msgstr ""
 msgid "Ensure you have selected a language for each caption file."
 msgstr "Ensure you have selected a language for each caption file."
 
-#: src/components/dialogs/MutedWords.tsx:129
-#: src/components/dialogs/MutedWords.tsx:130
+#: src/components/dialogs/MutedWords.tsx:115
+#: src/components/dialogs/MutedWords.tsx:116
 msgid "Enter a word or phrase"
 msgstr "Enter a word or phrase"
 
@@ -3087,11 +3087,11 @@ msgstr "Everyone"
 msgid "Everything else"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:164
+#: src/components/dialogs/MutedWords.tsx:150
 msgid "Exclude users you follow"
 msgstr ""
 
-#: src/screens/Moderation/MutedWords.tsx:116
+#: src/screens/Moderation/MutedWords.tsx:118
 msgid "Excludes people you follow"
 msgstr "Excludes people you follow"
 
@@ -3119,12 +3119,12 @@ msgstr ""
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
-#: src/screens/Moderation/MutedWords.tsx:113
+#: src/screens/Moderation/MutedWords.tsx:115
 msgid "Expired"
 msgstr ""
 
 #. placeholder {0}: formatDistance(expiryDate, new Date(), { addSuffix: true })
-#: src/screens/Moderation/MutedWords.tsx:114
+#: src/screens/Moderation/MutedWords.tsx:116
 msgid "Expires {0}"
 msgstr ""
 
@@ -3252,7 +3252,7 @@ msgstr ""
 msgid "Failed to delete message"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:174
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:171
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -3404,7 +3404,7 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:194
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:191
 msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
@@ -3480,8 +3480,8 @@ msgstr ""
 msgid "Feed unavailable"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:227
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:243
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:220
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:236
 msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr ""
@@ -3723,9 +3723,9 @@ msgstr "Food & Drink"
 msgid "For You"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:60
-#: src/screens/Moderation/MutedWords.tsx:185
+#: src/components/dialogs/MutedWords.tsx:46
 #: src/screens/Moderation/MutedWords.tsx:187
+#: src/screens/Moderation/MutedWords.tsx:189
 msgid "Forever"
 msgstr ""
 
@@ -4087,12 +4087,12 @@ msgstr "Hide group chat updates"
 msgid "Hide lists"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:456
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:464
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
 msgid "Hide reply for everyone"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:574
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:562
 msgid "Hide this reply?"
 msgstr ""
 
@@ -4166,7 +4166,7 @@ msgstr ""
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:546
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:534
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -4297,7 +4297,7 @@ msgstr ""
 msgid "Invalid group chat code."
 msgstr "Invalid group chat code."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:302
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:295
 msgctxt "toast"
 msgid "Invalid interaction settings."
 msgstr ""
@@ -4828,7 +4828,7 @@ msgstr ""
 msgid "Loading video"
 msgstr "Loading video"
 
-#: src/screens/Moderation/MutedWords.tsx:70
+#: src/screens/Moderation/MutedWords.tsx:72
 msgid "Loading your muted words"
 msgstr "Loading your muted words"
 
@@ -4885,11 +4885,6 @@ msgstr "Love GIFs"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Make one for me"
 msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:197
-#: src/components/dialogs/MutedWords.tsx:201
-msgid "Manage all muted words"
-msgstr "Manage all muted words"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
 #: src/screens/Settings/ContentAndMediaSettings.tsx:62
@@ -5171,8 +5166,8 @@ msgstr ""
 msgid "Mute {prefixedTag}"
 msgstr "Mute {prefixedTag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:500
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:504
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:488
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:492
 #: src/view/com/profile/ProfileMenu.tsx:313
 #: src/view/com/profile/ProfileMenu.tsx:320
 msgid "Mute account"
@@ -5192,7 +5187,7 @@ msgstr ""
 msgid "Mute conversation"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:157
+#: src/components/dialogs/MutedWords.tsx:143
 msgid "Mute in"
 msgstr "Mute in"
 
@@ -5200,7 +5195,7 @@ msgstr "Mute in"
 msgid "Mute list"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:120
+#: src/components/dialogs/MutedWords.tsx:106
 msgid "Mute one word, phrase, @username or hashtag."
 msgstr "Mute one word, phrase, @username or hashtag."
 
@@ -5212,17 +5207,12 @@ msgstr ""
 msgid "Mute this group chat"
 msgstr "Mute this group chat"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:435
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:438
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:428
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:431
 msgid "Mute thread"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:442
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:443
-msgid "Mute words & tags"
-msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:98
+#: src/components/dialogs/MutedWords.tsx:84
 #: src/screens/Messages/ConversationSettings/index.tsx:441
 msgid "Muted"
 msgstr "Muted"
@@ -5246,7 +5236,7 @@ msgid "Muted by \"{0}\""
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:149
-#: src/screens/Moderation/MutedWords.tsx:51
+#: src/screens/Moderation/MutedWords.tsx:53
 msgid "Muted words"
 msgstr "Muted words"
 
@@ -5927,8 +5917,8 @@ msgid "Opens this draft in the composer"
 msgstr ""
 
 #. placeholder {0}: word.value
-#: src/screens/Moderation/MutedWords.tsx:156
-#: src/screens/Moderation/MutedWords.tsx:165
+#: src/screens/Moderation/MutedWords.tsx:158
+#: src/screens/Moderation/MutedWords.tsx:167
 msgid "Options for \"{0}\""
 msgstr "Options for \"{0}\""
 
@@ -6106,8 +6096,8 @@ msgstr ""
 msgid "Pin to Home"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:380
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:373
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:377
 msgid "Pin to your profile"
 msgstr ""
 
@@ -6159,7 +6149,7 @@ msgstr ""
 msgid "Please confirm your email address to upload videos."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:90
+#: src/components/dialogs/MutedWords.tsx:76
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr ""
 
@@ -6238,7 +6228,7 @@ msgstr ""
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:155
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:152
 msgctxt "toast"
 msgid "Post deleted"
 msgstr ""
@@ -6288,7 +6278,7 @@ msgstr "Post link"
 msgid "Post not found"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:375
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:368
 msgid "Post options"
 msgstr "Post options"
 
@@ -6455,11 +6445,11 @@ msgstr ""
 msgid "Quote post"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:259
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:252
 msgid "Quote post was re-attached"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:259
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:252
 msgid "Quote post was successfully detached"
 msgstr ""
 
@@ -6478,8 +6468,8 @@ msgstr ""
 msgid "Quotes of this post"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:473
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:481
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:469
 msgid "Re-attach quote"
 msgstr ""
 
@@ -6575,8 +6565,8 @@ msgstr "Reload to update"
 #: src/screens/Messages/ConversationSettings/Member.tsx:152
 #: src/screens/Messages/ConversationSettings/prompts.tsx:166
 #: src/screens/Moderation/index.tsx:204
-#: src/screens/Moderation/MutedWords.tsx:135
-#: src/screens/Moderation/MutedWords.tsx:194
+#: src/screens/Moderation/MutedWords.tsx:137
+#: src/screens/Moderation/MutedWords.tsx:196
 #: src/screens/Settings/components/AccountsSection.tsx:270
 #: src/view/com/posts/PostFeedErrorMessage.tsx:182
 msgid "Remove"
@@ -6687,7 +6677,7 @@ msgstr ""
 msgid "Remove live status"
 msgstr ""
 
-#: src/screens/Moderation/MutedWords.tsx:192
+#: src/screens/Moderation/MutedWords.tsx:194
 msgid "Remove muted word"
 msgstr "Remove muted word"
 
@@ -6827,12 +6817,12 @@ msgstr ""
 msgid "Reply sorting"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:291
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:284
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:290
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:283
 msgid "Reply was successfully hidden"
 msgstr ""
 
@@ -6887,8 +6877,8 @@ msgstr ""
 msgid "Report message"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:516
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:517
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:504
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:505
 msgid "Report post"
 msgstr ""
 
@@ -7448,7 +7438,7 @@ msgstr ""
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
-#: src/components/dialogs/MutedWords.tsx:145
+#: src/components/dialogs/MutedWords.tsx:131
 msgid "Select how long to mute this word for"
 msgstr "Select how long to mute this word for"
 
@@ -7473,7 +7463,7 @@ msgstr ""
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:153
+#: src/components/dialogs/MutedWords.tsx:139
 msgid "Select what content this muted word should apply to"
 msgstr "Select what content this muted word should apply to"
 
@@ -7653,8 +7643,8 @@ msgstr "Show feed context debug"
 msgid "Show group chat updates"
 msgstr "Show group chat updates"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:422
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:423
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:415
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:416
 msgid "Show less like this"
 msgstr ""
 
@@ -7670,8 +7660,8 @@ msgstr ""
 msgid "Show More"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:417
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:418
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:410
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:411
 msgid "Show more like this"
 msgstr ""
 
@@ -7701,8 +7691,8 @@ msgstr ""
 msgid "Show replies as"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:456
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:464
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
 msgid "Show reply for everyone"
 msgstr ""
 
@@ -7757,8 +7747,8 @@ msgstr "Sign in to another account"
 msgid "Sign in to Bluesky"
 msgstr "Sign in to Bluesky"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:406
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:407
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:399
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:400
 msgid "Sign in to view post"
 msgstr ""
 
@@ -8136,7 +8126,7 @@ msgstr ""
 msgid "System log"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:67
+#: src/components/dialogs/MutedWords.tsx:53
 msgid "Tags only"
 msgstr ""
 
@@ -8190,7 +8180,7 @@ msgstr ""
 msgid "Tell us a little more"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:66
+#: src/components/dialogs/MutedWords.tsx:52
 msgid "Text & tags"
 msgstr ""
 
@@ -8341,9 +8331,9 @@ msgstr ""
 
 #. placeholder {0}: String(e)
 #. placeholder {0}: e.toString()
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:331
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:348
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:362
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:324
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:341
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:355
 #: src/screens/Messages/ConversationSettings/Member.tsx:73
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:97
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:110
@@ -8649,7 +8639,7 @@ msgstr ""
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:575
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:563
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
@@ -8713,7 +8703,7 @@ msgid "This will create a new list with the same name, description, and members 
 msgstr ""
 
 #. placeholder {0}: word.value
-#: src/screens/Moderation/MutedWords.tsx:133
+#: src/screens/Moderation/MutedWords.tsx:135
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
@@ -8722,7 +8712,7 @@ msgstr ""
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:568
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr ""
 
@@ -8781,8 +8771,8 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:81
 #: src/components/Post/Translated/index.tsx:37
 #: src/components/Post/Translated/index.tsx:43
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:395
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:396
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:388
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:389
 msgid "Translate"
 msgstr ""
 
@@ -8990,8 +8980,8 @@ msgstr ""
 msgid "Unmute {prefixedTag}"
 msgstr "Unmute {prefixedTag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:500
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:504
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:488
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:492
 #: src/view/com/profile/ProfileMenu.tsx:313
 #: src/view/com/profile/ProfileMenu.tsx:318
 msgid "Unmute account"
@@ -9014,8 +9004,8 @@ msgstr ""
 msgid "Unmute this group chat"
 msgstr "Unmute this group chat"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:435
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:438
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:428
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:431
 msgid "Unmute thread"
 msgstr ""
 
@@ -9041,8 +9031,8 @@ msgstr ""
 msgid "Unpin from home"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:380
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:373
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:377
 msgid "Unpin from profile"
 msgstr ""
 
@@ -9095,12 +9085,12 @@ msgstr "Update invite link"
 msgid "Update is available"
 msgstr "Update is available"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:262
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:255
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:305
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:298
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
@@ -9635,11 +9625,11 @@ msgstr ""
 msgid "Yes GIFs"
 msgstr "Yes GIFs"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:570
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:558
 msgid "Yes, detach"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:577
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:565
 msgid "Yes, hide"
 msgstr ""
 
@@ -9855,7 +9845,7 @@ msgstr ""
 msgid "You haven't made any custom feeds yet."
 msgstr ""
 
-#: src/screens/Moderation/MutedWords.tsx:88
+#: src/screens/Moderation/MutedWords.tsx:90
 msgid "You haven't muted any words or tags yet. Use the + button above to add one."
 msgstr "You haven't muted any words or tags yet. Use the + button above to add one."
 
@@ -9942,11 +9932,11 @@ msgstr ""
 msgid "You will no longer receive notifications for {0}"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:188
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:185
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:185
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:182
 msgid "You will now receive notifications for this thread"
 msgstr ""
 
@@ -9954,7 +9944,7 @@ msgstr ""
 msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "You won’t be able to rejoin unless you’re invited."
 
-#: src/screens/Moderation/MutedWords.tsx:76
+#: src/screens/Moderation/MutedWords.tsx:78
 msgid "You won't see or receive any new notifications for posts that include muted words."
 msgstr "You won't see or receive any new notifications for posts that include muted words."
 
@@ -10054,7 +10044,7 @@ msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr ""
 
-#: src/screens/Moderation/MutedWords.tsx:80
+#: src/screens/Moderation/MutedWords.tsx:82
 msgid "Your muted words"
 msgstr ""
 

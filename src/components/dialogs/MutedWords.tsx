@@ -8,7 +8,6 @@ import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
 
 import { logger } from '#/logger';
 
-import { type MutedWordsDialogPayload, useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import * as styles from '#/components/dialogs/MutedWords.css';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import * as Settings from '#/components/SettingsCards';
@@ -18,36 +17,23 @@ import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { InlineLinkText } from '#/components/web/Link';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
-export function MutedWordsDialog() {
+export function MutedWordsDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	const { t: l } = useLingui();
-
-	const { mutedWordsDialogControl: handle } = useGlobalDialogsControlContext();
 
 	return (
 		<Dialog.Root handle={handle}>
-			{({ payload }: { payload: MutedWordsDialogPayload | undefined }) =>
-				payload ? (
-					<Dialog.Popup label={l`Add a muted word or tag`} size="narrow">
-						<Dialog.Close />
-						<DialogInner handle={handle} showManageLink={payload.showManageLink ?? false} />
-					</Dialog.Popup>
-				) : null
-			}
+			<Dialog.Popup label={l`Add a muted word or tag`} size="narrow">
+				<Dialog.Close />
+				<DialogInner />
+			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
-function DialogInner({
-	handle,
-	showManageLink,
-}: {
-	handle: Dialog.DialogHandle<MutedWordsDialogPayload>;
-	showManageLink: boolean;
-}) {
+function DialogInner() {
 	const { t: l } = useLingui();
 	const { isPending, mutateAsync: addMutedWord } = useUpsertMutedWordsMutation();
 	const [field, setField] = useState('');
@@ -188,18 +174,6 @@ function DialogInner({
 					<Text className={styles.errorText} color="white">
 						{error}
 					</Text>
-				</div>
-			)}
-
-			{showManageLink && (
-				<div className={styles.manageRow}>
-					<InlineLinkText
-						label={l`Manage all muted words`}
-						onPress={() => handle.close()}
-						to="/moderation/muted-words"
-					>
-						<Trans>Manage all muted words</Trans>
-					</InlineLinkText>
 				</div>
 			)}
 		</div>

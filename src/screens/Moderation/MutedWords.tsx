@@ -14,7 +14,7 @@ import {
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
 import { useFormatDistance } from '#/components/hooks/dates';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag';
@@ -26,6 +26,7 @@ import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
@@ -38,12 +39,13 @@ export function MutedWordsScreen(
 	_props: NativeStackScreenProps<CommonNavigatorParams, 'ModerationMutedWords'>,
 ) {
 	const { t: l } = useLingui();
-	const { mutedWordsDialogControl } = useGlobalDialogsControlContext();
+	const dialogHandle = Dialog.useDialogHandle();
 	const { data: preferences, error, refetch } = usePreferencesQuery();
 	const mutedWords = preferences?.moderationPrefs.mutedWords;
 
 	return (
 		<Layout.Screen>
+			<MutedWordsDialog handle={dialogHandle} />
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
@@ -54,7 +56,7 @@ export function MutedWordsScreen(
 				<Button
 					color="secondary"
 					label={l`Add muted word`}
-					onClick={() => mutedWordsDialogControl.openWithPayload({ showManageLink: false })}
+					onClick={() => dialogHandle.open(null)}
 					size="small"
 				>
 					<ButtonIcon icon={Plus} />

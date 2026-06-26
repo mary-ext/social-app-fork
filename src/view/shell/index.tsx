@@ -14,7 +14,6 @@ import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 import { atoms as a, useTheme } from '#/alf';
 
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarning';
-import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
 import { SigninDialog } from '#/components/dialogs/Signin';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import { Lightbox } from '#/components/Lightbox';
@@ -45,7 +44,6 @@ function ShellInner() {
 				<FlatNavigator />
 			</ErrorBoundary>
 			<ComposerDialog />
-			<MutedWordsDialog />
 			<SigninDialog />
 			<LinkWarningDialog />
 			<GroupChatJoinDialog />

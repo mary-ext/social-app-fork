@@ -37,7 +37,6 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 
 import { logger } from '#/logger';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
@@ -50,7 +49,6 @@ import {
 } from '#/components/icons/Emoji';
 import { Eye_Stroke2_Corner0_Rounded as Eye } from '#/components/icons/Eye';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
-import { Filter_Stroke2_Corner0_Rounded as Filter } from '#/components/icons/Filter';
 import {
 	Mute_Stroke2_Corner0_Rounded as Mute,
 	Mute_Stroke2_Corner0_Rounded as MuteIcon,
@@ -101,7 +99,6 @@ let PostMenuItems = ({
 	const feedFeedback = useFeedFeedbackContext();
 	const translate = useGoogleTranslate();
 	const navigation = useNavigation<NavigationProp>();
-	const { mutedWordsDialogControl } = useGlobalDialogsControlContext();
 	const blockPromptControl = Prompt.usePromptHandle();
 	const mutePromptControl = Prompt.usePromptHandle();
 	const reportDialogControl = useReportDialogControl();
@@ -196,10 +193,6 @@ let PostMenuItems = ({
 				});
 			}
 		}
-	};
-
-	const onToggleWordsAndTagsMute = () => {
-		mutedWordsDialogControl.openWithPayload({ showManageLink: true });
 	};
 
 	const onCopyPostText = () => {
@@ -437,11 +430,6 @@ let PostMenuItems = ({
 							>
 								<Menu.ItemText>{isThreadMuted ? l`Unmute thread` : l`Mute thread`}</Menu.ItemText>
 								<Menu.ItemIcon icon={isThreadMuted ? Unmute : Mute} position="right" />
-							</Menu.Item>
-
-							<Menu.Item label={l`Mute words & tags`} onClick={onToggleWordsAndTagsMute}>
-								<Menu.ItemText>{l`Mute words & tags`}</Menu.ItemText>
-								<Menu.ItemIcon icon={Filter} position="right" />
 							</Menu.Item>
 						</Menu.Group>
 					</>
