@@ -122,11 +122,17 @@ let NotificationFeedItem = ({
 				const uripReply = parseCanonicalResourceUri(item.notification.uri);
 				return `/profile/${uripReply.repo}/post/${uripReply.rkey}`;
 			}
-			case 'feedgen-like':
-			case 'starterpack-joined': {
+			case 'feedgen-like': {
 				if (item.subjectUri) {
 					const urip = parseCanonicalResourceUri(item.subjectUri);
 					return `/profile/${urip.repo}/feed/${urip.rkey}`;
+				}
+				break;
+			}
+			case 'starterpack-joined': {
+				if (item.subjectUri) {
+					const urip = parseCanonicalResourceUri(item.subjectUri);
+					return `/starter-pack/${urip.repo}/${urip.rkey}`;
 				}
 				break;
 			}

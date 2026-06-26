@@ -19,30 +19,36 @@ import { Link as WebLink } from '#/components/web/Link';
 
 import * as css from './StarterPackCard.css';
 
-export function Default({ starterPack }: { starterPack?: AnyStarterPackView }) {
+type DefaultProps = {
+	className?: string;
+	starterPack?: AnyStarterPackView;
+	topBorder?: boolean;
+};
+
+/** A list-row starter pack card */
+export function Default({ className, starterPack, topBorder }: DefaultProps) {
 	if (!starterPack) return null;
 	return (
-		<Link starterPack={starterPack}>
+		<Link className={clsx(css.defaultRow({ topBorder }), className)} starterPack={starterPack}>
 			<Card starterPack={starterPack} />
 		</Link>
 	);
 }
 
+/** A compact starter pack card for notifications. */
 export function Notification({ starterPack }: { starterPack?: AnyStarterPackView }) {
 	if (!starterPack) return null;
 	return (
-		<Link starterPack={starterPack}>
-			<Outer>
-				<Header>
-					<TitleAndByline starterPack={starterPack} />
-				</Header>
-				<JoinedCount starterPack={starterPack} />
-			</Outer>
-		</Link>
+		<Outer>
+			<Header>
+				<TitleAndByline starterPack={starterPack} />
+			</Header>
+			<JoinedCount starterPack={starterPack} />
+		</Outer>
 	);
 }
 
-/** The full card body: icon + title/byline header, description, and join count. */
+/** The full card body */
 export function Card({ starterPack }: { starterPack: AnyStarterPackView }) {
 	return (
 		<Outer>
@@ -110,6 +116,10 @@ function JoinedCount({ starterPack }: { starterPack: AnyStarterPackView }) {
 	);
 }
 
+/**
+ * Builds a navigable link to the starter pack screen plus a precache helper for the creator and starter pack
+ * queries.
+ */
 export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 	const { t: l } = useLingui();
 	const qc = useQueryClient();
@@ -129,6 +139,7 @@ export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 	};
 }
 
+/** A clickable wrapper that navigates to the starter pack screen and precaches its data. */
 export function Link({
 	starterPack,
 	children,
@@ -164,6 +175,7 @@ export function Link({
 	);
 }
 
+/** A starter pack embedded in a post: OG card image on top and the card body below. */
 export function Embed({ starterPack }: { starterPack: AnyStarterPackView }) {
 	const imageUri = getStarterPackOgCard(starterPack);
 

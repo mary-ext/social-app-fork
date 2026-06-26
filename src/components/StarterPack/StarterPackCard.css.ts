@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { vars } from '#/styles/contract.css';
+import { recipe } from '#/styles/recipe';
+import { borderRadius, space } from '#/styles/tokens.css';
 
 export const link = style({
 	alignItems: 'flex-start',
@@ -15,7 +16,7 @@ export const link = style({
 export const outer = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: 8,
+	gap: space.sm,
 	width: '100%',
 });
 
@@ -23,7 +24,7 @@ export const header = style({
 	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: 8,
+	gap: space.sm,
 	width: '100%',
 });
 
@@ -39,8 +40,8 @@ export const titleColumn = style({
 // external-link embed. inset focus ring so the post body's `GalleryBleed` clip can't trim it.
 export const embedCard = style({
 	backgroundColor: colors.bg,
-	borderColor: vars.palette.contrast_100,
-	borderRadius: 8,
+	borderColor: colors.borderContrastLow,
+	borderRadius: borderRadius.sm,
 	borderStyle: 'solid',
 	borderWidth: 1,
 	boxSizing: 'border-box',
@@ -49,15 +50,39 @@ export const embedCard = style({
 	width: '100%',
 	selectors: {
 		'&:focus-visible': {
-			outline: `2px solid ${vars.palette.primary_500}`,
+			outline: `2px solid ${colors.primary_500}`,
 			outlineOffset: -2,
 		},
-		'&:hover': { borderColor: vars.palette.contrast_300 },
+		'&:hover': { borderColor: colors.borderContrastHigh },
 	},
 });
 
 export const embedBody = style({
 	boxSizing: 'border-box',
-	padding: 12,
+	padding: space.md,
 	width: '100%',
+});
+
+/**
+ * A list-row starter pack card: full-width padded row that highlights on hover/press, with a hairline top
+ * separator on by default — opt out (`topBorder: false`) for the first row beneath a sticky tab bar.
+ */
+export const defaultRow = recipe({
+	base: {
+		padding: space.lg,
+		selectors: {
+			'&:active': { backgroundColor: colors.contrast_25 },
+			'&:hover': { backgroundColor: colors.contrast_25 },
+		},
+	},
+	defaultVariants: { topBorder: true },
+	variants: {
+		topBorder: {
+			true: {
+				borderTopColor: colors.borderContrastLow,
+				borderTopStyle: 'solid',
+				borderTopWidth: 1,
+			},
+		},
+	},
 });

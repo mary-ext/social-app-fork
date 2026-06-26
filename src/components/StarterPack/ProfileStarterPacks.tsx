@@ -60,7 +60,6 @@ export function ProfileStarterPacks({
 	emptyStateButton,
 	emptyStateIcon,
 }: ProfileFeedgensProps) {
-	const t = useTheme();
 	const bottomBarOffset = useBottomBarOffset(100);
 	const { height } = useWindowDimensions();
 	const [isPTRing, setIsPTRing] = useState(false);
@@ -111,13 +110,9 @@ export function ProfileStarterPacks({
 
 	const renderItem = useCallback(
 		({ item, index }: ListRenderItemInfo<AnyStarterPackView>) => {
-			return (
-				<View style={[a.p_lg, (isTabletOrDesktop || index !== 0) && a.border_t, t.atoms.border_contrast_low]}>
-					<StarterPackCard starterPack={item} />
-				</View>
-			);
+			return <StarterPackCard starterPack={item} topBorder={isTabletOrDesktop || index !== 0} />;
 		},
-		[isTabletOrDesktop, t.atoms.border_contrast_low],
+		[isTabletOrDesktop],
 	);
 
 	return (
