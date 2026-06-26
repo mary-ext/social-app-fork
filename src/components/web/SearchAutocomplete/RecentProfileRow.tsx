@@ -1,7 +1,10 @@
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
+
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -21,11 +24,21 @@ export function RecentProfileRow({
 	row: Extract<ListRow, { kind: 'recent-profile' }>;
 }) {
 	const { t } = useLingui();
+	const moderationOpts = useModerationOpts();
+	const moderation = moderationOpts
+		? getDisplayRestrictions(moderateProfile(row.profile, moderationOpts), DisplayContext.ProfileMedia)
+		: undefined;
 
 	return (
 		<div className={styles.row}>
 			<Autocomplete.Item className={styles.item} value={row}>
-				<UserAvatar avatar={row.profile.avatar} className={styles.avatar} size={36} type="user" />
+				<UserAvatar
+					avatar={row.profile.avatar}
+					className={styles.avatar}
+					moderation={moderation}
+					size={36}
+					type={row.profile.associated?.labeler ? 'labeler' : 'user'}
+				/>
 				<span className={styles.text}>
 					<Text numberOfLines={1} weight="medium">
 						{sanitizeHandle(row.profile.handle)}

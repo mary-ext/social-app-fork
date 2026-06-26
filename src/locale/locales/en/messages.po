@@ -6537,7 +6537,7 @@ msgstr ""
 
 #. placeholder {0}: row.query
 #. placeholder {0}: sanitizeHandle(row.profile.handle)
-#: src/components/web/SearchAutocomplete/RecentProfileRow.tsx:39
+#: src/components/web/SearchAutocomplete/RecentProfileRow.tsx:52
 #: src/components/web/SearchAutocomplete/RecentQueryRow.tsx:30
 msgid "Remove {0} from recent searches"
 msgstr "Remove {0} from recent searches"
