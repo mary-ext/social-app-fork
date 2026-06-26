@@ -348,16 +348,11 @@ export function AddMembersFlow({
 			</View>
 		),
 		[
-			buttonLabel,
 			control,
 			groupChatProfiles,
-			handlePressAdd,
-			handlePressBack,
-			isButtonDisabled,
 			l,
 			onRemoveDid,
 			searchText,
-			showButton,
 			showChatProfileTabs,
 			t.atoms.bg,
 			t.atoms.border_contrast_low,

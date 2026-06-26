@@ -895,7 +895,6 @@ export function Explore({
 			t.atoms.bg_contrast_25,
 			t.atoms.text_contrast_medium,
 			t.atoms.bg,
-			t.palette.negative_400,
 			focusSearchInput,
 			selectedInterest,
 			moderationOpts,

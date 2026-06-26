@@ -517,7 +517,7 @@ msgid "{following} following"
 msgstr ""
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:61
-#: src/components/dms/InitiateChatFlow.tsx:800
+#: src/components/dms/InitiateChatFlow.tsx:796
 msgid "{handle} can’t be added"
 msgstr "{handle} can’t be added"
 
@@ -525,7 +525,7 @@ msgstr "{handle} can’t be added"
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:768
+#: src/components/dms/InitiateChatFlow.tsx:764
 msgid "{handle} can’t be messaged"
 msgstr "{handle} can’t be messaged"
 
@@ -1048,7 +1048,7 @@ msgstr "Add any context that would help the moderators."
 msgid "Add emoji reaction"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:401
+#: src/components/dms/AddMembersFlow.tsx:396
 msgid "Add group chat members"
 msgstr "Add group chat members"
 
@@ -1552,10 +1552,10 @@ msgstr "Automation label"
 msgid "Autoplay videos and GIFs"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:431
-#: src/components/dms/AddMembersFlow.tsx:434
+#: src/components/dms/AddMembersFlow.tsx:426
+#: src/components/dms/AddMembersFlow.tsx:429
+#: src/components/dms/InitiateChatFlow.tsx:642
 #: src/components/dms/InitiateChatFlow.tsx:646
-#: src/components/dms/InitiateChatFlow.tsx:650
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
 #: src/components/moderation/LabelsOnMeDialog.tsx:272
 #: src/screens/Messages/components/ChatDisabled.tsx:158
@@ -5308,8 +5308,8 @@ msgstr "New group chat"
 
 #. Button used to create a new group chat.
 #. Button used to create a new group chat.
-#: src/components/dms/InitiateChatFlow.tsx:678
-#: src/components/dms/InitiateChatFlow.tsx:714
+#: src/components/dms/InitiateChatFlow.tsx:674
+#: src/components/dms/InitiateChatFlow.tsx:710
 msgctxt "action"
 msgid "New group chat"
 msgstr "New group chat"
@@ -5651,7 +5651,7 @@ msgstr ""
 
 #: src/components/BotAccountAlert.tsx:48
 #: src/components/BotAccountAlert.tsx:50
-#: src/components/dms/InitiateChatFlow.tsx:626
+#: src/components/dms/InitiateChatFlow.tsx:622
 #: src/components/dms/MessageItem.tsx:589
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:492
 msgid "Okay"
@@ -7397,7 +7397,7 @@ msgstr ""
 msgid "Select GIF \"{0}\""
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:619
+#: src/components/dms/InitiateChatFlow.tsx:615
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
@@ -7910,12 +7910,12 @@ msgstr ""
 msgid "Start adding people!"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:619
+#: src/components/dms/InitiateChatFlow.tsx:615
 msgid "Start chat"
 msgstr "Start chat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:378
-#: src/components/dms/InitiateChatFlow.tsx:750
+#: src/components/dms/InitiateChatFlow.tsx:746
 msgid "Start chat with {displayName}"
 msgstr ""
 
@@ -9955,11 +9955,11 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:624
+#: src/components/dms/InitiateChatFlow.tsx:620
 msgid "Your account is too new"
 msgstr "Your account is too new"
 
-#: src/components/dms/InitiateChatFlow.tsx:625
+#: src/components/dms/InitiateChatFlow.tsx:621
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Your account must be at least 7 days old to create a new group chat."
 

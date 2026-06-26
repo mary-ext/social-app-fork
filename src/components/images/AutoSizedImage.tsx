@@ -7,11 +7,9 @@ export function ConstrainedImage({
 	aspectRatio,
 	fullBleed,
 	children,
-	minMobileAspectRatio,
 }: {
 	aspectRatio: number;
 	fullBleed?: boolean;
-	minMobileAspectRatio?: number;
 	children: React.ReactNode;
 }) {
 	const t = useTheme();
@@ -19,7 +17,7 @@ export function ConstrainedImage({
 	const outerAspectRatio = useMemo<DimensionValue>(() => {
 		const ratio = Math.min(1 / aspectRatio, 1); // 1:1 bounding box
 		return `${ratio * 100}%`;
-	}, [aspectRatio, minMobileAspectRatio]);
+	}, [aspectRatio]);
 
 	return (
 		<View style={[a.w_full]}>

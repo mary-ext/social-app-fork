@@ -46,7 +46,7 @@ export function VideoPreview({
 
 	return (
 		<View style={[a.pt_xs]}>
-			<ConstrainedImage aspectRatio={constrained || 1} minMobileAspectRatio={14 / 9}>
+			<ConstrainedImage aspectRatio={constrained || 1}>
 				<View style={[a.flex_1, { backgroundColor: 'black' }]}>
 					{video.mimeType === 'image/gif' ? (
 						<img src={url} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt="GIF" />
