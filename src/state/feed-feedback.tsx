@@ -6,6 +6,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 import throttle from 'lodash.throttle';
 
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
+import { useConstant } from '#/lib/hooks/use-constant';
 
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
 import type { FeedDescriptor, FeedPostSliceItem } from '#/state/queries/post-feed';
@@ -50,7 +51,9 @@ const stateContext = createContext<StateContext>({
 stateContext.displayName = 'FeedFeedbackContext';
 
 export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasSession: boolean) {
-	const logger = Logger.create(Logger.Context.FeedFeedback);
+	// create once per mount: Logger.create returns a fresh instance each call, so a render-time call would
+	// both allocate per render and make any callback depending on it change identity every render.
+	const logger = useConstant(() => Logger.create(Logger.Context.FeedFeedback));
 	const { appview } = useClients();
 
 	const feed = !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo) ? feedSourceInfo : undefined;
@@ -90,6 +93,10 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 
 	const sendToFeed = useMemo(
 		() =>
+			// lodash.throttle stores sendToFeedNoDelay without invoking it, so the queue/history refs
+			// below are only read when the throttled function fires from handlers/effects, never during
+			// render. the rule can't prove throttle won't call back synchronously, hence the suppression.
+			// eslint-disable-next-line react-hooks/refs
 			throttle(sendToFeedNoDelay, 10e3, {
 				leading: false,
 				trailing: true,
@@ -147,7 +154,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 				sendToFeed();
 			}
 		},
-		[enabled, sendToFeed],
+		[enabled, logger, sendToFeed],
 	);
 
 	return useMemo(() => {

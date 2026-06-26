@@ -93,13 +93,18 @@ function LinkBox({ href }: { href: string }) {
 	 * Apex-domain splitting needs the lazily-loaded public-suffix list. Until it resolves — and for URLs
 	 * that fail to parse — the hostname is shown unsplit.
 	 */
-	const [[scheme, hostname, rest], setParts] = useState<[string, string, string]>(() =>
-		unsplitUrlParts(href),
-	);
+	const [parts, setParts] = useState<[string, string, string]>(() => unsplitUrlParts(href));
+	const [scheme, hostname, rest] = parts;
+
+	// re-sync the unsplit parts when href changes, during render, so the new href's base parts are committed
+	// in the same frame rather than cascading from an effect.
+	const [prevHref, setPrevHref] = useState(href);
+	if (prevHref !== href) {
+		setPrevHref(href);
+		setParts(unsplitUrlParts(href));
+	}
 
 	useEffect(() => {
-		setParts(unsplitUrlParts(href));
-
 		let urlHostname: string;
 		try {
 			urlHostname = new URL(href).hostname;

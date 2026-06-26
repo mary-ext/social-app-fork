@@ -30,7 +30,7 @@ type ExtraImageProps = {
 	transition?: unknown;
 	autoplay?: boolean;
 	enableLiveTextInteraction?: boolean;
-	loading?: 'eager' | 'lazy' | string;
+	loading?: 'eager' | 'lazy';
 	onDisplay?: () => void;
 	onLoad?: (event: LoadEvent) => void;
 	onError?: (event: ImageErrorEventData) => void;

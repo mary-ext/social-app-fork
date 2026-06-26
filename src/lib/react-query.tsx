@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { focusManager, onlineManager, QueryClient } from '@tanstack/react-query';
@@ -8,6 +7,7 @@ import {
 	type PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client';
 
+import { useConstant } from '#/lib/hooks/use-constant';
 import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
 import { networkConfirmed, networkLost } from '#/state/events';
@@ -29,7 +29,7 @@ async function checkIsOnline(): Promise<boolean> {
 			cache: 'no-store',
 			signal: controller.signal,
 		});
-		const json = await res.json();
+		const json = (await res.json()) as { version?: unknown };
 		if (json.version) {
 			return true;
 		} else {
@@ -155,14 +155,16 @@ function QueryProviderInner({
 	children: React.ReactNode;
 	currentDid: string | undefined;
 }) {
-	const initialDid = useRef(currentDid);
-	if (currentDid !== initialDid.current) {
+	// initialDid is a mount-time snapshot used only for the invariant check below. useConstant (not useRef)
+	// so the read during render isn't a ref access.
+	const initialDid = useConstant(() => currentDid);
+	if (currentDid !== initialDid) {
 		throw Error('Something is very wrong. Expected did to be stable due to key above.');
 	}
 	// We create the query client here so that it's scoped to a specific DID.
 	// Do not move the query client creation outside of this component.
-	const [queryClient, _setQueryClient] = useState(() => createQueryClient());
-	const [persistOptions, _setPersistOptions] = useState(() => {
+	const queryClient = useConstant(() => createQueryClient());
+	const persistOptions = useConstant(() => {
 		const storage = createPersistedQueryStorage(currentDid ?? 'logged-out');
 		const asyncPersister = createAsyncStoragePersister({
 			storage,
@@ -174,7 +176,6 @@ function QueryProviderInner({
 			buster: import.meta.env.PUBLIC_GIT_COMMIT_HASH || 'dev',
 		} satisfies Omit<PersistQueryClientOptions, 'queryClient'>;
 	});
-	useEffect(() => {}, [queryClient]);
 	return (
 		<PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
 			{children}

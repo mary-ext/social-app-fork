@@ -60,15 +60,15 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 	return useQuery<AppBskyGraphDefs.StarterPackView>({
 		queryKey: RQKEY(uri ? { uri } : { did, rkey }),
 		queryFn: async () => {
-			if (!uri) {
-				uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`;
-			} else if (uri && !uri.startsWith('at://')) {
-				uri = httpStarterPackUriToAtUri(uri) as string;
-			}
+			const resolvedUri = !uri
+				? `at://${did}/app.bsky.graph.starterpack/${rkey}`
+				: uri.startsWith('at://')
+					? uri
+					: (httpStarterPackUriToAtUri(uri) as string);
 
 			const data = await ok(
 				appview.get('app.bsky.graph.getStarterPack', {
-					params: { starterPack: uri as ResourceUri },
+					params: { starterPack: resolvedUri as ResourceUri },
 				}),
 			);
 			return data.starterPack;
