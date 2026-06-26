@@ -80,7 +80,7 @@ async function prepareOAuthSession(session: Session): Promise<{ account: Session
 	const oauthAgent = new OAuthUserAgent(session);
 	const clients = createOAuthClients(oauthAgent);
 	const account = await refreshSession(clients.pds!);
-	await configureModerationForAccount(account);
+	configureModerationForAccount(account);
 	return { account, clients };
 }
 
@@ -123,7 +123,7 @@ export async function optimisticOAuthSession(
 	const session = await getSession(storedAccount.did as AtcuteDid, { allowStale: true });
 	const oauthAgent = new OAuthUserAgent(session);
 	const clients = createOAuthClients(oauthAgent);
-	await configureModerationForAccount(storedAccount);
+	configureModerationForAccount(storedAccount);
 	return {
 		clients,
 		validate: () => validateResumedSession(oauthAgent, clients.pds!),

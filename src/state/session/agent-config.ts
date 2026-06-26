@@ -4,7 +4,7 @@ function key(did: string) {
 	return `${PREFIX}:${did}`;
 }
 
-export async function saveLabelers(did: string, value: string[]) {
+export function saveLabelers(did: string, value: string[]) {
 	try {
 		localStorage.setItem(key(did), JSON.stringify(value));
 	} catch {
@@ -12,7 +12,7 @@ export async function saveLabelers(did: string, value: string[]) {
 	}
 }
 
-export async function readLabelers(did: string): Promise<string[] | undefined> {
+export function readLabelers(did: string): string[] | undefined {
 	try {
 		const rawData = localStorage.getItem(key(did));
 		return rawData ? JSON.parse(rawData) : undefined;

@@ -32,7 +32,7 @@ export function useBookmarksQuery() {
 	});
 }
 
-export async function optimisticallySaveBookmark(qc: QueryClient, post: AppBskyFeedDefs.PostView) {
+export function optimisticallySaveBookmark(qc: QueryClient, post: AppBskyFeedDefs.PostView) {
 	qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.$output>>(
 		{
 			queryKey: [bookmarksQueryKeyRoot],
@@ -66,7 +66,7 @@ export async function optimisticallySaveBookmark(qc: QueryClient, post: AppBskyF
 	);
 }
 
-export async function optimisticallyDeleteBookmark(qc: QueryClient, { uri }: { uri: string }) {
+export function optimisticallyDeleteBookmark(qc: QueryClient, { uri }: { uri: string }) {
 	qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.$output>>(
 		{
 			queryKey: [bookmarksQueryKeyRoot],

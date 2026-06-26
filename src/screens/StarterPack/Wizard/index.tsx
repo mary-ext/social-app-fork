@@ -227,7 +227,7 @@ function WizardInner({
 		},
 	});
 
-	const submit = async () => {
+	const submit = () => {
 		dispatch({ type: 'SetProcessing', processing: true });
 		if (currentStarterPack && currentListItems) {
 			editStarterPack({

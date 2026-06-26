@@ -4,15 +4,21 @@ import { convertCdnPreset } from './util';
  * Saves an image to the user's device. Uses the CDN's `download` preset which uses the JPEG version with the
  * Content-Disposition header set to `attachment; filename=<filename>`. On native this saves to the media
  * library; on web it triggers a browser download.
+ *
+ * @returns a promise that rejects if the download setup throws; callers chain `.then`/`await` (e.g. the
+ *   Lightbox failure toast), so the side effect runs inside the promise chain rather than synchronously
+ *   before it
  */
-export async function saveImageToMediaLibrary({ uri }: { uri: string }) {
-	const downloadUri = convertCdnPreset(uri, 'download');
-	const segments = downloadUri.split('/');
-	const filename = `bluesky-${segments.at(-1)}.jpg`;
-	downloadUrl(downloadUri, filename);
+export function saveImageToMediaLibrary({ uri }: { uri: string }): Promise<void> {
+	return Promise.resolve().then(() => {
+		const downloadUri = convertCdnPreset(uri, 'download');
+		const segments = downloadUri.split('/');
+		const filename = `bluesky-${segments.at(-1)}.jpg`;
+		downloadUrl(downloadUri, filename);
+	});
 }
 
-export async function saveBytesToDisk(filename: string, bytes: Uint8Array<ArrayBuffer>, type: string) {
+export function saveBytesToDisk(filename: string, bytes: Uint8Array<ArrayBuffer>, type: string) {
 	const blob = new Blob([bytes], { type });
 	const url = URL.createObjectURL(blob);
 	downloadUrl(url, filename);

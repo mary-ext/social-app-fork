@@ -11,10 +11,10 @@ export function configureModerationForGuest() {
 	configureAdditionalModerationAuthorities();
 }
 
-export async function configureModerationForAccount(account: SessionAccount) {
+export function configureModerationForAccount(account: SessionAccount) {
 	switchToBskyAppLabeler();
 
-	const labelerDids = await readLabelers(account.did).catch((_) => {});
+	const labelerDids = readLabelers(account.did);
 	if (labelerDids) {
 		const subscribed = labelerDids.filter((did) => did !== BSKY_LABELER_DID);
 		// the @atcute appview client injects this header on every request, reading it fresh from here

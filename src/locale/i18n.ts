@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { i18n } from '@lingui/core';
 import { enUS as defaultLocale } from 'date-fns/locale/en-US';
 
@@ -8,25 +8,20 @@ import { sanitizeAppLanguageSetting } from '#/locale/helpers';
 import type { AppLanguage } from '#/locale/languages';
 import { messages } from '#/locale/locales/en/messages';
 
-export async function dynamicActivate(locale: AppLanguage) {
+export function dynamicActivate(locale: AppLanguage) {
 	i18n.load(locale, messages);
 	i18n.activate(locale);
-
-	return defaultLocale;
 }
 
 export function useLocaleLanguage() {
 	const { appLanguage } = useLanguagePrefs();
-	const [dateLocale, setDateLocale] = useState(defaultLocale);
 
 	useEffect(() => {
 		const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage);
 
 		document.documentElement.lang = sanitizedLanguage;
-		void dynamicActivate(sanitizedLanguage).then((locale) => {
-			setDateLocale(locale);
-		});
+		dynamicActivate(sanitizedLanguage);
 	}, [appLanguage]);
 
-	return dateLocale;
+	return defaultLocale;
 }

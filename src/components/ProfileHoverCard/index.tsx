@@ -263,7 +263,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
 	const prefetchProfileQuery = usePrefetchProfileQuery();
 	const prefetchedProfile = useRef(false);
-	const prefetchIfNeeded = useCallback(async () => {
+	const prefetchIfNeeded = useCallback(() => {
 		if (!prefetchedProfile.current) {
 			prefetchedProfile.current = true;
 			void prefetchProfileQuery(props.did);

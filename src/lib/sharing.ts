@@ -8,12 +8,16 @@ import * as Toast from '#/components/Toast';
  *
  * @param {string} url - A string representing the URL that needs to be shared or copied to the clipboard.
  */
-export async function shareUrl(url: string) {
+export function shareUrl(url: string): Promise<void> {
 	// React Native Share is not supported by web. Web Share API
-	// has increasing but not full support, so default to clipboard
-	void navigator.clipboard.writeText(url);
-	Toast.show(t`Copied to clipboard`, {
-		type: 'success',
+	// has increasing but not full support, so default to clipboard.
+	// run inside a promise chain so a clipboard failure rejects (callers use `void`) rather than
+	// throwing synchronously into the press handler, matching the prior async wrapper's behavior.
+	return Promise.resolve().then(() => {
+		void navigator.clipboard.writeText(url);
+		Toast.show(t`Copied to clipboard`, {
+			type: 'success',
+		});
 	});
 }
 

@@ -18,7 +18,7 @@ export function useIntentHandler() {
 	const { currentAccount } = useSession();
 
 	useEffect(() => {
-		const handleIncomingURL = async (url: string) => {
+		const handleIncomingURL = (url: string) => {
 			const urlp = parseLinkingUrl(url);
 			const [, intent, intentType] = urlp.pathname.split('/');
 

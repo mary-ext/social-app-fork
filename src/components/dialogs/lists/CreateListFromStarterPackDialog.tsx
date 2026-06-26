@@ -44,7 +44,7 @@ export function CreateListFromStarterPackDialog({
 		control.close(() => createListHandle.open(null));
 	};
 
-	const addMembersAndNavigate = async (listUri: string) => {
+	const addMembersAndNavigate = (listUri: string) => {
 		const navigateToList = () => {
 			const urip = parseCanonicalResourceUri(listUri);
 			navigation.navigate('ProfileList', {

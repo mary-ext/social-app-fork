@@ -34,9 +34,8 @@ export function ComposerPrompt() {
 		openComposer({ logContext: 'Fab' });
 	}, [openComposer]);
 
-	const onPressImage = useCallback(async () => {
+	const onPressImage = useCallback(() => {
 		openComposer({ openGallery: true, logContext: 'Fab' });
-		return;
 	}, [openComposer]);
 
 	if (!profile) {

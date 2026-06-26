@@ -5,28 +5,28 @@ export function create({ id }: { id: string }): DB {
 	const scopedKey = (key: string) => `${prefix}${key}`;
 
 	return {
-		async get(key: string) {
+		get(key: string) {
 			try {
 				return localStorage.getItem(scopedKey(key)) ?? undefined;
 			} catch {
 				return undefined;
 			}
 		},
-		async set(key: string, value: string) {
+		set(key: string, value: string) {
 			try {
 				localStorage.setItem(scopedKey(key), value);
 			} catch {
 				// Expected in restricted/private modes or quota exhaustion.
 			}
 		},
-		async delete(key: string) {
+		delete(key: string) {
 			try {
 				localStorage.removeItem(scopedKey(key));
 			} catch {
 				// Expected in restricted/private modes.
 			}
 		},
-		async clear() {
+		clear() {
 			try {
 				const keys: string[] = [];
 				for (let i = 0; i < localStorage.length; i++) {

@@ -149,7 +149,7 @@ export function useCreateStarterPackMutation({
 			});
 			onSuccess(data);
 		},
-		onError: async (error) => {
+		onError: (error) => {
 			onError(error);
 		},
 	});

@@ -10,7 +10,7 @@ import type { CompressedVideo, VideoAsset } from './types';
  * @returns the video blob, unchanged
  * @throws {VideoTooLargeError} if the video exceeds the upload size limit
  */
-export async function compressVideo(asset: VideoAsset): Promise<CompressedVideo> {
+export function compressVideo(asset: VideoAsset): CompressedVideo {
 	if (asset.blob.size > VIDEO_MAX_SIZE) {
 		throw new VideoTooLargeError();
 	}

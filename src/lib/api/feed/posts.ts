@@ -20,6 +20,9 @@ export class PostListFeedAPI implements FeedAPI {
 		};
 	}
 
+	// async kept for FeedAPI conformance (peekLatest(): Promise<...>); this impl returns the cached
+	// peek set during fetch() rather than making a network call, so it has no await.
+	// eslint-disable-next-line @typescript-eslint/require-await -- see comment above
 	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
 		if (this.peek) return this.peek;
 		throw new Error('Has not fetched yet');

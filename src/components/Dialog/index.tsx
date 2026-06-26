@@ -89,7 +89,7 @@ export function Outer({ children, control, onClose, webOptions }: React.PropsWit
 	);
 
 	const handleBackgroundPress = useCallback(
-		async (e: GestureResponderEvent) => {
+		(e: GestureResponderEvent) => {
 			webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close();
 		},
 		[webOptions, close],

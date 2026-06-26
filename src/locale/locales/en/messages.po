@@ -1052,7 +1052,7 @@ msgstr ""
 msgid "Add group chat members"
 msgstr "Add group chat members"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:95
+#: src/view/com/feeds/ComposerPrompt.tsx:94
 msgid "Add image"
 msgstr ""
 
@@ -2134,7 +2134,7 @@ msgid "Component storybook"
 msgstr "Component storybook"
 
 #: src/lib/hotkeys/index.tsx:60
-#: src/view/com/feeds/ComposerPrompt.tsx:51
+#: src/view/com/feeds/ComposerPrompt.tsx:50
 #: src/view/shell/desktop/LeftNav.tsx:405
 msgid "Compose new post"
 msgstr ""
@@ -2255,8 +2255,8 @@ msgstr "Conversation not found."
 #: src/components/dms/MessageContextMenu.tsx:47
 #: src/components/PostControls/DiscoverDebug.tsx:26
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:202
-#: src/lib/sharing.ts:15
-#: src/lib/sharing.ts:28
+#: src/lib/sharing.ts:18
+#: src/lib/sharing.ts:32
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -5858,7 +5858,7 @@ msgstr "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other 
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:96
+#: src/view/com/feeds/ComposerPrompt.tsx:95
 msgid "Opens image picker"
 msgstr ""
 
@@ -5871,7 +5871,7 @@ msgstr "Opens profile"
 msgid "Opens the GIF picker dialog"
 msgstr "Opens the GIF picker dialog"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:52
+#: src/view/com/feeds/ComposerPrompt.tsx:51
 msgid "Opens the post composer"
 msgstr ""
 
@@ -9482,7 +9482,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:73
 #: src/view/com/composer/Composer.tsx:1172
-#: src/view/com/feeds/ComposerPrompt.tsx:87
+#: src/view/com/feeds/ComposerPrompt.tsx:86
 msgid "What's up?"
 msgstr ""
 

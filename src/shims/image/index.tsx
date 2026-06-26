@@ -130,5 +130,5 @@ Image.prefetch = async (url) => {
 	await Promise.all(urls.map((item) => RNImage.prefetch(item)));
 	return true;
 };
-Image.clearDiskCache = async () => true;
-Image.clearMemoryCache = async () => true;
+Image.clearDiskCache = () => Promise.resolve(true);
+Image.clearMemoryCache = () => Promise.resolve(true);
