@@ -513,6 +513,11 @@ export const ComposePost = ({
 	);
 
 	const [publishOnUpload, setPublishOnUpload] = useState(false);
+	// monotonic token bumped (during render) when a publish queued on upload completion is ready to fire.
+	// consumed once by the effect below via a handled-ref, so the publish side effect runs after commit
+	// without any setState landing in the effect body.
+	const [uploadCompletionPublishRequest, setUploadCompletionPublishRequest] = useState(0);
+	const handledUploadCompletionPublishRequestRef = useRef(0);
 
 	const onClose = useCallback(() => {
 		closeComposer();
@@ -680,7 +685,7 @@ export const ComposePost = ({
 					!(post.embed.media?.type === 'video' && post.embed.media.video.status === 'error')),
 		);
 
-	const getFilteredThread = (): {
+	const getFilteredThread = useCallback((): {
 		type: 'none' | 'trailing-only' | 'non-trailing';
 		filteredThread: ThreadDraft;
 	} => {
@@ -706,7 +711,7 @@ export const ComposePost = ({
 			type: hasNonTrailingEmpty ? 'non-trailing' : 'trailing-only',
 			filteredThread,
 		};
-	};
+	}, [thread]);
 
 	const onPressPublish = useCallback(async () => {
 		if (isPublishing) {
@@ -873,24 +878,26 @@ export const ComposePost = ({
 			);
 		}, 500);
 	}, [
-		l,
-		thread,
+		appview,
 		canPost,
-		isPublishing,
+		cleanupPublishedDraft,
+		composerState.draftId,
+		composerState.originalLocalRefs,
+		currentDid,
 		currentLanguages,
+		emptyPostsPromptControl,
+		getFilteredThread,
+		initQuote,
+		isPublishing,
+		l,
+		navigation,
 		onClose,
 		onPost,
 		onPostSuccess,
-		initQuote,
+		pds,
+		queryClient,
 		replyTo,
 		setLangPrefs,
-		queryClient,
-		navigation,
-		composerState.draftId,
-		composerState.originalLocalRefs,
-		composerState.isDirty,
-		cleanupPublishedDraft,
-		emptyPostsPromptControl,
 	]);
 
 	const handleConfirmSkipEmpty = () => {
@@ -904,29 +911,60 @@ export const ComposePost = ({
 		void onPressPublish();
 	});
 
-	useEffect(() => {
-		if (publishOnUpload) {
-			let erroredVideos = 0;
-			let uploadingVideos = 0;
-			for (let post of thread.posts) {
-				if (isEmptyPost(post)) continue;
-				if (post.embed.media?.type === 'video') {
-					const video = post.embed.media.video;
-					if (video.status === 'error') {
-						erroredVideos++;
-					} else if (video.status !== 'done') {
-						uploadingVideos++;
-					}
+	// `publishOnUpload` latches when a publish is queued waiting for video uploads to finish. the upload
+	// status is derived during render, and the latch clears via a render-time adjustment the moment uploads
+	// reach a terminal state — so neither setState lands in an effect. on a clean completion the publish is
+	// armed by bumping a monotonic token; the effect below fires it once after commit.
+	const queuedVideoUploadStatus = useMemo((): 'blocked' | 'complete' | 'uploading' => {
+		let hasUploadingVideo = false;
+		for (const post of thread.posts) {
+			if (isEmptyPost(post)) continue;
+			if (post.embed.media?.type !== 'video') continue;
+			switch (post.embed.media.video.status) {
+				case 'done': {
+					break;
+				}
+				case 'error': {
+					return 'blocked';
+				}
+				default: {
+					hasUploadingVideo = true;
+					break;
 				}
 			}
-			if (erroredVideos > 0) {
+		}
+		return hasUploadingVideo ? 'uploading' : 'complete';
+	}, [thread.posts]);
+
+	if (publishOnUpload) {
+		switch (queuedVideoUploadStatus) {
+			case 'blocked': {
 				setPublishOnUpload(false);
-			} else if (uploadingVideos === 0) {
+				break;
+			}
+			case 'complete': {
 				setPublishOnUpload(false);
-				void onPressPublish();
+				setUploadCompletionPublishRequest((request) => request + 1);
+				break;
+			}
+			case 'uploading': {
+				break;
 			}
 		}
-	}, [thread.posts, onPressPublish, publishOnUpload]);
+	}
+
+	// fire the armed publish after commit. the handled-ref makes it idempotent against effect replay or
+	// callback identity churn, so `onComposerPostPublish` (a useNonReactiveCallback) won't re-trigger.
+	useEffect(() => {
+		if (
+			uploadCompletionPublishRequest === 0 ||
+			handledUploadCompletionPublishRequestRef.current === uploadCompletionPublishRequest
+		) {
+			return;
+		}
+		handledUploadCompletionPublishRequestRef.current = uploadCompletionPublishRequest;
+		onComposerPostPublish();
+	}, [uploadCompletionPublishRequest, onComposerPostPublish]);
 
 	// TODO: It might make more sense to display this error per-post.
 	// Right now we're just displaying the first one.
@@ -942,12 +980,17 @@ export const ComposePost = ({
 	}
 
 	const scrollViewRef = useRef<ScrollView | null>(null);
+	// focus the text input once per focus request. the reducer bumps `activePostFocusRequestId` on
+	// focus-requesting actions; this effect consumes each committed request exactly once by tracking
+	// the last-handled id in a ref, so no reducer state is mutated after render.
+	const handledFocusRequestIdRef = useRef(0);
 	useEffect(() => {
-		if (composerState.mutableNeedsFocusActive) {
-			composerState.mutableNeedsFocusActive = false;
-			textInputRef.current?.focus();
+		if (composerState.activePostFocusRequestId === handledFocusRequestIdRef.current) {
+			return;
 		}
-	}, [composerState]);
+		handledFocusRequestIdRef.current = composerState.activePostFocusRequestId;
+		textInputRef.current?.focus();
+	}, [composerState.activePostFocusRequestId]);
 
 	const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined;
 	const { scrollHandler, onScrollViewContentSizeChange, onScrollViewLayout, bottomBarAnimatedStyle } =

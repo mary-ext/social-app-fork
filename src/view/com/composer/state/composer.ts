@@ -97,7 +97,12 @@ export type ThreadDraft = {
 export type ComposerState = {
 	thread: ThreadDraft;
 	activePostIndex: number;
-	mutableNeedsFocusActive: boolean;
+	/**
+	 * Monotonic counter bumped each time an action requests the text input be focused. Consumed once by an
+	 * effect in `Composer` (compared against a handled-ref) so each request focuses exactly once, without
+	 * mutating reducer state from the effect.
+	 */
+	activePostFocusRequestId: number;
 	/** ID of the draft being edited, if any. Used to update existing draft on save. */
 	draftId?: string;
 	/** Whether the composer has been modified since loading a draft. */
@@ -252,7 +257,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				...state,
 				isDirty: true,
 				activePostIndex: nextActivePostIndex,
-				mutableNeedsFocusActive: true,
+				activePostFocusRequestId: state.activePostFocusRequestId + 1,
 				thread: {
 					...state.thread,
 					posts: nextPosts,
@@ -275,7 +280,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 
 			return {
 				activePostIndex: 0,
-				mutableNeedsFocusActive: true,
+				activePostFocusRequestId: state.activePostFocusRequestId + 1,
 				draftId,
 				isDirty: false,
 				loadedMediaMap: loadedMedia,
@@ -296,12 +301,17 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			};
 		}
 		case 'clear': {
-			return createComposerState({
-				initText: undefined,
-				initMention: undefined,
-				initQuoteUri: undefined,
-				initInteractionSettings: action.initInteractionSettings,
-			});
+			// preserve the focus-request counter so it stays monotonic across a clear; resetting it to 0
+			// would desync it from Composer's handled-ref and could drop or replay a focus request.
+			return {
+				...createComposerState({
+					initText: undefined,
+					initMention: undefined,
+					initQuoteUri: undefined,
+					initInteractionSettings: action.initInteractionSettings,
+				}),
+				activePostFocusRequestId: state.activePostFocusRequestId,
+			};
 		}
 		case 'mark_saved': {
 			return {
@@ -643,7 +653,7 @@ export function createComposerState({
 
 	return {
 		activePostIndex: 0,
-		mutableNeedsFocusActive: false,
+		activePostFocusRequestId: 0,
 		isDirty: false,
 		thread: {
 			posts: [
