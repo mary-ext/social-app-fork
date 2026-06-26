@@ -48,10 +48,8 @@ import {
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
-import { InlineLinkText } from '#/components/web/Link';
 
 import { useActorStatus } from '#/features/liveNow';
-import { useKawaiiMode } from '#/storage/hooks/kawaii';
 
 const ICON_WIDTH = 26;
 
@@ -226,9 +224,6 @@ function DrawerContent() {
 					/>
 				</>
 			)}
-
-			<div className={styles.dividerBottom} />
-			<ExtraLinks />
 		</>
 	);
 }
@@ -314,28 +309,5 @@ function MenuItem({
 				{label}
 			</Text>
 		</button>
-	);
-}
-
-function ExtraLinks() {
-	const kawaii = useKawaiiMode();
-	if (!kawaii) {
-		return null;
-	}
-	return (
-		<div className={styles.extraLinks}>
-			<Text color="textContrastMedium">
-				<Trans>
-					Logo by{' '}
-					<InlineLinkText
-						label="@sawaratsuki.bsky.social"
-						size="md"
-						to="/profile/did:plc:du3w3sxieoct4kidddf6rpby"
-					>
-						@sawaratsuki.bsky.social
-					</InlineLinkText>
-				</Trans>
-			</Text>
-		</div>
 	);
 }

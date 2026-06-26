@@ -107,7 +107,7 @@ msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
 #. placeholder {0}: numUnreadNotifications ?? 0
-#: src/view/shell/Drawer.tsx:161
+#: src/view/shell/Drawer.tsx:159
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -695,13 +695,13 @@ msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
-#: src/view/shell/Drawer.tsx:267
+#: src/view/shell/Drawer.tsx:262
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followsCount ?? 0)
 #. placeholder {1}: profile?.followsCount || 0
-#: src/view/shell/Drawer.tsx:274
+#: src/view/shell/Drawer.tsx:269
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
 
@@ -1718,7 +1718,7 @@ msgstr "Blocking will not prevent labels from being applied on your account, but
 msgid "Blocking won't stop this labeler's labels from being applied to your account."
 msgstr "Blocking won't stop this labeler's labels from being applied to your account."
 
-#: src/view/com/auth/SplashScreen.tsx:133
+#: src/view/com/auth/SplashScreen.tsx:128
 msgid "Blog"
 msgstr ""
 
@@ -1773,7 +1773,7 @@ msgstr ""
 msgid "Browse topic {displayName}"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:130
+#: src/view/com/auth/SplashScreen.tsx:125
 msgid "Business"
 msgstr ""
 
@@ -1896,7 +1896,7 @@ msgstr ""
 
 #: src/Navigation.tsx:704
 #: src/view/shell/desktop/LeftNav.tsx:585
-#: src/view/shell/Drawer.tsx:152
+#: src/view/shell/Drawer.tsx:150
 msgid "Chat"
 msgstr ""
 
@@ -3154,8 +3154,8 @@ msgstr ""
 
 #: src/Navigation.tsx:440
 #: src/view/shell/desktop/LeftNav.tsx:564
-#: src/view/shell/Drawer.tsx:138
-#: src/view/shell/Drawer.tsx:224
+#: src/view/shell/Drawer.tsx:136
+#: src/view/shell/Drawer.tsx:222
 msgid "Explore"
 msgstr ""
 
@@ -3493,8 +3493,8 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:478
 #: src/view/screens/Profile.tsx:341
 #: src/view/shell/desktop/LeftNav.tsx:594
-#: src/view/shell/Drawer.tsx:172
-#: src/view/shell/Drawer.tsx:217
+#: src/view/shell/Drawer.tsx:170
+#: src/view/shell/Drawer.tsx:215
 msgid "Feeds"
 msgstr ""
 
@@ -4137,8 +4137,8 @@ msgstr ""
 #: src/Navigation.tsx:460
 #: src/Navigation.tsx:465
 #: src/view/shell/desktop/LeftNav.tsx:555
-#: src/view/shell/Drawer.tsx:145
-#: src/view/shell/Drawer.tsx:210
+#: src/view/shell/Drawer.tsx:143
+#: src/view/shell/Drawer.tsx:208
 msgid "Home"
 msgstr ""
 
@@ -4364,7 +4364,7 @@ msgid "Job ID: {0}"
 msgstr ""
 
 #. Link to a page with job openings at Bluesky
-#: src/view/com/auth/SplashScreen.tsx:136
+#: src/view/com/auth/SplashScreen.tsx:131
 msgid "Jobs"
 msgstr ""
 
@@ -4468,7 +4468,7 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:129
+#: src/view/com/auth/SplashScreen.tsx:124
 msgid "Learn more about Bluesky"
 msgstr ""
 
@@ -4726,7 +4726,7 @@ msgstr ""
 #: src/view/screens/Profile.tsx:239
 #: src/view/screens/Profile.tsx:377
 #: src/view/shell/desktop/LeftNav.tsx:603
-#: src/view/shell/Drawer.tsx:179
+#: src/view/shell/Drawer.tsx:177
 msgid "Lists"
 msgstr ""
 
@@ -4856,15 +4856,6 @@ msgstr "Locked"
 msgid "Log"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:71
-msgid "Logo by @sawaratsuki.bsky.social"
-msgstr ""
-
-#: src/view/shell/desktop/RightNav.tsx:67
-#: src/view/shell/Drawer.tsx:328
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr ""
-
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:37
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
 msgstr ""
@@ -4955,7 +4946,7 @@ msgstr "Mentioning user"
 msgid "Mentions"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:76
+#: src/view/shell/Drawer.tsx:74
 msgid "Menu"
 msgstr "Menu"
 
@@ -5642,7 +5633,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:64
 #: src/view/screens/Notifications.tsx:116
 #: src/view/shell/desktop/LeftNav.tsx:574
-#: src/view/shell/Drawer.tsx:165
+#: src/view/shell/Drawer.tsx:163
 msgid "Notifications"
 msgstr ""
 
@@ -5891,7 +5882,7 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 
-#: src/view/com/auth/SplashScreen.tsx:90
+#: src/view/com/auth/SplashScreen.tsx:85
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
@@ -6378,8 +6369,8 @@ msgstr ""
 
 #: src/Navigation.tsx:546
 #: src/view/shell/desktop/LeftNav.tsx:624
-#: src/view/shell/Drawer.tsx:193
-#: src/view/shell/Drawer.tsx:248
+#: src/view/shell/Drawer.tsx:191
+#: src/view/shell/Drawer.tsx:243
 msgid "Profile"
 msgstr ""
 
@@ -6500,7 +6491,7 @@ msgstr ""
 msgid "Read more replies"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:132
+#: src/view/com/auth/SplashScreen.tsx:127
 msgid "Read the Bluesky blog"
 msgstr ""
 
@@ -7146,7 +7137,7 @@ msgid "Save to my feeds"
 msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:612
-#: src/view/shell/Drawer.tsx:186
+#: src/view/shell/Drawer.tsx:184
 msgctxt "link to bookmarks screen"
 msgid "Saved"
 msgstr ""
@@ -7354,7 +7345,7 @@ msgstr ""
 msgid "See #{tag} posts by user"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:135
+#: src/view/com/auth/SplashScreen.tsx:130
 msgid "See jobs at Bluesky"
 msgstr ""
 
@@ -7512,7 +7503,7 @@ msgstr ""
 #: src/Navigation.tsx:533
 #: src/screens/Settings/Settings.tsx:44
 #: src/view/shell/desktop/LeftNav.tsx:633
-#: src/view/shell/Drawer.tsx:200
+#: src/view/shell/Drawer.tsx:198
 msgid "Settings"
 msgstr ""
 
@@ -7717,8 +7708,8 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:261
 #: src/screens/StarterPack/StarterPackScreen.tsx:396
 #: src/screens/StarterPack/StarterPackScreen.tsx:408
-#: src/view/com/auth/SplashScreen.tsx:89
-#: src/view/com/auth/SplashScreen.tsx:96
+#: src/view/com/auth/SplashScreen.tsx:84
+#: src/view/com/auth/SplashScreen.tsx:91
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:192
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
 #: src/view/shell/nav-sign-in-card.tsx:34
@@ -7913,8 +7904,8 @@ msgstr ""
 msgid "Sort replies"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:60
-#: src/view/shell/desktop/RightNav.tsx:62
+#: src/view/shell/desktop/RightNav.tsx:57
+#: src/view/shell/desktop/RightNav.tsx:59
 msgid "Source code"
 msgstr "Source code"
 
@@ -9375,7 +9366,7 @@ msgstr ""
 msgid "View your default post interaction settings"
 msgstr ""
 
-#: src/view/com/home/HomeHeaderLayout.tsx:53
+#: src/view/com/home/HomeHeaderLayout.tsx:50
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:55
 msgid "View your feeds and explore more"
 msgstr ""
@@ -9517,7 +9508,7 @@ msgstr ""
 msgid "What do you want to call your starter pack?"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:78
+#: src/view/com/auth/SplashScreen.tsx:73
 #: src/view/com/composer/Composer.tsx:1172
 #: src/view/com/feeds/ComposerPrompt.tsx:87
 msgid "What's up?"

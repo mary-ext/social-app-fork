@@ -20,7 +20,6 @@ export type Device = {
 	externalEmbeds?: Partial<Record<EmbedPlayerSource, 'hide' | 'show'>>;
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
-	kawaii?: boolean;
 	languagePrefs?: LanguagePrefs;
 	largeAltBadgeEnabled?: boolean;
 	pdsAddressHistory?: string[];

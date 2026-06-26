@@ -16,7 +16,6 @@ import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
-import { useKawaiiMode } from '#/storage/hooks/kawaii';
 import { colors } from '#/styles/colors';
 
 export const SplashScreen = ({
@@ -29,8 +28,6 @@ export const SplashScreen = ({
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const { isTabletOrMobile: IS_WEB_MOBILE } = useWebMediaQueries();
-
-	const kawaii = useKawaiiMode();
 
 	return (
 		<>
@@ -66,13 +63,11 @@ export const SplashScreen = ({
 				>
 					<ErrorBoundary>
 						<View style={[a.justify_center, a.align_center]}>
-							<Logo width={kawaii ? 300 : 92} fill="sky" />
+							<Logo width={92} fill="sky" />
 
-							{!kawaii && (
-								<View style={[a.pb_sm, a.pt_5xl]}>
-									<Logotype width={161} fill={colors.text} />
-								</View>
-							)}
+							<View style={[a.pb_sm, a.pt_5xl]}>
+								<Logotype width={161} fill={colors.text} />
+							</View>
 
 							<Text style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
 								<Trans>What's up?</Trans>

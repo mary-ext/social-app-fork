@@ -3,9 +3,6 @@ import type { TextProps } from 'react-native';
 
 import { flatten, useTheme } from '#/alf';
 
-import { Image } from '#/shims/image';
-import { useKawaiiMode } from '#/storage/hooks/kawaii';
-
 const ratio = 57 / 64;
 
 type Props = {
@@ -22,22 +19,6 @@ export function Logo(props: Props) {
 		? 'url(#sky)'
 		: fill || (styles?.color as string | undefined) || t.palette.primary_500;
 	const size = parseInt(String(rest.width || 32), 10);
-
-	const isKawaii = useKawaiiMode();
-
-	if (isKawaii) {
-		return (
-			<Image
-				source={
-					size > 100 ? require('../../../assets/kawaii.png') : require('../../../assets/kawaii_smol.png')
-				}
-				accessibilityLabel="Bluesky"
-				accessibilityHint=""
-				accessibilityIgnoresInvertColors
-				style={[{ height: size, aspectRatio: 1.4 }]}
-			/>
-		);
-	}
 
 	return (
 		<svg

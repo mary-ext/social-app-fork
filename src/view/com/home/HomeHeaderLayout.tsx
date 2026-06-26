@@ -15,8 +15,6 @@ import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons
 import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 
-import { useKawaiiMode } from '#/storage/hooks/kawaii';
-
 /**
  * The home screen's chrome above the feed tabs — the logo and a feeds-discovery link. Rendered as the
  * scroll-away header of the feed tabs; the tab bar below it stays sticky.
@@ -33,7 +31,6 @@ function HomeHeaderLayoutDesktopAndTablet() {
 	const t = useTheme();
 	const { hasSession } = useSession();
 	const { t: l } = useLingui();
-	const kawaii = useKawaiiMode();
 	const gutters = useGutters([0, 'base']);
 
 	if (!hasSession) {
@@ -45,7 +42,7 @@ function HomeHeaderLayoutDesktopAndTablet() {
 			<View style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
 				<View style={{ width: 34 }} />
 				<View style={[a.flex_1, a.align_center, a.justify_center]}>
-					<Logo width={kawaii ? 60 : 28} />
+					<Logo width={28} />
 				</View>
 				<Link
 					to="/feeds"

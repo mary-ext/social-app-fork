@@ -130,15 +130,13 @@ export const signInCard = style({ paddingInline: space.xl });
 // the dividers are deliberately asymmetric: the small margin faces the nav list, whose buttons carry their
 // own `space.md` block padding — so the line sits `sm + md` from the first/last icon, matching the `xl` gap
 // on the profile-card/extra-links side.
-const dividerBase = {
+export const dividerTop = style({
 	backgroundColor: vars.palette.contrast_100,
 	height: 1,
+	marginBottom: space.sm,
 	marginInline: space.xl,
-} as const;
-
-export const dividerTop = style({ ...dividerBase, marginBottom: space.sm, marginTop: space.xl });
-
-export const dividerBottom = style({ ...dividerBase, marginBottom: space.xl, marginTop: space.sm });
+	marginTop: space.xl,
+});
 
 export const menuItem = style(
 	layered(components, {
@@ -177,11 +175,4 @@ export const countBadge = style({
 	position: 'absolute',
 	right: -10,
 	top: -4,
-});
-
-export const extraLinks = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.md,
-	paddingInline: space.xl,
 });
