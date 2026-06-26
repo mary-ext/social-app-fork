@@ -1,5 +1,6 @@
 import { randomInRange, weightedRandomIndex } from '#/lib/numbers';
 
+import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
 import { clampAspectRatio, deriveCarouselHeight } from '#/components/ImageEmbed/carousel/utils';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 
@@ -86,7 +87,11 @@ function BleedSingle({ aspect }: { aspect: number }) {
 function CarouselStrip({ tiles }: { tiles: number[] }) {
 	// a strip at the carousel's derived row height, each tile as wide as its clamped aspect, clipped to the
 	// column like the real one.
-	const height = deriveCarouselHeight(tiles[0], tiles[1]);
+	const height = deriveCarouselHeight({
+		max: CAROUSEL_MAX_HEIGHT,
+		min: CAROUSEL_MIN_HEIGHT,
+		ratios: tiles,
+	});
 	return (
 		<div className={css.carousel} style={{ height }}>
 			{tiles.map((aspect, i) => (

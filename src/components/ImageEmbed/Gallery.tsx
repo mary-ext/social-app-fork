@@ -2,9 +2,17 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import type { LightboxImage } from '@oomfware/lightbox';
+import { clsx } from 'clsx';
 
 import type { LightboxControl } from '#/components/dialogs/Context';
-import { CAROUSEL_HEIGHT_CHAT } from '#/components/ImageEmbed/carousel/const';
+import {
+	CAROUSEL_CHAT_MAX_HEIGHT,
+	CAROUSEL_CHAT_MIN_HEIGHT,
+	CAROUSEL_MAX_HEIGHT,
+	CAROUSEL_MIN_HEIGHT,
+	CAROUSEL_PEEK,
+	ITEM_GAP,
+} from '#/components/ImageEmbed/carousel/const';
 import { useKeyboardHandlers } from '#/components/ImageEmbed/carousel/useKeyboardHandlers';
 import { usePointerHandlers } from '#/components/ImageEmbed/carousel/usePointerHandlers';
 import { computeDims, deriveCarouselHeight, getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
@@ -34,17 +42,30 @@ export function Gallery({ images, control, lightboxImages, onPressIn, viewContex
 	const isWithinQuote = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
 	const hideBadges = isWithinQuote;
-	// One row height for the whole strip, derived from the first two images' orientation (chat bubbles use a
-	// fixed compact height instead). Items then take their own clamped width within it.
-	const contentHeight = isWithinChat
-		? CAROUSEL_HEIGHT_CHAT
-		: deriveCarouselHeight(getAspectRatio(images[0]?.aspectRatio), getAspectRatio(images[1]?.aspectRatio));
-
 	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor (by diffing bounding
 	// rects) so it can extend past the post's content column.
 	const { bleedRef, bleedWidth } = useGalleryBleed();
 	const contentRef = useRef<HTMLDivElement>(null);
 	const [contentDims, setContentDims] = useState<{ x: number; width: number }>();
+
+	const width = bleedWidth || Math.min(600, window.innerWidth);
+	const insetLeft = contentDims?.x ?? 0;
+	const insetRight = bleedWidth > 0 ? bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0) : 0;
+	// Width budget for the widest tile: every snapped tile sits `insetLeft` in from the strip's left edge (the
+	// text column), so the room to the right viewport edge is `width - insetLeft`; reserve the inter-tile gap
+	// plus a sliver of the next image so it peeks.
+	const maxItemWidth = Math.max(0, width - insetLeft - ITEM_GAP - CAROUSEL_PEEK);
+
+	// One row height for the whole strip: an orientation base from the first two images (chat bubbles map onto
+	// a more compact range), shrunk so the widest tile fits `maxItemWidth` uncropped and the next peeks. Items
+	// then take their own clamped width within it.
+	const contentHeight = deriveCarouselHeight({
+		max: isWithinChat ? CAROUSEL_CHAT_MAX_HEIGHT : CAROUSEL_MAX_HEIGHT,
+		maxWidth: maxItemWidth,
+		min: isWithinChat ? CAROUSEL_CHAT_MIN_HEIGHT : CAROUSEL_MIN_HEIGHT,
+		ratios: images.map((image) => getAspectRatio(image.aspectRatio)),
+	});
+
 	// `useEffect`, not `useLayoutEffect`: the bleed element is an ancestor, so its ref attaches after this
 	// descendant's layout phase. Measuring post-commit (and re-running when `bleedWidth` settles) sees it.
 	useEffect(() => {
@@ -60,10 +81,6 @@ export function Gallery({ images, control, lightboxImages, onPressIn, viewContex
 		window.addEventListener('resize', measure);
 		return () => window.removeEventListener('resize', measure);
 	}, [bleedRef, bleedWidth, contentHeight]);
-
-	const width = bleedWidth || Math.min(600, window.innerWidth);
-	const insetLeft = contentDims?.x ?? 0;
-	const insetRight = bleedWidth > 0 ? bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0) : 0;
 
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());
@@ -177,9 +194,15 @@ function GalleryImage({
 	onPressIn?: () => void;
 }) {
 	const { t: l } = useLingui();
-	const [aspectRatio, setAspectRatio] = useState(() => getAspectRatio(image.aspectRatio));
-	const { isCropped, ...dims } = computeDims({ height: contentHeight, aspectRatio });
+	// Size from the declared aspect ratio only (a missing one defaults to square). The shared row height was
+	// derived against these same metadata ratios, so adopting an image's true ratio post-load could push a
+	// metadata-less tile past the width budget and swallow the peek — better a square placeholder.
+	const aspectRatio = getAspectRatio(image.aspectRatio);
+	const { isCropped, ...dims } = computeDims({ aspectRatio, height: contentHeight });
 	const hasAlt = !!image.alt;
+	// With a known ratio the tile matches it (cover fills cleanly; a clamped panorama is intentionally cropped,
+	// flagged by `isCropped`). With an unknown ratio the tile is a blind square, so letterbox rather than chop.
+	const isContain = aspectRatio === undefined;
 
 	useEffect(() => {
 		onWidthChange(index, dims.width);
@@ -202,19 +225,10 @@ function GalleryImage({
 			onPointerDown={onPressIn}
 		>
 			<img
-				className={styles.image}
+				className={clsx(styles.image, isContain && styles.imageContain)}
 				src={image.thumb}
 				alt={image.alt}
 				loading={index === 0 ? 'eager' : 'lazy'}
-				onLoad={(e) => {
-					const ar = getAspectRatio({
-						width: e.currentTarget.naturalWidth,
-						height: e.currentTarget.naturalHeight,
-					});
-					if (ar && ar !== aspectRatio) {
-						setAspectRatio(ar);
-					}
-				}}
 			/>
 			{!hideBadges && (
 				<MediaBadges

@@ -1862,7 +1862,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/ImageEmbed/Gallery.tsx:123
+#: src/components/ImageEmbed/Gallery.tsx:140
 msgid "carousel"
 msgstr "carousel"
 
@@ -4191,12 +4191,12 @@ msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/ImageEmbed/Gallery.tsx:201
+#: src/components/ImageEmbed/Gallery.tsx:224
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
 #. placeholder {0}: images.length
-#: src/components/ImageEmbed/Gallery.tsx:124
+#: src/components/ImageEmbed/Gallery.tsx:141
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -4771,7 +4771,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:147
 #: src/screens/Profile/Sections/Feed.tsx:76
 #: src/screens/ProfileList/FeedSection.tsx:81
-#: src/view/com/feeds/FeedPage.tsx:117
+#: src/view/com/feeds/FeedPage.tsx:115
 msgid "Load new posts"
 msgstr ""
 
@@ -5362,7 +5362,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:122
+#: src/view/com/feeds/FeedPage.tsx:120
 #: src/view/shell/desktop/LeftNav.tsx:499
 msgctxt "action"
 msgid "New post"
@@ -7795,7 +7795,7 @@ msgstr ""
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
-#: src/components/ImageEmbed/Gallery.tsx:200
+#: src/components/ImageEmbed/Gallery.tsx:223
 msgid "slide"
 msgstr "slide"
 
