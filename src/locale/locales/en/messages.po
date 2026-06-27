@@ -4752,6 +4752,8 @@ msgstr ""
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:56
 #: src/screens/Settings/InterestsSettings.tsx:59
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:36
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:92
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:78
 #: src/view/com/composer/photos/EditImageDialog.tsx:38
 #: src/view/shell/Composer.tsx:44
 msgid "Loading"
@@ -5392,7 +5394,7 @@ msgstr "No emojis found"
 msgid "No expiry set"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:88
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:95
 msgid "No feeds found. Try searching for something else."
 msgstr ""
 
@@ -5557,7 +5559,7 @@ msgstr ""
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:74
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:81
 msgid "Nobody was found. Try searching for someone else."
 msgstr ""
 
@@ -7169,6 +7171,10 @@ msgstr "Scrolls the conversation to the most recent message"
 #: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:661
 #: src/Navigation.tsx:578
 #: src/screens/Search/Shell.tsx:216
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:79
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:80
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:65
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:66
 msgid "Search"
 msgstr ""
 

@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useActorSearch } from '#/state/queries/actor-search';
 
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
-import { SearchInput } from '#/components/forms/SearchInput';
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
-import { Loader } from '#/components/Loader';
 import { WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Text';
+import { SearchInput } from '#/components/web/forms/SearchInput';
 
 import * as css from './Wizard.css';
 
@@ -21,6 +21,7 @@ function keyExtractor(item: AnyProfileView) {
 }
 
 export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOptions }) {
+	const { t: l } = useLingui();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
 
@@ -57,7 +58,13 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 	return (
 		<>
 			<div className={css.searchBar}>
-				<SearchInput value={query} onChangeText={setQuery} onClearText={() => setQuery('')} />
+				<SearchInput
+					value={query}
+					onChangeText={setQuery}
+					onClear={() => setQuery('')}
+					label={l`Search`}
+					placeholder={l`Search`}
+				/>
 			</div>
 			<List
 				data={query ? results : topFollowers}
@@ -68,7 +75,7 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 				ListEmptyComponent={
 					<div className={css.empty}>
 						{isLoading ? (
-							<Loader size="lg" />
+							<CenteredSpinner label={l`Loading`} size="lg" />
 						) : (
 							<Text weight="semiBold" size="lg" align="center" className={css.emptyText}>
 								<Trans>Nobody was found. Try searching for someone else.</Trans>
