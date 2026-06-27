@@ -18,13 +18,13 @@ import {
 
 import { atoms as a, tokens, useTheme, utils } from '#/alf';
 
+import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
-import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 import { colors } from '#/styles/colors';
