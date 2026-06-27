@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 import { CARD_ASPECT_RATIO } from '#/lib/constants';
 
@@ -21,12 +21,9 @@ export const atoms = {
 	}),
 
 	/** Used for the outermost components on screens, to ensure that they can fill the screen and extend beyond. */
-	util_screen_outer: [
-		webStyle({
-			minHeight: '100dvh',
-		}),
-		undefined,
-	] as StyleProp<ViewStyle>,
+	util_screen_outer: webStyle({
+		minHeight: '100dvh',
+	}),
 
 	/*
 	 * Theme-independent bg colors

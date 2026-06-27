@@ -45,19 +45,7 @@
 				-ms-overflow-style: scrollbar;
 				font-synthesis-weight: none;
 			}
-			:root {
-				--text: black;
-				--background: white;
-				--backgroundLight: #e2e7ee;
-			}
-			@media (prefers-color-scheme: dark) {
-				:root {
-					color-scheme: dark;
-					--text: white;
-					--background: black;
-					--backgroundLight: #232e3e;
-				}
-			}
+
 			html,
 			body,
 			#root {
@@ -67,32 +55,37 @@
 				min-height: 100%;
 				width: 100%;
 			}
-			html.theme--light,
-			html.theme--light body,
-			html.theme--light #root {
+
+			:root {
+				--text: black;
+				--background: white;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					color-scheme: dark;
+					--text: white;
+					--background: black;
+				}
+			}
+
+			.theme--light {
 				background-color: white;
 				--text: black;
 				--background: white;
-				--backgroundLight: #dce2ea;
 			}
-			html.theme--dark,
-			html.theme--dark body,
-			html.theme--dark #root {
+			.theme--dark {
 				color-scheme: dark;
 				background-color: black;
 				--text: white;
 				--background: black;
-				--backgroundLight: #232e3e;
 			}
-			html.theme--dim,
-			html.theme--dim body,
-			html.theme--dim #root {
+			.theme--dim {
 				color-scheme: dark;
 				background-color: #151d28;
 				--text: white;
 				--background: #151d28;
-				--backgroundLight: #2c3a4e;
 			}
+
 			#splash {
 				display: flex;
 				position: fixed;

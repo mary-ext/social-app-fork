@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { useIntentHandler } from '#/lib/hooks/useIntentHandler';
@@ -10,8 +9,6 @@ import { useCloseAllActiveElements } from '#/state/util';
 
 import { OAuthCallback } from '#/view/com/auth/OAuthCallback';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
-
-import { atoms as a, useTheme } from '#/alf';
 
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarning';
 import { SigninDialog } from '#/components/dialogs/Signin';
@@ -56,17 +53,13 @@ function ShellInner() {
 }
 
 export function Shell() {
-	const t = useTheme();
+	if (IS_OAUTH_CALLBACK) {
+		return <OAuthCallback />;
+	}
 
 	return (
-		<View style={[a.util_screen_outer, t.atoms.bg]}>
-			{IS_OAUTH_CALLBACK ? (
-				<OAuthCallback />
-			) : (
-				<RoutesContainer>
-					<ShellInner />
-				</RoutesContainer>
-			)}
-		</View>
+		<RoutesContainer>
+			<ShellInner />
+		</RoutesContainer>
 	);
 }

@@ -18,8 +18,9 @@ export const editor = style({
 // #region drop overlay
 
 // always mounted and `inert` while hidden, so the fade is a class toggle rather than a mount juggle, and the
-// scrim never captures interaction. portaled to `document.body` to escape `#root { isolation: isolate }` and
-// stack above open Base UI dialogs (the `#/components/Portal` outlet sits in `#root` at z-index 10).
+// scrim never captures interaction. portaled to `document.body` — where the composer's Base UI dialog also
+// portals — so the fixed scrim isn't confined to that dialog's stacking context and can overlay it via
+// `zIndex.dialog`.
 export const dropScrim = recipe(
 	{
 		base: {

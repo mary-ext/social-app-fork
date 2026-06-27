@@ -37,3 +37,10 @@ globalStyle('.theme--dark', {
 globalStyle('.theme--dim', {
 	vars: assignVars(vars, themeValues(invertPalette(DEFAULT_SUBDUED_PALETTE), 0.4, '45%')),
 });
+
+// the authoritative page background, consuming the theme contract so it tracks `.theme--*` like every other
+// surface. `web/index.html` paints an approximate background on <html> (the viewport canvas) for the
+// pre-hydration splash; this rule owns <body> — the scroll container — so its color covers the full
+// scrollable area, and since the splash only colors <html> there's no specificity contest once the bundle
+// loads.
+globalStyle('body', { backgroundColor: vars.palette.contrast_0 });
