@@ -21,7 +21,6 @@
 	"screens.search.results.error.failed": "We’re sorry, but your search could not be completed. Please try again in a few minutes.",
 	"screens.search.results.error.generic": "Error: {error}",
 	"screens.search.results.loading": "Loading search results",
-	"screens.search.searchFilters.label": "read about how to use search filters",
 	"screens.search.starterPack.additionalCount": "+{computedTotal}",
 	"screens.search.starterPack.open": "Open pack",
 	"screens.search.trending.browse": "Browse topic {displayName}",
