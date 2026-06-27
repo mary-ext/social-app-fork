@@ -34,7 +34,7 @@ import { LinkPreview } from './LinkPreview';
 export function GoLiveDialog({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['features.liveNow.action.goLive']()}>
+			<Dialog.Popup className={styles.popup} label={m['features.liveNow.goLive.confirm']()}>
 				<DialogInner handle={handle} profile={profile} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -93,10 +93,10 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 		<div className={styles.container}>
 			<div className={styles.header}>
 				<Text size="_2xl" weight="semiBold">
-					{m['features.liveNow.action.goLive']()}
+					{m['features.liveNow.goLive.confirm']()}
 				</Text>
 				<Text color="textContrastHigh" size="md">
-					{m['features.liveNow.dialog.description']()}
+					{m['features.liveNow.goLive.description']()}
 				</Text>
 			</div>
 			{moderationOpts && (
@@ -112,11 +112,11 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 			)}
 			<div className={styles.fields}>
 				<TextField.Root isInvalid={isSourceInvalid}>
-					<TextField.LabelText>{m['features.liveNow.label.liveLink']()}</TextField.LabelText>
+					<TextField.LabelText>{m['features.liveNow.link.label']()}</TextField.LabelText>
 					<TextField.Input
 						autoCapitalize="none"
 						autoComplete="url"
-						label={m['features.liveNow.label.liveLink']()}
+						label={m['features.liveNow.link.label']()}
 						onBlur={() => {
 							// don't nag about an empty field — only flag a non-empty, non-URL value
 							if (liveLink.trim() && !parseLooseUrl(liveLink)) {
@@ -125,18 +125,16 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						}}
 						onChangeText={setLiveLink}
 						onFocus={() => setLiveLinkError('')}
-						placeholder={m['features.liveNow.label.linkPlaceholder']()}
+						placeholder={m['features.liveNow.link.placeholder']()}
 						value={liveLink}
 					/>
 				</TextField.Root>
 				{liveLinkError || linkMetaError ? (
 					<Admonition type="error">
-						{liveLinkError ? m['features.liveNow.error.invalidLink']() : cleanError(linkMetaError)}
+						{liveLinkError ? m['features.liveNow.link.invalid']() : cleanError(linkMetaError)}
 					</Admonition>
 				) : (
-					<Admonition type="tip">
-						{m['features.liveNow.hint.enabledServices']({ allowedServices })}
-					</Admonition>
+					<Admonition type="tip">{m['features.liveNow.service.enabled']({ allowedServices })}</Admonition>
 				)}
 
 				<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
@@ -144,9 +142,9 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 			{hasLink && (
 				<div>
-					<TextField.LabelText>{m['features.liveNow.label.goLiveFor']()}</TextField.LabelText>
+					<TextField.LabelText>{m['features.liveNow.duration.label']()}</TextField.LabelText>
 					<Select.Root onValueChange={onChangeDuration} value={String(duration)}>
-						<Select.Trigger label={m['features.liveNow.action.selectDuration']()}>
+						<Select.Trigger label={m['features.liveNow.duration.select']()}>
 							<Text>
 								{displayDuration(duration)}
 								{'  '}
@@ -191,12 +189,12 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					<Button
 						color="primary"
 						disabled={isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl}
-						label={m['features.liveNow.action.goLive']()}
+						label={m['features.liveNow.goLive.confirm']()}
 						onClick={() => goLive()}
 						size="small"
 						variant="solid"
 					>
-						<ButtonText>{m['features.liveNow.action.goLive']()}</ButtonText>
+						<ButtonText>{m['features.liveNow.goLive.confirm']()}</ButtonText>
 						{isGoingLive && <ButtonIcon icon={Loader} />}
 					</Button>
 				)}

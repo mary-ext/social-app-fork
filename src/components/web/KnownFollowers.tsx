@@ -94,7 +94,7 @@ function KnownFollowersInner({
 	return (
 		<Link
 			className={css.link}
-			label={m['common.a11y.pressToViewKnownFollowers']()}
+			label={m['common.follow.a11y.knownFollowers']()}
 			to={makeProfileLink(profile, 'known-followers')}
 		>
 			<AvatarStack
@@ -107,7 +107,7 @@ function KnownFollowersInner({
 				{slice.length >= 2 ? (
 					serverCount > 2 ? (
 						<Trans
-							message={m['common.label.followedByMany']}
+							message={m['common.follow.followedByMany']}
 							inputs={{
 								count: serverCount - 2,
 								name: slice[0]!.profile.displayName,
@@ -128,7 +128,7 @@ function KnownFollowersInner({
 						/>
 					) : (
 						<Trans
-							message={m['common.label.followedByTwo']}
+							message={m['common.follow.followedByTwo']}
 							inputs={{
 								name: slice[0]!.profile.displayName,
 								name2: slice[1]!.profile.displayName,
@@ -149,7 +149,7 @@ function KnownFollowersInner({
 					)
 				) : serverCount > 1 ? (
 					<Trans
-						message={m['common.label.followedByOthers']}
+						message={m['common.follow.followedByOthers']}
 						inputs={{ count: serverCount - 1, name: slice[0]!.profile.displayName }}
 						markup={{
 							t0: ({ children }) => (
@@ -161,7 +161,7 @@ function KnownFollowersInner({
 					/>
 				) : (
 					<Trans
-						message={m['common.label.followedBy']}
+						message={m['common.follow.followedBy']}
 						inputs={{ name: slice[0]!.profile.displayName }}
 						markup={{
 							t0: ({ children }) => (

@@ -248,42 +248,42 @@ let NotificationFeedItem = ({
 
 	if (item.type === 'post-like') {
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.multiName.likedPost']({
+			? m['view.notifications.like.post.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.singleName.likedPost']({ firstAuthorName });
+			: m['view.notifications.like.post.singleName']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.multiLink.likedPost']}
+				message={m['view.notifications.like.post.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.singleLink.likedPost']}
+				message={m['view.notifications.like.post.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
 	} else if (item.type === 'repost') {
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.multiName.repostedPost']({
+			? m['view.notifications.repost.post.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.singleName.repostedPost']({ firstAuthorName });
+			: m['view.notifications.repost.post.singleName']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.multiLink.repostedPost']}
+				message={m['view.notifications.repost.post.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.singleLink.repostedPost']}
+				message={m['view.notifications.repost.post.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
@@ -295,31 +295,31 @@ let NotificationFeedItem = ({
 			 * Follow-backs are ungrouped, grouped follow-backs not supported atm,
 			 * see `src/state/queries/notifications/util.ts`
 			 */
-			a11yLabel = m['view.notifications.singleName.followedBack']({ firstAuthorName });
+			a11yLabel = m['view.notifications.follow.back.singleName']({ firstAuthorName });
 			notificationContent = (
 				<Trans
-					message={m['view.notifications.singleLink.followedBack']}
+					message={m['view.notifications.follow.back.singleLink']}
 					inputs={{ firstAuthorName: ltrFirstAuthorName }}
 					markup={{ authorLink: authorLinkMarkup }}
 				/>
 			);
 		} else {
 			a11yLabel = hasMultipleAuthors
-				? m['view.notifications.multiName.followed']({
+				? m['view.notifications.follow.multiName']({
 						additionalAuthorsCount,
 						firstAuthorName,
 						formattedAuthorsCount,
 					})
-				: m['view.notifications.singleName.followed']({ firstAuthorName });
+				: m['view.notifications.follow.singleName']({ firstAuthorName });
 			notificationContent = hasMultipleAuthors ? (
 				<Trans
-					message={m['view.notifications.multiLink.followed']}
+					message={m['view.notifications.follow.multiLink']}
 					inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 					markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 				/>
 			) : (
 				<Trans
-					message={m['view.notifications.singleLink.followed']}
+					message={m['view.notifications.follow.singleLink']}
 					inputs={{ firstAuthorName: ltrFirstAuthorName }}
 					markup={{ authorLink: authorLinkMarkup }}
 				/>
@@ -327,10 +327,10 @@ let NotificationFeedItem = ({
 		}
 		icon = <PersonPlusIcon size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'contact-match') {
-		a11yLabel = m['view.notifications.contact.onBlueskyName']({ firstAuthorName });
+		a11yLabel = m['view.notifications.contact.singleName']({ firstAuthorName });
 		notificationContent = (
 			<Trans
-				message={m['view.notifications.contact.onBlueskyLink']}
+				message={m['view.notifications.contact.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
@@ -338,42 +338,42 @@ let NotificationFeedItem = ({
 		icon = <ContactsIconFilled size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'feedgen-like') {
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.multiName.likedFeed']({
+			? m['view.notifications.like.feed.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.singleName.likedFeed']({ firstAuthorName });
+			: m['view.notifications.like.feed.singleName']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.multiLink.likedFeed']}
+				message={m['view.notifications.like.feed.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.singleLink.likedFeed']}
+				message={m['view.notifications.like.feed.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
 	} else if (item.type === 'starterpack-joined') {
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.multiName.signedUp']({
+			? m['view.notifications.starterPack.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.singleName.signedUp']({ firstAuthorName });
+			: m['view.notifications.starterPack.singleName']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.multiLink.signedUp']}
+				message={m['view.notifications.starterPack.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.singleLink.signedUp']}
+				message={m['view.notifications.starterPack.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
@@ -381,21 +381,21 @@ let NotificationFeedItem = ({
 		icon = <StarterPack width={24} gradient="sky" />;
 	} else if (item.type === 'verified') {
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.multiName.verified']({
+			? m['view.notifications.verification.verified.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.singleName.verified']({ firstAuthorName });
+			: m['view.notifications.verification.verified.singleName']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.multiLink.verified']}
+				message={m['view.notifications.verification.verified.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.singleLink.verified']}
+				message={m['view.notifications.verification.verified.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
@@ -403,21 +403,21 @@ let NotificationFeedItem = ({
 		icon = <VerifiedCheck size="xl" />;
 	} else if (item.type === 'unverified') {
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.multiName.removedVerifications']({
+			? m['view.notifications.verification.removed.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.singleName.removedVerification']({ firstAuthorName });
+			: m['view.notifications.verification.removed.singleName']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.multiLink.removedVerifications']}
+				message={m['view.notifications.verification.removed.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.singleLink.removedVerification']}
+				message={m['view.notifications.verification.removed.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
@@ -425,42 +425,42 @@ let NotificationFeedItem = ({
 		icon = <VerifiedCheck size="xl" fill={colors.contrast_500} />;
 	} else if (item.type === 'like-via-repost') {
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.multiName.likedRepost']({
+			? m['view.notifications.like.repost.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.singleName.likedRepost']({ firstAuthorName });
+			: m['view.notifications.like.repost.singleName']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.multiLink.likedRepost']}
+				message={m['view.notifications.like.repost.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.singleLink.likedRepost']}
+				message={m['view.notifications.like.repost.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
 	} else if (item.type === 'repost-via-repost') {
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.multiName.repostedRepost']({
+			? m['view.notifications.repost.repost.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.singleName.repostedRepost']({ firstAuthorName });
+			: m['view.notifications.repost.repost.singleName']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.multiLink.repostedRepost']}
+				message={m['view.notifications.repost.repost.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.singleLink.repostedRepost']}
+				message={m['view.notifications.repost.repost.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
@@ -469,21 +469,21 @@ let NotificationFeedItem = ({
 	} else if (item.type === 'subscribed-post') {
 		const postsCount = 1 + (item.additional?.length || 0);
 		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.newPosts.fromMultiName']({
+			? m['view.notifications.newPosts.multiName']({
 					additionalAuthorsCount,
 					firstAuthorName,
 					formattedAuthorsCount,
 				})
-			: m['view.notifications.newPosts.fromName']({ firstAuthorName, postsCount });
+			: m['view.notifications.newPosts.singleName']({ firstAuthorName, postsCount });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
-				message={m['view.notifications.newPosts.fromMultiLink']}
+				message={m['view.notifications.newPosts.multiLink']}
 				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
-				message={m['view.notifications.newPosts.fromLink']}
+				message={m['view.notifications.newPosts.singleLink']}
 				inputs={{ firstAuthorName: ltrFirstAuthorName, postsCount }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
@@ -687,7 +687,9 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 		try {
 			await queueFollow();
 			Toast.show(
-				m['common.a11y.following']({ name: sanitizeDisplayName(profile.displayName || profile.handle) }),
+				m['common.follow.a11y.following']({
+					name: sanitizeDisplayName(profile.displayName || profile.handle),
+				}),
 			);
 		} catch (err) {
 			if (!(err instanceof Error && err.name === 'AbortError')) {
@@ -704,7 +706,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 		try {
 			await queueUnfollow();
 			Toast.show(
-				m['common.label.noLongerFollowing']({
+				m['common.follow.noLongerFollowing']({
 					name: sanitizeDisplayName(profile.displayName || profile.handle),
 				}),
 			);
@@ -731,7 +733,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 
 	const isFollowing = profileShadow.viewer.following;
 	const isFollowedBy = profileShadow.viewer.followedBy;
-	const followingLabel = m['common.action.following']();
+	const followingLabel = m['common.follow.action.following']();
 
 	return (
 		<div className={css.followBtnWrap}>
@@ -743,18 +745,18 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 					onClick={(e) => void onPressUnfollow(e)}
 				>
 					<ButtonIcon icon={CheckIcon} />
-					<ButtonText>{m['common.action.following']()}</ButtonText>
+					<ButtonText>{m['common.follow.action.following']()}</ButtonText>
 				</Button>
 			) : (
 				<Button
-					label={isFollowedBy ? m['common.action.followBack']() : m['common.action.follow']()}
+					label={isFollowedBy ? m['common.follow.action.followBack']() : m['common.follow.action.follow']()}
 					color="primary"
 					size="small"
 					onClick={(e) => void onPressFollow(e)}
 				>
 					<ButtonIcon icon={PlusIcon} />
 					<ButtonText>
-						{isFollowedBy ? m['common.action.followBack']() : m['common.action.follow']()}
+						{isFollowedBy ? m['common.follow.action.followBack']() : m['common.follow.action.follow']()}
 					</ButtonText>
 				</Button>
 			)}
@@ -796,7 +798,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 
 	return (
 		<Button
-			label={m['common.label.sayHello']()}
+			label={m['common.compose.sayHello']()}
 			variant="ghost"
 			color="primary"
 			size="small"
@@ -804,7 +806,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			disabled={isLoading}
 			onClick={() => void onPressSayHello()}
 		>
-			<ButtonText>{m['common.label.sayHello']()}</ButtonText>
+			<ButtonText>{m['common.compose.sayHello']()}</ButtonText>
 		</Button>
 	);
 }

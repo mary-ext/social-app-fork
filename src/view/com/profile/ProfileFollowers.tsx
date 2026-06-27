@@ -80,7 +80,9 @@ export function ProfileFollowers({ name }: { name: string }) {
 				isError={isError}
 				emptyType="results"
 				emptyMessage={
-					isMe ? m['view.profile.empty.noFollowers']() : m['view.profile.empty.noFollowersUser']()
+					isMe
+						? m['view.profile.followers.followersEmpty']()
+						: m['view.profile.followers.followersEmptyUser']()
 				}
 				errorMessage={cleanError(resolveError || error)}
 				onRetry={isError ? refetch : undefined}

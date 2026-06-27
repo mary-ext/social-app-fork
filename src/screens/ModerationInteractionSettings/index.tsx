@@ -30,18 +30,18 @@ export function Screen() {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.title.postInteractionSettings']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.interaction.settingsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<div className={styles.content}>
-					<Admonition type="tip">{m['screens.moderationInteractionSettings.hint.defaults']()}</Admonition>
+					<Admonition type="tip">{m['screens.moderationInteractionSettings.description']()}</Admonition>
 					{preferences ? (
 						<Inner preferences={preferences} />
 					) : (
 						<div className={styles.loaderWrap}>
-							<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
+							<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
 						</div>
 					)}
 				</div>
@@ -87,13 +87,13 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 				postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
 				threadgateAllowRules: threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
 			});
-			Toast.show(m['screens.moderationInteractionSettings.toast.saved']());
+			Toast.show(m['screens.moderationInteractionSettings.save.success']());
 		} catch (e) {
 			logger.error(`Failed to save post interaction settings`, {
 				safeMessage: e instanceof Error ? e.message : String(e),
 				source: 'ModerationInteractionSettingsScreen',
 			});
-			setError(m['screens.moderationInteractionSettings.error.save']());
+			setError(m['screens.moderationInteractionSettings.save.error']());
 		}
 	}, [maybeEditedPostgate, maybeEditedAllowUI, setPostInteractionSettings]);
 

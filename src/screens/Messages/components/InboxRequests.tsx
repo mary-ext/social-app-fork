@@ -22,7 +22,7 @@ export function InboxRequests({
 	const overflow = count >= REQUEST_COUNT_CAP;
 
 	const label = !unread
-		? m['screens.messages.label.requests']()
+		? m['screens.messages.requests.label']()
 		: overflow
 			? m['screens.messages.requests.tenPlusRequests']()
 			: m['screens.messages.requests.shortCount']({ count });

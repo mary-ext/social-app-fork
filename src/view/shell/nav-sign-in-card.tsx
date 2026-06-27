@@ -27,18 +27,18 @@ let NavSignInCard = ({}: {}): React.ReactNode => {
 			</Link>
 			<View style={[a.pt_lg]}>
 				<Text style={[a.text_3xl, a.font_bold, { lineHeight: a.text_3xl.fontSize }]}>
-					{m['view.cta.joinConversation']()}
+					{m['view.thread.joinConversation']()}
 				</Text>
 			</View>
 			<View style={[a.flex_row, a.flex_wrap, a.gap_sm, a.pt_md]}>
 				<Button
 					onPress={showSignIn}
-					label={m['common.action.signIn']()}
+					label={m['common.session.action.signIn']()}
 					size="small"
 					variant="solid"
 					color="primary"
 				>
-					<ButtonText>{m['common.action.signIn']()}</ButtonText>
+					<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
 				</Button>
 			</View>
 			<View style={[a.mt_md, a.w_full, { height: 32 }]}>

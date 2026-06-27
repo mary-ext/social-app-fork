@@ -77,7 +77,7 @@ export function ListHiddenScreen({
 		void queryClient.invalidateQueries({
 			queryKey: [listQueryRoot],
 		});
-		Toast.show(m['screens.list.toast.unsubscribed']());
+		Toast.show(m['screens.list.subscription.unsubscribedToast']());
 		setIsProcessing(false);
 	};
 
@@ -85,7 +85,7 @@ export function ListHiddenScreen({
 		if (!savedFeedConfig) return;
 		try {
 			await removeSavedFeed(savedFeedConfig);
-			Toast.show(m['screens.list.toast.removedFromSaved']());
+			Toast.show(m['screens.list.savedFeeds.removedToast']());
 		} catch (e) {
 			logger.error('Failed to remove list from saved feeds', { message: e });
 			Toast.show(m['common.error.issueConnection']());
@@ -111,17 +111,17 @@ export function ListHiddenScreen({
 				<View style={[a.gap_sm, a.align_center]}>
 					<Text style={[a.font_semi_bold, a.text_3xl]}>
 						{list.creator.viewer?.blocking || list.creator.viewer?.blockedBy
-							? m['screens.list.error.creatorBlockedTitle']()
-							: m['screens.list.error.hiddenTitle']()}
+							? m['screens.list.block.title']()
+							: m['screens.list.hidden.title']()}
 					</Text>
 					<Text style={[a.text_md, a.text_center, a.px_md, t.atoms.text_contrast_high, { lineHeight: 1.4 }]}>
 						{list.creator.viewer?.blocking || list.creator.viewer?.blockedBy ? (
-							m['screens.list.error.creatorBlockedDesc']()
+							m['screens.list.block.message']()
 						) : isOwner ? (
-							m['screens.list.warning.violationByYou']()
+							m['screens.list.violation.byYou']()
 						) : (
 							<Trans
-								message={m['screens.list.warning.violationByOther']}
+								message={m['screens.list.violation.byOther']}
 								inputs={{ handle: sanitizeHandle(list.creator.handle, '@') }}
 								markup={{
 									t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text>,
@@ -138,11 +138,11 @@ export function ListHiddenScreen({
 							variant="solid"
 							color="secondary"
 							size="large"
-							label={m['screens.list.action.removeFromSaved']()}
+							label={m['screens.list.savedFeeds.remove']()}
 							onPress={() => void onRemoveList()}
 							disabled={isProcessing}
 						>
-							<ButtonText>{m['screens.list.action.removeFromSaved']()}</ButtonText>
+							<ButtonText>{m['screens.list.savedFeeds.remove']()}</ButtonText>
 							{isProcessing ? <ButtonIcon icon={Loader} position="right" /> : null}
 						</Button>
 					) : null}
@@ -151,18 +151,18 @@ export function ListHiddenScreen({
 							variant="solid"
 							color="secondary"
 							size="large"
-							label={m['screens.list.action.showAnyway']()}
+							label={m['screens.list.hidden.showAnyway']()}
 							onPress={() => setIsContentVisible(true)}
 							disabled={isProcessing}
 						>
-							<ButtonText>{m['common.action.showAnyway']()}</ButtonText>
+							<ButtonText>{m['common.moderation.showAnyway']()}</ButtonText>
 						</Button>
 					) : list.viewer?.muted || list.viewer?.blocked ? (
 						<Button
 							variant="solid"
 							color="secondary"
 							size="large"
-							label={m['screens.list.action.unsubscribe']()}
+							label={m['screens.list.subscription.unsubscribe']()}
 							onPress={() => {
 								if (isModList) {
 									void onUnsubscribe();
@@ -172,7 +172,7 @@ export function ListHiddenScreen({
 							}}
 							disabled={isProcessing}
 						>
-							<ButtonText>{m['screens.list.action.unsubscribe']()}</ButtonText>
+							<ButtonText>{m['screens.list.subscription.unsubscribe']()}</ButtonText>
 							{isProcessing ? <ButtonIcon icon={Loader} position="right" /> : null}
 						</Button>
 					) : null}

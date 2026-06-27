@@ -105,7 +105,7 @@ function ThreadItemAnchorDeleted({ isRoot }: { isRoot: boolean }) {
 						<TrashIcon fill="currentColor" />
 					</div>
 					<Text size="md" weight="semiBold" color="textContrastMedium">
-						{m['screens.postThread.error.deleted']()}
+						{m['screens.postThread.post.error.deleted']()}
 					</Text>
 				</div>
 			</div>
@@ -273,7 +273,7 @@ function ThreadItemAnchorInner({
 									<InlineLinkText
 										className={css.handle}
 										color="textContrastHigh"
-										label={m['common.action.viewProfile']()}
+										label={m['common.profile.action.view']()}
 										numberOfLines={1}
 										onPress={onOpenAuthor}
 										size="md"
@@ -337,12 +337,12 @@ function ThreadItemAnchorInner({
 									<InlineLinkText
 										color="textContrastMedium"
 										data-testid="repostCount-expanded"
-										label={m['screens.postThread.title.reposts']()}
+										label={m['screens.postThread.engagement.repost.title']()}
 										size="md"
 										to={repostsHref}
 									>
 										<Trans
-											message={m['screens.postThread.count.reposts']}
+											message={m['screens.postThread.engagement.repost.count']}
 											inputs={{
 												count: post.repostCount,
 												formattedCount: formatPostStatCount(post.repostCount),
@@ -361,12 +361,12 @@ function ThreadItemAnchorInner({
 									<InlineLinkText
 										color="textContrastMedium"
 										data-testid="quoteCount-expanded"
-										label={m['screens.postThread.title.quotes']()}
+										label={m['screens.postThread.engagement.quote.title']()}
 										size="md"
 										to={quotesHref}
 									>
 										<Trans
-											message={m['screens.postThread.count.quotes']}
+											message={m['screens.postThread.engagement.quote.count']}
 											inputs={{
 												count: post.quoteCount,
 												formattedCount: formatPostStatCount(post.quoteCount),
@@ -385,12 +385,12 @@ function ThreadItemAnchorInner({
 									<InlineLinkText
 										color="textContrastMedium"
 										data-testid="likeCount-expanded"
-										label={m['screens.postThread.title.likes']()}
+										label={m['screens.postThread.engagement.like.title']()}
 										size="md"
 										to={likesHref}
 									>
 										<Trans
-											message={m['screens.postThread.count.likes']}
+											message={m['screens.postThread.engagement.like.count']}
 											inputs={{
 												count: post.likeCount,
 												formattedCount: formatPostStatCount(post.likeCount),
@@ -408,7 +408,7 @@ function ThreadItemAnchorInner({
 								{post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
 									<Text data-testid="bookmarkCount-expanded" size="md" color="textContrastMedium">
 										<Trans
-											message={m['screens.postThread.count.saves']}
+											message={m['screens.postThread.engagement.save.count']}
 											inputs={{
 												count: post.bookmarkCount,
 												formattedCount: formatPostStatCount(post.bookmarkCount),
@@ -484,8 +484,8 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	return (
 		<>
 			<Button
-				label={m['screens.postThread.label.archived']()}
-				accessibilityHint={m['screens.postThread.a11y.createdInfo']()}
+				label={m['screens.postThread.archive.label']()}
+				accessibilityHint={m['screens.postThread.dateVerification.createdInfo']()}
 				onPress={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
@@ -496,7 +496,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 					<div className={clsx(css.archivedPill, (hovered || pressed) && css.archivedPillActive)}>
 						<CalendarClockIcon fill={colors.yellow} size="sm" aria-hidden />
 						<Text size="xs" weight="semiBold" color="textContrastMedium">
-							{m['screens.postThread.label.archivedFrom']({ date: niceDate(createdAt, 'medium') })}
+							{m['screens.postThread.archive.from']({ date: niceDate(createdAt, 'medium') })}
 						</Text>
 					</div>
 				)}
@@ -504,10 +504,10 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 
 			<Prompt.Outer handle={handle}>
 				<Prompt.Content>
-					<Prompt.TitleText>{m['screens.postThread.label.archived']()}</Prompt.TitleText>
+					<Prompt.TitleText>{m['screens.postThread.archive.label']()}</Prompt.TitleText>
 					<Prompt.DescriptionText>
 						<Trans
-							message={m['screens.postThread.hint.dateMismatch']}
+							message={m['screens.postThread.dateVerification.mismatch']}
 							inputs={{
 								claimed: niceDate(createdAt),
 								seen: niceDate(indexedAt),
@@ -518,7 +518,9 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 							}}
 						/>
 					</Prompt.DescriptionText>
-					<Prompt.DescriptionText>{m['screens.postThread.hint.dateUnverified']()}</Prompt.DescriptionText>
+					<Prompt.DescriptionText>
+						{m['screens.postThread.dateVerification.unverified']()}
+					</Prompt.DescriptionText>
 				</Prompt.Content>
 				<Prompt.Actions>
 					<Prompt.Action cta={m['common.action.okay']()} onPress={() => {}} />

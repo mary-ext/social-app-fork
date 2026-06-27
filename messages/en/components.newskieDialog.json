@@ -1,7 +1,7 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"components.newskieDialog.a11y.dialog": "New user info dialog",
 	"components.newskieDialog.a11y.hint": "This user is new here. Press for more info about when they joined.",
+	"components.newskieDialog.a11y.label": "New user info dialog",
 	"components.newskieDialog.joinedAgo": [
 		{
 			"declarations": [

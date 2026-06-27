@@ -78,8 +78,8 @@ function LabelsOnMeDialogInner({ control, labels, type }: LabelsOnMeDialogProps)
 				<>
 					<Text className={styles.title} size="_2xl" weight="bold">
 						{isAccount
-							? m['components.moderation.title.labelsOnAccount']()
-							: m['components.moderation.title.labelsOnContent']()}
+							? m['components.moderation.label.titleAccount']()
+							: m['components.moderation.label.titleContent']()}
 					</Text>
 					<Text size="md">
 						{containsSelfLabel
@@ -131,12 +131,12 @@ function Label({
 				{!isSelfLabel && (
 					<Button
 						color="secondary"
-						label={m['components.moderation.action.appeal']()}
+						label={m['components.moderation.appeal.action']()}
 						onClick={() => onPressAppeal(label)}
 						size="small"
 						variant="solid"
 					>
-						<ButtonText>{m['components.moderation.action.appeal']()}</ButtonText>
+						<ButtonText>{m['components.moderation.appeal.action']()}</ButtonText>
 					</Button>
 				)}
 			</div>
@@ -148,7 +148,7 @@ function Label({
 					<div className={styles.sourceRow}>
 						<Text className={styles.sourceText} color="textContrastMedium" numberOfLines={1}>
 							<Trans
-								message={m['common.label.source']}
+								message={m['common.moderation.source']}
 								inputs={{ sourceName }}
 								markup={{
 									t0: ({ children }) => (
@@ -165,7 +165,7 @@ function Label({
 						</Text>
 						{label.exp && (
 							<Text className={styles.expires} color="textContrastMedium" size="sm">
-								{m['common.label.expires'](relativeMessageParts(label.exp, now))}
+								{m['common.mutedWord.expires'](relativeMessageParts(label.exp, now))}
 							</Text>
 						)}
 					</div>
@@ -215,13 +215,13 @@ function AppealForm({
 			if (err instanceof ClientResponseError && err.error === 'AlreadyAppealed') {
 				setError(m['components.moderation.appeal.alreadyAppealed']());
 			} else {
-				setError(m['common.error.submitAppeal']());
+				setError(m['common.appeal.submitError']());
 			}
 			logger.error('Failed to submit label appeal', { message: err });
 		},
 		onSuccess: () => {
 			control.close();
-			Toast.show(m['common.toast.appealSubmitted']());
+			Toast.show(m['common.appeal.submittedToast']());
 		},
 	});
 

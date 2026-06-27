@@ -47,40 +47,37 @@ export function SettingsScreen({}: Props) {
 				<Settings.List>
 					<AccountsSection />
 
-					<Settings.Section titleText={m['screens.settings.title.preferences']()}>
-						<Settings.LinkRow label={m['screens.settings.title.accountAndPrivacy']()} to="/settings/account">
+					<Settings.Section titleText={m['screens.settings.preferences.title']()}>
+						<Settings.LinkRow label={m['screens.settings.account.privacyTitle']()} to="/settings/account">
 							<Settings.Icon icon={PersonIcon} />
-							<Settings.Label titleText={m['common.label.accountPrivacy']()} />
+							<Settings.Label titleText={m['common.account.privacy']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['screens.settings.title.moderationContentFilters']()} to="/moderation">
+						<Settings.LinkRow label={m['screens.settings.moderation.title']()} to="/moderation">
 							<Settings.Icon icon={HandIcon} />
-							<Settings.Label titleText={m['screens.settings.title.moderationContentFilters']()} />
+							<Settings.Label titleText={m['screens.settings.moderation.title']()} />
 						</Settings.LinkRow>
 						<Settings.LinkRow label={m['common.nav.notifications']()} to="/settings/notifications">
 							<Settings.Icon icon={NotificationIcon} />
 							<Settings.Label titleText={m['common.nav.notifications']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow
-							label={m['screens.settings.title.contentAndMedia']()}
-							to="/settings/content-and-media"
-						>
+						<Settings.LinkRow label={m['screens.settings.media.title']()} to="/settings/content-and-media">
 							<Settings.Icon icon={WindowIcon} />
-							<Settings.Label titleText={m['screens.settings.title.contentAndMedia']()} />
+							<Settings.Label titleText={m['screens.settings.media.title']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['common.label.appearance']()} to="/settings/appearance">
+						<Settings.LinkRow label={m['common.appearance.label']()} to="/settings/appearance">
 							<Settings.Icon icon={PaintRollerIcon} />
-							<Settings.Label titleText={m['common.label.appearance']()} />
+							<Settings.Label titleText={m['common.appearance.label']()} />
 						</Settings.LinkRow>
 						<Settings.LinkRow
-							label={m['screens.settings.title.accessibility']()}
+							label={m['screens.settings.accessibility.title']()}
 							to="/settings/accessibility"
 						>
 							<Settings.Icon icon={AccessibilityIcon} />
-							<Settings.Label titleText={m['screens.settings.title.accessibility']()} />
+							<Settings.Label titleText={m['screens.settings.accessibility.title']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['screens.settings.title.languages']()} to="/settings/language">
+						<Settings.LinkRow label={m['screens.settings.language.title']()} to="/settings/language">
 							<Settings.Icon icon={EarthIcon} />
-							<Settings.Label titleText={m['screens.settings.title.languages']()} />
+							<Settings.Label titleText={m['screens.settings.language.title']()} />
 						</Settings.LinkRow>
 					</Settings.Section>
 
@@ -89,21 +86,21 @@ export function SettingsScreen({}: Props) {
 
 					<Settings.Section>
 						<button
-							aria-label={m['common.action.signOut']()}
+							aria-label={m['common.session.action.signOut']()}
 							className={clsx(cardStyles.row, cardStyles.rowInteractive)}
 							onClick={() => signOutPromptHandle.open(null)}
 							type="button"
 						>
 							<Text className={cardStyles.title} color="negative_500" size="md" weight="medium">
-								{m['common.action.signOut']()}
+								{m['common.session.action.signOut']()}
 							</Text>
 						</button>
 					</Settings.Section>
 
 					<Settings.Section>
-						<Settings.LinkRow label={m['common.label.systemLog']()} to="/sys/log">
+						<Settings.LinkRow label={m['common.developer.systemLog']()} to="/sys/log">
 							<Settings.Icon icon={CodeLinesIcon} />
-							<Settings.Label titleText={m['common.label.systemLog']()} />
+							<Settings.Label titleText={m['common.developer.systemLog']()} />
 						</Settings.LinkRow>
 						<DevOptionsRow />
 					</Settings.Section>
@@ -113,11 +110,11 @@ export function SettingsScreen({}: Props) {
 			<Prompt.Basic
 				cancelButtonCta={m['common.action.cancel']()}
 				confirmButtonColor="negative"
-				confirmButtonCta={m['common.action.signOut']()}
-				description={m['common.hint.signOutAll']()}
+				confirmButtonCta={m['common.session.action.signOut']()}
+				description={m['common.session.signOut.message']()}
 				handle={signOutPromptHandle}
 				onConfirm={() => logoutEveryAccount()}
-				title={m['common.dialog.signOutTitle']()}
+				title={m['common.session.signOut.title']()}
 			/>
 		</Layout.Screen>
 	);
@@ -133,36 +130,36 @@ function DevOptionsRow({ className }: { className?: string }) {
 		<Settings.CollapsibleRow
 			className={className}
 			icon={CodeBracketsIcon}
-			label={m['screens.settings.title.developerOptions']()}
+			label={m['screens.settings.developer.title']()}
 			onOpenChange={setOpen}
 			open={open}
-			titleText={m['screens.settings.title.developerOptions']()}
+			titleText={m['screens.settings.developer.title']()}
 		>
 			<Settings.SwitchRow
-				label={m['screens.settings.label.developerMode']()}
+				label={m['screens.settings.developer.mode']()}
 				onChange={setDevModeEnabled}
 				value={devModeEnabled}
 			>
-				<Settings.Label titleText={m['screens.settings.label.developerMode']()} />
+				<Settings.Label titleText={m['screens.settings.developer.mode']()} />
 			</Settings.SwitchRow>
 			<Settings.SwitchRow
-				label={m['screens.settings.debug.showFeedContext']()}
+				label={m['screens.settings.developer.showFeedContext']()}
 				onChange={setDebugFeedContextEnabled}
 				value={debugFeedContextEnabled}
 			>
-				<Settings.Label titleText={m['screens.settings.debug.showFeedContext']()} />
+				<Settings.Label titleText={m['screens.settings.developer.showFeedContext']()} />
 			</Settings.SwitchRow>
 			<Settings.ButtonRow
-				label={m['screens.settings.action.openComponentStorybook']()}
+				label={m['screens.settings.developer.storybook.open']()}
 				onPress={() => navigation.navigate('Debug')}
 			>
-				<Settings.Label titleText={m['screens.settings.label.componentStorybook']()} />
+				<Settings.Label titleText={m['screens.settings.developer.storybook.label']()} />
 			</Settings.ButtonRow>
 			<Settings.ButtonRow
-				label={m['screens.settings.action.openModerationPlayground']()}
+				label={m['screens.settings.developer.moderationPlayground.open']()}
 				onPress={() => navigation.navigate('DebugMod')}
 			>
-				<Settings.Label titleText={m['screens.settings.label.moderationPlayground']()} />
+				<Settings.Label titleText={m['screens.settings.developer.moderationPlayground.label']()} />
 			</Settings.ButtonRow>
 		</Settings.CollapsibleRow>
 	);

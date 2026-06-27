@@ -86,7 +86,7 @@ function DialogInner() {
 	);
 	const interestsDisplayNames = useMemo(
 		() => ({
-			[FOR_YOU_TAB]: m['common.label.forYou'](),
+			[FOR_YOU_TAB]: m['common.feeds.forYou'](),
 			...rawInterestsDisplayNames,
 		}),
 		[rawInterestsDisplayNames],
@@ -167,7 +167,7 @@ function DialogInner() {
 		}
 
 		if (hasSearchText && !isFetchingSearchResults && !_items.length && !isSearchResultsError) {
-			_items.push({ type: 'empty', key: 'empty', message: m['common.empty.noResults']() });
+			_items.push({ type: 'empty', key: 'empty', message: m['common.search.empty']() });
 		}
 
 		return _items;
@@ -493,8 +493,8 @@ function SearchInput({
 				autoCorrect={false}
 				autoComplete="off"
 				autoCapitalize="none"
-				accessibilityLabel={m['common.action.searchProfiles']()}
-				accessibilityHint={m['common.a11y.searchProfiles']()}
+				accessibilityLabel={m['common.search.action.profiles']()}
+				accessibilityHint={m['common.search.a11y.profiles']()}
 			/>
 		</View>
 	);

@@ -122,7 +122,7 @@ function DirectChatItem({
 
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
-		? m['common.label.deletedAccount']()
+		? m['common.account.deleted']()
 		: createSanitizedDisplayName(
 				profile,
 				true,
@@ -145,8 +145,8 @@ function DirectChatItem({
 			subtitle={isDeletedAccount ? undefined : sanitizeHandle(profile.handle, '@')}
 			accessibilityHint={
 				!isDeletedAccount
-					? m['screens.messages.a11y.goToConversation']({ handle: profile.handle })
-					: m['screens.messages.label.deletedAccountConvo']()
+					? m['screens.messages.chats.goToConversation']({ handle: profile.handle })
+					: m['screens.messages.deletedAccount.message']()
 			}
 			showMenu={showMenu}
 			selected={selected}
@@ -198,7 +198,7 @@ function GroupChatItem({
 			convo={convo}
 			avatar={<AvatarBubbles profiles={convo.members} size={isWithinLeftPanel ? 48 : 52} />}
 			title={chatName}
-			accessibilityHint={m['screens.messages.a11y.goToGroupChat']({ chatName })}
+			accessibilityHint={m['screens.messages.chats.goToGroupChat']({ chatName })}
 			primaryProfile={groupOwner}
 			primaryProfileModeration={moderation}
 			isBlockedAccount={false}
@@ -290,7 +290,7 @@ function BaseChatItem({
 		(convo.kind === 'group' && convo.details.lockStatus !== 'unlocked');
 
 	const { lastMessage, LastMessageIcon, lastMessageSentAt } = useMemo(() => {
-		let lastMessage: string = m['screens.messages.empty.noMessages']();
+		let lastMessage: string = m['screens.messages.conversation.noMessages']();
 
 		let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null;
 
@@ -301,8 +301,8 @@ function BaseChatItem({
 			lastMessageSentAt = convo.view.lastMessage.sentAt;
 
 			lastMessage = isDeletedAccount
-				? m['components.dms.toast.conversationDeleted']()
-				: m['components.dms.toast.messageDeleted']();
+				? m['components.dms.delete.conversationDeleted']()
+				: m['components.dms.delete.messageDeleted']();
 		}
 
 		// Message
@@ -314,7 +314,7 @@ function BaseChatItem({
 			});
 			if (info) {
 				lastMessage = info.isBlockedMessage
-					? m['screens.messages.label.messageHidden']()
+					? m['screens.messages.moderation.messageHidden']()
 					: (info.message ?? lastMessage);
 				lastMessageSentAt = info.sentAt;
 			}
@@ -352,7 +352,7 @@ function BaseChatItem({
 		}
 
 		if (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked') {
-			lastMessage = m['screens.messages.label.chatLocked']();
+			lastMessage = m['screens.messages.lock.chatLocked']();
 			LastMessageIcon = LockIcon;
 		}
 

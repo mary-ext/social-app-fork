@@ -22,7 +22,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 	const { data: convoAvailability } = useGetConvoAvailabilityQuery(profile.did);
 	const { mutate: initiateConvo } = useGetConvoForMembers({
 		onError: () => {
-			Toast.show(m['common.error.createConversation']());
+			Toast.show(m['common.chat.error.create']());
 		},
 		onSuccess: ({ convo }) => {
 			navigation.navigate('MessagesConversation', { conversation: convo.id });
@@ -56,7 +56,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 		return (
 			<Button
 				color="secondary"
-				label={m['components.dms.action.messageUser']({ handle: profile.handle })}
+				label={m['components.dms.chat.action.message']({ handle: profile.handle })}
 				onClick={onPress}
 				shape="round"
 				size="small"

@@ -320,10 +320,10 @@ export function Controls({
 				data-cursor={showCursor || !playing ? 'pointer' : 'none'}
 				aria-label={
 					!focused
-						? m['components.post.a11y.unmuteVideo']()
+						? m['components.post.video.a11y.unmute']()
 						: playing
-							? m['components.post.a11y.pauseVideo']()
-							: m['components.post.a11y.playVideo']()
+							? m['components.post.video.a11y.pause']()
+							: m['components.post.video.a11y.play']()
 				}
 				onPointerEnter={onPointerMoveEmptySpace}
 				onPointerMove={onPointerMoveEmptySpace}
@@ -350,8 +350,8 @@ export function Controls({
 				<div className={styles.controlsRow}>
 					<ControlButton
 						active={playing}
-						activeLabel={m['components.post.action.pause']()}
-						inactiveLabel={m['components.post.action.play']()}
+						activeLabel={m['components.post.video.action.pause']()}
+						inactiveLabel={m['components.post.video.action.play']()}
 						activeIcon={PauseIcon}
 						inactiveIcon={PlayIcon}
 						onPress={onPressPlayPause}
@@ -365,8 +365,8 @@ export function Controls({
 					{hasSubtitleTrack && (
 						<ControlButton
 							active={subtitlesEnabled}
-							activeLabel={m['components.post.action.disableCaptions']()}
-							inactiveLabel={m['components.post.action.enableCaptions']()}
+							activeLabel={m['components.post.video.captions.disable']()}
+							inactiveLabel={m['components.post.video.captions.enable']()}
 							activeIcon={CCActiveIcon}
 							inactiveIcon={CCInactiveIcon}
 							onPress={onPressSubtitles}
@@ -383,8 +383,8 @@ export function Controls({
 					{!IS_WEB_MOBILE_IOS && (
 						<ControlButton
 							active={isFullscreen}
-							activeLabel={m['components.post.action.exitFullscreen']()}
-							inactiveLabel={m['components.post.action.enterFullscreen']()}
+							activeLabel={m['components.post.video.action.exitFullscreen']()}
+							inactiveLabel={m['components.post.video.action.enterFullscreen']()}
 							activeIcon={ArrowsInIcon}
 							inactiveIcon={ArrowsOutIcon}
 							onPress={onPressFullscreen}
@@ -394,8 +394,8 @@ export function Controls({
 			</div>
 			{(showSpinner || error) && (
 				<div className={styles.overlay}>
-					{showSpinner && <Spinner label={m['common.label.loadingVideo']()} color="#fff" size="lg" />}
-					{error && <Text className={styles.errorText}>{m['components.post.error.generic']()}</Text>}
+					{showSpinner && <Spinner label={m['common.video.loading']()} color="#fff" size="lg" />}
+					{error && <Text className={styles.errorText}>{m['components.post.video.error.generic']()}</Text>}
 				</div>
 			)}
 		</div>

@@ -16,7 +16,7 @@ import * as css from './ThreadItemReadMoreUp.css';
 export function ThreadItemReadMoreUp({ item }: { item: Extract<ThreadItem, { type: 'readMoreUp' }> }) {
 	return (
 		<Link
-			label={m['screens.postThread.action.continueThread']()}
+			label={m['screens.postThread.reply.action.continueThread']()}
 			to={item.href}
 			style={[
 				a.gap_xs,
@@ -35,7 +35,7 @@ export function ThreadItemReadMoreUp({ item }: { item: Extract<ThreadItem, { typ
 								<UpIcon fill={interacted ? colors.textContrastHigh : colors.textContrastLow} width={24} />
 							</div>
 							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
-								{m['screens.postThread.action.continueThreadMore']()}
+								{m['screens.postThread.reply.action.continueThreadMore']()}
 							</Text>
 						</div>
 						<div className={css.iconCell}>

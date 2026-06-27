@@ -76,7 +76,7 @@ function ThreadItemPostDeleted({ item, overrides }: Pick<ThreadItemPostProps, 'i
 					<TrashIcon fill="currentColor" />
 				</div>
 				<Text size="md" weight="semiBold" color="textContrastMedium">
-					{m['screens.postThread.error.deleted']()}
+					{m['screens.postThread.post.error.deleted']()}
 				</Text>
 			</div>
 

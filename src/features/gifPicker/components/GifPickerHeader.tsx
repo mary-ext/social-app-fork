@@ -22,7 +22,7 @@ export function GifPickerHeader({
 		<div className={styles.root}>
 			<SearchInput
 				inputRef={inputRef}
-				label={m['features.gifPicker.a11y.search']()}
+				label={m['features.gifPicker.search.a11y']()}
 				maxLength={50}
 				onChangeText={onChangeText}
 				onClear={onClear}
@@ -31,7 +31,7 @@ export function GifPickerHeader({
 						onEscape();
 					}
 				}}
-				placeholder={m['features.gifPicker.label.searchPlaceholder']()}
+				placeholder={m['features.gifPicker.search.placeholder']()}
 				value={value}
 			/>
 		</div>

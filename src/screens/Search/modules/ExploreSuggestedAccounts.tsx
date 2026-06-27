@@ -37,7 +37,7 @@ export function SuggestedAccountsTabBar({
 				hideDefaultTab
 					? interestsDisplayNames
 					: {
-							all: defaultTabLabel || m['common.label.forYou'](),
+							all: defaultTabLabel || m['common.feeds.forYou'](),
 							...interestsDisplayNames,
 						}
 			}

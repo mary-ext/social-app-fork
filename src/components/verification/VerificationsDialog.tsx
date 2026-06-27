@@ -30,7 +30,7 @@ export function VerificationsDialog({
 	const userName = getUserDisplayName(profile);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.verification.title.verificationsFor']({ userName })} size="narrow">
+			<Dialog.Popup label={m['components.verification.verifications.title']({ userName })} size="narrow">
 				<DialogInner handle={handle} profile={profile} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -46,11 +46,11 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const userName = getUserDisplayName(profile);
 	const label = isViewer
 		? isVerified
-			? m['components.verification.status.youVerified']()
-			: m['components.verification.title.yourVerifications']()
+			? m['components.verification.verified.youStatus']()
+			: m['components.verification.verifications.yourTitle']()
 		: isVerified
-			? m['components.verification.status.userVerified']({ userName })
-			: m['components.verification.title.userVerifications']({ userName });
+			? m['components.verification.verified.userStatus']({ userName })
+			: m['components.verification.verifications.userTitle']({ userName });
 
 	return (
 		<>
@@ -60,14 +60,14 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				</Text>
 				<Text size="md">
 					{isVerified
-						? m['components.verification.description.verified']()
-						: m['components.verification.description.notVerified']()}
+						? m['components.verification.verified.description']()
+						: m['components.verification.verified.notVerified']()}
 				</Text>
 			</div>
 			{profile.verification ? (
 				<div className={css.section}>
 					<Text color="textContrastMedium" size="sm">
-						{m['components.verification.label.verifiedBy']()}
+						{m['components.verification.verifications.verifiedBy']()}
 					</Text>
 
 					<div className={css.list}>
@@ -78,7 +78,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 					{profile.verification.verifications.some((v) => !v.isValid) && isViewer && (
 						<Admonition className={css.admonitionSpacing} type="warning">
-							{m['components.verification.error.someInvalid']()}
+							{m['components.verification.verifications.someInvalid']()}
 						</Admonition>
 					)}
 				</div>
@@ -94,7 +94,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				</Button>
 				<ExternalLinkButton
 					color="secondary"
-					label={m['components.verification.cta.learnMore']()}
+					label={m['components.verification.learnMore']()}
 					size="small"
 					href={urls.website.blog.initialVerificationAnnouncement}
 				>
@@ -124,7 +124,7 @@ function VerifierCard({
 							<ProfileCard.AvatarPlaceholder />
 							<div className={css.nameColumn}>
 								<Text numberOfLines={1} size="md" weight="semiBold">
-									{m['components.verification.label.unknownVerifier']()}
+									{m['components.verification.trustedVerifier.unknown']()}
 								</Text>
 								<Text color="textContrastMedium" numberOfLines={1}>
 									{verification.issuer}

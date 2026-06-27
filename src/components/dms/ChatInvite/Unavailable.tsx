@@ -16,7 +16,7 @@ export function Unavailable({ className }: { className?: string }) {
 		<div className={clsx(css.unavailable, className)}>
 			<WarningIcon size="md" fill="currentColor" />
 			<Text size="md" weight="medium" color="textContrastMedium">
-				{m['common.error.inviteUnavailable']()}
+				{m['common.chat.error.inviteUnavailable']()}
 			</Text>
 		</div>
 	);

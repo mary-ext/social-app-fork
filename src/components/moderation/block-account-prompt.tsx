@@ -24,10 +24,10 @@ export function BlockAccountPrompt({
 		return (
 			<Prompt.Basic
 				handle={handle}
-				title={m['components.moderation.dialog.unblockTitle']()}
-				description={m['common.hint.unblockInteract']()}
+				title={m['components.moderation.block.unblockTitle']()}
+				description={m['common.block.unblockHint']()}
 				onConfirm={onConfirm}
-				confirmButtonCta={m['common.action.unblock']()}
+				confirmButtonCta={m['common.block.action.unblock']()}
 			/>
 		);
 	}
@@ -36,12 +36,12 @@ export function BlockAccountPrompt({
 		<Prompt.Outer handle={handle} size="wide">
 			<Prompt.Content>
 				<Prompt.TitleText>{m['components.moderation.block.confirmTitle']()}</Prompt.TitleText>
-				<Prompt.DescriptionText>{m['components.moderation.hint.whatHappens']()}</Prompt.DescriptionText>
+				<Prompt.DescriptionText>{m['components.moderation.whatHappens']()}</Prompt.DescriptionText>
 
 				<Prompt.Rows>
-					<Prompt.Row icon={Megaphone}>{m['components.moderation.hint.blockedCanSee']()}</Prompt.Row>
-					<Prompt.Row icon={Eye}>{m['components.moderation.hint.blockedNoSeePosts']()}</Prompt.Row>
-					<Prompt.Row icon={Bubble}>{m['components.moderation.hint.blockedNoMention']()}</Prompt.Row>
+					<Prompt.Row icon={Megaphone}>{m['components.moderation.block.canSee']()}</Prompt.Row>
+					<Prompt.Row icon={Eye}>{m['components.moderation.block.noSeePosts']()}</Prompt.Row>
+					<Prompt.Row icon={Bubble}>{m['components.moderation.block.noMention']()}</Prompt.Row>
 				</Prompt.Rows>
 
 				{isLabeler && (
@@ -51,7 +51,7 @@ export function BlockAccountPrompt({
 				)}
 			</Prompt.Content>
 			<Prompt.Actions>
-				<Prompt.Action onPress={onConfirm} color="negative" cta={m['common.action.block']()} />
+				<Prompt.Action onPress={onConfirm} color="negative" cta={m['common.block.action.block']()} />
 				<Prompt.Cancel />
 			</Prompt.Actions>
 		</Prompt.Outer>

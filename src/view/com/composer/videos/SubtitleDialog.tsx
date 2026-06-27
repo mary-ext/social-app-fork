@@ -41,8 +41,8 @@ export function SubtitleDialogBtn(props: Props) {
 	return (
 		<View style={[a.flex_row, a.my_xs]}>
 			<Button
-				label={m['view.composer.title.captionsAndAltText']()}
-				accessibilityHint={m['view.composer.a11y.opensCaptionsDialog']()}
+				label={m['view.composer.captions.title']()}
+				accessibilityHint={m['view.composer.captions.opensDialog']()}
 				size="small"
 				color="secondary"
 				variant="ghost"
@@ -52,7 +52,7 @@ export function SubtitleDialogBtn(props: Props) {
 				}}
 			>
 				<ButtonIcon icon={CCIcon} />
-				<ButtonText>{m['view.composer.title.captionsAndAltText']()}</ButtonText>
+				<ButtonText>{m['view.composer.captions.title']()}</ButtonText>
 			</Button>
 			<Dialog.Outer control={control}>
 				<Dialog.Handle />
@@ -90,13 +90,13 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 	});
 
 	return (
-		<Dialog.ScrollableInner label={m['view.composer.title.videoSettings']()}>
+		<Dialog.ScrollableInner label={m['view.composer.video.settingsTitle']()}>
 			<View style={a.gap_md}>
-				<Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>{m['common.label.altText']()}</Text>
+				<Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>{m['common.altText.label']()}</Text>
 				<TextField.Root isInvalid={isOverMaxLength}>
 					<Dialog.Input
-						label={m['common.label.altText']()}
-						placeholder={m['view.composer.action.addAltTextOptional']()}
+						label={m['common.altText.label']()}
+						placeholder={m['view.composer.altText.action.addOptional']()}
 						value={altText}
 						onChangeText={setAltText}
 						maxLength={MAX_ALT_TEXT * 10}
@@ -113,7 +113,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 
 				{isOverMaxLength && (
 					<Text style={[a.text_md, { color: t.palette.negative_500 }, a.leading_snug, a.mt_md]}>
-						{m['view.composer.error.altTextTooLong']({ MAX_ALT_TEXT })}
+						{m['view.composer.altText.error.tooLong']({ MAX_ALT_TEXT })}
 					</Text>
 				)}
 
@@ -121,7 +121,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 					<>
 						<View style={[a.border_t, a.w_full, t.atoms.border_contrast_medium, a.my_md]} />
 						<Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
-							{m['view.composer.label.captions']()}
+							{m['view.composer.captions.label']()}
 						</Text>
 						<SubtitleFilePicker
 							onSelectFile={handleSelectFile}
@@ -144,7 +144,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 						</View>
 						{subtitleMissingLanguage && (
 							<Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-								{m['view.composer.error.captionLanguageRequired']()}
+								{m['view.composer.captions.error.languageRequired']()}
 							</Text>
 						)}
 					</>
@@ -225,7 +225,7 @@ function SubtitleFileRow({
 				</View>
 			</View>
 			<Button
-				label={m['view.composer.action.removeCaption']()}
+				label={m['view.composer.captions.action.remove']()}
 				size="tiny"
 				shape="round"
 				variant="outline"

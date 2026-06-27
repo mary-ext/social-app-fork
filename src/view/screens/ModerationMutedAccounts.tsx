@@ -81,7 +81,7 @@ export function ModerationMutedAccounts({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.title.mutedAccounts']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.mute.accountsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -159,7 +159,7 @@ function Info({ style }: { style?: StyleProp<ViewStyle> }) {
 			]}
 		>
 			<Text style={[a.text_center, a.text_sm, t.atoms.text_contrast_high]}>
-				{m['view.muted.description']()}
+				{m['view.mute.description']()}
 			</Text>
 		</View>
 	);

@@ -146,7 +146,7 @@ function DrawerContent() {
 						activeIcon={MessageFilled}
 						inactiveIcon={Message}
 						isActive={isAtMessages}
-						label={m['common.label.chat']()}
+						label={m['common.chat.label']()}
 						onPress={() => onPressTab('Messages')}
 					/>
 					<MenuItem
@@ -155,7 +155,7 @@ function DrawerContent() {
 						countLabel={
 							numUnreadNotifications === ''
 								? undefined
-								: m['view.notifications.unreadCountAria']({ count: numUnreadNotifications })
+								: m['view.notifications.unreadCount.a11y']({ count: numUnreadNotifications })
 						}
 						inactiveIcon={Bell}
 						isActive={isAtNotifications}
@@ -173,7 +173,7 @@ function DrawerContent() {
 						activeIcon={List}
 						inactiveIcon={List}
 						isActive={false}
-						label={m['common.label.lists']()}
+						label={m['common.list.label']()}
 						onPress={() => navigateAndClose('Lists')}
 					/>
 					<MenuItem
@@ -274,7 +274,7 @@ function DrawerProfileCard({
 							</Text>
 						),
 					}}
-					message={m['view.profile.followersCount']}
+					message={m['view.profile.followers.followersCount']}
 				/>{' '}
 				&middot;{' '}
 				<Trans
@@ -289,7 +289,7 @@ function DrawerProfileCard({
 							</Text>
 						),
 					}}
-					message={m['view.profile.followingCount']}
+					message={m['view.profile.followers.followingCount']}
 				/>
 			</Text>
 		</button>

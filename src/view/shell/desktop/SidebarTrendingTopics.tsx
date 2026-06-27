@@ -51,7 +51,7 @@ function Inner() {
 						size="tiny"
 						color="secondary"
 						shape="round"
-						label={m['view.a11y.trendingOptions']()}
+						label={m['view.trending.options']()}
 						onClick={() => trendingPrompt.open(null)}
 						className={css.optionsButton}
 					>
@@ -76,8 +76,8 @@ function Inner() {
 			</div>
 			<Prompt.Basic
 				handle={trendingPrompt}
-				title={m['view.dialog.hideTrendingTitle']()}
-				description={m['view.hint.updateLater']()}
+				title={m['view.trending.hide.title']()}
+				description={m['view.settings.updateLater']()}
 				confirmButtonCta={m['common.action.hide']()}
 				onConfirm={onConfirmHide}
 			/>

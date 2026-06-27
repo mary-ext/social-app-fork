@@ -92,7 +92,7 @@ export function InviteLinkDialog({
 			setStep(Step.MANAGE);
 		},
 		onError: () => {
-			Toast.show(m['screens.messages.error.createInviteLink'](), {
+			Toast.show(m['screens.messages.inviteLink.generate.error'](), {
 				type: 'error',
 			});
 		},
@@ -102,21 +102,21 @@ export function InviteLinkDialog({
 			setStep(Step.MANAGE);
 		},
 		onError: () => {
-			Toast.show(m['screens.messages.error.editInviteLink'](), {
+			Toast.show(m['screens.messages.inviteLink.edit.error'](), {
 				type: 'error',
 			});
 		},
 	});
 	const { mutate: disableJoinLink, isPending: isDisabling } = useDisableJoinLink(convo.view.id, {
 		onError: () => {
-			Toast.show(m['screens.messages.error.disableInviteLink'](), {
+			Toast.show(m['screens.messages.inviteLink.disable.error'](), {
 				type: 'error',
 			});
 		},
 	});
 	const { mutate: enableJoinLink, isPending: isEnabling } = useEnableJoinLink(convo.view.id, {
 		onError: () => {
-			Toast.show(m['screens.messages.error.enableInviteLink'](), {
+			Toast.show(m['screens.messages.inviteLink.enable.error'](), {
 				type: 'error',
 			});
 		},
@@ -126,23 +126,23 @@ export function InviteLinkDialog({
 	const whoCanJoinOptions = [
 		{
 			name: 'anyone',
-			owner: m['screens.messages.label.anyoneJoinInstantly'](),
-			member: m['screens.messages.label.anyoneJoinInstantly'](),
+			owner: m['screens.messages.joinSettings.anyoneInstant'](),
+			member: m['screens.messages.joinSettings.anyoneInstant'](),
 		},
 		{
 			name: 'anyone:requireApproval',
-			owner: m['screens.messages.label.anyoneCanRequest'](),
-			member: m['screens.messages.label.anyoneCanRequest'](),
+			owner: m['screens.messages.joinSettings.anyoneRequest'](),
+			member: m['screens.messages.joinSettings.anyoneRequest'](),
 		},
 		{
 			name: 'followedByOwner',
-			owner: m['screens.messages.option.followingJoinInstant'](),
-			member: m['screens.messages.option.ownerFollowsJoinInstant']({ ownerName }),
+			owner: m['screens.messages.joinSettings.followingInstant'](),
+			member: m['screens.messages.joinSettings.ownerFollowsInstant']({ ownerName }),
 		},
 		{
 			name: 'followedByOwner:requireApproval',
-			owner: m['screens.messages.option.followingRequest'](),
-			member: m['screens.messages.option.ownerFollowsRequest']({ ownerName }),
+			owner: m['screens.messages.joinSettings.followingRequest'](),
+			member: m['screens.messages.joinSettings.ownerFollowsRequest']({ ownerName }),
 		},
 	];
 
@@ -150,26 +150,26 @@ export function InviteLinkDialog({
 	let header: string | null = null;
 	switch (step) {
 		case Step.INFO: {
-			header = m['screens.messages.label.inviteLink']();
+			header = m['screens.messages.inviteLink.label']();
 			content = (
 				<>
 					<View style={[a.gap_lg]}>
-						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.hint.inviteLinkInfo']()}</Text>
+						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.inviteLink.info']()}</Text>
 						<Text style={[a.text_md, a.leading_snug]}>
-							{m['screens.messages.error.memberLimit']({ count: convo.details.memberLimit })}
+							{m['screens.messages.members.add.limit']({ count: convo.details.memberLimit })}
 						</Text>
-						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.hint.invitePrivacy']()}</Text>
+						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.inviteLink.privacy']()}</Text>
 					</View>
 					<View style={[a.mt_4xl]}>
 						<Button
-							label={m['screens.messages.action.getStarted']()}
+							label={m['screens.messages.conversation.getStarted']()}
 							color="primary"
 							size="large"
 							onPress={() => {
 								setStep(Step.GENERATE);
 							}}
 						>
-							<ButtonText>{m['screens.messages.action.getStarted']()}</ButtonText>
+							<ButtonText>{m['screens.messages.conversation.getStarted']()}</ButtonText>
 							<ButtonIcon icon={ArrowRightIcon} />
 						</Button>
 					</View>
@@ -182,14 +182,14 @@ export function InviteLinkDialog({
 			const linkHasChanged = linkEnabled && joinLinkRuleKey !== whoCanJoin;
 
 			header = linkEnabled
-				? m['screens.messages.action.updateInviteLink']()
-				: m['screens.messages.action.generateInviteLink']();
+				? m['screens.messages.inviteLink.edit.update']()
+				: m['screens.messages.inviteLink.generate.action']();
 			content = (
 				<>
-					<Text style={[a.text_md]}>{m['screens.messages.hint.chooseWhoCanJoin']()}</Text>
+					<Text style={[a.text_md]}>{m['screens.messages.joinSettings.hint']()}</Text>
 					<View style={[a.mt_lg]}>
 						<Toggle.Group
-							label={m['screens.messages.label.whoCanJoin']()}
+							label={m['screens.messages.joinSettings.label']()}
 							type="radio"
 							values={[whoCanJoin]}
 							onChange={([value]) => setWhoCanJoin(value!)}
@@ -219,9 +219,9 @@ export function InviteLinkDialog({
 							label={
 								linkEnabled
 									? linkHasChanged
-										? m['screens.messages.action.updateInviteLink']()
+										? m['screens.messages.inviteLink.edit.update']()
 										: m['common.action.back']()
-									: m['screens.messages.action.generateInviteLink']()
+									: m['screens.messages.inviteLink.generate.action']()
 							}
 							color={linkEnabled && !linkHasChanged ? 'secondary' : 'primary'}
 							size="large"
@@ -248,9 +248,9 @@ export function InviteLinkDialog({
 							<ButtonText>
 								{linkEnabled
 									? linkHasChanged
-										? m['screens.messages.action.updateInviteLink']()
+										? m['screens.messages.inviteLink.edit.update']()
 										: m['common.action.back']()
-									: m['screens.messages.action.generateInviteLink']()}
+									: m['screens.messages.inviteLink.generate.action']()}
 							</ButtonText>
 							{linkHasChanged && <ButtonIcon icon={isSaving ? Loader : ArrowRightIcon} />}
 						</Button>
@@ -269,15 +269,13 @@ export function InviteLinkDialog({
 				whoCanJoinOptions[0]!;
 			const ownerValue = currentOption?.owner ?? whoCanJoinOptions[0]!.owner;
 			const memberValue = currentOption?.member ?? whoCanJoinOptions[0]!.member;
-			header = linkEnabled
-				? m['screens.messages.label.inviteLink']()
-				: m['common.label.inviteLinkDisabled']();
+			header = linkEnabled ? m['screens.messages.inviteLink.label']() : m['common.chat.inviteLinkDisabled']();
 			content = (
 				<>
 					<View style={[a.mt_lg]}>
 						<CopyTextButton
 							disabled={linkDisabled || !joinLink?.code}
-							label={m['screens.messages.label.inviteLink']()}
+							label={m['screens.messages.inviteLink.label']()}
 							value={joinLinkURI}
 						>
 							<Text
@@ -289,7 +287,7 @@ export function InviteLinkDialog({
 						</CopyTextButton>
 						{createdAt ? (
 							<Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
-								{m['screens.messages.label.created']({
+								{m['screens.messages.inviteLink.created']({
 									date: dateTimeLong.format(createdAt),
 								})}
 							</Text>
@@ -299,7 +297,7 @@ export function InviteLinkDialog({
 						isOwner ? (
 							<View style={[a.mt_lg]}>
 								<EditTextButton
-									label={m['screens.messages.action.editLinkSettings']()}
+									label={m['screens.messages.inviteLink.edit.settings']()}
 									value={ownerValue}
 									onPress={() => setStep(Step.GENERATE)}
 								>
@@ -316,18 +314,18 @@ export function InviteLinkDialog({
 						<View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
 							{isOwner ? (
 								<StackedButton
-									label={m['screens.messages.action.disable']()}
+									label={m['screens.messages.inviteLink.disable.confirm']()}
 									icon={ChainLinkBrokenIcon}
 									color="negative_subtle"
 									style={[a.flex_1, a.rounded_full]}
 									onPress={() => setStep(Step.CONFIRM_DISABLE)}
 								>
-									{m['screens.messages.action.disable']()}
+									{m['screens.messages.inviteLink.disable.confirm']()}
 								</StackedButton>
 							) : null}
 							<StackedButton
 								disabled={linkDisabled}
-								label={m['screens.messages.label.postLink']()}
+								label={m['screens.messages.composer.embed.postLink']()}
 								icon={EditIcon}
 								color="primary_subtle"
 								style={[a.flex_1, a.rounded_full]}
@@ -340,11 +338,11 @@ export function InviteLinkDialog({
 									});
 								}}
 							>
-								{m['screens.messages.label.postLink']()}
+								{m['screens.messages.composer.embed.postLink']()}
 							</StackedButton>
 							<StackedButton
 								disabled={linkDisabled}
-								label={m['common.action.share']()}
+								label={m['common.share.action.share']()}
 								icon={ArrowShareRightIcon}
 								color="primary_subtle"
 								style={[a.flex_1, a.rounded_full]}
@@ -352,31 +350,31 @@ export function InviteLinkDialog({
 									void shareUrl(joinLinkURI);
 								}}
 							>
-								{m['common.action.share']()}
+								{m['common.share.action.share']()}
 							</StackedButton>
 						</View>
 					) : (
 						<View style={[a.gap_md, a.mt_lg]}>
 							<Button
 								disabled={isEnabling || isDisabling}
-								label={m['screens.messages.action.reenableInviteLink']()}
+								label={m['screens.messages.inviteLink.enable.action']()}
 								color="primary"
 								size="large"
 								onPress={() => {
 									enableJoinLink();
 								}}
 							>
-								<ButtonText>{m['screens.messages.action.reenableLink']()}</ButtonText>
+								<ButtonText>{m['screens.messages.inviteLink.enable.short']()}</ButtonText>
 								{isEnabling && <ButtonIcon icon={Loader} />}
 							</Button>
 							<Button
 								disabled={isEnabling || isDisabling}
-								label={m['screens.messages.action.generateNewInviteLink']()}
+								label={m['screens.messages.inviteLink.generate.new']()}
 								color="secondary"
 								size="large"
 								onPress={() => setStep(Step.GENERATE)}
 							>
-								<ButtonText>{m['screens.messages.action.generateNewLink']()}</ButtonText>
+								<ButtonText>{m['screens.messages.inviteLink.generate.newShort']()}</ButtonText>
 							</Button>
 						</View>
 					)}
@@ -391,23 +389,23 @@ export function InviteLinkDialog({
 						<ChainLinkBrokenIcon fill={colors.negative_500} size="3xl" />
 					</View>
 					<Text style={[a.flex_1, a.pb_sm, a.text_center, a.text_lg, a.font_bold, a.leading_snug]}>
-						{m['screens.messages.dialog.disableLinkTitle']()}
+						{m['screens.messages.inviteLink.disable.title']()}
 					</Text>
 					<Text style={[a.pb_2xl, a.text_center, a.text_sm, a.leading_snug]}>
-						{m['screens.messages.hint.disableLinkInfo']()}
+						{m['screens.messages.inviteLink.disable.message']()}
 					</Text>
 					<View style={[a.w_full, a.gap_md, a.justify_end]}>
 						<Button
 							color="negative"
 							disabled={isDisabling}
 							size="large"
-							label={m['screens.messages.action.disableLink']()}
+							label={m['screens.messages.inviteLink.disable.action']()}
 							onPress={() => {
 								disableJoinLink();
 								setStep(Step.MANAGE);
 							}}
 						>
-							<ButtonText>{m['screens.messages.action.disableLink']()}</ButtonText>
+							<ButtonText>{m['screens.messages.inviteLink.disable.action']()}</ButtonText>
 						</Button>
 						<Button
 							color="secondary"
@@ -427,11 +425,11 @@ export function InviteLinkDialog({
 	}
 
 	if (!isOwner && (!joinLink || joinLink.enabledStatus === 'disabled')) {
-		header = m['screens.messages.label.inviteLink']();
+		header = m['screens.messages.inviteLink.label']();
 		content = (
 			<>
 				<View style={[a.mt_lg]}>
-					<Text style={[a.text_sm]}>{m['screens.messages.empty.noInviteLink']()}</Text>
+					<Text style={[a.text_sm]}>{m['screens.messages.inviteLink.empty']()}</Text>
 				</View>
 				<View style={[a.gap_md, a.mt_lg]}>
 					<Button
@@ -465,7 +463,7 @@ export function InviteLinkDialog({
 						<Dialog.Close />
 					</View>
 				}
-				label={m['screens.messages.a11y.inviteLinkDialog']()}
+				label={m['screens.messages.inviteLink.a11y']()}
 				style={{ maxWidth: 400 }}
 			>
 				{content}

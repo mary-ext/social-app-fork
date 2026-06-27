@@ -32,10 +32,10 @@ export function MembersAndRequests({
 		<View style={[a.flex_row, a.justify_between, a.px_xl, a.pt_xl, a.pb_sm]}>
 			<View style={[a.flex_row, a.align_center, a.gap_xs]}>
 				<Text style={[a.text_lg, a.font_semi_bold, t.atoms.text]}>
-					{m['screens.messages.label.members']()}
+					{m['screens.messages.members.label']()}
 				</Text>
 				<Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
-					{m['screens.messages.label.memberCountRatio']({
+					{m['screens.messages.members.countRatio']({
 						memberCount,
 						memberLimit,
 					})}
@@ -43,7 +43,7 @@ export function MembersAndRequests({
 			</View>
 			{isOwner && requestCount > 0 ? (
 				<InlineLinkText
-					label={m['screens.messages.a11y.viewIncomingRequestsGroup']()}
+					label={m['screens.messages.requests.viewIncoming.a11yGroup']()}
 					style={[a.text_sm, a.text_right, a.font_semi_bold]}
 					{...createStaticClick(() => {
 						navigation.navigate('MessagesJoinRequests', {
@@ -53,7 +53,7 @@ export function MembersAndRequests({
 				>
 					{hasMoreRequests
 						? m['screens.messages.requests.countOverflow']({ requestCount })
-						: m['screens.messages.requests.countLabel']({ requestCount })}
+						: m['screens.messages.requests.count']({ requestCount })}
 				</InlineLinkText>
 			) : null}
 		</View>

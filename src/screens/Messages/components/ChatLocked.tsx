@@ -38,15 +38,15 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 
 	const { mutate: lockConvo } = useLockConvo(convo.view.id, {
 		onSuccess: () => {
-			Toast.show(m['screens.messages.toast.groupUnlocked']());
+			Toast.show(m['screens.messages.lock.unlockedToast']());
 		},
 		onError: (e) => {
 			if (e instanceof ClientResponseError && e.error === 'ConvoLockedByModeration') {
-				Toast.show(m['screens.messages.label.chatLockedMod'](), { type: 'error' });
+				Toast.show(m['screens.messages.lock.chatLockedMod'](), { type: 'error' });
 				return;
 			}
 			logger.error('Failed to unlock group chat', { message: e });
-			Toast.show(m['screens.messages.error.unlockGroup'](), { type: 'error' });
+			Toast.show(m['screens.messages.lock.error.unlock'](), { type: 'error' });
 		},
 	});
 
@@ -56,7 +56,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });
-			Toast.show(m['screens.messages.error.leaveGroup'](), {
+			Toast.show(m['screens.messages.leave.error'](), {
 				type: 'error',
 			});
 		},
@@ -64,11 +64,11 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 
 	return (
 		<ChatFooter
-			heading={m['screens.messages.label.chatLocked']()}
+			heading={m['screens.messages.lock.chatLocked']()}
 			subheading={
 				isModerationLock
-					? m['screens.messages.label.groupLockedOwner']()
-					: m['screens.messages.label.noOneCanSend']()
+					? m['screens.messages.lock.lockedByOwner']()
+					: m['screens.messages.lock.noOneCanSend']()
 			}
 			icon={LockIcon}
 		>
@@ -84,7 +84,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 							numberOfLines={1}
 							style={[a.text_sm, a.font_semi_bold, a.leading_snug, t.atoms.text_contrast_high]}
 						>
-							{m['screens.messages.action.unlockChat']()}
+							{m['screens.messages.lock.action.unlockChat']()}
 						</Text>
 					</Pressable>
 				)
@@ -107,7 +107,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 								},
 							]}
 						>
-							{m['common.action.leaveChat']()}
+							{m['common.chat.action.leave']()}
 						</Text>
 					</Pressable>
 					<LeaveChatPrompt control={leaveChatPrompt} groupName={convo.details.name} onConfirm={leaveConvo} />

@@ -47,7 +47,7 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 							{record.name}
 						</Text>
 						<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-							{m['screens.search.label.byCreator']({ handle: sanitizeHandle(view.creator.handle) })}
+							{m['screens.search.byCreator']({ handle: sanitizeHandle(view.creator.handle) })}
 						</Text>
 					</div>
 					<LinkButton
@@ -58,7 +58,7 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 						to={link.to}
 						variant="solid"
 					>
-						<ButtonText>{m['screens.search.action.openPack']()}</ButtonText>
+						<ButtonText>{m['screens.search.starterPack.open']()}</ButtonText>
 					</LinkButton>
 				</div>
 			</div>
@@ -141,7 +141,7 @@ export function AvatarStack({
 						<div className={css.totalInner}>
 							{computedTotal > 0 ? (
 								<Text className={css.totalText} size={gtPhone ? 'md' : 'xs'} weight="semiBold">
-									{m['screens.search.label.additionalCount']({ computedTotal })}
+									{m['screens.search.starterPack.additionalCount']({ computedTotal })}
 								</Text>
 							) : (
 								<Plus fill="white" />

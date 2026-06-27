@@ -63,7 +63,7 @@ export function Link({
 		// avatar, a follow button) without nesting them in an anchor
 		<BlockLink
 			className={clsx(css.link, className)}
-			label={m['common.a11y.viewProfileNamed']({
+			label={m['common.profile.a11y.viewNamed']({
 				name: profile.displayName || sanitizeHandle(profile.handle),
 			})}
 			onBeforePress={onPress}
@@ -328,7 +328,7 @@ function FollowButtonInner({
 		e.stopPropagation();
 		try {
 			await queueFollow();
-			Toast.show(m['common.a11y.following']({ name: name() }));
+			Toast.show(m['common.follow.a11y.following']({ name: name() }));
 			onFollow?.();
 		} catch (err) {
 			if (!(err instanceof Error && err.name === 'AbortError')) {
@@ -341,7 +341,7 @@ function FollowButtonInner({
 		e.stopPropagation();
 		try {
 			await queueUnfollow();
-			Toast.show(m['common.label.noLongerFollowing']({ name: name() }));
+			Toast.show(m['common.follow.noLongerFollowing']({ name: name() }));
 		} catch (err) {
 			if (!(err instanceof Error && err.name === 'AbortError')) {
 				Toast.show(m['common.error.generic'](), { type: 'error' });
@@ -349,10 +349,10 @@ function FollowButtonInner({
 		}
 	};
 
-	const unfollowLabel = m['common.action.following']();
+	const unfollowLabel = m['common.follow.action.following']();
 	const followLabel = profile.viewer?.followedBy
-		? m['common.action.followBack']()
-		: m['common.action.follow']();
+		? m['common.follow.action.followBack']()
+		: m['common.follow.action.follow']();
 
 	if (!profile.viewer) return null;
 	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) return null;

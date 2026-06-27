@@ -48,10 +48,10 @@ export function ChatDisabled({
 			>
 				<WarningIcon fill={colors.text} size="lg" className={css.warningIcon} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
-					{m['screens.messages.error.chatsDisabledTitle']()}
+					{m['screens.messages.moderation.chatsDisabled.title']()}
 				</Text>
 				<Text style={[a.text_center, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-					{m['screens.messages.error.chatsDisabledMod']()}
+					{m['screens.messages.moderation.chatsDisabled.message']()}
 				</Text>
 				<AppealDialog />
 			</View>
@@ -68,10 +68,10 @@ function AppealDialog() {
 				color="secondary_inverted"
 				size="large"
 				onPress={control.open}
-				label={m['screens.messages.action.appeal']()}
+				label={m['screens.messages.moderation.appeal.action']()}
 				style={[a.mt_lg, a.w_full]}
 			>
-				<ButtonText>{m['screens.messages.action.appeal']()}</ButtonText>
+				<ButtonText>{m['screens.messages.moderation.appeal.action']()}</ButtonText>
 			</Button>
 			<Dialog.Outer control={control}>
 				<Dialog.Handle />
@@ -108,13 +108,13 @@ function DialogInner() {
 		},
 		onError: (err) => {
 			logger.error('Failed to submit chat appeal', { message: err });
-			Toast.show(m['common.error.submitAppeal'](), {
+			Toast.show(m['common.appeal.submitError'](), {
 				type: 'error',
 			});
 		},
 		onSuccess: () => {
 			control.close();
-			Toast.show(m['common.toast.appealSubmitted']());
+			Toast.show(m['common.appeal.submittedToast']());
 		},
 	});
 
@@ -122,15 +122,15 @@ function DialogInner() {
 	const onBack = useCallback(() => control.close(), [control]);
 
 	return (
-		<Dialog.ScrollableInner label={m['screens.messages.action.appeal']()}>
+		<Dialog.ScrollableInner label={m['screens.messages.moderation.appeal.action']()}>
 			<Text style={[a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_tight]}>
-				{m['screens.messages.action.appeal']()}
+				{m['screens.messages.moderation.appeal.action']()}
 			</Text>
-			<Text style={[a.text_md, a.leading_snug]}>{m['common.hint.appealDestination']()}</Text>
+			<Text style={[a.text_md, a.leading_snug]}>{m['common.appeal.destination']()}</Text>
 			<View style={[a.my_md]}>
 				<Dialog.Input
 					label={m['common.a11y.textInput']()}
-					placeholder={m['screens.messages.label.appealPrompt']()}
+					placeholder={m['screens.messages.moderation.appeal.prompt']()}
 					value={details}
 					onChangeText={setDetails}
 					autoFocus={true}

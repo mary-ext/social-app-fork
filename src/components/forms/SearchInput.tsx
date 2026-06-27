@@ -69,7 +69,7 @@ export function SearchInput({ value, label, onClearText, hotkey, ref, ...rest }:
 					<Button
 						testID="searchTextInputClearBtn"
 						onPress={onClearText}
-						label={m['components.forms.a11y.clearSearch']()}
+						label={m['components.forms.clearSearch']()}
 						hitSlop={HITSLOP_10}
 						size="tiny"
 						shape="round"

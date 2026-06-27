@@ -50,7 +50,7 @@ type ExploreSearchButtonModule = 'suggestedAccounts' | 'suggestedFeeds';
 function LoadMore({ item }: { item: ExploreScreenItems & { type: 'loadMore' } }) {
 	return (
 		<button
-			aria-label={m['screens.search.action.loadMore']()}
+			aria-label={m['screens.search.explore.loadMore']()}
 			className={css.loadMore}
 			onClick={() => void item.onLoadMore()}
 			type="button"
@@ -264,10 +264,10 @@ export function Explore({
 		i.push({
 			type: 'tabbedHeader',
 			key: 'suggested-accounts-header',
-			title: m['screens.search.title.suggestedAccounts'](),
+			title: m['screens.search.account.title'](),
 			icon: Person,
 			searchButton: {
-				label: m['screens.search.action.searchMoreAccounts'](),
+				label: m['screens.search.account.searchMore'](),
 				metricsTag: 'suggestedAccounts',
 				tab: 'user',
 			},
@@ -280,7 +280,7 @@ export function Explore({
 			i.push({
 				type: 'error',
 				key: 'suggestedUsersError',
-				message: m['screens.search.error.loadSuggestedFollows'](),
+				message: m['screens.search.account.loadError'](),
 				error: cleanError(suggestedUsersError),
 			});
 		} else {
@@ -341,10 +341,10 @@ export function Explore({
 		i.push({
 			type: 'header',
 			key: 'suggested-feeds-header',
-			title: m['screens.search.title.discoverFeeds'](),
+			title: m['screens.search.feeds.title'](),
 			icon: ListSparkle,
 			searchButton: {
-				label: m['screens.search.action.searchMoreFeeds'](),
+				label: m['screens.search.feeds.searchMore'](),
 				metricsTag: 'suggestedFeeds',
 				tab: 'feed',
 			},
@@ -370,14 +370,14 @@ export function Explore({
 					i.push({
 						type: 'error',
 						key: 'suggestedFeedsError',
-						message: m['screens.search.error.loadSuggestedFeeds'](),
+						message: m['screens.search.feeds.error.loadSuggested'](),
 						error: cleanError(suggestedFeedsError),
 					});
 				} else if (preferencesError) {
 					i.push({
 						type: 'error',
 						key: 'preferencesError',
-						message: m['screens.search.error.loadFeedsPrefs'](),
+						message: m['screens.search.feeds.error.loadPrefs'](),
 						error: cleanError(preferencesError),
 					});
 				} else {
@@ -396,7 +396,7 @@ export function Explore({
 						i.push({
 							type: 'loadMore',
 							key: 'loadMoreFeeds',
-							message: m['screens.search.action.loadMoreFeeds'](),
+							message: m['screens.search.feeds.loadMore'](),
 							isLoadingMore: isLoadingMoreFeeds,
 							onLoadMore: onLoadMoreFeeds,
 						});
@@ -410,21 +410,21 @@ export function Explore({
 					i.push({
 						type: 'error',
 						key: 'feedsError',
-						message: m['screens.search.error.loadFeeds'](),
+						message: m['screens.search.feeds.error.load'](),
 						error: cleanError(feedsError),
 					});
 				} else if (suggestedFeedsError) {
 					i.push({
 						type: 'error',
 						key: 'suggestedFeedsError',
-						message: m['screens.search.error.loadSuggestedFeeds'](),
+						message: m['screens.search.feeds.error.loadSuggested'](),
 						error: cleanError(suggestedFeedsError),
 					});
 				} else if (preferencesError) {
 					i.push({
 						type: 'error',
 						key: 'preferencesError',
-						message: m['screens.search.error.loadFeedsPrefs'](),
+						message: m['screens.search.feeds.error.loadPrefs'](),
 						error: cleanError(preferencesError),
 					});
 				} else {
@@ -457,21 +457,21 @@ export function Explore({
 					i.push({
 						type: 'error',
 						key: 'feedsError',
-						message: m['screens.search.error.loadFeeds'](),
+						message: m['screens.search.feeds.error.load'](),
 						error: cleanError(feedsError),
 					});
 				} else if (suggestedFeedsError) {
 					i.push({
 						type: 'error',
 						key: 'suggestedFeedsError',
-						message: m['screens.search.error.loadSuggestedFeeds'](),
+						message: m['screens.search.feeds.error.loadSuggested'](),
 						error: cleanError(suggestedFeedsError),
 					});
 				} else if (preferencesError) {
 					i.push({
 						type: 'error',
 						key: 'preferencesError',
-						message: m['screens.search.error.loadFeedsPrefs'](),
+						message: m['screens.search.feeds.error.loadPrefs'](),
 						error: cleanError(preferencesError),
 					});
 				} else {
@@ -492,7 +492,7 @@ export function Explore({
 						i.push({
 							type: 'loadMore',
 							key: 'loadMoreFeeds',
-							message: m['screens.search.action.loadMoreFeeds'](),
+							message: m['screens.search.feeds.loadMore'](),
 							isLoadingMore: isLoadingMoreFeeds,
 							onLoadMore: onLoadMoreFeeds,
 						});
@@ -506,21 +506,21 @@ export function Explore({
 					i.push({
 						type: 'error',
 						key: 'feedsError',
-						message: m['screens.search.error.loadFeeds'](),
+						message: m['screens.search.feeds.error.load'](),
 						error: cleanError(feedsError),
 					});
 				} else if (suggestedFeedsError) {
 					i.push({
 						type: 'error',
 						key: 'feedsError',
-						message: m['screens.search.error.loadSuggestedFeeds'](),
+						message: m['screens.search.feeds.error.loadSuggested'](),
 						error: cleanError(suggestedFeedsError),
 					});
 				} else if (preferencesError) {
 					i.push({
 						type: 'error',
 						key: 'preferencesError',
-						message: m['screens.search.error.loadFeedsPrefs'](),
+						message: m['screens.search.feeds.error.loadPrefs'](),
 						error: cleanError(preferencesError),
 					});
 				} else {
@@ -550,7 +550,7 @@ export function Explore({
 		i.push({
 			type: 'header',
 			key: 'suggested-starterPacks-header',
-			title: m['common.label.starterPacks'](),
+			title: m['common.starterPack.sectionTitle'](),
 			icon: StarterPack,
 			iconSize: 'xl',
 		});
@@ -672,10 +672,10 @@ export function Explore({
 						<div className={css.admonitionWrap}>
 							<Admonition>
 								{selectedInterest
-									? m['screens.search.empty.noResultsFor']({
+									? m['screens.search.account.emptyInterest']({
 											interest: interestsDisplayNames[selectedInterest] ?? '',
 										})
-									: m['screens.search.empty.noResults']()}
+									: m['screens.search.account.empty']()}
 							</Admonition>
 						</div>
 					);
@@ -750,7 +750,7 @@ export function Explore({
 					return null; // what should we do here?
 				}
 				case 'preview:loading': {
-					return <CenteredSpinner label={m['common.label.loading']()} size="lg" />;
+					return <CenteredSpinner label={m['common.status.loading']()} size="lg" />;
 				}
 				case 'preview:header': {
 					return (
@@ -761,7 +761,7 @@ export function Explore({
 								<div className={css.previewHeaderText}>
 									<ModuleHeader.TitleText size="lg">{item.feed.displayName}</ModuleHeader.TitleText>
 									<ModuleHeader.SubtitleText>
-										{m['screens.search.label.byCreator']({
+										{m['screens.search.byCreator']({
 											handle: sanitizeHandle(item.feed.creator.handle),
 										})}
 									</ModuleHeader.SubtitleText>
@@ -803,7 +803,7 @@ export function Explore({
 				case 'preview:loadMoreError': {
 					return (
 						<LoadMoreRetryBtn
-							label={m['common.error.fetchPosts']()}
+							label={m['common.post.fetchError']()}
 							onPress={() => void fetchNextPageFeedPreviews()}
 						/>
 					);

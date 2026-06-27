@@ -35,11 +35,11 @@ export function MessageInputReply() {
 	if (!text.trim()) {
 		subtle = true;
 		if (replyTo.embed?.$type === 'chat.bsky.embed.joinLink#view') {
-			text = m['common.label.chatInviteLink']();
+			text = m['common.chat.inviteLink']();
 		} else if (replyTo.embed?.$type === 'app.bsky.embed.record#view') {
-			text = m['common.label.embeddedContent']();
+			text = m['common.embed.content']();
 		} else {
-			text = m['common.label.noText']();
+			text = m['common.altText.noText']();
 		}
 	}
 
@@ -70,7 +70,7 @@ export function MessageInputReply() {
 				</Text>
 			</View>
 			<Button
-				label={m['screens.messages.action.cancelReply']()}
+				label={m['screens.messages.composer.cancelReply']()}
 				onPress={clearReply}
 				style={[a.px_2xs]}
 				hitSlop={HITSLOP_20}

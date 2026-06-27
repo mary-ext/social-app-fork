@@ -60,7 +60,7 @@ export function VideoPreview({
 								playsInline
 								onError={(err) => {
 									console.error('Error loading video', err);
-									Toast.show(m['view.composer.error.videoProcess'](), {
+									Toast.show(m['view.composer.video.error.process'](), {
 										type: 'error',
 									});
 									clear();

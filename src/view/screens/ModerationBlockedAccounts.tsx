@@ -78,7 +78,7 @@ export function ModerationBlockedAccounts({}: Props) {
 				<Layout.Header.Outer>
 					<Layout.Header.BackButton />
 					<Layout.Header.Content>
-						<Layout.Header.TitleText>{m['common.label.blockedAccounts']()}</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['common.block.accountsTitle']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
@@ -157,7 +157,7 @@ function Info({ style }: { style?: StyleProp<ViewStyle> }) {
 			]}
 		>
 			<Text style={[a.text_center, a.text_sm, t.atoms.text_contrast_high]}>
-				{m['view.blocked.description']()}
+				{m['view.block.description']()}
 			</Text>
 		</View>
 	);

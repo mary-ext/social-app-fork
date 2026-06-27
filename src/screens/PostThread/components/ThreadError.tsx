@@ -15,13 +15,13 @@ export function ThreadError({ error, onRetry }: { error: Error; onRetry: () => v
 	const cleanError = useCleanError();
 
 	const { title, message } = useMemo(() => {
-		let title = m['screens.postThread.error.loadPost']();
-		let message: string = m['screens.postThread.error.generic']();
+		let title = m['screens.postThread.post.error.load']();
+		let message: string = m['screens.postThread.post.error.generic']();
 
 		const { raw, clean } = cleanError(error);
 
 		if (error.message.startsWith('Post not found')) {
-			title = m['screens.postThread.error.notFound']();
+			title = m['screens.postThread.post.error.notFound']();
 			message = clean || raw || message;
 		}
 

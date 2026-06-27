@@ -63,7 +63,7 @@ export function GlobalReportDialog() {
 				payload ? (
 					<Dialog.Popup
 						className={styles.popup}
-						label={m['components.moderation.a11y.reportDialog']()}
+						label={m['components.moderation.report.a11yLabel']()}
 						scroll="body"
 					>
 						<Content close={() => control.close()} subject={payload.subject} />
@@ -96,7 +96,7 @@ export function ReportDialog({
 		>
 			<Dialog.Popup
 				className={styles.popup}
-				label={m['components.moderation.a11y.reportDialog']()}
+				label={m['components.moderation.report.a11yLabel']()}
 				scroll="body"
 			>
 				<Content close={() => control.close()} onAfterSubmit={onAfterSubmit} subject={subject} />
@@ -132,9 +132,9 @@ function Invalid({ close }: { close: () => void }) {
 			<Dialog.Body>
 				<div className={styles.body}>
 					<Text size="lg" weight="bold">
-						{m['components.moderation.error.invalidSubject']()}
+						{m['components.moderation.report.error.invalidSubject']()}
 					</Text>
-					<Text color="textContrastMedium">{m['components.moderation.error.reportDataInvalid']()}</Text>
+					<Text color="textContrastMedium">{m['components.moderation.report.error.dataInvalid']()}</Text>
 				</div>
 			</Dialog.Body>
 		</>
@@ -293,10 +293,10 @@ function Inner({
 							<ExternalLink
 								className={styles.legal}
 								href={SUPPORT_PAGE}
-								label={m['components.moderation.copyright.title']()}
+								label={m['components.moderation.report.copyright.title']()}
 							>
 								<Text className={styles.grow} color="textContrastMedium" leading="snug" size="sm">
-									{m['components.moderation.copyright.prompt']()}
+									{m['components.moderation.report.copyright.prompt']()}
 								</Text>
 								<SquareArrowTopRightIcon fill={colors.textContrastMedium} size="sm" />
 							</ExternalLink>
@@ -342,10 +342,10 @@ function Inner({
 								</div>
 							) : labelersError || !allLabelers ? (
 								<>
-									<Admonition type="error">{m['components.moderation.error.loadServices']()}</Admonition>
+									<Admonition type="error">{m['components.moderation.service.loadError']()}</Admonition>
 									<Button
 										color="secondary"
-										label={m['components.moderation.action.retryServices']()}
+										label={m['components.moderation.service.retry']()}
 										onClick={() => void refetch()}
 										size="small"
 										variant="solid"
@@ -355,7 +355,7 @@ function Inner({
 								</>
 							) : !selectedLabeler ? (
 								<Admonition type="warning">
-									{m['components.moderation.error.noLabelerSupportsReport']()}
+									{m['components.moderation.report.error.noLabelerSupport']()}
 								</Admonition>
 							) : (
 								<>
@@ -378,15 +378,15 @@ function Inner({
 							color="primary"
 							className={styles.doneButton}
 							disabled={!canSubmit}
-							label={m['components.moderation.action.submitReport']()}
+							label={m['components.moderation.report.submit']()}
 							onClick={() => void onSubmit()}
 							size="large"
 							variant="solid"
 						>
 							<ButtonText>
 								{isSuccess
-									? m['components.moderation.toast.reportSent']()
-									: m['components.moderation.action.submitReport']()}
+									? m['components.moderation.report.sentToast']()
+									: m['components.moderation.report.submit']()}
 							</ButtonText>
 							<ButtonIcon icon={isSuccess ? CheckIcon : isPending ? Loader : PaperPlaneIcon} />
 						</Button>
@@ -491,11 +491,11 @@ function Recipient({
 					<Menu.Trigger
 						render={
 							<button
-								aria-label={m['components.moderation.service.change']()}
+								aria-label={m['components.moderation.service.change.a11yLabel']()}
 								className={styles.changeLink}
 								type="button"
 							>
-								<Text color="primary_500">{m['components.moderation.action.change']()}</Text>
+								<Text color="primary_500">{m['components.moderation.service.change.label']()}</Text>
 							</button>
 						}
 					/>
@@ -532,8 +532,8 @@ function Details({ onChange, value }: { onChange: (value: string) => void; value
 	const length = value.length;
 	const overLimit = length > MAX_DETAILS_LENGTH;
 	const counterLabel = overLimit
-		? m['components.moderation.details.charCountOver']({ length, MAX_DETAILS_LENGTH })
-		: m['components.moderation.details.charCount']({ length, MAX_DETAILS_LENGTH });
+		? m['components.moderation.report.details.charCountOver']({ length, MAX_DETAILS_LENGTH })
+		: m['components.moderation.report.details.charCount']({ length, MAX_DETAILS_LENGTH });
 	return (
 		<TextField.Root isInvalid={overLimit}>
 			<TextField.LabelText
@@ -549,21 +549,21 @@ function Details({ onChange, value }: { onChange: (value: string) => void; value
 					</Text>
 				}
 			>
-				{m['components.moderation.details.labelOptional']()}
+				{m['components.moderation.report.details.labelOptional']()}
 			</TextField.LabelText>
 			<TextField.Input
 				describedBy={counterId}
 				isInvalid={overLimit}
-				label={m['components.moderation.details.label']()}
+				label={m['components.moderation.report.details.label']()}
 				maxRows={8}
 				multiline
 				onChangeText={onChange}
-				placeholder={m['components.moderation.details.contextHint']()}
+				placeholder={m['components.moderation.report.details.placeholder']()}
 				value={value}
 			/>
 			{/* announce only the crossing into over-limit while typing; a stable message avoids per-keystroke spam */}
 			<div className={styles.srOnly} role="status">
-				{overLimit ? m['components.moderation.error.detailsOverLimit']() : ''}
+				{overLimit ? m['components.moderation.report.error.detailsOverLimit']() : ''}
 			</div>
 		</TextField.Root>
 	);

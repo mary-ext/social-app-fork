@@ -194,7 +194,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
 			if (!url) return undefined;
 			if (!isLiveNowUrlAllowed(url, liveNowConfig.currentAccountAllowedHosts)) {
 				const { formatted } = getLiveServiceNames(liveNowConfig.currentAccountAllowedHosts);
-				throw new Error(m['features.liveNow.error.unsupportedService']({ formatted }));
+				throw new Error(m['features.liveNow.service.unsupported']({ formatted }));
 			}
 
 			return await getLinkMeta(url);
@@ -289,7 +289,7 @@ export function useUpsertLiveStatusMutation(
 			} else {
 			}
 
-			Toast.show(m['features.liveNow.status.started']());
+			Toast.show(m['features.liveNow.goLive.started']());
 			control.close(() => {
 				if (!currentAccount) return;
 
@@ -342,7 +342,7 @@ export function useRemoveLiveStatusMutation() {
 			});
 		},
 		onSuccess: () => {
-			Toast.show(m['features.liveNow.status.ended']());
+			Toast.show(m['features.liveNow.goLive.ended']());
 			control.close(() => {
 				if (!currentAccount) return;
 

@@ -76,7 +76,7 @@ export function MessageComposer({
 		if (!hasEmbed && message.trim() === '') return;
 		const graphemeCount = getGraphemeLength(message);
 		if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
-			Toast.show(m['screens.messages.error.messageTooLong']({ graphemeCount, MAX_DM_GRAPHEME_LENGTH }), {
+			Toast.show(m['screens.messages.composer.tooLongError']({ graphemeCount, MAX_DM_GRAPHEME_LENGTH }), {
 				type: 'error',
 			});
 			return;
@@ -156,10 +156,12 @@ export function MessageComposer({
 							</>
 						)}
 						<Composer
-							accessibilityLabel={m['screens.messages.a11y.messageInput']()}
-							accessibilityHint={m['screens.messages.label.writeMessage']()}
+							accessibilityLabel={m['screens.messages.composer.a11y']()}
+							accessibilityHint={m['screens.messages.composer.placeholder']()}
 							placeholder={
-								loading ? m['screens.messages.label.loadingChat']() : m['screens.messages.action.message']()
+								loading
+									? m['screens.messages.conversation.loading']()
+									: m['screens.messages.message.action']()
 							}
 							autocompletePlacement="top-start"
 							internalApiRef={composerInternalApiRef}
@@ -208,7 +210,7 @@ function SubmitButton({
 		>
 			<Pressable
 				accessibilityRole="button"
-				accessibilityLabel={m['screens.messages.action.sendMessage']()}
+				accessibilityLabel={m['screens.messages.composer.send']()}
 				accessibilityHint=""
 				hitSlop={HITSLOP_10}
 				style={[a.rounded_full, a.align_center, a.justify_center, { height: MIN_HEIGHT, width: MIN_HEIGHT }]}

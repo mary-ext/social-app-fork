@@ -17,7 +17,7 @@ interface PostsListProps {
 export function PostsList({ listUri }: PostsListProps) {
 	const feed: FeedDescriptor = `list|${listUri}`;
 	const renderPostsEmpty = useCallback(() => {
-		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.empty.feed']()} />;
+		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
 	}, []);
 
 	return (

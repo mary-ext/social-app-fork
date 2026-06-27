@@ -213,7 +213,7 @@ export function TextInput({
 				<div className={styles.dropScrim({ visible: isDropping })} inert={!isDropping}>
 					<div className={styles.dropCard}>
 						<Text className={styles.dropText} color="textContrastMedium" size="lg" weight="semiBold">
-							{m['view.composer.label.dropToAddImages']()}
+							{m['view.composer.gallery.dropToAdd']()}
 						</Text>
 					</div>
 				</div>,

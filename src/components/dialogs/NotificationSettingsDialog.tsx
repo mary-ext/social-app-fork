@@ -32,7 +32,7 @@ export function NotificationSettingsDialog({
 }: NotificationSettingsDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['common.title.notificationSettings']()}>
+			<Dialog.Popup className={styles.popup} label={m['common.notifications.settingsTitle']()}>
 				<Inner
 					allowDisableInApp={allowDisableInApp}
 					name={name}
@@ -67,7 +67,7 @@ function Inner({
 			</div>
 			{isError ? (
 				<div className={styles.errorWrap}>
-					<Admonition type="error">{m['common.error.loadNotificationSettings']()}</Admonition>
+					<Admonition type="error">{m['common.notifications.loadSettingsError']()}</Admonition>
 				</div>
 			) : (
 				<PreferenceControls

@@ -40,17 +40,17 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 			<Dialog.Trigger
 				handle={control}
 				render={
-					<Button color="secondary" size="small" label={m['view.composer.title.contentWarnings']()}>
+					<Button color="secondary" size="small" label={m['view.composer.contentWarning.title']()}>
 						<ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
 						<ButtonText>
-							{hasLabel ? m['view.composer.status.labelsAdded']() : m['common.label.labels']()}
+							{hasLabel ? m['view.composer.contentWarning.labelsAdded']() : m['common.moderation.labels']()}
 						</ButtonText>
 						<ButtonIcon icon={TinyChevronIcon} size="2xs" />
 					</Button>
 				}
 			/>
 			<Dialog.Root handle={control}>
-				<Dialog.Popup label={m['view.composer.action.addContentWarning']()} size="narrow">
+				<Dialog.Popup label={m['view.composer.contentWarning.add']()} size="narrow">
 					<Dialog.Close />
 					<DialogInner
 						labels={labels}
@@ -81,38 +81,38 @@ function DialogInner({
 		<>
 			<div className={styles.header}>
 				<Text size="_2xl" weight="semiBold">
-					{m['view.composer.action.addContentWarning']()}
+					{m['view.composer.contentWarning.add']()}
 				</Text>
-				<Text color="textContrastMedium">{m['view.composer.hint.contentWarnings']()}</Text>
+				<Text color="textContrastMedium">{m['view.composer.contentWarning.hint']()}</Text>
 			</div>
 
 			<div className={styles.sections}>
 				<div className={styles.section}>
 					<Text size="lg" weight="semiBold">
-						{m['common.label.adultContent']()}
+						{m['common.moderation.adultContent']()}
 					</Text>
 					<Toggle.Group
-						label={m['view.composer.label.adultContentLabels']()}
+						label={m['view.composer.contentWarning.adultLabels']()}
 						onChange={(values) => updateAdultLabels(values as AdultSelfLabel[])}
 						values={labels}
 					>
 						<Toggle.PanelGroup>
-							<Toggle.Item label={m['view.composer.label.suggestive']()} name="sexual">
+							<Toggle.Item label={m['view.composer.contentWarning.suggestive']()} name="sexual">
 								<Toggle.Panel adjacent="trailing">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>{m['view.composer.label.suggestive']()}</Toggle.PanelText>
+									<Toggle.PanelText>{m['view.composer.contentWarning.suggestive']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
-							<Toggle.Item label={m['view.composer.label.nudity']()} name="nudity">
+							<Toggle.Item label={m['view.composer.contentWarning.nudity']()} name="nudity">
 								<Toggle.Panel adjacent="both">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>{m['view.composer.label.nudity']()}</Toggle.PanelText>
+									<Toggle.PanelText>{m['view.composer.contentWarning.nudity']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
-							<Toggle.Item label={m['view.composer.label.porn']()} name="porn">
+							<Toggle.Item label={m['view.composer.contentWarning.porn']()} name="porn">
 								<Toggle.Panel adjacent="leading">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>{m['view.composer.label.adult']()}</Toggle.PanelText>
+									<Toggle.PanelText>{m['view.composer.contentWarning.adult']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
 						</Toggle.PanelGroup>
@@ -123,25 +123,25 @@ function DialogInner({
 								? m['view.composer.contentWarning.pornDesc']()
 								: labels.includes('nudity')
 									? m['view.composer.contentWarning.nudityDesc']()
-									: m['view.composer.label.sexualContent']()}
+									: m['view.composer.contentWarning.sexualContentDesc']()}
 						</Text>
 					)}
 				</div>
 
 				<div className={styles.section}>
 					<Text size="lg" weight="semiBold">
-						{m['common.label.other']()}
+						{m['common.status.other']()}
 					</Text>
 					<Toggle.Group
-						label={m['view.composer.label.otherLabels']()}
+						label={m['view.composer.contentWarning.otherLabels']()}
 						onChange={(values) => updateOtherLabels(values as OtherSelfLabel[])}
 						values={labels}
 					>
 						<Toggle.PanelGroup>
-							<Toggle.Item label={m['common.label.graphicMedia']()} name="graphic-media">
+							<Toggle.Item label={m['common.moderation.graphicMedia']()} name="graphic-media">
 								<Toggle.Panel adjacent="none">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>{m['common.label.graphicMedia']()}</Toggle.PanelText>
+									<Toggle.PanelText>{m['common.moderation.graphicMedia']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
 						</Toggle.PanelGroup>

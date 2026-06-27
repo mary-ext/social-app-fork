@@ -44,13 +44,13 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 	};
 
 	return (
-		<Dialog.Popup label={m['components.dialogs.leaving.title']()} size="narrow">
+		<Dialog.Popup label={m['components.dialogs.link.title']()} size="narrow">
 			<div className={css.outer}>
 				<div className={css.content}>
 					<Text size="_2xl" weight="bold">
-						{m['components.dialogs.leaving.title']()}
+						{m['components.dialogs.link.title']()}
 					</Text>
-					<Text color="textContrastHigh">{m['components.dialogs.link.destinationPrompt']()}</Text>
+					<Text color="textContrastHigh">{m['components.dialogs.link.destination']()}</Text>
 					<LinkBox href={link.href} />
 				</div>
 				<div className={css.actions}>
@@ -59,18 +59,12 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 					</Button>
 					<Button
 						color="primary"
-						label={
-							link.share
-								? m['components.dialogs.action.shareLink']()
-								: m['components.dialogs.action.visitSite']()
-						}
+						label={link.share ? m['components.dialogs.link.share']() : m['components.dialogs.link.visit']()}
 						onClick={onPressVisit}
 						variant="solid"
 					>
 						<ButtonText>
-							{link.share
-								? m['components.dialogs.action.shareLink']()
-								: m['components.dialogs.action.visitSite']()}
+							{link.share ? m['components.dialogs.link.share']() : m['components.dialogs.link.visit']()}
 						</ButtonText>
 					</Button>
 				</div>

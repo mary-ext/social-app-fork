@@ -36,18 +36,18 @@ export function PostRepliedTo({
 
 	let label;
 	if (isParentBlocked) {
-		label = m['components.post.label.repliedToBlocked']();
+		label = m['components.post.reply.toBlocked']();
 	} else if (isParentNotFound) {
-		label = m['components.post.label.repliedToPost']();
+		label = m['components.post.reply.toPost']();
 	} else if (parentAuthor) {
 		const did = typeof parentAuthor === 'string' ? parentAuthor : parentAuthor.did;
 		const isMe = currentAccount?.did === did;
 		if (isMe) {
-			label = m['components.post.label.repliedToYou']();
+			label = m['components.post.reply.toYou']();
 		} else {
 			label = (
 				<Trans
-					message={m['components.post.label.repliedTo']}
+					message={m['components.post.reply.to']}
 					markup={{ t0: () => <ParentAuthorName did={did} /> }}
 				/>
 			);

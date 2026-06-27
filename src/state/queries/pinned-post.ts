@@ -57,9 +57,9 @@ export function usePinnedPostMutation() {
 				});
 
 				if (pinCurrentPost) {
-					Toast.show(m['state.toast.postPinned']());
+					Toast.show(m['state.pin.pinned']());
 				} else {
-					Toast.show(m['state.toast.postUnpinned']());
+					Toast.show(m['state.pin.unpinned']());
 				}
 
 				void queryClient.invalidateQueries({
@@ -69,7 +69,7 @@ export function usePinnedPostMutation() {
 					queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_with_replies`),
 				});
 			} catch (e) {
-				Toast.show(m['state.error.pinPost']());
+				Toast.show(m['state.pin.error']());
 				logger.error('Failed to pin post', { message: String(e) });
 				// revert optimistic update
 				updatePostShadow(queryClient, postUri, {

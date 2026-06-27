@@ -117,7 +117,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		avatar: view.avatar,
 		displayName: view.displayName
 			? sanitizeDisplayName(view.displayName)
-			: m['common.label.feedBy']({ handle: sanitizeHandle(view.creator.handle, '@') }),
+			: m['common.feeds.feedBy']({ handle: sanitizeHandle(view.creator.handle, '@') }),
 		description,
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
@@ -156,7 +156,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		creatorHandle: view.creator.handle,
 		displayName: view.name
 			? sanitizeDisplayName(view.name)
-			: m['state.label.userListByCreator']({ handle: sanitizeHandle(view.creator.handle, '@') }),
+			: m['state.list.byCreator']({ handle: sanitizeHandle(view.creator.handle, '@') }),
 		contentMode: undefined,
 	};
 }

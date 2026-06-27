@@ -54,7 +54,7 @@ interface PostOpts {
 
 export async function post({ appview, did, pds }: PostClients, queryClient: QueryClient, opts: PostOpts) {
 	const thread = opts.thread;
-	opts.onStateChange?.(m['lib.status.processing']());
+	opts.onStateChange?.(m['lib.upload.processing']());
 
 	let replyPromise: Promise<AppBskyFeedPost.Main['reply']> | AppBskyFeedPost.Main['reply'] | undefined;
 	if (opts.replyTo) {
@@ -169,7 +169,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 			safeMessage: e instanceof Error ? e.message : String(e),
 		});
 		if (isNetworkError(e)) {
-			throw new Error(m['lib.error.postUploadFailed']());
+			throw new Error(m['lib.upload.postFailed']());
 		} else {
 			throw e;
 		}
@@ -300,7 +300,7 @@ async function resolveMedia(
 		logger.debug(`Uploading images`, {
 			count: imagesDraft.length,
 		});
-		onStateChange?.(m['lib.status.uploadingImages']());
+		onStateChange?.(m['lib.upload.images']());
 		const images: AppBskyEmbedImages.Image[] = await Promise.all(
 			imagesDraft.map(async (image, i) => {
 				logger.debug(`Compressing image #${i}`);
@@ -323,7 +323,7 @@ async function resolveMedia(
 		logger.debug(`Uploading images`, {
 			count: imagesDraft.length,
 		});
-		onStateChange?.(m['lib.status.uploadingImages']());
+		onStateChange?.(m['lib.upload.images']());
 		const items: $type.enforce<AppBskyEmbedGallery.Image>[] = await Promise.all(
 			imagesDraft.map(async (image, i) => {
 				logger.debug(`Compressing image #${i}`);
@@ -380,7 +380,7 @@ async function resolveMedia(
 		const resolvedGif = await fetchResolveGifQuery(queryClient, gifDraft.gif);
 		let blob: AtpBlob | undefined;
 		if (resolvedGif.thumb) {
-			onStateChange?.(m['lib.status.uploadingThumb']());
+			onStateChange?.(m['lib.upload.thumb']());
 			blob = await uploadBlob(pds, resolvedGif.thumb.source.blob);
 		}
 		return {
@@ -398,7 +398,7 @@ async function resolveMedia(
 		if (resolvedLink.type === 'external') {
 			let blob: AtpBlob | undefined;
 			if (resolvedLink.thumb) {
-				onStateChange?.(m['lib.status.uploadingThumb']());
+				onStateChange?.(m['lib.upload.thumb']());
 				blob = await uploadBlob(pds, resolvedLink.thumb.source.blob);
 			}
 			return {

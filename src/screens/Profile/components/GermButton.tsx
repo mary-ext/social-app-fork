@@ -73,7 +73,7 @@ function GermLink({ url }: { url: string }) {
 			<ExternalLink
 				className={css.pill}
 				href={url}
-				label={m['screens.profile.action.openGermDm']()}
+				label={m['screens.profile.germDm.action.open']()}
 				onPress={() => {
 					// a custom domain can't be verified as a real Germ link, so route it through our own warning
 					if (isCustomGermDomain(url)) {
@@ -84,7 +84,7 @@ function GermLink({ url }: { url: string }) {
 			>
 				<GermLogo size="small" />
 				<WebText className={css.label} size="sm" weight="medium">
-					{m['screens.profile.label.germDm']()}
+					{m['screens.profile.germDm.label']()}
 				</WebText>
 				<ArrowTopRightIcon className={css.arrow} width={14} height={14} fill={colors.text} />
 			</ExternalLink>
@@ -137,10 +137,10 @@ function GermSelfButton({ did }: { did: string }) {
 					await whenAppViewReady(appview, did, (res) => !!res.associated?.germ);
 					await queryClient.refetchQueries({ queryKey: RQKEY(did) });
 
-					Toast.show(m['screens.profile.toast.germDmReconnected']());
+					Toast.show(m['screens.profile.germDm.reconnectedToast']());
 				} catch (e) {
 					const message = e instanceof Error ? e.message : String(e);
-					Toast.show(m['screens.profile.error.reconnectGermDm']({ message }), {
+					Toast.show(m['screens.profile.germDm.error.reconnect']({ message }), {
 						type: 'error',
 					});
 					if (!isNetworkError(e)) {
@@ -153,7 +153,7 @@ function GermSelfButton({ did }: { did: string }) {
 
 			selfExplanationDialogControl.close(() => {
 				void queryClient.refetchQueries({ queryKey: RQKEY(did) });
-				Toast.show(m['screens.profile.toast.germDmDisconnected'](), {
+				Toast.show(m['screens.profile.germDm.disconnectedToast'](), {
 					action: previousRecord
 						? { label: m['screens.profile.action.undo'](), onPress: () => void undo() }
 						: undefined,
@@ -161,7 +161,7 @@ function GermSelfButton({ did }: { did: string }) {
 			});
 		},
 		onError: (error) => {
-			Toast.show(m['screens.profile.error.disconnectGermDm']({ message: error?.message }), {
+			Toast.show(m['screens.profile.germDm.error.disconnect']({ message: error?.message }), {
 				type: 'error',
 			});
 			if (!isNetworkError(error)) {
@@ -175,27 +175,27 @@ function GermSelfButton({ did }: { did: string }) {
 	return (
 		<>
 			<Button
-				label={m['screens.profile.a11y.learnGermDm']()}
+				label={m['screens.profile.germDm.learnMore']()}
 				onPress={() => {
 					selfExplanationDialogControl.open();
 				}}
 				style={[t.atoms.bg_contrast_50, a.rounded_full, a.self_start, { padding: 6, paddingRight: 10 }]}
 			>
 				<GermLogo size="small" />
-				<Text style={[a.text_sm, a.font_medium, a.ml_xs]}>{m['screens.profile.label.germDm']()}</Text>
+				<Text style={[a.text_sm, a.font_medium, a.ml_xs]}>{m['screens.profile.germDm.label']()}</Text>
 			</Button>
 			<Dialog.Outer control={selfExplanationDialogControl}>
 				<Dialog.Handle />
 				<Dialog.ScrollableInner
-					label={m['screens.profile.label.germDmLink']()}
+					label={m['screens.profile.germDm.linkLabel']()}
 					style={[{ maxWidth: 400, borderRadius: 36 }]}
 				>
 					<View style={[a.flex_row, a.align_center, { gap: 6 }]}>
 						<GermLogo size="large" />
-						<Text style={[a.text_2xl, a.font_bold]}>{m['screens.profile.label.germDmLink']()}</Text>
+						<Text style={[a.text_2xl, a.font_bold]}>{m['screens.profile.germDm.linkLabel']()}</Text>
 					</View>
 
-					<Text style={[a.text_md, a.leading_snug, a.mt_sm]}>{m['screens.profile.hint.germDmInfo']()}</Text>
+					<Text style={[a.text_md, a.leading_snug, a.mt_sm]}>{m['screens.profile.germDm.info']()}</Text>
 					<View style={[a.mt_2xl, a.gap_md]}>
 						<Button
 							label={m['screens.profile.action.gotIt']()}
@@ -206,14 +206,14 @@ function GermSelfButton({ did }: { did: string }) {
 							<ButtonText>{m['screens.profile.action.gotIt']()}</ButtonText>
 						</Button>
 						<Button
-							label={m['screens.profile.action.disconnectGermDm']()}
+							label={m['screens.profile.germDm.action.disconnect']()}
 							size="large"
 							color="secondary"
 							onPress={() => deleteDeclaration()}
 							disabled={isPending}
 						>
 							{isPending && <ButtonIcon icon={Loader} />}
-							<ButtonText>{m['screens.profile.action.disconnectGermDm']()}</ButtonText>
+							<ButtonText>{m['screens.profile.germDm.action.disconnect']()}</ButtonText>
 						</Button>
 					</View>
 				</Dialog.ScrollableInner>

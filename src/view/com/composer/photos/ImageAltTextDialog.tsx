@@ -23,7 +23,7 @@ type Props = {
 export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.ReactNode => {
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
-			<Dialog.Popup scroll="body" label={m['view.composer.action.addAltText']()}>
+			<Dialog.Popup scroll="body" label={m['view.composer.altText.action.add']()}>
 				<DialogInner handle={handle} image={image} onChange={onChange} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -62,7 +62,7 @@ const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{m['view.composer.action.addAltText']()}</Dialog.Header.TitleText>
+					<Dialog.Header.TitleText>{m['view.composer.altText.action.add']()}</Dialog.Header.TitleText>
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot>
 					<Button
@@ -99,24 +99,24 @@ const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
 								</Text>
 							}
 						>
-							{m['view.composer.label.descriptiveAltText']()}
+							{m['view.composer.altText.descriptive']()}
 						</TextField.LabelText>
 						<TextField.Input
 							autoFocus
 							defaultValue={altText}
 							describedBy={counterId}
 							isInvalid={isOverLimit}
-							label={m['common.label.altText']()}
+							label={m['common.altText.label']()}
 							maxRows={8}
 							multiline
 							onChangeText={setAltText}
-							placeholder={m['common.label.altText']()}
+							placeholder={m['common.altText.label']()}
 						/>
 					</TextField.Root>
 
 					{/* announce only the crossing into over-limit while typing; a stable message avoids per-keystroke spam */}
 					<div className={styles.srOnly} role="status">
-						{isOverLimit ? m['view.composer.error.altTextOverLimit']() : ''}
+						{isOverLimit ? m['view.composer.altText.error.overLimit']() : ''}
 					</div>
 				</div>
 			</Dialog.Body>

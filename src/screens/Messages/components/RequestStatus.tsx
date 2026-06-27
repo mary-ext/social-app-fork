@@ -53,8 +53,8 @@ export function RequestStatus({
 			>
 				<Pressable
 					accessibilityRole="button"
-					accessibilityLabel={m['screens.messages.action.viewIncomingRequests']()}
-					accessibilityHint={m['screens.messages.a11y.viewIncomingRequestsJoin']()}
+					accessibilityLabel={m['screens.messages.requests.viewIncoming.action']()}
+					accessibilityHint={m['screens.messages.requests.viewIncoming.a11yJoin']()}
 					hitSlop={HITSLOP_10}
 					style={[a.flex_1, a.flex_row, a.align_center, a.p_lg]}
 					onPress={onPress}
@@ -65,13 +65,13 @@ export function RequestStatus({
 							? m['screens.messages.requests.newOverThreshold']({
 									JOIN_REQUESTS_THRESHOLD,
 								})
-							: m['screens.messages.requests.newJoinCount']({ count })}
+							: m['screens.messages.requests.newCount']({ count })}
 					</Text>
 				</Pressable>
 				<Pressable
 					accessibilityRole="button"
 					accessibilityLabel={m['screens.messages.a11y.closeBanner']()}
-					accessibilityHint={m['screens.messages.a11y.closeRequestsBanner']()}
+					accessibilityHint={m['screens.messages.requests.closeBanner']()}
 					hitSlop={HITSLOP_10}
 					onPress={onDismiss}
 					style={[a.p_lg]}

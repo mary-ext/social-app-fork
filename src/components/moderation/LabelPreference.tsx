@@ -75,7 +75,7 @@ export function LabelerLabelRow({
 	const labelOptions: Record<LabelPreference, string> = {
 		hide: m['common.action.hide'](),
 		ignore: m['common.action.show'](),
-		warn: m['common.action.warn'](),
+		warn: m['common.moderation.warn'](),
 	};
 
 	// A label that is configured elsewhere (a global label, set in moderation settings) or unavailable (adult
@@ -96,14 +96,14 @@ export function LabelerLabelRow({
 							<CircleInfo fill="currentColor" size="sm" />
 							<Text color="textContrastMedium" size="sm" weight="medium">
 								{adultDisabled ? (
-									m['components.moderation.hint.adultContentDisabled']()
+									m['components.moderation.adultContent.disabled']()
 								) : (
 									<Trans
-										message={m['components.moderation.hint.configuredIn']}
+										message={m['components.moderation.moderationSettings.configuredIn']}
 										markup={{
 											t0: ({ children }) => (
 												<InlineLinkText
-													label={m['components.moderation.label.moderationSettings']()}
+													label={m['components.moderation.moderationSettings.label']()}
 													to="/moderation"
 												>
 													{children}
@@ -143,7 +143,7 @@ export function LabelerLabelRow({
 		<Settings.SelectRow<LabelPreference>
 			className={className}
 			items={items}
-			label={m['common.label.filteringFor']({ name: labelStrings.name })}
+			label={m['common.search.filteringFor']({ name: labelStrings.name })}
 			onValueChange={(visibility) => mutate({ label: identifier, labelerDid, visibility })}
 			value={prefAdjusted}
 		>

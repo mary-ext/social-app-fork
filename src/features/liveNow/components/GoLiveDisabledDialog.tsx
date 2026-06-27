@@ -79,13 +79,13 @@ function DialogInner({
 			}
 		},
 		onError: () => {
-			Toast.show(m['common.error.submitAppeal'](), {
+			Toast.show(m['common.appeal.submitError'](), {
 				type: 'error',
 			});
 		},
 		onSuccess: () => {
 			handle.close();
-			Toast.show(m['common.toast.appealSubmitted'](), {
+			Toast.show(m['common.appeal.submittedToast'](), {
 				type: 'success',
 			});
 		},
@@ -97,10 +97,10 @@ function DialogInner({
 		<div className={styles.container}>
 			<div className={styles.header}>
 				<Text className={styles.title} size="_2xl" weight="semiBold">
-					{m['features.liveNow.error.disabled']()}
+					{m['features.liveNow.goLive.disabled']()}
 				</Text>
 				<Text size="md">{m['features.liveNow.appeal.blocked']()}</Text>
-				<Text size="md">{m['common.hint.appealDestination']()}</Text>
+				<Text size="md">{m['common.appeal.destination']()}</Text>
 			</div>
 
 			<div className={styles.fields}>

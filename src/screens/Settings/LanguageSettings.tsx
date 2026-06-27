@@ -91,7 +91,7 @@ export function LanguageSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['screens.settings.title.languages']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.settings.language.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -100,36 +100,36 @@ export function LanguageSettingsScreen({}: Props) {
 					<Settings.Section>
 						<Settings.SelectRow
 							items={APP_LANGUAGES.map((language) => ({ label: language.name, value: language.code2 }))}
-							label={m['screens.settings.language.selectAppLanguage']()}
+							label={m['screens.settings.language.app.select']()}
 							onValueChange={onChangeAppLanguage}
 							value={LOCALE}
 						>
 							<Settings.Icon icon={EarthIcon} />
 							<Settings.Label
 								subtitleText={m['screens.settings.appearance.usedForInterface']()}
-								titleText={m['screens.settings.label.appLanguage']()}
+								titleText={m['screens.settings.language.app.label']()}
 							/>
 						</Settings.SelectRow>
 						<Settings.SelectRow
 							items={primaryLanguageItems}
-							label={m['screens.settings.language.selectPrimaryLanguage']()}
+							label={m['screens.settings.language.primary.select']()}
 							onValueChange={onChangePrimaryLanguage}
 							value={langPrefs.primaryLanguage}
 						>
 							<Settings.Icon icon={LanguageIcon} />
 							<Settings.Label
-								subtitleText={m['screens.settings.hint.preferredTranslationLanguage']()}
-								titleText={m['screens.settings.label.primaryLanguage']()}
+								subtitleText={m['screens.settings.language.translationHint']()}
+								titleText={m['screens.settings.language.primary.label']()}
 							/>
 						</Settings.SelectRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.language.selectContentLanguages']()}
+							label={m['screens.settings.language.content.select']()}
 							onPress={() => contentLanguagePrefsControl.open(null)}
 						>
 							<Settings.Icon icon={FilterIcon} />
 							<Settings.Label
-								subtitleText={contentLanguageSummary ?? m['screens.settings.hint.allLanguagesShown']()}
-								titleText={m['screens.settings.label.contentLanguages']()}
+								subtitleText={contentLanguageSummary ?? m['screens.settings.language.allShownHint']()}
+								titleText={m['screens.settings.language.content.label']()}
 							/>
 						</Settings.ButtonRow>
 					</Settings.Section>
@@ -137,8 +137,8 @@ export function LanguageSettingsScreen({}: Props) {
 
 				<LanguageSelectDialog
 					handle={contentLanguagePrefsControl}
-					titleText={m['screens.settings.language.selectContentLanguages']()}
-					subtitleText={m['screens.settings.hint.noLanguagesSelected']()}
+					titleText={m['screens.settings.language.content.select']()}
+					subtitleText={m['screens.settings.language.noneSelectedHint']()}
 					currentLanguages={contentLanguages}
 					onSelectLanguages={setContentLanguages}
 				/>

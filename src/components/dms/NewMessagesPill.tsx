@@ -49,8 +49,8 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 					},
 				]}
 				accessibilityRole="button"
-				accessibilityLabel={m['components.dms.a11y.scrollToLatest']()}
-				accessibilityHint={m['components.dms.a11y.scrollToRecent']()}
+				accessibilityLabel={m['components.dms.scrollDown.a11y.label']()}
+				accessibilityHint={m['components.dms.scrollDown.a11y.hint']()}
 				onPress={onPress}
 			>
 				<ArrowDownIcon size="md" fill={colors.text} />

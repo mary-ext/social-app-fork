@@ -40,7 +40,9 @@ export function SystemMessageGroup({
 				accessibilityRole="button"
 				accessibilityLabel={label}
 				accessibilityHint={
-					expanded ? m['components.dms.action.hideUpdates']() : m['components.dms.label.showGroupUpdates']()
+					expanded
+						? m['components.dms.group.action.hideUpdates']()
+						: m['components.dms.group.action.showUpdates']()
 				}
 				accessibilityState={{ expanded }}
 				hitSlop={HITSLOP_10}

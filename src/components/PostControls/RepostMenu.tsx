@@ -45,35 +45,29 @@ export const RepostMenu = ({
 			<Tooltip label={tooltip}>
 				<Menu.Trigger render={render} />
 			</Tooltip>
-			<Menu.Popup label={m['components.postControls.a11y.repost']()} align="center" minWidth={170}>
+			<Menu.Popup label={m['components.postControls.repost.a11y']()} align="center" minWidth={170}>
 				<Menu.Item
 					label={
 						isReposted
-							? m['components.postControls.action.undoRepost']()
-							: m['components.postControls.action.repost']()
+							? m['components.postControls.repost.action.undo']()
+							: m['components.postControls.repost.action.repost']()
 					}
 					onClick={onRepost}
 				>
 					<Menu.ItemText>
 						{isReposted
-							? m['components.postControls.action.undoRepost']()
-							: m['components.postControls.action.repost']()}
+							? m['components.postControls.repost.action.undo']()
+							: m['components.postControls.repost.action.repost']()}
 					</Menu.ItemText>
 					<Menu.ItemIcon icon={Repost} position="right" />
 				</Menu.Item>
 				<Menu.Item
 					disabled={embeddingDisabled}
-					label={
-						embeddingDisabled
-							? m['components.postControls.label.quotesDisabled']()
-							: m['common.action.quotePost']()
-					}
+					label={embeddingDisabled ? m['components.postControls.quote.disabled']() : m['common.quote.post']()}
 					onClick={onQuote}
 				>
 					<Menu.ItemText>
-						{embeddingDisabled
-							? m['components.postControls.label.quotesDisabled']()
-							: m['common.action.quotePost']()}
+						{embeddingDisabled ? m['components.postControls.quote.disabled']() : m['common.quote.post']()}
 					</Menu.ItemText>
 					<Menu.ItemIcon icon={Quote} position="right" />
 				</Menu.Item>

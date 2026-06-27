@@ -184,7 +184,7 @@ export function useFeedPreviews(
 					items.push({
 						type: 'preview:error',
 						key: 'error',
-						message: m['state.error.feedFetch'](),
+						message: m['state.feeds.error.fetch'](),
 						error: cleanError(error),
 					});
 				} else if (isEmpty) {

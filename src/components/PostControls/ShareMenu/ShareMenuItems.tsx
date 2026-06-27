@@ -71,15 +71,15 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 	};
 
 	const copyLinkItem = (
-		<Menu.Item label={m['components.postControls.action.copyLink']()} onClick={onCopyLink}>
-			<Menu.ItemText>{m['components.postControls.action.copyLink']()}</Menu.ItemText>
+		<Menu.Item label={m['components.postControls.copy.link']()} onClick={onCopyLink}>
+			<Menu.ItemText>{m['components.postControls.copy.link']()}</Menu.ItemText>
 			<Menu.ItemIcon icon={ChainLinkIcon} position="right" />
 		</Menu.Item>
 	);
 
 	return (
 		<>
-			<Menu.Popup label={m['common.action.share']()} align="end">
+			<Menu.Popup label={m['common.share.action.share']()} align="end">
 				<Menu.Item label={bookmark.label} onClick={bookmark.onToggle}>
 					<Menu.ItemText>{bookmark.label}</Menu.ItemText>
 					<Menu.ItemIcon icon={bookmark.isBookmarked ? BookmarkFilled : Bookmark} position="right" />
@@ -91,12 +91,12 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 
 				{hasSession && (
 					<Menu.Item
-						label={m['components.postControls.action.sendViaDm']()}
+						label={m['components.postControls.share.sendViaDm']()}
 						onClick={() => {
 							sendViaChatControl.open();
 						}}
 					>
-						<Menu.ItemText>{m['components.postControls.action.sendViaDm']()}</Menu.ItemText>
+						<Menu.ItemText>{m['components.postControls.share.sendViaDm']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={Send} position="right" />
 					</Menu.Item>
 				)}
@@ -107,7 +107,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 						<Menu.Group>
 							{copyLinkItem}
 							<Menu.LabelText maxWidth={220}>
-								{m['components.postControls.hint.loggedInOnly']()}
+								{m['components.postControls.visibility.loggedInOnly']()}
 							</Menu.LabelText>
 						</Menu.Group>
 					</>
@@ -116,12 +116,12 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 				{devModeEnabled && (
 					<>
 						<Menu.Separator />
-						<Menu.Item label={m['components.postControls.action.copyUri']()} onClick={onShareATURI}>
-							<Menu.ItemText>{m['components.postControls.action.copyUri']()}</Menu.ItemText>
+						<Menu.Item label={m['components.postControls.copy.uri']()} onClick={onShareATURI}>
+							<Menu.ItemText>{m['components.postControls.copy.uri']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={ClipboardIcon} position="right" />
 						</Menu.Item>
-						<Menu.Item label={m['components.postControls.action.copyAuthorDid']()} onClick={onShareAuthorDID}>
-							<Menu.ItemText>{m['components.postControls.action.copyAuthorDid']()}</Menu.ItemText>
+						<Menu.Item label={m['components.postControls.copy.authorDid']()} onClick={onShareAuthorDID}>
+							<Menu.ItemText>{m['components.postControls.copy.authorDid']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={ClipboardIcon} position="right" />
 						</Menu.Item>
 					</>

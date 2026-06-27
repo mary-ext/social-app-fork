@@ -30,9 +30,9 @@ export const PostQuotesScreen = ({ route }: Props) => {
 				<Layout.Header.Content>
 					{post && (
 						<>
-							<Layout.Header.TitleText>{m['common.label.quotes']()}</Layout.Header.TitleText>
+							<Layout.Header.TitleText>{m['common.quote.label']()}</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
-								{m['screens.post.count.quotes']({ count: quoteCount ?? 0 })}
+								{m['screens.post.quote.count']({ count: quoteCount ?? 0 })}
 							</Layout.Header.SubtitleText>
 						</>
 					)}

@@ -85,7 +85,7 @@ export function MessagesInboxScreenInner({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content align="left">
-					<Layout.Header.TitleText>{m['screens.messages.title.chatRequests']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.messages.requests.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				{hasUnreadConvos ? <MarkAsReadHeaderButton /> : <Layout.Header.Slot />}
 			</Layout.Header.Outer>
@@ -170,11 +170,11 @@ function RequestList({
 											{ maxWidth: 360 },
 										]}
 									>
-										{cleanError(error) || m['screens.messages.error.loadConversations']()}
+										{cleanError(error) || m['screens.messages.chats.reload.error']()}
 									</Text>
 
 									<Button
-										label={m['screens.messages.action.reloadConversations']()}
+										label={m['screens.messages.chats.reload.action']()}
 										size="small"
 										color="secondary_inverted"
 										onPress={() => void refetch()}
@@ -186,7 +186,7 @@ function RequestList({
 							</>
 						) : (
 							<EmptyState
-								message={m['screens.messages.empty.inboxZero']()}
+								message={m['screens.messages.chats.inboxZero']()}
 								icon={InboxLargeIcon}
 								iconSize="4xl"
 								messageColor="text"
@@ -195,7 +195,7 @@ function RequestList({
 									isWithinSplitView
 										? undefined
 										: {
-												label: m['screens.messages.action.backToChats'](),
+												label: m['screens.messages.chats.back'](),
 												text: m['common.action.back'](),
 												onPress: () => {
 													if (navigation.canGoBack()) {
@@ -260,12 +260,12 @@ function renderItem({ item }: { item: RequestItem }) {
 function MarkAsReadHeaderButton() {
 	const { mutate: markAllRead } = useUpdateAllRead('request', {
 		onMutate: () => {
-			Toast.show(m['screens.messages.toast.markedAllRead'](), {
+			Toast.show(m['screens.messages.requests.markAllRead.toast'](), {
 				type: 'success',
 			});
 		},
 		onError: () => {
-			Toast.show(m['screens.messages.error.markAllRead'](), {
+			Toast.show(m['screens.messages.requests.markAllRead.error'](), {
 				type: 'error',
 			});
 		},
@@ -273,13 +273,13 @@ function MarkAsReadHeaderButton() {
 
 	return (
 		<Button
-			label={m['screens.messages.action.markAllRead']()}
+			label={m['screens.messages.requests.markAllRead.action']()}
 			size="small"
 			color="secondary"
 			onPress={() => markAllRead()}
 		>
 			<ButtonIcon icon={CheckIcon} />
-			<ButtonText>{m['screens.messages.action.markAllRead']()}</ButtonText>
+			<ButtonText>{m['screens.messages.requests.markAllRead.action']()}</ButtonText>
 		</Button>
 	);
 }

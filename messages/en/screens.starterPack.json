@@ -2,46 +2,24 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"screens.starterPack.a11y.openMenu": "Open starter pack menu",
 	"screens.starterPack.a11y.options": "Starter pack options",
-	"screens.starterPack.action.copyLink": "Copy link to starter pack",
-	"screens.starterPack.action.createList": "Create a list from this starter pack",
-	"screens.starterPack.action.createListFromMembers": "Create list from members",
-	"screens.starterPack.action.delete": "Delete starter pack",
-	"screens.starterPack.action.edit": "Edit starter pack",
-	"screens.starterPack.action.finish": "Finish",
-	"screens.starterPack.action.followAll": "Follow all",
-	"screens.starterPack.action.report": "Report starter pack",
-	"screens.starterPack.action.share": "Share this starter pack",
-	"screens.starterPack.action.skip": "Skip",
-	"screens.starterPack.addMore": "Add {count} more to continue",
-	"screens.starterPack.charCount": "{nameLength} of {NAME_MAX_LENGTH} characters",
-	"screens.starterPack.defaultName": "My starter pack",
-	"screens.starterPack.defaultNameNamed": "{name}'s starter pack",
-	"screens.starterPack.dialog.deleteConfirm": "Are you sure you want to delete this starter pack?",
-	"screens.starterPack.dialog.deleteTitle": "Delete starter pack?",
-	"screens.starterPack.empty.addFeedsHint": "Add some feeds to your starter pack!",
-	"screens.starterPack.empty.justNameHint": "It's just {#t0}{name} {/t0}right now! Add more people to your starter pack by searching above.",
-	"screens.starterPack.empty.justYouHint": "It's just you right now! Add more people to your starter pack by searching above.",
-	"screens.starterPack.empty.noFeeds": "No feeds found. Try searching for something else.",
-	"screens.starterPack.empty.noPeople": "Nobody was found. Try searching for someone else.",
+	"screens.starterPack.delete.action": "Delete starter pack",
+	"screens.starterPack.delete.error.failed": "Failed to delete starter pack",
+	"screens.starterPack.delete.error.unable": "Unable to delete",
+	"screens.starterPack.delete.message": "Are you sure you want to delete this starter pack?",
+	"screens.starterPack.delete.title": "Delete starter pack?",
+	"screens.starterPack.edit": "Edit starter pack",
 	"screens.starterPack.error.create": "Failed to create starter pack",
-	"screens.starterPack.error.delete": "Failed to delete starter pack",
-	"screens.starterPack.error.followAll": "An error occurred while trying to follow all",
 	"screens.starterPack.error.invalid": "Starter pack is invalid",
 	"screens.starterPack.error.invalidLong": "The starter pack that you are trying to view is invalid. You may delete this starter pack instead.",
-	"screens.starterPack.error.maxFeeds": "You may only add up to 3 feeds",
-	"screens.starterPack.error.maxProfiles": [
-		{
-			"declarations": ["input STARTER_PACK_MAX_SIZE", "local cp = STARTER_PACK_MAX_SIZE: plural"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=other": "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
-			}
-		}
-	],
 	"screens.starterPack.error.notFound": "That starter pack could not be found.",
-	"screens.starterPack.error.unableToDelete": "Unable to delete",
-	"screens.starterPack.followAllSuccess": "All accounts have been followed!",
-	"screens.starterPack.hint.searchFeeds": "Search for feeds that you want to suggest to others.",
+	"screens.starterPack.feeds.addHint": "Add some feeds to your starter pack!",
+	"screens.starterPack.feeds.choose": "Choose Feeds",
+	"screens.starterPack.feeds.max": "You may only add up to 3 feeds",
+	"screens.starterPack.feeds.noResults": "No feeds found. Try searching for something else.",
+	"screens.starterPack.feeds.searchHint": "Search for feeds that you want to suggest to others.",
+	"screens.starterPack.follow.action": "Follow all",
+	"screens.starterPack.follow.error": "An error occurred while trying to follow all",
+	"screens.starterPack.follow.success": "All accounts have been followed!",
 	"screens.starterPack.included.manyFeeds": [
 		{
 			"declarations": ["input count", "input first", "input second", "local cp = count: plural"],
@@ -75,12 +53,34 @@
 			}
 		}
 	],
-	"screens.starterPack.label.chooseFeeds": "Choose Feeds",
-	"screens.starterPack.label.choosePeople": "Choose People",
-	"screens.starterPack.shareDescription": "My favorite feeds and people - join me!",
-	"screens.starterPack.shareDescriptionNamed": "{name}'s favorite feeds and people - join me!",
-	"screens.starterPack.tagline": "Invites, but personal",
-	"screens.starterPack.title.namePrompt": "What do you want to call your starter pack?",
-	"screens.starterPack.title.named": "{displayName}'s Starter Pack",
-	"screens.starterPack.title.tellMore": "Tell us a little more"
+	"screens.starterPack.list.create": "Create a list from this starter pack",
+	"screens.starterPack.list.createFromMembers": "Create list from members",
+	"screens.starterPack.name.charCount": "{nameLength} of {NAME_MAX_LENGTH} characters",
+	"screens.starterPack.name.default": "My starter pack",
+	"screens.starterPack.name.defaultNamed": "{name}'s starter pack",
+	"screens.starterPack.name.display": "{displayName}'s Starter Pack",
+	"screens.starterPack.name.prompt": "What do you want to call your starter pack?",
+	"screens.starterPack.people.addMore": "Add {count} more to continue",
+	"screens.starterPack.people.choose": "Choose People",
+	"screens.starterPack.people.justName": "It's just {#t0}{name} {/t0}right now! Add more people to your starter pack by searching above.",
+	"screens.starterPack.people.justYou": "It's just you right now! Add more people to your starter pack by searching above.",
+	"screens.starterPack.people.max": [
+		{
+			"declarations": ["input STARTER_PACK_MAX_SIZE", "local cp = STARTER_PACK_MAX_SIZE: plural"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=other": "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
+			}
+		}
+	],
+	"screens.starterPack.people.noResults": "Nobody was found. Try searching for someone else.",
+	"screens.starterPack.report": "Report starter pack",
+	"screens.starterPack.setup.finish": "Finish",
+	"screens.starterPack.setup.skip": "Skip",
+	"screens.starterPack.setup.tellMore": "Tell us a little more",
+	"screens.starterPack.share.action": "Share this starter pack",
+	"screens.starterPack.share.copyLink": "Copy link to starter pack",
+	"screens.starterPack.share.description": "My favorite feeds and people - join me!",
+	"screens.starterPack.share.descriptionNamed": "{name}'s favorite feeds and people - join me!",
+	"screens.starterPack.tagline": "Invites, but personal"
 }

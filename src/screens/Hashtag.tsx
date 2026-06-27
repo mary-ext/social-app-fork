@@ -76,14 +76,14 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 		return [
 			{
 				id: 'top',
-				label: m['common.label.top'](),
+				label: m['common.search.top'](),
 				render: (focused) => (
 					<HashtagScreenTab fullTag={fullTag} author={author} sort="top" active={focused} />
 				),
 			},
 			{
 				id: 'latest',
-				label: m['common.label.latest'](),
+				label: m['common.search.latest'](),
 				render: (focused) => (
 					<HashtagScreenTab fullTag={fullTag} author={author} sort="latest" active={focused} />
 				),
@@ -104,13 +104,13 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 							<Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
 							{author && (
 								<Layout.Header.SubtitleText>
-									{m['screens.hashtag.label.fromAuthor']({ sanitizedAuthor })}
+									{m['screens.hashtag.fromAuthor']({ sanitizedAuthor })}
 								</Layout.Header.SubtitleText>
 							)}
 						</Layout.Header.Content>
 						<Layout.Header.Slot>
 							<Button
-								label={m['common.action.share']()}
+								label={m['common.share.action.share']()}
 								size="small"
 								variant="ghost"
 								color="primary"
@@ -189,13 +189,13 @@ function HashtagScreenTab({
 
 	if (!hasSession) {
 		return (
-			<SearchError title={m['common.error.searchLoggedOut']()}>
+			<SearchError title={m['common.search.loggedOutError']()}>
 				<Text style={[a.text_md, a.text_center, a.leading_snug]}>
 					<Trans
-						message={m['common.cta.signInToSearch']}
+						message={m['common.search.signInPrompt']}
 						markup={{
 							t0: ({ children }) => (
-								<InlineLinkText label={m['common.action.signIn']()} to={'#'} onPress={showSignIn}>
+								<InlineLinkText label={m['common.session.action.signIn']()} to={'#'} onPress={showSignIn}>
 									{children}
 								</InlineLinkText>
 							),
@@ -216,7 +216,7 @@ function HashtagScreenTab({
 					isError={isError}
 					onRetry={refetch}
 					emptyType="results"
-					emptyMessage={m['screens.hashtag.empty.noResults']()}
+					emptyMessage={m['screens.hashtag.empty']()}
 				/>
 			) : (
 				<List

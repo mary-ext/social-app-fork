@@ -41,10 +41,7 @@ export function AfterReportConversationDialog({
 	return (
 		<Dialog.Outer control={control}>
 			<Dialog.Handle />
-			<Dialog.ScrollableInner
-				label={m['components.dms.dialog.blockOrLeavePrompt']()}
-				style={[{ maxWidth: 400 }]}
-			>
+			<Dialog.ScrollableInner label={m['components.dms.block.orLeave.prompt']()} style={[{ maxWidth: 400 }]}>
 				<DialogInner params={params} currentScreen={currentScreen} />
 				<Dialog.Close />
 			</Dialog.ScrollableInner>
@@ -70,10 +67,8 @@ function DialogInner({
 	) : isError || !profile ? (
 		<View style={[a.w_full, a.gap_lg]}>
 			<View style={[a.justify_center, a.gap_sm]}>
-				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.toast.reportSubmitted']()}</Text>
-				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-					{m['components.dms.toast.reportReceived']()}
-				</Text>
+				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.report.submitted']()}</Text>
+				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>{m['components.dms.report.received']()}</Text>
 			</View>
 
 			<Button
@@ -136,7 +131,7 @@ function DoneStep({
 			}
 		},
 		onError: () => {
-			Toast.show(m['components.dms.error.leaveChat'](), {
+			Toast.show(m['components.dms.leave.error.leave'](), {
 				type: 'error',
 			});
 		},
@@ -145,15 +140,15 @@ function DoneStep({
 	let btnText = m['common.action.done']();
 	let toastMsg: string | undefined;
 	if (actions.includes('leave') && actions.includes('block')) {
-		btnText = m['components.dms.action.blockAndLeave']();
-		toastMsg = m['components.dms.toast.conversationLeft']();
+		btnText = m['components.dms.block.orLeave.confirm']();
+		toastMsg = m['components.dms.leave.conversationLeft']();
 	} else if (actions.includes('leave')) {
-		btnText = m['components.dms.action.leaveAfterReport']();
-		toastMsg = m['components.dms.toast.conversationLeft']();
+		btnText = m['components.dms.leave.action.afterReport']();
+		toastMsg = m['components.dms.leave.conversationLeft']();
 	} else if (actions.includes('block')) {
 		// shouldn't be able to reach this, but here for completeness
-		btnText = m['components.dms.action.blockUserAfterReport']();
-		toastMsg = m['components.dms.toast.userBlocked']();
+		btnText = m['components.dms.block.action.afterReport']();
+		toastMsg = m['components.dms.block.userBlocked']();
 	}
 
 	const onPressPrimaryAction = () => {
@@ -175,29 +170,29 @@ function DoneStep({
 	return (
 		<View style={a.gap_2xl}>
 			<View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.toast.reportSubmitted']()}</Text>
-				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-					{m['components.dms.toast.reportReceived']()}
-				</Text>
+				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.report.submitted']()}</Text>
+				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>{m['components.dms.report.received']()}</Text>
 			</View>
 			<Toggle.Group
-				label={m['components.dms.action.blockOrLeave']()}
+				label={m['components.dms.block.orLeave.label']()}
 				values={actions}
 				onChange={handleActionsChange}
 			>
 				<View style={[a.gap_md]}>
-					<Toggle.Item name="block" label={m['components.dms.action.blockUser']()}>
+					<Toggle.Item name="block" label={m['components.dms.block.action.block']()}>
 						<Toggle.Checkbox />
-						<Toggle.LabelText style={[a.text_md]}>{m['components.dms.action.blockUser']()}</Toggle.LabelText>
+						<Toggle.LabelText style={[a.text_md]}>
+							{m['components.dms.block.action.block']()}
+						</Toggle.LabelText>
 					</Toggle.Item>
 					<Toggle.Item
 						name="leave"
-						label={m['components.dms.action.leaveConversation']()}
+						label={m['components.dms.leave.action.conversation']()}
 						disabled={actions.includes('block')}
 					>
 						<Toggle.Checkbox />
 						<Toggle.LabelText style={[a.text_md]}>
-							{m['components.dms.action.leaveConversation']()}
+							{m['components.dms.leave.action.conversation']()}
 						</Toggle.LabelText>
 					</Toggle.Item>
 				</View>

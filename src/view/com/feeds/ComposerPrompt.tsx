@@ -47,8 +47,8 @@ export function ComposerPrompt() {
 			onPress={onPress}
 			android_ripple={null}
 			accessibilityRole="button"
-			accessibilityLabel={m['common.action.composePost']()}
-			accessibilityHint={m['view.feeds.a11y.opensComposer']()}
+			accessibilityLabel={m['common.compose.action.compose']()}
+			accessibilityHint={m['view.feeds.composer.a11y']()}
 			onPointerEnter={() => setHover(true)}
 			onPointerLeave={() => setHover(false)}
 			style={({ pressed }) => [
@@ -83,7 +83,7 @@ export function ComposerPrompt() {
 				]}
 			>
 				<Text style={[t.atoms.text_contrast_medium, a.text_md, { includeFontPadding: false }]}>
-					{m['common.label.whatsUp']()}
+					{m['common.compose.placeholder']()}
 				</Text>
 				<View style={[a.flex_row, a.gap_md]}>
 					<Button
@@ -91,8 +91,8 @@ export function ComposerPrompt() {
 							e.stopPropagation();
 							void onPressImage();
 						}}
-						label={m['view.feeds.action.addImage']()}
-						accessibilityHint={m['view.feeds.a11y.opensImagePicker']()}
+						label={m['view.feeds.image.add']()}
+						accessibilityHint={m['view.feeds.image.a11y']()}
 						variant="ghost"
 						shape="round"
 					>

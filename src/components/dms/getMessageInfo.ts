@@ -65,9 +65,9 @@ export function getMessageInfo({
 
 	const prefix = (message: string) => {
 		if (isFromMe) {
-			return m['components.dms.label.lastMessageByYou']({ message });
+			return m['components.dms.message.preview.byYou']({ message });
 		} else if (isGroup && name) {
-			return m['components.dms.label.namedMessage']({ message, name });
+			return m['components.dms.message.preview.named']({ message, name });
 		}
 		return message;
 	};
@@ -77,7 +77,7 @@ export function getMessageInfo({
 	if (lastMessage.text) {
 		message = prefix(lastMessage.text);
 	} else if (lastMessage.embed) {
-		const defaultEmbeddedContentMessage = m['common.label.embeddedContent']();
+		const defaultEmbeddedContentMessage = m['common.embed.content']();
 
 		if (lastMessage.embed.$type === 'app.bsky.embed.record#view') {
 			const embed = lastMessage.embed;
@@ -92,7 +92,7 @@ export function getMessageInfo({
 				message = prefix(defaultEmbeddedContentMessage);
 			}
 		} else if (lastMessage.embed.$type === 'chat.bsky.embed.joinLink#view') {
-			message = prefix(m['common.label.chatInviteLink']());
+			message = prefix(m['common.chat.inviteLink']());
 		} else {
 			message = prefix(defaultEmbeddedContentMessage);
 		}

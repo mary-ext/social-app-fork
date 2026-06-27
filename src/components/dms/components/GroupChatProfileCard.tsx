@@ -59,7 +59,7 @@ export function GroupChatProfileCard({
 									<ProfileCard.Handle profile={profile} />
 								) : (
 									<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-										{m['components.dms.error.cannotAdd']({ handle })}
+										{m['components.dms.recipient.error.cannotAdd']({ handle })}
 									</Text>
 								)}
 							</View>

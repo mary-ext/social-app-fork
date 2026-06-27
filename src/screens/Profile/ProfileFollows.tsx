@@ -19,7 +19,7 @@ export const ProfileFollowsScreen = ({ route }: Props) => {
 		did: resolvedDid,
 	});
 
-	useSetTitle(profile ? m['screens.profile.title.following']({ handle: profile.handle }) : undefined);
+	useSetTitle(profile ? m['screens.profile.follow.following.title']({ handle: profile.handle }) : undefined);
 
 	return (
 		<Layout.Screen testID="profileFollowsScreen">
@@ -32,7 +32,7 @@ export const ProfileFollowsScreen = ({ route }: Props) => {
 								{sanitizeDisplayName(profile.displayName || profile.handle)}
 							</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
-								{m['screens.profile.count.following']({ count: profile.followsCount ?? 0 })}
+								{m['screens.profile.follow.following.count']({ count: profile.followsCount ?? 0 })}
 							</Layout.Header.SubtitleText>
 						</>
 					)}

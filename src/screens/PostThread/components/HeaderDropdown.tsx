@@ -17,7 +17,7 @@ export function HeaderDropdown({
 			<Menu.Trigger
 				render={
 					<Button
-						label={m['screens.postThread.label.threadOptions']()}
+						label={m['screens.postThread.threadOptions.label']()}
 						size="small"
 						variant="ghost"
 						color="secondary"
@@ -27,56 +27,56 @@ export function HeaderDropdown({
 					</Button>
 				}
 			/>
-			<Menu.Popup label={m['screens.postThread.label.threadOptions']()} align="end">
+			<Menu.Popup label={m['screens.postThread.threadOptions.label']()} align="end">
 				<Menu.Group>
-					<Menu.LabelText>{m['screens.postThread.label.showRepliesAs']()}</Menu.LabelText>
+					<Menu.LabelText>{m['screens.postThread.threadOptions.display.label']()}</Menu.LabelText>
 					<Menu.Item
-						label={m['screens.postThread.label.linear']()}
+						label={m['screens.postThread.threadOptions.display.linear']()}
 						onClick={() => {
 							setView('linear');
 						}}
 					>
-						<Menu.ItemText>{m['screens.postThread.label.linear']()}</Menu.ItemText>
+						<Menu.ItemText>{m['screens.postThread.threadOptions.display.linear']()}</Menu.ItemText>
 						<Menu.ItemRadio selected={view === 'linear'} />
 					</Menu.Item>
 					<Menu.Item
-						label={m['screens.postThread.label.threaded']()}
+						label={m['screens.postThread.threadOptions.display.threaded']()}
 						onClick={() => {
 							setView('tree');
 						}}
 					>
-						<Menu.ItemText>{m['screens.postThread.label.threaded']()}</Menu.ItemText>
+						<Menu.ItemText>{m['screens.postThread.threadOptions.display.threaded']()}</Menu.ItemText>
 						<Menu.ItemRadio selected={view === 'tree'} />
 					</Menu.Item>
 				</Menu.Group>
 				<Menu.Separator />
 				<Menu.Group>
-					<Menu.LabelText>{m['screens.postThread.label.replySorting']()}</Menu.LabelText>
+					<Menu.LabelText>{m['screens.postThread.threadOptions.sorting']()}</Menu.LabelText>
 					<Menu.Item
-						label={m['common.label.topRepliesFirst']()}
+						label={m['common.thread.sort.top']()}
 						onClick={() => {
 							setSort('top');
 						}}
 					>
-						<Menu.ItemText>{m['common.label.topRepliesFirst']()}</Menu.ItemText>
+						<Menu.ItemText>{m['common.thread.sort.top']()}</Menu.ItemText>
 						<Menu.ItemRadio selected={sort === 'top'} />
 					</Menu.Item>
 					<Menu.Item
-						label={m['common.label.oldestRepliesFirst']()}
+						label={m['common.thread.sort.oldest']()}
 						onClick={() => {
 							setSort('oldest');
 						}}
 					>
-						<Menu.ItemText>{m['common.label.oldestRepliesFirst']()}</Menu.ItemText>
+						<Menu.ItemText>{m['common.thread.sort.oldest']()}</Menu.ItemText>
 						<Menu.ItemRadio selected={sort === 'oldest'} />
 					</Menu.Item>
 					<Menu.Item
-						label={m['common.label.newestRepliesFirst']()}
+						label={m['common.thread.sort.newest']()}
 						onClick={() => {
 							setSort('newest');
 						}}
 					>
-						<Menu.ItemText>{m['common.label.newestRepliesFirst']()}</Menu.ItemText>
+						<Menu.ItemText>{m['common.thread.sort.newest']()}</Menu.ItemText>
 						<Menu.ItemRadio selected={sort === 'newest'} />
 					</Menu.Item>
 				</Menu.Group>

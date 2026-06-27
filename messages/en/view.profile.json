@@ -1,24 +1,14 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"view.profile.action.addToLists": "Add to lists",
-	"view.profile.action.copyDid": "Copy DID",
-	"view.profile.action.copyLink": "Copy link to profile",
-	"view.profile.action.copyUri": "Copy at:// URI",
-	"view.profile.action.editLiveStatus": "Edit live status",
-	"view.profile.action.follow": "Follow account",
-	"view.profile.action.goLive": "Go live",
-	"view.profile.action.goLiveDisabled": "Go live (disabled)",
 	"view.profile.action.report": "Report account",
 	"view.profile.action.searchPosts": "Search posts",
 	"view.profile.action.seeSuggested": "See suggested accounts",
-	"view.profile.action.shareAnyway": "Share anyway",
-	"view.profile.action.unfollow": "Unfollow account",
 	"view.profile.action.viewAvatar": "View the avatar",
-	"view.profile.empty.noFollowers": "No followers yet",
-	"view.profile.empty.noFollowersUser": "This user doesn't have any followers.",
-	"view.profile.empty.notFollowingUser": "This user isn't following anyone.",
-	"view.profile.empty.notFollowingYou": "You are not following anyone yet",
-	"view.profile.followersCount": [
+	"view.profile.follow.action.follow": "Follow account",
+	"view.profile.follow.action.unfollow": "Unfollow account",
+	"view.profile.follow.followedToast": "Account followed",
+	"view.profile.follow.unfollowedToast": "Account unfollowed",
+	"view.profile.followers.followersCount": [
 		{
 			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
@@ -28,7 +18,9 @@
 			}
 		}
 	],
-	"view.profile.followingCount": [
+	"view.profile.followers.followersEmpty": "No followers yet",
+	"view.profile.followers.followersEmptyUser": "This user doesn't have any followers.",
+	"view.profile.followers.followingCount": [
 		{
 			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
@@ -38,13 +30,21 @@
 			}
 		}
 	],
-	"view.profile.hint.loggedInOnly": "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.",
-	"view.profile.label.listBy": "List by {#t0/}",
-	"view.profile.label.listByYou": "List by you",
-	"view.profile.label.modListBy": "Moderation list by {#t0/}",
-	"view.profile.label.modListByYou": "Moderation list by you",
-	"view.profile.label.shareNote": "Note about sharing",
-	"view.profile.label.starterPackBy": "Starter pack by {#t0/}",
-	"view.profile.toast.followed": "Account followed",
-	"view.profile.toast.unfollowed": "Account unfollowed"
+	"view.profile.followers.followingEmpty": "You are not following anyone yet",
+	"view.profile.followers.followingEmptyUser": "This user isn't following anyone.",
+	"view.profile.list.add": "Add to lists",
+	"view.profile.list.by": "List by {#t0/}",
+	"view.profile.list.byYou": "List by you",
+	"view.profile.list.moderationBy": "Moderation list by {#t0/}",
+	"view.profile.list.moderationByYou": "Moderation list by you",
+	"view.profile.liveStatus.action.edit": "Edit live status",
+	"view.profile.liveStatus.action.goLive": "Go live",
+	"view.profile.liveStatus.action.goLiveDisabled": "Go live (disabled)",
+	"view.profile.sharing.action.copyDid": "Copy DID",
+	"view.profile.sharing.action.copyLink": "Copy link to profile",
+	"view.profile.sharing.action.copyUri": "Copy at:// URI",
+	"view.profile.sharing.loggedInOnly.confirm": "Share anyway",
+	"view.profile.sharing.loggedInOnly.message": "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.",
+	"view.profile.sharing.note": "Note about sharing",
+	"view.profile.starterPack.by": "Starter pack by {#t0/}"
 }

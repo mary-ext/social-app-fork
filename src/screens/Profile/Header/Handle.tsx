@@ -27,7 +27,7 @@ export function ProfileHeaderHandle({
 			{profile.viewer?.followedBy && !blockHide ? (
 				<div className={styles.followsYou}>
 					<Text size="sm" color="text">
-						{m['common.label.followsYou']()}
+						{m['common.follow.followsYou']()}
 					</Text>
 				</div>
 			) : undefined}
@@ -39,7 +39,7 @@ export function ProfileHeaderHandle({
 				className={clsx(styles.handle, invalidHandle && styles.invalidHandle)}
 			>
 				{invalidHandle
-					? m['screens.profile.label.invalidHandle']()
+					? m['screens.profile.editProfile.invalidHandle']()
 					: sanitizeHandle(profile.handle, '@', false)}
 			</Text>
 		</div>

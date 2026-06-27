@@ -73,7 +73,7 @@ export function NotificationsScreen({}: Props) {
 		return [
 			{
 				id: 'all',
-				label: m['common.label.all'](),
+				label: m['common.status.all'](),
 				render: (focused) => (
 					<NotificationsTab
 						filter="all"
@@ -87,7 +87,7 @@ export function NotificationsScreen({}: Props) {
 			},
 			{
 				id: 'mentions',
-				label: m['common.label.mentions'](),
+				label: m['common.mention.label'](),
 				render: (focused) => (
 					<NotificationsTab
 						filter="mentions"
@@ -118,7 +118,7 @@ export function NotificationsScreen({}: Props) {
 						<Layout.Header.Slot>
 							<LinkButton
 								to="/settings/notifications"
-								label={m['common.title.notificationSettings']()}
+								label={m['common.notifications.settingsTitle']()}
 								size="small"
 								variant="ghost"
 								color="secondary"
@@ -132,7 +132,7 @@ export function NotificationsScreen({}: Props) {
 			/>
 			<FAB
 				icon={<EditBigIcon size="lg" fill={colors.white} />}
-				label={m['common.label.newPost']()}
+				label={m['common.compose.action.new']()}
 				onClick={() => openComposer({ logContext: 'Fab' })}
 			/>
 		</Layout.Screen>
@@ -241,10 +241,10 @@ function DisabledNotificationsWarning({ active }: { active: boolean }) {
 			<div className={css.warning}>
 				<Admonition type="warning">
 					<Trans
-						message={m['view.notifications.disabledHint']}
+						message={m['view.notifications.settings.disabledHint']}
 						markup={{
 							t0: ({ children }) => (
-								<InlineLinkText label={m['view.notifications.visitSettings']()} to="/settings/notifications">
+								<InlineLinkText label={m['view.notifications.settings.visit']()} to="/settings/notifications">
 									{children}
 								</InlineLinkText>
 							),

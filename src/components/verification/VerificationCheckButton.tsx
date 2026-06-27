@@ -148,8 +148,8 @@ function Badge({
 			<Dialog.Trigger
 				aria-label={
 					state.profile.isViewer
-						? m['components.verification.action.viewYourVerifications']()
-						: m['components.verification.action.viewUserVerifications']()
+						? m['components.verification.verifications.action.viewYours']()
+						: m['components.verification.verifications.action.viewUser']()
 				}
 				className={css.button}
 				handle={control}

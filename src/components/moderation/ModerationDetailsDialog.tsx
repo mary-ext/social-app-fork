@@ -53,19 +53,19 @@ function ModerationDetailsDialogInner({
 	let name;
 	let description;
 	if (!modcause) {
-		name = m['common.label.contentWarning']();
-		description = m['common.label.generalWarning']();
+		name = m['common.moderation.contentWarning']();
+		description = m['common.moderation.generalWarning']();
 	} else if (modcause.type === 'reply-hidden') {
 		const isYou = currentAccount?.did === modcause.source.did;
-		name = isYou ? m['common.label.replyHiddenByYou']() : m['common.label.replyHiddenByAuthor']();
-		description = isYou ? m['common.label.youHidReply']() : m['common.label.authorHiddenReply']();
+		name = isYou ? m['common.thread.replyHiddenByYou']() : m['common.thread.replyHiddenByAuthor']();
+		description = isYou ? m['common.thread.youHidReply']() : m['common.thread.authorHiddenReply']();
 	} else if (modcause.type === ModerationCauseType.Blocking) {
 		if (modcause.source) {
 			const list = modcause.source;
-			name = m['common.title.userBlockedByList']();
+			name = m['common.block.byList.title']();
 			description = (
 				<Trans
-					message={m['common.label.includedInBlockedList']}
+					message={m['common.block.byList.message']}
 					inputs={{ listName: list.name }}
 					markup={{
 						t0: ({ children }) => (
@@ -77,19 +77,19 @@ function ModerationDetailsDialogInner({
 				/>
 			);
 		} else {
-			name = m['common.title.userBlocked']();
-			description = m['common.label.youBlockedUser']();
+			name = m['common.block.byYou.title']();
+			description = m['common.block.byYou.message']();
 		}
 	} else if (modcause.type === ModerationCauseType.BlockedBy) {
-		name = m['common.title.userBlocksYou']();
-		description = m['common.label.blockedByUser']();
+		name = m['common.block.blocksYou.title']();
+		description = m['common.block.blocksYou.message']();
 	} else if (modcause.type === ModerationCauseType.MutedPermanent) {
 		if (modcause.source) {
 			const list = modcause.source;
-			name = m['common.label.accountMutedByList']();
+			name = m['common.mute.byList.title']();
 			description = (
 				<Trans
-					message={m['common.label.includedInMutedList']}
+					message={m['common.mute.byList.message']}
 					inputs={{ listName: list.name }}
 					markup={{
 						t0: ({ children }) => (
@@ -101,18 +101,18 @@ function ModerationDetailsDialogInner({
 				/>
 			);
 		} else {
-			name = m['common.label.accountMuted']();
-			description = m['common.label.youMutedAccount']();
+			name = m['common.mute.byYou.title']();
+			description = m['common.mute.byYou.message']();
 		}
 	} else if (modcause.type === ModerationCauseType.MutedTemporary) {
-		name = m['common.label.accountMuted']();
-		description = m['common.label.youMutedAccount']();
+		name = m['common.mute.byYou.title']();
+		description = m['common.mute.byYou.message']();
 	} else if (modcause.type === ModerationCauseType.MutedKeyword) {
-		name = m['common.label.postHiddenByMutedWord']();
-		description = m['common.label.hiddenWordTag']();
+		name = m['common.mutedWord.postHidden']();
+		description = m['common.mutedWord.hiddenTag']();
 	} else if (modcause.type === ModerationCauseType.Hidden) {
-		name = m['common.label.postHiddenByYou']();
-		description = m['common.label.youHidPost']();
+		name = m['common.thread.postHiddenByYou']();
+		description = m['common.thread.youHidPost']();
 	} else if (modcause.type === ModerationCauseType.Label) {
 		name = desc.name;
 		description = (
@@ -126,11 +126,11 @@ function ModerationDetailsDialogInner({
 		description = '';
 	}
 
-	const sourceName = desc.source || desc.sourceDisplayName || m['common.label.unknownLabeler']();
+	const sourceName = desc.source || desc.sourceDisplayName || m['common.moderation.unknownLabeler']();
 
 	return (
 		<Dialog.ScrollableInner
-			label={m['common.title.moderationDetails']()}
+			label={m['common.moderation.detailsTitle']()}
 			contentContainerStyle={{
 				paddingLeft: 0,
 				paddingRight: 0,
@@ -148,7 +148,7 @@ function ModerationDetailsDialogInner({
 
 				{desc.isSubjectAccount && (
 					<Admonition type="info" style={[a.mt_md]}>
-						{m['common.hint.accountModeration']()}
+						{m['common.moderation.accountHint']()}
 					</Admonition>
 				)}
 			</View>
@@ -168,14 +168,14 @@ function ModerationDetailsDialogInner({
 				>
 					{modcause.source === null ? (
 						<Text style={[t.atoms.text, a.text_md, a.leading_snug]}>
-							{m['common.label.appliedByAuthor']()}
+							{m['common.moderation.appliedByAuthor']()}
 						</Text>
 					) : (
 						<>
 							<View style={[a.flex_row, a.justify_between, a.gap_xl, { paddingBottom: 1 }]}>
 								<Text style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
 									<Trans
-										message={m['common.label.source']}
+										message={m['common.moderation.source']}
 										inputs={{ sourceName }}
 										markup={{
 											t0: ({ children }) => (
@@ -193,7 +193,7 @@ function ModerationDetailsDialogInner({
 								{modcause.label.exp && (
 									<View>
 										<Text style={[a.leading_snug, a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-											{m['common.label.expires'](relativeMessageParts(modcause.label.exp, tick))}
+											{m['common.mutedWord.expires'](relativeMessageParts(modcause.label.exp, tick))}
 										</Text>
 									</View>
 								)}

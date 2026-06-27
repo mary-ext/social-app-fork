@@ -444,7 +444,7 @@ function PostFeed({
 				/>
 			);
 		} else if (row.type === 'loadMoreError') {
-			return <LoadMoreRetryBtn label={m['common.error.fetchPosts']()} onPress={onPressRetryLoadMore} />;
+			return <LoadMoreRetryBtn label={m['common.post.fetchError']()} onPress={onPressRetryLoadMore} />;
 		} else if (row.type === 'loading') {
 			return <PostFeedLoadingPlaceholder />;
 		} else if (row.type === 'feedShutdownMsg') {
@@ -491,7 +491,7 @@ function PostFeed({
 	const feedFooter = shouldRenderEndOfFeed ? (
 		<div className={css.endOfFeedSlot}>{renderEndOfFeed()}</div>
 	) : hasNextPage && !isError ? (
-		<CenteredSpinner label={m['view.posts.label.loadingMore']()} size="xl" />
+		<CenteredSpinner label={m['view.posts.feed.loadingMore']()} size="xl" />
 	) : null;
 
 	const onItemSeen = (item: FeedRow) => {

@@ -114,10 +114,7 @@ export function ProfileStarterPacks({
 			}
 			if (item === LOAD_MORE_ERROR_ITEM) {
 				return (
-					<LoadMoreRetryBtn
-						label={m['components.starterPack.error.fetch']()}
-						onPress={onPressRetryLoadMore}
-					/>
+					<LoadMoreRetryBtn label={m['components.starterPack.list.error']()} onPress={onPressRetryLoadMore} />
 				);
 			}
 			if (item === LOADING) {
@@ -126,7 +123,7 @@ export function ProfileStarterPacks({
 			return (
 				<EmptyState
 					icon={emptyStateIcon}
-					message={emptyStateMessage ?? m['components.starterPack.empty.description']()}
+					message={emptyStateMessage ?? m['components.starterPack.list.empty']()}
 					button={emptyStateButton}
 				/>
 			);
@@ -173,12 +170,12 @@ function CreateAnother() {
 		<div className={css.createAnother}>
 			<Button
 				color="secondary"
-				label={m['common.action.createStarterPack']()}
+				label={m['common.starterPack.action.create']()}
 				onClick={() => navigation.navigate('StarterPackWizard', {})}
 				size="small"
 				variant="solid"
 			>
-				<ButtonText>{m['components.starterPack.action.createAnother']()}</ButtonText>
+				<ButtonText>{m['components.starterPack.create.another']()}</ButtonText>
 				<ButtonIcon icon={PlusIcon} />
 			</Button>
 		</div>

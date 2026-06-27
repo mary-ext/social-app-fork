@@ -73,18 +73,18 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 					<button
 						type="button"
 						className={styles.playButton}
-						aria-label={isPlaying ? m['common.a11y.pauseGif']() : m['common.a11y.playGif']()}
+						aria-label={isPlaying ? m['common.gif.a11y.pause']() : m['common.gif.a11y.play']()}
 						onClick={onPress}
 					>
 						{!isLoaded ? (
-							<Spinner label={m['common.label.loadingGif']()} />
+							<Spinner label={m['common.gif.loading']()} />
 						) : !isPlaying ? (
 							<PlayButtonIcon />
 						) : null}
 					</button>
 					<div className={styles.gifBadge}>
 						<Text size="xs" weight="bold" className={styles.badgeText}>
-							{m['common.label.gif']()}
+							{m['common.gif.label']()}
 						</Text>
 					</div>
 					{resolvedAlt ? <AltBadge text={resolvedAlt} /> : null}
@@ -124,15 +124,15 @@ function AltBadge({ text }: { text: string }) {
 			<button
 				type="button"
 				className={styles.altBadge}
-				aria-label={m['common.action.showAltText']()}
+				aria-label={m['common.altText.show']()}
 				onClick={() => handle.open(null)}
 			>
 				<Text size="xs" weight="bold" className={styles.badgeText}>
-					{m['common.label.altBadge']()}
+					{m['common.altText.badge']()}
 				</Text>
 			</button>
 			<Prompt.Outer handle={handle}>
-				<Prompt.TitleText>{m['common.label.altTextTitle']()}</Prompt.TitleText>
+				<Prompt.TitleText>{m['common.altText.title']()}</Prompt.TitleText>
 				<Prompt.DescriptionText>{text}</Prompt.DescriptionText>
 				<Prompt.Actions>
 					<Prompt.Action onPress={() => {}} cta={m['common.action.close']()} color="secondary" />

@@ -37,7 +37,7 @@ export function NoFollowingFeed({ onAddFeed }: { onAddFeed?: () => void }) {
 		<View style={[a.flex_row, a.flex_wrap, a.align_center, a.py_md, a.px_lg]}>
 			<Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
 				<Trans
-					message={m['screens.feeds.empty.missingFollowing']}
+					message={m['screens.feeds.missingFollowing']}
 					markup={{
 						t0: ({ children }) => (
 							<InlineLinkText

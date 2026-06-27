@@ -75,10 +75,10 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 				ListEmptyComponent={
 					<div className={css.empty}>
 						{isLoading ? (
-							<CenteredSpinner label={m['common.label.loading']()} size="lg" />
+							<CenteredSpinner label={m['common.status.loading']()} size="lg" />
 						) : (
 							<Text weight="semiBold" size="lg" align="center" className={css.emptyText}>
-								{m['screens.starterPack.empty.noPeople']()}
+								{m['screens.starterPack.people.noResults']()}
 							</Text>
 						)}
 					</div>

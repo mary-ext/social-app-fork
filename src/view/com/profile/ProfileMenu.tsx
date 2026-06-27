@@ -113,7 +113,7 @@ function ProfileMenu({
 		if (profile.viewer?.muted) {
 			try {
 				await queueUnmute();
-				Toast.show(m['common.toast.accountUnmuted']());
+				Toast.show(m['common.mute.unmutedToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
 					logger.error('Failed to unmute account', { message: e });
@@ -125,7 +125,7 @@ function ProfileMenu({
 		} else {
 			try {
 				await queueMute();
-				Toast.show(m['common.toast.accountMuted']());
+				Toast.show(m['common.mute.mutedToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
 					logger.error('Failed to mute account', { message: e });
@@ -141,7 +141,7 @@ function ProfileMenu({
 		if (profile.viewer?.blocking) {
 			try {
 				await queueUnblock();
-				Toast.show(m['common.toast.accountUnblocked']());
+				Toast.show(m['common.block.unblockedToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
 					logger.error('Failed to unblock account', { message: e });
@@ -153,7 +153,7 @@ function ProfileMenu({
 		} else {
 			try {
 				await queueBlock();
-				Toast.show(m['common.toast.accountBlocked']());
+				Toast.show(m['common.block.blockedToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
 					logger.error('Failed to block account', { message: e });
@@ -168,7 +168,7 @@ function ProfileMenu({
 	const onPressFollowAccount = useCallback(async () => {
 		try {
 			await queueFollow();
-			Toast.show(m['view.profile.toast.followed']());
+			Toast.show(m['view.profile.follow.followedToast']());
 		} catch (e) {
 			if (!isAbortError(e)) {
 				logger.error('Failed to follow account', { message: e });
@@ -182,7 +182,7 @@ function ProfileMenu({
 	const onPressUnfollowAccount = useCallback(async () => {
 		try {
 			await queueUnfollow();
-			Toast.show(m['view.profile.toast.unfollowed']());
+			Toast.show(m['view.profile.follow.unfollowedToast']());
 		} catch (e) {
 			if (!isAbortError(e)) {
 				logger.error('Failed to unfollow account', { message: e });
@@ -229,7 +229,7 @@ function ProfileMenu({
 				<Menu.Popup label={m['common.a11y.moreOptions']()} align="end" minWidth={170}>
 					<Menu.Group>
 						<Menu.Item
-							label={m['view.profile.action.copyLink']()}
+							label={m['view.profile.sharing.action.copyLink']()}
 							onClick={() => {
 								if (showLoggedOutWarning) {
 									loggedOutWarningPromptHandle.open(null);
@@ -238,7 +238,7 @@ function ProfileMenu({
 								}
 							}}
 						>
-							<Menu.ItemText>{m['view.profile.action.copyLink']()}</Menu.ItemText>
+							<Menu.ItemText>{m['view.profile.sharing.action.copyLink']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={ChainLinkIcon} />
 						</Menu.Item>
 						<Menu.Item label={m['view.profile.action.searchPosts']()} onClick={onPressSearch}>
@@ -257,40 +257,37 @@ function ProfileMenu({
 											<Menu.Item
 												label={
 													isFollowing
-														? m['view.profile.action.unfollow']()
-														: m['view.profile.action.follow']()
+														? m['view.profile.follow.action.unfollow']()
+														: m['view.profile.follow.action.follow']()
 												}
 												onClick={() => void (isFollowing ? onPressUnfollowAccount() : onPressFollowAccount())}
 											>
 												<Menu.ItemText>
 													{isFollowing
-														? m['view.profile.action.unfollow']()
-														: m['view.profile.action.follow']()}
+														? m['view.profile.follow.action.unfollow']()
+														: m['view.profile.follow.action.follow']()}
 												</Menu.ItemText>
 												<Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />
 											</Menu.Item>
 										)}
 									</>
 								)}
-								<Menu.Item label={m['common.action.addToStarterPacks']()} onClick={onPressAddToStarterPacks}>
-									<Menu.ItemText>{m['common.action.addToStarterPacks']()}</Menu.ItemText>
+								<Menu.Item label={m['common.starterPack.action.add']()} onClick={onPressAddToStarterPacks}>
+									<Menu.ItemText>{m['common.starterPack.action.add']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={StarterPack} />
 								</Menu.Item>
-								<Menu.Item
-									label={m['view.profile.action.addToLists']()}
-									onClick={addToListsDialogControl.open}
-								>
-									<Menu.ItemText>{m['view.profile.action.addToLists']()}</Menu.ItemText>
+								<Menu.Item label={m['view.profile.list.add']()} onClick={addToListsDialogControl.open}>
+									<Menu.ItemText>{m['view.profile.list.add']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={List} />
 								</Menu.Item>
 								{isSelf && canGoLive && (
 									<Menu.Item
 										label={
 											status.isDisabled
-												? m['view.profile.action.goLiveDisabled']()
+												? m['view.profile.liveStatus.action.goLiveDisabled']()
 												: status.isActive
-													? m['view.profile.action.editLiveStatus']()
-													: m['view.profile.action.goLive']()
+													? m['view.profile.liveStatus.action.edit']()
+													: m['view.profile.liveStatus.action.goLive']()
 										}
 										onClick={() => {
 											if (status.isDisabled) {
@@ -302,10 +299,10 @@ function ProfileMenu({
 									>
 										<Menu.ItemText>
 											{status.isDisabled
-												? m['view.profile.action.goLiveDisabled']()
+												? m['view.profile.liveStatus.action.goLiveDisabled']()
 												: status.isActive
-													? m['view.profile.action.editLiveStatus']()
-													: m['view.profile.action.goLive']()}
+													? m['view.profile.liveStatus.action.edit']()
+													: m['view.profile.liveStatus.action.goLive']()}
 										</Menu.ItemText>
 										<Menu.ItemIcon icon={LiveIcon} />
 									</Menu.Item>
@@ -316,15 +313,15 @@ function ProfileMenu({
 											<Menu.Item
 												label={
 													profile.viewer?.muted
-														? m['common.action.unmuteAccount']()
-														: m['common.action.muteAccount']()
+														? m['common.mute.action.unmuteAccount']()
+														: m['common.mute.action.muteAccount']()
 												}
 												onClick={() => mutePromptHandle.open(null)}
 											>
 												<Menu.ItemText>
 													{profile.viewer?.muted
-														? m['common.action.unmuteAccount']()
-														: m['common.action.muteAccount']()}
+														? m['common.mute.action.unmuteAccount']()
+														: m['common.mute.action.muteAccount']()}
 												</Menu.ItemText>
 												<Menu.ItemIcon icon={profile.viewer?.muted ? Unmute : Mute} />
 											</Menu.Item>
@@ -333,15 +330,15 @@ function ProfileMenu({
 											<Menu.Item
 												label={
 													profile.viewer
-														? m['common.action.unblockAccount']()
-														: m['common.action.blockAccount']()
+														? m['common.block.action.unblockAccount']()
+														: m['common.block.action.blockAccount']()
 												}
 												onClick={() => blockPromptHandle.open(null)}
 											>
 												<Menu.ItemText>
 													{profile.viewer?.blocking
-														? m['common.action.unblockAccount']()
-														: m['common.action.blockAccount']()}
+														? m['common.block.action.unblockAccount']()
+														: m['common.block.action.blockAccount']()}
 												</Menu.ItemText>
 												<Menu.ItemIcon icon={profile.viewer?.blocking ? PersonCheck : PersonX} />
 											</Menu.Item>
@@ -359,12 +356,12 @@ function ProfileMenu({
 						<>
 							<Menu.Separator />
 							<Menu.Group>
-								<Menu.Item label={m['view.profile.action.copyUri']()} onClick={onPressShareATUri}>
-									<Menu.ItemText>{m['view.profile.action.copyUri']()}</Menu.ItemText>
+								<Menu.Item label={m['view.profile.sharing.action.copyUri']()} onClick={onPressShareATUri}>
+									<Menu.ItemText>{m['view.profile.sharing.action.copyUri']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={ClipboardIcon} />
 								</Menu.Item>
-								<Menu.Item label={m['view.profile.action.copyDid']()} onClick={onPressShareDID}>
-									<Menu.ItemText>{m['view.profile.action.copyDid']()}</Menu.ItemText>
+								<Menu.Item label={m['view.profile.sharing.action.copyDid']()} onClick={onPressShareDID}>
+									<Menu.ItemText>{m['view.profile.sharing.action.copyDid']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={ClipboardIcon} />
 								</Menu.Item>
 							</Menu.Group>
@@ -400,10 +397,10 @@ function ProfileMenu({
 			/>
 			<WebPrompt.Basic
 				handle={loggedOutWarningPromptHandle}
-				title={m['view.profile.label.shareNote']()}
-				description={m['view.profile.hint.loggedInOnly']()}
+				title={m['view.profile.sharing.note']()}
+				description={m['view.profile.sharing.loggedInOnly.message']()}
 				onConfirm={onPressShare}
-				confirmButtonCta={m['view.profile.action.shareAnyway']()}
+				confirmButtonCta={m['view.profile.sharing.loggedInOnly.confirm']()}
 			/>
 			{status.isDisabled ? (
 				<GoLiveDisabledDialog handle={goLiveDisabledDialogHandle} status={status} />

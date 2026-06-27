@@ -46,36 +46,36 @@ export function MessagesSettingsScreenInner({}: Props) {
 	const allowMessagesFromOptions: { name: AllowIncoming; label: string }[] = [
 		{
 			name: 'all',
-			label: m['screens.messages.option.everyoneMessages'](),
+			label: m['screens.messages.dmSettings.everyone'](),
 		},
 		{
 			name: 'following',
-			label: m['screens.messages.option.followingMessages'](),
+			label: m['screens.messages.dmSettings.following'](),
 		},
 		{
 			name: 'none',
-			label: m['screens.messages.option.noOneMessages'](),
+			label: m['screens.messages.dmSettings.noOne'](),
 		},
 	];
 
 	const allowGroupInvitesFromOptions: { name: AllowIncoming; label: string }[] = [
 		{
 			name: 'all',
-			label: m['screens.messages.option.everyoneInvites'](),
+			label: m['screens.messages.inviteSettings.everyone'](),
 		},
 		{
 			name: 'following',
-			label: m['screens.messages.option.followingInvites'](),
+			label: m['screens.messages.inviteSettings.following'](),
 		},
 		{
 			name: 'none',
-			label: m['screens.messages.option.noOneInvites'](),
+			label: m['screens.messages.inviteSettings.noOne'](),
 		},
 	];
 
 	const { mutate: updateDeclaration } = useUpdateActorDeclaration({
 		onError: () => {
-			Toast.show(m['screens.messages.error.updateSettings'](), {
+			Toast.show(m['screens.messages.chatSettings.updateError'](), {
 				type: 'error',
 			});
 		},
@@ -104,7 +104,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['screens.messages.title.chatSettings']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.messages.chatSettings.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -112,13 +112,13 @@ export function MessagesSettingsScreenInner({}: Props) {
 				<View style={[a.py_xl, a.gap_md]}>
 					<View style={[a.px_xl]}>
 						<Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
-							{m['screens.messages.label.allowDmFrom']()}
+							{m['screens.messages.dmSettings.label']()}
 						</Text>
 						<Text style={[a.pb_md, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-							{m['screens.messages.hint.ongoingConversations']()}
+							{m['screens.messages.dmSettings.hint']()}
 						</Text>
 						<Toggle.Group
-							label={m['screens.messages.label.allowDmFrom']()}
+							label={m['screens.messages.dmSettings.label']()}
 							type="radio"
 							values={[(profile?.associated?.chat?.allowIncoming as AllowIncoming) ?? 'following']}
 							onChange={onSelectMessagesFrom}
@@ -135,13 +135,13 @@ export function MessagesSettingsScreenInner({}: Props) {
 					<Divider style={{ marginVertical: 10 }} />
 					<View style={[a.px_xl]}>
 						<Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
-							{m['screens.messages.label.allowInvitesFrom']()}
+							{m['screens.messages.inviteSettings.label']()}
 						</Text>
 						<Text style={[a.pb_md, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-							{m['screens.messages.hint.ongoingConversations']()}
+							{m['screens.messages.dmSettings.hint']()}
 						</Text>
 						<Toggle.Group
-							label={m['screens.messages.label.allowInvitesFrom']()}
+							label={m['screens.messages.inviteSettings.label']()}
 							type="radio"
 							values={[resolveAllowGroupInvites(profile?.associated?.chat)]}
 							onChange={onSelectGroupInvitesFrom}
@@ -159,7 +159,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 
 					<View style={[a.px_xl]}>
 						<Toggle.Item
-							label={m['common.action.exportChatData']()}
+							label={m['common.chat.action.export']()}
 							name="exportChatData"
 							style={[a.flex_row, a.align_center, a.justify_between]}
 							onChange={() => {
@@ -168,7 +168,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 						>
 							<CarIcon className={css.carIcon} fill={colors.text} size="lg" />
 							<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
-								{m['screens.messages.action.exportChatData']()}
+								{m['screens.messages.export.action']()}
 							</Text>
 							<ChevronRightIcon className={css.chevron} fill={colors.text} size="md" />
 						</Toggle.Item>

@@ -27,7 +27,7 @@ export function Screen() {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.nav.verificationSettings']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.verification.settingsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -35,7 +35,7 @@ export function Screen() {
 				<Settings.List>
 					<Admonition type="tip">
 						<Trans
-							message={m['screens.moderation.hint.verificationInfo']}
+							message={m['screens.moderation.verification.info']}
 							markup={{
 								t0: ({ children }) => (
 									<ExternalInlineLinkText
@@ -52,7 +52,7 @@ export function Screen() {
 						<Inner preferences={preferences} />
 					) : (
 						<div className={styles.loaderWrap}>
-							<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
+							<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
 						</div>
 					)}
 				</Settings.List>
@@ -69,12 +69,12 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 		<Settings.Section>
 			<Settings.SwitchRow
 				disabled={isPending}
-				label={m['screens.moderation.label.hideVerificationBadges']()}
+				label={m['screens.moderation.verification.hideBadges']()}
 				onChange={(value) => setVerificationPrefs({ hideBadges: value })}
 				value={hideBadges}
 			>
 				<Settings.Icon icon={CircleCheck} />
-				<Settings.Label titleText={m['screens.moderation.label.hideVerificationBadges']()} />
+				<Settings.Label titleText={m['screens.moderation.verification.hideBadges']()} />
 			</Settings.SwitchRow>
 		</Settings.Section>
 	);

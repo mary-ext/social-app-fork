@@ -52,7 +52,9 @@ export const ProfileKnownFollowersScreen = ({ route }: Props) => {
 	} = useProfileKnownFollowersQuery(resolvedDid);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 
-	useSetTitle(profile ? m['screens.profile.title.knownFollowers']({ handle: profile.handle }) : undefined);
+	useSetTitle(
+		profile ? m['screens.profile.follow.knownFollowers.title']({ handle: profile.handle }) : undefined,
+	);
 
 	const onRefresh = async () => {
 		setIsPTRing(true);
@@ -85,12 +87,12 @@ export const ProfileKnownFollowersScreen = ({ route }: Props) => {
 	if (followers.length < 1) {
 		return (
 			<Layout.Screen>
-				<ViewHeader title={m['common.label.followersYouKnow']()} />
+				<ViewHeader title={m['common.follow.followersYouKnow']()} />
 				<ListMaybePlaceholder
 					isLoading={isDidLoading || isFollowersLoading}
 					isError={isError}
 					emptyType="results"
-					emptyMessage={m['screens.profile.empty.noKnownFollowers']({ name })}
+					emptyMessage={m['screens.profile.follow.knownFollowers.empty']({ name })}
 					errorMessage={cleanError(resolveError || error)}
 					onRetry={isError ? refetch : undefined}
 					topBorder={false}
@@ -102,7 +104,7 @@ export const ProfileKnownFollowersScreen = ({ route }: Props) => {
 
 	return (
 		<Layout.Screen>
-			<ViewHeader title={m['common.label.followersYouKnow']()} />
+			<ViewHeader title={m['common.follow.followersYouKnow']()} />
 			<List
 				data={followers}
 				renderItem={renderItem}

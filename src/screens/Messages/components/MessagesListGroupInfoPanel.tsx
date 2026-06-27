@@ -44,7 +44,7 @@ export function MessagesListGroupInfoPanel({
 		},
 		onError: (e) => {
 			logger.error('Failed to add group chat members', { message: e });
-			Toast.show(m['screens.messages.error.addMembers'](), { type: 'error' });
+			Toast.show(m['screens.messages.members.add.error'](), { type: 'error' });
 		},
 	});
 
@@ -56,15 +56,15 @@ export function MessagesListGroupInfoPanel({
 
 	let names: React.ReactNode = null;
 	if (members.length === 1) {
-		names = m['screens.messages.title.newChatOne']({ name: createSanitizedDisplayName(members[0]!) });
+		names = m['screens.messages.newChat.one']({ name: createSanitizedDisplayName(members[0]!) });
 	} else if (members.length === 2) {
-		names = m['screens.messages.title.newChatTwo']({
+		names = m['screens.messages.newChat.two']({
 			first: createSanitizedDisplayName(members[0]!),
 			second: createSanitizedDisplayName(members[1]!),
 		});
 	} else if (members.length > 2) {
 		const memberCount = convo.details.memberCount - 2;
-		names = m['screens.messages.title.newChatMany']({
+		names = m['screens.messages.newChat.many']({
 			first: createSanitizedDisplayName(members[0]!),
 			memberCount,
 			second: createSanitizedDisplayName(members[1]!),
@@ -102,7 +102,7 @@ export function MessagesListGroupInfoPanel({
 							<Button
 								color="secondary"
 								size="small"
-								label={m['screens.messages.a11y.addPeople']()}
+								label={m['screens.messages.members.add.a11y']()}
 								onPress={() => addMembersControl.open()}
 							>
 								<ButtonIcon icon={PersonPlusIcon} />
@@ -115,13 +115,13 @@ export function MessagesListGroupInfoPanel({
 								size="small"
 								label={
 									isOwner
-										? m['screens.messages.a11y.manageInviteLink']()
-										: m['screens.messages.a11y.viewInviteLink']()
+										? m['screens.messages.inviteLink.manage.a11y']()
+										: m['screens.messages.inviteLink.view.a11y']()
 								}
 								onPress={inviteLinkControl.open}
 							>
 								<ButtonIcon icon={ChainLinkIcon} />
-								<ButtonText>{m['screens.messages.label.inviteLink']()}</ButtonText>
+								<ButtonText>{m['screens.messages.inviteLink.label']()}</ButtonText>
 							</Button>
 						) : null}
 					</View>

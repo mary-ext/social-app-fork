@@ -22,7 +22,7 @@ export function DiscoverDebug({ feedContext }: { feedContext: string | undefined
 			onClick={(e) => {
 				e.stopPropagation();
 				void navigator.clipboard.writeText(feedContext);
-				Toast.show(m['common.toast.copied']());
+				Toast.show(m['common.share.copiedToast']());
 			}}
 		>
 			<Text className={css.text} color="contrast_400" numberOfLines={1}>

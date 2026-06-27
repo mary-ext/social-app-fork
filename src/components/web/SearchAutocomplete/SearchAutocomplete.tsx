@@ -665,7 +665,7 @@ function ActiveSearchAutocomplete({
 						render={
 							<Button
 								color="secondary"
-								label={m['common.action.clearSearch']()}
+								label={m['common.search.action.clear']()}
 								shape="round"
 								size="tiny"
 								variant="ghost"

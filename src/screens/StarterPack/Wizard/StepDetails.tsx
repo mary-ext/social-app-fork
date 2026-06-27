@@ -43,7 +43,7 @@ export function StepDetails() {
 				<TextField.LabelText
 					accessory={
 						<Text
-							aria-label={m['screens.starterPack.charCount']({ nameLength, NAME_MAX_LENGTH })}
+							aria-label={m['screens.starterPack.name.charCount']({ nameLength, NAME_MAX_LENGTH })}
 							className={css.counter}
 							color="textContrastMedium"
 							id={counterId}
@@ -53,14 +53,14 @@ export function StepDetails() {
 						</Text>
 					}
 				>
-					{m['screens.starterPack.title.namePrompt']()}
+					{m['screens.starterPack.name.prompt']()}
 				</TextField.LabelText>
 				<TextField.Input
 					describedBy={counterId}
 					label={
 						name
-							? m['screens.starterPack.defaultNameNamed']({ name })
-							: m['screens.starterPack.defaultName']()
+							? m['screens.starterPack.name.defaultNamed']({ name })
+							: m['screens.starterPack.name.default']()
 					}
 					maxLength={NAME_MAX_LENGTH}
 					onChangeText={(text) => dispatch({ type: 'SetName', name: text })}
@@ -68,12 +68,12 @@ export function StepDetails() {
 				/>
 			</TextField.Root>
 			<TextField.Root>
-				<TextField.LabelText>{m['screens.starterPack.title.tellMore']()}</TextField.LabelText>
+				<TextField.LabelText>{m['screens.starterPack.setup.tellMore']()}</TextField.LabelText>
 				<TextField.Input
 					label={
 						name
-							? m['screens.starterPack.shareDescriptionNamed']({ name })
-							: m['screens.starterPack.shareDescription']()
+							? m['screens.starterPack.share.descriptionNamed']({ name })
+							: m['screens.starterPack.share.description']()
 					}
 					minRows={6}
 					multiline

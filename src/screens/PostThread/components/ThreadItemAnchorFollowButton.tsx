@@ -116,7 +116,7 @@ function PostThreadFollowBtnLoaded({
 	return (
 		<Button
 			data-testid="followBtn"
-			label={m['common.a11y.follow']({ handle: profile.handle })}
+			label={m['common.follow.a11y.follow']({ handle: profile.handle })}
 			onClick={onPress}
 			size="small"
 			color={isFollowing ? 'secondary' : 'secondary_inverted'}
@@ -125,9 +125,9 @@ function PostThreadFollowBtnLoaded({
 			<ButtonText>
 				{!isFollowing
 					? isFollowedBy
-						? m['common.action.followBack']()
-						: m['common.action.follow']()
-					: m['common.action.following']()}
+						? m['common.follow.action.followBack']()
+						: m['common.follow.action.follow']()
+					: m['common.follow.action.following']()}
 			</ButtonText>
 		</Button>
 	);

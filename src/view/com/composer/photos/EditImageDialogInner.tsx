@@ -48,7 +48,7 @@ export function EditImageDialogInner({
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{m['view.composer.action.editImage']()}</Dialog.Header.TitleText>
+					<Dialog.Header.TitleText>{m['view.composer.gallery.action.edit']()}</Dialog.Header.TitleText>
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot>
 					<Button
@@ -60,7 +60,7 @@ export function EditImageDialogInner({
 						variant="ghost"
 					>
 						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
-						{pending && <Spinner color="currentColor" label={m['common.label.saving']()} size="sm" />}
+						{pending && <Spinner color="currentColor" label={m['common.status.saving']()} size="sm" />}
 					</Button>
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>

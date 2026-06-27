@@ -19,7 +19,7 @@ export const ProfileSearchScreen = ({ route }: Props) => {
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 
-	useSetTitle(profile ? m['screens.profile.action.searchUserPosts']({ handle: profile.handle }) : undefined);
+	useSetTitle(profile ? m['screens.profile.search.action.userPosts']({ handle: profile.handle }) : undefined);
 
 	const fixedParams = useMemo(
 		() => ({
@@ -34,9 +34,9 @@ export const ProfileSearchScreen = ({ route }: Props) => {
 			inputPlaceholder={
 				profile
 					? currentAccount?.did === profile.did
-						? m['screens.profile.action.searchMyPosts']()
-						: m['screens.profile.action.searchUserPosts']({ handle: profile.handle })
-					: m['screens.profile.hint.searchPlaceholder']()
+						? m['screens.profile.search.action.myPosts']()
+						: m['screens.profile.search.action.userPosts']({ handle: profile.handle })
+					: m['screens.profile.search.placeholder']()
 			}
 			fixedParams={fixedParams}
 			queryParam={queryParam}

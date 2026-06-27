@@ -18,8 +18,8 @@ export function ProfileHeaderMetrics() {
 
 	const followers = formatCount(profile.followersCount || 0);
 	const following = formatCount(profile.followsCount || 0);
-	const pluralizedFollowers = m['common.count.followers']({ count: profile.followersCount || 0 });
-	const pluralizedFollowings = m['common.count.following']({ count: profile.followsCount || 0 });
+	const pluralizedFollowers = m['common.follow.followersUnit']({ count: profile.followersCount || 0 });
+	const pluralizedFollowings = m['common.follow.followingUnit']({ count: profile.followsCount || 0 });
 
 	return (
 		<div className={css.row}>
@@ -37,7 +37,7 @@ export function ProfileHeaderMetrics() {
 			</InlineLinkText>
 			<InlineLinkText
 				color="text"
-				label={m['screens.profile.label.followingCount']({ count: profile.followsCount || 0 })}
+				label={m['screens.profile.follow.following.countLabel']({ count: profile.followsCount || 0 })}
 				to={makeProfileLink(profile, 'follows')}
 			>
 				<Text size="md" weight="semiBold">
@@ -50,7 +50,7 @@ export function ProfileHeaderMetrics() {
 			<Text color="text" size="md" weight="semiBold">
 				{formatCount(profile.postsCount || 0)}{' '}
 				<Text color="textContrastMedium" size="md" weight="normal">
-					{m['screens.profile.count.posts']({ count: profile.postsCount || 0 })}
+					{m['screens.profile.posts.count']({ count: profile.postsCount || 0 })}
 				</Text>
 			</Text>
 		</div>

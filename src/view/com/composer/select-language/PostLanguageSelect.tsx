@@ -60,7 +60,7 @@ export function PostLanguageSelect({
 		return (
 			<>
 				<LanguageButton
-					label={m['view.composer.a11y.postLanguageSelection']()}
+					label={m['view.composer.language.a11y.selection']()}
 					nudgeAt={nudgeAt}
 					onClick={() => languageDialogControl.open(null)}
 				/>
@@ -91,7 +91,7 @@ export function PostLanguageSelect({
 							return (
 								<Menu.Item
 									key={historyItem}
-									label={m['view.composer.a11y.selectLanguage']({ langName })}
+									label={m['view.composer.language.a11y.select']({ langName })}
 									onClick={() => {
 										setLangPrefs.setPostLanguage(historyItem);
 										onSelectLanguage?.(historyItem);

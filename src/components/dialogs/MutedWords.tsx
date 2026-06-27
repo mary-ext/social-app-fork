@@ -47,8 +47,8 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		{ label: m['common.time.days30'](), value: '30_days' },
 	];
 	const targetItems = [
-		{ label: m['components.dialogs.label.textAndTags'](), value: 'content' },
-		{ label: m['components.dialogs.label.tagsOnly'](), value: 'tag' },
+		{ label: m['components.dialogs.mutedWord.textAndTags'](), value: 'content' },
+		{ label: m['components.dialogs.mutedWord.tagsOnly'](), value: 'tag' },
 	];
 
 	const submit = async () => {
@@ -78,7 +78,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		try {
 			// send raw value and rely on SDK as sanitization source of truth
 			await addMutedWord([{ value: field, targets: surfaces, actorTarget, expiresAt }]);
-			Toast.show(m['common.label.muted'](), { type: 'success' });
+			Toast.show(m['common.mute.status'](), { type: 'success' });
 			handle.close();
 		} catch (e) {
 			const message = e instanceof Error ? e.message : String(e);
@@ -98,7 +98,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		<div className={styles.form}>
 			<div className={styles.intro}>
 				<Text size="lg" weight="semiBold" color="textContrastHigh">
-					{m['common.action.addMutedWord']()}
+					{m['common.mutedWord.action.add']()}
 				</Text>
 				<Text size="md_sub" color="textContrastMedium">
 					{m['components.dialogs.mutedWord.description']()}
@@ -130,7 +130,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 					onValueChange={setDuration}
 					value={duration}
 				>
-					<Settings.Label titleText={m['components.dialogs.label.duration']()} />
+					<Settings.Label titleText={m['components.dialogs.mutedWord.duration']()} />
 				</Settings.SelectRow>
 				<Settings.SelectRow
 					items={targetItems}
@@ -159,7 +159,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			>
 				<ButtonText>{m['common.action.add']()}</ButtonText>
 				{isPending ? (
-					<Spinner color="currentColor" label={m['components.dialogs.action.adding']()} size="sm" />
+					<Spinner color="currentColor" label={m['components.dialogs.list.adding']()} size="sm" />
 				) : (
 					<ButtonIcon icon={Plus} />
 				)}

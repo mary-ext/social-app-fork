@@ -21,7 +21,7 @@ export function BotAccountAlert({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['common.label.automatedAccount']()} size="narrow">
+			<Dialog.Popup label={m['common.account.automated']()} size="narrow">
 				<DialogInner handle={handle} profile={profile} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -33,8 +33,8 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 	const isSelf = profile.did === currentAccount?.did;
 	const description = isSelf
-		? m['components.botAccountAlert.descByYou']()
-		: m['components.botAccountAlert.descByOwner']();
+		? m['components.botAccountAlert.descriptionByYou']()
+		: m['components.botAccountAlert.descriptionByOwner']();
 
 	return (
 		<div className={css.body}>
@@ -49,14 +49,14 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				{isSelf && (
 					<Button
 						color="secondary"
-						label={m['components.botAccountAlert.action.openSettings']()}
+						label={m['components.botAccountAlert.openSettings']()}
 						onClick={() => {
 							handle.close();
 							void navigate('AccountSettings');
 						}}
 						size="large"
 					>
-						<ButtonText>{m['components.botAccountAlert.action.openSettings']()}</ButtonText>
+						<ButtonText>{m['components.botAccountAlert.openSettings']()}</ButtonText>
 					</Button>
 				)}
 			</div>

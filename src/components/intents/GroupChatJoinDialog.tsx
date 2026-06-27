@@ -76,7 +76,7 @@ export function GroupChatJoinDialog() {
 	return (
 		<Dialog.Root handle={groupChatJoinControl}>
 			{({ payload }) => (
-				<Dialog.Popup label={m['components.intents.action.join']()} size="narrow">
+				<Dialog.Popup label={m['components.intents.join.action.join']()} size="narrow">
 					<div className={css.inner}>
 						{/* remount per code so a reopen with a different invite refetches from a clean state */}
 						<GroupChatJoinDialogContent
@@ -118,7 +118,7 @@ function GroupChatJoinDialogContent({
 					// that can lag behind the write.
 					if (code) setJoinLinkPreviewRequestedForCode(queryClient, code, true);
 					handle.close();
-					Toast.show(m['components.intents.status.accessRequested']());
+					Toast.show(m['components.intents.accessRequest.success']());
 					break;
 				case 'joined': {
 					// Membership changed — refetch any cached previews of this link (e.g. a DM embed) so
@@ -126,7 +126,7 @@ function GroupChatJoinDialogContent({
 					if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code);
 					if (data.convo && data.convo.id) {
 						handle.close();
-						Toast.show(m['components.intents.status.joinSuccess']());
+						Toast.show(m['components.intents.join.success']());
 						navigation.navigate('MessagesConversation', {
 							conversation: data.convo.id,
 						});
@@ -141,28 +141,28 @@ function GroupChatJoinDialogContent({
 			}
 		},
 		onError: (error) => {
-			let errorMessage = m['components.intents.error.joinFailed']();
+			let errorMessage = m['components.intents.join.error.failed']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.connection']();
 			} else if (error instanceof ClientResponseError) {
 				switch (error.error) {
 					case 'ConvoLocked':
-						errorMessage = m['components.intents.error.conversationLocked']();
+						errorMessage = m['components.intents.join.error.conversationLocked']();
 						break;
 					case 'FollowRequired':
-						errorMessage = m['components.intents.error.followersOnly']();
+						errorMessage = m['components.intents.permission.followersOnly']();
 						break;
 					case 'InvalidCode':
-						errorMessage = m['components.intents.error.invalidCode']();
+						errorMessage = m['components.intents.inviteLink.error.invalidCode']();
 						break;
 					case 'LinkDisabled':
-						errorMessage = m['components.intents.error.linkDisabled']();
+						errorMessage = m['components.intents.inviteLink.error.disabled']();
 						break;
 					case 'MemberLimitReached':
-						errorMessage = m['common.error.memberLimitReached']();
+						errorMessage = m['common.chat.error.memberLimit']();
 						break;
 					case 'UserKicked':
-						errorMessage = m['components.intents.error.previouslyRemoved']();
+						errorMessage = m['components.intents.join.error.previouslyRemoved']();
 						break;
 				}
 			}
@@ -176,14 +176,14 @@ function GroupChatJoinDialogContent({
 			// "Request to join" right away.
 			if (code) setJoinLinkPreviewRequestedForCode(queryClient, code, false);
 			handle.close();
-			Toast.show(m['common.label.joinRequestRescinded']());
+			Toast.show(m['common.requests.rescinded']());
 		},
 		onError: (error) => {
-			let errorMessage = m['common.error.rescindRequest']();
+			let errorMessage = m['common.requests.error.rescind']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.connection']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidJoinRequest') {
-				errorMessage = m['common.error.invalidRescindRequest']();
+				errorMessage = m['common.requests.error.invalidRescind']();
 			}
 			Toast.show(errorMessage);
 		},
@@ -213,7 +213,7 @@ function GroupChatJoinDialogContent({
 			<>
 				<ChainLinkBrokenIcon fill={colors.primary_500} width={48} />
 				<Text align="center" size="lg" weight="semiBold">
-					{m['components.intents.error.linkInvalid']()}
+					{m['components.intents.inviteLink.error.invalid']()}
 				</Text>
 				<Button
 					className={css.actionButton}
@@ -242,7 +242,7 @@ function GroupChatJoinDialogContent({
 						size="lg"
 						weight="medium"
 					>
-						{m['common.error.inviteUnavailable']()}
+						{m['common.chat.error.inviteUnavailable']()}
 					</Text>
 				</div>
 				<Button
@@ -267,22 +267,22 @@ function GroupChatJoinDialogContent({
 	let canJoin = true;
 	let ButtonIconImage = isJoinPending || isWithdrawPending ? Loader : JoinIcon;
 	let buttonText = joinLinkPreview.requireApproval
-		? m['common.action.requestToJoin']()
-		: m['common.action.join']();
+		? m['common.requests.action.request']()
+		: m['common.chat.action.join']();
 	let buttonColor: 'primary' | 'secondary' = 'primary';
 	if (joinLinkPreview.memberCount >= joinLinkPreview.memberLimit) {
 		canJoin = false;
 		ButtonIconImage = HandIcon;
-		buttonText = m['common.error.chatFull']();
+		buttonText = m['common.chat.error.full']();
 		buttonColor = 'secondary';
 	} else if (joinLinkPreview.joinRule === 'followedByOwner' && !isFollowing) {
 		canJoin = false;
 		ButtonIconImage = HandIcon;
-		buttonText = m['common.hint.ownerFollowsOnlyJoin']();
+		buttonText = m['common.chat.ownerFollowsHint']();
 		buttonColor = 'secondary';
 	} else if (hasRequested) {
 		ButtonIconImage = XIcon;
-		buttonText = m['common.action.rescindRequest']();
+		buttonText = m['common.requests.action.rescind']();
 		buttonColor = 'secondary';
 	}
 
@@ -298,7 +298,7 @@ function GroupChatJoinDialogContent({
 				<div className={css.metaSection}>
 					<div className={css.titleGroup}>
 						<Text align="center" color="textContrastHigh" size="sm" weight="medium">
-							{m['common.label.groupChat']()}
+							{m['common.chat.group']()}
 						</Text>
 						<Text align="center" size="_3xl" weight="bold">
 							{joinLinkPreview.name}
@@ -314,7 +314,7 @@ function GroupChatJoinDialogContent({
 							color="textContrastMedium"
 						>
 							<Trans
-								message={m['common.label.byOwner']}
+								message={m['common.chat.byOwner']}
 								inputs={{ ownerHandle }}
 								markup={{
 									t0: ({ children }) => (
@@ -337,7 +337,7 @@ function GroupChatJoinDialogContent({
 					</div>
 					<div className={css.infoRow}>
 						<Text align="center" size="sm" weight="medium" color="textContrastMedium">
-							{m['common.count.members']({
+							{m['common.chat.membersCount']({
 								count: joinLinkPreview.memberCount,
 								limit: joinLinkPreview.memberLimit,
 							})}
@@ -345,8 +345,8 @@ function GroupChatJoinDialogContent({
 						<PersonGroupIcon className={css.personGroupIcon} fill={colors.textContrastMedium} width={12} />
 						<Text align="center" size="sm" weight="medium" color="textContrastMedium">
 							{joinLinkPreview.joinRule === 'followedByOwner'
-								? m['components.intents.label.followersCanJoin']()
-								: m['components.intents.label.anyoneCanJoin']()}
+								? m['components.intents.permission.followers']()
+								: m['components.intents.permission.anyone']()}
 						</Text>
 					</div>
 				</div>
@@ -356,7 +356,7 @@ function GroupChatJoinDialogContent({
 					className={css.actionButton}
 					color="primary"
 					disabled={!code}
-					label={m['components.intents.action.open']()}
+					label={m['components.intents.join.action.open']()}
 					onClick={() => {
 						handle.close();
 						navigation.navigate('MessagesConversation', {
@@ -365,7 +365,7 @@ function GroupChatJoinDialogContent({
 					}}
 					size="large"
 				>
-					<ButtonText>{m['common.action.openChat']()}</ButtonText>
+					<ButtonText>{m['common.chat.action.open']()}</ButtonText>
 					<ButtonIcon icon={ArrowRightIcon} />
 				</Button>
 			) : (
@@ -375,8 +375,8 @@ function GroupChatJoinDialogContent({
 					disabled={isJoinPending || isWithdrawPending || !code || !canJoin}
 					label={
 						joinLinkPreview.requireApproval
-							? m['components.intents.action.requestAccess']()
-							: m['components.intents.action.join']()
+							? m['components.intents.accessRequest.request']()
+							: m['components.intents.join.action.join']()
 					}
 					onClick={hasRequested ? handleWithdraw : handleJoin}
 					size="large"

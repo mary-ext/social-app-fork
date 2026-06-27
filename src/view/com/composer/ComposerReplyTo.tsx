@@ -93,7 +93,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 			]}
 			onPress={onPress}
 			accessibilityRole="button"
-			accessibilityLabel={m['view.composer.a11y.expandReply']()}
+			accessibilityLabel={m['view.composer.reply.expand']()}
 			accessibilityHint=""
 		>
 			<PreviewableUserAvatar

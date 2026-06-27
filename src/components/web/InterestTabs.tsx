@@ -180,8 +180,8 @@ export function InterestTabs({
 						<button
 							aria-label={
 								active
-									? m['components.web.a11y.categoryActive']({ displayName })
-									: m['components.web.a11y.categorySelect']({ displayName })
+									? m['components.web.category.a11y.active']({ displayName })
+									: m['components.web.category.a11y.select']({ displayName })
 							}
 							className={css.tab({ active })}
 							data-active={active}

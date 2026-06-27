@@ -447,7 +447,7 @@ export function PostThread({ uri }: { uri: string }) {
 			<Layout.Header.Outer ref={headerRef}>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['navigation.title.post']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['navigation.post.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot>
 					<HeaderDropdown

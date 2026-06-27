@@ -123,7 +123,7 @@ function Card({ did }: { did: string }) {
 
 	return (
 		<div className={clsx(css.card, css.loading)}>
-			<Spinner color={colors.contrast_500} label={m['common.label.loading']()} size="xl" />
+			<Spinner color={colors.contrast_500} label={m['common.status.loading']()} size="xl" />
 		</div>
 	);
 }
@@ -146,8 +146,8 @@ function Inner({
 		profile.viewer?.blocking || profile.viewer?.blockedBy || profile.viewer?.blockingByList;
 	const following = formatCount(profile.followsCount || 0);
 	const followers = formatCount(profile.followersCount || 0);
-	const pluralizedFollowers = m['common.count.followers']({ count: profile.followersCount || 0 });
-	const pluralizedFollowings = m['common.count.following']({ count: profile.followsCount || 0 });
+	const pluralizedFollowers = m['common.follow.followersUnit']({ count: profile.followersCount || 0 });
+	const pluralizedFollowings = m['common.follow.followingUnit']({ count: profile.followsCount || 0 });
 	const profileURL = makeProfileLink({ did: profile.did });
 	const isMe = currentAccount?.did === profile.did;
 	const isLabeler = profile.associated?.labeler;
@@ -156,7 +156,7 @@ function Inner({
 	return (
 		<div>
 			<div className={css.headerRow}>
-				<Link className={css.avatarLink} label={m['common.action.viewProfile']()} to={profileURL}>
+				<Link className={css.avatarLink} label={m['common.profile.action.view']()} to={profileURL}>
 					<UserAvatar
 						avatar={profile.avatar}
 						moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
@@ -170,30 +170,30 @@ function Inner({
 					(isBlockedUser ? (
 						<LinkButton
 							color="secondary"
-							label={m['common.a11y.viewBlockedProfile']()}
+							label={m['common.profile.a11y.viewBlocked']()}
 							size="small"
 							to={profileURL}
 							variant="solid"
 						>
-							<ButtonText>{m['common.action.viewProfile']()}</ButtonText>
+							<ButtonText>{m['common.profile.action.view']()}</ButtonText>
 						</LinkButton>
 					) : (
 						<Button
 							color={isFollowing ? 'secondary' : 'primary'}
-							label={isFollowing ? m['common.action.following']() : m['common.action.follow']()}
+							label={isFollowing ? m['common.follow.action.following']() : m['common.follow.action.follow']()}
 							onClick={isFollowing ? unfollow : follow}
 							size="small"
 							variant="solid"
 						>
 							<ButtonIcon icon={isFollowing ? Check : Plus} />
 							<ButtonText>
-								{isFollowing ? m['common.action.following']() : m['common.action.follow']()}
+								{isFollowing ? m['common.follow.action.following']() : m['common.follow.action.follow']()}
 							</ButtonText>
 						</Button>
 					))}
 			</div>
 
-			<Link className={css.nameLink} label={m['common.action.viewProfile']()} to={profileURL}>
+			<Link className={css.nameLink} label={m['common.profile.action.view']()} to={profileURL}>
 				<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} size="lg" />
 				<ProfileHeaderHandle disableTaps profile={profileShadow} />
 			</Link>
@@ -221,7 +221,7 @@ function Inner({
 						</InlineLinkText>
 						<InlineLinkText
 							color="text"
-							label={m['common.label.followingCount']({ following })}
+							label={m['common.follow.followingCount']({ following })}
 							to={makeProfileLink(profile, 'follows')}
 						>
 							<Text size="md" weight="semiBold">

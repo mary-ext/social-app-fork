@@ -1,14 +1,13 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"features.liveNow.action.goLive": "Go Live",
 	"features.liveNow.action.openProfile": "Open profile",
-	"features.liveNow.action.removeStatus": "Remove live status",
-	"features.liveNow.action.selectDuration": "Select duration",
 	"features.liveNow.action.watchNow": "Watch now",
 	"features.liveNow.appeal.blocked": "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below.",
 	"features.liveNow.appeal.prompt": "Please explain why you think your Go Live access was incorrectly disabled.",
 	"features.liveNow.appeal.title": "Appeal livestream suspension",
-	"features.liveNow.dialog.description": "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event.",
+	"features.liveNow.badge.beta": "Live feature is in beta",
+	"features.liveNow.badge.live": "LIVE",
+	"features.liveNow.badge.userIsLive": "{handle} is live",
 	"features.liveNow.duration.hours": [
 		{
 			"declarations": ["input hours", "local cp = hours: plural"],
@@ -29,6 +28,7 @@
 			}
 		}
 	],
+	"features.liveNow.duration.label": "Go live for",
 	"features.liveNow.duration.minutes": [
 		{
 			"declarations": ["input minutes", "local cp = minutes: plural"],
@@ -39,21 +39,21 @@
 			}
 		}
 	],
-	"features.liveNow.error.disabled": "Going live is currently disabled for your account",
-	"features.liveNow.error.invalidLink": "This is not a valid link",
-	"features.liveNow.error.unsupportedService": "This service is not supported while the Live feature is in beta. Allowed services: {formatted}.",
-	"features.liveNow.hint.enabledServices": "The following services are enabled for your account: {allowedServices}",
+	"features.liveNow.duration.select": "Select duration",
+	"features.liveNow.expiry.none": "No expiry set",
+	"features.liveNow.expiry.value": "Expires in {duration} at {time}",
+	"features.liveNow.goLive.confirm": "Go Live",
+	"features.liveNow.goLive.description": "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event.",
+	"features.liveNow.goLive.disabled": "Going live is currently disabled for your account",
+	"features.liveNow.goLive.ended": "You are no longer live",
+	"features.liveNow.goLive.live": "You are Live",
+	"features.liveNow.goLive.remove": "Remove live status",
+	"features.liveNow.goLive.started": "You are now live!",
 	"features.liveNow.image.hidden": "Image is hidden due to your moderation settings.",
 	"features.liveNow.image.unavailable": "Image is unavailable.",
-	"features.liveNow.label.beta": "Live feature is in beta",
-	"features.liveNow.label.expiresAt": "Expires in {duration} at {time}",
-	"features.liveNow.label.goLiveFor": "Go live for",
-	"features.liveNow.label.linkPlaceholder": "www.mylivestream.tv",
-	"features.liveNow.label.liveBadge": "LIVE",
-	"features.liveNow.label.liveLink": "Live link",
-	"features.liveNow.label.noExpiry": "No expiry set",
-	"features.liveNow.label.userIsLive": "{handle} is live",
-	"features.liveNow.status.ended": "You are no longer live",
-	"features.liveNow.status.live": "You are Live",
-	"features.liveNow.status.started": "You are now live!"
+	"features.liveNow.link.invalid": "This is not a valid link",
+	"features.liveNow.link.label": "Live link",
+	"features.liveNow.link.placeholder": "www.mylivestream.tv",
+	"features.liveNow.service.enabled": "The following services are enabled for your account: {allowedServices}",
+	"features.liveNow.service.unsupported": "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 }

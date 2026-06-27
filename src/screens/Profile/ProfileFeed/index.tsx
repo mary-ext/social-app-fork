@@ -46,7 +46,7 @@ export function ProfileFeedScreen(props: Props) {
 			<Layout.Screen testID="profileFeedScreenError">
 				<ErrorScreen
 					showHeader
-					title={m['screens.profile.error.feedLoad']()}
+					title={m['screens.profile.feed.loadError']()}
 					message={cleanError(error)}
 					onPressTryAgain={() => void refetch()}
 				/>
@@ -121,7 +121,7 @@ export function ProfileFeedScreenInner({
 	}, [onScrollToTop, isScreenFocused]);
 
 	const renderPostsEmpty = useCallback(() => {
-		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.empty.feed']()} />;
+		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
 	}, []);
 
 	return (
@@ -142,14 +142,14 @@ export function ProfileFeedScreenInner({
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn
 					onPress={onScrollToTop}
-					label={m['common.action.loadNewPosts']()}
+					label={m['common.feeds.action.loadNew']()}
 					showIndicator={hasNew}
 				/>
 			)}
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={colors.white} />}
-					label={m['common.label.newPost']()}
+					label={m['common.compose.action.new']()}
 					onClick={() => openComposer({ logContext: 'Fab' })}
 				/>
 			)}

@@ -123,7 +123,7 @@ export function Outer({ children, control, onClose, webOptions }: React.PropsWit
 						<RemoveScrollBar />
 						<Pressable
 							accessibilityHint={undefined}
-							accessibilityLabel={m['components.dialog.a11y.close']()}
+							accessibilityLabel={m['components.dialog.close']()}
 							onPress={(e) => void handleBackgroundPress(e)}
 						>
 							<View
@@ -308,7 +308,7 @@ export function Close() {
 				color="secondary"
 				shape="round"
 				onPress={() => close()}
-				label={m['components.dialog.a11y.close']()}
+				label={m['components.dialog.close']()}
 			>
 				<ButtonIcon icon={X} size="md" />
 			</Button>

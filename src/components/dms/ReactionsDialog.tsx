@@ -57,7 +57,7 @@ export function ReactionsDialog({
 	const header = (
 		<>
 			<View style={[a.px_2xl, a.pt_xl, a.pb_md]}>
-				<Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{m['components.dms.title.reactions']()}</Text>
+				<Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{m['components.dms.reaction.title']()}</Text>
 			</View>
 			<ReactionTabs
 				groupedReactions={groupedReactions}
@@ -80,7 +80,7 @@ export function ReactionsDialog({
 			<Dialog.Handle />
 			{null}
 			<Dialog.ScrollableInner
-				label={m['components.dms.title.reactions']()}
+				label={m['components.dms.reaction.title']()}
 				contentContainerStyle={[a.pt_0]}
 				header={header}
 				style={[{ maxWidth: 400 }]}
@@ -156,7 +156,7 @@ function ReactionRow({
 
 		convo
 			.removeReaction(message.id, reaction.value)
-			.catch(() => Toast.show(m['components.dms.error.removeReaction']()));
+			.catch(() => Toast.show(m['components.dms.reaction.error.remove']()));
 	};
 
 	const inner = (
@@ -168,7 +168,7 @@ function ReactionRow({
 						{displayName}
 					</Text>
 					<Text numberOfLines={1} style={[a.text_xs, t.atoms.text_contrast_medium, a.mt_xs]}>
-						{isFromSelf ? m['components.dms.a11y.tapToRemove']() : handle}
+						{isFromSelf ? m['components.dms.reaction.a11y.remove']() : handle}
 					</Text>
 				</View>
 			</View>
@@ -184,7 +184,7 @@ function ReactionRow({
 		return (
 			<Pressable
 				accessibilityRole="button"
-				accessibilityHint={m['components.dms.a11y.tapToRemoveReaction']({ value: reaction.value })}
+				accessibilityHint={m['components.dms.reaction.a11y.removeReaction']({ value: reaction.value })}
 				style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between, a.my_sm]}
 				onPress={handleOnPress}
 			>
@@ -242,7 +242,7 @@ function ReactionTabs({
 	};
 
 	const tabs: Tab[] = [
-		{ key: 'all', value: m['common.label.all'](), count: totalReactions },
+		{ key: 'all', value: m['common.status.all'](), count: totalReactions },
 		...(groupedReactions ?? []),
 	];
 
@@ -304,8 +304,8 @@ function ReactionTab({
 			accessibilityState={{ selected: selected === tab.key }}
 			accessibilityHint={
 				tab.key === 'all'
-					? m['components.dms.a11y.tapToShowAllReactions']()
-					: m['components.dms.a11y.tapToShowReactions']({ value: tab.value })
+					? m['components.dms.reaction.a11y.showAll']()
+					: m['components.dms.reaction.a11y.show']({ value: tab.value })
 			}
 			hitSlop={HITSLOP_10}
 			style={[

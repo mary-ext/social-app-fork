@@ -124,23 +124,23 @@ function LabelerListHeader({
 	return (
 		<View style={[a.py_xl]}>
 			<Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-				{m['screens.profile.hint.labels']()}
+				{m['screens.profile.labeler.labelsHint']()}
 			</Text>
 			{labelerInfo?.creator.viewer?.blocking ? (
 				<View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
 					<CircleInfo size="sm" fill={colors.textContrastMedium} />
 					<Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-						{m['screens.profile.hint.blockingLabeler']()}
+						{m['screens.profile.labeler.blockHint']()}
 					</Text>
 				</View>
 			) : null}
 			{!hasValues ? (
 				<Text style={[a.pt_xl, t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-					{m['screens.profile.hint.noLabelsDeclared']()}
+					{m['screens.profile.labeler.noLabelsDeclared']()}
 				</Text>
 			) : !isSubscribed ? (
 				<Text style={[a.pt_xl, t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-					{m['screens.profile.hint.subscribePrompt']({ handle: labelerInfo.creator.handle })}
+					{m['screens.profile.labeler.subscribePrompt']({ handle: labelerInfo.creator.handle })}
 				</Text>
 			) : null}
 		</View>

@@ -41,7 +41,7 @@ export function ListsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.label.lists']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.list.label']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Button
 					label={m['view.action.newList']()}
@@ -51,7 +51,7 @@ export function ListsScreen({}: Props) {
 					onClick={onPressNewList}
 				>
 					<ButtonIcon icon={PlusIcon} />
-					<ButtonText>{m['common.label.new']()}</ButtonText>
+					<ButtonText>{m['common.status.new']()}</ButtonText>
 				</Button>
 			</Layout.Header.Outer>
 			<MyLists filter="curate" />

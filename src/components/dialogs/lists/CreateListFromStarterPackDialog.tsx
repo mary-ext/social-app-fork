@@ -64,7 +64,7 @@ export function CreateListFromStarterPackDialog({
 			void queryClient.invalidateQueries({ queryKey: ['list-members', listUri] });
 		} catch (e) {
 			logger.error('Failed to add members to list', { safeMessage: e });
-			Toast.show(m['components.dialogs.list.createdPartialError'](), {
+			Toast.show(m['components.dialogs.list.error.createdPartial'](), {
 				type: 'error',
 			});
 		}

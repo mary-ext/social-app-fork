@@ -103,19 +103,19 @@ export function useChatInvite({
 		if (convoId && convoId === currentConvoId) {
 			// You're already in the chat this invite links to - offer to copy the link rather than open/join.
 			action = {
-				label: m['common.action.copyLink'](),
+				label: m['common.share.action.copyLink'](),
 				icon: LinkIcon,
 				side: 'left',
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
 					void navigator.clipboard.writeText(`https://bsky.app/chat/${preview.code}`);
-					Toast.show(m['common.toast.copied'](), { type: 'success' });
+					Toast.show(m['common.share.copiedToast'](), { type: 'success' });
 				},
 			};
 		} else if (convoId) {
 			action = {
-				label: m['common.action.openChat'](),
+				label: m['common.chat.action.open'](),
 				icon: ArrowRightIcon,
 				side: 'right',
 				color: 'primary',
@@ -127,21 +127,23 @@ export function useChatInvite({
 		} else {
 			let canJoin = true;
 			let icon: React.ComponentType<SVGIconProps> = JoinIcon;
-			let label = preview.requireApproval ? m['common.action.requestToJoin']() : m['common.action.join']();
+			let label = preview.requireApproval
+				? m['common.requests.action.request']()
+				: m['common.chat.action.join']();
 			let color: 'primary' | 'secondary' = 'primary';
 			if (preview.memberCount >= preview.memberLimit) {
 				canJoin = false;
 				icon = HandIcon;
-				label = m['common.error.chatFull']();
+				label = m['common.chat.error.full']();
 				color = 'secondary';
 			} else if (preview.joinRule === 'followedByOwner' && !isFollowing) {
 				canJoin = false;
 				icon = HandIcon;
-				label = m['common.hint.ownerFollowsOnlyJoin']();
+				label = m['common.chat.ownerFollowsHint']();
 				color = 'secondary';
 			} else if (hasRequested) {
 				icon = CheckIcon;
-				label = m['components.dms.label.requested']();
+				label = m['components.dms.invite.requested']();
 				color = 'secondary';
 			}
 

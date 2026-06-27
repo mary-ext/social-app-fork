@@ -78,7 +78,7 @@ function Empty({ onStartWizard }: { onStartWizard: () => void }) {
 		<View style={[a.gap_2xl, { paddingTop: 100 }]}>
 			<View style={[a.gap_xs, a.align_center]}>
 				<StarterPack width={48} fill={colors.contrast_200} />
-				<Text style={[a.text_center]}>{m['components.dialogs.empty.starterPacks']()}</Text>
+				<Text style={[a.text_center]}>{m['components.dialogs.starterPack.empty']()}</Text>
 			</View>
 			<View style={[a.align_center]}>
 				<Button
@@ -143,7 +143,7 @@ function StarterPackList({
 	const listHeader = (
 		<>
 			<View style={[a.justify_between, a.align_center, a.flex_row, a.pb_lg]}>
-				<Text style={[a.text_lg, a.font_semi_bold]}>{m['common.action.addToStarterPacks']()}</Text>
+				<Text style={[a.text_lg, a.font_semi_bold]}>{m['common.starterPack.action.add']()}</Text>
 				<Button
 					label={m['common.action.close']()}
 					onPress={onClose}
@@ -217,7 +217,7 @@ function StarterPackItem({
 			if (!isNetworkError(err)) {
 				logger.error('Failed to add to starter pack', { safeMessage: err });
 			}
-			Toast.show(m['components.dialogs.starterPack.addError'](), { type: 'error' });
+			Toast.show(m['components.dialogs.starterPack.error.add'](), { type: 'error' });
 		},
 	});
 
@@ -229,7 +229,7 @@ function StarterPackItem({
 			if (!isNetworkError(err)) {
 				logger.error('Failed to remove from starter pack', { safeMessage: err });
 			}
-			Toast.show(m['components.dialogs.starterPack.removeError'](), { type: 'error' });
+			Toast.show(m['components.dialogs.starterPack.error.remove'](), { type: 'error' });
 		},
 	});
 
@@ -279,7 +279,7 @@ function StarterPackItem({
 
 							{starterPack.list?.listItemCount && starterPack.list.listItemCount > 4 && (
 								<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.ml_xs]}>
-									{m['components.dialogs.count.more']({
+									{m['components.dialogs.list.moreCount']({
 										count: starterPack.list.listItemCount - 4,
 									})}
 								</Text>

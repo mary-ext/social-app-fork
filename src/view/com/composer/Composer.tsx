@@ -172,12 +172,12 @@ function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: 
 		(next: ComposerImage[]) => {
 			const result = applyGalleryCap(currentCount, next);
 			if (result.status === 'full') {
-				Toast.show(m['view.composer.error.maxImagesAdd']({ MAX_GALLERY_IMAGES }), { type: 'warning' });
+				Toast.show(m['view.composer.gallery.error.maxAdd']({ MAX_GALLERY_IMAGES }), { type: 'warning' });
 				return;
 			}
 			if (result.status === 'partial') {
 				Toast.show(
-					m['view.composer.error.galleryLimit']({
+					m['view.composer.gallery.error.limit']({
 						accepted: result.accepted.length,
 						count: next.length,
 						total: next.length,
@@ -514,9 +514,9 @@ export const ComposePost = ({
 
 	const getDraftSaveError = useCallback((e: unknown): string => {
 		if (e instanceof ClientResponseError && e.error === 'DraftLimitReached') {
-			return m['view.composer.error.maxDrafts']();
+			return m['view.composer.drafts.error.max']();
 		}
-		return m['view.composer.error.saveDraft']();
+		return m['view.composer.drafts.error.save']();
 	}, []);
 
 	const validateDraftTextOrError = useCallback((): boolean => {
@@ -524,7 +524,7 @@ export const ComposePost = ({
 			(post) => !isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH),
 		);
 		if (tooLong) {
-			setError(m['view.composer.error.draftTooLong']({ MAX_DRAFT_GRAPHEME_LENGTH }));
+			setError(m['view.composer.drafts.error.tooLong']({ MAX_DRAFT_GRAPHEME_LENGTH }));
 			return false;
 		}
 		return true;
@@ -647,13 +647,13 @@ export const ComposePost = ({
 			const media = thread.posts[i]!.embed.media;
 			if (media) {
 				if ((media.type === 'images' || media.type === 'gallery') && media.images.some((img) => !img.alt)) {
-					return m['view.composer.error.imageAltMissing']();
+					return m['view.composer.gallery.error.altMissing']();
 				}
 				if (media.type === 'gif' && !media.alt) {
-					return m['view.composer.error.gifAltMissing']();
+					return m['view.composer.gif.error.altMissing']();
 				}
 				if (media.type === 'video' && media.video.status !== 'error' && !media.video.altText) {
-					return m['view.composer.error.videoAltMissing']();
+					return m['view.composer.video.error.altMissing']();
 				}
 			}
 		}
@@ -795,9 +795,9 @@ export const ComposePost = ({
 
 			let err = cleanError(error.message);
 			if (e instanceof apilib.ReplyDeletedError || err.includes('not locate record')) {
-				err = m['view.composer.error.replyDeleted']();
+				err = m['view.composer.reply.deleted']();
 			} else if (e instanceof EmbeddingDisabledError) {
-				err = m['view.composer.error.quotesDisabled']();
+				err = m['view.composer.quote.disabled']();
 			}
 			setError(err);
 			setIsPublishing(false);
@@ -840,14 +840,14 @@ export const ComposePost = ({
 		setTimeout(() => {
 			Toast.show(
 				filteredThread.posts.length > 1
-					? m['view.composer.status.postsSent']()
+					? m['view.composer.publish.postsSent']()
 					: replyTo
-						? m['view.composer.status.replySent']()
-						: m['view.composer.status.postSent'](),
+						? m['view.composer.publish.replySent']()
+						: m['view.composer.publish.postSent'](),
 				{
 					action: postUri
 						? {
-								label: m['view.composer.action.view'](),
+								label: m['view.composer.publish.action.view'](),
 								onPress: () => {
 									const { repo: name, rkey } = parseCanonicalResourceUri(postUri);
 									navigation.navigate('PostThread', { name, rkey });
@@ -1093,7 +1093,7 @@ export const ComposePost = ({
 			{replyTo ? (
 				<Prompt.Basic
 					handle={discardPromptControl}
-					title={m['view.composer.dialog.discardDraftTitle']()}
+					title={m['view.composer.drafts.discard.title']()}
 					confirmButtonCta={m['common.action.discard']()}
 					confirmButtonColor="negative"
 					onConfirm={handleDiscard}
@@ -1104,16 +1104,16 @@ export const ComposePost = ({
 						<Prompt.TitleText>
 							{allPostsWithinLimit
 								? composerState.draftId
-									? m['view.composer.dialog.saveChangesTitle']()
-									: m['view.composer.dialog.saveDraftTitle']()
-								: m['view.composer.dialog.discardPostTitle']()}
+									? m['view.composer.drafts.saveChanges.title']()
+									: m['view.composer.drafts.save.title']()
+								: m['view.composer.discard.title']()}
 						</Prompt.TitleText>
 						<Prompt.DescriptionText>
 							{allPostsWithinLimit
 								? composerState.draftId
-									? m['view.composer.dialog.unsavedDraftSave']()
-									: m['view.composer.dialog.saveDraftToEdit']()
-								: m['view.composer.error.draftTooLongFixed']()}
+									? m['view.composer.drafts.saveChanges.message']()
+									: m['view.composer.drafts.save.message']()
+								: m['view.composer.drafts.error.tooLongFixed']()}
 						</Prompt.DescriptionText>
 					</Prompt.Content>
 					<Prompt.Actions>
@@ -1122,7 +1122,7 @@ export const ComposePost = ({
 								cta={
 									composerState.draftId
 										? m['common.action.saveChanges']()
-										: m['view.composer.action.saveDraft']()
+										: m['view.composer.drafts.action.save']()
 								}
 								onPress={() => void handleSaveDraft()}
 								color="primary"
@@ -1133,17 +1133,17 @@ export const ComposePost = ({
 							onPress={handleDiscard}
 							color="negative_subtle"
 						/>
-						<Prompt.Cancel cta={m['view.composer.action.keepEditing']()} />
+						<Prompt.Cancel cta={m['view.composer.discard.keepEditing']()} />
 					</Prompt.Actions>
 				</Prompt.Outer>
 			)}
 
 			<Prompt.Basic
 				handle={emptyPostsPromptControl}
-				title={m['view.composer.dialog.skipEmptyTitle']()}
-				description={m['view.composer.dialog.threadEmptyPosts']()}
-				confirmButtonCta={m['view.composer.action.postAnyway']()}
-				cancelButtonCta={m['view.composer.action.keepEditing']()}
+				title={m['view.composer.thread.skipEmpty.title']()}
+				description={m['view.composer.thread.skipEmpty.message']()}
+				confirmButtonCta={m['view.composer.publish.action.anyway']()}
+				cancelButtonCta={m['view.composer.discard.keepEditing']()}
 				onConfirm={handleConfirmSkipEmpty}
 			/>
 		</>
@@ -1189,9 +1189,9 @@ let ComposerPost = memo(function ComposerPost({
 	const forceMinHeight = isTextOnly && isActive;
 	const selectTextInputPlaceholder = isReply
 		? isFirstPost
-			? m['common.label.writeReply']()
-			: m['view.composer.action.addPost']()
-		: m['common.label.whatsUp']();
+			? m['common.compose.replyPlaceholder']()
+			: m['view.composer.thread.action.addPost']()
+		: m['common.compose.placeholder']();
 	const discardPromptControl = Prompt.usePromptHandle();
 
 	const dispatchPost = useCallback(
@@ -1223,7 +1223,7 @@ let ComposerPost = memo(function ComposerPost({
 			const mimeType = blob.type;
 			if (mimeType.startsWith('video/') || mimeType === 'image/gif') {
 				if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-					Toast.show(m['view.composer.error.unsupportedVideoType']({ mimeType }), {
+					Toast.show(m['view.composer.video.error.unsupportedType']({ mimeType }), {
 						type: 'error',
 					});
 					return;
@@ -1245,7 +1245,7 @@ let ComposerPost = memo(function ComposerPost({
 						mimeType: blob.type,
 						size: blob.size,
 					});
-					onError(m['view.composer.error.pasteImage']());
+					onError(m['view.composer.gallery.error.paste']());
 					return;
 				}
 				onImageAdd([image]);
@@ -1288,14 +1288,14 @@ let ComposerPost = memo(function ComposerPost({
 					onError={onError}
 					onPressPublish={onPublish}
 					accessible={true}
-					accessibilityLabel={m['common.action.writePost']()}
-					accessibilityHint={m['view.composer.hint.maxLength']({ count: MAX_GRAPHEME_LENGTH || 0 })}
+					accessibilityLabel={m['common.compose.action.write']()}
+					accessibilityHint={m['view.composer.text.maxLengthHint']({ count: MAX_GRAPHEME_LENGTH || 0 })}
 				/>
 			</View>
 			{canRemovePost && isActive && (
 				<>
 					<Button
-						label={m['common.action.deletePost']()}
+						label={m['common.post.delete']()}
 						size="small"
 						color="secondary"
 						variant="ghost"
@@ -1321,8 +1321,8 @@ let ComposerPost = memo(function ComposerPost({
 					</Button>
 					<Prompt.Basic
 						handle={discardPromptControl}
-						title={m['view.composer.dialog.discardPostTitle']()}
-						description={m['view.composer.dialog.discardPostMessage']()}
+						title={m['view.composer.discard.title']()}
+						description={m['view.composer.discard.message']()}
 						onConfirm={() => {
 							dispatch({
 								type: 'remove_post',
@@ -1401,7 +1401,7 @@ function ComposerTopBar({
 						</WebText>
 						<Spinner
 							color={colors.textContrastMedium}
-							label={m['view.composer.status.publishing']()}
+							label={m['view.composer.publish.publishing']()}
 							size="md"
 						/>
 					</div>
@@ -1423,11 +1423,11 @@ function ComposerTopBar({
 							label={
 								isReply
 									? isThread
-										? m['view.composer.a11y.publishReplies']()
-										: m['view.composer.a11y.publishReply']()
+										? m['view.composer.publish.a11y.replies']()
+										: m['view.composer.publish.a11y.reply']()
 									: isThread
-										? m['view.composer.a11y.publishPosts']()
-										: m['view.composer.a11y.publishPost']()
+										? m['view.composer.publish.a11y.posts']()
+										: m['view.composer.publish.a11y.post']()
 							}
 							color="primary"
 							size="small"
@@ -1438,8 +1438,8 @@ function ComposerTopBar({
 								{isReply
 									? m['common.action.reply']()
 									: isThread
-										? m['view.composer.action.postAll']()
-										: m['navigation.title.post']()}
+										? m['view.composer.publish.action.all']()
+										: m['navigation.post.title']()}
 							</WebButton.ButtonText>
 						</WebButton.Button>
 					</div>
@@ -1716,7 +1716,7 @@ function ComposerFooter({
 					onImageAdd(selectedImages);
 				}
 				if (failed > 0) {
-					onError(m['view.composer.error.imagesNotAdded']({ failed }));
+					onError(m['view.composer.gallery.error.notAdded']({ failed }));
 				}
 			} else if ((type === 'video' || type === 'gif') && video) {
 				onSelectVideo(post.id, video);
@@ -1776,7 +1776,7 @@ function ComposerFooter({
 			<View style={[a.flex_row, a.align_center, a.justify_between]}>
 				{showAddButton && (
 					<ComposerToolbarButton
-						label={m['view.composer.action.addPostToThread']()}
+						label={m['view.composer.thread.action.addPostToThread']()}
 						onClick={onAddPost}
 						icon={PlusIcon}
 					/>
@@ -1975,7 +1975,7 @@ function ErrorBanner({
 							t.atoms.text_contrast_low,
 						]}
 					>
-						{m['view.composer.label.jobId']({ jobId: videoState.jobId })}
+						{m['view.composer.video.jobId']({ jobId: videoState.jobId })}
 					</Text>
 				)}
 			</View>
@@ -2006,34 +2006,34 @@ function VideoUploadToolbar({ state }: { state: VideoState }) {
 	switch (state.status) {
 		case 'compressing':
 			if (isGif) {
-				text = m['view.composer.status.compressingGif']();
+				text = m['view.composer.gif.compressing']();
 			} else {
-				text = m['view.composer.status.compressingVideo']();
+				text = m['view.composer.video.compressing']();
 			}
 			break;
 		case 'uploading':
 			if (isGif) {
-				text = m['view.composer.status.uploadingGif']();
+				text = m['view.composer.gif.uploading']();
 			} else {
-				text = m['view.composer.status.uploadingVideo']();
+				text = m['view.composer.video.uploading']();
 			}
 			break;
 		case 'processing':
 			if (isGif) {
-				text = m['view.composer.status.processingGif']();
+				text = m['view.composer.gif.processing']();
 			} else {
-				text = m['view.composer.status.processingVideo']();
+				text = m['view.composer.video.processing']();
 			}
 			break;
 		case 'error':
-			text = m['common.label.error']();
+			text = m['common.error.heading']();
 			wheelProgress = 100;
 			break;
 		case 'done':
 			if (isGif) {
-				text = m['view.composer.status.gifUploaded']();
+				text = m['view.composer.gif.uploaded']();
 			} else {
-				text = m['view.composer.status.videoUploaded']();
+				text = m['view.composer.video.uploaded']();
 			}
 			break;
 	}

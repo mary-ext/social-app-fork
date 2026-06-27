@@ -38,14 +38,14 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });
-			Toast.show(m['screens.messages.error.leaveGroup'](), {
+			Toast.show(m['screens.messages.leave.error'](), {
 				type: 'error',
 			});
 		},
 	});
 
 	return (
-		<ChatFooter heading={m['screens.messages.label.chatEnded']()} icon={CircleXIcon}>
+		<ChatFooter heading={m['screens.messages.connection.ended']()} icon={CircleXIcon}>
 			{isOwner ? null : (
 				<>
 					<Pressable
@@ -65,7 +65,7 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 								},
 							]}
 						>
-							{m['common.action.leaveChat']()}
+							{m['common.chat.action.leave']()}
 						</Text>
 					</Pressable>
 					<LeaveChatPrompt control={leaveChatPrompt} groupName={convo.details.name} onConfirm={leaveConvo} />

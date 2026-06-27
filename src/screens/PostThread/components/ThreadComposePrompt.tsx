@@ -40,8 +40,8 @@ export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => 
 			)}
 			<PressableScale
 				accessibilityRole="button"
-				accessibilityLabel={m['screens.postThread.a11y.composeReply']()}
-				accessibilityHint={m['screens.postThread.a11y.opensComposer']()}
+				accessibilityLabel={m['screens.postThread.reply.a11y.compose']()}
+				accessibilityHint={m['screens.postThread.reply.a11y.opensComposer']()}
 				onPress={() => {
 					onPressCompose();
 				}}
@@ -64,7 +64,7 @@ export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => 
 					type={profile?.associated?.labeler ? 'labeler' : 'user'}
 				/>
 				<Text size="md" color="textContrastMedium">
-					{m['common.label.writeReply']()}
+					{m['common.compose.replyPlaceholder']()}
 				</Text>
 			</PressableScale>
 		</div>

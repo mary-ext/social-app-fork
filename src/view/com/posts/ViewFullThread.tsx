@@ -20,7 +20,7 @@ export function ViewFullThread({ uri }: { uri: string }) {
 	if (!itemHref) return null;
 
 	return (
-		<Link className={css.link} to={itemHref} label={m['view.posts.action.viewFullThread']()}>
+		<Link className={css.link} to={itemHref} label={m['view.posts.thread.viewFull']()}>
 			<div className={css.spine}>
 				<div className={css.segment} />
 				<div className={css.dash} />
@@ -29,7 +29,7 @@ export function ViewFullThread({ uri }: { uri: string }) {
 				<div className={css.segment} />
 			</div>
 			<Text color="primary_500" weight="medium">
-				{m['view.posts.action.viewFullThread']()}
+				{m['view.posts.thread.viewFull']()}
 			</Text>
 		</Link>
 	);

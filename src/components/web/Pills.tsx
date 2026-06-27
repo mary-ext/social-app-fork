@@ -78,7 +78,7 @@ export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
 export function FollowsYou() {
 	return (
 		<div className={styles.followsYou}>
-			<Text size="xs">{m['common.label.followsYou']()}</Text>
+			<Text size="xs">{m['common.follow.followsYou']()}</Text>
 		</div>
 	);
 }

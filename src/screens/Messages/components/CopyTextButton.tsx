@@ -46,7 +46,7 @@ export function CopyTextButton({
 					pointerEvents="none"
 				>
 					<Text style={[a.font_medium, a.text_right, a.text_sm, t.atoms.text_contrast_high]}>
-						{m['screens.messages.toast.copied']()}
+						{m['screens.messages.inviteLink.copiedToast']()}
 					</Text>
 				</View>
 			)}

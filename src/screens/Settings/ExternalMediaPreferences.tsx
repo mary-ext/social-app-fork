@@ -22,13 +22,13 @@ export function ExternalMediaPreferencesScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.label.externalMediaPreferences']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.externalMedia.preferencesTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
-					<Settings.Section bodyText={m['common.hint.externalMedia']()}>
+					<Settings.Section bodyText={m['common.externalMedia.hint']()}>
 						{Object.entries(externalEmbedLabels)
 							.filter(([key]) => !exemptExternalEmbedSources.has(key as EmbedPlayerSource))
 							.map(([key, label]) => {

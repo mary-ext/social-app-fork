@@ -41,7 +41,7 @@ export function EditLiveDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['features.liveNow.status.live']()}>
+			<Dialog.Popup className={styles.popup} label={m['features.liveNow.goLive.live']()}>
 				<DialogInner embed={embed} handle={handle} status={status} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -105,27 +105,27 @@ function DialogInner({
 		<div className={styles.container}>
 			<div className={styles.header}>
 				<Text size="_2xl" weight="semiBold">
-					{m['features.liveNow.status.live']()}
+					{m['features.liveNow.goLive.live']()}
 				</Text>
 				<div className={styles.expiryRow}>
 					<ClockIcon fill={colors.textContrastHigh} size="sm" />
 					<Text color="textContrastHigh" size="md">
 						{typeof record?.durationMinutes === 'number'
-							? m['features.liveNow.label.expiresAt']({
+							? m['features.liveNow.expiry.value']({
 									duration: displayDuration(minutesUntilExpiry),
 									time: clock.format(expiryDateTime),
 								})
-							: m['features.liveNow.label.noExpiry']()}
+							: m['features.liveNow.expiry.none']()}
 					</Text>
 				</div>
 			</div>
 			<div className={styles.fields}>
 				<TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
-					<TextField.LabelText>{m['features.liveNow.label.liveLink']()}</TextField.LabelText>
+					<TextField.LabelText>{m['features.liveNow.link.label']()}</TextField.LabelText>
 					<TextField.Input
 						autoCapitalize="none"
 						autoComplete="url"
-						label={m['features.liveNow.label.liveLink']()}
+						label={m['features.liveNow.link.label']()}
 						onBlur={() => {
 							// don't nag about an empty field — only flag a non-empty, non-URL value
 							if (liveLink.trim() && !parseLooseUrl(liveLink)) {
@@ -139,13 +139,13 @@ function DialogInner({
 								goLive();
 							}
 						}}
-						placeholder={m['features.liveNow.label.linkPlaceholder']()}
+						placeholder={m['features.liveNow.link.placeholder']()}
 						value={liveLink}
 					/>
 				</TextField.Root>
 				{(liveLinkError || linkMetaError) && (
 					<Admonition type="error">
-						{liveLinkError ? m['features.liveNow.error.invalidLink']() : cleanError(linkMetaError)}
+						{liveLinkError ? m['features.liveNow.link.invalid']() : cleanError(linkMetaError)}
 					</Admonition>
 				)}
 
@@ -182,12 +182,12 @@ function DialogInner({
 				<Button
 					color="negative_subtle"
 					disabled={isRemovingLiveStatus || isGoingLive}
-					label={m['features.liveNow.action.removeStatus']()}
+					label={m['features.liveNow.goLive.remove']()}
 					onClick={() => removeLiveStatus()}
 					size="small"
 					variant="solid"
 				>
-					<ButtonText>{m['features.liveNow.action.removeStatus']()}</ButtonText>
+					<ButtonText>{m['features.liveNow.goLive.remove']()}</ButtonText>
 					{isRemovingLiveStatus && <ButtonIcon icon={Loader} />}
 				</Button>
 			</div>

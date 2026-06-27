@@ -12,7 +12,7 @@ export function GifPickerItem({ gif, onSelectGif }: { gif: Gif; onSelectGif: (gi
 			type="button"
 			className={styles.tile}
 			onClick={() => onSelectGif(gif)}
-			aria-label={m['features.gifPicker.a11y.selectGif']({ title: gif.title })}
+			aria-label={m['features.gifPicker.gallery.select']({ title: gif.title })}
 		>
 			<img
 				className={styles.image}

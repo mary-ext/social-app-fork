@@ -38,10 +38,10 @@ export function InterestsSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.label.yourInterests']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.interest.yourInterests']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot>
-					{isSaving && <Spinner color="currentColor" label={m['common.label.saving']()} size="sm" />}
+					{isSaving && <Spinner color="currentColor" label={m['common.status.saving']()} size="sm" />}
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 			<Layout.Content>
@@ -54,7 +54,7 @@ export function InterestsSettingsScreen({}: Props) {
 						<Inner preferences={preferences} setIsSaving={setIsSaving} />
 					) : (
 						<div className={styles.loaderWrap}>
-							<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
+							<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
 						</div>
 					)}
 				</div>
@@ -111,7 +111,7 @@ function Inner({
 
 				Toast.show(m['screens.settings.interests.updatedToast']());
 			} catch (error) {
-				Toast.show(m['screens.settings.error.failedSaveInterests'](), {
+				Toast.show(m['screens.settings.interests.saveError'](), {
 					type: 'error',
 				});
 			} finally {

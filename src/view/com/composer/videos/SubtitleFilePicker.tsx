@@ -38,7 +38,7 @@ export function SubtitleFilePicker({
 				logger.error('Invalid subtitle file type', {
 					safeMessage: `File: ${selectedFile.name} (${selectedFile.type})`,
 				});
-				Toast.show(m['view.composer.error.vttOnly']());
+				Toast.show(m['view.composer.captions.error.vttOnly']());
 			}
 		}
 	};
@@ -57,14 +57,14 @@ export function SubtitleFilePicker({
 			<View style={a.flex_row}>
 				<Button
 					onPress={handleClick}
-					label={m['view.composer.action.selectCaptionFile']()}
+					label={m['view.composer.captions.action.select']()}
 					size="large"
 					color="primary"
 					variant="solid"
 					disabled={disabled}
 				>
 					<ButtonIcon icon={CCIcon} />
-					<ButtonText>{m['view.composer.action.selectCaptionFile']()}</ButtonText>
+					<ButtonText>{m['view.composer.captions.action.select']()}</ButtonText>
 				</Button>
 			</View>
 		</View>

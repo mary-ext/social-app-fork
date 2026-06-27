@@ -71,7 +71,7 @@ export async function getVideoUploadLimits({ pds, dispatchUrl }: { pds: Client; 
 		if (limits.message) {
 			throw new UploadLimitError(limits.message);
 		} else {
-			throw new UploadLimitError(m['lib.error.videoUploadLimit']());
+			throw new UploadLimitError(m['lib.video.uploadLimit']());
 		}
 	}
 }

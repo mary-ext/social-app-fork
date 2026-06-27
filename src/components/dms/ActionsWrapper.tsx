@@ -72,16 +72,16 @@ export function ActionsWrapper({
 			) {
 				convo
 					.removeReaction(message.id, emoji)
-					.catch(() => Toast.show(m['components.dms.error.removeReaction']()));
+					.catch(() => Toast.show(m['components.dms.reaction.error.remove']()));
 			} else {
 				if (hasReachedReactionLimit(message, currentAccount?.did)) {
-					Toast.show(m['components.dms.error.reactionLimit']({ EMOJI_REACTION_LIMIT }), {
+					Toast.show(m['components.dms.reaction.error.limit']({ EMOJI_REACTION_LIMIT }), {
 						type: 'info',
 					});
 					return;
 				}
 				convo.addReaction(message.id, emoji).catch(() =>
-					Toast.show(m['components.dms.error.addReaction'](), {
+					Toast.show(m['components.dms.reaction.error.add'](), {
 						type: 'error',
 					}),
 				);
@@ -117,7 +117,7 @@ export function ActionsWrapper({
 							<button
 								{...props}
 								type="button"
-								aria-label={m['components.dms.action.addReaction']()}
+								aria-label={m['components.dms.reaction.action.add']()}
 								className={clsx(props.className, reactionStyles.trigger)}
 								style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
 							>
@@ -134,7 +134,7 @@ export function ActionsWrapper({
 						<button
 							{...props}
 							type="button"
-							aria-label={m['components.dms.a11y.messageOptions']()}
+							aria-label={m['components.dms.message.a11y.options']()}
 							className={clsx(props.className, reactionStyles.trigger)}
 							style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
 						>

@@ -39,7 +39,7 @@ export function useCleanError() {
 		if (raw.includes('Bad token scope') || raw.includes('Bad token method')) {
 			return {
 				raw,
-				clean: m['lib.error.appPasswordFeature'](),
+				clean: m['lib.appPassword.featureUnavailable'](),
 			};
 		}
 

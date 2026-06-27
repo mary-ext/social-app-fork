@@ -138,7 +138,7 @@ function ContentHiderActive({
 
 				const def = cause.labelDef || getDefinition(labelDefs, cause.label);
 				if (def.identifier === 'porn' || def.identifier === 'sexual') {
-					return m['common.label.adultContent']();
+					return m['common.moderation.adultContent']();
 				}
 				return getLabelStrings(LOCALE, globalLabelStrings, def).name;
 			});
@@ -190,14 +190,14 @@ function ContentHiderActive({
 				<Dialog.Trigger
 					handle={control}
 					className={styles.learnMoreButton}
-					aria-label={m['components.moderation.action.learnMoreContent']()}
+					aria-label={m['components.moderation.label.learnMore.aboutContent']()}
 				>
 					<Text size="md_sub" color="textContrastMedium">
 						{desc.sourceType === 'user'
 							? m['components.moderation.label.labeledByAuthor']()
 							: m['components.moderation.label.labeledBy']({ source: sanitizeDisplayName(desc.source) })}{' '}
 						<Text size="md_sub" color="primary_500" className={styles.learnMoreLink}>
-							{m['components.moderation.action.learnMoreDot']()}
+							{m['components.moderation.label.learnMore.dot']()}
 						</Text>
 					</Text>
 				</Dialog.Trigger>

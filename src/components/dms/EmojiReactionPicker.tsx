@@ -99,7 +99,7 @@ function QuickReactions({
 			})}
 			<button
 				type="button"
-				aria-label={m['components.dms.action.moreEmojis']()}
+				aria-label={m['components.dms.reaction.action.more']()}
 				className={styles.expandButton}
 				onClick={onExpand}
 			>

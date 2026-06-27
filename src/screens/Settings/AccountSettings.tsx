@@ -43,13 +43,13 @@ export function AccountSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.label.accountPrivacy']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.account.privacy']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
-					<Settings.Section titleText={m['screens.settings.export.yourDataTitle']()}>
+					<Settings.Section titleText={m['screens.settings.export.title']()}>
 						<Settings.SwitchRow
 							disabled={!automation.canToggle}
 							label={m['screens.settings.automation.showLabel']()}
@@ -60,28 +60,28 @@ export function AccountSettingsScreen({}: Props) {
 							<Settings.Icon icon={RobotIcon} />
 							<Settings.Label
 								subtitleText={m['screens.settings.automation.showLabelHint']()}
-								titleText={m['screens.settings.label.automation']()}
+								titleText={m['screens.settings.automation.label']()}
 							/>
 						</Settings.SwitchRow>
 
 						<Settings.ButtonRow
-							label={m['screens.settings.action.exportData']()}
+							label={m['screens.settings.export.action.export']()}
 							onPress={() => exportCarHandle.open(null)}
 						>
 							<Settings.Icon icon={CarIcon} />
-							<Settings.Label titleText={m['screens.settings.action.exportData']()} />
+							<Settings.Label titleText={m['screens.settings.export.action.export']()} />
 						</Settings.ButtonRow>
 					</Settings.Section>
 
 					<Settings.Section
 						footnoteText={
 							<Trans
-								message={m['screens.settings.privacy.discoverabilityNotice']}
+								message={m['screens.settings.privacy.discoverability.notice']}
 								markup={{
 									t0: ({ children }) => (
 										<ExternalInlineLinkText
 											size="sm"
-											label={m['screens.settings.privacy.learnMorePublic']()}
+											label={m['screens.settings.privacy.discoverability.learnMore']()}
 											href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
 										>
 											{children}
@@ -90,10 +90,10 @@ export function AccountSettingsScreen({}: Props) {
 								}}
 							/>
 						}
-						titleText={m['screens.settings.title.privacy']()}
+						titleText={m['screens.settings.privacy.title']()}
 					>
 						<Settings.ButtonRow
-							label={m['screens.settings.label.allowNotifyingOthers']()}
+							label={m['screens.settings.activitySubscription.allowNotifying']()}
 							onPress={() => activityHandle.open(null)}
 						>
 							<Settings.Icon icon={BellRingingIcon} />
@@ -102,21 +102,21 @@ export function AccountSettingsScreen({}: Props) {
 								subtitleText={
 									<AllowSubscriptionsValue isError={isError} value={declaration?.value?.allowSubscriptions} />
 								}
-								titleText={m['screens.settings.label.allowNotifyingOthers']()}
+								titleText={m['screens.settings.activitySubscription.allowNotifying']()}
 							/>
 						</Settings.ButtonRow>
 
 						<Settings.SwitchRow
 							disabled={!pwi.canToggle}
-							label={m['screens.settings.privacy.requestLimitedVisibility']()}
+							label={m['screens.settings.privacy.discoverability.request']()}
 							loading={pwi.loading}
 							onChange={pwi.toggle}
 							value={pwi.enabled}
 						>
 							<Settings.Icon icon={EyeSlashIcon} />
 							<Settings.Label
-								subtitleText={m['screens.settings.privacy.discoverabilityDesc']()}
-								titleText={m['screens.settings.privacy.requestLimitedVisibility']()}
+								subtitleText={m['screens.settings.privacy.discoverability.description']()}
+								titleText={m['screens.settings.privacy.discoverability.request']()}
 							/>
 						</Settings.SwitchRow>
 					</Settings.Section>
@@ -131,16 +131,16 @@ export function AccountSettingsScreen({}: Props) {
 /** The current activity-subscription selection, rendered as the drill-in row's value line. */
 function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?: AllowSubscriptions }) {
 	if (isError) {
-		return m['screens.settings.error.loadingPreference']();
+		return m['screens.settings.preferences.error.loading']();
 	}
 	switch (value) {
 		case 'mutuals':
-			return m['screens.settings.option.onlyFollowersIFollow']();
+			return m['screens.settings.audience.onlyFollowersIFollow']();
 		case 'none':
-			return m['screens.messages.option.noOneInvites']();
+			return m['screens.messages.inviteSettings.noOne']();
 		case 'followers':
 		default:
-			return m['screens.settings.option.anyoneWhoFollowsMe']();
+			return m['screens.settings.audience.anyoneWhoFollowsMe']();
 	}
 }
 

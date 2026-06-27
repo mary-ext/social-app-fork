@@ -40,7 +40,7 @@ export function useNotificationSettingsUpdateMutation() {
 		onError: (e) => {
 			logger.error('Could not update notification settings', { message: e });
 			void queryClient.invalidateQueries({ queryKey: RQKEY });
-			Toast.show(m['state.error.notificationSettingsUpdate'](), {
+			Toast.show(m['state.notifications.error.settingsUpdate'](), {
 				type: 'error',
 			});
 		},

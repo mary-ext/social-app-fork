@@ -22,7 +22,7 @@ export function CategoryNav({
 }) {
 	return (
 		<ToggleGroup
-			aria-label={m['components.emojiPicker.a11y.categories']()}
+			aria-label={m['components.emojiPicker.category.a11y']()}
 			className={styles.nav}
 			onValueChange={(groupValue) => {
 				const next = groupValue[0];

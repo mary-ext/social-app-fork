@@ -55,112 +55,112 @@ export function NotificationSettingsScreen({}: Props) {
 			<Layout.Content>
 				{isError && (
 					<div className={styles.errorWrap}>
-						<Admonition type="error">{m['common.error.loadNotificationSettings']()}</Admonition>
+						<Admonition type="error">{m['common.notifications.loadSettingsError']()}</Admonition>
 					</div>
 				)}
 				<Settings.List>
 					<Settings.Section>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.like']()}
+							label={m['screens.settings.notifications.like.title']()}
 							onPress={() => likeHandle.open(null)}
 						>
 							<Settings.Icon icon={HeartIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.like} />}
-								titleText={m['common.label.likes']()}
+								titleText={m['common.like.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.follow']()}
+							label={m['screens.settings.notifications.follow.title']()}
 							onPress={() => followHandle.open(null)}
 						>
 							<Settings.Icon icon={PersonPlusIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.follow} />}
-								titleText={m['screens.settings.notifications.newFollowers']()}
+								titleText={m['screens.settings.notifications.follow.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.reply']()}
+							label={m['screens.settings.notifications.reply.title']()}
 							onPress={() => replyHandle.open(null)}
 						>
 							<Settings.Icon icon={BubbleIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.reply} />}
-								titleText={m['common.label.replies']()}
+								titleText={m['common.reply.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.mention']()}
+							label={m['screens.settings.notifications.mention.title']()}
 							onPress={() => mentionHandle.open(null)}
 						>
 							<Settings.Icon icon={AtIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.mention} />}
-								titleText={m['common.label.mentions']()}
+								titleText={m['common.mention.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.quote']()}
+							label={m['screens.settings.notifications.quote.title']()}
 							onPress={() => quoteHandle.open(null)}
 						>
 							<Settings.Icon icon={CloseQuoteIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.quote} />}
-								titleText={m['common.label.quotes']()}
+								titleText={m['common.quote.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.repost']()}
+							label={m['screens.settings.notifications.repost.title']()}
 							onPress={() => repostHandle.open(null)}
 						>
 							<Settings.Icon icon={RepostIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.repost} />}
-								titleText={m['screens.settings.notifications.reposts']()}
+								titleText={m['screens.settings.notifications.repost.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.activity']()}
+							label={m['screens.settings.notifications.activity.title']()}
 							onPress={() => activityHandle.open(null)}
 						>
 							<Settings.Icon icon={BellRingingIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
-								titleText={m['screens.settings.label.activityFromOthers']()}
+								titleText={m['screens.settings.notifications.activity.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.likeViaRepost']()}
+							label={m['screens.settings.notifications.likeViaRepost.title']()}
 							onPress={() => likeRepostHandle.open(null)}
 						>
 							<Settings.Icon icon={LikeRepostIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.likeViaRepost} />}
-								titleText={m['screens.settings.notifications.likesOfReposts']()}
+								titleText={m['screens.settings.notifications.likeViaRepost.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.repostViaRepost']()}
+							label={m['screens.settings.notifications.repostViaRepost.title']()}
 							onPress={() => repostRepostHandle.open(null)}
 						>
 							<Settings.Icon icon={RepostRepostIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.repostViaRepost} />}
-								titleText={m['screens.settings.notifications.repostsOfReposts']()}
+								titleText={m['screens.settings.notifications.repostViaRepost.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={m['screens.settings.notifications.title.everythingElse']()}
+							label={m['screens.settings.notifications.everythingElse.title']()}
 							onPress={() => miscHandle.open(null)}
 						>
 							<Settings.Icon icon={ShapesIcon} />
@@ -169,7 +169,7 @@ export function NotificationSettingsScreen({}: Props) {
 								// technically a bundle of several settings, but since they're set together
 								// and are most likely in sync we'll just show the state of one of them
 								subtitleText={<SettingPreview preference={settings?.starterpackJoined} />}
-								titleText={m['screens.settings.label.everythingElse']()}
+								titleText={m['screens.settings.notifications.everythingElse.label']()}
 							/>
 						</Settings.ButtonRow>
 					</Settings.Section>
@@ -178,65 +178,65 @@ export function NotificationSettingsScreen({}: Props) {
 			<NotificationSettingsDialog
 				handle={likeHandle}
 				name="like"
-				subtitleText={m['screens.settings.notifications.likesDesc']()}
-				titleText={m['common.label.likes']()}
+				subtitleText={m['screens.settings.notifications.like.description']()}
+				titleText={m['common.like.label']()}
 			/>
 			<NotificationSettingsDialog
 				handle={followHandle}
 				name="follow"
-				subtitleText={m['screens.settings.notifications.followsDesc']()}
-				titleText={m['screens.settings.notifications.newFollowers']()}
+				subtitleText={m['screens.settings.notifications.follow.description']()}
+				titleText={m['screens.settings.notifications.follow.label']()}
 			/>
 			<NotificationSettingsDialog
 				handle={replyHandle}
 				name="reply"
-				subtitleText={m['screens.settings.notifications.repliesDesc']()}
-				titleText={m['common.label.replies']()}
+				subtitleText={m['screens.settings.notifications.reply.description']()}
+				titleText={m['common.reply.label']()}
 			/>
 			<NotificationSettingsDialog
 				handle={mentionHandle}
 				name="mention"
-				subtitleText={m['screens.settings.notifications.mentionsDesc']()}
-				titleText={m['common.label.mentions']()}
+				subtitleText={m['screens.settings.notifications.mention.description']()}
+				titleText={m['common.mention.label']()}
 			/>
 			<NotificationSettingsDialog
 				handle={quoteHandle}
 				name="quote"
-				subtitleText={m['screens.settings.notifications.quotesDesc']()}
-				titleText={m['common.label.quotes']()}
+				subtitleText={m['screens.settings.notifications.quote.description']()}
+				titleText={m['common.quote.label']()}
 			/>
 			<NotificationSettingsDialog
 				handle={repostHandle}
 				name="repost"
-				subtitleText={m['screens.settings.notifications.repostsDesc']()}
-				titleText={m['screens.settings.notifications.reposts']()}
+				subtitleText={m['screens.settings.notifications.repost.description']()}
+				titleText={m['screens.settings.notifications.repost.label']()}
 			/>
 			<NotificationSettingsDialog
 				allowDisableInApp={false}
 				handle={activityHandle}
 				name="subscribedPost"
-				subtitleText={m['screens.settings.notifications.subscribedDesc']()}
-				titleText={m['screens.settings.label.activityFromOthers']()}
+				subtitleText={m['screens.settings.notifications.subscribed.description']()}
+				titleText={m['screens.settings.notifications.activity.label']()}
 			/>
 			<NotificationSettingsDialog
 				handle={likeRepostHandle}
 				name="likeViaRepost"
-				subtitleText={m['screens.settings.notifications.likesRepostsDesc']()}
-				titleText={m['screens.settings.notifications.likesOfReposts']()}
+				subtitleText={m['screens.settings.notifications.likeViaRepost.description']()}
+				titleText={m['screens.settings.notifications.likeViaRepost.label']()}
 			/>
 			<NotificationSettingsDialog
 				handle={repostRepostHandle}
 				name="repostViaRepost"
-				subtitleText={m['screens.settings.notifications.repostsRepostsDesc']()}
-				titleText={m['screens.settings.notifications.repostsOfReposts']()}
+				subtitleText={m['screens.settings.notifications.repostViaRepost.description']()}
+				titleText={m['screens.settings.notifications.repostViaRepost.label']()}
 			/>
 			<NotificationSettingsDialog
 				allowDisableInApp={false}
 				handle={miscHandle}
 				name="starterpackJoined"
-				subtitleText={m['screens.settings.notifications.activityDesc']()}
+				subtitleText={m['screens.settings.notifications.activity.description']()}
 				syncOthers={['verified', 'unverified']}
-				titleText={m['screens.settings.label.everythingElse']()}
+				titleText={m['screens.settings.notifications.everythingElse.label']()}
 			/>
 		</Layout.Screen>
 	);
@@ -253,31 +253,31 @@ function SettingPreview({
 		if ('include' in preference) {
 			if (preference.include === 'all') {
 				if (preference.list && preference.push) {
-					return m['screens.settings.notifications.inAppPushEveryone']();
+					return m['screens.settings.notifications.channel.inAppPushEveryone']();
 				} else if (preference.list) {
-					return m['screens.settings.notifications.inAppEveryone']();
+					return m['screens.settings.notifications.channel.inAppEveryone']();
 				} else if (preference.push) {
-					return m['screens.settings.notifications.pushEveryone']();
+					return m['screens.settings.notifications.channel.pushEveryone']();
 				}
 			} else if (preference.include === 'follows') {
 				if (preference.list && preference.push) {
-					return m['screens.settings.notifications.inAppPushFollowing']();
+					return m['screens.settings.notifications.channel.inAppPushFollowing']();
 				} else if (preference.list) {
-					return m['screens.settings.notifications.inAppFollowing']();
+					return m['screens.settings.notifications.channel.inAppFollowing']();
 				} else if (preference.push) {
-					return m['screens.settings.notifications.pushFollowing']();
+					return m['screens.settings.notifications.channel.pushFollowing']();
 				}
 			}
 		} else {
 			if (preference.list && preference.push) {
-				return m['screens.settings.notifications.inAppPush']();
+				return m['screens.settings.notifications.channel.inAppPush']();
 			} else if (preference.list) {
-				return m['screens.settings.notifications.inApp']();
+				return m['screens.settings.notifications.channel.inApp']();
 			} else if (preference.push) {
-				return m['screens.settings.notifications.push']();
+				return m['screens.settings.notifications.channel.push']();
 			}
 		}
 	}
 
-	return m['common.label.off']();
+	return m['common.status.off']();
 }

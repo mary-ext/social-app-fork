@@ -39,13 +39,13 @@ export function EditNamePrompt({
 		<Prompt.Outer control={control}>
 			<>
 				<Prompt.Content>
-					<Prompt.TitleText>{m['screens.messages.action.editGroupName']()}</Prompt.TitleText>
+					<Prompt.TitleText>{m['screens.messages.groupName.edit.action']()}</Prompt.TitleText>
 					<View style={[a.my_sm]}>
 						<TextField.Root isInvalid={nameTooLong}>
 							<TextField.Input
 								key={inputKey}
-								label={m['screens.messages.action.editGroupName']()}
-								placeholder={m['common.label.groupName']()}
+								label={m['screens.messages.groupName.edit.action']()}
+								placeholder={m['common.chat.groupName']()}
 								defaultValue={value}
 								onChangeText={onChangeText}
 								returnKeyType="done"
@@ -58,7 +58,7 @@ export function EditNamePrompt({
 						</TextField.Root>
 						{nameTooLong ? (
 							<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-								{m['common.error.groupNameTooLong']({ MAX_GROUP_NAME_GRAPHEME_LENGTH })}
+								{m['common.chat.error.groupNameTooLong']({ MAX_GROUP_NAME_GRAPHEME_LENGTH })}
 							</Text>
 						) : null}
 					</View>
@@ -82,9 +82,9 @@ export function LockChatPrompt({
 	return (
 		<Prompt.Basic
 			control={control}
-			title={m['screens.messages.dialog.lockTitle']()}
-			description={m['screens.messages.dialog.lockDescription']()}
-			confirmButtonCta={m['screens.messages.action.lockGroup']()}
+			title={m['screens.messages.lock.confirm.title']()}
+			description={m['screens.messages.lock.confirm.message']()}
+			confirmButtonCta={m['screens.messages.lock.action.lockGroup']()}
 			cancelButtonCta={m['common.action.cancel']()}
 			onConfirm={onConfirm}
 		/>
@@ -103,9 +103,9 @@ export function LeaveChatPrompt({
 	return (
 		<Prompt.Basic
 			control={control}
-			title={m['screens.messages.dialog.leaveConfirm']({ groupName })}
-			description={m['screens.messages.dialog.leaveRejoinWarning']()}
-			confirmButtonCta={m['screens.messages.action.leaveGroup']()}
+			title={m['screens.messages.leave.confirm.message']({ groupName })}
+			description={m['screens.messages.leave.confirm.rejoinWarning']()}
+			confirmButtonCta={m['screens.messages.leave.action']()}
 			confirmButtonColor="negative"
 			cancelButtonCta={m['common.action.cancel']()}
 			onConfirm={onConfirm}
@@ -125,9 +125,9 @@ export function LeaveAndLockChatPrompt({
 	return (
 		<Prompt.Basic
 			control={control}
-			title={m['screens.messages.dialog.leaveConfirm']({ groupName })}
-			description={m['screens.messages.dialog.leaveLockWarning']()}
-			confirmButtonCta={m['screens.messages.action.leaveGroup']()}
+			title={m['screens.messages.leave.confirm.message']({ groupName })}
+			description={m['screens.messages.leave.confirm.lockWarning']()}
+			confirmButtonCta={m['screens.messages.leave.action']()}
 			confirmButtonColor="negative"
 			cancelButtonCta={m['common.action.cancel']()}
 			onConfirm={onConfirm}
@@ -147,8 +147,8 @@ export function RemoveMemberPrompt({
 	return (
 		<Prompt.Basic
 			control={control}
-			title={m['screens.messages.dialog.removeMemberTitle']({ displayName })}
-			description={m['screens.messages.dialog.removeRejoinWarning']()}
+			title={m['screens.messages.members.remove.title']({ displayName })}
+			description={m['screens.messages.members.remove.warning']()}
 			confirmButtonCta={m['common.action.remove']()}
 			confirmButtonColor="negative"
 			cancelButtonCta={m['common.action.cancel']()}

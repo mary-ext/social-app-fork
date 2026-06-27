@@ -93,7 +93,7 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 				<Autocomplete.List className={styles.list}>
 					<Autocomplete.Empty>
 						{}
-						<div className={styles.empty}>{m['components.emojiPicker.empty']()}</div>
+						<div className={styles.empty}>{m['components.emojiPicker.search.empty']()}</div>
 					</Autocomplete.Empty>
 
 					<EmojiGrid

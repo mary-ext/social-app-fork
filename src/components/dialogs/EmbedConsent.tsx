@@ -63,7 +63,7 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 					{m['components.dialogs.externalMedia.prompt']({ source: externalEmbedLabels[source] })}
 				</Text>
 
-				<Admonition type="info">{m['common.hint.externalMedia']()}</Admonition>
+				<Admonition type="info">{m['common.externalMedia.hint']()}</Admonition>
 			</div>
 
 			<div className={styles.actions}>

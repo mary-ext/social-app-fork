@@ -314,7 +314,7 @@ export function FeedsScreen({}: Props) {
 				<Layout.Header.Slot>
 					<LinkButton
 						color="secondary"
-						label={m['common.action.editMyFeeds']()}
+						label={m['common.feeds.action.edit']()}
 						shape="round"
 						size="small"
 						to="/settings/saved-feeds"
@@ -331,7 +331,7 @@ export function FeedsScreen({}: Props) {
 				keyExtractor={(item) => item.key}
 				ListFooterComponent={
 					isPopularFeedsFetchingNextPage ? (
-						<CenteredSpinner label={m['view.feeds.loadingMore']()} size="xl" />
+						<CenteredSpinner label={m['view.feeds.feed.loadingMore']()} size="xl" />
 					) : null
 				}
 				onEndReached={onEndReached}
@@ -342,7 +342,7 @@ export function FeedsScreen({}: Props) {
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={colors.white} />}
-					label={m['common.label.newPost']()}
+					label={m['common.compose.action.new']()}
 					onClick={() => openComposer({ logContext: 'Fab' })}
 				/>
 			)}
@@ -361,7 +361,7 @@ function FollowingFeed() {
 				<div className={css.followingIcon}>
 					<FilterTimeline width={18} fill={colors.white} />
 				</div>
-				<FeedCard.TitleAndByline title={m['common.label.followingFeed']()} />
+				<FeedCard.TitleAndByline title={m['common.feeds.following']()} />
 			</FeedCard.Header>
 		</div>
 	);
@@ -406,9 +406,9 @@ function FeedsSavedHeader() {
 			</div>
 			<div className={css.headerColumn}>
 				<Text size="_2xl" weight="bold">
-					{m['view.title.myFeeds']()}
+					{m['view.feeds.saved.title']()}
 				</Text>
-				<Text color="textContrastHigh">{m['view.feeds.savedDescription']()}</Text>
+				<Text color="textContrastHigh">{m['view.feeds.saved.description']()}</Text>
 			</div>
 		</div>
 	);
@@ -422,9 +422,9 @@ function FeedsAboutHeader() {
 			</div>
 			<div className={css.aboutColumn}>
 				<Text size="_2xl" weight="bold">
-					{m['view.title.discoverFeeds']()}
+					{m['view.feeds.discover.title']()}
 				</Text>
-				<Text color="textContrastHigh">{m['view.feeds.discoverDescription']()}</Text>
+				<Text color="textContrastHigh">{m['view.feeds.discover.description']()}</Text>
 			</div>
 		</div>
 	);

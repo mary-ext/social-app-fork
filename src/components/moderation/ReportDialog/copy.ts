@@ -7,43 +7,43 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
 		case 'account': {
 			return {
 				title: m['components.moderation.report.user'](),
-				subtitle: m['components.moderation.prompt.reviewUser'](),
+				subtitle: m['components.moderation.report.reviewPrompt.user'](),
 			};
 		}
 		case 'status': {
 			return {
-				title: m['common.action.reportLivestream'](),
-				subtitle: m['components.moderation.prompt.reviewLivestream'](),
+				title: m['common.liveNow.report'](),
+				subtitle: m['components.moderation.report.reviewPrompt.livestream'](),
 			};
 		}
 		case 'post': {
 			return {
 				title: m['components.moderation.report.post'](),
-				subtitle: m['components.moderation.prompt.reviewPost'](),
+				subtitle: m['components.moderation.report.reviewPrompt.post'](),
 			};
 		}
 		case 'list': {
 			return {
 				title: m['components.moderation.report.list'](),
-				subtitle: m['components.moderation.prompt.reviewList'](),
+				subtitle: m['components.moderation.report.reviewPrompt.list'](),
 			};
 		}
 		case 'feed': {
 			return {
 				title: m['components.moderation.report.feed'](),
-				subtitle: m['components.moderation.prompt.reviewFeed'](),
+				subtitle: m['components.moderation.report.reviewPrompt.feed'](),
 			};
 		}
 		case 'starterPack': {
 			return {
 				title: m['components.moderation.report.starterPack'](),
-				subtitle: m['components.moderation.prompt.reviewStarterPack'](),
+				subtitle: m['components.moderation.report.reviewPrompt.starterPack'](),
 			};
 		}
 		case 'convo': {
 			return {
 				title: m['components.moderation.report.conversation'](),
-				subtitle: m['components.moderation.prompt.reviewConversation'](),
+				subtitle: m['components.moderation.report.reviewPrompt.conversation'](),
 			};
 		}
 		case 'convoMessage': {
@@ -51,13 +51,13 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
 				case 'convo': {
 					return {
 						title: m['components.moderation.report.conversation'](),
-						subtitle: m['components.moderation.prompt.reviewConversation'](),
+						subtitle: m['components.moderation.report.reviewPrompt.conversation'](),
 					};
 				}
 				case 'message': {
 					return {
 						title: m['components.moderation.report.message'](),
-						subtitle: m['components.moderation.prompt.reviewMessage'](),
+						subtitle: m['components.moderation.report.reviewPrompt.message'](),
 					};
 				}
 			}

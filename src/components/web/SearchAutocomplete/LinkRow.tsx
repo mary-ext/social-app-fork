@@ -13,7 +13,7 @@ export function LinkRow({ row }: { row: Extract<ListRow, { kind: 'link' }> }) {
 	return (
 		<Autocomplete.Item className={styles.row} value={row}>
 			<ChainLinkIcon className={styles.icon} fill="currentColor" size="sm" />
-			<Text>{m['components.web.action.openUrlInApp']()}</Text>
+			<Text>{m['components.web.openInApp.label']()}</Text>
 		</Autocomplete.Item>
 	);
 }

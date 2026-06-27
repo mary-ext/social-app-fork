@@ -27,8 +27,8 @@ export function SelectGifBtn({ onClose, onSelectGif, disabled }: Props) {
 						icon={GifIcon}
 						// the dialog open is owned by the Trigger; dismiss the soft keyboard alongside it.
 						onClick={() => Keyboard.dismiss()}
-						label={m['view.composer.a11y.selectGif']()}
-						aria-description={m['view.composer.a11y.opensGifPicker']()}
+						label={m['view.composer.gif.a11y.select']()}
+						aria-description={m['view.composer.gif.a11y.opensPicker']()}
 						disabled={disabled}
 					/>
 				}

@@ -56,14 +56,14 @@ function useKeyboardShortcuts() {
 					requiresSession: true,
 				},
 			),
-		{ scopes: ['global'], description: m['common.action.composePost']() },
+		{ scopes: ['global'], description: m['common.compose.action.compose']() },
 		[openComposer],
 	);
 
 	useHotkeys(Hotkeys.FOCUS_SEARCH, () => handleKey(() => focusSearch.emit()), {
 		scopes: ['global'],
 		preventDefault: true,
-		description: m['lib.a11y.focusSearch'](),
+		description: m['lib.search.focusSearch'](),
 		useKey: true, // Support international and alternate keyboard layouts
 	});
 }

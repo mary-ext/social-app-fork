@@ -67,7 +67,7 @@ function JoinRequestsInner() {
 				<Header />
 				<Error
 					title={m['screens.messages.error.generic']()}
-					message={m['screens.messages.error.loadJoinRequests']()}
+					message={m['screens.messages.requests.error.load']()}
 					onRetry={() => convoState.error.retry()}
 					sideBorders={false}
 				/>
@@ -89,8 +89,8 @@ function JoinRequestsInner() {
 	if (convoState.convo.kind !== 'group') {
 		return (
 			<Error
-				title={m['screens.messages.error.wrongConversationType']()}
-				message={m['screens.messages.error.groupOnlyScreen']()}
+				title={m['screens.messages.conversation.wrongTypeError']()}
+				message={m['screens.messages.conversation.groupOnlyError']()}
 				onGoBack={() => {
 					if (navigation.canGoBack()) {
 						navigation.goBack();
@@ -148,7 +148,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		convo.view.id,
 		{
 			onSuccess: () => {
-				Toast.show(m['screens.messages.toast.requestApproved']());
+				Toast.show(m['screens.messages.requests.approvedToast']());
 				if (getRemainingRequestCount() < 1) {
 					navigation.replace('MessagesConversationSettings', {
 						conversation: convo.view.id,
@@ -156,19 +156,19 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				}
 			},
 			onError: (error) => {
-				let errorMessage = m['screens.messages.error.acceptJoinRequest']();
+				let errorMessage = m['screens.messages.requests.acceptJoin.error']();
 				if (isNetworkError(error)) {
 					errorMessage = m['common.error.network']();
 				} else if (error instanceof ClientResponseError) {
 					switch (error.error) {
 						case 'InvalidConvo':
-							errorMessage = m['common.error.conversationNotFound']();
+							errorMessage = m['common.chat.error.notFound']();
 							break;
 						case 'InsufficientRole':
-							errorMessage = m['screens.messages.error.adminOnlyAccept']();
+							errorMessage = m['screens.messages.requests.acceptJoin.adminOnly']();
 							break;
 						case 'MemberLimitReached':
-							errorMessage = m['common.error.memberLimitReached']();
+							errorMessage = m['common.chat.error.memberLimit']();
 							break;
 					}
 				}
@@ -182,7 +182,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		convo.view.id,
 		{
 			onSuccess: () => {
-				Toast.show(m['screens.messages.toast.requestIgnored']());
+				Toast.show(m['screens.messages.requests.ignoredToast']());
 				if (getRemainingRequestCount() < 1) {
 					navigation.replace('MessagesConversationSettings', {
 						conversation: convo.view.id,
@@ -190,16 +190,16 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				}
 			},
 			onError: (error) => {
-				let errorMessage = m['screens.messages.error.ignoreJoinRequest']();
+				let errorMessage = m['screens.messages.requests.ignore.error']();
 				if (isNetworkError(error)) {
 					errorMessage = m['common.error.network']();
 				} else if (error instanceof ClientResponseError) {
 					switch (error.error) {
 						case 'InvalidConvo':
-							errorMessage = m['common.error.conversationNotFound']();
+							errorMessage = m['common.chat.error.notFound']();
 							break;
 						case 'InsufficientRole':
-							errorMessage = m['screens.messages.error.adminOnlyIgnore']();
+							errorMessage = m['screens.messages.requests.ignore.adminOnly']();
 							break;
 					}
 				}
@@ -253,13 +253,13 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			]}
 		>
 			<Button
-				label={m['screens.messages.action.editInviteLink']()}
+				label={m['screens.messages.inviteLink.edit.action']()}
 				size="large"
 				color="primary"
 				onPress={() => inviteLinkControl.open()}
 				style={[a.w_full]}
 			>
-				<ButtonText>{m['screens.messages.action.editInviteLink']()}</ButtonText>
+				<ButtonText>{m['screens.messages.inviteLink.edit.action']()}</ButtonText>
 			</Button>
 		</View>
 	);
@@ -290,7 +290,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				<View style={[a.flex_1, a.align_center, a.justify_center, a.gap_sm, a.p_lg]}>
 					<ErrorIcon size="3xl" fill={colors.textContrastHigh} />
 					<Text style={[a.leading_snug, a.text_center, a.px_lg, a.text_md, t.atoms.text_contrast_high]}>
-						{m['screens.messages.error.fetchJoinRequests']()}
+						{m['screens.messages.requests.error.fetch']()}
 					</Text>
 					<Button
 						color="primary"
@@ -354,7 +354,7 @@ function Header({ count, hasMoreRequests }: { count?: number; hasMoreRequests?: 
 			<Layout.Header.Content>
 				<Layout.Header.TitleText>
 					{count === undefined
-						? m['common.label.requestsToJoin']()
+						? m['common.requests.label']()
 						: hasMoreRequests
 							? m['screens.messages.requests.toJoinOverflow']({ count })
 							: m['screens.messages.requests.toJoinCount']({ count })}
@@ -368,13 +368,13 @@ function Header({ count, hasMoreRequests }: { count?: number; hasMoreRequests?: 
 function AcceptButton({ disabled, onPress }: { disabled?: boolean; onPress: () => void }) {
 	return (
 		<Button
-			label={m['screens.messages.action.acceptJoinRequest']()}
+			label={m['screens.messages.requests.acceptJoin.a11y']()}
 			size="small"
 			color="primary"
 			disabled={disabled}
 			onPress={onPress}
 		>
-			<ButtonText>{m['screens.messages.action.accept']()}</ButtonText>
+			<ButtonText>{m['screens.messages.requests.accept.action']()}</ButtonText>
 		</Button>
 	);
 }
@@ -382,13 +382,13 @@ function AcceptButton({ disabled, onPress }: { disabled?: boolean; onPress: () =
 function RejectButton({ disabled, onPress }: { disabled?: boolean; onPress: () => void }) {
 	return (
 		<Button
-			label={m['screens.messages.label.ignoreJoinRequest']()}
+			label={m['screens.messages.requests.ignore.a11y']()}
 			size="small"
 			color="secondary"
 			disabled={disabled}
 			onPress={onPress}
 		>
-			<ButtonText>{m['screens.messages.action.ignore']()}</ButtonText>
+			<ButtonText>{m['screens.messages.requests.ignore.action']()}</ButtonText>
 		</Button>
 	);
 }

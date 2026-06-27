@@ -30,7 +30,7 @@ export function NotificationsActivityListScreen({
 				feed={`posts|${posts}`}
 				disablePoll
 				renderEmptyState={() => (
-					<EmptyState icon={EditIcon} iconSize="2xl" message={m['screens.notifications.empty.noPosts']()} />
+					<EmptyState icon={EditIcon} iconSize="2xl" message={m['screens.notifications.empty']()} />
 				)}
 				renderEndOfFeed={() => <ListFooter />}
 			/>

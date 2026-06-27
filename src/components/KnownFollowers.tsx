@@ -125,7 +125,7 @@ function KnownFollowersInner({
 
 	return (
 		<Link
-			label={m['common.a11y.pressToViewKnownFollowers']()}
+			label={m['common.follow.a11y.knownFollowers']()}
 			onPress={onLinkPress}
 			to={makeProfileLink(profile, 'known-followers')}
 			style={[
@@ -194,7 +194,7 @@ function KnownFollowersInner({
 							// only 2
 							serverCount > 2 ? (
 								<Trans
-									message={m['common.label.followedByMany']}
+									message={m['common.follow.followedByMany']}
 									inputs={{
 										count: serverCount - 2,
 										name: slice[0]!.profile.displayName,
@@ -215,7 +215,7 @@ function KnownFollowersInner({
 								/>
 							) : (
 								<Trans
-									message={m['common.label.followedByTwo']}
+									message={m['common.follow.followedByTwo']}
 									inputs={{
 										name: slice[0]!.profile.displayName,
 										name2: slice[1]!.profile.displayName,
@@ -237,7 +237,7 @@ function KnownFollowersInner({
 						) : serverCount > 1 ? (
 							// 1-n followers, including blocks
 							<Trans
-								message={m['common.label.followedByOthers']}
+								message={m['common.follow.followedByOthers']}
 								inputs={{
 									count: serverCount - 1,
 									name: slice[0]!.profile.displayName,
@@ -253,7 +253,7 @@ function KnownFollowersInner({
 						) : (
 							// only 1
 							<Trans
-								message={m['common.label.followedBy']}
+								message={m['common.follow.followedBy']}
 								inputs={{ name: slice[0]!.profile.displayName }}
 								markup={{
 									t0: ({ children }) => (
@@ -278,7 +278,7 @@ function EmptyFallback({ show }: { show?: boolean }) {
 
 	return (
 		<Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-			{m['components.knownFollowers.label.noneFollowed']()}
+			{m['components.knownFollowers.empty']()}
 		</Text>
 	);
 }

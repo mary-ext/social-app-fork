@@ -16,10 +16,10 @@ export function ThreadItemPostTombstone({ type }: ThreadItemPostTombstoneProps) 
 	const { copy, Icon } = useMemo(() => {
 		switch (type) {
 			case 'blocked':
-				return { copy: m['screens.postThread.error.blocked'](), Icon: PersonXIcon };
+				return { copy: m['screens.postThread.post.error.blocked'](), Icon: PersonXIcon };
 			case 'not-found':
 			default:
-				return { copy: m['screens.postThread.error.notFound'](), Icon: TrashIcon };
+				return { copy: m['screens.postThread.post.error.notFound'](), Icon: TrashIcon };
 		}
 	}, [type]);
 

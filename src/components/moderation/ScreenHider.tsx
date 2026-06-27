@@ -49,11 +49,11 @@ export function ScreenHider({
 				</div>
 			</div>
 			<Text className={css.title} size="_4xl" weight="semiBold">
-				{isNoPwi ? m['common.dialog.signInRequiredTitle']() : m['common.label.contentWarning']()}
+				{isNoPwi ? m['common.session.signInRequiredTitle']() : m['common.moderation.contentWarning']()}
 			</Text>
 			{isNoPwi ? (
 				<Text className={css.body} color="textContrastMedium" size="lg">
-					{m['components.moderation.label.signInToView']()}
+					{m['components.moderation.signInRequired.message']()}
 				</Text>
 			) : (
 				<Text className={css.body} color="textContrastMedium" size="lg">
@@ -62,12 +62,12 @@ export function ScreenHider({
 						{desc.name}.{' '}
 					</Text>
 					<Dialog.Trigger
-						aria-label={m['components.moderation.action.learnMoreWarning']()}
+						aria-label={m['components.moderation.label.learnMore.aboutWarning']()}
 						className={css.learnMore}
 						handle={control}
 					>
 						<Text color="primary_500" size="lg">
-							{m['components.moderation.action.learnMore']()}
+							{m['components.moderation.label.learnMore.label']()}
 						</Text>
 					</Dialog.Trigger>
 				</Text>
@@ -95,12 +95,12 @@ export function ScreenHider({
 					<Button
 						className={css.pill}
 						color="secondary"
-						label={m['common.action.showAnyway']()}
+						label={m['common.moderation.showAnyway']()}
 						onClick={() => setOverride((v) => !v)}
 						size="large"
 						variant="solid"
 					>
-						<ButtonText>{m['common.action.showAnyway']()}</ButtonText>
+						<ButtonText>{m['common.moderation.showAnyway']()}</ButtonText>
 					</Button>
 				)}
 			</div>

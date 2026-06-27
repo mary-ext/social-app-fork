@@ -186,12 +186,12 @@ export function BottomBarWeb() {
 					</div>
 					<Button
 						onClick={showSignIn}
-						label={m['common.action.signIn']()}
+						label={m['common.session.action.signIn']()}
 						size="small"
 						variant="solid"
 						color="primary"
 					>
-						<ButtonText>{m['common.action.signIn']()}</ButtonText>
+						<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
 					</Button>
 				</div>
 			)}
@@ -255,7 +255,7 @@ const NavItem: React.FC<{
 			{notificationCount ? (
 				<div
 					className={css.badge}
-					aria-label={m['view.notifications.unreadCountBadge']({ notificationCount })}
+					aria-label={m['view.notifications.unreadCount.badge']({ notificationCount })}
 				>
 					<Text size="sm" weight="semiBold" color="white" className={css.badgeLabel}>
 						{notificationCount}

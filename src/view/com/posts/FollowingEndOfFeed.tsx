@@ -31,21 +31,21 @@ export function FollowingEndOfFeed() {
 		<View style={[styles.container, pal.border, { minHeight: Dimensions.get('window').height * 0.75 }]}>
 			<View style={styles.inner}>
 				<Text type="xl-medium" style={[s.textCenter, pal.text]}>
-					{m['view.posts.empty.endOfFeed']()}
+					{m['view.posts.feed.endOfFeed']()}
 				</Text>
 				<Button type="inverted" style={styles.emptyBtn} onPress={onPressFindAccounts}>
 					<Text type="lg-medium" style={palInverted.text}>
-						{m['view.posts.cta.findAccounts']()}
+						{m['view.posts.follow.findAccounts']()}
 					</Text>
 					<ChevronRightIcon width={14} fill={colors.textInverted} />
 				</Button>
 
 				<Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
-					{m['view.posts.empty.discoverHint']()}
+					{m['view.posts.discover.hint']()}
 				</Text>
 				<Button type="inverted" style={[styles.emptyBtn, s.mt10]} onPress={onPressDiscoverFeeds}>
 					<Text type="lg-medium" style={palInverted.text}>
-						{m['view.posts.cta.discoverFeeds']()}
+						{m['view.posts.discover.findFeeds']()}
 					</Text>
 					<ChevronRightIcon width={14} fill={colors.textInverted} />
 				</Button>

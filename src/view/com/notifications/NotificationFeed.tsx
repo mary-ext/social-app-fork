@@ -102,18 +102,14 @@ export function NotificationFeed({
 			if (isNotificationSentinel(item)) {
 				if (item === LOAD_MORE_ERROR_ITEM) {
 					return (
-						<LoadMoreRetryBtn label={m['view.notifications.error.fetch']()} onPress={onPressRetryLoadMore} />
+						<LoadMoreRetryBtn label={m['view.notifications.fetchError']()} onPress={onPressRetryLoadMore} />
 					);
 				}
 				if (item === LOADING_ITEM) {
 					return <NotificationFeedLoadingPlaceholder />;
 				}
 				return (
-					<EmptyState
-						icon={BellIcon}
-						message={m['view.notifications.empty.title']()}
-						className={css.emptyState}
-					/>
+					<EmptyState icon={BellIcon} message={m['view.notifications.empty']()} className={css.emptyState} />
 				);
 			}
 			return (

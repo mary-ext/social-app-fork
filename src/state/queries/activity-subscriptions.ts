@@ -76,7 +76,7 @@ export function useNotificationDeclarationMutation() {
 			);
 		},
 		onError: () => {
-			Toast.show(m['state.error.updateNotificationDeclaration']());
+			Toast.show(m['state.notifications.error.declarationUpdate']());
 			void queryClient.invalidateQueries({
 				queryKey: RQKEY_getNotificationDeclaration,
 			});

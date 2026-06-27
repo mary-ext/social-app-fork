@@ -2,12 +2,12 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"components.richTextTag.a11y.cashtag": "Cashtag {tag}",
 	"components.richTextTag.a11y.hashtag": "Hashtag {tag}",
-	"components.richTextTag.action.mute": "Mute {prefixedTag}",
-	"components.richTextTag.action.seePosts": "See {prefixedTag} posts",
-	"components.richTextTag.action.seePostsByUser": "See {prefixedTag} posts by user",
-	"components.richTextTag.action.seePostsHash": "See #{tag} posts",
-	"components.richTextTag.action.seePostsHashByUser": "See #{tag} posts by user",
-	"components.richTextTag.action.seePostsTag": "See {tag} posts",
-	"components.richTextTag.action.seePostsTagByUser": "See {tag} posts by user",
-	"components.richTextTag.action.unmute": "Unmute {prefixedTag}"
+	"components.richTextTag.mute": "Mute {prefixedTag}",
+	"components.richTextTag.seePosts.hash": "See #{tag} posts",
+	"components.richTextTag.seePosts.hashByUser": "See #{tag} posts by user",
+	"components.richTextTag.seePosts.prefixed": "See {prefixedTag} posts",
+	"components.richTextTag.seePosts.prefixedByUser": "See {prefixedTag} posts by user",
+	"components.richTextTag.seePosts.tag": "See {tag} posts",
+	"components.richTextTag.seePosts.tagByUser": "See {tag} posts by user",
+	"components.richTextTag.unmute": "Unmute {prefixedTag}"
 }

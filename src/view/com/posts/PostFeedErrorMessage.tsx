@@ -71,7 +71,7 @@ export function PostFeedErrorMessage({
 			<EmptyState
 				icon={WarningIcon}
 				iconSize="2xl"
-				message={m['view.posts.label.postsHidden']()}
+				message={m['view.posts.moderation.hidden']()}
 				className={css.empty}
 			/>
 		);
@@ -98,13 +98,13 @@ function FeedgenErrorMessage({
 			({
 				[KnownError.Unknown]: '',
 				[KnownError.Block]: '',
-				[KnownError.FeedgenDoesNotExist]: m['view.posts.error.feedNotFound'](),
-				[KnownError.FeedgenMisconfigured]: m['view.posts.error.feedMisconfigured'](),
-				[KnownError.FeedgenBadResponse]: m['view.posts.error.feedBadResponse'](),
-				[KnownError.FeedgenOffline]: m['view.posts.error.feedOffline'](),
-				[KnownError.FeedSignedInOnly]: m['view.posts.empty.requiresAccount'](),
-				[KnownError.FeedgenUnknown]: m['view.posts.error.feedServerRequest'](),
-				[KnownError.FeedTooManyRequests]: m['view.posts.error.feedHighTraffic'](),
+				[KnownError.FeedgenDoesNotExist]: m['view.posts.feed.error.notFound'](),
+				[KnownError.FeedgenMisconfigured]: m['view.posts.feed.error.misconfigured'](),
+				[KnownError.FeedgenBadResponse]: m['view.posts.feed.error.badResponse'](),
+				[KnownError.FeedgenOffline]: m['view.posts.feed.error.offline'](),
+				[KnownError.FeedSignedInOnly]: m['view.posts.feed.requiresAccount'](),
+				[KnownError.FeedgenUnknown]: m['view.posts.feed.error.serverRequest'](),
+				[KnownError.FeedTooManyRequests]: m['view.posts.feed.error.highTraffic'](),
 			})[knownError],
 		[knownError],
 	);
@@ -126,7 +126,7 @@ function FeedgenErrorMessage({
 			if (!savedFeedConfig) return;
 			await removeFeed(savedFeedConfig);
 		} catch (err) {
-			Toast.show(m['view.posts.error.removeFeed'](), { type: 'warning' });
+			Toast.show(m['view.posts.feed.remove.error'](), { type: 'warning' });
 			logger.error('Failed to remove feed', { message: err });
 		}
 	}, [removeFeed, savedFeedConfig]);
@@ -144,9 +144,9 @@ function FeedgenErrorMessage({
 				return (
 					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
 						{knownError === KnownError.FeedgenDoesNotExist && savedFeedConfig && (
-							<Button type="inverted" label={m['view.posts.action.removeFeed']()} onPress={onRemoveFeed} />
+							<Button type="inverted" label={m['view.posts.feed.remove.label']()} onPress={onRemoveFeed} />
 						)}
-						<Button type="default-light" label={m['common.action.viewProfile']()} onPress={onViewProfile} />
+						<Button type="default-light" label={m['common.profile.action.view']()} onPress={onViewProfile} />
 					</View>
 				);
 			}
@@ -171,7 +171,7 @@ function FeedgenErrorMessage({
 
 				{rawError?.message && (
 					<Text style={pal.textLight}>
-						{m['view.posts.error.serverMessage']({ message: rawError.message })}
+						{m['view.posts.feed.error.serverMessage']({ message: rawError.message })}
 					</Text>
 				)}
 
@@ -179,8 +179,8 @@ function FeedgenErrorMessage({
 			</View>
 			<Prompt.Basic
 				control={removePromptControl}
-				title={m['view.posts.dialog.removeFeedTitle']()}
-				description={m['view.posts.dialog.removeFeedDescription']()}
+				title={m['view.posts.feed.remove.title']()}
+				description={m['view.posts.feed.remove.message']()}
 				onConfirm={onPressRemoveFeed}
 				confirmButtonCta={m['common.action.remove']()}
 				confirmButtonColor="negative"

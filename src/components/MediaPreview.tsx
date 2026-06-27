@@ -126,7 +126,7 @@ export function GifItem({ thumbnail, alt }: { thumbnail?: string; alt?: string }
 				<PlayButtonIcon size={24} />
 			</View>
 			<View style={styles.altContainer}>
-				<Text style={styles.alt}>{m['common.label.gif']()}</Text>
+				<Text style={styles.alt}>{m['common.gif.label']()}</Text>
 			</View>
 		</ImageItem>
 	);

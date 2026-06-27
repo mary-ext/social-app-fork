@@ -28,10 +28,7 @@ export function VerifierDialog({
 	const userName = getUserDisplayName(profile);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup
-				label={m['components.verification.label.trustedVerifierInfo']({ userName })}
-				size="narrow"
-			>
+			<Dialog.Popup label={m['components.verification.trustedVerifier.title']({ userName })} size="narrow">
 				<DialogInner handle={handle} profile={profile} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -44,14 +41,14 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const isSelf = profile.did === currentAccount?.did;
 	const userName = getUserDisplayName(profile);
 	const label = isSelf
-		? m['components.verification.status.youTrustedVerifier']()
-		: m['components.verification.status.userTrustedVerifier']({ userName });
+		? m['components.verification.trustedVerifier.youStatus']()
+		: m['components.verification.trustedVerifier.userStatus']({ userName });
 
 	return (
 		<div className={css.content}>
 			<div className={css.imageBox}>
 				<img
-					alt={m['components.verification.a11y.illustration']()}
+					alt={m['components.verification.trustedVerifier.illustration']()}
 					className={css.image}
 					src={announcementImage}
 				/>
@@ -63,7 +60,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				</Text>
 				<Text size="md">
 					<Trans
-						message={m['components.verification.about.trustedVerifiers']}
+						message={m['components.verification.trustedVerifier.description']}
 						markup={{ t0: () => <VerifierCheck className={css.inlineCheck} width={14} /> }}
 					/>
 				</Text>
@@ -72,7 +69,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 			<div className={css.actions}>
 				<ExternalLinkButton
 					color="primary"
-					label={m['components.verification.cta.learnMore']()}
+					label={m['components.verification.learnMore']()}
 					size="small"
 					href={urls.website.blog.initialVerificationAnnouncement}
 				>

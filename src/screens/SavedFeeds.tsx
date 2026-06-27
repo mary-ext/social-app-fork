@@ -74,7 +74,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 	const onSaveChanges = async () => {
 		try {
 			await overwriteSavedFeeds(currentFeeds);
-			Toast.show(m['common.toast.feedsUpdated']());
+			Toast.show(m['common.feeds.updatedToast']());
 			if (navigation.canGoBack()) {
 				navigation.goBack();
 			} else {
@@ -123,12 +123,12 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					</View>
 				)}
 
-				<SectionHeaderText>{m['screens.savedFeeds.title.pinned']()}</SectionHeaderText>
+				<SectionHeaderText>{m['screens.savedFeeds.pinned.title']()}</SectionHeaderText>
 
 				{preferences ? (
 					!pinnedFeeds.length ? (
 						<View style={[a.flex_1, a.p_lg]}>
-							<Admonition type="info">{m['screens.savedFeeds.empty.pinned']()}</Admonition>
+							<Admonition type="info">{m['screens.savedFeeds.pinned.empty']()}</Admonition>
 						</View>
 					) : (
 						<SortableList
@@ -166,12 +166,12 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					</View>
 				)}
 
-				<SectionHeaderText>{m['screens.savedFeeds.title.saved']()}</SectionHeaderText>
+				<SectionHeaderText>{m['screens.savedFeeds.saved.title']()}</SectionHeaderText>
 
 				{preferences ? (
 					!unpinnedFeeds.length ? (
 						<View style={[a.flex_1, a.p_lg]}>
-							<Admonition type="info">{m['screens.savedFeeds.empty.saved']()}</Admonition>
+							<Admonition type="info">{m['screens.savedFeeds.saved.empty']()}</Admonition>
 						</View>
 					) : (
 						unpinnedFeeds.map((f) => (
@@ -192,12 +192,12 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 				<View style={[a.px_lg, a.py_xl]}>
 					<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
 						<Trans
-							message={m['screens.savedFeeds.hint.about']}
+							message={m['screens.savedFeeds.about.description']}
 							markup={{
 								t0: ({ children }) => (
 									<InlineLinkText
 										to="https://github.com/bluesky-social/feed-generator"
-										label={m['screens.savedFeeds.action.seeGuide']()}
+										label={m['screens.savedFeeds.about.guide']()}
 										disableMismatchWarning
 										style={[a.leading_snug]}
 									>
@@ -249,7 +249,7 @@ function PinnedFeedItem({
 			<View style={[a.pr_sm, a.flex_row, a.align_center, a.gap_sm]}>
 				<Button
 					testID={`feed-${feed.type}-togglePin`}
-					label={m['common.action.unpinFeed']()}
+					label={m['common.feeds.action.unpin']()}
 					onPress={onTogglePinned}
 					size="small"
 					color="primary_subtle"
@@ -261,7 +261,7 @@ function PinnedFeedItem({
 					<>
 						<Button
 							testID={`feed-${feed.type}-moveUp`}
-							label={m['screens.savedFeeds.action.moveUp']()}
+							label={m['screens.savedFeeds.reorder.moveUp']()}
 							onPress={onMoveUp}
 							disabled={index === 0}
 							size="small"
@@ -272,7 +272,7 @@ function PinnedFeedItem({
 						</Button>
 						<Button
 							testID={`feed-${feed.type}-moveDown`}
-							label={m['screens.savedFeeds.action.moveDown']()}
+							label={m['screens.savedFeeds.reorder.moveDown']()}
 							onPress={onMoveDown}
 							disabled={index === total! - 1}
 							size="small"
@@ -320,7 +320,7 @@ function UnpinnedFeedItem({
 			<View style={[a.pr_lg, a.flex_row, a.align_center, a.gap_sm]}>
 				<Button
 					testID={`feed-${feedUri}-toggleSave`}
-					label={m['common.action.removeFromFeeds']()}
+					label={m['common.feeds.action.remove']()}
 					onPress={onPressRemove}
 					size="small"
 					color="secondary"
@@ -331,7 +331,7 @@ function UnpinnedFeedItem({
 				</Button>
 				<Button
 					testID={`feed-${feed.type}-togglePin`}
-					label={m['common.action.pinFeed']()}
+					label={m['common.feeds.action.pin']()}
 					onPress={onTogglePinned}
 					size="small"
 					color="secondary"
@@ -374,7 +374,9 @@ function FollowingFeedCard() {
 				<FilterTimeline width={22} fill={colors.white} />
 			</View>
 			<View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
-				<Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>{m['common.action.following']()}</Text>
+				<Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>
+					{m['common.follow.action.following']()}
+				</Text>
 			</View>
 		</View>
 	);

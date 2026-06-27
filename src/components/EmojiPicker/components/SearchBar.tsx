@@ -23,14 +23,14 @@ export function SearchBar({ children }: { children?: ReactNode }) {
 				<Autocomplete.Input
 					autoFocus
 					className={clsx(styles.input, styles.inputWithAccessory)}
-					placeholder={m['components.emojiPicker.searchPlaceholder']()}
+					placeholder={m['components.emojiPicker.search.placeholder']()}
 				/>
 				<div className={styles.accessory}>
 					<Autocomplete.Clear
 						render={
 							<Button
 								color="secondary"
-								label={m['common.action.clearSearch']()}
+								label={m['common.search.action.clear']()}
 								shape="round"
 								size="tiny"
 								variant="ghost"

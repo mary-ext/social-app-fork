@@ -24,7 +24,7 @@ export function SubscribeMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 	const onSubscribeMute = async () => {
 		try {
 			await muteList({ uri: list.uri, mute: true });
-			Toast.show(m['screens.profileList.toast.muted']());
+			Toast.show(m['screens.profileList.mute.mutedToast']());
 		} catch {
 			Toast.show(m['common.error.issueConnection'](), {
 				type: 'error',
@@ -35,7 +35,7 @@ export function SubscribeMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 	const onSubscribeBlock = async () => {
 		try {
 			await blockList({ uri: list.uri, block: true });
-			Toast.show(m['screens.profileList.toast.blocked']());
+			Toast.show(m['screens.profileList.block.blockedToast']());
 		} catch {
 			Toast.show(m['common.error.issueConnection'](), {
 				type: 'error',
@@ -49,30 +49,30 @@ export function SubscribeMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 				<Menu.Trigger
 					render={
 						<Button
-							label={m['screens.profileList.action.subscribeToList']()}
+							label={m['screens.profileList.subscribe.action.subscribeToList']()}
 							size="small"
 							color="primary_subtle"
 							disabled={isPending}
 						>
 							{isPending && <ButtonIcon icon={Loader} />}
-							<ButtonText>{m['screens.profileList.action.subscribe']()}</ButtonText>
+							<ButtonText>{m['screens.profileList.subscribe.action.subscribe']()}</ButtonText>
 						</Button>
 					}
 				/>
-				<Menu.Popup label={m['screens.profileList.action.subscribeToList']()} align="end">
+				<Menu.Popup label={m['screens.profileList.subscribe.action.subscribeToList']()} align="end">
 					<Menu.Group>
 						<Menu.Item
-							label={m['screens.profileList.action.muteAccounts']()}
+							label={m['screens.profileList.mute.action.accounts']()}
 							onClick={() => subscribeMutePromptHandle.open(null)}
 						>
-							<Menu.ItemText>{m['screens.profileList.action.muteAccounts']()}</Menu.ItemText>
+							<Menu.ItemText>{m['screens.profileList.mute.action.accounts']()}</Menu.ItemText>
 							<Menu.ItemIcon position="right" icon={MuteIcon} />
 						</Menu.Item>
 						<Menu.Item
-							label={m['screens.profileList.action.blockAccounts']()}
+							label={m['screens.profileList.block.action.accounts']()}
 							onClick={() => subscribeBlockPromptHandle.open(null)}
 						>
-							<Menu.ItemText>{m['screens.profileList.action.blockAccounts']()}</Menu.ItemText>
+							<Menu.ItemText>{m['screens.profileList.block.action.accounts']()}</Menu.ItemText>
 							<Menu.ItemIcon position="right" icon={PersonXIcon} />
 						</Menu.Item>
 					</Menu.Group>
@@ -80,17 +80,17 @@ export function SubscribeMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 			</Menu.Root>
 			<Prompt.Basic
 				handle={subscribeMutePromptHandle}
-				title={m['screens.profileList.dialog.muteConfirmTitle']()}
-				description={m['screens.profileList.dialog.muteDescription']()}
+				title={m['screens.profileList.mute.confirm.title']()}
+				description={m['screens.profileList.mute.confirm.message']()}
 				onConfirm={() => void onSubscribeMute()}
-				confirmButtonCta={m['screens.profileList.action.muteList']()}
+				confirmButtonCta={m['screens.profileList.mute.action.list']()}
 			/>
 			<Prompt.Basic
 				handle={subscribeBlockPromptHandle}
-				title={m['screens.profileList.dialog.blockConfirmTitle']()}
-				description={m['screens.profileList.dialog.blockDescription']()}
+				title={m['screens.profileList.block.confirm.title']()}
+				description={m['screens.profileList.block.confirm.message']()}
 				onConfirm={() => void onSubscribeBlock()}
-				confirmButtonCta={m['screens.profileList.action.blockList']()}
+				confirmButtonCta={m['screens.profileList.block.action.list']()}
 				confirmButtonColor="negative"
 			/>
 		</>

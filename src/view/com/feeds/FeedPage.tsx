@@ -113,14 +113,14 @@ export function FeedPage({
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn
 					onPress={onPressLoadLatest}
-					label={m['common.action.loadNewPosts']()}
+					label={m['common.feeds.action.loadNew']()}
 					showIndicator={hasNew}
 				/>
 			)}
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={colors.white} />}
-					label={m['common.action.newPost']()}
+					label={m['common.compose.action.new']()}
 					onClick={onPressCompose}
 				/>
 			)}

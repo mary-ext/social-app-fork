@@ -38,7 +38,7 @@ export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; wi
 	return (
 		<>
 			<Dialog.Trigger
-				aria-label={m['common.label.automatedAccount']()}
+				aria-label={m['common.account.automated']()}
 				className={css.button}
 				handle={control}
 				onClick={(e) => e.stopPropagation()}

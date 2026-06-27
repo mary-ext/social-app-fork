@@ -12,7 +12,7 @@ export function ExternalEmbedRemoveBtn({ onRemove, style }: { onRemove: () => vo
 	return (
 		<View style={[a.absolute, { top: 8, right: 8 }, a.z_50, style]}>
 			<Button
-				label={m['view.composer.action.removeAttachment']()}
+				label={m['view.composer.media.removeAttachment']()}
 				onPress={onRemove}
 				size="small"
 				variant="solid"

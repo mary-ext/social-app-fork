@@ -74,8 +74,8 @@ export function LikedByList({ uri }: { uri: string }) {
 				isLoading={isUriLoading || isLikedByLoading}
 				isError={isError}
 				emptyType="results"
-				emptyTitle={m['common.empty.noLikes']()}
-				emptyMessage={m['common.empty.noLikesPrompt']()}
+				emptyTitle={m['common.like.empty']()}
+				emptyMessage={m['common.like.emptyPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
 				onRetry={isError ? refetch : undefined}
 				topBorder={false}

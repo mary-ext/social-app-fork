@@ -46,7 +46,7 @@ export const NotFoundScreen = () => {
 						size="small"
 						label={canGoBack ? m['common.action.goBack']() : m['common.action.goHome']()}
 						accessibilityLabel={canGoBack ? m['common.action.goBack']() : m['common.action.goHome']()}
-						accessibilityHint={canGoBack ? m['common.a11y.goBack']() : m['view.a11y.returnsHome']()}
+						accessibilityHint={canGoBack ? m['common.a11y.goBack']() : m['view.home.returnsHome']()}
 						onPress={onPressHome}
 					>
 						<ButtonText>{canGoBack ? m['common.action.goBack']() : m['common.action.goHome']()}</ButtonText>

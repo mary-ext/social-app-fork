@@ -7,11 +7,11 @@
 	"components.lightbox.a11y.options": "Image options",
 	"components.lightbox.a11y.previous": "Previous image",
 	"components.lightbox.a11y.viewer": "Image viewer",
-	"components.lightbox.action.download": "Download image",
-	"components.lightbox.action.expandAlt": "Expand alt text",
-	"components.lightbox.action.share": "Share image",
-	"components.lightbox.error.copyLink": "Failed to copy link",
-	"components.lightbox.error.save": "Failed to save image",
-	"components.lightbox.toast.linkCopied": "Link copied to clipboard",
-	"components.lightbox.toast.saved": "Image saved"
+	"components.lightbox.altText.expand": "Expand alt text",
+	"components.lightbox.download.error": "Failed to save image",
+	"components.lightbox.download.label": "Download image",
+	"components.lightbox.download.savedToast": "Image saved",
+	"components.lightbox.share.copiedToast": "Link copied to clipboard",
+	"components.lightbox.share.error": "Failed to copy link",
+	"components.lightbox.share.label": "Share image"
 }

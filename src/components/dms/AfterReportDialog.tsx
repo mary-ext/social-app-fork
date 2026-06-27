@@ -43,10 +43,7 @@ export function AfterReportDialog({
 	return (
 		<Dialog.Outer control={control} onClose={onClose}>
 			<Dialog.Handle />
-			<Dialog.ScrollableInner
-				label={m['components.dms.dialog.blockOrDeletePrompt']()}
-				style={[{ maxWidth: 400 }]}
-			>
+			<Dialog.ScrollableInner label={m['components.dms.block.orDelete.prompt']()} style={[{ maxWidth: 400 }]}>
 				<DialogInner params={params} currentScreen={currentScreen} />
 				<Dialog.Close />
 			</Dialog.ScrollableInner>
@@ -78,10 +75,8 @@ function DialogInner({
 	) : isError || !profile ? (
 		<View style={[a.w_full, a.gap_lg]}>
 			<View style={[a.justify_center, a.gap_sm]}>
-				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.toast.reportSubmitted']()}</Text>
-				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-					{m['components.dms.toast.reportReceived']()}
-				</Text>
+				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.report.submitted']()}</Text>
+				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>{m['components.dms.report.received']()}</Text>
 			</View>
 
 			<Button
@@ -122,7 +117,7 @@ function DoneStep({
 			}
 		},
 		onError: () => {
-			Toast.show(m['components.dms.error.leaveChat'](), {
+			Toast.show(m['components.dms.leave.error.leave'](), {
 				type: 'error',
 			});
 		},
@@ -131,14 +126,14 @@ function DoneStep({
 	let btnText = m['common.action.done']();
 	let toastMsg: string | undefined;
 	if (actions.includes('leave') && actions.includes('block')) {
-		btnText = m['components.dms.action.blockAndDelete']();
-		toastMsg = m['components.dms.toast.conversationDeleted']();
+		btnText = m['components.dms.block.orDelete.confirm']();
+		toastMsg = m['components.dms.delete.conversationDeleted']();
 	} else if (actions.includes('leave')) {
-		btnText = m['components.dms.action.deleteConversation']();
-		toastMsg = m['components.dms.toast.conversationDeleted']();
+		btnText = m['components.dms.delete.action.conversation']();
+		toastMsg = m['components.dms.delete.conversationDeleted']();
 	} else if (actions.includes('block')) {
-		btnText = m['components.dms.dialog.blockUserTitle']();
-		toastMsg = m['components.dms.toast.userBlocked']();
+		btnText = m['components.dms.block.title']();
+		toastMsg = m['components.dms.block.userBlocked']();
 	}
 
 	const onPressPrimaryAction = () => {
@@ -160,20 +155,22 @@ function DoneStep({
 	return (
 		<View style={a.gap_2xl}>
 			<View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.toast.reportSubmitted']()}</Text>
-				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-					{m['components.dms.toast.reportReceived']()}
-				</Text>
+				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.report.submitted']()}</Text>
+				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>{m['components.dms.report.received']()}</Text>
 			</View>
-			<Toggle.Group label={m['components.dms.action.blockOrDelete']()} values={actions} onChange={setActions}>
+			<Toggle.Group label={m['components.dms.block.orDelete.label']()} values={actions} onChange={setActions}>
 				<View style={[a.gap_md]}>
-					<Toggle.Item name="block" label={m['components.dms.action.blockUser']()}>
+					<Toggle.Item name="block" label={m['components.dms.block.action.block']()}>
 						<Toggle.Checkbox />
-						<Toggle.LabelText style={[a.text_md]}>{m['components.dms.action.blockUser']()}</Toggle.LabelText>
+						<Toggle.LabelText style={[a.text_md]}>
+							{m['components.dms.block.action.block']()}
+						</Toggle.LabelText>
 					</Toggle.Item>
-					<Toggle.Item name="leave" label={m['common.action.deleteConversation']()}>
+					<Toggle.Item name="leave" label={m['common.chat.action.deleteConversation']()}>
 						<Toggle.Checkbox />
-						<Toggle.LabelText style={[a.text_md]}>{m['common.action.deleteConversation']()}</Toggle.LabelText>
+						<Toggle.LabelText style={[a.text_md]}>
+							{m['common.chat.action.deleteConversation']()}
+						</Toggle.LabelText>
 					</Toggle.Item>
 				</View>
 			</Toggle.Group>

@@ -30,7 +30,7 @@ export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
 		<>
 			<TouchableOpacity
 				accessibilityHint=""
-				accessibilityLabel={m['view.composer.action.addAltText']()}
+				accessibilityLabel={m['view.composer.altText.action.add']()}
 				accessibilityRole="button"
 				hitSlop={HITSLOP_10}
 				onPress={() => control.open(null)}
@@ -51,12 +51,12 @@ export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
 					<Plus size="sm" fill={colors.white} />
 				)}
 				<Text style={[a.font_semi_bold, { color: t.palette.white }]} accessible={false}>
-					{m['common.label.altBadge']()}
+					{m['common.altText.badge']()}
 				</Text>
 			</TouchableOpacity>
 
 			<Admonition type="info" style={[a.mt_sm]}>
-				{m['view.composer.hint.altText']()}
+				{m['view.composer.altText.hint']()}
 			</Admonition>
 
 			<GifAltTextDialog altText={altText} gif={gif} handle={control} onSubmit={onSubmit} />

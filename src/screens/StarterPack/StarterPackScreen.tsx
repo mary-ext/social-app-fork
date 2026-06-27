@@ -162,7 +162,7 @@ function StarterPackScreenLoaded({
 	const sections = definite<Section<'feeds' | 'people' | 'posts'>>([
 		showPeopleTab && {
 			id: 'people',
-			label: m['common.label.people'](),
+			label: m['common.people.label'](),
 			render: () => <ProfilesList listUri={starterPack.list!.uri} moderationOpts={moderationOpts} />,
 		},
 		showFeedsTab && {
@@ -172,7 +172,7 @@ function StarterPackScreenLoaded({
 		},
 		showPostsTab && {
 			id: 'posts',
-			label: m['common.label.posts'](),
+			label: m['common.post.label'](),
 			render: () => <PostsList listUri={starterPack.list!.uri} />,
 		},
 	]);
@@ -282,7 +282,7 @@ function Header({
 			listItems = await getAllListMembers(appview, starterPack.list.uri);
 		} catch (e) {
 			setIsProcessing(false);
-			Toast.show(m['screens.starterPack.error.followAll'](), {
+			Toast.show(m['screens.starterPack.follow.error'](), {
 				type: 'error',
 			});
 			logger.error('Failed to get list members for starter pack', {
@@ -309,7 +309,7 @@ function Header({
 			});
 		} catch (e) {
 			setIsProcessing(false);
-			Toast.show(m['screens.starterPack.error.followAll'](), {
+			Toast.show(m['screens.starterPack.follow.error'](), {
 				type: 'error',
 			});
 			logger.error('Failed to follow all accounts', { safeMessage: e });
@@ -323,7 +323,7 @@ function Header({
 				});
 			}
 		});
-		Toast.show(m['screens.starterPack.followAllSuccess']());
+		Toast.show(m['screens.starterPack.follow.success']());
 	};
 
 	const richText = record.description
@@ -349,18 +349,18 @@ function Header({
 					<View style={[a.flex_row, a.gap_sm, a.align_center]}>
 						{isOwn ? (
 							<Button
-								label={m['screens.starterPack.action.share']()}
+								label={m['screens.starterPack.share.action']()}
 								hitSlop={HITSLOP_20}
 								variant="solid"
 								color="primary"
 								size="small"
 								onPress={onOpenShareDialog}
 							>
-								<ButtonText>{m['common.action.share']()}</ButtonText>
+								<ButtonText>{m['common.share.action.share']()}</ButtonText>
 							</Button>
 						) : (
 							<Button
-								label={m['screens.starterPack.action.followAll']()}
+								label={m['screens.starterPack.follow.action']()}
 								variant="solid"
 								color="primary"
 								size="small"
@@ -368,7 +368,7 @@ function Header({
 								onPress={() => void onFollowAll()}
 								style={[a.flex_row, a.gap_xs, a.align_center]}
 							>
-								<ButtonText>{m['screens.starterPack.action.followAll']()}</ButtonText>
+								<ButtonText>{m['screens.starterPack.follow.action']()}</ButtonText>
 								{isProcessing && <ButtonIcon icon={Loader} />}
 							</Button>
 						)}
@@ -385,7 +385,7 @@ function Header({
 					{richText ? <RichText size="md" value={richText} /> : null}
 					{!hasSession ? (
 						<Button
-							label={m['common.action.signIn']()}
+							label={m['common.session.action.signIn']()}
 							onPress={() => {
 								setActiveStarterPack({
 									uri: starterPack.uri,
@@ -396,7 +396,7 @@ function Header({
 							color="primary"
 							size="large"
 						>
-							<ButtonText style={[a.text_lg]}>{m['common.action.signIn']()}</ButtonText>
+							<ButtonText style={[a.text_lg]}>{m['common.session.action.signIn']()}</ButtonText>
 						</Button>
 					) : null}
 					{joinedAllTimeCount >= 25 ? (
@@ -481,7 +481,7 @@ function OverflowMenu({
 					{isOwn ? (
 						<>
 							<Menu.Item
-								label={m['screens.starterPack.action.edit']()}
+								label={m['screens.starterPack.edit']()}
 								onClick={() => {
 									navigation.navigate('StarterPackEdit', {
 										rkey: routeParams.rkey,
@@ -492,36 +492,36 @@ function OverflowMenu({
 								<Menu.ItemIcon icon={Pencil} position="right" />
 							</Menu.Item>
 							<Menu.Item
-								label={m['screens.starterPack.action.delete']()}
+								label={m['screens.starterPack.delete.action']()}
 								onClick={() => deleteHandle.open(null)}
 							>
 								<Menu.ItemText>{m['common.action.delete']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={Trash} position="right" />
 							</Menu.Item>
 							<Menu.Item
-								label={m['screens.starterPack.action.createList']()}
+								label={m['screens.starterPack.list.create']()}
 								onClick={() => {
 									convertToListDialogControl.open();
 								}}
 							>
-								<Menu.ItemText>{m['screens.starterPack.action.createListFromMembers']()}</Menu.ItemText>
+								<Menu.ItemText>{m['screens.starterPack.list.createFromMembers']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={ListSparkle} position="right" />
 							</Menu.Item>
 						</>
 					) : (
 						<>
 							<Menu.Group>
-								<Menu.Item label={m['screens.starterPack.action.copyLink']()} onClick={onOpenShareDialog}>
-									<Menu.ItemText>{m['common.action.copyLink']()}</Menu.ItemText>
+								<Menu.Item label={m['screens.starterPack.share.copyLink']()} onClick={onOpenShareDialog}>
+									<Menu.ItemText>{m['common.share.action.copyLink']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={ChainLinkIcon} position="right" />
 								</Menu.Item>
 							</Menu.Group>
 
 							<Menu.Item
-								label={m['screens.starterPack.action.report']()}
+								label={m['screens.starterPack.report']()}
 								onClick={() => reportDialogControl.open(null)}
 							>
-								<Menu.ItemText>{m['screens.starterPack.action.report']()}</Menu.ItemText>
+								<Menu.ItemText>{m['screens.starterPack.report']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={CircleInfo} position="right" />
 							</Menu.Item>
 						</>
@@ -541,8 +541,8 @@ function OverflowMenu({
 			)}
 			<Prompt.Outer handle={deleteHandle}>
 				<Prompt.Content>
-					<Prompt.TitleText>{m['screens.starterPack.dialog.deleteTitle']()}</Prompt.TitleText>
-					<Prompt.DescriptionText>{m['screens.starterPack.dialog.deleteConfirm']()}</Prompt.DescriptionText>
+					<Prompt.TitleText>{m['screens.starterPack.delete.title']()}</Prompt.TitleText>
+					<Prompt.DescriptionText>{m['screens.starterPack.delete.message']()}</Prompt.DescriptionText>
 				</Prompt.Content>
 				{deleteError && (
 					<View
@@ -558,7 +558,7 @@ function OverflowMenu({
 						]}
 					>
 						<View style={[a.flex_1, a.gap_2xs]}>
-							<Text style={[a.font_semi_bold]}>{m['screens.starterPack.error.unableToDelete']()}</Text>
+							<Text style={[a.font_semi_bold]}>{m['screens.starterPack.delete.error.unable']()}</Text>
 							<Text style={[a.leading_snug]}>{cleanError(deleteError)}</Text>
 						</View>
 						<CircleInfo size="sm" fill={colors.negative_400} />
@@ -602,7 +602,7 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 		onError: (e) => {
 			setIsProcessing(false);
 			logger.error('Failed to delete invalid starter pack', { safeMessage: e });
-			Toast.show(m['screens.starterPack.error.delete'](), {
+			Toast.show(m['screens.starterPack.delete.error.failed'](), {
 				type: 'error',
 			});
 		},
@@ -629,7 +629,7 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 					<Button
 						variant="solid"
 						color="primary"
-						label={m['screens.starterPack.action.delete']()}
+						label={m['screens.starterPack.delete.action']()}
 						size="large"
 						style={[a.rounded_sm, a.overflow_hidden, { paddingVertical: 10 }]}
 						disabled={isProcessing}

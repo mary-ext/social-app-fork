@@ -1,6 +1,6 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"components.emojiPicker.a11y.categories": "Emoji categories",
+	"components.emojiPicker.category.a11y": "Emoji categories",
 	"components.emojiPicker.category.activity": "Activity",
 	"components.emojiPicker.category.animalsNature": "Animals & Nature",
 	"components.emojiPicker.category.flags": "Flags",
@@ -9,8 +9,8 @@
 	"components.emojiPicker.category.smileysPeople": "Smileys & People",
 	"components.emojiPicker.category.symbols": "Symbols",
 	"components.emojiPicker.category.travelPlaces": "Travel & Places",
-	"components.emojiPicker.empty": "No emojis found",
-	"components.emojiPicker.searchPlaceholder": "Search emojis",
-	"components.emojiPicker.skinTone": "Skin tone",
-	"components.emojiPicker.skinToneValue": "Skin tone {value}"
+	"components.emojiPicker.search.empty": "No emojis found",
+	"components.emojiPicker.search.placeholder": "Search emojis",
+	"components.emojiPicker.skinTone.label": "Skin tone",
+	"components.emojiPicker.skinTone.value": "Skin tone {value}"
 }

@@ -16,7 +16,10 @@ import * as styles from './ActivitySubscriptionDialog.css';
 export function ActivitySubscriptionDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['screens.settings.label.allowNotifyingOthers']()}>
+			<Dialog.Popup
+				className={styles.popup}
+				label={m['screens.settings.activitySubscription.allowNotifying']()}
+			>
 				<Inner />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -36,42 +39,42 @@ function Inner() {
 		<>
 			<div className={styles.header}>
 				<Text size="lg" weight="semiBold">
-					{m['screens.settings.label.allowNotifyingOthers']()}
+					{m['screens.settings.activitySubscription.allowNotifying']()}
 				</Text>
 				<Text color="textContrastMedium" size="sm">
 					{m['screens.settings.activitySubscription.prompt']()}
 				</Text>
 			</div>
 			{isError ? (
-				<Admonition type="error">{m['screens.settings.error.failedLoadPreference']()}</Admonition>
+				<Admonition type="error">{m['screens.settings.preferences.error.load']()}</Admonition>
 			) : isPending ? (
 				<div className={styles.loaderWrap}>
-					<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
+					<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
 				</div>
 			) : (
 				<Toggle.Group
 					className={styles.radioList}
-					label={m['screens.settings.hint.filterWhoCanReceive']()}
+					label={m['screens.settings.activitySubscription.filterHint']()}
 					onChange={onChangeFilter}
 					type="radio"
 					values={[declaration.value.allowSubscriptions]}
 				>
-					<Toggle.RadioItem label={m['screens.settings.option.anyoneWhoFollowsMe']()} value="followers">
+					<Toggle.RadioItem label={m['screens.settings.audience.anyoneWhoFollowsMe']()} value="followers">
 						<Toggle.Panel>
 							<Toggle.RadioIndicator />
-							<Toggle.PanelText>{m['screens.settings.option.anyoneWhoFollowsMe']()}</Toggle.PanelText>
+							<Toggle.PanelText>{m['screens.settings.audience.anyoneWhoFollowsMe']()}</Toggle.PanelText>
 						</Toggle.Panel>
 					</Toggle.RadioItem>
-					<Toggle.RadioItem label={m['screens.settings.option.onlyFollowersIFollow']()} value="mutuals">
+					<Toggle.RadioItem label={m['screens.settings.audience.onlyFollowersIFollow']()} value="mutuals">
 						<Toggle.Panel>
 							<Toggle.RadioIndicator />
-							<Toggle.PanelText>{m['screens.settings.option.onlyFollowersIFollow']()}</Toggle.PanelText>
+							<Toggle.PanelText>{m['screens.settings.audience.onlyFollowersIFollow']()}</Toggle.PanelText>
 						</Toggle.Panel>
 					</Toggle.RadioItem>
-					<Toggle.RadioItem label={m['screens.settings.option.noOne']()} value="none">
+					<Toggle.RadioItem label={m['screens.settings.audience.noOne']()} value="none">
 						<Toggle.Panel>
 							<Toggle.RadioIndicator />
-							<Toggle.PanelText>{m['screens.messages.option.noOneInvites']()}</Toggle.PanelText>
+							<Toggle.PanelText>{m['screens.messages.inviteSettings.noOne']()}</Toggle.PanelText>
 						</Toggle.Panel>
 					</Toggle.RadioItem>
 				</Toggle.Group>

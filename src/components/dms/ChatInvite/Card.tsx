@@ -33,10 +33,10 @@ export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 
 				<div className={css.metaRow}>
 					<Text size="xs" weight="medium" color="textContrastMedium" numberOfLines={1}>
-						{m['common.label.groupChat']()}
+						{m['common.chat.group']()}
 					</Text>
 					<Text size="xs" weight="medium" color="textContrastMedium" numberOfLines={1}>
-						{m['common.count.members']({
+						{m['common.chat.membersCount']({
 							count: preview.memberCount,
 							limit: preview.memberLimit,
 						})}
@@ -46,7 +46,7 @@ export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 				<div className={css.ownerRow}>
 					<Text size="md_sub" weight="medium" numberOfLines={1} className={css.shrink}>
 						<Trans
-							message={m['common.label.byOwner']}
+							message={m['common.chat.byOwner']}
 							inputs={{ ownerHandle }}
 							markup={{
 								t0: ({ children }) => (

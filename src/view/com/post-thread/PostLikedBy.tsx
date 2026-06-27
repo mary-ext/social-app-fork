@@ -74,8 +74,8 @@ export function PostLikedBy({ uri }: { uri: string }) {
 				isLoading={isLoadingUri || isLoadingLikes}
 				isError={isError}
 				emptyType="results"
-				emptyTitle={m['common.empty.noLikes']()}
-				emptyMessage={m['common.empty.noLikesPrompt']()}
+				emptyTitle={m['common.like.empty']()}
+				emptyMessage={m['common.like.emptyPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
 				sideBorders={false}
 				topBorder={false}

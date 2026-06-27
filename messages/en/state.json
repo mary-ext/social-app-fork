@@ -1,11 +1,11 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"state.error.feedFetch": "An error occurred while fetching the feed.",
-	"state.error.notificationSettingsUpdate": "Could not update notification settings",
-	"state.error.pinPost": "Failed to pin post",
-	"state.error.updateFeeds": "Failed to update feeds",
-	"state.error.updateNotificationDeclaration": "Failed to update notification declaration",
-	"state.label.userListByCreator": "User List by {handle}",
-	"state.toast.postPinned": "Post pinned",
-	"state.toast.postUnpinned": "Post unpinned"
+	"state.feeds.error.fetch": "An error occurred while fetching the feed.",
+	"state.feeds.error.update": "Failed to update feeds",
+	"state.list.byCreator": "User List by {handle}",
+	"state.notifications.error.declarationUpdate": "Failed to update notification declaration",
+	"state.notifications.error.settingsUpdate": "Could not update notification settings",
+	"state.pin.error": "Failed to pin post",
+	"state.pin.pinned": "Post pinned",
+	"state.pin.unpinned": "Post unpinned"
 }

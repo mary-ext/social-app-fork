@@ -54,7 +54,7 @@ export function Member({
 	const { mutate: removeMembers } = useRemoveFromGroupChat(convo.view.id, {
 		onError: (e) => {
 			logger.error('Failed to remove group chat member', { message: e });
-			Toast.show(m['screens.messages.error.removeMember'](), { type: 'error' });
+			Toast.show(m['screens.messages.members.remove.error'](), { type: 'error' });
 		},
 	});
 
@@ -64,7 +64,7 @@ export function Member({
 		requireAuth(async () => {
 			try {
 				await queueFollow();
-				Toast.show(m['screens.messages.label.following']({ displayName }));
+				Toast.show(m['screens.messages.follow.following']({ displayName }));
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
@@ -85,7 +85,7 @@ export function Member({
 
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
-		? m['common.label.deletedAccount']()
+		? m['common.account.deleted']()
 		: createSanitizedDisplayName(
 				profile,
 				true,
@@ -96,7 +96,7 @@ export function Member({
 	let statusBadge: React.ReactNode | null = null;
 	if (isSelf) {
 		if (status === 'owner') {
-			statusBadge = <StatusBadge label={m['screens.messages.label.admin']()} />;
+			statusBadge = <StatusBadge label={m['screens.messages.members.admin']()} />;
 		}
 	} else {
 		statusBadge = (
@@ -105,7 +105,7 @@ export function Member({
 	}
 
 	const joinedReason = profile.kind?.addedBy
-		? m['screens.messages.label.addedBy']({
+		? m['screens.messages.addedToChat.addedBy']({
 				name: createSanitizedDisplayName(
 					profile.kind.addedBy,
 					true,
@@ -115,7 +115,7 @@ export function Member({
 					),
 				),
 			})
-		: m['screens.messages.label.addedByInviteLink']();
+		: m['screens.messages.addedToChat.addedByInviteLink']();
 
 	// surface a prominent remove button to the owner for blocked members
 	const showRemoveButton = isOwner && !isSelf && !!isBlockedOrBlocking(profile);
@@ -144,7 +144,7 @@ export function Member({
 				</ProfileCard.Link>
 				{showRemoveButton ? (
 					<Button
-						label={m['screens.messages.a11y.removeMember']({ displayName })}
+						label={m['screens.messages.members.remove.a11y']({ displayName })}
 						size="tiny"
 						color="negative_subtle"
 						onPress={() => removeMemberPrompt.open()}
@@ -153,11 +153,11 @@ export function Member({
 					</Button>
 				) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
 					<SimpleInlineLinkText
-						label={m['screens.messages.action.follow']({ displayName })}
+						label={m['screens.messages.follow.action']({ displayName })}
 						{...createStaticClick(handleFollow)}
 						style={[a.font_medium]}
 					>
-						{m['common.action.follow']()}
+						{m['common.follow.action.follow']()}
 					</SimpleInlineLinkText>
 				)}
 				{statusBadge}

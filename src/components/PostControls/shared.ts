@@ -63,7 +63,7 @@ export function usePostControlsActions({
 
 	const onPressToggleLike = async () => {
 		if (isBlocked) {
-			Toast.show(m['common.error.blockedInteraction'](), {
+			Toast.show(m['common.block.interactionError'](), {
 				type: 'warning',
 			});
 			return;
@@ -92,7 +92,7 @@ export function usePostControlsActions({
 
 	const onRepost = async () => {
 		if (isBlocked) {
-			Toast.show(m['common.error.blockedInteraction'](), {
+			Toast.show(m['common.block.interactionError'](), {
 				type: 'warning',
 			});
 			return;
@@ -120,7 +120,7 @@ export function usePostControlsActions({
 
 	const onQuote = () => {
 		if (isBlocked) {
-			Toast.show(m['common.error.blockedInteraction'](), {
+			Toast.show(m['common.block.interactionError'](), {
 				type: 'warning',
 			});
 			return;

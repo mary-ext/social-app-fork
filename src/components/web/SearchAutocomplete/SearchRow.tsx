@@ -17,7 +17,7 @@ export function SearchRow({ row }: { row: Extract<ListRow, { kind: 'search' }> }
 			<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="sm" />
 			<Text className={styles.label}>
 				<Trans
-					message={m['components.web.action.searchFor']}
+					message={m['components.web.search.submit']}
 					inputs={{ query: row.query }}
 					markup={{ t0: ({ children }) => <Text weight="semiBold">{children}</Text> }}
 				/>

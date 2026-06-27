@@ -280,7 +280,7 @@ function ReplyLanguageNudge({
 			label={
 				<RNText>
 					<Trans
-						message={m['view.composer.lang.replyPrompt']}
+						message={m['view.composer.language.replyPrompt']}
 						inputs={{ suggestedLanguageName }}
 						markup={{ t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text> }}
 					/>
@@ -340,7 +340,7 @@ function LanguageSuggestionButton({
 					color="primary_subtle"
 					shape="round"
 					onPress={() => onAccept(value)}
-					label={m['view.composer.a11y.acceptLanguageSuggestion']()}
+					label={m['view.composer.language.a11y.acceptSuggestion']()}
 				>
 					<ButtonIcon icon={CheckIcon} size="sm" />
 				</Button>
@@ -350,7 +350,7 @@ function LanguageSuggestionButton({
 					color="secondary"
 					shape="round"
 					onPress={() => onDecline()}
-					label={m['view.composer.a11y.declineLanguageSuggestion']()}
+					label={m['view.composer.language.a11y.declineSuggestion']()}
 				>
 					<ButtonIcon icon={XIcon} size="sm" />
 				</Button>

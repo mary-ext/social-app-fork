@@ -122,7 +122,7 @@ const GalleryInner = ({ images, containerInfo, dispatch }: GalleryInnerProps) =>
 			</View>
 			{images.some((image) => !image.alt) && (
 				<Admonition type="info" style={[a.mt_sm]}>
-					{m['view.composer.hint.altText']()}
+					{m['view.composer.altText.hint']()}
 				</Admonition>
 			)}
 		</>
@@ -171,7 +171,7 @@ const GalleryItem = ({
 			<TouchableOpacity
 				testID="altTextButton"
 				accessibilityRole="button"
-				accessibilityLabel={m['view.composer.action.addAltText']()}
+				accessibilityLabel={m['view.composer.altText.action.add']()}
 				accessibilityHint=""
 				onPress={onAltTextEdit}
 				style={[styles.altTextControl, altTextControlStyle]}
@@ -182,14 +182,14 @@ const GalleryItem = ({
 					<PlusIcon width={10} style={{ color: t.palette.white }} />
 				)}
 				<Text style={styles.altTextControlLabel} accessible={false}>
-					{m['common.label.altBadge']()}
+					{m['common.altText.badge']()}
 				</Text>
 			</TouchableOpacity>
 			<View style={imageControlsStyle}>
 				<TouchableOpacity
 					testID="editPhotoButton"
 					accessibilityRole="button"
-					accessibilityLabel={m['view.composer.action.editImage']()}
+					accessibilityLabel={m['view.composer.gallery.action.edit']()}
 					accessibilityHint=""
 					onPress={onImageEdit}
 					style={styles.imageControl}
@@ -199,7 +199,7 @@ const GalleryItem = ({
 				<TouchableOpacity
 					testID="removePhotoButton"
 					accessibilityRole="button"
-					accessibilityLabel={m['view.composer.action.removeImage']()}
+					accessibilityLabel={m['view.composer.gallery.action.remove']()}
 					accessibilityHint=""
 					onPress={onRemove}
 					style={styles.imageControl}
@@ -209,7 +209,7 @@ const GalleryItem = ({
 			</View>
 			<TouchableOpacity
 				accessibilityRole="button"
-				accessibilityLabel={m['view.composer.action.addAltText']()}
+				accessibilityLabel={m['view.composer.altText.action.add']()}
 				accessibilityHint=""
 				onPress={onAltTextEdit}
 				style={styles.altTextHiddenRegion}

@@ -11,7 +11,7 @@ import { m } from '#/paraglide/messages';
 import * as css from './ThreadItemShowOtherReplies.css';
 
 export function ThreadItemShowOtherReplies({ onPress }: { onPress: () => void }) {
-	const label = m['screens.postThread.action.showMoreReplies']();
+	const label = m['screens.postThread.reply.action.showMore']();
 
 	return (
 		<Button

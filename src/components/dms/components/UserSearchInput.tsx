@@ -38,7 +38,7 @@ export function UserSearchInput({
 			<SearchIcon size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
-				placeholder={m['components.dms.label.searchPeople']()}
+				placeholder={m['components.dms.search.placeholder']()}
 				value={value}
 				onChangeText={onChangeText}
 				onFocus={onFocus}
@@ -58,8 +58,8 @@ export function UserSearchInput({
 				autoComplete="off"
 				autoCapitalize="none"
 				autoFocus
-				accessibilityLabel={m['common.action.searchProfiles']()}
-				accessibilityHint={m['common.a11y.searchProfiles']()}
+				accessibilityLabel={m['common.search.action.profiles']()}
+				accessibilityHint={m['common.search.a11y.profiles']()}
 			/>
 		</View>
 	);

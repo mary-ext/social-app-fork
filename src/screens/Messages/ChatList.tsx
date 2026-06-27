@@ -123,7 +123,7 @@ export function MessagesScreenInner({ route }: Props) {
 		return (
 			<>
 				<EmptyState
-					message={m['screens.messages.empty.sayHi']()}
+					message={m['screens.messages.conversation.sayHi']()}
 					icon={BubbleSmileIcon}
 					messageColor="text"
 					iconColor={t.atoms.text.color}
@@ -132,8 +132,8 @@ export function MessagesScreenInner({ route }: Props) {
 						chatStatus?.chatDisabled
 							? undefined
 							: {
-									label: m['common.action.newChat'](),
-									text: m['common.action.newChat'](),
+									label: m['common.chat.action.new'](),
+									text: m['common.chat.action.new'](),
 									onPress: newChatControl.open,
 									size: 'small',
 									color: 'primary',
@@ -289,11 +289,11 @@ export function ChatList({
 											{ maxWidth: 360 },
 										]}
 									>
-										{cleanError(error) || m['screens.messages.error.loadConversations']()}
+										{cleanError(error) || m['screens.messages.chats.reload.error']()}
 									</Text>
 
 									<Button
-										label={m['screens.messages.action.reloadConversations']()}
+										label={m['screens.messages.chats.reload.action']()}
 										size="small"
 										color="secondary_inverted"
 										onPress={() => void refetch()}
@@ -305,7 +305,7 @@ export function ChatList({
 							</>
 						) : isWithinSplitView ? (
 							<EmptyState
-								message={m['screens.messages.empty.inboxTitle']()}
+								message={m['screens.messages.chats.inboxEmpty']()}
 								icon={InboxLargeIcon}
 								iconSize="4xl"
 								messageColor="text"
@@ -314,7 +314,7 @@ export function ChatList({
 							/>
 						) : (
 							<EmptyState
-								message={m['screens.messages.empty.sayHi']()}
+								message={m['screens.messages.conversation.sayHi']()}
 								icon={BubbleSmileIcon}
 								iconSize="4xl"
 								messageColor="text"
@@ -323,8 +323,8 @@ export function ChatList({
 									chatStatus?.chatDisabled
 										? undefined
 										: {
-												label: m['common.action.newChat'](),
-												text: m['common.action.newChat'](),
+												label: m['common.chat.action.new'](),
+												text: m['common.chat.action.new'](),
 												onPress: wrappedOpenChatControl,
 												size: 'small',
 												color: 'primary',
@@ -412,7 +412,7 @@ export function Header({
 			{gtMobile ? (
 				<>
 					<Layout.Header.Content align="left">
-						<Layout.Header.TitleText>{m['screens.messages.title.chats']()}</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['screens.messages.chats.title']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 
 					<View style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -420,7 +420,7 @@ export function Header({
 						<Link
 							to="/messages/settings"
 							action={action}
-							label={m['common.label.chatSettings']()}
+							label={m['common.chat.settingsLabel']()}
 							size="small"
 							color="secondary"
 							shape="round"
@@ -430,7 +430,7 @@ export function Header({
 						</Link>
 						{!chatStatus?.chatDisabled && (
 							<Button
-								label={m['common.action.newChat']()}
+								label={m['common.chat.action.new']()}
 								color="primary"
 								size="small"
 								shape="round"
@@ -445,13 +445,13 @@ export function Header({
 				<>
 					<Layout.Header.MenuButton />
 					<Layout.Header.Content align="left">
-						<Layout.Header.TitleText>{m['screens.messages.title.chats']()}</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['screens.messages.chats.title']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 					<InboxRequests count={requestCount} variant="ghost" />
 					<Layout.Header.Slot>
 						<Link
 							to="/messages/settings"
-							label={m['common.label.chatSettings']()}
+							label={m['common.chat.settingsLabel']()}
 							size="small"
 							variant="ghost"
 							color="secondary"

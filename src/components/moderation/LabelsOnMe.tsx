@@ -45,7 +45,7 @@ export function LabelsOnMe({
 				render={
 					<Button
 						color="secondary"
-						label={m['components.moderation.action.viewLabelInfo']()}
+						label={m['components.moderation.label.viewInfo']()}
 						size={size ?? 'small'}
 						variant="solid"
 					>

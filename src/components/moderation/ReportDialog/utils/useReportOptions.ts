@@ -231,11 +231,11 @@ export function useReportOptions() {
 		},
 		other: {
 			key: 'other',
-			title: m['common.label.other'](),
+			title: m['common.status.other'](),
 			description: m['components.moderation.reason.other'](),
 			options: [
 				{
-					title: m['common.label.other'](),
+					title: m['common.status.other'](),
 					reason: OzoneReason.REASONOTHER,
 				},
 			],

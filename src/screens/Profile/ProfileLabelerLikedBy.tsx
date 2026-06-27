@@ -15,7 +15,7 @@ export function ProfileLabelerLikedByScreen({
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.labeler.service', 'self');
 	return (
 		<Layout.Screen>
-			<ViewHeader title={m['common.title.likedBy']()} />
+			<ViewHeader title={m['common.like.likedByTitle']()} />
 			<LikedByList uri={uri} />
 		</Layout.Screen>
 	);

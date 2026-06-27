@@ -50,16 +50,16 @@ export function cleanError(error: unknown): string {
 		return m['lib.error.serverIssues']();
 	}
 	if (str.includes('Bad token scope') || str.includes('Bad token method')) {
-		return m['lib.error.appPasswordFeatureCap']();
+		return m['lib.appPassword.featureUnavailableCap']();
 	}
 	if (str.includes('Account has been suspended')) {
-		return m['lib.error.accountSuspended']();
+		return m['lib.account.error.suspended']();
 	}
 	if (str.includes('Account is deactivated')) {
-		return m['lib.error.accountDeactivated']();
+		return m['lib.account.error.deactivated']();
 	}
 	if (str.includes('Profile not found')) {
-		return m['lib.error.profileNotFound']();
+		return m['lib.profile.notFound']();
 	}
 	if (str.includes('Unable to resolve handle')) {
 		return m['lib.error.handleResolveFailed']();

@@ -56,7 +56,7 @@ export function SubscribeProfileDialog({
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup
 				className={styles.popup}
-				label={m['components.activityNotifications.hint.newPosts']({ name })}
+				label={m['components.activityNotifications.newPostsHint']({ name })}
 			>
 				<DialogInner
 					handle={handle}
@@ -115,7 +115,7 @@ function DialogInner({
 
 			if (!activitySubscription.post && !activitySubscription.reply) {
 				Toast.show(
-					m['components.activityNotifications.toast.unsubscribed']({
+					m['components.activityNotifications.unsubscribedToast']({
 						handle: sanitizeHandle(profile.handle, '@'),
 					}),
 					{
@@ -140,7 +140,7 @@ function DialogInner({
 			} else {
 				if (!initialState.post && !initialState.reply) {
 					Toast.show(
-						m['components.activityNotifications.toast.subscribed']({
+						m['components.activityNotifications.subscribedToast']({
 							handle: sanitizeHandle(profile.handle, '@'),
 						}),
 						{
@@ -148,7 +148,7 @@ function DialogInner({
 						},
 					);
 				} else {
-					Toast.show(m['components.activityNotifications.toast.saved'](), {
+					Toast.show(m['components.activityNotifications.savedToast'](), {
 						type: 'success',
 					});
 				}
@@ -183,10 +183,10 @@ function DialogInner({
 		<div className={styles.content}>
 			<div className={styles.header}>
 				<Text size="_2xl" weight="bold">
-					{m['components.activityNotifications.cta.keepPosted']()}
+					{m['components.activityNotifications.subscribe']()}
 				</Text>
 				<Text color="textContrastMedium" size="md">
-					{m['components.activityNotifications.hint.activity']()}
+					{m['components.activityNotifications.activityHint']()}
 				</Text>
 			</div>
 
@@ -204,31 +204,29 @@ function DialogInner({
 				type="radio"
 				values={[selected]}
 			>
-				<Toggle.RadioItem label={m['components.activityNotifications.option.postsAndReplies']()} value="all">
+				<Toggle.RadioItem label={m['components.activityNotifications.postsAndReplies']()} value="all">
 					<Toggle.Panel>
 						<Toggle.RadioIndicator />
-						<Toggle.PanelText>
-							{m['components.activityNotifications.option.postsAndReplies']()}
-						</Toggle.PanelText>
+						<Toggle.PanelText>{m['components.activityNotifications.postsAndReplies']()}</Toggle.PanelText>
 					</Toggle.Panel>
 				</Toggle.RadioItem>
-				<Toggle.RadioItem label={m['components.activityNotifications.option.postsOnly']()} value="posts">
+				<Toggle.RadioItem label={m['components.activityNotifications.postsOnly']()} value="posts">
 					<Toggle.Panel>
 						<Toggle.RadioIndicator />
-						<Toggle.PanelText>{m['components.activityNotifications.option.postsOnly']()}</Toggle.PanelText>
+						<Toggle.PanelText>{m['components.activityNotifications.postsOnly']()}</Toggle.PanelText>
 					</Toggle.Panel>
 				</Toggle.RadioItem>
-				<Toggle.RadioItem label={m['common.label.off']()} value="off">
+				<Toggle.RadioItem label={m['common.status.off']()} value="off">
 					<Toggle.Panel>
 						<Toggle.RadioIndicator />
-						<Toggle.PanelText>{m['common.label.off']()}</Toggle.PanelText>
+						<Toggle.PanelText>{m['common.status.off']()}</Toggle.PanelText>
 					</Toggle.Panel>
 				</Toggle.RadioItem>
 			</Toggle.Group>
 
 			{error && (
 				<Admonition type="error">
-					{m['components.activityNotifications.error.save']({ error: cleanError(error) })}
+					{m['components.activityNotifications.saveError']({ error: cleanError(error) })}
 				</Admonition>
 			)}
 

@@ -46,60 +46,57 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['screens.settings.title.contentMedia']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.settings.media.sectionTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
 					<Settings.Section>
-						<Settings.LinkRow
-							label={m['screens.settings.action.manageSavedFeeds']()}
-							to="/settings/saved-feeds"
-						>
+						<Settings.LinkRow label={m['screens.settings.feeds.manageSaved']()} to="/settings/saved-feeds">
 							<Settings.Icon icon={HashtagIcon} />
-							<Settings.Label titleText={m['screens.settings.action.manageSavedFeeds']()} />
+							<Settings.Label titleText={m['screens.settings.feeds.manageSaved']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['common.label.yourInterests']()} to="/settings/interests">
+						<Settings.LinkRow label={m['common.interest.yourInterests']()} to="/settings/interests">
 							<Settings.Icon icon={CircleInfo} />
-							<Settings.Label titleText={m['common.label.yourInterests']()} />
+							<Settings.Label titleText={m['common.interest.yourInterests']()} />
 						</Settings.LinkRow>
 					</Settings.Section>
 
-					<Settings.Section titleText={m['common.label.media']()}>
+					<Settings.Section titleText={m['common.media.label']()}>
 						<Settings.LinkRow
-							label={m['screens.settings.title.externalMedia']()}
+							label={m['screens.settings.media.externalTitle']()}
 							to="/settings/external-embeds"
 						>
 							<Settings.Icon icon={MacintoshIcon} />
-							<Settings.Label titleText={m['screens.settings.title.externalMedia']()} />
+							<Settings.Label titleText={m['screens.settings.media.externalTitle']()} />
 						</Settings.LinkRow>
 						<Settings.SwitchRow
-							label={m['screens.settings.label.autoplay']()}
+							label={m['screens.settings.media.autoplay']()}
 							onChange={(value) => setAutoplayDisabledPref(!value)}
 							value={!autoplayDisabledPref}
 						>
 							<Settings.Icon icon={PlayIcon} />
-							<Settings.Label titleText={m['screens.settings.label.autoplay']()} />
+							<Settings.Label titleText={m['screens.settings.media.autoplay']()} />
 						</Settings.SwitchRow>
 						{trendingEnabled && (
 							<Settings.SwitchRow
-								label={m['screens.settings.label.enableTrendingTopics']()}
+								label={m['screens.settings.media.trending']()}
 								onChange={(value) => setTrendingDisabled(!value)}
 								value={!trendingDisabled}
 							>
 								<Settings.Icon icon={Graph} />
-								<Settings.Label titleText={m['screens.settings.label.enableTrendingTopics']()} />
+								<Settings.Label titleText={m['screens.settings.media.trending']()} />
 							</Settings.SwitchRow>
 						)}
 					</Settings.Section>
 
-					<Settings.Section titleText={m['screens.settings.thread.preferencesTitle']()}>
+					<Settings.Section titleText={m['screens.settings.thread.title']()}>
 						<Settings.SelectRow
 							items={[
-								{ label: m['common.label.topRepliesFirst'](), value: 'top' },
-								{ label: m['common.label.oldestRepliesFirst'](), value: 'oldest' },
-								{ label: m['common.label.newestRepliesFirst'](), value: 'newest' },
+								{ label: m['common.thread.sort.top'](), value: 'top' },
+								{ label: m['common.thread.sort.oldest'](), value: 'oldest' },
+								{ label: m['common.thread.sort.newest'](), value: 'newest' },
 							]}
 							label={m['screens.settings.thread.sortReplies']()}
 							onValueChange={(value) => setSort(normalizeSort(value))}
@@ -123,7 +120,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 
 					<Settings.Section
 						footnoteText={m['screens.settings.thread.followingOnlyHint']()}
-						titleText={m['screens.settings.label.followingFeed']()}
+						titleText={m['screens.settings.feeds.following']()}
 					>
 						<Settings.SwitchRow
 							label={m['screens.settings.thread.showReplies']()}

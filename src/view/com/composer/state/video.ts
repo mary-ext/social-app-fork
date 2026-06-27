@@ -340,7 +340,7 @@ export async function processVideo(
 			logger.error('Error processing video', { safeMessage: e });
 			dispatch({
 				type: 'to_error',
-				error: m['view.composer.error.videoProcessFailed'](),
+				error: m['view.composer.video.error.processFailed'](),
 				signal,
 			});
 			return; // Exit async loop
@@ -386,10 +386,10 @@ function getCompressErrorMessage(e: unknown): string | null {
 		return null;
 	}
 	if (e instanceof VideoTooLargeError) {
-		return m['view.composer.error.videoTooLarge']({ VIDEO_MAX_SIZE_MB });
+		return m['view.composer.video.error.tooLarge']({ VIDEO_MAX_SIZE_MB });
 	}
 	logger.error('Error compressing video', { safeMessage: e });
-	return m['view.composer.error.videoCompress']();
+	return m['view.composer.video.error.compress']();
 }
 
 function getUploadErrorMessage(e: unknown): string | null {
@@ -400,31 +400,31 @@ function getUploadErrorMessage(e: unknown): string | null {
 		// https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
 		switch (e.message) {
 			case 'User is not allowed to upload videos':
-				return m['view.composer.error.videoNotAllowed']();
+				return m['view.composer.video.error.notAllowed']();
 			case 'Uploading is disabled at the moment':
-				return m['view.composer.error.videoWaitlist']();
+				return m['view.composer.video.error.waitlist']();
 			case "Failed to get user's upload stats":
-				return m['view.composer.error.videoPermCheckFailed']();
+				return m['view.composer.video.error.permCheckFailed']();
 			case 'User has exceeded daily upload bytes limit':
-				return m['view.composer.error.videoDailyLimitBytes']();
+				return m['view.composer.video.error.dailyLimitBytes']();
 			case 'User has exceeded daily upload videos limit':
-				return m['view.composer.error.videoDailyLimitCount']();
+				return m['view.composer.video.error.dailyLimitCount']();
 			case 'Account is not old enough to upload videos':
-				return m['view.composer.error.videoAccountTooYoung']();
+				return m['view.composer.video.error.accountTooYoung']();
 			case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)':
-				return m['view.composer.error.videoTooLarge']({ VIDEO_MAX_SIZE_MB });
+				return m['view.composer.video.error.tooLarge']({ VIDEO_MAX_SIZE_MB });
 			case 'Confirm your email address to upload videos':
-				return m['view.composer.error.emailConfirmRequired']();
+				return m['view.composer.video.error.emailConfirmRequired']();
 		}
 	}
 
 	if (isNetworkError(e)) {
-		return m['view.composer.error.videoUploadConnection']();
+		return m['view.composer.video.error.uploadConnection']();
 	} else {
 		// only log errors if they are unknown (and not network errors)
 		logger.error('Error uploading video', { safeMessage: e });
 	}
 
 	const message = e instanceof Error ? e.message : '';
-	return m['view.composer.error.videoUpload']({ message });
+	return m['view.composer.video.error.upload']({ message });
 }

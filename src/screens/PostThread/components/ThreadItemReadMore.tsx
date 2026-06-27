@@ -37,7 +37,7 @@ export function ThreadItemReadMore({
 			{spacers}
 			<div className={clsx(css.connectorBase, isTreeView ? css.connectorTree : css.connectorLinear)} />
 			<Link
-				label={m['screens.postThread.action.readMoreReplies']()}
+				label={m['screens.postThread.reply.action.readMore']()}
 				to={item.href}
 				style={[a.pt_sm, a.pb_md, a.gap_xs]}
 			>
@@ -47,7 +47,7 @@ export function ThreadItemReadMore({
 						<>
 							<CirclePlus fill={interacted ? colors.textContrastHigh : colors.textContrastLow} width={18} />
 							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
-								{m['screens.postThread.action.readMoreRepliesCount']({ count: item.moreReplies })}
+								{m['screens.postThread.reply.action.readMoreCount']({ count: item.moreReplies })}
 							</Text>
 						</>
 					);

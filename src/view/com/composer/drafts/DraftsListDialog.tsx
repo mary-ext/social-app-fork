@@ -25,7 +25,7 @@ type DraftsListDialogProps = {
 export function DraftsListDialog({ handle, onSelectDraft }: DraftsListDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" label={m['view.composer.title.drafts']()}>
+			<Dialog.Popup scroll="body" label={m['view.composer.drafts.title']()}>
 				<DialogInner handle={handle} onSelectDraft={onSelectDraft} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -90,7 +90,7 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{m['view.composer.title.drafts']()}</Dialog.Header.TitleText>
+					<Dialog.Header.TitleText>{m['view.composer.drafts.title']()}</Dialog.Header.TitleText>
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot />
 			</Dialog.Header.Outer>
@@ -105,17 +105,17 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 				)}
 				onEndReached={onEndReached}
 				isFetchingNextPage={isFetchingNextPage}
-				loadingLabel={m['view.composer.status.loadingDrafts']()}
+				loadingLabel={m['view.composer.drafts.loading']()}
 				ListEmptyComponent={
 					isLoading ? (
 						<div className={styles.loading}>
-							<CenteredSpinner label={m['view.composer.status.loadingDrafts']()} size="lg" />
+							<CenteredSpinner label={m['view.composer.drafts.loading']()} size="lg" />
 						</div>
 					) : (
 						<div className={styles.empty}>
 							<PageXIcon width={48} height={48} fill={colors.textContrastLow} />
 							<Text size="md" weight="medium" color="textContrastHigh" align="center">
-								{m['view.composer.empty.drafts']()}
+								{m['view.composer.drafts.empty']()}
 							</Text>
 						</div>
 					)
@@ -124,7 +124,7 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 					drafts.length > 5 ? (
 						<div className={styles.footerNote}>
 							<Text align="center" color="textContrastMedium">
-								{m['view.composer.empty.manyThoughts']()}
+								{m['view.composer.text.placeholder']()}
 							</Text>
 						</div>
 					) : null

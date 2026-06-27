@@ -48,11 +48,11 @@ export function CustomFeedEmptyState() {
 				<MagnifyingGlassIcon color={colors.text} className={css.icon} size={62} />
 			</View>
 			<Text type="xl-medium" style={[s.textCenter, pal.text]}>
-				{m['view.posts.empty.feed']()}
+				{m['view.posts.feed.empty']()}
 			</Text>
 			<Button type="inverted" style={styles.emptyBtn} onPress={onPressFindAccounts}>
 				<Text type="lg-medium" style={palInverted.text}>
-					{m['view.posts.cta.findAccounts']()}
+					{m['view.posts.follow.findAccounts']()}
 				</Text>
 				<ChevronRightIcon width={14} fill={colors.textInverted} />
 			</Button>

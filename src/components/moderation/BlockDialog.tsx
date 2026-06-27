@@ -124,12 +124,12 @@ function BlockDialogInner({
 			<View style={[a.pb_lg, a.gap_sm]}>
 				<Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
 					{profile.viewer?.blocking
-						? m['components.moderation.dialog.unblockTitle']()
+						? m['components.moderation.block.unblockTitle']()
 						: m['components.moderation.block.confirmTitle']()}
 				</Text>
 				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
 					{profile.viewer?.blocking
-						? m['common.hint.unblockInteract']()
+						? m['common.block.unblockHint']()
 						: profile.associated?.labeler
 							? m['components.moderation.block.descriptionLabels']()
 							: m['components.moderation.block.description']()}
@@ -138,7 +138,7 @@ function BlockDialogInner({
 			{hasMutualGroupChats ? (
 				<View style={[a.pt_sm, a.pb_xs, t.atoms.bg]}>
 					<Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_high]}>
-						{m['components.moderation.label.mutualGroupChats']()}
+						{m['components.moderation.chat.mutualGroups']()}
 					</Text>
 				</View>
 			) : null}
@@ -150,11 +150,13 @@ function BlockDialogInner({
 			<Button
 				color={profile.viewer?.blocking ? undefined : 'negative'}
 				size="large"
-				label={profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
+				label={
+					profile.viewer?.blocking ? m['common.block.action.unblock']() : m['common.block.action.block']()
+				}
 				onPress={() => control.close(() => void onBlock())}
 			>
 				<ButtonText>
-					{profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
+					{profile.viewer?.blocking ? m['common.block.action.unblock']() : m['common.block.action.block']()}
 				</ButtonText>
 			</Button>
 			<Button
@@ -171,7 +173,9 @@ function BlockDialogInner({
 	if (isLoading || !hasMutualGroupChats) {
 		return (
 			<Dialog.ScrollableInner
-				label={profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
+				label={
+					profile.viewer?.blocking ? m['common.block.action.unblock']() : m['common.block.action.block']()
+				}
 				style={[{ maxWidth: 420 }]}
 			>
 				{listHeader}
@@ -187,7 +191,7 @@ function BlockDialogInner({
 
 	return (
 		<Dialog.InnerFlatList
-			label={profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
+			label={profile.viewer?.blocking ? m['common.block.action.unblock']() : m['common.block.action.block']()}
 			data={items}
 			renderItem={renderItems}
 			ListHeaderComponent={listHeader}
@@ -235,7 +239,7 @@ function MutualGroupChat({
 
 	const { mutate: leaveConvo, isPending: isLeavePending } = useLeaveConvo(convo?.view.id, {
 		onSuccess: () => {
-			Toast.show(m['components.moderation.toast.leftChat']());
+			Toast.show(m['components.moderation.chat.leftToast']());
 			void queryClient.invalidateQueries({
 				queryKey: createListMutualGroupsQueryKey({ subject: profileDid }),
 			});
@@ -243,13 +247,13 @@ function MutualGroupChat({
 		onError: (error) => {
 			onRestoreConvo(view.id);
 			logger.error('Error leaving group chat', { message: error });
-			let errorMessage = m['components.moderation.error.leaveChat']();
+			let errorMessage = m['components.moderation.chat.error.leave']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidConvo') {
-				errorMessage = m['components.moderation.error.chatNotFound']();
+				errorMessage = m['components.moderation.chat.error.notFound']();
 			} else if (error instanceof ClientResponseError && error.error === 'OwnerCannotLeave') {
-				errorMessage = m['components.moderation.error.ownerCannotLeave']();
+				errorMessage = m['components.moderation.chat.error.ownerCannotLeave']();
 			}
 			Toast.show(errorMessage, { type: 'error' });
 		},
@@ -257,7 +261,7 @@ function MutualGroupChat({
 
 	const { mutate: removeMembers, isPending: isRemovePending } = useRemoveFromGroupChat(convo?.view.id, {
 		onSuccess: () => {
-			Toast.show(m['components.moderation.toast.memberRemoved']());
+			Toast.show(m['components.moderation.chat.memberRemovedToast']());
 			void queryClient.invalidateQueries({
 				queryKey: createListMutualGroupsQueryKey({ subject: profileDid }),
 			});
@@ -265,13 +269,13 @@ function MutualGroupChat({
 		onError: (error) => {
 			onRestoreConvo(view.id);
 			logger.error('Error removing group chat member', { message: error });
-			let errorMessage = m['components.moderation.error.removeMember']();
+			let errorMessage = m['components.moderation.chat.error.removeMember']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidConvo') {
-				errorMessage = m['components.moderation.error.chatNotFound']();
+				errorMessage = m['components.moderation.chat.error.notFound']();
 			} else if (error instanceof ClientResponseError && error.error === 'InsufficientRole') {
-				errorMessage = m['components.moderation.error.mustBeOwnerToRemove']();
+				errorMessage = m['components.moderation.chat.error.mustBeOwnerToRemove']();
 			}
 			Toast.show(errorMessage, { type: 'error' });
 		},
@@ -294,11 +298,11 @@ function MutualGroupChat({
 					</Text>
 					{isViewerOwner ? (
 						<Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-							{m['components.moderation.hint.youOwnChat']()}
+							{m['components.moderation.chat.youOwn']()}
 						</Text>
 					) : isProfileOwner ? (
 						<Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-							{m['components.moderation.hint.theyOwnChat']()}
+							{m['components.moderation.chat.theyOwn']()}
 						</Text>
 					) : null}
 				</View>
@@ -307,32 +311,32 @@ function MutualGroupChat({
 				<Button
 					color="negative_subtle"
 					disabled={isRemovePending}
-					label={m['components.moderation.action.kickMember']()}
+					label={m['components.moderation.chat.kickMember']()}
 					size="small"
 					onPress={() => {
 						onOptimisticallyRemoveConvo(view.id);
 						removeMembers({ members: [profileDid] });
 					}}
 				>
-					<ButtonText>{m['components.moderation.action.kickMember']()}</ButtonText>
+					<ButtonText>{m['components.moderation.chat.kickMember']()}</ButtonText>
 					{isRemovePending ? <ButtonIcon icon={Loader} /> : null}
 				</Button>
 			) : isCurrentConvo ? (
 				<Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
-					{m['components.moderation.label.currentChat']()}
+					{m['components.moderation.chat.current']()}
 				</Text>
 			) : (
 				<Button
 					color="secondary"
 					disabled={isLeavePending}
-					label={m['common.action.leaveChat']()}
+					label={m['common.chat.action.leave']()}
 					size="small"
 					onPress={() => {
 						onOptimisticallyRemoveConvo(view.id);
 						leaveConvo();
 					}}
 				>
-					<ButtonText>{m['common.action.leaveChat']()}</ButtonText>
+					<ButtonText>{m['common.chat.action.leave']()}</ButtonText>
 					{isLeavePending ? <ButtonIcon icon={Loader} /> : null}
 				</Button>
 			)}

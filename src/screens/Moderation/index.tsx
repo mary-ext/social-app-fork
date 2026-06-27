@@ -65,14 +65,14 @@ export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorP
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.label.moderation']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.moderation.label']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				{isLoading ? (
 					<div className={styles.status}>
-						<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
+						<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
 					</div>
 				) : error || !preferences ? (
 					<Settings.List>
@@ -122,7 +122,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 	const handleCleanup = async () => {
 		try {
 			await removeLabelers({ dids: unavailableDids });
-			Toast.show(m['screens.moderation.toast.removedUnavailableServices'](), { type: 'success' });
+			Toast.show(m['screens.moderation.labeler.removeUnavailable.toast'](), { type: 'success' });
 		} catch (e) {
 			logger.error('Failed to remove unavailable labelers', {
 				safeMessage: e instanceof Error ? e.message : String(e),
@@ -132,60 +132,60 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 	return (
 		<Settings.List>
-			<Settings.Section titleText={m['screens.moderation.title.moderationTools']()}>
+			<Settings.Section titleText={m['screens.moderation.title']()}>
 				<Settings.LinkRow
-					label={m['screens.moderation.hint.viewInteractionSettings']()}
+					label={m['screens.moderation.interaction.description']()}
 					to="/moderation/interaction-settings"
 				>
 					<Settings.Icon icon={EditBig} />
-					<Settings.Label titleText={m['screens.moderation.title.interactionSettings']()} />
-				</Settings.LinkRow>
-
-				<Settings.LinkRow label={m['screens.moderation.hint.viewMutedWords']()} to="/moderation/muted-words">
-					<Settings.Icon icon={Filter} />
-					<Settings.Label titleText={m['screens.moderation.title.mutedWords']()} />
+					<Settings.Label titleText={m['screens.moderation.interaction.title']()} />
 				</Settings.LinkRow>
 
 				<Settings.LinkRow
-					label={m['screens.moderation.hint.viewModerationLists']()}
+					label={m['screens.moderation.mutedWord.description']()}
+					to="/moderation/muted-words"
+				>
+					<Settings.Icon icon={Filter} />
+					<Settings.Label titleText={m['screens.moderation.mutedWord.title']()} />
+				</Settings.LinkRow>
+
+				<Settings.LinkRow
+					label={m['screens.moderation.moderationList.description']()}
 					to="/moderation/modlists"
 				>
 					<Settings.Icon icon={Group} />
-					<Settings.Label titleText={m['common.label.moderationLists']()} />
+					<Settings.Label titleText={m['common.moderation.listsLabel']()} />
 				</Settings.LinkRow>
 
-				<Settings.LinkRow
-					label={m['screens.moderation.hint.viewMutedAccounts']()}
-					to="/moderation/muted-accounts"
-				>
+				<Settings.LinkRow label={m['screens.moderation.mute.description']()} to="/moderation/muted-accounts">
 					<Settings.Icon icon={Person} />
-					<Settings.Label titleText={m['screens.moderation.title.mutedAccounts']()} />
+					<Settings.Label titleText={m['screens.moderation.mute.title']()} />
 				</Settings.LinkRow>
 
 				<Settings.LinkRow
-					label={m['screens.moderation.hint.viewBlockedAccounts']()}
+					label={m['screens.moderation.block.description']()}
 					to="/moderation/blocked-accounts"
 				>
 					<Settings.Icon icon={CircleBanSign} />
-					<Settings.Label titleText={m['screens.moderation.title.blockedAccounts']()} />
+					<Settings.Label titleText={m['screens.moderation.block.title']()} />
 				</Settings.LinkRow>
 
 				<Settings.LinkRow
-					label={m['screens.moderation.action.manageVerification']()}
+					label={m['screens.moderation.verification.manage']()}
 					to="/moderation/verification-settings"
 				>
 					<Settings.Icon icon={CircleCheck} />
-					<Settings.Label titleText={m['screens.moderation.title.verificationSettings']()} />
+					<Settings.Label titleText={m['screens.moderation.verification.title']()} />
 				</Settings.LinkRow>
 			</Settings.Section>
 
-			<Settings.Section titleText={m['screens.moderation.title.contentFilters']()}>
+			<Settings.Section titleText={m['screens.moderation.adultContent.title']()}>
 				<Settings.SwitchRow
-					label={m['screens.moderation.a11y.toggleAdultContent']()}
+					label={m['screens.moderation.adultContent.toggleA11y']()}
 					onChange={(selected) => void onToggleAdultContentEnabled(selected)}
 					value={adultContentEnabled}
 				>
-					<Settings.Label titleText={m['screens.moderation.label.enableAdultContent']()} />
+					<Settings.Label titleText={m['screens.moderation.adultContent.enable']()} />
 				</Settings.SwitchRow>
 
 				{adultContentEnabled &&
@@ -196,12 +196,12 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 			{unavailableDids.length > 0 && (
 				<div className={styles.cleanup}>
-					<Admonition type="tip">{m['screens.moderation.hint.servicesUnavailable']()}</Admonition>
+					<Admonition type="tip">{m['screens.moderation.labeler.servicesUnavailable']()}</Admonition>
 					<Button
 						className={styles.removeButton}
 						color="primary"
 						disabled={isRemovingLabelers}
-						label={m['screens.moderation.action.removeUnavailableServices']()}
+						label={m['screens.moderation.labeler.removeUnavailable.action']()}
 						onClick={() => void handleCleanup()}
 						size="small"
 						variant="ghost"
@@ -214,12 +214,12 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 			{isLabelersLoading ? (
 				<div className={styles.status}>
-					<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
+					<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
 				</div>
 			) : labelersError || !labelers ? (
-				<Admonition type="error">{m['screens.moderation.error.loadLabelers']()}</Admonition>
+				<Admonition type="error">{m['screens.moderation.labeler.loadError']()}</Admonition>
 			) : (
-				<Settings.Section titleText={m['screens.moderation.label.advanced']()}>
+				<Settings.Section titleText={m['screens.moderation.advanced']()}>
 					{labelers.map((labeler) => (
 						<LabelerRow key={labeler.creator.did} labeler={labeler} />
 					))}
@@ -247,10 +247,10 @@ function AdultContentLabelRow({
 			className={className}
 			items={[
 				{ label: m['common.action.show'](), value: 'ignore' },
-				{ label: m['common.action.warn'](), value: 'warn' },
+				{ label: m['common.moderation.warn'](), value: 'warn' },
 				{ label: m['common.action.hide'](), value: 'hide' },
 			]}
-			label={m['common.label.filteringFor']({ name: labelStrings.name })}
+			label={m['common.search.filteringFor']({ name: labelStrings.name })}
 			onValueChange={(visibility) => mutate({ label: identifier, labelerDid: undefined, visibility })}
 			value={pref}
 		>
@@ -272,7 +272,7 @@ function LabelerRow({
 	return (
 		<Settings.LinkRowRaw
 			className={clsx(cardStyles.rowPlain, className)}
-			label={m['screens.moderation.a11y.viewLabeler']({ handle: creator.handle })}
+			label={m['screens.moderation.labeler.viewA11y']({ handle: creator.handle })}
 			to={makeProfileLink({ did: creator.did })}
 		>
 			<UserAvatar avatar={creator.avatar} className={styles.labelerAvatar} size={40} type="labeler" />
@@ -286,13 +286,13 @@ function LabelerRow({
 					</Text>
 				) : (
 					<Text color="textContrastMedium" size="md_sub">
-						{m['screens.moderation.label.byCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
+						{m['screens.moderation.labeler.byCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
 					</Text>
 				)}
 				{isNonConfigurableModerationAuthority(creator.did) && (
 					<span className={styles.regionalNotice}>
 						<Flag fill="currentColor" size="sm" />
-						<Text size="sm">{m['screens.moderation.hint.requiredInRegion']()}</Text>
+						<Text size="sm">{m['screens.moderation.adultContent.requiredInRegion']()}</Text>
 					</span>
 				)}
 			</div>

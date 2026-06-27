@@ -235,7 +235,7 @@ export function SearchablePeopleList({
 	]);
 
 	if (searchText && !isFetching && !items.length && !isError) {
-		items.push({ type: 'empty', key: 'empty', message: m['common.empty.noResults']() });
+		items.push({ type: 'empty', key: 'empty', message: m['common.search.empty']() });
 	}
 
 	const renderItems = useCallback(
@@ -277,7 +277,7 @@ export function SearchablePeopleList({
 					return <Empty key={item.key} message={item.message} />;
 				}
 				case 'error': {
-					return <Error key={item.key} message={m['components.dialogs.error.loadProfiles']()} />;
+					return <Error key={item.key} message={m['components.dialogs.account.loadError']()} />;
 				}
 				default:
 					return null;
@@ -372,7 +372,11 @@ function DefaultProfileCard({
 	}, [onPress, profile.did]);
 
 	return (
-		<Button disabled={!enabled} label={m['common.action.startChat']({ displayName })} onPress={handleOnPress}>
+		<Button
+			disabled={!enabled}
+			label={m['common.chat.action.start']({ displayName })}
+			onPress={handleOnPress}
+		>
 			{({ hovered, pressed, focused }) => (
 				<View
 					style={[
@@ -431,7 +435,7 @@ function ExistingChatCard({
 	return (
 		<Button
 			disabled={!enabled}
-			label={m['components.dialogs.chat.a11ySelect']({ name })}
+			label={m['components.dialogs.chat.selectA11y']({ name })}
 			onPress={handleOnPress}
 		>
 			{({ hovered, pressed, focused }) => (
@@ -474,7 +478,7 @@ function ExistingChatCard({
 								<>
 									{enabled ? (
 										<Text style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={2}>
-											{m['components.dialogs.count.member']({ count: convo.details.memberCount })}
+											{m['components.dialogs.list.memberCount']({ count: convo.details.memberCount })}
 										</Text>
 									) : (
 										<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
@@ -562,8 +566,8 @@ function SearchInput({
 				autoComplete="off"
 				autoCapitalize="none"
 				autoFocus
-				accessibilityLabel={m['common.action.searchProfiles']()}
-				accessibilityHint={m['common.a11y.searchProfiles']()}
+				accessibilityLabel={m['common.search.action.profiles']()}
+				accessibilityHint={m['common.search.a11y.profiles']()}
 			/>
 		</View>
 	);

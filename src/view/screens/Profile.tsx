@@ -220,7 +220,7 @@ function ProfileScreenLoaded({
 	const sections = definite<Section<string>>([
 		showFiltersTab && {
 			id: 'labels',
-			label: m['common.label.labels'](),
+			label: m['common.moderation.labels'](),
 			render: () => (
 				<ProfileLabelsSection
 					labelerInfo={labelerInfo}
@@ -233,20 +233,20 @@ function ProfileScreenLoaded({
 		showListsTab &&
 			hasLabeler && {
 				id: 'lists',
-				label: m['common.label.lists'](),
+				label: m['common.list.label'](),
 				render: (isFocused: boolean) => (
 					<ProfileLists did={profile.did} enabled={isFocused} listCount={listCount} />
 				),
 			},
 		showPostsTab && {
 			id: 'posts',
-			label: m['common.label.posts'](),
+			label: m['common.post.label'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_and_author_threads`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['common.empty.noPosts']()}
+					emptyStateMessage={m['common.post.empty']()}
 					emptyStateButton={
 						isMe
 							? {
@@ -263,7 +263,7 @@ function ProfileScreenLoaded({
 		},
 		showRepliesTab && {
 			id: 'replies',
-			label: m['common.label.replies'](),
+			label: m['common.reply.label'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_replies`}
@@ -276,7 +276,7 @@ function ProfileScreenLoaded({
 		},
 		showMediaTab && {
 			id: 'media',
-			label: m['common.label.media'](),
+			label: m['common.media.label'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_media`}
@@ -300,7 +300,7 @@ function ProfileScreenLoaded({
 		},
 		showVideosTab && {
 			id: 'videos',
-			label: m['view.title.videos'](),
+			label: m['view.video.title'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_video`}
@@ -324,13 +324,13 @@ function ProfileScreenLoaded({
 		},
 		showLikesTab && {
 			id: 'likes',
-			label: m['common.label.likes'](),
+			label: m['common.like.label'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`likes|${profile.did}`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['common.empty.noLikes']()}
+					emptyStateMessage={m['common.like.empty']()}
 					emptyStateIcon={HeartIcon}
 				/>
 			),
@@ -344,14 +344,14 @@ function ProfileScreenLoaded({
 		},
 		showStarterPacksTab && {
 			id: 'starterPacks',
-			label: m['common.label.starterPacks'](),
+			label: m['common.starterPack.sectionTitle'](),
 			render: (isFocused: boolean) => (
 				<ProfileStarterPacks
 					did={profile.did}
 					isMe={isMe}
 					enabled={isFocused}
 					starterPackCount={starterPackCount}
-					emptyStateMessage={isMe ? m['view.starterPacks.description']() : m['view.empty.starterPacks']()}
+					emptyStateMessage={isMe ? m['view.starterPack.description']() : m['view.empty.starterPacks']()}
 					emptyStateButton={
 						isMe
 							? {
@@ -370,7 +370,7 @@ function ProfileScreenLoaded({
 		showListsTab &&
 			!hasLabeler && {
 				id: 'lists',
-				label: m['common.label.lists'](),
+				label: m['common.list.label'](),
 				render: (isFocused: boolean) => (
 					<ProfileLists did={profile.did} enabled={isFocused} listCount={listCount} />
 				),
@@ -408,7 +408,7 @@ function ProfileScreenLoaded({
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={colors.white} />}
-					label={m['common.label.newPost']()}
+					label={m['common.compose.action.new']()}
 					onClick={onPressCompose}
 				/>
 			)}

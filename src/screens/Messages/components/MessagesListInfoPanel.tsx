@@ -59,13 +59,13 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 				<Button
 					color="secondary"
 					size="small"
-					label={m['common.a11y.goToProfile']()}
+					label={m['common.profile.a11y.goTo']()}
 					onPress={() => {
 						navigation.navigate('Profile', { name: profileLink });
 					}}
 				>
 					<ButtonIcon icon={PersonIcon} />
-					<ButtonText>{m['common.action.goToProfile']()}</ButtonText>
+					<ButtonText>{m['common.profile.action.goTo']()}</ButtonText>
 				</Button>
 			</View>
 		</View>

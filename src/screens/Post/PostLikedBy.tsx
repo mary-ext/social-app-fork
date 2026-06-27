@@ -30,9 +30,9 @@ export const PostLikedByScreen = ({ route }: Props) => {
 				<Layout.Header.Content>
 					{post && (
 						<>
-							<Layout.Header.TitleText>{m['common.title.likedBy']()}</Layout.Header.TitleText>
+							<Layout.Header.TitleText>{m['common.like.likedByTitle']()}</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
-								{m['screens.post.count.likes']({ count: likeCount ?? 0 })}
+								{m['screens.post.like.count']({ count: likeCount ?? 0 })}
 							</Layout.Header.SubtitleText>
 						</>
 					)}

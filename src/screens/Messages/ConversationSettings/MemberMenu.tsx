@@ -58,14 +58,14 @@ export function MemberMenu({
 			navigation.navigate('MessagesConversation', { conversation: convo.id });
 		},
 		onError: () => {
-			Toast.show(m['common.error.createConversation'](), { type: 'error' });
+			Toast.show(m['common.chat.error.create'](), { type: 'error' });
 		},
 	});
 	const convoId = convo.view.id;
 	const { mutate: removeMembers } = useRemoveFromGroupChat(convoId, {
 		onError: (e) => {
 			logger.error('Failed to remove group chat member', { message: e });
-			Toast.show(m['screens.messages.error.removeMember'](), { type: 'error' });
+			Toast.show(m['screens.messages.members.remove.error'](), { type: 'error' });
 		},
 	});
 	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
@@ -88,7 +88,7 @@ export function MemberMenu({
 		if (profile.viewer?.blocking) {
 			try {
 				await queueUnblock();
-				Toast.show(m['common.toast.accountUnblocked']());
+				Toast.show(m['common.block.unblockedToast']());
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
@@ -101,7 +101,7 @@ export function MemberMenu({
 		} else {
 			try {
 				await queueBlock();
-				Toast.show(m['common.toast.accountBlocked']());
+				Toast.show(m['common.block.blockedToast']());
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
@@ -131,13 +131,13 @@ export function MemberMenu({
 					render={
 						type === 'owner' ? (
 							<StatusBadge
-								label={m['screens.messages.label.admin']()}
+								label={m['screens.messages.members.admin']()}
 								interactive
-								aria-label={m['screens.messages.a11y.openMemberOptions']({ displayName })}
+								aria-label={m['screens.messages.members.options.a11y']({ displayName })}
 							/>
 						) : (
 							<Button
-								label={m['screens.messages.a11y.openMemberOptions']({ displayName })}
+								label={m['screens.messages.members.options.a11y']({ displayName })}
 								size="small"
 								variant="ghost"
 								color="secondary"
@@ -148,24 +148,21 @@ export function MemberMenu({
 						)
 					}
 				/>
-				<Menu.Popup label={m['screens.messages.label.chatMemberOptions']()} align="end">
+				<Menu.Popup label={m['screens.messages.members.options.label']()} align="end">
 					<Menu.Group>
 						<Menu.Item
-							label={m['common.a11y.viewProfileDisplayName']({ displayName })}
+							label={m['common.profile.a11y.viewDisplayName']({ displayName })}
 							onClick={() => {
 								navigation.navigate('Profile', { name: profile.did });
 							}}
 						>
 							<Menu.ItemIcon icon={PersonIcon} />
-							<Menu.ItemText>{m['common.action.goToProfile']()}</Menu.ItemText>
+							<Menu.ItemText>{m['common.profile.action.goTo']()}</Menu.ItemText>
 						</Menu.Item>
 						{canMessageMember ? (
-							<Menu.Item
-								label={m['screens.messages.action.messageUser']({ displayName })}
-								onClick={messageMember}
-							>
+							<Menu.Item label={m['screens.messages.message.user']({ displayName })} onClick={messageMember}>
 								<Menu.ItemIcon icon={MessageIcon} />
-								<Menu.ItemText>{m['screens.messages.action.message']()}</Menu.ItemText>
+								<Menu.ItemText>{m['screens.messages.message.action']()}</Menu.ItemText>
 							</Menu.Item>
 						) : null}
 					</Menu.Group>
@@ -176,8 +173,8 @@ export function MemberMenu({
 								destructive
 								label={
 									profile.viewer?.blocking
-										? m['screens.messages.action.unblockUser']({ displayName })
-										: m['screens.messages.action.block']({ displayName })
+										? m['screens.messages.block.unblock']({ displayName })
+										: m['screens.messages.block.block']({ displayName })
 								}
 								onClick={() =>
 									void (profile.viewer?.blocking ? handleBlockMember() : blockMemberPrompt.open())
@@ -185,18 +182,20 @@ export function MemberMenu({
 							>
 								<Menu.ItemIcon icon={profile.viewer?.blocking ? PersonCheck : PersonXIcon} />
 								<Menu.ItemText>
-									{profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
+									{profile.viewer?.blocking
+										? m['common.block.action.unblock']()
+										: m['common.block.action.block']()}
 								</Menu.ItemText>
 							</Menu.Item>
 						) : null}
 						{canRemoveMember ? (
 							<Menu.Item
 								destructive
-								label={m['screens.messages.a11y.removeMember']({ displayName })}
+								label={m['screens.messages.members.remove.a11y']({ displayName })}
 								onClick={() => removeMemberPrompt.open()}
 							>
 								<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-								<Menu.ItemText>{m['screens.messages.action.removeFromChat']()}</Menu.ItemText>
+								<Menu.ItemText>{m['screens.messages.members.remove.action']()}</Menu.ItemText>
 							</Menu.Item>
 						) : null}
 					</Menu.Group>

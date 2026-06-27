@@ -99,7 +99,7 @@ function ProfileHeaderReady({
 
 	const isDeletedAccount = profile?.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
-		? m['common.label.deletedAccount']()
+		? m['common.account.deleted']()
 		: createSanitizedDisplayName(
 				profile,
 				true,
@@ -111,7 +111,7 @@ function ProfileHeaderReady({
 		<Wrapper
 			heading={
 				<Link
-					label={m['common.a11y.viewProfileDisplayName']({ displayName })}
+					label={m['common.profile.a11y.viewDisplayName']({ displayName })}
 					style={[a.flex_row, a.gap_md, a.flex_1]}
 					to={makeProfileLink(profile)}
 				>
@@ -156,7 +156,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			heading={
 				<Link
 					label={convo.details.name}
-					accessibilityHint={m['components.dms.action.openGroupSettings']()}
+					accessibilityHint={m['components.dms.group.action.openSettings']()}
 					style={[a.flex_row, a.gap_md, a.flex_1, a.justify_start]}
 					to={
 						disabled
@@ -190,7 +190,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 									},
 								}
 					}
-					label={m['components.dms.action.openGroupSettings']()}
+					label={m['components.dms.group.action.openSettings']()}
 					size="small"
 					color="secondary"
 					shape="round"

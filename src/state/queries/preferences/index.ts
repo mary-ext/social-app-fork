@@ -247,13 +247,13 @@ export function useToggleSavedFeed({
 			} else {
 				await saveFeeds([{ pinned: !!pin, type, value: uri }]);
 			}
-			Toast.show(m['common.toast.feedsUpdated']());
+			Toast.show(m['common.feeds.updatedToast']());
 		} catch (err) {
 			logger.error(err instanceof Error ? err : String(err), {
 				message: 'failed to update saved feeds',
 				pin,
 			});
-			Toast.show(m['state.error.updateFeeds'](), { type: 'error' });
+			Toast.show(m['state.feeds.error.update'](), { type: 'error' });
 		}
 	}, [pin, removeFeed, saveFeeds, savedFeedConfig, type, uri]);
 

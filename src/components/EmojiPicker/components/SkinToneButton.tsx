@@ -21,7 +21,7 @@ export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) 
 				}
 			}}
 		>
-			<Select.Trigger aria-label={m['components.emojiPicker.skinTone']()} className={styles.trigger}>
+			<Select.Trigger aria-label={m['components.emojiPicker.skinTone.label']()} className={styles.trigger}>
 				<Select.Value className={styles.glyph}>{(value: SkinTone) => SKIN_HANDS[value - 1]}</Select.Value>
 			</Select.Trigger>
 
@@ -30,7 +30,7 @@ export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) 
 					<Select.Popup className={styles.menu}>
 						{TONES.map((value) => (
 							<Select.Item
-								aria-label={m['components.emojiPicker.skinToneValue']({ value })}
+								aria-label={m['components.emojiPicker.skinTone.value']({ value })}
 								className={styles.item}
 								key={value}
 								value={value}

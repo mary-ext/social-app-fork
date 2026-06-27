@@ -15,7 +15,7 @@ export function shareUrl(url: string): Promise<void> {
 	// throwing synchronously into the press handler, matching the prior async wrapper's behavior.
 	return Promise.resolve().then(() => {
 		void navigator.clipboard.writeText(url);
-		Toast.show(m['common.toast.copied'](), {
+		Toast.show(m['common.share.copiedToast'](), {
 			type: 'success',
 		});
 	});
@@ -29,7 +29,7 @@ export function shareUrl(url: string): Promise<void> {
  */
 export async function shareText(text: string) {
 	await navigator.clipboard.writeText(text);
-	Toast.show(m['common.toast.copied'](), {
+	Toast.show(m['common.share.copiedToast'](), {
 		type: 'success',
 	});
 }

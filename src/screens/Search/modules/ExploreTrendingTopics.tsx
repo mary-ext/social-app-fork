@@ -69,13 +69,13 @@ function TrendRow({ rank, trend }: { rank: number; trend: AppBskyUnspeccedDefs.T
 	return (
 		<Link
 			className={css.row}
-			label={m['screens.search.a11y.browseTopic']({ displayName: trend.displayName })}
+			label={m['screens.search.trending.browse']({ displayName: trend.displayName })}
 			to={trend.link}
 		>
 			<div className={css.main}>
 				<div className={css.titleRow}>
 					<Text className={css.rank} size="md" weight="semiBold">
-						{m['screens.search.label.rank']({ rank })}
+						{m['screens.search.trending.rank']({ rank })}
 					</Text>
 					<Text className={css.nameText} numberOfLines={1} size="md" weight="semiBold">
 						{trend.displayName}
@@ -106,18 +106,18 @@ function TrendingIndicator({ type }: { type: 'hot' | 'new' | 'skeleton' | number
 	switch (type) {
 		case 'hot': {
 			Icon = FlameIcon;
-			text = m['screens.search.label.hot']();
+			text = m['screens.search.trending.hot']();
 			variant = 'hot';
 			break;
 		}
 		case 'new': {
 			Icon = TrendingIcon;
-			text = m['common.label.new']();
+			text = m['common.status.new']();
 			variant = 'new';
 			break;
 		}
 		default: {
-			text = m['screens.search.label.timeAgo']({ type });
+			text = m['screens.search.trending.timeAgo']({ type });
 			variant = 'age';
 			break;
 		}
@@ -136,15 +136,15 @@ function TrendingIndicator({ type }: { type: 'hot' | 'new' | 'skeleton' | number
 function useCategoryDisplayName(category: AppBskyUnspeccedDefs.TrendView['category']) {
 	switch (category) {
 		case 'news':
-			return m['common.label.news']();
+			return m['common.interest.news']();
 		case 'politics':
-			return m['common.label.politics']();
+			return m['common.interest.politics']();
 		case 'pop-culture':
-			return m['screens.search.label.entertainment']();
+			return m['screens.search.trending.entertainment']();
 		case 'sports':
-			return m['common.label.sports']();
+			return m['common.interest.sports']();
 		case 'video-games':
-			return m['common.label.videoGames']();
+			return m['common.interest.videoGames']();
 		case 'other':
 		default:
 			return null;

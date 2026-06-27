@@ -89,10 +89,10 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 				ListEmptyComponent={
 					<div className={css.empty}>
 						{isLoading ? (
-							<CenteredSpinner label={m['common.label.loading']()} size="lg" />
+							<CenteredSpinner label={m['common.status.loading']()} size="lg" />
 						) : (
 							<Text weight="semiBold" size="lg" align="center" className={css.emptyText}>
-								{m['screens.starterPack.empty.noFeeds']()}
+								{m['screens.starterPack.feeds.noResults']()}
 							</Text>
 						)}
 					</div>

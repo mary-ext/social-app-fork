@@ -34,11 +34,11 @@ export function NoSavedFeedsOfAnyType({ onAddRecommendedFeeds }: { onAddRecommen
 	return (
 		<View style={[a.flex_row, a.flex_wrap, a.justify_between, a.p_xl, a.gap_md]}>
 			<Text style={[a.leading_snug, t.atoms.text_contrast_medium, { maxWidth: 310 }]}>
-				{m['screens.feeds.empty.noSaved']()}
+				{m['screens.feeds.noSaved']()}
 			</Text>
 			<Button
 				disabled={isPending}
-				label={m['common.action.applyRecommendedFeeds']()}
+				label={m['common.feeds.action.applyRecommended']()}
 				size="small"
 				color="primary_subtle"
 				onPress={() => void addRecommendedFeeds()}

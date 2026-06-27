@@ -68,7 +68,7 @@ export function MediaBadges({ variant, hasAlt, cropped, large, count, index }: M
 					{hasAlt && (
 						<div className={boxClass}>
 							<Text weight="bold" size={large ? 'xs' : 'sm'} className={large ? undefined : styles.altSmall}>
-								{m['common.label.altBadge']()}
+								{m['common.altText.badge']()}
 							</Text>
 						</div>
 					)}

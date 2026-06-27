@@ -94,8 +94,8 @@ export function CreateOrEditListDialog({
 			</Dialog.Root>
 			<Prompt.Basic
 				handle={cancelHandle}
-				title={m['common.dialog.discardChangesTitle']()}
-				description={m['common.dialog.discardChangesPrompt']()}
+				title={m['common.discardChanges.title']()}
+				description={m['common.discardChanges.message']()}
 				onConfirm={() => handle.close()}
 				confirmButtonCta={m['common.action.discard']()}
 				confirmButtonColor="negative"
@@ -242,8 +242,8 @@ function DialogInner({
 				});
 				Toast.show(
 					isCurateList
-						? m['components.dialogs.toast.listUpdated']()
-						: m['components.dialogs.list.moderationUpdatedToast'](),
+						? m['components.dialogs.list.userUpdatedToast']()
+						: m['components.dialogs.list.moderation.updatedToast'](),
 				);
 				handle.close();
 				onSave?.(list.uri);
@@ -257,8 +257,8 @@ function DialogInner({
 				});
 				Toast.show(
 					isCurateList
-						? m['components.dialogs.toast.listCreated']()
-						: m['components.dialogs.list.moderationCreatedToast'](),
+						? m['components.dialogs.list.userCreatedToast']()
+						: m['components.dialogs.list.moderation.createdToast'](),
 				);
 				handle.close();
 				onSave?.(uri);
@@ -293,18 +293,18 @@ function DialogInner({
 	const title = list
 		? isCurateList
 			? m['components.dialogs.list.editUser']()
-			: m['components.dialogs.list.editModeration']()
+			: m['components.dialogs.list.moderation.editTitle']()
 		: isCurateList
 			? m['components.dialogs.list.createUser']()
-			: m['components.dialogs.list.createModeration']();
+			: m['components.dialogs.list.moderation.createTitle']();
 
 	const displayNamePlaceholder = isCurateList
 		? m['components.dialogs.list.namePlaceholder']()
-		: m['components.dialogs.list.moderationNamePlaceholder']();
+		: m['components.dialogs.list.moderation.namePlaceholder']();
 
 	const descriptionPlaceholder = isCurateList
 		? m['components.dialogs.list.descriptionPlaceholder']()
-		: m['components.dialogs.list.moderationDescriptionPlaceholder']();
+		: m['components.dialogs.list.moderation.descriptionPlaceholder']();
 
 	return (
 		<>
@@ -373,14 +373,14 @@ function DialogInner({
 						<TextField.Input
 							defaultValue={displayName}
 							onChangeText={onChangeDisplayName}
-							label={m['components.dialogs.label.name']()}
+							label={m['components.dialogs.list.name']()}
 							placeholder={displayNamePlaceholder}
 						/>
 						{(displayNameTooLong || displayNameTooShort) && (
 							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
 								{displayNameTooLong
-									? m['components.dialogs.list.nameTooLong']({ DISPLAY_NAME_MAX_GRAPHEMES })
-									: m['components.dialogs.list.nameRequired']()}
+									? m['components.dialogs.list.error.nameTooLong']({ DISPLAY_NAME_MAX_GRAPHEMES })
+									: m['components.dialogs.list.error.nameRequired']()}
 							</Text>
 						)}
 					</TextField.Root>
@@ -391,12 +391,12 @@ function DialogInner({
 							defaultValue={descriptionText}
 							onChangeText={setDescriptionText}
 							multiline
-							label={m['common.label.description']()}
+							label={m['common.status.description']()}
 							placeholder={descriptionPlaceholder}
 						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
-								{m['components.dialogs.list.descriptionTooLong']({ DESCRIPTION_MAX_GRAPHEMES })}
+								{m['components.dialogs.list.error.descriptionTooLong']({ DESCRIPTION_MAX_GRAPHEMES })}
 							</Text>
 						)}
 					</TextField.Root>

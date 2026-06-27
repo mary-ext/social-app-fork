@@ -80,7 +80,7 @@ function ThreadItemTreePostDeleted({ item }: { item: Extract<ThreadItem, { type:
 				<div className={css.deletedRow}>
 					<TrashIcon fill="currentColor" width={14} />
 					<Text color="textContrastMedium" className={css.deletedText}>
-						{m['screens.postThread.error.deleted']()}
+						{m['screens.postThread.post.error.deleted']()}
 					</Text>
 				</div>
 				{item.ui.isLastChild && !item.ui.precedesChildReadMore && <div className={css.deletedSpacer} />}

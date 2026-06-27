@@ -23,19 +23,15 @@ export function GifPresentationControls({
 			<button
 				type="button"
 				className={styles.playButton}
-				aria-label={isPlaying ? m['common.a11y.pauseGif']() : m['common.a11y.playGif']()}
+				aria-label={isPlaying ? m['common.gif.a11y.pause']() : m['common.gif.a11y.play']()}
 				onClick={onPress}
 			>
-				{isLoading ? (
-					<Spinner label={m['common.label.loadingGif']()} />
-				) : !isPlaying ? (
-					<PlayButtonIcon />
-				) : null}
+				{isLoading ? <Spinner label={m['common.gif.loading']()} /> : !isPlaying ? <PlayButtonIcon /> : null}
 			</button>
 			{!isPlaying && <div aria-hidden className={styles.dim} />}
 			<div className={styles.gifBadge}>
 				<Text size="xs" weight="bold" className={styles.badgeText}>
-					{m['common.label.gif']()}
+					{m['common.gif.label']()}
 				</Text>
 			</div>
 			{altText && <AltBadge text={altText} />}
@@ -51,15 +47,15 @@ function AltBadge({ text }: { text: string }) {
 			<button
 				type="button"
 				className={styles.altBadge}
-				aria-label={m['common.action.showAltText']()}
+				aria-label={m['common.altText.show']()}
 				onClick={() => handle.open(null)}
 			>
 				<Text size="xs" weight="bold" className={styles.badgeText}>
-					{m['common.label.altBadge']()}
+					{m['common.altText.badge']()}
 				</Text>
 			</button>
 			<Prompt.Outer handle={handle}>
-				<Prompt.TitleText>{m['common.label.altTextTitle']()}</Prompt.TitleText>
+				<Prompt.TitleText>{m['common.altText.title']()}</Prompt.TitleText>
 				<Prompt.DescriptionText>{text}</Prompt.DescriptionText>
 				<Prompt.Actions>
 					<Prompt.Action onPress={() => {}} cta={m['common.action.close']()} color="secondary" />

@@ -112,7 +112,7 @@ export function TitleAndByline({ creator, title }: { creator?: AnyProfileView; t
 			</Text>
 			{creator && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{m['common.label.feedBy']({ handle: sanitizeHandle(creator.handle, '@') })}
+					{m['common.feeds.feedBy']({ handle: sanitizeHandle(creator.handle, '@') })}
 				</Text>
 			)}
 		</div>
@@ -143,7 +143,7 @@ export function Description({ description }: { description?: string }) {
 export function Likes({ count }: { count: number }) {
 	return (
 		<Text color="textContrastMedium" size="sm" weight="semiBold">
-			{m['common.count.likedBy']({ count: count || 0 })}
+			{m['common.like.likedByCount']({ count: count || 0 })}
 		</Text>
 	);
 }
@@ -182,7 +182,7 @@ function SaveButtonInner({
 			<Button
 				color={isSaved ? 'secondary' : 'primary'}
 				disabled={isPending}
-				label={m['common.action.addFeed']()}
+				label={m['common.feeds.action.add']()}
 				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
 				size="small"
 				variant="solid"
@@ -195,7 +195,7 @@ function SaveButtonInner({
 						) : (
 							!text && <ButtonIcon icon={TrashIcon} size="md" />
 						)}
-						{text && <ButtonText>{m['common.action.unpinFeed']()}</ButtonText>}
+						{text && <ButtonText>{m['common.feeds.action.unpin']()}</ButtonText>}
 					</>
 				) : (
 					<>
@@ -204,7 +204,7 @@ function SaveButtonInner({
 						) : (
 							<ButtonIcon icon={PinIcon} size="md" />
 						)}
-						{text && <ButtonText>{m['common.action.pinFeed']()}</ButtonText>}
+						{text && <ButtonText>{m['common.feeds.action.pin']()}</ButtonText>}
 					</>
 				)}
 			</Button>
@@ -212,10 +212,10 @@ function SaveButtonInner({
 			<Prompt.Basic
 				confirmButtonColor="negative"
 				confirmButtonCta={m['common.action.remove']()}
-				description={m['common.dialog.removeFeedPrompt']()}
+				description={m['common.feeds.remove.message']()}
 				handle={removePromptHandle}
 				onConfirm={() => void toggleSave()}
-				title={m['common.dialog.removeFromFeedsTitle']()}
+				title={m['common.feeds.remove.title']()}
 			/>
 		</>
 	);

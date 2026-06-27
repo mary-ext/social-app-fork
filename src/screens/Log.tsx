@@ -43,7 +43,7 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.label.systemLog']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.developer.systemLog']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -65,8 +65,8 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 										a.gap_sm,
 									]}
 									onPress={toggler(entry.id)}
-									accessibilityLabel={m['screens.log.action.viewEntry']()}
-									accessibilityHint={m['screens.log.a11y.openDetails']()}
+									accessibilityLabel={m['screens.log.viewEntry']()}
+									accessibilityHint={m['screens.log.openDetails']()}
 								>
 									{entry.level === LogLevel.Warn || entry.level === LogLevel.Error ? (
 										<WarningIcon size="sm" fill={colors.negative_500} />

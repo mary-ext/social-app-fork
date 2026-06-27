@@ -55,17 +55,17 @@ export function SearchResults({
 		return definite<Section<SearchTabId>>([
 			{
 				id: 'top',
-				label: m['common.label.top'](),
+				label: m['common.search.top'](),
 				render: (focused) => <PostResults active={focused} query={queryWithParams} sort="top" />,
 			},
 			{
 				id: 'latest',
-				label: m['common.label.latest'](),
+				label: m['common.search.latest'](),
 				render: (focused) => <PostResults active={focused} query={queryWithParams} sort="latest" />,
 			},
 			noParams && {
 				id: 'people',
-				label: m['common.label.people'](),
+				label: m['common.people.label'](),
 				render: (focused) => <UserResults active={focused} query={query} />,
 			},
 			noParams && {
@@ -84,7 +84,7 @@ export function SearchResults({
 function Pending() {
 	return (
 		<Layout.Content>
-			<CenteredSpinner label={m['screens.search.a11y.loadingResults']()} size="xl" />
+			<CenteredSpinner label={m['screens.search.results.loading']()} size="xl" />
 		</Layout.Content>
 	);
 }
@@ -107,7 +107,7 @@ function EmptyState({
 					{error && (
 						<>
 							<div className={css.emptyDivider} />
-							<Text color="textContrastMedium">{m['screens.search.error.generic']({ error })}</Text>
+							<Text color="textContrastMedium">{m['screens.search.results.error.generic']({ error })}</Text>
 						</>
 					)}
 
@@ -131,7 +131,7 @@ function NoResultsText({ query }: { query: string }) {
 							</Text>
 						),
 					}}
-					message={m['screens.search.empty.noResultsForQuery']}
+					message={m['screens.search.results.empty']}
 				/>
 			</Text>
 			{'\n\n'}
@@ -144,7 +144,7 @@ function NoResultsText({ query }: { query: string }) {
 							</ExternalInlineLinkText>
 						),
 					}}
-					message={m['screens.search.empty.tryDifferentTerm']}
+					message={m['screens.search.results.emptyHint']}
 				/>
 			</Text>
 		</>
@@ -193,7 +193,7 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 
 	if (!hasSession) {
 		return (
-			<SearchError title={m['common.error.searchLoggedOut']()}>
+			<SearchError title={m['common.search.loggedOutError']()}>
 				<Text align="center" size="md">
 					<Trans
 						markup={{
@@ -211,7 +211,7 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 							t1: ({ children }) => <Text>{children}</Text>,
 							t2: ({ children }) => <Text color="textContrastMedium">{children}</Text>,
 						}}
-						message={m['common.cta.signInToSearch']}
+						message={m['common.search.signInPrompt']}
 					/>
 				</Text>
 			</SearchError>
@@ -219,7 +219,7 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 	}
 
 	if (error) {
-		return <EmptyState error={cleanError(error)} messageText={m['screens.search.error.searchFailed']()} />;
+		return <EmptyState error={cleanError(error)} messageText={m['screens.search.results.error.failed']()} />;
 	}
 
 	if (!isFetched) {
@@ -269,7 +269,7 @@ function UserResults({ active, query }: { active: boolean; query: string }) {
 	};
 
 	if (error) {
-		return <EmptyState error={error.toString()} messageText={m['screens.search.error.searchFailed']()} />;
+		return <EmptyState error={error.toString()} messageText={m['screens.search.results.error.failed']()} />;
 	}
 
 	if (!isFetched) {

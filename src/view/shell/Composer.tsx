@@ -35,12 +35,12 @@ export function ComposerDialog() {
 			}}
 		>
 			{({ payload }) => (
-				<Dialog.Popup scroll="body" label={m['common.action.writePost']()}>
+				<Dialog.Popup scroll="body" label={m['common.compose.action.write']()}>
 					{payload && (
 						<Suspense
 							fallback={
 								<div className={styles.placeholder}>
-									<Spinner color={colors.contrast_500} label={m['common.label.loading']()} />
+									<Spinner color={colors.contrast_500} label={m['common.status.loading']()} />
 								</div>
 							}
 						>

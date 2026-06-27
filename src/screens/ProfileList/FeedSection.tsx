@@ -51,16 +51,16 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 	const renderPostsEmpty = useCallback(() => {
 		return (
 			<View style={[a.gap_xl, a.align_center]}>
-				<EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.empty.feed']()} />
+				<EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />
 				{isOwner && (
 					<Button
-						label={m['screens.profileList.empty.startAdding']()}
+						label={m['screens.profileList.members.startAdding']()}
 						onPress={onPressAddUser}
 						color="primary"
 						size="small"
 					>
 						<ButtonIcon icon={PersonPlusIcon} />
-						<ButtonText>{m['screens.profileList.empty.startAddingCta']()}</ButtonText>
+						<ButtonText>{m['screens.profileList.members.startAddingCta']()}</ButtonText>
 					</Button>
 				)}
 			</View>
@@ -82,7 +82,7 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn
 					onPress={onScrollToTop}
-					label={m['common.action.loadNewPosts']()}
+					label={m['common.feeds.action.loadNew']()}
 					showIndicator={hasNew}
 				/>
 			)}

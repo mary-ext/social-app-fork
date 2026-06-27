@@ -57,7 +57,7 @@ export function DraftsButton({
 	return (
 		<>
 			<Button
-				label={m['view.composer.title.drafts']()}
+				label={m['view.composer.drafts.title']()}
 				variant="ghost"
 				color="primary"
 				shape="default"
@@ -66,7 +66,7 @@ export function DraftsButton({
 				disabled={isSaving}
 				onClick={handlePress}
 			>
-				<ButtonText size="md">{m['view.composer.title.drafts']()}</ButtonText>
+				<ButtonText size="md">{m['view.composer.drafts.title']()}</ButtonText>
 			</Button>
 			<DraftsListDialog handle={draftsDialogControl} onSelectDraft={onSelectDraft} />
 			<Prompt.Outer handle={savePromptControl}>
@@ -74,22 +74,24 @@ export function DraftsButton({
 					<Prompt.TitleText>
 						{canSaveDraft
 							? isEditingDraft
-								? m['view.composer.dialog.saveChangesTitle']()
-								: m['view.composer.dialog.saveDraftTitle']()
-							: m['view.composer.dialog.discardDraftTitle']()}
+								? m['view.composer.drafts.saveChanges.title']()
+								: m['view.composer.drafts.save.title']()
+							: m['view.composer.drafts.discard.title']()}
 					</Prompt.TitleText>
 					<Prompt.DescriptionText>
 						{canSaveDraft
 							? isEditingDraft
-								? m['view.composer.dialog.unsavedSaveBeforeViewing']()
-								: m['view.composer.dialog.saveDraftBeforeViewing']()
-							: m['view.composer.dialog.draftTooLongDiscard']()}
+								? m['view.composer.drafts.beforeViewing.unsaved']()
+								: m['view.composer.drafts.beforeViewing.save']()
+							: m['view.composer.drafts.beforeViewing.tooLong']()}
 					</Prompt.DescriptionText>
 				</Prompt.Content>
 				<Prompt.Actions>
 					{canSaveDraft && (
 						<Prompt.Action
-							cta={isEditingDraft ? m['common.action.saveChanges']() : m['view.composer.action.saveDraft']()}
+							cta={
+								isEditingDraft ? m['common.action.saveChanges']() : m['view.composer.drafts.action.save']()
+							}
 							onPress={() => void handleSaveAndOpen()}
 							color="primary"
 						/>
@@ -99,7 +101,7 @@ export function DraftsButton({
 						onPress={handleDiscardAndOpen}
 						color="negative_subtle"
 					/>
-					<Prompt.Cancel cta={m['view.composer.action.keepEditing']()} />
+					<Prompt.Cancel cta={m['view.composer.discard.keepEditing']()} />
 				</Prompt.Actions>
 			</Prompt.Outer>
 		</>

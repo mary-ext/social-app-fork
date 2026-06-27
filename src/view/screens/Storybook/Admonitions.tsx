@@ -60,7 +60,7 @@ export function Admonitions() {
 					<AdmonitionContent>
 						<AdmonitionText>
 							<Trans
-								message={m['view.notifications.enableHint']}
+								message={m['view.notifications.settings.enableHint']}
 								markup={{
 									t0: ({ children }) => (
 										<RNText style={[a.font_bold, t.atoms.text_contrast_high]}>{children}</RNText>
@@ -71,7 +71,7 @@ export function Admonitions() {
 						</AdmonitionText>
 						<AdmonitionText>
 							<Trans
-								message={m['view.notifications.restrictHint']}
+								message={m['view.notifications.settings.restrictHint']}
 								markup={{
 									t0: ({ children }) => (
 										<InlineLinkText

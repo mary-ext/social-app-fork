@@ -84,35 +84,35 @@ export function MessagesListBlockedFooter({
 				<PersonXIcon fill={colors.text} size="lg" className={css.icon} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
 					{isGroup
-						? m['components.dms.error.youAreBlockingOwner']()
+						? m['components.dms.block.youAreBlockingOwner']()
 						: isBlocking
-							? m['components.dms.error.youAreBlockingPerson']()
-							: m['components.dms.error.personBlockingYou']()}
+							? m['components.dms.block.youAreBlockingPerson']()
+							: m['components.dms.block.personBlockingYou']()}
 				</Text>
 				<Text style={[a.text_center, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-					{m['components.dms.hint.readOnlyHistory']()}
+					{m['components.dms.chat.readOnlyHint']()}
 				</Text>
 				{isBlocking ? (
 					<Button
-						label={m['common.action.unblock']()}
+						label={m['common.block.action.unblock']()}
 						color="secondary_inverted"
 						size="large"
 						style={[a.mt_lg, a.w_full]}
 						onPress={onUnblockPress}
 					>
 						<ButtonIcon icon={PersonCheckIcon} />
-						<ButtonText>{m['common.action.unblock']()}</ButtonText>
+						<ButtonText>{m['common.block.action.unblock']()}</ButtonText>
 					</Button>
 				) : null}
 				<Button
-					label={m['common.action.leaveChat']()}
+					label={m['common.chat.action.leave']()}
 					color="secondary_inverted"
 					size="large"
 					style={[a.mt_lg, a.w_full]}
 					onPress={leaveConvoControl.open}
 				>
 					<ButtonIcon icon={LeaveIcon} />
-					<ButtonText>{m['common.action.leaveChat']()}</ButtonText>
+					<ButtonText>{m['common.chat.action.leave']()}</ButtonText>
 				</Button>
 				<LeaveConvoPrompt control={leaveConvoControl} currentScreen="conversation" convoId={convoId} />
 				<BlockedByListDialog control={blockedByListControl} listBlocks={listBlocks} />

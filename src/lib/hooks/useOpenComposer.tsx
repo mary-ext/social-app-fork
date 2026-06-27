@@ -79,7 +79,7 @@ export function useOpenComposer() {
 			author && (author.viewer?.blocking || author.viewer?.blockedBy || author.viewer?.blockingByList),
 		);
 		if (isBlocked) {
-			Toast.show(m['common.error.blockedInteraction'](), {
+			Toast.show(m['common.block.interactionError'](), {
 				type: 'warning',
 			});
 			return;

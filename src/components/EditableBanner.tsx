@@ -60,13 +60,13 @@ export function EditableBanner({
 	return (
 		<>
 			<Menu.Root>
-				<Menu.Trigger aria-label={m['components.editableBanner.a11y.edit']()} className={styles.trigger}>
+				<Menu.Trigger aria-label={m['components.editableBanner.edit']()} className={styles.trigger}>
 					{banner && <img className={styles.image} src={banner} alt="" />}
 					<span className={styles.editBadge}>
 						<CameraFilledIcon width={14} height={14} fill="currentColor" />
 					</span>
 				</Menu.Trigger>
-				<Menu.Popup label={m['components.editableBanner.a11y.edit']()} align="center">
+				<Menu.Popup label={m['components.editableBanner.edit']()} align="center">
 					<Menu.Item onClick={() => void onOpenLibrary()}>
 						<Menu.ItemText>{m['common.action.uploadFromFiles']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={LibraryIcon} />
@@ -75,7 +75,7 @@ export function EditableBanner({
 						<>
 							<Menu.Separator />
 							<Menu.Item destructive onClick={() => onSelectNewBanner(null)}>
-								<Menu.ItemText>{m['components.editableBanner.action.remove']()}</Menu.ItemText>
+								<Menu.ItemText>{m['components.editableBanner.remove']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={TrashIcon} />
 							</Menu.Item>
 						</>

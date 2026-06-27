@@ -27,8 +27,8 @@ export function FollowButton() {
 			color={following ? 'secondary' : 'primary'}
 			label={
 				following
-					? m['screens.profile.action.unfollow']({ handle: profile.handle })
-					: m['common.a11y.follow']({ handle: profile.handle })
+					? m['screens.profile.follow.unfollow']({ handle: profile.handle })
+					: m['common.follow.a11y.follow']({ handle: profile.handle })
 			}
 			onClick={following ? actions.unfollow : actions.follow}
 			size="small"
@@ -36,10 +36,10 @@ export function FollowButton() {
 			{!following && <ButtonIcon icon={Plus} />}
 			<ButtonText>
 				{following
-					? m['common.action.following']()
+					? m['common.follow.action.following']()
 					: profile.viewer?.followedBy
-						? m['common.action.followBack']()
-						: m['common.action.follow']()}
+						? m['common.follow.action.followBack']()
+						: m['common.follow.action.follow']()}
 			</ButtonText>
 		</Button>
 	);
@@ -56,9 +56,9 @@ export function EditProfileButton() {
 		<>
 			<Dialog.Trigger
 				handle={editProfileHandle}
-				render={<Button label={m['screens.profile.action.editProfile']()} color="secondary" size="small" />}
+				render={<Button label={m['screens.profile.editProfile.action']()} color="secondary" size="small" />}
 			>
-				<ButtonText>{m['screens.profile.title.editProfile']()}</ButtonText>
+				<ButtonText>{m['screens.profile.editProfile.title']()}</ButtonText>
 			</Dialog.Trigger>
 			<EditProfileDialog profile={profile} handle={editProfileHandle} />
 		</>
@@ -78,19 +78,19 @@ export function UnblockButton() {
 			<Button
 				color="secondary"
 				disabled={!hasSession}
-				label={m['common.action.unblock']()}
+				label={m['common.block.action.unblock']()}
 				onClick={() => unblockHandle.open(null)}
 				size="small"
 			>
-				<ButtonText>{m['common.action.unblock']()}</ButtonText>
+				<ButtonText>{m['common.block.action.unblock']()}</ButtonText>
 			</Button>
 			<Prompt.Basic
 				confirmButtonColor="negative"
-				confirmButtonCta={m['common.action.unblock']()}
-				description={m['common.hint.unblockInteract']()}
+				confirmButtonCta={m['common.block.action.unblock']()}
+				description={m['common.block.unblockHint']()}
 				handle={unblockHandle}
 				onConfirm={() => void actions.unblock()}
-				title={m['screens.profile.dialog.unblockTitle']()}
+				title={m['screens.profile.block.unblock.title']()}
 			/>
 		</>
 	);

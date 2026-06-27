@@ -47,7 +47,7 @@ function InnerApp() {
 
 	useEffect(() => {
 		if (sessionResumeFailed) {
-			Toast.show(m['common.error.sessionExpired'](), { type: 'info' });
+			Toast.show(m['common.session.expiredError'](), { type: 'info' });
 		}
 	}, [sessionResumeFailed]);
 

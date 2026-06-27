@@ -31,7 +31,7 @@ export function useSubmitReportMutation() {
 			subject: ParsedReportSubject;
 		}) {
 			if (!pds) {
-				throw new Error(m['components.moderation.error.mustSignInToReport']());
+				throw new Error(m['components.moderation.report.error.mustSignIn']());
 			}
 
 			const labelerSupportedReasonTypes = labeler.reasonTypes || [];

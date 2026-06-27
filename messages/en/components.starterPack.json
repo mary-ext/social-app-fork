@@ -1,25 +1,30 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"components.starterPack.a11y.navigate": "Navigate to {name}",
-	"components.starterPack.action.add": "Add {displayName} to starter pack",
-	"components.starterPack.action.copyLink": "Copy Link",
-	"components.starterPack.action.createAnother": "Create another",
-	"components.starterPack.action.editFeeds": "Edit Feeds",
-	"components.starterPack.action.editPeople": "Edit People",
-	"components.starterPack.action.remove": "Remove {displayName} from starter pack",
-	"components.starterPack.byline": "Starter pack by {handle}",
-	"components.starterPack.dialog.shareDescription": "Share this starter pack and help people join your community on Bluesky.",
-	"components.starterPack.dialog.shareLinkTitle": "Share link dialog",
-	"components.starterPack.empty.description": "Starter packs let you share your favorite feeds and people with your friends.",
-	"components.starterPack.error.fetch": "There was an issue fetching your starter packs. Tap here to try again.",
-	"components.starterPack.invitePrompt": "Invite people to this starter pack!",
-	"components.starterPack.joinedCount": [
+	"components.starterPack.card.byline": "Starter pack by {handle}",
+	"components.starterPack.card.joinedCount": [
 		{
-			"declarations": ["input joinedAllTimeCount", "local cp = joinedAllTimeCount: plural"],
-			"selectors": ["cp"],
+			"declarations": [
+				"input joinedAllTimeCount",
+				"local cp = joinedAllTimeCount: plural"
+			],
+			"selectors": [
+				"cp"
+			],
 			"match": {
 				"cp=other": "{joinedAllTimeCount} users have joined!"
 			}
 		}
-	]
+	],
+	"components.starterPack.card.navigate": "Navigate to {name}",
+	"components.starterPack.create.another": "Create another",
+	"components.starterPack.edit.feeds": "Edit Feeds",
+	"components.starterPack.edit.people": "Edit People",
+	"components.starterPack.list.empty": "Starter packs let you share your favorite feeds and people with your friends.",
+	"components.starterPack.list.error": "There was an issue fetching your starter packs. Tap here to try again.",
+	"components.starterPack.membership.action.add": "Add {displayName} to starter pack",
+	"components.starterPack.membership.action.remove": "Remove {displayName} from starter pack",
+	"components.starterPack.share.a11yLabel": "Share link dialog",
+	"components.starterPack.share.copyLink": "Copy Link",
+	"components.starterPack.share.invitePrompt": "Invite people to this starter pack!",
+	"components.starterPack.share.message": "Share this starter pack and help people join your community on Bluesky."
 }

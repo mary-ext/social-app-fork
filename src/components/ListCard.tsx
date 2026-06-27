@@ -142,7 +142,7 @@ export function TitleAndByline({
 			>
 				<Hider.Mask>
 					<Text className={css.italic} numberOfLines={1} weight="medium">
-						{m['components.listCard.label.hidden']()}
+						{m['components.listCard.hidden']()}
 					</Text>
 				</Hider.Mask>
 				<Hider.Content>
@@ -154,8 +154,8 @@ export function TitleAndByline({
 			{creator && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 					{purpose === MODLIST
-						? m['components.listCard.label.moderationListBy']({ handle: sanitizeHandle(creator.handle, '@') })
-						: m['common.label.listByCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
+						? m['components.listCard.moderationListBy']({ handle: sanitizeHandle(creator.handle, '@') })
+						: m['common.list.byCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
 				</Text>
 			)}
 		</div>
@@ -212,7 +212,7 @@ function SaveButtonInner({
 			<Button
 				color={isSaved ? 'secondary' : 'primary'}
 				disabled={isPending}
-				label={m['common.action.addFeed']()}
+				label={m['common.feeds.action.add']()}
 				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
 				size="small"
 				variant="solid"
@@ -225,7 +225,7 @@ function SaveButtonInner({
 						) : (
 							!text && <ButtonIcon icon={TrashIcon} size="md" />
 						)}
-						{text && <ButtonText>{m['common.action.unpinFeed']()}</ButtonText>}
+						{text && <ButtonText>{m['common.feeds.action.unpin']()}</ButtonText>}
 					</>
 				) : (
 					<>
@@ -234,7 +234,7 @@ function SaveButtonInner({
 						) : (
 							<ButtonIcon icon={PinIcon} size="md" />
 						)}
-						{text && <ButtonText>{m['common.action.pinFeed']()}</ButtonText>}
+						{text && <ButtonText>{m['common.feeds.action.pin']()}</ButtonText>}
 					</>
 				)}
 			</Button>
@@ -242,10 +242,10 @@ function SaveButtonInner({
 			<Prompt.Basic
 				confirmButtonColor="negative"
 				confirmButtonCta={m['common.action.remove']()}
-				description={m['common.dialog.removeFeedPrompt']()}
+				description={m['common.feeds.remove.message']()}
 				handle={removePromptHandle}
 				onConfirm={() => void toggleSave()}
-				title={m['common.dialog.removeFromFeedsTitle']()}
+				title={m['common.feeds.remove.title']()}
 			/>
 		</>
 	);

@@ -146,7 +146,7 @@ function ProfileListScreenLoaded({
 		return moderateList(list, moderationOpts);
 	}, [list, moderationOpts]);
 
-	useSetTitle(isHidden ? m['screens.profileList.toast.hidden']() : list.name);
+	useSetTitle(isHidden ? m['screens.profileList.hide.hiddenToast']() : list.name);
 
 	const onChangeMembers = () => {
 		if (isCurateList) {
@@ -162,7 +162,7 @@ function ProfileListScreenLoaded({
 		const sections: Section<'people' | 'posts'>[] = [
 			{
 				id: 'posts',
-				label: m['common.label.posts'](),
+				label: m['common.post.label'](),
 				render: (focused) => (
 					<FeedSection
 						feed={`list|${uri}`}
@@ -174,7 +174,7 @@ function ProfileListScreenLoaded({
 			},
 			{
 				id: 'people',
-				label: m['common.label.people'](),
+				label: m['common.people.label'](),
 				render: () => <AboutSection list={list} onPressAddUser={addUserDialogControl.open} />,
 			},
 		];
@@ -196,7 +196,7 @@ function ProfileListScreenLoaded({
 						/>
 						<FAB
 							icon={<EditBigIcon size="lg" fill={colors.white} />}
-							label={m['common.label.newPost']()}
+							label={m['common.compose.action.new']()}
 							onClick={() => openComposer({ logContext: 'Fab' })}
 						/>
 					</View>
@@ -219,7 +219,7 @@ function ProfileListScreenLoaded({
 					<AboutSection list={list} onPressAddUser={addUserDialogControl.open} />
 					<FAB
 						icon={<EditBigIcon size="lg" fill={colors.white} />}
-						label={m['common.label.newPost']()}
+						label={m['common.compose.action.new']()}
 						onClick={() => openComposer({ logContext: 'Fab' })}
 					/>
 				</View>

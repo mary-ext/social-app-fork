@@ -46,7 +46,7 @@ export function NewskieDialog({
 			>
 				<Newskie width={24} height={24} fill="currentColor" />
 			</Dialog.Trigger>
-			<Dialog.Popup size="narrow" label={m['components.newskieDialog.a11y.dialog']()}>
+			<Dialog.Popup size="narrow" label={m['components.newskieDialog.a11y.label']()}>
 				<DialogInner profile={profile} createdAt={createdAt} now={now} onClose={() => handle.close()} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -100,7 +100,7 @@ function DialogInner({
 					<Newskie width={64} height={64} fill="currentColor" />
 				</div>
 				<Text size="xl" weight="semiBold">
-					{isMe ? m['components.newskieDialog.welcome']() : m['common.label.sayHello']()}
+					{isMe ? m['components.newskieDialog.welcome']() : m['common.compose.sayHello']()}
 				</Text>
 			</div>
 			<Text size="md" align="center">

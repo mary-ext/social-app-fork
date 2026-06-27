@@ -35,29 +35,29 @@ export function NewChat({
 		},
 		onError: (error) => {
 			logger.error('Failed to create chat', { safeMessage: error });
-			let errorMessage = m['components.dms.error.startChat']();
+			let errorMessage = m['components.dms.chat.error.start']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();
 			} else if (error instanceof ClientResponseError) {
 				switch (error.error) {
 					case 'AccountSuspended': {
-						errorMessage = m['components.dms.error.suspendedChat']();
+						errorMessage = m['components.dms.chat.error.suspended']();
 						break;
 					}
 					case 'BlockedActor': {
-						errorMessage = m['components.dms.error.userBlockedYou']();
+						errorMessage = m['components.dms.block.userBlockedYou']();
 						break;
 					}
 					case 'MessagesDisabled': {
-						errorMessage = m['components.dms.error.userDisabledChat']();
+						errorMessage = m['components.dms.chat.error.userDisabled']();
 						break;
 					}
 					case 'NotFollowedBySender': {
-						errorMessage = m['components.dms.error.chatRecipientNotFollowed']();
+						errorMessage = m['components.dms.chat.error.recipientNotFollowed']();
 						break;
 					}
 					case 'RecipientNotFound': {
-						errorMessage = m['components.dms.error.selectedRecipientNotFound']();
+						errorMessage = m['components.dms.recipient.error.selectedNotFound']();
 						break;
 					}
 				}
@@ -74,33 +74,33 @@ export function NewChat({
 		},
 		onError: (error) => {
 			logger.error('Failed to create groupchat', { safeMessage: error });
-			let errorMessage = m['components.dms.error.createGroup']();
+			let errorMessage = m['components.dms.group.error.create']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();
 			} else if (error instanceof ClientResponseError) {
 				switch (error.error) {
 					case 'AccountSuspended': {
-						errorMessage = m['components.dms.error.suspendedGroupChat']();
+						errorMessage = m['components.dms.group.error.suspended']();
 						break;
 					}
 					case 'BlockedActor': {
-						errorMessage = m['components.dms.error.recipientBlockedYou']();
+						errorMessage = m['components.dms.recipient.error.blockedYou']();
 						break;
 					}
 					case 'NewAccountCannotCreateGroup': {
-						errorMessage = m['components.dms.error.cannotCreateGroupYet']();
+						errorMessage = m['components.dms.group.error.cannotCreateYet']();
 						break;
 					}
 					case 'NotFollowedBySender': {
-						errorMessage = m['components.dms.error.recipientNotFollowed']();
+						errorMessage = m['components.dms.recipient.error.notFollowed']();
 						break;
 					}
 					case 'RecipientNotFound': {
-						errorMessage = m['components.dms.error.recipientNotFound']();
+						errorMessage = m['components.dms.recipient.error.notFound']();
 						break;
 					}
 					case 'UserForbidsGroups': {
-						errorMessage = m['components.dms.error.recipientNoGroups']();
+						errorMessage = m['components.dms.recipient.error.noGroups']();
 						break;
 					}
 				}
@@ -137,14 +137,14 @@ export function NewChat({
 			{!chatDisabled && (
 				<FAB
 					icon={<NewChatIcon size="lg" fill={colors.white} />}
-					label={m['common.action.newChat']()}
+					label={m['common.chat.action.new']()}
 					onClick={wrappedOnPress}
 				/>
 			)}
 			<Dialog.Outer control={control} testID="newChatDialog">
 				<Dialog.Handle />
 				<InitiateChatFlow
-					title={m['common.action.newChat']()}
+					title={m['common.chat.action.new']()}
 					onSelectChat={onCreateChat}
 					onSelectGroupChat={onCreateGroupChat}
 				/>

@@ -97,7 +97,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 		try {
 			if (savedFeedConfig) {
 				await removeFeed(savedFeedConfig);
-				Toast.show(m['common.label.removedFromFeeds']());
+				Toast.show(m['common.feeds.removedToast']());
 			} else {
 				await addSavedFeeds([
 					{
@@ -106,10 +106,10 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 						pinned: false,
 					},
 				]);
-				Toast.show(m['common.label.savedToFeeds']());
+				Toast.show(m['common.feeds.savedToast']());
 			}
 		} catch (err) {
-			Toast.show(m['common.error.updateFeeds'](), {
+			Toast.show(m['common.feeds.updateError'](), {
 				type: 'error',
 			});
 			logger.error('Failed to update feeds', { message: err });
@@ -128,9 +128,9 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				]);
 
 				if (pinned) {
-					Toast.show(m['screens.profile.toast.pinned']({ name: info.displayName }));
+					Toast.show(m['screens.profile.feed.pinnedToast']({ name: info.displayName }));
 				} else {
-					Toast.show(m['screens.profile.toast.unpinned']({ name: info.displayName }));
+					Toast.show(m['screens.profile.feed.unpinnedToast']({ name: info.displayName }));
 				}
 			} else {
 				await addSavedFeeds([
@@ -140,7 +140,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 						pinned: true,
 					},
 				]);
-				Toast.show(m['screens.profile.toast.pinned']({ name: info.displayName }));
+				Toast.show(m['screens.profile.feed.pinnedToast']({ name: info.displayName }));
 			}
 		} catch (e) {
 			Toast.show(m['common.error.serverContact'](), {
@@ -157,7 +157,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				<Layout.Header.Content>
 					<button
 						className={styles.infoButton}
-						aria-label={m['screens.profile.a11y.openFeedInfo']()}
+						aria-label={m['screens.profile.feed.a11y.openInfo']()}
 						onClick={() => infoControl.open(null)}
 					>
 						{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
@@ -195,7 +195,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 								<Menu.Trigger
 									render={
 										<Button
-											label={m['screens.profile.a11y.openFeedOptions']()}
+											label={m['screens.profile.feed.a11y.openOptions']()}
 											size="small"
 											variant="ghost"
 											shape="round"
@@ -206,28 +206,24 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 									}
 								/>
 
-								<Menu.Popup label={m['screens.profile.label.feedOptions']()} align="end">
+								<Menu.Popup label={m['screens.profile.feed.options']()} align="end">
 									<Menu.Item
 										disabled={isFeedStateChangePending}
-										label={m['screens.profile.action.unpinFromHome']()}
+										label={m['screens.profile.feed.action.unpin']()}
 										onClick={() => void onTogglePinned()}
 									>
-										<Menu.ItemText>{m['screens.profile.action.unpinFromHome']()}</Menu.ItemText>
+										<Menu.ItemText>{m['screens.profile.feed.action.unpin']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={X} position="right" />
 									</Menu.Item>
 									<Menu.Item
 										disabled={isFeedStateChangePending}
 										label={
-											isSaved
-												? m['common.action.removeFromFeeds']()
-												: m['screens.profile.action.saveToFeeds']()
+											isSaved ? m['common.feeds.action.remove']() : m['screens.profile.feed.action.save']()
 										}
 										onClick={() => void onToggleSaved()}
 									>
 										<Menu.ItemText>
-											{isSaved
-												? m['common.action.removeFromFeeds']()
-												: m['screens.profile.action.saveToFeeds']()}
+											{isSaved ? m['common.feeds.action.remove']() : m['screens.profile.feed.action.save']()}
 										</Menu.ItemText>
 										<Menu.ItemIcon icon={isSaved ? Trash : Plus} position="right" />
 									</Menu.Item>
@@ -235,7 +231,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 							</Menu.Root>
 						) : (
 							<Button
-								label={m['screens.profile.action.pinToHome']()}
+								label={m['screens.profile.feed.action.pin']()}
 								size="small"
 								variant="ghost"
 								shape="round"
@@ -249,7 +245,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				)}
 			</Layout.Header.Outer>
 			<Dialog.Root handle={infoControl}>
-				<Dialog.Popup label={m['screens.profile.a11y.feedMenu']()} className={styles.dialogPopup}>
+				<Dialog.Popup label={m['screens.profile.feed.a11y.menu']()} className={styles.dialogPopup}>
 					<DialogInner
 						info={info}
 						likeUri={likeUri}
@@ -339,12 +335,12 @@ function DialogInner({
 					</Text>
 					<Text size="sm" color="textContrastMedium" numberOfLines={1}>
 						<Trans
-							message={m['screens.profile.label.byCreator']}
+							message={m['screens.profile.feed.byCreator']}
 							inputs={{ handle: sanitizeHandle(info.creatorHandle, '@') }}
 							markup={{
 								t0: ({ children }) => (
 									<InlineLinkText
-										label={m['screens.profile.a11y.viewProfile']({ handle: info.creatorHandle })}
+										label={m['screens.profile.avatar.a11y.viewProfile']({ handle: info.creatorHandle })}
 										to={makeProfileLink({ did: info.creatorDid })}
 										size="sm"
 										color="textContrastMedium"
@@ -360,7 +356,7 @@ function DialogInner({
 				</div>
 
 				<Button
-					label={m['screens.profile.action.shareFeed']()}
+					label={m['screens.profile.feed.action.share']()}
 					size="small"
 					variant="ghost"
 					color="secondary"
@@ -376,13 +372,13 @@ function DialogInner({
 			<div className={styles.dialogLikedByRow}>
 				{typeof likeCount === 'number' && (
 					<InlineLinkText
-						label={m['screens.profile.action.viewFeedLikes']()}
+						label={m['screens.profile.feed.action.viewLikes']()}
 						to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
 						size="md_sub"
 						color="textContrastMedium"
 						onPress={closeDialog}
 					>
-						{m['screens.profile.count.likedBy']({ likeCount })}
+						{m['screens.profile.feed.likes.count']({ likeCount })}
 					</InlineLinkText>
 				)}
 			</div>
@@ -391,7 +387,7 @@ function DialogInner({
 					<div className={styles.dialogActionsRow}>
 						<Button
 							disabled={isLikePending || isUnlikePending}
-							label={m['screens.profile.action.likeFeed']()}
+							label={m['screens.profile.feed.action.like']()}
 							size="small"
 							color="secondary"
 							onClick={() => void onToggleLiked()}
@@ -405,14 +401,14 @@ function DialogInner({
 						</Button>
 						<Button
 							disabled={isFeedStateChangePending}
-							label={isPinned ? m['common.action.unpinFeed']() : m['common.action.pinFeed']()}
+							label={isPinned ? m['common.feeds.action.unpin']() : m['common.feeds.action.pin']()}
 							size="small"
 							color={isPinned ? 'secondary' : 'primary'}
 							onClick={onTogglePinned}
 							className={styles.dialogActionButton}
 						>
 							<ButtonText>
-								{isPinned ? m['common.action.unpinFeed']() : m['common.action.pinFeed']()}
+								{isPinned ? m['common.feeds.action.unpin']() : m['common.feeds.action.pin']()}
 							</ButtonText>
 							<ButtonIcon icon={Pin} />
 						</Button>
@@ -423,17 +419,17 @@ function DialogInner({
 
 						<div className={styles.dialogReportRow}>
 							<Text size="md_sub" color="textContrastMedium" className={styles.dialogWrongText}>
-								{m['screens.profile.hint.reportIssue']()}
+								{m['screens.profile.feedback.reportIssue']()}
 							</Text>
 
 							<Button
-								label={m['screens.profile.action.reportFeed']()}
+								label={m['screens.profile.feed.action.report']()}
 								size="small"
 								variant="solid"
 								color="secondary"
 								onClick={onPressReport}
 							>
-								<ButtonText>{m['screens.profile.action.reportFeed']()}</ButtonText>
+								<ButtonText>{m['screens.profile.feed.action.report']()}</ButtonText>
 								<ButtonIcon icon={CircleInfo} />
 							</Button>
 						</div>

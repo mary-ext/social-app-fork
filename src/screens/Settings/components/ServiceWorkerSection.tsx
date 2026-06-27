@@ -51,15 +51,15 @@ export function ServiceWorkerSection() {
 			return null;
 		}
 		case 'installing': {
-			row = busyRow(m['screens.settings.label.installingApp'](), m['screens.settings.label.installing']());
+			row = busyRow(m['screens.settings.update.installingApp'](), m['screens.settings.update.installing']());
 
 			break;
 		}
 		case 'uninstalled': {
 			row = (
-				<Settings.ButtonRow label={m['screens.settings.action.installApp']()} onPress={registerServiceWorker}>
+				<Settings.ButtonRow label={m['screens.settings.update.installApp']()} onPress={registerServiceWorker}>
 					<Settings.Icon icon={DownloadIcon} />
-					<Settings.Label titleText={m['screens.settings.action.installApp']()} />
+					<Settings.Label titleText={m['screens.settings.update.installApp']()} />
 				</Settings.ButtonRow>
 			);
 
@@ -67,8 +67,8 @@ export function ServiceWorkerSection() {
 		}
 		case 'update_installing': {
 			row = busyRow(
-				m['screens.settings.label.installingUpdateEllipsis'](),
-				m['screens.settings.label.installingUpdate'](),
+				m['screens.settings.update.installingUpdateEllipsis'](),
+				m['screens.settings.update.installingUpdate'](),
 			);
 
 			break;
@@ -76,7 +76,7 @@ export function ServiceWorkerSection() {
 		case 'update_ready': {
 			row = (
 				<Settings.ButtonRow
-					label={m['screens.settings.action.reloadToUpdate']()}
+					label={m['screens.settings.update.reload']()}
 					color="primary_subtle"
 					onPress={applyServiceWorkerUpdate}
 				>

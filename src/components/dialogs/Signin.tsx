@@ -107,12 +107,12 @@ function ChooseAccountScreen({
 			<div className={css.heading}>
 				{intent === 'switch' ? (
 					<Text size="_2xl" weight="semiBold">
-						{m['common.action.switchAccount']()}
+						{m['common.account.action.switch']()}
 					</Text>
 				) : (
 					<>
 						<Text size="_2xl" weight="semiBold">
-							{m['common.action.signIn']()}
+							{m['common.session.action.signIn']()}
 						</Text>
 						<Text color="textContrastHigh">{m['components.dialogs.account.chooseDescription']()}</Text>
 					</>
@@ -138,7 +138,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 	const onSubmit = useCallback(async () => {
 		const trimmed = identifier.trim();
 		if (!trimmed) {
-			setError(m['components.dialogs.account.handleDidDescription']());
+			setError(m['components.dialogs.account.handle.description']());
 			return;
 		}
 
@@ -150,7 +150,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 			logger.error('sign in dialog: OAuth start failed', {
 				message: e instanceof Error ? e.message : String(e),
 			});
-			setError(m['components.dialogs.error.signinStart']());
+			setError(m['components.dialogs.signin.startError']());
 			setIsSubmitting(false);
 		}
 	}, [identifier, login]);
@@ -166,22 +166,22 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 		<div className={css.outer}>
 			<div className={css.heading}>
 				<Text size="_2xl" weight="semiBold">
-					{m['common.action.signIn']()}
+					{m['common.session.action.signIn']()}
 				</Text>
 				<Text color="textContrastHigh">{m['components.dialogs.signin.description']()}</Text>
 			</div>
 			<div className={css.form}>
 				<TextField.Root isInvalid={!!error}>
-					<TextField.LabelText>{m['components.dialogs.account.handleDidLabel']()}</TextField.LabelText>
+					<TextField.LabelText>{m['components.dialogs.account.handle.label']()}</TextField.LabelText>
 					<div className={css.field}>
 						<AtIcon className={css.fieldIcon} size="md" fill={colors.contrast_500} />
 						<TextField.Input
 							autoCapitalize="none"
 							className={css.fieldInput}
-							label={m['components.dialogs.account.handleDidLabel']()}
+							label={m['components.dialogs.account.handle.label']()}
 							onChangeText={setIdentifier}
 							onKeyDown={onKeyDown}
-							placeholder={m['components.dialogs.account.handlePlaceholder']()}
+							placeholder={m['components.dialogs.account.handle.placeholder']()}
 							value={identifier}
 						/>
 					</div>
@@ -196,7 +196,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 				<Button
 					color="primary"
 					disabled={isSubmitting}
-					label={m['common.action.signIn']()}
+					label={m['common.session.action.signIn']()}
 					onClick={() => void onSubmit()}
 					size="large"
 					variant="solid"
@@ -204,7 +204,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 					{isSubmitting ? (
 						<ButtonIcon icon={Loader} />
 					) : (
-						<ButtonText>{m['common.action.signIn']()}</ButtonText>
+						<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
 					)}
 				</Button>
 				{onBack && (

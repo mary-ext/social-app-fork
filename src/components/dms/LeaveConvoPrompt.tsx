@@ -32,13 +32,13 @@ export function LeaveConvoPrompt({
 			}
 		},
 		onError: (error) => {
-			let errorMessage = m['components.dms.error.leaveChat']();
+			let errorMessage = m['components.dms.leave.error.leave']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidConvo') {
-				errorMessage = m['common.error.conversationNotFound']();
+				errorMessage = m['common.chat.error.notFound']();
 			} else if (error instanceof ClientResponseError && error.error === 'OwnerCannotLeave') {
-				errorMessage = m['components.dms.error.ownerMustLock']();
+				errorMessage = m['components.dms.leave.error.ownerMustLock']();
 			}
 			Toast.show(errorMessage, { type: 'error' });
 		},
@@ -47,10 +47,8 @@ export function LeaveConvoPrompt({
 	return (
 		<Prompt.Basic
 			control={control}
-			title={m['components.dms.action.leaveConversation']()}
-			description={
-				hasMessages ? m['components.dms.dialog.leaveGroupPrompt']() : m['components.dms.dialog.leavePrompt']()
-			}
+			title={m['components.dms.leave.action.conversation']()}
+			description={hasMessages ? m['components.dms.leave.groupPrompt']() : m['components.dms.leave.prompt']()}
 			confirmButtonCta={m['common.action.leave']()}
 			confirmButtonColor="negative"
 			onConfirm={() => leaveConvo()}

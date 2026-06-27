@@ -52,7 +52,7 @@ function CantSubscribePrompt({ handle }: { handle: Prompt.PromptHandle }) {
 		<Prompt.Outer handle={handle}>
 			<Prompt.Content>
 				<Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
-				<Prompt.DescriptionText>{m['screens.profile.error.subscribeLimit']()}</Prompt.DescriptionText>
+				<Prompt.DescriptionText>{m['screens.profile.labeler.error.subscribeLimit']()}</Prompt.DescriptionText>
 			</Prompt.Content>
 			<Prompt.Actions>
 				<Prompt.Action cta={m['screens.profile.action.ok']()} onPress={() => handle.close()} />
@@ -96,16 +96,16 @@ function SubscribeLabelerButton() {
 				className={clsx(css.subscribeButton, isSubscribed ? css.subscribed : css.unsubscribed)}
 				label={
 					isSubscribed
-						? m['screens.profile.action.unsubscribeLabeler']()
-						: m['screens.profile.action.subscribeThisLabeler']()
+						? m['screens.profile.labeler.action.unsubscribeThis']()
+						: m['screens.profile.labeler.action.subscribeThis']()
 				}
 				onClick={onPressSubscribe}
 				variant="bare"
 			>
 				<Text align="center" color={isSubscribed ? 'contrast_700' : 'white'} weight="semiBold">
 					{isSubscribed
-						? m['screens.profile.action.unsubscribe']()
-						: m['screens.profile.action.subscribeLabeler']()}
+						? m['screens.profile.labeler.action.unsubscribe']()
+						: m['screens.profile.labeler.action.subscribe']()}
 				</Text>
 			</Button>
 			<CantSubscribePrompt handle={cantSubscribePrompt} />
@@ -160,7 +160,7 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 			<Button
 				color="secondary"
 				disabled={!hasSession || isLikePending || isUnlikePending}
-				label={m['screens.profile.action.likeLabeler']()}
+				label={m['screens.profile.labeler.action.like']()}
 				onClick={() => void onToggleLiked()}
 				shape="round"
 				size="small"
@@ -175,12 +175,12 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 			<InlineLinkText
 				className={css.likedBy}
 				color="textContrastMedium"
-				label={m['screens.profile.count.likedBy']({ likeCount })}
+				label={m['screens.profile.feed.likes.count']({ likeCount })}
 				size="sm"
 				to={`/profile/${labeler.creator.did}/labeler/liked-by`}
 				weight="semiBold"
 			>
-				{m['screens.profile.count.likedBy']({ likeCount })}
+				{m['screens.profile.feed.likes.count']({ likeCount })}
 			</InlineLinkText>
 		</div>
 	);

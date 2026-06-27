@@ -60,7 +60,7 @@ export function AccountList({
 						<PlusIcon width={20} height={20} fill="currentColor" />
 					</span>
 					<Text className={css.info} size="md" weight="medium">
-						{otherLabel ?? m['components.accountList.label.other']()}
+						{otherLabel ?? m['components.accountList.other']()}
 					</Text>
 					<ChevronIcon className={css.chevron} width={20} height={20} fill={colors.textContrastLow} />
 				</button>

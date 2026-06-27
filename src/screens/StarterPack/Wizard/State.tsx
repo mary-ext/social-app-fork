@@ -75,7 +75,7 @@ function reducer(state: State, action: Action): State {
 			break;
 		case 'AddProfile':
 			if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
-				Toast.show(m['screens.starterPack.error.maxProfiles']({ STARTER_PACK_MAX_SIZE }), {
+				Toast.show(m['screens.starterPack.people.max']({ STARTER_PACK_MAX_SIZE }), {
 					type: 'info',
 				});
 			} else {
@@ -90,7 +90,7 @@ function reducer(state: State, action: Action): State {
 			break;
 		case 'AddFeed':
 			if (state.feeds.length >= 3) {
-				Toast.show(m['screens.starterPack.error.maxFeeds'](), {
+				Toast.show(m['screens.starterPack.feeds.max'](), {
 					type: 'info',
 				});
 			} else {

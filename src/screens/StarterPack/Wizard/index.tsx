@@ -154,24 +154,24 @@ function WizardInner({
 
 	const getDefaultName = () => {
 		const displayName = createSanitizedDisplayName(currentProfile!, true);
-		return m['screens.starterPack.title.named']({ displayName }).slice(0, 50);
+		return m['screens.starterPack.name.display']({ displayName }).slice(0, 50);
 	};
 
 	const wizardUiStrings: Record<WizardStep, { header: string; nextBtn: string; subtitle?: string }> = {
 		Details: {
-			header: m['common.label.starterPack'](),
+			header: m['common.starterPack.label'](),
 			nextBtn: m['common.action.next'](),
 		},
 		Profiles: {
-			header: m['screens.starterPack.label.choosePeople'](),
+			header: m['screens.starterPack.people.choose'](),
 			nextBtn: m['common.action.next'](),
 		},
 		Feeds: {
-			header: m['screens.starterPack.label.chooseFeeds'](),
+			header: m['screens.starterPack.feeds.choose'](),
 			nextBtn:
 				state.feeds.length === 0
-					? m['screens.starterPack.action.skip']()
-					: m['screens.starterPack.action.finish'](),
+					? m['screens.starterPack.setup.skip']()
+					: m['screens.starterPack.setup.finish'](),
 		},
 	};
 	const currUiStrings = wizardUiStrings[state.currentStep];
@@ -359,10 +359,10 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 						{
 							items.length < 2 ? (
 								currentAccount?.did === items[0]!.did ? (
-									m['screens.starterPack.empty.justYouHint']()
+									m['screens.starterPack.people.justYou']()
 								) : (
 									<Trans
-										message={m['screens.starterPack.empty.justNameHint']}
+										message={m['screens.starterPack.people.justName']}
 										inputs={{ name: getName(items[0]!) }}
 										markup={{
 											t0: ({ children }) => (
@@ -442,10 +442,10 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 					items.length === 0 ? (
 						<div className={css.feedsEmptyHelper}>
 							<Text weight="semiBold" size="md" className={css.helperText}>
-								{m['screens.starterPack.empty.addFeedsHint']()}
+								{m['screens.starterPack.feeds.addHint']()}
 							</Text>
 							<Text size="md" className={css.helperText}>
-								{m['screens.starterPack.hint.searchFeeds']()}
+								{m['screens.starterPack.feeds.searchHint']()}
 							</Text>
 						</div>
 					) : (
@@ -514,7 +514,7 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 			<div className={css.cta}>
 				{state.currentStep === 'Profiles' && items.length < 8 && (
 					<Text weight="semiBold" size="md" color="textContrastMedium">
-						{m['screens.starterPack.addMore']({ count: 8 - items.length })}
+						{m['screens.starterPack.people.addMore']({ count: 8 - items.length })}
 					</Text>
 				)}
 				<Button

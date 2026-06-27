@@ -237,8 +237,8 @@ export function InitiateChatFlow({
 		},
 	);
 
-	const newGroupChatTitle = m['components.dms.title.newGroup']();
-	const groupNameTitle = m['common.label.groupName']();
+	const newGroupChatTitle = m['components.dms.group.title']();
+	const groupNameTitle = m['common.chat.groupName']();
 
 	const onRemoveDid = useCallback(
 		(did: string) => {
@@ -260,7 +260,7 @@ export function InitiateChatFlow({
 			_items.push({
 				type: 'empty',
 				key: 'empty',
-				message: m['components.dms.error.networkIssues'](),
+				message: m['components.dms.chat.error.network'](),
 			});
 		} else if (chatState === ChatState.GROUP_NAME) {
 			_items = groupChatProfiles.map((profile) => ({
@@ -271,7 +271,7 @@ export function InitiateChatFlow({
 			_items.unshift({
 				type: 'label',
 				key: 'members',
-				message: m['components.dms.label.newGroupWith'](),
+				message: m['components.dms.group.newGroupWith'](),
 			});
 		} else if (searchText.length) {
 			if (results?.length) {
@@ -322,7 +322,7 @@ export function InitiateChatFlow({
 			_items.unshift({
 				type: 'label',
 				key: 'suggested',
-				message: m['components.dms.label.suggested'](),
+				message: m['components.dms.search.suggested'](),
 			});
 		}
 
@@ -334,7 +334,7 @@ export function InitiateChatFlow({
 	}, [isError, chatState, searchText, groupChatProfiles, results, currentAccount?.did, follows]);
 
 	if (searchText && !isFetching && !items.length && !isError) {
-		items.push({ type: 'empty', key: 'empty', message: m['common.empty.noResults']() });
+		items.push({ type: 'empty', key: 'empty', message: m['common.search.empty']() });
 	}
 
 	const handlePressBack = useCallback(() => {
@@ -441,14 +441,14 @@ export function InitiateChatFlow({
 		maxCount: MAX_GROUP_NAME_GRAPHEME_LENGTH,
 	});
 
-	let buttonLabel = m['components.dms.action.continueToName']();
+	let buttonLabel = m['components.dms.group.action.continueToName']();
 	let buttonText = m['common.action.next']();
 	let handleButtonPress = handlePressNext;
 	let showButton = chatState === ChatState.NEW_GROUP_CHAT && groupChatProfiles.length > 0;
 	let isButtonDisabled = !showButton;
 	switch (chatState) {
 		case ChatState.GROUP_NAME:
-			buttonLabel = m['components.dms.action.createGroup']();
+			buttonLabel = m['components.dms.group.action.create']();
 			buttonText = m['common.action.create']();
 			handleButtonPress = handlePressConfirm;
 			showButton = true;
@@ -507,7 +507,7 @@ export function InitiateChatFlow({
 							<View style={[a.w_full, a.relative, a.pt_md]}>
 								<TextField.Root isInvalid={groupNameTooLong}>
 									<TextField.Input
-										label={m['common.label.groupName']()}
+										label={m['common.chat.groupName']()}
 										value={groupName}
 										returnKeyType="next"
 										keyboardAppearance={t.scheme}
@@ -523,7 +523,7 @@ export function InitiateChatFlow({
 								</TextField.Root>
 								{groupNameTooLong ? (
 									<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-										{m['common.error.groupNameTooLong']({ MAX_GROUP_NAME_GRAPHEME_LENGTH })}
+										{m['common.chat.error.groupNameTooLong']({ MAX_GROUP_NAME_GRAPHEME_LENGTH })}
 									</Text>
 								) : null}
 							</View>
@@ -609,15 +609,15 @@ export function InitiateChatFlow({
 			}
 			label={
 				chatState === ChatState.NEW_GROUP_CHAT
-					? m['components.dms.label.selectMembers']()
-					: m['components.dms.action.startChat']()
+					? m['components.dms.group.selectMembers']()
+					: m['components.dms.chat.action.start']()
 			}
 			style={[webViewStyle(a.contents)]}
 		>
 			<Prompt.Basic
 				control={accountTooNewPromptControl}
-				title={m['components.dms.error.accountTooNewTitle']()}
-				description={m['components.dms.error.accountTooNewGroup']()}
+				title={m['components.dms.account.tooNew.title']()}
+				description={m['components.dms.account.tooNew.message']()}
 				confirmButtonCta={m['common.action.okay']()}
 				onConfirm={() => {}}
 				showCancel={false}
@@ -669,7 +669,7 @@ export function InitiateChatFlow({
 function NewGroupChatButton({ onPress, dimmed = false }: { onPress: () => void; dimmed?: boolean }) {
 	const t = useTheme();
 	return (
-		<Button label={m['components.dms.action.newGroup']()} onPress={onPress}>
+		<Button label={m['components.dms.group.action.new']()} onPress={onPress}>
 			{({ hovered, pressed, focused }) => (
 				<View
 					style={[
@@ -699,7 +699,7 @@ function NewGroupChatButton({ onPress, dimmed = false }: { onPress: () => void; 
 					</View>
 					<View style={[a.flex_grow]}>
 						<Text style={[a.text_md, a.font_medium, a.leading_snug, t.atoms.text]}>
-							{m['components.dms.title.newGroup']()}
+							{m['components.dms.group.title']()}
 						</Text>
 					</View>
 					<ChevronRightIcon size="md" fill={colors.text} />
@@ -732,7 +732,11 @@ function DefaultProfileCard({
 	}, [onPress, profile.did]);
 
 	return (
-		<Button disabled={!enabled} label={m['common.action.startChat']({ displayName })} onPress={handleOnPress}>
+		<Button
+			disabled={!enabled}
+			label={m['common.chat.action.start']({ displayName })}
+			onPress={handleOnPress}
+		>
 			{({ hovered, pressed, focused }) => (
 				<View
 					style={[
@@ -750,7 +754,7 @@ function DefaultProfileCard({
 								<ProfileCard.Handle profile={profile} />
 							) : (
 								<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-									{m['components.dms.error.cannotMessage']({ handle })}
+									{m['components.dms.recipient.error.cannotMessage']({ handle })}
 								</Text>
 							)}
 						</View>
@@ -782,7 +786,7 @@ function GroupChatMemberProfileCard({
 						<ProfileCard.Handle profile={profile} />
 					) : (
 						<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-							{m['components.dms.error.cannotAdd']({ handle })}
+							{m['components.dms.recipient.error.cannotAdd']({ handle })}
 						</Text>
 					)}
 				</View>

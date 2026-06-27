@@ -18,7 +18,7 @@ export function LiveIndicator({
 	return (
 		<div className={clsx(styles.container({ size }), className)} style={style}>
 			<Text className={styles.pill({ size })} align="center" color="white" weight="semiBold">
-				{m['features.liveNow.label.liveBadge']()}
+				{m['features.liveNow.badge.live']()}
 			</Text>
 		</div>
 	);

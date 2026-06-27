@@ -237,13 +237,13 @@ export function SelectMediaButton({
 
 		const errors = Array.from(errorCodes).map((error) => {
 			return {
-				[SelectedAssetError.Unsupported]: m['view.composer.error.fileUnsupported'](),
-				[SelectedAssetError.MixedTypes]: m['view.composer.error.multipleMediaTypes'](),
-				[SelectedAssetError.MaxImages]: m['view.composer.error.maxImagesSelect']({ MAX_GALLERY_IMAGES }),
-				[SelectedAssetError.MaxVideos]: m['view.composer.error.oneVideoOnly'](),
-				[SelectedAssetError.VideoTooLong]: m['view.composer.error.videoTooLong'](),
-				[SelectedAssetError.MaxGIFs]: m['view.composer.error.oneGifOnly'](),
-				[SelectedAssetError.FileTooBig]: m['view.composer.error.fileTooLarge']({ VIDEO_MAX_SIZE_MB }),
+				[SelectedAssetError.Unsupported]: m['view.composer.video.error.fileUnsupported'](),
+				[SelectedAssetError.MixedTypes]: m['view.composer.media.multipleTypes'](),
+				[SelectedAssetError.MaxImages]: m['view.composer.gallery.error.maxSelect']({ MAX_GALLERY_IMAGES }),
+				[SelectedAssetError.MaxVideos]: m['view.composer.video.error.oneOnly'](),
+				[SelectedAssetError.VideoTooLong]: m['view.composer.video.error.tooLong'](),
+				[SelectedAssetError.MaxGIFs]: m['view.composer.gif.error.oneOnly'](),
+				[SelectedAssetError.FileTooBig]: m['view.composer.video.error.fileTooLarge']({ VIDEO_MAX_SIZE_MB }),
 			}[error];
 		});
 
@@ -261,8 +261,8 @@ export function SelectMediaButton({
 		<ComposerToolbarButton
 			icon={ImageIcon}
 			onClick={() => void onPressSelectMedia()}
-			label={m['view.composer.a11y.addMedia']()}
-			aria-description={m['view.composer.a11y.addMediaHint']({ MAX_GALLERY_IMAGES })}
+			label={m['view.composer.media.a11y.add']()}
+			aria-description={m['view.composer.media.a11y.addHint']({ MAX_GALLERY_IMAGES })}
 			disabled={disabled}
 		/>
 	);

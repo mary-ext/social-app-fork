@@ -70,7 +70,7 @@ export function EditableUserAvatar({
 		<>
 			<Menu.Root>
 				<Menu.Trigger
-					aria-label={m['components.editableUserAvatar.a11y.edit']()}
+					aria-label={m['components.editableUserAvatar.edit']()}
 					className={styles.trigger}
 					style={assignInlineVars({ [styles.sizeVar]: `${size}px`, [styles.radiusVar]: radius })}
 				>
@@ -85,7 +85,7 @@ export function EditableUserAvatar({
 						<CameraFilledIcon width={14} height={14} fill="currentColor" />
 					</span>
 				</Menu.Trigger>
-				<Menu.Popup label={m['components.editableUserAvatar.a11y.edit']()}>
+				<Menu.Popup label={m['components.editableUserAvatar.edit']()}>
 					<Menu.Item onClick={() => void onOpenLibrary()}>
 						<Menu.ItemText>{m['common.action.uploadFromFiles']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={LibraryIcon} />
@@ -94,7 +94,7 @@ export function EditableUserAvatar({
 						<>
 							<Menu.Separator />
 							<Menu.Item destructive onClick={() => onSelectNewAvatar(null)}>
-								<Menu.ItemText>{m['components.editableUserAvatar.action.remove']()}</Menu.ItemText>
+								<Menu.ItemText>{m['components.editableUserAvatar.remove']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={TrashIcon} />
 							</Menu.Item>
 						</>

@@ -91,8 +91,8 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 						className={css.bannerButton}
 						aria-label={
 							profile.banner
-								? m['screens.profile.a11y.viewBanner']()
-								: m['screens.profile.a11y.bannerPlaceholder']()
+								? m['screens.profile.banner.a11y.view']()
+								: m['screens.profile.banner.a11y.placeholder']()
 						}
 						onClick={onPressBanner}
 					>
@@ -110,7 +110,7 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 				<button
 					type="button"
 					className={css.avatarButton}
-					aria-label={m['screens.profile.a11y.viewAvatar']({ handle: profile.handle })}
+					aria-label={m['screens.profile.avatar.a11y.view']({ handle: profile.handle })}
 					onClick={onPressAvi}
 				>
 					<span

@@ -25,14 +25,14 @@ export function BlockedByListDialog({
 
 	return (
 		<Prompt.Outer control={control} testID="blockedByListDialog">
-			<Prompt.TitleText>{m['components.dms.toast.userBlockedByList']()}</Prompt.TitleText>
+			<Prompt.TitleText>{m['components.dms.block.userBlockedByList']()}</Prompt.TitleText>
 			<View style={[a.gap_sm, a.pb_lg]}>
 				<Text selectable style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-					{m['components.dms.error.blockedByModerationLists']()}{' '}
+					{m['components.dms.block.lists.description']()}{' '}
 				</Text>
 
 				<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-					{m['components.dms.label.listsBlocking']()}{' '}
+					{m['components.dms.block.lists.heading']()}{' '}
 					{listBlocks.map((block, i) =>
 						block.source ? (
 							<Fragment key={block.source.uri}>
@@ -50,7 +50,7 @@ export function BlockedByListDialog({
 				</Text>
 			</View>
 			<Prompt.Actions>
-				<Prompt.Action cta={m['components.dms.action.understand']()} onPress={() => {}} />
+				<Prompt.Action cta={m['components.dms.block.lists.confirm']()} onPress={() => {}} />
 			</Prompt.Actions>
 			<Dialog.Close />
 		</Prompt.Outer>

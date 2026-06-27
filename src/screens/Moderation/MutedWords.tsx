@@ -50,11 +50,11 @@ export function MutedWordsScreen(
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['screens.moderation.title.mutedWords']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.moderation.mutedWord.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Button
 					color="secondary"
-					label={m['common.action.addMutedWord']()}
+					label={m['common.mutedWord.action.add']()}
 					onClick={() => dialogHandle.open(null)}
 					size="small"
 				>
@@ -66,20 +66,20 @@ export function MutedWordsScreen(
 				{error ? (
 					<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
 				) : !preferences ? (
-					<CenteredSpinner label={m['screens.moderation.label.loadingMutedWords']()} fill />
+					<CenteredSpinner label={m['screens.moderation.mutedWord.loading']()} fill />
 				) : (
 					<Settings.List>
 						{mutedWords?.length ? (
 							<Settings.Section
-								bodyText={m['screens.moderation.hint.mutedWordsNotifications']()}
-								titleText={m['screens.moderation.title.yourMutedWords']()}
+								bodyText={m['screens.moderation.mutedWord.notificationsHint']()}
+								titleText={m['screens.moderation.mutedWord.heading']()}
 							>
 								{mutedWords.toReversed().map((word, i) => (
 									<MutedWordRow key={word.value + i} word={word} />
 								))}
 							</Settings.Section>
 						) : (
-							<Admonition type="tip">{m['screens.moderation.empty.mutedWords']()}</Admonition>
+							<Admonition type="tip">{m['screens.moderation.mutedWord.empty']()}</Admonition>
 						)}
 					</Settings.List>
 				)}
@@ -101,10 +101,12 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 	const details = [
 		expiryDate
 			? isExpired
-				? m['screens.moderation.label.expired']()
-				: m['common.label.expires'](relativeMessageParts(expiryDate, new Date()))
+				? m['screens.moderation.mutedWord.expired']()
+				: m['common.mutedWord.expires'](relativeMessageParts(expiryDate, new Date()))
 			: undefined,
-		word.actorTarget === 'exclude-following' ? m['screens.moderation.hint.excludesFollowing']() : undefined,
+		word.actorTarget === 'exclude-following'
+			? m['screens.moderation.mutedWord.excludesFollowing']()
+			: undefined,
 	]
 		.filter(Boolean)
 		.join(' · ');
@@ -120,8 +122,8 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 		<>
 			<Prompt.Basic
 				handle={removeHandle}
-				title={m['screens.moderation.dialog.confirmTitle']()}
-				description={m['screens.moderation.dialog.removeWordDescription']({ value: word.value })}
+				title={m['screens.moderation.mutedWord.remove.title']()}
+				description={m['screens.moderation.mutedWord.remove.message']({ value: word.value })}
 				onConfirm={() => void removeMutedWord(word)}
 				confirmButtonCta={m['common.action.remove']()}
 				confirmButtonColor="negative"
@@ -144,7 +146,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 								<Button
 									className={styles.optionsButton}
 									color="secondary"
-									label={m['screens.moderation.a11y.optionsForWord']({ value: word.value })}
+									label={m['screens.moderation.mutedWord.optionsA11y']({ value: word.value })}
 									shape="round"
 									size="tiny"
 									variant="ghost"
@@ -155,10 +157,10 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 						/>
 						<Menu.Popup
 							align="end"
-							label={m['screens.moderation.a11y.optionsForWord']({ value: word.value })}
+							label={m['screens.moderation.mutedWord.optionsA11y']({ value: word.value })}
 						>
 							<Menu.Group>
-								<Menu.LabelText>{m['screens.moderation.action.changeDuration']()}</Menu.LabelText>
+								<Menu.LabelText>{m['screens.moderation.mutedWord.changeDuration']()}</Menu.LabelText>
 								<Menu.Item label={m['common.time.hours24']()} onClick={() => renew(1)}>
 									<Menu.ItemText>{m['common.time.hours24']()}</Menu.ItemText>
 								</Menu.Item>
@@ -175,7 +177,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 							<Menu.Separator />
 							<Menu.Item
 								destructive
-								label={m['screens.moderation.action.removeMutedWord']()}
+								label={m['screens.moderation.mutedWord.remove.confirm']()}
 								onClick={() => removeHandle.open(null)}
 							>
 								<Menu.ItemText>{m['common.action.remove']()}</Menu.ItemText>

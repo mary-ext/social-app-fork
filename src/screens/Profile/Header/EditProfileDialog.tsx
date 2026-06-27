@@ -55,7 +55,7 @@ export function EditProfileDialog({
 					}
 				}}
 			>
-				<Dialog.Popup scroll="body" label={m['screens.profile.action.editProfile']()}>
+				<Dialog.Popup scroll="body" label={m['screens.profile.editProfile.action']()}>
 					<DialogInner
 						profile={profile}
 						handle={handle}
@@ -67,8 +67,8 @@ export function EditProfileDialog({
 			</Dialog.Root>
 			<Prompt.Basic
 				handle={cancelHandle}
-				title={m['common.dialog.discardChangesTitle']()}
-				description={m['common.dialog.discardChangesPrompt']()}
+				title={m['common.discardChanges.title']()}
+				description={m['common.discardChanges.message']()}
 				onConfirm={() => handle.close()}
 				confirmButtonCta={m['common.action.discard']()}
 				confirmButtonColor="negative"
@@ -201,7 +201,7 @@ function DialogInner({
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{m['screens.profile.action.editProfile']()}</Dialog.Header.TitleText>
+					<Dialog.Header.TitleText>{m['screens.profile.editProfile.action']()}</Dialog.Header.TitleText>
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot>
 					<Button
@@ -240,16 +240,16 @@ function DialogInner({
 
 				<div className={styles.fields}>
 					<TextField.Root isInvalid={displayNameTooLong}>
-						<TextField.LabelText>{m['screens.profile.label.displayName']()}</TextField.LabelText>
+						<TextField.LabelText>{m['screens.profile.editProfile.displayName.label']()}</TextField.LabelText>
 						<TextField.Input
 							defaultValue={displayName}
 							onChangeText={setDisplayName}
-							label={m['screens.profile.label.displayName']()}
-							placeholder={m['screens.profile.hint.displayNamePlaceholder']()}
+							label={m['screens.profile.editProfile.displayName.label']()}
+							placeholder={m['screens.profile.editProfile.displayName.placeholder']()}
 						/>
 						{displayNameTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
-								{m['screens.profile.error.displayNameTooLong']({ MAX_DISPLAY_NAME })}
+								{m['screens.profile.editProfile.displayName.tooLong']({ MAX_DISPLAY_NAME })}
 							</Text>
 						)}
 					</TextField.Root>
@@ -259,7 +259,7 @@ function DialogInner({
 						displayName !== initialDisplayName && (
 							<Admonition type="error">
 								<Trans
-									message={m['screens.profile.hint.verificationWarning']}
+									message={m['screens.profile.editProfile.displayName.verificationWarning']}
 									markup={{
 										t0: ({ children }) => (
 											<InlineLinkText
@@ -275,17 +275,17 @@ function DialogInner({
 						)}
 
 					<TextField.Root isInvalid={descriptionTooLong}>
-						<TextField.LabelText>{m['common.label.description']()}</TextField.LabelText>
+						<TextField.LabelText>{m['common.status.description']()}</TextField.LabelText>
 						<TextField.Input
 							defaultValue={description}
 							onChangeText={setDescription}
 							multiline
-							label={m['common.label.description']()}
-							placeholder={m['screens.profile.hint.bio']()}
+							label={m['common.status.description']()}
+							placeholder={m['screens.profile.editProfile.bio.hint']()}
 						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
-								{m['screens.profile.error.descriptionTooLong']({ MAX_DESCRIPTION })}
+								{m['screens.profile.editProfile.bio.tooLong']({ MAX_DESCRIPTION })}
 							</Text>
 						)}
 					</TextField.Root>

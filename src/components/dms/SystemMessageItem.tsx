@@ -57,7 +57,7 @@ export function SystemMessageItem({
 				<Link
 					to={makeProfileLink(action.profile)}
 					label={text}
-					accessibilityHint={m['components.dms.a11y.opensProfile']()}
+					accessibilityHint={m['components.dms.message.a11y.opensProfile']()}
 					style={a.w_full}
 				>
 					{row}

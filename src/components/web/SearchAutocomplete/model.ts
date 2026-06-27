@@ -132,11 +132,11 @@ export const interactiveItems = (result: AutocompleteResult): InteractiveItem[] 
 const actorSectionLabel = (op: OperatorName): string => {
 	switch (op) {
 		case 'mentions':
-			return m['components.web.label.mentioningUser']();
+			return m['components.web.search.filter.mention']();
 		case 'to':
-			return m['components.web.label.toUser']();
+			return m['components.web.search.filter.to']();
 		default:
-			return m['components.web.label.fromUser']();
+			return m['components.web.search.filter.from']();
 	}
 };
 
@@ -273,7 +273,7 @@ export const buildResult = ({
 				const recent = buildRecentRows(history, recentProfiles, recentProfilesPending);
 				if (recent.length > 0) {
 					rows.push(
-						{ key: 'recent-label', kind: 'section-label', label: m['components.web.label.recent']() },
+						{ key: 'recent-label', kind: 'section-label', label: m['components.web.search.recent.label']() },
 						...recent,
 					);
 				}
@@ -293,7 +293,7 @@ export const buildResult = ({
 			if (operators.length > 0) {
 				rows.push(
 					{ key: 'divider', kind: 'divider' },
-					{ key: 'options-label', kind: 'section-label', label: m['components.web.label.searchOptions']() },
+					{ key: 'options-label', kind: 'section-label', label: m['components.web.search.filter.label']() },
 				);
 				for (const operator of operators) {
 					rows.push({ key: `operator-${operator.name}`, kind: 'operator', operator });

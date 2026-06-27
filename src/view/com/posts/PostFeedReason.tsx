@@ -44,11 +44,9 @@ export function PostFeedReason({
 						{...reasonText}
 						onPress={onOpenReposter}
 						to={makeProfileLink(by)}
-						label={
-							isOwner ? m['view.posts.label.repostedByYou']() : m['view.posts.label.repostedBy']({ reposter })
-						}
+						label={isOwner ? m['view.posts.repost.byYou']() : m['view.posts.repost.by']({ reposter })}
 					>
-						{isOwner ? m['view.posts.label.repostedByYou']() : m['view.posts.label.repostedBy']({ reposter })}
+						{isOwner ? m['view.posts.repost.byYou']() : m['view.posts.repost.by']({ reposter })}
 					</InlineLinkText>
 				</ProfileHoverCard>
 			</div>
@@ -59,7 +57,7 @@ export function PostFeedReason({
 		return (
 			<div className={css.includeReason}>
 				<PinIcon fill="currentColor" width={13} height={13} />
-				<Text {...reasonText}>{m['view.posts.label.pinned']()}</Text>
+				<Text {...reasonText}>{m['view.posts.feed.pinnedBadge']()}</Text>
 			</div>
 		);
 	}

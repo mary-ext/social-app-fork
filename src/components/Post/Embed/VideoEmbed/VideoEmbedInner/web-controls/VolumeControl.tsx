@@ -61,7 +61,7 @@ export function VolumeControl({
 							min={0}
 							max={100}
 							value={sliderVolume}
-							aria-label={m['components.post.a11y.volume']()}
+							aria-label={m['components.post.video.a11y.volume']()}
 							className={clsx(styles.slider, IS_WEB_SAFARI && styles.sliderSafari)}
 							onChange={onVolumeChange}
 							// @ts-expect-error for old versions of firefox, and then re-using it for targeting the CSS -sfn
@@ -72,8 +72,8 @@ export function VolumeControl({
 			)}
 			<ControlButton
 				active={muted || volume === 0}
-				activeLabel={m['common.action.unmute']()}
-				inactiveLabel={m['common.action.mute']()}
+				activeLabel={m['common.mute.action.unmute']()}
+				inactiveLabel={m['common.mute.action.mute']()}
 				activeIcon={MuteIcon}
 				inactiveIcon={UnmuteIcon}
 				onPress={onPressMute}

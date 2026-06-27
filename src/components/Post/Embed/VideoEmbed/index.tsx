@@ -186,12 +186,12 @@ function VideoError({ error, retry }: { error: unknown; retry: () => void }) {
 	let text = null;
 
 	if (error instanceof VideoNotFoundError) {
-		text = m['components.post.error.videoNotFound']();
+		text = m['components.post.video.error.notFound']();
 	} else if (error instanceof HLSUnsupportedError) {
 		showRetryButton = false;
-		text = m['components.post.error.unsupportedCodec']();
+		text = m['components.post.video.error.unsupportedCodec']();
 	} else {
-		text = m['components.post.error.videoLoad']();
+		text = m['components.post.video.error.load']();
 	}
 
 	return (

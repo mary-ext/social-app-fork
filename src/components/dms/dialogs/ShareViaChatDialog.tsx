@@ -38,7 +38,7 @@ function SendViaChatDialogInner({
 		},
 		onError: (error) => {
 			logger.error('Failed to share post to chat', { message: error });
-			Toast.show(m['components.dms.error.openChat'](), {
+			Toast.show(m['components.dms.chat.error.open'](), {
 				type: 'error',
 			});
 		},
@@ -60,7 +60,7 @@ function SendViaChatDialogInner({
 
 	return (
 		<SearchablePeopleList
-			title={m['components.dms.title.sendPost']()}
+			title={m['components.dms.share.title']()}
 			onSelectChat={(chat) => {
 				if (chat.kind === 'user') {
 					onCreateChat(chat.did);

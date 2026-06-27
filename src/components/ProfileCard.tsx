@@ -101,7 +101,7 @@ export function Link({
 	return (
 		<InternalLink
 			testID={`profileCard-${profile.handle}-link`}
-			label={m['common.a11y.viewProfileNamed']({
+			label={m['common.profile.a11y.viewNamed']({
 				name: profile.displayName || sanitizeHandle(profile.handle),
 			})}
 			to={profileURL}
@@ -408,7 +408,7 @@ export function FollowButtonInner({
 		try {
 			await queueFollow();
 			Toast.show(
-				m['common.a11y.following']({
+				m['common.follow.a11y.following']({
 					name: sanitizeDisplayName(
 						profile.displayName || profile.handle,
 						getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
@@ -433,7 +433,7 @@ export function FollowButtonInner({
 		try {
 			await queueUnfollow();
 			Toast.show(
-				m['common.label.noLongerFollowing']({
+				m['common.follow.noLongerFollowing']({
 					name: sanitizeDisplayName(
 						profile.displayName || profile.handle,
 						getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
@@ -451,10 +451,10 @@ export function FollowButtonInner({
 		}
 	};
 
-	const unfollowLabel = m['common.action.following']();
+	const unfollowLabel = m['common.follow.action.following']();
 	const followLabel = profile.viewer?.followedBy
-		? m['common.action.followBack']()
-		: m['common.action.follow']();
+		? m['common.follow.action.followBack']()
+		: m['common.follow.action.follow']();
 
 	if (!profile.viewer) return null;
 	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) return null;

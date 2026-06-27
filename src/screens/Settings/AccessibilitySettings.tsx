@@ -21,13 +21,13 @@ export function AccessibilitySettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['screens.settings.title.accessibility']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.settings.accessibility.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
-					<Settings.Section titleText={m['common.label.altText']()}>
+					<Settings.Section titleText={m['common.altText.label']()}>
 						<Settings.SwitchRow
 							label={m['screens.settings.accessibility.requireAltText']()}
 							onChange={setRequireAltTextEnabled}
@@ -37,12 +37,12 @@ export function AccessibilitySettingsScreen({}: Props) {
 							<Settings.Label titleText={m['screens.settings.accessibility.requireAltText']()} />
 						</Settings.SwitchRow>
 						<Settings.SwitchRow
-							label={m['screens.settings.label.largerAltTextBadges']()}
+							label={m['screens.settings.accessibility.largerAltTextBadges']()}
 							onChange={setLargeAltBadgeEnabled}
 							value={largeAltBadgeEnabled}
 						>
 							<Settings.Icon icon={TextSizeIcon} />
-							<Settings.Label titleText={m['screens.settings.label.largerAltTextBadges']()} />
+							<Settings.Label titleText={m['screens.settings.accessibility.largerAltTextBadges']()} />
 						</Settings.SwitchRow>
 					</Settings.Section>
 				</Settings.List>

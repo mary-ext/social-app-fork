@@ -174,7 +174,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 									<span className={styles.readingTime}>
 										<Clock size="xs" fill="currentColor" />
 										<Text color="textContrastMedium" size="xs">
-											{m['components.post.label.readingTime']({ readingTime: view.readingTime })}
+											{m['components.post.publication.readingTime']({ readingTime: view.readingTime })}
 										</Text>
 									</span>
 								) : null}
@@ -215,8 +215,8 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 				href={view.source.uri}
 				label={
 					view.source.title
-						? m['components.post.action.viewSource']({ title: view.source.title })
-						: m['components.post.action.viewPublication']()
+						? m['components.post.publication.action.viewSource']({ title: view.source.title })
+						: m['components.post.publication.action.view']()
 				}
 				onPress={open}
 			>
@@ -272,8 +272,8 @@ function PublicationFooter({
 				href={view.source.uri}
 				label={
 					view.source.title
-						? m['components.post.action.viewSource']({ title: view.source.title })
-						: m['components.post.action.viewPublication']()
+						? m['components.post.publication.action.viewSource']({ title: view.source.title })
+						: m['components.post.publication.action.view']()
 				}
 				onPress={open}
 				tabIndex={-1}
@@ -357,14 +357,17 @@ function SubscribeButton({
 	const publicationTitle = view.source.title;
 	const label = highlightedPublisher
 		? publicationTitle
-			? m['components.post.action.subscribeToOn']({ publicationTitle, name: highlightedPublisher.name })
-			: m['components.post.action.subscribeOn']({ name: highlightedPublisher.name })
+			? m['components.post.publication.action.subscribeTo']({
+					publicationTitle,
+					name: highlightedPublisher.name,
+				})
+			: m['components.post.publication.action.subscribe']({ name: highlightedPublisher.name })
 		: publicationTitle
-			? m['components.post.action.viewPublicationTitle']({ publicationTitle })
-			: m['components.post.action.viewPublication']();
+			? m['components.post.publication.action.viewTitle']({ publicationTitle })
+			: m['components.post.publication.action.view']();
 	const cta = highlightedPublisher
-		? m['components.post.action.subscribeOn']({ name: highlightedPublisher.name })
-		: m['components.post.action.viewPublication']();
+		? m['components.post.publication.action.subscribe']({ name: highlightedPublisher.name })
+		: m['components.post.publication.action.view']();
 
 	/*
 	 * The custom site theme paints the button background with `accent` and the text with `accentForeground`.

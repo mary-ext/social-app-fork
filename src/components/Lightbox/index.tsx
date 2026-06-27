@@ -225,9 +225,9 @@ function Chrome() {
 		} else if (typeof navigator !== 'undefined' && navigator.clipboard) {
 			try {
 				await navigator.clipboard.writeText(url);
-				Toast.show(m['components.lightbox.toast.linkCopied']());
+				Toast.show(m['components.lightbox.share.copiedToast']());
 			} catch {
-				Toast.show(m['components.lightbox.error.copyLink'](), { type: 'error' });
+				Toast.show(m['components.lightbox.share.error'](), { type: 'error' });
 			}
 		}
 	}, [img?.src]);
@@ -238,8 +238,8 @@ function Chrome() {
 			return;
 		}
 		saveImageToMediaLibrary({ uri: url }).then(
-			() => Toast.show(m['components.lightbox.toast.saved']()),
-			() => Toast.show(m['components.lightbox.error.save'](), { type: 'error' }),
+			() => Toast.show(m['components.lightbox.download.savedToast']()),
+			() => Toast.show(m['components.lightbox.download.error'](), { type: 'error' }),
 		);
 	}, [img?.src]);
 
@@ -272,12 +272,12 @@ function Chrome() {
 						<EllipsisIcon size="md" fill="currentColor" className={styles.rotated} />
 					</Menu.Trigger>
 					<Menu.Popup label={m['components.lightbox.a11y.options']()}>
-						<Menu.Item label={m['components.lightbox.action.share']()} onClick={() => void onShare()}>
-							<Menu.ItemText>{m['components.lightbox.action.share']()}</Menu.ItemText>
+						<Menu.Item label={m['components.lightbox.share.label']()} onClick={() => void onShare()}>
+							<Menu.ItemText>{m['components.lightbox.share.label']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={ShareIcon} position="right" />
 						</Menu.Item>
-						<Menu.Item label={m['components.lightbox.action.download']()} onClick={onDownload}>
-							<Menu.ItemText>{m['components.lightbox.action.download']()}</Menu.ItemText>
+						<Menu.Item label={m['components.lightbox.download.label']()} onClick={onDownload}>
+							<Menu.ItemText>{m['components.lightbox.download.label']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={DownloadIcon} position="right" />
 						</Menu.Item>
 					</Menu.Popup>
@@ -296,7 +296,7 @@ function Chrome() {
 					<button
 						type="button"
 						className={styles.altButton}
-						aria-label={m['components.lightbox.action.expandAlt']()}
+						aria-label={m['components.lightbox.altText.expand']()}
 						onClick={() => setAltExpanded((v) => !v)}
 					>
 						<Text size="md" numberOfLines={altExpanded ? undefined : 3} className={styles.altText}>

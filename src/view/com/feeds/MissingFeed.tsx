@@ -37,9 +37,7 @@ export function MissingFeed({
 	return (
 		<>
 			<Button
-				label={
-					type === 'feed' ? m['view.feeds.error.connectCustomFeed']() : m['view.feeds.label.deletedList']()
-				}
+				label={type === 'feed' ? m['view.feeds.feed.error.connect']() : m['view.feeds.list.deleted']()}
 				accessibilityHint={m['view.feeds.a11y.tapForInfo']()}
 				onPress={control.open}
 				style={[
@@ -67,9 +65,7 @@ export function MissingFeed({
 					</View>
 					<View style={[a.flex_1]}>
 						<Text emoji style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]} numberOfLines={1}>
-							{type === 'feed'
-								? m['view.feeds.error.feedUnavailableTitle']()
-								: m['view.feeds.label.deletedList']()}
+							{type === 'feed' ? m['view.feeds.feed.unavailable.title']() : m['view.feeds.list.deleted']()}
 						</Text>
 						<Text
 							style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug, a.italic]}
@@ -99,23 +95,19 @@ function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list';
 
 	return (
 		<Dialog.ScrollableInner
-			label={
-				type === 'feed' ? m['view.feeds.a11y.unavailableFeedInfo']() : m['view.feeds.label.deletedList']()
-			}
+			label={type === 'feed' ? m['view.feeds.feed.unavailable.a11y']() : m['view.feeds.list.deleted']()}
 			style={{ maxWidth: 500 }}
 		>
 			<View style={[a.gap_sm]}>
 				<Text style={[a.font_bold, a.text_2xl]}>
-					{type === 'feed' ? m['view.feeds.error.connectFeedService']() : m['view.feeds.label.deletedList']()}
+					{type === 'feed' ? m['view.feeds.feed.error.connectService']() : m['view.feeds.list.deleted']()}
 				</Text>
 				<Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-					{type === 'feed'
-						? m['view.feeds.error.feedServiceUnavailable']()
-						: m['view.feeds.error.listNotFound']()}
+					{type === 'feed' ? m['view.feeds.feed.unavailable.message']() : m['view.feeds.list.notFound']()}
 				</Text>
 				<Divider style={[a.my_md]} />
 				<Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
-					{type === 'feed' ? m['view.feeds.a11y.feedCreator']() : m['view.feeds.a11y.listCreator']()}
+					{type === 'feed' ? m['view.feeds.feed.a11y.creator']() : m['view.feeds.list.a11y.creator']()}
 				</Text>
 				{profile && moderationOpts && (
 					<View style={[a.w_full, a.align_start]}>
@@ -129,13 +121,13 @@ function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list';
 				)}
 				{isProfileError && (
 					<Text style={[t.atoms.text_contrast_high, a.italic, a.text_center, a.w_full]}>
-						{m['view.feeds.error.profileNotFound']()}
+						{m['view.feeds.profile.notFound']()}
 					</Text>
 				)}
 				{type === 'feed' && (
 					<>
 						<Text style={[a.font_semi_bold, t.atoms.text_contrast_high, a.mt_md]}>
-							{m['view.feeds.a11y.feedIdentifier']()}
+							{m['view.feeds.feed.a11y.identifier']()}
 						</Text>
 						<Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>{atUri.rkey}</Text>
 					</>

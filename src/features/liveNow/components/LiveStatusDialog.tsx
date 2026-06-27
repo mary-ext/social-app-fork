@@ -133,11 +133,11 @@ export function LiveStatus({
 				<View style={[a.flex_row, a.align_center, a.justify_between, a.w_full, a.pt_sm]}>
 					<View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
 						<CircleInfoIcon size="sm" fill={colors.textContrastLow} />
-						<Text style={[t.atoms.text_contrast_low, a.text_sm]}>{m['features.liveNow.label.beta']()}</Text>
+						<Text style={[t.atoms.text_contrast_low, a.text_sm]}>{m['features.liveNow.badge.beta']()}</Text>
 					</View>
 					{status && (
 						<SimpleInlineLinkText
-							label={m['common.action.reportLivestream']()}
+							label={m['common.liveNow.report']()}
 							{...createStaticClick(() => {
 								function open() {
 									reportDialogControl.openWithPayload({
@@ -186,12 +186,12 @@ function ModeratedImage() {
 
 				{hider.meta.allowOverride && (
 					<SimpleInlineLinkText
-						label={m['common.action.showAnyway']()}
+						label={m['common.moderation.showAnyway']()}
 						{...createStaticClick(() => {
 							hider.setIsContentVisible(true);
 						})}
 					>
-						{m['common.action.showAnyway']()}
+						{m['common.moderation.showAnyway']()}
 					</SimpleInlineLinkText>
 				)}
 			</View>

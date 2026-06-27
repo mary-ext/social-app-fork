@@ -69,7 +69,7 @@ export const SplashScreen = ({
 							</View>
 
 							<Text style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-								{m['common.label.whatsUp']()}
+								{m['common.compose.placeholder']()}
 							</Text>
 						</View>
 
@@ -80,13 +80,13 @@ export const SplashScreen = ({
 							<Button
 								testID="signInButton"
 								onPress={onPressSignin}
-								label={m['common.action.signIn']()}
-								accessibilityHint={m['view.auth.a11y.signInHint']()}
+								label={m['common.session.action.signIn']()}
+								accessibilityHint={m['view.auth.signIn.a11yHint']()}
 								size="large"
 								variant="solid"
 								color="secondary"
 							>
-								<ButtonText>{m['common.action.signIn']()}</ButtonText>
+								<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
 							</Button>
 						</View>
 					</ErrorBoundary>
@@ -116,14 +116,14 @@ function Footer() {
 				t.atoms.border_contrast_medium,
 			]}
 		>
-			<InlineLinkText label={m['view.auth.cta.learnMore']()} to="https://bsky.social">
-				{m['view.auth.label.business']()}
+			<InlineLinkText label={m['view.auth.links.learnMore']()} to="https://bsky.social">
+				{m['view.auth.links.business']()}
 			</InlineLinkText>
-			<InlineLinkText label={m['view.auth.a11y.readBlog']()} to="https://bsky.social/about/blog">
-				{m['view.auth.label.blog']()}
+			<InlineLinkText label={m['view.auth.links.blogA11y']()} to="https://bsky.social/about/blog">
+				{m['view.auth.links.blog']()}
 			</InlineLinkText>
-			<InlineLinkText label={m['view.auth.a11y.seeJobs']()} to="https://bsky.social/about/join">
-				{m['view.auth.label.jobs']()}
+			<InlineLinkText label={m['view.auth.links.jobsA11y']()} to="https://bsky.social/about/join">
+				{m['view.auth.links.jobs']()}
 			</InlineLinkText>
 			<View style={a.flex_1} />
 			<AppLanguageDropdown />

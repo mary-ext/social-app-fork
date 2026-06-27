@@ -29,7 +29,7 @@ export function ThreadItemAnchorNoUnauthenticated() {
 
 			<View style={[a.py_sm]}>
 				<Text style={[a.text_xl, a.italic, t.atoms.text_contrast_medium]}>
-					{m['screens.postThread.hint.signedInOnly']()}
+					{m['screens.postThread.visibility.signedInOnly']()}
 				</Text>
 			</View>
 		</View>

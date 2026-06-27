@@ -46,7 +46,7 @@ export function RequestListItem({ convo: convoView }: { convo: ChatBskyConvoDefs
 				<View style={[a.py_lg, a.w_full, { opacity: 0 }]} aria-hidden>
 					{/* Placeholder text so that it responds to the font height */}
 					<Text style={[a.text_xs, a.leading_tight, a.font_semi_bold]}>
-						{m['screens.messages.action.acceptRequest']()}
+						{m['screens.messages.requests.accept.button']()}
 					</Text>
 				</View>
 				{/* then, this gets absolutely positioned on top of the spacer */}

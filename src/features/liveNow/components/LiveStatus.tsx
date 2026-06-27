@@ -55,7 +55,7 @@ export function LiveStatusDialog({
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup
 				className={css.dialogPopup}
-				label={m['features.liveNow.label.userIsLive']({ handle: sanitizeHandle(profile.handle) })}
+				label={m['features.liveNow.badge.userIsLive']({ handle: sanitizeHandle(profile.handle) })}
 			>
 				<LiveStatus
 					embed={embed}
@@ -183,7 +183,7 @@ export function LiveStatus({
 					<div className={css.beta}>
 						<CircleInfoIcon width={16} height={16} fill={colors.textContrastLow} />
 						<Text color="textContrastLow" size="sm">
-							{m['features.liveNow.label.beta']()}
+							{m['features.liveNow.badge.beta']()}
 						</Text>
 					</div>
 					<Button

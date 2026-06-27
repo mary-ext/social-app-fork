@@ -93,8 +93,8 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		convo
 			.deleteMessage(deleteTarget.id)
-			.then(() => Toast.show(m['components.dms.toast.messageDeleted']()))
-			.catch(() => Toast.show(m['components.dms.error.deleteMessage']()));
+			.then(() => Toast.show(m['components.dms.delete.messageDeleted']()))
+			.catch(() => Toast.show(m['components.dms.delete.error.message']()));
 	}, [convo, deleteTarget]);
 
 	const onAfterReportSubmit = useCallback(() => {
@@ -165,8 +165,8 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 			)}
 			<Prompt.Basic
 				control={deleteControl}
-				title={m['components.dms.action.deleteMessage']()}
-				description={m['components.dms.dialog.deleteMessagePrompt']()}
+				title={m['components.dms.delete.action.message']()}
+				description={m['components.dms.delete.messagePrompt']()}
 				confirmButtonCta={m['common.action.delete']()}
 				confirmButtonColor="negative"
 				onConfirm={onConfirmDelete}

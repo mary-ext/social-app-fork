@@ -58,8 +58,8 @@ export function DraftItem({
 			<button
 				type="button"
 				className={styles.card}
-				aria-label={m['view.composer.action.openDraft']()}
-				aria-description={m['view.composer.a11y.opensDraft']()}
+				aria-label={m['view.composer.drafts.action.open']()}
+				aria-description={m['view.composer.drafts.opensDraft']()}
 				onClick={() => onSelect(draft)}
 			>
 				{!!post.text.trim().length && <DraftRichText value={post.text} numberOfLines={8} />}
@@ -73,8 +73,8 @@ export function DraftItem({
 								icon={WarningIcon}
 								text={
 									isUnknownDevice
-										? m['view.composer.label.mediaStoredOtherDevice']()
-										: m['view.composer.label.mediaStoredOn']({
+										? m['view.composer.media.storedOtherDevice']()
+										: m['view.composer.media.storedOn']({
 												deviceName: draft.draft.deviceName ?? '',
 											})
 								}
@@ -84,16 +84,16 @@ export function DraftItem({
 							<DraftMetadataTag
 								display="warning"
 								icon={WarningIcon}
-								text={m['view.composer.label.missingMedia']()}
+								text={m['view.composer.media.missing']()}
 							/>
 						)}
 						{draft.meta.hasQuotes && (
-							<DraftMetadataTag icon={CloseQuoteIcon} text={m['common.action.quotePost']()} />
+							<DraftMetadataTag icon={CloseQuoteIcon} text={m['common.quote.post']()} />
 						)}
 						{draft.meta.replyCount > 0 && (
 							<DraftMetadataTag
 								icon={CirclePlusIcon}
-								text={m['view.composer.count.morePosts']({
+								text={m['view.composer.thread.morePosts']({
 									count: draft.meta.replyCount,
 								})}
 							/>
@@ -127,8 +127,8 @@ export function DraftItem({
 
 			<Prompt.Basic
 				handle={discardPromptControl}
-				title={m['view.composer.dialog.discardDraftTitle']()}
-				description={m['view.composer.dialog.draftDeleteWarning']()}
+				title={m['view.composer.drafts.discard.title']()}
+				description={m['view.composer.drafts.discard.message']()}
 				onConfirm={handleDelete}
 				confirmButtonCta={m['common.action.discard']()}
 				confirmButtonColor="negative"
@@ -216,7 +216,7 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 							<PlayButtonIcon size={24} />
 						</div>
 						<div className={styles.gifBadge} aria-hidden>
-							<Text className={styles.gifBadgeText}>{m['common.label.gif']()}</Text>
+							<Text className={styles.gifBadgeText}>{m['common.gif.label']()}</Text>
 						</div>
 					</MediaTile>
 				</div>

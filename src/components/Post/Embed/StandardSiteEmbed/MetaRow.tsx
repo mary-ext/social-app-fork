@@ -56,7 +56,7 @@ export function MetaRow({
 			key: 'author',
 			node: (
 				<Text size="xs" color="textContrastMedium" numberOfLines={1}>
-					{m['components.post.label.byAuthor']({ handle: authorProfile.handle })}
+					{m['components.post.publication.byAuthor']({ handle: authorProfile.handle })}
 				</Text>
 			),
 		});

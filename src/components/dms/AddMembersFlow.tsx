@@ -171,7 +171,7 @@ export function AddMembersFlow({
 			_items.push({
 				type: 'empty',
 				key: 'empty',
-				message: m['components.dms.error.networkIssues'](),
+				message: m['components.dms.chat.error.network'](),
 			});
 		} else if (searchText.length) {
 			if (autocompleteResults?.length) {
@@ -213,7 +213,7 @@ export function AddMembersFlow({
 			_items.unshift({
 				type: 'label',
 				key: 'suggested',
-				message: m['components.dms.label.suggested'](),
+				message: m['components.dms.search.suggested'](),
 			});
 		}
 
@@ -222,7 +222,7 @@ export function AddMembersFlow({
 			// append an inline indicator so the user sees that work is happening.
 			_items.push({ type: 'loading', key: 'loading' });
 		} else if (searchText && !isAutocompleteFetching && !_items.length && !isError) {
-			_items.push({ type: 'empty', key: 'empty', message: m['common.empty.noResults']() });
+			_items.push({ type: 'empty', key: 'empty', message: m['common.search.empty']() });
 		}
 
 		return _items;
@@ -282,7 +282,7 @@ export function AddMembersFlow({
 		}, 0);
 	}, []);
 
-	let buttonLabel = m['components.dms.action.continueToName']();
+	let buttonLabel = m['components.dms.group.action.continueToName']();
 	let buttonText = m['common.action.next']();
 	let showButton = groupChatProfiles.length > 0;
 	let isButtonDisabled = !showButton;
@@ -391,7 +391,7 @@ export function AddMembersFlow({
 			onChange={setGroupChatMembers}
 			type="checkbox"
 			maxSelections={remainingSlots}
-			label={m['components.dms.action.addMembers']()}
+			label={m['components.dms.group.action.addMembers']()}
 			style={[webViewStyle(a.contents)]}
 		>
 			<Dialog.InnerFlatList

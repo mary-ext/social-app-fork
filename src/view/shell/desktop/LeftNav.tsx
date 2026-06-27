@@ -144,10 +144,10 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 			)}
 			<Prompt.Basic
 				handle={signOutPromptHandle}
-				title={m['common.dialog.signOutTitle']()}
-				description={m['common.hint.signOutAll']()}
+				title={m['common.session.signOut.title']()}
+				description={m['common.session.signOut.message']()}
 				onConfirm={() => logoutEveryAccount()}
-				confirmButtonCta={m['common.action.signOut']()}
+				confirmButtonCta={m['common.session.action.signOut']()}
 				cancelButtonCta={m['common.action.cancel']()}
 				confirmButtonColor="negative"
 			/>
@@ -178,7 +178,7 @@ function SwitchMenuItems({
 			{accounts && accounts.length > 0 && (
 				<>
 					<Menu.Group>
-						<Menu.LabelText>{m['common.action.switchAccount']()}</Menu.LabelText>
+						<Menu.LabelText>{m['common.account.action.switch']()}</Menu.LabelText>
 						{accounts.map((other) => (
 							<SwitchMenuItem key={other.account.did} account={other.account} profile={other.profile} />
 						))}
@@ -187,13 +187,13 @@ function SwitchMenuItems({
 				</>
 			)}
 			<SwitcherMenuProfileLink />
-			<Menu.Item label={m['common.action.addAnotherAccount']()} onClick={onAddAnotherAccount}>
+			<Menu.Item label={m['common.account.action.addAnother']()} onClick={onAddAnotherAccount}>
 				<Menu.ItemIcon icon={PlusIcon} />
-				<Menu.ItemText>{m['common.action.addAnotherAccount']()}</Menu.ItemText>
+				<Menu.ItemText>{m['common.account.action.addAnother']()}</Menu.ItemText>
 			</Menu.Item>
-			<Menu.Item label={m['common.action.signOut']()} onClick={() => signOutPromptHandle.open(null)}>
+			<Menu.Item label={m['common.session.action.signOut']()} onClick={() => signOutPromptHandle.open(null)}>
 				<Menu.ItemIcon icon={LeaveIcon} />
-				<Menu.ItemText>{m['common.action.signOut']()}</Menu.ItemText>
+				<Menu.ItemText>{m['common.session.action.signOut']()}</Menu.ItemText>
 			</Menu.Item>
 		</Menu.Popup>
 	);
@@ -238,11 +238,11 @@ function SwitcherMenuProfileLink() {
 
 	return (
 		<Menu.Item
-			label={m['common.action.goToProfile']()}
+			label={m['common.profile.action.goTo']()}
 			render={<a href={bindings.href} onClick={bindings.onClick} />}
 		>
 			<Menu.ItemIcon icon={UserCircleIcon} />
-			<Menu.ItemText>{m['common.action.goToProfile']()}</Menu.ItemText>
+			<Menu.ItemText>{m['common.profile.action.goTo']()}</Menu.ItemText>
 		</Menu.Item>
 	);
 }
@@ -326,7 +326,7 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 				<Icon aria-hidden={true} width={NAV_ICON_WIDTH} fill={colors.text} />
 				{typeof count === 'string' && count ? (
 					<Text
-						aria-label={m['view.notifications.unreadCount']({ count })}
+						aria-label={m['view.notifications.unreadCount.label']({ count })}
 						size="sm"
 						weight="semiBold"
 						color="white"
@@ -386,14 +386,14 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 		<div className={minimal ? css.composeRowMinimal : css.composeRow}>
 			<Button
 				disabled={isFetchingHandle}
-				label={m['common.action.composePost']()}
+				label={m['common.compose.action.compose']()}
 				onClick={() => void onPressCompose()}
 				size="large"
 				color="primary"
 				className={minimal ? css.composeButtonMinimal : undefined}
 			>
 				<ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
-				{!minimal && <ButtonText>{m['common.label.newPost']()}</ButtonText>}
+				{!minimal && <ButtonText>{m['common.compose.action.new']()}</ButtonText>}
 			</Button>
 		</div>
 	);
@@ -464,7 +464,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: MessageFilledIcon,
 							inactive: MessageIcon,
 						}}
-						label={m['common.label.chat']()}
+						label={m['common.chat.label']()}
 					/>
 					<NavItem
 						href="/feeds"
@@ -482,7 +482,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: ListFilledIcon,
 							inactive: ListIcon,
 						}}
-						label={m['common.label.lists']()}
+						label={m['common.list.label']()}
 					/>
 					<NavItem
 						href="/saved"

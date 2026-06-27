@@ -424,8 +424,8 @@ function Inner({
 		profile.viewer?.blocking || profile.viewer?.blockedBy || profile.viewer?.blockingByList;
 	const following = formatCount(profile.followsCount || 0);
 	const followers = formatCount(profile.followersCount || 0);
-	const pluralizedFollowers = m['common.count.followers']({ count: profile.followersCount || 0 });
-	const pluralizedFollowings = m['common.count.following']({ count: profile.followsCount || 0 });
+	const pluralizedFollowers = m['common.follow.followersUnit']({ count: profile.followersCount || 0 });
+	const pluralizedFollowings = m['common.follow.followingUnit']({ count: profile.followsCount || 0 });
 	const profileURL = makeProfileLink({ did: profile.did });
 	const isMe = useMemo(() => currentAccount?.did === profile.did, [currentAccount, profile]);
 	const isLabeler = profile.associated?.labeler;
@@ -433,7 +433,7 @@ function Inner({
 	return (
 		<View>
 			<View style={[a.flex_row, a.justify_between, a.align_start]}>
-				<Link to={profileURL} label={m['common.action.viewProfile']()} onPress={hide}>
+				<Link to={profileURL} label={m['common.profile.action.view']()} onPress={hide}>
 					<UserAvatar
 						size={64}
 						avatar={profile.avatar}
@@ -447,14 +447,14 @@ function Inner({
 					(isBlockedUser ? (
 						<Link
 							to={profileURL}
-							label={m['common.a11y.viewBlockedProfile']()}
+							label={m['common.profile.a11y.viewBlocked']()}
 							onPress={hide}
 							size="small"
 							color="secondary"
 							variant="solid"
 							style={[a.rounded_full]}
 						>
-							<ButtonText>{m['common.action.viewProfile']()}</ButtonText>
+							<ButtonText>{m['common.profile.action.view']()}</ButtonText>
 						</Link>
 					) : (
 						<Button
@@ -462,7 +462,9 @@ function Inner({
 							color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
 							variant="solid"
 							label={
-								profileShadow.viewer?.following ? m['common.action.following']() : m['common.action.follow']()
+								profileShadow.viewer?.following
+									? m['common.follow.action.following']()
+									: m['common.follow.action.follow']()
 							}
 							style={[a.rounded_full]}
 							onPress={profileShadow.viewer?.following ? unfollow : follow}
@@ -470,13 +472,13 @@ function Inner({
 							<ButtonIcon position="left" icon={profileShadow.viewer?.following ? Check : Plus} />
 							<ButtonText>
 								{profileShadow.viewer?.following
-									? m['common.action.following']()
-									: m['common.action.follow']()}
+									? m['common.follow.action.following']()
+									: m['common.follow.action.follow']()}
 							</ButtonText>
 						</Button>
 					))}
 			</View>
-			<Link to={profileURL} label={m['common.action.viewProfile']()} onPress={hide}>
+			<Link to={profileURL} label={m['common.profile.action.view']()} onPress={hide}>
 				<View style={[a.pb_sm, a.flex_1]}>
 					<View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
 						<Text numberOfLines={1} style={[a.text_lg, a.leading_snug, a.font_semi_bold, a.self_start]}>
@@ -514,7 +516,7 @@ function Inner({
 						</InlineLinkText>
 						<InlineLinkText
 							to={makeProfileLink(profile, 'follows')}
-							label={m['common.label.followingCount']({ following })}
+							label={m['common.follow.followingCount']({ following })}
 							color="text"
 							onPress={hide}
 						>

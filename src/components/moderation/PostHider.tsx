@@ -77,7 +77,7 @@ export function PostHider({
 			<Dialog.Trigger
 				handle={control}
 				className={styles.iconButton}
-				aria-label={m['components.moderation.action.learnMoreWarning']()}
+				aria-label={m['components.moderation.label.learnMore.aboutWarning']()}
 			>
 				<span
 					className={clsx(styles.iconCircle, iconClassName)}
@@ -93,7 +93,7 @@ export function PostHider({
 				<button
 					type="button"
 					className={styles.toggle}
-					aria-label={m['components.moderation.action.showContent']()}
+					aria-label={m['components.moderation.label.showContent']()}
 					onClick={() => {
 						setOverride(true);
 					}}

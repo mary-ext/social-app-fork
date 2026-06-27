@@ -46,7 +46,7 @@ export function getReactionInfo({
 		});
 
 	const lastMessageText = reactedTo.text;
-	const target = lastMessageText ? `"${lastMessageText}"` : m['components.dms.label.aMessage']();
+	const target = lastMessageText ? `"${lastMessageText}"` : m['components.dms.message.preview.fallback']();
 
 	let message: string;
 	if (isFromMe) {

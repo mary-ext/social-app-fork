@@ -120,10 +120,10 @@ export function ProfileSubpageHeader({
 						<Text type="lg" style={[pal.textLight]} numberOfLines={1}>
 							{purpose === 'app.bsky.graph.defs#curatelist' ? (
 								isOwner ? (
-									m['view.profile.label.listByYou']()
+									m['view.profile.list.byYou']()
 								) : (
 									<Trans
-										message={m['view.profile.label.listBy']}
+										message={m['view.profile.list.by']}
 										markup={{
 											t0: () => (
 												<TextLink
@@ -137,10 +137,10 @@ export function ProfileSubpageHeader({
 								)
 							) : purpose === 'app.bsky.graph.defs#modlist' ? (
 								isOwner ? (
-									m['view.profile.label.modListByYou']()
+									m['view.profile.list.moderationByYou']()
 								) : (
 									<Trans
-										message={m['view.profile.label.modListBy']}
+										message={m['view.profile.list.moderationBy']}
 										markup={{
 											t0: () => (
 												<TextLink
@@ -154,10 +154,10 @@ export function ProfileSubpageHeader({
 								)
 							) : purpose === 'app.bsky.graph.defs#referencelist' ? (
 								isOwner ? (
-									m['common.label.starterPackByYou']()
+									m['common.starterPack.byYou']()
 								) : (
 									<Trans
-										message={m['view.profile.label.starterPackBy']}
+										message={m['view.profile.starterPack.by']}
 										markup={{
 											t0: () => (
 												<TextLink

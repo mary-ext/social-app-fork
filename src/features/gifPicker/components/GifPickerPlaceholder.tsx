@@ -23,17 +23,17 @@ export function GifPickerPlaceholder({
 	onGoBack: () => void;
 }) {
 	if (isLoading) {
-		return <CenteredSpinner label={m['features.gifPicker.label.loading']()} size="2xl" fill />;
+		return <CenteredSpinner label={m['features.gifPicker.load.loading']()} size="2xl" fill />;
 	}
 
 	if (isError) {
 		return (
 			<div className={styles.center}>
 				<Text size="lg" weight="semiBold">
-					{m['features.gifPicker.error.loadTitle']()}
+					{m['features.gifPicker.load.error.title']()}
 				</Text>
 				<Text size="sm" color="textContrastMedium">
-					{m['features.gifPicker.error.loadBody']()}
+					{m['features.gifPicker.load.error.message']()}
 				</Text>
 				<Button
 					label={m['common.action.tryAgain']()}
@@ -48,10 +48,10 @@ export function GifPickerPlaceholder({
 	}
 
 	const emptyMessage = isSearching
-		? m['features.gifPicker.empty.searchNoResults']({ query })
+		? m['features.gifPicker.search.empty']({ query })
 		: isRecentsEmpty
-			? m['features.gifPicker.empty.recents']()
-			: m['features.gifPicker.empty.trending']();
+			? m['features.gifPicker.recents.empty']()
+			: m['features.gifPicker.trending.empty']();
 
 	return (
 		<div className={styles.center}>

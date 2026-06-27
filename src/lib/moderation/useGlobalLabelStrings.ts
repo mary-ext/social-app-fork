@@ -15,15 +15,15 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
 			description: m['lib.moderation.hiddenByModerators'](),
 		},
 		'!warn': {
-			name: m['common.label.contentWarning'](),
+			name: m['common.moderation.contentWarning'](),
 			description: m['lib.moderation.generalWarning'](),
 		},
 		'!no-unauthenticated': {
-			name: m['common.dialog.signInRequiredTitle'](),
+			name: m['common.session.signInRequiredTitle'](),
 			description: m['lib.moderation.signedInOnly'](),
 		},
 		porn: {
-			name: m['common.label.adultContent'](),
+			name: m['common.moderation.adultContent'](),
 			description: m['lib.moderation.explicitSexual'](),
 		},
 		sexual: {
@@ -35,11 +35,11 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
 			description: m['lib.moderation.artisticNudesExample'](),
 		},
 		'graphic-media': {
-			name: m['common.label.graphicMedia'](),
+			name: m['common.moderation.graphicMedia'](),
 			description: m['lib.moderation.graphicMedia'](),
 		},
 		gore: {
-			name: m['common.label.graphicMedia'](),
+			name: m['common.moderation.graphicMedia'](),
 			description: m['lib.moderation.graphicMedia'](),
 		},
 	};

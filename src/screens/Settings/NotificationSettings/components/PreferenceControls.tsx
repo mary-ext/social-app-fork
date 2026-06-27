@@ -32,7 +32,7 @@ export function PreferenceControls({
 	if (!preference) {
 		return (
 			<div className={styles.loaderWrap}>
-				<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
+				<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
 			</div>
 		);
 	}
@@ -101,29 +101,29 @@ export function Inner({
 		<div className={styles.container}>
 			<Toggle.Group
 				className={styles.channels}
-				label={m['screens.settings.notifications.selectChannels']()}
+				label={m['screens.settings.notifications.channel.selectPrompt']()}
 				onChange={onChangeChannels}
 				type="checkbox"
 				values={channels}
 			>
 				<Toggle.Item
 					className={styles.switchRow}
-					label={m['screens.settings.notifications.receivePush']()}
+					label={m['screens.settings.notifications.channel.receivePush']()}
 					name="push"
 				>
 					<Text className={styles.switchLabel} size="md">
-						{m['screens.settings.notifications.pushNotifications']()}
+						{m['screens.settings.notifications.channel.pushNotifications']()}
 					</Text>
 					<Toggle.Switch />
 				</Toggle.Item>
 				{allowDisableInApp && (
 					<Toggle.Item
 						className={styles.switchRow}
-						label={m['screens.settings.notifications.receiveInApp']()}
+						label={m['screens.settings.notifications.channel.receiveInApp']()}
 						name="list"
 					>
 						<Text className={styles.switchLabel} size="md">
-							{m['screens.settings.notifications.inAppNotifications']()}
+							{m['screens.settings.notifications.channel.inAppNotifications']()}
 						</Text>
 						<Toggle.Switch />
 					</Toggle.Item>
@@ -133,34 +133,34 @@ export function Inner({
 				<>
 					<div className={styles.divider} />
 					<Text size="md" weight="semiBold">
-						{m['screens.settings.label.from']()}
+						{m['screens.settings.activitySubscription.from']()}
 					</Text>
 					<Toggle.Group
 						className={styles.radioList}
 						disabled={channels.length === 0}
-						label={m['screens.settings.hint.filterWhoYouReceive']()}
+						label={m['screens.settings.notifications.filterHint']()}
 						onChange={onChangeFilter}
 						type="radio"
 						values={[preference.include]}
 					>
-						<Toggle.RadioItem label={m['screens.settings.option.everyone']()} value="all">
+						<Toggle.RadioItem label={m['screens.settings.audience.everyone']()} value="all">
 							<Toggle.Panel>
 								<Toggle.RadioIndicator />
-								<Toggle.PanelText>{m['screens.settings.option.everyone']()}</Toggle.PanelText>
+								<Toggle.PanelText>{m['screens.settings.audience.everyone']()}</Toggle.PanelText>
 							</Toggle.Panel>
 						</Toggle.RadioItem>
 						{name === 'chat' ? (
-							<Toggle.RadioItem label={m['screens.settings.label.acceptedConversations']()} value="accepted">
+							<Toggle.RadioItem label={m['screens.settings.chat.acceptedConversations']()} value="accepted">
 								<Toggle.Panel>
 									<Toggle.RadioIndicator />
-									<Toggle.PanelText>{m['screens.settings.label.acceptedConversations']()}</Toggle.PanelText>
+									<Toggle.PanelText>{m['screens.settings.chat.acceptedConversations']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.RadioItem>
 						) : (
-							<Toggle.RadioItem label={m['screens.settings.option.peopleIFollow']()} value="follows">
+							<Toggle.RadioItem label={m['screens.settings.audience.peopleIFollow']()} value="follows">
 								<Toggle.Panel>
 									<Toggle.RadioIndicator />
-									<Toggle.PanelText>{m['screens.settings.option.peopleIFollow']()}</Toggle.PanelText>
+									<Toggle.PanelText>{m['screens.settings.audience.peopleIFollow']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.RadioItem>
 						)}

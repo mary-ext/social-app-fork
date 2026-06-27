@@ -22,7 +22,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 
 	const isBookmarked = !!post.viewer?.bookmarked;
 
-	const undoLabel = m['components.postControls.action.undo']();
+	const undoLabel = m['components.postControls.save.undo']();
 
 	const save = async ({ disableUndo }: { disableUndo?: boolean } = {}) => {
 		try {
@@ -31,7 +31,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 				post,
 			});
 
-			toast.show(m['components.postControls.toast.saved'](), {
+			toast.show(m['components.postControls.save.toast'](), {
 				action: disableUndo
 					? undefined
 					: { label: undoLabel, onPress: () => void remove({ disableUndo: true }) },
@@ -52,7 +52,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 				uri: post.uri,
 			});
 
-			toast.show(m['common.label.removedFromSaved'](), {
+			toast.show(m['common.savedPosts.removedToast'](), {
 				action: disableUndo
 					? undefined
 					: { label: undoLabel, onPress: () => void save({ disableUndo: true }) },
@@ -77,7 +77,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 
 	return {
 		isBookmarked,
-		label: isBookmarked ? m['common.action.removeFromSaved']() : m['components.postControls.action.save'](),
+		label: isBookmarked ? m['common.savedPosts.remove']() : m['components.postControls.save.action'](),
 		onToggle,
 	};
 }

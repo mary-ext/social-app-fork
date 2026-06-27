@@ -35,7 +35,7 @@ export function BookmarksScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.label.savedPosts']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.savedPosts.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -164,7 +164,7 @@ function BookmarkNotFound({
 	const remove = async () => {
 		try {
 			await bookmark({ action: 'delete', uri: post.uri });
-			toast.show(m['common.label.removedFromSaved'](), {
+			toast.show(m['common.savedPosts.removedToast'](), {
 				type: 'info',
 			});
 		} catch (e) {
@@ -184,12 +184,12 @@ function BookmarkNotFound({
 				<Skele.Text size="md" width="25%" />
 
 				<Text className={css.deletedMessage} color="textContrastMedium" size="md">
-					{m['screens.bookmarks.label.deletedPost']()}
+					{m['screens.bookmarks.deletedPost']()}
 				</Text>
 			</Skele.Col>
 
 			<Button
-				label={m['common.action.removeFromSaved']()}
+				label={m['common.savedPosts.remove']()}
 				size="tiny"
 				color="secondary"
 				onClick={() => void remove()}
@@ -217,10 +217,10 @@ function BookmarksEmpty() {
 	return (
 		<EmptyState
 			icon={BookmarkDeleteLarge}
-			message={m['screens.bookmarks.empty.title']()}
+			message={m['screens.bookmarks.empty']()}
 			messageColor="textContrastMedium"
 			button={{
-				label: m['screens.bookmarks.a11y.backHome'](),
+				label: m['screens.bookmarks.backHome'](),
 				text: m['common.action.goHome'](),
 				onPress: () => navigation.navigate('Home' as never),
 				size: 'small',

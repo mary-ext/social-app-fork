@@ -28,13 +28,13 @@ const EditImageDialogInner = lazy(() =>
 export function EditImageDialog(props: EditImageDialogProps) {
 	return (
 		<Dialog.Root disablePointerDismissal handle={props.handle}>
-			<Dialog.Popup scroll="body" label={m['view.composer.action.editImage']()}>
+			<Dialog.Popup scroll="body" label={m['view.composer.gallery.action.edit']()}>
 				<Suspense
 					fallback={
 						<Dialog.Body>
 							<div className={styles.loadingHeader} />
 							<div className={styles.loadingBody}>
-								<Spinner color={colors.contrast_500} label={m['common.label.loading']()} />
+								<Spinner color={colors.contrast_500} label={m['common.status.loading']()} />
 							</div>
 						</Dialog.Body>
 					}

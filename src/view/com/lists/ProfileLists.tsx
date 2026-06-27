@@ -98,7 +98,7 @@ export function ProfileLists({ did, enabled, listCount }: ProfileListsProps): Re
 				return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
 			}
 			if (item === LOAD_MORE_ERROR_ITEM) {
-				return <LoadMoreRetryBtn label={m['common.error.fetchLists']()} onPress={onPressRetryLoadMore} />;
+				return <LoadMoreRetryBtn label={m['common.list.fetchError']()} onPress={onPressRetryLoadMore} />;
 			}
 			if (item === LOADING) {
 				return <ListCard.LoadingPlaceholder count={listCount} />;
@@ -106,13 +106,13 @@ export function ProfileLists({ did, enabled, listCount }: ProfileListsProps): Re
 			return (
 				<EmptyState
 					icon={ListIcon}
-					message={isSelf ? m['view.lists.empty.none']() : m['view.lists.empty.title']()}
+					message={isSelf ? m['view.list.empty']() : m['view.list.emptyTitle']()}
 					messageColor="textContrastMedium"
 					button={
 						isSelf
 							? {
-									label: m['view.lists.action.create'](),
-									text: m['view.lists.action.create'](),
+									label: m['view.list.create'](),
+									text: m['view.list.create'](),
 									onPress: () => navigation.navigate('Lists' as never),
 									size: 'small',
 									color: 'primary',

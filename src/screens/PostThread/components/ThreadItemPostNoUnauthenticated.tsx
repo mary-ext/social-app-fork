@@ -45,7 +45,7 @@ export function ThreadItemPostNoUnauthenticated({
 				</Skele.Circle>
 
 				<Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
-					{m['screens.postThread.hint.signedInOnly']()}
+					{m['screens.postThread.visibility.signedInOnly']()}
 				</Text>
 			</Skele.Row>
 			<View

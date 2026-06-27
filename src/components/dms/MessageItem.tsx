@@ -280,7 +280,7 @@ let MessageItem = ({
 					<Pressable
 						accessible={true}
 						accessibilityLabel={reactionsLabel}
-						accessibilityHint={isGroupChat ? m['components.dms.a11y.tapToViewReactions']() : undefined}
+						accessibilityHint={isGroupChat ? m['components.dms.reaction.a11y.view']() : undefined}
 						style={[
 							a.flex_row,
 							a.gap_2xs,
@@ -413,7 +413,7 @@ let MessageItem = ({
 									)}
 									{rt.text.length > 0 && (
 										<View
-											accessibilityHint={m['components.dms.hint.addReaction']()}
+											accessibilityHint={m['components.dms.reaction.hint']()}
 											style={[
 												!isFromSelf && isGroupChat && a.ml_sm,
 												!isOnlyEmoji(message.text) && [
@@ -496,17 +496,19 @@ function MessageItemMetadata({
 		case 'pending-message':
 			return item.failed ? (
 				<Text style={[a.text_xs, a.my_2xs, { color: errorColor }, style]}>
-					<Text style={[a.text_xs, { color: errorColor }]}>{m['components.dms.error.sendFailed']()}</Text>
+					<Text style={[a.text_xs, { color: errorColor }]}>
+						{m['components.dms.message.error.sendFailed']()}
+					</Text>
 					{item.retry && (
 						<>
 							{' '}
 							<InlineLinkText
-								label={m['components.dms.action.retryFailed']()}
+								label={m['components.dms.message.action.retry']()}
 								to="#"
 								onPress={handleRetry}
 								style={[a.text_xs, { color: errorColor }]}
 							>
-								{m['components.dms.a11y.tapToRetry']()}
+								{m['components.dms.message.a11y.retry']()}
 							</InlineLinkText>
 							.
 						</>
@@ -536,10 +538,10 @@ function BlockedPlaceholder({
 				style={[{ maxWidth: '80%' }, a.self_start]}
 				label={
 					profile.viewer?.blocking
-						? m['components.dms.error.messageHiddenYouBlocking']()
-						: m['components.dms.error.messageHiddenBlockingYou']()
+						? m['components.dms.block.messageHiddenYouBlocking']()
+						: m['components.dms.block.messageHiddenBlockingYou']()
 				}
-				accessibilityHint={m['components.dms.a11y.tapForDetails']()}
+				accessibilityHint={m['components.dms.message.a11y.tapForDetails']()}
 				onPress={() => control.open()}
 			>
 				<View
@@ -558,8 +560,8 @@ function BlockedPlaceholder({
 				>
 					<Text style={[a.text_sm, a.leading_snug, a.italic, t.atoms.text_contrast_medium]}>
 						{profile.viewer?.blocking
-							? m['components.dms.error.messageHiddenYouBlocking']()
-							: m['components.dms.error.messageHiddenBlockingYou']()}
+							? m['components.dms.block.messageHiddenYouBlocking']()
+							: m['components.dms.block.messageHiddenBlockingYou']()}
 					</Text>
 				</View>
 			</Button>
@@ -567,20 +569,20 @@ function BlockedPlaceholder({
 				<Prompt.Content>
 					<Prompt.TitleText>
 						{profile.viewer?.blocking
-							? m['components.dms.error.youAreBlocking']({ handle: sanitizeHandle(profile.handle, '@') })
-							: m['components.dms.blocking.isBlockingYou']({ handle: sanitizeHandle(profile.handle, '@') })}
+							? m['components.dms.block.youAreBlocking']({ handle: sanitizeHandle(profile.handle, '@') })
+							: m['components.dms.block.isBlockingYou']({ handle: sanitizeHandle(profile.handle, '@') })}
 					</Prompt.TitleText>
 					<Prompt.DescriptionText>
 						{profile.viewer?.blocking
-							? m['components.dms.label.hiddenYouBlocking']()
-							: m['components.dms.label.hiddenBlockingYou']()}
+							? m['components.dms.block.hiddenYouBlocking']()
+							: m['components.dms.block.hiddenBlockingYou']()}
 					</Prompt.DescriptionText>
 					<Prompt.Actions>
 						<Prompt.Action onPress={() => {}} cta={m['common.action.okay']()} color="primary" />
 						{profile.viewer?.blocking && !profile.viewer.blockingByList && (
 							<Prompt.Action
 								onPress={() => void queueUnblock()}
-								cta={m['common.action.unblock']()}
+								cta={m['common.block.action.unblock']()}
 								color="secondary"
 							/>
 						)}
@@ -626,7 +628,7 @@ function ReplyCaption({
 
 	return (
 		<Button
-			label={m['components.dms.a11y.scrollToReply']()}
+			label={m['components.dms.reply.a11y.scrollTo']()}
 			onPress={onPress}
 			style={[
 				a.w_full,
@@ -692,22 +694,22 @@ function ReplyQuote({
 	let text: string;
 	let subtle = false;
 	if (isBlocked) {
-		text = m['components.dms.label.blockedMessageHidden']();
+		text = m['components.dms.block.messageHidden']();
 		subtle = true;
 	} else if (replyTo.$type === 'chat.bsky.convo.defs#messageView') {
 		text = replyTo.text;
 		if (!text.trim()) {
 			subtle = true;
 			if (replyTo.embed?.$type === 'chat.bsky.embed.joinLink#view') {
-				text = m['common.label.chatInviteLink']();
+				text = m['common.chat.inviteLink']();
 			} else if (replyTo.embed?.$type === 'app.bsky.embed.record#view') {
-				text = m['common.label.embeddedContent']();
+				text = m['common.embed.content']();
 			} else {
-				text = m['common.label.noText']();
+				text = m['common.altText.noText']();
 			}
 		}
 	} else {
-		text = m['components.dms.label.deletedMessage']();
+		text = m['components.dms.message.deleted']();
 		subtle = true;
 	}
 
@@ -715,8 +717,8 @@ function ReplyQuote({
 		<Button
 			label={
 				senderName
-					? m['components.dms.a11y.repliedToFrom']({ senderName })
-					: m['components.dms.a11y.repliedTo']()
+					? m['components.dms.reply.a11y.repliedToFrom']({ senderName })
+					: m['components.dms.reply.a11y.repliedTo']()
 			}
 			onPress={onPress}
 			style={[

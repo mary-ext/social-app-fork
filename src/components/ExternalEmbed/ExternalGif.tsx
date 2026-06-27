@@ -67,7 +67,7 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 						{!isAnimating || !isPlayerActive ? (
 							<PlayButtonIcon />
 						) : (
-							<Spinner label={m['common.label.loadingGif']()} />
+							<Spinner label={m['common.gif.loading']()} />
 						)}
 					</span>
 				) : null}

@@ -50,7 +50,7 @@ export function VideoEmbedInnerWeb({
 	}, [lastKnownTime]);
 
 	return (
-		<div className={styles.root} aria-label={m['components.post.a11y.videoPlayer']()}>
+		<div className={styles.root} aria-label={m['components.post.video.a11y.player']()}>
 			<div ref={containerRef} style={{ height: '100%', width: '100%' }}>
 				<figure style={{ margin: 0, position: 'absolute', inset: 0 }}>
 					<video

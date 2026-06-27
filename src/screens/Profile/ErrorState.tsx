@@ -29,10 +29,10 @@ export function ErrorState({ error }: { error: string }) {
 		<View style={[a.px_xl]}>
 			<CircleInfo width={48} fill={colors.textContrastLow} />
 			<Text style={[a.text_xl, a.font_semi_bold, a.pb_md, a.pt_xl]}>
-				{m['screens.profile.error.moderationServiceLoad']()}
+				{m['screens.profile.labeler.error.serviceLoad']()}
 			</Text>
 			<Text style={[a.text_md, a.leading_normal, a.pb_md, t.atoms.text_contrast_medium]}>
-				{m['screens.profile.error.moderationUnavailable']()}
+				{m['screens.profile.labeler.error.unavailable']()}
 			</Text>
 			<View style={[a.relative, a.py_md, a.px_lg, a.rounded_md, a.mb_2xl, t.atoms.bg_contrast_25]}>
 				<Text style={[a.text_md, a.leading_normal]}>{error}</Text>

@@ -30,9 +30,9 @@ export const PostRepostedByScreen = ({ route }: Props) => {
 				<Layout.Header.Content>
 					{post && (
 						<>
-							<Layout.Header.TitleText>{m['screens.post.label.repostedBy']()}</Layout.Header.TitleText>
+							<Layout.Header.TitleText>{m['screens.post.repost.by']()}</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
-								{m['screens.post.count.reposts']({ count: quoteCount ?? 0 })}
+								{m['screens.post.repost.count']({ count: quoteCount ?? 0 })}
 							</Layout.Header.SubtitleText>
 						</>
 					)}

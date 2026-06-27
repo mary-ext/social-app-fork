@@ -56,10 +56,10 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	const anyoneCanReply = settings.length === 1 && settings[0]!.type === 'everybody';
 	const noOneCanReply = settings.length === 1 && settings[0]!.type === 'nobody';
 	const description = anyoneCanReply
-		? m['components.whoCanReply.label.everybody']()
+		? m['components.whoCanReply.summary.everybody.label']()
 		: noOneCanReply
-			? m['components.whoCanReply.label.disabled']()
-			: m['components.whoCanReply.label.some']();
+			? m['components.whoCanReply.summary.disabled.label']()
+			: m['components.whoCanReply.summary.some']();
 
 	const onPressOpen = () => {
 		if (isThreadAuthor) {
@@ -78,7 +78,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 			<button
 				type="button"
 				aria-label={
-					isThreadAuthor ? m['components.whoCanReply.action.edit']() : m['common.label.whoCanReply']()
+					isThreadAuthor ? m['components.whoCanReply.edit']() : m['common.interaction.whoCanReply']()
 				}
 				className={clsx(css.trigger, isThreadAuthor && css.triggerAuthor)}
 				onClick={onPressOpen}
@@ -134,7 +134,7 @@ function WhoCanReplyDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup size="narrow" label={m['components.whoCanReply.a11y.dialog']()}>
+			<Dialog.Popup size="narrow" label={m['components.whoCanReply.a11yLabel']()}>
 				<div className={css.dialogContent}>
 					<Text size="xl" weight="semiBold">
 						{m['components.whoCanReply.title']()}
@@ -160,14 +160,14 @@ function Rules({
 		<>
 			<Text size="md" color="textContrastMedium">
 				{settings.length === 0 ? (
-					m['components.whoCanReply.label.unknown']()
+					m['components.whoCanReply.summary.unknown']()
 				) : settings[0]!.type === 'everybody' ? (
-					m['components.whoCanReply.label.everybodyDesc']()
+					m['components.whoCanReply.summary.everybody.description']()
 				) : settings[0]!.type === 'nobody' ? (
-					m['components.whoCanReply.label.disabledDesc']()
+					m['components.whoCanReply.summary.disabled.description']()
 				) : (
 					<Trans
-						message={m['components.whoCanReply.label.onlyRules']}
+						message={m['components.whoCanReply.rules.template']}
 						markup={{
 							t0: () => (
 								<>
@@ -185,7 +185,7 @@ function Rules({
 			</Text>
 			{embeddingDisabled && (
 				<Text size="md" color="textContrastMedium">
-					{m['components.whoCanReply.label.noQuotes']()}
+					{m['components.whoCanReply.quote.noOne']()}
 				</Text>
 			)}
 		</>
@@ -202,12 +202,12 @@ function Rule({
 	lists: AppBskyGraphDefs.ListViewBasic[] | undefined;
 }) {
 	if (rule.type === 'mention') {
-		return m['components.whoCanReply.label.mentionedUsers']();
+		return m['components.whoCanReply.rules.mentioned']();
 	}
 	if (rule.type === 'followers') {
 		return (
 			<Trans
-				message={m['components.whoCanReply.label.following']}
+				message={m['components.whoCanReply.rules.following']}
 				inputs={{ handle: post.author.handle }}
 				markup={{
 					t0: ({ children }) => (
@@ -222,7 +222,7 @@ function Rule({
 	if (rule.type === 'following') {
 		return (
 			<Trans
-				message={m['components.whoCanReply.label.followedBy']}
+				message={m['components.whoCanReply.rules.followedBy']}
 				inputs={{ handle: post.author.handle }}
 				markup={{
 					t0: ({ children }) => (
@@ -240,7 +240,7 @@ function Rule({
 			const listUrip = parseCanonicalResourceUri(list.uri);
 			return (
 				<Trans
-					message={m['components.whoCanReply.label.listMembers']}
+					message={m['components.whoCanReply.rules.listMembers']}
 					inputs={{ name: list.name }}
 					markup={{
 						t0: ({ children }) => (
@@ -262,7 +262,7 @@ function Separator({ i, length }: { i: number; length: number }) {
 	if (i === length - 2) {
 		return (
 			<>
-				{length > 2 ? ',' : ''} {m['components.whoCanReply.label.and']()}{' '}
+				{length > 2 ? ',' : ''} {m['components.whoCanReply.rules.and']()}{' '}
 			</>
 		);
 	}

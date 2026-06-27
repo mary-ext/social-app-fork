@@ -33,7 +33,7 @@ export function SubscribeProfileButton({
 				render={
 					<Button
 						color="secondary"
-						label={m['components.activityNotifications.hint.whenPosts']({ name })}
+						label={m['components.activityNotifications.whenPostsHint']({ name })}
 						shape="round"
 						size="small"
 					>

@@ -17,12 +17,12 @@ export function MessageListError({ item }: { item: ConvoItem & { type: 'error' }
 	const { description, help, cta } = useMemo(() => {
 		return {
 			[ConvoItemError.FirehoseFailed]: {
-				description: m['screens.messages.label.chatDisconnected'](),
-				help: m['screens.messages.a11y.reconnectHint'](),
-				cta: m['screens.messages.action.reconnect'](),
+				description: m['screens.messages.connection.disconnected'](),
+				help: m['screens.messages.connection.reconnect.a11y'](),
+				cta: m['screens.messages.connection.reconnect.action'](),
 			},
 			[ConvoItemError.HistoryFailed]: {
-				description: m['screens.messages.error.loadPastMessages'](),
+				description: m['screens.messages.conversation.loadPastError'](),
 				help: m['common.a11y.pressToRetry'](),
 				cta: m['common.action.retry'](),
 			},

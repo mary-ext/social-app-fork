@@ -167,7 +167,7 @@ function DialogInner({
 	const hasAll = displayedLanguages.all.length > 0;
 
 	const listData: ListEntry[] = [
-		...(hasRecent ? [{ type: 'header' as const, label: m['common.label.recentlyUsed']() }] : []),
+		...(hasRecent ? [{ type: 'header' as const, label: m['common.status.recentlyUsed']() }] : []),
 		...displayedLanguages.checkedRecent.map((lang) => ({ type: 'item' as const, lang })),
 		...displayedLanguages.uncheckedRecent.map((lang) => ({ type: 'item' as const, lang })),
 		...(hasAll ? [{ type: 'header' as const, label: m['components.dialogs.language.all']() }] : []),

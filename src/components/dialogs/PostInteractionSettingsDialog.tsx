@@ -333,7 +333,7 @@ export function PostInteractionSettingsForm({
 
 				<div className={styles.replyBlock} style={{ opacity: replySettingsDisabled ? 0.3 : 1 }}>
 					<Text size="md" weight="medium">
-						{m['common.label.whoCanReply']()}
+						{m['common.interaction.whoCanReply']()}
 					</Text>
 
 					<Toggle.Group
@@ -377,7 +377,7 @@ export function PostInteractionSettingsForm({
 							<Toggle.Item label={m['components.dialogs.reply.allowFollowers']()} name="followers">
 								<Toggle.Panel adjacent="trailing">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>{m['components.dialogs.label.followers']()}</Toggle.PanelText>
+									<Toggle.PanelText>{m['components.dialogs.reply.followers']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
 							<Toggle.Item label={m['components.dialogs.reply.allowFollows']()} name="following">
@@ -397,7 +397,7 @@ export function PostInteractionSettingsForm({
 								label={
 									showLists
 										? m['components.dialogs.list.hide']()
-										: m['components.dialogs.list.a11yShowSelect']()
+										: m['components.dialogs.list.showSelectA11y']()
 								}
 								onClick={() => {
 									setShowLists((s) => !s);
@@ -428,11 +428,11 @@ export function PostInteractionSettingsForm({
 									</Toggle.Panel>
 								) : isListsError ? (
 									<Toggle.Panel>
-										<Toggle.PanelText>{m['components.dialogs.list.loadError']()}</Toggle.PanelText>
+										<Toggle.PanelText>{m['components.dialogs.list.error.load']()}</Toggle.PanelText>
 									</Toggle.Panel>
 								) : lists.length === 0 ? (
 									<Toggle.Panel>
-										<Toggle.PanelText>{m['components.dialogs.empty.lists']()}</Toggle.PanelText>
+										<Toggle.PanelText>{m['components.dialogs.list.empty']()}</Toggle.PanelText>
 									</Toggle.Panel>
 								) : (
 									lists.map((list, i) => (
@@ -457,14 +457,14 @@ export function PostInteractionSettingsForm({
 				checked={quotesEnabled}
 				label={
 					quotesEnabled
-						? m['components.dialogs.interaction.disableQuotes']()
-						: m['components.dialogs.interaction.enableQuotes']()
+						? m['components.dialogs.interaction.quote.disable']()
+						: m['components.dialogs.interaction.quote.enable']()
 				}
 				onChange={onChangeQuotesEnabled}
 			>
 				<Toggle.Panel>
 					<Toggle.PanelText icon={QuoteIcon}>
-						{m['components.dialogs.interaction.allowQuotes']()}
+						{m['components.dialogs.interaction.quote.allow']()}
 					</Toggle.PanelText>
 					<Toggle.Switch />
 				</Toggle.Panel>
@@ -482,7 +482,7 @@ export function PostInteractionSettingsForm({
 						</Toggle.Item>
 					) : (
 						<Text color="textContrastMedium" size="md">
-							{m['components.dialogs.label.defaultSettings']()}
+							{m['components.dialogs.mutedWord.defaultSettings']()}
 						</Text>
 					)}
 				</div>
@@ -496,7 +496,7 @@ export function PostInteractionSettingsForm({
 				size="large"
 			>
 				<ButtonText>{m['common.action.save']()}</ButtonText>
-				{isSaving && <Spinner color="currentColor" label={m['common.label.saving']()} size="sm" />}
+				{isSaving && <Spinner color="currentColor" label={m['common.status.saving']()} size="sm" />}
 			</Button>
 		</div>
 	);

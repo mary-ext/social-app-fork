@@ -57,7 +57,7 @@ export function AccountsSection() {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<Settings.Section titleText={m['screens.settings.title.accounts']()}>
+		<Settings.Section titleText={m['screens.settings.account.title']()}>
 			{profile && moderationOpts ? (
 				<CurrentAccountRow moderationOpts={moderationOpts} profile={profile} />
 			) : (
@@ -162,10 +162,10 @@ function SwitchAccountDisclosure({
 		<Settings.CollapsibleRow
 			className={className}
 			icon={PersonGroupIcon}
-			label={m['common.action.switchAccount']()}
+			label={m['common.account.action.switch']()}
 			onOpenChange={onOpenChange}
 			open={open}
-			titleText={m['common.action.switchAccount']()}
+			titleText={m['common.account.action.switch']()}
 			trailing={
 				<span className={styles.avatarStack}>
 					<AvatarStack
@@ -247,15 +247,15 @@ function OtherAccountRow({
 			</button>
 			{!pendingDid && (
 				<Menu.Root>
-					<Menu.Trigger aria-label={m['screens.settings.label.accountOptions']()} className={styles.overflow}>
+					<Menu.Trigger aria-label={m['screens.settings.account.options']()} className={styles.overflow}>
 						<DotsHorizontal fill="currentColor" size="sm" />
 					</Menu.Trigger>
-					<Menu.Popup label={m['screens.settings.label.accountOptions']()}>
+					<Menu.Popup label={m['screens.settings.account.options']()}>
 						<Menu.Item
-							label={m['screens.settings.action.removeAccount']()}
+							label={m['screens.settings.account.remove']()}
 							onClick={() => removePromptHandle.open(null)}
 						>
-							<Menu.ItemText>{m['screens.settings.action.removeAccount']()}</Menu.ItemText>
+							<Menu.ItemText>{m['screens.settings.account.remove']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={PersonXIcon} />
 						</Menu.Item>
 					</Menu.Popup>
@@ -265,13 +265,13 @@ function OtherAccountRow({
 			<Prompt.Basic
 				confirmButtonColor="negative"
 				confirmButtonCta={m['common.action.remove']()}
-				description={m['screens.settings.account.removeQuickAccessConfirm']({ handle: account.handle })}
+				description={m['screens.settings.account.quickAccess.remove.message']({ handle: account.handle })}
 				handle={removePromptHandle}
 				onConfirm={() => {
 					removeAccount(account);
-					Toast.show(m['screens.settings.toast.accountRemovedFromQuickAccess']());
+					Toast.show(m['screens.settings.account.quickAccess.removedToast']());
 				}}
-				title={m['screens.settings.dialog.removeQuickAccessTitle']()}
+				title={m['screens.settings.account.quickAccess.remove.title']()}
 			/>
 		</div>
 	);
@@ -286,14 +286,14 @@ function AddAccountRow({ className }: { className?: string }) {
 
 	return (
 		<button
-			aria-label={m['common.action.addAnotherAccount']()}
+			aria-label={m['common.account.action.addAnother']()}
 			className={clsx(cardStyles.row, cardStyles.rowInteractive, className)}
 			onClick={onAddAnotherAccount}
 			type="button"
 		>
 			<Settings.Icon icon={PersonPlusIcon} />
 			<Text className={cardStyles.title} size="md" weight="medium">
-				{m['common.action.addAnotherAccount']()}
+				{m['common.account.action.addAnother']()}
 			</Text>
 		</button>
 	);

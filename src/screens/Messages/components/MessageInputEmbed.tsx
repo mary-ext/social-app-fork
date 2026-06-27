@@ -144,7 +144,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 			return (
 				<SimpleContainer onRemove={onRemove}>
 					<Text style={[a.text_center, t.atoms.text_contrast_medium, a.italic]}>
-						{m['screens.messages.error.fetchPost']()}
+						{m['screens.messages.composer.embed.fetchError']()}
 					</Text>
 				</SimpleContainer>
 			);
@@ -172,7 +172,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 							/>
 						</View>
 						<Button
-							label={m['screens.messages.action.removeEmbed']()}
+							label={m['screens.messages.composer.embed.remove']()}
 							onPress={onRemove}
 							style={[a.px_2xs, { transform: [{ translateY: -2 }] }]}
 							hitSlop={HITSLOP_20}
@@ -211,7 +211,7 @@ function MessageInputInviteEmbed({ code, onRemove }: { code: string; onRemove: (
 		<View style={[a.flex_1, t.atoms.border_contrast_high, a.rounded_md, a.border, a.p_sm, a.mt_sm, a.mx_sm]}>
 			<MessageInputInviteEmbedBody status={status} preview={preview} />
 			<Button
-				label={m['screens.messages.action.removeEmbed']()}
+				label={m['screens.messages.composer.embed.remove']()}
 				onPress={onRemove}
 				style={[a.absolute, { top: 10, right: 8 }, a.px_2xs, { transform: [{ translateY: -2 }] }]}
 				hitSlop={HITSLOP_20}
@@ -259,7 +259,7 @@ function SimpleContainer({ children, onRemove }: { children: React.ReactNode; on
 			{children}
 			{onRemove && (
 				<Button
-					label={m['screens.messages.action.removeEmbed']()}
+					label={m['screens.messages.composer.embed.remove']()}
 					onPress={onRemove}
 					style={[a.absolute, { top: 10, right: 8 }, a.px_2xs, { transform: [{ translateY: -2 }] }]}
 					hitSlop={HITSLOP_20}

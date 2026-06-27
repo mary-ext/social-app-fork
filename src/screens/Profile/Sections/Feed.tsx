@@ -53,7 +53,7 @@ export function ProfileFeedSection({
 				<EmptyState
 					icon={emptyStateIcon || EditIcon}
 					iconSize="3xl"
-					message={emptyStateMessage || m['common.empty.noPosts']()}
+					message={emptyStateMessage || m['common.post.empty']()}
 					button={emptyStateButton}
 				/>
 			</div>
@@ -75,7 +75,7 @@ export function ProfileFeedSection({
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn
 					onPress={onScrollToTop}
-					label={m['common.action.loadNewPosts']()}
+					label={m['common.feeds.action.loadNew']()}
 					showIndicator={hasNew}
 				/>
 			)}
@@ -87,7 +87,7 @@ function ProfileEndOfFeed() {
 	return (
 		<div className={css.endOfFeed}>
 			<Text align="center" color="textContrastMedium">
-				{m['screens.profile.empty.endOfFeed']()}
+				{m['screens.profile.feed.endOfFeed']()}
 			</Text>
 		</div>
 	);

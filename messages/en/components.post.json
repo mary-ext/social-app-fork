@@ -1,41 +1,12 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"components.post.a11y.pauseVideo": "Pause video",
-	"components.post.a11y.playVideo": "Play video",
-	"components.post.a11y.seekSlider": "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause",
-	"components.post.a11y.timeProgress": "{currentTime} of {duration}",
-	"components.post.a11y.timeRemaining": [
-		{
-			"declarations": ["input time", "local cp = time: plural"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "Time remaining: {time} second",
-				"cp=other": "Time remaining: {time} seconds"
-			}
-		}
-	],
-	"components.post.a11y.unmuteVideo": "Unmute video",
-	"components.post.a11y.videoPlayer": "Embedded video player",
-	"components.post.a11y.volume": "Volume",
-	"components.post.action.disableCaptions": "Disable captions",
-	"components.post.action.enableCaptions": "Enable captions",
-	"components.post.action.enterFullscreen": "Enter fullscreen",
-	"components.post.action.exitFullscreen": "Exit fullscreen",
-	"components.post.action.pause": "Pause",
-	"components.post.action.play": "Play",
-	"components.post.action.subscribeOn": "Subscribe on {name}",
-	"components.post.action.subscribeToOn": "Subscribe to {publicationTitle} on {name}",
-	"components.post.action.viewPublication": "View publication",
-	"components.post.action.viewPublicationTitle": "View {publicationTitle}",
-	"components.post.action.viewSource": "View {title}",
-	"components.post.error.generic": "An error occurred",
-	"components.post.error.unsupportedCodec": "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).",
-	"components.post.error.videoLoad": "An error occurred while loading the video. Please try again.",
-	"components.post.error.videoNotFound": "Video not found.",
-	"components.post.label.blocked": "Blocked",
-	"components.post.label.byAuthor": "by @{handle}",
-	"components.post.label.deleted": "Deleted",
-	"components.post.label.readingTime": [
+	"components.post.publication.action.subscribe": "Subscribe on {name}",
+	"components.post.publication.action.subscribeTo": "Subscribe to {publicationTitle} on {name}",
+	"components.post.publication.action.view": "View publication",
+	"components.post.publication.action.viewSource": "View {title}",
+	"components.post.publication.action.viewTitle": "View {publicationTitle}",
+	"components.post.publication.byAuthor": "by @{handle}",
+	"components.post.publication.readingTime": [
 		{
 			"declarations": ["input readingTime", "local cp = readingTime: plural"],
 			"selectors": ["cp"],
@@ -45,10 +16,39 @@
 			}
 		}
 	],
-	"components.post.label.removedByAuthor": "Removed by author",
-	"components.post.label.removedByYou": "Removed by you",
-	"components.post.label.repliedTo": "Replied to {#t0/}",
-	"components.post.label.repliedToBlocked": "Replied to a blocked post",
-	"components.post.label.repliedToPost": "Replied to a post",
-	"components.post.label.repliedToYou": "Replied to you"
+	"components.post.reply.to": "Replied to {#t0/}",
+	"components.post.reply.toBlocked": "Replied to a blocked post",
+	"components.post.reply.toPost": "Replied to a post",
+	"components.post.reply.toYou": "Replied to you",
+	"components.post.state.blocked": "Blocked",
+	"components.post.state.deleted": "Deleted",
+	"components.post.state.removedByAuthor": "Removed by author",
+	"components.post.state.removedByYou": "Removed by you",
+	"components.post.video.a11y.pause": "Pause video",
+	"components.post.video.a11y.play": "Play video",
+	"components.post.video.a11y.player": "Embedded video player",
+	"components.post.video.a11y.seekSlider": "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause",
+	"components.post.video.a11y.timeProgress": "{currentTime} of {duration}",
+	"components.post.video.a11y.timeRemaining": [
+		{
+			"declarations": ["input time", "local cp = time: plural"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "Time remaining: {time} second",
+				"cp=other": "Time remaining: {time} seconds"
+			}
+		}
+	],
+	"components.post.video.a11y.unmute": "Unmute video",
+	"components.post.video.a11y.volume": "Volume",
+	"components.post.video.action.enterFullscreen": "Enter fullscreen",
+	"components.post.video.action.exitFullscreen": "Exit fullscreen",
+	"components.post.video.action.pause": "Pause",
+	"components.post.video.action.play": "Play",
+	"components.post.video.captions.disable": "Disable captions",
+	"components.post.video.captions.enable": "Enable captions",
+	"components.post.video.error.generic": "An error occurred",
+	"components.post.video.error.load": "An error occurred while loading the video. Please try again.",
+	"components.post.video.error.notFound": "Video not found.",
+	"components.post.video.error.unsupportedCodec": "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 }

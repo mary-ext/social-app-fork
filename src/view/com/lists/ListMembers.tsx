@@ -141,7 +141,7 @@ export function ListMembers({
 					return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;
 				}
 				if (item === LOAD_MORE_ERROR_ITEM) {
-					return <LoadMoreRetryBtn label={m['view.lists.error.fetch']()} onPress={onPressRetryLoadMore} />;
+					return <LoadMoreRetryBtn label={m['view.list.fetchError']()} onPress={onPressRetryLoadMore} />;
 				}
 				if (item === LOADING_ITEM) {
 					return <ProfileCardFeedLoadingPlaceholder />;

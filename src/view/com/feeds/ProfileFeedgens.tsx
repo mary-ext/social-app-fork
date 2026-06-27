@@ -98,7 +98,7 @@ export function ProfileFeedgens({ did, enabled, feedCount }: ProfileFeedgensProp
 				return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
 			}
 			if (item === LOAD_MORE_ERROR_ITEM) {
-				return <LoadMoreRetryBtn label={m['common.error.fetchLists']()} onPress={onPressRetryLoadMore} />;
+				return <LoadMoreRetryBtn label={m['common.list.fetchError']()} onPress={onPressRetryLoadMore} />;
 			}
 			if (item === LOADING) {
 				return <FeedCard.LoadingPlaceholder count={feedCount} />;
@@ -106,13 +106,13 @@ export function ProfileFeedgens({ did, enabled, feedCount }: ProfileFeedgensProp
 			return (
 				<EmptyState
 					icon={HashtagWideIcon}
-					message={isSelf ? m['view.feeds.empty.description']() : m['view.feeds.empty.title']()}
+					message={isSelf ? m['view.feeds.saved.empty.message']() : m['view.feeds.saved.empty.title']()}
 					messageColor="textContrastMedium"
 					button={
 						isSelf
 							? {
-									label: m['view.feeds.action.browseCustomFeeds'](),
-									text: m['view.feeds.action.browseCustomFeeds'](),
+									label: m['view.feeds.discover.browse'](),
+									text: m['view.feeds.discover.browse'](),
 									onPress: () => navigation.navigate('Feeds' as never),
 									size: 'small',
 									color: 'secondary',

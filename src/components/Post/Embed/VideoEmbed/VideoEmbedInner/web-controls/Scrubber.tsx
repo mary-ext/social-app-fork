@@ -170,12 +170,12 @@ export function Scrubber({
 				</div>
 				<div
 					ref={circleRef}
-					aria-label={m['components.post.a11y.seekSlider']()}
+					aria-label={m['components.post.video.a11y.seekSlider']()}
 					role="slider"
 					aria-valuemax={duration}
 					aria-valuemin={0}
 					aria-valuenow={currentTime}
-					aria-valuetext={m['components.post.a11y.timeProgress']({
+					aria-valuetext={m['components.post.video.a11y.timeProgress']({
 						currentTime: formatTime(currentTime),
 						duration: formatTime(duration),
 					})}

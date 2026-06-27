@@ -58,7 +58,7 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 			<View style={[a.flex_row, a.gap_md, a.w_full, otherUser && a.pt_sm]}>
 				{otherUser && (
 					<RejectMenu
-						label={m['screens.messages.action.blockOrReport']()}
+						label={m['screens.messages.block.orReport']()}
 						icon={true}
 						convo={convoState.convo}
 						profile={otherUser}
@@ -126,7 +126,7 @@ function InviterHeader({
 			<View style={[a.flex_1]}>
 				<Text style={[a.flex_row, a.align_center]}>
 					<Trans
-						message={m['screens.messages.label.addedYou']}
+						message={m['screens.messages.addedToChat.addedYou']}
 						inputs={{ displayName }}
 						markup={{
 							t0: ({ children }) => (

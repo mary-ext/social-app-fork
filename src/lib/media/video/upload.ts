@@ -61,11 +61,11 @@ export async function uploadVideo({
 				const uploadRes = JSON.parse(xhr.responseText) as AppBskyVideoDefs.JobStatus;
 				resolve(uploadRes);
 			} else {
-				reject(new ServerError(m['lib.error.videoUploadFailed']()));
+				reject(new ServerError(m['lib.video.uploadFailed']()));
 			}
 		};
 		xhr.onerror = () => {
-			reject(new ServerError(m['lib.error.videoUploadFailed']()));
+			reject(new ServerError(m['lib.video.uploadFailed']()));
 		};
 		xhr.open('POST', uri);
 		xhr.setRequestHeader('Content-Type', video.mimeType);
@@ -74,7 +74,7 @@ export async function uploadVideo({
 	});
 
 	if (!res.jobId) {
-		throw new ServerError(res.error || m['lib.error.videoUploadFailed']());
+		throw new ServerError(res.error || m['lib.video.uploadFailed']());
 	}
 
 	if (signal.aborted) {

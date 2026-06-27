@@ -49,12 +49,12 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 		return [
 			{
 				id: 'top',
-				label: m['common.label.top'](),
+				label: m['common.search.top'](),
 				render: (focused) => <TopicScreenTab topic={topic} sort="top" active={focused} />,
 			},
 			{
 				id: 'latest',
-				label: m['common.label.latest'](),
+				label: m['common.search.latest'](),
 				render: (focused) => <TopicScreenTab topic={topic} sort="latest" active={focused} />,
 			},
 		];
@@ -74,7 +74,7 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 						</Layout.Header.Content>
 						<Layout.Header.Slot>
 							<Button
-								label={m['common.action.share']()}
+								label={m['common.share.action.share']()}
 								size="small"
 								variant="ghost"
 								color="primary"
@@ -136,7 +136,7 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 					isError={isError}
 					onRetry={refetch}
 					emptyType="results"
-					emptyMessage={m['screens.topic.empty.noResults']()}
+					emptyMessage={m['screens.topic.empty']()}
 				/>
 			) : (
 				<List

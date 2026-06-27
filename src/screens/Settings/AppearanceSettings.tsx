@@ -48,7 +48,7 @@ export function AppearanceSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.label.appearance']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.appearance.label']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -104,7 +104,7 @@ export function AppearanceSettingsScreen({}: Props) {
 							onValueChange={onChangeFontScale}
 							items={[
 								{ label: m['screens.settings.appearance.smaller'](), value: '-1' },
-								{ label: m['screens.settings.option.default'](), value: '0' },
+								{ label: m['screens.settings.audience.default'](), value: '0' },
 								{ label: m['screens.settings.appearance.larger'](), value: '1' },
 							]}
 						>

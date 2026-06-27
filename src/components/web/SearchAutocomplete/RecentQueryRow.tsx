@@ -25,7 +25,7 @@ export function RecentQueryRow({
 				<Text className={styles.label}>{row.query}</Text>
 			</Autocomplete.Item>
 			<RecentRemoveButton
-				label={m['components.web.a11y.removeRecentSearch']({ query: row.query })}
+				label={m['components.web.search.recent.removeA11y']({ query: row.query })}
 				onRemove={() => onRemoveRecent({ kind: 'query', query: row.query })}
 			/>
 		</div>

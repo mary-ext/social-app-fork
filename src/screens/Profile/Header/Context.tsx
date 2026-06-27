@@ -124,7 +124,7 @@ export function ProfileHeaderProvider({
 				await queueFollow();
 				onFollowChange?.(true);
 				Toast.show(
-					m['common.a11y.following']({
+					m['common.follow.a11y.following']({
 						name: sanitizeDisplayName(
 							profile.displayName || profile.handle,
 							getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
@@ -147,7 +147,7 @@ export function ProfileHeaderProvider({
 				await queueUnfollow();
 				onFollowChange?.(false);
 				Toast.show(
-					m['common.label.noLongerFollowing']({
+					m['common.follow.noLongerFollowing']({
 						name: sanitizeDisplayName(
 							profile.displayName || profile.handle,
 							getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
@@ -168,7 +168,7 @@ export function ProfileHeaderProvider({
 	const unblock = useCallback(async () => {
 		try {
 			await queueUnblock();
-			Toast.show(m['common.toast.accountUnblocked']());
+			Toast.show(m['common.block.unblockedToast']());
 		} catch (err) {
 			const e = err as Error;
 			if (e?.name !== 'AbortError') {

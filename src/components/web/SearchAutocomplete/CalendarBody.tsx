@@ -42,7 +42,7 @@ export function CalendarBody({
 			<Button
 				className={styles.navPrevious}
 				color="secondary"
-				label={m['components.web.action.previousMonth']()}
+				label={m['components.web.calendar.action.previousMonth']()}
 				onClick={() => onGoToMonth(-1)}
 				// keep the text input focused so keyboard navigation survives a month change.
 				onMouseDown={(event) => event.preventDefault()}
@@ -60,7 +60,7 @@ export function CalendarBody({
 			<Button
 				className={styles.navNext}
 				color="secondary"
-				label={m['components.web.action.nextMonth']()}
+				label={m['components.web.calendar.action.nextMonth']()}
 				onClick={() => onGoToMonth(1)}
 				onMouseDown={(event) => event.preventDefault()}
 				shape="round"

@@ -123,7 +123,7 @@ function AnchorPostControls({
 								})
 						: undefined
 				}
-				label={m['components.postControls.a11y.reply']({ count: post.replyCount || 0 })}
+				label={m['components.postControls.reply.a11y']({ count: post.replyCount || 0 })}
 				tooltip={m['common.action.reply']()}
 				className={clsx(replyDisabled && css.replyDisabled)}
 			>
@@ -135,10 +135,10 @@ function AnchorPostControls({
 				onRepost={() => void onRepost()}
 				onQuote={onQuote}
 				embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
-				tooltip={m['components.postControls.action.repost']()}
+				tooltip={m['components.postControls.repost.action.repost']()}
 				render={
 					<AnchorControlButton
-						label={m['components.postControls.a11y.repost']()}
+						label={m['components.postControls.repost.a11y']()}
 						tooltip={null}
 						active={!!post.viewer?.repost}
 						activeColor={t.palette.positive_500}
@@ -155,8 +155,8 @@ function AnchorPostControls({
 				onClick={() => requireAuth(() => onPressToggleLike())}
 				label={
 					post.viewer?.like
-						? m['components.postControls.a11y.unlike']({ count: post.likeCount || 0 })
-						: m['components.postControls.a11y.like']({ count: post.likeCount || 0 })
+						? m['components.postControls.like.a11y.unlike']({ count: post.likeCount || 0 })
+						: m['components.postControls.like.a11y.like']({ count: post.likeCount || 0 })
 				}
 			>
 				<AnchorControlButtonIconBox>
@@ -171,9 +171,9 @@ function AnchorPostControls({
 			<ShareMenu
 				post={post}
 				onShare={onShare}
-				tooltip={m['common.action.share']()}
+				tooltip={m['common.share.action.share']()}
 				render={
-					<AnchorControlButton label={m['components.postControls.a11y.openShare']()} tooltip={null}>
+					<AnchorControlButton label={m['components.postControls.share.a11y']()} tooltip={null}>
 						<AnchorControlButtonIcon icon={ArrowShareRightIcon} />
 					</AnchorControlButton>
 				}
@@ -187,9 +187,9 @@ function AnchorPostControls({
 				threadgateRecord={threadgateRecord}
 				onShowLess={onShowLess}
 				logContext={logContext}
-				tooltip={m['components.postControls.action.more']()}
+				tooltip={m['components.postControls.options.more']()}
 				render={
-					<AnchorControlButton label={m['components.postControls.a11y.openOptions']()} tooltip={null}>
+					<AnchorControlButton label={m['components.postControls.options.a11y']()} tooltip={null}>
 						<AnchorControlButtonIcon icon={DotsHorizontal} />
 					</AnchorControlButton>
 				}

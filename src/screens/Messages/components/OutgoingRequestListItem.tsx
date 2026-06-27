@@ -28,14 +28,14 @@ export function OutgoingRequestListItem({
 
 	const { mutate: withdrawRequest, isPending: isWithdrawPending } = useWithdrawJoinGroupChatRequest({
 		onSuccess: () => {
-			Toast.show(m['common.label.joinRequestRescinded']());
+			Toast.show(m['common.requests.rescinded']());
 		},
 		onError: (error) => {
-			let errorMessage = m['common.error.rescindRequest']();
+			let errorMessage = m['common.requests.error.rescind']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.connection']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidJoinRequest') {
-				errorMessage = m['common.error.invalidRescindRequest']();
+				errorMessage = m['common.requests.error.invalidRescind']();
 			}
 			Toast.show(errorMessage);
 		},
@@ -44,7 +44,7 @@ export function OutgoingRequestListItem({
 	return (
 		<>
 			<Link
-				label={m['screens.messages.action.rescindRequest']()}
+				label={m['screens.messages.requests.rescind.action']()}
 				{...createStaticClick(() => {
 					prompt.open();
 				})}
@@ -80,7 +80,7 @@ export function OutgoingRequestListItem({
 								) : null}
 							</View>
 							<Text numberOfLines={1} style={[a.text_sm, t.atoms.text_contrast_high]}>
-								{m['screens.messages.label.requestedToJoin']()}
+								{m['screens.messages.requests.requested']()}
 							</Text>
 						</View>
 					</View>
@@ -88,9 +88,9 @@ export function OutgoingRequestListItem({
 			</Link>
 			<Prompt.Basic
 				control={prompt}
-				title={m['common.action.rescindRequest']()}
-				description={m['screens.messages.dialog.rescindConfirm']({ name: convoView.name })}
-				confirmButtonCta={m['common.action.rescindRequest']()}
+				title={m['common.requests.action.rescind']()}
+				description={m['screens.messages.requests.rescind.confirm']({ name: convoView.name })}
+				confirmButtonCta={m['common.requests.action.rescind']()}
 				onConfirm={() => {
 					prompt.close(() => {
 						if (isWithdrawPending) return;

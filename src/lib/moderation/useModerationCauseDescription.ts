@@ -45,8 +45,8 @@ export function useModerationCauseDescription(
 	if (!cause) {
 		return {
 			icon: Warning,
-			name: m['common.label.contentWarning'](),
-			description: m['common.label.generalWarning'](),
+			name: m['common.moderation.contentWarning'](),
+			description: m['common.moderation.generalWarning'](),
 		};
 	}
 
@@ -55,8 +55,8 @@ export function useModerationCauseDescription(
 		const isMe = currentAccount?.did === cause.source.did;
 		return {
 			icon: EyeSlash,
-			name: isMe ? m['common.label.replyHiddenByYou']() : m['common.label.replyHiddenByAuthor'](),
-			description: isMe ? m['common.label.youHidReply']() : m['common.label.authorHiddenReply'](),
+			name: isMe ? m['common.thread.replyHiddenByYou']() : m['common.thread.replyHiddenByAuthor'](),
+			description: isMe ? m['common.thread.youHidReply']() : m['common.thread.authorHiddenReply'](),
 		};
 	}
 
@@ -66,20 +66,20 @@ export function useModerationCauseDescription(
 				return {
 					icon: CircleBanSign,
 					name: m['lib.moderation.blockedBy']({ name: cause.source.name }),
-					description: m['common.label.youBlockedUser'](),
+					description: m['common.block.byYou.message'](),
 				};
 			}
 			return {
 				icon: CircleBanSign,
-				name: m['common.title.userBlocked'](),
-				description: m['common.label.youBlockedUser'](),
+				name: m['common.block.byYou.title'](),
+				description: m['common.block.byYou.message'](),
 			};
 		}
 		case ModerationCauseType.BlockedBy: {
 			return {
 				icon: CircleBanSign,
 				name: m['lib.moderation.blockingYou'](),
-				description: m['common.label.blockedByUser'](),
+				description: m['common.block.blocksYou.message'](),
 			};
 		}
 		case ModerationCauseType.MutedPermanent: {
@@ -92,28 +92,28 @@ export function useModerationCauseDescription(
 			}
 			return {
 				icon: EyeSlash,
-				name: m['common.label.accountMuted'](),
-				description: m['common.label.youMutedAccount'](),
+				name: m['common.mute.byYou.title'](),
+				description: m['common.mute.byYou.message'](),
 			};
 		}
 		case ModerationCauseType.MutedTemporary: {
 			return {
 				icon: EyeSlash,
-				name: m['common.label.accountMuted'](),
-				description: m['common.label.youMutedAccount'](),
+				name: m['common.mute.byYou.title'](),
+				description: m['common.mute.byYou.message'](),
 			};
 		}
 		case ModerationCauseType.MutedKeyword: {
 			return {
 				icon: EyeSlash,
-				name: m['common.label.postHiddenByMutedWord'](),
-				description: m['common.label.hiddenWordTag'](),
+				name: m['common.mutedWord.postHidden'](),
+				description: m['common.mutedWord.hiddenTag'](),
 			};
 		}
 		case ModerationCauseType.Hidden: {
 			return {
 				icon: EyeSlash,
-				name: m['common.label.postHiddenByYou'](),
+				name: m['common.thread.postHiddenByYou'](),
 				description: m['lib.moderation.youHidden'](),
 			};
 		}
@@ -128,11 +128,11 @@ export function useModerationCauseDescription(
 					source = 'moderation.bsky.app';
 					sourceDisplayName = 'Bluesky Moderation Service';
 				} else {
-					source = m['common.label.unknownLabeler']();
+					source = m['common.moderation.unknownLabeler']();
 				}
 			}
 			if (def.identifier === 'porn' || def.identifier === 'sexual') {
-				strings.name = m['common.label.adultContent']();
+				strings.name = m['common.moderation.adultContent']();
 			}
 
 			return {

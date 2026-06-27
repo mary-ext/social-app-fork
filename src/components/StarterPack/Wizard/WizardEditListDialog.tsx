@@ -56,8 +56,8 @@ export function WizardEditListDialog({
 
 	const title =
 		state.currentStep === 'Profiles'
-			? m['components.starterPack.action.editPeople']()
-			: m['components.starterPack.action.editFeeds']();
+			? m['components.starterPack.edit.people']()
+			: m['components.starterPack.edit.feeds']();
 
 	return (
 		<Dialog.Root handle={handle}>

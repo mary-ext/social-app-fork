@@ -11,7 +11,7 @@ export function HeroRow() {
 		<div className={styles.hero}>
 			<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="xl" />
 			<Text className={styles.text} color="textContrastMedium">
-				{m['components.web.hint.searchPrompt']()}
+				{m['components.web.search.placeholder']()}
 			</Text>
 		</div>
 	);

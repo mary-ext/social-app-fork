@@ -25,7 +25,7 @@ import * as styles from './ExportCarDialog.css';
 export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['screens.settings.action.exportProfileData']()}>
+			<Dialog.Popup className={styles.popup} label={m['screens.settings.export.action.exportProfile']()}>
 				<DialogInner />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -49,10 +49,10 @@ function DialogInner() {
 			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
 			saveBytesToDisk('repo.car', carData as Uint8Array<ArrayBuffer>, 'application/vnd.ipld.car');
 
-			Toast.show(m['screens.settings.toast.fileSaved']());
+			Toast.show(m['screens.settings.export.savedToast']());
 		} catch (e) {
 			logger.error('Error occurred while downloading CAR file', { message: e });
-			Toast.show(m['screens.settings.error.savingFile'](), { type: 'error' });
+			Toast.show(m['screens.settings.export.saveError'](), { type: 'error' });
 		} finally {
 			setLoading(false);
 		}
@@ -68,10 +68,10 @@ function DialogInner() {
 			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
 			saveBytesToDisk('chat.jsonl', res as Uint8Array<ArrayBuffer>, 'application/jsonl');
 
-			Toast.show(m['screens.settings.toast.fileSaved']());
+			Toast.show(m['screens.settings.export.savedToast']());
 		} catch (e) {
 			logger.error('Error occurred while downloading chat data', { message: e });
-			Toast.show(m['screens.settings.error.savingFile'](), { type: 'error' });
+			Toast.show(m['screens.settings.export.saveError'](), { type: 'error' });
 		} finally {
 			setLoading(false);
 		}
@@ -80,7 +80,7 @@ function DialogInner() {
 	return (
 		<div className={styles.content}>
 			<Text className={styles.title} size="_2xl" weight="bold">
-				{m['screens.settings.action.exportProfileData']()}
+				{m['screens.settings.export.action.exportProfile']()}
 			</Text>
 			<Text className={styles.body} color="textContrastHigh" size="sm">
 				{m['screens.settings.export.repositoryHint']()}
@@ -89,30 +89,30 @@ function DialogInner() {
 			<Button
 				color="primary"
 				disabled={!!loading}
-				label={m['screens.settings.label.downloadProfileData']()}
+				label={m['screens.settings.export.action.downloadProfile']()}
 				onClick={() => void download()}
 				size="large"
 			>
 				<ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
-				<ButtonText>{m['screens.settings.label.downloadProfileData']()}</ButtonText>
+				<ButtonText>{m['screens.settings.export.action.downloadProfile']()}</ButtonText>
 			</Button>
 
 			<Text className={styles.heading} size="_2xl" weight="bold">
-				{m['common.action.exportChatData']()}
+				{m['common.chat.action.export']()}
 			</Text>
 			<Text className={styles.body} color="textContrastHigh" size="sm">
-				{m['screens.settings.export.chatDataHint']()}
+				{m['screens.settings.export.chatHint']()}
 			</Text>
 
 			<Button
 				color="primary"
 				disabled={!!loading}
-				label={m['screens.settings.label.downloadChatData']()}
+				label={m['screens.settings.export.action.downloadChat']()}
 				onClick={() => void downloadChatData()}
 				size="large"
 			>
 				<ButtonIcon icon={loading === 'chat' ? Loader : DownloadIcon} />
-				<ButtonText>{m['screens.settings.label.downloadChatData']()}</ButtonText>
+				<ButtonText>{m['screens.settings.export.action.downloadChat']()}</ButtonText>
 			</Button>
 
 			<Text className={styles.footnote} color="textContrastMedium" size="sm">

@@ -45,7 +45,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 				<View style={[a.px_sm, a.py_sm]}>
 					<Button
 						testID="addUserBtn"
-						label={m['screens.profileList.action.addUser']()}
+						label={m['screens.profileList.members.add']()}
 						onPress={onPressAddUser}
 						color="primary"
 						size="small"
@@ -62,7 +62,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 			<View style={[a.px_lg, a.py_md, a.flex_row_reverse]}>
 				<Button
 					testID="addUserBtn"
-					label={m['screens.profileList.action.addUser']()}
+					label={m['screens.profileList.members.add']()}
 					onPress={onPressAddUser}
 					color="primary"
 					size="small"
@@ -79,17 +79,17 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	const renderEmptyState = useCallback(() => {
 		return (
 			<View style={[a.gap_xl, a.align_center]}>
-				<EmptyState icon={ListIcon} message={m['screens.profileList.empty.message']()} />
+				<EmptyState icon={ListIcon} message={m['screens.profileList.members.empty']()} />
 				{isOwner && (
 					<Button
 						testID="emptyStateAddUserBtn"
-						label={m['screens.profileList.empty.startAdding']()}
+						label={m['screens.profileList.members.startAdding']()}
 						onPress={onPressAddUser}
 						color="primary"
 						size="small"
 					>
 						<ButtonIcon icon={PersonPlusIcon} />
-						<ButtonText>{m['screens.profileList.empty.startAddingCta']()}</ButtonText>
+						<ButtonText>{m['screens.profileList.members.startAddingCta']()}</ButtonText>
 					</Button>
 				)}
 			</View>

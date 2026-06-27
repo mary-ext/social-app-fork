@@ -17,7 +17,7 @@ export const ProfileFeedLikedByScreen = ({ route }: Props) => {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.title.likedBy']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.like.likedByTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>

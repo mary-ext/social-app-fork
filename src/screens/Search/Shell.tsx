@@ -127,7 +127,7 @@ export function SearchScreenShell({
 			<Layout.Header.BackButton />
 		) : queryWithParams ? (
 			<Layout.Header.BackButton
-				label={m['screens.search.action.backToExplore']()}
+				label={m['screens.search.explore.back']()}
 				onClick={(evt) => {
 					evt.preventDefault();
 					navigateToExplore();
@@ -146,7 +146,7 @@ export function SearchScreenShell({
 						eager
 						// trailing space so the caret opens on a fresh token, ready to append an operator/filter
 						initialQuery={queryParam ? queryParam + ' ' : queryParam}
-						placeholder={inputPlaceholder ?? m['screens.search.hint.searchPlaceholder']()}
+						placeholder={inputPlaceholder ?? m['screens.search.input.placeholder']()}
 						onNavigate={(path) => navigateToPath(path, 'push')}
 						onNavigateToProfile={navigateToProfile}
 						onSubmit={navigateToQuery}
@@ -211,7 +211,7 @@ function SearchScreenInner({
 			<div className={css.empty}>
 				<MagnifyingGlassIcon strokeWidth={3} size={60} color={colors.textContrastMedium} />
 				<Text color="textContrastMedium" size="md">
-					{m['screens.search.hint.findOnBluesky']()}
+					{m['screens.search.input.description']()}
 				</Text>
 			</div>
 		</Layout.Content>

@@ -42,13 +42,13 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 		try {
 			if (feedConfig) {
 				await removeFeed(feedConfig);
-				Toast.show(m['common.label.removedFromFeeds']());
+				Toast.show(m['common.feeds.removedToast']());
 			}
 			if (hasDiscoverPinned) {
 				setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`);
 			}
 		} catch (err) {
-			Toast.show(m['common.error.updateFeeds'](), {
+			Toast.show(m['common.feeds.updateError'](), {
 				type: 'warning',
 			});
 			logger.error('Failed to update feeds', { message: err });
@@ -62,9 +62,9 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 				discoverFeedConfig,
 			});
 			setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`);
-			Toast.show(m['view.posts.feedback.replacedWithDiscover']());
+			Toast.show(m['view.posts.feed.replace.toast']());
 		} catch (err) {
-			Toast.show(m['common.error.updateFeeds'](), {
+			Toast.show(m['common.feeds.updateError'](), {
 				type: 'warning',
 			});
 			logger.error('Failed to update feeds', { message: err });
@@ -77,11 +77,11 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 			<Text style={[a.text_5xl, a.font_semi_bold, t.atoms.text, a.text_center]}>:(</Text>
 			<Text style={[a.text_md, a.leading_snug, t.atoms.text, a.text_center]}>
 				<Trans
-					message={m['view.posts.empty.feedOffline']}
+					message={m['view.posts.feed.offlineFallback']}
 					markup={{
 						t0: ({ children }) => (
 							<InlineLinkText
-								label={m['view.posts.label.discoverFeed']()}
+								label={m['view.posts.discover.feedName']()}
 								to={feedUriToHref(DISCOVER_FEED_URI)}
 								style={[a.text_md]}
 							>
@@ -97,11 +97,11 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 						variant="outline"
 						color="primary"
 						size="small"
-						label={m['view.posts.action.removeFeed']()}
+						label={m['view.posts.feed.remove.label']()}
 						disabled={isProcessing}
 						onPress={() => void onRemoveFeed()}
 					>
-						<ButtonText>{m['view.posts.action.removeFeed']()}</ButtonText>
+						<ButtonText>{m['view.posts.feed.remove.label']()}</ButtonText>
 						{isRemovePending && <ButtonIcon icon={Loader} />}
 					</Button>
 					{!hasDiscoverPinned && (
@@ -109,11 +109,11 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 							variant="solid"
 							color="primary"
 							size="small"
-							label={m['view.posts.action.replaceWithDiscover']()}
+							label={m['view.posts.feed.replace.label']()}
 							disabled={isProcessing}
 							onPress={() => void onReplaceFeed()}
 						>
-							<ButtonText>{m['view.posts.action.replaceWithDiscover']()}</ButtonText>
+							<ButtonText>{m['view.posts.feed.replace.label']()}</ButtonText>
 							{isReplacePending && <ButtonIcon icon={Loader} />}
 						</Button>
 					)}

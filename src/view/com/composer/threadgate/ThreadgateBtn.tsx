@@ -80,8 +80,8 @@ export function ThreadgateBtn({
 	const anyoneCanQuote = !postgate.embeddingRules || postgate.embeddingRules.length === 0;
 	const anyoneCanInteract = anyoneCanReply && anyoneCanQuote;
 	const label = anyoneCanInteract
-		? m['view.composer.label.anyoneCanInteract']()
-		: m['view.composer.label.interactionLimited']();
+		? m['view.composer.interaction.anyone']()
+		: m['view.composer.interaction.limited']();
 
 	return (
 		<>

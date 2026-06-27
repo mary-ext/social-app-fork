@@ -65,7 +65,7 @@ export function MoreOptionsMenu({
 		if (!savedFeedConfig) return;
 		try {
 			await removeSavedFeed(savedFeedConfig);
-			Toast.show(m['common.label.removedFromFeeds']());
+			Toast.show(m['common.feeds.removedToast']());
 		} catch (e) {
 			Toast.show(m['common.error.serverContact'](), {
 				type: 'error',
@@ -81,7 +81,7 @@ export function MoreOptionsMenu({
 			await removeSavedFeed(savedFeedConfig);
 		}
 
-		Toast.show(m['screens.profileList.toast.deleted']());
+		Toast.show(m['screens.profileList.delete.deletedToast']());
 		if (navigation.canGoBack()) {
 			navigation.goBack();
 		} else {
@@ -93,9 +93,9 @@ export function MoreOptionsMenu({
 		try {
 			if (!savedFeedConfig) return;
 			await removeSavedFeed(savedFeedConfig);
-			Toast.show(m['screens.profileList.toast.unpinnedList']());
+			Toast.show(m['screens.profileList.pin.unpinnedListToast']());
 		} catch {
-			Toast.show(m['screens.profileList.error.unpinFailed'](), {
+			Toast.show(m['screens.profileList.pin.unpinError'](), {
 				type: 'error',
 			});
 		}
@@ -104,7 +104,7 @@ export function MoreOptionsMenu({
 	const onUnsubscribeMute = async () => {
 		try {
 			await muteList({ uri: list.uri, mute: false });
-			Toast.show(m['screens.profileList.toast.unmuted']());
+			Toast.show(m['screens.profileList.mute.unmutedToast']());
 		} catch {
 			Toast.show(m['common.error.issueConnection']());
 		}
@@ -113,7 +113,7 @@ export function MoreOptionsMenu({
 	const onUnsubscribeBlock = async () => {
 		try {
 			await blockList({ uri: list.uri, block: false });
-			Toast.show(m['screens.profileList.toast.unblocked']());
+			Toast.show(m['screens.profileList.block.unblockedToast']());
 		} catch {
 			Toast.show(m['common.error.issueConnection']());
 		}
@@ -131,16 +131,16 @@ export function MoreOptionsMenu({
 				/>
 				<Menu.Popup label={m['common.a11y.moreOptions']()} align="end">
 					<Menu.Group>
-						<Menu.Item label={m['screens.profileList.action.copyLink']()} onClick={onPressShare}>
-							<Menu.ItemText>{m['screens.profileList.action.copyLink']()}</Menu.ItemText>
+						<Menu.Item label={m['screens.profileList.share.copyLink']()} onClick={onPressShare}>
+							<Menu.ItemText>{m['screens.profileList.share.copyLink']()}</Menu.ItemText>
 							<Menu.ItemIcon position="right" icon={ChainLink} />
 						</Menu.Item>
 						{savedFeedConfig && (
 							<Menu.Item
-								label={m['common.action.removeFromFeeds']()}
+								label={m['common.feeds.action.remove']()}
 								onClick={() => void onRemoveFromSavedFeeds()}
 							>
-								<Menu.ItemText>{m['common.action.removeFromFeeds']()}</Menu.ItemText>
+								<Menu.ItemText>{m['common.feeds.action.remove']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={TrashIcon} />
 							</Menu.Item>
 						)}
@@ -151,27 +151,27 @@ export function MoreOptionsMenu({
 					{isOwner ? (
 						<Menu.Group>
 							<Menu.Item
-								label={m['screens.profileList.action.editDetails']()}
+								label={m['screens.profileList.edit.details']()}
 								onClick={() => editListHandle.open(null)}
 							>
-								<Menu.ItemText>{m['screens.profileList.action.editDetails']()}</Menu.ItemText>
+								<Menu.ItemText>{m['screens.profileList.edit.details']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={PencilLineIcon} />
 							</Menu.Item>
 							<Menu.Item
-								label={m['screens.profileList.action.deleteList']()}
+								label={m['screens.profileList.delete.list']()}
 								onClick={() => deleteListPromptHandle.open(null)}
 							>
-								<Menu.ItemText>{m['screens.profileList.action.deleteList']()}</Menu.ItemText>
+								<Menu.ItemText>{m['screens.profileList.delete.list']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={TrashIcon} />
 							</Menu.Item>
 						</Menu.Group>
 					) : (
 						<Menu.Group>
 							<Menu.Item
-								label={m['screens.profileList.action.reportList']()}
+								label={m['screens.profileList.report.list']()}
 								onClick={() => reportDialogControl.open(null)}
 							>
-								<Menu.ItemText>{m['screens.profileList.action.reportList']()}</Menu.ItemText>
+								<Menu.ItemText>{m['screens.profileList.report.list']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={WarningIcon} />
 							</Menu.Item>
 						</Menu.Group>
@@ -182,10 +182,10 @@ export function MoreOptionsMenu({
 							<Menu.Separator />
 							<Menu.Group>
 								<Menu.Item
-									label={m['screens.profileList.action.unpinModerationList']()}
+									label={m['screens.profileList.pin.action.unpinModerationList']()}
 									onClick={() => void onUnpinModList()}
 								>
-									<Menu.ItemText>{m['screens.profileList.action.unpinModerationList']()}</Menu.ItemText>
+									<Menu.ItemText>{m['screens.profileList.pin.action.unpinModerationList']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={PinIcon} />
 								</Menu.Item>
 							</Menu.Group>
@@ -198,19 +198,19 @@ export function MoreOptionsMenu({
 							<Menu.Group>
 								{isBlocking && (
 									<Menu.Item
-										label={m['screens.profileList.action.unblockList']()}
+										label={m['screens.profileList.block.action.unblock']()}
 										onClick={() => void onUnsubscribeBlock()}
 									>
-										<Menu.ItemText>{m['screens.profileList.action.unblockList']()}</Menu.ItemText>
+										<Menu.ItemText>{m['screens.profileList.block.action.unblock']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={PersonCheckIcon} />
 									</Menu.Item>
 								)}
 								{isMuting && (
 									<Menu.Item
-										label={m['screens.profileList.action.unmuteList']()}
+										label={m['screens.profileList.mute.action.unmute']()}
 										onClick={() => void onUnsubscribeMute()}
 									>
-										<Menu.ItemText>{m['screens.profileList.action.unmuteList']()}</Menu.ItemText>
+										<Menu.ItemText>{m['screens.profileList.mute.action.unmute']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={UnmuteIcon} />
 									</Menu.Item>
 								)}
@@ -222,8 +222,8 @@ export function MoreOptionsMenu({
 			<CreateOrEditListDialog handle={editListHandle} list={list} />
 			<Prompt.Basic
 				handle={deleteListPromptHandle}
-				title={m['screens.profileList.dialog.deleteConfirmTitle']()}
-				description={m['screens.profileList.dialog.deleteDescription']()}
+				title={m['screens.profileList.delete.confirm.title']()}
+				description={m['screens.profileList.delete.confirm.message']()}
 				onConfirm={() => void onPressDelete()}
 				confirmButtonCta={m['common.action.delete']()}
 				confirmButtonColor="negative"

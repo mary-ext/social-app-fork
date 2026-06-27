@@ -90,8 +90,8 @@ function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {
 			</Text>
 			<Text size="md_sub" color="textContrastMedium" numberOfLines={1}>
 				{creator?.did === currentAccount?.did
-					? m['common.label.starterPackByYou']()
-					: m['components.starterPack.byline']({ handle: sanitizeHandle(creator.handle, '@') })}
+					? m['common.starterPack.byYou']()
+					: m['components.starterPack.card.byline']({ handle: sanitizeHandle(creator.handle, '@') })}
 			</Text>
 		</div>
 	);
@@ -112,7 +112,7 @@ function JoinedCount({ starterPack }: { starterPack: AnyStarterPackView }) {
 	if (!joinedAllTimeCount || joinedAllTimeCount < 50) return null;
 	return (
 		<Text size="md_sub" weight="semiBold" color="textContrastMedium">
-			{m['components.starterPack.joinedCount']({ joinedAllTimeCount })}
+			{m['components.starterPack.card.joinedCount']({ joinedAllTimeCount })}
 		</Text>
 	);
 }
@@ -134,7 +134,7 @@ export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 
 	return {
 		to: `/starter-pack/${did}/${rkey}`,
-		label: m['components.starterPack.a11y.navigate']({
+		label: m['components.starterPack.card.navigate']({
 			name: (view.record as AppBskyGraphStarterpack.Main).name,
 		}),
 		precache,
@@ -163,7 +163,7 @@ export function Link({
 	return (
 		<WebLink
 			to={`/starter-pack/${did}/${rkey}`}
-			label={m['components.starterPack.a11y.navigate']({ name: record.name })}
+			label={m['components.starterPack.card.navigate']({ name: record.name })}
 			className={clsx(css.link, className)}
 			onPress={() => {
 				precacheResolvedUri(queryClient, starterPack.creator.handle, starterPack.creator.did);

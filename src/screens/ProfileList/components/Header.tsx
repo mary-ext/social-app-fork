@@ -65,7 +65,7 @@ export function Header({
 					},
 				]);
 				Toast.show(
-					pinned ? m['screens.profileList.toast.pinned']() : m['screens.profileList.toast.unpinned'](),
+					pinned ? m['screens.profileList.pin.pinnedToast']() : m['screens.profileList.pin.unpinnedToast'](),
 				);
 			} else {
 				await addSavedFeeds([
@@ -75,7 +75,7 @@ export function Header({
 						pinned: true,
 					},
 				]);
-				Toast.show(m['common.label.savedToFeeds']());
+				Toast.show(m['common.feeds.savedToast']());
 			}
 		} catch (e) {
 			Toast.show(m['common.error.serverContact'](), {
@@ -88,7 +88,7 @@ export function Header({
 	const onUnsubscribeMute = async () => {
 		try {
 			await muteList({ uri: list.uri, mute: false });
-			Toast.show(m['screens.profileList.toast.unmuted']());
+			Toast.show(m['screens.profileList.mute.unmutedToast']());
 		} catch {
 			Toast.show(m['common.error.issueConnection']());
 		}
@@ -97,7 +97,7 @@ export function Header({
 	const onUnsubscribeBlock = async () => {
 		try {
 			await blockList({ uri: list.uri, block: false });
-			Toast.show(m['screens.profileList.toast.unblocked']());
+			Toast.show(m['screens.profileList.block.unblockedToast']());
 		} catch {
 			Toast.show(m['common.error.issueConnection']());
 		}
@@ -130,7 +130,9 @@ export function Header({
 						testID={isPinned ? 'unpinBtn' : 'pinBtn'}
 						color={isPinned ? 'secondary' : 'primary_subtle'}
 						label={
-							isPinned ? m['screens.profileList.action.unpin']() : m['screens.profileList.action.pinToHome']()
+							isPinned
+								? m['screens.profileList.pin.action.unpin']()
+								: m['screens.profileList.pin.action.pinToHome']()
 						}
 						onPress={() => void onTogglePinned()}
 						disabled={isPending}
@@ -140,8 +142,8 @@ export function Header({
 						{!isPinned && <ButtonIcon icon={isPending ? Loader : PinIcon} />}
 						<ButtonText>
 							{isPinned
-								? m['screens.profileList.action.unpin']()
-								: m['screens.profileList.action.pinToHome']()}
+								? m['screens.profileList.pin.action.unpin']()
+								: m['screens.profileList.pin.action.pinToHome']()}
 						</ButtonText>
 					</Button>
 				) : isModList ? (
@@ -149,27 +151,27 @@ export function Header({
 						<Button
 							testID="unblockBtn"
 							color="secondary"
-							label={m['common.action.unblock']()}
+							label={m['common.block.action.unblock']()}
 							onPress={() => void onUnsubscribeBlock()}
 							size="small"
 							style={[a.rounded_full]}
 							disabled={isBlockPending}
 						>
 							{isBlockPending && <ButtonIcon icon={Loader} />}
-							<ButtonText>{m['common.action.unblock']()}</ButtonText>
+							<ButtonText>{m['common.block.action.unblock']()}</ButtonText>
 						</Button>
 					) : isMuting ? (
 						<Button
 							testID="unmuteBtn"
 							color="secondary"
-							label={m['common.action.unmute']()}
+							label={m['common.mute.action.unmute']()}
 							onPress={() => void onUnsubscribeMute()}
 							size="small"
 							style={[a.rounded_full]}
 							disabled={isMutePending}
 						>
 							{isMutePending && <ButtonIcon icon={Loader} />}
-							<ButtonText>{m['common.action.unmute']()}</ButtonText>
+							<ButtonText>{m['common.mute.action.unmute']()}</ButtonText>
 						</Button>
 					) : (
 						<SubscribeMenu list={list} />

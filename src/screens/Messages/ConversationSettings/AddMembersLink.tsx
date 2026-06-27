@@ -60,7 +60,7 @@ export function AddMembersLink({
 		},
 		onError: (e) => {
 			logger.error('Failed to add group chat members', { message: e });
-			Toast.show(m['screens.messages.error.addMembers'](), { type: 'error' });
+			Toast.show(m['screens.messages.members.add.error'](), { type: 'error' });
 		},
 	});
 
@@ -68,7 +68,7 @@ export function AddMembersLink({
 		<>
 			<Button
 				disabled={disabled || isAddPending}
-				label={m['screens.messages.action.addMembers']()}
+				label={m['screens.messages.members.add.action']()}
 				onPress={addMembersControl.open}
 			>
 				{({ interacting }) => (
@@ -101,7 +101,7 @@ export function AddMembersLink({
 								<PlusIcon fill={colors.textContrastHigh} size="sm" />
 							</View>
 							<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, a.mx_sm, t.atoms.text]}>
-								{m['screens.messages.action.addMembers']()}
+								{m['screens.messages.members.add.action']()}
 							</Text>
 						</View>
 						{isAddPending ? <Loader size="md" /> : <ChevronIcon fill={colors.textContrastMedium} size="md" />}
@@ -113,7 +113,7 @@ export function AddMembersLink({
 				<Dialog.Handle />
 				<AddMembersFlow
 					convo={convo}
-					title={m['screens.messages.action.addMembers']()}
+					title={m['screens.messages.members.add.action']()}
 					onAddMembers={(members, profiles) => {
 						addGroupMembers({ members, profiles });
 					}}

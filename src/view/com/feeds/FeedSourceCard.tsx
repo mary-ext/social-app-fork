@@ -113,14 +113,14 @@ export function FeedSourceCardLoaded({
 					</Text>
 					<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]} numberOfLines={1}>
 						{feed.type === 'feed'
-							? m['common.label.feedBy']({ handle: sanitizeHandle(feed.creatorHandle, '@') })
-							: m['common.label.listByCreator']({ handle: sanitizeHandle(feed.creatorHandle, '@') })}
+							? m['common.feeds.feedBy']({ handle: sanitizeHandle(feed.creatorHandle, '@') })
+							: m['common.list.byCreator']({ handle: sanitizeHandle(feed.creatorHandle, '@') })}
 					</Text>
 				</View>
 			</View>
 			{showLikes && feed.type === 'feed' ? (
 				<Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium, a.leading_snug]}>
-					{m['common.count.likedBy']({ count: feed.likeCount || 0 })}
+					{m['common.like.likedByCount']({ count: feed.likeCount || 0 })}
 				</Text>
 			) : null}
 		</>
@@ -132,12 +132,12 @@ export function FeedSourceCardLoaded({
 				testID={`feed-${feed.displayName}`}
 				label={
 					feed.type === 'feed'
-						? m['view.feeds.a11y.feedByLikedBy']({
+						? m['view.feeds.feed.a11y.label']({
 								name: feed.displayName,
 								creator: sanitizeHandle(feed.creatorHandle, '@'),
 								likeCount: feed.likeCount || 0,
 							})
-						: m['view.feeds.a11y.listBy']({
+						: m['view.feeds.list.a11y.label']({
 								name: feed.displayName,
 								creator: sanitizeHandle(feed.creatorHandle, '@'),
 							})

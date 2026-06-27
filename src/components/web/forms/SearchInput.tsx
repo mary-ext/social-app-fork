@@ -59,7 +59,7 @@ export function SearchInput({
 				<Button
 					className={styles.clear}
 					color="secondary"
-					label={m['common.action.clearSearch']()}
+					label={m['common.search.action.clear']()}
 					onClick={onClear}
 					shape="round"
 					size="tiny"

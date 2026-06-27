@@ -22,10 +22,10 @@ export function MuteAccountPrompt({
 		return (
 			<Prompt.Basic
 				handle={handle}
-				title={m['components.moderation.dialog.unmuteTitle']()}
-				description={m['components.moderation.hint.unmuteResume']()}
+				title={m['components.moderation.mute.unmuteTitle']()}
+				description={m['components.moderation.mute.unmuteResume']()}
 				onConfirm={onConfirm}
-				confirmButtonCta={m['common.action.unmute']()}
+				confirmButtonCta={m['common.mute.action.unmute']()}
 			/>
 		);
 	}
@@ -34,16 +34,16 @@ export function MuteAccountPrompt({
 		<Prompt.Outer handle={handle} size="wide">
 			<Prompt.Content>
 				<Prompt.TitleText>{m['components.moderation.mute.confirmTitle']()}</Prompt.TitleText>
-				<Prompt.DescriptionText>{m['components.moderation.hint.whatHappens']()}</Prompt.DescriptionText>
+				<Prompt.DescriptionText>{m['components.moderation.whatHappens']()}</Prompt.DescriptionText>
 
 				<Prompt.Rows>
-					<Prompt.Row icon={Megaphone}>{m['components.moderation.hint.muteUnaware']()}</Prompt.Row>
-					<Prompt.Row icon={Eye}>{m['components.moderation.hint.mutedSeePostsNotReplies']()}</Prompt.Row>
-					<Prompt.Row icon={Bubble}>{m['components.moderation.hint.mutedReplyNoNotif']()}</Prompt.Row>
+					<Prompt.Row icon={Megaphone}>{m['components.moderation.mute.unaware']()}</Prompt.Row>
+					<Prompt.Row icon={Eye}>{m['components.moderation.mute.seePostsNotReplies']()}</Prompt.Row>
+					<Prompt.Row icon={Bubble}>{m['components.moderation.mute.replyNoNotif']()}</Prompt.Row>
 				</Prompt.Rows>
 			</Prompt.Content>
 			<Prompt.Actions>
-				<Prompt.Action onPress={onConfirm} cta={m['common.action.mute']()} />
+				<Prompt.Action onPress={onConfirm} cta={m['common.mute.action.mute']()} />
 				<Prompt.Cancel />
 			</Prompt.Actions>
 		</Prompt.Outer>

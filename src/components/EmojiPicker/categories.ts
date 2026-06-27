@@ -25,7 +25,7 @@ type EmojiCategory = {
  * fixed order. each carries the icon shown in the nav bar and the descriptor for its header label.
  */
 export const CATEGORIES = [
-	{ icon: ClockIcon, key: 'recent', label: m['common.label.recentlyUsed'] },
+	{ icon: ClockIcon, key: 'recent', label: m['common.status.recentlyUsed'] },
 	{ icon: EmojiIcon, key: 'people', label: m['components.emojiPicker.category.smileysPeople'] },
 	{ icon: GrowthIcon, key: 'nature', label: m['components.emojiPicker.category.animalsNature'] },
 	{ icon: AppleIcon, key: 'foods', label: m['components.emojiPicker.category.foodDrink'] },

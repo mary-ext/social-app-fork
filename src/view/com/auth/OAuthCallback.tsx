@@ -41,9 +41,9 @@ export function OAuthCallback() {
 						message: e instanceof Error ? e.message : String(e),
 					});
 					if (e instanceof InactiveAccountError) {
-						Toast.show(m['view.auth.error.accountInactive'](), { type: 'warning' });
+						Toast.show(m['view.auth.signIn.accountInactiveError'](), { type: 'warning' });
 					} else {
-						setError(m['view.auth.error.signInFailed']());
+						setError(m['view.auth.signIn.failedError']());
 					}
 				});
 		});
@@ -66,7 +66,7 @@ export function OAuthCallback() {
 				) : (
 					<>
 						<Loader size="xl" />
-						<Text style={[a.text_md, t.atoms.text_contrast_high]}>{m['view.auth.label.signingIn']()}</Text>
+						<Text style={[a.text_md, t.atoms.text_contrast_high]}>{m['view.auth.signIn.inProgress']()}</Text>
 					</>
 				)}
 			</ErrorBoundary>

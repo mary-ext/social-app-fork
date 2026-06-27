@@ -99,25 +99,25 @@ export function RichTextTag({
 			<Menu.Popup label={label}>
 				<Menu.Group>
 					<Menu.Item
-						label={m['components.richTextTag.action.seePosts']({ prefixedTag })}
+						label={m['components.richTextTag.seePosts.prefixed']({ prefixedTag })}
 						onClick={() => navigation.push('Hashtag', { tag })}
 					>
 						<Menu.ItemText>
 							{isCashtag
-								? m['components.richTextTag.action.seePostsTag']({ tag })
-								: m['components.richTextTag.action.seePostsHash']({ tag })}
+								? m['components.richTextTag.seePosts.tag']({ tag })
+								: m['components.richTextTag.seePosts.hash']({ tag })}
 						</Menu.ItemText>
 						<Menu.ItemIcon icon={Search} />
 					</Menu.Item>
 					{authorHandle && !isInvalidHandle(authorHandle) && (
 						<Menu.Item
-							label={m['components.richTextTag.action.seePostsByUser']({ prefixedTag })}
+							label={m['components.richTextTag.seePosts.prefixedByUser']({ prefixedTag })}
 							onClick={() => navigation.push('Hashtag', { author: authorHandle, tag })}
 						>
 							<Menu.ItemText>
 								{isCashtag
-									? m['components.richTextTag.action.seePostsTagByUser']({ tag })
-									: m['components.richTextTag.action.seePostsHashByUser']({ tag })}
+									? m['components.richTextTag.seePosts.tagByUser']({ tag })
+									: m['components.richTextTag.seePosts.hashByUser']({ tag })}
 							</Menu.ItemText>
 							<Menu.ItemIcon icon={Person} />
 						</Menu.Item>
@@ -127,8 +127,8 @@ export function RichTextTag({
 				<Menu.Item
 					label={
 						isMuted
-							? m['components.richTextTag.action.unmute']({ prefixedTag })
-							: m['components.richTextTag.action.mute']({ prefixedTag })
+							? m['components.richTextTag.unmute']({ prefixedTag })
+							: m['components.richTextTag.mute']({ prefixedTag })
 					}
 					onClick={() => {
 						if (isMuted) {
@@ -142,8 +142,8 @@ export function RichTextTag({
 				>
 					<Menu.ItemText>
 						{isMuted
-							? m['components.richTextTag.action.unmute']({ prefixedTag })
-							: m['components.richTextTag.action.mute']({ prefixedTag })}
+							? m['components.richTextTag.unmute']({ prefixedTag })
+							: m['components.richTextTag.mute']({ prefixedTag })}
 					</Menu.ItemText>
 					<Menu.ItemIcon icon={isPreferencesLoading ? Loader : Mute} />
 				</Menu.Item>

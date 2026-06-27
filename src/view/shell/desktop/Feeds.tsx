@@ -88,12 +88,12 @@ export function DesktopFeeds() {
 				value={MORE_FEEDS}
 				nativeButton={false}
 				render={
-					<Link to={MORE_FEEDS} label={m['view.feeds.more']()} className={css.item}>
+					<Link to={MORE_FEEDS} label={m['view.feeds.feed.more']()} className={css.item}>
 						<span className={css.morePlusBox}>
 							<Plus width={16} height={16} fill="currentColor" />
 						</span>
 						<Text size="md" numberOfLines={1} className={css.label}>
-							{m['view.feeds.more']()}
+							{m['view.feeds.feed.more']()}
 						</Text>
 					</Link>
 				}
@@ -110,7 +110,7 @@ function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
 			value={feedInfo.feedDescriptor}
 			className={css.item}
 			aria-label={feedInfo.displayName}
-			title={m['view.a11y.opensFeed']({ name: feedInfo.displayName })}
+			title={m['view.feeds.opensFeed']({ name: feedInfo.displayName })}
 		>
 			{isFollowing ? (
 				<span className={css.followingIcon}>

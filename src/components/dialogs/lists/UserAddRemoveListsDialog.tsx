@@ -98,13 +98,13 @@ function DialogInner({
 			const modLists = lists.filter((i) => i.list.purpose === 'app.bsky.graph.defs#modlist');
 			if (curateLists.length > 0) {
 				_items = _items.concat(
-					{ type: 'section-header', key: 'curatelist', title: m['components.dialogs.label.userLists']() },
+					{ type: 'section-header', key: 'curatelist', title: m['components.dialogs.list.userLists']() },
 					curateLists.map((item) => ({ type: 'list', item }) as const),
 				);
 			}
 			if (modLists.length > 0) {
 				_items = _items.concat(
-					{ type: 'section-header', key: 'modlist', title: m['common.label.moderationLists']() },
+					{ type: 'section-header', key: 'modlist', title: m['common.moderation.listsLabel']() },
 					modLists.map((item) => ({ type: 'list', item }) as const),
 				);
 			}
@@ -139,7 +139,7 @@ function DialogInner({
 									{ maxWidth: 200 },
 								]}
 							>
-								{m['common.empty.lists']()}
+								{m['common.list.empty']()}
 							</Text>
 						</View>
 					);
@@ -204,7 +204,7 @@ function DialogInner({
 			ListHeaderComponent={
 				<Dialog.Header renderRight={renderCloseButton}>
 					<Dialog.HeaderText style={[a.pl_lg, a.pr_5xl, a.text_left, a.flex_1]}>
-						{m['components.dialogs.action.addToLists']({
+						{m['components.dialogs.list.addToLists']({
 							name: sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle, '@')),
 						})}
 					</Dialog.HeaderText>
@@ -264,8 +264,9 @@ function ListRow({
 						{sanitizeDisplayName(list.name)}
 					</Text>
 					<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
-						{list.purpose === 'app.bsky.graph.defs#curatelist' && m['components.dialogs.label.userList']()}
-						{list.purpose === 'app.bsky.graph.defs#modlist' && m['components.dialogs.list.moderationLabel']()}
+						{list.purpose === 'app.bsky.graph.defs#curatelist' && m['components.dialogs.list.userList']()}
+						{list.purpose === 'app.bsky.graph.defs#modlist' &&
+							m['components.dialogs.list.moderation.label']()}
 					</Text>
 				</View>
 				<Button

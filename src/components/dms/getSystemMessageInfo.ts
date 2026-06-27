@@ -123,25 +123,25 @@ export function getSystemMessageInfo(
 		case 'chat.bsky.convo.defs#systemMessageDataCreateJoinLink':
 			return {
 				Icon: ChainLinkIcon,
-				message: m['components.dms.toast.inviteCreated'](),
+				message: m['components.dms.invite.created'](),
 				action: { kind: 'inviteLink' },
 			};
 		case 'chat.bsky.convo.defs#systemMessageDataEditJoinLink':
 			return {
 				Icon: ChainLinkIcon,
-				message: m['components.dms.toast.inviteEdited'](),
+				message: m['components.dms.invite.edited'](),
 				action: { kind: 'inviteLink' },
 			};
 		case 'chat.bsky.convo.defs#systemMessageDataEnableJoinLink':
 			return {
 				Icon: ChainLinkIcon,
-				message: m['components.dms.toast.inviteEnabled'](),
+				message: m['components.dms.invite.enabled'](),
 				action: { kind: 'inviteLink' },
 			};
 		case 'chat.bsky.convo.defs#systemMessageDataDisableJoinLink':
 			return {
 				Icon: ChainLinkBrokenIcon,
-				message: m['common.label.inviteLinkDisabled'](),
+				message: m['common.chat.inviteLinkDisabled'](),
 				action: { kind: 'inviteLink' },
 			};
 	}

@@ -117,7 +117,7 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 						color="textContrastHigh"
 						weight="semiBold"
 						disabled={disabled}
-						label={m['common.action.viewProfile']()}
+						label={m['common.profile.action.view']()}
 						numberOfLines={1}
 						onPress={onBeforePressAuthor}
 						size="md"

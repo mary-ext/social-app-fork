@@ -46,7 +46,7 @@ export let MessageContextMenu = ({
 		const str = richTextToString({ text: message.text, facets: message.facets ?? [] }, true);
 
 		void navigator.clipboard.writeText(str);
-		Toast.show(m['common.toast.copied'](), {
+		Toast.show(m['common.share.copiedToast'](), {
 			type: 'success',
 		});
 	}, [message.text, message.facets]);
@@ -62,14 +62,14 @@ export let MessageContextMenu = ({
 			<Menu.Trigger render={render} />
 			<Menu.Popup
 				align={isFromSelf ? 'end' : 'start'}
-				label={m['components.dms.a11y.messageFrom']({
+				label={m['components.dms.message.a11y.from']({
 					handle: sender?.handle ?? 'unknown',
 					text: message.text,
 				})}
 			>
 				<Menu.Group>
 					<Menu.LabelText>
-						{m['components.dms.label.sentAt']({
+						{m['components.dms.message.sentAt']({
 							time: timeShort.format(new Date(message.sentAt)),
 						})}
 					</Menu.LabelText>
@@ -83,22 +83,22 @@ export let MessageContextMenu = ({
 								<Menu.ItemIcon icon={LanguageIcon} position="left" />
 								<Menu.ItemText>{m['common.action.translate']()}</Menu.ItemText>
 							</Menu.Item>
-							<Menu.Item label={m['components.dms.action.copyText']()} onClick={onCopyMessage}>
+							<Menu.Item label={m['components.dms.message.action.copyText']()} onClick={onCopyMessage}>
 								<Menu.ItemIcon icon={ClipboardIcon} position="left" />
-								<Menu.ItemText>{m['components.dms.action.copyText']()}</Menu.ItemText>
+								<Menu.ItemText>{m['components.dms.message.action.copyText']()}</Menu.ItemText>
 							</Menu.Item>
 						</>
 					)}
 					<Menu.Item
-						label={m['components.dms.action.deleteMessageForMe']()}
+						label={m['components.dms.delete.action.messageForMe']()}
 						onClick={() => openDeleteMessage(message)}
 					>
 						<Menu.ItemIcon icon={TrashIcon} position="left" />
-						<Menu.ItemText>{m['components.dms.action.deleteForMe']()}</Menu.ItemText>
+						<Menu.ItemText>{m['components.dms.delete.action.forMe']()}</Menu.ItemText>
 					</Menu.Item>
 					{!isFromSelf && (
 						<Menu.Item
-							label={m['components.dms.action.reportMessage']()}
+							label={m['components.dms.report.message']()}
 							onClick={() => openReportMessage(message, senderProfile)}
 						>
 							<Menu.ItemIcon icon={FlagIcon} position="left" />

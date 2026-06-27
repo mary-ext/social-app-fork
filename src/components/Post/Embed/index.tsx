@@ -204,10 +204,10 @@ function RecordEmbed({
 			);
 		}
 		case 'post_not_found': {
-			return <PostPlaceholderText>{m['components.post.label.deleted']()}</PostPlaceholderText>;
+			return <PostPlaceholderText>{m['components.post.state.deleted']()}</PostPlaceholderText>;
 		}
 		case 'post_blocked': {
-			return <PostPlaceholderText>{m['components.post.label.blocked']()}</PostPlaceholderText>;
+			return <PostPlaceholderText>{m['components.post.state.blocked']()}</PostPlaceholderText>;
 		}
 		case 'post_detached': {
 			return <PostDetachedEmbed embed={embed} />;
@@ -225,8 +225,8 @@ export function PostDetachedEmbed({ embed }: { embed: EmbedType<'post_detached'>
 	return (
 		<PostPlaceholderText>
 			{isViewerOwner
-				? m['components.post.label.removedByYou']()
-				: m['components.post.label.removedByAuthor']()}
+				? m['components.post.state.removedByYou']()
+				: m['components.post.state.removedByAuthor']()}
 		</PostPlaceholderText>
 	);
 }

@@ -89,7 +89,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 						aria-label={m['components.externalEmbed.a11y.playVideo']()}
 						onClick={onPlayPress}
 					>
-						{!isActive ? <PlayButtonIcon /> : <Spinner label={m['common.label.loadingVideo']()} />}
+						{!isActive ? <PlayButtonIcon /> : <Spinner label={m['common.video.loading']()} />}
 					</button>
 				) : null}
 				{isActive ? (
