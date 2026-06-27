@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -46,9 +46,7 @@ export function usePostThread({ anchor }: { anchor?: string }) {
 		view,
 		setView: baseSetView,
 	} = useThreadPreferences();
-	const below = useMemo(() => {
-		return view === 'linear' ? LINEAR_VIEW_BELOW : gtPhone ? TREE_VIEW_BELOW_DESKTOP : TREE_VIEW_BELOW;
-	}, [view, gtPhone]);
+	const below = view === 'linear' ? LINEAR_VIEW_BELOW : gtPhone ? TREE_VIEW_BELOW_DESKTOP : TREE_VIEW_BELOW;
 
 	const postThreadQueryKey = createPostThreadQueryKey({
 		anchor,
@@ -123,8 +121,8 @@ export function usePostThread({ anchor }: { anchor?: string }) {
 	});
 
 	const thread = useMemo(() => query.data?.thread || [], [query.data?.thread]);
-	const threadgate = useMemo(() => query.data?.threadgate, [query.data?.threadgate]);
-	const hasOtherThreadItems = useMemo(() => !!query.data?.hasOtherReplies, [query.data?.hasOtherReplies]);
+	const threadgate = query.data?.threadgate;
+	const hasOtherThreadItems = !!query.data?.hasOtherReplies;
 	const [otherItemsVisible, setOtherItemsVisible] = useState(false);
 
 	/**
@@ -196,22 +194,16 @@ export function usePostThread({ anchor }: { anchor?: string }) {
 	]);
 
 	/** Sets the sort order for the thread and resets the additional thread items */
-	const setSort: typeof baseSetSort = useCallback(
-		(nextSort) => {
-			setOtherItemsVisible(false);
-			baseSetSort(nextSort);
-		},
-		[baseSetSort, setOtherItemsVisible],
-	);
+	const setSort: typeof baseSetSort = (nextSort) => {
+		setOtherItemsVisible(false);
+		baseSetSort(nextSort);
+	};
 
 	/** Sets the view variant for the thread and resets the additional thread items */
-	const setView: typeof baseSetView = useCallback(
-		(nextView) => {
-			setOtherItemsVisible(false);
-			baseSetView(nextView);
-		},
-		[baseSetView, setOtherItemsVisible],
-	);
+	const setView: typeof baseSetView = (nextView) => {
+		setOtherItemsVisible(false);
+		baseSetView(nextView);
+	};
 
 	/*
 	 * This is the main thread response, sorted into separate buckets based on
@@ -252,55 +244,41 @@ export function usePostThread({ anchor }: { anchor?: string }) {
 		setOtherItemsVisible,
 	]);
 
-	return useMemo(() => {
-		const context: PostThreadContextType = {
-			postThreadQueryKey,
-			postThreadOtherQueryKey,
-		};
-		return {
-			context,
-			state: {
-				/*
-				 * Copy in any query state that is useful
-				 */
-				isFetching: query.isFetching,
-				isPlaceholderData: query.isPlaceholderData,
-				error: query.error,
-				/*
-				 * Other state
-				 */
-				sort,
-				view,
-				otherItemsVisible,
-			},
-			data: {
-				items,
-				threadgate,
-			},
-			actions: {
-				/*
-				 * Copy in any query actions that are useful
-				 */
-				insertReplies: mutator.insertReplies,
-				refetch: query.refetch,
-				/*
-				 * Other actions
-				 */
-				setSort,
-				setView,
-			},
-		};
-	}, [
-		query,
-		mutator.insertReplies,
-		otherItemsVisible,
-		sort,
-		view,
-		setSort,
-		setView,
-		threadgate,
-		items,
+	const context: PostThreadContextType = {
 		postThreadQueryKey,
 		postThreadOtherQueryKey,
-	]);
+	};
+	return {
+		context,
+		state: {
+			/*
+			 * Copy in any query state that is useful
+			 */
+			isFetching: query.isFetching,
+			isPlaceholderData: query.isPlaceholderData,
+			error: query.error,
+			/*
+			 * Other state
+			 */
+			sort,
+			view,
+			otherItemsVisible,
+		},
+		data: {
+			items,
+			threadgate,
+		},
+		actions: {
+			/*
+			 * Copy in any query actions that are useful
+			 */
+			insertReplies: mutator.insertReplies,
+			refetch: query.refetch,
+			/*
+			 * Other actions
+			 */
+			setSort,
+			setView,
+		},
+	};
 }
