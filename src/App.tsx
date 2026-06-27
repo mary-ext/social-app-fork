@@ -23,8 +23,6 @@ import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
 import { Provider as StarterPackProvider } from '#/state/shell/starter-pack';
 import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-replies';
 
-import I18nProvider from '#/locale/i18nProvider';
-
 import { Shell } from '#/view/shell/index';
 
 import { ThemeProvider as Alf } from '#/alf';
@@ -110,17 +108,15 @@ function App() {
 	return (
 		<SessionProvider>
 			<PrefsStateProvider>
-				<I18nProvider>
-					<ShellStateProvider>
-						<DialogStateProvider>
-							<PortalProvider>
-								<StarterPackProvider>
-									<InnerApp />
-								</StarterPackProvider>
-							</PortalProvider>
-						</DialogStateProvider>
-					</ShellStateProvider>
-				</I18nProvider>
+				<ShellStateProvider>
+					<DialogStateProvider>
+						<PortalProvider>
+							<StarterPackProvider>
+								<InnerApp />
+							</StarterPackProvider>
+						</PortalProvider>
+					</DialogStateProvider>
+				</ShellStateProvider>
 			</PrefsStateProvider>
 		</SessionProvider>
 	);

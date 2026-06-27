@@ -10,11 +10,12 @@ import {
 	useUpdateMutedWordMutation,
 } from '#/state/queries/preferences';
 
+import { formatRelativeTime } from '#/locale/intl/timeAgo';
+
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
-import { useFormatDistance } from '#/components/hooks/dates';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag';
 import { PageText_Stroke2_Corner0_Rounded as PageText } from '#/components/icons/PageText';
@@ -91,7 +92,6 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 	const { mutateAsync: removeMutedWord } = useRemoveMutedWordMutation();
 	const { mutateAsync: updateMutedWord } = useUpdateMutedWordMutation();
 	const removeHandle = Prompt.usePromptHandle();
-	const formatDistance = useFormatDistance();
 
 	const isTagOnly = !word.targets.includes('content');
 	const expiryDate = word.expiresAt ? new Date(word.expiresAt) : undefined;
@@ -103,7 +103,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 			? isExpired
 				? m['screens.moderation.label.expired']()
 				: m['screens.moderation.label.expires']({
-						time: formatDistance(expiryDate, new Date(), { addSuffix: true }),
+						time: formatRelativeTime(expiryDate, new Date()),
 					})
 			: undefined,
 		word.actorTarget === 'exclude-following' ? m['screens.moderation.hint.excludesFollowing']() : undefined,

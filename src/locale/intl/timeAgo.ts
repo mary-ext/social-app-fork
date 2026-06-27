@@ -39,6 +39,9 @@ const narrow = {
 	second: unit('second', 'narrow'),
 };
 
+// relative-time formatter carrying the "ago"/"in" suffix that `formatDateDiff` deliberately omits.
+const relativeLong = new Intl.RelativeTimeFormat(LOCALE, { numeric: 'always', style: 'long' });
+
 /**
  * Returns the difference between `earlier` and `later` dates, based on opinionated rules.
  *
@@ -111,6 +114,22 @@ export function formatDateDiff({
 			}
 			return isLong ? long.month.format(diff.value) : `${diff.value}mo`;
 	}
+}
+
+/**
+ * Formats the signed distance from `base` to `date` with an "ago"/"in" suffix ("in 3 days", "5 days ago").
+ *
+ * @returns the formatted relative time string
+ */
+export function formatRelativeTime(date: number | string | Date, base: number | string | Date): string {
+	const target = new Date(date);
+	const now = new Date(base);
+	const isPast = target < now;
+	const diff = dateDiff(isPast ? target : now, isPast ? now : target);
+	if (diff.unit === 'now') {
+		return m['lib.time.now']();
+	}
+	return relativeLong.format(isPast ? -diff.value : diff.value, diff.unit);
 }
 
 /**
