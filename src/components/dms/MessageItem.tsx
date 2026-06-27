@@ -519,7 +519,6 @@ let MessageItemMetadata = ({
 			return null;
 	}
 };
-MessageItemMetadata = memo(MessageItemMetadata);
 export { MessageItemMetadata };
 
 function BlockedPlaceholder({

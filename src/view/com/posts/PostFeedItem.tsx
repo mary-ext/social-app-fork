@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
@@ -335,4 +335,3 @@ let FeedItemInner = ({
 		</GalleryBleed>
 	);
 };
-FeedItemInner = memo(FeedItemInner);

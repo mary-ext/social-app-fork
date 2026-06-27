@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
@@ -172,5 +171,4 @@ let ListMaybePlaceholder = ({
 
 	return null;
 };
-ListMaybePlaceholder = memo(ListMaybePlaceholder);
 export { ListMaybePlaceholder };

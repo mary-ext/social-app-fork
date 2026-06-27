@@ -69,7 +69,7 @@ const LABELER_PURPLE = 'rgb(105 0 255)';
 const squareRadius = (size: number) => (size > 32 ? 8 : 3);
 
 /** Vector fallback shown when an avatar has no image, keyed by actor type and shape. */
-const DefaultAvatar = memo(function DefaultAvatar({
+function DefaultAvatar({
 	type,
 	shape,
 	size,
@@ -142,7 +142,7 @@ const DefaultAvatar = memo(function DefaultAvatar({
 			/>
 		</svg>
 	);
-});
+}
 
 // HACK: we serve smaller avis but haven't updated lexicons to expose them; string-replace to the thumbnail
 // preset for small renders. -prf

@@ -308,7 +308,6 @@ let Header = ({
 		</View>
 	);
 };
-Header = memo(Header);
 
 function HeaderTop() {
 	const { t: l } = useLingui();
@@ -396,7 +395,6 @@ let Tab = ({
 		</View>
 	);
 };
-Tab = memo(Tab);
 
 let FollowProfileCard = ({
 	profile,

@@ -1,4 +1,4 @@
-import { memo, type ReactNode, type Ref, useCallback } from 'react';
+import { type ReactNode, type Ref, useCallback } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
@@ -157,5 +157,4 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 		</div>
 	);
 };
-PostMeta = memo(PostMeta);
 export { PostMeta };

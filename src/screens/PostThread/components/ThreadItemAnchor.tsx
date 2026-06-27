@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 import type {
 	AnyProfileView,
 	AppBskyFeedDefs,
@@ -121,7 +121,7 @@ function ThreadItemAnchorParentReplyLine({ isRoot }: { isRoot: boolean }) {
 	) : null;
 }
 
-const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
+function ThreadItemAnchorInner({
 	item,
 	isRoot,
 	postShadow,
@@ -414,7 +414,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 			</GalleryBleed>
 		</>
 	);
-});
+}
 
 function ExpandedPostDetails({
 	post,

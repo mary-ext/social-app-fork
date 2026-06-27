@@ -1,4 +1,4 @@
-import { type ComponentProps, memo, useCallback } from 'react';
+import { type ComponentProps, useCallback } from 'react';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
@@ -101,4 +101,3 @@ export let MessageContextMenu = ({
 		</Menu.Root>
 	);
 };
-MessageContextMenu = memo(MessageContextMenu);

@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -28,7 +28,7 @@ type ReportDialogParams = {
  * Dialog shown after a report is submitted, allowing the user to block the reporter and/or leave the
  * conversation.
  */
-export const AfterReportConversationDialog = memo(function BlockOrLeaveDialogInner({
+export function AfterReportConversationDialog({
 	control,
 	params,
 	currentScreen,
@@ -50,7 +50,7 @@ export const AfterReportConversationDialog = memo(function BlockOrLeaveDialogInn
 			</Dialog.ScrollableInner>
 		</Dialog.Outer>
 	);
-});
+}
 
 function DialogInner({
 	params,

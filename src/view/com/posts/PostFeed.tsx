@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -519,7 +519,6 @@ let PostFeed = ({
 		/>
 	);
 };
-PostFeed = memo(PostFeed);
 export { PostFeed };
 
 export function isThreadParentAt<T>(arr: Array<T>, i: number) {

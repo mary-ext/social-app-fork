@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { useLingui, Trans } from '@lingui/react/macro';
 
 import type { ThreadItem } from '#/state/queries/usePostThread';
@@ -15,11 +14,7 @@ import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemReadMoreUp.css';
 
-export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
-	item,
-}: {
-	item: Extract<ThreadItem, { type: 'readMoreUp' }>;
-}) {
+export function ThreadItemReadMoreUp({ item }: { item: Extract<ThreadItem, { type: 'readMoreUp' }> }) {
 	const { t: l } = useLingui();
 
 	return (
@@ -54,4 +49,4 @@ export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
 			}}
 		</Link>
 	);
-});
+}

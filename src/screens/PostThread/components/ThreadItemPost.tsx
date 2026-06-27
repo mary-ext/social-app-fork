@@ -1,4 +1,4 @@
-import { memo, type ReactNode, useCallback, useMemo } from 'react';
+import { type ReactNode, useCallback, useMemo } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -85,7 +85,7 @@ function ThreadItemPostDeleted({ item, overrides }: Pick<ThreadItemPostProps, 'i
 	);
 }
 
-const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
+function ThreadItemPostOuterWrapper({
 	item,
 	overrides,
 	hoverable,
@@ -103,12 +103,10 @@ const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
 			</PostLayout.Frame>
 		</GalleryBleed>
 	);
-});
+}
 
 /** Provides some space between posts as well as contains the reply line */
-const ThreadItemPostParentReplyLine = memo(function ThreadItemPostParentReplyLine({
-	item,
-}: Pick<ThreadItemPostProps, 'item'>) {
+function ThreadItemPostParentReplyLine({ item }: Pick<ThreadItemPostProps, 'item'>) {
 	return (
 		<div className={css.parentLineRow}>
 			<div className={css.parentLineColumn}>
@@ -116,9 +114,9 @@ const ThreadItemPostParentReplyLine = memo(function ThreadItemPostParentReplyLin
 			</div>
 		</div>
 	);
-});
+}
 
-const ThreadItemPostInner = memo(function ThreadItemPostInner({
+function ThreadItemPostInner({
 	item,
 	postShadow,
 	overrides,
@@ -260,7 +258,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 			</PostHider>
 		</ThreadItemPostOuterWrapper>
 	);
-});
+}
 
 export function ThreadItemPostSkeleton({ index }: { index: number }) {
 	const { lastWidth, lineCount } = threadTextShape(index);

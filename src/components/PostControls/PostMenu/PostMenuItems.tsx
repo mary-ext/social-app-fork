@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 import type {
 	AnyProfileView,
 	AppBskyFeedDefs,
@@ -578,5 +578,4 @@ let PostMenuItems = ({
 		</>
 	);
 };
-PostMenuItems = memo(PostMenuItems);
 export { PostMenuItems };

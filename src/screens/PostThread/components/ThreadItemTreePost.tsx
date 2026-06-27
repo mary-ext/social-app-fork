@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -88,7 +88,7 @@ function ThreadItemTreePostDeleted({ item }: { item: Extract<ThreadItem, { type:
 	);
 }
 
-const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrapper({
+function ThreadItemTreePostOuterWrapper({
 	item,
 	children,
 }: {
@@ -109,9 +109,9 @@ const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrap
 			</div>
 		</GalleryBleed>
 	);
-});
+}
 
-const ThreadItemTreePostInnerWrapper = memo(function ThreadItemTreePostInnerWrapper({
+function ThreadItemTreePostInnerWrapper({
 	item,
 	children,
 }: {
@@ -124,9 +124,9 @@ const ThreadItemTreePostInnerWrapper = memo(function ThreadItemTreePostInnerWrap
 			{children}
 		</div>
 	);
-});
+}
 
-const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
+function ThreadItemTreePostInner({
 	item,
 	postShadow,
 	overrides,
@@ -252,7 +252,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 			</div>
 		</ThreadItemTreePostOuterWrapper>
 	);
-});
+}
 
 export function ThreadItemTreePostSkeleton({ index }: { index: number }) {
 	const { lastWidth, lineCount } = threadTextShape(index);

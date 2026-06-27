@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { View } from 'react-native';
 import type { AppBskyEmbedRecord } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
@@ -68,5 +67,4 @@ let MessageItemEmbed = ({
 		</MessageContextProvider>
 	);
 };
-MessageItemEmbed = memo(MessageItemEmbed);
 export { MessageItemEmbed };

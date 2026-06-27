@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { useLingui, Plural, Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
@@ -14,7 +13,7 @@ import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemReadMore.css';
 
-export const ThreadItemReadMore = memo(function ThreadItemReadMore({
+export function ThreadItemReadMore({
 	item,
 	view,
 }: {
@@ -55,4 +54,4 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
 			</Link>
 		</div>
 	);
-});
+}

@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
@@ -77,6 +76,5 @@ let PostContent = ({
 		</ContentHider>
 	);
 };
-PostContent = memo(PostContent);
 
 export { PostContent };

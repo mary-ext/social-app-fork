@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
@@ -158,7 +158,6 @@ let ConvoMenu = ({
 		</>
 	);
 };
-ConvoMenu = memo(ConvoMenu);
 
 function MenuContent({
 	convo: initialConvo,

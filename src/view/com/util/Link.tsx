@@ -1,4 +1,4 @@
-import { type JSX, memo, useCallback, useMemo } from 'react';
+import { type JSX, useCallback, useMemo } from 'react';
 import {
 	type GestureResponderEvent,
 	Pressable,
@@ -62,7 +62,7 @@ interface Props extends React.ComponentProps<typeof TouchableOpacity> {
 }
 
 /** @deprecated use Link from `#/components/Link.tsx` instead */
-export const Link = memo(function Link({
+export function Link({
 	testID,
 	style,
 	href,
@@ -157,10 +157,10 @@ export const Link = memo(function Link({
 			{children ? children : <Text>{title || 'link'}</Text>}
 		</Com>
 	);
-});
+}
 
 /** @deprecated use InlineLinkText from `#/components/Link.tsx` instead */
-export const TextLink = memo(function TextLink({
+export function TextLink({
 	testID,
 	type = 'md',
 	style,
@@ -263,7 +263,7 @@ export const TextLink = memo(function TextLink({
 			{text}
 		</Text>
 	);
-});
+}
 
 const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/'];
 

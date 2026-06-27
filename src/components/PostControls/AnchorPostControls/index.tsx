@@ -1,4 +1,4 @@
-import { type ComponentType, memo, type MouseEvent, type ReactNode, type Ref } from 'react';
+import type { ComponentType, MouseEvent, ReactNode, Ref } from 'react';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
@@ -219,7 +219,6 @@ let AnchorPostControls = ({
 		</div>
 	);
 };
-AnchorPostControls = memo(AnchorPostControls);
 export { AnchorPostControls };
 
 /** Loading placeholder matching the anchor action bar's layout and control density. */

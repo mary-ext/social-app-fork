@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -418,5 +418,4 @@ let ProfileMenu = ({
 	);
 };
 
-ProfileMenu = memo(ProfileMenu);
 export { ProfileMenu };
