@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext } from 'react';
 
 const SplitViewContext = createContext<{
 	isWithinSplitView: boolean;
@@ -11,14 +11,11 @@ const SplitViewContext = createContext<{
 });
 
 export function SplitViewProvider({ children, side }: { children: React.ReactNode; side: 'left' | 'right' }) {
-	const value = useMemo(
-		() => ({
-			isWithinSplitView: true,
-			isWithinLeftPanel: side === 'left',
-			isWithinRightPanel: side === 'right',
-		}),
-		[side],
-	);
+	const value = {
+		isWithinSplitView: true,
+		isWithinLeftPanel: side === 'left',
+		isWithinRightPanel: side === 'right',
+	};
 	return <SplitViewContext value={value}>{children}</SplitViewContext>;
 }
 

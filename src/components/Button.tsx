@@ -522,18 +522,15 @@ export const Button = forwardRef<View, ButtonProps>(
 			};
 		}, [t, variant, color, size, shape, disabled]);
 
-		const context = useMemo<ButtonContext>(
-			() => ({
-				...state,
-				interacting: state.hovered || state.focused || state.pressed,
-				variant,
-				color,
-				size,
-				shape,
-				disabled: !!disabled,
-			}),
-			[state, variant, color, size, shape, disabled],
-		);
+		const context: ButtonContext = {
+			...state,
+			interacting: state.hovered || state.focused || state.pressed,
+			variant,
+			color,
+			size,
+			shape,
+			disabled: !!disabled,
+		};
 
 		return (
 			<PressableComponent

@@ -70,9 +70,7 @@ function reducer(state: State, action: Actions): State {
 export function MessageDraftsProvider({ children }: { children: React.ReactNode }) {
 	const [state, dispatch] = useReducer(reducer, {});
 
-	const ctx = useMemo(() => {
-		return { state, dispatch };
-	}, [state]);
+	const ctx = { state, dispatch };
 
 	return <MessageDraftsContext.Provider value={ctx}>{children}</MessageDraftsContext.Provider>;
 }

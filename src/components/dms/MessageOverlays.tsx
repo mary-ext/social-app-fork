@@ -105,10 +105,11 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 		setAfterReportTarget(reportTarget.message);
 	}, [queryClient, reportTarget]);
 
-	const ctx = useMemo<MessageDialogsContextType>(
-		() => ({ openDeleteMessage, openReportMessage, openReactions }),
-		[openDeleteMessage, openReportMessage, openReactions],
-	);
+	const ctx: MessageDialogsContextType = {
+		openDeleteMessage,
+		openReportMessage,
+		openReactions,
+	};
 
 	// `reactionsTarget` is a snapshot from when the dialog was opened. Read the
 	// live message out of the convo items so optimistic reaction changes (e.g.

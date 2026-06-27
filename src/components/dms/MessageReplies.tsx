@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 
 /** How long a message stays highlighted after scrolling to it, before the flash fades out. */
@@ -83,16 +83,13 @@ export function MessageRepliesProvider({
 		};
 	}, []);
 
-	const ctx = useMemo<MessageRepliesContextType>(
-		() => ({
-			replyTo,
-			setReply,
-			clearReply,
-			scrollToMessage,
-			highlightedMessage,
-		}),
-		[replyTo, setReply, clearReply, scrollToMessage, highlightedMessage],
-	);
+	const ctx: MessageRepliesContextType = {
+		replyTo,
+		setReply,
+		clearReply,
+		scrollToMessage,
+		highlightedMessage,
+	};
 
 	return <Context.Provider value={ctx}>{children}</Context.Provider>;
 }

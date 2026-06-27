@@ -8,7 +8,6 @@ import {
 	type Ref,
 	useContext,
 	useId,
-	useMemo,
 } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -38,7 +37,7 @@ export function Root({
 	isInvalid?: boolean;
 }) {
 	const id = useId();
-	const value = useMemo(() => ({ id, isInvalid }), [id, isInvalid]);
+	const value = { id, isInvalid };
 	return (
 		<FieldContext.Provider value={value}>
 			<div className={clsx(styles.root, className)}>{children}</div>

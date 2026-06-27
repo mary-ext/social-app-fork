@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -56,26 +56,24 @@ export function Root<T extends string>({
 		x: number;
 	} | null>(null);
 
-	const contextValue = useMemo(() => {
-		return {
-			type,
-			size,
-			selectedValue: value,
-			selectedPosition,
-			onSelectValue: (val: string, position: { width: number; x: number } | null) => {
-				onChange(val as T);
-				if (position) setSelectedPosition(position);
-			},
-			updatePosition: (position: { width: number; x: number }) => {
-				setSelectedPosition((currPos) => {
-					if (currPos && currPos.width === position.width && currPos.x === position.x) {
-						return currPos;
-					}
-					return position;
-				});
-			},
-		};
-	}, [value, selectedPosition, setSelectedPosition, onChange, type, size]);
+	const contextValue = {
+		type,
+		size,
+		selectedValue: value,
+		selectedPosition,
+		onSelectValue: (val: string, position: { width: number; x: number } | null) => {
+			onChange(val as T);
+			if (position) setSelectedPosition(position);
+		},
+		updatePosition: (position: { width: number; x: number }) => {
+			setSelectedPosition((currPos) => {
+				if (currPos && currPos.width === position.width && currPos.x === position.x) {
+					return currPos;
+				}
+				return position;
+			});
+		},
+	};
 
 	return (
 		<View

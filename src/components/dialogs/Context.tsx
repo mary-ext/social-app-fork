@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext } from 'react';
 import type { LightboxImage } from '@oomfware/lightbox';
 
 import type { ComposerOpts } from '#/lib/hooks/useOpenComposer';
@@ -63,24 +63,14 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const linkWarningDialogControl = useDialogHandle<LinkWarningPayload>();
 	const reportDialogControl = useDialogHandle<{ subject: ReportSubject }>();
 
-	const ctx = useMemo<ControlsContext>(
-		() => ({
-			composerDialogControl,
-			groupChatJoinControl,
-			lightboxControl,
-			signinDialogControl,
-			linkWarningDialogControl,
-			reportDialogControl,
-		}),
-		[
-			composerDialogControl,
-			groupChatJoinControl,
-			lightboxControl,
-			signinDialogControl,
-			linkWarningDialogControl,
-			reportDialogControl,
-		],
-	);
+	const ctx: ControlsContext = {
+		composerDialogControl,
+		groupChatJoinControl,
+		lightboxControl,
+		signinDialogControl,
+		linkWarningDialogControl,
+		reportDialogControl,
+	};
 
 	return <ControlsContext.Provider value={ctx}>{children}</ControlsContext.Provider>;
 }

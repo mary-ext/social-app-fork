@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { device } from '#/storage';
 
@@ -21,7 +21,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		device.set(['largeAltBadgeEnabled'], value);
 	}, []);
 
-	const value = useMemo<LargeAltBadgeContext>(() => [enabled, setter], [enabled, setter]);
+	const value: LargeAltBadgeContext = [enabled, setter];
 
 	return <context.Provider value={value}>{children}</context.Provider>;
 }

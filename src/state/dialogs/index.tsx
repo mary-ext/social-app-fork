@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useRef, useState } from 'react';
 
 import { useHotkeysContext } from '#/lib/hotkeys';
 
@@ -79,21 +79,15 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		[disableScope, enableScope],
 	);
 
-	const context = useMemo<IDialogContext>(
-		() => ({
-			activeDialogs,
-			openDialogs,
-		}),
-		[activeDialogs, openDialogs],
-	);
-	const controls = useMemo(
-		() => ({
-			closeAllDialogs,
-			setDialogIsOpen,
-			setFullyExpandedCount,
-		}),
-		[closeAllDialogs, setDialogIsOpen, setFullyExpandedCount],
-	);
+	const context: IDialogContext = {
+		activeDialogs,
+		openDialogs,
+	};
+	const controls = {
+		closeAllDialogs,
+		setDialogIsOpen,
+		setFullyExpandedCount,
+	};
 
 	return (
 		<DialogContext.Provider value={context}>

@@ -91,34 +91,24 @@ export function ThemeProvider({
 		[setFontFamily],
 	);
 
-	const value = useMemo<Alf>(() => {
-		const nextThemes = {
-			...themes,
-			...themesOverride,
-		};
+	const nextThemes = {
+		...themes,
+		...themesOverride,
+	};
 
-		return {
-			themes: nextThemes,
-			themeName: themeName,
-			theme: nextThemes[themeName],
-			fonts: {
-				scale: fontScale,
-				scaleMultiplier: fontScaleMultiplier,
-				family: fontFamily,
-				setFontScale: setFontScaleAndPersist,
-				setFontFamily: setFontFamilyAndPersist,
-			},
-			flags: {},
-		};
-	}, [
-		themeName,
-		themesOverride,
-		fontScale,
-		setFontScaleAndPersist,
-		fontFamily,
-		setFontFamilyAndPersist,
-		fontScaleMultiplier,
-	]);
+	const value: Alf = {
+		themes: nextThemes,
+		themeName: themeName,
+		theme: nextThemes[themeName],
+		fonts: {
+			scale: fontScale,
+			scaleMultiplier: fontScaleMultiplier,
+			family: fontFamily,
+			setFontScale: setFontScaleAndPersist,
+			setFontFamily: setFontFamilyAndPersist,
+		},
+		flags: {},
+	};
 
 	return <Context.Provider value={value}>{children}</Context.Provider>;
 }

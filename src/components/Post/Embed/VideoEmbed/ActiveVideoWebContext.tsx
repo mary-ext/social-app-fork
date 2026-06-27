@@ -4,7 +4,6 @@ import {
 	useContext,
 	useEffect,
 	useId,
-	useMemo,
 	useRef,
 	useState,
 	useSyncExternalStore,
@@ -78,14 +77,11 @@ export function Provider({ children }: { children: React.ReactNode }) {
 		[windowHeight],
 	);
 
-	const value = useMemo(
-		() => ({
-			activeViewId,
-			setActiveView,
-			sendViewPosition,
-		}),
-		[activeViewId, setActiveView, sendViewPosition],
-	);
+	const value = {
+		activeViewId,
+		setActiveView,
+		sendViewPosition,
+	};
 
 	return <Context.Provider value={value}>{children}</Context.Provider>;
 }

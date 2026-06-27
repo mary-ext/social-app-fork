@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, type RefObject, useContext, useMemo, useRef } from 'react';
+import { createContext, type ReactNode, type RefObject, useContext, useRef } from 'react';
 import { Popover } from '@base-ui/react/popover';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -62,17 +62,14 @@ export function Root({ children, handle, onEmojiSelect, preloadOnMount = true, n
 	// not ones opened by clicking the Trigger.
 	const actionsRef = useRef<{ close: () => void; unmount: () => void }>(null);
 
-	const value = useMemo(
-		() => ({
-			onEmojiSelect: (emoji: Emoji) => {
-				emojiInserted.emit(emoji);
-				onEmojiSelect?.(emoji);
-			},
-			close: () => actionsRef.current?.close(),
-			nextFocusRef,
-		}),
-		[onEmojiSelect, nextFocusRef],
-	);
+	const value = {
+		onEmojiSelect: (emoji: Emoji) => {
+			emojiInserted.emit(emoji);
+			onEmojiSelect?.(emoji);
+		},
+		close: () => actionsRef.current?.close(),
+		nextFocusRef,
+	};
 
 	return (
 		<EmojiPickerContext value={value}>

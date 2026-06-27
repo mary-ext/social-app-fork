@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext } from 'react';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
@@ -30,7 +30,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 	const userDid = currentAccount?.did;
 	const moderationPrefs = prefs.data?.moderationPrefs;
-	const value = useMemo<ModerationOptions | undefined>(() => {
+	const value: ModerationOptions | undefined = (() => {
 		if (override) {
 			return override;
 		}
@@ -48,7 +48,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			prefs: toModerationPreferences({ ...moderationPrefs, labelers }),
 			labelDefs,
 		};
-	}, [override, userDid, labelDefs, moderationPrefs]);
+	})();
 
 	return <moderationOptsContext.Provider value={value}>{children}</moderationOptsContext.Provider>;
 }

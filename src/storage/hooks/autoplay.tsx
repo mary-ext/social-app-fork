@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { getReducedMotion } from '#/lib/reduced-motion';
 
@@ -25,7 +25,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		device.set(['disableAutoplay'], value);
 	}, []);
 
-	const value = useMemo<AutoplayContext>(() => [disableAutoplay, setter], [disableAutoplay, setter]);
+	const value: AutoplayContext = [disableAutoplay, setter];
 
 	return <context.Provider value={value}>{children}</context.Provider>;
 }

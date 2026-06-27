@@ -56,19 +56,16 @@ export function Root({ children, isInvalid = false, style }: RootProps) {
 	const { state: hovered, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
 	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
 
-	const context = useMemo(
-		() => ({
-			inputRef,
-			hovered,
-			onHoverIn,
-			onHoverOut,
-			focused,
-			onFocus,
-			onBlur,
-			isInvalid,
-		}),
-		[inputRef, hovered, onHoverIn, onHoverOut, focused, onFocus, onBlur, isInvalid],
-	);
+	const context = {
+		inputRef,
+		hovered,
+		onHoverIn,
+		onHoverOut,
+		focused,
+		onFocus,
+		onBlur,
+		isInvalid,
+	};
 	const webProps: WebRootProps = {
 		onClick: () => inputRef.current?.focus(),
 		onMouseOver: onHoverIn,

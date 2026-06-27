@@ -1,14 +1,4 @@
-import {
-	createContext,
-	Fragment,
-	useCallback,
-	useContext,
-	useEffect,
-	useId,
-	useMemo,
-	useRef,
-	useState,
-} from 'react';
+import { createContext, Fragment, useCallback, useContext, useEffect, useId, useRef, useState } from 'react';
 
 type Component = React.ReactElement<unknown>;
 
@@ -45,14 +35,11 @@ export function createPortalGroup() {
 			setOutlet(<>{Object.values(map.current)}</>);
 		}, []);
 
-		const contextValue = useMemo(
-			() => ({
-				outlet,
-				append,
-				remove,
-			}),
-			[outlet, append, remove],
-		);
+		const contextValue = {
+			outlet,
+			append,
+			remove,
+		};
 
 		return <Context.Provider value={contextValue}>{props.children}</Context.Provider>;
 	}

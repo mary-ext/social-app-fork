@@ -102,16 +102,13 @@ export function Group({
 
 	const maxReached = !!(type === 'checkbox' && maxSelections && values.length >= maxSelections);
 
-	const context = useMemo(
-		() => ({
-			values,
-			type,
-			disabled,
-			maxSelectionsReached: maxReached,
-			setFieldValue,
-		}),
-		[values, disabled, type, maxReached, setFieldValue],
-	);
+	const context = {
+		values,
+		type,
+		disabled,
+		maxSelectionsReached: maxReached,
+		setFieldValue,
+	};
 
 	return (
 		<GroupContext.Provider value={context}>

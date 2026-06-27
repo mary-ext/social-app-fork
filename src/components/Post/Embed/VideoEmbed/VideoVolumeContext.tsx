@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const Context = createContext<{
 	muted: boolean;
@@ -13,15 +13,12 @@ export function Provider({ children }: { children: React.ReactNode }) {
 	const [muted, setMuted] = useState(true);
 	const [volume, setVolume] = useState(1);
 
-	const value = useMemo(
-		() => ({
-			muted,
-			setMuted,
-			volume,
-			setVolume,
-		}),
-		[muted, setMuted, volume, setVolume],
-	);
+	const value = {
+		muted,
+		setMuted,
+		volume,
+		setVolume,
+	};
 
 	return <Context.Provider value={value}>{children}</Context.Provider>;
 }

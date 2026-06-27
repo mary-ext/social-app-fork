@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const CurrentConvoIdContext = createContext<{
 	currentConvoId: string | undefined;
@@ -19,6 +19,6 @@ export function useCurrentConvoId() {
 
 export function CurrentConvoIdProvider({ children }: { children: React.ReactNode }) {
 	const [currentConvoId, setCurrentConvoId] = useState<string | undefined>();
-	const ctx = useMemo(() => ({ currentConvoId, setCurrentConvoId }), [currentConvoId]);
+	const ctx = { currentConvoId, setCurrentConvoId };
 	return <CurrentConvoIdContext.Provider value={ctx}>{children}</CurrentConvoIdContext.Provider>;
 }

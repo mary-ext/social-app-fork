@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useId, useMemo } from 'react';
+import { createContext, useCallback, useContext, useId } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
@@ -41,7 +41,7 @@ export function Outer({
 	const titleId = useId();
 	const descriptionId = useId();
 
-	const context = useMemo(() => ({ titleId, descriptionId }), [titleId, descriptionId]);
+	const context = { titleId, descriptionId };
 
 	return (
 		<Dialog.Outer
