@@ -129,11 +129,15 @@ export default defineConfig(
 				{
 					/*
 					 * The `postinstall` hook runs `compile-if-needed` locally, but not in
-					 * CI. For CI-sake, ignore this.
+					 * CI. For CI-sake, ignore this. `#/paraglide/*` is likewise generated
+					 * (gitignored) by `paraglide:compile`.
 					 */
-					ignore: ['^#\/locale\/locales\/.+\/messages'],
+					ignore: ['^#\/locale\/locales\/.+\/messages', '^#\/paraglide\/'],
 				},
 			],
+			// paraglide message keys are dot-paths accessed as `m['some.key']()`; the bundler
+			// resolves them, but the rule can't statically validate computed namespace access.
+			'import-x/namespace': ['error', { allowComputed: true }],
 			'import-x/no-extraneous-dependencies': [
 				'error',
 				{

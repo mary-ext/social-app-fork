@@ -1,45 +1,66 @@
 import { Fragment, type ReactNode } from 'react';
 
+import type {
+	MessageMarkupAttributes,
+	MessageMarkupOptions,
+	MessageMarkupSchema,
+	MessageMarkupTag,
+	MessageMetadata,
+	MessagePart,
+} from '#/paraglide/runtime';
+
 // derived from @inlang/paraglide-js-react (MIT, (c) Opral US Inc.). renders a paraglide message that
 // carries markup: the message file decides which tags appear and where (`{#tag}…{/tag}`), while the
 // `markup` prop decides how each tag renders. plain (markup-free) messages render their string
 // directly. see messages/en/*.json for the `{#tN}` tags emitted from the old lingui `<Trans>` cases.
+//
+// the generics derive `inputs` and `markup` from the message's own type (paraglide attaches them as
+// phantom MessageMetadata), so a wrong input or an unknown/missing markup tag is a type error.
 
-interface MarkupArgs {
+/** Renders one markup tag instance: its wrapped `children`, plus the tag's `options`/`attributes`. */
+type MarkupRenderer<Tag extends MessageMarkupTag = MessageMarkupTag> = (args: {
+	attributes: Tag['attributes'];
 	children?: ReactNode;
-	options: Record<string, unknown>;
-	attributes: Record<string, unknown>;
-}
-
-/** Renders one markup tag. Receives the tag's wrapped `children`, plus its `options`/`attributes`. */
-type MarkupRenderer = (args: MarkupArgs) => ReactNode;
-
-type MessagePart =
-	| { type: 'markup-end'; name: string }
-	| {
-			type: 'markup-standalone';
-			name: string;
-			options: Record<string, unknown>;
-			attributes: Record<string, unknown>;
-	  }
-	| {
-			type: 'markup-start';
-			name: string;
-			options: Record<string, unknown>;
-			attributes: Record<string, unknown>;
-	  }
-	| { type: 'text'; value: string };
+	options: Tag['options'];
+}) => ReactNode;
 
 /** A compiled paraglide message function, optionally exposing `.parts()` for markup messages. */
-type Message = ((inputs?: Record<string, unknown>, options?: { locale?: string }) => string) & {
-	parts?: (inputs?: Record<string, unknown>, options?: { locale?: string }) => MessagePart[];
+type Message = ((...args: never[]) => string) & {
+	parts?: (...args: never[]) => MessagePart[];
 };
 
+type MetaOf<M> =
+	M extends MessageMetadata<infer Inputs, infer Options, infer Markup>
+		? { inputs: Inputs; markup: Markup; options: Options }
+		: never;
+type InputsOf<M> = MetaOf<M> extends { inputs: infer Inputs } ? Inputs : Record<string, never>;
+type MarkupOf<M> =
+	MetaOf<M> extends { markup: infer Markup extends MessageMarkupSchema } ? Markup : MessageMarkupSchema;
+
+type InputsProp<Inputs> = keyof Inputs extends never ? { inputs?: Inputs } : { inputs: Inputs };
+type MarkupProp<Markup extends MessageMarkupSchema> = keyof Markup extends never
+	? { markup?: never }
+	: {
+			markup: {
+				[K in keyof Markup & string]: MarkupRenderer<
+					Markup[K] extends MessageMarkupTag ? Markup[K] : MessageMarkupTag
+				>;
+			};
+		};
+
+type TransProps<M> = { message: M } & InputsProp<InputsOf<M>> & MarkupProp<MarkupOf<M>>;
+
+type AnyRenderer = (args: {
+	attributes: MessageMarkupAttributes;
+	children?: ReactNode;
+	options: MessageMarkupOptions;
+}) => ReactNode;
+
 interface Frame {
-	attributes: Record<string, unknown>;
+	attributes: MessageMarkupAttributes;
 	children: ReactNode[];
 	name: string;
-	options: Record<string, unknown>;
+	options: MessageMarkupOptions;
 }
 
 const toChildren = (nodes: ReactNode[]): ReactNode => {
@@ -52,14 +73,14 @@ const toChildren = (nodes: ReactNode[]): ReactNode => {
 	return nodes.map((node, i) => <Fragment key={i}>{node}</Fragment>);
 };
 
-const renderParts = (parts: MessagePart[], markup: Record<string, MarkupRenderer>): ReactNode => {
+const renderParts = (parts: MessagePart[], markup: Record<string, AnyRenderer>): ReactNode => {
 	const root: ReactNode[] = [];
 	const stack: Frame[] = [];
 	const append = (node: ReactNode) => {
 		const top = stack[stack.length - 1];
 		(top ? top.children : root).push(node);
 	};
-	const render = (frame: Omit<Frame, 'children'> & { children: ReactNode[] }): ReactNode => {
+	const render = (frame: Frame): ReactNode => {
 		const renderer = markup[frame.name];
 		const children = toChildren(frame.children);
 		if (!renderer) {
@@ -102,25 +123,19 @@ const renderParts = (parts: MessagePart[], markup: Record<string, MarkupRenderer
 	return toChildren(root);
 };
 
-interface TransProps {
-	/** A paraglide message function from `#/paraglide/messages`. */
-	message: Message;
-	/** Message variables (the message's declared inputs). */
-	inputs?: Record<string, unknown>;
-	/** A renderer per markup tag in the message (keys match the `{#tag}` names, e.g. `t0`). */
-	markup?: Record<string, MarkupRenderer>;
-}
-
 /**
- * Renders a paraglide message that interleaves React components, the replacement for lingui's `<Trans>` with
- * embedded elements.
+ * Renders a paraglide message that interleaves React components — the replacement for lingui's `<Trans>` with
+ * embedded elements. `inputs` and `markup` are typed against `message`: pass the message's variables as
+ * `inputs`, and a renderer per markup tag (keys match the `{#tag}` names, e.g. `t0`) as `markup`.
  *
  * @returns The message rendered with each markup tag mapped through `markup`.
  */
-export const Trans = ({ inputs, markup, message }: TransProps): ReactNode => {
-	const i = inputs ?? {};
+export const Trans = <M extends Message>(props: TransProps<NoInfer<M>> & { message: M }): ReactNode => {
+	const { message } = props;
+	const inputs = 'inputs' in props ? props.inputs : undefined;
 	if (typeof message.parts !== 'function') {
-		return message(i);
+		return message(inputs as never);
 	}
-	return renderParts(message.parts(i), markup ?? {});
+	const markup = ('markup' in props ? props.markup : undefined) as Record<string, AnyRenderer> | undefined;
+	return renderParts(message.parts(inputs as never), markup ?? {});
 };
