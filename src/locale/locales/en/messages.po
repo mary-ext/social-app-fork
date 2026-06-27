@@ -24,19 +24,19 @@ msgid "\"{interestsDisplayName}\" category (active)"
 msgstr ""
 
 #: src/components/dms/getMessageInfo.ts:107
-#: src/components/dms/MessageItem.tsx:714
+#: src/components/dms/MessageItem.tsx:713
 #: src/screens/Messages/components/MessageInputReply.tsx:38
 msgid "(chat invite link)"
 msgstr "(chat invite link)"
 
 #: src/components/dms/getMessageInfo.ts:92
-#: src/components/dms/MessageItem.tsx:716
+#: src/components/dms/MessageItem.tsx:715
 #: src/screens/Messages/components/MessageInputReply.tsx:40
 msgid "(contains embedded content)"
 msgstr ""
 
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:156
+#: src/lib/hooks/useTimeAgo.ts:152
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr ""
 
@@ -51,7 +51,7 @@ msgid "{0, plural, one {# following} other {# following}}"
 msgstr ""
 
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:146
+#: src/lib/hooks/useTimeAgo.ts:142
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr ""
 
@@ -76,12 +76,12 @@ msgid "{0, plural, one {# member} other {# members}}"
 msgstr "{0, plural, one {# member} other {# members}}"
 
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:136
+#: src/lib/hooks/useTimeAgo.ts:132
 msgid "{0, plural, one {# minute} other {# minutes}}"
 msgstr ""
 
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:167
+#: src/lib/hooks/useTimeAgo.ts:163
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr ""
 
@@ -107,7 +107,7 @@ msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr ""
 
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:126
+#: src/lib/hooks/useTimeAgo.ts:122
 msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr "{0, plural, one {#m} other {#m}}"
 
 #. How many months have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:169
+#: src/lib/hooks/useTimeAgo.ts:165
 msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr ""
 
@@ -192,7 +192,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:578
+#: src/components/dms/MessageItem.tsx:577
 msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
@@ -299,25 +299,25 @@ msgstr "{0}/{1} {2, plural, one {member} other {members}}"
 
 #. How many days have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:158
+#: src/lib/hooks/useTimeAgo.ts:154
 msgid "{0}d"
 msgstr ""
 
 #. How many hours have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:148
+#: src/lib/hooks/useTimeAgo.ts:144
 msgid "{0}h"
 msgstr ""
 
 #. How many minutes have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:138
+#: src/lib/hooks/useTimeAgo.ts:134
 msgid "{0}m"
 msgstr ""
 
 #. How many seconds have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
-#: src/lib/hooks/useTimeAgo.ts:128
+#: src/lib/hooks/useTimeAgo.ts:124
 msgid "{0}s"
 msgstr ""
 
@@ -611,7 +611,7 @@ msgstr "{name}'s starter pack"
 msgid "{nameLength} of {NAME_MAX_LENGTH} characters"
 msgstr "{nameLength} of {NAME_MAX_LENGTH} characters"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:263
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:257
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -628,15 +628,15 @@ msgstr ""
 msgid "{rank}."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:667
+#: src/components/dms/MessageItem.tsx:666
 msgid "{replierDisplayName} replied"
 msgstr "{replierDisplayName} replied"
 
-#: src/components/dms/MessageItem.tsx:663
+#: src/components/dms/MessageItem.tsx:662
 msgid "{replierDisplayName} replied to {originalName}"
 msgstr "{replierDisplayName} replied to {originalName}"
 
-#: src/components/dms/MessageItem.tsx:661
+#: src/components/dms/MessageItem.tsx:660
 msgid "{replierDisplayName} replied to you"
 msgstr "{replierDisplayName} replied to you"
 
@@ -819,7 +819,7 @@ msgstr "A network error occurred. Please check your internet connection."
 msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:99
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:97
 msgid "Abusive or discriminatory behavior"
 msgstr ""
 
@@ -915,8 +915,8 @@ msgstr ""
 #: src/components/moderation/ModerationDetailsDialog.tsx:99
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:94
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:98
-#: src/lib/moderation/useModerationCauseDescription.ts:95
-#: src/lib/moderation/useModerationCauseDescription.ts:102
+#: src/lib/moderation/useModerationCauseDescription.ts:93
+#: src/lib/moderation/useModerationCauseDescription.ts:100
 msgid "Account Muted"
 msgstr ""
 
@@ -1171,13 +1171,13 @@ msgstr "Admin"
 msgid "Adult"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:67
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:65
 msgid "Adult content"
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:140
-#: src/lib/moderation/useGlobalLabelStrings.ts:29
-#: src/lib/moderation/useModerationCauseDescription.ts:135
+#: src/lib/moderation/useGlobalLabelStrings.ts:27
+#: src/lib/moderation/useModerationCauseDescription.ts:133
 #: src/view/com/composer/labels/LabelsBtn.tsx:97
 msgid "Adult Content"
 msgstr ""
@@ -1190,7 +1190,7 @@ msgstr ""
 msgid "Adult Content labels"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:75
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:73
 msgid "Adult sexual abuse content"
 msgstr ""
 
@@ -1346,7 +1346,7 @@ msgstr ""
 msgid "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 msgstr "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:236
 msgid "An issue not included in these options"
 msgstr ""
 
@@ -1375,7 +1375,7 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:120
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:115
-#: src/lib/moderation/useModerationCauseDescription.ts:131
+#: src/lib/moderation/useModerationCauseDescription.ts:129
 msgid "an unknown labeler"
 msgstr ""
 
@@ -1383,11 +1383,11 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:87
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:85
 msgid "Animal sexual abuse"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:129
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:127
 msgid "Animal welfare"
 msgstr ""
 
@@ -1577,7 +1577,7 @@ msgstr ""
 msgid "Back to Chats"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:140
+#: src/screens/Search/Shell.tsx:131
 msgid "Back to Explore"
 msgstr "Back to Explore"
 
@@ -1586,11 +1586,11 @@ msgstr "Back to Explore"
 msgid "Back to your accounts"
 msgstr "Back to your accounts"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:215
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:213
 msgid "Banned activities or security violations"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:226
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:224
 msgid "Banned user returning"
 msgstr ""
 
@@ -1607,8 +1607,8 @@ msgstr ""
 msgid "Block {displayName}"
 msgstr "Block {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:269
-#: src/components/dms/ConvoMenu.tsx:273
+#: src/components/dms/ConvoMenu.tsx:268
+#: src/components/dms/ConvoMenu.tsx:272
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:498
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:499
 #: src/screens/Messages/components/RequestButtons.tsx:146
@@ -1696,7 +1696,7 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:707
+#: src/components/dms/MessageItem.tsx:706
 msgid "Blocked message hidden"
 msgstr "Blocked message hidden"
 
@@ -1728,7 +1728,7 @@ msgstr ""
 msgid "Books"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:214
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:212
 msgid "Breaking site rules"
 msgstr ""
 
@@ -1746,15 +1746,15 @@ msgstr ""
 msgid "Browse other feeds"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:170
+#: src/components/TrendingTopics.tsx:168
 msgid "Browse posts about {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:178
+#: src/components/TrendingTopics.tsx:176
 msgid "Browse posts tagged with {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:187
+#: src/components/TrendingTopics.tsx:185
 msgid "Browse starter pack {displayName}"
 msgstr ""
 
@@ -1763,7 +1763,7 @@ msgstr ""
 msgid "Browse topic {0}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:224
+#: src/components/TrendingTopics.tsx:222
 msgid "Browse topic {displayName}"
 msgstr ""
 
@@ -1842,7 +1842,7 @@ msgstr "Cancel reply"
 #: src/components/PostControls/shared.ts:66
 #: src/components/PostControls/shared.ts:95
 #: src/components/PostControls/shared.ts:123
-#: src/lib/hooks/useOpenComposer.tsx:83
+#: src/lib/hooks/useOpenComposer.tsx:82
 msgid "Cannot interact with a blocked user"
 msgstr ""
 
@@ -1916,7 +1916,7 @@ msgstr "Chat locked"
 msgid "Chat member options"
 msgstr "Chat member options"
 
-#: src/components/dms/ConvoMenu.tsx:204
+#: src/components/dms/ConvoMenu.tsx:203
 msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
@@ -1967,7 +1967,7 @@ msgstr "Chat title changed to {0}"
 msgid "Chat unlocked"
 msgstr "Chat unlocked"
 
-#: src/components/dms/ConvoMenu.tsx:206
+#: src/components/dms/ConvoMenu.tsx:205
 msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
@@ -1977,11 +1977,11 @@ msgstr ""
 msgid "Chats"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:160
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:158
 msgid "Child safety"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:164
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:162
 msgid "Child Sexual Abuse Material (CSAM)"
 msgstr ""
 
@@ -2070,7 +2070,7 @@ msgstr ""
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:66
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:70
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:77
-#: src/components/suggested-follows-dialog.tsx:324
+#: src/components/suggested-follows-dialog.tsx:323
 #: src/components/verification/VerificationsDialog.tsx:95
 #: src/components/verification/VerifierDialog.tsx:82
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:37
@@ -2181,7 +2181,7 @@ msgstr ""
 msgid "Content and Media"
 msgstr ""
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:17
+#: src/lib/moderation/useGlobalLabelStrings.ts:15
 msgid "Content Blocked"
 msgstr ""
 
@@ -2193,15 +2193,15 @@ msgstr ""
 msgid "Content languages"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:191
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:189
 msgid "Content promoting or depicting self-harm"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:55
 #: src/components/moderation/ScreenHider.tsx:52
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:54
-#: src/lib/moderation/useGlobalLabelStrings.ts:21
-#: src/lib/moderation/useModerationCauseDescription.ts:48
+#: src/lib/moderation/useGlobalLabelStrings.ts:19
+#: src/lib/moderation/useModerationCauseDescription.ts:46
 msgid "Content Warning"
 msgstr ""
 
@@ -2214,11 +2214,11 @@ msgstr ""
 msgid "Continue as {0} (currently signed in)"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:27
+#: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:22
 msgid "Continue thread"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:46
+#: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:41
 msgid "Continue thread..."
 msgstr ""
 
@@ -2329,7 +2329,7 @@ msgstr ""
 msgid "Could not connect to feed service"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:154
+#: src/screens/Messages/components/MessageInputEmbed.tsx:148
 msgid "Could not fetch post"
 msgstr "Could not fetch post"
 
@@ -2357,7 +2357,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:210
+#: src/components/dms/ConvoMenu.tsx:209
 msgid "Could not mute chat"
 msgstr ""
 
@@ -2472,11 +2472,11 @@ msgstr ""
 msgid "Current chat"
 msgstr "Current chat"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:199
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:197
 msgid "Dangerous challenges or activities"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:203
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:201
 msgid "Dangerous substances or drug abuse"
 msgstr ""
 
@@ -2494,7 +2494,7 @@ msgstr ""
 msgid "Decline this language suggestion"
 msgstr "Decline this language suggestion"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:83
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:81
 msgid "Deepfake adult content"
 msgstr ""
 
@@ -2584,7 +2584,7 @@ msgstr ""
 msgid "Deleted list"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:722
+#: src/components/dms/MessageItem.tsx:721
 msgid "Deleted message"
 msgstr "Deleted message"
 
@@ -2722,7 +2722,7 @@ msgstr ""
 msgid "Do not apply this muted word to users you follow"
 msgstr "Do not apply this muted word to users you follow"
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:34
+#: src/lib/moderation/useGlobalLabelStrings.ts:32
 msgid "Does not include nudity."
 msgstr ""
 
@@ -2763,7 +2763,7 @@ msgctxt "button"
 msgid "Download profile data"
 msgstr "Download profile data"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:114
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:112
 msgid "Doxxing"
 msgstr ""
 
@@ -2790,7 +2790,7 @@ msgstr ""
 msgid "e.g. alice.bsky.social"
 msgstr "e.g. alice.bsky.social"
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:38
+#: src/lib/moderation/useGlobalLabelStrings.ts:36
 msgid "E.g. artistic nudes."
 msgstr ""
 
@@ -2810,7 +2810,7 @@ msgstr ""
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:195
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:193
 msgid "Eating disorders"
 msgstr ""
 
@@ -3122,12 +3122,12 @@ msgstr ""
 msgid "Expires in {0} at {1}"
 msgstr ""
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:42
-#: src/lib/moderation/useGlobalLabelStrings.ts:46
+#: src/lib/moderation/useGlobalLabelStrings.ts:40
+#: src/lib/moderation/useGlobalLabelStrings.ts:44
 msgid "Explicit or potentially disturbing media."
 msgstr ""
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:30
+#: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Explicit sexual images."
 msgstr ""
 
@@ -3177,7 +3177,7 @@ msgstr ""
 msgid "External Media Preferences"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:145
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:143
 msgid "Extremist content"
 msgstr ""
 
@@ -3414,11 +3414,11 @@ msgstr ""
 msgid "Failed to upload video"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:48
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:46
 msgid "Fake account or bot"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:56
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:54
 msgid "False information about elections"
 msgstr ""
 
@@ -3512,11 +3512,11 @@ msgstr ""
 msgid "Find accounts to follow"
 msgstr ""
 
-#: src/components/suggested-follows-dialog.tsx:320
+#: src/components/suggested-follows-dialog.tsx:319
 msgid "Find people to follow"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:224
+#: src/screens/Search/Shell.tsx:215
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
@@ -3813,7 +3813,7 @@ msgstr ""
 msgid "GIF uploaded"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:141
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:139
 msgid "Glorification of violence"
 msgstr ""
 
@@ -3887,7 +3887,7 @@ msgstr "Go to <0>{0}</0>"
 msgid "Go to conversation with {0}"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:253
+#: src/components/dms/ConvoMenu.tsx:252
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:70
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:162
 #: src/view/shell/desktop/LeftNav.tsx:251
@@ -3899,7 +3899,7 @@ msgstr ""
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
-#: src/components/dms/ConvoMenu.tsx:250
+#: src/components/dms/ConvoMenu.tsx:249
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:63
 msgid "Go to user's profile"
 msgstr ""
@@ -3913,18 +3913,18 @@ msgstr ""
 msgid "Got it"
 msgstr ""
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:41
-#: src/lib/moderation/useGlobalLabelStrings.ts:45
+#: src/lib/moderation/useGlobalLabelStrings.ts:39
+#: src/lib/moderation/useGlobalLabelStrings.ts:43
 #: src/view/com/composer/labels/LabelsBtn.tsx:154
 #: src/view/com/composer/labels/LabelsBtn.tsx:158
 msgid "Graphic Media"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:137
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:135
 msgid "Graphic violent content"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:168
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:166
 msgid "Grooming or predatory behavior"
 msgstr ""
 
@@ -3988,7 +3988,7 @@ msgstr "Group name"
 msgid "Group name is too long. The maximum number of characters is {MAX_GROUP_NAME_GRAPHEME_LENGTH}."
 msgstr "Group name is too long. The maximum number of characters is {MAX_GROUP_NAME_GRAPHEME_LENGTH}."
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:218
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:216
 msgid "Hacking or system attacks"
 msgstr ""
 
@@ -4002,15 +4002,15 @@ msgstr "Handle or DID"
 msgid "Happy GIFs"
 msgstr "Happy GIFs"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:98
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:96
 msgid "Harassment or hate"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:188
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:186
 msgid "Harmful or high-risk activities"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:161
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:159
 msgid "Harming or endangering minors"
 msgstr ""
 
@@ -4022,7 +4022,7 @@ msgstr ""
 msgid "Hashtag {tag}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:110
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:108
 msgid "Hate speech"
 msgstr ""
 
@@ -4118,7 +4118,7 @@ msgstr "Honoring this request is voluntary: your profile and posts stay publicly
 msgid "Hot"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:149
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:147
 msgid "Human trafficking"
 msgstr ""
 
@@ -4191,7 +4191,7 @@ msgstr ""
 msgid "Image viewer"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:52
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:50
 msgid "Impersonation"
 msgstr ""
 
@@ -4489,10 +4489,10 @@ msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:210
 #: src/components/dms/AfterReportConversationDialog.tsx:213
-#: src/components/dms/ConvoMenu.tsx:232
-#: src/components/dms/ConvoMenu.tsx:235
-#: src/components/dms/ConvoMenu.tsx:287
-#: src/components/dms/ConvoMenu.tsx:290
+#: src/components/dms/ConvoMenu.tsx:231
+#: src/components/dms/ConvoMenu.tsx:234
+#: src/components/dms/ConvoMenu.tsx:286
+#: src/components/dms/ConvoMenu.tsx:289
 #: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave conversation"
 msgstr ""
@@ -4867,8 +4867,8 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:242
-#: src/components/dms/ConvoMenu.tsx:245
+#: src/components/dms/ConvoMenu.tsx:241
+#: src/components/dms/ConvoMenu.tsx:244
 msgid "Mark as read"
 msgstr ""
 
@@ -4981,19 +4981,19 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:585
+#: src/components/dms/MessageItem.tsx:584
 msgid "Messages from this person are hidden while they are blocking you."
 msgstr "Messages from this person are hidden while they are blocking you."
 
-#: src/components/dms/MessageItem.tsx:583
+#: src/components/dms/MessageItem.tsx:582
 msgid "Messages from this person are hidden while you are blocking them."
 msgstr "Messages from this person are hidden while you are blocking them."
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:176
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:174
 msgid "Minor harassment or bullying"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:36
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:34
 msgid "Misleading"
 msgstr ""
 
@@ -5071,7 +5071,7 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:56
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:55
-#: src/lib/moderation/useModerationCauseDescription.ts:49
+#: src/lib/moderation/useModerationCauseDescription.ts:47
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
@@ -5149,8 +5149,8 @@ msgstr "Mute account?"
 msgid "Mute accounts"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:257
-#: src/components/dms/ConvoMenu.tsx:260
+#: src/components/dms/ConvoMenu.tsx:256
+#: src/components/dms/ConvoMenu.tsx:259
 msgid "Mute conversation"
 msgstr ""
 
@@ -5198,7 +5198,7 @@ msgid "Muted accounts have their posts removed from your feed and from your noti
 msgstr ""
 
 #. placeholder {0}: cause.source.name
-#: src/lib/moderation/useModerationCauseDescription.ts:89
+#: src/lib/moderation/useModerationCauseDescription.ts:87
 msgid "Muted by \"{0}\""
 msgstr ""
 
@@ -5509,8 +5509,8 @@ msgstr ""
 msgid "No results for \"{0}\"."
 msgstr ""
 
-#: src/components/Lists.tsx:153
-#: src/components/Lists.tsx:163
+#: src/components/Lists.tsx:152
+#: src/components/Lists.tsx:162
 msgid "No results found"
 msgstr ""
 
@@ -5530,7 +5530,7 @@ msgstr ""
 msgid "No Starter Packs yet"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:718
+#: src/components/dms/MessageItem.tsx:717
 #: src/screens/Messages/components/MessageInputReply.tsx:42
 msgid "No text"
 msgstr "No text"
@@ -5565,11 +5565,11 @@ msgstr ""
 msgid "Nobody was found. Try searching for someone else."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:79
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:77
 msgid "Non-consensual intimate imagery"
 msgstr ""
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:37
+#: src/lib/moderation/useGlobalLabelStrings.ts:35
 msgid "Non-sexual Nudity"
 msgstr ""
 
@@ -5617,7 +5617,7 @@ msgstr ""
 msgid "Notifies every app, including the Bluesky app, that you don't want your account shown to people who aren't signed in."
 msgstr "Notifies every app, including the Bluesky app, that you don't want your account shown to people who aren't signed in."
 
-#: src/lib/hooks/useTimeAgo.ts:122
+#: src/lib/hooks/useTimeAgo.ts:118
 msgid "now"
 msgstr ""
 
@@ -5650,7 +5650,7 @@ msgstr ""
 #: src/components/BotAccountAlert.tsx:48
 #: src/components/BotAccountAlert.tsx:50
 #: src/components/dms/InitiateChatFlow.tsx:622
-#: src/components/dms/MessageItem.tsx:589
+#: src/components/dms/MessageItem.tsx:588
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:492
 msgid "Okay"
 msgstr ""
@@ -5733,7 +5733,7 @@ msgstr "Only people the chat owner follows can join"
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr ""
 
-#: src/components/Lists.tsx:138
+#: src/components/Lists.tsx:137
 #: src/view/screens/Profile.tsx:123
 msgid "Oops!"
 msgstr ""
@@ -5883,8 +5883,8 @@ msgstr ""
 msgid "Options for \"{0}\""
 msgstr "Options for \"{0}\""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:237
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:241
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:235
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 #: src/view/com/composer/labels/LabelsBtn.tsx:146
 msgid "Other"
 msgstr ""
@@ -5893,15 +5893,15 @@ msgstr ""
 msgid "Other account"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:180
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:178
 msgid "Other child safety issue"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:207
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:205
 msgid "Other dangerous content"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:118
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:116
 msgid "Other harassing or hateful content"
 msgstr ""
 
@@ -5909,19 +5909,19 @@ msgstr ""
 msgid "Other labels"
 msgstr "Other labels"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:60
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:58
 msgid "Other misleading content"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:230
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:228
 msgid "Other network rule-breaking"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:91
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:89
 msgid "Other sexual violence content"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:153
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:151
 msgid "Other violent content"
 msgstr ""
 
@@ -5944,8 +5944,8 @@ msgstr "Owner"
 msgid "Owner must lock the group before leaving."
 msgstr "Owner must lock the group before leaving."
 
-#: src/components/Lists.tsx:153
-#: src/components/Lists.tsx:163
+#: src/components/Lists.tsx:152
+#: src/components/Lists.tsx:162
 #: src/view/screens/NotFound.tsx:36
 #: src/view/screens/NotFound.tsx:43
 msgid "Page not found"
@@ -6202,13 +6202,13 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:101
-#: src/lib/moderation/useModerationCauseDescription.ts:109
+#: src/lib/moderation/useModerationCauseDescription.ts:107
 msgid "Post Hidden by Muted Word"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:105
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:104
-#: src/lib/moderation/useModerationCauseDescription.ts:116
+#: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "Post Hidden by You"
 msgstr ""
 
@@ -6286,7 +6286,7 @@ msgid "Press to attempt reconnection"
 msgstr ""
 
 #: src/components/Error.tsx:61
-#: src/components/Lists.tsx:66
+#: src/components/Lists.tsx:65
 #: src/screens/Messages/components/MessageListError.tsx:27
 #: src/screens/Messages/JoinRequests.tsx:301
 msgid "Press to retry"
@@ -6313,7 +6313,7 @@ msgstr ""
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:172
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:170
 msgid "Privacy violation of a minor"
 msgstr ""
 
@@ -6348,7 +6348,7 @@ msgstr "Profile banner placeholder"
 msgid "Profile not found"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:222
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:220
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
@@ -6444,7 +6444,7 @@ msgid "Reactions"
 msgstr "Reactions"
 
 #. placeholder {0}: item.moreReplies
-#: src/screens/PostThread/components/ThreadItemReadMore.tsx:48
+#: src/screens/PostThread/components/ThreadItemReadMore.tsx:47
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr ""
 
@@ -6453,7 +6453,7 @@ msgctxt "english-only-resource"
 msgid "read about how to use search filters"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemReadMore.tsx:41
+#: src/screens/PostThread/components/ThreadItemReadMore.tsx:40
 msgid "Read more replies"
 msgstr ""
 
@@ -6570,9 +6570,9 @@ msgstr ""
 msgid "Remove caption file"
 msgstr "Remove caption file"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:182
-#: src/screens/Messages/components/MessageInputEmbed.tsx:222
-#: src/screens/Messages/components/MessageInputEmbed.tsx:271
+#: src/screens/Messages/components/MessageInputEmbed.tsx:176
+#: src/screens/Messages/components/MessageInputEmbed.tsx:216
+#: src/screens/Messages/components/MessageInputEmbed.tsx:265
 msgid "Remove embed"
 msgstr ""
 
@@ -6708,11 +6708,11 @@ msgctxt "description"
 msgid "Replied to you"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:730
+#: src/components/dms/MessageItem.tsx:729
 msgid "Replied-to message from {senderName}, tap to scroll to it"
 msgstr "Replied-to message from {senderName}, tap to scroll to it"
 
-#: src/components/dms/MessageItem.tsx:731
+#: src/components/dms/MessageItem.tsx:730
 msgid "Replied-to message, tap to scroll to it"
 msgstr "Replied-to message, tap to scroll to it"
 
@@ -6752,13 +6752,13 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:59
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:58
-#: src/lib/moderation/useModerationCauseDescription.ts:58
+#: src/lib/moderation/useModerationCauseDescription.ts:56
 msgid "Reply Hidden by Thread Author"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:59
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:58
-#: src/lib/moderation/useModerationCauseDescription.ts:58
+#: src/lib/moderation/useModerationCauseDescription.ts:56
 msgid "Reply Hidden by You"
 msgstr ""
 
@@ -6797,8 +6797,8 @@ msgstr "Report a copyright violation, legal request, or regulatory compliance is
 msgid "Report account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:277
-#: src/components/dms/ConvoMenu.tsx:280
+#: src/components/dms/ConvoMenu.tsx:276
+#: src/components/dms/ConvoMenu.tsx:279
 #: src/screens/Messages/components/RequestButtons.tsx:153
 #: src/screens/Messages/components/RequestButtons.tsx:155
 msgid "Report conversation"
@@ -6851,12 +6851,12 @@ msgstr ""
 msgid "Report submitted"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:48
-#: src/components/moderation/ReportDialog/copy.ts:56
+#: src/components/moderation/ReportDialog/copy.ts:46
+#: src/components/moderation/ReportDialog/copy.ts:54
 msgid "Report this conversation"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:36
+#: src/components/moderation/ReportDialog/copy.ts:34
 msgid "Report this feed"
 msgstr ""
 
@@ -6864,28 +6864,28 @@ msgstr ""
 msgid "Report this group chat"
 msgstr "Report this group chat"
 
-#: src/components/moderation/ReportDialog/copy.ts:30
+#: src/components/moderation/ReportDialog/copy.ts:28
 msgid "Report this list"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:18
+#: src/components/moderation/ReportDialog/copy.ts:16
 #: src/features/liveNow/components/LiveStatusDialog.tsx:147
 msgid "Report this livestream"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:62
+#: src/components/moderation/ReportDialog/copy.ts:60
 msgid "Report this message"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:24
+#: src/components/moderation/ReportDialog/copy.ts:22
 msgid "Report this post"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:42
+#: src/components/moderation/ReportDialog/copy.ts:40
 msgid "Report this starter pack"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:12
+#: src/components/moderation/ReportDialog/copy.ts:10
 msgid "Report this user"
 msgstr ""
 
@@ -6994,7 +6994,7 @@ msgid "Rescind request to join group chat"
 msgstr "Rescind request to join group chat"
 
 #: src/components/Error.tsx:63
-#: src/components/Lists.tsx:68
+#: src/components/Lists.tsx:67
 #: src/components/moderation/ReportDialog/index.tsx:356
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:25
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:28
@@ -7130,7 +7130,7 @@ msgstr ""
 msgid "Say hi to someone"
 msgstr "Say hi to someone"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:44
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:42
 msgid "Scam"
 msgstr ""
 
@@ -7152,7 +7152,7 @@ msgstr ""
 msgid "Scroll to latest messages"
 msgstr "Scroll to latest messages"
 
-#: src/components/dms/MessageItem.tsx:636
+#: src/components/dms/MessageItem.tsx:635
 msgid "Scroll to the message this is replying to"
 msgstr "Scroll to the message this is replying to"
 
@@ -7170,7 +7170,7 @@ msgstr "Scrolls the conversation to the most recent message"
 #: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:171
 #: src/components/web/SearchAutocomplete/SearchAutocomplete.tsx:661
 #: src/Navigation.tsx:578
-#: src/screens/Search/Shell.tsx:217
+#: src/screens/Search/Shell.tsx:208
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:79
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:80
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:65
@@ -7184,7 +7184,7 @@ msgstr ""
 msgid "Search @{0}'s posts"
 msgstr ""
 
-#: src/components/suggested-follows-dialog.tsx:492
+#: src/components/suggested-follows-dialog.tsx:490
 msgid "Search by name or interest"
 msgstr ""
 
@@ -7198,12 +7198,12 @@ msgid "Search feeds"
 msgstr ""
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.
-#: src/components/suggested-follows-dialog.tsx:362
+#: src/components/suggested-follows-dialog.tsx:361
 msgid "Search for \"{interestsDisplayName}\""
 msgstr ""
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
-#: src/components/suggested-follows-dialog.tsx:357
+#: src/components/suggested-follows-dialog.tsx:356
 msgid "Search for \"{interestsDisplayName}\" (active)"
 msgstr ""
 
@@ -7232,7 +7232,7 @@ msgstr "Search for people"
 msgid "Search for posts and users on Bluesky"
 msgstr "Search for posts and users on Bluesky"
 
-#: src/screens/Search/Shell.tsx:159
+#: src/screens/Search/Shell.tsx:150
 msgid "Search for posts, users, or feeds"
 msgstr ""
 
@@ -7271,7 +7271,7 @@ msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:566
 #: src/components/dms/components/UserSearchInput.tsx:62
-#: src/components/suggested-follows-dialog.tsx:511
+#: src/components/suggested-follows-dialog.tsx:509
 msgid "Search profiles"
 msgstr ""
 
@@ -7281,7 +7281,7 @@ msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:567
 #: src/components/dms/components/UserSearchInput.tsx:63
-#: src/components/suggested-follows-dialog.tsx:512
+#: src/components/suggested-follows-dialog.tsx:510
 msgid "Searches for profiles"
 msgstr ""
 
@@ -7439,7 +7439,7 @@ msgstr ""
 msgid "Selecting multiple media types is not supported."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:187
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:185
 msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
@@ -7525,7 +7525,7 @@ msgstr ""
 msgid "Sexual activity or erotic nudity."
 msgstr ""
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:33
+#: src/lib/moderation/useGlobalLabelStrings.ts:31
 msgid "Sexually Suggestive"
 msgstr ""
 
@@ -7679,8 +7679,8 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:408
 #: src/view/com/auth/SplashScreen.tsx:84
 #: src/view/com/auth/SplashScreen.tsx:91
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:192
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:189
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:191
 #: src/view/shell/nav-sign-in-card.tsx:34
 #: src/view/shell/nav-sign-in-card.tsx:36
 msgid "Sign in"
@@ -7731,7 +7731,7 @@ msgid "Sign out?"
 msgstr ""
 
 #: src/components/moderation/ScreenHider.tsx:52
-#: src/lib/moderation/useGlobalLabelStrings.ts:25
+#: src/lib/moderation/useGlobalLabelStrings.ts:23
 msgid "Sign-in Required"
 msgstr ""
 
@@ -7852,7 +7852,7 @@ msgstr ""
 msgid "Something went wrong, please try again."
 msgstr ""
 
-#: src/components/Lists.tsx:139
+#: src/components/Lists.tsx:138
 msgid "Something went wrong!"
 msgstr ""
 
@@ -7884,11 +7884,11 @@ msgstr "Source code"
 msgid "Source: <0>{sourceName}</0>"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:40
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:38
 msgid "Spam"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:37
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:35
 msgid "Spam or other inauthentic behavior or deception"
 msgstr ""
 
@@ -8086,7 +8086,7 @@ msgstr ""
 msgid "Tags only"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:546
+#: src/components/dms/MessageItem.tsx:545
 msgid "Tap for details"
 msgstr "Tap for details"
 
@@ -8120,7 +8120,7 @@ msgstr "Tap to show all reactions"
 msgid "Tap to view reactions"
 msgstr "Tap to view reactions"
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:106
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:104
 msgid "Targeted harassment"
 msgstr ""
 
@@ -8171,7 +8171,7 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:60
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:59
-#: src/lib/moderation/useModerationCauseDescription.ts:59
+#: src/lib/moderation/useModerationCauseDescription.ts:57
 msgid "The author of this thread has hidden this reply."
 msgstr ""
 
@@ -8440,11 +8440,11 @@ msgstr "This chat is locked by a moderation action"
 msgid "This chat was disconnected"
 msgstr ""
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:18
+#: src/lib/moderation/useGlobalLabelStrings.ts:16
 msgid "This content has been hidden by the moderators."
 msgstr ""
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:22
+#: src/lib/moderation/useGlobalLabelStrings.ts:20
 msgid "This content has received a general warning from moderators."
 msgstr ""
 
@@ -8554,13 +8554,13 @@ msgstr ""
 msgid "This message is hidden"
 msgstr "This message is hidden"
 
-#: src/components/dms/MessageItem.tsx:544
-#: src/components/dms/MessageItem.tsx:567
+#: src/components/dms/MessageItem.tsx:543
+#: src/components/dms/MessageItem.tsx:566
 msgid "This message is hidden because this user is blocking you."
 msgstr "This message is hidden because this user is blocking you."
 
-#: src/components/dms/MessageItem.tsx:543
-#: src/components/dms/MessageItem.tsx:565
+#: src/components/dms/MessageItem.tsx:542
+#: src/components/dms/MessageItem.tsx:564
 msgid "This message is hidden because you are blocking this user."
 msgstr "This message is hidden because you are blocking this user."
 
@@ -8608,7 +8608,7 @@ msgstr ""
 msgid "This screen is only available for group conversations."
 msgstr "This screen is only available for group conversations."
 
-#: src/features/liveNow/index.tsx:195
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -8622,7 +8622,7 @@ msgstr "This user has blocked you and cannot be messaged."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:80
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:79
-#: src/lib/moderation/useModerationCauseDescription.ts:82
+#: src/lib/moderation/useModerationCauseDescription.ts:80
 msgid "This user has blocked you. You cannot view their content."
 msgstr ""
 
@@ -8630,7 +8630,7 @@ msgstr ""
 msgid "This user has disabled chat and cannot be messaged."
 msgstr "This user has disabled chat and cannot be messaged."
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:26
+#: src/lib/moderation/useGlobalLabelStrings.ts:24
 msgid "This user has requested that their content only be shown to signed-in users."
 msgstr ""
 
@@ -8690,7 +8690,7 @@ msgstr ""
 msgid "Threaded"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:133
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:131
 msgid "Threats or incitement"
 msgstr ""
 
@@ -8758,7 +8758,7 @@ msgstr "Trending GIFs"
 msgid "Trending options"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:102
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
 msgid "Trolling"
 msgstr ""
 
@@ -8818,7 +8818,7 @@ msgstr "Unable to start sign in. Please try again."
 msgid "Unavailable feed information"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:591
+#: src/components/dms/MessageItem.tsx:590
 #: src/components/dms/MessagesListBlockedFooter.tsx:98
 #: src/components/dms/MessagesListBlockedFooter.tsx:106
 #: src/components/moderation/block-account-prompt.tsx:32
@@ -8843,8 +8843,8 @@ msgstr ""
 msgid "Unblock {displayName}"
 msgstr "Unblock {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:269
-#: src/components/dms/ConvoMenu.tsx:273
+#: src/components/dms/ConvoMenu.tsx:268
+#: src/components/dms/ConvoMenu.tsx:272
 #: src/view/com/profile/ProfileMenu.tsx:328
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Unblock account"
@@ -8896,11 +8896,11 @@ msgstr ""
 msgid "Unknown verifier"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:71
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:69
 msgid "Unlabeled adult content"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:68
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:66
 msgid "Unlabeled, abusive, or non-consensual adult content"
 msgstr ""
 
@@ -8951,7 +8951,7 @@ msgstr ""
 msgid "Unmute account?"
 msgstr "Unmute account?"
 
-#: src/components/dms/ConvoMenu.tsx:260
+#: src/components/dms/ConvoMenu.tsx:259
 msgid "Unmute conversation"
 msgstr ""
 
@@ -9103,12 +9103,12 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:75
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:74
-#: src/lib/moderation/useModerationCauseDescription.ts:74
+#: src/lib/moderation/useModerationCauseDescription.ts:72
 msgid "User Blocked"
 msgstr ""
 
 #. placeholder {0}: cause.source.name
-#: src/lib/moderation/useModerationCauseDescription.ts:68
+#: src/lib/moderation/useModerationCauseDescription.ts:66
 msgid "User Blocked by \"{0}\""
 msgstr ""
 
@@ -9121,7 +9121,7 @@ msgstr ""
 msgid "User Blocked by List"
 msgstr ""
 
-#: src/lib/moderation/useModerationCauseDescription.ts:81
+#: src/lib/moderation/useModerationCauseDescription.ts:79
 msgid "User Blocking You"
 msgstr ""
 
@@ -9319,7 +9319,7 @@ msgstr "View the invite link for this group chat"
 msgid "View the labeling service provided by @{0}"
 msgstr ""
 
-#: src/components/verification/VerificationCheckButton.tsx:154
+#: src/components/verification/VerificationCheckButton.tsx:150
 msgid "View this user's verifications"
 msgstr ""
 
@@ -9356,15 +9356,15 @@ msgstr "View your muted words"
 msgid "View your profile"
 msgstr "View your profile"
 
-#: src/components/verification/VerificationCheckButton.tsx:154
+#: src/components/verification/VerificationCheckButton.tsx:150
 msgid "View your verifications"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:125
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:123
 msgid "Violence"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:126
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:124
 msgid "Violent or threatening content"
 msgstr ""
 
@@ -9460,7 +9460,7 @@ msgstr "We’re sorry, but your search could not be completed. Please try again 
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
-#: src/components/Lists.tsx:164
+#: src/components/Lists.tsx:163
 #: src/view/screens/NotFound.tsx:46
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
@@ -9502,36 +9502,36 @@ msgstr ""
 msgid "Whoops!"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:49
-#: src/components/moderation/ReportDialog/copy.ts:57
+#: src/components/moderation/ReportDialog/copy.ts:47
+#: src/components/moderation/ReportDialog/copy.ts:55
 msgid "Why should this conversation be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:37
+#: src/components/moderation/ReportDialog/copy.ts:35
 msgid "Why should this feed be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:31
+#: src/components/moderation/ReportDialog/copy.ts:29
 msgid "Why should this list be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:19
+#: src/components/moderation/ReportDialog/copy.ts:17
 msgid "Why should this livestream be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:63
+#: src/components/moderation/ReportDialog/copy.ts:61
 msgid "Why should this message be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:25
+#: src/components/moderation/ReportDialog/copy.ts:23
 msgid "Why should this post be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:43
+#: src/components/moderation/ReportDialog/copy.ts:41
 msgid "Why should this starter pack be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:13
+#: src/components/moderation/ReportDialog/copy.ts:11
 msgid "Why should this user be reviewed?"
 msgstr ""
 
@@ -9606,7 +9606,7 @@ msgid "You are a trusted verifier"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:576
+#: src/components/dms/MessageItem.tsx:575
 msgid "You are blocking {0}"
 msgstr "You are blocking {0}"
 
@@ -9627,7 +9627,7 @@ msgstr ""
 msgid "You are Live"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:348
+#: src/features/liveNow/index.tsx:353
 msgid "You are no longer live"
 msgstr ""
 
@@ -9639,7 +9639,7 @@ msgstr ""
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:293
+#: src/features/liveNow/index.tsx:298
 msgid "You are now live!"
 msgstr ""
 
@@ -9729,8 +9729,8 @@ msgstr "You have been previously removed from this group and can’t join it usi
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:76
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:75
-#: src/lib/moderation/useModerationCauseDescription.ts:69
-#: src/lib/moderation/useModerationCauseDescription.ts:75
+#: src/lib/moderation/useModerationCauseDescription.ts:67
+#: src/lib/moderation/useModerationCauseDescription.ts:73
 msgid "You have blocked this user. You cannot view their content."
 msgstr ""
 
@@ -9738,7 +9738,7 @@ msgstr ""
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr ""
 
-#: src/lib/moderation/useModerationCauseDescription.ts:117
+#: src/lib/moderation/useModerationCauseDescription.ts:115
 msgid "You have hidden this post"
 msgstr ""
 
@@ -9755,12 +9755,12 @@ msgstr "You have marked this account as automated. You can remove it at any time
 #: src/components/moderation/ModerationDetailsDialog.tsx:100
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:95
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:99
-#: src/lib/moderation/useModerationCauseDescription.ts:96
-#: src/lib/moderation/useModerationCauseDescription.ts:103
+#: src/lib/moderation/useModerationCauseDescription.ts:94
+#: src/lib/moderation/useModerationCauseDescription.ts:101
 msgid "You have muted this account."
 msgstr ""
 
-#: src/lib/moderation/useModerationCauseDescription.ts:90
+#: src/lib/moderation/useModerationCauseDescription.ts:88
 msgid "You have muted this user"
 msgstr ""
 
@@ -9781,7 +9781,7 @@ msgstr ""
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr ""
 
-#: src/components/Lists.tsx:50
+#: src/components/Lists.tsx:49
 msgid "You have reached the end"
 msgstr ""
 
@@ -9811,7 +9811,7 @@ msgstr "You haven't muted any words or tags yet. Use the + button above to add o
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:60
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:59
-#: src/lib/moderation/useModerationCauseDescription.ts:59
+#: src/lib/moderation/useModerationCauseDescription.ts:57
 msgid "You hid this reply."
 msgstr ""
 
@@ -9861,15 +9861,15 @@ msgstr ""
 msgid "You reacted {0} to {target}"
 msgstr "You reacted {0} to {target}"
 
-#: src/components/dms/MessageItem.tsx:658
+#: src/components/dms/MessageItem.tsx:657
 msgid "You replied"
 msgstr "You replied"
 
-#: src/components/dms/MessageItem.tsx:656
+#: src/components/dms/MessageItem.tsx:655
 msgid "You replied to {originalName}"
 msgstr "You replied to {originalName}"
 
-#: src/components/dms/MessageItem.tsx:654
+#: src/components/dms/MessageItem.tsx:653
 msgid "You replied to yourself"
 msgstr "You replied to yourself"
 
@@ -9924,7 +9924,7 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:102
-#: src/lib/moderation/useModerationCauseDescription.ts:110
+#: src/lib/moderation/useModerationCauseDescription.ts:108
 msgid "You've chosen to hide a word or tag within this post."
 msgstr ""
 

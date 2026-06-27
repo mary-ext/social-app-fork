@@ -1,6 +1,6 @@
 import 'react-image-crop/dist/ReactCrop.css';
 
-import { type CSSProperties, useCallback, useImperativeHandle, useRef, useState } from 'react';
+import { type CSSProperties, useImperativeHandle, useRef, useState } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { ReactCrop, type PercentCrop } from 'react-image-crop';
 
@@ -112,29 +112,27 @@ function EditImageInner({
 				}
 			: undefined;
 
-	const onPressSubmit = useCallback(async () => {
-		const result = await manipulateImage(image, {
-			crop:
-				crop && (crop.width || crop.height) !== 0
-					? {
-							originX: (crop.x * source.width) / 100,
-							originY: (crop.y * source.height) / 100,
-							width: (crop.width * source.width) / 100,
-							height: (crop.height * source.height) / 100,
-						}
-					: undefined,
-		});
-
-		onChange(result);
-		handle.close();
-	}, [crop, image, source, handle, onChange]);
-
 	useImperativeHandle(
 		saveRef,
 		() => ({
-			save: onPressSubmit,
+			save: async () => {
+				const result = await manipulateImage(image, {
+					crop:
+						crop && (crop.width || crop.height) !== 0
+							? {
+									originX: (crop.x * source.width) / 100,
+									originY: (crop.y * source.height) / 100,
+									width: (crop.width * source.width) / 100,
+									height: (crop.height * source.height) / 100,
+								}
+							: undefined,
+				});
+
+				onChange(result);
+				handle.close();
+			},
 		}),
-		[onPressSubmit],
+		[crop, image, source, handle, onChange],
 	);
 
 	return (
