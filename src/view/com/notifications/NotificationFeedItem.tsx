@@ -18,8 +18,7 @@ import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 import { Collapsible } from '@base-ui/react/collapsible';
-import { plural } from '@lingui/core/macro';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -37,6 +36,8 @@ import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache
 import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { FeedSourceCard } from '#/view/com/feeds/FeedSourceCard';
 import { Post } from '#/view/com/post/Post';
@@ -97,7 +98,7 @@ let NotificationFeedItem = ({
 }): React.ReactNode => {
 	const queryClient = useQueryClient();
 	const t = useTheme();
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
 	const itemHref = useMemo(() => {
 		switch (item.type) {
@@ -218,7 +219,7 @@ let NotificationFeedItem = ({
 		);
 	}
 
-	const firstAuthorLink = (
+	const authorLinkMarkup = ({ children }: { children?: React.ReactNode }) => (
 		<ProfileHoverCard did={firstAuthor.profile.did}>
 			<InlineLinkText
 				key={firstAuthor.href}
@@ -228,13 +229,17 @@ let NotificationFeedItem = ({
 				weight="semiBold"
 				size="md"
 			>
-				{forceLTR(firstAuthorName)}
+				{children}
 				<span className={css.badgeWrap}>
 					<ProfileBadges profile={firstAuthor.profile} size="md" />
 				</span>
 			</InlineLinkText>
 		</ProfileHoverCard>
 	);
+	const othersCountMarkup = ({ children }: { children?: React.ReactNode }) => (
+		<Text weight="semiBold">{children}</Text>
+	);
+	const ltrFirstAuthorName = forceLTR(firstAuthorName);
 	const additionalAuthorsCount = authors.length - 1;
 	const hasMultipleAuthors = additionalAuthorsCount > 0;
 	const formattedAuthorsCount = hasMultipleAuthors ? formatCount(i18n, additionalAuthorsCount) : '';
@@ -245,47 +250,45 @@ let NotificationFeedItem = ({
 
 	if (item.type === 'post-like') {
 		a11yLabel = hasMultipleAuthors
-			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})} liked your post`
+			? m['view.notifications.multiName.likedPost']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
 			: m['view.notifications.singleName.likedPost']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				{firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-				liked your post
-			</Trans>
+			<Trans
+				message={m['view.notifications.multiLink.likedPost']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>{firstAuthorLink} liked your post</Trans>
+			<Trans
+				message={m['view.notifications.singleLink.likedPost']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 	} else if (item.type === 'repost') {
 		a11yLabel = hasMultipleAuthors
-			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})} reposted your post`
+			? m['view.notifications.multiName.repostedPost']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
 			: m['view.notifications.singleName.repostedPost']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				{firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-				reposted your post
-			</Trans>
+			<Trans
+				message={m['view.notifications.multiLink.repostedPost']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>{firstAuthorLink} reposted your post</Trans>
+			<Trans
+				message={m['view.notifications.singleLink.repostedPost']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 		icon = <RepostIcon size="lg" fill={colors.positive_500} />;
 	} else if (item.type === 'follow') {
@@ -295,197 +298,197 @@ let NotificationFeedItem = ({
 			 * see `src/state/queries/notifications/util.ts`
 			 */
 			a11yLabel = m['view.notifications.singleName.followedBack']({ firstAuthorName });
-			notificationContent = <Trans>{firstAuthorLink} followed you back</Trans>;
+			notificationContent = (
+				<Trans
+					message={m['view.notifications.singleLink.followedBack']}
+					inputs={{ firstAuthorName: ltrFirstAuthorName }}
+					markup={{ authorLink: authorLinkMarkup }}
+				/>
+			);
 		} else {
 			a11yLabel = hasMultipleAuthors
-				? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-						one: `${formattedAuthorsCount} other`,
-						other: `${formattedAuthorsCount} others`,
-					})} followed you`
+				? m['view.notifications.multiName.followed']({
+						additionalAuthorsCount,
+						firstAuthorName,
+						formattedAuthorsCount,
+					})
 				: m['view.notifications.singleName.followed']({ firstAuthorName });
 			notificationContent = hasMultipleAuthors ? (
-				<Trans>
-					{firstAuthorLink} and{' '}
-					<Text weight="semiBold">
-						<Plural
-							value={additionalAuthorsCount}
-							one={`${formattedAuthorsCount} other`}
-							other={`${formattedAuthorsCount} others`}
-						/>
-					</Text>{' '}
-					followed you
-				</Trans>
+				<Trans
+					message={m['view.notifications.multiLink.followed']}
+					inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+					markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+				/>
 			) : (
-				<Trans>{firstAuthorLink} followed you</Trans>
+				<Trans
+					message={m['view.notifications.singleLink.followed']}
+					inputs={{ firstAuthorName: ltrFirstAuthorName }}
+					markup={{ authorLink: authorLinkMarkup }}
+				/>
 			);
 		}
 		icon = <PersonPlusIcon size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'contact-match') {
 		a11yLabel = m['view.notifications.contact.onBlueskyName']({ firstAuthorName });
-		notificationContent = <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>;
+		notificationContent = (
+			<Trans
+				message={m['view.notifications.contact.onBlueskyLink']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
+		);
 		icon = <ContactsIconFilled size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'feedgen-like') {
 		a11yLabel = hasMultipleAuthors
-			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})} liked your custom feed`
+			? m['view.notifications.multiName.likedFeed']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
 			: m['view.notifications.singleName.likedFeed']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				{firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-				liked your custom feed
-			</Trans>
+			<Trans
+				message={m['view.notifications.multiLink.likedFeed']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>{firstAuthorLink} liked your custom feed</Trans>
+			<Trans
+				message={m['view.notifications.singleLink.likedFeed']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 	} else if (item.type === 'starterpack-joined') {
 		a11yLabel = hasMultipleAuthors
-			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})} signed up with your starter pack`
+			? m['view.notifications.multiName.signedUp']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
 			: m['view.notifications.singleName.signedUp']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				{firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-				signed up with your starter pack
-			</Trans>
+			<Trans
+				message={m['view.notifications.multiLink.signedUp']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>{firstAuthorLink} signed up with your starter pack</Trans>
+			<Trans
+				message={m['view.notifications.singleLink.signedUp']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 		icon = <StarterPack width={24} gradient="sky" />;
 	} else if (item.type === 'verified') {
 		a11yLabel = hasMultipleAuthors
-			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})} verified you`
+			? m['view.notifications.multiName.verified']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
 			: m['view.notifications.singleName.verified']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				{firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-				verified you
-			</Trans>
+			<Trans
+				message={m['view.notifications.multiLink.verified']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>{firstAuthorLink} verified you</Trans>
+			<Trans
+				message={m['view.notifications.singleLink.verified']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 		icon = <VerifiedCheck size="xl" />;
 	} else if (item.type === 'unverified') {
 		a11yLabel = hasMultipleAuthors
-			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})} removed their verifications from your account`
+			? m['view.notifications.multiName.removedVerifications']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
 			: m['view.notifications.singleName.removedVerification']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				{firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-				removed their verifications from your account
-			</Trans>
+			<Trans
+				message={m['view.notifications.multiLink.removedVerifications']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>{firstAuthorLink} removed their verification from your account</Trans>
+			<Trans
+				message={m['view.notifications.singleLink.removedVerification']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 		icon = <VerifiedCheck size="xl" fill={colors.contrast_500} />;
 	} else if (item.type === 'like-via-repost') {
 		a11yLabel = hasMultipleAuthors
-			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})} liked your repost`
+			? m['view.notifications.multiName.likedRepost']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
 			: m['view.notifications.singleName.likedRepost']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				{firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-				liked your repost
-			</Trans>
+			<Trans
+				message={m['view.notifications.multiLink.likedRepost']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>{firstAuthorLink} liked your repost</Trans>
+			<Trans
+				message={m['view.notifications.singleLink.likedRepost']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 	} else if (item.type === 'repost-via-repost') {
 		a11yLabel = hasMultipleAuthors
-			? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})} reposted your repost`
+			? m['view.notifications.multiName.repostedRepost']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
 			: m['view.notifications.singleName.repostedRepost']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				{firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-				reposted your repost
-			</Trans>
+			<Trans
+				message={m['view.notifications.multiLink.repostedRepost']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>{firstAuthorLink} reposted your repost</Trans>
+			<Trans
+				message={m['view.notifications.singleLink.repostedRepost']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 		icon = <RepostIcon size="xl" fill={colors.positive_500} />;
 	} else if (item.type === 'subscribed-post') {
 		const postsCount = 1 + (item.additional?.length || 0);
 		a11yLabel = hasMultipleAuthors
-			? l`New posts from ${firstAuthorName} and ${plural(additionalAuthorsCount, {
-					one: `${formattedAuthorsCount} other`,
-					other: `${formattedAuthorsCount} others`,
-				})}`
-			: l`New ${plural(postsCount, {
-					one: 'post',
-					other: 'posts',
-				})} from ${firstAuthorName}`;
+			? m['view.notifications.newPosts.fromMultiName']({
+					additionalAuthorsCount,
+					firstAuthorName,
+					formattedAuthorsCount,
+				})
+			: m['view.notifications.newPosts.fromName']({ firstAuthorName, postsCount });
 		notificationContent = hasMultipleAuthors ? (
-			<Trans>
-				New posts from {firstAuthorLink} and{' '}
-				<Text weight="semiBold">
-					<Plural
-						value={additionalAuthorsCount}
-						one={`${formattedAuthorsCount} other`}
-						other={`${formattedAuthorsCount} others`}
-					/>
-				</Text>{' '}
-			</Trans>
+			<Trans
+				message={m['view.notifications.newPosts.fromMultiLink']}
+				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
+			/>
 		) : (
-			<Trans>
-				New <Plural value={postsCount} one="post" other="posts" /> from {firstAuthorLink}
-			</Trans>
+			<Trans
+				message={m['view.notifications.newPosts.fromLink']}
+				inputs={{ firstAuthorName: ltrFirstAuthorName, postsCount }}
+				markup={{ authorLink: authorLinkMarkup }}
+			/>
 		);
 		icon = <BellRingingIcon size="xl" fill={colors.primary_500} />;
 	} else {

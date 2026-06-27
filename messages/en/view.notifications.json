@@ -3,7 +3,7 @@
 	"view.notifications.a11y.collapseUsers": "Collapse list of users",
 	"view.notifications.a11y.expandUsers": "Expand list of users",
 	"view.notifications.a11y.goToProfile": "Go to {firstAuthorName}'s profile",
-	"view.notifications.contact.onBlueskyLink": "Your contact {firstAuthorLink} is on Bluesky",
+	"view.notifications.contact.onBlueskyLink": "Your contact {#authorLink}{firstAuthorName}{/authorLink} is on Bluesky",
 	"view.notifications.contact.onBlueskyName": "Your contact {firstAuthorName} is on Bluesky",
 	"view.notifications.disabledHint": "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your {#t0}notification settings{/t0}.",
 	"view.notifications.empty.title": "No notifications yet!",
@@ -14,14 +14,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} followed you",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} followed you"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} followed you",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} followed you"
 			}
 		}
 	],
@@ -29,14 +29,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your custom feed",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your custom feed"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your custom feed",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your custom feed"
 			}
 		}
 	],
@@ -44,14 +44,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your post",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your post"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your post",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your post"
 			}
 		}
 	],
@@ -59,14 +59,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your repost",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your repost"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your repost",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your repost"
 			}
 		}
 	],
@@ -74,14 +74,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} removed their verifications from your account",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} removed their verifications from your account"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} removed their verifications from your account",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} removed their verifications from your account"
 			}
 		}
 	],
@@ -89,14 +89,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} reposted your post",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} reposted your post"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} reposted your post",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} reposted your post"
 			}
 		}
 	],
@@ -104,14 +104,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} reposted your repost",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} reposted your repost"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} reposted your repost",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} reposted your repost"
 			}
 		}
 	],
@@ -119,14 +119,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} signed up with your starter pack",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} signed up with your starter pack"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} signed up with your starter pack",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} signed up with your starter pack"
 			}
 		}
 	],
@@ -134,14 +134,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} verified you",
-				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} verified you"
+				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} verified you",
+				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} verified you"
 			}
 		}
 	],
@@ -282,11 +282,11 @@
 	],
 	"view.notifications.newPosts.fromLink": [
 		{
-			"declarations": ["input postsCount", "input firstAuthorLink", "local cp = postsCount: plural"],
+			"declarations": ["input postsCount", "input firstAuthorName", "local cp = postsCount: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "New post from {firstAuthorLink}",
-				"cp=other": "New posts from {firstAuthorLink}"
+				"cp=one": "New post from {#authorLink}{firstAuthorName}{/authorLink}",
+				"cp=other": "New posts from {#authorLink}{firstAuthorName}{/authorLink}"
 			}
 		}
 	],
@@ -294,14 +294,14 @@
 		{
 			"declarations": [
 				"input additionalAuthorsCount",
-				"input firstAuthorLink",
+				"input firstAuthorName",
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "New posts from {firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} ",
-				"cp=other": "New posts from {firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} "
+				"cp=one": "New posts from {#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} ",
+				"cp=other": "New posts from {#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} "
 			}
 		}
 	],
@@ -331,16 +331,16 @@
 		}
 	],
 	"view.notifications.restrictHint": "If you want to restrict who can receive notifications for your account's activity, you can change this in {#t0}Settings → Account & privacy{/t0}.",
-	"view.notifications.singleLink.followed": "{firstAuthorLink} followed you",
-	"view.notifications.singleLink.followedBack": "{firstAuthorLink} followed you back",
-	"view.notifications.singleLink.likedFeed": "{firstAuthorLink} liked your custom feed",
-	"view.notifications.singleLink.likedPost": "{firstAuthorLink} liked your post",
-	"view.notifications.singleLink.likedRepost": "{firstAuthorLink} liked your repost",
-	"view.notifications.singleLink.removedVerification": "{firstAuthorLink} removed their verification from your account",
-	"view.notifications.singleLink.repostedPost": "{firstAuthorLink} reposted your post",
-	"view.notifications.singleLink.repostedRepost": "{firstAuthorLink} reposted your repost",
-	"view.notifications.singleLink.signedUp": "{firstAuthorLink} signed up with your starter pack",
-	"view.notifications.singleLink.verified": "{firstAuthorLink} verified you",
+	"view.notifications.singleLink.followed": "{#authorLink}{firstAuthorName}{/authorLink} followed you",
+	"view.notifications.singleLink.followedBack": "{#authorLink}{firstAuthorName}{/authorLink} followed you back",
+	"view.notifications.singleLink.likedFeed": "{#authorLink}{firstAuthorName}{/authorLink} liked your custom feed",
+	"view.notifications.singleLink.likedPost": "{#authorLink}{firstAuthorName}{/authorLink} liked your post",
+	"view.notifications.singleLink.likedRepost": "{#authorLink}{firstAuthorName}{/authorLink} liked your repost",
+	"view.notifications.singleLink.removedVerification": "{#authorLink}{firstAuthorName}{/authorLink} removed their verification from your account",
+	"view.notifications.singleLink.repostedPost": "{#authorLink}{firstAuthorName}{/authorLink} reposted your post",
+	"view.notifications.singleLink.repostedRepost": "{#authorLink}{firstAuthorName}{/authorLink} reposted your repost",
+	"view.notifications.singleLink.signedUp": "{#authorLink}{firstAuthorName}{/authorLink} signed up with your starter pack",
+	"view.notifications.singleLink.verified": "{#authorLink}{firstAuthorName}{/authorLink} verified you",
 	"view.notifications.singleName.followed": "{firstAuthorName} followed you",
 	"view.notifications.singleName.followedBack": "{firstAuthorName} followed you back",
 	"view.notifications.singleName.likedFeed": "{firstAuthorName} liked your custom feed",
