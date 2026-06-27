@@ -357,14 +357,14 @@ export const pubIdentity = style({
 });
 
 export const pubDescription = style({
-	paddingTop: space.sm,
+	marginTop: space.sm,
 	pointerEvents: 'none',
 	position: 'relative',
 	zIndex: 1,
 });
 
 export const pubSubscribeStacked = style({
-	paddingTop: space.sm,
+	marginTop: space.sm,
 	position: 'relative',
 	zIndex: 1,
 });
