@@ -170,7 +170,7 @@ export function Panel({
 }
 
 // the *Text suffix makes the lint expect a <Text> return, but this renders a styled DOM span whose
-// callers already wrap user-facing strings in <Trans>
+// callers already pass localized strings
 export function PanelText({ icon, children }: { icon?: ComponentType<IconProps>; children: ReactNode }) {
 	if (icon) {
 		// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
