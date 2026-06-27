@@ -1,6 +1,11 @@
 import { useMemo } from 'react';
 import type { AppBskyFeedDefs as AtcAppBskyFeedDefs, AppBskyActorDefs } from '@atcute/bluesky';
-import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderatePost,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
@@ -111,16 +116,21 @@ export function useFeedPreviews(
 	const moderationOpts = useModerationOpts();
 	const enabled = feeds.length > 0 && isEnabled;
 
-	// stable per-instance Map; useConstant (not useRef) so reads/writes inside the data memo (which runs
-	// during render) aren't ref accesses.
+	// stable per-instance cache; useConstant (not useRef) so reads/writes inside the data memo (which
+	// runs during render) aren't ref accesses. processed pages bake in moderation, which isn't part of
+	// the page key, so we nest the page cache under the moderationOpts it was built with and drop stale
+	// entries when the opts change.
 	const processedPageCache = useConstant(
 		() =>
 			new Map<
-				{
-					feed: AtcAppBskyFeedDefs.GeneratorView;
-					posts: AtcAppBskyFeedDefs.FeedViewPost[];
-				},
-				FeedPreviewItem[]
+				ModerationOptions | undefined,
+				Map<
+					{
+						feed: AtcAppBskyFeedDefs.GeneratorView;
+						posts: AtcAppBskyFeedDefs.FeedViewPost[];
+					},
+					FeedPreviewItem[]
+				>
 			>(),
 	);
 
@@ -153,6 +163,15 @@ export function useFeedPreviews(
 
 			if (!enabled) return items;
 
+			// scope the cache to the current moderationOpts; dropping entries built under stale opts so we
+			// don't serve items filtered/hidden under outdated moderation settings.
+			let pageCache = processedPageCache.get(moderationOpts);
+			if (!pageCache) {
+				processedPageCache.clear();
+				pageCache = new Map();
+				processedPageCache.set(moderationOpts, pageCache);
+			}
+
 			items.push({
 				type: 'preview:spacer',
 				key: 'spacer',
@@ -177,7 +196,7 @@ export function useFeedPreviews(
 					for (let pageIndex = 0; pageIndex < data.pages.length; pageIndex++) {
 						const page = data.pages[pageIndex]!;
 
-						const cachedPage = processedPageCache.get(page);
+						const cachedPage = pageCache.get(page);
 						if (cachedPage) {
 							items.push(...cachedPage);
 							continue;
@@ -298,7 +317,7 @@ export function useFeedPreviews(
 							processedPage = [];
 						}
 
-						processedPageCache.set(page, processedPage);
+						pageCache.set(page, processedPage);
 						items.push(...processedPage);
 					}
 				} else if (isError && !isEmpty) {
