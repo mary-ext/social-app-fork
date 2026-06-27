@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useReducer, useRef } from 'react';
+import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
 
 import { useCurrentConvoId } from './current-convo-id';
 
@@ -19,17 +19,14 @@ function useMessageDraftsContext() {
 export function useMessageDraft() {
 	const { currentConvoId } = useCurrentConvoId();
 	const { state, dispatch } = useMessageDraftsContext();
-	return useMemo(
-		() => ({
-			getDraft: () => (currentConvoId && state[currentConvoId]) || '',
-			clearDraft: () => {
-				if (currentConvoId) {
-					dispatch({ type: 'clear', convoId: currentConvoId });
-				}
-			},
-		}),
-		[state, dispatch, currentConvoId],
-	);
+	return {
+		getDraft: () => (currentConvoId && state[currentConvoId]) || '',
+		clearDraft: () => {
+			if (currentConvoId) {
+				dispatch({ type: 'clear', convoId: currentConvoId });
+			}
+		},
+	};
 }
 
 export function useSaveMessageDraft(message: string) {

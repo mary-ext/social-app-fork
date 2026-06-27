@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
@@ -303,41 +302,38 @@ export function useUpdatePostThreadThreadgateQueryCache() {
 	const qc = useQueryClient();
 	const context = usePostThreadContext();
 
-	return useCallback(
-		(threadgate: AppBskyFeedDefs.ThreadgateView) => {
-			if (!context) return;
+	return (threadgate: AppBskyFeedDefs.ThreadgateView) => {
+		if (!context) return;
 
-			function mutator<T>(thread: ApiThreadItem[]): T[] {
-				for (let i = 0; i < thread.length; i++) {
-					const item = thread[i]!;
+		function mutator<T>(thread: ApiThreadItem[]): T[] {
+			for (let i = 0; i < thread.length; i++) {
+				const item = thread[i]!;
 
-					if (item.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') continue;
+				if (item.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') continue;
 
-					if (item.depth === 0) {
-						thread.splice(i, 1, {
-							...item,
-							value: {
-								...item.value,
-								post: {
-									...item.value.post,
-									threadgate,
-								},
+				if (item.depth === 0) {
+					thread.splice(i, 1, {
+						...item,
+						value: {
+							...item.value,
+							post: {
+								...item.value.post,
+								threadgate,
 							},
-						});
-					}
+						},
+					});
 				}
-
-				return thread as T[];
 			}
 
-			qc.setQueryData<AppBskyUnspeccedGetPostThreadV2.$output>(context.postThreadQueryKey, (data) => {
-				if (!data) return;
-				return {
-					...data,
-					thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([...data.thread]),
-				};
-			});
-		},
-		[qc, context],
-	);
+			return thread as T[];
+		}
+
+		qc.setQueryData<AppBskyUnspeccedGetPostThreadV2.$output>(context.postThreadQueryKey, (data) => {
+			if (!data) return;
+			return {
+				...data,
+				thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([...data.thread]),
+			};
+		});
+	};
 }
