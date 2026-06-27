@@ -118,11 +118,10 @@ export default defineConfig(
 			'react/prop-types': 'off',
 			'react-native/no-inline-styles': 'off',
 			...reactNativeA11y.configs.all.rules,
-			// TODO: Fix these and set to error
-			'react-hooks/set-state-in-effect': 'warn',
-			'react-hooks/purity': 'warn',
-			'react-hooks/refs': 'warn',
-			'react-hooks/immutability': 'warn',
+			'react-hooks/set-state-in-effect': 'error',
+			'react-hooks/purity': 'error',
+			'react-hooks/refs': 'error',
+			'react-hooks/immutability': 'error',
 
 			/** Import linting */
 			'import-x/no-unresolved': [
