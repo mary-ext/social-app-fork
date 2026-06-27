@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { type Theme, type ThemeName, utils as baseUtils } from '#/alf/base';
@@ -64,14 +64,11 @@ export function ThemeProvider({
 }: React.PropsWithChildren<{ theme: ThemeName; themesOverride?: Partial<typeof themes> }>) {
 	const [fontScale, setFontScale] = useState<Alf['fonts']['scale']>(() => getFontScale());
 	const [fontScaleMultiplier, setFontScaleMultiplier] = useState(() => computeFontScaleMultiplier(fontScale));
-	const setFontScaleAndPersist = useCallback<Alf['fonts']['setFontScale']>(
-		(fs) => {
-			setFontScale(fs);
-			persistFontScale(fs);
-			setFontScaleMultiplier(computeFontScaleMultiplier(fs));
-		},
-		[setFontScale],
-	);
+	const setFontScaleAndPersist = (fs: Alf['fonts']['scale']) => {
+		setFontScale(fs);
+		persistFontScale(fs);
+		setFontScaleMultiplier(computeFontScaleMultiplier(fs));
+	};
 	useEffect(() => {
 		// bridge the font-size preference into CSS: write the `fontScale` var onto <html> so the
 		// `fontSize.*` tokens (and everything built on them) scale without per-component JS.
@@ -83,13 +80,10 @@ export function ThemeProvider({
 	}, [fontScaleMultiplier]);
 
 	const [fontFamily, setFontFamily] = useState<Alf['fonts']['family']>(() => getFontFamily());
-	const setFontFamilyAndPersist = useCallback<Alf['fonts']['setFontFamily']>(
-		(ff) => {
-			setFontFamily(ff);
-			persistFontFamily(ff);
-		},
-		[setFontFamily],
-	);
+	const setFontFamilyAndPersist = (ff: Alf['fonts']['family']) => {
+		setFontFamily(ff);
+		persistFontFamily(ff);
+	};
 
 	const nextThemes = {
 		...themes,
@@ -119,7 +113,5 @@ export function useAlf() {
 
 export function useTheme(theme?: ThemeName) {
 	const alf = useAlf();
-	return useMemo(() => {
-		return theme ? alf.themes[theme] : alf.theme;
-	}, [theme, alf]);
+	return theme ? alf.themes[theme] : alf.theme;
 }

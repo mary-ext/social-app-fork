@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext } from 'react';
 import type { NativeScrollEvent } from 'react-native';
 
 export type ScrollEvent = NativeScrollEvent & {
@@ -30,14 +30,11 @@ type ProviderProps = { children: React.ReactNode } & ScrollHandlers;
 // Note: this completely *overrides* the parent handlers.
 // It's up to you to compose them with the parent ones via useScrollHandlers() if needed.
 export function ScrollProvider({ children, onBeginDrag, onEndDrag, onScroll, onMomentumEnd }: ProviderProps) {
-	const handlers = useMemo(
-		() => ({
-			onBeginDrag,
-			onEndDrag,
-			onScroll,
-			onMomentumEnd,
-		}),
-		[onBeginDrag, onEndDrag, onScroll, onMomentumEnd],
-	);
+	const handlers = {
+		onBeginDrag,
+		onEndDrag,
+		onScroll,
+		onMomentumEnd,
+	};
 	return <ScrollContext.Provider value={handlers}>{children}</ScrollContext.Provider>;
 }

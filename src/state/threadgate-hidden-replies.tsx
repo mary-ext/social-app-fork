@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
 
 type StateContext = {
@@ -26,33 +26,27 @@ export function Provider({ children }: { children: React.ReactNode }) {
 	const [uris, setUris] = useState<Set<string>>(new Set());
 	const [recentlyUnhiddenUris, setRecentlyUnhiddenUris] = useState<Set<string>>(new Set());
 
-	const stateCtx = useMemo(
-		() => ({
-			uris,
-			recentlyUnhiddenUris,
-		}),
-		[uris, recentlyUnhiddenUris],
-	);
+	const stateCtx = {
+		uris,
+		recentlyUnhiddenUris,
+	};
 
-	const apiCtx = useMemo(
-		() => ({
-			addHiddenReplyUri(uri: string) {
-				setUris((prev) => new Set(prev.add(uri)));
-				setRecentlyUnhiddenUris((prev) => {
-					prev.delete(uri);
-					return new Set(prev);
-				});
-			},
-			removeHiddenReplyUri(uri: string) {
-				setUris((prev) => {
-					prev.delete(uri);
-					return new Set(prev);
-				});
-				setRecentlyUnhiddenUris((prev) => new Set(prev.add(uri)));
-			},
-		}),
-		[setUris],
-	);
+	const apiCtx = {
+		addHiddenReplyUri(uri: string) {
+			setUris((prev) => new Set(prev.add(uri)));
+			setRecentlyUnhiddenUris((prev) => {
+				prev.delete(uri);
+				return new Set(prev);
+			});
+		},
+		removeHiddenReplyUri(uri: string) {
+			setUris((prev) => {
+				prev.delete(uri);
+				return new Set(prev);
+			});
+			setRecentlyUnhiddenUris((prev) => new Set(prev.add(uri)));
+		},
+	};
 
 	return (
 		<ApiContext.Provider value={apiCtx}>
@@ -75,25 +69,20 @@ export function useMergedThreadgateHiddenReplies({
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 }) {
 	const { uris, recentlyUnhiddenUris } = useThreadgateHiddenReplyUris();
-	return useMemo(() => {
-		const set = new Set([...(threadgateRecord?.hiddenReplies || []), ...uris]);
-		for (const uri of recentlyUnhiddenUris) {
-			set.delete(uri);
-		}
-		return set;
-	}, [uris, recentlyUnhiddenUris, threadgateRecord]);
+	const set = new Set([...(threadgateRecord?.hiddenReplies || []), ...uris]);
+	for (const uri of recentlyUnhiddenUris) {
+		set.delete(uri);
+	}
+	return set;
 }
 
 export function useMergeThreadgateHiddenReplies() {
 	const { uris, recentlyUnhiddenUris } = useThreadgateHiddenReplyUris();
-	return useCallback(
-		(threadgate?: AppBskyFeedThreadgate.Main) => {
-			const set = new Set([...(threadgate?.hiddenReplies || []), ...uris]);
-			for (const uri of recentlyUnhiddenUris) {
-				set.delete(uri);
-			}
-			return set;
-		},
-		[uris, recentlyUnhiddenUris],
-	);
+	return (threadgate?: AppBskyFeedThreadgate.Main) => {
+		const set = new Set([...(threadgate?.hiddenReplies || []), ...uris]);
+		for (const uri of recentlyUnhiddenUris) {
+			set.delete(uri);
+		}
+		return set;
+	};
 }
