@@ -20,14 +20,8 @@
 	"view.profile.empty.notFollowingYou": "You are not following anyone yet",
 	"view.profile.followersCount": [
 		{
-			"declarations": [
-				"input count",
-				"input formatted",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{#t0}{formatted}{/t0} follower",
 				"cp=other": "{#t0}{formatted}{/t0} followers"
@@ -36,14 +30,8 @@
 	],
 	"view.profile.followingCount": [
 		{
-			"declarations": [
-				"input count",
-				"input formatted",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{#t0}{formatted}{/t0} following",
 				"cp=other": "{#t0}{formatted}{/t0} following"

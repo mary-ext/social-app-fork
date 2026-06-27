@@ -20,13 +20,8 @@
 	"screens.notifications.empty.noPosts": "No posts here",
 	"screens.post.count.likes": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} like",
 				"cp=other": "{count} likes"
@@ -35,13 +30,8 @@
 	],
 	"screens.post.count.quotes": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} quote",
 				"cp=other": "{count} quotes"
@@ -50,13 +40,8 @@
 	],
 	"screens.post.count.reposts": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} repost",
 				"cp=other": "{count} reposts"

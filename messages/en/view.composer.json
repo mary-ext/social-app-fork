@@ -4,13 +4,8 @@
 	"view.composer.a11y.addMedia": "Add media to post",
 	"view.composer.a11y.addMediaHint": [
 		{
-			"declarations": [
-				"input MAX_GALLERY_IMAGES",
-				"local cp = MAX_GALLERY_IMAGES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Opens device gallery to select up to {MAX_GALLERY_IMAGES} images, or a single video or GIF."
 			}
@@ -53,13 +48,8 @@
 	"view.composer.contentWarning.pornDesc": "Pictures meant for adults.",
 	"view.composer.count.morePosts": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "1 more post",
 				"cp=other": "{count} more posts"
@@ -84,13 +74,8 @@
 	"view.composer.error.altTextOverLimit": "Alt text is over the character limit.",
 	"view.composer.error.altTextTooLong": [
 		{
-			"declarations": [
-				"input MAX_ALT_TEXT",
-				"local cp = MAX_ALT_TEXT: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_ALT_TEXT", "local cp = MAX_ALT_TEXT: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Alt text must be less than {MAX_ALT_TEXT} characters."
 			}
@@ -99,13 +84,8 @@
 	"view.composer.error.captionLanguageRequired": "Ensure you have selected a language for each caption file.",
 	"view.composer.error.draftTooLong": [
 		{
-			"declarations": [
-				"input MAX_DRAFT_GRAPHEME_LENGTH",
-				"local cp = MAX_DRAFT_GRAPHEME_LENGTH: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_DRAFT_GRAPHEME_LENGTH", "local cp = MAX_DRAFT_GRAPHEME_LENGTH: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "One or more posts are too long to save as a draft. The maximum number of characters is {MAX_DRAFT_GRAPHEME_LENGTH} character.",
 				"cp=other": "One or more posts are too long to save as a draft. The maximum number of characters is {MAX_DRAFT_GRAPHEME_LENGTH} characters."
@@ -125,9 +105,7 @@
 				"input MAX_GALLERY_IMAGES",
 				"local cp = count: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Only {accepted} of {total} image added; limit is {MAX_GALLERY_IMAGES}",
 				"cp=other": "Only {accepted} of {total} images added; limit is {MAX_GALLERY_IMAGES}"
@@ -138,13 +116,8 @@
 	"view.composer.error.imageAltMissing": "One or more images is missing alt text.",
 	"view.composer.error.imagesNotAdded": [
 		{
-			"declarations": [
-				"input failed",
-				"local cp = failed: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input failed", "local cp = failed: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "An image couldn't be added to your post.",
 				"cp=other": "{failed} images couldn't be added to your post."
@@ -154,13 +127,8 @@
 	"view.composer.error.maxDrafts": "You've reached the maximum number of drafts",
 	"view.composer.error.maxImagesAdd": [
 		{
-			"declarations": [
-				"input MAX_GALLERY_IMAGES",
-				"local cp = MAX_GALLERY_IMAGES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "You can only add up to {MAX_GALLERY_IMAGES} images per post"
 			}
@@ -168,13 +136,8 @@
 	],
 	"view.composer.error.maxImagesSelect": [
 		{
-			"declarations": [
-				"input MAX_GALLERY_IMAGES",
-				"local cp = MAX_GALLERY_IMAGES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "You can select up to {MAX_GALLERY_IMAGES} images in total."
 			}
@@ -208,13 +171,8 @@
 	"view.composer.hint.contentWarnings": "Please add any content warning labels that are applicable for the media you are posting.",
 	"view.composer.hint.maxLength": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Compose posts up to {count} characters in length"
 			}

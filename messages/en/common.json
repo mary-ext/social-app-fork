@@ -107,13 +107,8 @@
 	"common.action.writePost": "Write post",
 	"common.count.followers": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "follower",
 				"cp=other": "followers"
@@ -122,13 +117,8 @@
 	],
 	"common.count.following": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "following",
 				"cp=other": "following"
@@ -137,13 +127,8 @@
 	],
 	"common.count.likedBy": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Liked by {count} user",
 				"cp=other": "Liked by {count} users"
@@ -152,14 +137,8 @@
 	],
 	"common.count.members": [
 		{
-			"declarations": [
-				"input limit",
-				"input count",
-				"local cp = limit: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input limit", "input count", "local cp = limit: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count}/{limit} member",
 				"cp=other": "{count}/{limit} members"
@@ -244,15 +223,8 @@
 	"common.label.followedBy": "Followed by {#t0}{name}{/t0}",
 	"common.label.followedByMany": [
 		{
-			"declarations": [
-				"input count",
-				"input name",
-				"input name2",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "input name", "input name2", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Followed by {#t0}{name}{/t0}, {#t1}{name2}{/t1}, and {count} other",
 				"cp=other": "Followed by {#t0}{name}{/t0}, {#t1}{name2}{/t1}, and {count} others"
@@ -261,14 +233,8 @@
 	],
 	"common.label.followedByOthers": [
 		{
-			"declarations": [
-				"input count",
-				"input name",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Followed by {#t0}{name}{/t0} and {count} other",
 				"cp=other": "Followed by {#t0}{name}{/t0} and {count} others"

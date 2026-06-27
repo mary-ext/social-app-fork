@@ -11,13 +11,8 @@
 	"features.liveNow.dialog.description": "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event.",
 	"features.liveNow.duration.hours": [
 		{
-			"declarations": [
-				"input hours",
-				"local cp = hours: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input hours", "local cp = hours: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{hours} hour",
 				"cp=other": "{hours} hours"
@@ -26,14 +21,8 @@
 	],
 	"features.liveNow.duration.hoursMinutes": [
 		{
-			"declarations": [
-				"input hours",
-				"input minutesString",
-				"local cp = hours: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input hours", "input minutesString", "local cp = hours: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{hours} hour {minutesString}",
 				"cp=other": "{hours} hours {minutesString}"
@@ -42,13 +31,8 @@
 	],
 	"features.liveNow.duration.minutes": [
 		{
-			"declarations": [
-				"input minutes",
-				"local cp = minutes: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input minutes", "local cp = minutes: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{minutes} minute",
 				"cp=other": "{minutes} minutes"

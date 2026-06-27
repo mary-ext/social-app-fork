@@ -56,13 +56,8 @@
 	"lib.time.dateTime": "{time} · {date}",
 	"lib.time.days": [
 		{
-			"declarations": [
-				"input value",
-				"local cp = value: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input value", "local cp = value: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{value} day",
 				"cp=other": "{value} days"
@@ -72,13 +67,8 @@
 	"lib.time.daysNarrow": "{value}d",
 	"lib.time.hours": [
 		{
-			"declarations": [
-				"input value",
-				"local cp = value: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input value", "local cp = value: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{value} hour",
 				"cp=other": "{value} hours"
@@ -88,13 +78,8 @@
 	"lib.time.hoursNarrow": "{value}h",
 	"lib.time.minutes": [
 		{
-			"declarations": [
-				"input value",
-				"local cp = value: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input value", "local cp = value: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{value} minute",
 				"cp=other": "{value} minutes"
@@ -104,13 +89,8 @@
 	"lib.time.minutesNarrow": "{value}m",
 	"lib.time.months": [
 		{
-			"declarations": [
-				"input value",
-				"local cp = value: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input value", "local cp = value: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{value} month",
 				"cp=other": "{value} months"
@@ -119,13 +99,8 @@
 	],
 	"lib.time.monthsNarrow": [
 		{
-			"declarations": [
-				"input value",
-				"local cp = value: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input value", "local cp = value: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{value}mo",
 				"cp=other": "{value}mo"
@@ -135,13 +110,8 @@
 	"lib.time.now": "now",
 	"lib.time.seconds": [
 		{
-			"declarations": [
-				"input value",
-				"local cp = value: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input value", "local cp = value: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{value} second",
 				"cp=other": "{value} seconds"

@@ -2,13 +2,8 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"components.postControls.a11y.like": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Like ({count} like)",
 				"cp=other": "Like ({count} likes)"
@@ -19,13 +14,8 @@
 	"components.postControls.a11y.openShare": "Open share menu",
 	"components.postControls.a11y.reply": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Reply ({count} reply)",
 				"cp=other": "Reply ({count} replies)"
@@ -35,13 +25,8 @@
 	"components.postControls.a11y.repost": "Repost or quote post",
 	"components.postControls.a11y.unlike": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Unlike ({count} like)",
 				"cp=other": "Unlike ({count} likes)"
@@ -87,13 +72,8 @@
 	"components.postControls.hint.loggedInOnly": "Note: This post is only visible to logged-in users.",
 	"components.postControls.hint.maxHiddenReplies": [
 		{
-			"declarations": [
-				"input MAX_HIDDEN_REPLIES",
-				"local cp = MAX_HIDDEN_REPLIES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_HIDDEN_REPLIES", "local cp = MAX_HIDDEN_REPLIES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "You can hide a maximum of {MAX_HIDDEN_REPLIES} replies."
 			}

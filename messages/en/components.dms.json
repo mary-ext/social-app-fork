@@ -72,13 +72,8 @@
 	"components.dms.error.personBlockingYou": "This person is blocking you",
 	"components.dms.error.reactionLimit": [
 		{
-			"declarations": [
-				"input EMOJI_REACTION_LIMIT",
-				"local cp = EMOJI_REACTION_LIMIT: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input EMOJI_REACTION_LIMIT", "local cp = EMOJI_REACTION_LIMIT: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "You cannot add more than {EMOJI_REACTION_LIMIT} emoji reaction",
 				"cp=other": "You cannot add more than {EMOJI_REACTION_LIMIT} emoji reactions"
@@ -121,14 +116,8 @@
 	"components.dms.reaction.reactedTo": "{name} reacted {reaction} to {target}",
 	"components.dms.reaction.summary": [
 		{
-			"declarations": [
-				"input count",
-				"input values",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "input values", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} person reacted – {values}",
 				"cp=other": "{count} people reacted – {values}"
@@ -164,13 +153,8 @@
 	"components.dms.update.chatUnlocked": "Chat unlocked",
 	"components.dms.update.count": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} chat update",
 				"cp=other": "{count} chat updates"

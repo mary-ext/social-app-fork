@@ -15,13 +15,8 @@
 	"components.starterPack.invitePrompt": "Invite people to this starter pack!",
 	"components.starterPack.joinedCount": [
 		{
-			"declarations": [
-				"input joinedAllTimeCount",
-				"local cp = joinedAllTimeCount: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input joinedAllTimeCount", "local cp = joinedAllTimeCount: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "{joinedAllTimeCount} users have joined!"
 			}

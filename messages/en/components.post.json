@@ -6,13 +6,8 @@
 	"components.post.a11y.timeProgress": "{currentTime} of {duration}",
 	"components.post.a11y.timeRemaining": [
 		{
-			"declarations": [
-				"input time",
-				"local cp = time: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input time", "local cp = time: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Time remaining: {time} second",
 				"cp=other": "Time remaining: {time} seconds"
@@ -42,13 +37,8 @@
 	"components.post.label.deleted": "Deleted",
 	"components.post.label.readingTime": [
 		{
-			"declarations": [
-				"input readingTime",
-				"local cp = readingTime: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input readingTime", "local cp = readingTime: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{readingTime}m",
 				"cp=other": "{readingTime}m"

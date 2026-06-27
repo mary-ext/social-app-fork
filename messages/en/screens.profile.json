@@ -32,13 +32,8 @@
 	"screens.profile.action.viewFeedLikes": "View users who like this feed",
 	"screens.profile.count.followers": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} follower",
 				"cp=other": "{count} followers"
@@ -47,13 +42,8 @@
 	],
 	"screens.profile.count.following": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} following",
 				"cp=other": "{count} following"
@@ -62,13 +52,8 @@
 	],
 	"screens.profile.count.likedBy": [
 		{
-			"declarations": [
-				"input likeCount",
-				"local cp = likeCount: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input likeCount", "local cp = likeCount: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Liked by {likeCount} user",
 				"cp=other": "Liked by {likeCount} users"
@@ -77,13 +62,8 @@
 	],
 	"screens.profile.count.posts": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "post",
 				"cp=other": "posts"
@@ -95,13 +75,8 @@
 	"screens.profile.empty.noKnownFollowers": "You don't follow any users who follow @{name}.",
 	"screens.profile.error.descriptionTooLong": [
 		{
-			"declarations": [
-				"input MAX_DESCRIPTION",
-				"local cp = MAX_DESCRIPTION: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_DESCRIPTION", "local cp = MAX_DESCRIPTION: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Description is too long. The maximum number of characters is {MAX_DESCRIPTION}."
 			}
@@ -110,13 +85,8 @@
 	"screens.profile.error.disconnectGermDm": "Failed to disconnect Germ DM. Error: {message}",
 	"screens.profile.error.displayNameTooLong": [
 		{
-			"declarations": [
-				"input MAX_DISPLAY_NAME",
-				"local cp = MAX_DISPLAY_NAME: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_DISPLAY_NAME", "local cp = MAX_DISPLAY_NAME: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Display name is too long. The maximum number of characters is {MAX_DISPLAY_NAME}."
 			}

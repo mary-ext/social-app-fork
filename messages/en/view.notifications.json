@@ -18,9 +18,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} followed you",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} followed you"
@@ -35,9 +33,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your custom feed",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your custom feed"
@@ -52,9 +48,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your post",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your post"
@@ -69,9 +63,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your repost",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your repost"
@@ -86,9 +78,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} removed their verifications from your account",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} removed their verifications from your account"
@@ -103,9 +93,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} reposted your post",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} reposted your post"
@@ -120,9 +108,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} reposted your repost",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} reposted your repost"
@@ -137,9 +123,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} signed up with your starter pack",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} signed up with your starter pack"
@@ -154,9 +138,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} verified you",
 				"cp=other": "{firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} verified you"
@@ -171,9 +153,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other followed you",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others followed you"
@@ -188,9 +168,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other liked your custom feed",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others liked your custom feed"
@@ -205,9 +183,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other liked your post",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others liked your post"
@@ -222,9 +198,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other liked your repost",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others liked your repost"
@@ -239,9 +213,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other removed their verifications from your account",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others removed their verifications from your account"
@@ -256,9 +228,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other reposted your post",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others reposted your post"
@@ -273,9 +243,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other reposted your repost",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others reposted your repost"
@@ -290,9 +258,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other signed up with your starter pack",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others signed up with your starter pack"
@@ -307,9 +273,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other verified you",
 				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others verified you"
@@ -318,14 +282,8 @@
 	],
 	"view.notifications.newPosts.fromLink": [
 		{
-			"declarations": [
-				"input postsCount",
-				"input firstAuthorLink",
-				"local cp = postsCount: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input postsCount", "input firstAuthorLink", "local cp = postsCount: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "New post from {firstAuthorLink}",
 				"cp=other": "New posts from {firstAuthorLink}"
@@ -340,9 +298,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "New posts from {firstAuthorLink} and {#t0}{formattedAuthorsCount} other{/t0} ",
 				"cp=other": "New posts from {firstAuthorLink} and {#t0}{formattedAuthorsCount} others{/t0} "
@@ -357,9 +313,7 @@
 				"input formattedAuthorsCount",
 				"local cp = additionalAuthorsCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "New posts from {firstAuthorName} and {formattedAuthorsCount} other",
 				"cp=other": "New posts from {firstAuthorName} and {formattedAuthorsCount} others"
@@ -368,14 +322,8 @@
 	],
 	"view.notifications.newPosts.fromName": [
 		{
-			"declarations": [
-				"input postsCount",
-				"input firstAuthorName",
-				"local cp = postsCount: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input postsCount", "input firstAuthorName", "local cp = postsCount: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "New post from {firstAuthorName}",
 				"cp=other": "New posts from {firstAuthorName}"
@@ -405,13 +353,8 @@
 	"view.notifications.singleName.verified": "{firstAuthorName} verified you",
 	"view.notifications.unreadCount": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} unread item",
 				"cp=other": "{count} unread items"
@@ -420,13 +363,8 @@
 	],
 	"view.notifications.unreadCountAria": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} unread item",
 				"cp=other": "{count} unread items"
@@ -435,13 +373,8 @@
 	],
 	"view.notifications.unreadCountBadge": [
 		{
-			"declarations": [
-				"input notificationCount",
-				"local cp = notificationCount: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input notificationCount", "local cp = notificationCount: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{notificationCount} unread item",
 				"cp=other": "{notificationCount} unread items"

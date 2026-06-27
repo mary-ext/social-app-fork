@@ -31,13 +31,8 @@
 	"screens.starterPack.error.maxFeeds": "You may only add up to 3 feeds",
 	"screens.starterPack.error.maxProfiles": [
 		{
-			"declarations": [
-				"input STARTER_PACK_MAX_SIZE",
-				"local cp = STARTER_PACK_MAX_SIZE: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input STARTER_PACK_MAX_SIZE", "local cp = STARTER_PACK_MAX_SIZE: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
 			}
@@ -49,15 +44,8 @@
 	"screens.starterPack.hint.searchFeeds": "Search for feeds that you want to suggest to others.",
 	"screens.starterPack.included.manyFeeds": [
 		{
-			"declarations": [
-				"input count",
-				"input first",
-				"input second",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "input first", "input second", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} other are included in your starter pack",
 				"cp=other": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} others are included in your starter pack"
@@ -66,15 +54,8 @@
 	],
 	"screens.starterPack.included.manyProfiles": [
 		{
-			"declarations": [
-				"input count",
-				"input first",
-				"input second",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "input first", "input second", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} other are included in your starter pack",
 				"cp=other": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} others are included in your starter pack"
@@ -87,13 +68,8 @@
 	"screens.starterPack.inviteDescription": "Invite your friends to follow your favorite feeds and people",
 	"screens.starterPack.joinedCount": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "{count} people have joined Bluesky via this starter pack!"
 			}

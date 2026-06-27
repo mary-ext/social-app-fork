@@ -17,13 +17,8 @@
 	"components.dialogs.chat.groupLocked": "Group is locked",
 	"components.dialogs.count.member": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} member",
 				"cp=other": "{count} members"
@@ -32,13 +27,8 @@
 	],
 	"components.dialogs.count.more": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "+{count} more"
 			}
@@ -90,13 +80,8 @@
 	"components.dialogs.list.descriptionPlaceholder": "e.g. The posters who never miss.",
 	"components.dialogs.list.descriptionTooLong": [
 		{
-			"declarations": [
-				"input DESCRIPTION_MAX_GRAPHEMES",
-				"local cp = DESCRIPTION_MAX_GRAPHEMES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input DESCRIPTION_MAX_GRAPHEMES", "local cp = DESCRIPTION_MAX_GRAPHEMES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "List description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
 			}
@@ -117,13 +102,8 @@
 	"components.dialogs.list.nameRequired": "List must have a name.",
 	"components.dialogs.list.nameTooLong": [
 		{
-			"declarations": [
-				"input DISPLAY_NAME_MAX_GRAPHEMES",
-				"local cp = DISPLAY_NAME_MAX_GRAPHEMES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input DISPLAY_NAME_MAX_GRAPHEMES", "local cp = DISPLAY_NAME_MAX_GRAPHEMES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "List name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
 			}
@@ -135,13 +115,8 @@
 	"components.dialogs.list.selectFromYours": "Select from your lists",
 	"components.dialogs.list.selectFromYoursCount": [
 		{
-			"declarations": [
-				"input numberOfListsSelected",
-				"local cp = numberOfListsSelected: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input numberOfListsSelected", "local cp = numberOfListsSelected: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Select from your lists {#t0}({numberOfListsSelected} selected){/t0}"
 			}

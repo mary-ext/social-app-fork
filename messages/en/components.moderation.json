@@ -68,13 +68,8 @@
 	"components.moderation.label.mutualGroupChats": "Mutual group chats",
 	"components.moderation.label.placedOnAccount": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} label has been placed on this account",
 				"cp=other": "{count} labels have been placed on this account"
@@ -83,13 +78,8 @@
 	],
 	"components.moderation.label.placedOnContent": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} label has been placed on this content",
 				"cp=other": "{count} labels have been placed on this content"
