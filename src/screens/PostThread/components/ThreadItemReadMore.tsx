@@ -1,4 +1,3 @@
-import { Plural, Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import type { PostThreadParams, ThreadItem } from '#/state/queries/usePostThread';
@@ -48,9 +47,7 @@ export function ThreadItemReadMore({
 						<>
 							<CirclePlus fill={interacted ? colors.textContrastHigh : colors.textContrastLow} width={18} />
 							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
-								<Trans>
-									Read <Plural one="# more reply" other="# more replies" value={item.moreReplies} />
-								</Trans>
+								{m['screens.postThread.action.readMoreRepliesCount']({ count: item.moreReplies })}
 							</Text>
 						</>
 					);

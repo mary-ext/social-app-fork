@@ -1,5 +1,3 @@
-import { Plural } from '@lingui/react/macro';
-
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -34,7 +32,7 @@ export const ProfileFollowersScreen = ({ route }: Props) => {
 								{sanitizeDisplayName(profile.displayName || profile.handle)}
 							</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
-								<Plural value={profile.followersCount ?? 0} one="# follower" other="# followers" />
+								{m['screens.profile.count.followers']({ count: profile.followersCount ?? 0 })}
 							</Layout.Header.SubtitleText>
 						</>
 					)}

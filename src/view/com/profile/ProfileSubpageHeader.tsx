@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';
@@ -11,6 +10,8 @@ import type { NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { softReset } from '#/state/events';
+
+import { Trans } from '#/locale/Trans';
 
 import { TextLink } from '#/view/com/util/Link';
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
@@ -121,40 +122,52 @@ export function ProfileSubpageHeader({
 								isOwner ? (
 									m['view.profile.label.listByYou']()
 								) : (
-									<Trans>
-										List by{' '}
-										<TextLink
-											text={sanitizeHandle(creator.handle || '', '@')}
-											href={makeProfileLink(creator)}
-											style={pal.textLight}
-										/>
-									</Trans>
+									<Trans
+										message={m['view.profile.label.listBy']}
+										markup={{
+											t0: () => (
+												<TextLink
+													text={sanitizeHandle(creator.handle || '', '@')}
+													href={makeProfileLink(creator)}
+													style={pal.textLight}
+												/>
+											),
+										}}
+									/>
 								)
 							) : purpose === 'app.bsky.graph.defs#modlist' ? (
 								isOwner ? (
 									m['view.profile.label.modListByYou']()
 								) : (
-									<Trans>
-										Moderation list by{' '}
-										<TextLink
-											text={sanitizeHandle(creator.handle || '', '@')}
-											href={makeProfileLink(creator)}
-											style={pal.textLight}
-										/>
-									</Trans>
+									<Trans
+										message={m['view.profile.label.modListBy']}
+										markup={{
+											t0: () => (
+												<TextLink
+													text={sanitizeHandle(creator.handle || '', '@')}
+													href={makeProfileLink(creator)}
+													style={pal.textLight}
+												/>
+											),
+										}}
+									/>
 								)
 							) : purpose === 'app.bsky.graph.defs#referencelist' ? (
 								isOwner ? (
 									m['common.label.starterPackByYou']()
 								) : (
-									<Trans>
-										Starter pack by{' '}
-										<TextLink
-											text={sanitizeHandle(creator.handle || '', '@')}
-											href={makeProfileLink(creator)}
-											style={pal.textLight}
-										/>
-									</Trans>
+									<Trans
+										message={m['view.profile.label.starterPackBy']}
+										markup={{
+											t0: () => (
+												<TextLink
+													text={sanitizeHandle(creator.handle || '', '@')}
+													href={makeProfileLink(creator)}
+													style={pal.textLight}
+												/>
+											),
+										}}
+									/>
 								)
 							) : null}
 						</Text>

@@ -1,5 +1,4 @@
 import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -10,6 +9,8 @@ import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
+
+import { Trans } from '#/locale/Trans';
 
 import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Bot_Stroke as RobotIcon } from '#/components/icons/Bot';
@@ -74,17 +75,20 @@ export function AccountSettingsScreen({}: Props) {
 
 					<Settings.Section
 						footnoteText={
-							<Trans>
-								Honoring this request is voluntary: your profile and posts stay publicly available, and some
-								apps may show your account anyway.{' '}
-								<ExternalInlineLinkText
-									size="sm"
-									label={m['screens.settings.privacy.learnMorePublic']()}
-									href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
-								>
-									{m['components.moderation.action.learnMoreDot']()}
-								</ExternalInlineLinkText>
-							</Trans>
+							<Trans
+								message={m['screens.settings.privacy.discoverabilityNotice']}
+								markup={{
+									t0: ({ children }) => (
+										<ExternalInlineLinkText
+											size="sm"
+											label={m['screens.settings.privacy.learnMorePublic']()}
+											href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
+										>
+											{children}
+										</ExternalInlineLinkText>
+									),
+								}}
+							/>
 						}
 						titleText={m['screens.settings.title.privacy']()}
 					>

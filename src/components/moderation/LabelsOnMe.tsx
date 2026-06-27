@@ -1,6 +1,5 @@
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Plural, Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
@@ -52,17 +51,9 @@ export function LabelsOnMe({
 					>
 						<ButtonIcon icon={CircleInfo} />
 						<ButtonText>
-							{type === 'account' ? (
-								<Trans>
-									<Plural value={filtered.length} one="# label has" other="# labels have" /> been placed on
-									this account
-								</Trans>
-							) : (
-								<Trans>
-									<Plural value={filtered.length} one="# label has" other="# labels have" /> been placed on
-									this content
-								</Trans>
-							)}
+							{type === 'account'
+								? m['components.moderation.label.placedOnAccount']({ count: filtered.length })
+								: m['components.moderation.label.placedOnContent']({ count: filtered.length })}
 						</ButtonText>
 					</Button>
 				}

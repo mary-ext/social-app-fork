@@ -8,8 +8,6 @@ import {
 	type ViewStyle,
 } from 'react-native';
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
-import { plural } from '@lingui/core/macro';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
@@ -111,7 +109,6 @@ let MessageItem = ({
 }): React.ReactNode => {
 	const t = useTheme();
 	const { currentAccount } = useSession();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const queryClient = useQueryClient();
 
@@ -262,11 +259,11 @@ let MessageItem = ({
 				return m['components.dms.update.someoneReacted']({ value: reaction.value });
 			}
 		}
-		return l`${plural(reactions.length, {
-			one: '# person',
-			other: '# people',
-		})} reacted – ${groupedReactions.map((g) => g.value).join(' ')}`;
-	}, [reactions, groupedReactions, currentAccount?.did, relatedProfiles, l]);
+		return m['components.dms.reaction.summary']({
+			count: reactions.length,
+			values: groupedReactions.map((g) => g.value).join(' '),
+		});
+	}, [reactions, groupedReactions, currentAccount?.did, relatedProfiles]);
 
 	const appliedReactions = (
 		<>
@@ -569,11 +566,9 @@ function BlockedPlaceholder({
 			<Prompt.Outer control={control}>
 				<Prompt.Content>
 					<Prompt.TitleText>
-						{profile.viewer?.blocking ? (
-							m['components.dms.error.youAreBlocking']({ handle: sanitizeHandle(profile.handle, '@') })
-						) : (
-							<Trans>{sanitizeHandle(profile.handle, '@')} is blocking you</Trans>
-						)}
+						{profile.viewer?.blocking
+							? m['components.dms.error.youAreBlocking']({ handle: sanitizeHandle(profile.handle, '@') })
+							: m['components.dms.blocking.isBlockingYou']({ handle: sanitizeHandle(profile.handle, '@') })}
 					</Prompt.TitleText>
 					<Prompt.DescriptionText>
 						{profile.viewer?.blocking
@@ -647,23 +642,20 @@ function ReplyCaption({
 		>
 			<ArrowCornerDownRightIcon size="xs" style={t.atoms.text_contrast_medium} />
 			<Text style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]} numberOfLines={1} emoji>
-				{isFromSelf ? (
-					originalSenderIsSelf ? (
-						m['components.dms.update.youRepliedToYourself']()
-					) : originalName ? (
-						m['components.dms.update.youRepliedTo']({ originalName })
-					) : (
-						m['components.dms.update.youReplied']()
-					)
-				) : originalSenderIsSelf ? (
-					<Trans>{replierDisplayName} replied to you</Trans>
-				) : originalName ? (
-					<Trans>
-						{replierDisplayName} replied to {originalName}
-					</Trans>
-				) : (
-					<Trans>{replierDisplayName} replied</Trans>
-				)}
+				{isFromSelf
+					? originalSenderIsSelf
+						? m['components.dms.update.youRepliedToYourself']()
+						: originalName
+							? m['components.dms.update.youRepliedTo']({ originalName })
+							: m['components.dms.update.youReplied']()
+					: originalSenderIsSelf
+						? m['components.dms.reply.repliedToYou']({ replierDisplayName: replierDisplayName ?? '' })
+						: originalName
+							? m['components.dms.reply.repliedTo']({
+									originalName,
+									replierDisplayName: replierDisplayName ?? '',
+								})
+							: m['components.dms.reply.replied']({ replierDisplayName: replierDisplayName ?? '' })}
 			</Text>
 		</Button>
 	);
