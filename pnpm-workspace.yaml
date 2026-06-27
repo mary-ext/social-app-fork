@@ -30,6 +30,22 @@ minimumReleaseAgeExclude:
   - '@typescript/native-preview-win32-arm64@7.0.0-dev.20260621.1'
   - '@typescript/native-preview-win32-x64@7.0.0-dev.20260621.1'
   - '@typescript/native-preview@7.0.0-dev.20260621.1'
+  - '@lingui/swc-plugin@6.5.0'
+  - '@rsbuild/core@2.1.1'
+  - '@rspack/binding-darwin-arm64@2.1.1'
+  - '@rspack/binding-darwin-x64@2.1.1'
+  - '@rspack/binding-linux-arm64-gnu@2.1.1'
+  - '@rspack/binding-linux-arm64-musl@2.1.1'
+  - '@rspack/binding-linux-riscv64-gnu@2.1.1'
+  - '@rspack/binding-linux-riscv64-musl@2.1.1'
+  - '@rspack/binding-linux-x64-gnu@2.1.1'
+  - '@rspack/binding-linux-x64-musl@2.1.1'
+  - '@rspack/binding-wasm32-wasi@2.1.1'
+  - '@rspack/binding-win32-arm64-msvc@2.1.1'
+  - '@rspack/binding-win32-ia32-msvc@2.1.1'
+  - '@rspack/binding-win32-x64-msvc@2.1.1'
+  - '@rspack/binding@2.1.1'
+  - '@rspack/core@2.1.1'
 patchedDependencies:
   '@base-ui/react': patches/@base-ui__react.patch
   '@lingui/cli': patches/@lingui__cli.patch

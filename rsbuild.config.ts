@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import { defineConfig } from '@rsbuild/core';
-import { pluginBabel } from '@rsbuild/plugin-babel';
 import { pluginReact } from '@rsbuild/plugin-react';
 import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 import { VanillaExtractPlugin } from '@vanilla-extract/webpack-plugin';
@@ -35,33 +34,11 @@ export default defineConfig(({ envMode }) => {
 
 	return {
 		plugins: [
-			pluginReact(),
-			// Babel's sole remaining job is React Compiler — the only part of the pipeline without a
-			// Rust/SWC equivalent. Rspack's native React Compiler (rsbuild 2.1.0) can't replace it yet:
-			// it surfaces every compiler bail-out as a hard build error, ignoring `panicThreshold`
-			// (web-infra-dev/rspack#14517), which breaks on the many components — including react-native-web
-			// internals — that the compiler declines to optimize.
-			pluginBabel({
-				// vanilla-extract `.css.ts` files are build-evaluated by VanillaExtractPlugin, not runtime
-				// code — keep them out of react-compiler entirely.
-				exclude: /\.css\.ts$/,
-				include: transpiledPaths,
-				babelLoaderOptions(options, { addPlugins }) {
-					options.presets = [];
-					// babel-plugin-react-compiler parses but can't strip TypeScript syntax, so do that first.
-					options.overrides = [
-						{
-							plugins: [['@babel/plugin-transform-typescript', { allowNamespaces: true, isTSX: false }]],
-							test: /\.[cm]?ts$/,
-						},
-						{
-							plugins: [['@babel/plugin-transform-typescript', { allowNamespaces: true, isTSX: true }]],
-							test: /\.[cm]?tsx$/,
-						},
-					];
-					addPlugins(['@lingui/babel-plugin-lingui-macro', 'babel-plugin-react-compiler']);
-				},
-			}),
+			// React Compiler runs natively in rspack's builtin swc-loader (no Babel pass). `panicThreshold:
+			// 'none'` downlevels the components the compiler declines to optimize from hard build errors to
+			// skipped optimizations — the bail-out severity is honoured as of rspack 2.1.0
+			// (web-infra-dev/rspack#14517).
+			pluginReact({ reactCompiler: { panicThreshold: 'none' } }),
 		],
 		source: {
 			define: {
@@ -120,6 +97,16 @@ export default defineConfig(({ envMode }) => {
 			removeConsole: envMode === 'production',
 		},
 		tools: {
+			swc: {
+				jsc: {
+					experimental: {
+						// lingui macros (`msg`, `t`, `<Trans>`, `plural`) expand in the SWC Wasm plugin. It runs
+						// before React Compiler within the same swc pass, so message ids stay aligned with the
+						// catalog (a babel pre-pass is no longer needed to guarantee that ordering).
+						plugins: [['@lingui/swc-plugin', {}]],
+					},
+				},
+			},
 			rspack(config) {
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());
