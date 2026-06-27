@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { device, useStorage } from '#/storage';
 
 /** emoji skin tone: 1 = default/yellow, 2–6 = the five Fitzpatrick tones. */
@@ -26,12 +24,9 @@ export function useEmojiSkinTone() {
  */
 export function useRecentEmojis() {
 	const [recents = [], setRecents] = useStorage(device, ['recentEmojis']);
-	const add = useCallback(
-		(id: string) => {
-			const current = device.get(['recentEmojis']) ?? [];
-			setRecents([id, ...current.filter((existing) => existing !== id)].slice(0, RECENTS_LIMIT));
-		},
-		[setRecents],
-	);
+	const add = (id: string) => {
+		const current = device.get(['recentEmojis']) ?? [];
+		setRecents([id, ...current.filter((existing) => existing !== id)].slice(0, RECENTS_LIMIT));
+	};
 	return [recents, add] as const;
 }

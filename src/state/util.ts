@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { useComposerControls } from '#/lib/hooks/useOpenComposer';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
@@ -12,9 +10,9 @@ export function useCloseAllActiveElements() {
 	// The lightbox is a registered web dialog now, so `closeAllDialogs` covers it alongside the rest.
 	const { closeAllDialogs: closeAlfDialogs } = useDialogStateControlContext();
 	const setDrawerOpen = useSetDrawerOpen();
-	return useCallback(() => {
+	return () => {
 		closeComposer();
 		closeAlfDialogs();
 		setDrawerOpen(false);
-	}, [closeComposer, closeAlfDialogs, setDrawerOpen]);
+	};
 }

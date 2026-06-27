@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import type { Account, Auth, Device } from '#/storage/schema';
@@ -179,13 +179,10 @@ export function useStorage<Scopes extends unknown[], Schema extends object, Key 
 		return () => sub.remove();
 	}, [storage, scopes]);
 
-	const setter = useCallback(
-		(data: Schema[Key]) => {
-			setValue(data);
-			storage.set(scopes, data);
-		},
-		[storage, scopes],
-	);
+	const setter = (data: Schema[Key]) => {
+		setValue(data);
+		storage.set(scopes, data);
+	};
 
 	return [value, setter] as const;
 }

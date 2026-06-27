@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
@@ -92,7 +91,7 @@ export function useOpenComposer() {
 		composerDialogControl.openWithPayload(opts);
 	});
 
-	return useMemo(() => ({ openComposer }), [openComposer]);
+	return { openComposer };
 }
 
 export function useComposerControls() {
@@ -106,5 +105,5 @@ export function useComposerControls() {
 		return wasOpen;
 	});
 
-	return useMemo(() => ({ closeComposer }), [closeComposer]);
+	return { closeComposer };
 }

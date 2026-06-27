@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { emojiDataQuery } from '#/components/EmojiPicker/data';
@@ -11,9 +10,9 @@ import { emojiDataQuery } from '#/components/EmojiPicker/data';
  */
 export function useWebPreloadEmoji({ immediate }: { immediate?: boolean } = {}) {
 	const queryClient = useQueryClient();
-	const preload = useCallback(() => {
+	const preload = () => {
 		void queryClient.prefetchQuery(emojiDataQuery());
-	}, [queryClient]);
+	};
 	if (immediate) {
 		preload();
 	}

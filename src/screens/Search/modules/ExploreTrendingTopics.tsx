@@ -1,4 +1,4 @@
-import { type ComponentType, useMemo } from 'react';
+import type { ComponentType } from 'react';
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -182,15 +182,13 @@ function TrendingTopicRowSkeleton() {
 function useModerateTrendingActors(actors: AppBskyUnspeccedDefs.TrendView['actors']) {
 	const moderationOpts = useModerationOpts();
 
-	return useMemo(() => {
-		if (!moderationOpts) return [];
+	if (!moderationOpts) return [];
 
-		return actors
-			.filter((actor) => {
-				const decision = moderateProfile(actor, moderationOpts);
-				const modui = getDisplayRestrictions(decision, DisplayContext.ProfileMedia);
-				return modui.blurs.length === 0 && modui.filters.length === 0;
-			})
-			.slice(0, 3);
-	}, [actors, moderationOpts]);
+	return actors
+		.filter((actor) => {
+			const decision = moderateProfile(actor, moderationOpts);
+			const modui = getDisplayRestrictions(decision, DisplayContext.ProfileMedia);
+			return modui.blurs.length === 0 && modui.filters.length === 0;
+		})
+		.slice(0, 3);
 }

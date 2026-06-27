@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { interpretLabelerDefinition } from '@atcute/bluesky-moderation';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
@@ -29,24 +28,20 @@ export function useMyLabelersQuery({
 	const labelers = useLabelersDetailedInfoQuery({ dids });
 	const isLoading = prefs.isLoading || labelers.isLoading;
 	const error = prefs.error || labelers.error;
-	return useMemo(() => {
-		return {
-			isLoading,
-			error,
-			data: labelers.data,
-			refetch: labelers.refetch,
-		};
-	}, [labelers, isLoading, error]);
+	return {
+		isLoading,
+		error,
+		data: labelers.data,
+		refetch: labelers.refetch,
+	};
 }
 
 export function useLabelDefinitionsQuery() {
 	const labelers = useMyLabelersQuery();
-	return useMemo(() => {
-		return {
-			labelDefs: Object.fromEntries(
-				(labelers.data || []).map((labeler) => [labeler.creator.did, interpretLabelerDefinition(labeler)]),
-			),
-			labelers: labelers.data || [],
-		};
-	}, [labelers]);
+	return {
+		labelDefs: Object.fromEntries(
+			(labelers.data || []).map((labeler) => [labeler.creator.did, interpretLabelerDefinition(labeler)]),
+		),
+		labelers: labelers.data || [],
+	};
 }

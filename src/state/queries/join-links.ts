@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { ChatBskyGroupGetJoinLinkPreviews } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -107,28 +106,25 @@ export function useGetJoinLinkPreview() {
 	const { chat } = useClients();
 	const queryClient = useQueryClient();
 
-	return useCallback(
-		async ({
-			code,
-			hasSession,
-		}: {
-			code: string;
-			hasSession: boolean;
-		}): Promise<JoinLinkPreview | undefined> => {
-			try {
-				const data = await queryClient.fetchQuery({
-					queryKey: createJoinLinkPreviewQueryKey({ codes: [code], hasSession }),
-					queryFn: () => fetchJoinLinkPreviews({ chat, codes: [code] }),
-					staleTime: STALE.SECONDS.FIFTEEN,
-				});
-				return data.joinLinkPreviews[0];
-			} catch (error) {
-				logger.error('Failed to fetch join link preview', { safeMessage: error });
-				return undefined;
-			}
-		},
-		[chat, queryClient],
-	);
+	return async ({
+		code,
+		hasSession,
+	}: {
+		code: string;
+		hasSession: boolean;
+	}): Promise<JoinLinkPreview | undefined> => {
+		try {
+			const data = await queryClient.fetchQuery({
+				queryKey: createJoinLinkPreviewQueryKey({ codes: [code], hasSession }),
+				queryFn: () => fetchJoinLinkPreviews({ chat, codes: [code] }),
+				staleTime: STALE.SECONDS.FIFTEEN,
+			});
+			return data.joinLinkPreviews[0];
+		} catch (error) {
+			logger.error('Failed to fetch join link preview', { safeMessage: error });
+			return undefined;
+		}
+	};
 }
 
 /**
