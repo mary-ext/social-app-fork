@@ -26,7 +26,6 @@
 	"screens.moderation.label.byCreator": "By {handle}",
 	"screens.moderation.label.enableAdultContent": "Enable adult content",
 	"screens.moderation.label.expired": "Expired",
-	"screens.moderation.label.expires": "Expires {time}",
 	"screens.moderation.label.hideVerificationBadges": "Hide verification badges",
 	"screens.moderation.label.loadingMutedWords": "Loading your muted words",
 	"screens.moderation.title.blockedAccounts": "Blocked accounts",

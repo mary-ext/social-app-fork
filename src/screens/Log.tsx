@@ -3,12 +3,10 @@ import { LayoutAnimation, Pressable, View } from 'react-native';
 
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
-import { useTickEveryMinute } from '#/state/shell';
-
 import { getEntries } from '#/logger/logDump';
 import { LogLevel } from '#/logger/types';
 
-import { useGetTimeAgo } from '#/locale/intl/timeAgo';
+import { LOCALE } from '#/locale/intl/locale';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -24,11 +22,12 @@ import { Text } from '#/components/Typography';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
+// debug log entries are absolute moments, not "5m ago" durations — show the wall-clock date and time.
+const logTimestamp = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'short', timeStyle: 'medium' });
+
 export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log'>) {
 	const t = useTheme();
 	const [expanded, setExpanded] = useState<string[]>([]);
-	const timeAgo = useGetTimeAgo();
-	const tick = useTickEveryMinute();
 
 	const toggler = (id: string) => () => {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -88,7 +87,7 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 											<ChevronBottomIcon size="sm" fill={colors.textContrastLow} />
 										))}
 									<Text style={[{ minWidth: 40 }, t.atoms.text_contrast_medium]}>
-										{timeAgo(entry.timestamp, tick)}
+										{logTimestamp.format(new Date(entry.timestamp))}
 									</Text>
 								</Pressable>
 								{expanded.includes(entry.id) && (

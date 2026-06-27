@@ -7,7 +7,7 @@ import { listUriToHref } from '#/lib/strings/url-helpers';
 
 import { useSession } from '#/state/session';
 
-import { useGetTimeAgo } from '#/locale/intl/timeAgo';
+import { relativeMessageParts } from '#/locale/intl/timeAgo';
 import { Trans } from '#/locale/Trans';
 
 import type { AppModerationCause } from '#/components/Pills';
@@ -46,7 +46,6 @@ export function ModerationDetailsDialog({ control, modcause }: ModerationDetails
 function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDialogProps) {
 	const desc = useModerationCauseDescription(modcause);
 	const { currentAccount } = useSession();
-	const timeDiff = useGetTimeAgo({ future: true });
 	const now = useConstant(Date.now);
 
 	let name;
@@ -162,7 +161,7 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 							</Text>
 							{modcause.label.exp && (
 								<Text className={styles.expires} color="textContrastMedium" size="sm">
-									{m['common.label.expiresIn']({ time: timeDiff(now, modcause.label.exp) })}
+									{m['common.label.expires'](relativeMessageParts(modcause.label.exp, now))}
 								</Text>
 							)}
 						</div>

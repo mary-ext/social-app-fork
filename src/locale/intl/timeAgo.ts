@@ -1,16 +1,28 @@
 import { differenceInSeconds } from 'date-fns';
 
-import { dateMedium } from '#/locale/intl/datetime';
+import { dateMedium, monthDay } from '#/locale/intl/datetime';
 import { LOCALE } from '#/locale/intl/locale';
 
 import { m } from '#/paraglide/messages';
-
-export type DateDiffFormat = 'long' | 'short';
 
 type DateDiff = {
 	earlier: Date;
 	later: Date;
 	unit: 'day' | 'hour' | 'minute' | 'month' | 'now' | 'second';
+	value: number;
+};
+
+/** The recency buckets a `*Inputs` recency-variant message selects on. */
+export type RelativeRecency = 'other' | 'this_week' | 'this_year';
+
+/** Inputs a recency-variant message expects; see {@link relativeMessageParts}. */
+export type RelativeMessageParts = {
+	recency: RelativeRecency;
+	/** ISO timestamp the message's `datetime` locals format. */
+	ts: string;
+	/** `Intl.RelativeTimeFormat` unit for the message's `relativetime` local. */
+	unit: 'day' | 'hour' | 'minute' | 'month' | 'second';
+	/** Signed magnitude (negative in the past, positive in the future) for the `relativetime` local. */
 	value: number;
 };
 
@@ -20,40 +32,26 @@ const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 const MONTH_30 = DAY * 30;
 
-// duration formatters, instantiated once. `unit` style with `unitDisplay` gives bare durations
-// ("2 minutes" / "2m") with no "ago"/"in" — matching the prior compact timestamp UI. month narrow is
-// special-cased to "2mo" because Intl's narrow month ("2m") collides with minute.
-const unit = (u: 'day' | 'hour' | 'minute' | 'month' | 'second', display: 'long' | 'narrow') =>
-	new Intl.NumberFormat(LOCALE, { style: 'unit', unit: u, unitDisplay: display });
-const long = {
-	day: unit('day', 'long'),
-	hour: unit('hour', 'long'),
-	minute: unit('minute', 'long'),
-	month: unit('month', 'long'),
-	second: unit('second', 'long'),
+// compact duration formatters, instantiated once. `unit` style with `unitDisplay: 'narrow'` gives bare
+// durations ("2m", "2h", "2d") with no "ago"/"in". no day-or-larger formatter beyond these is needed:
+// the time-ago path collapses to a calendar date once a week or older (see `isWeekOrOlder`).
+const narrow = (u: 'day' | 'hour' | 'minute' | 'second') =>
+	new Intl.NumberFormat(LOCALE, { style: 'unit', unit: u, unitDisplay: 'narrow' });
+const compact = {
+	day: narrow('day'),
+	hour: narrow('hour'),
+	minute: narrow('minute'),
+	second: narrow('second'),
 };
-const narrow = {
-	day: unit('day', 'narrow'),
-	hour: unit('hour', 'narrow'),
-	minute: unit('minute', 'narrow'),
-	second: unit('second', 'narrow'),
-};
-
-// relative-time formatter carrying the "ago"/"in" suffix that `formatDateDiff` deliberately omits.
-const relativeLong = new Intl.RelativeTimeFormat(LOCALE, { numeric: 'always', style: 'long' });
 
 /**
  * Returns the difference between `earlier` and `later` dates, based on opinionated rules.
  *
  * - All months are considered exactly 30 days.
  * - Dates assume `earlier` <= `later`, and will otherwise return 'now'.
- * - All values round down unless `rounding` is `'up'`.
+ * - All values round down.
  */
-export function dateDiff(
-	earlier: number | string | Date,
-	later: number | string | Date,
-	rounding: 'down' | 'up' = 'down',
-): DateDiff {
+function dateDiff(earlier: number | string | Date, later: number | string | Date): DateDiff {
 	let diff = {
 		unit: 'now' as DateDiff['unit'],
 		value: 0,
@@ -61,8 +59,7 @@ export function dateDiff(
 	const e = new Date(earlier);
 	const l = new Date(later);
 	const diffSeconds = differenceInSeconds(l, e);
-	const round = (perUnit: number) =>
-		rounding === 'up' ? Math.ceil(diffSeconds / perUnit) : Math.floor(diffSeconds / perUnit);
+	const round = (perUnit: number) => Math.floor(diffSeconds / perUnit);
 
 	if (diffSeconds < NOW) {
 		diff = { unit: 'now', value: 0 };
@@ -81,67 +78,74 @@ export function dateDiff(
 	return { ...diff, earlier: e, later: l };
 }
 
+// the shared threshold: at a week or older, both the standalone timestamp and the recency messages
+// drop the relative duration in favor of a calendar date.
+const isWeekOrOlder = (diff: DateDiff) => diff.unit === 'month' || (diff.unit === 'day' && diff.value >= 7);
+
 /**
- * Formats a `DateDiff` as a natural-language duration (no "ago"/"in" suffix).
+ * Formats the elapsed time between two dates as a compact, standalone timestamp ("2m", "2h", "5d"),
+ * collapsing to a calendar date once a week or older ("5 Jan", or "5 Jan 2024" when the year differs from
+ * `later`'s). For timestamps embedded in a sentence, use {@link relativeMessageParts} instead.
  *
- * - `'short'` is compact ("2m", "2h", "2d", "2mo"); `'long'` is spelled out ("2 minutes").
- * - Differences of 12 months or more render as an absolute date instead.
- *
- * @returns the formatted duration string
+ * @returns the formatted timestamp
  */
-export function formatDateDiff({
-	diff,
-	format = 'short',
-}: {
-	diff: DateDiff;
-	format?: DateDiffFormat;
-}): string {
-	const isLong = format === 'long';
+export function formatTimeAgo(earlier: number | string | Date, later: number | string | Date): string {
+	const diff = dateDiff(earlier, later);
+	// a week or older — an exact "8d"/"3mo" reads as noise, so fall back to the calendar date,
+	// dropping the year while it matches the reference ("later") year.
+	const asDate = () =>
+		(diff.earlier.getFullYear() === diff.later.getFullYear() ? monthDay : dateMedium).format(diff.earlier);
+	if (isWeekOrOlder(diff)) {
+		return asDate();
+	}
 	switch (diff.unit) {
 		case 'now':
 			return m['lib.time.now']();
 		case 'second':
-			return (isLong ? long.second : narrow.second).format(diff.value);
+			return compact.second.format(diff.value);
 		case 'minute':
-			return (isLong ? long.minute : narrow.minute).format(diff.value);
+			return compact.minute.format(diff.value);
 		case 'hour':
-			return (isLong ? long.hour : narrow.hour).format(diff.value);
+			return compact.hour.format(diff.value);
 		case 'day':
-			return (isLong ? long.day : narrow.day).format(diff.value);
+			return compact.day.format(diff.value);
+		// 'month' can't reach here — `isWeekOrOlder` already returned — but the switch stays exhaustive.
 		case 'month':
-			if (diff.value >= 12) {
-				return dateMedium.format(diff.earlier);
-			}
-			return isLong ? long.month.format(diff.value) : `${diff.value}mo`;
+			return asDate();
 	}
 }
 
 /**
- * Formats the signed distance from `base` to `date` with an "ago"/"in" suffix ("in 3 days", "5 days ago").
+ * Decomposes the distance between `date` and `now` into the inputs a recency-variant message expects, letting
+ * the message own its phrasing per recency (relative "5 days ago" within the week, "on 5 July" within the
+ * year, "on 5 July 2024" beyond). Pairs with messages declaring `relativetime`/`datetime` locals selected by
+ * `recency`.
  *
- * @returns the formatted relative time string
+ * @param date the timestamp being described
+ * @param now the reference point ("now") the distance is measured from
+ * @returns the `recency` selector plus the `ts`/`unit`/`value` formatting inputs
  */
-export function formatRelativeTime(date: number | string | Date, base: number | string | Date): string {
+export function relativeMessageParts(
+	date: number | string | Date,
+	now: number | string | Date,
+): RelativeMessageParts {
 	const target = new Date(date);
-	const now = new Date(base);
-	const isPast = target < now;
-	const diff = dateDiff(isPast ? target : now, isPast ? now : target);
-	if (diff.unit === 'now') {
-		return m['lib.time.now']();
+	const base = new Date(now);
+	const isPast = target < base;
+	const diff = dateDiff(isPast ? target : base, isPast ? base : target);
+	let recency: RelativeRecency;
+	if (!isWeekOrOlder(diff)) {
+		recency = 'this_week';
+	} else if (target.getFullYear() === base.getFullYear()) {
+		recency = 'this_year';
+	} else {
+		recency = 'other';
 	}
-	return relativeLong.format(isPast ? -diff.value : diff.value, diff.unit);
-}
-
-/**
- * Returns a function that formats the elapsed time between two dates.
- *
- * @param future when true, rounds durations up (for countdowns) instead of down
- * @returns `(earlier, later, options?) => string`
- */
-export function useGetTimeAgo({ future = false }: { future?: boolean } = {}) {
-	return (
-		earlier: number | string | Date,
-		later: number | string | Date,
-		options?: { format: DateDiffFormat },
-	) => formatDateDiff({ diff: dateDiff(earlier, later, future ? 'up' : 'down'), format: options?.format });
+	return {
+		recency,
+		ts: target.toISOString(),
+		// relativetime needs a concrete unit; dateDiff's 'now' collapses to 0 seconds ("now").
+		unit: diff.unit === 'now' ? 'second' : diff.unit,
+		value: isPast ? -diff.value : diff.value,
+	};
 }

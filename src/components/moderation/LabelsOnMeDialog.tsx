@@ -15,7 +15,7 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { useGetTimeAgo } from '#/locale/intl/timeAgo';
+import { relativeMessageParts } from '#/locale/intl/timeAgo';
 import { Trans } from '#/locale/Trans';
 
 import { Loader } from '#/components/Loader';
@@ -117,7 +117,6 @@ function Label({
 }) {
 	const { labeler, strings } = useLabelInfo(label);
 	const sourceName = labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src;
-	const timeDiff = useGetTimeAgo({ future: true });
 	const now = useConstant(Date.now);
 
 	return (
@@ -166,7 +165,7 @@ function Label({
 						</Text>
 						{label.exp && (
 							<Text className={styles.expires} color="textContrastMedium" size="sm">
-								{m['common.label.expiresIn']({ time: timeDiff(now, label.exp) })}
+								{m['common.label.expires'](relativeMessageParts(label.exp, now))}
 							</Text>
 						)}
 					</div>

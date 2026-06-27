@@ -216,7 +216,25 @@
 	"common.label.description": "Description",
 	"common.label.embeddedContent": "(contains embedded content)",
 	"common.label.error": "Error",
-	"common.label.expiresIn": "Expires in {time}",
+	"common.label.expires": [
+		{
+			"declarations": [
+				"input recency",
+				"input ts",
+				"input unit",
+				"input value",
+				"local fullDate = ts: datetime year=numeric month=long day=numeric",
+				"local monthDay = ts: datetime month=long day=numeric",
+				"local relative = value: relativetime unit=$unit numeric=auto"
+			],
+			"selectors": ["recency"],
+			"match": {
+				"recency=other": "Expires on {fullDate}",
+				"recency=this_week": "Expires {relative}",
+				"recency=this_year": "Expires on {monthDay}"
+			}
+		}
+	],
 	"common.label.externalMediaPreferences": "External Media Preferences",
 	"common.label.feedBy": "Feed by {handle}",
 	"common.label.filteringFor": "Filtering for {name}",

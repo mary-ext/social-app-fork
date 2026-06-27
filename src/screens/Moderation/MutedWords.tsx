@@ -10,7 +10,7 @@ import {
 	useUpdateMutedWordMutation,
 } from '#/state/queries/preferences';
 
-import { formatRelativeTime } from '#/locale/intl/timeAgo';
+import { relativeMessageParts } from '#/locale/intl/timeAgo';
 
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 
@@ -102,9 +102,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 		expiryDate
 			? isExpired
 				? m['screens.moderation.label.expired']()
-				: m['screens.moderation.label.expires']({
-						time: formatRelativeTime(expiryDate, new Date()),
-					})
+				: m['common.label.expires'](relativeMessageParts(expiryDate, new Date()))
 			: undefined,
 		word.actorTarget === 'exclude-following' ? m['screens.moderation.hint.excludesFollowing']() : undefined,
 	]

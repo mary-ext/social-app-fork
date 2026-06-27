@@ -8,7 +8,7 @@ import { listUriToHref } from '#/lib/strings/url-helpers';
 import { useSession } from '#/state/session';
 import { useTickEveryMinute } from '#/state/shell';
 
-import { useGetTimeAgo } from '#/locale/intl/timeAgo';
+import { relativeMessageParts } from '#/locale/intl/timeAgo';
 import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useGutters, useTheme } from '#/alf';
@@ -47,7 +47,6 @@ function ModerationDetailsDialogInner({
 	const xGutters = useGutters([0, 'base']);
 	const desc = useModerationCauseDescription(modcause);
 	const { currentAccount } = useSession();
-	const timeDiff = useGetTimeAgo({ future: true });
 	// re-evaluate the expiry countdown each minute; the dialog is short-lived so this is cheap.
 	const tick = useTickEveryMinute();
 
@@ -194,7 +193,7 @@ function ModerationDetailsDialogInner({
 								{modcause.label.exp && (
 									<View>
 										<Text style={[a.leading_snug, a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-											{m['common.label.expiresIn']({ time: timeDiff(tick, modcause.label.exp) })}
+											{m['common.label.expires'](relativeMessageParts(modcause.label.exp, tick))}
 										</Text>
 									</View>
 								)}

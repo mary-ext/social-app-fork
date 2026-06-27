@@ -9,7 +9,7 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { useGetTimeAgo } from '#/locale/intl/timeAgo';
+import { relativeMessageParts } from '#/locale/intl/timeAgo';
 
 import { Newskie } from '#/components/icons/Newskie';
 import * as styles from '#/components/NewskieDialog.css';
@@ -67,7 +67,6 @@ function DialogInner({
 }) {
 	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
-	const timeAgo = useGetTimeAgo();
 	const isMe = profile.did === currentAccount?.did;
 
 	const profileName = useMemo(() => {
@@ -80,21 +79,18 @@ function DialogInner({
 	}, [moderationOpts, profile]);
 
 	const getJoinMessage = () => {
-		const timeAgoString = timeAgo(createdAt, now, { format: 'long' });
+		const parts = relativeMessageParts(createdAt, now);
 
 		if (isMe) {
 			if (profile.joinedViaStarterPack) {
-				return m['components.newskieDialog.joinedViaStarterPackSelf']({ timeAgoString });
-			} else {
-				return m['components.newskieDialog.joinedAgoSelf']({ timeAgoString });
+				return m['components.newskieDialog.joinedViaStarterPackSelf'](parts);
 			}
-		} else {
-			if (profile.joinedViaStarterPack) {
-				return m['components.newskieDialog.joinedViaStarterPack']({ profileName, timeAgoString });
-			} else {
-				return m['components.newskieDialog.joinedAgo']({ profileName, timeAgoString });
-			}
+			return m['components.newskieDialog.joinedAgoSelf'](parts);
 		}
+		if (profile.joinedViaStarterPack) {
+			return m['components.newskieDialog.joinedViaStarterPack']({ ...parts, profileName });
+		}
+		return m['components.newskieDialog.joinedAgo']({ ...parts, profileName });
 	};
 
 	return (
