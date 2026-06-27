@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 /**
  * One object URL per blob. Caching by blob keeps repeated or remounted reads (notably React StrictMode's
  * mount → unmount → remount in dev) from each creating — and then revoking — a URL that another render is
@@ -31,5 +29,5 @@ function getBlobUrl(blob: Blob): string {
 export function useBlobUrl(blob: Blob): string;
 export function useBlobUrl(blob: Blob | null | undefined): string | undefined;
 export function useBlobUrl(blob: Blob | null | undefined): string | undefined {
-	return useMemo(() => (blob ? getBlobUrl(blob) : undefined), [blob]);
+	return blob ? getBlobUrl(blob) : undefined;
 }

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { View } from 'react-native';
 import type { ParsedCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
@@ -161,37 +160,36 @@ type ParsedTrendingTopic =
 
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 	const { t: l } = useLingui();
-	return useMemo(() => {
-		const { topic: displayName, link } = raw;
+	const { topic: displayName, link } = raw;
 
-		if (link.startsWith('/search')) {
-			return {
-				type: 'topic',
-				label: l`Browse posts about ${displayName}`,
-				displayName,
-				uri: undefined,
-				url: link,
-			};
-		} else if (link.startsWith('/hashtag')) {
-			return {
-				type: 'tag',
-				label: l`Browse posts tagged with ${displayName}`,
-				displayName,
-				// displayName: displayName.replace(/^#/, ''),
-				uri: undefined,
-				url: link,
-			};
-		} else if (link.startsWith('/starter-pack')) {
-			return {
-				type: 'starter-pack',
-				label: l`Browse starter pack ${displayName}`,
-				displayName,
-				uri: undefined,
-				url: link,
-			};
-		}
+	if (link.startsWith('/search')) {
+		return {
+			type: 'topic',
+			label: l`Browse posts about ${displayName}`,
+			displayName,
+			uri: undefined,
+			url: link,
+		};
+	} else if (link.startsWith('/hashtag')) {
+		return {
+			type: 'tag',
+			label: l`Browse posts tagged with ${displayName}`,
+			displayName,
+			// displayName: displayName.replace(/^#/, ''),
+			uri: undefined,
+			url: link,
+		};
+	} else if (link.startsWith('/starter-pack')) {
+		return {
+			type: 'starter-pack',
+			label: l`Browse starter pack ${displayName}`,
+			displayName,
+			uri: undefined,
+			url: link,
+		};
+	}
 
-		/*
+	/*
     if (!link.startsWith('at://')) {
       // above logic
     } else {
@@ -219,12 +217,11 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
     }
      */
 
-		return {
-			type: 'unknown',
-			label: l`Browse topic ${displayName}`,
-			displayName,
-			uri: undefined,
-			url: link,
-		};
-	}, [l, raw]);
+	return {
+		type: 'unknown',
+		label: l`Browse topic ${displayName}`,
+		displayName,
+		uri: undefined,
+		url: link,
+	};
 }

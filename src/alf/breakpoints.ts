@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { useMediaQuery } from '#/lib/media-query';
 
 export type Breakpoint = 'gtPhone' | 'gtMobile' | 'gtTablet';
@@ -10,22 +8,20 @@ export function useBreakpoints(): Record<Breakpoint, boolean> & {
 	const gtPhone = useMediaQuery('(width >= 500px)');
 	const gtMobile = useMediaQuery('(width >= 800px)');
 	const gtTablet = useMediaQuery('(width >= 1300px)');
-	return useMemo(() => {
-		let active: Breakpoint | undefined;
-		if (gtTablet) {
-			active = 'gtTablet';
-		} else if (gtMobile) {
-			active = 'gtMobile';
-		} else if (gtPhone) {
-			active = 'gtPhone';
-		}
-		return {
-			activeBreakpoint: active,
-			gtPhone,
-			gtMobile,
-			gtTablet,
-		};
-	}, [gtPhone, gtMobile, gtTablet]);
+	let active: Breakpoint | undefined;
+	if (gtTablet) {
+		active = 'gtTablet';
+	} else if (gtMobile) {
+		active = 'gtMobile';
+	} else if (gtPhone) {
+		active = 'gtPhone';
+	}
+	return {
+		activeBreakpoint: active,
+		gtPhone,
+		gtMobile,
+		gtTablet,
+	};
 }
 
 /** Fine-tuned breakpoints for the shell layout */

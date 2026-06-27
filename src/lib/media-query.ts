@@ -1,4 +1,4 @@
-import { useMemo, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 interface MediaQueryStore {
@@ -49,7 +49,7 @@ const getStore = (query: string): MediaQueryStore => {
  * @returns whether the media query currently matches
  */
 export const useMediaQuery = (query: string): boolean => {
-	const store = useMemo(() => getStore(query), [query]);
+	const store = getStore(query);
 
 	return useSyncExternalStore(store.subscribe, store.getSnapshot);
 };

@@ -1,21 +1,18 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 export function useInteractionState() {
 	const [state, setState] = useState(false);
 
-	const onIn = useCallback(() => {
+	const onIn = () => {
 		setState(true);
-	}, []);
-	const onOut = useCallback(() => {
+	};
+	const onOut = () => {
 		setState(false);
-	}, []);
+	};
 
-	return useMemo(
-		() => ({
-			state,
-			onIn,
-			onOut,
-		}),
-		[state, onIn, onOut],
-	);
+	return {
+		state,
+		onIn,
+		onOut,
+	};
 }

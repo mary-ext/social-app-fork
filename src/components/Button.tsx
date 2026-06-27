@@ -574,178 +574,176 @@ Button.displayName = 'Button';
 export function useSharedButtonTextStyles() {
 	const t = useTheme();
 	const { color, variant, disabled, size } = useButtonContext();
-	return useMemo(() => {
-		const baseStyles: TextStyle[] = [];
+	const baseStyles: TextStyle[] = [];
 
+	/*
+	 * This is the happy path for new button styles, following the
+	 * deprecation of `variant` prop. This redundant `variant` check is here
+	 * just to make this handling easier to understand.
+	 */
+	if (variant === 'solid') {
+		if (color === 'primary') {
+			if (!disabled) {
+				baseStyles.push({ color: t.palette.white });
+			} else {
+				baseStyles.push({
+					color: select(t.name, {
+						light: t.palette.white,
+						dim: t.atoms.text_inverted.color,
+						dark: t.atoms.text_inverted.color,
+					}),
+				});
+			}
+		} else if (color === 'secondary') {
+			if (!disabled) {
+				baseStyles.push(t.atoms.text_contrast_medium);
+			} else {
+				baseStyles.push({
+					color: t.palette.contrast_300,
+				});
+			}
+		} else if (color === 'secondary_inverted') {
+			if (!disabled) {
+				baseStyles.push(t.atoms.text_inverted);
+			} else {
+				baseStyles.push({
+					color: t.palette.contrast_300,
+				});
+			}
+		} else if (color === 'negative') {
+			if (!disabled) {
+				baseStyles.push({ color: t.palette.white });
+			} else {
+				baseStyles.push({ color: t.palette.negative_300 });
+			}
+		} else if (color === 'primary_subtle') {
+			if (!disabled) {
+				baseStyles.push({
+					color: t.palette.primary_600,
+				});
+			} else {
+				baseStyles.push({
+					color: t.palette.primary_200,
+				});
+			}
+		} else if (color === 'negative_subtle') {
+			if (!disabled) {
+				baseStyles.push({
+					color: t.palette.negative_600,
+				});
+			} else {
+				baseStyles.push({
+					color: t.palette.negative_200,
+				});
+			}
+		}
+	} else {
 		/*
-		 * This is the happy path for new button styles, following the
-		 * deprecation of `variant` prop. This redundant `variant` check is here
-		 * just to make this handling easier to understand.
+		 * BEGIN DEPRECATED STYLES
 		 */
-		if (variant === 'solid') {
-			if (color === 'primary') {
-				if (!disabled) {
-					baseStyles.push({ color: t.palette.white });
-				} else {
-					baseStyles.push({
-						color: select(t.name, {
-							light: t.palette.white,
-							dim: t.atoms.text_inverted.color,
-							dark: t.atoms.text_inverted.color,
-						}),
-					});
-				}
-			} else if (color === 'secondary') {
-				if (!disabled) {
-					baseStyles.push(t.atoms.text_contrast_medium);
-				} else {
-					baseStyles.push({
-						color: t.palette.contrast_300,
-					});
-				}
-			} else if (color === 'secondary_inverted') {
-				if (!disabled) {
-					baseStyles.push(t.atoms.text_inverted);
-				} else {
-					baseStyles.push({
-						color: t.palette.contrast_300,
-					});
-				}
-			} else if (color === 'negative') {
-				if (!disabled) {
-					baseStyles.push({ color: t.palette.white });
-				} else {
-					baseStyles.push({ color: t.palette.negative_300 });
-				}
-			} else if (color === 'primary_subtle') {
+		if (color === 'primary') {
+			if (variant === 'outline') {
 				if (!disabled) {
 					baseStyles.push({
 						color: t.palette.primary_600,
 					});
 				} else {
-					baseStyles.push({
-						color: t.palette.primary_200,
-					});
+					baseStyles.push({ color: t.palette.primary_600, opacity: 0.5 });
 				}
-			} else if (color === 'negative_subtle') {
+			} else if (variant === 'ghost') {
+				if (!disabled) {
+					baseStyles.push({ color: t.palette.primary_600 });
+				} else {
+					baseStyles.push({ color: t.palette.primary_600, opacity: 0.5 });
+				}
+			}
+		} else if (color === 'secondary') {
+			if (variant === 'outline') {
 				if (!disabled) {
 					baseStyles.push({
-						color: t.palette.negative_600,
+						color: t.palette.contrast_600,
 					});
 				} else {
 					baseStyles.push({
-						color: t.palette.negative_200,
+						color: t.palette.contrast_300,
+					});
+				}
+			} else if (variant === 'ghost') {
+				if (!disabled) {
+					baseStyles.push({
+						color: t.palette.contrast_600,
+					});
+				} else {
+					baseStyles.push({
+						color: t.palette.contrast_300,
 					});
 				}
 			}
-		} else {
-			/*
-			 * BEGIN DEPRECATED STYLES
-			 */
-			if (color === 'primary') {
-				if (variant === 'outline') {
-					if (!disabled) {
-						baseStyles.push({
-							color: t.palette.primary_600,
-						});
-					} else {
-						baseStyles.push({ color: t.palette.primary_600, opacity: 0.5 });
-					}
-				} else if (variant === 'ghost') {
-					if (!disabled) {
-						baseStyles.push({ color: t.palette.primary_600 });
-					} else {
-						baseStyles.push({ color: t.palette.primary_600, opacity: 0.5 });
-					}
+		} else if (color === 'secondary_inverted') {
+			if (variant === 'outline') {
+				if (!disabled) {
+					baseStyles.push({
+						color: t.palette.contrast_600,
+					});
+				} else {
+					baseStyles.push({
+						color: t.palette.contrast_300,
+					});
 				}
-			} else if (color === 'secondary') {
-				if (variant === 'outline') {
-					if (!disabled) {
-						baseStyles.push({
-							color: t.palette.contrast_600,
-						});
-					} else {
-						baseStyles.push({
-							color: t.palette.contrast_300,
-						});
-					}
-				} else if (variant === 'ghost') {
-					if (!disabled) {
-						baseStyles.push({
-							color: t.palette.contrast_600,
-						});
-					} else {
-						baseStyles.push({
-							color: t.palette.contrast_300,
-						});
-					}
-				}
-			} else if (color === 'secondary_inverted') {
-				if (variant === 'outline') {
-					if (!disabled) {
-						baseStyles.push({
-							color: t.palette.contrast_600,
-						});
-					} else {
-						baseStyles.push({
-							color: t.palette.contrast_300,
-						});
-					}
-				} else if (variant === 'ghost') {
-					if (!disabled) {
-						baseStyles.push({
-							color: t.palette.contrast_600,
-						});
-					} else {
-						baseStyles.push({
-							color: t.palette.contrast_300,
-						});
-					}
-				}
-			} else if (color === 'negative') {
-				if (variant === 'outline') {
-					if (!disabled) {
-						baseStyles.push({ color: t.palette.negative_400 });
-					} else {
-						baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 });
-					}
-				} else if (variant === 'ghost') {
-					if (!disabled) {
-						baseStyles.push({ color: t.palette.negative_400 });
-					} else {
-						baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 });
-					}
-				}
-			} else if (color === 'negative_subtle') {
-				if (variant === 'outline') {
-					if (!disabled) {
-						baseStyles.push({ color: t.palette.negative_400 });
-					} else {
-						baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 });
-					}
-				} else if (variant === 'ghost') {
-					if (!disabled) {
-						baseStyles.push({ color: t.palette.negative_400 });
-					} else {
-						baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 });
-					}
+			} else if (variant === 'ghost') {
+				if (!disabled) {
+					baseStyles.push({
+						color: t.palette.contrast_600,
+					});
+				} else {
+					baseStyles.push({
+						color: t.palette.contrast_300,
+					});
 				}
 			}
-			/*
-			 * END DEPRECATED STYLES
-			 */
+		} else if (color === 'negative') {
+			if (variant === 'outline') {
+				if (!disabled) {
+					baseStyles.push({ color: t.palette.negative_400 });
+				} else {
+					baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 });
+				}
+			} else if (variant === 'ghost') {
+				if (!disabled) {
+					baseStyles.push({ color: t.palette.negative_400 });
+				} else {
+					baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 });
+				}
+			}
+		} else if (color === 'negative_subtle') {
+			if (variant === 'outline') {
+				if (!disabled) {
+					baseStyles.push({ color: t.palette.negative_400 });
+				} else {
+					baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 });
+				}
+			} else if (variant === 'ghost') {
+				if (!disabled) {
+					baseStyles.push({ color: t.palette.negative_400 });
+				} else {
+					baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 });
+				}
+			}
 		}
+		/*
+		 * END DEPRECATED STYLES
+		 */
+	}
 
-		if (size === 'large') {
-			baseStyles.push(a.text_md, a.font_medium);
-		} else if (size === 'small') {
-			baseStyles.push(a.text_sm, a.font_medium);
-		} else if (size === 'tiny') {
-			baseStyles.push(a.text_xs, a.font_semi_bold);
-		}
+	if (size === 'large') {
+		baseStyles.push(a.text_md, a.font_medium);
+	} else if (size === 'small') {
+		baseStyles.push(a.text_sm, a.font_medium);
+	} else if (size === 'tiny') {
+		baseStyles.push(a.text_xs, a.font_semi_bold);
+	}
 
-		return flatten(baseStyles);
-	}, [t, variant, color, size, disabled]);
+	return flatten(baseStyles);
 }
 
 export function ButtonText({ children, style, ...rest }: ButtonTextProps) {

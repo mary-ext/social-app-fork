@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useRef } from 'react';
+import { createContext, useContext, useRef } from 'react';
 import {
 	type AccessibilityProps,
 	StyleSheet,
@@ -83,38 +83,36 @@ export function Root({ children, isInvalid = false, style }: RootProps) {
 
 export function useSharedInputStyles() {
 	const t = useTheme();
-	return useMemo(() => {
-		const hover: ViewStyle[] = [
-			{
-				borderColor: t.palette.contrast_100,
-			},
-		];
-		const focus: ViewStyle[] = [
-			{
-				backgroundColor: t.palette.primary_25,
-				borderColor: t.palette.primary_500,
-			},
-		];
-		const error: ViewStyle[] = [
-			{
-				backgroundColor: t.palette.negative_25,
-				borderColor: t.palette.negative_300,
-			},
-		];
-		const errorHover: ViewStyle[] = [
-			{
-				backgroundColor: t.palette.negative_25,
-				borderColor: t.palette.negative_500,
-			},
-		];
+	const hover: ViewStyle[] = [
+		{
+			borderColor: t.palette.contrast_100,
+		},
+	];
+	const focus: ViewStyle[] = [
+		{
+			backgroundColor: t.palette.primary_25,
+			borderColor: t.palette.primary_500,
+		},
+	];
+	const error: ViewStyle[] = [
+		{
+			backgroundColor: t.palette.negative_25,
+			borderColor: t.palette.negative_300,
+		},
+	];
+	const errorHover: ViewStyle[] = [
+		{
+			backgroundColor: t.palette.negative_25,
+			borderColor: t.palette.negative_500,
+		},
+	];
 
-		return {
-			chromeHover: StyleSheet.flatten(hover),
-			chromeFocus: StyleSheet.flatten(focus),
-			chromeError: StyleSheet.flatten(error),
-			chromeErrorHover: StyleSheet.flatten(errorHover),
-		};
-	}, [t]);
+	return {
+		chromeHover: StyleSheet.flatten(hover),
+		chromeFocus: StyleSheet.flatten(focus),
+		chromeError: StyleSheet.flatten(error),
+		chromeErrorHover: StyleSheet.flatten(errorHover),
+	};
 }
 
 export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText' | 'placeholder'> & {

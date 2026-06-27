@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { type Breakpoint, useBreakpoints } from '#/alf/breakpoints';
 import * as tokens from '#/alf/tokens';
 
@@ -48,13 +46,11 @@ export function useGutters([topArg, rightArg, bottomArg, leftArg]: Gutter[]) {
 				? [rightArg, top, rightArg]
 				: [rightArg, bottomArg, leftArg];
 
-	return useMemo(() => {
-		const breakpoint = activeBreakpoint || 'default';
-		return {
-			paddingTop: top === 0 ? 0 : gutters[top!][breakpoint],
-			paddingRight: right === 0 ? 0 : gutters[right!][breakpoint],
-			paddingBottom: bottom === 0 ? 0 : gutters[bottom!][breakpoint],
-			paddingLeft: left === 0 ? 0 : gutters[left!][breakpoint],
-		};
-	}, [activeBreakpoint, top, right, bottom, left]);
+	const breakpoint = activeBreakpoint || 'default';
+	return {
+		paddingTop: top === 0 ? 0 : gutters[top!][breakpoint],
+		paddingRight: right === 0 ? 0 : gutters[right!][breakpoint],
+		paddingBottom: bottom === 0 ? 0 : gutters[bottom!][breakpoint],
+		paddingLeft: left === 0 ? 0 : gutters[left!][breakpoint],
+	};
 }

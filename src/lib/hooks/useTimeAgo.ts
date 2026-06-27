@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { I18n } from '@lingui/core';
 import { defineMessage, plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
@@ -21,17 +20,14 @@ const MONTH_30 = DAY * 30;
 
 export function useGetTimeAgo({ future = false }: { future?: boolean } = {}) {
 	const { i18n } = useLingui();
-	return useCallback(
-		(
-			earlier: number | string | Date,
-			later: number | string | Date,
-			options?: { format: DateDiffFormat },
-		) => {
-			const diff = dateDiff(earlier, later, future ? 'up' : 'down');
-			return formatDateDiff({ diff, i18n, format: options?.format });
-		},
-		[i18n, future],
-	);
+	return (
+		earlier: number | string | Date,
+		later: number | string | Date,
+		options?: { format: DateDiffFormat },
+	) => {
+		const diff = dateDiff(earlier, later, future ? 'up' : 'down');
+		return formatDateDiff({ diff, i18n, format: options?.format });
+	};
 }
 
 /**

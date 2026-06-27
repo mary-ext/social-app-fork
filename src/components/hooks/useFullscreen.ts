@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 
 import { IS_WEB_FIREFOX, IS_WEB_SAFARI } from '#/env';
 
@@ -14,7 +14,7 @@ export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 	// so the effect can read the previous value without a synchronous setState.
 	const prevIsFullscreenRef = useRef(isFullscreen);
 
-	const toggleFullscreen = useCallback(() => {
+	const toggleFullscreen = () => {
 		if (isFullscreen) {
 			void document.exitFullscreen();
 		} else {
@@ -23,7 +23,7 @@ export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 			scrollYRef.current = window.scrollY;
 			void ref.current.requestFullscreen();
 		}
-	}, [isFullscreen, ref]);
+	};
 
 	useEffect(() => {
 		const prevIsFullscreen = prevIsFullscreenRef.current;
