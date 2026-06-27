@@ -1,11 +1,15 @@
-import { useMemo } from 'react';
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
 	AppBskyActorStatus,
 	AppBskyEmbedExternal,
 } from '@atcute/bluesky';
-import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateStatus,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
 import type { $type, Did, GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -70,29 +74,36 @@ export type LiveNowConfig = {
 export function useLiveNowConfig(): LiveNowConfig {
 	const { currentAccount } = useSession();
 
-	return useMemo(() => {
-		const defaultAllowedHosts = new Set(DEFAULT_ALLOWED_DOMAINS.concat(LIVE_NOW_WORKER_CONFIG.allow));
-		const allowedHostsExceptionsByDid = new Map<string, Set<string>>();
-		for (const ex of LIVE_NOW_WORKER_CONFIG.exceptions) {
-			allowedHostsExceptionsByDid.set(ex.did, new Set(DEFAULT_ALLOWED_DOMAINS.concat(ex.allow)));
-		}
+	const defaultAllowedHosts = new Set(DEFAULT_ALLOWED_DOMAINS.concat(LIVE_NOW_WORKER_CONFIG.allow));
+	const allowedHostsExceptionsByDid = new Map<string, Set<string>>();
+	for (const ex of LIVE_NOW_WORKER_CONFIG.exceptions) {
+		allowedHostsExceptionsByDid.set(ex.did, new Set(DEFAULT_ALLOWED_DOMAINS.concat(ex.allow)));
+	}
 
-		if (!currentAccount?.did) {
-			return {
-				canGoLive: false,
-				currentAccountAllowedHosts: new Set(),
-				defaultAllowedHosts,
-				allowedHostsExceptionsByDid,
-			};
-		}
-
+	if (!currentAccount?.did) {
 		return {
-			canGoLive: true,
-			currentAccountAllowedHosts: allowedHostsExceptionsByDid.get(currentAccount.did) ?? defaultAllowedHosts,
+			canGoLive: false,
+			currentAccountAllowedHosts: new Set(),
 			defaultAllowedHosts,
 			allowedHostsExceptionsByDid,
 		};
-	}, [currentAccount]);
+	}
+
+	return {
+		canGoLive: true,
+		currentAccountAllowedHosts: allowedHostsExceptionsByDid.get(currentAccount.did) ?? defaultAllowedHosts,
+		defaultAllowedHosts,
+		allowedHostsExceptionsByDid,
+	};
+}
+
+function computeStatusModeration(
+	actor: AnyProfileView | undefined,
+	moderationOpts: ModerationOptions | undefined,
+) {
+	if (!actor || !('status' in actor && actor.status)) return undefined;
+	if (!moderationOpts) return undefined;
+	return moderateStatus(actor, moderationOpts);
 }
 
 export function useActorStatus(actor?: AnyProfileView) {
@@ -101,52 +112,46 @@ export function useActorStatus(actor?: AnyProfileView) {
 	const config = useLiveNowConfig();
 	const moderationOpts = useModerationOpts();
 
-	const moderation = useMemo(() => {
-		if (!actor || !('status' in actor && actor.status)) return undefined;
-		if (!moderationOpts) return undefined;
-		return moderateStatus(actor, moderationOpts);
-	}, [actor, moderationOpts]);
+	const moderation = computeStatusModeration(actor, moderationOpts);
 
-	return useMemo(() => {
-		void tick; // revalidate every minute
+	void tick; // revalidate every minute
 
-		/*
-		 * Do not even allow Live Now to show if filtered for `contentList`.
-		 */
-		if (moderation && getDisplayRestrictions(moderation, DisplayContext.ContentList).filters.length > 0) {
-			return DEFAULT_STATE;
-		}
+	/*
+	 * Do not even allow Live Now to show if filtered for `contentList`.
+	 */
+	if (moderation && getDisplayRestrictions(moderation, DisplayContext.ContentList).filters.length > 0) {
+		return DEFAULT_STATE;
+	}
 
-		if (shadowed && 'status' in shadowed && shadowed.status) {
-			const isValid = isStatusValidForViewers(shadowed.status, config);
-			const isDisabled = shadowed.status.isDisabled;
-			const isActive = isStatusStillActive(shadowed.status.expiresAt);
-			if (isValid && !isDisabled && isActive) {
-				return {
-					uri: shadowed.status.uri,
-					cid: shadowed.status.cid,
-					isDisabled: false,
-					isActive: true,
-					status: 'app.bsky.actor.status#live',
-					embed: shadowed.status.embed, // temp_isStatusValid asserts this
-					expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
-					record: shadowed.status.record,
-				} satisfies AppBskyActorDefs.StatusView;
-			}
+	if (shadowed && 'status' in shadowed && shadowed.status) {
+		const isValid = isStatusValidForViewers(shadowed.status, config);
+		const isDisabled = shadowed.status.isDisabled;
+		const isActive = isStatusStillActive(shadowed.status.expiresAt);
+		if (isValid && !isDisabled && isActive) {
 			return {
 				uri: shadowed.status.uri,
 				cid: shadowed.status.cid,
-				isDisabled,
-				isActive: false,
+				isDisabled: false,
+				isActive: true,
 				status: 'app.bsky.actor.status#live',
 				embed: shadowed.status.embed, // temp_isStatusValid asserts this
 				expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
 				record: shadowed.status.record,
 			} satisfies AppBskyActorDefs.StatusView;
-		} else {
-			return DEFAULT_STATE;
 		}
-	}, [shadowed, config, tick, moderation]);
+		return {
+			uri: shadowed.status.uri,
+			cid: shadowed.status.cid,
+			isDisabled,
+			isActive: false,
+			status: 'app.bsky.actor.status#live',
+			embed: shadowed.status.embed, // temp_isStatusValid asserts this
+			expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+			record: shadowed.status.record,
+		} satisfies AppBskyActorDefs.StatusView;
+	} else {
+		return DEFAULT_STATE;
+	}
 }
 
 export function isStatusStillActive(timeStr: string | undefined) {

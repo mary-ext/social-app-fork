@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
@@ -45,37 +44,34 @@ function useFullVerificationState({ profile }: { profile: AnyProfileView }): Ful
 		profile: currentAccountProfile,
 	});
 
-	return useMemo(() => {
-		const verifications = profile.verification?.verifications || [];
-		const wasVerified =
-			profileState.role === 'default' && !profileState.isVerified && verifications.length > 0;
-		const hasIssuedVerification = Boolean(
-			viewerState &&
-			viewerState.role === 'verifier' &&
-			profileState.role === 'default' &&
-			verifications.find((v) => v.issuer === currentAccount?.did),
-		);
+	const verifications = profile.verification?.verifications || [];
+	const wasVerified = profileState.role === 'default' && !profileState.isVerified && verifications.length > 0;
+	const hasIssuedVerification = Boolean(
+		viewerState &&
+		viewerState.role === 'verifier' &&
+		profileState.role === 'default' &&
+		verifications.find((v) => v.issuer === currentAccount?.did),
+	);
 
-		return {
-			profile: {
-				...profileState,
-				wasVerified,
-				isViewer: profile.did === currentAccount?.did,
-				showBadge: profileState.showBadge,
-			},
-			viewer:
-				viewerState.role === 'verifier'
-					? {
-							role: 'verifier',
-							isVerified: viewerState.isVerified,
-							hasIssuedVerification,
-						}
-					: {
-							role: 'default',
-							isVerified: viewerState.isVerified,
-						},
-		};
-	}, [profile, currentAccount, profileState, viewerState]);
+	return {
+		profile: {
+			...profileState,
+			wasVerified,
+			isViewer: profile.did === currentAccount?.did,
+			showBadge: profileState.showBadge,
+		},
+		viewer:
+			viewerState.role === 'verifier'
+				? {
+						role: 'verifier',
+						isVerified: viewerState.isVerified,
+						hasIssuedVerification,
+					}
+				: {
+						role: 'default',
+						isVerified: viewerState.isVerified,
+					},
+	};
 }
 
 function shouldShowVerificationCheckButton(state: FullVerificationState) {

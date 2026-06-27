@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
@@ -119,23 +118,21 @@ export type Subject =
 export function useLabelSubject({ label }: { label: ComAtprotoLabelDefs.Label }): {
 	subject: Subject;
 } {
-	return useMemo(() => {
-		const { cid, uri } = label;
-		if (cid) {
-			return {
-				subject: {
-					uri,
-					cid,
-				},
-			};
-		} else {
-			return {
-				subject: {
-					did: uri,
-				},
-			};
-		}
-	}, [label]);
+	const { cid, uri } = label;
+	if (cid) {
+		return {
+			subject: {
+				uri,
+				cid,
+			},
+		};
+	} else {
+		return {
+			subject: {
+				did: uri,
+			},
+		};
+	}
 }
 
 export function unique(value: ModerationCause, index: number, array: ModerationCause[]) {

@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 import { AppLanguage } from '#/locale/languages';
 
@@ -22,37 +20,34 @@ export function useLanguagePrefs() {
 }
 
 export function useLanguagePrefsApi() {
-	return useMemo(
-		() => ({
-			setAppLanguage(code2: AppLanguage) {
-				device.set(['languagePrefs'], { ...read(), appLanguage: code2 });
-			},
-			setContentLanguages(code2s: string[]) {
-				device.set(['languagePrefs'], { ...read(), contentLanguages: code2s });
-			},
-			setPrimaryLanguage(code2: string) {
-				device.set(['languagePrefs'], { ...read(), primaryLanguage: code2 });
-			},
-			setPostLanguage(commaSeparatedLangCodes: string) {
-				device.set(['languagePrefs'], { ...read(), postLanguage: commaSeparatedLangCodes });
-			},
-			/**
-			 * Saves whatever language codes are currently selected into a history array, which is then used to
-			 * populate the language selector menu.
-			 */
-			savePostLanguageToHistory() {
-				const prefs = read();
-				device.set(['languagePrefs'], {
-					...prefs,
-					// filter out duplicate `postLanguage` if it exists, and prepend it to the start of the array
-					postLanguageHistory: [prefs.postLanguage]
-						.concat(prefs.postLanguageHistory.filter((langs) => langs !== prefs.postLanguage))
-						.slice(0, 6),
-				});
-			},
-		}),
-		[],
-	);
+	return {
+		setAppLanguage(code2: AppLanguage) {
+			device.set(['languagePrefs'], { ...read(), appLanguage: code2 });
+		},
+		setContentLanguages(code2s: string[]) {
+			device.set(['languagePrefs'], { ...read(), contentLanguages: code2s });
+		},
+		setPrimaryLanguage(code2: string) {
+			device.set(['languagePrefs'], { ...read(), primaryLanguage: code2 });
+		},
+		setPostLanguage(commaSeparatedLangCodes: string) {
+			device.set(['languagePrefs'], { ...read(), postLanguage: commaSeparatedLangCodes });
+		},
+		/**
+		 * Saves whatever language codes are currently selected into a history array, which is then used to
+		 * populate the language selector menu.
+		 */
+		savePostLanguageToHistory() {
+			const prefs = read();
+			device.set(['languagePrefs'], {
+				...prefs,
+				// filter out duplicate `postLanguage` if it exists, and prepend it to the start of the array
+				postLanguageHistory: [prefs.postLanguage]
+					.concat(prefs.postLanguageHistory.filter((langs) => langs !== prefs.postLanguage))
+					.slice(0, 6),
+			});
+		},
+	};
 }
 
 export function getContentLanguages() {
