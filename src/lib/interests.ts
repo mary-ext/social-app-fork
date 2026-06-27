@@ -75,3 +75,14 @@ export function useInterestsDisplayNames() {
 		} satisfies Record<Interest, string>;
 	}, [l]);
 }
+
+/** Sort comparator that floats `boosts` (in their given order) to the front; other items keep their order. */
+export function boostInterests(boosts?: string[]) {
+	return (a: string, b: string) => {
+		const indexA = boosts?.indexOf(a) ?? -1;
+		const indexB = boosts?.indexOf(b) ?? -1;
+		const rankA = indexA === -1 ? Infinity : indexA;
+		const rankB = indexB === -1 ? Infinity : indexB;
+		return rankA - rankB;
+	};
+}

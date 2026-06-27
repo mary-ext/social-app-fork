@@ -381,13 +381,3 @@ function Tab({
 		</View>
 	);
 }
-
-export function boostInterests(boosts?: string[]) {
-	return (_a: string, _b: string) => {
-		const indexA = boosts?.indexOf(_a) ?? -1;
-		const indexB = boosts?.indexOf(_b) ?? -1;
-		const rankA = indexA === -1 ? Infinity : indexA;
-		const rankB = indexB === -1 ? Infinity : indexB;
-		return rankA - rankB;
-	};
-}

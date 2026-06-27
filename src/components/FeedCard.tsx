@@ -267,8 +267,16 @@ const MAX_LOADING_ROW_COUNT = 10;
  * @param count number of placeholder rows; callers should pass the known feed-generator count when available
  *   (e.g. `profile.associated.feedgens`). Defaults to a small value and is capped so large counts don't
  *   render excessive rows.
+ * @param topBorder whether the first row carries a top divider (later rows always do); set it when the
+ *   placeholder sits directly beneath a borderless header, like the real cards do. Defaults to `false`.
  */
-export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNode {
+export function LoadingPlaceholder({
+	count,
+	topBorder = false,
+}: {
+	count?: number;
+	topBorder?: boolean;
+}): React.ReactNode {
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
 	const rows = Array.from({ length: rowCount }, () => ({
 		// ~5% of feeds carry no description; the rest cluster around 1 line with a long tail.
@@ -278,7 +286,7 @@ export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNo
 	return (
 		<>
 			{rows.map((row, i) => (
-				<LoadingRow key={i} descriptionLines={row.descriptionLines} topBorder={i !== 0} />
+				<LoadingRow key={i} descriptionLines={row.descriptionLines} topBorder={i === 0 ? topBorder : true} />
 			))}
 		</>
 	);

@@ -1,6 +1,4 @@
-import { View } from 'react-native';
-
-import { atoms as a } from '#/alf';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { type Props, useCommonSVGProps } from '#/components/icons/common';
 import { Loader_Stroke2_Corner0_Rounded as Icon } from '#/components/icons/Loader';
@@ -13,7 +11,7 @@ export function Loader(props: Props) {
 	const common = useCommonSVGProps(props);
 
 	return (
-		<View style={[a.relative, a.justify_center, a.align_center, { width: common.size, height: common.size }]}>
+		<div className={css.container} style={assignInlineVars({ [css.sizeVar]: `${common.size}px` })}>
 			{/* css rotation animation - src/style.css */}
 			<div className="rotate-500ms">
 				<Icon
@@ -23,6 +21,6 @@ export function Loader(props: Props) {
 					style={props.style}
 				/>
 			</div>
-		</View>
+		</div>
 	);
 }

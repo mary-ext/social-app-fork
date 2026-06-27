@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { ModerationCause } from '@atcute/bluesky-moderation';
+import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
@@ -69,5 +70,16 @@ export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
 			</Dialog.Trigger>
 			<ModerationDetailsDialog control={control} modcause={cause} />
 		</>
+	);
+}
+
+/** A static pill marking a profile the signed-in user is followed by. */
+export function FollowsYou() {
+	return (
+		<div className={styles.followsYou}>
+			<Text size="xs">
+				<Trans>Follows you</Trans>
+			</Text>
+		</div>
 	);
 }

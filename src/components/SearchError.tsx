@@ -1,34 +1,25 @@
-import { View } from 'react-native';
-
-import { atoms as a, useBreakpoints } from '#/alf';
+import type { ReactNode } from 'react';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import * as Layout from '#/components/Layout';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import * as Layout from '#/components/web/Layout';
 
 import { colors } from '#/styles/colors';
 
-export function SearchError({ title, children }: { title?: string; children?: React.ReactNode }) {
-	const { gtMobile } = useBreakpoints();
+import * as css from './SearchError.css';
 
+export function SearchError({ title, children }: { title?: string; children?: ReactNode }) {
 	return (
 		<Layout.Content>
-			<View
-				style={[
-					a.align_center,
-					a.gap_4xl,
-					a.px_xl,
-					{
-						paddingVertical: 150,
-					},
-				]}
-			>
+			<div className={css.outer}>
 				<XIcon width={32} fill={colors.textContrastLow} />
-				<View style={[a.align_center, { maxWidth: gtMobile ? 394 : 294 }, gtMobile ? a.gap_md : a.gap_sm]}>
-					<Text style={[a.font_semi_bold, a.text_lg, a.text_center, a.leading_snug]}>{title}</Text>
+				<div className={css.body}>
+					<Text align="center" size="lg" weight="semiBold">
+						{title}
+					</Text>
 					{children}
-				</View>
-			</View>
+				</div>
+			</div>
 		</Layout.Content>
 	);
 }

@@ -162,6 +162,68 @@ export const button = recipe(
 				},
 				variant: 'ghost',
 			},
+			// outline: an opaque (`contrast_0`) fill with a 1px hairline border in the color's hue and the same
+			// text color as `ghost`; hover tints the fill. mirrors the legacy RNW Button's outline variant.
+			{
+				color: 'negative',
+				style: {
+					backgroundColor: vars.palette.contrast_0,
+					border: `1px solid ${vars.palette.negative_500}`,
+					color: vars.palette.negative_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_50 } },
+				},
+				variant: 'outline',
+			},
+			{
+				color: 'negative_subtle',
+				style: {
+					backgroundColor: vars.palette.contrast_0,
+					border: `1px solid ${vars.palette.negative_500}`,
+					color: vars.palette.negative_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_50 } },
+				},
+				variant: 'outline',
+			},
+			{
+				color: 'primary',
+				style: {
+					backgroundColor: vars.palette.contrast_0,
+					border: `1px solid ${vars.palette.primary_500}`,
+					color: vars.palette.primary_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_50 } },
+				},
+				variant: 'outline',
+			},
+			{
+				color: 'primary_subtle',
+				style: {
+					backgroundColor: vars.palette.contrast_0,
+					border: `1px solid ${vars.palette.primary_500}`,
+					color: vars.palette.primary_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_50 } },
+				},
+				variant: 'outline',
+			},
+			{
+				color: 'secondary',
+				style: {
+					backgroundColor: vars.palette.contrast_0,
+					border: `1px solid ${vars.palette.contrast_300}`,
+					color: vars.palette.contrast_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
+				},
+				variant: 'outline',
+			},
+			{
+				color: 'secondary_inverted',
+				style: {
+					backgroundColor: vars.palette.contrast_0,
+					border: `1px solid ${vars.palette.contrast_300}`,
+					color: vars.palette.contrast_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
+				},
+				variant: 'outline',
+			},
 			// emitted after the `size` variant, so the square hit target wins over its padding. these exact
 			// dimensions matter: a 34px box overflows the 33px header slot, nudging the centered icon off-axis.
 			{ shape: 'round', size: 'large', style: { height: 44, padding: 0, width: 44 } },
@@ -201,9 +263,14 @@ export const button = recipe(
 				small: { gap: 5, paddingBlock: 8, paddingInline: 14, vars: { [fontSizeVar]: fontSize.md_sub } },
 				tiny: { gap: 3, paddingBlock: 5, paddingInline: 10, vars: { [fontSizeVar]: fontSize.xs } },
 			},
-			// `bare` inherits its surroundings (e.g. a full-row pressable); solid/ghost colors come from the
-			// compound variants above.
-			variant: { bare: { backgroundColor: 'transparent', color: 'inherit' }, ghost: {}, solid: {} },
+			// `bare` inherits its surroundings (e.g. a full-row pressable); solid/ghost/outline colors come from
+			// the compound variants above.
+			variant: {
+				bare: { backgroundColor: 'transparent', color: 'inherit' },
+				ghost: {},
+				outline: {},
+				solid: {},
+			},
 		},
 	},
 	{ debugId: 'button', layer: components },

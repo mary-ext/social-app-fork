@@ -100,3 +100,15 @@ export const inlineBadges = style({
 export const inlineHandle = style({
 	flexShrink: 10,
 });
+
+export const description = style({
+	paddingTop: space.xs,
+});
+
+export const descriptionPlaceholder = style({
+	paddingTop: space._2xs,
+});
+
+export const labels = style({
+	paddingTop: space.xs,
+});

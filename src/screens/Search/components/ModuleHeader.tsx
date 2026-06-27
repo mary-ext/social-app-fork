@@ -1,132 +1,95 @@
-import { useMemo } from 'react';
-import { View } from 'react-native';
+import { type ComponentType, type ReactNode, useMemo } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import { makeCustomFeedLink } from '#/lib/routes/links';
 
-import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
-
-import { Button, ButtonIcon } from '#/components/Button';
 import * as FeedCard from '#/components/FeedCard';
-import { sizes as iconSizes } from '#/components/icons/common';
+import { type Props as SVGIconProps, sizes as iconSizes } from '#/components/icons/common';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
-import { Link } from '#/components/Link';
-import { Text, type TextProps } from '#/components/Typography';
+import { Text, type TextProps } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import { Link } from '#/components/web/Link';
+
+import * as css from './ModuleHeader.css';
 
 export function Container({
-	style,
-	children,
 	bottomBorder,
+	children,
+	className,
 }: {
-	children: React.ReactNode;
 	bottomBorder?: boolean;
-} & ViewStyleProp) {
-	const t = useTheme();
-	return (
-		<View
-			style={[
-				a.flex_row,
-				a.align_center,
-				a.px_lg,
-				a.pt_2xl,
-				a.pb_md,
-				a.gap_sm,
-				t.atoms.bg,
-				bottomBorder && [a.border_b, t.atoms.border_contrast_low],
-				style,
-			]}
-		>
-			{children}
-		</View>
-	);
+	children: ReactNode;
+	className?: string;
+}) {
+	return <div className={clsx(css.container({ bottomBorder }), className)}>{children}</div>;
 }
 
-export function FeedLink({
-	feed,
-	children,
-}: {
-	feed: AppBskyFeedDefs.GeneratorView;
-	children?: React.ReactNode;
-}) {
-	const t = useTheme();
+export function FeedLink({ children, feed }: { children?: ReactNode; feed: AppBskyFeedDefs.GeneratorView }) {
 	const { repo: did, rkey } = useMemo(() => parseCanonicalResourceUri(feed.uri), [feed.uri]);
 	return (
-		<Link to={makeCustomFeedLink(did, rkey)} label={feed.displayName} style={[a.flex_1]}>
-			{({ focused, hovered, pressed }) => (
-				<View
-					style={[
-						a.flex_1,
-						a.flex_row,
-						a.align_center,
-						{ gap: 10 },
-						a.rounded_md,
-						a.p_xs,
-						{ marginLeft: -6 },
-						(focused || hovered || pressed) && t.atoms.bg_contrast_25,
-					]}
-				>
-					{children}
-				</View>
-			)}
+		<Link className={css.feedLink} label={feed.displayName} to={makeCustomFeedLink(did, rkey)}>
+			{children}
 		</Link>
 	);
 }
 
 export function FeedAvatar({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
-	return <UserAvatar type="algo" size={38} avatar={feed.avatar} />;
+	return <UserAvatar avatar={feed.avatar} size={40} type="algo" />;
 }
 
 export function Icon({
 	icon: Comp,
 	size = 'lg',
-}: Pick<React.ComponentProps<typeof ButtonIcon>, 'icon' | 'size'>) {
-	const iconSize = iconSizes[size];
-
-	return (
-		<View style={[a.z_20, { width: iconSize, height: iconSize, marginLeft: -2 }]}>
-			<Comp width={iconSize} />
-		</View>
-	);
-}
-
-export function TitleText({ style, ...props }: TextProps) {
-	return <Text style={[a.font_semi_bold, a.flex_1, a.text_xl, style]} emoji {...props} />;
-}
-
-export function SubtitleText({ style, ...props }: TextProps) {
-	const t = useTheme();
-	return (
-		<Text style={[t.atoms.text_contrast_medium, a.leading_tight, a.flex_1, a.text_sm, style]} {...props} />
-	);
-}
-
-export function SearchButton({
-	label,
-	metricsTag: _metricsTag,
-	onPress,
 }: {
-	label: string;
-	metricsTag: 'suggestedAccounts' | 'suggestedFeeds';
-	onPress?: () => void;
+	icon: ComponentType<SVGIconProps>;
+	size?: SVGIconProps['size'];
+}) {
+	const iconSize = iconSizes[size ?? 'lg'];
+	return (
+		<div className={css.icon} style={assignInlineVars({ [css.iconSizeVar]: `${iconSize}px` })}>
+			<Comp width={iconSize} />
+		</div>
+	);
+}
+
+export function TitleText({
+	children,
+	className,
+	size = 'xl',
+}: {
+	children: ReactNode;
+	className?: string;
+	size?: TextProps['size'];
 }) {
 	return (
+		<Text className={clsx(css.titleText, className)} size={size} weight="semiBold">
+			{children}
+		</Text>
+	);
+}
+
+export function SubtitleText({ children }: { children: ReactNode }) {
+	return (
+		<Text className={css.subtitleText} color="textContrastMedium" size="md_sub">
+			{children}
+		</Text>
+	);
+}
+
+export function SearchButton({ label, onClick }: { label: string; onClick?: () => void }) {
+	return (
 		<Button
+			className={css.searchButton}
+			color="secondary"
 			label={label}
+			onClick={onClick}
+			shape="round"
 			size="small"
 			variant="ghost"
-			color="secondary"
-			shape="round"
-			PressableComponent={undefined}
-			onPress={() => {
-				onPress?.();
-			}}
-			style={[
-				{
-					right: -4,
-				},
-			]}
 		>
 			<ButtonIcon icon={SearchIcon} size="lg" />
 		</Button>
@@ -135,16 +98,16 @@ export function SearchButton({
 
 export function PinButton({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 	return (
-		<View style={[a.z_20, { marginRight: -6 }]}>
+		<div className={css.pinButton}>
 			<FeedCard.SaveButton
-				pin
-				view={feed}
-				size="large"
 				color="secondary"
-				variant="ghost"
+				pin
 				shape="round"
+				size="large"
 				text={false}
+				variant="ghost"
+				view={feed}
 			/>
-		</View>
+		</div>
 	);
 }

@@ -10,6 +10,7 @@ import { useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import { getModerationCauseKey } from '#/lib/moderation';
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
@@ -24,11 +25,14 @@ import { BlockLink } from '#/components/BlockLink';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { ProfileBadges } from '#/components/ProfileBadges';
+import { RichText, type RichTextProps } from '#/components/RichText';
 import { Text, type TextProps } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { PreviewableUserAvatar, UserAvatar } from '#/components/UserAvatar';
 import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Pills from '#/components/web/Pills';
 import * as css from '#/components/web/ProfileCard.css';
+import * as Skeleton from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';
 
@@ -209,6 +213,79 @@ export function NameAndHandlePlaceholder() {
 			<div className={css.namePlaceholderBar} />
 			<div className={css.handlePlaceholderBar} />
 		</div>
+	);
+}
+
+/** Profile bio as inline richtext; renders nothing when empty or when the viewer is blocked. */
+export function Description({
+	align,
+	color,
+	numberOfLines = 3,
+	profile: profileUnshadowed,
+	size,
+}: {
+	numberOfLines?: number;
+	profile: AnyProfileView;
+} & Pick<RichTextProps, 'align' | 'color' | 'size'>) {
+	const profile = useProfileShadow(profileUnshadowed);
+	if (!('description' in profile) || !profile.description) {
+		return null;
+	}
+	if (
+		profile.viewer &&
+		(profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList)
+	) {
+		return null;
+	}
+	return (
+		<div className={css.description}>
+			<RichText
+				align={align}
+				color={color}
+				disableLinks
+				numberOfLines={numberOfLines}
+				size={size}
+				value={profile.description}
+			/>
+		</div>
+	);
+}
+
+/** Skeleton bio bars standing in for the description while a profile loads. */
+export function DescriptionPlaceholder({ numberOfLines = 3 }: { numberOfLines?: number }) {
+	return (
+		<div className={css.descriptionPlaceholder}>
+			<Skeleton.Lines blend={false} count={numberOfLines} lastWidth={60} />
+		</div>
+	);
+}
+
+/** Moderation alert/inform pills plus a "follows you" marker; renders nothing when there's none to show. */
+export function Labels({
+	moderationOpts,
+	profile,
+}: {
+	moderationOpts: ModerationOptions;
+	profile: AnyProfileView;
+}) {
+	const moderation = moderateProfile(profile, moderationOpts);
+	const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileList);
+	const followedBy = profile.viewer?.followedBy;
+
+	if (!followedBy && modui.alerts.length === 0 && modui.informs.length === 0) {
+		return null;
+	}
+
+	return (
+		<Pills.Row className={css.labels}>
+			{followedBy && <Pills.FollowsYou />}
+			{modui.alerts.map((alert) => (
+				<Pills.Label cause={alert} key={getModerationCauseKey(alert)} />
+			))}
+			{modui.informs.map((inform) => (
+				<Pills.Label cause={inform} key={getModerationCauseKey(inform)} />
+			))}
+		</Pills.Row>
 	);
 }
 

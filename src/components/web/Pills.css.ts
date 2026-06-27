@@ -62,3 +62,13 @@ export const pill = recipe({
 export const pillText = style({
 	paddingRight: 3,
 });
+
+export const followsYou = style({
+	alignItems: 'center',
+	backgroundColor: vars.palette.contrast_50,
+	borderRadius: 4,
+	display: 'flex',
+	justifyContent: 'center',
+	paddingBlock: 3,
+	paddingInline: 6,
+});

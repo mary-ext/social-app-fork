@@ -4,7 +4,7 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
+import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';
@@ -21,7 +21,7 @@ import * as Dialog from '#/components/Dialog';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
-import { boostInterests, InterestTabs } from '#/components/InterestTabs';
+import { InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 

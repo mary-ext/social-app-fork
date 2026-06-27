@@ -1,51 +1,29 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { useQueryClient } from '@tanstack/react-query';
 import * as bcp47Match from 'bcp-47-match';
 
-import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
+import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 import { cleanError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { RQKEY_ROOT as useActorSearchQueryKeyRoot } from '#/state/queries/actor-search';
 import { type FeedPreviewItem, useFeedPreviews } from '#/state/queries/explore-feed-previews';
 import { useGetPopularFeedsQuery } from '#/state/queries/feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import {
-	createGetSuggestedFeedsQueryKey,
-	useGetSuggestedFeedsQuery,
-} from '#/state/queries/trending/useGetSuggestedFeedsQuery';
-import {
-	getSuggestedUsersForExploreQueryKeyRoot,
-	useGetSuggestedUsersForExploreQuery,
-} from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
-import { createGetTrendsQueryKey } from '#/state/queries/trending/useGetTrendsQuery';
-import {
-	createSuggestedStarterPacksQueryKey,
-	useSuggestedStarterPacksQuery,
-} from '#/state/queries/useSuggestedStarterPacksQuery';
+import { useGetSuggestedFeedsQuery } from '#/state/queries/trending/useGetSuggestedFeedsQuery';
+import { useGetSuggestedUsersForExploreQuery } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
+import { useSuggestedStarterPacksQuery } from '#/state/queries/useSuggestedStarterPacksQuery';
 
 import { logger } from '#/logger';
 
 import { isThreadChildAt, isThreadParentAt } from '#/view/com/posts/PostFeed';
 import { PostFeedItem } from '#/view/com/posts/PostFeedItem';
 import { ViewFullThread } from '#/view/com/posts/ViewFullThread';
-import { List } from '#/view/com/util/List';
-import { FeedFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
-import { StarterPackCard, StarterPackCardSkeleton } from '#/screens/Search/components/StarterPackCard';
-import { ExploreRecommendations } from '#/screens/Search/modules/ExploreRecommendations';
-import { ExploreTrendingTopics } from '#/screens/Search/modules/ExploreTrendingTopics';
-
-import { atoms as a, useTheme } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import { Button } from '#/components/Button';
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
@@ -53,43 +31,39 @@ import type { Props as IcoProps, Props as SVGIconProps } from '#/components/icon
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
 import { StarterPack } from '#/components/icons/StarterPack';
 import { UserCircle_Stroke2_Corner0_Rounded as Person } from '#/components/icons/UserCircle';
-import { boostInterests } from '#/components/InterestTabs';
-import { Loader } from '#/components/Loader';
-import * as ProfileCard from '#/components/ProfileCard';
-import { SubtleHover } from '#/components/SubtleHover';
-import { Text } from '#/components/Typography';
+import { List } from '#/components/List/List';
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
+import { Admonition } from '#/components/web/Admonition';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { colors } from '#/styles/colors';
 
 import * as ModuleHeader from './components/ModuleHeader';
+import { StarterPackCard, StarterPackCardSkeleton } from './components/StarterPackCard';
+import * as css from './Explore.css';
 import { SuggestedAccountsTabBar, SuggestedProfileCard } from './modules/ExploreSuggestedAccounts';
+import { ExploreTrendingTopics } from './modules/ExploreTrendingTopics';
 
 type ExploreSearchButtonModule = 'suggestedAccounts' | 'suggestedFeeds';
 
 function LoadMore({ item }: { item: ExploreScreenItems & { type: 'loadMore' } }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 
-	const handleOnPress = () => {
-		void item.onLoadMore();
-	};
-
 	return (
-		<Button label={l`Load more`} onPress={handleOnPress} style={[a.relative, a.w_full]}>
-			{({ hovered, pressed }) => (
-				<>
-					<SubtleHover hover={hovered || pressed} />
-					<View style={[a.flex_1, a.flex_row, a.align_center, a.justify_center, a.px_lg, a.py_md, a.gap_sm]}>
-						<Text style={[a.leading_snug]}>{item.message}</Text>
-						{item.isLoadingMore ? (
-							<Loader size="sm" />
-						) : (
-							<ChevronDownIcon size="sm" style={t.atoms.text_contrast_medium} />
-						)}
-					</View>
-				</>
+		<button
+			aria-label={l`Load more`}
+			className={css.loadMore}
+			onClick={() => void item.onLoadMore()}
+			type="button"
+		>
+			<Text>{item.message}</Text>
+			{item.isLoadingMore ? (
+				<Spinner color={colors.textContrastMedium} label={null} size="sm" />
+			) : (
+				<ChevronDownIcon fill={colors.textContrastMedium} size="sm" />
 			)}
-		</Button>
+		</button>
 	);
 }
 
@@ -108,7 +82,7 @@ type ExploreScreenItems =
 			searchButton?: {
 				label: string;
 				metricsTag: ExploreSearchButtonModule;
-				tab: 'user' | 'profile' | 'feed';
+				tab: 'feed' | 'profile' | 'user';
 			};
 	  }
 	| {
@@ -119,16 +93,12 @@ type ExploreScreenItems =
 			searchButton?: {
 				label: string;
 				metricsTag: ExploreSearchButtonModule;
-				tab: 'user' | 'profile' | 'feed';
+				tab: 'feed' | 'profile' | 'user';
 			};
 			hideDefaultTab?: boolean;
 	  }
 	| {
 			type: 'trendingTopics';
-			key: string;
-	  }
-	| {
-			type: 'recommendations';
 			key: string;
 	  }
 	| {
@@ -181,10 +151,9 @@ type ExploreScreenItems =
 export function Explore({
 	focusSearchInput,
 }: {
-	focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void;
+	focusSearchInput: (tab: 'feed' | 'profile' | 'user') => void;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const { data: preferences, error: preferencesError } = usePreferencesQuery();
 	const moderationOpts = useModerationOpts();
 	const [selectedInterest, setSelectedInterest] = useState<string | null>(null);
@@ -255,30 +224,6 @@ export function Explore({
 			error: feedPreviewSlicesError,
 		},
 	} = useFeedPreviews(suggestedFeeds?.feeds ?? [], useFullExperience);
-
-	const qc = useQueryClient();
-	const [isPTR, setIsPTR] = useState(false);
-	const onPTR = useCallback(async () => {
-		setIsPTR(true);
-		await Promise.all([
-			qc.resetQueries({
-				queryKey: createGetTrendsQueryKey(),
-			}),
-			qc.resetQueries({
-				queryKey: createSuggestedStarterPacksQueryKey(),
-			}),
-			qc.resetQueries({
-				queryKey: [getSuggestedUsersForExploreQueryKeyRoot],
-			}),
-			qc.resetQueries({
-				queryKey: [useActorSearchQueryKeyRoot],
-			}),
-			qc.resetQueries({
-				queryKey: createGetSuggestedFeedsQueryKey(),
-			}),
-		]);
-		setIsPTR(false);
-	}, [qc, setIsPTR]);
 
 	const onLoadMoreFeedPreviews = useCallback(async () => {
 		if (
@@ -450,16 +395,6 @@ export function Explore({
 						} else {
 							i.push(...feedItems);
 						}
-
-						for (const [index, item] of feedItems.entries()) {
-							if (item.type !== 'feed') {
-								continue;
-							}
-							// don't log the ones we've already sent
-							if (hasPressedLoadMoreFeeds && index < 6) {
-								continue;
-							}
-						}
 					}
 					if (!hasPressedLoadMoreFeeds) {
 						i.push({
@@ -469,6 +404,9 @@ export function Explore({
 							isLoadingMore: isLoadingMoreFeeds,
 							onLoadMore: onLoadMoreFeeds,
 						});
+					} else if (feedItems.length > 0) {
+						// no load-more button to close the list — draw a footer so the last feed keeps a divider
+						i.push({ type: 'preview:footer', key: 'suggested-feeds-footer' });
 					}
 				}
 			} else {
@@ -495,6 +433,8 @@ export function Explore({
 					});
 				} else {
 					i.push({ type: 'feedPlaceholder', key: 'feedPlaceholder' });
+					// close the placeholder list with a divider, as the loaded list does
+					i.push({ type: 'preview:footer', key: 'suggested-feeds-footer' });
 				}
 			}
 		} else {
@@ -560,6 +500,9 @@ export function Explore({
 							isLoadingMore: isLoadingMoreFeeds,
 							onLoadMore: onLoadMoreFeeds,
 						});
+					} else if (feedItems.length > 0) {
+						// no load-more button to close the list — draw a footer so the last feed keeps a divider
+						i.push({ type: 'preview:footer', key: 'suggested-feeds-footer' });
 					}
 				}
 			} else {
@@ -586,6 +529,8 @@ export function Explore({
 					});
 				} else {
 					i.push({ type: 'feedPlaceholder', key: 'feedPlaceholder' });
+					// close the placeholder list with a divider, as the loaded list does
+					i.push({ type: 'preview:footer', key: 'suggested-feeds-footer' });
 				}
 			}
 		}
@@ -677,13 +622,11 @@ export function Explore({
 	]);
 
 	const renderItem = useCallback(
-		({ item, index }: { item: ExploreScreenItems; index: number }) => {
-			const handleOnPressRetry = () => {
-				void fetchNextPageFeedPreviews();
-			};
+		({ item }: { item: ExploreScreenItems }) => {
 			switch (item.type) {
-				case 'topBorder':
-					return <View style={[a.w_full, t.atoms.border_contrast_low, a.border_t]} />;
+				case 'topBorder': {
+					return <div className={css.topBorder} />;
+				}
 				case 'header': {
 					return (
 						<ModuleHeader.Container bottomBorder={item.bottomBorder}>
@@ -691,8 +634,8 @@ export function Explore({
 							<ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
 							{item.searchButton && (
 								<ModuleHeader.SearchButton
-									{...item.searchButton}
-									onPress={() => focusSearchInput(item.searchButton?.tab || 'user')}
+									label={item.searchButton.label}
+									onClick={() => focusSearchInput(item.searchButton?.tab || 'user')}
 								/>
 							)}
 						</ModuleHeader.Container>
@@ -700,48 +643,38 @@ export function Explore({
 				}
 				case 'tabbedHeader': {
 					return (
-						<View style={[a.pb_md]}>
-							<ModuleHeader.Container style={[a.pb_xs]}>
+						<div className={css.tabbedHeader}>
+							<ModuleHeader.Container className={css.tabbedHeaderInner}>
 								<ModuleHeader.Icon icon={item.icon} />
 								<ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
 								{item.searchButton && (
 									<ModuleHeader.SearchButton
-										{...item.searchButton}
-										onPress={() => focusSearchInput(item.searchButton?.tab || 'user')}
+										label={item.searchButton.label}
+										onClick={() => focusSearchInput(item.searchButton?.tab || 'user')}
 									/>
 								)}
 							</ModuleHeader.Container>
 							<SuggestedAccountsTabBar
-								selectedInterest={selectedInterest}
-								onSelectInterest={setSelectedInterest}
 								hideDefaultTab={item.hideDefaultTab}
+								onSelectInterest={setSelectedInterest}
+								selectedInterest={selectedInterest}
 							/>
-						</View>
+						</div>
 					);
 				}
 				case 'trendingTopics': {
 					return (
-						<View style={[a.pb_md]}>
+						<div className={css.tabbedHeader}>
 							<ExploreTrendingTopics />
-						</View>
+						</div>
 					);
-				}
-				case 'recommendations': {
-					return <ExploreRecommendations />;
 				}
 				case 'profile': {
-					return (
-						<SuggestedProfileCard
-							profile={item.profile}
-							moderationOpts={moderationOpts!}
-							recId={item.recId}
-							position={index}
-						/>
-					);
+					return <SuggestedProfileCard moderationOpts={moderationOpts!} profile={item.profile} />;
 				}
 				case 'profileEmpty': {
 					return (
-						<View style={[a.px_lg, a.pb_lg]}>
+						<div className={css.admonitionWrap}>
 							<Admonition>
 								{selectedInterest ? (
 									<Trans>No results for "{interestsDisplayNames[selectedInterest]}".</Trans>
@@ -749,47 +682,38 @@ export function Explore({
 									<Trans>No results.</Trans>
 								)}
 							</Admonition>
-						</View>
+						</div>
 					);
 				}
 				case 'feed': {
-					return (
-						<FeedCard.Default
-							view={item.feed}
-							onPress={() => {
-								if (!useFullExperience) {
-									return;
-								}
-							}}
-						/>
-					);
+					return <FeedCard.Default view={item.feed} />;
 				}
 				case 'starterPack': {
 					return (
-						<View style={[a.px_lg, a.pb_lg]}>
+						<div className={css.cardWrap}>
 							<StarterPackCard view={item.view} />
-						</View>
+						</div>
 					);
 				}
 				case 'starterPackSkeleton': {
 					return (
-						<View style={[a.px_lg, a.pb_lg]}>
+						<div className={css.cardWrap}>
 							<StarterPackCardSkeleton />
-						</View>
+						</div>
 					);
 				}
 				case 'loadMore': {
 					return (
-						<View style={[a.border_t, t.atoms.border_contrast_low]}>
+						<div className={css.loadMoreWrap}>
 							<LoadMore item={item} />
-						</View>
+						</div>
 					);
 				}
 				case 'profilePlaceholder': {
 					return (
 						<>
 							{Array.from({ length: 3 }).map((__, i) => (
-								<View style={[a.px_lg, a.py_lg, a.border_t, t.atoms.border_contrast_low]} key={i}>
+								<div className={css.profilePlaceholder} key={i}>
 									<ProfileCard.Outer>
 										<ProfileCard.Header>
 											<ProfileCard.AvatarPlaceholder />
@@ -797,62 +721,61 @@ export function Explore({
 										</ProfileCard.Header>
 										<ProfileCard.DescriptionPlaceholder numberOfLines={2} />
 									</ProfileCard.Outer>
-								</View>
+								</div>
 							))}
 						</>
 					);
 				}
 				case 'feedPlaceholder': {
-					return <FeedFeedLoadingPlaceholder />;
+					// topBorder so the first row carries the same divider its real feed cards (and the other
+					// placeholders) do beneath the borderless section header
+					return <FeedCard.LoadingPlaceholder topBorder />;
 				}
 				case 'error':
 				case 'preview:error': {
 					return (
-						<View style={[a.border_t, a.pt_md, a.px_md, t.atoms.border_contrast_low]}>
-							<View style={[a.flex_row, a.gap_md, a.p_lg, a.rounded_sm, t.atoms.bg_contrast_25]}>
-								<CircleInfo size="md" fill={colors.negative_400} />
-								<View style={[a.flex_1, a.gap_sm]}>
-									<Text style={[a.font_semi_bold, a.leading_snug]}>{item.message}</Text>
-									<Text style={[a.italic, a.leading_snug, t.atoms.text_contrast_medium]}>{item.error}</Text>
-								</View>
-							</View>
-						</View>
+						<div className={css.errorOuter}>
+							<div className={css.errorBox}>
+								<CircleInfo fill={colors.negative_400} size="md" />
+								<div className={css.errorTextCol}>
+									<Text weight="semiBold">{item.message}</Text>
+									<Text className={css.errorDetail} color="textContrastMedium">
+										{item.error}
+									</Text>
+								</div>
+							</div>
+						</div>
 					);
 				}
 				// feed previews
 				case 'preview:spacer': {
-					return <View style={[a.w_full, a.pt_4xl]} />;
+					return <div className={css.previewSpacer} />;
 				}
 				case 'preview:empty': {
 					return null; // what should we do here?
 				}
 				case 'preview:loading': {
-					return (
-						<View style={[a.py_2xl, a.flex_1, a.align_center]}>
-							<Loader size="lg" />
-						</View>
-					);
+					return <CenteredSpinner label={l`Loading`} size="lg" />;
 				}
 				case 'preview:header': {
 					return (
-						<ModuleHeader.Container style={[a.pt_xs]} bottomBorder>
-							{/* Very non-scientific way to avoid small gap on scroll */}
-							<View style={[a.absolute, a.inset_0, t.atoms.bg, { top: -2 }]} />
+						<ModuleHeader.Container bottomBorder className={css.previewHeader}>
 							<ModuleHeader.FeedLink feed={item.feed}>
 								<ModuleHeader.FeedAvatar feed={item.feed} />
-								<View style={[a.flex_1, a.gap_2xs]}>
-									<ModuleHeader.TitleText style={[a.text_lg]}>{item.feed.displayName}</ModuleHeader.TitleText>
+
+								<div className={css.previewHeaderText}>
+									<ModuleHeader.TitleText size="lg">{item.feed.displayName}</ModuleHeader.TitleText>
 									<ModuleHeader.SubtitleText>
-										<Trans>By {sanitizeHandle(item.feed.creator.handle, '@')}</Trans>
+										<Trans>by {sanitizeHandle(item.feed.creator.handle)}</Trans>
 									</ModuleHeader.SubtitleText>
-								</View>
+								</div>
 							</ModuleHeader.FeedLink>
 							<ModuleHeader.PinButton feed={item.feed} />
 						</ModuleHeader.Container>
 					);
 				}
 				case 'preview:footer': {
-					return <View style={[a.border_t, t.atoms.border_contrast_low, a.w_full, a.pt_4xl]} />;
+					return <div className={css.previewFooter} />;
 				}
 				case 'preview:sliceItem': {
 					const slice = item.slice;
@@ -884,76 +807,23 @@ export function Explore({
 					return (
 						<LoadMoreRetryBtn
 							label={l`There was an issue fetching posts. Tap here to try again.`}
-							onPress={handleOnPressRetry}
+							onPress={() => void fetchNextPageFeedPreviews()}
 						/>
 					);
 				}
 			}
 		},
-		[
-			t.atoms.border_contrast_low,
-			t.atoms.bg_contrast_25,
-			t.atoms.text_contrast_medium,
-			t.atoms.bg,
-			focusSearchInput,
-			selectedInterest,
-			moderationOpts,
-			interestsDisplayNames,
-			useFullExperience,
-			l,
-			fetchNextPageFeedPreviews,
-		],
+		[focusSearchInput, selectedInterest, moderationOpts, interestsDisplayNames, l, fetchNextPageFeedPreviews],
 	);
-
-	const handleOnEndReached = () => {
-		void onLoadMoreFeedPreviews();
-	};
-
-	const handleOnRefresh = () => {
-		void onPTR();
-	};
 
 	return (
 		<List
 			data={items}
-			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			desktopFixedHeight
-			contentContainerStyle={{ paddingBottom: 100 }}
-			keyboardShouldPersistTaps="handled"
-			keyboardDismissMode="on-drag"
-			stickyHeaderIndices={undefined}
-			onEndReached={handleOnEndReached}
-			/** Default: 2 */
+			ListFooterComponent={<div className={css.bottomSpacer} />}
+			onEndReached={() => void onLoadMoreFeedPreviews()}
 			onEndReachedThreshold={4}
-			/** Default: 10 */
-			initialNumToRender={10}
-			/** Default: 21 */
-			windowSize={undefined}
-			/**
-			 * Default: 10
-			 *
-			 * NOTE: This was 1 on Android. Unfortunately this leads to the list totally freaking out when the
-			 * sticky headers changed. I made a minimal reproduction and yeah, it's this prop. Totally fine when the
-			 * sticky headers are static, but when they're dynamic, it's a mess.
-			 *
-			 * Repro: https://github.com/mozzius/stickyindices-repro
-			 *
-			 * I then found doubling this prop on iOS also reduced it freaking out there as well.
-			 *
-			 * Trades off seeing more blank space due to it having to render more items before it can show anything.
-			 * -sfn
-			 */
-			maxToRenderPerBatch={undefined}
-			/**
-			 * Default: 50
-			 *
-			 * NOTE: This was 25 on Android. However, due to maxToRenderPerBatch being set to 10, the lower batching
-			 * period is no longer necessary (?)
-			 */
-			updateCellsBatchingPeriod={50}
-			refreshing={isPTR}
-			onRefresh={handleOnRefresh}
+			renderItem={renderItem}
 		/>
 	);
 }

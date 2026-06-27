@@ -1,5 +1,4 @@
-import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
@@ -12,9 +11,7 @@ import { useSession } from '#/state/session';
 
 import { makeSearchQuery, type Params, parseSearchQuery } from '#/screens/Search/utils';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
 import { SearchAutocomplete } from '#/components/web/SearchAutocomplete/SearchAutocomplete';
@@ -23,6 +20,7 @@ import { colors } from '#/styles/colors';
 
 import { Explore } from './Explore';
 import { SearchResults, type SearchTabId } from './SearchResults';
+import * as css from './Shell.css';
 
 type TabParam = 'feed' | 'latest' | 'profile' | 'user';
 
@@ -165,7 +163,7 @@ export function SearchScreenShell({
 					/>
 				</Layout.Header.Content>
 			</Layout.Header.Outer>
-			<View style={a.flex_1}>
+			<div className={css.body}>
 				<SearchScreenInner
 					activeTab={activeTab}
 					setActiveTab={setActiveTab}
@@ -174,12 +172,12 @@ export function SearchScreenShell({
 					headerHeight={headerHeight}
 					focusSearchInput={focusSearchInput}
 				/>
-			</View>
+			</div>
 		</Layout.Screen>
 	);
 }
 
-let SearchScreenInner = ({
+function SearchScreenInner({
 	activeTab,
 	setActiveTab,
 	query,
@@ -193,41 +191,42 @@ let SearchScreenInner = ({
 	queryWithParams: string;
 	headerHeight: number;
 	focusSearchInput: (tab?: TabParam) => void;
-}): React.ReactNode => {
-	const t = useTheme();
+}) {
 	const { hasSession } = useSession();
-	const { gtTablet } = useBreakpoints();
 
-	return queryWithParams ? (
-		<SearchResults
-			query={query}
-			queryWithParams={queryWithParams}
-			activeTab={activeTab}
-			headerHeight={headerHeight}
-			onTabChange={setActiveTab}
-		/>
-	) : hasSession ? (
-		<Explore focusSearchInput={focusSearchInput} />
-	) : (
+	if (queryWithParams) {
+		return (
+			<SearchResults
+				query={query}
+				queryWithParams={queryWithParams}
+				activeTab={activeTab}
+				headerHeight={headerHeight}
+				onTabChange={setActiveTab}
+			/>
+		);
+	}
+
+	if (hasSession) {
+		return <Explore focusSearchInput={focusSearchInput} />;
+	}
+
+	return (
 		<Layout.Content>
-			{gtTablet && (
-				<View style={[a.border_b, t.atoms.border_contrast_low, a.px_lg, a.pt_sm, a.pb_lg]}>
-					<Text style={[a.text_2xl, a.font_bold]}>
-						<Trans>Search</Trans>
-					</Text>
-				</View>
-			)}
+			<div className={css.heading}>
+				<Text size="_2xl" weight="bold">
+					<Trans>Search</Trans>
+				</Text>
+			</div>
 
-			<View style={[a.align_center, a.justify_center, a.py_4xl, a.gap_lg]}>
+			<div className={css.empty}>
 				<MagnifyingGlassIcon strokeWidth={3} size={60} color={colors.textContrastMedium} />
-				<Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+				<Text color="textContrastMedium" size="md">
 					<Trans>Find posts, users, and feeds on Bluesky</Trans>
 				</Text>
-			</View>
+			</div>
 		</Layout.Content>
 	);
-};
-SearchScreenInner = memo(SearchScreenInner);
+}
 
 function useQueryManager({ fixedParams, initialQuery }: { fixedParams?: Params; initialQuery: string }) {
 	return useMemo(() => {

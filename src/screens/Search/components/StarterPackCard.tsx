@@ -1,40 +1,28 @@
-import { useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useSession } from '#/state/session';
 
-import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+import { useBreakpoints } from '#/alf/breakpoints';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { ButtonText } from '#/components/Button';
+import { BlockLink } from '#/components/BlockLink';
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { Link } from '#/components/Link';
-import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { useStarterPackLink } from '#/components/StarterPack/StarterPackCard';
-import { SubtleHover } from '#/components/SubtleHover';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
+import { ButtonText } from '#/components/web/Button';
+import { LinkButton } from '#/components/web/Link';
+import * as Skeleton from '#/components/web/Skeleton';
 
-type WebViewStyle = Omit<ViewStyle, 'position' | 'zIndex'> & {
-	position?: 'static';
-	zIndex?: 'unset';
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
-};
+import * as css from './StarterPackCard.css';
 
 export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackView }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
-	const { currentAccount } = useSession();
 	const { gtPhone } = useBreakpoints();
 	const link = useStarterPackLink({ view });
 	const record = view.record as AppBskyGraphStarterpack.Main;
@@ -43,197 +31,118 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 	const profiles = view.listItemsSample?.slice(0, profileCount).map((item) => item.subject);
 
 	return (
-		<Link to={link.to} label={link.label} onHoverIn={link.precache} onPress={link.precache}>
-			{(s) => (
-				<>
-					<SubtleHover hover={s.hovered || s.pressed} />
+		<BlockLink
+			className={css.card}
+			label={link.label}
+			onBeforePress={link.precache}
+			onPointerEnter={link.precache}
+			to={link.to}
+		>
+			<div>
+				<AvatarStack numPending={profileCount} profiles={profiles ?? []} total={view.list?.listItemCount} />
 
-					<View
-						style={[
-							a.w_full,
-							a.p_lg,
-							a.gap_md,
-							a.border,
-							a.rounded_sm,
-							a.overflow_hidden,
-							t.atoms.border_contrast_low,
-						]}
+				<div className={css.body}>
+					<div className={css.titleColumn}>
+						<Text numberOfLines={1} size="md" weight="semiBold">
+							{record.name}
+						</Text>
+						<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
+							{l`by ${sanitizeHandle(view.creator.handle)}`}
+						</Text>
+					</div>
+					<LinkButton
+						color="secondary"
+						label={link.label}
+						onPress={() => link.precache()}
+						size="small"
+						to={link.to}
+						variant="solid"
 					>
-						<AvatarStack
-							profiles={profiles ?? []}
-							numPending={profileCount}
-							total={view.list?.listItemCount}
-						/>
-
-						<View
-							style={[
-								a.w_full,
-								a.flex_row,
-								a.align_start,
-								a.gap_lg,
-								webViewStyle({
-									position: 'static',
-									zIndex: 'unset',
-								}),
-							]}
-						>
-							<View style={[a.flex_1]}>
-								<Text emoji style={[a.text_md, a.font_semi_bold, a.leading_snug]} numberOfLines={1}>
-									{record.name}
-								</Text>
-								<Text
-									emoji
-									style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
-									numberOfLines={1}
-								>
-									{view.creator?.did === currentAccount?.did
-										? l`By you`
-										: l`By ${sanitizeHandle(view.creator.handle, '@')}`}
-								</Text>
-							</View>
-							<Link
-								to={link.to}
-								label={link.label}
-								onHoverIn={link.precache}
-								onPress={link.precache}
-								variant="solid"
-								color="secondary"
-								size="small"
-								style={[a.z_50]}
-							>
-								<ButtonText>
-									<Trans>Open pack</Trans>
-								</ButtonText>
-							</Link>
-						</View>
-					</View>
-				</>
-			)}
-		</Link>
+						<ButtonText>
+							<Trans>Open pack</Trans>
+						</ButtonText>
+					</LinkButton>
+				</div>
+			</div>
+		</BlockLink>
 	);
 }
 
 export function AvatarStack({
-	profiles,
 	numPending,
+	profiles,
 	total,
 }: {
-	profiles: AnyProfileView[];
 	numPending: number;
+	profiles: AnyProfileView[];
 	total?: number;
 }) {
-	const t = useTheme();
 	const { gtPhone } = useBreakpoints();
 	const moderationOpts = useModerationOpts();
 	const computedTotal = (total ?? numPending) - numPending;
-	const circlesCount = numPending + 1; // add total at end
+	const circlesCount = numPending + 1; // add the count circle at the end
 	const widthPerc = 100 / circlesCount;
+
 	const [size, setSize] = useState<number | null>(null);
+	const measureRef = useRef<HTMLDivElement | null>(null);
+	useEffect(() => {
+		const el = measureRef.current;
+		if (!el) return;
+		const measure = () => setSize(el.getBoundingClientRect().width);
+		measure();
+		const observer = new ResizeObserver(measure);
+		observer.observe(el);
+		return () => observer.disconnect();
+	}, []);
 
 	const isPending = (numPending && profiles.length === 0) || !moderationOpts;
-
 	const items = isPending
 		? Array.from({ length: numPending ?? circlesCount }).map((_, i) => ({
 				key: i,
-				profile: null,
 				moderation: null,
+				profile: null,
 			}))
-		: profiles.map((item) => ({
-				key: item.did,
-				profile: item,
-				moderation: moderateProfile(item, moderationOpts),
+		: profiles.map((profile) => ({
+				key: profile.did,
+				moderation: moderateProfile(profile, moderationOpts),
+				profile,
 			}));
 
 	return (
-		<View style={[a.w_full, a.flex_row, a.align_center, a.relative, { width: `${100 - widthPerc * 0.2}%` }]}>
+		<div className={css.stack} style={assignInlineVars({ [css.stackWidthVar]: `${100 - widthPerc * 0.2}%` })}>
 			{items.map((item, i) => (
-				<View
+				<div
+					className={css.cell}
 					key={item.key}
-					style={[
-						{
-							width: `${widthPerc}%`,
-							zIndex: 100 - i,
-						},
-					]}
+					style={assignInlineVars({ [css.cellWidthVar]: `${widthPerc}%`, [css.cellZVar]: String(100 - i) })}
 				>
-					<View
-						style={[
-							a.relative,
-							{
-								width: '120%',
-							},
-						]}
-					>
-						<View
-							onLayout={(e) => setSize(e.nativeEvent.layout.width)}
-							style={[
-								a.rounded_full,
-								t.atoms.bg_contrast_25,
-								{
-									paddingTop: '100%',
-								},
-							]}
-						>
+					<div className={css.cellInner}>
+						<div className={css.circle} ref={i === 0 ? measureRef : undefined}>
 							{size && item.profile ? (
-								<View style={[a.absolute, a.inset_0]}>
+								<div className={css.avatarFill}>
 									<UserAvatar
-										size={size}
 										avatar={item.profile.avatar}
-										type={item.profile.associated?.labeler ? 'labeler' : 'user'}
 										moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
+										size={size}
+										type={item.profile.associated?.labeler ? 'labeler' : 'user'}
 									/>
-								</View>
+								</div>
 							) : (
-								<MediaInsetBorder style={[a.rounded_full]} />
+								<div className={css.placeholderBorder} />
 							)}
-						</View>
-					</View>
-				</View>
+						</div>
+					</div>
+				</div>
 			))}
-			<View
-				style={[
-					{
-						width: `${widthPerc}%`,
-						zIndex: 1,
-					},
-				]}
+			<div
+				className={css.cell}
+				style={assignInlineVars({ [css.cellWidthVar]: `${widthPerc}%`, [css.cellZVar]: '1' })}
 			>
-				<View
-					style={[
-						a.relative,
-						{
-							width: '120%',
-						},
-					]}
-				>
-					<View
-						style={[
-							{
-								paddingTop: '100%',
-							},
-						]}
-					>
-						<View
-							style={[
-								a.absolute,
-								a.inset_0,
-								a.rounded_full,
-								a.align_center,
-								a.justify_center,
-								{
-									backgroundColor: t.atoms.text_contrast_low.color,
-								},
-							]}
-						>
+				<div className={css.cellInner}>
+					<div className={css.totalBox}>
+						<div className={css.totalInner}>
 							{computedTotal > 0 ? (
-								<Text
-									style={[
-										gtPhone ? a.text_md : a.text_xs,
-										a.font_semi_bold,
-										a.leading_snug,
-										{ color: 'white' },
-									]}
-								>
+								<Text className={css.totalText} size={gtPhone ? 'md' : 'xs'} weight="semiBold">
 									<Trans comment="Indicates the number of additional profiles are in the Starter Pack e.g. +12">
 										+{computedTotal}
 									</Trans>
@@ -241,52 +150,27 @@ export function AvatarStack({
 							) : (
 								<Plus fill="white" />
 							)}
-						</View>
-					</View>
-				</View>
-			</View>
-		</View>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 }
 
 export function StarterPackCardSkeleton() {
-	const t = useTheme();
 	const { gtPhone } = useBreakpoints();
-
 	const profileCount = gtPhone ? 11 : 8;
-
 	return (
-		<View
-			style={[
-				a.w_full,
-				a.p_lg,
-				a.gap_md,
-				a.border,
-				a.rounded_sm,
-				a.overflow_hidden,
-				t.atoms.border_contrast_low,
-			]}
-		>
-			<AvatarStack profiles={[]} numPending={profileCount} />
-			<View
-				style={[
-					a.w_full,
-					a.flex_row,
-					a.align_start,
-					a.gap_lg,
-					webViewStyle({
-						position: 'static',
-						zIndex: 'unset',
-					}),
-				]}
-			>
-				<View style={[a.flex_1, a.gap_xs]}>
-					<LoadingPlaceholder width={180} height={18} />
-					<LoadingPlaceholder width={120} height={14} />
-				</View>
-
-				<LoadingPlaceholder width={100} height={33} />
-			</View>
-		</View>
+		<div className={css.card}>
+			<AvatarStack numPending={profileCount} profiles={[]} />
+			<div className={css.body}>
+				<Skeleton.Col gap="xs">
+					<Skeleton.Text size="md" width={180} />
+					<Skeleton.Text size="sm" width={120} />
+				</Skeleton.Col>
+				<div className={css.openPackPlaceholder} />
+			</div>
+		</div>
 	);
 }
