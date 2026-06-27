@@ -265,7 +265,7 @@ function FeedItemInner({
 						</div>
 					</div>
 
-					<PostLayout.Row className={css.layoutRow}>
+					<PostLayout.Row>
 						<PostLayout.AvatarColumn>
 							<PreviewableUserAvatar
 								size={36}

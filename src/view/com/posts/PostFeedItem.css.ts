@@ -47,11 +47,6 @@ export const replyLineParentLive = style({
 	marginTop: space.sm,
 });
 
-/** The 1px nudge between the reason row and the avatar/content row. */
-export const layoutRow = style({
-	marginTop: 1,
-});
-
 /**
  * Below-meta rhythm for the spacing-free `PostMeta` leaf (the parent owns the spacing). `display: flex` so
  * the wrapper hugs the row instead of inflating it with the font strut.

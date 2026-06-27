@@ -45,7 +45,7 @@ function PostLoadingPlaceholder({
 					) : null}
 				</div>
 			</div>
-			<PostLayout.Row className={feedCss.layoutRow}>
+			<PostLayout.Row>
 				<PostLayout.AvatarColumn>
 					<Skele.Circle size={AVI_SIZE} />
 				</PostLayout.AvatarColumn>
