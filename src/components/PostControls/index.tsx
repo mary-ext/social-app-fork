@@ -14,7 +14,7 @@ import { clsx } from 'clsx';
 import { CountWheel } from '#/lib/custom-animations/CountWheel';
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import type { Props as IconProps } from '#/components/icons/common';
@@ -29,7 +29,7 @@ import { Tooltip } from '#/components/web/Tooltip';
 import * as css from './index.css';
 import { PostOverflowMenu } from './PostMenu';
 import { RepostMenu } from './RepostMenu';
-import { type PostControlsProps, usePostControlsActions, useSecondaryControlSpacingStyles } from './shared';
+import { type PostControlsProps, usePostControlsActions } from './shared';
 import { ShareMenu } from './ShareMenu';
 
 const PostControlContext = createContext<{ active?: boolean }>({});
@@ -281,12 +281,10 @@ export function PostControls({
 }
 
 export function PostControlsSkeleton() {
-	const { gtPhone } = useBreakpoints();
-
-	const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({ gtPhone });
-
 	// the rest-state row shows the bare icons, so the bars stand in at `ICON_SIZE` — the live `iconCircle` is
-	// only the hover target and pulls itself back to that footprint with a negative margin.
+	// only the hover target and pulls itself back to that footprint with a negative margin. the trailing
+	// cluster reuses `secondaryGroup` verbatim so its gap matches the live row (sized to clear those spilled
+	// hover circles), rather than bunching the bars tighter than the icons they stand in for.
 	return (
 		<div className={css.root}>
 			<div className={css.primaryGroup}>
@@ -300,7 +298,7 @@ export function PostControlsSkeleton() {
 					<Skele.Pill blend size={css.ICON_SIZE} />
 				</div>
 			</div>
-			<div className={css.secondaryGroup} style={secondaryControlSpacingStyles}>
+			<div className={css.secondaryGroup}>
 				<Skele.Circle blend size={css.ICON_SIZE} />
 				<Skele.Circle blend size={css.ICON_SIZE} />
 			</div>

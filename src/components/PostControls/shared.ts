@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
@@ -157,9 +157,4 @@ export function usePostControlsActions({
 		replyDisabled,
 		requireAuth,
 	};
-}
-
-/** Resolves the trailing cluster's gap: roomier on the big bar / wide layouts. */
-export function useSecondaryControlSpacingStyles({ big, gtPhone }: { big?: boolean; gtPhone: boolean }) {
-	return useMemo(() => ({ gap: big || gtPhone ? 8 : 4 }), [big, gtPhone]);
 }
