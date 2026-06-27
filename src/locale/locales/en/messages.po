@@ -955,7 +955,7 @@ msgstr "Accounts"
 msgid "Accounts with a scalloped blue check mark <0/> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr "Accounts with a scalloped blue check mark <0/> can verify others. These trusted verifiers are selected by Bluesky."
 
-#: src/components/EmojiPicker/categories.ts:58
+#: src/components/EmojiPicker/categories.ts:32
 msgid "Activity"
 msgstr "Activity"
 
@@ -1390,7 +1390,7 @@ msgstr ""
 msgid "Animals"
 msgstr ""
 
-#: src/components/EmojiPicker/categories.ts:64
+#: src/components/EmojiPicker/categories.ts:30
 msgid "Animals & Nature"
 msgstr "Animals & Nature"
 
@@ -1480,7 +1480,7 @@ msgstr ""
 msgid "Archived post"
 msgstr ""
 
-#: src/components/dms/MessageOverlays.tsx:168
+#: src/components/dms/MessageOverlays.tsx:169
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 
@@ -2502,7 +2502,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/components/dms/MessageOverlays.tsx:169
+#: src/components/dms/MessageOverlays.tsx:170
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:536
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:221
 #: src/screens/StarterPack/StarterPackScreen.tsx:512
@@ -2536,7 +2536,7 @@ msgstr ""
 msgid "Delete list"
 msgstr ""
 
-#: src/components/dms/MessageOverlays.tsx:167
+#: src/components/dms/MessageOverlays.tsx:168
 msgid "Delete message"
 msgstr ""
 
@@ -2948,7 +2948,7 @@ msgstr "Embedded player"
 msgid "Embedded video player"
 msgstr ""
 
-#: src/components/EmojiPicker/components/CategoryNav.tsx:27
+#: src/components/EmojiPicker/components/CategoryNav.tsx:26
 msgid "Emoji categories"
 msgstr "Emoji categories"
 
@@ -3528,7 +3528,7 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
-#: src/components/EmojiPicker/categories.ts:60
+#: src/components/EmojiPicker/categories.ts:36
 msgid "Flags"
 msgstr "Flags"
 
@@ -3689,7 +3689,7 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: src/components/EmojiPicker/categories.ts:62
+#: src/components/EmojiPicker/categories.ts:31
 msgid "Food & Drink"
 msgstr "Food & Drink"
 
@@ -5624,7 +5624,7 @@ msgstr ""
 msgid "Nudity"
 msgstr ""
 
-#: src/components/EmojiPicker/categories.ts:66
+#: src/components/EmojiPicker/categories.ts:34
 msgid "Objects"
 msgstr "Objects"
 
@@ -6477,7 +6477,7 @@ msgid "Recent GIFs"
 msgstr "Recent GIFs"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:170
-#: src/components/EmojiPicker/categories.ts:72
+#: src/components/EmojiPicker/categories.ts:28
 msgid "Recently used"
 msgstr ""
 
@@ -7758,7 +7758,7 @@ msgstr "slide"
 msgid "Smaller"
 msgstr ""
 
-#: src/components/EmojiPicker/categories.ts:68
+#: src/components/EmojiPicker/categories.ts:29
 msgid "Smileys & People"
 msgstr "Smileys & People"
 
@@ -8063,7 +8063,7 @@ msgstr "Switch to @{0}"
 msgid "Switching account"
 msgstr "Switching account"
 
-#: src/components/EmojiPicker/categories.ts:74
+#: src/components/EmojiPicker/categories.ts:35
 msgid "Symbols"
 msgstr "Symbols"
 
@@ -8731,7 +8731,7 @@ msgstr ""
 msgid "Translate"
 msgstr ""
 
-#: src/components/EmojiPicker/categories.ts:70
+#: src/components/EmojiPicker/categories.ts:33
 msgid "Travel & Places"
 msgstr "Travel & Places"
 

@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { Autocomplete } from '@base-ui/react/autocomplete';
+import { useLingui } from '@lingui/react/macro';
 
-import { useCategoryLabel } from '../categories';
+import { CATEGORY_LABELS } from '../categories';
 import { type EmojiLayout, GRID_HEIGHT, OVERSCAN } from '../layout';
 import type { EmojiCell } from '../util';
 import * as styles from './EmojiGrid.css';
@@ -25,7 +26,7 @@ export const EmojiGrid = forwardRef<EmojiGridHandle, EmojiGridProps>(function Em
 	{ cells, layout, onActiveSectionChange, onSelect },
 	ref,
 ) {
-	const labelFor = useCategoryLabel();
+	const { i18n } = useLingui();
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [scrollTop, setScrollTop] = useState(0);
 
@@ -107,7 +108,7 @@ export const EmojiGrid = forwardRef<EmojiGridHandle, EmojiGridProps>(function Em
 				{visible.map((row) =>
 					row.type === 'header' ? (
 						<div className={styles.header} key={row.key} style={{ height: row.height, top: row.top }}>
-							{labelFor(row.key)}
+							{i18n._(CATEGORY_LABELS[row.key]!)}
 						</div>
 					) : (
 						<Autocomplete.Row
