@@ -40,7 +40,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 
-let ConvoMenu = ({
+function ConvoMenu({
 	convo,
 	profile,
 	control,
@@ -64,7 +64,7 @@ let ConvoMenu = ({
 		userBlock?: BlockingModerationCause;
 	};
 	style?: ViewStyleProp['style'];
-}): React.ReactNode => {
+}): React.ReactNode {
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
@@ -157,7 +157,7 @@ let ConvoMenu = ({
 			<BlockedByListDialog control={blockedByListControl} listBlocks={listBlocks} />
 		</>
 	);
-};
+}
 
 function MenuContent({
 	convo: initialConvo,

@@ -87,7 +87,7 @@ function AnchorControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps
  * anchor surfaces those in its own stats row — and owns its own button chrome separately from the compact
  * {@link PostControls}.
  */
-let AnchorPostControls = ({
+function AnchorPostControls({
 	post,
 	record,
 	richText,
@@ -99,7 +99,7 @@ let AnchorPostControls = ({
 	threadgateRecord,
 	onShowLess,
 	viaRepost,
-}: PostControlsProps): React.ReactNode => {
+}: PostControlsProps): React.ReactNode {
 	const t = useTheme();
 	const { t: l } = useLingui();
 
@@ -218,7 +218,7 @@ let AnchorPostControls = ({
 			/>
 		</div>
 	);
-};
+}
 export { AnchorPostControls };
 
 /** Loading placeholder matching the anchor action bar's layout and control density. */

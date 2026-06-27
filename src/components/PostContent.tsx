@@ -19,7 +19,7 @@ import * as css from './PostContent.css';
  * The gate + alerts moderate against the surface's own display context; the embed's gallery offset always
  * uses the list context, matching both call sites.
  */
-let PostContent = ({
+function PostContent({
 	post,
 	richText,
 	moderation,
@@ -42,7 +42,7 @@ let PostContent = ({
 	className?: string;
 	/** Forwarded to the embed wrapper (e.g. the feed surface's trailing padding). */
 	embedClassName?: string;
-}): React.ReactNode => {
+}): React.ReactNode {
 	const listModui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
 	const bodyModui =
 		displayContext === 'view' ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : listModui;
@@ -75,6 +75,6 @@ let PostContent = ({
 			) : null}
 		</ContentHider>
 	);
-};
+}
 
 export { PostContent };

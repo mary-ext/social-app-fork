@@ -472,13 +472,13 @@ let MessageItem = ({
 MessageItem = memo(MessageItem);
 export { MessageItem };
 
-let MessageItemMetadata = ({
+function MessageItemMetadata({
 	item,
 	style,
 }: {
 	item: ConvoItem & { type: 'message' | 'pending-message' };
 	style: StyleProp<TextStyle>;
-}): React.ReactNode => {
+}): React.ReactNode {
 	const t = useTheme();
 	const { t: l } = useLingui();
 
@@ -518,7 +518,7 @@ let MessageItemMetadata = ({
 		default:
 			return null;
 	}
-};
+}
 export { MessageItemMetadata };
 
 function BlockedPlaceholder({

@@ -112,7 +112,7 @@ export function PostFeedItem({
 	return null;
 }
 
-let FeedItemInner = ({
+function FeedItemInner({
 	post,
 	record,
 	reason,
@@ -134,7 +134,7 @@ let FeedItemInner = ({
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	rootPost: AppBskyFeedDefs.PostView;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-}): React.ReactNode => {
+}): React.ReactNode {
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
@@ -334,4 +334,4 @@ let FeedItemInner = ({
 			</BlockLink>
 		</GalleryBleed>
 	);
-};
+}

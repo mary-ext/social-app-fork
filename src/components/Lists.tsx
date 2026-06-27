@@ -72,7 +72,7 @@ function ListFooterError({ error, onRetry }: { error: string; onRetry?: () => Pr
 	);
 }
 
-let ListMaybePlaceholder = ({
+function ListMaybePlaceholder({
 	isLoading,
 	noEmpty,
 	isError,
@@ -106,7 +106,7 @@ let ListMaybePlaceholder = ({
 	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
 	emptyStateButton?: EmptyStateButtonProps;
 	useEmptyState?: boolean;
-}): React.ReactNode => {
+}): React.ReactNode {
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const { gtMobile, gtTablet } = useBreakpoints();
@@ -170,5 +170,5 @@ let ListMaybePlaceholder = ({
 	}
 
 	return null;
-};
+}
 export { ListMaybePlaceholder };

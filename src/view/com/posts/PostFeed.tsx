@@ -109,7 +109,7 @@ const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY;
 // Measured posts span ~120px (text) to ~700px (media), median ~240px.
 const FEED_ITEM_HEIGHT_ESTIMATE = 300;
 
-let PostFeed = ({
+function PostFeed({
 	feed,
 	ignoreFilterFor,
 	enabled,
@@ -135,7 +135,7 @@ let PostFeed = ({
 	renderEndOfFeed?: () => React.ReactElement;
 	ListHeaderComponent?: () => React.ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
-}): React.ReactNode => {
+}): React.ReactNode {
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const { currentAccount, hasSession } = useSession();
@@ -518,7 +518,7 @@ let PostFeed = ({
 			onItemSeen={onItemSeen}
 		/>
 	);
-};
+}
 export { PostFeed };
 
 export function isThreadParentAt<T>(arr: Array<T>, i: number) {

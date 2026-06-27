@@ -14,7 +14,7 @@ import * as css from './MessageItemInviteEmbed.css';
 const BORDER_RADIUS = 20;
 const SQUARED_BORDER_RADIUS = 4;
 
-let MessageItemInviteEmbed = ({
+function MessageItemInviteEmbed({
 	embed,
 	isFromSelf,
 	isGroupChat,
@@ -26,7 +26,7 @@ let MessageItemInviteEmbed = ({
 	isGroupChat: boolean;
 	squaredTopCorner: boolean;
 	squaredBottomCorner: boolean;
-}): React.ReactNode => {
+}): React.ReactNode {
 	const t = useTheme();
 	const convo = useConvoActive();
 	const { status, preview, action } = ChatInvite.useChatInvite({
@@ -74,7 +74,7 @@ let MessageItemInviteEmbed = ({
 			</View>
 		</MessageContextProvider>
 	);
-};
+}
 export { MessageItemInviteEmbed };
 
 function MessageItemInviteEmbedBody({

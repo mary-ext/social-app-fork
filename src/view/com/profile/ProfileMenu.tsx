@@ -58,11 +58,11 @@ const isAbortError = (error: unknown) => {
 	return error instanceof Error && error.name === 'AbortError';
 };
 
-let ProfileMenu = ({
+function ProfileMenu({
 	profile,
 }: {
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
-}): React.ReactNode => {
+}): React.ReactNode {
 	const { t: l } = useLingui();
 	const { currentAccount, hasSession } = useSession();
 	const reportDialogControl = useReportDialogControl();
@@ -416,6 +416,6 @@ let ProfileMenu = ({
 			)}
 		</>
 	);
-};
+}
 
 export { ProfileMenu };

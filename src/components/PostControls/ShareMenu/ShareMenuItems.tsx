@@ -30,7 +30,7 @@ interface ShareMenuItemsProps {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 }
 
-let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode => {
+function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode {
 	const { hasSession } = useSession();
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
@@ -139,5 +139,5 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 			<SendViaChatDialog control={sendViaChatControl} onSelectChat={onSelectChatToShareTo} />
 		</>
 	);
-};
+}
 export { ShareMenuItems };

@@ -11,7 +11,7 @@ import { MessageContextProvider } from './MessageContext';
 const BORDER_RADIUS = 20;
 const SQUARED_BORDER_RADIUS = 4;
 
-let MessageItemEmbed = ({
+function MessageItemEmbed({
 	embed,
 	isFromSelf,
 	isGroupChat,
@@ -23,7 +23,7 @@ let MessageItemEmbed = ({
 	isGroupChat: boolean;
 	squaredTopCorner: boolean;
 	squaredBottomCorner: boolean;
-}): React.ReactNode => {
+}): React.ReactNode {
 	const t = useTheme();
 
 	return (
@@ -66,5 +66,5 @@ let MessageItemEmbed = ({
 			</View>
 		</MessageContextProvider>
 	);
-};
+}
 export { MessageItemEmbed };

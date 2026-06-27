@@ -72,7 +72,7 @@ interface PostMetaOpts {
 	onOpenAuthor?: () => void;
 }
 
-let PostMeta = (opts: PostMetaOpts): ReactNode => {
+function PostMeta(opts: PostMetaOpts): ReactNode {
 	const { i18n, t: l } = useLingui();
 
 	const author = useProfileShadow(opts.author);
@@ -156,5 +156,5 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 			</div>
 		</div>
 	);
-};
+}
 export { PostMeta };

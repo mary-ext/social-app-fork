@@ -71,7 +71,7 @@ import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
-let PostMenuItems = ({
+function PostMenuItems({
 	post,
 	postFeedContext,
 	postReqId,
@@ -89,7 +89,7 @@ let PostMenuItems = ({
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
-}): React.ReactNode => {
+}): React.ReactNode {
 	const { hasSession, currentAccount } = useSession();
 	const { t: l } = useLingui();
 	const langPrefs = useLanguagePrefs();
@@ -577,5 +577,5 @@ let PostMenuItems = ({
 			/>
 		</>
 	);
-};
+}
 export { PostMenuItems };
