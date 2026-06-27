@@ -7,7 +7,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -391,7 +391,7 @@ function DefaultProfileCard({
 								<ProfileCard.Handle profile={profile} />
 							) : (
 								<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-									<Trans>{handle} can't be messaged</Trans>
+									{m['components.dialogs.chat.cannotMessage']({ handle })}
 								</Text>
 							)}
 						</View>

@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
@@ -27,7 +26,6 @@ export function VolumeControl({
 	onEndHover: () => void;
 	drawFocus: () => void;
 }) {
-	const { t: l } = useLingui();
 	const [volume, setVolume] = useVideoVolumeState();
 
 	const onVolumeChange = useCallback(
@@ -74,8 +72,8 @@ export function VolumeControl({
 			)}
 			<ControlButton
 				active={muted || volume === 0}
-				activeLabel={l({ message: `Unmute`, context: 'video' })}
-				inactiveLabel={l({ message: `Mute`, context: 'video' })}
+				activeLabel={m['common.action.unmute']()}
+				inactiveLabel={m['common.action.mute']()}
 				activeIcon={MuteIcon}
 				inactiveIcon={UnmuteIcon}
 				onPress={onPressMute}

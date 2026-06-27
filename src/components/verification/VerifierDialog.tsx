@@ -1,5 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
@@ -38,7 +38,6 @@ export function VerifierDialog({
 }
 
 function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const isSelf = profile.did === currentAccount?.did;
@@ -72,10 +71,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 			<div className={css.actions}>
 				<ExternalLinkButton
 					color="primary"
-					label={l({
-						context: `english-only-resource`,
-						message: `Learn more about verification on Bluesky`,
-					})}
+					label={m['components.verification.cta.learnMore']()}
 					size="small"
 					href={urls.website.blog.initialVerificationAnnouncement}
 				>

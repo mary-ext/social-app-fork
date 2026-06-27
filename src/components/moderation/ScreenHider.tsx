@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
@@ -58,7 +57,7 @@ export function ScreenHider({
 				</Text>
 			) : (
 				<Text className={css.body} color="textContrastMedium" size="lg">
-					<Trans>This {screenDescription} has been flagged:</Trans>{' '}
+					{m['components.moderation.label.flaggedPrefix']({ screenDescription })}{' '}
 					<Text color="text" size="lg" weight="semiBold">
 						{desc.name}.{' '}
 					</Text>

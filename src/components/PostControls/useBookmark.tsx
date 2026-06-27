@@ -1,5 +1,4 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
 
@@ -17,17 +16,13 @@ import { m } from '#/paraglide/messages';
  * label, and a press handler; the rendering component owns the button chrome and the filled/outline icon.
  */
 export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
-	const { t: l } = useLingui();
 	const { mutateAsync: bookmark } = useBookmarkMutation();
 	const cleanError = useCleanError();
 	const requireAuth = useRequireAuth();
 
 	const isBookmarked = !!post.viewer?.bookmarked;
 
-	const undoLabel = l({
-		message: `Undo`,
-		context: `Button label to undo saving/removing a post from saved posts.`,
-	});
+	const undoLabel = m['components.postControls.action.undo']();
 
 	const save = async ({ disableUndo }: { disableUndo?: boolean } = {}) => {
 		try {

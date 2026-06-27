@@ -7,7 +7,6 @@ import {
 	LabelFlags,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
 
@@ -141,7 +140,7 @@ function LabelerListHeader({
 				</Text>
 			) : !isSubscribed ? (
 				<Text style={[a.pt_xl, t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-					<Trans>Subscribe to @{labelerInfo.creator.handle} to use these labels:</Trans>
+					{m['screens.profile.hint.subscribePrompt']({ handle: labelerInfo.creator.handle })}
 				</Text>
 			) : null}
 		</View>

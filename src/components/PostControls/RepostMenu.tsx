@@ -1,5 +1,4 @@
 import type { ReactElement } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { useRequireAuth, useSession } from '#/state/session';
 
@@ -31,7 +30,6 @@ export const RepostMenu = ({
 	onQuote: () => void;
 	embeddingDisabled: boolean;
 }) => {
-	const { t: l } = useLingui();
 	const { hasSession } = useSession();
 	const requireAuth = useRequireAuth();
 
@@ -52,14 +50,14 @@ export const RepostMenu = ({
 					label={
 						isReposted
 							? m['components.postControls.action.undoRepost']()
-							: l({ message: `Repost`, context: `action` })
+							: m['components.postControls.action.repost']()
 					}
 					onClick={onRepost}
 				>
 					<Menu.ItemText>
 						{isReposted
 							? m['components.postControls.action.undoRepost']()
-							: l({ message: `Repost`, context: `action` })}
+							: m['components.postControls.action.repost']()}
 					</Menu.ItemText>
 					<Menu.ItemIcon icon={Repost} position="right" />
 				</Menu.Item>

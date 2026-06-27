@@ -754,7 +754,7 @@ function DefaultProfileCard({
 								<ProfileCard.Handle profile={profile} />
 							) : (
 								<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-									<Trans>{handle} can’t be messaged</Trans>
+									{m['components.dms.error.cannotMessage']({ handle })}
 								</Text>
 							)}
 						</View>
@@ -786,7 +786,7 @@ function GroupChatMemberProfileCard({
 						<ProfileCard.Handle profile={profile} />
 					) : (
 						<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-							<Trans>{handle} can’t be added</Trans>
+							{m['components.dms.error.cannotAdd']({ handle })}
 						</Text>
 					)}
 				</View>

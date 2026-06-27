@@ -88,7 +88,7 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 					size="large"
 				>
 					<ButtonText>
-						<Trans>Enable {externalEmbedLabels[source]} only</Trans>
+						{m['components.dialogs.externalMedia.enableOnly']({ source: externalEmbedLabels[source] })}
 					</ButtonText>
 				</Button>
 				<Button

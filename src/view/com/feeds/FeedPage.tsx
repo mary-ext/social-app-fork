@@ -1,7 +1,6 @@
 import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { type NavigationProp, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -47,7 +46,6 @@ export function FeedPage({
 	feedInfo: FeedSourceInfo;
 }) {
 	const { hasSession } = useSession();
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp<AllNavigatorParams>>();
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
@@ -122,7 +120,7 @@ export function FeedPage({
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={colors.white} />}
-					label={l({ message: `New post`, context: 'action' })}
+					label={m['common.action.newPost']()}
 					onClick={onPressCompose}
 				/>
 			)}

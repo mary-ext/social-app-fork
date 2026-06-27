@@ -59,11 +59,10 @@ export function MessagesListGroupInfoPanel({
 	if (members.length === 1) {
 		names = m['screens.messages.title.newChatOne']({ name: createSanitizedDisplayName(members[0]!) });
 	} else if (members.length === 2) {
-		names = (
-			<Trans>
-				New chat with {createSanitizedDisplayName(members[0]!)} and {createSanitizedDisplayName(members[1]!)}
-			</Trans>
-		);
+		names = m['screens.messages.title.newChatTwo']({
+			first: createSanitizedDisplayName(members[0]!),
+			second: createSanitizedDisplayName(members[1]!),
+		});
 	} else if (members.length > 2) {
 		const memberCount = convo.details.memberCount - 2;
 		names = (

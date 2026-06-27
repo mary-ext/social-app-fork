@@ -460,7 +460,7 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 			<div className={css.cta}>
 				{state.currentStep === 'Profiles' && items.length < 8 && (
 					<Text weight="semiBold" size="md" color="textContrastMedium">
-						<Trans>Add {8 - items.length} more to continue</Trans>
+						{m['screens.starterPack.addMore']({ count: 8 - items.length })}
 					</Text>
 				)}
 				<Button

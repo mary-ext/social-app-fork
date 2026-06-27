@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
@@ -205,9 +204,9 @@ function DialogInner({
 			ListHeaderComponent={
 				<Dialog.Header renderRight={renderCloseButton}>
 					<Dialog.HeaderText style={[a.pl_lg, a.pr_5xl, a.text_left, a.flex_1]}>
-						<Trans>
-							Add {sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle, '@'))} to lists
-						</Trans>
+						{m['components.dialogs.action.addToLists']({
+							name: sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle, '@')),
+						})}
 					</Dialog.HeaderText>
 				</Dialog.Header>
 			}

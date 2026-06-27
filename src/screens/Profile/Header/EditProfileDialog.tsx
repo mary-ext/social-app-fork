@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';
 import { cleanError } from '#/lib/strings/errors';
@@ -89,7 +89,6 @@ function DialogInner({
 	cancelHandle: Prompt.PromptHandle;
 	setDirty: (dirty: boolean) => void;
 }) {
-	const { t: l } = useLingui();
 	const verification = useSimpleVerificationState({ profile });
 	const {
 		mutateAsync: updateProfileMutation,
@@ -264,7 +263,7 @@ function DialogInner({
 								<Trans>
 									You are verified. You will lose your verification status if you change your display name.{' '}
 									<InlineLinkText
-										label={l({ message: `Learn more`, context: `english-only-resource` })}
+										label={m['common.action.learnMore']()}
 										to={urls.website.blog.initialVerificationAnnouncement}
 									>
 										{m['components.moderation.action.learnMoreDot']()}

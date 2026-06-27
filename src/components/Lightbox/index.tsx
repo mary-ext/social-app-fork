@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import { Trans } from '@lingui/react/macro';
 import {
 	type LightboxImage,
 	Lightbox as Lb,
@@ -318,9 +317,7 @@ function Chrome() {
 					</div>
 					<div aria-live="polite" aria-atomic="true" className={styles.srOnly}>
 						<Text>
-							<Trans>
-								Image {index + 1} of {images.length}
-							</Trans>
+							{m['components.lightbox.a11y.imagePosition']({ index: index + 1, count: images.length })}
 						</Text>
 					</div>
 				</>

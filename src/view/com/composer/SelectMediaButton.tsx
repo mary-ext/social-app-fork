@@ -269,10 +269,7 @@ export function SelectMediaButton({
 		<ComposerToolbarButton
 			icon={ImageIcon}
 			onClick={() => void onPressSelectMedia()}
-			label={l({
-				message: `Add media to post`,
-				comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
-			})}
+			label={m['view.composer.a11y.addMedia']()}
 			aria-description={l({
 				message: `Opens device gallery to select up to ${plural(MAX_GALLERY_IMAGES, {
 					other: '# images',

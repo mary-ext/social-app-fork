@@ -1,4 +1,4 @@
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 
@@ -20,7 +20,6 @@ import { m } from '#/paraglide/messages';
 import * as styles from './VerificationSettings.css';
 
 export function Screen() {
-	const { t: l } = useLingui();
 	const { data: preferences } = usePreferencesQuery();
 
 	return (
@@ -38,10 +37,7 @@ export function Screen() {
 						<Trans>
 							Verifications on Bluesky work differently than on other platforms.{' '}
 							<ExternalInlineLinkText
-								label={l({
-									context: `english-only-resource`,
-									message: `Learn more`,
-								})}
+								label={m['common.action.learnMore']()}
 								href={urls.website.blog.initialVerificationAnnouncement}
 							>
 								Learn more here.

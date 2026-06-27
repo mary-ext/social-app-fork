@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
@@ -102,7 +101,6 @@ function RequestList({
 	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvoRequests.$output>, Error>;
 	conversations: RequestItem[];
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const navigation = useNavigation<NavigationProp>();
 	const { isWithinSplitView } = useIsWithinSplitView();
@@ -188,10 +186,7 @@ function RequestList({
 							</>
 						) : (
 							<EmptyState
-								message={l({
-									message: `Inbox zero!`,
-									comment: "Title message shown in chat requests inbox when it's empty",
-								})}
+								message={m['screens.messages.empty.inboxZero']()}
 								icon={InboxLargeIcon}
 								iconSize="4xl"
 								messageColor="text"

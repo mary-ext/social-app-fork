@@ -1,5 +1,3 @@
-import { useLingui } from '@lingui/react/macro';
-
 import {
 	useNotificationDeclarationMutation,
 	useNotificationDeclarationQuery,
@@ -27,7 +25,6 @@ export function ActivitySubscriptionDialog({ handle }: { handle: Dialog.DialogHa
 }
 
 function Inner() {
-	const { t: l } = useLingui();
 	const { data: declaration, isError, isPending } = useNotificationDeclarationQuery();
 	const { mutate } = useNotificationDeclarationMutation();
 
@@ -71,7 +68,7 @@ function Inner() {
 							<Toggle.PanelText>{m['screens.settings.option.onlyFollowersIFollow']()}</Toggle.PanelText>
 						</Toggle.Panel>
 					</Toggle.RadioItem>
-					<Toggle.RadioItem label={l({ context: 'enable for', message: `No one` })} value="none">
+					<Toggle.RadioItem label={m['screens.settings.option.noOne']()} value="none">
 						<Toggle.Panel>
 							<Toggle.RadioIndicator />
 							<Toggle.PanelText>{m['screens.messages.option.noOneInvites']()}</Toggle.PanelText>

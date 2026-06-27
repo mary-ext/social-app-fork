@@ -6,7 +6,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -17,6 +16,8 @@ import { canBeAddedToGroup } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export function GroupChatProfileCard({
 	profile,
@@ -58,7 +59,7 @@ export function GroupChatProfileCard({
 									<ProfileCard.Handle profile={profile} />
 								) : (
 									<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-										<Trans>{handle} can’t be added</Trans>
+										{m['components.dms.error.cannotAdd']({ handle })}
 									</Text>
 								)}
 							</View>

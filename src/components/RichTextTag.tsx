@@ -1,5 +1,4 @@
 import { type MouseEvent, useMemo } from 'react';
-import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -104,7 +103,9 @@ export function RichTextTag({
 						onClick={() => navigation.push('Hashtag', { tag })}
 					>
 						<Menu.ItemText>
-							{isCashtag ? <Trans>See {tag} posts</Trans> : <Trans>See #{tag} posts</Trans>}
+							{isCashtag
+								? m['components.richTextTag.action.seePostsTag']({ tag })
+								: m['components.richTextTag.action.seePostsHash']({ tag })}
 						</Menu.ItemText>
 						<Menu.ItemIcon icon={Search} />
 					</Menu.Item>
@@ -114,7 +115,9 @@ export function RichTextTag({
 							onClick={() => navigation.push('Hashtag', { author: authorHandle, tag })}
 						>
 							<Menu.ItemText>
-								{isCashtag ? <Trans>See {tag} posts by user</Trans> : <Trans>See #{tag} posts by user</Trans>}
+								{isCashtag
+									? m['components.richTextTag.action.seePostsTagByUser']({ tag })
+									: m['components.richTextTag.action.seePostsHashByUser']({ tag })}
 							</Menu.ItemText>
 							<Menu.ItemIcon icon={Person} />
 						</Menu.Item>

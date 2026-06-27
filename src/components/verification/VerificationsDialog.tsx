@@ -97,10 +97,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				</Button>
 				<ExternalLinkButton
 					color="secondary"
-					label={l({
-						context: `english-only-resource`,
-						message: `Learn more about verification on Bluesky`,
-					})}
+					label={m['components.verification.cta.learnMore']()}
 					size="small"
 					href={urls.website.blog.initialVerificationAnnouncement}
 				>

@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';
@@ -38,7 +37,6 @@ export function MessagesSettingsScreen(props: Props) {
 
 export function MessagesSettingsScreenInner({}: Props) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({
 		did: currentAccount!.did,
@@ -48,33 +46,30 @@ export function MessagesSettingsScreenInner({}: Props) {
 	const allowMessagesFromOptions: { name: AllowIncoming; label: string }[] = [
 		{
 			name: 'all',
-			label: l({ context: 'allow messages from', message: `Everyone` }),
+			label: m['screens.messages.option.everyoneMessages'](),
 		},
 		{
 			name: 'following',
-			label: l({ context: 'allow messages from', message: `People I follow` }),
+			label: m['screens.messages.option.followingMessages'](),
 		},
 		{
 			name: 'none',
-			label: l({ context: 'allow messages from', message: `No one` }),
+			label: m['screens.messages.option.noOneMessages'](),
 		},
 	];
 
 	const allowGroupInvitesFromOptions: { name: AllowIncoming; label: string }[] = [
 		{
 			name: 'all',
-			label: l({ context: 'allow group chat invites from', message: `Everyone` }),
+			label: m['screens.messages.option.everyoneInvites'](),
 		},
 		{
 			name: 'following',
-			label: l({
-				context: 'allow group chat invites from',
-				message: `People I follow`,
-			}),
+			label: m['screens.messages.option.followingInvites'](),
 		},
 		{
 			name: 'none',
-			label: l({ context: 'allow group chat invites from', message: `No one` }),
+			label: m['screens.messages.option.noOneInvites'](),
 		},
 	];
 
