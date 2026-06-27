@@ -987,7 +987,7 @@ msgstr ""
 msgid "Add {0} to lists"
 msgstr "Add {0} to lists"
 
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:59
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:72
 msgid "Add {displayName} to starter pack"
 msgstr ""
 
@@ -3450,10 +3450,6 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:212
 msgid "Feed options"
 msgstr "Feed options"
-
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:58
-msgid "Feed toggle"
-msgstr ""
 
 #: src/view/com/feeds/MissingFeed.tsx:68
 msgid "Feed unavailable"
@@ -6024,10 +6020,6 @@ msgstr ""
 msgid "People you mention"
 msgstr ""
 
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:58
-msgid "Person toggle"
-msgstr ""
-
 #: src/lib/interests.ts:67
 msgid "Pets"
 msgstr ""
@@ -6520,8 +6512,8 @@ msgstr "Reload to update"
 #: src/components/dialogs/StarterPackDialog.tsx:311
 #: src/components/FeedCard.tsx:225
 #: src/components/ListCard.tsx:254
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:86
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:94
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:87
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:89
 #: src/screens/Bookmarks/index.tsx:197
 #: src/screens/Messages/ConversationSettings/Member.tsx:152
 #: src/screens/Messages/ConversationSettings/prompts.tsx:166
@@ -6544,7 +6536,7 @@ msgstr "Remove {0} from recent searches"
 msgid "Remove {displayName} from group chat"
 msgstr "Remove {displayName} from group chat"
 
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:59
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:72
 msgid "Remove {displayName} from starter pack"
 msgstr ""
 

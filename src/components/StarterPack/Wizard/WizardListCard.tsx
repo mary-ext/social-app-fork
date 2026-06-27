@@ -17,13 +17,10 @@ import { useSession } from '#/state/session';
 
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
-import * as Toggle from '#/components/forms/Toggle';
-import { Checkbox } from '#/components/forms/Toggle';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Toggle from '#/components/web/forms/Toggle';
 
 import * as css from './WizardListCard.css';
 
@@ -50,52 +47,50 @@ function WizardListCard({
 	disabled?: boolean;
 	moderationUi: DisplayRestrictions;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 
-	return (
-		<Toggle.Item
-			name={type === 'user' ? l`Person toggle` : l`Feed toggle`}
-			label={included ? l`Remove ${displayName} from starter pack` : l`Add ${displayName} to starter pack`}
-			value={included}
-			disabled={btnType === 'remove' || disabled}
-			onChange={onPress}
-			style={[
-				a.flex_row,
-				a.align_center,
-				a.px_lg,
-				a.py_md,
-				a.gap_md,
-				a.border_b,
-				t.atoms.border_contrast_low,
-			]}
-		>
-			<UserAvatar size={45} avatar={avatar} moderation={moderationUi} type={type} />
+	const rowContent = (
+		<>
+			<UserAvatar size={40} avatar={avatar} moderation={moderationUi} type={type} />
 			<div className={css.textCol}>
-				<Text weight="semiBold" size="md" numberOfLines={1}>
+				<Text color="textContrastHigh" weight="semiBold" size="md" numberOfLines={1}>
 					{displayName}
 				</Text>
-				<Text color="textContrastMedium" numberOfLines={1}>
+				<Text color="textContrastMedium" size="md_sub" numberOfLines={1}>
 					{subtitle}
 				</Text>
 			</div>
-			{btnType === 'checkbox' ? (
-				<Checkbox />
-			) : !disabled ? (
-				<Button
-					label={l`Remove`}
-					variant="solid"
-					color="secondary"
-					size="small"
-					style={[a.self_center, { marginLeft: 'auto' }]}
-					onPress={onPress}
-				>
+		</>
+	);
+
+	if (btnType === 'checkbox') {
+		return (
+			<Toggle.Item
+				checked={included}
+				onChange={onPress}
+				disabled={disabled}
+				label={included ? l`Remove ${displayName} from starter pack` : l`Add ${displayName} to starter pack`}
+				className={css.row}
+			>
+				{rowContent}
+				<Toggle.CheckboxIndicator />
+			</Toggle.Item>
+		);
+	}
+
+	// the remove variant is a static row with an inline button — not a toggle, so it can't be a Toggle.Item
+	// (that renders a <button>, and the remove control would be an invalid nested <button>).
+	return (
+		<div className={css.row}>
+			{rowContent}
+			{!disabled && (
+				<Button label={l`Remove`} variant="solid" color="secondary" size="small" onClick={onPress}>
 					<ButtonText>
 						<Trans>Remove</Trans>
 					</ButtonText>
 				</Button>
-			) : null}
-		</Toggle.Item>
+			)}
+		</div>
 	);
 }
 
@@ -125,7 +120,7 @@ export function WizardProfileCard({
 	);
 	const displayName = profile.displayName
 		? sanitizeDisplayName(profile.displayName)
-		: `@${sanitizeHandle(profile.handle)}`;
+		: sanitizeHandle(profile.handle);
 
 	const onPress = () => {
 		if (disabled) return;
@@ -142,8 +137,8 @@ export function WizardProfileCard({
 		<WizardListCard
 			type="user"
 			btnType={btnType}
-			displayName={displayName}
-			subtitle={`@${sanitizeHandle(profile.handle)}`}
+			displayName={sanitizeHandle(profile.handle)}
+			subtitle={displayName}
 			onPress={onPress}
 			avatar={profile.avatar}
 			included={included}
