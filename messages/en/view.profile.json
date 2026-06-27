@@ -1,0 +1,62 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"view.profile.action.addToLists": "Add to lists",
+	"view.profile.action.copyDid": "Copy DID",
+	"view.profile.action.copyLink": "Copy link to profile",
+	"view.profile.action.copyUri": "Copy at:// URI",
+	"view.profile.action.editLiveStatus": "Edit live status",
+	"view.profile.action.follow": "Follow account",
+	"view.profile.action.goLive": "Go live",
+	"view.profile.action.goLiveDisabled": "Go live (disabled)",
+	"view.profile.action.report": "Report account",
+	"view.profile.action.searchPosts": "Search posts",
+	"view.profile.action.seeSuggested": "See suggested accounts",
+	"view.profile.action.shareAnyway": "Share anyway",
+	"view.profile.action.unfollow": "Unfollow account",
+	"view.profile.action.viewAvatar": "View the avatar",
+	"view.profile.empty.noFollowers": "No followers yet",
+	"view.profile.empty.noFollowersUser": "This user doesn't have any followers.",
+	"view.profile.empty.notFollowingUser": "This user isn't following anyone.",
+	"view.profile.empty.notFollowingYou": "You are not following anyone yet",
+	"view.profile.followersCount": [
+		{
+			"declarations": [
+				"input count",
+				"input formatted",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{#t0}{formatted}{/t0} follower",
+				"cp=other": "{#t0}{formatted}{/t0} followers"
+			}
+		}
+	],
+	"view.profile.followingCount": [
+		{
+			"declarations": [
+				"input count",
+				"input formatted",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{#t0}{formatted}{/t0} following",
+				"cp=other": "{#t0}{formatted}{/t0} following"
+			}
+		}
+	],
+	"view.profile.hint.loggedInOnly": "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.",
+	"view.profile.label.listBy": "List by {#t0/}",
+	"view.profile.label.listByYou": "List by you",
+	"view.profile.label.modListBy": "Moderation list by {#t0/}",
+	"view.profile.label.modListByYou": "Moderation list by you",
+	"view.profile.label.shareNote": "Note about sharing",
+	"view.profile.label.starterPackBy": "Starter pack by {#t0/}",
+	"view.profile.toast.followed": "Account followed",
+	"view.profile.toast.unfollowed": "Account unfollowed"
+}

@@ -1,0 +1,21 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.verification.a11y.illustration": "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.",
+	"components.verification.about.trustedVerifiers": "Accounts with a scalloped blue check mark {#t0/} can verify others. These trusted verifiers are selected by Bluesky.",
+	"components.verification.action.viewUserVerifications": "View this user's verifications",
+	"components.verification.action.viewYourVerifications": "View your verifications",
+	"components.verification.cta.learnMore": "Learn more about verification on Bluesky",
+	"components.verification.description.notVerified": "This account has one or more attempted verifications, but it is not currently verified.",
+	"components.verification.description.verified": "This account has a checkmark because it's been verified by trusted sources.",
+	"components.verification.error.someInvalid": "Some of your verifications are invalid.",
+	"components.verification.label.trustedVerifierInfo": "Trusted verifier information for {userName}",
+	"components.verification.label.unknownVerifier": "Unknown verifier",
+	"components.verification.label.verifiedBy": "Verified by:",
+	"components.verification.status.userTrustedVerifier": "{userName} is a trusted verifier",
+	"components.verification.status.userVerified": "{userName} is verified",
+	"components.verification.status.youTrustedVerifier": "You are a trusted verifier",
+	"components.verification.status.youVerified": "You are verified",
+	"components.verification.title.userVerifications": "{userName}'s verifications",
+	"components.verification.title.verificationsFor": "Verifications for {userName}",
+	"components.verification.title.yourVerifications": "Your verifications"
+}

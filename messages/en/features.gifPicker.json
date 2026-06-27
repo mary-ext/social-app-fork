@@ -1,0 +1,19 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"features.gifPicker.a11y.filterHappy": "Happy GIFs",
+	"features.gifPicker.a11y.filterLove": "Love GIFs",
+	"features.gifPicker.a11y.filterParty": "Party GIFs",
+	"features.gifPicker.a11y.filterSad": "Sad GIFs",
+	"features.gifPicker.a11y.filterYes": "Yes GIFs",
+	"features.gifPicker.a11y.recents": "Recent GIFs",
+	"features.gifPicker.a11y.search": "Search GIFs",
+	"features.gifPicker.a11y.selectGif": "Select GIF \\\"{title}\\\"",
+	"features.gifPicker.a11y.trending": "Trending GIFs",
+	"features.gifPicker.empty.recents": "No recent GIFs yet. Pick one to see it here.",
+	"features.gifPicker.empty.searchNoResults": "No GIFs found for \\\"{query}\\\".",
+	"features.gifPicker.empty.trending": "No GIFs to show right now. Try again in a moment.",
+	"features.gifPicker.error.loadBody": "There was a problem loading GIFs. Check your connection and try again.",
+	"features.gifPicker.error.loadTitle": "Couldn’t load GIFs",
+	"features.gifPicker.label.loading": "Loading GIFs",
+	"features.gifPicker.label.searchPlaceholder": "Search KLIPY"
+}

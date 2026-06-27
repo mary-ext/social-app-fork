@@ -1,0 +1,110 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.starterPack.a11y.openMenu": "Open starter pack menu",
+	"screens.starterPack.a11y.options": "Starter pack options",
+	"screens.starterPack.action.copyLink": "Copy link to starter pack",
+	"screens.starterPack.action.createList": "Create a list from this starter pack",
+	"screens.starterPack.action.createListFromMembers": "Create list from members",
+	"screens.starterPack.action.delete": "Delete starter pack",
+	"screens.starterPack.action.edit": "Edit starter pack",
+	"screens.starterPack.action.finish": "Finish",
+	"screens.starterPack.action.followAll": "Follow all",
+	"screens.starterPack.action.report": "Report starter pack",
+	"screens.starterPack.action.share": "Share this starter pack",
+	"screens.starterPack.action.skip": "Skip",
+	"screens.starterPack.addMore": "Add {count} more to continue",
+	"screens.starterPack.charCount": "{nameLength} of {NAME_MAX_LENGTH} characters",
+	"screens.starterPack.defaultName": "My starter pack",
+	"screens.starterPack.defaultNameNamed": "{name}'s starter pack",
+	"screens.starterPack.dialog.deleteConfirm": "Are you sure you want to delete this starter pack?",
+	"screens.starterPack.dialog.deleteTitle": "Delete starter pack?",
+	"screens.starterPack.empty.addFeedsHint": "Add some feeds to your starter pack!",
+	"screens.starterPack.empty.justNameHint": "It's just {#t0}{name} {/t0}right now! Add more people to your starter pack by searching above.",
+	"screens.starterPack.empty.justYouHint": "It's just you right now! Add more people to your starter pack by searching above.",
+	"screens.starterPack.empty.noFeeds": "No feeds found. Try searching for something else.",
+	"screens.starterPack.empty.noPeople": "Nobody was found. Try searching for someone else.",
+	"screens.starterPack.error.create": "Failed to create starter pack",
+	"screens.starterPack.error.delete": "Failed to delete starter pack",
+	"screens.starterPack.error.followAll": "An error occurred while trying to follow all",
+	"screens.starterPack.error.invalid": "Starter pack is invalid",
+	"screens.starterPack.error.invalidLong": "The starter pack that you are trying to view is invalid. You may delete this starter pack instead.",
+	"screens.starterPack.error.maxFeeds": "You may only add up to 3 feeds",
+	"screens.starterPack.error.maxProfiles": [
+		{
+			"declarations": [
+				"input STARTER_PACK_MAX_SIZE",
+				"local cp = STARTER_PACK_MAX_SIZE: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
+			}
+		}
+	],
+	"screens.starterPack.error.notFound": "That starter pack could not be found.",
+	"screens.starterPack.error.unableToDelete": "Unable to delete",
+	"screens.starterPack.followAllSuccess": "All accounts have been followed!",
+	"screens.starterPack.hint.searchFeeds": "Search for feeds that you want to suggest to others.",
+	"screens.starterPack.included.manyFeeds": [
+		{
+			"declarations": [
+				"input count",
+				"input first",
+				"input second",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} other are included in your starter pack",
+				"cp=other": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} others are included in your starter pack"
+			}
+		}
+	],
+	"screens.starterPack.included.manyProfiles": [
+		{
+			"declarations": [
+				"input count",
+				"input first",
+				"input second",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} other are included in your starter pack",
+				"cp=other": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} others are included in your starter pack"
+			}
+		}
+	],
+	"screens.starterPack.included.oneProfile": "{#t0}{name}{/t0} is included in your starter pack",
+	"screens.starterPack.included.twoProfiles": "{#t0}{first}{/t0} and{#t1} {/t1}{#t2}{second} {/t2}are included in your starter pack",
+	"screens.starterPack.included.youAndOne": "{#t0}You{/t0} and{#t1} {/t1}{#t2}{name} {/t2}are included in your starter pack",
+	"screens.starterPack.inviteDescription": "Invite your friends to follow your favorite feeds and people",
+	"screens.starterPack.joinedCount": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "{count} people have joined Bluesky via this starter pack!"
+			}
+		}
+	],
+	"screens.starterPack.label.chooseFeeds": "Choose Feeds",
+	"screens.starterPack.label.choosePeople": "Choose People",
+	"screens.starterPack.shareDescription": "My favorite feeds and people - join me!",
+	"screens.starterPack.shareDescriptionNamed": "{name}'s favorite feeds and people - join me!",
+	"screens.starterPack.tagline": "Invites, but personal",
+	"screens.starterPack.title.namePrompt": "What do you want to call your starter pack?",
+	"screens.starterPack.title.named": "{displayName}'s Starter Pack",
+	"screens.starterPack.title.tellMore": "Tell us a little more"
+}

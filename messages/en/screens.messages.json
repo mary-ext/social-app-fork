@@ -1,0 +1,323 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.messages.a11y.addPeople": "Click here to add people to this group chat",
+	"screens.messages.a11y.closeBanner": "Close banner",
+	"screens.messages.a11y.closeRequestsBanner": "Close the incoming requests banner",
+	"screens.messages.a11y.goToConversation": "Go to conversation with {handle}",
+	"screens.messages.a11y.goToGroupChat": "Go to the group chat named \\\"{chatName}\\\"",
+	"screens.messages.a11y.inviteLinkDialog": "Group chat invite link dialog",
+	"screens.messages.a11y.leaveGroupChat": "Leave this group chat",
+	"screens.messages.a11y.lockGroupChat": "Lock this group chat",
+	"screens.messages.a11y.manageInviteLink": "Click here to create or manage an invite link for this group chat",
+	"screens.messages.a11y.messageInput": "Message input field",
+	"screens.messages.a11y.openMemberOptions": "Open chat member options for {displayName}",
+	"screens.messages.a11y.reconnectHint": "Press to attempt reconnection",
+	"screens.messages.a11y.removeMember": "Remove {displayName} from this group chat",
+	"screens.messages.a11y.unlockGroupChat": "Unlock this group chat",
+	"screens.messages.a11y.viewIncomingRequestsGroup": "View incoming group chat requests",
+	"screens.messages.a11y.viewIncomingRequestsJoin": "View incoming requests to join this group chat",
+	"screens.messages.a11y.viewInviteLink": "Click here to view the invite link for this group chat",
+	"screens.messages.a11y.viewInviteLinkHint": "View the invite link for this group chat",
+	"screens.messages.action.accept": "Accept",
+	"screens.messages.action.acceptChatRequest": "Accept chat request",
+	"screens.messages.action.acceptJoin": "Accept",
+	"screens.messages.action.acceptJoinRequest": "Accept join request",
+	"screens.messages.action.acceptRequest": "Accept Request",
+	"screens.messages.action.addMembers": "Add members",
+	"screens.messages.action.appeal": "Appeal this decision",
+	"screens.messages.action.backToChats": "Back to Chats",
+	"screens.messages.action.block": "Block {displayName}",
+	"screens.messages.action.blockOrReport": "Block or report",
+	"screens.messages.action.cancelReply": "Cancel reply",
+	"screens.messages.action.deleteChat": "Delete chat",
+	"screens.messages.action.disable": "Disable",
+	"screens.messages.action.disableLink": "Disable link",
+	"screens.messages.action.editGroupName": "Edit group name",
+	"screens.messages.action.editInviteLink": "Edit invite link",
+	"screens.messages.action.editLinkSettings": "Edit link settings",
+	"screens.messages.action.editName": "Edit name",
+	"screens.messages.action.exportChatData": "Export chat data",
+	"screens.messages.action.follow": "Follow {displayName}",
+	"screens.messages.action.generateInviteLink": "Generate invite link",
+	"screens.messages.action.generateNewInviteLink": "Generate new invite link",
+	"screens.messages.action.generateNewLink": "Generate new link",
+	"screens.messages.action.getStarted": "Get started",
+	"screens.messages.action.ignore": "Ignore",
+	"screens.messages.action.leaveGroup": "Leave group chat",
+	"screens.messages.action.lock": "Lock",
+	"screens.messages.action.lockGroup": "Lock group chat",
+	"screens.messages.action.markAllRead": "Mark all as read",
+	"screens.messages.action.message": "Message",
+	"screens.messages.action.messageUser": "Message {displayName}",
+	"screens.messages.action.muteGroup": "Mute this group chat",
+	"screens.messages.action.reconnect": "Reconnect",
+	"screens.messages.action.reenableInviteLink": "Re-enable invite link",
+	"screens.messages.action.reenableLink": "Re-enable link",
+	"screens.messages.action.reject": "Reject",
+	"screens.messages.action.reloadConversations": "Reload conversations",
+	"screens.messages.action.removeEmbed": "Remove embed",
+	"screens.messages.action.removeFromChat": "Remove from chat",
+	"screens.messages.action.reportGroup": "Report this group chat",
+	"screens.messages.action.rescindRequest": "Rescind request to join group chat",
+	"screens.messages.action.sendMessage": "Send message",
+	"screens.messages.action.unblockUser": "Unblock {displayName}",
+	"screens.messages.action.unlockChat": "Unlock chat",
+	"screens.messages.action.unmuteGroup": "Unmute this group chat",
+	"screens.messages.action.updateInviteLink": "Update invite link",
+	"screens.messages.action.viewIncomingRequests": "View incoming requests",
+	"screens.messages.addedToChat.many": [
+		{
+			"declarations": [
+				"input memberCount",
+				"input member1",
+				"input member2",
+				"local cp = memberCount: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{member1}, {member2} and {memberCount} other added to chat",
+				"cp=other": "{member1}, {member2} and {memberCount} others added to chat"
+			}
+		}
+	],
+	"screens.messages.addedToChat.one": "{name} added to chat",
+	"screens.messages.addedToChat.two": "{member1} and {member2} added to chat",
+	"screens.messages.dialog.disableLinkTitle": "Disable this invite link?",
+	"screens.messages.dialog.leaveConfirm": "Are you sure you want to leave {groupName}?",
+	"screens.messages.dialog.leaveLockWarning": "Leaving this chat will lock it permanently and you won’t be able to rejoin.",
+	"screens.messages.dialog.leaveRejoinWarning": "You won’t be able to rejoin unless you’re invited.",
+	"screens.messages.dialog.lockDescription": "Members can still read chat history but can’t send new messages.",
+	"screens.messages.dialog.lockTitle": "Lock group chat?",
+	"screens.messages.dialog.removeMemberTitle": "Remove {displayName}?",
+	"screens.messages.dialog.removeRejoinWarning": "They won’t be able to rejoin unless you invite them again.",
+	"screens.messages.dialog.rescindConfirm": "Are you sure you want to rescind your request to join {name}?",
+	"screens.messages.empty.inboxTitle": "Inbox empty",
+	"screens.messages.empty.inboxZero": "Inbox zero!",
+	"screens.messages.empty.noInviteLink": "There is no invite link for this group chat.",
+	"screens.messages.empty.noMessages": "No messages yet",
+	"screens.messages.empty.sayHi": "Say hi to someone",
+	"screens.messages.error.acceptChat": "Failed to accept chat",
+	"screens.messages.error.acceptJoinRequest": "Failed to accept join request",
+	"screens.messages.error.addMembers": "Failed to add members",
+	"screens.messages.error.adminOnlyAccept": "Only admins can accept join requests.",
+	"screens.messages.error.adminOnlyIgnore": "Only admins can ignore join requests.",
+	"screens.messages.error.chatsDisabledMod": "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky.",
+	"screens.messages.error.chatsDisabledTitle": "Your chats have been disabled",
+	"screens.messages.error.createInviteLink": "Failed to create invite link",
+	"screens.messages.error.deleteChat": "Failed to delete chat",
+	"screens.messages.error.disableInviteLink": "Failed to disable invite link",
+	"screens.messages.error.editGroupName": "Failed to edit group chat name",
+	"screens.messages.error.editInviteLink": "Failed to edit invite link",
+	"screens.messages.error.enableInviteLink": "Failed to enable invite link",
+	"screens.messages.error.fetchJoinRequests": "Unable to fetch join requests.",
+	"screens.messages.error.fetchPost": "Could not fetch post",
+	"screens.messages.error.generic": "Something went wrong",
+	"screens.messages.error.groupOnlyScreen": "This screen is only available for group conversations.",
+	"screens.messages.error.ignoreJoinRequest": "Failed to ignore join request",
+	"screens.messages.error.leaveGroup": "Failed to leave group chat",
+	"screens.messages.error.loadConversation": "We couldn't load this conversation",
+	"screens.messages.error.loadConversations": "Failed to load conversations",
+	"screens.messages.error.loadJoinRequests": "We couldn’t load this conversation’s join requests",
+	"screens.messages.error.loadPastMessages": "Failed to load past messages",
+	"screens.messages.error.loadSettings": "We couldn’t load this conversation’s settings",
+	"screens.messages.error.lockGroup": "Failed to lock group chat",
+	"screens.messages.error.markAllRead": "Failed to mark all requests as read",
+	"screens.messages.error.memberLimit": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "Group chats can only have a maximum of {count} people."
+			}
+		}
+	],
+	"screens.messages.error.messageTooLong": "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})",
+	"screens.messages.error.muteGroup": "Failed to mute group chat",
+	"screens.messages.error.removeMember": "Failed to remove group chat member",
+	"screens.messages.error.unlockGroup": "Failed to unlock group chat",
+	"screens.messages.error.updateSettings": "Failed to update settings",
+	"screens.messages.error.wrongConversationType": "Wrong kind of conversation",
+	"screens.messages.hint.chooseWhoCanJoin": "Choose who can join this group chat and how.",
+	"screens.messages.hint.disableLinkInfo": "Anyone who has it will no longer be able to join or request to join. You can always create a new one.",
+	"screens.messages.hint.inviteLinkInfo": "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time.",
+	"screens.messages.hint.invitePrivacy": "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone.",
+	"screens.messages.hint.ongoingConversations": "You can continue ongoing conversations regardless of which setting you choose.",
+	"screens.messages.label.addedBy": "Added by {name}",
+	"screens.messages.label.addedByInviteLink": "Added by invite link",
+	"screens.messages.label.addedYou": "{#t0}{displayName}{/t0}{#t1}{#t2/}{/t1}{#t3} added you{/t3}",
+	"screens.messages.label.admin": "Admin",
+	"screens.messages.label.allowDmFrom": "Allow direct messages from",
+	"screens.messages.label.allowInvitesFrom": "Allow group chat invites from",
+	"screens.messages.label.anyoneCanRequest": "Anyone can request to join",
+	"screens.messages.label.anyoneJoinInstantly": "Anyone can join instantly",
+	"screens.messages.label.appealPrompt": "Please explain why you think your chats were incorrectly disabled",
+	"screens.messages.label.chatDisconnected": "This chat was disconnected",
+	"screens.messages.label.chatEnded": "This chat has ended",
+	"screens.messages.label.chatLocked": "This chat is locked",
+	"screens.messages.label.chatLockedMod": "This chat is locked by a moderation action",
+	"screens.messages.label.chatMemberOptions": "Chat member options",
+	"screens.messages.label.createOrModifyLink": "Create or modify an invite link for this group chat",
+	"screens.messages.label.created": "Created {date}",
+	"screens.messages.label.deletedAccountConvo": "This conversation is with a deleted or a deactivated account. Press for options",
+	"screens.messages.label.editGroupNameHint": "Edit this group chat’s name",
+	"screens.messages.label.following": "Following {displayName}",
+	"screens.messages.label.groupLockedOwner": "This group is locked by a moderation action on the owner",
+	"screens.messages.label.ignoreJoinRequest": "Ignore join request",
+	"screens.messages.label.inviteLink": "Invite link",
+	"screens.messages.label.loadingChat": "Loading chat...",
+	"screens.messages.label.locked": "Locked",
+	"screens.messages.label.memberCountRatio": "{memberCount}/{memberLimit}",
+	"screens.messages.label.members": "Members",
+	"screens.messages.label.messageHidden": "This message is hidden",
+	"screens.messages.label.noOneCanSend": "No one can send messages",
+	"screens.messages.label.postLink": "Post link",
+	"screens.messages.label.rejectChatRequest": "Reject chat request",
+	"screens.messages.label.requestedToJoin": "You requested to join",
+	"screens.messages.label.requests": "Requests",
+	"screens.messages.label.whoCanJoin": "Who can join this group chat and how",
+	"screens.messages.label.writeMessage": "Write a message",
+	"screens.messages.option.everyoneInvites": "Everyone",
+	"screens.messages.option.everyoneMessages": "Everyone",
+	"screens.messages.option.followingInvites": "People I follow",
+	"screens.messages.option.followingJoinInstant": "People I follow can join instantly",
+	"screens.messages.option.followingMessages": "People I follow",
+	"screens.messages.option.followingRequest": "People I follow can request to join",
+	"screens.messages.option.noOneInvites": "No one",
+	"screens.messages.option.noOneMessages": "No one",
+	"screens.messages.option.ownerFollowsJoinInstant": "People {ownerName} follows can join instantly",
+	"screens.messages.option.ownerFollowsRequest": "People {ownerName} follows can request to join",
+	"screens.messages.requests.countLabel": [
+		{
+			"declarations": [
+				"input requestCount",
+				"local cp = requestCount: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{requestCount} request",
+				"cp=other": "{requestCount} requests"
+			}
+		}
+	],
+	"screens.messages.requests.countOverflow": "{requestCount}+ requests",
+	"screens.messages.requests.newCount": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} new join request",
+				"cp=other": "{count} new join requests"
+			}
+		}
+	],
+	"screens.messages.requests.newJoinCount": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} new join request",
+				"cp=other": "{count} new join requests"
+			}
+		}
+	],
+	"screens.messages.requests.newOverThreshold": "{JOIN_REQUESTS_THRESHOLD}+ new join requests",
+	"screens.messages.requests.shortCount": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} request",
+				"cp=other": "{count} requests"
+			}
+		}
+	],
+	"screens.messages.requests.tenPlus": "10+",
+	"screens.messages.requests.tenPlusRequests": "10+ requests",
+	"screens.messages.requests.toJoinCount": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"count",
+				"cp"
+			],
+			"match": {
+				"count=0, cp=*": "No requests to join",
+				"count=*, cp=one": "{count} request to join",
+				"count=*, cp=other": "{count} requests to join"
+			}
+		}
+	],
+	"screens.messages.requests.toJoinOverflow": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "{count}+ requests to join"
+			}
+		}
+	],
+	"screens.messages.title.chatRequests": "Chat requests",
+	"screens.messages.title.chatSettings": "Chat Settings",
+	"screens.messages.title.chats": "Chats",
+	"screens.messages.title.newChatMany": [
+		{
+			"declarations": [
+				"input memberCount",
+				"input first",
+				"input second",
+				"local cp = memberCount: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "New chat with {first}, {second}, and {memberCount} more.",
+				"cp=other": "New chat with {first}, {second}, and {memberCount} more."
+			}
+		}
+	],
+	"screens.messages.title.newChatOne": "New chat with {name}",
+	"screens.messages.title.newChatTwo": "New chat with {first} and {second}",
+	"screens.messages.toast.chatDeleted": "Chat deleted",
+	"screens.messages.toast.copied": "Copied!",
+	"screens.messages.toast.groupLocked": "Group chat locked",
+	"screens.messages.toast.groupMuted": "Group chat muted",
+	"screens.messages.toast.groupNameUpdated": "Group chat name updated",
+	"screens.messages.toast.groupUnlocked": "Group chat unlocked",
+	"screens.messages.toast.groupUnmuted": "Group chat unmuted",
+	"screens.messages.toast.markedAllRead": "Marked all as read",
+	"screens.messages.toast.requestApproved": "Request approved.",
+	"screens.messages.toast.requestIgnored": "Request ignored."
+}

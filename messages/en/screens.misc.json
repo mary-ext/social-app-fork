@@ -1,0 +1,68 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.bookmarks.a11y.backHome": "Button to go back to the home timeline",
+	"screens.bookmarks.empty.title": "Nothing saved yet",
+	"screens.bookmarks.label.deletedPost": "This post was deleted by its author",
+	"screens.feeds.action.addFollowing": "Add the default feed of only people you follow",
+	"screens.feeds.action.useRecommended": "Use recommended",
+	"screens.feeds.empty.missingFollowing": "Looks like you're missing a following feed. {#t0}Click here to add one.{/t0}",
+	"screens.feeds.empty.noSaved": "Looks like you haven't saved any feeds! Use our recommendations or browse more below.",
+	"screens.hashtag.empty.noResults": "We couldn't find any results for that tag.",
+	"screens.hashtag.label.fromAuthor": "From @{sanitizedAuthor}",
+	"screens.home.action.addRecommendedFeeds": "Add recommended feeds",
+	"screens.home.action.browseOtherFeeds": "Browse other feeds",
+	"screens.home.empty.unpinned": "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄",
+	"screens.log.a11y.openDetails": "Opens additional details for a debug entry",
+	"screens.log.action.viewEntry": "View debug entry",
+	"screens.moderationInteractionSettings.error.save": "Failed to save settings. Please try again.",
+	"screens.moderationInteractionSettings.hint.defaults": "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer.",
+	"screens.moderationInteractionSettings.toast.saved": "Settings saved",
+	"screens.notifications.empty.noPosts": "No posts here",
+	"screens.post.count.likes": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} like",
+				"cp=other": "{count} likes"
+			}
+		}
+	],
+	"screens.post.count.quotes": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} quote",
+				"cp=other": "{count} quotes"
+			}
+		}
+	],
+	"screens.post.count.reposts": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} repost",
+				"cp=other": "{count} reposts"
+			}
+		}
+	],
+	"screens.post.label.repostedBy": "Reposted By",
+	"screens.topic.empty.noResults": "We couldn't find any results for that topic."
+}

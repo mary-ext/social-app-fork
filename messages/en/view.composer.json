@@ -1,0 +1,264 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"view.composer.a11y.acceptLanguageSuggestion": "Accept this language suggestion",
+	"view.composer.a11y.addMedia": "Add media to post",
+	"view.composer.a11y.addMediaHint": [
+		{
+			"declarations": [
+				"input MAX_GALLERY_IMAGES",
+				"local cp = MAX_GALLERY_IMAGES: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "Opens device gallery to select up to {MAX_GALLERY_IMAGES} images, or a single video or GIF."
+			}
+		}
+	],
+	"view.composer.a11y.declineLanguageSuggestion": "Decline this language suggestion",
+	"view.composer.a11y.dismissError": "Dismiss error",
+	"view.composer.a11y.expandReply": "Expand or collapse the full post you are replying to",
+	"view.composer.a11y.opensCaptionsDialog": "Opens captions and alt text dialog",
+	"view.composer.a11y.opensDraft": "Opens this draft in the composer",
+	"view.composer.a11y.opensGifPicker": "Opens the GIF picker dialog",
+	"view.composer.a11y.postLanguageSelection": "Post language selection",
+	"view.composer.a11y.publishPost": "Publish post",
+	"view.composer.a11y.publishPosts": "Publish posts",
+	"view.composer.a11y.publishReplies": "Publish replies",
+	"view.composer.a11y.publishReply": "Publish reply",
+	"view.composer.a11y.selectGif": "Select GIF",
+	"view.composer.a11y.selectLanguage": "Select {langName}",
+	"view.composer.action.addAltText": "Add alt text",
+	"view.composer.action.addAltTextOptional": "Add alt text (optional)",
+	"view.composer.action.addContentWarning": "Add a content warning",
+	"view.composer.action.addPost": "Add another post",
+	"view.composer.action.addPostToThread": "Add another post to thread",
+	"view.composer.action.editImage": "Edit image",
+	"view.composer.action.keepEditing": "Keep editing",
+	"view.composer.action.openDraft": "Open draft",
+	"view.composer.action.post": "Post",
+	"view.composer.action.postAll": "Post All",
+	"view.composer.action.postAnyway": "Post anyway",
+	"view.composer.action.removeAttachment": "Remove attachment",
+	"view.composer.action.removeCaption": "Remove caption file",
+	"view.composer.action.removeImage": "Remove image",
+	"view.composer.action.saveDraft": "Save draft",
+	"view.composer.action.selectCaptionFile": "Select caption file (.vtt)",
+	"view.composer.action.view": "View",
+	"view.composer.altText.charCount": "{length} of {MAX_ALT_TEXT} characters",
+	"view.composer.altText.charCountOverLimit": "{length} of {MAX_ALT_TEXT} characters, over the limit",
+	"view.composer.contentWarning.disturbingDesc": "Media that may be disturbing or inappropriate for some audiences.",
+	"view.composer.contentWarning.nudityDesc": "Artistic or non-erotic nudity.",
+	"view.composer.contentWarning.pornDesc": "Pictures meant for adults.",
+	"view.composer.count.morePosts": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "1 more post",
+				"cp=other": "{count} more posts"
+			}
+		}
+	],
+	"view.composer.dialog.discardDraftTitle": "Discard draft?",
+	"view.composer.dialog.discardPostMessage": "Are you sure you'd like to discard this post?",
+	"view.composer.dialog.discardPostTitle": "Discard post?",
+	"view.composer.dialog.draftDeleteWarning": "This draft will be permanently deleted.",
+	"view.composer.dialog.draftTooLongDiscard": "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?",
+	"view.composer.dialog.saveChangesTitle": "Save changes?",
+	"view.composer.dialog.saveDraftBeforeViewing": "Would you like to save this as a draft before viewing your drafts?",
+	"view.composer.dialog.saveDraftTitle": "Save draft?",
+	"view.composer.dialog.saveDraftToEdit": "Would you like to save this as a draft to edit later?",
+	"view.composer.dialog.skipEmptyTitle": "Skip empty posts?",
+	"view.composer.dialog.threadEmptyPosts": "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.",
+	"view.composer.dialog.unsavedDraftSave": "You have unsaved changes to this draft, would you like to save them?",
+	"view.composer.dialog.unsavedSaveBeforeViewing": "You have unsaved changes. Would you like to save them before viewing your drafts?",
+	"view.composer.empty.drafts": "No drafts yet",
+	"view.composer.empty.manyThoughts": "So many thoughts, you should post one",
+	"view.composer.error.altTextOverLimit": "Alt text is over the character limit.",
+	"view.composer.error.altTextTooLong": [
+		{
+			"declarations": [
+				"input MAX_ALT_TEXT",
+				"local cp = MAX_ALT_TEXT: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "Alt text must be less than {MAX_ALT_TEXT} characters."
+			}
+		}
+	],
+	"view.composer.error.captionLanguageRequired": "Ensure you have selected a language for each caption file.",
+	"view.composer.error.draftTooLong": [
+		{
+			"declarations": [
+				"input MAX_DRAFT_GRAPHEME_LENGTH",
+				"local cp = MAX_DRAFT_GRAPHEME_LENGTH: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "One or more posts are too long to save as a draft. The maximum number of characters is {MAX_DRAFT_GRAPHEME_LENGTH} character.",
+				"cp=other": "One or more posts are too long to save as a draft. The maximum number of characters is {MAX_DRAFT_GRAPHEME_LENGTH} characters."
+			}
+		}
+	],
+	"view.composer.error.draftTooLongFixed": "You can only save drafts up to 1000 characters.",
+	"view.composer.error.emailConfirmRequired": "Please confirm your email address to upload videos.",
+	"view.composer.error.fileTooLarge": "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB.",
+	"view.composer.error.fileUnsupported": "One or more of your selected files are not supported.",
+	"view.composer.error.galleryLimit": [
+		{
+			"declarations": [
+				"input count",
+				"input accepted",
+				"input total",
+				"input MAX_GALLERY_IMAGES",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "Only {accepted} of {total} image added; limit is {MAX_GALLERY_IMAGES}",
+				"cp=other": "Only {accepted} of {total} images added; limit is {MAX_GALLERY_IMAGES}"
+			}
+		}
+	],
+	"view.composer.error.gifAltMissing": "One or more GIFs is missing alt text.",
+	"view.composer.error.imageAltMissing": "One or more images is missing alt text.",
+	"view.composer.error.imagesNotAdded": [
+		{
+			"declarations": [
+				"input failed",
+				"local cp = failed: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "An image couldn't be added to your post.",
+				"cp=other": "{failed} images couldn't be added to your post."
+			}
+		}
+	],
+	"view.composer.error.maxDrafts": "You've reached the maximum number of drafts",
+	"view.composer.error.maxImagesAdd": [
+		{
+			"declarations": [
+				"input MAX_GALLERY_IMAGES",
+				"local cp = MAX_GALLERY_IMAGES: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "You can only add up to {MAX_GALLERY_IMAGES} images per post"
+			}
+		}
+	],
+	"view.composer.error.maxImagesSelect": [
+		{
+			"declarations": [
+				"input MAX_GALLERY_IMAGES",
+				"local cp = MAX_GALLERY_IMAGES: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "You can select up to {MAX_GALLERY_IMAGES} images in total."
+			}
+		}
+	],
+	"view.composer.error.multipleMediaTypes": "Selecting multiple media types is not supported.",
+	"view.composer.error.oneGifOnly": "You can only select one GIF at a time.",
+	"view.composer.error.oneVideoOnly": "You can only select one video at a time.",
+	"view.composer.error.pasteImage": "The pasted image couldn't be added to your post.",
+	"view.composer.error.quotesDisabled": "This post's author has disabled quote posts.",
+	"view.composer.error.replyDeleted": "We're sorry! The post you are replying to has been deleted.",
+	"view.composer.error.saveDraft": "Failed to save draft",
+	"view.composer.error.unsupportedVideoType": "Unsupported video type: {mimeType}",
+	"view.composer.error.videoAccountTooYoung": "Your account is not yet old enough to upload videos. Please try again later.",
+	"view.composer.error.videoAltMissing": "One or more videos is missing alt text.",
+	"view.composer.error.videoCompress": "An error occurred while compressing the video.",
+	"view.composer.error.videoDailyLimitBytes": "You've reached your daily limit for video uploads (too many bytes)",
+	"view.composer.error.videoDailyLimitCount": "You've reached your daily limit for video uploads (too many videos)",
+	"view.composer.error.videoNotAllowed": "You are not allowed to upload videos.",
+	"view.composer.error.videoPermCheckFailed": "We were unable to determine if you are allowed to upload videos. Please try again.",
+	"view.composer.error.videoProcess": "Could not process your video",
+	"view.composer.error.videoProcessFailed": "Video failed to process",
+	"view.composer.error.videoTooLarge": "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.",
+	"view.composer.error.videoTooLong": "Videos must be less than 3 minutes long.",
+	"view.composer.error.videoUpload": "An error occurred while uploading the video. {message}",
+	"view.composer.error.videoUploadConnection": "An error occurred while uploading the video. Please check your internet connection and try again.",
+	"view.composer.error.videoWaitlist": "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!",
+	"view.composer.error.vttOnly": "Only WebVTT (.vtt) files are supported",
+	"view.composer.gallery.moreCount": "+{count}",
+	"view.composer.hint.altText": "Alt text describes images for blind and low-vision users, and helps give context to everyone.",
+	"view.composer.hint.contentWarnings": "Please add any content warning labels that are applicable for the media you are posting.",
+	"view.composer.hint.maxLength": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "Compose posts up to {count} characters in length"
+			}
+		}
+	],
+	"view.composer.label.adult": "Adult",
+	"view.composer.label.adultContentLabels": "Adult Content labels",
+	"view.composer.label.anyoneCanInteract": "Anyone can interact",
+	"view.composer.label.captions": "Captions (.vtt)",
+	"view.composer.label.descriptiveAltText": "Descriptive alt text",
+	"view.composer.label.dropToAddImages": "Drop to add images",
+	"view.composer.label.interactionLimited": "Interaction limited",
+	"view.composer.label.jobId": "Job ID: {jobId}",
+	"view.composer.label.mediaStoredOn": "Media stored on {deviceName}",
+	"view.composer.label.mediaStoredOtherDevice": "Media stored on another device",
+	"view.composer.label.missingMedia": "Missing media",
+	"view.composer.label.nudity": "Nudity",
+	"view.composer.label.otherLabels": "Other labels",
+	"view.composer.label.porn": "Porn",
+	"view.composer.label.sexualContent": "Sexual activity or erotic nudity.",
+	"view.composer.label.suggestive": "Suggestive",
+	"view.composer.lang.replyPrompt": "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in {#t0}{suggestedLanguageName}{/t0}?",
+	"view.composer.language.chooseTitle": "Choose post languages",
+	"view.composer.language.more": "More languages...",
+	"view.composer.language.prompt": "Are you writing in {#t0}{suggestedLanguageName}{/t0}?",
+	"view.composer.language.select": "Select language...",
+	"view.composer.language.selectHint": "Select up to 3 languages used in this post",
+	"view.composer.language.selectPost": "Select post language",
+	"view.composer.status.compressingGif": "Compressing GIF...",
+	"view.composer.status.compressingVideo": "Compressing video...",
+	"view.composer.status.gifUploaded": "GIF uploaded",
+	"view.composer.status.labelsAdded": "Labels added",
+	"view.composer.status.loadingDrafts": "Loading drafts",
+	"view.composer.status.postSent": "Your post was sent",
+	"view.composer.status.postsSent": "Your posts were sent",
+	"view.composer.status.processingGif": "Processing GIF...",
+	"view.composer.status.processingVideo": "Processing video...",
+	"view.composer.status.publishing": "Publishing",
+	"view.composer.status.replySent": "Your reply was sent",
+	"view.composer.status.uploadingGif": "Uploading GIF...",
+	"view.composer.status.uploadingVideo": "Uploading video...",
+	"view.composer.status.videoUploaded": "Video uploaded",
+	"view.composer.title.captionsAndAltText": "Captions & alt text",
+	"view.composer.title.contentWarnings": "Content warnings",
+	"view.composer.title.drafts": "Drafts",
+	"view.composer.title.videoSettings": "Video settings"
+}

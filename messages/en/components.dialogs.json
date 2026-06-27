@@ -1,0 +1,186 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.dialogs.account.alreadySignedIn": "Already signed in as @{handle}",
+	"components.dialogs.account.back": "Back to your accounts",
+	"components.dialogs.account.chooseDescription": "Choose an account to sign in with.",
+	"components.dialogs.account.handleDidDescription": "Enter your handle or DID.",
+	"components.dialogs.account.handleDidLabel": "Handle or DID",
+	"components.dialogs.account.handlePlaceholder": "e.g. alice.bsky.social",
+	"components.dialogs.account.signInAnother": "Sign in to another account",
+	"components.dialogs.action.addToLists": "Add {name} to lists",
+	"components.dialogs.action.adding": "Adding",
+	"components.dialogs.action.noThanks": "No thanks",
+	"components.dialogs.action.shareLink": "Share link",
+	"components.dialogs.action.visitSite": "Visit site",
+	"components.dialogs.chat.a11ySelect": "Select chat \\\"{name}\\\"",
+	"components.dialogs.chat.cannotMessage": "{handle} can't be messaged",
+	"components.dialogs.chat.groupLocked": "Group is locked",
+	"components.dialogs.count.member": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} member",
+				"cp=other": "{count} members"
+			}
+		}
+	],
+	"components.dialogs.count.more": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "+{count} more"
+			}
+		}
+	],
+	"components.dialogs.empty.lists": "You don't have any lists yet.",
+	"components.dialogs.empty.starterPacks": "You have no starter packs.",
+	"components.dialogs.error.loadProfiles": "Failed to load profiles",
+	"components.dialogs.error.network": "We're having network issues, try again",
+	"components.dialogs.error.signinStart": "Unable to start sign in. Please try again.",
+	"components.dialogs.externalMedia.enableOnly": "Enable {source} only",
+	"components.dialogs.externalMedia.enableThisSource": "Enable this source only",
+	"components.dialogs.externalMedia.enableTitle": "Enable external media",
+	"components.dialogs.externalMedia.prompt": "This content is hosted by {source}. Do you want to enable external media?",
+	"components.dialogs.externalMedia.title": "External Media",
+	"components.dialogs.interaction.allowQuotes": "Allow quote posts",
+	"components.dialogs.interaction.disableQuotes": "Disable quote posts of this post",
+	"components.dialogs.interaction.editTitle": "Edit post interaction settings",
+	"components.dialogs.interaction.enableQuotes": "Enable quote posts of this post",
+	"components.dialogs.interaction.loading": "Loading post interaction settings...",
+	"components.dialogs.interaction.title": "Post interaction settings",
+	"components.dialogs.label.defaultSettings": "These are your default settings",
+	"components.dialogs.label.duration": "Duration",
+	"components.dialogs.label.followers": "Your followers",
+	"components.dialogs.label.name": "Name",
+	"components.dialogs.label.tagsOnly": "Tags only",
+	"components.dialogs.label.textAndTags": "Text & tags",
+	"components.dialogs.label.userList": "User list",
+	"components.dialogs.label.userLists": "User lists",
+	"components.dialogs.language.all": "All languages",
+	"components.dialogs.language.chooseTitle": "Choose languages",
+	"components.dialogs.language.search": "Search languages",
+	"components.dialogs.language.selectTitle": "Select languages",
+	"components.dialogs.leaving.title": "Leaving Bluesky",
+	"components.dialogs.link.destinationPrompt": "This link is taking you to the following website:",
+	"components.dialogs.list.a11yShowSelect": "Show lists of users to select from",
+	"components.dialogs.list.addPeopleTitle": "Add people to list",
+	"components.dialogs.list.addUserTitle": "Add user to list",
+	"components.dialogs.list.addedToast": "Added to list",
+	"components.dialogs.list.addingMembers": "Adding members to list...",
+	"components.dialogs.list.avatarAlt": "List avatar",
+	"components.dialogs.list.createFromStarterPack": "Create list from starter pack",
+	"components.dialogs.list.createModeration": "Create moderation list",
+	"components.dialogs.list.createOrEdit": "Create or edit list",
+	"components.dialogs.list.createTitle": "Create list",
+	"components.dialogs.list.createUser": "Create user list",
+	"components.dialogs.list.createdPartialError": "List created, but failed to add some members",
+	"components.dialogs.list.descriptionLabel": "List description",
+	"components.dialogs.list.descriptionPlaceholder": "e.g. The posters who never miss.",
+	"components.dialogs.list.descriptionTooLong": [
+		{
+			"declarations": [
+				"input DESCRIPTION_MAX_GRAPHEMES",
+				"local cp = DESCRIPTION_MAX_GRAPHEMES: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "List description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
+			}
+		}
+	],
+	"components.dialogs.list.editModeration": "Edit moderation list",
+	"components.dialogs.list.editUser": "Edit user list",
+	"components.dialogs.list.hide": "Hide lists",
+	"components.dialogs.list.loadError": "An error occurred while loading your lists :/",
+	"components.dialogs.list.loading": "Loading lists...",
+	"components.dialogs.list.moderationCreatedToast": "Moderation list created",
+	"components.dialogs.list.moderationDescriptionPlaceholder": "e.g. Users that repeatedly reply with ads.",
+	"components.dialogs.list.moderationLabel": "Moderation list",
+	"components.dialogs.list.moderationNamePlaceholder": "e.g. Spammers",
+	"components.dialogs.list.moderationUpdatedToast": "Moderation list updated",
+	"components.dialogs.list.nameLabel": "List name",
+	"components.dialogs.list.namePlaceholder": "e.g. Great Posters",
+	"components.dialogs.list.nameRequired": "List must have a name.",
+	"components.dialogs.list.nameTooLong": [
+		{
+			"declarations": [
+				"input DISPLAY_NAME_MAX_GRAPHEMES",
+				"local cp = DISPLAY_NAME_MAX_GRAPHEMES: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "List name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
+			}
+		}
+	],
+	"components.dialogs.list.owner": "Owner",
+	"components.dialogs.list.removeUser": "Remove user from list",
+	"components.dialogs.list.removedToast": "Removed from list",
+	"components.dialogs.list.selectFromYours": "Select from your lists",
+	"components.dialogs.list.selectFromYoursCount": [
+		{
+			"declarations": [
+				"input numberOfListsSelected",
+				"local cp = numberOfListsSelected: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "Select from your lists {#t0}({numberOfListsSelected} selected){/t0}"
+			}
+		}
+	],
+	"components.dialogs.mutedWord.addSubmit": "Add muted word with chosen settings",
+	"components.dialogs.mutedWord.addTitle": "Add a muted word or tag",
+	"components.dialogs.mutedWord.description": "Mute one word, phrase, @username or hashtag.",
+	"components.dialogs.mutedWord.excludeFollows": "Do not apply this muted word to users you follow",
+	"components.dialogs.mutedWord.excludeFollowsLabel": "Exclude users you follow",
+	"components.dialogs.mutedWord.inputPlaceholder": "Enter a word or phrase",
+	"components.dialogs.mutedWord.invalidError": "Please enter a valid word, tag, or phrase to mute",
+	"components.dialogs.mutedWord.muteIn": "Mute in",
+	"components.dialogs.mutedWord.saveOptions": "Save these options for next time",
+	"components.dialogs.mutedWord.selectDuration": "Select how long to mute this word for",
+	"components.dialogs.mutedWord.selectTargets": "Select what content this muted word should apply to",
+	"components.dialogs.reply.advancedDescription": "Set precisely which groups of people can reply to your post",
+	"components.dialogs.reply.allowAnyone": "Allow anyone to reply",
+	"components.dialogs.reply.allowFollowers": "Allow your followers to reply",
+	"components.dialogs.reply.allowFollows": "Allow people you follow to reply",
+	"components.dialogs.reply.allowList": "Allow users in {name} to reply",
+	"components.dialogs.reply.allowMentions": "Allow people you mention to reply",
+	"components.dialogs.reply.anyone": "Anyone",
+	"components.dialogs.reply.authorControlled": "Reply settings are chosen by the author of the thread",
+	"components.dialogs.reply.description": "Set who can reply to your post",
+	"components.dialogs.reply.disableAll": "Disable replies entirely",
+	"components.dialogs.reply.nobody": "Nobody",
+	"components.dialogs.reply.peopleYouFollow": "People you follow",
+	"components.dialogs.reply.peopleYouMention": "People you mention",
+	"components.dialogs.signin.description": "Sign in with your Bluesky account.",
+	"components.dialogs.signin.title": "Sign in to Bluesky",
+	"components.dialogs.starterPack.addError": "Failed to add to starter pack",
+	"components.dialogs.starterPack.addedToast": "Added to starter pack",
+	"components.dialogs.starterPack.cloneDescription": "This will create a new list with the same name, description, and members as this starter pack.",
+	"components.dialogs.starterPack.copyNotice": "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy.",
+	"components.dialogs.starterPack.createTitle": "Create starter pack",
+	"components.dialogs.starterPack.newTitle": "New starter pack",
+	"components.dialogs.starterPack.removeError": "Failed to remove from starter pack",
+	"components.dialogs.starterPack.removedToast": "Removed from starter pack",
+	"components.dialogs.toast.listCreated": "User list created",
+	"components.dialogs.toast.listUpdated": "User list updated"
+}

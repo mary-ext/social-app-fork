@@ -1,0 +1,14 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.activityNotifications.cta.keepPosted": "Keep me posted",
+	"components.activityNotifications.error.save": "Could not save changes: {error}",
+	"components.activityNotifications.hint.activity": "Get notified of this account’s activity",
+	"components.activityNotifications.hint.newPosts": "Get notified of new posts from {name}",
+	"components.activityNotifications.hint.whenPosts": "Get notified when {name} posts",
+	"components.activityNotifications.option.postsAndReplies": "Posts and replies",
+	"components.activityNotifications.option.postsOnly": "Posts only",
+	"components.activityNotifications.title": "Subscribe to account activity",
+	"components.activityNotifications.toast.saved": "Changes saved",
+	"components.activityNotifications.toast.subscribed": "You'll start receiving notifications for {handle}!",
+	"components.activityNotifications.toast.unsubscribed": "You will no longer receive notifications for {handle}"
+}

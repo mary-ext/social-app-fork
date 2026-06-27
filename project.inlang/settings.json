@@ -1,0 +1,57 @@
+{
+	"$schema": "https://inlang.com/schema/project-settings",
+	"baseLocale": "en",
+	"locales": [
+		"en"
+	],
+	"modules": [
+		"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4.4.0/dist/index.js"
+	],
+	"plugin.inlang.messageFormat": {
+		"pathPattern": [
+			"./messages/{locale}/common.json",
+			"./messages/{locale}/components.activityNotifications.json",
+			"./messages/{locale}/components.dialogs.json",
+			"./messages/{locale}/components.dms.json",
+			"./messages/{locale}/components.emojiPicker.json",
+			"./messages/{locale}/components.intents.json",
+			"./messages/{locale}/components.lightbox.json",
+			"./messages/{locale}/components.misc.json",
+			"./messages/{locale}/components.moderation.json",
+			"./messages/{locale}/components.newskieDialog.json",
+			"./messages/{locale}/components.post.json",
+			"./messages/{locale}/components.postControls.json",
+			"./messages/{locale}/components.richTextTag.json",
+			"./messages/{locale}/components.starterPack.json",
+			"./messages/{locale}/components.verification.json",
+			"./messages/{locale}/components.web.json",
+			"./messages/{locale}/components.whoCanReply.json",
+			"./messages/{locale}/features.gifPicker.json",
+			"./messages/{locale}/features.liveNow.json",
+			"./messages/{locale}/lib.json",
+			"./messages/{locale}/navigation.json",
+			"./messages/{locale}/screens.list.json",
+			"./messages/{locale}/screens.messages.json",
+			"./messages/{locale}/screens.misc.json",
+			"./messages/{locale}/screens.moderation.json",
+			"./messages/{locale}/screens.postThread.json",
+			"./messages/{locale}/screens.profile.json",
+			"./messages/{locale}/screens.profileList.json",
+			"./messages/{locale}/screens.savedFeeds.json",
+			"./messages/{locale}/screens.search.json",
+			"./messages/{locale}/screens.settings.json",
+			"./messages/{locale}/screens.starterPack.json",
+			"./messages/{locale}/state.json",
+			"./messages/{locale}/view.action.json",
+			"./messages/{locale}/view.auth.json",
+			"./messages/{locale}/view.composer.json",
+			"./messages/{locale}/view.empty.json",
+			"./messages/{locale}/view.feeds.json",
+			"./messages/{locale}/view.label.json",
+			"./messages/{locale}/view.misc.json",
+			"./messages/{locale}/view.notifications.json",
+			"./messages/{locale}/view.posts.json",
+			"./messages/{locale}/view.profile.json"
+		]
+	}
+}

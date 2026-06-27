@@ -1,0 +1,13 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"view.auth.a11y.readBlog": "Read the Bluesky blog",
+	"view.auth.a11y.seeJobs": "See jobs at Bluesky",
+	"view.auth.a11y.signInHint": "Opens flow to sign in to your existing Bluesky account",
+	"view.auth.cta.learnMore": "Learn more about Bluesky",
+	"view.auth.error.accountInactive": "This account is not active.",
+	"view.auth.error.signInFailed": "Sign in failed. Please try again.",
+	"view.auth.label.blog": "Blog",
+	"view.auth.label.business": "Business",
+	"view.auth.label.jobs": "Jobs",
+	"view.auth.label.signingIn": "Signing in..."
+}

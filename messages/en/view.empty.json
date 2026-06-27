@@ -1,0 +1,10 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"view.empty.blocked": "You have not blocked any accounts yet. To block an account, go to their profile and select \\\"Block account\\\" from the menu on their account.",
+	"view.empty.media": "No media yet",
+	"view.empty.muted": "You have not muted any accounts yet. To mute an account, go to their profile and select \\\"Mute account\\\" from the menu on their account.",
+	"view.empty.noResults": "No results found for \\\"{query}\\\"",
+	"view.empty.replies": "No replies yet",
+	"view.empty.starterPacks": "No Starter Packs yet",
+	"view.empty.videos": "No video posts yet"
+}

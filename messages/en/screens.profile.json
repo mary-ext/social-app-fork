@@ -1,0 +1,156 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.profile.a11y.bannerPlaceholder": "Profile banner placeholder",
+	"screens.profile.a11y.feedMenu": "Feed menu",
+	"screens.profile.a11y.learnGermDm": "Learn more about your Germ DM link",
+	"screens.profile.a11y.openFeedInfo": "Open feed info screen",
+	"screens.profile.a11y.openFeedOptions": "Open feed options menu",
+	"screens.profile.a11y.viewAvatar": "View {handle}'s avatar",
+	"screens.profile.a11y.viewBanner": "View profile banner",
+	"screens.profile.a11y.viewProfile": "View {handle}'s profile",
+	"screens.profile.action.disconnectGermDm": "Disconnect Germ DM",
+	"screens.profile.action.editProfile": "Edit profile",
+	"screens.profile.action.gotIt": "Got it",
+	"screens.profile.action.likeFeed": "Like this feed",
+	"screens.profile.action.likeLabeler": "Like this labeler",
+	"screens.profile.action.ok": "OK",
+	"screens.profile.action.openGermDm": "Open Germ DM",
+	"screens.profile.action.pinToHome": "Pin to Home",
+	"screens.profile.action.reportFeed": "Report feed",
+	"screens.profile.action.saveToFeeds": "Save to my feeds",
+	"screens.profile.action.searchMyPosts": "Search my posts",
+	"screens.profile.action.searchUserPosts": "Search @{handle}'s posts",
+	"screens.profile.action.shareFeed": "Share this feed",
+	"screens.profile.action.subscribeLabeler": "Subscribe to Labeler",
+	"screens.profile.action.subscribeThisLabeler": "Subscribe to this labeler",
+	"screens.profile.action.undo": "Undo",
+	"screens.profile.action.unfollow": "Unfollow {handle}",
+	"screens.profile.action.unlike": "Unlike",
+	"screens.profile.action.unpinFromHome": "Unpin from home",
+	"screens.profile.action.unsubscribe": "Unsubscribe",
+	"screens.profile.action.unsubscribeLabeler": "Unsubscribe from this labeler",
+	"screens.profile.action.viewFeedLikes": "View users who like this feed",
+	"screens.profile.count.followers": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} follower",
+				"cp=other": "{count} followers"
+			}
+		}
+	],
+	"screens.profile.count.following": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{count} following",
+				"cp=other": "{count} following"
+			}
+		}
+	],
+	"screens.profile.count.likedBy": [
+		{
+			"declarations": [
+				"input likeCount",
+				"local cp = likeCount: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "Liked by {likeCount} user",
+				"cp=other": "Liked by {likeCount} users"
+			}
+		}
+	],
+	"screens.profile.count.posts": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "post",
+				"cp=other": "posts"
+			}
+		}
+	],
+	"screens.profile.dialog.unblockTitle": "Unblock Account?",
+	"screens.profile.empty.endOfFeed": "End of feed",
+	"screens.profile.empty.noKnownFollowers": "You don't follow any users who follow @{name}.",
+	"screens.profile.error.descriptionTooLong": [
+		{
+			"declarations": [
+				"input MAX_DESCRIPTION",
+				"local cp = MAX_DESCRIPTION: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "Description is too long. The maximum number of characters is {MAX_DESCRIPTION}."
+			}
+		}
+	],
+	"screens.profile.error.disconnectGermDm": "Failed to disconnect Germ DM. Error: {message}",
+	"screens.profile.error.displayNameTooLong": [
+		{
+			"declarations": [
+				"input MAX_DISPLAY_NAME",
+				"local cp = MAX_DISPLAY_NAME: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "Display name is too long. The maximum number of characters is {MAX_DISPLAY_NAME}."
+			}
+		}
+	],
+	"screens.profile.error.feedLoad": "Could not load feed",
+	"screens.profile.error.moderationServiceLoad": "Hmmmm, we couldn't load that moderation service.",
+	"screens.profile.error.moderationUnavailable": "This moderation service is unavailable. See below for more details. If this issue persists, contact us.",
+	"screens.profile.error.reconnectGermDm": "Failed to reconnect Germ DM. Error: {message}",
+	"screens.profile.error.server": "There was an issue contacting the server, please check your internet connection and try again.",
+	"screens.profile.error.subscribeLimit": "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty.",
+	"screens.profile.hint.bio": "Tell us a bit about yourself",
+	"screens.profile.hint.blockingLabeler": "Blocking does not prevent this labeler from placing labels on your account.",
+	"screens.profile.hint.displayNamePlaceholder": "e.g. Alice Lastname",
+	"screens.profile.hint.germDmInfo": "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below.",
+	"screens.profile.hint.labels": "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network.",
+	"screens.profile.hint.noLabelsDeclared": "This labeler hasn't declared what labels it publishes, and may not be active.",
+	"screens.profile.hint.reportIssue": "Something wrong? Let us know.",
+	"screens.profile.hint.searchPlaceholder": "Search...",
+	"screens.profile.hint.subscribePrompt": "Subscribe to @{handle} to use these labels:",
+	"screens.profile.hint.verificationWarning": "You are verified. You will lose your verification status if you change your display name. {#t0}Learn more.{/t0}",
+	"screens.profile.label.byCreator": "by {#t0}{handle}{/t0}",
+	"screens.profile.label.displayName": "Display name",
+	"screens.profile.label.feedOptions": "Feed options",
+	"screens.profile.label.followingCount": "{count} following",
+	"screens.profile.label.germDm": "Germ DM",
+	"screens.profile.label.germDmLink": "Germ DM Link",
+	"screens.profile.label.invalidHandle": "⚠Invalid Handle",
+	"screens.profile.title.editProfile": "Edit Profile",
+	"screens.profile.title.followers": "People following @{handle}",
+	"screens.profile.title.following": "People followed by @{handle}",
+	"screens.profile.title.knownFollowers": "Followers of @{handle} that you know",
+	"screens.profile.toast.germDmDisconnected": "Germ DM disconnected",
+	"screens.profile.toast.germDmReconnected": "Germ DM reconnected",
+	"screens.profile.toast.pinned": "Pinned {name} to Home",
+	"screens.profile.toast.unpinned": "Unpinned {name} from Home"
+}

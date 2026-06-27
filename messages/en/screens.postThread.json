@@ -1,0 +1,108 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.postThread.a11y.composeReply": "Compose reply",
+	"screens.postThread.a11y.createdInfo": "Shows information about when this post was created",
+	"screens.postThread.a11y.opensComposer": "Opens composer",
+	"screens.postThread.action.continueThread": "Continue thread",
+	"screens.postThread.action.continueThreadMore": "Continue thread...",
+	"screens.postThread.action.readMoreReplies": "Read more replies",
+	"screens.postThread.action.readMoreRepliesCount": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "Read {count} more reply",
+				"cp=other": "Read {count} more replies"
+			}
+		}
+	],
+	"screens.postThread.action.showMoreReplies": "Show more replies",
+	"screens.postThread.count.likes": [
+		{
+			"declarations": [
+				"input count",
+				"input formattedCount",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{#t0}{formattedCount}{/t0} like",
+				"cp=other": "{#t0}{formattedCount}{/t0} likes"
+			}
+		}
+	],
+	"screens.postThread.count.quotes": [
+		{
+			"declarations": [
+				"input count",
+				"input formattedCount",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{#t0}{formattedCount}{/t0} quote",
+				"cp=other": "{#t0}{formattedCount}{/t0} quotes"
+			}
+		}
+	],
+	"screens.postThread.count.reposts": [
+		{
+			"declarations": [
+				"input count",
+				"input formattedCount",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{#t0}{formattedCount}{/t0} repost",
+				"cp=other": "{#t0}{formattedCount}{/t0} reposts"
+			}
+		}
+	],
+	"screens.postThread.count.saves": [
+		{
+			"declarations": [
+				"input count",
+				"input formattedCount",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{#t0}{formattedCount}{/t0} save",
+				"cp=other": "{#t0}{formattedCount}{/t0} saves"
+			}
+		}
+	],
+	"screens.postThread.error.blocked": "Post blocked",
+	"screens.postThread.error.deleted": "Post has been deleted",
+	"screens.postThread.error.generic": "Something went wrong. Please try again in a moment.",
+	"screens.postThread.error.loadPost": "Error loading post",
+	"screens.postThread.error.notFound": "Post not found",
+	"screens.postThread.hint.dateMismatch": "This post claims to have been created on {#t0}{claimed}{/t0}, but was first seen by Bluesky on {#t1}{seen}{/t1}.",
+	"screens.postThread.hint.dateUnverified": "Bluesky cannot confirm the authenticity of the claimed date.",
+	"screens.postThread.hint.signedInOnly": "This author has chosen to make their posts visible only to people who are signed in.",
+	"screens.postThread.label.archived": "Archived post",
+	"screens.postThread.label.archivedFrom": "Archived from {date}",
+	"screens.postThread.label.linear": "Linear",
+	"screens.postThread.label.post": "Post",
+	"screens.postThread.label.replySorting": "Reply sorting",
+	"screens.postThread.label.showRepliesAs": "Show replies as",
+	"screens.postThread.label.threadOptions": "Thread options",
+	"screens.postThread.label.threaded": "Threaded",
+	"screens.postThread.title.likes": "Likes on this post",
+	"screens.postThread.title.quotes": "Quotes of this post",
+	"screens.postThread.title.reposts": "Reposts of this post"
+}

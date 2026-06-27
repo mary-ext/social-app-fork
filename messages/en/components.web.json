@@ -1,0 +1,18 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.web.a11y.categoryActive": "\\\"{displayName}\\\" category (active)",
+	"components.web.a11y.categorySelect": "Select \\\"{displayName}\\\" category",
+	"components.web.a11y.removeRecentSearch": "Remove {query} from recent searches",
+	"components.web.action.goTo": "Go to {#t0}{name}{/t0}",
+	"components.web.action.nextMonth": "Next month",
+	"components.web.action.openUrlInApp": "Open URL in app",
+	"components.web.action.previousMonth": "Previous month",
+	"components.web.action.removeRecentSearch": "Remove from recent searches",
+	"components.web.action.searchFor": "Search for {#t0}{query}{/t0}",
+	"components.web.hint.searchPrompt": "Search for posts and users on Bluesky",
+	"components.web.label.fromUser": "From user",
+	"components.web.label.mentioningUser": "Mentioning user",
+	"components.web.label.recent": "Recent",
+	"components.web.label.searchOptions": "Search options",
+	"components.web.label.toUser": "To user"
+}

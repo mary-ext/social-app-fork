@@ -1,0 +1,10 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.newskieDialog.a11y.dialog": "New user info dialog",
+	"components.newskieDialog.a11y.hint": "This user is new here. Press for more info about when they joined.",
+	"components.newskieDialog.joinedAgo": "{profileName} joined Bluesky {timeAgoString} ago",
+	"components.newskieDialog.joinedAgoSelf": "You joined Bluesky {timeAgoString} ago",
+	"components.newskieDialog.joinedViaStarterPack": "{profileName} joined Bluesky using a starter pack {timeAgoString} ago",
+	"components.newskieDialog.joinedViaStarterPackSelf": "You joined Bluesky using a starter pack {timeAgoString} ago",
+	"components.newskieDialog.welcome": "Welcome, friend!"
+}

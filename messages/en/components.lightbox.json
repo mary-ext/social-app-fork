@@ -1,0 +1,17 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.lightbox.a11y.close": "Close image viewer",
+	"components.lightbox.a11y.imagePosition": "Image {index} of {count}",
+	"components.lightbox.a11y.loading": "Loading image",
+	"components.lightbox.a11y.next": "Next image",
+	"components.lightbox.a11y.options": "Image options",
+	"components.lightbox.a11y.previous": "Previous image",
+	"components.lightbox.a11y.viewer": "Image viewer",
+	"components.lightbox.action.download": "Download image",
+	"components.lightbox.action.expandAlt": "Expand alt text",
+	"components.lightbox.action.share": "Share image",
+	"components.lightbox.error.copyLink": "Failed to copy link",
+	"components.lightbox.error.save": "Failed to save image",
+	"components.lightbox.toast.linkCopied": "Link copied to clipboard",
+	"components.lightbox.toast.saved": "Image saved"
+}

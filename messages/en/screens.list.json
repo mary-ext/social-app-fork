@@ -1,0 +1,13 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.list.action.removeFromSaved": "Remove from saved feeds",
+	"screens.list.action.showAnyway": "Show list anyway",
+	"screens.list.action.unsubscribe": "Unsubscribe from list",
+	"screens.list.error.creatorBlockedDesc": "Either the creator of this list has blocked you or you have blocked the creator.",
+	"screens.list.error.creatorBlockedTitle": "Creator has been blocked",
+	"screens.list.error.hiddenTitle": "List has been hidden",
+	"screens.list.toast.removedFromSaved": "Removed from saved feeds",
+	"screens.list.toast.unsubscribed": "Unsubscribed from list",
+	"screens.list.warning.violationByOther": "This list – created by {#t0}{handle}{/t0} – contains possible violations of Bluesky's community guidelines in its name or description.",
+	"screens.list.warning.violationByYou": "This list – created by you – contains possible violations of Bluesky's community guidelines in its name or description."
+}

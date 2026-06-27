@@ -1,0 +1,18 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.intents.a11y.closeDialog": "Close this dialog",
+	"components.intents.action.join": "Join group chat",
+	"components.intents.action.open": "Open group chat",
+	"components.intents.action.requestAccess": "Request access to group chat",
+	"components.intents.error.conversationLocked": "This conversation is locked.",
+	"components.intents.error.followersOnly": "Only followers can join this group chat.",
+	"components.intents.error.invalidCode": "Invalid group chat code.",
+	"components.intents.error.joinFailed": "Failed to join the group chat. Please try again.",
+	"components.intents.error.linkDisabled": "This invite link has been disabled.",
+	"components.intents.error.linkInvalid": "This invite link is invalid",
+	"components.intents.error.previouslyRemoved": "You have been previously removed from this group and can’t join it using this link.",
+	"components.intents.label.anyoneCanJoin": "Anyone can join",
+	"components.intents.label.followersCanJoin": "Followers can join",
+	"components.intents.status.accessRequested": "Access requested! The group owner will review your request.",
+	"components.intents.status.joinSuccess": "Successfully joined the group chat!"
+}

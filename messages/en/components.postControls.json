@@ -1,0 +1,113 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.postControls.a11y.like": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "Like ({count} like)",
+				"cp=other": "Like ({count} likes)"
+			}
+		}
+	],
+	"components.postControls.a11y.openOptions": "Open post options menu",
+	"components.postControls.a11y.openShare": "Open share menu",
+	"components.postControls.a11y.reply": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "Reply ({count} reply)",
+				"cp=other": "Reply ({count} replies)"
+			}
+		}
+	],
+	"components.postControls.a11y.repost": "Repost or quote post",
+	"components.postControls.a11y.unlike": [
+		{
+			"declarations": [
+				"input count",
+				"local cp = count: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "Unlike ({count} like)",
+				"cp=other": "Unlike ({count} likes)"
+			}
+		}
+	],
+	"components.postControls.action.copyAuthorDid": "Copy author DID",
+	"components.postControls.action.copyLink": "Copy link to post",
+	"components.postControls.action.copyText": "Copy post text",
+	"components.postControls.action.copyUri": "Copy post at:// URI",
+	"components.postControls.action.detachQuote": "Detach quote",
+	"components.postControls.action.editInteractionSettings": "Edit interaction settings",
+	"components.postControls.action.hideReply": "Hide reply for everyone",
+	"components.postControls.action.more": "More",
+	"components.postControls.action.muteThread": "Mute thread",
+	"components.postControls.action.pin": "Pin to your profile",
+	"components.postControls.action.reattachQuote": "Re-attach quote",
+	"components.postControls.action.report": "Report post",
+	"components.postControls.action.repost": "Repost",
+	"components.postControls.action.save": "Add to saved posts",
+	"components.postControls.action.sendViaDm": "Send via direct message",
+	"components.postControls.action.showLess": "Show less like this",
+	"components.postControls.action.showMore": "Show more like this",
+	"components.postControls.action.showReply": "Show reply for everyone",
+	"components.postControls.action.undo": "Undo",
+	"components.postControls.action.undoRepost": "Undo repost",
+	"components.postControls.action.unmuteThread": "Unmute thread",
+	"components.postControls.action.unpin": "Unpin from profile",
+	"components.postControls.cta.signIn": "Sign in to view post",
+	"components.postControls.dialog.confirmDetach": "Yes, detach",
+	"components.postControls.dialog.confirmHide": "Yes, hide",
+	"components.postControls.dialog.deleteBody": "If you remove this post, you won't be able to recover it.",
+	"components.postControls.dialog.deleteTitle": "Delete this post?",
+	"components.postControls.dialog.detachBody": "This will remove your post from this quote post for all users, and replace it with a placeholder.",
+	"components.postControls.dialog.detachTitle": "Detach quote post?",
+	"components.postControls.dialog.hideReplyBody": "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others.",
+	"components.postControls.dialog.hideReplyTitle": "Hide this reply?",
+	"components.postControls.error.delete": "Failed to delete post, please try again",
+	"components.postControls.error.invalidInteractionSettings": "Invalid interaction settings.",
+	"components.postControls.error.toggleThreadMute": "Failed to toggle thread mute, please try again",
+	"components.postControls.error.updateQuoteAttachment": "Updating quote attachment failed",
+	"components.postControls.error.updateReplyVisibility": "Updating reply visibility failed",
+	"components.postControls.hint.loggedInOnly": "Note: This post is only visible to logged-in users.",
+	"components.postControls.hint.maxHiddenReplies": [
+		{
+			"declarations": [
+				"input MAX_HIDDEN_REPLIES",
+				"local cp = MAX_HIDDEN_REPLIES: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=other": "You can hide a maximum of {MAX_HIDDEN_REPLIES} replies."
+			}
+		}
+	],
+	"components.postControls.label.options": "Post options",
+	"components.postControls.label.quotesDisabled": "Quote posts disabled",
+	"components.postControls.toast.deleted": "Post deleted",
+	"components.postControls.toast.detached": "Quote post was successfully detached",
+	"components.postControls.toast.feedbackSent": "Feedback sent to feed operator",
+	"components.postControls.toast.reattached": "Quote post was re-attached",
+	"components.postControls.toast.replyHidden": "Reply was successfully hidden",
+	"components.postControls.toast.replyVisibilityUpdated": "Reply visibility updated",
+	"components.postControls.toast.saved": "Post saved",
+	"components.postControls.toast.threadMuted": "You will now receive notifications for this thread",
+	"components.postControls.toast.threadUnmuted": "You will no longer receive notifications for this thread"
+}

@@ -1,0 +1,152 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"lib.a11y.focusSearch": "Focus the search field",
+	"lib.error.accountDeactivated": "Account is deactivated",
+	"lib.error.accountSuspended": "Account has been suspended",
+	"lib.error.appPasswordFeature": "This feature is not available while using an app password. Please sign in with your main password.",
+	"lib.error.appPasswordFeatureCap": "This feature is not available while using an App Password. Please sign in with your main password.",
+	"lib.error.connectionFailed": "Unable to connect. Please check your internet connection and try again.",
+	"lib.error.handleResolveFailed": "Unable to resolve handle",
+	"lib.error.postUploadFailed": "Post failed to upload. Please check your Internet connection and try again.",
+	"lib.error.profileNotFound": "Profile not found",
+	"lib.error.rateLimit": "You've reached the maximum number of requests allowed. Please try again later.",
+	"lib.error.serverIssues": "The server appears to be experiencing issues. Please try again in a few moments.",
+	"lib.error.signInAs": "Please sign in as @{handle}",
+	"lib.error.uriNotRecord": "Expected uri to resolve to a record",
+	"lib.error.videoUploadFailed": "Failed to upload video",
+	"lib.error.videoUploadLimit": "You have temporarily reached the limit for video uploads. Please try again later.",
+	"lib.interest.animals": "Animals",
+	"lib.interest.art": "Art",
+	"lib.interest.books": "Books",
+	"lib.interest.comedy": "Comedy",
+	"lib.interest.comics": "Comics",
+	"lib.interest.culture": "Culture",
+	"lib.interest.education": "Education",
+	"lib.interest.finance": "Finance",
+	"lib.interest.food": "Food",
+	"lib.interest.journalism": "Journalism",
+	"lib.interest.movies": "Movies",
+	"lib.interest.music": "Music",
+	"lib.interest.nature": "Nature",
+	"lib.interest.pets": "Pets",
+	"lib.interest.photography": "Photography",
+	"lib.interest.science": "Science",
+	"lib.interest.softwareDev": "Software Dev",
+	"lib.interest.tech": "Tech",
+	"lib.interest.tv": "TV",
+	"lib.interest.writers": "Writers",
+	"lib.moderation.artisticNudesExample": "E.g. artistic nudes.",
+	"lib.moderation.blockedBy": "User Blocked by \\\"{name}\\\"",
+	"lib.moderation.blockingYou": "User Blocking You",
+	"lib.moderation.contentBlocked": "Content Blocked",
+	"lib.moderation.explicitSexual": "Explicit sexual images.",
+	"lib.moderation.generalWarning": "This content has received a general warning from moderators.",
+	"lib.moderation.graphicMedia": "Explicit or potentially disturbing media.",
+	"lib.moderation.hiddenByModerators": "This content has been hidden by the moderators.",
+	"lib.moderation.mutedBy": "Muted by \\\"{name}\\\"",
+	"lib.moderation.noNudity": "Does not include nudity.",
+	"lib.moderation.nonSexualNudity": "Non-sexual Nudity",
+	"lib.moderation.sexuallySuggestive": "Sexually Suggestive",
+	"lib.moderation.signedInOnly": "This user has requested that their content only be shown to signed-in users.",
+	"lib.moderation.youHidden": "You have hidden this post",
+	"lib.moderation.youMuted": "You have muted this user",
+	"lib.status.processing": "Processing...",
+	"lib.status.uploadingImages": "Uploading images...",
+	"lib.status.uploadingThumb": "Uploading link thumbnail...",
+	"lib.time.dateTime": "{time} · {date}",
+	"lib.time.days": [
+		{
+			"declarations": [
+				"input value",
+				"local cp = value: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{value} day",
+				"cp=other": "{value} days"
+			}
+		}
+	],
+	"lib.time.daysNarrow": "{value}d",
+	"lib.time.hours": [
+		{
+			"declarations": [
+				"input value",
+				"local cp = value: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{value} hour",
+				"cp=other": "{value} hours"
+			}
+		}
+	],
+	"lib.time.hoursNarrow": "{value}h",
+	"lib.time.minutes": [
+		{
+			"declarations": [
+				"input value",
+				"local cp = value: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{value} minute",
+				"cp=other": "{value} minutes"
+			}
+		}
+	],
+	"lib.time.minutesNarrow": "{value}m",
+	"lib.time.months": [
+		{
+			"declarations": [
+				"input value",
+				"local cp = value: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{value} month",
+				"cp=other": "{value} months"
+			}
+		}
+	],
+	"lib.time.monthsNarrow": [
+		{
+			"declarations": [
+				"input value",
+				"local cp = value: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{value}mo",
+				"cp=other": "{value}mo"
+			}
+		}
+	],
+	"lib.time.now": "now",
+	"lib.time.seconds": [
+		{
+			"declarations": [
+				"input value",
+				"local cp = value: plural"
+			],
+			"selectors": [
+				"cp"
+			],
+			"match": {
+				"cp=one": "{value} second",
+				"cp=other": "{value} seconds"
+			}
+		}
+	],
+	"lib.time.secondsNarrow": "{value}s"
+}

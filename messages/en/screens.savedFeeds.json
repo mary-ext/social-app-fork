@@ -1,0 +1,11 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.savedFeeds.action.moveDown": "Move feed down",
+	"screens.savedFeeds.action.moveUp": "Move feed up",
+	"screens.savedFeeds.action.seeGuide": "See this guide",
+	"screens.savedFeeds.empty.pinned": "You don't have any pinned feeds.",
+	"screens.savedFeeds.empty.saved": "You don't have any saved feeds.",
+	"screens.savedFeeds.hint.about": "Feeds are custom algorithms that users build with a little coding expertise. {#t0}See this guide{/t0} for more information.",
+	"screens.savedFeeds.title.pinned": "Pinned Feeds",
+	"screens.savedFeeds.title.saved": "Saved Feeds"
+}

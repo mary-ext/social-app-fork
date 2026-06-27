@@ -1,0 +1,20 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"navigation.title.accessibilitySettings": "Accessibility Settings",
+	"navigation.title.chatRequests": "Chat request inbox",
+	"navigation.title.contentAndMedia": "Content and Media",
+	"navigation.title.editStarterPack": "Edit your starter pack",
+	"navigation.title.feed": "Feed",
+	"navigation.title.followers": "Followers",
+	"navigation.title.hashtag": "Hashtag",
+	"navigation.title.languageSettings": "Language Settings",
+	"navigation.title.likedBy": "Liked by",
+	"navigation.title.list": "List",
+	"navigation.title.log": "Log",
+	"navigation.title.messages": "Messages",
+	"navigation.title.moderationStates": "Moderation states",
+	"navigation.title.mutedWords": "Muted Words & Tags",
+	"navigation.title.post": "Post",
+	"navigation.title.storybook": "Storybook",
+	"navigation.title.topic": "Topic"
+}
