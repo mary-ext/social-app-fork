@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Text as RNText, View } from 'react-native';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
-import { Trans, useLingui } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -13,6 +12,7 @@ import { useLanguagePrefs } from '#/state/preferences/languages';
 import { logger } from '#/logger';
 
 import { code3ToCode2, codeToLanguageName } from '#/locale/helpers';
+import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -21,6 +21,8 @@ import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/C
 import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * Extracts the primary language subtag from a BCP-47 language tag (e.g. `en-US` → `en`), or `undefined` if
@@ -244,9 +246,11 @@ function GuessedLanguage({
 		<LanguageSuggestionButton
 			label={
 				<RNText>
-					<Trans>
-						Are you writing in <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
-					</Trans>
+					<Trans
+						message={m['view.composer.language.prompt']}
+						inputs={{ suggestedLanguageName }}
+						markup={{ t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text> }}
+					/>
 				</RNText>
 			}
 			value={language}
@@ -278,10 +282,11 @@ function ReplyLanguageNudge({
 		<LanguageSuggestionButton
 			label={
 				<RNText>
-					<Trans>
-						The post you’re replying to was marked as being written in {suggestedLanguageName} by its author.
-						Would you like to reply in <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
-					</Trans>
+					<Trans
+						message={m['view.composer.lang.replyPrompt']}
+						inputs={{ suggestedLanguageName }}
+						markup={{ t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text> }}
+					/>
 				</RNText>
 			}
 			value={language}
@@ -303,7 +308,6 @@ function LanguageSuggestionButton({
 	onDecline: () => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 
 	return (
 		<View style={[a.px_lg, a.py_sm]}>
@@ -339,7 +343,7 @@ function LanguageSuggestionButton({
 					color="primary_subtle"
 					shape="round"
 					onPress={() => onAccept(value)}
-					label={l`Accept this language suggestion`}
+					label={m['view.composer.a11y.acceptLanguageSuggestion']()}
 				>
 					<ButtonIcon icon={CheckIcon} size="sm" />
 				</Button>
@@ -349,7 +353,7 @@ function LanguageSuggestionButton({
 					color="secondary"
 					shape="round"
 					onPress={() => onDecline()}
-					label={l`Decline this language suggestion`}
+					label={m['view.composer.a11y.declineLanguageSuggestion']()}
 				>
 					<ButtonIcon icon={XIcon} size="sm" />
 				</Button>
