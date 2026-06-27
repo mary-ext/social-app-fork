@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Keyboard, ScrollView, View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -8,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
-import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -33,21 +31,20 @@ import { StepDetails } from '#/screens/StarterPack/Wizard/StepDetails';
 import { StepFeeds } from '#/screens/StarterPack/Wizard/StepFeeds';
 import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
-import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import * as Layout from '#/components/web/Layout';
 
 import { Image } from '#/shims/image';
 
 import { Provider } from './State';
+import * as css from './Wizard.css';
 
 export function Wizard({
 	route,
@@ -110,7 +107,7 @@ export function Wizard({
 	}
 
 	return (
-		<Layout.Screen testID="starterPackWizardScreen" style={[{ minHeight: 0 }, a.flex_1]}>
+		<Layout.Screen>
 			<Provider starterPack={starterPack} listItems={listItems} targetProfile={profile}>
 				<WizardInner
 					currentStarterPack={starterPack}
@@ -250,18 +247,10 @@ function WizardInner({
 
 	const onNext = () => {
 		if (state.currentStep === 'Feeds') {
-			void submit();
+			submit();
 			return;
 		}
-
-		const keyboardVisible = Keyboard.isVisible();
-		Keyboard.dismiss();
-		setTimeout(
-			() => {
-				dispatch({ type: 'Next' });
-			},
-			keyboardVisible ? 16 : 0,
-		);
+		dispatch({ type: 'Next' });
 	};
 
 	const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds;
@@ -270,26 +259,25 @@ function WizardInner({
 		(state.currentStep === 'Profiles' && items.length > 1) ||
 		(state.currentStep === 'Feeds' && items.length > 0);
 
-	const editDialogControl = useDialogControl();
+	const editDialogHandle = Dialog.useDialogHandle();
 
 	return (
-		<Layout.Center style={[a.flex_1]}>
+		<>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton
 					label={l`Back`}
-					accessibilityHint={l`Returns to the previous step`}
-					onPress={(evt) => {
+					onClick={(evt) => {
 						if (state.currentStep !== 'Details') {
 							evt.preventDefault();
 							dispatch({ type: 'Back' });
 						}
 					}}
 				/>
-				<Layout.Header.Content align="left">
+				<Layout.Header.Content>
 					<Layout.Header.TitleText>{currUiStrings.header}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				{isEditEnabled ? (
-					<Button label={l`Edit`} color="secondary" size="small" onPress={editDialogControl.open}>
+					<Button label={l`Edit`} color="secondary" size="small" onClick={() => editDialogHandle.open(null)}>
 						<ButtonText>
 							<Trans>Edit</Trans>
 						</ButtonText>
@@ -298,117 +286,74 @@ function WizardInner({
 					<Layout.Header.Slot />
 				)}
 			</Layout.Header.Outer>
-			<Container>
-				{state.currentStep === 'Details' ? (
+			{state.currentStep === 'Details' ? (
+				<div className={css.details}>
 					<StepDetails />
-				) : state.currentStep === 'Profiles' ? (
-					<StepProfiles moderationOpts={moderationOpts} />
-				) : state.currentStep === 'Feeds' ? (
-					<StepFeeds moderationOpts={moderationOpts} />
-				) : null}
-			</Container>
-			{state.currentStep !== 'Details' && <Footer onNext={onNext} nextBtnText={currUiStrings.nextBtn} />}
-			<WizardEditListDialog
-				control={editDialogControl}
-				state={state}
-				dispatch={dispatch}
-				moderationOpts={moderationOpts}
-				profile={profile}
-			/>
-		</Layout.Center>
-	);
-}
-
-function Container({ children }: { children: React.ReactNode }) {
-	const { t: l } = useLingui();
-	const [state, dispatch] = useWizardState();
-
-	if (state.currentStep === 'Profiles' || state.currentStep === 'Feeds') {
-		return <View style={[a.flex_1]}>{children}</View>;
-	}
-
-	return (
-		<ScrollView style={[a.flex_1]} keyboardShouldPersistTaps="handled">
-			{children}
-			{state.currentStep === 'Details' && (
-				<>
 					<Button
 						label={l`Next`}
-						variant="solid"
 						color="primary"
 						size="large"
-						style={[a.mx_xl, a.mb_lg, { marginTop: 35 }]}
-						onPress={() => dispatch({ type: 'Next' })}
+						className={css.detailsNext}
+						onClick={() => dispatch({ type: 'Next' })}
 					>
 						<ButtonText>
 							<Trans>Next</Trans>
 						</ButtonText>
 					</Button>
-				</>
+				</div>
+			) : state.currentStep === 'Profiles' ? (
+				<StepProfiles moderationOpts={moderationOpts} />
+			) : (
+				<StepFeeds moderationOpts={moderationOpts} />
 			)}
-		</ScrollView>
+			{state.currentStep !== 'Details' && <Footer onNext={onNext} nextBtnText={currUiStrings.nextBtn} />}
+			<WizardEditListDialog
+				handle={editDialogHandle}
+				state={state}
+				dispatch={dispatch}
+				moderationOpts={moderationOpts}
+				profile={profile}
+			/>
+		</>
 	);
 }
 
 function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: string }) {
-	const t = useTheme();
 	const [state] = useWizardState();
-	const { bottom: bottomInset } = useSafeAreaInsets();
 	const { currentAccount } = useSession();
 	const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds;
 
 	const minimumItems = state.currentStep === 'Profiles' ? 8 : 0;
 
-	const textStyles = [a.text_md];
-
 	return (
-		<View
-			style={[
-				a.border_t,
-				a.align_center,
-				a.px_lg,
-				a.pt_xl,
-				a.gap_md,
-				t.atoms.bg,
-				t.atoms.border_contrast_medium,
-				{
-					paddingBottom: a.pb_lg.paddingBottom + bottomInset,
-				},
-			]}
-		>
+		<div className={css.footer}>
 			{items.length > minimumItems && (
-				<View style={[a.absolute, { right: 14, top: 31 }]}>
-					<Text style={[a.font_semi_bold]}>
-						{items.length}/{state.currentStep === 'Profiles' ? STARTER_PACK_MAX_SIZE : 3}
-					</Text>
-				</View>
+				<Text weight="semiBold" className={css.countBadge}>
+					{items.length}/{state.currentStep === 'Profiles' ? STARTER_PACK_MAX_SIZE : 3}
+				</Text>
 			)}
-			<View style={[a.flex_row]}>
+			<div className={css.avatarRow}>
 				{items.slice(0, 6).map((p, index) => (
-					<View
+					<div
 						key={index}
-						style={[
-							a.rounded_full,
-							{
-								borderWidth: 0.5,
-								borderColor: t.atoms.bg.backgroundColor,
-							},
+						className={css.avatarRing}
+						style={
 							state.currentStep === 'Profiles'
 								? { zIndex: 1 - index, marginLeft: index > 0 ? -8 : 0 }
-								: { marginRight: 4 },
-						]}
+								: { marginRight: 4 }
+						}
 					>
 						<UserAvatar
 							avatar={p.avatar}
 							size={32}
 							type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
 						/>
-					</View>
+					</div>
 				))}
-			</View>
+			</div>
 			{
 				state.currentStep === 'Profiles' ? (
-					<Text style={[a.text_center, textStyles]}>
+					<Text size="md" className={css.helperText}>
 						{
 							items.length < 2 ? (
 								currentAccount?.did === items[0]!.did ? (
@@ -418,7 +363,7 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 								) : (
 									<Trans>
 										It's just{' '}
-										<Text style={[a.font_semi_bold, textStyles]} emoji>
+										<Text size="md" weight="semiBold">
 											{getName(items[0]!)}{' '}
 										</Text>
 										right now! Add more people to your starter pack by searching above.
@@ -427,18 +372,24 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 							) : items.length === 2 ? (
 								currentAccount?.did === items[0]!.did ? (
 									<Trans>
-										<Text style={[a.font_semi_bold, textStyles]}>You</Text> and
+										<Text size="md" weight="semiBold">
+											You
+										</Text>{' '}
+										and
 										<Text> </Text>
-										<Text style={[a.font_semi_bold, textStyles]} emoji>
+										<Text size="md" weight="semiBold">
 											{getName(items[1]! /* [0] is self, skip it */)}{' '}
 										</Text>
 										are included in your starter pack
 									</Trans>
 								) : (
 									<Trans>
-										<Text style={[a.font_semi_bold, textStyles]}>{getName(items[0]!)}</Text> and
+										<Text size="md" weight="semiBold">
+											{getName(items[0]!)}
+										</Text>{' '}
+										and
 										<Text> </Text>
-										<Text style={[a.font_semi_bold, textStyles]} emoji>
+										<Text size="md" weight="semiBold">
 											{getName(items[1]! /* [0] is self, skip it */)}{' '}
 										</Text>
 										are included in your starter pack
@@ -446,10 +397,10 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 								)
 							) : items.length > 2 ? (
 								<Trans context="profiles">
-									<Text style={[a.font_semi_bold, textStyles]} emoji>
+									<Text size="md" weight="semiBold">
 										{getName(items[1]! /* [0] is self, skip it */)},{' '}
 									</Text>
-									<Text style={[a.font_semi_bold, textStyles]} emoji>
+									<Text size="md" weight="semiBold">
 										{getName(items[2]!)},{' '}
 									</Text>
 									and <Plural value={items.length - 2} one="# other" other="# others" /> are included in your
@@ -460,42 +411,42 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 					</Text>
 				) : state.currentStep === 'Feeds' ? (
 					items.length === 0 ? (
-						<View style={[a.gap_sm]}>
-							<Text style={[a.font_semi_bold, a.text_center, textStyles]}>
+						<div className={css.feedsEmptyHelper}>
+							<Text weight="semiBold" size="md" className={css.helperText}>
 								<Trans>Add some feeds to your starter pack!</Trans>
 							</Text>
-							<Text style={[a.text_center, textStyles]}>
+							<Text size="md" className={css.helperText}>
 								<Trans>Search for feeds that you want to suggest to others.</Trans>
 							</Text>
-						</View>
+						</div>
 					) : (
-						<Text style={[a.text_center, textStyles]}>
+						<Text size="md" className={css.helperText}>
 							{
 								items.length === 1 ? (
 									<Trans>
-										<Text style={[a.font_semi_bold, textStyles]} emoji>
+										<Text size="md" weight="semiBold">
 											{getName(items[0]!)}
 										</Text>{' '}
 										is included in your starter pack
 									</Trans>
 								) : items.length === 2 ? (
 									<Trans>
-										<Text style={[a.font_semi_bold, textStyles]} emoji>
+										<Text size="md" weight="semiBold">
 											{getName(items[0]!)}
 										</Text>{' '}
 										and
 										<Text> </Text>
-										<Text style={[a.font_semi_bold, textStyles]} emoji>
+										<Text size="md" weight="semiBold">
 											{getName(items[1]!)}{' '}
 										</Text>
 										are included in your starter pack
 									</Trans>
 								) : items.length > 2 ? (
 									<Trans context="feeds">
-										<Text style={[a.font_semi_bold, textStyles]} emoji>
+										<Text size="md" weight="semiBold">
 											{getName(items[0]!)},{' '}
 										</Text>
-										<Text style={[a.font_semi_bold, textStyles]} emoji>
+										<Text size="md" weight="semiBold">
 											{getName(items[1]!)},{' '}
 										</Text>
 										and <Plural value={items.length - 2} one="# other" other="# others" /> are included in
@@ -507,18 +458,18 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 					)
 				) : null /* Should not happen. */
 			}
-			<View style={[a.w_full, a.align_center, a.gap_2xl, a.mt_md]}>
+			<div className={css.cta}>
 				{state.currentStep === 'Profiles' && items.length < 8 && (
-					<Text style={[a.font_semi_bold, textStyles, t.atoms.text_contrast_medium]}>
+					<Text weight="semiBold" size="md" color="textContrastMedium">
 						<Trans>Add {8 - items.length} more to continue</Trans>
 					</Text>
 				)}
 				<Button
 					label={nextBtnText}
-					style={[a.w_full, a.py_md, a.px_2xl]}
+					className={css.ctaButton}
 					color="primary"
 					size="large"
-					onPress={onNext}
+					onClick={onNext}
 					disabled={
 						!state.canNext || state.processing || (state.currentStep === 'Profiles' && items.length < 8)
 					}
@@ -526,8 +477,8 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 					<ButtonText>{nextBtnText}</ButtonText>
 					{state.processing && <ButtonIcon icon={Loader} />}
 				</Button>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 

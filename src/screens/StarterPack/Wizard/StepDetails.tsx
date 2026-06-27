@@ -1,22 +1,23 @@
-import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { useId } from 'react';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import * as TextField from '#/components/forms/TextField';
 import { StarterPack } from '#/components/icons/StarterPack';
-import { ScreenTransition } from '#/components/ScreenTransition';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
+
+import * as css from './Wizard.css';
+
+const NAME_MAX_LENGTH = 50;
 
 export function StepDetails() {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const [state, dispatch] = useWizardState();
+	const counterId = useId();
 
 	const { currentAccount } = useSession();
 	const { data: currentProfile } = useProfileQuery({
@@ -25,59 +26,59 @@ export function StepDetails() {
 	});
 
 	const name = currentProfile?.displayName || currentProfile?.handle;
+	const nameLength = state.name?.length ?? 0;
 
 	return (
-		<ScreenTransition direction={state.transitionDirection} enabledWeb>
-			<View style={[a.px_xl, a.gap_xl, a.mt_4xl]}>
-				<View style={[a.gap_md, a.align_center, a.px_md, a.mb_md]}>
-					<StarterPack width={90} gradient="sky" />
-					<Text style={[a.font_semi_bold, a.text_3xl]}>
-						<Trans>Invites, but personal</Trans>
-					</Text>
-					<Text style={[a.text_center, a.text_md, a.px_md]}>
-						<Trans>Invite your friends to follow your favorite feeds and people</Trans>
-					</Text>
-				</View>
-				<View>
-					<TextField.LabelText>
-						<Trans>What do you want to call your starter pack?</Trans>
-					</TextField.LabelText>
-					<TextField.Root>
-						<TextField.Input
-							label={name ? l`${name}'s starter pack` : l`My starter pack`}
-							value={state.name}
-							onChangeText={(text) => dispatch({ type: 'SetName', name: text })}
-						/>
-						<TextField.SuffixText
-							label={l({
-								comment:
-									'Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field',
-								message: `${state.name?.length} out of 50`,
-							})}
+		<>
+			<div className={css.detailsHeader}>
+				<StarterPack width={90} gradient="sky" />
+				<Text weight="semiBold" size="_3xl">
+					<Trans>Invites, but personal</Trans>
+				</Text>
+				<Text size="md" align="center" className={css.detailsSubtitle}>
+					<Trans>Invite your friends to follow your favorite feeds and people</Trans>
+				</Text>
+			</div>
+			<TextField.Root>
+				<TextField.LabelText
+					accessory={
+						<Text
+							aria-label={l`${nameLength} of ${NAME_MAX_LENGTH} characters`}
+							className={css.counter}
+							color="textContrastMedium"
+							id={counterId}
+							size="sm"
 						>
-							<Text style={[t.atoms.text_contrast_medium]}>{state.name?.length ?? 0}/50</Text>
-						</TextField.SuffixText>
-					</TextField.Root>
-				</View>
-				<View>
-					<TextField.LabelText>
-						<Trans>Tell us a little more</Trans>
-					</TextField.LabelText>
-					<TextField.Root>
-						<TextField.Input
-							label={
-								name
-									? l`${name}'s favorite feeds and people - join me!`
-									: l`My favorite feeds and people - join me!`
-							}
-							value={state.description}
-							onChangeText={(text) => dispatch({ type: 'SetDescription', description: text })}
-							multiline
-							style={{ minHeight: 150 }}
-						/>
-					</TextField.Root>
-				</View>
-			</View>
-		</ScreenTransition>
+							{nameLength} / {NAME_MAX_LENGTH}
+						</Text>
+					}
+				>
+					<Trans>What do you want to call your starter pack?</Trans>
+				</TextField.LabelText>
+				<TextField.Input
+					describedBy={counterId}
+					label={name ? l`${name}'s starter pack` : l`My starter pack`}
+					maxLength={NAME_MAX_LENGTH}
+					onChangeText={(text) => dispatch({ type: 'SetName', name: text })}
+					value={state.name ?? ''}
+				/>
+			</TextField.Root>
+			<TextField.Root>
+				<TextField.LabelText>
+					<Trans>Tell us a little more</Trans>
+				</TextField.LabelText>
+				<TextField.Input
+					label={
+						name
+							? l`${name}'s favorite feeds and people - join me!`
+							: l`My favorite feeds and people - join me!`
+					}
+					minRows={6}
+					multiline
+					onChangeText={(text) => dispatch({ type: 'SetDescription', description: text })}
+					value={state.description ?? ''}
+				/>
+			</TextField.Root>
+		</>
 	);
 }

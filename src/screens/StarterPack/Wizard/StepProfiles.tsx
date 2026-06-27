@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { type ListRenderItemInfo, ScrollView, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
@@ -7,24 +6,21 @@ import { Trans } from '@lingui/react/macro';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useActorSearch } from '#/state/queries/actor-search';
 
-import { List } from '#/view/com/util/List';
-
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { SearchInput } from '#/components/forms/SearchInput';
+import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { Loader } from '#/components/Loader';
-import { ScreenTransition } from '#/components/ScreenTransition';
 import { WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+
+import * as css from './Wizard.css';
 
 function keyExtractor(item: AnyProfileView) {
 	return item?.did ?? '';
 }
 
 export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOptions }) {
-	const t = useTheme();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
 
@@ -59,36 +55,28 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 	};
 
 	return (
-		<ScreenTransition style={[a.flex_1]} direction={state.transitionDirection} enabledWeb>
-			<View style={[a.border_b, t.atoms.border_contrast_medium]}>
-				<View style={[a.py_sm, a.px_md, { height: 60 }]}>
-					<SearchInput value={query} onChangeText={setQuery} onClearText={() => setQuery('')} />
-				</View>
-			</View>
+		<>
+			<div className={css.searchBar}>
+				<SearchInput value={query} onChangeText={setQuery} onClearText={() => setQuery('')} />
+			</div>
 			<List
 				data={query ? results : topFollowers}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
-				renderScrollComponent={(props) => <ScrollView {...props} />}
-				keyboardShouldPersistTaps="handled"
-				disableFullWindowScroll={true}
-				sideBorders={false}
-				style={[a.flex_1]}
 				onEndReached={!query ? () => void fetchNextPage() : undefined}
 				onEndReachedThreshold={0.25}
-				keyboardDismissMode="on-drag"
 				ListEmptyComponent={
-					<View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
+					<div className={css.empty}>
 						{isLoading ? (
 							<Loader size="lg" />
 						) : (
-							<Text style={[a.font_semi_bold, a.text_lg, a.text_center, a.mt_lg, a.leading_snug]}>
+							<Text weight="semiBold" size="lg" align="center" className={css.emptyText}>
 								<Trans>Nobody was found. Try searching for someone else.</Trans>
 							</Text>
 						)}
-					</View>
+					</div>
 				}
 			/>
-		</ScreenTransition>
+		</>
 	);
 }

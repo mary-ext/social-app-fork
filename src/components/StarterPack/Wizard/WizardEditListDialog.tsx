@@ -1,21 +1,14 @@
-import { useRef } from 'react';
-import { type ListRenderItemInfo, View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-
-import type { ListMethods } from '#/view/com/util/List';
-
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { WizardFeedCard, WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
-import { Text } from '#/components/Typography';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+
+import * as css from './WizardEditListDialog.css';
 
 type ListItem = AnyProfileView | AppBskyFeedDefs.GeneratorView;
 
@@ -24,31 +17,26 @@ function keyExtractor(item: ListItem, index: number) {
 }
 
 export function WizardEditListDialog({
-	control,
+	handle,
 	state,
 	dispatch,
 	moderationOpts,
 	profile,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Dialog.DialogHandle;
 	state: WizardState;
 	dispatch: (action: WizardAction) => void;
 	moderationOpts: ModerationOptions;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
-	const initialNumToRender = useInitialNumToRender();
 
-	const listRef = useRef<ListMethods>(null);
+	const data: ListItem[] =
+		state.currentStep === 'Feeds'
+			? state.feeds
+			: [profile, ...state.profiles.filter((p) => p.did !== profile.did)];
 
-	const getData = () => {
-		if (state.currentStep === 'Feeds') return state.feeds;
-
-		return [profile, ...state.profiles.filter((p) => p.did !== profile.did)];
-	};
-
-	const renderItem = ({ item }: ListRenderItemInfo<ListItem>) =>
+	const renderItem = (item: ListItem) =>
 		'handle' in item ? (
 			<WizardProfileCard
 				profile={item}
@@ -67,58 +55,32 @@ export function WizardEditListDialog({
 			/>
 		);
 
+	const title = state.currentStep === 'Profiles' ? l`Edit People` : l`Edit Feeds`;
+
 	return (
-		<Dialog.Outer control={control} testID="newChatDialog">
-			<Dialog.Handle />
-			<Dialog.InnerFlatList
-				ref={listRef}
-				data={getData()}
-				renderItem={renderItem}
-				keyExtractor={keyExtractor}
-				ListHeaderComponent={
-					<View
-						style={[
-							a.flex_row,
-							a.justify_between,
-							a.border_b,
-							a.px_sm,
-							a.mb_sm,
-							t.atoms.bg,
-							t.atoms.border_contrast_medium,
-							a.align_center,
-							{
-								height: 48,
-							},
-						]}
-					>
-						<View style={{ width: 60 }} />
-						<Text style={[a.font_semi_bold, a.text_xl]}>
-							{state.currentStep === 'Profiles' ? <Trans>Edit People</Trans> : <Trans>Edit Feeds</Trans>}
-						</Text>
-						<View style={{ width: 60 }}>
-							{
-								<Button
-									label={l`Close`}
-									variant="ghost"
-									color="primary"
-									size="small"
-									onPress={() => control.close()}
-								>
-									<ButtonText>
-										<Trans>Close</Trans>
-									</ButtonText>
-								</Button>
-							}
-						</View>
-					</View>
-				}
-				stickyHeaderIndices={[0]}
-				style={[a.py_0, a.h_full_vh, { maxHeight: 600 }, a.px_0]}
-				webInnerStyle={[a.py_0, { maxWidth: 500, minWidth: 200 }]}
-				keyboardDismissMode="on-drag"
-				removeClippedSubviews={true}
-				initialNumToRender={initialNumToRender}
-			/>
-		</Dialog.Outer>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup scroll="body" label={title}>
+				<Dialog.Header.Outer>
+					<Dialog.Header.Slot />
+					<Dialog.Header.Content>
+						<Dialog.Header.TitleText>{title}</Dialog.Header.TitleText>
+					</Dialog.Header.Content>
+					<Dialog.Header.Slot>
+						<Button
+							label={l`Close`}
+							variant="ghost"
+							color="primary"
+							size="small"
+							onClick={() => handle.close()}
+						>
+							<ButtonText>
+								<Trans>Close</Trans>
+							</ButtonText>
+						</Button>
+					</Dialog.Header.Slot>
+				</Dialog.Header.Outer>
+				<Dialog.List data={data} keyExtractor={keyExtractor} renderItem={renderItem} className={css.list} />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }

@@ -1,4 +1,3 @@
-import { Keyboard, View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -8,7 +7,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -23,8 +22,10 @@ import { atoms as a, useTheme } from '#/alf';
 import { Button, ButtonText } from '#/components/Button';
 import * as Toggle from '#/components/forms/Toggle';
 import { Checkbox } from '#/components/forms/Toggle';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
+
+import * as css from './WizardListCard.css';
 
 function WizardListCard({
 	type,
@@ -70,18 +71,14 @@ function WizardListCard({
 			]}
 		>
 			<UserAvatar size={45} avatar={avatar} moderation={moderationUi} type={type} />
-			<View style={[a.flex_1, a.gap_2xs]}>
-				<Text
-					emoji
-					style={[a.flex_1, a.font_semi_bold, a.text_md, a.leading_tight, a.self_start]}
-					numberOfLines={1}
-				>
+			<div className={css.textCol}>
+				<Text weight="semiBold" size="md" numberOfLines={1}>
 					{displayName}
 				</Text>
-				<Text style={[a.flex_1, a.leading_tight, t.atoms.text_contrast_medium]} numberOfLines={1}>
+				<Text color="textContrastMedium" numberOfLines={1}>
 					{subtitle}
 				</Text>
-			</View>
+			</div>
 			{btnType === 'checkbox' ? (
 				<Checkbox />
 			) : !disabled ? (
@@ -132,8 +129,6 @@ export function WizardProfileCard({
 
 	const onPress = () => {
 		if (disabled) return;
-
-		Keyboard.dismiss();
 		if (profile.did === targetProfileDid) return;
 
 		if (!included) {
@@ -181,8 +176,6 @@ export function WizardFeedCard({
 
 	const onPress = () => {
 		if (disabled) return;
-
-		Keyboard.dismiss();
 		if (included) {
 			dispatch({ type: 'RemoveFeed', feedUri: generator.uri });
 		} else {

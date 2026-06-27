@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { type ListRenderItemInfo, ScrollView, View } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
@@ -8,25 +7,22 @@ import { DISCOVER_FEED_URI } from '#/lib/constants';
 
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
 
-import { List } from '#/view/com/util/List';
-
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
-
-import { atoms as a, useTheme } from '#/alf';
 
 import { SearchInput } from '#/components/forms/SearchInput';
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
+import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { Loader } from '#/components/Loader';
-import { ScreenTransition } from '#/components/ScreenTransition';
 import { WizardFeedCard } from '#/components/StarterPack/Wizard/WizardListCard';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+
+import * as css from './Wizard.css';
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
 }
 
 export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOptions }) {
-	const t = useTheme();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
 	const throttledQuery = useThrottledValue(query, 500);
@@ -73,36 +69,28 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 	};
 
 	return (
-		<ScreenTransition style={[a.flex_1]} direction={state.transitionDirection} enabledWeb>
-			<View style={[a.border_b, t.atoms.border_contrast_medium]}>
-				<View style={[a.py_sm, a.px_md, { height: 60 }]}>
-					<SearchInput value={query} onChangeText={(t) => setQuery(t)} onClearText={() => setQuery('')} />
-				</View>
-			</View>
+		<>
+			<div className={css.searchBar}>
+				<SearchInput value={query} onChangeText={(t) => setQuery(t)} onClearText={() => setQuery('')} />
+			</div>
 			<List
 				data={query ? searchedFeeds : suggestedFeeds}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
 				onEndReached={!query ? () => void fetchNextPage() : undefined}
 				onEndReachedThreshold={2}
-				keyboardDismissMode="on-drag"
-				renderScrollComponent={(props) => <ScrollView {...props} />}
-				keyboardShouldPersistTaps="handled"
-				disableFullWindowScroll={true}
-				sideBorders={false}
-				style={{ flex: 1 }}
 				ListEmptyComponent={
-					<View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
+					<div className={css.empty}>
 						{isLoading ? (
 							<Loader size="lg" />
 						) : (
-							<Text style={[a.font_semi_bold, a.text_lg, a.text_center, a.mt_lg, a.leading_snug]}>
+							<Text weight="semiBold" size="lg" align="center" className={css.emptyText}>
 								<Trans>No feeds found. Try searching for something else.</Trans>
 							</Text>
 						)}
-					</View>
+					</div>
 				}
 			/>
-		</ScreenTransition>
+		</>
 	);
 }
