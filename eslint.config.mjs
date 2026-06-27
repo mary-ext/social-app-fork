@@ -3,7 +3,6 @@ import js from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
 import bskyInternal from 'eslint-plugin-bsky-internal';
 import importX from 'eslint-plugin-import-x';
-import lingui from 'eslint-plugin-lingui';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 // @ts-expect-error no types
@@ -48,8 +47,6 @@ export default defineConfig(
 			react,
 			'react-native': reactNative,
 			'react-native-a11y': reactNativeA11y,
-			// @ts-expect-error - not sure why
-			lingui,
 			'bsky-internal': bskyInternal,
 		},
 		languageOptions: {
@@ -106,7 +103,6 @@ export default defineConfig(
 			],
 			'bsky-internal/consistent-type-imports': 'error',
 			'bsky-internal/use-prefixed-imports': 'error',
-			'bsky-internal/lingui-msg-rule': 'error',
 
 			/** React & React Native */
 			...react.configs.recommended.rules,
@@ -125,12 +121,9 @@ export default defineConfig(
 			'import-x/no-unresolved': [
 				'error',
 				{
-					/*
-					 * The `postinstall` hook runs `compile-if-needed` locally, but not in
-					 * CI. For CI-sake, ignore this. `#/paraglide/*` is likewise generated
-					 * (gitignored) by `paraglide:compile`.
-					 */
-					ignore: ['^#\/locale\/locales\/.+\/messages', '^#\/paraglide\/'],
+					// `#/paraglide/*` is generated (gitignored) by `paraglide:compile`, which the
+					// `postinstall` hook runs locally but CI may not.
+					ignore: ['^#\/paraglide\/'],
 				},
 			],
 			// paraglide message keys are dot-paths accessed as `m['some.key']()`; the bundler

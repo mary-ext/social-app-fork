@@ -97,16 +97,6 @@ export default defineConfig(({ envMode }) => {
 			removeConsole: envMode === 'production',
 		},
 		tools: {
-			swc: {
-				jsc: {
-					experimental: {
-						// lingui macros (`msg`, `t`, `<Trans>`, `plural`) expand in the SWC Wasm plugin. It runs
-						// before React Compiler within the same swc pass, so message ids stay aligned with the
-						// catalog (a babel pre-pass is no longer needed to guarantee that ordering).
-						plugins: [['@lingui/swc-plugin', {}]],
-					},
-				},
-			},
 			rspack(config) {
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());

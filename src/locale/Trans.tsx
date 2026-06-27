@@ -12,7 +12,7 @@ import type {
 // derived from @inlang/paraglide-js-react (MIT, (c) Opral US Inc.). renders a paraglide message that
 // carries markup: the message file decides which tags appear and where (`{#tag}…{/tag}`), while the
 // `markup` prop decides how each tag renders. plain (markup-free) messages render their string
-// directly. see messages/en/*.json for the `{#tN}` tags emitted from the old lingui `<Trans>` cases.
+// directly. see the `{#tN}` markup tags in messages/en/*.json.
 //
 // the generics derive `inputs` and `markup` from the message's own type (paraglide attaches them as
 // phantom MessageMetadata), so a wrong input or an unknown/missing markup tag is a type error.
@@ -124,9 +124,9 @@ const renderParts = (parts: MessagePart[], markup: Record<string, AnyRenderer>):
 };
 
 /**
- * Renders a paraglide message that interleaves React components — the replacement for lingui's `<Trans>` with
- * embedded elements. `inputs` and `markup` are typed against `message`: pass the message's variables as
- * `inputs`, and a renderer per markup tag (keys match the `{#tag}` names, e.g. `t0`) as `markup`.
+ * Renders a paraglide message that interleaves React components. `inputs` and `markup` are typed against
+ * `message`: pass the message's variables as `inputs`, and a renderer per markup tag (keys match the `{#tag}`
+ * names, e.g. `t0`) as `markup`.
  *
  * @returns The message rendered with each markup tag mapped through `markup`.
  */
