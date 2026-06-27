@@ -7,11 +7,10 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useNonReactiveObject } from '#/lib/hooks/useNonReactiveObject';
 import { type Detection, detectLanguagesAsync } from '#/lib/language-detection';
 
-import { useLanguagePrefs } from '#/state/preferences/languages';
-
 import { logger } from '#/logger';
 
 import { code3ToCode2, codeToLanguageName } from '#/locale/helpers';
+import { LOCALE } from '#/locale/intl/locale';
 import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -233,8 +232,7 @@ function GuessedLanguage({
 	onAccept: (language: string) => void;
 	onDecline: () => void;
 }) {
-	const langPrefs = useLanguagePrefs();
-	const suggestedLanguageName = codeToLanguageName(language, langPrefs.appLanguage);
+	const suggestedLanguageName = codeToLanguageName(language, LOCALE);
 	const onAccept = () => {
 		onAcceptOuter(language);
 	};
@@ -269,8 +267,7 @@ function ReplyLanguageNudge({
 	onAccept: (language: string) => void;
 	onDecline: () => void;
 }) {
-	const langPrefs = useLanguagePrefs();
-	const suggestedLanguageName = codeToLanguageName(language, langPrefs.appLanguage);
+	const suggestedLanguageName = codeToLanguageName(language, LOCALE);
 	const onAccept = () => {
 		onAcceptOuter(language);
 	};

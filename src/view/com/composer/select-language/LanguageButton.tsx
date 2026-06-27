@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import { toPostLanguages, useLanguagePrefs } from '#/state/preferences/languages';
 
 import { codeToLanguageName } from '#/locale/helpers';
+import { LOCALE } from '#/locale/intl/locale';
 
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { Button, type ButtonProps } from '#/components/web/Button';
@@ -32,7 +33,7 @@ export function LanguageButton({
 			{nudgeAt > 0 && <span key={nudgeAt} className={styles.pulseOverlay} />}
 			{languages.length > 0 ? (
 				<span className={styles.langText}>
-					{languages.map((lang) => codeToLanguageName(lang, langPrefs.appLanguage)).join(', ')}
+					{languages.map((lang) => codeToLanguageName(lang, LOCALE)).join(', ')}
 				</span>
 			) : (
 				<GlobeIcon size="xs" fill="currentColor" />

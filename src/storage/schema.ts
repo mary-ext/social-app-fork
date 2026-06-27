@@ -1,9 +1,12 @@
 import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 
 import type { Gif } from '#/features/gifPicker/types';
+import type { Locale } from '#/paraglide/runtime';
 
 /** Data that's specific to the device and does not vary based account */
 export type Device = {
+	/** The paraglide locale for UI translations. Resolved once into `LOCALE`; changing it reloads. */
+	appLanguage?: Locale;
 	colorMode?: 'dark' | 'light' | 'system';
 	darkTheme?: 'dark' | 'dim';
 	debugFeedContextEnabled?: boolean;
@@ -31,8 +34,6 @@ export type Device = {
 };
 
 export type LanguagePrefs = {
-	/** The language for UI translations in the app, matching {@link AppLanguage}. */
-	appLanguage: string;
 	/** BCP-47 2-letter language codes the user can read, passed to feeds. */
 	contentLanguages: string[];
 	/** Comma-separated BCP-47 2-letter language code(s) the user is currently posting in. */

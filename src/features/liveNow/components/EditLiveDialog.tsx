@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { differenceInMinutes } from 'date-fns';
 
 import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
@@ -8,6 +7,8 @@ import { cleanError } from '#/lib/strings/errors';
 import { parseLooseUrl } from '#/lib/strings/url-helpers';
 
 import { useTickEveryMinute } from '#/state/shell';
+
+import { clock } from '#/locale/intl/datetime';
 
 import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
 import { Loader } from '#/components/Loader';
@@ -57,8 +58,6 @@ function DialogInner({
 	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { i18n } = useLingui();
-
 	const [liveLink, setLiveLink] = useState<string>(embed.external.uri);
 	const [liveLinkError, setLiveLinkError] = useState('');
 	const tick = useTickEveryMinute();
@@ -114,11 +113,7 @@ function DialogInner({
 						{typeof record?.durationMinutes === 'number'
 							? m['features.liveNow.label.expiresAt']({
 									duration: displayDuration(minutesUntilExpiry),
-									time: i18n.date(expiryDateTime, {
-										hour: 'numeric',
-										minute: '2-digit',
-										hour12: true,
-									}),
+									time: clock.format(expiryDateTime),
 								})
 							: m['features.liveNow.label.noExpiry']()}
 					</Text>

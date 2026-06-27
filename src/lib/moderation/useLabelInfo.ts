@@ -7,12 +7,13 @@ import {
 	interpretLabelValueDefinition,
 	type LabelLocale,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react';
 import * as bcp47Match from 'bcp-47-match';
 
 import { type GlobalLabelStrings, useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 
 import { useLabelDefinitions } from '#/state/preferences';
+
+import { LOCALE } from '#/locale/intl/locale';
 
 export interface LabelInfo {
 	label: ComAtprotoLabelDefs.Label;
@@ -22,14 +23,13 @@ export interface LabelInfo {
 }
 
 export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
-	const { i18n } = useLingui();
 	const { labelDefs, labelers } = useLabelDefinitions();
 	const globalLabelStrings = useGlobalLabelStrings();
 	const def = getDefinition(labelDefs, label);
 	return {
 		label,
 		def,
-		strings: getLabelStrings(i18n.locale, globalLabelStrings, def),
+		strings: getLabelStrings(LOCALE, globalLabelStrings, def),
 		labeler: labelers.find((labeler) => label.src === labeler.creator.did),
 	};
 }

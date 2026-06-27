@@ -1,6 +1,7 @@
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 
 import { codeToLanguageName } from '#/locale/helpers';
+import { LOCALE } from '#/locale/intl/locale';
 
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
@@ -85,7 +86,7 @@ export function PostLanguageSelect({
 						{dedupedHistory.map((historyItem) => {
 							const langName = historyItem
 								.split(',')
-								.map((code) => codeToLanguageName(code, langPrefs.appLanguage))
+								.map((code) => codeToLanguageName(code, LOCALE))
 								.join(' + ');
 							return (
 								<Menu.Item

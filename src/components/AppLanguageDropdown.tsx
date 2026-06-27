@@ -1,40 +1,20 @@
-import { useCallback } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-
-import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
-import { resetPostsFeedQueries } from '#/state/queries/post-feed';
-
-import { sanitizeAppLanguageSetting } from '#/locale/helpers';
+import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
 import { APP_LANGUAGES } from '#/locale/languages';
 
 import * as Select from '#/components/Select';
 import { Button } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import type { Locale } from '#/paraglide/runtime';
 
 import * as styles from './AppLanguageDropdown.css';
 
 export function AppLanguageDropdown() {
-	const queryClient = useQueryClient();
-	const langPrefs = useLanguagePrefs();
-	const setLangPrefs = useLanguagePrefsApi();
-	const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage);
-
-	const onChangeAppLanguage = useCallback(
-		(value: string) => {
-			if (!value) {
-				return;
-			}
-
-			const next = sanitizeAppLanguageSetting(value);
-			if (sanitizedLang !== next) {
-				setLangPrefs.setAppLanguage(next);
-			}
-
-			resetPostsFeedQueries(queryClient);
-		},
-		[queryClient, sanitizedLang, setLangPrefs],
-	);
+	const onChangeAppLanguage = (value: string) => {
+		if (value && value !== LOCALE) {
+			setAppLanguage(value as Locale);
+		}
+	};
 
 	const items = APP_LANGUAGES.map((language) => ({
 		label: language.name,
@@ -42,7 +22,7 @@ export function AppLanguageDropdown() {
 	}));
 
 	return (
-		<Select.Root items={items} value={sanitizedLang} onValueChange={onChangeAppLanguage}>
+		<Select.Root items={items} value={LOCALE} onValueChange={onChangeAppLanguage}>
 			<Select.Trigger
 				render={
 					<Button

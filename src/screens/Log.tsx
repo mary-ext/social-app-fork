@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { LayoutAnimation, Pressable, View } from 'react-native';
 
-import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useTickEveryMinute } from '#/state/shell';
 
 import { getEntries } from '#/logger/logDump';
 import { LogLevel } from '#/logger/types';
+
+import { useGetTimeAgo } from '#/locale/intl/timeAgo';
 
 import { atoms as a, useTheme } from '#/alf';
 

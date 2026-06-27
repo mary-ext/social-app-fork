@@ -3,7 +3,15 @@ import { createRoot } from 'react-dom/client';
 
 import { initServiceWorker } from '#/lib/service-worker';
 
+import { LOCALE } from '#/locale/intl/locale';
+
 import App from '#/App';
+import { overwriteGetLocale } from '#/paraglide/runtime';
+
+// the UI locale is fixed for the page session (changing it reloads), so point paraglide at the
+// resolved LOCALE and stamp the document language once, up front.
+overwriteGetLocale(() => LOCALE);
+document.documentElement.lang = LOCALE;
 
 const rootEl = document.getElementById('root');
 if (!rootEl) throw new Error('Missing #root element');

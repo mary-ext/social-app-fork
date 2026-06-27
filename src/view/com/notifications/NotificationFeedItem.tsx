@@ -18,7 +18,6 @@ import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 import { Collapsible } from '@base-ui/react/collapsible';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -27,7 +26,6 @@ import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
 import { forceLTR } from '#/lib/strings/bidi';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { niceDate } from '#/lib/strings/time';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { FeedNotification } from '#/state/queries/notifications/feed';
@@ -37,11 +35,12 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { niceDate } from '#/locale/intl/datetime';
+import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
 import { FeedSourceCard } from '#/view/com/feeds/FeedSourceCard';
 import { Post } from '#/view/com/post/Post';
-import { formatCount } from '#/view/com/util/numeric/format';
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 
 import { useTheme } from '#/alf';
@@ -98,7 +97,6 @@ let NotificationFeedItem = ({
 }): React.ReactNode => {
 	const queryClient = useQueryClient();
 	const t = useTheme();
-	const { i18n } = useLingui();
 	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
 	const itemHref = useMemo(() => {
 		switch (item.type) {
@@ -169,7 +167,7 @@ let NotificationFeedItem = ({
 		].filter((author, index, arr) => arr.findIndex((au) => au.profile.did === author.profile.did) === index);
 	}, [item, moderationOpts]);
 
-	const niceTimestamp = niceDate(i18n, item.notification.indexedAt);
+	const niceTimestamp = niceDate(item.notification.indexedAt);
 	const firstAuthor = authors[0]!;
 	const firstAuthorName = sanitizeDisplayName(firstAuthor.profile.displayName || firstAuthor.profile.handle);
 
@@ -242,7 +240,7 @@ let NotificationFeedItem = ({
 	const ltrFirstAuthorName = forceLTR(firstAuthorName);
 	const additionalAuthorsCount = authors.length - 1;
 	const hasMultipleAuthors = additionalAuthorsCount > 0;
-	const formattedAuthorsCount = hasMultipleAuthors ? formatCount(i18n, additionalAuthorsCount) : '';
+	const formattedAuthorsCount = hasMultipleAuthors ? formatCount(additionalAuthorsCount) : '';
 
 	let a11yLabel = '';
 	let notificationContent: React.ReactElement;

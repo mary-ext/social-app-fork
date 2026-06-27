@@ -1,23 +1,24 @@
 import { createContext, useContext } from 'react';
-import { i18n } from '@lingui/core';
-import { I18nProvider as DefaultI18nProvider } from '@lingui/react';
 import type { Locale } from 'date-fns';
+import { enUS } from 'date-fns/locale/en-US';
 
-import { useLocaleLanguage } from './i18n';
+// UI localization is English-only, so the date-fns locale is constant. the context stays so callers
+// keep using useDateLocale() and a future multi-locale setup only changes what's provided here.
+const dateLocale: Locale = enUS;
 
 const DateLocaleContext = createContext<Locale | undefined>(undefined);
 DateLocaleContext.displayName = 'DateLocaleContext';
 
 export default function I18nProvider({ children }: { children: React.ReactNode }) {
-	const dateLocale = useLocaleLanguage();
-	return (
-		<DateLocaleContext value={dateLocale}>
-			<DefaultI18nProvider i18n={i18n}>{children}</DefaultI18nProvider>
-		</DateLocaleContext>
-	);
+	return <DateLocaleContext value={dateLocale}>{children}</DateLocaleContext>;
 }
 
-/** Returns a `date-fns` locale corresponding to the current app language */
+/**
+ * Returns the date-fns locale for the current app language.
+ *
+ * @returns the active date-fns locale
+ * @throws if used outside an `I18nProvider`
+ */
 export function useDateLocale() {
 	const ctx = useContext(DateLocaleContext);
 

@@ -1,13 +1,14 @@
 import { type ComponentProps, useCallback } from 'react';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 
 import { useLanguagePrefs } from '#/state/preferences';
 import { useSession } from '#/state/session';
+
+import { timeShort } from '#/locale/intl/datetime';
 
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
@@ -33,7 +34,6 @@ export let MessageContextMenu = ({
 	/** The trigger element (a message-hover button); receives Base UI trigger props + `{ open }` state. */
 	render: ComponentProps<typeof Menu.Trigger>['render'];
 }): React.ReactNode => {
-	const { i18n } = useLingui();
 	const { currentAccount } = useSession();
 	const { openDeleteMessage, openReportMessage } = useMessageDialogs();
 	const { setReply } = useMessageReplies();
@@ -70,9 +70,7 @@ export let MessageContextMenu = ({
 				<Menu.Group>
 					<Menu.LabelText>
 						{m['components.dms.label.sentAt']({
-							time: i18n.date(new Date(message.sentAt), {
-								timeStyle: 'short',
-							}),
+							time: timeShort.format(new Date(message.sentAt)),
 						})}
 					</Menu.LabelText>
 					<Menu.Item label={m['common.action.reply']()} onClick={() => setReply(message)}>

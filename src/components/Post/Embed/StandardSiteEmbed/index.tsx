@@ -1,5 +1,4 @@
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import {
 	type ColorValue,
 	darken,
@@ -13,8 +12,9 @@ import {
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { niceDate } from '#/lib/strings/time';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
+
+import { niceDate } from '#/locale/intl/datetime';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
@@ -138,7 +138,6 @@ export function StandardSiteEmbed(props: StandardSiteEmbedProps) {
 }
 
 function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
-	const { i18n } = useLingui();
 	const niceUrl = toNiceDomain(view.uri);
 	const open = () => onOpen?.();
 
@@ -168,7 +167,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 							<div className={styles.metaInline}>
 								{view.createdAt ? (
 									<Text color="textContrastMedium" size="xs">
-										{niceDate(i18n, view.createdAt, 'long', 'none')}
+										{niceDate(view.createdAt, 'long', 'none')}
 									</Text>
 								) : null}
 								{view.readingTime ? (

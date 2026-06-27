@@ -10,7 +10,6 @@ import {
 	type ModerationDecision,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { GestureActionView } from '#/lib/custom-animations/GestureActionView';
@@ -254,7 +253,6 @@ function BaseChatItem({
 	children?: React.ReactNode;
 }) {
 	const t = useTheme();
-	const { i18n } = useLingui();
 	const { currentAccount } = useSession();
 	const menuControl = useMenuHandle();
 	const menuTriggerId = useId();
@@ -363,7 +361,7 @@ function BaseChatItem({
 			LastMessageIcon,
 			lastMessageSentAt,
 		};
-	}, [convo, currentAccount?.did, isDeletedAccount, primaryProfile, i18n]);
+	}, [convo, currentAccount?.did, isDeletedAccount, primaryProfile]);
 
 	const [showActions, setShowActions] = useState(false);
 

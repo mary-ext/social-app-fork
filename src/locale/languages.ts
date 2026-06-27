@@ -1,19 +1,13 @@
+import type { Locale } from '#/paraglide/runtime';
+
 export interface Language {
 	code3: string;
 	code2: string;
 	name: string;
 }
 
-export enum AppLanguage {
-	en = 'en',
-}
-
-interface AppLanguageConfig {
-	code2: AppLanguage;
-	name: string;
-}
-
-export const APP_LANGUAGES: AppLanguageConfig[] = [{ code2: AppLanguage.en, name: 'English' }];
+/** The UI-translation languages the app offers, keyed by paraglide locale code. */
+export const APP_LANGUAGES: { code2: Locale; name: string }[] = [{ code2: 'en', name: 'English' }];
 
 // Pre-generated list using Intl.DisplayNames to localize the language name.
 export const LANGUAGES: Language[] = [

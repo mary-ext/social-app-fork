@@ -1,17 +1,17 @@
 import { type ReactNode, type Ref, useCallback } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { niceDate } from '#/lib/strings/time';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { unstableCacheProfileView } from '#/state/queries/profile';
+
+import { niceDate } from '#/locale/intl/datetime';
 
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text, type TextProps } from '#/components/Text';
@@ -74,8 +74,6 @@ interface PostMetaOpts {
 }
 
 function PostMeta(opts: PostMetaOpts): ReactNode {
-	const { i18n } = useLingui();
-
 	const author = useProfileShadow(opts.author);
 	const handle = author.handle;
 	const profileLink = makeProfileLink(author);
@@ -89,7 +87,7 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 		unstableCacheProfileView(queryClient, author);
 	}, [queryClient, author]);
 
-	const timestampLabel = niceDate(i18n, opts.timestamp);
+	const timestampLabel = niceDate(opts.timestamp);
 	const { isActive: live } = useActorStatus(author);
 
 	const disabled = opts.linkDisabled ?? false;

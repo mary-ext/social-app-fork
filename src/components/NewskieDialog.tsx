@@ -4,11 +4,12 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 import { differenceInSeconds } from 'date-fns';
 
 import { useConstant } from '#/lib/hooks/use-constant';
-import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
+
+import { useGetTimeAgo } from '#/locale/intl/timeAgo';
 
 import { Newskie } from '#/components/icons/Newskie';
 import * as styles from '#/components/NewskieDialog.css';

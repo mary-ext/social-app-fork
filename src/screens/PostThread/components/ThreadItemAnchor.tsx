@@ -7,7 +7,6 @@ import type {
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -16,7 +15,6 @@ import { triangularRandom } from '#/lib/numbers';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
-import { niceDate } from '#/lib/strings/time';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -26,6 +24,8 @@ import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 import type { PostSource } from '#/state/unstable-post-source';
 
+import { niceDate } from '#/locale/intl/datetime';
+import { formatPostStatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
@@ -44,7 +44,6 @@ import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { TranslatedPost } from '#/components/Post/Translated';
 import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
-import { useFormatPostStatCount } from '#/components/PostControls/util';
 import * as PostLayout from '#/components/PostLayout';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText } from '#/components/RichText';
@@ -142,7 +141,6 @@ function ThreadItemAnchorInner({
 	const { openComposer } = useOpenComposer();
 	const { currentAccount, hasSession } = useSession();
 	const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession);
-	const formatPostStatCount = useFormatPostStatCount();
 
 	const post = postShadow;
 	const record = item.value.post.record;
@@ -457,7 +455,6 @@ function ExpandedPostDetails({
 	post: Extract<ThreadItem, { type: 'threadPost' }>['value']['post'];
 	isThreadAuthor: boolean;
 }) {
-	const { i18n } = useLingui();
 	const isRootPost = !('reply' in post.record);
 
 	return (
@@ -465,7 +462,7 @@ function ExpandedPostDetails({
 			<BackdatedPostIndicator post={post} />
 			<div className={css.expandedDetailsRow}>
 				<Text size="md_sub" color="textContrastMedium">
-					{niceDate(i18n, post.indexedAt, 'dot separated')}
+					{niceDate(post.indexedAt, 'dot separated')}
 				</Text>
 				{isRootPost && <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />}
 			</div>
@@ -474,7 +471,6 @@ function ExpandedPostDetails({
 }
 
 function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
-	const { i18n } = useLingui();
 	const handle = Prompt.usePromptHandle();
 
 	const indexedAt = new Date(post.indexedAt);
@@ -500,7 +496,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 					<div className={clsx(css.archivedPill, (hovered || pressed) && css.archivedPillActive)}>
 						<CalendarClockIcon fill={colors.yellow} size="sm" aria-hidden />
 						<Text size="xs" weight="semiBold" color="textContrastMedium">
-							{m['screens.postThread.label.archivedFrom']({ date: niceDate(i18n, createdAt, 'medium') })}
+							{m['screens.postThread.label.archivedFrom']({ date: niceDate(createdAt, 'medium') })}
 						</Text>
 					</div>
 				)}
@@ -513,8 +509,8 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 						<Trans
 							message={m['screens.postThread.hint.dateMismatch']}
 							inputs={{
-								claimed: niceDate(i18n, createdAt),
-								seen: niceDate(i18n, indexedAt),
+								claimed: niceDate(createdAt),
+								seen: niceDate(indexedAt),
 							}}
 							markup={{
 								t0: ({ children }) => <Text weight="semiBold">{children}</Text>,

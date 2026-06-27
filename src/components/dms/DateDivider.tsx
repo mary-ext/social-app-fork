@@ -1,7 +1,8 @@
 import { memo } from 'react';
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 import { subDays } from 'date-fns';
+
+import { clockNumeric, weekdayLong, weekdayMonthDay, weekdayMonthDayYear } from '#/locale/intl/datetime';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -13,13 +14,8 @@ import { localDateString } from './util';
 
 let DateDivider = ({ date: dateStr }: { date: string }): React.ReactNode => {
 	const t = useTheme();
-	const { i18n } = useLingui();
-
 	let date: string;
-	const time = i18n.date(new Date(dateStr), {
-		hour: 'numeric',
-		minute: 'numeric',
-	});
+	const time = clockNumeric.format(new Date(dateStr));
 
 	const timestamp = new Date(dateStr);
 
@@ -34,21 +30,12 @@ let DateDivider = ({ date: dateStr }: { date: string }): React.ReactNode => {
 	} else {
 		if (timestamp < oneWeekAgo) {
 			if (timestamp.getFullYear() === today.getFullYear()) {
-				date = i18n.date(timestamp, {
-					weekday: 'short',
-					month: 'long',
-					day: 'numeric',
-				});
+				date = weekdayMonthDay.format(timestamp);
 			} else {
-				date = i18n.date(timestamp, {
-					weekday: 'short',
-					month: 'long',
-					day: 'numeric',
-					year: 'numeric',
-				});
+				date = weekdayMonthDayYear.format(timestamp);
 			}
 		} else {
-			date = i18n.date(timestamp, { weekday: 'long' });
+			date = weekdayLong.format(timestamp);
 		}
 	}
 

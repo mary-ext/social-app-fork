@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react';
 
 import { makeCustomFeedLink, makeProfileLink } from '#/lib/routes/links';
 import { shareUrl } from '#/lib/sharing';
@@ -19,9 +18,8 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
-
-import { formatCount } from '#/view/com/util/numeric/format';
 
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
@@ -70,7 +68,6 @@ export function ProfileFeedHeaderSkeleton() {
 }
 
 export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
-	const { i18n } = useLingui();
 	const { hasSession } = useSession();
 	const infoControl = Dialog.useDialogHandle();
 	const reportDialogControl = useReportDialogControl();
@@ -181,7 +178,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 								<span className={styles.infoButtonLikes}>
 									<HeartFilled size="xs" fill={likeUri ? colors.pink : colors.textContrastLow} />
 									<Text size="sm" color="textContrastMedium" numberOfLines={1}>
-										{formatCount(i18n, likeCount)}
+										{formatCount(likeCount)}
 									</Text>
 								</span>
 							</span>

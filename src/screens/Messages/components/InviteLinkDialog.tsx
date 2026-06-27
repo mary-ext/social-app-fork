@@ -7,7 +7,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -17,6 +16,8 @@ import { useCreateJoinLink } from '#/state/queries/messages/create-join-link';
 import { useDisableJoinLink } from '#/state/queries/messages/disable-join-link';
 import { useEditJoinLink } from '#/state/queries/messages/edit-join-link';
 import { useEnableJoinLink } from '#/state/queries/messages/enable-join-link';
+
+import { dateTimeLong } from '#/locale/intl/datetime';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -59,8 +60,6 @@ export function InviteLinkDialog({
 	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
-	const { i18n } = useLingui();
-
 	const ownerName = createSanitizedDisplayName(
 		owner,
 		false,
@@ -291,10 +290,7 @@ export function InviteLinkDialog({
 						{createdAt ? (
 							<Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
 								{m['screens.messages.label.created']({
-									date: i18n.date(createdAt, {
-										dateStyle: 'long',
-										timeStyle: 'short',
-									}),
+									date: dateTimeLong.format(createdAt),
 								})}
 							</Text>
 						) : null}

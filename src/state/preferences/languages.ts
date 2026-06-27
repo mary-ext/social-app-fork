@@ -1,10 +1,8 @@
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
-import { AppLanguage } from '#/locale/languages';
 
 import { device, type LanguagePrefs, useStorage } from '#/storage';
 
 const defaults: LanguagePrefs = {
-	appLanguage: AppLanguage.en,
 	contentLanguages: deviceLanguageCodes,
 	postLanguage: deviceLanguageCodes[0] || 'en',
 	postLanguageHistory: deviceLanguageCodes.concat(['en', 'ja', 'pt', 'de']).slice(0, 6),
@@ -21,9 +19,6 @@ export function useLanguagePrefs() {
 
 export function useLanguagePrefsApi() {
 	return {
-		setAppLanguage(code2: AppLanguage) {
-			device.set(['languagePrefs'], { ...read(), appLanguage: code2 });
-		},
 		setContentLanguages(code2s: string[]) {
 			device.set(['languagePrefs'], { ...read(), contentLanguages: code2s });
 		},

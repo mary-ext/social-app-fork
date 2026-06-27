@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
-import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { makeProfileLink } from '#/lib/routes/links';
 import { listUriToHref } from '#/lib/strings/url-helpers';
@@ -9,6 +8,7 @@ import { listUriToHref } from '#/lib/strings/url-helpers';
 import { useSession } from '#/state/session';
 import { useTickEveryMinute } from '#/state/shell';
 
+import { useGetTimeAgo } from '#/locale/intl/timeAgo';
 import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useGutters, useTheme } from '#/alf';

@@ -12,6 +12,8 @@ import { clsx } from 'clsx';
 import { CountWheel } from '#/lib/custom-animations/CountWheel';
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 
+import { formatPostStatCount } from '#/locale/intl/number';
+
 import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
@@ -19,7 +21,6 @@ import type { Props as IconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Reply as Bubble } from '#/components/icons/Reply';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
-import { useFormatPostStatCount } from '#/components/PostControls/util';
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Text';
 import { Tooltip } from '#/components/web/Tooltip';
@@ -137,7 +138,6 @@ export function PostControls({
 	viaRepost,
 }: PostControlsProps): React.ReactNode {
 	const t = useTheme();
-	const formatPostStatCount = useFormatPostStatCount();
 
 	const {
 		hasLikeIconBeenToggled,

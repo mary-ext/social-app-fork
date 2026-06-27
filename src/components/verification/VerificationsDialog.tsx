@@ -1,5 +1,4 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
@@ -7,6 +6,8 @@ import { getUserDisplayName } from '#/lib/getUserDisplayName';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
+import { dateLong } from '#/locale/intl/datetime';
 
 import { Text } from '#/components/Text';
 import { useSimpleVerificationState } from '#/components/verification';
@@ -111,7 +112,6 @@ function VerifierCard({
 	outerHandle: Dialog.DialogHandle;
 	verification: AppBskyActorDefs.VerificationView;
 }) {
-	const { i18n } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const { data: profile, error } = useProfileQuery({ did: verification.issuer });
 
@@ -143,9 +143,7 @@ function VerifierCard({
 							<div className={css.nameColumn}>
 								<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
 								<Text color="textContrastMedium" numberOfLines={1}>
-									{i18n.date(new Date(verification.createdAt), {
-										dateStyle: 'long',
-									})}
+									{dateLong.format(new Date(verification.createdAt))}
 								</Text>
 							</div>
 						</ProfileCard.Link>

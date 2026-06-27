@@ -11,6 +11,7 @@ import { getLabelStrings } from '#/lib/moderation/useLabelInfo';
 
 import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/state/queries/preferences';
 
+import { LOCALE } from '#/locale/intl/locale';
 import { Trans } from '#/locale/Trans';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
@@ -20,7 +21,6 @@ import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { getLocale } from '#/paraglide/runtime';
 
 import * as styles from './LabelPreference.css';
 
@@ -49,7 +49,7 @@ export function LabelerLabelRow({
 	const { data: preferences } = usePreferencesQuery();
 	const { mutate, variables } = usePreferencesSetContentLabelMutation();
 	const globalLabelStrings = useGlobalLabelStrings();
-	const labelStrings = getLabelStrings(getLocale(), globalLabelStrings, labelDefinition);
+	const labelStrings = getLabelStrings(LOCALE, globalLabelStrings, labelDefinition);
 
 	const savedPref =
 		labelerDid && !isGlobalLabel

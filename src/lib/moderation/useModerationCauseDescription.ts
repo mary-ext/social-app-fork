@@ -1,11 +1,12 @@
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useLabelDefinitions } from '#/state/preferences';
 import { useSession } from '#/state/session';
+
+import { LOCALE } from '#/locale/intl/locale';
 
 import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
@@ -38,7 +39,6 @@ export function useModerationCauseDescription(
 	cause: ModerationCause | AppModerationCause | undefined,
 ): ModerationCauseDescription {
 	const { currentAccount } = useSession();
-	const { i18n } = useLingui();
 	const { labelDefs, labelers } = useLabelDefinitions();
 	const globalLabelStrings = useGlobalLabelStrings();
 
@@ -119,7 +119,7 @@ export function useModerationCauseDescription(
 		}
 		case ModerationCauseType.Label: {
 			const def = cause.labelDef || getDefinition(labelDefs, cause.label);
-			const strings = getLabelStrings(i18n.locale, globalLabelStrings, def);
+			const strings = getLabelStrings(LOCALE, globalLabelStrings, def);
 			const labeler = labelers.find((l) => l.creator.did === cause.label.src);
 			let source = labeler ? sanitizeHandle(labeler.creator.handle, '@') : undefined;
 			let sourceDisplayName = labeler?.creator.displayName;

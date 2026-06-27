@@ -4,7 +4,8 @@ import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes
 
 import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 
-import { languageName, sanitizeAppLanguageSetting } from '#/locale/helpers';
+import { languageName } from '#/locale/helpers';
+import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
 import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
 
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
@@ -16,6 +17,7 @@ import { useDialogHandle } from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import type { Locale } from '#/paraglide/runtime';
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(
 	(lang, i, arr) => lang.code2 && arr.findIndex((l) => l.code2 === lang.code2) === i,
@@ -44,18 +46,11 @@ export function LanguageSettingsScreen({}: Props) {
 
 	const contentLanguagePrefsControl = useDialogHandle();
 
-	const onChangeAppLanguage = useCallback(
-		(value: string) => {
-			if (!value) {
-				return;
-			}
-
-			if (langPrefs.appLanguage !== value) {
-				setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value));
-			}
-		},
-		[langPrefs, setLangPrefs],
-	);
+	const onChangeAppLanguage = (value: string) => {
+		if (value && LOCALE !== value) {
+			setAppLanguage(value as Locale);
+		}
+	};
 
 	const onChangePrimaryLanguage = useCallback(
 		(value: string) => {
@@ -73,10 +68,10 @@ export function LanguageSettingsScreen({}: Props) {
 	const primaryLanguageItems = useMemo(
 		() =>
 			DEDUPED_LANGUAGES.map((lang) => ({
-				label: languageName(lang, langPrefs.appLanguage),
+				label: languageName(lang, LOCALE),
 				value: lang.code2,
-			})).sort((a, b) => a.label.localeCompare(b.label, langPrefs.appLanguage)),
-		[langPrefs.appLanguage],
+			})).sort((a, b) => a.label.localeCompare(b.label, LOCALE)),
+		[],
 	);
 
 	const contentLanguageSummary = useMemo(() => {
@@ -86,10 +81,10 @@ export function LanguageSettingsScreen({}: Props) {
 		return contentLanguages
 			.map((code2) => {
 				const lang = LANGUAGES.find((l) => l.code2 === code2);
-				return lang ? languageName(lang, langPrefs.appLanguage) : code2;
+				return lang ? languageName(lang, LOCALE) : code2;
 			})
 			.join(', ');
-	}, [contentLanguages, langPrefs.appLanguage]);
+	}, [contentLanguages]);
 
 	return (
 		<Layout.Screen>
@@ -107,7 +102,7 @@ export function LanguageSettingsScreen({}: Props) {
 							items={APP_LANGUAGES.map((language) => ({ label: language.name, value: language.code2 }))}
 							label={m['screens.settings.language.selectAppLanguage']()}
 							onValueChange={onChangeAppLanguage}
-							value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
+							value={LOCALE}
 						>
 							<Settings.Icon icon={EarthIcon} />
 							<Settings.Label

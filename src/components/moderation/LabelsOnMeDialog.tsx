@@ -5,7 +5,6 @@ import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 import { useMutation } from '@tanstack/react-query';
 
 import { useConstant } from '#/lib/hooks/use-constant';
-import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useLabelSubject } from '#/lib/moderation';
 import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
@@ -16,6 +15,7 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { useGetTimeAgo } from '#/locale/intl/timeAgo';
 import { Trans } from '#/locale/Trans';
 
 import { Loader } from '#/components/Loader';

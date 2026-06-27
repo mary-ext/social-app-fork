@@ -3,7 +3,7 @@ import * as bcp47Match from 'bcp-47-match';
 
 import { detectLanguages } from '#/lib/language-detection';
 
-import { AppLanguage, type Language, LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3 } from './languages';
+import { type Language, LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3 } from './languages';
 
 /**
  * Minimum top-candidate probability for a from-text detection to count. Below this the detector is just
@@ -115,15 +115,4 @@ export function getTranslatorLink(text: string, targetLangCode: string, sourceLa
 	return `https://translate.google.com/?sl=${sourceLanguage ?? 'auto'}&tl=${targetLangCode}&text=${encodeURIComponent(
 		text,
 	)}`;
-}
-
-/**
- * Returns a valid `appLanguage` value from an arbitrary string.
- *
- * UI localization is English-only in this fork, so any stale or legacy stored value is normalized back to
- * English.
- */
-export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
-	void appLanguage;
-	return AppLanguage.en;
 }

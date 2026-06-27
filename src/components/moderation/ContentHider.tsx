@@ -15,6 +15,8 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useLabelDefinitions } from '#/state/preferences';
 
+import { LOCALE } from '#/locale/intl/locale';
+
 import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
 import {
@@ -23,7 +25,6 @@ import {
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
-import { getLocale } from '#/paraglide/runtime';
 import { colors } from '#/styles/colors';
 
 import * as styles from './ContentHider.css';
@@ -139,7 +140,7 @@ function ContentHiderActive({
 				if (def.identifier === 'porn' || def.identifier === 'sexual') {
 					return m['common.label.adultContent']();
 				}
-				return getLabelStrings(getLocale(), globalLabelStrings, def).name;
+				return getLabelStrings(LOCALE, globalLabelStrings, def).name;
 			});
 
 		if (selfBlurNames.length === 0) {

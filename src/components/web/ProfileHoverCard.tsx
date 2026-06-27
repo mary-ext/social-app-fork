@@ -7,7 +7,6 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { PreviewCard } from '@base-ui/react/preview-card';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -20,7 +19,7 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { usePrefetchProfileQuery, useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { formatCount } from '#/view/com/util/numeric/format';
+import { formatCount } from '#/locale/intl/number';
 
 import { ProfileHeaderHandle } from '#/screens/Profile/Header/Handle';
 
@@ -136,7 +135,6 @@ function Inner({
 	moderationOpts: ModerationOptions;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { i18n } = useLingui();
 	const { currentAccount } = useSession();
 	const moderation = moderateProfile(profile, moderationOpts);
 	const [descriptionRT] = useRichText(profile.description ?? '');
@@ -146,8 +144,8 @@ function Inner({
 	});
 	const isBlockedUser =
 		profile.viewer?.blocking || profile.viewer?.blockedBy || profile.viewer?.blockingByList;
-	const following = formatCount(i18n, profile.followsCount || 0);
-	const followers = formatCount(i18n, profile.followersCount || 0);
+	const following = formatCount(profile.followsCount || 0);
+	const followers = formatCount(profile.followersCount || 0);
 	const pluralizedFollowers = m['common.count.followers']({ count: profile.followersCount || 0 });
 	const pluralizedFollowings = m['common.count.following']({ count: profile.followsCount || 0 });
 	const profileURL = makeProfileLink({ did: profile.did });

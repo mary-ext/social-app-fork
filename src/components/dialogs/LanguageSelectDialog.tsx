@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { useLanguagePrefs } from '#/state/preferences/languages';
 
 import { languageName } from '#/locale/helpers';
+import { LOCALE } from '#/locale/intl/locale';
 import { type Language, LANGUAGES, LANGUAGES_MAP_CODE2 } from '#/locale/languages';
 
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
@@ -127,7 +128,7 @@ function DialogInner({
 		// NOTE(@elijaharita): helper functions
 		const searchLower = search.toLowerCase();
 		const matchesSearch = (lang: Language) =>
-			languageName(lang, langPrefs.appLanguage).toLowerCase().includes(searchLower) ||
+			languageName(lang, LOCALE).toLowerCase().includes(searchLower) ||
 			lang.name.toLowerCase().includes(searchLower);
 		const isChecked = (lang: Language) => checkedLanguagesCode2.includes(lang.code2);
 		const isInRecents = (lang: Language) => recentLanguagesCode2.includes(lang.code2);
@@ -159,7 +160,7 @@ function DialogInner({
 				uncheckedRecent,
 			};
 		}
-	}, [allowedLanguages, search, langPrefs.postLanguageHistory, checkedLanguagesCode2, langPrefs.appLanguage]);
+	}, [allowedLanguages, search, langPrefs.postLanguageHistory, checkedLanguagesCode2]);
 
 	const hasRecent =
 		displayedLanguages.checkedRecent.length > 0 || displayedLanguages.uncheckedRecent.length > 0;
@@ -229,7 +230,7 @@ function DialogInner({
 						);
 					}
 					const lang = item.lang;
-					const name = languageName(lang, langPrefs.appLanguage);
+					const name = languageName(lang, LOCALE);
 					const isLastItem = index === numItems - 1;
 
 					return (

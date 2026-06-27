@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
@@ -22,6 +21,8 @@ import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { monthDayYear } from '#/locale/intl/datetime';
 
 import { List } from '#/view/com/util/List';
 
@@ -288,8 +289,6 @@ function SettingsHeader({
 	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
-	const { i18n } = useLingui();
-
 	const navigation = useNavigation<NavigationProp>();
 
 	const groupName = convo.details.name;
@@ -423,11 +422,7 @@ function SettingsHeader({
 				<Text style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>{groupName}</Text>
 				<Text style={[a.text_sm, a.text_center, a.pt_xs, a.px_xl, t.atoms.text_contrast_high]}>
 					{m['screens.messages.label.created']({
-						date: i18n.date(createdAt, {
-							month: 'long',
-							day: 'numeric',
-							year: 'numeric',
-						}),
+						date: monthDayYear.format(createdAt),
 					})}
 				</Text>
 				<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_2xl, a.pt_2xl, a.flex_wrap]}>

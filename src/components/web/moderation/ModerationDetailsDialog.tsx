@@ -1,13 +1,13 @@
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import { useConstant } from '#/lib/hooks/use-constant';
-import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { makeProfileLink } from '#/lib/routes/links';
 import { listUriToHref } from '#/lib/strings/url-helpers';
 
 import { useSession } from '#/state/session';
 
+import { useGetTimeAgo } from '#/locale/intl/timeAgo';
 import { Trans } from '#/locale/Trans';
 
 import type { AppModerationCause } from '#/components/Pills';
