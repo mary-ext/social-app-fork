@@ -1,7 +1,13 @@
-import { format } from 'date-fns/format';
-
 import { LogLevel, type Transport } from '#/logger/types';
 import { prepareMetadata } from '#/logger/util';
+
+// fixed en-US h23 for a stable HH:mm:ss debug stamp, independent of the app locale.
+const timeFormat = new Intl.DateTimeFormat('en-US', {
+	hour: '2-digit',
+	hourCycle: 'h23',
+	minute: '2-digit',
+	second: '2-digit',
+});
 
 /** Used in dev mode to nicely log to the console */
 export const consoleTransport: Transport = (level, context, message, metadata, timestamp) => {
@@ -15,7 +21,7 @@ export const consoleTransport: Transport = (level, context, message, metadata, t
 		[LogLevel.Error]: 'red',
 	}[level];
 
-	const timestampStr = format(timestamp, 'HH:mm:ss');
+	const timestampStr = timeFormat.format(timestamp);
 	const contextStr = context ? ` (${context})` : '';
 	const messageStr = message ? ` ${message.toString()}` : '';
 
