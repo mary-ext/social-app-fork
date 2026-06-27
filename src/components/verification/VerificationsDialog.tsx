@@ -1,5 +1,5 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
@@ -17,6 +17,8 @@ import * as Dialog from '#/components/web/Dialog';
 import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import { m } from '#/paraglide/messages';
+
 export function VerificationsDialog({
 	handle,
 	profile,
@@ -24,11 +26,10 @@ export function VerificationsDialog({
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 }) {
-	const { t: l } = useLingui();
 	const userName = getUserDisplayName(profile);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={l`Verifications for ${userName}`} size="narrow">
+			<Dialog.Popup label={m['components.verification.title.verificationsFor']({ userName })} size="narrow">
 				<DialogInner handle={handle} profile={profile} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -45,10 +46,10 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const userName = getUserDisplayName(profile);
 	const label = isViewer
 		? isVerified
-			? l`You are verified`
-			: l`Your verifications`
+			? m['components.verification.status.youVerified']()
+			: m['components.verification.title.yourVerifications']()
 		: isVerified
-			? l`${userName} is verified`
+			? m['components.verification.status.userVerified']({ userName })
 			: l({
 					comment: `Possessive, meaning "the verifications of {userName}"`,
 					message: `${userName}'s verifications`,
@@ -61,19 +62,15 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					{label}
 				</Text>
 				<Text size="md">
-					{isVerified ? (
-						<Trans>This account has a checkmark because it's been verified by trusted sources.</Trans>
-					) : (
-						<Trans>
-							This account has one or more attempted verifications, but it is not currently verified.
-						</Trans>
-					)}
+					{isVerified
+						? m['components.verification.description.verified']()
+						: m['components.verification.description.notVerified']()}
 				</Text>
 			</div>
 			{profile.verification ? (
 				<div className={css.section}>
 					<Text color="textContrastMedium" size="sm">
-						<Trans>Verified by:</Trans>
+						{m['components.verification.label.verifiedBy']()}
 					</Text>
 
 					<div className={css.list}>
@@ -84,16 +81,19 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 					{profile.verification.verifications.some((v) => !v.isValid) && isViewer && (
 						<Admonition className={css.admonitionSpacing} type="warning">
-							<Trans>Some of your verifications are invalid.</Trans>
+							{m['components.verification.error.someInvalid']()}
 						</Admonition>
 					)}
 				</div>
 			) : null}
 			<div className={css.actions}>
-				<Button color="primary" label={l`Close dialog`} onClick={() => handle.close()} size="small">
-					<ButtonText>
-						<Trans>Close</Trans>
-					</ButtonText>
+				<Button
+					color="primary"
+					label={m['common.a11y.closeDialog']()}
+					onClick={() => handle.close()}
+					size="small"
+				>
+					<ButtonText>{m['common.action.close']()}</ButtonText>
 				</Button>
 				<ExternalLinkButton
 					color="secondary"
@@ -104,9 +104,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					size="small"
 					href={urls.website.blog.initialVerificationAnnouncement}
 				>
-					<ButtonText>
-						<Trans context="english-only-resource">Learn more</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.learnMore']()}</ButtonText>
 				</ExternalLinkButton>
 			</div>
 		</>
@@ -133,7 +131,7 @@ function VerifierCard({
 							<ProfileCard.AvatarPlaceholder />
 							<div className={css.nameColumn}>
 								<Text numberOfLines={1} size="md" weight="semiBold">
-									<Trans>Unknown verifier</Trans>
+									{m['components.verification.label.unknownVerifier']()}
 								</Text>
 								<Text color="textContrastMedium" numberOfLines={1}>
 									{verification.issuer}

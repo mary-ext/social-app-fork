@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
-import { useLingui, Trans } from '@lingui/react/macro';
 
 import { makeListLink } from '#/lib/routes/links';
 
@@ -25,6 +24,8 @@ import { Loader } from '#/components/Loader';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
+
 import { MoreOptionsMenu } from './MoreOptionsMenu';
 import { SubscribeMenu } from './SubscribeMenu';
 
@@ -37,7 +38,6 @@ export function Header({
 	list: AppBskyGraphDefs.ListView;
 	preferences: UsePreferencesQueryResponse;
 }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
 	const isModList = list.purpose === 'app.bsky.graph.defs#modlist';
@@ -64,7 +64,9 @@ export function Header({
 						pinned,
 					},
 				]);
-				Toast.show(pinned ? l`Pinned to your feeds` : l`Unpinned from your feeds`);
+				Toast.show(
+					pinned ? m['screens.profileList.toast.pinned']() : m['screens.profileList.toast.unpinned'](),
+				);
 			} else {
 				await addSavedFeeds([
 					{
@@ -73,10 +75,10 @@ export function Header({
 						pinned: true,
 					},
 				]);
-				Toast.show(l`Saved to your feeds`);
+				Toast.show(m['common.label.savedToFeeds']());
 			}
 		} catch (e) {
-			Toast.show(l`There was an issue contacting the server`, {
+			Toast.show(m['common.error.serverContact'](), {
 				type: 'error',
 			});
 			logger.error('Failed to toggle pinned feed', { message: e });
@@ -86,18 +88,18 @@ export function Header({
 	const onUnsubscribeMute = async () => {
 		try {
 			await muteList({ uri: list.uri, mute: false });
-			Toast.show(l({ message: 'List unmuted', context: 'toast' }));
+			Toast.show(m['screens.profileList.toast.unmuted']());
 		} catch {
-			Toast.show(l`There was an issue. Please check your internet connection and try again.`);
+			Toast.show(m['common.error.issueConnection']());
 		}
 	};
 
 	const onUnsubscribeBlock = async () => {
 		try {
 			await blockList({ uri: list.uri, block: false });
-			Toast.show(l({ message: 'List unblocked', context: 'toast' }));
+			Toast.show(m['screens.profileList.toast.unblocked']());
 		} catch {
-			Toast.show(l`There was an issue. Please check your internet connection and try again.`);
+			Toast.show(m['common.error.issueConnection']());
 		}
 	};
 
@@ -127,45 +129,47 @@ export function Header({
 					<Button
 						testID={isPinned ? 'unpinBtn' : 'pinBtn'}
 						color={isPinned ? 'secondary' : 'primary_subtle'}
-						label={isPinned ? l`Unpin` : l`Pin to home`}
+						label={
+							isPinned ? m['screens.profileList.action.unpin']() : m['screens.profileList.action.pinToHome']()
+						}
 						onPress={() => void onTogglePinned()}
 						disabled={isPending}
 						size="small"
 						style={[a.rounded_full]}
 					>
 						{!isPinned && <ButtonIcon icon={isPending ? Loader : PinIcon} />}
-						<ButtonText>{isPinned ? <Trans>Unpin</Trans> : <Trans>Pin to home</Trans>}</ButtonText>
+						<ButtonText>
+							{isPinned
+								? m['screens.profileList.action.unpin']()
+								: m['screens.profileList.action.pinToHome']()}
+						</ButtonText>
 					</Button>
 				) : isModList ? (
 					isBlocking ? (
 						<Button
 							testID="unblockBtn"
 							color="secondary"
-							label={l`Unblock`}
+							label={m['common.action.unblock']()}
 							onPress={() => void onUnsubscribeBlock()}
 							size="small"
 							style={[a.rounded_full]}
 							disabled={isBlockPending}
 						>
 							{isBlockPending && <ButtonIcon icon={Loader} />}
-							<ButtonText>
-								<Trans>Unblock</Trans>
-							</ButtonText>
+							<ButtonText>{m['common.action.unblock']()}</ButtonText>
 						</Button>
 					) : isMuting ? (
 						<Button
 							testID="unmuteBtn"
 							color="secondary"
-							label={l`Unmute`}
+							label={m['common.action.unmute']()}
 							onPress={() => void onUnsubscribeMute()}
 							size="small"
 							style={[a.rounded_full]}
 							disabled={isMutePending}
 						>
 							{isMutePending && <ButtonIcon icon={Loader} />}
-							<ButtonText>
-								<Trans>Unmute</Trans>
-							</ButtonText>
+							<ButtonText>{m['common.action.unmute']()}</ButtonText>
 						</Button>
 					) : (
 						<SubscribeMenu list={list} />

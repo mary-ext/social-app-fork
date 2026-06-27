@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
 
@@ -11,6 +10,8 @@ import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
 import { useDialogHandle } from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './ExternalGif.css';
 
 export type ExternalGifProps = {
@@ -20,7 +21,6 @@ export type ExternalGifProps = {
 
 /** Click-to-play giphy gif: swaps a static thumbnail for the animated source on activation. */
 export function ExternalGif({ link, params }: ExternalGifProps) {
-	const { t: l } = useLingui();
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
 	const consentDialogControl = useDialogHandle();
 
@@ -57,14 +57,18 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 			<button
 				type="button"
 				className={styles.button}
-				aria-label={l`Play ${link.title}`}
+				aria-label={m['components.externalEmbed.a11y.play']({ title: link.title })}
 				onClick={onPlayPress}
 			>
 				<img className={styles.image} src={src} alt={link.title} />
 				{showOverlay ? (
 					<span className={styles.overlay}>
 						<span aria-hidden className={styles.dim} />
-						{!isAnimating || !isPlayerActive ? <PlayButtonIcon /> : <Spinner label={l`Loading GIF`} />}
+						{!isAnimating || !isPlayerActive ? (
+							<PlayButtonIcon />
+						) : (
+							<Spinner label={m['common.label.loadingGif']()} />
+						)}
 					</span>
 				) : null}
 			</button>

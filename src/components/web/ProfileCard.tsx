@@ -6,7 +6,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -35,6 +34,7 @@ import * as css from '#/components/web/ProfileCard.css';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 
 /** Vertical card container: stacks the header, labels, and description. */
 export function Outer({ children }: { children: ReactNode }) {
@@ -58,13 +58,14 @@ export function Link({
 	onPress?: () => void;
 	profile: AnyProfileView;
 }) {
-	const { t: l } = useLingui();
 	return (
 		// BlockLink (role=link <div>), not an <a>, so the row can hold interactive children (a previewable
 		// avatar, a follow button) without nesting them in an anchor
 		<BlockLink
 			className={clsx(css.link, className)}
-			label={l`View ${profile.displayName || sanitizeHandle(profile.handle)}’s profile`}
+			label={m['common.a11y.viewProfileNamed']({
+				name: profile.displayName || sanitizeHandle(profile.handle),
+			})}
 			onBeforePress={onPress}
 			to={makeProfileLink({ did: profile.did })}
 		>
@@ -312,7 +313,6 @@ function FollowButtonInner({
 	withIcon = true,
 	...rest
 }: FollowButtonProps) {
-	const { t: l } = useLingui();
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = moderateProfile(profile, moderationOpts);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
@@ -328,11 +328,11 @@ function FollowButtonInner({
 		e.stopPropagation();
 		try {
 			await queueFollow();
-			Toast.show(l`Following ${name()}`);
+			Toast.show(m['common.a11y.following']({ name: name() }));
 			onFollow?.();
 		} catch (err) {
 			if (!(err instanceof Error && err.name === 'AbortError')) {
-				Toast.show(l`An issue occurred, please try again.`, { type: 'error' });
+				Toast.show(m['common.error.generic'](), { type: 'error' });
 			}
 		}
 	};
@@ -341,21 +341,18 @@ function FollowButtonInner({
 		e.stopPropagation();
 		try {
 			await queueUnfollow();
-			Toast.show(l`No longer following ${name()}`);
+			Toast.show(m['common.label.noLongerFollowing']({ name: name() }));
 		} catch (err) {
 			if (!(err instanceof Error && err.name === 'AbortError')) {
-				Toast.show(l`An issue occurred, please try again.`, { type: 'error' });
+				Toast.show(m['common.error.generic'](), { type: 'error' });
 			}
 		}
 	};
 
-	const unfollowLabel = l({
-		message: 'Following',
-		comment: 'User is following this account, click to unfollow',
-	});
+	const unfollowLabel = m['common.action.following']();
 	const followLabel = profile.viewer?.followedBy
-		? l({ message: 'Follow back', comment: 'User is not following this account, click to follow back' })
-		: l({ message: 'Follow', comment: 'User is not following this account, click to follow' });
+		? m['common.action.followBack']()
+		: m['common.action.follow']();
 
 	if (!profile.viewer) return null;
 	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) return null;

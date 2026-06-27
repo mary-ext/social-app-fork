@@ -3,7 +3,6 @@ import { LayoutAnimation, View } from 'react-native';
 import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { HITSLOP_20 } from '#/lib/constants';
@@ -33,6 +32,8 @@ import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './MessageInputEmbed.css';
 
@@ -115,8 +116,6 @@ export function MessageInputEmbed({
 
 function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () => void }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const { data: post, status } = usePostQuery(uri);
 
 	const moderationOpts = useModerationOpts();
@@ -145,7 +144,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 			return (
 				<SimpleContainer onRemove={onRemove}>
 					<Text style={[a.text_center, t.atoms.text_contrast_medium, a.italic]}>
-						<Trans>Could not fetch post</Trans>
+						{m['screens.messages.error.fetchPost']()}
 					</Text>
 				</SimpleContainer>
 			);
@@ -173,7 +172,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 							/>
 						</View>
 						<Button
-							label={l`Remove embed`}
+							label={m['screens.messages.action.removeEmbed']()}
 							onPress={onRemove}
 							style={[a.px_2xs, { transform: [{ translateY: -2 }] }]}
 							hitSlop={HITSLOP_20}
@@ -206,14 +205,13 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 
 function MessageInputInviteEmbed({ code, onRemove }: { code: string; onRemove: () => void }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { status, preview } = ChatInvite.useChatInvite({ code });
 
 	return (
 		<View style={[a.flex_1, t.atoms.border_contrast_high, a.rounded_md, a.border, a.p_sm, a.mt_sm, a.mx_sm]}>
 			<MessageInputInviteEmbedBody status={status} preview={preview} />
 			<Button
-				label={l`Remove embed`}
+				label={m['screens.messages.action.removeEmbed']()}
 				onPress={onRemove}
 				style={[a.absolute, { top: 10, right: 8 }, a.px_2xs, { transform: [{ translateY: -2 }] }]}
 				hitSlop={HITSLOP_20}
@@ -244,7 +242,6 @@ function MessageInputInviteEmbedBody({
 
 function SimpleContainer({ children, onRemove }: { children: React.ReactNode; onRemove?: () => void }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	return (
 		<View
 			style={[
@@ -262,7 +259,7 @@ function SimpleContainer({ children, onRemove }: { children: React.ReactNode; on
 			{children}
 			{onRemove && (
 				<Button
-					label={l`Remove embed`}
+					label={m['screens.messages.action.removeEmbed']()}
 					onPress={onRemove}
 					style={[a.absolute, { top: 10, right: 8 }, a.px_2xs, { transform: [{ translateY: -2 }] }]}
 					hitSlop={HITSLOP_20}

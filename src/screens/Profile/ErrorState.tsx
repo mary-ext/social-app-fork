@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -11,11 +10,11 @@ import { Button, ButtonText } from '#/components/Button';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function ErrorState({ error }: { error: string }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	const onPressBack = useCallback(() => {
@@ -30,13 +29,10 @@ export function ErrorState({ error }: { error: string }) {
 		<View style={[a.px_xl]}>
 			<CircleInfo width={48} fill={colors.textContrastLow} />
 			<Text style={[a.text_xl, a.font_semi_bold, a.pb_md, a.pt_xl]}>
-				<Trans>Hmmmm, we couldn't load that moderation service.</Trans>
+				{m['screens.profile.error.moderationServiceLoad']()}
 			</Text>
 			<Text style={[a.text_md, a.leading_normal, a.pb_md, t.atoms.text_contrast_medium]}>
-				<Trans>
-					This moderation service is unavailable. See below for more details. If this issue persists, contact
-					us.
-				</Trans>
+				{m['screens.profile.error.moderationUnavailable']()}
 			</Text>
 			<View style={[a.relative, a.py_md, a.px_lg, a.rounded_md, a.mb_2xl, t.atoms.bg_contrast_25]}>
 				<Text style={[a.text_md, a.leading_normal]}>{error}</Text>
@@ -46,13 +42,11 @@ export function ErrorState({ error }: { error: string }) {
 					size="small"
 					color="secondary"
 					variant="solid"
-					label={l`Go Back`}
+					label={m['common.action.goBackTitle']()}
 					accessibilityHint="Returns to previous page"
 					onPress={onPressBack}
 				>
-					<ButtonText>
-						<Trans>Go Back</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.goBackTitle']()}</ButtonText>
 				</Button>
 			</View>
 		</View>

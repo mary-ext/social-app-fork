@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { Trans } from '@lingui/react/macro';
 
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 
@@ -11,6 +10,7 @@ import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Loc
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function ThreadItemPostNoUnauthenticated({
@@ -45,7 +45,7 @@ export function ThreadItemPostNoUnauthenticated({
 				</Skele.Circle>
 
 				<Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
-					<Trans>This author has chosen to make their posts visible only to people who are signed in.</Trans>
+					{m['screens.postThread.hint.signedInOnly']()}
 				</Text>
 			</Skele.Row>
 			<View

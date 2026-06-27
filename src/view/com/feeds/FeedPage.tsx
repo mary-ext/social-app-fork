@@ -24,6 +24,7 @@ import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 const POLL_FREQ = 60e3; // 60sec
@@ -112,7 +113,11 @@ export function FeedPage({
 				/>
 			</FeedFeedbackProvider>
 			{(isScrolledDown || hasNew) && (
-				<LoadLatestBtn onPress={onPressLoadLatest} label={l`Load new posts`} showIndicator={hasNew} />
+				<LoadLatestBtn
+					onPress={onPressLoadLatest}
+					label={m['common.action.loadNewPosts']()}
+					showIndicator={hasNew}
+				/>
 			)}
 			{hasSession && (
 				<FAB

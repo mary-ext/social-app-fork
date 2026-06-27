@@ -1,5 +1,5 @@
 import { Text as RNText, View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -18,8 +18,9 @@ import { BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon } from '#/c
 import { InlineLinkText } from '#/components/Link';
 import { H1 } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 export function Admonitions() {
-	const { t: l } = useLingui();
 	const t = useTheme();
 
 	return (
@@ -40,18 +41,14 @@ export function Admonitions() {
 				<AdmonitionRow>
 					<AdmonitionIcon />
 					<AdmonitionContent>
-						<AdmonitionText>
-							<Trans>Something went wrong, please try again</Trans>
-						</AdmonitionText>
+						<AdmonitionText>{m['view.error.generic']()}</AdmonitionText>
 					</AdmonitionContent>
 					<AdmonitionButton
 						color="negative_subtle"
-						label={l`Retry loading report options`}
+						label={m['view.action.retryReportOptions']()}
 						onPress={() => {}}
 					>
-						<ButtonText>
-							<Trans>Retry</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.retry']()}</ButtonText>
 						<ButtonIcon icon={Retry} />
 					</AdmonitionButton>
 				</AdmonitionRow>
@@ -72,7 +69,7 @@ export function Admonitions() {
 								If you want to restrict who can receive notifications for your account's activity, you can
 								change this in{' '}
 								<InlineLinkText
-									label={l`Account and privacy settings`}
+									label={m['view.label.accountPrivacySettings']()}
 									to={{ screen: 'AccountSettings' }}
 									style={[a.font_bold]}
 								>

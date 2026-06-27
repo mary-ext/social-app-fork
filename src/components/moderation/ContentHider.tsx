@@ -5,7 +5,7 @@ import {
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
 import { Collapsible } from '@base-ui/react/collapsible';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { ADULT_CONTENT_LABELS, type AdultSelfLabel, isJustAMute } from '#/lib/moderation';
@@ -23,6 +23,7 @@ import {
 	useModerationDetailsDialogControl,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as styles from './ContentHider.css';
@@ -84,7 +85,7 @@ function ContentHiderActive({
 	childContainerClassName?: string;
 	children?: ReactNode;
 }) {
-	const { i18n, t: l } = useLingui();
+	const { i18n } = useLingui();
 	const [override, setOverride] = useState(false);
 	const control = useModerationDetailsDialogControl();
 	const { labelDefs } = useLabelDefinitions();
@@ -98,7 +99,7 @@ function ContentHiderActive({
 		}
 		if (blur.type !== ModerationCauseType.Label || blur.source !== null) {
 			if (desc.isSubjectAccount) {
-				return l`${desc.name} (Account)`;
+				return m['components.moderation.label.accountSuffix']({ name: desc.name });
 			} else {
 				return desc.name;
 			}
@@ -137,7 +138,7 @@ function ContentHiderActive({
 
 				const def = cause.labelDef || getDefinition(labelDefs, cause.label);
 				if (def.identifier === 'porn' || def.identifier === 'sexual') {
-					return l`Adult Content`;
+					return m['common.label.adultContent']();
 				}
 				return getLabelStrings(i18n.locale, globalLabelStrings, def).name;
 			});
@@ -146,7 +147,7 @@ function ContentHiderActive({
 			return desc.name;
 		}
 		return [...new Set(selfBlurNames)].join(', ');
-	}, [l, modui.blurs, blur, desc.name, desc.isSubjectAccount, labelDefs, i18n.locale, globalLabelStrings]);
+	}, [modui.blurs, blur, desc.name, desc.isSubjectAccount, labelDefs, i18n.locale, globalLabelStrings]);
 
 	const triggerInner = (
 		<>
@@ -162,7 +163,7 @@ function ContentHiderActive({
 			</Text>
 			{!modui.noOverride && (
 				<Text size="md_sub" weight="medium" color="textContrastHigh" className={styles.toggleText}>
-					{override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
+					{override ? m['common.action.hide']() : m['common.action.show']()}
 				</Text>
 			)}
 		</>
@@ -189,16 +190,14 @@ function ContentHiderActive({
 				<Dialog.Trigger
 					handle={control}
 					className={styles.learnMoreButton}
-					aria-label={l`Learn more about the moderation applied to this content`}
+					aria-label={m['components.moderation.action.learnMoreContent']()}
 				>
 					<Text size="md_sub" color="textContrastMedium">
-						{desc.sourceType === 'user' ? (
-							<Trans>Labeled by the author.</Trans>
-						) : (
-							<Trans>Labeled by {sanitizeDisplayName(desc.source)}.</Trans>
-						)}{' '}
+						{desc.sourceType === 'user'
+							? m['components.moderation.label.labeledByAuthor']()
+							: m['components.moderation.label.labeledBy']({ source: sanitizeDisplayName(desc.source) })}{' '}
 						<Text size="md_sub" color="primary_500" className={styles.learnMoreLink}>
-							<Trans>Learn more.</Trans>
+							{m['components.moderation.action.learnMoreDot']()}
 						</Text>
 					</Text>
 				</Dialog.Trigger>

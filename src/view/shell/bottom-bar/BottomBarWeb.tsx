@@ -1,6 +1,6 @@
 import { type ComponentPropsWithoutRef, type MouseEvent, useRef } from 'react';
 import { plural } from '@lingui/core/macro';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -40,6 +40,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './BottomBarWeb.css';
@@ -112,7 +113,6 @@ const useLongPress = (onLongPress?: () => void) => {
 };
 
 export function BottomBarWeb() {
-	const { t: l } = useLingui();
 	const { hasSession, currentAccount } = useSession();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 	const hideBorder = useHideBottomBarBorder();
@@ -186,10 +186,14 @@ export function BottomBarWeb() {
 							<Logotype width={72} fill={colors.text} />
 						</div>
 					</div>
-					<Button onClick={showSignIn} label={l`Sign in`} size="small" variant="solid" color="primary">
-						<ButtonText>
-							<Trans>Sign in</Trans>
-						</ButtonText>
+					<Button
+						onClick={showSignIn}
+						label={m['common.action.signIn']()}
+						size="small"
+						variant="solid"
+						color="primary"
+					>
+						<ButtonText>{m['common.action.signIn']()}</ButtonText>
 					</Button>
 				</div>
 			)}

@@ -8,6 +8,8 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './Card.css';
 import type { ChatInvitePreview } from './use-chat-invite';
 
@@ -31,7 +33,7 @@ export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 
 				<div className={css.metaRow}>
 					<Text size="xs" weight="medium" color="textContrastMedium" numberOfLines={1}>
-						<Trans>Group chat</Trans>
+						{m['common.label.groupChat']()}
 					</Text>
 					<Text size="xs" weight="medium" color="textContrastMedium" numberOfLines={1}>
 						<Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">

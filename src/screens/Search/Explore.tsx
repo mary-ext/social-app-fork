@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import * as bcp47Match from 'bcp-47-match';
 
 import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
@@ -37,6 +37,7 @@ import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as ModuleHeader from './components/ModuleHeader';
@@ -48,11 +49,9 @@ import { ExploreTrendingTopics } from './modules/ExploreTrendingTopics';
 type ExploreSearchButtonModule = 'suggestedAccounts' | 'suggestedFeeds';
 
 function LoadMore({ item }: { item: ExploreScreenItems & { type: 'loadMore' } }) {
-	const { t: l } = useLingui();
-
 	return (
 		<button
-			aria-label={l`Load more`}
+			aria-label={m['screens.search.action.loadMore']()}
 			className={css.loadMore}
 			onClick={() => void item.onLoadMore()}
 			type="button"
@@ -153,7 +152,6 @@ export function Explore({
 }: {
 	focusSearchInput: (tab: 'feed' | 'profile' | 'user') => void;
 }) {
-	const { t: l } = useLingui();
 	const { data: preferences, error: preferencesError } = usePreferencesQuery();
 	const moderationOpts = useModerationOpts();
 	const [selectedInterest, setSelectedInterest] = useState<string | null>(null);
@@ -267,10 +265,10 @@ export function Explore({
 		i.push({
 			type: 'tabbedHeader',
 			key: 'suggested-accounts-header',
-			title: l`Suggested accounts`,
+			title: m['screens.search.title.suggestedAccounts'](),
 			icon: Person,
 			searchButton: {
-				label: l`Search for more accounts`,
+				label: m['screens.search.action.searchMoreAccounts'](),
 				metricsTag: 'suggestedAccounts',
 				tab: 'user',
 			},
@@ -283,7 +281,7 @@ export function Explore({
 			i.push({
 				type: 'error',
 				key: 'suggestedUsersError',
-				message: l`Failed to load suggested follows`,
+				message: m['screens.search.error.loadSuggestedFollows'](),
 				error: cleanError(suggestedUsersError),
 			});
 		} else {
@@ -331,7 +329,6 @@ export function Explore({
 		}
 		return i;
 	}, [
-		l,
 		moderationOpts,
 		suggestedUsers,
 		suggestedUsersIsLoading,
@@ -345,10 +342,10 @@ export function Explore({
 		i.push({
 			type: 'header',
 			key: 'suggested-feeds-header',
-			title: l`Discover new feeds`,
+			title: m['screens.search.title.discoverFeeds'](),
 			icon: ListSparkle,
 			searchButton: {
-				label: l`Search for more feeds`,
+				label: m['screens.search.action.searchMoreFeeds'](),
 				metricsTag: 'suggestedFeeds',
 				tab: 'feed',
 			},
@@ -374,14 +371,14 @@ export function Explore({
 					i.push({
 						type: 'error',
 						key: 'suggestedFeedsError',
-						message: l`Failed to load suggested feeds`,
+						message: m['screens.search.error.loadSuggestedFeeds'](),
 						error: cleanError(suggestedFeedsError),
 					});
 				} else if (preferencesError) {
 					i.push({
 						type: 'error',
 						key: 'preferencesError',
-						message: l`Failed to load feeds preferences`,
+						message: m['screens.search.error.loadFeedsPrefs'](),
 						error: cleanError(preferencesError),
 					});
 				} else {
@@ -400,7 +397,7 @@ export function Explore({
 						i.push({
 							type: 'loadMore',
 							key: 'loadMoreFeeds',
-							message: l`Load more suggested feeds`,
+							message: m['screens.search.action.loadMoreFeeds'](),
 							isLoadingMore: isLoadingMoreFeeds,
 							onLoadMore: onLoadMoreFeeds,
 						});
@@ -414,21 +411,21 @@ export function Explore({
 					i.push({
 						type: 'error',
 						key: 'feedsError',
-						message: l`Failed to load feeds`,
+						message: m['screens.search.error.loadFeeds'](),
 						error: cleanError(feedsError),
 					});
 				} else if (suggestedFeedsError) {
 					i.push({
 						type: 'error',
 						key: 'suggestedFeedsError',
-						message: l`Failed to load suggested feeds`,
+						message: m['screens.search.error.loadSuggestedFeeds'](),
 						error: cleanError(suggestedFeedsError),
 					});
 				} else if (preferencesError) {
 					i.push({
 						type: 'error',
 						key: 'preferencesError',
-						message: l`Failed to load feeds preferences`,
+						message: m['screens.search.error.loadFeedsPrefs'](),
 						error: cleanError(preferencesError),
 					});
 				} else {
@@ -461,21 +458,21 @@ export function Explore({
 					i.push({
 						type: 'error',
 						key: 'feedsError',
-						message: l`Failed to load feeds`,
+						message: m['screens.search.error.loadFeeds'](),
 						error: cleanError(feedsError),
 					});
 				} else if (suggestedFeedsError) {
 					i.push({
 						type: 'error',
 						key: 'suggestedFeedsError',
-						message: l`Failed to load suggested feeds`,
+						message: m['screens.search.error.loadSuggestedFeeds'](),
 						error: cleanError(suggestedFeedsError),
 					});
 				} else if (preferencesError) {
 					i.push({
 						type: 'error',
 						key: 'preferencesError',
-						message: l`Failed to load feeds preferences`,
+						message: m['screens.search.error.loadFeedsPrefs'](),
 						error: cleanError(preferencesError),
 					});
 				} else {
@@ -496,7 +493,7 @@ export function Explore({
 						i.push({
 							type: 'loadMore',
 							key: 'loadMoreFeeds',
-							message: l`Load more suggested feeds`,
+							message: m['screens.search.action.loadMoreFeeds'](),
 							isLoadingMore: isLoadingMoreFeeds,
 							onLoadMore: onLoadMoreFeeds,
 						});
@@ -510,21 +507,21 @@ export function Explore({
 					i.push({
 						type: 'error',
 						key: 'feedsError',
-						message: l`Failed to load feeds`,
+						message: m['screens.search.error.loadFeeds'](),
 						error: cleanError(feedsError),
 					});
 				} else if (suggestedFeedsError) {
 					i.push({
 						type: 'error',
 						key: 'feedsError',
-						message: l`Failed to load suggested feeds`,
+						message: m['screens.search.error.loadSuggestedFeeds'](),
 						error: cleanError(suggestedFeedsError),
 					});
 				} else if (preferencesError) {
 					i.push({
 						type: 'error',
 						key: 'preferencesError',
-						message: l`Failed to load feeds preferences`,
+						message: m['screens.search.error.loadFeedsPrefs'](),
 						error: cleanError(preferencesError),
 					});
 				} else {
@@ -536,7 +533,6 @@ export function Explore({
 		}
 		return i;
 	}, [
-		l,
 		useFullExperience,
 		suggestedFeeds,
 		preferences,
@@ -555,7 +551,7 @@ export function Explore({
 		i.push({
 			type: 'header',
 			key: 'suggested-starterPacks-header',
-			title: l`Starter Packs`,
+			title: m['common.label.starterPacks'](),
 			icon: StarterPack,
 			iconSize: 'xl',
 		});
@@ -580,7 +576,7 @@ export function Explore({
 			});
 		}
 		return i;
-	}, [suggestedSPs, l, isLoadingSuggestedSPs, suggestedSPsError, isRefetchingSuggestedSPs]);
+	}, [suggestedSPs, isLoadingSuggestedSPs, suggestedSPsError, isRefetchingSuggestedSPs]);
 	const feedPreviewsModule = useMemo(() => {
 		const i: ExploreScreenItems[] = [];
 		i.push(...feedPreviewSlices);
@@ -679,7 +675,7 @@ export function Explore({
 								{selectedInterest ? (
 									<Trans>No results for "{interestsDisplayNames[selectedInterest]}".</Trans>
 								) : (
-									<Trans>No results.</Trans>
+									m['screens.search.empty.noResults']()
 								)}
 							</Admonition>
 						</div>
@@ -755,7 +751,7 @@ export function Explore({
 					return null; // what should we do here?
 				}
 				case 'preview:loading': {
-					return <CenteredSpinner label={l`Loading`} size="lg" />;
+					return <CenteredSpinner label={m['common.label.loading']()} size="lg" />;
 				}
 				case 'preview:header': {
 					return (
@@ -766,7 +762,9 @@ export function Explore({
 								<div className={css.previewHeaderText}>
 									<ModuleHeader.TitleText size="lg">{item.feed.displayName}</ModuleHeader.TitleText>
 									<ModuleHeader.SubtitleText>
-										<Trans>by {sanitizeHandle(item.feed.creator.handle)}</Trans>
+										{m['screens.search.label.byCreator']({
+											handle: sanitizeHandle(item.feed.creator.handle),
+										})}
 									</ModuleHeader.SubtitleText>
 								</div>
 							</ModuleHeader.FeedLink>
@@ -806,14 +804,14 @@ export function Explore({
 				case 'preview:loadMoreError': {
 					return (
 						<LoadMoreRetryBtn
-							label={l`There was an issue fetching posts. Tap here to try again.`}
+							label={m['common.error.fetchPosts']()}
 							onPress={() => void fetchNextPageFeedPreviews()}
 						/>
 					);
 				}
 			}
 		},
-		[focusSearchInput, selectedInterest, moderationOpts, interestsDisplayNames, l, fetchNextPageFeedPreviews],
+		[focusSearchInput, selectedInterest, moderationOpts, interestsDisplayNames, fetchNextPageFeedPreviews],
 	);
 
 	return (

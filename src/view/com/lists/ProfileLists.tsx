@@ -1,5 +1,4 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -18,6 +17,8 @@ import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/ico
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import * as ListCard from '#/components/ListCard';
 import { ListFooter } from '#/components/Lists';
+
+import { m } from '#/paraglide/messages';
 
 // only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const LIST_ITEM_HEIGHT_ESTIMATE = 120;
@@ -47,7 +48,6 @@ interface ProfileListsProps {
 }
 
 export function ProfileLists({ did, enabled, listCount }: ProfileListsProps): React.ReactNode {
-	const { t: l } = useLingui();
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useProfileListsQuery(did, { enabled });
 	const isEmpty = !isPending && !data?.pages[0]?.lists.length;
@@ -98,12 +98,7 @@ export function ProfileLists({ did, enabled, listCount }: ProfileListsProps): Re
 				return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
 			}
 			if (item === LOAD_MORE_ERROR_ITEM) {
-				return (
-					<LoadMoreRetryBtn
-						label={l`There was an issue fetching your lists. Tap here to try again.`}
-						onPress={onPressRetryLoadMore}
-					/>
-				);
+				return <LoadMoreRetryBtn label={m['common.error.fetchLists']()} onPress={onPressRetryLoadMore} />;
 			}
 			if (item === LOADING) {
 				return <ListCard.LoadingPlaceholder count={listCount} />;
@@ -111,13 +106,13 @@ export function ProfileLists({ did, enabled, listCount }: ProfileListsProps): Re
 			return (
 				<EmptyState
 					icon={ListIcon}
-					message={isSelf ? l`You haven't created any lists yet.` : l`No lists`}
+					message={isSelf ? m['view.lists.empty.none']() : m['view.lists.empty.title']()}
 					messageColor="textContrastMedium"
 					button={
 						isSelf
 							? {
-									label: l`Create a list`,
-									text: l`Create a list`,
+									label: m['view.lists.action.create'](),
+									text: m['view.lists.action.create'](),
 									onPress: () => navigation.navigate('Lists' as never),
 									size: 'small',
 									color: 'primary',

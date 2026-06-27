@@ -1,9 +1,9 @@
-import { Trans, useLingui } from '@lingui/react/macro';
-
 import { Bubble_Stroke2_Corner2_Rounded as Bubble } from '#/components/icons/Bubble';
 import { Eye_Stroke2_Corner0_Rounded as Eye } from '#/components/icons/Eye';
 import { Megaphone_Stroke2_Corner0_Rounded as Megaphone } from '#/components/icons/Megaphone';
 import * as Prompt from '#/components/web/Prompt';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * Block/unblock confirmation. Blocking shows an explainer of what the block does; unblocking shows a plain
@@ -20,16 +20,14 @@ export function BlockAccountPrompt({
 	isLabeler: boolean;
 	onConfirm: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	if (isBlocking) {
 		return (
 			<Prompt.Basic
 				handle={handle}
-				title={l`Unblock account?`}
-				description={l`The account will be able to interact with you after unblocking.`}
+				title={m['components.moderation.dialog.unblockTitle']()}
+				description={m['common.hint.unblockInteract']()}
 				onConfirm={onConfirm}
-				confirmButtonCta={l`Unblock`}
+				confirmButtonCta={m['common.action.unblock']()}
 			/>
 		);
 	}
@@ -37,29 +35,23 @@ export function BlockAccountPrompt({
 	return (
 		<Prompt.Outer handle={handle} size="wide">
 			<Prompt.Content>
-				<Prompt.TitleText>{l`Block account?`}</Prompt.TitleText>
-				<Prompt.DescriptionText>{l`Here's what happens if you do:`}</Prompt.DescriptionText>
+				<Prompt.TitleText>{m['components.moderation.block.confirmTitle']()}</Prompt.TitleText>
+				<Prompt.DescriptionText>{m['components.moderation.hint.whatHappens']()}</Prompt.DescriptionText>
 
 				<Prompt.Rows>
-					<Prompt.Row icon={Megaphone}>
-						<Trans>They can see they're blocked</Trans>
-					</Prompt.Row>
-					<Prompt.Row icon={Eye}>
-						<Trans>They can't see your posts and you won't see theirs or any replies to them</Trans>
-					</Prompt.Row>
-					<Prompt.Row icon={Bubble}>
-						<Trans>They can't mention you or reply to your posts</Trans>
-					</Prompt.Row>
+					<Prompt.Row icon={Megaphone}>{m['components.moderation.hint.blockedCanSee']()}</Prompt.Row>
+					<Prompt.Row icon={Eye}>{m['components.moderation.hint.blockedNoSeePosts']()}</Prompt.Row>
+					<Prompt.Row icon={Bubble}>{m['components.moderation.hint.blockedNoMention']()}</Prompt.Row>
 				</Prompt.Rows>
 
 				{isLabeler && (
 					<Prompt.DescriptionText>
-						{l`Blocking won't stop this labeler's labels from being applied to your account.`}
+						{m['components.moderation.block.descriptionLabeler']()}
 					</Prompt.DescriptionText>
 				)}
 			</Prompt.Content>
 			<Prompt.Actions>
-				<Prompt.Action onPress={onConfirm} color="negative" cta={l`Block`} />
+				<Prompt.Action onPress={onConfirm} color="negative" cta={m['common.action.block']()} />
 				<Prompt.Cancel />
 			</Prompt.Actions>
 		</Prompt.Outer>

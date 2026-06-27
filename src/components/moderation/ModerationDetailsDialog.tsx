@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
@@ -17,6 +17,8 @@ import * as Dialog from '#/components/Dialog';
 import { InlineLinkText } from '#/components/Link';
 import type { AppModerationCause } from '#/components/Pills';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export { useDialogControl as useModerationDetailsDialogControl } from '#/components/Dialog';
 
@@ -42,7 +44,6 @@ function ModerationDetailsDialogInner({
 }) {
 	const t = useTheme();
 	const xGutters = useGutters([0, 'base']);
-	const { t: l } = useLingui();
 	const desc = useModerationCauseDescription(modcause);
 	const { currentAccount } = useSession();
 	const timeDiff = useGetTimeAgo({ future: true });
@@ -52,16 +53,16 @@ function ModerationDetailsDialogInner({
 	let name;
 	let description;
 	if (!modcause) {
-		name = l`Content Warning`;
-		description = l`Moderator has chosen to set a general warning on the content.`;
+		name = m['common.label.contentWarning']();
+		description = m['common.label.generalWarning']();
 	} else if (modcause.type === 'reply-hidden') {
 		const isYou = currentAccount?.did === modcause.source.did;
-		name = isYou ? l`Reply Hidden by You` : l`Reply Hidden by Thread Author`;
-		description = isYou ? l`You hid this reply.` : l`The author of this thread has hidden this reply.`;
+		name = isYou ? m['common.label.replyHiddenByYou']() : m['common.label.replyHiddenByAuthor']();
+		description = isYou ? m['common.label.youHidReply']() : m['common.label.authorHiddenReply']();
 	} else if (modcause.type === ModerationCauseType.Blocking) {
 		if (modcause.source) {
 			const list = modcause.source;
-			name = l`User Blocked by List`;
+			name = m['common.title.userBlockedByList']();
 			description = (
 				<Trans>
 					This user is included in the{' '}
@@ -72,16 +73,16 @@ function ModerationDetailsDialogInner({
 				</Trans>
 			);
 		} else {
-			name = l`User Blocked`;
-			description = l`You have blocked this user. You cannot view their content.`;
+			name = m['common.title.userBlocked']();
+			description = m['common.label.youBlockedUser']();
 		}
 	} else if (modcause.type === ModerationCauseType.BlockedBy) {
-		name = l`User Blocks You`;
-		description = l`This user has blocked you. You cannot view their content.`;
+		name = m['common.title.userBlocksYou']();
+		description = m['common.label.blockedByUser']();
 	} else if (modcause.type === ModerationCauseType.MutedPermanent) {
 		if (modcause.source) {
 			const list = modcause.source;
-			name = l`Account Muted by List`;
+			name = m['common.label.accountMutedByList']();
 			description = (
 				<Trans>
 					This user is included in the{' '}
@@ -92,18 +93,18 @@ function ModerationDetailsDialogInner({
 				</Trans>
 			);
 		} else {
-			name = l`Account Muted`;
-			description = l`You have muted this account.`;
+			name = m['common.label.accountMuted']();
+			description = m['common.label.youMutedAccount']();
 		}
 	} else if (modcause.type === ModerationCauseType.MutedTemporary) {
-		name = l`Account Muted`;
-		description = l`You have muted this account.`;
+		name = m['common.label.accountMuted']();
+		description = m['common.label.youMutedAccount']();
 	} else if (modcause.type === ModerationCauseType.MutedKeyword) {
-		name = l`Post Hidden by Muted Word`;
-		description = l`You've chosen to hide a word or tag within this post.`;
+		name = m['common.label.postHiddenByMutedWord']();
+		description = m['common.label.hiddenWordTag']();
 	} else if (modcause.type === ModerationCauseType.Hidden) {
-		name = l`Post Hidden by You`;
-		description = l`You have hidden this post.`;
+		name = m['common.label.postHiddenByYou']();
+		description = m['common.label.youHidPost']();
 	} else if (modcause.type === ModerationCauseType.Label) {
 		name = desc.name;
 		description = (
@@ -117,11 +118,11 @@ function ModerationDetailsDialogInner({
 		description = '';
 	}
 
-	const sourceName = desc.source || desc.sourceDisplayName || l`an unknown labeler`;
+	const sourceName = desc.source || desc.sourceDisplayName || m['common.label.unknownLabeler']();
 
 	return (
 		<Dialog.ScrollableInner
-			label={l`Moderation details`}
+			label={m['common.title.moderationDetails']()}
 			contentContainerStyle={{
 				paddingLeft: 0,
 				paddingRight: 0,
@@ -139,9 +140,7 @@ function ModerationDetailsDialogInner({
 
 				{desc.isSubjectAccount && (
 					<Admonition type="info" style={[a.mt_md]}>
-						<Trans>
-							This moderation was applied to the entire user account and will appear on all posts.
-						</Trans>
+						{m['common.hint.accountModeration']()}
 					</Admonition>
 				)}
 			</View>
@@ -161,7 +160,7 @@ function ModerationDetailsDialogInner({
 				>
 					{modcause.source === null ? (
 						<Text style={[t.atoms.text, a.text_md, a.leading_snug]}>
-							<Trans>This label was applied by the author.</Trans>
+							{m['common.label.appliedByAuthor']()}
 						</Text>
 					) : (
 						<>
@@ -181,7 +180,7 @@ function ModerationDetailsDialogInner({
 								{modcause.label.exp && (
 									<View>
 										<Text style={[a.leading_snug, a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-											<Trans>Expires in {timeDiff(tick, modcause.label.exp)}</Trans>
+											{m['common.label.expiresIn']({ time: timeDiff(tick, modcause.label.exp) })}
 										</Text>
 									</View>
 								)}

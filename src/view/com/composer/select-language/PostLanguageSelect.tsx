@@ -1,5 +1,3 @@
-import { Trans, useLingui } from '@lingui/react/macro';
-
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 
 import { codeToLanguageName } from '#/locale/helpers';
@@ -8,6 +6,8 @@ import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog'
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
+
+import { m } from '#/paraglide/messages';
 
 import { LanguageButton } from './LanguageButton';
 
@@ -25,7 +25,6 @@ export function PostLanguageSelect({
 	 */
 	nudgeAt?: number;
 }) {
-	const { t: l } = useLingui();
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
 	const languageDialogControl = useDialogHandle();
@@ -45,8 +44,8 @@ export function PostLanguageSelect({
 
 	const dialog = (
 		<LanguageSelectDialog
-			titleText={<Trans>Choose post languages</Trans>}
-			subtitleText={<Trans>Select up to 3 languages used in this post</Trans>}
+			titleText={m['view.composer.language.chooseTitle']()}
+			subtitleText={m['view.composer.language.selectHint']()}
 			handle={languageDialogControl}
 			currentLanguages={currentLanguages}
 			onSelectLanguages={onSelectLanguages}
@@ -60,7 +59,7 @@ export function PostLanguageSelect({
 		return (
 			<>
 				<LanguageButton
-					label={l`Post language selection`}
+					label={m['view.composer.a11y.postLanguageSelection']()}
 					nudgeAt={nudgeAt}
 					onClick={() => languageDialogControl.open(null)}
 				/>
@@ -75,13 +74,13 @@ export function PostLanguageSelect({
 				<Menu.Trigger
 					render={
 						<LanguageButton
-							label={l`Select post language`}
+							label={m['view.composer.language.selectPost']()}
 							currentLanguages={currentLanguages}
 							nudgeAt={nudgeAt}
 						/>
 					}
 				/>
-				<Menu.Popup label={l`Select post language`}>
+				<Menu.Popup label={m['view.composer.language.selectPost']()}>
 					<Menu.Group>
 						{dedupedHistory.map((historyItem) => {
 							const langName = historyItem
@@ -91,7 +90,7 @@ export function PostLanguageSelect({
 							return (
 								<Menu.Item
 									key={historyItem}
-									label={l`Select ${langName}`}
+									label={m['view.composer.a11y.selectLanguage']({ langName })}
 									onClick={() => {
 										setLangPrefs.setPostLanguage(historyItem);
 										onSelectLanguage?.(historyItem);
@@ -104,10 +103,11 @@ export function PostLanguageSelect({
 						})}
 					</Menu.Group>
 					<Menu.Separator />
-					<Menu.Item label={l`More languages...`} onClick={() => languageDialogControl.open(null)}>
-						<Menu.ItemText>
-							<Trans>More languages...</Trans>
-						</Menu.ItemText>
+					<Menu.Item
+						label={m['view.composer.language.more']()}
+						onClick={() => languageDialogControl.open(null)}
+					>
+						<Menu.ItemText>{m['view.composer.language.more']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={ChevronRightIcon} position="right" />
 					</Menu.Item>
 				</Menu.Popup>

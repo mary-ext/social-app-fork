@@ -1,8 +1,9 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { logger } from '#/logger';
+
+import { m } from '#/paraglide/messages';
 
 import { ErrorScreen } from './error/ErrorScreen';
 import { CenteredView } from './Views';
@@ -50,12 +51,10 @@ export class ErrorBoundary extends Component<Props, State> {
 }
 
 function TranslatedErrorScreen({ details }: { details?: string }) {
-	const { t: l } = useLingui();
-
 	return (
 		<ErrorScreen
-			title={l`Oh no!`}
-			message={l`There was an unexpected issue in the application. Please let us know if this happened to you!`}
+			title={m['common.error.ohNo']()}
+			message={m['common.error.unexpected']()}
 			details={details}
 		/>
 	);

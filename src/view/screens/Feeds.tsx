@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
@@ -37,6 +37,7 @@ import { SearchInput } from '#/components/web/forms/SearchInput';
 import * as Layout from '#/components/web/Layout';
 import { LinkButton } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './Feeds.css';
@@ -95,7 +96,6 @@ type FlatlistSlice =
 	  };
 
 export function FeedsScreen({}: Props) {
-	const { t: l } = useLingui();
 	const { openComposer } = useOpenComposer();
 	const { hasSession } = useSession();
 	const [query, setQuery] = useState('');
@@ -274,11 +274,11 @@ export function FeedsScreen({}: Props) {
 						<FeedsAboutHeader />
 						<div ref={searchAnchorRef} className={css.searchWrapper}>
 							<SearchInput
-								label={l`Search feeds`}
+								label={m['view.action.searchFeeds']()}
 								onChangeText={onChangeQuery}
 								onClear={onPressCancelSearch}
 								onFocus={onFocusSearch}
-								placeholder={l`Search feeds`}
+								placeholder={m['view.action.searchFeeds']()}
 								value={query}
 							/>
 						</div>
@@ -310,14 +310,12 @@ export function FeedsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Feeds</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.nav.feeds']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot>
 					<LinkButton
 						color="secondary"
-						label={l`Edit My Feeds`}
+						label={m['common.action.editMyFeeds']()}
 						shape="round"
 						size="small"
 						to="/settings/saved-feeds"
@@ -333,7 +331,9 @@ export function FeedsScreen({}: Props) {
 				estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(item) => item.key}
 				ListFooterComponent={
-					isPopularFeedsFetchingNextPage ? <CenteredSpinner label={l`Loading more feeds`} size="xl" /> : null
+					isPopularFeedsFetchingNextPage ? (
+						<CenteredSpinner label={m['view.feeds.loadingMore']()} size="xl" />
+					) : null
 				}
 				onEndReached={onEndReached}
 				onEndReachedThreshold={2}
@@ -343,7 +343,7 @@ export function FeedsScreen({}: Props) {
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={colors.white} />}
-					label={l`New post`}
+					label={m['common.label.newPost']()}
 					onClick={() => openComposer({ logContext: 'Fab' })}
 				/>
 			)}
@@ -356,14 +356,13 @@ function FeedOrFollowing({ savedFeed }: { savedFeed: SavedFeedItem }) {
 }
 
 function FollowingFeed() {
-	const { t: l } = useLingui();
 	return (
 		<div className={css.plainRow}>
 			<FeedCard.Header>
 				<div className={css.followingIcon}>
 					<FilterTimeline width={18} fill={colors.white} />
 				</div>
-				<FeedCard.TitleAndByline title={l({ context: 'feed-name', message: 'Following' })} />
+				<FeedCard.TitleAndByline title={m['common.label.followingFeed']()} />
 			</FeedCard.Header>
 		</div>
 	);
@@ -408,11 +407,9 @@ function FeedsSavedHeader() {
 			</div>
 			<div className={css.headerColumn}>
 				<Text size="_2xl" weight="bold">
-					<Trans>My Feeds</Trans>
+					{m['view.title.myFeeds']()}
 				</Text>
-				<Text color="textContrastHigh">
-					<Trans>All the feeds you've saved, right in one place.</Trans>
-				</Text>
+				<Text color="textContrastHigh">{m['view.feeds.savedDescription']()}</Text>
 			</div>
 		</div>
 	);
@@ -426,13 +423,9 @@ function FeedsAboutHeader() {
 			</div>
 			<div className={css.aboutColumn}>
 				<Text size="_2xl" weight="bold">
-					<Trans>Discover New Feeds</Trans>
+					{m['view.title.discoverFeeds']()}
 				</Text>
-				<Text color="textContrastHigh">
-					<Trans>
-						Choose your own timeline! Feeds built by the community help you find content you love.
-					</Trans>
-				</Text>
+				<Text color="textContrastHigh">{m['view.feeds.discoverDescription']()}</Text>
 			</div>
 		</div>
 	);

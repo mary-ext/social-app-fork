@@ -51,6 +51,8 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { useDialogHandle } from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { AddMembersLink } from './AddMembersLink';
 import { Member, MemberPlaceholder } from './Member';
@@ -90,9 +92,7 @@ export function MessagesConversationSettingsScreen({ route }: Props) {
 					}}
 				/>
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Group chat settings</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.title.groupChatSettings']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -102,7 +102,6 @@ export function MessagesConversationSettingsScreen({ route }: Props) {
 }
 
 function SettingsInner({ convoId }: { convoId: string }) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
@@ -113,8 +112,8 @@ function SettingsInner({ convoId }: { convoId: string }) {
 	if (error) {
 		return (
 			<Error
-				title={l`Something went wrong`}
-				message={l`We couldn’t load this conversation’s settings`}
+				title={m['screens.messages.error.generic']()}
+				message={m['screens.messages.error.loadSettings']()}
 				onRetry={() => refetch()}
 				sideBorders={false}
 			/>
@@ -132,8 +131,8 @@ function SettingsInner({ convoId }: { convoId: string }) {
 	if (convo.kind !== 'group') {
 		return (
 			<Error
-				title={l`Wrong kind of conversation`}
-				message={l`This screen is only available for group conversations.`}
+				title={m['screens.messages.error.wrongConversationType']()}
+				message={m['screens.messages.error.groupOnlyScreen']()}
 				onGoBack={() => {
 					if (navigation.canGoBack()) {
 						navigation.goBack();
@@ -289,7 +288,7 @@ function SettingsHeader({
 	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
-	const { i18n, t: l } = useLingui();
+	const { i18n } = useLingui();
 
 	const navigation = useNavigation<NavigationProp>();
 
@@ -306,26 +305,26 @@ function SettingsHeader({
 
 	const { mutate: editGroupName, isPending: isEditingName } = useEditGroupChatName(convo.view.id, {
 		onSuccess: () => {
-			Toast.show(l({ message: 'Group chat name updated', context: 'toast' }));
+			Toast.show(m['screens.messages.toast.groupNameUpdated']());
 		},
 		onError: (e) => {
 			setNewGroupName(groupName);
 			logger.error('Failed to edit group chat name', { message: e });
-			Toast.show(l`Failed to edit group chat name`, { type: 'error' });
+			Toast.show(m['screens.messages.error.editGroupName'](), { type: 'error' });
 		},
 	});
 
 	const { mutate: muteConvo, isPending: isMuting } = useMuteConvo(convo.view.id, {
 		onSuccess: (data) => {
 			if (data.convo.muted) {
-				Toast.show(l({ message: 'Group chat muted', context: 'toast' }));
+				Toast.show(m['screens.messages.toast.groupMuted']());
 			} else {
-				Toast.show(l({ message: 'Group chat unmuted', context: 'toast' }));
+				Toast.show(m['screens.messages.toast.groupUnmuted']());
 			}
 		},
 		onError: (e) => {
 			logger.error('Failed to mute group chat', { message: e });
-			Toast.show(l`Failed to mute group chat`, { type: 'error' });
+			Toast.show(m['screens.messages.error.muteGroup'](), { type: 'error' });
 		},
 	});
 
@@ -335,7 +334,7 @@ function SettingsHeader({
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });
-			Toast.show(l({ message: 'Failed to leave group chat', context: 'toast' }), { type: 'error' });
+			Toast.show(m['screens.messages.error.leaveGroup'](), { type: 'error' });
 		},
 	});
 
@@ -348,20 +347,20 @@ function SettingsHeader({
 			if (data.convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return;
 			if (silent) return;
 			if (data.convo.kind.lockStatus === 'locked') {
-				Toast.show(l({ message: 'Group chat locked', context: 'toast' }));
+				Toast.show(m['screens.messages.toast.groupLocked']());
 			} else {
-				Toast.show(l({ message: 'Group chat unlocked', context: 'toast' }));
+				Toast.show(m['screens.messages.toast.groupUnlocked']());
 			}
 		},
 		onError: (e, { lock }) => {
 			if (lock) {
 				logger.error('Failed to lock group chat', { message: e });
-				Toast.show(l`Failed to lock group chat`, { type: 'error' });
+				Toast.show(m['screens.messages.error.lockGroup'](), { type: 'error' });
 			} else if (e instanceof ClientResponseError && e.error === 'ConvoLockedByModeration') {
-				Toast.show(l`This chat is locked by a moderation action`, { type: 'error' });
+				Toast.show(m['screens.messages.label.chatLockedMod'](), { type: 'error' });
 			} else {
 				logger.error('Failed to unlock group chat', { message: e });
-				Toast.show(l`Failed to unlock group chat`, { type: 'error' });
+				Toast.show(m['screens.messages.error.unlockGroup'](), { type: 'error' });
 			}
 		},
 	});
@@ -437,16 +436,20 @@ function SettingsHeader({
 						color={convo.view.muted ? 'negative_subtle' : 'secondary'}
 						disabled={isMuting || lockStatus !== 'unlocked'}
 						icon={convo.view.muted ? BellOffIcon : BellIcon}
-						label={convo.view.muted ? l`Unmute this group chat` : l`Mute this group chat`}
-						text={convo.view.muted ? l`Muted` : l`Mute`}
+						label={
+							convo.view.muted
+								? m['screens.messages.action.unmuteGroup']()
+								: m['screens.messages.action.muteGroup']()
+						}
+						text={convo.view.muted ? m['common.label.muted']() : m['common.action.mute']()}
 						onPress={handleToggleMute}
 					/>
 					{isOwner ? (
 						<SettingsButton
 							disabled={isEditingName || lockStatus !== 'unlocked'}
 							icon={EditIcon}
-							label={l`Edit this group chat’s name`}
-							text={l`Edit name`}
+							label={m['screens.messages.label.editGroupNameHint']()}
+							text={m['screens.messages.action.editName']()}
 							onPress={handlePromptName}
 						/>
 					) : null}
@@ -456,10 +459,10 @@ function SettingsHeader({
 							icon={ChainLinkIcon}
 							label={
 								isOwner
-									? l`Create or modify an invite link for this group chat`
-									: l`View the invite link for this group chat`
+									? m['screens.messages.label.createOrModifyLink']()
+									: m['screens.messages.a11y.viewInviteLinkHint']()
 							}
-							text={l`Invite link`}
+							text={m['screens.messages.label.inviteLink']()}
 							onPress={inviteLinkDialog.open}
 						/>
 					) : null}
@@ -468,24 +471,32 @@ function SettingsHeader({
 							color={lockStatus === 'locked' ? 'negative_subtle' : 'secondary'}
 							disabled={isLocking}
 							icon={LockIcon}
-							label={lockStatus === 'locked' ? l`Unlock this group chat` : l`Lock this group chat`}
-							text={lockStatus === 'locked' ? l`Locked` : l`Lock`}
+							label={
+								lockStatus === 'locked'
+									? m['screens.messages.a11y.unlockGroupChat']()
+									: m['screens.messages.a11y.lockGroupChat']()
+							}
+							text={
+								lockStatus === 'locked'
+									? m['screens.messages.label.locked']()
+									: m['screens.messages.action.lock']()
+							}
 							onPress={lockStatus === 'locked' ? handleUnlock : lockChatPrompt.open}
 						/>
 					) : null}
 					{!isOwner && reportSubjectDid ? (
 						<SettingsButton
 							icon={FlagIcon}
-							label={l`Report this group chat`}
-							text={l`Report`}
+							label={m['screens.messages.action.reportGroup']()}
+							text={m['common.action.report']()}
 							onPress={() => reportControl.open(null)}
 						/>
 					) : null}
 					<SettingsButton
 						disabled={isLeaving || (isOwner && isLocking)}
 						icon={ArrowBoxLeftIcon}
-						label={l`Leave this group chat`}
-						text={l`Leave`}
+						label={m['screens.messages.a11y.leaveGroupChat']()}
+						text={m['common.action.leave']()}
 						onPress={isOwner ? leaveAndLockChatPrompt.open : leaveChatPrompt.open}
 					/>
 				</View>

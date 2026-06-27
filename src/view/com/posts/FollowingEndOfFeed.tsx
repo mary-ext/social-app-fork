@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';
@@ -9,6 +8,7 @@ import { s } from '#/lib/styles';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { Button } from '../util/forms/Button';
@@ -31,21 +31,21 @@ export function FollowingEndOfFeed() {
 		<View style={[styles.container, pal.border, { minHeight: Dimensions.get('window').height * 0.75 }]}>
 			<View style={styles.inner}>
 				<Text type="xl-medium" style={[s.textCenter, pal.text]}>
-					<Trans>You've reached the end of your feed! Find some more accounts to follow.</Trans>
+					{m['view.posts.empty.endOfFeed']()}
 				</Text>
 				<Button type="inverted" style={styles.emptyBtn} onPress={onPressFindAccounts}>
 					<Text type="lg-medium" style={palInverted.text}>
-						<Trans>Find accounts to follow</Trans>
+						{m['view.posts.cta.findAccounts']()}
 					</Text>
 					<ChevronRightIcon width={14} fill={colors.textInverted} />
 				</Button>
 
 				<Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
-					<Trans>You can also discover new Custom Feeds to follow.</Trans>
+					{m['view.posts.empty.discoverHint']()}
 				</Text>
 				<Button type="inverted" style={[styles.emptyBtn, s.mt10]} onPress={onPressDiscoverFeeds}>
 					<Text type="lg-medium" style={palInverted.text}>
-						<Trans>Discover new custom feeds</Trans>
+						{m['view.posts.cta.discoverFeeds']()}
 					</Text>
 					<ChevronRightIcon width={14} fill={colors.textInverted} />
 				</Button>

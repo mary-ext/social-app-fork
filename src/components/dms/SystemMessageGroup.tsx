@@ -1,7 +1,6 @@
 import { Pressable, View } from 'react-native';
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 
@@ -12,6 +11,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown } from '#/components/icons/Chevron';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export function SystemMessageGroup({
 	item,
@@ -25,7 +26,6 @@ export function SystemMessageGroup({
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const count = item.items.length;
 
 	const label = plural(count, {
@@ -43,7 +43,9 @@ export function SystemMessageGroup({
 				testID="systemMessageGroupToggle"
 				accessibilityRole="button"
 				accessibilityLabel={label}
-				accessibilityHint={expanded ? l`Hide group chat updates` : l`Show group chat updates`}
+				accessibilityHint={
+					expanded ? m['components.dms.action.hideUpdates']() : m['components.dms.label.showGroupUpdates']()
+				}
 				accessibilityState={{ expanded }}
 				hitSlop={HITSLOP_10}
 				onPress={() => onToggle(item.key)}

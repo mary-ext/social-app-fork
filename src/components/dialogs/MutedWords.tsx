@@ -1,5 +1,4 @@
 import { type KeyboardEvent, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
 
@@ -18,14 +17,14 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
 export function MutedWordsDialog({ handle }: { handle: Dialog.DialogHandle }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={l`Add a muted word or tag`} size="narrow">
+			<Dialog.Popup label={m['components.dialogs.mutedWord.addTitle']()} size="narrow">
 				<Dialog.Close />
 				<DialogInner handle={handle} />
 			</Dialog.Popup>
@@ -34,7 +33,6 @@ export function MutedWordsDialog({ handle }: { handle: Dialog.DialogHandle }) {
 }
 
 function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
-	const { t: l } = useLingui();
 	const { isPending, mutateAsync: addMutedWord } = useUpsertMutedWordsMutation();
 	const [field, setField] = useState('');
 	const [target, setTarget] = useState<'content' | 'tag'>('content');
@@ -43,14 +41,14 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const [error, setError] = useState('');
 
 	const durationItems = [
-		{ label: l`Forever`, value: 'forever' },
-		{ label: l`24 hours`, value: '24_hours' },
-		{ label: l`7 days`, value: '7_days' },
-		{ label: l`30 days`, value: '30_days' },
+		{ label: m['common.time.forever'](), value: 'forever' },
+		{ label: m['common.time.hours24'](), value: '24_hours' },
+		{ label: m['common.time.days7'](), value: '7_days' },
+		{ label: m['common.time.days30'](), value: '30_days' },
 	];
 	const targetItems = [
-		{ label: l`Text & tags`, value: 'content' },
-		{ label: l`Tags only`, value: 'tag' },
+		{ label: m['components.dialogs.label.textAndTags'](), value: 'content' },
+		{ label: m['components.dialogs.label.tagsOnly'](), value: 'tag' },
 	];
 
 	const submit = async () => {
@@ -73,14 +71,14 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 
 		if (!sanitizedValue || !surfaces.length) {
 			setField('');
-			setError(l`Please enter a valid word, tag, or phrase to mute`);
+			setError(m['components.dialogs.mutedWord.invalidError']());
 			return;
 		}
 
 		try {
 			// send raw value and rely on SDK as sanitization source of truth
 			await addMutedWord([{ value: field, targets: surfaces, actorTarget, expiresAt }]);
-			Toast.show(l`Muted`, { type: 'success' });
+			Toast.show(m['common.label.muted'](), { type: 'success' });
 			handle.close();
 		} catch (e) {
 			const message = e instanceof Error ? e.message : String(e);
@@ -100,10 +98,10 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		<div className={styles.form}>
 			<div className={styles.intro}>
 				<Text size="lg" weight="semiBold" color="textContrastHigh">
-					<Trans>Add muted word</Trans>
+					{m['common.action.addMutedWord']()}
 				</Text>
 				<Text size="md_sub" color="textContrastMedium">
-					<Trans>Mute one word, phrase, @username or hashtag.</Trans>
+					{m['components.dialogs.mutedWord.description']()}
 				</Text>
 			</div>
 
@@ -112,8 +110,8 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 					autoCapitalize="none"
 					autoComplete="off"
 					autoFocus
-					label={l`Enter a word or phrase`}
-					placeholder={l`Enter a word or phrase`}
+					label={m['components.dialogs.mutedWord.inputPlaceholder']()}
+					placeholder={m['components.dialogs.mutedWord.inputPlaceholder']()}
 					value={field}
 					onChangeText={(value) => {
 						if (error) {
@@ -128,26 +126,26 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			<Settings.Section>
 				<Settings.SelectRow
 					items={durationItems}
-					label={l`Select how long to mute this word for`}
+					label={m['components.dialogs.mutedWord.selectDuration']()}
 					onValueChange={setDuration}
 					value={duration}
 				>
-					<Settings.Label titleText={<Trans>Duration</Trans>} />
+					<Settings.Label titleText={m['components.dialogs.label.duration']()} />
 				</Settings.SelectRow>
 				<Settings.SelectRow
 					items={targetItems}
-					label={l`Select what content this muted word should apply to`}
+					label={m['components.dialogs.mutedWord.selectTargets']()}
 					onValueChange={setTarget}
 					value={target}
 				>
-					<Settings.Label titleText={<Trans>Mute in</Trans>} />
+					<Settings.Label titleText={m['components.dialogs.mutedWord.muteIn']()} />
 				</Settings.SelectRow>
 				<Settings.SwitchRow
-					label={l`Do not apply this muted word to users you follow`}
+					label={m['components.dialogs.mutedWord.excludeFollows']()}
 					onChange={setExcludeFollowing}
 					value={excludeFollowing}
 				>
-					<Settings.Label titleText={<Trans>Exclude users you follow</Trans>} />
+					<Settings.Label titleText={m['components.dialogs.mutedWord.excludeFollowsLabel']()} />
 				</Settings.SwitchRow>
 			</Settings.Section>
 
@@ -155,15 +153,13 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 				className={styles.addButton}
 				color="primary"
 				disabled={isPending || !field}
-				label={l`Add muted word with chosen settings`}
+				label={m['components.dialogs.mutedWord.addSubmit']()}
 				size="large"
 				onClick={() => void submit()}
 			>
-				<ButtonText>
-					<Trans>Add</Trans>
-				</ButtonText>
+				<ButtonText>{m['common.action.add']()}</ButtonText>
 				{isPending ? (
-					<Spinner color="currentColor" label={l`Adding`} size="sm" />
+					<Spinner color="currentColor" label={m['components.dialogs.action.adding']()} size="sm" />
 				) : (
 					<ButtonIcon icon={Plus} />
 				)}

@@ -1,5 +1,3 @@
-import { Trans, useLingui } from '@lingui/react/macro';
-
 import { type TrendingTopic, useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
 
@@ -12,6 +10,7 @@ import { Link } from '#/components/web/Link';
 import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 import { colors } from '#/styles/colors';
 
@@ -26,7 +25,6 @@ export function SidebarTrendingTopics() {
 }
 
 function Inner() {
-	const { t: l } = useLingui();
 	const trendingPrompt = Prompt.usePromptHandle();
 	const { setTrendingDisabled } = useTrendingSettingsApi();
 	const { data: trending, error, isLoading } = useTrendingTopics();
@@ -46,14 +44,14 @@ function Inner() {
 				<div className={css.header}>
 					<TrendingIcon width={16} height={16} fill={colors.text} />
 					<Text size="md" weight="semiBold" className={css.title}>
-						<Trans>Trending</Trans>
+						{m['view.label.trending']()}
 					</Text>
 					<Button
 						variant="ghost"
 						size="tiny"
 						color="secondary"
 						shape="round"
-						label={l`Trending options`}
+						label={m['view.a11y.trendingOptions']()}
 						onClick={() => trendingPrompt.open(null)}
 						className={css.optionsButton}
 					>
@@ -78,9 +76,9 @@ function Inner() {
 			</div>
 			<Prompt.Basic
 				handle={trendingPrompt}
-				title={l`Hide trending topics?`}
-				description={l`You can update this later from your settings.`}
-				confirmButtonCta={l`Hide`}
+				title={m['view.dialog.hideTrendingTitle']()}
+				description={m['view.hint.updateLater']()}
+				confirmButtonCta={m['common.action.hide']()}
 				onConfirm={onConfirmHide}
 			/>
 		</>

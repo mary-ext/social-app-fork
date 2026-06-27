@@ -1,7 +1,6 @@
 import { type ComponentProps, useCallback, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
@@ -16,6 +15,8 @@ import {
 	ModerationDetailsDialog,
 	useModerationDetailsDialogControl,
 } from '#/components/web/moderation/ModerationDetailsDialog';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './PostHider.css';
 
@@ -50,7 +51,6 @@ export function PostHider({
 	...props
 }: Props) {
 	const queryClient = useQueryClient();
-	const { t: l } = useLingui();
 	const [override, setOverride] = useState(false);
 	const control = useModerationDetailsDialogControl();
 	const blur = modui.blurs[0] || (interpretFilterAsBlur ? getBlurrableFilter(modui) : undefined);
@@ -77,7 +77,7 @@ export function PostHider({
 			<Dialog.Trigger
 				handle={control}
 				className={styles.iconButton}
-				aria-label={l`Learn more about this warning`}
+				aria-label={m['components.moderation.action.learnMoreWarning']()}
 			>
 				<span
 					className={clsx(styles.iconCircle, iconClassName)}
@@ -93,14 +93,12 @@ export function PostHider({
 				<button
 					type="button"
 					className={styles.toggle}
-					aria-label={l`Show the content`}
+					aria-label={m['components.moderation.action.showContent']()}
 					onClick={() => {
 						setOverride(true);
 					}}
 				>
-					<Text color="primary_500">
-						<Trans>Show</Trans>
-					</Text>
+					<Text color="primary_500">{m['common.action.show']()}</Text>
 				</button>
 			)}
 		</div>

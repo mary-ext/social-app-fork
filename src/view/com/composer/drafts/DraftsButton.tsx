@@ -1,8 +1,8 @@
-import { useLingui, Trans } from '@lingui/react/macro';
-
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './DraftsButton.css';
 import { DraftsListDialog } from './DraftsListDialog';
@@ -28,7 +28,6 @@ export function DraftsButton({
 	canSaveDraft: boolean;
 	textLength: number;
 }) {
-	const { t: l } = useLingui();
 	const draftsDialogControl = Dialog.useDialogHandle();
 	const savePromptControl = Prompt.usePromptHandle();
 	const { isPending: isSaving } = useSaveDraftMutation();
@@ -58,7 +57,7 @@ export function DraftsButton({
 	return (
 		<>
 			<Button
-				label={l`Drafts`}
+				label={m['view.composer.title.drafts']()}
 				variant="ghost"
 				color="primary"
 				shape="default"
@@ -67,51 +66,40 @@ export function DraftsButton({
 				disabled={isSaving}
 				onClick={handlePress}
 			>
-				<ButtonText size="md">
-					<Trans>Drafts</Trans>
-				</ButtonText>
+				<ButtonText size="md">{m['view.composer.title.drafts']()}</ButtonText>
 			</Button>
 			<DraftsListDialog handle={draftsDialogControl} onSelectDraft={onSelectDraft} />
 			<Prompt.Outer handle={savePromptControl}>
 				<Prompt.Content>
 					<Prompt.TitleText>
-						{canSaveDraft ? (
-							isEditingDraft ? (
-								<Trans>Save changes?</Trans>
-							) : (
-								<Trans>Save draft?</Trans>
-							)
-						) : (
-							<Trans>Discard draft?</Trans>
-						)}
+						{canSaveDraft
+							? isEditingDraft
+								? m['view.composer.dialog.saveChangesTitle']()
+								: m['view.composer.dialog.saveDraftTitle']()
+							: m['view.composer.dialog.discardDraftTitle']()}
 					</Prompt.TitleText>
 					<Prompt.DescriptionText>
-						{canSaveDraft ? (
-							isEditingDraft ? (
-								<Trans>
-									You have unsaved changes. Would you like to save them before viewing your drafts?
-								</Trans>
-							) : (
-								<Trans>Would you like to save this as a draft before viewing your drafts?</Trans>
-							)
-						) : (
-							<Trans>
-								You can only save drafts up to 1000 characters. Would you like to discard this post before
-								viewing your drafts?
-							</Trans>
-						)}
+						{canSaveDraft
+							? isEditingDraft
+								? m['view.composer.dialog.unsavedSaveBeforeViewing']()
+								: m['view.composer.dialog.saveDraftBeforeViewing']()
+							: m['view.composer.dialog.draftTooLongDiscard']()}
 					</Prompt.DescriptionText>
 				</Prompt.Content>
 				<Prompt.Actions>
 					{canSaveDraft && (
 						<Prompt.Action
-							cta={isEditingDraft ? l`Save changes` : l`Save draft`}
+							cta={isEditingDraft ? m['common.action.saveChanges']() : m['view.composer.action.saveDraft']()}
 							onPress={() => void handleSaveAndOpen()}
 							color="primary"
 						/>
 					)}
-					<Prompt.Action cta={l`Discard`} onPress={handleDiscardAndOpen} color="negative_subtle" />
-					<Prompt.Cancel cta={l`Keep editing`} />
+					<Prompt.Action
+						cta={m['common.action.discard']()}
+						onPress={handleDiscardAndOpen}
+						color="negative_subtle"
+					/>
+					<Prompt.Cancel cta={m['view.composer.action.keepEditing']()} />
 				</Prompt.Actions>
 			</Prompt.Outer>
 		</>

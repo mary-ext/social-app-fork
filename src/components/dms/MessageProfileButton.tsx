@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -14,15 +13,16 @@ import { Message_Stroke2_Corner0_Rounded as Message } from '#/components/icons/M
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import { m } from '#/paraglide/messages';
+
 /** Round button that opens (or starts) a DM with the profile, when the viewer is allowed to message them. */
 export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.ProfileViewDetailed }) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	const { data: convoAvailability } = useGetConvoAvailabilityQuery(profile.did);
 	const { mutate: initiateConvo } = useGetConvoForMembers({
 		onError: () => {
-			Toast.show(l`Failed to create conversation`);
+			Toast.show(m['common.error.createConversation']());
 		},
 		onSuccess: ({ convo }) => {
 			navigation.navigate('MessagesConversation', { conversation: convo.id });
@@ -56,7 +56,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 		return (
 			<Button
 				color="secondary"
-				label={l`Message ${profile.handle}`}
+				label={m['components.dms.action.messageUser']({ handle: profile.handle })}
 				onClick={onPress}
 				shape="round"
 				size="small"

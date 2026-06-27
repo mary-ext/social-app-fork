@@ -1,5 +1,4 @@
 import { type ReactNode, useCallback, useMemo } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -15,6 +14,8 @@ import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 import { Bell_Stroke2_Corner0_Rounded as BellIcon } from '#/components/icons/Bell';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 import { Loader } from '#/components/Loader';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './NotificationFeed.css';
 import { NotificationFeedItem } from './NotificationFeedItem';
@@ -50,7 +51,6 @@ export function NotificationFeed({
 	onScrolledDownChange: (isScrolledDown: boolean) => void;
 	ListHeaderComponent?: ReactNode;
 }) {
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const { data, isFetching, isFetched, isError, error, hasNextPage, isFetchingNextPage, fetchNextPage } =
 		useNotificationFeedQuery({
@@ -102,16 +102,19 @@ export function NotificationFeed({
 			if (isNotificationSentinel(item)) {
 				if (item === LOAD_MORE_ERROR_ITEM) {
 					return (
-						<LoadMoreRetryBtn
-							label={l`There was an issue fetching notifications. Tap here to try again.`}
-							onPress={onPressRetryLoadMore}
-						/>
+						<LoadMoreRetryBtn label={m['view.notifications.error.fetch']()} onPress={onPressRetryLoadMore} />
 					);
 				}
 				if (item === LOADING_ITEM) {
 					return <NotificationFeedLoadingPlaceholder />;
 				}
-				return <EmptyState icon={BellIcon} message={l`No notifications yet!`} className={css.emptyState} />;
+				return (
+					<EmptyState
+						icon={BellIcon}
+						message={m['view.notifications.empty.title']()}
+						className={css.emptyState}
+					/>
+				);
 			}
 			return (
 				<NotificationFeedItem
@@ -122,7 +125,7 @@ export function NotificationFeed({
 				/>
 			);
 		},
-		[moderationOpts, l, onPressRetryLoadMore, filter],
+		[moderationOpts, onPressRetryLoadMore, filter],
 	);
 
 	const feedFooter = isFetchingNextPage ? (

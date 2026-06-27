@@ -6,7 +6,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
@@ -40,6 +39,7 @@ import * as Prompt from '#/components/web/Prompt';
 import * as Skele from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 
 import * as styles from './AccountsSection.css';
 
@@ -57,7 +57,7 @@ export function AccountsSection() {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<Settings.Section titleText={<Trans>Accounts</Trans>}>
+		<Settings.Section titleText={m['screens.settings.title.accounts']()}>
 			{profile && moderationOpts ? (
 				<CurrentAccountRow moderationOpts={moderationOpts} profile={profile} />
 			) : (
@@ -89,7 +89,6 @@ function CurrentAccountRow({
 	moderationOpts: ModerationOptions;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { t: l } = useLingui();
 	const shadow = useProfileShadow(profile);
 	const { isActive: live } = useActorStatus(profile);
 
@@ -102,7 +101,7 @@ function CurrentAccountRow({
 	return (
 		<Settings.LinkRowRaw
 			className={clsx(cardStyles.rowPlain, className)}
-			label={l`View your profile`}
+			label={m['screens.settings.account.viewProfile']()}
 			to={makeProfileLink(profile)}
 		>
 			<UserAvatar
@@ -159,16 +158,14 @@ function SwitchAccountDisclosure({
 	others: SessionAccount[];
 	pendingDid: string | null;
 }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Settings.CollapsibleRow
 			className={className}
 			icon={PersonGroupIcon}
-			label={l`Switch account`}
+			label={m['common.action.switchAccount']()}
 			onOpenChange={onOpenChange}
 			open={open}
-			titleText={<Trans>Switch account</Trans>}
+			titleText={m['common.action.switchAccount']()}
 			trailing={
 				<span className={styles.avatarStack}>
 					<AvatarStack
@@ -208,7 +205,6 @@ function OtherAccountRow({
 	pendingDid: string | null;
 	profile?: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { t: l } = useLingui();
 	const removePromptHandle = Prompt.usePromptHandle();
 	const { removeAccount } = useSessionApi();
 	const { isActive: live } = useActorStatus(profile);
@@ -216,7 +212,7 @@ function OtherAccountRow({
 	return (
 		<div className={styles.accountRow}>
 			<button
-				aria-label={l`Switch to @${account.handle}`}
+				aria-label={m['screens.settings.account.switchTo']({ handle: account.handle })}
 				className={clsx(cardStyles.rowPlain, cardStyles.rowInteractive)}
 				onClick={() => {
 					if (!pendingDid) {
@@ -246,19 +242,20 @@ function OtherAccountRow({
 					{sanitizeHandle(account.handle, '@')}
 				</Text>
 				{pendingDid === account.did && (
-					<Spinner color="currentColor" label={l`Switching account`} size="sm" />
+					<Spinner color="currentColor" label={m['screens.settings.account.switching']()} size="sm" />
 				)}
 			</button>
 			{!pendingDid && (
 				<Menu.Root>
-					<Menu.Trigger aria-label={l`Account options`} className={styles.overflow}>
+					<Menu.Trigger aria-label={m['screens.settings.label.accountOptions']()} className={styles.overflow}>
 						<DotsHorizontal fill="currentColor" size="sm" />
 					</Menu.Trigger>
-					<Menu.Popup label={l`Account options`}>
-						<Menu.Item label={l`Remove account`} onClick={() => removePromptHandle.open(null)}>
-							<Menu.ItemText>
-								<Trans>Remove account</Trans>
-							</Menu.ItemText>
+					<Menu.Popup label={m['screens.settings.label.accountOptions']()}>
+						<Menu.Item
+							label={m['screens.settings.action.removeAccount']()}
+							onClick={() => removePromptHandle.open(null)}
+						>
+							<Menu.ItemText>{m['screens.settings.action.removeAccount']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={PersonXIcon} />
 						</Menu.Item>
 					</Menu.Popup>
@@ -267,21 +264,20 @@ function OtherAccountRow({
 
 			<Prompt.Basic
 				confirmButtonColor="negative"
-				confirmButtonCta={l`Remove`}
-				description={l`This will remove @${account.handle} from the quick access list.`}
+				confirmButtonCta={m['common.action.remove']()}
+				description={m['screens.settings.account.removeQuickAccessConfirm']({ handle: account.handle })}
 				handle={removePromptHandle}
 				onConfirm={() => {
 					removeAccount(account);
-					Toast.show(l`Account removed from quick access`);
+					Toast.show(m['screens.settings.toast.accountRemovedFromQuickAccess']());
 				}}
-				title={l`Remove from quick access?`}
+				title={m['screens.settings.dialog.removeQuickAccessTitle']()}
 			/>
 		</div>
 	);
 }
 
 function AddAccountRow({ className }: { className?: string }) {
-	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
 	const onAddAnotherAccount = () => {
@@ -290,14 +286,14 @@ function AddAccountRow({ className }: { className?: string }) {
 
 	return (
 		<button
-			aria-label={l`Add another account`}
+			aria-label={m['common.action.addAnotherAccount']()}
 			className={clsx(cardStyles.row, cardStyles.rowInteractive, className)}
 			onClick={onAddAnotherAccount}
 			type="button"
 		>
 			<Settings.Icon icon={PersonPlusIcon} />
 			<Text className={cardStyles.title} size="md" weight="medium">
-				<Trans>Add another account</Trans>
+				{m['common.action.addAnotherAccount']()}
 			</Text>
 		</button>
 	);

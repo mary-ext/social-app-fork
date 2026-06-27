@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
 
@@ -8,6 +7,8 @@ import { logger } from '#/logger';
 import * as Dialog from '#/components/Dialog';
 import { SearchablePeopleList } from '#/components/dialogs/SearchablePeopleList';
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 export function SendViaChatDialog({
 	control,
@@ -31,14 +32,13 @@ function SendViaChatDialogInner({
 	control: Dialog.DialogControlProps;
 	onSelectChat: (chatId: string) => void;
 }) {
-	const { t: l } = useLingui();
 	const { mutate: createChat } = useGetConvoForMembers({
 		onSuccess: (data) => {
 			onSelectChat(data.convo.id);
 		},
 		onError: (error) => {
 			logger.error('Failed to share post to chat', { message: error });
-			Toast.show(l`An issue occurred while trying to open the chat`, {
+			Toast.show(m['components.dms.error.openChat'](), {
 				type: 'error',
 			});
 		},
@@ -60,7 +60,7 @@ function SendViaChatDialogInner({
 
 	return (
 		<SearchablePeopleList
-			title={l`Send post to...`}
+			title={m['components.dms.title.sendPost']()}
 			onSelectChat={(chat) => {
 				if (chat.kind === 'user') {
 					onCreateChat(chat.did);

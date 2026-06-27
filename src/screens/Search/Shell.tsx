@@ -1,6 +1,5 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 
 import { MagnifyingGlassIcon } from '#/lib/icons';
@@ -16,6 +15,7 @@ import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
 import { SearchAutocomplete } from '#/components/web/SearchAutocomplete/SearchAutocomplete';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { Explore } from './Explore';
@@ -50,7 +50,6 @@ export function SearchScreenShell({
 	navButton?: 'back' | 'menu';
 	inputPlaceholder?: string;
 }) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const route = useRoute();
 	const navigateToPath = useNavigateToPath();
@@ -128,7 +127,7 @@ export function SearchScreenShell({
 			<Layout.Header.BackButton />
 		) : queryWithParams ? (
 			<Layout.Header.BackButton
-				label={l`Back to Explore`}
+				label={m['screens.search.action.backToExplore']()}
 				onClick={(evt) => {
 					evt.preventDefault();
 					navigateToExplore();
@@ -147,7 +146,7 @@ export function SearchScreenShell({
 						eager
 						// trailing space so the caret opens on a fresh token, ready to append an operator/filter
 						initialQuery={queryParam ? queryParam + ' ' : queryParam}
-						placeholder={inputPlaceholder ?? l`Search for posts, users, or feeds`}
+						placeholder={inputPlaceholder ?? m['screens.search.hint.searchPlaceholder']()}
 						onNavigate={(path) => navigateToPath(path, 'push')}
 						onNavigateToProfile={navigateToProfile}
 						onSubmit={navigateToQuery}
@@ -205,14 +204,14 @@ function SearchScreenInner({
 		<Layout.Content>
 			<div className={css.heading}>
 				<Text size="_2xl" weight="bold">
-					<Trans>Search</Trans>
+					{m['common.action.search']()}
 				</Text>
 			</div>
 
 			<div className={css.empty}>
 				<MagnifyingGlassIcon strokeWidth={3} size={60} color={colors.textContrastMedium} />
 				<Text color="textContrastMedium" size="md">
-					<Trans>Find posts, users, and feeds on Bluesky</Trans>
+					{m['screens.search.hint.findOnBluesky']()}
 				</Text>
 			</div>
 		</Layout.Content>

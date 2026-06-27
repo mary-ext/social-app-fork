@@ -42,6 +42,7 @@ import * as css from '#/components/web/ProfileHoverCard.css';
 
 import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatus';
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export type ProfileHoverCardProps = {
@@ -90,7 +91,6 @@ export function ProfileHoverCard({ children, did }: ProfileHoverCardProps) {
 }
 
 function Card({ did }: { did: string }) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const profile = useProfileQuery({ did });
 	const moderationOpts = useModerationOpts();
@@ -125,7 +125,7 @@ function Card({ did }: { did: string }) {
 
 	return (
 		<div className={clsx(css.card, css.loading)}>
-			<Spinner color={colors.contrast_500} label={l`Loading`} size="xl" />
+			<Spinner color={colors.contrast_500} label={m['common.label.loading']()} size="xl" />
 		</div>
 	);
 }
@@ -137,7 +137,7 @@ function Inner({
 	moderationOpts: ModerationOptions;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { i18n, t: l } = useLingui();
+	const { i18n } = useLingui();
 	const { currentAccount } = useSession();
 	const moderation = moderateProfile(profile, moderationOpts);
 	const [descriptionRT] = useRichText(profile.description ?? '');
@@ -159,7 +159,7 @@ function Inner({
 	return (
 		<div>
 			<div className={css.headerRow}>
-				<Link className={css.avatarLink} label={l`View profile`} to={profileURL}>
+				<Link className={css.avatarLink} label={m['common.action.viewProfile']()} to={profileURL}>
 					<UserAvatar
 						avatar={profile.avatar}
 						moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
@@ -173,28 +173,30 @@ function Inner({
 					(isBlockedUser ? (
 						<LinkButton
 							color="secondary"
-							label={l`View blocked user's profile`}
+							label={m['common.a11y.viewBlockedProfile']()}
 							size="small"
 							to={profileURL}
 							variant="solid"
 						>
-							<ButtonText>{l`View profile`}</ButtonText>
+							<ButtonText>{m['common.action.viewProfile']()}</ButtonText>
 						</LinkButton>
 					) : (
 						<Button
 							color={isFollowing ? 'secondary' : 'primary'}
-							label={isFollowing ? l`Following` : l`Follow`}
+							label={isFollowing ? m['common.action.following']() : m['common.action.follow']()}
 							onClick={isFollowing ? unfollow : follow}
 							size="small"
 							variant="solid"
 						>
 							<ButtonIcon icon={isFollowing ? Check : Plus} />
-							<ButtonText>{isFollowing ? l`Following` : l`Follow`}</ButtonText>
+							<ButtonText>
+								{isFollowing ? m['common.action.following']() : m['common.action.follow']()}
+							</ButtonText>
 						</Button>
 					))}
 			</div>
 
-			<Link className={css.nameLink} label={l`View profile`} to={profileURL}>
+			<Link className={css.nameLink} label={m['common.action.viewProfile']()} to={profileURL}>
 				<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} size="lg" />
 				<ProfileHeaderHandle disableTaps profile={profileShadow} />
 			</Link>
@@ -222,7 +224,7 @@ function Inner({
 						</InlineLinkText>
 						<InlineLinkText
 							color="text"
-							label={l`${following} following`}
+							label={m['common.label.followingCount']({ following })}
 							to={makeProfileLink(profile, 'follows')}
 						>
 							<Text size="md" weight="semiBold">

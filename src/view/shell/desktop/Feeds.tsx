@@ -1,6 +1,5 @@
 import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 
 import { getCurrentRoute } from '#/lib/routes/helpers';
@@ -18,6 +17,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './Feeds.css';
@@ -26,7 +26,6 @@ import * as css from './Feeds.css';
 const MORE_FEEDS = '/feeds';
 
 export function DesktopFeeds() {
-	const { t: l } = useLingui();
 	const { data: pinnedFeedInfos, error, isLoading } = usePinnedFeedsInfos();
 	const selectedFeed = useSelectedFeed();
 	const setSelectedFeed = useSetSelectedFeed();
@@ -89,12 +88,12 @@ export function DesktopFeeds() {
 				value={MORE_FEEDS}
 				nativeButton={false}
 				render={
-					<Link to={MORE_FEEDS} label={l`More feeds`} className={css.item}>
+					<Link to={MORE_FEEDS} label={m['view.feeds.more']()} className={css.item}>
 						<span className={css.morePlusBox}>
 							<Plus width={16} height={16} fill="currentColor" />
 						</span>
 						<Text size="md" numberOfLines={1} className={css.label}>
-							{l`More feeds`}
+							{m['view.feeds.more']()}
 						</Text>
 					</Link>
 				}
@@ -104,7 +103,6 @@ export function DesktopFeeds() {
 }
 
 function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
-	const { t: l } = useLingui();
 	const isFollowing = feedInfo.feedDescriptor === 'following';
 
 	return (
@@ -112,7 +110,7 @@ function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
 			value={feedInfo.feedDescriptor}
 			className={css.item}
 			aria-label={feedInfo.displayName}
-			title={l`Opens ${feedInfo.displayName} feed`}
+			title={m['view.a11y.opensFeed']({ name: feedInfo.displayName })}
 		>
 			{isFollowing ? (
 				<span className={css.followingIcon}>

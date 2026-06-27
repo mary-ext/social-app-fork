@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { plural } from '@lingui/core/macro';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -10,6 +10,8 @@ import { atoms as a, useTheme } from '#/alf';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { createStaticClick, InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export function MembersAndRequests({
 	convo,
@@ -33,7 +35,7 @@ export function MembersAndRequests({
 		<View style={[a.flex_row, a.justify_between, a.px_xl, a.pt_xl, a.pb_sm]}>
 			<View style={[a.flex_row, a.align_center, a.gap_xs]}>
 				<Text style={[a.text_lg, a.font_semi_bold, t.atoms.text]}>
-					<Trans comment="The heading above the list of chat members.">Members</Trans>
+					{m['screens.messages.label.members']()}
 				</Text>
 				<Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
 					{l({
@@ -44,7 +46,7 @@ export function MembersAndRequests({
 			</View>
 			{isOwner && requestCount > 0 ? (
 				<InlineLinkText
-					label={l`View incoming group chat requests`}
+					label={m['screens.messages.a11y.viewIncomingRequestsGroup']()}
 					style={[a.text_sm, a.text_right, a.font_semi_bold]}
 					{...createStaticClick(() => {
 						navigation.navigate('MessagesJoinRequests', {

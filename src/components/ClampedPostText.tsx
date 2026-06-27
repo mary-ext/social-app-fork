@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { countLines } from '#/lib/strings/helpers';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { RichText } from '#/components/RichText';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './ClampedPostText.css';
 
@@ -14,7 +15,6 @@ import * as css from './ClampedPostText.css';
  * show-more button. Shared by the feed, standalone, and thread post surfaces.
  */
 export function ClampedPostText({ authorHandle, richText }: { authorHandle: string; richText: Richtext }) {
-	const { t: l } = useLingui();
 	const [limitLines, setLimitLines] = useState(() => countLines(richText.text) >= MAX_POST_LINES);
 
 	// a flex wrapper around RichText for spacing, not a text leaf — the *Text-returns-<Text> rule doesn't apply
@@ -32,12 +32,12 @@ export function ClampedPostText({ authorHandle, richText }: { authorHandle: stri
 				<button
 					type="button"
 					className={css.showMore}
-					aria-label={l`Expand post text`}
+					aria-label={m['components.clampedPostText.action.expand']()}
 					onClick={() => setLimitLines(false)}
 				>
 					{/* the button hosts the link text directly, so the *Text-returns-<Text> rule doesn't apply */}
-					{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
-					<Trans>Show More</Trans>
+					{}
+					{m['components.clampedPostText.action.showMore']()}
 				</button>
 			)}
 		</div>

@@ -5,7 +5,7 @@ import type {
 	AppBskyGraphGetStarterPacksWithMembership,
 	AppBskyGraphStarterpack,
 } from '@atcute/bluesky';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -34,6 +34,7 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
@@ -74,25 +75,20 @@ export function StarterPackDialog({ control, targetDid, enabled }: StarterPackDi
 }
 
 function Empty({ onStartWizard }: { onStartWizard: () => void }) {
-	const { t: l } = useLingui();
 	return (
 		<View style={[a.gap_2xl, { paddingTop: 100 }]}>
 			<View style={[a.gap_xs, a.align_center]}>
 				<StarterPack width={48} fill={colors.contrast_200} />
-				<Text style={[a.text_center]}>
-					<Trans>You have no starter packs.</Trans>
-				</Text>
+				<Text style={[a.text_center]}>{m['components.dialogs.empty.starterPacks']()}</Text>
 			</View>
 			<View style={[a.align_center]}>
 				<Button
-					label={l`Create starter pack`}
+					label={m['components.dialogs.starterPack.createTitle']()}
 					color="secondary_inverted"
 					size="small"
 					onPress={onStartWizard}
 				>
-					<ButtonText>
-						<Trans comment="Text on button to create a new starter pack">Create</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.create']()}</ButtonText>
 					<ButtonIcon icon={PlusIcon} />
 				</Button>
 			</View>
@@ -110,7 +106,6 @@ function StarterPackList({
 	enabled?: boolean;
 }) {
 	const control = Dialog.useDialogContext();
-	const { t: l } = useLingui();
 	const { data: subject } = useProfileQuery({ did: targetDid });
 
 	const { data, isError, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
@@ -149,11 +144,9 @@ function StarterPackList({
 	const listHeader = (
 		<>
 			<View style={[a.justify_between, a.align_center, a.flex_row, a.pb_lg]}>
-				<Text style={[a.text_lg, a.font_semi_bold]}>
-					<Trans>Add to starter packs</Trans>
-				</Text>
+				<Text style={[a.text_lg, a.font_semi_bold]}>{m['common.action.addToStarterPacks']()}</Text>
 				<Button
-					label={l`Close`}
+					label={m['common.action.close']()}
 					onPress={onClose}
 					variant="ghost"
 					color="secondary"
@@ -168,17 +161,15 @@ function StarterPackList({
 				<>
 					<View style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
 						<Text style={[a.text_md, a.font_semi_bold]}>
-							<Trans>New starter pack</Trans>
+							{m['components.dialogs.starterPack.newTitle']()}
 						</Text>
 						<Button
-							label={l`Create starter pack`}
+							label={m['components.dialogs.starterPack.createTitle']()}
 							color="secondary_inverted"
 							size="small"
 							onPress={onStartWizard}
 						>
-							<ButtonText>
-								<Trans comment="Text on button to create a new starter pack">Create</Trans>
-							</ButtonText>
+							<ButtonText>{m['common.action.create']()}</ButtonText>
 							<ButtonIcon icon={PlusIcon} />
 						</Button>
 					</View>
@@ -212,7 +203,6 @@ function StarterPackItem({
 	subject?: AnyProfileView;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const isSelf = subject?.did === currentAccount?.did;
 
@@ -222,25 +212,25 @@ function StarterPackItem({
 	const { mutate: addMembership, isPending: isPendingAdd } = useListMembershipAddMutation({
 		subject,
 		onSuccess: () => {
-			Toast.show(l`Added to starter pack`);
+			Toast.show(m['components.dialogs.starterPack.addedToast']());
 		},
 		onError: (err) => {
 			if (!isNetworkError(err)) {
 				logger.error('Failed to add to starter pack', { safeMessage: err });
 			}
-			Toast.show(l`Failed to add to starter pack`, { type: 'error' });
+			Toast.show(m['components.dialogs.starterPack.addError'](), { type: 'error' });
 		},
 	});
 
 	const { mutate: removeMembership, isPending: isPendingRemove } = useListMembershipRemoveMutation({
 		onSuccess: () => {
-			Toast.show(l`Removed from starter pack`);
+			Toast.show(m['components.dialogs.starterPack.removedToast']());
 		},
 		onError: (err) => {
 			if (!isNetworkError(err)) {
 				logger.error('Failed to remove from starter pack', { safeMessage: err });
 			}
-			Toast.show(l`Failed to remove from starter pack`, { type: 'error' });
+			Toast.show(m['components.dialogs.starterPack.removeError'](), { type: 'error' });
 		},
 	});
 
@@ -300,7 +290,7 @@ function StarterPackItem({
 				</View>
 			</View>
 			<Button
-				label={isInPack ? l`Remove` : l`Add`}
+				label={isInPack ? m['common.action.remove']() : m['common.action.add']()}
 				color={isInPack ? 'secondary' : 'primary_subtle'}
 				size="tiny"
 				disabled={isPending || isSelf}
@@ -308,7 +298,11 @@ function StarterPackItem({
 			>
 				{isPending && <ButtonIcon icon={Loader} />}
 				<ButtonText>
-					{isSelf ? <Trans>Owner</Trans> : isInPack ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
+					{isSelf
+						? m['components.dialogs.list.owner']()
+						: isInPack
+							? m['common.action.remove']()
+							: m['common.action.add']()}
 				</ButtonText>
 			</Button>
 		</View>

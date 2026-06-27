@@ -4,7 +4,7 @@ import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
@@ -63,8 +63,10 @@ import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
+import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';
 import { colors } from '#/styles/colors';
+
 type StarterPackScreeProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>;
 type StarterPackScreenShortProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPackShort'>;
 
@@ -77,7 +79,6 @@ export function StarterPackScreen({ route }: StarterPackScreeProps) {
 }
 
 export function StarterPackScreenShort({ route }: StarterPackScreenShortProps) {
-	const { t: l } = useLingui();
 	const {
 		data: resolvedStarterPack,
 		isLoading,
@@ -92,8 +93,8 @@ export function StarterPackScreenShort({ route }: StarterPackScreenShortProps) {
 				<ListMaybePlaceholder
 					isLoading={isLoading}
 					isError={isError}
-					errorMessage={l`That starter pack could not be found.`}
-					emptyMessage={l`That starter pack could not be found.`}
+					errorMessage={m['screens.starterPack.error.notFound']()}
+					emptyMessage={m['screens.starterPack.error.notFound']()}
 				/>
 			</Layout.Screen>
 		);
@@ -111,7 +112,6 @@ export function StarterPackScreenInner({
 	routeParams: StarterPackScreeProps['route']['params'];
 }) {
 	const { name, rkey } = routeParams;
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const moderationOpts = useModerationOpts();
@@ -129,8 +129,8 @@ export function StarterPackScreenInner({
 			<ListMaybePlaceholder
 				isLoading={isLoadingDid || isLoadingStarterPack || !moderationOpts}
 				isError={isErrorDid || isErrorStarterPack || !isValid}
-				errorMessage={l`That starter pack could not be found.`}
-				emptyMessage={l`That starter pack could not be found.`}
+				errorMessage={m['screens.starterPack.error.notFound']()}
+				emptyMessage={m['screens.starterPack.error.notFound']()}
 			/>
 		);
 	}
@@ -160,22 +160,20 @@ function StarterPackScreenLoaded({
 	const showPeopleTab = Boolean(starterPack.list);
 	const showFeedsTab = Boolean(starterPack.feeds?.length);
 	const showPostsTab = Boolean(starterPack.list);
-	const { t: l } = useLingui();
-
 	const sections = definite<Section<'feeds' | 'people' | 'posts'>>([
 		showPeopleTab && {
 			id: 'people',
-			label: l`People`,
+			label: m['common.label.people'](),
 			render: () => <ProfilesList listUri={starterPack.list!.uri} moderationOpts={moderationOpts} />,
 		},
 		showFeedsTab && {
 			id: 'feeds',
-			label: l`Feeds`,
+			label: m['common.nav.feeds'](),
 			render: () => <FeedsList feeds={starterPack.feeds ?? []} />,
 		},
 		showPostsTab && {
 			id: 'posts',
-			label: l`Posts`,
+			label: m['common.label.posts'](),
 			render: () => <PostsList listUri={starterPack.list!.uri} />,
 		},
 	]);
@@ -238,7 +236,6 @@ function Header({
 	routeParams: StarterPackScreeProps['route']['params'];
 	onOpenShareDialog: () => void;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const { currentAccount, hasSession } = useSession();
 	const { appview, pds } = useClients();
@@ -286,7 +283,7 @@ function Header({
 			listItems = await getAllListMembers(appview, starterPack.list.uri);
 		} catch (e) {
 			setIsProcessing(false);
-			Toast.show(l`An error occurred while trying to follow all`, {
+			Toast.show(m['screens.starterPack.error.followAll'](), {
 				type: 'error',
 			});
 			logger.error('Failed to get list members for starter pack', {
@@ -313,7 +310,7 @@ function Header({
 			});
 		} catch (e) {
 			setIsProcessing(false);
-			Toast.show(l`An error occurred while trying to follow all`, {
+			Toast.show(m['screens.starterPack.error.followAll'](), {
 				type: 'error',
 			});
 			logger.error('Failed to follow all accounts', { safeMessage: e });
@@ -327,7 +324,7 @@ function Header({
 				});
 			}
 		});
-		Toast.show(l`All accounts have been followed!`);
+		Toast.show(m['screens.starterPack.followAllSuccess']());
 	};
 
 	const richText = record.description
@@ -353,20 +350,18 @@ function Header({
 					<View style={[a.flex_row, a.gap_sm, a.align_center]}>
 						{isOwn ? (
 							<Button
-								label={l`Share this starter pack`}
+								label={m['screens.starterPack.action.share']()}
 								hitSlop={HITSLOP_20}
 								variant="solid"
 								color="primary"
 								size="small"
 								onPress={onOpenShareDialog}
 							>
-								<ButtonText>
-									<Trans>Share</Trans>
-								</ButtonText>
+								<ButtonText>{m['common.action.share']()}</ButtonText>
 							</Button>
 						) : (
 							<Button
-								label={l`Follow all`}
+								label={m['screens.starterPack.action.followAll']()}
 								variant="solid"
 								color="primary"
 								size="small"
@@ -374,9 +369,7 @@ function Header({
 								onPress={() => void onFollowAll()}
 								style={[a.flex_row, a.gap_xs, a.align_center]}
 							>
-								<ButtonText>
-									<Trans>Follow all</Trans>
-								</ButtonText>
+								<ButtonText>{m['screens.starterPack.action.followAll']()}</ButtonText>
 								{isProcessing && <ButtonIcon icon={Loader} />}
 							</Button>
 						)}
@@ -393,7 +386,7 @@ function Header({
 					{richText ? <RichText size="md" value={richText} /> : null}
 					{!hasSession ? (
 						<Button
-							label={l`Sign in`}
+							label={m['common.action.signIn']()}
 							onPress={() => {
 								setActiveStarterPack({
 									uri: starterPack.uri,
@@ -404,9 +397,7 @@ function Header({
 							color="primary"
 							size="large"
 						>
-							<ButtonText style={[a.text_lg]}>
-								<Trans>Sign in</Trans>
-							</ButtonText>
+							<ButtonText style={[a.text_lg]}>{m['common.action.signIn']()}</ButtonText>
 						</Button>
 					) : null}
 					{joinedAllTimeCount >= 25 ? (
@@ -436,7 +427,6 @@ function OverflowMenu({
 	onOpenShareDialog: () => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const reportDialogControl = useReportDialogControl();
 	const deleteHandle = Prompt.usePromptHandle();
@@ -481,7 +471,7 @@ function OverflowMenu({
 				<Menu.Trigger
 					render={
 						<WebButton
-							label={l`Open starter pack menu`}
+							label={m['screens.starterPack.a11y.openMenu']()}
 							variant="solid"
 							color="secondary"
 							size="small"
@@ -491,55 +481,51 @@ function OverflowMenu({
 						</WebButton>
 					}
 				/>
-				<Menu.Popup label={l`Starter pack options`} minWidth={170} align="end">
+				<Menu.Popup label={m['screens.starterPack.a11y.options']()} minWidth={170} align="end">
 					{isOwn ? (
 						<>
 							<Menu.Item
-								label={l`Edit starter pack`}
+								label={m['screens.starterPack.action.edit']()}
 								onClick={() => {
 									navigation.navigate('StarterPackEdit', {
 										rkey: routeParams.rkey,
 									});
 								}}
 							>
-								<Menu.ItemText>
-									<Trans>Edit</Trans>
-								</Menu.ItemText>
+								<Menu.ItemText>{m['common.action.edit']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={Pencil} position="right" />
 							</Menu.Item>
-							<Menu.Item label={l`Delete starter pack`} onClick={() => deleteHandle.open(null)}>
-								<Menu.ItemText>
-									<Trans>Delete</Trans>
-								</Menu.ItemText>
+							<Menu.Item
+								label={m['screens.starterPack.action.delete']()}
+								onClick={() => deleteHandle.open(null)}
+							>
+								<Menu.ItemText>{m['common.action.delete']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={Trash} position="right" />
 							</Menu.Item>
 							<Menu.Item
-								label={l`Create a list from this starter pack`}
+								label={m['screens.starterPack.action.createList']()}
 								onClick={() => {
 									convertToListDialogControl.open();
 								}}
 							>
-								<Menu.ItemText>
-									<Trans>Create list from members</Trans>
-								</Menu.ItemText>
+								<Menu.ItemText>{m['screens.starterPack.action.createListFromMembers']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={ListSparkle} position="right" />
 							</Menu.Item>
 						</>
 					) : (
 						<>
 							<Menu.Group>
-								<Menu.Item label={l`Copy link to starter pack`} onClick={onOpenShareDialog}>
-									<Menu.ItemText>
-										<Trans>Copy link</Trans>
-									</Menu.ItemText>
+								<Menu.Item label={m['screens.starterPack.action.copyLink']()} onClick={onOpenShareDialog}>
+									<Menu.ItemText>{m['common.action.copyLink']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={ChainLinkIcon} position="right" />
 								</Menu.Item>
 							</Menu.Group>
 
-							<Menu.Item label={l`Report starter pack`} onClick={() => reportDialogControl.open(null)}>
-								<Menu.ItemText>
-									<Trans>Report starter pack</Trans>
-								</Menu.ItemText>
+							<Menu.Item
+								label={m['screens.starterPack.action.report']()}
+								onClick={() => reportDialogControl.open(null)}
+							>
+								<Menu.ItemText>{m['screens.starterPack.action.report']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={CircleInfo} position="right" />
 							</Menu.Item>
 						</>
@@ -559,12 +545,8 @@ function OverflowMenu({
 			)}
 			<Prompt.Outer handle={deleteHandle}>
 				<Prompt.Content>
-					<Prompt.TitleText>
-						<Trans>Delete starter pack?</Trans>
-					</Prompt.TitleText>
-					<Prompt.DescriptionText>
-						<Trans>Are you sure you want to delete this starter pack?</Trans>
-					</Prompt.DescriptionText>
+					<Prompt.TitleText>{m['screens.starterPack.dialog.deleteTitle']()}</Prompt.TitleText>
+					<Prompt.DescriptionText>{m['screens.starterPack.dialog.deleteConfirm']()}</Prompt.DescriptionText>
 				</Prompt.Content>
 				{deleteError && (
 					<View
@@ -580,9 +562,7 @@ function OverflowMenu({
 						]}
 					>
 						<View style={[a.flex_1, a.gap_2xs]}>
-							<Text style={[a.font_semi_bold]}>
-								<Trans>Unable to delete</Trans>
-							</Text>
+							<Text style={[a.font_semi_bold]}>{m['screens.starterPack.error.unableToDelete']()}</Text>
 							<Text style={[a.leading_snug]}>{cleanError(deleteError)}</Text>
 						</View>
 						<CircleInfo size="sm" fill={colors.negative_400} />
@@ -592,7 +572,7 @@ function OverflowMenu({
 					<Prompt.Action
 						onPress={() => void onDeleteStarterPack()}
 						color="negative"
-						cta={l`Delete`}
+						cta={m['common.action.delete']()}
 						icon={isDeletePending ? Loader : undefined}
 						shouldCloseOnPress={false}
 					/>
@@ -605,7 +585,6 @@ function OverflowMenu({
 }
 
 function InvalidStarterPack({ rkey }: { rkey: string }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const navigation = useNavigation<NavigationProp>();
 	const { gtMobile } = useBreakpoints();
@@ -627,7 +606,7 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 		onError: (e) => {
 			setIsProcessing(false);
 			logger.error('Failed to delete invalid starter pack', { safeMessage: e });
-			Toast.show(l`Failed to delete starter pack`, {
+			Toast.show(m['screens.starterPack.error.delete'](), {
 				type: 'error',
 			});
 		},
@@ -637,9 +616,7 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 		<Layout.Content centerContent>
 			<View style={[a.py_4xl, a.px_xl, a.align_center, a.gap_5xl]}>
 				<View style={[a.w_full, a.align_center, a.gap_lg]}>
-					<Text style={[a.font_semi_bold, a.text_3xl]}>
-						<Trans>Starter pack is invalid</Trans>
-					</Text>
+					<Text style={[a.font_semi_bold, a.text_3xl]}>{m['screens.starterPack.error.invalid']()}</Text>
 					<Text
 						style={[
 							a.text_md,
@@ -649,17 +626,14 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 							gtMobile ? { width: 450 } : [a.w_full, a.px_lg],
 						]}
 					>
-						<Trans>
-							The starter pack that you are trying to view is invalid. You may delete this starter pack
-							instead.
-						</Trans>
+						{m['screens.starterPack.error.invalidLong']()}
 					</Text>
 				</View>
 				<View style={[a.gap_md, gtMobile ? { width: 350 } : [a.w_full, a.px_lg]]}>
 					<Button
 						variant="solid"
 						color="primary"
-						label={l`Delete starter pack`}
+						label={m['screens.starterPack.action.delete']()}
 						size="large"
 						style={[a.rounded_sm, a.overflow_hidden, { paddingVertical: 10 }]}
 						disabled={isProcessing}
@@ -668,23 +642,19 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 							deleteStarterPack({ rkey });
 						}}
 					>
-						<ButtonText>
-							<Trans>Delete</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.delete']()}</ButtonText>
 						{isProcessing && <Loader size="xs" color="white" />}
 					</Button>
 					<Button
 						variant="solid"
 						color="secondary"
-						label={l`Return to previous page`}
+						label={m['common.action.returnToPreviousPage']()}
 						size="large"
 						style={[a.rounded_sm, a.overflow_hidden, { paddingVertical: 10 }]}
 						disabled={isProcessing}
 						onPress={goBack}
 					>
-						<ButtonText>
-							<Trans>Go Back</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.goBackTitle']()}</ButtonText>
 					</Button>
 				</View>
 			</View>

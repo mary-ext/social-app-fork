@@ -2,7 +2,6 @@ import { type JSX, useCallback, useMemo, useState } from 'react';
 import { Dimensions, type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -24,6 +23,8 @@ import { useDialogControl } from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { ListFooter } from '#/components/Lists';
 import * as ProfileCard from '#/components/ProfileCard';
+
+import { m } from '#/paraglide/messages';
 
 const LOADING_ITEM = { _reactKey: '__loading__' } as const;
 const EMPTY_ITEM = { _reactKey: '__empty__' } as const;
@@ -64,7 +65,6 @@ export function ListMembers({
 	headerOffset?: number;
 	desktopFixedHeightOffset?: number;
 }) {
-	const { t: l } = useLingui();
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
@@ -141,12 +141,7 @@ export function ListMembers({
 					return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;
 				}
 				if (item === LOAD_MORE_ERROR_ITEM) {
-					return (
-						<LoadMoreRetryBtn
-							label={l`There was an issue fetching the list. Tap here to try again.`}
-							onPress={onPressRetryLoadMore}
-						/>
-					);
+					return <LoadMoreRetryBtn label={m['view.lists.error.fetch']()} onPress={onPressRetryLoadMore} />;
 				}
 				if (item === LOADING_ITEM) {
 					return <ProfileCardFeedLoadingPlaceholder />;
@@ -159,7 +154,7 @@ export function ListMembers({
 
 			return <ListMember profile={profile} moderationOpts={moderationOpts} isOwner={isOwner} list={list} />;
 		},
-		[renderEmptyState, error, onPressTryAgain, onPressRetryLoadMore, moderationOpts, isOwner, l, list],
+		[renderEmptyState, error, onPressTryAgain, onPressRetryLoadMore, moderationOpts, isOwner, list],
 	);
 
 	const renderFooter = useCallback(() => {
@@ -213,7 +208,6 @@ function ListMember({
 	list: string;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const editMembershipDialogControl = useDialogControl();
 
 	return (
@@ -226,7 +220,7 @@ function ListMember({
 						{isOwner && (
 							<Button
 								testID={`user-${profile.handle}-editBtn`}
-								label={l({ message: 'Edit', context: 'action' })}
+								label={m['common.action.edit']()}
 								onPress={(e) => {
 									e.preventDefault();
 									editMembershipDialogControl.open();
@@ -235,9 +229,7 @@ function ListMember({
 								variant="solid"
 								color="secondary"
 							>
-								<ButtonText>
-									<Trans context="action">Edit</Trans>
-								</ButtonText>
+								<ButtonText>{m['common.action.edit']()}</ButtonText>
 							</Button>
 						)}
 					</ProfileCard.Header>

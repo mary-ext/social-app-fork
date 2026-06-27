@@ -14,6 +14,7 @@ import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './PostRepliedTo.css';
@@ -34,14 +35,14 @@ export function PostRepliedTo({
 
 	let label;
 	if (isParentBlocked) {
-		label = <Trans context="description">Replied to a blocked post</Trans>;
+		label = m['components.post.label.repliedToBlocked']();
 	} else if (isParentNotFound) {
-		label = <Trans context="description">Replied to a post</Trans>;
+		label = m['components.post.label.repliedToPost']();
 	} else if (parentAuthor) {
 		const did = typeof parentAuthor === 'string' ? parentAuthor : parentAuthor.did;
 		const isMe = currentAccount?.did === did;
 		if (isMe) {
-			label = <Trans context="description">Replied to you</Trans>;
+			label = m['components.post.label.repliedToYou']();
 		} else {
 			label = (
 				<Trans context="description">

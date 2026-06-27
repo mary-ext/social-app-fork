@@ -1,7 +1,6 @@
-import { useLingui } from '@lingui/react/macro';
-
 import * as Skeleton from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
 import type { SearchHistoryEntry } from '#/storage';
 
 import type { ListRow } from './model';
@@ -16,8 +15,6 @@ export function RecentProfilePendingRow({
 	onRemoveRecent: (entry: SearchHistoryEntry) => void;
 	row: Extract<ListRow, { kind: 'recent-profile-pending' }>;
 }) {
-	const { t } = useLingui();
-
 	return (
 		<div className={styles.row}>
 			<div className={styles.item}>
@@ -30,7 +27,7 @@ export function RecentProfilePendingRow({
 				</span>
 			</div>
 			<RecentRemoveButton
-				label={t`Remove from recent searches`}
+				label={m['components.web.action.removeRecentSearch']()}
 				onRemove={() => onRemoveRecent({ did: row.did, kind: 'profile' })}
 			/>
 		</div>

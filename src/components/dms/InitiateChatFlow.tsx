@@ -7,7 +7,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -40,6 +40,7 @@ import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { ChatProfileTabs } from './ChatProfileTabs';
@@ -208,7 +209,6 @@ export function InitiateChatFlow({
 	onSelectGroupChat: (dids: string[], groupName: string) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const control = Dialog.useDialogContext();
 	const [headerHeight, setHeaderHeight] = useState(0);
@@ -238,8 +238,8 @@ export function InitiateChatFlow({
 		},
 	);
 
-	const newGroupChatTitle = l`New group chat`;
-	const groupNameTitle = l`Group name`;
+	const newGroupChatTitle = m['components.dms.title.newGroup']();
+	const groupNameTitle = m['common.label.groupName']();
 
 	const onRemoveDid = useCallback(
 		(did: string) => {
@@ -261,7 +261,7 @@ export function InitiateChatFlow({
 			_items.push({
 				type: 'empty',
 				key: 'empty',
-				message: l`We’re having network issues, try again`,
+				message: m['components.dms.error.networkIssues'](),
 			});
 		} else if (chatState === ChatState.GROUP_NAME) {
 			_items = groupChatProfiles.map((profile) => ({
@@ -272,7 +272,7 @@ export function InitiateChatFlow({
 			_items.unshift({
 				type: 'label',
 				key: 'members',
-				message: l`New group chat with:`,
+				message: m['components.dms.label.newGroupWith'](),
 			});
 		} else if (searchText.length) {
 			if (results?.length) {
@@ -323,7 +323,7 @@ export function InitiateChatFlow({
 			_items.unshift({
 				type: 'label',
 				key: 'suggested',
-				message: l`Suggested`,
+				message: m['components.dms.label.suggested'](),
 			});
 		}
 
@@ -332,10 +332,10 @@ export function InitiateChatFlow({
 		}
 
 		return _items;
-	}, [isError, chatState, searchText, l, groupChatProfiles, results, currentAccount?.did, follows]);
+	}, [isError, chatState, searchText, groupChatProfiles, results, currentAccount?.did, follows]);
 
 	if (searchText && !isFetching && !items.length && !isError) {
-		items.push({ type: 'empty', key: 'empty', message: l`No results` });
+		items.push({ type: 'empty', key: 'empty', message: m['common.empty.noResults']() });
 	}
 
 	const handlePressBack = useCallback(() => {
@@ -442,15 +442,15 @@ export function InitiateChatFlow({
 		maxCount: MAX_GROUP_NAME_GRAPHEME_LENGTH,
 	});
 
-	let buttonLabel = l`Continue to group name`;
-	let buttonText = l`Next`;
+	let buttonLabel = m['components.dms.action.continueToName']();
+	let buttonText = m['common.action.next']();
 	let handleButtonPress = handlePressNext;
 	let showButton = chatState === ChatState.NEW_GROUP_CHAT && groupChatProfiles.length > 0;
 	let isButtonDisabled = !showButton;
 	switch (chatState) {
 		case ChatState.GROUP_NAME:
-			buttonLabel = l`Create group chat`;
-			buttonText = l`Create`;
+			buttonLabel = m['components.dms.action.createGroup']();
+			buttonText = m['common.action.create']();
 			handleButtonPress = handlePressConfirm;
 			showButton = true;
 			isButtonDisabled = groupName === '' || groupNameTooLong;
@@ -491,7 +491,7 @@ export function InitiateChatFlow({
 						</Text>
 						{
 							<Button
-								label={l`Close`}
+								label={m['common.action.close']()}
 								size="small"
 								shape="round"
 								variant="ghost"
@@ -508,7 +508,7 @@ export function InitiateChatFlow({
 							<View style={[a.w_full, a.relative, a.pt_md]}>
 								<TextField.Root isInvalid={groupNameTooLong}>
 									<TextField.Input
-										label={l`Group name`}
+										label={m['common.label.groupName']()}
 										value={groupName}
 										returnKeyType="next"
 										keyboardAppearance={t.scheme}
@@ -561,7 +561,6 @@ export function InitiateChatFlow({
 			t.atoms.bg,
 			t.atoms.text_contrast_high,
 			t.scheme,
-			l,
 			screenTitle,
 			isButtonDisabled,
 			handleButtonPress,
@@ -612,14 +611,18 @@ export function InitiateChatFlow({
 				// reserve one slot for them
 				groupMemberLimit ? groupMemberLimit - 1 : undefined
 			}
-			label={chatState === ChatState.NEW_GROUP_CHAT ? l`Select group chat members` : l`Start chat`}
+			label={
+				chatState === ChatState.NEW_GROUP_CHAT
+					? m['components.dms.label.selectMembers']()
+					: m['components.dms.action.startChat']()
+			}
 			style={[webViewStyle(a.contents)]}
 		>
 			<Prompt.Basic
 				control={accountTooNewPromptControl}
-				title={l`Your account is too new`}
-				description={l`Your account must be at least 7 days old to create a new group chat.`}
-				confirmButtonCta={l`Okay`}
+				title={m['components.dms.error.accountTooNewTitle']()}
+				description={m['components.dms.error.accountTooNewGroup']()}
+				confirmButtonCta={m['common.action.okay']()}
 				onConfirm={() => {}}
 				showCancel={false}
 			/>
@@ -639,12 +642,14 @@ export function InitiateChatFlow({
 					chatState !== ChatState.NEW_CHAT ? (
 						<Dialog.FlatListFooter onLayout={(evt) => setFooterHeight(evt.nativeEvent.layout.height)}>
 							<View style={[a.flex_row, a.align_center, a.justify_between]}>
-								<Button label={l`Back`} size="small" color="secondary" onPress={handlePressBack}>
+								<Button
+									label={m['common.action.back']()}
+									size="small"
+									color="secondary"
+									onPress={handlePressBack}
+								>
 									<ButtonIcon icon={ArrowLeftIcon} size="md" />
-									<ButtonText>
-										{' '}
-										<Trans>Back</Trans>
-									</ButtonText>
+									<ButtonText> {m['common.action.back']()}</ButtonText>
 								</Button>
 								<Button
 									label={buttonLabel}
@@ -667,17 +672,8 @@ export function InitiateChatFlow({
 
 function NewGroupChatButton({ onPress, dimmed = false }: { onPress: () => void; dimmed?: boolean }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	return (
-		<Button
-			label={l({
-				message: 'New group chat',
-				context: 'action',
-				comment: 'Button used to create a new group chat.',
-			})}
-			onPress={onPress}
-		>
+		<Button label={m['components.dms.action.newGroup']()} onPress={onPress}>
 			{({ hovered, pressed, focused }) => (
 				<View
 					style={[
@@ -707,9 +703,7 @@ function NewGroupChatButton({ onPress, dimmed = false }: { onPress: () => void; 
 					</View>
 					<View style={[a.flex_grow]}>
 						<Text style={[a.text_md, a.font_medium, a.leading_snug, t.atoms.text]}>
-							<Trans context="action" comment="Button used to create a new group chat.">
-								New group chat
-							</Trans>
+							{m['components.dms.title.newGroup']()}
 						</Text>
 					</View>
 					<ChevronRightIcon size="md" fill={colors.text} />
@@ -729,7 +723,6 @@ function DefaultProfileCard({
 	onPress: (did: string) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const enabled = canBeMessaged(profile);
 	const moderation = moderateProfile(profile, moderationOpts);
 	const handle = sanitizeHandle(profile.handle, '@');
@@ -743,7 +736,7 @@ function DefaultProfileCard({
 	}, [onPress, profile.did]);
 
 	return (
-		<Button disabled={!enabled} label={l`Start chat with ${displayName}`} onPress={handleOnPress}>
+		<Button disabled={!enabled} label={m['common.action.startChat']({ displayName })} onPress={handleOnPress}>
 			{({ hovered, pressed, focused }) => (
 				<View
 					style={[

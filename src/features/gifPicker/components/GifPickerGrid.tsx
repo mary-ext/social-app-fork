@@ -1,5 +1,4 @@
 import { type Ref, useEffect, useImperativeHandle, useLayoutEffect, useRef } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -10,6 +9,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as styles from '#/features/gifPicker/components/GifPickerGrid.css';
 import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
 import type { Gif } from '#/features/gifPicker/types';
+import { m } from '#/paraglide/messages';
 
 export type GifPickerGridHandle = {
 	scrollToTop: () => void;
@@ -36,7 +36,6 @@ export function GifPickerGrid({
 	onSelectGif,
 	ref,
 }: Props) {
-	const { t: l } = useLingui();
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -82,14 +81,19 @@ export function GifPickerGrid({
 					))}
 				</div>
 				{isFetchingNextPage ? (
-					<CenteredSpinner label={l`Loading GIFs`} size="xl" />
+					<CenteredSpinner label={m['features.gifPicker.label.loading']()} size="xl" />
 				) : error ? (
 					<div className={styles.footer}>
 						<Text size="sm" color="textContrastMedium" align="center">
 							{cleanError(error)}
 						</Text>
-						<Button label={l`Retry`} size="small" color="secondary" onClick={() => void fetchNextPage()}>
-							<ButtonText>{l`Retry`}</ButtonText>
+						<Button
+							label={m['common.action.retry']()}
+							size="small"
+							color="secondary"
+							onClick={() => void fetchNextPage()}
+						>
+							<ButtonText>{m['common.action.retry']()}</ButtonText>
 						</Button>
 					</div>
 				) : null}

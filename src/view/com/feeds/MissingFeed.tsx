@@ -1,6 +1,5 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -17,6 +16,8 @@ import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/ico
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 export function MissingFeed({
 	style,
 	hideTopBorder,
@@ -29,7 +30,6 @@ export function MissingFeed({
 	error?: unknown;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const control = Dialog.useDialogControl();
 
 	const type = getFeedTypeFromUri(uri);
@@ -37,8 +37,10 @@ export function MissingFeed({
 	return (
 		<>
 			<Button
-				label={type === 'feed' ? l`Could not connect to custom feed` : l`Deleted list`}
-				accessibilityHint={l`Tap for more information`}
+				label={
+					type === 'feed' ? m['view.feeds.error.connectCustomFeed']() : m['view.feeds.label.deletedList']()
+				}
+				accessibilityHint={m['view.feeds.a11y.tapForInfo']()}
 				onPress={control.open}
 				style={[
 					a.flex_1,
@@ -65,13 +67,15 @@ export function MissingFeed({
 					</View>
 					<View style={[a.flex_1]}>
 						<Text emoji style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]} numberOfLines={1}>
-							{type === 'feed' ? <Trans>Feed unavailable</Trans> : <Trans>Deleted list</Trans>}
+							{type === 'feed'
+								? m['view.feeds.error.feedUnavailableTitle']()
+								: m['view.feeds.label.deletedList']()}
 						</Text>
 						<Text
 							style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug, a.italic]}
 							numberOfLines={1}
 						>
-							{<Trans>Click for information</Trans>}
+							{m['view.feeds.a11y.clickForInfo']()}
 						</Text>
 					</View>
 				</View>
@@ -87,7 +91,6 @@ export function MissingFeed({
 function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list'; error: unknown }) {
 	const control = Dialog.useDialogContext();
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const atUri = parseCanonicalResourceUri(uri);
 	const { data: profile, isError: isProfileError } = useProfileQuery({
 		did: atUri.repo,
@@ -96,26 +99,23 @@ function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list';
 
 	return (
 		<Dialog.ScrollableInner
-			label={type === 'feed' ? l`Unavailable feed information` : l`Deleted list`}
+			label={
+				type === 'feed' ? m['view.feeds.a11y.unavailableFeedInfo']() : m['view.feeds.label.deletedList']()
+			}
 			style={{ maxWidth: 500 }}
 		>
 			<View style={[a.gap_sm]}>
 				<Text style={[a.font_bold, a.text_2xl]}>
-					{type === 'feed' ? <Trans>Could not connect to feed service</Trans> : <Trans>Deleted list</Trans>}
+					{type === 'feed' ? m['view.feeds.error.connectFeedService']() : m['view.feeds.label.deletedList']()}
 				</Text>
 				<Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-					{type === 'feed' ? (
-						<Trans>
-							We could not connect to the service that provides this custom feed. It may be temporarily
-							experiencing issues, or permanently unavailable.
-						</Trans>
-					) : (
-						<Trans>We could not find this list. It was probably deleted.</Trans>
-					)}
+					{type === 'feed'
+						? m['view.feeds.error.feedServiceUnavailable']()
+						: m['view.feeds.error.listNotFound']()}
 				</Text>
 				<Divider style={[a.my_md]} />
 				<Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
-					{type === 'feed' ? <Trans>Feed creator</Trans> : <Trans>List creator</Trans>}
+					{type === 'feed' ? m['view.feeds.a11y.feedCreator']() : m['view.feeds.a11y.listCreator']()}
 				</Text>
 				{profile && moderationOpts && (
 					<View style={[a.w_full, a.align_start]}>
@@ -129,13 +129,13 @@ function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list';
 				)}
 				{isProfileError && (
 					<Text style={[t.atoms.text_contrast_high, a.italic, a.text_center, a.w_full]}>
-						<Trans>Could not find profile</Trans>
+						{m['view.feeds.error.profileNotFound']()}
 					</Text>
 				)}
 				{type === 'feed' && (
 					<>
 						<Text style={[a.font_semi_bold, t.atoms.text_contrast_high, a.mt_md]}>
-							<Trans>Feed identifier</Trans>
+							{m['view.feeds.a11y.feedIdentifier']()}
 						</Text>
 						<Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>{atUri.rkey}</Text>
 					</>
@@ -143,7 +143,7 @@ function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list';
 				{error instanceof Error && (
 					<>
 						<Text style={[a.font_semi_bold, t.atoms.text_contrast_high, a.mt_md]}>
-							<Trans>Error message</Trans>
+							{m['view.feeds.a11y.errorMessage']()}
 						</Text>
 						<Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>{cleanError(error.message)}</Text>
 					</>

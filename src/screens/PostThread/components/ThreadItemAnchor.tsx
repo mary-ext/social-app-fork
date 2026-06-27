@@ -55,6 +55,7 @@ import * as Skele from '#/components/web/Skeleton';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemAnchor.css';
@@ -103,7 +104,7 @@ function ThreadItemAnchorDeleted({ isRoot }: { isRoot: boolean }) {
 						<TrashIcon fill="currentColor" />
 					</div>
 					<Text size="md" weight="semiBold" color="textContrastMedium">
-						<Trans>Post has been deleted</Trans>
+						{m['screens.postThread.error.deleted']()}
 					</Text>
 				</div>
 			</div>
@@ -136,7 +137,6 @@ function ThreadItemAnchorInner({
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	postSource?: PostSource;
 }) {
-	const { t: l } = useLingui();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount, hasSession } = useSession();
 	const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession);
@@ -273,7 +273,7 @@ function ThreadItemAnchorInner({
 									<InlineLinkText
 										className={css.handle}
 										color="textContrastHigh"
-										label={l`View profile`}
+										label={m['common.action.viewProfile']()}
 										numberOfLines={1}
 										onPress={onOpenAuthor}
 										size="md"
@@ -337,7 +337,7 @@ function ThreadItemAnchorInner({
 									<InlineLinkText
 										color="textContrastMedium"
 										data-testid="repostCount-expanded"
-										label={l`Reposts of this post`}
+										label={m['screens.postThread.title.reposts']()}
 										size="md"
 										to={repostsHref}
 									>
@@ -353,7 +353,7 @@ function ThreadItemAnchorInner({
 									<InlineLinkText
 										color="textContrastMedium"
 										data-testid="quoteCount-expanded"
-										label={l`Quotes of this post`}
+										label={m['screens.postThread.title.quotes']()}
 										size="md"
 										to={quotesHref}
 									>
@@ -369,7 +369,7 @@ function ThreadItemAnchorInner({
 									<InlineLinkText
 										color="textContrastMedium"
 										data-testid="likeCount-expanded"
-										label={l`Likes on this post`}
+										label={m['screens.postThread.title.likes']()}
 										size="md"
 										to={likesHref}
 									>
@@ -440,7 +440,7 @@ function ExpandedPostDetails({
 }
 
 function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const handle = Prompt.usePromptHandle();
 
 	const indexedAt = new Date(post.indexedAt);
@@ -454,8 +454,8 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	return (
 		<>
 			<Button
-				label={l`Archived post`}
-				accessibilityHint={l`Shows information about when this post was created`}
+				label={m['screens.postThread.label.archived']()}
+				accessibilityHint={m['screens.postThread.a11y.createdInfo']()}
 				onPress={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
@@ -466,7 +466,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 					<div className={clsx(css.archivedPill, (hovered || pressed) && css.archivedPillActive)}>
 						<CalendarClockIcon fill={colors.yellow} size="sm" aria-hidden />
 						<Text size="xs" weight="semiBold" color="textContrastMedium">
-							<Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
+							{m['screens.postThread.label.archivedFrom']({ date: niceDate(i18n, createdAt, 'medium') })}
 						</Text>
 					</div>
 				)}
@@ -474,9 +474,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 
 			<Prompt.Outer handle={handle}>
 				<Prompt.Content>
-					<Prompt.TitleText>
-						<Trans>Archived post</Trans>
-					</Prompt.TitleText>
+					<Prompt.TitleText>{m['screens.postThread.label.archived']()}</Prompt.TitleText>
 					<Prompt.DescriptionText>
 						<Trans>
 							This post claims to have been created on{' '}
@@ -484,12 +482,10 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 							<Text weight="semiBold">{niceDate(i18n, indexedAt)}</Text>.
 						</Trans>
 					</Prompt.DescriptionText>
-					<Prompt.DescriptionText>
-						<Trans>Bluesky cannot confirm the authenticity of the claimed date.</Trans>
-					</Prompt.DescriptionText>
+					<Prompt.DescriptionText>{m['screens.postThread.hint.dateUnverified']()}</Prompt.DescriptionText>
 				</Prompt.Content>
 				<Prompt.Actions>
-					<Prompt.Action cta={l`Okay`} onPress={() => {}} />
+					<Prompt.Action cta={m['common.action.okay']()} onPress={() => {}} />
 				</Prompt.Actions>
 			</Prompt.Outer>
 		</>

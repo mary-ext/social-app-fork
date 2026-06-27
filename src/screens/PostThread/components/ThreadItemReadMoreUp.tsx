@@ -1,5 +1,3 @@
-import { useLingui, Trans } from '@lingui/react/macro';
-
 import type { ThreadItem } from '#/state/queries/usePostThread';
 
 import { OUTER_SPACE } from '#/screens/PostThread/const';
@@ -10,16 +8,15 @@ import { ArrowTopCircle_Stroke2_Corner0_Rounded as UpIcon } from '#/components/i
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemReadMoreUp.css';
 
 export function ThreadItemReadMoreUp({ item }: { item: Extract<ThreadItem, { type: 'readMoreUp' }> }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Link
-			label={l`Continue thread`}
+			label={m['screens.postThread.action.continueThread']()}
 			to={item.href}
 			style={[
 				a.gap_xs,
@@ -38,7 +35,7 @@ export function ThreadItemReadMoreUp({ item }: { item: Extract<ThreadItem, { typ
 								<UpIcon fill={interacted ? colors.textContrastHigh : colors.textContrastLow} width={24} />
 							</div>
 							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
-								<Trans>Continue thread...</Trans>
+								{m['screens.postThread.action.continueThreadMore']()}
 							</Text>
 						</div>
 						<div className={css.iconCell}>

@@ -1,6 +1,5 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
-import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -15,6 +14,8 @@ import type {
 } from '#/components/Composer/Autocomplete/types';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './Autocomplete.css';
 
@@ -33,7 +34,6 @@ export function Autocomplete({
 	placement?: Placement;
 	onSelect: (item: AutocompleteItem) => void;
 }) {
-	const { t: l } = useLingui();
 	const [side, align = 'start'] = placement.split('-') as ['top' | 'bottom', 'start' | 'end' | undefined];
 
 	return (
@@ -52,7 +52,7 @@ export function Autocomplete({
 					onMouseDown={(e) => e.preventDefault()}
 				>
 					{items.length === 0 ? (
-						<CenteredSpinner label={l`Loading`} size="lg" />
+						<CenteredSpinner label={m['common.label.loading']()} size="lg" />
 					) : (
 						<BaseAutocomplete.List>
 							{items.map((item) => {

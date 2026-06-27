@@ -1,5 +1,4 @@
 import { Pressable } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -18,13 +17,13 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 import { LeaveChatPrompt } from '../ConversationSettings/prompts';
 import { ChatFooter } from './ChatFooter';
 
 export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const leaveChatPrompt = Prompt.usePromptControl();
 
 	const navigation = useNavigation<NavigationProp>();
@@ -39,14 +38,14 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });
-			Toast.show(l({ message: 'Failed to leave group chat', context: 'toast' }), {
+			Toast.show(m['screens.messages.error.leaveGroup'](), {
 				type: 'error',
 			});
 		},
 	});
 
 	return (
-		<ChatFooter heading={l`This chat has ended`} icon={CircleXIcon}>
+		<ChatFooter heading={m['screens.messages.label.chatEnded']()} icon={CircleXIcon}>
 			{isOwner ? null : (
 				<>
 					<Pressable
@@ -66,7 +65,7 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 								},
 							]}
 						>
-							<Trans>Leave chat</Trans>
+							{m['common.action.leaveChat']()}
 						</Text>
 					</Pressable>
 					<LeaveChatPrompt control={leaveChatPrompt} groupName={convo.details.name} onConfirm={leaveConvo} />

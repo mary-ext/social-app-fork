@@ -1,8 +1,8 @@
-import { Trans, useLingui } from '@lingui/react/macro';
-
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon } from '#/components/icons/ArrowRotate';
 import { Text as TextPrimitive } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './VideoFallback.css';
 
@@ -19,14 +19,16 @@ export function Text({ children }: { children: React.ReactNode }) {
 }
 
 export function RetryButton({ onPress }: { onPress: () => void }) {
-	const { t: l } = useLingui();
-
 	return (
-		<Button onClick={onPress} size="small" color="secondary_inverted" variant="solid" label={l`Retry`}>
+		<Button
+			onClick={onPress}
+			size="small"
+			color="secondary_inverted"
+			variant="solid"
+			label={m['common.action.retry']()}
+		>
 			<ButtonIcon icon={ArrowRotateIcon} />
-			<ButtonText>
-				<Trans>Retry</Trans>
-			</ButtonText>
+			<ButtonText>{m['common.action.retry']()}</ButtonText>
 		</Button>
 	);
 }

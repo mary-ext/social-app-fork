@@ -6,7 +6,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -49,6 +48,7 @@ import * as Layout from '#/components/web/Layout';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { navigate } from '#/Navigation';
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './Profile.css';
@@ -63,7 +63,6 @@ export function ProfileScreen(props: Props) {
 }
 
 function ProfileScreenInner({ route }: Props) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const name = route.params.name === 'me' ? currentAccount?.did : route.params.name;
@@ -120,7 +119,7 @@ function ProfileScreenInner({ route }: Props) {
 	if (resolveError || profileError) {
 		return (
 			<ErrorScreen
-				title={profileError ? l`Not Found` : l`Oops!`}
+				title={profileError ? m['common.error.notFound']() : m['common.error.oops']()}
 				message={cleanError(resolveError || profileError)}
 				onPressTryAgain={onPressTryAgain}
 				showHeader
@@ -172,8 +171,6 @@ function ProfileScreenLoaded({
 		enabled: !!profile.associated?.labeler,
 	});
 	const [selectedTab, setSelectedTab] = useState<string | null>(null);
-	const { t: l } = useLingui();
-
 	useSetTitle(combinedDisplayName(profile));
 
 	const description = profile.description ?? '';
@@ -223,7 +220,7 @@ function ProfileScreenLoaded({
 	const sections = definite<Section<string>>([
 		showFiltersTab && {
 			id: 'labels',
-			label: l`Labels`,
+			label: m['common.label.labels'](),
 			render: () => (
 				<ProfileLabelsSection
 					labelerInfo={labelerInfo}
@@ -236,25 +233,25 @@ function ProfileScreenLoaded({
 		showListsTab &&
 			hasLabeler && {
 				id: 'lists',
-				label: l`Lists`,
+				label: m['common.label.lists'](),
 				render: (isFocused: boolean) => (
 					<ProfileLists did={profile.did} enabled={isFocused} listCount={listCount} />
 				),
 			},
 		showPostsTab && {
 			id: 'posts',
-			label: l`Posts`,
+			label: m['common.label.posts'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_and_author_threads`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={l`No posts yet`}
+					emptyStateMessage={m['common.empty.noPosts']()}
 					emptyStateButton={
 						isMe
 							? {
-									label: l`Write a post`,
-									text: l`Write a post`,
+									label: m['view.action.writePost'](),
+									text: m['view.action.writePost'](),
 									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
 									size: 'small',
 									color: 'primary',
@@ -266,31 +263,31 @@ function ProfileScreenLoaded({
 		},
 		showRepliesTab && {
 			id: 'replies',
-			label: l`Replies`,
+			label: m['common.label.replies'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_replies`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={l`No replies yet`}
+					emptyStateMessage={m['view.empty.replies']()}
 					emptyStateIcon={MessageIcon}
 				/>
 			),
 		},
 		showMediaTab && {
 			id: 'media',
-			label: l`Media`,
+			label: m['common.label.media'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_media`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={l`No media yet`}
+					emptyStateMessage={m['view.empty.media']()}
 					emptyStateButton={
 						isMe
 							? {
-									label: l`Post a photo`,
-									text: l`Post a photo`,
+									label: m['view.action.postPhoto'](),
+									text: m['view.action.postPhoto'](),
 									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
 									size: 'small',
 									color: 'primary',
@@ -303,18 +300,18 @@ function ProfileScreenLoaded({
 		},
 		showVideosTab && {
 			id: 'videos',
-			label: l`Videos`,
+			label: m['view.title.videos'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_video`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={l`No video posts yet`}
+					emptyStateMessage={m['view.empty.videos']()}
 					emptyStateButton={
 						isMe
 							? {
-									label: l`Post a video`,
-									text: l`Post a video`,
+									label: m['view.action.postVideo'](),
+									text: m['view.action.postVideo'](),
 									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
 									size: 'small',
 									color: 'primary',
@@ -327,43 +324,39 @@ function ProfileScreenLoaded({
 		},
 		showLikesTab && {
 			id: 'likes',
-			label: l`Likes`,
+			label: m['common.label.likes'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`likes|${profile.did}`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={l`No likes yet`}
+					emptyStateMessage={m['common.empty.noLikes']()}
 					emptyStateIcon={HeartIcon}
 				/>
 			),
 		},
 		showFeedsTab && {
 			id: 'feeds',
-			label: l`Feeds`,
+			label: m['common.nav.feeds'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedgens did={profile.did} enabled={isFocused} feedCount={feedGenCount} />
 			),
 		},
 		showStarterPacksTab && {
 			id: 'starterPacks',
-			label: l`Starter Packs`,
+			label: m['common.label.starterPacks'](),
 			render: (isFocused: boolean) => (
 				<ProfileStarterPacks
 					did={profile.did}
 					isMe={isMe}
 					enabled={isFocused}
 					starterPackCount={starterPackCount}
-					emptyStateMessage={
-						isMe
-							? l`Starter Packs let you share your favorite feeds and people with your friends.`
-							: l`No Starter Packs yet`
-					}
+					emptyStateMessage={isMe ? m['view.starterPacks.description']() : m['view.empty.starterPacks']()}
 					emptyStateButton={
 						isMe
 							? {
-									label: l`Create a Starter Pack`,
-									text: l`Create a Starter Pack`,
+									label: m['view.action.createStarterPack'](),
+									text: m['view.action.createStarterPack'](),
 									onPress: navToWizard,
 									color: 'primary',
 									size: 'small',
@@ -377,7 +370,7 @@ function ProfileScreenLoaded({
 		showListsTab &&
 			!hasLabeler && {
 				id: 'lists',
-				label: l`Lists`,
+				label: m['common.label.lists'](),
 				render: (isFocused: boolean) => (
 					<ProfileLists did={profile.did} enabled={isFocused} listCount={listCount} />
 				),
@@ -392,7 +385,7 @@ function ProfileScreenLoaded({
 	return (
 		<ScreenHider
 			className={css.container}
-			screenDescription={l`user`}
+			screenDescription={m['view.label.user']()}
 			modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 		>
 			<Tabs
@@ -415,7 +408,7 @@ function ProfileScreenLoaded({
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={colors.white} />}
-					label={l`New post`}
+					label={m['common.label.newPost']()}
 					onClick={onPressCompose}
 				/>
 			)}

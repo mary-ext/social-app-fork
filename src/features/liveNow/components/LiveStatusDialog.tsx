@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
@@ -26,6 +25,7 @@ import { Text } from '#/components/Typography';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
+import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';
 import { colors } from '#/styles/colors';
 
@@ -42,7 +42,6 @@ export function LiveStatus({
 	padding?: 'lg' | 'xl';
 	onPressOpenProfile: () => void;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const queryClient = useQueryClient();
 	const openLink = useOpenLink();
@@ -98,7 +97,7 @@ export function LiveStatus({
 					</View>
 				</View>
 				<Button
-					label={l`Watch now`}
+					label={m['features.liveNow.action.watchNow']()}
 					size={'small'}
 					color="primary"
 					variant="solid"
@@ -106,9 +105,7 @@ export function LiveStatus({
 						void openLink(embed.external.uri);
 					}}
 				>
-					<ButtonText>
-						<Trans>Watch now</Trans>
-					</ButtonText>
+					<ButtonText>{m['features.liveNow.action.watchNow']()}</ButtonText>
 					<ButtonIcon icon={SquareArrowTopRightIcon} />
 				</Button>
 				<View style={[t.atoms.border_contrast_low, a.border_t, a.w_full]} />
@@ -120,7 +117,7 @@ export function LiveStatus({
 							<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
 						</View>
 						<Button
-							label={l`Open profile`}
+							label={m['features.liveNow.action.openProfile']()}
 							size="small"
 							color="secondary"
 							variant="solid"
@@ -129,22 +126,18 @@ export function LiveStatus({
 								onPressOpenProfile();
 							}}
 						>
-							<ButtonText>
-								<Trans>Open profile</Trans>
-							</ButtonText>
+							<ButtonText>{m['features.liveNow.action.openProfile']()}</ButtonText>
 						</Button>
 					</ProfileCard.Header>
 				)}
 				<View style={[a.flex_row, a.align_center, a.justify_between, a.w_full, a.pt_sm]}>
 					<View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
 						<CircleInfoIcon size="sm" fill={colors.textContrastLow} />
-						<Text style={[t.atoms.text_contrast_low, a.text_sm]}>
-							<Trans>Live feature is in beta</Trans>
-						</Text>
+						<Text style={[t.atoms.text_contrast_low, a.text_sm]}>{m['features.liveNow.label.beta']()}</Text>
 					</View>
 					{status && (
 						<SimpleInlineLinkText
-							label={l`Report this livestream`}
+							label={m['common.action.reportLivestream']()}
 							{...createStaticClick(() => {
 								function open() {
 									reportDialogControl.openWithPayload({
@@ -162,7 +155,7 @@ export function LiveStatus({
 							})}
 							style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}
 						>
-							<Trans>Report</Trans>
+							{m['common.action.report']()}
 						</SimpleInlineLinkText>
 					)}
 				</View>
@@ -173,7 +166,6 @@ export function LiveStatus({
 
 function ModeratedImage() {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const hider = Hider.useHider();
 
 	return (
@@ -181,31 +173,25 @@ function ModeratedImage() {
 			<View style={[a.align_center, a.gap_sm, { maxWidth: 200 }]}>
 				<ImageIcon size="lg" fill={colors.textContrastMedium} />
 				<Text style={[a.italic, a.leading_snug, a.text_center, t.atoms.text_contrast_medium]}>
-					{hider.meta.allowOverride ? (
-						<Trans comment="Image has been moderated and user has the option of showing it temporarily">
-							Image is hidden due to your moderation settings.
-						</Trans>
-					) : (
-						/*
-						 * In practice, if `allowOverride` is false, we won't even allow this
-						 * dialog to open. That is handled in
-						 * `#/features/liveNow/index.tsx`. But for clarity, I've included
-						 * this here.
-						 */
-						<Trans comment="Image has been moderated and is not visible to the user">
-							Image is unavailable.
-						</Trans>
-					)}
+					{hider.meta.allowOverride
+						? m['features.liveNow.image.hidden']()
+						: /*
+							 * In practice, if `allowOverride` is false, we won't even allow this
+							 * dialog to open. That is handled in
+							 * `#/features/liveNow/index.tsx`. But for clarity, I've included
+							 * this here.
+							 */
+							m['features.liveNow.image.unavailable']()}
 				</Text>
 
 				{hider.meta.allowOverride && (
 					<SimpleInlineLinkText
-						label={l`Show anyway`}
+						label={m['common.action.showAnyway']()}
 						{...createStaticClick(() => {
 							hider.setIsContentVisible(true);
 						})}
 					>
-						<Trans>Show anyway</Trans>
+						{m['common.action.showAnyway']()}
 					</SimpleInlineLinkText>
 				)}
 			</View>

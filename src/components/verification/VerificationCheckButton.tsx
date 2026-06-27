@@ -1,5 +1,4 @@
 import type { AnyProfileView } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import type { Shadow } from '#/state/cache/types';
 import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
@@ -12,6 +11,7 @@ import { VerificationsDialog } from '#/components/verification/VerificationsDial
 import { VerifierDialog } from '#/components/verification/VerifierDialog';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type FullVerificationState = {
@@ -131,7 +131,6 @@ function Badge({
 	verificationState: FullVerificationState;
 	width: number;
 }) {
-	const { t: l } = useLingui();
 	const verificationsControl = Dialog.useDialogHandle();
 	const verifierControl = Dialog.useDialogHandle();
 
@@ -147,7 +146,11 @@ function Badge({
 	return (
 		<>
 			<Dialog.Trigger
-				aria-label={state.profile.isViewer ? l`View your verifications` : l`View this user's verifications`}
+				aria-label={
+					state.profile.isViewer
+						? m['components.verification.action.viewYourVerifications']()
+						: m['components.verification.action.viewUserVerifications']()
+				}
 				className={css.button}
 				handle={control}
 				onClick={(e) => e.stopPropagation()}

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 import type Hls from 'hls.js';
 
 import { clamp } from '#/lib/numbers';
@@ -21,6 +20,7 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
 import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
+import { m } from '#/paraglide/messages';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 import { useSubtitlesEnabled } from '#/storage/hooks/subtitles';
 
@@ -74,7 +74,6 @@ export function Controls({
 		error,
 		canPlay,
 	} = useVideoElement(videoRef);
-	const { t: l } = useLingui();
 	const [subtitlesEnabled, setSubtitlesEnabled] = useSubtitlesEnabled();
 	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
 	const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef);
@@ -319,7 +318,13 @@ export function Controls({
 				type="button"
 				className={styles.emptySpace}
 				data-cursor={showCursor || !playing ? 'pointer' : 'none'}
-				aria-label={!focused ? l`Unmute video` : playing ? l`Pause video` : l`Play video`}
+				aria-label={
+					!focused
+						? m['components.post.a11y.unmuteVideo']()
+						: playing
+							? m['components.post.a11y.pauseVideo']()
+							: m['components.post.a11y.playVideo']()
+				}
 				onPointerEnter={onPointerMoveEmptySpace}
 				onPointerMove={onPointerMoveEmptySpace}
 				onPointerLeave={onPointerLeaveEmptySpace}
@@ -345,8 +350,8 @@ export function Controls({
 				<div className={styles.controlsRow}>
 					<ControlButton
 						active={playing}
-						activeLabel={l`Pause`}
-						inactiveLabel={l`Play`}
+						activeLabel={m['components.post.action.pause']()}
+						inactiveLabel={m['components.post.action.play']()}
 						activeIcon={PauseIcon}
 						inactiveIcon={PlayIcon}
 						onPress={onPressPlayPause}
@@ -360,8 +365,8 @@ export function Controls({
 					{hasSubtitleTrack && (
 						<ControlButton
 							active={subtitlesEnabled}
-							activeLabel={l`Disable captions`}
-							inactiveLabel={l`Enable captions`}
+							activeLabel={m['components.post.action.disableCaptions']()}
+							inactiveLabel={m['components.post.action.enableCaptions']()}
 							activeIcon={CCActiveIcon}
 							inactiveIcon={CCInactiveIcon}
 							onPress={onPressSubtitles}
@@ -378,8 +383,8 @@ export function Controls({
 					{!IS_WEB_MOBILE_IOS && (
 						<ControlButton
 							active={isFullscreen}
-							activeLabel={l`Exit fullscreen`}
-							inactiveLabel={l`Enter fullscreen`}
+							activeLabel={m['components.post.action.exitFullscreen']()}
+							inactiveLabel={m['components.post.action.enterFullscreen']()}
 							activeIcon={ArrowsInIcon}
 							inactiveIcon={ArrowsOutIcon}
 							onPress={onPressFullscreen}
@@ -389,12 +394,8 @@ export function Controls({
 			</div>
 			{(showSpinner || error) && (
 				<div className={styles.overlay}>
-					{showSpinner && <Spinner label={l`Loading video`} color="#fff" size="lg" />}
-					{error && (
-						<Text className={styles.errorText}>
-							<Trans>An error occurred</Trans>
-						</Text>
-					)}
+					{showSpinner && <Spinner label={m['common.label.loadingVideo']()} color="#fff" size="lg" />}
+					{error && <Text className={styles.errorText}>{m['components.post.error.generic']()}</Text>}
 				</div>
 			)}
 		</div>

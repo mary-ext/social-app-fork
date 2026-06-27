@@ -1,10 +1,11 @@
-import { useLingui } from '@lingui/react/macro';
 import { HotkeysProvider, useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 
 import { focusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
+
+import { m } from '#/paraglide/messages';
 
 enum Hotkeys {
 	OPEN_COMPOSER = 'n',
@@ -29,8 +30,6 @@ function KeyboardShortcuts({ children }: React.PropsWithChildren<unknown>) {
 function useKeyboardShortcuts() {
 	const { openComposer } = useOpenComposer();
 	const { hasSession } = useSession();
-	const { t: l } = useLingui();
-
 	const shouldIgnore = (requiresSession: boolean = false) => {
 		if (requiresSession && !hasSession) {
 			return true;
@@ -57,14 +56,14 @@ function useKeyboardShortcuts() {
 					requiresSession: true,
 				},
 			),
-		{ scopes: ['global'], description: l`Compose new post` },
+		{ scopes: ['global'], description: m['common.action.composePost']() },
 		[openComposer],
 	);
 
 	useHotkeys(Hotkeys.FOCUS_SEARCH, () => handleKey(() => focusSearch.emit()), {
 		scopes: ['global'],
 		preventDefault: true,
-		description: l`Focus the search field`,
+		description: m['lib.a11y.focusSearch'](),
 		useKey: true, // Support international and alternate keyboard layouts
 	});
 }

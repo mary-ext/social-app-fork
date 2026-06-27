@@ -19,6 +19,8 @@ import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/T
 import * as Toast from '#/components/Toast';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
+
 export let MessageContextMenu = ({
 	message,
 	senderProfile,
@@ -31,7 +33,7 @@ export let MessageContextMenu = ({
 	/** The trigger element (a message-hover button); receives Base UI trigger props + `{ open }` state. */
 	render: ComponentProps<typeof Menu.Trigger>['render'];
 }): React.ReactNode => {
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const { currentAccount } = useSession();
 	const { openDeleteMessage, openReportMessage } = useMessageDialogs();
 	const { setReply } = useMessageReplies();
@@ -44,10 +46,10 @@ export let MessageContextMenu = ({
 		const str = richTextToString({ text: message.text, facets: message.facets ?? [] }, true);
 
 		void navigator.clipboard.writeText(str);
-		Toast.show(l`Copied to clipboard`, {
+		Toast.show(m['common.toast.copied'](), {
 			type: 'success',
 		});
-	}, [l, message.text, message.facets]);
+	}, [message.text, message.facets]);
 
 	const onPressTranslateMessage = useCallback(() => {
 		void translate(message.text, langPrefs.primaryLanguage);
@@ -60,40 +62,49 @@ export let MessageContextMenu = ({
 			<Menu.Trigger render={render} />
 			<Menu.Popup
 				align={isFromSelf ? 'end' : 'start'}
-				label={l`Message from @${
-					sender?.handle ?? 'unknown' // should always be defined
-				}: ${message.text}`}
+				label={m['components.dms.a11y.messageFrom']({
+					handle: sender?.handle ?? 'unknown',
+					text: message.text,
+				})}
 			>
 				<Menu.Group>
 					<Menu.LabelText>
-						{l`Sent at ${i18n.date(new Date(message.sentAt), {
-							timeStyle: 'short',
-						})}`}
+						{m['components.dms.label.sentAt']({
+							time: i18n.date(new Date(message.sentAt), {
+								timeStyle: 'short',
+							}),
+						})}
 					</Menu.LabelText>
-					<Menu.Item label={l`Reply`} onClick={() => setReply(message)}>
+					<Menu.Item label={m['common.action.reply']()} onClick={() => setReply(message)}>
 						<Menu.ItemIcon icon={ReplyIcon} position="left" />
-						<Menu.ItemText>{l`Reply`}</Menu.ItemText>
+						<Menu.ItemText>{m['common.action.reply']()}</Menu.ItemText>
 					</Menu.Item>
 					{message.text.length > 0 && (
 						<>
-							<Menu.Item label={l`Translate`} onClick={onPressTranslateMessage}>
+							<Menu.Item label={m['common.action.translate']()} onClick={onPressTranslateMessage}>
 								<Menu.ItemIcon icon={LanguageIcon} position="left" />
-								<Menu.ItemText>{l`Translate`}</Menu.ItemText>
+								<Menu.ItemText>{m['common.action.translate']()}</Menu.ItemText>
 							</Menu.Item>
-							<Menu.Item label={l`Copy message text`} onClick={onCopyMessage}>
+							<Menu.Item label={m['components.dms.action.copyText']()} onClick={onCopyMessage}>
 								<Menu.ItemIcon icon={ClipboardIcon} position="left" />
-								<Menu.ItemText>{l`Copy message text`}</Menu.ItemText>
+								<Menu.ItemText>{m['components.dms.action.copyText']()}</Menu.ItemText>
 							</Menu.Item>
 						</>
 					)}
-					<Menu.Item label={l`Delete message for me`} onClick={() => openDeleteMessage(message)}>
+					<Menu.Item
+						label={m['components.dms.action.deleteMessageForMe']()}
+						onClick={() => openDeleteMessage(message)}
+					>
 						<Menu.ItemIcon icon={TrashIcon} position="left" />
-						<Menu.ItemText>{l`Delete for me`}</Menu.ItemText>
+						<Menu.ItemText>{m['components.dms.action.deleteForMe']()}</Menu.ItemText>
 					</Menu.Item>
 					{!isFromSelf && (
-						<Menu.Item label={l`Report message`} onClick={() => openReportMessage(message, senderProfile)}>
+						<Menu.Item
+							label={m['components.dms.action.reportMessage']()}
+							onClick={() => openReportMessage(message, senderProfile)}
+						>
 							<Menu.ItemIcon icon={FlagIcon} position="left" />
-							<Menu.ItemText>{l`Report`}</Menu.ItemText>
+							<Menu.ItemText>{m['common.action.report']()}</Menu.ItemText>
 						</Menu.Item>
 					)}
 				</Menu.Group>

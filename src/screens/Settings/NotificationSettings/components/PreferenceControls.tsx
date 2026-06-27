@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
 import type { AppBskyNotificationDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNotificationSettingsUpdateMutation } from '#/state/queries/notifications/settings';
 
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toggle from '#/components/web/forms/Toggle';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './PreferenceControls.css';
 
@@ -28,12 +29,10 @@ export function PreferenceControls({
 	 */
 	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
 }) {
-	const { t: l } = useLingui();
-
 	if (!preference) {
 		return (
 			<div className={styles.loaderWrap}>
-				<Spinner color="currentColor" label={l`Loading`} size="xl" />
+				<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
 			</div>
 		);
 	}
@@ -62,7 +61,6 @@ export function Inner({
 		| AppBskyNotificationDefs.Preference;
 	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
 }) {
-	const { t: l } = useLingui();
 	const { mutate } = useNotificationSettingsUpdateMutation();
 
 	const channels = useMemo(() => {
@@ -103,21 +101,29 @@ export function Inner({
 		<div className={styles.container}>
 			<Toggle.Group
 				className={styles.channels}
-				label={l`Select your preferred notification channels`}
+				label={m['screens.settings.notifications.selectChannels']()}
 				onChange={onChangeChannels}
 				type="checkbox"
 				values={channels}
 			>
-				<Toggle.Item className={styles.switchRow} label={l`Receive push notifications`} name="push">
+				<Toggle.Item
+					className={styles.switchRow}
+					label={m['screens.settings.notifications.receivePush']()}
+					name="push"
+				>
 					<Text className={styles.switchLabel} size="md">
-						<Trans>Push notifications</Trans>
+						{m['screens.settings.notifications.pushNotifications']()}
 					</Text>
 					<Toggle.Switch />
 				</Toggle.Item>
 				{allowDisableInApp && (
-					<Toggle.Item className={styles.switchRow} label={l`Receive in-app notifications`} name="list">
+					<Toggle.Item
+						className={styles.switchRow}
+						label={m['screens.settings.notifications.receiveInApp']()}
+						name="list"
+					>
 						<Text className={styles.switchLabel} size="md">
-							<Trans>In-app notifications</Trans>
+							{m['screens.settings.notifications.inAppNotifications']()}
 						</Text>
 						<Toggle.Switch />
 					</Toggle.Item>
@@ -127,40 +133,34 @@ export function Inner({
 				<>
 					<div className={styles.divider} />
 					<Text size="md" weight="semiBold">
-						<Trans>From</Trans>
+						{m['screens.settings.label.from']()}
 					</Text>
 					<Toggle.Group
 						className={styles.radioList}
 						disabled={channels.length === 0}
-						label={l`Filter who you receive notifications from`}
+						label={m['screens.settings.hint.filterWhoYouReceive']()}
 						onChange={onChangeFilter}
 						type="radio"
 						values={[preference.include]}
 					>
-						<Toggle.RadioItem label={l`Everyone`} value="all">
+						<Toggle.RadioItem label={m['screens.settings.option.everyone']()} value="all">
 							<Toggle.Panel>
 								<Toggle.RadioIndicator />
-								<Toggle.PanelText>
-									<Trans>Everyone</Trans>
-								</Toggle.PanelText>
+								<Toggle.PanelText>{m['screens.settings.option.everyone']()}</Toggle.PanelText>
 							</Toggle.Panel>
 						</Toggle.RadioItem>
 						{name === 'chat' ? (
-							<Toggle.RadioItem label={l`Accepted conversations`} value="accepted">
+							<Toggle.RadioItem label={m['screens.settings.label.acceptedConversations']()} value="accepted">
 								<Toggle.Panel>
 									<Toggle.RadioIndicator />
-									<Toggle.PanelText>
-										<Trans>Accepted conversations</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['screens.settings.label.acceptedConversations']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.RadioItem>
 						) : (
-							<Toggle.RadioItem label={l`People I follow`} value="follows">
+							<Toggle.RadioItem label={m['screens.settings.option.peopleIFollow']()} value="follows">
 								<Toggle.Panel>
 									<Toggle.RadioIndicator />
-									<Toggle.PanelText>
-										<Trans>People I follow</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['screens.settings.option.peopleIFollow']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.RadioItem>
 						)}

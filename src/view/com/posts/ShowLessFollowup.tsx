@@ -1,11 +1,11 @@
 import { View } from 'react-native';
-import { Trans } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { CircleCheck_Stroke2_Corner0_Rounded } from '#/components/icons/CircleCheck';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function ShowLessFollowup() {
@@ -25,7 +25,7 @@ export function ShowLessFollowup() {
 			>
 				<CircleCheck_Stroke2_Corner0_Rounded fill={colors.textContrastLow} size="sm" />
 				<Text style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
-					<Trans>Thank you for your feedback! It has been sent to the feed operator.</Trans>
+					{m['view.posts.feedback.thanks']()}
 				</Text>
 			</View>
 		</View>

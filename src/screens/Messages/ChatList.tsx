@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -43,6 +42,7 @@ import { Link } from '#/components/Link';
 import { ListFooter } from '#/components/Lists';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './ChatList.css';
@@ -81,7 +81,6 @@ export function MessagesScreen(props: Props) {
 
 export function MessagesScreenInner({ route }: Props) {
 	const { isWithinSplitView } = useIsWithinSplitView();
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const t = useTheme();
 	const newChatControl = useDialogControl();
@@ -124,7 +123,7 @@ export function MessagesScreenInner({ route }: Props) {
 		return (
 			<>
 				<EmptyState
-					message={l`Say hi to someone`}
+					message={m['screens.messages.empty.sayHi']()}
 					icon={BubbleSmileIcon}
 					messageColor="text"
 					iconColor={t.atoms.text.color}
@@ -133,8 +132,8 @@ export function MessagesScreenInner({ route }: Props) {
 						chatStatus?.chatDisabled
 							? undefined
 							: {
-									label: l`New chat`,
-									text: l`New chat`,
+									label: m['common.action.newChat'](),
+									text: m['common.action.newChat'](),
 									onPress: newChatControl.open,
 									size: 'small',
 									color: 'primary',
@@ -167,7 +166,6 @@ export function ChatList({
 	chatStatus: ChatStatus | undefined;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const scrollElRef = useRef<ListMethods | null>(null);
 	const { isWithinSplitView } = useIsWithinSplitView();
 
@@ -279,7 +277,7 @@ export function ChatList({
 								<View style={[a.pt_3xl, a.align_center]}>
 									<CircleInfoIcon width={48} fill={colors.textContrastLow} />
 									<Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
-										<Trans>Whoops!</Trans>
+										{m['common.error.whoops']()}
 									</Text>
 									<Text
 										style={[
@@ -291,25 +289,23 @@ export function ChatList({
 											{ maxWidth: 360 },
 										]}
 									>
-										{cleanError(error) || l`Failed to load conversations`}
+										{cleanError(error) || m['screens.messages.error.loadConversations']()}
 									</Text>
 
 									<Button
-										label={l`Reload conversations`}
+										label={m['screens.messages.action.reloadConversations']()}
 										size="small"
 										color="secondary_inverted"
 										onPress={() => void refetch()}
 									>
-										<ButtonText>
-											<Trans>Retry</Trans>
-										</ButtonText>
+										<ButtonText>{m['common.action.retry']()}</ButtonText>
 										<ButtonIcon icon={RetryIcon} />
 									</Button>
 								</View>
 							</>
 						) : isWithinSplitView ? (
 							<EmptyState
-								message={l`Inbox empty`}
+								message={m['screens.messages.empty.inboxTitle']()}
 								icon={InboxLargeIcon}
 								iconSize="4xl"
 								messageColor="text"
@@ -318,7 +314,7 @@ export function ChatList({
 							/>
 						) : (
 							<EmptyState
-								message={l`Say hi to someone`}
+								message={m['screens.messages.empty.sayHi']()}
 								icon={BubbleSmileIcon}
 								iconSize="4xl"
 								messageColor="text"
@@ -327,8 +323,8 @@ export function ChatList({
 									chatStatus?.chatDisabled
 										? undefined
 										: {
-												label: l`New chat`,
-												text: l`New chat`,
+												label: m['common.action.newChat'](),
+												text: m['common.action.newChat'](),
 												onPress: wrappedOpenChatControl,
 												size: 'small',
 												color: 'primary',
@@ -395,7 +391,6 @@ export function Header({
 	newChatControl: DialogControlProps;
 	chatStatus: ChatStatus | undefined;
 }) {
-	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
@@ -417,9 +412,7 @@ export function Header({
 			{gtMobile ? (
 				<>
 					<Layout.Header.Content align="left">
-						<Layout.Header.TitleText>
-							<Trans>Chats</Trans>
-						</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['screens.messages.title.chats']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 
 					<View style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -427,7 +420,7 @@ export function Header({
 						<Link
 							to="/messages/settings"
 							action={action}
-							label={l`Chat settings`}
+							label={m['common.label.chatSettings']()}
 							size="small"
 							color="secondary"
 							shape="round"
@@ -437,7 +430,7 @@ export function Header({
 						</Link>
 						{!chatStatus?.chatDisabled && (
 							<Button
-								label={l`New chat`}
+								label={m['common.action.newChat']()}
 								color="primary"
 								size="small"
 								shape="round"
@@ -452,15 +445,13 @@ export function Header({
 				<>
 					<Layout.Header.MenuButton />
 					<Layout.Header.Content align="left">
-						<Layout.Header.TitleText>
-							<Trans>Chats</Trans>
-						</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['screens.messages.title.chats']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 					<InboxRequests count={requestCount} variant="ghost" />
 					<Layout.Header.Slot>
 						<Link
 							to="/messages/settings"
-							label={l`Chat settings`}
+							label={m['common.label.chatSettings']()}
 							size="small"
 							variant="ghost"
 							color="secondary"

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { onAppStateChange } from '#/lib/appState';
@@ -30,6 +29,8 @@ import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { SuggestedFollows } from '#/components/FeedInterstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
+
+import { m } from '#/paraglide/messages';
 
 import { ComposerPrompt } from '../feeds/ComposerPrompt';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
@@ -136,7 +137,6 @@ function PostFeed({
 	ListHeaderComponent?: () => React.ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }): React.ReactNode {
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const { currentAccount, hasSession } = useSession();
 	const feedFeedback = useFeedFeedbackContext();
@@ -444,12 +444,7 @@ function PostFeed({
 				/>
 			);
 		} else if (row.type === 'loadMoreError') {
-			return (
-				<LoadMoreRetryBtn
-					label={l`There was an issue fetching posts. Tap here to try again.`}
-					onPress={onPressRetryLoadMore}
-				/>
-			);
+			return <LoadMoreRetryBtn label={m['common.error.fetchPosts']()} onPress={onPressRetryLoadMore} />;
 		} else if (row.type === 'loading') {
 			return <PostFeedLoadingPlaceholder />;
 		} else if (row.type === 'feedShutdownMsg') {
@@ -496,7 +491,7 @@ function PostFeed({
 	const feedFooter = shouldRenderEndOfFeed ? (
 		<div className={css.endOfFeedSlot}>{renderEndOfFeed()}</div>
 	) : hasNextPage && !isError ? (
-		<CenteredSpinner label={l`Loading more posts`} size="xl" />
+		<CenteredSpinner label={m['view.posts.label.loadingMore']()} size="xl" />
 	) : null;
 
 	const onItemSeen = (item: FeedRow) => {

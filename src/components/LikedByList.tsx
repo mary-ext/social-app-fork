@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { AppBskyFeedGetLikes as GetLikes } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
@@ -15,6 +14,8 @@ import { List } from '#/view/com/util/List';
 
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 
+import { m } from '#/paraglide/messages';
+
 function renderItem({ item, index }: { item: GetLikes.Like; index: number }) {
 	return <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} noBorder={index === 0} />;
 }
@@ -24,7 +25,6 @@ function keyExtractor(item: GetLikes.Like) {
 }
 
 export function LikedByList({ uri }: { uri: string }) {
-	const { t: l } = useLingui();
 	const initialNumToRender = useInitialNumToRender();
 	const [isPTRing, setIsPTRing] = useState(false);
 
@@ -74,8 +74,8 @@ export function LikedByList({ uri }: { uri: string }) {
 				isLoading={isUriLoading || isLikedByLoading}
 				isError={isError}
 				emptyType="results"
-				emptyTitle={l`No likes yet`}
-				emptyMessage={l`Nobody has liked this yet. Maybe you should be the first!`}
+				emptyTitle={m['common.empty.noLikes']()}
+				emptyMessage={m['common.empty.noLikesPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
 				onRetry={isError ? refetch : undefined}
 				topBorder={false}

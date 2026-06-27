@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { type SessionAccount, useSessionApi } from '#/state/session';
 
@@ -8,9 +7,10 @@ import { logger } from '#/logger';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
+
 export function useAccountSwitcher() {
 	const [pendingDid, setPendingDid] = useState<string | null>(null);
-	const { t: l } = useLingui();
 	const { switchAccount } = useSessionApi();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
@@ -28,14 +28,14 @@ export function useAccountSwitcher() {
 					message: e instanceof Error ? e.message : String(e),
 				});
 				signinDialogControl.openWithPayload({ requestedAccount: account });
-				Toast.show(l`Please sign in as @${account.handle}`, {
+				Toast.show(m['lib.error.signInAs']({ handle: account.handle }), {
 					type: 'warning',
 				});
 			} finally {
 				setPendingDid(null);
 			}
 		},
-		[l, switchAccount, signinDialogControl, pendingDid],
+		[switchAccount, signinDialogControl, pendingDid],
 	);
 
 	return { onPressSwitchAccount, pendingDid };

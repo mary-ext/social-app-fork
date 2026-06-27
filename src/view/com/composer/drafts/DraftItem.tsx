@@ -16,6 +16,8 @@ import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Text } from '#/components/Text';
 import * as Prompt from '#/components/web/Prompt';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './DraftItem.css';
 import { DraftRichText } from './DraftRichText';
 import type { DraftPostDisplay, DraftSummary } from './state/schema';
@@ -59,8 +61,8 @@ export function DraftItem({
 			<button
 				type="button"
 				className={styles.card}
-				aria-label={l`Open draft`}
-				aria-description={l`Opens this draft in the composer`}
+				aria-label={m['view.composer.action.openDraft']()}
+				aria-description={m['view.composer.a11y.opensDraft']()}
 				onClick={() => onSelect(draft)}
 			>
 				{!!post.text.trim().length && <DraftRichText value={post.text} numberOfLines={8} />}
@@ -74,7 +76,7 @@ export function DraftItem({
 								icon={WarningIcon}
 								text={
 									isUnknownDevice
-										? l`Media stored on another device`
+										? m['view.composer.label.mediaStoredOtherDevice']()
 										: l({
 												message: `Media stored on ${draft.draft.deviceName}`,
 												comment: `Example: "Media stored on John's iPhone"`,
@@ -83,9 +85,15 @@ export function DraftItem({
 							/>
 						)}
 						{mediaIsMissing && (
-							<DraftMetadataTag display="warning" icon={WarningIcon} text={l`Missing media`} />
+							<DraftMetadataTag
+								display="warning"
+								icon={WarningIcon}
+								text={m['view.composer.label.missingMedia']()}
+							/>
 						)}
-						{draft.meta.hasQuotes && <DraftMetadataTag icon={CloseQuoteIcon} text={l`Quote post`} />}
+						{draft.meta.hasQuotes && (
+							<DraftMetadataTag icon={CloseQuoteIcon} text={m['common.action.quotePost']()} />
+						)}
 						{draft.meta.replyCount > 0 && (
 							<DraftMetadataTag
 								icon={CirclePlusIcon}
@@ -116,7 +124,7 @@ export function DraftItem({
 				<Prompt.Trigger
 					handle={discardPromptControl}
 					className={styles.menuButton}
-					aria-label={l`More options`}
+					aria-label={m['common.a11y.moreOptions']()}
 				>
 					<DotsIcon className={styles.menuIcon} width={16} height={16} fill="currentColor" />
 				</Prompt.Trigger>
@@ -124,10 +132,10 @@ export function DraftItem({
 
 			<Prompt.Basic
 				handle={discardPromptControl}
-				title={l`Discard draft?`}
-				description={l`This draft will be permanently deleted.`}
+				title={m['view.composer.dialog.discardDraftTitle']()}
+				description={m['view.composer.dialog.draftDeleteWarning']()}
 				onConfirm={handleDelete}
-				confirmButtonCta={l`Discard`}
+				confirmButtonCta={m['common.action.discard']()}
 				confirmButtonColor="negative"
 			/>
 		</div>
@@ -159,7 +167,6 @@ type LoadedImage = {
 };
 
 function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
-	const { t: l } = useLingui();
 	const [loadedImages, setLoadedImages] = useState<LoadedImage[]>([]);
 	const [hasVideo, setHasVideo] = useState(false);
 
@@ -214,7 +221,7 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 							<PlayButtonIcon size={24} />
 						</div>
 						<div className={styles.gifBadge} aria-hidden>
-							<Text className={styles.gifBadgeText}>{l`GIF`}</Text>
+							<Text className={styles.gifBadgeText}>{m['common.label.gif']()}</Text>
 						</div>
 					</MediaTile>
 				</div>

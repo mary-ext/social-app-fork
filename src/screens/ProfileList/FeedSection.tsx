@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -18,6 +17,8 @@ import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/compon
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import type { ListMethods } from '#/components/List/List';
 
+import { m } from '#/paraglide/messages';
+
 interface FeedSectionProps {
 	feed: FeedDescriptor;
 	isFocused: boolean;
@@ -31,8 +32,6 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const isScreenFocused = useIsFocused();
-	const { t: l } = useLingui();
-
 	const onScrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
@@ -52,18 +51,21 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 	const renderPostsEmpty = useCallback(() => {
 		return (
 			<View style={[a.gap_xl, a.align_center]}>
-				<EmptyState icon={HashtagWideIcon} iconSize="2xl" message={l`This feed is empty.`} />
+				<EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.empty.feed']()} />
 				{isOwner && (
-					<Button label={l`Start adding people`} onPress={onPressAddUser} color="primary" size="small">
+					<Button
+						label={m['screens.profileList.empty.startAdding']()}
+						onPress={onPressAddUser}
+						color="primary"
+						size="small"
+					>
 						<ButtonIcon icon={PersonPlusIcon} />
-						<ButtonText>
-							<Trans>Start adding people!</Trans>
-						</ButtonText>
+						<ButtonText>{m['screens.profileList.empty.startAddingCta']()}</ButtonText>
 					</Button>
 				)}
 			</View>
 		);
-	}, [l, onPressAddUser, isOwner]);
+	}, [onPressAddUser, isOwner]);
 
 	return (
 		<View>
@@ -78,7 +80,11 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 				renderEmptyState={renderPostsEmpty}
 			/>
 			{(isScrolledDown || hasNew) && (
-				<LoadLatestBtn onPress={onScrollToTop} label={l`Load new posts`} showIndicator={hasNew} />
+				<LoadLatestBtn
+					onPress={onScrollToTop}
+					label={m['common.action.loadNewPosts']()}
+					showIndicator={hasNew}
+				/>
 			)}
 		</View>
 	);

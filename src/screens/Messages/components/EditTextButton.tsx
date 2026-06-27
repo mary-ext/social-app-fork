@@ -1,10 +1,11 @@
 import { View } from 'react-native';
-import { Trans } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, type ButtonProps } from '#/components/Button';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export function EditTextButton({ children, style, onPress, ...props }: ButtonProps & { value: string }) {
 	const t = useTheme();
@@ -43,7 +44,7 @@ export function EditTextButton({ children, style, onPress, ...props }: ButtonPro
 							style={[a.rounded_full, t.atoms.bg_contrast_50, { paddingHorizontal: 10, paddingVertical: 8 }]}
 						>
 							<Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
-								<Trans>Edit</Trans>
+								{m['common.action.edit']()}
 							</Text>
 						</View>
 					</View>

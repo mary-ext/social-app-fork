@@ -2,6 +2,8 @@ import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
 import { useLingui } from '@lingui/react/macro';
 
+import { m } from '#/paraglide/messages';
+
 import { CATEGORIES } from '../categories';
 import * as styles from './CategoryNav.css';
 
@@ -19,11 +21,11 @@ export function CategoryNav({
 	hasRecents: boolean;
 	onJump: (key: string) => void;
 }) {
-	const { i18n, t } = useLingui();
+	const { i18n } = useLingui();
 
 	return (
 		<ToggleGroup
-			aria-label={t`Emoji categories`}
+			aria-label={m['components.emojiPicker.a11y.categories']()}
 			className={styles.nav}
 			onValueChange={(groupValue) => {
 				const next = groupValue[0];

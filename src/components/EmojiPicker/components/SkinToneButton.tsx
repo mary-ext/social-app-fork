@@ -1,6 +1,6 @@
 import { Select } from '@base-ui/react/select';
-import { useLingui } from '@lingui/react/macro';
 
+import { m } from '#/paraglide/messages';
 import type { SkinTone } from '#/storage/hooks/emoji';
 
 import * as styles from './SkinToneButton.css';
@@ -12,8 +12,6 @@ const TONES: SkinTone[] = [1, 2, 3, 4, 5, 6];
 
 /** a Base UI Select of tone swatches to choose the active emoji skin tone. */
 export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) => void; tone: SkinTone }) {
-	const { t } = useLingui();
-
 	return (
 		<Select.Root
 			value={tone}
@@ -23,7 +21,7 @@ export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) 
 				}
 			}}
 		>
-			<Select.Trigger aria-label={t`Skin tone`} className={styles.trigger}>
+			<Select.Trigger aria-label={m['components.emojiPicker.skinTone']()} className={styles.trigger}>
 				<Select.Value className={styles.glyph}>{(value: SkinTone) => SKIN_HANDS[value - 1]}</Select.Value>
 			</Select.Trigger>
 
@@ -32,7 +30,7 @@ export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) 
 					<Select.Popup className={styles.menu}>
 						{TONES.map((value) => (
 							<Select.Item
-								aria-label={t`Skin tone ${value}`}
+								aria-label={m['components.emojiPicker.skinToneValue']({ value })}
 								className={styles.item}
 								key={value}
 								value={value}

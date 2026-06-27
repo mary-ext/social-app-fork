@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
@@ -10,6 +9,8 @@ import type * as Dialog from '#/components/Dialog';
 import * as TextField from '#/components/forms/TextField';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export function EditNamePrompt({
 	control,
@@ -29,8 +30,6 @@ export function EditNamePrompt({
 	onConfirm: () => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const nameTooLong = isOverMaxGraphemeCount({
 		text: value,
 		maxCount: MAX_GROUP_NAME_GRAPHEME_LENGTH,
@@ -40,15 +39,13 @@ export function EditNamePrompt({
 		<Prompt.Outer control={control}>
 			<>
 				<Prompt.Content>
-					<Prompt.TitleText>
-						<Trans>Edit group name</Trans>
-					</Prompt.TitleText>
+					<Prompt.TitleText>{m['screens.messages.action.editGroupName']()}</Prompt.TitleText>
 					<View style={[a.my_sm]}>
 						<TextField.Root isInvalid={nameTooLong}>
 							<TextField.Input
 								key={inputKey}
-								label={l`Edit group name`}
-								placeholder={l`Group name`}
+								label={m['screens.messages.action.editGroupName']()}
+								placeholder={m['common.label.groupName']()}
 								defaultValue={value}
 								onChangeText={onChangeText}
 								returnKeyType="done"
@@ -61,16 +58,13 @@ export function EditNamePrompt({
 						</TextField.Root>
 						{nameTooLong ? (
 							<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-								<Trans>
-									Group name is too long. The maximum number of characters is {MAX_GROUP_NAME_GRAPHEME_LENGTH}
-									.
-								</Trans>
+								{m['common.error.groupNameTooLong']({ MAX_GROUP_NAME_GRAPHEME_LENGTH })}
 							</Text>
 						) : null}
 					</View>
 				</Prompt.Content>
 				<Prompt.Actions>
-					<Prompt.Action cta={l`Save`} onPress={onConfirm} disabled={nameTooLong} />
+					<Prompt.Action cta={m['common.action.save']()} onPress={onConfirm} disabled={nameTooLong} />
 					<Prompt.Cancel />
 				</Prompt.Actions>
 			</>
@@ -85,15 +79,13 @@ export function LockChatPrompt({
 	control: Dialog.DialogOuterProps['control'];
 	onConfirm: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Prompt.Basic
 			control={control}
-			title={l`Lock group chat?`}
-			description={l`Members can still read chat history but can’t send new messages.`}
-			confirmButtonCta={l`Lock group chat`}
-			cancelButtonCta={l`Cancel`}
+			title={m['screens.messages.dialog.lockTitle']()}
+			description={m['screens.messages.dialog.lockDescription']()}
+			confirmButtonCta={m['screens.messages.action.lockGroup']()}
+			cancelButtonCta={m['common.action.cancel']()}
 			onConfirm={onConfirm}
 		/>
 	);
@@ -108,16 +100,14 @@ export function LeaveChatPrompt({
 	groupName: string;
 	onConfirm: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Prompt.Basic
 			control={control}
-			title={l`Are you sure you want to leave ${groupName}?`}
-			description={l`You won’t be able to rejoin unless you’re invited.`}
-			confirmButtonCta={l`Leave group chat`}
+			title={m['screens.messages.dialog.leaveConfirm']({ groupName })}
+			description={m['screens.messages.dialog.leaveRejoinWarning']()}
+			confirmButtonCta={m['screens.messages.action.leaveGroup']()}
 			confirmButtonColor="negative"
-			cancelButtonCta={l`Cancel`}
+			cancelButtonCta={m['common.action.cancel']()}
 			onConfirm={onConfirm}
 		/>
 	);
@@ -132,16 +122,14 @@ export function LeaveAndLockChatPrompt({
 	groupName: string;
 	onConfirm: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Prompt.Basic
 			control={control}
-			title={l`Are you sure you want to leave ${groupName}?`}
-			description={l`Leaving this chat will lock it permanently and you won’t be able to rejoin.`}
-			confirmButtonCta={l`Leave group chat`}
+			title={m['screens.messages.dialog.leaveConfirm']({ groupName })}
+			description={m['screens.messages.dialog.leaveLockWarning']()}
+			confirmButtonCta={m['screens.messages.action.leaveGroup']()}
 			confirmButtonColor="negative"
-			cancelButtonCta={l`Cancel`}
+			cancelButtonCta={m['common.action.cancel']()}
 			onConfirm={onConfirm}
 		/>
 	);
@@ -156,16 +144,14 @@ export function RemoveMemberPrompt({
 	displayName: string;
 	onConfirm: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Prompt.Basic
 			control={control}
-			title={l`Remove ${displayName}?`}
-			description={l`They won’t be able to rejoin unless you invite them again.`}
-			confirmButtonCta={l`Remove`}
+			title={m['screens.messages.dialog.removeMemberTitle']({ displayName })}
+			description={m['screens.messages.dialog.removeRejoinWarning']()}
+			confirmButtonCta={m['common.action.remove']()}
 			confirmButtonColor="negative"
-			cancelButtonCta={l`Cancel`}
+			cancelButtonCta={m['common.action.cancel']()}
 			onConfirm={onConfirm}
 		/>
 	);

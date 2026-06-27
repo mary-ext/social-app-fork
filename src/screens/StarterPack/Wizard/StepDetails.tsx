@@ -1,5 +1,4 @@
 import { useId } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
@@ -10,12 +9,13 @@ import { StarterPack } from '#/components/icons/StarterPack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './Wizard.css';
 
 const NAME_MAX_LENGTH = 50;
 
 export function StepDetails() {
-	const { t: l } = useLingui();
 	const [state, dispatch] = useWizardState();
 	const counterId = useId();
 
@@ -33,17 +33,17 @@ export function StepDetails() {
 			<div className={css.detailsHeader}>
 				<StarterPack width={90} gradient="sky" />
 				<Text weight="semiBold" size="_3xl">
-					<Trans>Invites, but personal</Trans>
+					{m['screens.starterPack.tagline']()}
 				</Text>
 				<Text size="md" align="center" className={css.detailsSubtitle}>
-					<Trans>Invite your friends to follow your favorite feeds and people</Trans>
+					{m['screens.starterPack.inviteDescription']()}
 				</Text>
 			</div>
 			<TextField.Root>
 				<TextField.LabelText
 					accessory={
 						<Text
-							aria-label={l`${nameLength} of ${NAME_MAX_LENGTH} characters`}
+							aria-label={m['screens.starterPack.charCount']({ nameLength, NAME_MAX_LENGTH })}
 							className={css.counter}
 							color="textContrastMedium"
 							id={counterId}
@@ -53,25 +53,27 @@ export function StepDetails() {
 						</Text>
 					}
 				>
-					<Trans>What do you want to call your starter pack?</Trans>
+					{m['screens.starterPack.title.namePrompt']()}
 				</TextField.LabelText>
 				<TextField.Input
 					describedBy={counterId}
-					label={name ? l`${name}'s starter pack` : l`My starter pack`}
+					label={
+						name
+							? m['screens.starterPack.defaultNameNamed']({ name })
+							: m['screens.starterPack.defaultName']()
+					}
 					maxLength={NAME_MAX_LENGTH}
 					onChangeText={(text) => dispatch({ type: 'SetName', name: text })}
 					value={state.name ?? ''}
 				/>
 			</TextField.Root>
 			<TextField.Root>
-				<TextField.LabelText>
-					<Trans>Tell us a little more</Trans>
-				</TextField.LabelText>
+				<TextField.LabelText>{m['screens.starterPack.title.tellMore']()}</TextField.LabelText>
 				<TextField.Input
 					label={
 						name
-							? l`${name}'s favorite feeds and people - join me!`
-							: l`My favorite feeds and people - join me!`
+							? m['screens.starterPack.shareDescriptionNamed']({ name })
+							: m['screens.starterPack.shareDescription']()
 					}
 					minRows={6}
 					multiline

@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/react/macro';
-
 import * as styles from '#/components/ImageEmbed/MediaBadges.css';
 import { Text } from '#/components/Text';
+
+import { m } from '#/paraglide/messages';
 
 // app.bsky icon `ArrowsDiagonalOut_Stroke2_Corner0_Rounded`, inlined as DOM SVG.
 const FULLSCREEN_PATH =
@@ -68,7 +68,7 @@ export function MediaBadges({ variant, hasAlt, cropped, large, count, index }: M
 					{hasAlt && (
 						<div className={boxClass}>
 							<Text weight="bold" size={large ? 'xs' : 'sm'} className={large ? undefined : styles.altSmall}>
-								<Trans>ALT</Trans>
+								{m['common.label.altBadge']()}
 							</Text>
 						</div>
 					)}

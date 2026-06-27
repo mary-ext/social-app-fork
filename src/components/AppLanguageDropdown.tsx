@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
@@ -11,11 +10,11 @@ import { APP_LANGUAGES } from '#/locale/languages';
 import * as Select from '#/components/Select';
 import { Button } from '#/components/web/Button';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './AppLanguageDropdown.css';
 
 export function AppLanguageDropdown() {
-	const { t: l } = useLingui();
-
 	const queryClient = useQueryClient();
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
@@ -47,7 +46,7 @@ export function AppLanguageDropdown() {
 			<Select.Trigger
 				render={
 					<Button
-						label={l`Change app language`}
+						label={m['components.appLanguageDropdown.a11y.change']()}
 						variant="ghost"
 						color="secondary"
 						size="tiny"
@@ -56,7 +55,10 @@ export function AppLanguageDropdown() {
 					/>
 				}
 			>
-				<Select.Value placeholder={l`Select an app language`} className={styles.value} />
+				<Select.Value
+					placeholder={m['components.appLanguageDropdown.a11y.select']()}
+					className={styles.value}
+				/>
 				<Select.Icon className={styles.icon} />
 			</Select.Trigger>
 			<Select.Content

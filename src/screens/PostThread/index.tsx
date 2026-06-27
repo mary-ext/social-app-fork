@@ -1,5 +1,4 @@
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -33,6 +32,8 @@ import { useBreakpoints } from '#/alf';
 
 import { List, type ListMethods } from '#/components/List/List';
 import * as Layout from '#/components/web/Layout';
+
+import { m } from '#/paraglide/messages';
 
 const PARENT_CHUNK_SIZE = 20;
 const CHILDREN_CHUNK_SIZE = 50;
@@ -446,9 +447,7 @@ export function PostThread({ uri }: { uri: string }) {
 			<Layout.Header.Outer ref={headerRef}>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans context="description">Post</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['navigation.title.post']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot>
 					<HeaderDropdown

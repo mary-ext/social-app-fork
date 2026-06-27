@@ -1,6 +1,6 @@
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
@@ -9,6 +9,8 @@ import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/i
 import { LabelsOnMeDialog, useLabelsOnMeDialogControl } from '#/components/moderation/LabelsOnMeDialog';
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './LabelsOnMe.css';
 
@@ -23,7 +25,6 @@ export function LabelsOnMe({
 	size?: ButtonProps['size'];
 	type: 'account' | 'content';
 }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const control = useLabelsOnMeDialogControl();
 
@@ -45,7 +46,7 @@ export function LabelsOnMe({
 				render={
 					<Button
 						color="secondary"
-						label={l`View information about these labels`}
+						label={m['components.moderation.action.viewLabelInfo']()}
 						size={size ?? 'small'}
 						variant="solid"
 					>

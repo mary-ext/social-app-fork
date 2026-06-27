@@ -7,7 +7,6 @@ import {
 	moderateList,
 } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
@@ -31,6 +30,7 @@ import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/w
 import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
 import { borderRadius } from '#/styles/tokens.css';
 
 import * as css from './ListCard.css';
@@ -131,7 +131,6 @@ export function TitleAndByline({
 	purpose?: AppBskyGraphDefs.ListView['purpose'];
 	title: string;
 }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	return (
@@ -143,7 +142,7 @@ export function TitleAndByline({
 			>
 				<Hider.Mask>
 					<Text className={css.italic} numberOfLines={1} weight="medium">
-						<Trans>Hidden list</Trans>
+						{m['components.listCard.label.hidden']()}
 					</Text>
 				</Hider.Mask>
 				<Hider.Content>
@@ -155,8 +154,8 @@ export function TitleAndByline({
 			{creator && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 					{purpose === MODLIST
-						? l`Moderation list by ${sanitizeHandle(creator.handle, '@')}`
-						: l`List by ${sanitizeHandle(creator.handle, '@')}`}
+						? m['components.listCard.label.moderationListBy']({ handle: sanitizeHandle(creator.handle, '@') })
+						: m['common.label.listByCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
 				</Text>
 			)}
 		</div>
@@ -205,7 +204,6 @@ function SaveButtonInner({
 	text?: boolean;
 	view: AppBskyGraphDefs.ListView;
 } & Partial<ButtonProps>) {
-	const { t: l } = useLingui();
 	const removePromptHandle = Prompt.usePromptHandle();
 	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ pin, type: 'list', uri: view.uri });
 
@@ -214,7 +212,7 @@ function SaveButtonInner({
 			<Button
 				color={isSaved ? 'secondary' : 'primary'}
 				disabled={isPending}
-				label={l`Add this feed to your feeds`}
+				label={m['common.action.addFeed']()}
 				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
 				size="small"
 				variant="solid"
@@ -227,11 +225,7 @@ function SaveButtonInner({
 						) : (
 							!text && <ButtonIcon icon={TrashIcon} size="md" />
 						)}
-						{text && (
-							<ButtonText>
-								<Trans>Unpin feed</Trans>
-							</ButtonText>
-						)}
+						{text && <ButtonText>{m['common.action.unpinFeed']()}</ButtonText>}
 					</>
 				) : (
 					<>
@@ -240,22 +234,18 @@ function SaveButtonInner({
 						) : (
 							<ButtonIcon icon={PinIcon} size="md" />
 						)}
-						{text && (
-							<ButtonText>
-								<Trans>Pin feed</Trans>
-							</ButtonText>
-						)}
+						{text && <ButtonText>{m['common.action.pinFeed']()}</ButtonText>}
 					</>
 				)}
 			</Button>
 
 			<Prompt.Basic
 				confirmButtonColor="negative"
-				confirmButtonCta={l`Remove`}
-				description={l`Are you sure you want to remove this from your feeds?`}
+				confirmButtonCta={m['common.action.remove']()}
+				description={m['common.dialog.removeFeedPrompt']()}
 				handle={removePromptHandle}
 				onConfirm={() => void toggleSave()}
-				title={l`Remove from your feeds?`}
+				title={m['common.dialog.removeFromFeedsTitle']()}
 			/>
 		</>
 	);

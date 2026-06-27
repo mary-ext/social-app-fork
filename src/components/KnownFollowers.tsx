@@ -6,7 +6,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -17,6 +17,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { Link, type LinkProps } from '#/components/Link';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
+
+import { m } from '#/paraglide/messages';
 
 const AVI_SIZE = 30;
 const AVI_SIZE_SMALL = 20;
@@ -93,8 +95,6 @@ function KnownFollowersInner({
 	showIfEmpty?: boolean;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const textStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium];
 
 	const slice = cachedKnownFollowers.followers.slice(0, 3).map((f) => {
@@ -124,7 +124,7 @@ function KnownFollowersInner({
 
 	return (
 		<Link
-			label={l`Press to view followers of this account that you also follow`}
+			label={m['common.a11y.pressToViewKnownFollowers']()}
 			onPress={onLinkPress}
 			to={makeProfileLink(profile, 'known-followers')}
 			style={[
@@ -247,7 +247,7 @@ function EmptyFallback({ show }: { show?: boolean }) {
 
 	return (
 		<Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-			<Trans>Not followed by anyone you’re following</Trans>
+			{m['components.knownFollowers.label.noneFollowed']()}
 		</Text>
 	);
 }

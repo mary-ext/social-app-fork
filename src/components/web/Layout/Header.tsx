@@ -1,5 +1,4 @@
 import type { MouseEvent } from 'react';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -14,6 +13,8 @@ import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/Layout/Header.css';
+
+import { m } from '#/paraglide/messages';
 
 export function Outer({
 	children,
@@ -67,7 +68,6 @@ export function BackButton({
 	label?: string;
 	onClick?: (evt: MouseEvent<HTMLButtonElement>) => void;
 } = {}) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	const handleClick = (evt: MouseEvent<HTMLButtonElement>) => {
@@ -85,7 +85,7 @@ export function BackButton({
 	return (
 		<Slot>
 			<Button
-				label={label ?? l`Go back`}
+				label={label ?? m['common.action.goBack']()}
 				variant="ghost"
 				color="secondary"
 				shape="round"
@@ -100,7 +100,6 @@ export function BackButton({
 
 /** Opens the drawer nav on narrow viewports; renders nothing once the side nav takes over. */
 export function MenuButton() {
-	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const setDrawerOpen = useSetDrawerOpen();
 
@@ -116,7 +115,7 @@ export function MenuButton() {
 	return (
 		<Slot>
 			<Button
-				label={l`Open drawer menu`}
+				label={m['common.a11y.openDrawerMenu']()}
 				variant="ghost"
 				color="secondary"
 				shape="round"

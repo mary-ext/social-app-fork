@@ -1,7 +1,7 @@
 import { Fragment, useMemo, useRef } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { makeListLink, makeProfileLink } from '#/lib/routes/links';
@@ -20,6 +20,8 @@ import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './WhoCanReply.css';
 
 interface WhoCanReplyProps {
@@ -28,7 +30,6 @@ interface WhoCanReplyProps {
 }
 
 export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
-	const { t: l } = useLingui();
 	const infoDialogHandle = Dialog.useDialogHandle();
 	const editDialogHandle = Dialog.useDialogHandle();
 
@@ -54,10 +55,10 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	const anyoneCanReply = settings.length === 1 && settings[0]!.type === 'everybody';
 	const noOneCanReply = settings.length === 1 && settings[0]!.type === 'nobody';
 	const description = anyoneCanReply
-		? l`Everybody can reply`
+		? m['components.whoCanReply.label.everybody']()
 		: noOneCanReply
-			? l`Replies disabled`
-			: l`Some people can reply`;
+			? m['components.whoCanReply.label.disabled']()
+			: m['components.whoCanReply.label.some']();
 
 	const onPressOpen = () => {
 		if (isThreadAuthor) {
@@ -75,7 +76,9 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 		<>
 			<button
 				type="button"
-				aria-label={isThreadAuthor ? l`Edit who can reply` : l`Who can reply`}
+				aria-label={
+					isThreadAuthor ? m['components.whoCanReply.action.edit']() : m['common.label.whoCanReply']()
+				}
 				className={clsx(css.trigger, isThreadAuthor && css.triggerAuthor)}
 				onClick={onPressOpen}
 				// prefetch the interaction settings so the edit dialog opens without a spinner
@@ -128,14 +131,12 @@ function WhoCanReplyDialog({
 	settings: ThreadgateAllowUISetting[];
 	embeddingDisabled: boolean;
 }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup size="narrow" label={l`Dialog: adjust who can interact with this post`}>
+			<Dialog.Popup size="narrow" label={m['components.whoCanReply.a11y.dialog']()}>
 				<div className={css.dialogContent}>
 					<Text size="xl" weight="semiBold">
-						<Trans>Who can interact with this post?</Trans>
+						{m['components.whoCanReply.title']()}
 					</Text>
 					<Rules post={post} settings={settings} embeddingDisabled={embeddingDisabled} />
 				</div>
@@ -158,11 +159,11 @@ function Rules({
 		<>
 			<Text size="md" color="textContrastMedium">
 				{settings.length === 0 ? (
-					<Trans>This post has an unknown type of threadgate on it. Your app may be out of date.</Trans>
+					m['components.whoCanReply.label.unknown']()
 				) : settings[0]!.type === 'everybody' ? (
-					<Trans>Everybody can reply to this post.</Trans>
+					m['components.whoCanReply.label.everybodyDesc']()
 				) : settings[0]!.type === 'nobody' ? (
-					<Trans>Replies to this post are disabled.</Trans>
+					m['components.whoCanReply.label.disabledDesc']()
 				) : (
 					<Trans>
 						Only{' '}
@@ -178,7 +179,7 @@ function Rules({
 			</Text>
 			{embeddingDisabled && (
 				<Text size="md" color="textContrastMedium">
-					<Trans>No one but the author can quote this post.</Trans>
+					{m['components.whoCanReply.label.noQuotes']()}
 				</Text>
 			)}
 		</>
@@ -195,7 +196,7 @@ function Rule({
 	lists: AppBskyGraphDefs.ListViewBasic[] | undefined;
 }) {
 	if (rule.type === 'mention') {
-		return <Trans>mentioned users</Trans>;
+		return m['components.whoCanReply.label.mentionedUsers']();
 	}
 	if (rule.type === 'followers') {
 		return (
@@ -240,7 +241,7 @@ function Separator({ i, length }: { i: number; length: number }) {
 	if (i === length - 2) {
 		return (
 			<>
-				{length > 2 ? ',' : ''} <Trans>and</Trans>{' '}
+				{length > 2 ? ',' : ''} {m['components.whoCanReply.label.and']()}{' '}
 			</>
 		);
 	}

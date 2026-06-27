@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
@@ -31,6 +30,8 @@ import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { Text } from '#/components/Text';
 import * as Skele from '#/components/web/Skeleton';
+
+import { m } from '#/paraglide/messages';
 
 import { threadTextShape } from './skeleton-shape';
 import * as css from './ThreadItemTreePost.css';
@@ -79,7 +80,7 @@ function ThreadItemTreePostDeleted({ item }: { item: Extract<ThreadItem, { type:
 				<div className={css.deletedRow}>
 					<TrashIcon fill="currentColor" width={14} />
 					<Text color="textContrastMedium" className={css.deletedText}>
-						<Trans>Post has been deleted</Trans>
+						{m['screens.postThread.error.deleted']()}
 					</Text>
 				</div>
 				{item.ui.isLastChild && !item.ui.precedesChildReadMore && <div className={css.deletedSpacer} />}

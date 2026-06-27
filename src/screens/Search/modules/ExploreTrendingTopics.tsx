@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
@@ -16,6 +16,7 @@ import { AvatarStack } from '#/components/web/AvatarStack';
 import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
 import { useTrendingSettings } from '#/storage/hooks/trending';
 
 import * as css from './ExploreTrendingTopics.css';
@@ -56,7 +57,6 @@ function Inner() {
 }
 
 function TrendRow({ rank, trend }: { rank: number; trend: AppBskyUnspeccedDefs.TrendView }) {
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	// refresh the freshness badge each minute instead of calling Date.now() during render.
 	const tick = useTickEveryMinute();
@@ -68,13 +68,15 @@ function TrendRow({ rank, trend }: { rank: number; trend: AppBskyUnspeccedDefs.T
 	const actors = useModerateTrendingActors(trend.actors);
 
 	return (
-		<Link className={css.row} label={l`Browse topic ${trend.displayName}`} to={trend.link}>
+		<Link
+			className={css.row}
+			label={m['screens.search.a11y.browseTopic']({ displayName: trend.displayName })}
+			to={trend.link}
+		>
 			<div className={css.main}>
 				<div className={css.titleRow}>
 					<Text className={css.rank} size="md" weight="semiBold">
-						<Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'>
-							{rank}.
-						</Trans>
+						{m['screens.search.label.rank']({ rank })}
 					</Text>
 					<Text className={css.nameText} numberOfLines={1} size="md" weight="semiBold">
 						{trend.displayName}
@@ -107,13 +109,13 @@ function TrendingIndicator({ type }: { type: 'hot' | 'new' | 'skeleton' | number
 	switch (type) {
 		case 'hot': {
 			Icon = FlameIcon;
-			text = l`Hot`;
+			text = m['screens.search.label.hot']();
 			variant = 'hot';
 			break;
 		}
 		case 'new': {
 			Icon = TrendingIcon;
-			text = l`New`;
+			text = m['common.label.new']();
 			variant = 'new';
 			break;
 		}
@@ -138,19 +140,17 @@ function TrendingIndicator({ type }: { type: 'hot' | 'new' | 'skeleton' | number
 }
 
 function useCategoryDisplayName(category: AppBskyUnspeccedDefs.TrendView['category']) {
-	const { t: l } = useLingui();
-
 	switch (category) {
 		case 'news':
-			return l`News`;
+			return m['common.label.news']();
 		case 'politics':
-			return l`Politics`;
+			return m['common.label.politics']();
 		case 'pop-culture':
-			return l`Entertainment`;
+			return m['screens.search.label.entertainment']();
 		case 'sports':
-			return l`Sports`;
+			return m['common.label.sports']();
 		case 'video-games':
-			return l`Video Games`;
+			return m['common.label.videoGames']();
 		case 'other':
 		default:
 			return null;

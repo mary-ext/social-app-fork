@@ -1,6 +1,5 @@
 import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { CommonNavigatorParams, NavigationProp, NativeStackScreenProps } from '#/lib/routes/types';
@@ -23,6 +22,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import * as Skele from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './Bookmarks.css';
@@ -35,9 +35,7 @@ export function BookmarksScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Saved Posts</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.label.savedPosts']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -161,13 +159,12 @@ function BookmarkNotFound({
 	hideTopBorder: boolean;
 	post: $type.enforce<AppBskyFeedDefs.NotFoundPost>;
 }) {
-	const { t: l } = useLingui();
 	const { mutateAsync: bookmark } = useBookmarkMutation();
 
 	const remove = async () => {
 		try {
 			await bookmark({ action: 'delete', uri: post.uri });
-			toast.show(l`Removed from saved posts`, {
+			toast.show(m['common.label.removedFromSaved'](), {
 				type: 'info',
 			});
 		} catch (e) {
@@ -187,15 +184,18 @@ function BookmarkNotFound({
 				<Skele.Text size="md" width="25%" />
 
 				<Text className={css.deletedMessage} color="textContrastMedium" size="md">
-					<Trans>This post was deleted by its author</Trans>
+					{m['screens.bookmarks.label.deletedPost']()}
 				</Text>
 			</Skele.Col>
 
-			<Button label={l`Remove from saved posts`} size="tiny" color="secondary" onClick={() => void remove()}>
+			<Button
+				label={m['common.action.removeFromSaved']()}
+				size="tiny"
+				color="secondary"
+				onClick={() => void remove()}
+			>
 				<ButtonIcon icon={BookmarkFilled} />
-				<ButtonText>
-					<Trans>Remove</Trans>
-				</ButtonText>
+				<ButtonText>{m['common.action.remove']()}</ButtonText>
 			</Button>
 		</div>
 	);
@@ -212,17 +212,16 @@ function BookmarkItem({
 }
 
 function BookmarksEmpty() {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	return (
 		<EmptyState
 			icon={BookmarkDeleteLarge}
-			message={l`Nothing saved yet`}
+			message={m['screens.bookmarks.empty.title']()}
 			messageColor="textContrastMedium"
 			button={{
-				label: l`Button to go back to the home timeline`,
-				text: l`Go home`,
+				label: m['screens.bookmarks.a11y.backHome'](),
+				text: m['common.action.goHome'](),
 				onPress: () => navigation.navigate('Home' as never),
 				size: 'small',
 				color: 'secondary',

@@ -7,7 +7,6 @@ import {
 	moderateList,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -38,6 +37,7 @@ import { Loader } from '#/components/Loader';
 import * as Hider from '#/components/moderation/Hider';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { AboutSection } from './AboutSection';
@@ -55,7 +55,6 @@ export function ProfileListScreen(props: Props) {
 }
 
 function ProfileListScreenInner(props: Props) {
-	const { t: l } = useLingui();
 	const { name: handleOrDid, rkey } = props.route.params;
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(
 		`at://${handleOrDid}/app.bsky.graph.list/${rkey}`,
@@ -70,16 +69,12 @@ function ProfileListScreenInner(props: Props) {
 				<Layout.Header.Outer>
 					<Layout.Header.BackButton />
 					<Layout.Header.Content>
-						<Layout.Header.TitleText>
-							<Trans>Could not load list</Trans>
-						</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['screens.profileList.error.loadFailed']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
 				<Layout.Content centerContent>
-					<ErrorScreen
-						error={l`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`}
-					/>
+					<ErrorScreen error={m['screens.profileList.error.resolveFailed']({ handleOrDid })} />
 				</Layout.Content>
 			</>
 		);
@@ -90,9 +85,7 @@ function ProfileListScreenInner(props: Props) {
 				<Layout.Header.Outer>
 					<Layout.Header.BackButton />
 					<Layout.Header.Content>
-						<Layout.Header.TitleText>
-							<Trans>Could not load list</Trans>
-						</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['screens.profileList.error.loadFailed']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
@@ -138,7 +131,6 @@ function ProfileListScreenLoaded({
 	preferences: UsePreferencesQueryResponse;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
@@ -154,7 +146,7 @@ function ProfileListScreenLoaded({
 		return moderateList(list, moderationOpts);
 	}, [list, moderationOpts]);
 
-	useSetTitle(isHidden ? l`List Hidden` : list.name);
+	useSetTitle(isHidden ? m['screens.profileList.toast.hidden']() : list.name);
 
 	const onChangeMembers = () => {
 		if (isCurateList) {
@@ -170,7 +162,7 @@ function ProfileListScreenLoaded({
 		const sections: Section<'people' | 'posts'>[] = [
 			{
 				id: 'posts',
-				label: l`Posts`,
+				label: m['common.label.posts'](),
 				render: (focused) => (
 					<FeedSection
 						feed={`list|${uri}`}
@@ -182,7 +174,7 @@ function ProfileListScreenLoaded({
 			},
 			{
 				id: 'people',
-				label: l`People`,
+				label: m['common.label.people'](),
 				render: () => <AboutSection list={list} onPressAddUser={addUserDialogControl.open} />,
 			},
 		];
@@ -204,7 +196,7 @@ function ProfileListScreenLoaded({
 						/>
 						<FAB
 							icon={<EditBigIcon size="lg" fill={colors.white} />}
-							label={l`New post`}
+							label={m['common.label.newPost']()}
 							onClick={() => openComposer({ logContext: 'Fab' })}
 						/>
 					</View>
@@ -227,7 +219,7 @@ function ProfileListScreenLoaded({
 					<AboutSection list={list} onPressAddUser={addUserDialogControl.open} />
 					<FAB
 						icon={<EditBigIcon size="lg" fill={colors.white} />}
-						label={l`New post`}
+						label={m['common.label.newPost']()}
 						onClick={() => openComposer({ logContext: 'Fab' })}
 					/>
 				</View>

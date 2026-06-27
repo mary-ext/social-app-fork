@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { Keyboard } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCallOnce } from '#/lib/once';
 
@@ -10,6 +9,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { DraftItem } from './DraftItem';
@@ -23,10 +23,9 @@ type DraftsListDialogProps = {
 };
 
 export function DraftsListDialog({ handle, onSelectDraft }: DraftsListDialogProps) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" label={l`Drafts`}>
+			<Dialog.Popup scroll="body" label={m['view.composer.title.drafts']()}>
 				<DialogInner handle={handle} onSelectDraft={onSelectDraft} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -34,7 +33,6 @@ export function DraftsListDialog({ handle, onSelectDraft }: DraftsListDialogProp
 }
 
 function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
-	const { t: l } = useLingui();
 	const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useDraftsQuery();
 	const { mutate: deleteDraft } = useDeleteDraftMutation();
 
@@ -81,16 +79,18 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 		<>
 			<Dialog.Header.Outer>
 				<Dialog.Header.Slot>
-					<Button label={l`Back`} onClick={() => handle.close()} size="small" color="primary" variant="ghost">
-						<ButtonText size="md">
-							<Trans>Back</Trans>
-						</ButtonText>
+					<Button
+						label={m['common.action.back']()}
+						onClick={() => handle.close()}
+						size="small"
+						color="primary"
+						variant="ghost"
+					>
+						<ButtonText size="md">{m['common.action.back']()}</ButtonText>
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>
-						<Trans>Drafts</Trans>
-					</Dialog.Header.TitleText>
+					<Dialog.Header.TitleText>{m['view.composer.title.drafts']()}</Dialog.Header.TitleText>
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot />
 			</Dialog.Header.Outer>
@@ -105,17 +105,17 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 				)}
 				onEndReached={onEndReached}
 				isFetchingNextPage={isFetchingNextPage}
-				loadingLabel={l`Loading drafts`}
+				loadingLabel={m['view.composer.status.loadingDrafts']()}
 				ListEmptyComponent={
 					isLoading ? (
 						<div className={styles.loading}>
-							<CenteredSpinner label={l`Loading drafts`} size="lg" />
+							<CenteredSpinner label={m['view.composer.status.loadingDrafts']()} size="lg" />
 						</div>
 					) : (
 						<div className={styles.empty}>
 							<PageXIcon width={48} height={48} fill={colors.textContrastLow} />
 							<Text size="md" weight="medium" color="textContrastHigh" align="center">
-								<Trans>No drafts yet</Trans>
+								{m['view.composer.empty.drafts']()}
 							</Text>
 						</div>
 					)
@@ -124,7 +124,7 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 					drafts.length > 5 ? (
 						<div className={styles.footerNote}>
 							<Text align="center" color="textContrastMedium">
-								<Trans>So many thoughts, you should post one</Trans>
+								{m['view.composer.empty.manyThoughts']()}
 							</Text>
 						</div>
 					) : null

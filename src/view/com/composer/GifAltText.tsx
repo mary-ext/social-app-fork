@@ -1,5 +1,4 @@
 import { TouchableOpacity } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 
@@ -14,6 +13,7 @@ import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
 
 import type { Gif } from '#/features/gifPicker/types';
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type Props = {
@@ -23,7 +23,6 @@ type Props = {
 };
 
 export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const control = Dialog.useDialogHandle();
 
@@ -31,7 +30,7 @@ export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
 		<>
 			<TouchableOpacity
 				accessibilityHint=""
-				accessibilityLabel={l`Add alt text`}
+				accessibilityLabel={m['view.composer.action.addAltText']()}
 				accessibilityRole="button"
 				hitSlop={HITSLOP_10}
 				onPress={() => control.open(null)}
@@ -52,14 +51,12 @@ export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
 					<Plus size="sm" fill={colors.white} />
 				)}
 				<Text style={[a.font_semi_bold, { color: t.palette.white }]} accessible={false}>
-					<Trans>ALT</Trans>
+					{m['common.label.altBadge']()}
 				</Text>
 			</TouchableOpacity>
 
 			<Admonition type="info" style={[a.mt_sm]}>
-				<Trans>
-					Alt text describes images for blind and low-vision users, and helps give context to everyone.
-				</Trans>
+				{m['view.composer.hint.altText']()}
 			</Admonition>
 
 			<GifAltTextDialog altText={altText} gif={gif} handle={control} onSubmit={onSubmit} />

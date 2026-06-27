@@ -21,6 +21,7 @@ import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { Tooltip } from '#/components/web/Tooltip';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 
 import * as css from './PostMeta.css';
 import { TimeElapsed } from './TimeElapsed';
@@ -73,7 +74,7 @@ interface PostMetaOpts {
 }
 
 function PostMeta(opts: PostMetaOpts): ReactNode {
-	const { i18n, t: l } = useLingui();
+	const { i18n } = useLingui();
 
 	const author = useProfileShadow(opts.author);
 	const handle = author.handle;
@@ -118,7 +119,7 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 						color="textContrastHigh"
 						weight="semiBold"
 						disabled={disabled}
-						label={l`View profile`}
+						label={m['common.action.viewProfile']()}
 						numberOfLines={1}
 						onPress={onBeforePressAuthor}
 						size="md"

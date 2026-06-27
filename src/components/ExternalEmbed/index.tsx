@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
@@ -16,6 +15,8 @@ import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';
 import { Earth_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './index.css';
 
 export type ExternalEmbedProps = {
@@ -27,7 +28,6 @@ export type ExternalEmbedProps = {
 
 /** Web-native external embed: a plain link card, an embedded gif/iframe player, or an autoplaying gif. */
 export function ExternalEmbed({ link, onOpen, hideAlt, className }: ExternalEmbedProps) {
-	const { t: l } = useLingui();
 	const externalEmbedPrefs = useExternalEmbedsPrefs();
 	const niceUrl = toNiceDomain(link.uri);
 	const imageUri = link.thumb;
@@ -49,7 +49,7 @@ export function ExternalEmbed({ link, onOpen, hideAlt, className }: ExternalEmbe
 		onOpen?.();
 	};
 
-	const ariaLabel = link.title || l`Open link to ${niceUrl}`;
+	const ariaLabel = link.title || m['common.a11y.openLink']({ niceUrl });
 
 	// Autoplaying tenor/klipy gifs render standalone, without the card chrome.
 	if (embedPlayerParams?.source === 'tenor' || embedPlayerParams?.source === 'klipy') {

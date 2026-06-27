@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
-import { useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
 
 import { isNetworkError } from '#/lib/strings/errors';
@@ -24,6 +23,8 @@ import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 export function ThreadgateBtn({
 	postgate,
 	onChangePostgate,
@@ -36,7 +37,6 @@ export function ThreadgateBtn({
 	threadgateAllowUISettings: ThreadgateAllowUISetting[];
 	onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void;
 }) {
-	const { t: l } = useLingui();
 	const control = Dialog.useDialogHandle();
 
 	const { data: preferences } = usePreferencesQuery();
@@ -79,7 +79,9 @@ export function ThreadgateBtn({
 		threadgateAllowUISettings.length === 1 && threadgateAllowUISettings[0]!.type === 'everybody';
 	const anyoneCanQuote = !postgate.embeddingRules || postgate.embeddingRules.length === 0;
 	const anyoneCanInteract = anyoneCanReply && anyoneCanQuote;
-	const label = anyoneCanInteract ? l`Anyone can interact` : l`Interaction limited`;
+	const label = anyoneCanInteract
+		? m['view.composer.label.anyoneCanInteract']()
+		: m['view.composer.label.interactionLimited']();
 
 	return (
 		<>

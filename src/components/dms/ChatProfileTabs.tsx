@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef } from 'react';
 import { type ScrollView, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -18,6 +17,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type Props = {
@@ -76,7 +76,6 @@ function Tab({
 	onRemove?: (did: string) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 
 	const moderation = moderateProfile(profile, moderationOpts!);
@@ -130,7 +129,7 @@ function Tab({
 			)}
 			<Button
 				hitSlop={HITSLOP_10}
-				label={l`Remove ${displayName} from group chat`}
+				label={m['components.dms.action.removeMember']({ displayName })}
 				style={[a.ml_xs]}
 				onPress={() => onPressItem(profile.did)}
 			>

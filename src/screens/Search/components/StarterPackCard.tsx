@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -19,10 +18,11 @@ import { ButtonText } from '#/components/web/Button';
 import { LinkButton } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './StarterPackCard.css';
 
 export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackView }) {
-	const { t: l } = useLingui();
 	const { gtPhone } = useBreakpoints();
 	const link = useStarterPackLink({ view });
 	const record = view.record as AppBskyGraphStarterpack.Main;
@@ -47,7 +47,7 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 							{record.name}
 						</Text>
 						<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-							{l`by ${sanitizeHandle(view.creator.handle)}`}
+							{m['screens.search.label.byCreator']({ handle: sanitizeHandle(view.creator.handle) })}
 						</Text>
 					</div>
 					<LinkButton
@@ -58,9 +58,7 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 						to={link.to}
 						variant="solid"
 					>
-						<ButtonText>
-							<Trans>Open pack</Trans>
-						</ButtonText>
+						<ButtonText>{m['screens.search.action.openPack']()}</ButtonText>
 					</LinkButton>
 				</div>
 			</div>
@@ -143,9 +141,7 @@ export function AvatarStack({
 						<div className={css.totalInner}>
 							{computedTotal > 0 ? (
 								<Text className={css.totalText} size={gtPhone ? 'md' : 'xs'} weight="semiBold">
-									<Trans comment="Indicates the number of additional profiles are in the Starter Pack e.g. +12">
-										+{computedTotal}
-									</Trans>
+									{m['screens.search.label.additionalCount']({ computedTotal })}
 								</Text>
 							) : (
 								<Plus fill="white" />

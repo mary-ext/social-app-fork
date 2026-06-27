@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
 import { OzoneReason } from '#/lib/moderation/report-reasons';
@@ -18,6 +17,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
+import { m } from '#/paraglide/messages';
 
 import * as styles from './GoLiveDisabledDialog.css';
 
@@ -28,10 +28,9 @@ export function GoLiveDisabledDialog({
 	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={l`Appeal livestream suspension`}>
+			<Dialog.Popup className={styles.popup} label={m['features.liveNow.appeal.title']()}>
 				<DialogInner handle={handle} status={status} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -46,7 +45,6 @@ function DialogInner({
 	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { t: l } = useLingui();
 	const { pds } = useClients();
 	const [details, setDetails] = useState('');
 
@@ -81,13 +79,13 @@ function DialogInner({
 			}
 		},
 		onError: () => {
-			Toast.show(l`Failed to submit appeal, please try again.`, {
+			Toast.show(m['common.error.submitAppeal'](), {
 				type: 'error',
 			});
 		},
 		onSuccess: () => {
 			handle.close();
-			Toast.show(l({ message: 'Appeal submitted', context: 'toast' }), {
+			Toast.show(m['common.toast.appealSubmitted'](), {
 				type: 'success',
 			});
 		},
@@ -99,33 +97,32 @@ function DialogInner({
 		<div className={styles.container}>
 			<div className={styles.header}>
 				<Text className={styles.title} size="_2xl" weight="semiBold">
-					<Trans>Going live is currently disabled for your account</Trans>
+					{m['features.liveNow.error.disabled']()}
 				</Text>
-				<Text size="md">
-					<Trans>
-						You are currently blocked from using the Go Live feature. To appeal this moderation decision,
-						please submit the form below.
-					</Trans>
-				</Text>
-				<Text size="md">
-					<Trans>This appeal will be sent to Bluesky's moderation service.</Trans>
-				</Text>
+				<Text size="md">{m['features.liveNow.appeal.blocked']()}</Text>
+				<Text size="md">{m['common.hint.appealDestination']()}</Text>
 			</div>
 
 			<div className={styles.fields}>
 				<TextField.Input
 					autoFocus
-					label={l`Text input field`}
+					label={m['common.a11y.textInput']()}
 					maxLength={300}
 					minRows={3}
 					multiline
 					onChangeText={setDetails}
-					placeholder={l`Please explain why you think your Go Live access was incorrectly disabled.`}
+					placeholder={m['features.liveNow.appeal.prompt']()}
 					value={details}
 				/>
 
-				<Button color="primary" label={l`Submit`} onClick={onSubmit} size="large" variant="solid">
-					<ButtonText>{l`Submit`}</ButtonText>
+				<Button
+					color="primary"
+					label={m['common.action.submit']()}
+					onClick={onSubmit}
+					size="large"
+					variant="solid"
+				>
+					<ButtonText>{m['common.action.submit']()}</ButtonText>
 					{isPending && <ButtonIcon icon={Loader} />}
 				</Button>
 			</div>

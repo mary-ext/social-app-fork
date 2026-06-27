@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -18,6 +17,7 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function AccountList({
@@ -32,7 +32,6 @@ export function AccountList({
 	pendingDid: string | null;
 }) {
 	const { currentAccount, accounts } = useSession();
-	const { t: l } = useLingui();
 	const { data: profiles } = useProfilesQuery({
 		handles: accounts.map((acc) => acc.did),
 	});
@@ -52,7 +51,7 @@ export function AccountList({
 			))}
 			{onSelectOther && (
 				<button
-					aria-label={l`Sign in to account that is not listed`}
+					aria-label={m['components.accountList.a11y.signInOther']()}
 					className={css.row}
 					onClick={onSelectOther}
 					type="button"
@@ -61,7 +60,7 @@ export function AccountList({
 						<PlusIcon width={20} height={20} fill="currentColor" />
 					</span>
 					<Text className={css.info} size="md" weight="medium">
-						{otherLabel ?? <Trans>Other account</Trans>}
+						{otherLabel ?? m['components.accountList.label.other']()}
 					</Text>
 					<ChevronIcon className={css.chevron} width={20} height={20} fill={colors.textContrastLow} />
 				</button>
@@ -83,7 +82,6 @@ function AccountItem({
 	onSelect: (account: SessionAccount) => void;
 	profile?: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { t: l } = useLingui();
 	const { isActive: live } = useActorStatus(profile);
 
 	const onClick = useCallback(() => {
@@ -94,8 +92,8 @@ function AccountItem({
 		<button
 			aria-label={
 				isCurrentAccount
-					? l`Continue as ${account.handle} (currently signed in)`
-					: l`Sign in as ${account.handle}`
+					? m['components.accountList.a11y.continueAs']({ handle: account.handle })
+					: m['components.accountList.a11y.signInAs']({ handle: account.handle })
 			}
 			className={clsx(css.row, isPendingAccount && css.rowActive)}
 			onClick={onClick}

@@ -1,6 +1,6 @@
 import { type ReactNode, useMemo } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { definite } from '#/lib/functions';
@@ -27,6 +27,8 @@ import { ExternalInlineLinkText, InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './SearchResults.css';
 
 export type SearchTabId = 'feeds' | 'latest' | 'people' | 'top';
@@ -44,8 +46,6 @@ export function SearchResults({
 	query: string;
 	queryWithParams: string;
 }) {
-	const { t: l } = useLingui();
-
 	const sections = useMemo(() => {
 		if (!queryWithParams) {
 			return [];
@@ -54,26 +54,26 @@ export function SearchResults({
 		return definite<Section<SearchTabId>>([
 			{
 				id: 'top',
-				label: l`Top`,
+				label: m['common.label.top'](),
 				render: (focused) => <PostResults active={focused} query={queryWithParams} sort="top" />,
 			},
 			{
 				id: 'latest',
-				label: l`Latest`,
+				label: m['common.label.latest'](),
 				render: (focused) => <PostResults active={focused} query={queryWithParams} sort="latest" />,
 			},
 			noParams && {
 				id: 'people',
-				label: l`People`,
+				label: m['common.label.people'](),
 				render: (focused) => <UserResults active={focused} query={query} />,
 			},
 			noParams && {
 				id: 'feeds',
-				label: l`Feeds`,
+				label: m['common.nav.feeds'](),
 				render: (focused) => <FeedsResults active={focused} query={query} />,
 			},
 		]);
-	}, [l, query, queryWithParams]);
+	}, [query, queryWithParams]);
 
 	return (
 		<Tabs headerOffset={headerHeight} onValueChange={onTabChange} sections={sections} value={activeTab} />
@@ -81,10 +81,9 @@ export function SearchResults({
 }
 
 function Pending() {
-	const { t: l } = useLingui();
 	return (
 		<Layout.Content>
-			<CenteredSpinner label={l`Loading search results`} size="xl" />
+			<CenteredSpinner label={m['screens.search.a11y.loadingResults']()} size="xl" />
 		</Layout.Content>
 	);
 }
@@ -107,9 +106,7 @@ function EmptyState({
 					{error && (
 						<>
 							<div className={css.emptyDivider} />
-							<Text color="textContrastMedium">
-								<Trans>Error: {error}</Trans>
-							</Text>
+							<Text color="textContrastMedium">{m['screens.search.error.generic']({ error })}</Text>
 						</>
 					)}
 
@@ -121,8 +118,6 @@ function EmptyState({
 }
 
 function NoResultsText({ query }: { query: string }) {
-	const { t: l } = useLingui();
-
 	return (
 		<>
 			<Text color="textContrastHigh" size="lg">
@@ -140,10 +135,7 @@ function NoResultsText({ query }: { query: string }) {
 					Try a different search term, or{' '}
 					<ExternalInlineLinkText
 						href={urls.website.blog.searchTipsAndTricks}
-						label={l({
-							context: 'english-only-resource',
-							message: 'read about how to use search filters',
-						})}
+						label={m['screens.search.action.readSearchFilters']()}
 						size="md"
 					>
 						read about how to use search filters
@@ -156,7 +148,6 @@ function NoResultsText({ query }: { query: string }) {
 }
 
 function PostResults({ active, query, sort }: { active: boolean; query: string; sort?: 'latest' | 'top' }) {
-	const { t: l } = useLingui();
 	const { currentAccount, hasSession } = useSession();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
@@ -198,11 +189,11 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 
 	if (!hasSession) {
 		return (
-			<SearchError title={l`Search is currently unavailable when logged out`}>
+			<SearchError title={m['common.error.searchLoggedOut']()}>
 				<Text align="center" size="md">
 					<Trans>
 						<InlineLinkText
-							label={l`Sign in`}
+							label={m['common.action.signIn']()}
 							onPress={() => {
 								signinDialogControl.openWithPayload({});
 								return false;
@@ -222,12 +213,7 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 	}
 
 	if (error) {
-		return (
-			<EmptyState
-				error={cleanError(error)}
-				messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
-			/>
-		);
+		return <EmptyState error={cleanError(error)} messageText={m['screens.search.error.searchFailed']()} />;
 	}
 
 	if (!isFetched) {
@@ -255,7 +241,6 @@ function SearchPost({ position, post }: { position: number; post: AppBskyFeedDef
 }
 
 function UserResults({ active, query }: { active: boolean; query: string }) {
-	const { t: l } = useLingui();
 	const { hasSession } = useSession();
 
 	const {
@@ -278,12 +263,7 @@ function UserResults({ active, query }: { active: boolean; query: string }) {
 	};
 
 	if (error) {
-		return (
-			<EmptyState
-				error={error.toString()}
-				messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
-			/>
-		);
+		return <EmptyState error={error.toString()} messageText={m['screens.search.error.searchFailed']()} />;
 	}
 
 	if (!isFetched) {

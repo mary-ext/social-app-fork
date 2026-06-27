@@ -1,9 +1,9 @@
 import { Autocomplete } from '@base-ui/react/autocomplete';
-import { useLingui } from '@lingui/react/macro';
 
 import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
 import type { SearchHistoryEntry } from '#/storage';
 
 import type { ListRow } from './model';
@@ -18,8 +18,6 @@ export function RecentQueryRow({
 	onRemoveRecent: (entry: SearchHistoryEntry) => void;
 	row: Extract<ListRow, { kind: 'recent-query' }>;
 }) {
-	const { t } = useLingui();
-
 	return (
 		<div className={styles.row}>
 			<Autocomplete.Item className={styles.item} value={row}>
@@ -27,7 +25,7 @@ export function RecentQueryRow({
 				<Text className={styles.label}>{row.query}</Text>
 			</Autocomplete.Item>
 			<RecentRemoveButton
-				label={t`Remove ${row.query} from recent searches`}
+				label={m['components.web.a11y.removeRecentSearch']({ query: row.query })}
 				onRemove={() => onRemoveRecent({ kind: 'query', query: row.query })}
 			/>
 		</div>

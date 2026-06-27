@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
@@ -27,6 +26,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import * as css from '#/features/liveNow/components/LiveStatus.css';
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 /**
@@ -44,7 +44,6 @@ export function LiveStatusDialog({
 	profile: AnyProfileView;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	const onPressOpenProfile = useCallback(() => {
@@ -54,7 +53,10 @@ export function LiveStatusDialog({
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.dialogPopup} label={l`${sanitizeHandle(profile.handle)} is live`}>
+			<Dialog.Popup
+				className={css.dialogPopup}
+				label={m['features.liveNow.label.userIsLive']({ handle: sanitizeHandle(profile.handle) })}
+			>
 				<LiveStatus
 					embed={embed}
 					onPressOpenProfile={onPressOpenProfile}
@@ -88,7 +90,6 @@ export function LiveStatus({
 	profile: AnyProfileView;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
 	const reportDialogControl = useGlobalReportDialogControl();
@@ -143,14 +144,12 @@ export function LiveStatus({
 				<ExternalLinkButton
 					className={css.watchButton}
 					color="primary"
-					label={l`Watch now`}
+					label={m['features.liveNow.action.watchNow']()}
 					size="small"
 					href={embed.external.uri}
 					variant="solid"
 				>
-					<ButtonText>
-						<Trans>Watch now</Trans>
-					</ButtonText>
+					<ButtonText>{m['features.liveNow.action.watchNow']()}</ButtonText>
 					<ButtonIcon icon={SquareArrowTopRightIcon} />
 				</ExternalLinkButton>
 
@@ -167,7 +166,7 @@ export function LiveStatus({
 						<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
 						<Button
 							color="secondary"
-							label={l`Open profile`}
+							label={m['features.liveNow.action.openProfile']()}
 							onClick={() => {
 								unstableCacheProfileView(queryClient, profile);
 								onPressOpenProfile();
@@ -175,9 +174,7 @@ export function LiveStatus({
 							size="small"
 							variant="solid"
 						>
-							<ButtonText>
-								<Trans>Open profile</Trans>
-							</ButtonText>
+							<ButtonText>{m['features.liveNow.action.openProfile']()}</ButtonText>
 						</Button>
 					</ProfileCard.Header>
 				)}
@@ -186,12 +183,17 @@ export function LiveStatus({
 					<div className={css.beta}>
 						<CircleInfoIcon width={16} height={16} fill={colors.textContrastLow} />
 						<Text color="textContrastLow" size="sm">
-							<Trans>Live feature is in beta</Trans>
+							{m['features.liveNow.label.beta']()}
 						</Text>
 					</div>
-					<Button className={css.reportButton} label={l`Report`} onClick={onReport} variant="bare">
+					<Button
+						className={css.reportButton}
+						label={m['common.action.report']()}
+						onClick={onReport}
+						variant="bare"
+					>
 						<Text color="textContrastMedium" size="sm">
-							<Trans>Report</Trans>
+							{m['common.action.report']()}
 						</Text>
 					</Button>
 				</div>

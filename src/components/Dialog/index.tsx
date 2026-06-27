@@ -9,7 +9,6 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 import { DismissableLayer, FocusGuards, FocusScope } from 'radix-ui/internal';
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
 
@@ -26,6 +25,8 @@ import { Context } from '#/components/Dialog/context';
 import type { DialogControlProps, DialogInnerProps, DialogOuterProps } from '#/components/Dialog/types';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Portal } from '#/components/Portal';
+
+import { m } from '#/paraglide/messages';
 
 export { useDialogContext, useDialogControl } from '#/components/Dialog/context';
 export * from '#/components/Dialog/shared';
@@ -54,7 +55,6 @@ const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagatio
 const preventDefault = (e: { preventDefault: () => void }) => e.preventDefault();
 
 export function Outer({ children, control, onClose, webOptions }: React.PropsWithChildren<DialogOuterProps>) {
-	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const [isOpen, setIsOpen] = useState(false);
 	const { setDialogIsOpen } = useDialogStateControlContext();
@@ -123,7 +123,7 @@ export function Outer({ children, control, onClose, webOptions }: React.PropsWit
 						<RemoveScrollBar />
 						<Pressable
 							accessibilityHint={undefined}
-							accessibilityLabel={l`Close active dialog`}
+							accessibilityLabel={m['components.dialog.a11y.close']()}
 							onPress={(e) => void handleBackgroundPress(e)}
 						>
 							<View
@@ -290,7 +290,6 @@ export function FlatListFooter({
 }
 
 export function Close() {
-	const { t: l } = useLingui();
 	const { close } = useContext(Context);
 	return (
 		<View
@@ -309,7 +308,7 @@ export function Close() {
 				color="secondary"
 				shape="round"
 				onPress={() => close()}
-				label={l`Close active dialog`}
+				label={m['components.dialog.a11y.close']()}
 			>
 				<ButtonIcon icon={X} size="md" />
 			</Button>

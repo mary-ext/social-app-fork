@@ -1,19 +1,18 @@
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Button, ButtonIcon } from '#/components/Button';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 
+import { m } from '#/paraglide/messages';
+
 export function ExternalEmbedRemoveBtn({ onRemove, style }: { onRemove: () => void } & ViewStyleProp) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	return (
 		<View style={[a.absolute, { top: 8, right: 8 }, a.z_50, style]}>
 			<Button
-				label={l`Remove attachment`}
+				label={m['view.composer.action.removeAttachment']()}
 				onPress={onRemove}
 				size="small"
 				variant="solid"

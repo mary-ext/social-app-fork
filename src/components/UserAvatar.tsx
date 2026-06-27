@@ -2,7 +2,6 @@ import { type ComponentPropsWithoutRef, memo, type Ref } from 'react';
 import type { AnyProfileView, AppBskyEmbedExternal } from '@atcute/bluesky';
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { Avatar } from '@base-ui/react/avatar';
-import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -24,6 +23,7 @@ import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatus';
+import { m } from '#/paraglide/messages';
 
 export type UserAvatarType = 'algo' | 'labeler' | 'list' | 'user';
 
@@ -220,7 +220,6 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	tabIndex,
 	...props
 }: PreviewableUserAvatarProps) {
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const status = useActorStatus(profile);
 	const liveHandle = Dialog.useDialogHandle();
@@ -247,7 +246,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	) : isTouchLive ? (
 		<button
 			type="button"
-			aria-label={l`${name}'s avatar`}
+			aria-label={m['components.userAvatar.a11y.avatar']({ name })}
 			className={styles.preview}
 			style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
 			tabIndex={tabIndex}
@@ -258,7 +257,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	) : (
 		<Link
 			className={styles.preview}
-			label={l`${name}'s avatar`}
+			label={m['components.userAvatar.a11y.avatar']({ name })}
 			onPress={() => {
 				onBeforePress?.();
 				unstableCacheProfileView(queryClient, profile);

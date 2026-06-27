@@ -26,6 +26,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLink, ExternalLinkButton } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 
@@ -147,7 +148,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 			<ExternalLink
 				className={styles.bodyLink}
 				href={view.uri}
-				label={view.title || l`Open link to ${niceUrl}`}
+				label={view.title || m['common.a11y.openLink']({ niceUrl })}
 				onPress={open}
 			>
 				{view.thumb ? <EmbedThumb src={view.thumb} /> : null}
@@ -208,7 +209,6 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 }
 
 function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
-	const { t: l } = useLingui();
 	if (!view.source) return null;
 	const themeColors = themeColorsFor(view);
 	const open = () => onOpen?.();
@@ -218,7 +218,11 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 			<ExternalLink
 				className={styles.pubFill}
 				href={view.source.uri}
-				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
+				label={
+					view.source.title
+						? m['components.post.action.viewSource']({ title: view.source.title })
+						: m['components.post.action.viewPublication']()
+				}
 				onPress={open}
 			>
 				{null}
@@ -262,7 +266,6 @@ function PublicationFooter({
 	onOpen?: () => void;
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
-	const { t: l } = useLingui();
 	if (!view.source) return null;
 	const themeColors = themeColorsFor(view);
 	const open = () => onOpen?.();
@@ -272,7 +275,11 @@ function PublicationFooter({
 			<ExternalLink
 				className={styles.footerFill}
 				href={view.source.uri}
-				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
+				label={
+					view.source.title
+						? m['components.post.action.viewSource']({ title: view.source.title })
+						: m['components.post.action.viewPublication']()
+				}
 				onPress={open}
 				tabIndex={-1}
 			>
@@ -349,19 +356,20 @@ function SubscribeButton({
 	onOpen?: () => void;
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
-	const { t: l } = useLingui();
 	const highlightedPublisher = matchStandardSitePublisher(view);
 	if (!view.source) return null;
 
 	const publicationTitle = view.source.title;
 	const label = highlightedPublisher
 		? publicationTitle
-			? l`Subscribe to ${publicationTitle} on ${highlightedPublisher.name}`
-			: l`Subscribe on ${highlightedPublisher.name}`
+			? m['components.post.action.subscribeToOn']({ publicationTitle, name: highlightedPublisher.name })
+			: m['components.post.action.subscribeOn']({ name: highlightedPublisher.name })
 		: publicationTitle
-			? l`View ${publicationTitle}`
-			: l`View publication`;
-	const cta = highlightedPublisher ? l`Subscribe on ${highlightedPublisher.name}` : l`View publication`;
+			? m['components.post.action.viewPublicationTitle']({ publicationTitle })
+			: m['components.post.action.viewPublication']();
+	const cta = highlightedPublisher
+		? m['components.post.action.subscribeOn']({ name: highlightedPublisher.name })
+		: m['components.post.action.viewPublication']();
 
 	/*
 	 * The custom site theme paints the button background with `accent` and the text with `accentForeground`.

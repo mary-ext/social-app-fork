@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
@@ -14,9 +13,10 @@ import { TitleCase_Stroke2_Corner0_Rounded as Aa } from '#/components/icons/Titl
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>;
 export function AppearanceSettingsScreen({}: Props) {
-	const { t: l } = useLingui();
 	const { fonts } = useAlf();
 
 	const { colorMode, darkTheme } = useThemePrefs();
@@ -48,70 +48,68 @@ export function AppearanceSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Appearance</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.label.appearance']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
-					<Settings.Section titleText={<Trans>Theme</Trans>}>
+					<Settings.Section titleText={m['screens.settings.appearance.theme']()}>
 						<Settings.SelectRow
-							label={l`Color mode`}
+							label={m['screens.settings.appearance.colorMode']()}
 							value={colorMode}
 							onValueChange={onChangeAppearance}
 							items={[
-								{ label: l`System`, value: 'system' },
-								{ label: l`Light`, value: 'light' },
-								{ label: l`Dark`, value: 'dark' },
+								{ label: m['screens.settings.appearance.system'](), value: 'system' },
+								{ label: m['screens.settings.appearance.light'](), value: 'light' },
+								{ label: m['screens.settings.appearance.dark'](), value: 'dark' },
 							]}
 						>
 							<Settings.Icon icon={PhoneIcon} />
-							<Settings.Label titleText={<Trans>Color mode</Trans>} />
+							<Settings.Label titleText={m['screens.settings.appearance.colorMode']()} />
 						</Settings.SelectRow>
 
 						{colorMode !== 'light' && (
 							<Settings.SelectRow
-								label={l`Dark theme`}
+								label={m['screens.settings.appearance.darkTheme']()}
 								value={darkTheme ?? 'dim'}
 								onValueChange={onChangeDarkTheme}
 								items={[
-									{ label: l`Dim`, value: 'dim' },
-									{ label: l`Dark`, value: 'dark' },
+									{ label: m['screens.settings.appearance.dim'](), value: 'dim' },
+									{ label: m['screens.settings.appearance.dark'](), value: 'dark' },
 								]}
 							>
 								<Settings.Icon icon={MoonIcon} />
-								<Settings.Label titleText={<Trans>Dark theme</Trans>} />
+								<Settings.Label titleText={m['screens.settings.appearance.darkTheme']()} />
 							</Settings.SelectRow>
 						)}
 					</Settings.Section>
 
-					<Settings.Section titleText={<Trans>Font</Trans>}>
+					<Settings.Section titleText={m['screens.settings.appearance.font']()}>
 						<Settings.SwitchRow
-							label={l`Use theme font`}
+							label={m['screens.settings.appearance.useThemeFont']()}
 							value={fonts.family === 'theme'}
 							onChange={(checked) => fonts.setFontFamily(checked ? 'theme' : 'system')}
 						>
 							<Settings.Icon icon={Aa} />
 							<Settings.Label
-								titleText={<Trans>Use theme font</Trans>}
-								subtitleText={<Trans>We recommend the theme font for the best experience.</Trans>}
+								titleText={m['screens.settings.appearance.useThemeFont']()}
+								subtitleText={m['screens.settings.appearance.recommendThemeFont']()}
 							/>
 						</Settings.SwitchRow>
 
 						<Settings.SelectRow
-							label={l`Font size`}
+							label={m['screens.settings.appearance.fontSize']()}
 							value={fonts.scale}
 							onValueChange={onChangeFontScale}
 							items={[
-								{ label: l`Smaller`, value: '-1' },
-								{ label: l`Default`, value: '0' },
-								{ label: l`Larger`, value: '1' },
+								{ label: m['screens.settings.appearance.smaller'](), value: '-1' },
+								{ label: m['screens.settings.option.default'](), value: '0' },
+								{ label: m['screens.settings.appearance.larger'](), value: '1' },
 							]}
 						>
 							<Settings.Icon icon={TextSize} />
-							<Settings.Label titleText={<Trans>Font size</Trans>} />
+							<Settings.Label titleText={m['screens.settings.appearance.fontSize']()} />
 						</Settings.SelectRow>
 					</Settings.Section>
 				</Settings.List>

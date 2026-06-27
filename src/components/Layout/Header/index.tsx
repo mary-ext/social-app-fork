@@ -1,6 +1,5 @@
 import { createContext, useCallback } from 'react';
 import { type GestureResponderEvent, Keyboard, View, type ViewStyle } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_30 } from '#/lib/constants';
@@ -21,6 +20,8 @@ import {
 	HEADER_SLOT_SIZE,
 } from '#/components/Layout/const';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 const webViewStyle = (style: unknown): ViewStyle => {
 	return style as ViewStyle;
@@ -86,7 +87,6 @@ export function Slot({ children }: { children?: React.ReactNode }) {
 }
 
 export function BackButton({ onPress, style, ...props }: Partial<ButtonProps>) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	const onPressBack = useCallback(
@@ -105,7 +105,7 @@ export function BackButton({ onPress, style, ...props }: Partial<ButtonProps>) {
 	return (
 		<Slot>
 			<Button
-				label={l`Go back`}
+				label={m['common.action.goBack']()}
 				size="small"
 				variant="ghost"
 				color="secondary"
@@ -122,7 +122,6 @@ export function BackButton({ onPress, style, ...props }: Partial<ButtonProps>) {
 }
 
 export function MenuButton() {
-	const { t: l } = useLingui();
 	const setDrawerOpen = useSetDrawerOpen();
 	const { gtMobile } = useBreakpoints();
 
@@ -134,7 +133,7 @@ export function MenuButton() {
 	return gtMobile ? null : (
 		<Slot>
 			<Button
-				label={l`Open drawer menu`}
+				label={m['common.a11y.openDrawerMenu']()}
 				size="small"
 				variant="ghost"
 				color="secondary"

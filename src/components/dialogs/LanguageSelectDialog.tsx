@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
@@ -17,6 +16,8 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { SearchInput } from '#/components/web/forms/SearchInput';
 import * as Toggle from '#/components/web/forms/Toggle';
+
+import { m } from '#/paraglide/messages';
 
 type ListEntry =
 	| {
@@ -45,7 +46,6 @@ export function LanguageSelectDialog({
 	onSelectLanguages: (languages: string[]) => void;
 	maxLanguages?: number;
 }) {
-	const { t: l } = useLingui();
 	const renderErrorBoundary = useCallback(
 		(error: unknown) => <DialogError handle={handle} details={String(error)} />,
 		[handle],
@@ -53,7 +53,7 @@ export function LanguageSelectDialog({
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" label={l`Choose languages`}>
+			<Dialog.Popup scroll="body" label={m['components.dialogs.language.chooseTitle']()}>
 				<ErrorBoundary renderError={renderErrorBoundary}>
 					<DialogInner
 						handle={handle}
@@ -84,7 +84,6 @@ function DialogInner({
 	onSelectLanguages?: (languages: string[]) => void;
 	maxLanguages?: number;
 }) {
-	const { t: l } = useLingui();
 	const langPrefs = useLanguagePrefs();
 
 	const allowedLanguages = useMemo(() => {
@@ -167,10 +166,10 @@ function DialogInner({
 	const hasAll = displayedLanguages.all.length > 0;
 
 	const listData: ListEntry[] = [
-		...(hasRecent ? [{ type: 'header' as const, label: l`Recently used` }] : []),
+		...(hasRecent ? [{ type: 'header' as const, label: m['common.label.recentlyUsed']() }] : []),
 		...displayedLanguages.checkedRecent.map((lang) => ({ type: 'item' as const, lang })),
 		...displayedLanguages.uncheckedRecent.map((lang) => ({ type: 'item' as const, lang })),
-		...(hasAll ? [{ type: 'header' as const, label: l`All languages` }] : []),
+		...(hasAll ? [{ type: 'header' as const, label: m['components.dialogs.language.all']() }] : []),
 		...displayedLanguages.all.map((lang) => ({ type: 'item' as const, lang })),
 	];
 
@@ -179,7 +178,7 @@ function DialogInner({
 	return (
 		<Toggle.Group
 			className={styles.group}
-			label={l`Select languages`}
+			label={m['components.dialogs.language.selectTitle']()}
 			maxSelections={maxLanguages}
 			onChange={setCheckedLanguagesCode2}
 			type="checkbox"
@@ -189,7 +188,7 @@ function DialogInner({
 				<div className={styles.headerRow}>
 					<div className={styles.titleBlock}>
 						<Text size="xl" weight="semiBold">
-							{titleText ?? <Trans>Choose languages</Trans>}
+							{titleText ?? m['components.dialogs.language.chooseTitle']()}
 						</Text>
 						{subtitleText && (
 							<Text color="textContrastMedium" size="md">
@@ -199,7 +198,7 @@ function DialogInner({
 					</div>
 					<Button
 						color="secondary"
-						label={l`Close dialog`}
+						label={m['common.a11y.closeDialog']()}
 						onClick={handleClose}
 						shape="round"
 						size="small"
@@ -209,11 +208,11 @@ function DialogInner({
 					</Button>
 				</div>
 				<SearchInput
-					label={l`Search languages`}
+					label={m['components.dialogs.language.search']()}
 					maxLength={50}
 					onChangeText={setSearch}
 					onClear={() => setSearch('')}
-					placeholder={l`Search languages`}
+					placeholder={m['components.dialogs.language.search']()}
 					value={search}
 				/>
 			</div>
@@ -251,13 +250,11 @@ function DialogInner({
 				<Button
 					className={styles.doneButton}
 					color="primary"
-					label={l`Close dialog`}
+					label={m['common.a11y.closeDialog']()}
 					onClick={handleClose}
 					size="large"
 				>
-					<ButtonText>
-						<Trans>Done</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.done']()}</ButtonText>
 				</Button>
 			</Dialog.Footer>
 		</Toggle.Group>
@@ -265,19 +262,20 @@ function DialogInner({
 }
 
 function DialogError({ handle, details }: { handle: Dialog.DialogHandle; details?: string }) {
-	const { t: l } = useLingui();
-
 	return (
 		<div className={styles.error}>
 			<ErrorScreen
-				title={l`Oh no!`}
-				message={l`There was an unexpected issue in the application. Please let us know if this happened to you!`}
+				title={m['common.error.ohNo']()}
+				message={m['common.error.unexpected']()}
 				details={details}
 			/>
-			<Button label={l`Close dialog`} onClick={() => handle.close()} color="primary" size="large">
-				<ButtonText>
-					<Trans>Close</Trans>
-				</ButtonText>
+			<Button
+				label={m['common.a11y.closeDialog']()}
+				onClick={() => handle.close()}
+				color="primary"
+				size="large"
+			>
+				<ButtonText>{m['common.action.close']()}</ButtonText>
 			</Button>
 		</div>
 	);

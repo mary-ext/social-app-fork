@@ -12,6 +12,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as css from '#/components/web/InterestTabs.css';
 
+import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';
 
 /** Pixels scrolled per edge-button click. */
@@ -210,7 +211,7 @@ export function InterestTabs({
 					<Button
 						className={css.edgeButton}
 						color="secondary"
-						label={l`Scroll left`}
+						label={m['common.a11y.scrollLeft']()}
 						onClick={() => scrollByStep('left')}
 						onPointerDown={() => startContinuousScroll('left')}
 						onPointerLeave={stopContinuousScroll}
@@ -227,7 +228,7 @@ export function InterestTabs({
 					<Button
 						className={css.edgeButton}
 						color="secondary"
-						label={l`Scroll right`}
+						label={m['common.a11y.scrollRight']()}
 						onClick={() => scrollByStep('right')}
 						onPointerDown={() => startContinuousScroll('right')}
 						onPointerLeave={stopContinuousScroll}

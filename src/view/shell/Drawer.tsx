@@ -50,6 +50,7 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 
 const ICON_WIDTH = 26;
 
@@ -59,7 +60,6 @@ const ICON_WIDTH = 26;
  * scroll while open. The hamburger only renders at mobile widths, so this stays closed otherwise.
  */
 export function Drawer() {
-	const { t: l } = useLingui();
 	const isOpen = useIsDrawerOpen();
 	const setDrawerOpen = useSetDrawerOpen();
 
@@ -70,8 +70,8 @@ export function Drawer() {
 				<BaseDrawer.Viewport className={styles.viewport}>
 					<BaseDrawer.Popup className={styles.popup}>
 						{/* Drawer.Title is itself the heading text host (an <h2>) */}
-						{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
-						<BaseDrawer.Title className={styles.srOnly}>{l`Menu`}</BaseDrawer.Title>
+						{}
+						<BaseDrawer.Title className={styles.srOnly}>{m['view.label.menu']()}</BaseDrawer.Title>
 						<BaseDrawer.Content className={styles.content}>
 							<DrawerContent />
 						</BaseDrawer.Content>
@@ -83,7 +83,6 @@ export function Drawer() {
 }
 
 function DrawerContent() {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const setDrawerOpen = useSetDrawerOpen();
 	const { currentAccount, hasSession } = useSession();
@@ -133,21 +132,21 @@ function DrawerContent() {
 						activeIcon={MagnifyingGlassFilled}
 						inactiveIcon={MagnifyingGlass}
 						isActive={isAtSearch}
-						label={l`Explore`}
+						label={m['common.nav.explore']()}
 						onPress={() => onPressTab('Search')}
 					/>
 					<MenuItem
 						activeIcon={HomeFilled}
 						inactiveIcon={Home}
 						isActive={isAtHome}
-						label={l`Home`}
+						label={m['common.nav.home']()}
 						onPress={() => onPressTab('Home')}
 					/>
 					<MenuItem
 						activeIcon={MessageFilled}
 						inactiveIcon={Message}
 						isActive={isAtMessages}
-						label={l`Chat`}
+						label={m['common.label.chat']()}
 						onPress={() => onPressTab('Messages')}
 					/>
 					<MenuItem
@@ -160,42 +159,42 @@ function DrawerContent() {
 						}
 						inactiveIcon={Bell}
 						isActive={isAtNotifications}
-						label={l`Notifications`}
+						label={m['common.nav.notifications']()}
 						onPress={() => onPressTab('Notifications')}
 					/>
 					<MenuItem
 						activeIcon={HashtagFilled}
 						inactiveIcon={Hashtag}
 						isActive={isAtFeeds}
-						label={l`Feeds`}
+						label={m['common.nav.feeds']()}
 						onPress={() => navigateAndClose('Feeds')}
 					/>
 					<MenuItem
 						activeIcon={List}
 						inactiveIcon={List}
 						isActive={false}
-						label={l`Lists`}
+						label={m['common.label.lists']()}
 						onPress={() => navigateAndClose('Lists')}
 					/>
 					<MenuItem
 						activeIcon={BookmarkFilled}
 						inactiveIcon={Bookmark}
 						isActive={isAtBookmarks}
-						label={l({ context: 'link to bookmarks screen', message: 'Saved' })}
+						label={m['view.label.saved']()}
 						onPress={() => navigateAndClose('Bookmarks')}
 					/>
 					<MenuItem
 						activeIcon={UserCircleFilled}
 						inactiveIcon={UserCircle}
 						isActive={isAtMyProfile}
-						label={l`Profile`}
+						label={m['common.nav.profile']()}
 						onPress={onPressProfile}
 					/>
 					<MenuItem
 						activeIcon={Settings}
 						inactiveIcon={Settings}
 						isActive={false}
-						label={l`Settings`}
+						label={m['common.nav.settings']()}
 						onPress={() => navigateAndClose('Settings')}
 					/>
 				</>
@@ -205,21 +204,21 @@ function DrawerContent() {
 						activeIcon={HomeFilled}
 						inactiveIcon={Home}
 						isActive={isAtHome}
-						label={l`Home`}
+						label={m['common.nav.home']()}
 						onPress={() => onPressTab('Home')}
 					/>
 					<MenuItem
 						activeIcon={HashtagFilled}
 						inactiveIcon={Hashtag}
 						isActive={isAtFeeds}
-						label={l`Feeds`}
+						label={m['common.nav.feeds']()}
 						onPress={() => navigateAndClose('Feeds')}
 					/>
 					<MenuItem
 						activeIcon={MagnifyingGlassFilled}
 						inactiveIcon={MagnifyingGlass}
 						isActive={isAtSearch}
-						label={l`Explore`}
+						label={m['common.nav.explore']()}
 						onPress={() => onPressTab('Search')}
 					/>
 				</>
@@ -235,12 +234,17 @@ function DrawerProfileCard({
 	account: SessionAccount;
 	onPressProfile: () => void;
 }) {
-	const { i18n, t: l } = useLingui();
+	const { i18n } = useLingui();
 	const { data: profile } = useProfileQuery({ did: account.did });
 	const { isActive: live } = useActorStatus(profile);
 
 	return (
-		<button aria-label={l`Profile`} className={styles.profileCard} onClick={onPressProfile} type="button">
+		<button
+			aria-label={m['common.nav.profile']()}
+			className={styles.profileCard}
+			onClick={onPressProfile}
+			type="button"
+		>
 			<UserAvatar
 				avatar={profile?.avatar}
 				live={live}

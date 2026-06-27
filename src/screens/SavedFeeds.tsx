@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { type ScrollView, View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -38,6 +38,7 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>;
@@ -51,7 +52,6 @@ export function SavedFeeds({}: Props) {
 
 function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const { mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending } =
 		useOverwriteSavedFeedsMutation();
@@ -73,14 +73,14 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 	const onSaveChanges = async () => {
 		try {
 			await overwriteSavedFeeds(currentFeeds);
-			Toast.show(l({ message: 'Feeds updated!', context: 'toast' }));
+			Toast.show(m['common.toast.feedsUpdated']());
 			if (navigation.canGoBack()) {
 				navigation.goBack();
 			} else {
 				navigation.navigate('Feeds');
 			}
 		} catch (e) {
-			Toast.show(l`There was an issue contacting the server`, {
+			Toast.show(m['common.error.serverContact'](), {
 				type: 'error',
 			});
 			logger.error('Failed to toggle pinned feed', { message: e });
@@ -92,20 +92,18 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content align="left">
-					<Layout.Header.TitleText>
-						<Trans>Feeds</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.nav.feeds']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Button
 					testID="saveChangesBtn"
 					size="small"
 					color={hasUnsavedChanges ? 'primary' : 'secondary'}
 					onPress={() => void onSaveChanges()}
-					label={l`Save changes`}
+					label={m['common.action.saveChanges']()}
 					disabled={isOverwritePending || !hasUnsavedChanges}
 				>
 					<ButtonIcon icon={isOverwritePending ? Loader : SaveIcon} />
-					<ButtonText>{gtMobile ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}</ButtonText>
+					<ButtonText>{gtMobile ? m['common.action.saveChanges']() : m['common.action.save']()}</ButtonText>
 				</Button>
 			</Layout.Header.Outer>
 			<Layout.Content ref={scrollRef} scrollEnabled={!isDragging}>
@@ -124,16 +122,12 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					</View>
 				)}
 
-				<SectionHeaderText>
-					<Trans>Pinned Feeds</Trans>
-				</SectionHeaderText>
+				<SectionHeaderText>{m['screens.savedFeeds.title.pinned']()}</SectionHeaderText>
 
 				{preferences ? (
 					!pinnedFeeds.length ? (
 						<View style={[a.flex_1, a.p_lg]}>
-							<Admonition type="info">
-								<Trans>You don't have any pinned feeds.</Trans>
-							</Admonition>
+							<Admonition type="info">{m['screens.savedFeeds.empty.pinned']()}</Admonition>
 						</View>
 					) : (
 						<SortableList
@@ -171,16 +165,12 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					</View>
 				)}
 
-				<SectionHeaderText>
-					<Trans>Saved Feeds</Trans>
-				</SectionHeaderText>
+				<SectionHeaderText>{m['screens.savedFeeds.title.saved']()}</SectionHeaderText>
 
 				{preferences ? (
 					!unpinnedFeeds.length ? (
 						<View style={[a.flex_1, a.p_lg]}>
-							<Admonition type="info">
-								<Trans>You don't have any saved feeds.</Trans>
-							</Admonition>
+							<Admonition type="info">{m['screens.savedFeeds.empty.saved']()}</Admonition>
 						</View>
 					) : (
 						unpinnedFeeds.map((f) => (
@@ -204,7 +194,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 							Feeds are custom algorithms that users build with a little coding expertise.{' '}
 							<InlineLinkText
 								to="https://github.com/bluesky-social/feed-generator"
-								label={l`See this guide`}
+								label={m['screens.savedFeeds.action.seeGuide']()}
 								disableMismatchWarning
 								style={[a.leading_snug]}
 							>
@@ -238,7 +228,6 @@ function PinnedFeedItem({
 	onMoveUp?: () => void;
 	onMoveDown?: () => void;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const feedUri = feed.value;
 
@@ -256,7 +245,7 @@ function PinnedFeedItem({
 			<View style={[a.pr_sm, a.flex_row, a.align_center, a.gap_sm]}>
 				<Button
 					testID={`feed-${feed.type}-togglePin`}
-					label={l`Unpin feed`}
+					label={m['common.action.unpinFeed']()}
 					onPress={onTogglePinned}
 					size="small"
 					color="primary_subtle"
@@ -268,7 +257,7 @@ function PinnedFeedItem({
 					<>
 						<Button
 							testID={`feed-${feed.type}-moveUp`}
-							label={l`Move feed up`}
+							label={m['screens.savedFeeds.action.moveUp']()}
 							onPress={onMoveUp}
 							disabled={index === 0}
 							size="small"
@@ -279,7 +268,7 @@ function PinnedFeedItem({
 						</Button>
 						<Button
 							testID={`feed-${feed.type}-moveDown`}
-							label={l`Move feed down`}
+							label={m['screens.savedFeeds.action.moveDown']()}
 							onPress={onMoveDown}
 							disabled={index === total! - 1}
 							size="small"
@@ -306,7 +295,6 @@ function UnpinnedFeedItem({
 	currentFeeds: AppBskyActorDefs.SavedFeed[];
 	setCurrentFeeds: React.Dispatch<React.SetStateAction<AppBskyActorDefs.SavedFeed[]>>;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const feedUri = feed.value;
 
@@ -328,7 +316,7 @@ function UnpinnedFeedItem({
 			<View style={[a.pr_lg, a.flex_row, a.align_center, a.gap_sm]}>
 				<Button
 					testID={`feed-${feedUri}-toggleSave`}
-					label={l`Remove from my feeds`}
+					label={m['common.action.removeFromFeeds']()}
 					onPress={onPressRemove}
 					size="small"
 					color="secondary"
@@ -339,7 +327,7 @@ function UnpinnedFeedItem({
 				</Button>
 				<Button
 					testID={`feed-${feed.type}-togglePin`}
-					label={l`Pin feed`}
+					label={m['common.action.pinFeed']()}
 					onPress={onTogglePinned}
 					size="small"
 					color="secondary"
@@ -382,9 +370,7 @@ function FollowingFeedCard() {
 				<FilterTimeline width={22} fill={colors.white} />
 			</View>
 			<View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
-				<Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>
-					<Trans context="feed-name">Following</Trans>
-				</Text>
+				<Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>{m['common.action.following']()}</Text>
 			</View>
 		</View>
 	);

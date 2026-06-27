@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import {
@@ -14,6 +13,8 @@ import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
 
+import { m } from '#/paraglide/messages';
+
 const HAS_SERVICE_WORKER = 'serviceWorker' in navigator;
 
 /**
@@ -21,7 +22,6 @@ const HAS_SERVICE_WORKER = 'serviceWorker' in navigator;
  * downloading, and an accented reload row once an update is waiting.
  */
 export function ServiceWorkerSection() {
-	const { t: l } = useLingui();
 	const status = useServiceWorkerStatus();
 
 	if (!HAS_SERVICE_WORKER) {
@@ -51,34 +51,37 @@ export function ServiceWorkerSection() {
 			return null;
 		}
 		case 'installing': {
-			row = busyRow(l`Installing app…`, l`Installing`);
+			row = busyRow(m['screens.settings.label.installingApp'](), m['screens.settings.label.installing']());
 
 			break;
 		}
 		case 'uninstalled': {
 			row = (
-				<Settings.ButtonRow label={l`Install app`} onPress={registerServiceWorker}>
+				<Settings.ButtonRow label={m['screens.settings.action.installApp']()} onPress={registerServiceWorker}>
 					<Settings.Icon icon={DownloadIcon} />
-					<Settings.Label titleText={<Trans>Install app</Trans>} />
+					<Settings.Label titleText={m['screens.settings.action.installApp']()} />
 				</Settings.ButtonRow>
 			);
 
 			break;
 		}
 		case 'update_installing': {
-			row = busyRow(l`Installing update…`, l`Installing update`);
+			row = busyRow(
+				m['screens.settings.label.installingUpdateEllipsis'](),
+				m['screens.settings.label.installingUpdate'](),
+			);
 
 			break;
 		}
 		case 'update_ready': {
 			row = (
 				<Settings.ButtonRow
-					label={l`Reload to update`}
+					label={m['screens.settings.action.reloadToUpdate']()}
 					color="primary_subtle"
 					onPress={applyServiceWorkerUpdate}
 				>
 					<Settings.Icon icon={ArrowRotateIcon} />
-					<Settings.Label titleText={<Trans>Update is available</Trans>} />
+					<Settings.Label titleText={m['screens.settings.update.available']()} />
 				</Settings.ButtonRow>
 			);
 

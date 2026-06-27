@@ -7,7 +7,6 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
 import { FeedTuner } from '#/lib/api/feed-manip';
@@ -21,6 +20,8 @@ import type { FeedPostSlice, FeedPostSliceItem } from '#/state/queries/post-feed
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
 import { useClients } from '#/state/session';
+
+import { m } from '#/paraglide/messages';
 
 const RQKEY_ROOT = 'feed-previews';
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds];
@@ -109,7 +110,6 @@ export function useFeedPreviews(
 	);
 
 	const uris = feeds.map((feed) => feed.uri);
-	const { t: l } = useLingui();
 	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 	const userInterests = aggregateUserInterests(preferences);
@@ -184,7 +184,7 @@ export function useFeedPreviews(
 					items.push({
 						type: 'preview:error',
 						key: 'error',
-						message: l`An error occurred while fetching the feed.`,
+						message: m['state.error.feedFetch'](),
 						error: cleanError(error),
 					});
 				} else if (isEmpty) {
@@ -334,7 +334,7 @@ export function useFeedPreviews(
 			}
 
 			return items;
-		}, [enabled, data, isFetched, isError, isPending, moderationOpts, l, error, processedPageCache]),
+		}, [enabled, data, isFetched, isError, isPending, moderationOpts, error, processedPageCache]),
 	};
 }
 

@@ -1,9 +1,8 @@
-import { useLingui } from '@lingui/react/macro';
-
 import { ArrowRotateClockwise_Stroke2_Corner0_Rounded as ArrowRotateClockwiseIcon } from '#/components/icons/ArrowRotate';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './ErrorMessage.css';
@@ -15,7 +14,6 @@ export function ErrorMessage({
 	message: string;
 	onPressTryAgain?: () => void;
 }) {
-	const { t: l } = useLingui();
 	return (
 		<div className={css.outer}>
 			<div className={css.iconBox}>
@@ -27,7 +25,12 @@ export function ErrorMessage({
 			</Text>
 
 			{onPressTryAgain && (
-				<button aria-label={l`Retry`} className={css.retry} onClick={onPressTryAgain} type="button">
+				<button
+					aria-label={m['common.action.retry']()}
+					className={css.retry}
+					onClick={onPressTryAgain}
+					type="button"
+				>
 					<ArrowRotateClockwiseIcon width={18} fill={colors.white} />
 				</button>
 			)}

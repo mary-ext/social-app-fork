@@ -8,12 +8,14 @@ import { formatCount } from '#/view/com/util/numeric/format';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import { useProfileHeader } from './Context';
 import * as css from './Metrics.css';
 
 /** Follower / following / post counts, the first two linking to their respective lists. */
 export function ProfileHeaderMetrics() {
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const {
 		state: { profile },
 	} = useProfileHeader();
@@ -39,7 +41,7 @@ export function ProfileHeaderMetrics() {
 			</InlineLinkText>
 			<InlineLinkText
 				color="text"
-				label={l`${profile.followsCount || 0} following`}
+				label={m['screens.profile.label.followingCount']({ count: profile.followsCount || 0 })}
 				to={makeProfileLink(profile, 'follows')}
 			>
 				<Text size="md" weight="semiBold">

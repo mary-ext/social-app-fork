@@ -15,6 +15,7 @@ import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './SystemMessageItem.css';
@@ -27,7 +28,7 @@ export function SystemMessageItem({
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 }) {
 	const t = useTheme();
-	const { i18n, t: l } = useLingui();
+	const { i18n } = useLingui();
 	const inviteLinkControl = useInviteLinkDialog();
 
 	const info = getSystemMessageInfo(item.message.data, relatedProfiles);
@@ -58,7 +59,7 @@ export function SystemMessageItem({
 				<Link
 					to={makeProfileLink(action.profile)}
 					label={text}
-					accessibilityHint={l`Opens profile`}
+					accessibilityHint={m['components.dms.a11y.opensProfile']()}
 					style={a.w_full}
 				>
 					{row}

@@ -3,7 +3,6 @@ import '#/styles/reset.css';
 import '#/styles/theme.css';
 
 import { Fragment, useEffect } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { Provider as HotkeysProvider } from '#/lib/hotkeys';
 import { initializeLanguageDetection } from '#/lib/language-detection';
@@ -38,6 +37,7 @@ import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEm
 import * as Toast from '#/components/Toast';
 import { ToastOutlet } from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
 import { Splash } from '#/Splash';
 
 import { Provider as HideBottomBarBorderProvider } from './lib/hooks/useHideBottomBarBorder';
@@ -45,14 +45,13 @@ import { Provider as HideBottomBarBorderProvider } from './lib/hooks/useHideBott
 function InnerApp() {
 	const { currentAccount, isSessionResuming, sessionResumeFailed } = useSession();
 	const theme = useColorModeTheme();
-	const { t: l } = useLingui();
 	const hasCheckedReferrer = useStarterPackEntry();
 
 	useEffect(() => {
 		if (sessionResumeFailed) {
-			Toast.show(l`Your session expired. Please sign in again.`, { type: 'info' });
+			Toast.show(m['common.error.sessionExpired'](), { type: 'info' });
 		}
-	}, [sessionResumeFailed, l]);
+	}, [sessionResumeFailed]);
 
 	return (
 		<Alf theme={theme}>

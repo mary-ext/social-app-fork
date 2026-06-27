@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { LayoutAnimation, Pressable, View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
@@ -21,11 +20,11 @@ import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/ico
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log'>) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const [expanded, setExpanded] = useState<string[]>([]);
 	const timeAgo = useGetTimeAgo();
 	const tick = useTickEveryMinute();
@@ -44,9 +43,7 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>System log</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.label.systemLog']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -68,8 +65,8 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 										a.gap_sm,
 									]}
 									onPress={toggler(entry.id)}
-									accessibilityLabel={l`View debug entry`}
-									accessibilityHint={l`Opens additional details for a debug entry`}
+									accessibilityLabel={m['screens.log.action.viewEntry']()}
+									accessibilityHint={m['screens.log.a11y.openDetails']()}
 								>
 									{entry.level === LogLevel.Warn || entry.level === LogLevel.Error ? (
 										<WarningIcon size="sm" fill={colors.negative_500} />

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
 import { cleanError } from '#/lib/strings/errors';
@@ -25,15 +25,15 @@ import {
 	useLiveNowConfig,
 	useUpsertLiveStatusMutation,
 } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 
 import * as styles from './GoLiveDialog.css';
 import { LinkPreview } from './LinkPreview';
 
 export function GoLiveDialog({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={l`Go Live`}>
+			<Dialog.Popup className={styles.popup} label={m['features.liveNow.action.goLive']()}>
 				<DialogInner handle={handle} profile={profile} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -45,7 +45,7 @@ export function GoLiveDialog({ handle, profile }: { handle: Dialog.DialogHandle;
 const DURATIONS = Array.from({ length: (4 * 60) / 5 }).map((_, i) => (i + 1) * 5);
 
 function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const [liveLink, setLiveLink] = useState('');
 	const [liveLinkError, setLiveLinkError] = useState('');
 	const [duration, setDuration] = useState(60);
@@ -93,13 +93,10 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 		<div className={styles.container}>
 			<div className={styles.header}>
 				<Text size="_2xl" weight="semiBold">
-					<Trans>Go Live</Trans>
+					{m['features.liveNow.action.goLive']()}
 				</Text>
 				<Text color="textContrastHigh" size="md">
-					<Trans>
-						Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see
-						information about your live event.
-					</Trans>
+					{m['features.liveNow.dialog.description']()}
 				</Text>
 			</div>
 			{moderationOpts && (
@@ -115,13 +112,11 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 			)}
 			<div className={styles.fields}>
 				<TextField.Root isInvalid={isSourceInvalid}>
-					<TextField.LabelText>
-						<Trans>Live link</Trans>
-					</TextField.LabelText>
+					<TextField.LabelText>{m['features.liveNow.label.liveLink']()}</TextField.LabelText>
 					<TextField.Input
 						autoCapitalize="none"
 						autoComplete="url"
-						label={l`Live link`}
+						label={m['features.liveNow.label.liveLink']()}
 						onBlur={() => {
 							// don't nag about an empty field — only flag a non-empty, non-URL value
 							if (liveLink.trim() && !parseLooseUrl(liveLink)) {
@@ -130,17 +125,17 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						}}
 						onChangeText={setLiveLink}
 						onFocus={() => setLiveLinkError('')}
-						placeholder={l`www.mylivestream.tv`}
+						placeholder={m['features.liveNow.label.linkPlaceholder']()}
 						value={liveLink}
 					/>
 				</TextField.Root>
 				{liveLinkError || linkMetaError ? (
 					<Admonition type="error">
-						{liveLinkError ? <Trans>This is not a valid link</Trans> : cleanError(linkMetaError)}
+						{liveLinkError ? m['features.liveNow.error.invalidLink']() : cleanError(linkMetaError)}
 					</Admonition>
 				) : (
 					<Admonition type="tip">
-						<Trans>The following services are enabled for your account: {allowedServices}</Trans>
+						{m['features.liveNow.hint.enabledServices']({ allowedServices })}
 					</Admonition>
 				)}
 
@@ -149,11 +144,9 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 			{hasLink && (
 				<div>
-					<TextField.LabelText>
-						<Trans>Go live for</Trans>
-					</TextField.LabelText>
+					<TextField.LabelText>{m['features.liveNow.label.goLiveFor']()}</TextField.LabelText>
 					<Select.Root onValueChange={onChangeDuration} value={String(duration)}>
-						<Select.Trigger label={l`Select duration`}>
+						<Select.Trigger label={m['features.liveNow.action.selectDuration']()}>
 							<Text>
 								{displayDuration(i18n, duration)}
 								{'  '}
@@ -198,27 +191,23 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					<Button
 						color="primary"
 						disabled={isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl}
-						label={l`Go Live`}
+						label={m['features.liveNow.action.goLive']()}
 						onClick={() => goLive()}
 						size="small"
 						variant="solid"
 					>
-						<ButtonText>
-							<Trans>Go Live</Trans>
-						</ButtonText>
+						<ButtonText>{m['features.liveNow.action.goLive']()}</ButtonText>
 						{isGoingLive && <ButtonIcon icon={Loader} />}
 					</Button>
 				)}
 				<Button
 					color="secondary"
-					label={l`Cancel`}
+					label={m['common.action.cancel']()}
 					onClick={() => handle.close()}
 					size="small"
 					variant="ghost"
 				>
-					<ButtonText>
-						<Trans>Cancel</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.cancel']()}</ButtonText>
 				</Button>
 			</div>
 		</div>

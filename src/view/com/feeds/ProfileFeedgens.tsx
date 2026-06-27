@@ -1,5 +1,4 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -18,6 +17,8 @@ import * as FeedCard from '#/components/FeedCard';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
+
+import { m } from '#/paraglide/messages';
 
 // only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const FEEDGEN_ITEM_HEIGHT_ESTIMATE = 120;
@@ -47,7 +48,6 @@ interface ProfileFeedgensProps {
 }
 
 export function ProfileFeedgens({ did, enabled, feedCount }: ProfileFeedgensProps): React.ReactNode {
-	const { t: l } = useLingui();
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useProfileFeedgensQuery(did, { enabled });
 	const isEmpty = !isPending && !data?.pages[0]?.feeds.length;
@@ -98,12 +98,7 @@ export function ProfileFeedgens({ did, enabled, feedCount }: ProfileFeedgensProp
 				return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
 			}
 			if (item === LOAD_MORE_ERROR_ITEM) {
-				return (
-					<LoadMoreRetryBtn
-						label={l`There was an issue fetching your lists. Tap here to try again.`}
-						onPress={onPressRetryLoadMore}
-					/>
-				);
+				return <LoadMoreRetryBtn label={m['common.error.fetchLists']()} onPress={onPressRetryLoadMore} />;
 			}
 			if (item === LOADING) {
 				return <FeedCard.LoadingPlaceholder count={feedCount} />;
@@ -111,13 +106,13 @@ export function ProfileFeedgens({ did, enabled, feedCount }: ProfileFeedgensProp
 			return (
 				<EmptyState
 					icon={HashtagWideIcon}
-					message={isSelf ? l`You haven't made any custom feeds yet.` : l`No custom feeds yet`}
+					message={isSelf ? m['view.feeds.empty.description']() : m['view.feeds.empty.title']()}
 					messageColor="textContrastMedium"
 					button={
 						isSelf
 							? {
-									label: l`Browse custom feeds`,
-									text: l`Browse custom feeds`,
+									label: m['view.feeds.action.browseCustomFeeds'](),
+									text: m['view.feeds.action.browseCustomFeeds'](),
 									onPress: () => navigation.navigate('Feeds' as never),
 									size: 'small',
 									color: 'secondary',

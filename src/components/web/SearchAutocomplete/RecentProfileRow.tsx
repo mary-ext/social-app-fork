@@ -1,6 +1,5 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Autocomplete } from '@base-ui/react/autocomplete';
-import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -9,6 +8,7 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { m } from '#/paraglide/messages';
 import type { SearchHistoryEntry } from '#/storage';
 
 import type { ListRow } from './model';
@@ -23,7 +23,6 @@ export function RecentProfileRow({
 	onRemoveRecent: (entry: SearchHistoryEntry) => void;
 	row: Extract<ListRow, { kind: 'recent-profile' }>;
 }) {
-	const { t } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const moderation = moderationOpts
 		? getDisplayRestrictions(moderateProfile(row.profile, moderationOpts), DisplayContext.ProfileMedia)
@@ -49,7 +48,7 @@ export function RecentProfileRow({
 				</span>
 			</Autocomplete.Item>
 			<RecentRemoveButton
-				label={t`Remove ${sanitizeHandle(row.profile.handle)} from recent searches`}
+				label={m['components.web.a11y.removeRecentSearch']({ query: sanitizeHandle(row.profile.handle) })}
 				onRemove={() => onRemoveRecent({ did: row.profile.did, kind: 'profile' })}
 			/>
 		</div>

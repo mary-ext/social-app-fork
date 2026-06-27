@@ -2,7 +2,7 @@ import { type ComponentProps, memo, useCallback, useEffect, useMemo, useRef, use
 import { TextInput, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 
@@ -25,6 +25,7 @@ import { InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type WebViewProps = ComponentProps<typeof View> & {
@@ -72,7 +73,6 @@ let lastSearchText = '';
 const FOR_YOU_TAB = 'all';
 
 function DialogInner() {
-	const { t: l } = useLingui();
 	const rawInterestsDisplayNames = useInterestsDisplayNames();
 	const { data: preferences } = usePreferencesQuery();
 	const personalizedInterests = preferences?.interests?.tags;
@@ -87,10 +87,10 @@ function DialogInner() {
 	);
 	const interestsDisplayNames = useMemo(
 		() => ({
-			[FOR_YOU_TAB]: l`For You`,
+			[FOR_YOU_TAB]: m['common.label.forYou'](),
 			...rawInterestsDisplayNames,
 		}),
-		[l, rawInterestsDisplayNames],
+		[rawInterestsDisplayNames],
 	);
 	const [selectedInterest, setSelectedInterest] = useState(() => lastSelectedInterest || FOR_YOU_TAB);
 	const [searchText, setSearchText] = useState(lastSearchText);
@@ -147,7 +147,7 @@ function DialogInner() {
 			_items.push({
 				type: 'empty',
 				key: 'empty',
-				message: l`We're having network issues, try again`,
+				message: m['components.dialogs.error.network'](),
 			});
 		} else {
 			const seen = new Set<string>();
@@ -168,12 +168,11 @@ function DialogInner() {
 		}
 
 		if (hasSearchText && !isFetchingSearchResults && !_items.length && !isSearchResultsError) {
-			_items.push({ type: 'empty', key: 'empty', message: l`No results` });
+			_items.push({ type: 'empty', key: 'empty', message: m['common.empty.noResults']() });
 		}
 
 		return _items;
 	}, [
-		l,
 		suggestions,
 		suggestionsError,
 		isFetchingSuggestions,
@@ -310,17 +309,16 @@ let Header = ({
 };
 
 function HeaderTop() {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const control = Dialog.useDialogContext();
 	return (
 		<View style={[a.px_lg, a.relative, a.flex_row, a.justify_between, a.align_center]}>
 			<Text style={[a.z_10, a.text_lg, a.font_bold, a.leading_tight, t.atoms.text_contrast_high]}>
-				<Trans>Find people to follow</Trans>
+				{m['components.suggestedFollowsDialog.title']()}
 			</Text>
 			{
 				<Button
-					label={l`Close`}
+					label={m['common.action.close']()}
 					size="small"
 					shape="round"
 					variant={'ghost'}
@@ -471,7 +469,6 @@ function SearchInput({
 	defaultValue: string;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { state: hovered, onIn: onMouseEnter, onOut: onMouseLeave } = useInteractionState();
 	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
 	const interacted = hovered || focused;
@@ -487,7 +484,7 @@ function SearchInput({
 			<SearchIcon size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
-				placeholder={l`Search by name or interest`}
+				placeholder={m['components.suggestedFollowsDialog.searchPlaceholder']()}
 				defaultValue={defaultValue}
 				onChangeText={onChangeText}
 				onFocus={onFocus}
@@ -506,8 +503,8 @@ function SearchInput({
 				autoCorrect={false}
 				autoComplete="off"
 				autoCapitalize="none"
-				accessibilityLabel={l`Search profiles`}
-				accessibilityHint={l`Searches for profiles`}
+				accessibilityLabel={m['common.action.searchProfiles']()}
+				accessibilityHint={m['common.a11y.searchProfiles']()}
 			/>
 		</View>
 	);

@@ -5,7 +5,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -15,6 +15,8 @@ import { Text } from '#/components/Text';
 import { AvatarStack } from '#/components/web/AvatarStack';
 import * as css from '#/components/web/KnownFollowers.css';
 import { Link } from '#/components/web/Link';
+
+import { m } from '#/paraglide/messages';
 
 const AVI_SIZE = 30;
 
@@ -67,8 +69,6 @@ function KnownFollowersInner({
 	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
 }) {
-	const { t: l } = useLingui();
-
 	const slice = cachedKnownFollowers.followers.slice(0, 3).map((f) => {
 		const moderation = moderateProfile(f, moderationOpts);
 		return {
@@ -93,7 +93,7 @@ function KnownFollowersInner({
 	return (
 		<Link
 			className={css.link}
-			label={l`Press to view followers of this account that you also follow`}
+			label={m['common.a11y.pressToViewKnownFollowers']()}
 			to={makeProfileLink(profile, 'known-followers')}
 		>
 			<AvatarStack

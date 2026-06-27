@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
 
@@ -10,12 +9,13 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
+import { m } from '#/paraglide/messages';
+
 import { useProfileHeader } from './Context';
 import { EditProfileDialog } from './EditProfileDialog';
 
 /** Follow / Unfollow / Follow back, driven by the lifted follow actions. */
 export function FollowButton() {
-	const { t: l } = useLingui();
 	const {
 		actions,
 		state: { profile },
@@ -25,19 +25,21 @@ export function FollowButton() {
 	return (
 		<Button
 			color={following ? 'secondary' : 'primary'}
-			label={following ? l`Unfollow ${profile.handle}` : l`Follow ${profile.handle}`}
+			label={
+				following
+					? m['screens.profile.action.unfollow']({ handle: profile.handle })
+					: m['common.a11y.follow']({ handle: profile.handle })
+			}
 			onClick={following ? actions.unfollow : actions.follow}
 			size="small"
 		>
 			{!following && <ButtonIcon icon={Plus} />}
 			<ButtonText>
-				{following ? (
-					<Trans>Following</Trans>
-				) : profile.viewer?.followedBy ? (
-					<Trans>Follow back</Trans>
-				) : (
-					<Trans>Follow</Trans>
-				)}
+				{following
+					? m['common.action.following']()
+					: profile.viewer?.followedBy
+						? m['common.action.followBack']()
+						: m['common.action.follow']()}
 			</ButtonText>
 		</Button>
 	);
@@ -45,7 +47,6 @@ export function FollowButton() {
 
 /** Opens the edit-profile dialog (shown on your own profile). */
 export function EditProfileButton() {
-	const { t: l } = useLingui();
 	const {
 		state: { profile },
 	} = useProfileHeader();
@@ -55,11 +56,9 @@ export function EditProfileButton() {
 		<>
 			<Dialog.Trigger
 				handle={editProfileHandle}
-				render={<Button label={l`Edit profile`} color="secondary" size="small" />}
+				render={<Button label={m['screens.profile.action.editProfile']()} color="secondary" size="small" />}
 			>
-				<ButtonText>
-					<Trans>Edit Profile</Trans>
-				</ButtonText>
+				<ButtonText>{m['screens.profile.title.editProfile']()}</ButtonText>
 			</Dialog.Trigger>
 			<EditProfileDialog profile={profile} handle={editProfileHandle} />
 		</>
@@ -68,7 +67,6 @@ export function EditProfileButton() {
 
 /** Unblocks the profile after a confirmation prompt. */
 export function UnblockButton() {
-	const { t: l } = useLingui();
 	const {
 		actions,
 		meta: { hasSession },
@@ -80,21 +78,19 @@ export function UnblockButton() {
 			<Button
 				color="secondary"
 				disabled={!hasSession}
-				label={l`Unblock`}
+				label={m['common.action.unblock']()}
 				onClick={() => unblockHandle.open(null)}
 				size="small"
 			>
-				<ButtonText>
-					<Trans context="action">Unblock</Trans>
-				</ButtonText>
+				<ButtonText>{m['common.action.unblock']()}</ButtonText>
 			</Button>
 			<Prompt.Basic
 				confirmButtonColor="negative"
-				confirmButtonCta={l`Unblock`}
-				description={l`The account will be able to interact with you after unblocking.`}
+				confirmButtonCta={m['common.action.unblock']()}
+				description={m['common.hint.unblockInteract']()}
 				handle={unblockHandle}
 				onConfirm={() => void actions.unblock()}
-				title={l`Unblock Account?`}
+				title={m['screens.profile.dialog.unblockTitle']()}
 			/>
 		</>
 	);

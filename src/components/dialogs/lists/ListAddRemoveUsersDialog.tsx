@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui, Trans } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -21,6 +20,8 @@ import { type ProfileItem, SearchablePeopleList } from '#/components/dialogs/Sea
 import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 export function ListAddRemoveUsersDialog({
 	control,
@@ -46,7 +47,6 @@ function DialogInner({
 	list: AppBskyGraphDefs.ListView;
 	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void | undefined;
 }) {
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 
 	const renderProfileCard = useCallback(
@@ -58,7 +58,12 @@ function DialogInner({
 		[onChange, list, moderationOpts],
 	);
 
-	return <SearchablePeopleList title={l`Add people to list`} renderProfileCard={renderProfileCard} />;
+	return (
+		<SearchablePeopleList
+			title={m['components.dialogs.list.addPeopleTitle']()}
+			renderProfileCard={renderProfileCard}
+		/>
+	);
 }
 
 function UserResult({
@@ -72,7 +77,6 @@ function UserResult({
 	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void | undefined;
 	moderationOpts?: ModerationOptions;
 }) {
-	const { t: l } = useLingui();
 	const { data: lists } = useListsWithMembershipQuery({ actor: profile.did });
 	// undefined while pending, false once loaded and not a member, else the membership record uri
 	const membership = useMemo<string | false | undefined>(
@@ -82,7 +86,7 @@ function UserResult({
 	const { mutate: listMembershipAdd, isPending: isAddingPending } = useListMembershipAddMutation({
 		subject: profile,
 		onSuccess: () => {
-			Toast.show(l`Added to list`);
+			Toast.show(m['components.dialogs.list.addedToast']());
 			onChange?.('add', profile);
 		},
 		onError: (e) =>
@@ -92,7 +96,7 @@ function UserResult({
 	});
 	const { mutate: listMembershipRemove, isPending: isRemovingPending } = useListMembershipRemoveMutation({
 		onSuccess: () => {
-			Toast.show(l`Removed from list`);
+			Toast.show(m['components.dialogs.list.removedToast']());
 			onChange?.('remove', profile);
 		},
 		onError: (e) =>
@@ -132,7 +136,11 @@ function UserResult({
 				</View>
 				{membership !== undefined && (
 					<Button
-						label={membership === false ? l`Add user to list` : l`Remove user from list`}
+						label={
+							membership === false
+								? m['components.dialogs.list.addUserTitle']()
+								: m['components.dialogs.list.removeUser']()
+						}
 						onPress={onToggleMembership}
 						disabled={isMutating}
 						size="small"
@@ -142,7 +150,9 @@ function UserResult({
 						{isMutating ? (
 							<ButtonIcon icon={Loader} />
 						) : (
-							<ButtonText>{membership === false ? <Trans>Add</Trans> : <Trans>Remove</Trans>}</ButtonText>
+							<ButtonText>
+								{membership === false ? m['common.action.add']() : m['common.action.remove']()}
+							</ButtonText>
 						)}
 					</Button>
 				)}

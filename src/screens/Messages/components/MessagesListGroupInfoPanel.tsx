@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
@@ -21,6 +21,8 @@ import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/componen
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 import { InviteLinkDialog } from './InviteLinkDialog';
 
 export function MessagesListGroupInfoPanel({
@@ -29,7 +31,6 @@ export function MessagesListGroupInfoPanel({
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const convoId = convo.view.id;
 
@@ -44,7 +45,7 @@ export function MessagesListGroupInfoPanel({
 		},
 		onError: (e) => {
 			logger.error('Failed to add group chat members', { message: e });
-			Toast.show(l`Failed to add members`, { type: 'error' });
+			Toast.show(m['screens.messages.error.addMembers'](), { type: 'error' });
 		},
 	});
 
@@ -56,7 +57,7 @@ export function MessagesListGroupInfoPanel({
 
 	let names: React.ReactNode = null;
 	if (members.length === 1) {
-		names = <Trans>New chat with {createSanitizedDisplayName(members[0]!)}</Trans>;
+		names = m['screens.messages.title.newChatOne']({ name: createSanitizedDisplayName(members[0]!) });
 	} else if (members.length === 2) {
 		names = (
 			<Trans>
@@ -104,13 +105,11 @@ export function MessagesListGroupInfoPanel({
 							<Button
 								color="secondary"
 								size="small"
-								label={l`Click here to add people to this group chat`}
+								label={m['screens.messages.a11y.addPeople']()}
 								onPress={() => addMembersControl.open()}
 							>
 								<ButtonIcon icon={PersonPlusIcon} />
-								<ButtonText>
-									<Trans>Add people</Trans>
-								</ButtonText>
+								<ButtonText>{m['common.action.addPeople']()}</ButtonText>
 							</Button>
 						) : null}
 						{isJoinLinkEnabled ? (
@@ -119,15 +118,13 @@ export function MessagesListGroupInfoPanel({
 								size="small"
 								label={
 									isOwner
-										? l`Click here to create or manage an invite link for this group chat`
-										: l`Click here to view the invite link for this group chat`
+										? m['screens.messages.a11y.manageInviteLink']()
+										: m['screens.messages.a11y.viewInviteLink']()
 								}
 								onPress={inviteLinkControl.open}
 							>
 								<ButtonIcon icon={ChainLinkIcon} />
-								<ButtonText>
-									<Trans>Invite link</Trans>
-								</ButtonText>
+								<ButtonText>{m['screens.messages.label.inviteLink']()}</ButtonText>
 							</Button>
 						) : null}
 					</View>
@@ -146,7 +143,7 @@ export function MessagesListGroupInfoPanel({
 				<Dialog.Handle />
 				<AddMembersFlow
 					convo={convo}
-					title={l`Add people`}
+					title={m['common.action.addPeople']()}
 					onAddMembers={(members, profiles) => addGroupMembers({ members, profiles })}
 				/>
 			</Dialog.Outer>

@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -20,11 +19,11 @@ import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { m } from '#/paraglide/messages';
+
 export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'direct' }> }) {
 	const navigation = useNavigation<NavigationProp>();
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 
@@ -60,15 +59,13 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 				<Button
 					color="secondary"
 					size="small"
-					label={l`Go to user's profile`}
+					label={m['common.a11y.goToProfile']()}
 					onPress={() => {
 						navigation.navigate('Profile', { name: profileLink });
 					}}
 				>
 					<ButtonIcon icon={PersonIcon} />
-					<ButtonText>
-						<Trans>Go to profile</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.goToProfile']()}</ButtonText>
 				</Button>
 			</View>
 		</View>

@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { Pressable, View, type ViewStyle } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 
@@ -14,6 +13,8 @@ import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { m } from '#/paraglide/messages';
+
 type WebViewStyle = ViewStyle & {
 	cursor?: 'pointer';
 	outline?: 'none';
@@ -25,7 +26,6 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 
 export function ComposerPrompt() {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { openComposer } = useOpenComposer();
 	const profile = useCurrentAccountProfile();
 	const [hover, setHover] = useState(false);
@@ -47,8 +47,8 @@ export function ComposerPrompt() {
 			onPress={onPress}
 			android_ripple={null}
 			accessibilityRole="button"
-			accessibilityLabel={l`Compose new post`}
-			accessibilityHint={l`Opens the post composer`}
+			accessibilityLabel={m['common.action.composePost']()}
+			accessibilityHint={m['view.feeds.a11y.opensComposer']()}
 			onPointerEnter={() => setHover(true)}
 			onPointerLeave={() => setHover(false)}
 			style={({ pressed }) => [
@@ -83,7 +83,7 @@ export function ComposerPrompt() {
 				]}
 			>
 				<Text style={[t.atoms.text_contrast_medium, a.text_md, { includeFontPadding: false }]}>
-					<Trans>What's up?</Trans>
+					{m['common.label.whatsUp']()}
 				</Text>
 				<View style={[a.flex_row, a.gap_md]}>
 					<Button
@@ -91,8 +91,8 @@ export function ComposerPrompt() {
 							e.stopPropagation();
 							void onPressImage();
 						}}
-						label={l`Add image`}
-						accessibilityHint={l`Opens image picker`}
+						label={m['view.feeds.action.addImage']()}
+						accessibilityHint={m['view.feeds.a11y.opensImagePicker']()}
 						variant="ghost"
 						shape="round"
 					>

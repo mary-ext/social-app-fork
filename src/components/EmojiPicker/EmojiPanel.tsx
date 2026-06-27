@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import type { Emoji as DataEmoji } from '@emoji-mart/data';
-import { useLingui } from '@lingui/react/macro';
 import { useQuery } from '@tanstack/react-query';
 
 import { definite } from '#/lib/functions';
 
+import { m } from '#/paraglide/messages';
 import { type SkinTone, useEmojiSkinTone, useRecentEmojis } from '#/storage/hooks/emoji';
 
 import { CategoryNav } from './components/CategoryNav';
@@ -24,7 +24,6 @@ import { type EmojiCell, makeCell, toSelection } from './util';
  * and a recently-used section. reports each selection plus whether Shift was held.
  */
 export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, shiftHeld: boolean) => void }) {
-	const { t } = useLingui();
 	const { data } = useQuery(emojiDataQuery());
 	const [query, setQuery] = useState('');
 	const [skinTone, setSkinTone] = useEmojiSkinTone();
@@ -93,8 +92,8 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 
 				<Autocomplete.List className={styles.list}>
 					<Autocomplete.Empty>
-						{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text -- web DOM text, not RN text */}
-						<div className={styles.empty}>{t`No emojis found`}</div>
+						{}
+						<div className={styles.empty}>{m['components.emojiPicker.empty']()}</div>
 					</Autocomplete.Empty>
 
 					<EmojiGrid

@@ -7,7 +7,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -21,6 +20,8 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Toggle from '#/components/web/forms/Toggle';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './WizardListCard.css';
 
@@ -47,8 +48,6 @@ function WizardListCard({
 	disabled?: boolean;
 	moderationUi: DisplayRestrictions;
 }) {
-	const { t: l } = useLingui();
-
 	const rowContent = (
 		<>
 			<UserAvatar size={40} avatar={avatar} moderation={moderationUi} type={type} />
@@ -69,7 +68,11 @@ function WizardListCard({
 				checked={included}
 				onChange={onPress}
 				disabled={disabled}
-				label={included ? l`Remove ${displayName} from starter pack` : l`Add ${displayName} to starter pack`}
+				label={
+					included
+						? m['components.starterPack.action.remove']({ displayName })
+						: m['components.starterPack.action.add']({ displayName })
+				}
 				className={css.row}
 			>
 				{rowContent}
@@ -84,10 +87,14 @@ function WizardListCard({
 		<div className={css.row}>
 			{rowContent}
 			{!disabled && (
-				<Button label={l`Remove`} variant="solid" color="secondary" size="small" onClick={onPress}>
-					<ButtonText>
-						<Trans>Remove</Trans>
-					</ButtonText>
+				<Button
+					label={m['common.action.remove']()}
+					variant="solid"
+					color="secondary"
+					size="small"
+					onClick={onPress}
+				>
+					<ButtonText>{m['common.action.remove']()}</ButtonText>
 				</Button>
 			)}
 		</div>

@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
@@ -35,6 +35,7 @@ import { ListFooter } from '#/components/Lists';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
@@ -85,9 +86,7 @@ export function MessagesInboxScreenInner({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content align="left">
-					<Layout.Header.TitleText>
-						<Trans>Chat requests</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.messages.title.chatRequests']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				{hasUnreadConvos ? <MarkAsReadHeaderButton /> : <Layout.Header.Slot />}
 			</Layout.Header.Outer>
@@ -161,7 +160,7 @@ function RequestList({
 								<View style={[a.pt_3xl, a.align_center]}>
 									<CircleInfoIcon width={48} fill={colors.textContrastLow} />
 									<Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
-										<Trans>Whoops!</Trans>
+										{m['common.error.whoops']()}
 									</Text>
 									<Text
 										style={[
@@ -173,18 +172,16 @@ function RequestList({
 											{ maxWidth: 360 },
 										]}
 									>
-										{cleanError(error) || l`Failed to load conversations`}
+										{cleanError(error) || m['screens.messages.error.loadConversations']()}
 									</Text>
 
 									<Button
-										label={l`Reload conversations`}
+										label={m['screens.messages.action.reloadConversations']()}
 										size="small"
 										color="secondary_inverted"
 										onPress={() => void refetch()}
 									>
-										<ButtonText>
-											<Trans>Retry</Trans>
-										</ButtonText>
+										<ButtonText>{m['common.action.retry']()}</ButtonText>
 										<ButtonIcon icon={RetryIcon} />
 									</Button>
 								</View>
@@ -203,8 +200,8 @@ function RequestList({
 									isWithinSplitView
 										? undefined
 										: {
-												label: l`Back to Chats`,
-												text: l`Back`,
+												label: m['screens.messages.action.backToChats'](),
+												text: m['common.action.back'](),
 												onPress: () => {
 													if (navigation.canGoBack()) {
 														navigation.goBack();
@@ -266,26 +263,28 @@ function renderItem({ item }: { item: RequestItem }) {
 }
 
 function MarkAsReadHeaderButton() {
-	const { t: l } = useLingui();
 	const { mutate: markAllRead } = useUpdateAllRead('request', {
 		onMutate: () => {
-			Toast.show(l`Marked all as read`, {
+			Toast.show(m['screens.messages.toast.markedAllRead'](), {
 				type: 'success',
 			});
 		},
 		onError: () => {
-			Toast.show(l`Failed to mark all requests as read`, {
+			Toast.show(m['screens.messages.error.markAllRead'](), {
 				type: 'error',
 			});
 		},
 	});
 
 	return (
-		<Button label={l`Mark all as read`} size="small" color="secondary" onPress={() => markAllRead()}>
+		<Button
+			label={m['screens.messages.action.markAllRead']()}
+			size="small"
+			color="secondary"
+			onPress={() => markAllRead()}
+		>
 			<ButtonIcon icon={CheckIcon} />
-			<ButtonText>
-				<Trans>Mark all as read</Trans>
-			</ButtonText>
+			<ButtonText>{m['screens.messages.action.markAllRead']()}</ButtonText>
 		</Button>
 	);
 }

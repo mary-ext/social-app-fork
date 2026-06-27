@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
@@ -14,6 +14,8 @@ import {
 	useModerationDetailsDialogControl,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './ScreenHider.css';
 
 export function ScreenHider({
@@ -26,7 +28,6 @@ export function ScreenHider({
 	modui: DisplayRestrictions;
 	className?: string;
 }>) {
-	const { t: l } = useLingui();
 	const [override, setOverride] = useState(false);
 	const navigation = useNavigation<NavigationProp>();
 	const control = useModerationDetailsDialogControl();
@@ -49,11 +50,11 @@ export function ScreenHider({
 				</div>
 			</div>
 			<Text className={css.title} size="_4xl" weight="semiBold">
-				{isNoPwi ? <Trans>Sign-in Required</Trans> : <Trans>Content Warning</Trans>}
+				{isNoPwi ? m['common.dialog.signInRequiredTitle']() : m['common.label.contentWarning']()}
 			</Text>
 			{isNoPwi ? (
 				<Text className={css.body} color="textContrastMedium" size="lg">
-					<Trans>This account has requested that users sign in to view their profile.</Trans>
+					{m['components.moderation.label.signInToView']()}
 				</Text>
 			) : (
 				<Text className={css.body} color="textContrastMedium" size="lg">
@@ -62,12 +63,12 @@ export function ScreenHider({
 						{desc.name}.{' '}
 					</Text>
 					<Dialog.Trigger
-						aria-label={l`Learn more about this warning`}
+						aria-label={m['components.moderation.action.learnMoreWarning']()}
 						className={css.learnMore}
 						handle={control}
 					>
 						<Text color="primary_500" size="lg">
-							<Trans>Learn More</Trans>
+							{m['components.moderation.action.learnMore']()}
 						</Text>
 					</Dialog.Trigger>
 				</Text>
@@ -78,7 +79,7 @@ export function ScreenHider({
 				<Button
 					className={css.pill}
 					color="primary"
-					label={l`Go back`}
+					label={m['common.action.goBack']()}
 					onClick={() => {
 						if (navigation.canGoBack()) {
 							navigation.goBack();
@@ -89,22 +90,18 @@ export function ScreenHider({
 					size="large"
 					variant="solid"
 				>
-					<ButtonText>
-						<Trans>Go back</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.goBack']()}</ButtonText>
 				</Button>
 				{!modui.noOverride && (
 					<Button
 						className={css.pill}
 						color="secondary"
-						label={l`Show anyway`}
+						label={m['common.action.showAnyway']()}
 						onClick={() => setOverride((v) => !v)}
 						size="large"
 						variant="solid"
 					>
-						<ButtonText>
-							<Trans>Show anyway</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.showAnyway']()}</ButtonText>
 					</Button>
 				)}
 			</div>

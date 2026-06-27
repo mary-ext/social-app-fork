@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollView, View, type ViewStyle } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
@@ -20,6 +19,8 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import * as ProfileCard from '#/components/ProfileCard';
 import { SuggestedFollowsDialog } from '#/components/suggested-follows-dialog';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 const MOBILE_CARD_WIDTH = 165;
 const FINAL_CARD_WIDTH = 120;
@@ -166,7 +167,6 @@ export function ProfileGrid({
 	onRequestHide?: () => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const { gtMobile } = useBreakpoints();
 	const followDialogControl = useDialogControl();
@@ -215,7 +215,7 @@ export function ProfileGrid({
 									<ProfileCard.Outer>
 										{onDismiss && (
 											<Button
-												label={l`Dismiss this suggestion`}
+												label={m['components.feedInterstitials.action.dismiss']()}
 												onPress={(e) => {
 													e.preventDefault();
 													onDismiss(profile.actor.did);
@@ -291,10 +291,10 @@ export function ProfileGrid({
 				pointerEvents={'box-none'}
 			>
 				<Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
-					<Trans>Suggested for you</Trans>
+					{m['components.feedInterstitials.title']()}
 				</Text>
 				<Button
-					label={l`See more suggested profiles`}
+					label={m['components.feedInterstitials.a11y.seeMore']()}
 					onPress={() => {
 						followDialogControl.open();
 					}}
@@ -310,7 +310,7 @@ export function ProfileGrid({
 								},
 							]}
 						>
-							<Trans>See more</Trans>
+							{m['components.feedInterstitials.action.seeMore']()}
 						</Text>
 					)}
 				</Button>
@@ -342,11 +342,9 @@ export function ProfileGrid({
 }
 
 function SeeMoreSuggestedProfilesCard({ onPress }: { onPress: () => void }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Button
-			label={l`Browse more accounts`}
+			label={m['components.feedInterstitials.action.browseMore']()}
 			onPress={onPress}
 			style={[
 				a.flex_col,
@@ -360,7 +358,7 @@ function SeeMoreSuggestedProfilesCard({ onPress }: { onPress: () => void }) {
 		>
 			<ButtonIcon icon={ArrowRight} size="lg" />
 			<ButtonText style={[a.text_md, a.font_medium, a.leading_snug, a.text_center]}>
-				<Trans>See more</Trans>
+				{m['components.feedInterstitials.action.seeMore']()}
 			</ButtonText>
 		</Button>
 	);

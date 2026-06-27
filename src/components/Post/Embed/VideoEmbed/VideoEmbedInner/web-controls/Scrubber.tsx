@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -8,6 +7,7 @@ import { clamp } from '#/lib/numbers';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 
 import { IS_WEB_FIREFOX, IS_WEB_TOUCH_DEVICE } from '#/env';
+import { m } from '#/paraglide/messages';
 
 import * as styles from './Scrubber.css';
 import { formatTime } from './utils';
@@ -33,7 +33,6 @@ export function Scrubber({
 	togglePlayPause: () => void;
 	drawFocus: () => void;
 }) {
-	const { t: l } = useLingui();
 	const [scrubberActive, setScrubberActive] = useState(false);
 	const { state: hovered, onIn: onStartHover, onOut: onEndHover } = useInteractionState();
 	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
@@ -171,12 +170,15 @@ export function Scrubber({
 				</div>
 				<div
 					ref={circleRef}
-					aria-label={l`Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause`}
+					aria-label={m['components.post.a11y.seekSlider']()}
 					role="slider"
 					aria-valuemax={duration}
 					aria-valuemin={0}
 					aria-valuenow={currentTime}
-					aria-valuetext={l`${formatTime(currentTime)} of ${formatTime(duration)}`}
+					aria-valuetext={m['components.post.a11y.timeProgress']({
+						currentTime: formatTime(currentTime),
+						duration: formatTime(duration),
+					})}
 					tabIndex={0}
 					onFocus={onFocus}
 					onBlur={onBlur}

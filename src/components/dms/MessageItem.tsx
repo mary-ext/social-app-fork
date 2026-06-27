@@ -38,6 +38,8 @@ import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 import { DateDivider } from './DateDivider';
 import * as css from './MessageItem.css';
 import { MessageItemEmbed } from './MessageItemEmbed';
@@ -247,14 +249,17 @@ let MessageItem = ({
 			const reaction = reactions[0]!;
 			const sender = reaction.sender;
 			if (sender.did === currentAccount?.did) {
-				return l`You reacted ${reaction.value}`;
+				return m['components.dms.update.youReacted']({ value: reaction.value });
 			} else {
 				const senderDid = reaction.sender.did;
 				const memberSender = relatedProfiles.get(senderDid);
 				if (memberSender) {
-					return l`${createSanitizedDisplayName(memberSender)} reacted ${reaction.value}`;
+					return m['components.dms.reaction.reactedBy']({
+						name: createSanitizedDisplayName(memberSender),
+						reaction: reaction.value,
+					});
 				}
-				return l`Someone reacted ${reaction.value}`;
+				return m['components.dms.update.someoneReacted']({ value: reaction.value });
 			}
 		}
 		return l`${plural(reactions.length, {
@@ -278,7 +283,7 @@ let MessageItem = ({
 					<Pressable
 						accessible={true}
 						accessibilityLabel={reactionsLabel}
-						accessibilityHint={isGroupChat ? l`Tap to view reactions` : undefined}
+						accessibilityHint={isGroupChat ? m['components.dms.a11y.tapToViewReactions']() : undefined}
 						style={[
 							a.flex_row,
 							a.gap_2xs,
@@ -411,7 +416,7 @@ let MessageItem = ({
 									)}
 									{rt.text.length > 0 && (
 										<View
-											accessibilityHint={l`Double tap or long press the message to add a reaction`}
+											accessibilityHint={m['components.dms.hint.addReaction']()}
 											style={[
 												!isFromSelf && isGroupChat && a.ml_sm,
 												!isOnlyEmoji(message.text) && [
@@ -480,8 +485,6 @@ function MessageItemMetadata({
 	style: StyleProp<TextStyle>;
 }): React.ReactNode {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const handleRetry = (e: GestureResponderEvent) => {
 		if (item.type === 'pending-message' && item.retry) {
 			e.preventDefault();
@@ -496,19 +499,17 @@ function MessageItemMetadata({
 		case 'pending-message':
 			return item.failed ? (
 				<Text style={[a.text_xs, a.my_2xs, { color: errorColor }, style]}>
-					<Text style={[a.text_xs, { color: errorColor }]}>
-						<Trans>Message failed to send.</Trans>
-					</Text>
+					<Text style={[a.text_xs, { color: errorColor }]}>{m['components.dms.error.sendFailed']()}</Text>
 					{item.retry && (
 						<>
 							{' '}
 							<InlineLinkText
-								label={l`Click to retry failed message`}
+								label={m['components.dms.action.retryFailed']()}
 								to="#"
 								onPress={handleRetry}
 								style={[a.text_xs, { color: errorColor }]}
 							>
-								<Trans>Tap to retry</Trans>
+								{m['components.dms.a11y.tapToRetry']()}
 							</InlineLinkText>
 							.
 						</>
@@ -528,7 +529,6 @@ function BlockedPlaceholder({
 	profile: Shadow<ChatBskyActorDefs.ProfileViewBasic>;
 	style?: StyleProp<ViewStyle>;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const control = Prompt.usePromptControl();
 	const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
@@ -539,10 +539,10 @@ function BlockedPlaceholder({
 				style={[{ maxWidth: '80%' }, a.self_start]}
 				label={
 					profile.viewer?.blocking
-						? l`This message is hidden because you are blocking this user.`
-						: l`This message is hidden because this user is blocking you.`
+						? m['components.dms.error.messageHiddenYouBlocking']()
+						: m['components.dms.error.messageHiddenBlockingYou']()
 				}
-				accessibilityHint={l`Tap for details`}
+				accessibilityHint={m['components.dms.a11y.tapForDetails']()}
 				onPress={() => control.open()}
 			>
 				<View
@@ -560,11 +560,9 @@ function BlockedPlaceholder({
 					]}
 				>
 					<Text style={[a.text_sm, a.leading_snug, a.italic, t.atoms.text_contrast_medium]}>
-						{profile.viewer?.blocking ? (
-							<Trans>This message is hidden because you are blocking this user.</Trans>
-						) : (
-							<Trans>This message is hidden because this user is blocking you.</Trans>
-						)}
+						{profile.viewer?.blocking
+							? m['components.dms.error.messageHiddenYouBlocking']()
+							: m['components.dms.error.messageHiddenBlockingYou']()}
 					</Text>
 				</View>
 			</Button>
@@ -572,22 +570,24 @@ function BlockedPlaceholder({
 				<Prompt.Content>
 					<Prompt.TitleText>
 						{profile.viewer?.blocking ? (
-							<Trans>You are blocking {sanitizeHandle(profile.handle, '@')}</Trans>
+							m['components.dms.error.youAreBlocking']({ handle: sanitizeHandle(profile.handle, '@') })
 						) : (
 							<Trans>{sanitizeHandle(profile.handle, '@')} is blocking you</Trans>
 						)}
 					</Prompt.TitleText>
 					<Prompt.DescriptionText>
-						{profile.viewer?.blocking ? (
-							<Trans>Messages from this person are hidden while you are blocking them.</Trans>
-						) : (
-							<Trans>Messages from this person are hidden while they are blocking you.</Trans>
-						)}
+						{profile.viewer?.blocking
+							? m['components.dms.label.hiddenYouBlocking']()
+							: m['components.dms.label.hiddenBlockingYou']()}
 					</Prompt.DescriptionText>
 					<Prompt.Actions>
-						<Prompt.Action onPress={() => {}} cta={l`Okay`} color="primary" />
+						<Prompt.Action onPress={() => {}} cta={m['common.action.okay']()} color="primary" />
 						{profile.viewer?.blocking && !profile.viewer.blockingByList && (
-							<Prompt.Action onPress={() => void queueUnblock()} cta={l`Unblock`} color="secondary" />
+							<Prompt.Action
+								onPress={() => void queueUnblock()}
+								cta={m['common.action.unblock']()}
+								color="secondary"
+							/>
 						)}
 					</Prompt.Actions>
 				</Prompt.Content>
@@ -619,7 +619,6 @@ function ReplyCaption({
 	onPress: () => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did;
@@ -632,7 +631,7 @@ function ReplyCaption({
 
 	return (
 		<Button
-			label={l`Scroll to the message this is replying to`}
+			label={m['components.dms.a11y.scrollToReply']()}
 			onPress={onPress}
 			style={[
 				a.w_full,
@@ -650,11 +649,11 @@ function ReplyCaption({
 			<Text style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]} numberOfLines={1} emoji>
 				{isFromSelf ? (
 					originalSenderIsSelf ? (
-						<Trans>You replied to yourself</Trans>
+						m['components.dms.update.youRepliedToYourself']()
 					) : originalName ? (
-						<Trans>You replied to {originalName}</Trans>
+						m['components.dms.update.youRepliedTo']({ originalName })
 					) : (
-						<Trans>You replied</Trans>
+						m['components.dms.update.youReplied']()
 					)
 				) : originalSenderIsSelf ? (
 					<Trans>{replierDisplayName} replied to you</Trans>
@@ -686,8 +685,6 @@ function ReplyQuote({
 	onPress: () => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const senderProfile = useMaybeProfileShadow(relatedProfiles.get(replyTo.sender.did));
 	// Hide the quoted content if we block, or are blocked by, the original
 	// sender - mirroring how the message bubble itself is hidden.
@@ -703,22 +700,22 @@ function ReplyQuote({
 	let text: string;
 	let subtle = false;
 	if (isBlocked) {
-		text = l`Blocked message hidden`;
+		text = m['components.dms.label.blockedMessageHidden']();
 		subtle = true;
 	} else if (replyTo.$type === 'chat.bsky.convo.defs#messageView') {
 		text = replyTo.text;
 		if (!text.trim()) {
 			subtle = true;
 			if (replyTo.embed?.$type === 'chat.bsky.embed.joinLink#view') {
-				text = l`(chat invite link)`;
+				text = m['common.label.chatInviteLink']();
 			} else if (replyTo.embed?.$type === 'app.bsky.embed.record#view') {
-				text = l`(contains embedded content)`;
+				text = m['common.label.embeddedContent']();
 			} else {
-				text = l`No text`;
+				text = m['common.label.noText']();
 			}
 		}
 	} else {
-		text = l`Deleted message`;
+		text = m['components.dms.label.deletedMessage']();
 		subtle = true;
 	}
 
@@ -726,8 +723,8 @@ function ReplyQuote({
 		<Button
 			label={
 				senderName
-					? l`Replied-to message from ${senderName}, tap to scroll to it`
-					: l`Replied-to message, tap to scroll to it`
+					? m['components.dms.a11y.repliedToFrom']({ senderName })
+					: m['components.dms.a11y.repliedTo']()
 			}
 			onPress={onPress}
 			style={[

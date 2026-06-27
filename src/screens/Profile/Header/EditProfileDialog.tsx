@@ -25,6 +25,8 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './EditProfileDialog.css';
 
 export function EditProfileDialog({
@@ -36,7 +38,6 @@ export function EditProfileDialog({
 	handle: Dialog.DialogHandle;
 	onUpdate?: () => void;
 }) {
-	const { t: l } = useLingui();
 	const cancelHandle = Prompt.usePromptHandle();
 	const [dirty, setDirty] = useState(false);
 
@@ -53,7 +54,7 @@ export function EditProfileDialog({
 					}
 				}}
 			>
-				<Dialog.Popup scroll="body" label={l`Edit profile`}>
+				<Dialog.Popup scroll="body" label={m['screens.profile.action.editProfile']()}>
 					<DialogInner
 						profile={profile}
 						handle={handle}
@@ -65,10 +66,10 @@ export function EditProfileDialog({
 			</Dialog.Root>
 			<Prompt.Basic
 				handle={cancelHandle}
-				title={l`Discard changes?`}
-				description={l`Are you sure you want to discard your changes?`}
+				title={m['common.dialog.discardChangesTitle']()}
+				description={m['common.dialog.discardChangesPrompt']()}
 				onConfirm={() => handle.close()}
-				confirmButtonCta={l`Discard`}
+				confirmButtonCta={m['common.action.discard']()}
 				confirmButtonColor="negative"
 			/>
 		</>
@@ -189,20 +190,22 @@ function DialogInner({
 		<>
 			<Dialog.Header.Outer>
 				<Dialog.Header.Slot>
-					<Button label={l`Cancel`} variant="ghost" color="primary" size="small" onClick={onRequestClose}>
-						<ButtonText size="md">
-							<Trans>Cancel</Trans>
-						</ButtonText>
+					<Button
+						label={m['common.action.cancel']()}
+						variant="ghost"
+						color="primary"
+						size="small"
+						onClick={onRequestClose}
+					>
+						<ButtonText size="md">{m['common.action.cancel']()}</ButtonText>
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>
-						<Trans>Edit profile</Trans>
-					</Dialog.Header.TitleText>
+					<Dialog.Header.TitleText>{m['screens.profile.action.editProfile']()}</Dialog.Header.TitleText>
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot>
 					<Button
-						label={l`Save`}
+						label={m['common.action.save']()}
 						variant="ghost"
 						color="primary"
 						size="small"
@@ -210,9 +213,7 @@ function DialogInner({
 						disabled={!dirty || isUpdatingProfile || displayNameTooLong || descriptionTooLong}
 						onClick={() => void onPressSave()}
 					>
-						<ButtonText size="md">
-							<Trans>Save</Trans>
-						</ButtonText>
+						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
 						{isUpdatingProfile && <ButtonIcon icon={Loader} />}
 					</Button>
 				</Dialog.Header.Slot>
@@ -239,14 +240,12 @@ function DialogInner({
 
 				<div className={styles.fields}>
 					<TextField.Root isInvalid={displayNameTooLong}>
-						<TextField.LabelText>
-							<Trans>Display name</Trans>
-						</TextField.LabelText>
+						<TextField.LabelText>{m['screens.profile.label.displayName']()}</TextField.LabelText>
 						<TextField.Input
 							defaultValue={displayName}
 							onChangeText={setDisplayName}
-							label={l`Display name`}
-							placeholder={l`e.g. Alice Lastname`}
+							label={m['screens.profile.label.displayName']()}
+							placeholder={m['screens.profile.hint.displayNamePlaceholder']()}
 						/>
 						{displayNameTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
@@ -268,22 +267,20 @@ function DialogInner({
 										label={l({ message: `Learn more`, context: `english-only-resource` })}
 										to={urls.website.blog.initialVerificationAnnouncement}
 									>
-										<Trans context="english-only-resource">Learn more.</Trans>
+										{m['components.moderation.action.learnMoreDot']()}
 									</InlineLinkText>
 								</Trans>
 							</Admonition>
 						)}
 
 					<TextField.Root isInvalid={descriptionTooLong}>
-						<TextField.LabelText>
-							<Trans>Description</Trans>
-						</TextField.LabelText>
+						<TextField.LabelText>{m['common.label.description']()}</TextField.LabelText>
 						<TextField.Input
 							defaultValue={description}
 							onChangeText={setDescription}
 							multiline
-							label={l`Description`}
-							placeholder={l`Tell us a bit about yourself`}
+							label={m['common.label.description']()}
+							placeholder={m['screens.profile.hint.bio']()}
 						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>

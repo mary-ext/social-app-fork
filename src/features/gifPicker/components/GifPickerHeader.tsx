@@ -1,9 +1,9 @@
 import type { Ref } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { SearchInput } from '#/components/web/forms/SearchInput';
 
 import * as styles from '#/features/gifPicker/components/GifPickerHeader.css';
+import { m } from '#/paraglide/messages';
 
 export function GifPickerHeader({
 	inputRef,
@@ -18,16 +18,11 @@ export function GifPickerHeader({
 	onClear: () => void;
 	onEscape: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	return (
 		<div className={styles.root}>
 			<SearchInput
 				inputRef={inputRef}
-				label={l({
-					message: 'Search GIFs',
-					comment: 'Accessibility label for the GIF search input inside the GIF picker dialog.',
-				})}
+				label={m['features.gifPicker.a11y.search']()}
 				maxLength={50}
 				onChangeText={onChangeText}
 				onClear={onClear}
@@ -36,11 +31,7 @@ export function GifPickerHeader({
 						onEscape();
 					}
 				}}
-				placeholder={l({
-					message: 'Search KLIPY',
-					comment:
-						'Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.',
-				})}
+				placeholder={m['features.gifPicker.label.searchPlaceholder']()}
 				value={value}
 			/>
 		</div>

@@ -1,5 +1,4 @@
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -15,6 +14,8 @@ import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/ic
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 export type ChatInvitePreview = ChatBskyGroupDefs.JoinLinkPreviewView;
 
@@ -68,7 +69,6 @@ export function useChatInvite({
 	currentConvoId?: string;
 }): ChatInvite {
 	const { hasSession } = useSession();
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const { groupChatJoinControl } = useGlobalDialogsControlContext();
 
@@ -103,19 +103,19 @@ export function useChatInvite({
 		if (convoId && convoId === currentConvoId) {
 			// You're already in the chat this invite links to - offer to copy the link rather than open/join.
 			action = {
-				label: l`Copy link`,
+				label: m['common.action.copyLink'](),
 				icon: LinkIcon,
 				side: 'left',
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
 					void navigator.clipboard.writeText(`https://bsky.app/chat/${preview.code}`);
-					Toast.show(l`Copied to clipboard`, { type: 'success' });
+					Toast.show(m['common.toast.copied'](), { type: 'success' });
 				},
 			};
 		} else if (convoId) {
 			action = {
-				label: l`Open chat`,
+				label: m['common.action.openChat'](),
 				icon: ArrowRightIcon,
 				side: 'right',
 				color: 'primary',
@@ -127,21 +127,21 @@ export function useChatInvite({
 		} else {
 			let canJoin = true;
 			let icon: React.ComponentType<SVGIconProps> = JoinIcon;
-			let label = preview.requireApproval ? l`Request to join` : l`Join`;
+			let label = preview.requireApproval ? m['common.action.requestToJoin']() : m['common.action.join']();
 			let color: 'primary' | 'secondary' = 'primary';
 			if (preview.memberCount >= preview.memberLimit) {
 				canJoin = false;
 				icon = HandIcon;
-				label = l`This chat is full`;
+				label = m['common.error.chatFull']();
 				color = 'secondary';
 			} else if (preview.joinRule === 'followedByOwner' && !isFollowing) {
 				canJoin = false;
 				icon = HandIcon;
-				label = l`Only people the chat owner follows can join`;
+				label = m['common.hint.ownerFollowsOnlyJoin']();
 				color = 'secondary';
 			} else if (hasRequested) {
 				icon = CheckIcon;
-				label = l`Requested`;
+				label = m['components.dms.label.requested']();
 				color = 'secondary';
 			}
 

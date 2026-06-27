@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
@@ -30,6 +30,7 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function UserAddRemoveListsDialog({
@@ -79,7 +80,6 @@ function DialogInner({
 	onChange?: (type: 'add' | 'remove', list: AppBskyGraphDefs.ListView) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const control = Dialog.useDialogContext();
 	const moderationOpts = useModerationOpts();
 	const { data: lists, isLoading, isError, error } = useListsWithMembershipQuery({ actor: profile.did });
@@ -99,19 +99,19 @@ function DialogInner({
 			const modLists = lists.filter((i) => i.list.purpose === 'app.bsky.graph.defs#modlist');
 			if (curateLists.length > 0) {
 				_items = _items.concat(
-					{ type: 'section-header', key: 'curatelist', title: l`User lists` },
+					{ type: 'section-header', key: 'curatelist', title: m['components.dialogs.label.userLists']() },
 					curateLists.map((item) => ({ type: 'list', item }) as const),
 				);
 			}
 			if (modLists.length > 0) {
 				_items = _items.concat(
-					{ type: 'section-header', key: 'modlist', title: l`Moderation lists` },
+					{ type: 'section-header', key: 'modlist', title: m['common.label.moderationLists']() },
 					modLists.map((item) => ({ type: 'list', item }) as const),
 				);
 			}
 		}
 		return _items;
-	}, [isError, isEmpty, isLoading, moderationOpts, lists, l]);
+	}, [isError, isEmpty, isLoading, moderationOpts, lists]);
 
 	const renderItem = useCallback(
 		({ item }: { item: Item }) => {
@@ -140,7 +140,7 @@ function DialogInner({
 									{ maxWidth: 200 },
 								]}
 							>
-								<Trans>You have no lists.</Trans>
+								{m['common.empty.lists']()}
 							</Text>
 						</View>
 					);
@@ -179,7 +179,7 @@ function DialogInner({
 	const renderCloseButton = useCallback(
 		() => (
 			<Button
-				label={l`Close`}
+				label={m['common.action.close']()}
 				onPress={() => control.close()}
 				size="small"
 				color="secondary"
@@ -190,7 +190,7 @@ function DialogInner({
 				<ButtonIcon icon={XIcon} size="md" />
 			</Button>
 		),
-		[control, l],
+		[control],
 	);
 
 	return (
@@ -227,20 +227,19 @@ function ListRow({
 	moderationOpts?: ModerationOptions;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { list } = item;
 	const membershipUri = item.listItem?.uri;
 	const { mutate: listMembershipAdd, isPending: isAddingPending } = useListMembershipAddMutation({
 		subject: profile,
 		onSuccess: () => {
-			Toast.show(l`Added to list`);
+			Toast.show(m['components.dialogs.list.addedToast']());
 			onChange?.('add', list);
 		},
 		onError: (e) => Toast.show(cleanError(e), { type: 'error' }),
 	});
 	const { mutate: listMembershipRemove, isPending: isRemovingPending } = useListMembershipRemoveMutation({
 		onSuccess: () => {
-			Toast.show(l`Removed from list`);
+			Toast.show(m['components.dialogs.list.removedToast']());
 			onChange?.('remove', list);
 		},
 		onError: (e) => Toast.show(cleanError(e), { type: 'error' }),
@@ -266,12 +265,16 @@ function ListRow({
 						{sanitizeDisplayName(list.name)}
 					</Text>
 					<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
-						{list.purpose === 'app.bsky.graph.defs#curatelist' && <Trans>User list</Trans>}
-						{list.purpose === 'app.bsky.graph.defs#modlist' && <Trans>Moderation list</Trans>}
+						{list.purpose === 'app.bsky.graph.defs#curatelist' && m['components.dialogs.label.userList']()}
+						{list.purpose === 'app.bsky.graph.defs#modlist' && m['components.dialogs.list.moderationLabel']()}
 					</Text>
 				</View>
 				<Button
-					label={!membershipUri ? l`Add user to list` : l`Remove user from list`}
+					label={
+						!membershipUri
+							? m['components.dialogs.list.addUserTitle']()
+							: m['components.dialogs.list.removeUser']()
+					}
 					onPress={onToggleMembership}
 					disabled={isMutating}
 					size="small"
@@ -281,7 +284,7 @@ function ListRow({
 					{isMutating ? (
 						<ButtonIcon icon={Loader} />
 					) : (
-						<ButtonText>{!membershipUri ? <Trans>Add</Trans> : <Trans>Remove</Trans>}</ButtonText>
+						<ButtonText>{!membershipUri ? m['common.action.add']() : m['common.action.remove']()}</ButtonText>
 					)}
 				</Button>
 			</ProfileCard.Header>

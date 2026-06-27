@@ -1,5 +1,5 @@
 import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -20,6 +20,8 @@ import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import { ActivitySubscriptionDialog } from './components/ActivitySubscriptionDialog';
 import { ExportCarDialog } from './components/ExportCarDialog';
 
@@ -27,7 +29,6 @@ type AllowSubscriptions = AppBskyNotificationDeclaration.Main['allowSubscription
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>;
 export function AccountSettingsScreen({}: Props) {
-	const { t: l } = useLingui();
 	const exportCarHandle = Dialog.useDialogHandle();
 	const activityHandle = Dialog.useDialogHandle();
 
@@ -41,32 +42,33 @@ export function AccountSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Account & privacy</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.label.accountPrivacy']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
-					<Settings.Section titleText={<Trans>Your data</Trans>}>
+					<Settings.Section titleText={m['screens.settings.export.yourDataTitle']()}>
 						<Settings.SwitchRow
 							disabled={!automation.canToggle}
-							label={l`Show automation label`}
+							label={m['screens.settings.automation.showLabel']()}
 							loading={automation.loading}
 							onChange={automation.toggle}
 							value={automation.enabled}
 						>
 							<Settings.Icon icon={RobotIcon} />
 							<Settings.Label
-								subtitleText={<Trans>Show others that this account is automated.</Trans>}
-								titleText={<Trans>Automation label</Trans>}
+								subtitleText={m['screens.settings.automation.showLabelHint']()}
+								titleText={m['screens.settings.label.automation']()}
 							/>
 						</Settings.SwitchRow>
 
-						<Settings.ButtonRow label={l`Export my data`} onPress={() => exportCarHandle.open(null)}>
+						<Settings.ButtonRow
+							label={m['screens.settings.action.exportData']()}
+							onPress={() => exportCarHandle.open(null)}
+						>
 							<Settings.Icon icon={CarIcon} />
-							<Settings.Label titleText={<Trans>Export my data</Trans>} />
+							<Settings.Label titleText={m['screens.settings.action.exportData']()} />
 						</Settings.ButtonRow>
 					</Settings.Section>
 
@@ -77,17 +79,17 @@ export function AccountSettingsScreen({}: Props) {
 								apps may show your account anyway.{' '}
 								<ExternalInlineLinkText
 									size="sm"
-									label={l`Learn more about what is public on Bluesky.`}
+									label={m['screens.settings.privacy.learnMorePublic']()}
 									href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
 								>
-									<Trans>Learn more.</Trans>
+									{m['components.moderation.action.learnMoreDot']()}
 								</ExternalInlineLinkText>
 							</Trans>
 						}
-						titleText={<Trans>Privacy</Trans>}
+						titleText={m['screens.settings.title.privacy']()}
 					>
 						<Settings.ButtonRow
-							label={l`Allow notifying others of my posts`}
+							label={m['screens.settings.label.allowNotifyingOthers']()}
 							onPress={() => activityHandle.open(null)}
 						>
 							<Settings.Icon icon={BellRingingIcon} />
@@ -96,26 +98,21 @@ export function AccountSettingsScreen({}: Props) {
 								subtitleText={
 									<AllowSubscriptionsValue isError={isError} value={declaration?.value?.allowSubscriptions} />
 								}
-								titleText={<Trans>Allow notifying others of my posts</Trans>}
+								titleText={m['screens.settings.label.allowNotifyingOthers']()}
 							/>
 						</Settings.ButtonRow>
 
 						<Settings.SwitchRow
 							disabled={!pwi.canToggle}
-							label={l`Request limited account visibility`}
+							label={m['screens.settings.privacy.requestLimitedVisibility']()}
 							loading={pwi.loading}
 							onChange={pwi.toggle}
 							value={pwi.enabled}
 						>
 							<Settings.Icon icon={EyeSlashIcon} />
 							<Settings.Label
-								subtitleText={
-									<Trans>
-										Notifies every app, including the Bluesky app, that you don't want your account shown to
-										people who aren't signed in.
-									</Trans>
-								}
-								titleText={<Trans>Request limited account visibility</Trans>}
+								subtitleText={m['screens.settings.privacy.discoverabilityDesc']()}
+								titleText={m['screens.settings.privacy.requestLimitedVisibility']()}
 							/>
 						</Settings.SwitchRow>
 					</Settings.Section>
@@ -130,16 +127,16 @@ export function AccountSettingsScreen({}: Props) {
 /** The current activity-subscription selection, rendered as the drill-in row's value line. */
 function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?: AllowSubscriptions }) {
 	if (isError) {
-		return <Trans>Error loading preference</Trans>;
+		return m['screens.settings.error.loadingPreference']();
 	}
 	switch (value) {
 		case 'mutuals':
-			return <Trans>Only followers who I follow</Trans>;
+			return m['screens.settings.option.onlyFollowersIFollow']();
 		case 'none':
-			return <Trans context="enable for">No one</Trans>;
+			return m['screens.messages.option.noOneInvites']();
 		case 'followers':
 		default:
-			return <Trans>Anyone who follows me</Trans>;
+			return m['screens.settings.option.anyoneWhoFollowsMe']();
 	}
 }
 

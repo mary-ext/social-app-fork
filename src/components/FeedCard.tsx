@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect, useMemo } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
@@ -23,6 +23,7 @@ import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/w
 import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
 import { borderRadius } from '#/styles/tokens.css';
 
 import * as css from './FeedCard.css';
@@ -112,7 +113,7 @@ export function TitleAndByline({ creator, title }: { creator?: AnyProfileView; t
 			</Text>
 			{creator && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					<Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+					{m['common.label.feedBy']({ handle: sanitizeHandle(creator.handle, '@') })}
 				</Text>
 			)}
 		</div>
@@ -176,7 +177,6 @@ function SaveButtonInner({
 	text?: boolean;
 	view: AppBskyFeedDefs.GeneratorView;
 } & Partial<ButtonProps>) {
-	const { t: l } = useLingui();
 	const removePromptHandle = Prompt.usePromptHandle();
 	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ pin, type: 'feed', uri: view.uri });
 
@@ -185,7 +185,7 @@ function SaveButtonInner({
 			<Button
 				color={isSaved ? 'secondary' : 'primary'}
 				disabled={isPending}
-				label={l`Add this feed to your feeds`}
+				label={m['common.action.addFeed']()}
 				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
 				size="small"
 				variant="solid"
@@ -198,11 +198,7 @@ function SaveButtonInner({
 						) : (
 							!text && <ButtonIcon icon={TrashIcon} size="md" />
 						)}
-						{text && (
-							<ButtonText>
-								<Trans>Unpin feed</Trans>
-							</ButtonText>
-						)}
+						{text && <ButtonText>{m['common.action.unpinFeed']()}</ButtonText>}
 					</>
 				) : (
 					<>
@@ -211,22 +207,18 @@ function SaveButtonInner({
 						) : (
 							<ButtonIcon icon={PinIcon} size="md" />
 						)}
-						{text && (
-							<ButtonText>
-								<Trans>Pin feed</Trans>
-							</ButtonText>
-						)}
+						{text && <ButtonText>{m['common.action.pinFeed']()}</ButtonText>}
 					</>
 				)}
 			</Button>
 
 			<Prompt.Basic
 				confirmButtonColor="negative"
-				confirmButtonCta={l`Remove`}
-				description={l`Are you sure you want to remove this from your feeds?`}
+				confirmButtonCta={m['common.action.remove']()}
+				description={m['common.dialog.removeFeedPrompt']()}
 				handle={removePromptHandle}
 				onConfirm={() => void toggleSave()}
-				title={l`Remove from your feeds?`}
+				title={m['common.dialog.removeFromFeedsTitle']()}
 			/>
 		</>
 	);

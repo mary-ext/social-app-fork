@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Keyboard, type StyleProp, View, type ViewStyle } from 'react-native';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural } from '@lingui/react/macro';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
@@ -20,6 +20,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './SubtitleDialog.css';
@@ -38,13 +39,11 @@ interface Props {
 
 export function SubtitleDialogBtn(props: Props) {
 	const control = Dialog.useDialogControl();
-	const { t: l } = useLingui();
-
 	return (
 		<View style={[a.flex_row, a.my_xs]}>
 			<Button
-				label={l`Captions & alt text`}
-				accessibilityHint={l`Opens captions and alt text dialog`}
+				label={m['view.composer.title.captionsAndAltText']()}
+				accessibilityHint={m['view.composer.a11y.opensCaptionsDialog']()}
 				size="small"
 				color="secondary"
 				variant="ghost"
@@ -54,7 +53,7 @@ export function SubtitleDialogBtn(props: Props) {
 				}}
 			>
 				<ButtonIcon icon={CCIcon} />
-				<ButtonText>{<Trans>Captions & alt text</Trans>}</ButtonText>
+				<ButtonText>{m['view.composer.title.captionsAndAltText']()}</ButtonText>
 			</Button>
 			<Dialog.Outer control={control}>
 				<Dialog.Handle />
@@ -66,7 +65,6 @@ export function SubtitleDialogBtn(props: Props) {
 
 function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaptions }: Props) {
 	const control = Dialog.useDialogContext();
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const { primaryLanguage } = useLanguagePrefs();
 
@@ -93,15 +91,13 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 	});
 
 	return (
-		<Dialog.ScrollableInner label={l`Video settings`}>
+		<Dialog.ScrollableInner label={m['view.composer.title.videoSettings']()}>
 			<View style={a.gap_md}>
-				<Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
-					<Trans>Alt text</Trans>
-				</Text>
+				<Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>{m['common.label.altText']()}</Text>
 				<TextField.Root isInvalid={isOverMaxLength}>
 					<Dialog.Input
-						label={l`Alt text`}
-						placeholder={l`Add alt text (optional)`}
+						label={m['common.label.altText']()}
+						placeholder={m['view.composer.action.addAltTextOptional']()}
 						value={altText}
 						onChangeText={setAltText}
 						maxLength={MAX_ALT_TEXT * 10}
@@ -126,7 +122,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 					<>
 						<View style={[a.border_t, a.w_full, t.atoms.border_contrast_medium, a.my_md]} />
 						<Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
-							<Trans>Captions (.vtt)</Trans>
+							{m['view.composer.label.captions']()}
 						</Text>
 						<SubtitleFilePicker
 							onSelectFile={handleSelectFile}
@@ -149,7 +145,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 						</View>
 						{subtitleMissingLanguage && (
 							<Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-								<Trans>Ensure you have selected a language for each caption file.</Trans>
+								{m['view.composer.error.captionLanguageRequired']()}
 							</Text>
 						)}
 					</>
@@ -157,7 +153,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 
 				<View style={[a.flex_row, a.justify_end]}>
 					<Button
-						label={l`Done`}
+						label={m['common.action.done']()}
 						size={'small'}
 						color="primary"
 						variant="solid"
@@ -168,9 +164,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 						style={a.mt_lg}
 						disabled={isOverMaxLength}
 					>
-						<ButtonText>
-							<Trans>Done</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.done']()}</ButtonText>
 					</Button>
 				</View>
 			</View>
@@ -192,8 +186,6 @@ function SubtitleFileRow({
 	setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void;
 	style: StyleProp<ViewStyle>;
 }) {
-	const { t: l } = useLingui();
-
 	const handleValueChange = useCallback(
 		(lang: string) => {
 			if (lang) {
@@ -221,8 +213,8 @@ function SubtitleFileRow({
 						style={{ maxWidth: 200, flex: 1 }}
 					>
 						<option value="" disabled selected hidden>
-							{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
-							<Trans>Select language...</Trans>
+							{}
+							{m['view.composer.language.select']()}
 						</option>
 						{otherLanguages.map((lang) => (
 							<option key={langCode(lang)} value={langCode(lang)}>
@@ -234,7 +226,7 @@ function SubtitleFileRow({
 				</View>
 			</View>
 			<Button
-				label={l`Remove caption file`}
+				label={m['view.composer.action.removeCaption']()}
 				size="tiny"
 				shape="round"
 				variant="outline"

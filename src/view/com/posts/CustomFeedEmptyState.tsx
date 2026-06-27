@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';
@@ -14,6 +13,7 @@ import { useSession } from '#/state/session';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { Button } from '../util/forms/Button';
@@ -48,11 +48,11 @@ export function CustomFeedEmptyState() {
 				<MagnifyingGlassIcon color={colors.text} className={css.icon} size={62} />
 			</View>
 			<Text type="xl-medium" style={[s.textCenter, pal.text]}>
-				<Trans>This feed is empty! You may need to follow more users or tune your language settings.</Trans>
+				{m['view.posts.empty.feed']()}
 			</Text>
 			<Button type="inverted" style={styles.emptyBtn} onPress={onPressFindAccounts}>
 				<Text type="lg-medium" style={palInverted.text}>
-					<Trans>Find accounts to follow</Trans>
+					{m['view.posts.cta.findAccounts']()}
 				</Text>
 				<ChevronRightIcon width={14} fill={colors.textInverted} />
 			</Button>

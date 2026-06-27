@@ -1,5 +1,4 @@
 import type { AppBskyNotificationDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { AllNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
@@ -25,11 +24,12 @@ import { Admonition } from '#/components/web/Admonition';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './index.css';
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>;
 export function NotificationSettingsScreen({}: Props) {
-	const { t: l } = useLingui();
 	const { data: settings, isError } = useNotificationSettingsQuery();
 
 	const likeHandle = Dialog.useDialogHandle();
@@ -48,123 +48,119 @@ export function NotificationSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Notifications</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.nav.notifications']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				{isError && (
 					<div className={styles.errorWrap}>
-						<Admonition type="error">
-							<Trans>Failed to load notification settings.</Trans>
-						</Admonition>
+						<Admonition type="error">{m['common.error.loadNotificationSettings']()}</Admonition>
 					</div>
 				)}
 				<Settings.List>
 					<Settings.Section>
 						<Settings.ButtonRow
-							label={l`Settings for like notifications`}
+							label={m['screens.settings.notifications.title.like']()}
 							onPress={() => likeHandle.open(null)}
 						>
 							<Settings.Icon icon={HeartIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.like} />}
-								titleText={<Trans>Likes</Trans>}
+								titleText={m['common.label.likes']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for new follower notifications`}
+							label={m['screens.settings.notifications.title.follow']()}
 							onPress={() => followHandle.open(null)}
 						>
 							<Settings.Icon icon={PersonPlusIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.follow} />}
-								titleText={<Trans>New followers</Trans>}
+								titleText={m['screens.settings.notifications.newFollowers']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for reply notifications`}
+							label={m['screens.settings.notifications.title.reply']()}
 							onPress={() => replyHandle.open(null)}
 						>
 							<Settings.Icon icon={BubbleIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.reply} />}
-								titleText={<Trans>Replies</Trans>}
+								titleText={m['common.label.replies']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for mention notifications`}
+							label={m['screens.settings.notifications.title.mention']()}
 							onPress={() => mentionHandle.open(null)}
 						>
 							<Settings.Icon icon={AtIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.mention} />}
-								titleText={<Trans>Mentions</Trans>}
+								titleText={m['common.label.mentions']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for quote notifications`}
+							label={m['screens.settings.notifications.title.quote']()}
 							onPress={() => quoteHandle.open(null)}
 						>
 							<Settings.Icon icon={CloseQuoteIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.quote} />}
-								titleText={<Trans>Quotes</Trans>}
+								titleText={m['common.label.quotes']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for repost notifications`}
+							label={m['screens.settings.notifications.title.repost']()}
 							onPress={() => repostHandle.open(null)}
 						>
 							<Settings.Icon icon={RepostIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.repost} />}
-								titleText={<Trans>Reposts</Trans>}
+								titleText={m['screens.settings.notifications.reposts']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for activity from others`}
+							label={m['screens.settings.notifications.title.activity']()}
 							onPress={() => activityHandle.open(null)}
 						>
 							<Settings.Icon icon={BellRingingIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
-								titleText={<Trans>Activity from others</Trans>}
+								titleText={m['screens.settings.label.activityFromOthers']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for notifications for likes of your reposts`}
+							label={m['screens.settings.notifications.title.likeViaRepost']()}
 							onPress={() => likeRepostHandle.open(null)}
 						>
 							<Settings.Icon icon={LikeRepostIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.likeViaRepost} />}
-								titleText={<Trans>Likes of your reposts</Trans>}
+								titleText={m['screens.settings.notifications.likesOfReposts']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for notifications for reposts of your reposts`}
+							label={m['screens.settings.notifications.title.repostViaRepost']()}
 							onPress={() => repostRepostHandle.open(null)}
 						>
 							<Settings.Icon icon={RepostRepostIcon} />
 							<Settings.Label
 								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.repostViaRepost} />}
-								titleText={<Trans>Reposts of your reposts</Trans>}
+								titleText={m['screens.settings.notifications.repostsOfReposts']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
-							label={l`Settings for notifications for everything else`}
+							label={m['screens.settings.notifications.title.everythingElse']()}
 							onPress={() => miscHandle.open(null)}
 						>
 							<Settings.Icon icon={ShapesIcon} />
@@ -173,7 +169,7 @@ export function NotificationSettingsScreen({}: Props) {
 								// technically a bundle of several settings, but since they're set together
 								// and are most likely in sync we'll just show the state of one of them
 								subtitleText={<SettingPreview preference={settings?.starterpackJoined} />}
-								titleText={<Trans>Everything else</Trans>}
+								titleText={m['screens.settings.label.everythingElse']()}
 							/>
 						</Settings.ButtonRow>
 					</Settings.Section>
@@ -182,67 +178,65 @@ export function NotificationSettingsScreen({}: Props) {
 			<NotificationSettingsDialog
 				handle={likeHandle}
 				name="like"
-				subtitleText={<Trans>Get notifications when people like your posts.</Trans>}
-				titleText={<Trans>Likes</Trans>}
+				subtitleText={m['screens.settings.notifications.likesDesc']()}
+				titleText={m['common.label.likes']()}
 			/>
 			<NotificationSettingsDialog
 				handle={followHandle}
 				name="follow"
-				subtitleText={<Trans>Get notifications when people follow you.</Trans>}
-				titleText={<Trans>New followers</Trans>}
+				subtitleText={m['screens.settings.notifications.followsDesc']()}
+				titleText={m['screens.settings.notifications.newFollowers']()}
 			/>
 			<NotificationSettingsDialog
 				handle={replyHandle}
 				name="reply"
-				subtitleText={<Trans>Get notifications when people reply to your posts.</Trans>}
-				titleText={<Trans>Replies</Trans>}
+				subtitleText={m['screens.settings.notifications.repliesDesc']()}
+				titleText={m['common.label.replies']()}
 			/>
 			<NotificationSettingsDialog
 				handle={mentionHandle}
 				name="mention"
-				subtitleText={<Trans>Get notifications when people mention you.</Trans>}
-				titleText={<Trans>Mentions</Trans>}
+				subtitleText={m['screens.settings.notifications.mentionsDesc']()}
+				titleText={m['common.label.mentions']()}
 			/>
 			<NotificationSettingsDialog
 				handle={quoteHandle}
 				name="quote"
-				subtitleText={<Trans>Get notifications when people quote your posts.</Trans>}
-				titleText={<Trans>Quotes</Trans>}
+				subtitleText={m['screens.settings.notifications.quotesDesc']()}
+				titleText={m['common.label.quotes']()}
 			/>
 			<NotificationSettingsDialog
 				handle={repostHandle}
 				name="repost"
-				subtitleText={<Trans>Get notifications when people repost your posts.</Trans>}
-				titleText={<Trans>Reposts</Trans>}
+				subtitleText={m['screens.settings.notifications.repostsDesc']()}
+				titleText={m['screens.settings.notifications.reposts']()}
 			/>
 			<NotificationSettingsDialog
 				allowDisableInApp={false}
 				handle={activityHandle}
 				name="subscribedPost"
-				subtitleText={<Trans>Get notifications when there's activity on posts you're subscribed to.</Trans>}
-				titleText={<Trans>Activity from others</Trans>}
+				subtitleText={m['screens.settings.notifications.subscribedDesc']()}
+				titleText={m['screens.settings.label.activityFromOthers']()}
 			/>
 			<NotificationSettingsDialog
 				handle={likeRepostHandle}
 				name="likeViaRepost"
-				subtitleText={<Trans>Get notifications when people like your reposts.</Trans>}
-				titleText={<Trans>Likes of your reposts</Trans>}
+				subtitleText={m['screens.settings.notifications.likesRepostsDesc']()}
+				titleText={m['screens.settings.notifications.likesOfReposts']()}
 			/>
 			<NotificationSettingsDialog
 				handle={repostRepostHandle}
 				name="repostViaRepost"
-				subtitleText={<Trans>Get notifications when people repost your reposts.</Trans>}
-				titleText={<Trans>Reposts of your reposts</Trans>}
+				subtitleText={m['screens.settings.notifications.repostsRepostsDesc']()}
+				titleText={m['screens.settings.notifications.repostsOfReposts']()}
 			/>
 			<NotificationSettingsDialog
 				allowDisableInApp={false}
 				handle={miscHandle}
 				name="starterpackJoined"
-				subtitleText={
-					<Trans>Get notifications for starter pack joins, verification, and other activity.</Trans>
-				}
+				subtitleText={m['screens.settings.notifications.activityDesc']()}
 				syncOthers={['verified', 'unverified']}
-				titleText={<Trans>Everything else</Trans>}
+				titleText={m['screens.settings.label.everythingElse']()}
 			/>
 		</Layout.Screen>
 	);
@@ -253,38 +247,37 @@ function SettingPreview({
 }: {
 	preference?: AppBskyNotificationDefs.FilterablePreference | AppBskyNotificationDefs.Preference;
 }) {
-	const { t: l } = useLingui();
 	if (!preference) {
 		return null;
 	} else {
 		if ('include' in preference) {
 			if (preference.include === 'all') {
 				if (preference.list && preference.push) {
-					return l`In-app, Push, Everyone`;
+					return m['screens.settings.notifications.inAppPushEveryone']();
 				} else if (preference.list) {
-					return l`In-app, Everyone`;
+					return m['screens.settings.notifications.inAppEveryone']();
 				} else if (preference.push) {
-					return l`Push, Everyone`;
+					return m['screens.settings.notifications.pushEveryone']();
 				}
 			} else if (preference.include === 'follows') {
 				if (preference.list && preference.push) {
-					return l`In-app, Push, People you follow`;
+					return m['screens.settings.notifications.inAppPushFollowing']();
 				} else if (preference.list) {
-					return l`In-app, People you follow`;
+					return m['screens.settings.notifications.inAppFollowing']();
 				} else if (preference.push) {
-					return l`Push, People you follow`;
+					return m['screens.settings.notifications.pushFollowing']();
 				}
 			}
 		} else {
 			if (preference.list && preference.push) {
-				return l`In-app, Push`;
+				return m['screens.settings.notifications.inAppPush']();
 			} else if (preference.list) {
-				return l`In-app`;
+				return m['screens.settings.notifications.inApp']();
 			} else if (preference.push) {
-				return l`Push`;
+				return m['screens.settings.notifications.push']();
 			}
 		}
 	}
 
-	return l`Off`;
+	return m['common.label.off']();
 }

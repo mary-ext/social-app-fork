@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useSession } from '#/state/session';
@@ -14,6 +13,7 @@ import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import { SOURCE_CODE_URL } from '#/env/common';
+import { m } from '#/paraglide/messages';
 
 import * as css from './RightNav.css';
 
@@ -35,7 +35,6 @@ function useWebQueryParams() {
 }
 
 export function DesktopRightNav({ routeName }: { routeName: string }) {
-	const { t: l } = useLingui();
 	const { hasSession } = useSession();
 	const isSearchScreen = routeName === 'Search';
 	const webqueryParams = useWebQueryParams();
@@ -54,9 +53,9 @@ export function DesktopRightNav({ routeName }: { routeName: string }) {
 				href={SOURCE_CODE_URL}
 				color="textContrastMedium"
 				size="sm"
-				label={l`Source code`}
+				label={m['view.label.sourceCode']()}
 			>
-				{l`Source code`}
+				{m['view.label.sourceCode']()}
 			</ExternalInlineLinkText>
 
 			{!hasSession && leftNavMinimal && <AppLanguageDropdown />}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -11,6 +10,8 @@ import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/qu
 import { useRequireAuth } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * Props shared by the post action bar in either size. The two surfaces — {@link PostControls} (feed / thread
@@ -43,7 +44,6 @@ export function usePostControlsActions({
 	logContext,
 	onPostReply,
 }: Pick<PostControlsProps, 'feedContext' | 'logContext' | 'onPostReply' | 'post' | 'reqId' | 'viaRepost'>) {
-	const { t: l } = useLingui();
 	const { openComposer } = useOpenComposer();
 	const { feedDescriptor, sendInteraction } = useFeedFeedbackContext();
 	const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, viaRepost, feedDescriptor, logContext);
@@ -63,7 +63,7 @@ export function usePostControlsActions({
 
 	const onPressToggleLike = async () => {
 		if (isBlocked) {
-			Toast.show(l`Cannot interact with a blocked user`, {
+			Toast.show(m['common.error.blockedInteraction'](), {
 				type: 'warning',
 			});
 			return;
@@ -92,7 +92,7 @@ export function usePostControlsActions({
 
 	const onRepost = async () => {
 		if (isBlocked) {
-			Toast.show(l`Cannot interact with a blocked user`, {
+			Toast.show(m['common.error.blockedInteraction'](), {
 				type: 'warning',
 			});
 			return;
@@ -120,7 +120,7 @@ export function usePostControlsActions({
 
 	const onQuote = () => {
 		if (isBlocked) {
-			Toast.show(l`Cannot interact with a blocked user`, {
+			Toast.show(m['common.error.blockedInteraction'](), {
 				type: 'warning',
 			});
 			return;

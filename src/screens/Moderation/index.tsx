@@ -5,7 +5,6 @@ import {
 	type InterpretedLabelDefinition,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
@@ -45,6 +44,8 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './index.css';
 
 // the global adult-content sub-labels, configurable once adult content is enabled; ordered least to most
@@ -57,7 +58,6 @@ const ADULT_CONTENT_LABELS = [
 ];
 
 export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>) {
-	const { t: l } = useLingui();
 	const { data: preferences, error, isLoading } = usePreferencesQuery();
 
 	return (
@@ -65,21 +65,19 @@ export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorP
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Moderation</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.label.moderation']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				{isLoading ? (
 					<div className={styles.status}>
-						<Spinner color="currentColor" label={l`Loading`} size="xl" />
+						<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
 					</div>
 				) : error || !preferences ? (
 					<Settings.List>
 						<Admonition type="error">
-							{error?.toString() || l`Something went wrong, please try again.`}
+							{error?.toString() || m['screens.moderation.error.generic']()}
 						</Admonition>
 					</Settings.List>
 				) : (
@@ -91,7 +89,6 @@ export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorP
 }
 
 function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
-	const { t: l } = useLingui();
 	const { data: labelers, error: labelersError, isLoading: isLabelersLoading } = useMyLabelersQuery();
 	const { isPending: isRemovingLabelers, mutateAsync: removeLabelers } = useRemoveLabelersMutation();
 	const { mutateAsync: setAdultContentPref, variables: optimisticAdultContent } =
@@ -125,7 +122,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 	const handleCleanup = async () => {
 		try {
 			await removeLabelers({ dids: unavailableDids });
-			Toast.show(l`Removed unavailable services`, { type: 'success' });
+			Toast.show(m['screens.moderation.toast.removedUnavailableServices'](), { type: 'success' });
 		} catch (e) {
 			logger.error('Failed to remove unavailable labelers', {
 				safeMessage: e instanceof Error ? e.message : String(e),
@@ -135,48 +132,60 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 	return (
 		<Settings.List>
-			<Settings.Section titleText={<Trans>Moderation tools</Trans>}>
+			<Settings.Section titleText={m['screens.moderation.title.moderationTools']()}>
 				<Settings.LinkRow
-					label={l`View your default post interaction settings`}
+					label={m['screens.moderation.hint.viewInteractionSettings']()}
 					to="/moderation/interaction-settings"
 				>
 					<Settings.Icon icon={EditBig} />
-					<Settings.Label titleText={<Trans>Interaction settings</Trans>} />
+					<Settings.Label titleText={m['screens.moderation.title.interactionSettings']()} />
 				</Settings.LinkRow>
 
-				<Settings.LinkRow label={l`View your muted words`} to="/moderation/muted-words">
+				<Settings.LinkRow label={m['screens.moderation.hint.viewMutedWords']()} to="/moderation/muted-words">
 					<Settings.Icon icon={Filter} />
-					<Settings.Label titleText={<Trans>Muted words</Trans>} />
+					<Settings.Label titleText={m['screens.moderation.title.mutedWords']()} />
 				</Settings.LinkRow>
 
-				<Settings.LinkRow label={l`View your moderation lists`} to="/moderation/modlists">
+				<Settings.LinkRow
+					label={m['screens.moderation.hint.viewModerationLists']()}
+					to="/moderation/modlists"
+				>
 					<Settings.Icon icon={Group} />
-					<Settings.Label titleText={<Trans>Moderation lists</Trans>} />
+					<Settings.Label titleText={m['common.label.moderationLists']()} />
 				</Settings.LinkRow>
 
-				<Settings.LinkRow label={l`View your muted accounts`} to="/moderation/muted-accounts">
+				<Settings.LinkRow
+					label={m['screens.moderation.hint.viewMutedAccounts']()}
+					to="/moderation/muted-accounts"
+				>
 					<Settings.Icon icon={Person} />
-					<Settings.Label titleText={<Trans>Muted accounts</Trans>} />
+					<Settings.Label titleText={m['screens.moderation.title.mutedAccounts']()} />
 				</Settings.LinkRow>
 
-				<Settings.LinkRow label={l`View your blocked accounts`} to="/moderation/blocked-accounts">
+				<Settings.LinkRow
+					label={m['screens.moderation.hint.viewBlockedAccounts']()}
+					to="/moderation/blocked-accounts"
+				>
 					<Settings.Icon icon={CircleBanSign} />
-					<Settings.Label titleText={<Trans>Blocked accounts</Trans>} />
+					<Settings.Label titleText={m['screens.moderation.title.blockedAccounts']()} />
 				</Settings.LinkRow>
 
-				<Settings.LinkRow label={l`Manage verification settings`} to="/moderation/verification-settings">
+				<Settings.LinkRow
+					label={m['screens.moderation.action.manageVerification']()}
+					to="/moderation/verification-settings"
+				>
 					<Settings.Icon icon={CircleCheck} />
-					<Settings.Label titleText={<Trans>Verification settings</Trans>} />
+					<Settings.Label titleText={m['screens.moderation.title.verificationSettings']()} />
 				</Settings.LinkRow>
 			</Settings.Section>
 
-			<Settings.Section titleText={<Trans>Content filters</Trans>}>
+			<Settings.Section titleText={m['screens.moderation.title.contentFilters']()}>
 				<Settings.SwitchRow
-					label={l`Toggle to enable or disable adult content`}
+					label={m['screens.moderation.a11y.toggleAdultContent']()}
 					onChange={(selected) => void onToggleAdultContentEnabled(selected)}
 					value={adultContentEnabled}
 				>
-					<Settings.Label titleText={<Trans>Enable adult content</Trans>} />
+					<Settings.Label titleText={m['screens.moderation.label.enableAdultContent']()} />
 				</Settings.SwitchRow>
 
 				{adultContentEnabled &&
@@ -187,36 +196,30 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 			{unavailableDids.length > 0 && (
 				<div className={styles.cleanup}>
-					<Admonition type="tip">
-						<Trans>Some moderation services in your list are no longer available.</Trans>
-					</Admonition>
+					<Admonition type="tip">{m['screens.moderation.hint.servicesUnavailable']()}</Admonition>
 					<Button
 						className={styles.removeButton}
 						color="primary"
 						disabled={isRemovingLabelers}
-						label={l`Remove unavailable moderation services`}
+						label={m['screens.moderation.action.removeUnavailableServices']()}
 						onClick={() => void handleCleanup()}
 						size="small"
 						variant="ghost"
 					>
 						{isRemovingLabelers && <ButtonIcon icon={Loader} />}
-						<ButtonText>
-							<Trans>Remove</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.remove']()}</ButtonText>
 					</Button>
 				</div>
 			)}
 
 			{isLabelersLoading ? (
 				<div className={styles.status}>
-					<Spinner color="currentColor" label={l`Loading`} size="xl" />
+					<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
 				</div>
 			) : labelersError || !labelers ? (
-				<Admonition type="error">
-					<Trans>We were unable to load your configured labelers at this time.</Trans>
-				</Admonition>
+				<Admonition type="error">{m['screens.moderation.error.loadLabelers']()}</Admonition>
 			) : (
-				<Settings.Section titleText={<Trans>Advanced</Trans>}>
+				<Settings.Section titleText={m['screens.moderation.label.advanced']()}>
 					{labelers.map((labeler) => (
 						<LabelerRow key={labeler.creator.did} labeler={labeler} />
 					))}
@@ -233,7 +236,6 @@ function AdultContentLabelRow({
 	className?: string;
 	labelDefinition: InterpretedLabelDefinition;
 }) {
-	const { t: l } = useLingui();
 	const { identifier } = labelDefinition;
 	const { data: preferences } = usePreferencesQuery();
 	const { mutate, variables } = usePreferencesSetContentLabelMutation();
@@ -244,11 +246,11 @@ function AdultContentLabelRow({
 		<Settings.SelectRow<LabelPreference>
 			className={className}
 			items={[
-				{ label: l`Show`, value: 'ignore' },
-				{ label: l`Warn`, value: 'warn' },
-				{ label: l`Hide`, value: 'hide' },
+				{ label: m['common.action.show'](), value: 'ignore' },
+				{ label: m['common.action.warn'](), value: 'warn' },
+				{ label: m['common.action.hide'](), value: 'hide' },
 			]}
-			label={l`Filtering for ${labelStrings.name}`}
+			label={m['common.label.filteringFor']({ name: labelStrings.name })}
 			onValueChange={(visibility) => mutate({ label: identifier, labelerDid: undefined, visibility })}
 			value={pref}
 		>
@@ -264,14 +266,13 @@ function LabelerRow({
 	className?: string;
 	labeler: AppBskyLabelerDefs.LabelerViewDetailed;
 }) {
-	const { t: l } = useLingui();
 	const { creator } = labeler;
 	const title = getLabelingServiceTitle({ displayName: creator.displayName, handle: creator.handle });
 
 	return (
 		<Settings.LinkRowRaw
 			className={clsx(cardStyles.rowPlain, className)}
-			label={l`View the labeling service provided by @${creator.handle}`}
+			label={m['screens.moderation.a11y.viewLabeler']({ handle: creator.handle })}
 			to={makeProfileLink({ did: creator.did })}
 		>
 			<UserAvatar avatar={creator.avatar} className={styles.labelerAvatar} size={40} type="labeler" />
@@ -285,15 +286,13 @@ function LabelerRow({
 					</Text>
 				) : (
 					<Text color="textContrastMedium" size="md_sub">
-						{l`By ${sanitizeHandle(creator.handle, '@')}`}
+						{m['screens.moderation.label.byCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
 					</Text>
 				)}
 				{isNonConfigurableModerationAuthority(creator.did) && (
 					<span className={styles.regionalNotice}>
 						<Flag fill="currentColor" size="sm" />
-						<Text size="sm">
-							<Trans>Required in your region</Trans>
-						</Text>
+						<Text size="sm">{m['screens.moderation.hint.requiredInRegion']()}</Text>
 					</span>
 				)}
 			</div>

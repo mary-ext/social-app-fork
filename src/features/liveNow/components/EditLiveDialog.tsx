@@ -24,6 +24,7 @@ import {
 	useUpsertLiveStatusMutation,
 } from '#/features/liveNow';
 import { LinkPreview } from '#/features/liveNow/components/LinkPreview';
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as styles from './EditLiveDialog.css';
@@ -37,10 +38,9 @@ export function EditLiveDialog({
 	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={l`You are Live`}>
+			<Dialog.Popup className={styles.popup} label={m['features.liveNow.status.live']()}>
 				<DialogInner embed={embed} handle={handle} status={status} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -57,7 +57,7 @@ function DialogInner({
 	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 
 	const [liveLink, setLiveLink] = useState<string>(embed.external.uri);
 	const [liveLinkError, setLiveLinkError] = useState('');
@@ -106,7 +106,7 @@ function DialogInner({
 		<div className={styles.container}>
 			<div className={styles.header}>
 				<Text size="_2xl" weight="semiBold">
-					<Trans>You are Live</Trans>
+					{m['features.liveNow.status.live']()}
 				</Text>
 				<div className={styles.expiryRow}>
 					<ClockIcon fill={colors.textContrastHigh} size="sm" />
@@ -121,20 +121,18 @@ function DialogInner({
 								})}
 							</Trans>
 						) : (
-							<Trans>No expiry set</Trans>
+							m['features.liveNow.label.noExpiry']()
 						)}
 					</Text>
 				</div>
 			</div>
 			<div className={styles.fields}>
 				<TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
-					<TextField.LabelText>
-						<Trans>Live link</Trans>
-					</TextField.LabelText>
+					<TextField.LabelText>{m['features.liveNow.label.liveLink']()}</TextField.LabelText>
 					<TextField.Input
 						autoCapitalize="none"
 						autoComplete="url"
-						label={l`Live link`}
+						label={m['features.liveNow.label.liveLink']()}
 						onBlur={() => {
 							// don't nag about an empty field — only flag a non-empty, non-URL value
 							if (liveLink.trim() && !parseLooseUrl(liveLink)) {
@@ -148,13 +146,13 @@ function DialogInner({
 								goLive();
 							}
 						}}
-						placeholder={l`www.mylivestream.tv`}
+						placeholder={m['features.liveNow.label.linkPlaceholder']()}
 						value={liveLink}
 					/>
 				</TextField.Root>
 				{(liveLinkError || linkMetaError) && (
 					<Admonition type="error">
-						{liveLinkError ? <Trans>This is not a valid link</Trans> : cleanError(linkMetaError)}
+						{liveLinkError ? m['features.liveNow.error.invalidLink']() : cleanError(linkMetaError)}
 					</Admonition>
 				)}
 
@@ -169,40 +167,34 @@ function DialogInner({
 					<Button
 						color="primary"
 						disabled={submitDisabled}
-						label={l`Save`}
+						label={m['common.action.save']()}
 						onClick={() => goLive()}
 						size="small"
 						variant="solid"
 					>
-						<ButtonText>
-							<Trans>Save</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.save']()}</ButtonText>
 						{isGoingLive && <ButtonIcon icon={Loader} />}
 					</Button>
 				) : (
 					<Button
 						color="primary"
-						label={l`Close`}
+						label={m['common.action.close']()}
 						onClick={() => handle.close()}
 						size="small"
 						variant="solid"
 					>
-						<ButtonText>
-							<Trans>Close</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.close']()}</ButtonText>
 					</Button>
 				)}
 				<Button
 					color="negative_subtle"
 					disabled={isRemovingLiveStatus || isGoingLive}
-					label={l`Remove live status`}
+					label={m['features.liveNow.action.removeStatus']()}
 					onClick={() => removeLiveStatus()}
 					size="small"
 					variant="solid"
 				>
-					<ButtonText>
-						<Trans>Remove live status</Trans>
-					</ButtonText>
+					<ButtonText>{m['features.liveNow.action.removeStatus']()}</ButtonText>
 					{isRemovingLiveStatus && <ButtonIcon icon={Loader} />}
 				</Button>
 			</div>

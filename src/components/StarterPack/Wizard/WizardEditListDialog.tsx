@@ -1,12 +1,13 @@
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { WizardFeedCard, WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './WizardEditListDialog.css';
 
@@ -29,8 +30,6 @@ export function WizardEditListDialog({
 	moderationOpts: ModerationOptions;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { t: l } = useLingui();
-
 	const data: ListItem[] =
 		state.currentStep === 'Feeds'
 			? state.feeds
@@ -55,7 +54,10 @@ export function WizardEditListDialog({
 			/>
 		);
 
-	const title = state.currentStep === 'Profiles' ? l`Edit People` : l`Edit Feeds`;
+	const title =
+		state.currentStep === 'Profiles'
+			? m['components.starterPack.action.editPeople']()
+			: m['components.starterPack.action.editFeeds']();
 
 	return (
 		<Dialog.Root handle={handle}>
@@ -67,15 +69,13 @@ export function WizardEditListDialog({
 					</Dialog.Header.Content>
 					<Dialog.Header.Slot>
 						<Button
-							label={l`Close`}
+							label={m['common.action.close']()}
 							variant="ghost"
 							color="primary"
 							size="small"
 							onClick={() => handle.close()}
 						>
-							<ButtonText>
-								<Trans>Close</Trans>
-							</ButtonText>
+							<ButtonText>{m['common.action.close']()}</ButtonText>
 						</Button>
 					</Dialog.Header.Slot>
 				</Dialog.Header.Outer>

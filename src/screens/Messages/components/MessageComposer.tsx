@@ -3,7 +3,6 @@ import { Pressable, View } from 'react-native';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 import { getGraphemeLength } from '@atcute/util-text';
-import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10, MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants';
 import { isBskyChatInviteUrl, isBskyPostUrl } from '#/lib/strings/url-helpers';
@@ -26,6 +25,7 @@ import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } f
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
 import { LinearGradient } from '#/shims/linear-gradient';
 import { colors } from '#/styles/colors';
 
@@ -50,7 +50,6 @@ export function MessageComposer({
 	loading?: boolean;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { getDraft, clearDraft } = useMessageDraft();
 	const composerInternalApiRef = useComposerInternalApiRef();
 	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
@@ -77,7 +76,9 @@ export function MessageComposer({
 		if (!hasEmbed && message.trim() === '') return;
 		const graphemeCount = getGraphemeLength(message);
 		if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
-			Toast.show(l`Message is too long (${graphemeCount}/${MAX_DM_GRAPHEME_LENGTH})`, { type: 'error' });
+			Toast.show(m['screens.messages.error.messageTooLong']({ graphemeCount, MAX_DM_GRAPHEME_LENGTH }), {
+				type: 'error',
+			});
 			return;
 		}
 
@@ -136,7 +137,11 @@ export function MessageComposer({
 								<EmojiPicker.Trigger
 									handle={emojiPickerHandle}
 									render={
-										<button type="button" aria-label={l`Open emoji picker`} className={styles.emojiButton} />
+										<button
+											type="button"
+											aria-label={m['common.a11y.openEmojiPicker']()}
+											className={styles.emojiButton}
+										/>
 									}
 								>
 									<EmojiSmileIcon size="md" fill="currentColor" />
@@ -151,12 +156,10 @@ export function MessageComposer({
 							</>
 						)}
 						<Composer
-							accessibilityLabel={l`Message input field`}
-							accessibilityHint={l`Write a message`}
+							accessibilityLabel={m['screens.messages.a11y.messageInput']()}
+							accessibilityHint={m['screens.messages.label.writeMessage']()}
 							placeholder={
-								loading
-									? l({ message: 'Loading chat...', context: 'placeholder' })
-									: l({ message: 'Message', context: 'action' })
+								loading ? m['screens.messages.label.loadingChat']() : m['screens.messages.action.message']()
 							}
 							autocompletePlacement="top-start"
 							internalApiRef={composerInternalApiRef}
@@ -197,7 +200,6 @@ function SubmitButton({
 	disabled: boolean;
 	loading: boolean;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 
 	return (
@@ -206,7 +208,7 @@ function SubmitButton({
 		>
 			<Pressable
 				accessibilityRole="button"
-				accessibilityLabel={l`Send message`}
+				accessibilityLabel={m['screens.messages.action.sendMessage']()}
 				accessibilityHint=""
 				hitSlop={HITSLOP_10}
 				style={[a.rounded_full, a.align_center, a.justify_center, { height: MIN_HEIGHT, width: MIN_HEIGHT }]}

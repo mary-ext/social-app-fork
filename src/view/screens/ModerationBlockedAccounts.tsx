@@ -22,6 +22,8 @@ import { ListFooter } from '#/components/Lists';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationBlockedAccounts'>;
 export function ModerationBlockedAccounts({}: Props) {
 	const t = useTheme();
@@ -77,9 +79,7 @@ export function ModerationBlockedAccounts({}: Props) {
 				<Layout.Header.Outer>
 					<Layout.Header.BackButton />
 					<Layout.Header.Content>
-						<Layout.Header.TitleText>
-							<Trans>Blocked Accounts</Trans>
-						</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['common.label.blockedAccounts']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
@@ -161,10 +161,7 @@ function Info({ style }: { style?: StyleProp<ViewStyle> }) {
 			]}
 		>
 			<Text style={[a.text_center, a.text_sm, t.atoms.text_contrast_high]}>
-				<Trans>
-					Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will
-					not see their content and they will be prevented from seeing yours.
-				</Trans>
+				{m['view.blocked.description']()}
 			</Text>
 		</View>
 	);

@@ -1,6 +1,5 @@
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -11,6 +10,8 @@ import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 export interface ComposerOptsPostRef {
 	uri: string;
@@ -54,7 +55,6 @@ export const COMPOSER_DIALOG_ID = 'composer';
  * hooks are the thin imperative API over that control.
  */
 export function useOpenComposer() {
-	const { t: l } = useLingui();
 	const { composerDialogControl } = useGlobalDialogsControlContext();
 	const queryClient = useQueryClient();
 
@@ -79,7 +79,7 @@ export function useOpenComposer() {
 			author && (author.viewer?.blocking || author.viewer?.blockedBy || author.viewer?.blockingByList),
 		);
 		if (isBlocked) {
-			Toast.show(l`Cannot interact with a blocked user`, {
+			Toast.show(m['common.error.blockedInteraction'](), {
 				type: 'warning',
 			});
 			return;

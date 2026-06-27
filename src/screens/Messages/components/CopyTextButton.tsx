@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
-import { Trans } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, type ButtonProps } from '#/components/Button';
 import { SquareBehindSquare_Stroke2_Corner2_Rounded as CopyIcon } from '#/components/icons/SquareBehindSquare4';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export function CopyTextButton({
 	children,
@@ -45,7 +46,7 @@ export function CopyTextButton({
 					pointerEvents="none"
 				>
 					<Text style={[a.font_medium, a.text_right, a.text_sm, t.atoms.text_contrast_high]}>
-						<Trans>Copied!</Trans>
+						{m['screens.messages.toast.copied']()}
 					</Text>
 				</View>
 			)}

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { saveBytesToDisk } from '#/lib/media/manip';
 
@@ -17,13 +17,14 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './ExportCarDialog.css';
 
 export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={l`Export my profile data`}>
+			<Dialog.Popup className={styles.popup} label={m['screens.settings.action.exportProfileData']()}>
 				<DialogInner />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -32,7 +33,6 @@ export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 }
 
 function DialogInner() {
-	const { t: l } = useLingui();
 	const { chat, pds } = useClients();
 	const { currentAccount } = useSession();
 	const [loading, setLoading] = useState<'chat' | 'repo' | false>(false);
@@ -48,14 +48,14 @@ function DialogInner() {
 			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
 			saveBytesToDisk('repo.car', carData as Uint8Array<ArrayBuffer>, 'application/vnd.ipld.car');
 
-			Toast.show(l`File saved successfully!`);
+			Toast.show(m['screens.settings.toast.fileSaved']());
 		} catch (e) {
 			logger.error('Error occurred while downloading CAR file', { message: e });
-			Toast.show(l`Error occurred while saving file`, { type: 'error' });
+			Toast.show(m['screens.settings.error.savingFile'](), { type: 'error' });
 		} finally {
 			setLoading(false);
 		}
-	}, [l, currentAccount, pds]);
+	}, [currentAccount, pds]);
 
 	const downloadChatData = useCallback(async () => {
 		if (!chat) {
@@ -67,19 +67,19 @@ function DialogInner() {
 			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
 			saveBytesToDisk('chat.jsonl', res as Uint8Array<ArrayBuffer>, 'application/jsonl');
 
-			Toast.show(l`File saved successfully!`);
+			Toast.show(m['screens.settings.toast.fileSaved']());
 		} catch (e) {
 			logger.error('Error occurred while downloading chat data', { message: e });
-			Toast.show(l`Error occurred while saving file`, { type: 'error' });
+			Toast.show(m['screens.settings.error.savingFile'](), { type: 'error' });
 		} finally {
 			setLoading(false);
 		}
-	}, [l, chat]);
+	}, [chat]);
 
 	return (
 		<div className={styles.content}>
 			<Text className={styles.title} size="_2xl" weight="bold">
-				<Trans>Export my profile data</Trans>
+				{m['screens.settings.action.exportProfileData']()}
 			</Text>
 			<Text className={styles.body} color="textContrastHigh" size="sm">
 				<Trans>
@@ -92,18 +92,16 @@ function DialogInner() {
 			<Button
 				color="primary"
 				disabled={!!loading}
-				label={l`Download profile data`}
+				label={m['screens.settings.label.downloadProfileData']()}
 				onClick={() => void download()}
 				size="large"
 			>
 				<ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
-				<ButtonText>
-					<Trans context="button">Download profile data</Trans>
-				</ButtonText>
+				<ButtonText>{m['screens.settings.label.downloadProfileData']()}</ButtonText>
 			</Button>
 
 			<Text className={styles.heading} size="_2xl" weight="bold">
-				<Trans>Export my chat data</Trans>
+				{m['common.action.exportChatData']()}
 			</Text>
 			<Text className={styles.body} color="textContrastHigh" size="sm">
 				<Trans>
@@ -115,21 +113,19 @@ function DialogInner() {
 			<Button
 				color="primary"
 				disabled={!!loading}
-				label={l`Download chat data`}
+				label={m['screens.settings.label.downloadChatData']()}
 				onClick={() => void downloadChatData()}
 				size="large"
 			>
 				<ButtonIcon icon={loading === 'chat' ? Loader : DownloadIcon} />
-				<ButtonText>
-					<Trans context="button">Download chat data</Trans>
-				</ButtonText>
+				<ButtonText>{m['screens.settings.label.downloadChatData']()}</ButtonText>
 			</Button>
 
 			<Text className={styles.footnote} color="textContrastMedium" size="sm">
 				<Trans>
 					This feature is in beta. You can read more about repository exports in{' '}
 					<ExternalInlineLinkText
-						label={l`View blogpost for more details`}
+						label={m['screens.settings.export.viewBlogpost']()}
 						size="sm"
 						href="https://docs.bsky.app/blog/repo-export"
 					>

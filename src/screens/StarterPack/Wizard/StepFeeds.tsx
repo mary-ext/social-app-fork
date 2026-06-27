@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';
 
@@ -16,6 +15,8 @@ import { WizardFeedCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Text';
 import { SearchInput } from '#/components/web/forms/SearchInput';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './Wizard.css';
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
@@ -23,7 +24,6 @@ function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 }
 
 export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOptions }) {
-	const { t: l } = useLingui();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
 	const throttledQuery = useThrottledValue(query, 500);
@@ -76,8 +76,8 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 					value={query}
 					onChangeText={setQuery}
 					onClear={() => setQuery('')}
-					label={l`Search`}
-					placeholder={l`Search`}
+					label={m['common.action.search']()}
+					placeholder={m['common.action.search']()}
 				/>
 			</div>
 			<List
@@ -89,10 +89,10 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 				ListEmptyComponent={
 					<div className={css.empty}>
 						{isLoading ? (
-							<CenteredSpinner label={l`Loading`} size="lg" />
+							<CenteredSpinner label={m['common.label.loading']()} size="lg" />
 						) : (
 							<Text weight="semiBold" size="lg" align="center" className={css.emptyText}>
-								<Trans>No feeds found. Try searching for something else.</Trans>
+								{m['screens.starterPack.empty.noFeeds']()}
 							</Text>
 						)}
 					</div>

@@ -1,6 +1,5 @@
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 
 import { isGifEmbed } from '#/lib/strings/embed-player';
 
@@ -10,6 +9,7 @@ import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
 
+import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';
 import { parseEmbed } from '#/types/embed';
 
@@ -126,9 +126,7 @@ export function GifItem({ thumbnail, alt }: { thumbnail?: string; alt?: string }
 				<PlayButtonIcon size={24} />
 			</View>
 			<View style={styles.altContainer}>
-				<Text style={styles.alt}>
-					<Trans>GIF</Trans>
-				</Text>
+				<Text style={styles.alt}>{m['common.label.gif']()}</Text>
 			</View>
 		</ImageItem>
 	);

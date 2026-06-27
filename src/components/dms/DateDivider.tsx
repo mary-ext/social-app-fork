@@ -7,11 +7,13 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 import { localDateString } from './util';
 
 let DateDivider = ({ date: dateStr }: { date: string }): React.ReactNode => {
 	const t = useTheme();
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 
 	let date: string;
 	const time = i18n.date(new Date(dateStr), {
@@ -26,9 +28,9 @@ let DateDivider = ({ date: dateStr }: { date: string }): React.ReactNode => {
 	const oneWeekAgo = subDays(today, 7);
 
 	if (localDateString(today) === localDateString(timestamp)) {
-		date = l`Today`;
+		date = m['components.dms.time.today']();
 	} else if (localDateString(yesterday) === localDateString(timestamp)) {
-		date = l`Yesterday`;
+		date = m['components.dms.time.yesterday']();
 	} else {
 		if (timestamp < oneWeekAgo) {
 			if (timestamp.getFullYear() === today.getFullYear()) {

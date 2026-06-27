@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
@@ -12,6 +11,7 @@ import { ConstrainedImage } from '#/components/images/AutoSizedImage';
 import * as Toast from '#/components/Toast';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
 
+import { m } from '#/paraglide/messages';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 
 export function VideoPreview({
@@ -24,7 +24,6 @@ export function VideoPreview({
 	isActivePost: boolean;
 	clear: () => void;
 }) {
-	const { t: l } = useLingui();
 	// TODO: figure out how to pause a GIF for reduced motion
 	// it's not possible using an img tag -sfn
 	const [autoplayDisabled] = useAutoplayDisabled();
@@ -61,7 +60,7 @@ export function VideoPreview({
 								playsInline
 								onError={(err) => {
 									console.error('Error loading video', err);
-									Toast.show(l`Could not process your video`, {
+									Toast.show(m['view.composer.error.videoProcess'](), {
 										type: 'error',
 									});
 									clear();

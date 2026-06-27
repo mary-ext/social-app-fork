@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useActorSearch } from '#/state/queries/actor-search';
@@ -14,6 +13,8 @@ import { WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCar
 import { Text } from '#/components/Text';
 import { SearchInput } from '#/components/web/forms/SearchInput';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './Wizard.css';
 
 function keyExtractor(item: AnyProfileView) {
@@ -21,7 +22,6 @@ function keyExtractor(item: AnyProfileView) {
 }
 
 export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOptions }) {
-	const { t: l } = useLingui();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
 
@@ -62,8 +62,8 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 					value={query}
 					onChangeText={setQuery}
 					onClear={() => setQuery('')}
-					label={l`Search`}
-					placeholder={l`Search`}
+					label={m['common.action.search']()}
+					placeholder={m['common.action.search']()}
 				/>
 			</div>
 			<List
@@ -75,10 +75,10 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 				ListEmptyComponent={
 					<div className={css.empty}>
 						{isLoading ? (
-							<CenteredSpinner label={l`Loading`} size="lg" />
+							<CenteredSpinner label={m['common.label.loading']()} size="lg" />
 						) : (
 							<Text weight="semiBold" size="lg" align="center" className={css.emptyText}>
-								<Trans>Nobody was found. Try searching for someone else.</Trans>
+								{m['screens.starterPack.empty.noPeople']()}
 							</Text>
 						)}
 					</div>

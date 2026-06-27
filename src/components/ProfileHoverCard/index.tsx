@@ -48,6 +48,7 @@ import { InlineLinkText } from '#/components/web/Link';
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
+import { m } from '#/paraglide/messages';
 
 import type { ProfileHoverCardProps } from './types';
 
@@ -414,7 +415,7 @@ function Inner({
 	hide: () => void;
 }) {
 	const t = useTheme();
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const { currentAccount } = useSession();
 	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
 	const [descriptionRT] = useRichText(profile.description ?? '');
@@ -441,7 +442,7 @@ function Inner({
 	return (
 		<View>
 			<View style={[a.flex_row, a.justify_between, a.align_start]}>
-				<Link to={profileURL} label={l`View profile`} onPress={hide}>
+				<Link to={profileURL} label={m['common.action.viewProfile']()} onPress={hide}>
 					<UserAvatar
 						size={64}
 						avatar={profile.avatar}
@@ -455,30 +456,36 @@ function Inner({
 					(isBlockedUser ? (
 						<Link
 							to={profileURL}
-							label={l`View blocked user's profile`}
+							label={m['common.a11y.viewBlockedProfile']()}
 							onPress={hide}
 							size="small"
 							color="secondary"
 							variant="solid"
 							style={[a.rounded_full]}
 						>
-							<ButtonText>{l`View profile`}</ButtonText>
+							<ButtonText>{m['common.action.viewProfile']()}</ButtonText>
 						</Link>
 					) : (
 						<Button
 							size="small"
 							color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
 							variant="solid"
-							label={profileShadow.viewer?.following ? l`Following` : l`Follow`}
+							label={
+								profileShadow.viewer?.following ? m['common.action.following']() : m['common.action.follow']()
+							}
 							style={[a.rounded_full]}
 							onPress={profileShadow.viewer?.following ? unfollow : follow}
 						>
 							<ButtonIcon position="left" icon={profileShadow.viewer?.following ? Check : Plus} />
-							<ButtonText>{profileShadow.viewer?.following ? l`Following` : l`Follow`}</ButtonText>
+							<ButtonText>
+								{profileShadow.viewer?.following
+									? m['common.action.following']()
+									: m['common.action.follow']()}
+							</ButtonText>
 						</Button>
 					))}
 			</View>
-			<Link to={profileURL} label={l`View profile`} onPress={hide}>
+			<Link to={profileURL} label={m['common.action.viewProfile']()} onPress={hide}>
 				<View style={[a.pb_sm, a.flex_1]}>
 					<View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
 						<Text numberOfLines={1} style={[a.text_lg, a.leading_snug, a.font_semi_bold, a.self_start]}>
@@ -516,7 +523,7 @@ function Inner({
 						</InlineLinkText>
 						<InlineLinkText
 							to={makeProfileLink(profile, 'follows')}
-							label={l`${following} following`}
+							label={m['common.label.followingCount']({ following })}
 							color="text"
 							onPress={hide}
 						>

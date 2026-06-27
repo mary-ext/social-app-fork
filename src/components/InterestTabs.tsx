@@ -14,6 +14,8 @@ import {
 } from '#/components/icons/Arrow';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 type WebViewStyle = ViewStyle & {
 	background?: string;
 	outline?: string;
@@ -48,7 +50,6 @@ export function InterestTabs({
 	gutterWidth?: number;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const listRef = useRef<ScrollView>(null);
 	const [totalWidth, setTotalWidth] = useState(0);
 	const [scrollX, setScrollX] = useState(0);
@@ -251,7 +252,7 @@ export function InterestTabs({
 					]}
 				>
 					<Button
-						label={l`Scroll left`}
+						label={m['common.a11y.scrollLeft']()}
 						onPress={scrollLeft}
 						onPressIn={() => startContinuousScroll('left')}
 						onPressOut={stopContinuousScroll}
@@ -287,7 +288,7 @@ export function InterestTabs({
 					]}
 				>
 					<Button
-						label={l`Scroll right`}
+						label={m['common.a11y.scrollRight']()}
 						onPress={scrollRight}
 						onPressIn={() => startContinuousScroll('right')}
 						onPressOut={stopContinuousScroll}

@@ -1,7 +1,6 @@
 import { Fragment } from 'react';
 import { View } from 'react-native';
 import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { listUriToHref } from '#/lib/strings/url-helpers';
 
@@ -13,6 +12,8 @@ import { InlineLinkText } from '#/components/Link';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 export function BlockedByListDialog({
 	control,
 	listBlocks,
@@ -20,19 +21,18 @@ export function BlockedByListDialog({
 	control: DialogControlProps;
 	listBlocks: BlockingModerationCause[];
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 
 	return (
 		<Prompt.Outer control={control} testID="blockedByListDialog">
-			<Prompt.TitleText>{l`User blocked by list`}</Prompt.TitleText>
+			<Prompt.TitleText>{m['components.dms.toast.userBlockedByList']()}</Prompt.TitleText>
 			<View style={[a.gap_sm, a.pb_lg]}>
 				<Text selectable style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-					{l`This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user.`}{' '}
+					{m['components.dms.error.blockedByModerationLists']()}{' '}
 				</Text>
 
 				<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-					{l`Lists blocking this user:`}{' '}
+					{m['components.dms.label.listsBlocking']()}{' '}
 					{listBlocks.map((block, i) =>
 						block.source ? (
 							<Fragment key={block.source.uri}>
@@ -50,7 +50,7 @@ export function BlockedByListDialog({
 				</Text>
 			</View>
 			<Prompt.Actions>
-				<Prompt.Action cta={l`I understand`} onPress={() => {}} />
+				<Prompt.Action cta={m['components.dms.action.understand']()} onPress={() => {}} />
 			</Prompt.Actions>
 			<Dialog.Close />
 		</Prompt.Outer>

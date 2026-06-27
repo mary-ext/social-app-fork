@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -16,6 +15,7 @@ import {
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb';
 
 import { IS_WEB_FIREFOX } from '#/env';
+import { m } from '#/paraglide/messages';
 
 import { useActiveVideoWeb } from './ActiveVideoWebContext';
 import * as styles from './index.css';
@@ -182,18 +182,16 @@ export const OnlyNearScreen = ({ children }: { children: React.ReactNode }) => {
 };
 
 function VideoError({ error, retry }: { error: unknown; retry: () => void }) {
-	const { t: l } = useLingui();
-
 	let showRetryButton = true;
 	let text = null;
 
 	if (error instanceof VideoNotFoundError) {
-		text = l`Video not found.`;
+		text = m['components.post.error.videoNotFound']();
 	} else if (error instanceof HLSUnsupportedError) {
 		showRetryButton = false;
-		text = l`This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).`;
+		text = m['components.post.error.unsupportedCodec']();
 	} else {
-		text = l`An error occurred while loading the video. Please try again.`;
+		text = m['components.post.error.videoLoad']();
 	}
 
 	return (

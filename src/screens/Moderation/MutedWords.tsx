@@ -1,4 +1,4 @@
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
@@ -31,6 +31,8 @@ import * as Layout from '#/components/web/Layout';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './MutedWords.css';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
@@ -38,7 +40,6 @@ const ONE_DAY = 24 * 60 * 60 * 1000;
 export function MutedWordsScreen(
 	_props: NativeStackScreenProps<CommonNavigatorParams, 'ModerationMutedWords'>,
 ) {
-	const { t: l } = useLingui();
 	const dialogHandle = Dialog.useDialogHandle();
 	const { data: preferences, error, refetch } = usePreferencesQuery();
 	const mutedWords = preferences?.moderationPrefs.mutedWords;
@@ -49,46 +50,36 @@ export function MutedWordsScreen(
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Muted words</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.moderation.title.mutedWords']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Button
 					color="secondary"
-					label={l`Add muted word`}
+					label={m['common.action.addMutedWord']()}
 					onClick={() => dialogHandle.open(null)}
 					size="small"
 				>
 					<ButtonIcon icon={Plus} />
-					<ButtonText>
-						<Trans context="action">Add</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.add']()}</ButtonText>
 				</Button>
 			</Layout.Header.Outer>
 			<Layout.Content>
 				{error ? (
 					<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
 				) : !preferences ? (
-					<CenteredSpinner label={l`Loading your muted words`} fill />
+					<CenteredSpinner label={m['screens.moderation.label.loadingMutedWords']()} fill />
 				) : (
 					<Settings.List>
 						{mutedWords?.length ? (
 							<Settings.Section
-								bodyText={
-									<Trans>
-										You won't see or receive any new notifications for posts that include muted words.
-									</Trans>
-								}
-								titleText={<Trans>Your muted words</Trans>}
+								bodyText={m['screens.moderation.hint.mutedWordsNotifications']()}
+								titleText={m['screens.moderation.title.yourMutedWords']()}
 							>
 								{mutedWords.toReversed().map((word, i) => (
 									<MutedWordRow key={word.value + i} word={word} />
 								))}
 							</Settings.Section>
 						) : (
-							<Admonition type="tip">
-								<Trans>You haven't muted any words or tags yet. Use the + button above to add one.</Trans>
-							</Admonition>
+							<Admonition type="tip">{m['screens.moderation.empty.mutedWords']()}</Admonition>
 						)}
 					</Settings.List>
 				)}
@@ -112,10 +103,12 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 	const details = [
 		expiryDate
 			? isExpired
-				? l`Expired`
-				: l`Expires ${formatDistance(expiryDate, new Date(), { addSuffix: true })}`
+				? m['screens.moderation.label.expired']()
+				: m['screens.moderation.label.expires']({
+						time: formatDistance(expiryDate, new Date(), { addSuffix: true }),
+					})
 			: undefined,
-		word.actorTarget === 'exclude-following' ? l`Excludes people you follow` : undefined,
+		word.actorTarget === 'exclude-following' ? m['screens.moderation.hint.excludesFollowing']() : undefined,
 	]
 		.filter(Boolean)
 		.join(' · ');
@@ -131,10 +124,10 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 		<>
 			<Prompt.Basic
 				handle={removeHandle}
-				title={l`Are you sure?`}
+				title={m['screens.moderation.dialog.confirmTitle']()}
 				description={l`This will delete "${word.value}" from your muted words. You can always add it back later.`}
 				onConfirm={() => void removeMutedWord(word)}
-				confirmButtonCta={l`Remove`}
+				confirmButtonCta={m['common.action.remove']()}
 				confirmButtonColor="negative"
 			/>
 
@@ -166,35 +159,27 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 						/>
 						<Menu.Popup align="end" label={l`Options for "${word.value}"`}>
 							<Menu.Group>
-								<Menu.LabelText>
-									<Trans>Change duration</Trans>
-								</Menu.LabelText>
-								<Menu.Item label={l`24 hours`} onClick={() => renew(1)}>
-									<Menu.ItemText>
-										<Trans>24 hours</Trans>
-									</Menu.ItemText>
+								<Menu.LabelText>{m['screens.moderation.action.changeDuration']()}</Menu.LabelText>
+								<Menu.Item label={m['common.time.hours24']()} onClick={() => renew(1)}>
+									<Menu.ItemText>{m['common.time.hours24']()}</Menu.ItemText>
 								</Menu.Item>
-								<Menu.Item label={l`7 days`} onClick={() => renew(7)}>
-									<Menu.ItemText>
-										<Trans>7 days</Trans>
-									</Menu.ItemText>
+								<Menu.Item label={m['common.time.days7']()} onClick={() => renew(7)}>
+									<Menu.ItemText>{m['common.time.days7']()}</Menu.ItemText>
 								</Menu.Item>
-								<Menu.Item label={l`30 days`} onClick={() => renew(30)}>
-									<Menu.ItemText>
-										<Trans>30 days</Trans>
-									</Menu.ItemText>
+								<Menu.Item label={m['common.time.days30']()} onClick={() => renew(30)}>
+									<Menu.ItemText>{m['common.time.days30']()}</Menu.ItemText>
 								</Menu.Item>
-								<Menu.Item label={l`Forever`} onClick={() => renew()}>
-									<Menu.ItemText>
-										<Trans>Forever</Trans>
-									</Menu.ItemText>
+								<Menu.Item label={m['common.time.forever']()} onClick={() => renew()}>
+									<Menu.ItemText>{m['common.time.forever']()}</Menu.ItemText>
 								</Menu.Item>
 							</Menu.Group>
 							<Menu.Separator />
-							<Menu.Item destructive label={l`Remove muted word`} onClick={() => removeHandle.open(null)}>
-								<Menu.ItemText>
-									<Trans>Remove</Trans>
-								</Menu.ItemText>
+							<Menu.Item
+								destructive
+								label={m['screens.moderation.action.removeMutedWord']()}
+								onClick={() => removeHandle.open(null)}
+							>
+								<Menu.ItemText>{m['common.action.remove']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={Trash} position="right" />
 							</Menu.Item>
 						</Menu.Popup>

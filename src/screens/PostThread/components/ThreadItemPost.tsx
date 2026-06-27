@@ -2,7 +2,6 @@ import { type ReactNode, useCallback, useMemo } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans } from '@lingui/react/macro';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -34,6 +33,7 @@ import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import * as Skele from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 
 import { threadTextShape } from './skeleton-shape';
 import * as css from './ThreadItemPost.css';
@@ -76,7 +76,7 @@ function ThreadItemPostDeleted({ item, overrides }: Pick<ThreadItemPostProps, 'i
 					<TrashIcon fill="currentColor" />
 				</div>
 				<Text size="md" weight="semiBold" color="textContrastMedium">
-					<Trans>Post has been deleted</Trans>
+					{m['screens.postThread.error.deleted']()}
 				</Text>
 			</div>
 

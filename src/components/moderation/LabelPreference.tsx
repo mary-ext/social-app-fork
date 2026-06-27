@@ -18,6 +18,8 @@ import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './LabelPreference.css';
 
 /**
@@ -37,7 +39,7 @@ export function LabelerLabelRow({
 	labelDefinition: InterpretedLabelDefinition;
 	labelerDid?: string;
 }) {
-	const { i18n, t: l } = useLingui();
+	const { i18n } = useLingui();
 	const { identifier } = labelDefinition;
 	// a global label is one backed by a built-in definition (porn, sexual, …); those are configured once in
 	// moderation settings, not per labeler. (`isCustomLabelValue` is a format check — it's true for these
@@ -70,9 +72,9 @@ export function LabelerLabelRow({
 	}
 
 	const labelOptions: Record<LabelPreference, string> = {
-		hide: l`Hide`,
-		ignore: l`Show`,
-		warn: l`Warn`,
+		hide: m['common.action.hide'](),
+		ignore: m['common.action.show'](),
+		warn: m['common.action.warn'](),
 	};
 
 	// A label that is configured elsewhere (a global label, set in moderation settings) or unavailable (adult
@@ -93,11 +95,14 @@ export function LabelerLabelRow({
 							<CircleInfo fill="currentColor" size="sm" />
 							<Text color="textContrastMedium" size="sm" weight="medium">
 								{adultDisabled ? (
-									<Trans>Adult content is disabled.</Trans>
+									m['components.moderation.hint.adultContentDisabled']()
 								) : (
 									<Trans>
 										Configured in{' '}
-										<InlineLinkText label={l`moderation settings`} to="/moderation">
+										<InlineLinkText
+											label={m['components.moderation.label.moderationSettings']()}
+											to="/moderation"
+										>
 											moderation settings
 										</InlineLinkText>
 										.
@@ -134,7 +139,7 @@ export function LabelerLabelRow({
 		<Settings.SelectRow<LabelPreference>
 			className={className}
 			items={items}
-			label={l`Filtering for ${labelStrings.name}`}
+			label={m['common.label.filteringFor']({ name: labelStrings.name })}
 			onValueChange={(visibility) => mutate({ label: identifier, labelerDid, visibility })}
 			value={prefAdjusted}
 		>

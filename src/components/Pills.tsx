@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import type { ModerationCause } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
@@ -16,6 +15,7 @@ import {
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export type AppModerationCause =
@@ -163,9 +163,7 @@ export function FollowsYou({ size = 'sm' }: CommonProps) {
 
 	return (
 		<View style={[variantStyles, a.justify_center, t.atoms.bg_contrast_50]}>
-			<Text style={[a.text_xs, a.leading_tight]}>
-				<Trans>Follows you</Trans>
-			</Text>
+			<Text style={[a.text_xs, a.leading_tight]}>{m['common.label.followsYou']()}</Text>
 		</View>
 	);
 }

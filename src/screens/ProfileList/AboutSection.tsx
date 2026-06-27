@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
 
@@ -16,13 +15,14 @@ import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 
+import { m } from '#/paraglide/messages';
+
 interface AboutSectionProps {
 	list: AppBskyGraphDefs.ListView;
 	onPressAddUser: () => void;
 }
 
 export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { gtMobile } = useBreakpoints();
 	const scrollElRef = useRef<ListMethods | null>(null);
@@ -45,7 +45,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 				<View style={[a.px_sm, a.py_sm]}>
 					<Button
 						testID="addUserBtn"
-						label={l`Add a user to this list`}
+						label={m['screens.profileList.action.addUser']()}
 						onPress={onPressAddUser}
 						color="primary"
 						size="small"
@@ -53,9 +53,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 						style={[a.py_md]}
 					>
 						<ButtonIcon icon={PersonPlusIcon} />
-						<ButtonText>
-							<Trans>Add people</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.addPeople']()}</ButtonText>
 					</Button>
 				</View>
 			);
@@ -64,7 +62,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 			<View style={[a.px_lg, a.py_md, a.flex_row_reverse]}>
 				<Button
 					testID="addUserBtn"
-					label={l`Add a user to this list`}
+					label={m['screens.profileList.action.addUser']()}
 					onPress={onPressAddUser}
 					color="primary"
 					size="small"
@@ -72,35 +70,31 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 					style={[a.py_sm]}
 				>
 					<ButtonIcon icon={PersonPlusIcon} />
-					<ButtonText>
-						<Trans>Add people</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.addPeople']()}</ButtonText>
 				</Button>
 			</View>
 		);
-	}, [isOwner, l, onPressAddUser, gtMobile]);
+	}, [isOwner, onPressAddUser, gtMobile]);
 
 	const renderEmptyState = useCallback(() => {
 		return (
 			<View style={[a.gap_xl, a.align_center]}>
-				<EmptyState icon={ListIcon} message={l`This list is empty.`} />
+				<EmptyState icon={ListIcon} message={m['screens.profileList.empty.message']()} />
 				{isOwner && (
 					<Button
 						testID="emptyStateAddUserBtn"
-						label={l`Start adding people`}
+						label={m['screens.profileList.empty.startAdding']()}
 						onPress={onPressAddUser}
 						color="primary"
 						size="small"
 					>
 						<ButtonIcon icon={PersonPlusIcon} />
-						<ButtonText>
-							<Trans>Start adding people!</Trans>
-						</ButtonText>
+						<ButtonText>{m['screens.profileList.empty.startAddingCta']()}</ButtonText>
 					</Button>
 				)}
 			</View>
 		);
-	}, [l, isOwner, onPressAddUser]);
+	}, [isOwner, onPressAddUser]);
 
 	return (
 		<View>
@@ -113,7 +107,11 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 				onScrolledDownChange={setIsScrolledDown}
 			/>
 			{isScrolledDown && (
-				<LoadLatestBtn onPress={onScrollToTop} label={l`Scroll to top`} showIndicator={false} />
+				<LoadLatestBtn
+					onPress={onScrollToTop}
+					label={m['screens.profileList.a11y.scrollToTop']()}
+					showIndicator={false}
+				/>
 			)}
 		</View>
 	);

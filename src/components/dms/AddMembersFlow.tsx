@@ -1,7 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
@@ -21,6 +20,8 @@ import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 import { ChatProfileTabs } from './ChatProfileTabs';
 import { EmptyMemberList } from './components/EmptyMemberList';
@@ -113,7 +114,6 @@ export function AddMembersFlow({
 	onAddMembers: (dids: string[], profiles: AnyProfileView[]) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
 
@@ -171,7 +171,7 @@ export function AddMembersFlow({
 			_items.push({
 				type: 'empty',
 				key: 'empty',
-				message: l`We’re having network issues, try again`,
+				message: m['components.dms.error.networkIssues'](),
 			});
 		} else if (searchText.length) {
 			if (autocompleteResults?.length) {
@@ -213,7 +213,7 @@ export function AddMembersFlow({
 			_items.unshift({
 				type: 'label',
 				key: 'suggested',
-				message: l`Suggested`,
+				message: m['components.dms.label.suggested'](),
 			});
 		}
 
@@ -222,7 +222,7 @@ export function AddMembersFlow({
 			// append an inline indicator so the user sees that work is happening.
 			_items.push({ type: 'loading', key: 'loading' });
 		} else if (searchText && !isAutocompleteFetching && !_items.length && !isError) {
-			_items.push({ type: 'empty', key: 'empty', message: l`No results` });
+			_items.push({ type: 'empty', key: 'empty', message: m['common.empty.noResults']() });
 		}
 
 		return _items;
@@ -233,7 +233,6 @@ export function AddMembersFlow({
 		isAutocompleteFetching,
 		isError,
 		isMemberListPending,
-		l,
 		memberDidSet,
 		searchText,
 	]);
@@ -283,8 +282,8 @@ export function AddMembersFlow({
 		}, 0);
 	}, []);
 
-	let buttonLabel = l`Continue to group name`;
-	let buttonText = l`Next`;
+	let buttonLabel = m['components.dms.action.continueToName']();
+	let buttonText = m['common.action.next']();
 	let showButton = groupChatProfiles.length > 0;
 	let isButtonDisabled = !showButton;
 
@@ -312,7 +311,7 @@ export function AddMembersFlow({
 						</Text>
 						{
 							<Button
-								label={l`Close`}
+								label={m['common.action.close']()}
 								size="small"
 								shape="round"
 								variant="ghost"
@@ -350,7 +349,6 @@ export function AddMembersFlow({
 		[
 			control,
 			groupChatProfiles,
-			l,
 			onRemoveDid,
 			searchText,
 			showChatProfileTabs,
@@ -393,7 +391,7 @@ export function AddMembersFlow({
 			onChange={setGroupChatMembers}
 			type="checkbox"
 			maxSelections={remainingSlots}
-			label={l`Add group chat members`}
+			label={m['components.dms.action.addMembers']()}
 			style={[webViewStyle(a.contents)]}
 		>
 			<Dialog.InnerFlatList
@@ -423,11 +421,14 @@ export function AddMembersFlow({
 				footer={
 					<Dialog.FlatListFooter onLayout={(evt) => setFooterHeight(evt.nativeEvent.layout.height)}>
 						<View style={[a.flex_row, a.align_center, a.justify_between]}>
-							<Button label={l`Back`} size="small" color="secondary" onPress={handlePressBack}>
+							<Button
+								label={m['common.action.back']()}
+								size="small"
+								color="secondary"
+								onPress={handlePressBack}
+							>
 								<ButtonIcon icon={ArrowLeftIcon} size="md" />
-								<ButtonText>
-									<Trans>Back</Trans>
-								</ButtonText>
+								<ButtonText>{m['common.action.back']()}</ButtonText>
 							</Button>
 							<Button
 								label={buttonLabel}

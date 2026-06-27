@@ -20,7 +20,6 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
-import { useLingui } from '@lingui/react/macro';
 
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
@@ -52,6 +51,7 @@ import * as Layout from '#/components/Layout';
 import * as ProfileCard from '#/components/ProfileCard';
 import { H1, H3, P, Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { ScreenHider } from '../../components/moderation/ScreenHider';
@@ -793,11 +793,10 @@ function MockAccountScreen({
 	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	return (
 		<View style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
 			<ScreenHider
-				screenDescription={l`profile`}
+				screenDescription={m['view.label.profile']()}
 				modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 			>
 				<StandardProfileHeader

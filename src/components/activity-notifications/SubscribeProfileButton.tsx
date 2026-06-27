@@ -1,6 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
@@ -10,6 +9,8 @@ import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/compone
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 /** Round bell button opening the activity-subscription dialog. */
 export function SubscribeProfileButton({
 	moderationOpts,
@@ -18,7 +19,6 @@ export function SubscribeProfileButton({
 	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
 }) {
-	const { t: l } = useLingui();
 	const handle = Dialog.useDialogHandle();
 
 	const name = createSanitizedDisplayName(profile, true);
@@ -31,7 +31,12 @@ export function SubscribeProfileButton({
 			<Dialog.Trigger
 				handle={handle}
 				render={
-					<Button color="secondary" label={l`Get notified when ${name} posts`} shape="round" size="small">
+					<Button
+						color="secondary"
+						label={m['components.activityNotifications.hint.whenPosts']({ name })}
+						shape="round"
+						size="small"
+					>
 						<ButtonIcon icon={Icon} size="md" />
 					</Button>
 				}

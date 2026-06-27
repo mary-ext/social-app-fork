@@ -27,6 +27,7 @@ import { Button } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Prompt from '#/components/web/Prompt';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { EditProfileButton } from './Actions';
@@ -49,26 +50,20 @@ interface Props {
 
 /** Keep this in sync with the value of MAX_LABELERS */
 function CantSubscribePrompt({ handle }: { handle: Prompt.PromptHandle }) {
-	const { t: l } = useLingui();
 	return (
 		<Prompt.Outer handle={handle}>
 			<Prompt.Content>
 				<Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
-				<Prompt.DescriptionText>
-					<Trans>
-						We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty.
-					</Trans>
-				</Prompt.DescriptionText>
+				<Prompt.DescriptionText>{m['screens.profile.error.subscribeLimit']()}</Prompt.DescriptionText>
 			</Prompt.Content>
 			<Prompt.Actions>
-				<Prompt.Action cta={l`OK`} onPress={() => handle.close()} />
+				<Prompt.Action cta={m['screens.profile.action.ok']()} onPress={() => handle.close()} />
 			</Prompt.Actions>
 		</Prompt.Outer>
 	);
 }
 
 function SubscribeLabelerButton() {
-	const { t: l } = useLingui();
 	const {
 		state: { profile },
 	} = useProfileHeader();
@@ -101,12 +96,18 @@ function SubscribeLabelerButton() {
 		<>
 			<Button
 				className={clsx(css.subscribeButton, isSubscribed ? css.subscribed : css.unsubscribed)}
-				label={isSubscribed ? l`Unsubscribe from this labeler` : l`Subscribe to this labeler`}
+				label={
+					isSubscribed
+						? m['screens.profile.action.unsubscribeLabeler']()
+						: m['screens.profile.action.subscribeThisLabeler']()
+				}
 				onClick={onPressSubscribe}
 				variant="bare"
 			>
 				<Text align="center" color={isSubscribed ? 'contrast_700' : 'white'} weight="semiBold">
-					{isSubscribed ? <Trans>Unsubscribe</Trans> : <Trans>Subscribe to Labeler</Trans>}
+					{isSubscribed
+						? m['screens.profile.action.unsubscribe']()
+						: m['screens.profile.action.subscribeLabeler']()}
 				</Text>
 			</Button>
 			<CantSubscribePrompt handle={cantSubscribePrompt} />
@@ -150,22 +151,19 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 				setLikeUri(res.uri);
 			}
 		} catch (e) {
-			Toast.show(
-				l`There was an issue contacting the server, please check your internet connection and try again.`,
-				{ type: 'error' },
-			);
+			Toast.show(m['screens.profile.error.server'](), { type: 'error' });
 			logger.error(`Failed to toggle labeler like`, {
 				message: e instanceof Error ? e.message : String(e),
 			});
 		}
-	}, [labeler, likeUri, unlikeMod, likeMod, l]);
+	}, [labeler, likeUri, unlikeMod, likeMod]);
 
 	return (
 		<div className={css.likeRow}>
 			<Button
 				color="secondary"
 				disabled={!hasSession || isLikePending || isUnlikePending}
-				label={l`Like this labeler`}
+				label={m['screens.profile.action.likeLabeler']()}
 				onClick={() => void onToggleLiked()}
 				shape="round"
 				size="small"

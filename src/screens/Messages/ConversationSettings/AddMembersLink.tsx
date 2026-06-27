@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { plural } from '@lingui/core/macro';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
@@ -20,6 +20,7 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function AddMembersLink({
@@ -42,9 +43,12 @@ export function AddMembersLink({
 
 				let names = null;
 				if (members.length === 1) {
-					names = l`${createSanitizedDisplayName(members[0]!)} added to chat`;
+					names = m['screens.messages.addedToChat.one']({ name: createSanitizedDisplayName(members[0]!) });
 				} else if (members.length === 2) {
-					names = l`${createSanitizedDisplayName(members[0]!)} and ${createSanitizedDisplayName(members[1]!)} added to chat`;
+					names = m['screens.messages.addedToChat.two']({
+						member1: createSanitizedDisplayName(members[0]!),
+						member2: createSanitizedDisplayName(members[1]!),
+					});
 				} else if (members.length > 2) {
 					const memberCount = convo.details.memberCount - 2;
 					names = l`${createSanitizedDisplayName(members[0]!)}, ${createSanitizedDisplayName(members[1]!)} and ${plural(
@@ -61,13 +65,17 @@ export function AddMembersLink({
 		},
 		onError: (e) => {
 			logger.error('Failed to add group chat members', { message: e });
-			Toast.show(l`Failed to add members`, { type: 'error' });
+			Toast.show(m['screens.messages.error.addMembers'](), { type: 'error' });
 		},
 	});
 
 	return (
 		<>
-			<Button disabled={disabled || isAddPending} label={l`Add members`} onPress={addMembersControl.open}>
+			<Button
+				disabled={disabled || isAddPending}
+				label={m['screens.messages.action.addMembers']()}
+				onPress={addMembersControl.open}
+			>
 				{({ interacting }) => (
 					<View
 						style={[
@@ -98,7 +106,7 @@ export function AddMembersLink({
 								<PlusIcon fill={colors.textContrastHigh} size="sm" />
 							</View>
 							<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, a.mx_sm, t.atoms.text]}>
-								<Trans>Add members</Trans>
+								{m['screens.messages.action.addMembers']()}
 							</Text>
 						</View>
 						{isAddPending ? <Loader size="md" /> : <ChevronIcon fill={colors.textContrastMedium} size="md" />}
@@ -110,7 +118,7 @@ export function AddMembersLink({
 				<Dialog.Handle />
 				<AddMembersFlow
 					convo={convo}
-					title={l`Add members`}
+					title={m['screens.messages.action.addMembers']()}
 					onAddMembers={(members, profiles) => {
 						addGroupMembers({ members, profiles });
 					}}

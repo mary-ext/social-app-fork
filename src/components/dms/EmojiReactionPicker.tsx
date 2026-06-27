@@ -1,7 +1,6 @@
 import { type ComponentProps, useState } from 'react';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Popover } from '@base-ui/react/popover';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
@@ -9,6 +8,8 @@ import { useSession } from '#/state/session';
 import { EmojiPanel } from '#/components/EmojiPicker/EmojiPanel';
 import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './EmojiReactionPicker.css';
 import { hasAlreadyReacted, hasReachedReactionLimit } from './util';
@@ -72,7 +73,6 @@ function QuickReactions({
 	onSelect: (emoji: string) => void;
 	onExpand: () => void;
 }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const limitReached = hasReachedReactionLimit(message, currentAccount?.did);
 
@@ -97,7 +97,12 @@ function QuickReactions({
 					</button>
 				);
 			})}
-			<button type="button" aria-label={l`More emojis`} className={styles.expandButton} onClick={onExpand}>
+			<button
+				type="button"
+				aria-label={m['components.dms.action.moreEmojis']()}
+				className={styles.expandButton}
+				onClick={onExpand}
+			>
 				<PlusIcon size="md" fill="currentColor" />
 			</button>
 		</div>

@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { moderatePost } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
@@ -16,6 +15,8 @@ import { Post } from '#/view/com/post/Post';
 
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 
+import { m } from '#/paraglide/messages';
+
 import { List } from '../util/List';
 
 function renderItem({ item, index }: { item: { post: AppBskyFeedDefs.PostView }; index: number }) {
@@ -27,7 +28,6 @@ function keyExtractor(item: { post: AppBskyFeedDefs.PostView }) {
 }
 
 export function PostQuotes({ uri }: { uri: string }) {
-	const { t: l } = useLingui();
 	const initialNumToRender = useInitialNumToRender();
 	const [isPTRing, setIsPTRing] = useState(false);
 
@@ -84,8 +84,8 @@ export function PostQuotes({ uri }: { uri: string }) {
 				isLoading={isLoadingUri || isLoadingQuotes}
 				isError={isError}
 				emptyType="results"
-				emptyTitle={l`No quotes yet`}
-				emptyMessage={l`Nobody has quoted this yet. Maybe you should be the first!`}
+				emptyTitle={m['view.postThread.empty.quotesTitle']()}
+				emptyMessage={m['view.postThread.empty.quotes']()}
 				errorMessage={cleanError(resolveError || error)}
 				sideBorders={false}
 			/>
@@ -109,7 +109,7 @@ export function PostQuotes({ uri }: { uri: string }) {
 					error={cleanError(error)}
 					onRetry={fetchNextPage}
 					showEndMessage
-					endMessageText={l`That's all, folks!`}
+					endMessageText={m['view.postThread.empty.endOfFeed']()}
 				/>
 			}
 			// @ts-ignore our .web version only -prf

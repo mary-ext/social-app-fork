@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useConvoActive } from '#/state/messages/convo';
@@ -15,6 +14,8 @@ import * as Prompt from '#/components/Prompt';
 import { usePromptControl } from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { useDialogHandle } from '#/components/web/Dialog';
+
+import { m } from '#/paraglide/messages';
 
 type MessageDialogsContextType = {
 	openDeleteMessage: (message: ChatBskyConvoDefs.MessageView) => void;
@@ -36,7 +37,6 @@ export function useMessageDialogs() {
 }
 
 export function MessageOverlays({ children }: { children: React.ReactNode }) {
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const convo = useConvoActive();
 
@@ -93,9 +93,9 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		convo
 			.deleteMessage(deleteTarget.id)
-			.then(() => Toast.show(l({ message: 'Message deleted', context: 'toast' })))
-			.catch(() => Toast.show(l`Failed to delete message`));
-	}, [l, convo, deleteTarget]);
+			.then(() => Toast.show(m['components.dms.toast.messageDeleted']()))
+			.catch(() => Toast.show(m['components.dms.error.deleteMessage']()));
+	}, [convo, deleteTarget]);
 
 	const onAfterReportSubmit = useCallback(() => {
 		if (!reportTarget) return;
@@ -165,9 +165,9 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 			)}
 			<Prompt.Basic
 				control={deleteControl}
-				title={l`Delete message`}
-				description={l`Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants.`}
-				confirmButtonCta={l`Delete`}
+				title={m['components.dms.action.deleteMessage']()}
+				description={m['components.dms.dialog.deleteMessagePrompt']()}
+				confirmButtonCta={m['common.action.delete']()}
 				confirmButtonColor="negative"
 				onConfirm={onConfirmDelete}
 				onClose={() => setDeleteTarget(null)}

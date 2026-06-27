@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import type { LightboxImage } from '@oomfware/lightbox';
 import { clsx } from 'clsx';
 
@@ -22,6 +21,7 @@ import { useGalleryBleed } from '#/components/images/Gallery';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export type GalleryProps = {
@@ -37,7 +37,6 @@ export type GalleryProps = {
 };
 
 export function Gallery({ images, control, lightboxImages, onPressIn, viewContext }: GalleryProps) {
-	const { t: l } = useLingui();
 	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const isWithinQuote = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
@@ -137,8 +136,8 @@ export function Gallery({ images, control, lightboxImages, onPressIn, viewContex
 			<div
 				ref={scrollRef}
 				role="group"
-				aria-roledescription={l`carousel`}
-				aria-label={l`Image gallery, ${images.length} images`}
+				aria-roledescription={m['components.imageEmbed.a11y.carousel']()}
+				aria-label={m['components.imageEmbed.a11y.gallery']({ count: images.length })}
 				className={styles.scroll}
 				style={{
 					marginLeft: -insetLeft,
@@ -193,7 +192,6 @@ function GalleryImage({
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 }) {
-	const { t: l } = useLingui();
 	// Size from the declared aspect ratio only (a missing one defaults to square). The shared row height was
 	// derived against these same metadata ratios, so adopting an image's true ratio post-load could push a
 	// metadata-less tile past the width budget and swallow the peek — better a square placeholder.
@@ -220,8 +218,10 @@ function GalleryImage({
 			// border-width wider than `dims.width`, drifting the snap anchor by that much per image.
 			style={{ height: dims.height, width: dims.width }}
 			tabIndex={index === 0 ? 0 : -1}
-			aria-roledescription={l`slide`}
-			aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}
+			aria-roledescription={m['components.imageEmbed.a11y.slide']()}
+			aria-label={
+				image.alt || m['components.imageEmbed.a11y.imagePosition']({ index: index + 1, imageCount })
+			}
 			onPointerDown={onPressIn}
 		>
 			<img

@@ -1,4 +1,4 @@
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural } from '@lingui/react/macro';
 
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
@@ -10,14 +10,15 @@ import { PostLikedBy as PostLikedByComponent } from '#/view/com/post-thread/Post
 
 import * as Layout from '#/components/Layout';
 
+import { m } from '#/paraglide/messages';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostLikedBy'>;
 export const PostLikedByScreen = ({ route }: Props) => {
 	const { name, rkey } = route.params;
-	const { t: l } = useLingui();
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
-	useSetTitle(post ? l`Post by @${post.author.handle}` : undefined);
+	useSetTitle(post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : undefined);
 
 	let likeCount;
 	if (post) {
@@ -31,9 +32,7 @@ export const PostLikedByScreen = ({ route }: Props) => {
 				<Layout.Header.Content>
 					{post && (
 						<>
-							<Layout.Header.TitleText>
-								<Trans>Liked By</Trans>
-							</Layout.Header.TitleText>
+							<Layout.Header.TitleText>{m['common.title.likedBy']()}</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
 								<Plural value={likeCount ?? 0} one="# like" other="# likes" />
 							</Layout.Header.SubtitleText>

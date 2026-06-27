@@ -1,7 +1,7 @@
 import { type MouseEvent, useCallback, useMemo, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -71,6 +71,7 @@ import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 import { router } from '#/routes';
 import { colors } from '#/styles/colors';
 
@@ -87,8 +88,6 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 	});
 	const profiles = data?.profiles;
 	const signOutPromptHandle = Prompt.usePromptHandle();
-	const { t: l } = useLingui();
-
 	const profile = profiles?.find((p) => p.did === currentAccount!.did);
 	const otherAccounts = accounts
 		.filter((acc) => acc.did !== currentAccount!.did)
@@ -107,7 +106,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 						render={
 							<button
 								type="button"
-								aria-label={l`Switch accounts`}
+								aria-label={m['view.action.switchAccounts']()}
 								className={clsx(css.profileTrigger, minimal && css.profileTriggerMinimal)}
 							>
 								<div className={css.avatarWrap}>
@@ -147,11 +146,11 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 			)}
 			<Prompt.Basic
 				handle={signOutPromptHandle}
-				title={l`Sign out?`}
-				description={l`You will be signed out of all your accounts.`}
+				title={m['common.dialog.signOutTitle']()}
+				description={m['common.hint.signOutAll']()}
 				onConfirm={() => logoutEveryAccount()}
-				confirmButtonCta={l`Sign out`}
-				cancelButtonCta={l`Cancel`}
+				confirmButtonCta={m['common.action.signOut']()}
+				cancelButtonCta={m['common.action.cancel']()}
 				confirmButtonColor="negative"
 			/>
 		</div>
@@ -170,7 +169,6 @@ function SwitchMenuItems({
 		| undefined;
 	signOutPromptHandle: Prompt.PromptHandle;
 }) {
-	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
 	const onAddAnotherAccount = () => {
@@ -178,13 +176,11 @@ function SwitchMenuItems({
 	};
 
 	return (
-		<Menu.Popup label={l`Switch accounts`} minWidth={150}>
+		<Menu.Popup label={m['view.action.switchAccounts']()} minWidth={150}>
 			{accounts && accounts.length > 0 && (
 				<>
 					<Menu.Group>
-						<Menu.LabelText>
-							<Trans>Switch account</Trans>
-						</Menu.LabelText>
+						<Menu.LabelText>{m['common.action.switchAccount']()}</Menu.LabelText>
 						{accounts.map((other) => (
 							<SwitchMenuItem key={other.account.did} account={other.account} profile={other.profile} />
 						))}
@@ -193,24 +189,19 @@ function SwitchMenuItems({
 				</>
 			)}
 			<SwitcherMenuProfileLink />
-			<Menu.Item label={l`Add another account`} onClick={onAddAnotherAccount}>
+			<Menu.Item label={m['common.action.addAnotherAccount']()} onClick={onAddAnotherAccount}>
 				<Menu.ItemIcon icon={PlusIcon} />
-				<Menu.ItemText>
-					<Trans>Add another account</Trans>
-				</Menu.ItemText>
+				<Menu.ItemText>{m['common.action.addAnotherAccount']()}</Menu.ItemText>
 			</Menu.Item>
-			<Menu.Item label={l`Sign out`} onClick={() => signOutPromptHandle.open(null)}>
+			<Menu.Item label={m['common.action.signOut']()} onClick={() => signOutPromptHandle.open(null)}>
 				<Menu.ItemIcon icon={LeaveIcon} />
-				<Menu.ItemText>
-					<Trans>Sign out</Trans>
-				</Menu.ItemText>
+				<Menu.ItemText>{m['common.action.signOut']()}</Menu.ItemText>
 			</Menu.Item>
 		</Menu.Popup>
 	);
 }
 
 function SwitcherMenuProfileLink() {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/';
 	const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink]);
@@ -248,11 +239,12 @@ function SwitcherMenuProfileLink() {
 	const bindings = useInternalLink({ action: 'navigate', onPress, to: profileLink });
 
 	return (
-		<Menu.Item label={l`Go to profile`} render={<a href={bindings.href} onClick={bindings.onClick} />}>
+		<Menu.Item
+			label={m['common.action.goToProfile']()}
+			render={<a href={bindings.href} onClick={bindings.onClick} />}
+		>
 			<Menu.ItemIcon icon={UserCircleIcon} />
-			<Menu.ItemText>
-				<Trans>Go to profile</Trans>
-			</Menu.ItemText>
+			<Menu.ItemText>{m['common.action.goToProfile']()}</Menu.ItemText>
 		</Menu.Item>
 	);
 }
@@ -264,14 +256,13 @@ function SwitchMenuItem({
 	account: SessionAccount;
 	profile: AppBskyActorDefs.ProfileViewDetailed | undefined;
 }) {
-	const { t: l } = useLingui();
 	const { onPressSwitchAccount, pendingDid } = useAccountSwitcher();
 	const { isActive: live } = useActorStatus(profile);
 
 	return (
 		<Menu.Item
 			disabled={!!pendingDid}
-			label={l`Switch to ${sanitizeHandle(profile?.handle ?? account.handle, '@')}`}
+			label={m['view.action.switchTo']({ handle: sanitizeHandle(profile?.handle ?? account.handle, '@') })}
 			onClick={() => void onPressSwitchAccount(account)}
 		>
 			<UserAvatar
@@ -366,7 +357,6 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 	const { currentAccount } = useSession();
 	const { getState } = useNavigation();
 	const { openComposer } = useOpenComposer();
-	const { t: l } = useLingui();
 	const [isFetchingHandle, setIsFetchingHandle] = useState(false);
 	const fetchHandle = useFetchHandle();
 
@@ -402,18 +392,14 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 		<div className={minimal ? css.composeRowMinimal : css.composeRow}>
 			<Button
 				disabled={isFetchingHandle}
-				label={l`Compose new post`}
+				label={m['common.action.composePost']()}
 				onClick={() => void onPressCompose()}
 				size="large"
 				color="primary"
 				className={minimal ? css.composeButtonMinimal : undefined}
 			>
 				<ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
-				{!minimal && (
-					<ButtonText>
-						<Trans context="action">New post</Trans>
-					</ButtonText>
-				)}
+				{!minimal && <ButtonText>{m['common.label.newPost']()}</ButtonText>}
 			</Button>
 		</div>
 	);
@@ -421,7 +407,6 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 
 export function DesktopLeftNav({ routeName }: { routeName: string }) {
 	const { hasSession, currentAccount } = useSession();
-	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 
 	// splitview uses the minimal variant of the leftnav. unfortunately there's no easy
@@ -455,7 +440,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: HomeFilledIcon,
 							inactive: HomeIcon,
 						}}
-						label={l`Home`}
+						label={m['common.nav.home']()}
 					/>
 					<NavItem
 						href="/search"
@@ -464,7 +449,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: MagnifyingGlassFilledIcon,
 							inactive: MagnifyingGlassIcon,
 						}}
-						label={l`Explore`}
+						label={m['common.nav.explore']()}
 					/>
 					<NavItem
 						href="/notifications"
@@ -474,7 +459,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: BellFilledIcon,
 							inactive: BellIcon,
 						}}
-						label={l`Notifications`}
+						label={m['common.nav.notifications']()}
 					/>
 					<NavItem
 						href="/messages"
@@ -485,7 +470,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: MessageFilledIcon,
 							inactive: MessageIcon,
 						}}
-						label={l`Chat`}
+						label={m['common.label.chat']()}
 					/>
 					<NavItem
 						href="/feeds"
@@ -494,7 +479,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: HashtagFilledIcon,
 							inactive: HashtagIcon,
 						}}
-						label={l`Feeds`}
+						label={m['common.nav.feeds']()}
 					/>
 					<NavItem
 						href="/lists"
@@ -503,7 +488,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: ListFilledIcon,
 							inactive: ListIcon,
 						}}
-						label={l`Lists`}
+						label={m['common.label.lists']()}
 					/>
 					<NavItem
 						href="/saved"
@@ -512,10 +497,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: BookmarkFilledIcon,
 							inactive: BookmarkIcon,
 						}}
-						label={l({
-							message: 'Saved',
-							context: 'link to bookmarks screen',
-						})}
+						label={m['view.label.saved']()}
 					/>
 					<NavItem
 						href={currentAccount ? makeProfileLink(currentAccount) : '/'}
@@ -524,7 +506,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: UserCircleFilledIcon,
 							inactive: UserCircleIcon,
 						}}
-						label={l`Profile`}
+						label={m['common.nav.profile']()}
 					/>
 					<NavItem
 						href="/settings"
@@ -533,7 +515,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: SettingsFilledIcon,
 							inactive: SettingsIcon,
 						}}
-						label={l`Settings`}
+						label={m['common.nav.settings']()}
 					/>
 
 					<ComposeBtn minimal={leftNavMinimal} />

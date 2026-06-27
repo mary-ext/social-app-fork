@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useLingui } from '@lingui/react/macro';
+
+import { m } from '#/paraglide/messages';
 
 export const interests = [
 	'animals',
@@ -43,37 +44,35 @@ export const popularInterests = [
 ] satisfies Interest[];
 
 export function useInterestsDisplayNames() {
-	const { t: l } = useLingui();
-
 	return useMemo<Record<string, string>>(() => {
 		return {
 			// Keep this alphabetized
-			animals: l`Animals`,
-			art: l`Art`,
-			books: l`Books`,
-			comedy: l`Comedy`,
-			comics: l`Comics`,
-			culture: l`Culture`,
-			dev: l`Software Dev`,
-			education: l`Education`,
-			finance: l`Finance`,
-			food: l`Food`,
-			gaming: l`Video Games`,
-			journalism: l`Journalism`,
-			movies: l`Movies`,
-			music: l`Music`,
-			nature: l`Nature`,
-			news: l`News`,
-			pets: l`Pets`,
-			photography: l`Photography`,
-			politics: l`Politics`,
-			science: l`Science`,
-			sports: l`Sports`,
-			tech: l`Tech`,
-			tv: l`TV`,
-			writers: l`Writers`,
+			animals: m['lib.interest.animals'](),
+			art: m['lib.interest.art'](),
+			books: m['lib.interest.books'](),
+			comedy: m['lib.interest.comedy'](),
+			comics: m['lib.interest.comics'](),
+			culture: m['lib.interest.culture'](),
+			dev: m['lib.interest.softwareDev'](),
+			education: m['lib.interest.education'](),
+			finance: m['lib.interest.finance'](),
+			food: m['lib.interest.food'](),
+			gaming: m['common.label.videoGames'](),
+			journalism: m['lib.interest.journalism'](),
+			movies: m['lib.interest.movies'](),
+			music: m['lib.interest.music'](),
+			nature: m['lib.interest.nature'](),
+			news: m['common.label.news'](),
+			pets: m['lib.interest.pets'](),
+			photography: m['lib.interest.photography'](),
+			politics: m['common.label.politics'](),
+			science: m['lib.interest.science'](),
+			sports: m['common.label.sports'](),
+			tech: m['lib.interest.tech'](),
+			tv: m['lib.interest.tv'](),
+			writers: m['lib.interest.writers'](),
 		} satisfies Record<Interest, string>;
-	}, [l]);
+	}, []);
 }
 
 /** Sort comparator that floats `boosts` (in their given order) to the front; other items keep their order. */

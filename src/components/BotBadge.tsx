@@ -1,11 +1,11 @@
 import type { AnyProfileView } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { BotAccountAlert } from '#/components/BotAccountAlert';
 import * as css from '#/components/BotBadge.css';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function isBotAccount(profile: { did: string; labels?: { src: string; val: string }[] }): boolean {
@@ -29,7 +29,6 @@ export function BotBadge({
 }
 
 export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; width: number }) {
-	const { t: l } = useLingui();
 	const control = Dialog.useDialogHandle();
 
 	if (!isBotAccount(profile)) {
@@ -39,7 +38,7 @@ export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; wi
 	return (
 		<>
 			<Dialog.Trigger
-				aria-label={l`Automated account`}
+				aria-label={m['common.label.automatedAccount']()}
 				className={css.button}
 				handle={control}
 				onClick={(e) => e.stopPropagation()}

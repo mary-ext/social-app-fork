@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
 
@@ -8,25 +7,26 @@ import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './ThreadError.css';
 
 export function ThreadError({ error, onRetry }: { error: Error; onRetry: () => void }) {
-	const { t: l } = useLingui();
 	const cleanError = useCleanError();
 
 	const { title, message } = useMemo(() => {
-		let title = l`Error loading post`;
-		let message = l`Something went wrong. Please try again in a moment.`;
+		let title = m['screens.postThread.error.loadPost']();
+		let message: string = m['screens.postThread.error.generic']();
 
 		const { raw, clean } = cleanError(error);
 
 		if (error.message.startsWith('Post not found')) {
-			title = l`Post not found`;
+			title = m['screens.postThread.error.notFound']();
 			message = clean || raw || message;
 		}
 
 		return { title, message };
-	}, [l, error, cleanError]);
+	}, [error, cleanError]);
 
 	return (
 		<Layout.Center>
@@ -40,10 +40,14 @@ export function ThreadError({ error, onRetry }: { error: Error; onRetry: () => v
 							{message}
 						</Text>
 					</div>
-					<Button label={l`Retry`} size="small" variant="solid" color="secondary_inverted" onPress={onRetry}>
-						<ButtonText>
-							<Trans>Retry</Trans>
-						</ButtonText>
+					<Button
+						label={m['common.action.retry']()}
+						size="small"
+						variant="solid"
+						color="secondary_inverted"
+						onPress={onRetry}
+					>
+						<ButtonText>{m['common.action.retry']()}</ButtonText>
 						<ButtonIcon icon={RetryIcon} position="right" />
 					</Button>
 				</div>

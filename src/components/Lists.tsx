@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -15,6 +14,8 @@ import * as css from '#/components/Lists.css';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
+
+import { m } from '#/paraglide/messages';
 
 export function ListFooter({
 	className,
@@ -46,7 +47,7 @@ export function ListFooter({
 				<ListFooterError error={error} onRetry={onRetry} />
 			) : !hasNextPage && showEndMessage ? (
 				<Text color="textContrastLow" size="sm">
-					{endMessageText ?? <Trans>You have reached the end</Trans>}
+					{endMessageText ?? m['components.lists.empty.endOfList']()}
 				</Text>
 			) : null}
 		</div>
@@ -54,18 +55,14 @@ export function ListFooter({
 }
 
 function ListFooterError({ error, onRetry }: { error: string; onRetry?: () => Promise<unknown> }) {
-	const { t: l } = useLingui();
-
 	return (
 		<div className={css.errorOuter}>
 			<div className={css.errorRow}>
 				<Text className={css.errorText} color="textContrastMedium" numberOfLines={2} size="sm">
 					{cleanError(error)}
 				</Text>
-				<Button label={l`Press to retry`} onClick={() => void onRetry?.()} variant="solid">
-					<ButtonText>
-						<Trans>Retry</Trans>
-					</ButtonText>
+				<Button label={m['common.a11y.pressToRetry']()} onClick={() => void onRetry?.()} variant="solid">
+					<ButtonText>{m['common.action.retry']()}</ButtonText>
 				</Button>
 			</div>
 		</div>
@@ -108,7 +105,6 @@ function ListMaybePlaceholder({
 	useEmptyState?: boolean;
 }): React.ReactNode {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { gtMobile, gtTablet } = useBreakpoints();
 
 	if (isLoading) {
@@ -134,8 +130,8 @@ function ListMaybePlaceholder({
 	if (isError) {
 		return (
 			<Error
-				title={errorTitle ?? l`Oops!`}
-				message={errorMessage ?? l`Something went wrong!`}
+				title={errorTitle ?? m['common.error.oops']()}
+				message={errorMessage ?? m['components.lists.error.generic']()}
 				onRetry={onRetry}
 				onGoBack={onGoBack}
 				sideBorders={sideBorders}
@@ -149,7 +145,12 @@ function ListMaybePlaceholder({
 			<CenteredView style={[t.atoms.border_contrast_low]} sideBorders={sideBorders ?? gtMobile}>
 				<EmptyState
 					icon={emptyStateIcon}
-					message={emptyMessage ?? (emptyType === 'results' ? l`No results found` : l`Page not found`)}
+					message={
+						emptyMessage ??
+						(emptyType === 'results'
+							? m['components.lists.empty.noResults']()
+							: m['common.error.pageNotFound']())
+					}
 					button={emptyStateButton}
 				/>
 			</CenteredView>
@@ -159,8 +160,13 @@ function ListMaybePlaceholder({
 	if (!noEmpty) {
 		return (
 			<Error
-				title={emptyTitle ?? (emptyType === 'results' ? l`No results found` : l`Page not found`)}
-				message={emptyMessage ?? l`We're sorry! We can't find the page you were looking for.`}
+				title={
+					emptyTitle ??
+					(emptyType === 'results'
+						? m['components.lists.empty.noResults']()
+						: m['common.error.pageNotFound']())
+				}
+				message={emptyMessage ?? m['common.error.notFoundDescription']()}
 				onRetry={onRetry}
 				onGoBack={onGoBack}
 				hideBackButton={hideBackButton}

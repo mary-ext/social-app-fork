@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyGroupListJoinRequests } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type InfiniteData, useQueryClient } from '@tanstack/react-query';
 
@@ -39,6 +39,7 @@ import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { InviteLinkDialog } from './components/InviteLinkDialog';
@@ -58,7 +59,6 @@ export function MessagesJoinRequestsScreen({ route }: Props) {
 }
 
 function JoinRequestsInner() {
-	const { t: l } = useLingui();
 	const convoState = useConvo();
 	const navigation = useNavigation<NavigationProp>();
 
@@ -67,8 +67,8 @@ function JoinRequestsInner() {
 			<>
 				<Header />
 				<Error
-					title={l`Something went wrong`}
-					message={l`We couldn’t load this conversation’s join requests`}
+					title={m['screens.messages.error.generic']()}
+					message={m['screens.messages.error.loadJoinRequests']()}
 					onRetry={() => convoState.error.retry()}
 					sideBorders={false}
 				/>
@@ -90,8 +90,8 @@ function JoinRequestsInner() {
 	if (convoState.convo.kind !== 'group') {
 		return (
 			<Error
-				title={l`Wrong kind of conversation`}
-				message={l`This screen is only available for group conversations.`}
+				title={m['screens.messages.error.wrongConversationType']()}
+				message={m['screens.messages.error.groupOnlyScreen']()}
 				onGoBack={() => {
 					if (navigation.canGoBack()) {
 						navigation.goBack();
@@ -108,7 +108,6 @@ function JoinRequestsInner() {
 
 function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const bottomBarOffset = useBottomBarOffset();
 	const { currentAccount } = useSession();
@@ -150,7 +149,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		convo.view.id,
 		{
 			onSuccess: () => {
-				Toast.show(l`Request approved.`);
+				Toast.show(m['screens.messages.toast.requestApproved']());
 				if (getRemainingRequestCount() < 1) {
 					navigation.replace('MessagesConversationSettings', {
 						conversation: convo.view.id,
@@ -158,19 +157,19 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				}
 			},
 			onError: (error) => {
-				let errorMessage = l`Failed to accept join request`;
+				let errorMessage = m['screens.messages.error.acceptJoinRequest']();
 				if (isNetworkError(error)) {
-					errorMessage = l`A network error occurred. Please check your internet connection.`;
+					errorMessage = m['common.error.network']();
 				} else if (error instanceof ClientResponseError) {
 					switch (error.error) {
 						case 'InvalidConvo':
-							errorMessage = l`Conversation not found.`;
+							errorMessage = m['common.error.conversationNotFound']();
 							break;
 						case 'InsufficientRole':
-							errorMessage = l`Only admins can accept join requests.`;
+							errorMessage = m['screens.messages.error.adminOnlyAccept']();
 							break;
 						case 'MemberLimitReached':
-							errorMessage = l`The member limit has been reached.`;
+							errorMessage = m['common.error.memberLimitReached']();
 							break;
 					}
 				}
@@ -184,7 +183,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		convo.view.id,
 		{
 			onSuccess: () => {
-				Toast.show(l`Request ignored.`);
+				Toast.show(m['screens.messages.toast.requestIgnored']());
 				if (getRemainingRequestCount() < 1) {
 					navigation.replace('MessagesConversationSettings', {
 						conversation: convo.view.id,
@@ -192,16 +191,16 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				}
 			},
 			onError: (error) => {
-				let errorMessage = l`Failed to ignore join request`;
+				let errorMessage = m['screens.messages.error.ignoreJoinRequest']();
 				if (isNetworkError(error)) {
-					errorMessage = l`A network error occurred. Please check your internet connection.`;
+					errorMessage = m['common.error.network']();
 				} else if (error instanceof ClientResponseError) {
 					switch (error.error) {
 						case 'InvalidConvo':
-							errorMessage = l`Conversation not found.`;
+							errorMessage = m['common.error.conversationNotFound']();
 							break;
 						case 'InsufficientRole':
-							errorMessage = l`Only admins can ignore join requests.`;
+							errorMessage = m['screens.messages.error.adminOnlyIgnore']();
 							break;
 					}
 				}
@@ -255,15 +254,13 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			]}
 		>
 			<Button
-				label={l`Edit invite link`}
+				label={m['screens.messages.action.editInviteLink']()}
 				size="large"
 				color="primary"
 				onPress={() => inviteLinkControl.open()}
 				style={[a.w_full]}
 			>
-				<ButtonText>
-					<Trans context="button">Edit invite link</Trans>
-				</ButtonText>
+				<ButtonText>{m['screens.messages.action.editInviteLink']()}</ButtonText>
 			</Button>
 		</View>
 	);
@@ -294,19 +291,17 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				<View style={[a.flex_1, a.align_center, a.justify_center, a.gap_sm, a.p_lg]}>
 					<ErrorIcon size="3xl" fill={colors.textContrastHigh} />
 					<Text style={[a.leading_snug, a.text_center, a.px_lg, a.text_md, t.atoms.text_contrast_high]}>
-						<Trans>Unable to fetch join requests.</Trans>
+						{m['screens.messages.error.fetchJoinRequests']()}
 					</Text>
 					<Button
 						color="primary"
-						label={l`Press to retry`}
+						label={m['common.a11y.pressToRetry']()}
 						onPress={() => void onRefresh()}
 						disabled={isPTRing}
 						size="large"
 						style={[a.mt_md]}
 					>
-						<ButtonText>
-							<Trans>Retry</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.retry']()}</ButtonText>
 						<ButtonIcon icon={isPTRing ? Loader : RetryIcon} />
 					</Button>
 				</View>
@@ -360,7 +355,7 @@ function Header({ count, hasMoreRequests }: { count?: number; hasMoreRequests?: 
 			<Layout.Header.Content>
 				<Layout.Header.TitleText>
 					{count === undefined ? (
-						<Trans>Requests to join</Trans>
+						m['common.label.requestsToJoin']()
 					) : hasMoreRequests ? (
 						<Plural
 							value={count}
@@ -383,35 +378,29 @@ function Header({ count, hasMoreRequests }: { count?: number; hasMoreRequests?: 
 }
 
 function AcceptButton({ disabled, onPress }: { disabled?: boolean; onPress: () => void }) {
-	const { t: l } = useLingui();
-
 	return (
-		<Button label={l`Accept join request`} size="small" color="primary" disabled={disabled} onPress={onPress}>
-			<ButtonText>
-				<Trans comment="Accept a request to join a chat" context="button">
-					Accept
-				</Trans>
-			</ButtonText>
+		<Button
+			label={m['screens.messages.action.acceptJoinRequest']()}
+			size="small"
+			color="primary"
+			disabled={disabled}
+			onPress={onPress}
+		>
+			<ButtonText>{m['screens.messages.action.accept']()}</ButtonText>
 		</Button>
 	);
 }
 
 function RejectButton({ disabled, onPress }: { disabled?: boolean; onPress: () => void }) {
-	const { t: l } = useLingui();
-
 	return (
 		<Button
-			label={l`Ignore join request`}
+			label={m['screens.messages.label.ignoreJoinRequest']()}
 			size="small"
 			color="secondary"
 			disabled={disabled}
 			onPress={onPress}
 		>
-			<ButtonText>
-				<Trans comment="Ignore a request to join a chat" context="button">
-					Ignore
-				</Trans>
-			</ButtonText>
+			<ButtonText>{m['screens.messages.action.ignore']()}</ButtonText>
 		</Button>
 	);
 }

@@ -1,5 +1,3 @@
-import { Trans, useLingui } from '@lingui/react/macro';
-
 import {
 	ADULT_CONTENT_LABELS,
 	type AdultSelfLabel,
@@ -18,9 +16,10 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 
+import { m } from '#/paraglide/messages';
+
 export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange: (v: SelfLabel[]) => void }) {
 	const control = Dialog.useDialogHandle();
-	const { t: l } = useLingui();
 
 	const hasLabel = labels.length > 0;
 
@@ -41,15 +40,17 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 			<Dialog.Trigger
 				handle={control}
 				render={
-					<Button color="secondary" size="small" label={l`Content warnings`}>
+					<Button color="secondary" size="small" label={m['view.composer.title.contentWarnings']()}>
 						<ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
-						<ButtonText>{hasLabel ? <Trans>Labels added</Trans> : <Trans>Labels</Trans>}</ButtonText>
+						<ButtonText>
+							{hasLabel ? m['view.composer.status.labelsAdded']() : m['common.label.labels']()}
+						</ButtonText>
 						<ButtonIcon icon={TinyChevronIcon} size="2xs" />
 					</Button>
 				}
 			/>
 			<Dialog.Root handle={control}>
-				<Dialog.Popup label={l`Add a content warning`} size="narrow">
+				<Dialog.Popup label={m['view.composer.action.addContentWarning']()} size="narrow">
 					<Dialog.Close />
 					<DialogInner
 						labels={labels}
@@ -74,106 +75,86 @@ function DialogInner({
 	updateAdultLabels: (labels: AdultSelfLabel[]) => void;
 	updateOtherLabels: (labels: OtherSelfLabel[]) => void;
 }) {
-	const { t: l } = useLingui();
-
 	const hasAdultLabel = labels.includes('sexual') || labels.includes('nudity') || labels.includes('porn');
 
 	return (
 		<>
 			<div className={styles.header}>
 				<Text size="_2xl" weight="semiBold">
-					<Trans>Add a content warning</Trans>
+					{m['view.composer.action.addContentWarning']()}
 				</Text>
-				<Text color="textContrastMedium">
-					<Trans>
-						Please add any content warning labels that are applicable for the media you are posting.
-					</Trans>
-				</Text>
+				<Text color="textContrastMedium">{m['view.composer.hint.contentWarnings']()}</Text>
 			</div>
 
 			<div className={styles.sections}>
 				<div className={styles.section}>
 					<Text size="lg" weight="semiBold">
-						<Trans>Adult Content</Trans>
+						{m['common.label.adultContent']()}
 					</Text>
 					<Toggle.Group
-						label={l`Adult Content labels`}
+						label={m['view.composer.label.adultContentLabels']()}
 						onChange={(values) => updateAdultLabels(values as AdultSelfLabel[])}
 						values={labels}
 					>
 						<Toggle.PanelGroup>
-							<Toggle.Item label={l`Suggestive`} name="sexual">
+							<Toggle.Item label={m['view.composer.label.suggestive']()} name="sexual">
 								<Toggle.Panel adjacent="trailing">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>
-										<Trans>Suggestive</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['view.composer.label.suggestive']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
-							<Toggle.Item label={l`Nudity`} name="nudity">
+							<Toggle.Item label={m['view.composer.label.nudity']()} name="nudity">
 								<Toggle.Panel adjacent="both">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>
-										<Trans>Nudity</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['view.composer.label.nudity']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
-							<Toggle.Item label={l`Porn`} name="porn">
+							<Toggle.Item label={m['view.composer.label.porn']()} name="porn">
 								<Toggle.Panel adjacent="leading">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>
-										<Trans>Adult</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['view.composer.label.adult']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
 						</Toggle.PanelGroup>
 					</Toggle.Group>
 					{hasAdultLabel && (
 						<Text color="textContrastMedium">
-							{labels.includes('sexual') ? (
-								<Trans>Pictures meant for adults.</Trans>
-							) : labels.includes('nudity') ? (
-								<Trans>Artistic or non-erotic nudity.</Trans>
-							) : (
-								<Trans>Sexual activity or erotic nudity.</Trans>
-							)}
+							{labels.includes('sexual')
+								? m['view.composer.contentWarning.pornDesc']()
+								: labels.includes('nudity')
+									? m['view.composer.contentWarning.nudityDesc']()
+									: m['view.composer.label.sexualContent']()}
 						</Text>
 					)}
 				</div>
 
 				<div className={styles.section}>
 					<Text size="lg" weight="semiBold">
-						<Trans>Other</Trans>
+						{m['common.label.other']()}
 					</Text>
 					<Toggle.Group
-						label={l`Other labels`}
+						label={m['view.composer.label.otherLabels']()}
 						onChange={(values) => updateOtherLabels(values as OtherSelfLabel[])}
 						values={labels}
 					>
 						<Toggle.PanelGroup>
-							<Toggle.Item label={l`Graphic Media`} name="graphic-media">
+							<Toggle.Item label={m['common.label.graphicMedia']()} name="graphic-media">
 								<Toggle.Panel adjacent="none">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>
-										<Trans>Graphic Media</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['common.label.graphicMedia']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
 						</Toggle.PanelGroup>
 					</Toggle.Group>
 					{labels.includes('graphic-media') && (
-						<Text color="textContrastMedium">
-							<Trans>Media that may be disturbing or inappropriate for some audiences.</Trans>
-						</Text>
+						<Text color="textContrastMedium">{m['view.composer.contentWarning.disturbingDesc']()}</Text>
 					)}
 				</div>
 			</div>
 
 			<div className={styles.doneRow}>
-				<Button color="primary" label={l`Done`} onClick={onDone} size="small">
-					<ButtonText>
-						<Trans>Done</Trans>
-					</ButtonText>
+				<Button color="primary" label={m['common.action.done']()} onClick={onDone} size="small">
+					<ButtonText>{m['common.action.done']()}</ButtonText>
 				</Button>
 			</div>
 		</>

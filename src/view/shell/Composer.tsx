@@ -1,5 +1,4 @@
 import { lazy, Suspense, useRef } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
 
@@ -7,6 +6,7 @@ import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { Spinner } from '#/components/Spinner';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import type { CancelRef } from '../com/composer/Composer';
@@ -17,7 +17,6 @@ import * as styles from './Composer.css';
 const ComposePost = lazy(() => import('../com/composer/Composer').then((m) => ({ default: m.ComposePost })));
 
 export function ComposerDialog() {
-	const { t: l } = useLingui();
 	const { composerDialogControl } = useGlobalDialogsControlContext();
 	const cancelRef = useRef<CancelRef>(null);
 
@@ -36,12 +35,12 @@ export function ComposerDialog() {
 			}}
 		>
 			{({ payload }) => (
-				<Dialog.Popup scroll="body" label={l`Write post`}>
+				<Dialog.Popup scroll="body" label={m['common.action.writePost']()}>
 					{payload && (
 						<Suspense
 							fallback={
 								<div className={styles.placeholder}>
-									<Spinner color={colors.contrast_500} label={l`Loading`} />
+									<Spinner color={colors.contrast_500} label={m['common.label.loading']()} />
 								</div>
 							}
 						>

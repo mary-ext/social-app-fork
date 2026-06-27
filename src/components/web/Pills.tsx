@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { ModerationCause } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
@@ -15,6 +14,8 @@ import {
 	useModerationDetailsDialogControl,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 import * as styles from '#/components/web/Pills.css';
+
+import { m } from '#/paraglide/messages';
 
 export type { AppModerationCause };
 
@@ -77,9 +78,7 @@ export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
 export function FollowsYou() {
 	return (
 		<div className={styles.followsYou}>
-			<Text size="xs">
-				<Trans>Follows you</Trans>
-			</Text>
+			<Text size="xs">{m['common.label.followsYou']()}</Text>
 		</div>
 	);
 }

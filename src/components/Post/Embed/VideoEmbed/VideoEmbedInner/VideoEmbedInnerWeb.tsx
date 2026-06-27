@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import type * as HlsTypes from 'hls.js';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+
+import { m } from '#/paraglide/messages';
 
 import * as BandwidthEstimate from './bandwidth-estimate';
 import * as styles from './VideoEmbedInnerWeb.css';
@@ -28,8 +29,6 @@ export function VideoEmbedInnerWeb({
 	const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false);
 	const [hlsLoading, setHlsLoading] = useState(false);
 	const figId = useId();
-	const { t: l } = useLingui();
-
 	// send error up to error boundary
 	const [error, setError] = useState<Error | null>(null);
 	if (error) {
@@ -51,7 +50,7 @@ export function VideoEmbedInnerWeb({
 	}, [lastKnownTime]);
 
 	return (
-		<div className={styles.root} aria-label={l`Embedded video player`}>
+		<div className={styles.root} aria-label={m['components.post.a11y.videoPlayer']()}>
 			<div ref={containerRef} style={{ height: '100%', width: '100%' }}>
 				<figure style={{ margin: 0, position: 'absolute', inset: 0 }}>
 					<video

@@ -1,4 +1,3 @@
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { atoms as a } from '#/alf';
@@ -7,11 +6,12 @@ import { Button } from '#/components/Button';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './ThreadItemShowOtherReplies.css';
 
 export function ThreadItemShowOtherReplies({ onPress }: { onPress: () => void }) {
-	const { t: l } = useLingui();
-	const label = l`Show more replies`;
+	const label = m['screens.postThread.action.showMoreReplies']();
 
 	return (
 		<Button

@@ -1,5 +1,5 @@
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
@@ -14,6 +14,8 @@ import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './ModerationDetailsDialog.css';
 
@@ -30,10 +32,9 @@ export interface ModerationDetailsDialogProps {
  * link navigates away.
  */
 export function ModerationDetailsDialog({ control, modcause }: ModerationDetailsDialogProps) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root handle={control}>
-			<Dialog.Popup className={styles.popup} label={l`Moderation details`}>
+			<Dialog.Popup className={styles.popup} label={m['common.title.moderationDetails']()}>
 				<ModerationDetailsDialogInner control={control} modcause={modcause} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -42,7 +43,6 @@ export function ModerationDetailsDialog({ control, modcause }: ModerationDetails
 }
 
 function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDialogProps) {
-	const { t: l } = useLingui();
 	const desc = useModerationCauseDescription(modcause);
 	const { currentAccount } = useSession();
 	const timeDiff = useGetTimeAgo({ future: true });
@@ -51,16 +51,16 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 	let name;
 	let description;
 	if (!modcause) {
-		name = l`Content Warning`;
-		description = l`Moderator has chosen to set a general warning on the content.`;
+		name = m['common.label.contentWarning']();
+		description = m['common.label.generalWarning']();
 	} else if (modcause.type === 'reply-hidden') {
 		const isYou = currentAccount?.did === modcause.source.did;
-		name = isYou ? l`Reply Hidden by You` : l`Reply Hidden by Thread Author`;
-		description = isYou ? l`You hid this reply.` : l`The author of this thread has hidden this reply.`;
+		name = isYou ? m['common.label.replyHiddenByYou']() : m['common.label.replyHiddenByAuthor']();
+		description = isYou ? m['common.label.youHidReply']() : m['common.label.authorHiddenReply']();
 	} else if (modcause.type === ModerationCauseType.Blocking) {
 		if (modcause.source) {
 			const list = modcause.source;
-			name = l`User Blocked by List`;
+			name = m['common.title.userBlockedByList']();
 			description = (
 				<Trans>
 					This user is included in the{' '}
@@ -71,16 +71,16 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 				</Trans>
 			);
 		} else {
-			name = l`User Blocked`;
-			description = l`You have blocked this user. You cannot view their content.`;
+			name = m['common.title.userBlocked']();
+			description = m['common.label.youBlockedUser']();
 		}
 	} else if (modcause.type === ModerationCauseType.BlockedBy) {
-		name = l`User Blocks You`;
-		description = l`This user has blocked you. You cannot view their content.`;
+		name = m['common.title.userBlocksYou']();
+		description = m['common.label.blockedByUser']();
 	} else if (modcause.type === ModerationCauseType.MutedPermanent) {
 		if (modcause.source) {
 			const list = modcause.source;
-			name = l`Account Muted by List`;
+			name = m['common.label.accountMutedByList']();
 			description = (
 				<Trans>
 					This user is included in the{' '}
@@ -91,18 +91,18 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 				</Trans>
 			);
 		} else {
-			name = l`Account Muted`;
-			description = l`You have muted this account.`;
+			name = m['common.label.accountMuted']();
+			description = m['common.label.youMutedAccount']();
 		}
 	} else if (modcause.type === ModerationCauseType.MutedTemporary) {
-		name = l`Account Muted`;
-		description = l`You have muted this account.`;
+		name = m['common.label.accountMuted']();
+		description = m['common.label.youMutedAccount']();
 	} else if (modcause.type === ModerationCauseType.MutedKeyword) {
-		name = l`Post Hidden by Muted Word`;
-		description = l`You've chosen to hide a word or tag within this post.`;
+		name = m['common.label.postHiddenByMutedWord']();
+		description = m['common.label.hiddenWordTag']();
 	} else if (modcause.type === ModerationCauseType.Hidden) {
-		name = l`Post Hidden by You`;
-		description = l`You have hidden this post.`;
+		name = m['common.label.postHiddenByYou']();
+		description = m['common.label.youHidPost']();
 	} else if (modcause.type === ModerationCauseType.Label) {
 		name = desc.name;
 		description = <Text size="md">{desc.description}</Text>;
@@ -112,7 +112,7 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 		description = '';
 	}
 
-	const sourceName = desc.source || desc.sourceDisplayName || l`an unknown labeler`;
+	const sourceName = desc.source || desc.sourceDisplayName || m['common.label.unknownLabeler']();
 
 	return (
 		<>
@@ -124,18 +124,14 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 
 				{desc.isSubjectAccount && (
 					<Admonition className={styles.admonition} type="info">
-						<Trans>
-							This moderation was applied to the entire user account and will appear on all posts.
-						</Trans>
+						{m['common.hint.accountModeration']()}
 					</Admonition>
 				)}
 			</div>
 			{modcause?.type === ModerationCauseType.Label && (
 				<div className={styles.labelBand}>
 					{modcause.source === null ? (
-						<Text size="md">
-							<Trans>This label was applied by the author.</Trans>
-						</Text>
+						<Text size="md">{m['common.label.appliedByAuthor']()}</Text>
 					) : (
 						<div className={styles.sourceRow}>
 							<Text className={styles.sourceText} color="textContrastMedium" numberOfLines={1}>
@@ -152,7 +148,7 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 							</Text>
 							{modcause.label.exp && (
 								<Text className={styles.expires} color="textContrastMedium" size="sm">
-									<Trans>Expires in {timeDiff(now, modcause.label.exp)}</Trans>
+									{m['common.label.expiresIn']({ time: timeDiff(now, modcause.label.exp) })}
 								</Text>
 							)}
 						</div>

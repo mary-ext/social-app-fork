@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { openImagePicker } from '#/lib/media/picker';
 import { isCancelledError } from '#/lib/strings/errors';
@@ -22,6 +21,8 @@ import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/T
 import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
+
 /** Web-native banner editor: a menu-triggering banner that crops uploads via {@link EditImageDialog}. */
 export function EditableBanner({
 	banner,
@@ -30,7 +31,6 @@ export function EditableBanner({
 	banner?: string | null;
 	onSelectNewBanner: (img: ImageMeta | null) => void;
 }) {
-	const { t: l } = useLingui();
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
 	const editImageDialogControl = useDialogHandle();
 
@@ -60,26 +60,22 @@ export function EditableBanner({
 	return (
 		<>
 			<Menu.Root>
-				<Menu.Trigger aria-label={l`Edit banner`} className={styles.trigger}>
+				<Menu.Trigger aria-label={m['components.editableBanner.a11y.edit']()} className={styles.trigger}>
 					{banner && <img className={styles.image} src={banner} alt="" />}
 					<span className={styles.editBadge}>
 						<CameraFilledIcon width={14} height={14} fill="currentColor" />
 					</span>
 				</Menu.Trigger>
-				<Menu.Popup label={l`Edit banner`} align="center">
+				<Menu.Popup label={m['components.editableBanner.a11y.edit']()} align="center">
 					<Menu.Item onClick={() => void onOpenLibrary()}>
-						<Menu.ItemText>
-							<Trans>Upload from Files</Trans>
-						</Menu.ItemText>
+						<Menu.ItemText>{m['common.action.uploadFromFiles']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={LibraryIcon} />
 					</Menu.Item>
 					{!!banner && (
 						<>
 							<Menu.Separator />
 							<Menu.Item destructive onClick={() => onSelectNewBanner(null)}>
-								<Menu.ItemText>
-									<Trans>Remove Banner</Trans>
-								</Menu.ItemText>
+								<Menu.ItemText>{m['components.editableBanner.action.remove']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={TrashIcon} />
 							</Menu.Item>
 						</>

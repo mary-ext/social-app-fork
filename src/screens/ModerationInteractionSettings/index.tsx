@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ResourceUri } from '@atcute/lexicons';
-import { Trans, useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
@@ -19,10 +18,11 @@ import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './index.css';
 
 export function Screen() {
-	const { t: l } = useLingui();
 	const { data: preferences } = usePreferencesQuery();
 
 	return (
@@ -30,25 +30,18 @@ export function Screen() {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Post Interaction Settings</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.title.postInteractionSettings']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<div className={styles.content}>
-					<Admonition type="tip">
-						<Trans>
-							The following settings will be used as your defaults when creating new posts. You can edit these
-							for a specific post from the composer.
-						</Trans>
-					</Admonition>
+					<Admonition type="tip">{m['screens.moderationInteractionSettings.hint.defaults']()}</Admonition>
 					{preferences ? (
 						<Inner preferences={preferences} />
 					) : (
 						<div className={styles.loaderWrap}>
-							<Spinner color="currentColor" label={l`Loading`} size="xl" />
+							<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
 						</div>
 					)}
 				</div>
@@ -58,7 +51,6 @@ export function Screen() {
 }
 
 function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
-	const { t: l } = useLingui();
 	const { isPending, mutateAsync: setPostInteractionSettings } = usePostInteractionSettingsMutation();
 	const [error, setError] = useState<string | undefined>(undefined);
 
@@ -95,15 +87,15 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 				postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
 				threadgateAllowRules: threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
 			});
-			Toast.show(l({ context: 'toast', message: 'Settings saved' }));
+			Toast.show(m['screens.moderationInteractionSettings.toast.saved']());
 		} catch (e) {
 			logger.error(`Failed to save post interaction settings`, {
 				safeMessage: e instanceof Error ? e.message : String(e),
 				source: 'ModerationInteractionSettingsScreen',
 			});
-			setError(l`Failed to save settings. Please try again.`);
+			setError(m['screens.moderationInteractionSettings.error.save']());
 		}
-	}, [l, maybeEditedPostgate, maybeEditedAllowUI, setPostInteractionSettings]);
+	}, [maybeEditedPostgate, maybeEditedAllowUI, setPostInteractionSettings]);
 
 	return (
 		<>

@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { Text } from '#/components/Text';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './ThreadItemPostTombstone.css';
 
@@ -12,16 +13,15 @@ export type ThreadItemPostTombstoneProps = {
 };
 
 export function ThreadItemPostTombstone({ type }: ThreadItemPostTombstoneProps) {
-	const { t: l } = useLingui();
 	const { copy, Icon } = useMemo(() => {
 		switch (type) {
 			case 'blocked':
-				return { copy: l`Post blocked`, Icon: PersonXIcon };
+				return { copy: m['screens.postThread.error.blocked'](), Icon: PersonXIcon };
 			case 'not-found':
 			default:
-				return { copy: l`Post not found`, Icon: TrashIcon };
+				return { copy: m['screens.postThread.error.notFound'](), Icon: TrashIcon };
 		}
-	}, [l, type]);
+	}, [type]);
 
 	return (
 		<div className={css.outer}>

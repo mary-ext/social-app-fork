@@ -8,7 +8,6 @@ import {
 	ModerationCauseType,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -31,6 +30,8 @@ import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
+
+import { m } from '#/paraglide/messages';
 
 import type { ConvoWithDetails } from './util';
 
@@ -80,7 +81,6 @@ function ProfileHeaderReady({
 	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const profile = useProfileShadow(convo.primaryMember);
 
 	const moderation = moderateProfile(profile, moderationOpts);
@@ -99,7 +99,7 @@ function ProfileHeaderReady({
 
 	const isDeletedAccount = profile?.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
-		? l`Deleted Account`
+		? m['common.label.deletedAccount']()
 		: createSanitizedDisplayName(
 				profile,
 				true,
@@ -111,7 +111,7 @@ function ProfileHeaderReady({
 		<Wrapper
 			heading={
 				<Link
-					label={l`View ${displayName}’s profile`}
+					label={m['common.a11y.viewProfileDisplayName']({ displayName })}
 					style={[a.flex_row, a.gap_md, a.flex_1]}
 					to={makeProfileLink(profile)}
 				>
@@ -149,8 +149,6 @@ function ProfileHeaderReady({
 }
 
 function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
-	const { t: l } = useLingui();
-
 	const disabled = convo.details.lockStatus === 'locked-permanently';
 
 	return (
@@ -158,7 +156,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			heading={
 				<Link
 					label={convo.details.name}
-					accessibilityHint={l`Open group chat settings`}
+					accessibilityHint={m['components.dms.action.openGroupSettings']()}
 					style={[a.flex_row, a.gap_md, a.flex_1, a.justify_start]}
 					to={
 						disabled
@@ -192,7 +190,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 									},
 								}
 					}
-					label={l`Open group chat settings`}
+					label={m['components.dms.action.openGroupSettings']()}
 					size="small"
 					color="secondary"
 					shape="round"

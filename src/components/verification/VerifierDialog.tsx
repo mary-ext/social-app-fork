@@ -13,6 +13,8 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { ExternalLinkButton } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import announcementImage from '../../../assets/images/initial_verification_announcement_1.png';
 
 export function VerifierDialog({
@@ -22,11 +24,13 @@ export function VerifierDialog({
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 }) {
-	const { t: l } = useLingui();
 	const userName = getUserDisplayName(profile);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={l`Trusted verifier information for ${userName}`} size="narrow">
+			<Dialog.Popup
+				label={m['components.verification.label.trustedVerifierInfo']({ userName })}
+				size="narrow"
+			>
 				<DialogInner handle={handle} profile={profile} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -39,13 +43,15 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 	const isSelf = profile.did === currentAccount?.did;
 	const userName = getUserDisplayName(profile);
-	const label = isSelf ? l`You are a trusted verifier` : l`${userName} is a trusted verifier`;
+	const label = isSelf
+		? m['components.verification.status.youTrustedVerifier']()
+		: m['components.verification.status.userTrustedVerifier']({ userName });
 
 	return (
 		<div className={css.content}>
 			<div className={css.imageBox}>
 				<img
-					alt={l`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`}
+					alt={m['components.verification.a11y.illustration']()}
 					className={css.image}
 					src={announcementImage}
 				/>
@@ -73,14 +79,15 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					size="small"
 					href={urls.website.blog.initialVerificationAnnouncement}
 				>
-					<ButtonText>
-						<Trans context="english-only-resource">Learn more</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.learnMore']()}</ButtonText>
 				</ExternalLinkButton>
-				<Button color="secondary" label={l`Close dialog`} onClick={() => handle.close()} size="small">
-					<ButtonText>
-						<Trans>Close</Trans>
-					</ButtonText>
+				<Button
+					color="secondary"
+					label={m['common.a11y.closeDialog']()}
+					onClick={() => handle.close()}
+					size="small"
+				>
+					<ButtonText>{m['common.action.close']()}</ButtonText>
 				</Button>
 			</div>
 		</div>

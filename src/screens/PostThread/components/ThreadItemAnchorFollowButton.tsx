@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -15,6 +14,8 @@ import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/C
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+
+import { m } from '#/paraglide/messages';
 
 export function ThreadItemAnchorFollowButton({ did, enabled = true }: { did: string; enabled?: boolean }) {
 	return <ThreadItemAnchorFollowButtonInner did={did} enabled={enabled} />;
@@ -42,7 +43,6 @@ function PostThreadFollowBtnLoaded({
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const navigation = useNavigation();
-	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const profile = useProfileShadow(profileUnshadowed);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
@@ -89,7 +89,7 @@ function PostThreadFollowBtnLoaded({
 				} catch (e) {
 					if (!(e instanceof Error && e.name === 'AbortError')) {
 						logger.error('Failed to follow', { message: String(e) });
-						Toast.show(l`There was an issue! ${String(e)}`, {
+						Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 							type: 'error',
 						});
 					}
@@ -102,36 +102,32 @@ function PostThreadFollowBtnLoaded({
 				} catch (e) {
 					if (!(e instanceof Error && e.name === 'AbortError')) {
 						logger.error('Failed to unfollow', { message: String(e) });
-						Toast.show(l`There was an issue! ${String(e)}`, {
+						Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 							type: 'error',
 						});
 					}
 				}
 			});
 		}
-	}, [isFollowing, requireAuth, queueFollow, l, queueUnfollow]);
+	}, [isFollowing, requireAuth, queueFollow, queueUnfollow]);
 
 	if (!showFollowBtn) return null;
 
 	return (
 		<Button
 			data-testid="followBtn"
-			label={l`Follow ${profile.handle}`}
+			label={m['common.a11y.follow']({ handle: profile.handle })}
 			onClick={onPress}
 			size="small"
 			color={isFollowing ? 'secondary' : 'secondary_inverted'}
 		>
 			{gtMobile && <ButtonIcon icon={isFollowing ? CheckIcon : PlusIcon} size="sm" />}
 			<ButtonText>
-				{!isFollowing ? (
-					isFollowedBy ? (
-						<Trans>Follow back</Trans>
-					) : (
-						<Trans>Follow</Trans>
-					)
-				) : (
-					<Trans>Following</Trans>
-				)}
+				{!isFollowing
+					? isFollowedBy
+						? m['common.action.followBack']()
+						: m['common.action.follow']()
+					: m['common.action.following']()}
 			</ButtonText>
 		</Button>
 	);

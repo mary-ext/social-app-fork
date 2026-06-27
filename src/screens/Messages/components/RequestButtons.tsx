@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -36,6 +35,8 @@ import {
 import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
+
 export function RejectMenu({
 	convo,
 	profile,
@@ -57,7 +58,6 @@ export function RejectMenu({
 	showDeleteConvo?: boolean;
 	currentScreen: 'list' | 'conversation';
 }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const shadowedProfile = useProfileShadow(profile);
 	const navigation = useNavigation<NavigationProp>();
@@ -70,46 +70,28 @@ export function RejectMenu({
 			}
 		},
 		onError: () => {
-			Toast.show(
-				l({
-					context: 'toast',
-					message: 'Failed to delete chat',
-				}),
-				{
-					type: 'error',
-				},
-			);
+			Toast.show(m['screens.messages.error.deleteChat'](), {
+				type: 'error',
+			});
 		},
 	});
 	const [queueBlock] = useProfileBlockMutationQueue(shadowedProfile);
 
 	const onPressDelete = useCallback(() => {
-		Toast.show(
-			l({
-				context: 'toast',
-				message: 'Chat deleted',
-			}),
-			{
-				type: 'success',
-			},
-		);
+		Toast.show(m['screens.messages.toast.chatDeleted'](), {
+			type: 'success',
+		});
 		leaveConvo();
-	}, [leaveConvo, l]);
+	}, [leaveConvo]);
 
 	const onPressBlock = useCallback(() => {
-		Toast.show(
-			l({
-				context: 'toast',
-				message: 'Account blocked',
-			}),
-			{
-				type: 'success',
-			},
-		);
+		Toast.show(m['common.toast.accountBlocked'](), {
+			type: 'success',
+		});
 		// block and also delete convo
 		void queueBlock();
 		leaveConvo();
-	}, [queueBlock, leaveConvo, l]);
+	}, [queueBlock, leaveConvo]);
 
 	const reportControl = useDialogHandle();
 	const blockOrDeleteControl = useDialogControl();
@@ -123,37 +105,35 @@ export function RejectMenu({
 			<Menu.Root>
 				<Menu.Trigger
 					render={
-						<WebButton label={l`Reject chat request`} color={color} size={size} className={className}>
+						<WebButton
+							label={m['screens.messages.label.rejectChatRequest']()}
+							color={color}
+							size={size}
+							className={className}
+						>
 							{icon ? <WebButtonIcon icon={FlagIcon} /> : null}
-							<WebButtonText>
-								{label || (
-									<Trans comment="Reject a chat request, this opens a menu with options">Reject</Trans>
-								)}
-							</WebButtonText>
+							<WebButtonText>{label || m['screens.messages.action.reject']()}</WebButtonText>
 						</WebButton>
 					}
 				/>
-				<Menu.Popup label={l`Reject chat request`}>
+				<Menu.Popup label={m['screens.messages.label.rejectChatRequest']()}>
 					<Menu.Group>
 						{showDeleteConvo && (
-							<Menu.Item label={l`Delete conversation`} onClick={onPressDelete}>
-								<Menu.ItemText>
-									<Trans>Delete conversation</Trans>
-								</Menu.ItemText>
+							<Menu.Item label={m['common.action.deleteConversation']()} onClick={onPressDelete}>
+								<Menu.ItemText>{m['common.action.deleteConversation']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={CircleX_Stroke2_Corner0_Rounded} position="right" />
 							</Menu.Item>
 						)}
-						<Menu.Item label={l`Block account`} onClick={onPressBlock}>
-							<Menu.ItemText>
-								<Trans>Block account</Trans>
-							</Menu.ItemText>
+						<Menu.Item label={m['common.action.blockAccount']()} onClick={onPressBlock}>
+							<Menu.ItemText>{m['common.action.blockAccount']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={PersonXIcon} position="right" />
 						</Menu.Item>
 						{reportSubject && (
-							<Menu.Item label={l`Report conversation`} onClick={() => reportControl.open(null)}>
-								<Menu.ItemText>
-									<Trans>Report conversation</Trans>
-								</Menu.ItemText>
+							<Menu.Item
+								label={m['common.action.reportConversation']()}
+								onClick={() => reportControl.open(null)}
+							>
+								<Menu.ItemText>{m['common.action.reportConversation']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={FlagIcon} position="right" />
 							</Menu.Item>
 						)}
@@ -224,7 +204,6 @@ export function AcceptChatButton({
 	onAcceptConvo?: () => void;
 	currentScreen: 'list' | 'conversation';
 }) {
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const navigation = useNavigation<NavigationProp>();
 
@@ -244,15 +223,9 @@ export function AcceptChatButton({
 			// no difference if the request failed - when they send a message, the convo will be accepted
 			// automatically. The only difference is that when they back out of the convo (without sending a message), the conversation will be rejected.
 			// the list will still have this chat in it -sfn
-			Toast.show(
-				l({
-					context: 'toast',
-					message: 'Failed to accept chat',
-				}),
-				{
-					type: 'error',
-				},
-			);
+			Toast.show(m['screens.messages.error.acceptChat'](), {
+				type: 'error',
+			});
 		},
 	});
 
@@ -270,13 +243,13 @@ export function AcceptChatButton({
 	return (
 		<Button
 			{...props}
-			label={label || l`Accept chat request`}
+			label={label || m['screens.messages.action.acceptChatRequest']()}
 			size={size}
 			color={color}
 			onPress={onPressAccept}
 		>
 			{Icon}
-			<ButtonText>{label || <Trans comment="Accept a chat request">Accept</Trans>}</ButtonText>
+			<ButtonText>{label || m['screens.messages.action.accept']()}</ButtonText>
 		</Button>
 	);
 }
@@ -295,7 +268,6 @@ export function DeleteChatButton({
 	convo: ChatBskyConvoDefs.ConvoView;
 	currentScreen: 'list' | 'conversation';
 }) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	const { mutate: leaveConvo } = useLeaveConvo(convo.id, {
@@ -305,35 +277,29 @@ export function DeleteChatButton({
 			}
 		},
 		onError: () => {
-			Toast.show(
-				l({
-					context: 'toast',
-					message: 'Failed to delete chat',
-				}),
-				{
-					type: 'error',
-				},
-			);
+			Toast.show(m['screens.messages.error.deleteChat'](), {
+				type: 'error',
+			});
 		},
 	});
 
 	const onPressDelete = useCallback(() => {
-		Toast.show(
-			l({
-				context: 'toast',
-				message: 'Chat deleted',
-			}),
-			{
-				type: 'success',
-			},
-		);
+		Toast.show(m['screens.messages.toast.chatDeleted'](), {
+			type: 'success',
+		});
 		leaveConvo();
-	}, [leaveConvo, l]);
+	}, [leaveConvo]);
 
 	return (
-		<Button label={label || l`Delete chat`} size={size} color={color} onPress={onPressDelete} {...props}>
+		<Button
+			label={label || m['screens.messages.action.deleteChat']()}
+			size={size}
+			color={color}
+			onPress={onPressDelete}
+			{...props}
+		>
 			{icon ? <ButtonIcon icon={LeaveIcon} /> : null}
-			<ButtonText>{label || <Trans>Delete chat</Trans>}</ButtonText>
+			<ButtonText>{label || m['screens.messages.action.deleteChat']()}</ButtonText>
 		</Button>
 	);
 }

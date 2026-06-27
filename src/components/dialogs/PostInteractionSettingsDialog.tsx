@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
@@ -41,6 +41,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as WebDialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export type PostInteractionSettingsFormProps = {
@@ -84,10 +85,8 @@ export function PostInteractionSettingsControlledDialog({
 }
 
 function DialogInner(props: PostInteractionSettingsFormProps) {
-	const { t: l } = useLingui();
-
 	return (
-		<WebDialog.Popup label={l`Edit post interaction settings`} size="narrow">
+		<WebDialog.Popup label={m['components.dialogs.interaction.editTitle']()} size="narrow">
 			<WebDialog.Close />
 			<Header />
 			<PostInteractionSettingsForm {...props} />
@@ -113,10 +112,9 @@ export type PostInteractionSettingsDialogProps = {
 
 /** Threadgate settings dialog. Used in the thread. */
 export function PostInteractionSettingsDialog({ handle, ...props }: PostInteractionSettingsDialogProps) {
-	const { t: l } = useLingui();
 	return (
 		<WebDialog.Root handle={handle}>
-			<WebDialog.Popup label={l`Edit post interaction settings`} size="narrow">
+			<WebDialog.Popup label={m['components.dialogs.interaction.editTitle']()} size="narrow">
 				<WebDialog.Close />
 				<PostInteractionSettingsDialogInner handle={handle} {...props} />
 			</WebDialog.Popup>
@@ -125,7 +123,6 @@ export function PostInteractionSettingsDialog({ handle, ...props }: PostInteract
 }
 
 function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractionSettingsDialogProps) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -192,14 +189,13 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 				source: 'PostInteractionSettingsDialogInner',
 				safeMessage: e instanceof Error ? e.message : String(e),
 			});
-			Toast.show(l`There was an issue. Please check your internet connection and try again.`, {
+			Toast.show(m['common.error.issueConnection'](), {
 				type: 'error',
 			});
 		} finally {
 			setIsSaving(false);
 		}
 	}, [
-		l,
 		handle,
 		props.postUri,
 		props.rootPostUri,
@@ -213,10 +209,8 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 	if (isLoading) {
 		return (
 			<div className={styles.loading}>
-				<Spinner color="currentColor" label={l`Loading post interaction settings...`} />
-				<Text className={styles.loadingText}>
-					<Trans>Loading post interaction settings...</Trans>
-				</Text>
+				<Spinner color="currentColor" label={m['components.dialogs.interaction.loading']()} />
+				<Text className={styles.loadingText}>{m['components.dialogs.interaction.loading']()}</Text>
 			</div>
 		);
 	}
@@ -250,7 +244,6 @@ export function PostInteractionSettingsForm({
 	persist,
 	onChangePersist,
 }: PostInteractionSettingsFormProps) {
-	const { t: l } = useLingui();
 	const [showLists, setShowLists] = useState(false);
 	const { data: lists, isPending: isListsPending, isError: isListsError } = useMyListsQuery('curate');
 	const [quotesEnabled, setQuotesEnabled] = useState(
@@ -332,20 +325,20 @@ export function PostInteractionSettingsForm({
 					<div className={styles.disabledNotice}>
 						<CircleInfo className={styles.disabledNoticeIcon} size="md" fill={colors.textContrastLow} />
 						<Text className={styles.flex1} color="textContrastMedium" size="sm">
-							<Trans>Reply settings are chosen by the author of the thread</Trans>
+							{m['components.dialogs.reply.authorControlled']()}
 						</Text>
 					</div>
 				)}
 
 				<div className={styles.replyBlock} style={{ opacity: replySettingsDisabled ? 0.3 : 1 }}>
 					<Text size="md" weight="medium">
-						<Trans>Who can reply</Trans>
+						{m['common.label.whoCanReply']()}
 					</Text>
 
 					<Toggle.Group
 						className={styles.radioRow}
 						disabled={replySettingsDisabled}
-						label={l`Set who can reply to your post`}
+						label={m['components.dialogs.reply.description']()}
 						onChange={(val) => {
 							if (val.includes('everyone')) {
 								onChangeThreadgateAllowUISettings([{ type: 'everybody' }]);
@@ -358,59 +351,53 @@ export function PostInteractionSettingsForm({
 						type="radio"
 						values={everyoneCanReply ? ['everyone'] : noOneCanReply ? ['nobody'] : []}
 					>
-						<Toggle.RadioItem label={l`Allow anyone to reply`} value="everyone">
+						<Toggle.RadioItem label={m['components.dialogs.reply.allowAnyone']()} value="everyone">
 							<Toggle.Panel>
 								<Toggle.RadioIndicator />
-								<Toggle.PanelText>
-									<Trans>Anyone</Trans>
-								</Toggle.PanelText>
+								<Toggle.PanelText>{m['components.dialogs.reply.anyone']()}</Toggle.PanelText>
 							</Toggle.Panel>
 						</Toggle.RadioItem>
-						<Toggle.RadioItem label={l`Disable replies entirely`} value="nobody">
+						<Toggle.RadioItem label={m['components.dialogs.reply.disableAll']()} value="nobody">
 							<Toggle.Panel>
 								<Toggle.RadioIndicator />
-								<Toggle.PanelText>
-									<Trans>Nobody</Trans>
-								</Toggle.PanelText>
+								<Toggle.PanelText>{m['components.dialogs.reply.nobody']()}</Toggle.PanelText>
 							</Toggle.Panel>
 						</Toggle.RadioItem>
 					</Toggle.Group>
 
 					<Toggle.Group
 						disabled={replySettingsDisabled}
-						label={l`Set precisely which groups of people can reply to your post`}
+						label={m['components.dialogs.reply.advancedDescription']()}
 						onChange={toggleGroupOnChange}
 						type="checkbox"
 						values={toggleGroupValues}
 					>
 						<Toggle.PanelGroup>
-							<Toggle.Item label={l`Allow your followers to reply`} name="followers">
+							<Toggle.Item label={m['components.dialogs.reply.allowFollowers']()} name="followers">
 								<Toggle.Panel adjacent="trailing">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>
-										<Trans>Your followers</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['components.dialogs.label.followers']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
-							<Toggle.Item label={l`Allow people you follow to reply`} name="following">
+							<Toggle.Item label={m['components.dialogs.reply.allowFollows']()} name="following">
 								<Toggle.Panel adjacent="both">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>
-										<Trans>People you follow</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['components.dialogs.reply.peopleYouFollow']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
-							<Toggle.Item label={l`Allow people you mention to reply`} name="mention">
+							<Toggle.Item label={m['components.dialogs.reply.allowMentions']()} name="mention">
 								<Toggle.Panel adjacent="both">
 									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>
-										<Trans>People you mention</Trans>
-									</Toggle.PanelText>
+									<Toggle.PanelText>{m['components.dialogs.reply.peopleYouMention']()}</Toggle.PanelText>
 								</Toggle.Panel>
 							</Toggle.Item>
 
 							<Toggle.Action
-								label={showLists ? l`Hide lists` : l`Show lists of users to select from`}
+								label={
+									showLists
+										? m['components.dialogs.list.hide']()
+										: m['components.dialogs.list.a11yShowSelect']()
+								}
 								onClick={() => {
 									setShowLists((s) => !s);
 								}}
@@ -419,7 +406,7 @@ export function PostInteractionSettingsForm({
 								<Toggle.Panel active={numberOfListsSelected > 0} adjacent={showLists ? 'both' : 'leading'}>
 									<Toggle.PanelText>
 										{numberOfListsSelected === 0 ? (
-											<Trans>Select from your lists</Trans>
+											m['components.dialogs.list.selectFromYours']()
 										) : (
 											<Trans>
 												Select from your lists{' '}
@@ -435,27 +422,21 @@ export function PostInteractionSettingsForm({
 							{showLists &&
 								(isListsPending ? (
 									<Toggle.Panel>
-										<Toggle.PanelText>
-											<Trans>Loading lists...</Trans>
-										</Toggle.PanelText>
+										<Toggle.PanelText>{m['components.dialogs.list.loading']()}</Toggle.PanelText>
 									</Toggle.Panel>
 								) : isListsError ? (
 									<Toggle.Panel>
-										<Toggle.PanelText>
-											<Trans>An error occurred while loading your lists :/</Trans>
-										</Toggle.PanelText>
+										<Toggle.PanelText>{m['components.dialogs.list.loadError']()}</Toggle.PanelText>
 									</Toggle.Panel>
 								) : lists.length === 0 ? (
 									<Toggle.Panel>
-										<Toggle.PanelText>
-											<Trans>You don't have any lists yet.</Trans>
-										</Toggle.PanelText>
+										<Toggle.PanelText>{m['components.dialogs.empty.lists']()}</Toggle.PanelText>
 									</Toggle.Panel>
 								) : (
 									lists.map((list, i) => (
 										<Toggle.Item
 											key={list.uri}
-											label={l`Allow users in ${list.name} to reply`}
+											label={m['components.dialogs.reply.allowList']({ name: list.name })}
 											name={`list:${list.uri}`}
 										>
 											<Toggle.Panel adjacent={i === lists.length - 1 ? 'leading' : 'both'}>
@@ -472,12 +453,16 @@ export function PostInteractionSettingsForm({
 			</div>
 			<Toggle.Item
 				checked={quotesEnabled}
-				label={quotesEnabled ? l`Disable quote posts of this post` : l`Enable quote posts of this post`}
+				label={
+					quotesEnabled
+						? m['components.dialogs.interaction.disableQuotes']()
+						: m['components.dialogs.interaction.enableQuotes']()
+				}
 				onChange={onChangeQuotesEnabled}
 			>
 				<Toggle.Panel>
 					<Toggle.PanelText icon={QuoteIcon}>
-						<Trans>Allow quote posts</Trans>
+						{m['components.dialogs.interaction.allowQuotes']()}
 					</Toggle.PanelText>
 					<Toggle.Switch />
 				</Toggle.Panel>
@@ -487,17 +472,15 @@ export function PostInteractionSettingsForm({
 					{isDirty ? (
 						<Toggle.Item
 							checked={persist}
-							label={l`Save these options for next time`}
+							label={m['components.dialogs.mutedWord.saveOptions']()}
 							onChange={() => onChangePersist?.(!persist)}
 						>
 							<Toggle.CheckboxIndicator />
-							<Text size="md">
-								<Trans>Save these options for next time</Trans>
-							</Text>
+							<Text size="md">{m['components.dialogs.mutedWord.saveOptions']()}</Text>
 						</Toggle.Item>
 					) : (
 						<Text color="textContrastMedium" size="md">
-							<Trans>These are your default settings</Trans>
+							{m['components.dialogs.label.defaultSettings']()}
 						</Text>
 					)}
 				</div>
@@ -506,14 +489,12 @@ export function PostInteractionSettingsForm({
 				className={styles.saveButton}
 				color="primary"
 				disabled={!canSave || isSaving}
-				label={l`Save`}
+				label={m['common.action.save']()}
 				onClick={onSave}
 				size="large"
 			>
-				<ButtonText>
-					<Trans>Save</Trans>
-				</ButtonText>
-				{isSaving && <Spinner color="currentColor" label={l`Saving`} size="sm" />}
+				<ButtonText>{m['common.action.save']()}</ButtonText>
+				{isSaving && <Spinner color="currentColor" label={m['common.label.saving']()} size="sm" />}
 			</Button>
 		</div>
 	);
@@ -523,7 +504,7 @@ function Header() {
 	return (
 		<div className={styles.header}>
 			<Text size="_2xl" weight="bold">
-				<Trans>Post interaction settings</Trans>
+				{m['components.dialogs.interaction.title']()}
 			</Text>
 		</div>
 	);

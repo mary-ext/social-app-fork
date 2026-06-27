@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
@@ -10,16 +9,17 @@ import { useSession } from '#/state/session';
 
 import { SearchScreenShell } from '#/screens/Search/Shell';
 
+import { m } from '#/paraglide/messages';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileSearch'>;
 export const ProfileSearchScreen = ({ route }: Props) => {
 	const { name, q: queryParam = '' } = route.params;
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 
-	useSetTitle(profile ? l`Search @${profile.handle}'s posts` : undefined);
+	useSetTitle(profile ? m['screens.profile.action.searchUserPosts']({ handle: profile.handle }) : undefined);
 
 	const fixedParams = useMemo(
 		() => ({
@@ -34,9 +34,9 @@ export const ProfileSearchScreen = ({ route }: Props) => {
 			inputPlaceholder={
 				profile
 					? currentAccount?.did === profile.did
-						? l`Search my posts`
-						: l`Search @${profile.handle}'s posts`
-					: l`Search...`
+						? m['screens.profile.action.searchMyPosts']()
+						: m['screens.profile.action.searchUserPosts']({ handle: profile.handle })
+					: m['screens.profile.hint.searchPlaceholder']()
 			}
 			fixedParams={fixedParams}
 			queryParam={queryParam}

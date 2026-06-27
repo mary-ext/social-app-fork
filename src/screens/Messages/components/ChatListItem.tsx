@@ -51,6 +51,7 @@ import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { useMenuHandle } from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './ChatListItem.css';
@@ -116,7 +117,6 @@ function DirectChatItem({
 	selected?: boolean;
 	children?: React.ReactNode;
 }) {
-	const { t: l } = useLingui();
 	const profile = useProfileShadow(convo.primaryMember);
 	const { isWithinLeftPanel } = useIsWithinSplitView();
 
@@ -124,7 +124,7 @@ function DirectChatItem({
 
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
-		? l`Deleted Account`
+		? m['common.label.deletedAccount']()
 		: createSanitizedDisplayName(
 				profile,
 				true,
@@ -147,8 +147,8 @@ function DirectChatItem({
 			subtitle={isDeletedAccount ? undefined : sanitizeHandle(profile.handle, '@')}
 			accessibilityHint={
 				!isDeletedAccount
-					? l`Go to conversation with ${profile.handle}`
-					: l`This conversation is with a deleted or a deactivated account. Press for options`
+					? m['screens.messages.a11y.goToConversation']({ handle: profile.handle })
+					: m['screens.messages.label.deletedAccountConvo']()
 			}
 			showMenu={showMenu}
 			selected={selected}
@@ -262,7 +262,7 @@ function BaseChatItem({
 	children?: React.ReactNode;
 }) {
 	const t = useTheme();
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const { currentAccount } = useSession();
 	const menuControl = useMenuHandle();
 	const menuTriggerId = useId();
@@ -300,7 +300,7 @@ function BaseChatItem({
 		(convo.kind === 'group' && convo.details.lockStatus !== 'unlocked');
 
 	const { lastMessage, LastMessageIcon, lastMessageSentAt } = useMemo(() => {
-		let lastMessage = l`No messages yet`;
+		let lastMessage: string = m['screens.messages.empty.noMessages']();
 
 		let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null;
 
@@ -310,7 +310,9 @@ function BaseChatItem({
 		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#deletedMessageView') {
 			lastMessageSentAt = convo.view.lastMessage.sentAt;
 
-			lastMessage = isDeletedAccount ? l`Conversation deleted` : l`Message deleted`;
+			lastMessage = isDeletedAccount
+				? m['components.dms.toast.conversationDeleted']()
+				: m['components.dms.toast.messageDeleted']();
 		}
 
 		// Message
@@ -322,7 +324,9 @@ function BaseChatItem({
 				i18n,
 			});
 			if (info) {
-				lastMessage = info.isBlockedMessage ? l`This message is hidden` : (info.message ?? lastMessage);
+				lastMessage = info.isBlockedMessage
+					? m['screens.messages.label.messageHidden']()
+					: (info.message ?? lastMessage);
 				lastMessageSentAt = info.sentAt;
 			}
 		}
@@ -360,7 +364,7 @@ function BaseChatItem({
 		}
 
 		if (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked') {
-			lastMessage = l`This chat is locked`;
+			lastMessage = m['screens.messages.label.chatLocked']();
 			LastMessageIcon = LockIcon;
 		}
 
@@ -369,7 +373,7 @@ function BaseChatItem({
 			LastMessageIcon,
 			lastMessageSentAt,
 		};
-	}, [l, convo, currentAccount?.did, isDeletedAccount, primaryProfile, i18n]);
+	}, [convo, currentAccount?.did, isDeletedAccount, primaryProfile, i18n]);
 
 	const [showActions, setShowActions] = useState(false);
 

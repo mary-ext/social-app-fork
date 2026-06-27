@@ -12,6 +12,8 @@ import { useExternalEmbedsPrefs, useSetExternalEmbedPref } from '#/state/prefere
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesExternalEmbeds'>;
 export function ExternalMediaPreferencesScreen({}: Props) {
 	const sources = useExternalEmbedsPrefs();
@@ -22,9 +24,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>External Media Preferences</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.label.externalMediaPreferences']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>

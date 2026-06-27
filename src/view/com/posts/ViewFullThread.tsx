@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 import { isCanonicalResourceUri, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
 
 import { Text } from '#/components/Text';
 import { Link } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import * as css from './ViewFullThread.css';
 
 export function ViewFullThread({ uri }: { uri: string }) {
-	const { t: l } = useLingui();
 	const itemHref = useMemo(() => {
 		if (!isCanonicalResourceUri(uri)) return undefined;
 		const urip = parseCanonicalResourceUri(uri);
@@ -20,7 +20,7 @@ export function ViewFullThread({ uri }: { uri: string }) {
 	if (!itemHref) return null;
 
 	return (
-		<Link className={css.link} to={itemHref} label={l`View full thread`}>
+		<Link className={css.link} to={itemHref} label={m['view.posts.action.viewFullThread']()}>
 			<div className={css.spine}>
 				<div className={css.segment} />
 				<div className={css.dash} />
@@ -28,7 +28,9 @@ export function ViewFullThread({ uri }: { uri: string }) {
 				<div className={css.dash} />
 				<div className={css.segment} />
 			</div>
-			<Text color="primary_500" weight="medium">{l`View full thread`}</Text>
+			<Text color="primary_500" weight="medium">
+				{m['view.posts.action.viewFullThread']()}
+			</Text>
 		</Link>
 	);
 }

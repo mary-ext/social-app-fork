@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { type TextInput, View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { mergeRefs } from '#/lib/merge-refs';
@@ -14,6 +13,8 @@ import * as TextField from '#/components/forms/TextField';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 
+import { m } from '#/paraglide/messages';
+
 type Props = Omit<TextField.InputProps, 'label'> & {
 	label?: TextField.InputProps['label'];
 	/** Called when the user presses the (X) button */
@@ -24,7 +25,6 @@ type Props = Omit<TextField.InputProps, 'label'> & {
 
 export function SearchInput({ value, label, onClearText, hotkey, ref, ...rest }: Props) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const showClear = value && value.length > 0;
 	const internalRef = useRef<TextInput>(null);
 
@@ -43,9 +43,9 @@ export function SearchInput({ value, label, onClearText, hotkey, ref, ...rest }:
 					// mergeRefs returns a ref callback that reads/writes .current only at attach time, not during render.
 					// eslint-disable-next-line react-hooks/refs
 					inputRef={mergeRefs([internalRef, ref])}
-					label={label || l`Search`}
+					label={label || m['common.action.search']()}
 					value={value}
-					placeholder={l`Search`}
+					placeholder={m['common.action.search']()}
 					returnKeyType="search"
 					keyboardAppearance={t.scheme}
 					selectTextOnFocus={false}
@@ -69,7 +69,7 @@ export function SearchInput({ value, label, onClearText, hotkey, ref, ...rest }:
 					<Button
 						testID="searchTextInputClearBtn"
 						onPress={onClearText}
-						label={l`Clear search query`}
+						label={m['components.forms.a11y.clearSearch']()}
 						hitSlop={HITSLOP_10}
 						size="tiny"
 						shape="round"

@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isNetworkError } from '#/lib/strings/errors';
 
@@ -17,26 +16,26 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 export function OutgoingRequestListItem({
 	convo: convoView,
 }: {
 	convo: ChatBskyGroupDefs.JoinRequestConvoView;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const prompt = Prompt.usePromptControl();
 
 	const { mutate: withdrawRequest, isPending: isWithdrawPending } = useWithdrawJoinGroupChatRequest({
 		onSuccess: () => {
-			Toast.show(l`Join request rescinded.`);
+			Toast.show(m['common.label.joinRequestRescinded']());
 		},
 		onError: (error) => {
-			let errorMessage = l`Failed to rescind your request. Please try again.`;
+			let errorMessage = m['common.error.rescindRequest']();
 			if (isNetworkError(error)) {
-				errorMessage = l`There was a problem with your internet connection, please try again`;
+				errorMessage = m['common.error.connection']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidJoinRequest') {
-				errorMessage = l`Invalid rescind request.`;
+				errorMessage = m['common.error.invalidRescindRequest']();
 			}
 			Toast.show(errorMessage);
 		},
@@ -45,7 +44,7 @@ export function OutgoingRequestListItem({
 	return (
 		<>
 			<Link
-				label={l`Rescind request to join group chat`}
+				label={m['screens.messages.action.rescindRequest']()}
 				{...createStaticClick(() => {
 					prompt.open();
 				})}
@@ -81,9 +80,7 @@ export function OutgoingRequestListItem({
 								) : null}
 							</View>
 							<Text numberOfLines={1} style={[a.text_sm, t.atoms.text_contrast_high]}>
-								<Trans comment="Displayed when the user has requested to join a group chat.">
-									You requested to join
-								</Trans>
+								{m['screens.messages.label.requestedToJoin']()}
 							</Text>
 						</View>
 					</View>
@@ -91,9 +88,9 @@ export function OutgoingRequestListItem({
 			</Link>
 			<Prompt.Basic
 				control={prompt}
-				title={l`Rescind request`}
-				description={l`Are you sure you want to rescind your request to join ${convoView.name}?`}
-				confirmButtonCta={l`Rescind request`}
+				title={m['common.action.rescindRequest']()}
+				description={m['screens.messages.dialog.rescindConfirm']({ name: convoView.name })}
+				confirmButtonCta={m['common.action.rescindRequest']()}
 				onConfirm={() => {
 					prompt.close(() => {
 						if (isWithdrawPending) return;

@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
@@ -10,6 +9,8 @@ import { atoms as a, tokens } from '#/alf';
 import { parseConvoView } from '#/components/dms/util';
 import { KnownFollowers } from '#/components/KnownFollowers';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 import { ChatListItem, ChatListItemPortal } from './ChatListItem';
 import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons';
@@ -45,7 +46,7 @@ export function RequestListItem({ convo: convoView }: { convo: ChatBskyConvoDefs
 				<View style={[a.py_lg, a.w_full, { opacity: 0 }]} aria-hidden>
 					{/* Placeholder text so that it responds to the font height */}
 					<Text style={[a.text_xs, a.leading_tight, a.font_semi_bold]}>
-						<Trans comment="Accept a chat request">Accept Request</Trans>
+						{m['screens.messages.action.acceptRequest']()}
 					</Text>
 				</View>
 				{/* then, this gets absolutely positioned on top of the spacer */}

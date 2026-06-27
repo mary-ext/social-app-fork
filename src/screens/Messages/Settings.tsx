@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';
@@ -23,6 +23,7 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './Settings.css';
@@ -79,7 +80,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 
 	const { mutate: updateDeclaration } = useUpdateActorDeclaration({
 		onError: () => {
-			Toast.show(l`Failed to update settings`, {
+			Toast.show(m['screens.messages.error.updateSettings'](), {
 				type: 'error',
 			});
 		},
@@ -108,9 +109,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Chat Settings</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.messages.title.chatSettings']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -118,13 +117,13 @@ export function MessagesSettingsScreenInner({}: Props) {
 				<View style={[a.py_xl, a.gap_md]}>
 					<View style={[a.px_xl]}>
 						<Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
-							<Trans>Allow direct messages from</Trans>
+							{m['screens.messages.label.allowDmFrom']()}
 						</Text>
 						<Text style={[a.pb_md, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-							<Trans>You can continue ongoing conversations regardless of which setting you choose.</Trans>
+							{m['screens.messages.hint.ongoingConversations']()}
 						</Text>
 						<Toggle.Group
-							label={l`Allow direct messages from`}
+							label={m['screens.messages.label.allowDmFrom']()}
 							type="radio"
 							values={[(profile?.associated?.chat?.allowIncoming as AllowIncoming) ?? 'following']}
 							onChange={onSelectMessagesFrom}
@@ -141,13 +140,13 @@ export function MessagesSettingsScreenInner({}: Props) {
 					<Divider style={{ marginVertical: 10 }} />
 					<View style={[a.px_xl]}>
 						<Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
-							<Trans>Allow group chat invites from</Trans>
+							{m['screens.messages.label.allowInvitesFrom']()}
 						</Text>
 						<Text style={[a.pb_md, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-							<Trans>You can continue ongoing conversations regardless of which setting you choose.</Trans>
+							{m['screens.messages.hint.ongoingConversations']()}
 						</Text>
 						<Toggle.Group
-							label={l`Allow group chat invites from`}
+							label={m['screens.messages.label.allowInvitesFrom']()}
 							type="radio"
 							values={[resolveAllowGroupInvites(profile?.associated?.chat)]}
 							onChange={onSelectGroupInvitesFrom}
@@ -165,7 +164,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 
 					<View style={[a.px_xl]}>
 						<Toggle.Item
-							label={l`Export my chat data`}
+							label={m['common.action.exportChatData']()}
 							name="exportChatData"
 							style={[a.flex_row, a.align_center, a.justify_between]}
 							onChange={() => {
@@ -174,7 +173,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 						>
 							<CarIcon className={css.carIcon} fill={colors.text} size="lg" />
 							<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
-								<Trans>Export chat data</Trans>
+								{m['screens.messages.action.exportChatData']()}
 							</Text>
 							<ChevronRightIcon className={css.chevron} fill={colors.text} size="md" />
 						</Toggle.Item>

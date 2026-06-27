@@ -5,6 +5,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import * as styles from '#/features/gifPicker/components/GifPickerPlaceholder.css';
+import { m } from '#/paraglide/messages';
 
 export function GifPickerPlaceholder({
 	isLoading,
@@ -26,27 +27,25 @@ export function GifPickerPlaceholder({
 	const { t: l } = useLingui();
 
 	if (isLoading) {
-		return <CenteredSpinner label={l`Loading GIFs`} size="2xl" fill />;
+		return <CenteredSpinner label={m['features.gifPicker.label.loading']()} size="2xl" fill />;
 	}
 
 	if (isError) {
 		return (
 			<div className={styles.center}>
 				<Text size="lg" weight="semiBold">
-					{l({
-						message: 'Couldn’t load GIFs',
-						comment: 'Title of the error screen shown when the GIF provider request fails.',
-					})}
+					{m['features.gifPicker.error.loadTitle']()}
 				</Text>
 				<Text size="sm" color="textContrastMedium">
-					{l({
-						message: 'There was a problem loading GIFs. Check your connection and try again.',
-						comment:
-							'Body message of the error screen shown when the GIF provider request fails. Encourages the user to retry.',
-					})}
+					{m['features.gifPicker.error.loadBody']()}
 				</Text>
-				<Button label={l`Try again`} size="small" color="secondary" onClick={() => void onRetry()}>
-					<ButtonText>{l`Try again`}</ButtonText>
+				<Button
+					label={m['common.action.tryAgain']()}
+					size="small"
+					color="secondary"
+					onClick={() => void onRetry()}
+				>
+					<ButtonText>{m['common.action.tryAgain']()}</ButtonText>
 				</Button>
 			</div>
 		);
@@ -59,16 +58,8 @@ export function GifPickerPlaceholder({
 					'Empty-state message shown in the GIF picker when a search returns zero results. Placeholder is the user’s search query.',
 			})
 		: isRecentsEmpty
-			? l({
-					message: 'No recent GIFs yet. Pick one to see it here.',
-					comment:
-						'Empty-state message shown in the GIF picker’s Recents tab before the user has selected any GIFs.',
-				})
-			: l({
-					message: 'No GIFs to show right now. Try again in a moment.',
-					comment:
-						'Empty-state message shown when the trending/featured GIF feed returns no results (rare, usually a transient provider issue).',
-				});
+			? m['features.gifPicker.empty.recents']()
+			: m['features.gifPicker.empty.trending']();
 
 	return (
 		<div className={styles.center}>
@@ -76,8 +67,8 @@ export function GifPickerPlaceholder({
 				{emptyMessage}
 			</Text>
 			{(isSearching || isRecentsEmpty) && (
-				<Button label={l`Go back`} size="small" color="secondary" onClick={onGoBack}>
-					<ButtonText>{l`Go back`}</ButtonText>
+				<Button label={m['common.action.goBack']()} size="small" color="secondary" onClick={onGoBack}>
+					<ButtonText>{m['common.action.goBack']()}</ButtonText>
 				</Button>
 			)}
 		</div>

@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import * as styles from '#/components/web/Dialog/Popup.css';
+
+import { m } from '#/paraglide/messages';
 
 // the portalled backdrop/viewport are rendered into `document.body`, but React still routes their
 // events up the *component* tree — so a click would bubble into whatever owns the dialog (e.g. the
@@ -69,9 +70,11 @@ export function Footer({ children }: { children: ReactNode }) {
 
 /** Close (×) button. Defaults to the popup's top-right corner; `outer` pins it to the screen corner. */
 export function Close({ outer }: { outer?: boolean } = {}) {
-	const { t: l } = useLingui();
 	return (
-		<BaseDialog.Close aria-label={l`Close dialog`} className={clsx(styles.close, outer && styles.closeOuter)}>
+		<BaseDialog.Close
+			aria-label={m['common.a11y.closeDialog']()}
+			className={clsx(styles.close, outer && styles.closeOuter)}
+		>
 			{/* 18px is the button-icon `md` size, which differs from the raw icon `md` (20px) */}
 			<TimesIcon width={18} height={18} fill="currentColor" />
 		</BaseDialog.Close>

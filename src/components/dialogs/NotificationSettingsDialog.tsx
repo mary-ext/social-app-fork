@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { AppBskyNotificationDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
 
@@ -9,6 +8,8 @@ import { PreferenceControls } from '#/screens/Settings/NotificationSettings/comp
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as Dialog from '#/components/web/Dialog';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './NotificationSettingsDialog.css';
 
@@ -29,11 +30,9 @@ export function NotificationSettingsDialog({
 	syncOthers,
 	titleText,
 }: NotificationSettingsDialogProps) {
-	const { t: l } = useLingui();
-
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={l`Notification settings`}>
+			<Dialog.Popup className={styles.popup} label={m['common.title.notificationSettings']()}>
 				<Inner
 					allowDisableInApp={allowDisableInApp}
 					name={name}
@@ -68,9 +67,7 @@ function Inner({
 			</div>
 			{isError ? (
 				<div className={styles.errorWrap}>
-					<Admonition type="error">
-						<Trans>Failed to load notification settings.</Trans>
-					</Admonition>
+					<Admonition type="error">{m['common.error.loadNotificationSettings']()}</Admonition>
 				</div>
 			) : (
 				<PreferenceControls

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -41,6 +41,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';
 
 import { Provider } from './State';
@@ -56,9 +57,6 @@ export function Wizard({
 	const onSuccess = 'onSuccess' in params ? params.onSuccess : undefined;
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
-
-	const { t: l } = useLingui();
-
 	// Use targetDid if provided (from dialog), otherwise use current account
 	const profileDid = targetDid || currentAccount!.did;
 
@@ -90,7 +88,7 @@ export function Wizard({
 				<ListMaybePlaceholder
 					isLoading={isLoadingStarterPack || isLoadingProfiles || isLoadingProfile}
 					isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
-					errorMessage={l`That starter pack could not be found.`}
+					errorMessage={m['screens.starterPack.error.notFound']()}
 				/>
 			</Layout.Screen>
 		);
@@ -100,7 +98,7 @@ export function Wizard({
 				<ListMaybePlaceholder
 					isLoading={false}
 					isError={true}
-					errorMessage={l`That starter pack could not be found.`}
+					errorMessage={m['screens.starterPack.error.notFound']()}
 				/>
 			</Layout.Screen>
 		);
@@ -138,7 +136,6 @@ function WizardInner({
 	onSuccess?: () => void;
 }) {
 	const navigation = useNavigation<NavigationProp>();
-	const { t: l } = useLingui();
 	const [state, dispatch] = useWizardState();
 	const { currentAccount } = useSession();
 
@@ -156,21 +153,24 @@ function WizardInner({
 
 	const getDefaultName = () => {
 		const displayName = createSanitizedDisplayName(currentProfile!, true);
-		return l`${displayName}'s Starter Pack`.slice(0, 50);
+		return m['screens.starterPack.title.named']({ displayName }).slice(0, 50);
 	};
 
 	const wizardUiStrings: Record<WizardStep, { header: string; nextBtn: string; subtitle?: string }> = {
 		Details: {
-			header: l`Starter Pack`,
-			nextBtn: l`Next`,
+			header: m['common.label.starterPack'](),
+			nextBtn: m['common.action.next'](),
 		},
 		Profiles: {
-			header: l`Choose People`,
-			nextBtn: l`Next`,
+			header: m['screens.starterPack.label.choosePeople'](),
+			nextBtn: m['common.action.next'](),
 		},
 		Feeds: {
-			header: l`Choose Feeds`,
-			nextBtn: state.feeds.length === 0 ? l`Skip` : l`Finish`,
+			header: m['screens.starterPack.label.chooseFeeds'](),
+			nextBtn:
+				state.feeds.length === 0
+					? m['screens.starterPack.action.skip']()
+					: m['screens.starterPack.action.finish'](),
 		},
 	};
 	const currUiStrings = wizardUiStrings[state.currentStep];
@@ -208,7 +208,7 @@ function WizardInner({
 		onError: (e) => {
 			logger.error('Failed to create starter pack', { safeMessage: e });
 			dispatch({ type: 'SetProcessing', processing: false });
-			Toast.show(l`Failed to create starter pack`, {
+			Toast.show(m['screens.starterPack.error.create'](), {
 				type: 'error',
 			});
 		},
@@ -218,7 +218,7 @@ function WizardInner({
 		onError: (e) => {
 			logger.error('Failed to edit starter pack', { safeMessage: e });
 			dispatch({ type: 'SetProcessing', processing: false });
-			Toast.show(l`Failed to create starter pack`, {
+			Toast.show(m['screens.starterPack.error.create'](), {
 				type: 'error',
 			});
 		},
@@ -265,7 +265,7 @@ function WizardInner({
 		<>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton
-					label={l`Back`}
+					label={m['common.action.back']()}
 					onClick={(evt) => {
 						if (state.currentStep !== 'Details') {
 							evt.preventDefault();
@@ -277,10 +277,13 @@ function WizardInner({
 					<Layout.Header.TitleText>{currUiStrings.header}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				{isEditEnabled ? (
-					<Button label={l`Edit`} color="secondary" size="small" onClick={() => editDialogHandle.open(null)}>
-						<ButtonText>
-							<Trans>Edit</Trans>
-						</ButtonText>
+					<Button
+						label={m['common.action.edit']()}
+						color="secondary"
+						size="small"
+						onClick={() => editDialogHandle.open(null)}
+					>
+						<ButtonText>{m['common.action.edit']()}</ButtonText>
 					</Button>
 				) : (
 					<Layout.Header.Slot />
@@ -290,15 +293,13 @@ function WizardInner({
 				<div className={css.details}>
 					<StepDetails />
 					<Button
-						label={l`Next`}
+						label={m['common.action.next']()}
 						color="primary"
 						size="large"
 						className={css.detailsNext}
 						onClick={() => dispatch({ type: 'Next' })}
 					>
-						<ButtonText>
-							<Trans>Next</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.next']()}</ButtonText>
 					</Button>
 				</div>
 			) : state.currentStep === 'Profiles' ? (
@@ -357,9 +358,7 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 						{
 							items.length < 2 ? (
 								currentAccount?.did === items[0]!.did ? (
-									<Trans>
-										It's just you right now! Add more people to your starter pack by searching above.
-									</Trans>
+									m['screens.starterPack.empty.justYouHint']()
 								) : (
 									<Trans>
 										It's just{' '}
@@ -413,10 +412,10 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 					items.length === 0 ? (
 						<div className={css.feedsEmptyHelper}>
 							<Text weight="semiBold" size="md" className={css.helperText}>
-								<Trans>Add some feeds to your starter pack!</Trans>
+								{m['screens.starterPack.empty.addFeedsHint']()}
 							</Text>
 							<Text size="md" className={css.helperText}>
-								<Trans>Search for feeds that you want to suggest to others.</Trans>
+								{m['screens.starterPack.hint.searchFeeds']()}
 							</Text>
 						</div>
 					) : (

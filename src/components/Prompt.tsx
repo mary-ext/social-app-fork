@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useId } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, type TextStyleProp, useTheme } from '#/alf';
 
@@ -8,6 +7,8 @@ import { Button, type ButtonColor, ButtonIcon, ButtonText } from '#/components/B
 import * as Dialog from '#/components/Dialog';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export {
 	type DialogControlProps as PromptControlProps,
@@ -105,15 +106,20 @@ export function Cancel({
 	/** Optional i18n string. If undefined, it will default to "Cancel". */
 	cta?: string;
 }) {
-	const { t: l } = useLingui();
 	const { close } = Dialog.useDialogContext();
 	const onPress = useCallback(() => {
 		close();
 	}, [close]);
 
 	return (
-		<Button variant="solid" color="secondary" size="large" label={cta || l`Cancel`} onPress={onPress}>
-			<ButtonText>{cta || l`Cancel`}</ButtonText>
+		<Button
+			variant="solid"
+			color="secondary"
+			size="large"
+			label={cta || m['common.action.cancel']()}
+			onPress={onPress}
+		>
+			<ButtonText>{cta || m['common.action.cancel']()}</ButtonText>
 		</Button>
 	);
 }
@@ -144,7 +150,6 @@ export function Action({
 	shouldCloseOnPress?: boolean;
 	testID?: string;
 }) {
-	const { t: l } = useLingui();
 	const { close } = Dialog.useDialogContext();
 	const handleOnPress = useCallback(
 		(e: GestureResponderEvent) => {
@@ -162,11 +167,11 @@ export function Action({
 			color={color}
 			disabled={disabled}
 			size="large"
-			label={cta || l`Confirm`}
+			label={cta || m['common.action.confirm']()}
 			onPress={handleOnPress}
 			testID={testID}
 		>
-			<ButtonText>{cta || l`Confirm`}</ButtonText>
+			<ButtonText>{cta || m['common.action.confirm']()}</ButtonText>
 			{icon && <ButtonIcon icon={icon} />}
 		</Button>
 	);

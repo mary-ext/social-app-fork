@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -40,6 +39,8 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
+
 function ConvoMenu({
 	convo,
 	profile,
@@ -65,7 +66,6 @@ function ConvoMenu({
 	};
 	style?: ViewStyleProp['style'];
 }): React.ReactNode {
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
 
@@ -89,14 +89,20 @@ function ConvoMenu({
 						handle={control}
 						id={triggerId}
 						render={
-							<Button label={l`Chat settings`} size="small" color="secondary" shape="round" variant="ghost">
+							<Button
+								label={m['common.label.chatSettings']()}
+								size="small"
+								color="secondary"
+								shape="round"
+								variant="ghost"
+							>
 								<ButtonIcon icon={DotsHorizontalIcon} size="md" />
 							</Button>
 						}
 					/>
 				</View>
 
-				<Menu.Popup label={l`Chat settings`}>
+				<Menu.Popup label={m['common.label.chatSettings']()}>
 					<MenuContent
 						profile={profile}
 						showMarkAsRead={showMarkAsRead}
@@ -182,7 +188,6 @@ function MenuContent({
 	blockedByListControl: Prompt.PromptControlProps;
 }) {
 	const navigation = useNavigation<NavigationProp>();
-	const { t: l } = useLingui();
 	const { mutate: markAsRead } = useMarkAsReadMutation();
 
 	const { listBlocks, userBlock } = blockInfo;
@@ -200,13 +205,13 @@ function MenuContent({
 	const { mutate: muteConvo } = useMuteConvo(convoId, {
 		onSuccess: (data) => {
 			if (data.convo.muted) {
-				Toast.show(l({ message: 'Chat muted', context: 'toast' }));
+				Toast.show(m['components.dms.toast.muted']());
 			} else {
-				Toast.show(l({ message: 'Chat unmuted', context: 'toast' }));
+				Toast.show(m['components.dms.toast.unmuted']());
 			}
 		},
 		onError: () => {
-			Toast.show(l`Could not mute chat`, {
+			Toast.show(m['components.dms.error.muteChat'](), {
 				type: 'error',
 			});
 		},
@@ -228,35 +233,38 @@ function MenuContent({
 	}, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock]);
 
 	return isDeletedAccount ? (
-		<Menu.Item destructive label={l`Leave conversation`} onClick={leaveConvoControl.open}>
+		<Menu.Item
+			destructive
+			label={m['components.dms.action.leaveConversation']()}
+			onClick={leaveConvoControl.open}
+		>
 			<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-			<Menu.ItemText>
-				<Trans>Leave conversation</Trans>
-			</Menu.ItemText>
+			<Menu.ItemText>{m['components.dms.action.leaveConversation']()}</Menu.ItemText>
 		</Menu.Item>
 	) : (
 		<>
 			<Menu.Group>
 				{showMarkAsRead && (
-					<Menu.Item label={l`Mark as read`} onClick={() => markAsRead({ convoId })}>
+					<Menu.Item label={m['components.dms.action.markAsRead']()} onClick={() => markAsRead({ convoId })}>
 						<Menu.ItemIcon icon={BubbleIcon} />
-						<Menu.ItemText>
-							<Trans>Mark as read</Trans>
-						</Menu.ItemText>
+						<Menu.ItemText>{m['components.dms.action.markAsRead']()}</Menu.ItemText>
 					</Menu.Item>
 				)}
 				{isGroupConvo ? null : (
-					<Menu.Item label={l`Go to user's profile`} onClick={onNavigateToProfile}>
+					<Menu.Item label={m['common.a11y.goToProfile']()} onClick={onNavigateToProfile}>
 						<Menu.ItemIcon icon={Person} />
-						<Menu.ItemText>
-							<Trans>Go to profile</Trans>
-						</Menu.ItemText>
+						<Menu.ItemText>{m['common.action.goToProfile']()}</Menu.ItemText>
 					</Menu.Item>
 				)}
-				<Menu.Item label={l`Mute conversation`} onClick={() => muteConvo({ mute: !convo?.muted })}>
+				<Menu.Item
+					label={m['components.dms.action.muteConversation']()}
+					onClick={() => muteConvo({ mute: !convo?.muted })}
+				>
 					<Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
 					<Menu.ItemText>
-						{convo?.muted ? <Trans>Unmute conversation</Trans> : <Trans>Mute conversation</Trans>}
+						{convo?.muted
+							? m['components.dms.action.unmuteConversation']()
+							: m['components.dms.action.muteConversation']()}
 					</Menu.ItemText>
 				</Menu.Item>
 			</Menu.Group>
@@ -265,29 +273,35 @@ function MenuContent({
 				{isGroupConvo ? null : (
 					<Menu.Item
 						destructive
-						label={isBlocking ? l`Unblock account` : l`Block account`}
+						label={isBlocking ? m['common.action.unblockAccount']() : m['common.action.blockAccount']()}
 						onClick={toggleBlock}
 					>
 						<Menu.ItemIcon icon={isBlocking ? PersonCheck : PersonX} />
-						<Menu.ItemText>{isBlocking ? l`Unblock account` : l`Block account`}</Menu.ItemText>
+						<Menu.ItemText>
+							{isBlocking ? m['common.action.unblockAccount']() : m['common.action.blockAccount']()}
+						</Menu.ItemText>
 					</Menu.Item>
 				)}
 				{canReport && (
-					<Menu.Item destructive label={l`Report conversation`} onClick={() => reportControl.open(null)}>
+					<Menu.Item
+						destructive
+						label={m['common.action.reportConversation']()}
+						onClick={() => reportControl.open(null)}
+					>
 						<Menu.ItemIcon icon={Flag} />
-						<Menu.ItemText>
-							<Trans>Report conversation</Trans>
-						</Menu.ItemText>
+						<Menu.ItemText>{m['common.action.reportConversation']()}</Menu.ItemText>
 					</Menu.Item>
 				)}
 			</Menu.Group>
 			<Menu.Separator />
 			<Menu.Group>
-				<Menu.Item destructive label={l`Leave conversation`} onClick={leaveConvoControl.open}>
+				<Menu.Item
+					destructive
+					label={m['components.dms.action.leaveConversation']()}
+					onClick={leaveConvoControl.open}
+				>
 					<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-					<Menu.ItemText>
-						<Trans>Leave conversation</Trans>
-					</Menu.ItemText>
+					<Menu.ItemText>{m['components.dms.action.leaveConversation']()}</Menu.ItemText>
 				</Menu.Item>
 			</Menu.Group>
 		</>

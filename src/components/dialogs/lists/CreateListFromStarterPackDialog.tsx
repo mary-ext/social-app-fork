@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import type { AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -21,6 +20,8 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { useDialogHandle } from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 import { CreateOrEditListDialog } from './CreateOrEditListDialog';
 
 export function CreateListFromStarterPackDialog({
@@ -30,7 +31,6 @@ export function CreateListFromStarterPackDialog({
 	control: Dialog.DialogControlProps;
 	starterPack: AppBskyGraphDefs.StarterPackView;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const { currentAccount } = useSession();
 	const navigation = useNavigation<NavigationProp>();
@@ -64,7 +64,7 @@ export function CreateListFromStarterPackDialog({
 			void queryClient.invalidateQueries({ queryKey: ['list-members', listUri] });
 		} catch (e) {
 			logger.error('Failed to add members to list', { safeMessage: e });
-			Toast.show(l`List created, but failed to add some members`, {
+			Toast.show(m['components.dialogs.list.createdPartialError'](), {
 				type: 'error',
 			});
 		}
@@ -81,35 +81,37 @@ export function CreateListFromStarterPackDialog({
 		<>
 			<Dialog.Outer control={control} testID="createListFromStarterPackDialog">
 				<Dialog.Handle />
-				<Dialog.ScrollableInner label={l`Create list from starter pack`} style={{ maxWidth: 400 }}>
+				<Dialog.ScrollableInner
+					label={m['components.dialogs.list.createFromStarterPack']()}
+					style={{ maxWidth: 400 }}
+				>
 					<View style={[a.gap_lg]}>
 						<Text style={[a.text_xl, a.font_bold]}>
-							<Trans>Create list from starter pack</Trans>
+							{m['components.dialogs.list.createFromStarterPack']()}
 						</Text>
 
 						<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-							<Trans>
-								This will create a new list with the same name, description, and members as this starter pack.
-							</Trans>
+							{m['components.dialogs.starterPack.cloneDescription']()}
 						</Text>
 
-						<Admonition type="tip">
-							<Trans>
-								Changes to the starter pack will not be reflected in the list after creation. The list will be
-								an independent copy.
-							</Trans>
-						</Admonition>
+						<Admonition type="tip">{m['components.dialogs.starterPack.copyNotice']()}</Admonition>
 
 						<View style={[a.flex_row_reverse, a.gap_md, a.pt_sm]}>
-							<Button label={l`Create list`} onPress={onPressCreate} size={'small'} color="primary">
-								<ButtonText>
-									<Trans>Create list</Trans>
-								</ButtonText>
+							<Button
+								label={m['components.dialogs.list.createTitle']()}
+								onPress={onPressCreate}
+								size={'small'}
+								color="primary"
+							>
+								<ButtonText>{m['components.dialogs.list.createTitle']()}</ButtonText>
 							</Button>
-							<Button label={l`Cancel`} onPress={() => control.close()} size={'small'} color="secondary">
-								<ButtonText>
-									<Trans>Cancel</Trans>
-								</ButtonText>
+							<Button
+								label={m['common.action.cancel']()}
+								onPress={() => control.close()}
+								size={'small'}
+								color="secondary"
+							>
+								<ButtonText>{m['common.action.cancel']()}</ButtonText>
 							</Button>
 						</View>
 					</View>
@@ -128,11 +130,14 @@ export function CreateListFromStarterPackDialog({
 			/>
 			<Dialog.Outer control={loadingDialogControl}>
 				<Dialog.Handle />
-				<Dialog.ScrollableInner label={l`Adding members to list...`} style={{ maxWidth: 400 }}>
+				<Dialog.ScrollableInner
+					label={m['components.dialogs.list.addingMembers']()}
+					style={{ maxWidth: 400 }}
+				>
 					<View style={[a.align_center, a.gap_lg, a.py_5xl]}>
 						<Loader size="xl" />
 						<Text style={[a.text_lg, t.atoms.text_contrast_high]}>
-							<Trans>Adding members to list...</Trans>
+							{m['components.dialogs.list.addingMembers']()}
 						</Text>
 					</View>
 				</Dialog.ScrollableInner>

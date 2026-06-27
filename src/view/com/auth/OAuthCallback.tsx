@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useCallOnce } from '#/lib/once';
@@ -18,9 +17,10 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 export function OAuthCallback() {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const insets = useSafeAreaInsets();
 	const { completeOAuthCallback } = useSessionApi();
 	const [error, setError] = useState('');
@@ -41,13 +41,13 @@ export function OAuthCallback() {
 						message: e instanceof Error ? e.message : String(e),
 					});
 					if (e instanceof InactiveAccountError) {
-						Toast.show(l`This account is not active.`, { type: 'warning' });
+						Toast.show(m['view.auth.error.accountInactive'](), { type: 'warning' });
 					} else {
-						setError(l`Sign in failed. Please try again.`);
+						setError(m['view.auth.error.signInFailed']());
 					}
 				});
 		});
-	}, [runOnce, completeOAuthCallback, l]);
+	}, [runOnce, completeOAuthCallback]);
 
 	return (
 		<View
@@ -66,7 +66,7 @@ export function OAuthCallback() {
 				) : (
 					<>
 						<Loader size="xl" />
-						<Text style={[a.text_md, t.atoms.text_contrast_high]}>{l`Signing in...`}</Text>
+						<Text style={[a.text_md, t.atoms.text_contrast_high]}>{m['view.auth.label.signingIn']()}</Text>
 					</>
 				)}
 			</ErrorBoundary>

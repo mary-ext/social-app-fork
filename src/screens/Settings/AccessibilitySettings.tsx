@@ -1,4 +1,3 @@
-import { Trans, useLingui } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';
@@ -8,13 +7,12 @@ import { TextSize_Stroke2_Corner0_Rounded as TextSizeIcon } from '#/components/i
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccessibilitySettings'>;
 export function AccessibilitySettingsScreen({}: Props) {
-	const { t: l } = useLingui();
-
 	const [requireAltTextEnabled, setRequireAltTextEnabled] = useRequireAltTextEnabled();
 	const [largeAltBadgeEnabled, setLargeAltBadgeEnabled] = useLargeAltBadgeEnabled();
 
@@ -23,30 +21,28 @@ export function AccessibilitySettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Accessibility</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['screens.settings.title.accessibility']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
-					<Settings.Section titleText={<Trans>Alt text</Trans>}>
+					<Settings.Section titleText={m['common.label.altText']()}>
 						<Settings.SwitchRow
-							label={l`Require alt text before posting`}
+							label={m['screens.settings.accessibility.requireAltText']()}
 							onChange={setRequireAltTextEnabled}
 							value={requireAltTextEnabled}
 						>
 							<Settings.Icon icon={ImageIcon} />
-							<Settings.Label titleText={<Trans>Require alt text before posting</Trans>} />
+							<Settings.Label titleText={m['screens.settings.accessibility.requireAltText']()} />
 						</Settings.SwitchRow>
 						<Settings.SwitchRow
-							label={l`Display larger alt text badges`}
+							label={m['screens.settings.label.largerAltTextBadges']()}
 							onChange={setLargeAltBadgeEnabled}
 							value={largeAltBadgeEnabled}
 						>
 							<Settings.Icon icon={TextSizeIcon} />
-							<Settings.Label titleText={<Trans>Display larger alt text badges</Trans>} />
+							<Settings.Label titleText={m['screens.settings.label.largerAltTextBadges']()} />
 						</Settings.SwitchRow>
 					</Settings.Section>
 				</Settings.List>

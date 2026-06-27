@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -23,6 +22,8 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 import { MemberMenu } from './MemberMenu';
 import { RemoveMemberPrompt } from './prompts';
 import { StatusBadge } from './StatusBadge';
@@ -42,8 +43,6 @@ export function Member({
 	isOwner: boolean;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const profile = useProfileShadow(profileUnshadowed);
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
@@ -55,7 +54,7 @@ export function Member({
 	const { mutate: removeMembers } = useRemoveFromGroupChat(convo.view.id, {
 		onError: (e) => {
 			logger.error('Failed to remove group chat member', { message: e });
-			Toast.show(l`Failed to remove group chat member`, { type: 'error' });
+			Toast.show(m['screens.messages.error.removeMember'](), { type: 'error' });
 		},
 	});
 
@@ -65,12 +64,12 @@ export function Member({
 		requireAuth(async () => {
 			try {
 				await queueFollow();
-				Toast.show(l`Following ${displayName}`);
+				Toast.show(m['screens.messages.label.following']({ displayName }));
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
 					logger.error('Failed to follow', { message: String(e) });
-					Toast.show(l`There was an issue! ${e.toString()}`, {
+					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
 						type: 'error',
 					});
 				}
@@ -86,7 +85,7 @@ export function Member({
 
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
-		? l`Deleted Account`
+		? m['common.label.deletedAccount']()
 		: createSanitizedDisplayName(
 				profile,
 				true,
@@ -97,7 +96,7 @@ export function Member({
 	let statusBadge: React.ReactNode | null = null;
 	if (isSelf) {
 		if (status === 'owner') {
-			statusBadge = <StatusBadge label={l`Admin`} />;
+			statusBadge = <StatusBadge label={m['screens.messages.label.admin']()} />;
 		}
 	} else {
 		statusBadge = (
@@ -106,15 +105,17 @@ export function Member({
 	}
 
 	const joinedReason = profile.kind?.addedBy
-		? l`Added by ${createSanitizedDisplayName(
-				profile.kind.addedBy,
-				true,
-				getDisplayRestrictions(
-					moderateProfile(profile.kind.addedBy, moderationOpts),
-					DisplayContext.ProfileBio,
+		? m['screens.messages.label.addedBy']({
+				name: createSanitizedDisplayName(
+					profile.kind.addedBy,
+					true,
+					getDisplayRestrictions(
+						moderateProfile(profile.kind.addedBy, moderationOpts),
+						DisplayContext.ProfileBio,
+					),
 				),
-			)}`
-		: l`Added by invite link`;
+			})
+		: m['screens.messages.label.addedByInviteLink']();
 
 	// surface a prominent remove button to the owner for blocked members
 	const showRemoveButton = isOwner && !isSelf && !!isBlockedOrBlocking(profile);
@@ -143,22 +144,20 @@ export function Member({
 				</ProfileCard.Link>
 				{showRemoveButton ? (
 					<Button
-						label={l`Remove ${displayName} from this group chat`}
+						label={m['screens.messages.a11y.removeMember']({ displayName })}
 						size="tiny"
 						color="negative_subtle"
 						onPress={() => removeMemberPrompt.open()}
 					>
-						<ButtonText>
-							<Trans>Remove</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.remove']()}</ButtonText>
 					</Button>
 				) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
 					<SimpleInlineLinkText
-						label={l`Follow ${displayName}`}
+						label={m['screens.messages.action.follow']({ displayName })}
 						{...createStaticClick(handleFollow)}
 						style={[a.font_medium]}
 					>
-						<Trans>Follow</Trans>
+						{m['common.action.follow']()}
 					</SimpleInlineLinkText>
 				)}
 				{statusBadge}

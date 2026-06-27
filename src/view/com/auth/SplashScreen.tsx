@@ -1,5 +1,4 @@
 import { Pressable, View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 
@@ -16,6 +15,7 @@ import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export const SplashScreen = ({
@@ -25,7 +25,6 @@ export const SplashScreen = ({
 	onDismiss?: () => void;
 	onPressSignin: () => void;
 }) => {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const { isTabletOrMobile: IS_WEB_MOBILE } = useWebMediaQueries();
 
@@ -70,7 +69,7 @@ export const SplashScreen = ({
 							</View>
 
 							<Text style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-								<Trans>What's up?</Trans>
+								{m['common.label.whatsUp']()}
 							</Text>
 						</View>
 
@@ -81,15 +80,13 @@ export const SplashScreen = ({
 							<Button
 								testID="signInButton"
 								onPress={onPressSignin}
-								label={l`Sign in`}
-								accessibilityHint={l`Opens flow to sign in to your existing Bluesky account`}
+								label={m['common.action.signIn']()}
+								accessibilityHint={m['view.auth.a11y.signInHint']()}
 								size="large"
 								variant="solid"
 								color="secondary"
 							>
-								<ButtonText>
-									<Trans>Sign in</Trans>
-								</ButtonText>
+								<ButtonText>{m['common.action.signIn']()}</ButtonText>
 							</Button>
 						</View>
 					</ErrorBoundary>
@@ -102,8 +99,6 @@ export const SplashScreen = ({
 
 function Footer() {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	return (
 		<View
 			style={[
@@ -121,14 +116,14 @@ function Footer() {
 				t.atoms.border_contrast_medium,
 			]}
 		>
-			<InlineLinkText label={l`Learn more about Bluesky`} to="https://bsky.social">
-				<Trans>Business</Trans>
+			<InlineLinkText label={m['view.auth.cta.learnMore']()} to="https://bsky.social">
+				{m['view.auth.label.business']()}
 			</InlineLinkText>
-			<InlineLinkText label={l`Read the Bluesky blog`} to="https://bsky.social/about/blog">
-				<Trans>Blog</Trans>
+			<InlineLinkText label={m['view.auth.a11y.readBlog']()} to="https://bsky.social/about/blog">
+				{m['view.auth.label.blog']()}
 			</InlineLinkText>
-			<InlineLinkText label={l`See jobs at Bluesky`} to="https://bsky.social/about/join">
-				<Trans comment="Link to a page with job openings at Bluesky">Jobs</Trans>
+			<InlineLinkText label={m['view.auth.a11y.seeJobs']()} to="https://bsky.social/about/join">
+				{m['view.auth.label.jobs']()}
 			</InlineLinkText>
 			<View style={a.flex_1} />
 			<AppLanguageDropdown />

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -20,6 +20,7 @@ import { usePromptControl } from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
+import { m } from '#/paraglide/messages';
 import { LinearGradient } from '#/shims/linear-gradient';
 
 import * as styles from './ChatStatusInfo.css';
@@ -27,7 +28,6 @@ import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons
 
 export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const leaveConvoControl = usePromptControl();
 
@@ -57,7 +57,7 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 			<View style={[a.flex_row, a.gap_md, a.w_full, otherUser && a.pt_sm]}>
 				{otherUser && (
 					<RejectMenu
-						label={l`Block or report`}
+						label={m['screens.messages.action.blockOrReport']()}
 						icon={true}
 						convo={convoState.convo}
 						profile={otherUser}
@@ -68,11 +68,7 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 					/>
 				)}
 				<DeleteChatButton
-					label={l({
-						message: 'Leave',
-						comment: 'Leave a conversation (reject a chat invitation)',
-						context: 'Button',
-					})}
+					label={m['common.action.leave']()}
 					icon={true}
 					convo={convoState.convo.view}
 					color="secondary"

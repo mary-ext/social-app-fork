@@ -1,10 +1,10 @@
-import { Trans, useLingui } from '@lingui/react/macro';
-
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon } from '#/components/icons/ArrowRotate';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './ErrorScreen.css';
 
@@ -21,17 +21,13 @@ export function ErrorScreen({
 	onPressTryAgain?: () => void;
 	showHeader?: boolean;
 }) {
-	const { t: l } = useLingui();
-
 	return (
 		<>
 			{showHeader && (
 				<Layout.Header.Outer>
 					<Layout.Header.BackButton />
 					<Layout.Header.Content>
-						<Layout.Header.TitleText>
-							<Trans>Error</Trans>
-						</Layout.Header.TitleText>
+						<Layout.Header.TitleText>{m['common.label.error']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
@@ -56,15 +52,13 @@ export function ErrorScreen({
 				{onPressTryAgain && (
 					<Button
 						color="secondary_inverted"
-						label={l`Retry`}
+						label={m['common.action.retry']()}
 						onClick={onPressTryAgain}
 						size="small"
 						variant="solid"
 					>
 						<ButtonIcon icon={ArrowRotateCounterClockwiseIcon} />
-						<ButtonText>
-							<Trans context="action">Try again</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.tryAgain']()}</ButtonText>
 					</Button>
 				)}
 			</div>

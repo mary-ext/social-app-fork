@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import type { ComAtprotoLabelDefs, ComAtprotoModerationCreateReport } from '@atcute/atproto';
 import { ClientResponseError, ok } from '@atcute/client';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -26,6 +26,8 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './LabelsOnMeDialog.css';
 
 export { useDialogHandle as useLabelsOnMeDialogControl } from '#/components/web/Dialog';
@@ -37,15 +39,14 @@ export interface LabelsOnMeDialogProps {
 }
 
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
-	const { t: l } = useLingui();
 	const isAccount = props.type === 'account';
 	return (
 		<Dialog.Root handle={props.control}>
 			<Dialog.Popup
 				label={
 					isAccount
-						? l`The following labels were applied to your account.`
-						: l`The following labels were applied to your content.`
+						? m['components.moderation.label.appliedToAccount']()
+						: m['components.moderation.label.appliedToContent']()
 				}
 			>
 				<LabelsOnMeDialogInner {...props} />
@@ -75,14 +76,14 @@ function LabelsOnMeDialogInner({ control, labels, type }: LabelsOnMeDialogProps)
 			) : (
 				<>
 					<Text className={styles.title} size="_2xl" weight="bold">
-						{isAccount ? <Trans>Labels on your account</Trans> : <Trans>Labels on your content</Trans>}
+						{isAccount
+							? m['components.moderation.title.labelsOnAccount']()
+							: m['components.moderation.title.labelsOnContent']()}
 					</Text>
 					<Text size="md">
-						{containsSelfLabel ? (
-							<Trans>You may appeal non-self labels if you feel they were placed in error.</Trans>
-						) : (
-							<Trans>You may appeal these labels if you feel they were placed in error.</Trans>
-						)}
+						{containsSelfLabel
+							? m['components.moderation.appeal.nonSelfHint']()
+							: m['components.moderation.appeal.theseLabelsHint']()}
 					</Text>
 
 					<div className={styles.list}>
@@ -113,7 +114,6 @@ function Label({
 	label: ComAtprotoLabelDefs.Label;
 	onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void;
 }) {
-	const { t: l } = useLingui();
 	const { labeler, strings } = useLabelInfo(label);
 	const sourceName = labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src;
 	const timeDiff = useGetTimeAgo({ future: true });
@@ -131,23 +131,19 @@ function Label({
 				{!isSelfLabel && (
 					<Button
 						color="secondary"
-						label={l`Appeal`}
+						label={m['components.moderation.action.appeal']()}
 						onClick={() => onPressAppeal(label)}
 						size="small"
 						variant="solid"
 					>
-						<ButtonText>
-							<Trans>Appeal</Trans>
-						</ButtonText>
+						<ButtonText>{m['components.moderation.action.appeal']()}</ButtonText>
 					</Button>
 				)}
 			</div>
 			<div className={styles.divider} />
 			<div className={styles.band}>
 				{isSelfLabel ? (
-					<Text color="textContrastMedium">
-						<Trans>This label was applied by you.</Trans>
-					</Text>
+					<Text color="textContrastMedium">{m['components.moderation.label.appliedByYou']()}</Text>
 				) : (
 					<div className={styles.sourceRow}>
 						<Text className={styles.sourceText} color="textContrastMedium" numberOfLines={1}>
@@ -164,7 +160,7 @@ function Label({
 						</Text>
 						{label.exp && (
 							<Text className={styles.expires} color="textContrastMedium" size="sm">
-								<Trans>Expires in {timeDiff(now, label.exp)}</Trans>
+								{m['common.label.expiresIn']({ time: timeDiff(now, label.exp) })}
 							</Text>
 						)}
 					</div>
@@ -183,7 +179,6 @@ function AppealForm({
 	label: ComAtprotoLabelDefs.Label;
 	onPressBack: () => void;
 }) {
-	const { t: l } = useLingui();
 	const { labeler, strings } = useLabelInfo(label);
 	const [details, setDetails] = useState('');
 	const { subject } = useLabelSubject({ label });
@@ -213,15 +208,15 @@ function AppealForm({
 		},
 		onError: (err) => {
 			if (err instanceof ClientResponseError && err.error === 'AlreadyAppealed') {
-				setError(l`You've already appealed this label and it's being reviewed by our moderation team.`);
+				setError(m['components.moderation.appeal.alreadyAppealed']());
 			} else {
-				setError(l`Failed to submit appeal, please try again.`);
+				setError(m['common.error.submitAppeal']());
 			}
 			logger.error('Failed to submit label appeal', { message: err });
 		},
 		onSuccess: () => {
 			control.close();
-			Toast.show(l({ message: 'Appeal submitted', context: 'toast' }));
+			Toast.show(m['common.toast.appealSubmitted']());
 		},
 	});
 
@@ -256,23 +251,35 @@ function AppealForm({
 			<div className={styles.appealInput}>
 				<TextField.Input
 					autoFocus
-					label={l`Text input field`}
+					label={m['common.a11y.textInput']()}
 					maxLength={300}
 					minRows={3}
 					multiline
 					onChangeText={setDetails}
-					placeholder={l`Please explain why you think this label was incorrectly applied by ${
-						labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
-					}`}
+					placeholder={m['components.moderation.appeal.explainPrompt']({
+						labeler: labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src,
+					})}
 					value={details}
 				/>
 			</div>
 			<div className={styles.appealActions}>
-				<Button color="secondary" label={l`Back`} onClick={onPressBack} size="large" variant="solid">
-					<ButtonText>{l`Back`}</ButtonText>
+				<Button
+					color="secondary"
+					label={m['common.action.back']()}
+					onClick={onPressBack}
+					size="large"
+					variant="solid"
+				>
+					<ButtonText>{m['common.action.back']()}</ButtonText>
 				</Button>
-				<Button color="primary" label={l`Submit`} onClick={onSubmit} size="large" variant="solid">
-					<ButtonText>{l`Submit`}</ButtonText>
+				<Button
+					color="primary"
+					label={m['common.action.submit']()}
+					onClick={onSubmit}
+					size="large"
+					variant="solid"
+				>
+					<ButtonText>{m['common.action.submit']()}</ButtonText>
 					{isPending && <ButtonIcon icon={Loader} />}
 				</Button>
 			</div>

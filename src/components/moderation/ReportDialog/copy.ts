@@ -1,64 +1,63 @@
-import { useLingui } from '@lingui/react/macro';
+import { m } from '#/paraglide/messages';
 
 import type { ParsedReportSubject } from './types';
 
 export function useCopyForSubject(subject: ParsedReportSubject) {
-	const { t: l } = useLingui();
 	switch (subject.type) {
 		case 'account': {
 			return {
-				title: l`Report this user`,
-				subtitle: l`Why should this user be reviewed?`,
+				title: m['components.moderation.report.user'](),
+				subtitle: m['components.moderation.prompt.reviewUser'](),
 			};
 		}
 		case 'status': {
 			return {
-				title: l`Report this livestream`,
-				subtitle: l`Why should this livestream be reviewed?`,
+				title: m['common.action.reportLivestream'](),
+				subtitle: m['components.moderation.prompt.reviewLivestream'](),
 			};
 		}
 		case 'post': {
 			return {
-				title: l`Report this post`,
-				subtitle: l`Why should this post be reviewed?`,
+				title: m['components.moderation.report.post'](),
+				subtitle: m['components.moderation.prompt.reviewPost'](),
 			};
 		}
 		case 'list': {
 			return {
-				title: l`Report this list`,
-				subtitle: l`Why should this list be reviewed?`,
+				title: m['components.moderation.report.list'](),
+				subtitle: m['components.moderation.prompt.reviewList'](),
 			};
 		}
 		case 'feed': {
 			return {
-				title: l`Report this feed`,
-				subtitle: l`Why should this feed be reviewed?`,
+				title: m['components.moderation.report.feed'](),
+				subtitle: m['components.moderation.prompt.reviewFeed'](),
 			};
 		}
 		case 'starterPack': {
 			return {
-				title: l`Report this starter pack`,
-				subtitle: l`Why should this starter pack be reviewed?`,
+				title: m['components.moderation.report.starterPack'](),
+				subtitle: m['components.moderation.prompt.reviewStarterPack'](),
 			};
 		}
 		case 'convo': {
 			return {
-				title: l`Report this conversation`,
-				subtitle: l`Why should this conversation be reviewed?`,
+				title: m['components.moderation.report.conversation'](),
+				subtitle: m['components.moderation.prompt.reviewConversation'](),
 			};
 		}
 		case 'convoMessage': {
 			switch (subject.view) {
 				case 'convo': {
 					return {
-						title: l`Report this conversation`,
-						subtitle: l`Why should this conversation be reviewed?`,
+						title: m['components.moderation.report.conversation'](),
+						subtitle: m['components.moderation.prompt.reviewConversation'](),
 					};
 				}
 				case 'message': {
 					return {
-						title: l`Report this message`,
-						subtitle: l`Why should this message be reviewed?`,
+						title: m['components.moderation.report.message'](),
+						subtitle: m['components.moderation.prompt.reviewMessage'](),
 					};
 				}
 			}

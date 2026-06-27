@@ -32,6 +32,7 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { CopyTextButton } from './CopyTextButton';
@@ -58,7 +59,7 @@ export function InviteLinkDialog({
 	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 
 	const ownerName = createSanitizedDisplayName(
 		owner,
@@ -92,7 +93,7 @@ export function InviteLinkDialog({
 			setStep(Step.MANAGE);
 		},
 		onError: () => {
-			Toast.show(l`Failed to create invite link`, {
+			Toast.show(m['screens.messages.error.createInviteLink'](), {
 				type: 'error',
 			});
 		},
@@ -102,21 +103,21 @@ export function InviteLinkDialog({
 			setStep(Step.MANAGE);
 		},
 		onError: () => {
-			Toast.show(l`Failed to edit invite link`, {
+			Toast.show(m['screens.messages.error.editInviteLink'](), {
 				type: 'error',
 			});
 		},
 	});
 	const { mutate: disableJoinLink, isPending: isDisabling } = useDisableJoinLink(convo.view.id, {
 		onError: () => {
-			Toast.show(l`Failed to disable invite link`, {
+			Toast.show(m['screens.messages.error.disableInviteLink'](), {
 				type: 'error',
 			});
 		},
 	});
 	const { mutate: enableJoinLink, isPending: isEnabling } = useEnableJoinLink(convo.view.id, {
 		onError: () => {
-			Toast.show(l`Failed to enable invite link`, {
+			Toast.show(m['screens.messages.error.enableInviteLink'](), {
 				type: 'error',
 			});
 		},
@@ -126,23 +127,23 @@ export function InviteLinkDialog({
 	const whoCanJoinOptions = [
 		{
 			name: 'anyone',
-			owner: l`Anyone can join instantly`,
-			member: l`Anyone can join instantly`,
+			owner: m['screens.messages.label.anyoneJoinInstantly'](),
+			member: m['screens.messages.label.anyoneJoinInstantly'](),
 		},
 		{
 			name: 'anyone:requireApproval',
-			owner: l`Anyone can request to join`,
-			member: l`Anyone can request to join`,
+			owner: m['screens.messages.label.anyoneCanRequest'](),
+			member: m['screens.messages.label.anyoneCanRequest'](),
 		},
 		{
 			name: 'followedByOwner',
-			owner: l`People I follow can join instantly`,
-			member: l`People ${ownerName} follows can join instantly`,
+			owner: m['screens.messages.option.followingJoinInstant'](),
+			member: m['screens.messages.option.ownerFollowsJoinInstant']({ ownerName }),
 		},
 		{
 			name: 'followedByOwner:requireApproval',
-			owner: l`People I follow can request to join`,
-			member: l`People ${ownerName} follows can request to join`,
+			owner: m['screens.messages.option.followingRequest'](),
+			member: m['screens.messages.option.ownerFollowsRequest']({ ownerName }),
 		},
 	];
 
@@ -150,41 +151,29 @@ export function InviteLinkDialog({
 	let header: string | null = null;
 	switch (step) {
 		case Step.INFO: {
-			header = l`Invite link`;
+			header = m['screens.messages.label.inviteLink']();
 			content = (
 				<>
 					<View style={[a.gap_lg]}>
-						<Text style={[a.text_md, a.leading_snug]}>
-							<Trans>
-								An invite link lets people join this group chat without being added directly. You control who
-								can join the chat. You can disable the link at any time.
-							</Trans>
-						</Text>
+						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.hint.inviteLinkInfo']()}</Text>
 						<Text style={[a.text_md, a.leading_snug]}>
 							<Trans>
 								Group chats can only have a maximum of{' '}
 								<Plural value={convo.details.memberLimit} other="# people" />.
 							</Trans>
 						</Text>
-						<Text style={[a.text_md, a.leading_snug]}>
-							<Trans>
-								Your name, avatar, the name of the group chat, and the number of members will be visible to
-								everyone.
-							</Trans>
-						</Text>
+						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.hint.invitePrivacy']()}</Text>
 					</View>
 					<View style={[a.mt_4xl]}>
 						<Button
-							label={l`Get started`}
+							label={m['screens.messages.action.getStarted']()}
 							color="primary"
 							size="large"
 							onPress={() => {
 								setStep(Step.GENERATE);
 							}}
 						>
-							<ButtonText>
-								<Trans>Get started</Trans>
-							</ButtonText>
+							<ButtonText>{m['screens.messages.action.getStarted']()}</ButtonText>
 							<ButtonIcon icon={ArrowRightIcon} />
 						</Button>
 					</View>
@@ -196,15 +185,15 @@ export function InviteLinkDialog({
 			const linkEnabled = joinLink?.enabledStatus === 'enabled';
 			const linkHasChanged = linkEnabled && joinLinkRuleKey !== whoCanJoin;
 
-			header = linkEnabled ? l`Update invite link` : l`Generate invite link`;
+			header = linkEnabled
+				? m['screens.messages.action.updateInviteLink']()
+				: m['screens.messages.action.generateInviteLink']();
 			content = (
 				<>
-					<Text style={[a.text_md]}>
-						<Trans>Choose who can join this group chat and how.</Trans>
-					</Text>
+					<Text style={[a.text_md]}>{m['screens.messages.hint.chooseWhoCanJoin']()}</Text>
 					<View style={[a.mt_lg]}>
 						<Toggle.Group
-							label={l`Who can join this group chat and how`}
+							label={m['screens.messages.label.whoCanJoin']()}
 							type="radio"
 							values={[whoCanJoin]}
 							onChange={([value]) => setWhoCanJoin(value!)}
@@ -232,7 +221,11 @@ export function InviteLinkDialog({
 					<View style={[a.mt_4xl]}>
 						<Button
 							label={
-								linkEnabled ? (linkHasChanged ? l`Update invite link` : l`Back`) : l`Generate invite link`
+								linkEnabled
+									? linkHasChanged
+										? m['screens.messages.action.updateInviteLink']()
+										: m['common.action.back']()
+									: m['screens.messages.action.generateInviteLink']()
 							}
 							color={linkEnabled && !linkHasChanged ? 'secondary' : 'primary'}
 							size="large"
@@ -257,7 +250,11 @@ export function InviteLinkDialog({
 							}}
 						>
 							<ButtonText>
-								{linkEnabled ? (linkHasChanged ? l`Update invite link` : l`Back`) : l`Generate invite link`}
+								{linkEnabled
+									? linkHasChanged
+										? m['screens.messages.action.updateInviteLink']()
+										: m['common.action.back']()
+									: m['screens.messages.action.generateInviteLink']()}
 							</ButtonText>
 							{linkHasChanged && <ButtonIcon icon={isSaving ? Loader : ArrowRightIcon} />}
 						</Button>
@@ -276,13 +273,15 @@ export function InviteLinkDialog({
 				whoCanJoinOptions[0]!;
 			const ownerValue = currentOption?.owner ?? whoCanJoinOptions[0]!.owner;
 			const memberValue = currentOption?.member ?? whoCanJoinOptions[0]!.member;
-			header = linkEnabled ? l`Invite link` : l`Invite link disabled`;
+			header = linkEnabled
+				? m['screens.messages.label.inviteLink']()
+				: m['common.label.inviteLinkDisabled']();
 			content = (
 				<>
 					<View style={[a.mt_lg]}>
 						<CopyTextButton
 							disabled={linkDisabled || !joinLink?.code}
-							label={l`Invite link`}
+							label={m['screens.messages.label.inviteLink']()}
 							value={joinLinkURI}
 						>
 							<Text
@@ -308,7 +307,7 @@ export function InviteLinkDialog({
 						isOwner ? (
 							<View style={[a.mt_lg]}>
 								<EditTextButton
-									label={l`Edit link settings`}
+									label={m['screens.messages.action.editLinkSettings']()}
 									value={ownerValue}
 									onPress={() => setStep(Step.GENERATE)}
 								>
@@ -325,18 +324,18 @@ export function InviteLinkDialog({
 						<View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
 							{isOwner ? (
 								<StackedButton
-									label={l`Disable`}
+									label={m['screens.messages.action.disable']()}
 									icon={ChainLinkBrokenIcon}
 									color="negative_subtle"
 									style={[a.flex_1, a.rounded_full]}
 									onPress={() => setStep(Step.CONFIRM_DISABLE)}
 								>
-									<Trans>Disable</Trans>
+									{m['screens.messages.action.disable']()}
 								</StackedButton>
 							) : null}
 							<StackedButton
 								disabled={linkDisabled}
-								label={l`Post link`}
+								label={m['screens.messages.label.postLink']()}
 								icon={EditIcon}
 								color="primary_subtle"
 								style={[a.flex_1, a.rounded_full]}
@@ -349,11 +348,11 @@ export function InviteLinkDialog({
 									});
 								}}
 							>
-								<Trans>Post link</Trans>
+								{m['screens.messages.label.postLink']()}
 							</StackedButton>
 							<StackedButton
 								disabled={linkDisabled}
-								label={l`Share`}
+								label={m['common.action.share']()}
 								icon={ArrowShareRightIcon}
 								color="primary_subtle"
 								style={[a.flex_1, a.rounded_full]}
@@ -361,35 +360,31 @@ export function InviteLinkDialog({
 									void shareUrl(joinLinkURI);
 								}}
 							>
-								<Trans>Share</Trans>
+								{m['common.action.share']()}
 							</StackedButton>
 						</View>
 					) : (
 						<View style={[a.gap_md, a.mt_lg]}>
 							<Button
 								disabled={isEnabling || isDisabling}
-								label={l`Re-enable invite link`}
+								label={m['screens.messages.action.reenableInviteLink']()}
 								color="primary"
 								size="large"
 								onPress={() => {
 									enableJoinLink();
 								}}
 							>
-								<ButtonText>
-									<Trans>Re-enable link</Trans>
-								</ButtonText>
+								<ButtonText>{m['screens.messages.action.reenableLink']()}</ButtonText>
 								{isEnabling && <ButtonIcon icon={Loader} />}
 							</Button>
 							<Button
 								disabled={isEnabling || isDisabling}
-								label={l`Generate new invite link`}
+								label={m['screens.messages.action.generateNewInviteLink']()}
 								color="secondary"
 								size="large"
 								onPress={() => setStep(Step.GENERATE)}
 							>
-								<ButtonText>
-									<Trans>Generate new link</Trans>
-								</ButtonText>
+								<ButtonText>{m['screens.messages.action.generateNewLink']()}</ButtonText>
 							</Button>
 						</View>
 					)}
@@ -404,38 +399,33 @@ export function InviteLinkDialog({
 						<ChainLinkBrokenIcon fill={colors.negative_500} size="3xl" />
 					</View>
 					<Text style={[a.flex_1, a.pb_sm, a.text_center, a.text_lg, a.font_bold, a.leading_snug]}>
-						<Trans>Disable this invite link?</Trans>
+						{m['screens.messages.dialog.disableLinkTitle']()}
 					</Text>
 					<Text style={[a.pb_2xl, a.text_center, a.text_sm, a.leading_snug]}>
-						<Trans>
-							Anyone who has it will no longer be able to join or request to join. You can always create a new
-							one.
-						</Trans>
+						{m['screens.messages.hint.disableLinkInfo']()}
 					</Text>
 					<View style={[a.w_full, a.gap_md, a.justify_end]}>
 						<Button
 							color="negative"
 							disabled={isDisabling}
 							size="large"
-							label={l`Disable link`}
+							label={m['screens.messages.action.disableLink']()}
 							onPress={() => {
 								disableJoinLink();
 								setStep(Step.MANAGE);
 							}}
 						>
-							<ButtonText>
-								<Trans>Disable link</Trans>
-							</ButtonText>
+							<ButtonText>{m['screens.messages.action.disableLink']()}</ButtonText>
 						</Button>
 						<Button
 							color="secondary"
 							size="large"
-							label={l`Cancel`}
+							label={m['common.action.cancel']()}
 							onPress={() => {
 								setStep(Step.MANAGE);
 							}}
 						>
-							<ButtonText>{l`Cancel`}</ButtonText>
+							<ButtonText>{m['common.action.cancel']()}</ButtonText>
 						</Button>
 					</View>
 				</>
@@ -445,19 +435,20 @@ export function InviteLinkDialog({
 	}
 
 	if (!isOwner && (!joinLink || joinLink.enabledStatus === 'disabled')) {
-		header = l`Invite link`;
+		header = m['screens.messages.label.inviteLink']();
 		content = (
 			<>
 				<View style={[a.mt_lg]}>
-					<Text style={[a.text_sm]}>
-						<Trans>There is no invite link for this group chat.</Trans>
-					</Text>
+					<Text style={[a.text_sm]}>{m['screens.messages.empty.noInviteLink']()}</Text>
 				</View>
 				<View style={[a.gap_md, a.mt_lg]}>
-					<Button label={l`Close`} color="primary" size="large" onPress={() => control.close()}>
-						<ButtonText>
-							<Trans>Close</Trans>
-						</ButtonText>
+					<Button
+						label={m['common.action.close']()}
+						color="primary"
+						size="large"
+						onPress={() => control.close()}
+					>
+						<ButtonText>{m['common.action.close']()}</ButtonText>
 					</Button>
 				</View>
 			</>
@@ -482,7 +473,7 @@ export function InviteLinkDialog({
 						<Dialog.Close />
 					</View>
 				}
-				label={l`Group chat invite link dialog`}
+				label={m['screens.messages.a11y.inviteLinkDialog']()}
 				style={{ maxWidth: 400 }}
 			>
 				{content}

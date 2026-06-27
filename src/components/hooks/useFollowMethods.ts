@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import type { Shadow } from '#/state/cache/types';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
@@ -10,8 +9,9 @@ import { logger } from '#/logger';
 
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
+
 export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> }) {
-	const { t: l } = useLingui();
 	const requireAuth = useRequireAuth();
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
@@ -22,13 +22,13 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 			} catch (e) {
 				logger.error(`useFollowMethods: failed to follow`, { message: String(e) });
 				if (!(e instanceof Error && e.name === 'AbortError')) {
-					Toast.show(l`An issue occurred, please try again.`, {
+					Toast.show(m['common.error.generic'](), {
 						type: 'error',
 					});
 				}
 			}
 		});
-	}, [l, queueFollow, requireAuth]);
+	}, [queueFollow, requireAuth]);
 
 	const unfollow = useCallback(() => {
 		requireAuth(async () => {
@@ -39,13 +39,13 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 					message: String(e),
 				});
 				if (!(e instanceof Error && e.name === 'AbortError')) {
-					Toast.show(l`An issue occurred, please try again.`, {
+					Toast.show(m['common.error.generic'](), {
 						type: 'error',
 					});
 				}
 			}
 		});
-	}, [l, queueUnfollow, requireAuth]);
+	}, [queueUnfollow, requireAuth]);
 
 	return {
 		follow,

@@ -1,5 +1,4 @@
 import { Autocomplete } from '@base-ui/react/autocomplete';
-import { useLingui } from '@lingui/react/macro';
 
 import {
 	ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
@@ -7,6 +6,8 @@ import {
 } from '#/components/icons/Chevron';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './CalendarBody.css';
 import type { DateItem } from './model';
@@ -28,8 +29,6 @@ export function CalendarBody({
 	onGoToMonth: (delta: number) => void;
 	visibleMonth: Date;
 }) {
-	const { t } = useLingui();
-
 	const monthLabel = visibleMonth.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
 	const weekdays = days.slice(0, 7);
 
@@ -43,7 +42,7 @@ export function CalendarBody({
 			<Button
 				className={styles.navPrevious}
 				color="secondary"
-				label={t`Previous month`}
+				label={m['components.web.action.previousMonth']()}
 				onClick={() => onGoToMonth(-1)}
 				// keep the text input focused so keyboard navigation survives a month change.
 				onMouseDown={(event) => event.preventDefault()}
@@ -61,7 +60,7 @@ export function CalendarBody({
 			<Button
 				className={styles.navNext}
 				color="secondary"
-				label={t`Next month`}
+				label={m['components.web.action.nextMonth']()}
 				onClick={() => onGoToMonth(1)}
 				onMouseDown={(event) => event.preventDefault()}
 				shape="round"

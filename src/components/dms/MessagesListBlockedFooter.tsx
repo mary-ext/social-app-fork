@@ -6,7 +6,6 @@ import {
 	type ModerationDecision,
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileBlockMutationQueue } from '#/state/queries/profile';
@@ -24,6 +23,7 @@ import {
 } from '#/components/icons/Person';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './MessagesListBlockedFooter.css';
@@ -40,7 +40,6 @@ export function MessagesListBlockedFooter({
 	isGroup: boolean;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const recipient = useProfileShadow(initialRecipient);
 	const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(recipient);
 
@@ -85,39 +84,35 @@ export function MessagesListBlockedFooter({
 				<PersonXIcon fill={colors.text} size="lg" className={css.icon} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
 					{isGroup
-						? l`You are blocking the chat owner`
+						? m['components.dms.error.youAreBlockingOwner']()
 						: isBlocking
-							? l`You are blocking this person`
-							: l`This person is blocking you`}
+							? m['components.dms.error.youAreBlockingPerson']()
+							: m['components.dms.error.personBlockingYou']()}
 				</Text>
 				<Text style={[a.text_center, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-					<Trans>You can read chat history but can't send new messages.</Trans>
+					{m['components.dms.hint.readOnlyHistory']()}
 				</Text>
 				{isBlocking ? (
 					<Button
-						label={l`Unblock`}
+						label={m['common.action.unblock']()}
 						color="secondary_inverted"
 						size="large"
 						style={[a.mt_lg, a.w_full]}
 						onPress={onUnblockPress}
 					>
 						<ButtonIcon icon={PersonCheckIcon} />
-						<ButtonText>
-							<Trans>Unblock</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.unblock']()}</ButtonText>
 					</Button>
 				) : null}
 				<Button
-					label={l`Leave chat`}
+					label={m['common.action.leaveChat']()}
 					color="secondary_inverted"
 					size="large"
 					style={[a.mt_lg, a.w_full]}
 					onPress={leaveConvoControl.open}
 				>
 					<ButtonIcon icon={LeaveIcon} />
-					<ButtonText>
-						<Trans>Leave chat</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.leaveChat']()}</ButtonText>
 				</Button>
 				<LeaveConvoPrompt control={leaveConvoControl} currentScreen="conversation" convoId={convoId} />
 				<BlockedByListDialog control={blockedByListControl} listBlocks={listBlocks} />

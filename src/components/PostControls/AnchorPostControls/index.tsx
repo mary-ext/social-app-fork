@@ -15,6 +15,8 @@ import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Rep
 import * as Skele from '#/components/Skeleton';
 import { Tooltip } from '#/components/web/Tooltip';
 
+import { m } from '#/paraglide/messages';
+
 import { PostOverflowMenu } from '../PostMenu';
 import { RepostMenu } from '../RepostMenu';
 import { type PostControlsProps, usePostControlsActions } from '../shared';
@@ -132,7 +134,7 @@ function AnchorPostControls({
 					comment:
 						'Accessibility label for the reply button, verb form followed by number of replies and noun form',
 				})}
-				tooltip={l`Reply`}
+				tooltip={m['common.action.reply']()}
 				className={clsx(replyDisabled && css.replyDisabled)}
 			>
 				<AnchorControlButtonIcon icon={Bubble} />
@@ -143,10 +145,10 @@ function AnchorPostControls({
 				onRepost={() => void onRepost()}
 				onQuote={onQuote}
 				embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
-				tooltip={l`Repost`}
+				tooltip={m['components.postControls.action.repost']()}
 				render={
 					<AnchorControlButton
-						label={l`Repost or quote post`}
+						label={m['components.postControls.a11y.repost']()}
 						tooltip={null}
 						active={!!post.viewer?.repost}
 						activeColor={t.palette.positive_500}
@@ -159,7 +161,7 @@ function AnchorPostControls({
 			<AnchorControlButton
 				active={Boolean(post.viewer?.like)}
 				activeColor={t.palette.pink}
-				tooltip={l`Like`}
+				tooltip={m['common.action.like']()}
 				onClick={() => requireAuth(() => onPressToggleLike())}
 				label={
 					post.viewer?.like
@@ -193,9 +195,9 @@ function AnchorPostControls({
 			<ShareMenu
 				post={post}
 				onShare={onShare}
-				tooltip={l`Share`}
+				tooltip={m['common.action.share']()}
 				render={
-					<AnchorControlButton label={l`Open share menu`} tooltip={null}>
+					<AnchorControlButton label={m['components.postControls.a11y.openShare']()} tooltip={null}>
 						<AnchorControlButtonIcon icon={ArrowShareRightIcon} />
 					</AnchorControlButton>
 				}
@@ -209,9 +211,9 @@ function AnchorPostControls({
 				threadgateRecord={threadgateRecord}
 				onShowLess={onShowLess}
 				logContext={logContext}
-				tooltip={l`More`}
+				tooltip={m['components.postControls.action.more']()}
 				render={
-					<AnchorControlButton label={l`Open post options menu`} tooltip={null}>
+					<AnchorControlButton label={m['components.postControls.a11y.openOptions']()} tooltip={null}>
 						<AnchorControlButtonIcon icon={DotsHorizontal} />
 					</AnchorControlButton>
 				}

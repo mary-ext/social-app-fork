@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ListRenderItemInfo } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -22,6 +21,8 @@ import * as Layout from '#/components/Layout';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
+import { m } from '#/paraglide/messages';
+
 const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
 	return <Post post={item} />;
 };
@@ -32,8 +33,6 @@ const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
 
 export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavigatorParams, 'Topic'>) {
 	const { topic } = route.params;
-	const { t: l } = useLingui();
-
 	const headerTitle = useMemo(() => {
 		return enforceLen(topic, 24, true, 'middle');
 	}, [topic]);
@@ -50,16 +49,16 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 		return [
 			{
 				id: 'top',
-				label: l`Top`,
+				label: m['common.label.top'](),
 				render: (focused) => <TopicScreenTab topic={topic} sort="top" active={focused} />,
 			},
 			{
 				id: 'latest',
-				label: l`Latest`,
+				label: m['common.label.latest'](),
 				render: (focused) => <TopicScreenTab topic={topic} sort="latest" active={focused} />,
 			},
 		];
-	}, [l, topic]);
+	}, [topic]);
 
 	return (
 		<Layout.Screen>
@@ -75,7 +74,7 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 						</Layout.Header.Content>
 						<Layout.Header.Slot>
 							<Button
-								label={l`Share`}
+								label={m['common.action.share']()}
 								size="small"
 								variant="ghost"
 								color="primary"
@@ -95,7 +94,6 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 }
 
 function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 'latest'; active: boolean }) {
-	const { t: l } = useLingui();
 	const initialNumToRender = useInitialNumToRender();
 	const [isPTR, setIsPTR] = useState(false);
 
@@ -138,7 +136,7 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 					isError={isError}
 					onRetry={refetch}
 					emptyType="results"
-					emptyMessage={l`We couldn't find any results for that topic.`}
+					emptyMessage={m['screens.topic.empty.noResults']()}
 				/>
 			) : (
 				<List

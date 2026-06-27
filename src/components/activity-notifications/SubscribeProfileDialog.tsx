@@ -6,7 +6,6 @@ import type {
 } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -27,6 +26,8 @@ import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/w
 import * as Dialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 import * as ProfileCard from '#/components/web/ProfileCard';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './SubscribeProfileDialog.css';
 
@@ -50,11 +51,13 @@ export function SubscribeProfileDialog({
 	moderationOpts: ModerationOptions;
 	includeProfile?: boolean;
 }) {
-	const { t: l } = useLingui();
 	const name = createSanitizedDisplayName(profile, false);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={l`Get notified of new posts from ${name}`}>
+			<Dialog.Popup
+				className={styles.popup}
+				label={m['components.activityNotifications.hint.newPosts']({ name })}
+			>
 				<DialogInner
 					handle={handle}
 					profile={profile}
@@ -78,7 +81,6 @@ function DialogInner({
 	moderationOpts: ModerationOptions;
 	includeProfile?: boolean;
 }) {
-	const { t: l } = useLingui();
 	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const initialState = parseActivitySubscription(profile.viewer?.activitySubscription);
@@ -112,9 +114,14 @@ function DialogInner({
 			});
 
 			if (!activitySubscription.post && !activitySubscription.reply) {
-				Toast.show(l`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`, {
-					type: 'success',
-				});
+				Toast.show(
+					m['components.activityNotifications.toast.unsubscribed']({
+						handle: sanitizeHandle(profile.handle, '@'),
+					}),
+					{
+						type: 'success',
+					},
+				);
 
 				// filter out the subscription
 				queryClient.setQueryData(
@@ -132,11 +139,16 @@ function DialogInner({
 				);
 			} else {
 				if (!initialState.post && !initialState.reply) {
-					Toast.show(l`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`, {
-						type: 'success',
-					});
+					Toast.show(
+						m['components.activityNotifications.toast.subscribed']({
+							handle: sanitizeHandle(profile.handle, '@'),
+						}),
+						{
+							type: 'success',
+						},
+					);
 				} else {
-					Toast.show(l`Changes saved`, {
+					Toast.show(m['components.activityNotifications.toast.saved'](), {
 						type: 'success',
 					});
 				}
@@ -153,28 +165,28 @@ function DialogInner({
 
 		if (isDirty) {
 			return {
-				label: l`Save changes`,
+				label: m['common.action.saveChanges'](),
 				color: hasAny ? 'primary' : 'negative',
 				onClick: () => saveChanges(state),
 				disabled: isSaving,
 			};
 		} else {
 			return {
-				label: l`Save changes`,
+				label: m['common.action.saveChanges'](),
 				color: 'secondary',
 				disabled: true,
 			};
 		}
-	}, [state, initialState, l, isSaving, saveChanges]);
+	}, [state, initialState, isSaving, saveChanges]);
 
 	return (
 		<div className={styles.content}>
 			<div className={styles.header}>
 				<Text size="_2xl" weight="bold">
-					<Trans>Keep me posted</Trans>
+					{m['components.activityNotifications.cta.keepPosted']()}
 				</Text>
 				<Text color="textContrastMedium" size="md">
-					<Trans>Get notified of this account’s activity</Trans>
+					{m['components.activityNotifications.hint.activity']()}
 				</Text>
 			</div>
 
@@ -187,40 +199,36 @@ function DialogInner({
 
 			<Toggle.Group
 				className={styles.radioList}
-				label={l`Subscribe to account activity`}
+				label={m['components.activityNotifications.title']()}
 				onChange={onSelect}
 				type="radio"
 				values={[selected]}
 			>
-				<Toggle.RadioItem label={l`Posts and replies`} value="all">
+				<Toggle.RadioItem label={m['components.activityNotifications.option.postsAndReplies']()} value="all">
 					<Toggle.Panel>
 						<Toggle.RadioIndicator />
 						<Toggle.PanelText>
-							<Trans>Posts and replies</Trans>
+							{m['components.activityNotifications.option.postsAndReplies']()}
 						</Toggle.PanelText>
 					</Toggle.Panel>
 				</Toggle.RadioItem>
-				<Toggle.RadioItem label={l`Posts only`} value="posts">
+				<Toggle.RadioItem label={m['components.activityNotifications.option.postsOnly']()} value="posts">
 					<Toggle.Panel>
 						<Toggle.RadioIndicator />
-						<Toggle.PanelText>
-							<Trans>Posts only</Trans>
-						</Toggle.PanelText>
+						<Toggle.PanelText>{m['components.activityNotifications.option.postsOnly']()}</Toggle.PanelText>
 					</Toggle.Panel>
 				</Toggle.RadioItem>
-				<Toggle.RadioItem label={l`Off`} value="off">
+				<Toggle.RadioItem label={m['common.label.off']()} value="off">
 					<Toggle.Panel>
 						<Toggle.RadioIndicator />
-						<Toggle.PanelText>
-							<Trans>Off</Trans>
-						</Toggle.PanelText>
+						<Toggle.PanelText>{m['common.label.off']()}</Toggle.PanelText>
 					</Toggle.Panel>
 				</Toggle.RadioItem>
 			</Toggle.Group>
 
 			{error && (
 				<Admonition type="error">
-					<Trans>Could not save changes: {cleanError(error)}</Trans>
+					{m['components.activityNotifications.error.save']({ error: cleanError(error) })}
 				</Admonition>
 			)}
 

@@ -1,5 +1,4 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -11,6 +10,8 @@ import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './PostFeedReason.css';
 
@@ -29,8 +30,6 @@ export function PostFeedReason({
 	reason: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin;
 	onOpenReposter?: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	const { currentAccount } = useSession();
 
 	if (reason.$type === 'app.bsky.feed.defs#reasonRepost') {
@@ -45,9 +44,11 @@ export function PostFeedReason({
 						{...reasonText}
 						onPress={onOpenReposter}
 						to={makeProfileLink(by)}
-						label={isOwner ? l`Reposted by you` : l`Reposted by ${reposter}`}
+						label={
+							isOwner ? m['view.posts.label.repostedByYou']() : m['view.posts.label.repostedBy']({ reposter })
+						}
 					>
-						{isOwner ? <Trans>Reposted by you</Trans> : <Trans>Reposted by {reposter}</Trans>}
+						{isOwner ? m['view.posts.label.repostedByYou']() : m['view.posts.label.repostedBy']({ reposter })}
 					</InlineLinkText>
 				</ProfileHoverCard>
 			</div>
@@ -58,9 +59,7 @@ export function PostFeedReason({
 		return (
 			<div className={css.includeReason}>
 				<PinIcon fill="currentColor" width={13} height={13} />
-				<Text {...reasonText}>
-					<Trans>Pinned</Trans>
-				</Text>
+				<Text {...reasonText}>{m['view.posts.label.pinned']()}</Text>
 			</div>
 		);
 	}

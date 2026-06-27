@@ -15,6 +15,8 @@ import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './VerificationSettings.css';
 
 export function Screen() {
@@ -26,9 +28,7 @@ export function Screen() {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Verification Settings</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.nav.verificationSettings']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
@@ -52,7 +52,7 @@ export function Screen() {
 						<Inner preferences={preferences} />
 					) : (
 						<div className={styles.loaderWrap}>
-							<Spinner color="currentColor" label={l`Loading`} size="xl" />
+							<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
 						</div>
 					)}
 				</Settings.List>
@@ -62,7 +62,6 @@ export function Screen() {
 }
 
 function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
-	const { t: l } = useLingui();
 	const { hideBadges } = preferences.verificationPrefs;
 	const { isPending, mutate: setVerificationPrefs } = useSetVerificationPrefsMutation();
 
@@ -70,12 +69,12 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 		<Settings.Section>
 			<Settings.SwitchRow
 				disabled={isPending}
-				label={l`Hide verification badges`}
+				label={m['screens.moderation.label.hideVerificationBadges']()}
 				onChange={(value) => setVerificationPrefs({ hideBadges: value })}
 				value={hideBadges}
 			>
 				<Settings.Icon icon={CircleCheck} />
-				<Settings.Label titleText={<Trans>Hide verification badges</Trans>} />
+				<Settings.Label titleText={m['screens.moderation.label.hideVerificationBadges']()} />
 			</Settings.SwitchRow>
 		</Settings.Section>
 	);

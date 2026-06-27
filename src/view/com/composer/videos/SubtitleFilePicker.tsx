@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
 
 import { logger } from '#/logger';
 
@@ -10,6 +9,8 @@ import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
+
 export function SubtitleFilePicker({
 	onSelectFile,
 	disabled,
@@ -17,7 +18,6 @@ export function SubtitleFilePicker({
 	onSelectFile: (file: File) => void;
 	disabled?: boolean;
 }) {
-	const { t: l } = useLingui();
 	const ref = useRef<HTMLInputElement>(null);
 
 	const handleClick = () => {
@@ -38,7 +38,7 @@ export function SubtitleFilePicker({
 				logger.error('Invalid subtitle file type', {
 					safeMessage: `File: ${selectedFile.name} (${selectedFile.type})`,
 				});
-				Toast.show(l`Only WebVTT (.vtt) files are supported`);
+				Toast.show(m['view.composer.error.vttOnly']());
 			}
 		}
 	};
@@ -57,16 +57,14 @@ export function SubtitleFilePicker({
 			<View style={a.flex_row}>
 				<Button
 					onPress={handleClick}
-					label={l`Select caption file (.vtt)`}
+					label={m['view.composer.action.selectCaptionFile']()}
 					size="large"
 					color="primary"
 					variant="solid"
 					disabled={disabled}
 				>
 					<ButtonIcon icon={CCIcon} />
-					<ButtonText>
-						<Trans>Select caption file (.vtt)</Trans>
-					</ButtonText>
+					<ButtonText>{m['view.composer.action.selectCaptionFile']()}</ButtonText>
 				</Button>
 			</View>
 		</View>

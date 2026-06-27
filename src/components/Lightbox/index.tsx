@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import {
 	type LightboxImage,
 	Lightbox as Lb,
@@ -27,6 +27,8 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import * as Dialog from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * The global image lightbox: a singleton Base UI dialog driven by the `lightboxControl` handle in the global
@@ -69,7 +71,6 @@ function LightboxContents({
 	open: boolean;
 	close: () => void;
 }) {
-	const { t: l } = useLingui();
 	const viewportRef = useRef<HTMLDivElement>(null);
 	const [chromeVisible, setChromeVisible] = useState(true);
 
@@ -124,7 +125,11 @@ function LightboxContents({
 				<BaseDialog.Backdrop className={styles.backdrop}>
 					<Lb.Scrim className={styles.scrim} />
 				</BaseDialog.Backdrop>
-				<BaseDialog.Popup aria-label={l`Image viewer`} className={styles.popup} initialFocus={viewportRef}>
+				<BaseDialog.Popup
+					aria-label={m['components.lightbox.a11y.viewer']()}
+					className={styles.popup}
+					initialFocus={viewportRef}
+				>
 					<Lb.Viewport ref={viewportRef} className={styles.viewport} onTap={onTap}>
 						<Lb.Track>{renderSlide}</Lb.Track>
 						<div className={clsx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
@@ -153,7 +158,6 @@ const renderSlide = (image: LightboxImage, index: number) => (
 
 /** A carousel cell that overlays a spinner on the lib's image until the full-size source resolves. */
 function Slide({ image, index }: { image: LightboxImage; index: number }) {
-	const { t: l } = useLingui();
 	const loading = useImageLoading(image.src);
 
 	return (
@@ -161,7 +165,7 @@ function Slide({ image, index }: { image: LightboxImage; index: number }) {
 			<Lb.Image index={index} />
 			{loading ? (
 				<div className={styles.slideSpinner}>
-					<Spinner label={l`Loading image`} color="rgba(255, 255, 255, 0.9)" />
+					<Spinner label={m['components.lightbox.a11y.loading']()} color="rgba(255, 255, 255, 0.9)" />
 				</div>
 			) : null}
 		</Lb.Slide>
@@ -200,7 +204,6 @@ function useImageLoading(src: string) {
 }
 
 function Chrome() {
-	const { t: l } = useLingui();
 	const { images, next, prev } = useLightbox();
 	const index = useLightboxState((state) => state.index);
 	const [altExpanded, setAltExpanded] = useState(false);
@@ -223,12 +226,12 @@ function Chrome() {
 		} else if (typeof navigator !== 'undefined' && navigator.clipboard) {
 			try {
 				await navigator.clipboard.writeText(url);
-				Toast.show(l`Link copied to clipboard`);
+				Toast.show(m['components.lightbox.toast.linkCopied']());
 			} catch {
-				Toast.show(l`Failed to copy link`, { type: 'error' });
+				Toast.show(m['components.lightbox.error.copyLink'](), { type: 'error' });
 			}
 		}
-	}, [img?.src, l]);
+	}, [img?.src]);
 
 	const onDownload = useCallback(() => {
 		const url = img?.src;
@@ -236,10 +239,10 @@ function Chrome() {
 			return;
 		}
 		saveImageToMediaLibrary({ uri: url }).then(
-			() => Toast.show(l`Image saved`),
-			() => Toast.show(l`Failed to save image`, { type: 'error' }),
+			() => Toast.show(m['components.lightbox.toast.saved']()),
+			() => Toast.show(m['components.lightbox.error.save'](), { type: 'error' }),
 		);
-	}, [img?.src, l]);
+	}, [img?.src]);
 
 	return (
 		<>
@@ -247,7 +250,7 @@ function Chrome() {
 				<button
 					type="button"
 					className={clsx(styles.navButton, styles.navLeft)}
-					aria-label={l`Previous image`}
+					aria-label={m['components.lightbox.a11y.previous']()}
 					onClick={prev}
 				>
 					<ChevronLeftIcon size="md" fill="currentColor" />
@@ -257,7 +260,7 @@ function Chrome() {
 				<button
 					type="button"
 					className={clsx(styles.navButton, styles.navRight)}
-					aria-label={l`Next image`}
+					aria-label={m['components.lightbox.a11y.next']()}
 					onClick={next}
 				>
 					<ChevronRightIcon size="md" fill="currentColor" />
@@ -266,27 +269,26 @@ function Chrome() {
 
 			<div className={styles.topLeft}>
 				<Menu.Root>
-					<Menu.Trigger className={styles.circle} aria-label={l`Image options`}>
+					<Menu.Trigger className={styles.circle} aria-label={m['components.lightbox.a11y.options']()}>
 						<EllipsisIcon size="md" fill="currentColor" className={styles.rotated} />
 					</Menu.Trigger>
-					<Menu.Popup label={l`Image options`}>
-						<Menu.Item label={l`Share image`} onClick={() => void onShare()}>
-							<Menu.ItemText>
-								<Trans>Share image</Trans>
-							</Menu.ItemText>
+					<Menu.Popup label={m['components.lightbox.a11y.options']()}>
+						<Menu.Item label={m['components.lightbox.action.share']()} onClick={() => void onShare()}>
+							<Menu.ItemText>{m['components.lightbox.action.share']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={ShareIcon} position="right" />
 						</Menu.Item>
-						<Menu.Item label={l`Download image`} onClick={onDownload}>
-							<Menu.ItemText>
-								<Trans>Download image</Trans>
-							</Menu.ItemText>
+						<Menu.Item label={m['components.lightbox.action.download']()} onClick={onDownload}>
+							<Menu.ItemText>{m['components.lightbox.action.download']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={DownloadIcon} position="right" />
 						</Menu.Item>
 					</Menu.Popup>
 				</Menu.Root>
 			</div>
 
-			<BaseDialog.Close aria-label={l`Close image viewer`} className={clsx(styles.circle, styles.topRight)}>
+			<BaseDialog.Close
+				aria-label={m['components.lightbox.a11y.close']()}
+				className={clsx(styles.circle, styles.topRight)}
+			>
 				<XIcon size="md" fill="currentColor" />
 			</BaseDialog.Close>
 
@@ -295,7 +297,7 @@ function Chrome() {
 					<button
 						type="button"
 						className={styles.altButton}
-						aria-label={l`Expand alt text`}
+						aria-label={m['components.lightbox.action.expandAlt']()}
 						onClick={() => setAltExpanded((v) => !v)}
 					>
 						<Text size="md" numberOfLines={altExpanded ? undefined : 3} className={styles.altText}>

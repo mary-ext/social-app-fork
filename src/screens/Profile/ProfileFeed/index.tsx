@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
@@ -33,14 +32,12 @@ import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/compon
 import * as Layout from '#/components/Layout';
 import type { ListMethods } from '#/components/List/List';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>;
 export function ProfileFeedScreen(props: Props) {
 	const { rkey, name: handleOrDid } = props.route.params;
-
-	const { t: l } = useLingui();
-
 	const uri = useMemo(() => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey), [rkey, handleOrDid]);
 	let { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
 
@@ -49,7 +46,7 @@ export function ProfileFeedScreen(props: Props) {
 			<Layout.Screen testID="profileFeedScreenError">
 				<ErrorScreen
 					showHeader
-					title={l`Could not load feed`}
+					title={m['screens.profile.error.feedLoad']()}
 					message={cleanError(error)}
 					onPressTryAgain={() => void refetch()}
 				/>
@@ -93,7 +90,6 @@ export function ProfileFeedScreenInner({
 	preferences: UsePreferencesQueryResponse;
 	feedInfo: FeedSourceFeedInfo;
 }) {
-	const { t: l } = useLingui();
 	const { hasSession } = useSession();
 	const { openComposer } = useOpenComposer();
 	const isScreenFocused = useIsFocused();
@@ -125,8 +121,8 @@ export function ProfileFeedScreenInner({
 	}, [onScrollToTop, isScreenFocused]);
 
 	const renderPostsEmpty = useCallback(() => {
-		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={l`This feed is empty.`} />;
-	}, [l]);
+		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.empty.feed']()} />;
+	}, []);
 
 	return (
 		<>
@@ -144,12 +140,16 @@ export function ProfileFeedScreenInner({
 				/>
 			</FeedFeedbackProvider>
 			{(isScrolledDown || hasNew) && (
-				<LoadLatestBtn onPress={onScrollToTop} label={l`Load new posts`} showIndicator={hasNew} />
+				<LoadLatestBtn
+					onPress={onScrollToTop}
+					label={m['common.action.loadNewPosts']()}
+					showIndicator={hasNew}
+				/>
 			)}
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={colors.white} />}
-					label={l`New post`}
+					label={m['common.label.newPost']()}
 					onClick={() => openComposer({ logContext: 'Fab' })}
 				/>
 			)}

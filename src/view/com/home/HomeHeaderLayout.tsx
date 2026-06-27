@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 
@@ -14,6 +13,8 @@ import { ButtonIcon } from '#/components/Button';
 import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag';
 import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * The home screen's chrome above the feed tabs — the logo and a feeds-discovery link. Rendered as the
@@ -30,7 +31,6 @@ export function HomeHeaderLayout() {
 function HomeHeaderLayoutDesktopAndTablet() {
 	const t = useTheme();
 	const { hasSession } = useSession();
-	const { t: l } = useLingui();
 	const gutters = useGutters([0, 'base']);
 
 	if (!hasSession) {
@@ -47,7 +47,7 @@ function HomeHeaderLayoutDesktopAndTablet() {
 				<Link
 					to="/feeds"
 					hitSlop={HITSLOP_10}
-					label={l`View your feeds and explore more`}
+					label={m['view.home.label.exploreFeeds']()}
 					size="small"
 					variant="ghost"
 					color="secondary"

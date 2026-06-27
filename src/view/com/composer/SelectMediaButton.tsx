@@ -11,6 +11,8 @@ import { MAX_GALLERY_IMAGES } from '#/view/com/composer/state/composer';
 
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 
+import { m } from '#/paraglide/messages';
+
 import { ComposerToolbarButton } from './ComposerToolbarButton';
 import { isAnimatedGif } from './videos/isAnimatedGif';
 
@@ -238,18 +240,18 @@ export function SelectMediaButton({
 
 		const errors = Array.from(errorCodes).map((error) => {
 			return {
-				[SelectedAssetError.Unsupported]: l`One or more of your selected files are not supported.`,
-				[SelectedAssetError.MixedTypes]: l`Selecting multiple media types is not supported.`,
+				[SelectedAssetError.Unsupported]: m['view.composer.error.fileUnsupported'](),
+				[SelectedAssetError.MixedTypes]: m['view.composer.error.multipleMediaTypes'](),
 				[SelectedAssetError.MaxImages]: l({
 					message: `You can select up to ${plural(MAX_GALLERY_IMAGES, {
 						other: '# images',
 					})} in total.`,
 					comment: `Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.`,
 				}),
-				[SelectedAssetError.MaxVideos]: l`You can only select one video at a time.`,
-				[SelectedAssetError.VideoTooLong]: l`Videos must be less than 3 minutes long.`,
-				[SelectedAssetError.MaxGIFs]: l`You can only select one GIF at a time.`,
-				[SelectedAssetError.FileTooBig]: l`One or more of your selected files are too large. Maximum size is ${VIDEO_MAX_SIZE_MB} MB.`,
+				[SelectedAssetError.MaxVideos]: m['view.composer.error.oneVideoOnly'](),
+				[SelectedAssetError.VideoTooLong]: m['view.composer.error.videoTooLong'](),
+				[SelectedAssetError.MaxGIFs]: m['view.composer.error.oneGifOnly'](),
+				[SelectedAssetError.FileTooBig]: m['view.composer.error.fileTooLarge']({ VIDEO_MAX_SIZE_MB }),
 			}[error];
 		});
 

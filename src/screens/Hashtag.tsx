@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ListRenderItemInfo } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -30,6 +30,8 @@ import { SearchError } from '#/components/SearchError';
 import { Text } from '#/components/Typography';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
+import { m } from '#/paraglide/messages';
+
 const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
 	return <Post post={item} />;
 };
@@ -40,8 +42,6 @@ const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
 
 export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
 	const { tag, author } = route.params;
-	const { t: l } = useLingui();
-
 	const isCashtag = tag.startsWith('$');
 
 	const fullTag = useMemo(() => {
@@ -75,20 +75,20 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 		return [
 			{
 				id: 'top',
-				label: l`Top`,
+				label: m['common.label.top'](),
 				render: (focused) => (
 					<HashtagScreenTab fullTag={fullTag} author={author} sort="top" active={focused} />
 				),
 			},
 			{
 				id: 'latest',
-				label: l`Latest`,
+				label: m['common.label.latest'](),
 				render: (focused) => (
 					<HashtagScreenTab fullTag={fullTag} author={author} sort="latest" active={focused} />
 				),
 			},
 		];
-	}, [l, fullTag, author]);
+	}, [fullTag, author]);
 
 	return (
 		<Layout.Screen>
@@ -102,12 +102,14 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 						<Layout.Header.Content>
 							<Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
 							{author && (
-								<Layout.Header.SubtitleText>{l`From @${sanitizedAuthor}`}</Layout.Header.SubtitleText>
+								<Layout.Header.SubtitleText>
+									{m['screens.hashtag.label.fromAuthor']({ sanitizedAuthor })}
+								</Layout.Header.SubtitleText>
 							)}
 						</Layout.Header.Content>
 						<Layout.Header.Slot>
 							<Button
-								label={l`Share`}
+								label={m['common.action.share']()}
 								size="small"
 								variant="ghost"
 								color="primary"
@@ -137,7 +139,6 @@ function HashtagScreenTab({
 	sort: 'top' | 'latest';
 	active: boolean;
 }) {
-	const { t: l } = useLingui();
 	const initialNumToRender = useInitialNumToRender();
 	const [isPTR, setIsPTR] = useState(false);
 	const t = useTheme();
@@ -187,10 +188,10 @@ function HashtagScreenTab({
 
 	if (!hasSession) {
 		return (
-			<SearchError title={l`Search is currently unavailable when logged out`}>
+			<SearchError title={m['common.error.searchLoggedOut']()}>
 				<Text style={[a.text_md, a.text_center, a.leading_snug]}>
 					<Trans>
-						<InlineLinkText label={l`Sign in`} to={'#'} onPress={showSignIn}>
+						<InlineLinkText label={m['common.action.signIn']()} to={'#'} onPress={showSignIn}>
 							Sign in
 						</InlineLinkText>
 						<Text> </Text>
@@ -211,7 +212,7 @@ function HashtagScreenTab({
 					isError={isError}
 					onRetry={refetch}
 					emptyType="results"
-					emptyMessage={l`We couldn't find any results for that tag.`}
+					emptyMessage={m['screens.hashtag.empty.noResults']()}
 				/>
 			) : (
 				<List

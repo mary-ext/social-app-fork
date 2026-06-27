@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
 import type { LabelPreference } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
@@ -39,6 +38,8 @@ import { setSubscribedLabelers } from '#/state/session/labelers';
 import { logger } from '#/logger';
 
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 export * from '#/state/queries/preferences/const';
 export * from '#/state/queries/preferences/moderation';
@@ -230,7 +231,6 @@ export function useToggleSavedFeed({
 	type: 'feed' | 'list';
 	uri: string;
 }) {
-	const { t: l } = useLingui();
 	const { data: preferences } = usePreferencesQuery();
 	const { isPending: isAddPending, mutateAsync: saveFeeds } = useAddSavedFeedsMutation();
 	const { isPending: isRemovePending, mutateAsync: removeFeed } = useRemoveFeedMutation();
@@ -247,15 +247,15 @@ export function useToggleSavedFeed({
 			} else {
 				await saveFeeds([{ pinned: !!pin, type, value: uri }]);
 			}
-			Toast.show(l({ message: 'Feeds updated!', context: 'toast' }));
+			Toast.show(m['common.toast.feedsUpdated']());
 		} catch (err) {
 			logger.error(err instanceof Error ? err : String(err), {
 				message: 'failed to update saved feeds',
 				pin,
 			});
-			Toast.show(l`Failed to update feeds`, { type: 'error' });
+			Toast.show(m['state.error.updateFeeds'](), { type: 'error' });
 		}
-	}, [l, pin, removeFeed, saveFeeds, savedFeedConfig, type, uri]);
+	}, [pin, removeFeed, saveFeeds, savedFeedConfig, type, uri]);
 
 	return {
 		isPending: isAddPending || isRemovePending,

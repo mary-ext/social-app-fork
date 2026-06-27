@@ -1,5 +1,4 @@
 import type { AnyStarterPackView } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -21,6 +20,8 @@ import {
 	LoadingPlaceholder as StarterPackLoadingPlaceholder,
 } from '#/components/StarterPack/StarterPackCard';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './ProfileStarterPacks.css';
 
@@ -64,7 +65,6 @@ export function ProfileStarterPacks({
 	emptyStateButton,
 	emptyStateIcon,
 }: ProfileStarterPacksProps): React.ReactNode {
-	const { t: l } = useLingui();
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useActorStarterPacksQuery({ did, enabled });
 	const isEmpty = !isPending && !data?.pages[0]?.starterPacks.length;
@@ -115,7 +115,7 @@ export function ProfileStarterPacks({
 			if (item === LOAD_MORE_ERROR_ITEM) {
 				return (
 					<LoadMoreRetryBtn
-						label={l`There was an issue fetching your starter packs. Tap here to try again.`}
+						label={m['components.starterPack.error.fetch']()}
 						onPress={onPressRetryLoadMore}
 					/>
 				);
@@ -126,10 +126,7 @@ export function ProfileStarterPacks({
 			return (
 				<EmptyState
 					icon={emptyStateIcon}
-					message={
-						emptyStateMessage ??
-						l`Starter packs let you share your favorite feeds and people with your friends.`
-					}
+					message={emptyStateMessage ?? m['components.starterPack.empty.description']()}
 					button={emptyStateButton}
 				/>
 			);
@@ -170,21 +167,18 @@ function keyExtractor(item: StarterPackItem) {
 
 /** A footer row offering the profile owner a shortcut back to the starter-pack wizard. */
 function CreateAnother() {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	return (
 		<div className={css.createAnother}>
 			<Button
 				color="secondary"
-				label={l`Create a starter pack`}
+				label={m['common.action.createStarterPack']()}
 				onClick={() => navigation.navigate('StarterPackWizard', {})}
 				size="small"
 				variant="solid"
 			>
-				<ButtonText>
-					<Trans>Create another</Trans>
-				</ButtonText>
+				<ButtonText>{m['components.starterPack.action.createAnother']()}</ButtonText>
 				<ButtonIcon icon={PlusIcon} />
 			</Button>
 		</div>

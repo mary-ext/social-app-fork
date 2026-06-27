@@ -1,5 +1,5 @@
 import { type GestureResponderEvent, View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { TIMELINE_SAVED_FEED } from '#/lib/constants';
 
@@ -10,9 +10,10 @@ import { atoms as a, useTheme } from '#/alf';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 export function NoFollowingFeed({ onAddFeed }: { onAddFeed?: () => void }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { mutateAsync: addSavedFeeds } = useAddSavedFeedsMutation();
 
 	const addRecommendedFeeds = (e: GestureResponderEvent) => {
@@ -38,7 +39,7 @@ export function NoFollowingFeed({ onAddFeed }: { onAddFeed?: () => void }) {
 					Looks like you're missing a following feed.{' '}
 					<InlineLinkText
 						to="#"
-						label={l`Add the default feed of only people you follow`}
+						label={m['screens.feeds.action.addFollowing']()}
 						onPress={addRecommendedFeeds}
 						style={[a.leading_snug]}
 					>

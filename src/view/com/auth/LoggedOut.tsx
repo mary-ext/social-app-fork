@@ -2,7 +2,6 @@ import { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
-import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
@@ -19,10 +18,11 @@ import { Button, ButtonIcon } from '#/components/Button';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 
+import { m } from '#/paraglide/messages';
+
 import { SplashScreen } from './SplashScreen';
 
 export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const insets = useSafeAreaInsets();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
@@ -64,7 +64,7 @@ export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 			<ErrorBoundary>
 				{onDismiss ? (
 					<Button
-						label={l`Go back`}
+						label={m['common.action.goBack']()}
 						variant="solid"
 						color="secondary_inverted"
 						size="small"

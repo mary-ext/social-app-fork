@@ -14,6 +14,8 @@ import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons
 import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
 import type { AppModerationCause } from '#/components/Pills';
 
+import { m } from '#/paraglide/messages';
+
 import { useGlobalLabelStrings } from './useGlobalLabelStrings';
 import { getDefinition, getLabelStrings } from './useLabelInfo';
 
@@ -43,8 +45,8 @@ export function useModerationCauseDescription(
 	if (!cause) {
 		return {
 			icon: Warning,
-			name: l`Content Warning`,
-			description: l`Moderator has chosen to set a general warning on the content.`,
+			name: m['common.label.contentWarning'](),
+			description: m['common.label.generalWarning'](),
 		};
 	}
 
@@ -53,8 +55,8 @@ export function useModerationCauseDescription(
 		const isMe = currentAccount?.did === cause.source.did;
 		return {
 			icon: EyeSlash,
-			name: isMe ? l`Reply Hidden by You` : l`Reply Hidden by Thread Author`,
-			description: isMe ? l`You hid this reply.` : l`The author of this thread has hidden this reply.`,
+			name: isMe ? m['common.label.replyHiddenByYou']() : m['common.label.replyHiddenByAuthor'](),
+			description: isMe ? m['common.label.youHidReply']() : m['common.label.authorHiddenReply'](),
 		};
 	}
 
@@ -64,20 +66,20 @@ export function useModerationCauseDescription(
 				return {
 					icon: CircleBanSign,
 					name: l`User Blocked by "${cause.source.name}"`,
-					description: l`You have blocked this user. You cannot view their content.`,
+					description: m['common.label.youBlockedUser'](),
 				};
 			}
 			return {
 				icon: CircleBanSign,
-				name: l`User Blocked`,
-				description: l`You have blocked this user. You cannot view their content.`,
+				name: m['common.title.userBlocked'](),
+				description: m['common.label.youBlockedUser'](),
 			};
 		}
 		case ModerationCauseType.BlockedBy: {
 			return {
 				icon: CircleBanSign,
-				name: l`User Blocking You`,
-				description: l`This user has blocked you. You cannot view their content.`,
+				name: m['lib.moderation.blockingYou'](),
+				description: m['common.label.blockedByUser'](),
 			};
 		}
 		case ModerationCauseType.MutedPermanent: {
@@ -85,34 +87,34 @@ export function useModerationCauseDescription(
 				return {
 					icon: EyeSlash,
 					name: l`Muted by "${cause.source.name}"`,
-					description: l`You have muted this user`,
+					description: m['lib.moderation.youMuted'](),
 				};
 			}
 			return {
 				icon: EyeSlash,
-				name: l`Account Muted`,
-				description: l`You have muted this account.`,
+				name: m['common.label.accountMuted'](),
+				description: m['common.label.youMutedAccount'](),
 			};
 		}
 		case ModerationCauseType.MutedTemporary: {
 			return {
 				icon: EyeSlash,
-				name: l`Account Muted`,
-				description: l`You have muted this account.`,
+				name: m['common.label.accountMuted'](),
+				description: m['common.label.youMutedAccount'](),
 			};
 		}
 		case ModerationCauseType.MutedKeyword: {
 			return {
 				icon: EyeSlash,
-				name: l`Post Hidden by Muted Word`,
-				description: l`You've chosen to hide a word or tag within this post.`,
+				name: m['common.label.postHiddenByMutedWord'](),
+				description: m['common.label.hiddenWordTag'](),
 			};
 		}
 		case ModerationCauseType.Hidden: {
 			return {
 				icon: EyeSlash,
-				name: l`Post Hidden by You`,
-				description: l`You have hidden this post`,
+				name: m['common.label.postHiddenByYou'](),
+				description: m['lib.moderation.youHidden'](),
 			};
 		}
 		case ModerationCauseType.Label: {
@@ -126,11 +128,11 @@ export function useModerationCauseDescription(
 					source = 'moderation.bsky.app';
 					sourceDisplayName = 'Bluesky Moderation Service';
 				} else {
-					source = l`an unknown labeler`;
+					source = m['common.label.unknownLabeler']();
 				}
 			}
 			if (def.identifier === 'porn' || def.identifier === 'sexual') {
-				strings.name = l`Adult Content`;
+				strings.name = m['common.label.adultContent']();
 			}
 
 			return {

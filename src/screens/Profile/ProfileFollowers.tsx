@@ -1,4 +1,4 @@
-import { Plural, useLingui } from '@lingui/react/macro';
+import { Plural } from '@lingui/react/macro';
 
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
@@ -11,17 +11,17 @@ import { ProfileFollowers as ProfileFollowersComponent } from '#/view/com/profil
 
 import * as Layout from '#/components/Layout';
 
+import { m } from '#/paraglide/messages';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>;
 export const ProfileFollowersScreen = ({ route }: Props) => {
 	const { name } = route.params;
-	const { t: l } = useLingui();
-
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({
 		did: resolvedDid,
 	});
 
-	useSetTitle(profile ? l`People following @${profile.handle}` : undefined);
+	useSetTitle(profile ? m['screens.profile.title.followers']({ handle: profile.handle }) : undefined);
 
 	return (
 		<Layout.Screen testID="profileFollowersScreen">

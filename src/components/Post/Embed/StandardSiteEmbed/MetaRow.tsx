@@ -1,11 +1,12 @@
 import { Fragment, type ReactNode } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans } from '@lingui/react/macro';
 
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { Text } from '#/components/Text';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './index.css';
 import { matchStandardSitePublisher, matchStandardSitePublisherByUri } from './publishers';
@@ -55,7 +56,7 @@ export function MetaRow({
 			key: 'author',
 			node: (
 				<Text size="xs" color="textContrastMedium" numberOfLines={1}>
-					<Trans>by @{authorProfile.handle}</Trans>
+					{m['components.post.label.byAuthor']({ handle: authorProfile.handle })}
 				</Text>
 			),
 		});

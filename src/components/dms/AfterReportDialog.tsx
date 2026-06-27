@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -18,6 +17,8 @@ import * as Toggle from '#/components/forms/Toggle';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 type ReportDialogParams = {
 	convoId: string;
@@ -39,12 +40,11 @@ export function AfterReportDialog({
 	currentScreen: 'list' | 'conversation';
 	onClose?: () => void;
 }): React.ReactNode {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Outer control={control} onClose={onClose}>
 			<Dialog.Handle />
 			<Dialog.ScrollableInner
-				label={l`Would you like to block this user and/or delete this conversation?`}
+				label={m['components.dms.dialog.blockOrDeletePrompt']()}
 				style={[{ maxWidth: 400 }]}
 			>
 				<DialogInner params={params} currentScreen={currentScreen} />
@@ -62,7 +62,6 @@ function DialogInner({
 	currentScreen: 'list' | 'conversation';
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const control = Dialog.useDialogContext();
 	const {
 		data: profile,
@@ -79,18 +78,19 @@ function DialogInner({
 	) : isError || !profile ? (
 		<View style={[a.w_full, a.gap_lg]}>
 			<View style={[a.justify_center, a.gap_sm]}>
-				<Text style={[a.text_2xl, a.font_semi_bold]}>
-					<Trans>Report submitted</Trans>
-				</Text>
+				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.toast.reportSubmitted']()}</Text>
 				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-					<Trans>Our moderation team has received your report.</Trans>
+					{m['components.dms.toast.reportReceived']()}
 				</Text>
 			</View>
 
-			<Button label={l`Close`} onPress={() => control.close()} size={'large'} color="secondary">
-				<ButtonText>
-					<Trans>Close</Trans>
-				</ButtonText>
+			<Button
+				label={m['common.action.close']()}
+				onPress={() => control.close()}
+				size={'large'}
+				color="secondary"
+			>
+				<ButtonText>{m['common.action.close']()}</ButtonText>
 			</Button>
 		</View>
 	) : (
@@ -107,7 +107,6 @@ function DoneStep({
 	currentScreen: 'list' | 'conversation';
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const control = Dialog.useDialogContext();
 	const { gtMobile } = useBreakpoints();
@@ -123,23 +122,23 @@ function DoneStep({
 			}
 		},
 		onError: () => {
-			Toast.show(l`Could not leave chat`, {
+			Toast.show(m['components.dms.error.leaveChat'](), {
 				type: 'error',
 			});
 		},
 	});
 
-	let btnText = l`Done`;
+	let btnText = m['common.action.done']();
 	let toastMsg: string | undefined;
 	if (actions.includes('leave') && actions.includes('block')) {
-		btnText = l`Block and Delete`;
-		toastMsg = l({ message: 'Conversation deleted', context: 'toast' });
+		btnText = m['components.dms.action.blockAndDelete']();
+		toastMsg = m['components.dms.toast.conversationDeleted']();
 	} else if (actions.includes('leave')) {
-		btnText = l`Delete Conversation`;
-		toastMsg = l({ message: 'Conversation deleted', context: 'toast' });
+		btnText = m['components.dms.action.deleteConversation']();
+		toastMsg = m['components.dms.toast.conversationDeleted']();
 	} else if (actions.includes('block')) {
-		btnText = l`Block User`;
-		toastMsg = l({ message: 'User blocked', context: 'toast' });
+		btnText = m['components.dms.dialog.blockUserTitle']();
+		toastMsg = m['components.dms.toast.userBlocked']();
 	}
 
 	const onPressPrimaryAction = () => {
@@ -161,30 +160,20 @@ function DoneStep({
 	return (
 		<View style={a.gap_2xl}>
 			<View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-				<Text style={[a.text_2xl, a.font_semi_bold]}>
-					<Trans>Report submitted</Trans>
-				</Text>
+				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.toast.reportSubmitted']()}</Text>
 				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-					<Trans>Our moderation team has received your report.</Trans>
+					{m['components.dms.toast.reportReceived']()}
 				</Text>
 			</View>
-			<Toggle.Group
-				label={l`Block user and/or delete this conversation`}
-				values={actions}
-				onChange={setActions}
-			>
+			<Toggle.Group label={m['components.dms.action.blockOrDelete']()} values={actions} onChange={setActions}>
 				<View style={[a.gap_md]}>
-					<Toggle.Item name="block" label={l`Block user`}>
+					<Toggle.Item name="block" label={m['components.dms.action.blockUser']()}>
 						<Toggle.Checkbox />
-						<Toggle.LabelText style={[a.text_md]}>
-							<Trans>Block user</Trans>
-						</Toggle.LabelText>
+						<Toggle.LabelText style={[a.text_md]}>{m['components.dms.action.blockUser']()}</Toggle.LabelText>
 					</Toggle.Item>
-					<Toggle.Item name="leave" label={l`Delete conversation`}>
+					<Toggle.Item name="leave" label={m['common.action.deleteConversation']()}>
 						<Toggle.Checkbox />
-						<Toggle.LabelText style={[a.text_md]}>
-							<Trans>Delete conversation</Trans>
-						</Toggle.LabelText>
+						<Toggle.LabelText style={[a.text_md]}>{m['common.action.deleteConversation']()}</Toggle.LabelText>
 					</Toggle.Item>
 				</View>
 			</Toggle.Group>
@@ -197,10 +186,13 @@ function DoneStep({
 				>
 					<ButtonText>{btnText}</ButtonText>
 				</Button>
-				<Button label={l`Close`} onPress={() => control.close()} size="large" color="secondary">
-					<ButtonText>
-						<Trans>Close</Trans>
-					</ButtonText>
+				<Button
+					label={m['common.action.close']()}
+					onPress={() => control.close()}
+					size="large"
+					color="secondary"
+				>
+					<ButtonText>{m['common.action.close']()}</ButtonText>
 				</Button>
 			</View>
 		</View>

@@ -1,6 +1,6 @@
 import { useId, useMemo, useReducer, useState } from 'react';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { getLabelingServiceTitle } from '#/lib/moderation';
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
@@ -26,6 +26,7 @@ import * as Dialog from '#/components/web/Dialog';
 import { ExternalLink } from '#/components/web/Link';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { useSubmitReportMutation } from './action';
@@ -54,13 +55,16 @@ export function useGlobalReportDialogControl() {
 
 /** The app-wide report dialog, opened imperatively with `reportDialogControl.openWithPayload({ subject })`. */
 export function GlobalReportDialog() {
-	const { t: l } = useLingui();
 	const control = useGlobalReportDialogControl();
 	return (
 		<Dialog.Root handle={control}>
 			{({ payload }: { payload: { subject: ReportSubject } | undefined }) =>
 				payload ? (
-					<Dialog.Popup className={styles.popup} label={l`Report dialog`} scroll="body">
+					<Dialog.Popup
+						className={styles.popup}
+						label={m['components.moderation.a11y.reportDialog']()}
+						scroll="body"
+					>
 						<Content close={() => control.close()} subject={payload.subject} />
 					</Dialog.Popup>
 				) : null
@@ -80,7 +84,6 @@ export function ReportDialog({
 	onClose?: () => void;
 	subject?: ReportSubject;
 }) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root
 			handle={control}
@@ -90,7 +93,11 @@ export function ReportDialog({
 				}
 			}}
 		>
-			<Dialog.Popup className={styles.popup} label={l`Report dialog`} scroll="body">
+			<Dialog.Popup
+				className={styles.popup}
+				label={m['components.moderation.a11y.reportDialog']()}
+				scroll="body"
+			>
 				<Content close={() => control.close()} onAfterSubmit={onAfterSubmit} subject={subject} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -118,20 +125,15 @@ function Content({
  * an empty sheet.
  */
 function Invalid({ close }: { close: () => void }) {
-	const { t: l } = useLingui();
 	return (
 		<>
-			<Header close={close} title={l`Report`} />
+			<Header close={close} title={m['common.action.report']()} />
 			<Dialog.Body>
 				<div className={styles.body}>
 					<Text size="lg" weight="bold">
-						<Trans>Invalid report subject</Trans>
+						{m['components.moderation.error.invalidSubject']()}
 					</Text>
-					<Text color="textContrastMedium">
-						<Trans>
-							Something wasn't quite right with the data you're trying to report. Please contact support.
-						</Trans>
-					</Text>
+					<Text color="textContrastMedium">{m['components.moderation.error.reportDataInvalid']()}</Text>
 				</div>
 			</Dialog.Body>
 		</>
@@ -147,7 +149,6 @@ function Inner({
 	onAfterSubmit?: () => void;
 	subject: ParsedReportSubject;
 }) {
-	const { t: l } = useLingui();
 	const logger = useMemo(() => Logger.create(Logger.Context.ReportDialog), []);
 	const {
 		data: allLabelers,
@@ -247,7 +248,7 @@ function Inner({
 			close();
 		} catch (e) {
 			logger.error(e instanceof Error ? e : String(e), { source: 'ReportDialog' });
-			dispatch({ type: 'setError', error: l`Something went wrong. Please try again.` });
+			dispatch({ type: 'setError', error: m['components.moderation.error.generic']() });
 		} finally {
 			setIsPending(false);
 		}
@@ -291,12 +292,10 @@ function Inner({
 							<ExternalLink
 								className={styles.legal}
 								href={SUPPORT_PAGE}
-								label={l`Report a copyright violation, legal request, or regulatory compliance issue`}
+								label={m['components.moderation.copyright.title']()}
 							>
 								<Text className={styles.grow} color="textContrastMedium" leading="snug" size="sm">
-									<Trans>
-										Need to report a copyright violation, legal request, or regulatory compliance issue?
-									</Trans>
+									{m['components.moderation.copyright.prompt']()}
 								</Text>
 								<SquareArrowTopRightIcon fill={colors.textContrastMedium} size="sm" />
 							</ExternalLink>
@@ -331,7 +330,7 @@ function Inner({
 							{state.reason && (
 								<div className={styles.summary}>
 									<Text color="textContrastMedium" size="sm">
-										<Trans>Reporting for</Trans>
+										{m['components.moderation.report.reportingFor']()}
 									</Text>
 									<Text weight="semiBold">{state.reason.title}</Text>
 								</div>
@@ -342,24 +341,20 @@ function Inner({
 								</div>
 							) : labelersError || !allLabelers ? (
 								<>
-									<Admonition type="error">
-										<Trans>Something went wrong loading the moderation services.</Trans>
-									</Admonition>
+									<Admonition type="error">{m['components.moderation.error.loadServices']()}</Admonition>
 									<Button
 										color="secondary"
-										label={l`Retry loading moderation services`}
+										label={m['components.moderation.action.retryServices']()}
 										onClick={() => void refetch()}
 										size="small"
 										variant="solid"
 									>
-										<ButtonText>
-											<Trans>Retry</Trans>
-										</ButtonText>
+										<ButtonText>{m['common.action.retry']()}</ButtonText>
 									</Button>
 								</>
 							) : !selectedLabeler ? (
 								<Admonition type="warning">
-									<Trans>Unfortunately, none of your subscribed labelers supports this report type.</Trans>
+									{m['components.moderation.error.noLabelerSupportsReport']()}
 								</Admonition>
 							) : (
 								<>
@@ -382,12 +377,16 @@ function Inner({
 							color="primary"
 							className={styles.doneButton}
 							disabled={!canSubmit}
-							label={l`Submit report`}
+							label={m['components.moderation.action.submitReport']()}
 							onClick={() => void onSubmit()}
 							size="large"
 							variant="solid"
 						>
-							<ButtonText>{isSuccess ? <Trans>Report sent</Trans> : <Trans>Submit report</Trans>}</ButtonText>
+							<ButtonText>
+								{isSuccess
+									? m['components.moderation.toast.reportSent']()
+									: m['components.moderation.action.submitReport']()}
+							</ButtonText>
 							<ButtonIcon icon={isSuccess ? CheckIcon : isPending ? Loader : PaperPlaneIcon} />
 						</Button>
 					</Dialog.Footer>
@@ -398,14 +397,13 @@ function Inner({
 }
 
 function Header({ close, onBack, title }: { close: () => void; onBack?: () => void; title: string }) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Header.Outer>
 			<Dialog.Header.Slot>
 				{onBack && (
 					<Button
 						color="secondary"
-						label={l`Go back`}
+						label={m['common.action.goBack']()}
 						onClick={onBack}
 						shape="round"
 						size="small"
@@ -419,7 +417,14 @@ function Header({ close, onBack, title }: { close: () => void; onBack?: () => vo
 				<Dialog.Header.TitleText>{title}</Dialog.Header.TitleText>
 			</Dialog.Header.Content>
 			<Dialog.Header.Slot>
-				<Button color="secondary" label={l`Close`} onClick={close} shape="round" size="small" variant="ghost">
+				<Button
+					color="secondary"
+					label={m['common.action.close']()}
+					onClick={close}
+					shape="round"
+					size="small"
+					variant="ghost"
+				>
 					<ButtonIcon icon={TimesIcon} />
 				</Button>
 			</Dialog.Header.Slot>
@@ -428,10 +433,9 @@ function Header({ close, onBack, title }: { close: () => void; onBack?: () => vo
 }
 
 function CategoryCard({ category, onSelect }: { category: ReportCategoryConfig; onSelect: () => void }) {
-	const { t: l } = useLingui();
 	return (
 		<button
-			aria-label={l`Report for ${category.title}`}
+			aria-label={m['components.moderation.report.forCategory']({ title: category.title })}
 			className={styles.card}
 			onClick={onSelect}
 			type="button"
@@ -447,10 +451,9 @@ function CategoryCard({ category, onSelect }: { category: ReportCategoryConfig; 
 }
 
 function OptionCard({ onSelect, option }: { onSelect: () => void; option: ReportOption }) {
-	const { t: l } = useLingui();
 	return (
 		<button
-			aria-label={l`Report for ${option.title}`}
+			aria-label={m['components.moderation.report.forCategory']({ title: option.title })}
 			className={styles.card}
 			onClick={onSelect}
 			type="button"
@@ -471,7 +474,6 @@ function Recipient({
 	onChange: (labeler: AppBskyLabelerDefs.LabelerViewDetailed) => void;
 	options: AppBskyLabelerDefs.LabelerViewDetailed[];
 }) {
-	const { t: l } = useLingui();
 	const title = getLabelingServiceTitle({
 		displayName: labeler.creator.displayName,
 		handle: labeler.creator.handle,
@@ -485,14 +487,16 @@ function Recipient({
 				<Menu.Root>
 					<Menu.Trigger
 						render={
-							<button aria-label={l`Change moderation service`} className={styles.changeLink} type="button">
-								<Text color="primary_500">
-									<Trans>Change</Trans>
-								</Text>
+							<button
+								aria-label={m['components.moderation.service.change']()}
+								className={styles.changeLink}
+								type="button"
+							>
+								<Text color="primary_500">{m['components.moderation.action.change']()}</Text>
 							</button>
 						}
 					/>
-					<Menu.Popup align="end" label={l`Choose a moderation service`} minWidth={240}>
+					<Menu.Popup align="end" label={m['components.moderation.service.choose']()} minWidth={240}>
 						{options.map((option) => {
 							const optionTitle = getLabelingServiceTitle({
 								displayName: option.creator.displayName,
@@ -521,13 +525,12 @@ function Recipient({
 }
 
 function Details({ onChange, value }: { onChange: (value: string) => void; value: string }) {
-	const { t: l } = useLingui();
 	const counterId = useId();
 	const length = value.length;
 	const overLimit = length > MAX_DETAILS_LENGTH;
 	const counterLabel = overLimit
-		? l`${length} of ${MAX_DETAILS_LENGTH} characters, over the limit`
-		: l`${length} of ${MAX_DETAILS_LENGTH} characters`;
+		? m['components.moderation.details.charCountOver']({ length, MAX_DETAILS_LENGTH })
+		: m['components.moderation.details.charCount']({ length, MAX_DETAILS_LENGTH });
 	return (
 		<TextField.Root isInvalid={overLimit}>
 			<TextField.LabelText
@@ -543,21 +546,21 @@ function Details({ onChange, value }: { onChange: (value: string) => void; value
 					</Text>
 				}
 			>
-				<Trans>Additional details (optional)</Trans>
+				{m['components.moderation.details.labelOptional']()}
 			</TextField.LabelText>
 			<TextField.Input
 				describedBy={counterId}
 				isInvalid={overLimit}
-				label={l`Additional details`}
+				label={m['components.moderation.details.label']()}
 				maxRows={8}
 				multiline
 				onChangeText={onChange}
-				placeholder={l`Add any context that would help the moderators.`}
+				placeholder={m['components.moderation.details.contextHint']()}
 				value={value}
 			/>
 			{/* announce only the crossing into over-limit while typing; a stable message avoids per-keystroke spam */}
 			<div className={styles.srOnly} role="status">
-				{overLimit ? l`Details are over the character limit.` : ''}
+				{overLimit ? m['components.moderation.error.detailsOverLimit']() : ''}
 			</div>
 		</TextField.Root>
 	);

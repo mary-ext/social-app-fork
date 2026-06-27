@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { openImagePicker } from '#/lib/media/picker';
@@ -24,6 +23,8 @@ import { UserAvatar, type UserAvatarType } from '#/components/UserAvatar';
 import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
+
 /** Web-native avatar editor: a menu-triggering avatar that crops uploads via {@link EditImageDialog}. */
 export function EditableUserAvatar({
 	type = 'user',
@@ -36,7 +37,6 @@ export function EditableUserAvatar({
 	avatar?: string | null;
 	onSelectNewAvatar: (img: ImageMeta | null) => void;
 }) {
-	const { t: l } = useLingui();
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
 	const editImageDialogControl = useDialogHandle();
 
@@ -70,7 +70,7 @@ export function EditableUserAvatar({
 		<>
 			<Menu.Root>
 				<Menu.Trigger
-					aria-label={l`Edit avatar`}
+					aria-label={m['components.editableUserAvatar.a11y.edit']()}
 					className={styles.trigger}
 					style={assignInlineVars({ [styles.sizeVar]: `${size}px`, [styles.radiusVar]: radius })}
 				>
@@ -85,20 +85,16 @@ export function EditableUserAvatar({
 						<CameraFilledIcon width={14} height={14} fill="currentColor" />
 					</span>
 				</Menu.Trigger>
-				<Menu.Popup label={l`Edit avatar`}>
+				<Menu.Popup label={m['components.editableUserAvatar.a11y.edit']()}>
 					<Menu.Item onClick={() => void onOpenLibrary()}>
-						<Menu.ItemText>
-							<Trans>Upload from Files</Trans>
-						</Menu.ItemText>
+						<Menu.ItemText>{m['common.action.uploadFromFiles']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={LibraryIcon} />
 					</Menu.Item>
 					{!!avatar && (
 						<>
 							<Menu.Separator />
 							<Menu.Item destructive onClick={() => onSelectNewAvatar(null)}>
-								<Menu.ItemText>
-									<Trans>Remove Avatar</Trans>
-								</Menu.ItemText>
+								<Menu.ItemText>{m['components.editableUserAvatar.action.remove']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={TrashIcon} />
 							</Menu.Item>
 						</>

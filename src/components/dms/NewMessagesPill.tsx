@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 
@@ -8,11 +7,11 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon } from '#/components/icons/Arrow';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { bottom: bottomInset } = useSafeAreaInsets();
 
 	const onPress = useCallback(() => {
@@ -50,8 +49,8 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 					},
 				]}
 				accessibilityRole="button"
-				accessibilityLabel={l`Scroll to latest messages`}
-				accessibilityHint={l`Scrolls the conversation to the most recent message`}
+				accessibilityLabel={m['components.dms.a11y.scrollToLatest']()}
+				accessibilityHint={m['components.dms.a11y.scrollToRecent']()}
 				onPress={onPress}
 			>
 				<ArrowDownIcon size="md" fill={colors.text} />

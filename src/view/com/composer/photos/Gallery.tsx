@@ -8,7 +8,6 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
@@ -28,6 +27,7 @@ import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
 import { useDialogHandle } from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';
 
 import type { PostAction } from '../state/composer';
@@ -122,9 +122,7 @@ const GalleryInner = ({ images, containerInfo, dispatch }: GalleryInnerProps) =>
 			</View>
 			{images.some((image) => !image.alt) && (
 				<Admonition type="info" style={[a.mt_sm]}>
-					<Trans>
-						Alt text describes images for blind and low-vision users, and helps give context to everyone.
-					</Trans>
+					{m['view.composer.hint.altText']()}
 				</Admonition>
 			)}
 		</>
@@ -148,7 +146,6 @@ const GalleryItem = ({
 	onChange,
 	onRemove,
 }: GalleryItemProps): React.ReactNode => {
-	const { t: l } = useLingui();
 	const t = useTheme();
 
 	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
@@ -174,7 +171,7 @@ const GalleryItem = ({
 			<TouchableOpacity
 				testID="altTextButton"
 				accessibilityRole="button"
-				accessibilityLabel={l`Add alt text`}
+				accessibilityLabel={m['view.composer.action.addAltText']()}
 				accessibilityHint=""
 				onPress={onAltTextEdit}
 				style={[styles.altTextControl, altTextControlStyle]}
@@ -185,14 +182,14 @@ const GalleryItem = ({
 					<PlusIcon width={10} style={{ color: t.palette.white }} />
 				)}
 				<Text style={styles.altTextControlLabel} accessible={false}>
-					<Trans>ALT</Trans>
+					{m['common.label.altBadge']()}
 				</Text>
 			</TouchableOpacity>
 			<View style={imageControlsStyle}>
 				<TouchableOpacity
 					testID="editPhotoButton"
 					accessibilityRole="button"
-					accessibilityLabel={l`Edit image`}
+					accessibilityLabel={m['view.composer.action.editImage']()}
 					accessibilityHint=""
 					onPress={onImageEdit}
 					style={styles.imageControl}
@@ -202,7 +199,7 @@ const GalleryItem = ({
 				<TouchableOpacity
 					testID="removePhotoButton"
 					accessibilityRole="button"
-					accessibilityLabel={l`Remove image`}
+					accessibilityLabel={m['view.composer.action.removeImage']()}
 					accessibilityHint=""
 					onPress={onRemove}
 					style={styles.imageControl}
@@ -212,7 +209,7 @@ const GalleryItem = ({
 			</View>
 			<TouchableOpacity
 				accessibilityRole="button"
-				accessibilityLabel={l`Add alt text`}
+				accessibilityLabel={m['view.composer.action.addAltText']()}
 				accessibilityHint=""
 				onPress={onAltTextEdit}
 				style={styles.altTextHiddenRegion}

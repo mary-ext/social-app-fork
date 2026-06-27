@@ -1,6 +1,5 @@
 import { Pressable } from 'react-native';
 import { ClientResponseError } from '@atcute/client';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -20,13 +19,13 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 import { LeaveChatPrompt } from '../ConversationSettings/prompts';
 import { ChatFooter } from './ChatFooter';
 
 export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const leaveChatPrompt = Prompt.usePromptControl();
 
 	const navigation = useNavigation<NavigationProp>();
@@ -39,15 +38,15 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 
 	const { mutate: lockConvo } = useLockConvo(convo.view.id, {
 		onSuccess: () => {
-			Toast.show(l({ message: 'Group chat unlocked', context: 'toast' }));
+			Toast.show(m['screens.messages.toast.groupUnlocked']());
 		},
 		onError: (e) => {
 			if (e instanceof ClientResponseError && e.error === 'ConvoLockedByModeration') {
-				Toast.show(l`This chat is locked by a moderation action`, { type: 'error' });
+				Toast.show(m['screens.messages.label.chatLockedMod'](), { type: 'error' });
 				return;
 			}
 			logger.error('Failed to unlock group chat', { message: e });
-			Toast.show(l`Failed to unlock group chat`, { type: 'error' });
+			Toast.show(m['screens.messages.error.unlockGroup'](), { type: 'error' });
 		},
 	});
 
@@ -57,7 +56,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });
-			Toast.show(l({ message: 'Failed to leave group chat', context: 'toast' }), {
+			Toast.show(m['screens.messages.error.leaveGroup'](), {
 				type: 'error',
 			});
 		},
@@ -65,11 +64,11 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 
 	return (
 		<ChatFooter
-			heading={l`This chat is locked`}
+			heading={m['screens.messages.label.chatLocked']()}
 			subheading={
 				isModerationLock
-					? l`This group is locked by a moderation action on the owner`
-					: l`No one can send messages`
+					? m['screens.messages.label.groupLockedOwner']()
+					: m['screens.messages.label.noOneCanSend']()
 			}
 			icon={LockIcon}
 		>
@@ -85,7 +84,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 							numberOfLines={1}
 							style={[a.text_sm, a.font_semi_bold, a.leading_snug, t.atoms.text_contrast_high]}
 						>
-							<Trans>Unlock chat</Trans>
+							{m['screens.messages.action.unlockChat']()}
 						</Text>
 					</Pressable>
 				)
@@ -108,7 +107,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 								},
 							]}
 						>
-							<Trans>Leave chat</Trans>
+							{m['common.action.leaveChat']()}
 						</Text>
 					</Pressable>
 					<LeaveChatPrompt control={leaveChatPrompt} groupName={convo.details.name} onConfirm={leaveConvo} />

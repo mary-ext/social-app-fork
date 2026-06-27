@@ -1,7 +1,8 @@
 import type { ToolsOzoneReportDefs } from '@atcute/ozone';
-import { useLingui } from '@lingui/react/macro';
 
 import { OzoneReason } from '#/lib/moderation/report-reasons';
+
+import { m } from '#/paraglide/messages';
 
 export type ReportCategory =
 	| 'childSafety'
@@ -26,217 +27,215 @@ export type ReportOption = {
 };
 
 export function useReportOptions() {
-	const { t: l } = useLingui();
-
 	const categories: Record<ReportCategory, ReportCategoryConfig> = {
 		misleading: {
 			key: 'misleading',
-			title: l`Misleading`,
-			description: l`Spam or other inauthentic behavior or deception`,
+			title: m['components.moderation.reason.misleading'](),
+			description: m['components.moderation.reason.spamDesc'](),
 			options: [
 				{
-					title: l`Spam`,
+					title: m['components.moderation.reason.spam'](),
 					reason: OzoneReason.REASONMISLEADINGSPAM,
 				},
 				{
-					title: l`Scam`,
+					title: m['components.moderation.reason.scam'](),
 					reason: OzoneReason.REASONMISLEADINGSCAM,
 				},
 				{
-					title: l`Fake account or bot`,
+					title: m['components.moderation.reason.fakeAccount'](),
 					reason: OzoneReason.REASONMISLEADINGBOT,
 				},
 				{
-					title: l`Impersonation`,
+					title: m['components.moderation.reason.impersonation'](),
 					reason: OzoneReason.REASONMISLEADINGIMPERSONATION,
 				},
 				{
-					title: l`False information about elections`,
+					title: m['components.moderation.reason.electionMisinfo'](),
 					reason: OzoneReason.REASONMISLEADINGELECTIONS,
 				},
 				{
-					title: l`Other misleading content`,
+					title: m['components.moderation.reason.otherMisleading'](),
 					reason: OzoneReason.REASONMISLEADINGOTHER,
 				},
 			],
 		},
 		sexualAdultContent: {
 			key: 'sexualAdultContent',
-			title: l`Adult content`,
-			description: l`Unlabeled, abusive, or non-consensual adult content`,
+			title: m['components.moderation.reason.adultContent'](),
+			description: m['components.moderation.reason.unlabeledAdultDesc'](),
 			options: [
 				{
-					title: l`Unlabeled adult content`,
+					title: m['components.moderation.reason.unlabeledAdult'](),
 					reason: OzoneReason.REASONSEXUALUNLABELED,
 				},
 				{
-					title: l`Adult sexual abuse content`,
+					title: m['components.moderation.reason.adultSexualAbuse'](),
 					reason: OzoneReason.REASONSEXUALABUSECONTENT,
 				},
 				{
-					title: l`Non-consensual intimate imagery`,
+					title: m['components.moderation.reason.ncii'](),
 					reason: OzoneReason.REASONSEXUALNCII,
 				},
 				{
-					title: l`Deepfake adult content`,
+					title: m['components.moderation.reason.deepfakeAdult'](),
 					reason: OzoneReason.REASONSEXUALDEEPFAKE,
 				},
 				{
-					title: l`Animal sexual abuse`,
+					title: m['components.moderation.reason.animalSexualAbuse'](),
 					reason: OzoneReason.REASONSEXUALANIMAL,
 				},
 				{
-					title: l`Other sexual violence content`,
+					title: m['components.moderation.reason.otherSexualViolence'](),
 					reason: OzoneReason.REASONSEXUALOTHER,
 				},
 			],
 		},
 		harassmentHate: {
 			key: 'harassmentHate',
-			title: l`Harassment or hate`,
-			description: l`Abusive or discriminatory behavior`,
+			title: m['components.moderation.reason.harassment'](),
+			description: m['components.moderation.reason.abusiveBehavior'](),
 			options: [
 				{
-					title: l`Trolling`,
+					title: m['components.moderation.reason.trolling'](),
 					reason: OzoneReason.REASONHARASSMENTTROLL,
 				},
 				{
-					title: l`Targeted harassment`,
+					title: m['components.moderation.reason.targetedHarassment'](),
 					reason: OzoneReason.REASONHARASSMENTTARGETED,
 				},
 				{
-					title: l`Hate speech`,
+					title: m['components.moderation.reason.hateSpeech'](),
 					reason: OzoneReason.REASONHARASSMENTHATESPEECH,
 				},
 				{
-					title: l`Doxxing`,
+					title: m['components.moderation.reason.doxxing'](),
 					reason: OzoneReason.REASONHARASSMENTDOXXING,
 				},
 				{
-					title: l`Other harassing or hateful content`,
+					title: m['components.moderation.reason.otherHarassment'](),
 					reason: OzoneReason.REASONHARASSMENTOTHER,
 				},
 			],
 		},
 		violencePhysicalHarm: {
 			key: 'violencePhysicalHarm',
-			title: l`Violence`,
-			description: l`Violent or threatening content`,
+			title: m['components.moderation.reason.violence'](),
+			description: m['components.moderation.reason.violenceDesc'](),
 			options: [
 				{
-					title: l`Animal welfare`,
+					title: m['components.moderation.reason.animalWelfare'](),
 					reason: OzoneReason.REASONVIOLENCEANIMAL,
 				},
 				{
-					title: l`Threats or incitement`,
+					title: m['components.moderation.reason.threats'](),
 					reason: OzoneReason.REASONVIOLENCETHREATS,
 				},
 				{
-					title: l`Graphic violent content`,
+					title: m['components.moderation.reason.graphicViolence'](),
 					reason: OzoneReason.REASONVIOLENCEGRAPHICCONTENT,
 				},
 				{
-					title: l`Glorification of violence`,
+					title: m['components.moderation.reason.glorificationViolence'](),
 					reason: OzoneReason.REASONVIOLENCEGLORIFICATION,
 				},
 				{
-					title: l`Extremist content`,
+					title: m['components.moderation.reason.extremistContent'](),
 					reason: OzoneReason.REASONVIOLENCEEXTREMISTCONTENT,
 				},
 				{
-					title: l`Human trafficking`,
+					title: m['components.moderation.reason.humanTrafficking'](),
 					reason: OzoneReason.REASONVIOLENCETRAFFICKING,
 				},
 				{
-					title: l`Other violent content`,
+					title: m['components.moderation.reason.otherViolent'](),
 					reason: OzoneReason.REASONVIOLENCEOTHER,
 				},
 			],
 		},
 		childSafety: {
 			key: 'childSafety',
-			title: l`Child safety`,
-			description: l`Harming or endangering minors`,
+			title: m['components.moderation.reason.childSafety'](),
+			description: m['components.moderation.reason.endangeringMinors'](),
 			options: [
 				{
-					title: l`Child Sexual Abuse Material (CSAM)`,
+					title: m['components.moderation.reason.csam'](),
 					reason: OzoneReason.REASONCHILDSAFETYCSAM,
 				},
 				{
-					title: l`Grooming or predatory behavior`,
+					title: m['components.moderation.reason.grooming'](),
 					reason: OzoneReason.REASONCHILDSAFETYGROOM,
 				},
 				{
-					title: l`Privacy violation of a minor`,
+					title: m['components.moderation.reason.minorPrivacy'](),
 					reason: OzoneReason.REASONCHILDSAFETYPRIVACY,
 				},
 				{
-					title: l`Minor harassment or bullying`,
+					title: m['components.moderation.reason.minorHarassment'](),
 					reason: OzoneReason.REASONCHILDSAFETYHARASSMENT,
 				},
 				{
-					title: l`Other child safety issue`,
+					title: m['components.moderation.reason.otherChildSafety'](),
 					reason: OzoneReason.REASONCHILDSAFETYOTHER,
 				},
 			],
 		},
 		selfHarm: {
 			key: 'selfHarm',
-			title: l`Self-harm or dangerous behaviors`,
-			description: l`Harmful or high-risk activities`,
+			title: m['components.moderation.reason.selfHarm'](),
+			description: m['components.moderation.reason.harmfulActivities'](),
 			options: [
 				{
-					title: l`Content promoting or depicting self-harm`,
+					title: m['components.moderation.reason.selfHarmContent'](),
 					reason: OzoneReason.REASONSELFHARMCONTENT,
 				},
 				{
-					title: l`Eating disorders`,
+					title: m['components.moderation.reason.eatingDisorders'](),
 					reason: OzoneReason.REASONSELFHARMED,
 				},
 				{
-					title: l`Dangerous challenges or activities`,
+					title: m['components.moderation.reason.dangerousChallenges'](),
 					reason: OzoneReason.REASONSELFHARMSTUNTS,
 				},
 				{
-					title: l`Dangerous substances or drug abuse`,
+					title: m['components.moderation.reason.dangerousSubstances'](),
 					reason: OzoneReason.REASONSELFHARMSUBSTANCES,
 				},
 				{
-					title: l`Other dangerous content`,
+					title: m['components.moderation.reason.otherDangerous'](),
 					reason: OzoneReason.REASONSELFHARMOTHER,
 				},
 			],
 		},
 		ruleBreaking: {
 			key: 'ruleBreaking',
-			title: l`Breaking site rules`,
-			description: l`Banned activities or security violations`,
+			title: m['components.moderation.reason.breakingSiteRules'](),
+			description: m['components.moderation.reason.bannedActivities'](),
 			options: [
 				{
-					title: l`Hacking or system attacks`,
+					title: m['components.moderation.reason.hacking'](),
 					reason: OzoneReason.REASONRULESITESECURITY,
 				},
 				{
-					title: l`Promoting or selling prohibited items or services`,
+					title: m['components.moderation.reason.prohibitedItems'](),
 					reason: OzoneReason.REASONRULEPROHIBITEDSALES,
 				},
 				{
-					title: l`Banned user returning`,
+					title: m['components.moderation.reason.bannedUserReturning'](),
 					reason: OzoneReason.REASONRULEBANEVASION,
 				},
 				{
-					title: l`Other network rule-breaking`,
+					title: m['components.moderation.reason.otherNetworkRule'](),
 					reason: OzoneReason.REASONRULEOTHER,
 				},
 			],
 		},
 		other: {
 			key: 'other',
-			title: l`Other`,
-			description: l`An issue not included in these options`,
+			title: m['common.label.other'](),
+			description: m['components.moderation.reason.other'](),
 			options: [
 				{
-					title: l`Other`,
+					title: m['common.label.other'](),
 					reason: OzoneReason.REASONOTHER,
 				},
 			],

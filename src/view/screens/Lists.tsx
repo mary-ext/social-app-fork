@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
@@ -13,9 +12,10 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>;
 export function ListsScreen({}: Props) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const createListHandle = Dialog.useDialogHandle();
 
@@ -41,15 +41,17 @@ export function ListsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Lists</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.label.lists']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Button label={l`New list`} color="secondary" size="small" variant="solid" onClick={onPressNewList}>
+				<Button
+					label={m['view.action.newList']()}
+					color="secondary"
+					size="small"
+					variant="solid"
+					onClick={onPressNewList}
+				>
 					<ButtonIcon icon={PlusIcon} />
-					<ButtonText>
-						<Trans context="action">New</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.label.new']()}</ButtonText>
 				</Button>
 			</Layout.Header.Outer>
 			<MyLists filter="curate" />

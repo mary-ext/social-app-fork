@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -17,6 +16,8 @@ import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 export function NewskieDialog({
 	profile,
 	disabled,
@@ -24,7 +25,6 @@ export function NewskieDialog({
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	disabled?: boolean;
 }) {
-	const { t: l } = useLingui();
 	const handle = Dialog.useDialogHandle();
 
 	const createdAt = profile.createdAt;
@@ -39,13 +39,13 @@ export function NewskieDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Trigger
-				aria-label={l`This user is new here. Press for more info about when they joined.`}
+				aria-label={m['components.newskieDialog.a11y.hint']()}
 				className={styles.trigger}
 				disabled={disabled}
 			>
 				<Newskie width={24} height={24} fill="currentColor" />
 			</Dialog.Trigger>
-			<Dialog.Popup size="narrow" label={l`New user info dialog`}>
+			<Dialog.Popup size="narrow" label={m['components.newskieDialog.a11y.dialog']()}>
 				<DialogInner profile={profile} createdAt={createdAt} now={now} onClose={() => handle.close()} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -64,7 +64,6 @@ function DialogInner({
 	now: number;
 	onClose: () => void;
 }) {
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
 	const timeAgo = useGetTimeAgo();
@@ -84,15 +83,15 @@ function DialogInner({
 
 		if (isMe) {
 			if (profile.joinedViaStarterPack) {
-				return l`You joined Bluesky using a starter pack ${timeAgoString} ago`;
+				return m['components.newskieDialog.joinedViaStarterPackSelf']({ timeAgoString });
 			} else {
-				return l`You joined Bluesky ${timeAgoString} ago`;
+				return m['components.newskieDialog.joinedAgoSelf']({ timeAgoString });
 			}
 		} else {
 			if (profile.joinedViaStarterPack) {
-				return l`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`;
+				return m['components.newskieDialog.joinedViaStarterPack']({ profileName, timeAgoString });
 			} else {
-				return l`${profileName} joined Bluesky ${timeAgoString} ago`;
+				return m['components.newskieDialog.joinedAgo']({ profileName, timeAgoString });
 			}
 		}
 	};
@@ -104,7 +103,7 @@ function DialogInner({
 					<Newskie width={64} height={64} fill="currentColor" />
 				</div>
 				<Text size="xl" weight="semiBold">
-					{isMe ? <Trans>Welcome, friend!</Trans> : <Trans>Say hello!</Trans>}
+					{isMe ? m['components.newskieDialog.welcome']() : m['common.label.sayHello']()}
 				</Text>
 			</div>
 			<Text size="md" align="center">

@@ -1,8 +1,9 @@
-import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Text';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './Unavailable.css';
 
@@ -15,7 +16,7 @@ export function Unavailable({ className }: { className?: string }) {
 		<div className={clsx(css.unavailable, className)}>
 			<WarningIcon size="md" fill="currentColor" />
 			<Text size="md" weight="medium" color="textContrastMedium">
-				<Trans>Chat invite link no longer available</Trans>
+				{m['common.error.inviteUnavailable']()}
 			</Text>
 		</div>
 	);

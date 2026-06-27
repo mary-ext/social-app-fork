@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { LayoutAnimation, Pressable, type ScrollView, View } from 'react-native';
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -19,6 +19,8 @@ import { DraggableScrollView } from '#/components/DraggableScrollView';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
+
+import { m } from '#/paraglide/messages';
 
 type Reaction = {
 	key: string;
@@ -40,8 +42,6 @@ export function ReactionsDialog({
 	message: ChatBskyConvoDefs.MessageView;
 	onClose?: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	const { currentAccount } = useSession();
 	const convo = useConvoActive();
 
@@ -58,9 +58,7 @@ export function ReactionsDialog({
 	const header = (
 		<>
 			<View style={[a.px_2xl, a.pt_xl, a.pb_md]}>
-				<Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>
-					<Trans>Reactions</Trans>
-				</Text>
+				<Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{m['components.dms.title.reactions']()}</Text>
 			</View>
 			<ReactionTabs
 				groupedReactions={groupedReactions}
@@ -83,7 +81,7 @@ export function ReactionsDialog({
 			<Dialog.Handle />
 			{null}
 			<Dialog.ScrollableInner
-				label={l`Reactions`}
+				label={m['components.dms.title.reactions']()}
 				contentContainerStyle={[a.pt_0]}
 				header={header}
 				style={[{ maxWidth: 400 }]}
@@ -139,8 +137,6 @@ function ReactionRow({
 	setSelected: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const isFromSelf = currentAccount?.did === profile.did;
 
 	const displayName = createSanitizedDisplayName(profile, true);
@@ -161,7 +157,7 @@ function ReactionRow({
 
 		convo
 			.removeReaction(message.id, reaction.value)
-			.catch(() => Toast.show(l`Failed to remove emoji reaction`));
+			.catch(() => Toast.show(m['components.dms.error.removeReaction']()));
 	};
 
 	const inner = (
@@ -173,7 +169,7 @@ function ReactionRow({
 						{displayName}
 					</Text>
 					<Text numberOfLines={1} style={[a.text_xs, t.atoms.text_contrast_medium, a.mt_xs]}>
-						{isFromSelf ? l`Tap to remove` : handle}
+						{isFromSelf ? m['components.dms.a11y.tapToRemove']() : handle}
 					</Text>
 				</View>
 			</View>
@@ -189,7 +185,7 @@ function ReactionRow({
 		return (
 			<Pressable
 				accessibilityRole="button"
-				accessibilityHint={l`Tap to remove your ${reaction.value} reaction`}
+				accessibilityHint={m['components.dms.a11y.tapToRemoveReaction']({ value: reaction.value })}
 				style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between, a.my_sm]}
 				onPress={handleOnPress}
 			>
@@ -213,8 +209,6 @@ function ReactionTabs({
 	onFilter: (value: string) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const scrollViewRef = useRef<ScrollView>(null);
 	const scrollState = useRef({ x: 0, width: 0 });
 	const tabLayouts = useRef<Map<string, { x: number; width: number }>>(new Map());
@@ -248,7 +242,10 @@ function ReactionTabs({
 		tabLayouts.current.set(key, layout);
 	};
 
-	const tabs: Tab[] = [{ key: 'all', value: l`All`, count: totalReactions }, ...(groupedReactions ?? [])];
+	const tabs: Tab[] = [
+		{ key: 'all', value: m['common.label.all'](), count: totalReactions },
+		...(groupedReactions ?? []),
+	];
 
 	return (
 		<View accessibilityRole="tablist" style={[t.atoms.bg]}>
@@ -308,7 +305,9 @@ function ReactionTab({
 			accessibilityRole="tab"
 			accessibilityState={{ selected: selected === tab.key }}
 			accessibilityHint={
-				tab.key === 'all' ? l`Tap to show all reactions` : l`Tap to show ${tab.value} reactions`
+				tab.key === 'all'
+					? m['components.dms.a11y.tapToShowAllReactions']()
+					: m['components.dms.a11y.tapToShowReactions']({ value: tab.value })
 			}
 			hitSlop={HITSLOP_10}
 			style={[

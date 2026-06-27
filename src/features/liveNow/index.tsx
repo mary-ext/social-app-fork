@@ -13,7 +13,6 @@ import {
 import { ClientResponseError } from '@atcute/client';
 import type { $type, Did, GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAfter, parseISO } from 'date-fns';
 
@@ -34,6 +33,7 @@ import { useDialogContext } from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 
 import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
+import { m } from '#/paraglide/messages';
 
 export * from '#/features/liveNow/utils';
 
@@ -187,8 +187,6 @@ export function isStatusValidForViewers(status: AppBskyActorDefs.StatusView, con
 
 export function useLiveLinkMetaQuery(url: string | null) {
 	const liveNowConfig = useLiveNowConfig();
-	const { t: l } = useLingui();
-
 	return useQuery({
 		enabled: !!url,
 		queryKey: ['link-meta', url],
@@ -196,9 +194,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
 			if (!url) return undefined;
 			if (!isLiveNowUrlAllowed(url, liveNowConfig.currentAccountAllowedHosts)) {
 				const { formatted } = getLiveServiceNames(liveNowConfig.currentAccountAllowedHosts);
-				throw new Error(
-					l`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,
-				);
+				throw new Error(m['features.liveNow.error.unsupportedService']({ formatted }));
 			}
 
 			return await getLinkMeta(url);
@@ -215,8 +211,6 @@ export function useUpsertLiveStatusMutation(
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
 	const control = useDialogContext();
-	const { t: l } = useLingui();
-
 	return useMutation({
 		mutationFn: async () => {
 			if (!currentAccount) throw new Error('Not logged in');
@@ -295,7 +289,7 @@ export function useUpsertLiveStatusMutation(
 			} else {
 			}
 
-			Toast.show(l`You are now live!`);
+			Toast.show(m['features.liveNow.status.started']());
 			control.close(() => {
 				if (!currentAccount) return;
 
@@ -332,8 +326,6 @@ export function useRemoveLiveStatusMutation() {
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
 	const control = useDialogContext();
-	const { t: l } = useLingui();
-
 	return useMutation({
 		mutationFn: async () => {
 			if (!currentAccount) throw new Error('Not logged in');
@@ -350,7 +342,7 @@ export function useRemoveLiveStatusMutation() {
 			});
 		},
 		onSuccess: () => {
-			Toast.show(l`You are no longer live`);
+			Toast.show(m['features.liveNow.status.ended']());
 			control.close(() => {
 				if (!currentAccount) return;
 

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -10,6 +9,7 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Prompt from '#/components/web/Prompt';
 
+import { m } from '#/paraglide/messages';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 
 import * as styles from './GifEmbed.css';
@@ -25,7 +25,6 @@ export type GifEmbedProps = {
 
 /** Autoplaying GIF (tenor/klipy), rendered as a muted looping `<video>` with play/pause + GIF/ALT badges. */
 export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, className }: GifEmbedProps) {
-	const { t: l } = useLingui();
 	const [autoplayDisabled] = useAutoplayDisabled();
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const [isPlaying, setIsPlaying] = useState(!autoplayDisabled);
@@ -74,14 +73,18 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 					<button
 						type="button"
 						className={styles.playButton}
-						aria-label={isPlaying ? l`Pause GIF` : l`Play GIF`}
+						aria-label={isPlaying ? m['common.a11y.pauseGif']() : m['common.a11y.playGif']()}
 						onClick={onPress}
 					>
-						{!isLoaded ? <Spinner label={l`Loading GIF`} /> : !isPlaying ? <PlayButtonIcon /> : null}
+						{!isLoaded ? (
+							<Spinner label={m['common.label.loadingGif']()} />
+						) : !isPlaying ? (
+							<PlayButtonIcon />
+						) : null}
 					</button>
 					<div className={styles.gifBadge}>
 						<Text size="xs" weight="bold" className={styles.badgeText}>
-							<Trans>GIF</Trans>
+							{m['common.label.gif']()}
 						</Text>
 					</div>
 					{resolvedAlt ? <AltBadge text={resolvedAlt} /> : null}
@@ -114,7 +117,6 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 }
 
 function AltBadge({ text }: { text: string }) {
-	const { t: l } = useLingui();
 	const handle = Prompt.usePromptHandle();
 
 	return (
@@ -122,20 +124,18 @@ function AltBadge({ text }: { text: string }) {
 			<button
 				type="button"
 				className={styles.altBadge}
-				aria-label={l`Show alt text`}
+				aria-label={m['common.action.showAltText']()}
 				onClick={() => handle.open(null)}
 			>
 				<Text size="xs" weight="bold" className={styles.badgeText}>
-					<Trans>ALT</Trans>
+					{m['common.label.altBadge']()}
 				</Text>
 			</button>
 			<Prompt.Outer handle={handle}>
-				<Prompt.TitleText>
-					<Trans>Alt Text</Trans>
-				</Prompt.TitleText>
+				<Prompt.TitleText>{m['common.label.altTextTitle']()}</Prompt.TitleText>
 				<Prompt.DescriptionText>{text}</Prompt.DescriptionText>
 				<Prompt.Actions>
-					<Prompt.Action onPress={() => {}} cta={l`Close`} color="secondary" />
+					<Prompt.Action onPress={() => {}} cta={m['common.action.close']()} color="secondary" />
 				</Prompt.Actions>
 			</Prompt.Outer>
 		</>

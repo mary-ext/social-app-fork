@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
@@ -12,6 +11,8 @@ import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
 import { Text } from '#/components/Text';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './Feed.css';
 
@@ -32,7 +33,6 @@ export function ProfileFeedSection({
 	emptyStateButton,
 	emptyStateIcon,
 }: FeedSectionProps) {
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const scrollElRef = useRef<ListMethods | null>(null);
 	const [hasNew, setHasNew] = useState(false);
@@ -53,7 +53,7 @@ export function ProfileFeedSection({
 				<EmptyState
 					icon={emptyStateIcon || EditIcon}
 					iconSize="3xl"
-					message={emptyStateMessage || l`No posts yet`}
+					message={emptyStateMessage || m['common.empty.noPosts']()}
 					button={emptyStateButton}
 				/>
 			</div>
@@ -73,7 +73,11 @@ export function ProfileFeedSection({
 				ignoreFilterFor={ignoreFilterFor}
 			/>
 			{(isScrolledDown || hasNew) && (
-				<LoadLatestBtn onPress={onScrollToTop} label={l`Load new posts`} showIndicator={hasNew} />
+				<LoadLatestBtn
+					onPress={onScrollToTop}
+					label={m['common.action.loadNewPosts']()}
+					showIndicator={hasNew}
+				/>
 			)}
 		</div>
 	);
@@ -83,7 +87,7 @@ function ProfileEndOfFeed() {
 	return (
 		<div className={css.endOfFeed}>
 			<Text align="center" color="textContrastMedium">
-				<Trans>End of feed</Trans>
+				{m['screens.profile.empty.endOfFeed']()}
 			</Text>
 		</div>
 	);

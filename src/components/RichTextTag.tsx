@@ -1,5 +1,5 @@
 import { type MouseEvent, useMemo } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -24,6 +24,8 @@ import type { InlineLinkUnderline } from '#/components/web/Link';
 import * as linkStyles from '#/components/web/Link.css';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
+
 const preventDefault = (e: MouseEvent) => e.preventDefault();
 
 export type RichTextTagProps = Pick<TextProps, 'color' | 'leading' | 'size'> & {
@@ -47,7 +49,6 @@ export function RichTextTag({
 	tag,
 	underline = 'hover',
 }: RichTextTagProps) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const { isLoading: isPreferencesLoading, data: preferences } = usePreferencesQuery();
 	const {
@@ -63,7 +64,9 @@ export function RichTextTag({
 	const { href } = useLink({ displayText: display, to: { params: { tag }, screen: 'Hashtag' } });
 
 	const isCashtag = tag.startsWith('$');
-	const label = isCashtag ? l`Cashtag ${tag}` : l`Hashtag ${tag}`;
+	const label = isCashtag
+		? m['components.richTextTag.a11y.cashtag']({ tag })
+		: m['components.richTextTag.a11y.hashtag']({ tag });
 	const prefixedTag = isCashtag ? tag : `#${tag}`;
 
 	const isMuted = Boolean(
@@ -96,7 +99,10 @@ export function RichTextTag({
 			</Menu.Trigger>
 			<Menu.Popup label={label}>
 				<Menu.Group>
-					<Menu.Item label={l`See ${prefixedTag} posts`} onClick={() => navigation.push('Hashtag', { tag })}>
+					<Menu.Item
+						label={m['components.richTextTag.action.seePosts']({ prefixedTag })}
+						onClick={() => navigation.push('Hashtag', { tag })}
+					>
 						<Menu.ItemText>
 							{isCashtag ? <Trans>See {tag} posts</Trans> : <Trans>See #{tag} posts</Trans>}
 						</Menu.ItemText>
@@ -104,7 +110,7 @@ export function RichTextTag({
 					</Menu.Item>
 					{authorHandle && !isInvalidHandle(authorHandle) && (
 						<Menu.Item
-							label={l`See ${prefixedTag} posts by user`}
+							label={m['components.richTextTag.action.seePostsByUser']({ prefixedTag })}
 							onClick={() => navigation.push('Hashtag', { author: authorHandle, tag })}
 						>
 							<Menu.ItemText>
@@ -116,7 +122,11 @@ export function RichTextTag({
 				</Menu.Group>
 				<Menu.Separator />
 				<Menu.Item
-					label={isMuted ? l`Unmute ${prefixedTag}` : l`Mute ${prefixedTag}`}
+					label={
+						isMuted
+							? m['components.richTextTag.action.unmute']({ prefixedTag })
+							: m['components.richTextTag.action.mute']({ prefixedTag })
+					}
 					onClick={() => {
 						if (isMuted) {
 							resetUpsert();
@@ -127,7 +137,11 @@ export function RichTextTag({
 						}
 					}}
 				>
-					<Menu.ItemText>{isMuted ? l`Unmute ${prefixedTag}` : l`Mute ${prefixedTag}`}</Menu.ItemText>
+					<Menu.ItemText>
+						{isMuted
+							? m['components.richTextTag.action.unmute']({ prefixedTag })
+							: m['components.richTextTag.action.mute']({ prefixedTag })}
+					</Menu.ItemText>
 					<Menu.ItemIcon icon={isPreferencesLoading ? Loader : Mute} />
 				</Menu.Item>
 			</Menu.Popup>

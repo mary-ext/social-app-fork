@@ -1,11 +1,11 @@
 import { lazy, Suspense } from 'react';
-import { useLingui } from '@lingui/react/macro';
 
 import type { ComposerImage } from '#/state/gallery';
 
 import { Spinner } from '#/components/Spinner';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as styles from './EditImageDialog.css';
@@ -26,16 +26,15 @@ const EditImageDialogInner = lazy(() =>
 );
 
 export function EditImageDialog(props: EditImageDialogProps) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root disablePointerDismissal handle={props.handle}>
-			<Dialog.Popup scroll="body" label={l`Edit image`}>
+			<Dialog.Popup scroll="body" label={m['view.composer.action.editImage']()}>
 				<Suspense
 					fallback={
 						<Dialog.Body>
 							<div className={styles.loadingHeader} />
 							<div className={styles.loadingBody}>
-								<Spinner color={colors.contrast_500} label={l`Loading`} />
+								<Spinner color={colors.contrast_500} label={m['common.label.loading']()} />
 							</div>
 						</Dialog.Body>
 					}

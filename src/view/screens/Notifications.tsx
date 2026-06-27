@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -29,6 +29,7 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText, LinkButton } from '#/components/web/Link';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './Notifications.css';
@@ -40,7 +41,6 @@ let lastActiveTab: 'all' | 'mentions' = 'all';
 
 type Props = NativeStackScreenProps<NotificationsTabNavigatorParams, 'Notifications'>;
 export function NotificationsScreen({}: Props) {
-	const { t: l } = useLingui();
 	const { openComposer } = useOpenComposer();
 	const unreadNotifs = useUnreadNotifications();
 	const hasNew = !!unreadNotifs;
@@ -72,7 +72,7 @@ export function NotificationsScreen({}: Props) {
 		return [
 			{
 				id: 'all',
-				label: l`All`,
+				label: m['common.label.all'](),
 				render: (focused) => (
 					<NotificationsTab
 						filter="all"
@@ -86,7 +86,7 @@ export function NotificationsScreen({}: Props) {
 			},
 			{
 				id: 'mentions',
-				label: l`Mentions`,
+				label: m['common.label.mentions'](),
 				render: (focused) => (
 					<NotificationsTab
 						filter="mentions"
@@ -99,7 +99,7 @@ export function NotificationsScreen({}: Props) {
 				),
 			},
 		];
-	}, [l, hasNew, checkUnreadAll, checkUnreadMentions, isLoadingAll, isLoadingMentions]);
+	}, [hasNew, checkUnreadAll, checkUnreadMentions, isLoadingAll, isLoadingMentions]);
 
 	return (
 		<Layout.Screen>
@@ -112,14 +112,12 @@ export function NotificationsScreen({}: Props) {
 					<Layout.Header.Outer noBottomBorder sticky={false}>
 						<Layout.Header.MenuButton />
 						<Layout.Header.Content>
-							<Layout.Header.TitleText>
-								<Trans>Notifications</Trans>
-							</Layout.Header.TitleText>
+							<Layout.Header.TitleText>{m['common.nav.notifications']()}</Layout.Header.TitleText>
 						</Layout.Header.Content>
 						<Layout.Header.Slot>
 							<LinkButton
 								to="/settings/notifications"
-								label={l`Notification settings`}
+								label={m['common.title.notificationSettings']()}
 								size="small"
 								variant="ghost"
 								color="secondary"
@@ -133,7 +131,7 @@ export function NotificationsScreen({}: Props) {
 			/>
 			<FAB
 				icon={<EditBigIcon size="lg" fill={colors.white} />}
-				label={l`New post`}
+				label={m['common.label.newPost']()}
 				onClick={() => openComposer({ logContext: 'Fab' })}
 			/>
 		</Layout.Screen>
@@ -155,7 +153,6 @@ function NotificationsTab({
 	checkUnread: ({ invalidate }: { invalidate: boolean }) => Promise<void>;
 	setIsLoadingLatest: (v: boolean) => void;
 }) {
-	const { t: l } = useLingui();
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const scrollElRef = useRef<ListMethods>(null);
 	const queryClient = useQueryClient();
@@ -222,14 +219,17 @@ function NotificationsTab({
 				}
 			/>
 			{(isScrolledDown || hasNew) && (
-				<LoadLatestBtn onPress={onPressLoadLatest} label={l`Load new notifications`} showIndicator={hasNew} />
+				<LoadLatestBtn
+					onPress={onPressLoadLatest}
+					label={m['view.notifications.loadNew']()}
+					showIndicator={hasNew}
+				/>
 			)}
 		</>
 	);
 }
 
 function DisabledNotificationsWarning({ active }: { active: boolean }) {
-	const { t: l } = useLingui();
 	const { data } = useNotificationSettingsQuery({ enabled: active });
 
 	if (!data) return null;
@@ -242,7 +242,7 @@ function DisabledNotificationsWarning({ active }: { active: boolean }) {
 					<Trans>
 						You have completely disabled reply, quote, and mention notifications, so this tab will no longer
 						update. To adjust this, visit your{' '}
-						<InlineLinkText label={l`Visit your notification settings`} to="/settings/notifications">
+						<InlineLinkText label={m['view.notifications.visitSettings']()} to="/settings/notifications">
 							notification settings
 						</InlineLinkText>
 						.

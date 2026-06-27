@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { isNetworkError } from '#/lib/strings/errors';
@@ -28,6 +27,8 @@ import { parseConvoView } from '#/components/dms/util';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 type Item = ChatBskyConvoDefs.ConvoView;
 
@@ -67,8 +68,6 @@ function BlockDialogInner({
 	currentConvoId?: string;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	const [headerHeight, setHeaderHeight] = useState(0);
 	const [footerHeight, setFooterHeight] = useState(0);
 
@@ -124,27 +123,22 @@ function BlockDialogInner({
 		<View style={[t.atoms.bg]} onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}>
 			<View style={[a.pb_lg, a.gap_sm]}>
 				<Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
-					{profile.viewer?.blocking ? <Trans>Unblock account?</Trans> : <Trans>Block account?</Trans>}
+					{profile.viewer?.blocking
+						? m['components.moderation.dialog.unblockTitle']()
+						: m['components.moderation.block.confirmTitle']()}
 				</Text>
 				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-					{profile.viewer?.blocking ? (
-						<Trans>The account will be able to interact with you after unblocking.</Trans>
-					) : profile.associated?.labeler ? (
-						<Trans>
-							Blocking will not prevent labels from being applied on your account, but it will stop this
-							account from replying in your threads or interacting with you.
-						</Trans>
-					) : (
-						<Trans>
-							Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.
-						</Trans>
-					)}
+					{profile.viewer?.blocking
+						? m['common.hint.unblockInteract']()
+						: profile.associated?.labeler
+							? m['components.moderation.block.descriptionLabels']()
+							: m['components.moderation.block.description']()}
 				</Text>
 			</View>
 			{hasMutualGroupChats ? (
 				<View style={[a.pt_sm, a.pb_xs, t.atoms.bg]}>
 					<Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_high]}>
-						<Trans>Mutual group chats</Trans>
+						{m['components.moderation.label.mutualGroupChats']()}
 					</Text>
 				</View>
 			) : null}
@@ -156,15 +150,20 @@ function BlockDialogInner({
 			<Button
 				color={profile.viewer?.blocking ? undefined : 'negative'}
 				size="large"
-				label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
+				label={profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
 				onPress={() => control.close(() => void onBlock())}
 			>
-				<ButtonText>{profile.viewer?.blocking ? <Trans>Unblock</Trans> : <Trans>Block</Trans>}</ButtonText>
-			</Button>
-			<Button color="secondary" size="large" label={l`Close dialog`} onPress={() => control.close()}>
 				<ButtonText>
-					<Trans>Cancel</Trans>
+					{profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
 				</ButtonText>
+			</Button>
+			<Button
+				color="secondary"
+				size="large"
+				label={m['common.a11y.closeDialog']()}
+				onPress={() => control.close()}
+			>
+				<ButtonText>{m['common.action.cancel']()}</ButtonText>
 			</Button>
 		</View>
 	);
@@ -172,7 +171,7 @@ function BlockDialogInner({
 	if (isLoading || !hasMutualGroupChats) {
 		return (
 			<Dialog.ScrollableInner
-				label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
+				label={profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
 				style={[{ maxWidth: 420 }]}
 			>
 				{listHeader}
@@ -188,7 +187,7 @@ function BlockDialogInner({
 
 	return (
 		<Dialog.InnerFlatList
-			label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
+			label={profile.viewer?.blocking ? m['common.action.unblock']() : m['common.action.block']()}
 			data={items}
 			renderItem={renderItems}
 			ListHeaderComponent={listHeader}
@@ -229,7 +228,6 @@ function MutualGroupChat({
 	onRestoreConvo: (convoId: string) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 
@@ -237,7 +235,7 @@ function MutualGroupChat({
 
 	const { mutate: leaveConvo, isPending: isLeavePending } = useLeaveConvo(convo?.view.id, {
 		onSuccess: () => {
-			Toast.show(l`Left group chat.`);
+			Toast.show(m['components.moderation.toast.leftChat']());
 			void queryClient.invalidateQueries({
 				queryKey: createListMutualGroupsQueryKey({ subject: profileDid }),
 			});
@@ -245,13 +243,13 @@ function MutualGroupChat({
 		onError: (error) => {
 			onRestoreConvo(view.id);
 			logger.error('Error leaving group chat', { message: error });
-			let errorMessage = l`Could not leave chat.`;
+			let errorMessage = m['components.moderation.error.leaveChat']();
 			if (isNetworkError(error)) {
-				errorMessage = l`A network error occurred. Please check your internet connection.`;
+				errorMessage = m['common.error.network']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidConvo') {
-				errorMessage = l`Chat not found.`;
+				errorMessage = m['components.moderation.error.chatNotFound']();
 			} else if (error instanceof ClientResponseError && error.error === 'OwnerCannotLeave') {
-				errorMessage = l`Chat owners cannot leave a group chat.`;
+				errorMessage = m['components.moderation.error.ownerCannotLeave']();
 			}
 			Toast.show(errorMessage, { type: 'error' });
 		},
@@ -259,7 +257,7 @@ function MutualGroupChat({
 
 	const { mutate: removeMembers, isPending: isRemovePending } = useRemoveFromGroupChat(convo?.view.id, {
 		onSuccess: () => {
-			Toast.show(l`Member removed from group chat.`);
+			Toast.show(m['components.moderation.toast.memberRemoved']());
 			void queryClient.invalidateQueries({
 				queryKey: createListMutualGroupsQueryKey({ subject: profileDid }),
 			});
@@ -267,13 +265,13 @@ function MutualGroupChat({
 		onError: (error) => {
 			onRestoreConvo(view.id);
 			logger.error('Error removing group chat member', { message: error });
-			let errorMessage = l`Could not remove member.`;
+			let errorMessage = m['components.moderation.error.removeMember']();
 			if (isNetworkError(error)) {
-				errorMessage = l`A network error occurred. Please check your internet connection.`;
+				errorMessage = m['common.error.network']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidConvo') {
-				errorMessage = l`Chat not found.`;
+				errorMessage = m['components.moderation.error.chatNotFound']();
 			} else if (error instanceof ClientResponseError && error.error === 'InsufficientRole') {
-				errorMessage = l`You must be a chat owner to remove a member.`;
+				errorMessage = m['components.moderation.error.mustBeOwnerToRemove']();
 			}
 			Toast.show(errorMessage, { type: 'error' });
 		},
@@ -296,11 +294,11 @@ function MutualGroupChat({
 					</Text>
 					{isViewerOwner ? (
 						<Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-							<Trans>You own this chat</Trans>
+							{m['components.moderation.hint.youOwnChat']()}
 						</Text>
 					) : isProfileOwner ? (
 						<Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-							<Trans>They own this chat</Trans>
+							{m['components.moderation.hint.theyOwnChat']()}
 						</Text>
 					) : null}
 				</View>
@@ -309,36 +307,32 @@ function MutualGroupChat({
 				<Button
 					color="negative_subtle"
 					disabled={isRemovePending}
-					label={l`Kick member`}
+					label={m['components.moderation.action.kickMember']()}
 					size="small"
 					onPress={() => {
 						onOptimisticallyRemoveConvo(view.id);
 						removeMembers({ members: [profileDid] });
 					}}
 				>
-					<ButtonText>
-						<Trans>Kick member</Trans>
-					</ButtonText>
+					<ButtonText>{m['components.moderation.action.kickMember']()}</ButtonText>
 					{isRemovePending ? <ButtonIcon icon={Loader} /> : null}
 				</Button>
 			) : isCurrentConvo ? (
 				<Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
-					<Trans>Current chat</Trans>
+					{m['components.moderation.label.currentChat']()}
 				</Text>
 			) : (
 				<Button
 					color="secondary"
 					disabled={isLeavePending}
-					label={l`Leave chat`}
+					label={m['common.action.leaveChat']()}
 					size="small"
 					onPress={() => {
 						onOptimisticallyRemoveConvo(view.id);
 						leaveConvo();
 					}}
 				>
-					<ButtonText>
-						<Trans>Leave chat</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.leaveChat']()}</ButtonText>
 					{isLeavePending ? <ButtonIcon icon={Loader} /> : null}
 				</Button>
 			)}

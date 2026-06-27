@@ -12,6 +12,7 @@ import { Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon } from '#/components/i
 import { TimesLarge_Stroke2_Corner0_Rounded as CloseIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function RequestStatus({
@@ -55,8 +56,8 @@ export function RequestStatus({
 			>
 				<Pressable
 					accessibilityRole="button"
-					accessibilityLabel={l`View incoming requests`}
-					accessibilityHint={l`View incoming requests to join this group chat`}
+					accessibilityLabel={m['screens.messages.action.viewIncomingRequests']()}
+					accessibilityHint={m['screens.messages.a11y.viewIncomingRequestsJoin']()}
 					hitSlop={HITSLOP_10}
 					style={[a.flex_1, a.flex_row, a.align_center, a.p_lg]}
 					onPress={onPress}
@@ -76,8 +77,8 @@ export function RequestStatus({
 				</Pressable>
 				<Pressable
 					accessibilityRole="button"
-					accessibilityLabel={l`Close banner`}
-					accessibilityHint={l`Close the incoming requests banner`}
+					accessibilityLabel={m['screens.messages.a11y.closeBanner']()}
+					accessibilityHint={m['screens.messages.a11y.closeRequestsBanner']()}
 					hitSlop={HITSLOP_10}
 					onPress={onDismiss}
 					style={[a.p_lg]}

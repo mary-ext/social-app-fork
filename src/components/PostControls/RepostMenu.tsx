@@ -8,6 +8,8 @@ import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Rep
 import * as Menu from '#/components/web/Menu';
 import { Tooltip } from '#/components/web/Tooltip';
 
+import { m } from '#/paraglide/messages';
+
 /**
  * The repost/quote menu. The caller supplies the trigger button via `render` so each action-bar size owns its
  * own button chrome. Signed-out viewers get an auth prompt on press instead of the menu — the open is
@@ -45,22 +47,36 @@ export const RepostMenu = ({
 			<Tooltip label={tooltip}>
 				<Menu.Trigger render={render} />
 			</Tooltip>
-			<Menu.Popup label={l`Repost or quote post`} align="center" minWidth={170}>
+			<Menu.Popup label={m['components.postControls.a11y.repost']()} align="center" minWidth={170}>
 				<Menu.Item
-					label={isReposted ? l`Undo repost` : l({ message: `Repost`, context: `action` })}
+					label={
+						isReposted
+							? m['components.postControls.action.undoRepost']()
+							: l({ message: `Repost`, context: `action` })
+					}
 					onClick={onRepost}
 				>
 					<Menu.ItemText>
-						{isReposted ? l`Undo repost` : l({ message: `Repost`, context: `action` })}
+						{isReposted
+							? m['components.postControls.action.undoRepost']()
+							: l({ message: `Repost`, context: `action` })}
 					</Menu.ItemText>
 					<Menu.ItemIcon icon={Repost} position="right" />
 				</Menu.Item>
 				<Menu.Item
 					disabled={embeddingDisabled}
-					label={embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
+					label={
+						embeddingDisabled
+							? m['components.postControls.label.quotesDisabled']()
+							: m['common.action.quotePost']()
+					}
 					onClick={onQuote}
 				>
-					<Menu.ItemText>{embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}</Menu.ItemText>
+					<Menu.ItemText>
+						{embeddingDisabled
+							? m['components.postControls.label.quotesDisabled']()
+							: m['common.action.quotePost']()}
+					</Menu.ItemText>
 					<Menu.ItemIcon icon={Quote} position="right" />
 				</Menu.Item>
 			</Menu.Popup>

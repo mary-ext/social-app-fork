@@ -10,7 +10,6 @@ import {
 } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Autocomplete } from '@base-ui/react/autocomplete';
-import { useLingui } from '@lingui/react/macro';
 import {
 	addDays,
 	addMonths,
@@ -45,6 +44,8 @@ import { useSession } from '#/state/session';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Button, ButtonIcon } from '#/components/web/Button';
+
+import { m } from '#/paraglide/messages';
 
 import { CalendarBody } from './CalendarBody';
 import { buildResult, CALENDAR_DAY_COUNT, type InteractiveItem, interactiveItems } from './model';
@@ -137,7 +138,6 @@ export function SearchAutocomplete({
 	placeholder,
 	...props
 }: SearchAutocompleteFieldProps) {
-	const { t } = useLingui();
 	const [active, setActive] = useState(eager ?? false);
 	const placeholderRef = useRef<HTMLInputElement | null>(null);
 
@@ -168,7 +168,7 @@ export function SearchAutocomplete({
 			<input
 				className={styles.input}
 				onFocus={() => setActive(true)}
-				placeholder={placeholder ?? t`Search`}
+				placeholder={placeholder ?? m['common.action.search']()}
 				ref={placeholderRef}
 			/>
 		</div>
@@ -190,7 +190,6 @@ function ActiveSearchAutocomplete({
 	onSubmit,
 	placeholder,
 }: SearchAutocompleteProps & { autoFocus: boolean; initialQuery?: string; placeholder?: string }) {
-	const { t } = useLingui();
 	const { currentAccount } = useSession();
 	const { data: meProfile } = useProfileQuery({ did: currentAccount?.did });
 
@@ -658,13 +657,19 @@ function ActiveSearchAutocomplete({
 					onKeyDown={onInputKeyDown}
 					onKeyDownCapture={onInputKeyDownCapture}
 					onKeyUp={syncCaret}
-					placeholder={placeholder ?? t`Search`}
+					placeholder={placeholder ?? m['common.action.search']()}
 					ref={inputRef}
 				/>
 				<div className={styles.clear}>
 					<Autocomplete.Clear
 						render={
-							<Button color="secondary" label={t`Clear search`} shape="round" size="tiny" variant="ghost">
+							<Button
+								color="secondary"
+								label={m['common.action.clearSearch']()}
+								shape="round"
+								size="tiny"
+								variant="ghost"
+							>
 								<ButtonIcon icon={XIcon} size="xs" />
 							</Button>
 						}

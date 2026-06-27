@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -19,9 +18,9 @@ import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 
 import { IS_DEV } from '#/env';
+import { m } from '#/paraglide/messages';
 
 export function HomeHeaderLayoutMobile() {
-	const { t: l } = useLingui();
 	const { hasSession } = useSession();
 	const { navigate } = useNavigation<NavigationProp>();
 
@@ -52,7 +51,7 @@ export function HomeHeaderLayoutMobile() {
 						testID="viewHeaderHomeFeedPrefsBtn"
 						to={{ screen: 'Feeds' }}
 						hitSlop={HITSLOP_10}
-						label={l`View your feeds and explore more`}
+						label={m['view.home.label.exploreFeeds']()}
 						size="small"
 						variant="ghost"
 						color="secondary"

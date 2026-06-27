@@ -2,7 +2,7 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui, Plural, Trans } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -20,6 +20,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
+
+import { m } from '#/paraglide/messages';
 
 import { MissingFeed } from './MissingFeed';
 
@@ -75,8 +77,6 @@ export function FeedSourceCardLoaded({
 	error?: unknown;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	/*
 	 * LOAD STATE
 	 *
@@ -113,11 +113,9 @@ export function FeedSourceCardLoaded({
 						{feed.displayName}
 					</Text>
 					<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]} numberOfLines={1}>
-						{feed.type === 'feed' ? (
-							<Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
-						) : (
-							<Trans>List by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
-						)}
+						{feed.type === 'feed'
+							? m['common.label.feedBy']({ handle: sanitizeHandle(feed.creatorHandle, '@') })
+							: m['common.label.listByCreator']({ handle: sanitizeHandle(feed.creatorHandle, '@') })}
 					</Text>
 				</View>
 			</View>
@@ -137,8 +135,15 @@ export function FeedSourceCardLoaded({
 				testID={`feed-${feed.displayName}`}
 				label={
 					feed.type === 'feed'
-						? l`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`
-						: l`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`
+						? m['view.feeds.a11y.feedByLikedBy']({
+								name: feed.displayName,
+								creator: sanitizeHandle(feed.creatorHandle, '@'),
+								likeCount: feed.likeCount || 0,
+							})
+						: m['view.feeds.a11y.listBy']({
+								name: feed.displayName,
+								creator: sanitizeHandle(feed.creatorHandle, '@'),
+							})
 				}
 				to={{
 					screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -21,6 +20,7 @@ import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components
 import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/PaperPlane';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 import { useBookmark } from '../useBookmark';
@@ -32,7 +32,6 @@ interface ShareMenuItemsProps {
 
 function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode {
 	const { hasSession } = useSession();
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const sendViaChatControl = useDialogControl();
 	const [devModeEnabled] = useDevMode();
@@ -72,17 +71,15 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 	};
 
 	const copyLinkItem = (
-		<Menu.Item label={l`Copy link to post`} onClick={onCopyLink}>
-			<Menu.ItemText>
-				<Trans>Copy link to post</Trans>
-			</Menu.ItemText>
+		<Menu.Item label={m['components.postControls.action.copyLink']()} onClick={onCopyLink}>
+			<Menu.ItemText>{m['components.postControls.action.copyLink']()}</Menu.ItemText>
 			<Menu.ItemIcon icon={ChainLinkIcon} position="right" />
 		</Menu.Item>
 	);
 
 	return (
 		<>
-			<Menu.Popup label={l`Share`} align="end">
+			<Menu.Popup label={m['common.action.share']()} align="end">
 				<Menu.Item label={bookmark.label} onClick={bookmark.onToggle}>
 					<Menu.ItemText>{bookmark.label}</Menu.ItemText>
 					<Menu.ItemIcon icon={bookmark.isBookmarked ? BookmarkFilled : Bookmark} position="right" />
@@ -94,14 +91,12 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 
 				{hasSession && (
 					<Menu.Item
-						label={l`Send via direct message`}
+						label={m['components.postControls.action.sendViaDm']()}
 						onClick={() => {
 							sendViaChatControl.open();
 						}}
 					>
-						<Menu.ItemText>
-							<Trans>Send via direct message</Trans>
-						</Menu.ItemText>
+						<Menu.ItemText>{m['components.postControls.action.sendViaDm']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={Send} position="right" />
 					</Menu.Item>
 				)}
@@ -112,7 +107,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 						<Menu.Group>
 							{copyLinkItem}
 							<Menu.LabelText maxWidth={220}>
-								<Trans>Note: This post is only visible to logged-in users.</Trans>
+								{m['components.postControls.hint.loggedInOnly']()}
 							</Menu.LabelText>
 						</Menu.Group>
 					</>
@@ -121,16 +116,12 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 				{devModeEnabled && (
 					<>
 						<Menu.Separator />
-						<Menu.Item label={l`Copy post at:// URI`} onClick={onShareATURI}>
-							<Menu.ItemText>
-								<Trans>Copy post at:// URI</Trans>
-							</Menu.ItemText>
+						<Menu.Item label={m['components.postControls.action.copyUri']()} onClick={onShareATURI}>
+							<Menu.ItemText>{m['components.postControls.action.copyUri']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={ClipboardIcon} position="right" />
 						</Menu.Item>
-						<Menu.Item label={l`Copy author DID`} onClick={onShareAuthorDID}>
-							<Menu.ItemText>
-								<Trans>Copy author DID</Trans>
-							</Menu.ItemText>
+						<Menu.Item label={m['components.postControls.action.copyAuthorDid']()} onClick={onShareAuthorDID}>
+							<Menu.ItemText>{m['components.postControls.action.copyAuthorDid']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={ClipboardIcon} position="right" />
 						</Menu.Item>
 					</>

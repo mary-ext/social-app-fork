@@ -46,6 +46,7 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Menu from '#/components/web/Menu';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as styles from './ProfileFeedHeader.css';
@@ -67,7 +68,7 @@ export function ProfileFeedHeaderSkeleton() {
 }
 
 export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const { hasSession } = useSession();
 	const infoControl = Dialog.useDialogHandle();
 	const reportDialogControl = useReportDialogControl();
@@ -97,7 +98,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 		try {
 			if (savedFeedConfig) {
 				await removeFeed(savedFeedConfig);
-				Toast.show(l`Removed from your feeds`);
+				Toast.show(m['common.label.removedFromFeeds']());
 			} else {
 				await addSavedFeeds([
 					{
@@ -106,15 +107,12 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 						pinned: false,
 					},
 				]);
-				Toast.show(l`Saved to your feeds`);
+				Toast.show(m['common.label.savedToFeeds']());
 			}
 		} catch (err) {
-			Toast.show(
-				l`There was an issue updating your feeds, please check your internet connection and try again.`,
-				{
-					type: 'error',
-				},
-			);
+			Toast.show(m['common.error.updateFeeds'](), {
+				type: 'error',
+			});
 			logger.error('Failed to update feeds', { message: err });
 		}
 	};
@@ -131,9 +129,9 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				]);
 
 				if (pinned) {
-					Toast.show(l`Pinned ${info.displayName} to Home`);
+					Toast.show(m['screens.profile.toast.pinned']({ name: info.displayName }));
 				} else {
-					Toast.show(l`Unpinned ${info.displayName} from Home`);
+					Toast.show(m['screens.profile.toast.unpinned']({ name: info.displayName }));
 				}
 			} else {
 				await addSavedFeeds([
@@ -143,10 +141,10 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 						pinned: true,
 					},
 				]);
-				Toast.show(l`Pinned ${info.displayName} to Home`);
+				Toast.show(m['screens.profile.toast.pinned']({ name: info.displayName }));
 			}
 		} catch (e) {
-			Toast.show(l`There was an issue contacting the server`, {
+			Toast.show(m['common.error.serverContact'](), {
 				type: 'error',
 			});
 			logger.error('Failed to toggle pinned feed', { message: e });
@@ -160,7 +158,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				<Layout.Header.Content>
 					<button
 						className={styles.infoButton}
-						aria-label={l`Open feed info screen`}
+						aria-label={m['screens.profile.a11y.openFeedInfo']()}
 						onClick={() => infoControl.open(null)}
 					>
 						{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
@@ -198,7 +196,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 								<Menu.Trigger
 									render={
 										<Button
-											label={l`Open feed options menu`}
+											label={m['screens.profile.a11y.openFeedOptions']()}
 											size="small"
 											variant="ghost"
 											shape="round"
@@ -209,28 +207,36 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 									}
 								/>
 
-								<Menu.Popup label={l`Feed options`} align="end">
+								<Menu.Popup label={m['screens.profile.label.feedOptions']()} align="end">
 									<Menu.Item
 										disabled={isFeedStateChangePending}
-										label={l`Unpin from home`}
+										label={m['screens.profile.action.unpinFromHome']()}
 										onClick={() => void onTogglePinned()}
 									>
-										<Menu.ItemText>{l`Unpin from home`}</Menu.ItemText>
+										<Menu.ItemText>{m['screens.profile.action.unpinFromHome']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={X} position="right" />
 									</Menu.Item>
 									<Menu.Item
 										disabled={isFeedStateChangePending}
-										label={isSaved ? l`Remove from my feeds` : l`Save to my feeds`}
+										label={
+											isSaved
+												? m['common.action.removeFromFeeds']()
+												: m['screens.profile.action.saveToFeeds']()
+										}
 										onClick={() => void onToggleSaved()}
 									>
-										<Menu.ItemText>{isSaved ? l`Remove from my feeds` : l`Save to my feeds`}</Menu.ItemText>
+										<Menu.ItemText>
+											{isSaved
+												? m['common.action.removeFromFeeds']()
+												: m['screens.profile.action.saveToFeeds']()}
+										</Menu.ItemText>
 										<Menu.ItemIcon icon={isSaved ? Trash : Plus} position="right" />
 									</Menu.Item>
 								</Menu.Popup>
 							</Menu.Root>
 						) : (
 							<Button
-								label={l`Pin to Home`}
+								label={m['screens.profile.action.pinToHome']()}
 								size="small"
 								variant="ghost"
 								shape="round"
@@ -244,7 +250,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				)}
 			</Layout.Header.Outer>
 			<Dialog.Root handle={infoControl}>
-				<Dialog.Popup label={l`Feed menu`} className={styles.dialogPopup}>
+				<Dialog.Popup label={m['screens.profile.a11y.feedMenu']()} className={styles.dialogPopup}>
 					<DialogInner
 						info={info}
 						likeUri={likeUri}
@@ -294,7 +300,6 @@ function DialogInner({
 	closeDialog: () => void;
 	onPressReport: () => void;
 }) {
-	const { t: l } = useLingui();
 	const { hasSession } = useSession();
 	const { mutateAsync: likeFeed, isPending: isLikePending } = useLikeMutation();
 	const { mutateAsync: unlikeFeed, isPending: isUnlikePending } = useUnlikeMutation();
@@ -312,12 +317,9 @@ function DialogInner({
 				setLikeUri(res.uri);
 			}
 		} catch (err) {
-			Toast.show(
-				l`There was an issue contacting the server, please check your internet connection and try again.`,
-				{
-					type: 'error',
-				},
-			);
+			Toast.show(m['screens.profile.error.server'](), {
+				type: 'error',
+			});
 			logger.error('Failed to toggle like', { message: err });
 		}
 	};
@@ -340,7 +342,7 @@ function DialogInner({
 						<Trans>
 							by{' '}
 							<InlineLinkText
-								label={l`View ${info.creatorHandle}'s profile`}
+								label={m['screens.profile.a11y.viewProfile']({ handle: info.creatorHandle })}
 								to={makeProfileLink({ did: info.creatorDid })}
 								size="sm"
 								color="textContrastMedium"
@@ -354,7 +356,7 @@ function DialogInner({
 				</div>
 
 				<Button
-					label={l`Share this feed`}
+					label={m['screens.profile.action.shareFeed']()}
 					size="small"
 					variant="ghost"
 					color="secondary"
@@ -370,7 +372,7 @@ function DialogInner({
 			<div className={styles.dialogLikedByRow}>
 				{typeof likeCount === 'number' && (
 					<InlineLinkText
-						label={l`View users who like this feed`}
+						label={m['screens.profile.action.viewFeedLikes']()}
 						to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
 						size="md_sub"
 						color="textContrastMedium"
@@ -387,7 +389,7 @@ function DialogInner({
 					<div className={styles.dialogActionsRow}>
 						<Button
 							disabled={isLikePending || isUnlikePending}
-							label={l`Like this feed`}
+							label={m['screens.profile.action.likeFeed']()}
 							size="small"
 							color="secondary"
 							onClick={() => void onToggleLiked()}
@@ -395,17 +397,21 @@ function DialogInner({
 						>
 							{isLiked ? <HeartFilled size="sm" fill={colors.pink} /> : <ButtonIcon icon={Heart} />}
 
-							<ButtonText>{isLiked ? <Trans>Unlike</Trans> : <Trans>Like</Trans>}</ButtonText>
+							<ButtonText>
+								{isLiked ? m['screens.profile.action.unlike']() : m['common.action.like']()}
+							</ButtonText>
 						</Button>
 						<Button
 							disabled={isFeedStateChangePending}
-							label={isPinned ? l`Unpin feed` : l`Pin feed`}
+							label={isPinned ? m['common.action.unpinFeed']() : m['common.action.pinFeed']()}
 							size="small"
 							color={isPinned ? 'secondary' : 'primary'}
 							onClick={onTogglePinned}
 							className={styles.dialogActionButton}
 						>
-							<ButtonText>{isPinned ? <Trans>Unpin feed</Trans> : <Trans>Pin feed</Trans>}</ButtonText>
+							<ButtonText>
+								{isPinned ? m['common.action.unpinFeed']() : m['common.action.pinFeed']()}
+							</ButtonText>
 							<ButtonIcon icon={Pin} />
 						</Button>
 					</div>
@@ -415,19 +421,17 @@ function DialogInner({
 
 						<div className={styles.dialogReportRow}>
 							<Text size="md_sub" color="textContrastMedium" className={styles.dialogWrongText}>
-								<Trans>Something wrong? Let us know.</Trans>
+								{m['screens.profile.hint.reportIssue']()}
 							</Text>
 
 							<Button
-								label={l`Report feed`}
+								label={m['screens.profile.action.reportFeed']()}
 								size="small"
 								variant="solid"
 								color="secondary"
 								onClick={onPressReport}
 							>
-								<ButtonText>
-									<Trans>Report feed</Trans>
-								</ButtonText>
+								<ButtonText>{m['screens.profile.action.reportFeed']()}</ButtonText>
 								<ButtonIcon icon={CircleInfo} />
 							</Button>
 						</div>

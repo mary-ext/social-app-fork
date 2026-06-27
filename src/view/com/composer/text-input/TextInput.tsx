@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { Trans } from '@lingui/react/macro';
 import { createPortal } from 'react-dom';
 
 import { isUriImage } from '#/lib/media/util';
@@ -18,6 +17,8 @@ import {
 } from '#/components/Composer';
 import type { Emoji } from '#/components/EmojiPicker';
 import { Text } from '#/components/Text';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './TextInput.css';
 import type { TextInputProps } from './TextInput.types';
@@ -212,7 +213,7 @@ export function TextInput({
 				<div className={styles.dropScrim({ visible: isDropping })} inert={!isDropping}>
 					<div className={styles.dropCard}>
 						<Text className={styles.dropText} color="textContrastMedium" size="lg" weight="semiBold">
-							<Trans>Drop to add images</Trans>
+							{m['view.composer.label.dropToAddImages']()}
 						</Text>
 					</div>
 				</div>,

@@ -1,5 +1,4 @@
 import { type KeyboardEvent, useCallback, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 
@@ -17,16 +16,16 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function SigninDialog() {
-	const { t: l } = useLingui();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 	return (
 		<Dialog.Root handle={signinDialogControl}>
 			{({ payload }: { payload: SigninDialogPayload | undefined }) =>
 				payload ? (
-					<Dialog.Popup label={l`Sign in to Bluesky`} size="narrow">
+					<Dialog.Popup label={m['components.dialogs.signin.title']()} size="narrow">
 						<SigninDialogInner close={() => signinDialogControl.close()} payload={payload} />
 						<Dialog.Close />
 					</Dialog.Popup>
@@ -74,7 +73,6 @@ function ChooseAccountScreen({
 	intent: 'signin' | 'switch';
 	onSelectOther: () => void;
 }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { login, switchAccount } = useSessionApi();
 	const [pendingDid, setPendingDid] = useState<string | null>(null);
@@ -86,7 +84,7 @@ function ChooseAccountScreen({
 			}
 			if (account.did === currentAccount?.did) {
 				close();
-				Toast.show(l`Already signed in as @${account.handle}`);
+				Toast.show(m['components.dialogs.account.alreadySignedIn']({ handle: account.handle }));
 				return;
 			}
 			try {
@@ -101,7 +99,7 @@ function ChooseAccountScreen({
 				setPendingDid(null);
 			}
 		},
-		[close, currentAccount?.did, l, login, pendingDid, switchAccount],
+		[close, currentAccount?.did, login, pendingDid, switchAccount],
 	);
 
 	return (
@@ -109,16 +107,14 @@ function ChooseAccountScreen({
 			<div className={css.heading}>
 				{intent === 'switch' ? (
 					<Text size="_2xl" weight="semiBold">
-						<Trans>Switch account</Trans>
+						{m['common.action.switchAccount']()}
 					</Text>
 				) : (
 					<>
 						<Text size="_2xl" weight="semiBold">
-							<Trans>Sign in</Trans>
+							{m['common.action.signIn']()}
 						</Text>
-						<Text color="textContrastHigh">
-							<Trans>Choose an account to sign in with.</Trans>
-						</Text>
+						<Text color="textContrastHigh">{m['components.dialogs.account.chooseDescription']()}</Text>
 					</>
 				)}
 			</div>
@@ -126,7 +122,7 @@ function ChooseAccountScreen({
 			<AccountList
 				onSelectAccount={(account) => void onSelectAccount(account)}
 				onSelectOther={onSelectOther}
-				otherLabel={l`Sign in to another account`}
+				otherLabel={m['components.dialogs.account.signInAnother']()}
 				pendingDid={pendingDid}
 			/>
 		</div>
@@ -134,7 +130,6 @@ function ChooseAccountScreen({
 }
 
 function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; onBack?: () => void }) {
-	const { t: l } = useLingui();
 	const { login } = useSessionApi();
 	const [identifier, setIdentifier] = useState(initialHandle);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -143,7 +138,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 	const onSubmit = useCallback(async () => {
 		const trimmed = identifier.trim();
 		if (!trimmed) {
-			setError(l`Enter your handle or DID.`);
+			setError(m['components.dialogs.account.handleDidDescription']());
 			return;
 		}
 
@@ -155,10 +150,10 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 			logger.error('sign in dialog: OAuth start failed', {
 				message: e instanceof Error ? e.message : String(e),
 			});
-			setError(l`Unable to start sign in. Please try again.`);
+			setError(m['components.dialogs.error.signinStart']());
 			setIsSubmitting(false);
 		}
-	}, [identifier, l, login]);
+	}, [identifier, login]);
 
 	const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
@@ -171,26 +166,22 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 		<div className={css.outer}>
 			<div className={css.heading}>
 				<Text size="_2xl" weight="semiBold">
-					<Trans>Sign in</Trans>
+					{m['common.action.signIn']()}
 				</Text>
-				<Text color="textContrastHigh">
-					<Trans>Sign in with your Bluesky account.</Trans>
-				</Text>
+				<Text color="textContrastHigh">{m['components.dialogs.signin.description']()}</Text>
 			</div>
 			<div className={css.form}>
 				<TextField.Root isInvalid={!!error}>
-					<TextField.LabelText>
-						<Trans>Handle or DID</Trans>
-					</TextField.LabelText>
+					<TextField.LabelText>{m['components.dialogs.account.handleDidLabel']()}</TextField.LabelText>
 					<div className={css.field}>
 						<AtIcon className={css.fieldIcon} size="md" fill={colors.contrast_500} />
 						<TextField.Input
 							autoCapitalize="none"
 							className={css.fieldInput}
-							label={l`Handle or DID`}
+							label={m['components.dialogs.account.handleDidLabel']()}
 							onChangeText={setIdentifier}
 							onKeyDown={onKeyDown}
-							placeholder={l`e.g. alice.bsky.social`}
+							placeholder={m['components.dialogs.account.handlePlaceholder']()}
 							value={identifier}
 						/>
 					</div>
@@ -205,7 +196,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 				<Button
 					color="primary"
 					disabled={isSubmitting}
-					label={l`Sign in`}
+					label={m['common.action.signIn']()}
 					onClick={() => void onSubmit()}
 					size="large"
 					variant="solid"
@@ -213,24 +204,20 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 					{isSubmitting ? (
 						<ButtonIcon icon={Loader} />
 					) : (
-						<ButtonText>
-							<Trans>Sign in</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.signIn']()}</ButtonText>
 					)}
 				</Button>
 				{onBack && (
 					<Button
 						color="secondary"
 						disabled={isSubmitting}
-						label={l`Back to your accounts`}
+						label={m['components.dialogs.account.back']()}
 						onClick={onBack}
 						size="large"
 						variant="ghost"
 					>
 						<ButtonIcon icon={ChevronLeftIcon} />
-						<ButtonText>
-							<Trans>Back to your accounts</Trans>
-						</ButtonText>
+						<ButtonText>{m['components.dialogs.account.back']()}</ButtonText>
 					</Button>
 				)}
 			</div>

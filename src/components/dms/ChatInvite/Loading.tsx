@@ -1,7 +1,8 @@
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { Spinner } from '#/components/Spinner';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './Loading.css';
 
@@ -10,11 +11,9 @@ import * as css from './Loading.css';
  * surface, so pass it via `className`.
  */
 export function Loading({ className }: { className?: string }) {
-	const { t: l } = useLingui();
-
 	return (
 		<div className={clsx(css.loading, className)}>
-			<Spinner label={l`Loading`} color="currentColor" size="md" />
+			<Spinner label={m['common.label.loading']()} color="currentColor" size="md" />
 		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import { useLingui } from '@lingui/react/macro';
+import { m } from '#/paraglide/messages';
 
 export type GlobalLabelStrings = Record<
 	string,
@@ -9,39 +9,38 @@ export type GlobalLabelStrings = Record<
 >;
 
 export function useGlobalLabelStrings(): GlobalLabelStrings {
-	const { t: l } = useLingui();
 	return {
 		'!hide': {
-			name: l`Content Blocked`,
-			description: l`This content has been hidden by the moderators.`,
+			name: m['lib.moderation.contentBlocked'](),
+			description: m['lib.moderation.hiddenByModerators'](),
 		},
 		'!warn': {
-			name: l`Content Warning`,
-			description: l`This content has received a general warning from moderators.`,
+			name: m['common.label.contentWarning'](),
+			description: m['lib.moderation.generalWarning'](),
 		},
 		'!no-unauthenticated': {
-			name: l`Sign-in Required`,
-			description: l`This user has requested that their content only be shown to signed-in users.`,
+			name: m['common.dialog.signInRequiredTitle'](),
+			description: m['lib.moderation.signedInOnly'](),
 		},
 		porn: {
-			name: l`Adult Content`,
-			description: l`Explicit sexual images.`,
+			name: m['common.label.adultContent'](),
+			description: m['lib.moderation.explicitSexual'](),
 		},
 		sexual: {
-			name: l`Sexually Suggestive`,
-			description: l`Does not include nudity.`,
+			name: m['lib.moderation.sexuallySuggestive'](),
+			description: m['lib.moderation.noNudity'](),
 		},
 		nudity: {
-			name: l`Non-sexual Nudity`,
-			description: l`E.g. artistic nudes.`,
+			name: m['lib.moderation.nonSexualNudity'](),
+			description: m['lib.moderation.artisticNudesExample'](),
 		},
 		'graphic-media': {
-			name: l`Graphic Media`,
-			description: l`Explicit or potentially disturbing media.`,
+			name: m['common.label.graphicMedia'](),
+			description: m['lib.moderation.graphicMedia'](),
 		},
 		gore: {
-			name: l`Graphic Media`,
-			description: l`Explicit or potentially disturbing media.`,
+			name: m['common.label.graphicMedia'](),
+			description: m['lib.moderation.graphicMedia'](),
 		},
 	};
 }

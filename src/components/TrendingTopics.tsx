@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import type { ParsedCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
 
 import type { TrendingTopic } from '#/state/queries/trending/useTrendingTopics';
 
@@ -9,6 +8,8 @@ import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 import { StarterPack as StarterPackIcon } from '#/components/icons/StarterPack';
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './TrendingTopics.css';
 
@@ -159,13 +160,12 @@ type ParsedTrendingTopic =
 	  };
 
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
-	const { t: l } = useLingui();
 	const { topic: displayName, link } = raw;
 
 	if (link.startsWith('/search')) {
 		return {
 			type: 'topic',
-			label: l`Browse posts about ${displayName}`,
+			label: m['components.trendingTopics.a11y.browseAbout']({ displayName }),
 			displayName,
 			uri: undefined,
 			url: link,
@@ -173,7 +173,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 	} else if (link.startsWith('/hashtag')) {
 		return {
 			type: 'tag',
-			label: l`Browse posts tagged with ${displayName}`,
+			label: m['components.trendingTopics.a11y.browseTag']({ displayName }),
 			displayName,
 			// displayName: displayName.replace(/^#/, ''),
 			uri: undefined,
@@ -182,7 +182,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 	} else if (link.startsWith('/starter-pack')) {
 		return {
 			type: 'starter-pack',
-			label: l`Browse starter pack ${displayName}`,
+			label: m['components.trendingTopics.a11y.browseStarterPack']({ displayName }),
 			displayName,
 			uri: undefined,
 			url: link,
@@ -219,7 +219,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 
 	return {
 		type: 'unknown',
-		label: l`Browse topic ${displayName}`,
+		label: m['components.trendingTopics.a11y.browseTopic']({ displayName }),
 		displayName,
 		uri: undefined,
 		url: link,

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Handle } from '@atcute/lexicons';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
@@ -28,6 +28,8 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
+import { m } from '#/paraglide/messages';
+
 const DISPLAY_NAME_MAX_GRAPHEMES = 64;
 const DESCRIPTION_MAX_GRAPHEMES = 300;
 
@@ -50,7 +52,6 @@ export function CreateOrEditListDialog({
 	onSave?: (uri: string) => void;
 	initialValues?: InitialListValues;
 }) {
-	const { t: l } = useLingui();
 	const cancelHandle = Prompt.usePromptHandle();
 	const [dirty, setDirty] = useState(false);
 
@@ -80,7 +81,7 @@ export function CreateOrEditListDialog({
 					}
 				}}
 			>
-				<Dialog.Popup scroll="body" label={l`Create or edit list`}>
+				<Dialog.Popup scroll="body" label={m['components.dialogs.list.createOrEdit']()}>
 					<DialogInner
 						list={list}
 						purpose={purpose}
@@ -94,10 +95,10 @@ export function CreateOrEditListDialog({
 			</Dialog.Root>
 			<Prompt.Basic
 				handle={cancelHandle}
-				title={l`Discard changes?`}
-				description={l`Are you sure you want to discard your changes?`}
+				title={m['common.dialog.discardChangesTitle']()}
+				description={m['common.dialog.discardChangesPrompt']()}
 				onConfirm={() => handle.close()}
-				confirmButtonCta={l`Discard`}
+				confirmButtonCta={m['common.action.discard']()}
 				confirmButtonColor="negative"
 			/>
 		</>
@@ -131,8 +132,6 @@ function DialogInner({
 		return 'app.bsky.graph.defs#curatelist';
 	}, [list, purpose]);
 	const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist';
-
-	const { t: l } = useLingui();
 	const { appview } = useClients();
 	const {
 		mutateAsync: createListMutation,
@@ -244,8 +243,8 @@ function DialogInner({
 				});
 				Toast.show(
 					isCurateList
-						? l({ message: 'User list updated', context: 'toast' })
-						: l({ message: 'Moderation list updated', context: 'toast' }),
+						? m['components.dialogs.toast.listUpdated']()
+						: m['components.dialogs.list.moderationUpdatedToast'](),
 				);
 				handle.close();
 				onSave?.(list.uri);
@@ -259,8 +258,8 @@ function DialogInner({
 				});
 				Toast.show(
 					isCurateList
-						? l({ message: 'User list created', context: 'toast' })
-						: l({ message: 'Moderation list created', context: 'toast' }),
+						? m['components.dialogs.toast.listCreated']()
+						: m['components.dialogs.list.moderationCreatedToast'](),
 				);
 				handle.close();
 				onSave?.(uri);
@@ -280,7 +279,6 @@ function DialogInner({
 		activePurpose,
 		isCurateList,
 		appview,
-		l,
 	]);
 
 	const onChangeDisplayName = useCallback(
@@ -295,26 +293,32 @@ function DialogInner({
 
 	const title = list
 		? isCurateList
-			? l`Edit user list`
-			: l`Edit moderation list`
+			? m['components.dialogs.list.editUser']()
+			: m['components.dialogs.list.editModeration']()
 		: isCurateList
-			? l`Create user list`
-			: l`Create moderation list`;
+			? m['components.dialogs.list.createUser']()
+			: m['components.dialogs.list.createModeration']();
 
-	const displayNamePlaceholder = isCurateList ? l`e.g. Great Posters` : l`e.g. Spammers`;
+	const displayNamePlaceholder = isCurateList
+		? m['components.dialogs.list.namePlaceholder']()
+		: m['components.dialogs.list.moderationNamePlaceholder']();
 
 	const descriptionPlaceholder = isCurateList
-		? l`e.g. The posters who never miss.`
-		: l`e.g. Users that repeatedly reply with ads.`;
+		? m['components.dialogs.list.descriptionPlaceholder']()
+		: m['components.dialogs.list.moderationDescriptionPlaceholder']();
 
 	return (
 		<>
 			<Dialog.Header.Outer>
 				<Dialog.Header.Slot>
-					<Button label={l`Cancel`} variant="ghost" color="primary" size="small" onClick={onRequestClose}>
-						<ButtonText size="md">
-							<Trans>Cancel</Trans>
-						</ButtonText>
+					<Button
+						label={m['common.action.cancel']()}
+						variant="ghost"
+						color="primary"
+						size="small"
+						onClick={onRequestClose}
+					>
+						<ButtonText size="md">{m['common.action.cancel']()}</ButtonText>
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
@@ -322,16 +326,14 @@ function DialogInner({
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot>
 					<Button
-						label={l`Save`}
+						label={m['common.action.save']()}
 						variant="ghost"
 						color="primary"
 						size="small"
 						disabled={!dirty || isCreatingList || isUpdatingList || displayNameTooLong || descriptionTooLong}
 						onClick={() => void onPressSave()}
 					>
-						<ButtonText size="md">
-							<Trans>Save</Trans>
-						</ButtonText>
+						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
 						{(isCreatingList || isUpdatingList) && <ButtonIcon icon={Loader} />}
 					</Button>
 				</Dialog.Header.Slot>
@@ -356,9 +358,7 @@ function DialogInner({
 
 				<div className={styles.fields}>
 					<div>
-						<TextField.LabelText>
-							<Trans>List avatar</Trans>
-						</TextField.LabelText>
+						<TextField.LabelText>{m['components.dialogs.list.avatarAlt']()}</TextField.LabelText>
 						<div className={styles.avatarWrap}>
 							<EditableUserAvatar
 								type="list"
@@ -370,13 +370,11 @@ function DialogInner({
 					</div>
 
 					<TextField.Root isInvalid={displayNameTooLong || displayNameTooShort}>
-						<TextField.LabelText>
-							<Trans>List name</Trans>
-						</TextField.LabelText>
+						<TextField.LabelText>{m['components.dialogs.list.nameLabel']()}</TextField.LabelText>
 						<TextField.Input
 							defaultValue={displayName}
 							onChangeText={onChangeDisplayName}
-							label={l`Name`}
+							label={m['components.dialogs.label.name']()}
 							placeholder={displayNamePlaceholder}
 						/>
 						{(displayNameTooLong || displayNameTooShort) && (
@@ -390,21 +388,19 @@ function DialogInner({
 										/>
 									</Trans>
 								) : (
-									<Trans>List must have a name.</Trans>
+									m['components.dialogs.list.nameRequired']()
 								)}
 							</Text>
 						)}
 					</TextField.Root>
 
 					<TextField.Root isInvalid={descriptionTooLong}>
-						<TextField.LabelText>
-							<Trans>List description</Trans>
-						</TextField.LabelText>
+						<TextField.LabelText>{m['components.dialogs.list.descriptionLabel']()}</TextField.LabelText>
 						<TextField.Input
 							defaultValue={descriptionText}
 							onChangeText={setDescriptionText}
 							multiline
-							label={l`Description`}
+							label={m['common.label.description']()}
 							placeholder={descriptionPlaceholder}
 						/>
 						{descriptionTooLong && (

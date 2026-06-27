@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';
@@ -18,6 +17,8 @@ import { logger } from '#/logger';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 import { EmptyState } from '../util/EmptyState';
 import { ErrorMessage } from '../util/error/ErrorMessage';
@@ -48,7 +49,6 @@ export function PostFeedErrorMessage({
 	onPressTryAgain: () => void;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }) {
-	const { t: l } = useLingui();
 	const knownError = useMemo(() => detectKnownError(feedDesc, error), [feedDesc, error]);
 
 	if (
@@ -67,7 +67,14 @@ export function PostFeedErrorMessage({
 	}
 
 	if (knownError === KnownError.Block) {
-		return <EmptyState icon={WarningIcon} iconSize="2xl" message={l`Posts hidden`} className={css.empty} />;
+		return (
+			<EmptyState
+				icon={WarningIcon}
+				iconSize="2xl"
+				message={m['view.posts.label.postsHidden']()}
+				className={css.empty}
+			/>
+		);
 	}
 
 	return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;
@@ -85,22 +92,21 @@ function FeedgenErrorMessage({
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }) {
 	const pal = usePalette('default');
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const msg = useMemo(
 		() =>
 			({
 				[KnownError.Unknown]: '',
 				[KnownError.Block]: '',
-				[KnownError.FeedgenDoesNotExist]: l`Hmm, we're having trouble finding this feed. It may have been deleted.`,
-				[KnownError.FeedgenMisconfigured]: l`Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue.`,
-				[KnownError.FeedgenBadResponse]: l`Hmm, the feed server gave a bad response. Please let the feed owner know about this issue.`,
-				[KnownError.FeedgenOffline]: l`Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.`,
-				[KnownError.FeedSignedInOnly]: l`This content is not viewable without a Bluesky account.`,
-				[KnownError.FeedgenUnknown]: l`Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue.`,
-				[KnownError.FeedTooManyRequests]: l`This feed is currently receiving high traffic and is temporarily unavailable. Please try again later.`,
+				[KnownError.FeedgenDoesNotExist]: m['view.posts.error.feedNotFound'](),
+				[KnownError.FeedgenMisconfigured]: m['view.posts.error.feedMisconfigured'](),
+				[KnownError.FeedgenBadResponse]: m['view.posts.error.feedBadResponse'](),
+				[KnownError.FeedgenOffline]: m['view.posts.error.feedOffline'](),
+				[KnownError.FeedSignedInOnly]: m['view.posts.empty.requiresAccount'](),
+				[KnownError.FeedgenUnknown]: m['view.posts.error.feedServerRequest'](),
+				[KnownError.FeedTooManyRequests]: m['view.posts.error.feedHighTraffic'](),
 			})[knownError],
-		[l, knownError],
+		[knownError],
 	);
 	const [__, uri] = feedDesc.split('|');
 	const [ownerDid] = safeParseFeedgenUri(uri!);
@@ -120,13 +126,10 @@ function FeedgenErrorMessage({
 			if (!savedFeedConfig) return;
 			await removeFeed(savedFeedConfig);
 		} catch (err) {
-			Toast.show(
-				l`There was an issue removing this feed. Please check your internet connection and try again.`,
-				{ type: 'warning' },
-			);
+			Toast.show(m['view.posts.error.removeFeed'](), { type: 'warning' });
 			logger.error('Failed to remove feed', { message: err });
 		}
-	}, [removeFeed, l, savedFeedConfig]);
+	}, [removeFeed, savedFeedConfig]);
 
 	const cta = useMemo(() => {
 		switch (knownError) {
@@ -141,14 +144,14 @@ function FeedgenErrorMessage({
 				return (
 					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
 						{knownError === KnownError.FeedgenDoesNotExist && savedFeedConfig && (
-							<Button type="inverted" label={l`Remove feed`} onPress={onRemoveFeed} />
+							<Button type="inverted" label={m['view.posts.action.removeFeed']()} onPress={onRemoveFeed} />
 						)}
-						<Button type="default-light" label={l`View profile`} onPress={onViewProfile} />
+						<Button type="default-light" label={m['common.action.viewProfile']()} onPress={onViewProfile} />
 					</View>
 				);
 			}
 		}
-	}, [knownError, onViewProfile, onRemoveFeed, l, savedFeedConfig]);
+	}, [knownError, onViewProfile, onRemoveFeed, savedFeedConfig]);
 
 	return (
 		<>
@@ -168,7 +171,7 @@ function FeedgenErrorMessage({
 
 				{rawError?.message && (
 					<Text style={pal.textLight}>
-						<Trans>Message from server: {rawError.message}</Trans>
+						{m['view.posts.error.serverMessage']({ message: rawError.message })}
 					</Text>
 				)}
 
@@ -176,10 +179,10 @@ function FeedgenErrorMessage({
 			</View>
 			<Prompt.Basic
 				control={removePromptControl}
-				title={l`Remove feed?`}
-				description={l`Remove this feed from your saved feeds`}
+				title={m['view.posts.dialog.removeFeedTitle']()}
+				description={m['view.posts.dialog.removeFeedDescription']()}
 				onConfirm={onPressRemoveFeed}
-				confirmButtonCta={l`Remove`}
+				confirmButtonCta={m['common.action.remove']()}
 				confirmButtonColor="negative"
 			/>
 		</>

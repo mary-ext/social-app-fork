@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from '#/lib/strings/embed-player';
 
@@ -10,6 +10,8 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './EmbedConsent.css';
 
 type EmbedConsentDialogProps = {
@@ -19,10 +21,9 @@ type EmbedConsentDialogProps = {
 };
 
 export function EmbedConsentDialog({ handle, source, onAccept }: EmbedConsentDialogProps) {
-	const { t: l } = useLingui();
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup size="narrow" label={l`External Media`}>
+			<Dialog.Popup size="narrow" label={m['components.dialogs.externalMedia.title']()}>
 				<DialogInner handle={handle} source={source} onAccept={onAccept} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -31,7 +32,6 @@ export function EmbedConsentDialog({ handle, source, onAccept }: EmbedConsentDia
 }
 
 function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
-	const { t: l } = useLingui();
 	const setExternalEmbedPref = useSetExternalEmbedPref();
 
 	const onShowAllPress = useCallback(() => {
@@ -56,14 +56,12 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 	return (
 		<>
 			<Text size="_2xl" weight="bold">
-				<Trans>External Media</Trans>
+				{m['components.dialogs.externalMedia.title']()}
 			</Text>
 
 			<div className={styles.body}>
 				<Text size="md">
-					<Trans>
-						This content is hosted by {externalEmbedLabels[source]}. Do you want to enable external media?
-					</Trans>
+					{m['components.dialogs.externalMedia.prompt']({ source: externalEmbedLabels[source] })}
 				</Text>
 
 				<Admonition type="info">
@@ -75,20 +73,32 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 			</div>
 
 			<div className={styles.actions}>
-				<Button label={l`Enable external media`} onClick={onShowAllPress} color="primary" size="large">
-					<ButtonText>
-						<Trans>Enable external media</Trans>
-					</ButtonText>
+				<Button
+					label={m['components.dialogs.externalMedia.enableTitle']()}
+					onClick={onShowAllPress}
+					color="primary"
+					size="large"
+				>
+					<ButtonText>{m['components.dialogs.externalMedia.enableTitle']()}</ButtonText>
 				</Button>
-				<Button label={l`Enable this source only`} onClick={onShowPress} color="secondary" size="large">
+				<Button
+					label={m['components.dialogs.externalMedia.enableThisSource']()}
+					onClick={onShowPress}
+					color="secondary"
+					size="large"
+				>
 					<ButtonText>
 						<Trans>Enable {externalEmbedLabels[source]} only</Trans>
 					</ButtonText>
 				</Button>
-				<Button label={l`No thanks`} onClick={onHidePress} variant="ghost" color="secondary" size="large">
-					<ButtonText>
-						<Trans>No thanks</Trans>
-					</ButtonText>
+				<Button
+					label={m['components.dialogs.action.noThanks']()}
+					onClick={onHidePress}
+					variant="ghost"
+					color="secondary"
+					size="large"
+				>
+					<ButtonText>{m['components.dialogs.action.noThanks']()}</ButtonText>
 				</Button>
 			</div>
 		</>

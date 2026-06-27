@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
@@ -15,6 +14,8 @@ import { List } from '#/view/com/util/List';
 
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 
+import { m } from '#/paraglide/messages';
+
 function renderItem({ item, index }: { item: ActorDefs.ProfileView; index: number }) {
 	return <ProfileCardWithFollowBtn key={item.did} profile={item} noBorder={index === 0} />;
 }
@@ -24,7 +25,6 @@ function keyExtractor(item: { did: string }) {
 }
 
 export function PostRepostedBy({ uri }: { uri: string }) {
-	const { t: l } = useLingui();
 	const initialNumToRender = useInitialNumToRender();
 
 	const [isPTRing, setIsPTRing] = useState(false);
@@ -74,8 +74,8 @@ export function PostRepostedBy({ uri }: { uri: string }) {
 				isLoading={isLoadingUri || isLoadingRepostedBy}
 				isError={isError}
 				emptyType="results"
-				emptyTitle={l`No reposts yet`}
-				emptyMessage={l`Nobody has reposted this yet. Maybe you should be the first!`}
+				emptyTitle={m['view.postThread.empty.repostsTitle']()}
+				emptyMessage={m['view.postThread.empty.reposts']()}
 				errorMessage={cleanError(resolveError || error)}
 				sideBorders={false}
 			/>

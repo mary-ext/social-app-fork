@@ -1,5 +1,5 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
 
@@ -9,6 +9,8 @@ import { useRequireAuth } from '#/state/session';
 
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * The save/remove-bookmark action shared by both action-bar sizes. Returns the toggle state, its accessible
@@ -34,7 +36,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 				post,
 			});
 
-			toast.show(<Trans>Post saved</Trans>, {
+			toast.show(m['components.postControls.toast.saved'](), {
 				action: disableUndo
 					? undefined
 					: { label: undoLabel, onPress: () => void remove({ disableUndo: true }) },
@@ -55,7 +57,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 				uri: post.uri,
 			});
 
-			toast.show(<Trans>Removed from saved posts</Trans>, {
+			toast.show(m['common.label.removedFromSaved'](), {
 				action: disableUndo
 					? undefined
 					: { label: undoLabel, onPress: () => void save({ disableUndo: true }) },
@@ -80,7 +82,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 
 	return {
 		isBookmarked,
-		label: isBookmarked ? l`Remove from saved posts` : l`Add to saved posts`,
+		label: isBookmarked ? m['common.action.removeFromSaved']() : m['components.postControls.action.save'](),
 		onToggle,
 	};
 }

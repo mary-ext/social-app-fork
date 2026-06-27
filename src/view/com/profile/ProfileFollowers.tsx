@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
@@ -15,6 +14,8 @@ import { logger } from '#/logger';
 import { PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon } from '#/components/icons/PeopleRemove2';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 
+import { m } from '#/paraglide/messages';
+
 import { List } from '../util/List';
 import { ProfileCardWithFollowBtn } from './ProfileCard';
 
@@ -27,7 +28,6 @@ function keyExtractor(item: { did: string }) {
 }
 
 export function ProfileFollowers({ name }: { name: string }) {
-	const { t: l } = useLingui();
 	const navigation = useNavigation();
 	const initialNumToRender = useInitialNumToRender();
 	const { currentAccount } = useSession();
@@ -79,15 +79,17 @@ export function ProfileFollowers({ name }: { name: string }) {
 				isLoading={isDidLoading || isFollowersLoading}
 				isError={isError}
 				emptyType="results"
-				emptyMessage={isMe ? l`No followers yet` : l`This user doesn't have any followers.`}
+				emptyMessage={
+					isMe ? m['view.profile.empty.noFollowers']() : m['view.profile.empty.noFollowersUser']()
+				}
 				errorMessage={cleanError(resolveError || error)}
 				onRetry={isError ? refetch : undefined}
 				sideBorders={false}
 				useEmptyState={true}
 				emptyStateIcon={PeopleRemoveIcon}
 				emptyStateButton={{
-					label: l`Go back`,
-					text: l`Go back`,
+					label: m['common.action.goBack'](),
+					text: m['common.action.goBack'](),
 					color: 'secondary',
 					size: 'small',
 					onPress: () => navigation.goBack(),

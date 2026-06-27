@@ -1,11 +1,11 @@
-import { Trans } from '@lingui/react/macro';
-
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { PostLikedBy as PostLikedByComponent } from '#/view/com/post-thread/PostLikedBy';
 
 import * as Layout from '#/components/Layout';
+
+import { m } from '#/paraglide/messages';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeedLikedBy'>;
 export const ProfileFeedLikedByScreen = ({ route }: Props) => {
@@ -17,9 +17,7 @@ export const ProfileFeedLikedByScreen = ({ route }: Props) => {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Liked By</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.title.likedBy']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>

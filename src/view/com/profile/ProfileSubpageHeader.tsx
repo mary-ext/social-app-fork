@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';
@@ -20,6 +20,8 @@ import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { StarterPack } from '#/components/icons/StarterPack';
 import * as Layout from '#/components/Layout';
 import { UserAvatar, type UserAvatarType } from '#/components/UserAvatar';
+
+import { m } from '#/paraglide/messages';
 
 export function ProfileSubpageHeader({
 	isLoading,
@@ -47,7 +49,6 @@ export function ProfileSubpageHeader({
 	avatarType: UserAvatarType | 'starter-pack';
 }>) {
 	const navigation = useNavigation<NavigationProp>();
-	const { t: l } = useLingui();
 	const { isMobile } = useWebMediaQueries();
 	const { lightboxControl } = useGlobalDialogsControlContext();
 	const pal = usePalette('default');
@@ -86,7 +87,7 @@ export function ProfileSubpageHeader({
 						testID="headerAviButton"
 						onPress={onPressAvi}
 						accessibilityRole="image"
-						accessibilityLabel={l`View the avatar`}
+						accessibilityLabel={m['view.profile.action.viewAvatar']()}
 						accessibilityHint=""
 						style={{ width: 58 }}
 					>
@@ -118,7 +119,7 @@ export function ProfileSubpageHeader({
 						<Text type="lg" style={[pal.textLight]} numberOfLines={1}>
 							{purpose === 'app.bsky.graph.defs#curatelist' ? (
 								isOwner ? (
-									<Trans>List by you</Trans>
+									m['view.profile.label.listByYou']()
 								) : (
 									<Trans>
 										List by{' '}
@@ -131,7 +132,7 @@ export function ProfileSubpageHeader({
 								)
 							) : purpose === 'app.bsky.graph.defs#modlist' ? (
 								isOwner ? (
-									<Trans>Moderation list by you</Trans>
+									m['view.profile.label.modListByYou']()
 								) : (
 									<Trans>
 										Moderation list by{' '}
@@ -144,7 +145,7 @@ export function ProfileSubpageHeader({
 								)
 							) : purpose === 'app.bsky.graph.defs#referencelist' ? (
 								isOwner ? (
-									<Trans>Starter pack by you</Trans>
+									m['common.label.starterPackByYou']()
 								) : (
 									<Trans>
 										Starter pack by{' '}

@@ -1,5 +1,4 @@
 import { useId, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
@@ -11,6 +10,8 @@ import * as TextField from '#/components/TextField';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './ImageAltTextDialog.css';
 
 type Props = {
@@ -20,11 +21,9 @@ type Props = {
 };
 
 export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.ReactNode => {
-	const { t: l } = useLingui();
-
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
-			<Dialog.Popup scroll="body" label={l`Add alt text`}>
+			<Dialog.Popup scroll="body" label={m['view.composer.action.addAltText']()}>
 				<DialogInner handle={handle} image={image} onChange={onChange} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -32,7 +31,6 @@ export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.Re
 };
 
 const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
-	const { t: l } = useLingui();
 	const [altText, setAltText] = useState(image.alt);
 	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
 	const counterId = useId();
@@ -41,8 +39,8 @@ const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
 	const canSave = altText !== image.alt && !isOverLimit;
 
 	const counterLabel = isOverLimit
-		? l`${altText.length} of ${MAX_ALT_TEXT} characters, over the limit`
-		: l`${altText.length} of ${MAX_ALT_TEXT} characters`;
+		? m['view.composer.altText.charCountOverLimit']({ length: altText.length, MAX_ALT_TEXT })
+		: m['view.composer.altText.charCount']({ length: altText.length, MAX_ALT_TEXT });
 
 	const onSave = () => {
 		onChange({ ...image, alt: altText });
@@ -55,34 +53,28 @@ const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
 				<Dialog.Header.Slot>
 					<Button
 						color="primary"
-						label={l`Cancel`}
+						label={m['common.action.cancel']()}
 						onClick={() => handle.close()}
 						size="small"
 						variant="ghost"
 					>
-						<ButtonText size="md">
-							<Trans>Cancel</Trans>
-						</ButtonText>
+						<ButtonText size="md">{m['common.action.cancel']()}</ButtonText>
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>
-						<Trans>Add alt text</Trans>
-					</Dialog.Header.TitleText>
+					<Dialog.Header.TitleText>{m['view.composer.action.addAltText']()}</Dialog.Header.TitleText>
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot>
 					<Button
 						className={canSave ? undefined : styles.inactiveSave}
 						color="primary"
 						disabled={!canSave}
-						label={l`Save`}
+						label={m['common.action.save']()}
 						onClick={onSave}
 						size="small"
 						variant="ghost"
 					>
-						<ButtonText size="md">
-							<Trans>Save</Trans>
-						</ButtonText>
+						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
 					</Button>
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>
@@ -107,24 +99,24 @@ const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
 								</Text>
 							}
 						>
-							<Trans>Descriptive alt text</Trans>
+							{m['view.composer.label.descriptiveAltText']()}
 						</TextField.LabelText>
 						<TextField.Input
 							autoFocus
 							defaultValue={altText}
 							describedBy={counterId}
 							isInvalid={isOverLimit}
-							label={l`Alt text`}
+							label={m['common.label.altText']()}
 							maxRows={8}
 							multiline
 							onChangeText={setAltText}
-							placeholder={l`Alt text`}
+							placeholder={m['common.label.altText']()}
 						/>
 					</TextField.Root>
 
 					{/* announce only the crossing into over-limit while typing; a stable message avoids per-keystroke spam */}
 					<div className={styles.srOnly} role="status">
-						{isOverLimit ? l`Alt text is over the character limit.` : ''}
+						{isOverLimit ? m['view.composer.error.altTextOverLimit']() : ''}
 					</div>
 				</div>
 			</Dialog.Body>

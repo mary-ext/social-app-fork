@@ -1,7 +1,7 @@
 import { useMemo, type ReactNode } from 'react';
 import type { AnyStarterPackView, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
@@ -19,6 +19,7 @@ import { Text } from '#/components/Text';
 import { Link as WebLink } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import { m } from '#/paraglide/messages';
 import { borderRadius } from '#/styles/tokens.css';
 
 import * as css from './StarterPackCard.css';
@@ -79,7 +80,6 @@ function Icon() {
 }
 
 function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { creator } = starterPack;
 	const record = starterPack.record as AppBskyGraphStarterpack.Main;
@@ -91,8 +91,8 @@ function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {
 			</Text>
 			<Text size="md_sub" color="textContrastMedium" numberOfLines={1}>
 				{creator?.did === currentAccount?.did
-					? l`Starter pack by you`
-					: l`Starter pack by ${sanitizeHandle(creator.handle, '@')}`}
+					? m['common.label.starterPackByYou']()
+					: m['components.starterPack.byline']({ handle: sanitizeHandle(creator.handle, '@') })}
 			</Text>
 		</div>
 	);
@@ -125,7 +125,6 @@ function JoinedCount({ starterPack }: { starterPack: AnyStarterPackView }) {
  * queries.
  */
 export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
-	const { t: l } = useLingui();
 	const qc = useQueryClient();
 	const { rkey, did } = useMemo(() => {
 		const rkey = parseCanonicalResourceUri(view.uri).rkey;
@@ -138,7 +137,9 @@ export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 
 	return {
 		to: `/starter-pack/${did}/${rkey}`,
-		label: l`Navigate to ${(view.record as AppBskyGraphStarterpack.Main).name}`,
+		label: m['components.starterPack.a11y.navigate']({
+			name: (view.record as AppBskyGraphStarterpack.Main).name,
+		}),
 		precache,
 	};
 }
@@ -155,7 +156,6 @@ export function Link({
 	className?: string;
 	onPress?: () => void;
 }) {
-	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 	const { rkey, did } = useMemo(() => {
@@ -166,7 +166,7 @@ export function Link({
 	return (
 		<WebLink
 			to={`/starter-pack/${did}/${rkey}`}
-			label={l`Navigate to ${record.name}`}
+			label={m['components.starterPack.a11y.navigate']({ name: record.name })}
 			className={clsx(css.link, className)}
 			onPress={() => {
 				precacheResolvedUri(queryClient, starterPack.creator.handle, starterPack.creator.did);

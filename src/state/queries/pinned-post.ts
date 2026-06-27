@@ -1,6 +1,5 @@
 import { ok } from '@atcute/client';
 import type { ActorIdentifier, ResourceUri } from '@atcute/lexicons';
-import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
@@ -9,12 +8,13 @@ import { logger } from '#/logger';
 
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
+
 import { updatePostShadow } from '../cache/post-shadow';
 import { useClients, useSession } from '../session';
 import { useProfileUpdateMutation } from './profile';
 
 export function usePinnedPostMutation() {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { appview } = useClients();
 	const queryClient = useQueryClient();
@@ -57,9 +57,9 @@ export function usePinnedPostMutation() {
 				});
 
 				if (pinCurrentPost) {
-					Toast.show(l({ message: 'Post pinned', context: 'toast' }));
+					Toast.show(m['state.toast.postPinned']());
 				} else {
-					Toast.show(l({ message: 'Post unpinned', context: 'toast' }));
+					Toast.show(m['state.toast.postUnpinned']());
 				}
 
 				void queryClient.invalidateQueries({
@@ -69,7 +69,7 @@ export function usePinnedPostMutation() {
 					queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_with_replies`),
 				});
 			} catch (e) {
-				Toast.show(l`Failed to pin post`);
+				Toast.show(m['state.error.pinPost']());
 				logger.error('Failed to pin post', { message: String(e) });
 				// revert optimistic update
 				updatePostShadow(queryClient, postUri, {

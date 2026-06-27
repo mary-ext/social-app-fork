@@ -7,7 +7,7 @@ import {
 	LabelFlags,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
 
@@ -22,6 +22,7 @@ import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Settings from '#/components/SettingsCards';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { ErrorState } from '../ErrorState';
@@ -105,8 +106,6 @@ function LabelerListHeader({
 	isSubscribed: boolean;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
-
 	if (isLabelerLoading) {
 		return (
 			<View style={[a.w_full, a.align_center, a.py_4xl]}>
@@ -118,7 +117,7 @@ function LabelerListHeader({
 	if (labelerError || !labelerInfo) {
 		return (
 			<View style={[a.w_full, a.align_center, a.py_4xl]}>
-				<ErrorState error={labelerError?.toString() || l`Something went wrong, please try again.`} />
+				<ErrorState error={labelerError?.toString() || m['screens.moderation.error.generic']()} />
 			</View>
 		);
 	}
@@ -126,22 +125,19 @@ function LabelerListHeader({
 	return (
 		<View style={[a.py_xl]}>
 			<Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-				<Trans>
-					Labels are annotations on users and content. They can be used to hide, warn, and categorize the
-					network.
-				</Trans>
+				{m['screens.profile.hint.labels']()}
 			</Text>
 			{labelerInfo?.creator.viewer?.blocking ? (
 				<View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
 					<CircleInfo size="sm" fill={colors.textContrastMedium} />
 					<Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-						<Trans>Blocking does not prevent this labeler from placing labels on your account.</Trans>
+						{m['screens.profile.hint.blockingLabeler']()}
 					</Text>
 				</View>
 			) : null}
 			{!hasValues ? (
 				<Text style={[a.pt_xl, t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-					<Trans>This labeler hasn't declared what labels it publishes, and may not be active.</Trans>
+					{m['screens.profile.hint.noLabelsDeclared']()}
 				</Text>
 			) : !isSubscribed ? (
 				<Text style={[a.pt_xl, t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>

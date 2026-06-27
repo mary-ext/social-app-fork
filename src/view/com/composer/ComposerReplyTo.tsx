@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
 import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -15,6 +14,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
+import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';
 import { parseEmbed } from '#/types/embed';
 
@@ -28,7 +28,6 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 
 export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const embed = replyTo.embed;
 
 	const [showFull, setShowFull] = useState(false);
@@ -94,7 +93,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 			]}
 			onPress={onPress}
 			accessibilityRole="button"
-			accessibilityLabel={l`Expand or collapse the full post you are replying to`}
+			accessibilityLabel={m['view.composer.a11y.expandReply']()}
 			accessibilityHint=""
 		>
 			<PreviewableUserAvatar
@@ -262,7 +261,7 @@ function ComposerReplyToImages({
 										]}
 									>
 										<Text style={[a.text_xs, a.text_center, t.atoms.shadow_sm, { color: t.palette.white }]}>
-											<Trans comment="Number of images beyond the first 3">+{totalNumber - 3}</Trans>
+											{m['view.composer.gallery.moreCount']({ count: totalNumber - 3 })}
 										</Text>
 									</View>
 								)}

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI, PROD_DEFAULT_FEED } from '#/lib/constants';
 import { feedUriToHref } from '#/lib/strings/url-helpers';
@@ -22,9 +22,10 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const setSelectedFeed = useSetSelectedFeed();
 	const { data: preferences } = usePreferencesQuery();
 	const { mutateAsync: removeFeed, isPending: isRemovePending } = useRemoveFeedMutation();
@@ -40,21 +41,18 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 		try {
 			if (feedConfig) {
 				await removeFeed(feedConfig);
-				Toast.show(l`Removed from your feeds`);
+				Toast.show(m['common.label.removedFromFeeds']());
 			}
 			if (hasDiscoverPinned) {
 				setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`);
 			}
 		} catch (err) {
-			Toast.show(
-				l`There was an issue updating your feeds, please check your internet connection and try again.`,
-				{
-					type: 'warning',
-				},
-			);
+			Toast.show(m['common.error.updateFeeds'](), {
+				type: 'warning',
+			});
 			logger.error('Failed to update feeds', { message: err });
 		}
-	}, [removeFeed, feedConfig, l, hasDiscoverPinned, setSelectedFeed]);
+	}, [removeFeed, feedConfig, hasDiscoverPinned, setSelectedFeed]);
 
 	const onReplaceFeed = useCallback(async () => {
 		try {
@@ -63,17 +61,14 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 				discoverFeedConfig,
 			});
 			setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`);
-			Toast.show(l`The feed has been replaced with Discover.`);
+			Toast.show(m['view.posts.feedback.replacedWithDiscover']());
 		} catch (err) {
-			Toast.show(
-				l`There was an issue updating your feeds, please check your internet connection and try again.`,
-				{
-					type: 'warning',
-				},
-			);
+			Toast.show(m['common.error.updateFeeds'](), {
+				type: 'warning',
+			});
 			logger.error('Failed to update feeds', { message: err });
 		}
-	}, [replaceFeedWithDiscover, discoverFeedConfig, feedConfig, setSelectedFeed, l]);
+	}, [replaceFeedWithDiscover, discoverFeedConfig, feedConfig, setSelectedFeed]);
 
 	const isProcessing = isReplacePending || isRemovePending;
 	return (
@@ -83,7 +78,7 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 				<Trans>
 					This feed is no longer online. We are showing{' '}
 					<InlineLinkText
-						label={l`The Discover feed`}
+						label={m['view.posts.label.discoverFeed']()}
 						to={feedUriToHref(DISCOVER_FEED_URI)}
 						style={[a.text_md]}
 					>
@@ -98,13 +93,11 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 						variant="outline"
 						color="primary"
 						size="small"
-						label={l`Remove feed`}
+						label={m['view.posts.action.removeFeed']()}
 						disabled={isProcessing}
 						onPress={() => void onRemoveFeed()}
 					>
-						<ButtonText>
-							<Trans>Remove feed</Trans>
-						</ButtonText>
+						<ButtonText>{m['view.posts.action.removeFeed']()}</ButtonText>
 						{isRemovePending && <ButtonIcon icon={Loader} />}
 					</Button>
 					{!hasDiscoverPinned && (
@@ -112,13 +105,11 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 							variant="solid"
 							color="primary"
 							size="small"
-							label={l`Replace with Discover`}
+							label={m['view.posts.action.replaceWithDiscover']()}
 							disabled={isProcessing}
 							onPress={() => void onReplaceFeed()}
 						>
-							<ButtonText>
-								<Trans>Replace with Discover</Trans>
-							</ButtonText>
+							<ButtonText>{m['view.posts.action.replaceWithDiscover']()}</ButtonText>
 							{isReplacePending && <ButtonIcon icon={Loader} />}
 						</Button>
 					)}

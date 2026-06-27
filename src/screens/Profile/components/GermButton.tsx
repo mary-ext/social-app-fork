@@ -2,7 +2,6 @@ import { View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import type { ActorIdentifier, Did } from '@atcute/lexicons';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
@@ -29,6 +28,7 @@ import { Text } from '#/components/Typography';
 import { useDialogHandle } from '#/components/web/Dialog';
 import { ExternalLink } from '#/components/web/Link';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import germLogoUrl from '../../../../assets/images/germ_logo.webp';
@@ -66,7 +66,6 @@ export function GermButton({
 }
 
 function GermLink({ url }: { url: string }) {
-	const { t: l } = useLingui();
 	const linkWarningHandle = useDialogHandle<LinkWarningPayload>();
 
 	return (
@@ -74,7 +73,7 @@ function GermLink({ url }: { url: string }) {
 			<ExternalLink
 				className={css.pill}
 				href={url}
-				label={l`Open Germ DM`}
+				label={m['screens.profile.action.openGermDm']()}
 				onPress={() => {
 					// a custom domain can't be verified as a real Germ link, so route it through our own warning
 					if (isCustomGermDomain(url)) {
@@ -85,7 +84,7 @@ function GermLink({ url }: { url: string }) {
 			>
 				<GermLogo size="small" />
 				<WebText className={css.label} size="sm" weight="medium">
-					<Trans>Germ DM</Trans>
+					{m['screens.profile.label.germDm']()}
 				</WebText>
 				<ArrowTopRightIcon className={css.arrow} width={14} height={14} fill={colors.text} />
 			</ExternalLink>
@@ -101,7 +100,6 @@ function GermLogo({ size }: { size: 'large' | 'small' }) {
 
 function GermSelfButton({ did }: { did: string }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const selfExplanationDialogControl = Dialog.useDialogControl();
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
@@ -139,10 +137,10 @@ function GermSelfButton({ did }: { did: string }) {
 					await whenAppViewReady(appview, did, (res) => !!res.associated?.germ);
 					await queryClient.refetchQueries({ queryKey: RQKEY(did) });
 
-					Toast.show(l`Germ DM reconnected`);
+					Toast.show(m['screens.profile.toast.germDmReconnected']());
 				} catch (e) {
 					const message = e instanceof Error ? e.message : String(e);
-					Toast.show(l`Failed to reconnect Germ DM. Error: ${message}`, {
+					Toast.show(m['screens.profile.error.reconnectGermDm']({ message }), {
 						type: 'error',
 					});
 					if (!isNetworkError(e)) {
@@ -155,13 +153,15 @@ function GermSelfButton({ did }: { did: string }) {
 
 			selfExplanationDialogControl.close(() => {
 				void queryClient.refetchQueries({ queryKey: RQKEY(did) });
-				Toast.show(<Trans>Germ DM disconnected</Trans>, {
-					action: previousRecord ? { label: l`Undo`, onPress: () => void undo() } : undefined,
+				Toast.show(m['screens.profile.toast.germDmDisconnected'](), {
+					action: previousRecord
+						? { label: m['screens.profile.action.undo'](), onPress: () => void undo() }
+						: undefined,
 				});
 			});
 		},
 		onError: (error) => {
-			Toast.show(l`Failed to disconnect Germ DM. Error: ${error?.message}`, {
+			Toast.show(m['screens.profile.error.disconnectGermDm']({ message: error?.message }), {
 				type: 'error',
 			});
 			if (!isNetworkError(error)) {
@@ -175,56 +175,45 @@ function GermSelfButton({ did }: { did: string }) {
 	return (
 		<>
 			<Button
-				label={l`Learn more about your Germ DM link`}
+				label={m['screens.profile.a11y.learnGermDm']()}
 				onPress={() => {
 					selfExplanationDialogControl.open();
 				}}
 				style={[t.atoms.bg_contrast_50, a.rounded_full, a.self_start, { padding: 6, paddingRight: 10 }]}
 			>
 				<GermLogo size="small" />
-				<Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
-					<Trans>Germ DM</Trans>
-				</Text>
+				<Text style={[a.text_sm, a.font_medium, a.ml_xs]}>{m['screens.profile.label.germDm']()}</Text>
 			</Button>
 			<Dialog.Outer control={selfExplanationDialogControl}>
 				<Dialog.Handle />
-				<Dialog.ScrollableInner label={l`Germ DM Link`} style={[{ maxWidth: 400, borderRadius: 36 }]}>
+				<Dialog.ScrollableInner
+					label={m['screens.profile.label.germDmLink']()}
+					style={[{ maxWidth: 400, borderRadius: 36 }]}
+				>
 					<View style={[a.flex_row, a.align_center, { gap: 6 }]}>
 						<GermLogo size="large" />
-						<Text style={[a.text_2xl, a.font_bold]}>
-							<Trans>Germ DM Link</Trans>
-						</Text>
+						<Text style={[a.text_2xl, a.font_bold]}>{m['screens.profile.label.germDmLink']()}</Text>
 					</View>
 
-					<Text style={[a.text_md, a.leading_snug, a.mt_sm]}>
-						<Trans>
-							This button lets others open the Germ DM app to send you a message. You can manage its
-							visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM
-							altogether by clicking the button below.
-						</Trans>
-					</Text>
+					<Text style={[a.text_md, a.leading_snug, a.mt_sm]}>{m['screens.profile.hint.germDmInfo']()}</Text>
 					<View style={[a.mt_2xl, a.gap_md]}>
 						<Button
-							label={l`Got it`}
+							label={m['screens.profile.action.gotIt']()}
 							size="large"
 							color="primary"
 							onPress={() => selfExplanationDialogControl.close()}
 						>
-							<ButtonText>
-								<Trans>Got it</Trans>
-							</ButtonText>
+							<ButtonText>{m['screens.profile.action.gotIt']()}</ButtonText>
 						</Button>
 						<Button
-							label={l`Disconnect Germ DM`}
+							label={m['screens.profile.action.disconnectGermDm']()}
 							size="large"
 							color="secondary"
 							onPress={() => deleteDeclaration()}
 							disabled={isPending}
 						>
 							{isPending && <ButtonIcon icon={Loader} />}
-							<ButtonText>
-								<Trans>Disconnect Germ DM</Trans>
-							</ButtonText>
+							<ButtonText>{m['screens.profile.action.disconnectGermDm']()}</ButtonText>
 						</Button>
 					</View>
 				</Dialog.ScrollableInner>

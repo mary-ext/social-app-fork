@@ -3,7 +3,6 @@ import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
@@ -25,6 +24,7 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 
+import { m } from '#/paraglide/messages';
 import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 
 import { ChatInviteEmbed } from './ChatInviteEmbed';
@@ -204,18 +204,10 @@ function RecordEmbed({
 			);
 		}
 		case 'post_not_found': {
-			return (
-				<PostPlaceholderText>
-					<Trans>Deleted</Trans>
-				</PostPlaceholderText>
-			);
+			return <PostPlaceholderText>{m['components.post.label.deleted']()}</PostPlaceholderText>;
 		}
 		case 'post_blocked': {
-			return (
-				<PostPlaceholderText>
-					<Trans>Blocked</Trans>
-				</PostPlaceholderText>
-			);
+			return <PostPlaceholderText>{m['components.post.label.blocked']()}</PostPlaceholderText>;
 		}
 		case 'post_detached': {
 			return <PostDetachedEmbed embed={embed} />;
@@ -232,7 +224,9 @@ export function PostDetachedEmbed({ embed }: { embed: EmbedType<'post_detached'>
 
 	return (
 		<PostPlaceholderText>
-			{isViewerOwner ? <Trans>Removed by you</Trans> : <Trans>Removed by author</Trans>}
+			{isViewerOwner
+				? m['components.post.label.removedByYou']()
+				: m['components.post.label.removedByAuthor']()}
 		</PostPlaceholderText>
 	);
 }

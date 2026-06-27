@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { shareUrl } from '#/lib/sharing';
@@ -10,6 +9,8 @@ import * as css from '#/components/dialogs/LinkWarning.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+
+import { m } from '#/paraglide/messages';
 
 export function LinkWarningDialog() {
 	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
@@ -31,7 +32,6 @@ function LinkWarningDialogBase({ handle }: { handle: Dialog.DialogHandle<LinkWar
 }
 
 function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarningPayload }) {
-	const { t: l } = useLingui();
 	const openLink = useOpenLink();
 
 	const onPressVisit = () => {
@@ -44,30 +44,34 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 	};
 
 	return (
-		<Dialog.Popup label={l`Leaving Bluesky`} size="narrow">
+		<Dialog.Popup label={m['components.dialogs.leaving.title']()} size="narrow">
 			<div className={css.outer}>
 				<div className={css.content}>
 					<Text size="_2xl" weight="bold">
-						<Trans>Leaving Bluesky</Trans>
+						{m['components.dialogs.leaving.title']()}
 					</Text>
-					<Text color="textContrastHigh">
-						<Trans>This link is taking you to the following website:</Trans>
-					</Text>
+					<Text color="textContrastHigh">{m['components.dialogs.link.destinationPrompt']()}</Text>
 					<LinkBox href={link.href} />
 				</div>
 				<div className={css.actions}>
-					<Button color="secondary" label={l`Go back`} onClick={close} variant="ghost">
-						<ButtonText>
-							<Trans>Go back</Trans>
-						</ButtonText>
+					<Button color="secondary" label={m['common.action.goBack']()} onClick={close} variant="ghost">
+						<ButtonText>{m['common.action.goBack']()}</ButtonText>
 					</Button>
 					<Button
 						color="primary"
-						label={link.share ? l`Share link` : l`Visit site`}
+						label={
+							link.share
+								? m['components.dialogs.action.shareLink']()
+								: m['components.dialogs.action.visitSite']()
+						}
 						onClick={onPressVisit}
 						variant="solid"
 					>
-						<ButtonText>{link.share ? <Trans>Share link</Trans> : <Trans>Visit site</Trans>}</ButtonText>
+						<ButtonText>
+							{link.share
+								? m['components.dialogs.action.shareLink']()
+								: m['components.dialogs.action.visitSite']()}
+						</ButtonText>
 					</Button>
 				</div>
 			</div>

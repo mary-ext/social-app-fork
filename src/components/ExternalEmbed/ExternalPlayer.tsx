@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { type EmbedPlayerParams, getPlayerAspect } from '#/lib/strings/embed-player';
 
@@ -13,6 +12,8 @@ import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
 import { useDialogHandle } from '#/components/web/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './ExternalPlayer.css';
 
 export type ExternalPlayerProps = {
@@ -22,7 +23,6 @@ export type ExternalPlayerProps = {
 
 /** Click-to-play iframe embed (youtube/vimeo/spotify/…): thumbnail + play overlay until activated. */
 export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
-	const { t: l } = useLingui();
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
 	const consentDialogControl = useDialogHandle();
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -83,8 +83,13 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 				{showThumb ? <EmbedThumb frameClassName={styles.thumb} src={link.thumb} /> : null}
 				{!isActive || isLoading ? <div aria-hidden className={styles.dim} /> : null}
 				{!isActive || isLoading ? (
-					<button type="button" className={styles.overlay} aria-label={l`Play Video`} onClick={onPlayPress}>
-						{!isActive ? <PlayButtonIcon /> : <Spinner label={l`Loading video`} />}
+					<button
+						type="button"
+						className={styles.overlay}
+						aria-label={m['components.externalEmbed.a11y.playVideo']()}
+						onClick={onPlayPress}
+					>
+						{!isActive ? <PlayButtonIcon /> : <Spinner label={m['common.label.loadingVideo']()} />}
 					</button>
 				) : null}
 				{isActive ? (
@@ -101,7 +106,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 							onLoad={() => setIsLoading(false)}
 							allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
 							allowFullScreen
-							title={link.title || l`Embedded player`}
+							title={link.title || m['components.externalEmbed.a11y.player']()}
 						/>
 					</div>
 				) : null}

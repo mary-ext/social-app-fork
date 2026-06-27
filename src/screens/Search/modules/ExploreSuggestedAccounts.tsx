@@ -1,6 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 
@@ -8,6 +7,8 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 
 import { InterestTabs } from '#/components/web/InterestTabs';
 import * as ProfileCard from '#/components/web/ProfileCard';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './ExploreSuggestedAccounts.css';
 
@@ -22,7 +23,6 @@ export function SuggestedAccountsTabBar({
 	onSelectInterest: (interest: string | null) => void;
 	selectedInterest: string | null;
 }) {
-	const { t: l } = useLingui();
 	const interestsDisplayNames = useInterestsDisplayNames();
 	const { data: preferences } = usePreferencesQuery();
 	const personalizedInterests = preferences?.interests?.tags;
@@ -37,7 +37,7 @@ export function SuggestedAccountsTabBar({
 				hideDefaultTab
 					? interestsDisplayNames
 					: {
-							all: defaultTabLabel || l`For You`,
+							all: defaultTabLabel || m['common.label.forYou'](),
 							...interestsDisplayNames,
 						}
 			}

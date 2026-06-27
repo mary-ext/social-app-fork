@@ -1,7 +1,6 @@
 import 'react-image-crop/dist/ReactCrop.css';
 
 import { type CSSProperties, useImperativeHandle, useRef, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { ReactCrop, type PercentCrop } from 'react-image-crop';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
@@ -11,6 +10,8 @@ import { type ImageSource, type ImageTransformation, manipulateImage } from '#/s
 import { Spinner } from '#/components/Spinner';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+
+import { m } from '#/paraglide/messages';
 
 import type { EditImageDialogProps } from './EditImageDialog';
 import * as styles from './EditImageDialogInner.css';
@@ -22,7 +23,6 @@ export function EditImageDialogInner({
 	circularCrop,
 	aspectRatio,
 }: EditImageDialogProps) {
-	const { t: l } = useLingui();
 	const [pending, setPending] = useState(false);
 	const ref = useRef<{ save: () => Promise<void> }>(null);
 
@@ -39,34 +39,28 @@ export function EditImageDialogInner({
 					<Button
 						color="primary"
 						disabled={pending}
-						label={l`Cancel`}
+						label={m['common.action.cancel']()}
 						onClick={() => handle.close()}
 						size="small"
 						variant="ghost"
 					>
-						<ButtonText size="md">
-							<Trans>Cancel</Trans>
-						</ButtonText>
+						<ButtonText size="md">{m['common.action.cancel']()}</ButtonText>
 					</Button>
 				</Dialog.Header.Slot>
 				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>
-						<Trans>Edit image</Trans>
-					</Dialog.Header.TitleText>
+					<Dialog.Header.TitleText>{m['view.composer.action.editImage']()}</Dialog.Header.TitleText>
 				</Dialog.Header.Content>
 				<Dialog.Header.Slot>
 					<Button
 						color="primary"
 						disabled={pending}
-						label={l`Save`}
+						label={m['common.action.save']()}
 						onClick={() => void onPressSave()}
 						size="small"
 						variant="ghost"
 					>
-						<ButtonText size="md">
-							<Trans>Save</Trans>
-						</ButtonText>
-						{pending && <Spinner color="currentColor" label={l`Saving`} size="sm" />}
+						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
+						{pending && <Spinner color="currentColor" label={m['common.label.saving']()} size="sm" />}
 					</Button>
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>

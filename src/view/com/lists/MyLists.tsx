@@ -1,5 +1,4 @@
 import type { AppBskyGraphDefs as GraphDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -10,6 +9,7 @@ import { List, type ListRenderItemInfo } from '#/components/List/List';
 import * as ListCard from '#/components/ListCard';
 import { ListFooter } from '#/components/Lists';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { EmptyState } from '../util/EmptyState';
@@ -28,7 +28,6 @@ const isMyListSentinel = (item: MyListItem): item is MyListSentinel => {
 
 /** Renders the viewer's own lists, one {@link ListCard.Default} row per list. */
 export function MyLists({ filter }: { filter: MyListsFilter }): React.ReactNode {
-	const { t: l } = useLingui();
 	const { data, isPending, isError, error, refetch } = useMyListsQuery(filter);
 	const isEmpty = !isPending && !data?.length;
 
@@ -50,11 +49,11 @@ export function MyLists({ filter }: { filter: MyListsFilter }): React.ReactNode 
 	const emptyText = (() => {
 		switch (filter) {
 			case 'curate':
-				return l`Lists allow you to see content from your favorite people.`;
+				return m['view.lists.empty.description']();
 			case 'mod':
-				return l`Public, sharable lists of users to mute or block in bulk.`;
+				return m['view.lists.label.modlistDescription']();
 			default:
-				return l`You have no lists.`;
+				return m['common.empty.lists']();
 		}
 	})();
 

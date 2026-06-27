@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -18,6 +17,7 @@ import { useDialogHandle } from '#/components/web/Dialog';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatus';
+import { m } from '#/paraglide/messages';
 
 import { useProfileHeader } from './Context';
 import * as css from './Shell.css';
@@ -27,7 +27,6 @@ import * as css from './Shell.css';
  * the moderation alerts. Variants pass the header body as `children`.
  */
 export function ProfileHeaderShell({ children }: { children: React.ReactNode }): React.ReactNode {
-	const { t: l } = useLingui();
 	const {
 		meta: { hideBackButton, isMe, isPlaceholderProfile, live },
 		state: { moderation, profile },
@@ -73,7 +72,12 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 			<div className={css.bannerRegion}>
 				{/* first in source order so it tabs first; its z-index (see css) keeps it painted over the banner */}
 				{!hideBackButton && (
-					<button type="button" className={css.backButton} aria-label={l`Back`} onClick={onPressBack}>
+					<button
+						type="button"
+						className={css.backButton}
+						aria-label={m['common.action.back']()}
+						onClick={onPressBack}
+					>
 						<span className={css.backButtonInner}>
 							<ArrowLeftIcon size="lg" fill="white" />
 						</span>
@@ -85,7 +89,11 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 					<button
 						type="button"
 						className={css.bannerButton}
-						aria-label={profile.banner ? l`View profile banner` : l`Profile banner placeholder`}
+						aria-label={
+							profile.banner
+								? m['screens.profile.a11y.viewBanner']()
+								: m['screens.profile.a11y.bannerPlaceholder']()
+						}
 						onClick={onPressBanner}
 					>
 						<UserBanner
@@ -102,7 +110,7 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 				<button
 					type="button"
 					className={css.avatarButton}
-					aria-label={l`View ${profile.handle}'s avatar`}
+					aria-label={m['screens.profile.a11y.viewAvatar']({ handle: profile.handle })}
 					onClick={onPressAvi}
 				>
 					<span

@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type LayoutChangeEvent, View } from 'react-native';
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 import {
 	type RouteProp,
 	useFocusEffect,
@@ -33,6 +32,8 @@ import { MessagesListHeader } from '#/components/dms/MessagesListHeader';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import * as Layout from '#/components/Layout';
+
+import { m } from '#/paraglide/messages';
 
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatEnded } from './components/ChatEnded';
@@ -69,7 +70,6 @@ export function MessagesConversationScreenInner({ route }: Props) {
 
 function Inner({ convoId }: { convoId: string }) {
 	const convoState = useConvo();
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const isFocused = useIsFocused();
 	const { data: convoData } = useConvoQuery({ convoId });
@@ -97,8 +97,8 @@ function Inner({ convoId }: { convoId: string }) {
 					<MessagesListHeader convo={convo} />
 				</Layout.Center>
 				<Error
-					title={l`Something went wrong`}
-					message={l`We couldn't load this conversation`}
+					title={m['screens.messages.error.generic']()}
+					message={m['screens.messages.error.loadConversation']()}
 					onRetry={() => convoState.error.retry()}
 					sideBorders={false}
 				/>

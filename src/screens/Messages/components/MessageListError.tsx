@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { type ConvoItem, ConvoItemError } from '#/state/messages/convo/types';
 
@@ -10,25 +9,25 @@ import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/i
 import { createStaticClick, InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function MessageListError({ item }: { item: ConvoItem & { type: 'error' } }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { description, help, cta } = useMemo(() => {
 		return {
 			[ConvoItemError.FirehoseFailed]: {
-				description: l`This chat was disconnected`,
-				help: l`Press to attempt reconnection`,
-				cta: l`Reconnect`,
+				description: m['screens.messages.label.chatDisconnected'](),
+				help: m['screens.messages.a11y.reconnectHint'](),
+				cta: m['screens.messages.action.reconnect'](),
 			},
 			[ConvoItemError.HistoryFailed]: {
-				description: l`Failed to load past messages`,
-				help: l`Press to retry`,
-				cta: l`Retry`,
+				description: m['screens.messages.error.loadPastMessages'](),
+				help: m['common.a11y.pressToRetry'](),
+				cta: m['common.action.retry'](),
 			},
 		}[item.code];
-	}, [l, item.code]);
+	}, [item.code]);
 
 	return (
 		<View style={[a.my_md, a.w_full, a.flex_row, a.justify_center]}>

@@ -7,6 +7,7 @@ import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/compo
 import { useVideoVolumeState } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
 
 import { IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE } from '#/env';
+import { m } from '#/paraglide/messages';
 
 import { ControlButton } from './ControlButton';
 import * as styles from './VolumeControl.css';
@@ -62,7 +63,7 @@ export function VolumeControl({
 							min={0}
 							max={100}
 							value={sliderVolume}
-							aria-label={l`Volume`}
+							aria-label={m['components.post.a11y.volume']()}
 							className={clsx(styles.slider, IS_WEB_SAFARI && styles.sliderSafari)}
 							onChange={onVolumeChange}
 							// @ts-expect-error for old versions of firefox, and then re-using it for targeting the CSS -sfn

@@ -19,6 +19,8 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/comp
 import { EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
+
 import { EmojiReactionPicker } from './EmojiReactionPicker';
 import * as reactionStyles from './EmojiReactionPicker.css';
 import { canReact, hasReachedReactionLimit } from './util';
@@ -71,7 +73,9 @@ export function ActionsWrapper({
 					(reaction) => reaction.value === emoji && reaction.sender.did === currentAccount?.did,
 				)
 			) {
-				convo.removeReaction(message.id, emoji).catch(() => Toast.show(l`Failed to remove emoji reaction`));
+				convo
+					.removeReaction(message.id, emoji)
+					.catch(() => Toast.show(m['components.dms.error.removeReaction']()));
 			} else {
 				if (hasReachedReactionLimit(message, currentAccount?.did)) {
 					Toast.show(
@@ -84,7 +88,7 @@ export function ActionsWrapper({
 					return;
 				}
 				convo.addReaction(message.id, emoji).catch(() =>
-					Toast.show(l`Failed to add emoji reaction`, {
+					Toast.show(m['components.dms.error.addReaction'](), {
 						type: 'error',
 					}),
 				);
@@ -120,7 +124,7 @@ export function ActionsWrapper({
 							<button
 								{...props}
 								type="button"
-								aria-label={l`Add emoji reaction`}
+								aria-label={m['components.dms.action.addReaction']()}
 								className={clsx(props.className, reactionStyles.trigger)}
 								style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
 							>
@@ -137,7 +141,7 @@ export function ActionsWrapper({
 						<button
 							{...props}
 							type="button"
-							aria-label={l`Message options`}
+							aria-label={m['components.dms.a11y.messageOptions']()}
 							className={clsx(props.className, reactionStyles.trigger)}
 							style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
 						>

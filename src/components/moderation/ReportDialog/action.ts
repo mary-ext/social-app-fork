@@ -4,18 +4,18 @@ import { ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 import type { ToolsOzoneReportDefs } from '@atcute/ozone';
-import { useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { m } from '#/paraglide/messages';
+
 import { NEW_TO_OLD_REASONS_MAP } from './const';
 import type { ParsedReportSubject } from './types';
 
 export function useSubmitReportMutation() {
-	const { t: l } = useLingui();
 	const { pds } = useClients();
 
 	return useMutation({
@@ -31,7 +31,7 @@ export function useSubmitReportMutation() {
 			subject: ParsedReportSubject;
 		}) {
 			if (!pds) {
-				throw new Error(l`You must be signed in to submit a report`);
+				throw new Error(m['components.moderation.error.mustSignInToReport']());
 			}
 
 			const labelerSupportedReasonTypes = labeler.reasonTypes || [];

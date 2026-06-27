@@ -1,5 +1,4 @@
 import type { FocusEventHandler, KeyboardEventHandler, Ref } from 'react';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
@@ -7,6 +6,8 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import * as TextField from '#/components/TextField';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/forms/SearchInput.css';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * A web-native search field: a leading magnifying-glass icon, a {@link TextField.Input}, and a trailing clear
@@ -37,7 +38,6 @@ export function SearchInput({
 	placeholder?: string;
 	value: string;
 }) {
-	const { t: l } = useLingui();
 	const showClear = !!onClear && value.length > 0;
 
 	return (
@@ -59,7 +59,7 @@ export function SearchInput({
 				<Button
 					className={styles.clear}
 					color="secondary"
-					label={l`Clear search`}
+					label={m['common.action.clearSearch']()}
 					onClick={onClear}
 					shape="round"
 					size="tiny"

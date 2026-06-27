@@ -31,6 +31,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { AvatarBubbles } from '../AvatarBubbles';
@@ -93,7 +94,6 @@ export function SearchablePeopleList({
 	  }
 )) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
 	const control = Dialog.useDialogContext();
 	const [headerHeight, setHeaderHeight] = useState(0);
@@ -118,7 +118,7 @@ export function SearchablePeopleList({
 			_items.push({
 				type: 'empty',
 				key: 'empty',
-				message: l`We're having network issues, try again`,
+				message: m['components.dialogs.error.network'](),
 			});
 		} else if (searchText.length) {
 			if (results?.length) {
@@ -225,7 +225,6 @@ export function SearchablePeopleList({
 
 		return _items;
 	}, [
-		l,
 		searchText,
 		results,
 		isError,
@@ -237,7 +236,7 @@ export function SearchablePeopleList({
 	]);
 
 	if (searchText && !isFetching && !items.length && !isError) {
-		items.push({ type: 'empty', key: 'empty', message: l`No results` });
+		items.push({ type: 'empty', key: 'empty', message: m['common.empty.noResults']() });
 	}
 
 	const renderItems = useCallback(
@@ -279,13 +278,13 @@ export function SearchablePeopleList({
 					return <Empty key={item.key} message={item.message} />;
 				}
 				case 'error': {
-					return <Error key={item.key} message={l`Failed to load profiles`} />;
+					return <Error key={item.key} message={m['components.dialogs.error.loadProfiles']()} />;
 				}
 				default:
 					return null;
 			}
 		},
-		[moderationOpts, onSelectChat, renderProfileCard, l],
+		[moderationOpts, onSelectChat, renderProfileCard],
 	);
 
 	useLayoutEffect(() => {
@@ -306,7 +305,7 @@ export function SearchablePeopleList({
 					</Text>
 					{
 						<Button
-							label={l`Close`}
+							label={m['common.action.close']()}
 							size="small"
 							shape="round"
 							variant={'ghost'}
@@ -331,7 +330,7 @@ export function SearchablePeopleList({
 				</View>
 			</View>
 		);
-	}, [t.atoms.border_contrast_low, t.atoms.bg, t.atoms.text_contrast_high, l, title, searchText, control]);
+	}, [t.atoms.border_contrast_low, t.atoms.bg, t.atoms.text_contrast_high, title, searchText, control]);
 
 	return (
 		<Dialog.InnerFlatList
@@ -360,7 +359,6 @@ function DefaultProfileCard({
 	onPress: (did: string) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const enabled = canBeMessaged(profile);
 	const moderation = moderateProfile(profile, moderationOpts);
 	const handle = sanitizeHandle(profile.handle, '@');
@@ -375,7 +373,7 @@ function DefaultProfileCard({
 	}, [onPress, profile.did]);
 
 	return (
-		<Button disabled={!enabled} label={l`Start chat with ${displayName}`} onPress={handleOnPress}>
+		<Button disabled={!enabled} label={m['common.action.startChat']({ displayName })} onPress={handleOnPress}>
 			{({ hovered, pressed, focused }) => (
 				<View
 					style={[
@@ -478,7 +476,7 @@ function ExistingChatCard({
 										</Text>
 									) : (
 										<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-											<Trans>Group is locked</Trans>
+											{m['components.dialogs.chat.groupLocked']()}
 										</Text>
 									)}
 								</>
@@ -529,7 +527,6 @@ function SearchInput({
 	inputRef: React.RefObject<TextInput | null>;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { state: hovered, onIn: onMouseEnter, onOut: onMouseLeave } = useInteractionState();
 	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
 	const interacted = hovered || focused;
@@ -543,7 +540,7 @@ function SearchInput({
 			<Search size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
-				placeholder={l`Search`}
+				placeholder={m['common.action.search']()}
 				value={value}
 				onChangeText={onChangeText}
 				onFocus={onFocus}
@@ -563,8 +560,8 @@ function SearchInput({
 				autoComplete="off"
 				autoCapitalize="none"
 				autoFocus
-				accessibilityLabel={l`Search profiles`}
-				accessibilityHint={l`Searches for profiles`}
+				accessibilityLabel={m['common.action.searchProfiles']()}
+				accessibilityHint={m['common.a11y.searchProfiles']()}
 			/>
 		</View>
 	);

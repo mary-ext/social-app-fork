@@ -7,7 +7,6 @@ import type {
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
@@ -71,6 +70,8 @@ import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
+import { m } from '#/paraglide/messages';
+
 function PostMenuItems({
 	post,
 	postFeedContext,
@@ -91,7 +92,6 @@ function PostMenuItems({
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
 }): React.ReactNode {
 	const { hasSession, currentAccount } = useSession();
-	const { t: l } = useLingui();
 	const langPrefs = useLanguagePrefs();
 	const { mutateAsync: deletePostMutate } = usePostDeleteMutation();
 	const { mutateAsync: pinPostMutate, isPending: isPinPending } = usePinnedPostMutation();
@@ -149,7 +149,7 @@ function PostMenuItems({
 	const onDeletePost = () => {
 		deletePostMutate({ uri: postUri }).then(
 			() => {
-				Toast.show(l({ message: 'Post deleted', context: 'toast' }));
+				Toast.show(m['components.postControls.toast.deleted']());
 
 				const route = getCurrentRoute(navigation.getState());
 				if (route.name === 'PostThread') {
@@ -168,7 +168,7 @@ function PostMenuItems({
 			},
 			(e) => {
 				logger.error('Failed to delete post', { message: e });
-				Toast.show(l`Failed to delete post, please try again`, {
+				Toast.show(m['components.postControls.error.delete'](), {
 					type: 'error',
 				});
 			},
@@ -179,16 +179,16 @@ function PostMenuItems({
 		try {
 			if (isThreadMuted) {
 				void unmuteThread();
-				Toast.show(l`You will now receive notifications for this thread`);
+				Toast.show(m['components.postControls.toast.threadMuted']());
 			} else {
 				void muteThread();
-				Toast.show(l`You will no longer receive notifications for this thread`);
+				Toast.show(m['components.postControls.toast.threadUnmuted']());
 			}
 		} catch (err) {
 			const e = err as Error;
 			if (e?.name !== 'AbortError') {
 				logger.error('Failed to toggle thread mute', { message: e });
-				Toast.show(l`Failed to toggle thread mute, please try again`, {
+				Toast.show(m['components.postControls.error.toggleThreadMute'](), {
 					type: 'error',
 				});
 			}
@@ -199,7 +199,7 @@ function PostMenuItems({
 		const str = richTextToString(richText, true);
 
 		void navigator.clipboard.writeText(str);
-		Toast.show(l`Copied to clipboard`, {
+		Toast.show(m['common.toast.copied'](), {
 			type: 'success',
 		});
 	};
@@ -217,7 +217,7 @@ function PostMenuItems({
 			feedContext: postFeedContext,
 			reqId: postReqId,
 		});
-		Toast.show(l({ message: 'Feedback sent to feed operator', context: 'toast' }));
+		Toast.show(m['components.postControls.toast.feedbackSent']());
 	};
 
 	const onPressShowLess = () => {
@@ -233,7 +233,7 @@ function PostMenuItems({
 				feedContext: postFeedContext,
 			});
 		} else {
-			Toast.show(l({ message: 'Feedback sent to feed operator', context: 'toast' }));
+			Toast.show(m['components.postControls.toast.feedbackSent']());
 		}
 	};
 
@@ -249,10 +249,14 @@ function PostMenuItems({
 				quoteUri: quoteEmbed.uri,
 				action: quoteEmbed.isDetached ? 'reattach' : 'detach',
 			});
-			Toast.show(isDetach ? l`Quote post was successfully detached` : l`Quote post was re-attached`);
+			Toast.show(
+				isDetach
+					? m['components.postControls.toast.detached']()
+					: m['components.postControls.toast.reattached'](),
+			);
 		} catch (err) {
 			const e = err as Error;
-			Toast.show(l({ message: 'Updating quote attachment failed', context: 'toast' }));
+			Toast.show(m['components.postControls.error.updateQuoteAttachment']());
 			logger.error(`Failed to ${action} quote`, { safeMessage: e.message });
 		}
 	};
@@ -280,8 +284,8 @@ function PostMenuItems({
 
 			Toast.show(
 				isHide
-					? l`Reply was successfully hidden`
-					: l({ message: 'Reply visibility updated', context: 'toast' }),
+					? m['components.postControls.toast.replyHidden']()
+					: m['components.postControls.toast.replyVisibilityUpdated'](),
 			);
 		} catch (err) {
 			const e = err as Error;
@@ -292,14 +296,9 @@ function PostMenuItems({
 					}),
 				);
 			} else if (e instanceof InvalidInteractionSettingsError) {
-				Toast.show(l({ message: 'Invalid interaction settings.', context: 'toast' }));
+				Toast.show(m['components.postControls.error.invalidInteractionSettings']());
 			} else {
-				Toast.show(
-					l({
-						message: 'Updating reply visibility failed',
-						context: 'toast',
-					}),
-				);
+				Toast.show(m['components.postControls.error.updateReplyVisibility']());
 				logger.error(`Failed to ${action} reply`, { safeMessage: e.message });
 			}
 		}
@@ -316,12 +315,12 @@ function PostMenuItems({
 	const onBlockAuthor = async () => {
 		try {
 			await queueBlock();
-			Toast.show(l({ message: 'Account blocked', context: 'toast' }));
+			Toast.show(m['common.toast.accountBlocked']());
 		} catch (err) {
 			const e = err as Error;
 			if (e?.name !== 'AbortError') {
 				logger.error('Failed to block account', { message: e });
-				Toast.show(l`There was an issue! ${e.toString()}`, {
+				Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
 					type: 'error',
 				});
 			}
@@ -333,12 +332,12 @@ function PostMenuItems({
 		if (postAuthor.viewer?.muted) {
 			try {
 				await queueUnmute();
-				Toast.show(l({ message: 'Account unmuted', context: 'toast' }));
+				Toast.show(m['common.toast.accountUnmuted']());
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
 					logger.error('Failed to unmute account', { message: e });
-					Toast.show(l`There was an issue! ${e.toString()}`, {
+					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
 						type: 'error',
 					});
 				}
@@ -347,12 +346,12 @@ function PostMenuItems({
 		} else {
 			try {
 				await queueMute();
-				Toast.show(l({ message: 'Account muted', context: 'toast' }));
+				Toast.show(m['common.toast.accountMuted']());
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
 					logger.error('Failed to mute account', { message: e });
-					Toast.show(l`There was an issue! ${e.toString()}`, {
+					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
 						type: 'error',
 					});
 				}
@@ -365,16 +364,24 @@ function PostMenuItems({
 
 	return (
 		<>
-			<Menu.Popup label={l`Post options`} align="end">
+			<Menu.Popup label={m['components.postControls.label.options']()} align="end">
 				{isAuthor && (
 					<>
 						<Menu.Group>
 							<Menu.Item
-								label={isPinned ? l`Unpin from profile` : l`Pin to your profile`}
+								label={
+									isPinned
+										? m['components.postControls.action.unpin']()
+										: m['components.postControls.action.pin']()
+								}
 								disabled={isPinPending}
 								onClick={onPressPin}
 							>
-								<Menu.ItemText>{isPinned ? l`Unpin from profile` : l`Pin to your profile`}</Menu.ItemText>
+								<Menu.ItemText>
+									{isPinned
+										? m['components.postControls.action.unpin']()
+										: m['components.postControls.action.pin']()}
+								</Menu.ItemText>
 								<Menu.ItemIcon icon={isPinPending ? Loader : PinIcon} position="right" />
 							</Menu.Item>
 						</Menu.Group>
@@ -385,19 +392,19 @@ function PostMenuItems({
 				<Menu.Group>
 					{!hideInPWI || hasSession ? (
 						<>
-							<Menu.Item label={l`Translate`} onClick={onPressTranslate}>
-								<Menu.ItemText>{l`Translate`}</Menu.ItemText>
+							<Menu.Item label={m['common.action.translate']()} onClick={onPressTranslate}>
+								<Menu.ItemText>{m['common.action.translate']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={Translate} position="right" />
 							</Menu.Item>
 
-							<Menu.Item label={l`Copy post text`} onClick={onCopyPostText}>
-								<Menu.ItemText>{l`Copy post text`}</Menu.ItemText>
+							<Menu.Item label={m['components.postControls.action.copyText']()} onClick={onCopyPostText}>
+								<Menu.ItemText>{m['components.postControls.action.copyText']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={ClipboardIcon} position="right" />
 							</Menu.Item>
 						</>
 					) : (
-						<Menu.Item label={l`Sign in to view post`} onClick={onSignIn}>
-							<Menu.ItemText>{l`Sign in to view post`}</Menu.ItemText>
+						<Menu.Item label={m['components.postControls.cta.signIn']()} onClick={onSignIn}>
+							<Menu.ItemText>{m['components.postControls.cta.signIn']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={Eye} position="right" />
 						</Menu.Item>
 					)}
@@ -407,13 +414,13 @@ function PostMenuItems({
 					<>
 						<Menu.Separator />
 						<Menu.Group>
-							<Menu.Item label={l`Show more like this`} onClick={onPressShowMore}>
-								<Menu.ItemText>{l`Show more like this`}</Menu.ItemText>
+							<Menu.Item label={m['components.postControls.action.showMore']()} onClick={onPressShowMore}>
+								<Menu.ItemText>{m['components.postControls.action.showMore']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={EmojiSmile} position="right" />
 							</Menu.Item>
 
-							<Menu.Item label={l`Show less like this`} onClick={onPressShowLess}>
-								<Menu.ItemText>{l`Show less like this`}</Menu.ItemText>
+							<Menu.Item label={m['components.postControls.action.showLess']()} onClick={onPressShowLess}>
+								<Menu.ItemText>{m['components.postControls.action.showLess']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={EmojiSad} position="right" />
 							</Menu.Item>
 						</Menu.Group>
@@ -425,10 +432,18 @@ function PostMenuItems({
 						<Menu.Separator />
 						<Menu.Group>
 							<Menu.Item
-								label={isThreadMuted ? l`Unmute thread` : l`Mute thread`}
+								label={
+									isThreadMuted
+										? m['components.postControls.action.unmuteThread']()
+										: m['components.postControls.action.muteThread']()
+								}
 								onClick={onToggleThreadMute}
 							>
-								<Menu.ItemText>{isThreadMuted ? l`Unmute thread` : l`Mute thread`}</Menu.ItemText>
+								<Menu.ItemText>
+									{isThreadMuted
+										? m['components.postControls.action.unmuteThread']()
+										: m['components.postControls.action.muteThread']()}
+								</Menu.ItemText>
 								<Menu.ItemIcon icon={isThreadMuted ? Unmute : Mute} position="right" />
 							</Menu.Item>
 						</Menu.Group>
@@ -441,7 +456,11 @@ function PostMenuItems({
 						<Menu.Group>
 							{canHideReplyForEveryone && (
 								<Menu.Item
-									label={isReplyHiddenByThreadgate ? l`Show reply for everyone` : l`Hide reply for everyone`}
+									label={
+										isReplyHiddenByThreadgate
+											? m['components.postControls.action.showReply']()
+											: m['components.postControls.action.hideReply']()
+									}
 									onClick={
 										isReplyHiddenByThreadgate
 											? onToggleReplyVisibility
@@ -449,7 +468,9 @@ function PostMenuItems({
 									}
 								>
 									<Menu.ItemText>
-										{isReplyHiddenByThreadgate ? l`Show reply for everyone` : l`Hide reply for everyone`}
+										{isReplyHiddenByThreadgate
+											? m['components.postControls.action.showReply']()
+											: m['components.postControls.action.hideReply']()}
 									</Menu.ItemText>
 									<Menu.ItemIcon icon={isReplyHiddenByThreadgate ? Eye : EyeSlash} position="right" />
 								</Menu.Item>
@@ -458,7 +479,11 @@ function PostMenuItems({
 							{canDetachQuote && (
 								<Menu.Item
 									disabled={isDetachPending}
-									label={quoteEmbed.isDetached ? l`Re-attach quote` : l`Detach quote`}
+									label={
+										quoteEmbed.isDetached
+											? m['components.postControls.action.reattachQuote']()
+											: m['components.postControls.action.detachQuote']()
+									}
 									onClick={
 										quoteEmbed.isDetached
 											? onToggleQuotePostAttachment
@@ -466,7 +491,9 @@ function PostMenuItems({
 									}
 								>
 									<Menu.ItemText>
-										{quoteEmbed.isDetached ? l`Re-attach quote` : l`Detach quote`}
+										{quoteEmbed.isDetached
+											? m['components.postControls.action.reattachQuote']()
+											: m['components.postControls.action.detachQuote']()}
 									</Menu.ItemText>
 									<Menu.ItemIcon
 										icon={isDetachPending ? Loader : quoteEmbed.isDetached ? Eye : EyeSlash}
@@ -485,24 +512,36 @@ function PostMenuItems({
 							{!isAuthor && (
 								<>
 									<Menu.Item
-										label={postAuthor.viewer?.muted ? l`Unmute account` : l`Mute account`}
+										label={
+											postAuthor.viewer?.muted
+												? m['common.action.unmuteAccount']()
+												: m['common.action.muteAccount']()
+										}
 										onClick={() => mutePromptControl.open(null)}
 									>
 										<Menu.ItemText>
-											{postAuthor.viewer?.muted ? l`Unmute account` : l`Mute account`}
+											{postAuthor.viewer?.muted
+												? m['common.action.unmuteAccount']()
+												: m['common.action.muteAccount']()}
 										</Menu.ItemText>
 										<Menu.ItemIcon icon={postAuthor.viewer?.muted ? UnmuteIcon : MuteIcon} position="right" />
 									</Menu.Item>
 
 									{!postAuthor.viewer?.blocking && (
-										<Menu.Item label={l`Block account`} onClick={() => blockPromptControl.open(null)}>
-											<Menu.ItemText>{l`Block account`}</Menu.ItemText>
+										<Menu.Item
+											label={m['common.action.blockAccount']()}
+											onClick={() => blockPromptControl.open(null)}
+										>
+											<Menu.ItemText>{m['common.action.blockAccount']()}</Menu.ItemText>
 											<Menu.ItemIcon icon={PersonX} position="right" />
 										</Menu.Item>
 									)}
 
-									<Menu.Item label={l`Report post`} onClick={() => reportDialogControl.open(null)}>
-										<Menu.ItemText>{l`Report post`}</Menu.ItemText>
+									<Menu.Item
+										label={m['components.postControls.action.report']()}
+										onClick={() => reportDialogControl.open(null)}
+									>
+										<Menu.ItemText>{m['components.postControls.action.report']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Warning} position="right" />
 									</Menu.Item>
 								</>
@@ -511,15 +550,20 @@ function PostMenuItems({
 							{isAuthor && (
 								<>
 									<Menu.Item
-										label={l`Edit interaction settings`}
+										label={m['components.postControls.action.editInteractionSettings']()}
 										onClick={() => postInteractionSettingsHandle.open(null)}
 										onMouseEnter={() => void prefetchPostInteractionSettings()}
 									>
-										<Menu.ItemText>{l`Edit interaction settings`}</Menu.ItemText>
+										<Menu.ItemText>
+											{m['components.postControls.action.editInteractionSettings']()}
+										</Menu.ItemText>
 										<Menu.ItemIcon icon={Gear} position="right" />
 									</Menu.Item>
-									<Menu.Item label={l`Delete post`} onClick={() => deletePromptControl.open(null)}>
-										<Menu.ItemText>{l`Delete post`}</Menu.ItemText>
+									<Menu.Item
+										label={m['common.action.deletePost']()}
+										onClick={() => deletePromptControl.open(null)}
+									>
+										<Menu.ItemText>{m['common.action.deletePost']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Trash} position="right" />
 									</Menu.Item>
 								</>
@@ -530,10 +574,10 @@ function PostMenuItems({
 			</Menu.Popup>
 			<Prompt.Basic
 				handle={deletePromptControl}
-				title={l`Delete this post?`}
-				description={l`If you remove this post, you won't be able to recover it.`}
+				title={m['components.postControls.dialog.deleteTitle']()}
+				description={m['components.postControls.dialog.deleteBody']()}
 				onConfirm={onDeletePost}
-				confirmButtonCta={l`Delete`}
+				confirmButtonCta={m['common.action.delete']()}
 				confirmButtonColor="negative"
 			/>
 			<ReportDialog
@@ -552,17 +596,17 @@ function PostMenuItems({
 			/>
 			<Prompt.Basic
 				handle={quotePostDetachConfirmControl}
-				title={l`Detach quote post?`}
-				description={l`This will remove your post from this quote post for all users, and replace it with a placeholder.`}
+				title={m['components.postControls.dialog.detachTitle']()}
+				description={m['components.postControls.dialog.detachBody']()}
 				onConfirm={() => void onToggleQuotePostAttachment()}
-				confirmButtonCta={l`Yes, detach`}
+				confirmButtonCta={m['components.postControls.dialog.confirmDetach']()}
 			/>
 			<Prompt.Basic
 				handle={hideReplyConfirmControl}
-				title={l`Hide this reply?`}
-				description={l`This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others.`}
+				title={m['components.postControls.dialog.hideReplyTitle']()}
+				description={m['components.postControls.dialog.hideReplyBody']()}
 				onConfirm={() => void onToggleReplyVisibility()}
-				confirmButtonCta={l`Yes, hide`}
+				confirmButtonCta={m['components.postControls.dialog.confirmHide']()}
 			/>
 			<BlockAccountPrompt
 				handle={blockPromptControl}

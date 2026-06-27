@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
@@ -20,6 +19,8 @@ import { ViewHeader } from '#/view/com/util/ViewHeader';
 import * as Layout from '#/components/Layout';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 
+import { m } from '#/paraglide/messages';
+
 function renderItem({ item, index }: { item: AppBskyActorDefs.ProfileView; index: number }) {
 	return <ProfileCardWithFollowBtn key={item.did} profile={item} noBorder={index === 0} />;
 }
@@ -30,7 +31,6 @@ function keyExtractor(item: { did: string }) {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileKnownFollowers'>;
 export const ProfileKnownFollowersScreen = ({ route }: Props) => {
-	const { t: l } = useLingui();
 	const initialNumToRender = useInitialNumToRender();
 
 	const { name } = route.params;
@@ -52,7 +52,7 @@ export const ProfileKnownFollowersScreen = ({ route }: Props) => {
 	} = useProfileKnownFollowersQuery(resolvedDid);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 
-	useSetTitle(profile ? l`Followers of @${profile.handle} that you know` : undefined);
+	useSetTitle(profile ? m['screens.profile.title.knownFollowers']({ handle: profile.handle }) : undefined);
 
 	const onRefresh = async () => {
 		setIsPTRing(true);
@@ -85,12 +85,12 @@ export const ProfileKnownFollowersScreen = ({ route }: Props) => {
 	if (followers.length < 1) {
 		return (
 			<Layout.Screen>
-				<ViewHeader title={l`Followers you know`} />
+				<ViewHeader title={m['common.label.followersYouKnow']()} />
 				<ListMaybePlaceholder
 					isLoading={isDidLoading || isFollowersLoading}
 					isError={isError}
 					emptyType="results"
-					emptyMessage={l`You don't follow any users who follow @${name}.`}
+					emptyMessage={m['screens.profile.empty.noKnownFollowers']({ name })}
 					errorMessage={cleanError(resolveError || error)}
 					onRetry={isError ? refetch : undefined}
 					topBorder={false}
@@ -102,7 +102,7 @@ export const ProfileKnownFollowersScreen = ({ route }: Props) => {
 
 	return (
 		<Layout.Screen>
-			<ViewHeader title={l`Followers you know`} />
+			<ViewHeader title={m['common.label.followersYouKnow']()} />
 			<List
 				data={followers}
 				renderItem={renderItem}

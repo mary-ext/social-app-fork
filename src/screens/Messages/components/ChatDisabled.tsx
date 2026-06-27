@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
 import { OzoneReason } from '#/lib/moderation/report-reasons';
@@ -21,6 +20,7 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './ChatDisabled.css';
@@ -48,12 +48,10 @@ export function ChatDisabled({
 			>
 				<WarningIcon fill={colors.text} size="lg" className={css.warningIcon} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
-					<Trans>Your chats have been disabled</Trans>
+					{m['screens.messages.error.chatsDisabledTitle']()}
 				</Text>
 				<Text style={[a.text_center, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-					<Trans>
-						Our moderators have reviewed reports and decided to disable your access to chats on Bluesky.
-					</Trans>
+					{m['screens.messages.error.chatsDisabledMod']()}
 				</Text>
 				<AppealDialog />
 			</View>
@@ -63,8 +61,6 @@ export function ChatDisabled({
 
 function AppealDialog() {
 	const control = Dialog.useDialogControl();
-	const { t: l } = useLingui();
-
 	return (
 		<>
 			<Button
@@ -72,12 +68,10 @@ function AppealDialog() {
 				color="secondary_inverted"
 				size="large"
 				onPress={control.open}
-				label={l`Appeal this decision`}
+				label={m['screens.messages.action.appeal']()}
 				style={[a.mt_lg, a.w_full]}
 			>
-				<ButtonText>
-					<Trans>Appeal this decision</Trans>
-				</ButtonText>
+				<ButtonText>{m['screens.messages.action.appeal']()}</ButtonText>
 			</Button>
 			<Dialog.Outer control={control}>
 				<Dialog.Handle />
@@ -88,7 +82,6 @@ function AppealDialog() {
 }
 
 function DialogInner() {
-	const { t: l } = useLingui();
 	const control = Dialog.useDialogContext();
 	const [details, setDetails] = useState('');
 	const { gtMobile } = useBreakpoints();
@@ -115,13 +108,13 @@ function DialogInner() {
 		},
 		onError: (err) => {
 			logger.error('Failed to submit chat appeal', { message: err });
-			Toast.show(l`Failed to submit appeal, please try again.`, {
+			Toast.show(m['common.error.submitAppeal'](), {
 				type: 'error',
 			});
 		},
 		onSuccess: () => {
 			control.close();
-			Toast.show(l({ message: 'Appeal submitted', context: 'toast' }));
+			Toast.show(m['common.toast.appealSubmitted']());
 		},
 	});
 
@@ -129,17 +122,15 @@ function DialogInner() {
 	const onBack = useCallback(() => control.close(), [control]);
 
 	return (
-		<Dialog.ScrollableInner label={l`Appeal this decision`}>
+		<Dialog.ScrollableInner label={m['screens.messages.action.appeal']()}>
 			<Text style={[a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_tight]}>
-				<Trans>Appeal this decision</Trans>
+				{m['screens.messages.action.appeal']()}
 			</Text>
-			<Text style={[a.text_md, a.leading_snug]}>
-				<Trans>This appeal will be sent to Bluesky's moderation service.</Trans>
-			</Text>
+			<Text style={[a.text_md, a.leading_snug]}>{m['common.hint.appealDestination']()}</Text>
 			<View style={[a.my_md]}>
 				<Dialog.Input
-					label={l`Text input field`}
-					placeholder={l`Please explain why you think your chats were incorrectly disabled`}
+					label={m['common.a11y.textInput']()}
+					placeholder={m['screens.messages.label.appealPrompt']()}
 					value={details}
 					onChangeText={setDetails}
 					autoFocus={true}
@@ -155,11 +146,9 @@ function DialogInner() {
 					color="secondary"
 					size="large"
 					onPress={onBack}
-					label={l`Back`}
+					label={m['common.action.back']()}
 				>
-					<ButtonText>
-						<Trans>Back</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.back']()}</ButtonText>
 				</Button>
 				<Button
 					testID="submitBtn"
@@ -167,11 +156,9 @@ function DialogInner() {
 					color="primary"
 					size="large"
 					onPress={onSubmit}
-					label={l`Submit`}
+					label={m['common.action.submit']()}
 				>
-					<ButtonText>
-						<Trans>Submit</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.submit']()}</ButtonText>
 					{isPending && <ButtonIcon icon={Loader} />}
 				</Button>
 			</View>

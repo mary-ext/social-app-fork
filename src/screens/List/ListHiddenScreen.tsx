@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useGoBack } from '#/lib/hooks/useGoBack';
@@ -24,6 +24,8 @@ import { useHider } from '#/components/moderation/Hider';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { m } from '#/paraglide/messages';
+
 export function ListHiddenScreen({
 	list,
 	preferences,
@@ -31,7 +33,6 @@ export function ListHiddenScreen({
 	list: AppBskyGraphDefs.ListView;
 	preferences: UsePreferencesQueryResponse;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const { currentAccount } = useSession();
 	const { gtMobile } = useBreakpoints();
@@ -58,7 +59,7 @@ export function ListHiddenScreen({
 			} catch (e) {
 				setIsProcessing(false);
 				logger.error('Failed to unmute list', { message: e });
-				Toast.show(l`There was an issue. Please check your internet connection and try again.`);
+				Toast.show(m['common.error.issueConnection']());
 				return;
 			}
 		}
@@ -68,14 +69,14 @@ export function ListHiddenScreen({
 			} catch (e) {
 				setIsProcessing(false);
 				logger.error('Failed to unblock list', { message: e });
-				Toast.show(l`There was an issue. Please check your internet connection and try again.`);
+				Toast.show(m['common.error.issueConnection']());
 				return;
 			}
 		}
 		void queryClient.invalidateQueries({
 			queryKey: [listQueryRoot],
 		});
-		Toast.show(l`Unsubscribed from list`);
+		Toast.show(m['screens.list.toast.unsubscribed']());
 		setIsProcessing(false);
 	};
 
@@ -83,10 +84,10 @@ export function ListHiddenScreen({
 		if (!savedFeedConfig) return;
 		try {
 			await removeSavedFeed(savedFeedConfig);
-			Toast.show(l`Removed from saved feeds`);
+			Toast.show(m['screens.list.toast.removedFromSaved']());
 		} catch (e) {
 			logger.error('Failed to remove list from saved feeds', { message: e });
-			Toast.show(l`There was an issue. Please check your internet connection and try again.`);
+			Toast.show(m['common.error.issueConnection']());
 		} finally {
 			setIsProcessing(false);
 		}
@@ -108,20 +109,15 @@ export function ListHiddenScreen({
 				<EyeSlash style={{ color: t.atoms.text_contrast_medium.color }} height={42} width={42} />
 				<View style={[a.gap_sm, a.align_center]}>
 					<Text style={[a.font_semi_bold, a.text_3xl]}>
-						{list.creator.viewer?.blocking || list.creator.viewer?.blockedBy ? (
-							<Trans>Creator has been blocked</Trans>
-						) : (
-							<Trans>List has been hidden</Trans>
-						)}
+						{list.creator.viewer?.blocking || list.creator.viewer?.blockedBy
+							? m['screens.list.error.creatorBlockedTitle']()
+							: m['screens.list.error.hiddenTitle']()}
 					</Text>
 					<Text style={[a.text_md, a.text_center, a.px_md, t.atoms.text_contrast_high, { lineHeight: 1.4 }]}>
 						{list.creator.viewer?.blocking || list.creator.viewer?.blockedBy ? (
-							<Trans>Either the creator of this list has blocked you or you have blocked the creator.</Trans>
+							m['screens.list.error.creatorBlockedDesc']()
 						) : isOwner ? (
-							<Trans>
-								This list – created by you – contains possible violations of Bluesky's community guidelines in
-								its name or description.
-							</Trans>
+							m['screens.list.warning.violationByYou']()
 						) : (
 							<Trans>
 								This list – created by{' '}
@@ -139,13 +135,11 @@ export function ListHiddenScreen({
 							variant="solid"
 							color="secondary"
 							size="large"
-							label={l`Remove from saved feeds`}
+							label={m['screens.list.action.removeFromSaved']()}
 							onPress={() => void onRemoveList()}
 							disabled={isProcessing}
 						>
-							<ButtonText>
-								<Trans>Remove from saved feeds</Trans>
-							</ButtonText>
+							<ButtonText>{m['screens.list.action.removeFromSaved']()}</ButtonText>
 							{isProcessing ? <ButtonIcon icon={Loader} position="right" /> : null}
 						</Button>
 					) : null}
@@ -154,20 +148,18 @@ export function ListHiddenScreen({
 							variant="solid"
 							color="secondary"
 							size="large"
-							label={l`Show list anyway`}
+							label={m['screens.list.action.showAnyway']()}
 							onPress={() => setIsContentVisible(true)}
 							disabled={isProcessing}
 						>
-							<ButtonText>
-								<Trans>Show anyway</Trans>
-							</ButtonText>
+							<ButtonText>{m['common.action.showAnyway']()}</ButtonText>
 						</Button>
 					) : list.viewer?.muted || list.viewer?.blocked ? (
 						<Button
 							variant="solid"
 							color="secondary"
 							size="large"
-							label={l`Unsubscribe from list`}
+							label={m['screens.list.action.unsubscribe']()}
 							onPress={() => {
 								if (isModList) {
 									void onUnsubscribe();
@@ -177,9 +169,7 @@ export function ListHiddenScreen({
 							}}
 							disabled={isProcessing}
 						>
-							<ButtonText>
-								<Trans>Unsubscribe from list</Trans>
-							</ButtonText>
+							<ButtonText>{m['screens.list.action.unsubscribe']()}</ButtonText>
 							{isProcessing ? <ButtonIcon icon={Loader} position="right" /> : null}
 						</Button>
 					) : null}
@@ -187,14 +177,12 @@ export function ListHiddenScreen({
 				<Button
 					variant="solid"
 					color="primary"
-					label={l`Return to previous page`}
+					label={m['common.action.returnToPreviousPage']()}
 					onPress={goBack}
 					size="large"
 					disabled={isProcessing}
 				>
-					<ButtonText>
-						<Trans>Go Back</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.goBackTitle']()}</ButtonText>
 				</Button>
 			</View>
 		</CenteredView>

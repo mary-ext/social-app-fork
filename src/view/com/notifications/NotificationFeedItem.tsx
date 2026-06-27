@@ -71,6 +71,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { Tooltip } from '#/components/web/Tooltip';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './NotificationFeedItem.css';
@@ -222,7 +223,7 @@ let NotificationFeedItem = ({
 			<InlineLinkText
 				key={firstAuthor.href}
 				to={firstAuthor.href}
-				label={l`Go to ${firstAuthorName}'s profile`}
+				label={m['view.notifications.a11y.goToProfile']({ firstAuthorName })}
 				color="text"
 				weight="semiBold"
 				size="md"
@@ -248,7 +249,7 @@ let NotificationFeedItem = ({
 					one: `${formattedAuthorsCount} other`,
 					other: `${formattedAuthorsCount} others`,
 				})} liked your post`
-			: l`${firstAuthorName} liked your post`;
+			: m['view.notifications.singleName.likedPost']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
@@ -270,7 +271,7 @@ let NotificationFeedItem = ({
 					one: `${formattedAuthorsCount} other`,
 					other: `${formattedAuthorsCount} others`,
 				})} reposted your post`
-			: l`${firstAuthorName} reposted your post`;
+			: m['view.notifications.singleName.repostedPost']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
@@ -293,7 +294,7 @@ let NotificationFeedItem = ({
 			 * Follow-backs are ungrouped, grouped follow-backs not supported atm,
 			 * see `src/state/queries/notifications/util.ts`
 			 */
-			a11yLabel = l`${firstAuthorName} followed you back`;
+			a11yLabel = m['view.notifications.singleName.followedBack']({ firstAuthorName });
 			notificationContent = <Trans>{firstAuthorLink} followed you back</Trans>;
 		} else {
 			a11yLabel = hasMultipleAuthors
@@ -301,7 +302,7 @@ let NotificationFeedItem = ({
 						one: `${formattedAuthorsCount} other`,
 						other: `${formattedAuthorsCount} others`,
 					})} followed you`
-				: l`${firstAuthorName} followed you`;
+				: m['view.notifications.singleName.followed']({ firstAuthorName });
 			notificationContent = hasMultipleAuthors ? (
 				<Trans>
 					{firstAuthorLink} and{' '}
@@ -320,7 +321,7 @@ let NotificationFeedItem = ({
 		}
 		icon = <PersonPlusIcon size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'contact-match') {
-		a11yLabel = l`Your contact ${firstAuthorName} is on Bluesky`;
+		a11yLabel = m['view.notifications.contact.onBlueskyName']({ firstAuthorName });
 		notificationContent = <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>;
 		icon = <ContactsIconFilled size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'feedgen-like') {
@@ -329,7 +330,7 @@ let NotificationFeedItem = ({
 					one: `${formattedAuthorsCount} other`,
 					other: `${formattedAuthorsCount} others`,
 				})} liked your custom feed`
-			: l`${firstAuthorName} liked your custom feed`;
+			: m['view.notifications.singleName.likedFeed']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
@@ -351,7 +352,7 @@ let NotificationFeedItem = ({
 					one: `${formattedAuthorsCount} other`,
 					other: `${formattedAuthorsCount} others`,
 				})} signed up with your starter pack`
-			: l`${firstAuthorName} signed up with your starter pack`;
+			: m['view.notifications.singleName.signedUp']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
@@ -374,7 +375,7 @@ let NotificationFeedItem = ({
 					one: `${formattedAuthorsCount} other`,
 					other: `${formattedAuthorsCount} others`,
 				})} verified you`
-			: l`${firstAuthorName} verified you`;
+			: m['view.notifications.singleName.verified']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
@@ -397,7 +398,7 @@ let NotificationFeedItem = ({
 					one: `${formattedAuthorsCount} other`,
 					other: `${formattedAuthorsCount} others`,
 				})} removed their verifications from your account`
-			: l`${firstAuthorName} removed their verification from your account`;
+			: m['view.notifications.singleName.removedVerification']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
@@ -420,7 +421,7 @@ let NotificationFeedItem = ({
 					one: `${formattedAuthorsCount} other`,
 					other: `${formattedAuthorsCount} others`,
 				})} liked your repost`
-			: l`${firstAuthorName} liked your repost`;
+			: m['view.notifications.singleName.likedRepost']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
@@ -442,7 +443,7 @@ let NotificationFeedItem = ({
 					one: `${formattedAuthorsCount} other`,
 					other: `${formattedAuthorsCount} others`,
 				})} reposted your repost`
-			: l`${firstAuthorName} reposted your repost`;
+			: m['view.notifications.singleName.repostedRepost']({ firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans>
 				{firstAuthorLink} and{' '}
@@ -582,8 +583,6 @@ function AuthorsList({
 	moderationOpts: ModerationOptions;
 	showDmButton: boolean;
 }) {
-	const { t: l } = useLingui();
-
 	// a single author needs no toggle: just the avatar (and the say-hello affordance for starter packs)
 	if (authors.length < 2) {
 		return (
@@ -609,7 +608,11 @@ function AuthorsList({
 				nativeButton={false}
 				render={<div />}
 				className={css.authorsTrigger}
-				aria-label={isExpanded ? l`Collapse list of users` : l`Expand list of users`}
+				aria-label={
+					isExpanded
+						? m['view.notifications.a11y.collapseUsers']()
+						: m['view.notifications.a11y.expandUsers']()
+				}
 				onClick={(event) => {
 					const interactive = (event.target as HTMLElement).closest('a, button');
 					if (interactive && interactive !== event.currentTarget) {
@@ -623,7 +626,7 @@ function AuthorsList({
 							<ChevronUpIcon size="sm" fill={colors.textContrastHigh} />
 						</div>
 						<Text color="textContrastHigh" weight="semiBold">
-							<Trans context="action">Hide</Trans>
+							{m['common.action.hide']()}
 						</Text>
 					</>
 				) : (
@@ -668,7 +671,6 @@ function AuthorsList({
 }
 
 function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
-	const { t: l } = useLingui();
 	const { currentAccount, hasSession } = useSession();
 	const profileShadow = useProfileShadow(profile);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profileShadow);
@@ -683,10 +685,12 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 
 		try {
 			await queueFollow();
-			Toast.show(l`Following ${sanitizeDisplayName(profile.displayName || profile.handle)}`);
+			Toast.show(
+				m['common.a11y.following']({ name: sanitizeDisplayName(profile.displayName || profile.handle) }),
+			);
 		} catch (err) {
 			if (!(err instanceof Error && err.name === 'AbortError')) {
-				Toast.show(l`An issue occurred, please try again.`, {
+				Toast.show(m['common.error.generic'](), {
 					type: 'error',
 				});
 			}
@@ -698,10 +702,14 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 
 		try {
 			await queueUnfollow();
-			Toast.show(l`No longer following ${sanitizeDisplayName(profile.displayName || profile.handle)}`);
+			Toast.show(
+				m['common.label.noLongerFollowing']({
+					name: sanitizeDisplayName(profile.displayName || profile.handle),
+				}),
+			);
 		} catch (err) {
 			if (!(err instanceof Error && err.name === 'AbortError')) {
-				Toast.show(l`An issue occurred, please try again.`, {
+				Toast.show(m['common.error.generic'](), {
 					type: 'error',
 				});
 			}
@@ -722,10 +730,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 
 	const isFollowing = profileShadow.viewer.following;
 	const isFollowedBy = profileShadow.viewer.followedBy;
-	const followingLabel = l({
-		message: 'Following',
-		comment: 'User is following this account, click to unfollow',
-	});
+	const followingLabel = m['common.action.following']();
 
 	return (
 		<div className={css.followBtnWrap}>
@@ -737,19 +742,19 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 					onClick={(e) => void onPressUnfollow(e)}
 				>
 					<ButtonIcon icon={CheckIcon} />
-					<ButtonText>
-						<Trans>Following</Trans>
-					</ButtonText>
+					<ButtonText>{m['common.action.following']()}</ButtonText>
 				</Button>
 			) : (
 				<Button
-					label={isFollowedBy ? l`Follow back` : l`Follow`}
+					label={isFollowedBy ? m['common.action.followBack']() : m['common.action.follow']()}
 					color="primary"
 					size="small"
 					onClick={(e) => void onPressFollow(e)}
 				>
 					<ButtonIcon icon={PlusIcon} />
-					<ButtonText>{isFollowedBy ? <Trans>Follow back</Trans> : <Trans>Follow</Trans>}</ButtonText>
+					<ButtonText>
+						{isFollowedBy ? m['common.action.followBack']() : m['common.action.follow']()}
+					</ButtonText>
 				</Button>
 			)}
 		</div>
@@ -757,7 +762,6 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 }
 
 function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
-	const { t: l } = useLingui();
 	const { chat } = useClients();
 	const { currentAccount } = useSession();
 	const navigation = useNavigation<NavigationProp>();
@@ -791,7 +795,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 
 	return (
 		<Button
-			label={l`Say hello!`}
+			label={m['common.label.sayHello']()}
 			variant="ghost"
 			color="primary"
 			size="small"
@@ -799,9 +803,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			disabled={isLoading}
 			onClick={() => void onPressSayHello()}
 		>
-			<ButtonText>
-				<Trans>Say hello!</Trans>
-			</ButtonText>
+			<ButtonText>{m['common.label.sayHello']()}</ButtonText>
 		</Button>
 	);
 }

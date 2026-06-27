@@ -7,7 +7,6 @@ import {
 	type ModerationDecision,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -22,6 +21,7 @@ import { logger } from '#/logger';
 import * as Toast from '#/components/Toast';
 
 import { useActorStatus } from '#/features/liveNow';
+import { m } from '#/paraglide/messages';
 
 /**
  * The viewer's relationship to the profile, as a single discriminant. Drives which action buttons a header
@@ -98,7 +98,6 @@ export function ProfileHeaderProvider({
 	onFollowChange?: (following: boolean) => void;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { t: l } = useLingui();
 	const { currentAccount, hasSession } = useSession();
 	const requireAuth = useRequireAuth();
 	const profile = useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed);
@@ -125,20 +124,22 @@ export function ProfileHeaderProvider({
 				await queueFollow();
 				onFollowChange?.(true);
 				Toast.show(
-					l`Following ${sanitizeDisplayName(
-						profile.displayName || profile.handle,
-						getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-					)}`,
+					m['common.a11y.following']({
+						name: sanitizeDisplayName(
+							profile.displayName || profile.handle,
+							getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+						),
+					}),
 				);
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
 					logger.error('Failed to follow', { message: String(e) });
-					Toast.show(l`There was an issue! ${e.toString()}`, { type: 'error' });
+					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), { type: 'error' });
 				}
 			}
 		});
-	}, [l, moderation, onFollowChange, profile.displayName, profile.handle, queueFollow, requireAuth]);
+	}, [moderation, onFollowChange, profile.displayName, profile.handle, queueFollow, requireAuth]);
 
 	const unfollow = useCallback(() => {
 		requireAuth(async () => {
@@ -146,34 +147,36 @@ export function ProfileHeaderProvider({
 				await queueUnfollow();
 				onFollowChange?.(false);
 				Toast.show(
-					l`No longer following ${sanitizeDisplayName(
-						profile.displayName || profile.handle,
-						getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-					)}`,
+					m['common.label.noLongerFollowing']({
+						name: sanitizeDisplayName(
+							profile.displayName || profile.handle,
+							getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+						),
+					}),
 					{ type: 'default' },
 				);
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
 					logger.error('Failed to unfollow', { message: String(e) });
-					Toast.show(l`There was an issue! ${e.toString()}`, { type: 'error' });
+					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), { type: 'error' });
 				}
 			}
 		});
-	}, [l, moderation, onFollowChange, profile.displayName, profile.handle, queueUnfollow, requireAuth]);
+	}, [moderation, onFollowChange, profile.displayName, profile.handle, queueUnfollow, requireAuth]);
 
 	const unblock = useCallback(async () => {
 		try {
 			await queueUnblock();
-			Toast.show(l({ message: 'Account unblocked', context: 'toast' }));
+			Toast.show(m['common.toast.accountUnblocked']());
 		} catch (err) {
 			const e = err as Error;
 			if (e?.name !== 'AbortError') {
 				logger.error('Failed to unblock account', { message: e });
-				Toast.show(l`There was an issue! ${e.toString()}`, { type: 'error' });
+				Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), { type: 'error' });
 			}
 		}
-	}, [l, queueUnblock]);
+	}, [queueUnblock]);
 
 	const value = useMemo<ProfileHeaderContextValue>(
 		() => ({

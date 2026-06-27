@@ -1,6 +1,5 @@
 import { type ComponentType, type ReactNode, useId } from 'react';
 import { AlertDialog } from '@base-ui/react/alert-dialog';
-import { useLingui } from '@lingui/react/macro';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
@@ -10,6 +9,7 @@ import * as buttonStyles from '#/components/web/Button.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 import * as styles from '#/components/web/Prompt/Prompt.css';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type Color = 'negative' | 'negative_subtle' | 'primary' | 'secondary';
@@ -101,11 +101,10 @@ export function Action({
 	icon?: ComponentType<IconProps>;
 	shouldCloseOnPress?: boolean;
 }) {
-	const { t: l } = useLingui();
 	const cls = buttonStyles.button({ color, size: 'large', variant: 'solid' });
 	const content = (
 		<>
-			<ButtonText>{cta ?? l`Confirm`}</ButtonText>
+			<ButtonText>{cta ?? m['common.action.confirm']()}</ButtonText>
 			{icon && <ButtonIcon icon={icon} />}
 		</>
 	);
@@ -126,12 +125,11 @@ export function Action({
 }
 
 export function Cancel({ cta }: { cta?: string }) {
-	const { t: l } = useLingui();
 	return (
 		<AlertDialog.Close
 			className={buttonStyles.button({ color: 'secondary', size: 'large', variant: 'solid' })}
 		>
-			<ButtonText>{cta ?? l`Cancel`}</ButtonText>
+			<ButtonText>{cta ?? m['common.action.cancel']()}</ButtonText>
 		</AlertDialog.Close>
 	);
 }

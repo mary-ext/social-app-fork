@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
-import { Trans, useLingui } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 import debounce from 'lodash.debounce';
@@ -25,11 +24,12 @@ import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
+
 import * as styles from './InterestsSettings.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'InterestsSettings'>;
 export function InterestsSettingsScreen({}: Props) {
-	const { t: l } = useLingui();
 	const { data: preferences } = usePreferencesQuery();
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -38,25 +38,23 @@ export function InterestsSettingsScreen({}: Props) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Your interests</Trans>
-					</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.label.yourInterests']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot>
-					{isSaving && <Spinner color="currentColor" label={l`Saving`} size="sm" />}
+					{isSaving && <Spinner color="currentColor" label={m['common.label.saving']()} size="sm" />}
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<div className={styles.body}>
 					<Text color="textContrastMedium" size="md_sub">
-						<Trans>Your selected interests help us serve you content you care about.</Trans>
+						{m['screens.settings.interests.helpHint']()}
 					</Text>
 
 					{preferences ? (
 						<Inner preferences={preferences} setIsSaving={setIsSaving} />
 					) : (
 						<div className={styles.loaderWrap}>
-							<Spinner color="currentColor" label={l`Loading`} size="xl" />
+							<Spinner color="currentColor" label={m['common.label.loading']()} size="xl" />
 						</div>
 					)}
 				</div>
@@ -72,7 +70,6 @@ function Inner({
 	preferences: UsePreferencesQueryResponse;
 	setIsSaving: (isSaving: boolean) => void;
 }) {
-	const { t: l } = useLingui();
 	const { pds } = useClients();
 	const qc = useQueryClient();
 	const interestsDisplayNames = useInterestsDisplayNames();
@@ -112,27 +109,16 @@ function Inner({
 					}),
 				]);
 
-				Toast.show(
-					l({
-						message: 'Your interests have been updated!',
-						context: 'toast',
-					}),
-				);
+				Toast.show(m['screens.settings.interests.updatedToast']());
 			} catch (error) {
-				Toast.show(
-					l({
-						message: 'Failed to save your interests.',
-						context: 'toast',
-					}),
-					{
-						type: 'error',
-					},
-				);
+				Toast.show(m['screens.settings.error.failedSaveInterests'](), {
+					type: 'error',
+				});
 			} finally {
 				setIsSaving(false);
 			}
 		}, 1500);
-	}, [l, pds, setIsSaving, qc, preselectedInterests]);
+	}, [pds, setIsSaving, qc, preselectedInterests]);
 
 	const onChangeInterests = (interests: string[]) => {
 		setInterests(interests);
@@ -142,12 +128,10 @@ function Inner({
 	return (
 		<>
 			{interests.length === 0 && (
-				<Admonition type="tip">
-					<Trans>We recommend selecting at least two interests.</Trans>
-				</Admonition>
+				<Admonition type="tip">{m['screens.settings.interests.recommendTwo']()}</Admonition>
 			)}
 			<CheckboxGroup
-				aria-label={l`Select your interests from the options below`}
+				aria-label={m['screens.settings.interests.selectPrompt']()}
 				className={styles.chipWrap}
 				onValueChange={(value) => void onChangeInterests(value)}
 				value={interests}

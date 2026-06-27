@@ -1,11 +1,11 @@
 import { TextInput, View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
 
+import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type WebViewProps = {
@@ -25,7 +25,6 @@ export function UserSearchInput({
 	inputRef: React.RefObject<TextInput | null>;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { state: hovered, onIn: onMouseEnter, onOut: onMouseLeave } = useInteractionState();
 	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
 	const interacted = hovered || focused;
@@ -39,7 +38,7 @@ export function UserSearchInput({
 			<SearchIcon size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
-				placeholder={l`Search for people`}
+				placeholder={m['components.dms.label.searchPeople']()}
 				value={value}
 				onChangeText={onChangeText}
 				onFocus={onFocus}
@@ -59,8 +58,8 @@ export function UserSearchInput({
 				autoComplete="off"
 				autoCapitalize="none"
 				autoFocus
-				accessibilityLabel={l`Search profiles`}
-				accessibilityHint={l`Searches for profiles`}
+				accessibilityLabel={m['common.action.searchProfiles']()}
+				accessibilityHint={m['common.a11y.searchProfiles']()}
 			/>
 		</View>
 	);

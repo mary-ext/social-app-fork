@@ -1,4 +1,3 @@
-import { Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
@@ -13,6 +12,7 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
+import { m } from '#/paraglide/messages';
 import { LinearGradient } from '#/shims/linear-gradient';
 
 import * as css from './ThreadComposePrompt.css';
@@ -20,7 +20,6 @@ import * as css from './ThreadComposePrompt.css';
 export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => void }) {
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
-	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const t = useTheme();
 	const { state: hovered, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
@@ -41,8 +40,8 @@ export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => 
 			)}
 			<PressableScale
 				accessibilityRole="button"
-				accessibilityLabel={l`Compose reply`}
-				accessibilityHint={l`Opens composer`}
+				accessibilityLabel={m['screens.postThread.a11y.composeReply']()}
+				accessibilityHint={m['screens.postThread.a11y.opensComposer']()}
 				onPress={() => {
 					onPressCompose();
 				}}
@@ -65,7 +64,7 @@ export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => 
 					type={profile?.associated?.labeler ? 'labeler' : 'user'}
 				/>
 				<Text size="md" color="textContrastMedium">
-					<Trans>Write your reply</Trans>
+					{m['common.label.writeReply']()}
 				</Text>
 			</PressableScale>
 		</div>

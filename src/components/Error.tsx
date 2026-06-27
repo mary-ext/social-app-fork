@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useGoBack } from '#/lib/hooks/useGoBack';
 
@@ -9,6 +8,8 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 export function Error({
 	title,
@@ -25,7 +26,6 @@ export function Error({
 	hideBackButton?: boolean;
 	sideBorders?: boolean;
 }) {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const { gtMobile } = useBreakpoints();
 	const goBack = useGoBack(onGoBack);
@@ -58,23 +58,25 @@ export function Error({
 			</View>
 			<View style={[a.gap_md, gtMobile ? { width: 350 } : [a.w_full, a.px_lg]]}>
 				{onRetry && (
-					<Button variant="solid" color="primary" label={l`Press to retry`} onPress={onRetry} size="large">
-						<ButtonText>
-							<Trans>Retry</Trans>
-						</ButtonText>
+					<Button
+						variant="solid"
+						color="primary"
+						label={m['common.a11y.pressToRetry']()}
+						onPress={onRetry}
+						size="large"
+					>
+						<ButtonText>{m['common.action.retry']()}</ButtonText>
 					</Button>
 				)}
 				{!hideBackButton && (
 					<Button
 						variant="solid"
 						color={onRetry ? 'secondary' : 'primary'}
-						label={l`Return to previous page`}
+						label={m['common.action.returnToPreviousPage']()}
 						onPress={goBack}
 						size="large"
 					>
-						<ButtonText>
-							<Trans>Go Back</Trans>
-						</ButtonText>
+						<ButtonText>{m['common.action.goBackTitle']()}</ButtonText>
 					</Button>
 				)}
 			</View>
