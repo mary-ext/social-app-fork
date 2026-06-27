@@ -1,6 +1,4 @@
 import type { AnyProfileView } from '@atcute/bluesky';
-import type { MessageDescriptor } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
 import {
 	addDays,
 	isAfterDate,
@@ -23,6 +21,7 @@ import {
 	type SuggestionMode,
 } from '#/lib/bsky/search';
 
+import { m } from '#/paraglide/messages';
 import type { SearchHistoryEntry } from '#/storage';
 
 /**
@@ -56,7 +55,7 @@ export type ChromeRow =
 	| { key: string; kind: 'divider' }
 	| { key: string; kind: 'hero' }
 	| { did: string; key: string; kind: 'recent-profile-pending' }
-	| { key: string; kind: 'section-label'; label: MessageDescriptor };
+	| { key: string; kind: 'section-label'; label: string };
 
 export type DateItem = Extract<InteractiveItem, { kind: 'date' }>;
 // date items live only in the calendar grid, never in a list, so the list renderer never sees one.
@@ -130,14 +129,14 @@ const isInteractive = (row: ListRow): row is Exclude<InteractiveItem, { kind: 'd
 export const interactiveItems = (result: AutocompleteResult): InteractiveItem[] =>
 	result.kind === 'date' ? result.days : result.rows.filter(isInteractive);
 
-const actorSectionLabel = (op: OperatorName): MessageDescriptor => {
+const actorSectionLabel = (op: OperatorName): string => {
 	switch (op) {
 		case 'mentions':
-			return defineMessage`Mentioning user`;
+			return m['components.web.label.mentioningUser']();
 		case 'to':
-			return defineMessage`To user`;
+			return m['components.web.label.toUser']();
 		default:
-			return defineMessage`From user`;
+			return m['components.web.label.fromUser']();
 	}
 };
 
@@ -273,7 +272,10 @@ export const buildResult = ({
 				// an empty field shows recent history instead of typeahead matches.
 				const recent = buildRecentRows(history, recentProfiles, recentProfilesPending);
 				if (recent.length > 0) {
-					rows.push({ key: 'recent-label', kind: 'section-label', label: defineMessage`Recent` }, ...recent);
+					rows.push(
+						{ key: 'recent-label', kind: 'section-label', label: m['components.web.label.recent']() },
+						...recent,
+					);
 				}
 			}
 			// hero empty-state when nothing actionable precedes the operator options.
@@ -291,7 +293,7 @@ export const buildResult = ({
 			if (operators.length > 0) {
 				rows.push(
 					{ key: 'divider', kind: 'divider' },
-					{ key: 'options-label', kind: 'section-label', label: defineMessage`Search options` },
+					{ key: 'options-label', kind: 'section-label', label: m['components.web.label.searchOptions']() },
 				);
 				for (const operator of operators) {
 					rows.push({ key: `operator-${operator.name}`, kind: 'operator', operator });

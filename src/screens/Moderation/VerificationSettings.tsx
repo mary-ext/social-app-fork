@@ -1,5 +1,3 @@
-import { Trans } from '@lingui/react/macro';
-
 import { urls } from '#/lib/constants';
 
 import {
@@ -7,6 +5,8 @@ import {
 	usePreferencesQuery,
 	useSetVerificationPrefsMutation,
 } from '#/state/queries/preferences';
+
+import { Trans } from '#/locale/Trans';
 
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
 import * as Settings from '#/components/SettingsCards';
@@ -34,15 +34,19 @@ export function Screen() {
 			<Layout.Content>
 				<Settings.List>
 					<Admonition type="tip">
-						<Trans>
-							Verifications on Bluesky work differently than on other platforms.{' '}
-							<ExternalInlineLinkText
-								label={m['common.action.learnMore']()}
-								href={urls.website.blog.initialVerificationAnnouncement}
-							>
-								Learn more here.
-							</ExternalInlineLinkText>
-						</Trans>
+						<Trans
+							message={m['screens.moderation.hint.verificationInfo']}
+							markup={{
+								t0: ({ children }) => (
+									<ExternalInlineLinkText
+										label={m['common.action.learnMore']()}
+										href={urls.website.blog.initialVerificationAnnouncement}
+									>
+										{children}
+									</ExternalInlineLinkText>
+								),
+							}}
+						/>
 					</Admonition>
 					{preferences ? (
 						<Inner preferences={preferences} />

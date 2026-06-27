@@ -1,7 +1,7 @@
-import { Plural, Trans } from '@lingui/react/macro';
-
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
+import { Trans } from '#/locale/Trans';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { ProfileBadges } from '#/components/ProfileBadges';
@@ -36,27 +36,32 @@ export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 						{m['common.label.groupChat']()}
 					</Text>
 					<Text size="xs" weight="medium" color="textContrastMedium" numberOfLines={1}>
-						<Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
-							{preview.memberCount}/{preview.memberLimit}{' '}
-							<Plural value={preview.memberLimit} one="member" other="members" />
-						</Trans>
+						{m['common.count.members']({
+							count: preview.memberCount,
+							limit: preview.memberLimit,
+						})}
 					</Text>
 				</div>
 
 				<div className={css.ownerRow}>
 					<Text size="md_sub" weight="medium" numberOfLines={1} className={css.shrink}>
-						<Trans comment="The group chat creator, in the format 'by {handle}'.">
-							by{' '}
-							<InlineLinkText
-								to={makeProfileLink(preview.owner)}
-								label={ownerHandle}
-								size="md_sub"
-								color="text"
-								weight="medium"
-							>
-								{ownerHandle}
-							</InlineLinkText>
-						</Trans>
+						<Trans
+							message={m['common.label.byOwner']}
+							inputs={{ ownerHandle }}
+							markup={{
+								t0: ({ children }) => (
+									<InlineLinkText
+										to={makeProfileLink(preview.owner)}
+										label={ownerHandle}
+										size="md_sub"
+										color="text"
+										weight="medium"
+									>
+										{children}
+									</InlineLinkText>
+								),
+							}}
+						/>
 					</Text>
 
 					<ProfileBadges profile={preview.owner} size="sm" />

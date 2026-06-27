@@ -1,5 +1,4 @@
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
-import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import {
 	type ColorValue,
@@ -139,7 +138,7 @@ export function StandardSiteEmbed(props: StandardSiteEmbedProps) {
 }
 
 function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
-	const { i18n, t: l } = useLingui();
+	const { i18n } = useLingui();
 	const niceUrl = toNiceDomain(view.uri);
 	const open = () => onOpen?.();
 
@@ -176,10 +175,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 									<span className={styles.readingTime}>
 										<Clock size="xs" fill="currentColor" />
 										<Text color="textContrastMedium" size="xs">
-											{l({
-												comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
-												message: plural(view.readingTime, { one: '#m', other: '#m' }),
-											})}
+											{m['components.post.label.readingTime']({ readingTime: view.readingTime })}
 										</Text>
 									</span>
 								) : null}

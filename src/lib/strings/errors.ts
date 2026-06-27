@@ -1,5 +1,6 @@
 import { ClientResponseError } from '@atcute/client';
-import { t } from '@lingui/core/macro';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * coerces a thrown value into a string suitable for substring matching. plain objects have no useful string
@@ -39,29 +40,29 @@ export function cleanError(error: unknown): string {
 	}
 	const str = errorToString(error);
 	if (isNetworkError(str)) {
-		return t`Unable to connect. Please check your internet connection and try again.`;
+		return m['lib.error.connectionFailed']();
 	}
 	if (
 		str.includes('Upstream Failure') ||
 		str.includes('NotEnoughResources') ||
 		str.includes('pipethrough network error')
 	) {
-		return t`The server appears to be experiencing issues. Please try again in a few moments.`;
+		return m['lib.error.serverIssues']();
 	}
 	if (str.includes('Bad token scope') || str.includes('Bad token method')) {
-		return t`This feature is not available while using an App Password. Please sign in with your main password.`;
+		return m['lib.error.appPasswordFeatureCap']();
 	}
 	if (str.includes('Account has been suspended')) {
-		return t`Account has been suspended`;
+		return m['lib.error.accountSuspended']();
 	}
 	if (str.includes('Account is deactivated')) {
-		return t`Account is deactivated`;
+		return m['lib.error.accountDeactivated']();
 	}
 	if (str.includes('Profile not found')) {
-		return t`Profile not found`;
+		return m['lib.error.profileNotFound']();
 	}
 	if (str.includes('Unable to resolve handle')) {
-		return t`Unable to resolve handle`;
+		return m['lib.error.handleResolveFailed']();
 	}
 	if (str.startsWith('Error: ')) {
 		return str.slice('Error: '.length);

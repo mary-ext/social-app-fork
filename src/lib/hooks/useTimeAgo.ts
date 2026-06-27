@@ -1,7 +1,8 @@
 import type { I18n } from '@lingui/core';
-import { defineMessage, plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';
+
+import { m } from '#/paraglide/messages';
 
 export type DateDiffFormat = 'long' | 'short';
 
@@ -115,58 +116,33 @@ export function formatDateDiff({
 
 	switch (diff.unit) {
 		case 'now': {
-			return i18n._(defineMessage`now`);
+			return m['lib.time.now']();
 		}
 		case 'second': {
 			return long
-				? i18n._(plural(diff.value, { one: '# second', other: '# seconds' }))
-				: i18n._(
-						defineMessage({
-							message: `${diff.value}s`,
-							comment: `How many seconds have passed, displayed in a narrow form`,
-						}),
-					);
+				? m['lib.time.seconds']({ value: diff.value })
+				: m['lib.time.secondsNarrow']({ value: diff.value });
 		}
 		case 'minute': {
 			return long
-				? i18n._(plural(diff.value, { one: '# minute', other: '# minutes' }))
-				: i18n._(
-						defineMessage({
-							message: `${diff.value}m`,
-							comment: `How many minutes have passed, displayed in a narrow form`,
-						}),
-					);
+				? m['lib.time.minutes']({ value: diff.value })
+				: m['lib.time.minutesNarrow']({ value: diff.value });
 		}
 		case 'hour': {
 			return long
-				? i18n._(plural(diff.value, { one: '# hour', other: '# hours' }))
-				: i18n._(
-						defineMessage({
-							message: `${diff.value}h`,
-							comment: `How many hours have passed, displayed in a narrow form`,
-						}),
-					);
+				? m['lib.time.hours']({ value: diff.value })
+				: m['lib.time.hoursNarrow']({ value: diff.value });
 		}
 		case 'day': {
 			return long
-				? i18n._(plural(diff.value, { one: '# day', other: '# days' }))
-				: i18n._(
-						defineMessage({
-							message: `${diff.value}d`,
-							comment: `How many days have passed, displayed in a narrow form`,
-						}),
-					);
+				? m['lib.time.days']({ value: diff.value })
+				: m['lib.time.daysNarrow']({ value: diff.value });
 		}
 		case 'month': {
 			if (diff.value < 12) {
 				return long
-					? i18n._(plural(diff.value, { one: '# month', other: '# months' }))
-					: i18n._(
-							defineMessage({
-								message: plural(diff.value, { one: '#mo', other: '#mo' }),
-								comment: `How many months have passed, displayed in a narrow form`,
-							}),
-						);
+					? m['lib.time.months']({ value: diff.value })
+					: m['lib.time.monthsNarrow']({ value: diff.value });
 			}
 			return i18n.date(new Date(diff.earlier));
 		}

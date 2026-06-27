@@ -1,11 +1,11 @@
 import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
-import type { I18n } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
 
 import { AbortError } from '#/lib/async/cancelable';
 import { ServerError } from '#/lib/media/video/errors';
 import type { CompressedVideo } from '#/lib/media/video/types';
+
+import { m } from '#/paraglide/messages';
 
 import { getServiceAuthToken, getVideoUploadLimits } from './upload.shared';
 import { createVideoEndpointUrl, mimeToExt } from './util';
@@ -17,7 +17,6 @@ export async function uploadVideo({
 	did,
 	setProgress,
 	signal,
-	i18n,
 }: {
 	video: CompressedVideo;
 	pds: Client;
@@ -25,12 +24,11 @@ export async function uploadVideo({
 	did: string;
 	setProgress: (progress: number) => void;
 	signal: AbortSignal;
-	i18n: I18n;
 }) {
 	if (signal.aborted) {
 		throw new AbortError();
 	}
-	await getVideoUploadLimits({ pds, dispatchUrl, i18n });
+	await getVideoUploadLimits({ pds, dispatchUrl });
 
 	const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
 		did,
@@ -63,11 +61,11 @@ export async function uploadVideo({
 				const uploadRes = JSON.parse(xhr.responseText) as AppBskyVideoDefs.JobStatus;
 				resolve(uploadRes);
 			} else {
-				reject(new ServerError(i18n._(defineMessage`Failed to upload video`)));
+				reject(new ServerError(m['lib.error.videoUploadFailed']()));
 			}
 		};
 		xhr.onerror = () => {
-			reject(new ServerError(i18n._(defineMessage`Failed to upload video`)));
+			reject(new ServerError(m['lib.error.videoUploadFailed']()));
 		};
 		xhr.open('POST', uri);
 		xhr.setRequestHeader('Content-Type', video.mimeType);
@@ -76,7 +74,7 @@ export async function uploadVideo({
 	});
 
 	if (!res.jobId) {
-		throw new ServerError(res.error || i18n._(defineMessage`Failed to upload video`));
+		throw new ServerError(res.error || m['lib.error.videoUploadFailed']());
 	}
 
 	if (signal.aborted) {

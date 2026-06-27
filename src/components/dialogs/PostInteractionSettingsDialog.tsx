@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
@@ -25,6 +24,8 @@ import {
 import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import * as styles from '#/components/dialogs/PostInteractionSettingsDialog.css';
 import {
@@ -408,12 +409,13 @@ export function PostInteractionSettingsForm({
 										{numberOfListsSelected === 0 ? (
 											m['components.dialogs.list.selectFromYours']()
 										) : (
-											<Trans>
-												Select from your lists{' '}
-												<span className={styles.listsCount}>
-													<Plural value={numberOfListsSelected} other="(# selected)" />
-												</span>
-											</Trans>
+											<Trans
+												message={m['components.dialogs.list.selectFromYoursCount']}
+												inputs={{ numberOfListsSelected }}
+												markup={{
+													t0: ({ children }) => <span className={styles.listsCount}>{children}</span>,
+												}}
+											/>
 										)}
 									</Toggle.PanelText>
 									<Toggle.PanelIcon icon={showLists ? ChevronUpIcon : ChevronDownIcon} />

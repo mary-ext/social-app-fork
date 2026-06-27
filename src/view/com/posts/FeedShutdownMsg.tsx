@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI, PROD_DEFAULT_FEED } from '#/lib/constants';
 import { feedUriToHref } from '#/lib/strings/url-helpers';
@@ -13,6 +12,8 @@ import {
 import { useSetSelectedFeed } from '#/state/shell/selected-feed';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -75,17 +76,20 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 		<View style={[a.py_3xl, a.px_2xl, a.gap_xl, t.atoms.border_contrast_low, a.border_t]}>
 			<Text style={[a.text_5xl, a.font_semi_bold, t.atoms.text, a.text_center]}>:(</Text>
 			<Text style={[a.text_md, a.leading_snug, t.atoms.text, a.text_center]}>
-				<Trans>
-					This feed is no longer online. We are showing{' '}
-					<InlineLinkText
-						label={m['view.posts.label.discoverFeed']()}
-						to={feedUriToHref(DISCOVER_FEED_URI)}
-						style={[a.text_md]}
-					>
-						Discover
-					</InlineLinkText>{' '}
-					instead.
-				</Trans>
+				<Trans
+					message={m['view.posts.empty.feedOffline']}
+					markup={{
+						t0: ({ children }) => (
+							<InlineLinkText
+								label={m['view.posts.label.discoverFeed']()}
+								to={feedUriToHref(DISCOVER_FEED_URI)}
+								style={[a.text_md]}
+							>
+								{children}
+							</InlineLinkText>
+						),
+					}}
+				/>
 			</Text>
 			{hasFeedPinned ? (
 				<View style={[a.flex_row, a.justify_center, a.gap_sm]}>

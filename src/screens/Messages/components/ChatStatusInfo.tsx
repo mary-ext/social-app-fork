@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -10,6 +9,8 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { ActiveConvoStates } from '#/state/messages/convo';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+
+import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -124,18 +125,24 @@ function InviterHeader({
 			/>
 			<View style={[a.flex_1]}>
 				<Text style={[a.flex_row, a.align_center]}>
-					<Trans comment="Text identifying the person who added you to a group chat">
-						<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
-							{displayName}
-						</Text>
-						<View style={[a.pl_xs]}>
-							<ProfileBadges profile={profile} size="sm" />
-						</View>
-						<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
-							{' '}
-							added you
-						</Text>
-					</Trans>
+					<Trans
+						message={m['screens.messages.label.addedYou']}
+						inputs={{ displayName }}
+						markup={{
+							t0: ({ children }) => (
+								<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
+									{children}
+								</Text>
+							),
+							t1: ({ children }) => <View style={[a.pl_xs]}>{children}</View>,
+							t2: () => <ProfileBadges profile={profile} size="sm" />,
+							t3: ({ children }) => (
+								<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
+									{children}
+								</Text>
+							),
+						}}
+					/>
 				</Text>
 				<Text style={[a.pt_xs, a.text_sm, t.atoms.text_contrast_high]}>
 					{sanitizeHandle(profile.handle, '@')}

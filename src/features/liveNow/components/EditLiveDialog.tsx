@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { differenceInMinutes } from 'date-fns';
 
 import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
@@ -111,18 +111,16 @@ function DialogInner({
 				<div className={styles.expiryRow}>
 					<ClockIcon fill={colors.textContrastHigh} size="sm" />
 					<Text color="textContrastHigh" size="md">
-						{typeof record?.durationMinutes === 'number' ? (
-							<Trans>
-								Expires in {displayDuration(i18n, minutesUntilExpiry)} at{' '}
-								{i18n.date(expiryDateTime, {
-									hour: 'numeric',
-									minute: '2-digit',
-									hour12: true,
-								})}
-							</Trans>
-						) : (
-							m['features.liveNow.label.noExpiry']()
-						)}
+						{typeof record?.durationMinutes === 'number'
+							? m['features.liveNow.label.expiresAt']({
+									duration: displayDuration(minutesUntilExpiry),
+									time: i18n.date(expiryDateTime, {
+										hour: 'numeric',
+										minute: '2-digit',
+										hour12: true,
+									}),
+								})
+							: m['features.liveNow.label.noExpiry']()}
 					</Text>
 				</div>
 			</div>

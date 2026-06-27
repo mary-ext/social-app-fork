@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { Plural, Trans } from '@lingui/react/macro';
 
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';
 import { cleanError } from '#/lib/strings/errors';
@@ -10,6 +9,8 @@ import type { ImageMeta } from '#/state/gallery';
 import { useProfileUpdateMutation } from '#/state/queries/profile';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 
@@ -248,10 +249,7 @@ function DialogInner({
 						/>
 						{displayNameTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
-								<Plural
-									value={MAX_DISPLAY_NAME}
-									other="Display name is too long. The maximum number of characters is #."
-								/>
+								{m['screens.profile.error.displayNameTooLong']({ MAX_DISPLAY_NAME })}
 							</Text>
 						)}
 					</TextField.Root>
@@ -260,15 +258,19 @@ function DialogInner({
 						verification.role === 'default' &&
 						displayName !== initialDisplayName && (
 							<Admonition type="error">
-								<Trans>
-									You are verified. You will lose your verification status if you change your display name.{' '}
-									<InlineLinkText
-										label={m['common.action.learnMore']()}
-										to={urls.website.blog.initialVerificationAnnouncement}
-									>
-										{m['components.moderation.action.learnMoreDot']()}
-									</InlineLinkText>
-								</Trans>
+								<Trans
+									message={m['screens.profile.hint.verificationWarning']}
+									markup={{
+										t0: ({ children }) => (
+											<InlineLinkText
+												label={m['common.action.learnMore']()}
+												to={urls.website.blog.initialVerificationAnnouncement}
+											>
+												{children}
+											</InlineLinkText>
+										),
+									}}
+								/>
 							</Admonition>
 						)}
 
@@ -283,10 +285,7 @@ function DialogInner({
 						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
-								<Plural
-									value={MAX_DESCRIPTION}
-									other="Description is too long. The maximum number of characters is #."
-								/>
+								{m['screens.profile.error.descriptionTooLong']({ MAX_DESCRIPTION })}
 							</Text>
 						)}
 					</TextField.Root>

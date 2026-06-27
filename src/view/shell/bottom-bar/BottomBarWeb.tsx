@@ -1,6 +1,4 @@
 import { type ComponentPropsWithoutRef, type MouseEvent, useRef } from 'react';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -209,7 +207,6 @@ const NavItem: React.FC<{
 	notificationCount?: string;
 	onLongPress?: () => void;
 }> = ({ children, href, routeName, hasNew, notificationCount, onLongPress }) => {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const navigation = useNavigation<NavigationProp>();
 	const { consumeLongPress, handlers: longPressHandlers } = useLongPress(onLongPress);
@@ -258,10 +255,7 @@ const NavItem: React.FC<{
 			{notificationCount ? (
 				<div
 					className={css.badge}
-					aria-label={l`${plural(notificationCount, {
-						one: '# unread item',
-						other: '# unread items',
-					})}`}
+					aria-label={m['view.notifications.unreadCountBadge']({ notificationCount })}
 				>
 					<Text size="sm" weight="semiBold" color="white" className={css.badgeLabel}>
 						{notificationCount}

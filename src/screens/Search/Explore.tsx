@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 import * as bcp47Match from 'bcp-47-match';
 
 import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
@@ -672,11 +671,11 @@ export function Explore({
 					return (
 						<div className={css.admonitionWrap}>
 							<Admonition>
-								{selectedInterest ? (
-									<Trans>No results for "{interestsDisplayNames[selectedInterest]}".</Trans>
-								) : (
-									m['screens.search.empty.noResults']()
-								)}
+								{selectedInterest
+									? m['screens.search.empty.noResultsFor']({
+											interest: interestsDisplayNames[selectedInterest] ?? '',
+										})
+									: m['screens.search.empty.noResults']()}
 							</Admonition>
 						</div>
 					);

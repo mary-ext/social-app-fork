@@ -8,7 +8,6 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { flip, offset, shift, size, useFloating } from '@floating-ui/react-dom';
-import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -427,14 +426,8 @@ function Inner({
 		profile.viewer?.blocking || profile.viewer?.blockedBy || profile.viewer?.blockingByList;
 	const following = formatCount(i18n, profile.followsCount || 0);
 	const followers = formatCount(i18n, profile.followersCount || 0);
-	const pluralizedFollowers = plural(profile.followersCount || 0, {
-		one: 'follower',
-		other: 'followers',
-	});
-	const pluralizedFollowings = plural(profile.followsCount || 0, {
-		one: 'following',
-		other: 'following',
-	});
+	const pluralizedFollowers = m['common.count.followers']({ count: profile.followersCount || 0 });
+	const pluralizedFollowings = m['common.count.following']({ count: profile.followsCount || 0 });
 	const profileURL = makeProfileLink({ did: profile.did });
 	const isMe = useMemo(() => currentAccount?.did === profile.did, [currentAccount, profile]);
 	const isLabeler = profile.associated?.labeler;

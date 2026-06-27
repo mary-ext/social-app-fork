@@ -1,5 +1,4 @@
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
@@ -8,6 +7,8 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { listUriToHref } from '#/lib/strings/url-helpers';
 
 import { useSession } from '#/state/session';
+
+import { Trans } from '#/locale/Trans';
 
 import type { AppModerationCause } from '#/components/Pills';
 import { Text } from '#/components/Text';
@@ -62,13 +63,17 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 			const list = modcause.source;
 			name = m['common.title.userBlockedByList']();
 			description = (
-				<Trans>
-					This user is included in the{' '}
-					<InlineLinkText label={list.name} size="sm" to={listUriToHref(list.uri)}>
-						{list.name}
-					</InlineLinkText>{' '}
-					list which you have blocked.
-				</Trans>
+				<Trans
+					message={m['common.label.includedInBlockedList']}
+					inputs={{ listName: list.name }}
+					markup={{
+						t0: ({ children }) => (
+							<InlineLinkText label={list.name} size="sm" to={listUriToHref(list.uri)}>
+								{children}
+							</InlineLinkText>
+						),
+					}}
+				/>
 			);
 		} else {
 			name = m['common.title.userBlocked']();
@@ -82,13 +87,17 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 			const list = modcause.source;
 			name = m['common.label.accountMutedByList']();
 			description = (
-				<Trans>
-					This user is included in the{' '}
-					<InlineLinkText label={list.name} size="sm" to={listUriToHref(list.uri)}>
-						{list.name}
-					</InlineLinkText>{' '}
-					list which you have muted.
-				</Trans>
+				<Trans
+					message={m['common.label.includedInMutedList']}
+					inputs={{ listName: list.name }}
+					markup={{
+						t0: ({ children }) => (
+							<InlineLinkText label={list.name} size="sm" to={listUriToHref(list.uri)}>
+								{children}
+							</InlineLinkText>
+						),
+					}}
+				/>
 			);
 		} else {
 			name = m['common.label.accountMuted']();
@@ -135,16 +144,21 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 					) : (
 						<div className={styles.sourceRow}>
 							<Text className={styles.sourceText} color="textContrastMedium" numberOfLines={1}>
-								<Trans>
-									Source:{' '}
-									<InlineLinkText
-										label={sourceName}
-										onPress={() => control.close()}
-										to={makeProfileLink({ did: modcause.label.src })}
-									>
-										{sourceName}
-									</InlineLinkText>
-								</Trans>
+								<Trans
+									message={m['common.label.source']}
+									inputs={{ sourceName }}
+									markup={{
+										t0: ({ children }) => (
+											<InlineLinkText
+												label={sourceName}
+												onPress={() => control.close()}
+												to={makeProfileLink({ did: modcause.label.src })}
+											>
+												{children}
+											</InlineLinkText>
+										),
+									}}
+								/>
 							</Text>
 							{modcause.label.exp && (
 								<Text className={styles.expires} color="textContrastMedium" size="sm">

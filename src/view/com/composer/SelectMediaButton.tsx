@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 
 import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE, VIDEO_MAX_SIZE_MB } from '#/lib/constants';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
@@ -222,7 +220,6 @@ export function SelectMediaButton({
 	onSelectAssets,
 	autoOpen,
 }: SelectMediaButtonProps) {
-	const { t: l } = useLingui();
 	const hasAutoOpened = useRef(false);
 
 	const selectionCountRemaining = MAX_GALLERY_IMAGES - selectedAssetsCount;
@@ -242,12 +239,7 @@ export function SelectMediaButton({
 			return {
 				[SelectedAssetError.Unsupported]: m['view.composer.error.fileUnsupported'](),
 				[SelectedAssetError.MixedTypes]: m['view.composer.error.multipleMediaTypes'](),
-				[SelectedAssetError.MaxImages]: l({
-					message: `You can select up to ${plural(MAX_GALLERY_IMAGES, {
-						other: '# images',
-					})} in total.`,
-					comment: `Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.`,
-				}),
+				[SelectedAssetError.MaxImages]: m['view.composer.error.maxImagesSelect']({ MAX_GALLERY_IMAGES }),
 				[SelectedAssetError.MaxVideos]: m['view.composer.error.oneVideoOnly'](),
 				[SelectedAssetError.VideoTooLong]: m['view.composer.error.videoTooLong'](),
 				[SelectedAssetError.MaxGIFs]: m['view.composer.error.oneGifOnly'](),
@@ -256,7 +248,7 @@ export function SelectMediaButton({
 		});
 
 		void onSelectAssets({ type, images, video, errors });
-	}, [l, onSelectAssets, selectionCountRemaining, allowedAssetTypes]);
+	}, [onSelectAssets, selectionCountRemaining, allowedAssetTypes]);
 
 	useEffect(() => {
 		if (autoOpen && !hasAutoOpened.current && !disabled) {
@@ -270,12 +262,7 @@ export function SelectMediaButton({
 			icon={ImageIcon}
 			onClick={() => void onPressSelectMedia()}
 			label={m['view.composer.a11y.addMedia']()}
-			aria-description={l({
-				message: `Opens device gallery to select up to ${plural(MAX_GALLERY_IMAGES, {
-					other: '# images',
-				})}, or a single video or GIF.`,
-				comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
-			})}
+			aria-description={m['view.composer.a11y.addMediaHint']({ MAX_GALLERY_IMAGES })}
 			disabled={disabled}
 		/>
 	);

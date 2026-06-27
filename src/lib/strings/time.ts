@@ -1,5 +1,6 @@
 import type { I18n } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
+
+import { m } from '#/paraglide/messages';
 
 export function niceDate(
 	i18n: I18n,
@@ -11,12 +12,10 @@ export function niceDate(
 	const d = new Date(date);
 
 	if (dateStyle === 'dot separated') {
-		return i18n._(
-			defineMessage({
-				context: 'date and time formatted like this: [time] · [date]',
-				message: `${i18n.date(d, { timeStyle: ts })} · ${i18n.date(d, { dateStyle: 'medium' })}`,
-			}),
-		);
+		return m['lib.time.dateTime']({
+			date: i18n.date(d, { dateStyle: 'medium' }),
+			time: i18n.date(d, { timeStyle: ts }),
+		});
 	}
 
 	return i18n.date(d, {

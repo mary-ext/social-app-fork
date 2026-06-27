@@ -1,4 +1,3 @@
-import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -22,8 +21,8 @@ export function ProfileHeaderMetrics() {
 
 	const followers = formatCount(i18n, profile.followersCount || 0);
 	const following = formatCount(i18n, profile.followsCount || 0);
-	const pluralizedFollowers = plural(profile.followersCount || 0, { one: 'follower', other: 'followers' });
-	const pluralizedFollowings = plural(profile.followsCount || 0, { one: 'following', other: 'following' });
+	const pluralizedFollowers = m['common.count.followers']({ count: profile.followersCount || 0 });
+	const pluralizedFollowings = m['common.count.following']({ count: profile.followsCount || 0 });
 
 	return (
 		<div className={css.row}>
@@ -54,7 +53,7 @@ export function ProfileHeaderMetrics() {
 			<Text color="text" size="md" weight="semiBold">
 				{formatCount(i18n, profile.postsCount || 0)}{' '}
 				<Text color="textContrastMedium" size="md" weight="normal">
-					{plural(profile.postsCount || 0, { one: 'post', other: 'posts' })}
+					{m['screens.profile.count.posts']({ count: profile.postsCount || 0 })}
 				</Text>
 			</Text>
 		</div>

@@ -25,8 +25,6 @@ import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { isGraphemeLengthInRange } from '@atcute/util-text';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -170,27 +168,20 @@ function applyGalleryCap(
 }
 
 function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: PostAction) => void) {
-	const { t: l } = useLingui();
 	return useCallback(
 		(next: ComposerImage[]) => {
 			const result = applyGalleryCap(currentCount, next);
 			if (result.status === 'full') {
-				Toast.show(
-					l({
-						message: `You can only add up to ${plural(MAX_GALLERY_IMAGES, { other: '# images' })} per post`,
-						comment:
-							'Toast shown when the user tries to add more images but the post gallery is already at the cap',
-					}),
-					{ type: 'warning' },
-				);
+				Toast.show(m['view.composer.error.maxImagesAdd']({ MAX_GALLERY_IMAGES }), { type: 'warning' });
 				return;
 			}
 			if (result.status === 'partial') {
 				Toast.show(
-					l({
-						message: `Only ${result.accepted.length} of ${next.length} ${plural(next.length, { one: 'image', other: 'images' })} added; limit is ${MAX_GALLERY_IMAGES}`,
-						comment:
-							'Toast shown when adding images would exceed the post gallery cap; only the first N are kept',
+					m['view.composer.error.galleryLimit']({
+						accepted: result.accepted.length,
+						count: next.length,
+						total: next.length,
+						MAX_GALLERY_IMAGES,
 					}),
 					{ type: 'warning' },
 				);
@@ -200,7 +191,7 @@ function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: 
 				images: result.accepted,
 			});
 		},
-		[currentCount, dispatchPostAction, l],
+		[currentCount, dispatchPostAction],
 	);
 }
 
@@ -225,7 +216,6 @@ export const ComposePost = ({
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
 	const { closeComposer } = useComposerControls();
-	const { t: l, i18n } = useLingui();
 	const [requireAltTextEnabled] = useRequireAltTextEnabled();
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
@@ -344,10 +334,9 @@ export const ComposePost = ({
 				pds,
 				currentDid,
 				abortController.signal,
-				i18n,
 			);
 		},
-		[i18n, pds, pdsUrl, currentDid, composerDispatch],
+		[pds, pdsUrl, currentDid, composerDispatch],
 	);
 
 	const onInitVideo = useNonReactiveCallback(() => {
@@ -459,7 +448,6 @@ export const ComposePost = ({
 					pds,
 					currentDid,
 					abortController.signal,
-					i18n,
 				);
 			} catch (e) {
 				logger.error('Failed to restore video from draft', {
@@ -468,7 +456,7 @@ export const ComposePost = ({
 				});
 			}
 		},
-		[i18n, pds, pdsUrl, currentDid, composerDispatch],
+		[pds, pdsUrl, currentDid, composerDispatch],
 	);
 
 	const handleSelectDraft = useCallback(
@@ -536,13 +524,11 @@ export const ComposePost = ({
 			(post) => !isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH),
 		);
 		if (tooLong) {
-			setError(
-				l`One or more posts are too long to save as a draft. ${plural(MAX_DRAFT_GRAPHEME_LENGTH, { one: 'The maximum number of characters is # character.', other: 'The maximum number of characters is # characters.' })}`,
-			);
+			setError(m['view.composer.error.draftTooLong']({ MAX_DRAFT_GRAPHEME_LENGTH }));
 			return false;
 		}
 		return true;
-	}, [composerState.thread.posts, l]);
+	}, [composerState.thread.posts]);
 
 	const handleSaveDraft = useCallback(async () => {
 		setError('');
@@ -1197,7 +1183,6 @@ let ComposerPost = memo(function ComposerPost({
 }) {
 	const { currentAccount } = useSession();
 	const currentDid = currentAccount!.did;
-	const { t: l } = useLingui();
 	const { data: currentProfile } = useProfileQuery({ did: currentDid });
 	const text = post.text;
 	const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media;
@@ -1304,9 +1289,7 @@ let ComposerPost = memo(function ComposerPost({
 					onPressPublish={onPublish}
 					accessible={true}
 					accessibilityLabel={m['common.action.writePost']()}
-					accessibilityHint={l`Compose posts up to ${plural(MAX_GRAPHEME_LENGTH || 0, {
-						other: '# characters',
-					})} in length`}
+					accessibilityHint={m['view.composer.hint.maxLength']({ count: MAX_GRAPHEME_LENGTH || 0 })}
 				/>
 			</View>
 			{canRemovePost && isActive && (
@@ -1662,7 +1645,6 @@ function ComposerFooter({
 	textInputRef: React.RefObject<TextInputRef | null>;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const { gtPhone } = useBreakpoints();
 	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
 	/*
@@ -1734,12 +1716,7 @@ function ComposerFooter({
 					onImageAdd(selectedImages);
 				}
 				if (failed > 0) {
-					onError(
-						l`${plural(failed, {
-							one: `An image couldn't be added to your post.`,
-							other: `# images couldn't be added to your post.`,
-						})}`,
-					);
+					onError(m['view.composer.error.imagesNotAdded']({ failed }));
 				}
 			} else if ((type === 'video' || type === 'gif') && video) {
 				onSelectVideo(post.id, video);
@@ -1751,7 +1728,7 @@ function ComposerFooter({
 				});
 			});
 		},
-		[post.id, onSelectVideo, onImageAdd, onError, l],
+		[post.id, onSelectVideo, onImageAdd, onError],
 	);
 
 	return (

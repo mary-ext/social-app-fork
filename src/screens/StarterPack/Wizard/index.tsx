@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -25,6 +24,8 @@ import {
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { useWizardState, type WizardStep } from '#/screens/StarterPack/Wizard/State';
 import { StepDetails } from '#/screens/StarterPack/Wizard/StepDetails';
@@ -360,51 +361,80 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 								currentAccount?.did === items[0]!.did ? (
 									m['screens.starterPack.empty.justYouHint']()
 								) : (
-									<Trans>
-										It's just{' '}
-										<Text size="md" weight="semiBold">
-											{getName(items[0]!)}{' '}
-										</Text>
-										right now! Add more people to your starter pack by searching above.
-									</Trans>
+									<Trans
+										message={m['screens.starterPack.empty.justNameHint']}
+										inputs={{ name: getName(items[0]!) }}
+										markup={{
+											t0: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+										}}
+									/>
 								)
 							) : items.length === 2 ? (
 								currentAccount?.did === items[0]!.did ? (
-									<Trans>
-										<Text size="md" weight="semiBold">
-											You
-										</Text>{' '}
-										and
-										<Text> </Text>
-										<Text size="md" weight="semiBold">
-											{getName(items[1]! /* [0] is self, skip it */)}{' '}
-										</Text>
-										are included in your starter pack
-									</Trans>
+									<Trans
+										message={m['screens.starterPack.included.youAndOne']}
+										inputs={{ name: getName(items[1]! /* [0] is self, skip it */) }}
+										markup={{
+											t0: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+											t1: ({ children }) => <Text>{children}</Text>,
+											t2: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+										}}
+									/>
 								) : (
-									<Trans>
-										<Text size="md" weight="semiBold">
-											{getName(items[0]!)}
-										</Text>{' '}
-										and
-										<Text> </Text>
-										<Text size="md" weight="semiBold">
-											{getName(items[1]! /* [0] is self, skip it */)}{' '}
-										</Text>
-										are included in your starter pack
-									</Trans>
+									<Trans
+										message={m['screens.starterPack.included.twoProfiles']}
+										inputs={{
+											first: getName(items[0]!),
+											second: getName(items[1]! /* [0] is self, skip it */),
+										}}
+										markup={{
+											t0: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+											t1: ({ children }) => <Text>{children}</Text>,
+											t2: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+										}}
+									/>
 								)
 							) : items.length > 2 ? (
-								<Trans context="profiles">
-									<Text size="md" weight="semiBold">
-										{getName(items[1]! /* [0] is self, skip it */)},{' '}
-									</Text>
-									<Text size="md" weight="semiBold">
-										{getName(items[2]!)},{' '}
-									</Text>
-									and <Plural value={items.length - 2} one="# other" other="# others" /> are included in your
-									starter pack
-								</Trans>
+								<Trans
+									message={m['screens.starterPack.included.manyProfiles']}
+									inputs={{
+										count: items.length - 2,
+										first: getName(items[1]! /* [0] is self, skip it */),
+										second: getName(items[2]!),
+									}}
+									markup={{
+										t0: ({ children }) => (
+											<Text size="md" weight="semiBold">
+												{children}
+											</Text>
+										),
+										t1: ({ children }) => (
+											<Text size="md" weight="semiBold">
+												{children}
+											</Text>
+										),
+									}}
+								/>
 							) : null /* Should not happen. */
 						}
 					</Text>
@@ -422,35 +452,59 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 						<Text size="md" className={css.helperText}>
 							{
 								items.length === 1 ? (
-									<Trans>
-										<Text size="md" weight="semiBold">
-											{getName(items[0]!)}
-										</Text>{' '}
-										is included in your starter pack
-									</Trans>
+									<Trans
+										message={m['screens.starterPack.included.oneProfile']}
+										inputs={{ name: getName(items[0]!) }}
+										markup={{
+											t0: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+										}}
+									/>
 								) : items.length === 2 ? (
-									<Trans>
-										<Text size="md" weight="semiBold">
-											{getName(items[0]!)}
-										</Text>{' '}
-										and
-										<Text> </Text>
-										<Text size="md" weight="semiBold">
-											{getName(items[1]!)}{' '}
-										</Text>
-										are included in your starter pack
-									</Trans>
+									<Trans
+										message={m['screens.starterPack.included.twoProfiles']}
+										inputs={{
+											first: getName(items[0]!),
+											second: getName(items[1]!),
+										}}
+										markup={{
+											t0: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+											t1: ({ children }) => <Text>{children}</Text>,
+											t2: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+										}}
+									/>
 								) : items.length > 2 ? (
-									<Trans context="feeds">
-										<Text size="md" weight="semiBold">
-											{getName(items[0]!)},{' '}
-										</Text>
-										<Text size="md" weight="semiBold">
-											{getName(items[1]!)},{' '}
-										</Text>
-										and <Plural value={items.length - 2} one="# other" other="# others" /> are included in
-										your starter pack
-									</Trans>
+									<Trans
+										message={m['screens.starterPack.included.manyFeeds']}
+										inputs={{
+											count: items.length - 2,
+											first: getName(items[0]!),
+											second: getName(items[1]!),
+										}}
+										markup={{
+											t0: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+											t1: ({ children }) => (
+												<Text size="md" weight="semiBold">
+													{children}
+												</Text>
+											),
+										}}
+									/>
 								) : null /* Should not happen. */
 							}
 						</Text>

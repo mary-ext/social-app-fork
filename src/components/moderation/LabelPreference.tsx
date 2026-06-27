@@ -4,13 +4,14 @@ import {
 	LabelFlags,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { getLabelStrings } from '#/lib/moderation/useLabelInfo';
 
 import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/state/queries/preferences';
+
+import { Trans } from '#/locale/Trans';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import * as Settings from '#/components/SettingsCards';
@@ -19,6 +20,7 @@ import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import { getLocale } from '#/paraglide/runtime';
 
 import * as styles from './LabelPreference.css';
 
@@ -39,7 +41,6 @@ export function LabelerLabelRow({
 	labelDefinition: InterpretedLabelDefinition;
 	labelerDid?: string;
 }) {
-	const { i18n } = useLingui();
 	const { identifier } = labelDefinition;
 	// a global label is one backed by a built-in definition (porn, sexual, …); those are configured once in
 	// moderation settings, not per labeler. (`isCustomLabelValue` is a format check — it's true for these
@@ -48,7 +49,7 @@ export function LabelerLabelRow({
 	const { data: preferences } = usePreferencesQuery();
 	const { mutate, variables } = usePreferencesSetContentLabelMutation();
 	const globalLabelStrings = useGlobalLabelStrings();
-	const labelStrings = getLabelStrings(i18n.locale, globalLabelStrings, labelDefinition);
+	const labelStrings = getLabelStrings(getLocale(), globalLabelStrings, labelDefinition);
 
 	const savedPref =
 		labelerDid && !isGlobalLabel
@@ -97,16 +98,19 @@ export function LabelerLabelRow({
 								{adultDisabled ? (
 									m['components.moderation.hint.adultContentDisabled']()
 								) : (
-									<Trans>
-										Configured in{' '}
-										<InlineLinkText
-											label={m['components.moderation.label.moderationSettings']()}
-											to="/moderation"
-										>
-											moderation settings
-										</InlineLinkText>
-										.
-									</Trans>
+									<Trans
+										message={m['components.moderation.hint.configuredIn']}
+										markup={{
+											t0: ({ children }) => (
+												<InlineLinkText
+													label={m['components.moderation.label.moderationSettings']()}
+													to="/moderation"
+												>
+													{children}
+												</InlineLinkText>
+											),
+										}}
+									/>
 								)}
 							</Text>
 						</span>

@@ -4,7 +4,6 @@ import type {
 	AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
-import { t } from '@lingui/core/macro';
 import {
 	type InfiniteData,
 	type QueryClient,
@@ -18,6 +17,8 @@ import { getRecord, putRecord } from '#/lib/api/records';
 import { useClients, useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 export const RQKEY_getActivitySubscriptions = ['activity-subscriptions'];
 export const RQKEY_getNotificationDeclaration = ['notification-declaration'];
@@ -75,7 +76,7 @@ export function useNotificationDeclarationMutation() {
 			);
 		},
 		onError: () => {
-			Toast.show(t`Failed to update notification declaration`);
+			Toast.show(m['state.error.updateNotificationDeclaration']());
 			void queryClient.invalidateQueries({
 				queryKey: RQKEY_getNotificationDeclaration,
 			});

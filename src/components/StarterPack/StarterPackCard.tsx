@@ -1,7 +1,6 @@
 import { useMemo, type ReactNode } from 'react';
 import type { AnyStarterPackView, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
@@ -113,9 +112,7 @@ function JoinedCount({ starterPack }: { starterPack: AnyStarterPackView }) {
 	if (!joinedAllTimeCount || joinedAllTimeCount < 50) return null;
 	return (
 		<Text size="md_sub" weight="semiBold" color="textContrastMedium">
-			<Trans comment="Number of users (always at least 50) who have joined Bluesky using a specific starter pack">
-				<Plural value={joinedAllTimeCount} other="# users have" /> joined!
-			</Trans>
+			{m['components.starterPack.joinedCount']({ joinedAllTimeCount })}
 		</Text>
 	);
 }

@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
@@ -9,6 +8,8 @@ import { listUriToHref } from '#/lib/strings/url-helpers';
 
 import { useSession } from '#/state/session';
 import { useTickEveryMinute } from '#/state/shell';
+
+import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useGutters, useTheme } from '#/alf';
 
@@ -64,13 +65,17 @@ function ModerationDetailsDialogInner({
 			const list = modcause.source;
 			name = m['common.title.userBlockedByList']();
 			description = (
-				<Trans>
-					This user is included in the{' '}
-					<InlineLinkText label={list.name} to={listUriToHref(list.uri)} style={[a.text_sm]}>
-						{list.name}
-					</InlineLinkText>{' '}
-					list which you have blocked.
-				</Trans>
+				<Trans
+					message={m['common.label.includedInBlockedList']}
+					inputs={{ listName: list.name }}
+					markup={{
+						t0: ({ children }) => (
+							<InlineLinkText label={list.name} to={listUriToHref(list.uri)} style={[a.text_sm]}>
+								{children}
+							</InlineLinkText>
+						),
+					}}
+				/>
 			);
 		} else {
 			name = m['common.title.userBlocked']();
@@ -84,13 +89,17 @@ function ModerationDetailsDialogInner({
 			const list = modcause.source;
 			name = m['common.label.accountMutedByList']();
 			description = (
-				<Trans>
-					This user is included in the{' '}
-					<InlineLinkText label={list.name} to={listUriToHref(list.uri)} style={[a.text_sm]}>
-						{list.name}
-					</InlineLinkText>{' '}
-					list which you have muted.
-				</Trans>
+				<Trans
+					message={m['common.label.includedInMutedList']}
+					inputs={{ listName: list.name }}
+					markup={{
+						t0: ({ children }) => (
+							<InlineLinkText label={list.name} to={listUriToHref(list.uri)} style={[a.text_sm]}>
+								{children}
+							</InlineLinkText>
+						),
+					}}
+				/>
 			);
 		} else {
 			name = m['common.label.accountMuted']();
@@ -166,16 +175,21 @@ function ModerationDetailsDialogInner({
 						<>
 							<View style={[a.flex_row, a.justify_between, a.gap_xl, { paddingBottom: 1 }]}>
 								<Text style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
-									<Trans>
-										Source:{' '}
-										<InlineLinkText
-											label={sourceName}
-											to={makeProfileLink({ did: modcause.label.src })}
-											onPress={() => control.close()}
-										>
-											{sourceName}
-										</InlineLinkText>
-									</Trans>
+									<Trans
+										message={m['common.label.source']}
+										inputs={{ sourceName }}
+										markup={{
+											t0: ({ children }) => (
+												<InlineLinkText
+													label={sourceName}
+													to={makeProfileLink({ did: modcause.label.src })}
+													onPress={() => control.close()}
+												>
+													{children}
+												</InlineLinkText>
+											),
+										}}
+									/>
 								</Text>
 								{modcause.label.exp && (
 									<View>

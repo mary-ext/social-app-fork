@@ -1,5 +1,3 @@
-import { plural } from '@lingui/core/macro';
-
 import { atoms as a } from '#/alf';
 
 import { ButtonIcon, ButtonText } from '#/components/Button';
@@ -27,10 +25,7 @@ export function InboxRequests({
 		? m['screens.messages.label.requests']()
 		: overflow
 			? m['screens.messages.requests.tenPlusRequests']()
-			: plural(count, {
-					one: '# request',
-					other: '# requests',
-				});
+			: m['screens.messages.requests.shortCount']({ count });
 
 	switch (variant) {
 		case 'ghost': {

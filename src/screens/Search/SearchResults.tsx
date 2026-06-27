@@ -1,6 +1,5 @@
 import { type ReactNode, useMemo } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { definite } from '#/lib/functions';
@@ -12,6 +11,8 @@ import { useActorSearch } from '#/state/queries/actor-search';
 import { usePopularFeedsSearch } from '#/state/queries/feed';
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
+
+import { Trans } from '#/locale/Trans';
 
 import { Post } from '#/view/com/post/Post';
 
@@ -121,27 +122,30 @@ function NoResultsText({ query }: { query: string }) {
 	return (
 		<>
 			<Text color="textContrastHigh" size="lg">
-				<Trans>
-					No results found for “
-					<Text size="lg" weight="medium">
-						{query}
-					</Text>
-					”.
-				</Trans>
+				<Trans
+					inputs={{ query }}
+					markup={{
+						t0: ({ children }) => (
+							<Text size="lg" weight="medium">
+								{children}
+							</Text>
+						),
+					}}
+					message={m['screens.search.empty.noResultsForQuery']}
+				/>
 			</Text>
 			{'\n\n'}
 			<Text color="textContrastHigh" size="md">
-				<Trans context="english-only-resource">
-					Try a different search term, or{' '}
-					<ExternalInlineLinkText
-						href={urls.website.blog.searchTipsAndTricks}
-						label={m['screens.search.action.readSearchFilters']()}
-						size="md"
-					>
-						read about how to use search filters
-					</ExternalInlineLinkText>
-					.
-				</Trans>
+				<Trans
+					markup={{
+						t0: ({ children }) => (
+							<ExternalInlineLinkText href={urls.website.blog.searchTipsAndTricks} size="md">
+								{children}
+							</ExternalInlineLinkText>
+						),
+					}}
+					message={m['screens.search.empty.tryDifferentTerm']}
+				/>
 			</Text>
 		</>
 	);
@@ -191,22 +195,24 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 		return (
 			<SearchError title={m['common.error.searchLoggedOut']()}>
 				<Text align="center" size="md">
-					<Trans>
-						<InlineLinkText
-							label={m['common.action.signIn']()}
-							onPress={() => {
-								signinDialogControl.openWithPayload({});
-								return false;
-							}}
-							to="/search"
-						>
-							Sign in
-						</InlineLinkText>
-						<Text> </Text>
-						<Text color="textContrastMedium">
-							to search for news, sports, politics, and everything else happening on Bluesky.
-						</Text>
-					</Trans>
+					<Trans
+						markup={{
+							t0: ({ children }) => (
+								<InlineLinkText
+									onPress={() => {
+										signinDialogControl.openWithPayload({});
+										return false;
+									}}
+									to="/search"
+								>
+									{children}
+								</InlineLinkText>
+							),
+							t1: ({ children }) => <Text>{children}</Text>,
+							t2: ({ children }) => <Text color="textContrastMedium">{children}</Text>,
+						}}
+						message={m['common.cta.signInToSearch']}
+					/>
 				</Text>
 			</SearchError>
 		);

@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
-import { plural } from '@lingui/core/macro';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
@@ -12,6 +11,8 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 import { useIsDrawerOpen, useSetDrawerOpen } from '#/state/shell';
+
+import { Trans } from '#/locale/Trans';
 
 import { formatCount } from '#/view/com/util/numeric/format';
 import * as styles from '#/view/shell/Drawer.css';
@@ -155,7 +156,7 @@ function DrawerContent() {
 						countLabel={
 							numUnreadNotifications === ''
 								? undefined
-								: plural(numUnreadNotifications ?? 0, { one: '# unread item', other: '# unread items' })
+								: m['view.notifications.unreadCountAria']({ count: numUnreadNotifications })
 						}
 						inactiveIcon={Bell}
 						isActive={isAtNotifications}
@@ -263,19 +264,35 @@ function DrawerProfileCard({
 				</Text>
 			</div>
 			<Text color="textContrastMedium" size="md">
-				<Trans>
-					<Text size="md" weight="semiBold">
-						{formatCount(i18n, profile?.followersCount ?? 0)}
-					</Text>{' '}
-					<Plural one="follower" other="followers" value={profile?.followersCount || 0} />
-				</Trans>{' '}
+				<Trans
+					inputs={{
+						count: profile?.followersCount || 0,
+						formatted: formatCount(i18n, profile?.followersCount ?? 0),
+					}}
+					markup={{
+						t0: ({ children }) => (
+							<Text size="md" weight="semiBold">
+								{children}
+							</Text>
+						),
+					}}
+					message={m['view.profile.followersCount']}
+				/>{' '}
 				&middot;{' '}
-				<Trans>
-					<Text size="md" weight="semiBold">
-						{formatCount(i18n, profile?.followsCount ?? 0)}
-					</Text>{' '}
-					<Plural one="following" other="following" value={profile?.followsCount || 0} />
-				</Trans>
+				<Trans
+					inputs={{
+						count: profile?.followsCount || 0,
+						formatted: formatCount(i18n, profile?.followsCount ?? 0),
+					}}
+					markup={{
+						t0: ({ children }) => (
+							<Text size="md" weight="semiBold">
+								{children}
+							</Text>
+						),
+					}}
+					message={m['view.profile.followingCount']}
+				/>
 			</Text>
 		</button>
 	);

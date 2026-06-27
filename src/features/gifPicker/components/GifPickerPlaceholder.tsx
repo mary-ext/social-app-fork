@@ -1,5 +1,3 @@
-import { useLingui } from '@lingui/react/macro';
-
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
@@ -24,8 +22,6 @@ export function GifPickerPlaceholder({
 	onRetry: () => Promise<unknown>;
 	onGoBack: () => void;
 }) {
-	const { t: l } = useLingui();
-
 	if (isLoading) {
 		return <CenteredSpinner label={m['features.gifPicker.label.loading']()} size="2xl" fill />;
 	}
@@ -52,11 +48,7 @@ export function GifPickerPlaceholder({
 	}
 
 	const emptyMessage = isSearching
-		? l({
-				message: `No GIFs found for "${query}".`,
-				comment:
-					'Empty-state message shown in the GIF picker when a search returns zero results. Placeholder is the user’s search query.',
-			})
+		? m['features.gifPicker.empty.searchNoResults']({ query })
 		: isRecentsEmpty
 			? m['features.gifPicker.empty.recents']()
 			: m['features.gifPicker.empty.trending']();

@@ -2,8 +2,6 @@ import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
@@ -39,7 +37,6 @@ export function ActionsWrapper({
 	children: React.ReactNode;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const convo = useConvoActive();
 	const { currentAccount } = useSession();
 	const primaryMember = useMaybeProfileShadow(convo.convo.primaryMember);
@@ -78,13 +75,9 @@ export function ActionsWrapper({
 					.catch(() => Toast.show(m['components.dms.error.removeReaction']()));
 			} else {
 				if (hasReachedReactionLimit(message, currentAccount?.did)) {
-					Toast.show(
-						l`You cannot add more than ${plural(EMOJI_REACTION_LIMIT, {
-							one: '# emoji reaction',
-							other: '# emoji reactions',
-						})}`,
-						{ type: 'info' },
-					);
+					Toast.show(m['components.dms.error.reactionLimit']({ EMOJI_REACTION_LIMIT }), {
+						type: 'info',
+					});
 					return;
 				}
 				convo.addReaction(message.id, emoji).catch(() =>
@@ -94,7 +87,7 @@ export function ActionsWrapper({
 				);
 			}
 		},
-		[l, convo, message, currentAccount?.did],
+		[convo, message, currentAccount?.did],
 	);
 
 	return (

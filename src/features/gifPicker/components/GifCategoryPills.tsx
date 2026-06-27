@@ -1,7 +1,3 @@
-import type { MessageDescriptor } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
-
 import { Celebrate_Stroke2_Corner0_Rounded as Celebrate } from '#/components/icons/Celebrate';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import type { Props as SVGIconProps } from '#/components/icons/common';
@@ -15,11 +11,12 @@ import { Trending3_Stroke2_Corner1_Rounded as Trending } from '#/components/icon
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import * as styles from '#/features/gifPicker/components/GifCategoryPills.css';
+import { m } from '#/paraglide/messages';
 
 export type GifCategory = {
 	id: string;
 	icon: React.ComponentType<SVGIconProps>;
-	label: MessageDescriptor;
+	label: () => string;
 	searchterm: string | null; // null = trending/recents (handled by consumer)
 };
 
@@ -32,69 +29,43 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
 	{
 		id: 'recents',
 		icon: Clock,
-		label: defineMessage({
-			message: 'Recent GIFs',
-			comment:
-				'Accessibility label for the icon-only pill that shows previously selected GIFs in the GIF picker.',
-		}),
+		label: m['features.gifPicker.a11y.recents'],
 		searchterm: null,
 	},
 	{
 		id: 'trending',
 		icon: Trending,
-		label: defineMessage({
-			message: 'Trending GIFs',
-			comment:
-				'Accessibility label for the icon-only pill that shows currently trending/featured GIFs in the GIF picker.',
-		}),
+		label: m['features.gifPicker.a11y.trending'],
 		searchterm: null,
 	},
 	{
 		id: 'love',
 		icon: Heart,
-		label: defineMessage({
-			message: 'Love GIFs',
-			comment:
-				'Accessibility label for the icon-only pill that filters the GIF picker to GIFs about love/affection.',
-		}),
+		label: m['features.gifPicker.a11y.filterLove'],
 		searchterm: 'love',
 	},
 	{
 		id: 'happy',
 		icon: EmojiSmile,
-		label: defineMessage({
-			message: 'Happy GIFs',
-			comment: 'Accessibility label for the icon-only pill that filters the GIF picker to happy/joyful GIFs.',
-		}),
+		label: m['features.gifPicker.a11y.filterHappy'],
 		searchterm: 'happy',
 	},
 	{
 		id: 'sad',
 		icon: EmojiSad,
-		label: defineMessage({
-			message: 'Sad GIFs',
-			comment: 'Accessibility label for the icon-only pill that filters the GIF picker to sad/crying GIFs.',
-		}),
+		label: m['features.gifPicker.a11y.filterSad'],
 		searchterm: 'cry',
 	},
 	{
 		id: 'party',
 		icon: Celebrate,
-		label: defineMessage({
-			message: 'Party GIFs',
-			comment:
-				'Accessibility label for the icon-only pill that filters the GIF picker to celebration/party GIFs.',
-		}),
+		label: m['features.gifPicker.a11y.filterParty'],
 		searchterm: 'congratulations',
 	},
 	{
 		id: 'yes',
 		icon: Shaka,
-		label: defineMessage({
-			message: 'Yes GIFs',
-			comment:
-				'Accessibility label for the icon-only pill that filters the GIF picker to affirmation/agreement GIFs.',
-		}),
+		label: m['features.gifPicker.a11y.filterYes'],
 		searchterm: 'yes',
 	},
 ] as const;
@@ -108,8 +79,6 @@ export function GifCategoryPills({
 	onSelect: (category: GifCategory) => void;
 	hasRecents: boolean;
 }) {
-	const { i18n } = useLingui();
-
 	return (
 		<div className={styles.row}>
 			{GIF_CATEGORIES.map((category) => {
@@ -118,7 +87,7 @@ export function GifCategoryPills({
 				return (
 					<Button
 						key={category.id}
-						label={i18n._(category.label)}
+						label={category.label()}
 						aria-current={isActive ? 'true' : undefined}
 						onClick={() => onSelect(category)}
 						size="small"

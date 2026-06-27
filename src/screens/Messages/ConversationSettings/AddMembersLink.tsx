@@ -1,6 +1,4 @@
 import { View } from 'react-native';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
@@ -31,7 +29,6 @@ export function AddMembersLink({
 	disabled?: boolean;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 
 	const addMembersControl = Dialog.useDialogControl();
 
@@ -51,13 +48,11 @@ export function AddMembersLink({
 					});
 				} else if (members.length > 2) {
 					const memberCount = convo.details.memberCount - 2;
-					names = l`${createSanitizedDisplayName(members[0]!)}, ${createSanitizedDisplayName(members[1]!)} and ${plural(
+					names = m['screens.messages.addedToChat.many']({
+						member1: createSanitizedDisplayName(members[0]!),
+						member2: createSanitizedDisplayName(members[1]!),
 						memberCount,
-						{
-							one: '# other',
-							other: '# others',
-						},
-					)} added to chat`;
+					});
 				}
 
 				if (names) Toast.show(names);

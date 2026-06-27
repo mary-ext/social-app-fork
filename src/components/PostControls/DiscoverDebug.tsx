@@ -1,8 +1,7 @@
-import { t } from '@lingui/core/macro';
-
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
 import * as css from './DiscoverDebug.css';
@@ -23,7 +22,7 @@ export function DiscoverDebug({ feedContext }: { feedContext: string | undefined
 			onClick={(e) => {
 				e.stopPropagation();
 				void navigator.clipboard.writeText(feedContext);
-				Toast.show(t`Copied to clipboard`);
+				Toast.show(m['common.toast.copied']());
 			}}
 		>
 			<Text className={css.text} color="contrast_400" numberOfLines={1}>

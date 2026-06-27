@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -42,7 +41,6 @@ export function InterestTabs({
 	onSelectTab: (tab: string) => void;
 	selectedInterest: string;
 }) {
-	const { t: l } = useLingui();
 	const scrollerRef = useRef<HTMLDivElement>(null);
 	const [canScrollLeft, setCanScrollLeft] = useState(false);
 	const [canScrollRight, setCanScrollRight] = useState(false);
@@ -182,16 +180,8 @@ export function InterestTabs({
 						<button
 							aria-label={
 								active
-									? l({
-											comment:
-												'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.',
-											message: `"${displayName}" category (active)`,
-										})
-									: l({
-											comment:
-												'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.',
-											message: `Select "${displayName}" category`,
-										})
+									? m['components.web.a11y.categoryActive']({ displayName })
+									: m['components.web.a11y.categorySelect']({ displayName })
 							}
 							className={css.tab({ active })}
 							data-active={active}

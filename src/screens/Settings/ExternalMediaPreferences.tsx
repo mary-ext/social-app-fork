@@ -1,5 +1,3 @@
-import { Trans } from '@lingui/react/macro';
-
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import {
 	type EmbedPlayerSource,
@@ -30,14 +28,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
-					<Settings.Section
-						bodyText={
-							<Trans>
-								External media may allow websites to collect information about you and your device. No
-								information is sent or requested until you press the "play" button.
-							</Trans>
-						}
-					>
+					<Settings.Section bodyText={m['common.hint.externalMedia']()}>
 						{Object.entries(externalEmbedLabels)
 							.filter(([key]) => !exemptExternalEmbedSources.has(key as EmbedPlayerSource))
 							.map(([key, label]) => {

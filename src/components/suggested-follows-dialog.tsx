@@ -2,7 +2,6 @@ import { type ComponentProps, memo, useCallback, useEffect, useMemo, useRef, use
 import { TextInput, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 
@@ -349,18 +348,9 @@ let Tab = ({
 	onLayout: (index: number, x: number, width: number) => void;
 }): React.ReactNode => {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const label = active
-		? l({
-				message: `Search for "${interestsDisplayName}" (active)`,
-				comment:
-					'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.',
-			})
-		: l({
-				message: `Search for "${interestsDisplayName}"`,
-				comment:
-					'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.',
-			});
+		? m['components.suggestedFollowsDialog.a11y.searchTabActive']({ interestsDisplayName })
+		: m['components.suggestedFollowsDialog.a11y.searchTab']({ interestsDisplayName });
 	return (
 		<View
 			key={interest}

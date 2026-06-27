@@ -1,7 +1,6 @@
 import type { ComponentType } from 'react';
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
@@ -97,8 +96,6 @@ function TrendRow({ rank, trend }: { rank: number; trend: AppBskyUnspeccedDefs.T
 }
 
 function TrendingIndicator({ type }: { type: 'hot' | 'new' | 'skeleton' | number }) {
-	const { t: l } = useLingui();
-
 	if (type === 'skeleton') {
 		return <div className={css.pill({ type: 'skeleton' })} />;
 	}
@@ -120,10 +117,7 @@ function TrendingIndicator({ type }: { type: 'hot' | 'new' | 'skeleton' | number
 			break;
 		}
 		default: {
-			text = l({
-				comment: 'trending topic time spent trending. should be as short as possible to fit in a pill',
-				message: `${type}h ago`,
-			});
+			text = m['screens.search.label.timeAgo']({ type });
 			variant = 'age';
 			break;
 		}

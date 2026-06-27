@@ -1,4 +1,3 @@
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
@@ -89,7 +88,6 @@ export function MutedWordsScreen(
 }
 
 function MutedWordRow({ className, word }: { className?: string; word: AppBskyActorDefs.MutedWord }) {
-	const { t: l } = useLingui();
 	const { mutateAsync: removeMutedWord } = useRemoveMutedWordMutation();
 	const { mutateAsync: updateMutedWord } = useUpdateMutedWordMutation();
 	const removeHandle = Prompt.usePromptHandle();
@@ -125,7 +123,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 			<Prompt.Basic
 				handle={removeHandle}
 				title={m['screens.moderation.dialog.confirmTitle']()}
-				description={l`This will delete "${word.value}" from your muted words. You can always add it back later.`}
+				description={m['screens.moderation.dialog.removeWordDescription']({ value: word.value })}
 				onConfirm={() => void removeMutedWord(word)}
 				confirmButtonCta={m['common.action.remove']()}
 				confirmButtonColor="negative"
@@ -148,7 +146,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 								<Button
 									className={styles.optionsButton}
 									color="secondary"
-									label={l`Options for "${word.value}"`}
+									label={m['screens.moderation.a11y.optionsForWord']({ value: word.value })}
 									shape="round"
 									size="tiny"
 									variant="ghost"
@@ -157,7 +155,10 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 								</Button>
 							}
 						/>
-						<Menu.Popup align="end" label={l`Options for "${word.value}"`}>
+						<Menu.Popup
+							align="end"
+							label={m['screens.moderation.a11y.optionsForWord']({ value: word.value })}
+						>
 							<Menu.Group>
 								<Menu.LabelText>{m['screens.moderation.action.changeDuration']()}</Menu.LabelText>
 								<Menu.Item label={m['common.time.hours24']()} onClick={() => renew(1)}>

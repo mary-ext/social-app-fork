@@ -1,6 +1,4 @@
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
-import type { MessageDescriptor } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
@@ -17,6 +15,8 @@ import {
 } from '#/components/icons/Lock';
 import { PencilLine_Stroke2_Corner0_Rounded as PencilIcon } from '#/components/icons/Pencil';
 
+import { m } from '#/paraglide/messages';
+
 export type SystemMessageAction =
 	| {
 			kind: 'profile';
@@ -26,7 +26,7 @@ export type SystemMessageAction =
 	| { kind: 'inviteLink' };
 
 export type SystemMessageInfo = {
-	message: MessageDescriptor;
+	message: string;
 	Icon: React.ComponentType<SVGIconProps>;
 	action?: SystemMessageAction;
 };
@@ -56,11 +56,11 @@ export function getSystemMessageInfo(
 				Icon: JoinIcon,
 				message: action
 					? opts.short
-						? defineMessage`${action.displayName} was added`
-						: defineMessage`${action.displayName} was added to the group`
+						? m['components.dms.update.added']({ name: action.displayName })
+						: m['components.dms.update.addedToGroup']({ name: action.displayName })
 					: opts.short
-						? defineMessage`Someone was added`
-						: defineMessage`Someone was added to the group`,
+						? m['components.dms.update.someoneAdded']()
+						: m['components.dms.update.someoneAddedToGroup'](),
 				action: action ?? undefined,
 			};
 		}
@@ -70,11 +70,11 @@ export function getSystemMessageInfo(
 				Icon: LeaveIcon,
 				message: action
 					? opts.short
-						? defineMessage`${action.displayName} was removed`
-						: defineMessage`${action.displayName} was removed from the group`
+						? m['components.dms.update.removed']({ name: action.displayName })
+						: m['components.dms.update.removedFromGroup']({ name: action.displayName })
 					: opts.short
-						? defineMessage`Someone was removed`
-						: defineMessage`Someone was removed from the group`,
+						? m['components.dms.update.someoneRemoved']()
+						: m['components.dms.update.someoneRemovedFromGroup'](),
 				action: action ?? undefined,
 			};
 		}
@@ -84,11 +84,11 @@ export function getSystemMessageInfo(
 				Icon: JoinIcon,
 				message: action
 					? opts.short
-						? defineMessage`${action.displayName} joined`
-						: defineMessage`${action.displayName} joined the group`
+						? m['components.dms.update.joined']({ name: action.displayName })
+						: m['components.dms.update.joinedGroup']({ name: action.displayName })
 					: opts.short
-						? defineMessage`Someone joined`
-						: defineMessage`Someone joined the group`,
+						? m['components.dms.update.someoneJoined']()
+						: m['components.dms.update.someoneJoinedGroup'](),
 				action: action ?? undefined,
 			};
 		}
@@ -98,50 +98,50 @@ export function getSystemMessageInfo(
 				Icon: LeaveIcon,
 				message: action
 					? opts.short
-						? defineMessage`${action.displayName} left`
-						: defineMessage`${action.displayName} left the group`
+						? m['components.dms.update.left']({ name: action.displayName })
+						: m['components.dms.update.leftGroup']({ name: action.displayName })
 					: opts.short
-						? defineMessage`Someone left`
-						: defineMessage`Someone left the group`,
+						? m['components.dms.update.someoneLeft']()
+						: m['components.dms.update.someoneLeftGroup'](),
 				action: action ?? undefined,
 			};
 		}
 		case 'chat.bsky.convo.defs#systemMessageDataLockConvo':
-			return { Icon: LockIcon, message: defineMessage`Chat locked` };
+			return { Icon: LockIcon, message: m['components.dms.update.chatLocked']() };
 		case 'chat.bsky.convo.defs#systemMessageDataUnlockConvo':
-			return { Icon: UnlockIcon, message: defineMessage`Chat unlocked` };
+			return { Icon: UnlockIcon, message: m['components.dms.update.chatUnlocked']() };
 		case 'chat.bsky.convo.defs#systemMessageDataLockConvoPermanently':
-			return { Icon: LockIcon, message: defineMessage`Chat ended` };
+			return { Icon: LockIcon, message: m['components.dms.update.chatEnded']() };
 		case 'chat.bsky.convo.defs#systemMessageDataEditGroup':
 			return {
 				Icon: PencilIcon,
 				message:
 					data.newName && !opts.short
-						? defineMessage`Chat title changed to ${data.newName}`
-						: defineMessage`Chat title changed`,
+						? m['components.dms.update.titleChangedTo']({ name: data.newName })
+						: m['components.dms.update.titleChanged'](),
 			};
 		case 'chat.bsky.convo.defs#systemMessageDataCreateJoinLink':
 			return {
 				Icon: ChainLinkIcon,
-				message: defineMessage`Invite link created`,
+				message: m['components.dms.toast.inviteCreated'](),
 				action: { kind: 'inviteLink' },
 			};
 		case 'chat.bsky.convo.defs#systemMessageDataEditJoinLink':
 			return {
 				Icon: ChainLinkIcon,
-				message: defineMessage`Invite link edited`,
+				message: m['components.dms.toast.inviteEdited'](),
 				action: { kind: 'inviteLink' },
 			};
 		case 'chat.bsky.convo.defs#systemMessageDataEnableJoinLink':
 			return {
 				Icon: ChainLinkIcon,
-				message: defineMessage`Invite link enabled`,
+				message: m['components.dms.toast.inviteEnabled'](),
 				action: { kind: 'inviteLink' },
 			};
 		case 'chat.bsky.convo.defs#systemMessageDataDisableJoinLink':
 			return {
 				Icon: ChainLinkBrokenIcon,
-				message: defineMessage`Invite link disabled`,
+				message: m['common.label.inviteLinkDisabled'](),
 				action: { kind: 'inviteLink' },
 			};
 	}

@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { Trans } from '@lingui/react/macro';
 
 import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from '#/lib/strings/embed-player';
 
@@ -64,12 +63,7 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 					{m['components.dialogs.externalMedia.prompt']({ source: externalEmbedLabels[source] })}
 				</Text>
 
-				<Admonition type="info">
-					<Trans>
-						External media may allow websites to collect information about you and your device. No information
-						is sent or requested until you press the "play" button.
-					</Trans>
-				</Admonition>
+				<Admonition type="info">{m['common.hint.externalMedia']()}</Admonition>
 			</div>
 
 			<div className={styles.actions}>

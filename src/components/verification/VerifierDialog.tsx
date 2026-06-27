@@ -1,10 +1,11 @@
 import type { AnyProfileView } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
 
 import { useSession } from '#/state/session';
+
+import { Trans } from '#/locale/Trans';
 
 import { VerifierCheck } from '#/components/icons/VerifierCheck';
 import { Text } from '#/components/Text';
@@ -61,10 +62,10 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					{label}
 				</Text>
 				<Text size="md">
-					<Trans>
-						Accounts with a scalloped blue check mark <VerifierCheck className={css.inlineCheck} width={14} />{' '}
-						can verify others. These trusted verifiers are selected by Bluesky.
-					</Trans>
+					<Trans
+						message={m['components.verification.about.trustedVerifiers']}
+						markup={{ t0: () => <VerifierCheck className={css.inlineCheck} width={14} /> }}
+					/>
 				</Text>
 			</div>
 

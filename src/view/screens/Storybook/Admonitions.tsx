@@ -1,5 +1,6 @@
 import { Text as RNText, View } from 'react-native';
-import { Trans } from '@lingui/react/macro';
+
+import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -58,25 +59,31 @@ export function Admonitions() {
 					<AdmonitionIcon />
 					<AdmonitionContent>
 						<AdmonitionText>
-							<Trans>
-								Enable notifications for an account by visiting their profile and pressing the{' '}
-								<RNText style={[a.font_bold, t.atoms.text_contrast_high]}>bell icon</RNText>{' '}
-								<BellRingingFilledIcon size="xs" style={t.atoms.text_contrast_high} />.
-							</Trans>
+							<Trans
+								message={m['view.notifications.enableHint']}
+								markup={{
+									t0: ({ children }) => (
+										<RNText style={[a.font_bold, t.atoms.text_contrast_high]}>{children}</RNText>
+									),
+									t1: () => <BellRingingFilledIcon size="xs" style={t.atoms.text_contrast_high} />,
+								}}
+							/>
 						</AdmonitionText>
 						<AdmonitionText>
-							<Trans>
-								If you want to restrict who can receive notifications for your account's activity, you can
-								change this in{' '}
-								<InlineLinkText
-									label={m['view.label.accountPrivacySettings']()}
-									to={{ screen: 'AccountSettings' }}
-									style={[a.font_bold]}
-								>
-									Settings &rarr; Account & privacy
-								</InlineLinkText>
-								.
-							</Trans>
+							<Trans
+								message={m['view.notifications.restrictHint']}
+								markup={{
+									t0: ({ children }) => (
+										<InlineLinkText
+											label={m['view.label.accountPrivacySettings']()}
+											to={{ screen: 'AccountSettings' }}
+											style={[a.font_bold]}
+										>
+											{children}
+										</InlineLinkText>
+									),
+								}}
+							/>
 						</AdmonitionText>
 					</AdmonitionContent>
 				</AdmonitionRow>

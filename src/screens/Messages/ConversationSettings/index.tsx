@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
@@ -422,14 +422,13 @@ function SettingsHeader({
 				</View>
 				<Text style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>{groupName}</Text>
 				<Text style={[a.text_sm, a.text_center, a.pt_xs, a.px_xl, t.atoms.text_contrast_high]}>
-					<Trans>
-						Created{' '}
-						{i18n.date(createdAt, {
+					{m['screens.messages.label.created']({
+						date: i18n.date(createdAt, {
 							month: 'long',
 							day: 'numeric',
 							year: 'numeric',
-						})}
-					</Trans>
+						}),
+					})}
 				</Text>
 				<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_2xl, a.pt_2xl, a.flex_wrap]}>
 					<SettingsButton

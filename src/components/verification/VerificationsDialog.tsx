@@ -38,7 +38,6 @@ export function VerificationsDialog({
 }
 
 function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const { isVerified } = useSimpleVerificationState({ profile });
@@ -50,10 +49,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 			: m['components.verification.title.yourVerifications']()
 		: isVerified
 			? m['components.verification.status.userVerified']({ userName })
-			: l({
-					comment: `Possessive, meaning "the verifications of {userName}"`,
-					message: `${userName}'s verifications`,
-				});
+			: m['components.verification.title.userVerifications']({ userName });
 
 	return (
 		<>

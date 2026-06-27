@@ -1,12 +1,11 @@
 import { type Client, ok } from '@atcute/client';
 import type { Did, Nsid } from '@atcute/lexicons';
-import type { I18n } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
 
 import { UploadLimitError } from '#/lib/media/video/errors';
 import { getServiceAuthAudFromUrl } from '#/lib/strings/url-helpers';
 
 import { VIDEO_PROXY_DID } from '#/env';
+import { m } from '#/paraglide/messages';
 
 import { createVideoClient } from './util';
 
@@ -51,17 +50,8 @@ export async function getServiceAuthToken({
  *
  * @param pds the signed-in PDS client (used to mint the service-auth token).
  * @param dispatchUrl the resolved PDS URL.
- * @param i18n the lingui i18n instance for fallback error messaging.
  */
-export async function getVideoUploadLimits({
-	pds,
-	dispatchUrl,
-	i18n,
-}: {
-	pds: Client;
-	dispatchUrl: string;
-	i18n: I18n;
-}) {
+export async function getVideoUploadLimits({ pds, dispatchUrl }: { pds: Client; dispatchUrl: string }) {
 	const token = await getServiceAuthToken({
 		pds,
 		dispatchUrl,
@@ -81,11 +71,7 @@ export async function getVideoUploadLimits({
 		if (limits.message) {
 			throw new UploadLimitError(limits.message);
 		} else {
-			throw new UploadLimitError(
-				i18n._(
-					defineMessage`You have temporarily reached the limit for video uploads. Please try again later.`,
-				),
-			);
+			throw new UploadLimitError(m['lib.error.videoUploadLimit']());
 		}
 	}
 }

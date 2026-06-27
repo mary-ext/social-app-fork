@@ -1,10 +1,10 @@
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
-import type { I18n } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { postUriToRelativePath, toBskyAppUrl, toShortUrl } from '#/lib/strings/url-helpers';
+
+import { m } from '#/paraglide/messages';
 
 export type UserMessageInfo = {
 	message: string | null;
@@ -40,12 +40,10 @@ export function getMessageInfo({
 	convo,
 	currentAccountDid,
 	primaryProfile,
-	i18n,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
 	currentAccountDid: string | undefined;
 	primaryProfile?: AnyProfileView;
-	i18n: I18n;
 }): UserMessageInfo | null {
 	if (convo.lastMessage?.$type !== 'chat.bsky.convo.defs#messageView') {
 		return null;
@@ -67,19 +65,9 @@ export function getMessageInfo({
 
 	const prefix = (message: string) => {
 		if (isFromMe) {
-			return i18n._(
-				defineMessage({
-					message: `You: ${message}`,
-					comment: 'When the last message in a chat was made by you.',
-				}),
-			);
+			return m['components.dms.label.lastMessageByYou']({ message });
 		} else if (isGroup && name) {
-			return i18n._(
-				defineMessage({
-					message: `${name}: ${message}`,
-					comment: 'When the last message in a group chat came from someone other than you.',
-				}),
-			);
+			return m['components.dms.label.namedMessage']({ message, name });
 		}
 		return message;
 	};
@@ -89,7 +77,7 @@ export function getMessageInfo({
 	if (lastMessage.text) {
 		message = prefix(lastMessage.text);
 	} else if (lastMessage.embed) {
-		const defaultEmbeddedContentMessage = i18n._(defineMessage`(contains embedded content)`);
+		const defaultEmbeddedContentMessage = m['common.label.embeddedContent']();
 
 		if (lastMessage.embed.$type === 'app.bsky.embed.record#view') {
 			const embed = lastMessage.embed;
@@ -104,7 +92,7 @@ export function getMessageInfo({
 				message = prefix(defaultEmbeddedContentMessage);
 			}
 		} else if (lastMessage.embed.$type === 'chat.bsky.embed.joinLink#view') {
-			message = prefix(i18n._(defineMessage`(chat invite link)`));
+			message = prefix(m['common.label.chatInviteLink']());
 		} else {
 			message = prefix(defaultEmbeddedContentMessage);
 		}

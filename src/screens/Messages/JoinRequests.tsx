@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyGroupListJoinRequests } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import { Plural } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type InfiniteData, useQueryClient } from '@tanstack/react-query';
 
@@ -354,22 +353,11 @@ function Header({ count, hasMoreRequests }: { count?: number; hasMoreRequests?: 
 			<Layout.Header.BackButton />
 			<Layout.Header.Content>
 				<Layout.Header.TitleText>
-					{count === undefined ? (
-						m['common.label.requestsToJoin']()
-					) : hasMoreRequests ? (
-						<Plural
-							value={count}
-							other="#+ requests to join"
-							comment="Displayed when there are more requests to join a group chat than have been loaded"
-						/>
-					) : (
-						<Plural
-							value={count}
-							_0="No requests to join"
-							one="# request to join"
-							other="# requests to join"
-						/>
-					)}
+					{count === undefined
+						? m['common.label.requestsToJoin']()
+						: hasMoreRequests
+							? m['screens.messages.requests.toJoinOverflow']({ count })
+							: m['screens.messages.requests.toJoinCount']({ count })}
 				</Layout.Header.TitleText>
 			</Layout.Header.Content>
 			<Layout.Header.Slot />

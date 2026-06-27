@@ -9,8 +9,6 @@ import {
 	useState,
 } from 'react';
 import { View } from 'react-native';
-import { i18n, type MessageDescriptor } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
 import {
 	createNavigationContainerRef,
 	DarkTheme,
@@ -56,6 +54,7 @@ import { type Theme, useTheme } from '#/alf';
 
 import { WebShell } from '#/components/web/Shell';
 
+import { m } from '#/paraglide/messages';
 import { router } from '#/routes';
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>();
@@ -427,7 +426,7 @@ const FlatNavigator = () => {
 	const t = useTheme();
 	const numUnread = useUnreadNotifications();
 	const screenListeners = useWebScrollRestoration();
-	const title = (page: MessageDescriptor) => bskyTitle(i18n._(page), numUnread);
+	const title = (page: string) => bskyTitle(page, numUnread);
 
 	return (
 		<Flat.Navigator
@@ -439,18 +438,18 @@ const FlatNavigator = () => {
 			<Flat.Screen
 				name="Home"
 				getComponent={() => HomeScreen}
-				options={{ title: title(defineMessage`Home`) }}
+				options={{ title: title(m['common.nav.home']()) }}
 			/>
 			<Flat.Screen
 				name="Search"
 				getComponent={() => SearchScreen}
-				options={{ title: title(defineMessage`Explore`) }}
+				options={{ title: title(m['common.nav.explore']()) }}
 			/>
 			<Flat.Screen
 				name="Notifications"
 				getComponent={() => NotificationsScreen}
 				options={{
-					title: title(defineMessage`Notifications`),
+					title: title(m['common.nav.notifications']()),
 					requireAuth: true,
 				}}
 			/>
@@ -458,39 +457,39 @@ const FlatNavigator = () => {
 				<Flat.Screen
 					name="Messages"
 					getComponent={() => MessagesScreen}
-					options={{ title: title(defineMessage`Messages`), requireAuth: true }}
+					options={{ title: title(m['navigation.title.messages']()), requireAuth: true }}
 				/>
 			</Flat.Group>
 			<Flat.Screen
 				name="Start"
 				getComponent={() => HomeScreen}
-				options={{ title: title(defineMessage`Home`) }}
+				options={{ title: title(m['common.nav.home']()) }}
 			/>
 			<Flat.Screen
 				name="GroupChatJoin"
 				getComponent={() => HomeScreen}
-				options={{ title: title(defineMessage`Home`) }}
+				options={{ title: title(m['common.nav.home']()) }}
 			/>
 			<Flat.Screen
 				name="NotFound"
 				getComponent={() => NotFoundScreen}
-				options={{ title: title(defineMessage`Not Found`) }}
+				options={{ title: title(m['common.error.notFound']()) }}
 			/>
 			<Flat.Screen
 				name="Lists"
 				component={ListsScreen}
-				options={{ title: title(defineMessage`Lists`), requireAuth: true }}
+				options={{ title: title(m['common.label.lists']()), requireAuth: true }}
 			/>
 			<Flat.Screen
 				name="Moderation"
 				getComponent={() => ModerationScreen}
-				options={{ title: title(defineMessage`Moderation`), requireAuth: true }}
+				options={{ title: title(m['common.label.moderation']()), requireAuth: true }}
 			/>
 			<Flat.Screen
 				name="ModerationModlists"
 				getComponent={() => ModerationModlistsScreen}
 				options={{
-					title: title(defineMessage`Moderation Lists`),
+					title: title(m['common.title.moderationLists']()),
 					requireAuth: true,
 				}}
 			/>
@@ -498,7 +497,7 @@ const FlatNavigator = () => {
 				name="ModerationMutedAccounts"
 				getComponent={() => ModerationMutedAccounts}
 				options={{
-					title: title(defineMessage`Muted Accounts`),
+					title: title(m['common.title.mutedAccounts']()),
 					requireAuth: true,
 				}}
 			/>
@@ -506,7 +505,7 @@ const FlatNavigator = () => {
 				name="ModerationMutedWords"
 				getComponent={() => ModerationMutedWords}
 				options={{
-					title: title(defineMessage`Muted Words & Tags`),
+					title: title(m['navigation.title.mutedWords']()),
 					requireAuth: true,
 				}}
 			/>
@@ -514,7 +513,7 @@ const FlatNavigator = () => {
 				name="ModerationBlockedAccounts"
 				getComponent={() => ModerationBlockedAccounts}
 				options={{
-					title: title(defineMessage`Blocked Accounts`),
+					title: title(m['common.label.blockedAccounts']()),
 					requireAuth: true,
 				}}
 			/>
@@ -522,7 +521,7 @@ const FlatNavigator = () => {
 				name="ModerationInteractionSettings"
 				getComponent={() => ModerationInteractionSettings}
 				options={{
-					title: title(defineMessage`Post Interaction Settings`),
+					title: title(m['common.title.postInteractionSettings']()),
 					requireAuth: true,
 				}}
 			/>
@@ -530,111 +529,111 @@ const FlatNavigator = () => {
 				name="ModerationVerificationSettings"
 				getComponent={() => ModerationVerificationSettings}
 				options={{
-					title: title(defineMessage`Verification Settings`),
+					title: title(m['common.nav.verificationSettings']()),
 					requireAuth: true,
 				}}
 			/>
 			<Flat.Screen
 				name="Settings"
 				getComponent={() => SettingsScreen}
-				options={{ title: title(defineMessage`Settings`), requireAuth: true }}
+				options={{ title: title(m['common.nav.settings']()), requireAuth: true }}
 			/>
 			<Flat.Screen
 				name="LanguageSettings"
 				getComponent={() => LanguageSettingsScreen}
 				options={{
-					title: title(defineMessage`Language Settings`),
+					title: title(m['navigation.title.languageSettings']()),
 					requireAuth: true,
 				}}
 			/>
 			<Flat.Screen
 				name="Profile"
 				getComponent={() => ProfileScreen}
-				options={{ title: title(defineMessage`Profile`) }}
+				options={{ title: title(m['common.nav.profile']()) }}
 			/>
 			<Flat.Screen
 				name="ProfileFollowers"
 				getComponent={() => ProfileFollowersScreen}
-				options={{ title: title(defineMessage`Followers`) }}
+				options={{ title: title(m['navigation.title.followers']()) }}
 			/>
 			<Flat.Screen
 				name="ProfileFollows"
 				getComponent={() => ProfileFollowsScreen}
-				options={{ title: title(defineMessage`Following`) }}
+				options={{ title: title(m['common.action.following']()) }}
 			/>
 			<Flat.Screen
 				name="ProfileKnownFollowers"
 				getComponent={() => ProfileKnownFollowersScreen}
-				options={{ title: title(defineMessage`Followers you know`) }}
+				options={{ title: title(m['common.label.followersYouKnow']()) }}
 			/>
 			<Flat.Screen
 				name="ProfileList"
 				getComponent={() => ProfileListScreen}
-				options={{ title: title(defineMessage`List`), requireAuth: true }}
+				options={{ title: title(m['navigation.title.list']()), requireAuth: true }}
 			/>
 			<Flat.Screen
 				name="ProfileSearch"
 				getComponent={() => ProfileSearchScreen}
-				options={{ title: title(defineMessage`Search`) }}
+				options={{ title: title(m['common.action.search']()) }}
 			/>
 			<Flat.Screen
 				name="PostThread"
 				getComponent={() => PostThreadScreen}
-				options={{ title: title(defineMessage`Post`) }}
+				options={{ title: title(m['navigation.title.post']()) }}
 			/>
 			<Flat.Screen
 				name="PostLikedBy"
 				getComponent={() => PostLikedByScreen}
-				options={{ title: title(defineMessage`Post`) }}
+				options={{ title: title(m['navigation.title.post']()) }}
 			/>
 			<Flat.Screen
 				name="PostRepostedBy"
 				getComponent={() => PostRepostedByScreen}
-				options={{ title: title(defineMessage`Post`) }}
+				options={{ title: title(m['navigation.title.post']()) }}
 			/>
 			<Flat.Screen
 				name="PostQuotes"
 				getComponent={() => PostQuotesScreen}
-				options={{ title: title(defineMessage`Post`) }}
+				options={{ title: title(m['navigation.title.post']()) }}
 			/>
 			<Flat.Screen
 				name="ProfileFeed"
 				getComponent={() => ProfileFeedScreen}
-				options={{ title: title(defineMessage`Feed`) }}
+				options={{ title: title(m['navigation.title.feed']()) }}
 			/>
 			<Flat.Screen
 				name="ProfileFeedLikedBy"
 				getComponent={() => ProfileFeedLikedByScreen}
-				options={{ title: title(defineMessage`Liked by`) }}
+				options={{ title: title(m['navigation.title.likedBy']()) }}
 			/>
 			<Flat.Screen
 				name="ProfileLabelerLikedBy"
 				getComponent={() => ProfileLabelerLikedByScreen}
-				options={{ title: title(defineMessage`Liked by`) }}
+				options={{ title: title(m['navigation.title.likedBy']()) }}
 			/>
 			<Flat.Screen
 				name="Debug"
 				getComponent={() => StorybookScreen}
-				options={{ title: title(defineMessage`Storybook`), requireAuth: true }}
+				options={{ title: title(m['navigation.title.storybook']()), requireAuth: true }}
 			/>
 			<Flat.Screen
 				name="DebugMod"
 				getComponent={() => DebugModScreen}
 				options={{
-					title: title(defineMessage`Moderation states`),
+					title: title(m['navigation.title.moderationStates']()),
 					requireAuth: true,
 				}}
 			/>
 			<Flat.Screen
 				name="Log"
 				getComponent={() => LogScreen}
-				options={{ title: title(defineMessage`Log`), requireAuth: true }}
+				options={{ title: title(m['navigation.title.log']()), requireAuth: true }}
 			/>
 			<Flat.Screen
 				name="SavedFeeds"
 				getComponent={() => SavedFeeds}
 				options={{
-					title: title(defineMessage`Edit My Feeds`),
+					title: title(m['common.action.editMyFeeds']()),
 					requireAuth: true,
 				}}
 			/>
@@ -642,7 +641,7 @@ const FlatNavigator = () => {
 				name="PreferencesExternalEmbeds"
 				getComponent={() => ExternalMediaPreferencesScreen}
 				options={{
-					title: title(defineMessage`External Media Preferences`),
+					title: title(m['common.label.externalMediaPreferences']()),
 					requireAuth: true,
 				}}
 			/>
@@ -650,7 +649,7 @@ const FlatNavigator = () => {
 				name="AccessibilitySettings"
 				getComponent={() => AccessibilitySettingsScreen}
 				options={{
-					title: title(defineMessage`Accessibility Settings`),
+					title: title(m['navigation.title.accessibilitySettings']()),
 					requireAuth: true,
 				}}
 			/>
@@ -658,7 +657,7 @@ const FlatNavigator = () => {
 				name="AppearanceSettings"
 				getComponent={() => AppearanceSettingsScreen}
 				options={{
-					title: title(defineMessage`Appearance`),
+					title: title(m['common.label.appearance']()),
 					requireAuth: true,
 				}}
 			/>
@@ -666,7 +665,7 @@ const FlatNavigator = () => {
 				name="AccountSettings"
 				getComponent={() => AccountSettingsScreen}
 				options={{
-					title: title(defineMessage`Account & privacy`),
+					title: title(m['common.label.accountPrivacy']()),
 					requireAuth: true,
 				}}
 			/>
@@ -674,7 +673,7 @@ const FlatNavigator = () => {
 				name="NotificationSettings"
 				getComponent={() => NotificationSettingsScreen}
 				options={{
-					title: title(defineMessage`Notification settings`),
+					title: title(m['common.title.notificationSettings']()),
 					requireAuth: true,
 				}}
 			/>
@@ -682,7 +681,7 @@ const FlatNavigator = () => {
 				name="ContentAndMediaSettings"
 				getComponent={() => ContentAndMediaSettingsScreen}
 				options={{
-					title: title(defineMessage`Content and Media`),
+					title: title(m['navigation.title.contentAndMedia']()),
 					requireAuth: true,
 				}}
 			/>
@@ -690,31 +689,31 @@ const FlatNavigator = () => {
 				name="InterestsSettings"
 				getComponent={() => InterestsSettingsScreen}
 				options={{
-					title: title(defineMessage`Your interests`),
+					title: title(m['common.label.yourInterests']()),
 					requireAuth: true,
 				}}
 			/>
 			<Flat.Screen
 				name="Hashtag"
 				getComponent={() => HashtagScreen}
-				options={{ title: title(defineMessage`Hashtag`) }}
+				options={{ title: title(m['navigation.title.hashtag']()) }}
 			/>
 			<Flat.Screen
 				name="Topic"
 				getComponent={() => TopicScreen}
-				options={{ title: title(defineMessage`Topic`) }}
+				options={{ title: title(m['navigation.title.topic']()) }}
 			/>
 			<Flat.Group screenLayout={renderMessagesSplitViewLayout}>
 				<Flat.Screen
 					name="MessagesConversation"
 					getComponent={() => MessagesConversationScreen}
-					options={{ title: title(defineMessage`Chat`), requireAuth: true }}
+					options={{ title: title(m['common.label.chat']()), requireAuth: true }}
 				/>
 				<Flat.Screen
 					name="MessagesConversationSettings"
 					getComponent={() => MessagesConversationSettingsScreen}
 					options={{
-						title: title(defineMessage`Group chat settings`),
+						title: title(m['common.title.groupChatSettings']()),
 						requireAuth: true,
 					}}
 				/>
@@ -722,7 +721,7 @@ const FlatNavigator = () => {
 					name="MessagesJoinRequests"
 					getComponent={() => MessagesJoinRequestsScreen}
 					options={{
-						title: title(defineMessage`Requests to join`),
+						title: title(m['common.label.requestsToJoin']()),
 						requireAuth: true,
 					}}
 				/>
@@ -730,7 +729,7 @@ const FlatNavigator = () => {
 					name="MessagesSettings"
 					getComponent={() => MessagesSettingsScreen}
 					options={{
-						title: title(defineMessage`Chat settings`),
+						title: title(m['common.label.chatSettings']()),
 						requireAuth: true,
 					}}
 				/>
@@ -738,7 +737,7 @@ const FlatNavigator = () => {
 					name="MessagesInbox"
 					getComponent={() => MessagesInboxScreen}
 					options={{
-						title: title(defineMessage`Chat request inbox`),
+						title: title(m['navigation.title.chatRequests']()),
 						requireAuth: true,
 					}}
 				/>
@@ -747,7 +746,7 @@ const FlatNavigator = () => {
 				name="NotificationsActivityList"
 				getComponent={() => NotificationsActivityListScreen}
 				options={{
-					title: title(defineMessage`Notifications`),
+					title: title(m['common.nav.notifications']()),
 					requireAuth: true,
 				}}
 			/>
@@ -755,30 +754,30 @@ const FlatNavigator = () => {
 				name="LegacyNotificationSettings"
 				getComponent={() => LegacyNotificationSettingsScreen}
 				options={{
-					title: title(defineMessage`Notification settings`),
+					title: title(m['common.title.notificationSettings']()),
 					requireAuth: true,
 				}}
 			/>
 			<Flat.Screen
 				name="Feeds"
 				getComponent={() => FeedsScreen}
-				options={{ title: title(defineMessage`Feeds`) }}
+				options={{ title: title(m['common.nav.feeds']()) }}
 			/>
 			<Flat.Screen
 				name="StarterPack"
 				getComponent={() => StarterPackScreen}
-				options={{ title: title(defineMessage`Starter Pack`) }}
+				options={{ title: title(m['common.label.starterPack']()) }}
 			/>
 			<Flat.Screen
 				name="StarterPackShort"
 				getComponent={() => StarterPackScreenShort}
-				options={{ title: title(defineMessage`Starter Pack`) }}
+				options={{ title: title(m['common.label.starterPack']()) }}
 			/>
 			<Flat.Screen
 				name="StarterPackWizard"
 				getComponent={() => Wizard}
 				options={{
-					title: title(defineMessage`Create a starter pack`),
+					title: title(m['common.action.createStarterPack']()),
 					requireAuth: true,
 				}}
 			/>
@@ -786,7 +785,7 @@ const FlatNavigator = () => {
 				name="StarterPackEdit"
 				getComponent={() => Wizard}
 				options={{
-					title: title(defineMessage`Edit your starter pack`),
+					title: title(m['navigation.title.editStarterPack']()),
 					requireAuth: true,
 				}}
 			/>
@@ -794,7 +793,7 @@ const FlatNavigator = () => {
 				name="Bookmarks"
 				getComponent={() => BookmarksScreen}
 				options={{
-					title: title(defineMessage`Saved Posts`),
+					title: title(m['common.label.savedPosts']()),
 					requireAuth: true,
 				}}
 			/>

@@ -9,7 +9,6 @@ import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { t } from '@lingui/core/macro';
 import {
 	type InfiniteData,
 	keepPreviousData,
@@ -31,6 +30,7 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 import { createQueryKey } from '#/state/queries/util';
 import { useClients, useSession } from '#/state/session';
 
+import { m } from '#/paraglide/messages';
 import { router } from '#/routes';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
@@ -117,7 +117,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		avatar: view.avatar,
 		displayName: view.displayName
 			? sanitizeDisplayName(view.displayName)
-			: t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
+			: m['common.label.feedBy']({ handle: sanitizeHandle(view.creator.handle, '@') }),
 		description,
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
@@ -156,7 +156,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		creatorHandle: view.creator.handle,
 		displayName: view.name
 			? sanitizeDisplayName(view.name)
-			: t`User List by ${sanitizeHandle(view.creator.handle, '@')}`,
+			: m['state.label.userListByCreator']({ handle: sanitizeHandle(view.creator.handle, '@') }),
 		contentMode: undefined,
 	};
 }

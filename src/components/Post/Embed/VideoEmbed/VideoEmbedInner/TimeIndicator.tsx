@@ -1,14 +1,11 @@
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
-
 import { Text } from '#/components/Text';
+
+import { m } from '#/paraglide/messages';
 
 import * as styles from './TimeIndicator.css';
 
 /** Absolutely positioned time indicator showing how many seconds are remaining. Time is in seconds. */
 export function TimeIndicator({ time }: { time: number }) {
-	const { t: l } = useLingui();
-
 	if (isNaN(time)) {
 		return null;
 	}
@@ -18,10 +15,9 @@ export function TimeIndicator({ time }: { time: number }) {
 
 	return (
 		<div
-			aria-label={l`Time remaining: ${plural(Number(time) || 0, {
-				one: '# second',
-				other: '# seconds',
-			})}`}
+			aria-label={m['components.post.a11y.timeRemaining']({
+				time: Number(time) || 0,
+			})}
 			className={styles.indicator}
 		>
 			<Text size="sm" weight="semiBold" className={styles.text}>

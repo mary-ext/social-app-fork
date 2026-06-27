@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Trans } from '@lingui/react/macro';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -14,6 +13,8 @@ import { useUnreadNotifications, useUnreadNotificationsApi } from '#/state/queri
 import { truncateAndInvalidate } from '#/state/queries/util';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { NotificationFeed } from '#/view/com/notifications/NotificationFeed';
 import { FAB } from '#/view/com/util/fab/FAB';
@@ -239,14 +240,16 @@ function DisabledNotificationsWarning({ active }: { active: boolean }) {
 		return (
 			<div className={css.warning}>
 				<Admonition type="warning">
-					<Trans>
-						You have completely disabled reply, quote, and mention notifications, so this tab will no longer
-						update. To adjust this, visit your{' '}
-						<InlineLinkText label={m['view.notifications.visitSettings']()} to="/settings/notifications">
-							notification settings
-						</InlineLinkText>
-						.
-					</Trans>
+					<Trans
+						message={m['view.notifications.disabledHint']}
+						markup={{
+							t0: ({ children }) => (
+								<InlineLinkText label={m['view.notifications.visitSettings']()} to="/settings/notifications">
+									{children}
+								</InlineLinkText>
+							),
+						}}
+					/>
 				</Admonition>
 			</div>
 		);

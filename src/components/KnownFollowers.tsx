@@ -6,11 +6,12 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Plural, Trans } from '@lingui/react/macro';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
+
+import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -192,46 +193,76 @@ function KnownFollowersInner({
 							// 2-n followers, including blocks
 							// only 2
 							serverCount > 2 ? (
-								<Trans>
-									Followed by{' '}
-									<Text emoji key={slice[0]!.profile.did} style={textStyle}>
-										{slice[0]!.profile.displayName}
-									</Text>
-									,{' '}
-									<Text emoji key={slice[1]!.profile.did} style={textStyle}>
-										{slice[1]!.profile.displayName}
-									</Text>
-									, and <Plural value={serverCount - 2} one="# other" other="# others" />
-								</Trans>
+								<Trans
+									message={m['common.label.followedByMany']}
+									inputs={{
+										count: serverCount - 2,
+										name: slice[0]!.profile.displayName,
+										name2: slice[1]!.profile.displayName,
+									}}
+									markup={{
+										t0: ({ children }) => (
+											<Text emoji style={textStyle}>
+												{children}
+											</Text>
+										),
+										t1: ({ children }) => (
+											<Text emoji style={textStyle}>
+												{children}
+											</Text>
+										),
+									}}
+								/>
 							) : (
-								<Trans>
-									Followed by{' '}
-									<Text emoji key={slice[0]!.profile.did} style={textStyle}>
-										{slice[0]!.profile.displayName}
-									</Text>{' '}
-									and{' '}
-									<Text emoji key={slice[1]!.profile.did} style={textStyle}>
-										{slice[1]!.profile.displayName}
-									</Text>
-								</Trans>
+								<Trans
+									message={m['common.label.followedByTwo']}
+									inputs={{
+										name: slice[0]!.profile.displayName,
+										name2: slice[1]!.profile.displayName,
+									}}
+									markup={{
+										t0: ({ children }) => (
+											<Text emoji style={textStyle}>
+												{children}
+											</Text>
+										),
+										t1: ({ children }) => (
+											<Text emoji style={textStyle}>
+												{children}
+											</Text>
+										),
+									}}
+								/>
 							)
 						) : serverCount > 1 ? (
 							// 1-n followers, including blocks
-							<Trans>
-								Followed by{' '}
-								<Text emoji key={slice[0]!.profile.did} style={textStyle}>
-									{slice[0]!.profile.displayName}
-								</Text>{' '}
-								and <Plural value={serverCount - 1} one="# other" other="# others" />
-							</Trans>
+							<Trans
+								message={m['common.label.followedByOthers']}
+								inputs={{
+									count: serverCount - 1,
+									name: slice[0]!.profile.displayName,
+								}}
+								markup={{
+									t0: ({ children }) => (
+										<Text emoji style={textStyle}>
+											{children}
+										</Text>
+									),
+								}}
+							/>
 						) : (
 							// only 1
-							<Trans>
-								Followed by{' '}
-								<Text emoji key={slice[0]!.profile.did} style={textStyle}>
-									{slice[0]!.profile.displayName}
-								</Text>
-							</Trans>
+							<Trans
+								message={m['common.label.followedBy']}
+								inputs={{ name: slice[0]!.profile.displayName }}
+								markup={{
+									t0: ({ children }) => (
+										<Text emoji style={textStyle}>
+											{children}
+										</Text>
+									),
+								}}
+							/>
 						)}
 					</Text>
 				</>

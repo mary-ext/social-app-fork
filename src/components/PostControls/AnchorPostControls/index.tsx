@@ -1,6 +1,4 @@
 import type { ComponentType, MouseEvent, ReactNode, Ref } from 'react';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
@@ -103,7 +101,6 @@ function AnchorPostControls({
 	viaRepost,
 }: PostControlsProps): React.ReactNode {
 	const t = useTheme();
-	const { t: l } = useLingui();
 
 	const {
 		hasLikeIconBeenToggled,
@@ -126,14 +123,7 @@ function AnchorPostControls({
 								})
 						: undefined
 				}
-				label={l({
-					message: `Reply (${plural(post.replyCount || 0, {
-						one: '# reply',
-						other: '# replies',
-					})})`,
-					comment:
-						'Accessibility label for the reply button, verb form followed by number of replies and noun form',
-				})}
+				label={m['components.postControls.a11y.reply']({ count: post.replyCount || 0 })}
 				tooltip={m['common.action.reply']()}
 				className={clsx(replyDisabled && css.replyDisabled)}
 			>
@@ -165,22 +155,8 @@ function AnchorPostControls({
 				onClick={() => requireAuth(() => onPressToggleLike())}
 				label={
 					post.viewer?.like
-						? l({
-								message: `Unlike (${plural(post.likeCount || 0, {
-									one: '# like',
-									other: '# likes',
-								})})`,
-								comment:
-									'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
-							})
-						: l({
-								message: `Like (${plural(post.likeCount || 0, {
-									one: '# like',
-									other: '# likes',
-								})})`,
-								comment:
-									'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
-							})
+						? m['components.postControls.a11y.unlike']({ count: post.likeCount || 0 })
+						: m['components.postControls.a11y.like']({ count: post.likeCount || 0 })
 				}
 			>
 				<AnchorControlButtonIconBox>

@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react';
 import type { ComAtprotoLabelDefs, ComAtprotoModerationCreateReport } from '@atcute/atproto';
 import { ClientResponseError, ok } from '@atcute/client';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
-import { Trans } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -16,6 +15,8 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Text';
@@ -147,16 +148,21 @@ function Label({
 				) : (
 					<div className={styles.sourceRow}>
 						<Text className={styles.sourceText} color="textContrastMedium" numberOfLines={1}>
-							<Trans>
-								Source:{' '}
-								<InlineLinkText
-									label={sourceName}
-									onPress={() => control.close()}
-									to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
-								>
-									{sourceName}
-								</InlineLinkText>
-							</Trans>
+							<Trans
+								message={m['common.label.source']}
+								inputs={{ sourceName }}
+								markup={{
+									t0: ({ children }) => (
+										<InlineLinkText
+											label={sourceName}
+											onPress={() => control.close()}
+											to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
+										>
+											{children}
+										</InlineLinkText>
+									),
+								}}
+							/>
 						</Text>
 						{label.exp && (
 							<Text className={styles.expires} color="textContrastMedium" size="sm">
@@ -226,21 +232,25 @@ function AppealForm({
 		<>
 			<div className={styles.appealHeader}>
 				<Text className={styles.title} size="_2xl" weight="semiBold">
-					<Trans>Appeal "{strings.name}" label</Trans>
+					{m['components.moderation.appeal.title']({ name: strings.name })}
 				</Text>
 				<Text size="md">
-					<Trans>
-						This appeal will be sent to{' '}
-						<InlineLinkText
-							label={sourceName}
-							onPress={() => control.close()}
-							size="md"
-							to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
-						>
-							{sourceName}
-						</InlineLinkText>
-						.
-					</Trans>
+					<Trans
+						message={m['components.moderation.appeal.sentTo']}
+						inputs={{ sourceName }}
+						markup={{
+							t0: ({ children }) => (
+								<InlineLinkText
+									label={sourceName}
+									onPress={() => control.close()}
+									size="md"
+									to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
+								>
+									{children}
+								</InlineLinkText>
+							),
+						}}
+					/>
 				</Text>
 			</div>
 			{error && (

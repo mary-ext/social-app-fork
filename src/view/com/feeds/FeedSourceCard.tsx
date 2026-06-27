@@ -2,7 +2,6 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans } from '@lingui/react/macro';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -121,9 +120,7 @@ export function FeedSourceCardLoaded({
 			</View>
 			{showLikes && feed.type === 'feed' ? (
 				<Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium, a.leading_snug]}>
-					<Trans>
-						Liked by <Plural value={feed.likeCount || 0} one="# user" other="# users" />
-					</Trans>
+					{m['common.count.likedBy']({ count: feed.likeCount || 0 })}
 				</Text>
 			) : null}
 		</>

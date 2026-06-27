@@ -1,8 +1,6 @@
 import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import type { Blob as AtpBlob } from '@atcute/lexicons';
-import type { I18n } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
 
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { AbortError } from '#/lib/async/cancelable';
@@ -15,6 +13,8 @@ import { createVideoClient } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { logger } from '#/logger';
+
+import { m } from '#/paraglide/messages';
 
 type CaptionsTrack = { lang: string; file: File };
 
@@ -240,13 +240,12 @@ export async function processVideo(
 	pds: Client,
 	did: string,
 	signal: AbortSignal,
-	i18n: I18n,
 ) {
 	let video: CompressedVideo | undefined;
 	try {
 		video = compressVideo(asset);
 	} catch (e) {
-		const message = getCompressErrorMessage(e, i18n);
+		const message = getCompressErrorMessage(e);
 		if (message !== null) {
 			dispatch({
 				type: 'to_error',
@@ -280,13 +279,12 @@ export async function processVideo(
 			dispatchUrl: pdsUrl,
 			did,
 			signal,
-			i18n,
 			setProgress: (p) => {
 				dispatch({ type: 'update_progress', progress: p, signal });
 			},
 		});
 	} catch (e) {
-		const message = getUploadErrorMessage(e, i18n);
+		const message = getUploadErrorMessage(e);
 		if (message !== null) {
 			dispatch({
 				type: 'to_error',
@@ -342,7 +340,7 @@ export async function processVideo(
 			logger.error('Error processing video', { safeMessage: e });
 			dispatch({
 				type: 'to_error',
-				error: i18n._(defineMessage`Video failed to process`),
+				error: m['view.composer.error.videoProcessFailed'](),
 				signal,
 			});
 			return; // Exit async loop
@@ -383,20 +381,18 @@ async function uploadVideoBlobDirectly(
 	return uploadBlob(pds, video.blob, video.mimeType);
 }
 
-function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {
+function getCompressErrorMessage(e: unknown): string | null {
 	if (e instanceof AbortError) {
 		return null;
 	}
 	if (e instanceof VideoTooLargeError) {
-		return i18n._(
-			defineMessage`The selected video is larger than ${VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.`,
-		);
+		return m['view.composer.error.videoTooLarge']({ VIDEO_MAX_SIZE_MB });
 	}
 	logger.error('Error compressing video', { safeMessage: e });
-	return i18n._(defineMessage`An error occurred while compressing the video.`);
+	return m['view.composer.error.videoCompress']();
 }
 
-function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
+function getUploadErrorMessage(e: unknown): string | null {
 	if (e instanceof AbortError) {
 		return null;
 	}
@@ -404,41 +400,31 @@ function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
 		// https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
 		switch (e.message) {
 			case 'User is not allowed to upload videos':
-				return i18n._(defineMessage`You are not allowed to upload videos.`);
+				return m['view.composer.error.videoNotAllowed']();
 			case 'Uploading is disabled at the moment':
-				return i18n._(
-					defineMessage`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
-				);
+				return m['view.composer.error.videoWaitlist']();
 			case "Failed to get user's upload stats":
-				return i18n._(
-					defineMessage`We were unable to determine if you are allowed to upload videos. Please try again.`,
-				);
+				return m['view.composer.error.videoPermCheckFailed']();
 			case 'User has exceeded daily upload bytes limit':
-				return i18n._(defineMessage`You've reached your daily limit for video uploads (too many bytes)`);
+				return m['view.composer.error.videoDailyLimitBytes']();
 			case 'User has exceeded daily upload videos limit':
-				return i18n._(defineMessage`You've reached your daily limit for video uploads (too many videos)`);
+				return m['view.composer.error.videoDailyLimitCount']();
 			case 'Account is not old enough to upload videos':
-				return i18n._(
-					defineMessage`Your account is not yet old enough to upload videos. Please try again later.`,
-				);
+				return m['view.composer.error.videoAccountTooYoung']();
 			case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)':
-				return i18n._(
-					defineMessage`The selected video is larger than ${VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.`,
-				);
+				return m['view.composer.error.videoTooLarge']({ VIDEO_MAX_SIZE_MB });
 			case 'Confirm your email address to upload videos':
-				return i18n._(defineMessage`Please confirm your email address to upload videos.`);
+				return m['view.composer.error.emailConfirmRequired']();
 		}
 	}
 
 	if (isNetworkError(e)) {
-		return i18n._(
-			defineMessage`An error occurred while uploading the video. Please check your internet connection and try again.`,
-		);
+		return m['view.composer.error.videoUploadConnection']();
 	} else {
 		// only log errors if they are unknown (and not network errors)
 		logger.error('Error uploading video', { safeMessage: e });
 	}
 
 	const message = e instanceof Error ? e.message : '';
-	return i18n._(defineMessage`An error occurred while uploading the video. ${message}`);
+	return m['view.composer.error.videoUpload']({ message });
 }

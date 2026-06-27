@@ -1,5 +1,3 @@
-import { Plural } from '@lingui/react/macro';
-
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
@@ -34,7 +32,7 @@ export const PostLikedByScreen = ({ route }: Props) => {
 						<>
 							<Layout.Header.TitleText>{m['common.title.likedBy']()}</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
-								<Plural value={likeCount ?? 0} one="# like" other="# likes" />
+								{m['screens.post.count.likes']({ count: likeCount ?? 0 })}
 							</Layout.Header.SubtitleText>
 						</>
 					)}

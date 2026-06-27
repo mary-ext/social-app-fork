@@ -12,7 +12,7 @@
 	"components.whoCanReply.label.listMembers": "{#t0}{name}{/t0} members",
 	"components.whoCanReply.label.mentionedUsers": "mentioned users",
 	"components.whoCanReply.label.noQuotes": "No one but the author can quote this post.",
-	"components.whoCanReply.label.onlyRules": "Only {rules} can reply.",
+	"components.whoCanReply.label.onlyRules": "Only {#t0}{/t0} can reply.",
 	"components.whoCanReply.label.some": "Some people can reply",
 	"components.whoCanReply.label.unknown": "This post has an unknown type of threadgate on it. Your app may be out of date.",
 	"components.whoCanReply.title": "Who can interact with this post?"

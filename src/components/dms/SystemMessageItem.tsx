@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
 
@@ -28,14 +27,13 @@ export function SystemMessageItem({
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 }) {
 	const t = useTheme();
-	const { i18n } = useLingui();
 	const inviteLinkControl = useInviteLinkDialog();
 
 	const info = getSystemMessageInfo(item.message.data, relatedProfiles);
 	if (!info) return null;
 
 	const { Icon, action } = info;
-	const text = i18n._(info.message);
+	const text = info.message;
 
 	const row = (
 		<View style={[a.w_full, a.flex_row, a.align_center, a.justify_center, a.px_md, a.mt_md]}>

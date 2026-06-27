@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { Plural, Trans } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
@@ -65,12 +64,11 @@ export function MessagesListGroupInfoPanel({
 		});
 	} else if (members.length > 2) {
 		const memberCount = convo.details.memberCount - 2;
-		names = (
-			<Trans>
-				New chat with {createSanitizedDisplayName(members[0]!)}, {createSanitizedDisplayName(members[1]!)},
-				and <Plural value={memberCount} one={`${memberCount} more`} other={`${memberCount} more`} />.
-			</Trans>
-		);
+		names = m['screens.messages.title.newChatMany']({
+			first: createSanitizedDisplayName(members[0]!),
+			memberCount,
+			second: createSanitizedDisplayName(members[1]!),
+		});
 	}
 
 	const isLocked = convo.details.lockStatus !== 'unlocked';

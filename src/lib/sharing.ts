@@ -1,6 +1,6 @@
-import { t } from '@lingui/core/macro';
-
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 /**
  * This function shares a URL using the native Share API if available, or copies it to the clipboard and
@@ -15,7 +15,7 @@ export function shareUrl(url: string): Promise<void> {
 	// throwing synchronously into the press handler, matching the prior async wrapper's behavior.
 	return Promise.resolve().then(() => {
 		void navigator.clipboard.writeText(url);
-		Toast.show(t`Copied to clipboard`, {
+		Toast.show(m['common.toast.copied'](), {
 			type: 'success',
 		});
 	});
@@ -29,7 +29,7 @@ export function shareUrl(url: string): Promise<void> {
  */
 export async function shareText(text: string) {
 	await navigator.clipboard.writeText(text);
-	Toast.show(t`Copied to clipboard`, {
+	Toast.show(m['common.toast.copied'](), {
 		type: 'success',
 	});
 }

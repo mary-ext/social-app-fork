@@ -5,7 +5,6 @@ import {
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
 import { Collapsible } from '@base-ui/react/collapsible';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { ADULT_CONTENT_LABELS, type AdultSelfLabel, isJustAMute } from '#/lib/moderation';
@@ -24,6 +23,7 @@ import {
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
+import { getLocale } from '#/paraglide/runtime';
 import { colors } from '#/styles/colors';
 
 import * as styles from './ContentHider.css';
@@ -85,7 +85,6 @@ function ContentHiderActive({
 	childContainerClassName?: string;
 	children?: ReactNode;
 }) {
-	const { i18n } = useLingui();
 	const [override, setOverride] = useState(false);
 	const control = useModerationDetailsDialogControl();
 	const { labelDefs } = useLabelDefinitions();
@@ -140,14 +139,14 @@ function ContentHiderActive({
 				if (def.identifier === 'porn' || def.identifier === 'sexual') {
 					return m['common.label.adultContent']();
 				}
-				return getLabelStrings(i18n.locale, globalLabelStrings, def).name;
+				return getLabelStrings(getLocale(), globalLabelStrings, def).name;
 			});
 
 		if (selfBlurNames.length === 0) {
 			return desc.name;
 		}
 		return [...new Set(selfBlurNames)].join(', ');
-	}, [modui.blurs, blur, desc.name, desc.isSubjectAccount, labelDefs, i18n.locale, globalLabelStrings]);
+	}, [modui.blurs, blur, desc.name, desc.isSubjectAccount, labelDefs, globalLabelStrings]);
 
 	const triggerInner = (
 		<>

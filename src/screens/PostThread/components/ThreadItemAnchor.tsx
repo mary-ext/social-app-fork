@@ -7,7 +7,7 @@ import type {
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -25,6 +25,8 @@ import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 import type { PostSource } from '#/state/unstable-post-source';
+
+import { Trans } from '#/locale/Trans';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
@@ -341,12 +343,20 @@ function ThreadItemAnchorInner({
 										size="md"
 										to={repostsHref}
 									>
-										<Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
-											<Text color="text" size="md" weight="semiBold">
-												{formatPostStatCount(post.repostCount)}
-											</Text>{' '}
-											<Plural value={post.repostCount} one="repost" other="reposts" />
-										</Trans>
+										<Trans
+											message={m['screens.postThread.count.reposts']}
+											inputs={{
+												count: post.repostCount,
+												formattedCount: formatPostStatCount(post.repostCount),
+											}}
+											markup={{
+												t0: ({ children }) => (
+													<Text color="text" size="md" weight="semiBold">
+														{children}
+													</Text>
+												),
+											}}
+										/>
 									</InlineLinkText>
 								) : null}
 								{post.quoteCount != null && post.quoteCount !== 0 && !post.viewer?.embeddingDisabled ? (
@@ -357,12 +367,20 @@ function ThreadItemAnchorInner({
 										size="md"
 										to={quotesHref}
 									>
-										<Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
-											<Text color="text" size="md" weight="semiBold">
-												{formatPostStatCount(post.quoteCount)}
-											</Text>{' '}
-											<Plural value={post.quoteCount} one="quote" other="quotes" />
-										</Trans>
+										<Trans
+											message={m['screens.postThread.count.quotes']}
+											inputs={{
+												count: post.quoteCount,
+												formattedCount: formatPostStatCount(post.quoteCount),
+											}}
+											markup={{
+												t0: ({ children }) => (
+													<Text color="text" size="md" weight="semiBold">
+														{children}
+													</Text>
+												),
+											}}
+										/>
 									</InlineLinkText>
 								) : null}
 								{post.likeCount != null && post.likeCount !== 0 ? (
@@ -373,22 +391,38 @@ function ThreadItemAnchorInner({
 										size="md"
 										to={likesHref}
 									>
-										<Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
-											<Text color="text" size="md" weight="semiBold">
-												{formatPostStatCount(post.likeCount)}
-											</Text>{' '}
-											<Plural value={post.likeCount} one="like" other="likes" />
-										</Trans>
+										<Trans
+											message={m['screens.postThread.count.likes']}
+											inputs={{
+												count: post.likeCount,
+												formattedCount: formatPostStatCount(post.likeCount),
+											}}
+											markup={{
+												t0: ({ children }) => (
+													<Text color="text" size="md" weight="semiBold">
+														{children}
+													</Text>
+												),
+											}}
+										/>
 									</InlineLinkText>
 								) : null}
 								{post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
 									<Text data-testid="bookmarkCount-expanded" size="md" color="textContrastMedium">
-										<Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
-											<Text color="text" size="md" weight="semiBold">
-												{formatPostStatCount(post.bookmarkCount)}
-											</Text>{' '}
-											<Plural value={post.bookmarkCount} one="save" other="saves" />
-										</Trans>
+										<Trans
+											message={m['screens.postThread.count.saves']}
+											inputs={{
+												count: post.bookmarkCount,
+												formattedCount: formatPostStatCount(post.bookmarkCount),
+											}}
+											markup={{
+												t0: ({ children }) => (
+													<Text color="text" size="md" weight="semiBold">
+														{children}
+													</Text>
+												),
+											}}
+										/>
 									</Text>
 								) : null}
 							</div>
@@ -476,11 +510,17 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 				<Prompt.Content>
 					<Prompt.TitleText>{m['screens.postThread.label.archived']()}</Prompt.TitleText>
 					<Prompt.DescriptionText>
-						<Trans>
-							This post claims to have been created on{' '}
-							<Text weight="semiBold">{niceDate(i18n, createdAt)}</Text>, but was first seen by Bluesky on{' '}
-							<Text weight="semiBold">{niceDate(i18n, indexedAt)}</Text>.
-						</Trans>
+						<Trans
+							message={m['screens.postThread.hint.dateMismatch']}
+							inputs={{
+								claimed: niceDate(i18n, createdAt),
+								seen: niceDate(i18n, indexedAt),
+							}}
+							markup={{
+								t0: ({ children }) => <Text weight="semiBold">{children}</Text>,
+								t1: ({ children }) => <Text weight="semiBold">{children}</Text>,
+							}}
+						/>
 					</Prompt.DescriptionText>
 					<Prompt.DescriptionText>{m['screens.postThread.hint.dateUnverified']()}</Prompt.DescriptionText>
 				</Prompt.Content>

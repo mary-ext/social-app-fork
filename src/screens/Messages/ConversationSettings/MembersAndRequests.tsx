@@ -1,6 +1,4 @@
 import { View } from 'react-native';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -25,7 +23,6 @@ export function MembersAndRequests({
 	isOwner: boolean;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 
 	const memberCount = convo.details.memberCount;
@@ -38,9 +35,9 @@ export function MembersAndRequests({
 					{m['screens.messages.label.members']()}
 				</Text>
 				<Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
-					{l({
-						message: `${memberCount}/${memberLimit}`,
-						comment: 'The number of group chat members out of the total number of permitted users.',
+					{m['screens.messages.label.memberCountRatio']({
+						memberCount,
+						memberLimit,
 					})}
 				</Text>
 			</View>
@@ -55,17 +52,8 @@ export function MembersAndRequests({
 					})}
 				>
 					{hasMoreRequests
-						? l({
-								message: `${requestCount}+ requests`,
-								comment: 'Displayed when there are more than 20 requests to join a group chat',
-							})
-						: l({
-								message: plural(requestCount, {
-									one: '# request',
-									other: '# requests',
-								}),
-								comment: 'The number of requests to join a group chat.',
-							})}
+						? m['screens.messages.requests.countOverflow']({ requestCount })
+						: m['screens.messages.requests.countLabel']({ requestCount })}
 				</InlineLinkText>
 			) : null}
 		</View>

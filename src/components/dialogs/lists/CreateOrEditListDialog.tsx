@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Handle } from '@atcute/lexicons';
-import { Plural, Trans } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
@@ -379,17 +378,9 @@ function DialogInner({
 						/>
 						{(displayNameTooLong || displayNameTooShort) && (
 							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
-								{displayNameTooLong ? (
-									<Trans>
-										List name is too long.{' '}
-										<Plural
-											value={DISPLAY_NAME_MAX_GRAPHEMES}
-											other="The maximum number of characters is #."
-										/>
-									</Trans>
-								) : (
-									m['components.dialogs.list.nameRequired']()
-								)}
+								{displayNameTooLong
+									? m['components.dialogs.list.nameTooLong']({ DISPLAY_NAME_MAX_GRAPHEMES })
+									: m['components.dialogs.list.nameRequired']()}
 							</Text>
 						)}
 					</TextField.Root>
@@ -405,10 +396,7 @@ function DialogInner({
 						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
-								<Trans>
-									List description is too long.{' '}
-									<Plural value={DESCRIPTION_MAX_GRAPHEMES} other="The maximum number of characters is #." />
-								</Trans>
+								{m['components.dialogs.list.descriptionTooLong']({ DESCRIPTION_MAX_GRAPHEMES })}
 							</Text>
 						)}
 					</TextField.Root>

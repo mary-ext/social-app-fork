@@ -5,11 +5,12 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Plural, Trans } from '@lingui/react/macro';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
+
+import { Trans } from '#/locale/Trans';
 
 import { Text } from '#/components/Text';
 import { AvatarStack } from '#/components/web/AvatarStack';
@@ -105,44 +106,71 @@ function KnownFollowersInner({
 			<Text className={css.text} color="textContrastMedium" numberOfLines={2} size="sm">
 				{slice.length >= 2 ? (
 					serverCount > 2 ? (
-						<Trans>
-							Followed by{' '}
-							<Text key={slice[0]!.profile.did} color="textContrastMedium" size="sm">
-								{slice[0]!.profile.displayName}
-							</Text>
-							,{' '}
-							<Text key={slice[1]!.profile.did} color="textContrastMedium" size="sm">
-								{slice[1]!.profile.displayName}
-							</Text>
-							, and <Plural value={serverCount - 2} one="# other" other="# others" />
-						</Trans>
+						<Trans
+							message={m['common.label.followedByMany']}
+							inputs={{
+								count: serverCount - 2,
+								name: slice[0]!.profile.displayName,
+								name2: slice[1]!.profile.displayName,
+							}}
+							markup={{
+								t0: ({ children }) => (
+									<Text color="textContrastMedium" size="sm">
+										{children}
+									</Text>
+								),
+								t1: ({ children }) => (
+									<Text color="textContrastMedium" size="sm">
+										{children}
+									</Text>
+								),
+							}}
+						/>
 					) : (
-						<Trans>
-							Followed by{' '}
-							<Text key={slice[0]!.profile.did} color="textContrastMedium" size="sm">
-								{slice[0]!.profile.displayName}
-							</Text>{' '}
-							and{' '}
-							<Text key={slice[1]!.profile.did} color="textContrastMedium" size="sm">
-								{slice[1]!.profile.displayName}
-							</Text>
-						</Trans>
+						<Trans
+							message={m['common.label.followedByTwo']}
+							inputs={{
+								name: slice[0]!.profile.displayName,
+								name2: slice[1]!.profile.displayName,
+							}}
+							markup={{
+								t0: ({ children }) => (
+									<Text color="textContrastMedium" size="sm">
+										{children}
+									</Text>
+								),
+								t1: ({ children }) => (
+									<Text color="textContrastMedium" size="sm">
+										{children}
+									</Text>
+								),
+							}}
+						/>
 					)
 				) : serverCount > 1 ? (
-					<Trans>
-						Followed by{' '}
-						<Text key={slice[0]!.profile.did} color="textContrastMedium" size="sm">
-							{slice[0]!.profile.displayName}
-						</Text>{' '}
-						and <Plural value={serverCount - 1} one="# other" other="# others" />
-					</Trans>
+					<Trans
+						message={m['common.label.followedByOthers']}
+						inputs={{ count: serverCount - 1, name: slice[0]!.profile.displayName }}
+						markup={{
+							t0: ({ children }) => (
+								<Text color="textContrastMedium" size="sm">
+									{children}
+								</Text>
+							),
+						}}
+					/>
 				) : (
-					<Trans>
-						Followed by{' '}
-						<Text key={slice[0]!.profile.did} color="textContrastMedium" size="sm">
-							{slice[0]!.profile.displayName}
-						</Text>
-					</Trans>
+					<Trans
+						message={m['common.label.followedBy']}
+						inputs={{ name: slice[0]!.profile.displayName }}
+						markup={{
+							t0: ({ children }) => (
+								<Text color="textContrastMedium" size="sm">
+									{children}
+								</Text>
+							),
+						}}
+					/>
 				)}
 			</Text>
 		</Link>

@@ -1,6 +1,5 @@
 import type { AppBskyNotificationDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { t } from '@lingui/core/macro';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';
@@ -8,6 +7,8 @@ import { useClients } from '#/state/session';
 import { logger } from '#/logger';
 
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 const RQKEY_ROOT = 'notification-settings';
 const RQKEY = [RQKEY_ROOT];
@@ -39,7 +40,7 @@ export function useNotificationSettingsUpdateMutation() {
 		onError: (e) => {
 			logger.error('Could not update notification settings', { message: e });
 			void queryClient.invalidateQueries({ queryKey: RQKEY });
-			Toast.show(t`Could not update notification settings`, {
+			Toast.show(m['state.error.notificationSettingsUpdate'](), {
 				type: 'error',
 			});
 		},

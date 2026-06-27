@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import * as device from '#/lib/deviceName';
@@ -32,7 +30,6 @@ export function DraftItem({
 	onSelect: (draft: DraftSummary) => void;
 	onDelete: (draft: DraftSummary) => void;
 }) {
-	const { t: l } = useLingui();
 	const discardPromptControl = Prompt.usePromptHandle();
 	const post = draft.posts[0]!;
 
@@ -77,9 +74,8 @@ export function DraftItem({
 								text={
 									isUnknownDevice
 										? m['view.composer.label.mediaStoredOtherDevice']()
-										: l({
-												message: `Media stored on ${draft.draft.deviceName}`,
-												comment: `Example: "Media stored on John's iPhone"`,
+										: m['view.composer.label.mediaStoredOn']({
+												deviceName: draft.draft.deviceName ?? '',
 											})
 								}
 							/>
@@ -97,9 +93,8 @@ export function DraftItem({
 						{draft.meta.replyCount > 0 && (
 							<DraftMetadataTag
 								icon={CirclePlusIcon}
-								text={plural(draft.meta.replyCount, {
-									one: '1 more post',
-									other: '# more posts',
+								text={m['view.composer.count.morePosts']({
+									count: draft.meta.replyCount,
 								})}
 							/>
 						)}

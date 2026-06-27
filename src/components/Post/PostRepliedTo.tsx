@@ -1,5 +1,4 @@
 import type { AnyProfileView } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -8,6 +7,8 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 import { STALE } from '#/state/queries';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
+import { Trans } from '#/locale/Trans';
 
 import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
 import { Text } from '#/components/Text';
@@ -45,9 +46,10 @@ export function PostRepliedTo({
 			label = m['components.post.label.repliedToYou']();
 		} else {
 			label = (
-				<Trans context="description">
-					Replied to <ParentAuthorName did={did} />
-				</Trans>
+				<Trans
+					message={m['components.post.label.repliedTo']}
+					markup={{ t0: () => <ParentAuthorName did={did} /> }}
+				/>
 			);
 		}
 	}

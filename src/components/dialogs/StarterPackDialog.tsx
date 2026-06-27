@@ -5,7 +5,6 @@ import type {
 	AppBskyGraphGetStarterPacksWithMembership,
 	AppBskyGraphStarterpack,
 } from '@atcute/bluesky';
-import { Plural, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
@@ -280,9 +279,9 @@ function StarterPackItem({
 
 							{starterPack.list?.listItemCount && starterPack.list.listItemCount > 4 && (
 								<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.ml_xs]}>
-									<Trans>
-										<Plural value={starterPack.list.listItemCount - 4} other="+# more" />
-									</Trans>
+									{m['components.dialogs.count.more']({
+										count: starterPack.list.listItemCount - 4,
+									})}
 								</Text>
 							)}
 						</>

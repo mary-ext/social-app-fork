@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
@@ -292,7 +291,7 @@ export function FeedsScreen({}: Props) {
 				return (
 					<div className={css.noResults}>
 						<Text color="textContrastMedium" size="lg">
-							<Trans>No results found for "{query}"</Trans>
+							{m['view.empty.noResults']({ query })}
 						</Text>
 					</div>
 				);

@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import { type ScrollView, View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
-import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -13,6 +12,8 @@ import { useOverwriteSavedFeedsMutation, usePreferencesQuery } from '#/state/que
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { FeedSourceCard } from '#/view/com/feeds/FeedSourceCard';
 
@@ -190,18 +191,21 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 
 				<View style={[a.px_lg, a.py_xl]}>
 					<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
-						<Trans>
-							Feeds are custom algorithms that users build with a little coding expertise.{' '}
-							<InlineLinkText
-								to="https://github.com/bluesky-social/feed-generator"
-								label={m['screens.savedFeeds.action.seeGuide']()}
-								disableMismatchWarning
-								style={[a.leading_snug]}
-							>
-								See this guide
-							</InlineLinkText>{' '}
-							for more information.
-						</Trans>
+						<Trans
+							message={m['screens.savedFeeds.hint.about']}
+							markup={{
+								t0: ({ children }) => (
+									<InlineLinkText
+										to="https://github.com/bluesky-social/feed-generator"
+										label={m['screens.savedFeeds.action.seeGuide']()}
+										disableMismatchWarning
+										style={[a.leading_snug]}
+									>
+										{children}
+									</InlineLinkText>
+								),
+							}}
+						/>
 					</Text>
 				</View>
 			</Layout.Content>

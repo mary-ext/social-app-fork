@@ -5,11 +5,12 @@ import type {
 	AppBskyGraphDefs,
 	AppBskyGraphStarterpack,
 } from '@atcute/bluesky';
-import { defineMessage, plural } from '@lingui/core/macro';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 
 import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const;
 type Step = (typeof steps)[number];
@@ -74,14 +75,9 @@ function reducer(state: State, action: Action): State {
 			break;
 		case 'AddProfile':
 			if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
-				Toast.show(
-					defineMessage`You may only add up to ${plural(STARTER_PACK_MAX_SIZE, {
-						other: `${STARTER_PACK_MAX_SIZE} profiles`,
-					})}`.message ?? '',
-					{
-						type: 'info',
-					},
-				);
+				Toast.show(m['screens.starterPack.error.maxProfiles']({ STARTER_PACK_MAX_SIZE }), {
+					type: 'info',
+				});
 			} else {
 				updatedState = { ...state, profiles: [...state.profiles, action.profile] };
 			}
@@ -94,7 +90,7 @@ function reducer(state: State, action: Action): State {
 			break;
 		case 'AddFeed':
 			if (state.feeds.length >= 3) {
-				Toast.show(defineMessage`You may only add up to 3 feeds`.message ?? '', {
+				Toast.show(m['screens.starterPack.error.maxFeeds'](), {
 					type: 'info',
 				});
 			} else {

@@ -1,6 +1,5 @@
 import { useId, useMemo, useReducer, useState } from 'react';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 
 import { getLabelingServiceTitle } from '#/lib/moderation';
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
@@ -9,6 +8,8 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
 
 import { Logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
@@ -480,9 +481,11 @@ function Recipient({
 	});
 	return (
 		<Text leading="snug">
-			<Trans>
-				Your report will be sent to <Text weight="semiBold">{title}</Text>.
-			</Trans>{' '}
+			<Trans
+				inputs={{ title }}
+				markup={{ t0: ({ children }) => <Text weight="semiBold">{children}</Text> }}
+				message={m['components.moderation.appeal.reportSentTo']}
+			/>{' '}
 			{options.length > 1 && (
 				<Menu.Root>
 					<Menu.Trigger

@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ListRenderItemInfo } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -14,6 +13,8 @@ import { enforceLen } from '#/lib/strings/helpers';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
+
+import { Trans } from '#/locale/Trans';
 
 import { Post } from '#/view/com/post/Post';
 import { List } from '#/view/com/util/List';
@@ -190,15 +191,18 @@ function HashtagScreenTab({
 		return (
 			<SearchError title={m['common.error.searchLoggedOut']()}>
 				<Text style={[a.text_md, a.text_center, a.leading_snug]}>
-					<Trans>
-						<InlineLinkText label={m['common.action.signIn']()} to={'#'} onPress={showSignIn}>
-							Sign in
-						</InlineLinkText>
-						<Text> </Text>
-						<Text style={t.atoms.text_contrast_medium}>
-							to search for news, sports, politics, and everything else happening on Bluesky.
-						</Text>
-					</Trans>
+					<Trans
+						message={m['common.cta.signInToSearch']}
+						markup={{
+							t0: ({ children }) => (
+								<InlineLinkText label={m['common.action.signIn']()} to={'#'} onPress={showSignIn}>
+									{children}
+								</InlineLinkText>
+							),
+							t1: ({ children }) => <Text>{children}</Text>,
+							t2: ({ children }) => <Text style={t.atoms.text_contrast_medium}>{children}</Text>,
+						}}
+					/>
 				</Text>
 			</SearchError>
 		);

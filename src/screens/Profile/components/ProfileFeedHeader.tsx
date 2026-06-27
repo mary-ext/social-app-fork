@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react';
 
 import { makeCustomFeedLink, makeProfileLink } from '#/lib/routes/links';
 import { shareUrl } from '#/lib/sharing';
@@ -18,6 +18,8 @@ import {
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { formatCount } from '#/view/com/util/numeric/format';
 
@@ -339,19 +341,24 @@ function DialogInner({
 						{info.displayName}
 					</Text>
 					<Text size="sm" color="textContrastMedium" numberOfLines={1}>
-						<Trans>
-							by{' '}
-							<InlineLinkText
-								label={m['screens.profile.a11y.viewProfile']({ handle: info.creatorHandle })}
-								to={makeProfileLink({ did: info.creatorDid })}
-								size="sm"
-								color="textContrastMedium"
-								numberOfLines={1}
-								onPress={closeDialog}
-							>
-								{sanitizeHandle(info.creatorHandle, '@')}
-							</InlineLinkText>
-						</Trans>
+						<Trans
+							message={m['screens.profile.label.byCreator']}
+							inputs={{ handle: sanitizeHandle(info.creatorHandle, '@') }}
+							markup={{
+								t0: ({ children }) => (
+									<InlineLinkText
+										label={m['screens.profile.a11y.viewProfile']({ handle: info.creatorHandle })}
+										to={makeProfileLink({ did: info.creatorDid })}
+										size="sm"
+										color="textContrastMedium"
+										numberOfLines={1}
+										onPress={closeDialog}
+									>
+										{children}
+									</InlineLinkText>
+								),
+							}}
+						/>
 					</Text>
 				</div>
 
@@ -378,9 +385,7 @@ function DialogInner({
 						color="textContrastMedium"
 						onPress={closeDialog}
 					>
-						<Trans>
-							Liked by <Plural value={likeCount} one="# user" other="# users" />
-						</Trans>
+						{m['screens.profile.count.likedBy']({ likeCount })}
 					</InlineLinkText>
 				)}
 			</div>

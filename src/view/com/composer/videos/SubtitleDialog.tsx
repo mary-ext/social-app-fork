@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { Keyboard, type StyleProp, View, type ViewStyle } from 'react-native';
-import { Plural } from '@lingui/react/macro';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
@@ -114,7 +113,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 
 				{isOverMaxLength && (
 					<Text style={[a.text_md, { color: t.palette.negative_500 }, a.leading_snug, a.mt_md]}>
-						<Plural value={MAX_ALT_TEXT} other="Alt text must be less than # characters." />
+						{m['view.composer.error.altTextTooLong']({ MAX_ALT_TEXT })}
 					</Text>
 				)}
 

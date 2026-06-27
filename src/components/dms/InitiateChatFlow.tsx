@@ -7,7 +7,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Trans } from '@lingui/react/macro';
 
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -524,10 +523,7 @@ export function InitiateChatFlow({
 								</TextField.Root>
 								{groupNameTooLong ? (
 									<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-										<Trans>
-											Group name is too long. The maximum number of characters is{' '}
-											{MAX_GROUP_NAME_GRAPHEME_LENGTH}.
-										</Trans>
+										{m['common.error.groupNameTooLong']({ MAX_GROUP_NAME_GRAPHEME_LENGTH })}
 									</Text>
 								) : null}
 							</View>

@@ -4,7 +4,6 @@ import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
@@ -404,10 +403,7 @@ function Header({
 						<View style={[a.flex_row, a.align_center, a.gap_sm]}>
 							<TrendingIcon width={12} style={{ color: t.atoms.text_contrast_medium.color }} />
 							<Text style={[a.font_semi_bold, a.text_sm, t.atoms.text_contrast_medium]}>
-								<Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
-									<Plural value={starterPack.joinedAllTimeCount || 0} other="# people have" /> joined Bluesky
-									via this starter pack!
-								</Trans>
+								{m['screens.starterPack.joinedCount']({ count: starterPack.joinedAllTimeCount || 0 })}
 							</Text>
 						</View>
 					) : null}

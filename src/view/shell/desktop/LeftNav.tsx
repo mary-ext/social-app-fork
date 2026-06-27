@@ -1,7 +1,5 @@
 import { type MouseEvent, useCallback, useMemo, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -289,7 +287,6 @@ interface NavItemProps {
 	minimal: boolean;
 }
 function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 
 	const [pathName] = useMemo(() => router.matchPath(href), [href]);
@@ -329,10 +326,7 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 				<Icon aria-hidden={true} width={NAV_ICON_WIDTH} fill={colors.text} />
 				{typeof count === 'string' && count ? (
 					<Text
-						aria-label={l`${plural(count, {
-							one: '# unread item',
-							other: '# unread items',
-						})}`}
+						aria-label={m['view.notifications.unreadCount']({ count })}
 						size="sm"
 						weight="semiBold"
 						color="white"

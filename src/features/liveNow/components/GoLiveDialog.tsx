@@ -148,7 +148,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					<Select.Root onValueChange={onChangeDuration} value={String(duration)}>
 						<Select.Trigger label={m['features.liveNow.action.selectDuration']()}>
 							<Text>
-								{displayDuration(i18n, duration)}
+								{displayDuration(duration)}
 								{'  '}
 								<Text className={styles.timeGap} color="textContrastLow">
 									{time(duration)}
@@ -160,7 +160,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						<Select.Content
 							items={DURATIONS}
 							renderItem={(item, _i, selectedValue) => {
-								const label = displayDuration(i18n, item);
+								const label = displayDuration(item);
 								return (
 									<Select.Item label={label} value={String(item)}>
 										<Select.ItemIndicator />

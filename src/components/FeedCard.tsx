@@ -1,7 +1,6 @@
 import { type ReactNode, useEffect, useMemo } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
@@ -144,9 +143,7 @@ export function Description({ description }: { description?: string }) {
 export function Likes({ count }: { count: number }) {
 	return (
 		<Text color="textContrastMedium" size="sm" weight="semiBold">
-			<Trans>
-				Liked by <Plural one="# user" other="# users" value={count || 0} />
-			</Trans>
+			{m['common.count.likedBy']({ count: count || 0 })}
 		</Text>
 	);
 }

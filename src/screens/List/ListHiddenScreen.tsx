@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useGoBack } from '#/lib/hooks/useGoBack';
@@ -12,6 +11,8 @@ import { type UsePreferencesQueryResponse, useRemoveFeedMutation } from '#/state
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { CenteredView } from '#/view/com/util/Views';
 
@@ -119,11 +120,13 @@ export function ListHiddenScreen({
 						) : isOwner ? (
 							m['screens.list.warning.violationByYou']()
 						) : (
-							<Trans>
-								This list – created by{' '}
-								<Text style={[a.font_semi_bold]}>{sanitizeHandle(list.creator.handle, '@')}</Text> – contains
-								possible violations of Bluesky's community guidelines in its name or description.
-							</Trans>
+							<Trans
+								message={m['screens.list.warning.violationByOther']}
+								inputs={{ handle: sanitizeHandle(list.creator.handle, '@') }}
+								markup={{
+									t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text>,
+								}}
+							/>
 						)}
 					</Text>
 				</View>

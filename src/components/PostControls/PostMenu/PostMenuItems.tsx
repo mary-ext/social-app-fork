@@ -6,7 +6,6 @@ import type {
 	AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { plural } from '@lingui/core/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
@@ -290,11 +289,7 @@ function PostMenuItems({
 		} catch (err) {
 			const e = err as Error;
 			if (e instanceof MaxHiddenRepliesError) {
-				Toast.show(
-					plural(MAX_HIDDEN_REPLIES, {
-						other: 'You can hide a maximum of # replies.',
-					}),
-				);
+				Toast.show(m['components.postControls.hint.maxHiddenReplies']({ MAX_HIDDEN_REPLIES }));
 			} else if (e instanceof InvalidInteractionSettingsError) {
 				Toast.show(m['components.postControls.error.invalidInteractionSettings']());
 			} else {

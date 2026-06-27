@@ -7,7 +7,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Plural, useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -412,7 +411,6 @@ function ExistingChatCard({
 	onPress: (convoId: string) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const enabled = convo.kind === 'group' ? convo.details.lockStatus === 'unlocked' : true;
 	const name =
 		convo.kind === 'group'
@@ -431,7 +429,11 @@ function ExistingChatCard({
 	}, [onPress, convo.view.id]);
 
 	return (
-		<Button disabled={!enabled} label={l`Select chat "${name}"`} onPress={handleOnPress}>
+		<Button
+			disabled={!enabled}
+			label={m['components.dialogs.chat.a11ySelect']({ name })}
+			onPress={handleOnPress}
+		>
 			{({ hovered, pressed, focused }) => (
 				<View
 					style={[
@@ -472,7 +474,7 @@ function ExistingChatCard({
 								<>
 									{enabled ? (
 										<Text style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={2}>
-											<Plural value={convo.details.memberCount} one="# member" other="# members" />
+											{m['components.dialogs.count.member']({ count: convo.details.memberCount })}
 										</Text>
 									) : (
 										<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>

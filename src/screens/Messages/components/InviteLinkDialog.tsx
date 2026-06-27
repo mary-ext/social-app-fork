@@ -7,7 +7,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -157,10 +157,7 @@ export function InviteLinkDialog({
 					<View style={[a.gap_lg]}>
 						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.hint.inviteLinkInfo']()}</Text>
 						<Text style={[a.text_md, a.leading_snug]}>
-							<Trans>
-								Group chats can only have a maximum of{' '}
-								<Plural value={convo.details.memberLimit} other="# people" />.
-							</Trans>
+							{m['screens.messages.error.memberLimit']({ count: convo.details.memberLimit })}
 						</Text>
 						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.hint.invitePrivacy']()}</Text>
 					</View>
@@ -293,13 +290,12 @@ export function InviteLinkDialog({
 						</CopyTextButton>
 						{createdAt ? (
 							<Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
-								<Trans>
-									Created{' '}
-									{i18n.date(createdAt, {
+								{m['screens.messages.label.created']({
+									date: i18n.date(createdAt, {
 										dateStyle: 'long',
 										timeStyle: 'short',
-									})}
-								</Trans>
+									}),
+								})}
 							</Text>
 						) : null}
 					</View>

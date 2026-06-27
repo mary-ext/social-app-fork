@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { ClientResponseError } from '@atcute/client';
-import { Plural, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -20,6 +19,8 @@ import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdr
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
@@ -312,18 +313,23 @@ function GroupChatJoinDialogContent({
 							weight="semiBold"
 							color="textContrastMedium"
 						>
-							<Trans comment="The group chat creator, in the format 'by {handle}'.">
-								by{' '}
-								<InlineLinkText
-									color="textContrastMedium"
-									label={ownerHandle}
-									size="sm"
-									to={makeProfileLink(joinLinkPreview.owner)}
-									weight="semiBold"
-								>
-									{ownerHandle}
-								</InlineLinkText>
-							</Trans>
+							<Trans
+								message={m['common.label.byOwner']}
+								inputs={{ ownerHandle }}
+								markup={{
+									t0: ({ children }) => (
+										<InlineLinkText
+											color="textContrastMedium"
+											label={ownerHandle}
+											size="sm"
+											to={makeProfileLink(joinLinkPreview.owner)}
+											weight="semiBold"
+										>
+											{children}
+										</InlineLinkText>
+									),
+								}}
+							/>
 						</Text>
 						<div className={css.badges}>
 							<ProfileBadges profile={joinLinkPreview.owner} size="sm" />
@@ -331,10 +337,10 @@ function GroupChatJoinDialogContent({
 					</div>
 					<div className={css.infoRow}>
 						<Text align="center" size="sm" weight="medium" color="textContrastMedium">
-							<Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
-								{joinLinkPreview.memberCount}/{joinLinkPreview.memberLimit}{' '}
-								<Plural value={joinLinkPreview.memberLimit} one="member" other="members" />
-							</Trans>
+							{m['common.count.members']({
+								count: joinLinkPreview.memberCount,
+								limit: joinLinkPreview.memberLimit,
+							})}
 						</Text>
 						<PersonGroupIcon className={css.personGroupIcon} fill={colors.textContrastMedium} width={12} />
 						<Text align="center" size="sm" weight="medium" color="textContrastMedium">

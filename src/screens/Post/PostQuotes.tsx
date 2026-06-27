@@ -1,5 +1,3 @@
-import { Plural } from '@lingui/react/macro';
-
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
@@ -34,7 +32,7 @@ export const PostQuotesScreen = ({ route }: Props) => {
 						<>
 							<Layout.Header.TitleText>{m['common.label.quotes']()}</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
-								<Plural value={quoteCount ?? 0} one="# quote" other="# quotes" />
+								{m['screens.post.count.quotes']({ count: quoteCount ?? 0 })}
 							</Layout.Header.SubtitleText>
 						</>
 					)}

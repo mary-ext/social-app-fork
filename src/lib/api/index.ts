@@ -13,7 +13,6 @@ import type {
 import { type Client, ok } from '@atcute/client';
 import type { $type, Blob as AtpBlob, Did, GenericUri, Handle, ResourceUri } from '@atcute/lexicons';
 import * as TID from '@atcute/tid';
-import { t } from '@lingui/core/macro';
 import type { QueryClient } from '@tanstack/react-query';
 
 import { isNetworkError } from '#/lib/strings/errors';
@@ -30,6 +29,8 @@ import {
 import { logger } from '#/logger';
 
 import type { EmbedDraft, PostDraft, ThreadDraft } from '#/view/com/composer/state/composer';
+
+import { m } from '#/paraglide/messages';
 
 import { createGIFDescription } from '../gif-alt-text';
 import { serializeRecordCid } from './cid';
@@ -53,7 +54,7 @@ interface PostOpts {
 
 export async function post({ appview, did, pds }: PostClients, queryClient: QueryClient, opts: PostOpts) {
 	const thread = opts.thread;
-	opts.onStateChange?.(t`Processing...`);
+	opts.onStateChange?.(m['lib.status.processing']());
 
 	let replyPromise: Promise<AppBskyFeedPost.Main['reply']> | AppBskyFeedPost.Main['reply'] | undefined;
 	if (opts.replyTo) {
@@ -168,7 +169,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 			safeMessage: e instanceof Error ? e.message : String(e),
 		});
 		if (isNetworkError(e)) {
-			throw new Error(t`Post failed to upload. Please check your Internet connection and try again.`);
+			throw new Error(m['lib.error.postUploadFailed']());
 		} else {
 			throw e;
 		}
@@ -299,7 +300,7 @@ async function resolveMedia(
 		logger.debug(`Uploading images`, {
 			count: imagesDraft.length,
 		});
-		onStateChange?.(t`Uploading images...`);
+		onStateChange?.(m['lib.status.uploadingImages']());
 		const images: AppBskyEmbedImages.Image[] = await Promise.all(
 			imagesDraft.map(async (image, i) => {
 				logger.debug(`Compressing image #${i}`);
@@ -322,7 +323,7 @@ async function resolveMedia(
 		logger.debug(`Uploading images`, {
 			count: imagesDraft.length,
 		});
-		onStateChange?.(t`Uploading images...`);
+		onStateChange?.(m['lib.status.uploadingImages']());
 		const items: $type.enforce<AppBskyEmbedGallery.Image>[] = await Promise.all(
 			imagesDraft.map(async (image, i) => {
 				logger.debug(`Compressing image #${i}`);
@@ -379,7 +380,7 @@ async function resolveMedia(
 		const resolvedGif = await fetchResolveGifQuery(queryClient, gifDraft.gif);
 		let blob: AtpBlob | undefined;
 		if (resolvedGif.thumb) {
-			onStateChange?.(t`Uploading link thumbnail...`);
+			onStateChange?.(m['lib.status.uploadingThumb']());
 			blob = await uploadBlob(pds, resolvedGif.thumb.source.blob);
 		}
 		return {
@@ -397,7 +398,7 @@ async function resolveMedia(
 		if (resolvedLink.type === 'external') {
 			let blob: AtpBlob | undefined;
 			if (resolvedLink.thumb) {
-				onStateChange?.(t`Uploading link thumbnail...`);
+				onStateChange?.(m['lib.status.uploadingThumb']());
 				blob = await uploadBlob(pds, resolvedLink.thumb.source.blob);
 			}
 			return {
@@ -422,7 +423,7 @@ async function resolveRecord(
 ): Promise<ComAtprotoRepoStrongRef.Main> {
 	const resolvedLink = await fetchResolveLinkQuery(queryClient, appview, uri);
 	if (resolvedLink.type !== 'record') {
-		throw Error(t`Expected uri to resolve to a record`);
+		throw Error(m['lib.error.uriNotRecord']());
 	}
 	return resolvedLink.record;
 }

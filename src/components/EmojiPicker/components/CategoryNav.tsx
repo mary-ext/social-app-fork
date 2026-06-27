@@ -1,6 +1,5 @@
 import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
-import { useLingui } from '@lingui/react/macro';
 
 import { m } from '#/paraglide/messages';
 
@@ -21,8 +20,6 @@ export function CategoryNav({
 	hasRecents: boolean;
 	onJump: (key: string) => void;
 }) {
-	const { i18n } = useLingui();
-
 	return (
 		<ToggleGroup
 			aria-label={m['components.emojiPicker.a11y.categories']()}
@@ -38,7 +35,7 @@ export function CategoryNav({
 		>
 			{CATEGORIES.map(({ icon: Icon, key, label }) => (
 				<Toggle
-					aria-label={i18n._(label)}
+					aria-label={label()}
 					className={styles.navButton}
 					disabled={key === 'recent' && !hasRecents}
 					key={key}

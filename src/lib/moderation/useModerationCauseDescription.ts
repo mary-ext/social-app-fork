@@ -38,7 +38,7 @@ export function useModerationCauseDescription(
 	cause: ModerationCause | AppModerationCause | undefined,
 ): ModerationCauseDescription {
 	const { currentAccount } = useSession();
-	const { t: l, i18n } = useLingui();
+	const { i18n } = useLingui();
 	const { labelDefs, labelers } = useLabelDefinitions();
 	const globalLabelStrings = useGlobalLabelStrings();
 
@@ -65,7 +65,7 @@ export function useModerationCauseDescription(
 			if (cause.source) {
 				return {
 					icon: CircleBanSign,
-					name: l`User Blocked by "${cause.source.name}"`,
+					name: m['lib.moderation.blockedBy']({ name: cause.source.name }),
 					description: m['common.label.youBlockedUser'](),
 				};
 			}
@@ -86,7 +86,7 @@ export function useModerationCauseDescription(
 			if (cause.source) {
 				return {
 					icon: EyeSlash,
-					name: l`Muted by "${cause.source.name}"`,
+					name: m['lib.moderation.mutedBy']({ name: cause.source.name }),
 					description: m['lib.moderation.youMuted'](),
 				};
 			}

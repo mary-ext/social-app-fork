@@ -1,8 +1,6 @@
 import { useCallback, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyLabelerDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { plural } from '@lingui/core/macro';
-import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { isAppLabeler } from '#/lib/moderation';
@@ -130,7 +128,6 @@ function LabelerActions() {
 }
 
 function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetailed }) {
-	const { t: l } = useLingui();
 	const {
 		meta: { hasSession },
 	} = useProfileHeader();
@@ -178,14 +175,12 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 			<InlineLinkText
 				className={css.likedBy}
 				color="textContrastMedium"
-				label={l`Liked by ${plural(likeCount, { one: '# user', other: '# users' })}`}
+				label={m['screens.profile.count.likedBy']({ likeCount })}
 				size="sm"
 				to={`/profile/${labeler.creator.did}/labeler/liked-by`}
 				weight="semiBold"
 			>
-				<Trans>
-					Liked by <Plural value={likeCount} one="# user" other="# users" />
-				</Trans>
+				{m['screens.profile.count.likedBy']({ likeCount })}
 			</InlineLinkText>
 		</div>
 	);

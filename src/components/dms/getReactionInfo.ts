@@ -1,10 +1,10 @@
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
-import type { I18n } from '@lingui/core';
-import { defineMessage } from '@lingui/core/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
 import { isDidBlockedInConvo } from '#/components/dms/getMessageInfo';
+
+import { m } from '#/paraglide/messages';
 
 export type UserReactionInfo = {
 	message: string;
@@ -16,12 +16,10 @@ export function getReactionInfo({
 	convo,
 	currentAccountDid,
 	primaryProfile,
-	i18n,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
 	currentAccountDid: string | undefined;
 	primaryProfile?: AnyProfileView;
-	i18n: I18n;
 }): UserReactionInfo | null {
 	if (convo.lastReaction?.$type !== 'chat.bsky.convo.defs#messageAndReactionView') {
 		return null;
@@ -30,7 +28,7 @@ export function getReactionInfo({
 	const { reaction, message: reactedTo } = convo.lastReaction;
 	const isFromMe = reaction.sender.did === currentAccountDid;
 	const senderDid = reaction.sender.did;
-	const sender = convo.members.find((m) => m.did === senderDid);
+	const sender = convo.members.find((member) => member.did === senderDid);
 	const name = sender ? createSanitizedDisplayName(sender) : null;
 
 	// Hide the preview when either the reactor or the author of the reacted-to message is blocked —
@@ -48,21 +46,15 @@ export function getReactionInfo({
 		});
 
 	const lastMessageText = reactedTo.text;
-	const fallbackMessage = i18n._(
-		defineMessage({
-			message: 'a message',
-			comment: 'If last message does not contain text, fall back to "{user} reacted to {a message}"',
-		}),
-	);
-	const target = lastMessageText ? `"${lastMessageText}"` : fallbackMessage;
+	const target = lastMessageText ? `"${lastMessageText}"` : m['components.dms.label.aMessage']();
 
 	let message: string;
 	if (isFromMe) {
-		message = i18n._(defineMessage`You reacted ${reaction.value} to ${target}`);
+		message = m['components.dms.update.youReactedTo']({ target, value: reaction.value });
 	} else if (name) {
-		message = i18n._(defineMessage`${name} reacted ${reaction.value} to ${target}`);
+		message = m['components.dms.reaction.reactedTo']({ name, reaction: reaction.value, target });
 	} else {
-		message = i18n._(defineMessage`Someone reacted ${reaction.value} to ${target}`);
+		message = m['components.dms.update.someoneReactedTo']({ target, value: reaction.value });
 	}
 
 	return {

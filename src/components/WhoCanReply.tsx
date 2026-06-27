@@ -1,12 +1,13 @@
 import { Fragment, useMemo, useRef } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
 import { makeListLink, makeProfileLink } from '#/lib/routes/links';
 
 import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting } from '#/state/queries/threadgate';
+
+import { Trans } from '#/locale/Trans';
 
 import {
 	PostInteractionSettingsDialog,
@@ -165,16 +166,21 @@ function Rules({
 				) : settings[0]!.type === 'nobody' ? (
 					m['components.whoCanReply.label.disabledDesc']()
 				) : (
-					<Trans>
-						Only{' '}
-						{settings.map((rule, i) => (
-							<Fragment key={`rule-${i}`}>
-								<Rule rule={rule} post={post} lists={post.threadgate!.lists} />
-								<Separator i={i} length={settings.length} />
-							</Fragment>
-						))}{' '}
-						can reply.
-					</Trans>
+					<Trans
+						message={m['components.whoCanReply.label.onlyRules']}
+						markup={{
+							t0: () => (
+								<>
+									{settings.map((rule, i) => (
+										<Fragment key={`rule-${i}`}>
+											<Rule rule={rule} post={post} lists={post.threadgate!.lists} />
+											<Separator i={i} length={settings.length} />
+										</Fragment>
+									))}
+								</>
+							),
+						}}
+					/>
 				)}{' '}
 			</Text>
 			{embeddingDisabled && (
@@ -200,22 +206,32 @@ function Rule({
 	}
 	if (rule.type === 'followers') {
 		return (
-			<Trans>
-				users following{' '}
-				<InlineLinkText label={`@${post.author.handle}`} size="md_sub" to={makeProfileLink(post.author)}>
-					@{post.author.handle}
-				</InlineLinkText>
-			</Trans>
+			<Trans
+				message={m['components.whoCanReply.label.following']}
+				inputs={{ handle: post.author.handle }}
+				markup={{
+					t0: ({ children }) => (
+						<InlineLinkText label={`@${post.author.handle}`} size="md_sub" to={makeProfileLink(post.author)}>
+							{children}
+						</InlineLinkText>
+					),
+				}}
+			/>
 		);
 	}
 	if (rule.type === 'following') {
 		return (
-			<Trans>
-				users followed by{' '}
-				<InlineLinkText label={`@${post.author.handle}`} size="md_sub" to={makeProfileLink(post.author)}>
-					@{post.author.handle}
-				</InlineLinkText>
-			</Trans>
+			<Trans
+				message={m['components.whoCanReply.label.followedBy']}
+				inputs={{ handle: post.author.handle }}
+				markup={{
+					t0: ({ children }) => (
+						<InlineLinkText label={`@${post.author.handle}`} size="md_sub" to={makeProfileLink(post.author)}>
+							{children}
+						</InlineLinkText>
+					),
+				}}
+			/>
 		);
 	}
 	if (rule.type === 'list') {
@@ -223,12 +239,17 @@ function Rule({
 		if (list) {
 			const listUrip = parseCanonicalResourceUri(list.uri);
 			return (
-				<Trans>
-					<InlineLinkText label={list.name} size="md_sub" to={makeListLink(listUrip.repo, listUrip.rkey)}>
-						{list.name}
-					</InlineLinkText>{' '}
-					members
-				</Trans>
+				<Trans
+					message={m['components.whoCanReply.label.listMembers']}
+					inputs={{ name: list.name }}
+					markup={{
+						t0: ({ children }) => (
+							<InlineLinkText label={list.name} size="md_sub" to={makeListLink(listUrip.repo, listUrip.rkey)}>
+								{children}
+							</InlineLinkText>
+						),
+					}}
+				/>
 			);
 		}
 	}

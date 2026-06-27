@@ -1,7 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { LayoutAnimation, Pressable, type ScrollView, View } from 'react-native';
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -298,7 +297,6 @@ function ReactionTab({
 	onTabLayout: (key: string, layout: { x: number; width: number }) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 
 	return (
 		<Pressable
@@ -333,10 +331,7 @@ function ReactionTab({
 		>
 			<Text emoji style={[a.text_sm]}>
 				{tab.key === 'all'
-					? l({
-							message: `All ${tab.count}`,
-							comment: 'Tab label showing the total count of reactions on a chat message.',
-						})
+					? m['components.dms.reaction.tabAll']({ count: tab.count })
 					: `${tab.value} ${tab.count}`}
 			</Text>
 		</Pressable>

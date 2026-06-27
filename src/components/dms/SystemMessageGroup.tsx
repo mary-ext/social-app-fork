@@ -1,6 +1,5 @@
 import { Pressable, View } from 'react-native';
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
-import { plural } from '@lingui/core/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 
@@ -28,10 +27,7 @@ export function SystemMessageGroup({
 	const t = useTheme();
 	const count = item.items.length;
 
-	const label = plural(count, {
-		one: '# chat update',
-		other: '# chat updates',
-	});
+	const label = m['components.dms.update.count']({ count });
 
 	const chevronStyle = {
 		transform: [{ rotate: `${expanded ? -180 : 0}deg` }],

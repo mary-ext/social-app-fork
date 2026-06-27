@@ -1,6 +1,4 @@
 import { Pressable, View } from 'react-native';
-import { plural } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 
@@ -27,7 +25,6 @@ export function RequestStatus({
 	onPress: () => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 
 	return (
 		<View
@@ -65,14 +62,10 @@ export function RequestStatus({
 					<EnvelopeIcon size="md" fill={colors.primary_500} />
 					<Text style={[a.flex_1, a.ml_sm, a.text_sm, a.font_semi_bold, { color: t.palette.primary_500 }]}>
 						{count > JOIN_REQUESTS_THRESHOLD
-							? l({
-									message: `${JOIN_REQUESTS_THRESHOLD}+ new join requests`,
-									comment: 'Displayed when the number of requests is greater than 20',
+							? m['screens.messages.requests.newOverThreshold']({
+									JOIN_REQUESTS_THRESHOLD,
 								})
-							: plural(count, {
-									one: '# new join request',
-									other: '# new join requests',
-								})}
+							: m['screens.messages.requests.newJoinCount']({ count })}
 					</Text>
 				</Pressable>
 				<Pressable

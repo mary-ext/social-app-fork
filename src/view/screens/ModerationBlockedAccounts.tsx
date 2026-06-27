@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
-import { Trans } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';
@@ -135,10 +134,7 @@ function Empty() {
 				]}
 			>
 				<Text style={[a.text_sm, a.text_center, t.atoms.text_contrast_high]}>
-					<Trans>
-						You have not blocked any accounts yet. To block an account, go to their profile and select "Block
-						account" from the menu on their account.
-					</Trans>
+					{m['view.empty.blocked']()}
 				</Text>
 			</View>
 		</View>

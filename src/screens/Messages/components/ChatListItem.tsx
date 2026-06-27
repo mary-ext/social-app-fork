@@ -10,7 +10,6 @@ import {
 	type ModerationDecision,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -185,7 +184,6 @@ function GroupChatItem({
 	selected?: boolean;
 	children?: React.ReactNode;
 }) {
-	const { t: l } = useLingui();
 	const groupOwner = useMaybeProfileShadow(convo.primaryMember);
 	const { isWithinLeftPanel } = useIsWithinSplitView();
 
@@ -201,7 +199,7 @@ function GroupChatItem({
 			convo={convo}
 			avatar={<AvatarBubbles profiles={convo.members} size={isWithinLeftPanel ? 48 : 52} />}
 			title={chatName}
-			accessibilityHint={l`Go to the group chat named "${chatName}"`}
+			accessibilityHint={m['screens.messages.a11y.goToGroupChat']({ chatName })}
 			primaryProfile={groupOwner}
 			primaryProfileModeration={moderation}
 			isBlockedAccount={false}
@@ -209,14 +207,8 @@ function GroupChatItem({
 			requestInfo={
 				convo.details.unreadJoinRequestCount
 					? convo.details.unreadJoinRequestCount > JOIN_REQUESTS_THRESHOLD
-						? l({
-								message: `${JOIN_REQUESTS_THRESHOLD}+ new join requests`,
-								context: 'Displayed when there are more than 20 requests to join a group chat',
-							})
-						: plural(convo.details.unreadJoinRequestCount, {
-								one: '# new join request',
-								other: '# new join requests',
-							})
+						? m['screens.messages.requests.newOverThreshold']({ JOIN_REQUESTS_THRESHOLD })
+						: m['screens.messages.requests.newCount']({ count: convo.details.unreadJoinRequestCount })
 					: undefined
 			}
 			showProfileBadges={false}
@@ -321,7 +313,6 @@ function BaseChatItem({
 				convo: convo.view,
 				currentAccountDid: currentAccount?.did,
 				primaryProfile,
-				i18n,
 			});
 			if (info) {
 				lastMessage = info.isBlockedMessage
@@ -337,7 +328,6 @@ function BaseChatItem({
 				convo: convo.view,
 				currentAccountDid: currentAccount?.did,
 				primaryProfile,
-				i18n,
 			});
 			if (
 				info &&
@@ -357,7 +347,7 @@ function BaseChatItem({
 				{ short: true },
 			);
 			if (info) {
-				lastMessage = i18n._(info.message);
+				lastMessage = info.message;
 				LastMessageIcon = info.Icon;
 				lastMessageSentAt = convo.view.lastMessage.sentAt;
 			}

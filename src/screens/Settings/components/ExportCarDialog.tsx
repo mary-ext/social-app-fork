@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
-import { Trans } from '@lingui/react/macro';
 
 import { saveBytesToDisk } from '#/lib/media/manip';
 
 import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
+
+import { Trans } from '#/locale/Trans';
 
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
 import { Loader } from '#/components/Loader';
@@ -82,11 +83,7 @@ function DialogInner() {
 				{m['screens.settings.action.exportProfileData']()}
 			</Text>
 			<Text className={styles.body} color="textContrastHigh" size="sm">
-				<Trans>
-					Your account repository, containing all public data records, can be downloaded as a "CAR" file. This
-					file does not include media embeds, such as images, or your private data, which must be fetched
-					separately.
-				</Trans>
+				{m['screens.settings.export.repositoryHint']()}
 			</Text>
 
 			<Button
@@ -104,10 +101,7 @@ function DialogInner() {
 				{m['common.action.exportChatData']()}
 			</Text>
 			<Text className={styles.body} color="textContrastHigh" size="sm">
-				<Trans>
-					You can also download your chat data as a "JSONL" file. This file only includes chat messages that
-					you have sent and does not include chat messages that you have received.
-				</Trans>
+				{m['screens.settings.export.chatDataHint']()}
 			</Text>
 
 			<Button
@@ -122,17 +116,20 @@ function DialogInner() {
 			</Button>
 
 			<Text className={styles.footnote} color="textContrastMedium" size="sm">
-				<Trans>
-					This feature is in beta. You can read more about repository exports in{' '}
-					<ExternalInlineLinkText
-						label={m['screens.settings.export.viewBlogpost']()}
-						size="sm"
-						href="https://docs.bsky.app/blog/repo-export"
-					>
-						this blogpost
-					</ExternalInlineLinkText>
-					.
-				</Trans>
+				<Trans
+					message={m['screens.settings.export.betaNotice']}
+					markup={{
+						t0: ({ children }) => (
+							<ExternalInlineLinkText
+								label={m['screens.settings.export.viewBlogpost']()}
+								size="sm"
+								href="https://docs.bsky.app/blog/repo-export"
+							>
+								{children}
+							</ExternalInlineLinkText>
+						),
+					}}
+				/>
 			</Text>
 		</div>
 	);

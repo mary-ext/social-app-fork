@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { type ScrollView, type StyleProp, View, type ViewStyle } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
@@ -327,18 +326,9 @@ function Tab({
 	onLayout: (index: number, x: number, width: number) => void;
 }) {
 	const t = useTheme();
-	const { t: l } = useLingui();
 	const label = active
-		? l({
-				message: `"${interestsDisplayName}" category (active)`,
-				comment:
-					'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.',
-			})
-		: l({
-				message: `Select "${interestsDisplayName}" category`,
-				comment:
-					'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.',
-			});
+		? m['components.interestTabs.a11y.categoryActive']({ interestsDisplayName })
+		: m['components.interestTabs.a11y.categorySelect']({ interestsDisplayName });
 
 	return (
 		<View
