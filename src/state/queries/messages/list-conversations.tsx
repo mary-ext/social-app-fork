@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import type { ChatBskyActorDefs, ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import {
@@ -768,18 +768,15 @@ export type ConvoListQueryData = {
 export function useOnMarkAsRead() {
 	const queryClient = useQueryClient();
 
-	return useCallback(
-		(chatId: string) => {
-			queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) => {
-				if (!old) return old;
-				return optimisticUpdate(chatId, old, (convo) => ({
-					...convo,
-					unreadCount: 0,
-				}));
-			});
-		},
-		[queryClient],
-	);
+	return (chatId: string) => {
+		queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) => {
+			if (!old) return old;
+			return optimisticUpdate(chatId, old, (convo) => ({
+				...convo,
+				unreadCount: 0,
+			}));
+		});
+	};
 }
 
 /**

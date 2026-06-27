@@ -101,32 +101,23 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 		}
 	}, [save, sort, view, savePrefs]);
 
-	const setSortWrapped = useCallback(
-		(next: string) => {
-			userUpdatedPrefs.current = true;
-			setSort(normalizeSort(next));
-		},
-		[setSort],
-	);
-	const setViewWrapped = useCallback(
-		(next: ThreadViewOption) => {
-			userUpdatedPrefs.current = true;
-			setView(next);
-		},
-		[setView],
-	);
+	const setSortWrapped = (next: string) => {
+		userUpdatedPrefs.current = true;
+		setSort(normalizeSort(next));
+	};
+	const setViewWrapped = (next: ThreadViewOption) => {
+		userUpdatedPrefs.current = true;
+		setView(next);
+	};
 
-	return useMemo(
-		() => ({
-			isLoaded,
-			isSaving,
-			sort,
-			setSort: setSortWrapped,
-			view,
-			setView: setViewWrapped,
-		}),
-		[isLoaded, isSaving, sort, setSortWrapped, view, setViewWrapped],
-	);
+	return {
+		isLoaded,
+		isSaving,
+		sort,
+		setSort: setSortWrapped,
+		view,
+		setView: setViewWrapped,
+	};
 }
 
 /** Migrates user thread preferences from the old sort values to V2 */

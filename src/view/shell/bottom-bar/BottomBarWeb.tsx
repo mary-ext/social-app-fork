@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type MouseEvent, useCallback, useMemo, useRef } from 'react';
+import { type ComponentPropsWithoutRef, type MouseEvent, useRef } from 'react';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -73,43 +73,40 @@ const useLongPress = (onLongPress?: () => void) => {
 	const firedRef = useRef(false);
 	const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-	const cancel = useCallback(() => {
+	const cancel = () => {
 		clearTimeout(timerRef.current);
 		timerRef.current = undefined;
-	}, []);
+	};
 
-	const handlers = useMemo<AnchorPressHandlers | undefined>(() => {
-		if (!onLongPress) {
-			return undefined;
-		}
-		return {
-			// the browser's own long-press / right-click menu would race our gesture, so suppress it
-			onContextMenu: (e) => e.preventDefault(),
-			onPointerCancel: cancel,
-			onPointerDown: (e) => {
-				if (e.button !== 0) {
-					return;
-				}
-				firedRef.current = false;
-				cancel();
-				timerRef.current = setTimeout(() => {
-					firedRef.current = true;
-					onLongPress();
-				}, LONG_PRESS_MS);
-			},
-			onPointerLeave: cancel,
-			onPointerUp: cancel,
-		};
-	}, [cancel, onLongPress]);
+	const handlers: AnchorPressHandlers | undefined = !onLongPress
+		? undefined
+		: {
+				// the browser's own long-press / right-click menu would race our gesture, so suppress it
+				onContextMenu: (e) => e.preventDefault(),
+				onPointerCancel: cancel,
+				onPointerDown: (e) => {
+					if (e.button !== 0) {
+						return;
+					}
+					firedRef.current = false;
+					cancel();
+					timerRef.current = setTimeout(() => {
+						firedRef.current = true;
+						onLongPress();
+					}, LONG_PRESS_MS);
+				},
+				onPointerLeave: cancel,
+				onPointerUp: cancel,
+			};
 
 	// true at most once per gesture — lets the click handler swallow the click trailing a long press
-	const consumeLongPress = useCallback(() => {
+	const consumeLongPress = () => {
 		if (firedRef.current) {
 			firedRef.current = false;
 			return true;
 		}
 		return false;
-	}, []);
+	};
 
 	return { consumeLongPress, handlers };
 };
@@ -125,13 +122,13 @@ export function BottomBarWeb() {
 	const unreadMessageCount = useUnreadMessageCount();
 	const notificationCountStr = useUnreadNotifications();
 
-	const showSignIn = useCallback(() => {
+	const showSignIn = () => {
 		signinDialogControl.openWithPayload({});
-	}, [signinDialogControl]);
+	};
 
-	const onLongPressProfile = useCallback(() => {
+	const onLongPressProfile = () => {
 		signinDialogControl.openWithPayload({ intent: 'switch' });
-	}, [signinDialogControl]);
+	};
 
 	return (
 		<nav className={clsx(css.bottomBar, hideBorder && css.bottomBarHideBorder)}>
@@ -230,22 +227,19 @@ const NavItem: React.FC<{
 	// tapping the active tab at its root soft-resets the feed; a deeper stack pops to root (handled by the
 	// link's `navigate` action). A different profile pushes a fresh screen instead.
 	const action = isOnDifferentProfile ? 'push' : 'navigate';
-	const onPress = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
-			// a long press already handled this interaction; don't also navigate on the trailing click
-			if (consumeLongPress()) {
-				return false;
-			}
-			if (action !== 'navigate' || isModifiedClick(e)) {
-				return;
-			}
-			if (getTabState(navigation.getState(), routeName) === TabState.InsideAtRoot) {
-				softReset.emit();
-				return false;
-			}
-		},
-		[action, consumeLongPress, navigation, routeName],
-	);
+	const onPress = (e: MouseEvent<HTMLElement>) => {
+		// a long press already handled this interaction; don't also navigate on the trailing click
+		if (consumeLongPress()) {
+			return false;
+		}
+		if (action !== 'navigate' || isModifiedClick(e)) {
+			return;
+		}
+		if (getTabState(navigation.getState(), routeName) === TabState.InsideAtRoot) {
+			softReset.emit();
+			return false;
+		}
+	};
 
 	return (
 		<Link

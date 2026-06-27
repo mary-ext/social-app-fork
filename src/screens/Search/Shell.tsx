@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
@@ -74,21 +74,15 @@ export function SearchScreenShell({
 		return () => observer.disconnect();
 	}, []);
 
-	const navigateToQuery = useCallback(
-		(nextQuery: string) => {
-			scrollToTopWeb();
-			// @ts-expect-error route params are not typesafe
-			navigation.push(route.name, { ...route.params, q: nextQuery });
-		},
-		[navigation, route.name, route.params],
-	);
+	const navigateToQuery = (nextQuery: string) => {
+		scrollToTopWeb();
+		// @ts-expect-error route params are not typesafe
+		navigation.push(route.name, { ...route.params, q: nextQuery });
+	};
 
-	const navigateToProfile = useCallback(
-		(profile: AnyProfileView) => {
-			navigation.navigate('Profile', { name: profile.did });
-		},
-		[navigation],
-	);
+	const navigateToProfile = (profile: AnyProfileView) => {
+		navigation.navigate('Profile', { name: profile.did });
+	};
 
 	const navigateToExplore = useCallback(() => {
 		// drop back to the explore page: clear the query and tab, keeping any other route params (e.g. a profile
@@ -120,17 +114,14 @@ export function SearchScreenShell({
 		}, [onSoftReset]),
 	);
 
-	const focusSearchInput = useCallback(
-		(tab?: TabParam) => {
-			focusSearch.emit();
+	const focusSearchInput = (tab?: TabParam) => {
+		focusSearch.emit();
 
-			// If a tab is specified, set the tab parameter so a subsequent search lands on it
-			if (tab) {
-				navigation.setParams({ ...route.params, tab });
-			}
-		},
-		[navigation, route.params],
-	);
+		// If a tab is specified, set the tab parameter so a subsequent search lands on it
+		if (tab) {
+			navigation.setParams({ ...route.params, tab });
+		}
+	};
 
 	const navButtonNode =
 		navButton === 'back' ? (
@@ -229,13 +220,11 @@ function SearchScreenInner({
 }
 
 function useQueryManager({ fixedParams, initialQuery }: { fixedParams?: Params; initialQuery: string }) {
-	return useMemo(() => {
-		const { params, query } = parseSearchQuery(initialQuery || '');
-		return {
-			query,
-			queryWithParams: makeSearchQuery(query, { ...params, ...fixedParams }),
-		};
-	}, [fixedParams, initialQuery]);
+	const { params, query } = parseSearchQuery(initialQuery || '');
+	return {
+		query,
+		queryWithParams: makeSearchQuery(query, { ...params, ...fixedParams }),
+	};
 }
 
 function scrollToTopWeb() {

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
 import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
@@ -60,35 +60,32 @@ export function useMessageEmbed() {
 
 	return {
 		embed,
-		setEmbed: useCallback(
-			(embedUrl: string | undefined) => {
-				if (!embedUrl) {
-					// Only the post embed is reflected in the route param (used by the share-to-DM intent flow);
-					// invites are local-only.
-					navigation.setParams({ embed: '' });
-					setEmbedState(undefined);
-					return;
-				}
+		setEmbed: (embedUrl: string | undefined) => {
+			if (!embedUrl) {
+				// Only the post embed is reflected in the route param (used by the share-to-DM intent flow);
+				// invites are local-only.
+				navigation.setParams({ embed: '' });
+				setEmbedState(undefined);
+				return;
+			}
 
-				if (embedFromParams) return;
+			if (embedFromParams) return;
 
-				if (isBskyChatInviteUrl(embedUrl)) {
-					const code = getChatInviteCodeFromUrl(embedUrl);
-					if (code) {
-						setEmbedState({ type: 'invite', code });
-					}
-					return;
+			if (isBskyChatInviteUrl(embedUrl)) {
+				const code = getChatInviteCodeFromUrl(embedUrl);
+				if (code) {
+					setEmbedState({ type: 'invite', code });
 				}
+				return;
+			}
 
-				if (isBskyPostUrl(embedUrl)) {
-					const url = convertBskyAppUrlIfNeeded(embedUrl);
-					const [_0, user, _1, rkey] = url.split('/').filter(Boolean) as [string, string, string, string];
-					const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey);
-					setEmbedState({ type: 'post', uri });
-				}
-			},
-			[embedFromParams, navigation],
-		),
+			if (isBskyPostUrl(embedUrl)) {
+				const url = convertBskyAppUrlIfNeeded(embedUrl);
+				const [_0, user, _1, rkey] = url.split('/').filter(Boolean) as [string, string, string, string];
+				const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey);
+				setEmbedState({ type: 'post', uri });
+			}
+		},
 	};
 }
 
@@ -99,10 +96,10 @@ export function MessageInputEmbed({
 	embed: MessageEmbedState | undefined;
 	setEmbed: (embedUrl: string | undefined) => void;
 }) {
-	const onRemove = useCallback(() => {
+	const onRemove = () => {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		setEmbed(undefined);
-	}, [setEmbed]);
+	};
 
 	if (!embed) {
 		return null;
@@ -123,12 +120,9 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 	const { data: post, status } = usePostQuery(uri);
 
 	const moderationOpts = useModerationOpts();
-	const moderation = useMemo(
-		() => (moderationOpts && post ? moderatePost(post, moderationOpts) : undefined),
-		[moderationOpts, post],
-	);
+	const moderation = moderationOpts && post ? moderatePost(post, moderationOpts) : undefined;
 
-	const { rt, record } = useMemo(() => {
+	const { rt, record } = (() => {
 		if (post) {
 			const postRecord = post.record as AppBskyFeedPost.Main;
 			return {
@@ -138,7 +132,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 		}
 
 		return { rt: undefined, record: undefined };
-	}, [post]);
+	})();
 
 	switch (status) {
 		case 'pending':

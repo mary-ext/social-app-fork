@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, forwardRef, useContext, useMemo, useState } from 'react';
 import {
 	type AccessibilityProps,
 	type GestureResponderEvent,
@@ -155,66 +155,48 @@ export const Button = forwardRef<View, ButtonProps>(
 			focused: false,
 		});
 
-		const onPressIn = useCallback(
-			(e: GestureResponderEvent) => {
-				setState((s) => ({
-					...s,
-					pressed: true,
-				}));
-				onPressInOuter?.(e);
-			},
-			[setState, onPressInOuter],
-		);
-		const onPressOut = useCallback(
-			(e: GestureResponderEvent) => {
-				setState((s) => ({
-					...s,
-					pressed: false,
-				}));
-				onPressOutOuter?.(e);
-			},
-			[setState, onPressOutOuter],
-		);
-		const onHoverIn = useCallback(
-			(e: MouseEvent) => {
-				setState((s) => ({
-					...s,
-					hovered: true,
-				}));
-				onHoverInOuter?.(e);
-			},
-			[setState, onHoverInOuter],
-		);
-		const onHoverOut = useCallback(
-			(e: MouseEvent) => {
-				setState((s) => ({
-					...s,
-					hovered: false,
-				}));
-				onHoverOutOuter?.(e);
-			},
-			[setState, onHoverOutOuter],
-		);
-		const onFocus = useCallback(
-			(e: NativeSyntheticEvent<TargetedEvent>) => {
-				setState((s) => ({
-					...s,
-					focused: true,
-				}));
-				onFocusOuter?.(e);
-			},
-			[setState, onFocusOuter],
-		);
-		const onBlur = useCallback(
-			(e: NativeSyntheticEvent<TargetedEvent>) => {
-				setState((s) => ({
-					...s,
-					focused: false,
-				}));
-				onBlurOuter?.(e);
-			},
-			[setState, onBlurOuter],
-		);
+		const onPressIn = (e: GestureResponderEvent) => {
+			setState((s) => ({
+				...s,
+				pressed: true,
+			}));
+			onPressInOuter?.(e);
+		};
+		const onPressOut = (e: GestureResponderEvent) => {
+			setState((s) => ({
+				...s,
+				pressed: false,
+			}));
+			onPressOutOuter?.(e);
+		};
+		const onHoverIn = (e: MouseEvent) => {
+			setState((s) => ({
+				...s,
+				hovered: true,
+			}));
+			onHoverInOuter?.(e);
+		};
+		const onHoverOut = (e: MouseEvent) => {
+			setState((s) => ({
+				...s,
+				hovered: false,
+			}));
+			onHoverOutOuter?.(e);
+		};
+		const onFocus = (e: NativeSyntheticEvent<TargetedEvent>) => {
+			setState((s) => ({
+				...s,
+				focused: true,
+			}));
+			onFocusOuter?.(e);
+		};
+		const onBlur = (e: NativeSyntheticEvent<TargetedEvent>) => {
+			setState((s) => ({
+				...s,
+				focused: false,
+			}));
+			onBlurOuter?.(e);
+		};
 
 		const { baseStyles, hoverStyles } = useMemo(() => {
 			const baseStyles: ViewStyle[] = [];
