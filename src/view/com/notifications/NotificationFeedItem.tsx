@@ -602,13 +602,20 @@ function AuthorsList({
 	return (
 		<Collapsible.Root open={isExpanded} onOpenChange={onOpenChange}>
 			<Collapsible.Trigger
-				// a non-native button so the trigger can hold the interactive previewable avatars; an avatar's
-				// own click `preventDefault`s, which Base UI honors and so skips the toggle
+				// a non-native button so the trigger can hold the interactive previewable avatars. Base UI's
+				// trigger toggles on every click and ignores a child's `preventDefault`, so a click on a nested
+				// avatar link would both navigate to that profile and expand the list. Suppress the toggle
+				// whenever the press lands on a nested interactive element rather than the chevron/label.
 				nativeButton={false}
 				render={<div />}
 				className={css.authorsTrigger}
 				aria-label={isExpanded ? l`Collapse list of users` : l`Expand list of users`}
-				data-authors-trigger
+				onClick={(event) => {
+					const interactive = (event.target as HTMLElement).closest('a, button');
+					if (interactive && interactive !== event.currentTarget) {
+						event.preventBaseUIHandler();
+					}
+				}}
 			>
 				{isExpanded ? (
 					<>

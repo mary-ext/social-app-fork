@@ -1363,8 +1363,8 @@ msgstr ""
 #: src/components/ProfileCard.tsx:444
 #: src/components/web/ProfileCard.tsx:258
 #: src/components/web/ProfileCard.tsx:270
-#: src/view/com/notifications/NotificationFeedItem.tsx:682
-#: src/view/com/notifications/NotificationFeedItem.tsx:697
+#: src/view/com/notifications/NotificationFeedItem.tsx:689
+#: src/view/com/notifications/NotificationFeedItem.tsx:704
 msgid "An issue occurred, please try again."
 msgstr ""
 
@@ -2110,7 +2110,7 @@ msgstr "Close the incoming requests banner"
 msgid "Close this dialog"
 msgstr "Close this dialog"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:610
+#: src/view/com/notifications/NotificationFeedItem.tsx:612
 msgid "Collapse list of users"
 msgstr ""
 
@@ -3082,7 +3082,7 @@ msgstr ""
 msgid "Expand alt text"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:610
+#: src/view/com/notifications/NotificationFeedItem.tsx:612
 msgid "Expand list of users"
 msgstr ""
 
@@ -3547,8 +3547,8 @@ msgstr "Focus the search field"
 #: src/screens/Messages/ConversationSettings/Member.tsx:161
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:130
 #: src/screens/Profile/Header/Actions.tsx:39
-#: src/view/com/notifications/NotificationFeedItem.tsx:739
-#: src/view/com/notifications/NotificationFeedItem.tsx:745
+#: src/view/com/notifications/NotificationFeedItem.tsx:746
+#: src/view/com/notifications/NotificationFeedItem.tsx:752
 msgid "Follow"
 msgstr ""
 
@@ -3578,8 +3578,8 @@ msgstr ""
 #: src/components/web/ProfileCard.tsx:280
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:128
 #: src/screens/Profile/Header/Actions.tsx:37
-#: src/view/com/notifications/NotificationFeedItem.tsx:739
-#: src/view/com/notifications/NotificationFeedItem.tsx:745
+#: src/view/com/notifications/NotificationFeedItem.tsx:746
+#: src/view/com/notifications/NotificationFeedItem.tsx:752
 msgid "Follow back"
 msgstr ""
 
@@ -3642,8 +3642,8 @@ msgstr ""
 #: src/Navigation.tsx:563
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:133
 #: src/screens/Profile/Header/Actions.tsx:35
-#: src/view/com/notifications/NotificationFeedItem.tsx:718
-#: src/view/com/notifications/NotificationFeedItem.tsx:734
+#: src/view/com/notifications/NotificationFeedItem.tsx:725
+#: src/view/com/notifications/NotificationFeedItem.tsx:741
 msgid "Following"
 msgstr ""
 
@@ -3659,7 +3659,7 @@ msgstr ""
 #: src/components/ProfileCard.tsx:412
 #: src/components/web/ProfileCard.tsx:254
 #: src/screens/Profile/Header/Context.tsx:128
-#: src/view/com/notifications/NotificationFeedItem.tsx:679
+#: src/view/com/notifications/NotificationFeedItem.tsx:686
 msgid "Following {0}"
 msgstr ""
 
@@ -4045,7 +4045,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:619
+#: src/view/com/notifications/NotificationFeedItem.tsx:626
 msgctxt "action"
 msgid "Hide"
 msgstr ""
@@ -5428,7 +5428,7 @@ msgstr ""
 #: src/components/ProfileCard.tsx:435
 #: src/components/web/ProfileCard.tsx:267
 #: src/screens/Profile/Header/Context.tsx:149
-#: src/view/com/notifications/NotificationFeedItem.tsx:694
+#: src/view/com/notifications/NotificationFeedItem.tsx:701
 msgid "No longer following {0}"
 msgstr ""
 
@@ -7122,8 +7122,8 @@ msgid "Saving"
 msgstr "Saving"
 
 #: src/components/NewskieDialog.tsx:107
-#: src/view/com/notifications/NotificationFeedItem.tsx:787
-#: src/view/com/notifications/NotificationFeedItem.tsx:796
+#: src/view/com/notifications/NotificationFeedItem.tsx:794
+#: src/view/com/notifications/NotificationFeedItem.tsx:803
 msgid "Say hello!"
 msgstr ""
 
