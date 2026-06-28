@@ -14,7 +14,15 @@
 	"screens.starterPack.error.notFound": "That starter pack could not be found.",
 	"screens.starterPack.feeds.addHint": "Add some feeds to your starter pack!",
 	"screens.starterPack.feeds.choose": "Choose feeds",
-	"screens.starterPack.feeds.max": "You may only add up to 3 feeds",
+	"screens.starterPack.feeds.max": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "You may only add up to {n} feeds"
+			}
+		}
+	],
 	"screens.starterPack.feeds.noResults": "No feeds found. Try searching for something else.",
 	"screens.starterPack.feeds.searchHint": "Search for feeds that you want to suggest to others.",
 	"screens.starterPack.follow.action": "Follow all",
@@ -22,21 +30,33 @@
 	"screens.starterPack.follow.success": "All accounts have been followed!",
 	"screens.starterPack.included.manyFeeds": [
 		{
-			"declarations": ["input count", "input first", "input second", "local cp = count: plural"],
+			"declarations": [
+				"input count",
+				"input first",
+				"input second",
+				"local cp = count: plural",
+				"local n = count: number"
+			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} other are included in your starter pack",
-				"cp=other": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} others are included in your starter pack"
+				"cp=one": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {n} other are included in your starter pack",
+				"cp=other": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {n} others are included in your starter pack"
 			}
 		}
 	],
 	"screens.starterPack.included.manyProfiles": [
 		{
-			"declarations": ["input count", "input first", "input second", "local cp = count: plural"],
+			"declarations": [
+				"input count",
+				"input first",
+				"input second",
+				"local cp = count: plural",
+				"local n = count: number"
+			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} other are included in your starter pack",
-				"cp=other": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {count} others are included in your starter pack"
+				"cp=one": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {n} other are included in your starter pack",
+				"cp=other": "{#t0}{first}, {/t0}{#t1}{second}, {/t1}and {n} others are included in your starter pack"
 			}
 		}
 	],
@@ -46,30 +66,46 @@
 	"screens.starterPack.inviteDescription": "Invite your friends to follow your favorite feeds and people",
 	"screens.starterPack.joinedCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "{count} people have joined Bluesky via this starter pack!"
+				"cp=other": "{n} people have joined Bluesky via this starter pack!"
 			}
 		}
 	],
 	"screens.starterPack.list.create": "Create a list from this starter pack",
 	"screens.starterPack.list.createFromMembers": "Create list from members",
-	"screens.starterPack.name.charCount": "{nameLength} of {NAME_MAX_LENGTH} characters",
+	"screens.starterPack.name.charCount": [
+		{
+			"declarations": ["input length", "input max", "local nl = length: number", "local nm = max: number"],
+			"selectors": [],
+			"match": {
+				"": "{nl} of {nm} characters"
+			}
+		}
+	],
 	"screens.starterPack.name.default": "My starter pack",
 	"screens.starterPack.name.defaultNamed": "{name}'s starter pack",
-	"screens.starterPack.name.display": "{displayName}'s starter pack",
+	"screens.starterPack.name.display": "{name}'s starter pack",
 	"screens.starterPack.name.prompt": "What do you want to call your starter pack?",
-	"screens.starterPack.people.addMore": "Add {count} more to continue",
+	"screens.starterPack.people.addMore": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "Add {n} more to continue"
+			}
+		}
+	],
 	"screens.starterPack.people.choose": "Choose people",
 	"screens.starterPack.people.justName": "It's just {#t0}{name} {/t0}right now! Add more people to your starter pack by searching above.",
 	"screens.starterPack.people.justYou": "It's just you right now! Add more people to your starter pack by searching above.",
 	"screens.starterPack.people.max": [
 		{
-			"declarations": ["input STARTER_PACK_MAX_SIZE", "local cp = STARTER_PACK_MAX_SIZE: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
+				"cp=other": "You may only add up to {n} profiles"
 			}
 		}
 	],

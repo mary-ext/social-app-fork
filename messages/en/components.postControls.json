@@ -15,21 +15,21 @@
 	"components.postControls.interaction.error": "Invalid interaction settings.",
 	"components.postControls.like.a11y.like": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Like ({count} like)",
-				"cp=other": "Like ({count} likes)"
+				"cp=one": "Like ({n} like)",
+				"cp=other": "Like ({n} likes)"
 			}
 		}
 	],
 	"components.postControls.like.a11y.unlike": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Unlike ({count} like)",
-				"cp=other": "Unlike ({count} likes)"
+				"cp=one": "Unlike ({n} like)",
+				"cp=other": "Unlike ({n} likes)"
 			}
 		}
 	],
@@ -49,11 +49,11 @@
 	"components.postControls.quote.updateError": "Updating quote attachment failed",
 	"components.postControls.reply.a11y": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Reply ({count} reply)",
-				"cp=other": "Reply ({count} replies)"
+				"cp=one": "Reply ({n} reply)",
+				"cp=other": "Reply ({n} replies)"
 			}
 		}
 	],
@@ -64,10 +64,10 @@
 	"components.postControls.replyVisibility.hide.toast": "Reply was successfully hidden",
 	"components.postControls.replyVisibility.maxHidden": [
 		{
-			"declarations": ["input MAX_HIDDEN_REPLIES", "local cp = MAX_HIDDEN_REPLIES: plural"],
+			"declarations": ["input limit", "local cp = limit: plural", "local n = limit: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "You can hide a maximum of {MAX_HIDDEN_REPLIES} replies."
+				"cp=other": "You can hide a maximum of {n} replies."
 			}
 		}
 	],

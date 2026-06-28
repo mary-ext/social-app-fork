@@ -17,8 +17,6 @@ import { useDisableJoinLink } from '#/state/queries/messages/disable-join-link';
 import { useEditJoinLink } from '#/state/queries/messages/edit-join-link';
 import { useEnableJoinLink } from '#/state/queries/messages/enable-join-link';
 
-import { dateTimeLong } from '#/locale/intl/datetime';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText, StackedButton } from '#/components/Button';
@@ -137,12 +135,12 @@ export function InviteLinkDialog({
 		{
 			name: 'followedByOwner',
 			owner: m['screens.messages.joinSettings.followingInstant'](),
-			member: m['screens.messages.joinSettings.ownerFollowsInstant']({ ownerName }),
+			member: m['screens.messages.joinSettings.ownerFollowsInstant']({ name: ownerName }),
 		},
 		{
 			name: 'followedByOwner:requireApproval',
 			owner: m['screens.messages.joinSettings.followingRequest'](),
-			member: m['screens.messages.joinSettings.ownerFollowsRequest']({ ownerName }),
+			member: m['screens.messages.joinSettings.ownerFollowsRequest']({ name: ownerName }),
 		},
 	];
 
@@ -288,7 +286,7 @@ export function InviteLinkDialog({
 						{createdAt ? (
 							<Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
 								{m['screens.messages.inviteLink.created']({
-									date: dateTimeLong.format(createdAt),
+									date: createdAt,
 								})}
 							</Text>
 						) : null}

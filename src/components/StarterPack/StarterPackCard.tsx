@@ -112,7 +112,7 @@ function JoinedCount({ starterPack }: { starterPack: AnyStarterPackView }) {
 	if (!joinedAllTimeCount || joinedAllTimeCount < 50) return null;
 	return (
 		<Text size="md_sub" weight="semiBold" color="textContrastMedium">
-			{m['components.starterPack.card.joinedCount']({ joinedAllTimeCount })}
+			{m['components.starterPack.card.joinedCount']({ count: joinedAllTimeCount })}
 		</Text>
 	);
 }

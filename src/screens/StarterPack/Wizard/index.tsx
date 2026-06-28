@@ -154,7 +154,7 @@ function WizardInner({
 
 	const getDefaultName = () => {
 		const displayName = createSanitizedDisplayName(currentProfile!, true);
-		return m['screens.starterPack.name.display']({ displayName }).slice(0, 50);
+		return m['screens.starterPack.name.display']({ name: displayName }).slice(0, 50);
 	};
 
 	const wizardUiStrings: Record<WizardStep, { header: string; nextBtn: string; subtitle?: string }> = {

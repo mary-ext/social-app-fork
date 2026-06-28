@@ -12,5 +12,13 @@
 	"components.emojiPicker.search.empty": "No emojis found",
 	"components.emojiPicker.search.placeholder": "Search emojis",
 	"components.emojiPicker.skinTone.label": "Skin tone",
-	"components.emojiPicker.skinTone.value": "Skin tone {value}"
+	"components.emojiPicker.skinTone.value": [
+		{
+			"declarations": ["input value", "local n = value: number"],
+			"selectors": [],
+			"match": {
+				"": "Skin tone {n}"
+			}
+		}
+	]
 }

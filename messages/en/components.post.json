@@ -3,14 +3,36 @@
 	"components.post.external.a11y.play": "Play {title}",
 	"components.post.external.a11y.player": "Embedded player",
 	"components.post.image.a11y.carousel": "carousel",
-	"components.post.image.a11y.gallery": "Image gallery, {count} images",
-	"components.post.image.a11y.imagePosition": "Image {index} of {imageCount}",
+	"components.post.image.a11y.gallery": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "Image gallery, {n} image",
+				"cp=other": "Image gallery, {n} images"
+			}
+		}
+	],
+	"components.post.image.a11y.imagePosition": [
+		{
+			"declarations": [
+				"input index",
+				"input imageCount",
+				"local n1 = index: number",
+				"local n2 = imageCount: number"
+			],
+			"selectors": [],
+			"match": {
+				"": "Image {n1} of {n2}"
+			}
+		}
+	],
 	"components.post.image.a11y.slide": "slide",
 	"components.post.publication.action.subscribe": "Subscribe on {name}",
-	"components.post.publication.action.subscribeTo": "Subscribe to {publicationTitle} on {name}",
+	"components.post.publication.action.subscribeTo": "Subscribe to {title} on {name}",
 	"components.post.publication.action.view": "View publication",
 	"components.post.publication.action.viewSource": "View {title}",
-	"components.post.publication.action.viewTitle": "View {publicationTitle}",
+	"components.post.publication.action.viewTitle": "View {title}",
 	"components.post.publication.byAuthor": "by @{handle}",
 	"components.post.publication.readingTime": [
 		{

@@ -349,8 +349,8 @@ let Tab = ({
 }): React.ReactNode => {
 	const t = useTheme();
 	const label = active
-		? m['components.dialogs.suggestedFollows.a11y.searchTabActive']({ interestsDisplayName })
-		: m['components.dialogs.suggestedFollows.a11y.searchTab']({ interestsDisplayName });
+		? m['components.dialogs.suggestedFollows.a11y.searchTabActive']({ interest: interestsDisplayName })
+		: m['components.dialogs.suggestedFollows.a11y.searchTab']({ interest: interestsDisplayName });
 	return (
 		<View
 			key={interest}

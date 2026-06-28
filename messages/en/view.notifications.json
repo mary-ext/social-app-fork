@@ -2,375 +2,275 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"view.notifications.a11y.collapseUsers": "Collapse list of users",
 	"view.notifications.a11y.expandUsers": "Expand list of users",
-	"view.notifications.a11y.goToProfile": "Go to {firstAuthorName}'s profile",
+	"view.notifications.a11y.goToProfile": "Go to {name}'s profile",
 	"view.notifications.activity.empty": "No posts here",
-	"view.notifications.contact.singleLink": "Your contact {#authorLink}{firstAuthorName}{/authorLink} is on Bluesky",
-	"view.notifications.contact.singleName": "Your contact {firstAuthorName} is on Bluesky",
+	"view.notifications.contact.singleLink": "Your contact {#authorLink}{name}{/authorLink} is on Bluesky",
+	"view.notifications.contact.singleName": "Your contact {name} is on Bluesky",
 	"view.notifications.empty": "No notifications yet!",
 	"view.notifications.fetchError": "There was an issue fetching notifications. Tap here to try again.",
-	"view.notifications.follow.back.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} followed you back",
-	"view.notifications.follow.back.singleName": "{firstAuthorName} followed you back",
+	"view.notifications.follow.back.singleLink": "{#authorLink}{name}{/authorLink} followed you back",
+	"view.notifications.follow.back.singleName": "{name} followed you back",
 	"view.notifications.follow.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} followed you",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} followed you"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} followed you",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} followed you"
 			}
 		}
 	],
 	"view.notifications.follow.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other followed you",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others followed you"
+				"cp=one": "{name} and {n} other followed you",
+				"cp=other": "{name} and {n} others followed you"
 			}
 		}
 	],
-	"view.notifications.follow.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} followed you",
-	"view.notifications.follow.singleName": "{firstAuthorName} followed you",
+	"view.notifications.follow.singleLink": "{#authorLink}{name}{/authorLink} followed you",
+	"view.notifications.follow.singleName": "{name} followed you",
 	"view.notifications.like.feed.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your custom feed",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your custom feed"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} liked your custom feed",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} liked your custom feed"
 			}
 		}
 	],
 	"view.notifications.like.feed.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other liked your custom feed",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others liked your custom feed"
+				"cp=one": "{name} and {n} other liked your custom feed",
+				"cp=other": "{name} and {n} others liked your custom feed"
 			}
 		}
 	],
-	"view.notifications.like.feed.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} liked your custom feed",
-	"view.notifications.like.feed.singleName": "{firstAuthorName} liked your custom feed",
+	"view.notifications.like.feed.singleLink": "{#authorLink}{name}{/authorLink} liked your custom feed",
+	"view.notifications.like.feed.singleName": "{name} liked your custom feed",
 	"view.notifications.like.post.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your post",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your post"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} liked your post",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} liked your post"
 			}
 		}
 	],
 	"view.notifications.like.post.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other liked your post",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others liked your post"
+				"cp=one": "{name} and {n} other liked your post",
+				"cp=other": "{name} and {n} others liked your post"
 			}
 		}
 	],
-	"view.notifications.like.post.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} liked your post",
-	"view.notifications.like.post.singleName": "{firstAuthorName} liked your post",
+	"view.notifications.like.post.singleLink": "{#authorLink}{name}{/authorLink} liked your post",
+	"view.notifications.like.post.singleName": "{name} liked your post",
 	"view.notifications.like.repost.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} liked your repost",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} liked your repost"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} liked your repost",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} liked your repost"
 			}
 		}
 	],
 	"view.notifications.like.repost.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other liked your repost",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others liked your repost"
+				"cp=one": "{name} and {n} other liked your repost",
+				"cp=other": "{name} and {n} others liked your repost"
 			}
 		}
 	],
-	"view.notifications.like.repost.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} liked your repost",
-	"view.notifications.like.repost.singleName": "{firstAuthorName} liked your repost",
+	"view.notifications.like.repost.singleLink": "{#authorLink}{name}{/authorLink} liked your repost",
+	"view.notifications.like.repost.singleName": "{name} liked your repost",
 	"view.notifications.loadNew": "Load new notifications",
 	"view.notifications.newPosts.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "New posts from {#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} ",
-				"cp=other": "New posts from {#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} "
+				"cp=one": "New posts from {#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} ",
+				"cp=other": "New posts from {#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} "
 			}
 		}
 	],
 	"view.notifications.newPosts.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "New posts from {firstAuthorName} and {formattedAuthorsCount} other",
-				"cp=other": "New posts from {firstAuthorName} and {formattedAuthorsCount} others"
+				"cp=one": "New posts from {name} and {n} other",
+				"cp=other": "New posts from {name} and {n} others"
 			}
 		}
 	],
 	"view.notifications.newPosts.singleLink": [
 		{
-			"declarations": ["input postsCount", "input firstAuthorName", "local cp = postsCount: plural"],
+			"declarations": ["input count", "input name", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "New post from {#authorLink}{firstAuthorName}{/authorLink}",
-				"cp=other": "New posts from {#authorLink}{firstAuthorName}{/authorLink}"
+				"cp=one": "New post from {#authorLink}{name}{/authorLink}",
+				"cp=other": "New posts from {#authorLink}{name}{/authorLink}"
 			}
 		}
 	],
 	"view.notifications.newPosts.singleName": [
 		{
-			"declarations": ["input postsCount", "input firstAuthorName", "local cp = postsCount: plural"],
+			"declarations": ["input count", "input name", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "New post from {firstAuthorName}",
-				"cp=other": "New posts from {firstAuthorName}"
+				"cp=one": "New post from {name}",
+				"cp=other": "New posts from {name}"
 			}
 		}
 	],
 	"view.notifications.repost.post.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} reposted your post",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} reposted your post"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} reposted your post",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} reposted your post"
 			}
 		}
 	],
 	"view.notifications.repost.post.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other reposted your post",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others reposted your post"
+				"cp=one": "{name} and {n} other reposted your post",
+				"cp=other": "{name} and {n} others reposted your post"
 			}
 		}
 	],
-	"view.notifications.repost.post.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} reposted your post",
-	"view.notifications.repost.post.singleName": "{firstAuthorName} reposted your post",
+	"view.notifications.repost.post.singleLink": "{#authorLink}{name}{/authorLink} reposted your post",
+	"view.notifications.repost.post.singleName": "{name} reposted your post",
 	"view.notifications.repost.repost.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} reposted your repost",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} reposted your repost"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} reposted your repost",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} reposted your repost"
 			}
 		}
 	],
 	"view.notifications.repost.repost.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other reposted your repost",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others reposted your repost"
+				"cp=one": "{name} and {n} other reposted your repost",
+				"cp=other": "{name} and {n} others reposted your repost"
 			}
 		}
 	],
-	"view.notifications.repost.repost.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} reposted your repost",
-	"view.notifications.repost.repost.singleName": "{firstAuthorName} reposted your repost",
+	"view.notifications.repost.repost.singleLink": "{#authorLink}{name}{/authorLink} reposted your repost",
+	"view.notifications.repost.repost.singleName": "{name} reposted your repost",
 	"view.notifications.settings.disabledHint": "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your {#t0}notification settings{/t0}.",
 	"view.notifications.settings.enableHint": "Enable notifications for an account by visiting their profile and pressing the {#t0}bell icon{/t0} {#t1/}.",
 	"view.notifications.settings.restrictHint": "If you want to restrict who can receive notifications for your account's activity, you can change this in {#t0}settings → account & privacy{/t0}.",
 	"view.notifications.settings.visit": "Visit your notification settings",
 	"view.notifications.starterPack.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} signed up with your starter pack",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} signed up with your starter pack"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} signed up with your starter pack",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} signed up with your starter pack"
 			}
 		}
 	],
 	"view.notifications.starterPack.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other signed up with your starter pack",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others signed up with your starter pack"
+				"cp=one": "{name} and {n} other signed up with your starter pack",
+				"cp=other": "{name} and {n} others signed up with your starter pack"
 			}
 		}
 	],
-	"view.notifications.starterPack.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} signed up with your starter pack",
-	"view.notifications.starterPack.singleName": "{firstAuthorName} signed up with your starter pack",
+	"view.notifications.starterPack.singleLink": "{#authorLink}{name}{/authorLink} signed up with your starter pack",
+	"view.notifications.starterPack.singleName": "{name} signed up with your starter pack",
 	"view.notifications.unreadCount.a11y": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} unread item",
-				"cp=other": "{count} unread items"
+				"cp=one": "{n} unread item",
+				"cp=other": "{n} unread items"
 			}
 		}
 	],
 	"view.notifications.unreadCount.badge": [
 		{
-			"declarations": ["input notificationCount", "local cp = notificationCount: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{notificationCount} unread item",
-				"cp=other": "{notificationCount} unread items"
+				"cp=one": "{n} unread item",
+				"cp=other": "{n} unread items"
 			}
 		}
 	],
 	"view.notifications.verification.removed.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} removed their verifications from your account",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} removed their verifications from your account"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} removed their verifications from your account",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} removed their verifications from your account"
 			}
 		}
 	],
 	"view.notifications.verification.removed.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other removed their verifications from your account",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others removed their verifications from your account"
+				"cp=one": "{name} and {n} other removed their verifications from your account",
+				"cp=other": "{name} and {n} others removed their verifications from your account"
 			}
 		}
 	],
-	"view.notifications.verification.removed.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} removed their verification from your account",
-	"view.notifications.verification.removed.singleName": "{firstAuthorName} removed their verification from your account",
+	"view.notifications.verification.removed.singleLink": "{#authorLink}{name}{/authorLink} removed their verification from your account",
+	"view.notifications.verification.removed.singleName": "{name} removed their verification from your account",
 	"view.notifications.verification.verified.multiLink": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} other{/t0} verified you",
-				"cp=other": "{#authorLink}{firstAuthorName}{/authorLink} and {#t0}{formattedAuthorsCount} others{/t0} verified you"
+				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} verified you",
+				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} verified you"
 			}
 		}
 	],
 	"view.notifications.verification.verified.multiName": [
 		{
-			"declarations": [
-				"input additionalAuthorsCount",
-				"input firstAuthorName",
-				"input formattedAuthorsCount",
-				"local cp = additionalAuthorsCount: plural"
-			],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{firstAuthorName} and {formattedAuthorsCount} other verified you",
-				"cp=other": "{firstAuthorName} and {formattedAuthorsCount} others verified you"
+				"cp=one": "{name} and {n} other verified you",
+				"cp=other": "{name} and {n} others verified you"
 			}
 		}
 	],
-	"view.notifications.verification.verified.singleLink": "{#authorLink}{firstAuthorName}{/authorLink} verified you",
-	"view.notifications.verification.verified.singleName": "{firstAuthorName} verified you"
+	"view.notifications.verification.verified.singleLink": "{#authorLink}{name}{/authorLink} verified you",
+	"view.notifications.verification.verified.singleName": "{name} verified you"
 }

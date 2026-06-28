@@ -64,7 +64,7 @@ export function Member({
 		requireAuth(async () => {
 			try {
 				await queueFollow();
-				Toast.show(m['screens.messages.follow.following']({ displayName }));
+				Toast.show(m['screens.messages.follow.following']({ name: displayName }));
 			} catch (err) {
 				const e = err as Error;
 				if (e?.name !== 'AbortError') {
@@ -144,7 +144,7 @@ export function Member({
 				</ProfileCard.Link>
 				{showRemoveButton ? (
 					<Button
-						label={m['screens.messages.members.remove.a11y']({ displayName })}
+						label={m['screens.messages.members.remove.a11y']({ name: displayName })}
 						size="tiny"
 						color="negative_subtle"
 						onPress={() => removeMemberPrompt.open()}
@@ -153,7 +153,7 @@ export function Member({
 					</Button>
 				) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
 					<SimpleInlineLinkText
-						label={m['screens.messages.follow.action']({ displayName })}
+						label={m['screens.messages.follow.action']({ name: displayName })}
 						{...createStaticClick(handleFollow)}
 						style={[a.font_medium]}
 					>

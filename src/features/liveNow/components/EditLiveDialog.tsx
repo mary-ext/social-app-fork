@@ -8,8 +8,6 @@ import { parseLooseUrl } from '#/lib/strings/url-helpers';
 
 import { useTickEveryMinute } from '#/state/shell';
 
-import { clock } from '#/locale/intl/datetime';
-
 import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Text';
@@ -113,7 +111,7 @@ function DialogInner({
 						{typeof record?.durationMinutes === 'number'
 							? m['features.liveNow.expiry.value']({
 									duration: displayDuration(minutesUntilExpiry),
-									time: clock.format(expiryDateTime),
+									time: expiryDateTime,
 								})
 							: m['features.liveNow.expiry.none']()}
 					</Text>

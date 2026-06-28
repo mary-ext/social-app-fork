@@ -379,7 +379,7 @@ function DialogInner({
 						{(displayNameTooLong || displayNameTooShort) && (
 							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
 								{displayNameTooLong
-									? m['components.dialogs.list.error.nameTooLong']({ DISPLAY_NAME_MAX_GRAPHEMES })
+									? m['components.dialogs.list.error.nameTooLong']({ max: DISPLAY_NAME_MAX_GRAPHEMES })
 									: m['components.dialogs.list.error.nameRequired']()}
 							</Text>
 						)}
@@ -396,7 +396,7 @@ function DialogInner({
 						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
-								{m['components.dialogs.list.error.descriptionTooLong']({ DESCRIPTION_MAX_GRAPHEMES })}
+								{m['components.dialogs.list.error.descriptionTooLong']({ max: DESCRIPTION_MAX_GRAPHEMES })}
 							</Text>
 						)}
 					</TextField.Root>

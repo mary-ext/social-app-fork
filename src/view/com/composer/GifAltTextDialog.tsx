@@ -81,8 +81,8 @@ const GifAltTextForm = ({
 	const canSave = altText !== initialAlt && !isOverLimit;
 
 	const counterLabel = isOverLimit
-		? m['view.composer.altText.charCountOverLimit']({ length: altText.length, MAX_ALT_TEXT })
-		: m['view.composer.altText.charCount']({ length: altText.length, MAX_ALT_TEXT });
+		? m['view.composer.altText.charCountOverLimit']({ length: altText.length, max: MAX_ALT_TEXT })
+		: m['view.composer.altText.charCount']({ length: altText.length, max: MAX_ALT_TEXT });
 
 	const onSave = () => {
 		onSubmit(altText);

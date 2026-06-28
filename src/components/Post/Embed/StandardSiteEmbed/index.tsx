@@ -358,12 +358,12 @@ function SubscribeButton({
 	const label = highlightedPublisher
 		? publicationTitle
 			? m['components.post.publication.action.subscribeTo']({
-					publicationTitle,
+					title: publicationTitle,
 					name: highlightedPublisher.name,
 				})
 			: m['components.post.publication.action.subscribe']({ name: highlightedPublisher.name })
 		: publicationTitle
-			? m['components.post.publication.action.viewTitle']({ publicationTitle })
+			? m['components.post.publication.action.viewTitle']({ title: publicationTitle })
 			: m['components.post.publication.action.view']();
 	const cta = highlightedPublisher
 		? m['components.post.publication.action.subscribe']({ name: highlightedPublisher.name })

@@ -165,7 +165,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 	if (link.startsWith('/search')) {
 		return {
 			type: 'topic',
-			label: m['components.trendingTopics.a11y.browseAbout']({ displayName }),
+			label: m['components.trendingTopics.a11y.browseAbout']({ name: displayName }),
 			displayName,
 			uri: undefined,
 			url: link,
@@ -173,7 +173,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 	} else if (link.startsWith('/hashtag')) {
 		return {
 			type: 'tag',
-			label: m['components.trendingTopics.a11y.browseTag']({ displayName }),
+			label: m['components.trendingTopics.a11y.browseTag']({ name: displayName }),
 			displayName,
 			// displayName: displayName.replace(/^#/, ''),
 			uri: undefined,
@@ -182,7 +182,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 	} else if (link.startsWith('/starter-pack')) {
 		return {
 			type: 'starter-pack',
-			label: m['components.trendingTopics.a11y.browseStarterPack']({ displayName }),
+			label: m['components.trendingTopics.a11y.browseStarterPack']({ name: displayName }),
 			displayName,
 			uri: undefined,
 			url: link,
@@ -219,7 +219,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 
 	return {
 		type: 'unknown',
-		label: m['components.trendingTopics.a11y.browseTopic']({ displayName }),
+		label: m['components.trendingTopics.a11y.browseTopic']({ name: displayName }),
 		displayName,
 		uri: undefined,
 		url: link,

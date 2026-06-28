@@ -43,7 +43,10 @@ export function StepDetails() {
 				<TextField.LabelText
 					accessory={
 						<Text
-							aria-label={m['screens.starterPack.name.charCount']({ nameLength, NAME_MAX_LENGTH })}
+							aria-label={m['screens.starterPack.name.charCount']({
+								length: nameLength,
+								max: NAME_MAX_LENGTH,
+							})}
 							className={css.counter}
 							color="textContrastMedium"
 							id={counterId}

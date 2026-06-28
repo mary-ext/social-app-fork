@@ -55,9 +55,9 @@ export function ProfileListScreen(props: Props) {
 }
 
 function ProfileListScreenInner(props: Props) {
-	const { name: handleOrDid, rkey } = props.route.params;
+	const { name: handle, rkey } = props.route.params;
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(
-		`at://${handleOrDid}/app.bsky.graph.list/${rkey}`,
+		`at://${handle}/app.bsky.graph.list/${rkey}`,
 	);
 	const { data: preferences } = usePreferencesQuery();
 	const { data: list, error: listError } = useListQuery(resolvedUri?.uri);
@@ -74,7 +74,7 @@ function ProfileListScreenInner(props: Props) {
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
 				<Layout.Content centerContent>
-					<ErrorScreen error={m['screens.profileList.error.resolveFailed']({ handleOrDid })} />
+					<ErrorScreen error={m['screens.profileList.error.resolveFailed']({ handle })} />
 				</Layout.Content>
 			</>
 		);

@@ -14,7 +14,7 @@
 	"screens.profileList.delete.list": "Delete list",
 	"screens.profileList.edit.details": "Edit list details",
 	"screens.profileList.error.loadFailed": "Could not load list",
-	"screens.profileList.error.resolveFailed": "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}.",
+	"screens.profileList.error.resolveFailed": "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handle}.",
 	"screens.profileList.hide.hiddenToast": "List hidden",
 	"screens.profileList.members.add": "Add a user to this list",
 	"screens.profileList.members.empty": "This list is empty.",

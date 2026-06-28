@@ -135,7 +135,7 @@ export function FeedSourceCardLoaded({
 						? m['view.feeds.feed.a11y.label']({
 								name: feed.displayName,
 								creator: sanitizeHandle(feed.creatorHandle, '@'),
-								likeCount: feed.likeCount || 0,
+								count: feed.likeCount || 0,
 							})
 						: m['view.feeds.list.a11y.label']({
 								name: feed.displayName,

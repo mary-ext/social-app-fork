@@ -378,7 +378,7 @@ function DialogInner({
 						color="textContrastMedium"
 						onPress={closeDialog}
 					>
-						{m['screens.profile.feed.likes.count']({ likeCount })}
+						{m['screens.profile.feed.likes.count']({ count: likeCount })}
 					</InlineLinkText>
 				)}
 			</div>

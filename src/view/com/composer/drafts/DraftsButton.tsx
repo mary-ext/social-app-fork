@@ -1,3 +1,5 @@
+import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants';
+
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
@@ -83,7 +85,7 @@ export function DraftsButton({
 							? isEditingDraft
 								? m['view.composer.drafts.beforeViewing.unsaved']()
 								: m['view.composer.drafts.beforeViewing.save']()
-							: m['view.composer.drafts.beforeViewing.tooLong']()}
+							: m['view.composer.drafts.beforeViewing.tooLong']({ max: MAX_DRAFT_GRAPHEME_LENGTH })}
 					</Prompt.DescriptionText>
 				</Prompt.Content>
 				<Prompt.Actions>

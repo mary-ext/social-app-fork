@@ -63,7 +63,7 @@ export function RequestStatus({
 					<Text style={[a.flex_1, a.ml_sm, a.text_sm, a.font_semi_bold, { color: t.palette.primary_500 }]}>
 						{count > JOIN_REQUESTS_THRESHOLD
 							? m['screens.messages.requests.newOverThreshold']({
-									JOIN_REQUESTS_THRESHOLD,
+									count: JOIN_REQUESTS_THRESHOLD,
 								})
 							: m['screens.messages.requests.newCount']({ count })}
 					</Text>

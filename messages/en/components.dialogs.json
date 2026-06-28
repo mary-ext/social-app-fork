@@ -50,10 +50,10 @@
 	"components.dialogs.list.error.createdPartial": "List created, but failed to add some members",
 	"components.dialogs.list.error.descriptionTooLong": [
 		{
-			"declarations": ["input DESCRIPTION_MAX_GRAPHEMES", "local cp = DESCRIPTION_MAX_GRAPHEMES: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "List description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
+				"cp=other": "List description is too long. The maximum number of characters is {n}."
 			}
 		}
 	],
@@ -61,10 +61,10 @@
 	"components.dialogs.list.error.nameRequired": "List must have a name.",
 	"components.dialogs.list.error.nameTooLong": [
 		{
-			"declarations": ["input DISPLAY_NAME_MAX_GRAPHEMES", "local cp = DISPLAY_NAME_MAX_GRAPHEMES: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "List name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
+				"cp=other": "List name is too long. The maximum number of characters is {n}."
 			}
 		}
 	],
@@ -72,11 +72,11 @@
 	"components.dialogs.list.loading": "Loading lists...",
 	"components.dialogs.list.memberCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} member",
-				"cp=other": "{count} members"
+				"cp=one": "{n} member",
+				"cp=other": "{n} members"
 			}
 		}
 	],
@@ -89,10 +89,10 @@
 	"components.dialogs.list.moderation.updatedToast": "Moderation list updated",
 	"components.dialogs.list.moreCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "+{count} more"
+				"cp=other": "+{n} more"
 			}
 		}
 	],
@@ -105,10 +105,10 @@
 	"components.dialogs.list.selectFromYours": "Select from your lists",
 	"components.dialogs.list.selectFromYoursCount": [
 		{
-			"declarations": ["input numberOfListsSelected", "local cp = numberOfListsSelected: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "Select from your lists {#t0}({numberOfListsSelected} selected){/t0}"
+				"cp=other": "Select from your lists {#t0}({n} selected){/t0}"
 			}
 		}
 	],
@@ -158,8 +158,8 @@
 	"components.dialogs.starterPack.error.remove": "Failed to remove from starter pack",
 	"components.dialogs.starterPack.newTitle": "New starter pack",
 	"components.dialogs.starterPack.removedToast": "Removed from starter pack",
-	"components.dialogs.suggestedFollows.a11y.searchTab": "Search for \\\"{interestsDisplayName}\\\"",
-	"components.dialogs.suggestedFollows.a11y.searchTabActive": "Search for \\\"{interestsDisplayName}\\\" (active)",
+	"components.dialogs.suggestedFollows.a11y.searchTab": "Search for \\\"{interest}\\\"",
+	"components.dialogs.suggestedFollows.a11y.searchTabActive": "Search for \\\"{interest}\\\" (active)",
 	"components.dialogs.suggestedFollows.searchPlaceholder": "Search by name or interest",
 	"components.dialogs.suggestedFollows.title": "Find people to follow"
 }

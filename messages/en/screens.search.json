@@ -20,10 +20,34 @@
 	"screens.search.results.error.failed": "We’re sorry, but your search could not be completed. Please try again in a few minutes.",
 	"screens.search.results.error.generic": "Error: {error}",
 	"screens.search.results.loading": "Loading search results",
-	"screens.search.starterPack.additionalCount": "+{computedTotal}",
+	"screens.search.starterPack.additionalCount": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "+{n}"
+			}
+		}
+	],
 	"screens.search.starterPack.open": "Open pack",
 	"screens.search.trending.entertainment": "Entertainment",
 	"screens.search.trending.hot": "Hot",
-	"screens.search.trending.rank": "{rank}.",
-	"screens.search.trending.timeAgo": "{type}h ago"
+	"screens.search.trending.rank": [
+		{
+			"declarations": ["input rank", "local cp = rank: plural", "local n = rank: number"],
+			"selectors": [],
+			"match": {
+				"": "{n}."
+			}
+		}
+	],
+	"screens.search.trending.timeAgo": [
+		{
+			"declarations": ["input type", "local cp = type: plural", "local n = type: number"],
+			"selectors": [],
+			"match": {
+				"": "{n}h ago"
+			}
+		}
+	]
 }

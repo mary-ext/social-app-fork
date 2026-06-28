@@ -411,7 +411,7 @@ export function PostInteractionSettingsForm({
 										) : (
 											<Trans
 												message={m['components.dialogs.list.selectFromYoursCount']}
-												inputs={{ numberOfListsSelected }}
+												inputs={{ count: numberOfListsSelected }}
 												markup={{
 													t0: ({ children }) => <span className={styles.listsCount}>{children}</span>,
 												}}

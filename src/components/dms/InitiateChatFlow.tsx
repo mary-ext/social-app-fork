@@ -523,7 +523,7 @@ export function InitiateChatFlow({
 								</TextField.Root>
 								{groupNameTooLong ? (
 									<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-										{m['common.chat.error.groupNameTooLong']({ MAX_GROUP_NAME_GRAPHEME_LENGTH })}
+										{m['common.chat.error.groupNameTooLong']({ max: MAX_GROUP_NAME_GRAPHEME_LENGTH })}
 									</Text>
 								) : null}
 							</View>
@@ -734,7 +734,7 @@ function DefaultProfileCard({
 	return (
 		<Button
 			disabled={!enabled}
-			label={m['common.chat.action.start']({ displayName })}
+			label={m['common.chat.action.start']({ name: displayName })}
 			onPress={handleOnPress}
 		>
 			{({ hovered, pressed, focused }) => (

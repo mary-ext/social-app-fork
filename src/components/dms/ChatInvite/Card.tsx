@@ -47,7 +47,7 @@ export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 					<Text size="md_sub" weight="medium" numberOfLines={1} className={css.shrink}>
 						<Trans
 							message={m['common.chat.byOwner']}
-							inputs={{ ownerHandle }}
+							inputs={{ handle: ownerHandle }}
 							markup={{
 								t0: ({ children }) => (
 									<InlineLinkText

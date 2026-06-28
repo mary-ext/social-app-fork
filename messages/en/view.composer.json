@@ -3,16 +3,33 @@
 	"view.composer.a11y.dismissError": "Dismiss error",
 	"view.composer.altText.action.add": "Add alt text",
 	"view.composer.altText.action.addOptional": "Add alt text (optional)",
-	"view.composer.altText.charCount": "{length} of {MAX_ALT_TEXT} characters",
-	"view.composer.altText.charCountOverLimit": "{length} of {MAX_ALT_TEXT} characters, over the limit",
+	"view.composer.altText.charCount": [
+		{
+			"declarations": ["input length", "input max", "local ln = length: number", "local mn = max: number"],
+			"selectors": [],
+			"match": {
+				"": "{ln} of {mn} characters"
+			}
+		}
+	],
+	"view.composer.altText.charCountOverLimit": [
+		{
+			"declarations": ["input length", "input max", "local ln = length: number", "local mn = max: number"],
+			"selectors": [],
+			"match": {
+				"": "{ln} of {mn} characters, over the limit"
+			}
+		}
+	],
 	"view.composer.altText.descriptive": "Descriptive alt text",
 	"view.composer.altText.error.overLimit": "Alt text is over the character limit.",
 	"view.composer.altText.error.tooLong": [
 		{
-			"declarations": ["input MAX_ALT_TEXT", "local cp = MAX_ALT_TEXT: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "Alt text must be less than {MAX_ALT_TEXT} characters."
+				"cp=one": "Alt text must be less than {n} character.",
+				"cp=other": "Alt text must be less than {n} characters."
 			}
 		}
 	],
@@ -44,7 +61,7 @@
 	"view.composer.drafts.action.open": "Open draft",
 	"view.composer.drafts.action.save": "Save draft",
 	"view.composer.drafts.beforeViewing.save": "Would you like to save this as a draft before viewing your drafts?",
-	"view.composer.drafts.beforeViewing.tooLong": "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?",
+	"view.composer.drafts.beforeViewing.tooLong": "You can only save drafts up to {max} characters. Would you like to discard this post before viewing your drafts?",
 	"view.composer.drafts.beforeViewing.unsaved": "You have unsaved changes. Would you like to save them before viewing your drafts?",
 	"view.composer.drafts.discard.message": "This draft will be permanently deleted.",
 	"view.composer.drafts.discard.title": "Discard draft?",
@@ -53,15 +70,15 @@
 	"view.composer.drafts.error.save": "Failed to save draft",
 	"view.composer.drafts.error.tooLong": [
 		{
-			"declarations": ["input MAX_DRAFT_GRAPHEME_LENGTH", "local cp = MAX_DRAFT_GRAPHEME_LENGTH: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "One or more posts are too long to save as a draft. The maximum number of characters is {MAX_DRAFT_GRAPHEME_LENGTH} character.",
-				"cp=other": "One or more posts are too long to save as a draft. The maximum number of characters is {MAX_DRAFT_GRAPHEME_LENGTH} characters."
+				"cp=one": "One or more posts are too long to save as a draft. The maximum number of characters is {n} character.",
+				"cp=other": "One or more posts are too long to save as a draft. The maximum number of characters is {n} characters."
 			}
 		}
 	],
-	"view.composer.drafts.error.tooLongFixed": "You can only save drafts up to 1000 characters.",
+	"view.composer.drafts.error.tooLongFixed": "You can only save drafts up to {max} characters.",
 	"view.composer.drafts.loading": "Loading drafts",
 	"view.composer.drafts.opensDraft": "Opens this draft in the composer",
 	"view.composer.drafts.save.message": "Would you like to save this as a draft to edit later?",
@@ -79,46 +96,57 @@
 				"input count",
 				"input accepted",
 				"input total",
-				"input MAX_GALLERY_IMAGES",
-				"local cp = count: plural"
+				"input max",
+				"local cp = count: plural",
+				"local na = accepted: number",
+				"local nt = total: number",
+				"local nm = max: number"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Only {accepted} of {total} image added; limit is {MAX_GALLERY_IMAGES}",
-				"cp=other": "Only {accepted} of {total} images added; limit is {MAX_GALLERY_IMAGES}"
+				"cp=one": "Only {na} of {nt} image added; limit is {nm}",
+				"cp=other": "Only {na} of {nt} images added; limit is {nm}"
 			}
 		}
 	],
 	"view.composer.gallery.error.maxAdd": [
 		{
-			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "You can only add up to {MAX_GALLERY_IMAGES} images per post"
+				"cp=other": "You can only add up to {n} images per post"
 			}
 		}
 	],
 	"view.composer.gallery.error.maxSelect": [
 		{
-			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "You can select up to {MAX_GALLERY_IMAGES} images in total."
+				"cp=other": "You can select up to {n} images in total."
 			}
 		}
 	],
 	"view.composer.gallery.error.notAdded": [
 		{
-			"declarations": ["input failed", "local cp = failed: plural"],
+			"declarations": ["input failed", "local cp = failed: plural", "local n = failed: number"],
 			"selectors": ["cp"],
 			"match": {
 				"cp=one": "An image couldn't be added to your post.",
-				"cp=other": "{failed} images couldn't be added to your post."
+				"cp=other": "{n} images couldn't be added to your post."
 			}
 		}
 	],
 	"view.composer.gallery.error.paste": "The pasted image couldn't be added to your post.",
-	"view.composer.gallery.moreCount": "+{count}",
+	"view.composer.gallery.moreCount": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "+{n}"
+			}
+		}
+	],
 	"view.composer.gif.a11y.opensPicker": "Opens the GIF picker dialog",
 	"view.composer.gif.a11y.select": "Select GIF",
 	"view.composer.gif.compressing": "Compressing GIF...",
@@ -131,22 +159,30 @@
 	"view.composer.interaction.limited": "Interaction limited",
 	"view.composer.language.a11y.acceptSuggestion": "Accept this language suggestion",
 	"view.composer.language.a11y.declineSuggestion": "Decline this language suggestion",
-	"view.composer.language.a11y.select": "Select {langName}",
+	"view.composer.language.a11y.select": "Select {language}",
 	"view.composer.language.a11y.selection": "Post language selection",
 	"view.composer.language.chooseTitle": "Choose post languages",
 	"view.composer.language.more": "More languages...",
-	"view.composer.language.prompt": "Are you writing in {#t0}{suggestedLanguageName}{/t0}?",
-	"view.composer.language.replyPrompt": "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in {#t0}{suggestedLanguageName}{/t0}?",
+	"view.composer.language.prompt": "Are you writing in {#t0}{language}{/t0}?",
+	"view.composer.language.replyPrompt": "The post you're replying to was marked as being written in {language} by its author. Would you like to reply in {#t0}{language}{/t0}?",
 	"view.composer.language.select": "Select language...",
-	"view.composer.language.selectHint": "Select up to 3 languages used in this post",
+	"view.composer.language.selectHint": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "Select up to {n} languages used in this post"
+			}
+		}
+	],
 	"view.composer.language.selectPost": "Select post language",
 	"view.composer.media.a11y.add": "Add media to post",
 	"view.composer.media.a11y.addHint": [
 		{
-			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"declarations": ["input max", "local cp = max: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "Opens device gallery to select up to {MAX_GALLERY_IMAGES} images, or a single video or GIF."
+				"cp=other": "Opens device gallery to select up to {max} images, or a single video or GIF."
 			}
 		}
 	],
@@ -171,10 +207,10 @@
 	"view.composer.reply.expand": "Expand or collapse the full post you are replying to",
 	"view.composer.text.maxLengthHint": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "Compose posts up to {count} characters in length"
+				"cp=other": "Compose posts up to {n} characters in length"
 			}
 		}
 	],
@@ -183,11 +219,11 @@
 	"view.composer.thread.action.addPostToThread": "Add another post to thread",
 	"view.composer.thread.morePosts": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
 				"cp=one": "1 more post",
-				"cp=other": "{count} more posts"
+				"cp=other": "{n} more posts"
 			}
 		}
 	],
@@ -200,15 +236,31 @@
 	"view.composer.video.error.dailyLimitBytes": "You've reached your daily limit for video uploads (too many bytes)",
 	"view.composer.video.error.dailyLimitCount": "You've reached your daily limit for video uploads (too many videos)",
 	"view.composer.video.error.emailConfirmRequired": "Please confirm your email address to upload videos.",
-	"view.composer.video.error.fileTooLarge": "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB.",
+	"view.composer.video.error.fileTooLarge": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "One or more of your selected files are too large. Maximum size is {n} MB."
+			}
+		}
+	],
 	"view.composer.video.error.fileUnsupported": "One or more of your selected files are not supported.",
 	"view.composer.video.error.notAllowed": "You are not allowed to upload videos.",
 	"view.composer.video.error.oneOnly": "You can only select one video at a time.",
 	"view.composer.video.error.permCheckFailed": "We were unable to determine if you are allowed to upload videos. Please try again.",
 	"view.composer.video.error.process": "Could not process your video",
 	"view.composer.video.error.processFailed": "Video failed to process",
-	"view.composer.video.error.tooLarge": "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.",
-	"view.composer.video.error.tooLong": "Videos must be less than 3 minutes long.",
+	"view.composer.video.error.tooLarge": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "The selected video is larger than {n} MB. Please try again with a smaller file."
+			}
+		}
+	],
+	"view.composer.video.error.tooLong": "Videos must be less than {minutes} minutes long.",
 	"view.composer.video.error.unsupportedType": "Unsupported video type: {mimeType}",
 	"view.composer.video.error.upload": "An error occurred while uploading the video. {message}",
 	"view.composer.video.error.uploadConnection": "An error occurred while uploading the video. Please check your internet connection and try again.",

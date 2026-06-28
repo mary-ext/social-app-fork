@@ -66,7 +66,7 @@ function ModerationDetailsDialogInner({
 			description = (
 				<Trans
 					message={m['common.block.byList.message']}
-					inputs={{ listName: list.name }}
+					inputs={{ name: list.name }}
 					markup={{
 						t0: ({ children }) => (
 							<InlineLinkText label={list.name} to={listUriToHref(list.uri)} style={[a.text_sm]}>
@@ -90,7 +90,7 @@ function ModerationDetailsDialogInner({
 			description = (
 				<Trans
 					message={m['common.mute.byList.message']}
-					inputs={{ listName: list.name }}
+					inputs={{ name: list.name }}
 					markup={{
 						t0: ({ children }) => (
 							<InlineLinkText label={list.name} to={listUriToHref(list.uri)} style={[a.text_sm]}>
@@ -176,7 +176,7 @@ function ModerationDetailsDialogInner({
 								<Text style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
 									<Trans
 										message={m['common.moderation.source']}
-										inputs={{ sourceName }}
+										inputs={{ source: sourceName }}
 										markup={{
 											t0: ({ children }) => (
 												<InlineLinkText

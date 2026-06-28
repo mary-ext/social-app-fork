@@ -374,7 +374,7 @@ function DefaultProfileCard({
 	return (
 		<Button
 			disabled={!enabled}
-			label={m['common.chat.action.start']({ displayName })}
+			label={m['common.chat.action.start']({ name: displayName })}
 			onPress={handleOnPress}
 		>
 			{({ hovered, pressed, focused }) => (

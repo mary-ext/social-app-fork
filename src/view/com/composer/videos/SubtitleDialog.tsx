@@ -113,7 +113,7 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 
 				{isOverMaxLength && (
 					<Text style={[a.text_md, { color: t.palette.negative_500 }, a.leading_snug, a.mt_md]}>
-						{m['view.composer.altText.error.tooLong']({ MAX_ALT_TEXT })}
+						{m['view.composer.altText.error.tooLong']({ max: MAX_ALT_TEXT })}
 					</Text>
 				)}
 

@@ -88,9 +88,9 @@ function DialogInner({
 			return m['components.newskieDialog.joinedAgoSelf'](parts);
 		}
 		if (profile.joinedViaStarterPack) {
-			return m['components.newskieDialog.joinedViaStarterPack']({ ...parts, profileName });
+			return m['components.newskieDialog.joinedViaStarterPack']({ ...parts, name: profileName });
 		}
-		return m['components.newskieDialog.joinedAgo']({ ...parts, profileName });
+		return m['components.newskieDialog.joinedAgo']({ ...parts, name: profileName });
 	};
 
 	return (

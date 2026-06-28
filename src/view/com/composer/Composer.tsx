@@ -172,7 +172,7 @@ function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: 
 		(next: ComposerImage[]) => {
 			const result = applyGalleryCap(currentCount, next);
 			if (result.status === 'full') {
-				Toast.show(m['view.composer.gallery.error.maxAdd']({ MAX_GALLERY_IMAGES }), { type: 'warning' });
+				Toast.show(m['view.composer.gallery.error.maxAdd']({ max: MAX_GALLERY_IMAGES }), { type: 'warning' });
 				return;
 			}
 			if (result.status === 'partial') {
@@ -181,7 +181,7 @@ function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: 
 						accepted: result.accepted.length,
 						count: next.length,
 						total: next.length,
-						MAX_GALLERY_IMAGES,
+						max: MAX_GALLERY_IMAGES,
 					}),
 					{ type: 'warning' },
 				);
@@ -524,7 +524,7 @@ export const ComposePost = ({
 			(post) => !isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH),
 		);
 		if (tooLong) {
-			setError(m['view.composer.drafts.error.tooLong']({ MAX_DRAFT_GRAPHEME_LENGTH }));
+			setError(m['view.composer.drafts.error.tooLong']({ max: MAX_DRAFT_GRAPHEME_LENGTH }));
 			return false;
 		}
 		return true;
@@ -1113,7 +1113,7 @@ export const ComposePost = ({
 								? composerState.draftId
 									? m['view.composer.drafts.saveChanges.message']()
 									: m['view.composer.drafts.save.message']()
-								: m['view.composer.drafts.error.tooLongFixed']()}
+								: m['view.composer.drafts.error.tooLongFixed']({ max: MAX_DRAFT_GRAPHEME_LENGTH })}
 						</Prompt.DescriptionText>
 					</Prompt.Content>
 					<Prompt.Actions>

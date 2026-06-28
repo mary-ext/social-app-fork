@@ -39,8 +39,8 @@ const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
 	const canSave = altText !== image.alt && !isOverLimit;
 
 	const counterLabel = isOverLimit
-		? m['view.composer.altText.charCountOverLimit']({ length: altText.length, MAX_ALT_TEXT })
-		: m['view.composer.altText.charCount']({ length: altText.length, MAX_ALT_TEXT });
+		? m['view.composer.altText.charCountOverLimit']({ length: altText.length, max: MAX_ALT_TEXT })
+		: m['view.composer.altText.charCount']({ length: altText.length, max: MAX_ALT_TEXT });
 
 	const onSave = () => {
 		onChange({ ...image, alt: altText });

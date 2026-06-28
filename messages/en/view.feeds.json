@@ -11,7 +11,15 @@
 	"view.feeds.explore.a11y": "View your feeds and explore more",
 	"view.feeds.feed.a11y.creator": "Feed creator",
 	"view.feeds.feed.a11y.identifier": "Feed identifier",
-	"view.feeds.feed.a11y.label": "{name}, a feed by {creator}, liked by {likeCount}",
+	"view.feeds.feed.a11y.label": [
+		{
+			"declarations": ["input name", "input creator", "input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "{name}, a feed by {creator}, liked by {n}"
+			}
+		}
+	],
 	"view.feeds.feed.a11y.opens": "Opens {name} feed",
 	"view.feeds.feed.error.connect": "Could not connect to custom feed",
 	"view.feeds.feed.error.connectService": "Could not connect to feed service",

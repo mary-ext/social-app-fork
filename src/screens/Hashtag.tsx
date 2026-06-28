@@ -104,7 +104,7 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 							<Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
 							{author && (
 								<Layout.Header.SubtitleText>
-									{m['screens.hashtag.fromAuthor']({ sanitizedAuthor })}
+									{m['screens.hashtag.fromAuthor']({ author: sanitizedAuthor })}
 								</Layout.Header.SubtitleText>
 							)}
 						</Layout.Header.Content>

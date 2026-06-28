@@ -3,6 +3,7 @@ import type { AppBskyActorDefs, AppBskyLabelerDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { clsx } from 'clsx';
 
+import { MAX_LABELERS } from '#/lib/constants';
 import { isAppLabeler } from '#/lib/moderation';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
@@ -52,7 +53,9 @@ function CantSubscribePrompt({ handle }: { handle: Prompt.PromptHandle }) {
 		<Prompt.Outer handle={handle}>
 			<Prompt.Content>
 				<Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
-				<Prompt.DescriptionText>{m['screens.profile.labeler.error.subscribeLimit']()}</Prompt.DescriptionText>
+				<Prompt.DescriptionText>
+					{m['screens.profile.labeler.error.subscribeLimit']({ limit: MAX_LABELERS })}
+				</Prompt.DescriptionText>
 			</Prompt.Content>
 			<Prompt.Actions>
 				<Prompt.Action cta={m['screens.profile.action.ok']()} onPress={() => handle.close()} />
@@ -175,12 +178,12 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 			<InlineLinkText
 				className={css.likedBy}
 				color="textContrastMedium"
-				label={m['screens.profile.feed.likes.count']({ likeCount })}
+				label={m['screens.profile.feed.likes.count']({ count: likeCount })}
 				size="sm"
 				to={`/profile/${labeler.creator.did}/labeler/liked-by`}
 				weight="semiBold"
 			>
-				{m['screens.profile.feed.likes.count']({ likeCount })}
+				{m['screens.profile.feed.likes.count']({ count: likeCount })}
 			</InlineLinkText>
 		</div>
 	);

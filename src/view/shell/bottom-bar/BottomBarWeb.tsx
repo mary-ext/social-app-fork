@@ -258,7 +258,7 @@ const NavItem: React.FC<{
 					weight="semiBold"
 					color="white"
 					className={css.badge}
-					aria-label={m['view.notifications.unreadCount.badge']({ notificationCount })}
+					aria-label={m['view.notifications.unreadCount.badge']({ count: notificationCount })}
 				>
 					{notificationCount}
 				</Text>

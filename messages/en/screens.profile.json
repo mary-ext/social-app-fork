@@ -11,10 +11,10 @@
 	"screens.profile.editProfile.bio.hint": "Tell us a bit about yourself",
 	"screens.profile.editProfile.bio.tooLong": [
 		{
-			"declarations": ["input MAX_DESCRIPTION", "local cp = MAX_DESCRIPTION: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "Description is too long. The maximum number of characters is {MAX_DESCRIPTION}."
+				"cp=other": "Description is too long. The maximum number of characters is {n}."
 			}
 		}
 	],
@@ -22,10 +22,10 @@
 	"screens.profile.editProfile.displayName.placeholder": "e.g. Alice Lastname",
 	"screens.profile.editProfile.displayName.tooLong": [
 		{
-			"declarations": ["input MAX_DISPLAY_NAME", "local cp = MAX_DISPLAY_NAME: plural"],
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "Display name is too long. The maximum number of characters is {MAX_DISPLAY_NAME}."
+				"cp=other": "Display name is too long. The maximum number of characters is {n}."
 			}
 		}
 	],
@@ -46,11 +46,11 @@
 	"screens.profile.feed.endOfFeed": "End of feed",
 	"screens.profile.feed.likes.count": [
 		{
-			"declarations": ["input likeCount", "local cp = likeCount: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Liked by {likeCount} user",
-				"cp=other": "Liked by {likeCount} users"
+				"cp=one": "Liked by {n} user",
+				"cp=other": "Liked by {n} users"
 			}
 		}
 	],
@@ -61,26 +61,34 @@
 	"screens.profile.feedback.reportIssue": "Something wrong? Let us know.",
 	"screens.profile.follow.followers.count": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} follower",
-				"cp=other": "{count} followers"
+				"cp=one": "{n} follower",
+				"cp=other": "{n} followers"
 			}
 		}
 	],
 	"screens.profile.follow.followers.title": "People following @{handle}",
 	"screens.profile.follow.following.count": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} following",
-				"cp=other": "{count} following"
+				"cp=one": "{n} following",
+				"cp=other": "{n} following"
 			}
 		}
 	],
-	"screens.profile.follow.following.countLabel": "{count} following",
+	"screens.profile.follow.following.countLabel": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "{n} following"
+			}
+		}
+	],
 	"screens.profile.follow.following.title": "People followed by @{handle}",
 	"screens.profile.follow.knownFollowers.empty": "You don't follow any users who follow @{name}.",
 	"screens.profile.follow.knownFollowers.title": "Followers of @{handle} that you know",
@@ -102,18 +110,26 @@
 	"screens.profile.labeler.action.unsubscribeThis": "Unsubscribe from this labeler",
 	"screens.profile.labeler.blockHint": "Blocking does not prevent this labeler from placing labels on your account.",
 	"screens.profile.labeler.error.serviceLoad": "Hmmmm, we couldn't load that moderation service.",
-	"screens.profile.labeler.error.subscribeLimit": "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty.",
+	"screens.profile.labeler.error.subscribeLimit": [
+		{
+			"declarations": ["input limit", "local n = limit: number"],
+			"selectors": [],
+			"match": {
+				"": "We're sorry! You can only subscribe to {n} labelers, and you've reached your limit of {n}."
+			}
+		}
+	],
 	"screens.profile.labeler.error.unavailable": "This moderation service is unavailable. See below for more details. If this issue persists, contact us.",
 	"screens.profile.labeler.labelsHint": "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network.",
 	"screens.profile.labeler.noLabelsDeclared": "This labeler hasn't declared what labels it publishes, and may not be active.",
 	"screens.profile.labeler.subscribePrompt": "Subscribe to @{handle} to use these labels:",
 	"screens.profile.posts.count": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "post",
-				"cp=other": "posts"
+				"cp=one": "{#t0}{formatted}{/t0} post",
+				"cp=other": "{#t0}{formatted}{/t0} posts"
 			}
 		}
 	],

@@ -22,8 +22,6 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { monthDayYear } from '#/locale/intl/datetime';
-
 import { List } from '#/view/com/util/List';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -422,7 +420,7 @@ function SettingsHeader({
 				<Text style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>{groupName}</Text>
 				<Text style={[a.text_sm, a.text_center, a.pt_xs, a.px_xl, t.atoms.text_contrast_high]}>
 					{m['screens.messages.inviteLink.created']({
-						date: monthDayYear.format(createdAt),
+						date: createdAt,
 					})}
 				</Text>
 				<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_2xl, a.pt_2xl, a.flex_wrap]}>

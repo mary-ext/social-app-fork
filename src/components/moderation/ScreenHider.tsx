@@ -57,7 +57,7 @@ export function ScreenHider({
 				</Text>
 			) : (
 				<Text className={css.body} color="textContrastMedium" size="lg">
-					{m['components.moderation.label.flaggedPrefix']({ screenDescription })}{' '}
+					{m['components.moderation.label.flaggedPrefix']({ type: screenDescription })}{' '}
 					<Text color="text" size="lg" weight="semiBold">
 						{desc.name}.{' '}
 					</Text>

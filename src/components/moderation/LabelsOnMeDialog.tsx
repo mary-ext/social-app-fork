@@ -149,7 +149,7 @@ function Label({
 						<Text className={styles.sourceText} color="textContrastMedium" numberOfLines={1}>
 							<Trans
 								message={m['common.moderation.source']}
-								inputs={{ sourceName }}
+								inputs={{ source: sourceName }}
 								markup={{
 									t0: ({ children }) => (
 										<InlineLinkText

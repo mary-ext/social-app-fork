@@ -129,7 +129,7 @@ function Tab({
 			)}
 			<Button
 				hitSlop={HITSLOP_10}
-				label={m['components.dms.group.action.removeMember']({ displayName })}
+				label={m['components.dms.group.action.removeMember']({ name: displayName })}
 				style={[a.ml_xs]}
 				onPress={() => onPressItem(profile.did)}
 			>

@@ -3,38 +3,39 @@
 	"screens.messages.a11y.closeBanner": "Close banner",
 	"screens.messages.addedToChat.addedBy": "Added by {name}",
 	"screens.messages.addedToChat.addedByInviteLink": "Added by invite link",
-	"screens.messages.addedToChat.addedYou": "{#t0}{displayName}{/t0}{#t1}{#t2/}{/t1}{#t3} added you{/t3}",
+	"screens.messages.addedToChat.addedYou": "{#t0}{name}{/t0}{#t1}{#t2/}{/t1}{#t3} added you{/t3}",
 	"screens.messages.addedToChat.many": [
 		{
 			"declarations": [
-				"input memberCount",
-				"input member1",
-				"input member2",
-				"local cp = memberCount: plural"
+				"input name",
+				"input name2",
+				"input count",
+				"local cp = count: plural",
+				"local n = count: number"
 			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{member1}, {member2} and {memberCount} other added to chat",
-				"cp=other": "{member1}, {member2} and {memberCount} others added to chat"
+				"cp=one": "{name}, {name2} and {n} other added to chat",
+				"cp=other": "{name}, {name2} and {n} others added to chat"
 			}
 		}
 	],
 	"screens.messages.addedToChat.one": "{name} added to chat",
-	"screens.messages.addedToChat.two": "{member1} and {member2} added to chat",
-	"screens.messages.block.block": "Block {displayName}",
+	"screens.messages.addedToChat.two": "{name} and {name2} added to chat",
+	"screens.messages.block.block": "Block {name}",
 	"screens.messages.block.orReport": "Block or report",
-	"screens.messages.block.unblock": "Unblock {displayName}",
+	"screens.messages.block.unblock": "Unblock {name}",
+	"screens.messages.chatSettings.loadError": "We couldn’t load this conversation’s settings",
+	"screens.messages.chatSettings.title": "Chat settings",
+	"screens.messages.chatSettings.updateError": "Failed to update settings",
 	"screens.messages.chats.back": "Back to chats",
 	"screens.messages.chats.goToConversation": "Go to conversation with {handle}",
-	"screens.messages.chats.goToGroupChat": "Go to the group chat named \\\"{chatName}\\\"",
+	"screens.messages.chats.goToGroupChat": "Go to the group chat named \\\"{name}\\\"",
 	"screens.messages.chats.inboxEmpty": "Inbox empty",
 	"screens.messages.chats.inboxZero": "Inbox zero!",
 	"screens.messages.chats.reload.action": "Reload conversations",
 	"screens.messages.chats.reload.error": "Failed to load conversations",
 	"screens.messages.chats.title": "Chats",
-	"screens.messages.chatSettings.loadError": "We couldn’t load this conversation’s settings",
-	"screens.messages.chatSettings.title": "Chat settings",
-	"screens.messages.chatSettings.updateError": "Failed to update settings",
 	"screens.messages.composer.a11y": "Message input field",
 	"screens.messages.composer.cancelReply": "Cancel reply",
 	"screens.messages.composer.embed.fetchError": "Could not fetch post",
@@ -42,7 +43,20 @@
 	"screens.messages.composer.embed.remove": "Remove embed",
 	"screens.messages.composer.placeholder": "Write a message",
 	"screens.messages.composer.send": "Send message",
-	"screens.messages.composer.tooLongError": "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})",
+	"screens.messages.composer.tooLongError": [
+		{
+			"declarations": [
+				"input length",
+				"input max",
+				"local lenNum = length: number",
+				"local maxNum = max: number"
+			],
+			"selectors": [],
+			"match": {
+				"": "Message is too long ({lenNum}/{maxNum})"
+			}
+		}
+	],
 	"screens.messages.connection.disconnected": "This chat was disconnected",
 	"screens.messages.connection.ended": "This chat has ended",
 	"screens.messages.connection.reconnect.a11y": "Press to attempt reconnection",
@@ -50,8 +64,8 @@
 	"screens.messages.conversation.getStarted": "Get started",
 	"screens.messages.conversation.groupOnlyError": "This screen is only available for group conversations.",
 	"screens.messages.conversation.loadError": "We couldn't load this conversation",
-	"screens.messages.conversation.loading": "Loading chat...",
 	"screens.messages.conversation.loadPastError": "Failed to load past messages",
+	"screens.messages.conversation.loading": "Loading chat...",
 	"screens.messages.conversation.noMessages": "No messages yet",
 	"screens.messages.conversation.sayHi": "Say hi to someone",
 	"screens.messages.conversation.wrongTypeError": "Wrong kind of conversation",
@@ -62,8 +76,8 @@
 	"screens.messages.dmSettings.hint": "You can continue ongoing conversations regardless of which setting you choose.",
 	"screens.messages.dmSettings.label": "Allow direct messages from",
 	"screens.messages.export.action": "Export chat data",
-	"screens.messages.follow.action": "Follow {displayName}",
-	"screens.messages.follow.following": "Following {displayName}",
+	"screens.messages.follow.action": "Follow {name}",
+	"screens.messages.follow.following": "Following {name}",
 	"screens.messages.groupName.edit.a11y": "Edit this group chat’s name",
 	"screens.messages.groupName.edit.action": "Edit group name",
 	"screens.messages.groupName.edit.error": "Failed to edit group chat name",
@@ -71,7 +85,15 @@
 	"screens.messages.groupName.updatedToast": "Group chat name updated",
 	"screens.messages.inviteLink.a11y": "Group chat invite link dialog",
 	"screens.messages.inviteLink.copiedToast": "Copied!",
-	"screens.messages.inviteLink.created": "Created {date}",
+	"screens.messages.inviteLink.created": [
+		{
+			"declarations": ["input date", "local d = date: datetime year=numeric month=long day=numeric"],
+			"selectors": [],
+			"match": {
+				"": "Created {d}"
+			}
+		}
+	],
 	"screens.messages.inviteLink.disable.action": "Disable link",
 	"screens.messages.inviteLink.disable.confirm": "Disable",
 	"screens.messages.inviteLink.disable.error": "Failed to disable invite link",
@@ -103,12 +125,12 @@
 	"screens.messages.joinSettings.followingRequest": "People I follow can request to join",
 	"screens.messages.joinSettings.hint": "Choose who can join this group chat and how.",
 	"screens.messages.joinSettings.label": "Who can join this group chat and how",
-	"screens.messages.joinSettings.ownerFollowsInstant": "People {ownerName} follows can join instantly",
-	"screens.messages.joinSettings.ownerFollowsRequest": "People {ownerName} follows can request to join",
+	"screens.messages.joinSettings.ownerFollowsInstant": "People {name} follows can join instantly",
+	"screens.messages.joinSettings.ownerFollowsRequest": "People {name} follows can request to join",
 	"screens.messages.leave.a11y": "Leave this group chat",
 	"screens.messages.leave.action": "Leave group chat",
 	"screens.messages.leave.confirm.lockWarning": "Leaving this chat will lock it permanently and you won’t be able to rejoin.",
-	"screens.messages.leave.confirm.message": "Are you sure you want to leave {groupName}?",
+	"screens.messages.leave.confirm.message": "Are you sure you want to leave {name}?",
 	"screens.messages.leave.confirm.rejoinWarning": "You won’t be able to rejoin unless you’re invited.",
 	"screens.messages.leave.error": "Failed to leave group chat",
 	"screens.messages.lock.a11y.lock": "Lock this group chat",
@@ -132,25 +154,38 @@
 	"screens.messages.members.add.error": "Failed to add members",
 	"screens.messages.members.add.limit": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "Group chats can only have a maximum of {count} people."
+				"cp=other": "Group chats can only have a maximum of {n} people."
 			}
 		}
 	],
 	"screens.messages.members.admin": "Admin",
-	"screens.messages.members.countRatio": "{memberCount}/{memberLimit}",
+	"screens.messages.members.countRatio": [
+		{
+			"declarations": [
+				"input count",
+				"input limit",
+				"local cNum = count: number",
+				"local lNum = limit: number"
+			],
+			"selectors": [],
+			"match": {
+				"": "{cNum}/{lNum}"
+			}
+		}
+	],
 	"screens.messages.members.label": "Members",
-	"screens.messages.members.options.a11y": "Open chat member options for {displayName}",
+	"screens.messages.members.options.a11y": "Open chat member options for {name}",
 	"screens.messages.members.options.label": "Chat member options",
-	"screens.messages.members.remove.a11y": "Remove {displayName} from this group chat",
+	"screens.messages.members.remove.a11y": "Remove {name} from this group chat",
 	"screens.messages.members.remove.action": "Remove from chat",
 	"screens.messages.members.remove.error": "Failed to remove group chat member",
-	"screens.messages.members.remove.title": "Remove {displayName}?",
+	"screens.messages.members.remove.title": "Remove {name}?",
 	"screens.messages.members.remove.warning": "They won’t be able to rejoin unless you invite them again.",
 	"screens.messages.message.action": "Message",
-	"screens.messages.message.user": "Message {displayName}",
+	"screens.messages.message.user": "Message {name}",
 	"screens.messages.moderation.appeal.action": "Appeal this decision",
 	"screens.messages.moderation.appeal.prompt": "Please explain why you think your chats were incorrectly disabled",
 	"screens.messages.moderation.chatsDisabled.message": "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky.",
@@ -163,16 +198,22 @@
 	"screens.messages.mute.unmutedToast": "Group chat unmuted",
 	"screens.messages.newChat.many": [
 		{
-			"declarations": ["input memberCount", "input first", "input second", "local cp = memberCount: plural"],
+			"declarations": [
+				"input name",
+				"input name2",
+				"input count",
+				"local cp = count: plural",
+				"local n = count: number"
+			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "New chat with {first}, {second}, and {memberCount} more.",
-				"cp=other": "New chat with {first}, {second}, and {memberCount} more."
+				"cp=one": "New chat with {name}, {name2}, and {n} more.",
+				"cp=other": "New chat with {name}, {name2}, and {n} more."
 			}
 		}
 	],
 	"screens.messages.newChat.one": "New chat with {name}",
-	"screens.messages.newChat.two": "New chat with {first} and {second}",
+	"screens.messages.newChat.two": "New chat with {name} and {name2}",
 	"screens.messages.report.group": "Report this group chat",
 	"screens.messages.requests.accept.a11y": "Accept chat request",
 	"screens.messages.requests.accept.action": "Accept",
@@ -185,15 +226,23 @@
 	"screens.messages.requests.closeBanner": "Close the incoming requests banner",
 	"screens.messages.requests.count": [
 		{
-			"declarations": ["input requestCount", "local cp = requestCount: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{requestCount} request",
-				"cp=other": "{requestCount} requests"
+				"cp=one": "{n} request",
+				"cp=other": "{n} requests"
 			}
 		}
 	],
-	"screens.messages.requests.countOverflow": "{requestCount}+ requests",
+	"screens.messages.requests.countOverflow": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "{n}+ requests"
+			}
+		}
+	],
 	"screens.messages.requests.error.fetch": "Unable to fetch join requests.",
 	"screens.messages.requests.error.load": "We couldn’t load this conversation’s join requests",
 	"screens.messages.requests.ignore.a11y": "Ignore join request",
@@ -207,15 +256,23 @@
 	"screens.messages.requests.markAllRead.toast": "Marked all as read",
 	"screens.messages.requests.newCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} new join request",
-				"cp=other": "{count} new join requests"
+				"cp=one": "{n} new join request",
+				"cp=other": "{n} new join requests"
 			}
 		}
 	],
-	"screens.messages.requests.newOverThreshold": "{JOIN_REQUESTS_THRESHOLD}+ new join requests",
+	"screens.messages.requests.newOverThreshold": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "{n}+ new join requests"
+			}
+		}
+	],
 	"screens.messages.requests.reject.a11y": "Reject chat request",
 	"screens.messages.requests.reject.action": "Reject",
 	"screens.messages.requests.requested": "You requested to join",
@@ -223,11 +280,11 @@
 	"screens.messages.requests.rescind.confirm": "Are you sure you want to rescind your request to join {name}?",
 	"screens.messages.requests.shortCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} request",
-				"cp=other": "{count} requests"
+				"cp=one": "{n} request",
+				"cp=other": "{n} requests"
 			}
 		}
 	],
@@ -236,21 +293,21 @@
 	"screens.messages.requests.title": "Chat requests",
 	"screens.messages.requests.toJoinCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["count", "cp"],
 			"match": {
 				"count=0, cp=*": "No requests to join",
-				"count=*, cp=one": "{count} request to join",
-				"count=*, cp=other": "{count} requests to join"
+				"count=*, cp=one": "{n} request to join",
+				"count=*, cp=other": "{n} requests to join"
 			}
 		}
 	],
 	"screens.messages.requests.toJoinOverflow": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=other": "{count}+ requests to join"
+				"cp=other": "{n}+ requests to join"
 			}
 		}
 	],

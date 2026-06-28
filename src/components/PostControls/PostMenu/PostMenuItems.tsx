@@ -289,7 +289,7 @@ function PostMenuItems({
 		} catch (err) {
 			const e = err as Error;
 			if (e instanceof MaxHiddenRepliesError) {
-				Toast.show(m['components.postControls.replyVisibility.maxHidden']({ MAX_HIDDEN_REPLIES }));
+				Toast.show(m['components.postControls.replyVisibility.maxHidden']({ limit: MAX_HIDDEN_REPLIES }));
 			} else if (e instanceof InvalidInteractionSettingsError) {
 				Toast.show(m['components.postControls.interaction.error']());
 			} else {

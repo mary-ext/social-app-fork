@@ -43,15 +43,15 @@ export function AddMembersLink({
 					names = m['screens.messages.addedToChat.one']({ name: createSanitizedDisplayName(members[0]!) });
 				} else if (members.length === 2) {
 					names = m['screens.messages.addedToChat.two']({
-						member1: createSanitizedDisplayName(members[0]!),
-						member2: createSanitizedDisplayName(members[1]!),
+						name: createSanitizedDisplayName(members[0]!),
+						name2: createSanitizedDisplayName(members[1]!),
 					});
 				} else if (members.length > 2) {
 					const memberCount = convo.details.memberCount - 2;
 					names = m['screens.messages.addedToChat.many']({
-						member1: createSanitizedDisplayName(members[0]!),
-						member2: createSanitizedDisplayName(members[1]!),
-						memberCount,
+						name: createSanitizedDisplayName(members[0]!),
+						name2: createSanitizedDisplayName(members[1]!),
+						count: memberCount,
 					});
 				}
 

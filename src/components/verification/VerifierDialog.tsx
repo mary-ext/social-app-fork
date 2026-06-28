@@ -25,10 +25,10 @@ export function VerifierDialog({
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 }) {
-	const userName = getUserDisplayName(profile);
+	const name = getUserDisplayName(profile);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.verification.trustedVerifier.title']({ userName })} size="narrow">
+			<Dialog.Popup label={m['components.verification.trustedVerifier.title']({ name })} size="narrow">
 				<DialogInner handle={handle} profile={profile} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -39,10 +39,10 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const { currentAccount } = useSession();
 
 	const isSelf = profile.did === currentAccount?.did;
-	const userName = getUserDisplayName(profile);
+	const name = getUserDisplayName(profile);
 	const label = isSelf
 		? m['components.verification.trustedVerifier.youStatus']()
-		: m['components.verification.trustedVerifier.userStatus']({ userName });
+		: m['components.verification.trustedVerifier.userStatus']({ name });
 
 	return (
 		<div className={css.content}>

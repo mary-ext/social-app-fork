@@ -198,7 +198,7 @@ function GroupChatItem({
 			convo={convo}
 			avatar={<AvatarBubbles profiles={convo.members} size={isWithinLeftPanel ? 48 : 52} />}
 			title={chatName}
-			accessibilityHint={m['screens.messages.chats.goToGroupChat']({ chatName })}
+			accessibilityHint={m['screens.messages.chats.goToGroupChat']({ name: chatName })}
 			primaryProfile={groupOwner}
 			primaryProfileModeration={moderation}
 			isBlockedAccount={false}
@@ -206,7 +206,7 @@ function GroupChatItem({
 			requestInfo={
 				convo.details.unreadJoinRequestCount
 					? convo.details.unreadJoinRequestCount > JOIN_REQUESTS_THRESHOLD
-						? m['screens.messages.requests.newOverThreshold']({ JOIN_REQUESTS_THRESHOLD })
+						? m['screens.messages.requests.newOverThreshold']({ count: JOIN_REQUESTS_THRESHOLD })
 						: m['screens.messages.requests.newCount']({ count: convo.details.unreadJoinRequestCount })
 					: undefined
 			}

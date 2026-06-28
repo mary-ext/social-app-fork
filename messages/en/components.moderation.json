@@ -32,7 +32,7 @@
 	"components.moderation.label.appliedByYou": "This label was applied by you.",
 	"components.moderation.label.appliedToAccount": "The following labels were applied to your account.",
 	"components.moderation.label.appliedToContent": "The following labels were applied to your content.",
-	"components.moderation.label.flaggedPrefix": "This {screenDescription} has been flagged:",
+	"components.moderation.label.flaggedPrefix": "This {type} has been flagged:",
 	"components.moderation.label.labeledBy": "Labeled by {source}.",
 	"components.moderation.label.labeledByAuthor": "Labeled by the author.",
 	"components.moderation.label.learnMore.aboutContent": "Learn more about the moderation applied to this content",
@@ -41,21 +41,21 @@
 	"components.moderation.label.learnMore.label": "Learn more",
 	"components.moderation.label.placedOnAccount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} label has been placed on this account",
-				"cp=other": "{count} labels have been placed on this account"
+				"cp=one": "{n} label has been placed on this account",
+				"cp=other": "{n} labels have been placed on this account"
 			}
 		}
 	],
 	"components.moderation.label.placedOnContent": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} label has been placed on this content",
-				"cp=other": "{count} labels have been placed on this content"
+				"cp=one": "{n} label has been placed on this content",
+				"cp=other": "{n} labels have been placed on this content"
 			}
 		}
 	],
@@ -128,8 +128,24 @@
 	"components.moderation.report.conversation": "Report this conversation",
 	"components.moderation.report.copyright.prompt": "Need to report a copyright violation, legal request, or regulatory compliance issue?",
 	"components.moderation.report.copyright.title": "Report a copyright violation, legal request, or regulatory compliance issue",
-	"components.moderation.report.details.charCount": "{length} of {MAX_DETAILS_LENGTH} characters",
-	"components.moderation.report.details.charCountOver": "{length} of {MAX_DETAILS_LENGTH} characters, over the limit",
+	"components.moderation.report.details.charCount": [
+		{
+			"declarations": ["input length", "input max", "local n = length: number", "local m = max: number"],
+			"selectors": [],
+			"match": {
+				"": "{n} of {m} characters"
+			}
+		}
+	],
+	"components.moderation.report.details.charCountOver": [
+		{
+			"declarations": ["input length", "input max", "local n = length: number", "local m = max: number"],
+			"selectors": [],
+			"match": {
+				"": "{n} of {m} characters, over the limit"
+			}
+		}
+	],
 	"components.moderation.report.details.label": "Additional details",
 	"components.moderation.report.details.labelOptional": "Additional details (optional)",
 	"components.moderation.report.details.placeholder": "Add any context that would help the moderators.",

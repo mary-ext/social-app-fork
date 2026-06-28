@@ -5,6 +5,7 @@ export const LOCAL_DEV_SERVICE = 'http://localhost:2583';
 export const BSKY_SERVICE = 'https://bsky.social';
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app';
 export const STARTER_PACK_MAX_SIZE = 150;
+export const STARTER_PACK_MAX_FEEDS = 3;
 export const CARD_ASPECT_RATIO = 1200 / 630;
 
 export const MAX_DISPLAY_NAME = 64;
@@ -21,6 +22,7 @@ export const MAX_GROUP_NAME_GRAPHEME_LENGTH = 50;
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 2000;
+export const MAX_POST_LANGUAGES = 3;
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
 	`at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`;

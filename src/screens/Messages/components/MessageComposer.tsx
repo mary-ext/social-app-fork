@@ -76,9 +76,12 @@ export function MessageComposer({
 		if (!hasEmbed && message.trim() === '') return;
 		const graphemeCount = getGraphemeLength(message);
 		if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
-			Toast.show(m['screens.messages.composer.tooLongError']({ graphemeCount, MAX_DM_GRAPHEME_LENGTH }), {
-				type: 'error',
-			});
+			Toast.show(
+				m['screens.messages.composer.tooLongError']({ length: graphemeCount, max: MAX_DM_GRAPHEME_LENGTH }),
+				{
+					type: 'error',
+				},
+			);
 			return;
 		}
 

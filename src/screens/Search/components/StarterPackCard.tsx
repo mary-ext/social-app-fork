@@ -141,7 +141,7 @@ export function AvatarStack({
 						<div className={css.totalInner}>
 							{computedTotal > 0 ? (
 								<Text className={css.totalText} size={gtPhone ? 'md' : 'xs'} weight="semiBold">
-									{m['screens.search.starterPack.additionalCount']({ computedTotal })}
+									{m['screens.search.starterPack.additionalCount']({ count: computedTotal })}
 								</Text>
 							) : (
 								<Plus fill="white" />

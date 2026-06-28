@@ -133,11 +133,11 @@ export function MemberMenu({
 							<StatusBadge
 								label={m['screens.messages.members.admin']()}
 								interactive
-								aria-label={m['screens.messages.members.options.a11y']({ displayName })}
+								aria-label={m['screens.messages.members.options.a11y']({ name: displayName })}
 							/>
 						) : (
 							<Button
-								label={m['screens.messages.members.options.a11y']({ displayName })}
+								label={m['screens.messages.members.options.a11y']({ name: displayName })}
 								size="small"
 								variant="ghost"
 								color="secondary"
@@ -151,7 +151,7 @@ export function MemberMenu({
 				<Menu.Popup label={m['screens.messages.members.options.label']()} align="end">
 					<Menu.Group>
 						<Menu.Item
-							label={m['common.profile.a11y.viewDisplayName']({ displayName })}
+							label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
 							onClick={() => {
 								navigation.navigate('Profile', { name: profile.did });
 							}}
@@ -160,7 +160,10 @@ export function MemberMenu({
 							<Menu.ItemText>{m['common.profile.action.goTo']()}</Menu.ItemText>
 						</Menu.Item>
 						{canMessageMember ? (
-							<Menu.Item label={m['screens.messages.message.user']({ displayName })} onClick={messageMember}>
+							<Menu.Item
+								label={m['screens.messages.message.user']({ name: displayName })}
+								onClick={messageMember}
+							>
 								<Menu.ItemIcon icon={MessageIcon} />
 								<Menu.ItemText>{m['screens.messages.message.action']()}</Menu.ItemText>
 							</Menu.Item>
@@ -173,8 +176,8 @@ export function MemberMenu({
 								destructive
 								label={
 									profile.viewer?.blocking
-										? m['screens.messages.block.unblock']({ displayName })
-										: m['screens.messages.block.block']({ displayName })
+										? m['screens.messages.block.unblock']({ name: displayName })
+										: m['screens.messages.block.block']({ name: displayName })
 								}
 								onClick={() =>
 									void (profile.viewer?.blocking ? handleBlockMember() : blockMemberPrompt.open())
@@ -191,7 +194,7 @@ export function MemberMenu({
 						{canRemoveMember ? (
 							<Menu.Item
 								destructive
-								label={m['screens.messages.members.remove.a11y']({ displayName })}
+								label={m['screens.messages.members.remove.a11y']({ name: displayName })}
 								onClick={() => removeMemberPrompt.open()}
 							>
 								<Menu.ItemIcon icon={ArrowBoxLeftIcon} />

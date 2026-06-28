@@ -6,7 +6,7 @@ import type {
 	AppBskyGraphStarterpack,
 } from '@atcute/bluesky';
 
-import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
+import { STARTER_PACK_MAX_FEEDS, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 
 import * as Toast from '#/components/Toast';
 
@@ -75,7 +75,7 @@ function reducer(state: State, action: Action): State {
 			break;
 		case 'AddProfile':
 			if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
-				Toast.show(m['screens.starterPack.people.max']({ STARTER_PACK_MAX_SIZE }), {
+				Toast.show(m['screens.starterPack.people.max']({ max: STARTER_PACK_MAX_SIZE }), {
 					type: 'info',
 				});
 			} else {
@@ -89,8 +89,8 @@ function reducer(state: State, action: Action): State {
 			};
 			break;
 		case 'AddFeed':
-			if (state.feeds.length >= 3) {
-				Toast.show(m['screens.starterPack.feeds.max'](), {
+			if (state.feeds.length >= STARTER_PACK_MAX_FEEDS) {
+				Toast.show(m['screens.starterPack.feeds.max']({ max: STARTER_PACK_MAX_FEEDS }), {
 					type: 'info',
 				});
 			} else {

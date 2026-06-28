@@ -20,6 +20,7 @@ import { usePrefetchProfileQuery, useProfileQuery } from '#/state/queries/profil
 import { useSession } from '#/state/session';
 
 import { formatCount } from '#/locale/intl/number';
+import { Trans } from '#/locale/Trans';
 
 import { ProfileHeaderHandle } from '#/screens/Profile/Header/Handle';
 
@@ -144,10 +145,8 @@ function Inner({
 	});
 	const isBlockedUser =
 		profile.viewer?.blocking || profile.viewer?.blockedBy || profile.viewer?.blockingByList;
-	const following = formatCount(profile.followsCount || 0);
-	const followers = formatCount(profile.followersCount || 0);
-	const pluralizedFollowers = m['common.follow.followersUnit']({ count: profile.followersCount || 0 });
-	const pluralizedFollowings = m['common.follow.followingUnit']({ count: profile.followsCount || 0 });
+	const followsCount = profile.followsCount || 0;
+	const followersCount = profile.followersCount || 0;
 	const profileURL = makeProfileLink({ did: profile.did });
 	const isMe = currentAccount?.did === profile.did;
 	const isLabeler = profile.associated?.labeler;
@@ -209,26 +208,43 @@ function Inner({
 					<div className={css.statsRow}>
 						<InlineLinkText
 							color="text"
-							label={`${followers} ${pluralizedFollowers}`}
+							label={m['common.follow.followersCount']({
+								count: followersCount,
+								formatted: formatCount(followersCount),
+							})}
 							to={makeProfileLink(profile, 'followers')}
 						>
-							<Text size="md" weight="semiBold">
-								{followers}{' '}
-							</Text>
 							<Text color="textContrastMedium" size="md">
-								{pluralizedFollowers}
+								<Trans
+									inputs={{ count: followersCount, formatted: formatCount(followersCount) }}
+									markup={{
+										t0: ({ children }) => (
+											<Text color="text" size="md" weight="semiBold">
+												{children}
+											</Text>
+										),
+									}}
+									message={m['view.profile.followers.followersCount']}
+								/>
 							</Text>
 						</InlineLinkText>
 						<InlineLinkText
 							color="text"
-							label={m['common.follow.followingCount']({ following })}
+							label={m['common.follow.followingCount']({ formatted: formatCount(followsCount) })}
 							to={makeProfileLink(profile, 'follows')}
 						>
-							<Text size="md" weight="semiBold">
-								{following}{' '}
-							</Text>
 							<Text color="textContrastMedium" size="md">
-								{pluralizedFollowings}
+								<Trans
+									inputs={{ count: followsCount, formatted: formatCount(followsCount) }}
+									markup={{
+										t0: ({ children }) => (
+											<Text color="text" size="md" weight="semiBold">
+												{children}
+											</Text>
+										),
+									}}
+									message={m['view.profile.followers.followingCount']}
+								/>
 							</Text>
 						</InlineLinkText>
 					</div>

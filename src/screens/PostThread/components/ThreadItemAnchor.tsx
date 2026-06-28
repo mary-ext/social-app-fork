@@ -345,7 +345,7 @@ function ThreadItemAnchorInner({
 											message={m['screens.postThread.engagement.repost.count']}
 											inputs={{
 												count: post.repostCount,
-												formattedCount: formatPostStatCount(post.repostCount),
+												formatted: formatPostStatCount(post.repostCount),
 											}}
 											markup={{
 												t0: ({ children }) => (
@@ -369,7 +369,7 @@ function ThreadItemAnchorInner({
 											message={m['screens.postThread.engagement.quote.count']}
 											inputs={{
 												count: post.quoteCount,
-												formattedCount: formatPostStatCount(post.quoteCount),
+												formatted: formatPostStatCount(post.quoteCount),
 											}}
 											markup={{
 												t0: ({ children }) => (
@@ -393,7 +393,7 @@ function ThreadItemAnchorInner({
 											message={m['screens.postThread.engagement.like.count']}
 											inputs={{
 												count: post.likeCount,
-												formattedCount: formatPostStatCount(post.likeCount),
+												formatted: formatPostStatCount(post.likeCount),
 											}}
 											markup={{
 												t0: ({ children }) => (
@@ -411,7 +411,7 @@ function ThreadItemAnchorInner({
 											message={m['screens.postThread.engagement.save.count']}
 											inputs={{
 												count: post.bookmarkCount,
-												formattedCount: formatPostStatCount(post.bookmarkCount),
+												formatted: formatPostStatCount(post.bookmarkCount),
 											}}
 											markup={{
 												t0: ({ children }) => (
@@ -496,7 +496,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 					<div className={clsx(css.archivedPill, (hovered || pressed) && css.archivedPillActive)}>
 						<CalendarClockIcon fill={colors.yellow} size="sm" aria-hidden />
 						<Text size="xs" weight="semiBold" color="textContrastMedium">
-							{m['screens.postThread.archive.from']({ date: niceDate(createdAt, 'medium') })}
+							{m['screens.postThread.archive.from']({ date: createdAt })}
 						</Text>
 					</div>
 				)}
@@ -509,8 +509,8 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 						<Trans
 							message={m['screens.postThread.dateVerification.mismatch']}
 							inputs={{
-								claimed: niceDate(createdAt),
-								seen: niceDate(indexedAt),
+								claimed: createdAt,
+								seen: indexedAt,
 							}}
 							markup={{
 								t0: ({ children }) => <Text weight="semiBold">{children}</Text>,

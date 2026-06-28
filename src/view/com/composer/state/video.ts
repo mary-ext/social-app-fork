@@ -386,7 +386,7 @@ function getCompressErrorMessage(e: unknown): string | null {
 		return null;
 	}
 	if (e instanceof VideoTooLargeError) {
-		return m['view.composer.video.error.tooLarge']({ VIDEO_MAX_SIZE_MB });
+		return m['view.composer.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
 	}
 	logger.error('Error compressing video', { safeMessage: e });
 	return m['view.composer.video.error.compress']();
@@ -412,7 +412,7 @@ function getUploadErrorMessage(e: unknown): string | null {
 			case 'Account is not old enough to upload videos':
 				return m['view.composer.video.error.accountTooYoung']();
 			case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)':
-				return m['view.composer.video.error.tooLarge']({ VIDEO_MAX_SIZE_MB });
+				return m['view.composer.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
 			case 'Confirm your email address to upload videos':
 				return m['view.composer.video.error.emailConfirmRequired']();
 		}

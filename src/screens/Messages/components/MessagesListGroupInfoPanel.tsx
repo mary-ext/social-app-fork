@@ -59,15 +59,15 @@ export function MessagesListGroupInfoPanel({
 		names = m['screens.messages.newChat.one']({ name: createSanitizedDisplayName(members[0]!) });
 	} else if (members.length === 2) {
 		names = m['screens.messages.newChat.two']({
-			first: createSanitizedDisplayName(members[0]!),
-			second: createSanitizedDisplayName(members[1]!),
+			name: createSanitizedDisplayName(members[0]!),
+			name2: createSanitizedDisplayName(members[1]!),
 		});
 	} else if (members.length > 2) {
 		const memberCount = convo.details.memberCount - 2;
 		names = m['screens.messages.newChat.many']({
-			first: createSanitizedDisplayName(members[0]!),
-			memberCount,
-			second: createSanitizedDisplayName(members[1]!),
+			name: createSanitizedDisplayName(members[0]!),
+			count: memberCount,
+			name2: createSanitizedDisplayName(members[1]!),
 		});
 	}
 

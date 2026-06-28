@@ -75,7 +75,7 @@ export function ActionsWrapper({
 					.catch(() => Toast.show(m['components.dms.reaction.error.remove']()));
 			} else {
 				if (hasReachedReactionLimit(message, currentAccount?.did)) {
-					Toast.show(m['components.dms.reaction.error.limit']({ EMOJI_REACTION_LIMIT }), {
+					Toast.show(m['components.dms.reaction.error.limit']({ limit: EMOJI_REACTION_LIMIT }), {
 						type: 'info',
 					});
 					return;

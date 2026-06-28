@@ -36,8 +36,8 @@ export function MembersAndRequests({
 				</Text>
 				<Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
 					{m['screens.messages.members.countRatio']({
-						memberCount,
-						memberLimit,
+						count: memberCount,
+						limit: memberLimit,
 					})}
 				</Text>
 			</View>
@@ -52,8 +52,8 @@ export function MembersAndRequests({
 					})}
 				>
 					{hasMoreRequests
-						? m['screens.messages.requests.countOverflow']({ requestCount })
-						: m['screens.messages.requests.count']({ requestCount })}
+						? m['screens.messages.requests.countOverflow']({ count: requestCount })
+						: m['screens.messages.requests.count']({ count: requestCount })}
 				</InlineLinkText>
 			) : null}
 		</View>

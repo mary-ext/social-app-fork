@@ -532,8 +532,8 @@ function Details({ onChange, value }: { onChange: (value: string) => void; value
 	const length = value.length;
 	const overLimit = length > MAX_DETAILS_LENGTH;
 	const counterLabel = overLimit
-		? m['components.moderation.report.details.charCountOver']({ length, MAX_DETAILS_LENGTH })
-		: m['components.moderation.report.details.charCount']({ length, MAX_DETAILS_LENGTH });
+		? m['components.moderation.report.details.charCountOver']({ length, max: MAX_DETAILS_LENGTH })
+		: m['components.moderation.report.details.charCount']({ length, max: MAX_DETAILS_LENGTH });
 	return (
 		<TextField.Root isInvalid={overLimit}>
 			<TextField.LabelText

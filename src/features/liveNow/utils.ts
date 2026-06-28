@@ -1,16 +1,20 @@
-import { m } from '#/paraglide/messages';
+import { LOCALE } from '#/locale/intl/locale';
 
+const durationFormat = new Intl.DurationFormat(LOCALE, { style: 'long' });
+// minutes-only variant forces "0 minutes" rather than an empty string for a sub-minute duration.
+const minutesOnlyFormat = new Intl.DurationFormat(LOCALE, { minutesDisplay: 'always', style: 'long' });
+
+/**
+ * Formats a duration in minutes as a localized, human-readable string, e.g. `90` -> "1 hour, 30 minutes".
+ *
+ * @param durationInMinutes the duration in minutes
+ * @returns the localized duration string
+ */
 export function displayDuration(durationInMinutes: number) {
-	const roundedDurationInMinutes = Math.round(durationInMinutes);
-	const hours = Math.floor(roundedDurationInMinutes / 60);
-	const minutes = roundedDurationInMinutes % 60;
-	const minutesString = m['features.liveNow.duration.minutes']({ minutes });
-	if (hours > 0) {
-		return minutes > 0
-			? m['features.liveNow.duration.hoursMinutes']({ hours, minutesString })
-			: m['features.liveNow.duration.hours']({ hours });
-	}
-	return minutesString;
+	const total = Math.max(0, Math.round(durationInMinutes));
+	const hours = Math.floor(total / 60);
+	const minutes = total % 60;
+	return hours > 0 ? durationFormat.format({ hours, minutes }) : minutesOnlyFormat.format({ minutes });
 }
 
 const serviceUrlToNameMap: Record<string, string> = {

@@ -651,13 +651,13 @@ function ReplyCaption({
 							? m['components.dms.update.youRepliedTo']({ originalName })
 							: m['components.dms.update.youReplied']()
 					: originalSenderIsSelf
-						? m['components.dms.reply.repliedToYou']({ replierDisplayName: replierDisplayName ?? '' })
+						? m['components.dms.reply.repliedToYou']({ replier: replierDisplayName ?? '' })
 						: originalName
 							? m['components.dms.reply.repliedTo']({
-									originalName,
-									replierDisplayName: replierDisplayName ?? '',
+									original: originalName,
+									replier: replierDisplayName ?? '',
 								})
-							: m['components.dms.reply.replied']({ replierDisplayName: replierDisplayName ?? '' })}
+							: m['components.dms.reply.replied']({ replier: replierDisplayName ?? '' })}
 			</Text>
 		</Button>
 	);
@@ -717,7 +717,7 @@ function ReplyQuote({
 		<Button
 			label={
 				senderName
-					? m['components.dms.reply.a11y.repliedToFrom']({ senderName })
+					? m['components.dms.reply.a11y.repliedToFrom']({ name: senderName })
 					: m['components.dms.reply.a11y.repliedTo']()
 			}
 			onPress={onPress}

@@ -111,7 +111,7 @@ function ProfileHeaderReady({
 		<Wrapper
 			heading={
 				<Link
-					label={m['common.profile.a11y.viewDisplayName']({ displayName })}
+					label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
 					style={[a.flex_row, a.gap_md, a.flex_1]}
 					to={makeProfileLink(profile)}
 				>

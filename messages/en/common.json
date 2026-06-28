@@ -71,14 +71,14 @@
 	"common.block.blockedToast": "Account blocked",
 	"common.block.blocksYou.message": "This user has blocked you. You cannot view their content.",
 	"common.block.blocksYou.title": "User blocks you",
-	"common.block.byList.message": "This user is included in the {#t0}{listName}{/t0} list which you have blocked.",
+	"common.block.byList.message": "This user is included in the {#t0}{name}{/t0} list which you have blocked.",
 	"common.block.byList.title": "User blocked by list",
 	"common.block.byYou.message": "You have blocked this user. You cannot view their content.",
 	"common.block.byYou.title": "User blocked",
 	"common.block.empty": "You have not blocked any accounts yet. To block an account, go to their profile and select \\\"Block account\\\" from the menu on their account.",
 	"common.block.interactionError": "Cannot interact with a blocked user",
-	"common.block.unblockedToast": "Account unblocked",
 	"common.block.unblockHint": "The account will be able to interact with you after unblocking.",
+	"common.block.unblockedToast": "Account unblocked",
 	"common.chat.action.deleteConversation": "Delete conversation",
 	"common.chat.action.export": "Export my chat data",
 	"common.chat.action.join": "Join",
@@ -86,11 +86,19 @@
 	"common.chat.action.new": "New chat",
 	"common.chat.action.open": "Open chat",
 	"common.chat.action.report": "Report conversation",
-	"common.chat.action.start": "Start chat with {displayName}",
-	"common.chat.byOwner": "by {#t0}{ownerHandle}{/t0}",
+	"common.chat.action.start": "Start chat with {name}",
+	"common.chat.byOwner": "by {#t0}{handle}{/t0}",
 	"common.chat.error.create": "Failed to create conversation",
 	"common.chat.error.full": "This chat is full",
-	"common.chat.error.groupNameTooLong": "Group name is too long. The maximum number of characters is {MAX_GROUP_NAME_GRAPHEME_LENGTH}.",
+	"common.chat.error.groupNameTooLong": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "Group name is too long. The maximum number of characters is {n}."
+			}
+		}
+	],
 	"common.chat.error.inviteUnavailable": "Chat invite link no longer available",
 	"common.chat.error.memberLimit": "The member limit has been reached.",
 	"common.chat.error.notFound": "Conversation not found.",
@@ -156,8 +164,8 @@
 	"common.feeds.remove.title": "Remove from your feeds?",
 	"common.feeds.removedToast": "Removed from your feeds",
 	"common.feeds.savedToast": "Saved to your feeds",
-	"common.feeds.updatedToast": "Feeds updated!",
 	"common.feeds.updateError": "There was an issue updating your feeds, please check your internet connection and try again.",
+	"common.feeds.updatedToast": "Feeds updated!",
 	"common.follow.a11y.follow": "Follow {handle}",
 	"common.follow.a11y.following": "Following {name}",
 	"common.follow.a11y.knownFollowers": "Press to view followers of this account that you also follow",
@@ -167,47 +175,43 @@
 	"common.follow.followedBy": "Followed by {#t0}{name}{/t0}",
 	"common.follow.followedByMany": [
 		{
-			"declarations": ["input count", "input name", "input name2", "local cp = count: plural"],
+			"declarations": [
+				"input count",
+				"input name",
+				"input name2",
+				"local cp = count: plural",
+				"local n = count: number"
+			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Followed by {#t0}{name}{/t0}, {#t1}{name2}{/t1}, and {count} other",
-				"cp=other": "Followed by {#t0}{name}{/t0}, {#t1}{name2}{/t1}, and {count} others"
+				"cp=one": "Followed by {#t0}{name}{/t0}, {#t1}{name2}{/t1}, and {n} other",
+				"cp=other": "Followed by {#t0}{name}{/t0}, {#t1}{name2}{/t1}, and {n} others"
 			}
 		}
 	],
 	"common.follow.followedByOthers": [
 		{
-			"declarations": ["input count", "input name", "local cp = count: plural"],
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Followed by {#t0}{name}{/t0} and {count} other",
-				"cp=other": "Followed by {#t0}{name}{/t0} and {count} others"
+				"cp=one": "Followed by {#t0}{name}{/t0} and {n} other",
+				"cp=other": "Followed by {#t0}{name}{/t0} and {n} others"
 			}
 		}
 	],
 	"common.follow.followedByTwo": "Followed by {#t0}{name}{/t0} and {#t1}{name2}{/t1}",
-	"common.follow.followersUnit": [
+	"common.follow.followersCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "follower",
-				"cp=other": "followers"
+				"cp=one": "{formatted} follower",
+				"cp=other": "{formatted} followers"
 			}
 		}
 	],
 	"common.follow.followersYouKnow": "Followers you know",
-	"common.follow.followingCount": "{following} following",
-	"common.follow.followingUnit": [
-		{
-			"declarations": ["input count", "local cp = count: plural"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "following",
-				"cp=other": "following"
-			}
-		}
-	],
+	"common.follow.followingCount": "{formatted} following",
 	"common.follow.followsYou": "Follows you",
 	"common.follow.knownFollowers.empty": "Not followed by anyone you’re following",
 	"common.follow.noLongerFollowing": "No longer following {name}",
@@ -227,11 +231,11 @@
 	"common.like.label": "Likes",
 	"common.like.likedByCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Liked by {count} user",
-				"cp=other": "Liked by {count} users"
+				"cp=one": "Liked by {n} user",
+				"cp=other": "Liked by {n} users"
 			}
 		}
 	],
@@ -265,7 +269,7 @@
 	"common.moderation.listsLabel": "Moderation lists",
 	"common.moderation.listsTitle": "Moderation lists",
 	"common.moderation.showAnyway": "Show anyway",
-	"common.moderation.source": "Source: {#t0}{sourceName}{/t0}",
+	"common.moderation.source": "Source: {#t0}{source}{/t0}",
 	"common.moderation.unknownLabeler": "an unknown labeler",
 	"common.moderation.warn": "Warn",
 	"common.mute.accountsTitle": "Muted accounts",
@@ -273,7 +277,7 @@
 	"common.mute.action.muteAccount": "Mute account",
 	"common.mute.action.unmute": "Unmute",
 	"common.mute.action.unmuteAccount": "Unmute account",
-	"common.mute.byList.message": "This user is included in the {#t0}{listName}{/t0} list which you have muted.",
+	"common.mute.byList.message": "This user is included in the {#t0}{name}{/t0} list which you have muted.",
 	"common.mute.byList.title": "Account muted by list",
 	"common.mute.byYou.message": "You have muted this account.",
 	"common.mute.byYou.title": "Account muted",
@@ -319,7 +323,7 @@
 	"common.post.label": "Posts",
 	"common.profile.a11y.goTo": "Go to user's profile",
 	"common.profile.a11y.viewBlocked": "View blocked user's profile",
-	"common.profile.a11y.viewDisplayName": "View {displayName}’s profile",
+	"common.profile.a11y.viewDisplayName": "View {name}'s profile",
 	"common.profile.a11y.viewNamed": "View {name}’s profile",
 	"common.profile.action.goTo": "Go to profile",
 	"common.profile.action.view": "View profile",

@@ -1,28 +1,52 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"screens.postThread.archive.from": "Archived from {date}",
+	"screens.postThread.archive.from": [
+		{
+			"declarations": [
+				"input date",
+				"local d = date: datetime year=numeric month=short day=numeric hour=numeric minute=2-digit"
+			],
+			"selectors": [],
+			"match": {
+				"": "Archived from {d}"
+			}
+		}
+	],
 	"screens.postThread.archive.label": "Archived post",
 	"screens.postThread.dateVerification.createdInfo": "Shows information about when this post was created",
-	"screens.postThread.dateVerification.mismatch": "This post claims to have been created on {#t0}{claimed}{/t0}, but was first seen by Bluesky on {#t1}{seen}{/t1}.",
+	"screens.postThread.dateVerification.mismatch": [
+		{
+			"declarations": [
+				"input claimed",
+				"input seen",
+				"local claimedDate = claimed: datetime year=numeric month=long day=numeric hour=numeric minute=2-digit",
+				"local seenDate = seen: datetime year=numeric month=long day=numeric hour=numeric minute=2-digit"
+			],
+			"selectors": [],
+			"match": {
+				"": "This post claims to have been created on {#t0}{claimedDate}{/t0}, but was first seen by Bluesky on {#t1}{seenDate}{/t1}."
+			}
+		}
+	],
 	"screens.postThread.dateVerification.unverified": "Bluesky cannot confirm the authenticity of the claimed date.",
 	"screens.postThread.engagement.like.count": [
 		{
-			"declarations": ["input count", "input formattedCount", "local cp = count: plural"],
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#t0}{formattedCount}{/t0} like",
-				"cp=other": "{#t0}{formattedCount}{/t0} likes"
+				"cp=one": "{#t0}{formatted}{/t0} like",
+				"cp=other": "{#t0}{formatted}{/t0} likes"
 			}
 		}
 	],
 	"screens.postThread.engagement.like.title": "Likes on this post",
 	"screens.postThread.engagement.quote.count": [
 		{
-			"declarations": ["input count", "input formattedCount", "local cp = count: plural"],
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#t0}{formattedCount}{/t0} quote",
-				"cp=other": "{#t0}{formattedCount}{/t0} quotes"
+				"cp=one": "{#t0}{formatted}{/t0} quote",
+				"cp=other": "{#t0}{formatted}{/t0} quotes"
 			}
 		}
 	],
@@ -32,11 +56,11 @@
 	"screens.postThread.engagement.quote.title": "Quotes of this post",
 	"screens.postThread.engagement.repost.count": [
 		{
-			"declarations": ["input count", "input formattedCount", "local cp = count: plural"],
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#t0}{formattedCount}{/t0} repost",
-				"cp=other": "{#t0}{formattedCount}{/t0} reposts"
+				"cp=one": "{#t0}{formatted}{/t0} repost",
+				"cp=other": "{#t0}{formatted}{/t0} reposts"
 			}
 		}
 	],
@@ -45,11 +69,11 @@
 	"screens.postThread.engagement.repost.title": "Reposts of this post",
 	"screens.postThread.engagement.save.count": [
 		{
-			"declarations": ["input count", "input formattedCount", "local cp = count: plural"],
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#t0}{formattedCount}{/t0} save",
-				"cp=other": "{#t0}{formattedCount}{/t0} saves"
+				"cp=one": "{#t0}{formatted}{/t0} save",
+				"cp=other": "{#t0}{formatted}{/t0} saves"
 			}
 		}
 	],
@@ -65,11 +89,11 @@
 	"screens.postThread.reply.action.readMore": "Read more replies",
 	"screens.postThread.reply.action.readMoreCount": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Read {count} more reply",
-				"cp=other": "Read {count} more replies"
+				"cp=one": "Read {n} more reply",
+				"cp=other": "Read {n} more replies"
 			}
 		}
 	],

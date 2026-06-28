@@ -1,3 +1,5 @@
+import { MAX_POST_LANGUAGES } from '#/lib/constants';
+
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 
 import { codeToLanguageName } from '#/locale/helpers';
@@ -46,11 +48,11 @@ export function PostLanguageSelect({
 	const dialog = (
 		<LanguageSelectDialog
 			titleText={m['view.composer.language.chooseTitle']()}
-			subtitleText={m['view.composer.language.selectHint']()}
+			subtitleText={m['view.composer.language.selectHint']({ max: MAX_POST_LANGUAGES })}
 			handle={languageDialogControl}
 			currentLanguages={currentLanguages}
 			onSelectLanguages={onSelectLanguages}
-			maxLanguages={3}
+			maxLanguages={MAX_POST_LANGUAGES}
 		/>
 	);
 
@@ -91,7 +93,7 @@ export function PostLanguageSelect({
 							return (
 								<Menu.Item
 									key={historyItem}
-									label={m['view.composer.language.a11y.select']({ langName })}
+									label={m['view.composer.language.a11y.select']({ language: langName })}
 									onClick={() => {
 										setLangPrefs.setPostLanguage(historyItem);
 										onSelectLanguage?.(historyItem);

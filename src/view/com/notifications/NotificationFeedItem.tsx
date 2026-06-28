@@ -36,7 +36,6 @@ import { useClients, useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import { niceDate } from '#/locale/intl/datetime';
-import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
 import { FeedSourceCard } from '#/view/com/feeds/FeedSourceCard';
@@ -222,7 +221,7 @@ let NotificationFeedItem = ({
 			<InlineLinkText
 				key={firstAuthor.href}
 				to={firstAuthor.href}
-				label={m['view.notifications.a11y.goToProfile']({ firstAuthorName })}
+				label={m['view.notifications.a11y.goToProfile']({ name: firstAuthorName })}
 				color="text"
 				weight="semiBold"
 				size="md"
@@ -240,7 +239,6 @@ let NotificationFeedItem = ({
 	const ltrFirstAuthorName = forceLTR(firstAuthorName);
 	const additionalAuthorsCount = authors.length - 1;
 	const hasMultipleAuthors = additionalAuthorsCount > 0;
-	const formattedAuthorsCount = hasMultipleAuthors ? formatCount(additionalAuthorsCount) : '';
 
 	let a11yLabel = '';
 	let notificationContent: React.ReactElement;
@@ -249,42 +247,40 @@ let NotificationFeedItem = ({
 	if (item.type === 'post-like') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.like.post.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.like.post.singleName']({ firstAuthorName });
+			: m['view.notifications.like.post.singleName']({ name: firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.like.post.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.like.post.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
 	} else if (item.type === 'repost') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.repost.post.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.repost.post.singleName']({ firstAuthorName });
+			: m['view.notifications.repost.post.singleName']({ name: firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.repost.post.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.repost.post.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
@@ -295,43 +291,42 @@ let NotificationFeedItem = ({
 			 * Follow-backs are ungrouped, grouped follow-backs not supported atm,
 			 * see `src/state/queries/notifications/util.ts`
 			 */
-			a11yLabel = m['view.notifications.follow.back.singleName']({ firstAuthorName });
+			a11yLabel = m['view.notifications.follow.back.singleName']({ name: firstAuthorName });
 			notificationContent = (
 				<Trans
 					message={m['view.notifications.follow.back.singleLink']}
-					inputs={{ firstAuthorName: ltrFirstAuthorName }}
+					inputs={{ name: ltrFirstAuthorName }}
 					markup={{ authorLink: authorLinkMarkup }}
 				/>
 			);
 		} else {
 			a11yLabel = hasMultipleAuthors
 				? m['view.notifications.follow.multiName']({
-						additionalAuthorsCount,
-						firstAuthorName,
-						formattedAuthorsCount,
+						count: additionalAuthorsCount,
+						name: firstAuthorName,
 					})
-				: m['view.notifications.follow.singleName']({ firstAuthorName });
+				: m['view.notifications.follow.singleName']({ name: firstAuthorName });
 			notificationContent = hasMultipleAuthors ? (
 				<Trans
 					message={m['view.notifications.follow.multiLink']}
-					inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+					inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 					markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 				/>
 			) : (
 				<Trans
 					message={m['view.notifications.follow.singleLink']}
-					inputs={{ firstAuthorName: ltrFirstAuthorName }}
+					inputs={{ name: ltrFirstAuthorName }}
 					markup={{ authorLink: authorLinkMarkup }}
 				/>
 			);
 		}
 		icon = <PersonPlusIcon size="lg" fill={colors.primary_500} />;
 	} else if (item.type === 'contact-match') {
-		a11yLabel = m['view.notifications.contact.singleName']({ firstAuthorName });
+		a11yLabel = m['view.notifications.contact.singleName']({ name: firstAuthorName });
 		notificationContent = (
 			<Trans
 				message={m['view.notifications.contact.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
@@ -339,42 +334,40 @@ let NotificationFeedItem = ({
 	} else if (item.type === 'feedgen-like') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.like.feed.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.like.feed.singleName']({ firstAuthorName });
+			: m['view.notifications.like.feed.singleName']({ name: firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.like.feed.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.like.feed.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
 	} else if (item.type === 'starterpack-joined') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.starterPack.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.starterPack.singleName']({ firstAuthorName });
+			: m['view.notifications.starterPack.singleName']({ name: firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.starterPack.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.starterPack.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
@@ -382,21 +375,20 @@ let NotificationFeedItem = ({
 	} else if (item.type === 'verified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.verified.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.verification.verified.singleName']({ firstAuthorName });
+			: m['view.notifications.verification.verified.singleName']({ name: firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.verification.verified.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.verification.verified.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
@@ -404,21 +396,20 @@ let NotificationFeedItem = ({
 	} else if (item.type === 'unverified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.removed.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.verification.removed.singleName']({ firstAuthorName });
+			: m['view.notifications.verification.removed.singleName']({ name: firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.verification.removed.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.verification.removed.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
@@ -426,42 +417,40 @@ let NotificationFeedItem = ({
 	} else if (item.type === 'like-via-repost') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.like.repost.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.like.repost.singleName']({ firstAuthorName });
+			: m['view.notifications.like.repost.singleName']({ name: firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.like.repost.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.like.repost.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
 	} else if (item.type === 'repost-via-repost') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.repost.repost.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.repost.repost.singleName']({ firstAuthorName });
+			: m['view.notifications.repost.repost.singleName']({ name: firstAuthorName });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.repost.repost.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.repost.repost.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName }}
+				inputs={{ name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
@@ -470,21 +459,20 @@ let NotificationFeedItem = ({
 		const postsCount = 1 + (item.additional?.length || 0);
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.newPosts.multiName']({
-					additionalAuthorsCount,
-					firstAuthorName,
-					formattedAuthorsCount,
+					count: additionalAuthorsCount,
+					name: firstAuthorName,
 				})
-			: m['view.notifications.newPosts.singleName']({ firstAuthorName, postsCount });
+			: m['view.notifications.newPosts.singleName']({ name: firstAuthorName, count: postsCount });
 		notificationContent = hasMultipleAuthors ? (
 			<Trans
 				message={m['view.notifications.newPosts.multiLink']}
-				inputs={{ additionalAuthorsCount, firstAuthorName: ltrFirstAuthorName, formattedAuthorsCount }}
+				inputs={{ count: additionalAuthorsCount, name: ltrFirstAuthorName }}
 				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
 			/>
 		) : (
 			<Trans
 				message={m['view.notifications.newPosts.singleLink']}
-				inputs={{ firstAuthorName: ltrFirstAuthorName, postsCount }}
+				inputs={{ name: ltrFirstAuthorName, count: postsCount }}
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);

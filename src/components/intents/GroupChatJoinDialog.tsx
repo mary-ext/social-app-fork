@@ -315,7 +315,7 @@ function GroupChatJoinDialogContent({
 						>
 							<Trans
 								message={m['common.chat.byOwner']}
-								inputs={{ ownerHandle }}
+								inputs={{ handle: ownerHandle }}
 								markup={{
 									t0: ({ children }) => (
 										<InlineLinkText

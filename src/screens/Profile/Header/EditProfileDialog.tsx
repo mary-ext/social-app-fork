@@ -249,7 +249,7 @@ function DialogInner({
 						/>
 						{displayNameTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
-								{m['screens.profile.editProfile.displayName.tooLong']({ MAX_DISPLAY_NAME })}
+								{m['screens.profile.editProfile.displayName.tooLong']({ max: MAX_DISPLAY_NAME })}
 							</Text>
 						)}
 					</TextField.Root>
@@ -285,7 +285,7 @@ function DialogInner({
 						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
-								{m['screens.profile.editProfile.bio.tooLong']({ MAX_DESCRIPTION })}
+								{m['screens.profile.editProfile.bio.tooLong']({ max: MAX_DESCRIPTION })}
 							</Text>
 						)}
 					</TextField.Root>

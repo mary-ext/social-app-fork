@@ -58,7 +58,7 @@ export function EditNamePrompt({
 						</TextField.Root>
 						{nameTooLong ? (
 							<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-								{m['common.chat.error.groupNameTooLong']({ MAX_GROUP_NAME_GRAPHEME_LENGTH })}
+								{m['common.chat.error.groupNameTooLong']({ max: MAX_GROUP_NAME_GRAPHEME_LENGTH })}
 							</Text>
 						) : null}
 					</View>
@@ -103,7 +103,7 @@ export function LeaveChatPrompt({
 	return (
 		<Prompt.Basic
 			control={control}
-			title={m['screens.messages.leave.confirm.message']({ groupName })}
+			title={m['screens.messages.leave.confirm.message']({ name: groupName })}
 			description={m['screens.messages.leave.confirm.rejoinWarning']()}
 			confirmButtonCta={m['screens.messages.leave.action']()}
 			confirmButtonColor="negative"
@@ -125,7 +125,7 @@ export function LeaveAndLockChatPrompt({
 	return (
 		<Prompt.Basic
 			control={control}
-			title={m['screens.messages.leave.confirm.message']({ groupName })}
+			title={m['screens.messages.leave.confirm.message']({ name: groupName })}
 			description={m['screens.messages.leave.confirm.lockWarning']()}
 			confirmButtonCta={m['screens.messages.leave.action']()}
 			confirmButtonColor="negative"
@@ -147,7 +147,7 @@ export function RemoveMemberPrompt({
 	return (
 		<Prompt.Basic
 			control={control}
-			title={m['screens.messages.members.remove.title']({ displayName })}
+			title={m['screens.messages.members.remove.title']({ name: displayName })}
 			description={m['screens.messages.members.remove.warning']()}
 			confirmButtonCta={m['common.action.remove']()}
 			confirmButtonColor="negative"

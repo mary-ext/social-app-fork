@@ -239,11 +239,15 @@ export function SelectMediaButton({
 			return {
 				[SelectedAssetError.Unsupported]: m['view.composer.video.error.fileUnsupported'](),
 				[SelectedAssetError.MixedTypes]: m['view.composer.media.multipleTypes'](),
-				[SelectedAssetError.MaxImages]: m['view.composer.gallery.error.maxSelect']({ MAX_GALLERY_IMAGES }),
+				[SelectedAssetError.MaxImages]: m['view.composer.gallery.error.maxSelect']({
+					max: MAX_GALLERY_IMAGES,
+				}),
 				[SelectedAssetError.MaxVideos]: m['view.composer.video.error.oneOnly'](),
-				[SelectedAssetError.VideoTooLong]: m['view.composer.video.error.tooLong'](),
+				[SelectedAssetError.VideoTooLong]: m['view.composer.video.error.tooLong']({ minutes: 3 }),
 				[SelectedAssetError.MaxGIFs]: m['view.composer.gif.error.oneOnly'](),
-				[SelectedAssetError.FileTooBig]: m['view.composer.video.error.fileTooLarge']({ VIDEO_MAX_SIZE_MB }),
+				[SelectedAssetError.FileTooBig]: m['view.composer.video.error.fileTooLarge']({
+					max: VIDEO_MAX_SIZE_MB,
+				}),
 			}[error];
 		});
 
@@ -262,7 +266,7 @@ export function SelectMediaButton({
 			icon={ImageIcon}
 			onClick={() => void onPressSelectMedia()}
 			label={m['view.composer.media.a11y.add']()}
-			aria-description={m['view.composer.media.a11y.addHint']({ MAX_GALLERY_IMAGES })}
+			aria-description={m['view.composer.media.a11y.addHint']({ max: MAX_GALLERY_IMAGES })}
 			disabled={disabled}
 		/>
 	);

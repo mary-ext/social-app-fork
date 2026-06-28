@@ -246,7 +246,7 @@ function GuessedLanguage({
 				<RNText>
 					<Trans
 						message={m['view.composer.language.prompt']}
-						inputs={{ suggestedLanguageName }}
+						inputs={{ language: suggestedLanguageName }}
 						markup={{ t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text> }}
 					/>
 				</RNText>
@@ -281,7 +281,7 @@ function ReplyLanguageNudge({
 				<RNText>
 					<Trans
 						message={m['view.composer.language.replyPrompt']}
-						inputs={{ suggestedLanguageName }}
+						inputs={{ language: suggestedLanguageName }}
 						markup={{ t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text> }}
 					/>
 				</RNText>

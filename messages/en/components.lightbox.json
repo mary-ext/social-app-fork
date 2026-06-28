@@ -1,7 +1,15 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"components.lightbox.a11y.close": "Close image viewer",
-	"components.lightbox.a11y.imagePosition": "Image {index} of {count}",
+	"components.lightbox.a11y.imagePosition": [
+		{
+			"declarations": ["input index", "input count", "local n1 = index: number", "local n2 = count: number"],
+			"selectors": [],
+			"match": {
+				"": "Image {n1} of {n2}"
+			}
+		}
+	],
 	"components.lightbox.a11y.loading": "Loading image",
 	"components.lightbox.a11y.next": "Next image",
 	"components.lightbox.a11y.options": "Image options",

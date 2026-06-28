@@ -127,7 +127,7 @@ function InviterHeader({
 				<Text style={[a.flex_row, a.align_center]}>
 					<Trans
 						message={m['screens.messages.addedToChat.addedYou']}
-						inputs={{ displayName }}
+						inputs={{ name: displayName }}
 						markup={{
 							t0: ({ children }) => (
 								<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>

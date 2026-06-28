@@ -8,40 +8,22 @@
 	"features.liveNow.badge.beta": "Live feature is in beta",
 	"features.liveNow.badge.live": "Live",
 	"features.liveNow.badge.userIsLive": "{handle} is live",
-	"features.liveNow.duration.hours": [
-		{
-			"declarations": ["input hours", "local cp = hours: plural"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{hours} hour",
-				"cp=other": "{hours} hours"
-			}
-		}
-	],
-	"features.liveNow.duration.hoursMinutes": [
-		{
-			"declarations": ["input hours", "input minutesString", "local cp = hours: plural"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{hours} hour {minutesString}",
-				"cp=other": "{hours} hours {minutesString}"
-			}
-		}
-	],
 	"features.liveNow.duration.label": "Go live for",
-	"features.liveNow.duration.minutes": [
-		{
-			"declarations": ["input minutes", "local cp = minutes: plural"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{minutes} minute",
-				"cp=other": "{minutes} minutes"
-			}
-		}
-	],
 	"features.liveNow.duration.select": "Select duration",
 	"features.liveNow.expiry.none": "No expiry set",
-	"features.liveNow.expiry.value": "Expires in {duration} at {time}",
+	"features.liveNow.expiry.value": [
+		{
+			"declarations": [
+				"input duration",
+				"input time",
+				"local t = time: datetime hour=numeric minute=2-digit"
+			],
+			"selectors": [],
+			"match": {
+				"": "Expires in {duration} at {t}"
+			}
+		}
+	],
 	"features.liveNow.goLive.confirm": "Go live",
 	"features.liveNow.goLive.description": "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event.",
 	"features.liveNow.goLive.disabled": "Going live is currently disabled for your account",

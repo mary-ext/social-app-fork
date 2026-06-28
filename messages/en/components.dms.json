@@ -48,7 +48,7 @@
 	"components.dms.group.action.hideUpdates": "Hide group chat updates",
 	"components.dms.group.action.new": "New group chat",
 	"components.dms.group.action.openSettings": "Open group chat settings",
-	"components.dms.group.action.removeMember": "Remove {displayName} from group chat",
+	"components.dms.group.action.removeMember": "Remove {name} from group chat",
 	"components.dms.group.action.showUpdates": "Show group chat updates",
 	"components.dms.group.error.cannotCreateYet": "You cannot create a group chat yet.",
 	"components.dms.group.error.create": "An issue occurred creating the group chat, please try again.",
@@ -94,11 +94,11 @@
 	"components.dms.reaction.error.add": "Failed to add emoji reaction",
 	"components.dms.reaction.error.limit": [
 		{
-			"declarations": ["input EMOJI_REACTION_LIMIT", "local cp = EMOJI_REACTION_LIMIT: plural"],
+			"declarations": ["input limit", "local cp = limit: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "You cannot add more than {EMOJI_REACTION_LIMIT} emoji reaction",
-				"cp=other": "You cannot add more than {EMOJI_REACTION_LIMIT} emoji reactions"
+				"cp=one": "You cannot add more than {limit} emoji reaction",
+				"cp=other": "You cannot add more than {limit} emoji reactions"
 			}
 		}
 	],
@@ -108,15 +108,23 @@
 	"components.dms.reaction.reactedTo": "{name} reacted {reaction} to {target}",
 	"components.dms.reaction.summary": [
 		{
-			"declarations": ["input count", "input values", "local cp = count: plural"],
+			"declarations": ["input count", "input values", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} person reacted – {values}",
-				"cp=other": "{count} people reacted – {values}"
+				"cp=one": "{n} person reacted – {values}",
+				"cp=other": "{n} people reacted – {values}"
 			}
 		}
 	],
-	"components.dms.reaction.tabAll": "All {count}",
+	"components.dms.reaction.tabAll": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "All {n}"
+			}
+		}
+	],
 	"components.dms.reaction.title": "Reactions",
 	"components.dms.recipient.error.blockedYou": "One of the selected recipients has blocked you and cannot be messaged.",
 	"components.dms.recipient.error.cannotAdd": "{handle} can’t be added",
@@ -125,11 +133,11 @@
 	"components.dms.recipient.error.notFound": "Unable to find a selected recipient.",
 	"components.dms.recipient.error.selectedNotFound": "Unable to find the selected recipient.",
 	"components.dms.reply.a11y.repliedTo": "Replied-to message, tap to scroll to it",
-	"components.dms.reply.a11y.repliedToFrom": "Replied-to message from {senderName}, tap to scroll to it",
+	"components.dms.reply.a11y.repliedToFrom": "Replied-to message from {name}, tap to scroll to it",
 	"components.dms.reply.a11y.scrollTo": "Scroll to the message this is replying to",
-	"components.dms.reply.replied": "{replierDisplayName} replied",
-	"components.dms.reply.repliedTo": "{replierDisplayName} replied to {originalName}",
-	"components.dms.reply.repliedToYou": "{replierDisplayName} replied to you",
+	"components.dms.reply.replied": "{replier} replied",
+	"components.dms.reply.repliedTo": "{replier} replied to {original}",
+	"components.dms.reply.repliedToYou": "{replier} replied to you",
 	"components.dms.report.message": "Report message",
 	"components.dms.report.received": "Our moderation team has received your report.",
 	"components.dms.report.submitted": "Report submitted",
@@ -148,11 +156,11 @@
 	"components.dms.update.chatUnlocked": "Chat unlocked",
 	"components.dms.update.count": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} chat update",
-				"cp=other": "{count} chat updates"
+				"cp=one": "{n} chat update",
+				"cp=other": "{n} chat updates"
 			}
 		}
 	],

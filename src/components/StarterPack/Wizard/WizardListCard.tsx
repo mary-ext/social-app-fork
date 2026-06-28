@@ -70,8 +70,8 @@ function WizardListCard({
 				disabled={disabled}
 				label={
 					included
-						? m['components.starterPack.membership.action.remove']({ displayName })
-						: m['components.starterPack.membership.action.add']({ displayName })
+						? m['components.starterPack.membership.action.remove']({ name: displayName })
+						: m['components.starterPack.membership.action.add']({ name: displayName })
 				}
 				className={css.row}
 			>

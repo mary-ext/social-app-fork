@@ -27,10 +27,10 @@ export function VerificationsDialog({
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 }) {
-	const userName = getUserDisplayName(profile);
+	const name = getUserDisplayName(profile);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.verification.verifications.title']({ userName })} size="narrow">
+			<Dialog.Popup label={m['components.verification.verifications.title']({ name })} size="narrow">
 				<DialogInner handle={handle} profile={profile} />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -43,14 +43,14 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 	const { isVerified } = useSimpleVerificationState({ profile });
 	const isViewer = profile.did === currentAccount?.did;
-	const userName = getUserDisplayName(profile);
+	const name = getUserDisplayName(profile);
 	const label = isViewer
 		? isVerified
 			? m['components.verification.verified.youStatus']()
 			: m['components.verification.verifications.yourTitle']()
 		: isVerified
-			? m['components.verification.verified.userStatus']({ userName })
-			: m['components.verification.verifications.userTitle']({ userName });
+			? m['components.verification.verified.userStatus']({ name })
+			: m['components.verification.verifications.userTitle']({ name });
 
 	return (
 		<>

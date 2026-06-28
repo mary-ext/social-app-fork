@@ -2,31 +2,31 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"screens.post.like.count": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local n = count: number", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} like",
-				"cp=other": "{count} likes"
+				"cp=one": "{n} like",
+				"cp=other": "{n} likes"
 			}
 		}
 	],
 	"screens.post.quote.count": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local n = count: number", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} quote",
-				"cp=other": "{count} quotes"
+				"cp=one": "{n} quote",
+				"cp=other": "{n} quotes"
 			}
 		}
 	],
 	"screens.post.repost.count": [
 		{
-			"declarations": ["input count", "local cp = count: plural"],
+			"declarations": ["input count", "local n = count: number", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{count} repost",
-				"cp=other": "{count} reposts"
+				"cp=one": "{n} repost",
+				"cp=other": "{n} reposts"
 			}
 		}
 	],
