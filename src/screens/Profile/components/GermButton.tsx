@@ -155,7 +155,7 @@ function GermSelfButton({ did }: { did: string }) {
 				void queryClient.refetchQueries({ queryKey: RQKEY(did) });
 				Toast.show(m['screens.profile.germDm.disconnectedToast'](), {
 					action: previousRecord
-						? { label: m['screens.profile.action.undo'](), onPress: () => void undo() }
+						? { label: m['common.action.undo'](), onPress: () => void undo() }
 						: undefined,
 				});
 			});

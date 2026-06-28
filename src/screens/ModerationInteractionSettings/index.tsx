@@ -36,7 +36,7 @@ export function Screen() {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<div className={styles.content}>
-					<Admonition type="tip">{m['screens.moderationInteractionSettings.description']()}</Admonition>
+					<Admonition type="tip">{m['screens.moderation.interaction.defaultsHint']()}</Admonition>
 					{preferences ? (
 						<Inner preferences={preferences} />
 					) : (
@@ -87,13 +87,13 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 				postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
 				threadgateAllowRules: threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
 			});
-			Toast.show(m['screens.moderationInteractionSettings.save.success']());
+			Toast.show(m['screens.moderation.interaction.savedToast']());
 		} catch (e) {
 			logger.error(`Failed to save post interaction settings`, {
 				safeMessage: e instanceof Error ? e.message : String(e),
 				source: 'ModerationInteractionSettingsScreen',
 			});
-			setError(m['screens.moderationInteractionSettings.save.error']());
+			setError(m['screens.moderation.interaction.saveError']());
 		}
 	}, [maybeEditedPostgate, maybeEditedAllowUI, setPostInteractionSettings]);
 

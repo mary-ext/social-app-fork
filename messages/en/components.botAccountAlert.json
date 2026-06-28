@@ -1,0 +1,6 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.botAccountAlert.descriptionByOwner": "This account has been marked as automated by its owner.",
+	"components.botAccountAlert.descriptionByYou": "You have marked this account as automated. You can remove it at any time from your account settings.",
+	"components.botAccountAlert.openSettings": "Open settings"
+}

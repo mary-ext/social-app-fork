@@ -675,7 +675,7 @@ export function Explore({
 									? m['screens.search.account.emptyInterest']({
 											interest: interestsDisplayNames[selectedInterest] ?? '',
 										})
-									: m['screens.search.account.empty']()}
+									: m['common.search.empty']()}
 							</Admonition>
 						</div>
 					);

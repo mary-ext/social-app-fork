@@ -69,7 +69,7 @@ function TrendRow({ rank, trend }: { rank: number; trend: AppBskyUnspeccedDefs.T
 	return (
 		<Link
 			className={css.row}
-			label={m['screens.search.trending.browse']({ displayName: trend.displayName })}
+			label={m['components.trendingTopics.a11y.browseTopic']({ displayName: trend.displayName })}
 			to={trend.link}
 		>
 			<div className={css.main}>

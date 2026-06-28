@@ -51,7 +51,7 @@ export function HomeHeaderLayoutMobile() {
 						testID="viewHeaderHomeFeedPrefsBtn"
 						to={{ screen: 'Feeds' }}
 						hitSlop={HITSLOP_10}
-						label={m['view.feeds.exploreLabel']()}
+						label={m['view.feeds.explore.a11y']()}
 						size="small"
 						variant="ghost"
 						color="secondary"

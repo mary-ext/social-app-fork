@@ -80,7 +80,6 @@
 	"components.postControls.repost.action.undo": "Undo repost",
 	"components.postControls.save.action": "Add to saved posts",
 	"components.postControls.save.toast": "Post saved",
-	"components.postControls.save.undo": "Undo",
 	"components.postControls.share.a11y": "Open share menu",
 	"components.postControls.share.sendViaDm": "Send via direct message",
 	"components.postControls.thread.mute.action": "Mute thread",

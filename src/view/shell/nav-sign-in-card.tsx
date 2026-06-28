@@ -27,7 +27,7 @@ let NavSignInCard = ({}: {}): React.ReactNode => {
 			</Link>
 			<View style={[a.pt_lg]}>
 				<Text style={[a.text_3xl, a.font_bold, { lineHeight: a.text_3xl.fontSize }]}>
-					{m['view.thread.joinConversation']()}
+					{m['view.auth.signIn.prompt']()}
 				</Text>
 			</View>
 			<View style={[a.flex_row, a.flex_wrap, a.gap_sm, a.pt_md]}>

@@ -247,7 +247,7 @@ function MutualGroupChat({
 		onError: (error) => {
 			onRestoreConvo(view.id);
 			logger.error('Error leaving group chat', { message: error });
-			let errorMessage = m['components.moderation.chat.error.leave']();
+			let errorMessage = m['components.dms.leave.error.leave']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();
 			} else if (error instanceof ClientResponseError && error.error === 'InvalidConvo') {

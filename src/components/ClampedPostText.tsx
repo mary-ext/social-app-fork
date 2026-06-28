@@ -32,12 +32,12 @@ export function ClampedPostText({ authorHandle, richText }: { authorHandle: stri
 				<button
 					type="button"
 					className={css.showMore}
-					aria-label={m['components.clampedPostText.action.expand']()}
+					aria-label={m['components.post.text.expand']()}
 					onClick={() => setLimitLines(false)}
 				>
 					{/* the button hosts the link text directly, so the *Text-returns-<Text> rule doesn't apply */}
 					{}
-					{m['components.clampedPostText.action.showMore']()}
+					{m['components.post.text.showMore']()}
 				</button>
 			)}
 		</div>

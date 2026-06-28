@@ -106,13 +106,13 @@ export function ProfileLists({ did, enabled, listCount }: ProfileListsProps): Re
 			return (
 				<EmptyState
 					icon={ListIcon}
-					message={isSelf ? m['view.list.empty']() : m['view.list.emptyTitle']()}
+					message={isSelf ? m['common.list.empty']() : m['common.list.emptyUser']()}
 					messageColor="textContrastMedium"
 					button={
 						isSelf
 							? {
-									label: m['view.list.create'](),
-									text: m['view.list.create'](),
+									label: m['common.list.create'](),
+									text: m['common.list.create'](),
 									onPress: () => navigation.navigate('Lists' as never),
 									size: 'small',
 									color: 'primary',

@@ -231,7 +231,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 							</Menu.Root>
 						) : (
 							<Button
-								label={m['screens.profile.feed.action.pin']()}
+								label={m['screens.profileList.pin.action.pinToHome']()}
 								size="small"
 								variant="ghost"
 								shape="round"

@@ -53,9 +53,9 @@ export function DesktopRightNav({ routeName }: { routeName: string }) {
 				href={SOURCE_CODE_URL}
 				color="textContrastMedium"
 				size="sm"
-				label={m['view.label.sourceCode']()}
+				label={m['common.sourceCode']()}
 			>
-				{m['view.label.sourceCode']()}
+				{m['common.sourceCode']()}
 			</ExternalInlineLinkText>
 
 			{!hasSession && leftNavMinimal && <AppLanguageDropdown />}

@@ -18,6 +18,7 @@
 	"screens.profileList.hide.hiddenToast": "List Hidden",
 	"screens.profileList.members.add": "Add a user to this list",
 	"screens.profileList.members.empty": "This list is empty.",
+	"screens.profileList.members.fetchError": "There was an issue fetching the list. Tap here to try again.",
 	"screens.profileList.members.startAdding": "Start adding people",
 	"screens.profileList.members.startAddingCta": "Start adding people!",
 	"screens.profileList.mute.action.accounts": "Mute accounts",

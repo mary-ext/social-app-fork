@@ -171,7 +171,7 @@ export function AddMembersFlow({
 			_items.push({
 				type: 'empty',
 				key: 'empty',
-				message: m['components.dms.chat.error.network'](),
+				message: m['components.dialogs.error.network'](),
 			});
 		} else if (searchText.length) {
 			if (autocompleteResults?.length) {

@@ -44,7 +44,7 @@ export function ModerationModlistsScreen({}: Props) {
 					<Layout.Header.TitleText>{m['common.moderation.listsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Button
-					label={m['view.action.newList']()}
+					label={m['common.list.action.new']()}
 					color="secondary"
 					variant="solid"
 					size="small"

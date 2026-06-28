@@ -1,0 +1,5 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.appLanguageDropdown.a11y.change": "Change app language",
+	"components.appLanguageDropdown.a11y.select": "Select an app language"
+}

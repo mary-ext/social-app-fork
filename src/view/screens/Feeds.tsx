@@ -273,11 +273,11 @@ export function FeedsScreen({}: Props) {
 						<FeedsAboutHeader />
 						<div ref={searchAnchorRef} className={css.searchWrapper}>
 							<SearchInput
-								label={m['view.action.searchFeeds']()}
+								label={m['view.feeds.search.placeholder']()}
 								onChangeText={onChangeQuery}
 								onClear={onPressCancelSearch}
 								onFocus={onFocusSearch}
-								placeholder={m['view.action.searchFeeds']()}
+								placeholder={m['view.feeds.search.placeholder']()}
 								value={query}
 							/>
 						</div>
@@ -291,7 +291,7 @@ export function FeedsScreen({}: Props) {
 				return (
 					<div className={css.noResults}>
 						<Text color="textContrastMedium" size="lg">
-							{m['view.empty.noResults']({ query })}
+							{m['view.feeds.discover.empty']({ query })}
 						</Text>
 					</div>
 				);

@@ -1,0 +1,7 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.accountList.a11y.continueAs": "Continue as {handle} (currently signed in)",
+	"components.accountList.a11y.signInAs": "Sign in as {handle}",
+	"components.accountList.a11y.signInOther": "Sign in to account that is not listed",
+	"components.accountList.other": "Other account"
+}

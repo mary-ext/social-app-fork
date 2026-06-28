@@ -71,7 +71,7 @@ export function Drawer() {
 					<BaseDrawer.Popup className={styles.popup}>
 						{/* Drawer.Title is itself the heading text host (an <h2>) */}
 						{}
-						<BaseDrawer.Title className={styles.srOnly}>{m['view.label.menu']()}</BaseDrawer.Title>
+						<BaseDrawer.Title className={styles.srOnly}>{m['navigation.drawer.title']()}</BaseDrawer.Title>
 						<BaseDrawer.Content className={styles.content}>
 							<DrawerContent />
 						</BaseDrawer.Content>
@@ -180,7 +180,7 @@ function DrawerContent() {
 						activeIcon={BookmarkFilled}
 						inactiveIcon={Bookmark}
 						isActive={isAtBookmarks}
-						label={m['view.label.saved']()}
+						label={m['common.nav.saved']()}
 						onPress={() => navigateAndClose('Bookmarks')}
 					/>
 					<MenuItem

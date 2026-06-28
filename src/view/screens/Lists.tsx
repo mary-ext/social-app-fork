@@ -44,7 +44,7 @@ export function ListsScreen({}: Props) {
 					<Layout.Header.TitleText>{m['common.list.label']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Button
-					label={m['view.action.newList']()}
+					label={m['common.list.action.new']()}
 					color="secondary"
 					size="small"
 					variant="solid"

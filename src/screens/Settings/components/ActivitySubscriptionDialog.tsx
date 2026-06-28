@@ -74,7 +74,7 @@ function Inner() {
 					<Toggle.RadioItem label={m['screens.settings.audience.noOne']()} value="none">
 						<Toggle.Panel>
 							<Toggle.RadioIndicator />
-							<Toggle.PanelText>{m['screens.messages.inviteSettings.noOne']()}</Toggle.PanelText>
+							<Toggle.PanelText>{m['screens.settings.audience.noOne']()}</Toggle.PanelText>
 						</Toggle.Panel>
 					</Toggle.RadioItem>
 				</Toggle.Group>

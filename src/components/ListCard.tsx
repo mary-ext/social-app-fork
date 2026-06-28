@@ -142,7 +142,7 @@ export function TitleAndByline({
 			>
 				<Hider.Mask>
 					<Text className={css.italic} numberOfLines={1} weight="medium">
-						{m['components.listCard.hidden']()}
+						{m['common.list.hidden']()}
 					</Text>
 				</Hider.Mask>
 				<Hider.Content>
@@ -154,7 +154,7 @@ export function TitleAndByline({
 			{creator && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 					{purpose === MODLIST
-						? m['components.listCard.moderationListBy']({ handle: sanitizeHandle(creator.handle, '@') })
+						? m['common.list.moderationBy']({ handle: sanitizeHandle(creator.handle, '@') })
 						: m['common.list.byCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
 				</Text>
 			)}

@@ -1,0 +1,5 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.log.entry.openDetails": "Opens additional details for a debug entry",
+	"screens.log.entry.view": "View debug entry"
+}

@@ -1,0 +1,6 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.home.action.addRecommendedFeeds": "Add recommended feeds",
+	"screens.home.action.browseOtherFeeds": "Browse other feeds",
+	"screens.home.empty": "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
+}

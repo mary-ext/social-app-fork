@@ -1,0 +1,8 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.feedInterstitials.action.browseMore": "Browse more accounts",
+	"components.feedInterstitials.action.dismiss": "Dismiss this suggestion",
+	"components.feedInterstitials.action.seeMore": "See more",
+	"components.feedInterstitials.seeMoreA11y": "See more suggested profiles",
+	"components.feedInterstitials.title": "Suggested for you"
+}

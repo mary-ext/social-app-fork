@@ -1,0 +1,6 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.bookmarks.backHome": "Button to go back to the home timeline",
+	"screens.bookmarks.deletedPost": "This post was deleted by its author",
+	"screens.bookmarks.empty": "Nothing saved yet"
+}

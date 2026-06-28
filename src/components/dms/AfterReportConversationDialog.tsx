@@ -143,11 +143,11 @@ function DoneStep({
 		btnText = m['components.dms.block.orLeave.confirm']();
 		toastMsg = m['components.dms.leave.conversationLeft']();
 	} else if (actions.includes('leave')) {
-		btnText = m['components.dms.leave.action.afterReport']();
+		btnText = m['components.dms.leave.action.conversation']();
 		toastMsg = m['components.dms.leave.conversationLeft']();
 	} else if (actions.includes('block')) {
 		// shouldn't be able to reach this, but here for completeness
-		btnText = m['components.dms.block.action.afterReport']();
+		btnText = m['components.dms.block.action.block']();
 		toastMsg = m['components.dms.block.userBlocked']();
 	}
 

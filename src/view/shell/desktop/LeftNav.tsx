@@ -104,7 +104,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 						render={
 							<button
 								type="button"
-								aria-label={m['view.action.switchAccounts']()}
+								aria-label={m['common.account.switcher.label']()}
 								className={clsx(css.profileTrigger, minimal && css.profileTriggerMinimal)}
 							>
 								<div className={css.avatarWrap}>
@@ -174,7 +174,7 @@ function SwitchMenuItems({
 	};
 
 	return (
-		<Menu.Popup label={m['view.action.switchAccounts']()} minWidth={150}>
+		<Menu.Popup label={m['common.account.switcher.label']()} minWidth={150}>
 			{accounts && accounts.length > 0 && (
 				<>
 					<Menu.Group>
@@ -260,7 +260,9 @@ function SwitchMenuItem({
 	return (
 		<Menu.Item
 			disabled={!!pendingDid}
-			label={m['view.action.switchTo']({ handle: sanitizeHandle(profile?.handle ?? account.handle, '@') })}
+			label={m['common.account.action.switchTo']({
+				handle: sanitizeHandle(profile?.handle ?? account.handle, '@'),
+			})}
 			onClick={() => void onPressSwitchAccount(account)}
 		>
 			<UserAvatar
@@ -326,7 +328,7 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 				<Icon aria-hidden={true} width={NAV_ICON_WIDTH} fill={colors.text} />
 				{typeof count === 'string' && count ? (
 					<Text
-						aria-label={m['view.notifications.unreadCount.label']({ count })}
+						aria-label={m['view.notifications.unreadCount.a11y']({ count })}
 						size="sm"
 						weight="semiBold"
 						color="white"
@@ -491,7 +493,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 							active: BookmarkFilledIcon,
 							inactive: BookmarkIcon,
 						}}
-						label={m['view.label.saved']()}
+						label={m['common.nav.saved']()}
 					/>
 					<NavItem
 						href={currentAccount ? makeProfileLink(currentAccount) : '/'}

@@ -90,7 +90,7 @@ export function UnblockButton() {
 				description={m['common.block.unblockHint']()}
 				handle={unblockHandle}
 				onConfirm={() => void actions.unblock()}
-				title={m['screens.profile.block.unblock.title']()}
+				title={m['components.moderation.block.unblockTitle']()}
 			/>
 		</>
 	);

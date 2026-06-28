@@ -141,7 +141,12 @@ export function ListMembers({
 					return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;
 				}
 				if (item === LOAD_MORE_ERROR_ITEM) {
-					return <LoadMoreRetryBtn label={m['view.list.fetchError']()} onPress={onPressRetryLoadMore} />;
+					return (
+						<LoadMoreRetryBtn
+							label={m['screens.profileList.members.fetchError']()}
+							onPress={onPressRetryLoadMore}
+						/>
+					);
 				}
 				if (item === LOADING_ITEM) {
 					return <ProfileCardFeedLoadingPlaceholder />;

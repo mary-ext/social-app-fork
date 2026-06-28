@@ -42,11 +42,11 @@ export function Admonitions() {
 				<AdmonitionRow>
 					<AdmonitionIcon />
 					<AdmonitionContent>
-						<AdmonitionText>{m['view.error.generic']()}</AdmonitionText>
+						<AdmonitionText>{m['common.error.generic']()}</AdmonitionText>
 					</AdmonitionContent>
 					<AdmonitionButton
 						color="negative_subtle"
-						label={m['view.action.retryReportOptions']()}
+						label={m['components.moderation.report.retry']()}
 						onPress={() => {}}
 					>
 						<ButtonText>{m['common.action.retry']()}</ButtonText>
@@ -75,7 +75,7 @@ export function Admonitions() {
 								markup={{
 									t0: ({ children }) => (
 										<InlineLinkText
-											label={m['view.label.accountPrivacySettings']()}
+											label={m['screens.settings.account.privacyLink']()}
 											to={{ screen: 'AccountSettings' }}
 											style={[a.font_bold]}
 										>

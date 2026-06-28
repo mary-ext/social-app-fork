@@ -14,12 +14,11 @@
 	"components.starterPack.create.another": "Create another",
 	"components.starterPack.edit.feeds": "Edit Feeds",
 	"components.starterPack.edit.people": "Edit People",
-	"components.starterPack.list.empty": "Starter packs let you share your favorite feeds and people with your friends.",
+	"components.starterPack.list.empty": "Starter Packs let you share your favorite feeds and people with your friends.",
 	"components.starterPack.list.error": "There was an issue fetching your starter packs. Tap here to try again.",
 	"components.starterPack.membership.action.add": "Add {displayName} to starter pack",
 	"components.starterPack.membership.action.remove": "Remove {displayName} from starter pack",
 	"components.starterPack.share.a11yLabel": "Share link dialog",
-	"components.starterPack.share.copyLink": "Copy Link",
 	"components.starterPack.share.invitePrompt": "Invite people to this starter pack!",
 	"components.starterPack.share.message": "Share this starter pack and help people join your community on Bluesky."
 }

@@ -136,8 +136,8 @@ export function Gallery({ images, control, lightboxImages, onPressIn, viewContex
 			<div
 				ref={scrollRef}
 				role="group"
-				aria-roledescription={m['components.imageEmbed.a11y.carousel']()}
-				aria-label={m['components.imageEmbed.a11y.gallery']({ count: images.length })}
+				aria-roledescription={m['components.post.image.a11y.carousel']()}
+				aria-label={m['components.post.image.a11y.gallery']({ count: images.length })}
 				className={styles.scroll}
 				style={{
 					marginLeft: -insetLeft,
@@ -218,9 +218,9 @@ function GalleryImage({
 			// border-width wider than `dims.width`, drifting the snap anchor by that much per image.
 			style={{ height: dims.height, width: dims.width }}
 			tabIndex={index === 0 ? 0 : -1}
-			aria-roledescription={m['components.imageEmbed.a11y.slide']()}
+			aria-roledescription={m['components.post.image.a11y.slide']()}
 			aria-label={
-				image.alt || m['components.imageEmbed.a11y.imagePosition']({ index: index + 1, imageCount })
+				image.alt || m['components.post.image.a11y.imagePosition']({ index: index + 1, imageCount })
 			}
 			onPointerDown={onPressIn}
 		>

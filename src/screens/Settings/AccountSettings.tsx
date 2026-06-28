@@ -137,7 +137,7 @@ function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?:
 		case 'mutuals':
 			return m['screens.settings.audience.onlyFollowersIFollow']();
 		case 'none':
-			return m['screens.messages.inviteSettings.noOne']();
+			return m['screens.settings.audience.noOne']();
 		case 'followers':
 		default:
 			return m['screens.settings.audience.anyoneWhoFollowsMe']();

@@ -9,5 +9,6 @@
 	"view.auth.signIn.a11yHint": "Opens flow to sign in to your existing Bluesky account",
 	"view.auth.signIn.accountInactiveError": "This account is not active.",
 	"view.auth.signIn.failedError": "Sign in failed. Please try again.",
-	"view.auth.signIn.inProgress": "Signing in..."
+	"view.auth.signIn.inProgress": "Signing in...",
+	"view.auth.signIn.prompt": "Join the conversation"
 }

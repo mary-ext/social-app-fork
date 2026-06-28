@@ -84,8 +84,8 @@ export function PostQuotes({ uri }: { uri: string }) {
 				isLoading={isLoadingUri || isLoadingQuotes}
 				isError={isError}
 				emptyType="results"
-				emptyTitle={m['view.thread.quote.emptyTitle']()}
-				emptyMessage={m['view.thread.quote.empty']()}
+				emptyTitle={m['screens.postThread.engagement.quote.empty']()}
+				emptyMessage={m['screens.postThread.engagement.quote.emptyPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
 				sideBorders={false}
 			/>
@@ -109,7 +109,7 @@ export function PostQuotes({ uri }: { uri: string }) {
 					error={cleanError(error)}
 					onRetry={fetchNextPage}
 					showEndMessage
-					endMessageText={m['view.thread.endOfFeed']()}
+					endMessageText={m['screens.postThread.engagement.quote.endOfFeed']()}
 				/>
 			}
 			// @ts-ignore our .web version only -prf

@@ -4,6 +4,7 @@
 	"screens.settings.accessibility.requireAltText": "Require alt text before posting",
 	"screens.settings.accessibility.title": "Accessibility",
 	"screens.settings.account.options": "Account options",
+	"screens.settings.account.privacyLink": "Account and privacy settings",
 	"screens.settings.account.privacyTitle": "Account and privacy",
 	"screens.settings.account.quickAccess.remove.message": "This will remove @{handle} from the quick access list.",
 	"screens.settings.account.quickAccess.remove.title": "Remove from quick access?",

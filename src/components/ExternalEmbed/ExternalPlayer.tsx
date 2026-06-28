@@ -86,7 +86,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 					<button
 						type="button"
 						className={styles.overlay}
-						aria-label={m['components.externalEmbed.a11y.playVideo']()}
+						aria-label={m['components.post.video.a11y.play']()}
 						onClick={onPlayPress}
 					>
 						{!isActive ? <PlayButtonIcon /> : <Spinner label={m['common.video.loading']()} />}
@@ -106,7 +106,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 							onLoad={() => setIsLoading(false)}
 							allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
 							allowFullScreen
-							title={link.title || m['components.externalEmbed.a11y.player']()}
+							title={link.title || m['components.post.external.a11y.player']()}
 						/>
 					</div>
 				) : null}

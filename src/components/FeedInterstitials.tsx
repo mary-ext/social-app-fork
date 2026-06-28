@@ -294,7 +294,7 @@ export function ProfileGrid({
 					{m['components.feedInterstitials.title']()}
 				</Text>
 				<Button
-					label={m['components.feedInterstitials.a11y.seeMore']()}
+					label={m['components.feedInterstitials.seeMoreA11y']()}
 					onPress={() => {
 						followDialogControl.open();
 					}}

@@ -278,7 +278,7 @@ function EmptyFallback({ show }: { show?: boolean }) {
 
 	return (
 		<Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-			{m['components.knownFollowers.empty']()}
+			{m['common.follow.knownFollowers.empty']()}
 		</Text>
 	);
 }

@@ -50,7 +50,7 @@ export function cleanError(error: unknown): string {
 		return m['lib.error.serverIssues']();
 	}
 	if (str.includes('Bad token scope') || str.includes('Bad token method')) {
-		return m['lib.appPassword.featureUnavailableCap']();
+		return m['lib.appPassword.featureUnavailable']();
 	}
 	if (str.includes('Account has been suspended')) {
 		return m['lib.account.error.suspended']();

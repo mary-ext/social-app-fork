@@ -114,7 +114,7 @@ export function useModerationCauseDescription(
 			return {
 				icon: EyeSlash,
 				name: m['common.thread.postHiddenByYou'](),
-				description: m['lib.moderation.youHidden'](),
+				description: m['common.thread.youHidPost'](),
 			};
 		}
 		case ModerationCauseType.Label: {

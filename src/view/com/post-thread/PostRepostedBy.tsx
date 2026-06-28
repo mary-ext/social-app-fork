@@ -74,8 +74,8 @@ export function PostRepostedBy({ uri }: { uri: string }) {
 				isLoading={isLoadingUri || isLoadingRepostedBy}
 				isError={isError}
 				emptyType="results"
-				emptyTitle={m['view.thread.repost.emptyTitle']()}
-				emptyMessage={m['view.thread.repost.empty']()}
+				emptyTitle={m['screens.postThread.engagement.repost.empty']()}
+				emptyMessage={m['screens.postThread.engagement.repost.emptyPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
 				sideBorders={false}
 			/>

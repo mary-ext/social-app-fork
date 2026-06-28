@@ -110,7 +110,7 @@ function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
 			value={feedInfo.feedDescriptor}
 			className={css.item}
 			aria-label={feedInfo.displayName}
-			title={m['view.feeds.opensFeed']({ name: feedInfo.displayName })}
+			title={m['view.feeds.feed.a11y.opens']({ name: feedInfo.displayName })}
 		>
 			{isFollowing ? (
 				<span className={css.followingIcon}>

@@ -6,9 +6,13 @@
 	"view.feeds.composer.a11y": "Opens the post composer",
 	"view.feeds.discover.browse": "Browse custom feeds",
 	"view.feeds.discover.description": "Choose your own timeline! Feeds built by the community help you find content you love.",
+	"view.feeds.discover.empty": "No results found for \\\"{query}\\\"",
+	"view.feeds.discover.title": "Discover New Feeds",
+	"view.feeds.explore.a11y": "View your feeds and explore more",
 	"view.feeds.feed.a11y.creator": "Feed creator",
 	"view.feeds.feed.a11y.identifier": "Feed identifier",
 	"view.feeds.feed.a11y.label": "{name}, a feed by {creator}, liked by {likeCount}",
+	"view.feeds.feed.a11y.opens": "Opens {name} feed",
 	"view.feeds.feed.error.connect": "Could not connect to custom feed",
 	"view.feeds.feed.error.connectService": "Could not connect to feed service",
 	"view.feeds.feed.loadingMore": "Loading more feeds",
@@ -25,5 +29,7 @@
 	"view.feeds.profile.notFound": "Could not find profile",
 	"view.feeds.saved.description": "All the feeds you've saved, right in one place.",
 	"view.feeds.saved.empty.message": "You haven't made any custom feeds yet.",
-	"view.feeds.saved.empty.title": "No custom feeds yet"
+	"view.feeds.saved.empty.title": "No custom feeds yet",
+	"view.feeds.saved.title": "My Feeds",
+	"view.feeds.search.placeholder": "Search feeds"
 }

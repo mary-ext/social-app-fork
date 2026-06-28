@@ -1,0 +1,11 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.trendingTopics.a11y.browseAbout": "Browse posts about {displayName}",
+	"components.trendingTopics.a11y.browseStarterPack": "Browse starter pack {displayName}",
+	"components.trendingTopics.a11y.browseTag": "Browse posts tagged with {displayName}",
+	"components.trendingTopics.a11y.browseTopic": "Browse topic {displayName}",
+	"components.trendingTopics.a11y.options": "Trending options",
+	"components.trendingTopics.hide.message": "You can update this later from your settings.",
+	"components.trendingTopics.hide.title": "Hide trending topics?",
+	"components.trendingTopics.title": "Trending"
+}

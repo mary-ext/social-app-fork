@@ -65,8 +65,8 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 										a.gap_sm,
 									]}
 									onPress={toggler(entry.id)}
-									accessibilityLabel={m['screens.log.viewEntry']()}
-									accessibilityHint={m['screens.log.openDetails']()}
+									accessibilityLabel={m['screens.log.entry.view']()}
+									accessibilityHint={m['screens.log.entry.openDetails']()}
 								>
 									{entry.level === LogLevel.Warn || entry.level === LogLevel.Error ? (
 										<WarningIcon size="sm" fill={colors.negative_500} />

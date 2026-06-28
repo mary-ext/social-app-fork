@@ -1,6 +1,5 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"screens.search.account.empty": "No results.",
 	"screens.search.account.emptyInterest": "No results for \\\"{interest}\\\".",
 	"screens.search.account.loadError": "Failed to load suggested follows",
 	"screens.search.account.searchMore": "Search for more accounts",
@@ -23,7 +22,6 @@
 	"screens.search.results.loading": "Loading search results",
 	"screens.search.starterPack.additionalCount": "+{computedTotal}",
 	"screens.search.starterPack.open": "Open pack",
-	"screens.search.trending.browse": "Browse topic {displayName}",
 	"screens.search.trending.entertainment": "Entertainment",
 	"screens.search.trending.hot": "Hot",
 	"screens.search.trending.rank": "{rank}.",

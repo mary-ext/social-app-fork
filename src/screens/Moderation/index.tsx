@@ -76,9 +76,7 @@ export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorP
 					</div>
 				) : error || !preferences ? (
 					<Settings.List>
-						<Admonition type="error">
-							{error?.toString() || m['screens.moderation.error.generic']()}
-						</Admonition>
+						<Admonition type="error">{error?.toString() || m['common.error.generic']()}</Admonition>
 					</Settings.List>
 				) : (
 					<ModerationScreenInner preferences={preferences} />

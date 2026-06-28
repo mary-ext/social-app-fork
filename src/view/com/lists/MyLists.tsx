@@ -49,9 +49,9 @@ export function MyLists({ filter }: { filter: MyListsFilter }): React.ReactNode 
 	const emptyText = (() => {
 		switch (filter) {
 			case 'curate':
-				return m['view.list.description']();
+				return m['common.list.description']();
 			case 'mod':
-				return m['view.list.moderation.description']();
+				return m['common.list.moderation.description']();
 			default:
 				return m['common.list.empty']();
 		}

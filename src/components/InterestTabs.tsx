@@ -327,8 +327,8 @@ function Tab({
 }) {
 	const t = useTheme();
 	const label = active
-		? m['components.interestTabs.a11y.categoryActive']({ interestsDisplayName })
-		: m['components.interestTabs.a11y.categorySelect']({ interestsDisplayName });
+		? m['components.web.category.a11y.active']({ displayName: interestsDisplayName })
+		: m['components.web.category.a11y.select']({ displayName: interestsDisplayName });
 
 	return (
 		<View

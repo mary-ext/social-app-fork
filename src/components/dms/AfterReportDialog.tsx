@@ -129,7 +129,7 @@ function DoneStep({
 		btnText = m['components.dms.block.orDelete.confirm']();
 		toastMsg = m['components.dms.delete.conversationDeleted']();
 	} else if (actions.includes('leave')) {
-		btnText = m['components.dms.delete.action.conversation']();
+		btnText = m['common.chat.action.deleteConversation']();
 		toastMsg = m['components.dms.delete.conversationDeleted']();
 	} else if (actions.includes('block')) {
 		btnText = m['components.dms.block.title']();

@@ -1,0 +1,4 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.topic.empty": "We couldn't find any results for that topic."
+}

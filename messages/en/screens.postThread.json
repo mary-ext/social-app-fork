@@ -26,6 +26,9 @@
 			}
 		}
 	],
+	"screens.postThread.engagement.quote.empty": "No quotes yet",
+	"screens.postThread.engagement.quote.emptyPrompt": "Nobody has quoted this yet. Maybe you should be the first!",
+	"screens.postThread.engagement.quote.endOfFeed": "That's all, folks!",
 	"screens.postThread.engagement.quote.title": "Quotes of this post",
 	"screens.postThread.engagement.repost.count": [
 		{
@@ -37,6 +40,8 @@
 			}
 		}
 	],
+	"screens.postThread.engagement.repost.empty": "No reposts yet",
+	"screens.postThread.engagement.repost.emptyPrompt": "Nobody has reposted this yet. Maybe you should be the first!",
 	"screens.postThread.engagement.repost.title": "Reposts of this post",
 	"screens.postThread.engagement.save.count": [
 		{

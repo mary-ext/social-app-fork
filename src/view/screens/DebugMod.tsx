@@ -796,7 +796,7 @@ function MockAccountScreen({
 	return (
 		<View style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
 			<ScreenHider
-				screenDescription={m['view.label.profile']()}
+				screenDescription={m['components.moderation.screenHider.profile']()}
 				modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 			>
 				<StandardProfileHeader

@@ -97,7 +97,7 @@ function Inner({ convoId }: { convoId: string }) {
 					<MessagesListHeader convo={convo} />
 				</Layout.Center>
 				<Error
-					title={m['screens.messages.error.generic']()}
+					title={m['common.error.generic']()}
 					message={m['screens.messages.conversation.loadError']()}
 					onRetry={() => convoState.error.retry()}
 					sideBorders={false}

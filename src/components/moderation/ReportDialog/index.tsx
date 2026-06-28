@@ -249,7 +249,7 @@ function Inner({
 			close();
 		} catch (e) {
 			logger.error(e instanceof Error ? e : String(e), { source: 'ReportDialog' });
-			dispatch({ type: 'setError', error: m['components.moderation.error.generic']() });
+			dispatch({ type: 'setError', error: m['common.error.generic']() });
 		} finally {
 			setIsPending(false);
 		}

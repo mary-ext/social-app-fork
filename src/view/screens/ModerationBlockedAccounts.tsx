@@ -134,7 +134,7 @@ function Empty() {
 				]}
 			>
 				<Text style={[a.text_sm, a.text_center, t.atoms.text_contrast_high]}>
-					{m['view.empty.blocked']()}
+					{m['common.block.empty']()}
 				</Text>
 			</View>
 		</View>
@@ -157,7 +157,7 @@ function Info({ style }: { style?: StyleProp<ViewStyle> }) {
 			]}
 		>
 			<Text style={[a.text_center, a.text_sm, t.atoms.text_contrast_high]}>
-				{m['view.block.description']()}
+				{m['screens.moderation.block.hint']()}
 			</Text>
 		</View>
 	);

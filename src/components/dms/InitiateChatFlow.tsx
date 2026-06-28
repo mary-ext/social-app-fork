@@ -260,7 +260,7 @@ export function InitiateChatFlow({
 			_items.push({
 				type: 'empty',
 				key: 'empty',
-				message: m['components.dms.chat.error.network'](),
+				message: m['components.dialogs.error.network'](),
 			});
 		} else if (chatState === ChatState.GROUP_NAME) {
 			_items = groupChatProfiles.map((profile) => ({
@@ -754,7 +754,7 @@ function DefaultProfileCard({
 								<ProfileCard.Handle profile={profile} />
 							) : (
 								<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-									{m['components.dms.recipient.error.cannotMessage']({ handle })}
+									{m['components.dialogs.chat.cannotMessage']({ handle })}
 								</Text>
 							)}
 						</View>

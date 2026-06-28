@@ -47,7 +47,7 @@ export function ListFooter({
 				<ListFooterError error={error} onRetry={onRetry} />
 			) : !hasNextPage && showEndMessage ? (
 				<Text color="textContrastLow" size="sm">
-					{endMessageText ?? m['components.lists.endOfList']()}
+					{endMessageText ?? m['common.list.endOfList']()}
 				</Text>
 			) : null}
 		</div>
@@ -131,7 +131,7 @@ function ListMaybePlaceholder({
 		return (
 			<Error
 				title={errorTitle ?? m['common.error.oops']()}
-				message={errorMessage ?? m['components.lists.error']()}
+				message={errorMessage ?? m['common.error.generic']()}
 				onRetry={onRetry}
 				onGoBack={onGoBack}
 				sideBorders={sideBorders}
@@ -147,7 +147,7 @@ function ListMaybePlaceholder({
 					icon={emptyStateIcon}
 					message={
 						emptyMessage ??
-						(emptyType === 'results' ? m['components.lists.noResults']() : m['common.error.pageNotFound']())
+						(emptyType === 'results' ? m['common.list.noResults']() : m['common.error.pageNotFound']())
 					}
 					button={emptyStateButton}
 				/>
@@ -160,7 +160,7 @@ function ListMaybePlaceholder({
 			<Error
 				title={
 					emptyTitle ??
-					(emptyType === 'results' ? m['components.lists.noResults']() : m['common.error.pageNotFound']())
+					(emptyType === 'results' ? m['common.list.noResults']() : m['common.error.pageNotFound']())
 				}
 				message={emptyMessage ?? m['common.error.notFoundDescription']()}
 				onRetry={onRetry}

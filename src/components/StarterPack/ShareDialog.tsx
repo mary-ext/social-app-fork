@@ -68,7 +68,7 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 					variant="solid"
 				>
 					<ButtonIcon icon={ChainLinkIcon} />
-					<ButtonText>{m['components.starterPack.share.copyLink']()}</ButtonText>
+					<ButtonText>{m['common.share.action.copyLink']()}</ButtonText>
 				</Button>
 			</div>
 		</div>

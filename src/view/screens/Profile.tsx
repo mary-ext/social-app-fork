@@ -250,8 +250,8 @@ function ProfileScreenLoaded({
 					emptyStateButton={
 						isMe
 							? {
-									label: m['view.action.writePost'](),
-									text: m['view.action.writePost'](),
+									label: m['common.compose.action.writePost'](),
+									text: m['common.compose.action.writePost'](),
 									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
 									size: 'small',
 									color: 'primary',
@@ -269,7 +269,7 @@ function ProfileScreenLoaded({
 					feed={`author|${profile.did}|posts_with_replies`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['view.empty.replies']()}
+					emptyStateMessage={m['common.reply.empty']()}
 					emptyStateIcon={MessageIcon}
 				/>
 			),
@@ -282,12 +282,12 @@ function ProfileScreenLoaded({
 					feed={`author|${profile.did}|posts_with_media`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['view.empty.media']()}
+					emptyStateMessage={m['common.media.empty']()}
 					emptyStateButton={
 						isMe
 							? {
-									label: m['view.action.postPhoto'](),
-									text: m['view.action.postPhoto'](),
+									label: m['common.compose.action.photo'](),
+									text: m['common.compose.action.photo'](),
 									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
 									size: 'small',
 									color: 'primary',
@@ -300,18 +300,18 @@ function ProfileScreenLoaded({
 		},
 		showVideosTab && {
 			id: 'videos',
-			label: m['view.video.title'](),
+			label: m['common.video.label'](),
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_video`}
 					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['view.empty.videos']()}
+					emptyStateMessage={m['common.video.empty']()}
 					emptyStateButton={
 						isMe
 							? {
-									label: m['view.action.postVideo'](),
-									text: m['view.action.postVideo'](),
+									label: m['common.compose.action.video'](),
+									text: m['common.compose.action.video'](),
 									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
 									size: 'small',
 									color: 'primary',
@@ -351,12 +351,14 @@ function ProfileScreenLoaded({
 					isMe={isMe}
 					enabled={isFocused}
 					starterPackCount={starterPackCount}
-					emptyStateMessage={isMe ? m['view.starterPack.description']() : m['view.empty.starterPacks']()}
+					emptyStateMessage={
+						isMe ? m['components.starterPack.list.empty']() : m['common.starterPack.empty']()
+					}
 					emptyStateButton={
 						isMe
 							? {
-									label: m['view.action.createStarterPack'](),
-									text: m['view.action.createStarterPack'](),
+									label: m['common.starterPack.action.create'](),
+									text: m['common.starterPack.action.create'](),
 									onPress: navToWizard,
 									color: 'primary',
 									size: 'small',
@@ -385,7 +387,7 @@ function ProfileScreenLoaded({
 	return (
 		<ScreenHider
 			className={css.container}
-			screenDescription={m['view.label.user']()}
+			screenDescription={m['components.moderation.screenHider.user']()}
 			modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 		>
 			<Tabs

@@ -287,7 +287,7 @@ function ProfileMenu({
 												? m['view.profile.liveStatus.action.goLiveDisabled']()
 												: status.isActive
 													? m['view.profile.liveStatus.action.edit']()
-													: m['view.profile.liveStatus.action.goLive']()
+													: m['features.liveNow.goLive.confirm']()
 										}
 										onClick={() => {
 											if (status.isDisabled) {
@@ -302,7 +302,7 @@ function ProfileMenu({
 												? m['view.profile.liveStatus.action.goLiveDisabled']()
 												: status.isActive
 													? m['view.profile.liveStatus.action.edit']()
-													: m['view.profile.liveStatus.action.goLive']()}
+													: m['features.liveNow.goLive.confirm']()}
 										</Menu.ItemText>
 										<Menu.ItemIcon icon={LiveIcon} />
 									</Menu.Item>

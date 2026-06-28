@@ -1,0 +1,5 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.editableBanner.edit": "Edit banner",
+	"components.editableBanner.remove": "Remove Banner"
+}

@@ -313,7 +313,7 @@ function HeaderTop() {
 	return (
 		<View style={[a.px_lg, a.relative, a.flex_row, a.justify_between, a.align_center]}>
 			<Text style={[a.z_10, a.text_lg, a.font_bold, a.leading_tight, t.atoms.text_contrast_high]}>
-				{m['components.suggestedFollowsDialog.title']()}
+				{m['components.dialogs.suggestedFollows.title']()}
 			</Text>
 			{
 				<Button
@@ -349,8 +349,8 @@ let Tab = ({
 }): React.ReactNode => {
 	const t = useTheme();
 	const label = active
-		? m['components.suggestedFollowsDialog.a11y.searchTabActive']({ interestsDisplayName })
-		: m['components.suggestedFollowsDialog.a11y.searchTab']({ interestsDisplayName });
+		? m['components.dialogs.suggestedFollows.a11y.searchTabActive']({ interestsDisplayName })
+		: m['components.dialogs.suggestedFollows.a11y.searchTab']({ interestsDisplayName });
 	return (
 		<View
 			key={interest}
@@ -474,7 +474,7 @@ function SearchInput({
 			<SearchIcon size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
-				placeholder={m['components.suggestedFollowsDialog.searchPlaceholder']()}
+				placeholder={m['components.dialogs.suggestedFollows.searchPlaceholder']()}
 				defaultValue={defaultValue}
 				onChangeText={onChangeText}
 				onFocus={onFocus}

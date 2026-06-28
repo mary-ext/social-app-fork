@@ -22,7 +22,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 
 	const isBookmarked = !!post.viewer?.bookmarked;
 
-	const undoLabel = m['components.postControls.save.undo']();
+	const undoLabel = m['common.action.undo']();
 
 	const save = async ({ disableUndo }: { disableUndo?: boolean } = {}) => {
 		try {

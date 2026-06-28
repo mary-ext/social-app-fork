@@ -46,30 +46,30 @@ export function MessagesSettingsScreenInner({}: Props) {
 	const allowMessagesFromOptions: { name: AllowIncoming; label: string }[] = [
 		{
 			name: 'all',
-			label: m['screens.messages.dmSettings.everyone'](),
+			label: m['screens.settings.audience.everyone'](),
 		},
 		{
 			name: 'following',
-			label: m['screens.messages.dmSettings.following'](),
+			label: m['screens.settings.audience.peopleIFollow'](),
 		},
 		{
 			name: 'none',
-			label: m['screens.messages.dmSettings.noOne'](),
+			label: m['screens.settings.audience.noOne'](),
 		},
 	];
 
 	const allowGroupInvitesFromOptions: { name: AllowIncoming; label: string }[] = [
 		{
 			name: 'all',
-			label: m['screens.messages.inviteSettings.everyone'](),
+			label: m['screens.settings.audience.everyone'](),
 		},
 		{
 			name: 'following',
-			label: m['screens.messages.inviteSettings.following'](),
+			label: m['screens.settings.audience.peopleIFollow'](),
 		},
 		{
 			name: 'none',
-			label: m['screens.messages.inviteSettings.noOne'](),
+			label: m['screens.settings.audience.noOne'](),
 		},
 	];
 

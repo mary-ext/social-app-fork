@@ -66,7 +66,7 @@ function JoinRequestsInner() {
 			<>
 				<Header />
 				<Error
-					title={m['screens.messages.error.generic']()}
+					title={m['common.error.generic']()}
 					message={m['screens.messages.requests.error.load']()}
 					onRetry={() => convoState.error.retry()}
 					sideBorders={false}

@@ -57,7 +57,7 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 			<button
 				type="button"
 				className={styles.button}
-				aria-label={m['components.externalEmbed.a11y.play']({ title: link.title })}
+				aria-label={m['components.post.external.a11y.play']({ title: link.title })}
 				onClick={onPlayPress}
 			>
 				<img className={styles.image} src={src} alt={link.title} />

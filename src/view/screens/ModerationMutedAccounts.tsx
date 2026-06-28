@@ -137,7 +137,7 @@ function Empty() {
 					{ maxWidth: 400 },
 				]}
 			>
-				<Text style={[a.text_sm, a.text_center, t.atoms.text_contrast_high]}>{m['view.empty.muted']()}</Text>
+				<Text style={[a.text_sm, a.text_center, t.atoms.text_contrast_high]}>{m['common.mute.empty']()}</Text>
 			</View>
 		</View>
 	);
@@ -159,7 +159,7 @@ function Info({ style }: { style?: StyleProp<ViewStyle> }) {
 			]}
 		>
 			<Text style={[a.text_center, a.text_sm, t.atoms.text_contrast_high]}>
-				{m['view.mute.description']()}
+				{m['screens.moderation.mute.hint']()}
 			</Text>
 		</View>
 	);

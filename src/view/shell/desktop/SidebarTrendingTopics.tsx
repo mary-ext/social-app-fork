@@ -44,14 +44,14 @@ function Inner() {
 				<div className={css.header}>
 					<TrendingIcon width={16} height={16} fill={colors.text} />
 					<Text size="md" weight="semiBold" className={css.title}>
-						{m['view.label.trending']()}
+						{m['components.trendingTopics.title']()}
 					</Text>
 					<Button
 						variant="ghost"
 						size="tiny"
 						color="secondary"
 						shape="round"
-						label={m['view.trending.options']()}
+						label={m['components.trendingTopics.a11y.options']()}
 						onClick={() => trendingPrompt.open(null)}
 						className={css.optionsButton}
 					>
@@ -76,8 +76,8 @@ function Inner() {
 			</div>
 			<Prompt.Basic
 				handle={trendingPrompt}
-				title={m['view.trending.hide.title']()}
-				description={m['view.settings.updateLater']()}
+				title={m['components.trendingTopics.hide.title']()}
+				description={m['components.trendingTopics.hide.message']()}
 				confirmButtonCta={m['common.action.hide']()}
 				onConfirm={onConfirmHide}
 			/>

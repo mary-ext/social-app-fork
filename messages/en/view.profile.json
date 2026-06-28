@@ -38,7 +38,6 @@
 	"view.profile.list.moderationBy": "Moderation list by {#t0/}",
 	"view.profile.list.moderationByYou": "Moderation list by you",
 	"view.profile.liveStatus.action.edit": "Edit live status",
-	"view.profile.liveStatus.action.goLive": "Go live",
 	"view.profile.liveStatus.action.goLiveDisabled": "Go live (disabled)",
 	"view.profile.sharing.action.copyDid": "Copy DID",
 	"view.profile.sharing.action.copyLink": "Copy link to profile",

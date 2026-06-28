@@ -116,7 +116,7 @@ function LabelerListHeader({
 	if (labelerError || !labelerInfo) {
 		return (
 			<View style={[a.w_full, a.align_center, a.py_4xl]}>
-				<ErrorState error={labelerError?.toString() || m['screens.moderation.error.generic']()} />
+				<ErrorState error={labelerError?.toString() || m['common.error.generic']()} />
 			</View>
 		);
 	}

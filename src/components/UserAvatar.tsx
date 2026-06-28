@@ -246,7 +246,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	) : isTouchLive ? (
 		<button
 			type="button"
-			aria-label={m['components.userAvatar.avatar']({ name })}
+			aria-label={m['common.a11y.avatar']({ name })}
 			className={styles.preview}
 			style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
 			tabIndex={tabIndex}
@@ -257,7 +257,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	) : (
 		<Link
 			className={styles.preview}
-			label={m['components.userAvatar.avatar']({ name })}
+			label={m['common.a11y.avatar']({ name })}
 			onPress={() => {
 				onBeforePress?.();
 				unstableCacheProfileView(queryClient, profile);
