@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"postinstall": "pnpm paraglide:compile && pnpm cf-typegen",
-		"dev": "pnpm paraglide:compile && rsbuild dev",
+		"dev": "rsbuild dev",
 		"dev:worker": "wrangler dev",
 		"deploy": "wrangler deploy",
 		"cf-typegen": "wrangler types",
