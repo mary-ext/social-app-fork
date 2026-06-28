@@ -1,5 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
+import * as navBadge from '#/view/shell/nav-badge.css';
+
 import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
@@ -197,33 +199,10 @@ export const iconBox = style({
 	zIndex: 1,
 });
 
-// unread-count badge overlapping the icon's top-right — a circle for a single digit, stretching to a pill for
-// wider counts. flex-centering the digit keeps it on the badge's axis without a hand-tuned line-height.
-export const badge = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.primary_500,
-	borderRadius: 999,
-	boxSizing: 'border-box',
-	display: 'flex',
-	height: 18,
-	justifyContent: 'center',
-	left: 12,
-	minWidth: 18,
-	paddingInline: 6,
-	position: 'absolute',
-	top: -6,
-});
+// overlaps the icon's top-right.
+export const badge = style([navBadge.badge, { left: 12, top: -6 }]);
 
-// the "has new" dot, shown in place of a count.
-export const hasNewDot = style({
-	backgroundColor: vars.palette.primary_500,
-	borderRadius: 999,
-	height: 8,
-	position: 'absolute',
-	right: -2,
-	top: -4,
-	width: 8,
-});
+export const hasNewDot = style([navBadge.hasNewDot, { right: -2, top: -4 }]);
 
 // #endregion
 

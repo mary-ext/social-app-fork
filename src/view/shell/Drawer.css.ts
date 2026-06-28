@@ -1,8 +1,10 @@
 import { createVar, style } from '@vanilla-extract/css';
 
+import * as navBadge from '#/view/shell/nav-badge.css';
+
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
-import { fontSize, space, zIndex } from '#/styles/tokens.css';
+import { space, zIndex } from '#/styles/tokens.css';
 
 // the entrance/exit translate and the swipe-driven backdrop fade mirror Base UI's `hero` side-drawer demo,
 // reflected to the left edge: the popup slides out to `translateX(-100%)`, and `--drawer-swipe-*` (set by
@@ -162,17 +164,4 @@ export const menuItem = style(
 /** Wraps the icon so the unread count can pin to its corner. */
 export const iconWrap = style({ display: 'inline-flex', position: 'relative' });
 
-export const countBadge = style({
-	backgroundColor: vars.palette.primary_500,
-	borderRadius: 999,
-	color: vars.palette.white,
-	fontSize: fontSize.xs,
-	fontVariant: 'tabular-nums',
-	fontWeight: 600,
-	lineHeight: 1.15,
-	paddingBlock: 1,
-	paddingInline: 4,
-	position: 'absolute',
-	right: -10,
-	top: -4,
-});
+export const countBadge = style([navBadge.badge, { right: -10, top: -4 }]);

@@ -1,5 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
+import * as navBadge from '#/view/shell/nav-badge.css';
+
 import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
@@ -37,37 +39,9 @@ export const ctrl = style({
 	},
 });
 
-export const badge = style({
-	alignItems: 'center',
-	backgroundColor: colors.primary_500,
-	borderRadius: 9999,
-	boxSizing: 'border-box',
-	display: 'flex',
-	height: 18,
-	justifyContent: 'center',
-	left: '52%',
-	minWidth: 18,
-	paddingInline: 5,
-	position: 'absolute',
-	top: 8,
-	zIndex: 1,
-});
+export const badge = style([navBadge.badge, { left: '52%', top: 8, zIndex: 1 }]);
 
-export const badgeLabel = style({
-	fontVariantNumeric: 'tabular-nums',
-});
-
-export const hasNewBadge = style({
-	backgroundColor: colors.primary_500,
-	borderRadius: 4,
-	height: 8,
-	left: '54%',
-	marginLeft: 4,
-	position: 'absolute',
-	top: 10,
-	width: 8,
-	zIndex: 1,
-});
+export const hasNewBadge = style([navBadge.hasNewDot, { left: '54%', marginLeft: 4, top: 10, zIndex: 1 }]);
 
 export const avatarRing = style({
 	border: `2px solid transparent`,

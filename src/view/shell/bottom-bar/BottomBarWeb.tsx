@@ -253,14 +253,15 @@ const NavItem: React.FC<{
 		>
 			{children({ isActive })}
 			{notificationCount ? (
-				<div
+				<Text
+					size="sm"
+					weight="semiBold"
+					color="white"
 					className={css.badge}
 					aria-label={m['view.notifications.unreadCount.badge']({ notificationCount })}
 				>
-					<Text size="sm" weight="semiBold" color="white" className={css.badgeLabel}>
-						{notificationCount}
-					</Text>
-				</div>
+					{notificationCount}
+				</Text>
 			) : hasNew ? (
 				<div className={css.hasNewBadge} />
 			) : null}

@@ -319,9 +319,15 @@ function MenuItem({
 			<span className={styles.iconWrap}>
 				<Icon fill="currentColor" width={ICON_WIDTH} />
 				{count ? (
-					<span aria-label={countLabel} className={styles.countBadge}>
+					<Text
+						aria-label={countLabel}
+						size="sm"
+						weight="semiBold"
+						color="white"
+						className={styles.countBadge}
+					>
 						{count}
-					</span>
+					</Text>
 				) : null}
 			</span>
 			<Text numberOfLines={1} size="_2xl" weight={isActive ? 'bold' : 'normal'}>
