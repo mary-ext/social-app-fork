@@ -16,12 +16,9 @@ export const PostLikedByScreen = ({ route }: Props) => {
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
-	useSetTitle(post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : undefined);
+	const likeCount = post?.likeCount;
 
-	let likeCount;
-	if (post) {
-		likeCount = post.likeCount;
-	}
+	useSetTitle(post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : undefined);
 
 	return (
 		<Layout.Screen>
@@ -39,7 +36,7 @@ export const PostLikedByScreen = ({ route }: Props) => {
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<PostLikedByComponent uri={uri} />
+			<PostLikedByComponent uri={uri} initialCount={likeCount} />
 		</Layout.Screen>
 	);
 };

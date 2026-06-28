@@ -1,33 +1,26 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
 
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { usePostRepostedByQuery } from '#/state/queries/post-reposted-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 
 import { logger } from '#/logger';
 
-import { ProfileCardWithFollowBtn } from '#/view/com/profile/ProfileCard';
-import { List } from '#/view/com/util/List';
-
+import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-function renderItem({ item, index }: { item: ActorDefs.ProfileView; index: number }) {
-	return <ProfileCardWithFollowBtn key={item.did} profile={item} noBorder={index === 0} />;
-}
-
-function keyExtractor(item: { did: string }) {
+function keyExtractor(item: ActorDefs.ProfileView) {
 	return item.did;
 }
 
-export function PostRepostedBy({ uri }: { uri: string }) {
-	const initialNumToRender = useInitialNumToRender();
-
-	const [isPTRing, setIsPTRing] = useState(false);
+export function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: number }) {
+	const moderationOpts = useModerationOpts();
 
 	const { data: resolvedUri, error: resolveError, isLoading: isLoadingUri } = useResolveUriQuery(uri);
 	const {
@@ -37,7 +30,6 @@ export function PostRepostedBy({ uri }: { uri: string }) {
 		hasNextPage,
 		fetchNextPage,
 		error,
-		refetch,
 	} = usePostRepostedByQuery(resolvedUri?.uri);
 
 	const isError = Boolean(resolveError || error);
@@ -49,29 +41,23 @@ export function PostRepostedBy({ uri }: { uri: string }) {
 		return [];
 	}, [data]);
 
-	const onRefresh = useCallback(async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh reposts', { message: err });
-		}
-		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
-
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more reposts', { message: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
+	};
+
+	if (!moderationOpts || ((isLoadingUri || isLoadingRepostedBy) && repostedBy.length < 1 && !isError)) {
+		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+	}
 
 	if (repostedBy.length < 1) {
 		return (
 			<ListMaybePlaceholder
-				isLoading={isLoadingUri || isLoadingRepostedBy}
+				isLoading={false}
 				isError={isError}
 				emptyType="results"
 				emptyTitle={m['screens.postThread.engagement.repost.empty']()}
@@ -82,17 +68,12 @@ export function PostRepostedBy({ uri }: { uri: string }) {
 		);
 	}
 
-	// loaded
-	// =
 	return (
 		<List
 			data={repostedBy}
-			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			refreshing={isPTRing}
-			onRefresh={() => void onRefresh()}
 			onEndReached={() => void onEndReached()}
-			onEndReachedThreshold={4}
+			onEndReachedThreshold={2}
 			ListFooterComponent={
 				<ListFooter
 					isFetchingNextPage={isFetchingNextPage}
@@ -100,11 +81,9 @@ export function PostRepostedBy({ uri }: { uri: string }) {
 					onRetry={fetchNextPage}
 				/>
 			}
-			// @ts-ignore our .web version only -prf
-			desktopFixedHeight
-			initialNumToRender={initialNumToRender}
-			windowSize={11}
-			sideBorders={false}
+			renderItem={({ index, item }) => (
+				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
+			)}
 		/>
 	);
 }

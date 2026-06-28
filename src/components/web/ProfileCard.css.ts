@@ -1,11 +1,8 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, space } from '#/styles/tokens.css';
-
-/** Placeholder edge length in px, wired inline so it scales to the `size` prop. */
-export const avatarSizeVar = createVar();
+import { space } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
@@ -54,6 +51,11 @@ export const defaultRow = recipe({
  */
 export const loadingRow = recipe({
 	base: {
+		// a content-sized flex column (not `flex: 1`): the placeholder renders bare under the screen's flex
+		// column, so a growing row would stretch to fill the viewport instead of sitting on the card rhythm.
+		display: 'flex',
+		flexDirection: 'column',
+		gap: space.md,
 		paddingBlock: space.md,
 		paddingInline: space.lg,
 	},
@@ -66,34 +68,6 @@ export const loadingRow = recipe({
 			},
 		},
 	},
-});
-
-export const avatarPlaceholder = style({
-	background: colors.contrast_50,
-	borderRadius: borderRadius.full,
-	height: avatarSizeVar,
-	width: avatarSizeVar,
-});
-
-export const nameAndHandlePlaceholder = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	gap: space.xs,
-});
-
-export const namePlaceholderBar = style({
-	background: colors.contrast_50,
-	borderRadius: borderRadius.xs,
-	height: 14,
-	width: '60%',
-});
-
-export const handlePlaceholderBar = style({
-	background: colors.contrast_50,
-	borderRadius: borderRadius.xs,
-	height: 10,
-	width: '40%',
 });
 
 export const header = style({

@@ -1,10 +1,10 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { useNavigation } from '@react-navigation/native';
 
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
 
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileFollowersQuery } from '#/state/queries/profile-followers';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
@@ -12,27 +12,21 @@ import { useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import { PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon } from '#/components/icons/PeopleRemove2';
+import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-import { List } from '../util/List';
-import { ProfileCardWithFollowBtn } from './ProfileCard';
-
-function renderItem({ item, index }: { item: ActorDefs.ProfileView; index: number }) {
-	return <ProfileCardWithFollowBtn key={item.did} profile={item} noBorder={index === 0} />;
-}
-
-function keyExtractor(item: { did: string }) {
+function keyExtractor(item: ActorDefs.ProfileView) {
 	return item.did;
 }
 
-export function ProfileFollowers({ name }: { name: string }) {
+export function ProfileFollowers({ name, initialCount }: { name: string; initialCount?: number }) {
 	const navigation = useNavigation();
-	const initialNumToRender = useInitialNumToRender();
 	const { currentAccount } = useSession();
+	const moderationOpts = useModerationOpts();
 
-	const [isPTRing, setIsPTRing] = useState(false);
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);
 	const {
 		data,
@@ -54,29 +48,23 @@ export function ProfileFollowers({ name }: { name: string }) {
 		return [];
 	}, [data]);
 
-	const onRefresh = useCallback(async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh followers', { message: err });
-		}
-		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
-
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || !!error) return;
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more followers', { message: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
+	};
+
+	if (!moderationOpts || ((isDidLoading || isFollowersLoading) && followers.length < 1 && !isError)) {
+		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+	}
 
 	if (followers.length < 1) {
 		return (
 			<ListMaybePlaceholder
-				isLoading={isDidLoading || isFollowersLoading}
+				isLoading={false}
 				isError={isError}
 				emptyType="results"
 				emptyMessage={
@@ -103,12 +91,9 @@ export function ProfileFollowers({ name }: { name: string }) {
 	return (
 		<List
 			data={followers}
-			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			refreshing={isPTRing}
-			onRefresh={() => void onRefresh()}
 			onEndReached={() => void onEndReached()}
-			onEndReachedThreshold={4}
+			onEndReachedThreshold={2}
 			ListFooterComponent={
 				<ListFooter
 					isFetchingNextPage={isFetchingNextPage}
@@ -116,11 +101,9 @@ export function ProfileFollowers({ name }: { name: string }) {
 					onRetry={fetchNextPage}
 				/>
 			}
-			// @ts-ignore our .web version only -prf
-			desktopFixedHeight
-			initialNumToRender={initialNumToRender}
-			windowSize={11}
-			sideBorders={false}
+			renderItem={({ index, item }) => (
+				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
+			)}
 		/>
 	);
 }

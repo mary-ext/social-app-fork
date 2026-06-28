@@ -19,6 +19,8 @@ export const ProfileFollowsScreen = ({ route }: Props) => {
 		did: resolvedDid,
 	});
 
+	const followsCount = profile?.followsCount;
+
 	useSetTitle(profile ? m['screens.profile.follow.following.title']({ handle: profile.handle }) : undefined);
 
 	return (
@@ -32,14 +34,14 @@ export const ProfileFollowsScreen = ({ route }: Props) => {
 								{sanitizeDisplayName(profile.displayName || profile.handle)}
 							</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
-								{m['screens.profile.follow.following.count']({ count: profile.followsCount ?? 0 })}
+								{m['screens.profile.follow.following.count']({ count: followsCount ?? 0 })}
 							</Layout.Header.SubtitleText>
 						</>
 					)}
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<ProfileFollowsComponent name={name} />
+			<ProfileFollowsComponent name={name} initialCount={followsCount} />
 		</Layout.Screen>
 	);
 };

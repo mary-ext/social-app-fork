@@ -6,7 +6,6 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { getModerationCauseKey } from '#/lib/moderation';
@@ -243,18 +242,16 @@ export function Handle({ profile }: { profile: AnyProfileView }) {
 
 /** Skeleton circle standing in for an avatar while a profile loads. */
 export function AvatarPlaceholder({ size = 40 }: { size?: number }) {
-	return (
-		<div className={css.avatarPlaceholder} style={assignInlineVars({ [css.avatarSizeVar]: `${size}px` })} />
-	);
+	return <Skeleton.Circle size={size} />;
 }
 
-/** Skeleton name + handle bars standing in for the name column while a profile loads. */
+/** Skeleton bars standing in for the name column while a profile loads */
 export function NameAndHandlePlaceholder() {
 	return (
-		<div className={css.nameAndHandlePlaceholder}>
-			<div className={css.namePlaceholderBar} />
-			<div className={css.handlePlaceholderBar} />
-		</div>
+		<Skeleton.Col>
+			<Skeleton.Text size="md" width="20%" />
+			<Skeleton.Text size="md_sub" width="25%" />
+		</Skeleton.Col>
 	);
 }
 
@@ -291,24 +288,19 @@ export function Description({
 	);
 }
 
-/** Skeleton bio bars standing in for the description while a profile loads. */
-export function DescriptionPlaceholder({ numberOfLines = 3 }: { numberOfLines?: number }) {
-	return <Skeleton.Lines blend={false} count={numberOfLines} lastWidth={60} />;
-}
-
 // weighted bio-line counts: most profiles carry a short bio, clustering around 1–2 lines with a tail toward
 // 3 and a few empty. index = line count (0–3).
 const DESCRIPTION_LINE_WEIGHTS = [3, 8, 6, 3];
 
 function LoadingRow({ descriptionLines, topBorder }: { descriptionLines: number; topBorder: boolean }) {
 	return (
-		<Skeleton.Col className={css.loadingRow({ topBorder })} gap="md">
-			<Skeleton.Row align="center" gap="sm">
+		<div className={css.loadingRow({ topBorder })}>
+			<Skeleton.Row align="center" gap="md">
 				<AvatarPlaceholder />
 				<NameAndHandlePlaceholder />
 			</Skeleton.Row>
 			{descriptionLines > 0 && <Skeleton.Lines count={descriptionLines} lastWidth={60} size="md" />}
-		</Skeleton.Col>
+		</div>
 	);
 }
 

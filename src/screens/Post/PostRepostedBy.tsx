@@ -16,12 +16,9 @@ export const PostRepostedByScreen = ({ route }: Props) => {
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
-	useSetTitle(post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : undefined);
+	const quoteCount = post?.repostCount;
 
-	let quoteCount;
-	if (post) {
-		quoteCount = post.repostCount;
-	}
+	useSetTitle(post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : undefined);
 
 	return (
 		<Layout.Screen>
@@ -39,7 +36,7 @@ export const PostRepostedByScreen = ({ route }: Props) => {
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<PostRepostedByComponent uri={uri} />
+			<PostRepostedByComponent uri={uri} initialCount={quoteCount} />
 		</Layout.Screen>
 	);
 };

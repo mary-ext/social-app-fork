@@ -1,11 +1,11 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { useNavigation } from '@react-navigation/native';
 
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
@@ -13,31 +13,25 @@ import { useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import { PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon } from '#/components/icons/PeopleRemove2';
+import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-import { List } from '../util/List';
-import { ProfileCardWithFollowBtn } from './ProfileCard';
-
-function renderItem({ item, index }: { item: ActorDefs.ProfileView; index: number }) {
-	return <ProfileCardWithFollowBtn key={item.did} profile={item} noBorder={index === 0} />;
-}
-
-function keyExtractor(item: { did: string }) {
+function keyExtractor(item: ActorDefs.ProfileView) {
 	return item.did;
 }
 
-export function ProfileFollows({ name }: { name: string }) {
-	const initialNumToRender = useInitialNumToRender();
+export function ProfileFollows({ name, initialCount }: { name: string; initialCount?: number }) {
 	const { currentAccount } = useSession();
 	const navigation = useNavigation<NavigationProp>();
+	const moderationOpts = useModerationOpts();
 
 	const onPressFindAccounts = useCallback(() => {
 		navigation.navigate('Search', {});
 	}, [navigation]);
 
-	const [isPTRing, setIsPTRing] = useState(false);
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);
 	const {
 		data,
@@ -59,29 +53,23 @@ export function ProfileFollows({ name }: { name: string }) {
 		return [];
 	}, [data]);
 
-	const onRefresh = useCallback(async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh follows', { error: err });
-		}
-		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
-
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || !!error) return;
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more follows', { error: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
+	};
+
+	if (!moderationOpts || ((isDidLoading || isFollowsLoading) && follows.length < 1 && !isError)) {
+		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+	}
 
 	if (follows.length < 1) {
 		return (
 			<ListMaybePlaceholder
-				isLoading={isDidLoading || isFollowsLoading}
+				isLoading={false}
 				isError={isError}
 				emptyType="results"
 				emptyMessage={
@@ -108,12 +96,9 @@ export function ProfileFollows({ name }: { name: string }) {
 	return (
 		<List
 			data={follows}
-			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			refreshing={isPTRing}
-			onRefresh={() => void onRefresh()}
 			onEndReached={() => void onEndReached()}
-			onEndReachedThreshold={4}
+			onEndReachedThreshold={2}
 			ListFooterComponent={
 				<ListFooter
 					isFetchingNextPage={isFetchingNextPage}
@@ -121,11 +106,9 @@ export function ProfileFollows({ name }: { name: string }) {
 					onRetry={fetchNextPage}
 				/>
 			}
-			// @ts-ignore our .web version only -prf
-			desktopFixedHeight
-			initialNumToRender={initialNumToRender}
-			windowSize={11}
-			sideBorders={false}
+			renderItem={({ index, item }) => (
+				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
+			)}
 		/>
 	);
 }
