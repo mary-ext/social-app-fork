@@ -19,7 +19,8 @@ export const link = style({
  */
 export const defaultRow = recipe({
 	base: {
-		padding: space.lg,
+		paddingBlock: space.md,
+		paddingInline: space.lg,
 		selectors: {
 			'&:active': { backgroundColor: colors.contrast_25 },
 			'&:hover': { backgroundColor: colors.contrast_25 },
@@ -69,7 +70,8 @@ export const italic = style({
  */
 export const loadingRow = recipe({
 	base: {
-		padding: space.lg,
+		paddingBlock: space.md,
+		paddingInline: space.lg,
 	},
 	variants: {
 		topBorder: {

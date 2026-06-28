@@ -705,21 +705,7 @@ export function Explore({
 					);
 				}
 				case 'profilePlaceholder': {
-					return (
-						<>
-							{Array.from({ length: 3 }).map((__, i) => (
-								<div className={css.profilePlaceholder} key={i}>
-									<ProfileCard.Outer>
-										<ProfileCard.Header>
-											<ProfileCard.AvatarPlaceholder />
-											<ProfileCard.NameAndHandlePlaceholder />
-										</ProfileCard.Header>
-										<ProfileCard.DescriptionPlaceholder numberOfLines={2} />
-									</ProfileCard.Outer>
-								</div>
-							))}
-						</>
-					);
+					return <ProfileCard.LoadingPlaceholder count={3} topBorder />;
 				}
 				case 'feedPlaceholder': {
 					// topBorder so the first row carries the same divider its real feed cards (and the other

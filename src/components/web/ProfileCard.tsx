@@ -10,6 +10,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { getModerationCauseKey } from '#/lib/moderation';
+import { weightedRandomIndex } from '#/lib/numbers';
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
@@ -25,7 +26,7 @@ import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/C
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText, type RichTextProps } from '#/components/RichText';
-import { Text, type TextProps } from '#/components/Text';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { PreviewableUserAvatar, UserAvatar } from '#/components/UserAvatar';
 import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -35,6 +36,51 @@ import * as Skeleton from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';
+
+/**
+ * The default profile-card presentation: a padded, full-width row laying out the avatar, name/handle, and a
+ * trailing follow button, then moderation labels and the bio. Highlights on hover/press, with a hairline top
+ * separator on by default. Compose the primitives directly for non-default layouts (a custom trailing action,
+ * a dialog row).
+ *
+ * @param descriptionLines max bio lines before truncation.
+ * @param followButtonProps overrides forwarded to the trailing {@link FollowButton} (e.g. `withIcon: false`).
+ * @param showLabels whether to render the moderation/follows-you {@link Labels} row.
+ * @param topBorder whether the row carries a top divider; turn it off for the first row beneath a header.
+ */
+export function Default({
+	className,
+	descriptionLines = 3,
+	followButtonProps,
+	moderationOpts,
+	onPress,
+	profile,
+	showLabels = true,
+	topBorder,
+}: {
+	className?: string;
+	descriptionLines?: number;
+	followButtonProps?: Partial<Omit<FollowButtonProps, 'moderationOpts' | 'profile'>>;
+	moderationOpts: ModerationOptions;
+	onPress?: () => void;
+	profile: AnyProfileView;
+	showLabels?: boolean;
+	topBorder?: boolean;
+}) {
+	return (
+		<Link className={clsx(css.defaultRow({ topBorder }), className)} onPress={onPress} profile={profile}>
+			<Outer>
+				<Header>
+					<Avatar moderationOpts={moderationOpts} profile={profile} />
+					<NameAndHandle moderationOpts={moderationOpts} profile={profile} />
+					<FollowButton moderationOpts={moderationOpts} profile={profile} {...followButtonProps} />
+				</Header>
+				{showLabels && <Labels moderationOpts={moderationOpts} profile={profile} />}
+				<Description numberOfLines={descriptionLines} profile={profile} />
+			</Outer>
+		</Link>
+	);
+}
 
 /** Vertical card container: stacks the header, labels, and description. */
 export function Outer({ children }: { children: ReactNode }) {
@@ -127,8 +173,8 @@ export function NameAndHandle({
 	}
 	return (
 		<div className={css.nameAndHandle}>
-			<Name moderationOpts={moderationOpts} profile={profile} />
 			<Handle profile={profile} />
+			<Name moderationOpts={moderationOpts} profile={profile} />
 		</div>
 	);
 }
@@ -161,17 +207,12 @@ function InlineNameAndHandle({
 	);
 }
 
-/** Display name with trailing verification/badge cluster; `size`/`leading` tune the name text. */
 export function Name({
-	leading,
 	moderationOpts,
 	profile,
-	size = 'md',
 }: {
-	leading?: TextProps['leading'];
 	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
-	size?: TextProps['size'];
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
@@ -179,24 +220,24 @@ export function Name({
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 	return (
-		<div className={css.nameRow}>
-			<Text className={css.nameText} leading={leading} numberOfLines={1} size={size} weight="semiBold">
-				{name}
+		<Text numberOfLines={1} color="textContrastMedium" size="md_sub">
+			{name}
+		</Text>
+	);
+}
+
+export function Handle({ profile }: { profile: AnyProfileView }) {
+	const handle = sanitizeHandle(profile.handle);
+	return (
+		<div className={css.handleRow}>
+			<Text className={css.handleText} color="textContrastHigh" weight="semiBold" numberOfLines={1}>
+				{handle}
 			</Text>
+
 			<div className={css.badges}>
 				<ProfileBadges profile={profile} size="md" />
 			</div>
 		</div>
-	);
-}
-
-/** The `@handle` line in muted contrast. */
-export function Handle({ profile }: { profile: AnyProfileView }) {
-	const handle = sanitizeHandle(profile.handle, '@');
-	return (
-		<Text color="textContrastMedium" numberOfLines={1}>
-			{handle}
-		</Text>
 	);
 }
 
@@ -239,25 +280,70 @@ export function Description({
 		return null;
 	}
 	return (
-		<div className={css.description}>
-			<RichText
-				align={align}
-				color={color}
-				disableLinks
-				numberOfLines={numberOfLines}
-				size={size}
-				value={profile.description}
-			/>
-		</div>
+		<RichText
+			align={align}
+			color={color}
+			disableLinks
+			numberOfLines={numberOfLines}
+			size={size}
+			value={profile.description}
+		/>
 	);
 }
 
 /** Skeleton bio bars standing in for the description while a profile loads. */
 export function DescriptionPlaceholder({ numberOfLines = 3 }: { numberOfLines?: number }) {
+	return <Skeleton.Lines blend={false} count={numberOfLines} lastWidth={60} />;
+}
+
+// weighted bio-line counts: most profiles carry a short bio, clustering around 1–2 lines with a tail toward
+// 3 and a few empty. index = line count (0–3).
+const DESCRIPTION_LINE_WEIGHTS = [3, 8, 6, 3];
+
+function LoadingRow({ descriptionLines, topBorder }: { descriptionLines: number; topBorder: boolean }) {
 	return (
-		<div className={css.descriptionPlaceholder}>
-			<Skeleton.Lines blend={false} count={numberOfLines} lastWidth={60} />
-		</div>
+		<Skeleton.Col className={css.loadingRow({ topBorder })} gap="md">
+			<Skeleton.Row align="center" gap="sm">
+				<AvatarPlaceholder />
+				<NameAndHandlePlaceholder />
+			</Skeleton.Row>
+			{descriptionLines > 0 && <Skeleton.Lines count={descriptionLines} lastWidth={60} size="md" />}
+		</Skeleton.Col>
+	);
+}
+
+// fallback row count when the caller doesn't know how many profiles to expect, and a cap so a large count
+// doesn't render dozens of placeholder rows.
+const DEFAULT_LOADING_ROW_COUNT = 3;
+const MAX_LOADING_ROW_COUNT = 10;
+
+/**
+ * A stack of profile-card placeholders for the loading state, mirroring {@link Default}'s layout (avatar,
+ * name/handle, bio) so it sits on the same rhythm as the real cards.
+ *
+ * @param count number of placeholder rows; defaults to a small value and is capped so large counts don't
+ *   render excessive rows.
+ * @param topBorder whether the first row carries a top divider (later rows always do); set it when the
+ *   placeholder sits directly beneath a borderless header. Defaults to `false`.
+ */
+export function LoadingPlaceholder({
+	count,
+	topBorder = false,
+}: {
+	count?: number;
+	topBorder?: boolean;
+}): ReactNode {
+	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
+	const rows = Array.from({ length: rowCount }, () => ({
+		descriptionLines: weightedRandomIndex(DESCRIPTION_LINE_WEIGHTS),
+	}));
+
+	return (
+		<>
+			{rows.map((row, i) => (
+				<LoadingRow descriptionLines={row.descriptionLines} key={i} topBorder={i === 0 ? topBorder : true} />
+			))}
+		</>
 	);
 }
 

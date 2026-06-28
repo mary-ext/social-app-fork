@@ -299,21 +299,7 @@ function SearchProfileCard({ profile, topBorder = true }: { profile: AnyProfileV
 	if (!moderationOpts) {
 		return null;
 	}
-	return (
-		<div className={css.profileRow({ topBorder })}>
-			<ProfileCard.Link profile={profile}>
-				<ProfileCard.Outer>
-					<ProfileCard.Header>
-						<ProfileCard.Avatar moderationOpts={moderationOpts} profile={profile} />
-						<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
-						<ProfileCard.FollowButton moderationOpts={moderationOpts} profile={profile} />
-					</ProfileCard.Header>
-					<ProfileCard.Labels moderationOpts={moderationOpts} profile={profile} />
-					<ProfileCard.Description profile={profile} />
-				</ProfileCard.Outer>
-			</ProfileCard.Link>
-		</div>
-	);
+	return <ProfileCard.Default moderationOpts={moderationOpts} profile={profile} topBorder={topBorder} />;
 }
 
 function FeedsResults({ active, query }: { active: boolean; query: string }) {

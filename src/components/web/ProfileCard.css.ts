@@ -1,6 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 /** Placeholder edge length in px, wired inline so it scales to the `size` prop. */
@@ -10,7 +11,7 @@ export const outer = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	gap: space.xs,
+	gap: space.md,
 	width: '100%',
 });
 
@@ -20,6 +21,51 @@ export const link = style({
 	cursor: 'pointer',
 	display: 'flex',
 	textDecoration: 'none',
+});
+
+/**
+ * The `Default` presentation: a padded, full-width row that highlights on hover/press, with a hairline top
+ * separator on by default — opt out (`topBorder: false`) for the first row beneath a header.
+ */
+export const defaultRow = recipe({
+	base: {
+		paddingBlock: space.md,
+		paddingInline: space.lg,
+		selectors: {
+			'&:active': { backgroundColor: colors.contrast_25 },
+			'&:hover': { backgroundColor: colors.contrast_25 },
+		},
+	},
+	defaultVariants: { topBorder: true },
+	variants: {
+		topBorder: {
+			true: {
+				borderTopColor: colors.borderContrastLow,
+				borderTopStyle: 'solid',
+				borderTopWidth: 1,
+			},
+		},
+	},
+});
+
+/**
+ * A non-interactive loading row: same padding and top separator as {@link defaultRow}, but without the
+ * hover/active highlight (a placeholder isn't a press target).
+ */
+export const loadingRow = recipe({
+	base: {
+		paddingBlock: space.md,
+		paddingInline: space.lg,
+	},
+	variants: {
+		topBorder: {
+			true: {
+				borderTopColor: colors.borderContrastLow,
+				borderTopStyle: 'solid',
+				borderTopWidth: 1,
+			},
+		},
+	},
 });
 
 export const avatarPlaceholder = style({
@@ -54,7 +100,7 @@ export const header = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: space.sm,
+	gap: space.md,
 });
 
 export const nameAndHandle = style({
@@ -64,20 +110,24 @@ export const nameAndHandle = style({
 	minWidth: 0,
 });
 
-export const nameRow = style({
+export const handleRow = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	maxWidth: '100%',
 });
 
-export const nameText = style({
+export const handleText = style({
 	alignSelf: 'flex-start',
 	flexShrink: 1,
 });
 
 export const badges = style({
-	paddingLeft: space.xs,
+	paddingLeft: 6,
+
+	':empty': {
+		display: 'none',
+	},
 });
 
 export const inlineRow = style({
@@ -99,14 +149,6 @@ export const inlineBadges = style({
 
 export const inlineHandle = style({
 	flexShrink: 10,
-});
-
-export const description = style({
-	paddingTop: space.xs,
-});
-
-export const descriptionPlaceholder = style({
-	paddingTop: space._2xs,
 });
 
 export const labels = style({

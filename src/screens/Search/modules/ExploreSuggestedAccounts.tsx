@@ -10,8 +10,6 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-import * as css from './ExploreSuggestedAccounts.css';
-
 export function SuggestedAccountsTabBar({
 	defaultTabLabel,
 	hideDefaultTab,
@@ -49,7 +47,7 @@ export function SuggestedAccountsTabBar({
 	);
 }
 
-/** Profile card for suggested accounts. Note: border is on the top edge. */
+/** Profile card for suggested accounts. */
 export function SuggestedProfileCard({
 	moderationOpts,
 	profile,
@@ -58,15 +56,12 @@ export function SuggestedProfileCard({
 	profile: AnyProfileView;
 }) {
 	return (
-		<ProfileCard.Link className={css.card} profile={profile}>
-			<ProfileCard.Outer>
-				<ProfileCard.Header>
-					<ProfileCard.Avatar moderationOpts={moderationOpts} profile={profile} />
-					<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
-					<ProfileCard.FollowButton moderationOpts={moderationOpts} profile={profile} withIcon={false} />
-				</ProfileCard.Header>
-				<ProfileCard.Description numberOfLines={2} profile={profile} />
-			</ProfileCard.Outer>
-		</ProfileCard.Link>
+		<ProfileCard.Default
+			descriptionLines={2}
+			followButtonProps={{ withIcon: false }}
+			moderationOpts={moderationOpts}
+			profile={profile}
+			showLabels={false}
+		/>
 	);
 }

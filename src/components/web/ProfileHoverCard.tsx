@@ -193,7 +193,7 @@ function Inner({
 			</div>
 
 			<Link className={css.nameLink} label={m['common.profile.action.view']()} to={profileURL}>
-				<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} size="lg" />
+				<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
 				<ProfileHeaderHandle disableTaps profile={profileShadow} />
 			</Link>
 

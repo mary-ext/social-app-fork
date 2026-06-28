@@ -53,12 +53,6 @@ export const loadMore = style({
 	},
 });
 
-export const profilePlaceholder = style({
-	borderTop: `1px solid ${colors.borderContrastLow}`,
-	paddingBlock: space.lg,
-	paddingInline: space.lg,
-});
-
 export const errorOuter = style({
 	borderTop: `1px solid ${colors.borderContrastLow}`,
 	paddingInline: space.md,
