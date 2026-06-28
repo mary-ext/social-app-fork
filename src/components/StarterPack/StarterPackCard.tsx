@@ -91,7 +91,7 @@ function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {
 			<Text size="md_sub" color="textContrastMedium" numberOfLines={1}>
 				{creator?.did === currentAccount?.did
 					? m['common.starterPack.byYou']()
-					: m['components.starterPack.card.byline']({ handle: sanitizeHandle(creator.handle, '@') })}
+					: m['components.starterPack.card.byline']({ handle: sanitizeHandle(creator.handle) })}
 			</Text>
 		</div>
 	);

@@ -112,7 +112,7 @@ export function TitleAndByline({ creator, title }: { creator?: AnyProfileView; t
 			</Text>
 			{creator && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{m['common.feeds.feedBy']({ handle: sanitizeHandle(creator.handle, '@') })}
+					{m['common.feeds.feedBy']({ handle: sanitizeHandle(creator.handle) })}
 				</Text>
 			)}
 		</div>

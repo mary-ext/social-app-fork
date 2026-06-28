@@ -284,7 +284,7 @@ function LabelerRow({
 					</Text>
 				) : (
 					<Text color="textContrastMedium" size="md_sub">
-						{m['screens.moderation.labeler.byCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
+						{m['screens.moderation.labeler.byCreator']({ handle: sanitizeHandle(creator.handle) })}
 					</Text>
 				)}
 				{isNonConfigurableModerationAuthority(creator.did) && (

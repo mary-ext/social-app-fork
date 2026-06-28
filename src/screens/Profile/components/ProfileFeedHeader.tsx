@@ -336,7 +336,7 @@ function DialogInner({
 					<Text size="sm" color="textContrastMedium" numberOfLines={1}>
 						<Trans
 							message={m['screens.profile.feed.byCreator']}
-							inputs={{ handle: sanitizeHandle(info.creatorHandle, '@') }}
+							inputs={{ handle: sanitizeHandle(info.creatorHandle) }}
 							markup={{
 								t0: ({ children }) => (
 									<InlineLinkText

@@ -122,7 +122,7 @@ export function ListHiddenScreen({
 						) : (
 							<Trans
 								message={m['screens.list.violation.byOther']}
-								inputs={{ handle: sanitizeHandle(list.creator.handle, '@') }}
+								inputs={{ handle: sanitizeHandle(list.creator.handle) }}
 								markup={{
 									t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text>,
 								}}

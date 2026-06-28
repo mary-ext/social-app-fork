@@ -127,7 +127,7 @@ export function ProfileSubpageHeader({
 										markup={{
 											t0: () => (
 												<TextLink
-													text={sanitizeHandle(creator.handle || '', '@')}
+													text={sanitizeHandle(creator.handle || '')}
 													href={makeProfileLink(creator)}
 													style={pal.textLight}
 												/>
@@ -144,7 +144,7 @@ export function ProfileSubpageHeader({
 										markup={{
 											t0: () => (
 												<TextLink
-													text={sanitizeHandle(creator.handle || '', '@')}
+													text={sanitizeHandle(creator.handle || '')}
 													href={makeProfileLink(creator)}
 													style={pal.textLight}
 												/>
@@ -161,7 +161,7 @@ export function ProfileSubpageHeader({
 										markup={{
 											t0: () => (
 												<TextLink
-													text={sanitizeHandle(creator.handle || '', '@')}
+													text={sanitizeHandle(creator.handle || '')}
 													href={makeProfileLink(creator)}
 													style={pal.textLight}
 												/>

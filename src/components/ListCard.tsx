@@ -154,8 +154,8 @@ export function TitleAndByline({
 			{creator && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 					{purpose === MODLIST
-						? m['common.list.moderationBy']({ handle: sanitizeHandle(creator.handle, '@') })
-						: m['common.list.byCreator']({ handle: sanitizeHandle(creator.handle, '@') })}
+						? m['common.list.moderationBy']({ handle: sanitizeHandle(creator.handle) })
+						: m['common.list.byCreator']({ handle: sanitizeHandle(creator.handle) })}
 				</Text>
 			)}
 		</div>
