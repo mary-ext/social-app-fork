@@ -91,6 +91,15 @@ export default defineConfig(({ envMode }) => {
 		output: {
 			cleanDistPath: true,
 			distPath: { root: 'web-build' },
+			minify: {
+				jsOptions: {
+					minimizerOptions: {
+						compress: {
+							passes: 3,
+						},
+					},
+				},
+			},
 		},
 		performance: {
 			// strip console.* from production bundles (replaces babel-plugin-transform-remove-console)
