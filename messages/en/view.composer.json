@@ -9,13 +9,8 @@
 	"view.composer.altText.error.overLimit": "Alt text is over the character limit.",
 	"view.composer.altText.error.tooLong": [
 		{
-			"declarations": [
-				"input MAX_ALT_TEXT",
-				"local cp = MAX_ALT_TEXT: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_ALT_TEXT", "local cp = MAX_ALT_TEXT: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Alt text must be less than {MAX_ALT_TEXT} characters."
 			}
@@ -58,13 +53,8 @@
 	"view.composer.drafts.error.save": "Failed to save draft",
 	"view.composer.drafts.error.tooLong": [
 		{
-			"declarations": [
-				"input MAX_DRAFT_GRAPHEME_LENGTH",
-				"local cp = MAX_DRAFT_GRAPHEME_LENGTH: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_DRAFT_GRAPHEME_LENGTH", "local cp = MAX_DRAFT_GRAPHEME_LENGTH: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "One or more posts are too long to save as a draft. The maximum number of characters is {MAX_DRAFT_GRAPHEME_LENGTH} character.",
 				"cp=other": "One or more posts are too long to save as a draft. The maximum number of characters is {MAX_DRAFT_GRAPHEME_LENGTH} characters."
@@ -92,9 +82,7 @@
 				"input MAX_GALLERY_IMAGES",
 				"local cp = count: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "Only {accepted} of {total} image added; limit is {MAX_GALLERY_IMAGES}",
 				"cp=other": "Only {accepted} of {total} images added; limit is {MAX_GALLERY_IMAGES}"
@@ -103,13 +91,8 @@
 	],
 	"view.composer.gallery.error.maxAdd": [
 		{
-			"declarations": [
-				"input MAX_GALLERY_IMAGES",
-				"local cp = MAX_GALLERY_IMAGES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "You can only add up to {MAX_GALLERY_IMAGES} images per post"
 			}
@@ -117,13 +100,8 @@
 	],
 	"view.composer.gallery.error.maxSelect": [
 		{
-			"declarations": [
-				"input MAX_GALLERY_IMAGES",
-				"local cp = MAX_GALLERY_IMAGES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "You can select up to {MAX_GALLERY_IMAGES} images in total."
 			}
@@ -131,13 +109,8 @@
 	],
 	"view.composer.gallery.error.notAdded": [
 		{
-			"declarations": [
-				"input failed",
-				"local cp = failed: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input failed", "local cp = failed: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "An image couldn't be added to your post.",
 				"cp=other": "{failed} images couldn't be added to your post."
@@ -170,13 +143,8 @@
 	"view.composer.media.a11y.add": "Add media to post",
 	"view.composer.media.a11y.addHint": [
 		{
-			"declarations": [
-				"input MAX_GALLERY_IMAGES",
-				"local cp = MAX_GALLERY_IMAGES: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input MAX_GALLERY_IMAGES", "local cp = MAX_GALLERY_IMAGES: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Opens device gallery to select up to {MAX_GALLERY_IMAGES} images, or a single video or GIF."
 			}
@@ -203,13 +171,8 @@
 	"view.composer.reply.expand": "Expand or collapse the full post you are replying to",
 	"view.composer.text.maxLengthHint": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Compose posts up to {count} characters in length"
 			}
@@ -220,13 +183,8 @@
 	"view.composer.thread.action.addPostToThread": "Add another post to thread",
 	"view.composer.thread.morePosts": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "1 more post",
 				"cp=other": "{count} more posts"

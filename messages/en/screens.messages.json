@@ -12,9 +12,7 @@
 				"input member2",
 				"local cp = memberCount: plural"
 			],
-			"selectors": [
-				"cp"
-			],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{member1}, {member2} and {memberCount} other added to chat",
 				"cp=other": "{member1}, {member2} and {memberCount} others added to chat"
@@ -141,13 +139,8 @@
 	"screens.messages.members.add.error": "Failed to add members",
 	"screens.messages.members.add.limit": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "Group chats can only have a maximum of {count} people."
 			}
@@ -177,15 +170,8 @@
 	"screens.messages.mute.unmutedToast": "Group chat unmuted",
 	"screens.messages.newChat.many": [
 		{
-			"declarations": [
-				"input memberCount",
-				"input first",
-				"input second",
-				"local cp = memberCount: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input memberCount", "input first", "input second", "local cp = memberCount: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "New chat with {first}, {second}, and {memberCount} more.",
 				"cp=other": "New chat with {first}, {second}, and {memberCount} more."
@@ -206,13 +192,8 @@
 	"screens.messages.requests.closeBanner": "Close the incoming requests banner",
 	"screens.messages.requests.count": [
 		{
-			"declarations": [
-				"input requestCount",
-				"local cp = requestCount: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input requestCount", "local cp = requestCount: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{requestCount} request",
 				"cp=other": "{requestCount} requests"
@@ -233,13 +214,8 @@
 	"screens.messages.requests.markAllRead.toast": "Marked all as read",
 	"screens.messages.requests.newCount": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} new join request",
 				"cp=other": "{count} new join requests"
@@ -254,13 +230,8 @@
 	"screens.messages.requests.rescind.confirm": "Are you sure you want to rescind your request to join {name}?",
 	"screens.messages.requests.shortCount": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=one": "{count} request",
 				"cp=other": "{count} requests"
@@ -272,14 +243,8 @@
 	"screens.messages.requests.title": "Chat requests",
 	"screens.messages.requests.toJoinCount": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"count",
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["count", "cp"],
 			"match": {
 				"count=0, cp=*": "No requests to join",
 				"count=*, cp=one": "{count} request to join",
@@ -289,13 +254,8 @@
 	],
 	"screens.messages.requests.toJoinOverflow": [
 		{
-			"declarations": [
-				"input count",
-				"local cp = count: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input count", "local cp = count: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "{count}+ requests to join"
 			}

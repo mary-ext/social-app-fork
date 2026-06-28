@@ -3,13 +3,8 @@
 	"components.starterPack.card.byline": "Starter pack by {handle}",
 	"components.starterPack.card.joinedCount": [
 		{
-			"declarations": [
-				"input joinedAllTimeCount",
-				"local cp = joinedAllTimeCount: plural"
-			],
-			"selectors": [
-				"cp"
-			],
+			"declarations": ["input joinedAllTimeCount", "local cp = joinedAllTimeCount: plural"],
+			"selectors": ["cp"],
 			"match": {
 				"cp=other": "{joinedAllTimeCount} users have joined!"
 			}
