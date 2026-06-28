@@ -87,6 +87,6 @@
 	"components.postControls.thread.muteError": "Failed to toggle thread mute, please try again",
 	"components.postControls.thread.unmute.action": "Unmute thread",
 	"components.postControls.thread.unmute.toast": "You will no longer receive notifications for this thread",
-	"components.postControls.visibility.loggedInOnly": "Note: This post is only visible to logged-in users.",
+	"components.postControls.visibility.loggedInOnly": "Note: this post is only visible to logged-in users.",
 	"components.postControls.visibility.signIn": "Sign in to view post"
 }

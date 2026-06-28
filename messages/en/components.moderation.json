@@ -28,7 +28,7 @@
 	"components.moderation.chat.mutualGroups": "Mutual group chats",
 	"components.moderation.chat.theyOwn": "They own this chat",
 	"components.moderation.chat.youOwn": "You own this chat",
-	"components.moderation.label.accountSuffix": "{name} (Account)",
+	"components.moderation.label.accountSuffix": "{name} (account)",
 	"components.moderation.label.appliedByYou": "This label was applied by you.",
 	"components.moderation.label.appliedToAccount": "The following labels were applied to your account.",
 	"components.moderation.label.appliedToContent": "The following labels were applied to your content.",
@@ -38,7 +38,7 @@
 	"components.moderation.label.learnMore.aboutContent": "Learn more about the moderation applied to this content",
 	"components.moderation.label.learnMore.aboutWarning": "Learn more about this warning",
 	"components.moderation.label.learnMore.dot": "Learn more.",
-	"components.moderation.label.learnMore.label": "Learn More",
+	"components.moderation.label.learnMore.label": "Learn more",
 	"components.moderation.label.placedOnAccount": [
 		{
 			"declarations": ["input count", "local cp = count: plural"],
@@ -80,7 +80,7 @@
 	"components.moderation.reason.bannedUserReturning": "Banned user returning",
 	"components.moderation.reason.breakingSiteRules": "Breaking site rules",
 	"components.moderation.reason.childSafety": "Child safety",
-	"components.moderation.reason.csam": "Child Sexual Abuse Material (CSAM)",
+	"components.moderation.reason.csam": "Child sexual abuse material (CSAM)",
 	"components.moderation.reason.dangerousChallenges": "Dangerous challenges or activities",
 	"components.moderation.reason.dangerousSubstances": "Dangerous substances or drug abuse",
 	"components.moderation.reason.deepfakeAdult": "Deepfake adult content",

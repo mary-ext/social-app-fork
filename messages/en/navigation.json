@@ -11,11 +11,11 @@
 	"navigation.likedBy.title": "Liked by",
 	"navigation.list.title": "List",
 	"navigation.moderation.states.title": "Moderation states",
-	"navigation.mutedWord.title": "Muted Words & Tags",
+	"navigation.mutedWord.title": "Muted words & tags",
 	"navigation.post.title": "Post",
-	"navigation.settings.accessibility.title": "Accessibility Settings",
-	"navigation.settings.contentAndMedia.title": "Content and Media",
-	"navigation.settings.language.title": "Language Settings",
+	"navigation.settings.accessibility.title": "Accessibility settings",
+	"navigation.settings.contentAndMedia.title": "Content and media",
+	"navigation.settings.language.title": "Language settings",
 	"navigation.starterPack.edit.title": "Edit your starter pack",
 	"navigation.topic.title": "Topic"
 }

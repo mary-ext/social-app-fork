@@ -255,7 +255,7 @@
 	"view.notifications.repost.repost.singleName": "{firstAuthorName} reposted your repost",
 	"view.notifications.settings.disabledHint": "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your {#t0}notification settings{/t0}.",
 	"view.notifications.settings.enableHint": "Enable notifications for an account by visiting their profile and pressing the {#t0}bell icon{/t0} {#t1/}.",
-	"view.notifications.settings.restrictHint": "If you want to restrict who can receive notifications for your account's activity, you can change this in {#t0}Settings → Account & privacy{/t0}.",
+	"view.notifications.settings.restrictHint": "If you want to restrict who can receive notifications for your account's activity, you can change this in {#t0}settings → account & privacy{/t0}.",
 	"view.notifications.settings.visit": "Visit your notification settings",
 	"view.notifications.starterPack.multiLink": [
 		{

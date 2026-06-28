@@ -2,7 +2,7 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"state.feeds.error.fetch": "An error occurred while fetching the feed.",
 	"state.feeds.error.update": "Failed to update feeds",
-	"state.list.byCreator": "User List by {handle}",
+	"state.list.byCreator": "User list by {handle}",
 	"state.notifications.error.declarationUpdate": "Failed to update notification declaration",
 	"state.notifications.error.settingsUpdate": "Could not update notification settings",
 	"state.pin.error": "Failed to pin post",

@@ -3,9 +3,9 @@
 	"screens.savedFeeds.about.description": "Feeds are custom algorithms that users build with a little coding expertise. {#t0}See this guide{/t0} for more information.",
 	"screens.savedFeeds.about.guide": "See this guide",
 	"screens.savedFeeds.pinned.empty": "You don't have any pinned feeds.",
-	"screens.savedFeeds.pinned.title": "Pinned Feeds",
+	"screens.savedFeeds.pinned.title": "Pinned feeds",
 	"screens.savedFeeds.reorder.moveDown": "Move feed down",
 	"screens.savedFeeds.reorder.moveUp": "Move feed up",
 	"screens.savedFeeds.saved.empty": "You don't have any saved feeds.",
-	"screens.savedFeeds.saved.title": "Saved Feeds"
+	"screens.savedFeeds.saved.title": "Saved feeds"
 }

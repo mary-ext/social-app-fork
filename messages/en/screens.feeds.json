@@ -2,6 +2,6 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"screens.feeds.action.addFollowing": "Add the default feed of only people you follow",
 	"screens.feeds.action.useRecommended": "Use recommended",
-	"screens.feeds.missingFollowing": "Looks like you're missing a following feed. {#t0}Click here to add one.{/t0}",
+	"screens.feeds.missingFollowing": "Looks like you're missing a Following feed. {#t0}Click here to add one.{/t0}",
 	"screens.feeds.noSaved": "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
 }
