@@ -44,11 +44,17 @@ type StarterPackDialogProps = {
 export function StarterPackDialog({ handle, targetDid }: StarterPackDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" label={m['common.starterPack.action.add']()}>
+			<Dialog.Popup className={css.popup} scroll="body" label={m['common.starterPack.action.add']()}>
 				<DialogInner handle={handle} targetDid={targetDid} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
+}
+
+type Item = { pack: StarterPackWithMembership; type: 'pack' } | { type: 'create' };
+
+function keyExtractor(item: Item): string {
+	return item.type === 'pack' ? item.pack.starterPack.uri : item.type;
 }
 
 function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
@@ -59,6 +65,12 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 		useActorStarterPacksWithMembershipsQuery({ did: targetDid });
 
 	const membershipItems = data?.pages.flatMap((page) => page.starterPacksWithMembership) ?? [];
+
+	// a "create new" row leads the list, sharing the same row chrome as the packs below it.
+	const items: Item[] = membershipItems.map((pack): Item => ({ pack, type: 'pack' }));
+	if (membershipItems.length > 0) {
+		items.unshift({ type: 'create' });
+	}
 
 	const onStartWizard = () => {
 		handle.close();
@@ -85,46 +97,39 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 	return (
 		<>
 			<div className={css.header}>
-				<div className={css.headerRow}>
-					<Text size="lg" weight="semiBold">
-						{m['common.starterPack.action.add']()}
-					</Text>
-					<Button
-						className={css.closeButton}
-						color="secondary"
-						label={m['common.action.close']()}
-						onClick={() => handle.close()}
-						shape="round"
-						size="small"
-						variant="ghost"
-					>
-						<ButtonIcon icon={XIcon} />
-					</Button>
-				</div>
-				{membershipItems.length > 0 && (
-					<div className={css.subHeaderRow}>
-						<Text size="md" weight="semiBold">
-							{m['components.dialogs.starterPack.newTitle']()}
-						</Text>
-						<Button
-							color="secondary_inverted"
-							label={m['components.dialogs.starterPack.createTitle']()}
-							onClick={onStartWizard}
-							size="small"
-						>
-							<ButtonText>{m['common.action.create']()}</ButtonText>
-							<ButtonIcon icon={PlusIcon} />
-						</Button>
-					</div>
-				)}
+				<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
+					{m['common.starterPack.action.add']()}
+				</Text>
+				<Button
+					className={css.closeButton}
+					color="secondary"
+					label={m['common.action.close']()}
+					onClick={() => handle.close()}
+					shape="round"
+					size="small"
+					variant="ghost"
+				>
+					<ButtonIcon icon={XIcon} />
+				</Button>
 			</div>
 			<Dialog.List
-				className={css.list}
-				data={membershipItems}
-				keyExtractor={(item) => item.starterPack.uri}
-				renderItem={(item) => (
-					<StarterPackItem starterPackWithMembership={item} subject={subject} targetDid={targetDid} />
-				)}
+				data={items}
+				keyExtractor={keyExtractor}
+				renderItem={(item, index) => {
+					switch (item.type) {
+						case 'create':
+							return <CreateRow onStartWizard={onStartWizard} topBorder={index !== 0} />;
+						case 'pack':
+							return (
+								<StarterPackItem
+									starterPackWithMembership={item.pack}
+									subject={subject}
+									targetDid={targetDid}
+									topBorder={index !== 0}
+								/>
+							);
+					}
+				}}
 				onEndReached={onEndReached}
 				isFetchingNextPage={isFetchingNextPage}
 				loadingLabel={m['common.status.loading']()}
@@ -142,6 +147,33 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 	);
 }
 
+function CreateButton({ onStartWizard }: { onStartWizard: () => void }) {
+	return (
+		<Button
+			color="secondary_inverted"
+			label={m['components.dialogs.starterPack.createTitle']()}
+			onClick={onStartWizard}
+			size="small"
+		>
+			<ButtonText>{m['common.action.create']()}</ButtonText>
+			<ButtonIcon icon={PlusIcon} />
+		</Button>
+	);
+}
+
+function CreateRow({ onStartWizard, topBorder }: { onStartWizard: () => void; topBorder: boolean }) {
+	return (
+		<div className={css.item({ topBorder })}>
+			<div className={css.itemInfo}>
+				<Text numberOfLines={1} size="md" weight="semiBold">
+					{m['components.dialogs.starterPack.newTitle']()}
+				</Text>
+			</div>
+			<CreateButton onStartWizard={onStartWizard} />
+		</div>
+	);
+}
+
 function Empty({ onStartWizard }: { onStartWizard: () => void }) {
 	return (
 		<div className={css.empty}>
@@ -149,15 +181,7 @@ function Empty({ onStartWizard }: { onStartWizard: () => void }) {
 				<StarterPack width={48} fill={colors.contrast_200} />
 				<Text align="center">{m['components.dialogs.starterPack.empty']()}</Text>
 			</div>
-			<Button
-				color="secondary_inverted"
-				label={m['components.dialogs.starterPack.createTitle']()}
-				onClick={onStartWizard}
-				size="small"
-			>
-				<ButtonText>{m['common.action.create']()}</ButtonText>
-				<ButtonIcon icon={PlusIcon} />
-			</Button>
+			<CreateButton onStartWizard={onStartWizard} />
 		</div>
 	);
 }
@@ -166,10 +190,12 @@ function StarterPackItem({
 	starterPackWithMembership,
 	subject,
 	targetDid,
+	topBorder,
 }: {
 	starterPackWithMembership: StarterPackWithMembership;
 	subject?: AnyProfileView;
 	targetDid: string;
+	topBorder: boolean;
 }) {
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
@@ -232,7 +258,7 @@ function StarterPackItem({
 	const listItemCount = starterPack.list?.listItemCount ?? 0;
 
 	return (
-		<div className={css.item}>
+		<div className={css.item({ topBorder })}>
 			<div className={css.itemInfo}>
 				<Text numberOfLines={1} size="md" weight="semiBold">
 					{record.name}
@@ -257,6 +283,7 @@ function StarterPackItem({
 				disabled={isPending || isSelf}
 				label={isInPack ? m['common.action.remove']() : m['common.action.add']()}
 				onClick={handleToggleMembership}
+				size="small"
 			>
 				{isPending && <ButtonIcon icon={Loader} />}
 				<ButtonText>

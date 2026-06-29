@@ -1,26 +1,31 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
+const DIALOG_PADDING = space.lg;
+
+export const popup = style({
+	height: 600,
+	maxWidth: 500,
+});
+
 export const header = style({
-	paddingInline: space._2xl,
-	paddingTop: space.xl,
+	alignItems: 'center',
+	backgroundColor: vars.palette.contrast_0,
+	borderBottom: `1px solid ${colors.borderContrastLow}`,
+	boxSizing: 'border-box',
+	display: 'flex',
+	flexShrink: 0,
+	justifyContent: 'space-between',
+	padding: DIALOG_PADDING,
 });
 
-export const headerRow = style({
-	alignItems: 'center',
+export const title = style({
 	display: 'flex',
-	justifyContent: 'space-between',
-	paddingBottom: space.lg,
-});
-
-export const subHeaderRow = style({
-	alignItems: 'center',
-	borderBottom: `1px solid ${vars.palette.contrast_200}`,
-	display: 'flex',
-	justifyContent: 'space-between',
-	paddingBottom: space.md,
+	minWidth: 0,
 });
 
 // pull the ghost close button flush with the dialog edge.
@@ -28,19 +33,28 @@ export const closeButton = style({
 	margin: -space.sm,
 });
 
-// floored so the dialog keeps a stable height instead of shrinking to a short list.
-export const list = style({
-	minHeight: 500,
-	paddingInline: space._2xl,
-});
-
-export const item = style({
-	alignItems: 'center',
-	display: 'flex',
-	gap: space.md,
-	justifyContent: 'space-between',
-	paddingBlock: space.md,
-});
+// the top border separates rows; suppressed on the first row so it doesn't double up under the header.
+export const item = recipe(
+	{
+		base: {
+			alignItems: 'center',
+			boxSizing: 'border-box',
+			display: 'flex',
+			gap: space.md,
+			justifyContent: 'space-between',
+			paddingBlock: space.md,
+			paddingInline: DIALOG_PADDING,
+		},
+		variants: {
+			topBorder: {
+				true: {
+					borderTop: `1px solid ${colors.borderContrastLow}`,
+				},
+			},
+		},
+	},
+	{ debugId: 'starterPackItem' },
+);
 
 export const itemInfo = style({
 	flex: 1,
@@ -61,20 +75,22 @@ export const loading = style({
 	alignItems: 'center',
 	display: 'flex',
 	justifyContent: 'center',
-	minHeight: 500,
+	paddingBlock: space._5xl,
 });
 
 export const empty = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
-	gap: space._2xl,
-	paddingTop: 100,
+	gap: space.lg,
+	paddingInline: space.xl,
+	paddingTop: space._5xl,
 });
 
 export const emptyText = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
-	gap: space.xs,
+	gap: space.sm,
+	maxWidth: 260,
 });
