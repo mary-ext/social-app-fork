@@ -29,7 +29,6 @@ export function Screen() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.verification.settingsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>

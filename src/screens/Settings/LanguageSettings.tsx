@@ -84,7 +84,6 @@ export function LanguageSettingsScreen({}: Props) {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['screens.settings.language.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>

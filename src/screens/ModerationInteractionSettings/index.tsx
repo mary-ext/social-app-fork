@@ -32,7 +32,6 @@ export function Screen() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.interaction.settingsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<div className={styles.content}>

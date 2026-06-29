@@ -23,7 +23,6 @@ export function AccessibilitySettingsScreen({}: Props) {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['screens.settings.accessibility.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>

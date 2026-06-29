@@ -37,7 +37,6 @@ export function BookmarksScreen({}: Props) {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.savedPosts.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<BookmarksInner />
 		</Layout.Screen>

@@ -1,14 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
 import { fontSizeVar, leadingOverrideVar } from '#/components/Text.css';
-import {
-	BUTTON_VISUAL_ALIGNMENT_OFFSET,
-	CENTER_COLUMN_WIDTH,
-	HEADER_SLOT_SIZE,
-} from '#/components/web/Layout/const';
+import { CENTER_COLUMN_WIDTH, HEADER_SLOT_SIZE } from '#/components/web/Layout/const';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize, lineHeight, zIndex } from '#/styles/tokens.css';
+import { fontSize, lineHeight, space, zIndex } from '#/styles/tokens.css';
 
 export const outer = style({
 	alignItems: 'center',
@@ -17,7 +13,7 @@ export const outer = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: 8,
+	gap: space.sm,
 	marginInline: 'auto',
 	maxWidth: CENTER_COLUMN_WIDTH,
 	minHeight: 52,
@@ -52,14 +48,17 @@ export const content = style({
 });
 
 export const slot = style({
+	display: 'flex',
+	alignItems: 'center',
+	gap: space.sm,
 	flexShrink: 0,
-	width: HEADER_SLOT_SIZE,
-	zIndex: zIndex.stickyRaised,
-});
 
-// shared left-edge offset for the header's leading icon button (back / menu), nudging it to optical alignment.
-export const edgeButton = style({
-	marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET,
+	':first-child': {
+		marginLeft: -8,
+	},
+	':last-child': {
+		marginRight: -8,
+	},
 });
 
 /**

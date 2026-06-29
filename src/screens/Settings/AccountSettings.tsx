@@ -45,7 +45,6 @@ export function AccountSettingsScreen({}: Props) {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.account.privacy']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>

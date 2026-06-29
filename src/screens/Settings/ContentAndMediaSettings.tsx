@@ -48,7 +48,6 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['screens.settings.media.sectionTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>

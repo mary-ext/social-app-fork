@@ -67,7 +67,6 @@ export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorP
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.moderation.label']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				{isLoading ? (

@@ -112,9 +112,11 @@ export function NotificationsScreen({}: Props) {
 				header={
 					<Layout.Header.Outer noBottomBorder sticky={false}>
 						<Layout.Header.MenuButton />
+
 						<Layout.Header.Content>
 							<Layout.Header.TitleText>{m['common.nav.notifications']()}</Layout.Header.TitleText>
 						</Layout.Header.Content>
+
 						<Layout.Header.Slot>
 							<LinkButton
 								to="/settings/notifications"
@@ -124,7 +126,7 @@ export function NotificationsScreen({}: Props) {
 								color="secondary"
 								shape="round"
 							>
-								<ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
+								<ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="md" />
 							</LinkButton>
 						</Layout.Header.Slot>
 					</Layout.Header.Outer>

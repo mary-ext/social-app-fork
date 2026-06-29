@@ -277,17 +277,17 @@ function WizardInner({
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{currUiStrings.header}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				{isEditEnabled ? (
-					<Button
-						label={m['common.action.edit']()}
-						color="secondary"
-						size="small"
-						onClick={() => editDialogHandle.open(null)}
-					>
-						<ButtonText>{m['common.action.edit']()}</ButtonText>
-					</Button>
-				) : (
-					<Layout.Header.Slot />
+				{isEditEnabled && (
+					<Layout.Header.Slot>
+						<Button
+							label={m['common.action.edit']()}
+							color="secondary"
+							size="small"
+							onClick={() => editDialogHandle.open(null)}
+						>
+							<ButtonText>{m['common.action.edit']()}</ButtonText>
+						</Button>
+					</Layout.Header.Slot>
 				)}
 			</Layout.Header.Outer>
 			{state.currentStep === 'Details' ? (

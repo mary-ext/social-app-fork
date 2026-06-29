@@ -89,10 +89,9 @@ export function BackButton({
 				variant="ghost"
 				color="secondary"
 				shape="round"
-				className={styles.edgeButton}
 				onClick={handleClick}
 			>
-				<ButtonIcon icon={ArrowLeft} size="lg" />
+				<ButtonIcon icon={ArrowLeft} size="md" />
 			</Button>
 		</Slot>
 	);
@@ -119,10 +118,9 @@ export function MenuButton() {
 				variant="ghost"
 				color="secondary"
 				shape="round"
-				className={styles.edgeButton}
 				onClick={onClick}
 			>
-				<ButtonIcon icon={Menu} size="lg" />
+				<ButtonIcon icon={Menu} size="md" />
 			</Button>
 		</Slot>
 	);

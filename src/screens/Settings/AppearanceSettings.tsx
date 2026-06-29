@@ -50,7 +50,6 @@ export function AppearanceSettingsScreen({}: Props) {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.appearance.label']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
