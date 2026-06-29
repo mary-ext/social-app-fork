@@ -6,13 +6,21 @@ import { clsx } from 'clsx';
 
 import { makeCustomFeedLink } from '#/lib/routes/links';
 
-import * as FeedCard from '#/components/FeedCard';
+import { useToggleSavedFeed } from '#/state/queries/preferences';
+import { useSession } from '#/state/session';
+
 import { type Props as SVGIconProps, sizes as iconSizes } from '#/components/icons/common';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
+import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
+import { Spinner } from '#/components/Spinner';
 import { Text, type TextProps } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
+import * as Prompt from '#/components/web/Prompt';
+
+import { m } from '#/paraglide/messages';
 
 import * as css from './ModuleHeader.css';
 
@@ -97,16 +105,42 @@ export function SearchButton({ label, onClick }: { label: string; onClick?: () =
 }
 
 export function PinButton({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
+	const { hasSession } = useSession();
+	if (!hasSession) {
+		return null;
+	}
+	return <PinButtonInner feed={feed} />;
+}
+
+function PinButtonInner({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
+	const removePromptHandle = Prompt.usePromptHandle();
+	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ pin: true, type: 'feed', uri: feed.uri });
+
 	return (
 		<div className={css.pinButton}>
-			<FeedCard.SaveButton
+			<Button
 				color="secondary"
-				pin
+				disabled={isPending}
+				label={m['common.feeds.action.add']()}
+				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
 				shape="round"
-				size="large"
-				text={false}
+				size="small"
 				variant="ghost"
-				view={feed}
+			>
+				{isPending ? (
+					<Spinner color="currentColor" label={null} size="sm" />
+				) : (
+					<ButtonIcon icon={isSaved ? TrashIcon : PinIcon} size="lg" />
+				)}
+			</Button>
+
+			<Prompt.Basic
+				confirmButtonColor="negative"
+				confirmButtonCta={m['common.action.remove']()}
+				description={m['common.feeds.remove.message']()}
+				handle={removePromptHandle}
+				onConfirm={() => void toggleSave()}
+				title={m['common.feeds.remove.title']()}
 			/>
 		</div>
 	);

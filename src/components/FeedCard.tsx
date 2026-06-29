@@ -13,12 +13,11 @@ import { useSession } from '#/state/session';
 
 import { BlockLink } from '#/components/BlockLink';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
-import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
 
@@ -148,32 +147,15 @@ export function Likes({ count }: { count: number }) {
 	);
 }
 
-export function SaveButton({
-	pin,
-	view,
-	...props
-}: {
-	pin?: boolean;
-	text?: boolean;
-	view: AppBskyFeedDefs.GeneratorView;
-} & Partial<ButtonProps>) {
+export function SaveButton({ pin, view }: { pin?: boolean; view: AppBskyFeedDefs.GeneratorView }) {
 	const { hasSession } = useSession();
 	if (!hasSession) {
 		return null;
 	}
-	return <SaveButtonInner pin={pin} view={view} {...props} />;
+	return <SaveButtonInner pin={pin} view={view} />;
 }
 
-function SaveButtonInner({
-	pin,
-	text = true,
-	view,
-	...buttonProps
-}: {
-	pin?: boolean;
-	text?: boolean;
-	view: AppBskyFeedDefs.GeneratorView;
-} & Partial<ButtonProps>) {
+function SaveButtonInner({ pin, view }: { pin?: boolean; view: AppBskyFeedDefs.GeneratorView }) {
 	const removePromptHandle = Prompt.usePromptHandle();
 	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ pin, type: 'feed', uri: view.uri });
 
@@ -186,16 +168,11 @@ function SaveButtonInner({
 				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
 				size="small"
 				variant="solid"
-				{...buttonProps}
 			>
 				{isSaved ? (
 					<>
-						{isPending ? (
-							<Spinner color="currentColor" label={null} size="sm" />
-						) : (
-							!text && <ButtonIcon icon={TrashIcon} size="md" />
-						)}
-						{text && <ButtonText>{m['common.feeds.action.unpin']()}</ButtonText>}
+						{isPending && <Spinner color="currentColor" label={null} size="sm" />}
+						<ButtonText>{m['common.feeds.action.unpin']()}</ButtonText>
 					</>
 				) : (
 					<>
@@ -204,7 +181,7 @@ function SaveButtonInner({
 						) : (
 							<ButtonIcon icon={PinIcon} size="md" />
 						)}
-						{text && <ButtonText>{m['common.feeds.action.pin']()}</ButtonText>}
+						<ButtonText>{m['common.feeds.action.pin']()}</ButtonText>
 					</>
 				)}
 			</Button>

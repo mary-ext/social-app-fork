@@ -15,19 +15,13 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { precacheList } from '#/state/queries/feed';
-import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
 import { BlockLink } from '#/components/BlockLink';
-import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Hider from '#/components/moderation/Hider';
 import { RichText } from '#/components/RichText';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
-import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
@@ -39,14 +33,12 @@ const CURATELIST = 'app.bsky.graph.defs#curatelist';
 const MODLIST = 'app.bsky.graph.defs#modlist';
 
 type Props = {
-	showPinButton?: boolean;
 	view: AppBskyGraphDefs.ListView;
 };
 
 export function Default({
 	className,
 	onPress,
-	showPinButton,
 	topBorder,
 	view,
 }: Props & {
@@ -68,7 +60,6 @@ export function Default({
 						purpose={view.purpose}
 						title={view.name}
 					/>
-					{showPinButton && view.purpose === CURATELIST && <SaveButton pin view={view} />}
 				</Header>
 				<Description description={view.description} />
 			</Outer>
@@ -185,79 +176,6 @@ export function Description({ description }: { description?: string }) {
 		return null;
 	}
 	return <RichText disableLinks value={description} />;
-}
-
-export function SaveButton({
-	pin,
-	view,
-	...props
-}: {
-	pin?: boolean;
-	text?: boolean;
-	view: AppBskyGraphDefs.ListView;
-} & Partial<ButtonProps>) {
-	const { hasSession } = useSession();
-	if (!hasSession) {
-		return null;
-	}
-	return <SaveButtonInner pin={pin} view={view} {...props} />;
-}
-
-function SaveButtonInner({
-	pin,
-	text = true,
-	view,
-	...buttonProps
-}: {
-	pin?: boolean;
-	text?: boolean;
-	view: AppBskyGraphDefs.ListView;
-} & Partial<ButtonProps>) {
-	const removePromptHandle = Prompt.usePromptHandle();
-	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ pin, type: 'list', uri: view.uri });
-
-	return (
-		<>
-			<Button
-				color={isSaved ? 'secondary' : 'primary'}
-				disabled={isPending}
-				label={m['common.feeds.action.add']()}
-				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
-				size="small"
-				variant="solid"
-				{...buttonProps}
-			>
-				{isSaved ? (
-					<>
-						{isPending ? (
-							<Spinner color="currentColor" label={null} size="sm" />
-						) : (
-							!text && <ButtonIcon icon={TrashIcon} size="md" />
-						)}
-						{text && <ButtonText>{m['common.feeds.action.unpin']()}</ButtonText>}
-					</>
-				) : (
-					<>
-						{isPending ? (
-							<Spinner color="currentColor" label={null} size="sm" />
-						) : (
-							<ButtonIcon icon={PinIcon} size="md" />
-						)}
-						{text && <ButtonText>{m['common.feeds.action.pin']()}</ButtonText>}
-					</>
-				)}
-			</Button>
-
-			<Prompt.Basic
-				confirmButtonColor="negative"
-				confirmButtonCta={m['common.action.remove']()}
-				description={m['common.feeds.remove.message']()}
-				handle={removePromptHandle}
-				onConfirm={() => void toggleSave()}
-				title={m['common.feeds.remove.title']()}
-			/>
-		</>
-	);
 }
 
 // weighted description-line counts: most list descriptions are short (1 line) or empty, with a long
