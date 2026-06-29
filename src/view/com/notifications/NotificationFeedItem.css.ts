@@ -9,38 +9,41 @@ export const NOTIF_AVI_SIZE = 32;
 export const POST_AVI_SIZE = 36;
 export const ICON_SIZE = 24;
 
-export const outer = recipe({
-	base: {
-		alignItems: 'flex-start',
-		borderTopColor: colors.borderContrastLow,
-		borderTopStyle: 'solid',
-		borderTopWidth: 0,
-		boxSizing: 'border-box',
-		cursor: 'pointer',
-		display: 'flex',
-		flexDirection: 'row',
-		overflow: 'hidden',
-		gap: 12,
-		paddingBlock: 12,
-		paddingInline: 16,
-		position: 'relative',
-		selectors: {
-			'&:hover': { backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover) },
+export const outer = recipe(
+	{
+		base: {
+			alignItems: 'flex-start',
+			borderTopColor: colors.borderContrastLow,
+			borderTopStyle: 'solid',
+			borderTopWidth: 0,
+			boxSizing: 'border-box',
+			cursor: 'pointer',
+			display: 'flex',
+			flexDirection: 'row',
+			overflow: 'hidden',
+			gap: 12,
+			paddingBlock: 12,
+			paddingInline: 16,
+			position: 'relative',
+			selectors: {
+				'&:hover': { backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover) },
+			},
 		},
-	},
-	variants: {
-		topBorder: { true: { borderTopWidth: 1 } },
-		unread: {
-			true: {
-				backgroundColor: colors.primary_25,
-				borderTopColor: colors.primary_100,
-				selectors: {
-					'&:hover': { backgroundColor: colors.primary_50 },
+		variants: {
+			topBorder: { true: { borderTopWidth: 1 } },
+			unread: {
+				true: {
+					backgroundColor: colors.primary_25,
+					borderTopColor: colors.primary_100,
+					selectors: {
+						'&:hover': { backgroundColor: colors.primary_50 },
+					},
 				},
 			},
 		},
 	},
-});
+	{ debugId: 'outer' },
+);
 
 export const iconColumn = style({
 	alignItems: 'flex-end',

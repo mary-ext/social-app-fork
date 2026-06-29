@@ -46,39 +46,42 @@ export const week = style({
 	display: 'contents',
 });
 
-export const day = recipe({
-	base: {
-		alignItems: 'center',
-		borderRadius: borderRadius.full,
-		cursor: 'default',
-		display: 'flex',
-		height: 36,
-		justifyContent: 'center',
-		// fixed-size circle centered within its (wider) grid column.
-		justifySelf: 'center',
-		outline: 'none',
-		userSelect: 'none',
-		width: 36,
-		selectors: {
-			'&[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
-			'&[data-disabled]': { pointerEvents: 'none' },
+export const day = recipe(
+	{
+		base: {
+			alignItems: 'center',
+			borderRadius: borderRadius.full,
+			cursor: 'default',
+			display: 'flex',
+			height: 36,
+			justifyContent: 'center',
+			// fixed-size circle centered within its (wider) grid column.
+			justifySelf: 'center',
+			outline: 'none',
+			userSelect: 'none',
+			width: 36,
+			selectors: {
+				'&[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
+				'&[data-disabled]': { pointerEvents: 'none' },
+			},
 		},
-	},
-	variants: {
-		// filled accent for the day already entered in the query.
-		selected: {
-			true: {
-				backgroundColor: vars.palette.primary_500,
-				selectors: {
-					'&[data-highlighted]': { backgroundColor: vars.palette.primary_600 },
+		variants: {
+			// filled accent for the day already entered in the query.
+			selected: {
+				true: {
+					backgroundColor: vars.palette.primary_500,
+					selectors: {
+						'&[data-highlighted]': { backgroundColor: vars.palette.primary_600 },
+					},
+				},
+			},
+			// ring around the current day.
+			today: {
+				true: {
+					boxShadow: `inset 0 0 0 1px ${vars.palette.contrast_400}`,
 				},
 			},
 		},
-		// ring around the current day.
-		today: {
-			true: {
-				boxShadow: `inset 0 0 0 1px ${vars.palette.contrast_400}`,
-			},
-		},
 	},
-});
+	{ debugId: 'day' },
+);

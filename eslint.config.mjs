@@ -102,6 +102,7 @@ export default defineConfig(
 				},
 			],
 			'bsky-internal/consistent-type-imports': 'error',
+			'bsky-internal/recipe-debug-id': 'error',
 			'bsky-internal/use-prefixed-imports': 'error',
 
 			/** React & React Native */

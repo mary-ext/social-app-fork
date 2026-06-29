@@ -70,7 +70,7 @@ export const tab = recipe(
 			},
 		},
 	},
-	{ layer: components },
+	{ debugId: 'tab', layer: components },
 );
 
 /** Tab label that inherits the button's (hover-driven) color instead of the `text` recipe default. */

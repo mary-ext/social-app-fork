@@ -25,7 +25,7 @@ export const container = recipe(
 			},
 		},
 	},
-	{ layer: components },
+	{ debugId: 'container', layer: components },
 );
 
 /** Icon box edge length in px, wired inline so it scales to the `size` prop. */

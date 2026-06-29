@@ -43,20 +43,23 @@ const padding = style({
 	paddingTop: paddingTopVar,
 });
 
-export const root = recipe({
-	base: {
-		position: 'relative',
-	},
-	variants: {
-		fontSize: {
-			lg: { vars: { [fontSizeVar]: fontSize.lg } },
-			md: { vars: { [fontSizeVar]: fontSize.md } },
+export const root = recipe(
+	{
+		base: {
+			position: 'relative',
+		},
+		variants: {
+			fontSize: {
+				lg: { vars: { [fontSizeVar]: fontSize.lg } },
+				md: { vars: { [fontSizeVar]: fontSize.md } },
+			},
+		},
+		defaultVariants: {
+			fontSize: 'lg',
 		},
 	},
-	defaultVariants: {
-		fontSize: 'lg',
-	},
-});
+	{ debugId: 'root' },
+);
 
 // caps the editor at `maxRows` and scrolls past it. the scroll lives on `root` itself: because the preview
 // overlay is sized to its own content (not pinned to the scrollport), it scrolls in lockstep with the

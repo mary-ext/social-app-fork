@@ -47,7 +47,7 @@ export const dropScrim = recipe(
 			},
 		},
 	},
-	{ layer: components },
+	{ debugId: 'dropScrim', layer: components },
 );
 
 export const dropCard = style(

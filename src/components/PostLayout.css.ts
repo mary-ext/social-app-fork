@@ -14,37 +14,40 @@ import { OUTER_SPACE, REPLY_LINE_WIDTH } from './PostLayout.const';
  * (e.g. the feed's `DiscoverDebug`). The border / spacing variants vary by the slice's position in its
  * thread.
  */
-export const frame = recipe({
-	base: {
-		boxSizing: 'border-box',
-		display: 'flex',
-		flexDirection: 'column',
-		paddingInline: OUTER_SPACE,
-		position: 'relative',
-	},
-	variants: {
-		// whole-row hover tint; the focused anchor post opts out
-		hoverable: {
-			true: {
-				cursor: 'pointer',
-				selectors: {
-					'&:hover': {
-						backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+export const frame = recipe(
+	{
+		base: {
+			boxSizing: 'border-box',
+			display: 'flex',
+			flexDirection: 'column',
+			paddingInline: OUTER_SPACE,
+			position: 'relative',
+		},
+		variants: {
+			// whole-row hover tint; the focused anchor post opts out
+			hoverable: {
+				true: {
+					cursor: 'pointer',
+					selectors: {
+						'&:hover': {
+							backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+						},
 					},
 				},
 			},
-		},
-		// extra top room when the post is the thread root
-		rootPad: { true: { paddingTop: space.lg } },
-		topBorder: {
-			true: {
-				borderTopColor: colors.borderContrastLow,
-				borderTopStyle: 'solid',
-				borderTopWidth: 1,
+			// extra top room when the post is the thread root
+			rootPad: { true: { paddingTop: space.lg } },
+			topBorder: {
+				true: {
+					borderTopColor: colors.borderContrastLow,
+					borderTopStyle: 'solid',
+					borderTopWidth: 1,
+				},
 			},
 		},
 	},
-});
+	{ debugId: 'frame' },
+);
 
 /**
  * The avatar + content columns side by side. `gap` owns the avatar→content spacing; `position: relative`

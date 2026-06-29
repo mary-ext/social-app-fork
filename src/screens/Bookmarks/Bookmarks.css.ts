@@ -4,26 +4,29 @@ import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
-export const notFoundRow = recipe({
-	base: {
-		alignItems: 'flex-start',
-		boxSizing: 'border-box',
-		display: 'flex',
-		flexDirection: 'row',
-		gap: space.lg,
-		paddingBlock: space.md,
-		paddingInline: space.lg,
-	},
-	variants: {
-		topBorder: {
-			true: {
-				borderTopColor: colors.borderContrastLow,
-				borderTopStyle: 'solid',
-				borderTopWidth: 1,
+export const notFoundRow = recipe(
+	{
+		base: {
+			alignItems: 'flex-start',
+			boxSizing: 'border-box',
+			display: 'flex',
+			flexDirection: 'row',
+			gap: space.lg,
+			paddingBlock: space.md,
+			paddingInline: space.lg,
+		},
+		variants: {
+			topBorder: {
+				true: {
+					borderTopColor: colors.borderContrastLow,
+					borderTopStyle: 'solid',
+					borderTopWidth: 1,
+				},
 			},
 		},
 	},
-});
+	{ debugId: 'notFoundRow' },
+);
 
 export const deletedAvatar = style({
 	alignItems: 'center',
