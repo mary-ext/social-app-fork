@@ -139,7 +139,8 @@ export function SearchScreenShell({
 
 	return (
 		<Layout.Screen>
-			<Layout.Header.Outer ref={headerRef}>
+			{/* explore carries the header's bottom border; search results have their own tab-bar border below */}
+			<Layout.Header.Outer noBottomBorder={!!queryWithParams} ref={headerRef}>
 				{navButtonNode}
 
 				<Layout.Header.Content>
