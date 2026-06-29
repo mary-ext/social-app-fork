@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import {
 	ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft,
@@ -45,7 +43,7 @@ export function InterestTabs({
 	const [canScrollLeft, setCanScrollLeft] = useState(false);
 	const [canScrollRight, setCanScrollRight] = useState(false);
 
-	const syncAffordances = useNonReactiveCallback(() => {
+	const syncAffordances = useEffectEvent(() => {
 		const el = scrollerRef.current;
 		if (!el) {
 			return;
@@ -68,7 +66,7 @@ export function InterestTabs({
 			el.removeEventListener('scroll', syncAffordances);
 			observer.disconnect();
 		};
-	}, [interests, syncAffordances]);
+	}, [interests]);
 
 	// center the active pill — scoped to the row's own scrollLeft so it doesn't nudge ancestors (e.g. the page)
 	useEffect(() => {

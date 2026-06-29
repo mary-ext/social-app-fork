@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useEffectEvent, useId, useRef, useState } from 'react';
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 import type * as HlsTypes from 'hls.js';
-
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import { m } from '#/paraglide/messages';
 
@@ -211,7 +209,7 @@ function useHLS({
 	const [lowQualityFragments, setLowQualityFragments] = useState<HlsTypes.Fragment[]>([]);
 
 	// purge low quality segments from buffer on next frag change
-	const handleFragChange = useNonReactiveCallback(
+	const handleFragChange = useEffectEvent(
 		(_event: HlsTypes.Events.FRAG_CHANGED, { frag }: HlsTypes.FragChangedData) => {
 			if (!Hls) return;
 			if (!hlsRef.current) return;
@@ -306,9 +304,9 @@ function useHLS({
 			hls.detachMedia();
 			hls.destroy();
 		};
-	}, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls, updateCuePositions]);
+	}, [Hls, playlist, setError, setHasSubtitleTrack, updateCuePositions, videoRef]);
 
-	const flushOnLoop = useNonReactiveCallback(() => {
+	const flushOnLoop = useEffectEvent(() => {
 		if (!Hls) return;
 		if (!hlsRef.current) return;
 		const hls = hlsRef.current;
@@ -354,7 +352,7 @@ function useHLS({
 		return () => {
 			abortController.abort();
 		};
-	}, [videoRef, flushOnLoop, hasLowQualityFragmentAtStart]);
+	}, [hasLowQualityFragmentAtStart, videoRef]);
 
 	return {
 		hlsRef,

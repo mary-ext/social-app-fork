@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { type ScrollView, type StyleProp, View, type ViewStyle } from 'react-native';
-
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import { atoms as a, tokens, useTheme, utils } from '#/alf';
 
@@ -56,7 +54,7 @@ export function InterestTabs({
 	const pendingTabOffsets = useRef<{ x: number; width: number }[]>([]);
 	const [tabOffsets, setTabOffsets] = useState<{ x: number; width: number }[]>([]);
 
-	const onInitialLayout = useNonReactiveCallback(() => {
+	const onInitialLayout = useEffectEvent(() => {
 		const index = interests.indexOf(selectedInterest);
 		scrollIntoViewIfNeeded(index);
 	});
@@ -65,7 +63,7 @@ export function InterestTabs({
 		if (tabOffsets) {
 			onInitialLayout();
 		}
-	}, [tabOffsets, onInitialLayout]);
+	}, [tabOffsets]);
 
 	function scrollIntoViewIfNeeded(index: number) {
 		const btnLayout = tabOffsets[index];

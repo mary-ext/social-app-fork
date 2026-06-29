@@ -4,6 +4,7 @@ import {
 	type Ref,
 	startTransition,
 	useEffect,
+	useEffectEvent,
 	useImperativeHandle,
 	useMemo,
 	useRef,
@@ -311,7 +312,7 @@ function Visibility({
 	const tailRef = useRef<HTMLDivElement>(null);
 	const isIntersecting = useRef(false);
 
-	const handleIntersection = useNonReactiveCallback((entries: IntersectionObserverEntry[]) => {
+	const handleIntersection = useEffectEvent((entries: IntersectionObserverEntry[]) => {
 		batchedUpdates(() => {
 			entries.forEach((entry) => {
 				if (entry.isIntersecting !== isIntersecting.current) {
@@ -331,7 +332,7 @@ function Visibility({
 		return () => {
 			if (tail) observer.unobserve(tail);
 		};
-	}, [bottomMargin, handleIntersection, topMargin]);
+	}, [bottomMargin, topMargin]);
 
 	return <div ref={tailRef} className={className} style={style} />;
 }
@@ -340,7 +341,7 @@ function useResizeObserver(
 	ref: React.RefObject<Element | null>,
 	onResize: undefined | ((width: number, height: number) => void),
 ) {
-	const handleResize = useNonReactiveCallback(onResize ?? (() => {}));
+	const handleResize = useEffectEvent(onResize ?? (() => {}));
 	const isActive = !!onResize;
 	useEffect(() => {
 		if (!isActive) return;
@@ -356,5 +357,5 @@ function useResizeObserver(
 		});
 		observer.observe(node);
 		return () => observer.unobserve(node);
-	}, [handleResize, isActive, ref]);
+	}, [isActive, ref]);
 }

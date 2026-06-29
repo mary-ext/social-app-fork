@@ -5,6 +5,7 @@ import {
 	startTransition,
 	useCallback,
 	useEffect,
+	useEffectEvent,
 	useImperativeHandle,
 	useRef,
 	useState,
@@ -280,7 +281,7 @@ function ListImpl<ItemT>(
 
 	// --- onScroll ---
 	const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false);
-	const handleScroll = useNonReactiveCallback(() => {
+	const handleScroll = useEffectEvent(() => {
 		if (!isInsideVisibleTree) return;
 
 		const element = getScrollableNode();
@@ -319,7 +320,7 @@ function ListImpl<ItemT>(
 		return () => {
 			element?.removeEventListener('scroll', handleScroll);
 		};
-	}, [isInsideVisibleTree, handleScroll, disableFullWindowScroll, getScrollableNode]);
+	}, [disableFullWindowScroll, getScrollableNode, isInsideVisibleTree]);
 
 	// --- onScrolledDownChange ---
 	const isScrolledDown = useRef(false);
@@ -462,7 +463,7 @@ function useResizeObserver(
 	ref: React.RefObject<Element | null>,
 	onResize: undefined | ((w: number, h: number) => void),
 ) {
-	const handleResize = useNonReactiveCallback(onResize ?? (() => {}));
+	const handleResize = useEffectEvent(onResize ?? (() => {}));
 	const isActive = !!onResize;
 	useEffect(() => {
 		if (!isActive) {
@@ -481,7 +482,7 @@ function useResizeObserver(
 		return () => {
 			resizeObserver.unobserve(node);
 		};
-	}, [handleResize, isActive, ref]);
+	}, [isActive, ref]);
 }
 
 let Row = function RowImpl<ItemT>({
@@ -502,7 +503,7 @@ let Row = function RowImpl<ItemT>({
 	const rowRef = useRef(null);
 	const intersectionTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-	const handleIntersection = useNonReactiveCallback((entries: IntersectionObserverEntry[]) => {
+	const handleIntersection = useEffectEvent((entries: IntersectionObserverEntry[]) => {
 		batchedUpdates(() => {
 			if (!onItemSeen) {
 				return;
@@ -539,7 +540,7 @@ let Row = function RowImpl<ItemT>({
 				observer.unobserve(row);
 			}
 		};
-	}, [handleIntersection, onItemSeen]);
+	}, [onItemSeen]);
 
 	// Register this row's DOM node so the list can scroll to it by index.
 	useEffect(() => {
@@ -589,7 +590,7 @@ let Visibility = ({
 	const tailRef = useRef(null);
 	const isIntersecting = useRef(false);
 
-	const handleIntersection = useNonReactiveCallback((entries: IntersectionObserverEntry[]) => {
+	const handleIntersection = useEffectEvent((entries: IntersectionObserverEntry[]) => {
 		batchedUpdates(() => {
 			entries.forEach((entry) => {
 				if (entry.isIntersecting !== isIntersecting.current) {
@@ -614,7 +615,7 @@ let Visibility = ({
 				observer.unobserve(tail);
 			}
 		};
-	}, [bottomMargin, handleIntersection, topMargin, root]);
+	}, [bottomMargin, root, topMargin]);
 
 	return <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />;
 };

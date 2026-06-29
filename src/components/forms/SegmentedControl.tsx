@@ -1,7 +1,5 @@
-import { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -125,8 +123,7 @@ export function Item({
 		position &&
 		(ctx.selectedPosition?.x !== position.x || ctx.selectedPosition?.width !== position.width);
 
-	// can't wait for `useEffectEvent`
-	const update = useNonReactiveCallback(() => {
+	const update = useEffectEvent(() => {
 		if (position) ctx.updatePosition(position);
 	});
 
@@ -134,7 +131,7 @@ export function Item({
 		if (needsUpdate) {
 			update();
 		}
-	}, [needsUpdate, update]);
+	}, [needsUpdate]);
 
 	const onPress = useCallback(
 		(evt: Parameters<NonNullable<ButtonProps['onPress']>>[0]) => {

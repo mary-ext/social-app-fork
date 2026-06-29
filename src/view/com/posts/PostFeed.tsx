@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { onAppStateChange } from '#/lib/appState';
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
@@ -164,7 +163,7 @@ function PostFeed({
 		}
 	}, [lastFetchedAt]);
 
-	const checkForNew = useNonReactiveCallback(async () => {
+	const checkForNew = useEffectEvent(async () => {
 		if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
 			return;
 		}
@@ -219,7 +218,7 @@ function PostFeed({
 				void checkForNew();
 			}
 		}
-	}, [enabled, isEmpty, disablePoll, checkForNew]);
+	}, [disablePoll, enabled, isEmpty]);
 
 	useEffect(() => {
 		const subscription = onAppStateChange((nextAppState) => {
@@ -240,7 +239,7 @@ function PostFeed({
 			subscription.remove();
 			stopPolling?.();
 		};
-	}, [pollInterval, checkForNew]);
+	}, [pollInterval]);
 
 	const blockedOrMutedAuthors = usePostAuthorShadowFilter(
 		// author feeds have their own handling

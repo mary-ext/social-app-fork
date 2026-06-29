@@ -3,6 +3,7 @@ import {
 	memo,
 	useCallback,
 	useEffect,
+	useEffectEvent,
 	useImperativeHandle,
 	useMemo,
 	useReducer,
@@ -339,7 +340,7 @@ export const ComposePost = ({
 		[pds, pdsUrl, currentDid, composerDispatch],
 	);
 
-	const onInitVideo = useNonReactiveCallback(() => {
+	const onInitVideo = useEffectEvent(() => {
 		if (initVideoUri) {
 			selectVideo(activePost.id, initVideoUri);
 		}
@@ -347,7 +348,7 @@ export const ComposePost = ({
 
 	useEffect(() => {
 		onInitVideo();
-	}, [onInitVideo]);
+	}, []);
 
 	const clearVideo = useCallback(
 		(postId: string) => {

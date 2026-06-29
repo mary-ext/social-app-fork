@@ -1,6 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
 export function useThrottledValue<T>(value: T, time: number) {
 	const pendingValueRef = useRef(value);
@@ -10,7 +8,7 @@ export function useThrottledValue<T>(value: T, time: number) {
 		pendingValueRef.current = value;
 	}, [value]);
 
-	const handleTick = useNonReactiveCallback(() => {
+	const handleTick = useEffectEvent(() => {
 		if (pendingValueRef.current !== throttledValue) {
 			setThrottledValue(pendingValueRef.current);
 		}
@@ -21,7 +19,7 @@ export function useThrottledValue<T>(value: T, time: number) {
 		return () => {
 			clearInterval(id);
 		};
-	}, [handleTick, time]);
+	}, [time]);
 
 	return throttledValue;
 }
