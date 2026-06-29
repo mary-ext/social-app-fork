@@ -43,18 +43,23 @@ export function ModerationModlistsScreen({}: Props) {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.moderation.listsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Button
-					label={m['common.list.action.new']()}
-					color="secondary"
-					variant="solid"
-					size="small"
-					onClick={onPressNewList}
-				>
-					<ButtonIcon icon={PlusIcon} />
-					<ButtonText>{m['common.status.new']()}</ButtonText>
-				</Button>
+
+				<Layout.Header.Slot>
+					<Button
+						label={m['common.list.action.new']()}
+						color="secondary"
+						variant="solid"
+						size="small"
+						onClick={onPressNewList}
+					>
+						<ButtonIcon icon={PlusIcon} />
+						<ButtonText>{m['common.status.new']()}</ButtonText>
+					</Button>
+				</Layout.Header.Slot>
 			</Layout.Header.Outer>
+
 			<MyLists filter="mod" />
+
 			<CreateOrEditListDialog
 				purpose="app.bsky.graph.defs#modlist"
 				handle={createListHandle}

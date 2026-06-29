@@ -46,22 +46,25 @@ export function MutedWordsScreen(
 
 	return (
 		<Layout.Screen>
-			<MutedWordsDialog handle={dialogHandle} />
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['screens.moderation.mutedWord.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Button
-					color="secondary"
-					label={m['common.mutedWord.action.add']()}
-					onClick={() => dialogHandle.open(null)}
-					size="small"
-				>
-					<ButtonIcon icon={Plus} />
-					<ButtonText>{m['common.action.add']()}</ButtonText>
-				</Button>
+
+				<Layout.Header.Slot>
+					<Button
+						color="secondary"
+						label={m['common.mutedWord.action.add']()}
+						onClick={() => dialogHandle.open(null)}
+						size="small"
+					>
+						<ButtonIcon icon={Plus} />
+						<ButtonText>{m['common.action.add']()}</ButtonText>
+					</Button>
+				</Layout.Header.Slot>
 			</Layout.Header.Outer>
+
 			<Layout.Content>
 				{error ? (
 					<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
@@ -84,6 +87,8 @@ export function MutedWordsScreen(
 					</Settings.List>
 				)}
 			</Layout.Content>
+
+			<MutedWordsDialog handle={dialogHandle} />
 		</Layout.Screen>
 	);
 }
