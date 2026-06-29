@@ -33,10 +33,3 @@ export const handle = style({
 	unicodeBidi: 'isolate',
 	wordBreak: 'break-all',
 });
-
-export const invalidHandle = style({
-	border: `1px solid ${vars.palette.contrast_200}`,
-	borderRadius: 4,
-	paddingBlock: 4,
-	paddingInline: 8,
-});

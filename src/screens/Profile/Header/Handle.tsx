@@ -1,7 +1,7 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
-import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
+import { sanitizeHandle } from '#/lib/strings/handles';
 
 import type { Shadow } from '#/state/cache/types';
 
@@ -19,11 +19,11 @@ export function ProfileHeaderHandle({
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
 	disableTaps?: boolean;
 }) {
-	const invalidHandle = isInvalidHandle(profile.handle);
 	const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy;
 	return (
 		<div className={clsx(styles.row, disableTaps && styles.noTaps)}>
 			<NewskieDialog profile={profile} disabled={disableTaps} />
+
 			{profile.viewer?.followedBy && !blockHide ? (
 				<div className={styles.followsYou}>
 					<Text size="sm" color="text">
@@ -31,16 +31,9 @@ export function ProfileHeaderHandle({
 					</Text>
 				</div>
 			) : undefined}
-			<Text
-				numberOfLines={1}
-				size={invalidHandle ? 'xs' : 'md'}
-				leading={invalidHandle ? undefined : 'snug'}
-				color={invalidHandle ? undefined : 'textContrastMedium'}
-				className={clsx(styles.handle, invalidHandle && styles.invalidHandle)}
-			>
-				{invalidHandle
-					? m['screens.profile.editProfile.invalidHandle']()
-					: sanitizeHandle(profile.handle, '@', false)}
+
+			<Text numberOfLines={1} size="md" leading="snug" color="textContrastMedium" className={styles.handle}>
+				{sanitizeHandle(profile.handle)}
 			</Text>
 		</div>
 	);
