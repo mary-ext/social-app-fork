@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Keyboard, type StyleProp, View, type ViewStyle } from 'react-native';
+import { clsx } from 'clsx';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
@@ -8,16 +8,15 @@ import { useLanguagePrefs } from '#/state/preferences';
 
 import { LANGUAGES } from '#/locale/languages';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import * as TextField from '#/components/forms/TextField';
 import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
 import { PageText_Stroke2_Corner0_Rounded as PageTextIcon } from '#/components/icons/PageText';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import { Text } from '#/components/Typography';
+import * as Select from '#/components/Select';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -37,34 +36,36 @@ interface Props {
 }
 
 export function SubtitleDialogBtn(props: Props) {
-	const control = Dialog.useDialogControl();
+	const handle = Dialog.useDialogHandle();
 	return (
-		<View style={[a.flex_row, a.my_xs]}>
+		<div className={css.buttonRow}>
 			<Button
 				label={m['view.composer.captions.title']()}
-				accessibilityHint={m['view.composer.captions.opensDialog']()}
 				size="small"
 				color="secondary"
 				variant="ghost"
-				onPress={() => {
-					if (Keyboard.isVisible()) Keyboard.dismiss();
-					control.open();
-				}}
+				onClick={() => handle.open(null)}
 			>
 				<ButtonIcon icon={CCIcon} />
 				<ButtonText>{m['view.composer.captions.title']()}</ButtonText>
 			</Button>
-			<Dialog.Outer control={control}>
-				<Dialog.Handle />
-				<SubtitleDialogInner {...props} />
-			</Dialog.Outer>
-		</View>
+			<Dialog.Root handle={handle}>
+				<Dialog.Popup label={m['view.composer.video.settingsTitle']()}>
+					<SubtitleDialogInner handle={handle} {...props} />
+					<Dialog.Close />
+				</Dialog.Popup>
+			</Dialog.Root>
+		</div>
 	);
 }
 
-function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaptions }: Props) {
-	const control = Dialog.useDialogContext();
-	const t = useTheme();
+function SubtitleDialogInner({
+	captions,
+	defaultAltText,
+	handle,
+	saveAltText,
+	setCaptions,
+}: Props & { handle: Dialog.DialogHandle }) {
 	const { primaryLanguage } = useLanguagePrefs();
 
 	const [altText, setAltText] = useState(defaultAltText);
@@ -90,100 +91,88 @@ function SubtitleDialogInner({ defaultAltText, saveAltText, captions, setCaption
 	});
 
 	return (
-		<Dialog.ScrollableInner label={m['view.composer.video.settingsTitle']()}>
-			<View style={a.gap_md}>
-				<Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>{m['common.altText.label']()}</Text>
-				<TextField.Root isInvalid={isOverMaxLength}>
-					<Dialog.Input
-						label={m['common.altText.label']()}
-						placeholder={m['view.composer.altText.action.addOptional']()}
-						value={altText}
-						onChangeText={setAltText}
-						maxLength={MAX_ALT_TEXT * 10}
-						multiline
-						style={{ maxHeight: 300 }}
-						numberOfLines={3}
-						onKeyPress={({ nativeEvent }) => {
-							if (nativeEvent.key === 'Escape') {
-								control.close();
-							}
-						}}
-					/>
-				</TextField.Root>
+		<div className={css.container}>
+			<Text size="xl" weight="semiBold">
+				{m['common.altText.label']()}
+			</Text>
+			<TextField.Root isInvalid={isOverMaxLength}>
+				<TextField.Input
+					label={m['common.altText.label']()}
+					placeholder={m['view.composer.altText.action.addOptional']()}
+					value={altText}
+					onChangeText={setAltText}
+					maxLength={MAX_ALT_TEXT * 10}
+					multiline
+					minRows={3}
+					maxRows={12}
+				/>
+			</TextField.Root>
 
-				{isOverMaxLength && (
-					<Text style={[a.text_md, { color: t.palette.negative_500 }, a.leading_snug, a.mt_md]}>
-						{m['view.composer.altText.error.tooLong']({ max: MAX_ALT_TEXT })}
-					</Text>
-				)}
+			{isOverMaxLength && (
+				<Text size="md" leading="snug" className={css.errorText}>
+					{m['view.composer.altText.error.tooLong']({ max: MAX_ALT_TEXT })}
+				</Text>
+			)}
 
-				{
-					<>
-						<View style={[a.border_t, a.w_full, t.atoms.border_contrast_medium, a.my_md]} />
-						<Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
-							{m['view.composer.captions.label']()}
-						</Text>
-						<SubtitleFilePicker
-							onSelectFile={handleSelectFile}
-							disabled={subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS}
-						/>
-						<View>
-							{captions.map((subtitle, i) => (
-								<SubtitleFileRow
-									key={subtitle.lang}
-									language={subtitle.lang}
-									file={subtitle.file}
-									setCaptions={setCaptions}
-									otherLanguages={LANGUAGES.filter(
-										(lang) =>
-											langCode(lang) === subtitle.lang || !captions.some((s) => s.lang === langCode(lang)),
-									)}
-									style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
-								/>
-							))}
-						</View>
-						{subtitleMissingLanguage && (
-							<Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-								{m['view.composer.captions.error.languageRequired']()}
-							</Text>
+			<div className={css.divider} />
+			<Text size="xl" weight="semiBold">
+				{m['view.composer.captions.label']()}
+			</Text>
+			<SubtitleFilePicker
+				onSelectFile={handleSelectFile}
+				disabled={subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS}
+			/>
+			<div className={css.captionsList}>
+				{captions.map((subtitle, i) => (
+					<SubtitleFileRow
+						key={subtitle.lang}
+						language={subtitle.lang}
+						file={subtitle.file}
+						setCaptions={setCaptions}
+						otherLanguages={LANGUAGES.filter(
+							(lang) => langCode(lang) === subtitle.lang || !captions.some((s) => s.lang === langCode(lang)),
 						)}
-					</>
-				}
+						alt={i % 2 === 0}
+					/>
+				))}
+			</div>
+			{subtitleMissingLanguage && (
+				<Text size="sm" color="textContrastMedium">
+					{m['view.composer.captions.error.languageRequired']()}
+				</Text>
+			)}
 
-				<View style={[a.flex_row, a.justify_end]}>
-					<Button
-						label={m['common.action.done']()}
-						size={'small'}
-						color="primary"
-						variant="solid"
-						onPress={() => {
-							saveAltText(altText);
-							control.close();
-						}}
-						style={a.mt_lg}
-						disabled={isOverMaxLength}
-					>
-						<ButtonText>{m['common.action.done']()}</ButtonText>
-					</Button>
-				</View>
-			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+			<div className={css.footer}>
+				<Button
+					label={m['common.action.done']()}
+					size="small"
+					color="primary"
+					variant="solid"
+					onClick={() => {
+						saveAltText(altText);
+						handle.close();
+					}}
+					disabled={isOverMaxLength}
+				>
+					<ButtonText>{m['common.action.done']()}</ButtonText>
+				</Button>
+			</div>
+		</div>
 	);
 }
 
 function SubtitleFileRow({
-	language,
+	alt,
 	file,
+	language,
 	otherLanguages,
 	setCaptions,
-	style,
 }: {
-	language: string;
+	alt: boolean;
 	file: File;
+	language: string;
 	otherLanguages: { code2: string; code3: string; name: string }[];
 	setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void;
-	style: StyleProp<ViewStyle>;
 }) {
 	const handleValueChange = useCallback(
 		(lang: string) => {
@@ -194,48 +183,50 @@ function SubtitleFileRow({
 		[setCaptions, language],
 	);
 
+	const languageItems = otherLanguages.map((lang) => ({
+		label: `${lang.name} (${langCode(lang)})`,
+		value: langCode(lang),
+	}));
+
 	return (
-		<View style={[a.flex_row, a.justify_between, a.py_md, a.px_lg, a.rounded_md, a.gap_md, style]}>
-			<View style={[a.flex_1, a.gap_xs, a.justify_center]}>
-				<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-					{language === '' ? (
-						<WarningIcon className={css.icon} fill={colors.negative_500} size="sm" />
-					) : (
-						<PageTextIcon className={css.icon} fill={colors.text} size="sm" />
-					)}
-					<Text style={[a.flex_1, a.leading_snug, a.font_semi_bold, a.mb_2xs]} numberOfLines={1}>
-						{file.name}
-					</Text>
-					<select
-						value={language}
-						onChange={(evt) => handleValueChange(evt.target.value)}
-						style={{ maxWidth: 200, flex: 1 }}
-					>
-						<option value="" disabled selected hidden>
-							{}
-							{m['view.composer.language.select']()}
-						</option>
-						{otherLanguages.map((lang) => (
-							<option key={langCode(lang)} value={langCode(lang)}>
-								{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
-								{`${lang.name} (${langCode(lang)})`}
-							</option>
-						))}
-					</select>
-				</View>
-			</View>
+		<div className={clsx(css.row, alt && css.rowAlt)}>
+			{language === '' ? (
+				<WarningIcon className={css.icon} fill={colors.negative_500} size="sm" />
+			) : (
+				<PageTextIcon className={css.icon} fill={colors.text} size="sm" />
+			)}
+			<Text className={css.fileName} weight="semiBold" leading="snug" numberOfLines={1}>
+				{file.name}
+			</Text>
+			<div className={css.language}>
+				<Select.Root items={languageItems} value={language} onValueChange={handleValueChange}>
+					<Select.Trigger label={m['view.composer.language.select']()}>
+						<Select.Value placeholder={m['view.composer.language.select']()} />
+						<Select.Icon />
+					</Select.Trigger>
+					<Select.Content
+						items={languageItems}
+						renderItem={({ label, value }) => (
+							<Select.Item label={label} value={value}>
+								<Select.ItemIndicator />
+								<Select.ItemText>{label}</Select.ItemText>
+							</Select.Item>
+						)}
+					/>
+				</Select.Root>
+			</div>
 			<Button
+				className={css.close}
 				label={m['view.composer.captions.action.remove']()}
 				size="tiny"
 				shape="round"
 				variant="outline"
 				color="secondary"
-				onPress={() => setCaptions((subs) => subs.filter((s) => s.lang !== language))}
-				style={[a.ml_sm]}
+				onClick={() => setCaptions((subs) => subs.filter((s) => s.lang !== language))}
 			>
 				<ButtonIcon icon={X} />
 			</Button>
-		</View>
+		</div>
 	);
 }
 

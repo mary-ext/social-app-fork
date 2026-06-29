@@ -39,7 +39,6 @@
 	"view.composer.captions.error.languageRequired": "Ensure you have selected a language for each caption file.",
 	"view.composer.captions.error.vttOnly": "Only WebVTT (.vtt) files are supported",
 	"view.composer.captions.label": "Captions (.vtt)",
-	"view.composer.captions.opensDialog": "Opens captions and alt text dialog",
 	"view.composer.captions.title": "Captions & alt text",
 	"view.composer.contentWarning.add": "Add a content warning",
 	"view.composer.contentWarning.adult": "Adult",

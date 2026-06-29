@@ -1,22 +1,21 @@
 import { useRef } from 'react';
-import { View } from 'react-native';
 
 import { logger } from '#/logger';
 
-import { atoms as a } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
 import * as Toast from '#/components/Toast';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
+import * as css from './SubtitleFilePicker.css';
+
 export function SubtitleFilePicker({
-	onSelectFile,
 	disabled,
+	onSelectFile,
 }: {
-	onSelectFile: (file: File) => void;
 	disabled?: boolean;
+	onSelectFile: (file: File) => void;
 }) {
 	const ref = useRef<HTMLInputElement>(null);
 
@@ -44,29 +43,27 @@ export function SubtitleFilePicker({
 	};
 
 	return (
-		<View style={a.gap_lg}>
+		<div className={css.row}>
 			<input
 				type="file"
 				accept=".vtt"
 				ref={ref}
-				style={a.hidden}
+				className={css.hiddenInput}
 				onChange={handlePick}
 				disabled={disabled}
 				aria-disabled={disabled}
 			/>
-			<View style={a.flex_row}>
-				<Button
-					onPress={handleClick}
-					label={m['view.composer.captions.action.select']()}
-					size="large"
-					color="primary"
-					variant="solid"
-					disabled={disabled}
-				>
-					<ButtonIcon icon={CCIcon} />
-					<ButtonText>{m['view.composer.captions.action.select']()}</ButtonText>
-				</Button>
-			</View>
-		</View>
+			<Button
+				onClick={handleClick}
+				label={m['view.composer.captions.action.select']()}
+				size="large"
+				color="primary"
+				variant="solid"
+				disabled={disabled}
+			>
+				<ButtonIcon icon={CCIcon} />
+				<ButtonText>{m['view.composer.captions.action.select']()}</ButtonText>
+			</Button>
+		</div>
 	);
 }
