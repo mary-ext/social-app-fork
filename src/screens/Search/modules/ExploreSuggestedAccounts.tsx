@@ -11,13 +11,9 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 import { m } from '#/paraglide/messages';
 
 export function SuggestedAccountsTabBar({
-	defaultTabLabel,
-	hideDefaultTab,
 	onSelectInterest,
 	selectedInterest,
 }: {
-	defaultTabLabel?: string;
-	hideDefaultTab?: boolean;
 	onSelectInterest: (interest: string | null) => void;
 	selectedInterest: string | null;
 }) {
@@ -30,19 +26,15 @@ export function SuggestedAccountsTabBar({
 
 	return (
 		<InterestTabs
-			interests={hideDefaultTab ? interests : ['all', ...interests]}
-			interestsDisplayNames={
-				hideDefaultTab
-					? interestsDisplayNames
-					: {
-							all: defaultTabLabel || m['common.feeds.forYou'](),
-							...interestsDisplayNames,
-						}
-			}
+			interests={['all', ...interests]}
+			interestsDisplayNames={{
+				all: m['common.feeds.forYou'](),
+				...interestsDisplayNames,
+			}}
 			onSelectTab={(tab) => {
 				onSelectInterest(tab === 'all' ? null : tab);
 			}}
-			selectedInterest={selectedInterest || (hideDefaultTab ? interests[0]! : 'all')}
+			selectedInterest={selectedInterest || 'all'}
 		/>
 	);
 }

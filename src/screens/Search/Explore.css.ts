@@ -3,11 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-export const topBorder = style({
-	borderTop: `1px solid ${colors.borderContrastLow}`,
-	width: '100%',
-});
-
 export const tabbedHeader = style({
 	paddingBottom: space.md,
 });

@@ -139,8 +139,9 @@ export function SearchScreenShell({
 
 	return (
 		<Layout.Screen>
-			<Layout.Header.Outer noBottomBorder ref={headerRef}>
+			<Layout.Header.Outer ref={headerRef}>
 				{navButtonNode}
+
 				<Layout.Header.Content>
 					<SearchAutocomplete
 						eager
