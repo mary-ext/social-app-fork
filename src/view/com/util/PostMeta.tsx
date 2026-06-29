@@ -121,7 +121,6 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 						numberOfLines={1}
 						onPress={onBeforePressAuthor}
 						size="md"
-						tabIndex={-1}
 						to={profileLink}
 					>
 						{sanitizeHandle(handle)}
