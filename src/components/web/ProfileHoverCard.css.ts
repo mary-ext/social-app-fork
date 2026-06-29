@@ -14,43 +14,48 @@ export const positioner = style({
 // the positioning/animation layer only; the visual chrome lives on the card so its fixed width is the full
 // card width (border included).
 export const popup = style({
+	backgroundColor: vars.palette.contrast_0,
+	border: `1px solid ${vars.palette.contrast_100}`,
+	borderRadius: borderRadius.md,
+	boxShadow: vars.shadow.lg,
 	maxWidth: '100%',
 	transformOrigin: 'var(--transform-origin)',
 	transitionDuration: '200ms',
 	transitionProperty: 'opacity, transform',
 	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+	overflow: 'hidden',
 	selectors: {
 		'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.97)' },
 	},
 });
 
-// a live card is roomier; a normal card pads its own content, while a live card's media bleeds to the card
-// edges so its padding lives inside LiveStatus instead. `border-box` keeps the border within the fixed width.
-export const card = style({
-	backgroundColor: vars.palette.contrast_0,
-	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: borderRadius.md,
-	boxShadow: vars.shadow.lg,
+const baseCard = style({
+	display: 'flex',
+	flexDirection: 'column',
 	boxSizing: 'border-box',
-	maxWidth: '100%',
-	// clip the live card's bleed-to-edge media to the rounded corners
-	overflow: 'hidden',
-	width: 300,
 });
 
-export const cardLive = style({
-	width: 350,
-});
+export const liveCard = style([
+	baseCard,
+	{
+		width: 350,
+	},
+]);
 
-export const cardPadded = style({
-	padding: space.lg,
-});
+export const profileCard = style([
+	baseCard,
+	{
+		padding: space.lg,
+		width: 300,
+	},
+]);
 
-export const loading = style({
+export const loadingCard = style({
 	alignItems: 'center',
 	display: 'flex',
 	justifyContent: 'center',
 	minHeight: 200,
+	width: 300,
 });
 
 export const headerRow = style({

@@ -8,7 +8,6 @@ import {
 } from '@atcute/bluesky-moderation';
 import { PreviewCard } from '@base-ui/react/preview-card';
 import { useNavigation } from '@react-navigation/native';
-import { clsx } from 'clsx';
 
 import { getModerationCauseKey } from '#/lib/moderation';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -104,7 +103,7 @@ function Card({ did }: { did: string }) {
 	if (data && moderationOpts) {
 		if (status.isActive) {
 			return (
-				<div className={clsx(css.card, css.cardLive)}>
+				<div className={css.liveCard}>
 					<LiveStatus
 						embed={status.embed as AppBskyEmbedExternal.View}
 						onPressOpenProfile={onPressOpenProfile}
@@ -115,15 +114,11 @@ function Card({ did }: { did: string }) {
 				</div>
 			);
 		}
-		return (
-			<div className={clsx(css.card, css.cardPadded)}>
-				<Inner moderationOpts={moderationOpts} profile={data} />
-			</div>
-		);
+		return <Inner moderationOpts={moderationOpts} profile={data} />;
 	}
 
 	return (
-		<div className={clsx(css.card, css.loading)}>
+		<div className={css.loadingCard}>
 			<Spinner color={colors.contrast_500} label={m['common.status.loading']()} size="xl" />
 		</div>
 	);
@@ -153,7 +148,7 @@ function Inner({
 	const isFollowing = profileShadow.viewer?.following;
 
 	return (
-		<div>
+		<div className={css.profileCard}>
 			<div className={css.headerRow}>
 				<Link className={css.avatarLink} label={m['common.profile.action.view']()} to={profileURL}>
 					<UserAvatar
@@ -193,7 +188,13 @@ function Inner({
 			</div>
 
 			<Link className={css.nameLink} label={m['common.profile.action.view']()} to={profileURL}>
-				<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
+				<ProfileCard.Name
+					moderationOpts={moderationOpts}
+					profile={profile}
+					color="text"
+					size="lg"
+					weight="semiBold"
+				/>
 				<ProfileHeaderHandle disableTaps profile={profileShadow} />
 			</Link>
 

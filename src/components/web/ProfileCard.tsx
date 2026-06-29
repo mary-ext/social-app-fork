@@ -207,29 +207,42 @@ function InlineNameAndHandle({
 }
 
 export function Name({
+	color = 'textContrastMedium',
 	moderationOpts,
 	profile,
+	size = 'md_sub',
+	weight = 'normal',
 }: {
+	color?: 'text' | 'textContrastMedium';
 	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
+	size?: 'md_sub' | 'lg';
+	weight?: 'normal' | 'semiBold';
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
+
 	return (
-		<Text numberOfLines={1} color="textContrastMedium" size="md_sub">
+		<Text numberOfLines={1} color={color} size={size} weight={weight}>
 			{name}
 		</Text>
 	);
 }
 
-export function Handle({ profile }: { profile: AnyProfileView }) {
+export function Handle({
+	profile,
+	weight = 'semiBold',
+}: {
+	profile: AnyProfileView;
+	weight?: 'normal' | 'semiBold';
+}) {
 	const handle = sanitizeHandle(profile.handle);
 	return (
 		<div className={css.handleRow}>
-			<Text className={css.handleText} color="textContrastHigh" weight="semiBold" numberOfLines={1}>
+			<Text className={css.handleText} color="textContrastHigh" weight={weight} numberOfLines={1}>
 				{handle}
 			</Text>
 
