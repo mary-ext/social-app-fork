@@ -60,7 +60,7 @@ export function ProfileFeedHeaderSkeleton() {
 			</Layout.Header.Content>
 			<Layout.Header.Slot>
 				<div className={styles.skeletonPin}>
-					<Pin size="xl" fill={colors.textContrastLow} />
+					<Pin size="lg" fill={colors.textContrastLow} />
 				</div>
 			</Layout.Header.Slot>
 		</Layout.Header.Outer>
@@ -238,7 +238,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 								color="secondary"
 								onClick={() => void onTogglePinned()}
 							>
-								<ButtonIcon icon={Pin} size="xl" />
+								<ButtonIcon icon={Pin} size="lg" />
 							</Button>
 						)}
 					</Layout.Header.Slot>

@@ -146,7 +146,7 @@ export const skeletonPin = style({
 	backgroundColor: vars.palette.contrast_25,
 	borderRadius: 999,
 	display: 'flex',
-	height: 34,
+	height: 33,
 	justifyContent: 'center',
-	width: 34,
+	width: 33,
 });

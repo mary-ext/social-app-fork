@@ -320,7 +320,7 @@ export function FeedsScreen({}: Props) {
 						to="/settings/saved-feeds"
 						variant="ghost"
 					>
-						<ButtonIcon icon={Gear} size="xl" />
+						<ButtonIcon icon={Gear} size="lg" />
 					</LinkButton>
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>

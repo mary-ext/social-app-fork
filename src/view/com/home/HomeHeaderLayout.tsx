@@ -46,7 +46,7 @@ export function HomeHeaderLayout() {
 						to="/feeds"
 						variant="ghost"
 					>
-						<ButtonIcon icon={FeedsIcon} size="md" />
+						<ButtonIcon icon={FeedsIcon} size="lg" />
 					</LinkButton>
 				)}
 			</Layout.Header.Slot>

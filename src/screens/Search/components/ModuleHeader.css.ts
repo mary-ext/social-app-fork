@@ -55,7 +55,7 @@ export const searchButton = style({
 
 export const pinButton = style({
 	flexShrink: 0,
-	marginRight: -6,
+	marginRight: -4,
 });
 
 export const feedLink = style({

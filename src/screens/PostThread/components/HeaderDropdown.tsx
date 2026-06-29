@@ -23,7 +23,7 @@ export function HeaderDropdown({
 						color="secondary"
 						shape="round"
 					>
-						<ButtonIcon icon={SettingsSlider} size="md" />
+						<ButtonIcon icon={SettingsSlider} size="lg" />
 					</Button>
 				}
 			/>

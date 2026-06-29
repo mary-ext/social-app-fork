@@ -91,7 +91,7 @@ export function SearchButton({ label, onClick }: { label: string; onClick?: () =
 			size="small"
 			variant="ghost"
 		>
-			<ButtonIcon icon={SearchIcon} size="xl" />
+			<ButtonIcon icon={SearchIcon} size="lg" />
 		</Button>
 	);
 }

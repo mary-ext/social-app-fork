@@ -126,7 +126,7 @@ export function NotificationsScreen({}: Props) {
 								color="secondary"
 								shape="round"
 							>
-								<ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="md" />
+								<ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
 							</LinkButton>
 						</Layout.Header.Slot>
 					</Layout.Header.Outer>

@@ -91,7 +91,7 @@ export function BackButton({
 				shape="round"
 				onClick={handleClick}
 			>
-				<ButtonIcon icon={ArrowLeft} size="md" />
+				<ButtonIcon icon={ArrowLeft} size="lg" />
 			</Button>
 		</Slot>
 	);
@@ -120,7 +120,7 @@ export function MenuButton() {
 				shape="round"
 				onClick={onClick}
 			>
-				<ButtonIcon icon={Menu} size="md" />
+				<ButtonIcon icon={Menu} size="lg" />
 			</Button>
 		</Slot>
 	);
