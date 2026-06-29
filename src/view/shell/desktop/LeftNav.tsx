@@ -394,7 +394,7 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 				color="primary"
 				className={minimal ? css.composeButtonMinimal : undefined}
 			>
-				<ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
+				<ButtonIcon icon={EditBigIcon} size={minimal ? 'xl' : 'sm'} />
 				{!minimal && <ButtonText>{m['common.compose.action.new']()}</ButtonText>}
 			</Button>
 		</div>

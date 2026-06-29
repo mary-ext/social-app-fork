@@ -238,7 +238,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 								color="secondary"
 								onClick={() => void onTogglePinned()}
 							>
-								<ButtonIcon icon={Pin} size="lg" />
+								<ButtonIcon icon={Pin} size="xl" />
 							</Button>
 						)}
 					</Layout.Header.Slot>
@@ -363,7 +363,7 @@ function DialogInner({
 					shape="round"
 					onClick={onPressShare}
 				>
-					<ButtonIcon icon={Share} size="lg" />
+					<ButtonIcon icon={Share} size="xl" />
 				</Button>
 			</div>
 

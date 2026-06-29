@@ -72,23 +72,6 @@ export type ButtonIconProps = {
 	size?: IconProps['size'];
 };
 
-// pixel size per icon token for icons rendered inside a Button. the mid-to-large tokens intentionally
-// diverge from the raw icon scale (`lg` is 24 here, 20 in `icons/common`) so button icons track the
-// rendered text. passed as an explicit width/height rather than the icon `size` prop so the raw scale
-// isn't consulted.
-const ICON_PX: Record<NonNullable<IconProps['size']>, number> = {
-	'2xl': 32,
-	'2xs': 8,
-	'3xl': 40,
-	'4xl': 48,
-	'5xl': 64,
-	lg: 24,
-	md: 18,
-	sm: 16,
-	xl: 28,
-	xs: 12,
-};
-
 // default icon token per button size, so a large/tiny button's icon tracks its text rather than always
 // rendering at the `small` scale.
 const DEFAULT_ICON_SIZE: Record<ButtonContextValue['size'], NonNullable<IconProps['size']>> = {
@@ -104,7 +87,6 @@ export function ButtonIcon({ icon: Icon, size }: ButtonIconProps) {
 		throw new Error('ButtonIcon must be rendered inside a Button');
 	}
 	const resolvedSize = size ?? DEFAULT_ICON_SIZE[ctx.size];
-	const px = ICON_PX[resolvedSize];
 	return (
 		<span
 			className={styles.iconBox({
@@ -113,7 +95,7 @@ export function ButtonIcon({ icon: Icon, size }: ButtonIconProps) {
 				size: ctx.size,
 			})}
 		>
-			<Icon width={px} height={px} fill="currentColor" />
+			<Icon size={resolvedSize} fill="currentColor" />
 		</span>
 	);
 }
