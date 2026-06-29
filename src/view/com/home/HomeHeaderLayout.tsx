@@ -1,62 +1,55 @@
-import { View } from 'react-native';
-
-import { HITSLOP_10 } from '#/lib/constants';
-
 import { useSession } from '#/state/session';
 
-import { HomeHeaderLayoutMobile } from '#/view/com/home/HomeHeaderLayoutMobile';
+import * as styles from '#/view/com/home/HomeHeaderLayout.css';
 import { Logo } from '#/view/icons/Logo';
 
-import { atoms as a, useBreakpoints, useGutters, useTheme } from '#/alf';
+import { useBreakpoints } from '#/alf';
 
-import { ButtonIcon } from '#/components/Button';
 import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag';
-import * as Layout from '#/components/Layout';
-import { Link } from '#/components/Link';
+import { ButtonIcon } from '#/components/web/Button';
+import * as Layout from '#/components/web/Layout';
+import { LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 
-/**
- * The home screen's chrome above the feed tabs — the logo and a feeds-discovery link. Rendered as the
- * scroll-away header of the feed tabs; the tab bar below it stays sticky.
- */
+/** The home screen's scroll-away header above the feed tabs: a centered logo and a feeds-discovery link. */
 export function HomeHeaderLayout() {
 	const { gtMobile } = useBreakpoints();
-	if (!gtMobile) {
-		return <HomeHeaderLayoutMobile />;
-	}
-	return <HomeHeaderLayoutDesktopAndTablet />;
-}
-
-function HomeHeaderLayoutDesktopAndTablet() {
-	const t = useTheme();
 	const { hasSession } = useSession();
-	const gutters = useGutters([0, 'base']);
 
-	if (!hasSession) {
+	// logged out past the mobile breakpoint the side nav owns navigation, so there's nothing to show
+	if (gtMobile && !hasSession) {
 		return null;
 	}
 
 	return (
-		<Layout.Center>
-			<View style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
-				<View style={{ width: 34 }} />
-				<View style={[a.flex_1, a.align_center, a.justify_center]}>
-					<Logo width={28} />
-				</View>
-				<Link
-					to="/feeds"
-					hitSlop={HITSLOP_10}
-					label={m['view.feeds.explore.a11y']()}
-					size="small"
-					variant="ghost"
-					color="secondary"
-					shape="square"
-					style={[a.justify_center]}
-				>
-					<ButtonIcon icon={FeedsIcon} size="lg" />
-				</Link>
-			</View>
-		</Layout.Center>
+		<Layout.Header.Outer noBottomBorder sticky={false}>
+			{gtMobile ? (
+				<Layout.Header.Slot>
+					<div className={styles.spacer} />
+				</Layout.Header.Slot>
+			) : (
+				<Layout.Header.MenuButton />
+			)}
+
+			<div className={styles.logo}>
+				<Logo width={30} />
+			</div>
+
+			<Layout.Header.Slot>
+				{hasSession && (
+					<LinkButton
+						color="secondary"
+						label={m['view.feeds.explore.a11y']()}
+						shape="round"
+						size="small"
+						to="/feeds"
+						variant="ghost"
+					>
+						<ButtonIcon icon={FeedsIcon} size="md" />
+					</LinkButton>
+				)}
+			</Layout.Header.Slot>
+		</Layout.Header.Outer>
 	);
 }
