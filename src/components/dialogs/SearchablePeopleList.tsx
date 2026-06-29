@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
@@ -42,7 +42,7 @@ type WebViewProps = {
 	onMouseLeave?: () => void;
 };
 
-export type ProfileItem = {
+type ProfileItem = {
 	type: 'profile';
 	key: string;
 	profile: AnyProfileView;
@@ -77,21 +77,12 @@ export function SearchablePeopleList({
 	showRecentConvos,
 	sortByMessageDeclaration,
 	onSelectChat,
-	renderProfileCard,
 }: {
 	title: string;
 	showRecentConvos?: boolean;
 	sortByMessageDeclaration?: boolean;
-} & (
-	| {
-			renderProfileCard: (item: ProfileItem) => React.ReactNode;
-			onSelectChat?: undefined;
-	  }
-	| {
-			onSelectChat: (chat: { kind: 'user'; did: string } | { kind: 'convo'; id: string }) => void;
-			renderProfileCard?: undefined;
-	  }
-)) {
+	onSelectChat: (chat: { kind: 'user'; did: string } | { kind: 'convo'; id: string }) => void;
+}) {
 	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 	const control = Dialog.useDialogContext();
@@ -242,33 +233,24 @@ export function SearchablePeopleList({
 		({ item }: { item: Item }) => {
 			switch (item.type) {
 				case 'existingChat': {
-					if (renderProfileCard) {
-						// should be unreachable
-						return null;
-					} else {
-						return (
-							<ExistingChatCard
-								key={item.key}
-								convo={item.convo}
-								moderationOpts={moderationOpts!}
-								onPress={(id) => onSelectChat({ kind: 'convo', id })}
-							/>
-						);
-					}
+					return (
+						<ExistingChatCard
+							key={item.key}
+							convo={item.convo}
+							moderationOpts={moderationOpts!}
+							onPress={(id) => onSelectChat({ kind: 'convo', id })}
+						/>
+					);
 				}
 				case 'profile': {
-					if (renderProfileCard) {
-						return <Fragment key={item.key}>{renderProfileCard(item)}</Fragment>;
-					} else {
-						return (
-							<DefaultProfileCard
-								key={item.key}
-								profile={item.profile}
-								moderationOpts={moderationOpts!}
-								onPress={(did) => onSelectChat({ kind: 'user', did })}
-							/>
-						);
-					}
+					return (
+						<DefaultProfileCard
+							key={item.key}
+							profile={item.profile}
+							moderationOpts={moderationOpts!}
+							onPress={(did) => onSelectChat({ kind: 'user', did })}
+						/>
+					);
 				}
 				case 'placeholder': {
 					return <ProfileCardSkeleton key={item.key} />;
@@ -283,7 +265,7 @@ export function SearchablePeopleList({
 					return null;
 			}
 		},
-		[moderationOpts, onSelectChat, renderProfileCard],
+		[moderationOpts, onSelectChat],
 	);
 
 	useLayoutEffect(() => {

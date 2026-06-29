@@ -29,12 +29,12 @@ import { ListHiddenScreen } from '#/screens/List/ListHiddenScreen';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { useDialogControl } from '#/components/Dialog';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import * as Layout from '#/components/Layout';
 import { Loader } from '#/components/Loader';
 import * as Hider from '#/components/moderation/Hider';
+import * as Dialog from '#/components/web/Dialog';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { m } from '#/paraglide/messages';
@@ -139,7 +139,8 @@ function ProfileListScreenLoaded({
 	const isScreenFocused = useIsFocused();
 	const isHidden = list.labels?.findIndex((l) => l.val === '!hide') !== -1;
 	const isOwner = currentAccount?.did === list.creator.did;
-	const addUserDialogControl = useDialogControl();
+	const addUserDialogHandle = Dialog.useDialogHandle();
+	const onPressAddUser = () => addUserDialogHandle.open(null);
 	const [activeTab, setActiveTab] = useState<'people' | 'posts'>('posts');
 
 	const moderation = useMemo(() => {
@@ -168,14 +169,14 @@ function ProfileListScreenLoaded({
 						feed={`list|${uri}`}
 						isFocused={isScreenFocused && focused}
 						isOwner={isOwner}
-						onPressAddUser={addUserDialogControl.open}
+						onPressAddUser={onPressAddUser}
 					/>
 				),
 			},
 			{
 				id: 'people',
 				label: m['common.people.label'](),
-				render: () => <AboutSection list={list} onPressAddUser={addUserDialogControl.open} />,
+				render: () => <AboutSection list={list} onPressAddUser={onPressAddUser} />,
 			},
 		];
 		return (
@@ -200,7 +201,7 @@ function ProfileListScreenLoaded({
 							onClick={() => openComposer({ logContext: 'Fab' })}
 						/>
 					</View>
-					<ListAddRemoveUsersDialog control={addUserDialogControl} list={list} onChange={onChangeMembers} />
+					<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} onChange={onChangeMembers} />
 				</Hider.Content>
 			</Hider.Outer>
 		);
@@ -216,14 +217,14 @@ function ProfileListScreenLoaded({
 			<Hider.Content>
 				<View style={[a.util_screen_outer]}>
 					<Layout.Center style={[a.border_b, t.atoms.border_contrast_low]}>{renderHeader()}</Layout.Center>
-					<AboutSection list={list} onPressAddUser={addUserDialogControl.open} />
+					<AboutSection list={list} onPressAddUser={onPressAddUser} />
 					<FAB
 						icon={<EditBigIcon size="lg" fill={colors.white} />}
 						label={m['common.compose.action.new']()}
 						onClick={() => openComposer({ logContext: 'Fab' })}
 					/>
 				</View>
-				<ListAddRemoveUsersDialog control={addUserDialogControl} list={list} onChange={onChangeMembers} />
+				<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} onChange={onChangeMembers} />
 			</Hider.Content>
 		</Hider.Outer>
 	);

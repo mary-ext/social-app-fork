@@ -82,8 +82,8 @@ export function Default({
 }
 
 /** Vertical card container: stacks the header, labels, and description. */
-export function Outer({ children }: { children: ReactNode }) {
-	return <div className={css.outer}>{children}</div>;
+export function Outer({ children, className }: { children: ReactNode; className?: string }) {
+	return <div className={clsx(css.outer, className)}>{children}</div>;
 }
 
 /** Horizontal row laying out an avatar, name/handle, and trailing action. */
