@@ -19,7 +19,6 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { useDialogControl } from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
@@ -65,7 +64,7 @@ function ProfileMenu({
 }): React.ReactNode {
 	const { currentAccount, hasSession } = useSession();
 	const reportDialogControl = useReportDialogControl();
-	const addToListsDialogControl = useDialogControl();
+	const addToListsDialogHandle = useDialogHandle();
 	const queryClient = useQueryClient();
 	const navigation = useNavigation<NavigationProp>();
 	const isSelf = currentAccount?.did === profile.did;
@@ -276,7 +275,10 @@ function ProfileMenu({
 									<Menu.ItemText>{m['common.starterPack.action.add']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={StarterPack} />
 								</Menu.Item>
-								<Menu.Item label={m['view.profile.list.add']()} onClick={addToListsDialogControl.open}>
+								<Menu.Item
+									label={m['view.profile.list.add']()}
+									onClick={() => addToListsDialogHandle.open(null)}
+								>
 									<Menu.ItemText>{m['view.profile.list.add']()}</Menu.ItemText>
 									<Menu.ItemIcon icon={List} />
 								</Menu.Item>
@@ -371,7 +373,7 @@ function ProfileMenu({
 			</Menu.Root>
 			<StarterPackDialog handle={addToStarterPacksDialogHandle} targetDid={profile.did} />
 			<UserAddRemoveListsDialog
-				control={addToListsDialogControl}
+				handle={addToListsDialogHandle}
 				profile={profile}
 				onChange={invalidateProfileQuery}
 			/>

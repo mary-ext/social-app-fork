@@ -113,7 +113,7 @@ export function Header({ children, className }: { children: ReactNode; className
 export type AvatarProps = { size?: number; src: string | undefined };
 
 export function Avatar({ size = 40, src }: AvatarProps) {
-	return <UserAvatar avatar={src} size={size} type="algo" />;
+	return <UserAvatar avatar={src} size={size} type="list" />;
 }
 
 export function AvatarPlaceholder({ size = 40 }: Omit<AvatarProps, 'src'>) {
@@ -121,17 +121,28 @@ export function AvatarPlaceholder({ size = 40 }: Omit<AvatarProps, 'src'>) {
 }
 
 export function TitleAndByline({
+	byline,
 	creator,
 	modUi,
 	purpose = CURATELIST,
 	title,
 }: {
+	/** Secondary line under the title; defaults to a "by @creator" byline derived from {@link creator}. */
+	byline?: string;
 	creator?: AnyProfileView;
 	modUi?: DisplayRestrictions;
 	purpose?: AppBskyGraphDefs.ListView['purpose'];
 	title: string;
 }) {
 	const { currentAccount } = useSession();
+
+	const subtitle =
+		byline ??
+		(creator
+			? purpose === MODLIST
+				? m['common.list.moderationBy']({ handle: sanitizeHandle(creator.handle) })
+				: m['common.list.byCreator']({ handle: sanitizeHandle(creator.handle) })
+			: undefined);
 
 	return (
 		<div className={css.titleColumn}>
@@ -151,11 +162,9 @@ export function TitleAndByline({
 					</Text>
 				</Hider.Content>
 			</Hider.Outer>
-			{creator && (
+			{subtitle && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{purpose === MODLIST
-						? m['common.list.moderationBy']({ handle: sanitizeHandle(creator.handle) })
-						: m['common.list.byCreator']({ handle: sanitizeHandle(creator.handle) })}
+					{subtitle}
 				</Text>
 			)}
 		</div>

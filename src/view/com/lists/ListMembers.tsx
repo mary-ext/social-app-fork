@@ -19,10 +19,10 @@ import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { ListFooter } from '#/components/Lists';
 import * as ProfileCard from '#/components/ProfileCard';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -213,7 +213,7 @@ function ListMember({
 	list: string;
 }) {
 	const t = useTheme();
-	const editMembershipDialogControl = useDialogControl();
+	const editMembershipDialogHandle = useDialogHandle();
 
 	return (
 		<View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
@@ -228,7 +228,7 @@ function ListMember({
 								label={m['common.action.edit']()}
 								onPress={(e) => {
 									e.preventDefault();
-									editMembershipDialogControl.open();
+									editMembershipDialogHandle.open(null);
 								}}
 								size="small"
 								variant="solid"
@@ -246,11 +246,11 @@ function ListMember({
 			</ProfileCard.Link>
 
 			<UserAddRemoveListsDialog
-				control={editMembershipDialogControl}
+				handle={editMembershipDialogHandle}
 				profile={profile}
 				onChange={(type, changedList) => {
 					if (type === 'remove' && changedList.uri === list) {
-						editMembershipDialogControl.close();
+						editMembershipDialogHandle.close();
 					}
 				}}
 			/>
