@@ -86,7 +86,7 @@ function ProfileMenu({
 	const loggedOutWarningPromptHandle = WebPrompt.usePromptHandle();
 	const goLiveDialogHandle = useDialogHandle();
 	const goLiveDisabledDialogHandle = useDialogHandle();
-	const addToStarterPacksDialogControl = useDialogControl();
+	const addToStarterPacksDialogHandle = useDialogHandle();
 
 	const showLoggedOutWarning = useMemo(() => {
 		return (
@@ -102,8 +102,8 @@ function ProfileMenu({
 	}, [queryClient, profile.did]);
 
 	const onPressAddToStarterPacks = useCallback(() => {
-		addToStarterPacksDialogControl.open();
-	}, [addToStarterPacksDialogControl]);
+		addToStarterPacksDialogHandle.open(null);
+	}, [addToStarterPacksDialogHandle]);
 
 	const onPressShare = useCallback(() => {
 		void shareUrl(toShareUrl(makeProfileLink(profile)));
@@ -369,7 +369,7 @@ function ProfileMenu({
 					) : null}
 				</Menu.Popup>
 			</Menu.Root>
-			<StarterPackDialog control={addToStarterPacksDialogControl} targetDid={profile.did} />
+			<StarterPackDialog handle={addToStarterPacksDialogHandle} targetDid={profile.did} />
 			<UserAddRemoveListsDialog
 				control={addToListsDialogControl}
 				profile={profile}

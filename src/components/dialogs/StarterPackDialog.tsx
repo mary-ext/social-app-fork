@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-import { View } from 'react-native';
 import type {
 	AnyProfileView,
 	AppBskyGraphGetStarterPacksWithMembership,
@@ -10,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
 
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorStarterPacksWithMembershipsQuery } from '#/state/queries/actor-starter-packs';
 import {
 	useListMembershipAddMutation,
@@ -20,189 +19,160 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { AvatarStack } from '#/components/AvatarStack';
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { Divider } from '#/components/Divider';
+import { CenteredSpinner } from '#/components/CenteredSpinner';
+import * as css from '#/components/dialogs/StarterPackDialog.css';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { StarterPack } from '#/components/icons/StarterPack';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Loader } from '#/components/Loader';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { AvatarStack } from '#/components/web/AvatarStack';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
-type StarterPackDialogItem = StarterPackWithMembership | { type: 'starter_pack_dialog_loader' };
 
-export type StarterPackDialogProps = {
-	control: Dialog.DialogControlProps;
+type StarterPackDialogProps = {
+	handle: Dialog.DialogHandle;
 	targetDid: string;
-	enabled?: boolean;
 };
 
-export function StarterPackDialog({ control, targetDid, enabled }: StarterPackDialogProps) {
-	const navigation = useNavigation<NavigationProp>();
+export function StarterPackDialog({ handle, targetDid }: StarterPackDialogProps) {
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup scroll="body" label={m['common.starterPack.action.add']()}>
+				<DialogInner handle={handle} targetDid={targetDid} />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
 
-	const navToWizard = useCallback(() => {
-		control.close();
+function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
+	const navigation = useNavigation<NavigationProp>();
+	const { data: subject } = useProfileQuery({ did: targetDid });
+
+	const { data, isError, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
+		useActorStarterPacksWithMembershipsQuery({ did: targetDid });
+
+	const membershipItems = data?.pages.flatMap((page) => page.starterPacksWithMembership) ?? [];
+
+	const onStartWizard = () => {
+		handle.close();
 		navigation.navigate('StarterPackWizard', {
 			fromDialog: true,
-			targetDid: targetDid,
+			targetDid,
 			onSuccess: () => {
 				setTimeout(() => {
-					if (!control.isOpen) {
-						control.open();
+					if (!handle.isOpen) {
+						handle.open(null);
 					}
 				}, 0);
 			},
 		});
-	}, [navigation, control, targetDid]);
+	};
 
-	const wrappedNavToWizard = navToWizard;
+	const onEndReached = () => {
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
+		void fetchNextPage();
+	};
 
 	return (
-		<Dialog.Outer control={control}>
-			<Dialog.Handle />
-			<StarterPackList onStartWizard={wrappedNavToWizard} targetDid={targetDid} enabled={enabled} />
-		</Dialog.Outer>
+		<>
+			<div className={css.header}>
+				<div className={css.headerRow}>
+					<Text size="lg" weight="semiBold">
+						{m['common.starterPack.action.add']()}
+					</Text>
+					<Button
+						className={css.closeButton}
+						color="secondary"
+						label={m['common.action.close']()}
+						onClick={() => handle.close()}
+						shape="round"
+						size="small"
+						variant="ghost"
+					>
+						<ButtonIcon icon={XIcon} />
+					</Button>
+				</div>
+				{membershipItems.length > 0 && (
+					<div className={css.subHeaderRow}>
+						<Text size="md" weight="semiBold">
+							{m['components.dialogs.starterPack.newTitle']()}
+						</Text>
+						<Button
+							color="secondary_inverted"
+							label={m['components.dialogs.starterPack.createTitle']()}
+							onClick={onStartWizard}
+							size="small"
+						>
+							<ButtonText>{m['common.action.create']()}</ButtonText>
+							<ButtonIcon icon={PlusIcon} />
+						</Button>
+					</div>
+				)}
+			</div>
+			<Dialog.List
+				className={css.list}
+				data={membershipItems}
+				keyExtractor={(item) => item.starterPack.uri}
+				renderItem={(item) => (
+					<StarterPackItem starterPackWithMembership={item} subject={subject} targetDid={targetDid} />
+				)}
+				onEndReached={onEndReached}
+				isFetchingNextPage={isFetchingNextPage}
+				loadingLabel={m['common.status.loading']()}
+				ListEmptyComponent={
+					isLoading ? (
+						<div className={css.loading}>
+							<CenteredSpinner label={m['common.status.loading']()} size="lg" />
+						</div>
+					) : (
+						<Empty onStartWizard={onStartWizard} />
+					)
+				}
+			/>
+		</>
 	);
 }
 
 function Empty({ onStartWizard }: { onStartWizard: () => void }) {
 	return (
-		<View style={[a.gap_2xl, { paddingTop: 100 }]}>
-			<View style={[a.gap_xs, a.align_center]}>
+		<div className={css.empty}>
+			<div className={css.emptyText}>
 				<StarterPack width={48} fill={colors.contrast_200} />
-				<Text style={[a.text_center]}>{m['components.dialogs.starterPack.empty']()}</Text>
-			</View>
-			<View style={[a.align_center]}>
-				<Button
-					label={m['components.dialogs.starterPack.createTitle']()}
-					color="secondary_inverted"
-					size="small"
-					onPress={onStartWizard}
-				>
-					<ButtonText>{m['common.action.create']()}</ButtonText>
-					<ButtonIcon icon={PlusIcon} />
-				</Button>
-			</View>
-		</View>
-	);
-}
-
-function StarterPackList({
-	onStartWizard,
-	targetDid,
-	enabled,
-}: {
-	onStartWizard: () => void;
-	targetDid: string;
-	enabled?: boolean;
-}) {
-	const control = Dialog.useDialogContext();
-	const { data: subject } = useProfileQuery({ did: targetDid });
-
-	const { data, isError, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
-		useActorStarterPacksWithMembershipsQuery({ did: targetDid, enabled });
-
-	const membershipItems = data?.pages.flatMap((page) => page.starterPacksWithMembership) || [];
-
-	const onEndReached = useCallback(async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			// Error handling is optional since this is just pagination
-		}
-	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
-
-	const renderItem = useCallback(
-		({ item }: { item: StarterPackDialogItem }) => {
-			if ('type' in item) {
-				return (
-					<View style={[a.align_center, a.py_2xl]}>
-						<Loader size="xl" />
-					</View>
-				);
-			}
-
-			return <StarterPackItem starterPackWithMembership={item} targetDid={targetDid} subject={subject} />;
-		},
-		[targetDid, subject],
-	);
-
-	const onClose = useCallback(() => {
-		control.close();
-	}, [control]);
-
-	const listHeader = (
-		<>
-			<View style={[a.justify_between, a.align_center, a.flex_row, a.pb_lg]}>
-				<Text style={[a.text_lg, a.font_semi_bold]}>{m['common.starterPack.action.add']()}</Text>
-				<Button
-					label={m['common.action.close']()}
-					onPress={onClose}
-					variant="ghost"
-					color="secondary"
-					size="small"
-					shape="round"
-					style={{ margin: -8 }}
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</View>
-			{membershipItems.length > 0 && (
-				<>
-					<View style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
-						<Text style={[a.text_md, a.font_semi_bold]}>
-							{m['components.dialogs.starterPack.newTitle']()}
-						</Text>
-						<Button
-							label={m['components.dialogs.starterPack.createTitle']()}
-							color="secondary_inverted"
-							size="small"
-							onPress={onStartWizard}
-						>
-							<ButtonText>{m['common.action.create']()}</ButtonText>
-							<ButtonIcon icon={PlusIcon} />
-						</Button>
-					</View>
-					<Divider />
-				</>
-			)}
-		</>
-	);
-
-	return (
-		<Dialog.InnerFlatList
-			data={isLoading ? [{ type: 'starter_pack_dialog_loader' }] : membershipItems}
-			renderItem={renderItem}
-			keyExtractor={(item) => ('type' in item ? item.type : item.starterPack.uri)}
-			onEndReached={() => void onEndReached()}
-			onEndReachedThreshold={0.1}
-			ListHeaderComponent={listHeader}
-			ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
-			style={[a.px_2xl, { minHeight: 500 }]}
-		/>
+				<Text align="center">{m['components.dialogs.starterPack.empty']()}</Text>
+			</div>
+			<Button
+				color="secondary_inverted"
+				label={m['components.dialogs.starterPack.createTitle']()}
+				onClick={onStartWizard}
+				size="small"
+			>
+				<ButtonText>{m['common.action.create']()}</ButtonText>
+				<ButtonIcon icon={PlusIcon} />
+			</Button>
+		</div>
 	);
 }
 
 function StarterPackItem({
 	starterPackWithMembership,
-	targetDid,
 	subject,
+	targetDid,
 }: {
 	starterPackWithMembership: StarterPackWithMembership;
-	targetDid: string;
 	subject?: AnyProfileView;
+	targetDid: string;
 }) {
-	const t = useTheme();
 	const { currentAccount } = useSession();
+	const moderationOpts = useModerationOpts();
 	const isSelf = subject?.did === currentAccount?.did;
 
 	const starterPack = starterPackWithMembership.starterPack;
@@ -236,64 +206,57 @@ function StarterPackItem({
 	const isPending = isPendingAdd || isPendingRemove;
 
 	const handleToggleMembership = () => {
-		if (!starterPack.list?.uri || isPending) return;
+		if (!starterPack.list?.uri || isPending) {
+			return;
+		}
 
 		const listUri = starterPack.list.uri;
 
 		if (!isInPack) {
-			addMembership({
-				listUri: listUri,
-				actorDid: targetDid,
-			});
+			addMembership({ actorDid: targetDid, listUri });
 		} else {
 			if (!starterPackWithMembership.listItem?.uri) {
-				console.error('Cannot remove: missing membership URI');
+				logger.error('Cannot remove from starter pack: missing membership URI');
 				return;
 			}
 			removeMembership({
-				listUri: listUri,
 				actorDid: targetDid,
+				listUri,
 				membershipUri: starterPackWithMembership.listItem.uri,
 			});
 		}
 	};
 
 	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	const sample = starterPack.listItemsSample ?? [];
+	const listItemCount = starterPack.list?.listItemCount ?? 0;
 
 	return (
-		<View style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
-			<View>
-				<Text emoji style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
+		<div className={css.item}>
+			<div className={css.itemInfo}>
+				<Text numberOfLines={1} size="md" weight="semiBold">
 					{record.name}
 				</Text>
-
-				<View style={[a.flex_row, a.align_center, a.mt_xs]}>
-					{starterPack.listItemsSample && starterPack.listItemsSample.length > 0 && (
-						<>
-							<AvatarStack
-								size={24}
-								profiles={
-									starterPack.listItemsSample?.slice(0, 4).map((p) => p.subject as AnyProfileView) ?? []
-								}
-							/>
-
-							{starterPack.list?.listItemCount && starterPack.list.listItemCount > 4 && (
-								<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.ml_xs]}>
-									{m['components.dialogs.list.moreCount']({
-										count: starterPack.list.listItemCount - 4,
-									})}
-								</Text>
-							)}
-						</>
-					)}
-				</View>
-			</View>
+				{sample.length > 0 && (
+					<div className={css.itemMeta}>
+						<AvatarStack
+							moderationOpts={moderationOpts}
+							profiles={sample.slice(0, 4).map((p) => p.subject as AnyProfileView)}
+							size={24}
+						/>
+						{listItemCount > 4 && (
+							<Text className={css.moreCount} color="textContrastMedium" size="sm">
+								{m['components.dialogs.list.moreCount']({ count: listItemCount - 4 })}
+							</Text>
+						)}
+					</div>
+				)}
+			</div>
 			<Button
-				label={isInPack ? m['common.action.remove']() : m['common.action.add']()}
 				color={isInPack ? 'secondary' : 'primary_subtle'}
-				size="tiny"
 				disabled={isPending || isSelf}
-				onPress={handleToggleMembership}
+				label={isInPack ? m['common.action.remove']() : m['common.action.add']()}
+				onClick={handleToggleMembership}
 			>
 				{isPending && <ButtonIcon icon={Loader} />}
 				<ButtonText>
@@ -304,6 +267,6 @@ function StarterPackItem({
 							: m['common.action.add']()}
 				</ButtonText>
 			</Button>
-		</View>
+		</div>
 	);
 }
