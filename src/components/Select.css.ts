@@ -2,7 +2,8 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
-import { fontSize, zIndex } from '#/styles/tokens.css';
+import { recipe } from '#/styles/recipe';
+import { fontSize, space, zIndex } from '#/styles/tokens.css';
 
 export const trigger = style(
 	layered(components, {
@@ -57,37 +58,44 @@ export const positioner = style(
 	}),
 );
 
-export const popup = style(
-	layered(components, {
-		backgroundColor: vars.palette.contrast_0,
-		border: `1px solid ${vars.palette.contrast_100}`,
-		borderRadius: 8,
-		boxShadow: vars.shadow.md,
-		boxSizing: 'border-box',
-		// the list scrolls inside; the popup clips it (rounded corners) and anchors the scroll arrows
-		display: 'flex',
-		flexDirection: 'column',
-		maxHeight: 'var(--available-height)',
-		// stretch the dropdown to the trigger's width (Base UI anchor) instead of shrinking to its
-		// content, while still growing past it for longer item labels
-		minWidth: 'var(--anchor-width)',
-		overflow: 'hidden',
-		position: 'relative',
-		transformOrigin: 'var(--transform-origin)',
-		transitionDuration: '150ms',
-		transitionProperty: 'opacity, transform',
-		transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-		selectors: {
-			'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+export const popup = recipe(
+	{
+		base: {
+			backgroundColor: vars.palette.contrast_0,
+			border: `1px solid ${vars.palette.contrast_100}`,
+			borderRadius: 8,
+			boxShadow: vars.shadow.md,
+			boxSizing: 'border-box',
+			// the list scrolls inside; the popup clips it (rounded corners) and anchors the scroll arrows
+			display: 'flex',
+			flexDirection: 'column',
+			maxHeight: 'var(--available-height)',
+			maxWidth: 'var(--available-width)',
+			overflow: 'hidden',
+			position: 'relative',
+			transformOrigin: 'var(--transform-origin)',
+			transitionDuration: '150ms',
+			transitionProperty: 'opacity, transform',
+			transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+			selectors: {
+				'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+			},
 		},
-	}),
-);
-
-// opt-out of the `--anchor-width` floor so the popup hugs its content instead of a wide trigger
-export const popupFitContent = style(
-	layered(components, {
-		minWidth: 'fit-content',
-	}),
+		defaultVariants: {
+			matchTriggerWidth: true,
+		},
+		variants: {
+			matchTriggerWidth: {
+				true: {
+					minWidth: 'var(--anchor-width)',
+				},
+				false: {
+					minWidth: 'fit-content',
+				},
+			},
+		},
+	},
+	{ debugId: 'popup', layer: components },
 );
 
 export const list = style(
@@ -96,7 +104,8 @@ export const list = style(
 		// the scroll container the scroll arrows drive; `minHeight: 0` lets it shrink to scroll inside the flex popup
 		minHeight: 0,
 		overflowY: 'auto',
-		padding: 4,
+		padding: space.xs,
+		scrollPadding: space.xs,
 	}),
 );
 
@@ -131,19 +140,23 @@ export const scrollDownArrow = style([
 	}),
 ]);
 
+const ITEM_LINE_HEIGHT = 20;
+const ITEM_ICON_SIZE = 16;
+const ITEM_BLOCK_PADDING = 5;
+const ITEM_INLINE_PADDING = 8;
+
 export const item = style(
 	layered(components, {
-		alignItems: 'center',
 		borderRadius: 4,
 		color: vars.palette.contrast_1000,
 		cursor: 'pointer',
 		display: 'flex',
-		fontSize: fontSize.sm,
-		minHeight: 25,
+		fontSize: fontSize.md_sub,
+		lineHeight: `${ITEM_LINE_HEIGHT}px`,
 		outline: 0,
-		paddingBlock: 2,
-		paddingLeft: 30,
-		paddingRight: 8,
+		paddingBlock: ITEM_BLOCK_PADDING,
+		paddingLeft: ITEM_ICON_SIZE + ITEM_INLINE_PADDING * 2,
+		paddingRight: ITEM_INLINE_PADDING,
 		position: 'relative',
 		transitionDuration: '100ms',
 		transitionProperty: 'background-color, color',
@@ -157,12 +170,9 @@ export const item = style(
 
 export const indicator = style(
 	layered(components, {
-		alignItems: 'center',
-		color: vars.palette.primary_500,
-		display: 'flex',
-		justifyContent: 'center',
-		left: 0,
+		color: vars.palette.primary_600,
+		left: 8,
 		position: 'absolute',
-		width: 30,
+		top: ITEM_BLOCK_PADDING + (ITEM_LINE_HEIGHT - ITEM_ICON_SIZE) / 2,
 	}),
 );

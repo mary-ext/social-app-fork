@@ -141,7 +141,7 @@ export function Content<T>({
 				sideOffset={5}
 				alignItemWithTrigger={false}
 			>
-				<BaseSelect.Popup className={clsx(styles.popup, !matchTriggerWidth && styles.popupFitContent)}>
+				<BaseSelect.Popup className={styles.popup({ matchTriggerWidth })}>
 					<BaseSelect.ScrollUpArrow className={styles.scrollUpArrow}>
 						<ChevronUpIcon size="xs" fill="currentColor" />
 					</BaseSelect.ScrollUpArrow>
