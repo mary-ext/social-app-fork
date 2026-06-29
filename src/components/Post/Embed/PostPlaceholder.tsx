@@ -8,8 +8,7 @@ import * as css from './PostPlaceholder.css';
 export function PostPlaceholder({ children }: { children: React.ReactNode }) {
 	return (
 		<div className={css.outer}>
-			<CircleInfoIcon className={css.icon} fill={colors.textContrastMedium} size="md" />
-
+			<CircleInfoIcon className={css.icon} fill={colors.textContrastMedium} size="lg" />
 			<Text size="md" weight="medium" color="textContrastMedium">
 				{children}
 			</Text>

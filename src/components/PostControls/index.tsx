@@ -102,7 +102,7 @@ function PostControlButtonIconBox({ children }: { children: ReactNode }) {
 function PostControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
 	return (
 		<PostControlButtonIconBox>
-			<Icon width={18} height={18} fill="currentColor" style={a.pointer_events_none} />
+			<Icon size="md" fill="currentColor" style={a.pointer_events_none} />
 		</PostControlButtonIconBox>
 	);
 }

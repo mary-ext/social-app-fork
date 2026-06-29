@@ -242,7 +242,7 @@ let NotificationFeedItem = ({
 
 	let a11yLabel = '';
 	let notificationContent: React.ReactElement;
-	let icon = <HeartIconFilled size="lg" fill={colors.pink} />;
+	let icon = <HeartIconFilled size="xl" fill={colors.pink} />;
 
 	if (item.type === 'post-like') {
 		a11yLabel = hasMultipleAuthors
@@ -284,7 +284,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <RepostIcon size="lg" fill={colors.positive_500} />;
+		icon = <RepostIcon size="xl" fill={colors.positive_500} />;
 	} else if (item.type === 'follow') {
 		if (isFollowBack && !hasMultipleAuthors) {
 			/*
@@ -320,7 +320,7 @@ let NotificationFeedItem = ({
 				/>
 			);
 		}
-		icon = <PersonPlusIcon size="lg" fill={colors.primary_500} />;
+		icon = <PersonPlusIcon size="xl" fill={colors.primary_500} />;
 	} else if (item.type === 'contact-match') {
 		a11yLabel = m['view.notifications.contact.singleName']({ name: firstAuthorName });
 		notificationContent = (
@@ -330,7 +330,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <ContactsIconFilled size="lg" fill={colors.primary_500} />;
+		icon = <ContactsIconFilled size="xl" fill={colors.primary_500} />;
 	} else if (item.type === 'feedgen-like') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.like.feed.multiName']({
@@ -371,7 +371,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <StarterPack width={24} gradient="sky" />;
+		icon = <StarterPack size="xl" gradient="sky" />;
 	} else if (item.type === 'verified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.verified.multiName']({
@@ -392,7 +392,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <VerifiedCheck size="xl" />;
+		icon = <VerifiedCheck size="2xl" />;
 	} else if (item.type === 'unverified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.removed.multiName']({
@@ -413,7 +413,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <VerifiedCheck size="xl" fill={colors.contrast_500} />;
+		icon = <VerifiedCheck size="2xl" fill={colors.contrast_500} />;
 	} else if (item.type === 'like-via-repost') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.like.repost.multiName']({
@@ -454,7 +454,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <RepostIcon size="xl" fill={colors.positive_500} />;
+		icon = <RepostIcon size="2xl" fill={colors.positive_500} />;
 	} else if (item.type === 'subscribed-post') {
 		const postsCount = 1 + (item.additional?.length || 0);
 		a11yLabel = hasMultipleAuthors
@@ -476,7 +476,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <BellRingingIcon size="xl" fill={colors.primary_500} />;
+		icon = <BellRingingIcon size="2xl" fill={colors.primary_500} />;
 	} else {
 		return null;
 	}

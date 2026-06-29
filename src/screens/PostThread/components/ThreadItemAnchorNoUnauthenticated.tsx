@@ -18,7 +18,7 @@ export function ThreadItemAnchorNoUnauthenticated() {
 		<View style={[a.p_lg, a.gap_md]}>
 			<Skele.Row style={[a.align_center, a.gap_md]}>
 				<Skele.Circle size={LINEAR_AVI_WIDTH}>
-					<LockIcon size="md" fill={colors.textContrastMedium} />
+					<LockIcon size="lg" fill={colors.textContrastMedium} />
 				</Skele.Circle>
 
 				<Skele.Col>
@@ -26,7 +26,6 @@ export function ThreadItemAnchorNoUnauthenticated() {
 					<Skele.Text blend style={[a.text_md, { width: '40%' }]} />
 				</Skele.Col>
 			</Skele.Row>
-
 			<View style={[a.py_sm]}>
 				<Text style={[a.text_xl, a.italic, t.atoms.text_contrast_medium]}>
 					{m['screens.postThread.visibility.signedInOnly']()}

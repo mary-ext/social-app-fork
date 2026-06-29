@@ -101,7 +101,6 @@ export function DraftItem({
 					</div>
 				)}
 			</button>
-
 			{/* Timestamp */}
 			<div className={styles.timestamp}>
 				<TimeElapsed timestamp={draft.updatedAt}>
@@ -112,7 +111,6 @@ export function DraftItem({
 					)}
 				</TimeElapsed>
 			</div>
-
 			{/* Menu button — a detached Trigger for the discard prompt; sits outside the card so its click
 			    never reaches the card's open handler. */}
 			<div className={styles.menuSlot}>
@@ -121,10 +119,9 @@ export function DraftItem({
 					className={styles.menuButton}
 					aria-label={m['common.a11y.moreOptions']()}
 				>
-					<DotsIcon className={styles.menuIcon} width={16} height={16} fill="currentColor" />
+					<DotsIcon className={styles.menuIcon} size="sm" fill="currentColor" />
 				</Prompt.Trigger>
 			</div>
-
 			<Prompt.Basic
 				handle={discardPromptControl}
 				title={m['view.composer.drafts.discard.title']()}
@@ -148,7 +145,7 @@ function DraftMetadataTag({
 }) {
 	return (
 		<div className={clsx(styles.tagRow, display === 'warning' ? styles.tagWarning : styles.tagInfo)}>
-			<Icon className={styles.tagIcon} width={16} height={16} fill="currentColor" />
+			<Icon className={styles.tagIcon} size="sm" fill="currentColor" />
 			<Text size="sm" className={styles.tagText}>
 				{text}
 			</Text>

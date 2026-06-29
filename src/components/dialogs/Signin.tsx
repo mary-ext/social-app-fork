@@ -174,7 +174,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 				<TextField.Root isInvalid={!!error}>
 					<TextField.LabelText>{m['components.dialogs.account.handle.label']()}</TextField.LabelText>
 					<div className={css.field}>
-						<AtIcon className={css.fieldIcon} size="md" fill={colors.contrast_500} />
+						<AtIcon className={css.fieldIcon} size="lg" fill={colors.contrast_500} />
 						<TextField.Input
 							autoCapitalize="none"
 							className={css.fieldInput}

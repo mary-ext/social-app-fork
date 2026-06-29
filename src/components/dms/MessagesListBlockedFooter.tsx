@@ -81,7 +81,7 @@ export function MessagesListBlockedFooter({
 					},
 				]}
 			>
-				<PersonXIcon fill={colors.text} size="lg" className={css.icon} />
+				<PersonXIcon fill={colors.text} size="xl" className={css.icon} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
 					{isGroup
 						? m['components.dms.block.youAreBlockingOwner']()

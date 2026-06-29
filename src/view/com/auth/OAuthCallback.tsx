@@ -65,7 +65,7 @@ export function OAuthCallback() {
 					<Text style={[a.text_md, t.atoms.text_contrast_high]}>{error}</Text>
 				) : (
 					<>
-						<Loader size="xl" />
+						<Loader size="2xl" />
 						<Text style={[a.text_md, t.atoms.text_contrast_high]}>{m['view.auth.signIn.inProgress']()}</Text>
 					</>
 				)}

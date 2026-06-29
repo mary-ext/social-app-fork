@@ -169,12 +169,11 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 				size="small"
 			>
 				{likeUri ? (
-					<HeartFilled width={18} height={18} fill={colors.negative_400} />
+					<HeartFilled size="md" fill={colors.negative_400} />
 				) : (
-					<Heart width={18} height={18} fill={colors.textContrastMedium} />
+					<Heart size="md" fill={colors.textContrastMedium} />
 				)}
 			</Button>
-
 			<InlineLinkText
 				className={css.likedBy}
 				color="textContrastMedium"

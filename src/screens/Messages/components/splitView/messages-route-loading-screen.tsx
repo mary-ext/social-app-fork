@@ -40,7 +40,7 @@ export function MessagesSplitViewColumnLoadingScreen() {
 			testID="messagesRouteColumnLoadingScreen"
 			style={[a.flex_1, a.align_center, a.justify_center, a.p_lg]}
 		>
-			<Loader size="xl" />
+			<Loader size="2xl" />
 		</View>
 	);
 }

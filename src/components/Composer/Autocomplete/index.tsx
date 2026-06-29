@@ -52,7 +52,7 @@ export function Autocomplete({
 					onMouseDown={(e) => e.preventDefault()}
 				>
 					{items.length === 0 ? (
-						<CenteredSpinner label={m['common.status.loading']()} size="lg" />
+						<CenteredSpinner label={m['common.status.loading']()} size="xl" />
 					) : (
 						<BaseAutocomplete.List>
 							{items.map((item) => {

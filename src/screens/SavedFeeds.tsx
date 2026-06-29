@@ -152,7 +152,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					)
 				) : (
 					<View style={[a.w_full, a.py_2xl, a.align_center]}>
-						<Loader size="xl" />
+						<Loader size="2xl" />
 					</View>
 				)}
 
@@ -185,7 +185,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					)
 				) : (
 					<View style={[a.w_full, a.py_2xl, a.align_center]}>
-						<Loader size="xl" />
+						<Loader size="2xl" />
 					</View>
 				)}
 

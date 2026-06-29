@@ -181,7 +181,7 @@ function BlockDialogInner({
 				{listHeader}
 				{isLoading ? (
 					<View style={[a.pb_2xl, a.align_center, a.justify_center]}>
-						<Loader size="xl" />
+						<Loader size="2xl" />
 					</View>
 				) : null}
 				{footer}
@@ -199,7 +199,7 @@ function BlockDialogInner({
 			ListFooterComponent={
 				isFetchingNextPage ? (
 					<View style={[a.py_lg, a.align_center, a.justify_center]}>
-						<Loader size="lg" />
+						<Loader size="xl" />
 					</View>
 				) : null
 			}

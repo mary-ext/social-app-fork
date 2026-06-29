@@ -147,7 +147,7 @@ export function MessageComposer({
 										/>
 									}
 								>
-									<EmojiSmileIcon size="md" fill="currentColor" />
+									<EmojiSmileIcon size="lg" fill="currentColor" />
 								</EmojiPicker.Trigger>
 								<EmojiPicker.Root
 									handle={emojiPickerHandle}
@@ -221,9 +221,9 @@ function SubmitButton({
 				disabled={disabled}
 			>
 				{loading ? (
-					<Loader size="md" fill={colors.white} className={styles.sendIcon} />
+					<Loader size="lg" fill={colors.white} className={styles.sendIcon} />
 				) : (
-					<PaperPlaneIcon size="md" fill={colors.white} className={styles.sendIcon} />
+					<PaperPlaneIcon size="lg" fill={colors.white} className={styles.sendIcon} />
 				)}
 			</Pressable>
 		</View>

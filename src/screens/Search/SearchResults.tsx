@@ -84,7 +84,7 @@ export function SearchResults({
 function Pending() {
 	return (
 		<Layout.Content>
-			<CenteredSpinner label={m['screens.search.results.loading']()} size="xl" />
+			<CenteredSpinner label={m['screens.search.results.loading']()} size="2xl" />
 		</Layout.Content>
 	);
 }

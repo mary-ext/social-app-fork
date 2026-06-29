@@ -50,7 +50,7 @@ export function EmptyState({
 			return null;
 		}
 		if (!icon) {
-			return <EditIcon size="2xl" fill={colors.textContrastMedium} />;
+			return <EditIcon size="3xl" fill={colors.textContrastMedium} />;
 		}
 		if (isValidElement(icon)) {
 			return icon;

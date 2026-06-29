@@ -125,7 +125,7 @@ export function ItemIcon({
 }) {
 	return (
 		<Icon
-			size="md"
+			size="lg"
 			fill={styles.iconColor}
 			className={clsx(styles.itemIcon, position === 'right' && styles.itemIconRight)}
 		/>

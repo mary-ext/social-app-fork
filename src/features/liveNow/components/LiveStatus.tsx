@@ -134,7 +134,7 @@ export function LiveStatus({
 						{embed.external.title || embed.external.uri}
 					</Text>
 					<div className={css.domain}>
-						<GlobeIcon width={12} height={12} fill={colors.textContrastMedium} />
+						<GlobeIcon size="xs" fill={colors.textContrastMedium} />
 						<Text color="textContrastMedium" numberOfLines={1} size="sm">
 							{toNiceDomain(embed.external.uri)}
 						</Text>
@@ -181,7 +181,7 @@ export function LiveStatus({
 
 				<div className={css.betaRow}>
 					<div className={css.beta}>
-						<CircleInfoIcon width={16} height={16} fill={colors.textContrastLow} />
+						<CircleInfoIcon size="sm" fill={colors.textContrastLow} />
 						<Text color="textContrastLow" size="sm">
 							{m['features.liveNow.badge.beta']()}
 						</Text>

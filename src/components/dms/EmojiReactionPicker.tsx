@@ -103,7 +103,7 @@ function QuickReactions({
 				className={styles.expandButton}
 				onClick={onExpand}
 			>
-				<PlusIcon size="md" fill="currentColor" />
+				<PlusIcon size="lg" fill="currentColor" />
 			</button>
 		</div>
 	);

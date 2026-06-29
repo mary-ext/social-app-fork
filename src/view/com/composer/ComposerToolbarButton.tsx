@@ -20,7 +20,7 @@ export function ComposerToolbarButton({
 }) {
 	return (
 		<Button variant="ghost" className={clsx(styles.button, className)} {...props}>
-			<Icon size="lg" fill="currentColor" />
+			<Icon size="xl" fill="currentColor" />
 		</Button>
 	);
 }

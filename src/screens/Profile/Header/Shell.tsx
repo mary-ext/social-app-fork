@@ -79,7 +79,7 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 						onClick={onPressBack}
 					>
 						<span className={css.backButtonInner}>
-							<ArrowLeftIcon size="lg" fill="white" />
+							<ArrowLeftIcon size="xl" fill="white" />
 						</span>
 					</button>
 				)}
@@ -104,7 +104,6 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 					</button>
 				)}
 			</div>
-
 			{/* placed before the header body so its tab order matches its visual spot (top-left, over the banner edge) */}
 			<div className={css.avatarAnchor}>
 				<button
@@ -133,16 +132,13 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 					</span>
 				</button>
 			</div>
-
 			{children}
-
 			{!isPlaceholderProfile &&
 				(isMe ? (
 					<LabelsOnMe className={css.headerAlerts} labels={profile.labels} type="account" />
 				) : (
 					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} />
 				))}
-
 			{live.isActive &&
 				(isMe ? (
 					<EditLiveDialog

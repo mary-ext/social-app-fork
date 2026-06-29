@@ -34,7 +34,7 @@ export function ErrorScreen({
 			)}
 			<div className={css.outer}>
 				<div className={css.badge}>
-					<WarningIcon width={24} fill="currentColor" />
+					<WarningIcon size="xl" fill="currentColor" />
 				</div>
 				<Text className={css.title} size="_2xl" weight="bold">
 					{title}

@@ -70,7 +70,7 @@ function DialogInner({
 
 	return isPending ? (
 		<View style={[a.w_full, a.py_5xl, a.align_center]}>
-			<Loader size="lg" />
+			<Loader size="xl" />
 		</View>
 	) : isError || !profile ? (
 		<View style={[a.w_full, a.gap_lg]}>

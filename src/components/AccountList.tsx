@@ -57,12 +57,12 @@ export function AccountList({
 					type="button"
 				>
 					<span className={css.addAvatar}>
-						<PlusIcon width={20} height={20} fill="currentColor" />
+						<PlusIcon size="lg" fill="currentColor" />
 					</span>
 					<Text className={css.info} size="md" weight="medium">
 						{otherLabel ?? m['components.accountList.other']()}
 					</Text>
-					<ChevronIcon className={css.chevron} width={20} height={20} fill={colors.textContrastLow} />
+					<ChevronIcon className={css.chevron} size="lg" fill={colors.textContrastLow} />
 				</button>
 			)}
 		</div>
@@ -123,10 +123,10 @@ function AccountItem({
 			</span>
 			{isCurrentAccount ? (
 				<span className={css.check}>
-					<CheckIcon width={12} height={12} fill="currentColor" />
+					<CheckIcon size="xs" fill="currentColor" />
 				</span>
 			) : (
-				<ChevronIcon className={css.chevron} width={20} height={20} fill={colors.textContrastLow} />
+				<ChevronIcon className={css.chevron} size="lg" fill={colors.textContrastLow} />
 			)}
 		</button>
 	);

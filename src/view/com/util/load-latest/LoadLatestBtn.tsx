@@ -40,7 +40,7 @@ export function LoadLatestBtn({
 				<div className={css.hover} />
 				<ArrowIcon
 					className={css.icon}
-					size="md"
+					size="lg"
 					fill={showIndicator ? colors.primary_500 : colors.textContrastMedium}
 				/>
 			</button>

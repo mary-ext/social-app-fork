@@ -27,7 +27,7 @@ export function ErrorState({ error }: { error: string }) {
 
 	return (
 		<View style={[a.px_xl]}>
-			<CircleInfo width={48} fill={colors.textContrastLow} />
+			<CircleInfo size="4xl" fill={colors.textContrastLow} />
 			<Text style={[a.text_xl, a.font_semi_bold, a.pb_md, a.pt_xl]}>
 				{m['screens.profile.labeler.error.serviceLoad']()}
 			</Text>

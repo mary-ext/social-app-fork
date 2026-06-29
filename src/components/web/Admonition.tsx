@@ -41,7 +41,7 @@ export function Admonition({
 	return (
 		<div className={clsx(styles.outer({ type }), className)}>
 			<div className={styles.row}>
-				<Icon className={styles.iconWrap} fill={ICON_FILL[type]} size="md" />
+				<Icon className={styles.iconWrap} fill={ICON_FILL[type]} size="lg" />
 				<div className={styles.content}>
 					<Text>{children}</Text>
 				</div>

@@ -41,7 +41,7 @@ function NotificationLoadingPlaceholder({
 	return (
 		<div className={clsx(css.item, topBorder && css.itemTopBorder)}>
 			<div className={itemCss.iconColumn}>
-				<HeartIconFilled size="lg" fill={colors.contrast_50} />
+				<HeartIconFilled size="xl" fill={colors.contrast_50} />
 			</div>
 			<div className={itemCss.content}>
 				<div className={css.avatars}>

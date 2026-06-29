@@ -91,7 +91,7 @@ export function List<ItemT>({
 						<Fragment key={keyExtractor(item, index)}>{renderItem(item, index)}</Fragment>
 					))}
 					{ListFooterComponent}
-					{isFetchingNextPage && loadingLabel && <CenteredSpinner label={loadingLabel} size="lg" />}
+					{isFetchingNextPage && loadingLabel && <CenteredSpinner label={loadingLabel} size="xl" />}
 					<div ref={sentinelRef} aria-hidden />
 				</>
 			)}

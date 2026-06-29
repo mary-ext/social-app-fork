@@ -7,7 +7,7 @@ type SpinnerProps = {
 	color?: string;
 	/** Accessible label announced by the `progressbar` role (e.g. "Loading GIF"). */
 	label: string | null;
-	/** Icon size token; defaults to `2xl`. */
+	/** Icon size token; defaults to `3xl`. */
 	size?: IconProps['size'];
 };
 
@@ -16,9 +16,9 @@ type SpinnerProps = {
  *
  * @param color tint applied via `currentColor`; defaults to white
  * @param label accessible label for the `progressbar` role
- * @param size icon size token; defaults to `2xl`
+ * @param size icon size token; defaults to `3xl`
  */
-export function Spinner({ color = '#fff', label, size = '2xl' }: SpinnerProps) {
+export function Spinner({ color = '#fff', label, size = '3xl' }: SpinnerProps) {
 	return (
 		<span
 			aria-hidden={label === null}

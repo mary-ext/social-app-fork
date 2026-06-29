@@ -42,7 +42,7 @@ function Inner() {
 		<>
 			<div className={css.card}>
 				<div className={css.header}>
-					<TrendingIcon width={16} height={16} fill={colors.text} />
+					<TrendingIcon size="sm" fill={colors.text} />
 					<Text size="md" weight="semiBold" className={css.title}>
 						{m['components.trendingTopics.title']()}
 					</Text>

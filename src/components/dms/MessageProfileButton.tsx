@@ -45,7 +45,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 		if (canBeMessaged(profile)) {
 			return (
 				<div aria-hidden className={css.loading}>
-					<Message width={20} height={20} fill="currentColor" />
+					<Message size="lg" fill="currentColor" />
 				</div>
 			);
 		}

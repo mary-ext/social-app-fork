@@ -77,7 +77,7 @@ function AnchorControlButtonIconBox({ children }: { children: ReactNode }) {
 function AnchorControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
 	return (
 		<AnchorControlButtonIconBox>
-			<Icon width={20} height={20} fill="currentColor" style={a.pointer_events_none} />
+			<Icon size="lg" fill="currentColor" style={a.pointer_events_none} />
 		</AnchorControlButtonIconBox>
 	);
 }

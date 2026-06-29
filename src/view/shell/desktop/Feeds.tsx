@@ -90,7 +90,7 @@ export function DesktopFeeds() {
 				render={
 					<Link to={MORE_FEEDS} label={m['view.feeds.feed.more']()} className={css.item}>
 						<span className={css.morePlusBox}>
-							<Plus width={16} height={16} fill="currentColor" />
+							<Plus size="sm" fill="currentColor" />
 						</span>
 						<Text size="md" numberOfLines={1} className={css.label}>
 							{m['view.feeds.feed.more']()}

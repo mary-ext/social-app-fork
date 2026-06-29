@@ -695,14 +695,14 @@ function NewGroupChatButton({ onPress, dimmed = false }: { onPress: () => void; 
 							},
 						]}
 					>
-						<PersonGroupIcon size="md" fill={colors.text} />
+						<PersonGroupIcon size="lg" fill={colors.text} />
 					</View>
 					<View style={[a.flex_grow]}>
 						<Text style={[a.text_md, a.font_medium, a.leading_snug, t.atoms.text]}>
 							{m['components.dms.group.title']()}
 						</Text>
 					</View>
-					<ChevronRightIcon size="md" fill={colors.text} />
+					<ChevronRightIcon size="lg" fill={colors.text} />
 				</View>
 			)}
 		</Button>

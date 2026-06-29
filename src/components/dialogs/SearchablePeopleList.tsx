@@ -525,7 +525,7 @@ function SearchInput({
 
 	return (
 		<View {...webProps} style={[a.flex_row, a.align_center, a.gap_sm]}>
-			<Search size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
+			<Search size="lg" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
 				placeholder={m['common.action.search']()}

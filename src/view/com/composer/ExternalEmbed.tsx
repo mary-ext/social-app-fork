@@ -66,7 +66,7 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 				</Container>
 			) : (
 				<Container style={loadingStyle}>
-					<Loader size="xl" />
+					<Loader size="2xl" />
 				</Container>
 			)}
 			<ExternalEmbedRemoveBtn onRemove={onRemove} />
@@ -170,7 +170,7 @@ export const ExternalEmbedLink = ({
 				</Container>
 			) : (
 				<Container>
-					<Loader size="xl" />
+					<Loader size="2xl" />
 				</Container>
 			)}
 			<ExternalEmbedRemoveBtn onRemove={onRemove} />

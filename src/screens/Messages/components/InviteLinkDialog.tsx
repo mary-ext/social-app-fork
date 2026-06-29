@@ -384,7 +384,7 @@ export function InviteLinkDialog({
 			content = (
 				<>
 					<View style={[a.align_center, a.justify_center, a.mb_lg]}>
-						<ChainLinkBrokenIcon fill={colors.negative_500} size="3xl" />
+						<ChainLinkBrokenIcon fill={colors.negative_500} size="4xl" />
 					</View>
 					<Text style={[a.flex_1, a.pb_sm, a.text_center, a.text_lg, a.font_bold, a.leading_snug]}>
 						{m['screens.messages.inviteLink.disable.title']()}

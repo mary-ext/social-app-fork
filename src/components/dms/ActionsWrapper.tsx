@@ -121,7 +121,7 @@ export function ActionsWrapper({
 								className={clsx(props.className, reactionStyles.trigger)}
 								style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
 							>
-								<EmojiSmileIcon size="md" style={t.atoms.text_contrast_medium} />
+								<EmojiSmileIcon size="lg" style={t.atoms.text_contrast_medium} />
 							</button>
 						)}
 					/>
@@ -138,7 +138,7 @@ export function ActionsWrapper({
 							className={clsx(props.className, reactionStyles.trigger)}
 							style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
 						>
-							<DotsHorizontalIcon size="md" style={t.atoms.text_contrast_medium} />
+							<DotsHorizontalIcon size="lg" style={t.atoms.text_contrast_medium} />
 						</button>
 					)}
 				/>

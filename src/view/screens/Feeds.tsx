@@ -324,24 +324,22 @@ export function FeedsScreen({}: Props) {
 					</LinkButton>
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
-
 			<List
 				data={items}
 				estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(item) => item.key}
 				ListFooterComponent={
 					isPopularFeedsFetchingNextPage ? (
-						<CenteredSpinner label={m['view.feeds.feed.loadingMore']()} size="xl" />
+						<CenteredSpinner label={m['view.feeds.feed.loadingMore']()} size="2xl" />
 					) : null
 				}
 				onEndReached={onEndReached}
 				onEndReachedThreshold={2}
 				renderItem={renderItem}
 			/>
-
 			{hasSession && (
 				<FAB
-					icon={<EditBigIcon size="lg" fill={colors.white} />}
+					icon={<EditBigIcon size="xl" fill={colors.white} />}
 					label={m['common.compose.action.new']()}
 					onClick={() => openComposer({ logContext: 'Fab' })}
 				/>
@@ -359,7 +357,7 @@ function FollowingFeed() {
 		<div className={css.plainRow}>
 			<FeedCard.Header>
 				<div className={css.followingIcon}>
-					<FilterTimeline width={18} fill={colors.white} />
+					<FilterTimeline size="md" fill={colors.white} />
 				</div>
 				<FeedCard.TitleAndByline title={m['common.feeds.following']()} />
 			</FeedCard.Header>
@@ -402,7 +400,7 @@ function FeedsSavedHeader() {
 	return (
 		<div className={css.savedHeader}>
 			<div className={css.headerIcon}>
-				<ListSparkleIcon size="lg" fill={colors.primary_500} />
+				<ListSparkleIcon size="xl" fill={colors.primary_500} />
 			</div>
 			<div className={css.headerColumn}>
 				<Text size="_2xl" weight="bold">
@@ -418,7 +416,7 @@ function FeedsAboutHeader() {
 	return (
 		<div className={css.aboutHeader}>
 			<div className={css.headerIcon}>
-				<ListMagnifyingGlassIcon size="lg" fill={colors.primary_500} />
+				<ListMagnifyingGlassIcon size="xl" fill={colors.primary_500} />
 			</div>
 			<div className={css.aboutColumn}>
 				<Text size="_2xl" weight="bold">

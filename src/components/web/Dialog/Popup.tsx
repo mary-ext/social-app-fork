@@ -75,8 +75,7 @@ export function Close({ outer }: { outer?: boolean } = {}) {
 			aria-label={m['common.a11y.closeDialog']()}
 			className={clsx(styles.close, outer && styles.closeOuter)}
 		>
-			{/* 18px is the button-icon `md` size, which differs from the raw icon `md` (20px) */}
-			<TimesIcon width={18} height={18} fill="currentColor" />
+			<TimesIcon size="md" fill="currentColor" />
 		</BaseDialog.Close>
 	);
 }

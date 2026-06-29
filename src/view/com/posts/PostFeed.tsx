@@ -490,7 +490,7 @@ function PostFeed({
 	const feedFooter = shouldRenderEndOfFeed ? (
 		<div className={css.endOfFeedSlot}>{renderEndOfFeed()}</div>
 	) : hasNextPage && !isError ? (
-		<CenteredSpinner label={m['view.posts.feed.loadingMore']()} size="xl" />
+		<CenteredSpinner label={m['view.posts.feed.loadingMore']()} size="2xl" />
 	) : null;
 
 	const onItemSeen = (item: FeedRow) => {

@@ -166,11 +166,11 @@ export function MessagesSettingsScreenInner({}: Props) {
 								exportCarHandle.open(null);
 							}}
 						>
-							<CarIcon className={css.carIcon} fill={colors.text} size="lg" />
+							<CarIcon className={css.carIcon} fill={colors.text} size="xl" />
 							<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
 								{m['screens.messages.export.action']()}
 							</Text>
-							<ChevronRightIcon className={css.chevron} fill={colors.text} size="md" />
+							<ChevronRightIcon className={css.chevron} fill={colors.text} size="lg" />
 						</Toggle.Item>
 					</View>
 					<Divider style={{ marginVertical: 10 }} />

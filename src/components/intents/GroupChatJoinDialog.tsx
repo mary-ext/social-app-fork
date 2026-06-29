@@ -203,7 +203,7 @@ function GroupChatJoinDialogContent({
 	if (isLoading || !data) {
 		return (
 			<div className={css.loaderBox}>
-				<Loader size="xl" />
+				<Loader size="2xl" />
 			</div>
 		);
 	}
@@ -211,7 +211,7 @@ function GroupChatJoinDialogContent({
 	if (error) {
 		return (
 			<>
-				<ChainLinkBrokenIcon fill={colors.primary_500} width={48} />
+				<ChainLinkBrokenIcon fill={colors.primary_500} size="4xl" />
 				<Text align="center" size="lg" weight="semiBold">
 					{m['components.intents.inviteLink.error.invalid']()}
 				</Text>
@@ -234,7 +234,7 @@ function GroupChatJoinDialogContent({
 		return (
 			<>
 				<div className={css.unavailableSection}>
-					<WarningIcon fill={colors.textContrastHigh} width={48} />
+					<WarningIcon fill={colors.textContrastHigh} size="4xl" />
 					<Text
 						align="center"
 						className={css.noLongerAvailableText}
@@ -342,7 +342,7 @@ function GroupChatJoinDialogContent({
 								limit: joinLinkPreview.memberLimit,
 							})}
 						</Text>
-						<PersonGroupIcon className={css.personGroupIcon} fill={colors.textContrastMedium} width={12} />
+						<PersonGroupIcon className={css.personGroupIcon} fill={colors.textContrastMedium} size="xs" />
 						<Text align="center" size="sm" weight="medium" color="textContrastMedium">
 							{joinLinkPreview.joinRule === 'followedByOwner'
 								? m['components.intents.permission.followers']()

@@ -135,7 +135,7 @@ export function CreateListFromStarterPackDialog({
 					style={{ maxWidth: 400 }}
 				>
 					<View style={[a.align_center, a.gap_lg, a.py_5xl]}>
-						<Loader size="xl" />
+						<Loader size="2xl" />
 						<Text style={[a.text_lg, t.atoms.text_contrast_high]}>
 							{m['components.dialogs.list.addingMembers']()}
 						</Text>

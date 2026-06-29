@@ -262,7 +262,7 @@ export function AddMembersFlow({
 				case 'loading': {
 					return (
 						<View style={[a.px_lg, a.py_xl, a.align_center]}>
-							<Loader size="lg" />
+							<Loader size="xl" />
 						</View>
 					);
 				}
@@ -403,7 +403,7 @@ export function AddMembersFlow({
 				ListEmptyComponent={
 					isMemberListPending || isAutocompleteFetching ? (
 						<View style={[a.flex_1, a.align_center, a.justify_center]}>
-							<Loader size="xl" />
+							<Loader size="2xl" />
 						</View>
 					) : null
 				}

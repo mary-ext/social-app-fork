@@ -41,7 +41,7 @@ export function ThreadItemPostNoUnauthenticated({
 			</View>
 			<Skele.Row style={[a.align_center, a.gap_md]}>
 				<Skele.Circle size={LINEAR_AVI_WIDTH}>
-					<LockIcon size="md" fill={colors.textContrastMedium} />
+					<LockIcon size="lg" fill={colors.textContrastMedium} />
 				</Skele.Circle>
 
 				<Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>

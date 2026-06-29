@@ -61,7 +61,7 @@ export function MissingFeed({
 							a.justify_center,
 						]}
 					>
-						<WarningIcon size="lg" />
+						<WarningIcon size="xl" />
 					</View>
 					<View style={[a.flex_1]}>
 						<Text emoji style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]} numberOfLines={1}>

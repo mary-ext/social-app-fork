@@ -60,7 +60,7 @@ export function ProfileFeedHeaderSkeleton() {
 			</Layout.Header.Content>
 			<Layout.Header.Slot>
 				<div className={styles.skeletonPin}>
-					<Pin size="lg" fill={colors.textContrastLow} />
+					<Pin size="xl" fill={colors.textContrastLow} />
 				</div>
 			</Layout.Header.Slot>
 		</Layout.Header.Outer>
@@ -184,7 +184,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 							</span>
 						</span>
 
-						<Ellipsis size="md" fill={colors.textContrastLow} />
+						<Ellipsis size="lg" fill={colors.textContrastLow} />
 					</button>
 				</Layout.Header.Content>
 
@@ -201,7 +201,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 											shape="round"
 											color="secondary"
 										>
-											<PinFilled size="lg" fill={colors.primary_500} />
+											<PinFilled size="xl" fill={colors.primary_500} />
 										</Button>
 									}
 								/>

@@ -9,7 +9,7 @@ import * as styles from './HeroRow.css';
 export function HeroRow() {
 	return (
 		<div className={styles.hero}>
-			<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="xl" />
+			<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="2xl" />
 			<Text className={styles.text} color="textContrastMedium">
 				{m['components.web.search.placeholder']()}
 			</Text>

@@ -108,7 +108,7 @@ function LabelerListHeader({
 	if (isLabelerLoading) {
 		return (
 			<View style={[a.w_full, a.align_center, a.py_4xl]}>
-				<Loader size="xl" />
+				<Loader size="2xl" />
 			</View>
 		);
 	}

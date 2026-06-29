@@ -38,7 +38,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 	return (
 		<div className={css.body}>
-			<RobotIcon className={css.icon} width={48} fill={colors.textContrastMedium} />
+			<RobotIcon className={css.icon} size="4xl" fill={colors.textContrastMedium} />
 			<Text align="center" className={css.text} color="textContrastHigh" size="md">
 				{description}
 			</Text>

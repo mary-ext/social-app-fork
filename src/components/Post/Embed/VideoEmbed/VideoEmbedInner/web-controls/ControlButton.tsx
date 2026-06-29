@@ -25,7 +25,7 @@ export function ControlButton({
 			aria-label={active ? activeLabel : inactiveLabel}
 			onClick={onPress}
 		>
-			<Icon fill="#fff" width={20} height={20} aria-hidden />
+			<Icon fill="#fff" size="lg" aria-hidden />
 		</button>
 	);
 }

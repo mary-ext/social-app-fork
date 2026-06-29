@@ -176,9 +176,8 @@ function BookmarkNotFound({
 	return (
 		<div className={css.notFoundRow({ topBorder: !hideTopBorder })}>
 			<div className={css.deletedAvatar}>
-				<QuestionIcon size="lg" fill={colors.textContrastLow} />
+				<QuestionIcon size="xl" fill={colors.textContrastLow} />
 			</div>
-
 			<Skele.Col gap="xs">
 				<Skele.Text size="md" width="25%" />
 
@@ -186,7 +185,6 @@ function BookmarkNotFound({
 					{m['screens.bookmarks.deletedPost']()}
 				</Text>
 			</Skele.Col>
-
 			<Button
 				label={m['common.savedPosts.remove']()}
 				size="tiny"

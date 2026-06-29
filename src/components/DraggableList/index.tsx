@@ -126,7 +126,7 @@ export function SortableList<T>({
 							userSelect: 'none',
 						}}
 					>
-						<GripIcon size="lg" fill={colors.textContrastMedium} className={css.icon} />
+						<GripIcon size="xl" fill={colors.textContrastMedium} className={css.icon} />
 					</div>
 				);
 

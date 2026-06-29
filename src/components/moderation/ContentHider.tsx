@@ -151,7 +151,7 @@ function ContentHiderActive({
 
 	const triggerInner = (
 		<>
-			<desc.icon size="md" fill={colors.textContrastMedium} className={styles.iconWrap} />
+			<desc.icon size="lg" fill={colors.textContrastMedium} className={styles.iconWrap} />
 			<Text
 				size="md"
 				weight="medium"

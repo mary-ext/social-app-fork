@@ -45,7 +45,7 @@ export function ThreadItemReadMore({
 					const interacted = hovered || pressed;
 					return (
 						<>
-							<CirclePlus fill={interacted ? colors.textContrastHigh : colors.textContrastLow} width={18} />
+							<CirclePlus fill={interacted ? colors.textContrastHigh : colors.textContrastLow} size="md" />
 							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
 								{m['screens.postThread.reply.action.readMoreCount']({ count: item.moreReplies })}
 							</Text>

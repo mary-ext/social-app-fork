@@ -17,13 +17,11 @@ export function ErrorMessage({
 	return (
 		<div className={css.outer}>
 			<div className={css.iconBox}>
-				<WarningIcon width={18} fill={colors.white} />
+				<WarningIcon size="md" fill={colors.white} />
 			</div>
-
 			<Text className={css.message} size="md" weight="medium" color="white">
 				{message}
 			</Text>
-
 			{onPressTryAgain && (
 				<button
 					aria-label={m['common.action.retry']()}
@@ -31,7 +29,7 @@ export function ErrorMessage({
 					onClick={onPressTryAgain}
 					type="button"
 				>
-					<ArrowRotateClockwiseIcon width={18} fill={colors.white} />
+					<ArrowRotateClockwiseIcon size="md" fill={colors.white} />
 				</button>
 			)}
 		</div>

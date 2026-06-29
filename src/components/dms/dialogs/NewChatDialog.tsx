@@ -136,7 +136,7 @@ export function NewChat({
 		<>
 			{!chatDisabled && (
 				<FAB
-					icon={<NewChatIcon size="lg" fill={colors.white} />}
+					icon={<NewChatIcon size="xl" fill={colors.white} />}
 					label={m['common.chat.action.new']()}
 					onClick={wrappedOnPress}
 				/>

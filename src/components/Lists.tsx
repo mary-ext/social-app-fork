@@ -42,7 +42,7 @@ export function ListFooter({
 			style={height != null ? assignInlineVars({ [css.heightVar]: `${height}px` }) : undefined}
 		>
 			{isFetchingNextPage ? (
-				<Loader size="xl" />
+				<Loader size="2xl" />
 			) : error ? (
 				<ListFooterError error={error} onRetry={onRetry} />
 			) : !hasNextPage && showEndMessage ? (
@@ -121,7 +121,7 @@ function ListMaybePlaceholder({
 				topBorder={topBorder && !gtTablet}
 			>
 				<View style={[a.w_full, a.align_center, { top: 100 }]}>
-					<Loader size="xl" />
+					<Loader size="2xl" />
 				</View>
 			</CenteredView>
 		);

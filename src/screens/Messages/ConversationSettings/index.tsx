@@ -122,7 +122,7 @@ function SettingsInner({ convoId }: { convoId: string }) {
 	if (!convo || !moderationOpts) {
 		return (
 			<View style={[a.flex_1, a.align_center, a.justify_center]}>
-				<Loader size="xl" />
+				<Loader size="2xl" />
 			</View>
 		);
 	}

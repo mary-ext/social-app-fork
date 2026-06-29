@@ -760,8 +760,8 @@ export function ButtonIcon({
 			}[buttonSize || 'small'] || 'sm') as Exclude<SVGIconProps['size'], undefined>);
 
 		/*
-		 * Copied here from icons/common.tsx so we can tweak if we need to, but
-		 * also so that we can calculate transforms.
+		 * The mid-to-large tokens intentionally diverge from icons/common.tsx (lg is 24 here, 20
+		 * there) so button icons track the rendered text; this also lets us calculate transforms.
 		 */
 		const iconSize = {
 			'2xs': 8,
@@ -773,6 +773,7 @@ export function ButtonIcon({
 			'2xl': 32,
 			'3xl': 40,
 			'4xl': 48,
+			'5xl': 64,
 		}[iconSizeShorthand];
 
 		/*
@@ -874,7 +875,7 @@ function StackedButtonInnerText({ children, icon: Icon }: Pick<StackedButtonProp
 	const textStyles = useSharedButtonTextStyles();
 	return (
 		<>
-			<Icon width={24} fill={textStyles.color as string} />
+			<Icon size="xl" fill={textStyles.color as string} />
 			<ButtonText>{children}</ButtonText>
 		</>
 	);

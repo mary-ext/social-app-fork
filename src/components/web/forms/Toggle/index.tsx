@@ -186,7 +186,7 @@ export function PanelText({ icon, children }: { icon?: ComponentType<IconProps>;
 }
 
 export function PanelIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
-	return <Icon className={styles.panelIcon} size="md" fill="currentColor" />;
+	return <Icon className={styles.panelIcon} size="lg" fill="currentColor" />;
 }
 
 /** The radio dot indicator; render inside a {@link RadioItem}. */

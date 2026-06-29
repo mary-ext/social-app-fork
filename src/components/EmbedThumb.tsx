@@ -39,7 +39,7 @@ function Thumb({ frameClassName, src }: EmbedThumbProps) {
 		<div className={clsx(styles.frame, frameClassName ?? styles.cardFrame)}>
 			{status === 'error' ? (
 				<span className={styles.fallback}>
-					<ImageIcon fill="currentColor" size="2xl" />
+					<ImageIcon fill="currentColor" size="3xl" />
 				</span>
 			) : (
 				<img

@@ -171,7 +171,7 @@ function ModeratedImage() {
 	return (
 		<View style={[a.p_lg, a.py_xl, a.align_center, a.justify_center, t.atoms.bg_contrast_25]}>
 			<View style={[a.align_center, a.gap_sm, { maxWidth: 200 }]}>
-				<ImageIcon size="lg" fill={colors.textContrastMedium} />
+				<ImageIcon size="xl" fill={colors.textContrastMedium} />
 				<Text style={[a.italic, a.leading_snug, a.text_center, t.atoms.text_contrast_medium]}>
 					{hider.meta.allowOverride
 						? m['features.liveNow.image.hidden']()

@@ -267,7 +267,6 @@ function Inner({
 	return (
 		<>
 			<Header close={close} onBack={onBack} title={title} />
-
 			{step === 'categories' && (
 				<Dialog.Body>
 					<div className={styles.body}>
@@ -304,7 +303,6 @@ function Inner({
 					</div>
 				</Dialog.Body>
 			)}
-
 			{step === 'reasons' && state.category && (
 				<Dialog.Body>
 					<div className={styles.body}>
@@ -323,7 +321,6 @@ function Inner({
 					</div>
 				</Dialog.Body>
 			)}
-
 			{step === 'form' && (
 				<>
 					<Dialog.Body>
@@ -338,7 +335,7 @@ function Inner({
 							)}
 							{labelersLoading ? (
 								<div className={styles.center}>
-									<Loader size="lg" />
+									<Loader size="xl" />
 								</div>
 							) : labelersError || !allLabelers ? (
 								<>

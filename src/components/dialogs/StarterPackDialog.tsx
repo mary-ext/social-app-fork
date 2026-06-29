@@ -136,7 +136,7 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 				ListEmptyComponent={
 					isLoading ? (
 						<div className={css.loading}>
-							<CenteredSpinner label={m['common.status.loading']()} size="lg" />
+							<CenteredSpinner label={m['common.status.loading']()} size="xl" />
 						</div>
 					) : (
 						<Empty onStartWizard={onStartWizard} />
@@ -178,7 +178,7 @@ function Empty({ onStartWizard }: { onStartWizard: () => void }) {
 	return (
 		<div className={css.empty}>
 			<div className={css.emptyText}>
-				<StarterPack width={48} fill={colors.contrast_200} />
+				<StarterPack size="4xl" fill={colors.contrast_200} />
 				<Text align="center">{m['components.dialogs.starterPack.empty']()}</Text>
 			</div>
 			<CreateButton onStartWizard={onStartWizard} />

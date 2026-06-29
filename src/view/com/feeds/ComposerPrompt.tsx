@@ -98,7 +98,7 @@ export function ComposerPrompt() {
 					>
 						{({ hovered, pressed, focused }) => (
 							<ImageIcon
-								size="lg"
+								size="xl"
 								style={{
 									color: hovered || pressed || focused ? t.palette.primary_500 : t.palette.contrast_300,
 								}}

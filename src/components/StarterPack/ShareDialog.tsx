@@ -43,7 +43,7 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 	if (!imageLoaded || !link) {
 		return (
 			<div className={styles.loading}>
-				<Loader size="xl" />
+				<Loader size="2xl" />
 			</div>
 		);
 	}

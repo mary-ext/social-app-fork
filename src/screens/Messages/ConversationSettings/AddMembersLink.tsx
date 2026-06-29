@@ -104,11 +104,10 @@ export function AddMembersLink({
 								{m['screens.messages.members.add.action']()}
 							</Text>
 						</View>
-						{isAddPending ? <Loader size="md" /> : <ChevronIcon fill={colors.textContrastMedium} size="md" />}
+						{isAddPending ? <Loader size="lg" /> : <ChevronIcon fill={colors.textContrastMedium} size="lg" />}
 					</View>
 				)}
 			</Button>
-
 			<Dialog.Outer control={addMembersControl} testID="addChatMembersDialog">
 				<Dialog.Handle />
 				<AddMembersFlow

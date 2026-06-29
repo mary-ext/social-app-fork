@@ -32,7 +32,7 @@ export function ThreadItemReadMoreUp({ item }: { item: Extract<ThreadItem, { typ
 					<div>
 						<div className={css.rowTop}>
 							<div className={css.iconCell}>
-								<UpIcon fill={interacted ? colors.textContrastHigh : colors.textContrastLow} width={24} />
+								<UpIcon fill={interacted ? colors.textContrastHigh : colors.textContrastLow} size="xl" />
 							</div>
 							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
 								{m['screens.postThread.reply.action.continueThreadMore']()}

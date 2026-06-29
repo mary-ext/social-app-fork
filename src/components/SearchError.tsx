@@ -12,7 +12,7 @@ export function SearchError({ title, children }: { title?: string; children?: Re
 	return (
 		<Layout.Content>
 			<div className={css.outer}>
-				<XIcon width={32} fill={colors.textContrastLow} />
+				<XIcon size="3xl" fill={colors.textContrastLow} />
 				<div className={css.body}>
 					<Text align="center" size="lg" weight="semiBold">
 						{title}

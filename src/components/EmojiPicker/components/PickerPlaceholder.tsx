@@ -6,7 +6,7 @@ import * as styles from './PickerPlaceholder.css';
 export function PickerPlaceholder() {
 	return (
 		<div className={styles.placeholder}>
-			<LoaderIcon className={styles.spinner} fill="currentColor" size="3xl" />
+			<LoaderIcon className={styles.spinner} fill="currentColor" size="4xl" />
 		</div>
 	);
 }

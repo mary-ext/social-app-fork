@@ -79,7 +79,7 @@ function MaybeLoader({ isLoading }: { isLoading: boolean }) {
 				justifyContent: 'center',
 			}}
 		>
-			{isLoading && <Loader size="xl" />}
+			{isLoading && <Loader size="2xl" />}
 		</View>
 	);
 }

@@ -275,7 +275,7 @@ export function ChatList({
 						{isError ? (
 							<>
 								<View style={[a.pt_3xl, a.align_center]}>
-									<CircleInfoIcon width={48} fill={colors.textContrastLow} />
+									<CircleInfoIcon size="4xl" fill={colors.textContrastLow} />
 									<Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
 										{m['common.error.whoops']()}
 									</Text>

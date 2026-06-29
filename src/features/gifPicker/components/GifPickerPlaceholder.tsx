@@ -23,7 +23,7 @@ export function GifPickerPlaceholder({
 	onGoBack: () => void;
 }) {
 	if (isLoading) {
-		return <CenteredSpinner label={m['features.gifPicker.load.loading']()} size="2xl" fill />;
+		return <CenteredSpinner label={m['features.gifPicker.load.loading']()} size="3xl" fill />;
 	}
 
 	if (isError) {

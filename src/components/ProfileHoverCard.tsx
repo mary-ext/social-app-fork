@@ -119,7 +119,7 @@ function Card({ did }: { did: string }) {
 
 	return (
 		<div className={css.loadingCard}>
-			<Spinner color={colors.contrast_500} label={m['common.status.loading']()} size="xl" />
+			<Spinner color={colors.contrast_500} label={m['common.status.loading']()} size="2xl" />
 		</div>
 	);
 }

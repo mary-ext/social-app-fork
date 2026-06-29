@@ -279,7 +279,7 @@ export function Icon({ icon: Comp }: { icon: React.ComponentType<SVGIconProps> }
 
 	return (
 		<View style={[a.z_20, a.pr_xs]}>
-			<Comp size="md" fill={fill} className={css.icon} />
+			<Comp size="lg" fill={fill} className={css.icon} />
 		</View>
 	);
 }

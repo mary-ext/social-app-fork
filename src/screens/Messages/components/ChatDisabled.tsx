@@ -46,7 +46,7 @@ export function ChatDisabled({
 					},
 				]}
 			>
-				<WarningIcon fill={colors.text} size="lg" className={css.warningIcon} />
+				<WarningIcon fill={colors.text} size="xl" className={css.warningIcon} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
 					{m['screens.messages.moderation.chatsDisabled.title']()}
 				</Text>

@@ -80,7 +80,7 @@ function JoinRequestsInner() {
 			<>
 				<Header />
 				<View style={[a.flex_1, a.align_center, a.justify_center]}>
-					<Loader size="xl" />
+					<Loader size="2xl" />
 				</View>
 			</>
 		);
@@ -288,7 +288,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			<>
 				<Header count={requestCount} hasMoreRequests={hasNextPage} />
 				<View style={[a.flex_1, a.align_center, a.justify_center, a.gap_sm, a.p_lg]}>
-					<ErrorIcon size="3xl" fill={colors.textContrastHigh} />
+					<ErrorIcon size="4xl" fill={colors.textContrastHigh} />
 					<Text style={[a.leading_snug, a.text_center, a.px_lg, a.text_md, t.atoms.text_contrast_high]}>
 						{m['screens.messages.requests.error.fetch']()}
 					</Text>
@@ -320,7 +320,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				ListEmptyComponent={
 					isPending ? (
 						<View style={[a.flex_1, a.align_center, a.justify_center, a.py_4xl]}>
-							<Loader size="xl" />
+							<Loader size="2xl" />
 						</View>
 					) : null
 				}

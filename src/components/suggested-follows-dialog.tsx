@@ -471,7 +471,7 @@ function SearchInput({
 			})}
 			style={[a.flex_row, a.align_center, a.gap_sm, a.px_lg, a.py_xs]}
 		>
-			<SearchIcon size="md" fill={interacted ? colors.primary_500 : colors.contrast_300} />
+			<SearchIcon size="lg" fill={interacted ? colors.primary_500 : colors.contrast_300} />
 			<TextInput
 				ref={inputRef}
 				placeholder={m['components.dialogs.suggestedFollows.searchPlaceholder']()}

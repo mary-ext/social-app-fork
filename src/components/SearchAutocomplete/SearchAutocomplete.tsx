@@ -164,7 +164,7 @@ export function SearchAutocomplete({
 
 	return (
 		<div className={styles.field}>
-			<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="md" />
+			<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="lg" />
 			<input
 				className={styles.input}
 				onFocus={() => setActive(true)}
@@ -637,7 +637,7 @@ function ActiveSearchAutocomplete({
 			value={query}
 		>
 			<div className={styles.field} ref={fieldRef}>
-				<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="md" />
+				<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="lg" />
 				<Autocomplete.Input
 					className={styles.input}
 					onBlur={(event) => {
@@ -676,7 +676,6 @@ function ActiveSearchAutocomplete({
 					/>
 				</div>
 			</div>
-
 			<Autocomplete.Portal>
 				<Autocomplete.Positioner align="end" className={styles.positioner} sideOffset={6}>
 					<Autocomplete.Popup className={styles.popup} ref={popupRef}>

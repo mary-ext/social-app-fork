@@ -37,7 +37,7 @@ export function Icon() {
 		error: t.palette.negative_500,
 		apology: t.atoms.text_contrast_medium.color,
 	}[type];
-	return <Icon fill={fill} size="md" />;
+	return <Icon fill={fill} size="lg" />;
 }
 
 export function Content({

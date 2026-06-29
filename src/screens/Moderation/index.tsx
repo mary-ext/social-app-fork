@@ -71,7 +71,7 @@ export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorP
 			<Layout.Content>
 				{isLoading ? (
 					<div className={styles.status}>
-						<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
+						<Spinner color="currentColor" label={m['common.status.loading']()} size="2xl" />
 					</div>
 				) : error || !preferences ? (
 					<Settings.List>
@@ -175,7 +175,6 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 					<Settings.Label titleText={m['screens.moderation.verification.title']()} />
 				</Settings.LinkRow>
 			</Settings.Section>
-
 			<Settings.Section titleText={m['screens.moderation.adultContent.title']()}>
 				<Settings.SwitchRow
 					label={m['screens.moderation.adultContent.toggleA11y']()}
@@ -190,7 +189,6 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 						<AdultContentLabelRow key={labelDefinition.identifier} labelDefinition={labelDefinition} />
 					))}
 			</Settings.Section>
-
 			{unavailableDids.length > 0 && (
 				<div className={styles.cleanup}>
 					<Admonition type="tip">{m['screens.moderation.labeler.servicesUnavailable']()}</Admonition>
@@ -208,10 +206,9 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 					</Button>
 				</div>
 			)}
-
 			{isLabelersLoading ? (
 				<div className={styles.status}>
-					<Spinner color="currentColor" label={m['common.status.loading']()} size="xl" />
+					<Spinner color="currentColor" label={m['common.status.loading']()} size="2xl" />
 				</div>
 			) : labelersError || !labelers ? (
 				<Admonition type="error">{m['screens.moderation.labeler.loadError']()}</Admonition>

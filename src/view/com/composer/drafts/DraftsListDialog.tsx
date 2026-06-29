@@ -109,11 +109,11 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 				ListEmptyComponent={
 					isLoading ? (
 						<div className={styles.loading}>
-							<CenteredSpinner label={m['view.composer.drafts.loading']()} size="lg" />
+							<CenteredSpinner label={m['view.composer.drafts.loading']()} size="xl" />
 						</div>
 					) : (
 						<div className={styles.empty}>
-							<PageXIcon width={48} height={48} fill={colors.textContrastLow} />
+							<PageXIcon size="4xl" fill={colors.textContrastLow} />
 							<Text size="md" weight="medium" color="textContrastHigh" align="center">
 								{m['view.composer.drafts.empty']()}
 							</Text>

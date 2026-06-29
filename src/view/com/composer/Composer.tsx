@@ -1403,7 +1403,7 @@ function ComposerTopBar({
 						<Spinner
 							color={colors.textContrastMedium}
 							label={m['view.composer.publish.publishing']()}
-							size="md"
+							size="lg"
 						/>
 					</div>
 				) : (

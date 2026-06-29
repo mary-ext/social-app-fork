@@ -324,7 +324,7 @@ export function PostInteractionSettingsForm({
 			<div className={styles.replySection}>
 				{replySettingsDisabled && (
 					<div className={styles.disabledNotice}>
-						<CircleInfo className={styles.disabledNoticeIcon} size="md" fill={colors.textContrastLow} />
+						<CircleInfo className={styles.disabledNoticeIcon} size="lg" fill={colors.textContrastLow} />
 						<Text className={styles.flex1} color="textContrastMedium" size="sm">
 							{m['components.dialogs.reply.authorControlled']()}
 						</Text>

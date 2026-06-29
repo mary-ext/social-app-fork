@@ -53,7 +53,7 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 				accessibilityHint={m['components.dms.scrollDown.a11y.hint']()}
 				onPress={onPress}
 			>
-				<ArrowDownIcon size="md" fill={colors.text} />
+				<ArrowDownIcon size="lg" fill={colors.text} />
 			</Pressable>
 		</View>
 	);

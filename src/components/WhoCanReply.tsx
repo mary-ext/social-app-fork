@@ -93,7 +93,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 				>
 					{description}
 				</Text>
-				{isThreadAuthor && <TinyChevronDownIcon width={8} fill="currentColor" />}
+				{isThreadAuthor && <TinyChevronDownIcon size="2xs" fill="currentColor" />}
 			</button>
 			{isThreadAuthor ? (
 				<PostInteractionSettingsDialog

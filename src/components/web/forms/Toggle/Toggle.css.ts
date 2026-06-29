@@ -157,7 +157,7 @@ export const panelIcon = style(
 		flexShrink: 0,
 		selectors: {
 			'[data-checked] &, [data-active] &': { color: vars.palette.contrast_1000 },
-			// shrink the 20px md glyph to 16px (the original's `sm`) inside a small panel; CSS dimensions
+			// shrink the 20px lg glyph to 16px (the `sm` size) inside a small panel; CSS dimensions
 			// win over the SVG width/height attributes.
 			'[data-size="small"] &': { height: 16, width: 16 },
 		},

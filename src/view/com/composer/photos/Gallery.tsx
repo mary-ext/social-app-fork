@@ -194,7 +194,7 @@ const GalleryItem = ({
 					onPress={onImageEdit}
 					style={styles.imageControl}
 				>
-					<PencilIcon width={12} style={{ color: colors.white }} />
+					<PencilIcon size="xs" style={{ color: colors.white }} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					testID="removePhotoButton"
@@ -204,7 +204,7 @@ const GalleryItem = ({
 					onPress={onRemove}
 					style={styles.imageControl}
 				>
-					<TimesIcon width={16} style={{ color: colors.white }} />
+					<TimesIcon size="sm" style={{ color: colors.white }} />
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity

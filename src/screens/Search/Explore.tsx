@@ -506,7 +506,7 @@ export function Explore({
 				return (
 					<div className={css.errorOuter}>
 						<div className={css.errorBox}>
-							<CircleInfo fill={colors.negative_400} size="md" />
+							<CircleInfo fill={colors.negative_400} size="lg" />
 							<div className={css.errorTextCol}>
 								<Text weight="semiBold">{item.message}</Text>
 								<Text className={css.errorDetail} color="textContrastMedium">
@@ -525,7 +525,7 @@ export function Explore({
 				return null; // what should we do here?
 			}
 			case 'preview:loading': {
-				return <CenteredSpinner label={m['common.status.loading']()} size="lg" />;
+				return <CenteredSpinner label={m['common.status.loading']()} size="xl" />;
 			}
 			case 'preview:header': {
 				return (

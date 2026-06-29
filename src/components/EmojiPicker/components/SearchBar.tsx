@@ -19,7 +19,7 @@ export function SearchBar({ children }: { children?: ReactNode }) {
 	return (
 		<div className={styles.row}>
 			<div className={styles.field}>
-				<MagnifyingGlassIcon className={styles.icon} size="md" fill="currentColor" />
+				<MagnifyingGlassIcon className={styles.icon} size="lg" fill="currentColor" />
 				<Autocomplete.Input
 					autoFocus
 					className={clsx(styles.input, styles.inputWithAccessory)}

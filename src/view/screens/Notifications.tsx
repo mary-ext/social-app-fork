@@ -133,7 +133,7 @@ export function NotificationsScreen({}: Props) {
 				}
 			/>
 			<FAB
-				icon={<EditBigIcon size="lg" fill={colors.white} />}
+				icon={<EditBigIcon size="xl" fill={colors.white} />}
 				label={m['common.compose.action.new']()}
 				onClick={() => openComposer({ logContext: 'Fab' })}
 			/>

@@ -92,7 +92,7 @@ function DialogInner({
 		if (isLoading || !moderationOpts) {
 			return (
 				<div className={css.loading}>
-					<Loader size="xl" />
+					<Loader size="2xl" />
 				</div>
 			);
 		}
@@ -226,7 +226,7 @@ function NoLists() {
 	return (
 		<div className={css.noLists}>
 			<div className={css.noListsIcon}>
-				<ListIcon fill={colors.textContrastLow} size="md" />
+				<ListIcon fill={colors.textContrastLow} size="lg" />
 			</div>
 			<Text align="center" className={css.noListsText} color="textContrastMedium" size="sm">
 				{m['common.list.empty']()}

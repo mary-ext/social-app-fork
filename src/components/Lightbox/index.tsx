@@ -252,7 +252,7 @@ function Chrome() {
 					aria-label={m['components.lightbox.a11y.previous']()}
 					onClick={prev}
 				>
-					<ChevronLeftIcon size="md" fill="currentColor" />
+					<ChevronLeftIcon size="lg" fill="currentColor" />
 				</button>
 			)}
 			{canRight && (
@@ -262,14 +262,13 @@ function Chrome() {
 					aria-label={m['components.lightbox.a11y.next']()}
 					onClick={next}
 				>
-					<ChevronRightIcon size="md" fill="currentColor" />
+					<ChevronRightIcon size="lg" fill="currentColor" />
 				</button>
 			)}
-
 			<div className={styles.topLeft}>
 				<Menu.Root>
 					<Menu.Trigger className={styles.circle} aria-label={m['components.lightbox.a11y.options']()}>
-						<EllipsisIcon size="md" fill="currentColor" className={styles.rotated} />
+						<EllipsisIcon size="lg" fill="currentColor" className={styles.rotated} />
 					</Menu.Trigger>
 					<Menu.Popup label={m['components.lightbox.a11y.options']()}>
 						<Menu.Item label={m['components.lightbox.share.label']()} onClick={() => void onShare()}>
@@ -283,14 +282,12 @@ function Chrome() {
 					</Menu.Popup>
 				</Menu.Root>
 			</div>
-
 			<BaseDialog.Close
 				aria-label={m['components.lightbox.a11y.close']()}
 				className={clsx(styles.circle, styles.topRight)}
 			>
-				<XIcon size="md" fill="currentColor" />
+				<XIcon size="lg" fill="currentColor" />
 			</BaseDialog.Close>
-
 			{img?.alt ? (
 				<div className={styles.altPanel}>
 					<button
@@ -305,7 +302,6 @@ function Chrome() {
 					</button>
 				</div>
 			) : null}
-
 			{images.length > 1 && (
 				<>
 					<div className={styles.pagerDots}>

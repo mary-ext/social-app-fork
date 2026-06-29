@@ -42,7 +42,7 @@ export const SplashScreen = ({
 					}}
 					onPress={onDismiss}
 				>
-					<TimesIcon width={24} style={t.atoms.text} />
+					<TimesIcon size="xl" style={t.atoms.text} />
 				</Pressable>
 			)}
 			<Layout.Center style={[a.h_full, a.flex_1]}>

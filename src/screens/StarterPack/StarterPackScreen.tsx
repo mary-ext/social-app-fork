@@ -401,7 +401,7 @@ function Header({
 					) : null}
 					{joinedAllTimeCount >= 25 ? (
 						<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-							<TrendingIcon width={12} style={{ color: t.atoms.text_contrast_medium.color }} />
+							<TrendingIcon size="xs" style={{ color: t.atoms.text_contrast_medium.color }} />
 							<Text style={[a.font_semi_bold, a.text_sm, t.atoms.text_contrast_medium]}>
 								{m['screens.starterPack.joinedCount']({ count: starterPack.joinedAllTimeCount || 0 })}
 							</Text>

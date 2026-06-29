@@ -112,7 +112,7 @@ function ProfileListScreenInner(props: Props) {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content centerContent contentContainerStyle={[a.mx_auto]}>
-				<Loader size="2xl" />
+				<Loader size="3xl" />
 			</Layout.Content>
 		</>
 	);
@@ -196,7 +196,7 @@ function ProfileListScreenLoaded({
 							header={renderHeader()}
 						/>
 						<FAB
-							icon={<EditBigIcon size="lg" fill={colors.white} />}
+							icon={<EditBigIcon size="xl" fill={colors.white} />}
 							label={m['common.compose.action.new']()}
 							onClick={() => openComposer({ logContext: 'Fab' })}
 						/>
@@ -219,7 +219,7 @@ function ProfileListScreenLoaded({
 					<Layout.Center style={[a.border_b, t.atoms.border_contrast_low]}>{renderHeader()}</Layout.Center>
 					<AboutSection list={list} onPressAddUser={onPressAddUser} />
 					<FAB
-						icon={<EditBigIcon size="lg" fill={colors.white} />}
+						icon={<EditBigIcon size="xl" fill={colors.white} />}
 						label={m['common.compose.action.new']()}
 						onClick={() => openComposer({ logContext: 'Fab' })}
 					/>
