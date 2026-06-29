@@ -24,11 +24,11 @@ import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/ico
 import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
 import type { ListMethods } from '#/components/List/List';
 import { Loader } from '#/components/Loader';
+import { type Section, Tabs } from '#/components/Tabs';
 import { Admonition } from '#/components/web/Admonition';
 import { ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText, LinkButton } from '#/components/web/Link';
-import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

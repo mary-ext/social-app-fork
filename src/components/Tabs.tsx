@@ -10,8 +10,8 @@ import {
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import { clsx } from 'clsx';
 
+import * as styles from '#/components/Tabs.css';
 import { Text } from '#/components/Text';
-import * as styles from '#/components/web/Tabs.css';
 
 /**
  * A web-native tabbed pager built on Base UI Tabs, exposed as namespace parts (`import * as Tabs`). Tabs are

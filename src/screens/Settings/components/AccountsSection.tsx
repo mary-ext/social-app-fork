@@ -26,6 +26,7 @@ import {
 	PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon,
 	PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person';
+import * as Menu from '#/components/Menu';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
@@ -34,7 +35,6 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { AvatarStack } from '#/components/web/AvatarStack';
-import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 import * as Skele from '#/components/web/Skeleton';
 

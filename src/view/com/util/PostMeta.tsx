@@ -14,11 +14,11 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 import { niceDate } from '#/locale/intl/datetime';
 
 import { ProfileBadges } from '#/components/ProfileBadges';
+import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text, type TextProps } from '#/components/Text';
+import { Tooltip } from '#/components/Tooltip';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { InlineLinkText } from '#/components/web/Link';
-import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
-import { Tooltip } from '#/components/web/Tooltip';
 
 import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';

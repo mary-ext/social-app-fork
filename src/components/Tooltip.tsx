@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
 import { Text } from '#/components/Text';
-import * as styles from '#/components/web/Tooltip.css';
+import * as styles from '#/components/Tooltip.css';
 
 export type TooltipProps = {
 	/**

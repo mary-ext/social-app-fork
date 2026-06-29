@@ -21,11 +21,11 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as styles from '#/components/Lightbox/Lightbox.css';
+import * as Menu from '#/components/Menu';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import * as Dialog from '#/components/web/Dialog';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 

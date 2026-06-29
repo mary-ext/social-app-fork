@@ -5,9 +5,9 @@ import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list'
 import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import { Loader } from '#/components/Loader';
+import * as Menu from '#/components/Menu';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';

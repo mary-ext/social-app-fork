@@ -19,9 +19,9 @@ import * as styles from '#/components/EditableUserAvatar.css';
 import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/components/icons/Camera';
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
+import * as Menu from '#/components/Menu';
 import { UserAvatar, type UserAvatarType } from '#/components/UserAvatar';
 import { useDialogHandle } from '#/components/web/Dialog';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 

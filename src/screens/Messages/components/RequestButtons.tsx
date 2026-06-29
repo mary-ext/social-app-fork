@@ -24,6 +24,7 @@ import { CircleX_Stroke2_Corner0_Rounded } from '#/components/icons/CircleX';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import { Loader } from '#/components/Loader';
+import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import {
@@ -33,7 +34,6 @@ import {
 	ButtonText as WebButtonText,
 } from '#/components/web/Button';
 import { useDialogHandle } from '#/components/web/Dialog';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 

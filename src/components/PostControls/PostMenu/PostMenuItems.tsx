@@ -61,12 +61,12 @@ import {
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
 import { Loader } from '#/components/Loader';
+import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import { useDialogHandle } from '#/components/web/Dialog';
-import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';

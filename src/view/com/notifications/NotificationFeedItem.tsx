@@ -60,15 +60,15 @@ import { StarterPack } from '#/components/icons/StarterPack';
 import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
 import * as MediaPreview from '#/components/MediaPreview';
 import { ProfileBadges } from '#/components/ProfileBadges';
+import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Notification as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
+import { Tooltip } from '#/components/Tooltip';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
-import { Tooltip } from '#/components/web/Tooltip';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

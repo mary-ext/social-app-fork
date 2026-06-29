@@ -18,6 +18,7 @@ import { PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon } from '#/componen
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { Loader } from '#/components/Loader';
+import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -25,7 +26,6 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { ExternalLink } from '#/components/web/Link';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

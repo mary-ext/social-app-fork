@@ -3,8 +3,8 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 
-import * as Menu from '#/components/web/Menu';
-import { Tooltip } from '#/components/web/Tooltip';
+import * as Menu from '#/components/Menu';
+import { Tooltip } from '#/components/Tooltip';
 
 import { ShareMenuItems } from './ShareMenuItems';
 

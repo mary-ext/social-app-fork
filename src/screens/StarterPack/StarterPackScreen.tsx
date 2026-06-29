@@ -48,19 +48,19 @@ import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/
 import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
+import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
 import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
 import { ShareDialog } from '#/components/StarterPack/ShareDialog';
+import { type Section, Tabs } from '#/components/Tabs';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
-import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';

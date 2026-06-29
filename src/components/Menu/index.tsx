@@ -6,8 +6,8 @@ import { clsx } from 'clsx';
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import type { Props as IconProps } from '#/components/icons/common';
+import * as styles from '#/components/Menu/Menu.css';
 import { Text } from '#/components/Text';
-import * as styles from '#/components/web/Menu/Menu.css';
 
 // a dropdown menu built on Base UI's Menu. Root + Trigger associate the menu with its anchor; pass a
 // `handle` (from `createHandle`/`useMenuHandle`) to drive a detached Trigger or open it imperatively.

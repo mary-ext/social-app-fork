@@ -8,6 +8,7 @@ import { parseLinkableUrl, toShortUrl } from '#/lib/strings/url-helpers';
 
 import { isOnlyEmoji } from '#/alf/typography';
 
+import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { atomicSegment, emoji } from '#/components/RichText.css';
 import { RichTextTag } from '#/components/RichTextTag';
 import { Text, type TextProps } from '#/components/Text';
@@ -17,7 +18,6 @@ import {
 	type InlineLinkTextProps,
 	type InlineLinkUnderline,
 } from '#/components/web/Link';
-import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 
 type Feature = AppBskyRichtextFacet.Main['features'][number];
 

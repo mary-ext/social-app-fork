@@ -7,8 +7,8 @@ import { LOCALE } from '#/locale/intl/locale';
 
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
+import * as Menu from '#/components/Menu';
 import { useDialogHandle } from '#/components/web/Dialog';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 

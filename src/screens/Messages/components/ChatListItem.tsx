@@ -42,12 +42,12 @@ import { Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen } from '#/compone
 import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 import { Trash_Stroke2_Corner0_Rounded } from '#/components/icons/Trash';
 import { Link } from '#/components/Link';
+import { useMenuHandle } from '#/components/Menu';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { createPortalGroup } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
-import { useMenuHandle } from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

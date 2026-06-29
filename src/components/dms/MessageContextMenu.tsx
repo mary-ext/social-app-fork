@@ -17,8 +17,8 @@ import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Language_Stroke2_Corner2_Rounded as LanguageIcon } from '#/components/icons/Language';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
+import * as Menu from '#/components/Menu';
 import * as Toast from '#/components/Toast';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 

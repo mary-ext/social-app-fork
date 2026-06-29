@@ -11,9 +11,9 @@ import { useSession } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
+import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
-import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

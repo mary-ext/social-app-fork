@@ -61,11 +61,11 @@ import {
 	UserCircle_Filled_Corner0_Rounded as UserCircleFilledIcon,
 	UserCircle_Stroke2_Corner0_Rounded as UserCircleIcon,
 } from '#/components/icons/UserCircle';
+import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link, useInternalLink } from '#/components/web/Link';
-import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
 import { useActorStatus } from '#/features/liveNow';

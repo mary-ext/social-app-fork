@@ -16,12 +16,12 @@ import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
 import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';
 import { useLink } from '#/components/Link';
 import { Loader } from '#/components/Loader';
+import * as Menu from '#/components/Menu';
 import { atomicSegment } from '#/components/RichText.css';
 import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
 import type { InlineLinkUnderline } from '#/components/web/Link';
 import * as linkStyles from '#/components/web/Link.css';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 

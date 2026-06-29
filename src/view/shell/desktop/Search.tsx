@@ -3,8 +3,8 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
 
+import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import { useNavigateToPath } from '#/components/web/Link';
-import { SearchAutocomplete } from '#/components/web/SearchAutocomplete/SearchAutocomplete';
 
 export function DesktopSearch() {
 	const navigation = useNavigation<NavigationProp>();

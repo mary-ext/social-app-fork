@@ -34,8 +34,8 @@ import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/ico
 import * as Layout from '#/components/Layout';
 import { Loader } from '#/components/Loader';
 import * as Hider from '#/components/moderation/Hider';
+import { type Section, Tabs } from '#/components/Tabs';
 import * as Dialog from '#/components/web/Dialog';
-import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

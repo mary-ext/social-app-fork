@@ -10,10 +10,10 @@ import { useSession } from '#/state/session';
 
 import { makeSearchQuery, type Params, parseSearchQuery } from '#/screens/Search/utils';
 
+import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
-import { SearchAutocomplete } from '#/components/web/SearchAutocomplete/SearchAutocomplete';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

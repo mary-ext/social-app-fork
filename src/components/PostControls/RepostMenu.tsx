@@ -4,8 +4,8 @@ import { useRequireAuth, useSession } from '#/state/session';
 
 import { CloseQuote_Stroke2_Corner1_Rounded as Quote } from '#/components/icons/Quote';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
-import * as Menu from '#/components/web/Menu';
-import { Tooltip } from '#/components/web/Tooltip';
+import * as Menu from '#/components/Menu';
+import { Tooltip } from '#/components/Tooltip';
 
 import { m } from '#/paraglide/messages';
 

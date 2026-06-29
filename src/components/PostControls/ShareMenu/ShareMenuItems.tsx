@@ -18,7 +18,7 @@ import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/PaperPlane';
-import * as Menu from '#/components/web/Menu';
+import * as Menu from '#/components/Menu';
 
 import { m } from '#/paraglide/messages';
 import { useDevMode } from '#/storage/hooks/dev-mode';

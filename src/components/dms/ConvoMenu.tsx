@@ -32,12 +32,12 @@ import {
 	PersonX_Stroke2_Corner0_Rounded as PersonX,
 } from '#/components/icons/Person';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
+import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 

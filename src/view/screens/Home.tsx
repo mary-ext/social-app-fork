@@ -22,8 +22,8 @@ import { FollowingEndOfFeed } from '#/view/com/posts/FollowingEndOfFeed';
 
 import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
 
+import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
-import { type Section, Tabs } from '#/components/web/Tabs';
 
 // the feed-discovery tab nudging the user toward the Feeds screen, shown logged-out and when the only
 // pinned feed is Following; selecting it opens that screen rather than switching feeds, so it has no

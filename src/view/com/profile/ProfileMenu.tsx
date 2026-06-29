@@ -37,13 +37,13 @@ import {
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
 import { StarterPack } from '#/components/icons/StarterPack';
+import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { useDialogHandle } from '#/components/web/Dialog';
-import * as Menu from '#/components/web/Menu';
 import * as WebPrompt from '#/components/web/Prompt';
 
 import { useActorStatus, useLiveNowConfig } from '#/features/liveNow';

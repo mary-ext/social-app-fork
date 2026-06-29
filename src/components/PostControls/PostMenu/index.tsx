@@ -5,8 +5,8 @@ import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 
-import * as Menu from '#/components/web/Menu';
-import { Tooltip } from '#/components/web/Tooltip';
+import * as Menu from '#/components/Menu';
+import { Tooltip } from '#/components/Tooltip';
 
 import { PostMenuItems } from './PostMenuItems';
 

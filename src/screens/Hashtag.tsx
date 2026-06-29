@@ -28,8 +28,8 @@ import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { SearchError } from '#/components/SearchError';
+import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Typography';
-import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { m } from '#/paraglide/messages';
 

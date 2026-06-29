@@ -22,11 +22,11 @@ import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { SearchError } from '#/components/SearchError';
+import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 import { ExternalInlineLinkText, InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { m } from '#/paraglide/messages';
 

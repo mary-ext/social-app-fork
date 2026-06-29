@@ -13,11 +13,11 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
+import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Text';
 import * as styles from '#/components/UserAvatar.css';
 import * as Dialog from '#/components/web/Dialog';
 import { Link } from '#/components/web/Link';
-import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';

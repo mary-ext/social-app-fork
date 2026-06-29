@@ -35,6 +35,7 @@ import {
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
+import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
@@ -44,7 +45,6 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

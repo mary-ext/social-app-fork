@@ -44,8 +44,8 @@ import { Message_Stroke1_Corner0_Rounded_Filled as MessageIcon } from '#/compone
 import { VideoClip_Stroke1_Corner0_Rounded as VideoIcon } from '#/components/icons/VideoClip';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
 import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
+import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
-import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { navigate } from '#/Navigation';
 import { m } from '#/paraglide/messages';

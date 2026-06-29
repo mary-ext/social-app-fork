@@ -1,8 +1,8 @@
 import type { ThreadPreferences } from '#/state/queries/preferences/useThreadPreferences';
 
 import { SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider } from '#/components/icons/SettingsSlider';
+import * as Menu from '#/components/Menu';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as Menu from '#/components/web/Menu';
 
 import { m } from '#/paraglide/messages';
 

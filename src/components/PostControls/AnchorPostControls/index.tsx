@@ -11,7 +11,7 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/componen
 import { Reply as Bubble } from '#/components/icons/Reply';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import * as Skele from '#/components/Skeleton';
-import { Tooltip } from '#/components/web/Tooltip';
+import { Tooltip } from '#/components/Tooltip';
 
 import { m } from '#/paraglide/messages';
 
