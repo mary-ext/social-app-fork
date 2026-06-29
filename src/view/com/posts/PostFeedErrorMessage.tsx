@@ -15,8 +15,8 @@ import { useRemoveFeedMutation } from '#/state/queries/preferences';
 import { logger } from '#/logger';
 
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
@@ -110,7 +110,7 @@ function FeedgenErrorMessage({
 	);
 	const [__, uri] = feedDesc.split('|');
 	const [ownerDid] = safeParseFeedgenUri(uri!);
-	const removePromptControl = Prompt.usePromptControl();
+	const removePromptHandle = Prompt.usePromptHandle();
 	const { mutateAsync: removeFeed } = useRemoveFeedMutation();
 
 	const onViewProfile = useCallback(() => {
@@ -118,8 +118,8 @@ function FeedgenErrorMessage({
 	}, [navigation, ownerDid]);
 
 	const onPressRemoveFeed = useCallback(() => {
-		removePromptControl.open();
-	}, [removePromptControl]);
+		removePromptHandle.open(null);
+	}, [removePromptHandle]);
 
 	const onRemoveFeed = useCallback(async () => {
 		try {
@@ -144,14 +144,18 @@ function FeedgenErrorMessage({
 				return (
 					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
 						{knownError === KnownError.FeedgenDoesNotExist && savedFeedConfig && (
-							<Button type="inverted" label={m['view.posts.feed.remove.label']()} onPress={onRemoveFeed} />
+							<Button
+								type="inverted"
+								label={m['view.posts.feed.remove.label']()}
+								onPress={onPressRemoveFeed}
+							/>
 						)}
 						<Button type="default-light" label={m['common.profile.action.view']()} onPress={onViewProfile} />
 					</View>
 				);
 			}
 		}
-	}, [knownError, onViewProfile, onRemoveFeed, savedFeedConfig]);
+	}, [knownError, onViewProfile, onPressRemoveFeed, savedFeedConfig]);
 
 	return (
 		<>
@@ -178,10 +182,10 @@ function FeedgenErrorMessage({
 				{cta}
 			</View>
 			<Prompt.Basic
-				control={removePromptControl}
+				handle={removePromptHandle}
 				title={m['view.posts.feed.remove.title']()}
 				description={m['view.posts.feed.remove.message']()}
-				onConfirm={onPressRemoveFeed}
+				onConfirm={() => void onRemoveFeed()}
 				confirmButtonCta={m['common.action.remove']()}
 				confirmButtonColor="negative"
 			/>
