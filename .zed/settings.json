@@ -6,51 +6,51 @@
 	"languages": {
 		"JSON": {
 			"prettier": {
-				"allowed": false,
+				"allowed": false
 			},
 			"formatter": [
 				{
 					"language_server": {
-						"name": "oxfmt",
-					},
-				},
-			],
+						"name": "oxfmt"
+					}
+				}
+			]
 		},
 		"JavaScript": {
 			"prettier": {
-				"allowed": false,
+				"allowed": false
 			},
 			"formatter": [
 				{
 					"language_server": {
-						"name": "oxfmt",
-					},
-				},
-			],
+						"name": "oxfmt"
+					}
+				}
+			]
 		},
 		"TypeScript": {
 			"prettier": {
-				"allowed": false,
+				"allowed": false
 			},
 			"formatter": [
 				{
 					"language_server": {
-						"name": "oxfmt",
-					},
-				},
-			],
+						"name": "oxfmt"
+					}
+				}
+			]
 		},
 		"TSX": {
 			"prettier": {
-				"allowed": false,
+				"allowed": false
 			},
 			"formatter": [
 				{
 					"language_server": {
-						"name": "oxfmt",
-					},
-				},
-			],
-		},
-	},
+						"name": "oxfmt"
+					}
+				}
+			]
+		}
+	}
 }
