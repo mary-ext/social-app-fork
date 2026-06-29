@@ -4,9 +4,9 @@ import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes
 
 import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 
-import { languageName } from '#/locale/helpers';
+import { codeToLanguageName, languageName } from '#/locale/helpers';
 import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
-import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
+import { APP_LANGUAGES, LANGUAGES, langCode } from '#/locale/languages';
 
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { Filter_Stroke2_Corner0_Rounded as FilterIcon } from '#/components/icons/Filter';
@@ -18,10 +18,6 @@ import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import type { Locale } from '#/paraglide/runtime';
-
-const DEDUPED_LANGUAGES = LANGUAGES.filter(
-	(lang, i, arr) => lang.code2 && arr.findIndex((l) => l.code2 === lang.code2) === i,
-);
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>;
 export function LanguageSettingsScreen({}: Props) {
@@ -67,9 +63,9 @@ export function LanguageSettingsScreen({}: Props) {
 
 	const primaryLanguageItems = useMemo(
 		() =>
-			DEDUPED_LANGUAGES.map((lang) => ({
+			LANGUAGES.map((lang) => ({
 				label: languageName(lang, LOCALE),
-				value: lang.code2,
+				value: langCode(lang),
 			})).sort((a, b) => a.label.localeCompare(b.label, LOCALE)),
 		[],
 	);
@@ -78,12 +74,7 @@ export function LanguageSettingsScreen({}: Props) {
 		if (contentLanguages.length === 0) {
 			return null;
 		}
-		return contentLanguages
-			.map((code2) => {
-				const lang = LANGUAGES.find((l) => l.code2 === code2);
-				return lang ? languageName(lang, LOCALE) : code2;
-			})
-			.join(', ');
+		return contentLanguages.map((code) => codeToLanguageName(code, LOCALE)).join(', ');
 	}, [contentLanguages]);
 
 	return (

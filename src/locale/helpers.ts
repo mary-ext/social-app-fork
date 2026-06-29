@@ -3,7 +3,7 @@ import * as bcp47Match from 'bcp-47-match';
 
 import { detectLanguages } from '#/lib/language-detection';
 
-import { type Language, LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3 } from './languages';
+import { type Language, LANGUAGES_MAP, langCode } from './languages';
 
 /**
  * Minimum top-candidate probability for a from-text detection to count. Below this the detector is just
@@ -13,7 +13,7 @@ const DETECTION_FLOOR = 0.2;
 
 export function code3ToCode2(lang: string): string {
 	if (lang.length === 3) {
-		return LANGUAGES_MAP_CODE3[lang]?.code2 || lang;
+		return LANGUAGES_MAP[lang]?.code2 ?? lang;
 	}
 	return lang;
 }
@@ -50,19 +50,15 @@ export function getPostLanguageTags(post: AppBskyFeedDefs.PostView) {
 }
 
 export function languageName(language: Language, appLang: string): string {
-	// if Intl.DisplayNames is unavailable on the target, display the English name
-	if (!Intl.DisplayNames) {
-		return language.name;
-	}
-
-	return getLocalizedLanguage(language.code2, appLang) || language.name;
+	const code = langCode(language);
+	// localize to the app language, falling back to the English name, then the raw code for anything Intl
+	// can't name (shouldn't happen for our curated set)
+	return getLocalizedLanguage(code, appLang) ?? getLocalizedLanguage(code, 'en') ?? code;
 }
 
 export function codeToLanguageName(lang2or3: string, appLang: string): string {
-	const code2 = code3ToCode2(lang2or3);
-	const knownLanguage = LANGUAGES_MAP_CODE2[code2];
-
-	return knownLanguage ? languageName(knownLanguage, appLang) : code2;
+	const knownLanguage = LANGUAGES_MAP[lang2or3];
+	return knownLanguage ? languageName(knownLanguage, appLang) : lang2or3;
 }
 
 export function getPostLanguage(post: AppBskyFeedDefs.PostView): string | undefined {

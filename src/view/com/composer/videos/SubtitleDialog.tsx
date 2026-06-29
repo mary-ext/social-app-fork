@@ -6,7 +6,9 @@ import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
 import { useLanguagePrefs } from '#/state/preferences';
 
-import { LANGUAGES } from '#/locale/languages';
+import { languageName } from '#/locale/helpers';
+import { LOCALE } from '#/locale/intl/locale';
+import { type Language, LANGUAGES, langCode } from '#/locale/languages';
 
 import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
 import { PageText_Stroke2_Corner0_Rounded as PageTextIcon } from '#/components/icons/PageText';
@@ -171,7 +173,7 @@ function SubtitleFileRow({
 	alt: boolean;
 	file: File;
 	language: string;
-	otherLanguages: { code2: string; code3: string; name: string }[];
+	otherLanguages: Language[];
 	setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void;
 }) {
 	const handleValueChange = useCallback(
@@ -184,7 +186,7 @@ function SubtitleFileRow({
 	);
 
 	const languageItems = otherLanguages.map((lang) => ({
-		label: `${lang.name} (${langCode(lang)})`,
+		label: `${languageName(lang, LOCALE)} (${langCode(lang)})`,
 		value: langCode(lang),
 	}));
 
@@ -228,8 +230,4 @@ function SubtitleFileRow({
 			</Button>
 		</div>
 	);
-}
-
-function langCode(lang: { code2: string; code3: string }) {
-	return lang.code2 || lang.code3;
 }

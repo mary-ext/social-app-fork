@@ -5,7 +5,7 @@ import { useLanguagePrefs } from '#/state/preferences/languages';
 
 import { languageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
-import { type Language, LANGUAGES, LANGUAGES_MAP_CODE2 } from '#/locale/languages';
+import { type Language, LANGUAGES, LANGUAGES_MAP, langCode } from '#/locale/languages';
 
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
@@ -87,51 +87,35 @@ function DialogInner({
 }) {
 	const langPrefs = useLanguagePrefs();
 
-	const allowedLanguages = useMemo(() => {
-		const uniqueLanguagesMap = LANGUAGES.filter((lang) => !!lang.code2).reduce(
-			(acc, lang) => {
-				acc[lang.code2] = lang;
-				return acc;
-			},
-			{} as Record<string, Language>,
-		);
-
-		return Object.values(uniqueLanguagesMap);
-	}, []);
-
-	const [checkedLanguagesCode2, setCheckedLanguagesCode2] = useState<string[]>(
-		currentLanguages || [langPrefs.primaryLanguage],
-	);
+	const [checkedCodes, setCheckedCodes] = useState<string[]>(currentLanguages || [langPrefs.primaryLanguage]);
 	const [search, setSearch] = useState('');
 
 	const handleClose = () => {
-		onSelectLanguages?.(checkedLanguagesCode2);
+		onSelectLanguages?.(checkedCodes);
 		handle.close();
 	};
 
 	// NOTE(@elijaharita): Displayed languages are split into 3 lists for
 	// ordering.
 	const displayedLanguages = useMemo(() => {
-		function mapCode2List(code2List: string[]) {
-			return code2List
-				.map((code2) => LANGUAGES_MAP_CODE2[code2])
-				.filter((lang): lang is Language => Boolean(lang));
+		function mapCodeList(codeList: string[]) {
+			return codeList.map((code) => LANGUAGES_MAP[code]).filter((lang): lang is Language => Boolean(lang));
 		}
 
 		// NOTE(@elijaharita): Get recent language codes and map them to language
 		// objects. Both the user account's saved language history and the current
 		// checked languages are displayed here.
-		const recentLanguagesCode2 =
-			Array.from(new Set([...checkedLanguagesCode2, ...langPrefs.postLanguageHistory])).slice(0, 5) || [];
-		const recentLanguages = mapCode2List(recentLanguagesCode2);
+		const recentCodes =
+			Array.from(new Set([...checkedCodes, ...langPrefs.postLanguageHistory])).slice(0, 5) || [];
+		const recentLanguages = mapCodeList(recentCodes);
 
 		// NOTE(@elijaharita): helper functions
 		const searchLower = search.toLowerCase();
 		const matchesSearch = (lang: Language) =>
 			languageName(lang, LOCALE).toLowerCase().includes(searchLower) ||
-			lang.name.toLowerCase().includes(searchLower);
-		const isChecked = (lang: Language) => checkedLanguagesCode2.includes(lang.code2);
-		const isInRecents = (lang: Language) => recentLanguagesCode2.includes(lang.code2);
+			languageName(lang, 'en').toLowerCase().includes(searchLower);
+		const isChecked = (lang: Language) => checkedCodes.includes(langCode(lang));
+		const isInRecents = (lang: Language) => recentCodes.includes(langCode(lang));
 
 		const checkedRecent = recentLanguages.filter(isChecked);
 
@@ -139,7 +123,7 @@ function DialogInner({
 			// NOTE(@elijaharita): if a search is active, we ALWAYS show checked
 			// items, as well as any items that match the search.
 			const uncheckedRecent = recentLanguages.filter((lang) => !isChecked(lang)).filter(matchesSearch);
-			const unchecked = allowedLanguages.filter((lang) => !isChecked(lang));
+			const unchecked = LANGUAGES.filter((lang) => !isChecked(lang));
 			const all = unchecked.filter(matchesSearch).filter((lang) => !isInRecents(lang));
 
 			return {
@@ -150,9 +134,9 @@ function DialogInner({
 		} else {
 			// NOTE(@elijaharita): if no search is active, we show everything.
 			const uncheckedRecent = recentLanguages.filter((lang) => !isChecked(lang));
-			const all = allowedLanguages
-				.filter((lang) => !recentLanguagesCode2.includes(lang.code2))
-				.filter((lang) => !isInRecents(lang));
+			const all = LANGUAGES.filter((lang) => !recentCodes.includes(langCode(lang))).filter(
+				(lang) => !isInRecents(lang),
+			);
 
 			return {
 				all,
@@ -160,7 +144,7 @@ function DialogInner({
 				uncheckedRecent,
 			};
 		}
-	}, [allowedLanguages, search, langPrefs.postLanguageHistory, checkedLanguagesCode2]);
+	}, [search, langPrefs.postLanguageHistory, checkedCodes]);
 
 	const hasRecent =
 		displayedLanguages.checkedRecent.length > 0 || displayedLanguages.uncheckedRecent.length > 0;
@@ -181,9 +165,9 @@ function DialogInner({
 			className={styles.group}
 			label={m['components.dialogs.language.selectTitle']()}
 			maxSelections={maxLanguages}
-			onChange={setCheckedLanguagesCode2}
+			onChange={setCheckedCodes}
 			type="checkbox"
-			values={checkedLanguagesCode2}
+			values={checkedCodes}
 		>
 			<div className={styles.header}>
 				<div className={styles.headerRow}>
@@ -220,7 +204,7 @@ function DialogInner({
 			<Dialog.List
 				className={styles.list}
 				data={listData}
-				keyExtractor={(item) => (item.type === 'header' ? `header-${item.label}` : item.lang.code2)}
+				keyExtractor={(item) => (item.type === 'header' ? `header-${item.label}` : langCode(item.lang))}
 				renderItem={(item, index) => {
 					if (item.type === 'header') {
 						return (
@@ -237,7 +221,7 @@ function DialogInner({
 						<Toggle.Item
 							className={clsx(styles.row, !isLastItem && styles.rowBorder)}
 							label={name}
-							name={lang.code2}
+							name={langCode(lang)}
 						>
 							<Text className={styles.rowLabel} color="textContrastHigh" size="sm" weight="semiBold">
 								{name}
