@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import type {
 	AppBskyActorDefs,
 	AppBskyActorGetSuggestions,
@@ -36,7 +35,7 @@ export function useSuggestedFollowsByActorQuery({
 				}),
 			);
 			const suggestions = data.suggestions.filter((profile) => !profile.viewer?.following);
-			return { suggestions, recId: data.recIdStr };
+			return { suggestions };
 		},
 		enabled,
 	});
@@ -58,29 +57,20 @@ export function useSuggestedFollowsByActorWithDismiss({
 	});
 	const queryClient = useQueryClient();
 
-	const onDismiss = useCallback(
-		(dismissedDid: string) => {
-			queryClient.setQueryData(suggestedFollowsByActorQueryKey(did), (previous: typeof data) => {
-				if (!previous) return previous;
-				return {
-					...previous,
-					suggestions: previous.suggestions.filter((s) => s.did !== dismissedDid),
-				};
-			});
-		},
-		[did, queryClient],
-	);
+	const onDismiss = (dismissedDid: string) => {
+		queryClient.setQueryData(suggestedFollowsByActorQueryKey(did), (previous: typeof data) => {
+			if (!previous) return previous;
+			return {
+				...previous,
+				suggestions: previous.suggestions.filter((s) => s.did !== dismissedDid),
+			};
+		});
+	};
 
-	const profiles = useMemo(() => {
-		return (data?.suggestions ?? []).map((profile) => ({
-			actor: profile,
-			recId: data?.recId,
-		}));
-	}, [data?.suggestions, data?.recId]);
+	const profiles = data?.suggestions ?? [];
 
 	return {
 		profiles,
-		recId: data?.recId,
 		onDismiss,
 		isLoading,
 		error,

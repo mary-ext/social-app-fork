@@ -26,7 +26,7 @@ import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlac
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { SuggestedFollows } from '#/components/FeedInterstitials';
+import { SuggestedFollows } from '#/components/feed-interstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 
 import { m } from '#/paraglide/messages';
