@@ -234,7 +234,6 @@ function ThreadItemPostInner({
 						) : undefined}
 						{post.embed && (
 							<div
-								className={css.embed}
 								style={maybeApplyGalleryOffsetStyles('embed', {
 									post: post,
 									modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),

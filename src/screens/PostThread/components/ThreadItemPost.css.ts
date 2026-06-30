@@ -62,10 +62,6 @@ export const labelsOnMe = style({
 export const postAlerts = style({
 	paddingBottom: space._2xs,
 });
-
-export const embed = style({
-	paddingBottom: space.xs,
-});
 // #endregion
 
 // #region deleted
