@@ -26,6 +26,17 @@ export class MessagesEventBus {
 	private emitter = new SimpleEventEmitter<[MessagesEventBusEvent]>();
 
 	private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing;
+	private hasInitialized = false;
+	/**
+	 * The activity the consumer wants, tracked separately from {@link status} because lifecycle calls
+	 * (resume/suspend/background) can arrive while init() is still in flight. init()'s completion reconciles to
+	 * this so a bus that was suspended/backgrounded mid-init doesn't start foreground polling against a stale
+	 * intent.
+	 */
+	private intendedStatus:
+		| MessagesEventBusStatus.Backgrounded
+		| MessagesEventBusStatus.Ready
+		| MessagesEventBusStatus.Suspended = MessagesEventBusStatus.Suspended;
 	private latestRev: string | undefined = undefined;
 	private pollInterval = DEFAULT_POLL_INTERVAL;
 	private requestedPollIntervals: Map<string, number> = new Map();
@@ -34,7 +45,9 @@ export class MessagesEventBus {
 		this.id = crypto.randomUUID();
 		this.chat = params.chat;
 
-		void this.init();
+		// init() is deferred to the first resume() rather than fired here: a constructor that
+		// performs network work outlives the React instance that owns it, so a StrictMode/concurrent
+		// render that constructs and discards a bus would still leak a getLog and a zombie poller.
 	}
 
 	requestPollInterval(interval: number) {
@@ -90,16 +103,38 @@ export class MessagesEventBus {
 
 	background() {
 		logger.debug(`background`, {});
+		this.intendedStatus = MessagesEventBusStatus.Backgrounded;
+		// while still seeding the cursor, only record intent; init()'s completion applies it. acting
+		// now would poll with an undefined cursor.
+		if (this.status === MessagesEventBusStatus.Initializing) {
+			return;
+		}
 		this.dispatch({ event: MessagesEventBusDispatchEvent.Background });
 	}
 
 	suspend() {
 		logger.debug(`suspend`, {});
+		this.intendedStatus = MessagesEventBusStatus.Suspended;
+		// a genuine unmount mid-init lands here; recording intent means init()'s completion won't
+		// start a poller for a consumer that's already gone.
+		if (this.status === MessagesEventBusStatus.Initializing) {
+			return;
+		}
 		this.dispatch({ event: MessagesEventBusDispatchEvent.Suspend });
 	}
 
 	resume() {
 		logger.debug(`resume`, {});
+		this.intendedStatus = MessagesEventBusStatus.Ready;
+		if (this.status === MessagesEventBusStatus.Initializing) {
+			// first activation kicks off the one-time cursor seed; its completion reconciles to
+			// intendedStatus. repeat resumes while still initializing (StrictMode) are no-ops.
+			if (!this.hasInitialized) {
+				this.hasInitialized = true;
+				void this.init();
+			}
+			return;
+		}
 		this.dispatch({ event: MessagesEventBusDispatchEvent.Resume });
 	}
 
@@ -109,20 +144,11 @@ export class MessagesEventBus {
 		switch (this.status) {
 			case MessagesEventBusStatus.Initializing: {
 				switch (action.event) {
+					// Suspend/Background never reach here: those lifecycle calls only record intent
+					// while Initializing (the cursor isn't seeded yet) and let this Ready completion
+					// apply it.
 					case MessagesEventBusDispatchEvent.Ready: {
-						this.status = MessagesEventBusStatus.Ready;
-						this.resetPoll();
-						this.emitter.emit({ type: 'connect' });
-						break;
-					}
-					case MessagesEventBusDispatchEvent.Background: {
-						this.status = MessagesEventBusStatus.Backgrounded;
-						this.resetPoll();
-						this.emitter.emit({ type: 'connect' });
-						break;
-					}
-					case MessagesEventBusDispatchEvent.Suspend: {
-						this.status = MessagesEventBusStatus.Suspended;
+						this.activateAfterInit();
 						break;
 					}
 					case MessagesEventBusDispatchEvent.Error: {
@@ -225,14 +251,43 @@ export class MessagesEventBus {
 		});
 	}
 
+	/**
+	 * Applies the consumer's current {@link intendedStatus} once init() has seeded the cursor, run from the
+	 * Initializing -> Ready transition. If the consumer suspended or backgrounded while init() was in flight,
+	 * we honor that rather than unconditionally foregrounding.
+	 */
+	private activateAfterInit() {
+		switch (this.intendedStatus) {
+			case MessagesEventBusStatus.Suspended: {
+				// consumer went away mid-init; stay idle rather than start a poller with no listeners.
+				this.status = MessagesEventBusStatus.Suspended;
+				return;
+			}
+			case MessagesEventBusStatus.Backgrounded: {
+				this.status = MessagesEventBusStatus.Backgrounded;
+				break;
+			}
+			case MessagesEventBusStatus.Ready: {
+				this.status = MessagesEventBusStatus.Ready;
+				break;
+			}
+		}
+
+		// init() already fetched the latest cursor, so an immediate poll from the same rev would just
+		// return empty. arm the interval without it; consumers needing fresher data lower the interval
+		// via requestPollInterval(), which polls immediately.
+		this.resetPoll({ immediate: false });
+		this.emitter.emit({ type: 'connect' });
+	}
+
 	private recoverFromError() {
 		logger.debug(`recoverFromError`, { hasRev: !!this.latestRev });
 
 		if (this.latestRev === undefined) {
 			/*
 			 * init() never succeeded, so we have no cursor to resume from. Re-run init() to seed latestRev. Its
-			 * success path dispatches Ready, which from Initializing transitions us to Ready + resetPoll + emit
-			 * connect.
+			 * success path dispatches Ready, which reconciles to intendedStatus (Ready here, since recovery is
+			 * only reached via a Resume/UpdatePoll dispatch from an active consumer).
 			 */
 			this.status = MessagesEventBusStatus.Initializing;
 			void this.init();
@@ -311,14 +366,14 @@ export class MessagesEventBus {
 		}
 	}
 
-	private resetPoll() {
+	private resetPoll({ immediate }: { immediate: boolean } = { immediate: true }) {
 		this.pollInterval = this.getPollInterval();
 		this.stopPoll();
-		this.startPoll();
+		this.startPoll({ immediate });
 	}
 
-	private startPoll() {
-		if (!this.isPolling) void this.poll();
+	private startPoll({ immediate }: { immediate: boolean }) {
+		if (immediate && !this.isPolling) void this.poll();
 
 		this.pollIntervalRef = setInterval(() => {
 			if (this.isPolling) return;
