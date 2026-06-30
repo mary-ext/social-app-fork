@@ -146,6 +146,10 @@ export const additionalWrap = style({
 	paddingTop: 2,
 });
 
+export const feedCardWrap = style({
+	paddingTop: 6,
+});
+
 export const starterPackBox = style({
 	borderColor: colors.borderContrastLow,
 	borderRadius: 8,

@@ -38,13 +38,13 @@ import { logger } from '#/logger';
 import { niceDate } from '#/locale/intl/datetime';
 import { Trans } from '#/locale/Trans';
 
-import { FeedSourceCard } from '#/view/com/feeds/FeedSourceCard';
 import { Post } from '#/view/com/post/Post';
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 
 import { useTheme } from '#/alf';
 
 import { BlockLink } from '#/components/BlockLink';
+import * as FeedCard from '#/components/FeedCard';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import {
@@ -526,16 +526,9 @@ let NotificationFeedItem = ({
 				) : null}
 
 				{item.type === 'feedgen-like' && item.subjectUri ? (
-					<FeedSourceCard
-						feedUri={item.subjectUri}
-						link={false}
-						style={[
-							t.atoms.bg,
-							t.atoms.border_contrast_low,
-							{ borderRadius: 8, borderWidth: 1, marginTop: 6, padding: 12 },
-						]}
-						showLikes
-					/>
+					<div className={css.feedCardWrap}>
+						<FeedCard.ByUri uri={item.subjectUri} />
+					</div>
 				) : null}
 				{item.type === 'starterpack-joined' ? (
 					<div className={css.starterPackBox}>

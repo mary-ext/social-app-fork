@@ -7,9 +7,11 @@ import { clsx } from 'clsx';
 import { weightedRandomIndex } from '#/lib/numbers';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { precacheFeedFromGeneratorView } from '#/state/queries/feed';
+import { precacheFeedFromGeneratorView, useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
+
+import { MissingFeed } from '#/view/com/feeds/MissingFeed';
 
 import { BlockLink } from '#/components/BlockLink';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
@@ -53,6 +55,47 @@ export function Default({
 				<Likes count={view.likeCount || 0} />
 			</Outer>
 		</Link>
+	);
+}
+
+/**
+ * Resolves a feed generator by its at-uri and renders a compact, non-link card framed for embedding inside
+ * another surface (e.g. a notification row). Shows a loading placeholder while resolving and a
+ * {@link MissingFeed} fallback if the feed can't be loaded.
+ *
+ * @param uri the feed generator's at-uri
+ */
+export function ByUri({ uri }: { uri: string }) {
+	const { data: feed, error } = useFeedSourceInfoQuery({ uri });
+
+	if (!feed || feed.type !== 'feed' || !feed.view) {
+		if (error) {
+			return <MissingFeed uri={uri} error={error} hideTopBorder />;
+		}
+		return <EmbedPlaceholder />;
+	}
+
+	const { view } = feed;
+	return (
+		<Outer className={css.embedCard}>
+			<Header>
+				<Avatar src={view.avatar} />
+				<TitleAndByline creator={view.creator} title={view.displayName} />
+			</Header>
+			<Likes count={view.likeCount || 0} />
+		</Outer>
+	);
+}
+
+function EmbedPlaceholder() {
+	return (
+		<Outer className={css.embedCard}>
+			<Header>
+				<AvatarPlaceholder />
+				<TitleAndBylinePlaceholder creator />
+			</Header>
+			<Skeleton.Text size="sm" width="35%" />
+		</Outer>
 	);
 }
 

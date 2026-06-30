@@ -46,7 +46,19 @@ export const outer = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.md,
-	width: '100%',
+});
+
+/**
+ * A self-contained, non-link card frame for embedding a feed card inside another surface (e.g. a notification
+ * row): a bordered, rounded box with its own background so it reads as a distinct card.
+ */
+export const embedCard = style({
+	backgroundColor: colors.bg,
+	borderColor: colors.borderContrastLow,
+	borderRadius: borderRadius.sm,
+	borderStyle: 'solid',
+	borderWidth: 1,
+	padding: space.md,
 });
 
 export const header = style({
