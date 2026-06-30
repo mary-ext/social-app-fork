@@ -34,7 +34,6 @@
 	"components.dialogs.link.visit": "Visit site",
 	"components.dialogs.list.addedToast": "Added to list",
 	"components.dialogs.list.adding": "Adding",
-	"components.dialogs.list.addingMembers": "Adding members to list...",
 	"components.dialogs.list.addPeopleTitle": "Add people to list",
 	"components.dialogs.list.addToLists": "Add {name} to lists",
 	"components.dialogs.list.addUserTitle": "Add user to list",

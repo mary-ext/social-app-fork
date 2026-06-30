@@ -35,7 +35,6 @@ import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
@@ -426,7 +425,7 @@ function OverflowMenu({
 	const { currentAccount } = useSession();
 	const reportDialogControl = useReportDialogControl();
 	const deleteHandle = Prompt.usePromptHandle();
-	const convertToListDialogControl = useDialogControl();
+	const convertToListHandle = Dialog.useDialogHandle();
 	const navigation = useNavigation<NavigationProp>();
 
 	const {
@@ -501,7 +500,7 @@ function OverflowMenu({
 							<Menu.Item
 								label={m['screens.starterPack.list.create']()}
 								onClick={() => {
-									convertToListDialogControl.open();
+									convertToListHandle.open(null);
 								}}
 							>
 								<Menu.ItemText>{m['screens.starterPack.list.createFromMembers']()}</Menu.ItemText>
@@ -575,7 +574,7 @@ function OverflowMenu({
 					<Prompt.Cancel />
 				</Prompt.Actions>
 			</Prompt.Outer>
-			<CreateListFromStarterPackDialog control={convertToListDialogControl} starterPack={starterPack} />
+			<CreateListFromStarterPackDialog handle={convertToListHandle} starterPack={starterPack} />
 		</>
 	);
 }
