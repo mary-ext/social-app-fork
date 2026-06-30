@@ -75,7 +75,8 @@ export function PostRepliedTo({
  * loading and error states stay inert.
  */
 function ParentAuthorName({ did }: { did: string }) {
-	const { data: profile, isError } = useProfileQuery({ did, staleTime: STALE.INFINITY });
+	// a feed of replies mounts many of these at once, so coalesce the author fetches into one request.
+	const { data: profile, isError } = useProfileQuery({ batch: true, did, staleTime: STALE.INFINITY });
 
 	if (isError) {
 		return (

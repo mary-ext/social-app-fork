@@ -194,14 +194,10 @@ function ActiveSearchAutocomplete({
 	const { data: meProfile } = useProfileQuery({ did: currentAccount?.did });
 
 	const { history, record, remove } = useSearchHistory();
-	// hydrate the history's profile entries to full views for the recent rows; keep prior data so the list
-	// doesn't blank out between fetches as entries are added or removed.
 	const recentProfileDids = history.flatMap((entry) => (entry.kind === 'profile' ? [entry.did] : []));
-	const {
-		data: recentProfileData,
-		isPending: recentProfilesPending,
-		isPlaceholderData: recentProfilesPlaceholder,
-	} = useProfilesQuery({ dids: recentProfileDids, maintainData: true });
+	const { data: recentProfileData, isPending: recentProfilesPending } = useProfilesQuery({
+		dids: recentProfileDids,
+	});
 	const recentProfiles = new Map(
 		(recentProfileData?.profiles ?? []).map((profile) => [profile.did, profile]),
 	);
@@ -341,9 +337,9 @@ function ActiveSearchAutocomplete({
 		profiles,
 		query,
 		recentProfiles,
-		// hold a skeleton slot for an unresolved recent while its view is still loading (first fetch, or a
-		// kept-previous list bridging a newly added did); once settled, an unresolved did drops out.
-		recentProfilesPending: recentProfilesPending || recentProfilesPlaceholder,
+		// hold a skeleton slot for an unresolved recent while its view is still loading; once settled, an
+		// unresolved did drops out.
+		recentProfilesPending,
 		today,
 		visibleMonth,
 	});

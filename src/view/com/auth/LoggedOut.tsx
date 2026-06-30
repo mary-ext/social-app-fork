@@ -1,14 +1,10 @@
 import { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
-import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 
-import { STALE } from '#/state/queries';
-import { profilesQueryKey } from '#/state/queries/profile';
-import { useClients, useSession } from '#/state/session';
+import { usePrefetchProfileQuery } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
@@ -27,24 +23,15 @@ export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 	const insets = useSafeAreaInsets();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
-	const queryClient = useQueryClient();
 	const { accounts } = useSession();
-	const { appview } = useClients();
+	const prefetchProfileQuery = usePrefetchProfileQuery();
 	useEffect(() => {
-		const actors = accounts.map((acc) => acc.did);
-		if (actors.length === 0) return;
-		void queryClient.prefetchQuery({
-			queryKey: profilesQueryKey(actors),
-			staleTime: STALE.MINUTES.FIVE,
-			queryFn: async () => {
-				return await ok(
-					appview.get('app.bsky.actor.getProfiles', {
-						params: { actors: actors as ActorIdentifier[] },
-					}),
-				);
-			},
-		});
-	}, [accounts, appview, queryClient]);
+		// warm each account's profile so the switcher renders instantly; the batched fetch coalesces
+		// these into one getProfiles request.
+		for (const acc of accounts) {
+			void prefetchProfileQuery(acc.did);
+		}
+	}, [accounts, prefetchProfileQuery]);
 
 	const onPressDismiss = useCallback(() => {
 		if (onDismiss) {

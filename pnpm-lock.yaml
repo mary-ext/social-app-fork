@@ -97,6 +97,9 @@ importers:
       '@mary-ext/simple-event-emitter':
         specifier: ^1.0.2
         version: 1.0.2
+      '@mary/batch-fetch':
+        specifier: jsr:^0.1.0
+        version: '@jsr/mary__batch-fetch@0.1.0'
       '@mary/color-fns':
         specifier: jsr:^0.1.3
         version: '@jsr/mary__color-fns@0.1.3'
@@ -1271,6 +1274,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@jsr/mary__batch-fetch@0.1.0':
+    resolution: {integrity: sha512-A5SmTfDUMjr+AaJA+wFg4eKKVQm6/51CYTg5ssO+vcnaCJoP1Y0RURG6VkMno9QUholf3AAldfzRgQOXDZbFgg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__batch-fetch/0.1.0.tgz}
 
   '@jsr/mary__color-fns@0.1.3':
     resolution: {integrity: sha512-bTuY9P/fNYQZrPubKzGIeH2NSGe+x5ZG50UnZ9860gR06D6DHHUw5OogzFXM1nrYfdTlR1qGNVH08kAiHK629A==, tarball: https://npm.jsr.io/~/11/@jsr/mary__color-fns/0.1.3.tgz}
@@ -6287,6 +6293,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@jsr/mary__batch-fetch@0.1.0': {}
 
   '@jsr/mary__color-fns@0.1.3': {}
 

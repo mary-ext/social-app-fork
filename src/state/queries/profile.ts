@@ -2,20 +2,21 @@ import { useCallback } from 'react';
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
-	AppBskyActorGetProfiles,
 	AppBskyActorProfile,
 	AppBskyGraphGetFollows,
 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { createBatchedFetch } from '@mary/batch-fetch';
 import {
 	type InfiniteData,
-	keepPreviousData,
 	type QueryClient,
 	useMutation,
+	useQueries,
 	useQuery,
 	useQueryClient,
+	type UseQueryResult,
 } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord, getRecord, putRecord } from '#/lib/api/records';
@@ -35,7 +36,7 @@ import {
 	useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations';
@@ -49,13 +50,27 @@ export const precacheProfile = unstableCacheProfileView;
 const RQKEY_ROOT = 'profile';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
-export const profilesQueryKeyRoot = 'profiles';
-export const profilesQueryKey = (dids: string[]) => [profilesQueryKeyRoot, dids];
+const fetchProfile = createBatchedFetch<string, AppBskyActorDefs.ProfileViewDetailed>({
+	limit: 25, // getProfiles caps `actors` at 25
+	fetch: async (dids, signal) => {
+		const { appview } = getClients();
+		const { profiles } = await ok(
+			appview.get('app.bsky.actor.getProfiles', {
+				params: { actors: dids as ActorIdentifier[] },
+				signal,
+			}),
+		);
+		return profiles;
+	},
+	idFromResource: (profile) => profile.did,
+});
 
 export function useProfileQuery({
+	batch = false,
 	did,
 	staleTime = STALE.SECONDS.FIFTEEN,
 }: {
+	batch?: boolean;
 	did: string | undefined;
 	staleTime?: number;
 }) {
@@ -69,12 +84,15 @@ export function useProfileQuery({
 		staleTime,
 		refetchOnWindowFocus: true,
 		queryKey: RQKEY(did ?? ''),
-		queryFn: () =>
-			ok(
-				appview.get('app.bsky.actor.getProfile', {
-					params: { actor: (did ?? '') as ActorIdentifier },
-				}),
-			),
+		queryFn: ({ signal }) =>
+			batch
+				? fetchProfile(did ?? '', signal)
+				: ok(
+						appview.get('app.bsky.actor.getProfile', {
+							params: { actor: (did ?? '') as ActorIdentifier },
+							signal,
+						}),
+					),
 		placeholderData: () => {
 			if (!did) return;
 			return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed;
@@ -83,39 +101,37 @@ export function useProfileQuery({
 	});
 }
 
-export function useProfilesQuery({ dids, maintainData }: { dids: string[]; maintainData?: boolean }) {
-	const { appview } = useClients();
-	return useQuery({
-		enabled: dids.length > 0,
-		staleTime: STALE.MINUTES.FIVE,
-		queryKey: profilesQueryKey(dids),
-		queryFn: () =>
-			ok(
-				appview.get('app.bsky.actor.getProfiles', {
-					params: { actors: dids as ActorIdentifier[] },
-				}),
-			),
-		placeholderData: maintainData ? keepPreviousData : undefined,
+// hoisted for a stable reference so react-query memoizes the combined result across renders.
+const combineProfiles = (results: UseQueryResult<AppBskyActorDefs.ProfileViewDetailed>[]) => ({
+	data: { profiles: results.flatMap((r) => (r.data ? [r.data] : [])) },
+	isLoading: results.some((r) => r.isLoading),
+	isPending: results.some((r) => r.isPending),
+});
+
+export function useProfilesQuery({ dids }: { dids: string[] }) {
+	return useQueries({
+		queries: dids.map((did) => ({
+			enabled: !!did,
+			staleTime: STALE.MINUTES.FIVE,
+			queryKey: RQKEY(did),
+			queryFn: ({ signal }: { signal: AbortSignal }) => fetchProfile(did, signal),
+		})),
+		// each did is its own cache entry, so changing the `dids` set never blanks the already-resolved ones.
+		combine: combineProfiles,
 	});
 }
 
 export function usePrefetchProfileQuery() {
-	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const prefetchProfileQuery = useCallback(
 		async (did: string) => {
 			await queryClient.prefetchQuery({
 				staleTime: STALE.SECONDS.THIRTY,
 				queryKey: RQKEY(did),
-				queryFn: () =>
-					ok(
-						appview.get('app.bsky.actor.getProfile', {
-							params: { actor: (did || '') as ActorIdentifier },
-						}),
-					),
+				queryFn: ({ signal }) => fetchProfile(did, signal),
 			});
 		},
-		[queryClient, appview],
+		[queryClient],
 	);
 	return prefetchProfileQuery;
 }
@@ -206,9 +222,6 @@ export function useProfileUpdateMutation() {
 			// invalidate cache
 			void queryClient.invalidateQueries({
 				queryKey: RQKEY(variables.profile.did),
-			});
-			void queryClient.invalidateQueries({
-				queryKey: [profilesQueryKeyRoot, [variables.profile.did]],
 			});
 			await updateProfileVerificationCache({ profile: variables.profile });
 		},
@@ -605,19 +618,6 @@ export function* findAllProfilesInQueryData(
 		}
 		if (queryData.did === did) {
 			yield queryData;
-		}
-	}
-	const profilesQueryDatas = queryClient.getQueriesData<AppBskyActorGetProfiles.$output>({
-		queryKey: [profilesQueryKeyRoot],
-	});
-	for (const [_queryKey, queryData] of profilesQueryDatas) {
-		if (!queryData) {
-			continue;
-		}
-		for (let profile of queryData.profiles) {
-			if (profile.did === did) {
-				yield profile;
-			}
 		}
 	}
 }
