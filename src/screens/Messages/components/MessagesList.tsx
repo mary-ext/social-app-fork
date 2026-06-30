@@ -221,17 +221,11 @@ export function MessagesList({
 
 			// Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
 			// can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
-			// Empty convos take this path too (once history is done) so hasScrolled gets set without an animated scroll.
+			// Revealing the list (setHasScrolled) is handled by a separate effect, not here: this callback runs from a
+			// ResizeObserver whose closure can lag behind the latest render, so the readiness it observes is unreliable.
 			if (!hasInitiallyScrolled.current && (renderItems.length > 0 || !convoState.isFetchingHistory)) {
 				hasInitiallyScrolled.current = true;
 				flatListRef.current?.scrollToOffset({ offset: height, animated: false });
-				// If history is already done loading, mark ready after a frame for the scroll to settle.
-				// Otherwise, the footer sentinel's onLayout will handle it when history finishes.
-				if (!convoState.isFetchingHistory) {
-					requestAnimationFrame(() => {
-						setHasScrolled(true);
-					});
-				}
 				prevContentHeight.current = height;
 				prevItemCount.current = renderItems.length;
 				return;
@@ -275,7 +269,6 @@ export function MessagesList({
 		},
 		[
 			hasScrolled,
-			setHasScrolled,
 			convoState.isFetchingHistory,
 			renderItems.length,
 			// these are stable
@@ -285,6 +278,23 @@ export function MessagesList({
 			layoutHeight,
 		],
 	);
+
+	// Reveal the list once the initial history has loaded. This is deliberately driven by render state
+	// rather than onContentSizeChange: that callback fires from a ResizeObserver whose closure can lag a
+	// render behind, so it can observe `isFetchingHistory` as still true after the messages have arrived
+	// and never flip `hasScrolled` — leaving the list hidden and inert (pointerEvents: none) forever.
+	// The scroll-to-bottom itself is handled by onContentSizeChange; here we just settle and reveal.
+	useEffect(() => {
+		if (hasScrolled || convoState.isFetchingHistory) {
+			return;
+		}
+		hasInitiallyScrolled.current = true;
+		const raf = requestAnimationFrame(() => {
+			flatListRef.current?.scrollToEnd({ animated: false });
+			setHasScrolled(true);
+		});
+		return () => cancelAnimationFrame(raf);
+	}, [convoState.isFetchingHistory, hasScrolled, setHasScrolled]);
 
 	const onStartReached = useCallback(() => {
 		void convoState.fetchMessageHistory();
@@ -491,16 +501,6 @@ export function MessagesList({
 		return null;
 	};
 
-	// Footer sentinel: when history is still loading during the initial scroll, the footer's onLayout fires each time
-	// new items are prepended (shifting its position). Once history finishes, this triggers setHasScrolled.
-	const onFooterLayout = useCallback(() => {
-		if (hasInitiallyScrolled.current && !hasScrolled && !convoState.isFetchingHistory) {
-			requestAnimationFrame(() => {
-				setHasScrolled(true);
-			});
-		}
-	}, [hasScrolled, setHasScrolled, convoState.isFetchingHistory]);
-
 	const renderScrollComponent = useCallback(
 		(props: ScrollViewProps) => <ChatScrollComponent {...props} />,
 		[],
@@ -512,65 +512,55 @@ export function MessagesList({
 				<MessageOverlays>
 					<View style={[a.flex_1]}>
 						{/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-						<View
-							style={[
-								a.flex_1,
-								{ opacity: hasScrolled ? 1 : 0 },
-								webViewStyle({ transition: 'opacity 0.2s ease-in-out' }),
-							]}
-						>
-							<ScrollProvider onScroll={onScroll}>
-								<List
-									ref={flatListRef}
-									data={renderItems}
-									renderItem={renderItem}
-									keyExtractor={keyExtractor}
-									disableFullWindowScroll={true}
-									disableVirtualization={true}
-									// The extra two items account for the header and the footer components
-									initialNumToRender={62}
-									maxToRenderPerBatch={32}
-									keyboardDismissMode="interactive"
-									keyboardShouldPersistTaps="handled"
-									maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
-									removeClippedSubviews={false}
-									sideBorders={false}
-									onContentSizeChange={onContentSizeChange}
-									onStartReached={onStartReached}
-									onScrollToIndexFailed={onScrollToIndexFailed}
-									showsVerticalScrollIndicator={true}
-									scrollEventThrottle={100}
-									ListHeaderComponent={
-										<>
-											<MaybeLoader isLoading={convoState.isFetchingHistory} />
-											{convoState.hasAllHistory ? (
-												convoState.convo?.kind === 'group' ? (
-													<MessagesListGroupInfoPanel convo={convoState.convo} />
-												) : convoState.convo?.kind === 'direct' ? (
-													<MessagesListInfoPanel convo={convoState.convo} />
-												) : null
-											) : null}
-										</>
-									}
-									// native only (prop is not supported on web)
-									renderScrollComponent={renderScrollComponent}
-									contentContainerStyle={{
-										paddingBottom: 0,
-									}}
-									ListFooterComponent={
-										<View style={{ height: tokens.space.md + inputHeightJS }} onLayout={onFooterLayout} />
-									}
-									style={webViewStyle({
-										scrollbarWidth: 'thin',
-										scrollbarColor: `${t.palette.contrast_100} transparent`,
-										scrollbarGutter: 'stable',
-									})}
-									pointerEvents={hasScrolled ? 'auto' : 'none'}
-									contentInset={{ top: transparentHeaderHeight }}
-									scrollIndicatorInsets={{ top: transparentHeaderHeight }}
-								/>
-							</ScrollProvider>
-						</View>
+						<ScrollProvider onScroll={onScroll}>
+							<List
+								ref={flatListRef}
+								data={renderItems}
+								renderItem={renderItem}
+								keyExtractor={keyExtractor}
+								disableFullWindowScroll={true}
+								disableVirtualization={true}
+								// The extra two items account for the header and the footer components
+								initialNumToRender={62}
+								maxToRenderPerBatch={32}
+								keyboardDismissMode="interactive"
+								keyboardShouldPersistTaps="handled"
+								maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
+								removeClippedSubviews={false}
+								sideBorders={false}
+								onContentSizeChange={onContentSizeChange}
+								onStartReached={onStartReached}
+								onScrollToIndexFailed={onScrollToIndexFailed}
+								showsVerticalScrollIndicator={true}
+								scrollEventThrottle={100}
+								ListHeaderComponent={
+									<>
+										<MaybeLoader isLoading={convoState.isFetchingHistory} />
+										{convoState.hasAllHistory ? (
+											convoState.convo?.kind === 'group' ? (
+												<MessagesListGroupInfoPanel convo={convoState.convo} />
+											) : convoState.convo?.kind === 'direct' ? (
+												<MessagesListInfoPanel convo={convoState.convo} />
+											) : null
+										) : null}
+									</>
+								}
+								// native only (prop is not supported on web)
+								renderScrollComponent={renderScrollComponent}
+								contentContainerStyle={{
+									paddingBottom: 0,
+								}}
+								ListFooterComponent={<View style={{ height: tokens.space.md + inputHeightJS }} />}
+								style={webViewStyle({
+									scrollbarWidth: 'thin',
+									scrollbarColor: `${t.palette.contrast_100} transparent`,
+									scrollbarGutter: 'stable',
+								})}
+								pointerEvents={hasScrolled ? 'auto' : 'none'}
+								contentInset={{ top: transparentHeaderHeight }}
+								scrollIndicatorInsets={{ top: transparentHeaderHeight }}
+							/>
+						</ScrollProvider>
 						<KeyboardStickyView
 							style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
 							onLayout={onInputLayout}
