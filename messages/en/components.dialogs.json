@@ -11,7 +11,7 @@
 	"components.dialogs.action.noThanks": "No thanks",
 	"components.dialogs.chat.cannotMessage": "{handle} can't be messaged",
 	"components.dialogs.chat.groupLocked": "Group is locked",
-	"components.dialogs.chat.selectA11y": "Select chat \\\"{name}\\\"",
+	"components.dialogs.chat.selectA11y": "Select chat \"{name}\"",
 	"components.dialogs.error.network": "We're having network issues, try again",
 	"components.dialogs.externalMedia.enableOnly": "Enable {source} only",
 	"components.dialogs.externalMedia.enableThisSource": "Enable this source only",

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"screens.search.account.emptyInterest": "No results for \\\"{interest}\\\".",
+	"screens.search.account.emptyInterest": "No results for \"{interest}\".",
 	"screens.search.account.loadError": "Failed to load suggested follows",
 	"screens.search.account.searchMore": "Search for more accounts",
 	"screens.search.account.title": "Suggested accounts",

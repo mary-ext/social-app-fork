@@ -6,7 +6,7 @@
 	"view.feeds.composer.a11y": "Opens the post composer",
 	"view.feeds.discover.browse": "Browse custom feeds",
 	"view.feeds.discover.description": "Choose your own timeline! Feeds built by the community help you find content you love.",
-	"view.feeds.discover.empty": "No results found for \\\"{query}\\\"",
+	"view.feeds.discover.empty": "No results found for \"{query}\"",
 	"view.feeds.discover.title": "Discover new feeds",
 	"view.feeds.explore.a11y": "View your feeds and explore more",
 	"view.feeds.feed.a11y.creator": "Feed creator",

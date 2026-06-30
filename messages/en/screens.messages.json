@@ -30,7 +30,7 @@
 	"screens.messages.chatSettings.updateError": "Failed to update settings",
 	"screens.messages.chats.back": "Back to chats",
 	"screens.messages.chats.goToConversation": "Go to conversation with {handle}",
-	"screens.messages.chats.goToGroupChat": "Go to the group chat named \\\"{name}\\\"",
+	"screens.messages.chats.goToGroupChat": "Go to the group chat named \"{name}\"",
 	"screens.messages.chats.inboxEmpty": "Inbox empty",
 	"screens.messages.chats.inboxZero": "Inbox zero!",
 	"screens.messages.chats.reload.action": "Reload conversations",
