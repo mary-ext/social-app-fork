@@ -255,10 +255,13 @@ export function usePostFeedQuery(
 									const moderations = slice.items.map((item) => moderatePost(item.post, moderationOpts!));
 
 									// apply moderation filter
+									const isProfileFeed = Boolean(ignoreFilterFor);
 									for (let i = 0; i < slice.items.length; i++) {
-										const ignoreFilter = slice.items[i]!.post.author.did === ignoreFilterFor;
-										if (ignoreFilter) {
-											// remove mutes to avoid confused UIs
+										const isProfileOwnerPost = slice.items[i]!.post.author.did === ignoreFilterFor;
+
+										// on a profile, mutes shouldn't hide reposts/replies/likes the account
+										// chose to surface; blocks and labels still apply to non-owner content
+										if (isProfileFeed) {
 											moderations[i]!.causes = moderations[i]!.causes.filter(
 												(cause) =>
 													cause.type !== ModerationCauseType.MutedPermanent &&
@@ -266,8 +269,7 @@ export function usePostFeedQuery(
 											);
 										}
 										if (
-											!ignoreFilter &&
-											moderations[i] &&
+											!isProfileOwnerPost &&
 											getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList).filters.length > 0
 										) {
 											return undefined;
