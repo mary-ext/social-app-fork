@@ -158,8 +158,6 @@
 	"components.dialogs.starterPack.error.remove": "Failed to remove from starter pack",
 	"components.dialogs.starterPack.newTitle": "New starter pack",
 	"components.dialogs.starterPack.removedToast": "Removed from starter pack",
-	"components.dialogs.suggestedFollows.a11y.searchTab": "Search for \\\"{interest}\\\"",
-	"components.dialogs.suggestedFollows.a11y.searchTabActive": "Search for \\\"{interest}\\\" (active)",
 	"components.dialogs.suggestedFollows.searchPlaceholder": "Search by name or interest",
 	"components.dialogs.suggestedFollows.title": "Find people to follow"
 }

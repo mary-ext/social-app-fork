@@ -25,6 +25,12 @@ export type ListProps<ItemT> = {
 	ListEmptyComponent?: ReactNode;
 	/** Rendered after the items, scrolling with them (e.g. an end-of-list note). Hidden while empty. */
 	ListFooterComponent?: ReactNode;
+	/**
+	 * Rendered above the items inside the scroll region, scrolling with them (e.g. a non-sticky filter row).
+	 * Shown even while empty (above {@link ListEmptyComponent}), unlike the footer. For pinned chrome use a
+	 * sibling `Header` slot instead.
+	 */
+	ListHeaderComponent?: ReactNode;
 };
 
 /**
@@ -44,6 +50,7 @@ export function List<ItemT>({
 	loadingLabel,
 	ListEmptyComponent,
 	ListFooterComponent,
+	ListHeaderComponent,
 }: ListProps<ItemT>) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const sentinelRef = useRef<HTMLDivElement>(null);
@@ -83,6 +90,7 @@ export function List<ItemT>({
 
 	return (
 		<div ref={scrollRef} className={clsx(styles.body, className)}>
+			{ListHeaderComponent}
 			{isEmpty ? (
 				ListEmptyComponent
 			) : (

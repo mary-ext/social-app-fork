@@ -13,12 +13,12 @@ import { logger } from '#/logger';
 import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRight } from '#/components/icons/Arrow';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import * as ProfileCard from '#/components/ProfileCard';
 import { SuggestedFollowsDialog } from '#/components/suggested-follows-dialog';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -169,7 +169,7 @@ export function ProfileGrid({
 	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 	const { gtMobile } = useBreakpoints();
-	const followDialogControl = useDialogControl();
+	const followDialogHandle = Dialog.useDialogHandle();
 
 	const isLoading = isSuggestionsLoading || !moderationOpts;
 	const isProfileHeaderContext = viewContext === 'profileHeader';
@@ -296,7 +296,7 @@ export function ProfileGrid({
 				<Button
 					label={m['components.feedInterstitials.seeMoreA11y']()}
 					onPress={() => {
-						followDialogControl.open();
+						followDialogHandle.open(null);
 					}}
 				>
 					{({ hovered }) => (
@@ -315,7 +315,7 @@ export function ProfileGrid({
 					)}
 				</Button>
 			</View>
-			<SuggestedFollowsDialog control={followDialogControl} />
+			<SuggestedFollowsDialog handle={followDialogHandle} />
 			{gtMobile ? (
 				<View style={[a.p_lg, a.pt_md]}>
 					<View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>{content}</View>
@@ -332,7 +332,7 @@ export function ProfileGrid({
 
 					<SeeMoreSuggestedProfilesCard
 						onPress={() => {
-							followDialogControl.open();
+							followDialogHandle.open(null);
 						}}
 					/>
 				</ScrollView>
