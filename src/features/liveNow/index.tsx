@@ -29,8 +29,8 @@ import { useTickEveryMinute } from '#/state/shell';
 
 import { logger } from '#/logger';
 
-import { useDialogContext } from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
+import type { DialogHandle } from '#/components/web/Dialog';
 
 import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
 import { m } from '#/paraglide/messages';
@@ -203,6 +203,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
 }
 
 export function useUpsertLiveStatusMutation(
+	handle: DialogHandle,
 	duration: number,
 	linkMeta: LinkMeta | null | undefined,
 	createdAt?: string,
@@ -210,7 +211,6 @@ export function useUpsertLiveStatusMutation(
 	const { currentAccount } = useSession();
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
-	const control = useDialogContext();
 	return useMutation({
 		mutationFn: async () => {
 			if (!currentAccount) throw new Error('Not logged in');
@@ -285,47 +285,42 @@ export function useUpsertLiveStatusMutation(
 			});
 		},
 		onSuccess: ({ record, image }) => {
-			if (createdAt) {
-			} else {
-			}
-
 			Toast.show(m['features.liveNow.goLive.started']());
-			control.close(() => {
-				if (!currentAccount) return;
+			handle.close();
 
-				const expiresAt = new Date(record.createdAt);
-				expiresAt.setMinutes(expiresAt.getMinutes() + record.durationMinutes);
+			if (!currentAccount) return;
 
-				updateProfileShadow(queryClient, currentAccount.did, {
-					status: {
-						$type: 'app.bsky.actor.defs#statusView',
-						status: 'app.bsky.actor.status#live',
-						isActive: true,
-						expiresAt: expiresAt.toISOString(),
-						embed:
-							record.embed && image
-								? ({
-										$type: 'app.bsky.embed.external#view',
-										external: {
-											...record.embed.external,
-											$type: 'app.bsky.embed.external#viewExternal',
-											thumb: image,
-										},
-									} as AppBskyActorDefs.StatusView['embed'])
-								: undefined,
-						record,
-					},
-				});
+			const expiresAt = new Date(record.createdAt);
+			expiresAt.setMinutes(expiresAt.getMinutes() + record.durationMinutes);
+
+			updateProfileShadow(queryClient, currentAccount.did, {
+				status: {
+					$type: 'app.bsky.actor.defs#statusView',
+					status: 'app.bsky.actor.status#live',
+					isActive: true,
+					expiresAt: expiresAt.toISOString(),
+					embed:
+						record.embed && image
+							? ({
+									$type: 'app.bsky.embed.external#view',
+									external: {
+										...record.embed.external,
+										$type: 'app.bsky.embed.external#viewExternal',
+										thumb: image,
+									},
+								} as AppBskyActorDefs.StatusView['embed'])
+							: undefined,
+					record,
+				},
 			});
 		},
 	});
 }
 
-export function useRemoveLiveStatusMutation() {
+export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 	const { currentAccount } = useSession();
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
-	const control = useDialogContext();
 	return useMutation({
 		mutationFn: async () => {
 			if (!currentAccount) throw new Error('Not logged in');
@@ -343,12 +338,12 @@ export function useRemoveLiveStatusMutation() {
 		},
 		onSuccess: () => {
 			Toast.show(m['features.liveNow.goLive.ended']());
-			control.close(() => {
-				if (!currentAccount) return;
+			handle.close();
 
-				updateProfileShadow(queryClient, currentAccount.did, {
-					status: undefined,
-				});
+			if (!currentAccount) return;
+
+			updateProfileShadow(queryClient, currentAccount.did, {
+				status: undefined,
 			});
 		},
 	});

@@ -78,13 +78,13 @@ function DialogInner({
 		mutate: goLive,
 		isPending: isGoingLive,
 		error: goLiveError,
-	} = useUpsertLiveStatusMutation(record?.durationMinutes ?? 0, linkMeta, record?.createdAt);
+	} = useUpsertLiveStatusMutation(handle, record?.durationMinutes ?? 0, linkMeta, record?.createdAt);
 
 	const {
 		mutate: removeLiveStatus,
 		isPending: isRemovingLiveStatus,
 		error: removeLiveStatusError,
-	} = useRemoveLiveStatusMutation();
+	} = useRemoveLiveStatusMutation(handle);
 
 	const { minutesUntilExpiry, expiryDateTime } = useMemo(() => {
 		void tick;

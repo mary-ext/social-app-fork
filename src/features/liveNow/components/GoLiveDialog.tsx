@@ -83,7 +83,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 		mutate: goLive,
 		isPending: isGoingLive,
 		error: goLiveError,
-	} = useUpsertLiveStatusMutation(duration, linkMeta);
+	} = useUpsertLiveStatusMutation(handle, duration, linkMeta);
 
 	const isSourceInvalid = !!liveLinkError || !!linkMetaError;
 
