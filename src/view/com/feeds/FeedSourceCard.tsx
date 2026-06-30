@@ -146,14 +146,7 @@ export function FeedSourceCardLoaded({
 					screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',
 					params: { name: feed.creatorDid, rkey: parseCanonicalResourceUri(feed.uri).rkey },
 				}}
-				style={[
-					a.flex_1,
-					a.p_lg,
-					a.gap_md,
-					!hideTopBorder && !a.border_t,
-					t.atoms.border_contrast_low,
-					style,
-				]}
+				style={[a.flex_1, a.p_lg, a.gap_md, !hideTopBorder && a.border_t, t.atoms.border_contrast_low, style]}
 			>
 				{inner}
 			</Link>
@@ -161,14 +154,7 @@ export function FeedSourceCardLoaded({
 	} else {
 		return (
 			<View
-				style={[
-					a.flex_1,
-					a.p_lg,
-					a.gap_md,
-					!hideTopBorder && !a.border_t,
-					t.atoms.border_contrast_low,
-					style,
-				]}
+				style={[a.flex_1, a.p_lg, a.gap_md, !hideTopBorder && a.border_t, t.atoms.border_contrast_low, style]}
 			>
 				{inner}
 			</View>

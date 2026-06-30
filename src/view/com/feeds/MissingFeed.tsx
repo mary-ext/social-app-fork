@@ -46,7 +46,7 @@ export function MissingFeed({
 					a.flex_1,
 					a.p_lg,
 					a.gap_md,
-					!hideTopBorder && !a.border_t,
+					!hideTopBorder && a.border_t,
 					t.atoms.border_contrast_low,
 					a.justify_start,
 					style,
