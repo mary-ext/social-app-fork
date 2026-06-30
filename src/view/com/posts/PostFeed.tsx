@@ -463,7 +463,7 @@ function PostFeed({
 		} else if (row.type === 'interstitialTrending') {
 			return <TrendingInterstitial />;
 		} else if (row.type === 'composerPrompt') {
-			return <ComposerPrompt />;
+			return <ComposerPrompt topBorder={rowIndex !== 0} />;
 		} else if (row.type === 'sliceItem') {
 			const slice = row.slice;
 			const indexInSlice = row.indexInSlice;
