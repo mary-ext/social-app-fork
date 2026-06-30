@@ -51,7 +51,7 @@ export function AccountsSection() {
 	const { accounts, currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 	const others = accounts.filter((acc) => acc.did !== currentAccount?.did);
-	const { data: otherProfiles } = useProfilesQuery({ handles: others.map((acc) => acc.handle) });
+	const { data: otherProfiles } = useProfilesQuery({ dids: others.map((acc) => acc.did) });
 	const { onPressSwitchAccount, pendingDid } = useAccountSwitcher();
 	const moderationOpts = useModerationOpts();
 	const [open, setOpen] = useState(false);

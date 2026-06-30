@@ -201,7 +201,7 @@ function ActiveSearchAutocomplete({
 		data: recentProfileData,
 		isPending: recentProfilesPending,
 		isPlaceholderData: recentProfilesPlaceholder,
-	} = useProfilesQuery({ handles: recentProfileDids, maintainData: true });
+	} = useProfilesQuery({ dids: recentProfileDids, maintainData: true });
 	const recentProfiles = new Map(
 		(recentProfileData?.profiles ?? []).map((profile) => [profile.did, profile]),
 	);

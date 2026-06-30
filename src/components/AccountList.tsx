@@ -33,7 +33,7 @@ export function AccountList({
 }) {
 	const { currentAccount, accounts } = useSession();
 	const { data: profiles } = useProfilesQuery({
-		handles: accounts.map((acc) => acc.did),
+		dids: accounts.map((acc) => acc.did),
 	});
 
 	return (

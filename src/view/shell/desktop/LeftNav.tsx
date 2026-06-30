@@ -82,7 +82,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 	const { currentAccount, accounts } = useSession();
 	const { logoutEveryAccount } = useSessionApi();
 	const { isLoading, data } = useProfilesQuery({
-		handles: accounts.map((acc) => acc.did),
+		dids: accounts.map((acc) => acc.did),
 	});
 	const profiles = data?.profiles;
 	const signOutPromptHandle = Prompt.usePromptHandle();

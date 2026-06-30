@@ -50,7 +50,7 @@ const RQKEY_ROOT = 'profile';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
 export const profilesQueryKeyRoot = 'profiles';
-export const profilesQueryKey = (handles: string[]) => [profilesQueryKeyRoot, handles];
+export const profilesQueryKey = (dids: string[]) => [profilesQueryKeyRoot, dids];
 
 export function useProfileQuery({
 	did,
@@ -83,16 +83,16 @@ export function useProfileQuery({
 	});
 }
 
-export function useProfilesQuery({ handles, maintainData }: { handles: string[]; maintainData?: boolean }) {
+export function useProfilesQuery({ dids, maintainData }: { dids: string[]; maintainData?: boolean }) {
 	const { appview } = useClients();
 	return useQuery({
-		enabled: handles.length > 0,
+		enabled: dids.length > 0,
 		staleTime: STALE.MINUTES.FIVE,
-		queryKey: profilesQueryKey(handles),
+		queryKey: profilesQueryKey(dids),
 		queryFn: () =>
 			ok(
 				appview.get('app.bsky.actor.getProfiles', {
-					params: { actors: handles as ActorIdentifier[] },
+					params: { actors: dids as ActorIdentifier[] },
 				}),
 			),
 		placeholderData: maintainData ? keepPreviousData : undefined,
