@@ -10,13 +10,15 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { Divider } from '#/components/Divider';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import * as ProfileCard from '#/components/ProfileCard';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Text as LegacyText } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+
+import * as styles from './MissingFeed.css';
 
 export function MissingFeed({
 	style,
@@ -30,7 +32,7 @@ export function MissingFeed({
 	error?: unknown;
 }) {
 	const t = useTheme();
-	const control = Dialog.useDialogControl();
+	const handle = Dialog.useDialogHandle();
 
 	const type = getFeedTypeFromUri(uri);
 
@@ -39,7 +41,7 @@ export function MissingFeed({
 			<Button
 				label={type === 'feed' ? m['view.feeds.feed.error.connect']() : m['view.feeds.list.deleted']()}
 				accessibilityHint={m['view.feeds.a11y.tapForInfo']()}
-				onPress={control.open}
+				onPress={() => handle.open(null)}
 				style={[
 					a.flex_1,
 					a.p_lg,
@@ -64,29 +66,46 @@ export function MissingFeed({
 						<WarningIcon size="xl" />
 					</View>
 					<View style={[a.flex_1]}>
-						<Text emoji style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]} numberOfLines={1}>
+						<LegacyText
+							emoji
+							style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]}
+							numberOfLines={1}
+						>
 							{type === 'feed' ? m['view.feeds.feed.unavailable.title']() : m['view.feeds.list.deleted']()}
-						</Text>
-						<Text
+						</LegacyText>
+						<LegacyText
 							style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug, a.italic]}
 							numberOfLines={1}
 						>
 							{m['view.feeds.a11y.clickForInfo']()}
-						</Text>
+						</LegacyText>
 					</View>
 				</View>
 			</Button>
-			<Dialog.Outer control={control}>
-				<Dialog.Handle />
-				<DialogInner uri={uri} type={type} error={error} />
-			</Dialog.Outer>
+			<Dialog.Root handle={handle}>
+				<Dialog.Popup
+					className={styles.popup}
+					label={type === 'feed' ? m['view.feeds.feed.unavailable.a11y']() : m['view.feeds.list.deleted']()}
+				>
+					<DialogInner handle={handle} uri={uri} type={type} error={error} />
+					<Dialog.Close />
+				</Dialog.Popup>
+			</Dialog.Root>
 		</>
 	);
 }
 
-function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list'; error: unknown }) {
-	const control = Dialog.useDialogContext();
-	const t = useTheme();
+function DialogInner({
+	handle,
+	uri,
+	type,
+	error,
+}: {
+	handle: Dialog.DialogHandle;
+	uri: string;
+	type: 'feed' | 'list';
+	error: unknown;
+}) {
 	const atUri = parseCanonicalResourceUri(uri);
 	const { data: profile, isError: isProfileError } = useProfileQuery({
 		did: atUri.repo,
@@ -94,55 +113,52 @@ function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list';
 	const moderationOpts = useModerationOpts();
 
 	return (
-		<Dialog.ScrollableInner
-			label={type === 'feed' ? m['view.feeds.feed.unavailable.a11y']() : m['view.feeds.list.deleted']()}
-			style={{ maxWidth: 500 }}
-		>
-			<View style={[a.gap_sm]}>
-				<Text style={[a.font_bold, a.text_2xl]}>
-					{type === 'feed' ? m['view.feeds.feed.error.connectService']() : m['view.feeds.list.deleted']()}
+		<div className={styles.content}>
+			<Text size="_2xl" weight="bold">
+				{type === 'feed' ? m['view.feeds.feed.error.connectService']() : m['view.feeds.list.deleted']()}
+			</Text>
+			<Text color="textContrastHigh">
+				{type === 'feed' ? m['view.feeds.feed.unavailable.message']() : m['view.feeds.list.notFound']()}
+			</Text>
+			<div className={styles.divider} />
+			<Text color="textContrastHigh" weight="semiBold">
+				{type === 'feed' ? m['view.feeds.feed.a11y.creator']() : m['view.feeds.list.a11y.creator']()}
+			</Text>
+			{profile && moderationOpts && (
+				<div className={styles.profileRow}>
+					<ProfileCard.Link profile={profile} onPress={() => handle.close()}>
+						<ProfileCard.Header>
+							<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
+							<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
+						</ProfileCard.Header>
+					</ProfileCard.Link>
+				</div>
+			)}
+			{isProfileError && (
+				<Text className={styles.notice} color="textContrastHigh" align="center">
+					{m['view.feeds.profile.notFound']()}
 				</Text>
-				<Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-					{type === 'feed' ? m['view.feeds.feed.unavailable.message']() : m['view.feeds.list.notFound']()}
-				</Text>
-				<Divider style={[a.my_md]} />
-				<Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
-					{type === 'feed' ? m['view.feeds.feed.a11y.creator']() : m['view.feeds.list.a11y.creator']()}
-				</Text>
-				{profile && moderationOpts && (
-					<View style={[a.w_full, a.align_start]}>
-						<ProfileCard.Link profile={profile} onPress={() => control.close()}>
-							<ProfileCard.Header>
-								<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
-								<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
-							</ProfileCard.Header>
-						</ProfileCard.Link>
-					</View>
-				)}
-				{isProfileError && (
-					<Text style={[t.atoms.text_contrast_high, a.italic, a.text_center, a.w_full]}>
-						{m['view.feeds.profile.notFound']()}
+			)}
+			{type === 'feed' && (
+				<>
+					<Text className={styles.labelSpaced} color="textContrastHigh" weight="semiBold">
+						{m['view.feeds.feed.a11y.identifier']()}
 					</Text>
-				)}
-				{type === 'feed' && (
-					<>
-						<Text style={[a.font_semi_bold, t.atoms.text_contrast_high, a.mt_md]}>
-							{m['view.feeds.feed.a11y.identifier']()}
-						</Text>
-						<Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>{atUri.rkey}</Text>
-					</>
-				)}
-				{error instanceof Error && (
-					<>
-						<Text style={[a.font_semi_bold, t.atoms.text_contrast_high, a.mt_md]}>
-							{m['view.feeds.a11y.errorMessage']()}
-						</Text>
-						<Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>{cleanError(error.message)}</Text>
-					</>
-				)}
-			</View>
-
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+					<Text className={styles.italic} color="textContrastHigh">
+						{atUri.rkey}
+					</Text>
+				</>
+			)}
+			{error instanceof Error && (
+				<>
+					<Text className={styles.labelSpaced} color="textContrastHigh" weight="semiBold">
+						{m['view.feeds.a11y.errorMessage']()}
+					</Text>
+					<Text className={styles.italic} color="textContrastHigh">
+						{cleanError(error.message)}
+					</Text>
+				</>
+			)}
+		</div>
 	);
 }
