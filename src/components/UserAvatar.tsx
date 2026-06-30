@@ -22,7 +22,7 @@ import { Link } from '#/components/web/Link';
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
-import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatus';
+import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
 import { m } from '#/paraglide/messages';
 
 export type UserAvatarType = 'algo' | 'labeler' | 'list' | 'user';

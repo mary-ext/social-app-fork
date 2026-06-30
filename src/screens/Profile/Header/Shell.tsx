@@ -16,7 +16,7 @@ import { useDialogHandle } from '#/components/web/Dialog';
 
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
-import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatus';
+import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
 import { m } from '#/paraglide/messages';
 
 import { useProfileHeader } from './Context';

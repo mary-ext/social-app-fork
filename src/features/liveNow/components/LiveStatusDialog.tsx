@@ -1,200 +1,203 @@
-import { useMemo } from 'react';
-import { View } from 'react-native';
+import { useCallback, useMemo } from 'react';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
+import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
-import { useOpenLink } from '#/lib/hooks/useOpenLink';
+import type { NavigationProp } from '#/lib/routes/types';
+import { sanitizeHandle } from '#/lib/strings/handles';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { unstableCacheProfileView } from '#/state/queries/profile';
+import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
-import { atoms as a, tokens, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
+import { EmbedThumb } from '#/components/EmbedThumb';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { Globe_Stroke2_Corner0_Rounded } from '#/components/icons/Globe';
-import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
+import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
-import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
-import * as Hider from '#/components/moderation/Hider';
+import { ContentHider } from '#/components/moderation/ContentHider';
 import { useGlobalReportDialogControl } from '#/components/moderation/ReportDialog';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
+import * as css from '#/features/liveNow/components/LiveStatusDialog.css';
 import { m } from '#/paraglide/messages';
-import { Image } from '#/shims/image';
 import { colors } from '#/styles/colors';
 
-export function LiveStatus({
-	status,
-	profile,
+/**
+ * A touch-only dialog that surfaces a live status (no hover affordance on touch devices). Open it
+ * imperatively through `handle.open()`.
+ */
+export function LiveStatusDialog({
 	embed,
-	padding = 'xl',
-	onPressOpenProfile,
+	handle,
+	profile,
+	status,
 }: {
-	status: AppBskyActorDefs.StatusView;
-	profile: AnyProfileView;
 	embed: AppBskyEmbedExternal.View;
-	padding?: 'lg' | 'xl';
-	onPressOpenProfile: () => void;
+	handle: Dialog.DialogHandle;
+	profile: AnyProfileView;
+	status: AppBskyActorDefs.StatusView;
 }) {
-	const t = useTheme();
+	const navigation = useNavigation<NavigationProp>();
+
+	const onPressOpenProfile = useCallback(() => {
+		handle.close();
+		navigation.push('Profile', { name: profile.did });
+	}, [handle, navigation, profile.did]);
+
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup
+				className={css.dialogPopup}
+				label={m['features.liveNow.badge.userIsLive']({ handle: sanitizeHandle(profile.handle) })}
+			>
+				<LiveStatus
+					embed={embed}
+					onPressOpenProfile={onPressOpenProfile}
+					onRequestClose={() => handle.close()}
+					profile={profile}
+					status={status}
+				/>
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+/**
+ * The live-status card body: livestream media, title/domain, a watch CTA, and the streamer's identity. Shared
+ * by {@link LiveStatusDialog} and the profile hover card.
+ */
+export function LiveStatus({
+	embed,
+	onPressOpenProfile,
+	onRequestClose,
+	padding = 'xl',
+	profile,
+	status,
+}: {
+	embed: AppBskyEmbedExternal.View;
+	onPressOpenProfile: () => void;
+	/** When set (i.e. inside a dialog), dismiss the host before opening the report dialog. */
+	onRequestClose?: () => void;
+	padding?: 'lg' | 'xl';
+	profile: AnyProfileView;
+	status: AppBskyActorDefs.StatusView;
+}) {
 	const queryClient = useQueryClient();
-	const openLink = useOpenLink();
 	const moderationOpts = useModerationOpts();
 	const reportDialogControl = useGlobalReportDialogControl();
-	const dialogContext = Dialog.useDialogContext();
-	const moderation = useMemo(() => {
+
+	const statusModeration = useMemo(() => {
 		if (!moderationOpts) return undefined;
 		return moderateStatus(profile, moderationOpts);
-	}, [profile, moderationOpts]);
+	}, [moderationOpts, profile]);
+
+	const onReport = useCallback(() => {
+		onRequestClose?.();
+		reportDialogControl.openWithPayload({
+			subject: {
+				...status,
+				$type: 'app.bsky.actor.defs#statusView',
+			},
+		});
+	}, [onRequestClose, reportDialogControl, status]);
+
+	const thumb = embed.external.thumb;
 
 	return (
 		<>
-			{embed.external.thumb && (
-				<Hider.Outer modui={moderation && getDisplayRestrictions(moderation, DisplayContext.ContentMedia)}>
-					<Hider.Mask>
-						<ModeratedImage />
-					</Hider.Mask>
-					<Hider.Content>
-						<View style={[t.atoms.bg_contrast_25, a.w_full, a.aspect_card]}>
-							<Image
-								source={embed.external.thumb}
-								contentFit="cover"
-								style={[a.absolute, a.inset_0]}
-								accessibilityIgnoresInvertColors
-							/>
-							<LiveIndicator
-								size="large"
-								style={{
-									bottom: 'auto',
-									justifyContent: 'flex-start',
-									left: tokens.space.lg,
-									right: 'auto',
-									top: tokens.space.lg,
-								}}
-							/>
-						</View>
-					</Hider.Content>
-				</Hider.Outer>
+			{thumb && (
+				<ContentHider
+					className={css.media}
+					modui={statusModeration && getDisplayRestrictions(statusModeration, DisplayContext.ContentMedia)}
+				>
+					<EmbedThumb frameClassName={css.mediaFrame} src={thumb} />
+					<LiveIndicator className={css.liveBadge} size="large" />
+				</ContentHider>
 			)}
-			<View
-				style={[a.gap_lg, padding === 'xl' ? [a.px_xl, !embed.external.thumb ? a.pt_2xl : a.pt_lg] : a.p_lg]}
+			<div
+				className={clsx(
+					css.content,
+					css.padding[padding],
+					padding === 'xl' && css.xlTop[thumb ? 'thumb' : 'noThumb'],
+				)}
 			>
-				<View style={[a.w_full, a.justify_center, a.gap_2xs]}>
-					<Text numberOfLines={3} style={[a.leading_snug, a.font_semi_bold, a.text_xl]}>
+				<div className={css.info}>
+					<Text numberOfLines={3} size="xl" weight="semiBold">
 						{embed.external.title || embed.external.uri}
 					</Text>
-					<View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-						<Globe_Stroke2_Corner0_Rounded size="xs" fill={colors.textContrastMedium} />
-						<Text numberOfLines={1} style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+					<div className={css.domain}>
+						<GlobeIcon size="xs" fill={colors.textContrastMedium} />
+						<Text color="textContrastMedium" numberOfLines={1} size="sm">
 							{toNiceDomain(embed.external.uri)}
 						</Text>
-					</View>
-				</View>
-				<Button
-					label={m['features.liveNow.action.watchNow']()}
-					size={'small'}
+					</div>
+				</div>
+
+				<ExternalLinkButton
+					className={css.watchButton}
 					color="primary"
+					label={m['features.liveNow.action.watchNow']()}
+					size="small"
+					href={embed.external.uri}
 					variant="solid"
-					onPress={() => {
-						void openLink(embed.external.uri);
-					}}
 				>
 					<ButtonText>{m['features.liveNow.action.watchNow']()}</ButtonText>
 					<ButtonIcon icon={SquareArrowTopRightIcon} />
-				</Button>
-				<View style={[t.atoms.border_contrast_low, a.border_t, a.w_full]} />
+				</ExternalLinkButton>
+
+				<div className={css.divider} />
+
 				{moderationOpts && (
 					<ProfileCard.Header>
-						<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
-						{/* Ensure wide enough on web hover */}
-						<View style={[a.flex_1, { minWidth: 100 }]}>
-							<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
-						</View>
+						<ProfileCard.Avatar
+							disabledPreview
+							liveOverride={false}
+							moderationOpts={moderationOpts}
+							profile={profile}
+						/>
+						<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
 						<Button
-							label={m['features.liveNow.action.openProfile']()}
-							size="small"
 							color="secondary"
-							variant="solid"
-							onPress={() => {
+							label={m['features.liveNow.action.openProfile']()}
+							onClick={() => {
 								unstableCacheProfileView(queryClient, profile);
 								onPressOpenProfile();
 							}}
+							size="small"
+							variant="solid"
 						>
 							<ButtonText>{m['features.liveNow.action.openProfile']()}</ButtonText>
 						</Button>
 					</ProfileCard.Header>
 				)}
-				<View style={[a.flex_row, a.align_center, a.justify_between, a.w_full, a.pt_sm]}>
-					<View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+
+				<div className={css.betaRow}>
+					<div className={css.beta}>
 						<CircleInfoIcon size="sm" fill={colors.textContrastLow} />
-						<Text style={[t.atoms.text_contrast_low, a.text_sm]}>{m['features.liveNow.badge.beta']()}</Text>
-					</View>
-					{status && (
-						<SimpleInlineLinkText
-							label={m['common.liveNow.report']()}
-							{...createStaticClick(() => {
-								function open() {
-									reportDialogControl.openWithPayload({
-										subject: {
-											...status,
-											$type: 'app.bsky.actor.defs#statusView',
-										},
-									});
-								}
-								if (dialogContext.isWithinDialog) {
-									dialogContext.close(open);
-								} else {
-									open();
-								}
-							})}
-							style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}
-						>
-							{m['common.action.report']()}
-						</SimpleInlineLinkText>
-					)}
-				</View>
-			</View>
-		</>
-	);
-}
-
-function ModeratedImage() {
-	const t = useTheme();
-	const hider = Hider.useHider();
-
-	return (
-		<View style={[a.p_lg, a.py_xl, a.align_center, a.justify_center, t.atoms.bg_contrast_25]}>
-			<View style={[a.align_center, a.gap_sm, { maxWidth: 200 }]}>
-				<ImageIcon size="xl" fill={colors.textContrastMedium} />
-				<Text style={[a.italic, a.leading_snug, a.text_center, t.atoms.text_contrast_medium]}>
-					{hider.meta.allowOverride
-						? m['features.liveNow.image.hidden']()
-						: /*
-							 * In practice, if `allowOverride` is false, we won't even allow this
-							 * dialog to open. That is handled in
-							 * `#/features/liveNow/index.tsx`. But for clarity, I've included
-							 * this here.
-							 */
-							m['features.liveNow.image.unavailable']()}
-				</Text>
-
-				{hider.meta.allowOverride && (
-					<SimpleInlineLinkText
-						label={m['common.moderation.showAnyway']()}
-						{...createStaticClick(() => {
-							hider.setIsContentVisible(true);
-						})}
+						<Text color="textContrastLow" size="sm">
+							{m['features.liveNow.badge.beta']()}
+						</Text>
+					</div>
+					<Button
+						className={css.reportButton}
+						label={m['common.action.report']()}
+						onClick={onReport}
+						variant="bare"
 					>
-						{m['common.moderation.showAnyway']()}
-					</SimpleInlineLinkText>
-				)}
-			</View>
-		</View>
+						<Text color="textContrastMedium" size="sm">
+							{m['common.action.report']()}
+						</Text>
+					</Button>
+				</div>
+			</div>
+		</>
 	);
 }

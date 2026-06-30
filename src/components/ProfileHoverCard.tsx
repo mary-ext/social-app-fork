@@ -39,7 +39,7 @@ import { InlineLinkText, Link, LinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { useActorStatus } from '#/features/liveNow';
-import { LiveStatus } from '#/features/liveNow/components/LiveStatus';
+import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
