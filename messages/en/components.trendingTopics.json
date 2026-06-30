@@ -4,6 +4,7 @@
 	"components.trendingTopics.a11y.browseStarterPack": "Browse starter pack {name}",
 	"components.trendingTopics.a11y.browseTag": "Browse posts tagged with {name}",
 	"components.trendingTopics.a11y.browseTopic": "Browse topic {name}",
+	"components.trendingTopics.a11y.hide": "Hide trending topics",
 	"components.trendingTopics.a11y.options": "Trending options",
 	"components.trendingTopics.hide.message": "You can update this later from your settings.",
 	"components.trendingTopics.hide.title": "Hide trending topics?",

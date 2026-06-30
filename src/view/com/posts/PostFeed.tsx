@@ -28,6 +28,7 @@ import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { SuggestedFollows } from '#/components/feed-interstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
+import { TrendingInterstitial } from '#/components/trending-interstitial';
 
 import { m } from '#/paraglide/messages';
 
@@ -74,6 +75,10 @@ export type FeedRow =
 	  }
 	| {
 			type: 'interstitialFollows';
+			key: string;
+	  }
+	| {
+			type: 'interstitialTrending';
 			key: string;
 	  }
 	| {
@@ -301,6 +306,11 @@ function PostFeed({
 						if (hasSession) {
 							if (feedKind === 'discover') {
 								if (sliceIndex === 0) {
+									arr.push({
+										type: 'interstitialTrending',
+										key: 'interstitialTrending-' + sliceIndex,
+									});
+
 									// Show composer prompt for Discover and Following feeds
 									if (hasSession && (feedUriOrActorDid === DISCOVER_FEED_URI || feed === 'following')) {
 										arr.push({
@@ -450,6 +460,8 @@ function PostFeed({
 			return <FeedShutdownMsg feedUri={feedUriOrActorDid} />;
 		} else if (row.type === 'interstitialFollows') {
 			return <SuggestedFollows feed={feed} />;
+		} else if (row.type === 'interstitialTrending') {
+			return <TrendingInterstitial />;
 		} else if (row.type === 'composerPrompt') {
 			return <ComposerPrompt />;
 		} else if (row.type === 'sliceItem') {

@@ -1,12 +1,13 @@
 import { type TrendingTopic, useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
 
-import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
+import { useLayoutBreakpoints } from '#/alf';
+
+import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
-import { Text } from '#/components/Text';
 import { useTopic } from '#/components/trending-topics';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import { Link } from '#/components/web/Link';
+import { InlineLinkText } from '#/components/web/Link';
 import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
 
@@ -14,14 +15,16 @@ import { m } from '#/paraglide/messages';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 import { colors } from '#/styles/colors';
 
-import * as css from './SidebarTrendingTopics.css';
+import * as css from './trending-interstitial.css';
 
-const TRENDING_LIMIT = 5;
+const SKELETON_WIDTHS = [80, 50, 120, 30, 180];
 
-export function SidebarTrendingTopics() {
+export function TrendingInterstitial() {
 	const { enabled } = useTrendingConfig();
 	const { trendingDisabled } = useTrendingSettings();
-	return !enabled ? null : trendingDisabled ? null : <Inner />;
+	const { rightNavVisible } = useLayoutBreakpoints();
+
+	return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null;
 }
 
 function Inner() {
@@ -40,40 +43,30 @@ function Inner() {
 
 	return (
 		<>
-			<div className={css.card}>
-				<div className={css.header}>
-					<TrendingIcon size="sm" fill={colors.text} />
-					<Text size="md" weight="semiBold" className={css.title}>
-						{m['components.trendingTopics.title']()}
-					</Text>
+			<div className={css.root}>
+				<TrendingIcon className={css.icon} size="md" fill={colors.primary_600} />
+				{isLoading
+					? SKELETON_WIDTHS.map((width, i) => (
+							<div key={i} className={css.topic}>
+								<Skeleton.Text size="sm" width={width} />
+							</div>
+						))
+					: trending?.topics?.map((topic) => <TopicLink key={topic.link} topic={topic} />)}
+				{!isLoading && (
 					<Button
 						variant="ghost"
 						size="tiny"
 						color="secondary"
 						shape="round"
-						label={m['components.trendingTopics.a11y.options']()}
+						label={m['components.trendingTopics.a11y.hide']()}
 						onClick={() => trendingPrompt.open(null)}
-						className={css.optionsButton}
+						className={css.hideButton}
 					>
-						<ButtonIcon icon={Ellipsis} size="xs" />
+						<ButtonIcon icon={XIcon} size="xs" />
 					</Button>
-				</div>
-
-				<div className={css.body}>
-					{isLoading
-						? Array.from({ length: TRENDING_LIMIT }, (_, i) => (
-								<Skeleton.Row key={i} align="center" gap="xs">
-									<Text size="sm" className={css.index}>
-										{i + 1}.
-									</Text>
-									<Skeleton.Text size="sm" width={i % 2 === 0 ? 80 : 100} />
-								</Skeleton.Row>
-							))
-						: trending?.topics
-								?.slice(0, TRENDING_LIMIT)
-								.map((topic, i) => <TopicLink key={topic.link} index={i} topic={topic} />)}
-				</div>
+				)}
 			</div>
+
 			<Prompt.Basic
 				handle={trendingPrompt}
 				title={m['components.trendingTopics.hide.title']()}
@@ -85,16 +78,19 @@ function Inner() {
 	);
 }
 
-function TopicLink({ index, topic }: { index: number; topic: TrendingTopic }) {
+function TopicLink({ topic }: { topic: TrendingTopic }) {
 	const { label, url } = useTopic(topic);
+
 	return (
-		<Link to={url} label={label} className={css.topicLink}>
-			<Text size="sm" className={css.index}>
-				{index + 1}.
-			</Text>
-			<Text size="sm" numberOfLines={1} className={css.topicName}>
-				{topic.displayName ?? topic.topic}
-			</Text>
-		</Link>
+		<InlineLinkText
+			to={url}
+			label={label}
+			size="sm"
+			weight="semiBold"
+			color="textContrastMedium"
+			className={css.topic}
+		>
+			{topic.topic}
+		</InlineLinkText>
 	);
 }
