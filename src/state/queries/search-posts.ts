@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedSearchPosts } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
@@ -11,29 +12,32 @@ import { useClients } from '#/state/session';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
 const searchPostsQueryKeyRoot = 'search-posts';
-const searchPostsQueryKey = ({ query, sort }: { query: string; sort?: string }) => [
+const searchPostsQueryKey = ({ author, query, sort }: { author?: string; query: string; sort?: string }) => [
 	searchPostsQueryKeyRoot,
 	query,
 	sort,
+	author,
 ];
 
 export function useSearchPostsQuery({
+	author,
+	enabled,
 	query,
 	sort,
-	enabled,
 }: {
+	author?: string;
+	enabled?: boolean;
 	query: string;
 	sort?: 'top' | 'latest';
-	enabled?: boolean;
 }) {
 	const { appview } = useClients();
 	const moderationOpts = useModerationOpts();
 	const selectArgs = useMemo(
 		() => ({
-			isSearchingSpecificUser: /from:(\w+)/.test(query),
+			isSearchingSpecificUser: !!author || /from:(\w+)/.test(query),
 			moderationOpts,
 		}),
-		[query, moderationOpts],
+		[author, moderationOpts, query],
 	);
 	const lastRun = useRef<{
 		data: InfiniteData<AppBskyFeedSearchPosts.$output>;
@@ -48,14 +52,15 @@ export function useSearchPostsQuery({
 		QueryKey,
 		string | undefined
 	>({
-		queryKey: searchPostsQueryKey({ query, sort }),
+		queryKey: searchPostsQueryKey({ author, query, sort }),
 		queryFn: ({ pageParam }) =>
 			ok(
 				appview.get('app.bsky.feed.searchPosts', {
 					params: {
-						q: query,
-						limit: 25,
+						author: author as ActorIdentifier | undefined,
 						cursor: pageParam,
+						limit: 25,
+						q: query,
 						sort,
 					},
 				}),

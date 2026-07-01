@@ -58,7 +58,8 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 
 	const sanitizedAuthor = useMemo(() => {
 		if (!author) return '';
-		return sanitizeHandle(author);
+		// DIDs have no `@` prefix; handles do.
+		return author.startsWith('did:') ? sanitizeHandle(author) : sanitizeHandle(author, '@');
 	}, [author]);
 
 	const onShare = useCallback(() => {
@@ -148,11 +149,9 @@ function HashtagScreenTab({
 	const isCashtag = fullTag.startsWith('$');
 
 	const queryParam = useMemo(() => {
-		// Cashtags need # prefix for search: "#$BTC" or "#$BTC from:author"
-		const searchTag = isCashtag ? `#${fullTag}` : fullTag;
-		if (!author) return searchTag;
-		return `${searchTag} from:${author}`;
-	}, [fullTag, author, isCashtag]);
+		// Cashtags need # prefix for search: "#$BTC"
+		return isCashtag ? `#${fullTag}` : fullTag;
+	}, [fullTag, isCashtag]);
 
 	const {
 		data,
@@ -164,7 +163,7 @@ function HashtagScreenTab({
 		refetch,
 		fetchNextPage,
 		hasNextPage,
-	} = useSearchPostsQuery({ query: queryParam, sort, enabled: active });
+	} = useSearchPostsQuery({ author, enabled: active, query: queryParam, sort });
 
 	const posts = useMemo(() => {
 		return data?.pages.flatMap((page) => page.posts) || [];
