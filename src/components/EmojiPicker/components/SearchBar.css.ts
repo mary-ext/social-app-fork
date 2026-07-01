@@ -3,16 +3,20 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { fontFamily, fontSize, space } from '#/styles/tokens.css';
 
+import { SEARCH_INPUT_RADIUS } from '../layout';
+
 // the band that insets the field off the panel edges.
 export const row = style({
 	paddingInline: space.sm,
 	paddingTop: space.sm,
+	zIndex: 1,
 });
 
 // positioning context for the leading icon and trailing accessory. its height tracks the input (the only
 // in-flow child) so `top: 50%` centers the adornments on the input.
 export const field = style({
 	position: 'relative',
+	marginBottom: -SEARCH_INPUT_RADIUS,
 });
 
 // leading search icon, vertically centered and non-interactive so clicks fall through to the input. its
@@ -34,7 +38,7 @@ export const input = style({
 	appearance: 'none',
 	backgroundColor: vars.palette.contrast_50,
 	border: '1px solid transparent',
-	borderRadius: 10,
+	borderRadius: SEARCH_INPUT_RADIUS,
 	boxSizing: 'border-box',
 	color: vars.palette.contrast_1000,
 	display: 'block',

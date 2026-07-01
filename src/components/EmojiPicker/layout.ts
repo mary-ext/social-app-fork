@@ -12,6 +12,12 @@ export const OVERSCAN = 80;
 export const GRID_PADDING = 8;
 /** padding below the last row of the scrolling grid, in px. */
 export const GRID_PADDING_BOTTOM = 8;
+/**
+ * corner radius of the search input, in px. the grid slides up under the input by this amount (via a negative
+ * margin) so its rounded bottom overlaps the scrolling content, so the layout offsets every row's top by the
+ * same amount to compensate.
+ */
+export const SEARCH_INPUT_RADIUS = 10;
 /** inner content width: {@link PER_LINE} cells plus the grid's inline padding. */
 export const PANEL_WIDTH = PER_LINE * ROW_HEIGHT + GRID_PADDING * 2;
 
@@ -49,7 +55,7 @@ export function buildEmojiLayout(sections: readonly EmojiSection[]): EmojiLayout
 	const rows: EmojiRow[] = [];
 	const rowIndexForEmoji: number[] = [];
 	const sectionRowIndex = new Map<string, number>();
-	let top = 0;
+	let top = SEARCH_INPUT_RADIUS;
 	let flat = 0;
 
 	for (const section of sections) {
@@ -60,7 +66,11 @@ export function buildEmojiLayout(sections: readonly EmojiSection[]): EmojiLayout
 		if (section.labeled) {
 			rows.push({ height: HEADER_HEIGHT, key: section.key, top, type: 'header' });
 			top += HEADER_HEIGHT;
+		} else {
+			// an unlabeled section (search results) has no header to supply a top gap, so give it one.
+			top += GRID_PADDING;
 		}
+
 		const rowCount = Math.ceil(section.count / PER_LINE);
 		for (let r = 0; r < rowCount; r++) {
 			const firstIndex = flat + r * PER_LINE;
