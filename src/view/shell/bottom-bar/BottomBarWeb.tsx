@@ -16,7 +16,7 @@ import { useSession } from '#/state/session';
 import { Logo } from '#/view/icons/Logo';
 import { Logotype } from '#/view/icons/Logotype';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import {
 	Bell_Stroke2_Corner0_Rounded as Bell,
 	Bell_Filled_Corner0_Rounded as BellFilled,
@@ -112,7 +112,7 @@ const useLongPress = (onLongPress?: () => void) => {
 
 export function BottomBarWeb() {
 	const { hasSession, currentAccount } = useSession();
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 	const hideBorder = useHideBottomBarBorder();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 	const isLabeler = profile?.associated?.labeler;
@@ -121,11 +121,11 @@ export function BottomBarWeb() {
 	const notificationCountStr = useUnreadNotifications();
 
 	const showSignIn = () => {
-		signinDialogControl.openWithPayload({});
+		signinDialogHandle.openWithPayload({});
 	};
 
 	const onLongPressProfile = () => {
-		signinDialogControl.openWithPayload({ intent: 'switch' });
+		signinDialogHandle.openWithPayload({ intent: 'switch' });
 	};
 
 	return (

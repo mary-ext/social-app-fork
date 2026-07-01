@@ -24,7 +24,7 @@ import { WebAuxClickWrapper } from '#/view/com/util/WebAuxClickWrapper';
 
 import { useTheme } from '#/alf';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 
 import { router } from '../../../routes';
 import { PressableWithHover } from './PressableWithHover';
@@ -190,7 +190,7 @@ export function TextLink({
 	onBeforePress?: () => void;
 } & TextProps) {
 	const navigation = useNavigationDeduped();
-	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
+	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
 	const openLink = useOpenLink();
 
 	if (!disableMismatchWarning && typeof text !== 'string') {
@@ -205,7 +205,7 @@ export function TextLink({
 				!disableMismatchWarning && isMisleadingLink(href, typeof text === 'string' ? text : '');
 			if (requiresWarning) {
 				e?.preventDefault?.();
-				linkWarningDialogControl.openWithPayload({
+				linkWarningDialogHandle.openWithPayload({
 					displayText: typeof text === 'string' ? text : '',
 					href,
 				});
@@ -231,7 +231,7 @@ export function TextLink({
 			disableMismatchWarning,
 			navigationAction,
 			openLink,
-			linkWarningDialogControl,
+			linkWarningDialogHandle,
 		],
 	);
 	const hrefAttrs = useMemo(() => {

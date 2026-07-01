@@ -2,15 +2,15 @@ import { ReportDialog } from '#/components/moderation/ReportDialog';
 import type { DialogHandle } from '#/components/web/Dialog';
 
 export function ReportConversationDialog({
-	control,
+	handle,
 	convoId,
 	did,
 	onAfterSubmit,
 }: {
-	control: DialogHandle;
+	handle: DialogHandle;
 	convoId: string;
 	did: string;
 	onAfterSubmit?: () => void;
 }) {
-	return <ReportDialog control={control} subject={{ convoId, did }} onAfterSubmit={onAfterSubmit} />;
+	return <ReportDialog handle={handle} subject={{ convoId, did }} onAfterSubmit={onAfterSubmit} />;
 }

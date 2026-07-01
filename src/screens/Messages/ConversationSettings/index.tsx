@@ -380,7 +380,7 @@ function SettingsHeader({
 	const lockChatPrompt = Prompt.usePromptControl();
 	const leaveChatPrompt = Prompt.usePromptControl();
 	const leaveAndLockChatPrompt = Prompt.usePromptControl();
-	const reportControl = useDialogHandle();
+	const reportHandle = useDialogHandle();
 	const deleteControl = Prompt.usePromptControl();
 
 	const handleToggleMute = () => {
@@ -481,7 +481,7 @@ function SettingsHeader({
 							icon={FlagIcon}
 							label={m['screens.messages.report.group']()}
 							text={m['common.action.report']()}
-							onPress={() => reportControl.open(null)}
+							onPress={() => reportHandle.open(null)}
 						/>
 					) : null}
 					<SettingsButton
@@ -519,7 +519,7 @@ function SettingsHeader({
 			{reportSubjectDid ? (
 				<>
 					<ReportConversationDialog
-						control={reportControl}
+						handle={reportHandle}
 						convoId={convo.view.id}
 						did={reportSubjectDid}
 						onAfterSubmit={deleteControl.open}

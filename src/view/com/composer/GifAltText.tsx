@@ -24,7 +24,7 @@ type Props = {
 
 export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
 	const t = useTheme();
-	const control = Dialog.useDialogHandle();
+	const handle = Dialog.useDialogHandle();
 
 	return (
 		<>
@@ -33,7 +33,7 @@ export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
 				accessibilityLabel={m['view.composer.altText.action.add']()}
 				accessibilityRole="button"
 				hitSlop={HITSLOP_10}
-				onPress={() => control.open(null)}
+				onPress={() => handle.open(null)}
 				style={[
 					a.absolute,
 					a.flex_row,
@@ -59,7 +59,7 @@ export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
 				{m['view.composer.altText.hint']()}
 			</Admonition>
 
-			<GifAltTextDialog altText={altText} gif={gif} handle={control} onSubmit={onSubmit} />
+			<GifAltTextDialog altText={altText} gif={gif} handle={handle} onSubmit={onSubmit} />
 		</>
 	);
 }

@@ -93,7 +93,7 @@ export function RejectMenu({
 		leaveConvo();
 	}, [queueBlock, leaveConvo]);
 
-	const reportControl = useDialogHandle();
+	const reportHandle = useDialogHandle();
 	const blockOrDeleteControl = useDialogControl();
 
 	const reportSubject = getConvoReportSubject(convo, currentAccount?.did);
@@ -129,7 +129,7 @@ export function RejectMenu({
 							<Menu.ItemIcon icon={PersonXIcon} position="right" />
 						</Menu.Item>
 						{reportSubject && (
-							<Menu.Item label={m['common.chat.action.report']()} onClick={() => reportControl.open(null)}>
+							<Menu.Item label={m['common.chat.action.report']()} onClick={() => reportHandle.open(null)}>
 								<Menu.ItemText>{m['common.chat.action.report']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={FlagIcon} position="right" />
 							</Menu.Item>
@@ -145,7 +145,7 @@ export function RejectMenu({
 							convoId: convo.view.id,
 							message: reportMessage,
 						}}
-						control={reportControl}
+						handle={reportHandle}
 						onAfterSubmit={() => {
 							const sender = convo.view.members.find((member) => member.did === reportMessage.sender.did);
 							if (sender) {
@@ -166,7 +166,7 @@ export function RejectMenu({
 			) : reportDid ? (
 				<>
 					<ReportConversationDialog
-						control={reportControl}
+						handle={reportHandle}
 						convoId={convo.view.id}
 						did={reportDid}
 						onAfterSubmit={blockOrDeleteControl.open}

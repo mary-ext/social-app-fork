@@ -30,30 +30,30 @@ export function DraftsButton({
 	canSaveDraft: boolean;
 	textLength: number;
 }) {
-	const draftsDialogControl = Dialog.useDialogHandle();
-	const savePromptControl = Prompt.usePromptHandle();
+	const draftsDialogHandle = Dialog.useDialogHandle();
+	const savePromptHandle = Prompt.usePromptHandle();
 	const { isPending: isSaving } = useSaveDraftMutation();
 
 	const handlePress = () => {
 		if (isEmpty || !isDirty) {
 			// Composer is empty or has no unsaved changes, go directly to drafts list
-			draftsDialogControl.open(null);
+			draftsDialogHandle.open(null);
 		} else {
 			// Composer has unsaved changes, ask what to do
-			savePromptControl.open(null);
+			savePromptHandle.open(null);
 		}
 	};
 
 	const handleSaveAndOpen = async () => {
 		const { success } = await onSaveDraft();
 		if (success) {
-			draftsDialogControl.open(null);
+			draftsDialogHandle.open(null);
 		}
 	};
 
 	const handleDiscardAndOpen = () => {
 		onDiscard();
-		draftsDialogControl.open(null);
+		draftsDialogHandle.open(null);
 	};
 
 	return (
@@ -70,8 +70,8 @@ export function DraftsButton({
 			>
 				<ButtonText size="md">{m['view.composer.drafts.title']()}</ButtonText>
 			</Button>
-			<DraftsListDialog handle={draftsDialogControl} onSelectDraft={onSelectDraft} />
-			<Prompt.Outer handle={savePromptControl}>
+			<DraftsListDialog handle={draftsDialogHandle} onSelectDraft={onSelectDraft} />
+			<Prompt.Outer handle={savePromptHandle}>
 				<Prompt.Content>
 					<Prompt.TitleText>
 						{canSaveDraft

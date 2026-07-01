@@ -1,8 +1,6 @@
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
-import type * as Dialog from '#/components/web/Dialog';
-
 export type ReportSubjectConvoMessage = {
 	view: 'convo' | 'message';
 	convoId: string;
@@ -75,12 +73,3 @@ export type ParsedReportSubject =
 	| ({
 			type: 'convo';
 	  } & ReportSubjectConvo);
-
-export type ReportDialogProps = {
-	control: Dialog.DialogHandle;
-	subject: ParsedReportSubject;
-	/** Called if the report was successfully submitted. */
-	onAfterSubmit?: () => void;
-	/** Called after the dialog finishes closing. */
-	onClose?: () => void;
-};

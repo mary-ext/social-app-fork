@@ -19,7 +19,7 @@ import * as Toggle from '#/components/web/forms/Toggle';
 import { m } from '#/paraglide/messages';
 
 export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange: (v: SelfLabel[]) => void }) {
-	const control = Dialog.useDialogHandle();
+	const handle = Dialog.useDialogHandle();
 
 	const hasLabel = labels.length > 0;
 
@@ -38,7 +38,7 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 	return (
 		<>
 			<Dialog.Trigger
-				handle={control}
+				handle={handle}
 				render={
 					<Button color="secondary" size="small" label={m['view.composer.contentWarning.title']()}>
 						<ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
@@ -49,14 +49,14 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 					</Button>
 				}
 			/>
-			<Dialog.Root handle={control}>
+			<Dialog.Root handle={handle}>
 				<Dialog.Popup label={m['view.composer.contentWarning.add']()} size="narrow">
 					<Dialog.Close />
 					<DialogInner
 						labels={labels}
 						updateAdultLabels={updateAdultLabels}
 						updateOtherLabels={updateOtherLabels}
-						onDone={() => control.close()}
+						onDone={() => handle.close()}
 					/>
 				</Dialog.Popup>
 			</Dialog.Root>

@@ -2,7 +2,7 @@ import { lazy, Suspense, useRef } from 'react';
 
 import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { Spinner } from '#/components/Spinner';
 import * as Dialog from '#/components/web/Dialog';
 
@@ -17,12 +17,12 @@ import * as styles from './Composer.css';
 const ComposePost = lazy(() => import('../com/composer/Composer').then((m) => ({ default: m.ComposePost })));
 
 export function ComposerDialog() {
-	const { composerDialogControl } = useGlobalDialogsControlContext();
+	const { composerDialogHandle } = useGlobalDialogsHandleContext();
 	const cancelRef = useRef<CancelRef>(null);
 
 	return (
 		<Dialog.Root
-			handle={composerDialogControl}
+			handle={composerDialogHandle}
 			id={COMPOSER_DIALOG_ID}
 			onOpenChange={(open, details) => {
 				// Imperative closes (publish, Cancel button, confirmed discard) pass through; Base UI clears

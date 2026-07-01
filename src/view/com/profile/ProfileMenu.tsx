@@ -40,7 +40,7 @@ import { StarterPack } from '#/components/icons/StarterPack';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
-import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
+import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { useDialogHandle } from '#/components/web/Dialog';
@@ -63,7 +63,7 @@ function ProfileMenu({
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
 }): React.ReactNode {
 	const { currentAccount, hasSession } = useSession();
-	const reportDialogControl = useReportDialogControl();
+	const reportDialogHandle = useReportDialogHandle();
 	const addToListsDialogHandle = useDialogHandle();
 	const queryClient = useQueryClient();
 	const navigation = useNavigation<NavigationProp>();
@@ -193,8 +193,8 @@ function ProfileMenu({
 	}, [queueUnfollow]);
 
 	const onPressReportAccount = useCallback(() => {
-		reportDialogControl.open(null);
-	}, [reportDialogControl]);
+		reportDialogHandle.open(null);
+	}, [reportDialogHandle]);
 
 	const onPressShareATUri = useCallback(() => {
 		void shareText(`at://${profile.did}`);
@@ -378,7 +378,7 @@ function ProfileMenu({
 				onChange={invalidateProfileQuery}
 			/>
 			<ReportDialog
-				control={reportDialogControl}
+				handle={reportDialogHandle}
 				subject={
 					{
 						...profile,

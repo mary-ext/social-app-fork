@@ -22,7 +22,7 @@ import { List } from '#/view/com/util/List';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon } from '#/components/Button';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
@@ -181,10 +181,10 @@ function HashtagScreenTab({
 		void fetchNextPage();
 	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
 
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const showSignIn = () => {
-		signinDialogControl.openWithPayload({});
+		signinDialogHandle.openWithPayload({});
 	};
 
 	if (!hasSession) {

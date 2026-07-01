@@ -8,69 +8,64 @@ import type { SessionAccount } from '#/state/session';
 import type { ReportSubject } from '#/components/moderation/ReportDialog';
 import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
 
-/** Payload opening the global lightbox: the image list and the index to start on. */
+/** the images and the index to open the global lightbox on. */
 export type LightboxPayload = { images: LightboxImage[]; index: number };
 
-/** Detached handle for the global lightbox; open it with `lightboxControl.openWithPayload({ images, index })`. */
-export type LightboxControl = DialogHandle<LightboxPayload>;
+/** detached handle for the global lightbox. */
+export type LightboxHandle = DialogHandle<LightboxPayload>;
 
 export type SigninDialogPayload = {
-	/** Whether the chooser frames itself as signing in (default) or switching the active account. */
+	/** whether the chooser frames itself as signing in (default) or switching the active account. */
 	intent?: 'signin' | 'switch';
 	requestedAccount?: SessionAccount;
 	showStoredAccounts?: boolean;
 };
 
-/** Payload opening the global link-warning dialog: the destination and its visible text (optionally shared). */
+/** the destination and its visible text for the global link-warning dialog. */
 export type LinkWarningPayload = {
 	href: string;
 	displayText: string;
 	share?: boolean;
 };
 
-type ControlsContext = {
-	/**
-	 * The composer's Base UI {@link DialogHandle}-backed dialog. Opened from triggers all over the app (no
-	 * declarative Trigger), so callers drive it imperatively — `openWithPayload(opts)` to open with the
-	 * composer state, `isOpen` to test, `close()` to close — and read the active opts in the dialog tree via
-	 * the `Dialog.Root` payload render-prop. The registry id is the constant `COMPOSER_DIALOG_ID`.
-	 */
-	composerDialogControl: DialogHandle<ComposerOpts>;
-	/** The group-chat join dialog; open with `openWithPayload({ code })` from a `bsky.app/chat/<code>` link. */
-	groupChatJoinControl: DialogHandle<{ code: string }>;
-	lightboxControl: LightboxControl;
-	signinDialogControl: DialogHandle<SigninDialogPayload>;
-	linkWarningDialogControl: DialogHandle<LinkWarningPayload>;
-	reportDialogControl: DialogHandle<{ subject: ReportSubject }>;
+type HandlesContext = {
+	/** the app-wide composer dialog, opened imperatively (no declarative trigger). */
+	composerDialogHandle: DialogHandle<ComposerOpts>;
+	/** the group-chat join dialog. */
+	groupChatJoinHandle: DialogHandle<{ code: string }>;
+	lightboxHandle: LightboxHandle;
+	signinDialogHandle: DialogHandle<SigninDialogPayload>;
+	linkWarningDialogHandle: DialogHandle<LinkWarningPayload>;
+	reportDialogHandle: DialogHandle<{ subject: ReportSubject }>;
 };
 
-const ControlsContext = createContext<ControlsContext | null>(null);
-ControlsContext.displayName = 'GlobalDialogControlsContext';
+const HandlesContext = createContext<HandlesContext | null>(null);
+HandlesContext.displayName = 'GlobalDialogHandlesContext';
 
-export function useGlobalDialogsControlContext() {
-	const ctx = useContext(ControlsContext);
+export function useGlobalDialogsHandleContext() {
+	const ctx = useContext(HandlesContext);
 	if (!ctx) {
-		throw new Error('useGlobalDialogsControlContext must be used within a Provider');
+		throw new Error('useGlobalDialogsHandleContext must be used within a Provider');
 	}
 	return ctx;
 }
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
-	const composerDialogControl = useDialogHandle<ComposerOpts>();
-	const groupChatJoinControl = useDialogHandle<{ code: string }>();
-	const lightboxControl = useDialogHandle<LightboxPayload>();
-	const signinDialogControl = useDialogHandle<SigninDialogPayload>();
-	const linkWarningDialogControl = useDialogHandle<LinkWarningPayload>();
-	const reportDialogControl = useDialogHandle<{ subject: ReportSubject }>();
+	const composerDialogHandle = useDialogHandle<ComposerOpts>();
+	const groupChatJoinHandle = useDialogHandle<{ code: string }>();
+	const lightboxHandle = useDialogHandle<LightboxPayload>();
+	const signinDialogHandle = useDialogHandle<SigninDialogPayload>();
+	const linkWarningDialogHandle = useDialogHandle<LinkWarningPayload>();
+	const reportDialogHandle = useDialogHandle<{ subject: ReportSubject }>();
 
-	const ctx: ControlsContext = {
-		composerDialogControl,
-		groupChatJoinControl,
-		lightboxControl,
-		signinDialogControl,
-		linkWarningDialogControl,
-		reportDialogControl,
+	const ctx: HandlesContext = {
+		composerDialogHandle,
+		groupChatJoinHandle,
+		lightboxHandle,
+		signinDialogHandle,
+		linkWarningDialogHandle,
+		reportDialogHandle,
 	};
 
-	return <ControlsContext.Provider value={ctx}>{children}</ControlsContext.Provider>;
+	return <HandlesContext.Provider value={ctx}>{children}</HandlesContext.Provider>;
 }

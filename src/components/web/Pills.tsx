@@ -11,7 +11,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import * as Dialog from '#/components/web/Dialog';
 import {
 	ModerationDetailsDialog,
-	useModerationDetailsDialogControl,
+	useModerationDetailsDialogHandle,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 import * as styles from '#/components/web/Pills.css';
 
@@ -39,7 +39,7 @@ export type LabelProps = {
 
 /** A single moderation pill: a glyph/avatar + label that opens the moderation-details dialog when pressed. */
 export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
-	const control = useModerationDetailsDialogControl();
+	const handle = useModerationDetailsDialogHandle();
 	const desc = useModerationCauseDescription(cause);
 	const isLabeler = Boolean(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;
@@ -50,7 +50,7 @@ export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
 			<Dialog.Trigger
 				aria-label={desc.name}
 				className={styles.pill({ bg: !noBg, size })}
-				handle={control}
+				handle={handle}
 				// the pill lives inside a navigable post; keep its click from bubbling to the row's nav handler.
 				onClick={(e) => e.stopPropagation()}
 			>
@@ -69,7 +69,7 @@ export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
 					{desc.name}
 				</Text>
 			</Dialog.Trigger>
-			<ModerationDetailsDialog control={control} modcause={cause} />
+			<ModerationDetailsDialog handle={handle} modcause={cause} />
 		</>
 	);
 }

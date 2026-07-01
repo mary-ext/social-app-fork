@@ -131,8 +131,8 @@ function Badge({
 	verificationState: FullVerificationState;
 	width: number;
 }) {
-	const verificationsControl = Dialog.useDialogHandle();
-	const verifierControl = Dialog.useDialogHandle();
+	const verificationsHandle = Dialog.useDialogHandle();
+	const verifierHandle = Dialog.useDialogHandle();
 
 	const isVerifier = state.profile.role === 'verifier';
 	const verifiedByHidden = !state.profile.showBadge && state.profile.isViewer;
@@ -141,7 +141,7 @@ function Badge({
 		: state.profile.isVerified
 			? colors.primary_500
 			: colors.contrast_100;
-	const control = isVerifier ? verifierControl : verificationsControl;
+	const handle = isVerifier ? verifierHandle : verificationsHandle;
 
 	return (
 		<>
@@ -152,13 +152,13 @@ function Badge({
 						: m['components.verification.verifications.action.viewUser']()
 				}
 				className={css.button}
-				handle={control}
+				handle={handle}
 				onClick={(e) => e.stopPropagation()}
 			>
 				<VerificationCheck fill={fill} verifier={isVerifier} width={width} />
 			</Dialog.Trigger>
-			<VerificationsDialog handle={verificationsControl} profile={profile} />
-			<VerifierDialog handle={verifierControl} profile={profile} />
+			<VerificationsDialog handle={verificationsHandle} profile={profile} />
+			<VerifierDialog handle={verifierHandle} profile={profile} />
 		</>
 	);
 }

@@ -22,7 +22,7 @@ import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
 
 import { useBreakpoints, useLayoutBreakpoints } from '#/alf';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
 import {
 	Bell_Filled_Corner0_Rounded as BellFilledIcon,
@@ -167,10 +167,10 @@ function SwitchMenuItems({
 		| undefined;
 	signOutPromptHandle: Prompt.PromptHandle;
 }) {
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const onAddAnotherAccount = () => {
-		signinDialogControl.openWithPayload({ showStoredAccounts: false });
+		signinDialogHandle.openWithPayload({ showStoredAccounts: false });
 	};
 
 	return (

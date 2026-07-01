@@ -6,7 +6,7 @@ import type { NavigationProp } from '#/lib/routes/types';
 import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useSession } from '#/state/session';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
 import { ChainLink_Stroke2_Corner0_Rounded as LinkIcon } from '#/components/icons/ChainLink';
@@ -70,7 +70,7 @@ export function useChatInvite({
 }): ChatInvite {
 	const { hasSession } = useSession();
 	const navigation = useNavigation<NavigationProp>();
-	const { groupChatJoinControl } = useGlobalDialogsControlContext();
+	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	const { data, error, isPending } = useJoinLinkPreviewsQuery({
 		codes: [code],
@@ -154,7 +154,7 @@ export function useChatInvite({
 				color,
 				disabled: !canJoin,
 				onPress: () => {
-					groupChatJoinControl.openWithPayload({ code });
+					groupChatJoinHandle.openWithPayload({ code });
 				},
 			};
 		}

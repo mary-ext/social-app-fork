@@ -17,7 +17,7 @@ import { Trans } from '#/locale/Trans';
 import { Post } from '#/view/com/post/Post';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
@@ -153,7 +153,7 @@ function NoResultsText({ query }: { query: string }) {
 
 function PostResults({ active, query, sort }: { active: boolean; query: string; sort?: 'latest' | 'top' }) {
 	const { currentAccount, hasSession } = useSession();
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const augmentedQuery = useMemo(
 		() => augmentSearchQuery(query || '', { did: currentAccount?.did }),
@@ -200,7 +200,7 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 							t0: ({ children }) => (
 								<InlineLinkText
 									onPress={() => {
-										signinDialogControl.openWithPayload({});
+										signinDialogHandle.openWithPayload({});
 										return false;
 									}}
 									to="/search"

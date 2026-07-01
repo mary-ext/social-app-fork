@@ -12,7 +12,7 @@ import {
 	safeUrlParse,
 } from '#/lib/strings/url-helpers';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
 import { Button, type ButtonProps } from '#/components/web/Button';
@@ -108,7 +108,7 @@ export const useInternalLink = ({
 // internal href, and nothing for a genuinely external or modified click (the native anchor opens those).
 const useExternalNav = (rawHref: string, action: LinkAction) => {
 	const navigateToPath = useNavigateToPath();
-	const { groupChatJoinControl } = useGlobalDialogsControlContext();
+	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	const parsed = safeUrlParse(rawHref);
 	const href = parsed ? convertBskyAppUrlIfNeeded(parsed.href) : undefined;
@@ -125,7 +125,7 @@ const useExternalNav = (rawHref: string, action: LinkAction) => {
 		// a group-chat invite opens the join dialog in place rather than navigating to /chat/<code>.
 		const chatInviteCode = getChatInviteCodeFromUrl(href);
 		if (chatInviteCode) {
-			groupChatJoinControl.openWithPayload({ code: chatInviteCode });
+			groupChatJoinHandle.openWithPayload({ code: chatInviteCode });
 			return;
 		}
 
@@ -175,7 +175,7 @@ const useContentLink = ({
 	onPress?: LinkOnPress;
 }): LinkBindings => {
 	const { href, isExternal, navigate } = useExternalNav(rawHref, action);
-	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
+	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
 	const onClick = (e: MouseEvent<HTMLElement>) => {
 		if (onPress?.(e) === false) {
 			e.preventDefault();
@@ -188,7 +188,7 @@ const useContentLink = ({
 
 		if (displayText && isExternal && isMisleadingLink(href, displayText)) {
 			e.preventDefault();
-			linkWarningDialogControl.openWithPayload({ displayText, href });
+			linkWarningDialogHandle.openWithPayload({ displayText, href });
 			return;
 		}
 

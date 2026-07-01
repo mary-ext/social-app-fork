@@ -254,7 +254,7 @@ function BaseChatItem({
 }) {
 	const t = useTheme();
 	const { currentAccount } = useSession();
-	const menuControl = useMenuHandle();
+	const menuHandle = useMenuHandle();
 	const menuTriggerId = useId();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const leaveConvoControl = useDialogControl();
@@ -389,12 +389,12 @@ function BaseChatItem({
 				// the menu (and its trigger) only mounts when `showMenu && primaryProfile`; opening a handle with
 				// no registered trigger throws, so gate on the same condition.
 				if (showMenu && primaryProfile) {
-					menuControl.open(menuTriggerId);
+					menuHandle.open(menuTriggerId);
 				}
 				return false;
 			}
 		},
-		[isDeletedAccount, showMenu, primaryProfile, menuControl, menuTriggerId, queryClient, convo],
+		[isDeletedAccount, showMenu, primaryProfile, menuHandle, menuTriggerId, queryClient, convo],
 	);
 
 	const markReadAction = {
@@ -608,7 +608,7 @@ function BaseChatItem({
 						<ConvoMenu
 							convo={convo}
 							profile={primaryProfile}
-							control={menuControl}
+							handle={menuHandle}
 							triggerId={menuTriggerId}
 							onOpenChange={setMenuOpen}
 							currentScreen="list"

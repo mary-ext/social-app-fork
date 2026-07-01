@@ -44,7 +44,7 @@ import { m } from '#/paraglide/messages';
 function ConvoMenu({
 	convo,
 	profile,
-	control,
+	handle,
 	triggerId,
 	onOpenChange,
 	currentScreen,
@@ -54,7 +54,7 @@ function ConvoMenu({
 }: {
 	convo: ConvoWithDetails;
 	profile: Shadow<AnyProfileView>;
-	control?: Menu.MenuHandle;
+	handle?: Menu.MenuHandle;
 	/** DOM id of the trigger, so a detached opener (the chat row) can anchor the menu to it. */
 	triggerId?: string;
 	onOpenChange?: (open: boolean) => void;
@@ -74,7 +74,7 @@ function ConvoMenu({
 	const reportDid = reportSubject && 'did' in reportSubject ? reportSubject.did : null;
 
 	const leaveConvoControl = Prompt.usePromptControl();
-	const reportControl = useDialogHandle();
+	const reportHandle = useDialogHandle();
 	const blockedByListControl = Prompt.usePromptControl();
 	const blockOrDeleteControl = Prompt.usePromptControl();
 	const deleteControl = Prompt.usePromptControl();
@@ -83,10 +83,10 @@ function ConvoMenu({
 
 	return (
 		<>
-			<Menu.Root handle={control} onOpenChange={onOpenChange}>
+			<Menu.Root handle={handle} onOpenChange={onOpenChange}>
 				<View style={[style]}>
 					<Menu.Trigger
-						handle={control}
+						handle={handle}
 						id={triggerId}
 						render={
 							<Button
@@ -110,7 +110,7 @@ function ConvoMenu({
 						convo={convo.view}
 						leaveConvoControl={leaveConvoControl}
 						canReport={!!reportSubject}
-						reportControl={reportControl}
+						reportHandle={reportHandle}
 						blockedByListControl={blockedByListControl}
 					/>
 				</Menu.Popup>
@@ -124,7 +124,7 @@ function ConvoMenu({
 							convoId: convo.view.id,
 							message: reportMessage,
 						}}
-						control={reportControl}
+						handle={reportHandle}
 						onAfterSubmit={() => {
 							const sender = convo.view.members.find((member) => member.did === reportMessage.sender.did);
 							if (sender) {
@@ -145,7 +145,7 @@ function ConvoMenu({
 			) : reportDid ? (
 				<>
 					<ReportConversationDialog
-						control={reportControl}
+						handle={reportHandle}
 						convoId={convo.view.id}
 						did={reportDid}
 						onAfterSubmit={deleteControl.open}
@@ -172,7 +172,7 @@ function MenuContent({
 	blockInfo,
 	leaveConvoControl,
 	canReport,
-	reportControl,
+	reportHandle,
 	blockedByListControl,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
@@ -184,7 +184,7 @@ function MenuContent({
 	};
 	leaveConvoControl: Prompt.PromptControlProps;
 	canReport: boolean;
-	reportControl: DialogHandle;
+	reportHandle: DialogHandle;
 	blockedByListControl: Prompt.PromptControlProps;
 }) {
 	const navigation = useNavigation<NavigationProp>();
@@ -291,7 +291,7 @@ function MenuContent({
 					<Menu.Item
 						destructive
 						label={m['common.chat.action.report']()}
-						onClick={() => reportControl.open(null)}
+						onClick={() => reportHandle.open(null)}
 					>
 						<Menu.ItemIcon icon={Flag} />
 						<Menu.ItemText>{m['common.chat.action.report']()}</Menu.ItemText>

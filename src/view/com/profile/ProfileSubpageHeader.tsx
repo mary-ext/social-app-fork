@@ -17,7 +17,7 @@ import { TextLink } from '#/view/com/util/Link';
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { Text } from '#/view/com/util/text/Text';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { StarterPack } from '#/components/icons/StarterPack';
 import * as Layout from '#/components/Layout';
 import { UserAvatar, type UserAvatarType } from '#/components/UserAvatar';
@@ -51,7 +51,7 @@ export function ProfileSubpageHeader({
 }>) {
 	const navigation = useNavigation<NavigationProp>();
 	const { isMobile } = useWebMediaQueries();
-	const { lightboxControl } = useGlobalDialogsControlContext();
+	const { lightboxHandle } = useGlobalDialogsHandleContext();
 	const pal = usePalette('default');
 	const canGoBack = navigation.canGoBack();
 
@@ -59,12 +59,12 @@ export function ProfileSubpageHeader({
 		if (
 			avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
 		) {
-			lightboxControl.openWithPayload({
+			lightboxHandle.openWithPayload({
 				images: [{ src: avatar }],
 				index: 0,
 			});
 		}
-	}, [lightboxControl, avatar]);
+	}, [lightboxHandle, avatar]);
 
 	return (
 		<>

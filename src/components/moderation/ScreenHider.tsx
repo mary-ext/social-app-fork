@@ -10,7 +10,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import {
 	ModerationDetailsDialog,
-	useModerationDetailsDialogControl,
+	useModerationDetailsDialogHandle,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
@@ -29,7 +29,7 @@ export function ScreenHider({
 }>) {
 	const [override, setOverride] = useState(false);
 	const navigation = useNavigation<NavigationProp>();
-	const control = useModerationDetailsDialogControl();
+	const handle = useModerationDetailsDialogHandle();
 	const blur = modui.blurs[0];
 	const desc = useModerationCauseDescription(blur);
 
@@ -64,7 +64,7 @@ export function ScreenHider({
 					<Dialog.Trigger
 						aria-label={m['components.moderation.label.learnMore.aboutWarning']()}
 						className={css.learnMore}
-						handle={control}
+						handle={handle}
 					>
 						<Text color="primary_500" size="lg">
 							{m['components.moderation.label.learnMore.label']()}
@@ -72,7 +72,7 @@ export function ScreenHider({
 					</Dialog.Trigger>
 				</Text>
 			)}
-			{!isNoPwi && <ModerationDetailsDialog control={control} modcause={blur} />}
+			{!isNoPwi && <ModerationDetailsDialog handle={handle} modcause={blur} />}
 			<div className={css.spacer} />
 			<div className={css.buttonRow}>
 				<Button

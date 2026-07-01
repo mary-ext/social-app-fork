@@ -36,7 +36,7 @@ import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Pl
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
-import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
+import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -69,16 +69,16 @@ export function ProfileFeedHeaderSkeleton() {
 
 export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 	const { hasSession } = useSession();
-	const infoControl = Dialog.useDialogHandle();
-	const reportDialogControl = useReportDialogControl();
+	const infoHandle = Dialog.useDialogHandle();
+	const reportDialogHandle = useReportDialogHandle();
 
 	const { data: preferences } = usePreferencesQuery();
 
 	// close this dialog before opening the report dialog so they don't stack on top of each other
 	const onPressReport = useCallback(() => {
-		infoControl.close();
-		reportDialogControl.open(null);
-	}, [infoControl, reportDialogControl]);
+		infoHandle.close();
+		reportDialogHandle.open(null);
+	}, [infoHandle, reportDialogHandle]);
 
 	const [likeUri, setLikeUri] = useState(info.likeUri || '');
 	const likeCount =
@@ -158,7 +158,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 					<button
 						className={styles.infoButton}
 						aria-label={m['screens.profile.feed.a11y.openInfo']()}
-						onClick={() => infoControl.open(null)}
+						onClick={() => infoHandle.open(null)}
 					>
 						{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
 
@@ -244,7 +244,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 					</Layout.Header.Slot>
 				)}
 			</Layout.Header.Outer>
-			<Dialog.Root handle={infoControl}>
+			<Dialog.Root handle={infoHandle}>
 				<Dialog.Popup label={m['screens.profile.feed.a11y.menu']()} className={styles.dialogPopup}>
 					<DialogInner
 						info={info}
@@ -254,14 +254,14 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 						isPinned={isPinned}
 						onTogglePinned={() => void onTogglePinned()}
 						isFeedStateChangePending={isFeedStateChangePending}
-						closeDialog={() => infoControl.close()}
+						closeDialog={() => infoHandle.close()}
 						onPressReport={onPressReport}
 					/>
 				</Dialog.Popup>
 			</Dialog.Root>
 			{hasSession && info.view && (
 				<ReportDialog
-					control={reportDialogControl}
+					handle={reportDialogHandle}
 					subject={
 						{
 							...info.view,

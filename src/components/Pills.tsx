@@ -12,7 +12,7 @@ import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 import {
 	ModerationDetailsDialog,
-	useModerationDetailsDialogControl,
+	useModerationDetailsDialogHandle,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
@@ -56,7 +56,7 @@ export type LabelProps = {
 
 export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelProps) {
 	const t = useTheme();
-	const control = useModerationDetailsDialogControl();
+	const handle = useModerationDetailsDialogHandle();
 	const desc = useModerationCauseDescription(cause);
 	const isLabeler = Boolean(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;
@@ -103,7 +103,7 @@ export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelP
 				onPress={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
-					control.open(null);
+					handle.open(null);
 				}}
 			>
 				{({ hovered, pressed }) => (
@@ -138,7 +138,7 @@ export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelP
 				)}
 			</Button>
 
-			{!disableDetailsDialog && <ModerationDetailsDialog control={control} modcause={cause} />}
+			{!disableDetailsDialog && <ModerationDetailsDialog handle={handle} modcause={cause} />}
 		</>
 	);
 }

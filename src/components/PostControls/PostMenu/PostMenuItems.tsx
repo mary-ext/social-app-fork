@@ -64,7 +64,7 @@ import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
-import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
+import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import { useDialogHandle } from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
@@ -96,13 +96,13 @@ function PostMenuItems({
 	const feedFeedback = useFeedFeedbackContext();
 	const translate = useGoogleTranslate();
 	const navigation = useNavigation<NavigationProp>();
-	const blockPromptControl = Prompt.usePromptHandle();
-	const mutePromptControl = Prompt.usePromptHandle();
-	const reportDialogControl = useReportDialogControl();
-	const deletePromptControl = Prompt.usePromptHandle();
+	const blockPromptHandle = Prompt.usePromptHandle();
+	const mutePromptHandle = Prompt.usePromptHandle();
+	const reportDialogHandle = useReportDialogHandle();
+	const deletePromptHandle = Prompt.usePromptHandle();
 	const postInteractionSettingsHandle = useDialogHandle();
-	const quotePostDetachConfirmControl = Prompt.usePromptHandle();
-	const hideReplyConfirmControl = Prompt.usePromptHandle();
+	const quotePostDetachConfirmHandle = Prompt.usePromptHandle();
+	const hideReplyConfirmHandle = Prompt.usePromptHandle();
 	const { mutateAsync: toggleReplyVisibility } = useToggleReplyVisibilityMutation();
 
 	const postUri = post.uri;
@@ -457,7 +457,7 @@ function PostMenuItems({
 									onClick={
 										isReplyHiddenByThreadgate
 											? onToggleReplyVisibility
-											: () => hideReplyConfirmControl.open(null)
+											: () => hideReplyConfirmHandle.open(null)
 									}
 								>
 									<Menu.ItemText>
@@ -480,7 +480,7 @@ function PostMenuItems({
 									onClick={
 										quoteEmbed.isDetached
 											? onToggleQuotePostAttachment
-											: () => quotePostDetachConfirmControl.open(null)
+											: () => quotePostDetachConfirmHandle.open(null)
 									}
 								>
 									<Menu.ItemText>
@@ -510,7 +510,7 @@ function PostMenuItems({
 												? m['common.mute.action.unmuteAccount']()
 												: m['common.mute.action.muteAccount']()
 										}
-										onClick={() => mutePromptControl.open(null)}
+										onClick={() => mutePromptHandle.open(null)}
 									>
 										<Menu.ItemText>
 											{postAuthor.viewer?.muted
@@ -523,7 +523,7 @@ function PostMenuItems({
 									{!postAuthor.viewer?.blocking && (
 										<Menu.Item
 											label={m['common.block.action.blockAccount']()}
-											onClick={() => blockPromptControl.open(null)}
+											onClick={() => blockPromptHandle.open(null)}
 										>
 											<Menu.ItemText>{m['common.block.action.blockAccount']()}</Menu.ItemText>
 											<Menu.ItemIcon icon={PersonX} position="right" />
@@ -532,7 +532,7 @@ function PostMenuItems({
 
 									<Menu.Item
 										label={m['components.postControls.report.post']()}
-										onClick={() => reportDialogControl.open(null)}
+										onClick={() => reportDialogHandle.open(null)}
 									>
 										<Menu.ItemText>{m['components.postControls.report.post']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Warning} position="right" />
@@ -550,7 +550,7 @@ function PostMenuItems({
 										<Menu.ItemText>{m['components.postControls.interaction.edit']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Gear} position="right" />
 									</Menu.Item>
-									<Menu.Item label={m['common.post.delete']()} onClick={() => deletePromptControl.open(null)}>
+									<Menu.Item label={m['common.post.delete']()} onClick={() => deletePromptHandle.open(null)}>
 										<Menu.ItemText>{m['common.post.delete']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Trash} position="right" />
 									</Menu.Item>
@@ -561,7 +561,7 @@ function PostMenuItems({
 				)}
 			</Menu.Popup>
 			<Prompt.Basic
-				handle={deletePromptControl}
+				handle={deletePromptHandle}
 				title={m['components.postControls.delete.title']()}
 				description={m['components.postControls.delete.message']()}
 				onConfirm={onDeletePost}
@@ -569,7 +569,7 @@ function PostMenuItems({
 				confirmButtonColor="negative"
 			/>
 			<ReportDialog
-				control={reportDialogControl}
+				handle={reportDialogHandle}
 				subject={{
 					...post,
 					$type: 'app.bsky.feed.defs#postView',
@@ -583,27 +583,27 @@ function PostMenuItems({
 				initialThreadgateView={post.threadgate}
 			/>
 			<Prompt.Basic
-				handle={quotePostDetachConfirmControl}
+				handle={quotePostDetachConfirmHandle}
 				title={m['components.postControls.quote.detach.title']()}
 				description={m['components.postControls.quote.detach.message']()}
 				onConfirm={() => void onToggleQuotePostAttachment()}
 				confirmButtonCta={m['components.postControls.quote.detach.confirm']()}
 			/>
 			<Prompt.Basic
-				handle={hideReplyConfirmControl}
+				handle={hideReplyConfirmHandle}
 				title={m['components.postControls.replyVisibility.hide.title']()}
 				description={m['components.postControls.replyVisibility.hide.message']()}
 				onConfirm={() => void onToggleReplyVisibility()}
 				confirmButtonCta={m['components.postControls.replyVisibility.hide.confirm']()}
 			/>
 			<BlockAccountPrompt
-				handle={blockPromptControl}
+				handle={blockPromptHandle}
 				isBlocking={!!postAuthor.viewer?.blocking}
 				isLabeler={!!postAuthor.associated?.labeler}
 				onConfirm={() => void onBlockAuthor()}
 			/>
 			<MuteAccountPrompt
-				handle={mutePromptControl}
+				handle={mutePromptHandle}
 				isMuted={!!postAuthor.viewer?.muted}
 				onConfirm={() => void onMuteAuthor()}
 			/>

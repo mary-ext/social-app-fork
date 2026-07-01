@@ -11,7 +11,7 @@ import { clsx } from 'clsx';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
 
-import { type LightboxPayload, useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { type LightboxPayload, useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon } from '#/components/icons/ArrowOutOfBox';
 import {
 	ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
@@ -30,16 +30,14 @@ import * as Dialog from '#/components/web/Dialog';
 import { m } from '#/paraglide/messages';
 
 /**
- * The global image lightbox: a singleton Base UI dialog driven by the `lightboxControl` handle in the global
- * dialogs context. Opened from anywhere with `lightboxControl.openWithPayload({ images, index })` (or a
- * `<Dialog.Trigger handle={lightboxControl} payload={…}>`). The gesture engine + carousel come from the
- * headless `@oomfware/lightbox`; this component supplies the modal shell (focus trap, scroll lock, Escape)
- * and the chrome.
+ * the global image lightbox: a singleton dialog (a shell around the headless `@oomfware/lightbox`) driven by
+ * the `lightboxHandle` in the global dialogs context. open it with `lightboxHandle.openWithPayload({ images,
+ * index })`.
  */
 export function Lightbox() {
-	const { lightboxControl } = useGlobalDialogsControlContext();
+	const { lightboxHandle } = useGlobalDialogsHandleContext();
 	const [open, setOpen] = useState(false);
-	const close = useCallback(() => lightboxControl.close(), [lightboxControl]);
+	const close = useCallback(() => lightboxHandle.close(), [lightboxHandle]);
 	useBackButtonCloses(open, close);
 
 	// Base UI keeps the payload (and thus `LightboxContents`) mounted after close, so the engine persists across
@@ -53,7 +51,7 @@ export function Lightbox() {
 	// the object identity (and thus a key derived from it) never changes, leaving the engine on the index it was
 	// last paged to.
 	return (
-		<Dialog.Root handle={lightboxControl} onOpenChange={(next) => setOpen(next)}>
+		<Dialog.Root handle={lightboxHandle} onOpenChange={(next) => setOpen(next)}>
 			{({ payload }: { payload: LightboxPayload | undefined }) =>
 				payload ? <LightboxContents payload={payload} open={open} close={close} /> : null
 			}

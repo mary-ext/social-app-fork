@@ -4,7 +4,7 @@ import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { shareUrl } from '#/lib/sharing';
 import { splitApexDomain } from '#/lib/strings/url-helpers';
 
-import { type LinkWarningPayload, useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { type LinkWarningPayload, useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import * as css from '#/components/dialogs/LinkWarning.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
@@ -13,8 +13,8 @@ import * as Dialog from '#/components/web/Dialog';
 import { m } from '#/paraglide/messages';
 
 export function LinkWarningDialog() {
-	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
-	return <LinkWarningDialogBase handle={linkWarningDialogControl} />;
+	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
+	return <LinkWarningDialogBase handle={linkWarningDialogHandle} />;
 }
 
 export function CustomLinkWarningDialog({ handle }: { handle: Dialog.DialogHandle<LinkWarningPayload> }) {

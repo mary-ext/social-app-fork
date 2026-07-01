@@ -5,7 +5,7 @@ import { type SessionAccount, useSession, useSessionApi } from '#/state/session'
 import { logger } from '#/logger';
 
 import { AccountList } from '#/components/AccountList';
-import { type SigninDialogPayload, useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { type SigninDialogPayload, useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import * as css from '#/components/dialogs/Signin.css';
 import { At_Stroke2_Corner0_Rounded as AtIcon } from '#/components/icons/At';
 import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon } from '#/components/icons/Chevron';
@@ -20,13 +20,13 @@ import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function SigninDialog() {
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 	return (
-		<Dialog.Root handle={signinDialogControl}>
+		<Dialog.Root handle={signinDialogHandle}>
 			{({ payload }: { payload: SigninDialogPayload | undefined }) =>
 				payload ? (
 					<Dialog.Popup label={m['components.dialogs.signin.title']()} size="narrow">
-						<SigninDialogInner close={() => signinDialogControl.close()} payload={payload} />
+						<SigninDialogInner close={() => signinDialogHandle.close()} payload={payload} />
 						<Dialog.Close />
 					</Dialog.Popup>
 				) : null

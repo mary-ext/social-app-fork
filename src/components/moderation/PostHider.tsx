@@ -13,7 +13,7 @@ import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
 import {
 	ModerationDetailsDialog,
-	useModerationDetailsDialogControl,
+	useModerationDetailsDialogHandle,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
@@ -52,7 +52,7 @@ export function PostHider({
 }: Props) {
 	const queryClient = useQueryClient();
 	const [override, setOverride] = useState(false);
-	const control = useModerationDetailsDialogControl();
+	const handle = useModerationDetailsDialogHandle();
 	const blur = modui.blurs[0] || (interpretFilterAsBlur ? getBlurrableFilter(modui) : undefined);
 	const desc = useModerationCauseDescription(blur);
 
@@ -73,9 +73,9 @@ export function PostHider({
 
 	return (
 		<div className={clsx(styles.row, hiderClassName)}>
-			<ModerationDetailsDialog control={control} modcause={blur} />
+			<ModerationDetailsDialog handle={handle} modcause={blur} />
 			<Dialog.Trigger
-				handle={control}
+				handle={handle}
 				className={styles.iconButton}
 				aria-label={m['components.moderation.label.learnMore.aboutWarning']()}
 			>

@@ -24,7 +24,7 @@ export type ExternalPlayerProps = {
 /** Click-to-play iframe embed (youtube/vimeo/spotify/…): thumbnail + play overlay until activated. */
 export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
-	const consentDialogControl = useDialogHandle();
+	const consentDialogHandle = useDialogHandle();
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	const [isActive, setIsActive] = useState(false);
@@ -58,18 +58,18 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 
 	const onPlayPress = useCallback(() => {
 		if (externalEmbedsPrefs?.[params.source] === undefined) {
-			consentDialogControl.open(null);
+			consentDialogHandle.open(null);
 			return;
 		}
 		setIsActive(true);
-	}, [consentDialogControl, externalEmbedsPrefs, params.source]);
+	}, [consentDialogHandle, externalEmbedsPrefs, params.source]);
 
 	const showThumb = !!link.thumb && (!isActive || isLoading);
 
 	return (
 		<>
 			<EmbedConsentDialog
-				handle={consentDialogControl}
+				handle={consentDialogHandle}
 				source={params.source}
 				onAccept={() => setIsActive(true)}
 			/>

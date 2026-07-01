@@ -220,8 +220,8 @@ export const ComposePost = ({
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
 	const textInputRef = useRef<TextInputRef>(null);
-	const discardPromptControl = Prompt.usePromptHandle();
-	const emptyPostsPromptControl = Prompt.usePromptHandle();
+	const discardPromptHandle = Prompt.usePromptHandle();
+	const emptyPostsPromptHandle = Prompt.usePromptHandle();
 	const skipEmptyConfirmedRef = useRef(false);
 	const { mutateAsync: saveDraft, isPending: _isSavingDraft } = useSaveDraftMutation();
 	const { mutate: cleanupPublishedDraft } = useCleanupPublishedDraftMutation();
@@ -624,11 +624,11 @@ export const ComposePost = ({
 			// prompt has something to confirm against.
 			closeAllDialogs({ except: [COMPOSER_DIALOG_ID] });
 			Keyboard.dismiss();
-			discardPromptControl.open(null);
+			discardPromptHandle.open(null);
 			return true;
 		}
 		return false;
-	}, [thread, composerState.draftId, composerState.isDirty, closeAllDialogs, discardPromptControl]);
+	}, [thread, composerState.draftId, composerState.isDirty, closeAllDialogs, discardPromptHandle]);
 
 	useImperativeHandle(cancelRef, () => ({ onPressCancel }));
 
@@ -709,7 +709,7 @@ export const ComposePost = ({
 		const { type: emptyType, filteredThread } = getFilteredThread();
 
 		if (emptyType === 'non-trailing' && !skipEmptyConfirmedRef.current) {
-			emptyPostsPromptControl.open(null);
+			emptyPostsPromptHandle.open(null);
 			return;
 		}
 
@@ -866,7 +866,7 @@ export const ComposePost = ({
 		composerState.originalLocalRefs,
 		currentDid,
 		currentLanguages,
-		emptyPostsPromptControl,
+		emptyPostsPromptHandle,
 		getFilteredThread,
 		initQuote,
 		isPublishing,
@@ -1092,14 +1092,14 @@ export const ComposePost = ({
 
 			{replyTo ? (
 				<Prompt.Basic
-					handle={discardPromptControl}
+					handle={discardPromptHandle}
 					title={m['view.composer.drafts.discard.title']()}
 					confirmButtonCta={m['common.action.discard']()}
 					confirmButtonColor="negative"
 					onConfirm={handleDiscard}
 				/>
 			) : (
-				<Prompt.Outer handle={discardPromptControl}>
+				<Prompt.Outer handle={discardPromptHandle}>
 					<Prompt.Content>
 						<Prompt.TitleText>
 							{allPostsWithinLimit
@@ -1139,7 +1139,7 @@ export const ComposePost = ({
 			)}
 
 			<Prompt.Basic
-				handle={emptyPostsPromptControl}
+				handle={emptyPostsPromptHandle}
 				title={m['view.composer.thread.skipEmpty.title']()}
 				description={m['view.composer.thread.skipEmpty.message']()}
 				confirmButtonCta={m['view.composer.publish.action.anyway']()}
@@ -1192,7 +1192,7 @@ let ComposerPost = memo(function ComposerPost({
 			? m['common.compose.replyPlaceholder']()
 			: m['view.composer.thread.action.addPost']()
 		: m['common.compose.placeholder']();
-	const discardPromptControl = Prompt.usePromptHandle();
+	const discardPromptHandle = Prompt.usePromptHandle();
 
 	const dispatchPost = useCallback(
 		(action: PostAction) => {
@@ -1308,7 +1308,7 @@ let ComposerPost = memo(function ComposerPost({
 								post.embed.link ||
 								post.embed.quote
 							) {
-								discardPromptControl.open(null);
+								discardPromptHandle.open(null);
 							} else {
 								dispatch({
 									type: 'remove_post',
@@ -1320,7 +1320,7 @@ let ComposerPost = memo(function ComposerPost({
 						<ButtonIcon icon={XIcon} />
 					</Button>
 					<Prompt.Basic
-						handle={discardPromptControl}
+						handle={discardPromptHandle}
 						title={m['view.composer.discard.title']()}
 						description={m['view.composer.discard.message']()}
 						onConfirm={() => {

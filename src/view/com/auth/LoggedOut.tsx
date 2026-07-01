@@ -11,7 +11,7 @@ import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 import { atoms as a, tokens, useTheme } from '#/alf';
 
 import { Button, ButtonIcon } from '#/components/Button';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 
 import { m } from '#/paraglide/messages';
@@ -21,7 +21,7 @@ import { SplashScreen } from './SplashScreen';
 export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 	const t = useTheme();
 	const insets = useSafeAreaInsets();
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const { accounts } = useSession();
 	const prefetchProfileQuery = usePrefetchProfileQuery();
@@ -40,8 +40,8 @@ export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 	}, [onDismiss]);
 
 	const showSignIn = useCallback(() => {
-		signinDialogControl.openWithPayload({});
-	}, [signinDialogControl]);
+		signinDialogHandle.openWithPayload({});
+	}, [signinDialogHandle]);
 
 	return (
 		<View

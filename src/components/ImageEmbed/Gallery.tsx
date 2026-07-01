@@ -3,7 +3,7 @@ import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import type { LightboxImage } from '@oomfware/lightbox';
 import { clsx } from 'clsx';
 
-import type { LightboxControl } from '#/components/dialogs/Context';
+import type { LightboxHandle } from '#/components/dialogs/Context';
 import {
 	CAROUSEL_CHAT_MAX_HEIGHT,
 	CAROUSEL_CHAT_MIN_HEIGHT,
@@ -30,13 +30,13 @@ export type GalleryProps = {
 	 * Lightbox handle + the full lib image list; each slide is a detached `Dialog.Trigger` opening at its
 	 * index.
 	 */
-	control: LightboxControl;
+	handle: LightboxHandle;
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 	viewContext?: PostEmbedViewContext;
 };
 
-export function Gallery({ images, control, lightboxImages, onPressIn, viewContext }: GalleryProps) {
+export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext }: GalleryProps) {
 	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const isWithinQuote = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
@@ -157,7 +157,7 @@ export function Gallery({ images, control, lightboxImages, onPressIn, viewContex
 						largeAltBadge={largeAltBadge}
 						onWidthChange={onWidthChange}
 						setItemRef={setItemRef}
-						control={control}
+						handle={handle}
 						lightboxImages={lightboxImages}
 						onPressIn={onPressIn}
 					/>
@@ -176,7 +176,7 @@ function GalleryImage({
 	largeAltBadge,
 	onWidthChange,
 	setItemRef,
-	control,
+	handle,
 	lightboxImages,
 	onPressIn,
 }: {
@@ -188,7 +188,7 @@ function GalleryImage({
 	largeAltBadge: boolean;
 	onWidthChange: (index: number, width: number) => void;
 	setItemRef: (index: number, node: HTMLElement | null) => void;
-	control: LightboxControl;
+	handle: LightboxHandle;
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 }) {
@@ -208,7 +208,7 @@ function GalleryImage({
 
 	return (
 		<Dialog.Trigger
-			handle={control}
+			handle={handle}
 			payload={{ images: lightboxImages, index }}
 			type="button"
 			ref={(node: HTMLElement | null) => setItemRef(index, node)}

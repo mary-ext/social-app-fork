@@ -3,7 +3,7 @@ import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import type { LightboxControl, LightboxPayload } from '#/components/dialogs/Context';
+import type { LightboxHandle, LightboxPayload } from '#/components/dialogs/Context';
 import * as styles from '#/components/ImageEmbed/AutoSizedImage.css';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
@@ -16,7 +16,7 @@ export type AutoSizedImageProps = {
 	crop?: 'constrained' | 'none' | 'square';
 	hideBadge?: boolean;
 	/** Lightbox handle + payload; the image renders as a detached `Dialog.Trigger` that opens it. */
-	control: LightboxControl;
+	handle: LightboxHandle;
 	payload: LightboxPayload;
 	onPressIn?: () => void;
 };
@@ -29,7 +29,7 @@ export function AutoSizedImage({
 	image,
 	crop = 'constrained',
 	hideBadge,
-	control,
+	handle,
 	payload,
 	onPressIn,
 }: AutoSizedImageProps) {
@@ -47,7 +47,7 @@ export function AutoSizedImage({
 
 	return (
 		<Dialog.Trigger
-			handle={control}
+			handle={handle}
 			payload={payload}
 			type="button"
 			className={className}

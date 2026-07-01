@@ -150,16 +150,16 @@ const GalleryItem = ({
 
 	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
 
-	const altTextControl = useDialogHandle();
-	const editControl = useDialogHandle();
+	const altTextHandle = useDialogHandle();
+	const editHandle = useDialogHandle();
 
 	const onImageEdit = () => {
-		editControl.open(null);
+		editHandle.open(null);
 	};
 
 	const onAltTextEdit = () => {
 		Keyboard.dismiss();
-		altTextControl.open(null);
+		altTextHandle.open(null);
 	};
 
 	return (
@@ -174,7 +174,7 @@ const GalleryItem = ({
 				accessibilityLabel={m['view.composer.altText.action.add']()}
 				accessibilityHint=""
 				onPress={onAltTextEdit}
-				style={[styles.altTextControl, altTextControlStyle]}
+				style={[styles.altTextHandle, altTextControlStyle]}
 			>
 				{image.alt.length !== 0 ? (
 					<CheckIcon width={10} style={{ color: t.palette.white }} />
@@ -225,8 +225,8 @@ const GalleryItem = ({
 				contentFit="cover"
 			/>
 			<MediaInsetBorder />
-			<ImageAltTextDialog handle={altTextControl} image={image} onChange={onChange} />
-			<EditImageDialog handle={editControl} image={image} onChange={onChange} />
+			<ImageAltTextDialog handle={altTextHandle} image={image} onChange={onChange} />
+			<EditImageDialog handle={editHandle} image={image} onChange={onChange} />
 		</View>
 	);
 };
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	altTextControl: {
+	altTextHandle: {
 		position: 'absolute',
 		zIndex: 1,
 		borderRadius: 6,

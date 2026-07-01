@@ -1,7 +1,7 @@
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import type { LightboxImage } from '@oomfware/lightbox';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { AutoSizedImage } from '#/components/ImageEmbed/AutoSizedImage';
 import { Gallery } from '#/components/ImageEmbed/Gallery';
 import { type CommonProps, PostEmbedViewContext } from '#/components/Post/Embed/types';
@@ -31,7 +31,7 @@ export function ImageEmbed({
 }: CommonProps & {
 	embed: EmbedType<'images'> | EmbedType<'gallery'>;
 }) {
-	const { lightboxControl } = useGlobalDialogsControlContext();
+	const { lightboxHandle } = useGlobalDialogsHandleContext();
 	// Gallery embeds carry the same image data under different field names (`thumbnail` -> `thumb`);
 	// normalize to `ViewImage` so the carousel and lightbox stay shared with the `images` embed.
 	const images: AppBskyEmbedImages.ViewImage[] =
@@ -64,14 +64,14 @@ export function ImageEmbed({
 								: 'constrained'
 					}
 					hideBadge={viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia}
-					control={lightboxControl}
+					handle={lightboxHandle}
 					payload={{ images: lightboxImages, index: 0 }}
 					onPressIn={onPressIn}
 				/>
 			) : (
 				<Gallery
 					images={images}
-					control={lightboxControl}
+					handle={lightboxHandle}
 					lightboxImages={lightboxImages}
 					onPressIn={onPressIn}
 					viewContext={viewContext}

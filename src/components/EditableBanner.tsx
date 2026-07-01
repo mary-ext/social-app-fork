@@ -32,7 +32,7 @@ export function EditableBanner({
 	onSelectNewBanner: (img: ImageMeta | null) => void;
 }) {
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogControl = useDialogHandle();
+	const editImageDialogHandle = useDialogHandle();
 
 	const onOpenLibrary = useCallback(async () => {
 		const file = await openImagePicker();
@@ -41,14 +41,14 @@ export function EditableBanner({
 		}
 		try {
 			setRawImage(await createComposerImage(file));
-			editImageDialogControl.open(null);
+			editImageDialogHandle.open(null);
 		} catch (e) {
 			// Don't log errors for user-cancelled selection.
 			if (!isCancelledError(e)) {
 				logger.error('Failed to crop banner', { error: e });
 			}
 		}
-	}, [editImageDialogControl]);
+	}, [editImageDialogHandle]);
 
 	const onChangeEditImage = useCallback(
 		async (image: ComposerImage) => {
@@ -83,7 +83,7 @@ export function EditableBanner({
 				</Menu.Popup>
 			</Menu.Root>
 			<EditImageDialog
-				handle={editImageDialogControl}
+				handle={editImageDialogHandle}
 				image={rawImage}
 				onChange={(image) => void onChangeEditImage(image)}
 				aspectRatio={3}

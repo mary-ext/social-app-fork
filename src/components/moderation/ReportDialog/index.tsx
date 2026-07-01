@@ -11,7 +11,7 @@ import { Logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon } from '#/components/icons/Chevron';
 import { PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
@@ -45,20 +45,20 @@ import { parseReportSubject } from './utils/parseReportSubject';
 import { type ReportCategoryConfig, type ReportOption, useReportOptions } from './utils/useReportOptions';
 
 export { type ReportSubject } from './types';
-export { useDialogHandle as useReportDialogControl } from '#/components/web/Dialog';
+export { useDialogHandle as useReportDialogHandle } from '#/components/web/Dialog';
 
 /** Caps the free-text context; submission is blocked past this and the counter turns negative. */
 const MAX_DETAILS_LENGTH = 300;
 
-export function useGlobalReportDialogControl() {
-	return useGlobalDialogsControlContext().reportDialogControl;
+export function useGlobalReportDialogHandle() {
+	return useGlobalDialogsHandleContext().reportDialogHandle;
 }
 
-/** The app-wide report dialog, opened imperatively with `reportDialogControl.openWithPayload({ subject })`. */
+/** the app-wide report dialog, opened imperatively with `reportDialogHandle.openWithPayload({ subject })`. */
 export function GlobalReportDialog() {
-	const control = useGlobalReportDialogControl();
+	const handle = useGlobalReportDialogHandle();
 	return (
-		<Dialog.Root handle={control}>
+		<Dialog.Root handle={handle}>
 			{({ payload }: { payload: { subject: ReportSubject } | undefined }) =>
 				payload ? (
 					<Dialog.Popup
@@ -66,7 +66,7 @@ export function GlobalReportDialog() {
 						label={m['components.moderation.report.a11yLabel']()}
 						scroll="body"
 					>
-						<Content close={() => control.close()} subject={payload.subject} />
+						<Content close={() => handle.close()} subject={payload.subject} />
 					</Dialog.Popup>
 				) : null
 			}
@@ -75,19 +75,19 @@ export function GlobalReportDialog() {
 }
 
 export function ReportDialog({
-	control,
+	handle,
 	onAfterSubmit,
 	onClose,
 	subject,
 }: {
-	control: Dialog.DialogHandle;
+	handle: Dialog.DialogHandle;
 	onAfterSubmit?: () => void;
 	onClose?: () => void;
 	subject?: ReportSubject;
 }) {
 	return (
 		<Dialog.Root
-			handle={control}
+			handle={handle}
 			onOpenChange={(open) => {
 				if (!open) {
 					onClose?.();
@@ -99,7 +99,7 @@ export function ReportDialog({
 				label={m['components.moderation.report.a11yLabel']()}
 				scroll="body"
 			>
-				<Content close={() => control.close()} onAfterSubmit={onAfterSubmit} subject={subject} />
+				<Content close={() => handle.close()} onAfterSubmit={onAfterSubmit} subject={subject} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -121,10 +121,7 @@ function Content({
 	return <Inner close={close} onAfterSubmit={onAfterSubmit} subject={parsed} />;
 }
 
-/**
- * Shown only if a developer wired the dialog with an unrecognizable subject — a graceful fallback rather than
- * an empty sheet.
- */
+/** graceful fallback shown when the dialog receives an unrecognizable subject. */
 function Invalid({ close }: { close: () => void }) {
 	return (
 		<>

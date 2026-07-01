@@ -41,7 +41,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const convo = useConvoActive();
 
 	const deleteControl = usePromptControl();
-	const reportControl = useDialogHandle();
+	const reportHandle = useDialogHandle();
 	const afterReportControl = usePromptControl();
 	const reactionsControl = useDialogControl();
 
@@ -64,9 +64,9 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const openReportMessage = useCallback(
 		(message: ChatBskyConvoDefs.MessageView, senderProfile: AnyProfileView | undefined) => {
 			setReportTarget({ message, senderProfile });
-			reportControl.open(null);
+			reportHandle.open(null);
 		},
-		[reportControl],
+		[reportHandle],
 	);
 
 	const openReactions = useCallback((message: ChatBskyConvoDefs.MessageView) => {
@@ -139,7 +139,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 		<Context.Provider value={ctx}>
 			{children}
 			<ReportDialog
-				control={reportControl}
+				handle={reportHandle}
 				subject={reportSubject}
 				onAfterSubmit={onAfterReportSubmit}
 				onClose={() => setReportTarget(null)}

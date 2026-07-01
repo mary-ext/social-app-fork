@@ -16,12 +16,12 @@ type Props = {
 };
 
 export function SelectGifBtn({ onClose, onSelectGif, disabled }: Props) {
-	const control = Dialog.useDialogHandle();
+	const handle = Dialog.useDialogHandle();
 
 	return (
 		<>
 			<Dialog.Trigger
-				handle={control}
+				handle={handle}
 				render={
 					<ComposerToolbarButton
 						icon={GifIcon}
@@ -33,7 +33,7 @@ export function SelectGifBtn({ onClose, onSelectGif, disabled }: Props) {
 					/>
 				}
 			/>
-			<GifPickerDialog handle={control} onClose={onClose} onSelectGif={onSelectGif} />
+			<GifPickerDialog handle={handle} onClose={onClose} onSelectGif={onSelectGif} />
 		</>
 	);
 }

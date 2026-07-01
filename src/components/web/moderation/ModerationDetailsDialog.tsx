@@ -20,30 +20,26 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './ModerationDetailsDialog.css';
 
-export { useDialogHandle as useModerationDetailsDialogControl } from '#/components/web/Dialog';
+export { useDialogHandle as useModerationDetailsDialogHandle } from '#/components/web/Dialog';
 
 export interface ModerationDetailsDialogProps {
-	control: Dialog.DialogHandle;
+	handle: Dialog.DialogHandle;
 	modcause?: AppModerationCause | ModerationCause;
 }
 
-/**
- * Web-native moderation-details dialog. Open it declaratively with a `Dialog.Trigger` wired to the same
- * `control` handle (see `ContentHider`); the handle is also used to close the dialog when the source-profile
- * link navigates away.
- */
-export function ModerationDetailsDialog({ control, modcause }: ModerationDetailsDialogProps) {
+/** shows the details behind a moderation cause. */
+export function ModerationDetailsDialog({ handle, modcause }: ModerationDetailsDialogProps) {
 	return (
-		<Dialog.Root handle={control}>
+		<Dialog.Root handle={handle}>
 			<Dialog.Popup className={styles.popup} label={m['common.moderation.detailsTitle']()}>
-				<ModerationDetailsDialogInner control={control} modcause={modcause} />
+				<ModerationDetailsDialogInner handle={handle} modcause={modcause} />
 				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
-function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDialogProps) {
+function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDialogProps) {
 	const desc = useModerationCauseDescription(modcause);
 	const { currentAccount } = useSession();
 	const now = useConstant(Date.now);
@@ -150,7 +146,7 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 										t0: ({ children }) => (
 											<InlineLinkText
 												label={sourceName}
-												onPress={() => control.close()}
+												onPress={() => handle.close()}
 												to={makeProfileLink({ did: modcause.label.src })}
 											>
 												{children}

@@ -35,7 +35,7 @@ import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
@@ -48,7 +48,7 @@ import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
-import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
+import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
@@ -239,7 +239,7 @@ function Header({
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
 	const setActiveStarterPack = useSetActiveStarterPack();
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const [isProcessing, setIsProcessing] = useState(false);
 
@@ -389,7 +389,7 @@ function Header({
 								setActiveStarterPack({
 									uri: starterPack.uri,
 								});
-								signinDialogControl.openWithPayload({});
+								signinDialogHandle.openWithPayload({});
 							}}
 							variant="solid"
 							color="primary"
@@ -423,7 +423,7 @@ function OverflowMenu({
 }) {
 	const t = useTheme();
 	const { currentAccount } = useSession();
-	const reportDialogControl = useReportDialogControl();
+	const reportDialogHandle = useReportDialogHandle();
 	const deleteHandle = Prompt.usePromptHandle();
 	const convertToListHandle = Dialog.useDialogHandle();
 	const navigation = useNavigation<NavigationProp>();
@@ -518,7 +518,7 @@ function OverflowMenu({
 
 							<Menu.Item
 								label={m['screens.starterPack.report']()}
-								onClick={() => reportDialogControl.open(null)}
+								onClick={() => reportDialogHandle.open(null)}
 							>
 								<Menu.ItemText>{m['screens.starterPack.report']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={CircleInfo} position="right" />
@@ -529,7 +529,7 @@ function OverflowMenu({
 			</Menu.Root>
 			{starterPack.list && (
 				<ReportDialog
-					control={reportDialogControl}
+					handle={reportDialogHandle}
 					subject={
 						{
 							...starterPack,

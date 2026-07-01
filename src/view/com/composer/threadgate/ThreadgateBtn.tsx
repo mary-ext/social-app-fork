@@ -37,7 +37,7 @@ export function ThreadgateBtn({
 	threadgateAllowUISettings: ThreadgateAllowUISetting[];
 	onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void;
 }) {
-	const control = Dialog.useDialogHandle();
+	const handle = Dialog.useDialogHandle();
 
 	const { data: preferences } = usePreferencesQuery();
 	const [persist, setPersist] = useState(false);
@@ -70,7 +70,7 @@ export function ThreadgateBtn({
 			}
 		},
 		onSettled: () => {
-			control.close();
+			handle.close();
 			setPersist(false);
 		},
 	});
@@ -86,7 +86,7 @@ export function ThreadgateBtn({
 	return (
 		<>
 			<Dialog.Trigger
-				handle={control}
+				handle={handle}
 				render={
 					<Button color="secondary" size="small" label={label}>
 						<ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
@@ -96,7 +96,7 @@ export function ThreadgateBtn({
 				}
 			/>
 			<PostInteractionSettingsControlledDialog
-				handle={control}
+				handle={handle}
 				onSave={() => {
 					if (persist) {
 						persistChanges({
@@ -104,7 +104,7 @@ export function ThreadgateBtn({
 							postgateEmbeddingRules: postgate.embeddingRules ?? [],
 						});
 					} else {
-						control.close();
+						handle.close();
 					}
 				}}
 				isSaving={isSaving}

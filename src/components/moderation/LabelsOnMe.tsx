@@ -5,7 +5,7 @@ import { clsx } from 'clsx';
 import { useSession } from '#/state/session';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { LabelsOnMeDialog, useLabelsOnMeDialogControl } from '#/components/moderation/LabelsOnMeDialog';
+import { LabelsOnMeDialog, useLabelsOnMeDialogHandle } from '#/components/moderation/LabelsOnMeDialog';
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
@@ -25,7 +25,7 @@ export function LabelsOnMe({
 	type: 'account' | 'content';
 }) {
 	const { currentAccount } = useSession();
-	const control = useLabelsOnMeDialogControl();
+	const handle = useLabelsOnMeDialogHandle();
 
 	if (!labels || !currentAccount) {
 		return null;
@@ -39,9 +39,9 @@ export function LabelsOnMe({
 
 	return (
 		<div className={clsx(styles.row, className)}>
-			<LabelsOnMeDialog control={control} labels={filtered} type={type} />
+			<LabelsOnMeDialog handle={handle} labels={filtered} type={type} />
 			<Dialog.Trigger
-				handle={control}
+				handle={handle}
 				render={
 					<Button
 						color="secondary"

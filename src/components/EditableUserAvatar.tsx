@@ -38,7 +38,7 @@ export function EditableUserAvatar({
 	onSelectNewAvatar: (img: ImageMeta | null) => void;
 }) {
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogControl = useDialogHandle();
+	const editImageDialogHandle = useDialogHandle();
 
 	const circular = type !== 'algo' && type !== 'list';
 	const radius = circular ? '50%' : size > 32 ? '8px' : '3px';
@@ -50,14 +50,14 @@ export function EditableUserAvatar({
 		}
 		try {
 			setRawImage(await createComposerImage(file));
-			editImageDialogControl.open(null);
+			editImageDialogHandle.open(null);
 		} catch (e) {
 			// Don't log errors for user-cancelled selection.
 			if (!isCancelledError(e)) {
 				logger.error('Failed to crop avatar', { error: e });
 			}
 		}
-	}, [editImageDialogControl]);
+	}, [editImageDialogHandle]);
 
 	const onChangeEditImage = useCallback(
 		async (image: ComposerImage) => {
@@ -102,7 +102,7 @@ export function EditableUserAvatar({
 				</Menu.Popup>
 			</Menu.Root>
 			<EditImageDialog
-				handle={editImageDialogControl}
+				handle={editImageDialogHandle}
 				image={rawImage}
 				onChange={(image) => void onChangeEditImage(image)}
 				aspectRatio={1}

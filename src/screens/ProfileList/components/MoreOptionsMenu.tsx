@@ -22,7 +22,7 @@ import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/compo
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Menu from '#/components/Menu';
-import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
+import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
@@ -40,7 +40,7 @@ export function MoreOptionsMenu({
 	const { currentAccount } = useSession();
 	const editListHandle = Dialog.useDialogHandle();
 	const deleteListPromptHandle = Prompt.usePromptHandle();
-	const reportDialogControl = useReportDialogControl();
+	const reportDialogHandle = useReportDialogHandle();
 	const navigation = useNavigation<NavigationProp>();
 
 	const { mutateAsync: removeSavedFeed } = useRemoveFeedMutation();
@@ -169,7 +169,7 @@ export function MoreOptionsMenu({
 						<Menu.Group>
 							<Menu.Item
 								label={m['screens.profileList.report.list']()}
-								onClick={() => reportDialogControl.open(null)}
+								onClick={() => reportDialogHandle.open(null)}
 							>
 								<Menu.ItemText>{m['screens.profileList.report.list']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={WarningIcon} />
@@ -229,7 +229,7 @@ export function MoreOptionsMenu({
 				confirmButtonColor="negative"
 			/>
 			<ReportDialog
-				control={reportDialogControl}
+				handle={reportDialogHandle}
 				subject={
 					{
 						...list,

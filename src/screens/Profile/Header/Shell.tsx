@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
@@ -31,7 +31,7 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 		meta: { hideBackButton, isMe, isPlaceholderProfile, live },
 		state: { moderation, profile },
 	} = useProfileHeader();
-	const { lightboxControl } = useGlobalDialogsControlContext();
+	const { lightboxHandle } = useGlobalDialogsHandleContext();
 	const navigation = useNavigation<NavigationProp>();
 	const liveStatusHandle = useDialogHandle();
 
@@ -40,9 +40,9 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 
 	const openLightbox = useCallback(
 		(uri: string) => {
-			lightboxControl.openWithPayload({ images: [{ src: uri }], index: 0 });
+			lightboxHandle.openWithPayload({ images: [{ src: uri }], index: 0 });
 		},
-		[lightboxControl],
+		[lightboxHandle],
 	);
 
 	const onPressBack = useCallback(() => {

@@ -30,7 +30,7 @@ export function DraftItem({
 	onSelect: (draft: DraftSummary) => void;
 	onDelete: (draft: DraftSummary) => void;
 }) {
-	const discardPromptControl = Prompt.usePromptHandle();
+	const discardPromptHandle = Prompt.usePromptHandle();
 	const post = draft.posts[0]!;
 
 	const mediaExistsOnOtherDevice = !draft.meta.isOriginatingDevice && draft.meta.hasMissingMedia;
@@ -115,7 +115,7 @@ export function DraftItem({
 			    never reaches the card's open handler. */}
 			<div className={styles.menuSlot}>
 				<Prompt.Trigger
-					handle={discardPromptControl}
+					handle={discardPromptHandle}
 					className={styles.menuButton}
 					aria-label={m['common.a11y.moreOptions']()}
 				>
@@ -123,7 +123,7 @@ export function DraftItem({
 				</Prompt.Trigger>
 			</div>
 			<Prompt.Basic
-				handle={discardPromptControl}
+				handle={discardPromptHandle}
 				title={m['view.composer.drafts.discard.title']()}
 				description={m['view.composer.drafts.discard.message']()}
 				onConfirm={handleDelete}

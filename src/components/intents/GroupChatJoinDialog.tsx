@@ -23,7 +23,7 @@ import { logger } from '#/logger';
 import { Trans } from '#/locale/Trans';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
 import { ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon } from '#/components/icons/ChainLink';
@@ -45,12 +45,11 @@ import { colors } from '#/styles/colors';
 import * as css from './GroupChatJoinDialog.css';
 
 /**
- * The single app-wide group-chat join dialog. Mounted inside the navigation container (see ShellInner) and
- * opened imperatively via `groupChatJoinControl.openWithPayload({ code })` — from a `bsky.app/chat/<code>`
- * link, an invite embed's join button, or a direct `/chat/<code>` page load.
+ * the single app-wide group-chat join dialog, opened imperatively from a `bsky.app/chat/<code>` link or
+ * invite.
  */
 export function GroupChatJoinDialog() {
-	const { groupChatJoinControl } = useGlobalDialogsControlContext();
+	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	// a direct load of /chat/<code> renders Home (see routes) — open the join dialog over it. The shell closes
 	// all dialogs on the navigator's initial 'state' settle, so opening on mount would be dismissed at once;
@@ -64,24 +63,24 @@ export function GroupChatJoinDialog() {
 		const unsubscribe = navigation.addListener('state', () => {
 			unsubscribe();
 			setTimeout(() => {
-				groupChatJoinControl.openWithPayload({ code });
+				groupChatJoinHandle.openWithPayload({ code });
 				// swap the now-handled /chat/<code> URL for Home; replaceState doesn't fire a navigator
 				// 'state' event, so it won't trip closeAllActiveElements and dismiss the dialog we just opened.
 				window.history.replaceState(null, '', '/');
 			}, 0);
 		});
 		return unsubscribe;
-	}, [groupChatJoinControl, navigation]);
+	}, [groupChatJoinHandle, navigation]);
 
 	return (
-		<Dialog.Root handle={groupChatJoinControl}>
+		<Dialog.Root handle={groupChatJoinHandle}>
 			{({ payload }) => (
 				<Dialog.Popup label={m['components.intents.join.action.join']()} size="narrow">
 					<div className={css.inner}>
 						{/* remount per code so a reopen with a different invite refetches from a clean state */}
 						<GroupChatJoinDialogContent
 							key={payload?.code}
-							handle={groupChatJoinControl}
+							handle={groupChatJoinHandle}
 							code={payload?.code}
 						/>
 					</div>

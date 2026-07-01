@@ -7,18 +7,18 @@ import { atoms as a } from '#/alf';
 
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { Button, ButtonText } from '#/components/Button';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
 
 let NavSignInCard = ({}: {}): React.ReactNode => {
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const showSignIn = useCallback(() => {
-		signinDialogControl.openWithPayload({});
-	}, [signinDialogControl]);
+		signinDialogHandle.openWithPayload({});
+	}, [signinDialogHandle]);
 
 	return (
 		<View style={[{ maxWidth: 245 }]}>

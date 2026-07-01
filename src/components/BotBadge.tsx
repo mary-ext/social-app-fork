@@ -29,7 +29,7 @@ export function BotBadge({
 }
 
 export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; width: number }) {
-	const control = Dialog.useDialogHandle();
+	const handle = Dialog.useDialogHandle();
 
 	if (!isBotAccount(profile)) {
 		return null;
@@ -40,12 +40,12 @@ export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; wi
 			<Dialog.Trigger
 				aria-label={m['common.account.automated']()}
 				className={css.button}
-				handle={control}
+				handle={handle}
 				onClick={(e) => e.stopPropagation()}
 			>
 				<RobotIcon width={width} fill="currentColor" />
 			</Dialog.Trigger>
-			<BotAccountAlert handle={control} profile={profile} />
+			<BotAccountAlert handle={handle} profile={profile} />
 		</>
 	);
 }

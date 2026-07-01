@@ -18,7 +18,7 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import {
@@ -278,10 +278,10 @@ function OtherAccountRow({
 }
 
 function AddAccountRow({ className }: { className?: string }) {
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const onAddAnotherAccount = () => {
-		signinDialogControl.openWithPayload({ showStoredAccounts: false });
+		signinDialogHandle.openWithPayload({ showStoredAccounts: false });
 	};
 
 	return (

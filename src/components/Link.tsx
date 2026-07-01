@@ -22,7 +22,7 @@ import { Text, type TextProps } from '#/components/Typography';
 
 import { router } from '#/routes';
 
-import { useGlobalDialogsControlContext } from './dialogs/Context';
+import { useGlobalDialogsHandleContext } from './dialogs/Context';
 
 type WebTextStyle = TextStyle & {
 	outline?: number;
@@ -154,7 +154,7 @@ export function useLink({
 	}
 
 	const isExternal = isExternalUrl(href);
-	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
+	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
 	const openLink = useOpenLink();
 
 	const onPress = useCallback(
@@ -170,7 +170,7 @@ export function useLink({
 			e.preventDefault();
 
 			if (requiresWarning) {
-				linkWarningDialogControl.openWithPayload({
+				linkWarningDialogHandle.openWithPayload({
 					displayText,
 					href,
 				});
@@ -211,7 +211,7 @@ export function useLink({
 			openLink,
 			action,
 			navigation,
-			linkWarningDialogControl,
+			linkWarningDialogHandle,
 		],
 	);
 

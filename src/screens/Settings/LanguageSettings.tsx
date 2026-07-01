@@ -40,7 +40,7 @@ export function LanguageSettingsScreen({}: Props) {
 		[setLangPrefs],
 	);
 
-	const contentLanguagePrefsControl = useDialogHandle();
+	const contentLanguagePrefsHandle = useDialogHandle();
 
 	const onChangeAppLanguage = (value: string) => {
 		if (value && LOCALE !== value) {
@@ -114,7 +114,7 @@ export function LanguageSettingsScreen({}: Props) {
 						</Settings.SelectRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.language.content.select']()}
-							onPress={() => contentLanguagePrefsControl.open(null)}
+							onPress={() => contentLanguagePrefsHandle.open(null)}
 						>
 							<Settings.Icon icon={FilterIcon} />
 							<Settings.Label
@@ -126,7 +126,7 @@ export function LanguageSettingsScreen({}: Props) {
 				</Settings.List>
 
 				<LanguageSelectDialog
-					handle={contentLanguagePrefsControl}
+					handle={contentLanguagePrefsHandle}
 					titleText={m['screens.settings.language.content.select']()}
 					subtitleText={m['screens.settings.language.noneSelectedHint']()}
 					currentLanguages={contentLanguages}

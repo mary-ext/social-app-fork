@@ -8,7 +8,7 @@ import { postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
 
 import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -42,17 +42,17 @@ export interface ComposerOpts {
 }
 
 /**
- * Registry id for the singleton composer dialog. A stable constant (rather than a `useId`) so the discard
+ * registry id for the singleton composer dialog. a stable constant (rather than a `useId`) so the discard
  * flow can `closeAllDialogs({ except: [COMPOSER_DIALOG_ID] })` without threading an id through context.
  */
 export const COMPOSER_DIALOG_ID = 'composer';
 
 /**
- * The composer is a global ALF dialog (see `composerDialogControl` in `#/components/dialogs/Context`); these
- * hooks are the thin imperative API over that control.
+ * thin imperative API over the global composer dialog (see `composerDialogHandle` in
+ * `#/components/dialogs/Context`).
  */
 export function useOpenComposer() {
-	const { composerDialogControl } = useGlobalDialogsControlContext();
+	const { composerDialogHandle } = useGlobalDialogsHandleContext();
 	const queryClient = useQueryClient();
 
 	const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
@@ -82,22 +82,22 @@ export function useOpenComposer() {
 			return;
 		}
 		// Never replace an already open composer.
-		if (composerDialogControl.isOpen) {
+		if (composerDialogHandle.isOpen) {
 			return;
 		}
-		composerDialogControl.openWithPayload(opts);
+		composerDialogHandle.openWithPayload(opts);
 	});
 
 	return { openComposer };
 }
 
 export function useComposerControls() {
-	const { composerDialogControl } = useGlobalDialogsControlContext();
+	const { composerDialogHandle } = useGlobalDialogsHandleContext();
 
 	const closeComposer = useNonReactiveCallback(() => {
-		const wasOpen = composerDialogControl.isOpen;
+		const wasOpen = composerDialogHandle.isOpen;
 		if (wasOpen) {
-			composerDialogControl.close();
+			composerDialogHandle.close();
 		}
 		return wasOpen;
 	});

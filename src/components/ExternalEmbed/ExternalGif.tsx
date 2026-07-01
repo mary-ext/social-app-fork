@@ -22,7 +22,7 @@ export type ExternalGifProps = {
 /** Click-to-play giphy gif: swaps a static thumbnail for the animated source on activation. */
 export function ExternalGif({ link, params }: ExternalGifProps) {
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
-	const consentDialogControl = useDialogHandle();
+	const consentDialogHandle = useDialogHandle();
 
 	const [isPlayerActive, setIsPlayerActive] = useState(false);
 	const [isPrefetched, setIsPrefetched] = useState(false);
@@ -37,7 +37,7 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 
 	const onPlayPress = useCallback(() => {
 		if (externalEmbedsPrefs?.[params.source] === undefined) {
-			consentDialogControl.open(null);
+			consentDialogHandle.open(null);
 			return;
 		}
 		if (!isPlayerActive) {
@@ -45,7 +45,7 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 			return;
 		}
 		setIsAnimating((prev) => !prev);
-	}, [consentDialogControl, externalEmbedsPrefs, isPlayerActive, load, params.source]);
+	}, [consentDialogHandle, externalEmbedsPrefs, isPlayerActive, load, params.source]);
 
 	// while paused or not yet prefetched the static thumb stands in for the animation (web can't pause a gif).
 	const showOverlay = !isPrefetched || !isAnimating;
@@ -53,7 +53,7 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 
 	return (
 		<>
-			<EmbedConsentDialog handle={consentDialogControl} source={params.source} onAccept={load} />
+			<EmbedConsentDialog handle={consentDialogHandle} source={params.source} onAccept={load} />
 			<button
 				type="button"
 				className={styles.button}

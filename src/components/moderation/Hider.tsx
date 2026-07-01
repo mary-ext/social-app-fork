@@ -8,7 +8,7 @@ import {
 
 import {
 	ModerationDetailsDialog,
-	useModerationDetailsDialogControl,
+	useModerationDetailsDialogHandle,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
 type Context = {
@@ -37,7 +37,7 @@ export function Outer({
 	allowOverride?: boolean;
 	modui: DisplayRestrictions | undefined;
 }>) {
-	const control = useModerationDetailsDialogControl();
+	const handle = useModerationDetailsDialogHandle();
 	const blur = modui?.blurs[0];
 	const [isContentVisible, setIsContentVisible] = useState(isContentVisibleInitialState || !blur);
 	const info = useModerationCauseDescription(blur);
@@ -53,7 +53,7 @@ export function Outer({
 	};
 
 	const showInfoDialog = () => {
-		control.open(null);
+		handle.open(null);
 	};
 
 	const onSetContentVisible = (show: boolean) => {
@@ -72,7 +72,7 @@ export function Outer({
 	return (
 		<Context.Provider value={ctx}>
 			{children}
-			<ModerationDetailsDialog control={control} modcause={blur} />
+			<ModerationDetailsDialog handle={handle} modcause={blur} />
 		</Context.Provider>
 	);
 }

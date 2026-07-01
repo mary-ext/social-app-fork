@@ -17,7 +17,7 @@ import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/componen
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
 import { ContentHider } from '#/components/moderation/ContentHider';
-import { useGlobalReportDialogControl } from '#/components/moderation/ReportDialog';
+import { useGlobalReportDialogHandle } from '#/components/moderation/ReportDialog';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
@@ -92,7 +92,7 @@ export function LiveStatus({
 }) {
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
-	const reportDialogControl = useGlobalReportDialogControl();
+	const reportDialogHandle = useGlobalReportDialogHandle();
 
 	const statusModeration = useMemo(() => {
 		if (!moderationOpts) return undefined;
@@ -101,13 +101,13 @@ export function LiveStatus({
 
 	const onReport = useCallback(() => {
 		onRequestClose?.();
-		reportDialogControl.openWithPayload({
+		reportDialogHandle.openWithPayload({
 			subject: {
 				...status,
 				$type: 'app.bsky.actor.defs#statusView',
 			},
 		});
-	}, [onRequestClose, reportDialogControl, status]);
+	}, [onRequestClose, reportDialogHandle, status]);
 
 	const thumb = embed.external.thumb;
 

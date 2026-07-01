@@ -30,7 +30,7 @@ export function PostLanguageSelect({
 }) {
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
-	const languageDialogControl = useDialogHandle();
+	const languageDialogHandle = useDialogHandle();
 
 	const dedupedHistory = Array.from(new Set([...langPrefs.postLanguageHistory, langPrefs.postLanguage]));
 
@@ -49,7 +49,7 @@ export function PostLanguageSelect({
 		<LanguageSelectDialog
 			titleText={m['view.composer.language.chooseTitle']()}
 			subtitleText={m['view.composer.language.selectHint']({ max: MAX_POST_LANGUAGES })}
-			handle={languageDialogControl}
+			handle={languageDialogHandle}
 			currentLanguages={currentLanguages}
 			onSelectLanguages={onSelectLanguages}
 			maxLanguages={MAX_POST_LANGUAGES}
@@ -64,7 +64,7 @@ export function PostLanguageSelect({
 				<LanguageButton
 					label={m['view.composer.language.a11y.selection']()}
 					nudgeAt={nudgeAt}
-					onClick={() => languageDialogControl.open(null)}
+					onClick={() => languageDialogHandle.open(null)}
 				/>
 				{dialog}
 			</>
@@ -108,7 +108,7 @@ export function PostLanguageSelect({
 					<Menu.Separator />
 					<Menu.Item
 						label={m['view.composer.language.more']()}
-						onClick={() => languageDialogControl.open(null)}
+						onClick={() => languageDialogHandle.open(null)}
 					>
 						<Menu.ItemText>{m['view.composer.language.more']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={ChevronRightIcon} position="right" />

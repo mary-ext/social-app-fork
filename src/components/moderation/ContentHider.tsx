@@ -21,7 +21,7 @@ import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
 import {
 	ModerationDetailsDialog,
-	useModerationDetailsDialogControl,
+	useModerationDetailsDialogHandle,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
@@ -87,7 +87,7 @@ function ContentHiderActive({
 	children?: ReactNode;
 }) {
 	const [override, setOverride] = useState(false);
-	const control = useModerationDetailsDialogControl();
+	const handle = useModerationDetailsDialogHandle();
 	const { labelDefs } = useLabelDefinitions();
 	const globalLabelStrings = useGlobalLabelStrings();
 	const blur = modui.blurs[0]!;
@@ -175,10 +175,10 @@ function ContentHiderActive({
 			onOpenChange={(open) => setOverride(open)}
 			className={clsx(styles.activeOuter, className, activeClassName)}
 		>
-			<ModerationDetailsDialog control={control} modcause={blur} />
+			<ModerationDetailsDialog handle={handle} modcause={blur} />
 			{modui.noOverride ? (
 				// noOverride content can never be revealed; its trigger opens the details dialog instead of toggling.
-				<Dialog.Trigger handle={control} className={styles.blurButton} aria-label={desc.name}>
+				<Dialog.Trigger handle={handle} className={styles.blurButton} aria-label={desc.name}>
 					{triggerInner}
 				</Dialog.Trigger>
 			) : (
@@ -188,7 +188,7 @@ function ContentHiderActive({
 			)}
 			{desc.source && blur.type === ModerationCauseType.Label && !override && (
 				<Dialog.Trigger
-					handle={control}
+					handle={handle}
 					className={styles.learnMoreButton}
 					aria-label={m['components.moderation.label.learnMore.aboutContent']()}
 				>

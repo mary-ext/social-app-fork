@@ -31,10 +31,10 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './LabelsOnMeDialog.css';
 
-export { useDialogHandle as useLabelsOnMeDialogControl } from '#/components/web/Dialog';
+export { useDialogHandle as useLabelsOnMeDialogHandle } from '#/components/web/Dialog';
 
 export interface LabelsOnMeDialogProps {
-	control: Dialog.DialogHandle;
+	handle: Dialog.DialogHandle;
 	labels: ComAtprotoLabelDefs.Label[];
 	type: 'account' | 'content';
 }
@@ -42,7 +42,7 @@ export interface LabelsOnMeDialogProps {
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
 	const isAccount = props.type === 'account';
 	return (
-		<Dialog.Root handle={props.control}>
+		<Dialog.Root handle={props.handle}>
 			<Dialog.Popup
 				label={
 					isAccount
@@ -57,7 +57,7 @@ export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
 	);
 }
 
-function LabelsOnMeDialogInner({ control, labels, type }: LabelsOnMeDialogProps) {
+function LabelsOnMeDialogInner({ handle, labels, type }: LabelsOnMeDialogProps) {
 	const { currentAccount } = useSession();
 	const [appealingLabel, setAppealingLabel] = useState<ComAtprotoLabelDefs.Label | undefined>(undefined);
 	const isAccount = type === 'account';
@@ -69,11 +69,7 @@ function LabelsOnMeDialogInner({ control, labels, type }: LabelsOnMeDialogProps)
 	return (
 		<div className={styles.main}>
 			{appealingLabel ? (
-				<AppealForm
-					control={control}
-					label={appealingLabel}
-					onPressBack={() => setAppealingLabel(undefined)}
-				/>
+				<AppealForm handle={handle} label={appealingLabel} onPressBack={() => setAppealingLabel(undefined)} />
 			) : (
 				<>
 					<Text className={styles.title} size="_2xl" weight="bold">
@@ -91,7 +87,7 @@ function LabelsOnMeDialogInner({ control, labels, type }: LabelsOnMeDialogProps)
 						{labels.map((label) => (
 							<Label
 								key={`${label.val}-${label.src}`}
-								control={control}
+								handle={handle}
 								isSelfLabel={label.src === currentAccount?.did}
 								label={label}
 								onPressAppeal={setAppealingLabel}
@@ -105,12 +101,12 @@ function LabelsOnMeDialogInner({ control, labels, type }: LabelsOnMeDialogProps)
 }
 
 function Label({
-	control,
+	handle,
 	isSelfLabel,
 	label,
 	onPressAppeal,
 }: {
-	control: Dialog.DialogHandle;
+	handle: Dialog.DialogHandle;
 	isSelfLabel: boolean;
 	label: ComAtprotoLabelDefs.Label;
 	onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void;
@@ -154,7 +150,7 @@ function Label({
 									t0: ({ children }) => (
 										<InlineLinkText
 											label={sourceName}
-											onPress={() => control.close()}
+											onPress={() => handle.close()}
 											to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
 										>
 											{children}
@@ -176,11 +172,11 @@ function Label({
 }
 
 function AppealForm({
-	control,
+	handle,
 	label,
 	onPressBack,
 }: {
-	control: Dialog.DialogHandle;
+	handle: Dialog.DialogHandle;
 	label: ComAtprotoLabelDefs.Label;
 	onPressBack: () => void;
 }) {
@@ -220,7 +216,7 @@ function AppealForm({
 			logger.error('Failed to submit label appeal', { message: err });
 		},
 		onSuccess: () => {
-			control.close();
+			handle.close();
 			Toast.show(m['common.appeal.submittedToast']());
 		},
 	});
@@ -241,7 +237,7 @@ function AppealForm({
 							t0: ({ children }) => (
 								<InlineLinkText
 									label={sourceName}
-									onPress={() => control.close()}
+									onPress={() => handle.close()}
 									size="md"
 									to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
 								>

@@ -9,7 +9,7 @@ import type { SessionAccount, SessionApiContext, SessionStateContext } from '#/s
 
 import { logger } from '#/logger';
 
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 
 import { auth, type AuthSession } from '#/storage';
 
@@ -363,17 +363,17 @@ export function useSessionApi() {
 
 export function useRequireAuth() {
 	const { hasSession } = useSession();
-	const { signinDialogControl } = useGlobalDialogsControlContext();
+	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	return useCallback(
 		(fn: () => unknown) => {
 			if (hasSession) {
 				fn();
 			} else {
-				signinDialogControl.openWithPayload({});
+				signinDialogHandle.openWithPayload({});
 			}
 		},
-		[hasSession, signinDialogControl],
+		[hasSession, signinDialogHandle],
 	);
 }
 
