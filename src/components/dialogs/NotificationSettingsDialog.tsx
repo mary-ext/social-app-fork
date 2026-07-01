@@ -69,10 +69,11 @@ function Inner({
 				<Text size="lg" weight="semiBold">
 					{titleText}
 				</Text>
-				<Text color="textContrastMedium" size="sm">
+				<Text color="textContrastMedium" size="md">
 					{subtitleText}
 				</Text>
 			</div>
+
 			{isError ? (
 				<div className={styles.errorWrap}>
 					<Admonition type="error">{m['common.notifications.loadSettingsError']()}</Admonition>
