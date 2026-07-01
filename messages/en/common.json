@@ -118,6 +118,7 @@
 			}
 		}
 	],
+	"common.chat.optionsLabel": "Chat options",
 	"common.chat.ownerFollowsHint": "Only people the chat owner follows can join",
 	"common.chat.settingsLabel": "Chat settings",
 	"common.chat.settingsTitle": "Group chat settings",

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
@@ -15,6 +15,7 @@ import { useMessagesEventBus } from '#/state/messages/events';
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
+import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
 import { logger } from '#/logger';
 
@@ -30,6 +31,7 @@ import { NewChat } from '#/components/dms/dialogs/NewChatDialog';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import { BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon } from '#/components/icons/Bubble';
+import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon } from '#/components/icons/CircleCheck';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon } from '#/components/icons/Inbox';
 import {
@@ -38,9 +40,11 @@ import {
 } from '#/components/icons/Message';
 import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
 import * as Layout from '#/components/Layout';
-import { Link } from '#/components/Link';
 import { ListFooter } from '#/components/Lists';
+import * as Menu from '#/components/Menu';
+import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -417,17 +421,19 @@ export function Header({
 
 					<View style={[a.flex_row, a.align_center, a.gap_sm]}>
 						<InboxRequests count={requestCount} variant="solid" action={action} />
-						<Link
-							to="/messages/settings"
+						<ChatSettingsMenu
 							action={action}
-							label={m['common.chat.settingsLabel']()}
-							size="small"
-							color="secondary"
-							shape="round"
-							style={[a.justify_center]}
-						>
-							<ButtonIcon icon={SettingsIcon} />
-						</Link>
+							render={
+								<WebButton
+									label={m['common.chat.optionsLabel']()}
+									size="small"
+									color="secondary"
+									shape="round"
+								>
+									<WebButtonIcon icon={SettingsIcon} />
+								</WebButton>
+							}
+						/>
 						{!chatStatus?.chatDisabled && (
 							<Button
 								label={m['common.chat.action.new']()}
@@ -449,20 +455,72 @@ export function Header({
 					</Layout.Header.Content>
 					<InboxRequests count={requestCount} variant="ghost" />
 					<Layout.Header.Slot>
-						<Link
-							to="/messages/settings"
-							label={m['common.chat.settingsLabel']()}
-							size="small"
-							variant="ghost"
-							color="secondary"
-							shape="round"
-							style={[a.justify_center]}
-						>
-							<ButtonIcon icon={SettingsIcon} size="lg" />
-						</Link>
+						<ChatSettingsMenu
+							action={action}
+							render={
+								<WebButton
+									label={m['common.chat.optionsLabel']()}
+									size="small"
+									variant="ghost"
+									color="secondary"
+									shape="round"
+								>
+									<WebButtonIcon icon={SettingsIcon} size="lg" />
+								</WebButton>
+							}
+						/>
 					</Layout.Header.Slot>
 				</>
 			)}
 		</Layout.Header.Outer>
+	);
+}
+
+function ChatSettingsMenu({
+	action,
+	render,
+}: {
+	action: 'navigate' | 'push';
+	render: ComponentProps<typeof Menu.Trigger>['render'];
+}) {
+	const navigation = useNavigation<NavigationProp>();
+
+	const { mutate: markAllChatsRead } = useUpdateAllRead('accepted', {
+		onMutate: () => {
+			Toast.show(m['screens.messages.chats.markAllRead.toast'](), { type: 'success' });
+		},
+		onError: () => {
+			Toast.show(m['screens.messages.chats.markAllRead.error'](), { type: 'error' });
+		},
+	});
+
+	return (
+		<Menu.Root>
+			<Menu.Trigger render={render} />
+			<Menu.Popup label={m['common.chat.optionsLabel']()}>
+				<Menu.Group>
+					<Menu.Item
+						label={m['screens.messages.chats.markAllRead.action']()}
+						onClick={() => markAllChatsRead()}
+					>
+						<Menu.ItemIcon icon={CircleCheckIcon} />
+						<Menu.ItemText>{m['screens.messages.chats.markAllRead.action']()}</Menu.ItemText>
+					</Menu.Item>
+					<Menu.Item
+						label={m['common.chat.settingsLabel']()}
+						onClick={() => {
+							if (action === 'navigate') {
+								navigation.navigate('MessagesSettings');
+							} else {
+								navigation.push('MessagesSettings');
+							}
+						}}
+					>
+						<Menu.ItemIcon icon={SettingsIcon} />
+						<Menu.ItemText>{m['common.chat.settingsLabel']()}</Menu.ItemText>
+					</Menu.Item>
+				</Menu.Group>
+			</Menu.Popup>
+		</Menu.Root>
 	);
 }
