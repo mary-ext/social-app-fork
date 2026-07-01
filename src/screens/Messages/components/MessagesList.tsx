@@ -40,7 +40,7 @@ import { MessageListError } from '#/screens/Messages/components/MessageListError
 import { atoms as a, tokens, useTheme } from '#/alf';
 
 import { DateDivider } from '#/components/dms/DateDivider';
-import { MessageItem } from '#/components/dms/MessageItem';
+import { MessageItem, type MessageItemNeighbor } from '#/components/dms/MessageItem';
 import { MessageOverlays } from '#/components/dms/MessageOverlays';
 import { MessageRepliesProvider } from '#/components/dms/MessageReplies';
 import { NewMessagesPill } from '#/components/dms/NewMessagesPill';
@@ -88,10 +88,7 @@ function keyExtractor(item: RenderItem) {
 	return item.key;
 }
 
-function getNeighborMessage(
-	items: RenderItem[],
-	index: number,
-): ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | null {
+function getNeighborMessage(items: RenderItem[], index: number): MessageItemNeighbor {
 	const neighbor = items[index];
 	if (!neighbor) return null;
 	if (
