@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
 
-import { languageName } from '#/locale/helpers';
+import { languageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 import { type Language, LANGUAGES, LANGUAGES_MAP, langCode } from '#/locale/languages';
 
@@ -116,6 +116,8 @@ function DialogInner({
 			languageName(lang, 'en').toLowerCase().includes(searchLower);
 		const isChecked = (lang: Language) => checkedCodes.includes(langCode(lang));
 		const isInRecents = (lang: Language) => recentCodes.includes(langCode(lang));
+		// drop languages this engine's CLDR data can't name — they'd render as bare codes
+		const isNameable = (lang: Language) => resolveLanguageName(lang, LOCALE) !== undefined;
 
 		const checkedRecent = recentLanguages.filter(isChecked);
 
@@ -123,7 +125,7 @@ function DialogInner({
 			// NOTE(@elijaharita): if a search is active, we ALWAYS show checked
 			// items, as well as any items that match the search.
 			const uncheckedRecent = recentLanguages.filter((lang) => !isChecked(lang)).filter(matchesSearch);
-			const unchecked = LANGUAGES.filter((lang) => !isChecked(lang));
+			const unchecked = LANGUAGES.filter((lang) => isNameable(lang) && !isChecked(lang));
 			const all = unchecked.filter(matchesSearch).filter((lang) => !isInRecents(lang));
 
 			return {
@@ -134,9 +136,7 @@ function DialogInner({
 		} else {
 			// NOTE(@elijaharita): if no search is active, we show everything.
 			const uncheckedRecent = recentLanguages.filter((lang) => !isChecked(lang));
-			const all = LANGUAGES.filter((lang) => !recentCodes.includes(langCode(lang))).filter(
-				(lang) => !isInRecents(lang),
-			);
+			const all = LANGUAGES.filter((lang) => isNameable(lang) && !isInRecents(lang));
 
 			return {
 				all,

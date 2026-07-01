@@ -6,7 +6,7 @@ import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
 import { useLanguagePrefs } from '#/state/preferences';
 
-import { languageName } from '#/locale/helpers';
+import { languageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 import { type Language, LANGUAGES, langCode } from '#/locale/languages';
 
@@ -132,7 +132,10 @@ function SubtitleDialogInner({
 						file={subtitle.file}
 						setCaptions={setCaptions}
 						otherLanguages={LANGUAGES.filter(
-							(lang) => langCode(lang) === subtitle.lang || !captions.some((s) => s.lang === langCode(lang)),
+							(lang) =>
+								langCode(lang) === subtitle.lang ||
+								(resolveLanguageName(lang, LOCALE) !== undefined &&
+									!captions.some((s) => s.lang === langCode(lang))),
 						)}
 						alt={i % 2 === 0}
 					/>

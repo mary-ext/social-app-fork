@@ -3,6 +3,7 @@ import * as bcp47Match from 'bcp-47-match';
 
 import { detectLanguages } from '#/lib/language-detection';
 
+import { LOCALE } from './intl/locale';
 import { type Language, LANGUAGES_MAP, langCode } from './languages';
 
 /**
@@ -18,30 +19,26 @@ export function code3ToCode2(lang: string): string {
 	return lang;
 }
 
-const displayNamesCache = new Map<string, Intl.DisplayNames>();
+const DISPLAY_NAMES_OPTIONS: Intl.DisplayNamesOptions = {
+	fallback: 'none',
+	languageDisplay: 'standard',
+	type: 'language',
+};
 
-function getDisplayNames(appLang: string): Intl.DisplayNames {
-	let cached = displayNamesCache.get(appLang);
-	if (!cached) {
-		cached = new Intl.DisplayNames([appLang], {
-			type: 'language',
-			fallback: 'none',
-			languageDisplay: 'standard',
-		});
-		displayNamesCache.set(appLang, cached);
-	}
-	return cached;
-}
+const localeDisplayNames = new Intl.DisplayNames([LOCALE], DISPLAY_NAMES_OPTIONS);
+const englishDisplayNames =
+	LOCALE === 'en' ? localeDisplayNames : new Intl.DisplayNames(['en'], DISPLAY_NAMES_OPTIONS);
 
 function getLocalizedLanguage(langCode: string, appLang: string): string | undefined {
-	try {
-		return getDisplayNames(appLang).of(langCode) || undefined;
-	} catch (e) {
-		// ignore RangeError from Intl.DisplayNames APIs
-		if (!(e instanceof RangeError)) {
-			throw e;
-		}
-	}
+	const displayNames = appLang === 'en' ? englishDisplayNames : localeDisplayNames;
+
+	return displayNames.of(langCode);
+}
+
+export function resolveLanguageName(language: Language, appLang: string): string | undefined {
+	const code = langCode(language);
+	// localize to the app language, falling back to the English name
+	return getLocalizedLanguage(code, appLang) ?? getLocalizedLanguage(code, 'en');
 }
 
 export function getPostLanguageTags(post: AppBskyFeedDefs.PostView) {
@@ -50,10 +47,7 @@ export function getPostLanguageTags(post: AppBskyFeedDefs.PostView) {
 }
 
 export function languageName(language: Language, appLang: string): string {
-	const code = langCode(language);
-	// localize to the app language, falling back to the English name, then the raw code for anything Intl
-	// can't name (shouldn't happen for our curated set)
-	return getLocalizedLanguage(code, appLang) ?? getLocalizedLanguage(code, 'en') ?? code;
+	return resolveLanguageName(language, appLang) ?? langCode(language);
 }
 
 export function codeToLanguageName(lang2or3: string, appLang: string): string {

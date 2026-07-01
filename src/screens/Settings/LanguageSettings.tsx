@@ -4,7 +4,7 @@ import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes
 
 import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 
-import { codeToLanguageName, languageName } from '#/locale/helpers';
+import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
 import { APP_LANGUAGES, LANGUAGES, langCode } from '#/locale/languages';
 
@@ -61,14 +61,16 @@ export function LanguageSettingsScreen({}: Props) {
 		[langPrefs, setLangPrefs],
 	);
 
-	const primaryLanguageItems = useMemo(
-		() =>
-			LANGUAGES.map((lang) => ({
-				label: languageName(lang, LOCALE),
-				value: langCode(lang),
-			})).sort((a, b) => a.label.localeCompare(b.label, LOCALE)),
-		[],
-	);
+	const primaryLanguageItems = useMemo(() => {
+		const items: { label: string; value: string }[] = [];
+		for (const lang of LANGUAGES) {
+			const label = resolveLanguageName(lang, LOCALE);
+			if (label) {
+				items.push({ label, value: langCode(lang) });
+			}
+		}
+		return items.sort((a, b) => a.label.localeCompare(b.label, LOCALE));
+	}, []);
 
 	const contentLanguageSummary = useMemo(() => {
 		if (contentLanguages.length === 0) {
