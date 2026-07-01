@@ -466,6 +466,7 @@ export function PostThread({ uri }: { uri: string }) {
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}
 					estimateHeight={ITEM_HEIGHT_ESTIMATE}
+					disableSkipOffscreen={keepAnchorRegionRendered}
 					onContentSizeChange={onContentSizeChangeWebOnly}
 					onStartReached={onStartReached}
 					onStartReachedThreshold={1}
@@ -495,3 +496,12 @@ function MobileComposePrompt({ onPressReply }: { onPressReply: () => unknown }) 
 const keyExtractor = (item: ThreadItem) => {
 	return item.key;
 };
+
+/**
+ * Keeps the anchor post (`depth === 0`) and its direct parent (`depth === -1`) out of the list's off-screen
+ * render-skipping. The direct parent first renders below the viewport, so if its height were still estimated
+ * when the anchor-pinning scroll brings it into view, its realization to full height would shove the anchor
+ * down off the top of the screen.
+ */
+const keepAnchorRegionRendered = (item: ThreadItem) =>
+	'depth' in item && (item.depth === 0 || item.depth === -1);

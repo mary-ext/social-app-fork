@@ -13,12 +13,6 @@ export const container = style({
 });
 
 /**
- * Container modifier: lets rows skip layout/paint while off screen (`content-visibility: auto`), sized by
- * {@link estimateHeightVar} until first rendered, after which the browser remembers each row's real height.
- */
-export const skipOffscreen = style({});
-
-/**
  * Universal row wrapper: a flex column (default `align-items: stretch`) so the row's content fills the list
  * width. Without it a shrink-to-fit root — e.g. a `<button>`-rooted row like the composer prompt — would only
  * be as wide as its content, which the old RNW `View` row wrapper avoided.
@@ -26,13 +20,20 @@ export const skipOffscreen = style({});
 export const row = style({
 	display: 'flex',
 	flexDirection: 'column',
-	selectors: {
-		// only the block axis is estimated; width stays at the flex-stretched container width.
-		[`${skipOffscreen} > &`]: {
-			containIntrinsicHeight: `auto ${estimateHeightVar}`,
-			contentVisibility: 'auto',
-		},
-	},
+});
+
+/**
+ * Row modifier: lets the row skip layout/paint while off screen (`content-visibility: auto`), sized by
+ * {@link estimateHeightVar} until first rendered, after which the browser remembers its real height.
+ *
+ * Applied per row (not to every row via the container) so specific rows can opt out — a row whose height is
+ * still estimated when it scrolls into view realizes its real size then, shifting everything below it; that
+ * is fine mid-list but breaks a scroll-anchor pin if it sits just above the anchor.
+ */
+export const rowSkip = style({
+	// only the block axis is estimated; width stays at the flex-stretched container width.
+	containIntrinsicHeight: `auto ${estimateHeightVar}`,
+	contentVisibility: 'auto',
 });
 
 /**

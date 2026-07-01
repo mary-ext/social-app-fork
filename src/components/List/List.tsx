@@ -39,6 +39,12 @@ export type ListRef = React.RefObject<ListMethods | null>;
 
 export type ListProps<ItemT> = {
 	data: readonly ItemT[] | null | undefined;
+	/**
+	 * Opts a row out of off-screen render-skipping (see {@link estimateHeight}). Return `true` for rows whose
+	 * late height realization must not shift surrounding content — e.g. a scroll-anchor target and the row just
+	 * above it. Only consulted when `estimateHeight` is set.
+	 */
+	disableSkipOffscreen?: (item: ItemT, index: number) => boolean;
 	keyExtractor: (item: ItemT, index: number) => string;
 	/** Shown in place of the rows when `data` is empty. */
 	ListEmptyComponent?: ReactNode;
@@ -75,6 +81,7 @@ export type ListProps<ItemT> = {
  */
 export function List<ItemT>({
 	data,
+	disableSkipOffscreen,
 	keyExtractor,
 	ListEmptyComponent,
 	ListFooterComponent,
@@ -133,7 +140,7 @@ export function List<ItemT>({
 	return (
 		<div
 			ref={containerRef}
-			className={clsx(css.container, skipOffscreen && css.skipOffscreen)}
+			className={css.container}
 			style={skipOffscreen ? assignInlineVars({ [css.estimateHeightVar]: `${estimateHeight}px` }) : undefined}
 		>
 			{onScrolledDownChange && (
@@ -151,7 +158,10 @@ export function List<ItemT>({
 				? ListEmptyComponent
 				: data.map((item, index) => {
 						const key = keyExtractor(item, index);
-						return <Row key={key} index={index} item={item} renderItem={renderItem} seen={seen} />;
+						const skip = skipOffscreen && !disableSkipOffscreen?.(item, index);
+						return (
+							<Row key={key} index={index} item={item} renderItem={renderItem} seen={seen} skip={skip} />
+						);
 					})}
 			{onEndReached && !isEmpty && (
 				<EdgeVisibility
@@ -237,11 +247,13 @@ const Row = memo(function Row<ItemT>({
 	item,
 	renderItem,
 	seen,
+	skip,
 }: {
 	index: number;
 	item: ItemT;
 	renderItem: ListRenderItem<ItemT>;
 	seen: SeenObserver<ItemT> | null;
+	skip: boolean;
 }) {
 	const rowRef = useRef<HTMLDivElement>(null);
 
@@ -254,7 +266,7 @@ const Row = memo(function Row<ItemT>({
 	}, [seen, item]);
 
 	return (
-		<div ref={rowRef} className={css.row}>
+		<div ref={rowRef} className={clsx(css.row, skip && css.rowSkip)}>
 			{renderItem({ index, item })}
 		</div>
 	);
@@ -263,6 +275,7 @@ const Row = memo(function Row<ItemT>({
 	item: ItemT;
 	renderItem: ListRenderItem<ItemT>;
 	seen: SeenObserver<ItemT> | null;
+	skip: boolean;
 }) => ReactNode;
 
 const thresholdMargin = (threshold: number | undefined) => `${(threshold ?? 0) * 100}%`;
