@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { clsx } from 'clsx';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
@@ -6,9 +6,9 @@ import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
 import { useLanguagePrefs } from '#/state/preferences';
 
-import { languageName, resolveLanguageName } from '#/locale/helpers';
+import { resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
-import { type Language, LANGUAGES, langCode } from '#/locale/languages';
+import { LANGUAGES, langCode } from '#/locale/languages';
 
 import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
 import { PageText_Stroke2_Corner0_Rounded as PageTextIcon } from '#/components/icons/PageText';
@@ -72,18 +72,32 @@ function SubtitleDialogInner({
 
 	const [altText, setAltText] = useState(defaultAltText);
 
-	const handleSelectFile = useCallback(
-		(file: File) => {
-			setCaptions((subs) => [
-				...subs,
-				{
-					lang: subs.some((s) => s.lang === primaryLanguage) ? '' : primaryLanguage,
-					file,
-				},
-			]);
-		},
-		[setCaptions, primaryLanguage],
-	);
+	const languageItems: Select.SelectItem[] = [];
+	for (const language of LANGUAGES) {
+		const label = resolveLanguageName(language, LOCALE);
+
+		if (!label) {
+			continue;
+		}
+
+		const value = langCode(language);
+		languageItems.push({
+			label: `${label} (${value})`,
+			value,
+		});
+	}
+
+	const usedLanguageCodes = new Set(captions.map((caption) => caption.lang).filter(Boolean));
+
+	const handleSelectFile = (file: File) => {
+		setCaptions((subs) => [
+			...subs,
+			{
+				lang: subs.some((s) => s.lang === primaryLanguage) ? '' : primaryLanguage,
+				file,
+			},
+		]);
+	};
 
 	const subtitleMissingLanguage = captions.some((sub) => sub.lang === '');
 
@@ -127,15 +141,12 @@ function SubtitleDialogInner({
 			<div className={css.captionsList}>
 				{captions.map((subtitle, i) => (
 					<SubtitleFileRow
-						key={subtitle.lang}
+						key={[subtitle.file.name, subtitle.file.lastModified, subtitle.file.size, i].join(':')}
 						language={subtitle.lang}
 						file={subtitle.file}
 						setCaptions={setCaptions}
-						otherLanguages={LANGUAGES.filter(
-							(lang) =>
-								langCode(lang) === subtitle.lang ||
-								(resolveLanguageName(lang, LOCALE) !== undefined &&
-									!captions.some((s) => s.lang === langCode(lang))),
+						languageItems={languageItems.filter(
+							({ value }) => value === subtitle.lang || !usedLanguageCodes.has(value),
 						)}
 						alt={i % 2 === 0}
 					/>
@@ -170,28 +181,20 @@ function SubtitleFileRow({
 	alt,
 	file,
 	language,
-	otherLanguages,
+	languageItems,
 	setCaptions,
 }: {
 	alt: boolean;
 	file: File;
 	language: string;
-	otherLanguages: Language[];
+	languageItems: Select.SelectItem[];
 	setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void;
 }) {
-	const handleValueChange = useCallback(
-		(lang: string) => {
-			if (lang) {
-				setCaptions((subs) => subs.map((s) => (s.lang === language ? { lang, file: s.file } : s)));
-			}
-		},
-		[setCaptions, language],
-	);
-
-	const languageItems = otherLanguages.map((lang) => ({
-		label: `${languageName(lang, LOCALE)} (${langCode(lang)})`,
-		value: langCode(lang),
-	}));
+	const handleValueChange = (lang: string) => {
+		if (lang) {
+			setCaptions((subs) => subs.map((s) => (s.file === file ? { lang, file: s.file } : s)));
+		}
+	};
 
 	return (
 		<div className={clsx(css.row, alt && css.rowAlt)}>
@@ -227,7 +230,7 @@ function SubtitleFileRow({
 				shape="round"
 				variant="outline"
 				color="secondary"
-				onClick={() => setCaptions((subs) => subs.filter((s) => s.lang !== language))}
+				onClick={() => setCaptions((subs) => subs.filter((s) => s.file !== file))}
 			>
 				<ButtonIcon icon={X} />
 			</Button>
