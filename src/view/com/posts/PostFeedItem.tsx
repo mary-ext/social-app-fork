@@ -144,7 +144,7 @@ function FeedItemInner({
 		const urip = parseCanonicalResourceUri(post.uri);
 		return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey];
 	}, [post.uri, post.author]);
-	const { sendInteraction, feedSourceInfo, feedDescriptor: _feedDescriptor } = useFeedFeedbackContext();
+	const { sendInteraction, feedSourceInfo } = useFeedFeedbackContext();
 
 	const onPressReply = () => {
 		sendInteraction({
@@ -163,7 +163,6 @@ function FeedItemInner({
 				moderation,
 				langs: record.langs,
 			},
-			logContext: 'PostReply',
 		});
 	};
 
@@ -304,7 +303,6 @@ function FeedItemInner({
 									reqId={reqId}
 									threadgateRecord={threadgateRecord}
 									onShowLess={onShowLess}
-									logContext="FeedItem"
 								/>
 							</div>
 							{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
@@ -328,7 +326,6 @@ function FeedItemInner({
 							<PostControls
 								post={post}
 								onPressReply={onPressReply}
-								logContext="FeedItem"
 								feedContext={feedContext}
 								reqId={reqId}
 								viaRepost={viaRepost}

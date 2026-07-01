@@ -18,8 +18,6 @@ import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
 const RQKEY_ROOT = 'post';
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri];
 
-export type PostActionLogContext = 'FeedItem' | 'PostThreadItem' | 'Post';
-
 export function usePostQuery(uri: string | undefined) {
 	const { appview } = useClients();
 	return useQuery<AppBskyFeedDefs.PostView>({
@@ -116,15 +114,13 @@ export function useGetPosts() {
 export function usePostLikeMutationQueue(
 	post: Shadow<AppBskyFeedDefs.PostView>,
 	viaRepost: { uri: string; cid: string } | undefined,
-	feedDescriptor: string | undefined,
-	logContext: PostActionLogContext,
 ) {
 	const queryClient = useQueryClient();
 	const postUri = post.uri;
 	const postCid = post.cid;
 	const initialLikeUri = post.viewer?.like;
-	const likeMutation = usePostLikeMutation(feedDescriptor, logContext, post);
-	const unlikeMutation = usePostUnlikeMutation(feedDescriptor, logContext, post);
+	const likeMutation = usePostLikeMutation();
+	const unlikeMutation = usePostUnlikeMutation();
 
 	const queueToggle = useToggleMutationQueue({
 		initialState: initialLikeUri,
@@ -175,11 +171,7 @@ export function usePostLikeMutationQueue(
 	return [queueLike, queueUnlike] as const;
 }
 
-function usePostLikeMutation(
-	_feedDescriptor: string | undefined,
-	_logContext: PostActionLogContext,
-	_post: Shadow<AppBskyFeedDefs.PostView>,
-) {
+function usePostLikeMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	return useMutation<
@@ -202,11 +194,7 @@ function usePostLikeMutation(
 	});
 }
 
-function usePostUnlikeMutation(
-	_feedDescriptor: string | undefined,
-	_logContext: PostActionLogContext,
-	_post: Shadow<AppBskyFeedDefs.PostView>,
-) {
+function usePostUnlikeMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	return useMutation<void, Error, { postUri: string; likeUri: string }>({
@@ -223,15 +211,13 @@ function usePostUnlikeMutation(
 export function usePostRepostMutationQueue(
 	post: Shadow<AppBskyFeedDefs.PostView>,
 	viaRepost: { uri: string; cid: string } | undefined,
-	feedDescriptor: string | undefined,
-	logContext: PostActionLogContext,
 ) {
 	const queryClient = useQueryClient();
 	const postUri = post.uri;
 	const postCid = post.cid;
 	const initialRepostUri = post.viewer?.repost;
-	const repostMutation = usePostRepostMutation(feedDescriptor, logContext, post);
-	const unrepostMutation = usePostUnrepostMutation(feedDescriptor, logContext, post);
+	const repostMutation = usePostRepostMutation();
+	const unrepostMutation = usePostUnrepostMutation();
 
 	const queueToggle = useToggleMutationQueue({
 		initialState: initialRepostUri,
@@ -280,11 +266,7 @@ export function usePostRepostMutationQueue(
 	return [queueRepost, queueUnrepost] as const;
 }
 
-function usePostRepostMutation(
-	_feedDescriptor: string | undefined,
-	_logContext: PostActionLogContext,
-	_post: Shadow<AppBskyFeedDefs.PostView>,
-) {
+function usePostRepostMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	return useMutation<
@@ -307,11 +289,7 @@ function usePostRepostMutation(
 	});
 }
 
-function usePostUnrepostMutation(
-	_feedDescriptor: string | undefined,
-	_logContext: PostActionLogContext,
-	_post: Shadow<AppBskyFeedDefs.PostView>,
-) {
+function usePostUnrepostMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	return useMutation<void, Error, { postUri: string; repostUri: string }>({

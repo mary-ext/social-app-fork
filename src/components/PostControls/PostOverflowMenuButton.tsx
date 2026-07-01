@@ -15,7 +15,6 @@ import { PostOverflowMenu } from './PostMenu';
 
 type Props = {
 	feedContext?: string | undefined;
-	logContext: 'FeedItem' | 'Post' | 'PostThreadItem';
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	record: AppBskyFeedPost.Main;
@@ -30,7 +29,6 @@ type Props = {
  */
 export function PostOverflowMenuButton({
 	feedContext,
-	logContext,
 	onShowLess,
 	post,
 	record,
@@ -47,7 +45,6 @@ export function PostOverflowMenuButton({
 			richText={richText}
 			threadgateRecord={threadgateRecord}
 			onShowLess={onShowLess}
-			logContext={logContext}
 			tooltip={m['components.postControls.options.more']()}
 			render={
 				<button type="button" aria-label={m['components.postControls.options.a11y']()} className={css.button}>

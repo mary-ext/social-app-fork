@@ -26,7 +26,7 @@ export function ComposerPrompt({ topBorder = false }: { topBorder?: boolean }) {
 				className={css.cover}
 				aria-label={m['common.compose.action.compose']()}
 				aria-description={m['view.feeds.composer.a11y']()}
-				onClick={() => openComposer({ logContext: 'Fab' })}
+				onClick={() => openComposer({})}
 			/>
 
 			<UserAvatar avatar={profile.avatar} size={36} type={profile.associated?.labeler ? 'labeler' : 'user'} />
@@ -41,7 +41,7 @@ export function ComposerPrompt({ topBorder = false }: { topBorder?: boolean }) {
 				className={css.imageButton}
 				label={m['view.feeds.image.add']()}
 				aria-description={m['view.feeds.image.a11y']()}
-				onClick={() => openComposer({ logContext: 'Fab', openGallery: true })}
+				onClick={() => openComposer({ openGallery: true })}
 				shape="round"
 				variant="bare"
 			>

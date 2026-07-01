@@ -173,7 +173,6 @@ function ThreadItemPostInner({
 				langs: post.record.langs,
 			},
 			onPostSuccess: onPostSuccess,
-			logContext: 'PostReply',
 		});
 	}, [openComposer, post, record, onPostSuccess, moderation]);
 
@@ -228,7 +227,6 @@ function ThreadItemPostInner({
 								record={record}
 								richText={richText}
 								threadgateRecord={threadgateRecord}
-								logContext="PostThreadItem"
 							/>
 						</div>
 						<LabelsOnMyPost className={css.labelsOnMe} post={post} />
@@ -251,7 +249,7 @@ function ThreadItemPostInner({
 								<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
 							</div>
 						)}
-						<PostControls post={postShadow} onPressReply={onPressReply} logContext="PostThreadItem" />
+						<PostControls post={postShadow} onPressReply={onPressReply} />
 						<DebugFieldDisplay subject={post} />
 					</PostLayout.ContentColumn>
 				</PostLayout.Row>

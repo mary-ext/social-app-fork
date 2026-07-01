@@ -204,7 +204,7 @@ function ProfileScreenLoaded({
 			profile.handle === currentAccount?.handle || isInvalidHandle(profile.handle)
 				? undefined
 				: profile.handle;
-		openComposer({ mention, logContext: 'ProfileFeed' });
+		openComposer({ mention });
 	};
 
 	const navToWizard = useCallback(() => {
@@ -252,7 +252,7 @@ function ProfileScreenLoaded({
 							? {
 									label: m['common.compose.action.writePost'](),
 									text: m['common.compose.action.writePost'](),
-									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
+									onPress: () => openComposer({}),
 									size: 'small',
 									color: 'primary',
 								}
@@ -288,7 +288,7 @@ function ProfileScreenLoaded({
 							? {
 									label: m['common.compose.action.photo'](),
 									text: m['common.compose.action.photo'](),
-									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
+									onPress: () => openComposer({}),
 									size: 'small',
 									color: 'primary',
 								}
@@ -312,7 +312,7 @@ function ProfileScreenLoaded({
 							? {
 									label: m['common.compose.action.video'](),
 									text: m['common.compose.action.video'](),
-									onPress: () => openComposer({ logContext: 'ProfileFeed' }),
+									onPress: () => openComposer({}),
 									size: 'small',
 									color: 'primary',
 								}

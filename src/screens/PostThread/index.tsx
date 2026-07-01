@@ -90,7 +90,6 @@ export function PostThread({ uri }: { uri: string }) {
 				langs: post.record.langs,
 			},
 			onPostSuccess: optimisticOnPostReply,
-			logContext: 'PostReply',
 		});
 
 		if (anchorPostSource) {

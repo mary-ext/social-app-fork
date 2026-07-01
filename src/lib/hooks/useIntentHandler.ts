@@ -79,7 +79,6 @@ export function useComposeIntent() {
 								mimeType: blob.type,
 								duration: meta.duration,
 							},
-							logContext: 'Deeplink',
 						});
 					} catch {}
 				})();
@@ -89,7 +88,6 @@ export function useComposeIntent() {
 			setTimeout(() => {
 				openComposer({
 					text: text ?? undefined,
-					logContext: 'Deeplink',
 				});
 			}, 500);
 		},

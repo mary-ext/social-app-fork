@@ -217,7 +217,6 @@ function ThreadItemAnchorInner({
 				langs: record.langs,
 			},
 			onPostSuccess: onPostSuccess,
-			logContext: 'PostReply',
 		});
 
 		if (postSource) {
@@ -299,7 +298,6 @@ function ThreadItemAnchorInner({
 								threadgateRecord={threadgateRecord}
 								feedContext={postSource?.post?.feedContext}
 								reqId={postSource?.post?.reqId}
-								logContext="PostThreadItem"
 							/>
 						</div>
 					</div>
@@ -441,7 +439,6 @@ function ThreadItemAnchorInner({
 							<AnchorPostControls
 								post={postShadow}
 								onPressReply={onPressReply}
-								logContext="PostThreadItem"
 								feedContext={postSource?.post?.feedContext}
 								reqId={postSource?.post?.reqId}
 								viaRepost={viaRepost}

@@ -206,7 +206,6 @@ export const ComposePost = ({
 	text: initText,
 	videoUri: initVideoUri,
 	openGallery,
-	logContext: _logContext,
 	cancelRef,
 }: Props & {
 	cancelRef?: React.RefObject<CancelRef | null>;

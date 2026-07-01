@@ -382,7 +382,7 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 		return undefined;
 	};
 
-	const onPressCompose = async () => openComposer({ mention: await getProfileHandle(), logContext: 'Fab' });
+	const onPressCompose = async () => openComposer({ mention: await getProfileHandle() });
 
 	return (
 		<div className={minimal ? css.composeRowMinimal : css.composeRow}>

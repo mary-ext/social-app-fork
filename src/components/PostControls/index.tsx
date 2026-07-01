@@ -128,7 +128,6 @@ export function PostControls({
 	reqId,
 	onPressReply,
 	onPostReply,
-	logContext,
 	viaRepost,
 }: PostControlsProps): React.ReactNode {
 	const t = useTheme();
@@ -141,7 +140,7 @@ export function PostControls({
 		onShare,
 		replyDisabled,
 		requireAuth,
-	} = usePostControlsActions({ post, feedContext, reqId, viaRepost, logContext, onPostReply });
+	} = usePostControlsActions({ post, feedContext, reqId, viaRepost, onPostReply });
 
 	const repostCount = (post.repostCount ?? 0) + (post.quoteCount ?? 0);
 

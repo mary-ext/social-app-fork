@@ -23,7 +23,6 @@ export type PostControlsProps = {
 	reqId?: string | undefined;
 	onPressReply: () => void;
 	onPostReply?: (postUri: string | undefined) => void;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
 	viaRepost?: { uri: string; cid: string };
 };
 
@@ -36,18 +35,12 @@ export function usePostControlsActions({
 	feedContext,
 	reqId,
 	viaRepost,
-	logContext,
 	onPostReply,
-}: Pick<PostControlsProps, 'feedContext' | 'logContext' | 'onPostReply' | 'post' | 'reqId' | 'viaRepost'>) {
+}: Pick<PostControlsProps, 'feedContext' | 'onPostReply' | 'post' | 'reqId' | 'viaRepost'>) {
 	const { openComposer } = useOpenComposer();
-	const { feedDescriptor, sendInteraction } = useFeedFeedbackContext();
-	const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, viaRepost, feedDescriptor, logContext);
-	const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
-		post,
-		viaRepost,
-		feedDescriptor,
-		logContext,
-	);
+	const { sendInteraction } = useFeedFeedbackContext();
+	const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, viaRepost);
+	const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(post, viaRepost);
 	const requireAuth = useRequireAuth();
 	const isBlocked = Boolean(
 		post.author.viewer?.blocking || post.author.viewer?.blockedBy || post.author.viewer?.blockingByList,
@@ -130,7 +123,6 @@ export function usePostControlsActions({
 		openComposer({
 			quote: post,
 			onPost: onPostReply,
-			logContext: 'QuotePost',
 		});
 	};
 

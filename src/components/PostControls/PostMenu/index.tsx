@@ -24,7 +24,6 @@ export const PostOverflowMenu = ({
 	richText,
 	threadgateRecord,
 	onShowLess,
-	logContext,
 }: {
 	render: ReactElement;
 	/** Hover/focus hint for the trigger; the tooltip wraps the menu trigger so it survives the menu wiring. */
@@ -36,7 +35,6 @@ export const PostOverflowMenu = ({
 	richText: Richtext;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
 }): React.ReactNode => {
 	// the items run a stack of hooks; only mount them once the menu has been opened.
 	const [hasBeenOpen, setHasBeenOpen] = useState(false);
@@ -61,7 +59,6 @@ export const PostOverflowMenu = ({
 					richText={richText}
 					threadgateRecord={threadgateRecord}
 					onShowLess={onShowLess}
-					logContext={logContext}
 				/>
 			)}
 		</Menu.Root>

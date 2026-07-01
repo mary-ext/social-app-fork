@@ -118,7 +118,6 @@ function PostInner({
 				moderation,
 				langs: record.langs,
 			},
-			logContext: 'PostReply',
 		});
 	}, [openComposer, post, record, moderation]);
 
@@ -155,14 +154,14 @@ function PostInner({
 									timestamp={post.indexedAt}
 									postHref={itemHref}
 								/>
-								<PostOverflowMenuButton post={post} record={record} richText={richText} logContext="Post" />
+								<PostOverflowMenuButton post={post} record={record} richText={richText} />
 							</div>
 							{replyAuthorDid !== '' && (
 								<PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />
 							)}
 							<LabelsOnMyPost post={post} />
 							<PostContent displayContext="view" moderation={moderation} post={post} richText={richText} />
-							<PostControls post={post} onPressReply={onPressReply} logContext="Post" />
+							<PostControls post={post} onPressReply={onPressReply} />
 						</PostLayout.ContentColumn>
 					</PostLayout.Row>
 				</article>

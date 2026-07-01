@@ -79,7 +79,6 @@ function PostMenuItems({
 	richText,
 	threadgateRecord,
 	onShowLess,
-	logContext: _logContext,
 }: {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
@@ -88,7 +87,6 @@ function PostMenuItems({
 	richText: Richtext;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
 }): React.ReactNode {
 	const { hasSession, currentAccount } = useSession();
 	const langPrefs = useLanguagePrefs();

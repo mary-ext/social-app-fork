@@ -198,7 +198,7 @@ function ProfileListScreenLoaded({
 						<FAB
 							icon={<EditBigIcon size="xl" fill={colors.white} />}
 							label={m['common.compose.action.new']()}
-							onClick={() => openComposer({ logContext: 'Fab' })}
+							onClick={() => openComposer({})}
 						/>
 					</View>
 					<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} onChange={onChangeMembers} />
@@ -221,7 +221,7 @@ function ProfileListScreenLoaded({
 					<FAB
 						icon={<EditBigIcon size="xl" fill={colors.white} />}
 						label={m['common.compose.action.new']()}
-						onClick={() => openComposer({ logContext: 'Fab' })}
+						onClick={() => openComposer({})}
 					/>
 				</View>
 				<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} onChange={onChangeMembers} />

@@ -190,7 +190,6 @@ function ThreadItemTreePostInner({
 				langs: post.record.langs,
 			},
 			onPostSuccess: onPostSuccess,
-			logContext: 'PostReply',
 		});
 	}, [openComposer, post, record, onPostSuccess, moderation]);
 
@@ -222,7 +221,6 @@ function ThreadItemTreePostInner({
 									record={record}
 									richText={richText}
 									threadgateRecord={threadgateRecord}
-									logContext="PostThreadItem"
 								/>
 							</div>
 							<div className={css.bodyRow}>
@@ -246,7 +244,7 @@ function ThreadItemTreePostInner({
 										/>
 									)}
 
-									<PostControls post={postShadow} onPressReply={onPressReply} logContext="PostThreadItem" />
+									<PostControls post={postShadow} onPressReply={onPressReply} />
 									<DebugFieldDisplay subject={post} />
 								</div>
 							</div>

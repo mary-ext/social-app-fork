@@ -50,7 +50,7 @@ function useKeyboardShortcuts() {
 		() =>
 			handleKey(
 				() => {
-					openComposer({ logContext: 'Other' });
+					openComposer({});
 				},
 				{
 					requiresSession: true,

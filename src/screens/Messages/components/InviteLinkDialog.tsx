@@ -331,7 +331,6 @@ export function InviteLinkDialog({
 									control.close(() => {
 										openComposer({
 											text: joinLinkURI,
-											logContext: 'Other',
 										});
 									});
 								}}
