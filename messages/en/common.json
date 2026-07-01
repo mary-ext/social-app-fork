@@ -106,6 +106,7 @@
 	"common.chat.groupName": "Group name",
 	"common.chat.inviteLink": "(chat invite link)",
 	"common.chat.inviteLinkDisabled": "Invite link disabled",
+	"common.chat.inviteLinkInvalid": "(invalid invite link)",
 	"common.chat.label": "Chat",
 	"common.chat.membersCount": [
 		{
@@ -133,6 +134,7 @@
 	"common.discardChanges.message": "Are you sure you want to discard your changes?",
 	"common.discardChanges.title": "Discard changes?",
 	"common.embed.content": "(contains embedded content)",
+	"common.embed.quotedPost": "(quoted post)",
 	"common.error.connection": "There was a problem with your internet connection, please try again",
 	"common.error.generic": "Something went wrong. Please try again.",
 	"common.error.heading": "Error",

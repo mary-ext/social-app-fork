@@ -29,6 +29,7 @@ import { Button } from '#/components/Button';
 import { ActionsWrapper } from '#/components/dms/ActionsWrapper';
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
+import { getReplyPreviewText } from '#/components/dms/replyPreview';
 import { ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
 import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
@@ -697,17 +698,7 @@ function ReplyQuote({
 		text = m['components.dms.block.messageHidden']();
 		subtle = true;
 	} else if (replyTo.$type === 'chat.bsky.convo.defs#messageView') {
-		text = replyTo.text;
-		if (!text.trim()) {
-			subtle = true;
-			if (replyTo.embed?.$type === 'chat.bsky.embed.joinLink#view') {
-				text = m['common.chat.inviteLink']();
-			} else if (replyTo.embed?.$type === 'app.bsky.embed.record#view') {
-				text = m['common.embed.content']();
-			} else {
-				text = m['common.altText.noText']();
-			}
-		}
+		({ subtle, text } = getReplyPreviewText(replyTo));
 	} else {
 		text = m['components.dms.message.deleted']();
 		subtle = true;

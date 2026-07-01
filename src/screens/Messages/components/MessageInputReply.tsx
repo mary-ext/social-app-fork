@@ -9,6 +9,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Button } from '#/components/Button';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
+import { getReplyPreviewText } from '#/components/dms/replyPreview';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
 
@@ -30,18 +31,7 @@ export function MessageInputReply() {
 	const senderProfile = convo.relatedProfiles.get(replyTo.sender.did);
 	const displayName = senderProfile ? createSanitizedDisplayName(senderProfile, false) : null;
 
-	let text = replyTo.text;
-	let subtle = false;
-	if (!text.trim()) {
-		subtle = true;
-		if (replyTo.embed?.$type === 'chat.bsky.embed.joinLink#view') {
-			text = m['common.chat.inviteLink']();
-		} else if (replyTo.embed?.$type === 'app.bsky.embed.record#view') {
-			text = m['common.embed.content']();
-		} else {
-			text = m['common.altText.noText']();
-		}
-	}
+	const { subtle, text } = getReplyPreviewText(replyTo);
 
 	return (
 		<View
