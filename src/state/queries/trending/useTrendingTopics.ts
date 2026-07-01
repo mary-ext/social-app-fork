@@ -30,7 +30,7 @@ function dedup(topics: TrendingTopic[]): TrendingTopic[] {
 
 export const trendingTopicsQueryKey = ['trending-topics'];
 
-export function useTrendingTopics() {
+export function useTrendingTopics({ enabled = true }: { enabled?: boolean } = {}) {
 	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 	const keywordFilters = useMemo(
@@ -39,6 +39,7 @@ export function useTrendingTopics() {
 	);
 
 	return useQuery<Response>({
+		enabled,
 		refetchOnWindowFocus: true,
 		staleTime: STALE.MINUTES.THREE,
 		queryKey: trendingTopicsQueryKey,

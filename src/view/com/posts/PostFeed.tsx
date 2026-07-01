@@ -28,7 +28,7 @@ import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { SuggestedFollows } from '#/components/feed-interstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
-import { TrendingInterstitial } from '#/components/trending-interstitial';
+import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/trending-interstitial';
 
 import { m } from '#/paraglide/messages';
 
@@ -147,6 +147,10 @@ function PostFeed({
 	// eslint-disable-next-line react-hooks/purity
 	const lastFetchRef = useRef<number>(Date.now());
 	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
+
+	const showTrendingInterstitial = useShowTrendingInterstitial({
+		enabled: hasSession && feedUriOrActorDid === DISCOVER_FEED_URI,
+	});
 
 	const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(() => new Set<string>());
 	const onPressShowLess = (interaction: AppBskyFeedDefs.Interaction) => {
@@ -299,25 +303,25 @@ function PostFeed({
 			} else if (data) {
 				let sliceIndex = -1;
 
-				for (const page of data?.pages) {
+				for (const page of data.pages) {
 					for (const slice of page.slices) {
 						sliceIndex++;
 
 						if (hasSession) {
 							if (feedKind === 'discover') {
 								if (sliceIndex === 0) {
-									arr.push({
-										type: 'interstitialTrending',
-										key: 'interstitialTrending-' + sliceIndex,
-									});
-
-									// Show composer prompt for Discover and Following feeds
-									if (hasSession && (feedUriOrActorDid === DISCOVER_FEED_URI || feed === 'following')) {
+									// only reserve a row (and its border) for trending when it will actually render
+									if (showTrendingInterstitial) {
 										arr.push({
-											type: 'composerPrompt',
-											key: 'composerPrompt-' + sliceIndex,
+											type: 'interstitialTrending',
+											key: 'interstitialTrending-' + sliceIndex,
 										});
 									}
+
+									arr.push({
+										type: 'composerPrompt',
+										key: 'composerPrompt-' + sliceIndex,
+									});
 								} else if (sliceIndex === 30) {
 									arr.push({
 										type: 'interstitialFollows',
@@ -326,13 +330,10 @@ function PostFeed({
 								}
 							} else if (feedKind === 'following') {
 								if (sliceIndex === 0) {
-									// Show composer prompt for Following feed
-									if (hasSession) {
-										arr.push({
-											type: 'composerPrompt',
-											key: 'composerPrompt-' + sliceIndex,
-										});
-									}
+									arr.push({
+										type: 'composerPrompt',
+										key: 'composerPrompt-' + sliceIndex,
+									});
 								}
 							} else if (feedKind === 'profile') {
 								if (sliceIndex === 5) {

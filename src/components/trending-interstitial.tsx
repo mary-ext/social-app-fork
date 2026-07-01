@@ -19,27 +19,27 @@ import * as css from './trending-interstitial.css';
 
 const SKELETON_WIDTHS = [80, 50, 120, 30, 180];
 
-export function TrendingInterstitial() {
-	const { enabled } = useTrendingConfig();
+export function useShowTrendingInterstitial({ enabled }: { enabled: boolean }): boolean {
+	const { enabled: trendingEnabled } = useTrendingConfig();
 	const { trendingDisabled } = useTrendingSettings();
 	const { rightNavVisible } = useLayoutBreakpoints();
 
-	return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null;
+	const eligible = enabled && trendingEnabled && !trendingDisabled && !rightNavVisible;
+
+	const { data: trending, error, isLoading } = useTrendingTopics({ enabled: eligible });
+	const noTopics = !isLoading && !error && !trending?.topics?.length;
+
+	return eligible && !error && !noTopics;
 }
 
-function Inner() {
+export function TrendingInterstitial() {
 	const trendingPrompt = Prompt.usePromptHandle();
 	const { setTrendingDisabled } = useTrendingSettingsApi();
-	const { data: trending, error, isLoading } = useTrendingTopics();
-	const noTopics = !isLoading && !error && !trending?.topics?.length;
+	const { data: trending, isLoading } = useTrendingTopics();
 
 	const onConfirmHide = () => {
 		setTrendingDisabled(true);
 	};
-
-	if (error || noTopics) {
-		return null;
-	}
 
 	return (
 		<>
