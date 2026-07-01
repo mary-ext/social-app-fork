@@ -182,7 +182,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		convo.view.id,
 		{
 			onSuccess: () => {
-				Toast.show(m['screens.messages.requests.ignoredToast']());
+				Toast.show(m['screens.messages.requests.rejectedToast']());
 				if (getRemainingRequestCount() < 1) {
 					navigation.replace('MessagesConversationSettings', {
 						conversation: convo.view.id,
@@ -190,7 +190,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				}
 			},
 			onError: (error) => {
-				let errorMessage = m['screens.messages.requests.ignore.error']();
+				let errorMessage = m['screens.messages.requests.rejectJoin.error']();
 				if (isNetworkError(error)) {
 					errorMessage = m['common.error.network']();
 				} else if (error instanceof ClientResponseError) {
@@ -199,7 +199,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 							errorMessage = m['common.chat.error.notFound']();
 							break;
 						case 'InsufficientRole':
-							errorMessage = m['screens.messages.requests.ignore.adminOnly']();
+							errorMessage = m['screens.messages.requests.rejectJoin.adminOnly']();
 							break;
 					}
 				}
@@ -382,13 +382,13 @@ function AcceptButton({ disabled, onPress }: { disabled?: boolean; onPress: () =
 function RejectButton({ disabled, onPress }: { disabled?: boolean; onPress: () => void }) {
 	return (
 		<Button
-			label={m['screens.messages.requests.ignore.a11y']()}
+			label={m['screens.messages.requests.rejectJoin.a11y']()}
 			size="small"
 			color="secondary"
 			disabled={disabled}
 			onPress={onPress}
 		>
-			<ButtonText>{m['screens.messages.requests.ignore.action']()}</ButtonText>
+			<ButtonText>{m['screens.messages.requests.reject.action']()}</ButtonText>
 		</Button>
 	);
 }

@@ -311,14 +311,14 @@ function MutualGroupChat({
 				<Button
 					color="negative_subtle"
 					disabled={isRemovePending}
-					label={m['components.moderation.chat.kickMember']()}
+					label={m['components.moderation.chat.removeMember']()}
 					size="small"
 					onPress={() => {
 						onOptimisticallyRemoveConvo(view.id);
 						removeMembers({ members: [profileDid] });
 					}}
 				>
-					<ButtonText>{m['components.moderation.chat.kickMember']()}</ButtonText>
+					<ButtonText>{m['components.moderation.chat.removeMember']()}</ButtonText>
 					{isRemovePending ? <ButtonIcon icon={Loader} /> : null}
 				</Button>
 			) : isCurrentConvo ? (
