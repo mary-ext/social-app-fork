@@ -1,7 +1,11 @@
 import type { ReactNode } from 'react';
-import type { AppBskyNotificationDefs } from '@atcute/bluesky';
 
-import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
+import {
+	isChatPreferenceName,
+	type NotificationSettingsPreferenceName,
+	useChatNotificationSettingsQuery,
+	useNotificationSettingsQuery,
+} from '#/state/queries/notifications/settings';
 
 import { PreferenceControls } from '#/screens/Settings/NotificationSettings/components/PreferenceControls';
 
@@ -16,9 +20,9 @@ import * as styles from './NotificationSettingsDialog.css';
 type NotificationSettingsDialogProps = {
 	allowDisableInApp?: boolean;
 	handle: Dialog.DialogHandle;
-	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
+	name: NotificationSettingsPreferenceName;
 	subtitleText: ReactNode;
-	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
+	syncOthers?: NotificationSettingsPreferenceName[];
 	titleText: ReactNode;
 };
 
@@ -53,7 +57,11 @@ function Inner({
 	syncOthers,
 	titleText,
 }: Omit<NotificationSettingsDialogProps, 'handle'>) {
-	const { data: preferences, isError } = useNotificationSettingsQuery();
+	const isChat = isChatPreferenceName(name);
+	const appQuery = useNotificationSettingsQuery({ enabled: !isChat });
+	const chatQuery = useChatNotificationSettingsQuery({ enabled: isChat });
+	const isError = isChat ? chatQuery.isError : appQuery.isError;
+	const preference = isChat ? chatQuery.data?.[name] : appQuery.data?.[name];
 
 	return (
 		<>
@@ -73,7 +81,7 @@ function Inner({
 				<PreferenceControls
 					allowDisableInApp={allowDisableInApp}
 					name={name}
-					preference={preferences?.[name]}
+					preference={preference}
 					syncOthers={syncOthers}
 				/>
 			)}

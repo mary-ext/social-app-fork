@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
-import type { AppBskyNotificationDefs } from '@atcute/bluesky';
 
-import { useNotificationSettingsUpdateMutation } from '#/state/queries/notifications/settings';
+import {
+	type NotificationSettingsPreference,
+	type NotificationSettingsPreferenceName,
+	useNotificationSettingsUpdateMutation,
+} from '#/state/queries/notifications/settings';
 
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -18,16 +21,13 @@ export function PreferenceControls({
 	syncOthers,
 }: {
 	allowDisableInApp?: boolean;
-	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
-	preference?:
-		| AppBskyNotificationDefs.ChatPreference
-		| AppBskyNotificationDefs.FilterablePreference
-		| AppBskyNotificationDefs.Preference;
+	name: NotificationSettingsPreferenceName;
+	preference?: NotificationSettingsPreference;
 	/**
 	 * Keep other prefs in sync with `name`. For use in the "everything else" category which groups starterpack
 	 * joins + verified + unverified notifications into a single toggle.
 	 */
-	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
+	syncOthers?: NotificationSettingsPreferenceName[];
 }) {
 	if (!preference) {
 		return (
@@ -54,12 +54,9 @@ export function Inner({
 	syncOthers = [],
 }: {
 	allowDisableInApp: boolean;
-	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
-	preference:
-		| AppBskyNotificationDefs.ChatPreference
-		| AppBskyNotificationDefs.FilterablePreference
-		| AppBskyNotificationDefs.Preference;
-	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
+	name: NotificationSettingsPreferenceName;
+	preference: NotificationSettingsPreference;
+	syncOthers?: NotificationSettingsPreferenceName[];
 }) {
 	const { mutate } = useNotificationSettingsUpdateMutation();
 
@@ -84,7 +81,7 @@ export function Inner({
 	};
 
 	const onChangeFilter = ([change]: string[]) => {
-		if (change !== 'all' && change !== 'follows' && change !== 'accepted') throw new Error('Invalid filter');
+		if (change !== 'all' && change !== 'follows') throw new Error('Invalid filter');
 
 		const newPreference = {
 			...preference,
@@ -116,7 +113,7 @@ export function Inner({
 					</Text>
 					<Toggle.Switch />
 				</Toggle.Item>
-				{allowDisableInApp && (
+				{allowDisableInApp && 'list' in preference && (
 					<Toggle.Item
 						className={styles.switchRow}
 						label={m['screens.settings.notifications.channel.receiveInApp']()}
@@ -149,21 +146,12 @@ export function Inner({
 								<Toggle.PanelText>{m['screens.settings.audience.everyone']()}</Toggle.PanelText>
 							</Toggle.Panel>
 						</Toggle.RadioItem>
-						{name === 'chat' ? (
-							<Toggle.RadioItem label={m['screens.settings.chat.acceptedConversations']()} value="accepted">
-								<Toggle.Panel>
-									<Toggle.RadioIndicator />
-									<Toggle.PanelText>{m['screens.settings.chat.acceptedConversations']()}</Toggle.PanelText>
-								</Toggle.Panel>
-							</Toggle.RadioItem>
-						) : (
-							<Toggle.RadioItem label={m['screens.settings.audience.peopleIFollow']()} value="follows">
-								<Toggle.Panel>
-									<Toggle.RadioIndicator />
-									<Toggle.PanelText>{m['screens.settings.audience.peopleIFollow']()}</Toggle.PanelText>
-								</Toggle.Panel>
-							</Toggle.RadioItem>
-						)}
+						<Toggle.RadioItem label={m['screens.settings.audience.peopleIFollow']()} value="follows">
+							<Toggle.Panel>
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>{m['screens.settings.audience.peopleIFollow']()}</Toggle.PanelText>
+							</Toggle.Panel>
+						</Toggle.RadioItem>
 					</Toggle.Group>
 				</>
 			)}

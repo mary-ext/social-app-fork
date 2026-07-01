@@ -1,17 +1,20 @@
-import type { AppBskyNotificationDefs } from '@atcute/bluesky';
-
 import type { AllNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
-import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
+import {
+	useChatNotificationSettingsQuery,
+	useNotificationSettingsQuery,
+} from '#/state/queries/notifications/settings';
 
 import { NotificationSettingsDialog } from '#/components/dialogs/NotificationSettingsDialog';
 import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At';
 import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Bubble_Stroke2_Corner2_Rounded as BubbleIcon } from '#/components/icons/Bubble';
+import { Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon } from '#/components/icons/Envelope';
 import {
 	Heart2_Stroke2_Corner0_Rounded as HeartIcon,
 	LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon,
 } from '#/components/icons/Heart2';
+import { Message_Stroke2_Corner0_Rounded as MessageIcon } from '#/components/icons/Message';
 import { PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote';
 import {
@@ -26,11 +29,14 @@ import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
+import { ChatNotificationDialogs } from './components/ChatNotificationDialogs';
+import { SettingPreview } from './components/SettingPreview';
 import * as styles from './index.css';
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>;
 export function NotificationSettingsScreen({}: Props) {
 	const { data: settings, isError } = useNotificationSettingsQuery();
+	const { data: chatSettings, isError: chatError } = useChatNotificationSettingsQuery();
 
 	const likeHandle = Dialog.useDialogHandle();
 	const followHandle = Dialog.useDialogHandle();
@@ -41,6 +47,8 @@ export function NotificationSettingsScreen({}: Props) {
 	const activityHandle = Dialog.useDialogHandle();
 	const likeRepostHandle = Dialog.useDialogHandle();
 	const repostRepostHandle = Dialog.useDialogHandle();
+	const chatHandle = Dialog.useDialogHandle();
+	const chatRequestHandle = Dialog.useDialogHandle();
 	const miscHandle = Dialog.useDialogHandle();
 
 	return (
@@ -159,6 +167,40 @@ export function NotificationSettingsScreen({}: Props) {
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
+							label={m['screens.settings.notifications.chat.newMessagesA11y']()}
+							onPress={() => chatHandle.open(null)}
+						>
+							<Settings.Icon icon={MessageIcon} />
+							<Settings.Label
+								loading={!chatSettings && !chatError}
+								subtitleText={
+									chatError ? (
+										m['common.notifications.loadSettingsError']()
+									) : (
+										<SettingPreview preference={chatSettings?.chat} />
+									)
+								}
+								titleText={m['screens.settings.notifications.chat.newMessages']()}
+							/>
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
+							label={m['screens.settings.notifications.chat.newRequestsA11y']()}
+							onPress={() => chatRequestHandle.open(null)}
+						>
+							<Settings.Icon icon={EnvelopeIcon} />
+							<Settings.Label
+								loading={!chatSettings && !chatError}
+								subtitleText={
+									chatError ? (
+										m['common.notifications.loadSettingsError']()
+									) : (
+										<SettingPreview preference={chatSettings?.chatRequest} />
+									)
+								}
+								titleText={m['screens.settings.notifications.chat.newRequests']()}
+							/>
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={m['screens.settings.notifications.everythingElse.title']()}
 							onPress={() => miscHandle.open(null)}
 						>
@@ -229,6 +271,7 @@ export function NotificationSettingsScreen({}: Props) {
 				subtitleText={m['screens.settings.notifications.repostViaRepost.description']()}
 				titleText={m['screens.settings.notifications.repostViaRepost.label']()}
 			/>
+			<ChatNotificationDialogs chatHandle={chatHandle} chatRequestHandle={chatRequestHandle} />
 			<NotificationSettingsDialog
 				allowDisableInApp={false}
 				handle={miscHandle}
@@ -239,44 +282,4 @@ export function NotificationSettingsScreen({}: Props) {
 			/>
 		</Layout.Screen>
 	);
-}
-
-function SettingPreview({
-	preference,
-}: {
-	preference?: AppBskyNotificationDefs.FilterablePreference | AppBskyNotificationDefs.Preference;
-}) {
-	if (!preference) {
-		return null;
-	} else {
-		if ('include' in preference) {
-			if (preference.include === 'all') {
-				if (preference.list && preference.push) {
-					return m['screens.settings.notifications.channel.inAppPushEveryone']();
-				} else if (preference.list) {
-					return m['screens.settings.notifications.channel.inAppEveryone']();
-				} else if (preference.push) {
-					return m['screens.settings.notifications.channel.pushEveryone']();
-				}
-			} else if (preference.include === 'follows') {
-				if (preference.list && preference.push) {
-					return m['screens.settings.notifications.channel.inAppPushFollowing']();
-				} else if (preference.list) {
-					return m['screens.settings.notifications.channel.inAppFollowing']();
-				} else if (preference.push) {
-					return m['screens.settings.notifications.channel.pushFollowing']();
-				}
-			}
-		} else {
-			if (preference.list && preference.push) {
-				return m['screens.settings.notifications.channel.inAppPush']();
-			} else if (preference.list) {
-				return m['screens.settings.notifications.channel.inApp']();
-			} else if (preference.push) {
-				return m['screens.settings.notifications.channel.push']();
-			}
-		}
-	}
-
-	return m['common.status.off']();
 }
