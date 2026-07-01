@@ -38,9 +38,7 @@ export type GalleryProps = {
 
 export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext }: GalleryProps) {
 	const [largeAltBadge] = useLargeAltBadgeEnabled();
-	const isWithinQuote = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
-	const hideBadges = isWithinQuote;
 	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor (by diffing bounding
 	// rects) so it can extend past the post's content column.
 	const { bleedRef, bleedWidth } = useGalleryBleed();
@@ -153,7 +151,6 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 						index={index}
 						imageCount={images.length}
 						contentHeight={contentHeight}
-						hideBadges={hideBadges}
 						largeAltBadge={largeAltBadge}
 						onWidthChange={onWidthChange}
 						setItemRef={setItemRef}
@@ -172,7 +169,6 @@ function GalleryImage({
 	index,
 	imageCount,
 	contentHeight,
-	hideBadges,
 	largeAltBadge,
 	onWidthChange,
 	setItemRef,
@@ -184,7 +180,6 @@ function GalleryImage({
 	index: number;
 	imageCount: number;
 	contentHeight: number;
-	hideBadges: boolean;
 	largeAltBadge: boolean;
 	onWidthChange: (index: number, width: number) => void;
 	setItemRef: (index: number, node: HTMLElement | null) => void;
@@ -230,16 +225,14 @@ function GalleryImage({
 				alt={image.alt}
 				loading={index === 0 ? 'eager' : 'lazy'}
 			/>
-			{!hideBadges && (
-				<MediaBadges
-					variant="gallery"
-					hasAlt={hasAlt}
-					cropped={isCropped}
-					large={largeAltBadge}
-					count={imageCount}
-					index={index}
-				/>
-			)}
+			<MediaBadges
+				variant="gallery"
+				hasAlt={hasAlt}
+				cropped={isCropped}
+				large={largeAltBadge}
+				count={imageCount}
+				index={index}
+			/>
 		</Dialog.Trigger>
 	);
 }

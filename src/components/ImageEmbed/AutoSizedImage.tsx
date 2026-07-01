@@ -14,7 +14,6 @@ import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 export type AutoSizedImageProps = {
 	image: AppBskyEmbedImages.ViewImage;
 	crop?: 'constrained' | 'none' | 'square';
-	hideBadge?: boolean;
 	/** Lightbox handle + payload; the image renders as a detached `Dialog.Trigger` that opens it. */
 	handle: LightboxHandle;
 	payload: LightboxPayload;
@@ -28,7 +27,6 @@ export type AutoSizedImageProps = {
 export function AutoSizedImage({
 	image,
 	crop = 'constrained',
-	hideBadge,
 	handle,
 	payload,
 	onPressIn,
@@ -72,11 +70,9 @@ export function AutoSizedImage({
 					}
 				}}
 			/>
-			{!hideBadge && (
-				// a single image is never cropped — it keeps its ratio (the square thumbnail does crop, but that
-				// path always hides badges), so the cropped indicator never applies here.
-				<MediaBadges variant="single" hasAlt={!!image.alt} cropped={false} large={largeAlt} />
-			)}
+			{/* A single image keeps its aspect ratio, so it's never cropped. The square quote thumbnail does
+			    cover-crop, but we intentionally surface only its alt badge there, not a crop indicator. */}
+			<MediaBadges variant="single" hasAlt={!!image.alt} cropped={false} large={largeAlt} />
 		</Dialog.Trigger>
 	);
 }

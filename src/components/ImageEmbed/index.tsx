@@ -63,7 +63,6 @@ export function ImageEmbed({
 								? 'square'
 								: 'constrained'
 					}
-					hideBadge={viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia}
 					handle={lightboxHandle}
 					payload={{ images: lightboxImages, index: 0 }}
 					onPressIn={onPressIn}
