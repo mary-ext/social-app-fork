@@ -66,7 +66,7 @@ export function NotificationSettingsScreen({}: Props) {
 					</div>
 				)}
 				<Settings.List>
-					<Settings.Section>
+					<Settings.Section titleText={m['screens.settings.notifications.interactions.title']()}>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.like.title']()}
 							onPress={() => likeHandle.open(null)}
@@ -133,17 +133,8 @@ export function NotificationSettingsScreen({}: Props) {
 								titleText={m['screens.settings.notifications.repost.label']()}
 							/>
 						</Settings.ButtonRow>
-						<Settings.ButtonRow
-							label={m['screens.settings.notifications.activity.title']()}
-							onPress={() => activityHandle.open(null)}
-						>
-							<Settings.Icon icon={BellRingingIcon} />
-							<Settings.Label
-								loading={!settings}
-								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
-								titleText={m['screens.settings.notifications.activity.label']()}
-							/>
-						</Settings.ButtonRow>
+					</Settings.Section>
+					<Settings.Section titleText={m['screens.settings.notifications.viaRepost.title']()}>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.likeViaRepost.title']()}
 							onPress={() => likeRepostHandle.open(null)}
@@ -166,6 +157,8 @@ export function NotificationSettingsScreen({}: Props) {
 								titleText={m['screens.settings.notifications.repostViaRepost.label']()}
 							/>
 						</Settings.ButtonRow>
+					</Settings.Section>
+					<Settings.Section titleText={m['screens.settings.notifications.chat.title']()}>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.chat.newMessagesA11y']()}
 							onPress={() => chatHandle.open(null)}
@@ -198,6 +191,19 @@ export function NotificationSettingsScreen({}: Props) {
 									)
 								}
 								titleText={m['screens.settings.notifications.chat.newRequests']()}
+							/>
+						</Settings.ButtonRow>
+					</Settings.Section>
+					<Settings.Section titleText={m['screens.settings.notifications.other.title']()}>
+						<Settings.ButtonRow
+							label={m['screens.settings.notifications.activity.title']()}
+							onPress={() => activityHandle.open(null)}
+						>
+							<Settings.Icon icon={BellRingingIcon} />
+							<Settings.Label
+								loading={!settings}
+								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
+								titleText={m['screens.settings.notifications.activity.label']()}
 							/>
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
