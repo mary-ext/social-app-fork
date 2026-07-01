@@ -66,6 +66,12 @@ export const altBadge = style([
 	},
 ]);
 
+// video (non-gif) surfaces the badge in the opposite corner from the gif label.
+export const altBadgeTopRight = style({
+	bottom: 'auto',
+	top: 6,
+});
+
 export const badgeText = style({
 	color: '#fff',
 });

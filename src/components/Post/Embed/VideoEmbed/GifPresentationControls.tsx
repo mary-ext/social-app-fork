@@ -1,3 +1,5 @@
+import { clsx } from 'clsx';
+
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -39,14 +41,20 @@ export function GifPresentationControls({
 	);
 }
 
-function AltBadge({ text }: { text: string }) {
+export function AltBadge({
+	text,
+	position = 'bottom-right',
+}: {
+	text: string;
+	position?: 'bottom-right' | 'top-right';
+}) {
 	const handle = Prompt.usePromptHandle();
 
 	return (
 		<>
 			<button
 				type="button"
-				className={styles.altBadge}
+				className={clsx(styles.altBadge, position === 'top-right' && styles.altBadgeTopRight)}
 				aria-label={m['common.altText.show']()}
 				onClick={() => handle.open(null)}
 			>

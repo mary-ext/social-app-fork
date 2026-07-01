@@ -2,8 +2,11 @@ import { useCallback, useEffect, useEffectEvent, useId, useRef, useState } from 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 import type * as HlsTypes from 'hls.js';
 
+import { useFullscreen } from '#/components/hooks/useFullscreen';
+
 import { m } from '#/paraglide/messages';
 
+import { AltBadge } from '../GifPresentationControls';
 import * as BandwidthEstimate from './bandwidth-estimate';
 import * as styles from './VideoEmbedInnerWeb.css';
 import { Controls } from './web-controls/VideoControls';
@@ -27,6 +30,8 @@ export function VideoEmbedInnerWeb({
 	const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false);
 	const [hlsLoading, setHlsLoading] = useState(false);
 	const figId = useId();
+	const [isFullscreen] = useFullscreen();
+	const isGif = embed.presentation === 'gif';
 	// send error up to error boundary
 	const [error, setError] = useState<Error | null>(null);
 	if (error) {
@@ -57,7 +62,7 @@ export function VideoEmbedInnerWeb({
 						style={{ width: '100%', height: '100%', objectFit: 'contain' }}
 						playsInline
 						preload="none"
-						muted={embed.presentation === 'gif' || !focused}
+						muted={isGif || !focused}
 						aria-labelledby={embed.alt ? figId : undefined}
 						onTimeUpdate={(e) => {
 							// eslint-disable-next-line react-hooks/immutability -- `lastKnownTime` is a ref prop; writing `.current` is intended
@@ -71,6 +76,7 @@ export function VideoEmbedInnerWeb({
 						</figcaption>
 					)}
 				</figure>
+				{!isFullscreen && !isGif && embed.alt && <AltBadge text={embed.alt} position="top-right" />}
 				<Controls
 					videoRef={videoRef}
 					hlsRef={hlsRef}
@@ -82,7 +88,7 @@ export function VideoEmbedInnerWeb({
 					onScreen={onScreen}
 					fullscreenRef={containerRef}
 					hasSubtitleTrack={hasSubtitleTrack}
-					isGif={embed.presentation === 'gif'}
+					isGif={isGif}
 					altText={embed.alt}
 					updateCuePositions={updateCuePositions}
 				/>
