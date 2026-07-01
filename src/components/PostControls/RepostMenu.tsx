@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import { cloneElement, type MouseEvent, type ReactElement } from 'react';
 
 import { useRequireAuth, useSession } from '#/state/session';
 
@@ -9,11 +9,6 @@ import { Tooltip } from '#/components/Tooltip';
 
 import { m } from '#/paraglide/messages';
 
-/**
- * The repost/quote menu. The caller supplies the trigger button via `render` so each action-bar size owns its
- * own button chrome. Signed-out viewers get an auth prompt on press instead of the menu — the open is
- * canceled before Base UI acts on it.
- */
 export const RepostMenu = ({
 	render,
 	tooltip,
@@ -22,8 +17,7 @@ export const RepostMenu = ({
 	onQuote,
 	embeddingDisabled,
 }: {
-	render: ReactElement;
-	/** Hover/focus hint for the trigger; the tooltip wraps the menu trigger so it survives the menu wiring. */
+	render: ReactElement<{ onClick?: (e: MouseEvent<HTMLButtonElement>) => void }>;
 	tooltip: string;
 	isReposted: boolean;
 	onRepost: () => void;
@@ -33,15 +27,18 @@ export const RepostMenu = ({
 	const { hasSession } = useSession();
 	const requireAuth = useRequireAuth();
 
+	// A menu trigger opens on pointerdown; opening the sign-in dialog there lets the trailing
+	// pointerup/click register as an outside-press that immediately dismisses it. Signed-out viewers
+	// don't need the menu, so wire the button as a plain click handler instead — the dialog then opens
+	// at click time, past the pointer sequence that opened it.
+	if (!hasSession) {
+		return (
+			<Tooltip label={tooltip}>{cloneElement(render, { onClick: () => requireAuth(() => {}) })}</Tooltip>
+		);
+	}
+
 	return (
-		<Menu.Root
-			onOpenChange={(open, details) => {
-				if (open && !hasSession) {
-					details.cancel();
-					requireAuth(() => {});
-				}
-			}}
-		>
+		<Menu.Root>
 			<Tooltip label={tooltip}>
 				<Menu.Trigger render={render} />
 			</Tooltip>
