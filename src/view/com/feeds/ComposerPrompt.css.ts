@@ -46,7 +46,7 @@ export const cover = style({
 	zIndex: 1,
 
 	selectors: {
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
+		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -2 },
 	},
 });
 
