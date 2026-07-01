@@ -423,7 +423,7 @@ export function usePinnedFeedsInfos() {
 			pinnedItems.map((f) => f.value),
 		),
 		gcTime: GCTIME.INFINITY,
-		staleTime: STALE.INFINITY,
+		staleTime: STALE.MINUTES.FIFTEEN,
 		enabled: !isLoadingPrefs,
 		queryFn: async () => {
 			if (!hasSession) {
