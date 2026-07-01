@@ -659,7 +659,9 @@ function ReplyCaption({
 
 	return (
 		<Button
-			label={onPress ? m['components.dms.reply.a11y.scrollTo']() : m['components.dms.reply.a11y.beforeJoined']()}
+			label={
+				onPress ? m['components.dms.reply.a11y.scrollTo']() : m['components.dms.reply.a11y.beforeJoined']()
+			}
 			disabled={!onPress}
 			onPress={onPress}
 			style={[
@@ -702,7 +704,8 @@ function ReplyQuote({
 }) {
 	const t = useTheme();
 	const senderDid =
-		replyTo.$type === 'chat.bsky.convo.defs#messageView' || replyTo.$type === 'chat.bsky.convo.defs#deletedMessageView'
+		replyTo.$type === 'chat.bsky.convo.defs#messageView' ||
+		replyTo.$type === 'chat.bsky.convo.defs#deletedMessageView'
 			? replyTo.sender.did
 			: undefined;
 	const senderProfile = useMaybeProfileShadow(senderDid ? relatedProfiles.get(senderDid) : undefined);
