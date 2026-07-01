@@ -41,7 +41,6 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 		}
 	}, [query]);
 
-	// kept memoized: model.layout is read from EmojiGrid's own useEffect/useImperativeHandle dep arrays.
 	const model = useMemo(() => buildModel(data, query, skinTone, recents), [data, query, recents, skinTone]);
 
 	if (!data) {

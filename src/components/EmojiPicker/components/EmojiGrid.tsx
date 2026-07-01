@@ -67,10 +67,12 @@ export const EmojiGrid = forwardRef<EmojiGridHandle, EmojiGridProps>(function Em
 
 	// the section whose header sits at (or just above) the top of the viewport — what the nav highlights.
 	// at the very bottom the last section wins even if its short body never reaches the top.
-	const sections = [...layout.sectionRowIndex].map(([key, rowIndex]) => ({
-		key,
-		top: layout.rows[rowIndex]!.top,
-	}));
+	const sections = Array.from(layout.sectionRowIndex, ([key, rowIndex]) => {
+		return {
+			key,
+			top: layout.rows[rowIndex]!.top,
+		};
+	});
 
 	let activeSection: string | null = null;
 	if (sections.length) {
