@@ -34,7 +34,7 @@ import { ModeratedListEmbed } from './ListEmbed';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
 import { StandardSiteEmbed } from './StandardSiteEmbed';
 import { isStandardSiteEmbed } from './StandardSiteEmbed/utils';
-import type { CommonProps, EmbedProps, PostEmbedViewContext } from './types';
+import { type CommonProps, type EmbedProps, PostEmbedViewContext } from './types';
 import { VideoEmbed } from './VideoEmbed';
 
 export { PostEmbedViewContext } from './types';
@@ -310,7 +310,12 @@ export function QuoteEmbed({
 
 	return (
 		<GalleryBleed>
-			<div className={css.quoteOuter}>
+			<div
+				className={clsx(
+					css.quoteOuter,
+					viewContext !== PostEmbedViewContext.ChatMessage && css.quoteOuterGap,
+				)}
+			>
 				<ContentHider
 					modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
 					className={clsx(css.quoteCard, !linkDisabled && css.quoteCardHover)}

@@ -33,6 +33,10 @@ export const quoteOuter = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
+});
+
+// Top gap above a quote. Omitted in chat, where clustered-message spacing owns the gap.
+export const quoteOuterGap = style({
 	marginTop: 8,
 });
 

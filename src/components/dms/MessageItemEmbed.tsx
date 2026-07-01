@@ -36,8 +36,6 @@ function MessageItemEmbed({
 						minWidth: 280,
 						maxWidth: 360,
 					},
-					// Cancel the embed's internal top margin so clustered message spacing owns the gap.
-					{ marginTop: -a.mt_sm.marginTop },
 				]}
 			>
 				<View>
