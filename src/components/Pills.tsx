@@ -10,10 +10,8 @@ import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 import { Button } from '#/components/Button';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
-import {
-	ModerationDetailsDialog,
-	useModerationDetailsDialogHandle,
-} from '#/components/web/moderation/ModerationDetailsDialog';
+import * as Dialog from '#/components/web/Dialog';
+import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -56,7 +54,7 @@ export type LabelProps = {
 
 export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelProps) {
 	const t = useTheme();
-	const handle = useModerationDetailsDialogHandle();
+	const handle = Dialog.useDialogHandle();
 	const desc = useModerationCauseDescription(cause);
 	const isLabeler = Boolean(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;

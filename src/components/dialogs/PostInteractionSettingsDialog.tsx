@@ -39,7 +39,7 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as WebDialog from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 
 import { m } from '#/paraglide/messages';
@@ -68,10 +68,10 @@ export function PostInteractionSettingsControlledDialog({
 	handle,
 	...rest
 }: PostInteractionSettingsFormProps & {
-	handle: WebDialog.DialogHandle;
+	handle: Dialog.DialogHandle;
 }) {
 	return (
-		<WebDialog.Root
+		<Dialog.Root
 			handle={handle}
 			onOpenChange={(open, details) => {
 				// preserve the old `preventDismiss` while there are unsaved changes pending a persist
@@ -81,22 +81,22 @@ export function PostInteractionSettingsControlledDialog({
 			}}
 		>
 			<DialogInner {...rest} />
-		</WebDialog.Root>
+		</Dialog.Root>
 	);
 }
 
 function DialogInner(props: PostInteractionSettingsFormProps) {
 	return (
-		<WebDialog.Popup label={m['components.dialogs.interaction.editTitle']()} size="narrow">
-			<WebDialog.Close />
+		<Dialog.Popup label={m['components.dialogs.interaction.editTitle']()} size="narrow">
+			<Dialog.Close />
 			<Header />
 			<PostInteractionSettingsForm {...props} />
-		</WebDialog.Popup>
+		</Dialog.Popup>
 	);
 }
 
 export type PostInteractionSettingsDialogProps = {
-	handle: WebDialog.DialogHandle;
+	handle: Dialog.DialogHandle;
 	/** URI of the post to edit the interaction settings for. Could be a root post or could be a reply. */
 	postUri: string;
 	/**
@@ -114,12 +114,12 @@ export type PostInteractionSettingsDialogProps = {
 /** Threadgate settings dialog. Used in the thread. */
 export function PostInteractionSettingsDialog({ handle, ...props }: PostInteractionSettingsDialogProps) {
 	return (
-		<WebDialog.Root handle={handle}>
-			<WebDialog.Popup label={m['components.dialogs.interaction.editTitle']()} size="narrow">
-				<WebDialog.Close />
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup label={m['components.dialogs.interaction.editTitle']()} size="narrow">
+				<Dialog.Close />
 				<PostInteractionSettingsDialogInner handle={handle} {...props} />
-			</WebDialog.Popup>
-		</WebDialog.Root>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 

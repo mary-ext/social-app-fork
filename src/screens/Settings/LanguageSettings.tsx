@@ -13,7 +13,7 @@ import { Filter_Stroke2_Corner0_Rounded as FilterIcon } from '#/components/icons
 import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { Language_Stroke2_Corner2_Rounded as LanguageIcon } from '#/components/icons/Language';
 import * as Settings from '#/components/SettingsCards';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
@@ -40,7 +40,7 @@ export function LanguageSettingsScreen({}: Props) {
 		[setLangPrefs],
 	);
 
-	const contentLanguagePrefsHandle = useDialogHandle();
+	const contentLanguagePrefsHandle = Dialog.useDialogHandle();
 
 	const onChangeAppLanguage = (value: string) => {
 		if (value && LOCALE !== value) {

@@ -36,7 +36,7 @@ import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Pl
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
-import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
+import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -70,7 +70,7 @@ export function ProfileFeedHeaderSkeleton() {
 export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 	const { hasSession } = useSession();
 	const infoHandle = Dialog.useDialogHandle();
-	const reportDialogHandle = useReportDialogHandle();
+	const reportDialogHandle = Dialog.useDialogHandle();
 
 	const { data: preferences } = usePreferencesQuery();
 

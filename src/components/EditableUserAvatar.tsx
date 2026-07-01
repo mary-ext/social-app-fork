@@ -21,7 +21,7 @@ import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/componen
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
 import { UserAvatar, type UserAvatarType } from '#/components/UserAvatar';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -38,7 +38,7 @@ export function EditableUserAvatar({
 	onSelectNewAvatar: (img: ImageMeta | null) => void;
 }) {
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogHandle = useDialogHandle();
+	const editImageDialogHandle = Dialog.useDialogHandle();
 
 	const circular = type !== 'algo' && type !== 'list';
 	const radius = circular ? '50%' : size > 32 ? '8px' : '3px';

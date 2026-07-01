@@ -22,7 +22,7 @@ import { Button, ButtonText } from '#/components/Button';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { ListFooter } from '#/components/Lists';
 import * as ProfileCard from '#/components/ProfileCard';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -213,7 +213,7 @@ function ListMember({
 	list: string;
 }) {
 	const t = useTheme();
-	const editMembershipDialogHandle = useDialogHandle();
+	const editMembershipDialogHandle = Dialog.useDialogHandle();
 
 	return (
 		<View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>

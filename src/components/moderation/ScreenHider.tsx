@@ -8,10 +8,7 @@ import type { NavigationProp } from '#/lib/routes/types';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import {
-	ModerationDetailsDialog,
-	useModerationDetailsDialogHandle,
-} from '#/components/web/moderation/ModerationDetailsDialog';
+import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -29,7 +26,7 @@ export function ScreenHider({
 }>) {
 	const [override, setOverride] = useState(false);
 	const navigation = useNavigation<NavigationProp>();
-	const handle = useModerationDetailsDialogHandle();
+	const handle = Dialog.useDialogHandle();
 	const blur = modui.blurs[0];
 	const desc = useModerationCauseDescription(blur);
 

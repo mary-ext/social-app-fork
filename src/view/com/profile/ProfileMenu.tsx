@@ -40,11 +40,11 @@ import { StarterPack } from '#/components/icons/StarterPack';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
-import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
+import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import { useDialogHandle } from '#/components/web/Dialog';
-import * as WebPrompt from '#/components/web/Prompt';
+import * as Dialog from '#/components/web/Dialog';
+import * as Prompt from '#/components/web/Prompt';
 
 import { useActorStatus, useLiveNowConfig } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
@@ -63,8 +63,8 @@ function ProfileMenu({
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
 }): React.ReactNode {
 	const { currentAccount, hasSession } = useSession();
-	const reportDialogHandle = useReportDialogHandle();
-	const addToListsDialogHandle = useDialogHandle();
+	const reportDialogHandle = Dialog.useDialogHandle();
+	const addToListsDialogHandle = Dialog.useDialogHandle();
 	const queryClient = useQueryClient();
 	const navigation = useNavigation<NavigationProp>();
 	const isSelf = currentAccount?.did === profile.did;
@@ -80,12 +80,12 @@ function ProfileMenu({
 	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
-	const blockPromptHandle = WebPrompt.usePromptHandle();
-	const mutePromptHandle = WebPrompt.usePromptHandle();
-	const loggedOutWarningPromptHandle = WebPrompt.usePromptHandle();
-	const goLiveDialogHandle = useDialogHandle();
-	const goLiveDisabledDialogHandle = useDialogHandle();
-	const addToStarterPacksDialogHandle = useDialogHandle();
+	const blockPromptHandle = Prompt.usePromptHandle();
+	const mutePromptHandle = Prompt.usePromptHandle();
+	const loggedOutWarningPromptHandle = Prompt.usePromptHandle();
+	const goLiveDialogHandle = Dialog.useDialogHandle();
+	const goLiveDisabledDialogHandle = Dialog.useDialogHandle();
+	const addToStarterPacksDialogHandle = Dialog.useDialogHandle();
 
 	const showLoggedOutWarning = useMemo(() => {
 		return (
@@ -397,7 +397,7 @@ function ProfileMenu({
 				isMuted={!!profile.viewer?.muted}
 				onConfirm={() => void onPressMuteAccount()}
 			/>
-			<WebPrompt.Basic
+			<Prompt.Basic
 				handle={loggedOutWarningPromptHandle}
 				title={m['view.profile.sharing.note']()}
 				description={m['view.profile.sharing.loggedInOnly.message']()}

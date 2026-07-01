@@ -8,7 +8,7 @@ import { useExternalEmbedsPrefs } from '#/state/preferences';
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -22,7 +22,7 @@ export type ExternalGifProps = {
 /** Click-to-play giphy gif: swaps a static thumbnail for the animated source on activation. */
 export function ExternalGif({ link, params }: ExternalGifProps) {
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
-	const consentDialogHandle = useDialogHandle();
+	const consentDialogHandle = Dialog.useDialogHandle();
 
 	const [isPlayerActive, setIsPlayerActive] = useState(false);
 	const [isPrefetched, setIsPrefetched] = useState(false);

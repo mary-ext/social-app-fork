@@ -6,10 +6,8 @@ import {
 	useModerationCauseDescription,
 } from '#/lib/moderation/useModerationCauseDescription';
 
-import {
-	ModerationDetailsDialog,
-	useModerationDetailsDialogHandle,
-} from '#/components/web/moderation/ModerationDetailsDialog';
+import * as Dialog from '#/components/web/Dialog';
+import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 
 type Context = {
 	isContentVisible: boolean;
@@ -37,7 +35,7 @@ export function Outer({
 	allowOverride?: boolean;
 	modui: DisplayRestrictions | undefined;
 }>) {
-	const handle = useModerationDetailsDialogHandle();
+	const handle = Dialog.useDialogHandle();
 	const blur = modui?.blurs[0];
 	const [isContentVisible, setIsContentVisible] = useState(isContentVisibleInitialState || !blur);
 	const info = useModerationCauseDescription(blur);

@@ -19,7 +19,7 @@ import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/com
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -32,7 +32,7 @@ export function EditableBanner({
 	onSelectNewBanner: (img: ImageMeta | null) => void;
 }) {
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogHandle = useDialogHandle();
+	const editImageDialogHandle = Dialog.useDialogHandle();
 
 	const onOpenLibrary = useCallback(async () => {
 		const file = await openImagePicker();

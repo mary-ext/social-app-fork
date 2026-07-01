@@ -6,13 +6,13 @@ import type { ComposerOpts } from '#/lib/hooks/useOpenComposer';
 import type { SessionAccount } from '#/state/session';
 
 import type { ReportSubject } from '#/components/moderation/ReportDialog';
-import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 /** the images and the index to open the global lightbox on. */
 export type LightboxPayload = { images: LightboxImage[]; index: number };
 
 /** detached handle for the global lightbox. */
-export type LightboxHandle = DialogHandle<LightboxPayload>;
+export type LightboxHandle = Dialog.DialogHandle<LightboxPayload>;
 
 export type SigninDialogPayload = {
 	/** whether the chooser frames itself as signing in (default) or switching the active account. */
@@ -30,13 +30,13 @@ export type LinkWarningPayload = {
 
 type HandlesContext = {
 	/** the app-wide composer dialog, opened imperatively (no declarative trigger). */
-	composerDialogHandle: DialogHandle<ComposerOpts>;
+	composerDialogHandle: Dialog.DialogHandle<ComposerOpts>;
 	/** the group-chat join dialog. */
-	groupChatJoinHandle: DialogHandle<{ code: string }>;
+	groupChatJoinHandle: Dialog.DialogHandle<{ code: string }>;
 	lightboxHandle: LightboxHandle;
-	signinDialogHandle: DialogHandle<SigninDialogPayload>;
-	linkWarningDialogHandle: DialogHandle<LinkWarningPayload>;
-	reportDialogHandle: DialogHandle<{ subject: ReportSubject }>;
+	signinDialogHandle: Dialog.DialogHandle<SigninDialogPayload>;
+	linkWarningDialogHandle: Dialog.DialogHandle<LinkWarningPayload>;
+	reportDialogHandle: Dialog.DialogHandle<{ subject: ReportSubject }>;
 };
 
 const HandlesContext = createContext<HandlesContext | null>(null);
@@ -51,12 +51,12 @@ export function useGlobalDialogsHandleContext() {
 }
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
-	const composerDialogHandle = useDialogHandle<ComposerOpts>();
-	const groupChatJoinHandle = useDialogHandle<{ code: string }>();
-	const lightboxHandle = useDialogHandle<LightboxPayload>();
-	const signinDialogHandle = useDialogHandle<SigninDialogPayload>();
-	const linkWarningDialogHandle = useDialogHandle<LinkWarningPayload>();
-	const reportDialogHandle = useDialogHandle<{ subject: ReportSubject }>();
+	const composerDialogHandle = Dialog.useDialogHandle<ComposerOpts>();
+	const groupChatJoinHandle = Dialog.useDialogHandle<{ code: string }>();
+	const lightboxHandle = Dialog.useDialogHandle<LightboxPayload>();
+	const signinDialogHandle = Dialog.useDialogHandle<SigninDialogPayload>();
+	const linkWarningDialogHandle = Dialog.useDialogHandle<LinkWarningPayload>();
+	const reportDialogHandle = Dialog.useDialogHandle<{ subject: ReportSubject }>();
 
 	const ctx: HandlesContext = {
 		composerDialogHandle,

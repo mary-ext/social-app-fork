@@ -12,7 +12,7 @@ import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
 import { UserBanner } from '#/components/UserBanner';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
@@ -33,7 +33,7 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 	} = useProfileHeader();
 	const { lightboxHandle } = useGlobalDialogsHandleContext();
 	const navigation = useNavigation<NavigationProp>();
-	const liveStatusHandle = useDialogHandle();
+	const liveStatusHandle = Dialog.useDialogHandle();
 
 	const mediaModeration = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 	const isLabeler = !!profile.associated?.labeler;

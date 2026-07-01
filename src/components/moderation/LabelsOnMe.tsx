@@ -5,7 +5,7 @@ import { clsx } from 'clsx';
 import { useSession } from '#/state/session';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { LabelsOnMeDialog, useLabelsOnMeDialogHandle } from '#/components/moderation/LabelsOnMeDialog';
+import { LabelsOnMeDialog } from '#/components/moderation/LabelsOnMeDialog';
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
@@ -25,7 +25,7 @@ export function LabelsOnMe({
 	type: 'account' | 'content';
 }) {
 	const { currentAccount } = useSession();
-	const handle = useLabelsOnMeDialogHandle();
+	const handle = Dialog.useDialogHandle();
 
 	if (!labels || !currentAccount) {
 		return null;

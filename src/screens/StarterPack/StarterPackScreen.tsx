@@ -48,7 +48,7 @@ import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
-import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
+import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
@@ -423,7 +423,7 @@ function OverflowMenu({
 }) {
 	const t = useTheme();
 	const { currentAccount } = useSession();
-	const reportDialogHandle = useReportDialogHandle();
+	const reportDialogHandle = Dialog.useDialogHandle();
 	const deleteHandle = Prompt.usePromptHandle();
 	const convertToListHandle = Dialog.useDialogHandle();
 	const navigation = useNavigation<NavigationProp>();

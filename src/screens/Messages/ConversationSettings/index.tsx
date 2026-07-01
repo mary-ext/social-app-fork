@@ -28,7 +28,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, type ButtonColor, ButtonIcon } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
+import { useDialogControl } from '#/components/Dialog';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
@@ -48,7 +48,7 @@ import { Loader } from '#/components/Loader';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -375,12 +375,12 @@ function SettingsHeader({
 		leaveConvo();
 	};
 
-	const inviteLinkDialog = Dialog.useDialogControl();
+	const inviteLinkDialog = useDialogControl();
 	const editNamePrompt = Prompt.usePromptControl();
 	const lockChatPrompt = Prompt.usePromptControl();
 	const leaveChatPrompt = Prompt.usePromptControl();
 	const leaveAndLockChatPrompt = Prompt.usePromptControl();
-	const reportHandle = useDialogHandle();
+	const reportHandle = Dialog.useDialogHandle();
 	const deleteControl = Prompt.usePromptControl();
 
 	const handleToggleMute = () => {

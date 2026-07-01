@@ -33,7 +33,7 @@ import {
 	type ButtonProps as WebButtonProps,
 	ButtonText as WebButtonText,
 } from '#/components/web/Button';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -93,7 +93,7 @@ export function RejectMenu({
 		leaveConvo();
 	}, [queueBlock, leaveConvo]);
 
-	const reportHandle = useDialogHandle();
+	const reportHandle = Dialog.useDialogHandle();
 	const blockOrDeleteControl = useDialogControl();
 
 	const reportSubject = getConvoReportSubject(convo, currentAccount?.did);

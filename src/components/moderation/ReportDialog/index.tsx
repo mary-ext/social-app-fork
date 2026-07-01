@@ -45,7 +45,6 @@ import { parseReportSubject } from './utils/parseReportSubject';
 import { type ReportCategoryConfig, type ReportOption, useReportOptions } from './utils/useReportOptions';
 
 export { type ReportSubject } from './types';
-export { useDialogHandle as useReportDialogHandle } from '#/components/web/Dialog';
 
 /** Caps the free-text context; submission is blocked past this and the counter turns negative. */
 const MAX_DETAILS_LENGTH = 300;

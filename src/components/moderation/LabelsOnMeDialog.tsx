@@ -31,8 +31,6 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './LabelsOnMeDialog.css';
 
-export { useDialogHandle as useLabelsOnMeDialogHandle } from '#/components/web/Dialog';
-
 export interface LabelsOnMeDialogProps {
 	handle: Dialog.DialogHandle;
 	labels: ComAtprotoLabelDefs.Label[];

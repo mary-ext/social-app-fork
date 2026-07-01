@@ -22,7 +22,7 @@ import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/compo
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Menu from '#/components/Menu';
-import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
+import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
@@ -40,7 +40,7 @@ export function MoreOptionsMenu({
 	const { currentAccount } = useSession();
 	const editListHandle = Dialog.useDialogHandle();
 	const deleteListPromptHandle = Prompt.usePromptHandle();
-	const reportDialogHandle = useReportDialogHandle();
+	const reportDialogHandle = Dialog.useDialogHandle();
 	const navigation = useNavigation<NavigationProp>();
 
 	const { mutateAsync: removeSavedFeed } = useRemoveFeedMutation();

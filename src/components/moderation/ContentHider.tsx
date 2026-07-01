@@ -19,10 +19,7 @@ import { LOCALE } from '#/locale/intl/locale';
 
 import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
-import {
-	ModerationDetailsDialog,
-	useModerationDetailsDialogHandle,
-} from '#/components/web/moderation/ModerationDetailsDialog';
+import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -87,7 +84,7 @@ function ContentHiderActive({
 	children?: ReactNode;
 }) {
 	const [override, setOverride] = useState(false);
-	const handle = useModerationDetailsDialogHandle();
+	const handle = Dialog.useDialogHandle();
 	const { labelDefs } = useLabelDefinitions();
 	const globalLabelStrings = useGlobalLabelStrings();
 	const blur = modui.blurs[0]!;

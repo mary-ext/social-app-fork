@@ -10,7 +10,7 @@ import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -24,7 +24,7 @@ export type ExternalPlayerProps = {
 /** Click-to-play iframe embed (youtube/vimeo/spotify/…): thumbnail + play overlay until activated. */
 export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
-	const consentDialogHandle = useDialogHandle();
+	const consentDialogHandle = Dialog.useDialogHandle();
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	const [isActive, setIsActive] = useState(false);

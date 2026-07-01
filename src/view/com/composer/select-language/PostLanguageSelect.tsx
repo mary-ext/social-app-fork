@@ -8,7 +8,7 @@ import { LOCALE } from '#/locale/intl/locale';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import * as Menu from '#/components/Menu';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -30,7 +30,7 @@ export function PostLanguageSelect({
 }) {
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
-	const languageDialogHandle = useDialogHandle();
+	const languageDialogHandle = Dialog.useDialogHandle();
 
 	const dedupedHistory = Array.from(new Set([...langPrefs.postLanguageHistory, langPrefs.postLanguage]));
 

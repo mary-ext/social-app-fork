@@ -42,7 +42,7 @@ import { Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen } from '#/compone
 import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 import { Trash_Stroke2_Corner0_Rounded } from '#/components/icons/Trash';
 import { Link } from '#/components/Link';
-import { useMenuHandle } from '#/components/Menu';
+import * as Menu from '#/components/Menu';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { createPortalGroup } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
@@ -254,7 +254,7 @@ function BaseChatItem({
 }) {
 	const t = useTheme();
 	const { currentAccount } = useSession();
-	const menuHandle = useMenuHandle();
+	const menuHandle = Menu.useMenuHandle();
 	const menuTriggerId = useId();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const leaveConvoControl = useDialogControl();

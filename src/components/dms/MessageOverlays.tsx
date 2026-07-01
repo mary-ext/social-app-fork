@@ -13,7 +13,7 @@ import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import { usePromptControl } from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -41,7 +41,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const convo = useConvoActive();
 
 	const deleteControl = usePromptControl();
-	const reportHandle = useDialogHandle();
+	const reportHandle = Dialog.useDialogHandle();
 	const afterReportControl = usePromptControl();
 	const reactionsControl = useDialogControl();
 

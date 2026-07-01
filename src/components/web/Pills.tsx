@@ -9,10 +9,7 @@ import type { AppModerationCause } from '#/components/Pills';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import * as Dialog from '#/components/web/Dialog';
-import {
-	ModerationDetailsDialog,
-	useModerationDetailsDialogHandle,
-} from '#/components/web/moderation/ModerationDetailsDialog';
+import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 import * as styles from '#/components/web/Pills.css';
 
 import { m } from '#/paraglide/messages';
@@ -39,7 +36,7 @@ export type LabelProps = {
 
 /** A single moderation pill: a glyph/avatar + label that opens the moderation-details dialog when pressed. */
 export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
-	const handle = useModerationDetailsDialogHandle();
+	const handle = Dialog.useDialogHandle();
 	const desc = useModerationCauseDescription(cause);
 	const isLabeler = Boolean(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;

@@ -37,7 +37,7 @@ import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -74,7 +74,7 @@ function ConvoMenu({
 	const reportDid = reportSubject && 'did' in reportSubject ? reportSubject.did : null;
 
 	const leaveConvoControl = Prompt.usePromptControl();
-	const reportHandle = useDialogHandle();
+	const reportHandle = Dialog.useDialogHandle();
 	const blockedByListControl = Prompt.usePromptControl();
 	const blockOrDeleteControl = Prompt.usePromptControl();
 	const deleteControl = Prompt.usePromptControl();
@@ -184,7 +184,7 @@ function MenuContent({
 	};
 	leaveConvoControl: Prompt.PromptControlProps;
 	canReport: boolean;
-	reportHandle: DialogHandle;
+	reportHandle: Dialog.DialogHandle;
 	blockedByListControl: Prompt.PromptControlProps;
 }) {
 	const navigation = useNavigation<NavigationProp>();

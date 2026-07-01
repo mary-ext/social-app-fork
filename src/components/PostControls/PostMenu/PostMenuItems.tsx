@@ -64,9 +64,9 @@ import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
-import { ReportDialog, useReportDialogHandle } from '#/components/moderation/ReportDialog';
+import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
-import { useDialogHandle } from '#/components/web/Dialog';
+import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
@@ -98,9 +98,9 @@ function PostMenuItems({
 	const navigation = useNavigation<NavigationProp>();
 	const blockPromptHandle = Prompt.usePromptHandle();
 	const mutePromptHandle = Prompt.usePromptHandle();
-	const reportDialogHandle = useReportDialogHandle();
+	const reportDialogHandle = Dialog.useDialogHandle();
 	const deletePromptHandle = Prompt.usePromptHandle();
-	const postInteractionSettingsHandle = useDialogHandle();
+	const postInteractionSettingsHandle = Dialog.useDialogHandle();
 	const quotePostDetachConfirmHandle = Prompt.usePromptHandle();
 	const hideReplyConfirmHandle = Prompt.usePromptHandle();
 	const { mutateAsync: toggleReplyVisibility } = useToggleReplyVisibilityMutation();

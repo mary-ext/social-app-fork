@@ -20,8 +20,6 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './ModerationDetailsDialog.css';
 
-export { useDialogHandle as useModerationDetailsDialogHandle } from '#/components/web/Dialog';
-
 export interface ModerationDetailsDialogProps {
 	handle: Dialog.DialogHandle;
 	modcause?: AppModerationCause | ModerationCause;
