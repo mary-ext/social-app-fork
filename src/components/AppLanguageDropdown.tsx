@@ -1,8 +1,9 @@
 import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
 import { APP_LANGUAGES } from '#/locale/languages';
 
+import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import * as Select from '#/components/Select';
-import { Button } from '#/components/web/Button';
+import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import type { Locale } from '#/paraglide/runtime';
@@ -35,6 +36,7 @@ export function AppLanguageDropdown() {
 					/>
 				}
 			>
+				<ButtonIcon icon={EarthIcon} />
 				<Select.Value
 					placeholder={m['components.appLanguageDropdown.a11y.select']()}
 					className={styles.value}
