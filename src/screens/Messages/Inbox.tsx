@@ -11,6 +11,7 @@ import { cleanError } from '#/lib/strings/errors';
 
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
 import { useMessagesEventBus } from '#/state/messages/events';
+import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts';
 import { useListConvoRequests } from '#/state/queries/messages/list-conversation-requests';
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
@@ -71,14 +72,8 @@ export function MessagesInboxScreenInner({}: Props) {
 		return items;
 	}, [data]);
 
-	const hasUnreadConvos = useMemo(() => {
-		return conversations.some(
-			(item) =>
-				item.type === 'incoming' &&
-				item.view.members.every((member) => member.handle !== 'missing.invalid') &&
-				item.view.unreadCount > 0,
-		);
-	}, [conversations]);
+	const { data: unreadCounts } = useUnreadCountsQuery();
+	const hasUnreadConvos = (unreadCounts?.unreadRequestConvos ?? 0) > 0;
 
 	return (
 		<Layout.Screen testID="messagesInboxScreen">

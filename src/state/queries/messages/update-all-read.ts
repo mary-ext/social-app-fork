@@ -1,3 +1,4 @@
+import type { ChatBskyConvoGetUnreadCounts } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -5,6 +6,7 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY } from './get-unread-counts';
 import {
 	type ConvoRequestListQueryData,
 	markAllRead as markAllRequestsRead,
@@ -84,10 +86,29 @@ export function useUpdateAllRead(
 					};
 				},
 			);
+			// zero out the badge count query that actually drives the unread badge,
+			// since it's a separate server query that the list caches don't feed
+			const prevUnreadCountsQueries = queryClient.getQueriesData<ChatBskyConvoGetUnreadCounts.$output>({
+				queryKey: UNREAD_COUNTS_PARTIAL_KEY,
+			});
+			queryClient.setQueriesData<ChatBskyConvoGetUnreadCounts.$output>(
+				{ queryKey: UNREAD_COUNTS_PARTIAL_KEY },
+				(old) => {
+					if (!old) return old;
+					return {
+						...old,
+						...(status === 'accepted' ? { unreadAcceptedConvos: 0 } : { unreadRequestConvos: 0 }),
+					};
+				},
+			);
 			onMutate?.();
-			return { prevConvoListQueries, prevRequestsQueries };
+			return { prevConvoListQueries, prevRequestsQueries, prevUnreadCountsQueries };
 		},
 		onSuccess: () => {
+			// the optimistic badge zeroing can drift from the server, so invalidate
+			// the count query to let it self-correct on next access rather than
+			// waiting for a log event
+			void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_PARTIAL_KEY });
 			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_PARTIAL_KEY(status) });
 			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_PARTIAL_KEY('all', 'unread') });
 			if (status === 'request') {
@@ -107,6 +128,11 @@ export function useUpdateAllRead(
 					queryClient.setQueryData(queryKey, prevData);
 				}
 				void queryClient.invalidateQueries({ queryKey: [CONVO_REQUEST_LIST_KEY] });
+			}
+			if (context?.prevUnreadCountsQueries) {
+				for (const [queryKey, prevData] of context.prevUnreadCountsQueries) {
+					queryClient.setQueryData(queryKey, prevData);
+				}
 			}
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
 			onError?.(error);

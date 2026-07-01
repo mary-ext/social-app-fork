@@ -1,3 +1,5 @@
+import { UNREAD_REQUEST_CAP } from '#/state/queries/messages/get-unread-counts';
+
 import { atoms as a } from '#/alf';
 
 import { ButtonIcon, ButtonText } from '#/components/Button';
@@ -5,9 +7,6 @@ import { Inbox_Stroke2_Corner2_Rounded as InboxIcon } from '#/components/icons/I
 import { Link } from '#/components/Link';
 
 import { m } from '#/paraglide/messages';
-
-// The server caps unreadRequestConvos at 11, where 11 means "any more than 10".
-const REQUEST_COUNT_CAP = 11;
 
 export function InboxRequests({
 	count,
@@ -19,12 +18,12 @@ export function InboxRequests({
 	action?: 'navigate' | 'push';
 }) {
 	const unread = count > 0;
-	const overflow = count >= REQUEST_COUNT_CAP;
+	const overflow = count >= UNREAD_REQUEST_CAP;
 
 	const label = !unread
 		? m['screens.messages.requests.label']()
 		: overflow
-			? m['screens.messages.requests.tenPlusRequests']()
+			? m['screens.messages.requests.countOverflow']({ count: UNREAD_REQUEST_CAP - 1 })
 			: m['screens.messages.requests.shortCount']({ count });
 
 	switch (variant) {
@@ -43,7 +42,9 @@ export function InboxRequests({
 					<ButtonIcon icon={InboxIcon} size="lg" />
 					{unread && (
 						<ButtonText style={[a.text_md, a.font_bold]}>
-							{overflow ? m['screens.messages.requests.tenPlus']() : count}
+							{overflow
+								? m['screens.messages.requests.shortCountOverflow']({ count: UNREAD_REQUEST_CAP - 1 })
+								: count}
 						</ButtonText>
 					)}
 				</Link>

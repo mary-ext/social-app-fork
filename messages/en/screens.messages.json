@@ -288,8 +288,15 @@
 			}
 		}
 	],
-	"screens.messages.requests.tenPlus": "10+",
-	"screens.messages.requests.tenPlusRequests": "10+ requests",
+	"screens.messages.requests.shortCountOverflow": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "{n}+"
+			}
+		}
+	],
 	"screens.messages.requests.title": "Chat requests",
 	"screens.messages.requests.toJoinCount": [
 		{
