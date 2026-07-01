@@ -9,7 +9,7 @@ import {
 import {
 	ModerationDetailsDialog,
 	useModerationDetailsDialogControl,
-} from '#/components/moderation/ModerationDetailsDialog';
+} from '#/components/web/moderation/ModerationDetailsDialog';
 
 type Context = {
 	isContentVisible: boolean;
@@ -53,7 +53,7 @@ export function Outer({
 	};
 
 	const showInfoDialog = () => {
-		control.open();
+		control.open(null);
 	};
 
 	const onSetContentVisible = (show: boolean) => {

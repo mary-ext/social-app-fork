@@ -8,12 +8,12 @@ import { useModerationCauseDescription } from '#/lib/moderation/useModerationCau
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Button } from '#/components/Button';
+import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/UserAvatar';
 import {
 	ModerationDetailsDialog,
 	useModerationDetailsDialogControl,
-} from '#/components/moderation/ModerationDetailsDialog';
-import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/UserAvatar';
+} from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -103,7 +103,7 @@ export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelP
 				onPress={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
-					control.open();
+					control.open(null);
 				}}
 			>
 				{({ hovered, pressed }) => (
