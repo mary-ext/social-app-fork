@@ -49,17 +49,17 @@ import { InlineLinkText } from '#/components/web/Link';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-import * as styles from './ProfileFeedHeader.css';
+import * as css from './ProfileFeedHeader.css';
 
 export function ProfileFeedHeaderSkeleton() {
 	return (
 		<Layout.Header.Outer>
 			<Layout.Header.BackButton />
 			<Layout.Header.Content>
-				<div className={styles.skeletonBar} />
+				<div className={css.skeletonBar} />
 			</Layout.Header.Content>
 			<Layout.Header.Slot>
-				<div className={styles.skeletonPin}>
+				<div className={css.skeletonPin}>
 					<Pin size="lg" fill={colors.textContrastLow} />
 				</div>
 			</Layout.Header.Slot>
@@ -156,26 +156,22 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
 					<button
-						className={styles.infoButton}
+						className={css.infoButton}
 						aria-label={m['screens.profile.feed.a11y.openInfo']()}
 						onClick={() => infoHandle.open(null)}
 					>
 						{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
 
-						<span className={styles.infoButtonText}>
-							<Text weight="bold" numberOfLines={2} className={styles.infoButtonTitle}>
+						<span className={css.infoButtonText}>
+							<Text weight="bold" size="lg" numberOfLines={2}>
 								{info.displayName}
 							</Text>
-							<span className={styles.infoButtonMeta}>
-								<Text
-									size="sm"
-									color="textContrastMedium"
-									numberOfLines={1}
-									className={styles.infoButtonHandle}
-								>
-									{sanitizeHandle(info.creatorHandle, '@')}
+							<span className={css.infoButtonMeta}>
+								<Text size="sm" color="textContrastMedium" numberOfLines={1} className={css.infoButtonHandle}>
+									{sanitizeHandle(info.creatorHandle)}
 								</Text>
-								<span className={styles.infoButtonLikes}>
+
+								<span className={css.infoButtonLikes}>
 									<HeartFilled size="xs" fill={likeUri ? colors.pink : colors.textContrastLow} />
 									<Text size="sm" color="textContrastMedium" numberOfLines={1}>
 										{formatCount(likeCount)}
@@ -184,7 +180,9 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 							</span>
 						</span>
 
-						<Ellipsis size="lg" fill={colors.textContrastLow} />
+						<div className={css.infoButtonEllipsis}>
+							<Ellipsis size="lg" fill={colors.contrast_600} />
+						</div>
 					</button>
 				</Layout.Header.Content>
 
@@ -201,7 +199,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 											shape="round"
 											color="secondary"
 										>
-											<PinFilled size="xl" fill={colors.primary_500} />
+											<PinFilled size="lg" fill={colors.primary_500} />
 										</Button>
 									}
 								/>
@@ -245,7 +243,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				)}
 			</Layout.Header.Outer>
 			<Dialog.Root handle={infoHandle}>
-				<Dialog.Popup label={m['screens.profile.feed.a11y.menu']()} className={styles.dialogPopup}>
+				<Dialog.Popup label={m['screens.profile.feed.a11y.menu']()} className={css.dialogPopup}>
 					<DialogInner
 						info={info}
 						likeUri={likeUri}
@@ -325,12 +323,12 @@ function DialogInner({
 	}, [info]);
 
 	return (
-		<div className={styles.dialogBody}>
-			<div className={styles.dialogHeaderRow}>
+		<div className={css.dialogBody}>
+			<div className={css.dialogHeaderRow}>
 				<UserAvatar type="algo" size={48} avatar={info.avatar} />
 
-				<div className={styles.dialogNameColumn}>
-					<Text size="_2xl" weight="bold" numberOfLines={2} className={styles.dialogTitle}>
+				<div className={css.dialogNameColumn}>
+					<Text size="_2xl" weight="bold" numberOfLines={2} className={css.dialogTitle}>
 						{info.displayName}
 					</Text>
 					<Text size="sm" color="textContrastMedium" numberOfLines={1}>
@@ -369,7 +367,7 @@ function DialogInner({
 
 			<RichText size="md" value={info.description} />
 
-			<div className={styles.dialogLikedByRow}>
+			<div className={css.dialogLikedByRow}>
 				{typeof likeCount === 'number' && (
 					<InlineLinkText
 						label={m['screens.profile.feed.action.viewLikes']()}
@@ -384,14 +382,14 @@ function DialogInner({
 			</div>
 			{hasSession && (
 				<>
-					<div className={styles.dialogActionsRow}>
+					<div className={css.dialogActionsRow}>
 						<Button
 							disabled={isLikePending || isUnlikePending}
 							label={m['screens.profile.feed.action.like']()}
 							size="small"
 							color="secondary"
 							onClick={() => void onToggleLiked()}
-							className={styles.dialogActionButton}
+							className={css.dialogActionButton}
 						>
 							{isLiked ? <HeartFilled size="sm" fill={colors.pink} /> : <ButtonIcon icon={Heart} />}
 
@@ -405,7 +403,7 @@ function DialogInner({
 							size="small"
 							color={isPinned ? 'secondary' : 'primary'}
 							onClick={onTogglePinned}
-							className={styles.dialogActionButton}
+							className={css.dialogActionButton}
 						>
 							<ButtonText>
 								{isPinned ? m['common.feeds.action.unpin']() : m['common.feeds.action.pin']()}
@@ -414,11 +412,11 @@ function DialogInner({
 						</Button>
 					</div>
 
-					<div className={styles.dialogReportSection}>
-						<div className={styles.dialogDivider} />
+					<div className={css.dialogReportSection}>
+						<div className={css.dialogDivider} />
 
-						<div className={styles.dialogReportRow}>
-							<Text size="md_sub" color="textContrastMedium" className={styles.dialogWrongText}>
+						<div className={css.dialogReportRow}>
+							<Text size="md_sub" color="textContrastMedium" className={css.dialogWrongText}>
 								{m['screens.profile.feedback.reportIssue']()}
 							</Text>
 

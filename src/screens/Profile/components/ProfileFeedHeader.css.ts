@@ -1,9 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
-import { fontSizeVar, leadingOverrideVar } from '#/components/Text.css';
+import { leadingOverrideVar } from '#/components/Text.css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize, lineHeight, space } from '#/styles/tokens.css';
+import { lineHeight, space } from '#/styles/tokens.css';
 
 export const dialogPopup = style({
 	maxWidth: 450,
@@ -86,38 +86,23 @@ export const infoButton = style({
 	borderRadius: 8,
 	cursor: 'pointer',
 	display: 'flex',
-	flex: '1 1 0%',
-	gap: 8,
+	flexGrow: 1,
+	gap: space.sm,
 	minWidth: 0,
-	paddingBlock: 2,
-	paddingLeft: 0,
-	paddingRight: 8,
-	transitionDuration: '100ms',
-	transitionProperty: 'background-color',
-	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
-	selectors: {
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
-		'&:hover': { backgroundColor: vars.palette.contrast_25 },
-	},
+	outline: 'none',
+	padding: 0,
+	textAlign: 'left',
 });
 
 export const infoButtonText = style({
-	flex: '1 1 0%',
+	flexGrow: 1,
 	minWidth: 0,
-});
-
-export const infoButtonTitle = style({
-	textAlign: 'left',
-	vars: { [fontSizeVar]: fontSize.md, [leadingOverrideVar]: String(lineHeight.snug) },
-	'@media': {
-		'screen and (min-width: 800px)': { vars: { [fontSizeVar]: fontSize.lg } },
-	},
 });
 
 export const infoButtonMeta = style({
 	display: 'flex',
 	flexDirection: 'row',
-	gap: 6,
+	gap: space.sm,
 });
 
 export const infoButtonHandle = style({
@@ -132,6 +117,26 @@ export const infoButtonLikes = style({
 	flexDirection: 'row',
 	flexShrink: 0,
 	gap: 2,
+});
+
+export const infoButtonEllipsis = style({
+	alignItems: 'center',
+	borderRadius: 999,
+	display: 'flex',
+	height: 33,
+	justifyContent: 'center',
+	transitionDuration: '100ms',
+	transitionProperty: 'background-color, color, border-color',
+	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+	width: 33,
+
+	selectors: {
+		'&:hover': { backgroundColor: vars.palette.contrast_50 },
+		[`${infoButton}:focus-visible &`]: {
+			outline: `2px solid ${vars.palette.primary_500}`,
+			outlineOffset: 2,
+		},
+	},
 });
 
 export const skeletonBar = style({
