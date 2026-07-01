@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
@@ -102,10 +102,10 @@ export function SearchablePeopleList({
 	});
 
 	const items = useMemo(() => {
-		let _items: Item[] = [];
+		let items: Item[] = [];
 
 		if (isError) {
-			_items.push({
+			items.push({
 				type: 'empty',
 				key: 'empty',
 				message: m['components.dialogs.error.network'](),
@@ -114,7 +114,7 @@ export function SearchablePeopleList({
 			if (results?.length) {
 				for (const profile of results) {
 					if (profile.did === currentAccount?.did) continue;
-					_items.push({
+					items.push({
 						type: 'profile',
 						key: profile.did,
 						profile,
@@ -122,7 +122,7 @@ export function SearchablePeopleList({
 				}
 
 				if (sortByMessageDeclaration) {
-					_items = _items.sort((item) => {
+					items = items.sort((item) => {
 						return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1;
 					});
 				}
@@ -146,7 +146,7 @@ export function SearchablePeopleList({
 							if (!convo) continue;
 
 							if (convo.kind === 'group') {
-								_items.push({
+								items.push({
 									type: 'existingChat',
 									key: convo.view.id,
 									convo,
@@ -157,7 +157,7 @@ export function SearchablePeopleList({
 
 								usedDids.add(convo.primaryMember.did);
 
-								_items.push({
+								items.push({
 									type: 'existingChat',
 									key: convo.view.id,
 									convo: convo,
@@ -188,14 +188,14 @@ export function SearchablePeopleList({
 					}
 
 					// then append
-					_items.push(...followsItems);
+					items.push(...followsItems);
 				} else {
-					_items.push(...placeholders);
+					items.push(...placeholders);
 				}
 			} else if (follows) {
 				for (const page of follows.pages) {
 					for (const profile of page.follows) {
-						_items.push({
+						items.push({
 							type: 'profile',
 							key: profile.did,
 							profile,
@@ -204,16 +204,16 @@ export function SearchablePeopleList({
 				}
 
 				if (sortByMessageDeclaration) {
-					_items = _items.sort((item) => {
+					items = items.sort((item) => {
 						return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1;
 					});
 				}
 			} else {
-				_items.push(...placeholders);
+				items.push(...placeholders);
 			}
 		}
 
-		return _items;
+		return items;
 	}, [
 		searchText,
 		results,
@@ -229,44 +229,41 @@ export function SearchablePeopleList({
 		items.push({ type: 'empty', key: 'empty', message: m['common.search.empty']() });
 	}
 
-	const renderItems = useCallback(
-		({ item }: { item: Item }) => {
-			switch (item.type) {
-				case 'existingChat': {
-					return (
-						<ExistingChatCard
-							key={item.key}
-							convo={item.convo}
-							moderationOpts={moderationOpts!}
-							onPress={(id) => onSelectChat({ kind: 'convo', id })}
-						/>
-					);
-				}
-				case 'profile': {
-					return (
-						<DefaultProfileCard
-							key={item.key}
-							profile={item.profile}
-							moderationOpts={moderationOpts!}
-							onPress={(did) => onSelectChat({ kind: 'user', did })}
-						/>
-					);
-				}
-				case 'placeholder': {
-					return <ProfileCardSkeleton key={item.key} />;
-				}
-				case 'empty': {
-					return <Empty key={item.key} message={item.message} />;
-				}
-				case 'error': {
-					return <Error key={item.key} message={m['components.dialogs.account.loadError']()} />;
-				}
-				default:
-					return null;
+	const renderItems = ({ item }: { item: Item }) => {
+		switch (item.type) {
+			case 'existingChat': {
+				return (
+					<ExistingChatCard
+						key={item.key}
+						convo={item.convo}
+						moderationOpts={moderationOpts!}
+						onPress={(id) => onSelectChat({ kind: 'convo', id })}
+					/>
+				);
 			}
-		},
-		[moderationOpts, onSelectChat],
-	);
+			case 'profile': {
+				return (
+					<DefaultProfileCard
+						key={item.key}
+						profile={item.profile}
+						moderationOpts={moderationOpts!}
+						onPress={(did) => onSelectChat({ kind: 'user', did })}
+					/>
+				);
+			}
+			case 'placeholder': {
+				return <ProfileCardSkeleton key={item.key} />;
+			}
+			case 'empty': {
+				return <Empty key={item.key} message={item.message} />;
+			}
+			case 'error': {
+				return <Error key={item.key} message={m['components.dialogs.account.loadError']()} />;
+			}
+			default:
+				return null;
+		}
+	};
 
 	useLayoutEffect(() => {
 		setTimeout(() => {
@@ -274,44 +271,42 @@ export function SearchablePeopleList({
 		}, 0);
 	}, []);
 
-	const listHeader = useMemo(() => {
-		return (
-			<View
-				onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}
-				style={[a.relative, a.pt_lg, a.pb_xs, a.px_lg, a.border_b, t.atoms.border_contrast_low, t.atoms.bg]}
-			>
-				<View style={[a.relative, a.justify_center]}>
-					<Text style={[a.z_10, a.text_lg, a.font_bold, a.leading_tight, t.atoms.text_contrast_high]}>
-						{title}
-					</Text>
-					{
-						<Button
-							label={m['common.action.close']()}
-							size="small"
-							shape="round"
-							variant={'ghost'}
-							color="secondary"
-							style={[a.absolute, a.z_20, { right: -4 }]}
-							onPress={() => control.close()}
-						>
-							<ButtonIcon icon={X} size="md" />
-						</Button>
-					}
-				</View>
-				<View style={[a.pt_xs]}>
-					<SearchInput
-						inputRef={inputRef}
-						value={searchText}
-						onChangeText={(text) => {
-							setSearchText(text);
-							listRef.current?.scrollToOffset({ offset: 0, animated: false });
-						}}
-						onEscape={control.close}
-					/>
-				</View>
+	const listHeader = (
+		<View
+			onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}
+			style={[a.relative, a.pt_lg, a.pb_xs, a.px_lg, a.border_b, t.atoms.border_contrast_low, t.atoms.bg]}
+		>
+			<View style={[a.relative, a.justify_center]}>
+				<Text style={[a.z_10, a.text_lg, a.font_bold, a.leading_tight, t.atoms.text_contrast_high]}>
+					{title}
+				</Text>
+				{
+					<Button
+						label={m['common.action.close']()}
+						size="small"
+						shape="round"
+						variant={'ghost'}
+						color="secondary"
+						style={[a.absolute, a.z_20, { right: -4 }]}
+						onPress={() => control.close()}
+					>
+						<ButtonIcon icon={X} size="md" />
+					</Button>
+				}
 			</View>
-		);
-	}, [t.atoms.border_contrast_low, t.atoms.bg, t.atoms.text_contrast_high, title, searchText, control]);
+			<View style={[a.pt_xs]}>
+				<SearchInput
+					inputRef={inputRef}
+					value={searchText}
+					onChangeText={(text) => {
+						setSearchText(text);
+						listRef.current?.scrollToOffset({ offset: 0, animated: false });
+					}}
+					onEscape={control.close}
+				/>
+			</View>
+		</View>
+	);
 
 	return (
 		<Dialog.InnerFlatList
@@ -349,9 +344,9 @@ function DefaultProfileCard({
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
-	const handleOnPress = useCallback(() => {
+	const handleOnPress = () => {
 		onPress(profile.did);
-	}, [onPress, profile.did]);
+	};
 
 	return (
 		<Button
@@ -410,9 +405,9 @@ function ExistingChatCard({
 					),
 				);
 
-	const handleOnPress = useCallback(() => {
+	const handleOnPress = () => {
 		onPress(convo.view.id);
-	}, [onPress, convo.view.id]);
+	};
 
 	return (
 		<Button

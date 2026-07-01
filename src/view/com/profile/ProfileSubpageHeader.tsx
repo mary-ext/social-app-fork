@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { useNavigation } from '@react-navigation/native';
@@ -55,7 +54,7 @@ export function ProfileSubpageHeader({
 	const pal = usePalette('default');
 	const canGoBack = navigation.canGoBack();
 
-	const onPressAvi = useCallback(() => {
+	const onPressAvi = () => {
 		if (
 			avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
 		) {
@@ -64,7 +63,7 @@ export function ProfileSubpageHeader({
 				index: 0,
 			});
 		}
-	}, [lightboxHandle, avatar]);
+	};
 
 	return (
 		<>

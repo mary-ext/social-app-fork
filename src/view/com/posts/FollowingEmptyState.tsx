@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -21,13 +20,13 @@ export function FollowingEmptyState() {
 	const palInverted = usePalette('inverted');
 	const navigation = useNavigation<NavigationProp>();
 
-	const onPressFindAccounts = useCallback(() => {
+	const onPressFindAccounts = () => {
 		navigation.navigate('Search', {});
-	}, [navigation]);
+	};
 
-	const onPressDiscoverFeeds = useCallback(() => {
+	const onPressDiscoverFeeds = () => {
 		navigation.navigate('Feeds');
-	}, [navigation]);
+	};
 
 	return (
 		<View style={styles.container}>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
@@ -75,12 +75,7 @@ export const ProfileKnownFollowersScreen = ({ route }: Props) => {
 		}
 	};
 
-	const followers = useMemo(() => {
-		if (data?.pages) {
-			return data.pages.flatMap((page) => page.followers);
-		}
-		return [];
-	}, [data]);
+	const followers = data?.pages ? data.pages.flatMap((page) => page.followers) : [];
 
 	const isError = Boolean(resolveError || error);
 

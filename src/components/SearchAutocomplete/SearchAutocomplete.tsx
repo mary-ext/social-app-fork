@@ -248,10 +248,13 @@ function ActiveSearchAutocomplete({
 	// treats `new Date()` as impure (clock-reading), so useConstant holds it rather than a const.
 	const today = useConstant(() => new Date());
 
+	// tokens/mode stay memoized: clampToConstraints (a kept useCallback, itself read from this
+	// file's own useEffect) depends on dateConstraints, which depends on this chain — React
+	// Compiler can't preserve clampToConstraints's memoization otherwise.
 	const tokens = useMemo(() => tokenize(query), [query]);
 	const active = useMemo(() => findActiveToken(tokens, caret), [tokens, caret]);
 	const mode = useMemo(() => classifyActiveToken(active), [active]);
-	const operatorSuggestions = useMemo(() => getOperatorSuggestions(tokens, active), [tokens, active]);
+	const operatorSuggestions = getOperatorSuggestions(tokens, active);
 
 	// the selectable date range for the active `since`/`until` picker (day-granular bounds).
 	const dateConstraints = useMemo(

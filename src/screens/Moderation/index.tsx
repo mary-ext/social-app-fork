@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
 	BUILTIN_LABELS,
@@ -103,18 +102,15 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 		(!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
 	);
 
-	const onToggleAdultContentEnabled = useCallback(
-		async (selected: boolean) => {
-			try {
-				await setAdultContentPref({ enabled: selected });
-			} catch (e) {
-				logger.error(`Failed to set adult content pref`, {
-					message: e instanceof Error ? e.message : String(e),
-				});
-			}
-		},
-		[setAdultContentPref],
-	);
+	const onToggleAdultContentEnabled = async (selected: boolean) => {
+		try {
+			await setAdultContentPref({ enabled: selected });
+		} catch (e) {
+			logger.error(`Failed to set adult content pref`, {
+				message: e instanceof Error ? e.message : String(e),
+			});
+		}
+	};
 
 	const handleCleanup = async () => {
 		try {

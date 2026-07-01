@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import {
 	type DisplayRestrictions,
 	type LabelModerationCause,
@@ -90,18 +90,16 @@ function ContentHiderActive({
 	const blur = modui.blurs[0]!;
 	const desc = useModerationCauseDescription(blur);
 
-	const labelName = useMemo(() => {
-		if (!modui?.blurs || !blur) {
-			return undefined;
+	let labelName: string | undefined;
+	if (!modui?.blurs || !blur) {
+		labelName = undefined;
+	} else if (blur.type !== ModerationCauseType.Label || blur.source !== null) {
+		if (desc.isSubjectAccount) {
+			labelName = m['components.moderation.label.accountSuffix']({ name: desc.name });
+		} else {
+			labelName = desc.name;
 		}
-		if (blur.type !== ModerationCauseType.Label || blur.source !== null) {
-			if (desc.isSubjectAccount) {
-				return m['components.moderation.label.accountSuffix']({ name: desc.name });
-			} else {
-				return desc.name;
-			}
-		}
-
+	} else {
 		const selfBlurCauses = modui.blurs.filter((cause): cause is LabelModerationCause => {
 			if (cause.type !== ModerationCauseType.Label) {
 				return false;
@@ -141,10 +139,11 @@ function ContentHiderActive({
 			});
 
 		if (selfBlurNames.length === 0) {
-			return desc.name;
+			labelName = desc.name;
+		} else {
+			labelName = [...new Set(selfBlurNames)].join(', ');
 		}
-		return [...new Set(selfBlurNames)].join(', ');
-	}, [modui.blurs, blur, desc.name, desc.isSubjectAccount, labelDefs, globalLabelStrings]);
+	}
 
 	const triggerInner = (
 		<>

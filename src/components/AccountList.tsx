@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
@@ -84,10 +83,6 @@ function AccountItem({
 }) {
 	const { isActive: live } = useActorStatus(profile);
 
-	const onClick = useCallback(() => {
-		onSelect(account);
-	}, [account, onSelect]);
-
 	return (
 		<button
 			aria-label={
@@ -96,7 +91,7 @@ function AccountItem({
 					: m['components.accountList.a11y.signInAs']({ handle: account.handle })
 			}
 			className={clsx(css.row, isPendingAccount && css.rowActive)}
-			onClick={onClick}
+			onClick={() => onSelect(account)}
 			type="button"
 		>
 			<UserAvatar

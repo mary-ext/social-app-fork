@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,22 +18,19 @@ export function ListsScreen({}: Props) {
 	const navigation = useNavigation<NavigationProp>();
 	const createListHandle = Dialog.useDialogHandle();
 
-	const onPressNewList = useCallback(() => {
+	const onPressNewList = () => {
 		createListHandle.open(null);
-	}, [createListHandle]);
+	};
 
-	const onCreateList = useCallback(
-		(uri: string) => {
-			try {
-				const urip = parseCanonicalResourceUri(uri);
-				navigation.navigate('ProfileList', {
-					name: urip.repo,
-					rkey: urip.rkey,
-				});
-			} catch {}
-		},
-		[navigation],
-	);
+	const onCreateList = (uri: string) => {
+		try {
+			const urip = parseCanonicalResourceUri(uri);
+			navigation.navigate('ProfileList', {
+				name: urip.repo,
+				rkey: urip.rkey,
+			});
+		} catch {}
+	};
 
 	return (
 		<Layout.Screen>

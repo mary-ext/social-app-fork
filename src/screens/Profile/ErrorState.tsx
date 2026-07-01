@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -17,13 +16,13 @@ export function ErrorState({ error }: { error: string }) {
 	const t = useTheme();
 	const navigation = useNavigation<NavigationProp>();
 
-	const onPressBack = useCallback(() => {
+	const onPressBack = () => {
 		if (navigation.canGoBack()) {
 			navigation.goBack();
 		} else {
 			navigation.navigate('Home');
 		}
-	}, [navigation]);
+	};
 
 	return (
 		<View style={[a.px_xl]}>

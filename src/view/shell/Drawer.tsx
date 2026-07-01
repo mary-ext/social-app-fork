@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 import { useNavigation } from '@react-navigation/native';
 
@@ -90,29 +89,23 @@ function DrawerContent() {
 		useNavigationTabState();
 	const numUnreadNotifications = useUnreadNotifications();
 
-	const onPressTab = useCallback(
-		(tab: 'Home' | 'Messages' | 'MyProfile' | 'Notifications' | 'Search') => {
-			setDrawerOpen(false);
-			// MyProfile doesn't exist on the web navigator, so resolve it to the Profile route -ansh
-			if (tab === 'MyProfile') {
-				navigation.navigate('Profile', { name: currentAccount!.did });
-			} else {
-				// @ts-expect-error struggles with string unions, apparently
-				navigation.navigate(tab);
-			}
-		},
-		[currentAccount, navigation, setDrawerOpen],
-	);
+	const onPressTab = (tab: 'Home' | 'Messages' | 'MyProfile' | 'Notifications' | 'Search') => {
+		setDrawerOpen(false);
+		// MyProfile doesn't exist on the web navigator, so resolve it to the Profile route -ansh
+		if (tab === 'MyProfile') {
+			navigation.navigate('Profile', { name: currentAccount!.did });
+		} else {
+			// @ts-expect-error struggles with string unions, apparently
+			navigation.navigate(tab);
+		}
+	};
 
-	const navigateAndClose = useCallback(
-		(screen: 'Bookmarks' | 'Feeds' | 'Lists' | 'Settings') => {
-			navigation.navigate(screen);
-			setDrawerOpen(false);
-		},
-		[navigation, setDrawerOpen],
-	);
+	const navigateAndClose = (screen: 'Bookmarks' | 'Feeds' | 'Lists' | 'Settings') => {
+		navigation.navigate(screen);
+		setDrawerOpen(false);
+	};
 
-	const onPressProfile = useCallback(() => onPressTab('MyProfile'), [onPressTab]);
+	const onPressProfile = () => onPressTab('MyProfile');
 
 	return (
 		<>

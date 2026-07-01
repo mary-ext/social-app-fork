@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import { openImagePicker } from '#/lib/media/picker';
 import { isCancelledError } from '#/lib/strings/errors';
@@ -34,7 +34,7 @@ export function EditableBanner({
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
 	const editImageDialogHandle = Dialog.useDialogHandle();
 
-	const onOpenLibrary = useCallback(async () => {
+	const onOpenLibrary = async () => {
 		const file = await openImagePicker();
 		if (!file) {
 			return;
@@ -48,14 +48,11 @@ export function EditableBanner({
 				logger.error('Failed to crop banner', { error: e });
 			}
 		}
-	}, [editImageDialogHandle]);
+	};
 
-	const onChangeEditImage = useCallback(
-		async (image: ComposerImage) => {
-			onSelectNewBanner(await compressProfileImage(image, 3000, 1000));
-		},
-		[onSelectNewBanner],
-	);
+	const onChangeEditImage = async (image: ComposerImage) => {
+		onSelectNewBanner(await compressProfileImage(image, 3000, 1000));
+	};
 
 	return (
 		<>

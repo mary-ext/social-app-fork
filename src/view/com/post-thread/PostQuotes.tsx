@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { moderatePost } from '@atcute/bluesky-moderation';
 
@@ -59,7 +59,7 @@ export function PostQuotes({ uri }: { uri: string }) {
 			)
 			.filter((item) => item !== null) ?? [];
 
-	const onRefresh = useCallback(async () => {
+	const onRefresh = async () => {
 		setIsPTRing(true);
 		try {
 			await refetch();
@@ -67,16 +67,16 @@ export function PostQuotes({ uri }: { uri: string }) {
 			logger.error('Failed to refresh quotes', { message: err });
 		}
 		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
+	};
 
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more quotes', { message: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
+	};
 
 	if (quotes.length < 1) {
 		return (

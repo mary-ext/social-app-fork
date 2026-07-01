@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { useNavigation } from '@react-navigation/native';
 
@@ -53,7 +53,7 @@ function PostThreadFollowBtnLoaded({
 	const [wasFollowing, setWasFollowing] = useState<boolean>(isFollowing);
 
 	// This prevents the button from disappearing as soon as we follow.
-	const showFollowBtn = useMemo(() => !isFollowing || !wasFollowing, [isFollowing, wasFollowing]);
+	const showFollowBtn = !isFollowing || !wasFollowing;
 
 	/**
 	 * We want this button to stay visible even after following, so that the user can unfollow if they want.
@@ -81,7 +81,7 @@ function PostThreadFollowBtnLoaded({
 		};
 	}, [isFollowing, wasFollowing, navigation]);
 
-	const onPress = useCallback(() => {
+	const onPress = () => {
 		if (!isFollowing) {
 			requireAuth(async () => {
 				try {
@@ -109,7 +109,7 @@ function PostThreadFollowBtnLoaded({
 				}
 			});
 		}
-	}, [isFollowing, requireAuth, queueFollow, queueUnfollow]);
+	};
 
 	if (!showFollowBtn) return null;
 

@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 import { clsx } from 'clsx';
@@ -67,9 +67,7 @@ export function RichText({
 	value,
 	weight,
 }: RichTextProps) {
-	const { text, facets } = useMemo(() => {
-		return typeof value === 'string' ? detectFacetsWithoutResolution(value) : value;
-	}, [value]);
+	const { text, facets } = typeof value === 'string' ? detectFacetsWithoutResolution(value) : value;
 
 	// emoji-only text is enlarged and unclamped, so it takes its own host rather than the shared one below
 	if (!facets?.length && isOnlyEmoji(text)) {

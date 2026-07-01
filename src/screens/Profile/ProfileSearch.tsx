@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
@@ -21,12 +19,9 @@ export const ProfileSearchScreen = ({ route }: Props) => {
 
 	useSetTitle(profile ? m['screens.profile.search.action.userPosts']({ handle: profile.handle }) : undefined);
 
-	const fixedParams = useMemo(
-		() => ({
-			from: profile?.handle ?? name,
-		}),
-		[profile?.handle, name],
-	);
+	const fixedParams = {
+		from: profile?.handle ?? name,
+	};
 
 	return (
 		<SearchScreenShell

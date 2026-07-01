@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import {
 	type ImageStyle,
 	Keyboard,
@@ -67,37 +67,33 @@ interface GalleryInnerProps extends GalleryProps {
 const GalleryInner = ({ images, containerInfo, dispatch }: GalleryInnerProps) => {
 	const { isMobile } = useWebMediaQueries();
 
-	const { altTextControlStyle, imageControlsStyle, imageStyle } = useMemo(() => {
-		// Cap columns at 4 so tiles stay tappable when MAX_GALLERY_IMAGES is high; n > 4 wraps to multiple
-		// rows via flexWrap on the gallery container.
-		const columns = Math.min(images.length, 4);
-		const side = images.length === 1 ? 250 : (containerInfo.width - IMAGE_GAP * (columns - 1)) / columns;
+	// Cap columns at 4 so tiles stay tappable when MAX_GALLERY_IMAGES is high; n > 4 wraps to multiple
+	// rows via flexWrap on the gallery container.
+	const columns = Math.min(images.length, 4);
+	const side = images.length === 1 ? 250 : (containerInfo.width - IMAGE_GAP * (columns - 1)) / columns;
 
-		const isOverflow = isMobile && images.length > 2;
+	const isOverflow = isMobile && images.length > 2;
 
-		return {
-			altTextControlStyle: isOverflow
-				? { left: 4, bottom: 4 }
-				: !isMobile && images.length < 3
-					? { left: 8, top: 8 }
-					: { left: 4, top: 4 },
-			imageControlsStyle: {
-				display: 'flex' as const,
-				flexDirection: 'row' as const,
-				position: 'absolute' as const,
-				...(isOverflow
-					? { top: 4, right: 4, gap: 4 }
-					: !isMobile && images.length < 3
-						? { top: 8, right: 8, gap: 8 }
-						: { top: 4, right: 4, gap: 4 }),
-				zIndex: 1,
-			},
-			imageStyle: {
-				height: side,
-				width: side,
-			},
-		};
-	}, [images.length, containerInfo, isMobile]);
+	const altTextControlStyle = isOverflow
+		? { left: 4, bottom: 4 }
+		: !isMobile && images.length < 3
+			? { left: 8, top: 8 }
+			: { left: 4, top: 4 };
+	const imageControlsStyle = {
+		display: 'flex' as const,
+		flexDirection: 'row' as const,
+		position: 'absolute' as const,
+		...(isOverflow
+			? { top: 4, right: 4, gap: 4 }
+			: !isMobile && images.length < 3
+				? { top: 8, right: 8, gap: 8 }
+				: { top: 4, right: 4, gap: 4 }),
+		zIndex: 1,
+	};
+	const imageStyle = {
+		height: side,
+		width: side,
+	};
 
 	return images.length !== 0 ? (
 		<>

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDefs } from '@atcute/bluesky';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -57,20 +57,18 @@ export function MessagesInboxScreenInner({}: Props) {
 	const listConvosQuery = useListConvoRequests();
 	const { data } = listConvosQuery;
 
-	const conversations = useMemo<RequestItem[]>(() => {
-		if (!data?.pages) return [];
-		const items: RequestItem[] = [];
+	const conversations: RequestItem[] = [];
+	if (data?.pages) {
 		for (const page of data.pages) {
 			for (const item of page.requests) {
 				if (item.$type === 'chat.bsky.convo.defs#convoView') {
-					items.push({ type: 'incoming', view: item });
+					conversations.push({ type: 'incoming', view: item });
 				} else if (item.$type === 'chat.bsky.group.defs#joinRequestConvoView') {
-					items.push({ type: 'outgoing', view: item });
+					conversations.push({ type: 'outgoing', view: item });
 				}
 			}
 		}
-		return items;
-	}, [data]);
+	}
 
 	const { data: unreadCounts } = useUnreadCountsQuery();
 	const hasUnreadConvos = (unreadCounts?.unreadRequestConvos ?? 0) > 0;
@@ -122,7 +120,7 @@ function RequestList({
 
 	useRefreshOnFocus(refetch);
 
-	const onRefresh = useCallback(async () => {
+	const onRefresh = async () => {
 		setIsPTRing(true);
 		try {
 			await refetch();
@@ -130,16 +128,16 @@ function RequestList({
 			logger.error('Failed to refresh conversations', { message: err });
 		}
 		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
+	};
 
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more conversations', { message: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
+	};
 
 	if (conversations.length < 1) {
 		return (

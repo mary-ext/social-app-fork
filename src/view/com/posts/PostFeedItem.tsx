@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
@@ -76,13 +75,10 @@ export function PostFeedItem({
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 }): React.ReactNode {
 	const postShadowed = usePostShadow(post);
-	const richText = useMemo(
-		(): Richtext => ({
-			text: record.text,
-			facets: record.facets,
-		}),
-		[record],
-	);
+	const richText: Richtext = {
+		text: record.text,
+		facets: record.facets,
+	};
 	if (postShadowed === POST_TOMBSTONE) {
 		return null;
 	}
@@ -140,10 +136,8 @@ function FeedItemInner({
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
 
-	const [href] = useMemo(() => {
-		const urip = parseCanonicalResourceUri(post.uri);
-		return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey];
-	}, [post.uri, post.author]);
+	const urip = parseCanonicalResourceUri(post.uri);
+	const href = makeProfileLink(post.author, 'post', urip.rkey);
 	const { sendInteraction, feedSourceInfo } = useFeedFeedbackContext();
 
 	const onPressReply = () => {
@@ -224,33 +218,33 @@ function FeedItemInner({
 
 	const { isActive: live } = useActorStatus(post.author);
 
-	const viaRepost = useMemo(() => {
-		if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
-			return {
-				uri: reason.uri,
-				cid: reason.cid,
-			};
-		}
-	}, [reason]);
+	let viaRepost: { uri: string; cid: string } | undefined;
+	if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
+		viaRepost = {
+			uri: reason.uri,
+			cid: reason.cid,
+		};
+	}
 
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,
 	});
-	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
+	let additionalPostAlerts: AppModerationCause[] = [];
+	{
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
 		const rootPostUri = (post.record as AppBskyFeedPost.Main).reply?.root?.uri || post.uri;
 		const isControlledByViewer =
 			rootPostUri && parseCanonicalResourceUri(rootPostUri).repo === currentAccount?.did;
-		return isControlledByViewer && isPostHiddenByThreadgate
-			? [
-					{
-						type: 'reply-hidden',
-						source: { type: 'user', did: currentAccount?.did },
-						priority: 6,
-					},
-				]
-			: [];
-	}, [post, currentAccount?.did, threadgateHiddenReplies]);
+		if (isControlledByViewer && isPostHiddenByThreadgate) {
+			additionalPostAlerts = [
+				{
+					type: 'reply-hidden',
+					source: { type: 'user', did: currentAccount?.did },
+					priority: 6,
+				},
+			];
+		}
+	}
 
 	return (
 		<GalleryBleed>

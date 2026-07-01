@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import deepEqual from 'fast-deep-equal';
@@ -53,13 +53,10 @@ export function ThreadgateBtn({
 		embeddingRules: preferences?.postInteractionSettings?.postgateEmbeddingRules || [],
 	});
 
-	const isDirty = useMemo(() => {
-		const everybody = [{ type: 'everybody' }];
-		return (
-			!deepEqual(threadgateAllowUISettings, prefThreadgateAllowUISettings ?? everybody) ||
-			!deepEqual(postgate.embeddingRules, prefPostgate?.embeddingRules ?? [])
-		);
-	}, [prefThreadgateAllowUISettings, prefPostgate, threadgateAllowUISettings, postgate]);
+	const everybody = [{ type: 'everybody' }];
+	const isDirty =
+		!deepEqual(threadgateAllowUISettings, prefThreadgateAllowUISettings ?? everybody) ||
+		!deepEqual(postgate.embeddingRules, prefPostgate?.embeddingRules ?? []);
 
 	const { mutate: persistChanges, isPending: isSaving } = usePostInteractionSettingsMutation({
 		onError: (err) => {

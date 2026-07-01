@@ -254,20 +254,17 @@ export function PostInteractionSettingsForm({
 		),
 	);
 
-	const onChangeQuotesEnabled = useCallback(
-		(enabled: boolean) => {
-			setQuotesEnabled(enabled);
-			onChangePostgate(
-				createPostgateRecord({
-					...postgate,
-					embeddingRules: (enabled
-						? []
-						: [embeddingRules.disableRule]) as AppBskyFeedPostgate.Main['embeddingRules'],
-				}),
-			);
-		},
-		[setQuotesEnabled, postgate, onChangePostgate],
-	);
+	const onChangeQuotesEnabled = (enabled: boolean) => {
+		setQuotesEnabled(enabled);
+		onChangePostgate(
+			createPostgateRecord({
+				...postgate,
+				embeddingRules: (enabled
+					? []
+					: [embeddingRules.disableRule]) as AppBskyFeedPostgate.Main['embeddingRules'],
+			}),
+		);
+	};
 
 	const noOneCanReply = !!threadgateAllowUISettings.find((v) => v.type === 'nobody');
 	const everyoneCanReply = !!threadgateAllowUISettings.find((v) => v.type === 'everybody');
@@ -523,7 +520,7 @@ export function usePrefetchPostInteractionSettings({
 	const { appview, pds } = useClients();
 	const getPost = useGetPost();
 
-	return useCallback(async () => {
+	return async () => {
 		try {
 			await Promise.all([
 				queryClient.prefetchQuery({
@@ -545,5 +542,5 @@ export function usePrefetchPostInteractionSettings({
 				safeMessage: e instanceof Error ? e.message : String(e),
 			});
 		}
-	}, [queryClient, appview, pds, postUri, rootPostUri, getPost]);
+	};
 }

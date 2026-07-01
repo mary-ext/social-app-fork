@@ -44,6 +44,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const rawInterestsDisplayNames = useInterestsDisplayNames();
 	const { data: preferences } = usePreferencesQuery();
 	const personalizedInterests = preferences?.interests?.tags;
+	// kept memoized: read from InterestTabs' own useEffect dep arrays.
 	const interests = useMemo(
 		() => [
 			FOR_YOU_TAB,
@@ -53,13 +54,10 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		],
 		[rawInterestsDisplayNames, personalizedInterests],
 	);
-	const interestsDisplayNames = useMemo(
-		() => ({
-			[FOR_YOU_TAB]: m['common.feeds.forYou'](),
-			...rawInterestsDisplayNames,
-		}),
-		[rawInterestsDisplayNames],
-	);
+	const interestsDisplayNames = {
+		[FOR_YOU_TAB]: m['common.feeds.forYou'](),
+		...rawInterestsDisplayNames,
+	};
 
 	const [selectedInterest, setSelectedInterest] = useState(() => lastSelectedInterest || FOR_YOU_TAB);
 	const [searchText, setSearchText] = useState(lastSearchText);
@@ -91,13 +89,10 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const isFetching = hasSearchText ? isFetchingSearchResults : isFetchingSuggestions;
 	const error = hasSearchText ? searchResultsError : suggestionsError;
 
-	const profiles = useMemo(() => {
-		const results = hasSearchText ? searchResults?.pages.flatMap((p) => p.actors) : suggestions?.actors;
-		if (!results) {
-			return [];
-		}
+	const results = hasSearchText ? searchResults?.pages.flatMap((p) => p.actors) : suggestions?.actors;
+	const profiles: AnyProfileView[] = [];
+	if (results) {
 		const seen = new Set<string>();
-		const out: AnyProfileView[] = [];
 		for (const profile of results) {
 			if (seen.has(profile.did)) {
 				continue;
@@ -109,24 +104,21 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 				continue;
 			}
 			seen.add(profile.did);
-			out.push(profile);
+			profiles.push(profile);
 		}
-		return out;
-	}, [currentAccount?.did, hasSearchText, searchResults, suggestions]);
+	}
 
 	// drives the empty slot: placeholders while loading, then a network/search-empty message
-	const listEmpty = ((): ReactNode => {
-		if (isFetching) {
-			return <ProfileCard.LoadingPlaceholder count={10} />;
-		}
-		if (error) {
-			return <Empty message={m['components.dialogs.error.network']()} />;
-		}
-		if (hasSearchText) {
-			return <Empty message={m['common.search.empty']()} />;
-		}
-		return <Empty message={m['components.dialogs.error.network']()} />;
-	})();
+	let listEmpty: ReactNode;
+	if (isFetching) {
+		listEmpty = <ProfileCard.LoadingPlaceholder count={10} />;
+	} else if (error) {
+		listEmpty = <Empty message={m['components.dialogs.error.network']()} />;
+	} else if (hasSearchText) {
+		listEmpty = <Empty message={m['common.search.empty']()} />;
+	} else {
+		listEmpty = <Empty message={m['components.dialogs.error.network']()} />;
+	}
 
 	const onSelectTab = (interest: string) => {
 		setSelectedInterest(interest);

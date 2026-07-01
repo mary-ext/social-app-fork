@@ -1,4 +1,4 @@
-import { type ComponentProps, useCallback } from 'react';
+import type { ComponentProps } from 'react';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
@@ -42,18 +42,18 @@ export let MessageContextMenu = ({
 
 	const isFromSelf = message.sender?.did === currentAccount?.did;
 
-	const onCopyMessage = useCallback(() => {
+	const onCopyMessage = () => {
 		const str = richTextToString({ text: message.text, facets: message.facets ?? [] }, true);
 
 		void navigator.clipboard.writeText(str);
 		Toast.show(m['common.share.copiedToast'](), {
 			type: 'success',
 		});
-	}, [message.text, message.facets]);
+	};
 
-	const onPressTranslateMessage = useCallback(() => {
+	const onPressTranslateMessage = () => {
 		void translate(message.text, langPrefs.primaryLanguage);
-	}, [langPrefs.primaryLanguage, message.text, translate]);
+	};
 
 	const sender = senderProfile;
 

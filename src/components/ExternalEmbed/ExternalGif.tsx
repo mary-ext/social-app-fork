@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
@@ -28,14 +28,14 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 	const [isPrefetched, setIsPrefetched] = useState(false);
 	const [isAnimating, setIsAnimating] = useState(true);
 
-	const load = useCallback(() => {
+	const load = () => {
 		setIsPlayerActive(true);
 		const image = new window.Image();
 		image.onload = () => setIsPrefetched(true);
 		image.src = params.playerUri;
-	}, [params.playerUri]);
+	};
 
-	const onPlayPress = useCallback(() => {
+	const onPlayPress = () => {
 		if (externalEmbedsPrefs?.[params.source] === undefined) {
 			consentDialogHandle.open(null);
 			return;
@@ -45,7 +45,7 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 			return;
 		}
 		setIsAnimating((prev) => !prev);
-	}, [consentDialogHandle, externalEmbedsPrefs, isPlayerActive, load, params.source]);
+	};
 
 	// while paused or not yet prefetched the static thumb stands in for the animation (web can't pause a gif).
 	const showOverlay = !isPrefetched || !isAnimating;

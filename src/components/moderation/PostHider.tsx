@@ -1,4 +1,4 @@
-import { type ComponentProps, useCallback, useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
 import { useQueryClient } from '@tanstack/react-query';
@@ -53,9 +53,9 @@ export function PostHider({
 	const blur = modui.blurs[0] || (interpretFilterAsBlur ? getBlurrableFilter(modui) : undefined);
 	const desc = useModerationCauseDescription(blur);
 
-	const onBeforePress = useCallback(() => {
+	const onBeforePress = () => {
 		unstableCacheProfileView(queryClient, profile);
-	}, [queryClient, profile]);
+	};
 
 	if (!blur || (disabled && !modui.noOverride) || override) {
 		// `display: contents` host: post bodies arrive as a component (or multiple elements), so BlockLink —

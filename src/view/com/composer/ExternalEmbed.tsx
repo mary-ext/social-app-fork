@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
@@ -26,17 +25,14 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 	const t = useTheme();
 	const { data, error } = useResolveGifQuery(gif);
 	const thumbUrl = useBlobUrl(data?.thumb?.source.blob);
-	const linkInfo = useMemo(
-		() =>
-			data &&
-			({
-				title: data.title ?? data.uri,
-				uri: data.uri,
-				description: data.description ?? '',
-				thumb: thumbUrl,
-			} as AppBskyEmbedExternal.ViewExternal),
-		[data, thumbUrl],
-	);
+	const linkInfo =
+		data &&
+		({
+			title: data.title ?? data.uri,
+			uri: data.uri,
+			description: data.description ?? '',
+			thumb: thumbUrl,
+		} as AppBskyEmbedExternal.ViewExternal);
 
 	const loadingStyle: ViewStyle = {
 		aspectRatio: (() => {
@@ -86,28 +82,28 @@ export const ExternalEmbedLink = ({
 	const t = useTheme();
 	const { data, error } = useResolveLinkQuery(uri);
 	const thumbUrl = useBlobUrl(data?.type === 'external' ? data.thumb?.source.blob : undefined);
-	const linkComponent = useMemo(() => {
-		if (data) {
-			if (data.type === 'external') {
-				const external = data.view?.external;
-				if (external && isStandardSiteEmbed(external)) {
-					return (
-						<StandardSiteEmbed
-							preview
-							view={
-								{
-									...external,
-									title: external.title || data.title || uri,
-									uri,
-									description: external.description || data.description,
-									// prefer opengraph data to atproto record-derived image
-									thumb: thumbUrl || external.thumb,
-								} as AppBskyEmbedExternal.ViewExternal
-							}
-						/>
-					);
-				}
-				return (
+	let linkComponent: React.ReactNode;
+	if (data) {
+		if (data.type === 'external') {
+			const external = data.view?.external;
+			if (external && isStandardSiteEmbed(external)) {
+				linkComponent = (
+					<StandardSiteEmbed
+						preview
+						view={
+							{
+								...external,
+								title: external.title || data.title || uri,
+								uri,
+								description: external.description || data.description,
+								// prefer opengraph data to atproto record-derived image
+								thumb: thumbUrl || external.thumb,
+							} as AppBskyEmbedExternal.ViewExternal
+						}
+					/>
+				);
+			} else {
+				linkComponent = (
 					<ExternalEmbed
 						link={
 							{
@@ -120,35 +116,35 @@ export const ExternalEmbedLink = ({
 						hideAlt
 					/>
 				);
-			} else if (data.kind === 'feed') {
-				return (
-					<ModeratedFeedEmbed
-						embed={{
-							type: 'feed',
-							view: {
-								$type: 'app.bsky.feed.defs#generatorView',
-								...data.view,
-							},
-						}}
-					/>
-				);
-			} else if (data.kind === 'list') {
-				return (
-					<ModeratedListEmbed
-						embed={{
-							type: 'list',
-							view: {
-								$type: 'app.bsky.graph.defs#listView',
-								...data.view,
-							},
-						}}
-					/>
-				);
-			} else if (data.kind === 'starter-pack') {
-				return <StarterPackEmbed starterPack={data.view} />;
 			}
+		} else if (data.kind === 'feed') {
+			linkComponent = (
+				<ModeratedFeedEmbed
+					embed={{
+						type: 'feed',
+						view: {
+							$type: 'app.bsky.feed.defs#generatorView',
+							...data.view,
+						},
+					}}
+				/>
+			);
+		} else if (data.kind === 'list') {
+			linkComponent = (
+				<ModeratedListEmbed
+					embed={{
+						type: 'list',
+						view: {
+							$type: 'app.bsky.graph.defs#listView',
+							...data.view,
+						},
+					}}
+				/>
+			);
+		} else if (data.kind === 'starter-pack') {
+			linkComponent = <StarterPackEmbed starterPack={data.view} />;
 		}
-	}, [data, uri, thumbUrl]);
+	}
 
 	if (data?.type === 'record' && hasQuote) {
 		// This is not currently supported by the data model so don't preview it.

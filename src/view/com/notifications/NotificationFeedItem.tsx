@@ -1,4 +1,4 @@
-import { memo, type MouseEvent, useCallback, useMemo, useState } from 'react';
+import { memo, type MouseEvent, useState } from 'react';
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
@@ -97,98 +97,92 @@ let NotificationFeedItem = ({
 	const queryClient = useQueryClient();
 	const t = useTheme();
 	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
-	const itemHref = useMemo(() => {
-		switch (item.type) {
-			case 'post-like':
-			case 'repost':
-			case 'like-via-repost':
-			case 'repost-via-repost': {
-				if (item.subjectUri) {
-					const urip = parseCanonicalResourceUri(item.subjectUri);
-					return `/profile/${urip.repo}/post/${urip.rkey}`;
-				}
-				break;
+	let itemHref = '';
+	switch (item.type) {
+		case 'post-like':
+		case 'repost':
+		case 'like-via-repost':
+		case 'repost-via-repost': {
+			if (item.subjectUri) {
+				const urip = parseCanonicalResourceUri(item.subjectUri);
+				itemHref = `/profile/${urip.repo}/post/${urip.rkey}`;
 			}
-			case 'follow':
-			case 'contact-match':
-			case 'verified':
-			case 'unverified': {
-				return makeProfileLink(item.notification.author);
-			}
-			case 'reply':
-			case 'mention':
-			case 'quote': {
-				const uripReply = parseCanonicalResourceUri(item.notification.uri);
-				return `/profile/${uripReply.repo}/post/${uripReply.rkey}`;
-			}
-			case 'feedgen-like': {
-				if (item.subjectUri) {
-					const urip = parseCanonicalResourceUri(item.subjectUri);
-					return `/profile/${urip.repo}/feed/${urip.rkey}`;
-				}
-				break;
-			}
-			case 'starterpack-joined': {
-				if (item.subjectUri) {
-					const urip = parseCanonicalResourceUri(item.subjectUri);
-					return `/starter-pack/${urip.repo}/${urip.rkey}`;
-				}
-				break;
-			}
-			case 'subscribed-post': {
-				const posts: string[] = [];
-				for (const post of [item.notification, ...(item.additional ?? [])]) {
-					posts.push(post.uri);
-				}
-				return `/notifications/activity?posts=${encodeURIComponent(posts.slice(0, 25).join(','))}`;
-			}
+			break;
 		}
+		case 'follow':
+		case 'contact-match':
+		case 'verified':
+		case 'unverified': {
+			itemHref = makeProfileLink(item.notification.author);
+			break;
+		}
+		case 'reply':
+		case 'mention':
+		case 'quote': {
+			const uripReply = parseCanonicalResourceUri(item.notification.uri);
+			itemHref = `/profile/${uripReply.repo}/post/${uripReply.rkey}`;
+			break;
+		}
+		case 'feedgen-like': {
+			if (item.subjectUri) {
+				const urip = parseCanonicalResourceUri(item.subjectUri);
+				itemHref = `/profile/${urip.repo}/feed/${urip.rkey}`;
+			}
+			break;
+		}
+		case 'starterpack-joined': {
+			if (item.subjectUri) {
+				const urip = parseCanonicalResourceUri(item.subjectUri);
+				itemHref = `/starter-pack/${urip.repo}/${urip.rkey}`;
+			}
+			break;
+		}
+		case 'subscribed-post': {
+			const posts: string[] = [];
+			for (const post of [item.notification, ...(item.additional ?? [])]) {
+				posts.push(post.uri);
+			}
+			itemHref = `/notifications/activity?posts=${encodeURIComponent(posts.slice(0, 25).join(','))}`;
+			break;
+		}
+	}
 
-		return '';
-	}, [item]);
-
-	const onBeforePress = useCallback(() => {
+	const onBeforePress = () => {
 		unstableCacheProfileView(queryClient, item.notification.author);
-	}, [queryClient, item.notification.author]);
+	};
 
-	const authors: Author[] = useMemo(() => {
-		return [
-			{
-				profile: item.notification.author as AppBskyActorDefs.ProfileView,
-				href: makeProfileLink(item.notification.author),
-				moderation: moderateProfile(item.notification.author, moderationOpts),
-			},
-			...(item.additional?.map(({ author }) => ({
-				profile: author,
-				href: makeProfileLink(author),
-				moderation: moderateProfile(author as AnyProfileView, moderationOpts),
-			})) || []),
-		].filter((author, index, arr) => arr.findIndex((au) => au.profile.did === author.profile.did) === index);
-	}, [item, moderationOpts]);
+	const authors: Author[] = [
+		{
+			profile: item.notification.author as AppBskyActorDefs.ProfileView,
+			href: makeProfileLink(item.notification.author),
+			moderation: moderateProfile(item.notification.author, moderationOpts),
+		},
+		...(item.additional?.map(({ author }) => ({
+			profile: author,
+			href: makeProfileLink(author),
+			moderation: moderateProfile(author as AnyProfileView, moderationOpts),
+		})) || []),
+	].filter((author, index, arr) => arr.findIndex((au) => au.profile.did === author.profile.did) === index);
 
 	const niceTimestamp = niceDate(item.notification.indexedAt);
 	const firstAuthor = authors[0]!;
 	const firstAuthorName = sanitizeDisplayName(firstAuthor.profile.displayName || firstAuthor.profile.handle);
 
 	// Calculate if this is a follow-back notification
-	const isFollowBack = useMemo(() => {
-		if (item.type !== 'follow') return false;
-		if (item.notification.author.viewer?.following) {
-			const record = item.notification.record as AppBskyGraphFollow.Main;
-			let followingTimestamp;
-			try {
-				const rkey = parseCanonicalResourceUri(item.notification.author.viewer.following).rkey;
-				followingTimestamp = TID.parse(rkey).timestamp;
-			} catch (e) {
-				return false;
-			}
+	let isFollowBack = false;
+	if (item.type === 'follow' && item.notification.author.viewer?.following) {
+		const record = item.notification.record as AppBskyGraphFollow.Main;
+		try {
+			const rkey = parseCanonicalResourceUri(item.notification.author.viewer.following).rkey;
+			const followingTimestamp = TID.parse(rkey).timestamp;
 			if (followingTimestamp) {
 				const followedTimestamp = new Date(record.createdAt).getTime() * 1000;
-				return followedTimestamp > followingTimestamp;
+				isFollowBack = followedTimestamp > followingTimestamp;
 			}
+		} catch (e) {
+			isFollowBack = false;
 		}
-		return false;
-	}, [item]);
+	}
 
 	if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
 		// don't render anything if the target post was deleted or unfindable

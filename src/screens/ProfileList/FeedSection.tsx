@@ -48,7 +48,7 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 		return softReset.subscribe(onScrollToTop);
 	}, [onScrollToTop, isScreenFocused]);
 
-	const renderPostsEmpty = useCallback(() => {
+	const renderPostsEmpty = () => {
 		return (
 			<View style={[a.gap_xl, a.align_center]}>
 				<EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />
@@ -65,7 +65,7 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 				)}
 			</View>
 		);
-	}, [onPressAddUser, isOwner]);
+	};
 
 	return (
 		<View>

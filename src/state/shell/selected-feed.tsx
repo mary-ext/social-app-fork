@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSession } from '#/state/session';
@@ -44,18 +44,15 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const { currentAccount } = useSession();
 	const [state, setState] = useState(() => getInitialFeed(currentAccount?.did));
 
-	const saveState = useCallback(
-		(feed: FeedDescriptor) => {
-			setState(feed);
-			try {
-				sessionStorage.setItem('lastSelectedHomeFeed', feed);
-			} catch {}
-			if (currentAccount?.did) {
-				account.set([currentAccount?.did, 'lastSelectedHomeFeed'], feed);
-			}
-		},
-		[currentAccount?.did],
-	);
+	const saveState = (feed: FeedDescriptor) => {
+		setState(feed);
+		try {
+			sessionStorage.setItem('lastSelectedHomeFeed', feed);
+		} catch {}
+		if (currentAccount?.did) {
+			account.set([currentAccount?.did, 'lastSelectedHomeFeed'], feed);
+		}
+	};
 
 	return (
 		<stateContext.Provider value={state}>

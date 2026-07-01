@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { StyleSheet, Text as RNText, type TextProps } from 'react-native';
 
 import { lh, s } from '#/lib/styles';
@@ -49,31 +48,29 @@ function Text_DEPRECATED({
 		}
 	}
 
-	const textProps = useMemo(() => {
-		const typography = theme.typography[type];
-		const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined;
+	const typography = theme.typography[type];
+	const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined;
 
-		const flattened = StyleSheet.flatten([s.black, typography, lineHeightStyle, style]);
+	const flattened = StyleSheet.flatten([s.black, typography, lineHeightStyle, style]);
 
-		applyFonts(flattened, fonts.family);
+	applyFonts(flattened, fonts.family);
 
-		// should always be defined on `typography`
+	// should always be defined on `typography`
+	// @ts-ignore
+	if (flattened.fontSize) {
 		// @ts-ignore
-		if (flattened.fontSize) {
+		flattened.fontSize = Math.round(
 			// @ts-ignore
-			flattened.fontSize = Math.round(
-				// @ts-ignore
-				flattened.fontSize * fonts.scaleMultiplier,
-			);
-		}
+			flattened.fontSize * fonts.scaleMultiplier,
+		);
+	}
 
-		return {
-			selectable,
-			style: flattened,
-			dataSet,
-			...props,
-		};
-	}, [dataSet, fonts.family, fonts.scaleMultiplier, lineHeight, props, selectable, style, theme, type]);
+	const textProps = {
+		selectable,
+		style: flattened,
+		dataSet,
+		...props,
+	};
 
 	return <RNText {...textProps}>{children}</RNText>;
 }

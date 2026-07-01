@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffectEvent, useLayoutEffect, useState } from 'react';
+import { createContext, useContext, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -133,13 +133,10 @@ export function Item({
 		}
 	}, [needsUpdate]);
 
-	const onPress = useCallback(
-		(evt: Parameters<NonNullable<ButtonProps['onPress']>>[0]) => {
-			ctx.onSelectValue(value, position);
-			onPressProp?.(evt);
-		},
-		[ctx, value, position, onPressProp],
-	);
+	const onPress = (evt: Parameters<NonNullable<ButtonProps['onPress']>>[0]) => {
+		ctx.onSelectValue(value, position);
+		onPressProp?.(evt);
+	};
 
 	return (
 		<View

@@ -1,4 +1,4 @@
-import { type MouseEvent, useCallback, useMemo, useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { clsx } from 'clsx';
@@ -202,38 +202,33 @@ function SwitchMenuItems({
 function SwitcherMenuProfileLink() {
 	const { currentAccount } = useSession();
 	const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/';
-	const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink]);
+	const [pathName] = router.matchPath(profileLink);
 	const currentRouteInfo = useNavigationState((state) => {
 		if (!state) {
 			return { name: 'Home' };
 		}
 		return getCurrentRoute(state);
 	});
-	const isCurrent = useMemo(() => {
-		if (currentRouteInfo.name === 'Profile') {
-			return (
-				isTab(currentRouteInfo.name, pathName) &&
-				(currentRouteInfo.params as CommonNavigatorParams['Profile']).name === currentAccount?.handle
-			);
-		} else {
-			return isTab(currentRouteInfo.name, pathName);
-		}
-	}, [currentAccount?.handle, currentRouteInfo, pathName]);
+	let isCurrent: boolean;
+	if (currentRouteInfo.name === 'Profile') {
+		isCurrent =
+			isTab(currentRouteInfo.name, pathName) &&
+			(currentRouteInfo.params as CommonNavigatorParams['Profile']).name === currentAccount?.handle;
+	} else {
+		isCurrent = isTab(currentRouteInfo.name, pathName);
+	}
 
-	const onPress = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
-			// a modified/middle click opens the profile in a new tab — let the anchor's default handle it
-			if (e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) {
-				return;
-			}
-			// already viewing this profile: soft-reset the screen rather than re-navigate to it
-			if (isCurrent) {
-				softReset.emit();
-				return false;
-			}
-		},
-		[isCurrent],
-	);
+	const onPress = (e: MouseEvent<HTMLElement>) => {
+		// a modified/middle click opens the profile in a new tab — let the anchor's default handle it
+		if (e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) {
+			return;
+		}
+		// already viewing this profile: soft-reset the screen rather than re-navigate to it
+		if (isCurrent) {
+			softReset.emit();
+			return false;
+		}
+	};
 	const bindings = useInternalLink({ action: 'navigate', onPress, to: profileLink });
 
 	return (
@@ -291,7 +286,7 @@ interface NavItemProps {
 function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 	const { currentAccount } = useSession();
 
-	const [pathName] = useMemo(() => router.matchPath(href), [href]);
+	const [pathName] = router.matchPath(href);
 	const currentRouteInfo = useNavigationState((state) => {
 		if (!state) {
 			return { name: 'Home' };
@@ -305,20 +300,17 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 			: isTab(currentRouteInfo.name, pathName);
 	const isRelated = currentRouteInfo.name.startsWith(pathName);
 
-	const onPress = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
-			// a modified/middle click opens a new tab — let the anchor's default handle it
-			if (isModifiedClick(e)) {
-				return;
-			}
-			// already on this tab: soft-reset the screen rather than re-navigate to it
-			if (isCurrent) {
-				softReset.emit();
-				return false;
-			}
-		},
-		[isCurrent],
-	);
+	const onPress = (e: MouseEvent<HTMLElement>) => {
+		// a modified/middle click opens a new tab — let the anchor's default handle it
+		if (isModifiedClick(e)) {
+			return;
+		}
+		// already on this tab: soft-reset the screen rather than re-navigate to it
+		if (isCurrent) {
+			softReset.emit();
+			return false;
+		}
+	};
 
 	const Icon = isCurrent || isRelated ? icons.active : icons.inactive;
 

@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useMemo, useState } from 'react';
+import { createContext, forwardRef, useContext, useState } from 'react';
 import {
 	type AccessibilityProps,
 	type GestureResponderEvent,
@@ -198,10 +198,10 @@ export const Button = forwardRef<View, ButtonProps>(
 			onBlurOuter?.(e);
 		};
 
-		const { baseStyles, hoverStyles } = useMemo(() => {
-			const baseStyles: ViewStyle[] = [];
-			const hoverStyles: ViewStyle[] = [];
+		const baseStyles: ViewStyle[] = [];
+		const hoverStyles: ViewStyle[] = [];
 
+		{
 			/*
 			 * This is the happy path for new button styles, following the
 			 * deprecation of `variant` prop. This redundant `variant` check is here
@@ -497,12 +497,7 @@ export const Button = forwardRef<View, ButtonProps>(
 					}
 				}
 			}
-
-			return {
-				baseStyles,
-				hoverStyles,
-			};
-		}, [t, variant, color, size, shape, disabled]);
+		}
 
 		const context: ButtonContext = {
 			...state,
@@ -749,63 +744,55 @@ export function ButtonIcon({
 }) {
 	const { size: buttonSize, shape: buttonShape } = useButtonContext();
 	const textStyles = useSharedButtonTextStyles();
-	const { iconSize, iconContainerSize, iconNegativeMargin } = useMemo(() => {
-		/** Pre-set icon sizes for different button sizes */
-		const iconSizeShorthand =
-			size ??
-			(({
-				large: 'md',
-				small: 'sm',
-				tiny: 'xs',
-			}[buttonSize || 'small'] || 'sm') as Exclude<SVGIconProps['size'], undefined>);
+	/** Pre-set icon sizes for different button sizes */
+	const iconSizeShorthand =
+		size ??
+		(({
+			large: 'md',
+			small: 'sm',
+			tiny: 'xs',
+		}[buttonSize || 'small'] || 'sm') as Exclude<SVGIconProps['size'], undefined>);
 
-		/*
-		 * The mid-to-large tokens intentionally diverge from icons/common.tsx (lg is 24 here, 20
-		 * there) so button icons track the rendered text; this also lets us calculate transforms.
-		 */
-		const iconSize = {
-			'2xs': 8,
-			xs: 12,
-			sm: 16,
-			md: 18,
-			lg: 24,
-			xl: 28,
-			'2xl': 32,
-			'3xl': 40,
-			'4xl': 48,
-			'5xl': 64,
-		}[iconSizeShorthand];
+	/*
+	 * The mid-to-large tokens intentionally diverge from icons/common.tsx (lg is 24 here, 20
+	 * there) so button icons track the rendered text; this also lets us calculate transforms.
+	 */
+	const iconSize = {
+		'2xs': 8,
+		xs: 12,
+		sm: 16,
+		md: 18,
+		lg: 24,
+		xl: 28,
+		'2xl': 32,
+		'3xl': 40,
+		'4xl': 48,
+		'5xl': 64,
+	}[iconSizeShorthand];
 
-		/*
-		 * Goal here is to match rendered text size so that different size icons
-		 * don't increase button size
-		 */
-		const iconContainerSize = {
-			large: 20,
-			small: 17,
-			tiny: 15,
+	/*
+	 * Goal here is to match rendered text size so that different size icons
+	 * don't increase button size
+	 */
+	const iconContainerSize = {
+		large: 20,
+		small: 17,
+		tiny: 15,
+	}[buttonSize || 'small'];
+
+	/*
+	 * The icon needs to be closer to the edge of the button than the text. Therefore
+	 * we make the gap slightly too large, and then pull in the sides using negative margins.
+	 */
+	let iconNegativeMargin = 0;
+
+	if (buttonShape === 'default') {
+		iconNegativeMargin = {
+			large: -2,
+			small: -2,
+			tiny: -1,
 		}[buttonSize || 'small'];
-
-		/*
-		 * The icon needs to be closer to the edge of the button than the text. Therefore
-		 * we make the gap slightly too large, and then pull in the sides using negative margins.
-		 */
-		let iconNegativeMargin = 0;
-
-		if (buttonShape === 'default') {
-			iconNegativeMargin = {
-				large: -2,
-				small: -2,
-				tiny: -1,
-			}[buttonSize || 'small'];
-		}
-
-		return {
-			iconSize,
-			iconContainerSize,
-			iconNegativeMargin,
-		};
-	}, [buttonSize, buttonShape, size]);
+	}
 
 	return (
 		<View

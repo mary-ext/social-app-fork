@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo, useState } from 'react';
+import { useId, useState } from 'react';
 import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import {
@@ -118,7 +118,7 @@ function DirectChatItem({
 	const profile = useProfileShadow(convo.primaryMember);
 	const { isWithinLeftPanel } = useIsWithinSplitView();
 
-	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
+	const moderation = moderateProfile(profile, moderationOpts);
 
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
@@ -186,10 +186,7 @@ function GroupChatItem({
 	const groupOwner = useMaybeProfileShadow(convo.primaryMember);
 	const { isWithinLeftPanel } = useIsWithinSplitView();
 
-	const moderation = useMemo(
-		() => (groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined),
-		[groupOwner, moderationOpts],
-	);
+	const moderation = groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined;
 
 	const chatName = convo.details.name;
 
@@ -270,18 +267,19 @@ function BaseChatItem({
 			(convo.kind === 'group' && (convo.details.unreadJoinRequestCount ?? 0) > 0)) &&
 		(convo.kind !== 'group' || convo.details.lockStatus === 'unlocked');
 
-	const blockInfo = useMemo(() => {
-		if (!primaryProfileModeration) return { listBlocks: [], userBlock: undefined };
+	let blockInfo: { listBlocks: BlockingModerationCause[]; userBlock: BlockingModerationCause | undefined } = {
+		listBlocks: [],
+		userBlock: undefined,
+	};
+	if (primaryProfileModeration) {
 		const blocks = primaryProfileModeration.causes.filter(
 			(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
 		);
-		const listBlocks = blocks.filter((block) => block.source !== null);
-		const userBlock = blocks.find((block) => block.source === null);
-		return {
-			listBlocks,
-			userBlock,
+		blockInfo = {
+			listBlocks: blocks.filter((block) => block.source !== null),
+			userBlock: blocks.find((block) => block.source === null),
 		};
-	}, [primaryProfileModeration]);
+	}
 
 	const isDimStyle =
 		convo.view.muted ||
@@ -289,113 +287,102 @@ function BaseChatItem({
 		isDeletedAccount ||
 		(convo.kind === 'group' && convo.details.lockStatus !== 'unlocked');
 
-	const { lastMessage, LastMessageIcon, lastMessageSentAt } = useMemo(() => {
-		let lastMessage: string = m['screens.messages.conversation.noMessages']();
+	let lastMessage: string = m['screens.messages.conversation.noMessages']();
 
-		let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null;
+	let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null;
 
-		let lastMessageSentAt: string | null = null;
+	let lastMessageSentAt: string | null = null;
 
-		// Deleted message
-		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#deletedMessageView') {
+	// Deleted message
+	if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#deletedMessageView') {
+		lastMessageSentAt = convo.view.lastMessage.sentAt;
+
+		lastMessage = isDeletedAccount
+			? m['components.dms.delete.conversationDeleted']()
+			: m['components.dms.delete.messageDeleted']();
+	}
+
+	// Message
+	if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView') {
+		const info = getMessageInfo({
+			convo: convo.view,
+			currentAccountDid: currentAccount?.did,
+			primaryProfile,
+		});
+		if (info) {
+			lastMessage = info.isBlockedMessage
+				? m['screens.messages.moderation.messageHidden']()
+				: (info.message ?? lastMessage);
+			lastMessageSentAt = info.sentAt;
+		}
+	}
+
+	// Reaction
+	if (convo.view.lastReaction?.$type === 'chat.bsky.convo.defs#messageAndReactionView') {
+		const info = getReactionInfo({
+			convo: convo.view,
+			currentAccountDid: currentAccount?.did,
+			primaryProfile,
+		});
+		if (
+			info &&
+			!info.isBlocked &&
+			(!lastMessageSentAt || new Date(lastMessageSentAt) < new Date(info.createdAt))
+		) {
+			lastMessage = info.message;
+			lastMessageSentAt = info.createdAt;
+		}
+	}
+
+	// System message
+	if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#systemMessageView') {
+		const info = getSystemMessageInfo(
+			convo.view.lastMessage.data,
+			new Map(convo.view.members.map((m) => [m.did, m])),
+			{ short: true },
+		);
+		if (info) {
+			lastMessage = info.message;
+			LastMessageIcon = info.Icon;
 			lastMessageSentAt = convo.view.lastMessage.sentAt;
-
-			lastMessage = isDeletedAccount
-				? m['components.dms.delete.conversationDeleted']()
-				: m['components.dms.delete.messageDeleted']();
 		}
+	}
 
-		// Message
-		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView') {
-			const info = getMessageInfo({
-				convo: convo.view,
-				currentAccountDid: currentAccount?.did,
-				primaryProfile,
-			});
-			if (info) {
-				lastMessage = info.isBlockedMessage
-					? m['screens.messages.moderation.messageHidden']()
-					: (info.message ?? lastMessage);
-				lastMessageSentAt = info.sentAt;
-			}
-		}
-
-		// Reaction
-		if (convo.view.lastReaction?.$type === 'chat.bsky.convo.defs#messageAndReactionView') {
-			const info = getReactionInfo({
-				convo: convo.view,
-				currentAccountDid: currentAccount?.did,
-				primaryProfile,
-			});
-			if (
-				info &&
-				!info.isBlocked &&
-				(!lastMessageSentAt || new Date(lastMessageSentAt) < new Date(info.createdAt))
-			) {
-				lastMessage = info.message;
-				lastMessageSentAt = info.createdAt;
-			}
-		}
-
-		// System message
-		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#systemMessageView') {
-			const info = getSystemMessageInfo(
-				convo.view.lastMessage.data,
-				new Map(convo.view.members.map((m) => [m.did, m])),
-				{ short: true },
-			);
-			if (info) {
-				lastMessage = info.message;
-				LastMessageIcon = info.Icon;
-				lastMessageSentAt = convo.view.lastMessage.sentAt;
-			}
-		}
-
-		if (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked') {
-			lastMessage = m['screens.messages.lock.chatLocked']();
-			LastMessageIcon = LockIcon;
-		}
-
-		return {
-			lastMessage,
-			LastMessageIcon,
-			lastMessageSentAt,
-		};
-	}, [convo, currentAccount?.did, isDeletedAccount, primaryProfile]);
+	if (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked') {
+		lastMessage = m['screens.messages.lock.chatLocked']();
+		LastMessageIcon = LockIcon;
+	}
 
 	const [showActions, setShowActions] = useState(false);
 
-	const onMouseEnter = useCallback(() => {
+	const onMouseEnter = () => {
 		setShowActions(true);
-	}, []);
+	};
 
-	const onMouseLeave = useCallback(() => {
+	const onMouseLeave = () => {
 		setShowActions(false);
-	}, []);
+	};
 
-	const onFocus = useCallback<React.FocusEventHandler>((e) => {
+	const onFocus: React.FocusEventHandler = (e) => {
 		if (e.nativeEvent.relatedTarget == null) return;
 		setShowActions(true);
-	}, []);
+	};
 
-	const onPress = useCallback(
-		(e: GestureResponderEvent) => {
-			for (const member of convo.view.members) {
-				unstableCacheProfileView(queryClient, member);
+	const onPress = (e: GestureResponderEvent) => {
+		for (const member of convo.view.members) {
+			unstableCacheProfileView(queryClient, member);
+		}
+		precacheConvoQuery(queryClient, convo.view);
+		if (isDeletedAccount) {
+			e.preventDefault();
+			// the menu (and its trigger) only mounts when `showMenu && primaryProfile`; opening a handle with
+			// no registered trigger throws, so gate on the same condition.
+			if (showMenu && primaryProfile) {
+				menuHandle.open(menuTriggerId);
 			}
-			precacheConvoQuery(queryClient, convo.view);
-			if (isDeletedAccount) {
-				e.preventDefault();
-				// the menu (and its trigger) only mounts when `showMenu && primaryProfile`; opening a handle with
-				// no registered trigger throws, so gate on the same condition.
-				if (showMenu && primaryProfile) {
-					menuHandle.open(menuTriggerId);
-				}
-				return false;
-			}
-		},
-		[isDeletedAccount, showMenu, primaryProfile, menuHandle, menuTriggerId, queryClient, convo],
-	);
+			return false;
+		}
+	};
 
 	const markReadAction = {
 		threshold: 120,

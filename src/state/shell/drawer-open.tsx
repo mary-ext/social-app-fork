@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import { useHotkeysContext } from '#/lib/hotkeys';
 
@@ -14,17 +14,14 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const [state, setState] = useState(false);
 	const { disableScope, enableScope } = useHotkeysContext();
 
-	const setDrawerOpen = useCallback(
-		(open: boolean) => {
-			if (open) {
-				disableScope('global');
-			} else {
-				enableScope('global');
-			}
-			setState(open);
-		},
-		[disableScope, enableScope],
-	);
+	const setDrawerOpen = (open: boolean) => {
+		if (open) {
+			disableScope('global');
+		} else {
+			enableScope('global');
+		}
+		setState(open);
+	};
 
 	return (
 		<stateContext.Provider value={state}>

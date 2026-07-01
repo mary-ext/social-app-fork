@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { AppBskyFeedGetLikes as GetLikes } from '@atcute/bluesky';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
@@ -42,14 +42,12 @@ export function LikedByList({ uri }: { uri: string }) {
 	const error = resolveError || likedByError;
 	const isError = !!resolveError || !!likedByError;
 
-	const likes = useMemo(() => {
-		if (data?.pages) {
-			return data.pages.flatMap((page) => page.likes);
-		}
-		return [];
-	}, [data]);
+	let likes: GetLikes.Like[] = [];
+	if (data?.pages) {
+		likes = data.pages.flatMap((page) => page.likes);
+	}
 
-	const onRefresh = useCallback(async () => {
+	const onRefresh = async () => {
 		setIsPTRing(true);
 		try {
 			await refetch();
@@ -57,16 +55,16 @@ export function LikedByList({ uri }: { uri: string }) {
 			logger.error('Failed to refresh likes', { message: err });
 		}
 		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
+	};
 
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more likes', { message: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
+	};
 
 	if (likes.length < 1) {
 		return (

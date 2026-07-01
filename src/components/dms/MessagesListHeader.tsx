@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { View } from 'react-native';
 import {
 	type BlockingModerationCause,
@@ -85,17 +84,13 @@ function ProfileHeaderReady({
 
 	const moderation = moderateProfile(profile, moderationOpts);
 
-	const blockInfo = useMemo(() => {
-		const blocks = moderation.causes.filter(
-			(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
-		);
-		const listBlocks = blocks.filter((block) => block.source !== null);
-		const userBlock = blocks.find((block) => block.source === null);
-		return {
-			listBlocks,
-			userBlock,
-		};
-	}, [moderation]);
+	const blocks = moderation.causes.filter(
+		(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
+	);
+	const blockInfo = {
+		listBlocks: blocks.filter((block) => block.source !== null),
+		userBlock: blocks.find((block) => block.source === null),
+	};
 
 	const isDeletedAccount = profile?.handle === 'missing.invalid';
 	const displayName = isDeletedAccount

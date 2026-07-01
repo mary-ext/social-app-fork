@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import {
 	type GestureResponderEvent,
 	Pressable,
@@ -174,10 +174,7 @@ let MessageItem = ({
 	const isInCluster = !(isFirstInCluster && isLastInCluster);
 	const isInMiddleOfCluster = isInCluster && !isFirstInCluster && !isLastInCluster;
 
-	const visibleReactions = useMemo(
-		() => filterBlockedReactions(message.reactions, relatedProfiles),
-		[message.reactions, relatedProfiles],
-	);
+	const visibleReactions = filterBlockedReactions(message.reactions, relatedProfiles);
 
 	const hasReactions = visibleReactions.length > 0;
 	const prevHasReactions =
@@ -244,36 +241,36 @@ let MessageItem = ({
 			<ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
 		);
 
-	const groupedReactions = useMemo(() => groupReactions(visibleReactions), [visibleReactions]);
+	const groupedReactions = groupReactions(visibleReactions);
 
 	const reactions = visibleReactions;
 
 	const hasSelfReacted = reactions.some((r) => r.sender.did === currentAccount?.did);
 
-	const reactionsLabel = useMemo(() => {
-		if (reactions.length === 0) return '';
-		if (reactions.length === 1) {
-			const reaction = reactions[0]!;
-			const sender = reaction.sender;
-			if (sender.did === currentAccount?.did) {
-				return m['components.dms.update.youReacted']({ value: reaction.value });
+	let reactionsLabel = '';
+	if (reactions.length === 1) {
+		const reaction = reactions[0]!;
+		const sender = reaction.sender;
+		if (sender.did === currentAccount?.did) {
+			reactionsLabel = m['components.dms.update.youReacted']({ value: reaction.value });
+		} else {
+			const senderDid = reaction.sender.did;
+			const memberSender = relatedProfiles.get(senderDid);
+			if (memberSender) {
+				reactionsLabel = m['components.dms.reaction.reactedBy']({
+					name: createSanitizedDisplayName(memberSender),
+					reaction: reaction.value,
+				});
 			} else {
-				const senderDid = reaction.sender.did;
-				const memberSender = relatedProfiles.get(senderDid);
-				if (memberSender) {
-					return m['components.dms.reaction.reactedBy']({
-						name: createSanitizedDisplayName(memberSender),
-						reaction: reaction.value,
-					});
-				}
-				return m['components.dms.update.someoneReacted']({ value: reaction.value });
+				reactionsLabel = m['components.dms.update.someoneReacted']({ value: reaction.value });
 			}
 		}
-		return m['components.dms.reaction.summary']({
+	} else if (reactions.length > 1) {
+		reactionsLabel = m['components.dms.reaction.summary']({
 			count: reactions.length,
 			values: groupedReactions.map((g) => g.value).join(' '),
 		});
-	}, [reactions, groupedReactions, currentAccount?.did, relatedProfiles]);
+	}
 
 	const appliedReactions = (
 		<>

@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import {
 	type NotificationSettingsPreference,
 	type NotificationSettingsPreferenceName,
@@ -60,12 +58,9 @@ export function Inner({
 }) {
 	const { mutate } = useNotificationSettingsUpdateMutation();
 
-	const channels = useMemo(() => {
-		const arr = [];
-		if ('list' in preference && preference.list) arr.push('list');
-		if (preference.push) arr.push('push');
-		return arr;
-	}, [preference]);
+	const channels = [];
+	if ('list' in preference && preference.list) channels.push('list');
+	if (preference.push) channels.push('push');
 
 	const onChangeChannels = (change: string[]) => {
 		const newPreference = {

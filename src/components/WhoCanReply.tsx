@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { clsx } from 'clsx';
@@ -39,9 +39,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	 * unexpectedly, we should check to make sure it's for sure the root URI.
 	 */
 	const rootUri = (post.record as AppBskyFeedPost.Main).reply?.root?.uri ?? post.uri;
-	const settings = useMemo(() => {
-		return threadgateViewToAllowUISetting(post.threadgate);
-	}, [post.threadgate]);
+	const settings = threadgateViewToAllowUISetting(post.threadgate);
 
 	const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
 		postUri: post.uri,

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
 import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
@@ -32,30 +32,28 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 
 	const [showFull, setShowFull] = useState(false);
 
-	const onPress = useCallback(() => {
+	const onPress = () => {
 		setShowFull((prev) => !prev);
 		LayoutAnimation.configureNext({
 			duration: 350,
 			update: { type: 'spring', springDamping: 0.7 },
 		});
-	}, []);
+	};
 
-	const quoteEmbed = useMemo(() => {
-		if (
-			embed?.$type === 'app.bsky.embed.record#view' &&
-			embed.record?.$type === 'app.bsky.embed.record#viewRecord' &&
-			embed.record.value?.$type === 'app.bsky.feed.post'
-		) {
-			return embed;
-		} else if (
-			embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
-			embed.record.record?.$type === 'app.bsky.embed.record#viewRecord' &&
-			embed.record.record.value?.$type === 'app.bsky.feed.post'
-		) {
-			return embed.record;
-		}
-		return null;
-	}, [embed]);
+	let quoteEmbed = null;
+	if (
+		embed?.$type === 'app.bsky.embed.record#view' &&
+		embed.record?.$type === 'app.bsky.embed.record#viewRecord' &&
+		embed.record.value?.$type === 'app.bsky.feed.post'
+	) {
+		quoteEmbed = embed;
+	} else if (
+		embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
+		embed.record.record?.$type === 'app.bsky.embed.record#viewRecord' &&
+		embed.record.record.value?.$type === 'app.bsky.feed.post'
+	) {
+		quoteEmbed = embed.record;
+	}
 	const parsedQuoteEmbed = quoteEmbed
 		? parseEmbed({
 				$type: 'app.bsky.embed.record#view',
@@ -63,20 +61,23 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 			})
 		: null;
 
-	const { images, totalNumber } = useMemo(() => {
-		if (embed?.$type === 'app.bsky.embed.images#view') {
-			return { images: embed.images, totalNumber: embed.images.length };
-		} else if (embed?.$type === 'app.bsky.embed.gallery#view') {
-			return { images: galleryItemsToImages(embed.items), totalNumber: embed.items.length };
-		} else if (embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
-			if (embed.media?.$type === 'app.bsky.embed.images#view') {
-				return { images: embed.media.images, totalNumber: embed.media.images.length };
-			} else if (embed.media?.$type === 'app.bsky.embed.gallery#view') {
-				return { images: galleryItemsToImages(embed.media.items), totalNumber: embed.media.items.length };
-			}
+	let images: AppBskyEmbedImages.ViewImage[] = [];
+	let totalNumber = 0;
+	if (embed?.$type === 'app.bsky.embed.images#view') {
+		images = embed.images;
+		totalNumber = embed.images.length;
+	} else if (embed?.$type === 'app.bsky.embed.gallery#view') {
+		images = galleryItemsToImages(embed.items);
+		totalNumber = embed.items.length;
+	} else if (embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
+		if (embed.media?.$type === 'app.bsky.embed.images#view') {
+			images = embed.media.images;
+			totalNumber = embed.media.images.length;
+		} else if (embed.media?.$type === 'app.bsky.embed.gallery#view') {
+			images = galleryItemsToImages(embed.media.items);
+			totalNumber = embed.media.items.length;
 		}
-		return { images: [], totalNumber: 0 };
-	}, [embed]);
+	}
 
 	return (
 		<Pressable

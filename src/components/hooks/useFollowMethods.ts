@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import type { Shadow } from '#/state/cache/types';
@@ -15,7 +14,7 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 	const requireAuth = useRequireAuth();
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
-	const follow = useCallback(() => {
+	const follow = () => {
 		requireAuth(async () => {
 			try {
 				await queueFollow();
@@ -28,9 +27,9 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 				}
 			}
 		});
-	}, [queueFollow, requireAuth]);
+	};
 
-	const unfollow = useCallback(() => {
+	const unfollow = () => {
 		requireAuth(async () => {
 			try {
 				await queueUnfollow();
@@ -45,7 +44,7 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 				}
 			}
 		});
-	}, [queueUnfollow, requireAuth]);
+	};
 
 	return {
 		follow,

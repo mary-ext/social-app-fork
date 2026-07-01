@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useMemo } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
@@ -110,7 +110,7 @@ export function Link({
 }) {
 	const queryClient = useQueryClient();
 
-	const href = useMemo(() => createProfileFeedHref({ feed: view }), [view]);
+	const href = createProfileFeedHref({ feed: view });
 
 	useEffect(() => {
 		precacheFeedFromGeneratorView(queryClient, view);

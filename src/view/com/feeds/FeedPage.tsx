@@ -79,15 +79,15 @@ export function FeedPage({
 		return softReset.subscribe(onSoftReset);
 	}, [onSoftReset, isPageFocused]);
 
-	const onPressCompose = useCallback(() => {
+	const onPressCompose = () => {
 		openComposer({});
-	}, [openComposer]);
+	};
 
-	const onPressLoadLatest = useCallback(() => {
+	const onPressLoadLatest = () => {
 		scrollToTop();
 		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 		setHasNew(false);
-	}, [scrollToTop, feed, queryClient]);
+	};
 
 	const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI;
 	return (

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 
@@ -38,7 +38,7 @@ function DialogInner() {
 	const { currentAccount } = useSession();
 	const [loading, setLoading] = useState<'chat' | 'repo' | false>(false);
 
-	const download = useCallback(async () => {
+	const download = async () => {
 		if (!currentAccount || !pds) {
 			return; // shouldn't ever happen
 		}
@@ -56,9 +56,9 @@ function DialogInner() {
 		} finally {
 			setLoading(false);
 		}
-	}, [currentAccount, pds]);
+	};
 
-	const downloadChatData = useCallback(async () => {
+	const downloadChatData = async () => {
 		if (!chat) {
 			return;
 		}
@@ -75,7 +75,7 @@ function DialogInner() {
 		} finally {
 			setLoading(false);
 		}
-	}, [chat]);
+	};
 
 	return (
 		<div className={styles.content}>

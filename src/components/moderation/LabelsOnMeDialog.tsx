@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { ComAtprotoLabelDefs, ComAtprotoModerationCreateReport } from '@atcute/atproto';
 import { ClientResponseError, ok } from '@atcute/client';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
@@ -59,10 +59,7 @@ function LabelsOnMeDialogInner({ handle, labels, type }: LabelsOnMeDialogProps) 
 	const { currentAccount } = useSession();
 	const [appealingLabel, setAppealingLabel] = useState<ComAtprotoLabelDefs.Label | undefined>(undefined);
 	const isAccount = type === 'account';
-	const containsSelfLabel = useMemo(
-		() => labels.some((label) => label.src === currentAccount?.did),
-		[currentAccount?.did, labels],
-	);
+	const containsSelfLabel = labels.some((label) => label.src === currentAccount?.did);
 
 	return (
 		<div className={styles.main}>
@@ -219,7 +216,7 @@ function AppealForm({
 		},
 	});
 
-	const onSubmit = useCallback(() => mutate(), [mutate]);
+	const onSubmit = () => mutate();
 
 	return (
 		<>

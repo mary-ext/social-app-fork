@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { useResolveLinkQuery } from '#/state/queries/resolve-link';
 
@@ -10,10 +8,10 @@ import * as css from './LazyQuoteEmbed.css';
 export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisabled?: boolean }) {
 	const { data } = useResolveLinkQuery(uri);
 
-	const view = useMemo(() => {
-		if (!data || data.type !== 'record' || data.kind !== 'post') return;
-		return createEmbedViewRecordFromPost(data.view);
-	}, [data]);
+	let view;
+	if (data && data.type === 'record' && data.kind === 'post') {
+		view = createEmbedViewRecordFromPost(data.view);
+	}
 
 	return view ? (
 		<QuoteEmbed

@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { View } from 'react-native';
 
 import { DISCOVER_FEED_URI, PROD_DEFAULT_FEED } from '#/lib/constants';
@@ -38,7 +37,7 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 	const hasFeedPinned = Boolean(feedConfig);
 	const hasDiscoverPinned = Boolean(discoverFeedConfig?.pinned);
 
-	const onRemoveFeed = useCallback(async () => {
+	const onRemoveFeed = async () => {
 		try {
 			if (feedConfig) {
 				await removeFeed(feedConfig);
@@ -53,9 +52,9 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 			});
 			logger.error('Failed to update feeds', { message: err });
 		}
-	}, [removeFeed, feedConfig, hasDiscoverPinned, setSelectedFeed]);
+	};
 
-	const onReplaceFeed = useCallback(async () => {
+	const onReplaceFeed = async () => {
 		try {
 			await replaceFeedWithDiscover({
 				forYouFeedConfig: feedConfig,
@@ -69,7 +68,7 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 			});
 			logger.error('Failed to update feeds', { message: err });
 		}
-	}, [replaceFeedWithDiscover, discoverFeedConfig, feedConfig, setSelectedFeed]);
+	};
 
 	const isProcessing = isReplacePending || isRemovePending;
 	return (

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import type { AppBskyActorDefs, AppBskyLabelerDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { clsx } from 'clsx';
@@ -139,7 +139,7 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 	const [likeUri, setLikeUri] = useState(labeler.viewer?.like || '');
 	const [likeCount, setLikeCount] = useState(labeler.likeCount || 0);
 
-	const onToggleLiked = useCallback(async () => {
+	const onToggleLiked = async () => {
 		try {
 			if (likeUri) {
 				await unlikeMod({ uri: likeUri });
@@ -156,7 +156,7 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 				message: e instanceof Error ? e.message : String(e),
 			});
 		}
-	}, [labeler, likeUri, unlikeMod, likeMod]);
+	};
 
 	return (
 		<div className={css.likeRow}>

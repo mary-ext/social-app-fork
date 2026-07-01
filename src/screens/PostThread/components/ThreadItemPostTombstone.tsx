@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { Text } from '#/components/Text';
@@ -13,15 +11,19 @@ export type ThreadItemPostTombstoneProps = {
 };
 
 export function ThreadItemPostTombstone({ type }: ThreadItemPostTombstoneProps) {
-	const { copy, Icon } = useMemo(() => {
-		switch (type) {
-			case 'blocked':
-				return { copy: m['screens.postThread.post.error.blocked'](), Icon: PersonXIcon };
-			case 'not-found':
-			default:
-				return { copy: m['screens.postThread.post.error.notFound'](), Icon: TrashIcon };
-		}
-	}, [type]);
+	let copy: string;
+	let Icon: typeof PersonXIcon;
+	switch (type) {
+		case 'blocked':
+			copy = m['screens.postThread.post.error.blocked']();
+			Icon = PersonXIcon;
+			break;
+		case 'not-found':
+		default:
+			copy = m['screens.postThread.post.error.notFound']();
+			Icon = TrashIcon;
+			break;
+	}
 
 	return (
 		<div className={css.outer}>

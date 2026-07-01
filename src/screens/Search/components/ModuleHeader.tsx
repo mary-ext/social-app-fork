@@ -1,4 +1,4 @@
-import { type ComponentType, type ReactNode, useMemo } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
@@ -37,7 +37,7 @@ export function Container({
 }
 
 export function FeedLink({ children, feed }: { children?: ReactNode; feed: AppBskyFeedDefs.GeneratorView }) {
-	const { repo: did, rkey } = useMemo(() => parseCanonicalResourceUri(feed.uri), [feed.uri]);
+	const { repo: did, rkey } = parseCanonicalResourceUri(feed.uri);
 	return (
 		<Link className={css.feedLink} label={feed.displayName} to={makeCustomFeedLink(did, rkey)}>
 			{children}

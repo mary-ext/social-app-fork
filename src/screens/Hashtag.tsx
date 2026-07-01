@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { ListRenderItemInfo } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -45,52 +45,45 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 	const { tag, author } = route.params;
 	const isCashtag = tag.startsWith('$');
 
-	const fullTag = useMemo(() => {
-		// Cashtags already include the $ prefix, hashtags need # added
-		return isCashtag ? tag : `#${tag}`;
-	}, [tag, isCashtag]);
+	// Cashtags already include the $ prefix, hashtags need # added
+	const fullTag = isCashtag ? tag : `#${tag}`;
 
-	const headerTitle = useMemo(() => {
-		// Keep cashtags uppercase, lowercase hashtags
-		const displayTag = isCashtag ? fullTag.toUpperCase() : fullTag.toLowerCase();
-		return enforceLen(displayTag, 24, true, 'middle');
-	}, [fullTag, isCashtag]);
+	// Keep cashtags uppercase, lowercase hashtags
+	const displayTag = isCashtag ? fullTag.toUpperCase() : fullTag.toLowerCase();
+	const headerTitle = enforceLen(displayTag, 24, true, 'middle');
 
-	const sanitizedAuthor = useMemo(() => {
-		if (!author) return '';
-		// DIDs have no `@` prefix; handles do.
-		return author.startsWith('did:') ? sanitizeHandle(author) : sanitizeHandle(author, '@');
-	}, [author]);
+	// DIDs have no `@` prefix; handles do.
+	const sanitizedAuthor = author
+		? author.startsWith('did:')
+			? sanitizeHandle(author)
+			: sanitizeHandle(author, '@')
+		: '';
 
-	const onShare = useCallback(() => {
+	const onShare = () => {
 		const url = new URL('https://bsky.app');
 		url.pathname = `/hashtag/${tag}`;
 		if (author) {
 			url.searchParams.set('author', author);
 		}
 		void shareUrl(url.toString());
-	}, [tag, author]);
+	};
 
 	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');
 
-	const sections = useMemo<Section<'latest' | 'top'>[]>(() => {
-		return [
-			{
-				id: 'top',
-				label: m['common.search.top'](),
-				render: (focused) => (
-					<HashtagScreenTab fullTag={fullTag} author={author} sort="top" active={focused} />
-				),
-			},
-			{
-				id: 'latest',
-				label: m['common.search.latest'](),
-				render: (focused) => (
-					<HashtagScreenTab fullTag={fullTag} author={author} sort="latest" active={focused} />
-				),
-			},
-		];
-	}, [fullTag, author]);
+	const sections: Section<'latest' | 'top'>[] = [
+		{
+			id: 'top',
+			label: m['common.search.top'](),
+			render: (focused) => <HashtagScreenTab fullTag={fullTag} author={author} sort="top" active={focused} />,
+		},
+		{
+			id: 'latest',
+			label: m['common.search.latest'](),
+			render: (focused) => (
+				<HashtagScreenTab fullTag={fullTag} author={author} sort="latest" active={focused} />
+			),
+		},
+	];
 
 	return (
 		<Layout.Screen>
@@ -148,10 +141,8 @@ function HashtagScreenTab({
 
 	const isCashtag = fullTag.startsWith('$');
 
-	const queryParam = useMemo(() => {
-		// Cashtags need # prefix for search: "#$BTC"
-		return isCashtag ? `#${fullTag}` : fullTag;
-	}, [fullTag, isCashtag]);
+	// Cashtags need # prefix for search: "#$BTC"
+	const queryParam = isCashtag ? `#${fullTag}` : fullTag;
 
 	const {
 		data,
@@ -165,20 +156,18 @@ function HashtagScreenTab({
 		hasNextPage,
 	} = useSearchPostsQuery({ author, enabled: active, query: queryParam, sort });
 
-	const posts = useMemo(() => {
-		return data?.pages.flatMap((page) => page.posts) || [];
-	}, [data]);
+	const posts = data?.pages.flatMap((page) => page.posts) || [];
 
-	const onRefresh = useCallback(async () => {
+	const onRefresh = async () => {
 		setIsPTR(true);
 		await refetch();
 		setIsPTR(false);
-	}, [refetch]);
+	};
 
-	const onEndReached = useCallback(() => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || error) return;
 		void fetchNextPage();
-	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
+	};
 
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 

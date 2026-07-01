@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { useNavigation } from '@react-navigation/native';
 
@@ -28,9 +27,9 @@ export function ProfileFollows({ name, initialCount }: { name: string; initialCo
 	const navigation = useNavigation<NavigationProp>();
 	const moderationOpts = useModerationOpts();
 
-	const onPressFindAccounts = useCallback(() => {
+	const onPressFindAccounts = () => {
 		navigation.navigate('Search', {});
-	}, [navigation]);
+	};
 
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);
 	const {
@@ -46,12 +45,7 @@ export function ProfileFollows({ name, initialCount }: { name: string; initialCo
 	const isError = !!resolveError || !!error;
 	const isMe = resolvedDid === currentAccount?.did;
 
-	const follows = useMemo(() => {
-		if (data?.pages) {
-			return data.pages.flatMap((page) => page.follows);
-		}
-		return [];
-	}, [data]);
+	const follows = data?.pages ? data.pages.flatMap((page) => page.follows) : [];
 
 	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || !!error) return;

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo } from 'react';
+import { createContext, useContext } from 'react';
 import { Pressable, type PressableProps, type StyleProp, View, type ViewStyle } from 'react-native';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -87,18 +87,15 @@ export function Group({
 	const groupRole = type === 'radio' ? 'radiogroup' : undefined;
 	const values = type === 'radio' ? providedValues.slice(0, 1) : providedValues;
 
-	const setFieldValue = useCallback<(props: { name: string; value: boolean }) => void>(
-		({ name, value }) => {
-			if (type === 'checkbox') {
-				const pruned = values.filter((v) => v !== name);
-				const next = value ? pruned.concat(name) : pruned;
-				onChange(next);
-			} else {
-				onChange([name]);
-			}
-		},
-		[type, onChange, values],
-	);
+	const setFieldValue: (props: { name: string; value: boolean }) => void = ({ name, value }) => {
+		if (type === 'checkbox') {
+			const pruned = values.filter((v) => v !== name);
+			const next = value ? pruned.concat(name) : pruned;
+			onChange(next);
+		} else {
+			onChange([name]);
+		}
+	};
 
 	const maxReached = !!(type === 'checkbox' && maxSelections && values.length >= maxSelections);
 
@@ -159,24 +156,21 @@ export function Item({
 	const selected = selectedValues.includes(name) || !!value;
 	const disabled = groupDisabled || itemDisabled || (!selected && maxSelectionsReached);
 
-	const onPress = useCallback(() => {
+	const onPress = () => {
 		const next = !selected;
 		setFieldValue({ name, value: next });
 		onChange?.(next);
-	}, [name, selected, onChange, setFieldValue]);
+	};
 
-	const state = useMemo(
-		() => ({
-			name,
-			selected,
-			disabled: disabled ?? false,
-			isInvalid: isInvalid ?? false,
-			hovered,
-			pressed,
-			focused,
-		}),
-		[name, selected, disabled, hovered, pressed, focused, isInvalid],
-	);
+	const state = {
+		name,
+		selected,
+		disabled: disabled ?? false,
+		isInvalid: isInvalid ?? false,
+		hovered,
+		pressed,
+		focused,
+	};
 
 	const highlightStyle = highlightRow
 		? [
@@ -370,75 +364,67 @@ export function Checkbox() {
 export function Switch() {
 	const t = useTheme();
 	const { selected, hovered, disabled, isInvalid } = useItemContext();
-	const { baseStyles, baseHoverStyles, indicatorStyles } = useMemo(() => {
-		const base: ViewStyle[] = [];
-		const baseHover: ViewStyle[] = [];
-		const indicator: ViewStyle[] = [];
+	const baseStyles: ViewStyle[] = [];
+	const baseHoverStyles: ViewStyle[] = [];
+	const indicatorStyles: ViewStyle[] = [];
+
+	if (selected) {
+		baseStyles.push({
+			backgroundColor: t.palette.primary_500,
+		});
+
+		if (hovered) {
+			baseHoverStyles.push({
+				backgroundColor: t.palette.primary_400,
+			});
+		}
+	} else {
+		baseStyles.push({
+			backgroundColor: t.palette.contrast_200,
+		});
+
+		if (hovered) {
+			baseHoverStyles.push({
+				backgroundColor: t.palette.contrast_100,
+			});
+		}
+	}
+
+	if (isInvalid) {
+		baseStyles.push({
+			backgroundColor: t.palette.negative_200,
+		});
+
+		if (hovered) {
+			baseHoverStyles.push({
+				backgroundColor: t.palette.negative_100,
+			});
+		}
 
 		if (selected) {
-			base.push({
-				backgroundColor: t.palette.primary_500,
+			baseStyles.push({
+				backgroundColor: t.palette.negative_500,
 			});
 
 			if (hovered) {
-				baseHover.push({
-					backgroundColor: t.palette.primary_400,
-				});
-			}
-		} else {
-			base.push({
-				backgroundColor: t.palette.contrast_200,
-			});
-
-			if (hovered) {
-				baseHover.push({
-					backgroundColor: t.palette.contrast_100,
+				baseHoverStyles.push({
+					backgroundColor: t.palette.negative_400,
 				});
 			}
 		}
+	}
 
-		if (isInvalid) {
-			base.push({
-				backgroundColor: t.palette.negative_200,
+	if (disabled) {
+		baseStyles.push({
+			backgroundColor: t.palette.contrast_50,
+		});
+
+		if (selected) {
+			baseStyles.push({
+				backgroundColor: t.palette.primary_100,
 			});
-
-			if (hovered) {
-				baseHover.push({
-					backgroundColor: t.palette.negative_100,
-				});
-			}
-
-			if (selected) {
-				base.push({
-					backgroundColor: t.palette.negative_500,
-				});
-
-				if (hovered) {
-					baseHover.push({
-						backgroundColor: t.palette.negative_400,
-					});
-				}
-			}
 		}
-
-		if (disabled) {
-			base.push({
-				backgroundColor: t.palette.contrast_50,
-			});
-
-			if (selected) {
-				base.push({
-					backgroundColor: t.palette.primary_100,
-				});
-			}
-		}
-
-		return {
-			baseStyles: base,
-			baseHoverStyles: disabled ? [] : baseHover,
-			indicatorStyles: indicator,
-		};
-	}, [t, hovered, disabled, selected, isInvalid]);
+	}
 
 	return (
 		<View
@@ -453,7 +439,7 @@ export function Switch() {
 				},
 				a.transition_color,
 				baseStyles,
-				hovered ? baseHoverStyles : {},
+				hovered && !disabled ? baseHoverStyles : {},
 			]}
 		>
 			<View

@@ -1,4 +1,4 @@
-import { type ReactNode, type Ref, useCallback } from 'react';
+import type { ReactNode, Ref } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useQueryClient } from '@tanstack/react-query';
@@ -79,13 +79,13 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 	const profileLink = makeProfileLink(author);
 	const queryClient = useQueryClient();
 	const onOpenAuthor = opts.onOpenAuthor;
-	const onBeforePressAuthor = useCallback(() => {
+	const onBeforePressAuthor = () => {
 		unstableCacheProfileView(queryClient, author);
 		onOpenAuthor?.();
-	}, [queryClient, author, onOpenAuthor]);
-	const onBeforePressPost = useCallback(() => {
+	};
+	const onBeforePressPost = () => {
 		unstableCacheProfileView(queryClient, author);
-	}, [queryClient, author]);
+	};
 
 	const timestampLabel = niceDate(opts.timestamp);
 	const { isActive: live } = useActorStatus(author);

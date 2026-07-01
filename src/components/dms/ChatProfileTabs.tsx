@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { type ScrollView, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
@@ -84,12 +84,9 @@ function Tab({
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
-	const onPressItem = useCallback(
-		(did: string) => {
-			onRemove?.(did);
-		},
-		[onRemove],
-	);
+	const onPressItem = (did: string) => {
+		onRemove?.(did);
+	};
 
 	return (
 		<View

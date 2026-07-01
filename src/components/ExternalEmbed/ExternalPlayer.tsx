@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { type EmbedPlayerParams, getPlayerAspect } from '#/lib/strings/embed-player';
@@ -56,13 +56,13 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 		return () => observer.disconnect();
 	}, [isActive]);
 
-	const onPlayPress = useCallback(() => {
+	const onPlayPress = () => {
 		if (externalEmbedsPrefs?.[params.source] === undefined) {
 			consentDialogHandle.open(null);
 			return;
 		}
 		setIsActive(true);
-	}, [consentDialogHandle, externalEmbedsPrefs, params.source]);
+	};
 
 	const showThumb = !!link.thumb && (!isActive || isLoading);
 

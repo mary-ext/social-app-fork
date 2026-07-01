@@ -53,29 +53,26 @@ export function TextInput({
 		textRef.current = text;
 	});
 
-	const handleTextChange = useCallback(
-		(newText: string) => {
-			const mayBePaste = isPastingRef.current || newText.length > prevLength.current + 1;
-			isPastingRef.current = false;
+	const handleTextChange = (newText: string) => {
+		const mayBePaste = isPastingRef.current || newText.length > prevLength.current + 1;
+		isPastingRef.current = false;
 
-			textRef.current = newText;
-			setText(newText);
+		textRef.current = newText;
+		setText(newText);
 
-			const nextDetectedUris = detectLinks(newText);
-			const suggestedUri = suggestLinkCardUri(
-				mayBePaste,
-				nextDetectedUris,
-				prevDetectedUris.current,
-				pastSuggestedUris.current,
-			);
-			prevDetectedUris.current = nextDetectedUris;
-			prevLength.current = newText.length;
-			if (suggestedUri) {
-				onNewLink(suggestedUri);
-			}
-		},
-		[onNewLink, setText],
-	);
+		const nextDetectedUris = detectLinks(newText);
+		const suggestedUri = suggestLinkCardUri(
+			mayBePaste,
+			nextDetectedUris,
+			prevDetectedUris.current,
+			pastSuggestedUris.current,
+		);
+		prevDetectedUris.current = nextDetectedUris;
+		prevLength.current = newText.length;
+		if (suggestedUri) {
+			onNewLink(suggestedUri);
+		}
+	};
 
 	const onEmojiInserted = useCallback(
 		(emoji: Emoji) => {
@@ -149,36 +146,30 @@ export function TextInput({
 		},
 	}));
 
-	const handleRequestSubmit = useCallback(
-		(request: SubmitRequest) => {
-			if (request.platform === 'web') {
-				const nativeEvent = request.nativeEvent;
-				if (!request.metaKey && !nativeEvent.ctrlKey) {
-					return;
-				}
-				nativeEvent.preventDefault();
+	const handleRequestSubmit = (request: SubmitRequest) => {
+		if (request.platform === 'web') {
+			const nativeEvent = request.nativeEvent;
+			if (!request.metaKey && !nativeEvent.ctrlKey) {
+				return;
 			}
-			onPressPublish(textRef.current);
-		},
-		[onPressPublish],
-	);
+			nativeEvent.preventDefault();
+		}
+		onPressPublish(textRef.current);
+	};
 
-	const handlePaste = useCallback(
-		(event: ClipboardEvent) => {
-			isPastingRef.current = true;
-			window.setTimeout(() => {
-				isPastingRef.current = false;
-			}, 0);
-			const transfer = event.clipboardData;
-			if (transfer?.items) {
-				if (hasMediaTransfer(transfer)) {
-					event.preventDefault();
-				}
-				handleTransferItems(transfer.items, onPhotoPasted, onError);
+	const handlePaste = (event: ClipboardEvent) => {
+		isPastingRef.current = true;
+		window.setTimeout(() => {
+			isPastingRef.current = false;
+		}, 0);
+		const transfer = event.clipboardData;
+		if (transfer?.items) {
+			if (hasMediaTransfer(transfer)) {
+				event.preventDefault();
 			}
-		},
-		[onError, onPhotoPasted],
-	);
+			handleTransferItems(transfer.items, onPhotoPasted, onError);
+		}
+	};
 
 	return (
 		<>

@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 import { useNavigation } from '@react-navigation/native';
@@ -46,10 +45,10 @@ export function LiveStatusDialog({
 }) {
 	const navigation = useNavigation<NavigationProp>();
 
-	const onPressOpenProfile = useCallback(() => {
+	const onPressOpenProfile = () => {
 		handle.close();
 		navigation.push('Profile', { name: profile.did });
-	}, [handle, navigation, profile.did]);
+	};
 
 	return (
 		<Dialog.Root handle={handle}>
@@ -94,12 +93,9 @@ export function LiveStatus({
 	const moderationOpts = useModerationOpts();
 	const reportDialogHandle = useGlobalReportDialogHandle();
 
-	const statusModeration = useMemo(() => {
-		if (!moderationOpts) return undefined;
-		return moderateStatus(profile, moderationOpts);
-	}, [moderationOpts, profile]);
+	const statusModeration = moderationOpts ? moderateStatus(profile, moderationOpts) : undefined;
 
-	const onReport = useCallback(() => {
+	const onReport = () => {
 		onRequestClose?.();
 		reportDialogHandle.openWithPayload({
 			subject: {
@@ -107,7 +103,7 @@ export function LiveStatus({
 				$type: 'app.bsky.actor.defs#statusView',
 			},
 		});
-	}, [onRequestClose, reportDialogHandle, status]);
+	};
 
 	const thumb = embed.external.thumb;
 

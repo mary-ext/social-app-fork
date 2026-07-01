@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -32,14 +32,9 @@ export function ModerationBlockedAccounts({}: Props) {
 	const { data, isFetching, isError, error, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
 		useMyBlockedAccountsQuery();
 	const isEmpty = !isFetching && !data?.pages[0]?.blocks.length;
-	const profiles = useMemo(() => {
-		if (data?.pages) {
-			return data.pages.flatMap((page) => page.blocks);
-		}
-		return [];
-	}, [data]);
+	const profiles = data?.pages ? data.pages.flatMap((page) => page.blocks) : [];
 
-	const onRefresh = useCallback(async () => {
+	const onRefresh = async () => {
 		setIsPTRing(true);
 		try {
 			await refetch();
@@ -47,9 +42,9 @@ export function ModerationBlockedAccounts({}: Props) {
 			logger.error('Failed to refresh my muted accounts', { message: err });
 		}
 		setIsPTRing(false);
-	}, [refetch, setIsPTRing]);
+	};
 
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetching || !hasNextPage || isError) return;
 
 		try {
@@ -57,7 +52,7 @@ export function ModerationBlockedAccounts({}: Props) {
 		} catch (err) {
 			logger.error('Failed to load more of my muted accounts', { message: err });
 		}
-	}, [isFetching, hasNextPage, isError, fetchNextPage]);
+	};
 
 	const renderItem = ({ item, index }: { item: ActorDefs.ProfileView; index: number }) => {
 		if (!moderationOpts) return null;

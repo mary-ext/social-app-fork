@@ -113,7 +113,7 @@ function Content({
 	onAfterSubmit?: () => void;
 	subject?: ReportSubject;
 }) {
-	const parsed = useMemo(() => (subject ? parseReportSubject(subject) : undefined), [subject]);
+	const parsed = subject ? parseReportSubject(subject) : undefined;
 	if (!parsed) {
 		return <Invalid close={close} />;
 	}

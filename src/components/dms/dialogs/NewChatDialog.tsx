@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { ClientResponseError } from '@atcute/client';
 
 import { isNetworkError } from '#/lib/strings/errors';
@@ -111,26 +110,19 @@ export function NewChat({
 		},
 	});
 
-	const onCreateChat = useCallback(
-		(did: string) => {
-			control.close(() => createChat([did]));
-		},
-		[control, createChat],
-	);
+	const onCreateChat = (did: string) => {
+		control.close(() => createChat([did]));
+	};
 
-	const onCreateGroupChat = useCallback(
-		(members: string[], name: string) => {
-			control.close(() => {
-				createGroupChat({ members, name });
-			});
-		},
-		[control, createGroupChat],
-	);
+	const onCreateGroupChat = (members: string[], name: string) => {
+		control.close(() => {
+			createGroupChat({ members, name });
+		});
+	};
 
-	const onPress = useCallback(() => {
+	const wrappedOnPress = () => {
 		control.open();
-	}, [control]);
-	const wrappedOnPress = onPress;
+	};
 
 	return (
 		<>

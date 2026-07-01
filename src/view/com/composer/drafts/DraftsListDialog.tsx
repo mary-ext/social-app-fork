@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Keyboard } from 'react-native';
 
 import { useCallOnce } from '#/lib/once';
@@ -36,7 +36,7 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 	const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useDraftsQuery();
 	const { mutate: deleteDraft } = useDeleteDraftMutation();
 
-	const drafts = useMemo(() => data?.pages.flatMap((page) => page.drafts) ?? [], [data]);
+	const drafts = data?.pages.flatMap((page) => page.drafts) ?? [];
 
 	// Fire draft:listOpen metric when dialog opens and data is loaded
 	const draftCount = drafts.length;
@@ -48,32 +48,26 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 		}
 	}, [onDraftListOpen, isDataReady, draftCount]);
 
-	const handleSelectDraft = useCallback(
-		(summary: DraftSummary) => {
-			// Dismiss keyboard immediately to prevent flicker. Without this,
-			// the text input regains focus (showing the keyboard) after the
-			// drafts sheet closes, then loses it again when the post component
-			// remounts with the draft content, causing a show-hide-show cycle -sfn
-			Keyboard.dismiss();
-			handle.close();
-			onSelectDraft(summary);
-		},
-		[handle, onSelectDraft],
-	);
+	const handleSelectDraft = (summary: DraftSummary) => {
+		// Dismiss keyboard immediately to prevent flicker. Without this,
+		// the text input regains focus (showing the keyboard) after the
+		// drafts sheet closes, then loses it again when the post component
+		// remounts with the draft content, causing a show-hide-show cycle -sfn
+		Keyboard.dismiss();
+		handle.close();
+		onSelectDraft(summary);
+	};
 
-	const handleDeleteDraft = useCallback(
-		(draftSummary: DraftSummary) => {
-			// Fire draft:delete metric
-			deleteDraft({ draftId: draftSummary.id, draft: draftSummary.draft });
-		},
-		[deleteDraft],
-	);
+	const handleDeleteDraft = (draftSummary: DraftSummary) => {
+		// Fire draft:delete metric
+		deleteDraft({ draftId: draftSummary.id, draft: draftSummary.draft });
+	};
 
-	const onEndReached = useCallback(() => {
+	const onEndReached = () => {
 		if (hasNextPage && !isFetchingNextPage) {
 			void fetchNextPage();
 		}
-	}, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+	};
 
 	return (
 		<>

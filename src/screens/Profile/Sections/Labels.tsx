@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { View } from 'react-native';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
@@ -42,14 +41,14 @@ export function ProfileLabelsSection({
 }: LabelsSectionProps) {
 	const isSubscribed = labelerInfo ? !!isLabelerSubscribed(labelerInfo, moderationOpts) : false;
 
-	const labelValues = useMemo(() => {
-		if (isLabelerLoading || !labelerInfo || labelerError) return [];
+	let labelValues: InterpretedLabelDefinition[] = [];
+	if (!isLabelerLoading && labelerInfo && !labelerError) {
 		const customDefs = Object.values(interpretLabelerDefinition(labelerInfo));
-		return labelerInfo.policies.labelValues
+		labelValues = labelerInfo.policies.labelValues
 			.filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
 			.map((val) => lookupLabelValueDefinition(val, customDefs))
 			.filter((def) => def && !(def.flags & LabelFlags.NoConfigurable)) as InterpretedLabelDefinition[];
-	}, [labelerInfo, labelerError, isLabelerLoading]);
+	}
 
 	return (
 		<View>

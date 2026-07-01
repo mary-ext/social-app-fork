@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
 
 import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
@@ -106,18 +104,20 @@ export function StandardActions() {
 		state: { profile },
 	} = useProfileHeader();
 
-	const subscriptionsAllowed = useMemo(() => {
-		switch (profile.associated?.activitySubscription?.allowSubscriptions) {
-			case 'followers':
-			case undefined:
-				return !!profile.viewer?.following;
-			case 'mutuals':
-				return !!profile.viewer?.following && !!profile.viewer.followedBy;
-			case 'none':
-			default:
-				return false;
-		}
-	}, [profile]);
+	let subscriptionsAllowed: boolean;
+	switch (profile.associated?.activitySubscription?.allowSubscriptions) {
+		case 'followers':
+		case undefined:
+			subscriptionsAllowed = !!profile.viewer?.following;
+			break;
+		case 'mutuals':
+			subscriptionsAllowed = !!profile.viewer?.following && !!profile.viewer.followedBy;
+			break;
+		case 'none':
+		default:
+			subscriptionsAllowed = false;
+			break;
+	}
 
 	let relationshipActions: React.ReactNode = null;
 	switch (relationship) {

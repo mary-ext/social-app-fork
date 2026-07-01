@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useRef, useState } from 'react';
+import { createContext, useContext, useRef, useState } from 'react';
 
 import { useHotkeysContext } from '#/lib/hotkeys';
 
@@ -51,7 +51,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const activeDialogs = useRef<Map<string, React.MutableRefObject<DialogControlRefProps>>>(new Map());
 	const openDialogs = useRef<Set<string>>(new Set());
 
-	const closeAllDialogs = useCallback((opts: CloseAllDialogsOptions = {}) => {
+	const closeAllDialogs = (opts: CloseAllDialogsOptions = {}) => {
 		const except = new Set(opts.except);
 		// snapshot before closing, since closing mutates openDialogs as each dialog reports back
 		const ids = [...openDialogs.current].filter((id) => !except.has(id));
@@ -61,23 +61,20 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		}
 
 		return ids.length > 0;
-	}, []);
+	};
 
-	const setDialogIsOpen = useCallback(
-		(id: string, isOpen: boolean) => {
-			if (isOpen) {
-				openDialogs.current.add(id);
-			} else {
-				openDialogs.current.delete(id);
-			}
-			if (openDialogs.current.size > 0) {
-				disableScope('global');
-			} else {
-				enableScope('global');
-			}
-		},
-		[disableScope, enableScope],
-	);
+	const setDialogIsOpen = (id: string, isOpen: boolean) => {
+		if (isOpen) {
+			openDialogs.current.add(id);
+		} else {
+			openDialogs.current.delete(id);
+		}
+		if (openDialogs.current.size > 0) {
+			disableScope('global');
+		} else {
+			enableScope('global');
+		}
+	};
 
 	const context: IDialogContext = {
 		activeDialogs,

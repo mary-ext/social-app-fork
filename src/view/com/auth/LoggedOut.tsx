@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { View } from 'react-native';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
@@ -33,15 +33,15 @@ export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 		}
 	}, [accounts, prefetchProfileQuery]);
 
-	const onPressDismiss = useCallback(() => {
+	const onPressDismiss = () => {
 		if (onDismiss) {
 			onDismiss();
 		}
-	}, [onDismiss]);
+	};
 
-	const showSignIn = useCallback(() => {
+	const showSignIn = () => {
 		signinDialogHandle.openWithPayload({});
-	}, [signinDialogHandle]);
+	};
 
 	return (
 		<View

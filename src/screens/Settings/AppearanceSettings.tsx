@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
@@ -22,26 +20,17 @@ export function AppearanceSettingsScreen({}: Props) {
 	const { colorMode, darkTheme } = useThemePrefs();
 	const { setColorMode, setDarkTheme } = useSetThemePrefs();
 
-	const onChangeAppearance = useCallback(
-		(value: 'dark' | 'light' | 'system') => {
-			setColorMode(value);
-		},
-		[setColorMode],
-	);
+	const onChangeAppearance = (value: 'dark' | 'light' | 'system') => {
+		setColorMode(value);
+	};
 
-	const onChangeDarkTheme = useCallback(
-		(value: 'dark' | 'dim') => {
-			setDarkTheme(value);
-		},
-		[setDarkTheme],
-	);
+	const onChangeDarkTheme = (value: 'dark' | 'dim') => {
+		setDarkTheme(value);
+	};
 
-	const onChangeFontScale = useCallback(
-		(value: Alf['fonts']['scale']) => {
-			fonts.setFontScale(value);
-		},
-		[fonts],
-	);
+	const onChangeFontScale = (value: Alf['fonts']['scale']) => {
+		fonts.setFontScale(value);
+	};
 
 	return (
 		<Layout.Screen>

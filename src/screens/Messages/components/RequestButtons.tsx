@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -77,21 +76,21 @@ export function RejectMenu({
 	});
 	const [queueBlock] = useProfileBlockMutationQueue(shadowedProfile);
 
-	const onPressDelete = useCallback(() => {
+	const onPressDelete = () => {
 		Toast.show(m['screens.messages.deleteChat.deletedToast'](), {
 			type: 'success',
 		});
 		leaveConvo();
-	}, [leaveConvo]);
+	};
 
-	const onPressBlock = useCallback(() => {
+	const onPressBlock = () => {
 		Toast.show(m['common.block.blockedToast'](), {
 			type: 'success',
 		});
 		// block and also delete convo
 		void queueBlock();
 		leaveConvo();
-	}, [queueBlock, leaveConvo]);
+	};
 
 	const reportHandle = Dialog.useDialogHandle();
 	const blockOrDeleteControl = useDialogControl();
@@ -226,9 +225,9 @@ export function AcceptChatButton({
 		},
 	});
 
-	const onPressAccept = useCallback(() => {
+	const onPressAccept = () => {
 		acceptConvo();
-	}, [acceptConvo]);
+	};
 
 	let Icon: React.ReactNode = null;
 	if (isPending) {
@@ -280,12 +279,12 @@ export function DeleteChatButton({
 		},
 	});
 
-	const onPressDelete = useCallback(() => {
+	const onPressDelete = () => {
 		Toast.show(m['screens.messages.deleteChat.deletedToast'](), {
 			type: 'success',
 		});
 		leaveConvo();
-	}, [leaveConvo]);
+	};
 
 	return (
 		<Button

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -54,10 +54,7 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 	}, [sendPosition, isFullscreen, isGif]);
 
 	const [key, setKey] = useState(0);
-	const renderError = useCallback(
-		(error: unknown) => <VideoError error={error} retry={() => setKey(key + 1)} />,
-		[key],
-	);
+	const renderError = (error: unknown) => <VideoError error={error} retry={() => setKey(key + 1)} />;
 
 	let aspectRatio: number | undefined;
 	const dims = embed.aspectRatio;

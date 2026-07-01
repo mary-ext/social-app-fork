@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type {
 	AnyProfileView,
 	AppBskyNotificationDefs,
@@ -159,25 +159,24 @@ function DialogInner({
 		},
 	});
 
-	const buttonProps: Omit<ButtonProps, 'children'> = useMemo(() => {
-		const isDirty = state.post !== initialState.post || state.reply !== initialState.reply;
-		const hasAny = state.post || state.reply;
+	const isDirty = state.post !== initialState.post || state.reply !== initialState.reply;
+	const hasAny = state.post || state.reply;
 
-		if (isDirty) {
-			return {
-				label: m['common.action.saveChanges'](),
-				color: hasAny ? 'primary' : 'negative',
-				onClick: () => saveChanges(state),
-				disabled: isSaving,
-			};
-		} else {
-			return {
-				label: m['common.action.saveChanges'](),
-				color: 'secondary',
-				disabled: true,
-			};
-		}
-	}, [state, initialState, isSaving, saveChanges]);
+	let buttonProps: Omit<ButtonProps, 'children'>;
+	if (isDirty) {
+		buttonProps = {
+			label: m['common.action.saveChanges'](),
+			color: hasAny ? 'primary' : 'negative',
+			onClick: () => saveChanges(state),
+			disabled: isSaving,
+		};
+	} else {
+		buttonProps = {
+			label: m['common.action.saveChanges'](),
+			color: 'secondary',
+			disabled: true,
+		};
+	}
 
 	return (
 		<div className={styles.content}>

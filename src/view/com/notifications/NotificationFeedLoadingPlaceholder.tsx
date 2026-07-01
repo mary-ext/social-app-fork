@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { clsx } from 'clsx';
 
 import { triangularRandom, weightedRandomIndex } from '#/lib/numbers';
@@ -69,17 +68,13 @@ function NotificationLoadingPlaceholder({
 
 export function NotificationFeedLoadingPlaceholder() {
 	// freeze the per-row variety for the component's lifetime so it doesn't reshuffle on every re-render.
-	const rows = useMemo(
-		() =>
-			Array.from({ length: 11 }, () => ({
-				actionWidth: triangularRandom(40, 75, 5),
-				avatarCount: 1 + weightedRandomIndex(AVATAR_WEIGHTS),
-				galleryCount: weightedRandomIndex(GALLERY_WEIGHTS),
-				subjectLines: 1 + weightedRandomIndex(SUBJECT_LINE_WEIGHTS),
-				subjectWidth: triangularRandom(55, 95, 5),
-			})),
-		[],
-	);
+	const rows = Array.from({ length: 11 }, () => ({
+		actionWidth: triangularRandom(40, 75, 5),
+		avatarCount: 1 + weightedRandomIndex(AVATAR_WEIGHTS),
+		galleryCount: weightedRandomIndex(GALLERY_WEIGHTS),
+		subjectLines: 1 + weightedRandomIndex(SUBJECT_LINE_WEIGHTS),
+		subjectWidth: triangularRandom(55, 95, 5),
+	}));
 
 	return (
 		<>

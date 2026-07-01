@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { useNavigation } from '@react-navigation/native';
 
@@ -29,7 +28,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 		},
 	});
 
-	const onPress = useCallback(() => {
+	const onPress = () => {
 		if (!convoAvailability?.canChat) {
 			return;
 		}
@@ -38,7 +37,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 		} else {
 			initiateConvo([profile.did]);
 		}
-	}, [navigation, profile.did, initiateConvo, convoAvailability]);
+	};
 
 	if (!convoAvailability) {
 		// pending state, sized to the button to avoid layout shift

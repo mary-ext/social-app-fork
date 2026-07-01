@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { AnyStarterPackView, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
@@ -123,10 +123,8 @@ function JoinedCount({ starterPack }: { starterPack: AnyStarterPackView }) {
  */
 export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 	const qc = useQueryClient();
-	const { rkey, did } = useMemo(() => {
-		const rkey = parseCanonicalResourceUri(view.uri).rkey;
-		return { rkey, did: view.creator.did };
-	}, [view]);
+	const rkey = parseCanonicalResourceUri(view.uri).rkey;
+	const did = view.creator.did;
 	const precache = () => {
 		precacheResolvedUri(qc, view.creator.handle, view.creator.did);
 		precacheStarterPack(qc, view);
@@ -155,10 +153,8 @@ export function Link({
 }) {
 	const queryClient = useQueryClient();
 	const record = starterPack.record as AppBskyGraphStarterpack.Main;
-	const { rkey, did } = useMemo(() => {
-		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
-		return { rkey, did: starterPack.creator.did };
-	}, [starterPack]);
+	const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
+	const did = starterPack.creator.did;
 
 	return (
 		<WebLink

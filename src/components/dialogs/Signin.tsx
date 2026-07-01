@@ -135,7 +135,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState('');
 
-	const onSubmit = useCallback(async () => {
+	const onSubmit = async () => {
 		const trimmed = identifier.trim();
 		if (!trimmed) {
 			setError(m['components.dialogs.account.handle.description']());
@@ -153,7 +153,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 			setError(m['components.dialogs.signin.startError']());
 			setIsSubmitting(false);
 		}
-	}, [identifier, login]);
+	};
 
 	const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {

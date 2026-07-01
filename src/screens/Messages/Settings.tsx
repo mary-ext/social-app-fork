@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -81,23 +80,17 @@ export function MessagesSettingsScreenInner({}: Props) {
 		},
 	});
 
-	const onSelectMessagesFrom = useCallback(
-		(keys: string[]) => {
-			const key = keys[0];
-			if (!key) return;
-			updateDeclaration({ allowIncoming: key as AllowIncoming });
-		},
-		[updateDeclaration],
-	);
+	const onSelectMessagesFrom = (keys: string[]) => {
+		const key = keys[0];
+		if (!key) return;
+		updateDeclaration({ allowIncoming: key as AllowIncoming });
+	};
 
-	const onSelectGroupInvitesFrom = useCallback(
-		(keys: string[]) => {
-			const key = keys[0];
-			if (!key) return;
-			updateDeclaration({ allowGroupInvites: key as AllowIncoming });
-		},
-		[updateDeclaration],
-	);
+	const onSelectGroupInvitesFrom = (keys: string[]) => {
+		const key = keys[0];
+		if (!key) return;
+		updateDeclaration({ allowGroupInvites: key as AllowIncoming });
+	};
 
 	return (
 		<Layout.Screen testID="messagesSettingsScreen">

@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
 
 import { logger } from '#/logger';
@@ -44,19 +42,13 @@ function SendViaChatDialogInner({
 		},
 	});
 
-	const onSelectExistingChat = useCallback(
-		(chatId: string) => {
-			control.close(() => onSelectChat(chatId));
-		},
-		[control, onSelectChat],
-	);
+	const onSelectExistingChat = (chatId: string) => {
+		control.close(() => onSelectChat(chatId));
+	};
 
-	const onCreateChat = useCallback(
-		(did: string) => {
-			control.close(() => createChat([did]));
-		},
-		[control, createChat],
-	);
+	const onCreateChat = (did: string) => {
+		control.close(() => createChat([did]));
+	};
 
 	return (
 		<SearchablePeopleList

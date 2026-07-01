@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -132,36 +132,32 @@ function ThreadItemPostInner({
 	const post = item.value.post;
 	const record = item.value.post.record;
 	const moderation = item.moderation;
-	const richText: Richtext = useMemo(
-		() => ({
-			text: record.text,
-			facets: record.facets,
-		}),
-		[record],
-	);
+	const richText: Richtext = {
+		text: record.text,
+		facets: record.facets,
+	};
 	const threadRootUri = record.reply?.root?.uri || post.uri;
-	const postHref = useMemo(() => {
-		const urip = parseCanonicalResourceUri(post.uri);
-		return makeProfileLink(post.author, 'post', urip.rkey);
-	}, [post.uri, post.author]);
+	const urip = parseCanonicalResourceUri(post.uri);
+	const postHref = makeProfileLink(post.author, 'post', urip.rkey);
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,
 	});
-	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
+	let additionalPostAlerts: AppModerationCause[] = [];
+	{
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
 		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
-		return isControlledByViewer && isPostHiddenByThreadgate
-			? [
-					{
-						type: 'reply-hidden',
-						source: { type: 'user', did: currentAccount?.did },
-						priority: 6,
-					},
-				]
-			: [];
-	}, [post, currentAccount?.did, threadgateHiddenReplies, threadRootUri]);
+		if (isControlledByViewer && isPostHiddenByThreadgate) {
+			additionalPostAlerts = [
+				{
+					type: 'reply-hidden',
+					source: { type: 'user', did: currentAccount?.did },
+					priority: 6,
+				},
+			];
+		}
+	}
 
-	const onPressReply = useCallback(() => {
+	const onPressReply = () => {
 		openComposer({
 			replyTo: {
 				uri: post.uri,
@@ -174,7 +170,7 @@ function ThreadItemPostInner({
 			},
 			onPostSuccess: onPostSuccess,
 		});
-	}, [openComposer, post, record, onPostSuccess, moderation]);
+	};
 
 	const { isActive: live } = useActorStatus(post.author);
 

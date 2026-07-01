@@ -1,4 +1,4 @@
-import { type CSSProperties, useCallback, useMemo } from 'react';
+import type { CSSProperties } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -47,20 +47,13 @@ export function Post({
 	const moderationOpts = useModerationOpts();
 	const record = post.record as AppBskyFeedPost.Main;
 	const postShadowed = usePostShadow(post);
-	const richText = useMemo(
-		() =>
-			record
-				? {
-						text: record.text,
-						facets: record.facets,
-					}
-				: undefined,
-		[record],
-	);
-	const moderation = useMemo(
-		() => (moderationOpts ? moderatePost(post, moderationOpts) : undefined),
-		[moderationOpts, post],
-	);
+	const richText = record
+		? {
+				text: record.text,
+				facets: record.facets,
+			}
+		: undefined;
+	const moderation = moderationOpts ? moderatePost(post, moderationOpts) : undefined;
 	if (postShadowed === POST_TOMBSTONE) {
 		return null;
 	}
@@ -107,7 +100,7 @@ function PostInner({
 		replyAuthorDid = urip.repo;
 	}
 
-	const onPressReply = useCallback(() => {
+	const onPressReply = () => {
 		openComposer({
 			replyTo: {
 				uri: post.uri,
@@ -119,12 +112,12 @@ function PostInner({
 				langs: record.langs,
 			},
 		});
-	}, [openComposer, post, record, moderation]);
+	};
 
-	const onBeforePress = useCallback(() => {
+	const onBeforePress = () => {
 		unstableCacheProfileView(queryClient, post.author);
 		outerOnBeforePress?.();
-	}, [queryClient, post.author, outerOnBeforePress]);
+	};
 
 	return (
 		<GalleryBleed>

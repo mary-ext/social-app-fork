@@ -1,8 +1,7 @@
-import { forwardRef, useCallback, useContext, useImperativeHandle, useMemo, useState } from 'react';
+import { forwardRef, useCallback, useContext, useImperativeHandle, useState } from 'react';
 import {
 	FlatList,
 	type FlatListProps,
-	type GestureResponderEvent,
 	type LayoutChangeEvent,
 	Pressable,
 	type StyleProp,
@@ -59,11 +58,6 @@ export function Outer({ children, control, onClose, webOptions }: React.PropsWit
 	const [isOpen, setIsOpen] = useState(false);
 	const { setDialogIsOpen } = useDialogStateControlContext();
 
-	const open = useCallback(() => {
-		setDialogIsOpen(control.id, true);
-		setIsOpen(true);
-	}, [setIsOpen, setDialogIsOpen, control.id]);
-
 	const close = useCallback<DialogControlProps['close']>(
 		(cb) => {
 			setDialogIsOpen(control.id, false);
@@ -88,32 +82,25 @@ export function Outer({ children, control, onClose, webOptions }: React.PropsWit
 		[control.id, onClose, setDialogIsOpen],
 	);
 
-	const handleBackgroundPress = useCallback(
-		(e: GestureResponderEvent) => {
-			webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close();
-		},
-		[webOptions, close],
-	);
-
 	useImperativeHandle(
 		control.ref,
 		() => ({
-			open,
+			open: () => {
+				setDialogIsOpen(control.id, true);
+				setIsOpen(true);
+			},
 			close,
 		}),
-		[close, open],
+		[close, control.id, setDialogIsOpen],
 	);
 
-	const context = useMemo(
-		() => ({
-			close,
-			disableDrag: false,
-			setDisableDrag: () => {},
-			isWithinDialog: true,
-			isHeightConstrained: false,
-		}),
-		[close],
-	);
+	const context = {
+		close,
+		disableDrag: false,
+		setDisableDrag: () => {},
+		isWithinDialog: true,
+		isHeightConstrained: false,
+	};
 
 	return (
 		<>
@@ -124,7 +111,7 @@ export function Outer({ children, control, onClose, webOptions }: React.PropsWit
 						<Pressable
 							accessibilityHint={undefined}
 							accessibilityLabel={m['common.a11y.closeDialog']()}
-							onPress={(e) => void handleBackgroundPress(e)}
+							onPress={(e) => (webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close())}
 						>
 							<View
 								style={[

@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useLayoutEffect, useReducer, useRef, useState } from 'react';
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 
@@ -136,7 +136,7 @@ export function AddMembersFlow({
 		convoId: convo.view.id,
 		placeholderData: convo.members,
 	});
-	const memberDidSet = useMemo(() => new Set(memberListData.map((profile) => profile.did)), [memberListData]);
+	const memberDidSet = new Set(memberListData.map((profile) => profile.did));
 
 	// The existing members (including the viewer) already occupy slots, so the
 	// number of people that can still be added is whatever's left.
@@ -147,28 +147,22 @@ export function AddMembersFlow({
 		groupChatProfiles: [],
 	});
 
-	const onRemoveDid = useCallback(
-		(did: string) => {
-			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-			dispatch({
-				type: 'removeDids',
-				groupChatDids: groupChatDids.filter((d) => d !== did),
-				groupChatProfiles: groupChatProfiles.filter((profile) => profile.did !== did),
-			});
-		},
-		[groupChatDids, groupChatProfiles],
-	);
+	const onRemoveDid = (did: string) => {
+		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+		dispatch({
+			type: 'removeDids',
+			groupChatDids: groupChatDids.filter((d) => d !== did),
+			groupChatProfiles: groupChatProfiles.filter((profile) => profile.did !== did),
+		});
+	};
 
-	const items = useMemo<Item[]>(() => {
-		if (isMemberListPending) {
-			// Still fetching chat member DIDs for filtering, so force the loading state.
-			return [];
-		}
-
-		const _items: Item[] = [];
-
+	let items: Item[] = [];
+	if (isMemberListPending) {
+		// Still fetching chat member DIDs for filtering, so force the loading state.
+		items = [];
+	} else {
 		if (isError) {
-			_items.push({
+			items.push({
 				type: 'empty',
 				key: 'empty',
 				message: m['components.dialogs.error.network'](),
@@ -177,14 +171,14 @@ export function AddMembersFlow({
 			if (autocompleteResults?.length) {
 				for (const profile of autocompleteResults) {
 					if (profile.did === currentAccount?.did || memberDidSet.has(profile.did)) continue;
-					_items.push({
+					items.push({
 						type: 'profile',
 						key: profile.did,
 						profile,
 					});
 				}
 
-				_items.sort((item) => {
+				items.sort((item) => {
 					return item.type === 'profile' && canBeAddedToGroup(item.profile) ? -1 : 1;
 				});
 			}
@@ -195,7 +189,7 @@ export function AddMembersFlow({
 						// omit follows that can't be added, matching upstream (rather than listing
 						// them as disabled rows)
 						if (!canBeAddedToGroup(profile)) continue;
-						_items.push({
+						items.push({
 							type: 'profile',
 							key: profile.did,
 							profile,
@@ -204,77 +198,63 @@ export function AddMembersFlow({
 				}
 			} else {
 				for (let i = 0; i < 10; i++) {
-					_items.push({ type: 'placeholder', key: i + '' });
+					items.push({ type: 'placeholder', key: i + '' });
 				}
 			}
 		}
 
-		if (searchText === '' && _items.length > 0) {
-			_items.unshift({
+		if (searchText === '' && items.length > 0) {
+			items.unshift({
 				type: 'label',
 				key: 'suggested',
 				message: m['components.dms.search.suggested'](),
 			});
 		}
 
-		if (searchText && isAutocompleteFetching && _items.length > 0) {
+		if (searchText && isAutocompleteFetching && items.length > 0) {
 			// Stale results are still showing while autocomplete refetches -
 			// append an inline indicator so the user sees that work is happening.
-			_items.push({ type: 'loading', key: 'loading' });
-		} else if (searchText && !isAutocompleteFetching && !_items.length && !isError) {
-			_items.push({ type: 'empty', key: 'empty', message: m['common.search.empty']() });
+			items.push({ type: 'loading', key: 'loading' });
+		} else if (searchText && !isAutocompleteFetching && !items.length && !isError) {
+			items.push({ type: 'empty', key: 'empty', message: m['common.search.empty']() });
 		}
+	}
 
-		return _items;
-	}, [
-		autocompleteResults,
-		currentAccount?.did,
-		follows,
-		isAutocompleteFetching,
-		isError,
-		isMemberListPending,
-		memberDidSet,
-		searchText,
-	]);
-
-	const handlePressBack = useCallback(() => {
+	const handlePressBack = () => {
 		control.close();
-	}, [control]);
+	};
 
-	const handlePressAdd = useCallback(() => {
+	const handlePressAdd = () => {
 		onAddMembers(groupChatDids, groupChatProfiles);
-	}, [groupChatDids, groupChatProfiles, onAddMembers]);
+	};
 
-	const renderItems = useCallback(
-		({ item }: { item: Item }) => {
-			switch (item.type) {
-				case 'label': {
-					return <UserLabel key={item.key} message={item.message} />;
-				}
-				case 'profile': {
-					return (
-						<GroupChatProfileCard key={item.key} profile={item.profile} moderationOpts={moderationOpts!} />
-					);
-				}
-				case 'placeholder': {
-					return <ProfileCardSkeleton key={item.key} />;
-				}
-				case 'loading': {
-					return (
-						<View style={[a.px_lg, a.py_xl, a.align_center]}>
-							<Loader size="xl" />
-						</View>
-					);
-				}
-				case 'empty': {
-					return <EmptyMemberList key={item.key} message={item.message} />;
-				}
-				default:
-					return null;
+	const renderItems = ({ item }: { item: Item }) => {
+		switch (item.type) {
+			case 'label': {
+				return <UserLabel key={item.key} message={item.message} />;
 			}
-		},
-		[moderationOpts],
-	);
+			case 'profile': {
+				return (
+					<GroupChatProfileCard key={item.key} profile={item.profile} moderationOpts={moderationOpts!} />
+				);
+			}
+			case 'placeholder': {
+				return <ProfileCardSkeleton key={item.key} />;
+			}
+			case 'loading': {
+				return (
+					<View style={[a.px_lg, a.py_xl, a.align_center]}>
+						<Loader size="xl" />
+					</View>
+				);
+			}
+			case 'empty': {
+				return <EmptyMemberList key={item.key} message={item.message} />;
+			}
+			default:
+				return null;
+		}
+	};
 
 	useLayoutEffect(() => {
 		setTimeout(() => {
@@ -289,74 +269,57 @@ export function AddMembersFlow({
 
 	const showChatProfileTabs = groupChatProfiles.length > 0;
 
-	const listHeader = useMemo(
-		() => (
-			<View onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}>
-				<View style={[a.relative, a.pt_lg, a.px_lg, a.border_b, t.atoms.border_contrast_low, t.atoms.bg]}>
-					<View style={[a.flex_row, a.gap_sm, a.relative, a.align_center, a.justify_between, a.pb_lg]}>
-						{null}
-						<Text
-							style={[
-								a.flex_grow,
-								a.z_10,
-								a.text_lg,
-								a.font_bold,
-								a.leading_tight,
-								t.atoms.text_contrast_high,
-								a.text_center,
-								a.px_5xl,
-							]}
+	const listHeader = (
+		<View onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}>
+			<View style={[a.relative, a.pt_lg, a.px_lg, a.border_b, t.atoms.border_contrast_low, t.atoms.bg]}>
+				<View style={[a.flex_row, a.gap_sm, a.relative, a.align_center, a.justify_between, a.pb_lg]}>
+					{null}
+					<Text
+						style={[
+							a.flex_grow,
+							a.z_10,
+							a.text_lg,
+							a.font_bold,
+							a.leading_tight,
+							t.atoms.text_contrast_high,
+							a.text_center,
+							a.px_5xl,
+						]}
+					>
+						{title}
+					</Text>
+					{
+						<Button
+							label={m['common.action.close']()}
+							size="small"
+							shape="round"
+							variant="ghost"
+							color="secondary"
+							style={[a.absolute, a.z_20, { right: -4 }]}
+							onPress={() => control.close()}
 						>
-							{title}
-						</Text>
-						{
-							<Button
-								label={m['common.action.close']()}
-								size="small"
-								shape="round"
-								variant="ghost"
-								color="secondary"
-								style={[a.absolute, a.z_20, { right: -4 }]}
-								onPress={() => control.close()}
-							>
-								<ButtonIcon icon={XIcon} size="lg" />
-							</Button>
-						}
-					</View>
-					<View style={[a.pt_xs]}>
-						<UserSearchInput
-							inputRef={inputRef}
-							value={searchText}
-							onChangeText={(text) => {
-								setSearchText(text);
-								listRef.current?.scrollToOffset({ offset: 0, animated: false });
-							}}
-							onEscape={control.close}
-						/>
-					</View>
+							<ButtonIcon icon={XIcon} size="lg" />
+						</Button>
+					}
 				</View>
-				{showChatProfileTabs ? (
-					<View style={[a.pb_sm, a.pt_md, t.atoms.bg]}>
-						<ChatProfileTabs
-							testID="newGroupChatMembers"
-							profiles={groupChatProfiles}
-							onRemove={onRemoveDid}
-						/>
-					</View>
-				) : null}
+				<View style={[a.pt_xs]}>
+					<UserSearchInput
+						inputRef={inputRef}
+						value={searchText}
+						onChangeText={(text) => {
+							setSearchText(text);
+							listRef.current?.scrollToOffset({ offset: 0, animated: false });
+						}}
+						onEscape={control.close}
+					/>
+				</View>
 			</View>
-		),
-		[
-			control,
-			groupChatProfiles,
-			onRemoveDid,
-			searchText,
-			showChatProfileTabs,
-			t.atoms.bg,
-			t.atoms.border_contrast_low,
-			t.atoms.text_contrast_high,
-			title,
-		],
+			{showChatProfileTabs ? (
+				<View style={[a.pb_sm, a.pt_md, t.atoms.bg]}>
+					<ChatProfileTabs testID="newGroupChatMembers" profiles={groupChatProfiles} onRemove={onRemoveDid} />
+				</View>
+			) : null}
+		</View>
 	);
 
 	const setGroupChatMembers = (dids: string[]) => {

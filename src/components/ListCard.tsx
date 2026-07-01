@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useMemo } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -80,7 +80,7 @@ export function Link({
 }) {
 	const queryClient = useQueryClient();
 
-	const href = useMemo(() => createProfileListHref({ list: view }), [view]);
+	const href = createProfileListHref({ list: view });
 
 	useEffect(() => {
 		precacheList(queryClient, view);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';
@@ -117,15 +117,15 @@ function DialogInner({
 		setDirty(dirty);
 	}, [dirty, setDirty]);
 
-	const onRequestClose = useCallback(() => {
+	const onRequestClose = () => {
 		if (dirty) {
 			cancelHandle.open(null);
 		} else {
 			handle.close();
 		}
-	}, [dirty, handle, cancelHandle]);
+	};
 
-	const onSelectNewAvatar = useCallback((img: ImageMeta | null) => {
+	const onSelectNewAvatar = (img: ImageMeta | null) => {
 		setImageError('');
 		if (img === null) {
 			setNewUserAvatar(null);
@@ -138,9 +138,9 @@ function DialogInner({
 		} catch (e) {
 			setImageError(cleanError(e));
 		}
-	}, []);
+	};
 
-	const onSelectNewBanner = useCallback((img: ImageMeta | null) => {
+	const onSelectNewBanner = (img: ImageMeta | null) => {
 		setImageError('');
 		if (!img) {
 			setNewUserBanner(null);
@@ -153,12 +153,12 @@ function DialogInner({
 		} catch (e) {
 			setImageError(cleanError(e));
 		}
-	}, []);
+	};
 
 	const displayNameTooLong = isOverMaxGraphemeCount({ text: displayName, maxCount: MAX_DISPLAY_NAME });
 	const descriptionTooLong = isOverMaxGraphemeCount({ text: description, maxCount: MAX_DESCRIPTION });
 
-	const onPressSave = useCallback(async () => {
+	const onPressSave = async () => {
 		setImageError('');
 		try {
 			await updateProfileMutation({
@@ -175,16 +175,7 @@ function DialogInner({
 		} catch (e) {
 			logger.error('Failed to update user profile', { message: String(e) });
 		}
-	}, [
-		updateProfileMutation,
-		profile,
-		onUpdate,
-		handle,
-		displayName,
-		description,
-		newUserAvatar,
-		newUserBanner,
-	]);
+	};
 
 	return (
 		<>

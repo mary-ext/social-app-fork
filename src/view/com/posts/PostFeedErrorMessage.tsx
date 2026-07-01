@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
@@ -49,7 +48,7 @@ export function PostFeedErrorMessage({
 	onPressTryAgain: () => void;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }) {
-	const knownError = useMemo(() => detectKnownError(feedDesc, error), [feedDesc, error]);
+	const knownError = detectKnownError(feedDesc, error);
 
 	if (
 		typeof knownError !== 'undefined' &&
@@ -93,35 +92,31 @@ function FeedgenErrorMessage({
 }) {
 	const pal = usePalette('default');
 	const navigation = useNavigation<NavigationProp>();
-	const msg = useMemo(
-		() =>
-			({
-				[KnownError.Unknown]: '',
-				[KnownError.Block]: '',
-				[KnownError.FeedgenDoesNotExist]: m['view.posts.feed.error.notFound'](),
-				[KnownError.FeedgenMisconfigured]: m['view.posts.feed.error.misconfigured'](),
-				[KnownError.FeedgenBadResponse]: m['view.posts.feed.error.badResponse'](),
-				[KnownError.FeedgenOffline]: m['view.posts.feed.error.offline'](),
-				[KnownError.FeedSignedInOnly]: m['view.posts.feed.requiresAccount'](),
-				[KnownError.FeedgenUnknown]: m['view.posts.feed.error.serverRequest'](),
-				[KnownError.FeedTooManyRequests]: m['view.posts.feed.error.highTraffic'](),
-			})[knownError],
-		[knownError],
-	);
+	const msg = {
+		[KnownError.Unknown]: '',
+		[KnownError.Block]: '',
+		[KnownError.FeedgenDoesNotExist]: m['view.posts.feed.error.notFound'](),
+		[KnownError.FeedgenMisconfigured]: m['view.posts.feed.error.misconfigured'](),
+		[KnownError.FeedgenBadResponse]: m['view.posts.feed.error.badResponse'](),
+		[KnownError.FeedgenOffline]: m['view.posts.feed.error.offline'](),
+		[KnownError.FeedSignedInOnly]: m['view.posts.feed.requiresAccount'](),
+		[KnownError.FeedgenUnknown]: m['view.posts.feed.error.serverRequest'](),
+		[KnownError.FeedTooManyRequests]: m['view.posts.feed.error.highTraffic'](),
+	}[knownError];
 	const [__, uri] = feedDesc.split('|');
 	const [ownerDid] = safeParseFeedgenUri(uri!);
 	const removePromptHandle = Prompt.usePromptHandle();
 	const { mutateAsync: removeFeed } = useRemoveFeedMutation();
 
-	const onViewProfile = useCallback(() => {
+	const onViewProfile = () => {
 		navigation.navigate('Profile', { name: ownerDid });
-	}, [navigation, ownerDid]);
+	};
 
-	const onPressRemoveFeed = useCallback(() => {
+	const onPressRemoveFeed = () => {
 		removePromptHandle.open(null);
-	}, [removePromptHandle]);
+	};
 
-	const onRemoveFeed = useCallback(async () => {
+	const onRemoveFeed = async () => {
 		try {
 			if (!savedFeedConfig) return;
 			await removeFeed(savedFeedConfig);
@@ -129,33 +124,30 @@ function FeedgenErrorMessage({
 			Toast.show(m['view.posts.feed.remove.error'](), { type: 'warning' });
 			logger.error('Failed to remove feed', { message: err });
 		}
-	}, [removeFeed, savedFeedConfig]);
+	};
 
-	const cta = useMemo(() => {
-		switch (knownError) {
-			case KnownError.FeedSignedInOnly: {
-				return null;
-			}
-			case KnownError.FeedgenDoesNotExist:
-			case KnownError.FeedgenMisconfigured:
-			case KnownError.FeedgenBadResponse:
-			case KnownError.FeedgenOffline:
-			case KnownError.FeedgenUnknown: {
-				return (
-					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-						{knownError === KnownError.FeedgenDoesNotExist && savedFeedConfig && (
-							<Button
-								type="inverted"
-								label={m['view.posts.feed.remove.label']()}
-								onPress={onPressRemoveFeed}
-							/>
-						)}
-						<Button type="default-light" label={m['common.profile.action.view']()} onPress={onViewProfile} />
-					</View>
-				);
-			}
+	let cta: React.ReactNode;
+	switch (knownError) {
+		case KnownError.FeedSignedInOnly: {
+			cta = null;
+			break;
 		}
-	}, [knownError, onViewProfile, onPressRemoveFeed, savedFeedConfig]);
+		case KnownError.FeedgenDoesNotExist:
+		case KnownError.FeedgenMisconfigured:
+		case KnownError.FeedgenBadResponse:
+		case KnownError.FeedgenOffline:
+		case KnownError.FeedgenUnknown: {
+			cta = (
+				<View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+					{knownError === KnownError.FeedgenDoesNotExist && savedFeedConfig && (
+						<Button type="inverted" label={m['view.posts.feed.remove.label']()} onPress={onPressRemoveFeed} />
+					)}
+					<Button type="default-light" label={m['common.profile.action.view']()} onPress={onViewProfile} />
+				</View>
+			);
+			break;
+		}
+	}
 
 	return (
 		<>

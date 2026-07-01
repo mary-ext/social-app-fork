@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { View } from 'react-native';
 
 import { ScrollProvider } from '#/lib/ScrollContext';
@@ -13,12 +13,10 @@ export function ListContained() {
 	const [animated, setAnimated] = useState(false);
 	const ref = useRef<ListMethods>(null);
 
-	const data = useMemo(() => {
-		return Array.from({ length: 100 }, (_, i) => ({
-			id: i,
-			text: `Message ${i}`,
-		}));
-	}, []);
+	const data = Array.from({ length: 100 }, (_, i) => ({
+		id: i,
+		text: `Message ${i}`,
+	}));
 
 	return (
 		<>

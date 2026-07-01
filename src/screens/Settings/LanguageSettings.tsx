@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
@@ -30,15 +30,12 @@ export function LanguageSettingsScreen({}: Props) {
 	// persists to langPrefs, so the names must differ — the symmetric-pair rule can't apply here
 	// eslint-disable-next-line react/hook-use-state
 	const [contentLanguages, _setContentLanguages] = useState(langPrefs.contentLanguages);
-	const setContentLanguages = useCallback(
-		(languages: string[]) => {
-			_setContentLanguages(languages);
-			requestAnimationFrame(() => {
-				setLangPrefs.setContentLanguages(languages);
-			});
-		},
-		[setLangPrefs],
-	);
+	const setContentLanguages = (languages: string[]) => {
+		_setContentLanguages(languages);
+		requestAnimationFrame(() => {
+			setLangPrefs.setContentLanguages(languages);
+		});
+	};
 
 	const contentLanguagePrefsHandle = Dialog.useDialogHandle();
 
@@ -48,36 +45,29 @@ export function LanguageSettingsScreen({}: Props) {
 		}
 	};
 
-	const onChangePrimaryLanguage = useCallback(
-		(value: string) => {
-			if (!value) {
-				return;
-			}
-
-			if (langPrefs.primaryLanguage !== value) {
-				setLangPrefs.setPrimaryLanguage(value);
-			}
-		},
-		[langPrefs, setLangPrefs],
-	);
-
-	const primaryLanguageItems = useMemo(() => {
-		const items: { label: string; value: string }[] = [];
-		for (const lang of LANGUAGES) {
-			const label = resolveLanguageName(lang, LOCALE);
-			if (label) {
-				items.push({ label, value: langCode(lang) });
-			}
+	const onChangePrimaryLanguage = (value: string) => {
+		if (!value) {
+			return;
 		}
-		return items.sort((a, b) => a.label.localeCompare(b.label, LOCALE));
-	}, []);
 
-	const contentLanguageSummary = useMemo(() => {
-		if (contentLanguages.length === 0) {
-			return null;
+		if (langPrefs.primaryLanguage !== value) {
+			setLangPrefs.setPrimaryLanguage(value);
 		}
-		return contentLanguages.map((code) => codeToLanguageName(code, LOCALE)).join(', ');
-	}, [contentLanguages]);
+	};
+
+	const primaryLanguageItems: { label: string; value: string }[] = [];
+	for (const lang of LANGUAGES) {
+		const label = resolveLanguageName(lang, LOCALE);
+		if (label) {
+			primaryLanguageItems.push({ label, value: langCode(lang) });
+		}
+	}
+	primaryLanguageItems.sort((a, b) => a.label.localeCompare(b.label, LOCALE));
+
+	let contentLanguageSummary: string | null = null;
+	if (contentLanguages.length !== 0) {
+		contentLanguageSummary = contentLanguages.map((code) => codeToLanguageName(code, LOCALE)).join(', ');
+	}
 
 	return (
 		<Layout.Screen>

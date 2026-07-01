@@ -82,9 +82,9 @@ export function Controls({
 	const showSpinner = hlsLoading || buffering;
 	const { state: volumeHovered, onIn: onVolumeHover, onOut: onVolumeEndHover } = useInteractionState();
 
-	const onKeyDown = useCallback(() => {
+	const onKeyDown = () => {
 		setInteractingViaKeypress(true);
-	}, []);
+	};
 
 	useEffect(() => {
 		if (interactingViaKeypress) {
@@ -157,30 +157,31 @@ export function Controls({
 		setFocused(true);
 	}, [active, setActive, setFocused]);
 
-	const onPressEmptySpace = useCallback(() => {
+	const onPressEmptySpace = () => {
 		if (!focused) {
 			drawFocus();
 			if (autoplayDisabled) play();
 		} else {
 			togglePlayPause();
 		}
-	}, [togglePlayPause, drawFocus, focused, autoplayDisabled, play]);
+	};
 
-	const onPressPlayPause = useCallback(() => {
+	const onPressPlayPause = () => {
 		drawFocus();
 		togglePlayPause();
-	}, [drawFocus, togglePlayPause]);
+	};
 
-	const onPressSubtitles = useCallback(() => {
+	const onPressSubtitles = () => {
 		drawFocus();
 		setSubtitlesEnabled(!subtitlesEnabled);
-	}, [drawFocus, setSubtitlesEnabled, subtitlesEnabled]);
+	};
 
-	const onPressFullscreen = useCallback(() => {
+	const onPressFullscreen = () => {
 		drawFocus();
 		toggleFullscreen();
-	}, [drawFocus, toggleFullscreen]);
+	};
 
+	// kept memoized: seekLeft/seekRight depend on it and are themselves read from Scrubber's effect.
 	const onSeek = useCallback(
 		(time: number) => {
 			if (!videoRef.current) return;
@@ -195,18 +196,20 @@ export function Controls({
 
 	const playStateBeforeSeekRef = useRef(false);
 
-	const onSeekStart = useCallback(() => {
+	const onSeekStart = () => {
 		drawFocus();
 		playStateBeforeSeekRef.current = playing;
 		pause();
-	}, [playing, pause, drawFocus]);
+	};
 
+	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
 	const onSeekEnd = useCallback(() => {
 		if (playStateBeforeSeekRef.current) {
 			play();
 		}
 	}, [play]);
 
+	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
 	const seekLeft = useCallback(() => {
 		if (!videoRef.current) return;
 
@@ -216,6 +219,7 @@ export function Controls({
 		onSeek(clamp(currentTime - 5, 0, duration));
 	}, [onSeek, videoRef]);
 
+	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
 	const seekRight = useCallback(() => {
 		if (!videoRef.current) return;
 
@@ -227,7 +231,7 @@ export function Controls({
 
 	const [showCursor, setShowCursor] = useState(true);
 	const cursorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-	const onPointerMoveEmptySpace = useCallback(() => {
+	const onPointerMoveEmptySpace = () => {
 		setShowCursor(true);
 		if (cursorTimeoutRef.current) {
 			clearTimeout(cursorTimeoutRef.current);
@@ -236,47 +240,41 @@ export function Controls({
 			setShowCursor(false);
 			onEndHover();
 		}, 2000);
-	}, [onEndHover]);
-	const onPointerLeaveEmptySpace = useCallback(() => {
+	};
+	const onPointerLeaveEmptySpace = () => {
 		setShowCursor(false);
 		if (cursorTimeoutRef.current) {
 			clearTimeout(cursorTimeoutRef.current);
 		}
-	}, []);
+	};
 
 	// these are used to trigger the hover state. on mobile, the hover state
 	// should stick around for a bit after they tap, and if the controls aren't
 	// present this initial tab should *only* show the controls and not activate anything
 
-	const onPointerDown = useCallback(
-		(evt: React.PointerEvent<HTMLDivElement>) => {
-			if (evt.pointerType !== 'mouse' && !hovered) {
-				evt.preventDefault();
-			}
-			clearTimeout(timeoutRef.current);
-		},
-		[hovered],
-	);
+	const onPointerDown = (evt: React.PointerEvent<HTMLDivElement>) => {
+		if (evt.pointerType !== 'mouse' && !hovered) {
+			evt.preventDefault();
+		}
+		clearTimeout(timeoutRef.current);
+	};
 
 	const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-	const onHoverWithTimeout = useCallback(() => {
+	const onHoverWithTimeout = () => {
 		onHover();
 		clearTimeout(timeoutRef.current);
-	}, [onHover]);
+	};
 
-	const onEndHoverWithTimeout = useCallback(
-		(evt: React.PointerEvent<HTMLDivElement>) => {
-			// if touch, end after 3s
-			// if mouse, end immediately
-			if (evt.pointerType !== 'mouse') {
-				setTimeout(onEndHover, 3000);
-			} else {
-				onEndHover();
-			}
-		},
-		[onEndHover],
-	);
+	const onEndHoverWithTimeout = (evt: React.PointerEvent<HTMLDivElement>) => {
+		// if touch, end after 3s
+		// if mouse, end immediately
+		if (evt.pointerType !== 'mouse') {
+			setTimeout(onEndHover, 3000);
+		} else {
+			onEndHover();
+		}
+	};
 
 	const showControls =
 		((focused || autoplayDisabled) && !playing) || (interactingViaKeypress ? hasFocus : hovered);

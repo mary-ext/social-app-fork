@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { type NativeScrollEvent, View } from 'react-native';
 import { type ScreenLayoutArgs, useIsFocused } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -54,9 +53,9 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 	const isFocused = useIsFocused();
 	const { data: chatStatus } = useChatActorStatusQuery();
 
-	const onLeftColumnScroll = useCallback((e: NativeScrollEvent) => {
+	const onLeftColumnScroll = (e: NativeScrollEvent) => {
 		splitViewLeftScroll.current = e.contentOffset.y;
-	}, []);
+	};
 
 	const onNewChat = (conversation: string) => navigation.navigate('MessagesConversation', { conversation });
 

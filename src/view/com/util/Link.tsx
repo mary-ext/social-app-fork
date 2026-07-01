@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useMemo } from 'react';
+import type { JSX } from 'react';
 import {
 	type GestureResponderEvent,
 	Pressable,
@@ -84,21 +84,12 @@ export function Link({
 	const anchorHref = asAnchor ? sanitizeUrl(href) : undefined;
 	const openLink = useOpenLink();
 
-	const onPress = useCallback(
-		(e?: Event) => {
-			onBeforePress?.();
-			if (typeof href === 'string') {
-				return onPressInner(
-					navigation,
-					sanitizeUrl(href),
-					navigationAction,
-					(href) => void openLink(href),
-					e,
-				);
-			}
-		},
-		[navigation, navigationAction, href, openLink, onBeforePress],
-	);
+	const onPress = (e?: Event) => {
+		onBeforePress?.();
+		if (typeof href === 'string') {
+			return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => void openLink(href), e);
+		}
+	};
 
 	const accessibilityActionsWithActivate = [
 		...(accessibilityActions || []),
@@ -199,51 +190,35 @@ export function TextLink({
 
 	const dataSet = compactDataSet(anchorNoUnderline ? { ...dataSetProp, noUnderline: 1 } : dataSetProp);
 
-	const onPress = useCallback(
-		(e?: Event) => {
-			const requiresWarning =
-				!disableMismatchWarning && isMisleadingLink(href, typeof text === 'string' ? text : '');
-			if (requiresWarning) {
-				e?.preventDefault?.();
-				linkWarningDialogHandle.openWithPayload({
-					displayText: typeof text === 'string' ? text : '',
-					href,
-				});
-			}
-			if (href !== '#' && e != null && isModifiedEvent(e as React.MouseEvent)) {
-				// Let the browser handle opening in new tab etc.
-				return;
-			}
-			onBeforePress?.();
-			if (onPressProp) {
-				e?.preventDefault?.();
-				// @ts-expect-error function signature differs by platform -prf
-				return onPressProp();
-			}
-			return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => void openLink(href), e);
-		},
-		[
-			onBeforePress,
-			onPressProp,
-			navigation,
-			href,
-			text,
-			disableMismatchWarning,
-			navigationAction,
-			openLink,
-			linkWarningDialogHandle,
-		],
-	);
-	const hrefAttrs = useMemo(() => {
-		const isExternal = isExternalUrl(href);
-		if (isExternal) {
-			return {
+	const onPress = (e?: Event) => {
+		const requiresWarning =
+			!disableMismatchWarning && isMisleadingLink(href, typeof text === 'string' ? text : '');
+		if (requiresWarning) {
+			e?.preventDefault?.();
+			linkWarningDialogHandle.openWithPayload({
+				displayText: typeof text === 'string' ? text : '',
+				href,
+			});
+		}
+		if (href !== '#' && e != null && isModifiedEvent(e as React.MouseEvent)) {
+			// Let the browser handle opening in new tab etc.
+			return;
+		}
+		onBeforePress?.();
+		if (onPressProp) {
+			e?.preventDefault?.();
+			// @ts-expect-error function signature differs by platform -prf
+			return onPressProp();
+		}
+		return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => void openLink(href), e);
+	};
+	const isExternal = isExternalUrl(href);
+	const hrefAttrs = isExternal
+		? {
 				target: '_blank',
 				// rel: 'noopener noreferrer',
-			};
-		}
-		return {};
-	}, [href]);
+			}
+		: {};
 
 	return (
 		<Text

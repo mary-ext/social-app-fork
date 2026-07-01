@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { differenceInSeconds } from 'date-fns';
@@ -30,10 +29,7 @@ export function NewskieDialog({
 
 	const createdAt = profile.createdAt;
 	const now = useConstant(Date.now);
-	const daysOld = useMemo(() => {
-		if (!createdAt) return Infinity;
-		return differenceInSeconds(now, new Date(createdAt)) / 86400;
-	}, [createdAt, now]);
+	const daysOld = createdAt ? differenceInSeconds(now, new Date(createdAt)) / 86400 : Infinity;
 
 	if (!createdAt || daysOld > 7) return null;
 
@@ -69,14 +65,14 @@ function DialogInner({
 	const { currentAccount } = useSession();
 	const isMe = profile.did === currentAccount?.did;
 
-	const profileName = useMemo(() => {
-		if (!moderationOpts) return profile.displayName || profile.handle;
+	let profileName = profile.displayName || profile.handle;
+	if (moderationOpts) {
 		const moderation = moderateProfile(profile, moderationOpts);
-		return sanitizeDisplayName(
+		profileName = sanitizeDisplayName(
 			profile.displayName || profile.handle,
 			getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 		);
-	}, [moderationOpts, profile]);
+	}
 
 	const getJoinMessage = () => {
 		const parts = relativeMessageParts(createdAt, now);

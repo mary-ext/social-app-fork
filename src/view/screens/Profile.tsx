@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -83,13 +83,13 @@ function ProfileScreenInner({ route }: Props) {
 		did: resolvedDid,
 	});
 
-	const onPressTryAgain = useCallback(() => {
+	const onPressTryAgain = () => {
 		if (resolveError) {
 			void refetchDid();
 		} else {
 			void refetchProfile();
 		}
-	}, [resolveError, refetchDid, refetchProfile]);
+	};
 
 	// Apply hard-coded redirects as need
 	useEffect(() => {
@@ -178,7 +178,7 @@ function ProfileScreenLoaded({
 	const [descriptionRT, isResolvingDescriptionRT] = useRichText(description);
 	const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT;
 	const isHeaderReady = !showPlaceholder;
-	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
+	const moderation = moderateProfile(profile, moderationOpts);
 
 	const isMe = profile.did === currentAccount?.did;
 	const hasLabeler = !!profile.associated?.labeler;
@@ -207,9 +207,9 @@ function ProfileScreenLoaded({
 		openComposer({ mention });
 	};
 
-	const navToWizard = useCallback(() => {
+	const navToWizard = () => {
 		navigation.navigate('StarterPackWizard', {});
-	}, [navigation]);
+	};
 
 	// rendering
 	// =

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
@@ -29,14 +29,14 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const isOwner = list.creator.did === currentAccount?.did;
 
-	const onScrollToTop = useCallback(() => {
+	const onScrollToTop = () => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
 			offset: 0,
 		});
-	}, []);
+	};
 
-	const renderHeader = useCallback(() => {
+	const renderHeader = () => {
 		if (!isOwner) {
 			return <View />;
 		}
@@ -74,9 +74,9 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 				</Button>
 			</View>
 		);
-	}, [isOwner, onPressAddUser, gtMobile]);
+	};
 
-	const renderEmptyState = useCallback(() => {
+	const renderEmptyState = () => {
 		return (
 			<View style={[a.gap_xl, a.align_center]}>
 				<EmptyState icon={ListIcon} message={m['screens.profileList.members.empty']()} />
@@ -94,7 +94,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 				)}
 			</View>
 		);
-	}, [isOwner, onPressAddUser]);
+	};
 
 	return (
 		<View>

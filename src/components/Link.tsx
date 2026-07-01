@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import {
 	type GestureResponderEvent,
 	Linking,
@@ -137,15 +136,14 @@ export function useLink({
 	displayText: string;
 }) {
 	const navigation = useNavigationDeduped();
-	const href = useMemo(() => {
-		return typeof to === 'string'
+	const href =
+		typeof to === 'string'
 			? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
 			: to.screen
 				? router.matchName(to.screen)?.build(to.params)
 				: to.href
 					? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
 					: undefined;
-	}, [to]);
 
 	if (!href) {
 		throw new Error(
@@ -157,63 +155,50 @@ export function useLink({
 	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
 	const openLink = useOpenLink();
 
-	const onPress = useCallback(
-		(e: GestureResponderEvent) => {
-			const exitEarlyIfFalse = outerOnPress?.(e);
+	const onPress = (e: GestureResponderEvent) => {
+		const exitEarlyIfFalse = outerOnPress?.(e);
 
-			if (exitEarlyIfFalse === false) return;
+		if (exitEarlyIfFalse === false) return;
 
-			const requiresWarning = Boolean(
-				!disableMismatchWarning && displayText && isExternal && isMisleadingLink(href, displayText),
-			);
+		const requiresWarning = Boolean(
+			!disableMismatchWarning && displayText && isExternal && isMisleadingLink(href, displayText),
+		);
 
-			e.preventDefault();
+		e.preventDefault();
 
-			if (requiresWarning) {
-				linkWarningDialogHandle.openWithPayload({
-					displayText,
-					href,
-				});
+		if (requiresWarning) {
+			linkWarningDialogHandle.openWithPayload({
+				displayText,
+				href,
+			});
+		} else {
+			if (isExternal) {
+				void openLink(href);
 			} else {
-				if (isExternal) {
+				const shouldOpenInNewTab = shouldClickOpenNewTab(e);
+
+				if (shouldOpenInNewTab || href.startsWith('http') || href.startsWith('mailto')) {
 					void openLink(href);
 				} else {
-					const shouldOpenInNewTab = shouldClickOpenNewTab(e);
+					const [screen, params] = router.matchPath(href) as [
+						screen: keyof AllNavigatorParams,
+						params?: RouteParams,
+					];
 
-					if (shouldOpenInNewTab || href.startsWith('http') || href.startsWith('mailto')) {
-						void openLink(href);
+					if (action === 'push') {
+						navigation.dispatch(StackActions.push(screen, params));
+					} else if (action === 'replace') {
+						navigation.dispatch(StackActions.replace(screen, params));
+					} else if (action === 'navigate') {
+						// @ts-expect-error not typed
+						navigation.navigate(screen, params, { pop: true });
 					} else {
-						const [screen, params] = router.matchPath(href) as [
-							screen: keyof AllNavigatorParams,
-							params?: RouteParams,
-						];
-
-						if (action === 'push') {
-							navigation.dispatch(StackActions.push(screen, params));
-						} else if (action === 'replace') {
-							navigation.dispatch(StackActions.replace(screen, params));
-						} else if (action === 'navigate') {
-							// @ts-expect-error not typed
-							navigation.navigate(screen, params, { pop: true });
-						} else {
-							throw Error('Unsupported navigator action.');
-						}
+						throw Error('Unsupported navigator action.');
 					}
 				}
 			}
-		},
-		[
-			outerOnPress,
-			disableMismatchWarning,
-			displayText,
-			isExternal,
-			href,
-			openLink,
-			action,
-			navigation,
-			linkWarningDialogHandle,
-		],
-	);
+		}
+	};
 
 	return {
 		isExternal,

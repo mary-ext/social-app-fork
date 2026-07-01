@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 
 /** How long a message stays highlighted after scrolling to it, before the flash fades out. */
@@ -50,30 +50,27 @@ export function MessageRepliesProvider({
 	const highlightKey = useRef(0);
 	const clearHighlightTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-	const setReply = useCallback((message: ChatBskyConvoDefs.MessageView) => {
+	const setReply = (message: ChatBskyConvoDefs.MessageView) => {
 		setReplyTo(message);
-	}, []);
+	};
 
-	const clearReply = useCallback(() => {
+	const clearReply = () => {
 		setReplyTo(null);
-	}, []);
+	};
 
-	const scrollToMessage = useCallback(
-		(messageId: string) => {
-			const didScroll = scrollToMessageRaw(messageId);
-			if (!didScroll) return;
+	const scrollToMessage = (messageId: string) => {
+		const didScroll = scrollToMessageRaw(messageId);
+		if (!didScroll) return;
 
-			highlightKey.current += 1;
-			setHighlightedMessage({ id: messageId, key: highlightKey.current });
-			if (clearHighlightTimeout.current) {
-				clearTimeout(clearHighlightTimeout.current);
-			}
-			clearHighlightTimeout.current = setTimeout(() => {
-				setHighlightedMessage(null);
-			}, MESSAGE_HIGHLIGHT_DURATION_MS);
-		},
-		[scrollToMessageRaw],
-	);
+		highlightKey.current += 1;
+		setHighlightedMessage({ id: messageId, key: highlightKey.current });
+		if (clearHighlightTimeout.current) {
+			clearTimeout(clearHighlightTimeout.current);
+		}
+		clearHighlightTimeout.current = setTimeout(() => {
+			setHighlightedMessage(null);
+		}, MESSAGE_HIGHLIGHT_DURATION_MS);
+	};
 
 	useEffect(() => {
 		return () => {

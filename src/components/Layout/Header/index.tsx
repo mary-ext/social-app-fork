@@ -1,4 +1,4 @@
-import { createContext, useCallback } from 'react';
+import { createContext } from 'react';
 import { type GestureResponderEvent, Keyboard, View, type ViewStyle } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -89,18 +89,15 @@ export function Slot({ children }: { children?: React.ReactNode }) {
 export function BackButton({ onPress, style, ...props }: Partial<ButtonProps>) {
 	const navigation = useNavigation<NavigationProp>();
 
-	const onPressBack = useCallback(
-		(evt: GestureResponderEvent) => {
-			onPress?.(evt);
-			if (evt.defaultPrevented) return;
-			if (navigation.canGoBack()) {
-				navigation.goBack();
-			} else {
-				navigation.navigate('Home');
-			}
-		},
-		[onPress, navigation],
-	);
+	const onPressBack = (evt: GestureResponderEvent) => {
+		onPress?.(evt);
+		if (evt.defaultPrevented) return;
+		if (navigation.canGoBack()) {
+			navigation.goBack();
+		} else {
+			navigation.navigate('Home');
+		}
+	};
 
 	return (
 		<Slot>
@@ -125,10 +122,10 @@ export function MenuButton() {
 	const setDrawerOpen = useSetDrawerOpen();
 	const { gtMobile } = useBreakpoints();
 
-	const onPress = useCallback(() => {
+	const onPress = () => {
 		Keyboard.dismiss();
 		setDrawerOpen(true);
-	}, [setDrawerOpen]);
+	};
 
 	return gtMobile ? null : (
 		<Slot>

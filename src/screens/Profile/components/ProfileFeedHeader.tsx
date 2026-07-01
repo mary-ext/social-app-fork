@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeCustomFeedLink, makeProfileLink } from '#/lib/routes/links';
@@ -75,10 +75,10 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 	const { data: preferences } = usePreferencesQuery();
 
 	// close this dialog before opening the report dialog so they don't stack on top of each other
-	const onPressReport = useCallback(() => {
+	const onPressReport = () => {
 		infoHandle.close();
 		reportDialogHandle.open(null);
-	}, [infoHandle, reportDialogHandle]);
+	};
 
 	const [likeUri, setLikeUri] = useState(info.likeUri || '');
 	const likeCount =
@@ -298,7 +298,7 @@ function DialogInner({
 	const { mutateAsync: unlikeFeed, isPending: isUnlikePending } = useUnlikeMutation();
 
 	const isLiked = !!likeUri;
-	const feedRkey = useMemo(() => parseCanonicalResourceUri(info.uri).rkey, [info.uri]);
+	const feedRkey = parseCanonicalResourceUri(info.uri).rkey;
 
 	const onToggleLiked = async () => {
 		try {
@@ -317,10 +317,10 @@ function DialogInner({
 		}
 	};
 
-	const onPressShare = useCallback(() => {
+	const onPressShare = () => {
 		const url = toShareUrl(info.route.href);
 		void shareUrl(url);
-	}, [info]);
+	};
 
 	return (
 		<div className={css.dialogBody}>

@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useMemo, useState } from 'react';
+import { type JSX, useState } from 'react';
 import { Dimensions, type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -83,32 +83,29 @@ export function ListMembers({
 	const isEmpty = !isFetching && !data?.pages[0]!.items.length;
 	const isOwner = currentAccount && data?.pages[0]!.list.creator.did === currentAccount.did;
 
-	const items = useMemo(() => {
-		let items: ListMemberItem[] = [];
-		if (isFetched) {
-			if (isEmpty && isError) {
-				items = items.concat([ERROR_ITEM]);
-			}
-			if (isEmpty) {
-				items = items.concat([EMPTY_ITEM]);
-			} else if (data) {
-				for (const page of data.pages) {
-					items = items.concat(page.items);
-				}
-			}
-			if (!isEmpty && isError) {
-				items = items.concat([LOAD_MORE_ERROR_ITEM]);
-			}
-		} else if (isFetching) {
-			items = items.concat([LOADING_ITEM]);
+	let items: ListMemberItem[] = [];
+	if (isFetched) {
+		if (isEmpty && isError) {
+			items = items.concat([ERROR_ITEM]);
 		}
-		return items;
-	}, [isFetched, isEmpty, isError, data, isFetching]);
+		if (isEmpty) {
+			items = items.concat([EMPTY_ITEM]);
+		} else if (data) {
+			for (const page of data.pages) {
+				items = items.concat(page.items);
+			}
+		}
+		if (!isEmpty && isError) {
+			items = items.concat([LOAD_MORE_ERROR_ITEM]);
+		}
+	} else if (isFetching) {
+		items = items.concat([LOADING_ITEM]);
+	}
 
 	// events
 	// =
 
-	const onRefresh = useCallback(async () => {
+	const onRefresh = async () => {
 		setIsRefreshing(true);
 		try {
 			await refetch();
@@ -116,53 +113,50 @@ export function ListMembers({
 			logger.error('Failed to refresh lists', { message: err });
 		}
 		setIsRefreshing(false);
-	}, [refetch, setIsRefreshing]);
+	};
 
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetching || !hasNextPage || isError) return;
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more lists', { message: err });
 		}
-	}, [isFetching, hasNextPage, isError, fetchNextPage]);
+	};
 
-	const onPressRetryLoadMore = useCallback(() => {
+	const onPressRetryLoadMore = () => {
 		void fetchNextPage();
-	}, [fetchNextPage]);
+	};
 
 	// rendering
 	// =
 
-	const renderItem = useCallback(
-		({ item }: { item: ListMemberItem }) => {
-			if (isListMemberSentinel(item)) {
-				if (item === ERROR_ITEM) {
-					return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;
-				}
-				if (item === LOAD_MORE_ERROR_ITEM) {
-					return (
-						<LoadMoreRetryBtn
-							label={m['screens.profileList.members.fetchError']()}
-							onPress={onPressRetryLoadMore}
-						/>
-					);
-				}
-				if (item === LOADING_ITEM) {
-					return <ProfileCardFeedLoadingPlaceholder />;
-				}
-				return renderEmptyState();
+	const renderItem = ({ item }: { item: ListMemberItem }) => {
+		if (isListMemberSentinel(item)) {
+			if (item === ERROR_ITEM) {
+				return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;
 			}
+			if (item === LOAD_MORE_ERROR_ITEM) {
+				return (
+					<LoadMoreRetryBtn
+						label={m['screens.profileList.members.fetchError']()}
+						onPress={onPressRetryLoadMore}
+					/>
+				);
+			}
+			if (item === LOADING_ITEM) {
+				return <ProfileCardFeedLoadingPlaceholder />;
+			}
+			return renderEmptyState();
+		}
 
-			const profile = item.subject as AnyProfileView;
-			if (!moderationOpts) return null;
+		const profile = item.subject as AnyProfileView;
+		if (!moderationOpts) return null;
 
-			return <ListMember profile={profile} moderationOpts={moderationOpts} isOwner={isOwner} list={list} />;
-		},
-		[renderEmptyState, error, onPressTryAgain, onPressRetryLoadMore, moderationOpts, isOwner, list],
-	);
+		return <ListMember profile={profile} moderationOpts={moderationOpts} isOwner={isOwner} list={list} />;
+	};
 
-	const renderFooter = useCallback(() => {
+	const renderFooter = () => {
 		if (isEmpty) return null;
 		return (
 			<ListFooter
@@ -173,7 +167,7 @@ export function ListMembers({
 				height={180 + headerOffset}
 			/>
 		);
-	}, [hasNextPage, error, isFetchingNextPage, fetchNextPage, isEmpty, headerOffset]);
+	};
 
 	return (
 		<View testID={testID} style={style}>

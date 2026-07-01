@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { LayoutAnimation } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
@@ -53,25 +53,22 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const [afterReportTarget, setAfterReportTarget] = useState<ChatBskyConvoDefs.MessageView | null>(null);
 	const [reactionsTarget, setReactionsTarget] = useState<ChatBskyConvoDefs.MessageView | null>(null);
 
-	const openDeleteMessage = useCallback(
-		(message: ChatBskyConvoDefs.MessageView) => {
-			setDeleteTarget(message);
-			deleteControl.open();
-		},
-		[deleteControl],
-	);
+	const openDeleteMessage = (message: ChatBskyConvoDefs.MessageView) => {
+		setDeleteTarget(message);
+		deleteControl.open();
+	};
 
-	const openReportMessage = useCallback(
-		(message: ChatBskyConvoDefs.MessageView, senderProfile: AnyProfileView | undefined) => {
-			setReportTarget({ message, senderProfile });
-			reportHandle.open(null);
-		},
-		[reportHandle],
-	);
+	const openReportMessage = (
+		message: ChatBskyConvoDefs.MessageView,
+		senderProfile: AnyProfileView | undefined,
+	) => {
+		setReportTarget({ message, senderProfile });
+		reportHandle.open(null);
+	};
 
-	const openReactions = useCallback((message: ChatBskyConvoDefs.MessageView) => {
+	const openReactions = (message: ChatBskyConvoDefs.MessageView) => {
 		setReactionsTarget(message);
-	}, []);
+	};
 
 	// These dialogs are conditionally mounted, so we can't open them in the same
 	// tick that we set their targets - the control refs aren't attached yet. Open
@@ -88,22 +85,22 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 		}
 	}, [afterReportTarget, afterReportControl]);
 
-	const onConfirmDelete = useCallback(() => {
+	const onConfirmDelete = () => {
 		if (!deleteTarget) return;
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		convo
 			.deleteMessage(deleteTarget.id)
 			.then(() => Toast.show(m['components.dms.delete.messageDeleted']()))
 			.catch(() => Toast.show(m['components.dms.delete.error.message']()));
-	}, [convo, deleteTarget]);
+	};
 
-	const onAfterReportSubmit = useCallback(() => {
+	const onAfterReportSubmit = () => {
 		if (!reportTarget) return;
 		if (reportTarget.senderProfile) {
 			unstableCacheProfileView(queryClient, reportTarget.senderProfile);
 		}
 		setAfterReportTarget(reportTarget.message);
-	}, [queryClient, reportTarget]);
+	};
 
 	const ctx: MessageDialogsContextType = {
 		openDeleteMessage,
@@ -114,18 +111,19 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	// `reactionsTarget` is a snapshot from when the dialog was opened. Read the
 	// live message out of the convo items so optimistic reaction changes (e.g.
 	// "Tap to remove") are reflected in the dialog without closing it first.
-	const reactionsMessage = useMemo(() => {
-		if (!reactionsTarget) return null;
+	let reactionsMessage: ChatBskyConvoDefs.MessageView | null = null;
+	if (reactionsTarget) {
+		reactionsMessage = reactionsTarget;
 		for (const item of convo.items) {
 			if (
 				(item.type === 'message' || item.type === 'pending-message') &&
 				item.message.id === reactionsTarget.id
 			) {
-				return item.message;
+				reactionsMessage = item.message;
+				break;
 			}
 		}
-		return reactionsTarget;
-	}, [convo.items, reactionsTarget]);
+	}
 
 	const reportSubject = reportTarget
 		? ({

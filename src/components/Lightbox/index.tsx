@@ -209,7 +209,7 @@ function Chrome() {
 	const canLeft = index > 0;
 	const canRight = index < images.length - 1;
 
-	const onShare = useCallback(async () => {
+	const onShare = async () => {
 		const url = img?.src;
 		if (!url) {
 			return;
@@ -228,9 +228,9 @@ function Chrome() {
 				Toast.show(m['components.lightbox.share.error'](), { type: 'error' });
 			}
 		}
-	}, [img?.src]);
+	};
 
-	const onDownload = useCallback(() => {
+	const onDownload = () => {
 		const url = img?.src;
 		if (!url) {
 			return;
@@ -239,7 +239,7 @@ function Chrome() {
 			() => Toast.show(m['components.lightbox.download.savedToast']()),
 			() => Toast.show(m['components.lightbox.download.error'](), { type: 'error' }),
 		);
-	}, [img?.src]);
+	};
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -51,10 +51,10 @@ export function NotificationsScreen({}: Props) {
 	const [activeTab, setActiveTab] = useState(lastActiveTab);
 	const isLoading = activeTab === 'all' ? isLoadingAll : isLoadingMentions;
 
-	const onTabChange = useCallback((tab: 'all' | 'mentions') => {
+	const onTabChange = (tab: 'all' | 'mentions') => {
 		setActiveTab(tab);
 		lastActiveTab = tab;
-	}, []);
+	};
 
 	const queryClient = useQueryClient();
 	const checkUnreadMentions = useCallback(
@@ -69,38 +69,36 @@ export function NotificationsScreen({}: Props) {
 		[queryClient],
 	);
 
-	const sections = useMemo<Section<'all' | 'mentions'>[]>(() => {
-		return [
-			{
-				id: 'all',
-				label: m['common.status.all'](),
-				render: (focused) => (
-					<NotificationsTab
-						filter="all"
-						isActive={focused}
-						isLoading={isLoadingAll}
-						hasNew={hasNew}
-						setIsLoadingLatest={setIsLoadingAll}
-						checkUnread={checkUnreadAll}
-					/>
-				),
-			},
-			{
-				id: 'mentions',
-				label: m['common.mention.label'](),
-				render: (focused) => (
-					<NotificationsTab
-						filter="mentions"
-						isActive={focused}
-						isLoading={isLoadingMentions}
-						hasNew={false /* We don't know for sure */}
-						setIsLoadingLatest={setIsLoadingMentions}
-						checkUnread={checkUnreadMentions}
-					/>
-				),
-			},
-		];
-	}, [hasNew, checkUnreadAll, checkUnreadMentions, isLoadingAll, isLoadingMentions]);
+	const sections: Section<'all' | 'mentions'>[] = [
+		{
+			id: 'all',
+			label: m['common.status.all'](),
+			render: (focused) => (
+				<NotificationsTab
+					filter="all"
+					isActive={focused}
+					isLoading={isLoadingAll}
+					hasNew={hasNew}
+					setIsLoadingLatest={setIsLoadingAll}
+					checkUnread={checkUnreadAll}
+				/>
+			),
+		},
+		{
+			id: 'mentions',
+			label: m['common.mention.label'](),
+			render: (focused) => (
+				<NotificationsTab
+					filter="mentions"
+					isActive={focused}
+					isLoading={isLoadingMentions}
+					hasNew={false /* We don't know for sure */}
+					setIsLoadingLatest={setIsLoadingMentions}
+					checkUnread={checkUnreadMentions}
+				/>
+			),
+		},
+	];
 
 	return (
 		<Layout.Screen>

@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
@@ -248,34 +247,26 @@ export function QuoteEmbed({
 	linkDisabled?: boolean;
 }) {
 	const moderationOpts = useModerationOpts();
-	const quote = useMemo<$type.enforce<AppBskyFeedDefs.PostView>>(
-		() =>
-			({
-				...embed.view,
-				$type: 'app.bsky.feed.defs#postView',
-				record: embed.view.value,
-				embed: embed.view.embeds?.[0],
-			}) as unknown as $type.enforce<AppBskyFeedDefs.PostView>,
-		[embed],
-	);
-	const moderation = useMemo(() => {
-		return moderationOpts ? moderatePost(quote, moderationOpts) : undefined;
-	}, [quote, moderationOpts]);
+	const quote = {
+		...embed.view,
+		$type: 'app.bsky.feed.defs#postView',
+		record: embed.view.value,
+		embed: embed.view.embeds?.[0],
+	} as unknown as $type.enforce<AppBskyFeedDefs.PostView>;
+	const moderation = moderationOpts ? moderatePost(quote, moderationOpts) : undefined;
 
 	const queryClient = useQueryClient();
 	const itemUrip = parseCanonicalResourceUri(quote.uri);
 	const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey);
 	const itemTitle = `Post by ${quote.author.handle}`;
 
-	const richText = useMemo(() => {
-		const { text, facets } = quote.record as AppBskyFeedPost.Main;
-		return text.trim() ? { text, facets } : undefined;
-	}, [quote.record]);
+	const { text, facets } = quote.record as AppBskyFeedPost.Main;
+	const richText = text.trim() ? { text, facets } : undefined;
 
-	const onBeforePress = useCallback(() => {
+	const onBeforePress = () => {
 		unstableCacheProfileView(queryClient, quote.author);
 		onOpen?.();
-	}, [queryClient, quote.author, onOpen]);
+	};
 
 	const contents = (
 		<>

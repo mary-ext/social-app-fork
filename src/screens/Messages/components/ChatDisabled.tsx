@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
@@ -118,8 +118,8 @@ function DialogInner() {
 		},
 	});
 
-	const onSubmit = useCallback(() => mutate(), [mutate]);
-	const onBack = useCallback(() => control.close(), [control]);
+	const onSubmit = () => mutate();
+	const onBack = () => control.close();
 
 	return (
 		<Dialog.ScrollableInner label={m['screens.messages.moderation.appeal.action']()}>

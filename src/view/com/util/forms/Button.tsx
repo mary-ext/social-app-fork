@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import {
 	ActivityIndicator,
 	type GestureResponderEvent,
@@ -142,31 +142,25 @@ export function Button({
 	});
 
 	const [isLoading, setIsLoading] = useState(false);
-	const onPressWrapped = useCallback(
-		async (event: GestureResponderEvent) => {
-			event.stopPropagation();
-			event.preventDefault();
-			if (withLoading) setIsLoading(true);
-			await onPress?.(event);
-			if (withLoading) setIsLoading(false);
-		},
-		[onPress, withLoading],
-	);
+	const onPressWrapped = async (event: GestureResponderEvent) => {
+		event.stopPropagation();
+		event.preventDefault();
+		if (withLoading) setIsLoading(true);
+		await onPress?.(event);
+		if (withLoading) setIsLoading(false);
+	};
 
-	const getStyle = useCallback(
-		(state: PressableStateCallbackType) => {
-			const arr = [typeOuterStyle, styles.outer, style];
-			if (state.pressed) {
-				arr.push({ opacity: 0.6 });
-			} else if (state.hovered) {
-				arr.push({ opacity: 0.8 });
-			}
-			return arr;
-		},
-		[typeOuterStyle, style],
-	);
+	const getStyle = (state: PressableStateCallbackType) => {
+		const arr = [typeOuterStyle, styles.outer, style];
+		if (state.pressed) {
+			arr.push({ opacity: 0.6 });
+		} else if (state.hovered) {
+			arr.push({ opacity: 0.8 });
+		}
+		return arr;
+	};
 
-	const renderChildern = useCallback(() => {
+	const renderChildern = () => {
 		if (!label) {
 			return children;
 		}
@@ -181,7 +175,7 @@ export function Button({
 				</Text>
 			</View>
 		);
-	}, [children, label, withLoading, isLoading, labelContainerStyle, typeLabelStyle, labelStyle]);
+	};
 
 	return (
 		<Pressable

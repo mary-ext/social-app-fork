@@ -1,4 +1,4 @@
-import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { startTransition, useCallback, useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -214,7 +214,7 @@ export function PostThread({ uri }: { uri: string }) {
 	 * No need to handle max parents here, deferParents will handle that and we want it to re-render with the
 	 * same items above the anchor.
 	 */
-	const prepareForParamsUpdate = useCallback(() => {
+	const prepareForParamsUpdate = () => {
 		/**
 		 * Truncate list so that anchor post is the first item in the list. Manual scroll handling is predicated
 		 * on this.
@@ -224,33 +224,32 @@ export function PostThread({ uri }: { uri: string }) {
 		setMaxChildrenCount(CHILDREN_CHUNK_SIZE);
 		// set flag
 		shouldHandleScroll.current = true;
-	}, [setDeferParents, setMaxChildrenCount]);
+	};
 
-	const setSortWrapped = useCallback(
-		(sort: string) => {
-			prepareForParamsUpdate();
-			thread.actions.setSort(sort);
-		},
-		[thread, prepareForParamsUpdate],
-	);
+	const setSortWrapped = (sort: string) => {
+		prepareForParamsUpdate();
+		thread.actions.setSort(sort);
+	};
 
-	const setViewWrapped = useCallback(
-		(view: ThreadViewOption) => {
-			prepareForParamsUpdate();
-			thread.actions.setView(view);
-		},
-		[thread, prepareForParamsUpdate],
-	);
+	const setViewWrapped = (view: ThreadViewOption) => {
+		prepareForParamsUpdate();
+		thread.actions.setView(view);
+	};
 
 	// total parents/children around the anchor post (depth === 0), used to short-circuit pagination once all
 	// items are loaded. derived from the items rather than stashed in refs, so it stays off the render path.
-	const { totalParents, totalChildren } = useMemo(() => {
+	let totalParents: number;
+	let totalChildren: number;
+	{
 		const anchorIndex = thread.data.items.findIndex((item) => 'depth' in item && item.depth === 0);
 		if (anchorIndex === -1) {
-			return { totalParents: 0, totalChildren: thread.data.items.length };
+			totalParents = 0;
+			totalChildren = thread.data.items.length;
+		} else {
+			totalParents = anchorIndex;
+			totalChildren = thread.data.items.length - 1 - anchorIndex;
 		}
-		return { totalParents: anchorIndex, totalChildren: thread.data.items.length - 1 - anchorIndex };
-	}, [thread.data.items]);
+	}
 
 	const onStartReached = () => {
 		if (thread.state.isFetching) return;
@@ -270,11 +269,8 @@ export function PostThread({ uri }: { uri: string }) {
 		setMaxChildrenCount((prev) => prev + CHILDREN_CHUNK_SIZE);
 	};
 
-	const slices = useMemo(() => {
-		const results: ThreadItem[] = [];
-
-		if (!thread.data.items.length) return results;
-
+	const slices: ThreadItem[] = [];
+	if (thread.data.items.length) {
 		/*
 		 * Pagination hack, tracks the # of items below the anchor post.
 		 */
@@ -292,7 +288,7 @@ export function PostThread({ uri }: { uri: string }) {
 			 * Handle anchor post.
 			 */
 			if (hasDepth && item.depth === 0) {
-				results.push(item);
+				slices.push(item);
 
 				/*
 				 * Walk up the parents, limiting by `maxParentCount`
@@ -302,7 +298,7 @@ export function PostThread({ uri }: { uri: string }) {
 					if (start >= 0) {
 						const limit = Math.max(0, start - maxParentCount);
 						for (let pi = start; pi >= limit; pi--) {
-							results.unshift(thread.data.items[pi]!);
+							slices.unshift(thread.data.items[pi]!);
 						}
 					}
 				}
@@ -312,13 +308,11 @@ export function PostThread({ uri }: { uri: string }) {
 				// can exit early if we've reached the max children count
 				if (childrenCount > maxChildrenCount) break;
 
-				results.push(item);
+				slices.push(item);
 				childrenCount++;
 			}
 		}
-
-		return results;
-	}, [thread, deferParents, maxParentCount, maxChildrenCount]);
+	}
 
 	/**
 	 * Defer rendering reply skeletons so that the anchor post (from cache) can paint without being blocked by
@@ -334,110 +328,108 @@ export function PostThread({ uri }: { uri: string }) {
 		}
 	}, [thread.state.isPlaceholderData, showReplySkeletons]);
 
-	const deferredSlices = useMemo(() => {
-		if (showReplySkeletons) return slices;
-		return slices.filter((item) => !(item.type === 'skeleton' && item.item === 'reply'));
-	}, [slices, showReplySkeletons]);
+	const deferredSlices = showReplySkeletons
+		? slices
+		: slices.filter((item) => !(item.type === 'skeleton' && item.item === 'reply'));
 
-	const isTombstoneView = useMemo(() => {
-		if (deferredSlices.length > 1) return false;
-		return deferredSlices.every((s) => s.type === 'threadPostBlocked' || s.type === 'threadPostNotFound');
-	}, [deferredSlices]);
+	let isTombstoneView = false;
+	if (deferredSlices.length <= 1) {
+		isTombstoneView = deferredSlices.every(
+			(s) => s.type === 'threadPostBlocked' || s.type === 'threadPostNotFound',
+		);
+	}
 
-	const renderItem = useCallback(
-		({ item, index }: { item: ThreadItem; index: number }) => {
-			if (item.type === 'threadPost') {
-				if (item.depth < 0) {
+	const renderItem = ({ item, index }: { item: ThreadItem; index: number }) => {
+		if (item.type === 'threadPost') {
+			if (item.depth < 0) {
+				return (
+					<ThreadItemPost
+						item={item}
+						threadgateRecord={thread.data.threadgate?.record}
+						overrides={{
+							topBorder: index === 0,
+						}}
+						onPostSuccess={optimisticOnPostReply}
+					/>
+				);
+			} else if (item.depth === 0) {
+				return (
+					<div>
+						{/*
+						 * IMPORTANT: this is a load-bearing key. We want the anchor marker
+						 * to remount any time the thread params change so that `deferParents`
+						 * is always reset to `false` once the anchor post is rendered.
+						 *
+						 * If we ever add additional thread params to this screen, they will
+						 * need to be added here.
+						 */}
+						<div key={item.uri + thread.state.view + thread.state.sort} ref={setAnchorNode} />
+						<ThreadItemAnchor
+							item={item}
+							threadgateRecord={thread.data.threadgate?.record}
+							onPostSuccess={optimisticOnPostReply}
+							postSource={anchorPostSource}
+						/>
+					</div>
+				);
+			} else {
+				if (thread.state.view === 'tree') {
+					return (
+						<ThreadItemTreePost
+							item={item}
+							threadgateRecord={thread.data.threadgate?.record}
+							overrides={{
+								moderation: thread.state.otherItemsVisible && item.depth > 0,
+							}}
+							onPostSuccess={optimisticOnPostReply}
+						/>
+					);
+				} else {
 					return (
 						<ThreadItemPost
 							item={item}
 							threadgateRecord={thread.data.threadgate?.record}
 							overrides={{
-								topBorder: index === 0,
+								moderation: thread.state.otherItemsVisible && item.depth > 0,
 							}}
 							onPostSuccess={optimisticOnPostReply}
 						/>
 					);
-				} else if (item.depth === 0) {
-					return (
-						<div>
-							{/*
-							 * IMPORTANT: this is a load-bearing key. We want the anchor marker
-							 * to remount any time the thread params change so that `deferParents`
-							 * is always reset to `false` once the anchor post is rendered.
-							 *
-							 * If we ever add additional thread params to this screen, they will
-							 * need to be added here.
-							 */}
-							<div key={item.uri + thread.state.view + thread.state.sort} ref={setAnchorNode} />
-							<ThreadItemAnchor
-								item={item}
-								threadgateRecord={thread.data.threadgate?.record}
-								onPostSuccess={optimisticOnPostReply}
-								postSource={anchorPostSource}
-							/>
-						</div>
-					);
-				} else {
-					if (thread.state.view === 'tree') {
-						return (
-							<ThreadItemTreePost
-								item={item}
-								threadgateRecord={thread.data.threadgate?.record}
-								overrides={{
-									moderation: thread.state.otherItemsVisible && item.depth > 0,
-								}}
-								onPostSuccess={optimisticOnPostReply}
-							/>
-						);
-					} else {
-						return (
-							<ThreadItemPost
-								item={item}
-								threadgateRecord={thread.data.threadgate?.record}
-								overrides={{
-									moderation: thread.state.otherItemsVisible && item.depth > 0,
-								}}
-								onPostSuccess={optimisticOnPostReply}
-							/>
-						);
-					}
-				}
-			} else if (item.type === 'threadPostNoUnauthenticated') {
-				if (item.depth < 0) {
-					return <ThreadItemPostNoUnauthenticated item={item} />;
-				} else if (item.depth === 0) {
-					return <ThreadItemAnchorNoUnauthenticated />;
-				}
-			} else if (item.type === 'readMore') {
-				return <ThreadItemReadMore item={item} view={thread.state.view === 'tree' ? 'tree' : 'linear'} />;
-			} else if (item.type === 'readMoreUp') {
-				return <ThreadItemReadMoreUp item={item} />;
-			} else if (item.type === 'threadPostBlocked') {
-				return <ThreadItemPostTombstone type="blocked" />;
-			} else if (item.type === 'threadPostNotFound') {
-				return <ThreadItemPostTombstone type="not-found" />;
-			} else if (item.type === 'replyComposer') {
-				return <div>{gtMobile && <ThreadComposePrompt onPressCompose={onReplyToAnchor} />}</div>;
-			} else if (item.type === 'showOtherReplies') {
-				return <ThreadItemShowOtherReplies onPress={item.onPress} />;
-			} else if (item.type === 'skeleton') {
-				if (item.item === 'anchor') {
-					return <ThreadItemAnchorSkeleton />;
-				} else if (item.item === 'reply') {
-					if (thread.state.view === 'linear') {
-						return <ThreadItemPostSkeleton index={index} />;
-					} else {
-						return <ThreadItemTreePostSkeleton index={index} />;
-					}
-				} else if (item.item === 'replyComposer') {
-					return <ThreadItemReplyComposerSkeleton />;
 				}
 			}
-			return null;
-		},
-		[thread, optimisticOnPostReply, onReplyToAnchor, gtMobile, anchorPostSource, setAnchorNode],
-	);
+		} else if (item.type === 'threadPostNoUnauthenticated') {
+			if (item.depth < 0) {
+				return <ThreadItemPostNoUnauthenticated item={item} />;
+			} else if (item.depth === 0) {
+				return <ThreadItemAnchorNoUnauthenticated />;
+			}
+		} else if (item.type === 'readMore') {
+			return <ThreadItemReadMore item={item} view={thread.state.view === 'tree' ? 'tree' : 'linear'} />;
+		} else if (item.type === 'readMoreUp') {
+			return <ThreadItemReadMoreUp item={item} />;
+		} else if (item.type === 'threadPostBlocked') {
+			return <ThreadItemPostTombstone type="blocked" />;
+		} else if (item.type === 'threadPostNotFound') {
+			return <ThreadItemPostTombstone type="not-found" />;
+		} else if (item.type === 'replyComposer') {
+			return <div>{gtMobile && <ThreadComposePrompt onPressCompose={onReplyToAnchor} />}</div>;
+		} else if (item.type === 'showOtherReplies') {
+			return <ThreadItemShowOtherReplies onPress={item.onPress} />;
+		} else if (item.type === 'skeleton') {
+			if (item.item === 'anchor') {
+				return <ThreadItemAnchorSkeleton />;
+			} else if (item.item === 'reply') {
+				if (thread.state.view === 'linear') {
+					return <ThreadItemPostSkeleton index={index} />;
+				} else {
+					return <ThreadItemTreePostSkeleton index={index} />;
+				}
+			} else if (item.item === 'replyComposer') {
+				return <ThreadItemReplyComposerSkeleton />;
+			}
+		}
+		return null;
+	};
 
 	const defaultListFooterHeight = hasParents ? window.innerHeight - 200 : undefined;
 

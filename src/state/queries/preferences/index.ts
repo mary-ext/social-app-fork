@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import type { LabelPreference } from '@atcute/bluesky-moderation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -235,12 +234,9 @@ export function useToggleSavedFeed({
 	const { isPending: isAddPending, mutateAsync: saveFeeds } = useAddSavedFeedsMutation();
 	const { isPending: isRemovePending, mutateAsync: removeFeed } = useRemoveFeedMutation();
 
-	const savedFeedConfig = useMemo(
-		() => preferences?.savedFeeds?.find((feed) => feed.value === uri),
-		[preferences?.savedFeeds, uri],
-	);
+	const savedFeedConfig = preferences?.savedFeeds?.find((feed) => feed.value === uri);
 
-	const toggleSave = useCallback(async () => {
+	const toggleSave = async () => {
 		try {
 			if (savedFeedConfig) {
 				await removeFeed(savedFeedConfig);
@@ -255,7 +251,7 @@ export function useToggleSavedFeed({
 			});
 			Toast.show(m['state.feeds.error.update'](), { type: 'error' });
 		}
-	}, [pin, removeFeed, saveFeeds, savedFeedConfig, type, uri]);
+	};
 
 	return {
 		isPending: isAddPending || isRemovePending,

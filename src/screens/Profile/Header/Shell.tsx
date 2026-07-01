@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useNavigation } from '@react-navigation/native';
@@ -38,34 +37,31 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 	const mediaModeration = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 	const isLabeler = !!profile.associated?.labeler;
 
-	const openLightbox = useCallback(
-		(uri: string) => {
-			lightboxHandle.openWithPayload({ images: [{ src: uri }], index: 0 });
-		},
-		[lightboxHandle],
-	);
+	const openLightbox = (uri: string) => {
+		lightboxHandle.openWithPayload({ images: [{ src: uri }], index: 0 });
+	};
 
-	const onPressBack = useCallback(() => {
+	const onPressBack = () => {
 		if (navigation.canGoBack()) {
 			navigation.goBack();
 		} else {
 			navigation.navigate('Home');
 		}
-	}, [navigation]);
+	};
 
-	const onPressBanner = useCallback(() => {
+	const onPressBanner = () => {
 		if (profile.banner && !(mediaModeration.blurs.length > 0 && mediaModeration.noOverride)) {
 			openLightbox(profile.banner);
 		}
-	}, [profile.banner, mediaModeration, openLightbox]);
+	};
 
-	const onPressAvi = useCallback(() => {
+	const onPressAvi = () => {
 		if (live.isActive) {
 			liveStatusHandle.open(null);
 		} else if (profile.avatar && !(mediaModeration.blurs.length > 0 && mediaModeration.noOverride)) {
 			openLightbox(profile.avatar);
 		}
-	}, [live.isActive, liveStatusHandle, profile.avatar, mediaModeration, openLightbox]);
+	};
 
 	return (
 		<div className={css.frame}>

@@ -118,10 +118,7 @@ export function MessagesScreenInner({ route }: Props) {
 		}, [messagesBus, isActive]),
 	);
 
-	const onNewChat = useCallback(
-		(conversation: string) => navigation.navigate('MessagesConversation', { conversation }),
-		[navigation],
-	);
+	const onNewChat = (conversation: string) => navigation.navigate('MessagesConversation', { conversation });
 
 	if (isWithinSplitView) {
 		return (
@@ -406,10 +403,9 @@ export function Header({
 	const { data: unreadCounts } = useUnreadCountsQuery();
 	const requestCount = unreadCounts?.unreadRequestConvos ?? 0;
 
-	const openChatControl = useCallback(() => {
+	const wrappedOpenChatControl = () => {
 		newChatControl.open();
-	}, [newChatControl]);
-	const wrappedOpenChatControl = openChatControl;
+	};
 
 	return (
 		<Layout.Header.Outer>

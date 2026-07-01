@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { View } from 'react-native';
 
 import { Logo } from '#/view/icons/Logo';
@@ -16,9 +16,9 @@ import { m } from '#/paraglide/messages';
 let NavSignInCard = ({}: {}): React.ReactNode => {
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
-	const showSignIn = useCallback(() => {
+	const showSignIn = () => {
 		signinDialogHandle.openWithPayload({});
-	}, [signinDialogHandle]);
+	};
 
 	return (
 		<View style={[{ maxWidth: 245 }]}>

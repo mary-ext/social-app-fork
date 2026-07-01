@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -87,28 +86,25 @@ function ProfileMenu({
 	const goLiveDisabledDialogHandle = Dialog.useDialogHandle();
 	const addToStarterPacksDialogHandle = Dialog.useDialogHandle();
 
-	const showLoggedOutWarning = useMemo(() => {
-		return (
-			profile.did !== currentAccount?.did &&
-			!!profile.labels?.find((label) => label.val === '!no-unauthenticated')
-		);
-	}, [currentAccount, profile]);
+	const showLoggedOutWarning =
+		profile.did !== currentAccount?.did &&
+		!!profile.labels?.find((label) => label.val === '!no-unauthenticated');
 
-	const invalidateProfileQuery = useCallback(() => {
+	const invalidateProfileQuery = () => {
 		void queryClient.invalidateQueries({
 			queryKey: profileQueryKey(profile.did),
 		});
-	}, [queryClient, profile.did]);
+	};
 
-	const onPressAddToStarterPacks = useCallback(() => {
+	const onPressAddToStarterPacks = () => {
 		addToStarterPacksDialogHandle.open(null);
-	}, [addToStarterPacksDialogHandle]);
+	};
 
-	const onPressShare = useCallback(() => {
+	const onPressShare = () => {
 		void shareUrl(toShareUrl(makeProfileLink(profile)));
-	}, [profile]);
+	};
 
-	const onPressMuteAccount = useCallback(async () => {
+	const onPressMuteAccount = async () => {
 		if (profile.viewer?.muted) {
 			try {
 				await queueUnmute();
@@ -134,9 +130,9 @@ function ProfileMenu({
 				}
 			}
 		}
-	}, [profile.viewer?.muted, queueUnmute, queueMute]);
+	};
 
-	const blockAccount = useCallback(async () => {
+	const blockAccount = async () => {
 		if (profile.viewer?.blocking) {
 			try {
 				await queueUnblock();
@@ -162,9 +158,9 @@ function ProfileMenu({
 				}
 			}
 		}
-	}, [profile.viewer?.blocking, queueUnblock, queueBlock]);
+	};
 
-	const onPressFollowAccount = useCallback(async () => {
+	const onPressFollowAccount = async () => {
 		try {
 			await queueFollow();
 			Toast.show(m['view.profile.follow.followedToast']());
@@ -176,9 +172,9 @@ function ProfileMenu({
 				});
 			}
 		}
-	}, [queueFollow]);
+	};
 
-	const onPressUnfollowAccount = useCallback(async () => {
+	const onPressUnfollowAccount = async () => {
 		try {
 			await queueUnfollow();
 			Toast.show(m['view.profile.follow.unfollowedToast']());
@@ -190,23 +186,23 @@ function ProfileMenu({
 				});
 			}
 		}
-	}, [queueUnfollow]);
+	};
 
-	const onPressReportAccount = useCallback(() => {
+	const onPressReportAccount = () => {
 		reportDialogHandle.open(null);
-	}, [reportDialogHandle]);
+	};
 
-	const onPressShareATUri = useCallback(() => {
+	const onPressShareATUri = () => {
 		void shareText(`at://${profile.did}`);
-	}, [profile.did]);
+	};
 
-	const onPressShareDID = useCallback(() => {
+	const onPressShareDID = () => {
 		void shareText(profile.did);
-	}, [profile.did]);
+	};
 
-	const onPressSearch = useCallback(() => {
+	const onPressSearch = () => {
 		navigation.navigate('ProfileSearch', { name: profile.did });
-	}, [navigation, profile.did]);
+	};
 
 	return (
 		<>

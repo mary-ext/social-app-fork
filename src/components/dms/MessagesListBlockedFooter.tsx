@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
@@ -46,27 +45,21 @@ export function MessagesListBlockedFooter({
 	const leaveConvoControl = useDialogControl();
 	const blockedByListControl = useDialogControl();
 
-	const { listBlocks, userBlock } = useMemo(() => {
-		const blocks = moderation.causes.filter(
-			(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
-		);
-		const listBlocks = blocks.filter((block) => block.source !== null);
-		const userBlock = blocks.find((block) => block.source === null);
-		return {
-			listBlocks,
-			userBlock,
-		};
-	}, [moderation]);
+	const blocks = moderation.causes.filter(
+		(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
+	);
+	const listBlocks = blocks.filter((block) => block.source !== null);
+	const userBlock = blocks.find((block) => block.source === null);
 
 	const isBlocking = !!userBlock || !!listBlocks.length;
 
-	const onUnblockPress = useCallback(() => {
+	const onUnblockPress = () => {
 		if (listBlocks.length) {
 			blockedByListControl.open();
 		} else {
 			void queueUnblock();
 		}
-	}, [blockedByListControl, listBlocks, queueUnblock]);
+	};
 
 	return (
 		<View style={[a.p_md]}>

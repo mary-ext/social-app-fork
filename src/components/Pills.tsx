@@ -1,5 +1,4 @@
-import { useMemo } from 'react';
-import { View } from 'react-native';
+import { type TextStyle, View, type ViewStyle } from 'react-native';
 import type { ModerationCause } from '@atcute/bluesky-moderation';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
@@ -34,15 +33,16 @@ export function Row({
 	style,
 	size = 'sm',
 }: { children: React.ReactNode | React.ReactNode[] } & CommonProps & ViewStyleProp) {
-	const styles = useMemo(() => {
-		switch (size) {
-			case 'lg':
-				return [{ gap: 5 }];
-			case 'sm':
-			default:
-				return [{ gap: 3 }];
-		}
-	}, [size]);
+	let styles: { gap: number }[];
+	switch (size) {
+		case 'lg':
+			styles = [{ gap: 5 }];
+			break;
+		case 'sm':
+		default:
+			styles = [{ gap: 3 }];
+			break;
+	}
 	return <View style={[a.flex_row, a.flex_wrap, a.gap_xs, styles, style]}>{children}</View>;
 }
 
@@ -59,39 +59,38 @@ export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelP
 	const isLabeler = Boolean(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;
 
-	const { outer, avi, text } = useMemo(() => {
-		switch (size) {
-			case 'lg': {
-				return {
-					outer: [
-						t.atoms.bg_contrast_25,
-						{
-							gap: 5,
-							paddingHorizontal: 5,
-							paddingVertical: 5,
-						},
-					],
-					avi: 16,
-					text: [a.text_sm],
-				};
-			}
-			case 'sm':
-			default: {
-				return {
-					outer: [
-						!noBg && t.atoms.bg_contrast_25,
-						{
-							gap: 3,
-							paddingHorizontal: 3,
-							paddingVertical: 3,
-						},
-					],
-					avi: 12,
-					text: [a.text_xs],
-				};
-			}
+	let outer: (ViewStyle | false)[];
+	let avi: number;
+	let text: TextStyle[];
+	switch (size) {
+		case 'lg': {
+			outer = [
+				t.atoms.bg_contrast_25,
+				{
+					gap: 5,
+					paddingHorizontal: 5,
+					paddingVertical: 5,
+				},
+			];
+			avi = 16;
+			text = [a.text_sm];
+			break;
 		}
-	}, [t, size, noBg]);
+		case 'sm':
+		default: {
+			outer = [
+				!noBg && t.atoms.bg_contrast_25,
+				{
+					gap: 3,
+					paddingHorizontal: 3,
+					paddingVertical: 3,
+				},
+			];
+			avi = 12;
+			text = [a.text_xs];
+			break;
+		}
+	}
 
 	return (
 		<>
@@ -141,26 +140,17 @@ export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelP
 	);
 }
 
-export function FollowsYou({ size = 'sm' }: CommonProps) {
+export function FollowsYou() {
 	const t = useTheme();
 
-	const variantStyles = useMemo(() => {
-		switch (size) {
-			case 'sm':
-			case 'lg':
-			default:
-				return [
-					{
-						paddingHorizontal: 6,
-						paddingVertical: 3,
-						borderRadius: 4,
-					},
-				];
-		}
-	}, [size]);
-
 	return (
-		<View style={[variantStyles, a.justify_center, t.atoms.bg_contrast_50]}>
+		<View
+			style={[
+				{ paddingHorizontal: 6, paddingVertical: 3, borderRadius: 4 },
+				a.justify_center,
+				t.atoms.bg_contrast_50,
+			]}
+		>
 			<Text style={[a.text_xs, a.leading_tight]}>{m['common.follow.followsYou']()}</Text>
 		</View>
 	);

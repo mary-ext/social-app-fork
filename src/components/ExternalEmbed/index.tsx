@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
@@ -32,16 +31,14 @@ export function ExternalEmbed({ link, onOpen, hideAlt, className }: ExternalEmbe
 	const niceUrl = toNiceDomain(link.uri);
 	const imageUri = link.thumb;
 
-	const embedPlayerParams = useMemo(() => {
-		const params = parseEmbedPlayerFromUrl(link.uri);
-		if (!params) {
-			return;
-		}
+	let embedPlayerParams;
+	const params = parseEmbedPlayerFromUrl(link.uri);
+	if (params) {
 		const canShow = externalEmbedPrefs?.[params.source] !== 'hide';
 		if (canShow || exemptExternalEmbedSources.has(params.source)) {
-			return params;
+			embedPlayerParams = params;
 		}
-	}, [link.uri, externalEmbedPrefs]);
+	}
 
 	// the anchor opens the external link via default nav; an ancestor `BlockLink` ignores clicks that land on
 	// it (it's a real <a>), so we only need to fire the open-interaction callback here.

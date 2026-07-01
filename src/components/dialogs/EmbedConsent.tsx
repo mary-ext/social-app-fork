@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from '#/lib/strings/embed-player';
 
 import { useSetExternalEmbedPref } from '#/state/preferences';
@@ -33,24 +31,24 @@ export function EmbedConsentDialog({ handle, source, onAccept }: EmbedConsentDia
 function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 	const setExternalEmbedPref = useSetExternalEmbedPref();
 
-	const onShowAllPress = useCallback(() => {
+	const onShowAllPress = () => {
 		for (const key of embedPlayerSources) {
 			setExternalEmbedPref(key, 'show');
 		}
 		onAccept();
 		handle.close();
-	}, [handle, onAccept, setExternalEmbedPref]);
+	};
 
-	const onShowPress = useCallback(() => {
+	const onShowPress = () => {
 		setExternalEmbedPref(source, 'show');
 		onAccept();
 		handle.close();
-	}, [handle, onAccept, setExternalEmbedPref, source]);
+	};
 
-	const onHidePress = useCallback(() => {
+	const onHidePress = () => {
 		setExternalEmbedPref(source, 'hide');
 		handle.close();
-	}, [handle, setExternalEmbedPref, source]);
+	};
 
 	return (
 		<>

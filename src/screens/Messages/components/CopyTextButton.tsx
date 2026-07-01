@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -29,14 +29,11 @@ export function CopyTextButton({
 		}
 	}, [hasBeenCopied]);
 
-	const onPress = useCallback(
-		(evt: GestureResponderEvent) => {
-			void navigator.clipboard.writeText(value);
-			setHasBeenCopied(true);
-			onPressProp?.(evt);
-		},
-		[value, onPressProp],
-	);
+	const onPress = (evt: GestureResponderEvent) => {
+		void navigator.clipboard.writeText(value);
+		setHasBeenCopied(true);
+		onPressProp?.(evt);
+	};
 
 	return (
 		<View style={[a.relative]}>

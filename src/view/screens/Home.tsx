@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -82,36 +82,35 @@ function HomeScreenReady({
 	const navigation = useNavigation<NavigationProp>();
 	const setSelectedFeed = useSetSelectedFeed();
 
-	const allFeeds = useMemo(() => pinnedFeedInfos.map((f) => f.feedDescriptor), [pinnedFeedInfos]);
+	const allFeeds = pinnedFeedInfos.map((f) => f.feedDescriptor);
 	const selectedFeed = useSelectedFeed() ?? allFeeds[0];
 	const selectedIndex = Math.max(0, allFeeds.indexOf(selectedFeed!));
 	useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName);
 
-	const renderFollowingEmptyState = useCallback(() => <FollowingEmptyState />, []);
-	const renderCustomFeedEmptyState = useCallback(() => <CustomFeedEmptyState />, []);
+	const renderFollowingEmptyState = () => <FollowingEmptyState />;
+	const renderCustomFeedEmptyState = () => <CustomFeedEmptyState />;
 
 	const whatsHotFeed: FeedDescriptor = `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`;
 
-	const sections = useMemo<Section<string>[]>(() => {
-		if (!hasSession) {
-			return [
-				{
-					id: whatsHotFeed,
-					label: 'Discover',
-					render: (focused) => (
-						<FeedPage
-							testID="customFeedPage"
-							isPageFocused={focused}
-							feed={whatsHotFeed}
-							renderEmptyState={renderCustomFeedEmptyState}
-							feedInfo={pinnedFeedInfos[0]!}
-						/>
-					),
-				},
-				{ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', render: () => null },
-			];
-		}
-
+	let sections: Section<string>[];
+	if (!hasSession) {
+		sections = [
+			{
+				id: whatsHotFeed,
+				label: 'Discover',
+				render: (focused) => (
+					<FeedPage
+						testID="customFeedPage"
+						isPageFocused={focused}
+						feed={whatsHotFeed}
+						renderEmptyState={renderCustomFeedEmptyState}
+						feedInfo={pinnedFeedInfos[0]!}
+					/>
+				),
+			},
+			{ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', render: () => null },
+		];
+	} else {
 		const feedSections: Section<string>[] = pinnedFeedInfos.map((feedInfo) => {
 			const feed = feedInfo.feedDescriptor;
 			return {
@@ -145,19 +144,16 @@ function HomeScreenReady({
 		if (!hasPinnedCustom) {
 			feedSections.push({ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', render: () => null });
 		}
-		return feedSections;
-	}, [hasSession, pinnedFeedInfos, whatsHotFeed, renderFollowingEmptyState, renderCustomFeedEmptyState]);
+		sections = feedSections;
+	}
 
-	const onValueChange = useCallback(
-		(value: string) => {
-			if (value === FEEDS_DISCOVERY_TAB) {
-				navigation.navigate('Feeds');
-				return;
-			}
-			setSelectedFeed(value as FeedDescriptor);
-		},
-		[navigation, setSelectedFeed],
-	);
+	const onValueChange = (value: string) => {
+		if (value === FEEDS_DISCOVERY_TAB) {
+			navigation.navigate('Feeds');
+			return;
+		}
+		setSelectedFeed(value as FeedDescriptor);
+	};
 
 	if (hasSession && pinnedFeedInfos.length === 0) {
 		return (

@@ -1,12 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import {
-	type LayoutChangeEvent,
-	type NativeScrollEvent,
-	ScrollView,
-	type ScrollViewProps,
-	View,
-	type ViewStyle,
-} from 'react-native';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { type LayoutChangeEvent, type NativeScrollEvent, View, type ViewStyle } from 'react-native';
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
@@ -155,9 +148,9 @@ export function MessagesList({
 
 	const [inputHeightJS, setInputHeightJS] = useState(0);
 
-	const onInputLayout = useCallback((event: LayoutChangeEvent) => {
+	const onInputLayout = (event: LayoutChangeEvent) => {
 		setInputHeightJS(event.nativeEvent.layout.height);
-	}, []);
+	};
 
 	// We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
 	// are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -205,76 +198,64 @@ export function MessagesList({
 	// Subsequent resizes will only scroll to the bottom if the user is at the bottom of the list (within 100 pixels of
 	// the bottom). Therefore, any new messages that come in or are sent will result in an animated scroll to end. However
 	// we will not scroll whenever new items get prepended to the top.
-	const onContentSizeChange = useCallback(
-		(_: number, height: number) => {
-			// Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
-			// previous off whenever we add new content to the previous offset whenever we add new content to the list.
-			if (isAtTop.current && hasScrolled) {
-				flatListRef.current?.scrollToOffset({
-					offset: height - prevContentHeight.current,
-					animated: false,
-				});
-			}
+	const onContentSizeChange = (_: number, height: number) => {
+		// Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
+		// previous off whenever we add new content to the previous offset whenever we add new content to the list.
+		if (isAtTop.current && hasScrolled) {
+			flatListRef.current?.scrollToOffset({
+				offset: height - prevContentHeight.current,
+				animated: false,
+			});
+		}
 
-			// Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
-			// can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
-			// Revealing the list (setHasScrolled) is handled by a separate effect, not here: this callback runs from a
-			// ResizeObserver whose closure can lag behind the latest render, so the readiness it observes is unreliable.
-			if (!hasInitiallyScrolled.current && (renderItems.length > 0 || !convoState.isFetchingHistory)) {
-				hasInitiallyScrolled.current = true;
-				flatListRef.current?.scrollToOffset({ offset: height, animated: false });
-				prevContentHeight.current = height;
-				prevItemCount.current = renderItems.length;
-				return;
-			}
-
-			// Subsequent: auto-scroll only if user is at the bottom
-			if (isAtBottom.current) {
-				// If the size of the content is changing by more than the height of the screen, then we don't
-				// want to scroll further than the start of all the new content. Since we are storing the previous offset,
-				// we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
-				// that can be pressed to immediately scroll to the end.
-				if (
-					didBackground.current &&
-					hasScrolled &&
-					height - prevContentHeight.current > layoutHeight.current - 50 &&
-					renderItems.length - prevItemCount.current > 1
-				) {
-					flatListRef.current?.scrollToOffset({
-						offset: prevContentHeight.current - 65,
-						animated: true,
-					});
-					setNewMessagesPill({
-						show: true,
-						startContentOffset: prevContentHeight.current - 65,
-					});
-				} else {
-					flatListRef.current?.scrollToOffset({
-						offset: height,
-						// only animate when new items were appended — pure layout growth
-						// (e.g. the composer spacer getting its height on web) should
-						// snap instantly rather than visibly scrolling
-						animated:
-							hasScrolled && height > prevContentHeight.current && renderItems.length > prevItemCount.current,
-					});
-				}
-			}
-
+		// Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
+		// can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
+		// Revealing the list (setHasScrolled) is handled by a separate effect, not here: this callback runs from a
+		// ResizeObserver whose closure can lag behind the latest render, so the readiness it observes is unreliable.
+		if (!hasInitiallyScrolled.current && (renderItems.length > 0 || !convoState.isFetchingHistory)) {
+			hasInitiallyScrolled.current = true;
+			flatListRef.current?.scrollToOffset({ offset: height, animated: false });
 			prevContentHeight.current = height;
 			prevItemCount.current = renderItems.length;
-			didBackground.current = false;
-		},
-		[
-			hasScrolled,
-			convoState.isFetchingHistory,
-			renderItems.length,
-			// these are stable
-			flatListRef,
-			isAtTop,
-			isAtBottom,
-			layoutHeight,
-		],
-	);
+			return;
+		}
+
+		// Subsequent: auto-scroll only if user is at the bottom
+		if (isAtBottom.current) {
+			// If the size of the content is changing by more than the height of the screen, then we don't
+			// want to scroll further than the start of all the new content. Since we are storing the previous offset,
+			// we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
+			// that can be pressed to immediately scroll to the end.
+			if (
+				didBackground.current &&
+				hasScrolled &&
+				height - prevContentHeight.current > layoutHeight.current - 50 &&
+				renderItems.length - prevItemCount.current > 1
+			) {
+				flatListRef.current?.scrollToOffset({
+					offset: prevContentHeight.current - 65,
+					animated: true,
+				});
+				setNewMessagesPill({
+					show: true,
+					startContentOffset: prevContentHeight.current - 65,
+				});
+			} else {
+				flatListRef.current?.scrollToOffset({
+					offset: height,
+					// only animate when new items were appended — pure layout growth
+					// (e.g. the composer spacer getting its height on web) should
+					// snap instantly rather than visibly scrolling
+					animated:
+						hasScrolled && height > prevContentHeight.current && renderItems.length > prevItemCount.current,
+				});
+			}
+		}
+
+		prevContentHeight.current = height;
+		prevItemCount.current = renderItems.length;
+		didBackground.current = false;
+	};
 
 	// Reveal the list once the initial history has loaded. This is deliberately driven by render state
 	// rather than onContentSizeChange: that callback fires from a ResizeObserver whose closure can lag a
@@ -293,161 +274,152 @@ export function MessagesList({
 		return () => cancelAnimationFrame(raf);
 	}, [convoState.isFetchingHistory, hasScrolled, setHasScrolled]);
 
-	const onStartReached = useCallback(() => {
+	const onStartReached = () => {
 		void convoState.fetchMessageHistory();
-	}, [convoState]);
+	};
 
-	const onScroll = useCallback(
-		(e: NativeScrollEvent) => {
-			layoutHeight.current = e.layoutMeasurement.height;
-			const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height;
+	const onScroll = (e: NativeScrollEvent) => {
+		layoutHeight.current = e.layoutMeasurement.height;
+		const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height;
 
-			// Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
-			// when a new message is added, hence the 100 pixel offset
-			isAtBottom.current = e.contentSize.height - 100 < bottomOffset;
-			isAtTop.current = e.contentOffset.y <= 1;
+		// Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
+		// when a new message is added, hence the 100 pixel offset
+		isAtBottom.current = e.contentSize.height - 100 < bottomOffset;
+		isAtTop.current = e.contentOffset.y <= 1;
 
-			if (
-				newMessagesPill.show &&
-				(e.contentOffset.y > newMessagesPill.startContentOffset + 200 || isAtBottom.current)
-			) {
-				setNewMessagesPill({
-					show: false,
-					startContentOffset: 0,
-				});
-			}
-		},
-		[layoutHeight, newMessagesPill, isAtBottom, isAtTop],
-	);
+		if (
+			newMessagesPill.show &&
+			(e.contentOffset.y > newMessagesPill.startContentOffset + 200 || isAtBottom.current)
+		) {
+			setNewMessagesPill({
+				show: false,
+				startContentOffset: 0,
+			});
+		}
+	};
 
 	// -- Keyboard animation handling
 
 	const { bottom: bottomInset } = useSafeAreaInsets();
 
 	// -- Message sending
-	const onSendMessage = useCallback(
-		async (text: string, reply?: $type.enforce<ChatBskyConvoDefs.MessageView>) => {
-			let trimmedText = cleanNewlines(text.trimEnd());
+	const onSendMessage = async (text: string, reply?: $type.enforce<ChatBskyConvoDefs.MessageView>) => {
+		let trimmedText = cleanNewlines(text.trimEnd());
 
-			let embed:
-				| $type.enforce<AppBskyEmbedRecord.Main>
-				| $type.enforce<ChatBskyEmbedJoinLink.Main>
-				| undefined;
-			let embedView:
-				| $type.enforce<AppBskyEmbedRecord.View>
-				| $type.enforce<ChatBskyEmbedJoinLink.View>
-				| undefined;
+		let embed: $type.enforce<AppBskyEmbedRecord.Main> | $type.enforce<ChatBskyEmbedJoinLink.Main> | undefined;
+		let embedView:
+			| $type.enforce<AppBskyEmbedRecord.View>
+			| $type.enforce<ChatBskyEmbedJoinLink.View>
+			| undefined;
 
-			if (messageEmbed?.type === 'post') {
-				try {
-					const post = await getPost({ uri: messageEmbed.uri });
-					if (post) {
-						embed = {
-							$type: 'app.bsky.embed.record',
-							record: {
-								uri: post.uri,
-								cid: post.cid,
-							},
-						};
+		if (messageEmbed?.type === 'post') {
+			try {
+				const post = await getPost({ uri: messageEmbed.uri });
+				if (post) {
+					embed = {
+						$type: 'app.bsky.embed.record',
+						record: {
+							uri: post.uri,
+							cid: post.cid,
+						},
+					};
 
-						embedView = {
-							$type: 'app.bsky.embed.record#view',
-							record: createEmbedViewRecordFromPost(post),
-						};
+					embedView = {
+						$type: 'app.bsky.embed.record#view',
+						record: createEmbedViewRecordFromPost(post),
+					};
 
-						// If the embedded post's own link sits at the start or end of the message text,
-						// strip it — it shows as the quote embed instead.
-						for (const token of tokenize(trimmedText)) {
-							if (token.type !== 'autolink' || !isBskyPostUrl(token.url)) {
-								continue;
+					// If the embedded post's own link sits at the start or end of the message text,
+					// strip it — it shows as the quote embed instead.
+					for (const token of tokenize(trimmedText)) {
+						if (token.type !== 'autolink' || !isBskyPostUrl(token.url)) {
+							continue;
+						}
+						const url = convertBskyAppUrlIfNeeded(token.url);
+						// this might have a handle instead of a DID, so just compare the rkey
+						const rkey = url.split('/').filter(Boolean).at(-1);
+						if (rkey && post.uri.endsWith(rkey)) {
+							if (trimmedText.startsWith(token.raw)) {
+								trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
+							} else if (trimmedText.endsWith(token.raw)) {
+								trimmedText = cleanNewlines(trimmedText.slice(0, -token.raw.length).trim());
 							}
-							const url = convertBskyAppUrlIfNeeded(token.url);
-							// this might have a handle instead of a DID, so just compare the rkey
-							const rkey = url.split('/').filter(Boolean).at(-1);
-							if (rkey && post.uri.endsWith(rkey)) {
-								if (trimmedText.startsWith(token.raw)) {
-									trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
-								} else if (trimmedText.endsWith(token.raw)) {
-									trimmedText = cleanNewlines(trimmedText.slice(0, -token.raw.length).trim());
-								}
-								break;
-							}
+							break;
 						}
 					}
-				} catch (error) {
-					logger.error('Failed to get post as quote for DM', { error });
 				}
-			} else if (messageEmbed?.type === 'invite') {
-				const code = messageEmbed.code;
-				embed = {
-					$type: 'chat.bsky.embed.joinLink',
-					code,
+			} catch (error) {
+				logger.error('Failed to get post as quote for DM', { error });
+			}
+		} else if (messageEmbed?.type === 'invite') {
+			const code = messageEmbed.code;
+			embed = {
+				$type: 'chat.bsky.embed.joinLink',
+				code,
+			};
+
+			const joinLinkPreview = await getJoinLinkPreview({ code, hasSession });
+			if (joinLinkPreview) {
+				embedView = {
+					$type: 'chat.bsky.embed.joinLink#view',
+					joinLinkPreview,
 				};
-
-				const joinLinkPreview = await getJoinLinkPreview({ code, hasSession });
-				if (joinLinkPreview) {
-					embedView = {
-						$type: 'chat.bsky.embed.joinLink#view',
-						joinLinkPreview,
-					};
-				}
-
-				// If the invite link sits at the start or end of the message text, strip it — it shows as the
-				// invite card instead.
-				for (const token of tokenize(trimmedText)) {
-					if (token.type !== 'autolink' || getChatInviteCodeFromUrl(token.url) !== code) {
-						continue;
-					}
-					if (trimmedText.startsWith(token.raw)) {
-						trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
-					} else if (trimmedText.endsWith(token.raw)) {
-						trimmedText = cleanNewlines(trimmedText.slice(0, -token.raw.length).trim());
-					}
-					break;
-				}
 			}
 
-			// `detectFacets` only emits mention facets for handles that resolve, so there are no
-			// invalid mentions left to strip.
-			const rt = shortenLinks(
-				await detectFacets(trimmedText, async (handle) => {
-					try {
-						const res = await ok(
-							appview.get('com.atproto.identity.resolveHandle', {
-								params: { handle: handle as Handle },
-							}),
-						);
-						return res.did;
-					} catch {
-						return undefined;
-					}
-				}),
-			);
-
-			if (!hasScrolled) {
-				setHasScrolled(true);
+			// If the invite link sits at the start or end of the message text, strip it — it shows as the
+			// invite card instead.
+			for (const token of tokenize(trimmedText)) {
+				if (token.type !== 'autolink' || getChatInviteCodeFromUrl(token.url) !== code) {
+					continue;
+				}
+				if (trimmedText.startsWith(token.raw)) {
+					trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
+				} else if (trimmedText.endsWith(token.raw)) {
+					trimmedText = cleanNewlines(trimmedText.slice(0, -token.raw.length).trim());
+				}
+				break;
 			}
+		}
 
-			convoState.sendMessage(
-				{
-					text: rt.text,
-					facets: rt.facets,
-					embed: embed,
-					replyTo: reply ? { messageId: reply.id } : undefined,
-				},
-				embedView,
-				reply,
-			);
-		},
-		[appview, convoState, messageEmbed, getPost, getJoinLinkPreview, hasSession, hasScrolled, setHasScrolled],
-	);
+		// `detectFacets` only emits mention facets for handles that resolve, so there are no
+		// invalid mentions left to strip.
+		const rt = shortenLinks(
+			await detectFacets(trimmedText, async (handle) => {
+				try {
+					const res = await ok(
+						appview.get('com.atproto.identity.resolveHandle', {
+							params: { handle: handle as Handle },
+						}),
+					);
+					return res.did;
+				} catch {
+					return undefined;
+				}
+			}),
+		);
 
-	const scrollToEndOnPress = useCallback(() => {
+		if (!hasScrolled) {
+			setHasScrolled(true);
+		}
+
+		convoState.sendMessage(
+			{
+				text: rt.text,
+				facets: rt.facets,
+				embed: embed,
+				replyTo: reply ? { messageId: reply.id } : undefined,
+			},
+			embedView,
+			reply,
+		);
+	};
+
+	const scrollToEndOnPress = () => {
 		flatListRef.current?.scrollToOffset({
 			offset: prevContentHeight.current,
 			animated: true,
 		});
-	}, [flatListRef]);
+	};
 
 	// Scroll to a message by id, if it's currently loaded in the list. Per the
 	// feature scope, we don't fetch history to find unloaded messages - tapping a
@@ -498,11 +470,6 @@ export function MessagesList({
 		return null;
 	};
 
-	const renderScrollComponent = useCallback(
-		(props: ScrollViewProps) => <ChatScrollComponent {...props} />,
-		[],
-	);
-
 	return (
 		<InviteLinkDialogProvider convo={convoState.convo}>
 			<MessageRepliesProvider scrollToMessage={scrollToMessage}>
@@ -542,8 +509,6 @@ export function MessagesList({
 										) : null}
 									</>
 								}
-								// native only (prop is not supported on web)
-								renderScrollComponent={renderScrollComponent}
 								contentContainerStyle={{
 									paddingBottom: 0,
 								}}
@@ -588,22 +553,6 @@ export function MessagesList({
 				</MessageOverlays>
 			</MessageRepliesProvider>
 		</InviteLinkDialogProvider>
-	);
-}
-
-function ChatScrollComponent({
-	ref,
-	...props
-}: ScrollViewProps & {
-	ref?: React.RefObject<ScrollView>;
-}) {
-	return (
-		<ScrollView
-			ref={ref}
-			automaticallyAdjustContentInsets={false}
-			keyboardDismissMode="interactive"
-			{...props}
-		/>
 	);
 }
 

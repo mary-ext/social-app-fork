@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -48,47 +48,44 @@ export function ActionsWrapper({
 
 	const [showActions, setShowActions] = useState(false);
 
-	const onMouseEnter = useCallback(() => {
+	const onMouseEnter = () => {
 		setShowActions(true);
-	}, []);
+	};
 
-	const onMouseLeave = useCallback(() => {
+	const onMouseLeave = () => {
 		setShowActions(false);
-	}, []);
+	};
 
 	// We need to handle the `onFocus` separately because we want to know if there is a related target (the element
 	// that is losing focus). If there isn't that means the focus is coming from a dropdown that is now closed.
-	const onFocus = useCallback<React.FocusEventHandler>((e) => {
+	const onFocus: React.FocusEventHandler = (e) => {
 		if (e.nativeEvent.relatedTarget == null) return;
 		setShowActions(true);
-	}, []);
+	};
 
-	const onEmojiSelect = useCallback(
-		(emoji: string) => {
-			if (
-				message.reactions?.find(
-					(reaction) => reaction.value === emoji && reaction.sender.did === currentAccount?.did,
-				)
-			) {
-				convo
-					.removeReaction(message.id, emoji)
-					.catch(() => Toast.show(m['components.dms.reaction.error.remove']()));
-			} else {
-				if (hasReachedReactionLimit(message, currentAccount?.did)) {
-					Toast.show(m['components.dms.reaction.error.limit']({ limit: EMOJI_REACTION_LIMIT }), {
-						type: 'info',
-					});
-					return;
-				}
-				convo.addReaction(message.id, emoji).catch(() =>
-					Toast.show(m['components.dms.reaction.error.add'](), {
-						type: 'error',
-					}),
-				);
+	const onEmojiSelect = (emoji: string) => {
+		if (
+			message.reactions?.find(
+				(reaction) => reaction.value === emoji && reaction.sender.did === currentAccount?.did,
+			)
+		) {
+			convo
+				.removeReaction(message.id, emoji)
+				.catch(() => Toast.show(m['components.dms.reaction.error.remove']()));
+		} else {
+			if (hasReachedReactionLimit(message, currentAccount?.did)) {
+				Toast.show(m['components.dms.reaction.error.limit']({ limit: EMOJI_REACTION_LIMIT }), {
+					type: 'info',
+				});
+				return;
 			}
-		},
-		[convo, message, currentAccount?.did],
-	);
+			convo.addReaction(message.id, emoji).catch(() =>
+				Toast.show(m['components.dms.reaction.error.add'](), {
+					type: 'error',
+				}),
+			);
+		}
+	};
 
 	return (
 		<View

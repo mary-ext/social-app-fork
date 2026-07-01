@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { View } from 'react-native';
 import * as TID from '@atcute/tid';
 
@@ -24,7 +23,7 @@ import { m } from '#/paraglide/messages';
 export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { isPending, mutateAsync: overwriteSavedFeeds } = useOverwriteSavedFeedsMutation();
 
-	const addRecommendedFeeds = useCallback(async () => {
+	const addRecommendedFeeds = async () => {
 		let skippedTimeline = false;
 		let skippedDiscover = false;
 		let remainingSavedFeeds = [];
@@ -55,7 +54,7 @@ export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQuer
 		];
 
 		await overwriteSavedFeeds(toSave);
-	}, [overwriteSavedFeeds, preferences.savedFeeds]);
+	};
 
 	return (
 		<CenteredView sideBorders style={[a.h_full_vh]}>

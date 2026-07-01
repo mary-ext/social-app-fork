@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { useNavigation } from '@react-navigation/native';
 
@@ -41,12 +40,7 @@ export function ProfileFollowers({ name, initialCount }: { name: string; initial
 	const isError = !!resolveError || !!error;
 	const isMe = resolvedDid === currentAccount?.did;
 
-	const followers = useMemo(() => {
-		if (data?.pages) {
-			return data.pages.flatMap((page) => page.followers);
-		}
-		return [];
-	}, [data]);
+	const followers = data?.pages ? data.pages.flatMap((page) => page.followers) : [];
 
 	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || !!error) return;

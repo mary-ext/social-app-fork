@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Handle } from '@atcute/lexicons';
@@ -121,15 +121,7 @@ function DialogInner({
 	setDirty: (dirty: boolean) => void;
 	initialValues?: InitialListValues;
 }) {
-	const activePurpose = useMemo(() => {
-		if (list?.purpose) {
-			return list.purpose;
-		}
-		if (purpose) {
-			return purpose;
-		}
-		return 'app.bsky.graph.defs#curatelist';
-	}, [list, purpose]);
+	const activePurpose = list?.purpose || purpose || 'app.bsky.graph.defs#curatelist';
 	const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist';
 	const { appview } = useClients();
 	const {
@@ -177,15 +169,15 @@ function DialogInner({
 		setDirty(dirty);
 	}, [dirty, setDirty]);
 
-	const onRequestClose = useCallback(() => {
+	const onRequestClose = () => {
 		if (dirty) {
 			cancelHandle.open(null);
 		} else {
 			handle.close();
 		}
-	}, [dirty, handle, cancelHandle]);
+	};
 
-	const onSelectNewAvatar = useCallback((img: ImageMeta | null) => {
+	const onSelectNewAvatar = (img: ImageMeta | null) => {
 		setImageError('');
 		if (img === null) {
 			setNewListAvatar(null);
@@ -198,7 +190,7 @@ function DialogInner({
 		} catch (e) {
 			setImageError(cleanError(e));
 		}
-	}, []);
+	};
 
 	const displayNameTooLong = isOverMaxGraphemeCount({
 		text: displayName,
@@ -206,7 +198,7 @@ function DialogInner({
 	});
 	const descriptionTooLong = getShortenedLength(descriptionText) > DESCRIPTION_MAX_GRAPHEMES;
 
-	const onPressSave = useCallback(async () => {
+	const onPressSave = async () => {
 		setImageError('');
 		setDisplayNameTooShort(false);
 		try {
@@ -266,29 +258,14 @@ function DialogInner({
 		} catch (e) {
 			logger.error('Failed to create/edit list', { message: String(e) });
 		}
-	}, [
-		list,
-		createListMutation,
-		updateListMutation,
-		onSave,
-		handle,
-		displayName,
-		descriptionText,
-		newListAvatar,
-		activePurpose,
-		isCurateList,
-		appview,
-	]);
+	};
 
-	const onChangeDisplayName = useCallback(
-		(text: string) => {
-			setDisplayName(text);
-			if (text.length > 0 && displayNameTooShort) {
-				setDisplayNameTooShort(false);
-			}
-		},
-		[displayNameTooShort],
-	);
+	const onChangeDisplayName = (text: string) => {
+		setDisplayName(text);
+		if (text.length > 0 && displayNameTooShort) {
+			setDisplayNameTooShort(false);
+		}
+	};
 
 	const title = list
 		? isCurateList

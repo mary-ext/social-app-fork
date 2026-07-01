@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
@@ -198,9 +197,9 @@ function MenuContent({
 	const convoId = initialConvo.id;
 	const { data: convo } = useConvoQuery({ convoId });
 
-	const onNavigateToProfile = useCallback(() => {
+	const onNavigateToProfile = () => {
 		navigation.navigate('Profile', { name: profile.did });
-	}, [navigation, profile.did]);
+	};
 
 	const { mutate: muteConvo } = useMuteConvo(convoId, {
 		onSuccess: (data) => {
@@ -219,7 +218,7 @@ function MenuContent({
 
 	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
 
-	const toggleBlock = useCallback(() => {
+	const toggleBlock = () => {
 		if (listBlocks.length) {
 			blockedByListControl.open();
 			return;
@@ -230,7 +229,7 @@ function MenuContent({
 		} else {
 			void queueBlock();
 		}
-	}, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock]);
+	};
 
 	return isDeletedAccount ? (
 		<Menu.Item

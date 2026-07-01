@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type {
 	AnyProfileView,
 	AppBskyFeedDefs,
@@ -148,62 +147,53 @@ function ThreadItemAnchorInner({
 	const moderation = item.moderation;
 	const authorShadow = useProfileShadow(post.author as AnyProfileView);
 	const { isActive: live } = useActorStatus(post.author);
-	const richText: Richtext = useMemo(
-		() => ({
-			text: record.text,
-			facets: record.facets,
-		}),
-		[record],
-	);
+	const richText: Richtext = {
+		text: record.text,
+		facets: record.facets,
+	};
 
 	const threadRootUri = record.reply?.root?.uri || post.uri;
 	const authorHref = makeProfileLink(post.author);
 	const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did;
 
-	const likesHref = useMemo(() => {
-		const urip = parseCanonicalResourceUri(post.uri);
-		return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by');
-	}, [post.uri, post.author]);
-	const repostsHref = useMemo(() => {
-		const urip = parseCanonicalResourceUri(post.uri);
-		return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by');
-	}, [post.uri, post.author]);
-	const quotesHref = useMemo(() => {
-		const urip = parseCanonicalResourceUri(post.uri);
-		return makeProfileLink(post.author, 'post', urip.rkey, 'quotes');
-	}, [post.uri, post.author]);
+	const urip = parseCanonicalResourceUri(post.uri);
+	const likesHref = makeProfileLink(post.author, 'post', urip.rkey, 'liked-by');
+	const repostsHref = makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by');
+	const quotesHref = makeProfileLink(post.author, 'post', urip.rkey, 'quotes');
 
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,
 	});
-	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
+	let additionalPostAlerts: AppModerationCause[] = [];
+	{
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
 		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
-		return isControlledByViewer && isPostHiddenByThreadgate
-			? [
-					{
-						type: 'reply-hidden',
-						source: { type: 'user', did: currentAccount?.did },
-						priority: 6,
-					},
-				]
-			: [];
-	}, [post, currentAccount?.did, threadgateHiddenReplies, threadRootUri]);
+		if (isControlledByViewer && isPostHiddenByThreadgate) {
+			additionalPostAlerts = [
+				{
+					type: 'reply-hidden',
+					source: { type: 'user', did: currentAccount?.did },
+					priority: 6,
+				},
+			];
+		}
+	}
 	const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
 		(rule) => rule.$type === 'app.bsky.feed.threadgate#followerRule',
 	);
 	const showFollowButton = currentAccount?.did !== post.author.did && !onlyFollowersCanReply;
 
-	const viaRepost = useMemo(() => {
+	let viaRepost: { uri: string; cid: string } | undefined;
+	{
 		const reason = postSource?.post.reason;
 
 		if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
-			return {
+			viaRepost = {
 				uri: reason.uri,
 				cid: reason.cid,
 			};
 		}
-	}, [postSource]);
+	}
 
 	const onPressReply = useNonReactiveCallback(() => {
 		openComposer({
@@ -549,14 +539,9 @@ function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost
 export function ThreadItemAnchorSkeleton() {
 	// a random body shape + embed mix, frozen so it doesn't reshuffle on re-render: we can't know the focused
 	// post's length or whether it carries media, so draw it the way the feed placeholder draws each row.
-	const { embed, lastWidth, lineCount } = useMemo(
-		() => ({
-			embed: EmbedSkeleton.randomShape(),
-			lastWidth: triangularRandom(40, 90, 5),
-			lineCount: triangularRandom(1, 6),
-		}),
-		[],
-	);
+	const embed = EmbedSkeleton.randomShape();
+	const lastWidth = triangularRandom(40, 90, 5);
+	const lineCount = triangularRandom(1, 6);
 	// rebuilt on the real anchor layout: a `Frame` with the avatar/name row, a `lg` body (the live `RichText`
 	// renders `lg`, not `xl`) optionally closing on a media embed, then the date footer, the bordered stats row,
 	// and the big anchor controls. a body embed takes the anchor's uncropped (full-bleed, 1:4) treatment.

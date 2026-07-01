@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { isCanonicalResourceUri, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -11,11 +10,11 @@ import { m } from '#/paraglide/messages';
 import * as css from './ViewFullThread.css';
 
 export function ViewFullThread({ uri }: { uri: string }) {
-	const itemHref = useMemo(() => {
-		if (!isCanonicalResourceUri(uri)) return undefined;
+	let itemHref: string | undefined;
+	if (isCanonicalResourceUri(uri)) {
 		const urip = parseCanonicalResourceUri(uri);
-		return makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
-	}, [uri]);
+		itemHref = makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
+	}
 
 	if (!itemHref) return null;
 

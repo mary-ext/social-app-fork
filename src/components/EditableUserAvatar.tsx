@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { openImagePicker } from '#/lib/media/picker';
@@ -43,7 +43,7 @@ export function EditableUserAvatar({
 	const circular = type !== 'algo' && type !== 'list';
 	const radius = circular ? '50%' : size > 32 ? '8px' : '3px';
 
-	const onOpenLibrary = useCallback(async () => {
+	const onOpenLibrary = async () => {
 		const file = await openImagePicker();
 		if (!file) {
 			return;
@@ -57,14 +57,11 @@ export function EditableUserAvatar({
 				logger.error('Failed to crop avatar', { error: e });
 			}
 		}
-	}, [editImageDialogHandle]);
+	};
 
-	const onChangeEditImage = useCallback(
-		async (image: ComposerImage) => {
-			onSelectNewAvatar(await compressProfileImage(image, 1000, 1000));
-		},
-		[onSelectNewAvatar],
-	);
+	const onChangeEditImage = async (image: ComposerImage) => {
+		onSelectNewAvatar(await compressProfileImage(image, 1000, 1000));
+	};
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 type StateContext = Map<string, boolean>;
 type SetStateContext = (uri: string, value: boolean) => void;
@@ -11,16 +11,13 @@ setStateContext.displayName = 'ThreadMutesSetStateContext';
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const [state, setState] = useState<StateContext>(() => new Map());
 
-	const setThreadMute = useCallback(
-		(uri: string, value: boolean) => {
-			setState((prev) => {
-				const next = new Map(prev);
-				next.set(uri, value);
-				return next;
-			});
-		},
-		[setState],
-	);
+	const setThreadMute = (uri: string, value: boolean) => {
+		setState((prev) => {
+			const next = new Map(prev);
+			next.set(uri, value);
+			return next;
+		});
+	};
 
 	return (
 		<stateContext.Provider value={state}>

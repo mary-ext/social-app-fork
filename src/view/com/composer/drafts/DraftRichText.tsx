@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 import { clsx } from 'clsx';
@@ -26,7 +26,7 @@ type Feature = AppBskyRichtextFacet.Main['features'][number];
  * @param numberOfLines clamp the preview to this many lines
  */
 export function DraftRichText({ value, numberOfLines }: { value: string; numberOfLines?: number }) {
-	const { text, facets } = useMemo(() => detectFacetsWithoutResolution(value), [value]);
+	const { text, facets } = detectFacetsWithoutResolution(value);
 
 	if (!facets?.length) {
 		return (

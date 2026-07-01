@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -34,12 +33,7 @@ export function PostRepostedBy({ uri, initialCount }: { uri: string; initialCoun
 
 	const isError = Boolean(resolveError || error);
 
-	const repostedBy = useMemo(() => {
-		if (data?.pages) {
-			return data.pages.flatMap((page) => page.repostedBy);
-		}
-		return [];
-	}, [data]);
+	const repostedBy = data?.pages ? data.pages.flatMap((page) => page.repostedBy) : [];
 
 	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;

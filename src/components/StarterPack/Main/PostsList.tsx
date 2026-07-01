@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { View } from 'react-native';
 
 import type { FeedDescriptor } from '#/state/queries/post-feed';
@@ -16,9 +15,9 @@ interface PostsListProps {
 
 export function PostsList({ listUri }: PostsListProps) {
 	const feed: FeedDescriptor = `list|${listUri}`;
-	const renderPostsEmpty = useCallback(() => {
+	const renderPostsEmpty = () => {
 		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
-	}, []);
+	};
 
 	return (
 		<View>

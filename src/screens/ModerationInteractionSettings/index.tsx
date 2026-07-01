@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { ResourceUri } from '@atcute/lexicons';
 import deepEqual from 'fast-deep-equal';
 
@@ -53,32 +53,25 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { isPending, mutateAsync: setPostInteractionSettings } = usePostInteractionSettingsMutation();
 	const [error, setError] = useState<string | undefined>(undefined);
 
-	const allowUI = useMemo(() => {
-		return threadgateRecordToAllowUISetting({
-			$type: 'app.bsky.feed.threadgate',
-			allow: preferences.postInteractionSettings.threadgateAllowRules,
-			createdAt: new Date().toISOString(),
-			post: '' as ResourceUri,
-		});
-	}, [preferences.postInteractionSettings.threadgateAllowRules]);
-	const postgate = useMemo(() => {
-		return createPostgateRecord({
-			embeddingRules: preferences.postInteractionSettings.postgateEmbeddingRules,
-			post: '' as ResourceUri,
-		});
-	}, [preferences.postInteractionSettings.postgateEmbeddingRules]);
+	const allowUI = threadgateRecordToAllowUISetting({
+		$type: 'app.bsky.feed.threadgate',
+		allow: preferences.postInteractionSettings.threadgateAllowRules,
+		createdAt: new Date().toISOString(),
+		post: '' as ResourceUri,
+	});
+	const postgate = createPostgateRecord({
+		embeddingRules: preferences.postInteractionSettings.postgateEmbeddingRules,
+		post: '' as ResourceUri,
+	});
 
 	const [maybeEditedAllowUI, setMaybeEditedAllowUI] = useState(allowUI);
 	const [maybeEditedPostgate, setMaybeEditedPostgate] = useState(postgate);
 
-	const wasEdited = useMemo(() => {
-		return (
-			!deepEqual(allowUI, maybeEditedAllowUI) ||
-			!deepEqual(postgate.embeddingRules, maybeEditedPostgate.embeddingRules)
-		);
-	}, [postgate, allowUI, maybeEditedAllowUI, maybeEditedPostgate]);
+	const wasEdited =
+		!deepEqual(allowUI, maybeEditedAllowUI) ||
+		!deepEqual(postgate.embeddingRules, maybeEditedPostgate.embeddingRules);
 
-	const onSave = useCallback(async () => {
+	const onSave = async () => {
 		setError('');
 
 		try {
@@ -94,7 +87,7 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 			});
 			setError(m['screens.moderation.interaction.saveError']());
 		}
-	}, [maybeEditedPostgate, maybeEditedAllowUI, setPostInteractionSettings]);
+	};
 
 	return (
 		<>

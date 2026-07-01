@@ -1,4 +1,4 @@
-import { type MouseEvent, useMemo } from 'react';
+import type { MouseEvent } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
@@ -75,9 +75,8 @@ export function RichTextTag({
 	);
 
 	// mute records that exactly match the tag in question
-	const removeableMuteWords = useMemo(() => {
-		return preferences?.moderationPrefs.mutedWords?.filter((word) => word.value === tag) ?? [];
-	}, [tag, preferences?.moderationPrefs.mutedWords]);
+	const removeableMuteWords =
+		preferences?.moderationPrefs.mutedWords?.filter((word) => word.value === tag) ?? [];
 
 	return (
 		<Menu.Root>

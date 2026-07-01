@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { type AccessibilityProps, type TextStyle, View, type ViewStyle } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -50,40 +49,32 @@ function ButtonInner({ children }: React.PropsWithChildren<{}>) {
 	const t = useTheme();
 	const state = Toggle.useItemContext();
 
-	const { baseStyles, hoverStyles, activeStyles } = useMemo(() => {
-		const base: ViewStyle[] = [];
-		const hover: ViewStyle[] = [];
-		const active: ViewStyle[] = [];
+	const baseStyles: ViewStyle[] = [];
+	const hoverStyles: ViewStyle[] = [];
+	const activeStyles: ViewStyle[] = [];
 
-		hover.push(t.name === 'light' ? t.atoms.bg_contrast_100 : t.atoms.bg_contrast_25);
+	hoverStyles.push(t.name === 'light' ? t.atoms.bg_contrast_100 : t.atoms.bg_contrast_25);
 
-		if (state.selected) {
-			active.push({
-				backgroundColor: t.palette.contrast_800,
-			});
-			hover.push({
-				backgroundColor: t.palette.contrast_800,
-			});
-
-			if (state.disabled) {
-				active.push({
-					backgroundColor: t.palette.contrast_500,
-				});
-			}
-		}
+	if (state.selected) {
+		activeStyles.push({
+			backgroundColor: t.palette.contrast_800,
+		});
+		hoverStyles.push({
+			backgroundColor: t.palette.contrast_800,
+		});
 
 		if (state.disabled) {
-			base.push({
-				backgroundColor: t.palette.contrast_100,
+			activeStyles.push({
+				backgroundColor: t.palette.contrast_500,
 			});
 		}
+	}
 
-		return {
-			baseStyles: base,
-			hoverStyles: hover,
-			activeStyles: active,
-		};
-	}, [t, state]);
+	if (state.disabled) {
+		baseStyles.push({
+			backgroundColor: t.palette.contrast_100,
+		});
+	}
 
 	return (
 		<View
@@ -112,18 +103,15 @@ export function ButtonText({ children }: { children: React.ReactNode }) {
 	const t = useTheme();
 	const state = Toggle.useItemContext();
 
-	const textStyles = useMemo(() => {
-		const text: TextStyle[] = [];
-		if (state.selected) {
-			text.push(t.atoms.text_inverted);
-		}
-		if (state.disabled) {
-			text.push({
-				opacity: 0.5,
-			});
-		}
-		return text;
-	}, [t, state]);
+	const textStyles: TextStyle[] = [];
+	if (state.selected) {
+		textStyles.push(t.atoms.text_inverted);
+	}
+	if (state.disabled) {
+		textStyles.push({
+			opacity: 0.5,
+		});
+	}
 
 	return (
 		<Text style={[a.text_center, a.font_semi_bold, t.atoms.text_contrast_medium, textStyles]}>

@@ -1,4 +1,4 @@
-import { createContext, use, useCallback, useMemo } from 'react';
+import { createContext, use } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -101,7 +101,7 @@ export function ProfileHeaderProvider({
 	const { currentAccount, hasSession } = useSession();
 	const requireAuth = useRequireAuth();
 	const profile = useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed);
-	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
+	const moderation = moderateProfile(profile, moderationOpts);
 	const live = useActorStatus(profile);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 	const [, queueUnblock] = useProfileBlockMutationQueue(profile);
@@ -118,7 +118,7 @@ export function ProfileHeaderProvider({
 				? 'blocked-by'
 				: 'default';
 
-	const follow = useCallback(() => {
+	const follow = () => {
 		requireAuth(async () => {
 			try {
 				await queueFollow();
@@ -139,9 +139,9 @@ export function ProfileHeaderProvider({
 				}
 			}
 		});
-	}, [moderation, onFollowChange, profile.displayName, profile.handle, queueFollow, requireAuth]);
+	};
 
-	const unfollow = useCallback(() => {
+	const unfollow = () => {
 		requireAuth(async () => {
 			try {
 				await queueUnfollow();
@@ -163,9 +163,9 @@ export function ProfileHeaderProvider({
 				}
 			}
 		});
-	}, [moderation, onFollowChange, profile.displayName, profile.handle, queueUnfollow, requireAuth]);
+	};
 
-	const unblock = useCallback(async () => {
+	const unblock = async () => {
 		try {
 			await queueUnblock();
 			Toast.show(m['common.block.unblockedToast']());
@@ -176,38 +176,21 @@ export function ProfileHeaderProvider({
 				Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), { type: 'error' });
 			}
 		}
-	}, [queueUnblock]);
+	};
 
-	const value = useMemo<ProfileHeaderContextValue>(
-		() => ({
-			actions: { follow, unblock, unfollow },
-			meta: {
-				hasSession,
-				hideBackButton,
-				isMe,
-				isPlaceholderProfile,
-				live,
-				moderationOpts,
-				relationship,
-			},
-			state: { descriptionRT, moderation, profile },
-		}),
-		[
-			descriptionRT,
-			follow,
+	const value: ProfileHeaderContextValue = {
+		actions: { follow, unblock, unfollow },
+		meta: {
 			hasSession,
 			hideBackButton,
 			isMe,
 			isPlaceholderProfile,
 			live,
-			moderation,
 			moderationOpts,
-			profile,
 			relationship,
-			unblock,
-			unfollow,
-		],
-	);
+		},
+		state: { descriptionRT, moderation, profile },
+	};
 
 	return <ProfileHeaderContext value={value}>{children}</ProfileHeaderContext>;
 }

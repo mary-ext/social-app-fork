@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { clsx } from 'clsx';
 
 import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
@@ -28,20 +27,17 @@ export function VolumeControl({
 }) {
 	const [volume, setVolume] = useVideoVolumeState();
 
-	const onVolumeChange = useCallback(
-		(evt: React.ChangeEvent<HTMLInputElement>) => {
-			drawFocus();
-			const vol = sliderVolumeToVideoVolume(Number(evt.target.value));
-			setVolume(vol);
-			changeMuted(vol === 0);
-		},
-		[setVolume, drawFocus, changeMuted],
-	);
+	const onVolumeChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+		drawFocus();
+		const vol = sliderVolumeToVideoVolume(Number(evt.target.value));
+		setVolume(vol);
+		changeMuted(vol === 0);
+	};
 
 	const sliderVolume = muted ? 0 : videoVolumeToSliderVolume(volume);
 
 	const isZeroVolume = volume === 0;
-	const onPressMute = useCallback(() => {
+	const onPressMute = () => {
 		drawFocus();
 		if (isZeroVolume) {
 			setVolume(1);
@@ -49,7 +45,7 @@ export function VolumeControl({
 		} else {
 			changeMuted((prevMuted) => !prevMuted);
 		}
-	}, [drawFocus, setVolume, isZeroVolume, changeMuted]);
+	};
 
 	return (
 		<div className={styles.root} onPointerEnter={onHover} onPointerLeave={onEndHover}>

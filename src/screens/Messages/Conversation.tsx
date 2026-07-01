@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { type LayoutChangeEvent, View } from 'react-native';
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 import {
@@ -138,15 +138,15 @@ function InnerReady({
 	const navigation = useNavigation<NavigationProp>();
 	const primaryMember = useMaybeProfileShadow(convo?.primaryMember);
 	const moderationOpts = useModerationOpts();
-	const primaryMemberModeration = useMemo(() => {
-		if (!primaryMember || !moderationOpts) return null;
-		return moderateProfile(primaryMember, moderationOpts);
-	}, [primaryMember, moderationOpts]);
+	let primaryMemberModeration = null;
+	if (primaryMember && moderationOpts) {
+		primaryMemberModeration = moderateProfile(primaryMember, moderationOpts);
+	}
 
 	const [headerHeight, setHeaderHeight] = useState(0);
-	const onHeaderLayout = useCallback((e: LayoutChangeEvent) => {
+	const onHeaderLayout = (e: LayoutChangeEvent) => {
 		setHeaderHeight(e.nativeEvent.layout.height);
-	}, []);
+	};
 
 	const unreadRequestCount = convo?.kind === 'group' ? (convo.details.unreadJoinRequestCount ?? 0) : 0;
 	const { mutate: markJoinRequestsRead } = useMarkJoinRequestsRead(convo?.view.id);

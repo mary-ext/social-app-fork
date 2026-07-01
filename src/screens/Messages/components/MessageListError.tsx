@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { View } from 'react-native';
 
 import { type ConvoItem, ConvoItemError } from '#/state/messages/convo/types';
@@ -14,20 +13,18 @@ import { colors } from '#/styles/colors';
 
 export function MessageListError({ item }: { item: ConvoItem & { type: 'error' } }) {
 	const t = useTheme();
-	const { description, help, cta } = useMemo(() => {
-		return {
-			[ConvoItemError.FirehoseFailed]: {
-				description: m['screens.messages.connection.disconnected'](),
-				help: m['screens.messages.connection.reconnect.a11y'](),
-				cta: m['screens.messages.connection.reconnect.action'](),
-			},
-			[ConvoItemError.HistoryFailed]: {
-				description: m['screens.messages.conversation.loadPastError'](),
-				help: m['common.a11y.pressToRetry'](),
-				cta: m['common.action.retry'](),
-			},
-		}[item.code];
-	}, [item.code]);
+	const { description, help, cta } = {
+		[ConvoItemError.FirehoseFailed]: {
+			description: m['screens.messages.connection.disconnected'](),
+			help: m['screens.messages.connection.reconnect.a11y'](),
+			cta: m['screens.messages.connection.reconnect.action'](),
+		},
+		[ConvoItemError.HistoryFailed]: {
+			description: m['screens.messages.conversation.loadPastError'](),
+			help: m['common.a11y.pressToRetry'](),
+			cta: m['common.action.retry'](),
+		},
+	}[item.code];
 
 	return (
 		<View style={[a.my_md, a.w_full, a.flex_row, a.justify_center]}>

@@ -104,13 +104,13 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 		itemWidthsRef.current.set(index, w);
 	}, []);
 
-	const setItemRef = useCallback((index: number, node: HTMLElement | null) => {
+	const setItemRef = (index: number, node: HTMLElement | null) => {
 		if (node) {
 			itemRefsRef.current.set(index, node);
 		} else {
 			itemRefsRef.current.delete(index);
 		}
-	}, []);
+	};
 
 	useKeyboardHandlers({
 		getScrollEl,

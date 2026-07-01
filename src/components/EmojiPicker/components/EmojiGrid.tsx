@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
 import { Text } from '#/components/Text';
@@ -67,26 +67,25 @@ export const EmojiGrid = forwardRef<EmojiGridHandle, EmojiGridProps>(function Em
 
 	// the section whose header sits at (or just above) the top of the viewport — what the nav highlights.
 	// at the very bottom the last section wins even if its short body never reaches the top.
-	const activeSection = useMemo(() => {
-		const sections = [...layout.sectionRowIndex].map(([key, rowIndex]) => ({
-			key,
-			top: layout.rows[rowIndex]!.top,
-		}));
-		if (!sections.length) {
-			return null;
-		}
+	const sections = [...layout.sectionRowIndex].map(([key, rowIndex]) => ({
+		key,
+		top: layout.rows[rowIndex]!.top,
+	}));
+
+	let activeSection: string | null = null;
+	if (sections.length) {
 		if (scrollTop + GRID_HEIGHT >= layout.totalHeight) {
-			return sections[sections.length - 1]!.key;
-		}
-		let active = sections[0]!.key;
-		for (const section of sections) {
-			if (section.top > scrollTop + 1) {
-				break;
+			activeSection = sections[sections.length - 1]!.key;
+		} else {
+			activeSection = sections[0]!.key;
+			for (const section of sections) {
+				if (section.top > scrollTop + 1) {
+					break;
+				}
+				activeSection = section.key;
 			}
-			active = section.key;
 		}
-		return active;
-	}, [layout, scrollTop]);
+	}
 
 	useEffect(() => {
 		onActiveSectionChange(activeSection);

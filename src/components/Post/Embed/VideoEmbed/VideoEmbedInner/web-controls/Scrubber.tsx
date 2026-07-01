@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -41,56 +41,44 @@ export function Scrubber({
 	const barRef = useRef<HTMLDivElement>(null);
 	const circleRef = useRef<HTMLDivElement>(null);
 
-	const seek = useCallback(
-		(evt: React.PointerEvent<HTMLDivElement>) => {
-			if (!barRef.current) return;
-			const { left, width } = barRef.current.getBoundingClientRect();
-			const x = evt.clientX;
-			const percent = clamp((x - left) / width, 0, 1) * duration;
-			onSeek(percent);
-			setSeekPosition(percent);
-		},
-		[duration, onSeek],
-	);
+	const seek = (evt: React.PointerEvent<HTMLDivElement>) => {
+		if (!barRef.current) return;
+		const { left, width } = barRef.current.getBoundingClientRect();
+		const x = evt.clientX;
+		const percent = clamp((x - left) / width, 0, 1) * duration;
+		onSeek(percent);
+		setSeekPosition(percent);
+	};
 
-	const onPointerDown = useCallback(
-		(evt: React.PointerEvent<HTMLDivElement>) => {
-			const target = evt.target;
-			if (target instanceof Element) {
-				evt.preventDefault();
-				target.setPointerCapture(evt.pointerId);
-				isSeekingRef.current = true;
-				seek(evt);
-				setScrubberActive(true);
-				onSeekStart();
-			}
-		},
-		[seek, onSeekStart],
-	);
+	const onPointerDown = (evt: React.PointerEvent<HTMLDivElement>) => {
+		const target = evt.target;
+		if (target instanceof Element) {
+			evt.preventDefault();
+			target.setPointerCapture(evt.pointerId);
+			isSeekingRef.current = true;
+			seek(evt);
+			setScrubberActive(true);
+			onSeekStart();
+		}
+	};
 
-	const onPointerMove = useCallback(
-		(evt: React.PointerEvent<HTMLDivElement>) => {
-			if (isSeekingRef.current) {
-				evt.preventDefault();
-				seek(evt);
-			}
-		},
-		[seek],
-	);
+	const onPointerMove = (evt: React.PointerEvent<HTMLDivElement>) => {
+		if (isSeekingRef.current) {
+			evt.preventDefault();
+			seek(evt);
+		}
+	};
 
-	const onPointerUp = useCallback(
-		(evt: React.PointerEvent<HTMLDivElement>) => {
-			const target = evt.target;
-			if (isSeekingRef.current && target instanceof Element) {
-				evt.preventDefault();
-				target.releasePointerCapture(evt.pointerId);
-				isSeekingRef.current = false;
-				onSeekEnd();
-				setScrubberActive(false);
-			}
-		},
-		[onSeekEnd],
-	);
+	const onPointerUp = (evt: React.PointerEvent<HTMLDivElement>) => {
+		const target = evt.target;
+		if (isSeekingRef.current && target instanceof Element) {
+			evt.preventDefault();
+			target.releasePointerCapture(evt.pointerId);
+			isSeekingRef.current = false;
+			onSeekEnd();
+			setScrubberActive(false);
+		}
+	};
 
 	useEffect(() => {
 		// HACK: there's divergent browser behaviour about what to do when

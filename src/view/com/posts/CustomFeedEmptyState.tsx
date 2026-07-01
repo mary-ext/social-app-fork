@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -38,9 +38,9 @@ export function CustomFeedEmptyState() {
 	const palInverted = usePalette('inverted');
 	const navigation = useNavigation<NavigationProp>();
 
-	const onPressFindAccounts = useCallback(() => {
+	const onPressFindAccounts = () => {
 		navigation.navigate('Search', {});
-	}, [navigation]);
+	};
 
 	return (
 		<View style={styles.emptyContainer}>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
 
 import * as device from '#/lib/deviceName';
@@ -37,21 +37,21 @@ export function DraftItem({
 	const mediaIsMissing = draft.meta.isOriginatingDevice && draft.meta.hasMissingMedia;
 	const hasMetadata = draft.meta.replyCount > 0 || mediaExistsOnOtherDevice || draft.meta.hasQuotes;
 
-	const isUnknownDevice = useMemo(() => {
-		const raw = draft.draft.deviceName;
-		switch (raw) {
-			case device.FALLBACK_ANDROID:
-			case device.FALLBACK_IOS:
-			case device.FALLBACK_WEB:
-				return true;
-			default:
-				return false;
-		}
-	}, [draft]);
+	let isUnknownDevice: boolean;
+	switch (draft.draft.deviceName) {
+		case device.FALLBACK_ANDROID:
+		case device.FALLBACK_IOS:
+		case device.FALLBACK_WEB:
+			isUnknownDevice = true;
+			break;
+		default:
+			isUnknownDevice = false;
+			break;
+	}
 
-	const handleDelete = useCallback(() => {
+	const handleDelete = () => {
 		onDelete(draft);
-	}, [onDelete, draft]);
+	};
 
 	return (
 		<div className={styles.wrapper}>

@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useMemo } from 'react';
+import type { ReactNode } from 'react';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -64,26 +64,23 @@ export function NotificationFeed({
 	// the `.find()` won't need to go any further than the first page -sfn
 	const isEmpty = !isFetching && !data?.pages.find((page) => page.items.length > 0);
 
-	const items = useMemo(() => {
-		let arr: NotificationItem[] = [];
-		if (isFetched) {
-			if (isEmpty) {
-				arr = arr.concat([EMPTY_FEED_ITEM]);
-			} else if (data) {
-				for (const page of data?.pages) {
-					arr = arr.concat(page.items);
-				}
+	let items: NotificationItem[] = [];
+	if (isFetched) {
+		if (isEmpty) {
+			items = items.concat([EMPTY_FEED_ITEM]);
+		} else if (data) {
+			for (const page of data?.pages) {
+				items = items.concat(page.items);
 			}
-			if (isError && !isEmpty) {
-				arr = arr.concat([LOAD_MORE_ERROR_ITEM]);
-			}
-		} else {
-			arr.push(LOADING_ITEM);
 		}
-		return arr;
-	}, [isFetched, isError, isEmpty, data]);
+		if (isError && !isEmpty) {
+			items = items.concat([LOAD_MORE_ERROR_ITEM]);
+		}
+	} else {
+		items.push(LOADING_ITEM);
+	}
 
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetching || !hasNextPage || isError) return;
 
 		try {
@@ -91,38 +88,35 @@ export function NotificationFeed({
 		} catch (err) {
 			logger.error('Failed to load more notifications', { message: err });
 		}
-	}, [isFetching, hasNextPage, isError, fetchNextPage]);
+	};
 
-	const onPressRetryLoadMore = useCallback(() => {
+	const onPressRetryLoadMore = () => {
 		void fetchNextPage();
-	}, [fetchNextPage]);
+	};
 
-	const renderItem = useCallback(
-		({ item, index }: ListRenderItemInfo<NotificationItem>) => {
-			if (isNotificationSentinel(item)) {
-				if (item === LOAD_MORE_ERROR_ITEM) {
-					return (
-						<LoadMoreRetryBtn label={m['view.notifications.fetchError']()} onPress={onPressRetryLoadMore} />
-					);
-				}
-				if (item === LOADING_ITEM) {
-					return <NotificationFeedLoadingPlaceholder />;
-				}
+	const renderItem = ({ item, index }: ListRenderItemInfo<NotificationItem>) => {
+		if (isNotificationSentinel(item)) {
+			if (item === LOAD_MORE_ERROR_ITEM) {
 				return (
-					<EmptyState icon={BellIcon} message={m['view.notifications.empty']()} className={css.emptyState} />
+					<LoadMoreRetryBtn label={m['view.notifications.fetchError']()} onPress={onPressRetryLoadMore} />
 				);
 			}
+			if (item === LOADING_ITEM) {
+				return <NotificationFeedLoadingPlaceholder />;
+			}
 			return (
-				<NotificationFeedItem
-					highlightUnread={filter === 'all'}
-					item={item}
-					moderationOpts={moderationOpts!}
-					hideTopBorder={index === 0}
-				/>
+				<EmptyState icon={BellIcon} message={m['view.notifications.empty']()} className={css.emptyState} />
 			);
-		},
-		[moderationOpts, onPressRetryLoadMore, filter],
-	);
+		}
+		return (
+			<NotificationFeedItem
+				highlightUnread={filter === 'all'}
+				item={item}
+				moderationOpts={moderationOpts!}
+				hideTopBorder={index === 0}
+			/>
+		);
+	};
 
 	const feedFooter = isFetchingNextPage ? (
 		<div className={css.feedFooter}>

@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { View } from 'react-native';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
@@ -17,14 +16,14 @@ export const NotFoundScreen = () => {
 	const navigation = useNavigation<NavigationProp>();
 
 	const canGoBack = navigation.canGoBack();
-	const onPressHome = useCallback(() => {
+	const onPressHome = () => {
 		if (canGoBack) {
 			navigation.goBack();
 		} else {
 			navigation.navigate('HomeTab');
 			navigation.dispatch(StackActions.popToTop());
 		}
-	}, [navigation, canGoBack]);
+	};
 
 	return (
 		<Layout.Screen testID="notFoundView">

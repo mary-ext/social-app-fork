@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { AppBskyFeedGetLikes as GetLikes } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -34,12 +33,7 @@ export function PostLikedBy({ uri, initialCount }: { uri: string; initialCount?:
 
 	const isError = Boolean(resolveError || error);
 
-	const likes = useMemo(() => {
-		if (data?.pages) {
-			return data.pages.flatMap((page) => page.likes);
-		}
-		return [];
-	}, [data]);
+	const likes = data?.pages ? data.pages.flatMap((page) => page.likes) : [];
 
 	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;

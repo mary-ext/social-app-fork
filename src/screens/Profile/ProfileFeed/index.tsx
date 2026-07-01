@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
@@ -38,7 +38,7 @@ import { colors } from '#/styles/colors';
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>;
 export function ProfileFeedScreen(props: Props) {
 	const { rkey, name: handleOrDid } = props.route.params;
-	const uri = useMemo(() => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey), [rkey, handleOrDid]);
+	const uri = makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey);
 	let { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
 
 	if (error && !isRefetching) {
@@ -120,9 +120,9 @@ export function ProfileFeedScreenInner({
 		return softReset.subscribe(onScrollToTop);
 	}, [onScrollToTop, isScreenFocused]);
 
-	const renderPostsEmpty = useCallback(() => {
+	const renderPostsEmpty = () => {
 		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
-	}, []);
+	};
 
 	return (
 		<>

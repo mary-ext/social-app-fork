@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
@@ -14,9 +13,9 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 	const t = useTheme();
 	const { bottom: bottomInset } = useSafeAreaInsets();
 
-	const onPress = useCallback(() => {
+	const onPress = () => {
 		onPressInner?.();
-	}, [onPressInner]);
+	};
 
 	return (
 		<View

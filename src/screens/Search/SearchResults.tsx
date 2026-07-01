@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { urls } from '#/lib/constants';
@@ -47,12 +47,10 @@ export function SearchResults({
 	query: string;
 	queryWithParams: string;
 }) {
-	const sections = useMemo(() => {
-		if (!queryWithParams) {
-			return [];
-		}
+	let sections: Section<SearchTabId>[] = [];
+	if (queryWithParams) {
 		const noParams = queryWithParams === query;
-		return definite<Section<SearchTabId>>([
+		sections = definite<Section<SearchTabId>>([
 			{
 				id: 'top',
 				label: m['common.search.top'](),
@@ -74,7 +72,7 @@ export function SearchResults({
 				render: (focused) => <FeedsResults active={focused} query={query} />,
 			},
 		]);
-	}, [query, queryWithParams]);
+	}
 
 	return (
 		<Tabs headerOffset={headerHeight} onValueChange={onTabChange} sections={sections} value={activeTab} />
@@ -155,10 +153,7 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 	const { currentAccount, hasSession } = useSession();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
-	const augmentedQuery = useMemo(
-		() => augmentSearchQuery(query || '', { did: currentAccount?.did }),
-		[query, currentAccount],
-	);
+	const augmentedQuery = augmentSearchQuery(query || '', { did: currentAccount?.did });
 
 	const {
 		data: results,
@@ -170,19 +165,16 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 		isFetchingNextPage,
 	} = useSearchPostsQuery({ enabled: active, query: augmentedQuery, sort });
 
-	const items = useMemo(() => {
-		const posts = results?.pages.flatMap((page) => page.posts) ?? [];
-		const seen = new Set<string>();
-		const out: AppBskyFeedDefs.PostView[] = [];
-		for (const post of posts) {
-			if (seen.has(post.uri)) {
-				continue;
-			}
-			seen.add(post.uri);
-			out.push(post);
+	const posts = results?.pages.flatMap((page) => page.posts) ?? [];
+	const seen = new Set<string>();
+	const items: AppBskyFeedDefs.PostView[] = [];
+	for (const post of posts) {
+		if (seen.has(post.uri)) {
+			continue;
 		}
-		return out;
-	}, [results]);
+		seen.add(post.uri);
+		items.push(post);
+	}
 
 	const onEndReached = () => {
 		if (isFetching || !hasNextPage || error) {
@@ -259,7 +251,7 @@ function UserResults({ active, query }: { active: boolean; query: string }) {
 		isFetchingNextPage,
 	} = useActorSearch({ enabled: active, query });
 
-	const profiles = useMemo(() => results?.pages.flatMap((page) => page.actors) ?? [], [results]);
+	const profiles = results?.pages.flatMap((page) => page.actors) ?? [];
 
 	const onEndReached = () => {
 		if (!hasSession || isFetching || !hasNextPage || error) {

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useId } from 'react';
+import { createContext, useContext, useId } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
 
 import { atoms as a, type TextStyleProp, useTheme } from '#/alf';
@@ -107,9 +107,9 @@ export function Cancel({
 	cta?: string;
 }) {
 	const { close } = Dialog.useDialogContext();
-	const onPress = useCallback(() => {
+	const onPress = () => {
 		close();
-	}, [close]);
+	};
 
 	return (
 		<Button
@@ -151,16 +151,13 @@ export function Action({
 	testID?: string;
 }) {
 	const { close } = Dialog.useDialogContext();
-	const handleOnPress = useCallback(
-		(e: GestureResponderEvent) => {
-			if (shouldCloseOnPress) {
-				close(() => onPress?.(e));
-			} else {
-				onPress?.(e);
-			}
-		},
-		[close, onPress, shouldCloseOnPress],
-	);
+	const handleOnPress = (e: GestureResponderEvent) => {
+		if (shouldCloseOnPress) {
+			close(() => onPress?.(e));
+		} else {
+			onPress?.(e);
+		}
+	};
 
 	return (
 		<Button

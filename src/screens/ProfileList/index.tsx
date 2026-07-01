@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import {
@@ -143,9 +143,7 @@ function ProfileListScreenLoaded({
 	const onPressAddUser = () => addUserDialogHandle.open(null);
 	const [activeTab, setActiveTab] = useState<'people' | 'posts'>('posts');
 
-	const moderation = useMemo(() => {
-		return moderateList(list, moderationOpts);
-	}, [list, moderationOpts]);
+	const moderation = moderateList(list, moderationOpts);
 
 	useSetTitle(isHidden ? m['screens.profileList.hide.hiddenToast']() : list.name);
 
@@ -155,9 +153,9 @@ function ProfileListScreenLoaded({
 		}
 	};
 
-	const renderHeader = useCallback(() => {
+	const renderHeader = () => {
 		return <Header rkey={rkey} list={list} preferences={preferences} />;
-	}, [rkey, list, preferences]);
+	};
 
 	if (isCurateList) {
 		const sections: Section<'people' | 'posts'>[] = [

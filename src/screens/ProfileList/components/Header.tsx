@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
@@ -103,16 +102,12 @@ export function Header({
 		}
 	};
 
-	const descriptionRT = useMemo(
-		() =>
-			list.description
-				? {
-						text: list.description,
-						facets: list.descriptionFacets ?? [],
-					}
-				: undefined,
-		[list],
-	);
+	const descriptionRT = list.description
+		? {
+				text: list.description,
+				facets: list.descriptionFacets ?? [],
+			}
+		: undefined;
 
 	return (
 		<>

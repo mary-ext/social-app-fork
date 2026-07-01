@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { clsx } from 'clsx';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
@@ -47,10 +47,7 @@ export function LanguageSelectDialog({
 	onSelectLanguages: (languages: string[]) => void;
 	maxLanguages?: number;
 }) {
-	const renderErrorBoundary = useCallback(
-		(error: unknown) => <DialogError handle={handle} details={String(error)} />,
-		[handle],
-	);
+	const renderErrorBoundary = (error: unknown) => <DialogError handle={handle} details={String(error)} />;
 
 	return (
 		<Dialog.Root handle={handle}>
@@ -97,54 +94,53 @@ function DialogInner({
 
 	// NOTE(@elijaharita): Displayed languages are split into 3 lists for
 	// ordering.
-	const displayedLanguages = useMemo(() => {
-		function mapCodeList(codeList: string[]) {
-			return codeList.map((code) => LANGUAGES_MAP[code]).filter((lang): lang is Language => Boolean(lang));
-		}
+	function mapCodeList(codeList: string[]) {
+		return codeList.map((code) => LANGUAGES_MAP[code]).filter((lang): lang is Language => Boolean(lang));
+	}
 
-		// NOTE(@elijaharita): Get recent language codes and map them to language
-		// objects. Both the user account's saved language history and the current
-		// checked languages are displayed here.
-		const recentCodes =
-			Array.from(new Set([...checkedCodes, ...langPrefs.postLanguageHistory])).slice(0, 5) || [];
-		const recentLanguages = mapCodeList(recentCodes);
+	// NOTE(@elijaharita): Get recent language codes and map them to language
+	// objects. Both the user account's saved language history and the current
+	// checked languages are displayed here.
+	const recentCodes =
+		Array.from(new Set([...checkedCodes, ...langPrefs.postLanguageHistory])).slice(0, 5) || [];
+	const recentLanguages = mapCodeList(recentCodes);
 
-		// NOTE(@elijaharita): helper functions
-		const searchLower = search.toLowerCase();
-		const matchesSearch = (lang: Language) =>
-			languageName(lang, LOCALE).toLowerCase().includes(searchLower) ||
-			languageName(lang, 'en').toLowerCase().includes(searchLower);
-		const isChecked = (lang: Language) => checkedCodes.includes(langCode(lang));
-		const isInRecents = (lang: Language) => recentCodes.includes(langCode(lang));
-		// drop languages this engine's CLDR data can't name — they'd render as bare codes
-		const isNameable = (lang: Language) => resolveLanguageName(lang, LOCALE) !== undefined;
+	// NOTE(@elijaharita): helper functions
+	const searchLower = search.toLowerCase();
+	const matchesSearch = (lang: Language) =>
+		languageName(lang, LOCALE).toLowerCase().includes(searchLower) ||
+		languageName(lang, 'en').toLowerCase().includes(searchLower);
+	const isChecked = (lang: Language) => checkedCodes.includes(langCode(lang));
+	const isInRecents = (lang: Language) => recentCodes.includes(langCode(lang));
+	// drop languages this engine's CLDR data can't name — they'd render as bare codes
+	const isNameable = (lang: Language) => resolveLanguageName(lang, LOCALE) !== undefined;
 
-		const checkedRecent = recentLanguages.filter(isChecked);
+	const checkedRecent = recentLanguages.filter(isChecked);
 
-		if (search) {
-			// NOTE(@elijaharita): if a search is active, we ALWAYS show checked
-			// items, as well as any items that match the search.
-			const uncheckedRecent = recentLanguages.filter((lang) => !isChecked(lang)).filter(matchesSearch);
-			const unchecked = LANGUAGES.filter((lang) => isNameable(lang) && !isChecked(lang));
-			const all = unchecked.filter(matchesSearch).filter((lang) => !isInRecents(lang));
+	let displayedLanguages: { all: Language[]; checkedRecent: Language[]; uncheckedRecent: Language[] };
+	if (search) {
+		// NOTE(@elijaharita): if a search is active, we ALWAYS show checked
+		// items, as well as any items that match the search.
+		const uncheckedRecent = recentLanguages.filter((lang) => !isChecked(lang)).filter(matchesSearch);
+		const unchecked = LANGUAGES.filter((lang) => isNameable(lang) && !isChecked(lang));
+		const all = unchecked.filter(matchesSearch).filter((lang) => !isInRecents(lang));
 
-			return {
-				all,
-				checkedRecent,
-				uncheckedRecent,
-			};
-		} else {
-			// NOTE(@elijaharita): if no search is active, we show everything.
-			const uncheckedRecent = recentLanguages.filter((lang) => !isChecked(lang));
-			const all = LANGUAGES.filter((lang) => isNameable(lang) && !isInRecents(lang));
+		displayedLanguages = {
+			all,
+			checkedRecent,
+			uncheckedRecent,
+		};
+	} else {
+		// NOTE(@elijaharita): if no search is active, we show everything.
+		const uncheckedRecent = recentLanguages.filter((lang) => !isChecked(lang));
+		const all = LANGUAGES.filter((lang) => isNameable(lang) && !isInRecents(lang));
 
-			return {
-				all,
-				checkedRecent,
-				uncheckedRecent,
-			};
-		}
-	}, [search, langPrefs.postLanguageHistory, checkedCodes]);
+		displayedLanguages = {
+			all,
+			checkedRecent,
+			uncheckedRecent,
+		};
+	}
 
 	const hasRecent =
 		displayedLanguages.checkedRecent.length > 0 || displayedLanguages.uncheckedRecent.length > 0;

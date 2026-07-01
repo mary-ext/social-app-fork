@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
@@ -32,9 +31,9 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 	const moderationOpts = useModerationOpts();
 	const leaveConvoControl = usePromptControl();
 
-	const onAcceptChat = useCallback(() => {
+	const onAcceptChat = () => {
 		convoState.markConvoAccepted();
-	}, [convoState]);
+	};
 
 	// either the other person, or the chat owner
 	// if we ever allow someone other than the owner to invite people, this will need to change
@@ -109,7 +108,7 @@ function InviterHeader({
 }) {
 	const t = useTheme();
 	const profile = useProfileShadow(profileUnshadowed);
-	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
+	const moderation = moderateProfile(profile, moderationOpts);
 	const displayName = createSanitizedDisplayName(
 		profile,
 		true,

@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { useCleanError } from '#/lib/hooks/useCleanError';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
@@ -14,19 +12,17 @@ import * as css from './ThreadError.css';
 export function ThreadError({ error, onRetry }: { error: Error; onRetry: () => void }) {
 	const cleanError = useCleanError();
 
-	const { title, message } = useMemo(() => {
-		let title = m['screens.postThread.post.error.load']();
-		let message: string = m['screens.postThread.post.error.generic']();
+	let title = m['screens.postThread.post.error.load']();
+	let message: string = m['screens.postThread.post.error.generic']();
 
+	{
 		const { raw, clean } = cleanError(error);
 
 		if (error.message.startsWith('Post not found')) {
 			title = m['screens.postThread.post.error.notFound']();
 			message = clean || raw || message;
 		}
-
-		return { title, message };
-	}, [error, cleanError]);
+	}
 
 	return (
 		<Layout.Center>

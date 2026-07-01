@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { LayoutAnimation, Pressable, type ScrollView, View } from 'react-native';
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -46,11 +46,8 @@ export function ReactionsDialog({
 
 	const [selected, setSelected] = useState('all');
 
-	const reactions = useMemo(
-		() => filterBlockedReactions(message.reactions, relatedProfiles),
-		[message.reactions, relatedProfiles],
-	);
-	const groupedReactions = useMemo(() => groupReactions(reactions), [reactions]);
+	const reactions = filterBlockedReactions(message.reactions, relatedProfiles);
+	const groupedReactions = groupReactions(reactions);
 
 	const filteredReactions = reactions.filter((r) => selected === 'all' || r.value === selected);
 

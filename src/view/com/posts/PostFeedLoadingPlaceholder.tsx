@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { triangularRandom, weightedRandomIndex } from '#/lib/numbers';
 
 import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
@@ -64,19 +62,15 @@ function PostLoadingPlaceholder({
 
 export function PostFeedLoadingPlaceholder() {
 	// freeze the per-row variety for the component's lifetime so it doesn't reshuffle on every re-render.
-	const rows = useMemo(
-		() =>
-			Array.from({ length: 9 }, () => ({
-				embed: EmbedSkeleton.randomShape(),
-				lastLineWidth: triangularRandom(35, 90, 5),
-				// ~30% of rows carry a repost/pin reason line, sized in px to the "Reposted by …" handle's natural
-				// width; null leaves the row empty (just its reserved space)
-				reasonWidth: weightedRandomIndex([7, 3]) === 1 ? triangularRandom(110, 210, 10) : null,
-				// post bodies cluster around a couple of lines; a triangular draw peaks there and tails to 1 and 5
-				textLines: triangularRandom(1, 5),
-			})),
-		[],
-	);
+	const rows = Array.from({ length: 9 }, () => ({
+		embed: EmbedSkeleton.randomShape(),
+		lastLineWidth: triangularRandom(35, 90, 5),
+		// ~30% of rows carry a repost/pin reason line, sized in px to the "Reposted by …" handle's natural
+		// width; null leaves the row empty (just its reserved space)
+		reasonWidth: weightedRandomIndex([7, 3]) === 1 ? triangularRandom(110, 210, 10) : null,
+		// post bodies cluster around a couple of lines; a triangular draw peaks there and tails to 1 and 5
+		textLines: triangularRandom(1, 5),
+	}));
 
 	return (
 		<>

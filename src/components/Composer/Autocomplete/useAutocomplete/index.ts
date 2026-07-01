@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -110,23 +110,18 @@ export function useAutocomplete({
 		placeholderData: keepPreviousData,
 	});
 
-	const items = useMemo(() => {
-		if (!query.data) {
-			return [];
-		}
-
-		const results = [...query.data];
+	let items: AutocompleteItem[] = [];
+	if (query.data) {
+		items = [...query.data];
 
 		if (showSearchFallback && q) {
-			results.unshift({
+			items.unshift({
 				key: `search-${q}`,
 				type: 'search' as const,
 				value: q,
 			});
 		}
-
-		return results;
-	}, [query.data, showSearchFallback, q]);
+	}
 
 	return {
 		query: q,
