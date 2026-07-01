@@ -41,10 +41,13 @@ export const cover = style({
 	cursor: 'pointer',
 	inset: 0,
 	margin: 0,
-	outline: 'none',
 	padding: 0,
 	position: 'absolute',
 	zIndex: 1,
+
+	selectors: {
+		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
+	},
 });
 
 export const body = style({
