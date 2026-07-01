@@ -143,6 +143,8 @@ export const panelText = style(
 				color: vars.palette.contrast_1000,
 				fontWeight: 500,
 			},
+			'[data-disabled] &': { color: vars.palette.contrast_500 },
+			'[data-checked][data-disabled] &': { color: vars.palette.contrast_600 },
 			'[data-size="small"] &': {
 				fontSize: fontSize.md_sub,
 				lineHeight: roundToPx(`calc(${fontSize.md_sub} * 1.3)`),
@@ -204,6 +206,9 @@ export const dot = style(
 		borderRadius: 999,
 		height: 12,
 		width: 12,
+		selectors: {
+			'[data-disabled] &': { backgroundColor: vars.palette.contrast_600 },
+		},
 	}),
 );
 
