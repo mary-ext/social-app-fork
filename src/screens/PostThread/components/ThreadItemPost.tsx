@@ -27,6 +27,7 @@ import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
+import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
 import { Text } from '#/components/Text';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
@@ -222,6 +223,13 @@ function ThreadItemPostInner({
 								timestamp={post.indexedAt}
 								postHref={postHref}
 							/>
+							<PostOverflowMenuButton
+								post={postShadow}
+								record={record}
+								richText={richText}
+								threadgateRecord={threadgateRecord}
+								logContext="PostThreadItem"
+							/>
 						</div>
 						<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 						<PostAlerts
@@ -243,14 +251,7 @@ function ThreadItemPostInner({
 								<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
 							</div>
 						)}
-						<PostControls
-							post={postShadow}
-							record={record}
-							richText={richText}
-							onPressReply={onPressReply}
-							logContext="PostThreadItem"
-							threadgateRecord={threadgateRecord}
-						/>
+						<PostControls post={postShadow} onPressReply={onPressReply} logContext="PostThreadItem" />
 						<DebugFieldDisplay subject={post} />
 					</PostLayout.ContentColumn>
 				</PostLayout.Row>

@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-/** The anchor action bar: the reply/repost/like cluster leading, bookmark/share/overflow trailing. */
+/** The anchor action bar: reply/repost/like leading, share trailing. */
 export const root = style({
 	height: 52,
 	alignItems: 'center',

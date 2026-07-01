@@ -100,6 +100,18 @@ export const bodyColumn = style({
 	minWidth: 0,
 });
 
+/**
+ * The meta row: `PostMeta` (which grows to fill) alongside the trailing overflow menu pinned to the
+ * top-right.
+ */
+export const metaRow = style({
+	alignItems: 'center',
+	boxSizing: 'border-box',
+	display: 'flex',
+	flexDirection: 'row',
+	minWidth: 0,
+});
+
 export const bodyRow = style({
 	boxSizing: 'border-box',
 	display: 'flex',

@@ -18,7 +18,6 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import type { Props as IconProps } from '#/components/icons/common';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Reply as Bubble } from '#/components/icons/Reply';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import * as Skele from '#/components/Skeleton';
@@ -28,7 +27,6 @@ import { Tooltip } from '#/components/Tooltip';
 import { m } from '#/paraglide/messages';
 
 import * as css from './index.css';
-import { PostOverflowMenu } from './PostMenu';
 import { RepostMenu } from './RepostMenu';
 import { type PostControlsProps, usePostControlsActions } from './shared';
 import { ShareMenu } from './ShareMenu';
@@ -126,15 +124,11 @@ function PostControlButtonText({ children }: { children: ReactNode }) {
 /** The compact post action bar used on the feed and thread rows. */
 export function PostControls({
 	post,
-	record,
-	richText,
 	feedContext,
 	reqId,
 	onPressReply,
 	onPostReply,
 	logContext,
-	threadgateRecord,
-	onShowLess,
 	viaRepost,
 }: PostControlsProps): React.ReactNode {
 	const t = useTheme();
@@ -237,22 +231,6 @@ export function PostControls({
 						</PostControlButton>
 					}
 				/>
-				<PostOverflowMenu
-					post={post}
-					postFeedContext={feedContext}
-					postReqId={reqId}
-					record={record}
-					richText={richText}
-					threadgateRecord={threadgateRecord}
-					onShowLess={onShowLess}
-					logContext={logContext}
-					tooltip={m['components.postControls.options.more']()}
-					render={
-						<PostControlButton label={m['components.postControls.options.a11y']()} tooltip={null}>
-							<PostControlButtonIcon icon={DotsHorizontal} />
-						</PostControlButton>
-					}
-				/>
 			</div>
 		</div>
 	);
@@ -260,9 +238,8 @@ export function PostControls({
 
 export function PostControlsSkeleton() {
 	// the rest-state row shows the bare icons, so the bars stand in at `ICON_SIZE` — the live `iconCircle` is
-	// only the hover target and pulls itself back to that footprint with a negative margin. the trailing
-	// cluster reuses `secondaryGroup` verbatim so its gap matches the live row (sized to clear those spilled
-	// hover circles), rather than bunching the bars tighter than the icons they stand in for.
+	// only the hover target and pulls itself back to that footprint with a negative margin. the trailing share
+	// control reuses `secondaryGroup` verbatim so it pins to the same edge as the live row.
 	return (
 		<div className={css.root}>
 			<div className={css.primaryGroup}>
@@ -277,7 +254,6 @@ export function PostControlsSkeleton() {
 				</div>
 			</div>
 			<div className={css.secondaryGroup}>
-				<Skele.Circle blend size={css.ICON_SIZE} />
 				<Skele.Circle blend size={css.ICON_SIZE} />
 			</div>
 		</div>

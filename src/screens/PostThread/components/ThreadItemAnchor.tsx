@@ -44,6 +44,7 @@ import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { TranslatedPost } from '#/components/Post/Translated';
 import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
+import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
@@ -290,6 +291,16 @@ function ThreadItemAnchorInner({
 						</div>
 						<div className={css.secondary}>
 							<ThreadItemAnchorFollowButton did={post.author.did} enabled={showFollowButton} />
+
+							<PostOverflowMenuButton
+								post={postShadow}
+								record={record}
+								richText={richText}
+								threadgateRecord={threadgateRecord}
+								feedContext={postSource?.post?.feedContext}
+								reqId={postSource?.post?.reqId}
+								logContext="PostThreadItem"
+							/>
 						</div>
 					</div>
 					<div className={css.body}>
@@ -429,11 +440,8 @@ function ThreadItemAnchorInner({
 						<FeedFeedbackProvider value={feedFeedback}>
 							<AnchorPostControls
 								post={postShadow}
-								record={record}
-								richText={richText}
 								onPressReply={onPressReply}
 								logContext="PostThreadItem"
-								threadgateRecord={threadgateRecord}
 								feedContext={postSource?.post?.feedContext}
 								reqId={postSource?.post?.reqId}
 								viaRepost={viaRepost}

@@ -49,9 +49,11 @@ export const childLine = style({
 // #endregion
 
 // #region body rhythm
+// the meta row: `PostMeta` (which grows to fill) alongside the trailing overflow menu pinned to the top-right.
 export const metaSpacing = style({
+	alignItems: 'center',
 	display: 'flex',
-	flexDirection: 'column',
+	flexDirection: 'row',
 	paddingBottom: space.xs,
 });
 

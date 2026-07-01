@@ -7,7 +7,6 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import type { Props as IconProps } from '#/components/icons/common';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Reply as Bubble } from '#/components/icons/Reply';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import * as Skele from '#/components/Skeleton';
@@ -15,7 +14,6 @@ import { Tooltip } from '#/components/Tooltip';
 
 import { m } from '#/paraglide/messages';
 
-import { PostOverflowMenu } from '../PostMenu';
 import { RepostMenu } from '../RepostMenu';
 import { type PostControlsProps, usePostControlsActions } from '../shared';
 import { ShareMenu } from '../ShareMenu';
@@ -89,15 +87,11 @@ function AnchorControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps
  */
 function AnchorPostControls({
 	post,
-	record,
-	richText,
 	feedContext,
 	reqId,
 	onPressReply,
 	onPostReply,
 	logContext,
-	threadgateRecord,
-	onShowLess,
 	viaRepost,
 }: PostControlsProps): React.ReactNode {
 	const t = useTheme();
@@ -178,22 +172,6 @@ function AnchorPostControls({
 					</AnchorControlButton>
 				}
 			/>
-			<PostOverflowMenu
-				post={post}
-				postFeedContext={feedContext}
-				postReqId={reqId}
-				record={record}
-				richText={richText}
-				threadgateRecord={threadgateRecord}
-				onShowLess={onShowLess}
-				logContext={logContext}
-				tooltip={m['components.postControls.options.more']()}
-				render={
-					<AnchorControlButton label={m['components.postControls.options.a11y']()} tooltip={null}>
-						<AnchorControlButtonIcon icon={DotsHorizontal} />
-					</AnchorControlButton>
-				}
-			/>
 		</div>
 	);
 }
@@ -206,7 +184,6 @@ export function AnchorPostControlsSkeleton() {
 
 	return (
 		<div className={css.root}>
-			<Skele.Circle blend size={size} />
 			<Skele.Circle blend size={size} />
 			<Skele.Circle blend size={size} />
 			<Skele.Circle blend size={size} />

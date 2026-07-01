@@ -31,12 +31,14 @@ export const outerBorder = style({
 });
 
 /**
- * Below-meta rhythm for the spacing-free `PostMeta` leaf. `display: flex` so the wrapper hugs the row instead
- * of inflating it with the font strut.
+ * The meta row: the spacing-free `PostMeta` leaf (which grows to fill) alongside the trailing overflow menu
+ * pinned to the post's top-right. `display: flex` so the row hugs its content instead of inflating on the
+ * font strut.
  */
 export const metaSpacing = style({
+	alignItems: 'center',
 	display: 'flex',
-	flexDirection: 'column',
+	flexDirection: 'row',
 	paddingBottom: 4,
 });
 

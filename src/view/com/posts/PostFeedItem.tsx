@@ -30,6 +30,7 @@ import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
+import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
@@ -295,6 +296,16 @@ function FeedItemInner({
 									postHref={href}
 									onOpenAuthor={onOpenAuthor}
 								/>
+								<PostOverflowMenuButton
+									post={post}
+									record={record}
+									richText={richText}
+									feedContext={feedContext}
+									reqId={reqId}
+									threadgateRecord={threadgateRecord}
+									onShowLess={onShowLess}
+									logContext="FeedItem"
+								/>
 							</div>
 							{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
 								<PostRepliedTo
@@ -316,14 +327,10 @@ function FeedItemInner({
 							/>
 							<PostControls
 								post={post}
-								record={record}
-								richText={richText}
 								onPressReply={onPressReply}
 								logContext="FeedItem"
 								feedContext={feedContext}
 								reqId={reqId}
-								threadgateRecord={threadgateRecord}
-								onShowLess={onShowLess}
 								viaRepost={viaRepost}
 							/>
 						</PostLayout.ContentColumn>

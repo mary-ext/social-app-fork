@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-/** The compact action bar: the reply/repost/like cluster leading, bookmark/share/overflow trailing. */
+/** The compact action bar: the reply/repost/like cluster leading, share trailing. */
 export const root = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -30,7 +30,7 @@ export const primaryItem = style({
 /** Dims the reply slot when the viewer can't reply. */
 export const replyDisabled = style({ opacity: 0.6 });
 
-/** The trailing bookmark/share/overflow cluster. */
+/** The trailing share control. */
 export const secondaryGroup = style({
 	display: 'flex',
 	gap: 16,

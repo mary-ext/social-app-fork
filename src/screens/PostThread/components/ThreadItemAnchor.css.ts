@@ -89,6 +89,7 @@ export const secondary = style({
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 0,
+	gap: space.lg,
 
 	':empty': {
 		display: 'none',

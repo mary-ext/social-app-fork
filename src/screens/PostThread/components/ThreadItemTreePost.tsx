@@ -28,6 +28,7 @@ import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
+import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import { Text } from '#/components/Text';
 import * as Skele from '#/components/web/Skeleton';
 
@@ -207,14 +208,23 @@ function ThreadItemTreePostInner({
 				>
 					<ThreadItemTreePostInnerWrapper item={item}>
 						<div className={css.bodyColumn}>
-							<PostMeta
-								author={post.author}
-								moderation={moderation}
-								timestamp={post.indexedAt}
-								postHref={postHref}
-								avatarSize={TREE_AVI_WIDTH}
-								showAvatar
-							/>
+							<div className={css.metaRow}>
+								<PostMeta
+									author={post.author}
+									moderation={moderation}
+									timestamp={post.indexedAt}
+									postHref={postHref}
+									avatarSize={TREE_AVI_WIDTH}
+									showAvatar
+								/>
+								<PostOverflowMenuButton
+									post={postShadow}
+									record={record}
+									richText={richText}
+									threadgateRecord={threadgateRecord}
+									logContext="PostThreadItem"
+								/>
+							</div>
 							<div className={css.bodyRow}>
 								<ChildReplyLine show={item.ui.showChildReplyLine} />
 								<div className={clsx(css.contentColumn, item.ui.isLastChild && css.contentColumnLastChild)}>
@@ -236,14 +246,7 @@ function ThreadItemTreePostInner({
 										/>
 									)}
 
-									<PostControls
-										post={postShadow}
-										record={record}
-										richText={richText}
-										onPressReply={onPressReply}
-										logContext="PostThreadItem"
-										threadgateRecord={threadgateRecord}
-									/>
+									<PostControls post={postShadow} onPressReply={onPressReply} logContext="PostThreadItem" />
 									<DebugFieldDisplay subject={post} />
 								</div>
 							</div>

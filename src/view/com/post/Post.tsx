@@ -26,6 +26,7 @@ import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
+import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
@@ -154,19 +155,14 @@ function PostInner({
 									timestamp={post.indexedAt}
 									postHref={itemHref}
 								/>
+								<PostOverflowMenuButton post={post} record={record} richText={richText} logContext="Post" />
 							</div>
 							{replyAuthorDid !== '' && (
 								<PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />
 							)}
 							<LabelsOnMyPost post={post} />
 							<PostContent displayContext="view" moderation={moderation} post={post} richText={richText} />
-							<PostControls
-								post={post}
-								record={record}
-								richText={richText}
-								onPressReply={onPressReply}
-								logContext="Post"
-							/>
+							<PostControls post={post} onPressReply={onPressReply} logContext="Post" />
 						</PostLayout.ContentColumn>
 					</PostLayout.Row>
 				</article>

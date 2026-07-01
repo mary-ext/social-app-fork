@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -20,15 +19,11 @@ import { m } from '#/paraglide/messages';
  */
 export type PostControlsProps = {
 	post: Shadow<AppBskyFeedDefs.PostView>;
-	record: AppBskyFeedPost.Main;
-	richText: Richtext;
 	feedContext?: string | undefined;
 	reqId?: string | undefined;
 	onPressReply: () => void;
 	onPostReply?: (postUri: string | undefined) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
-	threadgateRecord?: AppBskyFeedThreadgate.Main;
-	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	viaRepost?: { uri: string; cid: string };
 };
 

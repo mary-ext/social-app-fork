@@ -119,7 +119,7 @@ function PostThreadFollowBtnLoaded({
 			label={m['common.follow.a11y.follow']({ handle: profile.handle })}
 			onClick={onPress}
 			size="small"
-			color={isFollowing ? 'secondary' : 'secondary_inverted'}
+			color={isFollowing ? 'secondary' : 'primary_subtle'}
 		>
 			{gtMobile && <ButtonIcon icon={isFollowing ? CheckIcon : PlusIcon} size="sm" />}
 			<ButtonText>
