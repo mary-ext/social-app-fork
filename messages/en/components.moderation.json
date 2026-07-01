@@ -44,8 +44,8 @@
 			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{n} label has been placed on this account",
-				"cp=other": "{n} labels have been placed on this account"
+				"cp=one": "{n} account label",
+				"cp=other": "{n} account labels"
 			}
 		}
 	],
@@ -54,8 +54,8 @@
 			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{n} label has been placed on this content",
-				"cp=other": "{n} labels have been placed on this content"
+				"cp=one": "{n} content label",
+				"cp=other": "{n} content labels"
 			}
 		}
 	],
