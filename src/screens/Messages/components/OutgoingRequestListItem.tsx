@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 
@@ -8,23 +7,21 @@ import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdr
 
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
-import { createStaticClick, Link } from '#/components/Link';
-import * as Prompt from '#/components/Prompt';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
+
+import * as css from './OutgoingRequestListItem.css';
 
 export function OutgoingRequestListItem({
 	convo: convoView,
 }: {
 	convo: ChatBskyGroupDefs.JoinRequestConvoView;
 }) {
-	const t = useTheme();
-	const prompt = Prompt.usePromptControl();
+	const prompt = Prompt.usePromptHandle();
 
 	const { mutate: withdrawRequest, isPending: isWithdrawPending } = useWithdrawJoinGroupChatRequest({
 		onSuccess: () => {
@@ -43,59 +40,45 @@ export function OutgoingRequestListItem({
 
 	return (
 		<>
-			<Link
-				label={m['screens.messages.requests.rescind.action']()}
-				{...createStaticClick(() => {
-					prompt.open();
-				})}
+			<button
+				type="button"
+				className={css.row}
+				aria-label={m['screens.messages.requests.rescind.action']()}
+				onClick={() => prompt.open(null)}
 			>
-				{({ hovered, pressed, focused }) => (
-					<View
-						style={[
-							a.flex_row,
-							a.align_center,
-							a.flex_1,
-							a.px_lg,
-							a.py_md,
-							a.gap_md,
-							(hovered || pressed || focused) && t.atoms.bg_contrast_25,
-						]}
-					>
-						<AvatarBubbles profiles={[convoView.owner]} count={convoView.memberCount} size={48} />
-						<View style={[a.flex_1]}>
-							<View style={[a.w_full, a.flex_row, a.align_center, a.gap_xs, a.pb_2xs]}>
-								<View style={[a.flex_shrink]}>
-									<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold]}>
-										{convoView.name}
+				<AvatarBubbles profiles={[convoView.owner]} count={convoView.memberCount} size={48} />
+
+				<div className={css.body}>
+					<div className={css.nameRow}>
+						<Text className={css.name} size="md" weight="semiBold" numberOfLines={1}>
+							{convoView.name}
+						</Text>
+
+						{convoView.viewer?.requestedAt ? (
+							<TimeElapsed timestamp={convoView.viewer.requestedAt}>
+								{({ timeElapsed }) => (
+									<Text className={css.timestamp} size="md" color="textContrastMedium" numberOfLines={1}>
+										{timeElapsed}
 									</Text>
-								</View>
-								{convoView.viewer?.requestedAt ? (
-									<TimeElapsed timestamp={convoView.viewer.requestedAt}>
-										{({ timeElapsed }) => (
-											<Text numberOfLines={1} style={[a.text_sm, t.atoms.text_contrast_medium]}>
-												{timeElapsed}
-											</Text>
-										)}
-									</TimeElapsed>
-								) : null}
-							</View>
-							<Text numberOfLines={1} style={[a.text_sm, t.atoms.text_contrast_high]}>
-								{m['screens.messages.requests.requested']()}
-							</Text>
-						</View>
-					</View>
-				)}
-			</Link>
+								)}
+							</TimeElapsed>
+						) : null}
+					</div>
+
+					<Text size="md_sub" color="textContrastMedium" numberOfLines={1}>
+						{m['screens.messages.requests.requested']()}
+					</Text>
+				</div>
+			</button>
+
 			<Prompt.Basic
-				control={prompt}
+				handle={prompt}
 				title={m['common.requests.action.rescind']()}
 				description={m['screens.messages.requests.rescind.confirm']({ name: convoView.name })}
 				confirmButtonCta={m['common.requests.action.rescind']()}
 				onConfirm={() => {
-					prompt.close(() => {
-						if (isWithdrawPending) return;
-						withdrawRequest({ convoId: convoView.convoId });
-					});
+					if (isWithdrawPending) return;
+					withdrawRequest({ convoId: convoView.convoId });
 				}}
 			/>
 		</>
