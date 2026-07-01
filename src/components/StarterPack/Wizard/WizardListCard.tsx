@@ -120,7 +120,7 @@ export function WizardProfileCard({
 	const targetProfileDid = state.targetDid || currentAccount?.did;
 	const isTarget = profile.did === targetProfileDid;
 	const included = isTarget || state.profiles.some((p) => p.did === profile.did);
-	const disabled = isTarget || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE - 1);
+	const disabled = isTarget || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE);
 	const moderationUi = getDisplayRestrictions(
 		moderateProfile(profile, moderationOpts),
 		DisplayContext.ProfileMedia,
