@@ -51,9 +51,7 @@ function PostLoadingPlaceholder({
 				</PostLayout.AvatarColumn>
 				<PostLayout.ContentColumn>
 					<div className={feedCss.metaSpacing}>
-						<Skele.Row gap="xs">
-							<Skele.Text size="md" width="25%" />
-						</Skele.Row>
+						<Skele.Text size="md" width="25%" />
 					</div>
 					<Skele.Lines count={textLines} lastWidth={lastLineWidth} size="md" />
 					{embed ? <EmbedSkeleton.Reply shape={embed} /> : null}
