@@ -21,7 +21,9 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import {
 	displayDuration,
+	getLiveLinkFromStatusRecord,
 	getLiveServiceNames,
+	useActorStatus,
 	useLiveLinkMetaQuery,
 	useLiveNowConfig,
 	useUpsertLiveStatusMutation,
@@ -46,7 +48,8 @@ export function GoLiveDialog({ handle, profile }: { handle: Dialog.DialogHandle;
 const DURATIONS = Array.from({ length: (4 * 60) / 5 }).map((_, i) => (i + 1) * 5);
 
 function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
-	const [liveLink, setLiveLink] = useState('');
+	const status = useActorStatus(profile);
+	const [liveLink, setLiveLink] = useState(() => getLiveLinkFromStatusRecord(status.record));
 	const [liveLinkError, setLiveLinkError] = useState('');
 	const [duration, setDuration] = useState(60);
 	const moderationOpts = useModerationOpts();

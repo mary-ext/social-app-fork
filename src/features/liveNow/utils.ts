@@ -1,3 +1,5 @@
+import type { AppBskyActorStatus } from '@atcute/bluesky';
+
 import { LOCALE } from '#/locale/intl/locale';
 
 const durationFormat = new Intl.DurationFormat(LOCALE, { style: 'long' });
@@ -15,6 +17,36 @@ export function displayDuration(durationInMinutes: number) {
 	const hours = Math.floor(total / 60);
 	const minutes = total % 60;
 	return hours > 0 ? durationFormat.format({ hours, minutes }) : minutesOnlyFormat.format({ minutes });
+}
+
+/**
+ * Narrows a raw status record to a typed `app.bsky.actor.status` record.
+ *
+ * @param statusRecord the raw record value carried on a status view
+ * @returns the typed record, or null when the value is not a valid status record
+ */
+export function getValidLiveStatusRecord(statusRecord: unknown): AppBskyActorStatus.Main | null {
+	if (typeof statusRecord !== 'object' || statusRecord === null) {
+		return null;
+	}
+	if ((statusRecord as { $type?: string }).$type !== 'app.bsky.actor.status') {
+		return null;
+	}
+	return statusRecord as AppBskyActorStatus.Main;
+}
+
+/**
+ * Extracts the external link URI from a status record's embed.
+ *
+ * @param statusRecord the raw record value carried on a status view
+ * @returns the external link URI, or an empty string when the record is invalid or carries no external embed
+ */
+export function getLiveLinkFromStatusRecord(statusRecord: unknown): string {
+	const record = getValidLiveStatusRecord(statusRecord);
+	if (record?.embed?.$type !== 'app.bsky.embed.external') {
+		return '';
+	}
+	return record.embed.external.uri;
 }
 
 const serviceUrlToNameMap: Record<string, string> = {
