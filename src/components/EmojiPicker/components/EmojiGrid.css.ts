@@ -30,12 +30,9 @@ export const spacer = style({
 });
 
 export const header = style({
-	alignItems: 'flex-end',
+	alignItems: 'end',
 	boxSizing: 'border-box',
-	color: vars.palette.contrast_500,
 	display: 'flex',
-	fontSize: 13,
-	fontWeight: 600,
 	height: HEADER_HEIGHT,
 	left: 0,
 	paddingBottom: 4,

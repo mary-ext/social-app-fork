@@ -1,6 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
+import { Text } from '#/components/Text';
+
 import { CATEGORY_LABELS } from '../categories';
 import { type EmojiLayout, GRID_HEIGHT, OVERSCAN } from '../layout';
 import type { EmojiCell } from '../util';
@@ -106,7 +108,9 @@ export const EmojiGrid = forwardRef<EmojiGridHandle, EmojiGridProps>(function Em
 				{visible.map((row) =>
 					row.type === 'header' ? (
 						<div className={styles.header} key={row.key} style={{ height: row.height, top: row.top }}>
-							{CATEGORY_LABELS[row.key]!()}
+							<Text size="md_sub" weight="semiBold" color="textContrastMedium">
+								{CATEGORY_LABELS[row.key]!()}
+							</Text>
 						</div>
 					) : (
 						<Autocomplete.Row
