@@ -56,7 +56,7 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 								<Pressable
 									style={[
 										a.flex_row,
-										a.align_center,
+										a.align_start,
 										a.py_md,
 										a.px_sm,
 										a.border_b,
@@ -73,7 +73,7 @@ export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log
 									) : (
 										<CircleInfoIcon size="sm" />
 									)}
-									<View style={[a.flex_1, a.flex_row, a.justify_start, a.align_center, a.gap_sm]}>
+									<View style={[a.flex_1, a.gap_sm]}>
 										{entry.context && (
 											<Text style={[t.atoms.text_contrast_medium]}>({String(entry.context)})</Text>
 										)}
