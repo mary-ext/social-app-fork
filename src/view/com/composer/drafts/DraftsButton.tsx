@@ -6,7 +6,6 @@ import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
-import * as styles from './DraftsButton.css';
 import { DraftsListDialog } from './DraftsListDialog';
 import { useSaveDraftMutation } from './state/queries';
 import type { DraftSummary } from './state/schema';
@@ -64,7 +63,6 @@ export function DraftsButton({
 				color="primary"
 				shape="default"
 				size="small"
-				className={styles.trigger}
 				disabled={isSaving}
 				onClick={handlePress}
 			>

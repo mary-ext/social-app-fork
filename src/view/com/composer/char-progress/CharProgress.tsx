@@ -1,40 +1,39 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { clsx } from 'clsx';
 
 import { MAX_GRAPHEME_LENGTH } from '#/lib/constants';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { ProgressCircle, ProgressPie } from '#/components/progress-circle';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
-export function CharProgress({ count, style }: { count: number; style?: StyleProp<ViewStyle> }) {
-	const t = useTheme();
-	const textColor = count > MAX_GRAPHEME_LENGTH ? '#e60000' : t.atoms.text.color;
-	const circleColor = count > MAX_GRAPHEME_LENGTH ? '#e60000' : t.palette.primary_500;
+import { colors } from '#/styles/colors';
+
+import * as styles from './CharProgress.css';
+
+export function CharProgress({ count, className }: { count: number; className?: string }) {
+	const isOverLimit = count > MAX_GRAPHEME_LENGTH;
+	const circleColor = isOverLimit ? styles.overLimitColor : colors.primary_500;
 	return (
-		<View style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm, style]}>
-			<Text
-				style={[{ color: textColor, fontVariant: ['tabular-nums'] }, a.flex_grow, a.text_right]}
-				maxFontSizeMultiplier={1}
-			>
+		<div className={clsx(styles.container, className)}>
+			<Text size="md_sub" className={clsx(styles.count, isOverLimit && styles.countOver)}>
 				{MAX_GRAPHEME_LENGTH - count}
 			</Text>
-			{count > MAX_GRAPHEME_LENGTH ? (
+
+			{isOverLimit ? (
 				<ProgressPie
-					size={20}
-					borderWidth={4}
 					borderColor={circleColor}
+					borderWidth={4}
 					color={circleColor}
 					progress={Math.min((count - MAX_GRAPHEME_LENGTH) / MAX_GRAPHEME_LENGTH, 1)}
+					size={20}
 				/>
 			) : (
 				<ProgressCircle
-					size={20}
-					trackColor={t.atoms.border_contrast_low.borderColor}
 					color={circleColor}
 					progress={count / MAX_GRAPHEME_LENGTH}
+					size={20}
+					trackColor={colors.borderContrastLow}
 				/>
 			)}
-		</View>
+		</div>
 	);
 }

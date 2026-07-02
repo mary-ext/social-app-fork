@@ -16,7 +16,6 @@ import {
 	type NativeScrollEvent,
 	type NativeSyntheticEvent,
 	ScrollView,
-	type StyleProp,
 	StyleSheet,
 	View,
 	type ViewStyle,
@@ -50,7 +49,6 @@ import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
-import { colors as legacyColors } from '#/lib/styles';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
 import { postCreated } from '#/state/events';
@@ -62,50 +60,34 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { CharProgress } from '#/view/com/composer/char-progress/CharProgress';
 import { ComposerReplyTo } from '#/view/com/composer/ComposerReplyTo';
-import { DraftsButton } from '#/view/com/composer/drafts/DraftsButton';
 import { ExternalEmbedGif, ExternalEmbedLink } from '#/view/com/composer/ExternalEmbed';
 import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn';
 import { GifAltText } from '#/view/com/composer/GifAltText';
-import { LabelsBtn } from '#/view/com/composer/labels/LabelsBtn';
 import { Gallery } from '#/view/com/composer/photos/Gallery';
-import { SelectGifBtn } from '#/view/com/composer/photos/SelectGifBtn';
 import { SuggestedLanguage } from '#/view/com/composer/select-language/SuggestedLanguage';
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
 import { TextInput } from '#/view/com/composer/text-input/TextInput';
-import { ThreadgateBtn } from '#/view/com/composer/threadgate/ThreadgateBtn';
 import { SubtitleDialogBtn } from '#/view/com/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/view/com/composer/videos/VideoPreview';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { atoms as a, useTheme } from '#/alf';
 
-import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon } from '#/components/Button';
-import * as EmojiPicker from '#/components/EmojiPicker';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
-import { ProgressCircle } from '#/components/progress-circle';
-import { Spinner } from '#/components/Spinner';
-import { Text as WebText } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
-import * as WebButton from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
-import type { Gif } from '#/features/gifPicker/types';
 import { m } from '#/paraglide/messages';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
-import { colors } from '#/styles/colors';
 
-import * as topBarStyles from './Composer.css';
-import { ComposerToolbarButton } from './ComposerToolbarButton';
+import * as ComposerError from './ComposerError';
+import { ComposerFooter } from './ComposerFooter';
+import { ComposerPills } from './ComposerPills';
+import { ComposerTopBar } from './ComposerTopBar';
 import { draftToComposerPosts, extractLocalRefs, type RestoredVideo } from './drafts/state/api';
 import {
 	loadDraftMedia,
@@ -113,14 +95,12 @@ import {
 	useSaveDraftMutation,
 } from './drafts/state/queries';
 import type { DraftSummary } from './drafts/state/schema';
-import { PostLanguageSelect } from './select-language/PostLanguageSelect';
-import { type AssetType, SelectMediaButton, type SelectMediaButtonProps } from './SelectMediaButton';
+import { useAddImagesWithCap } from './gallery-cap';
 import {
 	type ComposerAction,
 	composerReducer,
 	createComposerState,
 	type EmbedDraft,
-	MAX_GALLERY_IMAGES,
 	type PostAction,
 	type PostDraft,
 	type ThreadDraft,
@@ -146,55 +126,6 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 
 /** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
 const NUDGE_COOLDOWN_MS = 10_000;
-
-function applyGalleryCap(
-	currentCount: number,
-	incoming: ComposerImage[],
-):
-	| { status: 'full' }
-	| { status: 'partial'; accepted: ComposerImage[]; dropped: number }
-	| { status: 'ok'; accepted: ComposerImage[] } {
-	const remaining = MAX_GALLERY_IMAGES - currentCount;
-	if (remaining <= 0) {
-		return { status: 'full' };
-	}
-	if (incoming.length > remaining) {
-		return {
-			status: 'partial',
-			accepted: incoming.slice(0, remaining),
-			dropped: incoming.length - remaining,
-		};
-	}
-	return { status: 'ok', accepted: incoming };
-}
-
-function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: PostAction) => void) {
-	return useCallback(
-		(next: ComposerImage[]) => {
-			const result = applyGalleryCap(currentCount, next);
-			if (result.status === 'full') {
-				Toast.show(m['view.composer.gallery.error.maxAdd']({ max: MAX_GALLERY_IMAGES }), { type: 'warning' });
-				return;
-			}
-			if (result.status === 'partial') {
-				Toast.show(
-					m['view.composer.gallery.error.limit']({
-						accepted: result.accepted.length,
-						count: next.length,
-						total: next.length,
-						max: MAX_GALLERY_IMAGES,
-					}),
-					{ type: 'warning' },
-				);
-			}
-			dispatchPostAction({
-				type: 'embed_add_images',
-				images: result.accepted,
-			});
-		},
-		[currentCount, dispatchPostAction],
-	);
-}
 
 type Props = ComposerOpts;
 export const ComposePost = ({
@@ -959,6 +890,23 @@ export const ComposePost = ({
 		}
 	}
 
+	// The single error to surface: an explicit error string wins over a video-upload error.
+	const displayedError: { error: string; detail?: string; onDismiss: () => void } | undefined = error
+		? { error, onDismiss: () => setError('') }
+		: erroredVideo.status === 'error'
+			? {
+					error: erroredVideo.error,
+					detail: erroredVideo.jobId
+						? m['view.composer.video.jobId']({ jobId: erroredVideo.jobId })
+						: undefined,
+					onDismiss: () => {
+						if (erroredVideoPostId) {
+							clearVideo(erroredVideoPostId);
+						}
+					},
+				}
+			: undefined;
+
 	const scrollViewRef = useRef<ScrollView | null>(null);
 	// focus the text input once per focus request. the reducer bumps `activePostFocusRequestId` on
 	// focus-requesting actions; this effect consumes each committed request exactly once by tracking
@@ -973,11 +921,10 @@ export const ComposePost = ({
 	}, [composerState.activePostFocusRequestId]);
 
 	const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined;
-	const { scrollHandler, onScrollViewContentSizeChange, onScrollViewLayout, bottomBarAnimatedStyle } =
-		useScrollTracker({
-			scrollViewRef,
-			stickyBottom: isLastThreadedPost,
-		});
+	const { scrollHandler, onScrollViewContentSizeChange, onScrollViewLayout } = useScrollTracker({
+		scrollViewRef,
+		stickyBottom: isLastThreadedPost,
+	});
 
 	const footer = (
 		<>
@@ -993,7 +940,6 @@ export const ComposePost = ({
 				post={activePost}
 				thread={composerState.thread}
 				dispatch={composerDispatch}
-				bottomBarAnimatedStyle={bottomBarAnimatedStyle}
 			/>
 			<ComposerFooter
 				post={activePost}
@@ -1039,13 +985,16 @@ export const ComposePost = ({
 			{/* The composer owns its own scrolling (the `ScrollView` below); this body fills the
 			    height-bounded dialog card while `minHeight: 0` lets the inner scroll view clip. */}
 			<View style={[a.flex_1, { minHeight: 0 }]}>
-				{missingAltError && <AltTextReminder error={missingAltError} />}
-				<ErrorBanner
-					error={error}
-					videoState={erroredVideo}
-					clearError={() => setError('')}
-					clearVideo={erroredVideoPostId ? () => clearVideo(erroredVideoPostId) : () => {}}
-				/>
+				<ComposerError.Root>
+					{missingAltError && <ComposerError.Box error={missingAltError} />}
+					{displayedError && (
+						<ComposerError.Box
+							error={displayedError.error}
+							detail={displayedError.detail}
+							onDismiss={displayedError.onDismiss}
+						/>
+					)}
+				</ComposerError.Root>
 				<ScrollView
 					testID="composePostView"
 					ref={scrollViewRef}
@@ -1345,118 +1294,6 @@ let ComposerPost = memo(function ComposerPost({
 	);
 });
 
-function ComposerTopBar({
-	canPost,
-	isReply,
-	isPublishQueued,
-	isPublishing,
-	isThread,
-	publishingStage,
-	onCancel,
-	onPublish,
-	onSelectDraft,
-	onSaveDraft,
-	onDiscard,
-	isEmpty,
-	isDirty,
-	isEditingDraft,
-	canSaveDraft,
-	textLength,
-}: {
-	isPublishing: boolean;
-	publishingStage: string;
-	canPost: boolean;
-	isReply: boolean;
-	isPublishQueued: boolean;
-	isThread: boolean;
-	onCancel: () => void;
-	onPublish: () => void;
-	onSelectDraft: (draft: DraftSummary) => void;
-	onSaveDraft: () => Promise<{ success: boolean }>;
-	onDiscard: () => void;
-	isEmpty: boolean;
-	isDirty: boolean;
-	isEditingDraft: boolean;
-	canSaveDraft: boolean;
-	textLength: number;
-}) {
-	return (
-		<Dialog.Header.Outer border={false}>
-			<Dialog.Header.Slot>
-				<WebButton.Button
-					label={m['common.action.cancel']()}
-					onClick={onCancel}
-					size="small"
-					color="primary"
-					variant="ghost"
-				>
-					<WebButton.ButtonText size="md">{m['common.action.cancel']()}</WebButton.ButtonText>
-				</WebButton.Button>
-			</Dialog.Header.Slot>
-			<Dialog.Header.Slot>
-				{isPublishing ? (
-					<div className={topBarStyles.publishingRow}>
-						<WebText color="textContrastMedium" size="md_sub">
-							{publishingStage}
-						</WebText>
-						<Spinner
-							color={colors.textContrastMedium}
-							label={m['view.composer.publish.publishing']()}
-							size="lg"
-						/>
-					</div>
-				) : (
-					<div className={topBarStyles.buttonRow}>
-						{!isReply && (
-							<DraftsButton
-								onSelectDraft={onSelectDraft}
-								onSaveDraft={onSaveDraft}
-								onDiscard={onDiscard}
-								isEmpty={isEmpty}
-								isDirty={isDirty}
-								isEditingDraft={isEditingDraft}
-								canSaveDraft={canSaveDraft}
-								textLength={textLength}
-							/>
-						)}
-						<WebButton.Button
-							label={
-								isReply
-									? isThread
-										? m['view.composer.publish.a11y.replies']()
-										: m['view.composer.publish.a11y.reply']()
-									: isThread
-										? m['view.composer.publish.a11y.posts']()
-										: m['view.composer.publish.a11y.post']()
-							}
-							color="primary"
-							size="small"
-							onClick={onPublish}
-							disabled={!canPost || isPublishQueued}
-						>
-							<WebButton.ButtonText size="md">
-								{isReply
-									? m['common.action.reply']()
-									: isThread
-										? m['view.composer.publish.action.all']()
-										: m['navigation.post.title']()}
-							</WebButton.ButtonText>
-						</WebButton.Button>
-					</div>
-				)}
-			</Dialog.Header.Slot>
-		</Dialog.Header.Outer>
-	);
-}
-
-function AltTextReminder({ error }: { error: string }) {
-	return (
-		<Admonition type="error" style={[a.mt_2xs, a.mb_sm, a.mx_lg]}>
-			{error}
-		</Admonition>
-	);
-}
-
 function ComposerEmbeds({
 	embed,
 	dispatch,
@@ -1551,247 +1388,6 @@ function ComposerEmbeds({
 	);
 }
 
-function ComposerPills({
-	isReply,
-	thread,
-	post,
-	dispatch,
-	bottomBarAnimatedStyle,
-}: {
-	isReply: boolean;
-	thread: ThreadDraft;
-	post: PostDraft;
-	dispatch: (action: ComposerAction) => void;
-	bottomBarAnimatedStyle: StyleProp<ViewStyle>;
-}) {
-	const t = useTheme();
-	const media = post.embed.media;
-	const hasMedia =
-		media?.type === 'images' || media?.type === 'gallery' || media?.type === 'gif' || media?.type === 'video';
-	const hasLink = !!post.embed.link;
-
-	// Don't render anything if no pills are going to be displayed
-	if (isReply && !hasMedia && !hasLink) {
-		return null;
-	}
-
-	return (
-		<View style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
-			<ScrollView
-				contentContainerStyle={[a.gap_sm]}
-				horizontal={true}
-				bounces={false}
-				keyboardShouldPersistTaps="always"
-				showsHorizontalScrollIndicator={false}
-			>
-				{isReply ? null : (
-					<ThreadgateBtn
-						postgate={thread.postgate}
-						onChangePostgate={(nextPostgate) => {
-							dispatch({ type: 'update_postgate', postgate: nextPostgate });
-						}}
-						threadgateAllowUISettings={thread.threadgate}
-						onChangeThreadgateAllowUISettings={(nextThreadgate) => {
-							dispatch({
-								type: 'update_threadgate',
-								threadgate: nextThreadgate,
-							});
-						}}
-					/>
-				)}
-				{hasMedia || hasLink ? (
-					<LabelsBtn
-						labels={post.labels}
-						onChange={(nextLabels) => {
-							dispatch({
-								type: 'update_post',
-								postId: post.id,
-								postAction: {
-									type: 'update_labels',
-									labels: nextLabels,
-								},
-							});
-						}}
-					/>
-				) : null}
-			</ScrollView>
-		</View>
-	);
-}
-
-function ComposerFooter({
-	post,
-	dispatch,
-	showAddButton,
-	onError,
-	onSelectVideo,
-	onAddPost,
-	currentLanguages,
-	onSelectLanguage,
-	languageNudgeAt,
-	openGallery,
-	textInputRef,
-}: {
-	post: PostDraft;
-	dispatch: (action: PostAction) => void;
-	showAddButton: boolean;
-	onError: (error: string) => void;
-	onSelectVideo: (postId: string, asset: VideoAsset) => void;
-	onAddPost: () => void;
-	currentLanguages: string[];
-	onSelectLanguage?: (language: string) => void;
-	languageNudgeAt: number;
-	openGallery?: boolean;
-	textInputRef: React.RefObject<TextInputRef | null>;
-}) {
-	const t = useTheme();
-	const { gtPhone } = useBreakpoints();
-	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
-	/*
-	 * Once we've allowed a certain type of asset to be selected, we don't allow
-	 * other types of media to be selected.
-	 */
-	const [selectedAssetsType, setSelectedAssetsType] = useState<AssetType | undefined>(undefined);
-
-	const media = post.embed.media;
-	const images = media?.type === 'images' || media?.type === 'gallery' ? media.images : [];
-	const video = media?.type === 'video' ? media.video : null;
-	const isMaxImages = images.length >= MAX_GALLERY_IMAGES;
-	const isMaxVideos = !!video;
-
-	let selectedAssetsCount = 0;
-	let isMediaSelectionDisabled = false;
-
-	if (media?.type === 'images' || media?.type === 'gallery') {
-		isMediaSelectionDisabled = isMaxImages;
-		selectedAssetsCount = images.length;
-	} else if (media?.type === 'video') {
-		isMediaSelectionDisabled = isMaxVideos;
-		selectedAssetsCount = 1;
-	} else {
-		isMediaSelectionDisabled = !!media;
-	}
-
-	const onImageAdd = useAddImagesWithCap(images.length, dispatch);
-
-	const onSelectGif = useCallback(
-		(gif: Gif) => {
-			dispatch({ type: 'embed_add_gif', gif });
-		},
-		[dispatch],
-	);
-
-	/*
-	 * Reset if the user clears any selected media
-	 */
-	if (selectedAssetsType !== undefined && !media) {
-		setSelectedAssetsType(undefined);
-	}
-
-	const onSelectAssets = useCallback<SelectMediaButtonProps['onSelectAssets']>(
-		async ({ type, images, video, errors }) => {
-			setSelectedAssetsType(type);
-
-			if (type === 'image' && images.length) {
-				const results = await Promise.allSettled(images.map((image) => createComposerImage(image)));
-
-				const selectedImages: ComposerImage[] = [];
-				let failed = 0;
-
-				for (const [index, result] of results.entries()) {
-					if (result.status === 'fulfilled') {
-						selectedImages.push(result.value);
-					} else {
-						failed++;
-						const file = images[index]!;
-						logger.error(`createComposerImage failed`, {
-							safeMessage: result.reason instanceof Error ? result.reason.message : String(result.reason),
-							mimeType: file.type,
-							size: file.size,
-						});
-					}
-				}
-
-				if (selectedImages.length) {
-					onImageAdd(selectedImages);
-				}
-				if (failed > 0) {
-					onError(m['view.composer.gallery.error.notAdded']({ failed }));
-				}
-			} else if ((type === 'video' || type === 'gif') && video) {
-				onSelectVideo(post.id, video);
-			}
-
-			errors.map((error) => {
-				Toast.show(error, {
-					type: 'warning',
-				});
-			});
-		},
-		[post.id, onSelectVideo, onImageAdd, onError],
-	);
-
-	return (
-		<View
-			style={[
-				a.flex_row,
-				a.py_xs,
-				{ paddingLeft: 7, paddingRight: 16 },
-				a.align_center,
-				a.border_t,
-				t.atoms.bg,
-				t.atoms.border_contrast_medium,
-				a.justify_between,
-			]}
-		>
-			<View style={[a.flex_row, a.align_center]}>
-				{video && video.status !== 'done' ? (
-					<VideoUploadToolbar state={video} />
-				) : (
-					<ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-						<SelectMediaButton
-							disabled={isMediaSelectionDisabled}
-							allowedAssetTypes={selectedAssetsType}
-							selectedAssetsCount={selectedAssetsCount}
-							onSelectAssets={onSelectAssets}
-							autoOpen={openGallery}
-						/>
-						<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
-						{gtPhone ? (
-							<>
-								<EmojiPicker.Trigger
-									handle={emojiPickerHandle}
-									render={
-										<ComposerToolbarButton label={m['common.a11y.openEmojiPicker']()} icon={EmojiSmileIcon} />
-									}
-								/>
-								<EmojiPicker.Root handle={emojiPickerHandle} nextFocusRef={textInputRef}>
-									<EmojiPicker.Picker />
-								</EmojiPicker.Root>
-							</>
-						) : null}
-					</ToolbarWrapper>
-				)}
-			</View>
-			<View style={[a.flex_row, a.align_center, a.justify_between]}>
-				{showAddButton && (
-					<ComposerToolbarButton
-						label={m['view.composer.thread.action.addPostToThread']()}
-						onClick={onAddPost}
-						icon={PlusIcon}
-					/>
-				)}
-				<PostLanguageSelect
-					currentLanguages={currentLanguages}
-					onSelectLanguage={onSelectLanguage}
-					nudgeAt={languageNudgeAt}
-				/>
-				<CharProgress count={post.shortenedGraphemeLength} style={{ width: 54 }} />
-			</View>
-		</View>
-	);
-}
-
 function useScrollTracker({
 	scrollViewRef,
 	stickyBottom,
@@ -1834,16 +1430,10 @@ function useScrollTracker({
 		scrollViewHeight.current = Math.floor(evt.nativeEvent.layout.height);
 	}, []);
 
-	const bottomBarAnimatedStyle: ViewStyle = {
-		borderTopWidth: StyleSheet.hairlineWidth,
-		borderColor: 'transparent',
-	};
-
 	return {
 		scrollHandler,
 		onScrollViewContentSizeChange,
 		onScrollViewLayout,
-		bottomBarAnimatedStyle,
 	};
 }
 
@@ -1879,174 +1469,7 @@ const styles = StyleSheet.create({
 		position: 'sticky',
 		bottom: 0,
 	}),
-	errorLine: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		backgroundColor: legacyColors.red1,
-		borderRadius: 6,
-		marginHorizontal: 16,
-		paddingHorizontal: 12,
-		paddingVertical: 10,
-		marginBottom: 8,
-	},
-	reminderLine: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		borderRadius: 6,
-		marginHorizontal: 16,
-		paddingHorizontal: 8,
-		paddingVertical: 6,
-		marginBottom: 8,
-	},
-	errorIcon: {
-		borderWidth: StyleSheet.hairlineWidth,
-		borderColor: legacyColors.red4,
-		color: legacyColors.red4,
-		borderRadius: 30,
-		width: 16,
-		height: 16,
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginRight: 5,
-	},
 	inactivePost: {
 		opacity: 0.5,
 	},
-	addExtLinkBtn: {
-		borderWidth: 1,
-		borderRadius: 24,
-		paddingHorizontal: 16,
-		paddingVertical: 12,
-		marginHorizontal: 10,
-		marginBottom: 4,
-	},
 });
-
-function ErrorBanner({
-	error: standardError,
-	videoState,
-	clearError,
-	clearVideo,
-}: {
-	error: string;
-	videoState: VideoState | NoVideoState;
-	clearError: () => void;
-	clearVideo: () => void;
-}) {
-	const t = useTheme();
-	const videoError = videoState.status === 'error' ? videoState.error : undefined;
-	const error = standardError || videoError;
-
-	const onClearError = () => {
-		if (standardError) {
-			clearError();
-		} else {
-			clearVideo();
-		}
-	};
-
-	if (!error) return null;
-
-	return (
-		<View style={[a.px_lg, a.pb_sm]}>
-			<View style={[a.px_md, a.py_sm, a.gap_xs, a.rounded_sm, t.atoms.bg_contrast_25]}>
-				<View style={[a.relative, a.flex_row, a.gap_sm, { paddingRight: 48 }]}>
-					<CircleInfoIcon fill={colors.negative_400} />
-					<Text style={[a.flex_1, a.leading_snug, { paddingTop: 1 }]}>{error}</Text>
-					<Button
-						label={m['view.composer.a11y.dismissError']()}
-						size="tiny"
-						color="secondary"
-						variant="ghost"
-						shape="round"
-						style={[a.absolute, { top: 0, right: 0 }]}
-						onPress={onClearError}
-					>
-						<ButtonIcon icon={XIcon} />
-					</Button>
-				</View>
-				{videoError && videoState.jobId && (
-					<Text
-						style={[
-							{ paddingLeft: 28 },
-							a.text_xs,
-							a.font_semi_bold,
-							a.leading_snug,
-							t.atoms.text_contrast_low,
-						]}
-					>
-						{m['view.composer.video.jobId']({ jobId: videoState.jobId })}
-					</Text>
-				)}
-			</View>
-		</View>
-	);
-}
-
-function ToolbarWrapper({
-	style: _style,
-	children,
-}: {
-	style: StyleProp<ViewStyle>;
-	children: React.ReactNode;
-}) {
-	return children;
-}
-
-function VideoUploadToolbar({ state }: { state: VideoState }) {
-	const t = useTheme();
-	const progress = state.progress;
-	const shouldRotate = state.status === 'processing' && (progress === 0 || progress === 1);
-	let wheelProgress = shouldRotate ? 0.33 : progress;
-
-	let text = '';
-
-	const isGif = state.video?.mimeType === 'image/gif';
-
-	switch (state.status) {
-		case 'compressing':
-			if (isGif) {
-				text = m['view.composer.gif.compressing']();
-			} else {
-				text = m['view.composer.video.compressing']();
-			}
-			break;
-		case 'uploading':
-			if (isGif) {
-				text = m['view.composer.gif.uploading']();
-			} else {
-				text = m['view.composer.video.uploading']();
-			}
-			break;
-		case 'processing':
-			if (isGif) {
-				text = m['view.composer.gif.processing']();
-			} else {
-				text = m['view.composer.video.processing']();
-			}
-			break;
-		case 'error':
-			text = m['common.error.heading']();
-			wheelProgress = 100;
-			break;
-		case 'done':
-			if (isGif) {
-				text = m['view.composer.gif.uploaded']();
-			} else {
-				text = m['view.composer.video.uploaded']();
-			}
-			break;
-	}
-
-	return (
-		<ToolbarWrapper style={[a.flex_row, a.align_center, { paddingVertical: 5 }]}>
-			<ProgressCircle
-				size={30}
-				trackColor={t.atoms.border_contrast_low.borderColor}
-				color={state.status === 'error' ? t.palette.negative_500 : t.palette.primary_500}
-				progress={wheelProgress}
-			/>
-			<Text style={[a.font_semi_bold, a.ml_sm]}>{text}</Text>
-		</ToolbarWrapper>
-	);
-}

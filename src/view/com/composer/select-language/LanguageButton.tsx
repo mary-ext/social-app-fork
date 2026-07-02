@@ -6,6 +6,7 @@ import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
+import { Text } from '#/components/Text';
 import { Button, type ButtonProps } from '#/components/web/Button';
 
 import * as styles from './LanguageButton.css';
@@ -29,12 +30,12 @@ export function LanguageButton({
 	const languages = currentLanguages ?? toPostLanguages(langPrefs.postLanguage);
 
 	return (
-		<Button variant="bare" size="small" className={clsx(styles.button, className)} {...props}>
+		<Button variant="ghost" size="small" className={clsx(styles.button, className)} {...props}>
 			{nudgeAt > 0 && <span key={nudgeAt} className={styles.pulseOverlay} />}
 			{languages.length > 0 ? (
-				<span className={styles.langText}>
+				<Text color="primary_600" size="md_sub">
 					{languages.map((lang) => codeToLanguageName(lang, LOCALE)).join(', ')}
-				</span>
+				</Text>
 			) : (
 				<GlobeIcon size="xs" fill="currentColor" />
 			)}
