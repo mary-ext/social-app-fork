@@ -36,8 +36,6 @@ export const router = new Router<AllNavigatableRoutes>({
 	ProfileFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
 	ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
 	// debug
-	Debug: '/sys/debug',
-	DebugMod: '/sys/debug-mod',
 	Log: '/sys/log',
 	// settings
 	LanguageSettings: '/settings/language',

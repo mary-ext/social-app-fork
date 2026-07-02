@@ -31,8 +31,6 @@ export type CommonNavigatorParams = {
 	ProfileFeed: { name: string; rkey: string };
 	ProfileFeedLikedBy: { name: string; rkey: string };
 	ProfileLabelerLikedBy: { name: string };
-	Debug: undefined;
-	DebugMod: undefined;
 	Log: undefined;
 	LanguageSettings: undefined;
 	SavedFeeds: undefined;

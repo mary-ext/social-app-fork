@@ -14,16 +14,11 @@ import { usePreferencesQuery } from '../queries/preferences';
 export const moderationOptsContext = createContext<ModerationOptions | undefined>(undefined);
 moderationOptsContext.displayName = 'ModerationOptsContext';
 
-// used in the moderation state devtool
-export const moderationOptsOverrideContext = createContext<ModerationOptions | undefined>(undefined);
-moderationOptsOverrideContext.displayName = 'ModerationOptsOverrideContext';
-
 export function useModerationOpts() {
 	return useContext(moderationOptsContext);
 }
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
-	const override = useContext(moderationOptsOverrideContext);
 	const { currentAccount } = useSession();
 	const prefs = usePreferencesQuery();
 	const { labelDefs } = useLabelDefinitions();
@@ -31,9 +26,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const userDid = currentAccount?.did;
 	const moderationPrefs = prefs.data?.moderationPrefs;
 	const value: ModerationOptions | undefined = (() => {
-		if (override) {
-			return override;
-		}
 		if (!moderationPrefs) {
 			return undefined;
 		}

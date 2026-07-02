@@ -82,9 +82,7 @@ const ContentAndMediaSettingsScreen = lazy(() =>
 		default: m.ContentAndMediaSettingsScreen,
 	})),
 );
-const DebugModScreen = lazy(() =>
-	import('#/view/screens/DebugMod').then((m) => ({ default: m.DebugModScreen })),
-);
+
 const ExternalMediaPreferencesScreen = lazy(() =>
 	import('#/screens/Settings/ExternalMediaPreferences').then((m) => ({
 		default: m.ExternalMediaPreferencesScreen,
@@ -274,9 +272,7 @@ const StarterPackScreenShort = lazy(() =>
 		default: m.StarterPackScreenShort,
 	})),
 );
-const StorybookScreen = lazy(() =>
-	import('#/view/screens/Storybook').then((m) => ({ default: m.StorybookScreen })),
-);
+
 const TopicScreen = lazy(() => import('#/screens/Topic').then((m) => ({ default: m.default })));
 const Wizard = lazy(() => import('#/screens/StarterPack/Wizard').then((m) => ({ default: m.Wizard })));
 
@@ -611,19 +607,7 @@ const FlatNavigator = () => {
 				getComponent={() => ProfileLabelerLikedByScreen}
 				options={{ title: title(m['navigation.likedBy.title']()) }}
 			/>
-			<Flat.Screen
-				name="Debug"
-				getComponent={() => StorybookScreen}
-				options={{ title: title(m['navigation.developer.storybook.title']()), requireAuth: true }}
-			/>
-			<Flat.Screen
-				name="DebugMod"
-				getComponent={() => DebugModScreen}
-				options={{
-					title: title(m['navigation.moderation.states.title']()),
-					requireAuth: true,
-				}}
-			/>
+
 			<Flat.Screen
 				name="Log"
 				getComponent={() => LogScreen}

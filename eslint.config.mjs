@@ -96,7 +96,6 @@ export default defineConfig(
 					impliedTextProps: [],
 					suggestedTextWrappers: {
 						Button: 'ButtonText',
-						'ToggleButton.Button': 'ToggleButton.ButtonText',
 						'SegmentedControl.Item': 'SegmentedControl.ItemText',
 					},
 				},

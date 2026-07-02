@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { clsx } from 'clsx';
 
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useSessionApi } from '#/state/session';
 
@@ -120,7 +119,6 @@ export function SettingsScreen({}: Props) {
 }
 
 function DevOptionsRow({ className }: { className?: string }) {
-	const navigation = useNavigation<NavigationProp>();
 	const [debugFeedContextEnabled, setDebugFeedContextEnabled] = useDebugFeedContextEnabled();
 	const [devModeEnabled, setDevModeEnabled] = useDevMode();
 	const [open, setOpen] = useState(false);
@@ -148,18 +146,6 @@ function DevOptionsRow({ className }: { className?: string }) {
 			>
 				<Settings.Label titleText={m['screens.settings.developer.showFeedContext']()} />
 			</Settings.SwitchRow>
-			<Settings.ButtonRow
-				label={m['screens.settings.developer.storybook.open']()}
-				onPress={() => navigation.navigate('Debug')}
-			>
-				<Settings.Label titleText={m['screens.settings.developer.storybook.label']()} />
-			</Settings.ButtonRow>
-			<Settings.ButtonRow
-				label={m['screens.settings.developer.moderationPlayground.open']()}
-				onPress={() => navigation.navigate('DebugMod')}
-			>
-				<Settings.Label titleText={m['screens.settings.developer.moderationPlayground.label']()} />
-			</Settings.ButtonRow>
 		</Settings.CollapsibleRow>
 	);
 }
