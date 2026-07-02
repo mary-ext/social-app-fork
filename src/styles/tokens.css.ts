@@ -24,8 +24,7 @@ export const space = {
 
 // scalar leading ratios for line-heights that aren't paired to a `fontSize` token: `none`/`tight` for the
 // `Text` recipe's `none` leading and its callers' tight heading overrides, `snug` for a few controls that
-// hardcode a 1.3 line-height (composer textarea, language button). per-size paired ratios live in
-// `fontLeading` below.
+// hardcode a 1.3 line-height (e.g. buttons). per-size paired ratios live in `fontLeading` below.
 export const lineHeight = {
 	none: 1,
 	snug: 1.3,

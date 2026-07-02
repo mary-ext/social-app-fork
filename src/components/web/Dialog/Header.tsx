@@ -4,9 +4,16 @@ import { clsx } from 'clsx';
 import { Text } from '#/components/Text';
 import * as styles from '#/components/web/Dialog/Header.css';
 
-/** Sticky header row. Compose with `Slot` (edge buttons) + `Content`/`TitleText`, like `Layout.Header`. */
-export function Outer({ border = true, children }: { border?: boolean; children: ReactNode }) {
-	return <div className={clsx(styles.outer, !border && styles.borderless)}>{children}</div>;
+export function Outer({
+	border = true,
+	className,
+	children,
+}: {
+	border?: boolean;
+	className?: string;
+	children: ReactNode;
+}) {
+	return <div className={clsx(styles.outer, !border && styles.borderless, className)}>{children}</div>;
 }
 
 export function Content({ children }: { children?: ReactNode }) {

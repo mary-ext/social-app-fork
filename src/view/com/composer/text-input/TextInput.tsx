@@ -27,7 +27,7 @@ export function TextInput({
 	ref,
 	text,
 	placeholder,
-	webForceMinHeight,
+	forceMinHeight,
 	hasRightPadding,
 	isActive,
 	setText,
@@ -180,13 +180,13 @@ export function TextInput({
 				autoFocus={autoFocus}
 				accessibilityLabel={accessibilityLabel}
 				accessibilityHint={accessibilityHint}
-				minRows={webForceMinHeight ? 7 : 2}
+				minRows={forceMinHeight ? 6 : 2}
 				className={styles.editor}
 				contentPadding={{
-					bottom: 5,
-					left: 5,
-					right: hasRightPadding ? 37 : 5,
-					top: 5,
+					top: 6,
+					bottom: 6,
+					left: 0,
+					right: hasRightPadding ? 24 : 0,
 				}}
 				onActiveCompletion={(completion) => {
 					activeCompletionRef.current = !!completion;

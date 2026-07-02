@@ -10,16 +10,6 @@ import {
 	useRef,
 	useState,
 } from 'react';
-import {
-	Keyboard,
-	type LayoutChangeEvent,
-	type NativeScrollEvent,
-	type NativeSyntheticEvent,
-	ScrollView,
-	StyleSheet,
-	View,
-	type ViewStyle,
-} from 'react-native';
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
@@ -27,6 +17,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { isGraphemeLengthInRange } from '@atcute/util-text';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
 import * as apilib from '#/lib/api/index';
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
@@ -72,18 +63,18 @@ import { TextInput } from '#/view/com/composer/text-input/TextInput';
 import { SubtitleDialogBtn } from '#/view/com/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/view/com/composer/videos/VideoPreview';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon } from '#/components/Button';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 
+import * as styles from './Composer.css';
 import * as ComposerError from './ComposerError';
 import { ComposerFooter } from './ComposerFooter';
 import { ComposerPills } from './ComposerPills';
@@ -108,22 +99,6 @@ import {
 import { NO_VIDEO, type NoVideoState, processVideo, type VideoState } from './state/video';
 import type { TextInputRef } from './text-input/TextInput.types';
 
-export type CancelRef = {
-	/** Returns `true` if the composer should stay open, `false` if the caller should close it. */
-	onPressCancel: () => boolean;
-};
-
-type WebViewStyle = Omit<ViewStyle, 'maxHeight' | 'position'> & {
-	maxHeight?: string;
-	position?: 'sticky';
-	scrollbarColor?: string;
-	scrollbarGutter?: 'stable';
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
-};
-
 /** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
 const NUDGE_COOLDOWN_MS = 10_000;
 
@@ -142,7 +117,6 @@ export const ComposePost = ({
 	cancelRef?: React.RefObject<CancelRef | null>;
 }) => {
 	const { currentAccount } = useSession();
-	const t = useTheme();
 	const { appview, pds, pdsUrl } = useClients();
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
@@ -554,7 +528,9 @@ export const ComposePost = ({
 			// Dismiss sub-dialogs (emoji picker, etc.) but keep the composer itself open so the discard
 			// prompt has something to confirm against.
 			closeAllDialogs({ except: [COMPOSER_DIALOG_ID] });
-			Keyboard.dismiss();
+			if (document.activeElement instanceof HTMLElement) {
+				document.activeElement.blur();
+			}
 			discardPromptHandle.open(null);
 			return true;
 		}
@@ -907,7 +883,7 @@ export const ComposePost = ({
 				}
 			: undefined;
 
-	const scrollViewRef = useRef<ScrollView | null>(null);
+	const scrollViewRef = useRef<HTMLDivElement | null>(null);
 	// focus the text input once per focus request. the reducer bumps `activePostFocusRequestId` on
 	// focus-requesting actions; this effect consumes each committed request exactly once by tracking
 	// the last-handled id in a ref, so no reducer state is mutated after render.
@@ -921,7 +897,7 @@ export const ComposePost = ({
 	}, [composerState.activePostFocusRequestId]);
 
 	const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined;
-	const { scrollHandler, onScrollViewContentSizeChange, onScrollViewLayout } = useScrollTracker({
+	const { scrollHandler, isScrolled } = useScrollTracker({
 		scrollViewRef,
 		stickyBottom: isLastThreadedPost,
 	});
@@ -965,6 +941,7 @@ export const ComposePost = ({
 	return (
 		<>
 			<ComposerTopBar
+				border={isScrolled}
 				canPost={canPost}
 				isReply={!!replyTo}
 				isPublishQueued={publishOnUpload}
@@ -982,9 +959,8 @@ export const ComposePost = ({
 				canSaveDraft={allPostsWithinLimit}
 				textLength={thread.posts[0]!.text.length}
 			/>
-			{/* The composer owns its own scrolling (the `ScrollView` below); this body fills the
-			    height-bounded dialog card while `minHeight: 0` lets the inner scroll view clip. */}
-			<View style={[a.flex_1, { minHeight: 0 }]}>
+			{/* The composer owns its own scrolling (the `Dialog.Body` / `scrollContainer` below) */}
+			<Dialog.Body className={styles.dialogBody}>
 				<ComposerError.Root>
 					{missingAltError && <ComposerError.Box error={missingAltError} />}
 					{displayedError && (
@@ -995,22 +971,7 @@ export const ComposePost = ({
 						/>
 					)}
 				</ComposerError.Root>
-				<ScrollView
-					testID="composePostView"
-					ref={scrollViewRef}
-					onScroll={scrollHandler}
-					contentContainerStyle={a.flex_grow}
-					style={[
-						a.flex_1,
-						webViewStyle({
-							scrollbarGutter: 'stable',
-							scrollbarColor: `${t.palette.contrast_200} transparent`,
-						}),
-					]}
-					keyboardShouldPersistTaps="always"
-					onContentSizeChange={onScrollViewContentSizeChange}
-					onLayout={onScrollViewLayout}
-				>
+				<div ref={scrollViewRef} onScroll={scrollHandler} className={styles.scrollContainer}>
 					{replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 					{thread.posts.map((post, index) => (
 						<Fragment key={post.id + (composerState.draftId ?? '')}>
@@ -1031,13 +992,13 @@ export const ComposePost = ({
 								onError={setError}
 							/>
 							{IS_WEBFooterSticky && post.id === activePost.id && (
-								<View style={styles.stickyFooterWeb}>{footer}</View>
+								<div className={styles.stickyFooterWeb}>{footer}</div>
 							)}
 						</Fragment>
 					))}
-				</ScrollView>
-				{!IS_WEBFooterSticky && footer}
-			</View>
+				</div>
+			</Dialog.Body>
+			{!IS_WEBFooterSticky && footer}
 
 			{replyTo ? (
 				<Prompt.Basic
@@ -1204,22 +1165,20 @@ let ComposerPost = memo(function ComposerPost({
 	);
 
 	return (
-		<View style={[a.mx_lg, a.mb_sm, !isActive && isLastPost && a.mb_lg, !isActive && styles.inactivePost]}>
-			<View style={[a.flex_row]}>
-				<View style={[a.mt_xs]}>
-					<UserAvatar
-						avatar={currentProfile?.avatar}
-						size={42}
-						type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-					/>
-				</View>
+		<div className={clsx(styles.postContainer, !isActive && styles.inactivePost)}>
+			<div className={styles.row}>
+				<UserAvatar
+					avatar={currentProfile?.avatar}
+					size={36}
+					type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+				/>
+
 				<TextInput
 					ref={textInputRef}
-					style={[a.pt_xs]}
 					text={text}
 					placeholder={selectTextInputPlaceholder}
 					autoFocus={isLastPost}
-					webForceMinHeight={forceMinHeight}
+					forceMinHeight={forceMinHeight}
 					// To avoid overlap with the close button:
 					hasRightPadding={isPartOfThread}
 					isActive={isActive}
@@ -1240,7 +1199,8 @@ let ComposerPost = memo(function ComposerPost({
 					accessibilityLabel={m['common.compose.action.write']()}
 					accessibilityHint={m['view.composer.text.maxLengthHint']({ count: MAX_GRAPHEME_LENGTH || 0 })}
 				/>
-			</View>
+			</div>
+
 			{canRemovePost && isActive && (
 				<>
 					<Button
@@ -1249,8 +1209,8 @@ let ComposerPost = memo(function ComposerPost({
 						color="secondary"
 						variant="ghost"
 						shape="round"
-						style={[a.absolute, { top: 0, right: 0 }]}
-						onPress={() => {
+						className={styles.remove}
+						onClick={() => {
 							if (
 								post.shortenedGraphemeLength > 0 ||
 								post.embed.media ||
@@ -1268,6 +1228,7 @@ let ComposerPost = memo(function ComposerPost({
 					>
 						<ButtonIcon icon={XIcon} />
 					</Button>
+
 					<Prompt.Basic
 						handle={discardPromptHandle}
 						title={m['view.composer.discard.title']()}
@@ -1283,6 +1244,7 @@ let ComposerPost = memo(function ComposerPost({
 					/>
 				</>
 			)}
+
 			<ComposerEmbeds
 				canRemoveQuote={canRemoveQuote}
 				embed={post.embed}
@@ -1290,7 +1252,7 @@ let ComposerPost = memo(function ComposerPost({
 				clearVideo={() => onClearVideo(post.id)}
 				isActivePost={isActive}
 			/>
-		</View>
+		</div>
 	);
 });
 
@@ -1314,7 +1276,7 @@ function ComposerEmbeds({
 				<Gallery images={embed.media.images} dispatch={dispatch} />
 			)}
 			{embed.media?.type === 'gif' && (
-				<View style={[a.relative, a.mt_lg]} key={embed.media.gif.url}>
+				<div className={styles.gifContainer} key={embed.media.gif.url}>
 					<ExternalEmbedGif gif={embed.media.gif} onRemove={() => dispatch({ type: 'embed_remove_gif' })} />
 					<GifAltText
 						gif={embed.media.gif}
@@ -1323,19 +1285,19 @@ function ComposerEmbeds({
 							dispatch({ type: 'embed_update_gif', alt: altText });
 						}}
 					/>
-				</View>
+				</div>
 			)}
 			{!embed.media && embed.link && (
-				<View style={[a.relative, a.mt_lg]} key={embed.link.uri}>
+				<div className={styles.linkContainer} key={embed.link.uri}>
 					<ExternalEmbedLink
 						uri={embed.link.uri}
 						hasQuote={!!embed.quote}
 						onRemove={() => dispatch({ type: 'embed_remove_link' })}
 					/>
-				</View>
+				</div>
 			)}
 			{video && (
-				<View style={[a.w_full, a.mt_lg]}>
+				<div className={styles.videoContainer}>
 					{video.asset &&
 						(video.status !== 'compressing' && video.video ? (
 							<VideoPreview
@@ -1369,20 +1331,20 @@ function ComposerEmbeds({
 							});
 						}}
 					/>
-				</View>
+				</div>
 			)}
 			{embed.quote?.uri ? (
-				<View style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], a.pb_md]}>
-					<View style={[a.relative]}>
+				<div className={video ? styles.quoteContainerWithVideo : styles.quoteContainerWithoutVideo}>
+					<div style={{ position: 'relative' }}>
 						<LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
 						{canRemoveQuote && (
 							<ExternalEmbedRemoveBtn
 								onRemove={() => dispatch({ type: 'embed_remove_quote' })}
-								style={{ top: 16 }}
+								className={styles.externalEmbedRemoveBtn}
 							/>
 						)}
-					</View>
-				</View>
+					</div>
+				</div>
 			) : null}
 		</>
 	);
@@ -1392,23 +1354,37 @@ function useScrollTracker({
 	scrollViewRef,
 	stickyBottom,
 }: {
-	scrollViewRef: React.RefObject<ScrollView | null>;
+	scrollViewRef: React.RefObject<HTMLDivElement | null>;
 	stickyBottom: boolean;
 }) {
+	const [isScrolled, setIsScrolled] = useState(false);
 	const contentOffset = useRef(0);
 	const scrollViewHeight = useRef(Infinity);
 	const contentHeight = useRef(0);
 
-	const scrollHandler = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-		const ev = event.nativeEvent;
-		contentOffset.current = Math.floor(ev.contentOffset.y);
-		contentHeight.current = Math.floor(ev.contentSize.height);
-		scrollViewHeight.current = Math.floor(ev.layoutMeasurement.height);
+	const scrollHandler = useCallback((event: React.UIEvent<HTMLDivElement>) => {
+		const el = event.currentTarget;
+		contentOffset.current = Math.floor(el.scrollTop);
+		contentHeight.current = Math.floor(el.scrollHeight);
+		scrollViewHeight.current = Math.floor(el.clientHeight);
+
+		const scrolled = el.scrollTop > 0;
+		setIsScrolled((prev) => {
+			if (prev !== scrolled) {
+				return scrolled;
+			}
+			return prev;
+		});
 	}, []);
 
-	const onScrollViewContentSizeChange = useCallback(
-		(_width: number, height: number) => {
-			const newContentHeight = Math.floor(height);
+	useEffect(() => {
+		const el = scrollViewRef.current;
+		if (!el) {
+			return;
+		}
+
+		const handleResize = () => {
+			const newContentHeight = Math.floor(el.scrollHeight);
 			const oldContentHeight = contentHeight.current;
 			let shouldScrollToBottom = false;
 			if (stickyBottom && newContentHeight > oldContentHeight) {
@@ -1419,21 +1395,27 @@ function useScrollTracker({
 				}
 			}
 			contentHeight.current = newContentHeight;
+			scrollViewHeight.current = Math.floor(el.clientHeight);
 			if (shouldScrollToBottom) {
-				scrollViewRef.current?.scrollTo({ x: 0, y: newContentHeight, animated: true });
+				el.scrollTo({ top: newContentHeight, behavior: 'smooth' });
 			}
-		},
-		[scrollViewRef, stickyBottom],
-	);
+		};
 
-	const onScrollViewLayout = useCallback((evt: LayoutChangeEvent) => {
-		scrollViewHeight.current = Math.floor(evt.nativeEvent.layout.height);
-	}, []);
+		contentHeight.current = Math.floor(el.scrollHeight);
+		scrollViewHeight.current = Math.floor(el.clientHeight);
+
+		const observer = new ResizeObserver(handleResize);
+		const target = el.firstElementChild || el;
+		observer.observe(target);
+
+		return () => {
+			observer.disconnect();
+		};
+	}, [scrollViewRef, stickyBottom]);
 
 	return {
 		scrollHandler,
-		onScrollViewContentSizeChange,
-		onScrollViewLayout,
+		isScrolled,
 	};
 }
 
@@ -1464,12 +1446,7 @@ function isEmptyPost(post: PostDraft) {
 	return post.text.trim().length === 0 && !post.embed.media && !post.embed.link && !post.embed.quote;
 }
 
-const styles = StyleSheet.create({
-	stickyFooterWeb: webViewStyle({
-		position: 'sticky',
-		bottom: 0,
-	}),
-	inactivePost: {
-		opacity: 0.5,
-	},
-});
+export type CancelRef = {
+	/** Returns `true` if the composer should stay open, `false` if the caller should close it. */
+	onPressCancel: () => boolean;
+};

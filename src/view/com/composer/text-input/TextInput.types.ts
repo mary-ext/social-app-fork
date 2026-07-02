@@ -16,7 +16,7 @@ export type TextInputRef = {
 export type TextInputProps = {
 	ref: React.Ref<TextInputRef>;
 	text: string;
-	webForceMinHeight: boolean;
+	forceMinHeight: boolean;
 	hasRightPadding: boolean;
 	isActive: boolean;
 	setText: (v: string) => void;

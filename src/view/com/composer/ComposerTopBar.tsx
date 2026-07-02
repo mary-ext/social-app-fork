@@ -1,3 +1,5 @@
+import { clsx } from 'clsx';
+
 import { DraftsButton } from '#/view/com/composer/drafts/DraftsButton';
 
 import { Spinner } from '#/components/Spinner';
@@ -12,6 +14,7 @@ import * as styles from './ComposerTopBar.css';
 import type { DraftSummary } from './drafts/state/schema';
 
 export function ComposerTopBar({
+	border,
 	canPost,
 	isReply,
 	isPublishQueued,
@@ -29,6 +32,7 @@ export function ComposerTopBar({
 	canSaveDraft,
 	textLength,
 }: {
+	border?: boolean;
 	isPublishing: boolean;
 	publishingStage: string;
 	canPost: boolean;
@@ -47,7 +51,7 @@ export function ComposerTopBar({
 	textLength: number;
 }) {
 	return (
-		<Dialog.Header.Outer border={false}>
+		<Dialog.Header.Outer border={false} className={clsx(styles.header, border && styles.headerScrolled)}>
 			<Dialog.Header.Slot>
 				<Button.Button
 					label={m['common.action.cancel']()}

@@ -1,42 +1,26 @@
 import { useState } from 'react';
-import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
 import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-
-import { atoms as a, useTheme, utils } from '#/alf';
 
 import { QuoteEmbed } from '#/components/Post/Embed';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { m } from '#/paraglide/messages';
-import { Image } from '#/shims/image';
 import { parseEmbed } from '#/types/embed';
 
-type WebViewStyle = ViewStyle & {
-	userSelect?: 'text';
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style;
-};
+import * as styles from './ComposerReplyTo.css';
 
 export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
-	const t = useTheme();
 	const embed = replyTo.embed;
 
 	const [showFull, setShowFull] = useState(false);
 
 	const onPress = () => {
 		setShowFull((prev) => !prev);
-		LayoutAnimation.configureNext({
-			duration: 350,
-			update: { type: 'spring', springDamping: 0.7 },
-		});
 	};
 
 	let quoteEmbed = null;
@@ -79,25 +63,14 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 	}
 
 	return (
-		<Pressable
-			style={[
-				a.flex_row,
-				a.align_start,
-				a.pt_xs,
-				a.pb_lg,
-				a.mb_md,
-				a.mx_lg,
-				a.border_b,
-				t.atoms.border_contrast_medium,
-				webViewStyle(a.user_select_text),
-			]}
-			onPress={onPress}
-			accessibilityRole="button"
-			accessibilityLabel={m['view.composer.reply.expand']()}
-			accessibilityHint=""
+		<div
+			className={styles.container}
+			onClick={onPress}
+			role="button"
+			aria-label={m['view.composer.reply.expand']()}
 		>
 			<PreviewableUserAvatar
-				size={42}
+				size={36}
 				profile={replyTo.author}
 				moderation={
 					replyTo.moderation
@@ -107,36 +80,35 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 				type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
 				disableNavigation={true}
 			/>
-			<View style={[a.flex_1, a.pl_md, a.pr_sm, a.gap_2xs]}>
-				<View style={[a.flex_row, a.align_center, a.pr_xs]}>
-					<Text style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]} numberOfLines={1} emoji>
-						{sanitizeDisplayName(replyTo.author.displayName || replyTo.author.handle)}
+
+			<div className={styles.content}>
+				<div className={styles.header}>
+					<Text className={styles.name} color="textContrastHigh" numberOfLines={1} weight="semiBold">
+						{replyTo.author.handle}
 					</Text>
-					<View style={[a.pl_xs]}>
-						<ProfileBadges profile={replyTo.author} size="sm" />
-					</View>
-				</View>
-				<View style={[a.flex_row, a.gap_md]}>
-					<View style={[a.flex_1, a.flex_grow]}>
-						<Text
-							style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}
-							numberOfLines={!showFull ? 6 : undefined}
-							emoji
-						>
+
+					<ProfileBadges profile={replyTo.author} size="sm" className={styles.badge} />
+				</div>
+
+				<div className={styles.bodyRow}>
+					<div className={styles.flexGrow}>
+						<Text size="md" leading="snug" color="textContrastHigh" numberOfLines={!showFull ? 6 : 16}>
 							{replyTo.text}
 						</Text>
-					</View>
+					</div>
+
 					{images &&
 						!(
 							replyTo.moderation &&
 							getDisplayRestrictions(replyTo.moderation, DisplayContext.ContentMedia).blurs.length > 0
 						) && <ComposerReplyToImages images={images} totalNumber={totalNumber} />}
-				</View>
+				</div>
+
 				{showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
 					<QuoteEmbed embed={parsedQuoteEmbed} linkDisabled />
 				)}
-			</View>
-		</Pressable>
+			</div>
+		</div>
 	);
 }
 
@@ -150,6 +122,10 @@ function galleryItemsToImages(items: AppBskyEmbedGallery.ViewImage[]): AppBskyEm
 	}));
 }
 
+function ReplyImage({ image }: { image: AppBskyEmbedImages.ViewImage }) {
+	return <img src={image.thumb} className={styles.image} alt={image.alt || ''} />;
+}
+
 function ComposerReplyToImages({
 	images,
 	totalNumber,
@@ -157,118 +133,60 @@ function ComposerReplyToImages({
 	images: AppBskyEmbedImages.ViewImage[];
 	totalNumber: number;
 }) {
-	const t = useTheme();
-
-	return (
-		<View
-			style={[
-				a.rounded_xs,
-				a.overflow_hidden,
-				a.mt_2xs,
-				a.mx_xs,
-				{
-					height: 64,
-					width: 64,
-				},
-			]}
-		>
-			{(images.length === 1 && (
-				<Image
-					source={{ uri: images[0]!.thumb }}
-					style={[a.flex_1]}
-					cachePolicy="memory-disk"
-					accessibilityIgnoresInvertColors
-				/>
-			)) ||
-				(images.length === 2 && (
-					<View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
-						<Image
-							source={{ uri: images[0]!.thumb }}
-							style={[a.flex_1]}
-							cachePolicy="memory-disk"
-							accessibilityIgnoresInvertColors
-						/>
-						<Image
-							source={{ uri: images[1]!.thumb }}
-							style={[a.flex_1]}
-							cachePolicy="memory-disk"
-							accessibilityIgnoresInvertColors
-						/>
-					</View>
-				)) ||
-				(images.length === 3 && (
-					<View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
-						<Image
-							source={{ uri: images[0]!.thumb }}
-							style={[a.flex_1]}
-							cachePolicy="memory-disk"
-							accessibilityIgnoresInvertColors
-						/>
-						<View style={[a.flex_1, a.gap_2xs]}>
-							<Image
-								source={{ uri: images[1]!.thumb }}
-								style={[a.flex_1]}
-								cachePolicy="memory-disk"
-								accessibilityIgnoresInvertColors
-							/>
-							<Image
-								source={{ uri: images[2]!.thumb }}
-								style={[a.flex_1]}
-								cachePolicy="memory-disk"
-								accessibilityIgnoresInvertColors
-							/>
-						</View>
-					</View>
-				)) ||
-				(images.length === 4 && (
-					<View style={[a.flex_1, a.gap_2xs]}>
-						<View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
-							<Image
-								source={{ uri: images[0]!.thumb }}
-								style={[a.flex_1]}
-								cachePolicy="memory-disk"
-								accessibilityIgnoresInvertColors
-							/>
-							<Image
-								source={{ uri: images[1]!.thumb }}
-								style={[a.flex_1]}
-								cachePolicy="memory-disk"
-								accessibilityIgnoresInvertColors
-							/>
-						</View>
-						<View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
-							<Image
-								source={{ uri: images[2]!.thumb }}
-								style={[a.flex_1]}
-								cachePolicy="memory-disk"
-								accessibilityIgnoresInvertColors
-							/>
-							<View style={[a.relative, a.flex_1]}>
-								<Image
-									source={{ uri: images[3]!.thumb }}
-									style={[a.flex_1]}
-									cachePolicy="memory-disk"
-									accessibilityIgnoresInvertColors
-								/>
-								{totalNumber > 4 && (
-									<View
-										style={[
-											a.absolute,
-											a.inset_0,
-											a.align_center,
-											a.justify_center,
-											{ backgroundColor: utils.alpha(t.palette.black, 0.6) },
-										]}
-									>
-										<Text style={[a.text_xs, a.text_center, t.atoms.shadow_sm, { color: t.palette.white }]}>
-											{m['view.composer.gallery.moreCount']({ count: totalNumber - 3 })}
-										</Text>
-									</View>
-								)}
-							</View>
-						</View>
-					</View>
-				))}
-		</View>
-	);
+	if (images.length === 1) {
+		return (
+			<div className={styles.imagesContainer}>
+				<ReplyImage image={images[0]!} />
+			</div>
+		);
+	}
+	if (images.length === 2) {
+		return (
+			<div className={styles.imagesContainer}>
+				<div className={styles.imagesRow}>
+					<ReplyImage image={images[0]!} />
+					<ReplyImage image={images[1]!} />
+				</div>
+			</div>
+		);
+	}
+	if (images.length === 3) {
+		return (
+			<div className={styles.imagesContainer}>
+				<div className={styles.imagesRow}>
+					<ReplyImage image={images[0]!} />
+					<div className={styles.imagesCol}>
+						<ReplyImage image={images[1]!} />
+						<ReplyImage image={images[2]!} />
+					</div>
+				</div>
+			</div>
+		);
+	}
+	if (images.length >= 4) {
+		return (
+			<div className={styles.imagesContainer}>
+				<div className={styles.imagesCol}>
+					<div className={styles.imagesRow}>
+						<ReplyImage image={images[0]!} />
+						<ReplyImage image={images[1]!} />
+					</div>
+					<div className={styles.imagesRow}>
+						<ReplyImage image={images[2]!} />
+						<div className={styles.imageOverlayWrapper}>
+							<ReplyImage image={images[3]!} />
+							{totalNumber > 4 && (
+								<div className={styles.imageOverlay}>
+									<Text weight="medium">
+										{m['view.composer.gallery.moreCount']({ count: totalNumber - 3 })}
+									</Text>
+								</div>
+							)}
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+	return null;
 }

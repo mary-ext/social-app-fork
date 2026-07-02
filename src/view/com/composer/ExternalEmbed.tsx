@@ -1,5 +1,5 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
+import { clsx } from 'clsx';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
@@ -8,8 +8,6 @@ import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve
 
 import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { Loader } from '#/components/Loader';
 import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
@@ -17,12 +15,13 @@ import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
 import type { Gif } from '#/features/gifPicker/types';
 
+import * as styles from './ExternalEmbed.css';
+
 export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif: Gif }) => {
-	const t = useTheme();
 	const { data, error } = useResolveGifQuery(gif);
 	const thumbUrl = useBlobUrl(data?.thumb?.source.blob);
 	const linkInfo =
@@ -34,7 +33,7 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 			thumb: thumbUrl,
 		} as AppBskyEmbedExternal.ViewExternal);
 
-	const loadingStyle: ViewStyle = {
+	const loadingStyle: React.CSSProperties = {
 		aspectRatio: (() => {
 			const dims = gif.media_formats.gif?.dims;
 			if (dims && dims[0] > 0 && dims[1] > 0) {
@@ -46,17 +45,17 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 	};
 
 	return (
-		<View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
+		<div className={styles.container}>
 			{linkInfo ? (
-				<View style={{ pointerEvents: 'auto' }}>
+				<div className={styles.pointerEventsAuto}>
 					<ExternalEmbed link={linkInfo} hideAlt />
-				</View>
+				</div>
 			) : error ? (
-				<Container style={[a.align_start, a.p_md, a.gap_xs]}>
-					<Text numberOfLines={1} style={t.atoms.text_contrast_high}>
+				<Container className={styles.errorContainer}>
+					<Text numberOfLines={1} color="textContrastHigh">
 						{gif.url}
 					</Text>
-					<Text numberOfLines={2} style={[{ color: t.palette.negative_400 }]}>
+					<Text numberOfLines={2} className={styles.textNegative}>
 						{cleanError(error)}
 					</Text>
 				</Container>
@@ -66,7 +65,7 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 				</Container>
 			)}
 			<ExternalEmbedRemoveBtn onRemove={onRemove} />
-		</View>
+		</div>
 	);
 };
 
@@ -79,7 +78,6 @@ export const ExternalEmbedLink = ({
 	hasQuote: boolean;
 	onRemove: () => void;
 }) => {
-	const t = useTheme();
 	const { data, error } = useResolveLinkQuery(uri);
 	const thumbUrl = useBlobUrl(data?.type === 'external' ? data.thumb?.source.blob : undefined);
 	let linkComponent: React.ReactNode;
@@ -152,15 +150,15 @@ export const ExternalEmbedLink = ({
 	}
 
 	return (
-		<View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
+		<div className={styles.linkContainer}>
 			{linkComponent ? (
-				<View style={{ pointerEvents: 'none' }}>{linkComponent}</View>
+				<div className={styles.pointerEventsNone}>{linkComponent}</div>
 			) : error ? (
-				<Container style={[a.align_start, a.p_md, a.gap_xs]}>
-					<Text numberOfLines={1} style={t.atoms.text_contrast_high}>
+				<Container className={styles.errorContainer}>
+					<Text numberOfLines={1} color="textContrastHigh">
 						{uri}
 					</Text>
-					<Text numberOfLines={2} style={[{ color: t.palette.negative_400 }]}>
+					<Text numberOfLines={2} className={styles.textNegative}>
 						{cleanError(error)}
 					</Text>
 				</Container>
@@ -170,26 +168,22 @@ export const ExternalEmbedLink = ({
 				</Container>
 			)}
 			<ExternalEmbedRemoveBtn onRemove={onRemove} />
-		</View>
+		</div>
 	);
 };
 
-function Container({ style, children }: { style?: StyleProp<ViewStyle>; children: React.ReactNode }) {
-	const t = useTheme();
+function Container({
+	style,
+	className,
+	children,
+}: {
+	style?: React.CSSProperties;
+	className?: string;
+	children: React.ReactNode;
+}) {
 	return (
-		<View
-			style={[
-				a.rounded_sm,
-				a.border,
-				a.align_center,
-				a.justify_center,
-				a.py_5xl,
-				t.atoms.bg_contrast_25,
-				t.atoms.border_contrast_medium,
-				style,
-			]}
-		>
+		<div className={clsx(styles.contentContainer, className)} style={style}>
 			{children}
-		</View>
+		</div>
 	);
 }

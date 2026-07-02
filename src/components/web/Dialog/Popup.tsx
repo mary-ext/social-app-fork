@@ -59,8 +59,21 @@ export function Popup({
 }
 
 /** Scrollable content region of a `body`-scroll Popup (below a pinned `Header`, above a pinned `Footer`). */
-export function Body({ children }: { children: ReactNode }) {
-	return <div className={styles.body}>{children}</div>;
+export function Body({
+	children,
+	className,
+	ref,
+	...props
+}: {
+	children: ReactNode;
+	className?: string;
+	ref?: React.Ref<HTMLDivElement>;
+} & React.HTMLAttributes<HTMLDivElement>) {
+	return (
+		<div ref={ref} className={clsx(styles.body, className)} {...props}>
+			{children}
+		</div>
+	);
 }
 
 /** Pinned action bar at the bottom of a `body`-scroll Popup. */

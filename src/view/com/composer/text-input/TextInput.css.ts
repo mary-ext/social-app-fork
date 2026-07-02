@@ -11,8 +11,6 @@ import { space, zIndex } from '#/styles/tokens.css';
 export const editor = style({
 	alignSelf: 'flex-start',
 	flex: 1,
-	marginBottom: 10,
-	marginLeft: 8,
 });
 
 // #region drop overlay

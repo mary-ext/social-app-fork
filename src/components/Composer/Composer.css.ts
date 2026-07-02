@@ -2,11 +2,13 @@ import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
-import { fontFamily, fontSize, lineHeight } from '#/styles/tokens.css';
+import { roundToPx } from '#/styles/round';
+import { fontFamily, fontLeading, fontSize } from '#/styles/tokens.css';
 
-// one font size feeds both layers via this var, set by the `root` recipe's `fontSize` variant, so the
-// transparent textarea and the colored preview overlay can never drift to different metrics.
+// one font size and its paired leading feed both layers via these vars, set by the `root` recipe's `fontSize`
+// variant, so the transparent textarea and the colored preview overlay can never drift to different metrics.
 const fontSizeVar = createVar();
+const leadingVar = createVar();
 
 // per-instance layout inputs, supplied by the component through `assignInlineVars` on `root` and consumed by
 // the rules below — so every property declaration (padding, min/max-height, scroll-padding) lives here in CSS
@@ -19,10 +21,14 @@ export const minRowsVar = createVar();
 export const maxRowsVar = createVar();
 
 const fontSizeValue = fallbackVar(fontSizeVar, fontSize.lg);
+const leadingValue = fallbackVar(leadingVar, String(fontLeading.lg));
+
+// pixel-snapped like `Text`, and shared by `rowsHeight` and `textMetrics` so row sizing tracks the line.
+const lineHeightValue = roundToPx(`calc(${fontSizeValue} * ${leadingValue})`);
 
 // the border-box height of `rows` text rows plus the vertical content padding.
 const rowsHeight = (rows: string) =>
-	`calc(${lineHeight.snug} * ${fontSizeValue} * ${rows} + ${paddingTopVar} + ${paddingBottomVar})`;
+	`calc(${lineHeightValue} * ${rows} + ${paddingTopVar} + ${paddingBottomVar})`;
 
 // shared metrics so the transparent textarea and the colored preview overlay wrap + advance identically;
 // composed into both rather than spread into each.
@@ -30,7 +36,7 @@ const textMetrics = style({
 	fontFamily,
 	fontSize: fontSizeValue,
 	letterSpacing: 'normal',
-	lineHeight: lineHeight.snug,
+	lineHeight: lineHeightValue,
 	whiteSpace: 'pre-wrap',
 	wordBreak: 'break-word',
 });
@@ -50,8 +56,8 @@ export const root = recipe(
 		},
 		variants: {
 			fontSize: {
-				lg: { vars: { [fontSizeVar]: fontSize.lg } },
-				md: { vars: { [fontSizeVar]: fontSize.md } },
+				lg: { vars: { [fontSizeVar]: fontSize.lg, [leadingVar]: String(fontLeading.lg) } },
+				md: { vars: { [fontSizeVar]: fontSize.md, [leadingVar]: String(fontLeading.md) } },
 			},
 		},
 		defaultVariants: {
