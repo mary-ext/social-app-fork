@@ -1,5 +1,8 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.verification.illustration.bluesky": "Bluesky",
+	"components.verification.illustration.trustedVerifier": "Trusted Verifier",
+	"components.verification.illustration.verifiedAccount": "Verified Account",
 	"components.verification.learnMore": "Learn more about verification on Bluesky",
 	"components.verification.trustedVerifier.description": "Accounts with a scalloped blue check mark {#t0/} can verify others. These trusted verifiers are selected by Bluesky.",
 	"components.verification.trustedVerifier.illustration": "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.",
