@@ -57,8 +57,9 @@ export function PostLanguageSelect({
 	);
 
 	// With no language history beyond the current one there's nothing to pick from, so the button opens the
-	// full picker directly instead of a menu.
-	if (dedupedHistory.length === 1 && dedupedHistory[0] === langPrefs.postLanguage) {
+	// full picker directly instead of a menu. `postLanguage` is always in `dedupedHistory`, so a single entry
+	// means it's the only one.
+	if (dedupedHistory.length === 1) {
 		return (
 			<>
 				<LanguageButton
