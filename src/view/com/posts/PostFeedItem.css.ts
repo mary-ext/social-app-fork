@@ -47,15 +47,12 @@ export const replyLineParentLive = style({
 	marginTop: space.sm,
 });
 
-/**
- * The meta row: the spacing-free `PostMeta` leaf (which grows to fill) alongside the trailing overflow menu
- * pinned to the post's top-right. `display: flex` so the row hugs its content instead of inflating on the
- * font strut; the parent owns the surrounding spacing.
- */
+/** The meta row */
 export const metaSpacing = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	gap: space.lg,
 	paddingBottom: space.xs,
 });
 

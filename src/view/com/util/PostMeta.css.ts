@@ -9,6 +9,7 @@ export const row = style({
 	flex: 1,
 	flexDirection: 'row',
 	gap: space.xs,
+	minWidth: 0,
 });
 
 export const avatar = style({
@@ -37,12 +38,7 @@ export const handle = style({
 	minWidth: 0,
 });
 
-// a flex item by virtue of `.author`; without this it blockifies to a line box whose strut is sized by
-// the inherited 14px / `line-height: normal` (~17px) rather than the tight-leading dot + link inside it.
-// `flex` makes it hug its children, matching the name/handle wrapper beside it.
 export const timestamp = style({
-	alignItems: 'flex-end',
-	display: 'flex',
-	paddingLeft: space.xs,
+	paddingLeft: space.sm,
 	whiteSpace: 'nowrap',
 });

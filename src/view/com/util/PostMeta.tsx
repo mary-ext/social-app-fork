@@ -5,7 +5,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -131,13 +130,14 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 
 				<TimeElapsed timestamp={opts.timestamp}>
 					{({ timeElapsed }) => (
-						<span className={css.timestamp}>
-							<Text aria-hidden color="textContrastMedium" size="md">
-								{NON_BREAKING_SPACE}
-							</Text>
+						<>
+							{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
+							<span aria-hidden> </span>
+
 							<Tooltip label={timestampLabel}>
 								<AuthorLink
 									align="right"
+									className={css.timestamp}
 									color="textContrastMedium"
 									disabled={disabled}
 									label={timestampLabel}
@@ -148,7 +148,7 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 									{timeElapsed}
 								</AuthorLink>
 							</Tooltip>
-						</span>
+						</>
 					)}
 				</TimeElapsed>
 			</div>
