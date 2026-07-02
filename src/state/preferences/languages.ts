@@ -26,7 +26,10 @@ export function useLanguagePrefsApi() {
 			device.set(['languagePrefs'], { ...read(), primaryLanguage: code2 });
 		},
 		setPostLanguage(commaSeparatedLangCodes: string) {
-			device.set(['languagePrefs'], { ...read(), postLanguage: commaSeparatedLangCodes });
+			// canonicalize the code order so set-equal selections (e.g. "en,ja" vs "ja,en") dedupe in history
+			// and compare consistently everywhere downstream
+			const postLanguage = toPostLanguages(commaSeparatedLangCodes).sort().join(',');
+			device.set(['languagePrefs'], { ...read(), postLanguage });
 		},
 		/**
 		 * Saves whatever language codes are currently selected into a history array, which is then used to

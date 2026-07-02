@@ -86,10 +86,11 @@ export function PostLanguageSelect({
 				<Menu.Popup label={m['view.composer.language.selectPost']()}>
 					<Menu.Group>
 						{dedupedHistory.map((historyItem) => {
-							const langName = historyItem
-								.split(',')
-								.map((code) => codeToLanguageName(code, LOCALE))
-								.join(' + ');
+							const historyLanguages = toPostLanguages(historyItem);
+							const langName = historyLanguages.map((code) => codeToLanguageName(code, LOCALE)).join(' + ');
+							const selected =
+								historyLanguages.length === currentLanguages.length &&
+								historyLanguages.every((code) => currentLanguages.includes(code));
 							return (
 								<Menu.Item
 									key={historyItem}
@@ -100,7 +101,7 @@ export function PostLanguageSelect({
 									}}
 								>
 									<Menu.ItemText>{langName}</Menu.ItemText>
-									<Menu.ItemRadio selected={currentLanguages.includes(historyItem)} />
+									<Menu.ItemRadio selected={selected} />
 								</Menu.Item>
 							);
 						})}
