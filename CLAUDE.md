@@ -1,5 +1,8 @@
 a fork of Bluesky app, gutted down to only support web platform, with some features stripped.
 
+ongoing: porting React Native Web components to regular React DOM components, using Base UI and
+Vanilla Extract.
+
 ## development notes
 
 ### project management
