@@ -1,8 +1,6 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
-import { sanitizeHandle } from '#/lib/strings/handles';
-
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { Text } from '#/components/Text';
@@ -40,7 +38,7 @@ export function RecentProfileRow({
 				/>
 				<span className={styles.text}>
 					<Text numberOfLines={1} weight="medium">
-						{sanitizeHandle(row.profile.handle)}
+						{row.profile.handle}
 					</Text>
 					<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 						{row.profile.displayName || row.profile.handle}
@@ -48,7 +46,7 @@ export function RecentProfileRow({
 				</span>
 			</Autocomplete.Item>
 			<RecentRemoveButton
-				label={m['components.web.search.recent.removeA11y']({ query: sanitizeHandle(row.profile.handle) })}
+				label={m['components.web.search.recent.removeA11y']({ query: row.profile.handle })}
 				onRemove={() => onRemoveRecent({ did: row.profile.did, kind: 'profile' })}
 			/>
 		</div>

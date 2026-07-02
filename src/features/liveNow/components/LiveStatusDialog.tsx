@@ -5,7 +5,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import type { NavigationProp } from '#/lib/routes/types';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -54,7 +53,7 @@ export function LiveStatusDialog({
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup
 				className={css.dialogPopup}
-				label={m['features.liveNow.badge.userIsLive']({ handle: sanitizeHandle(profile.handle) })}
+				label={m['features.liveNow.badge.userIsLive']({ handle: profile.handle })}
 			>
 				<LiveStatus
 					embed={embed}

@@ -5,7 +5,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { weightedRandomIndex } from '#/lib/numbers';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { precacheFeedFromGeneratorView, useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { useToggleSavedFeed } from '#/state/queries/preferences';
@@ -154,7 +153,7 @@ export function TitleAndByline({ creator, title }: { creator?: AnyProfileView; t
 			</Text>
 			{creator && (
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{m['common.feeds.feedBy']({ handle: sanitizeHandle(creator.handle) })}
+					{m['common.feeds.feedBy']({ handle: creator.handle })}
 				</Text>
 			)}
 		</div>

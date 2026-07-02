@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import type { NavigationProp } from '#/lib/routes/types';
-import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
+import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
@@ -32,7 +32,7 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 		return null;
 	}
 
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 	const displayName = moderationOpts
 		? createSanitizedDisplayName(
 				profile,

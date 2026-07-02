@@ -3,8 +3,6 @@ import type { AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { sanitizeHandle } from '#/lib/strings/handles';
-
 import {
 	type FeedSourceInfo,
 	hydrateFeedGenerator,
@@ -113,8 +111,8 @@ export function FeedSourceCardLoaded({
 					</Text>
 					<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]} numberOfLines={1}>
 						{feed.type === 'feed'
-							? m['common.feeds.feedBy']({ handle: sanitizeHandle(feed.creatorHandle) })
-							: m['common.list.byCreator']({ handle: sanitizeHandle(feed.creatorHandle) })}
+							? m['common.feeds.feedBy']({ handle: feed.creatorHandle })
+							: m['common.list.byCreator']({ handle: feed.creatorHandle })}
 					</Text>
 				</View>
 			</View>
@@ -134,12 +132,12 @@ export function FeedSourceCardLoaded({
 					feed.type === 'feed'
 						? m['view.feeds.feed.a11y.label']({
 								name: feed.displayName,
-								creator: sanitizeHandle(feed.creatorHandle),
+								creator: feed.creatorHandle,
 								count: feed.likeCount || 0,
 							})
 						: m['view.feeds.list.a11y.label']({
 								name: feed.displayName,
-								creator: sanitizeHandle(feed.creatorHandle),
+								creator: feed.creatorHandle,
 							})
 				}
 				to={{

@@ -1,8 +1,6 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
-import { sanitizeHandle } from '#/lib/strings/handles';
-
 import type { Shadow } from '#/state/cache/types';
 
 import { NewskieDialog } from '#/components/NewskieDialog';
@@ -33,7 +31,7 @@ export function ProfileHeaderHandle({
 			) : undefined}
 
 			<Text numberOfLines={1} size="md" leading="snug" color="textContrastMedium" className={styles.handle}>
-				{sanitizeHandle(profile.handle)}
+				{profile.handle}
 			</Text>
 		</div>
 	);

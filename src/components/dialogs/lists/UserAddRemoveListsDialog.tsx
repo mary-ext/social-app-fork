@@ -1,7 +1,6 @@
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/strings/errors';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import {
@@ -34,7 +33,7 @@ export function UserAddRemoveListsDialog({
 	onChange?: (type: 'add' | 'remove', list: AppBskyGraphDefs.ListView) => void;
 }) {
 	const title = m['components.dialogs.list.addToLists']({
-		name: sanitizeHandle(profile.handle),
+		name: profile.handle,
 	});
 
 	return (

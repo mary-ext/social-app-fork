@@ -26,10 +26,7 @@ export const followsYou = style({
 	paddingInline: 8,
 });
 
-// isolate the handle's bidi so an RTL display name above it can't flip the `@handle`, and break long
-// handles mid-string rather than letting them overflow the row.
+// break long handles mid-string rather than letting them overflow the row.
 export const handle = style({
-	direction: 'ltr',
-	unicodeBidi: 'isolate',
 	wordBreak: 'break-all',
 });

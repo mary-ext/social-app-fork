@@ -21,7 +21,6 @@ import {
 
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { GCTIME, STALE } from '#/state/queries';
@@ -117,7 +116,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		avatar: view.avatar,
 		displayName: view.displayName
 			? sanitizeDisplayName(view.displayName)
-			: m['common.feeds.feedBy']({ handle: sanitizeHandle(view.creator.handle) }),
+			: m['common.feeds.feedBy']({ handle: view.creator.handle }),
 		description,
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
@@ -156,7 +155,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		creatorHandle: view.creator.handle,
 		displayName: view.name
 			? sanitizeDisplayName(view.name)
-			: m['state.list.byCreator']({ handle: sanitizeHandle(view.creator.handle) }),
+			: m['state.list.byCreator']({ handle: view.creator.handle }),
 		contentMode: undefined,
 	};
 }

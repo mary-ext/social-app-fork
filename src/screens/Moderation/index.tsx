@@ -10,7 +10,6 @@ import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
@@ -276,7 +275,7 @@ function LabelerRow({
 					</Text>
 				) : (
 					<Text color="textContrastMedium" size="md_sub">
-						{m['screens.moderation.labeler.byCreator']({ handle: sanitizeHandle(creator.handle) })}
+						{m['screens.moderation.labeler.byCreator']({ handle: creator.handle })}
 					</Text>
 				)}
 				{isNonConfigurableModerationAuthority(creator.did) && (

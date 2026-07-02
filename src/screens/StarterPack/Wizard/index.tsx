@@ -9,7 +9,6 @@ import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { enforceLen } from '#/lib/strings/helpers';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';
 
@@ -539,7 +538,7 @@ function getName(item: AnyProfileView | AppBskyFeedDefs.GeneratorView) {
 	if (typeof item.displayName === 'string') {
 		return enforceLen(sanitizeDisplayName(item.displayName), 28, true);
 	} else if ('handle' in item && typeof item.handle === 'string') {
-		return enforceLen(sanitizeHandle(item.handle), 28, true);
+		return enforceLen(item.handle, 28, true);
 	}
 	return '';
 }

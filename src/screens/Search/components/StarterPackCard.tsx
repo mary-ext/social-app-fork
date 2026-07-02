@@ -3,8 +3,6 @@ import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { sanitizeHandle } from '#/lib/strings/handles';
-
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { useBreakpoints } from '#/alf/breakpoints';
@@ -47,7 +45,7 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 							{record.name}
 						</Text>
 						<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-							{m['screens.search.byCreator']({ handle: sanitizeHandle(view.creator.handle) })}
+							{m['screens.search.byCreator']({ handle: view.creator.handle })}
 						</Text>
 					</div>
 					<LinkButton

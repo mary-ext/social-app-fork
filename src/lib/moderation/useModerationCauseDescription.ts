@@ -1,7 +1,6 @@
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useLabelDefinitions } from '#/state/preferences';
 import { useSession } from '#/state/session';
@@ -121,7 +120,7 @@ export function useModerationCauseDescription(
 			const def = cause.labelDef || getDefinition(labelDefs, cause.label);
 			const strings = getLabelStrings(LOCALE, globalLabelStrings, def);
 			const labeler = labelers.find((l) => l.creator.did === cause.label.src);
-			let source = labeler ? sanitizeHandle(labeler.creator.handle, '@') : undefined;
+			let source = labeler ? `@${labeler.creator.handle}` : undefined;
 			let sourceDisplayName = labeler?.creator.displayName;
 			if (!source) {
 				if (cause.label.src === BSKY_LABELER_DID) {

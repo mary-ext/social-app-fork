@@ -11,7 +11,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { weightedRandomIndex } from '#/lib/numbers';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { precacheList } from '#/state/queries/feed';
@@ -131,8 +130,8 @@ export function TitleAndByline({
 		byline ??
 		(creator
 			? purpose === MODLIST
-				? m['common.list.moderationBy']({ handle: sanitizeHandle(creator.handle) })
-				: m['common.list.byCreator']({ handle: sanitizeHandle(creator.handle) })
+				? m['common.list.moderationBy']({ handle: creator.handle })
+				: m['common.list.byCreator']({ handle: creator.handle })
 			: undefined);
 
 	return (

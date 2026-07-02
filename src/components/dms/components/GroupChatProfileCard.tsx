@@ -8,7 +8,6 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -29,9 +28,9 @@ export function GroupChatProfileCard({
 	const t = useTheme();
 	const enabled = canBeAddedToGroup(profile);
 	const moderation = moderateProfile(profile, moderationOpts);
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 	const displayName = sanitizeDisplayName(
-		profile.displayName || sanitizeHandle(profile.handle),
+		profile.displayName || profile.handle,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 

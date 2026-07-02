@@ -1,5 +1,4 @@
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { Trans } from '#/locale/Trans';
 
@@ -20,7 +19,7 @@ import type { ChatInvitePreview } from './use-chat-invite';
 export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 	if (!preview) return null;
 
-	const ownerHandle = sanitizeHandle(preview.owner.handle);
+	const ownerHandle = preview.owner.handle;
 	const avatarProfiles = preview.convo?.members ?? [preview.owner];
 
 	return (

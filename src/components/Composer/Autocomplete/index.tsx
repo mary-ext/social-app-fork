@@ -1,8 +1,6 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 
-import { sanitizeHandle } from '#/lib/strings/handles';
-
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
@@ -98,7 +96,7 @@ function ProfileItem({
 
 			<span className={styles.text}>
 				<Text numberOfLines={1} weight="medium">
-					{sanitizeHandle(item.profile.handle)}
+					{item.profile.handle}
 				</Text>
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 					{item.profile.displayName || item.profile.handle}

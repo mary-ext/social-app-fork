@@ -4,7 +4,6 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
@@ -57,7 +56,7 @@ function SuggestedFollowCard({
 		<BlockLink
 			className={clsx(css.cardBase, css.cardLink)}
 			label={m['common.profile.a11y.viewNamed']({
-				name: profile.displayName || sanitizeHandle(profile.handle),
+				name: profile.displayName || profile.handle,
 			})}
 			to={makeProfileLink({ did: profile.did })}
 		>

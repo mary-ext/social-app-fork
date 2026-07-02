@@ -9,7 +9,6 @@ import { useLabelSubject } from '#/lib/moderation';
 import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useClients, useSession } from '#/state/session';
 
@@ -107,7 +106,7 @@ function Label({
 	onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void;
 }) {
 	const { labeler, strings } = useLabelInfo(label);
-	const sourceName = labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src;
+	const sourceName = labeler ? `@${labeler.creator.handle}` : label.src;
 	const now = useConstant(Date.now);
 
 	return (
@@ -180,7 +179,7 @@ function AppealForm({
 	const { subject } = useLabelSubject({ label });
 	const isAccountReport = 'did' in subject;
 	const { pds } = useClients();
-	const sourceName = labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src;
+	const sourceName = labeler ? `@${labeler.creator.handle}` : label.src;
 	const [error, setError] = useState<string | null>(null);
 
 	const { mutate, isPending } = useMutation({
@@ -257,7 +256,7 @@ function AppealForm({
 					multiline
 					onChangeText={setDetails}
 					placeholder={m['components.moderation.appeal.explainPrompt']({
-						labeler: labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src,
+						labeler: labeler ? `@${labeler.creator.handle}` : label.src,
 					})}
 					value={details}
 				/>

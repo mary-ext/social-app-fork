@@ -14,7 +14,6 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
@@ -109,7 +108,7 @@ export function Link({
 		<BlockLink
 			className={clsx(css.link, className)}
 			label={m['common.profile.a11y.viewNamed']({
-				name: profile.displayName || sanitizeHandle(profile.handle),
+				name: profile.displayName || profile.handle,
 			})}
 			onBeforePress={onPress}
 			to={makeProfileLink({ did: profile.did })}
@@ -187,10 +186,10 @@ function InlineNameAndHandle({
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
-		profile.displayName || sanitizeHandle(profile.handle),
+		profile.displayName || profile.handle,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 	return (
 		<div className={css.inlineRow}>
 			<Text className={css.inlineName} numberOfLines={1} weight="semiBold">
@@ -221,7 +220,7 @@ export function Name({
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
-		profile.displayName || sanitizeHandle(profile.handle),
+		profile.displayName || profile.handle,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
@@ -239,7 +238,7 @@ export function Handle({
 	profile: AnyProfileView;
 	weight?: 'normal' | 'semiBold';
 }) {
-	const handle = sanitizeHandle(profile.handle);
+	const handle = profile.handle;
 	return (
 		<div className={css.handleRow}>
 			<Text className={css.handleText} color="textContrastHigh" weight={weight} numberOfLines={1}>

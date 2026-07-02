@@ -9,7 +9,6 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
@@ -337,7 +336,7 @@ function DefaultProfileCard({
 	const t = useTheme();
 	const enabled = canBeMessaged(profile);
 	const moderation = moderateProfile(profile, moderationOpts);
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 	const displayName = createSanitizedDisplayName(
 		profile,
 		true,

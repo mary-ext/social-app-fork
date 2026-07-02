@@ -10,7 +10,6 @@ import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { cleanError } from '#/lib/strings/errors';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions';
@@ -116,7 +115,7 @@ function DialogInner({
 			if (!activitySubscription.post && !activitySubscription.reply) {
 				Toast.show(
 					m['components.activityNotifications.unsubscribedToast']({
-						handle: sanitizeHandle(profile.handle, '@'),
+						handle: `@${profile.handle}`,
 					}),
 					{
 						type: 'success',
@@ -141,7 +140,7 @@ function DialogInner({
 				if (!initialState.post && !initialState.reply) {
 					Toast.show(
 						m['components.activityNotifications.subscribedToast']({
-							handle: sanitizeHandle(profile.handle, '@'),
+							handle: `@${profile.handle}`,
 						}),
 						{
 							type: 'success',

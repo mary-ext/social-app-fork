@@ -3,7 +3,6 @@ import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 
 import { getLabelingServiceTitle } from '#/lib/moderation';
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
 
@@ -506,7 +505,7 @@ function Recipient({
 											{optionTitle}
 										</Text>
 										<Text color="textContrastMedium" size="sm">
-											{sanitizeHandle(option.creator.handle, '@')}
+											{`@${option.creator.handle}`}
 										</Text>
 									</div>
 									<Menu.ItemRadio selected={option.creator.did === labeler.creator.did} />

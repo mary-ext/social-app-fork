@@ -5,7 +5,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { weightedRandomIndex } from '#/lib/numbers';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import { precacheResolvedUri } from '#/state/queries/resolve-uri';
@@ -91,7 +90,7 @@ function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {
 			<Text size="md_sub" color="textContrastMedium" numberOfLines={1}>
 				{creator?.did === currentAccount?.did
 					? m['common.starterPack.byYou']()
-					: m['components.starterPack.card.byline']({ handle: sanitizeHandle(creator.handle) })}
+					: m['components.starterPack.card.byline']({ handle: creator.handle })}
 			</Text>
 		</div>
 	);

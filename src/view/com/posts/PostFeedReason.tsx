@@ -1,7 +1,6 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useSession } from '#/state/session';
 
@@ -35,7 +34,7 @@ export function PostFeedReason({
 	if (reason.$type === 'app.bsky.feed.defs#reasonRepost') {
 		const by = reason.by;
 		const isOwner = by.did === currentAccount?.did;
-		const reposter = sanitizeHandle(by.handle);
+		const reposter = by.handle;
 		return (
 			<div className={css.includeReason}>
 				<RepostIcon fill="currentColor" width={13} height={13} />

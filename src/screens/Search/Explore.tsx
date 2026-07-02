@@ -3,7 +3,6 @@ import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcut
 
 import { useInterestsDisplayNames } from '#/lib/interests';
 import { cleanError } from '#/lib/strings/errors';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { type FeedPreviewItem, useFeedPreviews } from '#/state/queries/explore-feed-previews';
@@ -537,7 +536,7 @@ export function Explore({
 								<ModuleHeader.TitleText size="lg">{item.feed.displayName}</ModuleHeader.TitleText>
 								<ModuleHeader.SubtitleText>
 									{m['screens.search.byCreator']({
-										handle: sanitizeHandle(item.feed.creator.handle),
+										handle: item.feed.creator.handle,
 									})}
 								</ModuleHeader.SubtitleText>
 							</div>

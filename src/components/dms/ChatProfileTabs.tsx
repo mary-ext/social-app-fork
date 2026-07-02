@@ -5,7 +5,6 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
@@ -80,7 +79,7 @@ function Tab({
 
 	const moderation = moderateProfile(profile, moderationOpts!);
 	const displayName = sanitizeDisplayName(
-		profile.displayName || sanitizeHandle(profile.handle),
+		profile.displayName || profile.handle,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 

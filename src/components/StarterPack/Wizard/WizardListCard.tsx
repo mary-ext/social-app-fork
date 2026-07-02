@@ -10,7 +10,6 @@ import {
 
 import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useSession } from '#/state/session';
 
@@ -125,9 +124,7 @@ export function WizardProfileCard({
 		moderateProfile(profile, moderationOpts),
 		DisplayContext.ProfileMedia,
 	);
-	const displayName = profile.displayName
-		? sanitizeDisplayName(profile.displayName)
-		: sanitizeHandle(profile.handle);
+	const displayName = profile.displayName ? sanitizeDisplayName(profile.displayName) : profile.handle;
 
 	const onPress = () => {
 		if (disabled) return;
@@ -144,7 +141,7 @@ export function WizardProfileCard({
 		<WizardListCard
 			type="user"
 			btnType={btnType}
-			displayName={sanitizeHandle(profile.handle)}
+			displayName={profile.handle}
 			subtitle={displayName}
 			onPress={onPress}
 			avatar={profile.avatar}
@@ -190,7 +187,7 @@ export function WizardFeedCard({
 			type="algo"
 			btnType={btnType}
 			displayName={sanitizeDisplayName(generator.displayName)}
-			subtitle={`Feed by @${sanitizeHandle(generator.creator.handle)}`}
+			subtitle={`Feed by @${generator.creator.handle}`}
 			onPress={onPress}
 			avatar={generator.avatar}
 			included={included}

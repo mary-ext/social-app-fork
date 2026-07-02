@@ -10,7 +10,6 @@ import {
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -100,7 +99,7 @@ function ProfileHeaderReady({
 				true,
 				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 			);
-	const handle = isDeletedAccount ? null : sanitizeHandle(profile.handle, '@');
+	const handle = isDeletedAccount ? null : `@${profile.handle}`;
 
 	return (
 		<Wrapper

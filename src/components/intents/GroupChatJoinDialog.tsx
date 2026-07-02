@@ -6,7 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { getChatInviteCodeFromUrl } from '#/lib/strings/url-helpers';
 
 import {
@@ -261,7 +260,7 @@ function GroupChatJoinDialogContent({
 	const isFollowing = joinLinkPreview.owner.viewer?.followedBy ?? false;
 	const hasRequested = !joinLinkPreview.convo && joinLinkPreview.viewer?.requestedAt != null;
 
-	const ownerHandle = sanitizeHandle(joinLinkPreview.owner.handle);
+	const ownerHandle = joinLinkPreview.owner.handle;
 
 	let canJoin = true;
 	let ButtonIconImage = isJoinPending || isWithdrawPending ? Loader : JoinIcon;

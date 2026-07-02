@@ -12,7 +12,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import type { Shadow } from '#/state/cache/types';
@@ -576,8 +575,8 @@ function BlockedPlaceholder({
 				<Prompt.Content>
 					<Prompt.TitleText>
 						{profile.viewer?.blocking
-							? m['components.dms.block.youAreBlocking']({ handle: sanitizeHandle(profile.handle, '@') })
-							: m['components.dms.block.isBlockingYou']({ handle: sanitizeHandle(profile.handle, '@') })}
+							? m['components.dms.block.youAreBlocking']({ handle: `@${profile.handle}` })
+							: m['components.dms.block.isBlockingYou']({ handle: `@${profile.handle}` })}
 					</Prompt.TitleText>
 					<Prompt.DescriptionText>
 						{profile.viewer?.blocking

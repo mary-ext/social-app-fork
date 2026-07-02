@@ -12,7 +12,6 @@ import type { Did } from '@atcute/lexicons';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import type { AppModerationCause } from '#/components/Pills';
 
@@ -69,7 +68,7 @@ export function labelIsHideableOffense(label: ComAtprotoLabelDefs.Label): boolea
 }
 
 export function getLabelingServiceTitle({ displayName, handle }: { displayName?: string; handle: string }) {
-	return displayName ? sanitizeDisplayName(displayName) : sanitizeHandle(handle, '@');
+	return displayName ? sanitizeDisplayName(displayName) : `@${handle}`;
 }
 
 export function lookupLabelValueDefinition(

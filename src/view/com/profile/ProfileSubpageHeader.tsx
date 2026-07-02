@@ -6,7 +6,6 @@ import { usePalette } from '#/lib/hooks/usePalette';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { softReset } from '#/state/events';
 
@@ -126,7 +125,7 @@ export function ProfileSubpageHeader({
 										markup={{
 											t0: () => (
 												<TextLink
-													text={sanitizeHandle(creator.handle || '')}
+													text={creator.handle || ''}
 													href={makeProfileLink(creator)}
 													style={pal.textLight}
 												/>
@@ -143,7 +142,7 @@ export function ProfileSubpageHeader({
 										markup={{
 											t0: () => (
 												<TextLink
-													text={sanitizeHandle(creator.handle || '')}
+													text={creator.handle || ''}
 													href={makeProfileLink(creator)}
 													style={pal.textLight}
 												/>
@@ -160,7 +159,7 @@ export function ProfileSubpageHeader({
 										markup={{
 											t0: () => (
 												<TextLink
-													text={sanitizeHandle(creator.handle || '')}
+													text={creator.handle || ''}
 													href={makeProfileLink(creator)}
 													style={pal.textLight}
 												/>

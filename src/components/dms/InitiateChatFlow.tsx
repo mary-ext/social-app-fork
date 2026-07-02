@@ -10,7 +10,6 @@ import {
 
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -721,9 +720,9 @@ function DefaultProfileCard({
 	const t = useTheme();
 	const enabled = canBeMessaged(profile);
 	const moderation = moderateProfile(profile, moderationOpts);
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 	const displayName = sanitizeDisplayName(
-		profile.displayName || sanitizeHandle(profile.handle),
+		profile.displayName || profile.handle,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
@@ -774,7 +773,7 @@ function GroupChatMemberProfileCard({
 }) {
 	const t = useTheme();
 	const enabled = canBeAddedToGroup(profile);
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 
 	return (
 		<View style={[a.flex_1, a.py_sm, a.px_lg, t.atoms.bg]}>

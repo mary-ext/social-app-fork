@@ -4,7 +4,6 @@ import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcu
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { type ActiveConvoStates, useConvoActive } from '#/state/messages/convo';
 import { useSession } from '#/state/session';
@@ -136,7 +135,7 @@ function ReactionRow({
 	const isFromSelf = currentAccount?.did === profile.did;
 
 	const displayName = createSanitizedDisplayName(profile, true);
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 
 	const handleOnPress = () => {
 		const remainingReactions = allReactions.filter(

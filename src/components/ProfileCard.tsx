@@ -18,7 +18,6 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
@@ -102,7 +101,7 @@ export function Link({
 		<InternalLink
 			testID={`profileCard-${profile.handle}-link`}
 			label={m['common.profile.a11y.viewNamed']({
-				name: profile.displayName || sanitizeHandle(profile.handle),
+				name: profile.displayName || profile.handle,
 			})}
 			to={profileURL}
 			style={[a.flex_col, style]}
@@ -198,10 +197,10 @@ function InlineNameAndHandle({
 	const t = useTheme();
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
-		profile.displayName || sanitizeHandle(profile.handle),
+		profile.displayName || profile.handle,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 	return (
 		<View style={[a.flex_row, a.align_end, a.flex_shrink]}>
 			<Text
@@ -238,7 +237,7 @@ export function Name({
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
-		profile.displayName || sanitizeHandle(profile.handle),
+		profile.displayName || profile.handle,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 	return (
@@ -265,7 +264,7 @@ export function Handle({
 	textStyle?: StyleProp<TextStyle>;
 }) {
 	const t = useTheme();
-	const handle = sanitizeHandle(profile.handle, '@');
+	const handle = `@${profile.handle}`;
 
 	return (
 		<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium, textStyle]} numberOfLines={1}>

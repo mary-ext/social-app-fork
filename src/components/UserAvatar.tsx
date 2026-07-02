@@ -9,7 +9,6 @@ import { clsx } from 'clsx';
 import { convertCdnPreset } from '#/lib/media/util';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
@@ -224,7 +223,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	const status = useActorStatus(profile);
 	const liveHandle = Dialog.useDialogHandle();
 
-	const name = sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle));
+	const name = sanitizeDisplayName(profile.displayName || profile.handle);
 	const circular = props.type !== 'algo' && props.type !== 'list';
 	const radius = circular ? '50%' : props.size > 32 ? '8px' : '3px';
 

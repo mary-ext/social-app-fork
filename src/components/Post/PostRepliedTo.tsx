@@ -2,7 +2,6 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { STALE } from '#/state/queries';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -87,7 +86,7 @@ function ParentAuthorName({ did }: { did: string }) {
 	}
 
 	if (profile) {
-		const name = sanitizeHandle(profile.handle);
+		const name = profile.handle;
 		return (
 			<ProfileHoverCard did={did}>
 				<InlineLinkText color="textContrastMedium" label={name} size="sm" to={makeProfileLink(profile)}>

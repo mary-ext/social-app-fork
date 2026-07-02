@@ -11,7 +11,6 @@ import { clsx } from 'clsx';
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -94,7 +93,7 @@ function CurrentAccountRow({
 
 	const moderation = moderateProfile(profile, moderationOpts);
 	const displayName = sanitizeDisplayName(
-		profile.displayName || sanitizeHandle(profile.handle),
+		profile.displayName || profile.handle,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
@@ -119,7 +118,7 @@ function CurrentAccountRow({
 					<ProfileBadges profile={shadow} size="sm" />
 				</span>
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{sanitizeHandle(profile.handle, '@')}
+					{`@${profile.handle}`}
 				</Text>
 			</div>
 			<ChevronRightIcon className={cardStyles.chevron} fill="currentColor" size="sm" />
@@ -239,7 +238,7 @@ function OtherAccountRow({
 					)}
 				</span>
 				<Text className={styles.handle} numberOfLines={1} size="md">
-					{sanitizeHandle(account.handle, '@')}
+					{`@${account.handle}`}
 				</Text>
 				{pendingDid === account.did && (
 					<Spinner color="currentColor" label={m['screens.settings.account.switching']()} size="sm" />

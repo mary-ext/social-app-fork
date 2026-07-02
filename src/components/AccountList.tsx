@@ -2,7 +2,6 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
@@ -113,7 +112,7 @@ function AccountItem({
 					)}
 				</span>
 				<Text color="textContrastMedium" size="sm">
-					{sanitizeHandle(account.handle, '@')}
+					{`@${account.handle}`}
 				</Text>
 			</span>
 			{isCurrentAccount ? (

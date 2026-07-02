@@ -12,7 +12,6 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { triangularRandom } from '#/lib/numbers';
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -270,7 +269,7 @@ function ThreadItemAnchorInner({
 										to={authorHref}
 										weight="semiBold"
 									>
-										{sanitizeHandle(post.author.handle)}
+										{post.author.handle}
 									</InlineLinkText>
 								</ProfileHoverCard>
 								<div className={css.badges}>

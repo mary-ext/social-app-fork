@@ -5,7 +5,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { unstableCacheProfileView } from '#/state/queries/profile';
@@ -122,7 +121,7 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 						size="md"
 						to={profileLink}
 					>
-						{sanitizeHandle(handle)}
+						{handle}
 					</AuthorLink>
 				</ProfileHoverCard>
 

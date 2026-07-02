@@ -5,7 +5,6 @@ import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderati
 
 import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { atoms as a, useTheme, utils } from '#/alf';
 
@@ -111,7 +110,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 			<View style={[a.flex_1, a.pl_md, a.pr_sm, a.gap_2xs]}>
 				<View style={[a.flex_row, a.align_center, a.pr_xs]}>
 					<Text style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]} numberOfLines={1} emoji>
-						{sanitizeDisplayName(replyTo.author.displayName || sanitizeHandle(replyTo.author.handle))}
+						{sanitizeDisplayName(replyTo.author.displayName || replyTo.author.handle)}
 					</Text>
 					<View style={[a.pl_xs]}>
 						<ProfileBadges profile={replyTo.author} size="sm" />

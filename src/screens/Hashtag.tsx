@@ -8,7 +8,6 @@ import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { enforceLen } from '#/lib/strings/helpers';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
@@ -53,11 +52,7 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 	const headerTitle = enforceLen(displayTag, 24, true, 'middle');
 
 	// DIDs have no `@` prefix; handles do.
-	const sanitizedAuthor = author
-		? author.startsWith('did:')
-			? sanitizeHandle(author)
-			: sanitizeHandle(author, '@')
-		: '';
+	const sanitizedAuthor = author ? (author.startsWith('did:') ? author : `@${author}`) : '';
 
 	const onShare = () => {
 		const url = new URL('https://bsky.app');

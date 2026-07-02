@@ -14,7 +14,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { GestureActionView } from '#/lib/custom-animations/GestureActionView';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { type Shadow, useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -142,7 +141,7 @@ function DirectChatItem({
 			primaryProfile={profile}
 			primaryProfileModeration={moderation}
 			title={displayName}
-			subtitle={isDeletedAccount ? undefined : sanitizeHandle(profile.handle, '@')}
+			subtitle={isDeletedAccount ? undefined : `@${profile.handle}`}
 			accessibilityHint={
 				!isDeletedAccount
 					? m['screens.messages.chats.goToConversation']({ handle: profile.handle })

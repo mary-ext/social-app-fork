@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
 import type { NavigationProp } from '#/lib/routes/types';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -251,7 +250,7 @@ function DrawerProfileCard({
 					{profile && <ProfileBadges profile={profile} size="lg" />}
 				</div>
 				<Text color="textContrastMedium" numberOfLines={1} size="md">
-					{sanitizeHandle(account.handle, '@')}
+					{`@${account.handle}`}
 				</Text>
 			</div>
 			<Text color="textContrastMedium" size="md">

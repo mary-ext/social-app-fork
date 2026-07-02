@@ -9,7 +9,7 @@ import { getCurrentRoute, isTab } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
+import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { softReset } from '#/state/events';
 import { useFetchHandle } from '#/state/queries/handle';
@@ -119,7 +119,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 									<>
 										<div className={css.identity}>
 											<Text size="sm" weight="semiBold" numberOfLines={1}>
-												{sanitizeHandle(profile.handle)}
+												{profile.handle}
 											</Text>
 
 											<Text size="xs" color="textContrastMedium" numberOfLines={1}>
@@ -256,7 +256,7 @@ function SwitchMenuItem({
 		<Menu.Item
 			disabled={!!pendingDid}
 			label={m['common.account.action.switchTo']({
-				handle: sanitizeHandle(profile?.handle ?? account.handle, '@'),
+				handle: `@${profile?.handle ?? account.handle}`,
 			})}
 			onClick={() => void onPressSwitchAccount(account)}
 		>
@@ -267,7 +267,7 @@ function SwitchMenuItem({
 				live={live}
 				hideLiveBadge
 			/>
-			<Menu.ItemText>{sanitizeHandle(profile?.handle ?? account.handle, '@')}</Menu.ItemText>
+			<Menu.ItemText>{`@${profile?.handle ?? account.handle}`}</Menu.ItemText>
 		</Menu.Item>
 	);
 }

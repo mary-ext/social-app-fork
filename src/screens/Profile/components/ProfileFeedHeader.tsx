@@ -3,7 +3,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeCustomFeedLink, makeProfileLink } from '#/lib/routes/links';
 import { shareUrl } from '#/lib/sharing';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
 import type { FeedSourceFeedInfo } from '#/state/queries/feed';
@@ -168,7 +167,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 							</Text>
 							<span className={css.infoButtonMeta}>
 								<Text size="sm" color="textContrastMedium" numberOfLines={1} className={css.infoButtonHandle}>
-									{sanitizeHandle(info.creatorHandle)}
+									{info.creatorHandle}
 								</Text>
 
 								<span className={css.infoButtonLikes}>
@@ -334,7 +333,7 @@ function DialogInner({
 					<Text size="sm" color="textContrastMedium" numberOfLines={1}>
 						<Trans
 							message={m['screens.profile.feed.byCreator']}
-							inputs={{ handle: sanitizeHandle(info.creatorHandle) }}
+							inputs={{ handle: info.creatorHandle }}
 							markup={{
 								t0: ({ children }) => (
 									<InlineLinkText

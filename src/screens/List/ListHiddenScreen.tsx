@@ -4,7 +4,6 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useGoBack } from '#/lib/hooks/useGoBack';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { RQKEY_ROOT as listQueryRoot, useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
 import { type UsePreferencesQueryResponse, useRemoveFeedMutation } from '#/state/queries/preferences';
@@ -122,7 +121,7 @@ export function ListHiddenScreen({
 						) : (
 							<Trans
 								message={m['screens.list.violation.byOther']}
-								inputs={{ handle: sanitizeHandle(list.creator.handle) }}
+								inputs={{ handle: list.creator.handle }}
 								markup={{
 									t0: ({ children }) => <Text style={[a.font_semi_bold]}>{children}</Text>,
 								}}

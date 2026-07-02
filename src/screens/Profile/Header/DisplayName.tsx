@@ -1,7 +1,6 @@
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useBreakpoints } from '#/alf';
 
@@ -25,7 +24,7 @@ export function ProfileHeaderDisplayName({ tight = false }: { tight?: boolean })
 			weight="bold"
 		>
 			{sanitizeDisplayName(
-				profile.displayName || sanitizeHandle(profile.handle),
+				profile.displayName || profile.handle,
 				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 			)}
 		</Text>

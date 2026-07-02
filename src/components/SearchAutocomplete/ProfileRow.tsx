@@ -1,8 +1,6 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
-import { sanitizeHandle } from '#/lib/strings/handles';
-
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { Text } from '#/components/Text';
@@ -30,7 +28,7 @@ export function ProfileRow({ row }: { row: Extract<ListRow, { kind: 'profile' }>
 
 			<span className={styles.text}>
 				<Text numberOfLines={1} weight="medium">
-					{sanitizeHandle(row.profile.handle)}
+					{row.profile.handle}
 				</Text>
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 					{row.profile.displayName || row.profile.handle}

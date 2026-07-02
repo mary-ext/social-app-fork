@@ -3,7 +3,6 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { ActiveConvoStates } from '#/state/messages/convo';
@@ -143,9 +142,7 @@ function InviterHeader({
 						}}
 					/>
 				</Text>
-				<Text style={[a.pt_xs, a.text_sm, t.atoms.text_contrast_high]}>
-					{sanitizeHandle(profile.handle, '@')}
-				</Text>
+				<Text style={[a.pt_xs, a.text_sm, t.atoms.text_contrast_high]}>{`@${profile.handle}`}</Text>
 			</View>
 		</View>
 	);
