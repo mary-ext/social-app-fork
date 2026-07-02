@@ -16,7 +16,6 @@ export const outer = recipe(
 			borderWidth: 1,
 			boxSizing: 'border-box',
 			padding: 12,
-			width: '100%',
 		},
 		variants: {
 			type: {
@@ -37,7 +36,6 @@ export const row = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 8,
-	width: '100%',
 });
 
 export const iconWrap = style({
