@@ -4,8 +4,14 @@ import { vars } from '#/styles/contract.css';
 
 export const button = style({
 	isolation: 'isolate',
+	minWidth: 36,
 	overflow: 'hidden',
+	paddingInline: 8,
 	position: 'relative',
+});
+
+export const text = style({
+	textTransform: 'uppercase',
 });
 
 const pulse = keyframes({
