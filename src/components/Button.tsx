@@ -26,9 +26,7 @@ import * as css from './Button.css';
  * component for other compound components.
  *
  * @example
- * 	```tsx
  * 	type MyComponentProps = Omit<ButtonProps, UninheritableButtonProps> & {...}
- * 	```
  */
 export type UninheritableButtonProps = 'variant' | 'color' | 'size' | 'shape';
 

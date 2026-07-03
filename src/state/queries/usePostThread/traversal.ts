@@ -489,7 +489,6 @@ export function buildThread({
  * inclusive of the parent and its last descendant.
  *
  * @example
- * 	```tsx
  * 	// items[] (index, depth)
  * 	// └─┬ anchor ──────── (0, 0)
  * 	//   ├─── branch ───── (1, 1)
@@ -501,7 +500,6 @@ export function buildThread({
  * 	//   └─── branch ───── (7, 1)
  *
  * 	const { start: 2, end: 5, length: 3 } = getBranch(items, 2, 1)
- * 	```
  *
  * @param items the list of items in the thread
  * @param startIndex the index of the parent item
