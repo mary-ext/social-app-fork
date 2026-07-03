@@ -50,14 +50,14 @@ export const fontWeight = {
 
 // the platform UI sans-serif fallback chain, shared by both font-family options.
 export const systemFontFamily = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
-// the "theme" option prepends the bundled InterVariable webfont to the fallback chain.
-export const themeFontFamily = `InterVariable, ${systemFontFamily}`;
+// the "theme" option prepends the bundled Inter Variable webfont to the fallback chain.
+export const themeFontFamily = `"Inter Variable", ${systemFontFamily}`;
 
 /** Runtime UI font stack; the ALF `ThemeProvider` writes it onto `<html>` from the font-family preference. */
 export const fontFamilyVar = createVar();
 
 /**
- * Active UI font family: the `fontFamilyVar` preference, defaulting to the InterVariable theme stack. Set
+ * Active UI font family: the `fontFamilyVar` preference, defaulting to the Inter Variable theme stack. Set
  * once on `<body>` so text elements inherit it rather than each re-declaring the stack.
  */
 export const fontFamily = fallbackVar(fontFamilyVar, themeFontFamily);

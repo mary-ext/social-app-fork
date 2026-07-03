@@ -42,6 +42,7 @@
 		"@braintree/sanitize-url": "^7.1.2",
 		"@emoji-mart/data": "^1.2.1",
 		"@floating-ui/react-dom": "^2.1.8",
+		"@fontsource-variable/inter": "^5.2.8",
 		"@mary-ext/simple-event-emitter": "^1.0.2",
 		"@mary/batch-fetch": "jsr:^0.1.0",
 		"@mary/color-fns": "jsr:^0.1.3",

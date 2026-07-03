@@ -11,21 +11,8 @@
  * HTML & BODY STYLES IN `web/index.html`
  */
 
-@font-face {
-	font-family: 'InterVariable';
-	src: url('../assets/fonts/inter/InterVariable.woff2') format('woff2');
-	font-weight: 300 1000;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'InterVariableItalic';
-	src: url('../assets/fonts/inter/InterVariable-Italic.woff2') format('woff2');
-	font-weight: 300 1000;
-	font-style: italic;
-	font-display: swap;
-}
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/inter/wght-italic.css';
 
 /*
  * The UA-default resets (font/line-height on form controls, link color, focus outline) live in

@@ -38,11 +38,8 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
  */
 export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
 	if (fontFamily === 'theme') {
-		style.fontFamily = 'InterVariable';
+		style.fontFamily = '"Inter Variable"';
 
-		if (style.fontStyle === 'italic') {
-			style.fontFamily += 'Italic';
-		}
 		// fallback families only supported on web
 		style.fontFamily += `, ${WEB_FONT_FAMILIES}`;
 		style.fontVariant = (style.fontVariant || []).concat(
