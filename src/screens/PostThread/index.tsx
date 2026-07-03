@@ -21,7 +21,7 @@ import { ThreadItemPostNoUnauthenticated } from '#/screens/PostThread/components
 import { ThreadItemPostTombstone } from '#/screens/PostThread/components/ThreadItemPostTombstone';
 import { ThreadItemReadMore } from '#/screens/PostThread/components/ThreadItemReadMore';
 import { ThreadItemReadMoreUp } from '#/screens/PostThread/components/ThreadItemReadMoreUp';
-import { ThreadItemReplyComposerSkeleton } from '#/screens/PostThread/components/ThreadItemReplyComposer';
+import { ThreadItemReplyComposerSkeleton } from '#/screens/PostThread/components/ThreadItemReplyComposerSkeleton';
 import { ThreadItemShowOtherReplies } from '#/screens/PostThread/components/ThreadItemShowOtherReplies';
 import {
 	ThreadItemTreePost,
@@ -394,7 +394,9 @@ export function PostThread({ uri }: { uri: string }) {
 		} else if (item.type === 'threadPostNotFound') {
 			return <ThreadItemPostTombstone type="not-found" />;
 		} else if (item.type === 'replyComposer') {
-			return <div>{gtMobile && <ThreadComposePrompt onPressCompose={onReplyToAnchor} />}</div>;
+			if (gtMobile) {
+				return <ThreadComposePrompt onPressCompose={onReplyToAnchor} />;
+			}
 		} else if (item.type === 'showOtherReplies') {
 			return <ThreadItemShowOtherReplies onPress={item.onPress} />;
 		} else if (item.type === 'skeleton') {
