@@ -1,4 +1,5 @@
 import { type ComponentType, type ReactNode, useId } from 'react';
+
 import { AlertDialog } from '@base-ui/react/alert-dialog';
 
 import { useConstant } from '#/lib/hooks/use-constant';

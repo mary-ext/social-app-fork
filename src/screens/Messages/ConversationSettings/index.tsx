@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { View } from 'react-native';
+
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';

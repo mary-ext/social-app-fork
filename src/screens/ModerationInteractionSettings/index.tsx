@@ -1,5 +1,7 @@
 import { useState } from 'react';
+
 import type { ResourceUri } from '@atcute/lexicons';
+
 import deepEqual from 'fast-deep-equal';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';

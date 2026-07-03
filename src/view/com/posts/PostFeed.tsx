@@ -1,5 +1,7 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
+
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { onAppStateChange } from '#/lib/appState';

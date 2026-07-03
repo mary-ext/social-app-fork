@@ -1,9 +1,11 @@
 import { useCallback, useMemo, useRef } from 'react';
+
 import type { AppBskyFeedDefs, AppBskyFeedSearchPosts } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

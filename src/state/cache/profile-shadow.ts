@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+
 import type { AnyProfileView, AppBskyActorDefs, AppBskyNotificationDefs } from '@atcute/bluesky';
+
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
+
 import type { QueryClient } from '@tanstack/react-query';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';

@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { type LayoutChangeEvent, type NativeScrollEvent, View, type ViewStyle } from 'react-native';
+
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
+
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 import { getGraphemeLength } from '@atcute/util-text';

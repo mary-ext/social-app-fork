@@ -1,5 +1,6 @@
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
+
 import { useQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

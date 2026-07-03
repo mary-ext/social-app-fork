@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { View } from 'react-native';
+
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { useSession } from '#/state/session';

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 

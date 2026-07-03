@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
+
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
@@ -9,6 +10,7 @@ import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import {
 	type InfiniteData,
 	keepPreviousData,

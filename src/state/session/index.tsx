@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
 import type { Did as AtcuteDid } from '@atcute/lexicons';
 import { deleteStoredSession, OAuthResponseError, TokenRefreshError } from '@atcute/oauth-browser-client';
 

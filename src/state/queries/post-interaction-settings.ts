@@ -1,4 +1,5 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { preferencesQueryKey } from '#/state/queries/preferences';

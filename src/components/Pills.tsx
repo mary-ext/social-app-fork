@@ -1,4 +1,5 @@
 import { type TextStyle, View, type ViewStyle } from 'react-native';
+
 import type { ModerationCause } from '@atcute/bluesky-moderation';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';

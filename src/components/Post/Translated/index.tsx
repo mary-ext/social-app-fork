@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
 import { HITSLOP_30 } from '#/lib/constants';

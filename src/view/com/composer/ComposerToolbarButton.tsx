@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+
 import { clsx } from 'clsx';
 
 import type { Props as IconProps } from '#/components/icons/common';

@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 import { type GestureResponderEvent, Keyboard, View, type ViewStyle } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_30 } from '#/lib/constants';

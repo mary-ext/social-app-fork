@@ -1,4 +1,5 @@
 import { memo, type MouseEvent, useState } from 'react';
+
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
@@ -17,6 +18,7 @@ import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
+
 import { Collapsible } from '@base-ui/react/collapsible';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';

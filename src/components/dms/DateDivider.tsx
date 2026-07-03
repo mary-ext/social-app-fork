@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { View } from 'react-native';
+
 import { subDays } from 'date-fns';
 
 import { clockNumeric, weekdayLong, weekdayMonthDay, weekdayMonthDayYear } from '#/locale/intl/datetime';

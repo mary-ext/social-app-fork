@@ -7,6 +7,7 @@ import type {
 } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 
 import { dangerousGetPostShadow, updatePostShadow } from '#/state/cache/post-shadow';

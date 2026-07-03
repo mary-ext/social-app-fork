@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 
 /** How long a message stays highlighted after scrolling to it, before the flash fades out. */

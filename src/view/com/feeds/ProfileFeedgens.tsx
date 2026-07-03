@@ -1,4 +1,5 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { cleanError } from '#/lib/strings/errors';

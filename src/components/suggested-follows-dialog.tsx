@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';

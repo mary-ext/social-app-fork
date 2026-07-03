@@ -1,6 +1,7 @@
 import type { AppBskyActorDefs, AppBskyFeedGetLikes } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
+
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

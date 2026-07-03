@@ -1,4 +1,5 @@
 import type { FocusEventHandler, KeyboardEventHandler, Ref } from 'react';
+
 import { clsx } from 'clsx';
 
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';

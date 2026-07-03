@@ -1,4 +1,5 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
+
 import type { AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';

@@ -1,5 +1,6 @@
 import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';

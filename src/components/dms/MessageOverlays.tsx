@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { LayoutAnimation } from 'react-native';
+
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useConvoActive } from '#/state/messages/convo';

@@ -4,6 +4,7 @@ import {
 	LabelFlags,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
+
 import { clsx } from 'clsx';
 
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { AppState } from 'react-native';
+
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
@@ -19,6 +20,7 @@ import {
 } from '@atcute/bluesky-moderation';
 import type { Client } from '@atcute/client';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { FeedTuner } from '#/lib/api/feed-manip';

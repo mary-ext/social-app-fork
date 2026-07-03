@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';

@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react';
 import { type ScrollView, View } from 'react-native';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
+
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 

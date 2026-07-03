@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
 import { Text } from '#/components/Text';

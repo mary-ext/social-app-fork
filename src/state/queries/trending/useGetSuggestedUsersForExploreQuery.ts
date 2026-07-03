@@ -1,5 +1,6 @@
 import type { AppBskyActorDefs, AppBskyUnspeccedGetSuggestedUsersForExplore } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
+
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';

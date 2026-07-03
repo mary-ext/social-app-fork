@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { type ScrollView, View } from 'react-native';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 

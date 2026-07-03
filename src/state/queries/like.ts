@@ -1,5 +1,6 @@
 import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useMutation } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord } from '#/lib/api/records';

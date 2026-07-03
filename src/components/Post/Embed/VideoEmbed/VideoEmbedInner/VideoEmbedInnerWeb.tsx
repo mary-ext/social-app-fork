@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useEffectEvent, useId, useRef, useState } from 'react';
+
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
+
 import type * as HlsTypes from 'hls.js';
 
 import { useFullscreen } from '#/components/hooks/useFullscreen';

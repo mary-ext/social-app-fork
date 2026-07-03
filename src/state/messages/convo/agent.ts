@@ -9,6 +9,7 @@ import type {
 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { $type, Did } from '@atcute/lexicons';
+
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { networkRetry } from '#/lib/async/retry';

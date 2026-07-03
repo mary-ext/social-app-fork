@@ -1,5 +1,6 @@
 import { type Token, tokenize } from '@atcute/bluesky-search-parser';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+
 import { min } from '@mary/date-fns';
 
 import { convertBskyAppUrlIfNeeded, isBskyAppUrl, safeUrlParse } from '#/lib/strings/url-helpers';

@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { View } from 'react-native';
+
 import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
 
 import { listUriToHref } from '#/lib/strings/url-helpers';

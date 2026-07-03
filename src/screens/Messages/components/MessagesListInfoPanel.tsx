@@ -1,5 +1,7 @@
 import { View } from 'react-native';
+
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';

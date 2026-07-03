@@ -1,4 +1,5 @@
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
+
 import { clsx } from 'clsx';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';

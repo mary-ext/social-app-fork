@@ -1,4 +1,5 @@
 import { type NativeScrollEvent, View } from 'react-native';
+
 import { type ScreenLayoutArgs, useIsFocused } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 

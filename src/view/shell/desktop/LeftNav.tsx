@@ -1,5 +1,7 @@
 import { type MouseEvent, useState } from 'react';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { clsx } from 'clsx';
 

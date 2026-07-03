@@ -1,6 +1,8 @@
 import { useState } from 'react';
+
 import type { AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
+
 import deepEqual from 'fast-deep-equal';
 
 import { isNetworkError } from '#/lib/strings/errors';

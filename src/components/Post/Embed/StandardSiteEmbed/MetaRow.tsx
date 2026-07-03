@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from 'react';
+
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 

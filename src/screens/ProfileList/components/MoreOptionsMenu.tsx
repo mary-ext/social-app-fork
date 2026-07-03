@@ -1,5 +1,6 @@
 import type { AppBskyActorDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';

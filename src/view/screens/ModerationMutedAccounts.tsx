@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
+
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
+
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';

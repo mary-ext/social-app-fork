@@ -1,5 +1,7 @@
 import { Pressable } from 'react-native';
+
 import { ClientResponseError } from '@atcute/client';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_10 } from '#/lib/constants';

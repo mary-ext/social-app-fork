@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import * as TID from '@atcute/tid';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';

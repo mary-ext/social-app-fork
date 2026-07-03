@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet, View } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';

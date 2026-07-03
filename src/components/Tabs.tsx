@@ -7,6 +7,7 @@ import {
 	useEffect,
 	useRef,
 } from 'react';
+
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import { clsx } from 'clsx';
 

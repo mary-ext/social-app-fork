@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+
 import { tokenize } from '@atcute/bluesky-richtext-parser';
+
 import debounce from 'lodash.debounce';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';

@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -7,6 +8,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
+
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';

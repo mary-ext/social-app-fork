@@ -1,5 +1,6 @@
 import { Children } from 'react';
 import type { StyleProp, TextProps as RNTextProps, TextStyle } from 'react-native';
+
 import createEmojiRegex from 'emoji-regex';
 
 import { type Alf, applyFonts, atoms, flatten } from '#/alf';

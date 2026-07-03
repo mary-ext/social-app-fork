@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
+
 import type { LightboxImage } from '@oomfware/lightbox';
+
 import { clsx } from 'clsx';
 
 import type { LightboxHandle } from '#/components/dialogs/Context';

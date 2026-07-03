@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -7,6 +8,7 @@ import {
 	type ModerationDecision,
 } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 

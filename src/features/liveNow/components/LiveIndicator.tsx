@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+
 import { clsx } from 'clsx';
 
 import { Text } from '#/components/Text';

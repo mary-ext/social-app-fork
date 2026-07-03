@@ -1,5 +1,7 @@
 import { useState } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
+
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';

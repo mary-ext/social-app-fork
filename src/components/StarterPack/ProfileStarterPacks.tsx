@@ -1,4 +1,5 @@
 import type { AnyStarterPackView } from '@atcute/bluesky';
+
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';

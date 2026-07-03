@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect } from 'react';
 import { AppState } from 'react-native';
+
 import type { Client } from '@atcute/client';
 
 import { useConstant } from '#/lib/hooks/use-constant';

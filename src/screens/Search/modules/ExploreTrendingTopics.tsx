@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 

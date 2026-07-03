@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import type { Account, Auth, Device } from '#/storage/schema';

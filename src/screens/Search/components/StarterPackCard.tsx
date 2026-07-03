@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+
 import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

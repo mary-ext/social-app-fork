@@ -1,5 +1,7 @@
 import { useState } from 'react';
+
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';

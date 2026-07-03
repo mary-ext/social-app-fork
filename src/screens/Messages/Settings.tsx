@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';

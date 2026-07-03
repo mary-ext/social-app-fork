@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+
 import type { AppBskyFeedDefs as AtcAppBskyFeedDefs, AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -7,6 +8,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
 import { FeedTuner } from '#/lib/api/feed-manip';

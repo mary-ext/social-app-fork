@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import * as TID from '@atcute/tid';
 
 import { DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED } from '#/lib/constants';

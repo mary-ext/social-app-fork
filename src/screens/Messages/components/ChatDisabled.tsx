@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
+
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
+
 import { useMutation } from '@tanstack/react-query';
 
 import { OzoneReason } from '#/lib/moderation/report-reasons';

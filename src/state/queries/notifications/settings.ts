@@ -1,5 +1,6 @@
 import type { AppBskyNotificationDefs, ChatBskyNotificationDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
+
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

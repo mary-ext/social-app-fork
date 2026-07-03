@@ -1,4 +1,5 @@
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
+
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/UserBanner.css';

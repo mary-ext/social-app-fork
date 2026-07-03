@@ -1,6 +1,8 @@
 import { Fragment, useRef } from 'react';
+
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { clsx } from 'clsx';
 
 import { makeListLink, makeProfileLink } from '#/lib/routes/links';

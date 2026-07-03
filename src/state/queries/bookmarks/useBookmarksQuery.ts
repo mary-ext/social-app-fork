@@ -2,6 +2,7 @@ import type { AppBskyBookmarkGetBookmarks, AppBskyFeedDefs } from '@atcute/blues
 import { ok } from '@atcute/client';
 import type { $type } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';

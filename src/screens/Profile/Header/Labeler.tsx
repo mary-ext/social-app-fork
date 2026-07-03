@@ -1,6 +1,8 @@
 import { useState } from 'react';
+
 import type { AppBskyActorDefs, AppBskyLabelerDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+
 import { clsx } from 'clsx';
 
 import { MAX_LABELERS } from '#/lib/constants';

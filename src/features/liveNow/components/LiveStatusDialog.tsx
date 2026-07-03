@@ -1,5 +1,6 @@
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
+
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';

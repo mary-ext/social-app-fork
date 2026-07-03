@@ -5,6 +5,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { UserAvatar } from '#/components/UserAvatar';

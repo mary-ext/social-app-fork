@@ -1,5 +1,6 @@
 import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
+
 import { useNavigation } from '@react-navigation/native';
 
 import type { CommonNavigatorParams, NavigationProp, NativeStackScreenProps } from '#/lib/routes/types';

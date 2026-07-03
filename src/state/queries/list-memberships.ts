@@ -7,6 +7,7 @@ import type {
 import { ok } from '@atcute/client';
 import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord } from '#/lib/api/records';

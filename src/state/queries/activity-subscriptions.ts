@@ -4,6 +4,7 @@ import type {
 	AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
+
 import {
 	type InfiniteData,
 	type QueryClient,

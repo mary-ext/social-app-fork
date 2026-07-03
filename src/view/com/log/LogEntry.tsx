@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { Collapsible } from '@base-ui/react/collapsible';
 
 import type { ConsoleTransportEntry } from '#/logger/logDump';

@@ -16,9 +16,11 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
+
 import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+
 import {
 	type InfiniteData,
 	type QueryClient,

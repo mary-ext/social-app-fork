@@ -1,4 +1,5 @@
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useNavigation } from '@react-navigation/native';
 
 import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';

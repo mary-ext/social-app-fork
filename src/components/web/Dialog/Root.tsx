@@ -1,4 +1,5 @@
 import { type ReactNode, useId, useRef } from 'react';
+
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 
 import { useConstant } from '#/lib/hooks/use-constant';

@@ -1,5 +1,6 @@
 import type { AppBskyActorDefs, AppBskyGraphGetBlocks } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
+
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

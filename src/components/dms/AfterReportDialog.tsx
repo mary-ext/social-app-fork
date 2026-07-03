@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+
 import { StackActions, useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';

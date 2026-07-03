@@ -1,4 +1,5 @@
 import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
+
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 

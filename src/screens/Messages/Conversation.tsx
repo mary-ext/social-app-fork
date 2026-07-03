@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
 import { type LayoutChangeEvent, View } from 'react-native';
+
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
+
 import {
 	type RouteProp,
 	useFocusEffect,

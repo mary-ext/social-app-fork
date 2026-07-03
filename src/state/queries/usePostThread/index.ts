@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
+
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
+
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

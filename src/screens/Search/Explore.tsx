@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { useInterestsDisplayNames } from '#/lib/interests';

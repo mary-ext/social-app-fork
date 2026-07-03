@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { clsx } from 'clsx';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';

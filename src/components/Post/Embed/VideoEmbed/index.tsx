@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 

@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
+
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 

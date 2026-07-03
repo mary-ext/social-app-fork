@@ -1,6 +1,8 @@
 import { type ReactNode, useEffect } from 'react';
+
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 

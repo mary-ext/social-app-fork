@@ -1,4 +1,5 @@
 import { type ListRenderItemInfo, View } from 'react-native';
+
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';

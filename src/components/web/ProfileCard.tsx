@@ -1,4 +1,5 @@
 import type { MouseEvent, ReactNode } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -6,6 +7,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
+
 import { clsx } from 'clsx';
 
 import { getModerationCauseKey } from '#/lib/moderation';

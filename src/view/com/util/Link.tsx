@@ -9,6 +9,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
+
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { StackActions } from '@react-navigation/native';
 

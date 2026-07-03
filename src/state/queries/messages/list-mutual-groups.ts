@@ -1,5 +1,6 @@
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
+
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { createQueryKey } from '#/state/queries/util';

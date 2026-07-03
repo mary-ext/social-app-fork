@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+
 import { Toast as BaseToast, type ToastManager } from '@base-ui/react/toast';
 import { clsx } from 'clsx';
 

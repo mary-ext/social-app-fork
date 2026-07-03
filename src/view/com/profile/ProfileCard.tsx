@@ -1,4 +1,5 @@
 import { type GestureResponderEvent, View } from 'react-native';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

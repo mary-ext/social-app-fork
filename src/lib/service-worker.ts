@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { logger } from '#/logger';

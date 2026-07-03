@@ -1,5 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
+
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+
 import debounce from 'lodash.debounce';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';

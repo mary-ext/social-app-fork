@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';

@@ -1,7 +1,9 @@
 import { View } from 'react-native';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';

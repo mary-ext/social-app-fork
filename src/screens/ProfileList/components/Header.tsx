@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { makeListLink } from '#/lib/routes/links';

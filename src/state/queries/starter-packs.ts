@@ -9,6 +9,7 @@ import type {
 import { type Client, ok } from '@atcute/client';
 import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 

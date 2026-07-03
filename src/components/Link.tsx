@@ -5,6 +5,7 @@ import {
 	type TargetedEvent,
 	type TextStyle,
 } from 'react-native';
+
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { type LinkProps as RNLinkProps, StackActions } from '@react-navigation/native';
 

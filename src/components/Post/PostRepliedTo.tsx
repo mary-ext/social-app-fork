@@ -1,4 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
+
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';

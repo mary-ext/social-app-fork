@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';

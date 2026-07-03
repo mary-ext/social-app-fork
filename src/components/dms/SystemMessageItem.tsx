@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 
 import { makeProfileLink } from '#/lib/routes/links';

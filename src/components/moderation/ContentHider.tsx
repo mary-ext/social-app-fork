@@ -1,9 +1,11 @@
 import { type ReactNode, useState } from 'react';
+
 import {
 	type DisplayRestrictions,
 	type LabelModerationCause,
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
+
 import { Collapsible } from '@base-ui/react/collapsible';
 import { clsx } from 'clsx';
 

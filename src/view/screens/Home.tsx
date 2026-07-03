@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';

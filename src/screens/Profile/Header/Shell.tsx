@@ -1,5 +1,6 @@
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
+
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 

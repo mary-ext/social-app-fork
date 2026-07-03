@@ -1,6 +1,8 @@
 import type { ReactNode, Ref } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 

@@ -1,4 +1,5 @@
 import type { Client } from '@atcute/client';
+
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { type ResolvedLink, resolveGif, resolveLink } from '#/lib/api/resolve';

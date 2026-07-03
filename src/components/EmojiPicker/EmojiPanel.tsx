@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import type { Emoji as DataEmoji } from '@emoji-mart/data';
 import { useQuery } from '@tanstack/react-query';

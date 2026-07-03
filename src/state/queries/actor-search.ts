@@ -1,5 +1,6 @@
 import type { AppBskyActorSearchActors } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
+
 import {
 	type InfiniteData,
 	keepPreviousData,

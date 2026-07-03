@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
+
 import { useFocusEffect } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
 

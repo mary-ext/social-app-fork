@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
+
 import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { HITSLOP_20 } from '#/lib/constants';

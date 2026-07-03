@@ -1,6 +1,7 @@
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { clsx } from 'clsx';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';

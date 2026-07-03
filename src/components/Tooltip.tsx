@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
 import { Text } from '#/components/Text';

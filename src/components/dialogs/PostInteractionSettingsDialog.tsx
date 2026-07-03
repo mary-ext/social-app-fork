@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
+
 import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';

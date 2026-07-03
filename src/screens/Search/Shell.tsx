@@ -1,5 +1,7 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
+
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 
 import { MagnifyingGlassIcon } from '#/lib/icons';

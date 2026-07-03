@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+
 import {
 	type LightboxImage,
 	Lightbox as Lb,
@@ -7,6 +7,8 @@ import {
 	useLightbox,
 	useLightboxState,
 } from '@oomfware/lightbox';
+
+import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';

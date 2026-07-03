@@ -1,5 +1,6 @@
 import type { ChatBskyGroupGetJoinLinkPreviews } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
+
 import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { createQueryKey, type StructuredQueryKey } from '#/state/queries/util';

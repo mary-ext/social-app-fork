@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';

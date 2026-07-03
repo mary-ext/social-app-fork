@@ -1,4 +1,5 @@
 import type { ComponentType, MouseEvent, ReactNode, Ref } from 'react';
+
 import { clsx } from 'clsx';
 
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';

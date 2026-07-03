@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,

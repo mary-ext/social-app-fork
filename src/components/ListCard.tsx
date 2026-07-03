@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect } from 'react';
+
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -7,6 +8,7 @@ import {
 	moderateList,
 } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 

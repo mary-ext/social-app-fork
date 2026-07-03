@@ -10,11 +10,13 @@ import {
 	useRef,
 	useState,
 } from 'react';
+
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { isGraphemeLengthInRange } from '@atcute/util-text';
+
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';

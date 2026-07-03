@@ -7,7 +7,9 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
+
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';

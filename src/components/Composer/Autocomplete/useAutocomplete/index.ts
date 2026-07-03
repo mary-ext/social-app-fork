@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -6,6 +7,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
+
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';

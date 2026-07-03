@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import { StackActions, useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';

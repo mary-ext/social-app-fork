@@ -1,6 +1,7 @@
 import 'react-image-crop/dist/ReactCrop.css';
 
 import { type CSSProperties, useImperativeHandle, useRef, useState } from 'react';
+
 import { ReactCrop, type PercentCrop } from 'react-image-crop';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';

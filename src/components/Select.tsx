@@ -6,6 +6,7 @@ import {
 	type ReactNode,
 	useContext,
 } from 'react';
+
 import { Select as BaseSelect } from '@base-ui/react/select';
 import { clsx } from 'clsx';
 

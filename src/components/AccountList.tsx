@@ -1,4 +1,5 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+
 import { clsx } from 'clsx';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';

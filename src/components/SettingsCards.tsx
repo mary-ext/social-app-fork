@@ -1,5 +1,6 @@
 import { Children, cloneElement, type ComponentType, Fragment, isValidElement, type ReactNode } from 'react';
 import type { GestureResponderEvent } from 'react-native';
+
 import { Collapsible } from '@base-ui/react/collapsible';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';

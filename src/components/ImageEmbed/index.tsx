@@ -1,4 +1,5 @@
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
+
 import type { LightboxImage } from '@oomfware/lightbox';
 
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';

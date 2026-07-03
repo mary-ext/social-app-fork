@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import type {
 	AnyProfileView,
 	AppBskyNotificationDefs,
@@ -6,6 +7,7 @@ import type {
 } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
+
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';

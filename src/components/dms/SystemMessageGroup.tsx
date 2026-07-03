@@ -1,4 +1,5 @@
 import { Pressable, View } from 'react-native';
+
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 
 import { HITSLOP_10 } from '#/lib/constants';

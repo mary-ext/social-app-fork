@@ -1,5 +1,6 @@
 import { type JSX, useState } from 'react';
 import { Dimensions, type StyleProp, View, type ViewStyle } from 'react-native';
+
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 

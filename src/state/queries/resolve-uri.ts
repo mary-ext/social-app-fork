@@ -1,6 +1,7 @@
 import { type Client, ok } from '@atcute/client';
 import type { Handle } from '@atcute/lexicons';
 import { isResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
+
 import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';

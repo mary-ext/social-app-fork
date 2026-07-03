@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';

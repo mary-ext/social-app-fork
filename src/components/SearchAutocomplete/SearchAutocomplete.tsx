@@ -8,8 +8,9 @@ import {
 	useRef,
 	useState,
 } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
-import { Autocomplete } from '@base-ui/react/autocomplete';
+
 import {
 	addDays,
 	addMonths,
@@ -22,6 +23,8 @@ import {
 	startOfMonth,
 	startOfWeek,
 } from '@mary/date-fns';
+
+import { Autocomplete } from '@base-ui/react/autocomplete';
 
 import {
 	classifyActiveToken,

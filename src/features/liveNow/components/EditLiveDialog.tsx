@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
+
 import type { AppBskyActorDefs, AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
+
 import { differenceInMinutes } from 'date-fns';
 
 import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';

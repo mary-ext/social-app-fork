@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 // central, reactive view of the OS reduced-motion preference: one shared MediaQueryList kept live

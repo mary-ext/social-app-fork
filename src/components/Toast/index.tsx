@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import { Toast as BaseToast } from '@base-ui/react/toast';
 
 import { ToastViewport } from '#/components/Toast/Toast';

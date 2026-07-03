@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { ListRenderItemInfo } from 'react-native';
+
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { HITSLOP_10 } from '#/lib/constants';

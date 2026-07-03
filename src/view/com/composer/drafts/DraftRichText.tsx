@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
+
 import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
+
 import { clsx } from 'clsx';
 
 import { detectFacetsWithoutResolution } from '#/lib/strings/rich-text-facets';

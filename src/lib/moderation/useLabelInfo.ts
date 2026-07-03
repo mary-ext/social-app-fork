@@ -7,6 +7,7 @@ import {
 	interpretLabelValueDefinition,
 	type LabelLocale,
 } from '@atcute/bluesky-moderation';
+
 import * as bcp47Match from 'bcp-47-match';
 
 import { type GlobalLabelStrings, useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';

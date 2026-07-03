@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import type Hls from 'hls.js';
 
 import { clamp } from '#/lib/numbers';

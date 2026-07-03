@@ -1,4 +1,5 @@
 import type { Insets } from 'react-native';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583';

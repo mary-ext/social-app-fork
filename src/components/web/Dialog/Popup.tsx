@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 

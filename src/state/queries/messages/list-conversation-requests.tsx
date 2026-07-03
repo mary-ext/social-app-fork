@@ -1,5 +1,6 @@
 import type { ChatBskyConvoListConvoRequests } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
+
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';

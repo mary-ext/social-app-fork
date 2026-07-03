@@ -1,6 +1,8 @@
 import type { ComponentType, ReactNode } from 'react';
+
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 

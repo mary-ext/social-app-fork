@@ -1,5 +1,6 @@
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { makeProfileLink } from '#/lib/routes/links';

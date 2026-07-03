@@ -1,4 +1,5 @@
 import { type ReactElement, useState } from 'react';
+
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 
 import type { Richtext } from '#/lib/strings/rich-text-facets';

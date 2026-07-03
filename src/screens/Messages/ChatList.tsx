@@ -1,6 +1,8 @@
 import { type ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
+
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
+
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 

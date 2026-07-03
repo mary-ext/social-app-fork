@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { LayoutAnimation, Pressable, type ScrollView, View } from 'react-native';
+
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { HITSLOP_10 } from '#/lib/constants';

@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
 	type InterpretedLabelDefinition,

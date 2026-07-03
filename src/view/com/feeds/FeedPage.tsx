@@ -1,6 +1,8 @@
 import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+
 import { type NavigationProp, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 

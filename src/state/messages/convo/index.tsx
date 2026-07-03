@@ -1,7 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from 'react';
+
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
+
 import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 

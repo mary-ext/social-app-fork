@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import * as styles from '#/lib/custom-animations/LikeIcon.css';

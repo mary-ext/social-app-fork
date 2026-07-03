@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { type EmbedPlayerParams, getPlayerAspect } from '#/lib/strings/embed-player';

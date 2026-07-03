@@ -1,4 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
+
 import type { Emoji } from '@emoji-mart/data';
 
 export type AutocompleteProfile = {

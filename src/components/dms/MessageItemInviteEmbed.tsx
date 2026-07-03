@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import type { ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 

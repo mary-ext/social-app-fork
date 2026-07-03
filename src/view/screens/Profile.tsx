@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -6,6 +7,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
+
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 

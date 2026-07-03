@@ -1,4 +1,5 @@
 import type { ComponentType, ReactElement, ReactNode } from 'react';
+
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';

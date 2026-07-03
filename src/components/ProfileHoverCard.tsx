@@ -1,4 +1,5 @@
 import { type ReactElement, useRef } from 'react';
+
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -6,6 +7,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
+
 import { PreviewCard } from '@base-ui/react/preview-card';
 import { useNavigation } from '@react-navigation/native';
 

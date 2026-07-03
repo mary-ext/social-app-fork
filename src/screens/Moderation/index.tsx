@@ -4,6 +4,7 @@ import {
 	type InterpretedLabelDefinition,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
+
 import { clsx } from 'clsx';
 
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';

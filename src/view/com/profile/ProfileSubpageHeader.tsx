@@ -1,5 +1,7 @@
 import { Pressable, View } from 'react-native';
+
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';

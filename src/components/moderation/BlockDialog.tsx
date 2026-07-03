@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { View } from 'react-native';
+
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { isNetworkError } from '#/lib/strings/errors';

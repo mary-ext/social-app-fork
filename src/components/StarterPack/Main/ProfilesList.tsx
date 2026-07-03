@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';

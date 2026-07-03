@@ -1,8 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
+
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
+
 import throttle from 'lodash.throttle';
 
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';

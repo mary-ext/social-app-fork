@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+
 import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
 
 type StateContext = {

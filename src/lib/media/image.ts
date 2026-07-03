@@ -1,4 +1,5 @@
 import type { AppBskyEmbedDefs } from '@atcute/bluesky';
+
 import { remove as removeExif } from '@mary/exif-rm';
 
 import { cover } from './crop';

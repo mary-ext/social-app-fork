@@ -1,4 +1,5 @@
 import { type Ref, useEffect, useEffectEvent, useImperativeHandle, useRef, useState } from 'react';
+
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';

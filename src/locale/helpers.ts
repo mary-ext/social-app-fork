@@ -1,4 +1,5 @@
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+
 import * as bcp47Match from 'bcp-47-match';
 
 import { detectLanguages } from '#/lib/language-detection';

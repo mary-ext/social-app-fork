@@ -1,6 +1,7 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
+
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { accumulate } from '#/lib/async/accumulate';

@@ -1,6 +1,8 @@
 import { type ComponentPropsWithoutRef, memo, type Ref } from 'react';
+
 import type { AnyProfileView, AppBskyEmbedExternal } from '@atcute/bluesky';
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
+
 import { Avatar } from '@base-ui/react/avatar';
 import { useQueryClient } from '@tanstack/react-query';
 import { assignInlineVars } from '@vanilla-extract/dynamic';

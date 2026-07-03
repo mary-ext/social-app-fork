@@ -1,4 +1,5 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
+
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { cleanError } from '#/lib/strings/errors';

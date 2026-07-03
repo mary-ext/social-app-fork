@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { View } from 'react-native';
+
 import type { AnyProfileView, ChatBskyGroupListJoinRequests } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
+
 import { useNavigation } from '@react-navigation/native';
 import { type InfiniteData, useQueryClient } from '@tanstack/react-query';
 

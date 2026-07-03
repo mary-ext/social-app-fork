@@ -1,6 +1,8 @@
 import { type ComponentProps, useState } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 

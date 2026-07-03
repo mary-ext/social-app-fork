@@ -1,5 +1,6 @@
 import type { ChatBskyConvoGetLog } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
+
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { networkRetry } from '#/lib/async/retry';

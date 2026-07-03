@@ -1,5 +1,6 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
 	DisplayContext,

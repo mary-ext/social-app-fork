@@ -5,6 +5,7 @@ import type {
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
+
 import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';

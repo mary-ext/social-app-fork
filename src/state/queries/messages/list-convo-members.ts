@@ -1,5 +1,6 @@
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
+
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';

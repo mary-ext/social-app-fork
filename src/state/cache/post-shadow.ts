@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
+
 import type { AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
+
 import type { QueryClient } from '@tanstack/react-query';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';

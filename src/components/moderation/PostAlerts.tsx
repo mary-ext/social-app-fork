@@ -1,4 +1,5 @@
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
+
 import { clsx } from 'clsx';
 
 import { getModerationCauseKey, unique } from '#/lib/moderation';

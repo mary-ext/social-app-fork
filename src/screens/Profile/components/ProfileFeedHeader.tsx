@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeCustomFeedLink, makeProfileLink } from '#/lib/routes/links';

@@ -1,4 +1,5 @@
 import type { LabelPreference } from '@atcute/bluesky-moderation';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';

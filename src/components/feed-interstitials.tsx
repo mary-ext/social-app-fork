@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+
 import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';

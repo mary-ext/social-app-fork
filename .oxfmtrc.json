@@ -19,9 +19,9 @@
 			"cloudflare",
 
 			"react",
-			{ "newlinesBetween": false },
 			"expo",
-			{ "newlinesBetween": false },
+			"atcute",
+			"oomfware",
 			"external",
 
 			"lib",
@@ -56,6 +56,14 @@
 			{
 				"groupName": "expo",
 				"elementNamePattern": ["expo", "expo/**", "expo-*", "expo-*/**"]
+			},
+			{
+				"groupName": "atcute",
+				"elementNamePattern": ["@atcute/**"]
+			},
+			{
+				"groupName": "oomfware",
+				"elementNamePattern": ["@mary/**", "@mary-ext/**", "@oomfware/**"]
 			},
 			{
 				"groupName": "lib",
