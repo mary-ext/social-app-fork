@@ -98,6 +98,8 @@ export const popup = recipe(
 	{ debugId: 'popup', layer: components },
 );
 
+const SCROLL_ARROW_HEIGHT = 24;
+
 export const list = style(
 	layered(components, {
 		flex: 1,
@@ -105,7 +107,8 @@ export const list = style(
 		minHeight: 0,
 		overflowY: 'auto',
 		padding: space.xs,
-		scrollPadding: space.xs,
+		scrollPaddingBlock: SCROLL_ARROW_HEIGHT + space.xs,
+		scrollPaddingInline: space.xs,
 	}),
 );
 
@@ -116,7 +119,7 @@ const scrollArrow = style(
 		alignItems: 'center',
 		color: vars.palette.contrast_1000,
 		display: 'flex',
-		height: 24,
+		height: SCROLL_ARROW_HEIGHT,
 		justifyContent: 'center',
 		left: 0,
 		right: 0,
