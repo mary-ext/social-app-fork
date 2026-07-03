@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { borderRadius, fontFamily, fontSize, space, zIndex } from '#/styles/tokens.css';
+import { borderRadius, fontSize, space, zIndex } from '#/styles/tokens.css';
 
 // #region input field
 
@@ -31,7 +31,7 @@ export const input = style({
 	boxSizing: 'border-box',
 	color: vars.palette.contrast_1000,
 	display: 'block',
-	fontFamily,
+	fontFamily: 'inherit',
 	fontSize: fontSize.md,
 	lineHeight: 1.2,
 	margin: 0,

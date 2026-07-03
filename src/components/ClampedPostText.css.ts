@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
-import { fontFamily, fontLeading, fontSize } from '#/styles/tokens.css';
+import { fontLeading, fontSize } from '#/styles/tokens.css';
 
 export const richText = style({
 	display: 'flex',
@@ -17,7 +17,7 @@ export const showMore = style({
 	border: 'none',
 	color: vars.palette.primary_500,
 	cursor: 'pointer',
-	fontFamily,
+	fontFamily: 'inherit',
 	fontSize: fontSize.md,
 	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
 	padding: 0,

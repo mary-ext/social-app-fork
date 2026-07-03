@@ -2,7 +2,7 @@ import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
-import { fontFamily, fontSize } from '#/styles/tokens.css';
+import { fontSize } from '#/styles/tokens.css';
 
 const borderWidth = 1;
 const lineHeight = 1.2;
@@ -45,7 +45,7 @@ export const input = style(
 		boxSizing: 'border-box',
 		color: vars.palette.contrast_1000,
 		display: 'block',
-		fontFamily,
+		fontFamily: 'inherit',
 		fontSize: fontSize.md,
 		lineHeight,
 		margin: 0,

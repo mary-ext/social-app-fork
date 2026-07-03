@@ -3,7 +3,7 @@ import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
-import { fontFamily, fontLeading, fontSize } from '#/styles/tokens.css';
+import { fontLeading, fontSize } from '#/styles/tokens.css';
 
 // one font size and its paired leading feed both layers via these vars, set by the `root` recipe's `fontSize`
 // variant, so the transparent textarea and the colored preview overlay can never drift to different metrics.
@@ -33,7 +33,7 @@ const rowsHeight = (rows: string) =>
 // shared metrics so the transparent textarea and the colored preview overlay wrap + advance identically;
 // composed into both rather than spread into each.
 const textMetrics = style({
-	fontFamily,
+	fontFamily: 'inherit',
 	fontSize: fontSizeValue,
 	letterSpacing: 'normal',
 	lineHeight: lineHeightValue,
