@@ -162,7 +162,7 @@ function Slide({ image, index }: { image: LightboxImage; index: number }) {
 			<Lb.Image index={index} />
 			{loading ? (
 				<div className={styles.slideSpinner}>
-					<Spinner label={m['components.lightbox.a11y.loading']()} color="rgba(255, 255, 255, 0.9)" />
+					<Spinner label={m['components.lightbox.a11y.loading']()} color="white" />
 				</div>
 			) : null}
 		</Lb.Slide>

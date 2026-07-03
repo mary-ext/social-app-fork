@@ -26,11 +26,11 @@ import { atoms as a, useTheme } from '#/alf';
 import { Button } from '#/components/Button';
 import * as ChatInvite from '#/components/dms/ChatInvite';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { Loader } from '#/components/Loader';
 import * as MediaPreview from '#/components/MediaPreview';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { RichText } from '#/components/RichText';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
@@ -137,7 +137,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 		case 'pending':
 			return (
 				<SimpleContainer onRemove={onRemove}>
-					<Loader />
+					<Spinner color="default" label={m['common.status.loading']()} />
 				</SimpleContainer>
 			);
 		case 'error':

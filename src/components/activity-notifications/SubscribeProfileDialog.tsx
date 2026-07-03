@@ -17,11 +17,11 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/web/Button';
+import { Button, type ButtonProps, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -230,7 +230,7 @@ function DialogInner({
 
 			<Button {...buttonProps} size="large" variant="solid">
 				<ButtonText>{buttonProps.label}</ButtonText>
-				{isSaving && <ButtonIcon icon={Loader} />}
+				{isSaving && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 			</Button>
 		</div>
 	);

@@ -23,7 +23,7 @@ import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
 import type { ListMethods } from '#/components/List/List';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Admonition } from '#/components/web/Admonition';
 import { ButtonIcon } from '#/components/web/Button';
@@ -124,7 +124,11 @@ export function NotificationsScreen({}: Props) {
 								color="secondary"
 								shape="round"
 							>
-								<ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
+								{isLoading ? (
+									<Spinner color="default" label={m['common.status.loading']()} size="lg" />
+								) : (
+									<ButtonIcon icon={SettingsIcon} size="lg" />
+								)}
 							</LinkButton>
 						</Layout.Header.Slot>
 					</Layout.Header.Outer>

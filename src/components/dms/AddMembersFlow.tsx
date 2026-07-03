@@ -18,7 +18,7 @@ import { canBeAddedToGroup, type ConvoWithDetails } from '#/components/dms/util'
 import * as Toggle from '#/components/forms/Toggle';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
@@ -244,7 +244,7 @@ export function AddMembersFlow({
 			case 'loading': {
 				return (
 					<View style={[a.px_lg, a.py_xl, a.align_center]}>
-						<Loader size="xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="xl" />
 					</View>
 				);
 			}
@@ -366,7 +366,7 @@ export function AddMembersFlow({
 				ListEmptyComponent={
 					isMemberListPending || isAutocompleteFetching ? (
 						<View style={[a.flex_1, a.align_center, a.justify_center]}>
-							<Loader size="2xl" />
+							<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 						</View>
 					) : null
 				}

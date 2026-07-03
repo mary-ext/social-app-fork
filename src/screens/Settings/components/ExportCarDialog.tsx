@@ -11,7 +11,7 @@ import { logger } from '#/logger';
 import { Trans } from '#/locale/Trans';
 
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -93,7 +93,11 @@ function DialogInner() {
 				onClick={() => void download()}
 				size="large"
 			>
-				<ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
+				{loading === 'repo' ? (
+					<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+				) : (
+					<ButtonIcon icon={DownloadIcon} />
+				)}
 				<ButtonText>{m['screens.settings.export.action.downloadProfile']()}</ButtonText>
 			</Button>
 
@@ -111,7 +115,11 @@ function DialogInner() {
 				onClick={() => void downloadChatData()}
 				size="large"
 			>
-				<ButtonIcon icon={loading === 'chat' ? Loader : DownloadIcon} />
+				{loading === 'chat' ? (
+					<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+				) : (
+					<ButtonIcon icon={DownloadIcon} />
+				)}
 				<ButtonText>{m['screens.settings.export.action.downloadChat']()}</ButtonText>
 			</Button>
 

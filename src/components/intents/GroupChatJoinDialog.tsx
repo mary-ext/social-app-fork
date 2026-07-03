@@ -30,8 +30,8 @@ import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/compon
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import { Loader } from '#/components/Loader';
 import { ProfileBadges } from '#/components/ProfileBadges';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -201,7 +201,7 @@ function GroupChatJoinDialogContent({
 	if (isLoading || !data) {
 		return (
 			<div className={css.loaderBox}>
-				<Loader size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 			</div>
 		);
 	}
@@ -263,7 +263,7 @@ function GroupChatJoinDialogContent({
 	const ownerHandle = joinLinkPreview.owner.handle;
 
 	let canJoin = true;
-	let ButtonIconImage = isJoinPending || isWithdrawPending ? Loader : JoinIcon;
+	let ButtonIconImage = JoinIcon;
 	let buttonText = joinLinkPreview.requireApproval
 		? m['common.requests.action.request']()
 		: m['common.chat.action.join']();
@@ -379,7 +379,15 @@ function GroupChatJoinDialogContent({
 					onClick={hasRequested ? handleWithdraw : handleJoin}
 					size="large"
 				>
-					<ButtonIcon icon={ButtonIconImage} />
+					{isJoinPending || isWithdrawPending ? (
+						<Spinner
+							color={isJoinPending ? 'white' : 'default'}
+							label={m['common.status.saving']()}
+							size="sm"
+						/>
+					) : (
+						<ButtonIcon icon={ButtonIconImage} />
+					)}
 					<ButtonText>{buttonText}</ButtonText>
 				</Button>
 			)}

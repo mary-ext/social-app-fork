@@ -12,10 +12,10 @@ import { logger } from '#/logger';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -159,7 +159,7 @@ function DialogInner() {
 					label={m['common.action.submit']()}
 				>
 					<ButtonText>{m['common.action.submit']()}</ButtonText>
-					{isPending && <ButtonIcon icon={Loader} />}
+					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			</View>
 			<Dialog.Close />

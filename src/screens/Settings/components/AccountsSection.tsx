@@ -248,7 +248,7 @@ function OtherAccountRow({
 				</Text>
 
 				{pendingDid === account.did && (
-					<Spinner color="currentColor" label={m['screens.settings.account.switching']()} size="sm" />
+					<Spinner color="default" label={m['screens.settings.account.switching']()} size="sm" />
 				)}
 			</button>
 			{!pendingDid && (

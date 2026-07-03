@@ -12,10 +12,10 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
@@ -125,7 +125,7 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 					label={m['screens.profile.germDm.action.disconnect']()}
 					onClick={() => deleteDeclaration()}
 				>
-					{isPending && <ButtonIcon icon={Loader} />}
+					{isPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 					<ButtonText>{m['screens.profile.germDm.action.disconnect']()}</ButtonText>
 				</Button>
 			</div>

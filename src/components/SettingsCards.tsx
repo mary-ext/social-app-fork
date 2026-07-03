@@ -323,7 +323,7 @@ export function SwitchRow({
 		>
 			{children}
 			<span className={styles.trailing}>
-				{loading && <Spinner color="currentColor" label={label} size="sm" />}
+				{loading && <Spinner color="default" label={label} size="sm" />}
 				<span className={styles.switchTrack}>
 					<span className={styles.switchThumb} />
 				</span>
@@ -375,7 +375,7 @@ export function SelectRow<T extends string>({
 				{children}
 				<span className={styles.trailing}>
 					{loading ? (
-						<Spinner color="currentColor" label={label} size="sm" />
+						<Spinner color="default" label={label} size="sm" />
 					) : (
 						<Text
 							className={styles.value}

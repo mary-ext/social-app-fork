@@ -10,12 +10,12 @@ import { useTickEveryMinute } from '#/state/shell';
 
 import { clock } from '#/locale/intl/datetime';
 
-import { Loader } from '#/components/Loader';
 import * as Select from '#/components/Select';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
@@ -198,7 +198,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						variant="solid"
 					>
 						<ButtonText>{m['features.liveNow.goLive.confirm']()}</ButtonText>
-						{isGoingLive && <ButtonIcon icon={Loader} />}
+						{isGoingLive && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 					</Button>
 				)}
 				<Button

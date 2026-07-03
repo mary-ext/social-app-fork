@@ -7,7 +7,6 @@ import { Spinner } from '#/components/Spinner';
 import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import type { CancelRef } from '../com/composer/Composer';
 import * as styles from './Composer.css';
@@ -40,7 +39,7 @@ export function ComposerDialog() {
 						<Suspense
 							fallback={
 								<div className={styles.placeholder}>
-									<Spinner color={colors.contrast_500} label={m['common.status.loading']()} />
+									<Spinner color="default" label={m['common.status.loading']()} />
 								</div>
 							}
 						>

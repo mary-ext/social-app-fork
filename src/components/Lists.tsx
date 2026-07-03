@@ -11,7 +11,7 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Error } from '#/components/Error';
 import * as css from '#/components/Lists.css';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
@@ -42,7 +42,7 @@ export function ListFooter({
 			style={height != null ? assignInlineVars({ [css.heightVar]: `${height}px` }) : undefined}
 		>
 			{isFetchingNextPage ? (
-				<Loader size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 			) : error ? (
 				<ListFooterError error={error} onRetry={onRetry} />
 			) : !hasNextPage && showEndMessage ? (
@@ -121,7 +121,7 @@ function ListMaybePlaceholder({
 				topBorder={topBorder && !gtTablet}
 			>
 				<View style={[a.w_full, a.align_center, { top: 100 }]}>
-					<Loader size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 				</View>
 			</CenteredView>
 		);

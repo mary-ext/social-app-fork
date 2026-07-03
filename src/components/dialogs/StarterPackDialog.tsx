@@ -24,7 +24,7 @@ import * as css from '#/components/dialogs/StarterPackDialog.css';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { StarterPack } from '#/components/icons/StarterPack';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { AvatarStack } from '#/components/web/AvatarStack';
@@ -285,7 +285,7 @@ function StarterPackItem({
 				onClick={handleToggleMembership}
 				size="small"
 			>
-				{isPending && <ButtonIcon icon={Loader} />}
+				{isPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 				<ButtonText>
 					{isSelf
 						? m['components.dialogs.list.owner']()

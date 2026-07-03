@@ -19,8 +19,8 @@ import { atoms as a } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
-import { Loader } from '#/components/Loader';
 import { RichText } from '#/components/RichText';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -134,7 +134,12 @@ export function Header({
 						size="small"
 						style={[a.rounded_full]}
 					>
-						{!isPinned && <ButtonIcon icon={isPending ? Loader : PinIcon} />}
+						{!isPinned &&
+							(isPending ? (
+								<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+							) : (
+								<ButtonIcon icon={PinIcon} />
+							))}
 						<ButtonText>
 							{isPinned
 								? m['screens.profileList.pin.action.unpin']()
@@ -152,7 +157,7 @@ export function Header({
 							style={[a.rounded_full]}
 							disabled={isBlockPending}
 						>
-							{isBlockPending && <ButtonIcon icon={Loader} />}
+							{isBlockPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 							<ButtonText>{m['common.block.action.unblock']()}</ButtonText>
 						</Button>
 					) : isMuting ? (
@@ -165,7 +170,7 @@ export function Header({
 							style={[a.rounded_full]}
 							disabled={isMutePending}
 						>
-							{isMutePending && <ButtonIcon icon={Loader} />}
+							{isMutePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 							<ButtonText>{m['common.mute.action.unmute']()}</ButtonText>
 						</Button>
 					) : (

@@ -16,9 +16,9 @@ import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { Button, ButtonText } from '#/components/Button';
 import { InlineLinkText } from '#/components/Link';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -101,7 +101,7 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 						onPress={() => void onRemoveFeed()}
 					>
 						<ButtonText>{m['view.posts.feed.remove.label']()}</ButtonText>
-						{isRemovePending && <ButtonIcon icon={Loader} />}
+						{isRemovePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 					</Button>
 					{!hasDiscoverPinned && (
 						<Button
@@ -113,7 +113,7 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 							onPress={() => void onReplaceFeed()}
 						>
 							<ButtonText>{m['view.posts.feed.replace.label']()}</ButtonText>
-							{isReplacePending && <ButtonIcon icon={Loader} />}
+							{isReplacePending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 						</Button>
 					)}
 				</View>

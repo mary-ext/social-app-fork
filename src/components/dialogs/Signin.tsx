@@ -9,7 +9,7 @@ import { type SigninDialogPayload, useGlobalDialogsHandleContext } from '#/compo
 import * as css from '#/components/dialogs/Signin.css';
 import { At_Stroke2_Corner0_Rounded as AtIcon } from '#/components/icons/At';
 import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon } from '#/components/icons/Chevron';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
@@ -202,7 +202,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 					variant="solid"
 				>
 					{isSubmitting ? (
-						<ButtonIcon icon={Loader} />
+						<Spinner color="white" label={m['common.status.loading']()} size="sm" />
 					) : (
 						<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
 					)}

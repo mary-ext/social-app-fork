@@ -13,7 +13,7 @@ import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -65,7 +65,7 @@ export function OAuthCallback() {
 					<Text style={[a.text_md, t.atoms.text_contrast_high]}>{error}</Text>
 				) : (
 					<>
-						<Loader size="2xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 						<Text style={[a.text_md, t.atoms.text_contrast_high]}>{m['view.auth.signIn.inProgress']()}</Text>
 					</>
 				)}

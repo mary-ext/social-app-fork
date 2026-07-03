@@ -35,7 +35,7 @@ import { Pin_Filled_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -103,7 +103,11 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					label={m['common.action.saveChanges']()}
 					disabled={isOverwritePending || !hasUnsavedChanges}
 				>
-					<ButtonIcon icon={isOverwritePending ? Loader : SaveIcon} />
+					{isOverwritePending ? (
+						<Spinner color="default" label={m['common.status.saving']()} size="sm" />
+					) : (
+						<ButtonIcon icon={SaveIcon} />
+					)}
 					<ButtonText>{gtMobile ? m['common.action.saveChanges']() : m['common.action.save']()}</ButtonText>
 				</Button>
 			</Layout.Header.Outer>
@@ -152,7 +156,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					)
 				) : (
 					<View style={[a.w_full, a.py_2xl, a.align_center]}>
-						<Loader size="2xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 					</View>
 				)}
 
@@ -185,7 +189,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					)
 				) : (
 					<View style={[a.w_full, a.py_2xl, a.align_center]}>
-						<Loader size="2xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 					</View>
 				)}
 

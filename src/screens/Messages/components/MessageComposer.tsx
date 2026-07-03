@@ -22,7 +22,7 @@ import { useMessageReplies } from '#/components/dms/MessageReplies';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -221,7 +221,7 @@ function SubmitButton({
 				disabled={disabled}
 			>
 				{loading ? (
-					<Loader size="lg" fill={colors.white} className={styles.sendIcon} />
+					<Spinner color="white" label={m['common.status.saving']()} size="lg" className={styles.sendIcon} />
 				) : (
 					<PaperPlaneIcon size="lg" fill={colors.white} className={styles.sendIcon} />
 				)}

@@ -27,7 +27,7 @@ import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/componen
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import { ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon } from '#/components/icons/ChainLink';
 import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/EditBig';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -250,7 +250,12 @@ export function InviteLinkDialog({
 										: m['common.action.back']()
 									: m['screens.messages.inviteLink.generate.action']()}
 							</ButtonText>
-							{linkHasChanged && <ButtonIcon icon={isSaving ? Loader : ArrowRightIcon} />}
+							{linkHasChanged &&
+								(isSaving ? (
+									<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+								) : (
+									<ButtonIcon icon={ArrowRightIcon} />
+								))}
 						</Button>
 					</View>
 				</>
@@ -362,7 +367,7 @@ export function InviteLinkDialog({
 								}}
 							>
 								<ButtonText>{m['screens.messages.inviteLink.enable.short']()}</ButtonText>
-								{isEnabling && <ButtonIcon icon={Loader} />}
+								{isEnabling && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 							</Button>
 							<Button
 								disabled={isEnabling || isDisabling}

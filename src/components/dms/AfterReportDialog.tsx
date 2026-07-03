@@ -14,7 +14,7 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -70,7 +70,7 @@ function DialogInner({
 
 	return isPending ? (
 		<View style={[a.w_full, a.py_5xl, a.align_center]}>
-			<Loader size="xl" />
+			<Spinner color="default" label={m['common.status.loading']()} size="xl" />
 		</View>
 	) : isError || !profile ? (
 		<View style={[a.w_full, a.gap_lg]}>

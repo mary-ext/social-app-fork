@@ -19,11 +19,11 @@ import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 
 import * as styles from '#/components/dialogs/lists/CreateOrEditListDialog.css';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
@@ -310,7 +310,9 @@ function DialogInner({
 						onClick={() => void onPressSave()}
 					>
 						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
-						{(isCreatingList || isUpdatingList) && <ButtonIcon icon={Loader} />}
+						{(isCreatingList || isUpdatingList) && (
+							<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+						)}
 					</Button>
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>

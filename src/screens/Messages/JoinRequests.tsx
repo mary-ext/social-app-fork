@@ -33,8 +33,8 @@ import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from
 import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo';
 import { KnownFollowers } from '#/components/KnownFollowers';
 import * as Layout from '#/components/Layout';
-import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -80,7 +80,7 @@ function JoinRequestsInner() {
 			<>
 				<Header />
 				<View style={[a.flex_1, a.align_center, a.justify_center]}>
-					<Loader size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 				</View>
 			</>
 		);
@@ -301,7 +301,11 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 						style={[a.mt_md]}
 					>
 						<ButtonText>{m['common.action.retry']()}</ButtonText>
-						<ButtonIcon icon={isPTRing ? Loader : RetryIcon} />
+						{isPTRing ? (
+							<Spinner color="white" label={m['common.status.loading']()} size="sm" />
+						) : (
+							<ButtonIcon icon={RetryIcon} />
+						)}
 					</Button>
 				</View>
 			</>
@@ -320,7 +324,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				ListEmptyComponent={
 					isPending ? (
 						<View style={[a.flex_1, a.align_center, a.justify_center, a.py_4xl]}>
-							<Loader size="2xl" />
+							<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 						</View>
 					) : null
 				}

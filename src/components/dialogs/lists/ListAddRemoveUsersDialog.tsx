@@ -16,7 +16,7 @@ import { useSession } from '#/state/session';
 
 import * as css from '#/components/dialogs/lists/ListAddRemoveUsersDialog.css';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -195,7 +195,7 @@ function UserResult({
 						variant="solid"
 					>
 						{isMutating ? (
-							<ButtonIcon icon={Loader} />
+							<Spinner color="default" label={m['common.status.saving']()} size="sm" />
 						) : (
 							<ButtonText>
 								{membership === false ? m['common.action.add']() : m['common.action.remove']()}

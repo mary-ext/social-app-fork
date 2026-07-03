@@ -6,7 +6,6 @@ import { Spinner } from '#/components/Spinner';
 import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as styles from './EditImageDialog.css';
 
@@ -34,7 +33,7 @@ export function EditImageDialog(props: EditImageDialogProps) {
 						<Dialog.Body>
 							<div className={styles.loadingHeader} />
 							<div className={styles.loadingBody}>
-								<Spinner color={colors.contrast_500} label={m['common.status.loading']()} />
+								<Spinner color="default" label={m['common.status.loading']()} />
 							</div>
 						</Dialog.Body>
 					}

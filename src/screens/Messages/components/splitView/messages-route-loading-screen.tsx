@@ -4,7 +4,9 @@ import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
 
 import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
 
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
+
+import { m } from '#/paraglide/messages';
 
 import { getMessagesSplitViewLayoutDimensions } from './layout-dimensions';
 
@@ -40,7 +42,7 @@ export function MessagesSplitViewColumnLoadingScreen() {
 			testID="messagesRouteColumnLoadingScreen"
 			style={[a.flex_1, a.align_center, a.justify_center, a.p_lg]}
 		>
-			<Loader size="2xl" />
+			<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 		</View>
 	);
 }

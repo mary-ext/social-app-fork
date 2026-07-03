@@ -159,7 +159,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			>
 				<ButtonText>{m['common.action.add']()}</ButtonText>
 				{isPending ? (
-					<Spinner color="currentColor" label={m['components.dialogs.list.adding']()} size="sm" />
+					<Spinner color="white" label={m['components.dialogs.list.adding']()} size="sm" />
 				) : (
 					<ButtonIcon icon={Plus} />
 				)}

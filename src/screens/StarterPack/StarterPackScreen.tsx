@@ -34,7 +34,7 @@ import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { Button, ButtonText } from '#/components/Button';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
@@ -46,10 +46,10 @@ import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
-import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
+import { Spinner } from '#/components/Spinner';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
 import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
@@ -368,7 +368,7 @@ function Header({
 								style={[a.flex_row, a.gap_xs, a.align_center]}
 							>
 								<ButtonText>{m['screens.starterPack.follow.action']()}</ButtonText>
-								{isProcessing && <ButtonIcon icon={Loader} />}
+								{isProcessing && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 							</Button>
 						)}
 						<OverflowMenu
@@ -411,6 +411,8 @@ function Header({
 		</>
 	);
 }
+
+const PromptSpinner = () => <Spinner color="white" label={m['common.status.saving']()} size="sm" />;
 
 function OverflowMenu({
 	starterPack,
@@ -568,7 +570,7 @@ function OverflowMenu({
 						onPress={() => void onDeleteStarterPack()}
 						color="negative"
 						cta={m['common.action.delete']()}
-						icon={isDeletePending ? Loader : undefined}
+						icon={isDeletePending ? PromptSpinner : undefined}
 						shouldCloseOnPress={false}
 					/>
 					<Prompt.Cancel />
@@ -638,7 +640,7 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 						}}
 					>
 						<ButtonText>{m['common.action.delete']()}</ButtonText>
-						{isProcessing && <Loader size="xs" color="white" />}
+						{isProcessing && <Spinner color="white" label={m['common.status.saving']()} size="xs" />}
 					</Button>
 					<Button
 						variant="solid"

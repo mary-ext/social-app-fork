@@ -9,11 +9,11 @@ import { parseLooseUrl } from '#/lib/strings/url-helpers';
 import { useTickEveryMinute } from '#/state/shell';
 
 import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
 import {
@@ -164,7 +164,7 @@ function DialogInner({
 						variant="solid"
 					>
 						<ButtonText>{m['common.action.save']()}</ButtonText>
-						{isGoingLive && <ButtonIcon icon={Loader} />}
+						{isGoingLive && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 					</Button>
 				) : (
 					<Button
@@ -186,7 +186,7 @@ function DialogInner({
 					variant="solid"
 				>
 					<ButtonText>{m['features.liveNow.goLive.remove']()}</ButtonText>
-					{isRemovingLiveStatus && <ButtonIcon icon={Loader} />}
+					{isRemovingLiveStatus && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			</div>
 		</div>

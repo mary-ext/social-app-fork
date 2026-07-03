@@ -16,8 +16,8 @@ import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon } from '#/compon
 import { PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
-import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -330,7 +330,7 @@ function Inner({
 							)}
 							{labelersLoading ? (
 								<div className={styles.center}>
-									<Loader size="xl" />
+									<Spinner color="default" label={m['common.status.loading']()} size="xl" />
 								</div>
 							) : labelersError || !allLabelers ? (
 								<>
@@ -380,7 +380,11 @@ function Inner({
 									? m['components.moderation.report.sentToast']()
 									: m['components.moderation.report.submit']()}
 							</ButtonText>
-							<ButtonIcon icon={isSuccess ? CheckIcon : isPending ? Loader : PaperPlaneIcon} />
+							{isPending ? (
+								<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+							) : (
+								<ButtonIcon icon={isSuccess ? CheckIcon : PaperPlaneIcon} />
+							)}
 						</Button>
 					</Dialog.Footer>
 				</>

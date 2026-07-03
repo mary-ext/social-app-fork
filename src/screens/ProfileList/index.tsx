@@ -32,8 +32,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import * as Layout from '#/components/Layout';
-import { Loader } from '#/components/Loader';
 import * as Hider from '#/components/moderation/Hider';
+import { Spinner } from '#/components/Spinner';
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Dialog from '#/components/web/Dialog';
 
@@ -112,7 +112,7 @@ function ProfileListScreenInner(props: Props) {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content centerContent contentContainerStyle={[a.mx_auto]}>
-				<Loader size="3xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="3xl" />
 			</Layout.Content>
 		</>
 	);

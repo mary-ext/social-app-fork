@@ -4,10 +4,10 @@ import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list'
 
 import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
-import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
@@ -54,7 +54,7 @@ export function SubscribeMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 							color="primary_subtle"
 							disabled={isPending}
 						>
-							{isPending && <ButtonIcon icon={Loader} />}
+							{isPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 							<ButtonText>{m['screens.profileList.subscribe.action.subscribe']()}</ButtonText>
 						</Button>
 					}

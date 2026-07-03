@@ -39,8 +39,10 @@ import { MessageRepliesProvider } from '#/components/dms/MessageReplies';
 import { NewMessagesPill } from '#/components/dms/NewMessagesPill';
 import { SystemMessageGroup } from '#/components/dms/SystemMessageGroup';
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Typography';
+
+import { m } from '#/paraglide/messages';
 
 import { ChatStatusInfo } from './ChatStatusInfo';
 import { groupSystemMessages, type RenderItem } from './groupSystemMessages';
@@ -72,7 +74,7 @@ function MaybeLoader({ isLoading }: { isLoading: boolean }) {
 				justifyContent: 'center',
 			}}
 		>
-			{isLoading && <Loader size="2xl" />}
+			{isLoading && <Spinner color="default" label={m['common.status.loading']()} size="2xl" />}
 		</View>
 	);
 }

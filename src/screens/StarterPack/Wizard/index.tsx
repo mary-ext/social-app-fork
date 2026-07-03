@@ -32,12 +32,12 @@ import { StepFeeds } from '#/screens/StarterPack/Wizard/StepFeeds';
 import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles';
 
 import { ListMaybePlaceholder } from '#/components/Lists';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
@@ -527,7 +527,7 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 					}
 				>
 					<ButtonText>{nextBtnText}</ButtonText>
-					{state.processing && <ButtonIcon icon={Loader} />}
+					{state.processing && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			</div>
 		</div>

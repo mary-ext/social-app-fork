@@ -8,7 +8,6 @@ import * as Button from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as styles from './ComposerTopBar.css';
 import type { DraftSummary } from './drafts/state/schema';
@@ -69,11 +68,7 @@ export function ComposerTopBar({
 						<Text color="textContrastMedium" size="md_sub">
 							{publishingStage}
 						</Text>
-						<Spinner
-							color={colors.textContrastMedium}
-							label={m['view.composer.publish.publishing']()}
-							size="lg"
-						/>
+						<Spinner color="default" label={m['view.composer.publish.publishing']()} size="lg" />
 					</div>
 				) : (
 					<div className={styles.buttonRow}>

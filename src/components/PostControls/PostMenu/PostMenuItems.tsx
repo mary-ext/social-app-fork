@@ -60,16 +60,18 @@ import {
 } from '#/components/icons/Speaker';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
-import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
+
+const MenuSpinner = () => <Spinner color="default" label={m['common.status.loading']()} size="lg" />;
 
 function PostMenuItems({
 	post,
@@ -375,7 +377,7 @@ function PostMenuItems({
 										? m['components.postControls.pin.action.unpin']()
 										: m['components.postControls.pin.action.pin']()}
 								</Menu.ItemText>
-								<Menu.ItemIcon icon={isPinPending ? Loader : PinIcon} position="right" />
+								<Menu.ItemIcon icon={isPinPending ? MenuSpinner : PinIcon} position="right" />
 							</Menu.Item>
 						</Menu.Group>
 						<Menu.Separator />
@@ -489,7 +491,7 @@ function PostMenuItems({
 											: m['components.postControls.quote.detach.action']()}
 									</Menu.ItemText>
 									<Menu.ItemIcon
-										icon={isDetachPending ? Loader : quoteEmbed.isDetached ? Eye : EyeSlash}
+										icon={isDetachPending ? MenuSpinner : quoteEmbed.isDetached ? Eye : EyeSlash}
 										position="right"
 									/>
 								</Menu.Item>

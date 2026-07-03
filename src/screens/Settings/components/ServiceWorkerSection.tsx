@@ -40,7 +40,7 @@ export function ServiceWorkerSection() {
 			<Settings.Icon icon={DownloadIcon} />
 			<Settings.Label titleText={titleText} />
 			<span className={cardStyles.trailing}>
-				<Spinner color="currentColor" label={null} size="sm" />
+				<Spinner color="default" label={null} size="sm" />
 			</span>
 		</button>
 	);

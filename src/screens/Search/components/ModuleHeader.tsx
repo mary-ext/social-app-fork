@@ -128,7 +128,7 @@ function PinButtonInner({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 				variant="ghost"
 			>
 				{isPending ? (
-					<Spinner color="currentColor" label={null} size="sm" />
+					<Spinner color="default" label={null} size="sm" />
 				) : (
 					<ButtonIcon icon={isSaved ? TrashIcon : PinIcon} size="lg" />
 				)}

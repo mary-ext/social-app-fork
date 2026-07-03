@@ -60,7 +60,7 @@ export function EditImageDialogInner({
 						variant="ghost"
 					>
 						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
-						{pending && <Spinner color="currentColor" label={m['common.status.saving']()} size="sm" />}
+						{pending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 					</Button>
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>

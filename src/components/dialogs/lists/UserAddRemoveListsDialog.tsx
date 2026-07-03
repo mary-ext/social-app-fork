@@ -14,7 +14,7 @@ import * as css from '#/components/dialogs/lists/UserAddRemoveListsDialog.css';
 import { BulletList_Stroke2_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as ListCard from '#/components/ListCard';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -91,7 +91,7 @@ function DialogInner({
 		if (isLoading || !moderationOpts) {
 			return (
 				<div className={css.loading}>
-					<Loader size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 				</div>
 			);
 		}
@@ -211,7 +211,7 @@ function ListRow({
 					variant="solid"
 				>
 					{isMutating ? (
-						<ButtonIcon icon={Loader} />
+						<Spinner color="white" label={m['common.status.saving']()} size="sm" />
 					) : (
 						<ButtonText>{!membershipUri ? m['common.action.add']() : m['common.action.remove']()}</ButtonText>
 					)}

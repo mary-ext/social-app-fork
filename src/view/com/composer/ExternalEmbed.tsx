@@ -9,15 +9,16 @@ import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve
 import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn';
 
 import { ExternalEmbed } from '#/components/ExternalEmbed';
-import { Loader } from '#/components/Loader';
 import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
+import { Spinner } from '#/components/Spinner';
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 
 import type { Gif } from '#/features/gifPicker/types';
+import { m } from '#/paraglide/messages';
 
 import * as styles from './ExternalEmbed.css';
 
@@ -61,7 +62,7 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 				</Container>
 			) : (
 				<Container style={loadingStyle}>
-					<Loader size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 				</Container>
 			)}
 			<ExternalEmbedRemoveBtn onRemove={onRemove} />
@@ -164,7 +165,7 @@ export const ExternalEmbedLink = ({
 				</Container>
 			) : (
 				<Container>
-					<Loader size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 				</Container>
 			)}
 			<ExternalEmbedRemoveBtn onRemove={onRemove} />

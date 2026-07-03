@@ -13,7 +13,7 @@ import * as css from './Loading.css';
 export function Loading({ className }: { className?: string }) {
 	return (
 		<div className={clsx(css.loading, className)}>
-			<Spinner label={m['common.status.loading']()} color="currentColor" size="lg" />
+			<Spinner label={m['common.status.loading']()} color="default" size="lg" />
 		</div>
 	);
 }

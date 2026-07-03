@@ -22,9 +22,9 @@ import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/C
 import { CircleX_Stroke2_Corner0_Rounded } from '#/components/icons/CircleX';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
-import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import {
 	Button as WebButton,
@@ -231,7 +231,13 @@ export function AcceptChatButton({
 
 	let Icon: React.ReactNode = null;
 	if (isPending) {
-		Icon = <ButtonIcon icon={Loader} />;
+		Icon = (
+			<Spinner
+				color={color === 'secondary' || props.variant === 'outline' ? 'default' : 'white'}
+				label={m['common.status.loading']()}
+				size="sm"
+			/>
+		);
 	} else if (icon) {
 		Icon = <ButtonIcon icon={CheckIcon} />;
 	}

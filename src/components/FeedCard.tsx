@@ -213,13 +213,13 @@ function SaveButtonInner({ pin, view }: { pin?: boolean; view: AppBskyFeedDefs.G
 			>
 				{isSaved ? (
 					<>
-						{isPending && <Spinner color="currentColor" label={null} size="sm" />}
+						{isPending && <Spinner color="white" label={null} size="sm" />}
 						<ButtonText>{m['common.feeds.action.unpin']()}</ButtonText>
 					</>
 				) : (
 					<>
 						{isPending ? (
-							<Spinner color="currentColor" label={null} size="sm" />
+							<Spinner color="white" label={null} size="sm" />
 						) : (
 							<ButtonIcon icon={PinIcon} size="md" />
 						)}

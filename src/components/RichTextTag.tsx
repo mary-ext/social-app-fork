@@ -15,9 +15,9 @@ import { MagnifyingGlass_Stroke2_Corner0_Rounded as Search } from '#/components/
 import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
 import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';
 import { useLink } from '#/components/Link';
-import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import { atomicSegment } from '#/components/RichText.css';
+import { Spinner } from '#/components/Spinner';
 import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
 import type { InlineLinkUnderline } from '#/components/web/Link';
@@ -39,6 +39,8 @@ export type RichTextTagProps = Pick<TextProps, 'color' | 'leading' | 'size'> & {
  * (browse the tag, browse it by the post's author, mute/unmute) on click. A left-click always opens the menu;
  * the anchor's href is kept so middle/right-click still open the tag's feed in a new tab.
  */
+const MenuSpinner = () => <Spinner color="default" label={m['common.status.loading']()} size="lg" />;
+
 export function RichTextTag({
 	authorHandle,
 	color = 'primary_500',
@@ -144,7 +146,7 @@ export function RichTextTag({
 							? m['components.richTextTag.unmute']({ prefixedTag })
 							: m['components.richTextTag.mute']({ prefixedTag })}
 					</Menu.ItemText>
-					<Menu.ItemIcon icon={isPreferencesLoading ? Loader : Mute} />
+					<Menu.ItemIcon icon={isPreferencesLoading ? MenuSpinner : Mute} />
 				</Menu.Item>
 			</Menu.Popup>
 		</Menu.Root>

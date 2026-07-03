@@ -210,7 +210,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 	if (isLoading) {
 		return (
 			<div className={styles.loading}>
-				<Spinner color="currentColor" label={m['components.dialogs.interaction.loading']()} />
+				<Spinner color="default" label={m['components.dialogs.interaction.loading']()} />
 				<Text className={styles.loadingText}>{m['components.dialogs.interaction.loading']()}</Text>
 			</div>
 		);
@@ -493,7 +493,7 @@ export function PostInteractionSettingsForm({
 				size="large"
 			>
 				<ButtonText>{m['common.action.save']()}</ButtonText>
-				{isSaving && <Spinner color="currentColor" label={m['common.status.saving']()} size="sm" />}
+				{isSaving && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 			</Button>
 		</div>
 	);

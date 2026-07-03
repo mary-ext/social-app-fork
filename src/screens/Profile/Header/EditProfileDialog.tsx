@@ -17,12 +17,12 @@ import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 import { EditableBanner } from '#/components/EditableBanner';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
 import { InlineLinkText } from '#/components/Link';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { useSimpleVerificationState } from '#/components/verification';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
@@ -205,7 +205,7 @@ function DialogInner({
 						onClick={() => void onPressSave()}
 					>
 						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
-						{isUpdatingProfile && <ButtonIcon icon={Loader} />}
+						{isUpdatingProfile && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 					</Button>
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>

@@ -41,7 +41,7 @@ export function InterestsSettingsScreen({}: Props) {
 					<Layout.Header.TitleText>{m['common.interest.yourInterests']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				<Layout.Header.Slot>
-					{isSaving && <Spinner color="currentColor" label={m['common.status.saving']()} size="sm" />}
+					{isSaving && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 			<Layout.Content>
@@ -54,7 +54,7 @@ export function InterestsSettingsScreen({}: Props) {
 						<Inner preferences={preferences} setIsSaving={setIsSaving} />
 					) : (
 						<div className={styles.loaderWrap}>
-							<Spinner color="currentColor" label={m['common.status.loading']()} size="2xl" />
+							<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 						</div>
 					)}
 				</div>

@@ -20,11 +20,11 @@ import { logger } from '#/logger';
 import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import type { DialogControlProps } from '#/components/Dialog';
 import { parseConvoView } from '#/components/dms/util';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -181,7 +181,7 @@ function BlockDialogInner({
 				{listHeader}
 				{isLoading ? (
 					<View style={[a.pb_2xl, a.align_center, a.justify_center]}>
-						<Loader size="2xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 					</View>
 				) : null}
 				{footer}
@@ -199,7 +199,7 @@ function BlockDialogInner({
 			ListFooterComponent={
 				isFetchingNextPage ? (
 					<View style={[a.py_lg, a.align_center, a.justify_center]}>
-						<Loader size="xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="xl" />
 					</View>
 				) : null
 			}
@@ -319,7 +319,7 @@ function MutualGroupChat({
 					}}
 				>
 					<ButtonText>{m['components.moderation.chat.removeMember']()}</ButtonText>
-					{isRemovePending ? <ButtonIcon icon={Loader} /> : null}
+					{isRemovePending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			) : isCurrentConvo ? (
 				<Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
@@ -337,7 +337,7 @@ function MutualGroupChat({
 					}}
 				>
 					<ButtonText>{m['common.chat.action.leave']()}</ButtonText>
-					{isLeavePending ? <ButtonIcon icon={Loader} /> : null}
+					{isLeavePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			)}
 		</View>

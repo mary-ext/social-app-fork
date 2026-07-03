@@ -41,7 +41,6 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 export type ProfileHoverCardProps = {
 	/**
@@ -119,7 +118,7 @@ function Card({ did }: { did: string }) {
 
 	return (
 		<div className={css.loadingCard}>
-			<Spinner color={colors.contrast_500} label={m['common.status.loading']()} size="2xl" />
+			<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 		</div>
 	);
 }

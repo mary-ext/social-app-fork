@@ -9,11 +9,11 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
@@ -123,7 +123,7 @@ function DialogInner({
 					variant="solid"
 				>
 					<ButtonText>{m['common.action.submit']()}</ButtonText>
-					{isPending && <ButtonIcon icon={Loader} />}
+					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			</div>
 		</div>

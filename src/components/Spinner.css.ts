@@ -1,8 +1,29 @@
-import { keyframes, style } from '@vanilla-extract/css';
+import { keyframes } from '@vanilla-extract/css';
+
+import { vars } from '#/styles/contract.css';
+import { recipe } from '#/styles/recipe';
 
 const spin = keyframes({ to: { transform: 'rotate(360deg)' } });
 
-export const spinner = style({
-	animation: `${spin} 500ms linear infinite`,
-	display: 'inline-flex',
-});
+export const spinner = recipe(
+	{
+		base: {
+			animation: `${spin} 500ms linear infinite`,
+			display: 'inline-flex',
+		},
+		variants: {
+			color: {
+				default: {
+					color: vars.palette.contrast_900,
+				},
+				white: {
+					color: '#fff',
+				},
+			},
+		},
+		defaultVariants: {
+			color: 'white',
+		},
+	},
+	{ debugId: 'spinner' },
+);

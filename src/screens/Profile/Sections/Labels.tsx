@@ -15,9 +15,9 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { ListFooter } from '#/components/Lists';
-import { Loader } from '#/components/Loader';
 import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Settings from '#/components/SettingsCards';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
@@ -107,7 +107,7 @@ function LabelerListHeader({
 	if (isLabelerLoading) {
 		return (
 			<View style={[a.w_full, a.align_center, a.py_4xl]}>
-				<Loader size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 			</View>
 		);
 	}

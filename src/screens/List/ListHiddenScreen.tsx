@@ -17,10 +17,10 @@ import { CenteredView } from '#/view/com/util/Views';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { Button, ButtonText } from '#/components/Button';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
-import { Loader } from '#/components/Loader';
 import { useHider } from '#/components/moderation/Hider';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -142,7 +142,7 @@ export function ListHiddenScreen({
 							disabled={isProcessing}
 						>
 							<ButtonText>{m['screens.list.savedFeeds.remove']()}</ButtonText>
-							{isProcessing ? <ButtonIcon icon={Loader} position="right" /> : null}
+							{isProcessing && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 						</Button>
 					) : null}
 					{isOwner ? (
@@ -172,7 +172,7 @@ export function ListHiddenScreen({
 							disabled={isProcessing}
 						>
 							<ButtonText>{m['screens.list.subscription.unsubscribe']()}</ButtonText>
-							{isProcessing ? <ButtonIcon icon={Loader} position="right" /> : null}
+							{isProcessing && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 						</Button>
 					) : null}
 				</View>

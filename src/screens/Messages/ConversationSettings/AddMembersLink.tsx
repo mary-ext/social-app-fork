@@ -14,7 +14,7 @@ import { AddMembersFlow } from '#/components/dms/AddMembersFlow';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
@@ -104,7 +104,11 @@ export function AddMembersLink({
 								{m['screens.messages.members.add.action']()}
 							</Text>
 						</View>
-						{isAddPending ? <Loader size="lg" /> : <ChevronIcon fill={colors.textContrastMedium} size="lg" />}
+						{isAddPending ? (
+							<Spinner color="default" label={m['common.status.saving']()} size="lg" />
+						) : (
+							<ChevronIcon fill={colors.textContrastMedium} size="lg" />
+						)}
 					</View>
 				)}
 			</Button>

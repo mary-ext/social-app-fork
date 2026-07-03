@@ -30,7 +30,7 @@ export function PreferenceControls({
 	if (!preference) {
 		return (
 			<div className={styles.loaderWrap}>
-				<Spinner color="currentColor" label={m['common.status.loading']()} size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 			</div>
 		);
 	}

@@ -31,7 +31,6 @@ import { Filter_Stroke2_Corner0_Rounded as Filter } from '#/components/icons/Fil
 import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag';
 import { Group3_Stroke2_Corner0_Rounded as Group } from '#/components/icons/Group';
 import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';
-import { Loader } from '#/components/Loader';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
@@ -39,7 +38,7 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
@@ -69,7 +68,7 @@ export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorP
 			<Layout.Content>
 				{isLoading ? (
 					<div className={styles.status}>
-						<Spinner color="currentColor" label={m['common.status.loading']()} size="2xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 					</div>
 				) : error || !preferences ? (
 					<Settings.List>
@@ -196,14 +195,14 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 						size="small"
 						variant="ghost"
 					>
-						{isRemovingLabelers && <ButtonIcon icon={Loader} />}
+						{isRemovingLabelers && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 						<ButtonText>{m['common.action.remove']()}</ButtonText>
 					</Button>
 				</div>
 			)}
 			{isLabelersLoading ? (
 				<div className={styles.status}>
-					<Spinner color="currentColor" label={m['common.status.loading']()} size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 				</div>
 			) : labelersError || !labelers ? (
 				<Admonition type="error">{m['screens.moderation.labeler.loadError']()}</Admonition>

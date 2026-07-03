@@ -392,7 +392,7 @@ export function Controls({
 			</div>
 			{(showSpinner || error) && (
 				<div className={styles.overlay}>
-					{showSpinner && <Spinner label={m['common.video.loading']()} color="#fff" size="xl" />}
+					{showSpinner && <Spinner label={m['common.video.loading']()} color="white" size="xl" />}
 					{error && <Text className={styles.errorText}>{m['components.post.video.error.generic']()}</Text>}
 				</div>
 			)}

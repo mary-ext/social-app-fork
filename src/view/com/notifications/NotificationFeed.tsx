@@ -13,7 +13,7 @@ import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
 import { Bell_Stroke2_Corner0_Rounded as BellIcon } from '#/components/icons/Bell';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 
 import { m } from '#/paraglide/messages';
 
@@ -120,7 +120,7 @@ export function NotificationFeed({
 
 	const feedFooter = isFetchingNextPage ? (
 		<div className={css.feedFooter}>
-			<Loader />
+			<Spinner color="default" label={m['common.status.loading']()} />
 		</div>
 	) : null;
 

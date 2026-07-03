@@ -44,8 +44,8 @@ import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Layout from '#/components/Layout';
-import { Loader } from '#/components/Loader';
 import * as Prompt from '#/components/Prompt';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
@@ -122,7 +122,7 @@ function SettingsInner({ convoId }: { convoId: string }) {
 	if (!convo || !moderationOpts) {
 		return (
 			<View style={[a.flex_1, a.align_center, a.justify_center]}>
-				<Loader size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
 			</View>
 		);
 	}
