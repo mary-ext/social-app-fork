@@ -103,5 +103,5 @@
 	"screens.postThread.threadOptions.display.threaded": "Threaded",
 	"screens.postThread.threadOptions.label": "Thread options",
 	"screens.postThread.threadOptions.sorting": "Reply sorting",
-	"screens.postThread.visibility.signedInOnly": "This author has chosen to make their posts visible only to people who are signed in."
+	"screens.postThread.visibility.signedInOnly": "The author restricted this post to signed-in users."
 }

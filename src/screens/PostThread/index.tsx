@@ -380,10 +380,10 @@ export function PostThread({ uri }: { uri: string }) {
 				}
 			}
 		} else if (item.type === 'threadPostNoUnauthenticated') {
-			if (item.depth < 0) {
-				return <ThreadItemPostNoUnauthenticated item={item} />;
-			} else if (item.depth === 0) {
+			if (item.depth === 0) {
 				return <ThreadItemAnchorNoUnauthenticated />;
+			} else {
+				return <ThreadItemPostNoUnauthenticated item={item} />;
 			}
 		} else if (item.type === 'readMore') {
 			return <ThreadItemReadMore item={item} view={thread.state.view === 'tree' ? 'tree' : 'linear'} />;

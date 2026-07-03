@@ -1,76 +1,44 @@
-import { View } from 'react-native';
-
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 
-import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
-
-import { atoms as a, useTheme } from '#/alf';
+import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
-import * as Skele from '#/components/Skeleton';
-import { Text } from '#/components/Typography';
+import * as PostLayout from '#/components/PostLayout';
+import { Text } from '#/components/Text';
+import * as Skele from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
+
+import * as css from './ThreadItemPostNoUnauthenticated.css';
 
 export function ThreadItemPostNoUnauthenticated({
 	item,
 }: {
 	item: Extract<ThreadItem, { type: 'threadPostNoUnauthenticated' }>;
 }) {
-	const t = useTheme();
-
 	return (
-		<View style={[{ paddingHorizontal: OUTER_SPACE }]}>
-			<View style={[a.flex_row, { height: 12 }]}>
-				<View style={{ width: LINEAR_AVI_WIDTH }}>
-					{item.ui.showParentReplyLine && (
-						<View
-							style={[
-								a.mx_auto,
-								a.flex_1,
-								a.mb_xs,
-								{
-									width: REPLY_LINE_WIDTH,
-									backgroundColor: t.atoms.border_contrast_low.borderColor,
-								},
-							]}
-						/>
-					)}
-				</View>
-			</View>
-			<Skele.Row style={[a.align_center, a.gap_md]}>
-				<Skele.Circle size={LINEAR_AVI_WIDTH}>
-					<LockIcon size="lg" fill={colors.textContrastMedium} />
-				</Skele.Circle>
+		<div className={css.container}>
+			<div className={css.parentSpineRow}>
+				<div className={css.parentSpineColumn}>
+					{item.ui.showParentReplyLine && <PostLayout.Spine className={css.parentSpine} />}
+				</div>
+			</div>
+			<PostLayout.Row>
+				<PostLayout.AvatarColumn>
+					<Skele.Circle size={LINEAR_AVI_WIDTH}>
+						<LockIcon size="lg" fill={colors.textContrastMedium} />
+					</Skele.Circle>
 
-				<Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
-					{m['screens.postThread.visibility.signedInOnly']()}
-				</Text>
-			</Skele.Row>
-			<View
-				style={[
-					a.flex_row,
-					a.justify_center,
-					{
-						height: OUTER_SPACE / 1.5,
-						width: LINEAR_AVI_WIDTH,
-					},
-				]}
-			>
-				{item.ui.showChildReplyLine && (
-					<View
-						style={[
-							a.mt_xs,
-							a.h_full,
-							{
-								width: REPLY_LINE_WIDTH,
-								backgroundColor: t.atoms.border_contrast_low.borderColor,
-							},
-						]}
-					/>
-				)}
-			</View>
-		</View>
+					{item.ui.showChildReplyLine && <PostLayout.Spine className={css.childSpine} />}
+				</PostLayout.AvatarColumn>
+
+				<PostLayout.ContentColumn>
+					<Text className={css.text} color="textContrastMedium" size="md">
+						{m['screens.postThread.visibility.signedInOnly']()}
+					</Text>
+				</PostLayout.ContentColumn>
+			</PostLayout.Row>
+		</div>
 	);
 }

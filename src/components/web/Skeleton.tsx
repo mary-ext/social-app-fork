@@ -65,17 +65,18 @@ export function Col({
 
 /** Loading placeholder for a circular element (e.g. a user avatar), sized to `size` pixels. */
 export function Circle({
+	children,
 	color = 'contrast_50',
 	size,
 }: {
+	children?: ReactNode;
 	color?: RecipeVariants<typeof styles.circle>['color'];
 	size: number;
 }) {
 	return (
-		<div
-			className={styles.circle({ color })}
-			style={assignInlineVars({ [styles.boxSizeVar]: `${size}px` })}
-		/>
+		<div className={styles.circle({ color })} style={assignInlineVars({ [styles.boxSizeVar]: `${size}px` })}>
+			{children}
+		</div>
 	);
 }
 
