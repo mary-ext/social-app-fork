@@ -137,10 +137,10 @@ function CurrentAccountRow({
 function CurrentAccountRowSkeleton({ className }: { className?: string }) {
 	return (
 		<div className={clsx(cardStyles.rowPlain, className)}>
-			<Skele.Circle size={40} />
+			<Skele.Circle color="contrast_100" size={40} />
 			<div className={styles.identity}>
-				<Skele.Text size="md" width={90} />
-				<Skele.Text size="md_sub" width={140} />
+				<Skele.Text color="contrast_100" size="md" width={90} />
+				<Skele.Text color="contrast_100" size="md_sub" width={140} />
 			</div>
 		</div>
 	);

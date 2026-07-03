@@ -10,12 +10,12 @@ import { borderRadius } from '#/styles/tokens.css';
 
 /** Loading placeholder for a line of {@link Text}: a rounded bar sized to the matching `size`'s line box. */
 export function Text({
-	blend,
+	color = 'contrast_50',
 	size = 'md',
 	width,
 }: {
-	/** De-emphasize this line so a paragraph reads as a primary line plus secondary ones. */
-	blend?: boolean;
+	/** The color level of this line placeholder. */
+	color?: RecipeVariants<typeof styles.text>['color'];
 	/** The `Text` size the line will render at, so the placeholder matches its height. */
 	size?: RecipeVariants<typeof styles.text>['size'];
 	/** Bar width; capped to the container. Omit to fill the available width. */
@@ -23,14 +23,14 @@ export function Text({
 }) {
 	return (
 		<div
-			className={styles.text({ size })}
+			className={styles.text({ color, size })}
 			style={
 				width !== undefined
 					? assignInlineVars({ [styles.widthVar]: typeof width === 'number' ? `${width}px` : width })
 					: undefined
 			}
 		>
-			<div className={clsx(styles.bar, blend && styles.blend)} />
+			<div className={styles.bar} />
 		</div>
 	);
 }
@@ -64,18 +64,37 @@ export function Col({
 }
 
 /** Loading placeholder for a circular element (e.g. a user avatar), sized to `size` pixels. */
-export function Circle({ size }: { size: number }) {
-	return <div className={styles.circle} style={assignInlineVars({ [styles.boxSizeVar]: `${size}px` })} />;
+export function Circle({
+	color = 'contrast_50',
+	size,
+}: {
+	color?: RecipeVariants<typeof styles.circle>['color'];
+	size: number;
+}) {
+	return (
+		<div
+			className={styles.circle({ color })}
+			style={assignInlineVars({ [styles.boxSizeVar]: `${size}px` })}
+		/>
+	);
 }
 
 /**
  * Loading placeholder for a rounded-square element (e.g. a feed/list avatar), sized to `size` pixels with a
  * `radius` corner (defaults to the small token).
  */
-export function Square({ radius = borderRadius.xs, size }: { radius?: number; size: number }) {
+export function Square({
+	color = 'contrast_50',
+	radius = borderRadius.xs,
+	size,
+}: {
+	color?: RecipeVariants<typeof styles.square>['color'];
+	radius?: number;
+	size: number;
+}) {
 	return (
 		<div
-			className={styles.square}
+			className={styles.square({ color })}
 			style={assignInlineVars({ [styles.boxSizeVar]: `${size}px`, [styles.squareRadiusVar]: `${radius}px` })}
 		/>
 	);
@@ -86,13 +105,13 @@ export function Square({ radius = borderRadius.xs, size }: { radius?: number; si
  * post text fills its column. Renders inside a {@link Col}.
  */
 export function Lines({
-	blend = true,
+	color = 'contrast_25',
 	count,
 	lastWidth,
 	size = 'md',
 }: {
-	/** De-emphasize the lines so they read as secondary text. On by default. */
-	blend?: boolean;
+	/** The color level of the lines. Defaults to contrast_25. */
+	color?: RecipeVariants<typeof styles.text>['color'];
 	/** Number of lines to render. */
 	count: number;
 	/** Width of the final, partial line, as a percentage. */
@@ -103,7 +122,7 @@ export function Lines({
 	return (
 		<Col>
 			{Array.from({ length: count }, (_, i) => (
-				<Text key={i} blend={blend} size={size} width={i === count - 1 ? `${lastWidth}%` : '100%'} />
+				<Text key={i} color={color} size={size} width={i === count - 1 ? `${lastWidth}%` : '100%'} />
 			))}
 		</Col>
 	);

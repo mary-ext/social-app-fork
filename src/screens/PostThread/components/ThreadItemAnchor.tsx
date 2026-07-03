@@ -558,7 +558,7 @@ export function ThreadItemAnchorSkeleton() {
 				<Skele.Lines count={lineCount} lastWidth={lastWidth} size="lg" />
 				{embed ? <EmbedSkeleton.Anchor shape={embed} /> : null}
 				<div className={css.expandedDetails}>
-					<Skele.Text blend size="md_sub" width={150} />
+					<Skele.Text color="contrast_25" size="md_sub" width={150} />
 				</div>
 			</div>
 

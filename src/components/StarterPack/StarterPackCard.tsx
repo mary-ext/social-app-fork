@@ -197,7 +197,7 @@ function TitleAndBylinePlaceholder() {
 	return (
 		<Skeleton.Col>
 			<Skeleton.Text size="md" width="60%" />
-			<Skeleton.Text blend size="md_sub" width="40%" />
+			<Skeleton.Text color="contrast_25" size="md_sub" width="40%" />
 		</Skeleton.Col>
 	);
 }

@@ -23,7 +23,7 @@ export function RecentProfilePendingRow({
 				</div>
 				<span className={styles.text}>
 					<Skeleton.Text size="md" width={140} />
-					<Skeleton.Text blend size="md_sub" width={90} />
+					<Skeleton.Text color="contrast_25" size="md_sub" width={90} />
 				</span>
 			</div>
 			<RecentRemoveButton

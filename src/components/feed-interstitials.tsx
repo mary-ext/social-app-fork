@@ -36,7 +36,7 @@ function SuggestedFollowPlaceholder() {
 				<div className={css.identity}>
 					<Skeleton.Text size="md" width="60%" />
 					<div className={css.description}>
-						<Skeleton.Lines blend={false} count={2} lastWidth={60} size="sm" />
+						<Skeleton.Lines color="contrast_50" count={2} lastWidth={60} size="sm" />
 					</div>
 				</div>
 			</div>

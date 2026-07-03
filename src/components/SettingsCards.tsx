@@ -107,7 +107,7 @@ export function Label({
 			</Text>
 			{loading ? (
 				<div className={styles.subtitle}>
-					<Skele.Text size="md_sub" width={140} />
+					<Skele.Text color="contrast_100" size="md_sub" width={140} />
 				</div>
 			) : (
 				subtitleText != null && (

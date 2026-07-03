@@ -36,6 +36,11 @@ export const text = recipe(
 			width: fallbackVar(widthVar, 'auto'),
 		},
 		variants: {
+			color: {
+				contrast_25: { color: vars.palette.contrast_25 },
+				contrast_50: { color: vars.palette.contrast_50 },
+				contrast_100: { color: vars.palette.contrast_100 },
+			},
 			// one variant per `Text` size, each publishing the size's font-size and its pixel-snapped line-height
 			// (`round(font-size × paired ratio)`) so the placeholder tracks the live typography scale.
 			size: Object.fromEntries(
@@ -50,7 +55,7 @@ export const text = recipe(
 				]),
 			) as { [K in keyof typeof fontLeading]: { vars: Record<string, string> } },
 		},
-		defaultVariants: { size: 'md' },
+		defaultVariants: { color: 'contrast_50', size: 'md' },
 	},
 	{ debugId: 'text' },
 );
@@ -58,35 +63,56 @@ export const text = recipe(
 // the bar is sized to the font-size and vertically centered by the flex parent, so the leftover line-height
 // splits into equal margins above and below — the same place the glyphs sit within a real line box.
 export const bar = style({
-	backgroundColor: vars.palette.contrast_50,
+	backgroundColor: 'currentColor',
 	borderRadius: borderRadius.md,
 	height: roundToPx(fontSizeVar),
 	width: '100%',
 });
 
-/** De-emphasizes a placeholder so a block of them reads as primary line + secondary lines. */
-export const blend = style({
-	opacity: 0.6,
-});
+export const circle = recipe(
+	{
+		base: {
+			alignItems: 'center',
+			backgroundColor: 'currentColor',
+			borderRadius: '50%',
+			display: 'flex',
+			flexShrink: 0,
+			height: boxSizeVar,
+			justifyContent: 'center',
+			width: boxSizeVar,
+		},
+		variants: {
+			color: {
+				contrast_25: { color: vars.palette.contrast_25 },
+				contrast_50: { color: vars.palette.contrast_50 },
+				contrast_100: { color: vars.palette.contrast_100 },
+			},
+		},
+		defaultVariants: { color: 'contrast_50' },
+	},
+	{ debugId: 'circle' },
+);
 
-export const circle = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_50,
-	borderRadius: '50%',
-	display: 'flex',
-	flexShrink: 0,
-	height: boxSizeVar,
-	justifyContent: 'center',
-	width: boxSizeVar,
-});
-
-export const square = style({
-	backgroundColor: vars.palette.contrast_50,
-	borderRadius: squareRadiusVar,
-	flexShrink: 0,
-	height: boxSizeVar,
-	width: boxSizeVar,
-});
+export const square = recipe(
+	{
+		base: {
+			backgroundColor: 'currentColor',
+			borderRadius: squareRadiusVar,
+			flexShrink: 0,
+			height: boxSizeVar,
+			width: boxSizeVar,
+		},
+		variants: {
+			color: {
+				contrast_25: { color: vars.palette.contrast_25 },
+				contrast_50: { color: vars.palette.contrast_50 },
+				contrast_100: { color: vars.palette.contrast_100 },
+			},
+		},
+		defaultVariants: { color: 'contrast_50' },
+	},
+	{ debugId: 'square' },
+);
 
 /** A horizontal flex group of placeholders. Unlayered. */
 export const row = recipe(

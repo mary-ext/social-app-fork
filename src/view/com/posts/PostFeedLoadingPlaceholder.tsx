@@ -38,7 +38,7 @@ function PostLoadingPlaceholder({
 						<div className={reasonCss.includeReason}>
 							<RepostIcon fill={colors.contrast_50} width={13} height={13} />
 							{/* fixed px, not a %: the real reason hugs its content, so a percentage has no stable base */}
-							<Skele.Text blend size="md_sub" width={reasonWidth} />
+							<Skele.Text color="contrast_25" size="md_sub" width={reasonWidth} />
 						</div>
 					) : null}
 				</div>
