@@ -188,7 +188,8 @@ export const icon = style({
 	flexShrink: 0,
 	gridColumn: 1,
 	gridRow: 1,
-	marginInlineEnd: space.md,
+	marginBlock: (20 - 18) / 2,
+	marginRight: space.md,
 	selectors: {
 		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
 	},
