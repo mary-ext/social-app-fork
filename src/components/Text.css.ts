@@ -4,7 +4,7 @@ import { colors } from '#/styles/colors';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
-import { fontFamily, fontLeading, fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
+import { fontLeading, fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 /** Turns a token scale into a variant group setting `property` to each token value. */
 const variantsFor = <Scale extends Record<string, number | string>, Property extends string>(
@@ -44,7 +44,7 @@ const sizeVariants = (): { [K in keyof typeof fontLeading]: { vars: Record<strin
 export const text = recipe(
 	{
 		base: {
-			fontFamily,
+			fontFamily: 'inherit',
 			fontSize: fontSizeScale,
 			// snap the derived line-height to a whole CSS pixel — `round(fontSize * leading, 1px)` — so it
 			// lands on the pixel grid rather than a fractional CSS value

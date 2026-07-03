@@ -48,7 +48,19 @@ export const fontWeight = {
 	bold: '700',
 } as const;
 
-export const fontFamily = `InterVariable, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
+// the platform UI sans-serif fallback chain, shared by both font-family options.
+export const systemFontFamily = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
+// the "theme" option prepends the bundled InterVariable webfont to the fallback chain.
+export const themeFontFamily = `InterVariable, ${systemFontFamily}`;
+
+/** Runtime UI font stack; the ALF `ThemeProvider` writes it onto `<html>` from the font-family preference. */
+export const fontFamilyVar = createVar();
+
+/**
+ * Active UI font family: the `fontFamilyVar` preference, defaulting to the InterVariable theme stack. Set
+ * once on `<body>` so text elements inherit it rather than each re-declaring the stack.
+ */
+export const fontFamily = fallbackVar(fontFamilyVar, themeFontFamily);
 
 /**
  * z-index scale. Two stacking spaces that don't directly compete — in-flow chrome (rendered in the document)

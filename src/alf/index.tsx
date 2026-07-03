@@ -12,7 +12,12 @@ import {
 import { themes } from '#/alf/themes';
 
 import type { Device } from '#/storage';
-import { fontScale as fontScaleVar } from '#/styles/tokens.css';
+import {
+	fontFamilyVar,
+	fontScale as fontScaleVar,
+	systemFontFamily,
+	themeFontFamily,
+} from '#/styles/tokens.css';
 
 export { atoms } from '#/alf/atoms';
 export { type TextStyleProp, type Theme, type ThemeName, type ViewStyleProp } from '#/alf/base';
@@ -69,21 +74,23 @@ export function ThemeProvider({
 		persistFontScale(fs);
 		setFontScaleMultiplier(computeFontScaleMultiplier(fs));
 	};
-	useEffect(() => {
-		// bridge the font-size preference into CSS: write the `fontScale` var onto <html> so the
-		// `fontSize.*` tokens (and everything built on them) scale without per-component JS.
-		const root = document.documentElement;
-		const inline = assignInlineVars({ [fontScaleVar]: String(fontScaleMultiplier) });
-		for (const [prop, value] of Object.entries(inline)) {
-			root.style.setProperty(prop, value);
-		}
-	}, [fontScaleMultiplier]);
 
 	const [fontFamily, setFontFamily] = useState<Alf['fonts']['family']>(() => getFontFamily());
 	const setFontFamilyAndPersist = (ff: Alf['fonts']['family']) => {
 		setFontFamily(ff);
 		persistFontFamily(ff);
 	};
+
+	useEffect(() => {
+		const root = document.documentElement;
+		const inline = assignInlineVars({
+			[fontFamilyVar]: fontFamily === 'theme' ? themeFontFamily : systemFontFamily,
+			[fontScaleVar]: String(fontScaleMultiplier),
+		});
+		for (const [prop, value] of Object.entries(inline)) {
+			root.style.setProperty(prop, value);
+		}
+	}, [fontFamily, fontScaleMultiplier]);
 
 	const nextThemes = {
 		...themes,

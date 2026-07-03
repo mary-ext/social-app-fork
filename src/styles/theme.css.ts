@@ -2,6 +2,7 @@ import { assignVars, globalStyle } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE, invertPalette, type Palette } from '#/styles/palette';
+import { fontFamily } from '#/styles/tokens.css';
 
 // palette.black is always an opaque 7-char hex, so a fixed 8-digit-hex alpha suffices for shadows.
 const alpha = (hex: string, opacity: number) => {
@@ -43,4 +44,7 @@ globalStyle('.theme--dim', {
 // pre-hydration splash; this rule owns <body> — the scroll container — so its color covers the full
 // scrollable area, and since the splash only colors <html> there's no specificity contest once the bundle
 // loads.
-globalStyle('body', { backgroundColor: vars.palette.contrast_0 });
+globalStyle('body', {
+	backgroundColor: vars.palette.contrast_0,
+	fontFamily,
+});
