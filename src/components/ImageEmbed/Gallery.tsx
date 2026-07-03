@@ -4,6 +4,7 @@ import type { LightboxImage } from '@oomfware/lightbox';
 import { clsx } from 'clsx';
 
 import type { LightboxHandle } from '#/components/dialogs/Context';
+import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import {
 	CAROUSEL_CHAT_MAX_HEIGHT,
 	CAROUSEL_CHAT_MIN_HEIGHT,
@@ -187,6 +188,14 @@ function GalleryImage({
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 }) {
+	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumb ? 'loading' : 'error');
+
+	const measure = useCallback((node: HTMLImageElement | null) => {
+		if (node?.complete) {
+			setStatus(node.naturalWidth > 0 ? 'loaded' : 'error');
+		}
+	}, []);
+
 	// Size from the declared aspect ratio only (a missing one defaults to square). The shared row height was
 	// derived against these same metadata ratios, so adopting an image's true ratio post-load could push a
 	// metadata-less tile past the width budget and swallow the peek — better a square placeholder.
@@ -219,12 +228,25 @@ function GalleryImage({
 			}
 			onPointerDown={onPressIn}
 		>
-			<img
-				className={clsx(styles.image, isContain && styles.imageContain)}
-				src={image.thumb}
-				alt={image.alt}
-				loading={index === 0 ? 'eager' : 'lazy'}
-			/>
+			{status === 'error' ? (
+				<span className={styles.fallback}>
+					<ImageIcon fill="currentColor" size="3xl" />
+				</span>
+			) : (
+				<img
+					className={clsx(
+						styles.image,
+						isContain && styles.imageContain,
+						status === 'loading' && styles.loading,
+					)}
+					src={image.thumb}
+					alt={image.alt}
+					loading={index === 0 ? 'eager' : 'lazy'}
+					onError={() => setStatus('error')}
+					onLoad={() => setStatus('loaded')}
+					ref={measure}
+				/>
+			)}
 			<MediaBadges
 				variant="gallery"
 				hasAlt={hasAlt}

@@ -70,3 +70,15 @@ export const image = style({
  * chop a wide image off-screen; `contain` shows the whole image within the square instead.
  */
 export const imageContain = style({ objectFit: 'contain' });
+
+export const loading = style({ opacity: 0 });
+
+export const fallback = style({
+	alignItems: 'center',
+	backgroundColor: vars.palette.contrast_25,
+	color: vars.palette.contrast_400,
+	display: 'flex',
+	inset: 0,
+	justifyContent: 'center',
+	position: 'absolute',
+});

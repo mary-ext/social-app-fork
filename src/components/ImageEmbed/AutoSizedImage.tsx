@@ -1,8 +1,10 @@
+import { useCallback, useState } from 'react';
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import type { LightboxHandle, LightboxPayload } from '#/components/dialogs/Context';
+import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import * as styles from '#/components/ImageEmbed/AutoSizedImage.css';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
@@ -30,7 +32,14 @@ export function AutoSizedImage({
 	payload,
 	onPressIn,
 }: AutoSizedImageProps) {
+	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumb ? 'loading' : 'error');
 	const [largeAlt] = useLargeAltBadgeEnabled();
+
+	const measure = useCallback((node: HTMLImageElement | null) => {
+		if (node?.complete) {
+			setStatus(node.naturalWidth > 0 ? 'loaded' : 'error');
+		}
+	}, []);
 	// Old images, or images from other clients, can lack an aspect ratio; those fall back to a square box.
 	const aspectRatio = getAspectRatio(image.aspectRatio);
 
@@ -51,12 +60,25 @@ export function AutoSizedImage({
 			aria-label={image.alt || undefined}
 			onPointerDown={onPointerDown}
 		>
-			<img
-				className={clsx(styles.image, isContain && styles.imageContain)}
-				src={image.thumb}
-				alt={image.alt}
-				loading="lazy"
-			/>
+			{status === 'error' ? (
+				<span className={styles.fallback}>
+					<ImageIcon fill="currentColor" size="3xl" />
+				</span>
+			) : (
+				<img
+					className={clsx(
+						styles.image,
+						isContain && styles.imageContain,
+						status === 'loading' && styles.loading,
+					)}
+					src={image.thumb}
+					alt={image.alt}
+					loading="lazy"
+					onError={() => setStatus('error')}
+					onLoad={() => setStatus('loaded')}
+					ref={measure}
+				/>
+			)}
 			{/* A single image keeps its aspect ratio, so it's never cropped. The square quote thumbnail does
 			    cover-crop, but we intentionally surface only its alt badge there, not a crop indicator. */}
 			<MediaBadges variant="single" hasAlt={!!image.alt} cropped={false} large={largeAlt} />
