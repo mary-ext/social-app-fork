@@ -17,15 +17,16 @@ export const identity = style({
 	minWidth: 0,
 });
 
-export const displayName = style({
+// the current account's primary identity line (the handle), truncated to a single line.
+export const primaryText = style({
 	minWidth: 0,
 });
 
-// the current account's name line: display name beside its profile badges.
+// the current account's name line: handle beside its profile badges.
 export const nameLine = style({
 	alignItems: 'center',
 	display: 'flex',
-	gap: space.xs,
+	gap: 6,
 	minWidth: 0,
 });
 

@@ -107,18 +107,24 @@ function CurrentAccountRow({
 				avatar={shadow.avatar}
 				live={live}
 				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-				size={44}
+				size={40}
 				type={shadow.associated?.labeler ? 'labeler' : 'user'}
 			/>
 			<div className={styles.identity}>
 				<span className={styles.nameLine}>
-					<Text className={styles.displayName} numberOfLines={1} size="lg_sub" weight="medium">
-						{displayName}
+					<Text
+						className={styles.primaryText}
+						color="textContrastHigh"
+						numberOfLines={1}
+						size="md"
+						weight="semiBold"
+					>
+						{profile.handle}
 					</Text>
 					<ProfileBadges profile={shadow} size="sm" />
 				</span>
 				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{`@${profile.handle}`}
+					{displayName}
 				</Text>
 			</div>
 			<ChevronRightIcon className={cardStyles.chevron} fill="currentColor" size="sm" />
@@ -129,10 +135,10 @@ function CurrentAccountRow({
 function CurrentAccountRowSkeleton({ className }: { className?: string }) {
 	return (
 		<div className={clsx(cardStyles.rowPlain, className)}>
-			<Skele.Circle size={44} />
+			<Skele.Circle size={40} />
 			<div className={styles.identity}>
-				<Skele.Text size="lg_sub" width={140} />
-				<Skele.Text size="md_sub" width={90} />
+				<Skele.Text size="md" width={90} />
+				<Skele.Text size="md_sub" width={140} />
 			</div>
 		</div>
 	);
@@ -237,9 +243,10 @@ function OtherAccountRow({
 						<div className={styles.avatarPlaceholder} />
 					)}
 				</span>
-				<Text className={styles.handle} numberOfLines={1} size="md">
-					{`@${account.handle}`}
+				<Text className={styles.handle} numberOfLines={1} size="md" weight="medium">
+					{account.handle}
 				</Text>
+
 				{pendingDid === account.did && (
 					<Spinner color="currentColor" label={m['screens.settings.account.switching']()} size="sm" />
 				)}
