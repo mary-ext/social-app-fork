@@ -453,6 +453,7 @@ function PostFeed({
 					error={error ?? undefined}
 					onPressTryAgain={onPressTryAgain}
 					savedFeedConfig={savedFeedConfig}
+					topBorder={rowIndex !== 0}
 				/>
 			);
 		} else if (row.type === 'loadMoreError') {

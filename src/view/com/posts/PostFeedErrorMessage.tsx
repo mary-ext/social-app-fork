@@ -1,12 +1,9 @@
-import { View } from 'react-native';
-
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { usePalette } from '#/lib/hooks/usePalette';
 import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError, errorToString } from '#/lib/strings/errors';
 
@@ -16,15 +13,15 @@ import { useRemoveFeedMutation } from '#/state/queries/preferences';
 import { logger } from '#/logger';
 
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
 import { EmptyState } from '../util/EmptyState';
 import { ErrorMessage } from '../util/error/ErrorMessage';
-import { Button } from '../util/forms/Button';
-import { Text } from '../util/text/Text';
 import * as css from './PostFeedErrorMessage.css';
 
 export enum KnownError {
@@ -44,11 +41,13 @@ export function PostFeedErrorMessage({
 	error,
 	onPressTryAgain,
 	savedFeedConfig,
+	topBorder = false,
 }: {
 	feedDesc: FeedDescriptor;
 	error?: Error;
 	onPressTryAgain: () => void;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
+	topBorder?: boolean;
 }) {
 	const knownError = detectKnownError(feedDesc, error);
 
@@ -63,6 +62,7 @@ export function PostFeedErrorMessage({
 				knownError={knownError}
 				rawError={error}
 				savedFeedConfig={savedFeedConfig}
+				topBorder={topBorder}
 			/>
 		);
 	}
@@ -86,13 +86,14 @@ function FeedgenErrorMessage({
 	knownError,
 	rawError,
 	savedFeedConfig,
+	topBorder,
 }: {
 	feedDesc: FeedDescriptor;
 	knownError: KnownError;
 	rawError?: Error;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
+	topBorder: boolean;
 }) {
-	const pal = usePalette('default');
 	const navigation = useNavigation<NavigationProp>();
 	const msg = {
 		[KnownError.Unknown]: '',
@@ -140,12 +141,20 @@ function FeedgenErrorMessage({
 		case KnownError.FeedgenOffline:
 		case KnownError.FeedgenUnknown: {
 			cta = (
-				<View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+				<div className={css.cta}>
 					{knownError === KnownError.FeedgenDoesNotExist && savedFeedConfig && (
-						<Button type="inverted" label={m['view.posts.feed.remove.label']()} onPress={onPressRemoveFeed} />
+						<Button
+							color="secondary_inverted"
+							label={m['view.posts.feed.remove.label']()}
+							onClick={onPressRemoveFeed}
+						>
+							<ButtonText>{m['view.posts.feed.remove.label']()}</ButtonText>
+						</Button>
 					)}
-					<Button type="default-light" label={m['common.profile.action.view']()} onPress={onViewProfile} />
-				</View>
+					<Button color="secondary" label={m['common.profile.action.view']()} onClick={onViewProfile}>
+						<ButtonText>{m['common.profile.action.view']()}</ButtonText>
+					</Button>
+				</div>
 			);
 			break;
 		}
@@ -153,28 +162,17 @@ function FeedgenErrorMessage({
 
 	return (
 		<>
-			<View
-				style={[
-					pal.border,
-					pal.viewLight,
-					{
-						borderTopWidth: 1,
-						paddingHorizontal: 20,
-						paddingVertical: 18,
-						gap: 12,
-					},
-				]}
-			>
-				<Text style={pal.text}>{msg}</Text>
+			<div className={css.container({ topBorder })}>
+				<Text>{msg}</Text>
 
 				{rawError?.message && (
-					<Text style={pal.textLight}>
+					<Text color="textContrastMedium">
 						{m['view.posts.feed.error.serverMessage']({ message: rawError.message })}
 					</Text>
 				)}
 
 				{cta}
-			</View>
+			</div>
 			<Prompt.Basic
 				handle={removePromptHandle}
 				title={m['view.posts.feed.remove.title']()}
