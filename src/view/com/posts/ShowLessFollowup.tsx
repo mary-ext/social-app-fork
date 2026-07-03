@@ -1,33 +1,20 @@
-import { View } from 'react-native';
-
-import { atoms as a, useTheme } from '#/alf';
-
 import { CircleCheck_Stroke2_Corner0_Rounded } from '#/components/icons/CircleCheck';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-export function ShowLessFollowup() {
-	const t = useTheme();
+import * as css from './ShowLessFollowup.css';
+
+export function ShowLessFollowup({ topBorder = false }: { topBorder?: boolean }) {
 	return (
-		<View style={[t.atoms.border_contrast_low, a.border_t, t.atoms.bg_contrast_25, a.p_sm]}>
-			<View
-				style={[
-					t.atoms.bg,
-					t.atoms.border_contrast_low,
-					a.border,
-					a.rounded_sm,
-					a.p_md,
-					a.flex_row,
-					a.gap_sm,
-				]}
-			>
-				<CircleCheck_Stroke2_Corner0_Rounded fill={colors.textContrastLow} size="sm" />
-				<Text style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
+		<div className={css.root({ topBorder })}>
+			<div className={css.card}>
+				<CircleCheck_Stroke2_Corner0_Rounded className={css.icon} fill={colors.contrast_500} size="md" />
+				<Text className={css.text} color="textContrastHigh" size="md_sub">
 					{m['view.posts.feedback.thanks']()}
 				</Text>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }

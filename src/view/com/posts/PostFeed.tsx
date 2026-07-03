@@ -493,7 +493,7 @@ function PostFeed({
 		} else if (row.type === 'sliceViewFullThread') {
 			return <ViewFullThread uri={row.uri} />;
 		} else if (row.type === 'showLessFollowup') {
-			return <ShowLessFollowup />;
+			return <ShowLessFollowup topBorder={rowIndex !== 0} />;
 		} else {
 			return null;
 		}
