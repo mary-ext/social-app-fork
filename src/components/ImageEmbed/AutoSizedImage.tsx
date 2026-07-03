@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -32,12 +31,11 @@ export function AutoSizedImage({
 	onPressIn,
 }: AutoSizedImageProps) {
 	const [largeAlt] = useLargeAltBadgeEnabled();
-	// Old images, or images from other clients, can lack an aspect ratio; fall back to square and pick up the
-	// real ratio once the image loads.
-	const [aspectRatio, setAspectRatio] = useState(() => getAspectRatio(image.aspectRatio));
+	// Old images, or images from other clients, can lack an aspect ratio; those fall back to a square box.
+	const aspectRatio = getAspectRatio(image.aspectRatio);
 
 	const isSquare = crop === 'square';
-	// Until a ratio-less image loads we don't know its shape, so letterbox it rather than cover-crop blindly.
+	// A ratio-less image is letterboxed inside its square box rather than cover-cropped to an unknown shape.
 	const isContain = aspectRatio === undefined && !isSquare;
 	const className = isSquare ? styles.square : crop === 'none' ? styles.uncapped : styles.constrained;
 
@@ -58,17 +56,6 @@ export function AutoSizedImage({
 				src={image.thumb}
 				alt={image.alt}
 				loading="lazy"
-				onLoad={(e) => {
-					if (aspectRatio === undefined) {
-						const ar = getAspectRatio({
-							height: e.currentTarget.naturalHeight,
-							width: e.currentTarget.naturalWidth,
-						});
-						if (ar !== undefined) {
-							setAspectRatio(ar);
-						}
-					}
-				}}
 			/>
 			{/* A single image keeps its aspect ratio, so it's never cropped. The square quote thumbnail does
 			    cover-crop, but we intentionally surface only its alt badge there, not a crop indicator. */}
