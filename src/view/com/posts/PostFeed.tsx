@@ -458,9 +458,9 @@ function PostFeed({
 		} else if (row.type === 'loadMoreError') {
 			return <LoadMoreRetryBtn label={m['common.post.fetchError']()} onPress={onPressRetryLoadMore} />;
 		} else if (row.type === 'loading') {
-			return <PostFeedLoadingPlaceholder />;
+			return <PostFeedLoadingPlaceholder topBorder={rowIndex !== 0} />;
 		} else if (row.type === 'feedShutdownMsg') {
-			return <FeedShutdownMsg feedUri={feedUriOrActorDid} />;
+			return <FeedShutdownMsg feedUri={feedUriOrActorDid} topBorder={rowIndex !== 0} />;
 		} else if (row.type === 'interstitialFollows') {
 			return <SuggestedFollows feed={feed} />;
 		} else if (row.type === 'interstitialTrending') {

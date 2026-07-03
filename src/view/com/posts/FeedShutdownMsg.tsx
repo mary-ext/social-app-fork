@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import { DISCOVER_FEED_URI, PROD_DEFAULT_FEED } from '#/lib/constants';
 import { feedUriToHref } from '#/lib/strings/url-helpers';
 
@@ -14,18 +12,17 @@ import { logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
-import { InlineLinkText } from '#/components/Link';
 import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Button, ButtonText } from '#/components/web/Button';
+import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 
-export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
-	const t = useTheme();
+import * as css from './FeedShutdownMsg.css';
+
+export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: string; topBorder?: boolean }) {
 	const setSelectedFeed = useSetSelectedFeed();
 	const { data: preferences } = usePreferencesQuery();
 	const { mutateAsync: removeFeed, isPending: isRemovePending } = useRemoveFeedMutation();
@@ -72,17 +69,19 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 
 	const isProcessing = isReplacePending || isRemovePending;
 	return (
-		<View style={[a.py_3xl, a.px_2xl, a.gap_xl, t.atoms.border_contrast_low, a.border_t]}>
-			<Text style={[a.text_5xl, a.font_semi_bold, t.atoms.text, a.text_center]}>:(</Text>
-			<Text style={[a.text_md, a.leading_snug, t.atoms.text, a.text_center]}>
+		<div className={css.root({ topBorder })}>
+			<Text align="center" size="_5xl" weight="semiBold">
+				:(
+			</Text>
+			<Text align="center" size="md">
 				<Trans
 					message={m['view.posts.feed.offlineFallback']}
 					markup={{
 						t0: ({ children }) => (
 							<InlineLinkText
 								label={m['view.posts.discover.feedName']()}
+								size="md"
 								to={feedUriToHref(DISCOVER_FEED_URI)}
-								style={[a.text_md]}
 							>
 								{children}
 							</InlineLinkText>
@@ -91,33 +90,31 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 				/>
 			</Text>
 			{hasFeedPinned ? (
-				<View style={[a.flex_row, a.justify_center, a.gap_sm]}>
+				<div className={css.buttons}>
 					<Button
-						variant="outline"
 						color="primary"
-						size="small"
-						label={m['view.posts.feed.remove.label']()}
 						disabled={isProcessing}
-						onPress={() => void onRemoveFeed()}
+						label={m['view.posts.feed.remove.label']()}
+						onClick={() => void onRemoveFeed()}
+						variant="outline"
 					>
 						<ButtonText>{m['view.posts.feed.remove.label']()}</ButtonText>
 						{isRemovePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 					</Button>
 					{!hasDiscoverPinned && (
 						<Button
-							variant="solid"
 							color="primary"
-							size="small"
-							label={m['view.posts.feed.replace.label']()}
 							disabled={isProcessing}
-							onPress={() => void onReplaceFeed()}
+							label={m['view.posts.feed.replace.label']()}
+							onClick={() => void onReplaceFeed()}
+							variant="solid"
 						>
 							<ButtonText>{m['view.posts.feed.replace.label']()}</ButtonText>
 							{isReplacePending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 						</Button>
 					)}
-				</View>
+				</div>
 			) : undefined}
-		</View>
+		</div>
 	);
 }

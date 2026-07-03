@@ -60,7 +60,7 @@ function PostLoadingPlaceholder({
 	);
 }
 
-export function PostFeedLoadingPlaceholder() {
+export function PostFeedLoadingPlaceholder({ topBorder = false }: { topBorder?: boolean }) {
 	// freeze the per-row variety for the component's lifetime so it doesn't reshuffle on every re-render.
 	const rows = Array.from({ length: 9 }, () => ({
 		embed: EmbedSkeleton.randomShape(),
@@ -81,7 +81,7 @@ export function PostFeedLoadingPlaceholder() {
 					lastLineWidth={row.lastLineWidth}
 					reasonWidth={row.reasonWidth}
 					textLines={row.textLines}
-					topBorder={i !== 0}
+					topBorder={topBorder || i !== 0}
 				/>
 			))}
 		</>
