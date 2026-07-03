@@ -40,10 +40,11 @@ export function VideoUploadToolbar({ state }: { state: VideoState }) {
 			<ProgressCircle
 				color={state.status === 'error' ? colors.negative_500 : colors.primary_500}
 				progress={wheelProgress}
-				size={30}
+				size={20}
 				trackColor={colors.borderContrastLow}
 			/>
-			<Text className={styles.label} weight="semiBold">
+
+			<Text weight="medium" size="md_sub">
 				{text}
 			</Text>
 		</div>

@@ -141,35 +141,34 @@ export function ComposerFooter({
 
 	return (
 		<div className={styles.footer}>
-			<div className={styles.left}>
-				{video && video.status !== 'done' ? (
-					<VideoUploadToolbar state={video} />
-				) : (
-					<>
-						<SelectMediaButton
-							disabled={isMediaSelectionDisabled}
-							allowedAssetTypes={selectedAssetsType}
-							selectedAssetsCount={selectedAssetsCount}
-							onSelectAssets={onSelectAssets}
-							autoOpen={openGallery}
-						/>
-						<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
-						{gtPhone ? (
-							<>
-								<EmojiPicker.Trigger
-									handle={emojiPickerHandle}
-									render={
-										<ComposerToolbarButton label={m['common.a11y.openEmojiPicker']()} icon={EmojiSmileIcon} />
-									}
-								/>
-								<EmojiPicker.Root handle={emojiPickerHandle} nextFocusRef={textInputRef}>
-									<EmojiPicker.Picker />
-								</EmojiPicker.Root>
-							</>
-						) : null}
-					</>
-				)}
-			</div>
+			{video && video.status !== 'done' ? (
+				<VideoUploadToolbar state={video} />
+			) : (
+				<div className={styles.left}>
+					<SelectMediaButton
+						disabled={isMediaSelectionDisabled}
+						allowedAssetTypes={selectedAssetsType}
+						selectedAssetsCount={selectedAssetsCount}
+						onSelectAssets={onSelectAssets}
+						autoOpen={openGallery}
+					/>
+					<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+					{gtPhone ? (
+						<>
+							<EmojiPicker.Trigger
+								handle={emojiPickerHandle}
+								render={
+									<ComposerToolbarButton label={m['common.a11y.openEmojiPicker']()} icon={EmojiSmileIcon} />
+								}
+							/>
+							<EmojiPicker.Root handle={emojiPickerHandle} nextFocusRef={textInputRef}>
+								<EmojiPicker.Picker />
+							</EmojiPicker.Root>
+						</>
+					) : null}
+				</div>
+			)}
+
 			<div className={styles.right}>
 				{showAddButton && (
 					<ComposerToolbarButton

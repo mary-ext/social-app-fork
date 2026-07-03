@@ -1,11 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
+import { space } from '#/styles/tokens.css';
+
 export const toolbar = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-});
-
-export const label = style({
-	marginLeft: 8,
+	gap: space.sm,
 });
