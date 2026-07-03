@@ -33,7 +33,7 @@
 			}
 		}
 	],
-	"view.composer.altText.hint": "Alt text describes images for blind and low-vision users, and helps give context to everyone.",
+	"view.composer.altText.hint": "Alt text describes media for low-vision users and adds context for everyone.",
 	"view.composer.captions.action.remove": "Remove caption file",
 	"view.composer.captions.action.select": "Select caption file (.vtt)",
 	"view.composer.captions.error.languageRequired": "Ensure you have selected a language for each caption file.",

@@ -6,13 +6,6 @@ import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { space, zIndex } from '#/styles/tokens.css';
 
-// positions the editor box within the composer row (the avatar sits to its left); the composer owns its own
-// internal layout.
-export const editor = style({
-	alignSelf: 'flex-start',
-	flex: 1,
-});
-
 // #region drop overlay
 
 // always mounted and `inert` while hidden, so the fade is a class toggle rather than a mount juggle, and the

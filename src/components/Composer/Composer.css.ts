@@ -53,6 +53,7 @@ export const root = recipe(
 	{
 		base: {
 			position: 'relative',
+			zIndex: 0,
 		},
 		variants: {
 			fontSize: {

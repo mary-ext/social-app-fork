@@ -181,7 +181,6 @@ export function TextInput({
 				accessibilityLabel={accessibilityLabel}
 				accessibilityHint={accessibilityHint}
 				minRows={forceMinHeight ? 6 : 2}
-				className={styles.editor}
 				contentPadding={{
 					top: 6,
 					bottom: 6,

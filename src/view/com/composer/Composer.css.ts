@@ -26,41 +26,35 @@ export const stickyFooterWeb = style({
 	bottom: 0,
 	zIndex: 2,
 	backgroundColor: vars.palette.contrast_0,
-	marginBottom: space.lg,
-
-	':last-child': {
-		marginBottom: 0,
-	},
 });
 
 export const inactivePost = style({
 	opacity: 0.5,
-
-	':last-child': {
-		marginBottom: space.lg,
-	},
 });
 
 export const postContainer = style({
 	display: 'flex',
-	flexDirection: 'column',
+	flexDirection: 'row',
+	gap: space.md,
+	paddingBottom: space.md,
 	paddingLeft: space.lg,
 	paddingRight: space.lg,
 	position: 'relative',
+	zIndex: 0,
 
 	selectors: {
-		'& + &': {
-			marginTop: space.md,
+		[`${stickyFooterWeb} + &`]: {
+			paddingTop: space.md,
 		},
 	},
 });
 
-export const row = style({
+export const col = style({
 	display: 'flex',
-	flexDirection: 'row',
+	flexDirection: 'column',
+	flexGrow: 1,
 	gap: space.md,
-	position: 'relative',
-	zIndex: 0,
+	minWidth: 0,
 });
 
 export const remove = style({

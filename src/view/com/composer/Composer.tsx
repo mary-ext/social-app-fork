@@ -64,6 +64,7 @@ import { SubtitleDialogBtn } from '#/view/com/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/view/com/composer/videos/VideoPreview';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import { GalleryBleed } from '#/components/images/Gallery';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -1165,94 +1166,96 @@ let ComposerPost = memo(function ComposerPost({
 	);
 
 	return (
-		<div className={clsx(styles.postContainer, !isActive && styles.inactivePost)}>
-			<div className={styles.row}>
+		<GalleryBleed>
+			<div className={clsx(styles.postContainer, !isActive && styles.inactivePost)}>
 				<UserAvatar
 					avatar={currentProfile?.avatar}
 					size={36}
 					type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
 				/>
 
-				<TextInput
-					ref={textInputRef}
-					text={text}
-					placeholder={selectTextInputPlaceholder}
-					autoFocus={isLastPost}
-					forceMinHeight={forceMinHeight}
-					// To avoid overlap with the close button:
-					hasRightPadding={isPartOfThread}
-					isActive={isActive}
-					setText={(text) => {
-						dispatchPost({ type: 'update_text', text });
-					}}
-					onFocus={() => {
-						dispatch({
-							type: 'focus_post',
-							postId: post.id,
-						});
-					}}
-					onPhotoPasted={(blob) => void onPhotoPasted(blob)}
-					onNewLink={onNewLink}
-					onError={onError}
-					onPressPublish={onPublish}
-					accessible={true}
-					accessibilityLabel={m['common.compose.action.write']()}
-					accessibilityHint={m['view.composer.text.maxLengthHint']({ count: MAX_GRAPHEME_LENGTH || 0 })}
-				/>
-			</div>
-
-			{canRemovePost && isActive && (
-				<>
-					<Button
-						label={m['common.post.delete']()}
-						size="small"
-						color="secondary"
-						variant="ghost"
-						shape="round"
-						className={styles.remove}
-						onClick={() => {
-							if (
-								post.shortenedGraphemeLength > 0 ||
-								post.embed.media ||
-								post.embed.link ||
-								post.embed.quote
-							) {
-								discardPromptHandle.open(null);
-							} else {
-								dispatch({
-									type: 'remove_post',
-									postId: post.id,
-								});
-							}
+				<div className={styles.col}>
+					<TextInput
+						ref={textInputRef}
+						text={text}
+						placeholder={selectTextInputPlaceholder}
+						autoFocus={isLastPost}
+						forceMinHeight={forceMinHeight}
+						// To avoid overlap with the close button:
+						hasRightPadding={isPartOfThread}
+						isActive={isActive}
+						setText={(text) => {
+							dispatchPost({ type: 'update_text', text });
 						}}
-					>
-						<ButtonIcon icon={XIcon} />
-					</Button>
-
-					<Prompt.Basic
-						handle={discardPromptHandle}
-						title={m['view.composer.discard.title']()}
-						description={m['view.composer.discard.message']()}
-						onConfirm={() => {
+						onFocus={() => {
 							dispatch({
-								type: 'remove_post',
+								type: 'focus_post',
 								postId: post.id,
 							});
 						}}
-						confirmButtonCta={m['common.action.discard']()}
-						confirmButtonColor="negative"
+						onPhotoPasted={(blob) => void onPhotoPasted(blob)}
+						onNewLink={onNewLink}
+						onError={onError}
+						onPressPublish={onPublish}
+						accessible={true}
+						accessibilityLabel={m['common.compose.action.write']()}
+						accessibilityHint={m['view.composer.text.maxLengthHint']({ count: MAX_GRAPHEME_LENGTH || 0 })}
 					/>
-				</>
-			)}
 
-			<ComposerEmbeds
-				canRemoveQuote={canRemoveQuote}
-				embed={post.embed}
-				dispatch={dispatchPost}
-				clearVideo={() => onClearVideo(post.id)}
-				isActivePost={isActive}
-			/>
-		</div>
+					{canRemovePost && isActive && (
+						<>
+							<Button
+								label={m['common.post.delete']()}
+								size="small"
+								color="secondary"
+								variant="ghost"
+								shape="round"
+								className={styles.remove}
+								onClick={() => {
+									if (
+										post.shortenedGraphemeLength > 0 ||
+										post.embed.media ||
+										post.embed.link ||
+										post.embed.quote
+									) {
+										discardPromptHandle.open(null);
+									} else {
+										dispatch({
+											type: 'remove_post',
+											postId: post.id,
+										});
+									}
+								}}
+							>
+								<ButtonIcon icon={XIcon} />
+							</Button>
+
+							<Prompt.Basic
+								handle={discardPromptHandle}
+								title={m['view.composer.discard.title']()}
+								description={m['view.composer.discard.message']()}
+								onConfirm={() => {
+									dispatch({
+										type: 'remove_post',
+										postId: post.id,
+									});
+								}}
+								confirmButtonCta={m['common.action.discard']()}
+								confirmButtonColor="negative"
+							/>
+						</>
+					)}
+
+					<ComposerEmbeds
+						canRemoveQuote={canRemoveQuote}
+						embed={post.embed}
+						dispatch={dispatchPost}
+						clearVideo={() => onClearVideo(post.id)}
+						isActivePost={isActive}
+					/>
+				</div>
+			</div>
+		</GalleryBleed>
 	);
 });
 
