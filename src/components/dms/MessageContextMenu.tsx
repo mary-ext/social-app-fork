@@ -3,10 +3,8 @@ import type { ComponentProps } from 'react';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 
-import { useLanguagePrefs } from '#/state/preferences';
 import { useSession } from '#/state/session';
 
 import { timeShort } from '#/locale/intl/datetime';
@@ -16,7 +14,6 @@ import { useMessageReplies } from '#/components/dms/MessageReplies';
 import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ReplyIcon } from '#/components/icons/ArrowCornerDownRight';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
-import { Language_Stroke2_Corner2_Rounded as LanguageIcon } from '#/components/icons/Language';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
 import * as Toast from '#/components/Toast';
@@ -38,8 +35,6 @@ export let MessageContextMenu = ({
 	const { currentAccount } = useSession();
 	const { openDeleteMessage, openReportMessage } = useMessageDialogs();
 	const { setReply } = useMessageReplies();
-	const langPrefs = useLanguagePrefs();
-	const translate = useGoogleTranslate();
 
 	const isFromSelf = message.sender?.did === currentAccount?.did;
 
@@ -50,10 +45,6 @@ export let MessageContextMenu = ({
 		Toast.show(m['common.share.copiedToast'](), {
 			type: 'success',
 		});
-	};
-
-	const onPressTranslateMessage = () => {
-		void translate(message.text, langPrefs.primaryLanguage);
 	};
 
 	const sender = senderProfile;
@@ -80,10 +71,6 @@ export let MessageContextMenu = ({
 					</Menu.Item>
 					{message.text.length > 0 && (
 						<>
-							<Menu.Item label={m['common.action.translate']()} onClick={onPressTranslateMessage}>
-								<Menu.ItemIcon icon={LanguageIcon} position="left" />
-								<Menu.ItemText>{m['common.action.translate']()}</Menu.ItemText>
-							</Menu.Item>
 							<Menu.Item label={m['components.dms.message.action.copyText']()} onClick={onCopyMessage}>
 								<Menu.ItemIcon icon={ClipboardIcon} position="left" />
 								<Menu.ItemText>{m['components.dms.message.action.copyText']()}</Menu.ItemText>

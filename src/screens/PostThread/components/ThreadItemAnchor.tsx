@@ -41,7 +41,6 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
-import { TranslatedPost } from '#/components/Post/Translated';
 import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
@@ -313,7 +312,6 @@ function ThreadItemAnchorInner({
 									authorHandle={post.author.handle}
 								/>
 							) : undefined}
-							<TranslatedPost post={post} />
 							{post.embed && (
 								<div className={richText?.text ? css.embedPad : undefined}>
 									<Embed

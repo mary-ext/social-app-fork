@@ -10,7 +10,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
 import { getCurrentRoute } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
@@ -20,7 +19,6 @@ import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
-import { useLanguagePrefs } from '#/state/preferences';
 import { usePinnedPostMutation } from '#/state/queries/pinned-post';
 import { usePostDeleteMutation, useThreadMuteMutationQueue } from '#/state/queries/post';
 import { useToggleQuoteDetachmentMutation } from '#/state/queries/postgate';
@@ -41,7 +39,6 @@ import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog';
-import { BubbleQuestion_Stroke2_Corner0_Rounded as Translate } from '#/components/icons/Bubble';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import {
 	EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
@@ -93,12 +90,10 @@ function PostMenuItems({
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 }): React.ReactNode {
 	const { hasSession, currentAccount } = useSession();
-	const langPrefs = useLanguagePrefs();
 	const { mutateAsync: deletePostMutate } = usePostDeleteMutation();
 	const { mutateAsync: pinPostMutate, isPending: isPinPending } = usePinnedPostMutation();
 	const requireSignIn = useRequireAuth();
 	const feedFeedback = useFeedFeedbackContext();
-	const translate = useGoogleTranslate();
 	const navigation = useNavigation<NavigationProp>();
 	const blockPromptHandle = Prompt.usePromptHandle();
 	const mutePromptHandle = Prompt.usePromptHandle();
@@ -203,10 +198,6 @@ function PostMenuItems({
 		Toast.show(m['common.share.copiedToast'](), {
 			type: 'success',
 		});
-	};
-
-	const onPressTranslate = () => {
-		void translate(record.text, langPrefs.primaryLanguage);
 	};
 
 	const hideInPWI = !!postAuthor.labels?.find((label) => label.val === '!no-unauthenticated');
@@ -389,11 +380,6 @@ function PostMenuItems({
 				<Menu.Group>
 					{!hideInPWI || hasSession ? (
 						<>
-							<Menu.Item label={m['common.action.translate']()} onClick={onPressTranslate}>
-								<Menu.ItemText>{m['common.action.translate']()}</Menu.ItemText>
-								<Menu.ItemIcon icon={Translate} position="right" />
-							</Menu.Item>
-
 							<Menu.Item label={m['components.postControls.copy.text']()} onClick={onCopyPostText}>
 								<Menu.ItemText>{m['components.postControls.copy.text']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={ClipboardIcon} position="right" />

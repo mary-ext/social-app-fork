@@ -101,9 +101,3 @@ export function isPostInLanguage(post: AppBskyFeedDefs.PostView, targetLangs: st
 	}
 	return bcp47Match.basicFilter(lang, targetLangs).length > 0;
 }
-
-export function getTranslatorLink(text: string, targetLangCode: string, sourceLanguage?: string): string {
-	return `https://translate.google.com/?sl=${sourceLanguage ?? 'auto'}&tl=${targetLangCode}&text=${encodeURIComponent(
-		text,
-	)}`;
-}

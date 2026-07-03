@@ -71,7 +71,6 @@
 	"screens.settings.language.primary.label": "Primary language",
 	"screens.settings.language.primary.select": "Select primary language",
 	"screens.settings.language.title": "Languages",
-	"screens.settings.language.translationHint": "Preferred language for translations in your feed",
 	"screens.settings.media.autoplay": "Autoplay videos and GIFs",
 	"screens.settings.media.externalTitle": "External media",
 	"screens.settings.media.sectionTitle": "Content & media",

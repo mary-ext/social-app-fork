@@ -99,10 +99,7 @@ export function LanguageSettingsScreen({}: Props) {
 							value={langPrefs.primaryLanguage}
 						>
 							<Settings.Icon icon={LanguageIcon} />
-							<Settings.Label
-								subtitleText={m['screens.settings.language.translationHint']()}
-								titleText={m['screens.settings.language.primary.label']()}
-							/>
+							<Settings.Label titleText={m['screens.settings.language.primary.label']()} />
 						</Settings.SelectRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.language.content.select']()}
