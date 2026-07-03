@@ -22,9 +22,8 @@ export function PostLanguageSelect({
 	currentLanguages?: string[];
 	onSelectLanguage?: (language: string) => void;
 	/**
-	 * Timestamp (ms) of the last honored language-detection nudge. Each time this changes, the button flashes a
-	 * transient hint and fades. The parent rate-limits updates, so successive detector firings inside the
-	 * cooldown won't re-flash. The initial `0` on mount is intentionally ignored.
+	 * timestamp (ms) of the last honored language-detection nudge. each time this changes, the button flashes a
+	 * transient hint and fades.
 	 */
 	nudgeAt?: number;
 }) {

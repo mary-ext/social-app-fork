@@ -64,8 +64,10 @@ export const embedBody = style({
 });
 
 /**
- * A list-row starter pack card: full-width padded row that highlights on hover/press, with a hairline top
- * separator on by default — opt out (`topBorder: false`) for the first row beneath a sticky tab bar.
+ * list-row starter pack card. full-width padded row that highlights on hover/press.
+ *
+ * @param topBorder whether to show a hairline top separator. default is true. disable for the first row
+ *   beneath a sticky tab bar.
  */
 export const defaultRow = recipe(
 	{

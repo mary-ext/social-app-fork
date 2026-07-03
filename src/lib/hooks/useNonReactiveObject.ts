@@ -1,12 +1,10 @@
 import { useInsertionEffect, useRef } from 'react';
 
 /**
- * This should be used sparingly. It erases reactivity, i.e. when the inputs change, the returned object
- * itself will remain the same. This means that if you use this at a higher level of your tree, and then some
- * state you read in it changes, there is no mechanism for anything below in the tree to "react" to this
- * change (e.g. by knowing to call your function again).
+ * returns a non-reactive version of the provided value. use sparingly, as changes to the underlying state
+ * will not trigger updates in components reading this value.
  *
- * For callbacks, see `useNonReactiveCallback` instead.
+ * @see useNonReactiveCallback for callbacks.
  */
 export function useNonReactiveObject<T extends Record<string, unknown>>(o: T): React.RefObject<T> {
 	const ref = useRef(o);

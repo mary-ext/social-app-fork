@@ -4,9 +4,8 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from './RecentRemoveButton.css';
 
 /**
- * the trailing remove control on a recent-history row. it sits beside the `Autocomplete.Item` (not inside
- * it), so a click removes the entry without committing the row; the mousedown is suppressed to keep input
- * focus and leave the popup open for removing several in a row.
+ * trailing remove control on a recent-history row. sits beside the `Autocomplete.Item` so a click removes the
+ * entry without committing the row, suppressing mousedown to keep input focus and leave the popup open.
  */
 export function RecentRemoveButton({ label, onRemove }: { label: string; onRemove: () => void }) {
 	return (

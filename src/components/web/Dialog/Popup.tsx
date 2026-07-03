@@ -29,8 +29,8 @@ export function Popup({
 	children: ReactNode;
 	size?: 'default' | 'narrow';
 	/**
-	 * Body strategy. `viewport` (default): a padded card that grows to its content while the viewport scrolls.
-	 * `body`: a height-bounded flex column whose `Body`/`List` child scrolls internally, with pinned
+	 * body strategy. `viewport` (default) is a padded card that grows to its content while the viewport
+	 * scrolls. `body` is a height-bounded flex column whose `Body`/`List` child scrolls internally, with pinned
 	 * `Header`/`Footer` slots.
 	 */
 	scroll?: 'body' | 'viewport';

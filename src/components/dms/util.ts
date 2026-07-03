@@ -52,10 +52,10 @@ export function canBeAddedToGroup(profile: AnyProfileView) {
 }
 
 /**
- * Resolves the effective `allowGroupInvites` value for a chat declaration. When unset, group invites follow
- * the general DM preference (`allowIncoming`), which itself defaults to `following`. This mirrors the
- * `undefined` fallthrough in canBeAddedToGroup, and is the single source of truth for both displaying and
- * persisting the setting.
+ * resolves the effective `allowGroupInvites` value for a chat declaration.
+ *
+ * @param chat the chat declaration to check.
+ * @returns the resolved group invite preference.
  */
 export function resolveAllowGroupInvites(
 	chat: { allowIncoming?: string; allowGroupInvites?: string } | undefined,
@@ -84,10 +84,12 @@ export function hasAlreadyReacted(
 }
 
 /**
- * Drops reactions from accounts the viewer is blocking or blocked by, so a blocked reactor's identity is
- * never surfaced via the reaction pills or the reactions dialog. `relatedProfiles` is shadow-synced by the
- * convo agent, so this reflects optimistic blocks. Reactions whose sender isn't in `relatedProfiles` are kept
- * - we can't determine their block status, and they already render anonymously ("Someone reacted").
+ * filters out reactions from blocked or blocking accounts to prevent their identities from appearing in the
+ * UI. keeps reactions from unknown senders, which are rendered anonymously.
+ *
+ * @param reactions list of reactions to filter
+ * @param relatedProfiles profile data used to check block status
+ * @returns filtered list of reactions
  */
 export function filterBlockedReactions(
 	reactions: ChatBskyConvoDefs.ReactionView[] | undefined,
@@ -112,9 +114,8 @@ export function hasReachedReactionLimit(
 }
 
 /**
- * Whether the active conversation accepts emoji reactions. Reactions are unavailable when: - the convo is in
- * the disabled state - a group convo is locked or permanently locked - 1-1: the other user is blocked or is
- * blocking us - group: we are blocking the primary member (the owner)
+ * whether the active conversation accepts emoji reactions. reactions are unavailable when the conversation is
+ * disabled, locked, or when there is a block relationship with the recipient or group owner.
  */
 export function canReact({
 	convoState,
@@ -243,13 +244,12 @@ export type ReportSubject =
 	| { convoId: string; message: ChatBskyConvoDefs.MessageView; view: 'convo' };
 
 /**
- * Derives the moderation report subject for a conversation. A group always reports the group itself (via its
- * owner); a direct chat reports the other user's most recent message when there is a reportable one,
- * otherwise the user. Returns null only when a group has no resolvable owner.
+ * derives the moderation report subject for a conversation. groups report the group owner, while direct chats
+ * report the other user's most recent message (or the user itself if no message is reportable).
  *
  * @param convo parsed conversation
- * @param ownDid the viewer's did, used to skip the viewer's own last message
- * @returns the report subject, or null when none can be derived
+ * @param ownDid the viewer's DID, used to skip the viewer's own last message
+ * @returns the report subject, or null if none can be derived
  */
 export function getConvoReportSubject(
 	convo: ConvoWithDetails,

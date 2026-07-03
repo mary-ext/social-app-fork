@@ -201,11 +201,9 @@ const DEFAULT_LOADING_ROW_COUNT = 3;
 const MAX_LOADING_ROW_COUNT = 10;
 
 /**
- * A stack of list-card placeholders for the loading state, mirroring {@link Default}'s layout (avatar,
- * title/byline, description) so it sits on the same rhythm as the real cards.
+ * stack of list-card placeholders for the loading state, mirroring {@link Default}'s layout.
  *
- * @param count number of placeholder rows; callers should pass the known list count when available (e.g.
- *   `profile.associated.lists`). Defaults to a small value and is capped so large counts don't render
+ * @param count number of placeholder rows. defaults to a small value and is capped to prevent rendering
  *   excessive rows.
  */
 export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNode {

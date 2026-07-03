@@ -23,11 +23,7 @@ export type PostSource = {
  */
 const transientSources = new Map<string, PostSource>();
 
-/**
- * A cache of sources that have been consumed by the post thread view. This is not cleaned up, but because we
- * use a new ID for each post thread view that consumes a source, this is never reused unless a user navigates
- * back to a post thread view that has not been dropped from memory.
- */
+/** cache of sources consumed by the post thread view */
 const consumedSources = new Map<string, PostSource>();
 
 /**
@@ -45,9 +41,8 @@ export function setUnstablePostSource(key: string, source: PostSource) {
 }
 
 /**
- * This hook is unstable and should only be used for FeedFeedback and other ephemeral non-critical systems.
- * Views that use this hook will continue to return a reference to the same source until those views are
- * dropped from memory.
+ * unstable hook for ephemeral non-critical systems where views return a reference to the same source until
+ * they are dropped from memory.
  */
 export function useUnstablePostSource(key: string) {
 	const id = useId();

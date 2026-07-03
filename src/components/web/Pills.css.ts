@@ -3,10 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
 
-/**
- * A wrapping flex row of moderation pills, spaced per `size`. Unlayered: the only escape hatch is a caller's
- * outer spacing `className`, rare enough not to warrant the `components`-layer override dance.
- */
+/** wrapping flex row of moderation pills, spaced per `size` */
 export const row = recipe(
 	{
 		base: {
@@ -26,8 +23,9 @@ export const row = recipe(
 );
 
 /**
- * A single moderation pill: a borderless, fully-rounded flex row that highlights on hover/press. Its resting
- * tint is on by default; PostAlerts passes `noBg` for `sm` pills so they read transparent until hovered.
+ * a single moderation pill that highlights on hover and press.
+ *
+ * @param noBg whether to disable the default background tint when resting
  */
 export const pill = recipe(
 	{

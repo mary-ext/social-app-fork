@@ -88,10 +88,7 @@ export function Item({
 	closeOnClick?: boolean;
 	destructive?: boolean;
 	disabled?: boolean;
-	/**
-	 * Renders the item as a custom element (e.g. an `<a>` for a link item), keeping menu-item styling, keyboard
-	 * navigation, and close-on-click. Base UI chains the element's own `onClick` with its internal one.
-	 */
+	/** renders the item as a custom element, keeping menu-item styling, keyboard navigation, and close-on-click */
 	render?: ReactElement;
 }) {
 	return (

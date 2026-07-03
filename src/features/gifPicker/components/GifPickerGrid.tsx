@@ -104,9 +104,10 @@ export function GifPickerGrid({
 }
 
 /**
- * Walks `items` in order and pushes each one into the currently shortest column, tracking accumulated
- * height-per-unit-width from each GIF's intrinsic aspect ratio. Preserves ordering top-to-bottom within each
- * column, which keeps pagination behavior intuitive as new pages stream in.
+ * distributes items into the currently shortest column to balance column heights while preserving
+ * top-to-bottom order.
+ *
+ * @param items items to distribute
  */
 function distributeIntoColumns(items: Gif[], numColumns: number): Gif[][] {
 	const columns: Gif[][] = Array.from({ length: numColumns }, () => []);

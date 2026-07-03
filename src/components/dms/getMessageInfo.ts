@@ -14,10 +14,12 @@ export type UserMessageInfo = {
 };
 
 /**
- * Resolves whether the given did is blocked (in either direction) within a convo. Prefers the passed-in
- * shadowed `primaryProfile` so optimistic blocks reflect immediately, before the convo list refetches - the
- * raw `members` fetched with the convo are invisible to the profile shadow cache. Group members other than
- * the owner fall back to the raw (potentially stale) member.
+ * resolves whether a DID is blocked in either direction within a conversation.
+ *
+ * @param did the DID to check for blocks.
+ * @param members the list of members fetched with the conversation.
+ * @param primaryProfile the profile used to check for optimistic block states.
+ * @returns true if the DID is blocked.
  */
 export function isDidBlockedInConvo({
 	did,

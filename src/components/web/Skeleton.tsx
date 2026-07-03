@@ -100,10 +100,7 @@ export function Square({
 	);
 }
 
-/**
- * A paragraph of text-line placeholders: full-width lines closing on a shorter final line, the way wrapped
- * post text fills its column. Renders inside a {@link Col}.
- */
+/** paragraph of text-line placeholders that closes on a shorter final line. renders inside a {@link Col}. */
 export function Lines({
 	color = 'contrast_25',
 	count,

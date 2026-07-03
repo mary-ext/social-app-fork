@@ -126,10 +126,10 @@ export function useMaybeProfileShadow<TProfileView extends AnyProfileView>(
 }
 
 /**
- * Takes a list of posts, and returns a list of DIDs that should be filtered out
+ * returns a list of DIDs that should be filtered out from a list of posts
  *
- * Note: it doesn't retroactively scan the cache, but only listens to new updates. The use case here is
- * intended for removing a post from a feed after you mute the author
+ * @param posts list of posts to evaluate
+ * @returns list of DIDs to filter out
  */
 export function usePostAuthorShadowFilter(data?: FeedPage[]) {
 	const [authors, setAuthors] = useState(new Map<string, { muted: boolean; blocked: boolean }>());
@@ -196,9 +196,13 @@ export function updateProfileShadow(queryClient: QueryClient, did: string, value
 }
 
 /**
- * Returns true if merging `shadow` into `profile` would change nothing, i.e. `mergeShadow` would be a no-op.
- * Object-valued fields are compared by reference, so this can return false negatives — callers may do
- * redundant merges, but never skip a real change.
+ * returns true if merging `shadow` into `profile` would change nothing.
+ *
+ * object-valued fields are compared by reference, which may result in false negatives.
+ *
+ * @param profile the base profile
+ * @param shadow the shadow profile to merge
+ * @returns true if the merge is a no-op
  */
 export function isProfileShadowApplied<TProfileView extends AnyProfileView>(
 	profile: TProfileView,

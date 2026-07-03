@@ -5,8 +5,8 @@ import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 
 /**
- * The "view full thread" affordance below a truncated thread slice. `paddingLeft` + the spine slot align the
- * dotted spine with the feed post's reply-line (centered in its 36px avatar column).
+ * view full thread affordance below a truncated thread slice. `paddingLeft` and the spine slot align the
+ * dotted spine with the feed post's reply-line.
  */
 export const link = style({
 	alignItems: 'center',

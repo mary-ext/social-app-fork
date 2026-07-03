@@ -7,9 +7,8 @@ import { JoinRequestEmbedBody } from '#/components/Post/Embed/JoinRequestEmbed';
 import * as css from './ChatInviteEmbed.css';
 
 /**
- * Renders a chat invite link found in an `app.bsky.embed.external` embed (e.g. a `bsky.app/chat/<code>` link
- * posted to the feed) as a join request card, falling back to a plain external embed if the invite can't be
- * resolved.
+ * renders a chat invite link from an external embed as a join request card, falling back to a plain external
+ * embed if the invite cannot be resolved
  */
 export function ChatInviteEmbed({
 	code,

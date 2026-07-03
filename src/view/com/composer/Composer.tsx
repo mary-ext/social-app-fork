@@ -161,19 +161,15 @@ export const ComposePost = ({
 	);
 
 	/**
-	 * When the user selects a language from the composer language selector, clear any temporary language
-	 * suggestions they may have selected previously, and any we might try to suggest to them.
+	 * clear temporary and suggested languages when the user selects a language from the composer language
+	 * selector
 	 */
 	const onSelectLanguage = () => {
 		setAcceptedLanguageSuggestion(null);
 		setReplyToLanguages([]);
 	};
 
-	/**
-	 * Timestamp (ms) of the last honored nudge from language detection. Used to rate-limit the pulse animation:
-	 * we ignore back-to-back nudges that arrive within NUDGE_COOLDOWN_MS. Consumers key an effect on this value
-	 * — it only changes when we actually want to re-pulse.
-	 */
+	/** timestamp (ms) of the last honored nudge from language detection, used to rate-limit the pulse animation. */
 	const [languageNudgeAt, setLanguageNudgeAt] = useState(0);
 	const onLanguageNudge = () => {
 		const now = Date.now();
@@ -510,10 +506,10 @@ export const ComposePost = ({
 	}, [composerDispatch, preferences?.postInteractionSettings]);
 
 	/**
-	 * Decides what a cancel request (Cancel button, Escape, backdrop press) should do. Returns `true` when the
-	 * composer should stay open (a sub-popup was closed, or the discard prompt was raised), `false` when the
-	 * caller should close the composer. Kept side-effect-only so the host can own the actual close (avoids
-	 * re-entrant `handle.close()` inside Base UI's `onOpenChange`).
+	 * decides how to handle a cancel request (Cancel button, Escape, backdrop press).
+	 *
+	 * @returns true if the composer should stay open (e.g., a sub-popup was closed or discard prompt shown), or
+	 *   false if the caller should close the composer.
 	 */
 	const onPressCancel = useCallback((): boolean => {
 		if (textInputRef.current?.maybeClosePopup()) {

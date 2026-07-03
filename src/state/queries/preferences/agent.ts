@@ -15,12 +15,9 @@ import type {
 } from '#/lib/moderation/preferences-types';
 
 /**
- * Fork-owned reimplementation of `@atproto/api`'s `BskyAgent` preference logic, talking to the
- * `@atcute/client` `pds` client directly. `app.bsky.actor.getPreferences` / `putPreferences` are
- * AppView-namespaced but PDS-implemented, so every call here routes through `pds`, never `appview`.
+ * manages user preferences by communicating directly with the PDS.
  *
- * The read path derives the fork-owned {@link BskyPreferences} aggregate; its `moderationPrefs` is converted
- * to the engine's `ModerationPreferences` at the boundary (see `#/lib/moderation/prefs`).
+ * reads and aggregates {@link BskyPreferences}.
  */
 
 // #region helpers
@@ -28,11 +25,7 @@ import type {
 type Pref = AppBskyActorDefs.Preferences[number];
 type PrefOf<Type extends Pref['$type']> = Extract<Pref, { $type: Type }>;
 
-/**
- * Builds a `$type` discriminant guard for the preference union. The union members carry a required `$type`,
- * so narrowing with `Extract` yields the precise member (unlike the exported interfaces, whose `$type` is
- * optional).
- */
+/** builds a `$type` discriminant guard for the preference union. */
 const prefGuard =
 	<Type extends Pref['$type']>(type: Type) =>
 	(pref: Pref): pref is PrefOf<Type> =>
@@ -50,8 +43,12 @@ const isThreadViewPref = prefGuard('app.bsky.actor.defs#threadViewPref');
 const isVerificationPrefs = prefGuard('app.bsky.actor.defs#verificationPrefs');
 
 /**
- * Returns a copy of `prefs` with every member matching `matches` removed and `replacement` appended. Spreads
- * into a fresh array rather than using `Array.concat`, which mis-resolves on the union element type.
+ * returns a copy of `prefs` with every member matching `matches` removed and `replacement` appended.
+ *
+ * @param prefs the original array of preferences
+ * @param matches the element to remove
+ * @param replacement the element to append
+ * @returns the updated array copy
  */
 const upsertPref = (
 	prefs: AppBskyActorDefs.Preferences,
@@ -187,12 +184,11 @@ async function withPrefsLock<T>(fn: () => Promise<T>): Promise<T> {
 }
 
 /**
- * Read-modify-write of the raw preferences array, serialized under {@link withPrefsLock}. Always sends the
- * full array back. Returning `false` from `cb` aborts the write.
+ * read-modify-write of the raw preferences array, serialized under {@link withPrefsLock}.
  *
- * @param pds the PDS client.
- * @param cb maps the current preferences to the next set, or `false` to skip the write.
- * @returns the written preferences (or the unchanged ones when `cb` returns `false`).
+ * @param pds the PDS client
+ * @param cb maps current preferences to the next set, or false to skip the write
+ * @returns the written preferences (or the unchanged ones if aborted)
  */
 async function updatePreferences(
 	pds: Client,
@@ -210,10 +206,7 @@ async function updatePreferences(
 }
 
 /**
- * Fetches and derives the user's full preferences, mirroring `@atproto/api`'s `BskyAgent.getPreferences`.
- * Reads the raw pref array from the PDS, narrows each item by `$type`, and applies legacy-label remapping.
- * Unlike `@atproto/api`, it does not migrate a legacy v1 `savedFeedsPref` into v2 — the fork assumes a
- * `savedFeedsPrefV2` already exists.
+ * fetches and derives the user's full preferences.
  *
  * @param pds the PDS client.
  * @param appLabelers the app-level labeler DIDs to seed `moderationPrefs.labelers` with.
@@ -425,13 +418,12 @@ export async function setAdultContentEnabled(pds: Client, enabled: boolean): Pro
 }
 
 /**
- * Sets a content-label visibility preference, optionally scoped to a labeler. Global changes to a label with
- * a legacy alias (`graphic-media`/`porn`/`sexual`) are double-written to the legacy label.
+ * sets a content-label visibility preference, optionally scoped to a labeler.
  *
- * @param pds the PDS client.
- * @param key the label identifier.
- * @param value the desired visibility.
- * @param labelerDid the labeler the preference applies to, or undefined for a global preference.
+ * @param pds the PDS client
+ * @param key the label identifier
+ * @param value the desired visibility
+ * @param labelerDid the labeler the preference applies to, or undefined for a global preference
  */
 export async function setContentLabelPref(
 	pds: Client,
@@ -487,11 +479,10 @@ export async function setContentLabelPref(
 }
 
 /**
- * Replaces the muted-words list with the provided words (matched/removed by `id`, falling back to value).
- * Adds new words with a fresh TID `id`; sanitizes values and drops any that sanitize to empty.
+ * replaces the muted-words list with the provided words.
  *
- * @param pds the PDS client.
- * @param mutedWords the words to add.
+ * @param pds the PDS client
+ * @param mutedWords the words to add
  */
 export async function upsertMutedWords(
 	pds: Client,

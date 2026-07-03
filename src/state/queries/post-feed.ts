@@ -113,10 +113,7 @@ export interface FeedPage {
 	fetchedAt: number;
 }
 
-/**
- * The minimum number of posts we want in a single "page" of results. Since we filter out unwanted content, we
- * may fetch more than this number to ensure that we get _at least_ this number.
- */
+/** minimum number of posts required in a single page of results */
 const MIN_POSTS = 30;
 
 export function usePostFeedQuery(
@@ -126,11 +123,7 @@ export function usePostFeedQuery(
 	const feedTuners = useFeedTuners(feedDesc);
 	const moderationOpts = useModerationOpts();
 	const { data: preferences } = usePreferencesQuery();
-	/**
-	 * Load bearing: we need to await AA state or risk FOUC. This marginally delays feeds, but AA state is
-	 * fetched immediately on load and is then available for the remainder of the session, so this delay only
-	 * affects cold loads. -esb
-	 */
+	/** awaits Active Assistant (AA) state to prevent flash of unstyled content (FOUC). */
 	const enabled = opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences);
 	const userInterests = aggregateUserInterests(preferences);
 	const { appview } = useClients();
@@ -142,10 +135,7 @@ export function usePostFeedQuery(
 	} | null>(null);
 	const isDiscover = feedDesc.includes(DISCOVER_FEED_URI);
 
-	/**
-	 * The number of posts to fetch in a single request. Because we filter unwanted content, we may over-fetch
-	 * here to try and fill pages by `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
-	 */
+	/** number of posts to fetch in a single request */
 	const fetchLimit = MIN_POSTS;
 
 	// Make sure this doesn't invalidate unless really needed.

@@ -12,10 +12,8 @@ import { UserAvatar } from '#/components/UserAvatar';
 import * as css from '#/components/web/AvatarStack.css';
 
 /**
- * A row of overlapping circular avatars. Earlier profiles paint on top, and each is masked to cut a
- * transparent gap over the next one — so the separation reads on any background, not just an opaque one.
- *
- * While moderation or the profiles are still loading, renders `numPending` placeholder circles instead.
+ * a row of overlapping circular avatars, with earlier profiles painted on top and masked to cut a transparent
+ * gap over the next. renders placeholder circles if profiles are loading.
  */
 export function AvatarStack({
 	moderationOpts,

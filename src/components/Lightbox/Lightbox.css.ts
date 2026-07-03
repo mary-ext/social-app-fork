@@ -54,9 +54,8 @@ export const viewport = style({
 
 // #region chrome
 /**
- * Full-bleed container holding every chrome element so a single tap can fade them all at once. Transparent to
- * pointers (`pointer-events: none`) so taps fall through to the image/viewport; the interactive controls
- * inside opt back in with `pointer-events: auto`.
+ * full-bleed container holding all chrome elements for unified fade animations. transparent to pointer events
+ * so taps fall through to the viewport, while interactive controls opt back in.
  */
 export const chrome = style({
 	position: 'absolute',

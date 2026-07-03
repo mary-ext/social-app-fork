@@ -66,8 +66,8 @@ export const image = style({
 });
 
 /**
- * Letterbox variant for ratio-unknown tiles. Such a tile is sized to a blind square, so cover-cropping could
- * chop a wide image off-screen; `contain` shows the whole image within the square instead.
+ * letterbox variant for ratio-unknown tiles. sizes the tile to a blind square and uses contain to show the
+ * whole image instead of cover-cropping.
  */
 export const imageContain = style({ objectFit: 'contain' });
 

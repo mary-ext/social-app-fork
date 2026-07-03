@@ -27,10 +27,8 @@ const AVI_SIZE_SMALL = 20;
 const AVI_BORDER = 1;
 
 /**
- * Shared logic to determine if `KnownFollowers` should be shown.
- *
- * Checks the # of actual returned users instead of the `count` value, because `count` includes blocked users
- * and `followers` does not.
+ * determines if `KnownFollowers` should be shown by checking the number of returned users instead of the
+ * `count` value
  */
 export function shouldShowKnownFollowers(knownFollowers?: AppBskyActorDefs.KnownFollowers) {
 	return knownFollowers && knownFollowers.followers.length > 0;

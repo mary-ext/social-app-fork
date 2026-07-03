@@ -164,8 +164,8 @@ export function isStatusStillActive(timeStr: string | undefined) {
 }
 
 /**
- * Validates whether the live status is valid for display in the app. Does NOT validate if the status is valid
- * for the acting user e.g. as they go live.
+ * validates whether the live status is valid for display in the app. does not validate if the status is valid
+ * for the acting user.
  */
 export function isStatusValidForViewers(status: AppBskyActorDefs.StatusView, config: LiveNowConfig) {
 	if (status.status !== 'app.bsky.actor.status#live') return false;

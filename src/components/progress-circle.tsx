@@ -4,7 +4,7 @@ const THICKNESS = 3;
 const clamp = (value: number) => Math.min(Math.max(value, 0), 1);
 
 /**
- * A circular progress ring: a full-circle track with an arc of the same thickness sweeping clockwise over it
+ * circular progress ring: a full-circle track with an arc of the same thickness sweeping clockwise over it
  * from the top as `progress` goes 0 → 1.
  */
 export function ProgressCircle({

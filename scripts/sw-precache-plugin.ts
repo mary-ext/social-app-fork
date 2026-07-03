@@ -8,10 +8,8 @@ import type { Compiler } from '@rspack/core';
 const PRECACHE_FILE = /\.(?:css|gif|ico|jpe?g|js|png|svg|webp|woff2?)$/;
 
 /**
- * Emits a precaching service worker (`sw.js`) at the build root by injecting the full content-hashed asset
- * manifest into a template. The injected manifest — and the cache name derived from it — changes whenever the
- * built asset set changes, so the emitted worker's bytes change too; that byte change is what makes the
- * browser detect an update and re-run precaching.
+ * emits a precaching service worker (`sw.js`) at the build root by injecting the full content-hashed asset
+ * manifest into a template.
  */
 export class ServiceWorkerPrecachePlugin {
 	readonly #templatePath: string;

@@ -97,11 +97,7 @@ export type ThreadDraft = {
 export type ComposerState = {
 	thread: ThreadDraft;
 	activePostIndex: number;
-	/**
-	 * Monotonic counter bumped each time an action requests the text input be focused. Consumed once by an
-	 * effect in `Composer` (compared against a handled-ref) so each request focuses exactly once, without
-	 * mutating reducer state from the effect.
-	 */
+	/** monotonic counter bumped each time an action requests the text input be focused. */
 	activePostFocusRequestId: number;
 	/** ID of the draft being edited, if any. Used to update existing draft on save. */
 	draftId?: string;
@@ -157,19 +153,15 @@ export type ComposerAction =
 	  };
 
 /**
- * Threshold for picking between embed variants. <= this count uses the legacy `app.bsky.embed.images` shape;
- *
- * > this count promotes to `app.bsky.embed.gallery`. Named to flag that if/when we deprecate the legacy images
- * > embed entirely, this constant (and the variant split it gates) should go away.
+ * threshold for picking between embed variants. <= this count uses the legacy `app.bsky.embed.images` shape,
+ * while > this count promotes to `app.bsky.embed.gallery`.
  */
 export const LEGACY_IMAGES_EMBED_MAX = 4;
 export const MAX_GALLERY_IMAGES = 10;
 
 /**
- * Picks the embed variant for a set of images. <=4 lands in the legacy `app.bsky.embed.images` shape; >4
- * promotes to `app.bsky.embed.gallery`. Anything beyond the gallery cap is dropped by the hard slice; callers
- * should already have enforced the cap upstream (picker, paste, etc), and the reducer logs a warning when the
- * cap is exceeded so the UI layer can surface a toast.
+ * picks the embed variant for a set of images. <=4 lands in the legacy `app.bsky.embed.images` shape; >4
+ * promotes to `app.bsky.embed.gallery`.
  */
 function imagesToMediaVariant(images: ComposerImage[]): ImagesMedia | GalleryMedia {
 	return images.length <= LEGACY_IMAGES_EMBED_MAX
@@ -612,11 +604,9 @@ export function createComposerState({
 	let link: Link | undefined;
 
 	/**
-	 * `initText` atm is only used for compose intents, meaning share links from external sources. If `initText`
-	 * is defined, we want to extract links/posts from `initText` and suggest them as embeds.
+	 * extracts links and posts from the initial text to suggest as embeds.
 	 *
-	 * This checks for posts separately from other types of links so that posts can become quotes. The util
-	 * `suggestLinkCardUri` is then applied to ensure we suggest at most 1 of each.
+	 * @param initText the initial text to extract links from.
 	 */
 	if (initText) {
 		const detectedExtUris = new Map<string, LinkFacetMatch>();

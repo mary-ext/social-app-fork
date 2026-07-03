@@ -1,9 +1,9 @@
 import { vars } from '#/styles/contract.css';
 
 /**
- * Color values for `color`/`background`/`borderColor`/`fill` style properties. Exposes the full themed
- * palette plus the semantic aliases (`text`, `bg`, `border*`); all resolve to themed CSS vars, so they invert
- * with the active theme.
+ * color values for `color`, `background`, `borderColor`, and `fill` style properties. exposes the full themed
+ * palette plus semantic aliases (`text`, `bg`, `border*`), which resolve to themed CSS variables to support
+ * theme inversion.
  */
 export const colors = {
 	...vars.palette,

@@ -103,12 +103,7 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
 	return { loadedMedia };
 }
 
-/**
- * Hook to save a draft.
- *
- * IMPORTANT: Network operations happen first in mutationFn. Local storage operations (save new media, delete
- * orphaned media) happen in onSuccess. This ensures we don't lose data if the network request fails.
- */
+/** hook to save a draft */
 export function useSaveDraftMutation() {
 	const { appview } = useClients();
 	const queryClient = useQueryClient();
@@ -249,8 +244,11 @@ export function useDeleteDraftMutation() {
 }
 
 /**
- * Hook to clean up a draft after it has been published. Deletes the draft from server and all associated
- * local media. Takes draftId and originalLocalRefs from composer state.
+ * cleans up a draft after it has been published by deleting it from the server and removing all associated
+ * local media.
+ *
+ * @param draftId the ID of the draft to delete
+ * @param originalLocalRefs local media references associated with the draft
  */
 export function useCleanupPublishedDraftMutation() {
 	const { appview } = useClients();

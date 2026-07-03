@@ -13,11 +13,10 @@ import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as css from './PostContent.css';
 
 /**
- * The moderation-gated post body: alert pills, rich text (with a show-more clamp), and the embed, all behind
- * a `ContentHider`. Shared by the feed (`displayContext='list'`) and standalone (`'view'`) post surfaces.
+ * moderation-gated post body showing alert pills, rich text (with a show-more clamp), and embeds behind a
+ * content hider.
  *
- * The gate + alerts moderate against the surface's own display context; the embed's gallery offset always
- * uses the list context, matching both call sites.
+ * @param displayContext the display context ('list' or 'view') of the post surface.
  */
 function PostContent({
 	post,

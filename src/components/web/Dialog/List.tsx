@@ -11,10 +11,7 @@ export type ListProps<ItemT> = {
 	renderItem: (item: ItemT, index: number) => ReactNode;
 	/** Extra classes on the scroll region (e.g. a min-height floor, content padding, or a tinted surface). */
 	className?: string;
-	/**
-	 * Fired when the end of the list scrolls into view, to load the next page. Detected with an
-	 * `IntersectionObserver` whose root is the scroll region (no effect unless `data` is non-empty).
-	 */
+	/** fired when the end of the list scrolls into view to load the next page */
 	onEndReached?: () => void;
 	/** Distance (px) from the bottom edge at which `onEndReached` fires — i.e. the observer's `rootMargin`. */
 	onEndReachedMargin?: number;
@@ -27,18 +24,17 @@ export type ListProps<ItemT> = {
 	/** Rendered after the items, scrolling with them (e.g. an end-of-list note). Hidden while empty. */
 	ListFooterComponent?: ReactNode;
 	/**
-	 * Rendered above the items inside the scroll region, scrolling with them (e.g. a non-sticky filter row).
-	 * Shown even while empty (above {@link ListEmptyComponent}), unlike the footer. For pinned chrome use a
+	 * rendered above the items inside the scroll region, scrolling with them (e.g. a non-sticky filter row).
+	 * shown even while empty (above {@link ListEmptyComponent}), unlike the footer. for pinned chrome use a
 	 * sibling `Header` slot instead.
 	 */
 	ListHeaderComponent?: ReactNode;
 };
 
 /**
- * The scrollable body of a `body`-scroll {@link Popup}, specialised for a paginated list: maps `data` through
- * `renderItem` and loads more via an `IntersectionObserver` sentinel. Replaces the old `Dialog.InnerFlatList`
- * (web is unvirtualised — fine for paginated or short lists). Compose pinned chrome as sibling
- * `Header`/`Footer` slots, not inside the list.
+ * scrollable body of a `body`-scroll {@link Popup} for paginated lists. maps `data` through `renderItem` and
+ * loads more via an `IntersectionObserver` sentinel. compose pinned chrome as sibling `Header`/`Footer`
+ * slots, not inside the list.
  */
 export function List<ItemT>({
 	data,

@@ -13,8 +13,8 @@ export const root = style(
 );
 
 /**
- * The tab bar: a sticky, horizontally-scrollable row of tabs with a hairline bottom border. Width comes from
- * the shell's center column, so it needs no width wrapper.
+ * tab bar: a sticky, horizontally-scrollable row of tabs with a hairline bottom border. width comes from the
+ * shell's center column, so it needs no width wrapper.
  */
 export const list = style(
 	layered(components, {

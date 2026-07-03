@@ -25,7 +25,7 @@ type FieldContextValue = {
 const FieldContext = createContext<FieldContextValue>({ id: undefined, isInvalid: false });
 
 /**
- * Groups a field's label + input, sharing a generated id so the {@link LabelText} is associated with the
+ * groups a field's label and input, sharing a generated id so the {@link LabelText} is associated with the
  * {@link Input}, and propagating the invalid state to the input.
  */
 export function Root({

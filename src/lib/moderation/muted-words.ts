@@ -2,13 +2,10 @@ import type { AppBskyActorDefs, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type KeywordFilter, KeywordFilterFlags } from '@atcute/bluesky-moderation';
 
 /**
- * Checks whether text (with optional facets/tags and an author) matches any keyword filter.
- *
- * Each filter is a case-insensitive, whole-word regex with target/expiry flags (see
- * `interpretMutedWordPreference`), tested against the post's content and tags.
+ * checks whether text (with optional facets/tags and an author) matches any keyword filter.
  *
  * @param params the muted-word check inputs.
- * @param params.keywordFilters the interpreted keyword filters (e.g. `moderationOpts.prefs.keywordFilters`).
+ * @param params.keywordFilters the interpreted keyword filters.
  * @param params.text the post text to test against content-targeted filters.
  * @param params.facets richtext facets whose tag features contribute to the tag set.
  * @param params.outlineTags additional tags carried outside the richtext facets.

@@ -7,8 +7,8 @@ import * as styles from '#/components/Tooltip.css';
 
 export type TooltipProps = {
 	/**
-	 * The trigger element. Must forward a ref and spread DOM props onto its host node (e.g.
-	 * {@link InlineLinkText} or `web/Button`) so the tooltip can wire its hover/focus behavior to it.
+	 * the trigger element. must forward a ref and spread DOM props onto its host node so the tooltip can wire
+	 * its hover/focus behavior.
 	 */
 	children: ReactElement;
 	/** The hint shown in the popup on hover/focus. */

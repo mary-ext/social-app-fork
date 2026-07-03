@@ -57,16 +57,7 @@ function PostThreadFollowBtnLoaded({
 	// This prevents the button from disappearing as soon as we follow.
 	const showFollowBtn = !isFollowing || !wasFollowing;
 
-	/**
-	 * We want this button to stay visible even after following, so that the user can unfollow if they want.
-	 * However, we need it to disappear after we push to a screen and then come back. We also need it to show up
-	 * if we view the post while following, go to the profile and unfollow, then come back to the post.
-	 *
-	 * We want to update wasFollowing both on blur and on focus so that we hit all these cases. On native, we
-	 * could do this only on focus because the transition animation gives us time to not notice the sudden
-	 * rendering of the button. However, on web if we do this, there's an obvious flicker once the button
-	 * renders. So, we update the state in both cases.
-	 */
+	/** updates the following state on focus and blur to control button visibility. */
 	useEffect(() => {
 		const updateWasFollowing = () => {
 			if (wasFollowing !== isFollowing) {

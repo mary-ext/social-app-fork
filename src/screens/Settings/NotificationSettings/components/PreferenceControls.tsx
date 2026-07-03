@@ -22,8 +22,8 @@ export function PreferenceControls({
 	name: NotificationSettingsPreferenceName;
 	preference?: NotificationSettingsPreference;
 	/**
-	 * Keep other prefs in sync with `name`. For use in the "everything else" category which groups starterpack
-	 * joins + verified + unverified notifications into a single toggle.
+	 * keeps other preferences in sync with `name`. used for the "everything else" category which groups
+	 * starterpack joins, verified, and unverified notifications into a single toggle.
 	 */
 	syncOthers?: NotificationSettingsPreferenceName[];
 }) {

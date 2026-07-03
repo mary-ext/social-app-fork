@@ -41,9 +41,11 @@ export type ListRef = React.RefObject<ListMethods | null>;
 export type ListProps<ItemT> = {
 	data: readonly ItemT[] | null | undefined;
 	/**
-	 * Opts a row out of off-screen render-skipping (see {@link estimateHeight}). Return `true` for rows whose
-	 * late height realization must not shift surrounding content — e.g. a scroll-anchor target and the row just
-	 * above it. Only consulted when `estimateHeight` is set.
+	 * opts a row out of off-screen render-skipping (see {@link estimateHeight}).
+	 *
+	 * @param row the row to check.
+	 * @returns true if the row's late height realization must not shift surrounding content (e.g. scroll-anchor
+	 *   targets).
 	 */
 	disableSkipOffscreen?: (item: ItemT, index: number) => boolean;
 	keyExtractor: (item: ItemT, index: number) => string;
@@ -53,11 +55,7 @@ export type ListProps<ItemT> = {
 	ListFooterComponent?: ReactNode;
 	/** Rendered before the rows. */
 	ListHeaderComponent?: ReactNode;
-	/**
-	 * Enables off-screen render-skipping (`content-visibility: auto`) on each row, seeding the placeholder
-	 * height with this estimate (in px). Once a row has rendered, the browser remembers its real size and
-	 * reuses it, so the estimate only governs rows that have never been on screen.
-	 */
+	/** estimated row height in pixels to enable off-screen render-skipping using `content-visibility: auto` */
 	estimateHeight?: number;
 	/** Fires when the rendered content's size changes (via `ResizeObserver`). */
 	onContentSizeChange?: (width: number, height: number) => void;
@@ -76,9 +74,8 @@ export type ListProps<ItemT> = {
 };
 
 /**
- * A non-virtualizing list bound to the document (full-window) scroll. Renders every row into the DOM and uses
- * `IntersectionObserver` sentinels for edge detection. Contained-scroll lists are a separate concern and not
- * served here.
+ * a non-virtualizing list bound to the document scroll that renders all rows and uses IntersectionObserver
+ * for edge detection.
  */
 export function List<ItemT>({
 	data,
@@ -183,8 +180,8 @@ type SeenObserver<ItemT> = {
 };
 
 /**
- * Builds one {@link IntersectionObserver} for the whole list and routes each entry back to its row, so the
- * observer count stays at one regardless of how many rows render. Returns `null` while disabled.
+ * creates a single {@link IntersectionObserver} for the entire list and routes each entry back to its row.
+ * returns `null` when disabled.
  */
 function useItemSeenObserver<ItemT>(
 	onItemSeen: ((item: ItemT) => void) | undefined,
@@ -281,11 +278,7 @@ const Row = memo(function Row<ItemT>({
 
 const thresholdMargin = (threshold: number | undefined) => `${(threshold ?? 0) * 100}%`;
 
-/**
- * Wraps {@link Visibility} so its observer is rebuilt whenever the content height changes — the
- * `%`-of-viewport margins are resolved against the sentinel's position, which shifts as rows are added or
- * removed.
- */
+/** wraps {@link Visibility} to rebuild its observer whenever the content height changes. */
 function EdgeVisibility({
 	bottomMargin,
 	containerRef,

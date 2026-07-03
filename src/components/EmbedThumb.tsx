@@ -14,9 +14,10 @@ export type EmbedThumbProps = {
 };
 
 /**
- * Media slot for a link/embed card: lazily loads the thumbnail and degrades to a placeholder icon when the
- * source is missing or fails to load, keeping the card's media frame intact instead of a broken box. The
- * frame is the full-bleed card aspect ratio unless {@link EmbedThumbProps.frameClassName} overrides it.
+ * media slot for a link or embed card. lazily loads the thumbnail and falls back to a placeholder icon if the
+ * source is missing or fails to load.
+ *
+ * @param props configuration options for the embed thumbnail
  */
 export function EmbedThumb({ frameClassName, src }: EmbedThumbProps) {
 	// remount on a new `src` so the load status starts fresh — feed rows recycle this slot across posts.

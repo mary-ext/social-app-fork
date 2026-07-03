@@ -2,10 +2,8 @@ import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 
 /**
- * Anchor styling for an inline text link: pointer cursor plus an underline whose timing the `underline`
- * variant controls — `hover` (the default) underlines on hover/focus, `always` keeps it underlined, `none`
- * never does. The underline inherits the text color (`currentColor`), so it tracks whatever `color` the text
- * recipe applies. Focus shows the same underline rather than a ring.
+ * anchor styling for an inline text link. controls the underline timing via the `underline` variant (defaults
+ * to `hover`).
  */
 export const inlineLink = recipe(
 	{

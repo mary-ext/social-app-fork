@@ -44,11 +44,7 @@ type UserAvatarProps = BaseUserAvatarProps &
 		moderation?: DisplayRestrictions;
 		noBorder?: boolean;
 		onLoad?: () => void;
-		/**
-		 * Styling escape hatch merged onto the root. The root's own styles sit in the `components` cascade layer,
-		 * so an (unlayered) class here outranks them — a `border-radius` set this way is inherited by every
-		 * layer.
-		 */
+		/** styling escape hatch merged onto the root. */
 		className?: string;
 		/** Forwarded to the avatar host so it can back a headless trigger (e.g. a hover card). */
 		ref?: Ref<HTMLSpanElement>;

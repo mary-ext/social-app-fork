@@ -38,15 +38,13 @@ import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';
 
 /**
- * The default profile-card presentation: a padded, full-width row laying out the avatar, name/handle, and a
- * trailing follow button, then moderation labels and the bio. Highlights on hover/press, with a hairline top
- * separator on by default. Compose the primitives directly for non-default layouts (a custom trailing action,
- * a dialog row).
+ * default profile card presentation displaying an avatar, name/handle, follow button, moderation labels, and
+ * bio.
  *
  * @param descriptionLines max bio lines before truncation.
- * @param followButtonProps overrides forwarded to the trailing {@link FollowButton} (e.g. `withIcon: false`).
- * @param showLabels whether to render the moderation/follows-you {@link Labels} row.
- * @param topBorder whether the row carries a top divider; turn it off for the first row beneath a header.
+ * @param followButtonProps overrides forwarded to the trailing FollowButton.
+ * @param showLabels whether to render the moderation/follows-you Labels row.
+ * @param topBorder whether the row carries a top divider.
  */
 export function Default({
 	className,
@@ -324,13 +322,10 @@ const DEFAULT_LOADING_ROW_COUNT = 3;
 const MAX_LOADING_ROW_COUNT = 10;
 
 /**
- * A stack of profile-card placeholders for the loading state, mirroring {@link Default}'s layout (avatar,
- * name/handle, bio) so it sits on the same rhythm as the real cards.
+ * stack of profile-card placeholders for the loading state.
  *
- * @param count number of placeholder rows; defaults to a small value and is capped so large counts don't
- *   render excessive rows.
- * @param topBorder whether the first row carries a top divider (later rows always do); set it when the
- *   placeholder sits directly beneath a borderless header. Defaults to `false`.
+ * @param count number of placeholder rows. capped to prevent excessive rendering.
+ * @param topBorder whether the first row carries a top divider. defaults to `false`.
  */
 export function LoadingPlaceholder({
 	count,

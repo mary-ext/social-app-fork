@@ -435,12 +435,9 @@ function parseGifFromUrl(
 }
 
 /**
- * Convert server Draft back to composer-compatible format for restoration. Returns posts and a map of videos
- * that need to be restored by re-processing.
+ * convert server draft back to composer-compatible format for restoration.
  *
- * Videos cannot be restored synchronously like images because they need to go through the compression and
- * upload pipeline. The caller should handle the restoredVideos by initiating video processing for each
- * entry.
+ * @returns posts and a map of videos that need to be restored by re-processing.
  */
 export async function draftToComposerPosts(
 	draft: AppBskyDraftDefs.Draft,

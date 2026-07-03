@@ -90,10 +90,7 @@ export function createCacheMutator({
 					 */
 					parent.value.post.replyCount = currentReplyCount;
 
-					/**
-					 * Additionally, we need to update the post shadow to keep track of these new values, since mutating
-					 * the post object above does not cause a re-render.
-					 */
+					/** update the post shadow to keep track of new values and trigger re-renders */
 					updatePostShadow(queryClient, parent.value.post.uri, {
 						optimisticReplyCount: currentReplyCount,
 					});

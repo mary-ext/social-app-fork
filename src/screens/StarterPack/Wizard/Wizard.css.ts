@@ -72,9 +72,8 @@ export const detailsNext = style({
 
 // #region footer
 /**
- * The step footer: pinned to the viewport bottom while the result list scrolls beneath it. `margin-top: auto`
- * absorbs the screen column's free space so the footer sits at the bottom when the list is short/empty; it
- * collapses to zero once content overflows, where `position: sticky` takes over and pins it during scroll.
+ * step footer pinned to the viewport bottom. sits at the bottom when the list is short or empty, and sticks
+ * to the bottom when the content overflows.
  */
 export const footer = style({
 	alignItems: 'center',

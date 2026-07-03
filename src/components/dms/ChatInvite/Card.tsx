@@ -13,8 +13,8 @@ import * as css from './Card.css';
 import type { ChatInvitePreview } from './use-chat-invite';
 
 /**
- * Presentational preview of a chat invite: member avatars, group name, member count, and owner. Renders
- * nothing without a preview (use a fallback alongside it for that case).
+ * preview of a chat invite showing member avatars, group name, member count, and owner. renders nothing
+ * without a preview.
  */
 export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 	if (!preview) return null;

@@ -2,10 +2,7 @@ import { type DimensionValue, StyleSheet } from 'react-native';
 
 export const flatten = StyleSheet.flatten;
 
-/**
- * Coerce a style value to a number. Padding values are typed as `DimensionValue` (numbers, percentages,
- * "auto", etc.) but our ALF atoms are always plain numbers. Non-numeric values are treated as 0.
- */
+/** coerces a style value to a number. non-numeric values are treated as 0. */
 function num(v: unknown): number {
 	return typeof v === 'number' ? v : 0;
 }
@@ -21,9 +18,12 @@ interface PaddingStyle {
 }
 
 /**
- * Extract resolved padding values from a style object. Returns numbers for each side, resolving shorthand
- * properties (padding → paddingVertical → paddingTop/paddingBottom, etc.). Values are expected to be numbers
- * — any non-numeric `DimensionValue` (e.g. percentages) is treated as 0.
+ * extract resolved padding values from a style object.
+ *
+ * resolves shorthand properties and treats non-numeric values as 0.
+ *
+ * @param style the style object to extract padding from
+ * @returns an object containing the resolved padding values for top, right, bottom, and left
  */
 export function extractPadding(style: PaddingStyle | PaddingStyle[]) {
 	const s = flatten(style) ?? {};

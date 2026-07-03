@@ -8,8 +8,10 @@ import { m } from '#/paraglide/messages';
 import * as css from './Unavailable.css';
 
 /**
- * "No longer available" state for a chat invite, shown when the link is disabled, invalid, or otherwise can't
- * be resolved. The outer container (height, border, etc.) varies per surface, so pass it via `className`.
+ * state for a chat invite that is no longer available, shown when the link is disabled, invalid, or cannot be
+ * resolved.
+ *
+ * @param className class name applied to the outer container
  */
 export function Unavailable({ className }: { className?: string }) {
 	return (

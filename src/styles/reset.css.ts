@@ -3,9 +3,8 @@ import { globalStyle } from '@vanilla-extract/css';
 import { reset } from '#/styles/layers.css';
 
 /**
- * Global UA-default resets, emitted into the {@link reset} cascade layer so that layered component styles (the
- * `components` layer) win over them. Only rules whose job is to neutralize a browser default belong here;
- * overrides that must win regardless (e.g. the autofill background hack) stay unlayered in `style.css`.
+ * global UA-default resets, emitted into the {@link reset} cascade layer so that layered component styles win
+ * over them. only rules whose job is to neutralize a browser default belong here.
  */
 
 // remove the default link color so component text color governs.

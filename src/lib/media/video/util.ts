@@ -14,12 +14,10 @@ export const createVideoEndpointUrl = (route: string, params?: Record<string, st
 };
 
 /**
- * Builds an XRPC client that talks directly to the video service. When a service-auth token is given (minted
- * upstream via `com.atproto.server.getServiceAuth` on the user's PDS) it is sent as a bearer credential on
- * every request; omit it to send requests unauthenticated (the job-status poll runs that way).
+ * builds an XRPC client for the video service.
  *
- * @param token the service-auth bearer token, or undefined to send requests unauthenticated.
- * @returns a `Client` rooted at `VIDEO_SERVICE`.
+ * @param token service-auth bearer token, or undefined for unauthenticated requests.
+ * @returns an XRPC client.
  */
 export function createVideoClient(token?: string): Client {
 	return new Client({

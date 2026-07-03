@@ -22,10 +22,8 @@ import { isModifiedClick, useNavigateToPath } from '#/components/web/Link';
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"], [role="link"], [data-no-row-link]';
 
 /**
- * Spread onto any element to exempt clicks within it from {@link BlockLink}'s row navigation. For regions that
- * handle their own clicks but aren't semantic links/buttons — media players, embedded iframes. Exempts both
- * clicks landing inside the region and clicks whose press began inside it (e.g. a drag that releases on the
- * post body), since {@link BlockLink} gates navigation on the press origin, not just the release target.
+ * spread onto any element to exempt clicks within it from {@link BlockLink} row navigation. useful for regions
+ * that handle their own clicks but are not semantic links or buttons.
  */
 export const noRowLink = { 'data-no-row-link': '' };
 
@@ -39,9 +37,8 @@ type BlockLinkProps = {
 	/** An in-app route path, e.g. `/profile/alice/post/abc`. Must start with a single `/`. */
 	to: string;
 	/**
-	 * When set, the row itself becomes a focusable `role="link"` with this accessible name (Enter activates).
-	 * Use it where the row is the only way to reach the target; omit it where inner links already provide
-	 * keyboard/AT access (e.g. a feed item's timestamp link), to avoid an extra empty tab stop.
+	 * makes the row a focusable link with the specified accessible name, activated by Enter. omit if inner
+	 * links already provide keyboard/AT access to avoid redundant tab stops.
 	 */
 	label?: string;
 	className?: string;
@@ -52,15 +49,11 @@ type BlockLinkProps = {
 };
 
 /**
- * A web-native clickable post-row region: navigates to `to` when its body is clicked, while letting nested
- * interactive elements and portalled popups (Base UI menus/dialogs) behave normally.
+ * navigates to `to` when its child is clicked, while allowing nested interactive elements and portalled
+ * popups to behave normally.
  *
- * Renders no element of its own — it clones its single child (which must be a DOM element) and attaches the
- * press behavior, keyboard/AT affordances, and forwarded ref/className directly to it, so the child's own box
- * is the row. The click handler checks DOM containment: a portalled menu item is a React (fiber) descendant
- * of the row but not a DOM descendant, so its bubbling click is ignored here rather than triggering
- * navigation. It also gates on the press origin (where the pointer went down), not just the release target,
- * so a drag out of an interactive sub-region onto the row body doesn't navigate.
+ * clones its single child to attach press behavior, keyboard/AT affordances, and forwarded refs/classnames
+ * without rendering a wrapper element.
  */
 export function BlockLink({
 	children,

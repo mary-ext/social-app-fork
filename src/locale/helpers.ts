@@ -8,8 +8,8 @@ import { LOCALE } from './intl/locale';
 import { type Language, LANGUAGES_MAP, langCode } from './languages';
 
 /**
- * Minimum top-candidate probability for a from-text detection to count. Below this the detector is just
- * picking the tallest blade of grass in low-signal noise, so we treat the post's language as undetermined.
+ * minimum top-candidate probability for a from-text detection to count. below this, the post's language is
+ * treated as undetermined.
  */
 const DETECTION_FLOOR = 0.2;
 

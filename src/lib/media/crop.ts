@@ -1,9 +1,8 @@
 export type CropResult = [offsetX: number, offsetY: number, width: number, height: number];
 
 /**
- * compute the placement of an image so it fills (covers) a target box, cropping the overflowing axis. the
- * returned rect is the source image's draw position and size, centered, in the target box's coordinate
- * space.
+ * compute the placement of an image to cover a target box, cropping the overflow. returns the source image's
+ * centered draw rect.
  *
  * @param pW target box width
  * @param pH target box height

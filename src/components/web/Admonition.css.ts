@@ -4,8 +4,9 @@ import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
 
 /**
- * A bordered callout box whose accent border tracks its `type`. Unlayered: `className` is the only escape
- * hatch and is rare enough not to need the `components`-layer override dance.
+ * bordered callout box whose accent border tracks its `type`.
+ *
+ * @param className escape hatch for custom styling
  */
 export const outer = recipe(
 	{

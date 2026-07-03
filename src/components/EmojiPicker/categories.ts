@@ -20,10 +20,7 @@ type EmojiCategory = {
 	label: () => string;
 };
 
-/**
- * the picker's sections in display order: `recent` first, then the `@emoji-mart/data` categories in their
- * fixed order. each carries the icon shown in the nav bar and the descriptor for its header label.
- */
+/** picker's sections in display order: `recent` followed by `@emoji-mart/data` categories. */
 export const CATEGORIES = [
 	{ icon: ClockIcon, key: 'recent', label: m['common.status.recentlyUsed'] },
 	{ icon: EmojiIcon, key: 'people', label: m['components.emojiPicker.category.smileysPeople'] },

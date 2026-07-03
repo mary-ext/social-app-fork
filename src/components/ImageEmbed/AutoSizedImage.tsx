@@ -24,8 +24,10 @@ export type AutoSizedImageProps = {
 };
 
 /**
- * A single post image. It keeps its own aspect ratio — `constrained` (feed) caps the height, `none` (thread
- * anchor) doesn't, and `square` cover-crops to a compact 1:1 quote thumbnail. Clicking opens the lightbox.
+ * renders a single post image that preserves its aspect ratio and opens a lightbox on click.
+ *
+ * @param ratio determines the layout constraint: 'constrained' caps the height, 'none' does not cap the
+ *   height, and 'square' crops to a 1:1 ratio.
  */
 export function AutoSizedImage({
 	image,

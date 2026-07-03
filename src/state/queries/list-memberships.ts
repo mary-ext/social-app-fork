@@ -24,13 +24,7 @@ export type ListWithMembership = AppBskyGraphGetListsWithMembership.ListWithMemb
 const RQKEY_WITH_MEMBERSHIP_ROOT = 'lists-with-membership';
 export const RQKEY_WITH_MEMBERSHIP = (actor?: string) => [RQKEY_WITH_MEMBERSHIP_ROOT, actor];
 
-/**
- * Fetches the signed-in user's curate and moderation lists, each annotated with the given actor's membership,
- * via the server-side `getListsWithMembership` endpoint.
- *
- * All pages are accumulated: the server applies its purpose filter after pagination, so individual pages may
- * come back empty while still carrying a cursor.
- */
+/** fetches the signed-in user's curate and moderation lists, each annotated with the given actor's membership. */
 export function useListsWithMembershipQuery({
 	actor,
 	enabled = true,

@@ -61,8 +61,8 @@ export type TriggerProps = {
 	 */
 	label?: string;
 	/**
-	 * Replaces the default themed button with a custom web-native element (e.g. `web/Button`). Prefer the
-	 * children form for the common case; reach for `render` only to supply a custom trigger element.
+	 * replaces the default themed button with a custom web-native element. prefer the children form for the
+	 * common case; reach for `render` only to supply a custom trigger element.
 	 */
 	render?: BaseSelect.Trigger.Props['render'];
 };
@@ -113,11 +113,7 @@ export type ContentProps<T> = {
 	align?: 'center' | 'end' | 'start';
 	/** The options to render. Recommended shape `{ label, value }`; otherwise pass `valueExtractor`. */
 	items: T[];
-	/**
-	 * Stretch the popup to at least the trigger's width (default). Pass `false` to size it to its content
-	 * instead — for a wide trigger (e.g. a full-row settings select) that shouldn't drag the popup out to
-	 * match.
-	 */
+	/** stretch the popup to at least the trigger's width. pass `false` to size it to its content instead. */
 	matchTriggerWidth?: boolean;
 	/** Renders one option; receives the current selection so an item can style itself against it. */
 	renderItem: (item: T, index: number, selectedValue: string | null) => ReactElement;

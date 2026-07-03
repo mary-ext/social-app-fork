@@ -5,10 +5,9 @@ import { clsx } from 'clsx';
 import * as css from './PostLayout.css';
 
 /**
- * The shared structural layout kit for every post surface (feed, linear/tree thread, focused anchor). These
- * are dumb, children-based primitives: they hold no post data and own no spacing of their own — each surface
- * composes them and supplies its own rhythm. Consume as `import * as PostLayout from
- * '#/components/PostLayout'`.
+ * shared structural layout kit for post surfaces (feed, linear/tree thread, focused anchor). these are
+ * children-based primitives that hold no post data and own no spacing of their own. consume as `import * as
+ * PostLayout from '#/components/PostLayout'`.
  */
 
 type DivProps = HTMLAttributes<HTMLDivElement> & { ref?: Ref<HTMLDivElement> };
@@ -25,8 +24,9 @@ export interface FrameProps extends DivProps {
 }
 
 /**
- * The outer clickable post row. Forwards `className`/`ref` and any other props (so a wrapping `GalleryBleed`
- * or `BlockLink` can clone it and attach measurement / press behaviour to this div).
+ * outer clickable post row that forwards `className`, `ref`, and other props.
+ *
+ * @param props props forwarded to the outer div
  */
 export function Frame({ children, className, hoverable, rootPad, topBorder, ...rest }: FrameProps) {
 	return (

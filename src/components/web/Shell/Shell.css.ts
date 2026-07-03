@@ -9,16 +9,14 @@ import { zIndex } from '#/styles/tokens.css';
 const CENTER_COLUMN_FRAME = CENTER_COLUMN_WIDTH + 2;
 
 /**
- * The bottom bar's measured height (or 0 when no bar), published by `WebShell` onto the shell root. Lets
- * screens and fixed overlays clear the in-flow bar without a hardcoded inset; consume via `fallbackVar`.
+ * the bottom bar's measured height (or 0 when no bar), published by `WebShell` onto the shell root. allows
+ * screens and fixed overlays to clear the in-flow bar without a hardcoded inset; consume via `fallbackVar`.
  */
 export const bottomBarHeightVar = createVar();
 
 /**
- * Full-height flex column the `<body>` scrolls. Holds the horizontal rail/center grid plus the in-flow bottom
- * bar. `flex-shrink: 0` lets it grow past the viewport with the in-flow screen so the body scrolls and the
- * sticky rails/bar get a tall containing block; `min-height: 100dvh` keeps the bar at the viewport bottom on
- * short pages.
+ * a full-height flex column that allows the `<body>` to scroll. holds the horizontal rail/center grid plus
+ * the in-flow bottom bar.
  */
 export const root = style({
 	display: 'flex',
@@ -29,13 +27,13 @@ export const root = style({
 });
 
 /**
- * Nav-rail + center-column track set. Equal `1fr` side tracks keep the center column viewport-centered
- * (matching upstream) at widths where both rails fit; the implicit `minmax(auto, 1fr)` lets a rail force its
- * track wider than its share — shrinking the opposite track and shifting the column over — only when it
- * genuinely needs the room (the tablet band, where the right rail is wider than the minimal left rail). The
- * center track fills the viewport below the mobile breakpoint and caps at the column frame above it. `flex: 1
- * 0 auto` fills the viewport on short pages but keeps the grid at its content height on long pages so the
- * rails can stick.
+ * nav-rail and center-column track set.
+ *
+ * use equal `1fr` side tracks to keep the center column viewport-centered when both rails fit. implicit
+ * `minmax(auto, 1fr)` allows a rail to expand its track and shift the column when needed (e.g., tablet band).
+ * the center track fills the viewport below the mobile breakpoint and caps at the column frame above it. uses
+ * `flex: 1 0 auto` to fill the viewport on short pages while keeping the grid at content height on long pages
+ * so rails can stick.
  */
 export const body = style({
 	display: 'grid',
@@ -50,11 +48,7 @@ export const body = style({
 	},
 });
 
-/**
- * Sticky nav rail. `max-height: 100dvh` (not `height`) keeps it at its content height so it never forces the
- * grid row taller than the center column; it pins at the top and scrolls internally only when its own content
- * overflows the viewport. Sizes to its content and hugs the center column (`justify-self` set per side).
- */
+/** sticky nav rail. pins at the top and scrolls internally only when its own content overflows the viewport. */
 export const rail = style({
 	alignSelf: 'start',
 	display: 'flex',
@@ -66,11 +60,7 @@ export const rail = style({
 	top: 0,
 });
 
-/**
- * Left rail hugs the right edge of its track (against the center column). Scrolling makes it a scroll
- * container with 0 horizontal min-content, so its `min-width` is pinned to its content — the `1fr` track
- * grows to fit it rather than the rail overflowing.
- */
+/** pins the min-width of the left rail to its content when scrolling, preventing overflow in the 1fr track */
 export const railLeft = style({
 	justifySelf: 'end',
 	minWidth: 'max-content',
@@ -131,11 +121,8 @@ export const bodyFixed = style({
 });
 
 /**
- * Size the center cell to the split view (its width is definite) and viewport-center it, then nudge the whole
- * column — minimal nav included, so the nav stays glued to the chat list — right by `halfLeftNavWidth/2` (or
- * `halfLeftNavWidth` in the tablet band, where the split view is narrower) to balance the nav, matching
- * upstream. Wrapped in media queries so it wins over `body`'s `@media` 602 track (VE emits media rules
- * last).
+ * size the center cell to the split view, center it in the viewport, and nudge the column right to balance
+ * the nav, matching upstream. wrapped in media queries to override `body` rules.
  */
 export const bodyWide = style({
 	'@media': {

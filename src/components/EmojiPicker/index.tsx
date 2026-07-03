@@ -54,8 +54,8 @@ export function useEmojiPickerHandle(): EmojiPickerHandle {
 }
 
 /**
- * Emoji picker on Base UI `Popover` — opens above a Base UI dialog (non-modal, zIndex 11). On select, emits
- * an `emojiInserted` event for web text inputs plus the optional `onEmojiSelect`.
+ * emoji picker that opens in a popover. emits an `emojiInserted` event and triggers the optional
+ * `onEmojiSelect` callback when an emoji is selected.
  */
 export function Root({ children, handle, onEmojiSelect, preloadOnMount = true, nextFocusRef }: RootProps) {
 	useWebPreloadEmoji({ immediate: preloadOnMount });

@@ -36,7 +36,7 @@ export function getValidLiveStatusRecord(statusRecord: unknown): AppBskyActorSta
 }
 
 /**
- * Extracts the external link URI from a status record's embed.
+ * extracts the external link URI from a status record's embed.
  *
  * @param statusRecord the raw record value carried on a status view
  * @returns the external link URI, or an empty string when the record is invalid or carries no external embed
@@ -63,8 +63,10 @@ const serviceUrlToNameMap: Record<string, string> = {
 };
 
 /**
- * Checks whether `hostname` is covered by the allowlist. A host matches an entry when it equals the entry or
- * is a subdomain of it, so `m.twitch.tv` matches `twitch.tv` while `twitch.tv.evil.com` does not.
+ * checks whether a hostname is covered by the allowlist. a host matches when it equals the entry or is a
+ * subdomain of it.
+ *
+ * @param hostname the hostname to check against the allowlist
  */
 function hostMatchesAllowlist(hostname: string, allowedHosts: Set<string>): boolean {
 	for (const allowed of allowedHosts) {
@@ -76,10 +78,9 @@ function hostMatchesAllowlist(hostname: string, allowedHosts: Set<string>): bool
 }
 
 /**
- * Checks whether `url`'s host is permitted by an allowlist of apex domains. The allowlist holds apex domains,
- * so matching is a plain equality/subdomain check — no public-suffix lookup needed.
+ * checks whether a URL's host is permitted by an allowlist of apex domains.
  *
- * @param url live status URL to check
+ * @param url URL to check
  * @param allowedHosts allowlist of apex domains
  * @returns whether the URL's host is allowed; false for unparseable URLs
  */

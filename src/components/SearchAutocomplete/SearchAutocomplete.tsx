@@ -56,10 +56,7 @@ import { Row } from './Row';
 import { useSearchHistory } from './search-history';
 import * as styles from './SearchAutocomplete.css';
 
-/**
- * the query for default-mode profile typeahead: the free text, or empty once any operator filter is present
- * (the user is composing a post search, not navigating to a profile).
- */
+/** query for default-mode profile typeahead: the free text, or empty once any operator filter is present */
 const defaultProfileQuery = (tokens: Token[]): string => {
 	const [remains, filters] = splitFilters(tokens);
 	if (filters.size > 0) {
@@ -120,19 +117,13 @@ type SearchAutocompleteFieldProps = SearchAutocompleteProps & {
 };
 
 /**
- * a search entry point. while idle it renders a cheap placeholder field, so none of the autocomplete's hooks,
- * history reads, or typeahead fetches run until the user actually engages search. the first focus (click,
- * tab, or the `/` hotkey) mounts {@link ActiveSearchAutocomplete} and hands focus to its input; once activated
- * it stays mounted, since search is touched rarely and keeping it warm avoids re-hydrating recents on every
- * reopen. the right rail uses this idle form; pass `eager` to skip straight to the live field (the search
- * screen, which mounts already populated from the URL).
+ * a search entry point that lazily mounts the autocomplete search field on first engagement unless eager.
  *
- * @param eager mount the live field at once, seeded but unfocused, instead of the lazy placeholder
- * @param initialQuery text to seed the live field with (and re-seed on change)
- * @param onNavigate navigates to an in-app route path (a profile, post, or other record matched from the
- *   query text)
- * @param onNavigateToProfile opens a profile chosen from the default typeahead
- * @param onSubmit runs a search for the given query
+ * @param eager mount the live field immediately instead of the lazy placeholder
+ * @param initialQuery text to seed the live field with
+ * @param onNavigate callback to navigate to an in-app route path
+ * @param onNavigateToProfile callback to open a profile chosen from the typeahead
+ * @param onSubmit callback to run a search for the query
  * @param placeholder placeholder shown while the field is empty
  */
 export function SearchAutocomplete({
@@ -179,11 +170,8 @@ export function SearchAutocomplete({
 }
 
 /**
- * the live search field: a Base UI Autocomplete whose floating popup parses the query at the caret and
- * switches between a default view (search + profile typeahead + operator options), an actor list
- * (`from:`/`to:`/`mentions:`), and a calendar grid (`since:`/`until:`). the calendar shares the input and its
- * keyboard navigation by toggling the `grid` layout in place rather than remounting, so focus is never lost.
- * mounted on demand by {@link SearchAutocomplete}; it claims focus on mount when `autoFocus` is set.
+ * live search field that parses the query at the caret to switch between a default search/operator view, an
+ * actor list, and a calendar grid.
  */
 function ActiveSearchAutocomplete({
 	autoFocus,

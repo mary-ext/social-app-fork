@@ -51,11 +51,7 @@ export const item = style([
 /** Aspect ratio (width / height) of a lone tile, driving its shape and width cap. */
 export const ratioVar = createVar();
 
-/**
- * A lone image tile. Unlike the scrolling strip it sits in the content column at its own ratio, capped at
- * {@link MAX_MEDIA_HEIGHT} tall — mirroring the read-only single-image embed so the preview matches the
- * post.
- */
+/** a lone image tile capped at {@link MAX_MEDIA_HEIGHT} tall, mirroring the read-only single-image embed. */
 export const single = style([
 	mediaBorder,
 	{

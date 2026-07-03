@@ -10,8 +10,8 @@ import { m } from '#/paraglide/messages';
 import * as styles from './ComposerError.css';
 
 /**
- * Wraps a stack of {@link Box} error callouts, owning their shared outer padding and spacing. Renders nothing
- * when it has no boxes, so callers can drop conditional boxes straight in.
+ * wraps a stack of {@link Box} error callouts, owning their shared outer padding and spacing. renders nothing
+ * when it has no boxes.
  */
 export function Root({ children }: { children: ReactNode }) {
 	return <div className={styles.list}>{children}</div>;

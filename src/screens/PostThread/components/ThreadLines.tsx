@@ -3,9 +3,8 @@ import { clsx } from 'clsx';
 import * as css from './ThreadLines.css';
 
 /**
- * The tree-thread reply lines: ancestor indent guides, the L-shaped connector into a nested post, and the
- * outgoing child line below an inline avatar. Each is drawn with box borders so the joins stay crisp; the
- * caller places them at the right point in the row.
+ * tree-thread reply lines including ancestor indent guides, the L-shaped connector, and the outgoing child
+ * line.
  */
 
 /** The leading column of ancestor vertical lines, one per indent level. */

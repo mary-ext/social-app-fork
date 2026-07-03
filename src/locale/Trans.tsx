@@ -124,11 +124,12 @@ const renderParts = (parts: MessagePart[], markup: Record<string, AnyRenderer>):
 };
 
 /**
- * Renders a paraglide message that interleaves React components. `inputs` and `markup` are typed against
- * `message`: pass the message's variables as `inputs`, and a renderer per markup tag (keys match the `{#tag}`
- * names, e.g. `t0`) as `markup`.
+ * renders a paraglide message that interleaves React components.
  *
- * @returns The message rendered with each markup tag mapped through `markup`.
+ * @param message the paraglide message function
+ * @param inputs the message's variables
+ * @param markup renderers for each markup tag in the message
+ * @returns the rendered message
  */
 export const Trans = <M extends Message>(props: TransProps<NoInfer<M>> & { message: M }): ReactNode => {
 	const { message } = props;

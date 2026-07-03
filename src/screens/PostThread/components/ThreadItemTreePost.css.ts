@@ -10,18 +10,13 @@ import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 /**
- * Vertical body padding. The boundary between two root-level reply subtrees (where the outer row border sits)
- * gets the looser value on both sides — `LOOSE` top on the bordered post that opens a subtree, `LOOSE` bottom
- * on the last child that closes the one above. Everywhere else uses `TIGHT`.
+ * vertical body padding. uses `LOOSE` at the boundary between root-level reply subtrees and `TIGHT`
+ * elsewhere.
  */
 const PADDING_TIGHT = 8;
 const PADDING_LOOSE = 12;
 
-/**
- * Tree-thread layout. The reply lines (indent guides, connector, child line) live in `./ThreadLines`; this
- * file owns the indented row structure, body columns, and deleted-post chrome. The tree's layout is
- * row-oriented and avatar-in-meta, so it doesn't share `#/components/PostLayout`'s column primitives.
- */
+/** tree-thread layout. owns the indented row structure, body columns, and deleted-post chrome. */
 
 /** The post row; GalleryBleed measures this host and clips the image-carousel bleed to it. */
 export const outerRow = style({
@@ -72,9 +67,8 @@ export const innerWrapperBordered = style({
 });
 
 /**
- * The post hover target; tints translucently behind content so text stays crisp. Sits inside the
- * (overflow-clipped) GalleryBleed row as `flex: 1`, so it needs `min-width: 0` — otherwise it grows to the
- * gallery's intrinsic width, which the bleed re-measures and feeds back into an unbounded width loop.
+ * tints translucently behind content so text stays crisp on hover. sits inside the gallery bleed row and
+ * requires min-width to avoid feedback loops.
  */
 export const hoverable = style({
 	boxSizing: 'border-box',
@@ -161,11 +155,7 @@ export const deletedSpacer = style({
 	height: OUTER_SPACE / 2,
 });
 
-/**
- * Loading-skeleton box: the live item's bordered `outerRow` + `innerWrapper`, minus the ancestor indent
- * guides a skeleton has no tree to draw. Keeps the 16px horizontal gutter; the body column carries the bottom
- * pad.
- */
+/** loading-skeleton box. keeps the 16px horizontal gutter; the body column carries the bottom padding. */
 export const skeleton = style({
 	borderTopColor: colors.borderContrastLow,
 	borderTopStyle: 'solid',

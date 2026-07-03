@@ -72,8 +72,8 @@ export function Group({
 }
 
 /**
- * A checkbox toggle. Pass `name` to enrol it in the surrounding {@link Group}; pass `checked`/`onChange` to
- * drive it standalone. Enrolled items auto-disable once the group's `maxSelections` cap is reached.
+ * checkbox toggle. pass `name` to enrol it in the surrounding {@link Group}; pass `checked`/`onChange` to
+ * drive it standalone. enrolled items auto-disable once the group's `maxSelections` cap is reached.
  */
 export function Item({
 	name,
@@ -144,8 +144,9 @@ export function PanelGroup({ children }: { children: ReactNode }) {
 }
 
 /**
- * The themed surface inside a toggle. Inside an {@link Item}/{@link RadioItem} the active styling tracks the
- * toggle; pass `active` to drive it directly (e.g. a non-toggle expander row).
+ * themed surface inside a toggle
+ *
+ * @param active drives active styling directly (e.g. a non-toggle expander row)
  */
 export function Panel({
 	active,

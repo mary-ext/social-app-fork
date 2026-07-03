@@ -82,8 +82,9 @@ function AnchorControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps
 }
 
 /**
- * The enlarged post action bar used on the focused thread anchor. It omits the per-control counts — the
- * anchor surfaces those in its own stats row — and owns its own button chrome separately from the compact
+ * enlarged post action bar used on the focused thread anchor.
+ *
+ * this bar omits per-control counts and manages its own button chrome separately from the compact
  * {@link PostControls}.
  */
 function AnchorPostControls({

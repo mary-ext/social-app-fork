@@ -21,9 +21,11 @@ const gtPhone = 'screen and (min-width: 500px)';
 // #region article card
 
 /**
- * The whole article body (thumb + text + inline meta) is one link. Hovering it lights the entire card — its
- * own tint, the footer tint, and the card border all key off this link's hover. Hovering the footer instead
- * lights nothing and only underlines the publication name.
+ * represents the main clickable area of the article card, containing the thumbnail, text, and inline
+ * metadata.
+ *
+ * hovering this element triggers the active hover state for the entire card (background tint, footer tint,
+ * and border).
  */
 export const bodyLink = style({
 	boxSizing: 'border-box',
@@ -261,9 +263,8 @@ export const footer = style({
 });
 
 /**
- * Absolute-fill link covering the footer; navigates to the publication and underlines its name on hover. A
- * mouse-only affordance (`tabIndex -1`) — the always-present "View publication" button is the keyboard path
- * to the same destination — so it carries no focus ring of its own.
+ * absolute-fill link covering the footer that navigates to the publication and underlines its name on hover.
+ * intended as a mouse-only affordance (tabIndex -1) and does not receive focus.
  */
 export const footerFill = style({
 	bottom: 0,

@@ -8,13 +8,10 @@ let state: State = 'idle';
 let loadPromise: Promise<void> | undefined;
 
 /**
- * Loads the language-detection model weights. Idempotent — repeated calls share a single in-flight load, and
- * a failed load resets so a later call can retry.
+ * loads the language-detection model weights. repeated calls share a single in-flight load, and a failed load
+ * resets to allow retrying.
  *
- * Weights (~27 kB) are fetched lazily to keep them out of the initial bundle, so callers should kick this off
- * early to have detection ready by first use.
- *
- * @returns a promise that resolves once weights are ready, or once a load attempt has failed
+ * @returns promise that resolves when weights are ready or when a load attempt fails.
  */
 export const initializeLanguageDetection = (): Promise<void> => {
 	if (!loadPromise) {
@@ -33,14 +30,11 @@ export const initializeLanguageDetection = (): Promise<void> => {
 };
 
 /**
- * Detects the languages present in `text`, sorted by probability descending.
- *
- * Detection is synchronous but depends on lazily-loaded weights: the first call triggers loading and returns
- * an empty array, as does any call before loading completes. Callers must treat an empty result as
- * "undetermined".
+ * detects the languages present in `text`, sorted by probability descending. returns an empty array if
+ * weights are not yet loaded or if the language is undetermined.
  *
  * @param text text to analyze
- * @returns probability-sorted detections, or an empty array when weights are not yet loaded
+ * @returns probability-sorted detections, or an empty array
  */
 export const detectLanguages = (text: string): Detection[] => {
 	if (state === 'ready') {
@@ -53,10 +47,7 @@ export const detectLanguages = (text: string): Detection[] => {
 };
 
 /**
- * Detects the languages present in `text`, waiting for the weights to load first.
- *
- * Unlike {@link detectLanguages}, this never returns empty merely because loading is still in flight — it
- * awaits the load and then detects. An empty array means either genuine "undetermined" or a failed load.
+ * detects the languages present in `text`, waiting for the weights to load first.
  *
  * @param text text to analyze
  * @returns probability-sorted detections, or an empty array when detection is undetermined or weights failed

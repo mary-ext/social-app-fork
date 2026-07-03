@@ -60,11 +60,10 @@ export function Default({
 }
 
 /**
- * Resolves a feed generator by its at-uri and renders a compact, non-link card framed for embedding inside
- * another surface (e.g. a notification row). Shows a loading placeholder while resolving and a
- * {@link MissingFeed} fallback if the feed can't be loaded.
+ * resolves a feed generator by its AT-URI and renders a compact, non-link card for embedding inside another
+ * surface. shows a loading placeholder while resolving and a fallback if the feed cannot be loaded.
  *
- * @param uri the feed generator's at-uri
+ * @param uri feed generator AT-URI
  */
 export function ByUri({ uri }: { uri: string }) {
 	const { data: feed, error } = useFeedSourceInfoQuery({ uri });
@@ -271,14 +270,10 @@ const DEFAULT_LOADING_ROW_COUNT = 3;
 const MAX_LOADING_ROW_COUNT = 10;
 
 /**
- * A stack of feed-card placeholders for the loading state, mirroring {@link Default}'s layout (avatar,
- * title/byline, save pill, description, like count) so it sits on the same rhythm as the real cards.
+ * stack of feed-card placeholders for the loading state.
  *
- * @param count number of placeholder rows; callers should pass the known feed-generator count when available
- *   (e.g. `profile.associated.feedgens`). Defaults to a small value and is capped so large counts don't
- *   render excessive rows.
- * @param topBorder whether the first row carries a top divider (later rows always do); set it when the
- *   placeholder sits directly beneath a borderless header, like the real cards do. Defaults to `false`.
+ * @param count number of placeholder rows.
+ * @param topBorder whether the first row carries a top divider.
  */
 export function LoadingPlaceholder({
 	count,

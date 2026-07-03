@@ -39,9 +39,5 @@ export const CHAT_PROXY_AUDIENCE = import.meta.env.PUBLIC_CHAT_PROXY_AUDIENCE as
 export const BSKY_LABELER_PROXY_AUDIENCE = import.meta.env
 	.PUBLIC_BSKY_LABELER_PROXY_AUDIENCE as AtprotoAudience;
 
-/**
- * Bare DID of the video service (e.g. `did:web:video.bsky.app`). Unlike the other proxy envs this is _not_ an
- * `aud#service-id` audience — the video service authenticates by short-lived service-auth token (not the
- * `atproto-proxy` header), and `com.atproto.server.getServiceAuth`'s `aud` argument is scoped to a DID.
- */
+/** bare DID of the video service (e.g. `did:web:video.bsky.app`). */
 export const VIDEO_PROXY_DID = import.meta.env.PUBLIC_VIDEO_PROXY_DID as Did;

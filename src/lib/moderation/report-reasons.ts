@@ -1,13 +1,7 @@
 import type { ComAtprotoModerationDefs } from '@atcute/atproto';
 import type { ToolsOzoneReportDefs } from '@atcute/ozone';
 
-/**
- * Report-reason value constants.
- *
- * `@atcute/ozone` and `@atcute/atproto` expose report reasons only as schemas and types — there are no value
- * constants like `@atproto/api`'s `ToolsOzoneReportDefs.REASONAPPEAL`. The literal NSID strings are named
- * here, typed against `@atcute`'s `ReasonType` unions.
- */
+/** report-reason value constants typed against `@atcute`'s `ReasonType` unions. */
 
 /** `tools.ozone.report.defs` reason values — the granular reason set. */
 export const OzoneReason = {

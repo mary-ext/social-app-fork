@@ -10,10 +10,7 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './ClampedPostText.css';
 
-/**
- * Post rich text that clamps to {@link MAX_POST_LINES} when it would overflow, revealing the rest behind a
- * show-more button. Shared by the feed, standalone, and thread post surfaces.
- */
+/** post rich text that clamps to {@link MAX_POST_LINES} and reveals the rest behind a show-more button */
 export function ClampedPostText({ authorHandle, richText }: { authorHandle: string; richText: Richtext }) {
 	const [limitLines, setLimitLines] = useState(() => countLines(richText.text) >= MAX_POST_LINES);
 

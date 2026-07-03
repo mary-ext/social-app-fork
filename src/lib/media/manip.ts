@@ -1,13 +1,10 @@
 import { convertCdnPreset } from './util';
 
 /**
- * Saves an image to the user's device. Uses the CDN's `download` preset which uses the JPEG version with the
- * Content-Disposition header set to `attachment; filename=<filename>`. On native this saves to the media
- * library; on web it triggers a browser download.
+ * saves an image to the user's device. on native, this saves to the media library; on web, it triggers a
+ * browser download.
  *
- * @returns a promise that rejects if the download setup throws; callers chain `.then`/`await` (e.g. the
- *   Lightbox failure toast), so the side effect runs inside the promise chain rather than synchronously
- *   before it
+ * @returns a promise that resolves when the download is initiated and rejects if the setup fails.
  */
 export function saveImageToMediaLibrary({ uri }: { uri: string }): Promise<void> {
 	return Promise.resolve().then(() => {

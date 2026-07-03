@@ -32,11 +32,7 @@ const base = style([
 	},
 ]);
 
-/**
- * Feed crop: the image keeps its ratio but never exceeds {@link MAX_MEDIA_HEIGHT} tall — clamping the width
- * to `height * ratio` shrinks a portrait so it caps out at that height and sits narrow, while landscape fills
- * the column.
- */
+/** crops the image to preserve its ratio while ensuring it does not exceed {@link MAX_MEDIA_HEIGHT} in height. */
 export const constrained = style([
 	base,
 	{ aspectRatio: ratioVar, width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${ratioVar}))` },

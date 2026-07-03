@@ -9,8 +9,8 @@ import { isBskyAppUrl } from '../strings/url-helpers';
 
 export interface LinkMeta {
 	/**
-	 * Strong refs (uri+cid) of the Atmosphere records backing this external content, resolved by the appview
-	 * from the standard.site `<link rel>` tags the page advertises. Example: a site.standard.document record.
+	 * strong refs (URI and CID) of the Atmosphere records backing this external content, resolved from the
+	 * standard.site `<link rel>` tags
 	 */
 	associatedRefs?: AppBskyEmbedExternal.External['associatedRefs'];
 	description?: string;

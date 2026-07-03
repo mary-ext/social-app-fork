@@ -21,8 +21,11 @@ import type { Emoji } from './types';
 import { type EmojiCell, makeCell, toSelection } from './util';
 
 /**
- * the emoji picker panel: a searchable Base UI Autocomplete grid with a category nav, a skin-tone selector,
- * and a recently-used section. reports each selection plus whether Shift was held.
+ * emoji picker panel featuring a searchable autocomplete grid, category navigation, skin-tone selector, and
+ * recently-used section.
+ *
+ * @param onSelect callback triggered when an emoji is selected, receiving the selection and whether the Shift
+ *   key was held.
  */
 export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, shiftHeld: boolean) => void }) {
 	const { data } = useQuery(emojiDataQuery());

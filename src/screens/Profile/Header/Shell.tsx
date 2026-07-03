@@ -23,8 +23,10 @@ import { useProfileHeader } from './Context';
 import * as css from './Shell.css';
 
 /**
- * The fixed profile-header scaffold: banner with back button, the overlapping avatar with its live ring, and
- * the moderation alerts. Variants pass the header body as `children`.
+ * profile-header scaffold displaying a banner with a back button, an overlapping avatar with a live ring, and
+ * moderation alerts.
+ *
+ * @param children header body
  */
 export function ProfileHeaderShell({ children }: { children: React.ReactNode }): React.ReactNode {
 	const {

@@ -33,9 +33,9 @@ type Props = ComponentProps<typeof BlockLink> & {
 };
 
 /**
- * Web-native moderation gate for a whole post row: renders the post (a {@link BlockLink}) when nothing blurs
- * it, otherwise a warning row whose icon opens the moderation-details dialog and whose `Show` reveals the
- * post. `noOverride` causes can't be revealed — only the dialog is reachable.
+ * moderation gate for a post row that renders the post or a warning row.
+ *
+ * @param noOverride prevents revealing the post, allowing only the details dialog.
  */
 export function PostHider({
 	to,

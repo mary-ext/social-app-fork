@@ -32,9 +32,8 @@ export type RootProps<Payload = unknown> = {
 	children?: ReactNode | ((bag: { payload: Payload | undefined }) => ReactNode);
 	handle?: DialogHandle<Payload>;
 	/**
-	 * Stable id under which this dialog registers in the shared `state/dialogs` registry. Pass an explicit id
-	 * when callers need to reference it (e.g. `closeAllDialogs({ except: [id] })`); defaults to a generated
-	 * one.
+	 * stable id under which this dialog registers in the shared registry. pass an explicit id when callers need
+	 * to reference it; defaults to a generated one.
 	 */
 	id?: string;
 	/** Prevent clicks outside the popup from dismissing it (the close button and Escape still work). */

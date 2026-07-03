@@ -5,9 +5,10 @@ import * as ChatInvite from '#/components/dms/ChatInvite';
 import * as css from './JoinRequestEmbed.css';
 
 /**
- * The "join request" presentation of a chat invite, used as a post embed: the loading / no-longer-available /
- * card + join button states. The caller owns resolving the invite (via {@link ChatInvite.useChatInvite}) and
- * passes the derived state in, so it can fall back to a plain link on error.
+ * presentation of a chat invite join request used as a post embed. displays loading, unavailable, or card and
+ * join button states.
+ *
+ * @param invite the resolved invite or error state
  */
 export function JoinRequestEmbedBody({
 	status,

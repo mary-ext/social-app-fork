@@ -3,10 +3,9 @@ import * as Toast from '#/components/Toast';
 import { m } from '#/paraglide/messages';
 
 /**
- * This function shares a URL using the native Share API if available, or copies it to the clipboard and
- * displays a toast message if not (mostly on web)
+ * shares the url using the native Share API if available, or copies it to the clipboard as a fallback.
  *
- * @param {string} url - A string representing the URL that needs to be shared or copied to the clipboard.
+ * @param url url to be shared or copied
  */
 export function shareUrl(url: string): Promise<void> {
 	// React Native Share is not supported by web. Web Share API
@@ -22,10 +21,10 @@ export function shareUrl(url: string): Promise<void> {
 }
 
 /**
- * This function shares a text using the native Share API if available, or copies it to the clipboard and
- * displays a toast message if not (mostly on web)
+ * shares the provided text using the native Share API if available, or copies it to the clipboard as a
+ * fallback.
  *
- * @param {string} text - A string representing the text that needs to be shared or copied to the clipboard.
+ * @param text text to share or copy
  */
 export async function shareText(text: string) {
 	await navigator.clipboard.writeText(text);

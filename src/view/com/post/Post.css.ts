@@ -4,10 +4,7 @@ import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 
-/**
- * The post row; GalleryBleed measures this host and clips the image-carousel bleed to it. The bottom rhythm
- * is owned by `PostLayout` `ContentColumn`, so the outer box carries no bottom padding.
- */
+/** post row component. GalleryBleed measures this host to clip the image-carousel bleed to it. */
 export const outer = style({
 	boxSizing: 'border-box',
 	cursor: 'pointer',
@@ -30,11 +27,7 @@ export const outerBorder = style({
 	borderTopWidth: 1,
 });
 
-/**
- * The meta row: the spacing-free `PostMeta` leaf (which grows to fill) alongside the trailing overflow menu
- * pinned to the post's top-right. `display: flex` so the row hugs its content instead of inflating on the
- * font strut.
- */
+/** meta row containing the spacing-free `PostMeta` leaf and the trailing overflow menu pinned to the top-right */
 export const metaSpacing = style({
 	alignItems: 'center',
 	display: 'flex',

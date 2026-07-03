@@ -13,10 +13,10 @@ export type ConvoCacheSnapshot = {
 };
 
 /**
- * Writes an optimistic update to a convo across both the single-convo and convo-list caches. The updater
- * receives the current ConvoView and returns the next one - return undefined to bail out (e.g. when the
- * convo's kind doesn't match what the mutation requires). Returns a snapshot that can be passed to
- * `rollbackConvoOptimistic`.
+ * writes an optimistic update to a convo across both the single-convo and convo-list caches.
+ *
+ * @param updater receives the current ConvoView and returns the next one, or undefined to bail out.
+ * @returns a snapshot that can be passed to `rollbackConvoOptimistic`.
  */
 export function updateConvoOptimistic(
 	queryClient: QueryClient,

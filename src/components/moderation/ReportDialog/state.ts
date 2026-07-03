@@ -32,10 +32,7 @@ export const initialState: ReportState = {
 	details: '',
 };
 
-/**
- * Maps a state to its visible step. The `other` category has a single implicit reason and is committed
- * straight to the form by {@link reducer}, so a category without a reason always means the reason list.
- */
+/** maps a state to its visible step. a category without a reason maps to the reason list. */
 export function stepFor(state: ReportState): ReportStep {
 	if (!state.category) {
 		return 'categories';

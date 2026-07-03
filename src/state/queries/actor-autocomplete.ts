@@ -65,16 +65,12 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 }
 
 /**
- * actor typeahead for the search bar's `from:`/`to:`/`mentions:` completion. unlike
- * {@link useActorAutocompleteQuery}, an empty query resolves to `self` (the signed-in account) rather than
- * nothing. because that empty state shares one query-cache continuum with the typed-prefix searches,
- * `keepPreviousData` bridges the jump from `from:` to `from:<first char>` — the popup keeps showing the prior
- * suggestion while the first search loads instead of flashing an empty list.
+ * query actor suggestions for search bar autocomplete. returns the current user when the query is empty.
  *
  * @param limit max suggestions to request
- * @param query the handle fragment after the operator (empty while the operator alone is typed)
- * @param self the profile to surface when nothing is typed yet, or undefined to surface nothing
- * @returns the moderated suggestion list query
+ * @param query search query or handle fragment
+ * @param self profile to return when the query is empty
+ * @returns moderated suggestion list query
  */
 export function useSearchActorAutocompleteQuery({
 	limit,

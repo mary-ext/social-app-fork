@@ -53,13 +53,7 @@ export function threadgateRecordToAllowUISetting(
 	return settings;
 }
 
-/**
- * Converts an array of {@link ThreadgateAllowUISetting} to the `allow` prop on
- * {@link AppBskyFeedThreadgate.Main}.
- *
- * If the `allow` property on the record is undefined, we infer that to mean that everyone can reply. If it's
- * an empty array, we infer that to mean that no one can reply.
- */
+/** converts threadgate allow UI settings to the AppBskyFeedThreadgate.Main allow prop */
 export function threadgateAllowUISettingToAllowRecordValue(
 	threadgate: ThreadgateAllowUISetting[],
 ): AppBskyFeedThreadgate.Main['allow'] {
@@ -90,11 +84,12 @@ export function threadgateAllowUISettingToAllowRecordValue(
 }
 
 /**
- * Merges two {@link AppBskyFeedThreadgate.Main} objects, combining their `allow` and `hiddenReplies` arrays
- * and de-deduplicating them.
+ * merges two {@link AppBskyFeedThreadgate.Main} objects, combining and deduplicating their `allow` and
+ * `hiddenReplies` arrays.
  *
- * Note: `allow` can be undefined here, be sure you don't accidentally set it to an empty array. See other
- * comments in this file.
+ * @param a first threadgate object
+ * @param b second threadgate object
+ * @returns the merged threadgate object
  */
 export function mergeThreadgateRecords(
 	prev: AppBskyFeedThreadgate.Main,

@@ -12,8 +12,10 @@ import * as toast from '#/components/Toast';
 import { m } from '#/paraglide/messages';
 
 /**
- * The save/remove-bookmark action shared by both action-bar sizes. Returns the toggle state, its accessible
- * label, and a press handler; the rendering component owns the button chrome and the filled/outline icon.
+ * shares the save/remove bookmark action between action-bar sizes, returning the toggle state, accessible
+ * label, and press handler.
+ *
+ * @returns toggle state, accessible label, and press handler.
  */
 export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 	const { mutateAsync: bookmark } = useBookmarkMutation();

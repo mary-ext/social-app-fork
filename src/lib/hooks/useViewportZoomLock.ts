@@ -6,11 +6,8 @@ const ZOOM_LOCKED_VIEWPORT =
 	'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover';
 
 /**
- * iOS Safari zooms in when a text input with `font-size < 16px` gains focus. To avoid that while still
- * allowing users to pinch-zoom for accessibility, we only pin `maximum-scale=1` while a text input is focused
- * and restore the original viewport on blur.
- *
- * Listeners run in the capture phase so we update the viewport before iOS commits to auto-zooming the input.
+ * prevents ios safari from auto-zooming on focused text inputs by temporarily pinning the viewport
+ * maximum-scale to 1.
  */
 export function useViewportZoomLock({ enabled } = { enabled: true }) {
 	useEffect(() => {

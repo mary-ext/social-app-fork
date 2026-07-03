@@ -52,10 +52,7 @@ export function optimisticDelete(convoId: string, old: ConvoRequestListQueryData
 	};
 }
 
-/**
- * Optimistically zeroes the unread count on every incoming conversation request in the request-list cache, so
- * "mark all as read" clears the inbox before the query refetches.
- */
+/** optimistically zeroes the unread count on every incoming conversation request in the request-list cache */
 export function markAllRead(old: ConvoRequestListQueryData | undefined) {
 	if (!old) return old;
 	return {
@@ -87,8 +84,8 @@ export function optimisticDeleteJoinRequest(convoId: string, old: ConvoRequestLi
 }
 
 /**
- * Yields every cached profile in the request-list — the members of incoming conversation requests and the
- * owner of each outgoing group join-request — so profile-shadow updates reach the inbox rows.
+ * yields every cached profile in the request-list (members of incoming conversation requests and the owner of
+ * each outgoing group join-request) so profile-shadow updates reach the inbox rows.
  */
 export function* findAllProfilesInQueryData(queryClient: QueryClient, did: string) {
 	const queryDatas = queryClient.getQueriesData<ConvoRequestListQueryData>({

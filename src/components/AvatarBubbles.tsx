@@ -26,17 +26,14 @@ type Layout = {
 type Props = {
 	animate?: boolean;
 	profiles: AnyProfileView[];
-	/**
-	 * By default, when there are more than 2 profiles, the current user is filtered out (so you don't see
-	 * yourself among your own group's members). Set this to `true` for cases where every passed profile should
-	 * appear, e.g. an invite preview where the owner is meaningful regardless of viewer.
-	 */
+	/** set to `true` to prevent filtering out the current user when there are more than two profiles */
 	self?: boolean;
 	size?: number;
 	/**
-	 * The true number of members, used to decide how many bubbles to render when it exceeds the number of
-	 * `profiles` we have on hand (e.g. an invite preview that only carries a few member profiles for a much
-	 * larger group). Slots without a profile render as placeholders. Defaults to `profiles.length`.
+	 * total number of members, used to determine the number of bubbles to render when it exceeds the number of
+	 * available profiles. slots without a profile render as placeholders.
+	 *
+	 * @default profiles.length
 	 */
 	count?: number;
 };

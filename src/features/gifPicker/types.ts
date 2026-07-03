@@ -1,7 +1,4 @@
-/**
- * GIF shape returned by the Bluesky GIF proxy. The field names follow the Tenor schema; Klipy responses are
- * normalized to the same shape by the proxy so downstream code can be provider-agnostic.
- */
+/** gif shape returned by the Bluesky GIF proxy. normalized to the Tenor schema. */
 export type Gif = {
 	created: number;
 	hasaudio: boolean;

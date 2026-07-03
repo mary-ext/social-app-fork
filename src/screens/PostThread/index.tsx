@@ -125,10 +125,10 @@ export function PostThread({ uri }: { uri: string }) {
 	const [deferParents, setDeferParents] = useState(true);
 
 	/**
-	 * Callback ref on the zero-size marker that sits at the top of the anchor post. The marker is keyed on the
-	 * thread params, so it remounts (and this fires) whenever they change — resetting `deferParents` to `false`
-	 * once the anchor has rendered, which then lets the parents prepend. Also serves as the measurement node
-	 * for the scroll-pinning logic.
+	 * callback ref for the marker at the top of the anchor post. triggers when thread parameters change to
+	 * reset parent deferral and serves as the measurement node for scroll pinning.
+	 *
+	 * @param node the DOM element or null
 	 */
 	const setAnchorNode = useCallback((node: HTMLDivElement | null) => {
 		anchorRef.current = node;
@@ -137,21 +137,12 @@ export function PostThread({ uri }: { uri: string }) {
 		}
 	}, []);
 
-	/**
-	 * Used to flag whether we should scroll to the anchor post. On a cold load, this is always true. And when a
-	 * user changes thread parameters, we also manually set this to true.
-	 */
+	/** whether to scroll to the anchor post. true on cold load or when thread parameters change. */
 	const shouldHandleScroll = useRef(true);
 	/**
-	 * Called any time the content size of the list changes. Could be a fresh render, items being added to the
-	 * list, or any resize that changes the scrollable size of the content.
+	 * Callback triggered when the content size of the list changes.
 	 *
-	 * We want this to fire every time we change params (which will reset `deferParents` via the remount of the
-	 * anchor marker, due to the key change), or click into a new post (which will result in a fresh
-	 * `deferParents` hook).
-	 *
-	 * The result being: any intentional change in view by the user will result in the anchor being pinned as
-	 * the first item.
+	 * Used to pin the anchor as the first item upon view changes.
 	 */
 	const onContentSizeChangeWebOnly = () => {
 		const list = listRef.current;
@@ -208,13 +199,7 @@ export function PostThread({ uri }: { uri: string }) {
 		}
 	};
 
-	/**
-	 * Called any time the user changes thread params, such as `view` or `sort`. Prepares the UI for
-	 * repositioning of the scroll so that the anchor post is always at the top after a params change.
-	 *
-	 * No need to handle max parents here, deferParents will handle that and we want it to re-render with the
-	 * same items above the anchor.
-	 */
+	/** prepares the UI to maintain the scroll position at the anchor post when thread parameters change. */
 	const prepareForParamsUpdate = () => {
 		/**
 		 * Truncate list so that anchor post is the first item in the list. Manual scroll handling is predicated
@@ -315,11 +300,7 @@ export function PostThread({ uri }: { uri: string }) {
 		}
 	}
 
-	/**
-	 * Defer rendering reply skeletons so that the anchor post (from cache) can paint without being blocked by
-	 * skeleton layout work. On mount, skeletons are filtered out. After the first render, they're added back
-	 * via a low-priority transition.
-	 */
+	/** defers rendering of reply skeletons to prevent blocking the initial paint of the cached anchor post. */
 	const [showReplySkeletons, setShowReplySkeletons] = useState(false);
 	useEffect(() => {
 		if (thread.state.isPlaceholderData && !showReplySkeletons) {
@@ -491,10 +472,8 @@ const keyExtractor = (item: ThreadItem) => {
 };
 
 /**
- * Keeps the anchor post (`depth === 0`) and its direct parent (`depth === -1`) out of the list's off-screen
- * render-skipping. The direct parent first renders below the viewport, so if its height were still estimated
- * when the anchor-pinning scroll brings it into view, its realization to full height would shove the anchor
- * down off the top of the screen.
+ * keeps the anchor post (depth 0) and its direct parent (depth -1) from skipping rendering when off-screen to
+ * prevent layout shifts when the anchor-pinning scroll brings them into view
  */
 const keepAnchorRegionRendered = (item: ThreadItem) =>
 	'depth' in item && (item.depth === 0 || item.depth === -1);

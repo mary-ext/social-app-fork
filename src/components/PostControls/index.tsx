@@ -52,8 +52,8 @@ type PostControlButtonProps = {
 };
 
 /**
- * The compact post-control action button: a plain `<button>` that can render standalone (pass `onClick`) or
- * back a `Menu.Trigger render={...}`. The big thread anchor has its own button — see `AnchorPostControls`.
+ * a compact post-control action button that renders as a plain button. can render standalone or back a
+ * Menu.Trigger.
  */
 function PostControlButton({
 	active,
@@ -89,9 +89,8 @@ function PostControlButton({
 }
 
 /**
- * Wraps a control's icon in the hover-highlighted circle so the hover/focus chrome lands on the icon alone.
- * Use directly for a custom icon (e.g. the animated like heart); {@link PostControlButtonIcon} is the
- * shorthand for a plain icon component.
+ * wraps a control's icon in a hover-highlighted circle so the hover/focus chrome lands on the icon alone. use
+ * directly for a custom icon; see {@link PostControlButtonIcon} for a plain icon.
  */
 function PostControlButtonIconBox({ children }: { children: ReactNode }) {
 	return <span className={css.iconCircle}>{children}</span>;

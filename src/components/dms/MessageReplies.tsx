@@ -41,8 +41,9 @@ export function MessageRepliesProvider({
 }: {
 	children: React.ReactNode;
 	/**
-	 * Performs the actual scroll. Returns true if the message was found and scrolled to, false if it isn't
-	 * currently loaded (so we know whether to flash it).
+	 * scrolls to the message if loaded.
+	 *
+	 * @returns true if the message was found and scrolled to, false otherwise.
 	 */
 	scrollToMessage: (messageId: string) => boolean;
 }) {

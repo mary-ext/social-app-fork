@@ -99,18 +99,15 @@ type BaseLinkProps = {
 	/** The React Navigation `StackAction` to perform when the link is pressed. */
 	action?: 'push' | 'replace' | 'navigate';
 
-	/**
-	 * If true, will warn the user if the link text does not match the href.
-	 *
-	 * Note: atm this only works for `InlineLink`s with a string child.
-	 */
+	/** warns the user if the link text does not match the href. only works for string children. */
 	disableMismatchWarning?: boolean;
 
 	/**
-	 * Callback for when the link is pressed. Prevent default and return `false` to exit early and prevent
-	 * navigation.
+	 * callback when the link is pressed. return `false` to prevent navigation.
 	 *
-	 * DO NOT use this for navigation, that's what the `to` prop is for.
+	 * do not use this for navigation (use the `to` prop instead).
+	 *
+	 * @param event the press event
 	 */
 	onPress?: (e: GestureResponderEvent) => void | false;
 
@@ -212,10 +209,10 @@ export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
 	Omit<ButtonProps, 'onPress' | 'disabled'>;
 
 /**
- * A interactive element that renders as a `<a>` tag on the web. On mobile it will translate the `href` to
- * navigator screens and params and dispatch a navigation action.
+ * an interactive element that renders as an `<a>` tag on the web, and translates the `href` to native
+ * navigation screens and params on mobile.
  *
- * Intended to behave as a web anchor tag. For more complex routing, use a `Button`.
+ * intended to behave as a web anchor tag. for more complex routing, use a `Button`.
  */
 export function Link({
 	children,

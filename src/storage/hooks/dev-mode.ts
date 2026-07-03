@@ -8,8 +8,8 @@ export function useDevMode() {
 
 let cachedIsDevMode: boolean | undefined;
 /**
- * Does not update when toggling dev mode on or off. This util simply retrieves the value and caches in memory
- * indefinitely. So after an update, you'll need to reload the app so it can pull a fresh value from storage.
+ * retrieves the dev mode state from storage and caches it in memory. reload the app to apply changes after
+ * toggling.
  */
 export function isDevMode() {
 	if (import.meta.env.DEV) return true;

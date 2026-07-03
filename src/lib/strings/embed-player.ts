@@ -64,9 +64,9 @@ export interface EmbedPlayerParams {
 	type: EmbedPlayerType;
 	playerUri: string;
 	/**
-	 * Web-only ordered list of `<source>` tags for `<video>` playback. When present, the browser uses
-	 * `canPlayType` to pick the first one it supports, which avoids UA sniffing for codec selection.
-	 * `playerUri` is used as the native source and as a fallback `<video src>` when this is empty.
+	 * web-only ordered list of `<source>` tags for `<video>` playback.
+	 *
+	 * @param playerUri native source and fallback `<video src>` when this is empty
 	 */
 	playerSources?: ReadonlyArray<{ src: string; type: string }>;
 	isGif?: boolean;

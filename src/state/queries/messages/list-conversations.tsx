@@ -45,19 +45,18 @@ export const RQKEY = (
 export type ConvoListItem = ChatBskyConvoListConvos.$output['convos'][number];
 
 /**
- * Prefix key matching every convo-list query with the given status (and optionally readState), regardless of
- * the remaining params (kind, lockStatus, limit). Only valid with prefix-matching APIs (setQueriesData,
- * getQueriesData, invalidateQueries) — exact-match APIs (getQueryData, setQueryData) hash the full key and
- * will never match a prefix.
+ * query key prefix matching every convo-list query with the given status and optional readState.
+ *
+ * only valid with prefix-matching APIs (e.g., setQueriesData, getQueriesData, invalidateQueries). exact-match
+ * APIs will not match this prefix.
+ *
+ * @param status the conversation status to match
+ * @param readState optional read state to match
  */
 export const RQKEY_PARTIAL = (status: 'accepted' | 'request' | 'all', readState?: 'all' | 'unread') =>
 	readState ? [RQKEY_ROOT, status, readState] : [RQKEY_ROOT, status];
 
-/**
- * Whether a convo satisfies the filters encoded in a convo-list query key. Caches are server-filtered, so
- * optimistic inserts must apply the same filters client-side or convos leak into lists that should exclude
- * them.
- */
+/** returns whether a convo satisfies the filters encoded in a convo-list query key. */
 export function convoMatchesQueryKey(convo: ConvoListItem, queryKey: QueryKey): boolean {
 	const [, status, readState, kind, lockStatus] = queryKey as ReturnType<typeof RQKEY>;
 	if (status !== 'all' && status !== convo.status) return false;
@@ -74,10 +73,8 @@ export function convoMatchesQueryKey(convo: ConvoListItem, queryKey: QueryKey): 
 }
 
 /**
- * Query predicate for optimistically upserting a convo into convo-list caches. Targets caches whose filters
- * the convo satisfies, plus caches the convo is already in — those get updated in place even if the convo no
- * longer matches (e.g. unreadCount dropped to 0), mirroring how read/mute log events update convos in place
- * everywhere.
+ * query predicate for optimistically upserting a convo into convo-list caches. targets caches whose filters
+ * the convo satisfies, plus caches the convo is already in.
  */
 export function convoListQueryPredicate(convo: ConvoListItem) {
 	return (query: Query): boolean => {
@@ -792,9 +789,8 @@ export function useOnMarkAsRead() {
 }
 
 /**
- * Wraps a convo-view update so it's skipped when the incoming event's `rev` is not newer than the convo's
- * current `rev`. Firehose events can arrive out of order (e.g. a retried poll replays an older event after a
- * newer one already landed); applying a stale event would clobber newer state.
+ * wraps a conversation view update to skip it if the incoming event's `rev` is not newer than the
+ * conversation's current `rev`. prevents out-of-order events from overwriting newer state.
  */
 function withRevGuard(
 	rev: string,

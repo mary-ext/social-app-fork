@@ -10,10 +10,7 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-/**
- * Fetches a fresh verification state from the app view and updates our profile cache. This state is computed
- * using a variety of factors on the server, so we need to get this data from the server.
- */
+/** fetches a fresh verification state from the app view and updates the profile cache. */
 export function useUpdateProfileVerificationCache() {
 	const qc = useQueryClient();
 	const { appview } = useClients();

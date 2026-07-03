@@ -27,10 +27,9 @@ import { IS_OAUTH_CALLBACK, startOAuthSignIn } from './oauth';
 export type { SessionAccount } from '#/state/session/types';
 
 /**
- * The session is resolved once at boot and is otherwise immutable for a page's lifetime: account changes
- * (switch, sign-out, cross-tab change) reload the page. Two in-place mutations are the exceptions, and avoid
- * a reload: removing a non-current account, and dropping the current session to logged-out when its token can
- * no longer be refreshed.
+ * resolves the session once at boot, keeping it immutable for the page's lifetime. exceptions that avoid a
+ * page reload are removing a non-current account, or dropping the current session to logged-out when the
+ * token cannot be refreshed.
  */
 
 // `auth` storage notifies in-process listeners on every write. A write made by
@@ -63,10 +62,8 @@ function signOut({ accounts, clearDids = [] }: { accounts: SessionAccount[]; cle
 }
 
 /**
- * Drops the session to logged-out in place — no reload, unlike {@link signOut}. Persists a logged-out session
- * (so a reload or another tab won't resume it), swaps in guest clients, clears the current account, and marks
- * the boot `failed` to surface the "session expired" toast. Shared by a failed boot resume and a live
- * token-refresh failure.
+ * drops the session to logged-out in place without reloading. persists the logged-out state, swaps in guest
+ * clients, clears the current account, and marks the boot failed to trigger a session expired toast.
  */
 function dropToGuestSession(
 	accounts: SessionAccount[],
@@ -86,10 +83,10 @@ function errorMessage(e: unknown): string {
 }
 
 /**
- * Whether a resume/validation error means the stored session is permanently unusable — the token was refused
- * or can no longer be refreshed — as opposed to a transient failure (offline, server hiccup, rate limit)
- * where the optimistic session should be kept. A 400/401 from the token endpoint covers the OAuth client
- * errors (`invalid_grant`, `unauthorized_client`, …) a refresh can be rejected with.
+ * determines if a resume or validation error means the stored session is permanently unusable.
+ *
+ * returns true if the token was refused or can no longer be refreshed, and false if the failure is transient
+ * and the session should be kept.
  */
 function isFatalSessionError(e: unknown): boolean {
 	return (
@@ -100,9 +97,9 @@ function isFatalSessionError(e: unknown): boolean {
 }
 
 /**
- * Boot lifecycle of the persisted session: `resuming` builds the agent from the stored token, `validating`
- * keeps that agent live while the session is checked against the server, `failed` means the stored session
- * was rejected, and `idle` covers both "no stored session" and a fully-settled resume.
+ * boot lifecycle of the persisted session: - `resuming`: builds the agent from the stored token -
+ * `validating`: keeps the agent live while the session is checked against the server - `failed`: the stored
+ * session was rejected - `idle`: no stored session or a fully-settled resume
  */
 type SessionBootStatus = 'failed' | 'idle' | 'resuming' | 'validating';
 

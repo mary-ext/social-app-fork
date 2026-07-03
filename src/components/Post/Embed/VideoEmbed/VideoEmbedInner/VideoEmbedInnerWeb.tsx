@@ -175,14 +175,8 @@ function useHLS({
 	const controlsVisibleRef = useRef(false);
 
 	/**
-	 * Repositions VTT subtitle cues using percentage-based line values (snapToLines=false) so that
-	 * multi-line/wrapped cues grow upward instead of extending offscreen. Moves cues higher when controls are
-	 * visible to avoid occlusion by the scrub bar.
-	 *
-	 * Called from two sites:
-	 *
-	 * - SUBTITLE_FRAG_PROCESSED: applies positioning to newly loaded cues
-	 * - VideoControls effect: updates positioning when controls show/hide
+	 * repositions VTT subtitle cues using percentage-based line values so that wrapped cues grow upward and are
+	 * not occluded by visible video controls.
 	 */
 	const updateCuePositions = useCallback(
 		(controlsVisible?: boolean) => {

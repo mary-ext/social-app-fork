@@ -554,8 +554,8 @@ function useProfileUnblockMutation() {
 }
 
 /**
- * Reads, merges, and writes the signed-in user's own `app.bsky.actor.profile` record, retrying on a swap
- * conflict (a concurrent profile edit). Mirrors `@atproto/api`'s `BskyAgent.upsertProfile`.
+ * reads, merges, and writes the signed-in user's own `app.bsky.actor.profile` record, retrying on a swap
+ * conflict.
  *
  * @param pds the PDS client.
  * @param did the user's repo DID.

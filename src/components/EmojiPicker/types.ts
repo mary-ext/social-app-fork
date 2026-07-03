@@ -1,4 +1,4 @@
-/** Represents an emoji selected from the picker. Sourced from the `emoji-mart` library's selection data. */
+/** represents an emoji selected from the picker. sourced from the `emoji-mart` library's selection data. */
 export type Emoji = {
 	aliases?: string[];
 	emoticons: string[];

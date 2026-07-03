@@ -42,12 +42,10 @@ const PARTIAL_DATE_RE =
 	/^((?!0{3})\d{4})(?:-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\d|3[01])(?:T([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d)(?:\.(\d+))?)?(Z|(?!-00:00)[+-](?:[01]\d|2[0-3]):(?:[0-5]\d))?)?)?)?$/;
 
 /**
- * parses a partial date (`yyyy`, `yyyy-mm`, `yyyy-mm-dd`, …) into the start of the period it denotes, used as
- * a `since` bound: a missing month or day widens to the first of the period. the time-of-day is left at
- * end-of-day rather than normalized to midnight, so callers must compare at day granularity.
+ * parses a partial date (e.g. `yyyy`, `yyyy-mm`, `yyyy-mm-dd`) into the start of the period it denotes.
  *
- * @param str the partial date string
- * @returns the parsed date, or `null` if it doesn't match the grammar
+ * @param str partial date string
+ * @returns parsed date, or `null` if invalid
  */
 export const parseStartDate = (str: string): Date | null => {
 	const match = PARTIAL_DATE_RE.exec(str);
@@ -120,10 +118,7 @@ export interface SearchOperator {
 	placeholder: string;
 }
 
-/**
- * the recognized search operators, in display order (actor filters, then date filters, then the rest) — the
- * order carries meaning for the options list, so it is not alphabetized.
- */
+/** recognized search operators in display order */
 export const SEARCH_OPERATORS: SearchOperator[] = [
 	{ kind: 'actor', name: 'from', placeholder: '@user' },
 	{ hideOn: ['mentions'], hidden: true, kind: 'actor', name: 'to', placeholder: '@user' },
@@ -227,9 +222,9 @@ export const classifyActiveToken = (active: ActiveToken | undefined): Suggestion
  * returns the operators worth offering as options for the current query: those not already used, not hidden,
  * not suppressed by a present sibling, and matching whatever the caret token has typed.
  *
- * @param tokens the tokenized query
- * @param active the token under the caret
- * @returns the operators to list under "search options"
+ * @param tokens tokenized query
+ * @param active token under the caret
+ * @returns operators to list under "search options"
  */
 export const getOperatorSuggestions = (
 	tokens: Token[],
@@ -358,12 +353,10 @@ const atUriToPath = (uri: string): string | null => {
 };
 
 /**
- * resolves a `bsky.app` URL or an `at://` URI typed into the search box to the in-app route it points at, so
- * the box can offer an "open in app" shortcut.
+ * resolves a `bsky.app` URL or `at://` URI to its corresponding in-app route.
  *
- * @param query the raw search query
- * @returns the in-app route path, or `null` when the query is neither such a link nor points anywhere
- *   navigable
+ * @param query raw search query
+ * @returns in-app route path, or null if not navigable
  */
 export const resolveInAppUrl = (query: string): string | null => {
 	const trimmed = query.trim();

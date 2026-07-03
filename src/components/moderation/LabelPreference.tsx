@@ -26,10 +26,8 @@ import { m } from '#/paraglide/messages';
 import * as styles from './LabelPreference.css';
 
 /**
- * A single labeler-published label rendered as a settings row. When the label is configurable here it is a
- * {@link Settings.SelectRow} dropdown (Show / Warn / Hide); when it is a global label (set in moderation
- * settings) or unavailable (adult content disabled) it falls back to a static value, and when the viewer is
- * not subscribed it is a non-interactive preview.
+ * single labeler-published label rendered as a settings row. falls back to a static value if globally set or
+ * unavailable, and to a non-interactive preview if the viewer is unsubscribed.
  */
 export function LabelerLabelRow({
 	className,

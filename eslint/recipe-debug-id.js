@@ -3,8 +3,8 @@
 const RECIPE_SOURCE = '#/styles/recipe';
 
 /**
- * @param {import('estree').Node} node
- * @returns {string | undefined}
+ * @param node
+ * @returns the node name, if applicable
  */
 function getDeclaredName(node) {
 	const parent = node.parent;
@@ -15,8 +15,8 @@ function getDeclaredName(node) {
 }
 
 /**
- * @param {import('estree').Property} prop
- * @returns {string | undefined}
+ * @param prop
+ * @returns the property key or undefined if not resolvable
  */
 function propertyKeyName(prop) {
 	if (prop.computed) {
@@ -32,9 +32,9 @@ function propertyKeyName(prop) {
 }
 
 /**
- * @param {import('eslint').Scope.Scope} scope
- * @param {string} name
- * @returns {import('eslint').Scope.Variable | undefined}
+ * @param scope
+ * @param name
+ * @returns the variable with the given name in the scope, or undefined if not found
  */
 function resolveVariable(scope, name) {
 	const variable = scope.variables.find((v) => v.name === name);
@@ -48,8 +48,10 @@ function resolveVariable(scope, name) {
 }
 
 /**
- * @param {import('eslint').Scope.Variable | undefined} variable
- * @returns {boolean}
+ * checks if the variable is defined
+ *
+ * @param variable the variable to check
+ * @returns true if the variable is defined, false otherwise
  */
 function isRecipeImport(variable) {
 	if (!variable) {

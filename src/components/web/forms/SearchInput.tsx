@@ -11,8 +11,8 @@ import * as styles from '#/components/web/forms/SearchInput.css';
 import { m } from '#/paraglide/messages';
 
 /**
- * A web-native search field: a leading magnifying-glass icon, a {@link TextField.Input}, and a trailing clear
- * (×) button shown whenever `value` is non-empty (and `onClear` is provided).
+ * search field with a leading magnifying-glass icon, a {@link TextField.Input}, and a trailing clear button
+ * shown when `value` is non-empty and `onClear` is provided.
  */
 export function SearchInput({
 	autoFocus,

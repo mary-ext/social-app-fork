@@ -11,9 +11,8 @@ export interface Language {
 export const APP_LANGUAGES: { code2: Locale; name: string }[] = [{ code2: 'en', name: 'English' }];
 
 /**
- * Languages offered for tagging posts and filtering feeds. Curated down from the full ISO 639 set to living
- * languages people actually post in. Display names are resolved at runtime via `Intl.DisplayNames` (see
- * `languageName`), so none are stored here — the trailing comments are just for readability.
+ * languages offered for tagging posts and filtering feeds. curated down from the full ISO 639 set to living
+ * languages people actually post in.
  */
 export const LANGUAGES: Language[] = [
 	{ id: 'aar', code2: 'aa' }, // Afar

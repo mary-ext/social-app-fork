@@ -45,11 +45,11 @@ const compact = {
 };
 
 /**
- * Returns the difference between `earlier` and `later` dates, based on opinionated rules.
+ * returns the difference between `earlier` and `later` dates, based on opinionated rules.
  *
- * - All months are considered exactly 30 days.
- * - Dates assume `earlier` <= `later`, and will otherwise return 'now'.
- * - All values round down.
+ * - all months are considered exactly 30 days.
+ * - dates assume `earlier` <= `later`, and will otherwise return 'now'.
+ * - all values round down.
  */
 function dateDiff(earlier: number | string | Date, later: number | string | Date): DateDiff {
 	let diff = {
@@ -83,9 +83,8 @@ function dateDiff(earlier: number | string | Date, later: number | string | Date
 const isWeekOrOlder = (diff: DateDiff) => diff.unit === 'month' || (diff.unit === 'day' && diff.value >= 7);
 
 /**
- * Formats the elapsed time between two dates as a compact, standalone timestamp ("2m", "2h", "5d"),
- * collapsing to a calendar date once a week or older ("5 Jan", or "5 Jan 2024" when the year differs from
- * `later`'s). For timestamps embedded in a sentence, use {@link relativeMessageParts} instead.
+ * formats the elapsed time between two dates as a compact, standalone timestamp (e.g., "2m", "2h", "5d", "5
+ * Jan", or "5 Jan 2024").
  *
  * @returns the formatted timestamp
  */
@@ -116,10 +115,7 @@ export function formatTimeAgo(earlier: number | string | Date, later: number | s
 }
 
 /**
- * Decomposes the distance between `date` and `now` into the inputs a recency-variant message expects, letting
- * the message own its phrasing per recency (relative "5 days ago" within the week, "on 5 July" within the
- * year, "on 5 July 2024" beyond). Pairs with messages declaring `relativetime`/`datetime` locals selected by
- * `recency`.
+ * decomposes the distance between `date` and `now` into inputs for a recency-variant message.
  *
  * @param date the timestamp being described
  * @param now the reference point ("now") the distance is measured from

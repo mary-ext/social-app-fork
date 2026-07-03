@@ -1,13 +1,10 @@
 import { useState } from 'react';
 
 /**
- * returns a value created once for the component instance, stable across renders. for component-lifetime
- * constants — imperative handles, class instances, mount-time snapshots — that are never updated after
- * creation.
+ * returns a stable value created once for the component instance.
  *
- * @param init lazily produces the value; may run more than once in dev StrictMode or aborted concurrent
- *   renders, matching useState's lazy initializer
- * @returns the value produced by init
+ * @param init lazy initializer that produces the value
+ * @returns the initialized value
  */
 export const useConstant = <T>(init: () => T): T => {
 	// useState-backed rather than useRef: these values are often read during render (returned,

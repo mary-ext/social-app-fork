@@ -1,9 +1,4 @@
-/**
- * Runtime half of the in-house recipe (see `./recipe`). The vanilla-extract function serializer rewrites a
- * recipe's `.css.ts` export into a `createRuntimeFn(config)` call importing from here, so the build-time
- * style machinery never reaches the client bundle — only this selector function and the precomputed class
- * names do.
- */
+/** runtime half of the in-house recipe. maps runtime options to precomputed class names. */
 
 export type VariantValue = boolean | number | string;
 type Selection = Record<string, VariantValue | undefined>;

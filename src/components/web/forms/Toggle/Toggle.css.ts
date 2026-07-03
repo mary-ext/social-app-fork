@@ -44,12 +44,12 @@ export const panelGroup = style(
 );
 
 /**
- * The themed surface inside a toggle. `adjacent` rounds corners by position in the stack (a squared edge sits
- * flush against a neighbour, a rounded edge caps it); `active` forces the checked tint for panels not nested
- * in a Base UI toggle (e.g. the lists expander); `size: 'small'` tightens padding and flattens corners for
- * dense stacks. The component also mirrors `size`/`active` onto `data-*` attributes so {@link panelText} and
- * {@link panelIcon} can react to the panel's state (recipe variant classes are opaque hashes a child can't
- * select on).
+ * a themed surface inside a toggle.
+ *
+ * @param adjacent rounds corners by position in the stack (a squared edge sits flush against a neighbor, a
+ *   rounded edge caps it)
+ * @param active forces the checked tint for panels not nested in a Base UI toggle
+ * @param size tightens padding and flattens corners for dense stacks when set to 'small'
  */
 export const panel = recipe(
 	{

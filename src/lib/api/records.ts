@@ -4,11 +4,11 @@ import type { Cid, Did, InferInput, ResourceUri } from '@atcute/lexicons';
 import type { Records } from '@atcute/lexicons/ambient';
 
 /**
- * Typed `com.atproto.repo.*` record helpers.
+ * typed `com.atproto.repo.*` record helpers.
  *
- * `@atcute/client`'s generic `get`/`post` type `getRecord`'s `value` and `putRecord`'s `record` as `unknown`.
- * These helpers re-type them via the ambient `Records` map so each call infers its record value from the
- * `collection` NSID, and centralize the casts the `repo.*` wire shape needs.
+ * re-types generic `getRecord`'s `value` and `putRecord`'s `record` from `unknown` to their concrete shapes
+ * via the ambient `Records` map based on the collection NSID, and centralizes the necessary casts for repo
+ * wire shapes.
  */
 
 /** An NSID for which a record type is registered in the ambient `Records` map. */
@@ -24,11 +24,11 @@ export interface CreateRecordOptions<K extends RecordType> {
 }
 
 /**
- * Creates a repo record via `com.atproto.repo.createRecord`.
+ * creates a repo record via `com.atproto.repo.createRecord`.
  *
- * @param client the client to issue the call on — the `pds` client for own-repo writes.
- * @param options the record to create.
- * @returns the create-record response.
+ * @param client client to issue the call on (use `pds` client for own-repo writes)
+ * @param options record to create
+ * @returns create-record response
  */
 export const createRecord = async <K extends RecordType>(client: Client, options: CreateRecordOptions<K>) => {
 	return await ok(client.post('com.atproto.repo.createRecord', { input: options }));
@@ -45,11 +45,11 @@ export interface PutRecordOptions<K extends RecordType> {
 }
 
 /**
- * Writes a repo record at a known rkey via `com.atproto.repo.putRecord`.
+ * writes a repo record at a known rkey.
  *
- * @param client the client to issue the call on — the `pds` client for own-repo writes.
- * @param options the record to write.
- * @returns the put-record response.
+ * @param client client to issue the call on
+ * @param options record to write
+ * @returns put-record response
  */
 export const putRecord = async <K extends RecordType>(client: Client, options: PutRecordOptions<K>) => {
 	return await ok(client.post('com.atproto.repo.putRecord', { input: options }));
@@ -64,10 +64,10 @@ export interface DeleteRecordOptions<K extends RecordType> {
 }
 
 /**
- * Deletes a repo record via `com.atproto.repo.deleteRecord`.
+ * deletes a repo record via `com.atproto.repo.deleteRecord`.
  *
- * @param client the client to issue the call on — the `pds` client for own-repo writes.
- * @param options the record to delete.
+ * @param client client to issue the call on — the `pds` client for own-repo writes
+ * @param options record to delete
  */
 export const deleteRecord = async <K extends RecordType>(client: Client, options: DeleteRecordOptions<K>) => {
 	await ok(client.post('com.atproto.repo.deleteRecord', { input: options }));
@@ -84,11 +84,11 @@ export interface GetRecordOptions<K extends RecordType> {
 export type GetRecordOutput<T> = ComAtprotoRepoGetRecord.$output & { value: T };
 
 /**
- * Reads a single repo record via `com.atproto.repo.getRecord`, typed by its `collection`.
+ * reads a single repo record via `com.atproto.repo.getRecord`, typed by its `collection`.
  *
- * @param client the client to issue the call on — `appview` for another user's record, `pds` for own.
- * @param options the record to read.
- * @returns the record output, with `value` typed from the `collection`.
+ * @param client client to issue the call on — `appview` for another user's record, `pds` for own.
+ * @param options record to read.
+ * @returns record output, with `value` typed from the `collection`.
  */
 export const getRecord = async <K extends RecordType>(
 	client: Client,
@@ -123,11 +123,11 @@ export type ListRecordsOutput<T> = Omit<ComAtprotoRepoListRecords.$output, 'reco
 };
 
 /**
- * Lists repo records via `com.atproto.repo.listRecords`, typed by their `collection`.
+ * lists repo records via `com.atproto.repo.listRecords`, typed by their `collection`.
  *
- * @param client the client to issue the call on — `appview` for another user's records, `pds` for own.
- * @param options the records to list.
- * @returns the list output, with each record's `value` typed from the `collection`.
+ * @param client client to issue the call on — `appview` for another user's records, `pds` for own
+ * @param options records to list
+ * @returns list output, with each record's `value` typed from the `collection`
  */
 export const listRecords = async <K extends RecordType>(
 	client: Client,

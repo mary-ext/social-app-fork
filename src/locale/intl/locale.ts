@@ -2,10 +2,10 @@ import { baseLocale, type Locale } from '#/paraglide/runtime';
 import { device } from '#/storage';
 
 /**
- * The active locale, read once from device storage at module load. It is constant for the lifetime of the
- * page — paraglide's `getLocale` is pointed at it on startup, and changing it goes through
- * {@link setAppLanguage} (which reloads) — so the `Intl` formatters in this directory can be instantiated once
- * as module-level constants rather than per call.
+ * the active locale, read from device storage at module load.
+ *
+ * it is constant for the lifetime of the page, allowing `Intl` formatters to be instantiated once as
+ * module-level constants.
  */
 export const LOCALE: Locale = device.get(['appLanguage']) ?? baseLocale;
 

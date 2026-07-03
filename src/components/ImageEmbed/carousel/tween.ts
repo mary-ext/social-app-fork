@@ -3,10 +3,12 @@ function ease(t: number, b: number, c: number, d: number) {
 }
 
 /**
- * Tween from `start` to `end` over `duration` ms using an exponential ease-out. Returns a function that
- * starts the tween. That function returns a stop handle.
+ * tween from `start` to `end` over `duration` ms using an exponential ease-out.
  *
- * Adapted from tinkerbell.
+ * @param start start value
+ * @param end end value
+ * @param duration duration in milliseconds
+ * @returns a function that starts the tween and returns a stop handle
  */
 export function tween(start: number, end: number, duration: number) {
 	return function run(cb: (v: number) => void, done?: () => void) {

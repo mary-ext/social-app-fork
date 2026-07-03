@@ -15,10 +15,8 @@ export const root = style({
 export const replyDisabled = style({ opacity: 0.6 });
 
 /**
- * The anchor (big) action button chrome — its own copy, not shared with the compact {@link PostControlButton},
- * so the two sizes stay independently tweakable. A borderless, transparent ghost button whose icon sits in a
- * hover-highlighted {@link iconCircle}; an active button paints its own color via an inline `style` so the
- * icon inherits it through `currentColor`.
+ * the anchor (big) action button chrome. this is independent of the compact {@link PostControlButton} to allow
+ * independent tweaking.
  */
 export const button = style({
 	alignItems: 'center',

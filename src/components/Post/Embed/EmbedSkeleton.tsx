@@ -23,10 +23,10 @@ const logAspect = (min: number, max: number) => Math.exp(randomInRange(Math.log(
 const randomAspect = () => (weightedRandomIndex([9, 1]) === 1 ? logAspect(1 / 5, 7) : logAspect(1 / 2, 2));
 
 /**
- * A randomly-drawn embed shape (or `null` for a text-only post), for a placeholder with many rows where the
- * variety reads as a real feed. Freeze it (e.g. `useMemo`) so it doesn't reshuffle across re-renders.
+ * returns a randomly selected embed shape (single-image, carousel, or null) to simulate a realistic feed
+ * placeholder. freeze the result (e.g., using `useMemo`) to prevent reshuffling on re-renders.
  *
- * @returns a single-image or carousel shape, or `null` ~60% of the time.
+ * @returns a shape type, or null approximately 60% of the time.
  */
 export function randomShape(): Shape | null {
 	switch (weightedRandomIndex(EMBED_KIND_WEIGHTS)) {

@@ -32,8 +32,8 @@ type ResolvedExternalLink = {
 	description: string;
 	thumb: ComposerImage | undefined;
 	/**
-	 * Strong refs (uri+cid) of the Atmosphere records backing this external content, resolved by the appview
-	 * from the standard.site `<link rel>` tags the page advertises. Example: a site.standard.document record.
+	 * strong refs (URI and CID) of the Atmosphere records backing this external content, resolved by the
+	 * appview from the page's `<link rel>` tags
 	 */
 	associatedRefs?: LinkMeta['associatedRefs'];
 	view?: AppBskyEmbedExternal.View;

@@ -32,9 +32,8 @@ import * as Dialog from '#/components/web/Dialog';
 import { m } from '#/paraglide/messages';
 
 /**
- * the global image lightbox: a singleton dialog (a shell around the headless `@oomfware/lightbox`) driven by
- * the `lightboxHandle` in the global dialogs context. open it with `lightboxHandle.openWithPayload({ images,
- * index })`.
+ * global image lightbox singleton dialog driven by the `lightboxHandle` in the global dialogs context. open
+ * it with `lightboxHandle.openWithPayload({ images, index })`.
  */
 export function Lightbox() {
 	const { lightboxHandle } = useGlobalDialogsHandleContext();
@@ -147,10 +146,7 @@ function LightboxContents({
  */
 const DOUBLE_TAP_MS = 300;
 
-/**
- * Stable custom slide renderer for `Lb.Track`. Hoisted (not inlined) so the lib can memoize the slide list on
- * its identity — a fresh closure each render would rebuild every slide on the per-frame paging path.
- */
+/** custom slide renderer for `Lb.Track` */
 const renderSlide = (image: LightboxImage, index: number) => (
 	<Slide key={image.src} image={image} index={index} />
 );
@@ -172,9 +168,8 @@ function Slide({ image, index }: { image: LightboxImage; index: number }) {
 }
 
 /**
- * Track whether a full-size image is still loading, via a cache-warming preload (the same `new Image()` path
- * `ImageEmbed` prefetches with), so a prefetched source resolves from cache with no spinner flash. Resolves
- * on both load and error, so a broken source stops spinning rather than hanging.
+ * track whether a full-size image is still loading via preload. resolves on both load and error to prevent
+ * infinite loading states.
  */
 function useImageLoading(src: string) {
 	const [loading, setLoading] = useState(true);
@@ -323,9 +318,8 @@ function Chrome() {
 }
 
 /**
- * While the lightbox is open, push a history entry so the browser back button closes it instead of navigating
- * away. Keyed to `open` (not component mount) since Base UI keeps the dialog payload — and thus its content —
- * mounted after close.
+ * push a history entry when the lightbox opens so the browser back button closes it instead of navigating
+ * away
  */
 function useBackButtonCloses(open: boolean, onClose: () => void) {
 	useEffect(() => {

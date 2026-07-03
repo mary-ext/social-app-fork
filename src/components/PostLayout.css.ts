@@ -9,10 +9,8 @@ import { space } from '#/styles/tokens.css';
 import { OUTER_SPACE, REPLY_LINE_WIDTH } from './PostLayout.const';
 
 /**
- * The outer post row, shared by every surface. `GalleryBleed` measures this host (or a wrapper that forwards
- * the ref onto it) and clips the image-carousel bleed to it. `position: relative` anchors in-row overlays
- * (e.g. the feed's `DiscoverDebug`). The border / spacing variants vary by the slice's position in its
- * thread.
+ * the outer post row shared by every surface. anchors in-row overlays and is measured by GalleryBleed to clip
+ * the image-carousel bleed.
  */
 export const frame = recipe(
 	{
@@ -71,9 +69,8 @@ export const avatarColumn = style({
 });
 
 /**
- * The flex-1 content column. `minWidth: 0` lets long names/text ellipsize instead of overflowing the row
- * (plain CSS flex items default to `min-width: auto`). The trailing `paddingBottom` is the per-post bottom
- * rhythm — every post reserves it, so there's no position-dependent bottom-space toggle.
+ * flex-1 content column. `minWidth: 0` allows text to ellipsize instead of overflowing. reserves bottom
+ * padding for per-post spacing.
  */
 export const content = style({
 	boxSizing: 'border-box',
@@ -85,8 +82,8 @@ export const content = style({
 });
 
 /**
- * A reply-spine line: a centered 2px vertical bar that grows to fill its column. Brightens one contrast step
- * in the dark/dim themes so it stays legible. Callers add the surrounding margin via `className`.
+ * a centered 2px vertical bar that grows to fill its column. brightens one contrast step in dark/dim themes
+ * to stay legible.
  */
 export const spine = style({
 	backgroundColor: colors.borderContrastLow,

@@ -16,31 +16,25 @@ export function getAspectRatio({ width, height }: { width?: number; height?: num
 }
 
 /**
- * Clamp an aspect ratio into the carousel's allowed range, {@link MIN_ASPECT_RATIO} (portrait) to
- * {@link MAX_ASPECT_RATIO} (landscape), so tiles stay a reasonable size. A missing ratio defaults to square.
+ * clamp an aspect ratio to the range of {@link MIN_ASPECT_RATIO} to {@link MAX_ASPECT_RATIO}. defaults to 1
+ * (square) if undefined.
  *
- * @param aspectRatio image width / height, if known
- * @returns the clamped ratio
+ * @param aspectRatio image width / height
+ * @returns clamped ratio
  */
 export function clampAspectRatio(aspectRatio?: number): number {
 	return Math.max(MIN_ASPECT_RATIO, Math.min(aspectRatio ?? 1, MAX_ASPECT_RATIO));
 }
 
 /**
- * Derive the carousel's shared row height. Two forces shape it:
+ * derive the carousel's shared row height based on the orientation of the first two tiles and capped by the
+ * maximum width budget.
  *
- * - Orientation: the first two tiles' average clamped aspect ratio maps linearly across the aspect range onto
- *   `[min, max]` — a wide pair packs short, a portrait pair stands tall. Only those two matter.
- * - Fit: the result is then capped so the _widest_ tile's natural width stays within `maxWidth`, leaving the
- *   next tile to peek. On a narrow viewport this pulls the height below `min` rather than cropping the
- *   image.
- *
- * @param max row height in px for a fully portrait first pair
- * @param maxWidth width budget for the widest tile in px (the strip minus its gutter, gap and peek); omit for
- *   no fit cap
- * @param min row height in px for a fully landscape first pair
- * @param ratios every tile's aspect ratio (width / height) in order; missing entries default to square
- * @returns the row height in px
+ * @param max maximum row height in px for portrait tiles
+ * @param maxWidth width budget for the widest tile in px to prevent cropping
+ * @param min minimum row height in px for landscape tiles
+ * @param ratios aspect ratio of each tile
+ * @returns the calculated row height in px
  */
 export function deriveCarouselHeight({
 	max,
@@ -64,17 +58,11 @@ export function deriveCarouselHeight({
 }
 
 /**
- * Resolve a carousel item's rendered size from the row height and the image's aspect ratio.
- *
- * Old images, or images from other clients, can lack an aspect ratio; those default to square. The ratio is
- * clamped (see {@link clampAspectRatio}) so items stay a reasonable size.
- *
- * `isCropped` flags a known ratio that falls outside the clamp — the tile is sized to the clamped ratio and
- * the image cover-cropped to fill it. A missing ratio is not cropped (it's contained instead, see Gallery).
+ * resolve a carousel item's rendered size from the row height and the image's aspect ratio.
  *
  * @param aspectRatio image width / height, if known
  * @param height carousel row height in px
- * @returns the item width/height and whether the image is cover-cropped to fit
+ * @returns the item width, height, and whether the image is cover-cropped to fit
  */
 export function computeDims({ aspectRatio, height }: { aspectRatio?: number; height: number }) {
 	const clamped = clampAspectRatio(aspectRatio);

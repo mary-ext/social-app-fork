@@ -15,8 +15,8 @@ import { Text } from '#/components/Typography';
 import { m } from '#/paraglide/messages';
 
 /**
- * Explicitly named, since the CTA in this component will overwrite all saved feeds if pressed. It should only
- * be presented to the user if they actually have no other feeds saved.
+ * warns the user that this action will overwrite all saved feeds. present this only if the user has no other
+ * saved feeds.
  */
 export function NoSavedFeedsOfAnyType({ onAddRecommendedFeeds }: { onAddRecommendedFeeds?: () => void }) {
 	const t = useTheme();

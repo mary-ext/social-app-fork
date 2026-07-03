@@ -1,11 +1,9 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 /**
- * The fork-owned shape of the preferences aggregate the preferences cache derives, and the moderation
- * preference interface the app persists. These are the fork's own types — they back on `@atcute/bluesky`
- * lexicon records (the PDS wire types) but NOT on `@atcute/bluesky-moderation`'s engine types, which are an
- * interpreted engine-input shape. {@link BskyPreferences.moderationPrefs} is converted to the engine's
- * `ModerationPreferences` at the boundary (see `#/lib/moderation/prefs`).
+ * the fork-owned shape of the preferences aggregate the preferences cache derives, and the moderation
+ * preference interface the app persists. back on `@atcute/bluesky` lexicon records (the PDS wire types) but
+ * not on `@atcute/bluesky-moderation`'s engine types.
  */
 
 export type { AppBskyActorDefs };

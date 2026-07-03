@@ -27,8 +27,8 @@ import { router } from '#/routes';
 type LinkAction = 'navigate' | 'push' | 'replace';
 
 /**
- * Click callback shared by both link families. Runs before navigation; return `false` to cancel it (the link
- * suppresses its default action for you). DO NOT navigate from here — that's what `to`/`href` are for.
+ * click callback run before navigation. return `false` to cancel navigation. do not navigate from this
+ * callback.
  */
 type LinkOnPress = (e: MouseEvent<HTMLElement>) => false | void;
 
@@ -40,9 +40,10 @@ type LinkBindings = {
 };
 
 /**
- * Whether a click should defer to the browser's default action (open in a new tab) rather than being
- * intercepted for client-side navigation: a middle/aux button or a held modifier. An `<a href>` lets such
- * clicks fall through to the native handler; a non-anchor link must replicate the new-tab open itself.
+ * determines whether a click should defer to the browser's default action (such as opening in a new tab)
+ * rather than being intercepted for client-side navigation.
+ *
+ * @param event the click event to check
  */
 export const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
 	return e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
@@ -72,10 +73,9 @@ export const useNavigateToPath = () => {
 };
 
 /**
- * Resolves the `href`/`onClick` bindings for an in-app-route link without rendering an anchor, so a non-`<a>`
- * element (e.g. a Base UI menu item rendered as a link) can carry real link semantics — middle/cmd-click
- * opens a new tab, a plain click navigates through `react-navigation`. Return `false` from `onPress` to
- * cancel navigation.
+ * resolves the href and onClick bindings for an in-app route link without rendering an anchor. this allows
+ * non-anchor elements to preserve link semantics (e.g., middle/cmd-click to open in a new tab, plain click to
+ * navigate). return false from onPress to cancel navigation.
  */
 export const useInternalLink = ({
 	action = 'push',
@@ -331,9 +331,10 @@ export type InlineLinkTextProps = InternalNavProps & InlineAnchorProps;
 export type LinkButtonProps = InternalNavProps & ButtonAnchorProps;
 
 /**
- * A web-native block link to an in-app route: an `<a>` wrapping arbitrary children that navigates through
- * `react-navigation` on a plain click and falls through to a native new-tab on a modified/middle click. To
- * cancel navigation (e.g. to open a dialog instead), return `false` from `onPress`.
+ * a block link to an in-app route that navigates using react-navigation on click, falling back to
+ * browser-native behavior on modified clicks.
+ *
+ * @param onPress callback to intercept the navigation; return false to cancel it.
  */
 export const Link = ({ action, onPress, to, ...rest }: LinkProps) => {
 	const bindings = useInternalLink({ action, onPress, to });
@@ -368,10 +369,7 @@ export type ExternalLinkProps = ExternalNavProps & BlockAnchorProps;
 export type ExternalInlineLinkTextProps = ExternalNavProps & InlineAnchorProps;
 export type ExternalLinkButtonProps = ExternalNavProps & ButtonAnchorProps;
 
-/**
- * A web-native block link to a raw URL: opens in a new tab, unless the URL resolves to an in-app route (a
- * `bsky.app` link), in which case it navigates internally.
- */
+/** opens a raw URL in a new tab, or navigates internally if it resolves to an in-app route. */
 export const ExternalLink = ({ action, href, onPress, ...rest }: ExternalLinkProps) => {
 	const bindings = useExternalLink({ action, href, onPress });
 	return <BlockAnchor bindings={bindings} {...rest} />;
@@ -396,9 +394,8 @@ export const ExternalLinkButton = ({ action, href, onPress, ...rest }: ExternalL
 export type ContentLinkTextProps = ExternalNavProps & InlineAnchorProps;
 
 /**
- * A web-native inline text link for untrusted content (e.g. a rich-text link facet): like
- * {@link ExternalInlineLinkText}, but because its children are attacker-controlled, it verifies them against
- * the destination and opens the link-warning dialog instead of navigating when they misrepresent it.
+ * an inline text link for untrusted content. behaves like {@link ExternalInlineLinkText}, but verifies
+ * attacker-controlled children against the destination URL and opens a link-warning dialog on mismatch.
  */
 export const ContentLinkText = ({ action, href, onPress, ...rest }: ContentLinkTextProps) => {
 	const bindings = useContentLink({

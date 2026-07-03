@@ -282,8 +282,8 @@ export const textSize = styleVariants(fontSize, (value) => ({
 }));
 
 /**
- * Box wrapping a {@link ButtonIcon}'s icon at a fixed per-size footprint, so icons of different intrinsic
- * sizes occupy the same box and a larger icon never grows the button height.
+ * wraps a {@link ButtonIcon}'s icon at a fixed per-size footprint, ensuring icons of different intrinsic sizes
+ * occupy the same box and larger icons do not grow the button height
  */
 export const iconBox = recipe(
 	{

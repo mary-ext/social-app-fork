@@ -46,18 +46,14 @@ import { m } from '#/paraglide/messages';
 
 export type ProfileHoverCardProps = {
 	/**
-	 * The trigger element. Used directly as {@link PreviewCard.Trigger}'s `render`, so it must forward a ref
-	 * and spread DOM props onto its host node (a plain `<div>`/`<a>`, `web/Link`, etc.).
+	 * trigger element. must forward a ref and spread DOM props onto its host node (used as
+	 * {@link PreviewCard.Trigger}'s `render`).
 	 */
 	children: ReactElement;
 	did: string;
 };
 
-/**
- * A profile preview shown on hover, built on Base UI's PreviewCard. Wraps a single ref-forwarding trigger.
- * Base UI only opens it via pointer hover, so it stays inert on touch devices; to drop the card entirely,
- * render the trigger directly instead of passing a flag.
- */
+/** profile preview shown on hover, built on Base UI's PreviewCard. wraps a single ref-forwarding trigger. */
 export function ProfileHoverCard({ children, did }: ProfileHoverCardProps) {
 	const prefetchProfileQuery = usePrefetchProfileQuery();
 	const prefetched = useRef(false);

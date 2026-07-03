@@ -1,22 +1,16 @@
 'use strict';
 
 /**
- * one rule owning the type-import convention:
+ * enforces the type-import convention: - specifiers used only as types are imported via `import type { A, B }
+ * from 'm'` - a mix of value and type-only specifiers are imported via `import { Value, type A } from 'm'` -
+ * multiple statements for the same module are merged into one
  *
- * - all specifiers used only as types -> `import type { A, B } from 'm'`
- * - mix of value and type-only specifiers -> `import { Value, type A } from 'm'`
- * - never two statements for the same module -> merged into one
- *
- * type-only-ness is read from the typescript-eslint scope analysis (`reference.isTypeReference`), the same
- * signal `@typescript-eslint/consistent-type-imports` relies on, so no type-checker is needed.
- *
- * default and namespace imports are intentionally left untouched: combining them with named imports has too
- * many fragile shapes to autofix safely, and they are rarely type-only here.
+ * default and namespace imports are ignored.
  */
 
 /**
- * @param {import('eslint').Scope.Variable | undefined} variable
- * @returns {boolean | null} true/false when known, null when it cannot be decided (unused)
+ * @param variable
+ * @returns true/false when known, null when it cannot be decided (unused)
  */
 const isTypeOnlyVariable = (variable) => {
 	if (!variable || variable.references.length === 0) {
@@ -26,9 +20,11 @@ const isTypeOnlyVariable = (variable) => {
 };
 
 /**
- * @param {import('estree').ImportSpecifier} specifier
- * @param {import('eslint').SourceCode} sourceCode
- * @returns {string} the `local` / `imported as local` text, without any `type` modifier
+ * gets the local import name from a specifier, excluding any type modifier
+ *
+ * @param specifier the import specifier node
+ * @param sourceCode the ESLint SourceCode instance
+ * @returns the local name text
  */
 const specifierText = (specifier, sourceCode) => {
 	const imported =

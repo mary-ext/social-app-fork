@@ -13,9 +13,8 @@ import { STALE } from '.';
 const joinLinkPreviewQueryKeyRoot = 'join-link-preview';
 
 /**
- * A single entry from a join link preview response. A variant — the link may resolve to a usable
- * `joinLinkPreviewView`, or to a `disabled`/`invalid` placeholder that only carries the code. Narrow on
- * `$type === 'chat.bsky.group.defs#joinLinkPreviewView'` before reading link details.
+ * an entry from a join link preview response. can be a usable preview or a disabled/invalid placeholder.
+ * narrow on `$type === 'chat.bsky.group.defs#joinLinkPreviewView'` before reading details.
  */
 export type JoinLinkPreview = ChatBskyGroupGetJoinLinkPreviews.$output['joinLinkPreviews'][number];
 
@@ -25,9 +24,9 @@ export const createJoinLinkPreviewQueryKey = (args: { codes: string[]; hasSessio
 	});
 
 /**
- * Invalidate any join link preview queries whose `codes` include the given code. Use this when a link's state
- * changes (e.g. it's enabled/disabled, or the viewer requests to join) so cached previews refetch and reflect
- * the new state.
+ * invalidate join link preview queries whose `codes` include the given code when a link's state changes.
+ *
+ * @param code the join link code to invalidate
  */
 export function invalidateJoinLinkPreviewsForCode(queryClient: QueryClient, code: string) {
 	return queryClient.invalidateQueries({
@@ -39,10 +38,8 @@ export function invalidateJoinLinkPreviewsForCode(queryClient: QueryClient, code
 }
 
 /**
- * Invalidate any join link preview queries that resolved to the given convo. The code isn't always known to
- * the viewer (e.g. when they're a regular member), so we match on the convoId carried by the resolved preview
- * instead. Use this when the viewer's membership changes (e.g. they leave or are removed) so cached previews
- * refetch and reflect their new viewer state.
+ * invalidate join link preview queries for a conversation. use when a user's membership changes so cached
+ * previews refetch to reflect their new state.
  */
 export function invalidateJoinLinkPreviewsForConvo(queryClient: QueryClient, convoId: string) {
 	return queryClient.invalidateQueries({
@@ -100,8 +97,10 @@ export function useJoinLinkPreviewsQuery({
 }
 
 /**
- * Imperatively fetch (or read from cache) a single join link preview by code. Used when sending a DM invite
- * embed so we can build an optimistic view. Returns undefined if the preview can't be resolved.
+ * fetch or read from cache a single join link preview by code.
+ *
+ * @param code the invite code
+ * @returns the preview, or undefined if it cannot be resolved
  */
 export function useGetJoinLinkPreview() {
 	const { chat } = useClients();
@@ -129,10 +128,8 @@ export function useGetJoinLinkPreview() {
 }
 
 /**
- * Optimistically set whether the viewer has requested to join the link with the given code, across any cached
- * join link preview queries. Used right after a successful join request (requested = true) or withdrawal
- * (requested = false) so the UI ("Requested" vs "Request to join") updates immediately, without waiting on a
- * server refetch that can lag behind the write.
+ * optimistically set whether the viewer has requested to join the link with the given code across cached join
+ * link preview queries
  */
 export function setJoinLinkPreviewRequestedForCode(
 	queryClient: QueryClient,

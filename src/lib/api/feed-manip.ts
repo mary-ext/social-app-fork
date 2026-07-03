@@ -349,13 +349,10 @@ export class FeedTuner {
 	}
 
 	/**
-	 * This function filters a list of FeedViewPostsSlice items based on whether they contain text in a
-	 * preferred language.
+	 * filters feed slices based on whether they contain text in a preferred language.
 	 *
-	 * @param {string[]} preferredLangsCode2 - An array of preferred language codes in ISO 639-1 or ISO 639-2
-	 *   format.
-	 * @returns A function that takes in a `FeedTuner` and an array of `FeedViewPostsSlice` objects and returns
-	 *   an array of `FeedViewPostsSlice` objects.
+	 * @param preferredLangsCode2 preferred language codes in ISO 639-1 or ISO 639-2 format
+	 * @returns a filter function for feed slices
 	 */
 	static preferredLangOnly(preferredLangsCode2: string[]) {
 		return (_tuner: FeedTuner, slices: FeedViewPostsSlice[], _dryRun: boolean): FeedViewPostsSlice[] => {

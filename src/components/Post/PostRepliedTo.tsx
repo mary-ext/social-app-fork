@@ -70,9 +70,8 @@ export function PostRepliedTo({
 }
 
 /**
- * The replied-to author's handle as an inline profile link wrapped in a hover card, falling back to a shimmer
- * while loading and to plain text on error. The hover card only arms once the profile resolves, so the
- * loading and error states stay inert.
+ * the replied-to author's handle as an inline profile link wrapped in a hover card, falling back to a shimmer
+ * while loading and to plain text on error
  */
 function ParentAuthorName({ did }: { did: string }) {
 	// a feed of replies mounts many of these at once, so coalesce the author fetches into one request.

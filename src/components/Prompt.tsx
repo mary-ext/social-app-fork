@@ -134,10 +134,9 @@ export function Action({
 	testID,
 }: {
 	/**
-	 * Callback to run when the action is pressed. The method is called _after_ the dialog closes.
+	 * callback to run after the dialog closes when the action is pressed.
 	 *
-	 * Note: The dialog will close automatically when the action is pressed, you should NOT close the dialog as
-	 * a side effect of this method.
+	 * @note the dialog closes automatically; do not close it manually within this callback.
 	 */
 	onPress: (e: GestureResponderEvent) => void;
 	color?: ButtonColor;
@@ -190,12 +189,7 @@ export function Basic({
 	description?: string;
 	cancelButtonCta?: string;
 	confirmButtonCta?: string;
-	/**
-	 * Callback to run when the Confirm button is pressed. The method is called _after_ the dialog closes.
-	 *
-	 * Note: The dialog will close automatically when the action is pressed, you should NOT close the dialog as
-	 * a side effect of this method.
-	 */
+	/** callback triggered after the dialog closes when the confirm button is pressed */
 	onConfirm: (e: GestureResponderEvent) => void;
 	onClose?: () => void;
 	confirmButtonColor?: ButtonColor;

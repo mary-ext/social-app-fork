@@ -128,11 +128,7 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText' | 'placeh
 	onChangeText?: (value: string) => void;
 	isInvalid?: boolean;
 	inputRef?: React.RefObject<TextInput | null> | React.ForwardedRef<TextInput>;
-	/**
-	 * Note: this currently falls back to the label if not specified. However, most new designs have no
-	 * placeholder. We should eventually remove this fallback behaviour, but for now just pass `null` if you
-	 * want no placeholder -sfn
-	 */
+	/** placeholder text. pass `null` to display no placeholder. */
 	placeholder?: string | null | undefined;
 };
 

@@ -5,8 +5,7 @@ import { emojiDataQuery } from '#/components/EmojiPicker/data';
 /**
  * preloads the emoji dataset.
  *
- * returns a function that triggers preloading (e.g. on hover); when `immediate` is `true`, preloading starts
- * on mount. loading happens at most once per page load.
+ * @returns a function that triggers preloading (e.g., on hover).
  */
 export function useWebPreloadEmoji({ immediate }: { immediate?: boolean } = {}) {
 	const queryClient = useQueryClient();

@@ -125,12 +125,7 @@ export class Convo {
 	> = new Map();
 	private deletedMessages: Set<string> = new Set();
 	private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> = new Map();
-	/**
-	 * Accumulated profile shadow state, keyed by did. The profiles this agent holds come from direct service
-	 * fetches, so they are invisible to the shadow cache's react-query scan. We keep our own overlay and
-	 * re-apply it whenever server data overwrites `relatedProfiles` or `convo.members`, otherwise refreshes
-	 * would revert optimistic state (e.g. a block) until the server catches up.
-	 */
+	/** accumulated profile shadow state, keyed by DID. used to re-apply optimistic updates to profile data. */
 	private profileShadows: Map<string, Partial<ProfileShadow>> = new Map();
 
 	private isProcessingPendingMessages = false;
@@ -589,10 +584,7 @@ export class Convo {
 		}
 	}
 
-	/**
-	 * Initialises the convo with placeholder data, if provided. We still refetch it before rendering the convo,
-	 * but this allows us to render the convo header immediately.
-	 */
+	/** initializes the convo with placeholder data to render the convo header immediately. */
 	private setupPlaceholderData(data: NonNullable<ConvoParams['placeholderData']>) {
 		this.setConvo(data.convo);
 	}
@@ -932,9 +924,8 @@ export class Convo {
 							this.pastMessages.set(ev.message.id, ev.message);
 						} else {
 							/**
-							 * If this message is already in new messages, it was added by our sending logic, and is based
-							 * on client-ordering. When we receive the "committed" event from the log, we should replace
-							 * this reference and re-insert in order to respect the order we received from the log.
+							 * replaces the client-ordered message reference with the log-committed version to preserve log
+							 * ordering.
 							 */
 							if (this.newMessages.has(ev.message.id)) {
 								this.newMessages.delete(ev.message.id);
@@ -1287,10 +1278,8 @@ export class Convo {
 	}
 
 	/**
-	 * When a message is deleted locally, it's removed from the list, but other messages that reply to it still
-	 * carry a hydrated `replyTo` with the original text until the server re-sends them. Swap that `replyTo` for
-	 * a deleted-message tombstone so the quote reflects the deletion immediately, matching what the server
-	 * returns on refresh.
+	 * swaps the `replyTo` field of replying messages with a deleted-message tombstone when a message is deleted
+	 * locally
 	 */
 	private tombstoneDeletedReplyTo(m: ChatBskyConvoDefs.MessageView): ChatBskyConvoDefs.MessageView {
 		const { replyTo } = m;
@@ -1396,10 +1385,10 @@ export class Convo {
 	}
 
 	/**
-	 * Add an emoji reaction to a message
+	 * add an emoji reaction to a message
 	 *
-	 * @param messageId - the id of the message to add the reaction to
-	 * @param emoji - must be one grapheme
+	 * @param messageId the id of the message to add the reaction to
+	 * @param emoji must be one grapheme
 	 */
 	async addReaction(messageId: string, emoji: string) {
 		const optimisticReaction = {

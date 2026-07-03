@@ -13,12 +13,12 @@ import * as styles from './CalendarBody.css';
 import type { DateItem } from './model';
 
 /**
- * the `since:`/`until:` calendar grid: a month of selectable days that insert an ISO date. rendered as
- * `Autocomplete.Row`/`Item` so it shares the input's keyboard navigation under the root's `grid` layout.
+ * calendar grid for selecting a date. rendered as Autocomplete rows/items to share keyboard navigation under
+ * the root's grid layout.
  *
- * @param days the 42-cell month grid in row-major order
- * @param onGoToMonth steps the visible month by the given number of months
- * @param visibleMonth the month being shown
+ * @param days 42-cell month grid in row-major order
+ * @param onGoToMonth callback to step the visible month by the given offset
+ * @param visibleMonth month currently displayed
  */
 export function CalendarBody({
 	days,

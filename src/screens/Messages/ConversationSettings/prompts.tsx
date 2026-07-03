@@ -21,10 +21,7 @@ export function EditNamePrompt({
 }: {
 	control: Dialog.DialogOuterProps['control'];
 	value: string;
-	/**
-	 * Bump this whenever the prompt is opened to remount the (uncontrolled) input and reseed it from `value`.
-	 * Required because the bottom sheet keeps its children mounted across opens.
-	 */
+	/** key to remount the uncontrolled input and reseed it from `value` when the prompt is opened */
 	inputKey: number;
 	onChangeText: (value: string) => void;
 	onConfirm: () => void;

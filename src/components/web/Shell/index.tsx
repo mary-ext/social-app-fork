@@ -27,12 +27,10 @@ export type WebShellProps = {
 };
 
 /**
- * App shell: a `<body>`-scrolled flex column wrapping a centered grid of nav rails around the screen column,
- * plus an in-flow sticky bottom bar. The left rail and the bottom bar are mutually exclusive (narrow
- * viewports get the bar); both rails self-collapse when their content doesn't render.
+ * app shell that renders a layout with nav rails and an in-flow sticky bottom bar.
  *
- * Publishes the bottom bar's measured height as the {@link styles.bottomBarHeightVar} CSS variable so screens
- * and fixed overlays (e.g. the thread compose prompt) can sit clear of the bar without a hardcoded inset.
+ * publishes the bottom bar's measured height as the {@link styles.bottomBarHeightVar} CSS variable for
+ * positioning screens and overlays.
  */
 export function WebShell({ children, routeName }: WebShellProps) {
 	const { hasSession } = useSession();

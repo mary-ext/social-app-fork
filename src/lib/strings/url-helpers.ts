@@ -71,9 +71,9 @@ export function isExternalUrl(url: string): boolean {
 }
 
 /**
- * Whether a link target is trusted, i.e. safe to navigate to without a leaving-the-app warning. Relative
+ * whether a link target is trusted, i.e. safe to navigate to without a leaving-the-app warning. relative
  * paths and in-app anchors are trusted; an absolute URL is trusted only when its host matches an entry in
- * {@link BSKY_TRUSTED_HOSTS} exactly — a subdomain such as `endpoints.bsky.app` is not trusted.
+ * {@link BSKY_TRUSTED_HOSTS} exactly.
  *
  * @param url the link target
  * @returns whether the target is trusted
@@ -213,9 +213,8 @@ const TRIM_HOST_RE = /^www\./;
 const TRIM_URLTEXT_RE = /^\s*(?:https?:\/\/)?(?:www\.)?/i;
 
 /**
- * Builds the host string a faithful display text must begin with: the hostname (sans `www.`) plus an explicit
- * port. A URL carrying embedded credentials is prefixed with a sentinel that cannot occur in trimmed text, so
- * any `user@host` authority always fails the match.
+ * builds the host string a faithful display text must begin with: the hostname (sans `www.`) plus an explicit
+ * port.
  *
  * @param url the parsed link target
  * @returns the expected host string
@@ -227,13 +226,11 @@ const buildExpectedHost = (url: URL): string => {
 };
 
 /**
- * Whether a link's visible text honestly names where it leads. Once its scheme and `www.` prefix are
- * stripped, the text must begin with the destination host and break on a path, query, or fragment boundary,
- * so `example.com` matched against `example.com.evil.tld` correctly fails.
+ * returns whether a link's visible text honestly represents its destination host.
  *
  * @param uri the link target
  * @param displayText the link's visible text
- * @returns whether the text faithfully represents the target host
+ * @returns true if the text faithfully represents the target host
  */
 const linkTextMatchesHost = (uri: string, displayText: string): boolean => {
 	const url = safeUrlParse(uri);
@@ -250,9 +247,8 @@ const linkTextMatchesHost = (uri: string, displayText: string): boolean => {
 };
 
 /**
- * Whether a content link should warn before navigating, i.e. its visible text misrepresents the destination.
- * Trusted targets — including relative paths and in-app anchors — never warn; every other target warns unless
- * the visible text faithfully names the destination host.
+ * determines if a link should show a warning before navigating. trusted targets (relative paths and anchors)
+ * never warn; other targets warn unless the display text matches the destination host.
  *
  * @param uri the link target
  * @param displayText the link's visible text
@@ -266,12 +262,9 @@ export const isMisleadingLink = (uri: string, displayText: string): boolean => {
 };
 
 /**
- * Splits a hostname into its subdomain prefix and registrable apex domain, e.g. `a.b.example.co.uk` →
- * `['a.b.', 'example.co.uk']`. Returns `['', hostname]` when the hostname has no recognized ICANN public
+ * splits a hostname into its subdomain prefix and registrable apex domain (e.g., `a.b.example.co.uk` ->
+ * `['a.b.', 'example.co.uk']`). returns `['', hostname]` if the hostname has no recognized ICANN public
  * suffix.
- *
- * The public-suffix dataset is loaded lazily (hence the async signature) to keep it out of the initial
- * bundle.
  *
  * @param hostname hostname to split
  * @returns a `[subdomainPrefix, apexDomain]` tuple
@@ -308,12 +301,10 @@ export function getServiceAuthAudFromUrl(url: string | URL): string | null {
 }
 
 /**
- * Parses a user-entered URL, assuming `https` when no scheme is given. Returns the normalized URL string, or
- * null when the input is not an `http(s)` URL with a dotted host. There is no TLD list — a literal dot in the
- * authority is enough, leaving reachability to whoever fetches the URL.
+ * parses a user-entered URL, assuming https when no scheme is given.
  *
  * @param text the user-entered URL
- * @returns the normalized URL string, or null when the input is not a usable URL
+ * @returns the normalized URL string, or null if the input is not a usable URL
  */
 export const parseLooseUrl = (text: string): string | null => {
 	const trimmed = text.trim();
@@ -322,13 +313,10 @@ export const parseLooseUrl = (text: string): string | null => {
 };
 
 /**
- * Parses a string into a URL, accepting only `http(s)` URLs whose authority carries a genuine dotted host
- * (rejecting degenerate hosts such as a bare run of dots, or a host with a trailing dot). Use this before
- * rendering an untrusted facet URI as a clickable link: a host with no real domain reveals nothing about the
- * destination, so such a link is better shown as plain text.
+ * parses a string into a URL, accepting only HTTP(S) URLs with a genuine dotted host.
  *
  * @param text the URL string to parse
- * @returns the parsed URL when it is a valid http(s) URL with a real host, otherwise null
+ * @returns the parsed URL, or null if invalid or lacking a real host
  */
 export const parseLinkableUrl = (text: string): URL | null => {
 	const url = safeUrlParse(text);
@@ -339,12 +327,10 @@ export const parseLinkableUrl = (text: string): URL | null => {
 };
 
 /**
- * Parses a string into a URL, accepting only the `http(s)` schemes that are safe to place in an anchor href.
- * Unparseable, relative, or dangerous-scheme input (`javascript:`, `data:`, …) yields null. Use this to
- * neutralize untrusted URLs before navigating to or rendering them.
+ * parses a string into a URL, accepting only safe http(s) schemes.
  *
  * @param text the URL string to parse
- * @returns the parsed URL when it is a valid http(s) URL, otherwise null
+ * @returns the parsed URL, or null if invalid or unsafe
  */
 export const safeUrlParse = (text: string): URL | null => {
 	const url = URL.parse(text);

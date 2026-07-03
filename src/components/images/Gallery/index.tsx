@@ -30,11 +30,11 @@ type GalleryBleedChildProps = {
 };
 
 /**
- * Wraps a post's body and measures its width, letting a descendant image carousel overflow horizontally to
- * the body's edges (the "bleed"). Consumers read the measurement via {@link useGalleryBleed}.
+ * wraps a post's body and measures its width, letting a descendant image carousel overflow horizontally to
+ * the body's edges. consumers read the measurement via {@link useGalleryBleed}.
  *
- * Renders no element of its own: it clones its single child — which must be a DOM element — to inject a
- * `ResizeObserver`-backed ref plus an overflow-clip class, publishing the measured width as `bleedWidth`.
+ * @param props
+ * @param props.children single child that must be a DOM element.
  */
 export function GalleryBleed({ children }: { children: React.ReactNode }) {
 	const ref = useRef<HTMLElement | null>(null);

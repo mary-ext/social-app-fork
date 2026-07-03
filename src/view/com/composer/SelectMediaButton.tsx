@@ -106,8 +106,11 @@ async function classifyFile(file: File): Promise<{ type: AssetType; mimeType: st
 }
 
 /**
- * Validate selected files and bucket them into a single asset type. Only one media type may be selected at a
- * time; the first valid type (or `allowedAssetTypes`, if set) constrains the rest.
+ * validate selected files and bucket them into a single asset type.
+ *
+ * @param files the files to validate.
+ * @param allowedAssetTypes optional set of allowed asset types to constrain validation.
+ * @returns the validated asset type.
  */
 async function processFiles(
 	files: File[],

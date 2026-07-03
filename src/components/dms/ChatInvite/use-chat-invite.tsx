@@ -21,10 +21,9 @@ import { m } from '#/paraglide/messages';
 export type ChatInvitePreview = ChatBskyGroupDefs.JoinLinkPreviewView;
 
 /**
- * The resolved state of a chat invite: - `loading`: the preview is still being fetched. - `error`: the fetch
- * failed (e.g. network). Surfaces may want to fall back to a plain link rather than show a chat-specific
- * error. - `unavailable`: the preview resolved but the link is disabled, invalid, or an unrecognized variant
- * - there's nothing to join. - `available`: a usable `JoinLinkPreviewView` is present.
+ * the resolved state of a chat invite: - `loading`: the preview is still being fetched. - `error`: the fetch
+ * failed. - `unavailable`: the link is disabled, invalid, or unrecognized. - `available`: a usable preview is
+ * present.
  */
 export type ChatInviteStatus = 'available' | 'error' | 'loading' | 'unavailable';
 
@@ -52,13 +51,12 @@ export type ChatInvite = {
 };
 
 /**
- * Fetches a chat invite's join link preview by code and derives its status plus the join/open action.
+ * fetches a chat invite's join link preview by code and derives its status plus the join/open action.
  *
  * @param code the invite code to resolve
- * @param initialPreview an already-resolved preview (e.g. a DM message embed carries it) to avoid a loading
- *   flash
- * @param currentConvoId the convo this invite is viewed within; when the invite links to that same chat, the
- *   action becomes "Copy link" instead of open/join (you're already here)
+ * @param initialPreview an already-resolved preview to avoid a loading flash
+ * @param currentConvoId the convo this invite is viewed within to determine if the action should be a copy
+ *   link action
  */
 export function useChatInvite({
 	code,

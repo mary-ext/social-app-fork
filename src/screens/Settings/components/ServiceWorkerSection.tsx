@@ -18,10 +18,7 @@ import { m } from '#/paraglide/messages';
 
 const HAS_SERVICE_WORKER = 'serviceWorker' in navigator;
 
-/**
- * Settings card for the offline service worker: an opt-in install row, a frozen spinner row while a worker is
- * downloading, and an accented reload row once an update is waiting.
- */
+/** settings card for the offline service worker. */
 export function ServiceWorkerSection() {
 	const status = useServiceWorkerStatus();
 

@@ -145,12 +145,10 @@ function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?:
 }
 
 /**
- * Reads and toggles a single self-label (`com.atproto.label.defs#selfLabels` value) on the current account's
- * profile record.
+ * toggles a single self-label on the current account's profile record.
  *
- * @param value the self-label value to add/remove (e.g. `'bot'`, `'!no-unauthenticated'`)
- * @param invalidateFeeds whether to refetch feed and thread queries after a successful toggle, so the label
- *   change is reflected wherever the account's posts render
+ * @param value the self-label value to add or remove
+ * @param invalidateFeeds whether to refetch feed and thread queries after a successful toggle
  */
 function useSelfLabelToggle({ invalidateFeeds, value }: { invalidateFeeds?: boolean; value: string }) {
 	const queryClient = useQueryClient();

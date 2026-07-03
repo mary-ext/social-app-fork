@@ -74,8 +74,8 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 }
 
 /**
- * URL display parts with the hostname left unsplit. Used as the fallback shown until the lazy apex-domain
- * split resolves, and for URLs that fail to parse.
+ * url display parts with the hostname left unsplit. used as the fallback until the lazy apex-domain split
+ * resolves, and for URLs that fail to parse.
  */
 function unsplitUrlParts(href: string): [string, string, string] {
 	try {

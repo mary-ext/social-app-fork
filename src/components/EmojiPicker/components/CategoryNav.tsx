@@ -8,7 +8,7 @@ import * as styles from './CategoryNav.css';
 
 /**
  * horizontal strip of category toggles, one per {@link CATEGORIES}. clicking one scrolls the grid to that
- * section; the toggle for the section currently scrolled into view shows as pressed. the `recent` toggle is
+ * section. the toggle for the section currently scrolled into view shows as pressed. the `recent` toggle is
  * disabled until {@link hasRecents}.
  */
 export function CategoryNav({

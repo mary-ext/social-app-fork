@@ -5,12 +5,7 @@ import type {
 	createPostThreadQueryKey,
 } from '#/state/queries/usePostThread/types';
 
-/**
- * Contains static metadata about the post thread query, suitable for context e.g. query keys and other things
- * that don't update frequently.
- *
- * Be careful adding things here, as it could cause unnecessary re-renders.
- */
+/** static metadata about the post thread query, suitable for context (e.g. query keys). */
 export type PostThreadContextType = {
 	postThreadQueryKey: ReturnType<typeof createPostThreadQueryKey>;
 	postThreadOtherQueryKey: ReturnType<typeof createPostThreadOtherQueryKey>;

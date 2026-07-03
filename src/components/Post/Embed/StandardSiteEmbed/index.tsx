@@ -53,16 +53,12 @@ type ThemeColors = {
 	legible: boolean;
 };
 
-/**
- * Absolute APCA lightness contrast (Lc) we hold the card's accent text to. Lc 90 is APCA's preferred level
- * for body text; the Lc 75 minimum technically passes but leaves saturated accents (e.g. white-on-red)
- * straining to read.
- */
+/** absolute APCA lightness contrast (Lc) held for the card's accent text */
 const ACCENT_MIN_LC = 90;
 
 /**
- * Most HSL-lightness points we'll shift a publisher's accent to reach {@link ACCENT_MIN_LC}. Past this the
- * color has darkened too far to still read as the brand, so the card falls back to its default colors.
+ * maximum hsl lightness points to shift a publisher's accent to reach {@link ACCENT_MIN_LC} before falling
+ * back to default colors
  */
 const MAX_ACCENT_DRIFT = 35;
 
@@ -77,10 +73,9 @@ const shiftLightness = (color: ColorValue, delta: number): ColorValue => {
 };
 
 /**
- * Resolves a legible accent pair from a site's custom theme. The publisher's own pair is honored when it
- * already clears APCA; otherwise the higher-contrast text color is taken and the accent is darkened or
- * lightened away from it until the pair clears the bar. Falls back to the card's default colors when the site
- * ships no accent, or when no reasonable adjustment reaches the bar.
+ * resolves a legible accent pair from a site's custom theme. honors the publisher's pair if it clears APCA;
+ * otherwise, adjusts the accent color to achieve sufficient contrast against the text color. falls back to
+ * the card's default colors if no accent is provided or if no legible adjustment is possible.
  */
 function themeColorsFor(view: AppBskyEmbedExternal.ViewExternal): ThemeColors {
 	const fallback: ThemeColors = {

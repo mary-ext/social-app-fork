@@ -1,7 +1,6 @@
 /**
- * One object URL per blob. Caching by blob keeps repeated or remounted reads (notably React StrictMode's
- * mount → unmount → remount in dev) from each creating — and then revoking — a URL that another render is
- * still loading. The URL is revoked when the blob is garbage-collected.
+ * cache object URLs by blob to prevent repeated or remounted reads from creating and revoking URLs
+ * prematurely.
  */
 const blobUrls = new WeakMap<Blob, string>();
 const revokeOnGc =
@@ -20,11 +19,11 @@ function getBlobUrl(blob: Blob): string {
 }
 
 /**
- * Returns a stable object URL for a blob, suitable for an `<img>`/`<video>` `src`. The same blob always
- * yields the same URL, and it is revoked once the blob is garbage-collected.
+ * returns a stable object URL for a blob, suitable for an image or video source. the same blob always yields
+ * the same URL, and it is revoked once the blob is garbage-collected.
  *
  * @param blob source blob, or undefined/null when there is nothing to display
- * @returns an object URL for the blob; undefined only when no blob was given
+ * @returns object URL for the blob, or undefined if no blob was given
  */
 export function useBlobUrl(blob: Blob): string;
 export function useBlobUrl(blob: Blob | null | undefined): string | undefined;

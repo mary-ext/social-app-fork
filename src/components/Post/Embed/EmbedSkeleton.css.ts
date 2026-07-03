@@ -21,11 +21,7 @@ export const singleTile = style({
 	borderRadius: borderRadius.md,
 });
 
-/**
- * The carousel strip. Its first tile sits at the content-column left (like the live carousel at rest, whose
- * leftward shift is only hidden scroll overflow), so it bleeds the right gutter only — same on every
- * surface.
- */
+/** carousel strip that aligns its first tile with the content column left and bleeds into the right gutter. */
 export const carousel = style({
 	display: 'flex',
 	flexDirection: 'row',

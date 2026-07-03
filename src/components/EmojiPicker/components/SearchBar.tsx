@@ -12,9 +12,8 @@ import { m } from '#/paraglide/messages';
 import * as styles from './SearchBar.css';
 
 /**
- * the picker's search row: a leading magnifying-glass icon, a Base UI {@link Autocomplete.Input}, a trailing
- * clear button (shown only while the query is non-empty), and an optional persistent accessory slot (e.g. the
- * skin-tone selector) composed via `children`. must render inside an `Autocomplete.Root`.
+ * picker's search row containing a leading search icon, an input field, a conditional clear button, and an
+ * optional accessory slot. must be rendered inside an `Autocomplete.Root`.
  */
 export function SearchBar({ children }: { children?: ReactNode }) {
 	return (

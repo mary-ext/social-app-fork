@@ -52,11 +52,7 @@ import { m } from '#/paraglide/messages';
 
 const ICON_WIDTH = 26;
 
-/**
- * The mobile-only left navigation drawer. A left-anchored Base UI drawer driven by the shared
- * {@link useIsDrawerOpen}/{@link useSetDrawerOpen} state; portals to `<body>`, traps focus, and locks page
- * scroll while open. The hamburger only renders at mobile widths, so this stays closed otherwise.
- */
+/** mobile-only left navigation drawer. */
 export function Drawer() {
 	const isOpen = useIsDrawerOpen();
 	const setDrawerOpen = useSetDrawerOpen();

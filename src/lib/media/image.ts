@@ -24,13 +24,8 @@ const PREDICTION_HEADROOM = 0.92;
 const PREDICTION_SCALES = [1.0, 0.9, 0.8, 0.7, 0.6] as const;
 
 /**
- * median encoded-bytes ratios vs the anchor (scale=1.0, q=92), measured via headless Chromium's
- * `OffscreenCanvas.convertToBlob` webp encoder on 64 cc-licensed test images spanning photos, illustrations,
- * and screenshots. rows correspond to {@link PREDICTION_SCALES}, cols to {@link QUALITY_STEPS}.
- *
- * the row structure is non-trivial: the canvas 2d downsampler produces slightly smoother intermediate pixels
- * than a standalone lanczos resize, so mid-scale rows have lower ratios than a jpeg-derived table would
- * predict. the values are specific to the browser encoder pipeline, not libwebp in general.
+ * median encoded-bytes ratios vs the anchor (scale=1.0, q=92), measured via chromium's WebP encoder on 64
+ * test images. rows correspond to {@link PREDICTION_SCALES}, columns to {@link QUALITY_STEPS}.
  */
 const PREDICTION_RATIOS: readonly (readonly number[])[] = [
 	[1.0, 0.8, 0.656, 0.558],
@@ -112,12 +107,6 @@ export const compressProfileImage = (blob: Blob, maxW: number, maxH: number): Pr
 /**
  * compress an image to fit a byte budget.
  *
- * starts with an anchor encode at {@link MAX_QUALITY} / full fitted dims. if the anchor fits, it ships.
- * otherwise, for webp CONTAIN inputs, an empirical lookup table ({@link PREDICTION_RATIOS}) picks the
- * highest-scoring (scale, quality) cell whose predicted byte count fits, and encodes once there. anything not
- * covered by the table (jpeg profile images, prediction misses) falls through to an iterative shrink-and-
- * quality-walk search seeded with the anchor.
- *
  * @param blob source image
  * @param opts size, format, and crop policy
  * @returns the encoded blob and its final aspect ratio
@@ -174,17 +163,15 @@ const compressImage = async (blob: Blob, opts: CompressOptions): Promise<Compres
 };
 
 /**
- * pick the highest-scoring (scale, quality) cell whose predicted byte count fits the budget with
- * {@link PREDICTION_HEADROOM} to spare, encode at that cell, and return the result if it actually fits.
- * returns undefined when no cell predicts within budget or when the encode missed the budget despite the
- * prediction — callers should fall back to iterative search.
+ * encodes the image at the highest-scoring cell that is predicted to fit the byte budget.
  *
  * @param image decoded source image
  * @param fittedW width at scale=1.0
  * @param fittedH height at scale=1.0
- * @param anchorBytes byte count of the anchor encode at (fittedW, fittedH, MAX_QUALITY)
+ * @param anchorBytes byte count of the anchor encode at maximum scale and quality
  * @param opts compression options
- * @returns the encoded result, or undefined if prediction was unusable
+ * @returns the encoded result, or undefined if no cell is predicted to fit or if the actual encode exceeds
+ *   the budget
  */
 const compressByPrediction = async (
 	image: HTMLImageElement,
@@ -232,19 +219,14 @@ const compressByPrediction = async (
 };
 
 /**
- * iterative shrink-and-quality-walk search seeded with the anchor encode. used for jpeg profile images (where
- * the prediction table isn't applicable) and as a fallback when the webp predictor misses its budget.
- *
- * holds quality at the ceiling while shrinking toward {@link SOFT_MIN_SCALE}, then walks through
- * {@link QUALITY_STEPS} once the soft threshold is reached. if that still isn't enough it keeps shrinking
- * down to {@link HARD_MIN_SCALE} before giving up.
+ * search for an encode within budget by iteratively shrinking scale and reducing quality.
  *
  * @param image decoded source image
- * @param fittedW width at scale=1.0
- * @param fittedH height at scale=1.0
- * @param anchorEncoded anchor encode at (fittedW, fittedH, MAX_QUALITY), known to overshoot
+ * @param fittedW width at scale 1.0
+ * @param fittedH height at scale 1.0
+ * @param anchorEncoded anchor encode at max quality, known to overshoot budget
  * @param opts compression options
- * @returns the encoded result, or undefined if no attempt fits within the budget
+ * @returns encoded result, or undefined if no attempt fits the budget
  */
 const compressByIteration = async (
 	image: HTMLImageElement,
@@ -328,11 +310,6 @@ export const stripExif = async (blob: Blob): Promise<Blob> => {
 
 /**
  * decode an image blob into an `HTMLImageElement`.
- *
- * uses the element's `load` event rather than `HTMLImageElement.decode()`: `decode()` forces a full-
- * resolution bitmap decode up front and rejects with `EncodingError` for otherwise-valid images whose pixel
- * dimensions exceed a browser/device memory budget — notably high-megapixel photos on mobile. `load` lets the
- * browser decode lazily and downsample at draw time, which is all the canvas pipeline here needs.
  *
  * @param blob source image
  * @returns the decoded image element

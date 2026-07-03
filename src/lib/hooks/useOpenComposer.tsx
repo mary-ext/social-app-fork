@@ -43,8 +43,8 @@ export interface ComposerOpts {
 }
 
 /**
- * registry id for the singleton composer dialog. a stable constant (rather than a `useId`) so the discard
- * flow can `closeAllDialogs({ except: [COMPOSER_DIALOG_ID] })` without threading an id through context.
+ * registry id for the singleton composer dialog. this stable constant allows the discard flow to close all
+ * other dialogs without threading an id through context.
  */
 export const COMPOSER_DIALOG_ID = 'composer';
 

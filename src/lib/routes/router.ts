@@ -83,14 +83,10 @@ function createRoute(pattern: string): Route {
 }
 
 /**
- * Decodes a percent-encoded path parameter so screens receive it unescaped.
- *
- * a path parameter can reach us percent-encoded — e.g. some static hosts redirect to the escaped form of a
- * url before any application code runs — which decoding here centralizes so individual screens don't each
- * unescape.
+ * decodes a percent-encoded path parameter so screens receive it unescaped.
  *
  * @param value raw path segment captured by the route matcher
- * @returns the decoded value, or the input unchanged when it is not valid percent-encoding
+ * @returns decoded value, or the input unchanged if percent-encoding is invalid
  */
 function decodeRouteParam(value: string): string {
 	try {

@@ -18,8 +18,8 @@ export type ActiveConvoStates =
 	| ConvoStateDisabled;
 
 /**
- * Checks if a `Convo` has a `status` that is "active", meaning the chat is loaded and ready to be used, or
- * its in a suspended or background state, and ready for resumption.
+ * checks if a `Convo` status is active, suspended, or in the background, indicating it is ready to be used or
+ * resumed
  */
 export function isConvoActive(convo: ConvoState): convo is ActiveConvoStates {
 	return (

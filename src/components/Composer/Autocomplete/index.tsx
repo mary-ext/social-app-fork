@@ -19,8 +19,8 @@ import { m } from '#/paraglide/messages';
 import * as styles from './Autocomplete.css';
 
 /**
- * The composer's inline-autocomplete suggestion popup for mentions and emoji. Must be rendered inside the
- * composer's `BaseAutocomplete.Root`, which owns the input and drives open-state and keyboard navigation.
+ * inline-autocomplete suggestion popup for mentions and emoji. must be rendered inside the composer's
+ * `BaseAutocomplete.Root`.
  */
 export function Autocomplete({
 	items,

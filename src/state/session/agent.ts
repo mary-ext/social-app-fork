@@ -26,8 +26,8 @@ export class InactiveAccountError extends Error {
 }
 
 /**
- * Refresh a resumed access token once it comes within this window of expiring. Tokens with more life left are
- * resumed as-is, with no refresh round trip.
+ * refresh a resumed access token once it comes within this window of expiring. tokens with more life left are
+ * resumed as-is.
  */
 const TOKEN_REFRESH_LEEWAY_MS = 5 * 60_000;
 
@@ -109,11 +109,10 @@ export async function resumeOAuthSession(storedAccount: SessionAccount) {
 }
 
 /**
- * Resumes a stored OAuth session without a network round trip, for a fast boot. The session is not validated
- * — callers must follow up with the returned `validate` callback once the app has rendered.
+ * resumes a stored OAuth session without a network round trip.
  *
  * @param storedAccount the persisted account to resume.
- * @returns the client set and a `validate` callback that confirms the session against the server.
+ * @returns the client set and a validate callback that confirms the session against the server.
  * @throws {TokenRefreshError} if no stored session exists for the account.
  */
 export async function optimisticOAuthSession(
@@ -131,15 +130,14 @@ export async function optimisticOAuthSession(
 }
 
 /**
- * Validates a session resumed via {@link optimisticOAuthSession}: refreshes the access token when it is
- * within {@link TOKEN_REFRESH_LEEWAY_MS} of expiry, then confirms with the server that the account is still
- * active.
+ * validates a session resumed via {@link optimisticOAuthSession}. refreshes the access token when it is close
+ * to expiry, then confirms the account is active.
  *
- * @param oauthAgent the session's atcute user-agent.
- * @param pds the session's PDS client.
- * @returns the up-to-date account.
- * @throws {InactiveAccountError} if the account has been deactivated.
- * @throws {TokenRefreshError} if the stored session can no longer be refreshed.
+ * @param oauthAgent the session's active user-agent
+ * @param pds the session's PDS client
+ * @returns the up-to-date account
+ * @throws {InactiveAccountError} if the account has been deactivated
+ * @throws {TokenRefreshError} if the stored session can no longer be refreshed
  */
 async function validateResumedSession(oauthAgent: OAuthUserAgent, pds: Client): Promise<SessionAccount> {
 	if (tokenExpiringWithin(oauthAgent.session, TOKEN_REFRESH_LEEWAY_MS)) {

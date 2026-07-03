@@ -69,12 +69,11 @@ const mapValues = <T, R>(input: Record<string, T>, fn: (value: T, key: string) =
 };
 
 /**
- * Builds a cva-style recipe with vanilla-extract: each variant value compiles to its own class and the
- * returned function resolves a variant selection to the matching class string. The serializer reconstructs
- * that function in the client bundle, so no build-time style code ships.
+ * builds a cva-style recipe with vanilla-extract where variants compile to classes and the returned function
+ * resolves a selection to a class string.
  *
- * @param definition base style, variant groups, optional compound variants and defaults
- * @param options `debugId` woven into class identifiers, and `layer` to emit every style into a cascade layer
+ * @param definition base style, variant groups, compound variants, and default variants
+ * @param options options containing debugId and cascade layer
  * @returns a function mapping a variant selection to its resolved class string
  */
 export const recipe = <Variants extends VariantGroups>(

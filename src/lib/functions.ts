@@ -21,10 +21,12 @@ export function dedupArray<T>(arr: T[]): T[] {
 }
 
 /**
- * Taken from @tanstack/query-core utils.ts Modified to support Date object comparisons
+ * returns `a` if `b` is deeply equal, preserving structural sharing between `a` and `b`. supports Date object
+ * comparisons.
  *
- * This function returns `a` if `b` is deeply equal. If not, it will replace any deeply equal children of `b`
- * with those of `a`. This can be used for structural sharing between JSON values for example.
+ * @param a the first value to compare
+ * @param b the second value to compare
+ * @returns the structurally shared result
  */
 type PlainObject = Record<string, unknown>;
 

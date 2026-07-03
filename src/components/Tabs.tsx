@@ -15,12 +15,9 @@ import * as styles from '#/components/Tabs.css';
 import { Text } from '#/components/Text';
 
 /**
- * A web-native tabbed pager built on Base UI Tabs, exposed as namespace parts (`import * as Tabs`). Tabs are
- * identified by a stable string id, so the active tab survives the tab set changing (keep `Tab`/`Panel`
- * `value` and React `key` on the same id). Panels stay mounted while hidden (so each page keeps its scroll
- * and query state), and Base UI handles keyboard navigation and ARIA wiring. The list is sticky and scrolls
- * horizontally when its tabs overflow, centering the active tab; its width comes from the shell's center
- * column, so no width wrapper is needed.
+ * tabbed pager built on Base UI Tabs, exposed as namespace parts. tabs are identified by a stable string id
+ * so the active tab survives tab set changes. panels stay mounted while hidden to preserve scroll and query
+ * state.
  *
  * ```tsx
  * <Tabs.Root value={tab} onValueChange={setTab}>
@@ -37,9 +34,9 @@ import { Text } from '#/components/Text';
 const TabsContext = createContext<{ value: string } | null>(null);
 
 /**
- * Lets the user click and drag horizontally to scroll an overflowing row, since the scrollbar is hidden and a
- * trackpad/shift-wheel isn't always available. A few pixels of slop keep a plain click selecting a tab; once
- * it crosses into a drag, the trailing click is swallowed so it doesn't activate a tab.
+ * enables click-and-drag horizontal scrolling for an overflowing container.
+ *
+ * prevents click actions from triggering if the drag distance exceeds a small threshold.
  */
 const useDragScroll = (ref: RefObject<HTMLElement | null>) => {
 	useEffect(() => {
@@ -179,10 +176,7 @@ export const Panel = ({ value, className, children, ...rest }: PanelProps) => {
 export type Section<Id extends string> = {
 	id: Id;
 	label: string;
-	/**
-	 * @param isFocused whether this is the active tab; gate the section's feed query on it so only the visible
-	 *   tab fetches while the rest sit mounted-but-idle.
-	 */
+	/** @param isFocused whether the tab is active to gate the feed query so only the visible tab fetches */
 	render: (isFocused: boolean) => ReactNode;
 };
 
@@ -202,13 +196,12 @@ export type TabsProps<Id extends string> = {
 };
 
 /**
- * The config-driven entry point to the web Tabs primitive: pass a `sections` array plus the controlled
- * `value`/`onValueChange`, and it renders the sticky bar and the keep-mounted panels with the shared chrome
- * (drag-scroll, active-tab centering, scroll-to-top on re-tap, first-tab fallback) built in. For bespoke
- * layouts, compose the lower-level `Root`/`List`/`Tab`/`Panel` parts directly instead.
+ * renders a tabbed interface with a sticky tab bar and persistent panels.
  *
- * Passing an empty `sections` renders just the `header` with no bar — e.g. while a profile header is still
- * loading and its tab set isn't known yet.
+ * @param props.sections config array for the tabs and panels
+ * @param props.value active tab value
+ * @param props.onValueChange callback triggered on tab change
+ * @param props.header optional header element rendered above the tab bar
  */
 export const Tabs = <Id extends string>({
 	header,

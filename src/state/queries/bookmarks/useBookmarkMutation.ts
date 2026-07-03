@@ -19,10 +19,7 @@ type MutationArgs =
 	| { action: 'create'; post: AppBskyFeedDefs.PostView }
 	| {
 			action: 'delete';
-			/**
-			 * For deletions, we only need to URI. Plus, in some cases we only know the URI, such as when a post was
-			 * deleted by the author.
-			 */
+			/** uri of the deleted item */
 			uri: string;
 	  };
 

@@ -1,11 +1,6 @@
 import { type CleanupFunction, type EventListener, SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-/**
- * A {@link SimpleEventEmitter} multiplexed over string keys: each key owns an independent set of listeners.
- * Backing emitters are created lazily on first subscribe and dropped once their last listener unsubscribes,
- * so an emitter that fires across an unbounded key space (post URIs, DIDs) doesn't retain a per-key entry
- * forever.
- */
+/** a multiplexed {@link SimpleEventEmitter} where each string key owns an independent set of listeners. */
 export class KeyedEventEmitter<TArgs extends unknown[], TKey extends string = string> {
 	#emitters = new Map<TKey, SimpleEventEmitter<TArgs>>();
 

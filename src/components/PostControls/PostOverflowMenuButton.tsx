@@ -24,8 +24,8 @@ type Props = {
 };
 
 /**
- * The post overflow ("…") menu rendered as a standalone corner button, for surfaces that pin it to the post's
- * top-right rather than the trailing action bar. Reuses the compact {@link PostControls} button chrome.
+ * post overflow ("…") menu rendered as a standalone corner button, for surfaces that pin it to the post's
+ * top-right rather than the trailing action bar. reuses the compact {@link PostControls} button chrome.
  */
 export function PostOverflowMenuButton({
 	feedContext,

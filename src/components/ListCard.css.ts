@@ -14,8 +14,9 @@ export const link = style({
 });
 
 /**
- * The `Default` presentation: a padded, full-width row that highlights on hover/press, with a hairline top
- * separator on by default — opt out (`topBorder: false`) for the first row beneath a header.
+ * padded, full-width row that highlights on hover/press, with an optional top border.
+ *
+ * @param topBorder whether to show the top border. defaults to true.
  */
 export const defaultRow = recipe(
 	{

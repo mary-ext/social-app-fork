@@ -4,13 +4,9 @@ import type {} from '@atcute/lexicons/ambient';
 import * as v from '@atcute/lexicons/validations';
 
 /**
- * Resolves opengraph/twitter metadata for an external url. When present, the returned `image` is an
- * origin-relative path to {@link getLinkImage} rather than the upstream image url. For a standard.site link —
- * one advertising Atmosphere records via `<link rel>` tags — the worker asks the appview to hydrate them, and
- * returns the resulting `associatedRefs` (uri+cid) and enhanced `view`.
- *
- * This is a fork-internal lexicon served by our own Cloudflare Worker, not a federated atproto method; the
- * `internal.app` authority is intentionally non-resolvable so it can never collide with a real nsid.
+ * resolves opengraph/twitter metadata for an external URL. when present, the returned `image` is an
+ * origin-relative path to {@link getLinkImage}. for a standard.site link advertising Atmosphere records,
+ * hydrates and returns the `associatedRefs` and enhanced `view`.
  */
 export const extractLinkMeta = v.query('internal.app.extractLinkMeta', {
 	params: v.object({
@@ -30,13 +26,8 @@ export const extractLinkMeta = v.query('internal.app.extractLinkMeta', {
 });
 
 /**
- * Mints a short-lived, DPoP-bound client assertion (RFC 7523) for our confidential OAuth client, signed with
- * the client's private key held by the worker. The browser presents a DPoP proof in the `DPoP` header and the
- * worker returns an assertion bound to that proof's key, letting the SPA be a confidential client without a
- * token-mediating proxy (Bluesky OAuth proposal 0010).
- *
- * Production only: local dev runs as a public client and never calls this. The worker guards it with a
- * same-origin (`Sec-Fetch-Site`) check, so only our own SPA can reach it.
+ * mints a short-lived, DPoP-bound client assertion (RFC 7523) for our confidential OAuth client, signed with
+ * the client's private key.
  */
 export const getClientAssertion = v.procedure('internal.app.getClientAssertion', {
 	params: null,

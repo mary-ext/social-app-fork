@@ -19,7 +19,7 @@ export type MediaBadgesProps = {
 };
 
 /**
- * Overlay badges on a media thumbnail: a top-right image-count badge for galleries, plus a bottom-right
+ * overlays badges on a media thumbnail: a top-right image-count badge for galleries, and a bottom-right
  * cluster with a fullscreen indicator when cropped and an ALT tag.
  */
 export function MediaBadges({ variant, hasAlt, cropped, large, count, index }: MediaBadgesProps) {

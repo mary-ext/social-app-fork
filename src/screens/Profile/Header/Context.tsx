@@ -25,8 +25,8 @@ import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';
 
 /**
- * The viewer's relationship to the profile, as a single discriminant. Drives which action buttons a header
- * variant renders, replacing the nested `isMe ? … : blocking ? …` ternary.
+ * viewer's relationship to the profile, as a single discriminant. drives which action buttons a header
+ * variant renders.
  */
 export type ProfileRelationship = 'blocked-by' | 'blocking' | 'blocking-by-list' | 'default' | 'self';
 
@@ -77,9 +77,8 @@ export const useProfileHeader = (): ProfileHeaderContextValue => {
 };
 
 /**
- * Lifts every piece of derived profile-header state into one place: the shadowed profile, the moderation
- * decision, the follow/block mutation queues, live status, and the viewer relationship. Header subcomponents
- * consume it via {@link useProfileHeader} rather than recomputing it.
+ * lifts profile-header state, including the shadowed profile, moderation decisions, mutation queues, live
+ * status, and viewer relationships, for consumption by header subcomponents via {@link useProfileHeader}.
  */
 export function ProfileHeaderProvider({
 	children,

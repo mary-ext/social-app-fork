@@ -6,8 +6,9 @@ import { getOffsetForIndex } from '#/components/ImageEmbed/carousel/utils';
 const SETTLE_DURATION = 700;
 
 /**
- * Arrow-key paging for the image carousel when focus is inside it. Tweens to the neighbouring item and
- * reports the settled index. Operates directly on the scroll element returned by `getScrollEl`.
+ * enables arrow-key paging for the carousel. tweens to the neighboring item and reports the settled index.
+ *
+ * @param getScrollEl function that returns the scrollable element
  */
 export function useKeyboardHandlers({
 	getScrollEl,

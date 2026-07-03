@@ -1,8 +1,7 @@
 /**
- * generates an ES256 signing key for the OAuth client-assertion backend (the confidential production client).
+ * generate an ES256 signing key for the OAuth client-assertion backend.
  *
- * prints the PKCS8 PEM private key to set as the worker secret, and the public jwks for reference (the worker
- * derives and advertises the jwks itself, so the printed copy is informational only).
+ * prints the PKCS8 PEM private key to set as the worker secret, and the public JWKS for reference.
  *
  * usage:
  *
@@ -10,8 +9,6 @@
  * node scripts/generate-oauth-key.ts
  * wrangler secret put OAUTH_PRIVATE_KEY  # paste the PEM output, including the BEGIN/END lines
  * ```
- *
- * the `kid` below must match the worker's SIGNING_KEY_ID (worker/client-assertion.ts).
  */
 import { exportPkcs8PrivateKey, generateClientAssertionKey, Keyset } from '@atcute/oauth-cab';
 

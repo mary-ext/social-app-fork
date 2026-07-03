@@ -76,11 +76,8 @@ export function useLabelerSubscriptionMutation() {
 	return useMutation({
 		async mutationFn({ did, subscribe }: { did: string; subscribe: boolean }) {
 			/**
-			 * If a user has invalid/takendown/deactivated labelers, we need to remove them. We don't have a great
-			 * way to do this atm on the server, so we do it here.
-			 *
-			 * We also need to push validation into this method, since we need to check {@link MAX_LABELERS} _after_
-			 * we've removed invalid or takendown labelers.
+			 * filters out invalid, taken down, or deactivated labelers, ensuring the total count does not exceed
+			 * {@link MAX_LABELERS}
 			 */
 			const labelerDids = (preferences.data?.moderationPrefs?.labelers ?? []).map((l) => l.did);
 			const invalidLabelers: string[] = [];

@@ -22,15 +22,13 @@ import { Text } from '#/components/Typography';
 import * as css from './Button.css';
 
 /**
- * The `Button` component, and some extensions of it like `Link` are intended to be generic and therefore
- * apply no styles by default. These `VariantProps` are what control the `Button`'s presentation, and are
- * intended only use cases where the buttons appear as, well, buttons.
- *
- * If `Button` or an extension of it are used for other compound components, use this property to avoid misuse
- * of these variant props further down the line.
+ * props that control the presentation of the Button component, intended to be omitted when extending the
+ * component for other compound components.
  *
  * @example
+ * 	```tsx
  * 	type MyComponentProps = Omit<ButtonProps, UninheritableButtonProps> & {...}
+ * 	```
  */
 export type UninheritableButtonProps = 'variant' | 'color' | 'size' | 'shape';
 
@@ -56,12 +54,12 @@ export type VariantProps = {
 	/** The size of the button */
 	size?: ButtonSize;
 	/**
-	 * The shape of the button
+	 * the shape of the button.
 	 *
-	 * - `default`: Pill shaped. Most buttons should use this shape.
-	 * - `round`: Circular. For icon-only buttons.
-	 * - `square`: Square. For icon-only buttons.
-	 * - `rectangular`: Rectangular. Use when adjacent to form fields.
+	 * - `default`: pill shaped. most buttons should use this shape.
+	 * - `round`: circular. for icon-only buttons.
+	 * - `square`: square. for icon-only buttons.
+	 * - `rectangular`: rectangular. use when adjacent to form fields.
 	 */
 	shape?: ButtonShape;
 };
@@ -143,8 +141,8 @@ export const Button = forwardRef<View, ButtonProps>(
 		ref,
 	) => {
 		/**
-		 * The `variant` prop is deprecated in favor of simply specifying `color`. If a `color` is set, then we
-		 * want to use the existing codepaths for "solid" buttons. This is to maintain backwards compatibility.
+		 * @deprecated use `color` instead. if `color` is set, solid button codepaths are used for backwards
+		 *   compatibility.
 		 */
 		const variant = !variantProp && color ? 'solid' : variantProp;
 

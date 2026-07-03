@@ -4,8 +4,8 @@ import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
 /**
- * flex column (default `align-items: stretch`) makes the pressable span the full width, matching the original
- * RNW `View`. `position: relative` anchors the mobile fade gradient (absolute inset-0).
+ * applies flex column layout to span the full width and anchors absolute children like the mobile fade
+ * gradient.
  */
 export const outer = style({
 	boxSizing: 'border-box',

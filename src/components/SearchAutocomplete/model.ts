@@ -26,9 +26,9 @@ import { m } from '#/paraglide/messages';
 import type { SearchHistoryEntry } from '#/storage';
 
 /**
- * a selectable row: the user navigates to it with the keyboard and presses it to act. every one is both fed
- * to `Autocomplete.Root`'s `items` (so its highlight order matches the rendered list) and dispatched by
- * `commit`. `date` items only ever appear in the calendar grid; the rest in the list.
+ * a selectable row in the autocomplete list that can be navigated and activated.
+ *
+ * @param item the item data representing the row
  */
 export type InteractiveItem =
 	| {
@@ -62,11 +62,7 @@ export type DateItem = Extract<InteractiveItem, { kind: 'date' }>;
 // date items live only in the calendar grid, never in a list, so the list renderer never sees one.
 export type ListRow = ChromeRow | Exclude<InteractiveItem, { kind: 'date' }>;
 
-/**
- * the popup's contents for the active suggestion mode: a calendar grid in date mode, otherwise an ordered
- * list of rows (chrome included). the renderer maps over this; {@link interactiveItems} derives the navigable
- * subset Base UI needs.
- */
+/** popup contents for the active suggestion mode: a calendar grid in date mode, or an ordered list of rows. */
 export type AutocompleteResult =
 	| { kind: 'actor'; rows: ListRow[] }
 	| { days: DateItem[]; kind: 'date'; visibleMonth: Date }
@@ -81,10 +77,9 @@ export const CALENDAR_DAY_COUNT = 42;
 const MAX_RECENT_SHOWN = 8;
 
 /**
- * builds the recent-history rows in stored (recency) order, interleaving queries and resolved profiles. a
- * profile whose hydration hasn't landed yet holds its slot with a skeleton placeholder (while `pending`); one
- * that stays unresolved after the fetch settles (a deleted/blocked account) is dropped rather than shown
- * blank.
+ * builds the recent-history rows in stored recency order, interleaving queries and resolved profiles.
+ *
+ * @param pending whether the profile hydration is currently loading
  */
 const buildRecentRows = (
 	history: SearchHistoryEntry[],
@@ -142,9 +137,8 @@ const actorSectionLabel = (op: OperatorName): string => {
 };
 
 /**
- * builds the day grid for a visible month: six weeks starting on Sunday, with spillover days from the
- * neighbouring months and each day flagged for today, selection, and whether it falls outside the allowed
- * range.
+ * builds the day grid for a visible month: six weeks starting on Sunday, with spillover days from
+ * neighbouring months, flagging today, selection, and out-of-range days.
  */
 const buildCalendarDays = ({
 	constraints,
@@ -189,20 +183,19 @@ const buildCalendarDays = ({
 /**
  * assembles the popup contents for the active mode: the calendar grid for `since`/`until`, a labelled profile
  * list for `from`/`to`/`mentions`, or the default mix of search/navigation shortcuts, profile typeahead, and
- * operator options. the row order is the render order.
+ * operator options.
  *
- * @param constraints the selectable date range derived from the sibling operator (date mode only)
- * @param history the unified search history, surfaced as recent rows in the empty default state
- * @param mode the classified suggestion mode for the caret token
- * @param operators the operators to offer under "search options" (default mode only)
- * @param profiles the actor/profile typeahead matches
- * @param query the raw search query
- * @param recentProfiles resolved profile views for the history's profile entries, keyed by did
- * @param recentProfilesPending whether the recent profiles' hydration is still in flight, so unresolved
- *   entries hold a skeleton slot rather than dropping out
- * @param today the current day, highlighted in the calendar
- * @param visibleMonth the month the calendar is showing
- * @returns the tagged result for the renderer
+ * @param constraints selectable date range derived from the sibling operator
+ * @param history unified search history, surfaced as recent rows in the empty default state
+ * @param mode classified suggestion mode for the caret token
+ * @param operators operators to offer under "search options"
+ * @param profiles actor/profile typeahead matches
+ * @param query raw search query
+ * @param recentProfiles resolved profile views for the history's profile entries, keyed by DID
+ * @param recentProfilesPending whether recent profiles' hydration is still in flight
+ * @param today current day, highlighted in the calendar
+ * @param visibleMonth month the calendar is showing
+ * @returns tagged result for the renderer
  */
 export const buildResult = ({
 	constraints,

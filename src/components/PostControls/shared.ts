@@ -13,11 +13,7 @@ import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
-/**
- * Props shared by the post action bar in either size. The two surfaces — {@link PostControls} (feed / thread
- * rows) and {@link AnchorPostControls} (focused thread anchor) — keep their layout/sizing separate but share
- * the action wiring via {@link usePostControlsActions}.
- */
+/** props shared by the post action bar in either size. */
 export type PostControlsProps = {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	feedContext?: string | undefined;

@@ -20,10 +20,8 @@ const IS_CONFIDENTIAL_CLIENT = !OAUTH_CLIENT_ID.startsWith('http://localhost');
 const CLIENT_ASSERTION_ENDPOINT = `${new URL(OAUTH_CLIENT_ID).origin}/xrpc/internal.app.getClientAssertion`;
 
 /**
- * Fetches a DPoP-bound client assertion from the worker's client-assertion backend, letting the production
- * SPA authenticate as a confidential client. The OAuth agent calls this before its PAR and token/refresh
- * requests; the request is same-origin, so the browser stamps the `Sec-Fetch-Site` header the worker
- * requires. The fixed RFC 7523 assertion type isn't sent over the wire — it's hardcoded here.
+ * fetches a DPoP-bound client assertion from the worker's client-assertion backend to authenticate the SPA as
+ * a confidential client.
  */
 const fetchClientAssertion: ClientAssertionFetcher = async ({ aud, createDpopProof }) => {
 	const { client_assertion } = await ok(

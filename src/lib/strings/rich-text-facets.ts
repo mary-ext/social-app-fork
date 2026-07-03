@@ -30,11 +30,10 @@ export function cleanNewlines(text: string): string {
 }
 
 /**
- * Counts the graphemes of `text` as it will be displayed, with link URLs replaced by their shortened form —
- * the value a composer's character counter shows.
+ * counts the graphemes of `text` as it will be displayed, with link URLs replaced by their shortened form.
  *
- * @param text the compose-input text.
- * @returns the shortened grapheme length.
+ * @param text the compose-input text
+ * @returns the shortened grapheme length
  */
 export function getShortenedLength(text: string): number {
 	let shortened = '';
@@ -45,11 +44,12 @@ export function getShortenedLength(text: string): number {
 }
 
 /**
- * Appends a parser token to a richtext builder: only mentions, hashtags, and scheme-prefixed autolinks become
- * facets; the parser's extended markdown syntax is emitted as literal text. Unlike `@atproto/api`,
- * bare-domain autolinks (`bsky.app` with no scheme) and cashtags are intentionally not faceted — an accepted
- * tradeoff of the @atcute parser. `resolveDid` maps a mention handle to a DID, or returns undefined to render
- * the mention as plain text.
+ * appends a parser token to a richtext builder, converting only mentions, hashtags, and scheme-prefixed
+ * autolinks into facets.
+ *
+ * @param token the parser token to append
+ * @param builder the richtext builder to append to
+ * @param resolveDid maps a mention handle to a DID, or returns undefined to render the mention as plain text
  */
 function appendToken(
 	builder: RichtextBuilder,
@@ -85,9 +85,7 @@ function appendToken(
 }
 
 /**
- * Detects facets in `text` without resolving mention handles to DIDs — each handle is stored in the mention
- * facet's `did` slot, matching `@atproto/api`'s `detectFacetsWithoutResolution()`. The resulting mention
- * facets are not lexicon-valid and only render as links when the consumer opts in.
+ * detects facets in `text` without resolving mention handles to DIDs.
  *
  * @param text the input text.
  * @returns the text and its detected facets.

@@ -2,10 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { space } from '#/styles/tokens.css';
 
-/**
- * Feed-specific layout. The shared row / column / spine / frame structure lives in `#/components/PostLayout`;
- * what remains here is the repost/pin reason header and the feed's per-element body rhythm.
- */
+/** feed-specific layout that renders the repost/pin reason header and the feed's per-element body rhythm. */
 
 /** The repost/pin reason header row above the post; its leading slot aligns the reason with the post body. */
 export const reasonRow = style({

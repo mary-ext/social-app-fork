@@ -213,14 +213,14 @@ export function useRemoveFeedMutation() {
 }
 
 /**
- * Tracks whether a feed or list is in the user's saved feeds and toggles it, surfacing a toast on either
+ * tracks whether a feed or list is in the user's saved feeds and toggles it, surfacing a toast on either
  * outcome.
  *
  * @param pin whether a freshly saved feed should also be pinned
  * @param type the saved-feed kind, `feed` for a generator or `list` for a list
  * @param uri the feed generator or list URI, matched against the saved-feeds config
- * @returns `isSaved` current saved state, `isPending` while a mutation is in flight, and `toggleSave` to add
- *   or remove it
+ * @returns an object containing the current saved state, a pending state, and a function to toggle the save
+ *   state
  */
 export function useToggleSavedFeed({
 	pin,

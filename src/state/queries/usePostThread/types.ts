@@ -117,14 +117,7 @@ export type ThreadItem =
 			item: 'anchor' | 'reply' | 'replyComposer';
 	  };
 
-/**
- * Metadata collected while traversing the raw data from the thread response. Some values here can be computed
- * immediately, while others need to be computed during a second pass over the thread after we know things
- * like total number of replies, the reply index, etc.
- *
- * The idea here is that these values should be objectively true in all cases, such that we can use them later
- * — either individually on in composite — to drive rendering behaviors.
- */
+/** metadata collected while traversing the raw data from the thread response. */
 export type TraversalMetadata = {
 	/** The depth of the post in the reply tree, where 0 is the root post. This is calculated on the server. */
 	depth: number;
@@ -163,32 +156,17 @@ export type TraversalMetadata = {
 	/** The number of replies to this post not hydrated and returned by the response. */
 	repliesUnhydrated: number;
 	/**
-	 * The number of replies that have been "seen" (actually able to be rendered) so far in the traversal.
-	 * Excludes replies that are moderated in some way, since those are not "seen" on first load.
-	 *
-	 * We use this to compute the `replyIndex` values of the children of this parent. E.g. if a reply is not
-	 * hydrated on the response, or is moderated in some way (including by the user), this value is not
-	 * incremented. So this represents the _actual_ index of the reply in the rendered view.
-	 *
-	 * Note: this is a "counter", not an "index". Because this value is incremented starting from 0, it is
-	 * 1-indexed. So to when comparing to the `replyIndex`, you'll need to subtract 1 from this value.
+	 * number of rendered replies encountered during traversal, excluding moderated or unhydrated replies.
+	 * 1-based counter.
 	 */
 	repliesSeenCounter: number;
-	/**
-	 * The index-0-based index of this reply in the parent post's replies. This is computed from the
-	 * `repliesSeenCounter` of the parent post, prior to it being incremented for this reply.
-	 */
+	/** 0-based index of this reply in the parent post's replies. */
 	replyIndex: number;
-	/**
-	 * Each slice is responsible for rendering reply lines based on its depth. This value corresponds to any
-	 * line indices that can be skipped e.g. because there are no further replies below this sub-tree to
-	 * render.
-	 */
+	/** line indices to skip when rendering reply lines for the slice, based on its depth */
 	skippedIndentIndices: Set<number>;
 	/**
-	 * Indicates and stores parent data IF that parent has additional unhydrated replies. This value is passed
-	 * down to children along the left/lower-most branch of the tree. When the end is reached, a "read more" is
-	 * inserted.
+	 * stores parent data if that parent has additional unhydrated replies to pass down to children along the
+	 * left/lower-most branch of the tree for rendering a "read more" link at the end
 	 */
 	upcomingParentReadMore?: TraversalMetadata;
 };

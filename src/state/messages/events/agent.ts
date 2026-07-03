@@ -28,12 +28,7 @@ export class MessagesEventBus {
 
 	private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing;
 	private hasInitialized = false;
-	/**
-	 * The activity the consumer wants, tracked separately from {@link status} because lifecycle calls
-	 * (resume/suspend/background) can arrive while init() is still in flight. init()'s completion reconciles to
-	 * this so a bus that was suspended/backgrounded mid-init doesn't start foreground polling against a stale
-	 * intent.
-	 */
+	/** desired activity state of the consumer, used to reconcile lifecycle changes during initialization */
 	private intendedStatus:
 		| MessagesEventBusStatus.Backgrounded
 		| MessagesEventBusStatus.Ready
@@ -253,9 +248,9 @@ export class MessagesEventBus {
 	}
 
 	/**
-	 * Applies the consumer's current {@link intendedStatus} once init() has seeded the cursor, run from the
-	 * Initializing -> Ready transition. If the consumer suspended or backgrounded while init() was in flight,
-	 * we honor that rather than unconditionally foregrounding.
+	 * applies the consumer's current {@link intendedStatus} once init() has seeded the cursor. runs during the
+	 * Initializing -> Ready transition to honor any suspend or background actions that occurred while init()
+	 * was in flight.
 	 */
 	private activateAfterInit() {
 		switch (this.intendedStatus) {

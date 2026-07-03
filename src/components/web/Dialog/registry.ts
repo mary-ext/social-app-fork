@@ -5,13 +5,11 @@ import { useDialogStateContext, useDialogStateControlContext } from '#/state/dia
 import type { DialogControlRefProps } from '#/components/Dialog';
 
 /**
- * Bridges a Base UI dialog into the app's shared `state/dialogs` registry so `closeAllDialogs` and the
- * hotkey-scope toggling keep working across both the old RNW dialogs and the new web-native ones.
+ * bridges a dialog into the shared dialog registry to support global closing.
  *
- * @param id stable dialog id (from `useId`)
- * @param close closes the dialog imperatively (e.g. `Dialog` passes its Root `actionsRef.close`, `Prompt`
- *   passes its `handle.close`); invoked by `closeAllDialogs`
- * @returns an `onOpenChange` handler to forward to the Base UI Root
+ * @param id stable dialog id
+ * @param close callback to close the dialog imperatively
+ * @returns an `onOpenChange` handler to forward to the dialog root
  */
 export function useRegisterDialog(id: string, close: () => void) {
 	const { activeDialogs } = useDialogStateContext();

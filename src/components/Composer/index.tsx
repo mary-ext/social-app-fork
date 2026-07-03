@@ -54,8 +54,8 @@ export type ComposerProps = {
 	fontSize?: 'lg' | 'md';
 	minRows?: number;
 	/**
-	 * Caps the editor's visible height at this many rows; beyond it the composer scrolls. Omit to let it grow
-	 * unbounded (the consumer's own scroll container then handles overflow).
+	 * caps the editor's visible height at this many rows, after which the composer scrolls. omit to let it grow
+	 * unbounded.
 	 */
 	maxRows?: number;
 	contentPadding?: ContentPadding;

@@ -5,13 +5,10 @@ import { toShortUrl } from '#/lib/strings/url-helpers';
 import { m } from '#/paraglide/messages';
 
 /**
- * Computes the preview text for a message quoted in a reply, shared between the staged-reply composer and the
- * sent reply bubble so the two stay in sync. When the message has its own text we use it verbatim; otherwise
- * we summarize its embed — the join link, the shared external link, or the quoted post.
+ * computes the preview text for a message quoted in a reply.
  *
  * @param message the message being quoted
- * @returns the preview `text` and whether it is `subtle` (a placeholder rather than real message content, so
- *   callers can render it muted/italic)
+ * @returns the preview text and whether it is subtle (a placeholder rather than real message content)
  */
 export function getReplyPreviewText(message: ChatBskyConvoDefs.MessageView): {
 	subtle: boolean;

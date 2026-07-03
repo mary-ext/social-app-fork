@@ -56,18 +56,19 @@ export const themeFontFamily = `"Inter Variable", ${systemFontFamily}`;
 /** Runtime UI font stack; the ALF `ThemeProvider` writes it onto `<html>` from the font-family preference. */
 export const fontFamilyVar = createVar();
 
-/**
- * Active UI font family: the `fontFamilyVar` preference, defaulting to the Inter Variable theme stack. Set
- * once on `<body>` so text elements inherit it rather than each re-declaring the stack.
- */
+/** active UI font family: the `fontFamilyVar` preference, defaulting to the Inter Variable theme stack. */
 export const fontFamily = fallbackVar(fontFamilyVar, themeFontFamily);
 
 /**
- * z-index scale. Two stacking spaces that don't directly compete — in-flow chrome (rendered in the document)
- * and portaled overlays (rendered late in `<body>`, already above the document) — but they're banded apart so
- * the global order is explicit and in-flow content (which should stay at `base`) can't accidentally outrank
- * chrome or an overlay. Component-local stacking (e.g. the composer's textarea over its preview, overlapping
- * avatars) is not part of this scale.
+ * z-index scale.
+ *
+ * contains two stacking spaces that do not directly compete:
+ *
+ * - in-flow chrome (rendered in the document)
+ * - portaled overlays (rendered late in the `<body>`, above the document)
+ *
+ * these are banded apart so the global order is explicit and in-flow content cannot accidentally outrank
+ * chrome or an overlay. component-local stacking is not part of this scale.
  */
 export const zIndex = {
 	base: 0,
@@ -117,9 +118,10 @@ export const fontSize = createGlobalTheme(
 );
 
 /**
- * Per-size default leading ratio (line-height ÷ font-size) — the Tailwind pairing for each size. The `Text`
- * recipe's `size` variant publishes it so `base` derives `round(font-size × ratio)`, and a consumer that
- * pairs its own line-height to a fixed size (e.g. a settings-card title) reads it directly.
+ * per-size default leading ratio (line-height ÷ font-size) based on Tailwind pairings.
+ *
+ * published by the `Text` recipe's `size` variant so `base` can derive `round(font-size × ratio)`, or so
+ * consumers can read it directly to pair their own line-height to a fixed size.
  */
 export const fontLeading = Object.fromEntries(
 	Object.entries(type).map(([key, { fontSize, lineHeight }]) => [key, lineHeight / fontSize]),

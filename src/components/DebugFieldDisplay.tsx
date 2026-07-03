@@ -8,13 +8,7 @@ import { Text } from '#/components/Typography';
 
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
-/**
- * Internal-use component to display debug information supplied by the appview. The `debug` field only exists
- * on some API views, and is only visible for internal users in dev mode. As such, none of these strings need
- * to be translated.
- *
- * This component can be removed at any time if we don't find it useful.
- */
+/** display debug information supplied by the appview */
 export function DebugFieldDisplay<T extends { debug?: { [x: string]: unknown } }>({
 	subject,
 }: {

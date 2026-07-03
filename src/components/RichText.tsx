@@ -47,9 +47,9 @@ export type RichTextProps = Pick<
 };
 
 /**
- * Renders an atproto richtext value (or a plain string, whose facets are detected on the fly) as inline text
- * with mentions, links, and hashtags. Mentions and links inherit the text `color`, defaulting to the link
- * color when unset; emoji-only content is enlarged per {@link RichTextProps.emojiScale}.
+ * renders an atproto richtext value (or a plain string with on-the-fly facet detection) as inline text with
+ * mentions, links, and hashtags. mentions and links inherit the text color (defaulting to the link color);
+ * emoji-only content is enlarged based on {@link RichTextProps.emojiScale}.
  */
 export function RichText({
 	align,

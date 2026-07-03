@@ -6,9 +6,8 @@ import createEmojiRegex from 'emoji-regex';
 import { type Alf, applyFonts, atoms, flatten } from '#/alf';
 
 /**
- * Ensures that `lineHeight` defaults to a relative value of `1`, or applies other relative leading atoms.
- *
- * If the `lineHeight` value is > 2, we assume it's an absolute value and returns it as-is.
+ * ensures that `lineHeight` defaults to a relative value of `1`, or applies other relative leading atoms. if
+ * the value is greater than 2, returns it as-is.
  */
 export function normalizeTextStyles(
 	styles: StyleProp<TextStyle>,

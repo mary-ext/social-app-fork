@@ -39,10 +39,10 @@ export const secondaryGroup = style({
 });
 
 /**
- * The compact action button chrome: a borderless, transparent ghost button whose icon sits in a
- * hover-highlighted {@link iconCircle}. The base text color is the resting tint; an active button paints its
- * own color via an inline `style` so icon + count inherit it through `currentColor`. Only the circle takes
- * the hover/focus chrome. The big thread anchor has its own button — see `AnchorPostControls`.
+ * compact action button chrome. a borderless, transparent ghost button whose icon sits in a hover-highlighted
+ * {@link iconCircle}. the base text color is the resting tint; an active button paints its own color via an
+ * inline style so the icon and count inherit it through currentColor. only the circle takes the hover or
+ * focus chrome.
  */
 export const button = style({
 	alignItems: 'center',
@@ -91,9 +91,8 @@ export const iconCircle = style({
 });
 
 /**
- * Overrides for the count/label, which renders through the web `Text` primitive (for its size-paired,
- * pixel-snapped line-height). `inherit` lets the count pick up the button's resting/active color via
- * `currentColor`; the count never wraps.
+ * overrides for the count/label, which renders through the web `Text` primitive. `inherit` lets the count
+ * pick up the button's resting/active color via `currentColor`. the count never wraps.
  */
 export const text = style({
 	color: 'inherit',

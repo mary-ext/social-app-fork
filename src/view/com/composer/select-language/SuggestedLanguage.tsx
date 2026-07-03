@@ -59,14 +59,15 @@ export function SuggestedLanguage({
 	/** All languages currently selected for the post being composed. */
 	currentLanguages: string[];
 	/**
-	 * Called when the user accepts a suggested language. We only pass a single language here. If the post being
-	 * replied to has multiple languages, we only suggest the first one.
+	 * callback triggered when the user accepts a suggested language
+	 *
+	 * @param language the accepted language
 	 */
 	onAcceptSuggestedLanguage: (language: string | null) => void;
 	/**
-	 * Fired when detection produced ambiguous results — no strong suggestion to show, but we want to hint to
-	 * the user that the detector is unsure. Expected to be an incrementing counter setter on the parent so the
-	 * nudge can re-fire on each detection cycle.
+	 * fired when detection produces ambiguous results, hinting to the user that the detector is unsure.
+	 * expected to be an incrementing counter setter on the parent so the nudge can re-fire on each detection
+	 * cycle.
 	 */
 	onNudge?: () => void;
 }) {

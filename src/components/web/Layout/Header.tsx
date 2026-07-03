@@ -55,9 +55,7 @@ export function TitleText({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * The header's leading back button. By default it pops the navigation stack, falling back to Home at the
- * root. Pass `onClick` to run a custom action instead — call `evt.preventDefault()` within it to suppress the
- * default pop (e.g. a logical "back" that stays on the screen).
+ * header's leading back button. by default pops the navigation stack, falling back to Home at the root.
  *
  * @param label accessible name for the button
  * @param onClick custom click handler; call `evt.preventDefault()` to skip the default back navigation

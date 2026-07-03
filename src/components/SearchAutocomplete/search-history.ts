@@ -10,11 +10,9 @@ const entryKey = (entry: SearchHistoryEntry): string =>
 	entry.kind === 'profile' ? `profile:${entry.did}` : `query:${entry.query}`;
 
 /**
- * the signed-in account's unified search history — queries and visited profiles in one recency-ordered list —
- * with helpers to record and remove entries. backed by the `searchHistory` account-scoped storage key, so it
- * stays in sync across tabs and component instances.
+ * the signed-in account's unified search history of queries and visited profiles.
  *
- * @returns the history (most recent first) and its mutators
+ * @returns an object containing the search history list and functions to add or remove entries.
  */
 export function useSearchHistory() {
 	const { currentAccount } = useSession();

@@ -6,9 +6,8 @@ import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 /**
- * Linear-thread-specific layout. The shared row / column / spine / frame structure lives in
- * `#/components/PostLayout`; what remains here is the incoming/outgoing reply spine geometry, the per-element
- * body rhythm, and the deleted-post chrome.
+ * linear-thread-specific layout containing incoming/outgoing reply spine geometry, per-element body rhythm,
+ * and deleted-post chrome.
  */
 
 /** Chrome for the PostHider warning row on the linear thread surface. */

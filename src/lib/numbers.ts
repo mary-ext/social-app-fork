@@ -3,14 +3,12 @@ export function clamp(v: number, min: number, max: number): number {
 }
 
 /**
- * Random number in `[min, max]` drawn from a triangular distribution (the mean of two uniform draws), so
- * values cluster toward the midpoint rather than spreading evenly.
+ * generates a random number in `[min, max]` drawn from a triangular distribution.
  *
  * @param min lower bound, inclusive
  * @param max upper bound, inclusive
- * @param step snap the result to the nearest multiple of this; defaults to `1`. `min` and `max` should be
- *   multiples of `step` to keep the result within range.
- * @returns a value in `[min, max]` snapped to `step`
+ * @param step snaps the result to the nearest multiple of this. defaults to 1.
+ * @returns a value in `[min, max]` snapped to step.
  */
 export function triangularRandom(min: number, max: number, step = 1): number {
 	const t = (Math.random() + Math.random()) / 2;

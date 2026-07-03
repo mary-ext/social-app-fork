@@ -6,8 +6,9 @@ import * as css from './JoinButton.css';
 import type { ChatInviteAction } from './use-chat-invite';
 
 /**
- * The join/open action button for a chat invite. Pass `onPress` to intercept (e.g. to close a surface before
- * navigating); it runs before the default action. Renders nothing without an action to perform.
+ * action button for a chat invite.
+ *
+ * @param onPress callback run before the default navigation action
  */
 export function JoinButton({
 	action,

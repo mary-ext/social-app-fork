@@ -11,10 +11,10 @@ export const unstableProfileViewCacheQueryKey = (didOrHandle: string) => [
 ];
 
 /**
- * Used as a rough cache of profile views to make loading snappier. This method accepts and stores any profile
- * view type by both handle and DID.
+ * caches profile views by handle and DID to speed up loading. access the cache via
+ * {@link useUnstableProfileViewCache}.
  *
- * Access the cache via {@link useUnstableProfileViewCache}.
+ * @param profile the profile view to cache
  */
 export function unstableCacheProfileView(queryClient: QueryClient, profile: AnyProfileView) {
 	queryClient.setQueryData(unstableProfileViewCacheQueryKey(profile.handle), profile);
@@ -22,10 +22,11 @@ export function unstableCacheProfileView(queryClient: QueryClient, profile: AnyP
 }
 
 /**
- * Hook to access the unstable profile view cache. This cache can return ANY profile view type, so if the
- * object shape is important, branch on `$type` to confirm before using.
+ * access the unstable profile view cache
  *
- * To cache a profile, use {@link unstableCacheProfileView}.
+ * this cache can return any profile view type, so branch on `$type` to confirm before using.
+ *
+ * to cache a profile, use {@link unstableCacheProfileView}.
  */
 export function useUnstableProfileViewCache() {
 	const qc = useQueryClient();

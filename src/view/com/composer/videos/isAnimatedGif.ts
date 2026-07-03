@@ -1,8 +1,8 @@
 /**
- * Checks if a GIF is animated. Cooked up by Claude, validated with some examples.
+ * checks if a GIF is animated.
  *
- * @param bytes - The GIF bytes, as a Uint8Array.
- * @returns An object with properties isGif, isAnimated, and frames.
+ * @param bytes the GIF bytes
+ * @returns an object indicating if it is a GIF, if it is animated, and the frame count
  */
 export function isAnimatedGif(buffer: ArrayBuffer): {
 	isGif: boolean;

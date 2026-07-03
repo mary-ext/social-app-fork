@@ -45,11 +45,13 @@ export const viewport = style(
 );
 
 /**
- * The popup card. The `size` variant caps width; `scroll: 'body'` switches from a padded card that grows with
- * its content (the surrounding viewport scrolls) into a height-bounded flex column whose own `Body`/`List`
- * child scrolls internally while the header/footer slots stay pinned (dropping the base card padding, which
- * the slots own). `fullHeight` locks a `body`-scroll popup to its max height so a transient loading/empty
- * state can't shrink it.
+ * popup card.
+ *
+ * @param size variant that caps width
+ * @param scroll 'body' switches from a padded card that grows with content to a height-bounded flex column
+ *   where the body scrolls internally and header/footer stay pinned
+ * @param fullHeight locks a 'body'-scroll popup to its max height to prevent shrinking during loading/empty
+ *   states
  */
 export const popup = recipe(
 	{

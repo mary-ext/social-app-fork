@@ -12,9 +12,9 @@ function createId(id: string) {
 }
 
 /**
- * Creates a localStorage-backed adapter for persisting react-query cache.
+ * creates a localStorage-backed adapter for persisting react-query cache.
  *
- * @param id - Unique identifier for this storage instance.
+ * @param id unique identifier for this storage instance.
  */
 export function createPersistedQueryStorage(id: string): PersistedQueryStorage {
 	const store = createArchiveDB({ id: createId(id) });

@@ -602,11 +602,9 @@ function BlockedPlaceholder({
 }
 
 /**
- * The "↪ X replied to Y" caption rendered above a reply message, in place of the display name. `X` is the
- * person sending the reply (self -> "you"), `Y` is the original sender. Tapping it scrolls to the original
- * (if loaded).
+ * caption rendered above a reply message indicating who replied to whom.
  *
- * Aligns with the sender's display name for others (left), or with the message bubble for self (right).
+ * aligns with the sender's display name for others (left), or with the message bubble for self (right).
  */
 function ReplyCaption({
 	replyTo,

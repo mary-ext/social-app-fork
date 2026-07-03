@@ -27,10 +27,8 @@ export function sortAndAnnotateThreadItems(
 		moderationOpts: ModerationOptions;
 		view: PostThreadParams['view'];
 		/**
-		 * Set to `true` in cases where we already know the moderation state of the post e.g. when fetching
-		 * additional replies from the server. This will prevent additional sorting or nested-branch truncation,
-		 * and all replies, regardless of moderation state, will be included in the resulting `threadItems`
-		 * array.
+		 * set to `true` to skip sorting or truncation based on moderation state. all replies will be included in
+		 * the resulting `threadItems` array.
 		 */
 		skipModerationHandling?: boolean;
 	},
@@ -293,11 +291,7 @@ export function sortAndAnnotateThreadItems(
 						if (metadata.isLastSibling) {
 							metadata.isPartOfLastBranchFromDepth = metadata.depth;
 
-							/**
-							 * If the parent is part of the last branch of the sub-tree, so is the child. However, if the
-							 * child is also a last sibling, then we need to start tracking `isPartOfLastBranchFromDepth`
-							 * from this point onwards, always updating it to the depth of the last sibling as we go down.
-							 */
+							/** updates the depth from which the current node is part of the last branch of the sub-tree */
 							if (!metadata.isLastSibling && metadata.parentMetadata.isPartOfLastBranchFromDepth) {
 								metadata.isPartOfLastBranchFromDepth = metadata.parentMetadata.isPartOfLastBranchFromDepth;
 							}
@@ -329,10 +323,7 @@ export function sortAndAnnotateThreadItems(
 						 * an indent line.
 						 */
 						if (metadata.parentMetadata.repliesUnhydrated <= 0 && metadata.isLastSibling) {
-							/**
-							 * Depth is 2 more than the 0-index of the indent calculation bc of how we render these. So
-							 * instead of handling that in the component, we just adjust that back to 0-index here.
-							 */
+							/** adjusts the rendering depth back to a 0-indexed value. */
 							metadata.skippedIndentIndices.add(item.depth - 2);
 						}
 					}
@@ -494,14 +485,28 @@ export function buildThread({
 }
 
 /**
- * Get the start and end index of a "branch" of the thread. A "branch" is a parent and it's children (not
- * siblings). Returned indices are inclusive of the parent and its last child.
+ * get the start and end index of a thread branch (a parent and its descendants). returned indices are
+ * inclusive of the parent and its last descendant.
  *
- * items[] (index, depth) └─┬ anchor ──────── (0, 0) ├─── branch ───── (1, 1) ├──┬ branch ───── (2, 1) (start)
- * │ ├──┬ leaf ──── (3, 2) │ │ └── leaf ── (4, 3) │ └─── leaf ──── (5, 2) (end) ├─── branch ───── (6, 1) └───
- * branch ───── (7, 1)
+ * @example
+ * 	```tsx
+ * 	// items[] (index, depth)
+ * 	// └─┬ anchor ──────── (0, 0)
+ * 	//   ├─── branch ───── (1, 1)
+ * 	//   ├──┬ branch ───── (2, 1) (start)
+ * 	//   │  ├──┬ leaf ──── (3, 2)
+ * 	//   │  │  └── leaf ── (4, 3)
+ * 	//   │  └─── leaf ──── (5, 2) (end)
+ * 	//   ├─── branch ───── (6, 1)
+ * 	//   └─── branch ───── (7, 1)
  *
- * const { start: 2, end: 5, length: 3 } = getBranch(items, 2, 1)
+ * 	const { start: 2, end: 5, length: 3 } = getBranch(items, 2, 1)
+ * 	```
+ *
+ * @param items the list of items in the thread
+ * @param startIndex the index of the parent item
+ * @param depth the depth of the parent item
+ * @returns the start and end index, and the length of the branch
  */
 export function getBranch(thread: ApiThreadItem[], branchStartIndex: number, branchStartDepth: number) {
 	let end = branchStartIndex;

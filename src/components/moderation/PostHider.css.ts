@@ -8,10 +8,7 @@ const focusRing = {
 	outlineOffset: 2,
 } as const;
 
-/**
- * The warning row shown in place of a blurred post until it's revealed. Layered into `components` so a
- * consumer's `hiderClassName` (unlayered) overrides the background/padding per surface.
- */
+/** warning row shown in place of a blurred post until it's revealed */
 export const row = style(
 	layered(components, {
 		alignItems: 'center',

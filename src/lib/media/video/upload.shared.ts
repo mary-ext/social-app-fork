@@ -10,14 +10,14 @@ import { m } from '#/paraglide/messages';
 import { createVideoClient } from './util';
 
 /**
- * Mints a short-lived service-auth token via `com.atproto.server.getServiceAuth` on the user's PDS.
+ * mints a short-lived service-auth token on the user's PDS.
  *
- * @param pds the signed-in PDS client.
- * @param dispatchUrl the resolved PDS URL, used to derive a fallback audience when `aud` is omitted.
- * @param aud the DID the token should be scoped to. Defaults to the user's PDS.
- * @param lxm the lexicon method the token authorizes.
- * @param exp optional unix timestamp (seconds) at which the token expires.
- * @returns the bearer token string.
+ * @param pds signed-in PDS client
+ * @param dispatchUrl resolved PDS URL, used to derive a fallback audience when `aud` is omitted
+ * @param aud DID the token should be scoped to (defaults to the user's PDS)
+ * @param lxm lexicon method the token authorizes
+ * @param exp optional unix timestamp (seconds) at which the token expires
+ * @returns bearer token string
  */
 export async function getServiceAuthToken({
 	pds,

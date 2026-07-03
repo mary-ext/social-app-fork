@@ -8,8 +8,8 @@ import { toShortUrl } from './url-helpers';
 type Feature = AppBskyRichtextFacet.Main['features'][number];
 
 /**
- * Replaces each link facet's display text with its shortened form, rebuilding the facets so their byte
- * offsets stay correct. The builder owns all UTF-8 offset math, so there is no manual byte stitching.
+ * replaces each link facet's display text with its shortened form, rebuilding the facets to maintain correct
+ * byte offsets.
  *
  * @param richtext the text and facets to shorten.
  * @returns the rewritten text and facets.

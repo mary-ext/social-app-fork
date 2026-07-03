@@ -236,12 +236,9 @@ const MAX_LOADING_ROW_COUNT = 10;
 const JOINED_COUNT_WEIGHT = [9, 1];
 
 /**
- * A stack of starter-pack-card placeholders for the loading state, mirroring {@link Default}'s layout (icon,
- * title/byline, description, joined count) so it sits on the same rhythm as the real cards.
+ * loading placeholders for starter pack cards.
  *
- * @param count number of placeholder rows; callers should pass the known starter-pack count when available
- *   (e.g. `profile.associated.starterPacks`). Defaults to a small value and is capped so large counts don't
- *   render excessive rows.
+ * @param count number of placeholder rows.
  */
 export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNode {
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);

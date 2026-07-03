@@ -20,11 +20,7 @@ export const boxSizeVar = createVar();
 /** Square corner radius in px, wired inline. */
 export const squareRadiusVar = createVar();
 
-/**
- * A loading placeholder for a line of `Text`: a rounded bar sized to the matching `size`'s line box. Each
- * `size` variant publishes that size's font-size and its pixel-snapped line-height (`round(font-size × paired
- * ratio)`) so the placeholder tracks the live typography scale. Unlayered.
- */
+/** loading placeholder for a line of text. */
 export const text = recipe(
 	{
 		base: {

@@ -19,13 +19,9 @@ export function createQueryKey<T extends Record<string, unknown>>(
 	args: T,
 	options: {
 		/**
-		 * If provided, this indicates that the query is persisted and the version of the persisted query format.
+		 * version of the persisted query format.
 		 *
-		 * This is used to ensure that when we make breaking changes to the persisted query format, we can
-		 * increment the version and avoid trying to read old persisted queries with the new format.
-		 *
-		 * If you're persisting your queries, you probably want to set `gcTime: GCTIME.INFINITY` for this query,
-		 * otherwise it'll get busted immediately after being persisted.
+		 * set `gcTime: GCTIME.INFINITY` to prevent the persisted query from being garbage collected immediately.
 		 */
 		persistedVersion?: number;
 	} = {},

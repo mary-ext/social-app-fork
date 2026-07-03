@@ -5,9 +5,8 @@ import { roundToPx } from '#/styles/round';
 import { fontLeading, fontSize, space } from '#/styles/tokens.css';
 
 /**
- * The rendered height of a {@link label} title line — `Text`'s own `roundToPx(size × leading)` formula for
- * size `md` and its paired leading. Matches it exactly (pixel snap included) so trailing content centers on
- * the title line rather than a fraction off it.
+ * the rendered height of a {@link label} title line. matches the `roundToPx(size × leading)` formula for size
+ * `md` and its paired leading, including pixel snapping, so trailing content centers on the title line.
  */
 const titleLineHeight = roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`);
 
@@ -79,15 +78,13 @@ export const panel = style({
 
 // #region row
 /**
- * A single row inside a {@link card}, laid out as a two-row grid:
+ * a single row inside a {@link card}, laid out as a two-row grid:
  *
  *     icon | title    | trailing
  *          | subtitle (spans title + trailing)
  *
- * The title shares its line with the trailing control/value, while the subtitle flows full-width beneath both
- * — so a long title or value can't squeeze the subtitle into a narrow column. Content top-aligns so the
- * trailing control sits on the title line; symmetric block padding keeps a single-line row visually
- * centered.
+ * the title shares its line with the trailing control/value, while the subtitle flows full-width beneath
+ * both. content top-aligns and block padding keeps a single-line row visually centered.
  */
 export const row = style({
 	alignItems: 'start',
@@ -102,9 +99,8 @@ export const row = style({
 });
 
 /**
- * A row's chrome without the {@link row} grid: same padding and size, but a plain centered flex line. For a
- * row that lays out its own content (e.g. an avatar beside a name/handle column) rather than the icon/title
- * grid.
+ * a row's chrome without the {@link row} grid: same padding and size, but a plain centered flex line. used for
+ * a row that lays out its own content rather than the icon/title grid.
  */
 export const rowPlain = style({
 	alignItems: 'center',
@@ -118,8 +114,9 @@ export const rowPlain = style({
 });
 
 /**
- * Element reset + hover tint + focus ring for a row that is itself an `<a>`/`<button>`/switch/select trigger.
- * A disabled row (including one frozen mid-write via `loading`) greys out and drops its hover tint.
+ * element reset, hover tint, and focus ring for a row acting as an interactive trigger.
+ *
+ * @param loading greys out the row and removes hover effects when true
  */
 export const rowInteractive = style({
 	appearance: 'none',
@@ -150,11 +147,8 @@ export const rowInteractive = style({
 });
 
 /**
- * The `primary_subtle` {@link ButtonRow} color: a primary-tinted fill that deepens on hover. Defined after
- * {@link rowInteractive} so it wins the equal-specificity background/hover cascade; companion `&` parent
- * selectors on {@link title}, {@link icon}, and {@link chevron} recolor the row's foreground to primary. The
- * subtitle keeps its neutral muted color — primary at the subtitle's size reads too low-contrast on the
- * tint.
+ * primary-tinted fill that deepens on hover. recolors foreground elements (title, icon, chevron) to primary,
+ * while keeping subtitle neutral muted for contrast.
  */
 export const rowPrimarySubtle = style({
 	backgroundColor: vars.palette.primary_50,
@@ -166,7 +160,7 @@ export const rowPrimarySubtle = style({
 });
 
 /**
- * Rounds a row's top corners to the card's radius. Applied to the first row so its hover tint and focus ring
+ * rounds a row's top corners to the card's radius. applied to the first row so its hover tint and focus ring
  * follow the card corner instead of being clipped square by the card's `overflow: hidden`.
  */
 export const rowFirst = style({

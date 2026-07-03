@@ -9,9 +9,8 @@ import { Button, type ButtonProps } from '#/components/web/Button';
 import * as css from './LanguageButton.css';
 
 /**
- * The composer's post-language button: shows the selected language code(s) (or a globe when none), and
- * flashes a transient pulse each time `nudgeAt` changes. Built on the web `Button` (`bare`/`small`) so it
- * forwards a ref and can back a Base UI Menu `Trigger`.
+ * displays the selected language code(s) or a globe icon if none are selected. flashes a transient pulse when
+ * `nudgeAt` changes. forwards a ref to the underlying web `Button` and can trigger a Base UI Menu.
  */
 export function LanguageButton({
 	currentLanguages,

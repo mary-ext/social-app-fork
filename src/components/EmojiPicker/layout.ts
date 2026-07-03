@@ -13,9 +13,9 @@ export const GRID_PADDING = 8;
 /** padding below the last row of the scrolling grid, in px. */
 export const GRID_PADDING_BOTTOM = 8;
 /**
- * corner radius of the search input, in px. the grid slides up under the input by this amount (via a negative
- * margin) so its rounded bottom overlaps the scrolling content, so the layout offsets every row's top by the
- * same amount to compensate.
+ * corner radius of the search input, in px. the grid slides up under the input by this amount so its rounded
+ * bottom overlaps the scrolling content, and layout offsets every row's top by the same amount to
+ * compensate.
  */
 export const SEARCH_INPUT_RADIUS = 10;
 /** inner content width: {@link PER_LINE} cells plus the grid's inline padding. */

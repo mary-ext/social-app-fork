@@ -50,10 +50,7 @@ export function useConvo() {
 	return ctx;
 }
 
-/**
- * This hook should only be used when the Convo is "active", meaning the chat is loaded and ready to be used,
- * or its in a suspended or background state, and ready for resumption.
- */
+/** use only when the Convo is active (loaded and ready) or suspended/backgrounded (ready for resumption) */
 export function useConvoActive() {
 	const ctx = useContext(ChatContext) as
 		| ConvoStateReady

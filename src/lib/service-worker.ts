@@ -5,15 +5,14 @@ import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import { logger } from '#/logger';
 
 /**
- * Lifecycle status of the service worker, from the page's point of view.
+ * lifecycle status of the service worker from the page's point of view:
  *
- * - `uninstalled` — no worker is registered for this page. Offline support is not active.
- * - `installing` — a first-ever install is downloading (the full precache). Manual, user-initiated.
- * - `installed` — a worker is active and no update is pending. Up to date.
- * - `update_installing` — a new worker is downloading/installing over the active one. Surface "Update in
- *   progress".
- * - `update_ready` — a new worker has installed and is waiting to activate. Surface "Update available" and call
- *   {@link applyServiceWorkerUpdate} when the user accepts.
+ * - `uninstalled` — no worker is registered for this page. offline support is not active.
+ * - `installing` — a first-ever install is downloading.
+ * - `installed` — a worker is active and no update is pending.
+ * - `update_installing` — a new worker is downloading or installing over the active one.
+ * - `update_ready` — a new worker has installed and is waiting to activate. call
+ *   {@link applyServiceWorkerUpdate} to activate.
  */
 export type ServiceWorkerStatus =
 	| 'installed'
@@ -76,10 +75,7 @@ const attach = (reg: ServiceWorkerRegistration) => {
 	});
 };
 
-/**
- * Begin tracking an already-registered service worker without installing one. Call once at startup; a user
- * who never opted in stays `uninstalled` and no worker is created.
- */
+/** begin tracking an already-registered service worker without installing one. call once at startup. */
 export const initServiceWorker = () => {
 	if (registration || !('serviceWorker' in navigator)) {
 		return;
@@ -103,8 +99,8 @@ export const initServiceWorker = () => {
 };
 
 /**
- * Install the service worker (opt-in). Triggers a first install — and the full precache download — so call it
- * from an explicit user action. No-op if one is already registered.
+ * install the service worker and trigger the precache download. call this from an explicit user action. no-op
+ * if already registered.
  */
 export const registerServiceWorker = () => {
 	// dev builds emit no `/sw.js`, so registering would 404. keep the settings row visible but inert.

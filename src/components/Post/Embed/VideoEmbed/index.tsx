@@ -111,10 +111,9 @@ const NearScreenContext = createContext(false);
 NearScreenContext.displayName = 'VideoNearScreenContext';
 
 /**
- * Renders a 100vh tall div and watches it with an IntersectionObserver to send the position of the div when
- * it's near the screen.
+ * renders a 100vh tall div and tracks its viewport position via IntersectionObserver.
  *
- * IMPORTANT: ViewportObserver _must_ not be within a `overflow: hidden` container.
+ * note: do not place inside an `overflow: hidden` container.
  */
 function ViewportObserver({
 	children,
@@ -169,11 +168,7 @@ function ViewportObserver({
 	);
 }
 
-/**
- * Awkward data flow here, but we need to hide the video when it's not near the screen. But also,
- * ViewportObserver _must_ not be within a `overflow: hidden` container. So we put it at the top level of the
- * component tree here, then hide the children of the auto-resizing container.
- */
+/** hides the video when it is not near the screen by observing the viewport. */
 export const OnlyNearScreen = ({ children }: { children: React.ReactNode }) => {
 	const nearScreen = useContext(NearScreenContext);
 

@@ -36,9 +36,9 @@ export type RichTextTagProps = Pick<TextProps, 'color' | 'leading' | 'size'> & {
 };
 
 /**
- * An inline hashtag/cashtag within {@link RichText}: a link to the tag's feed that opens a context menu
- * (browse the tag, browse it by the post's author, mute/unmute) on click. A left-click always opens the menu;
- * the anchor's href is kept so middle/right-click still open the tag's feed in a new tab.
+ * a link to a hashtag or cashtag feed within {@link RichText} that opens a context menu on click.
+ *
+ * @param props the component props
  */
 const MenuSpinner = () => <Spinner color="default" label={m['common.status.loading']()} size="lg" />;
 

@@ -19,18 +19,14 @@ import { Text } from '#/components/Text';
 import * as Skele from '#/components/web/Skeleton';
 
 /**
- * The card-sectioned settings vocabulary: a {@link List} of titled {@link Section} cards, each holding
- * whole-row {@link ButtonRow}/{@link SwitchRow}/{@link SelectRow} rows. Compose a row's leading {@link Icon}
- * and {@link Label}; trailing controls are supplied by the row type.
+ * card-sectioned settings vocabulary: a list of titled section cards, each holding whole-row button, switch,
+ * or select rows. compose a row's leading icon and label; trailing controls are supplied by the row type.
  */
 export function List({ children }: { children: ReactNode }) {
 	return <div className={styles.list}>{children}</div>;
 }
 
-/**
- * A titled card. Rows passed as children are clipped to the card's corners and separated by hairline dividers
- * (inserted automatically, so falsy children may be conditionally rendered).
- */
+/** titled card where children rows are clipped to corners and separated by automatic hairline dividers */
 export function Section({
 	bodyText,
 	children,
@@ -87,9 +83,13 @@ export function Icon({ icon: IconCmp }: { icon: ComponentType<IconProps> }) {
 }
 
 /**
- * The row's primary text, optionally over a muted second line. Renders the two lines as separate row-grid
- * items (not a nested column) so the subtitle can span the full row width beneath the trailing control. Pass
- * `loading` to show a skeleton bar in the subtitle's place while a drill-in row's value is fetched.
+ * the row's primary text, optionally over a muted second line.
+ *
+ * renders the two lines as separate row-grid items so the subtitle can span the full row width beneath the
+ * trailing control.
+ *
+ * @param loading pass true to show a skeleton bar in the subtitle's place while a drill-in row's value is
+ *   fetched.
  */
 export function Label({
 	loading,
@@ -121,9 +121,9 @@ export function Label({
 }
 
 /**
- * A row that fires an action on press; the whole row is the button, with a trailing forward chevron. `color`
- * defaults to `secondary` (the neutral row chrome); pass `primary_subtle` for a primary-tinted call-to-action
- * variant (the title, icon, and chevron recolor to primary to match).
+ * a row button that fires an action on press and displays a trailing chevron.
+ *
+ * @param color the row color variant. defaults to `secondary`.
  */
 export function ButtonRow({
 	children,
@@ -162,9 +162,10 @@ export function ButtonRow({
 }
 
 /**
- * A bare navigating row: an `<a>` with only the interactive chrome (hover/focus/reset) — the caller brings
- * the row layout (a {@link row}/{@link rowPlain} class via `className`) and every slot. Use {@link LinkRow}
- * for the common icon/label grid form with a trailing chevron.
+ * a bare navigating row `<a>` with interactive chrome (hover/focus/reset).
+ *
+ * the caller provides the row layout (a {@link row}/{@link rowPlain} class via `className`) and every slot.
+ * use {@link LinkRow} for the common icon/label grid form with a trailing chevron.
  */
 export function LinkRowRaw({
 	children,
@@ -217,9 +218,11 @@ export function LinkRow({
 }
 
 /**
- * A row that expands on press to reveal its `children` rows in a height-animated panel, with a chevron that
- * flips on open. Renders as one Section child; its inner rows get automatic dividers like {@link Section}.
- * Pass `trailing` for content shown beside the chevron while collapsed (e.g. an avatar-stack peek).
+ * an expandable row that reveals its `children` rows in a height-animated panel with a flipping chevron.
+ * renders as a single Section child, providing automatic dividers for inner rows.
+ *
+ * @param children the content to reveal when expanded
+ * @param trailing content shown beside the chevron while collapsed
  */
 export function CollapsibleRow({
 	children,
@@ -294,8 +297,9 @@ export function CollapsibleRow({
 }
 
 /**
- * A row that toggles a boolean on press; the whole row is the switch, with the switch skin at its end. Pass
- * `loading` while the change is being persisted to show a spinner and freeze the row.
+ * row that toggles a boolean on press.
+ *
+ * @param loading show a spinner and freeze the row while the change is being persisted
  */
 export function SwitchRow({
 	children,
@@ -334,8 +338,9 @@ export function SwitchRow({
 }
 
 /**
- * A row that opens a dropdown on press; the whole row is the select trigger, showing the current value. Pass
- * `loading` while the value is still being fetched to show a spinner in its place.
+ * row that opens a dropdown on press, where the whole row acts as the trigger showing the current value.
+ *
+ * @param loading show a spinner instead of the value while fetching
  */
 export function SelectRow<T extends string>({
 	children,

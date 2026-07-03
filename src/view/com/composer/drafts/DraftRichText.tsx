@@ -20,12 +20,10 @@ const URL_REGEX = /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z
 type Feature = AppBskyRichtextFacet.Main['features'][number];
 
 /**
- * Read-only rich-text renderer for draft previews: segments text into facet-colored spans without the
- * interactivity (links, hover cards, tag menus) of the full {@link RichText}, since the draft card is
- * pointer-events-none and only needs the visual.
+ * render a read-only rich-text preview by segmenting text into facet-colored spans.
  *
- * @param value the draft post text; facets are detected client-side (handles in place of DIDs)
- * @param numberOfLines clamp the preview to this many lines
+ * @param value draft post text where facets are detected client-side
+ * @param numberOfLines number of lines to clamp the preview to
  */
 export function DraftRichText({ value, numberOfLines }: { value: string; numberOfLines?: number }) {
 	const { text, facets } = detectFacetsWithoutResolution(value);

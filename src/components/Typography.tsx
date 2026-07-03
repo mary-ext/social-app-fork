@@ -74,9 +74,8 @@ export function P({ style, ...rest }: TextProps) {
 }
 
 /**
- * HACKFIX: React Native Web applies `overflow: hidden` to text when using the `numberOfLines` prop, which
- * causes it to clip ascenders/descenders. It only needs to be doing this for the X axis, so override the
- * style with `overflowX: 'hidden'`. Note this only works for `numberOfLines={1}` -sfn
+ * overrides the default `overflow: hidden` style applied by React Native Web when using `numberOfLines={1}`
+ * to prevent clipping of ascenders/descenders by applying `overflowX: 'hidden'` instead.
  *
  * @see https://github.com/necolas/react-native-web/pull/2836
  */

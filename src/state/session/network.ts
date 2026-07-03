@@ -31,12 +31,11 @@ export function withNetworkEvents<Args extends unknown[]>(
 }
 
 /**
- * Builds the XRPC fetch handler for an OAuth session: routes each request through the atcute user-agent
- * (which adds DPoP auth and refreshes tokens on its own), adds network-event instrumentation, and reports an
- * unrecoverable session drop.
+ * builds the XRPC fetch handler for an OAuth session, routing requests through the agent, adding
+ * network-event instrumentation, and reporting session drops.
  *
- * @param oauthAgent the atcute user-agent to route requests through.
- * @returns a fetch handler for the `@atcute/client` clients.
+ * @param oauthAgent atcute user-agent to route requests through
+ * @returns fetch handler for @atcute/client
  */
 export function createOAuthFetchHandler(oauthAgent: OAuthUserAgent): FetchHandler {
 	let dropped = false;

@@ -60,14 +60,11 @@ type AnchorPressHandlers = Pick<
 >;
 
 /**
- * React Native's `Pressable` fired `onLongPress` on touch; the DOM has no equivalent, so synthesize it. A
- * primary press held past {@link LONG_PRESS_MS} fires the callback and flags the gesture, letting the click
- * it would otherwise emit be swallowed instead of navigating (restores the bar's hold-avatar-to-switch
- * affordance).
+ * synthesize long press behavior for DOM elements. a primary press held past the threshold fires the callback
+ * and flags the gesture, letting the subsequent click be swallowed.
  *
- * @param onLongPress invoked when a press is held past the threshold; omit to disable the gesture
- * @returns pointer handlers to spread onto the anchor (or `undefined`), and `consumeLongPress` for the click
- *   handler to check
+ * @param onLongPress callback invoked when a press is held past the threshold; omit to disable the gesture
+ * @returns pointer handlers to spread onto the anchor, and `consumeLongPress` for the click handler to check
  */
 const useLongPress = (onLongPress?: () => void) => {
 	const firedRef = useRef(false);

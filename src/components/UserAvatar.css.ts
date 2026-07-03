@@ -64,10 +64,7 @@ export const fallback = style({
 	width: '100%',
 });
 
-/**
- * Themed hairline tracking the avatar's shape. An overlay rather than a border on the image itself: the
- * `filter: blur()` paints after the image's own corner clip, so a self-border would smear into the corners.
- */
+/** themed hairline tracking the avatar's shape, designed as an overlay to prevent blur smearing in corners */
 export const border = style([mediaOverlay, mediaBorder, { borderRadius: 'inherit' }]);
 
 /** Red inset border shown for live avatars, replacing the hairline. */

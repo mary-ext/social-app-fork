@@ -8,9 +8,9 @@ import { Button, type ButtonProps } from '#/components/web/Button';
 import * as styles from './ComposerToolbarButton.css';
 
 /**
- * A composer-toolbar icon button: a 40×40 ghost circle whose icon renders at `primary_500`. Built on the web
- * `Button` so it forwards a ref and can back a Base UI `Trigger` (emoji picker, GIF picker); pass an `icon`
- * rather than children.
+ * a composer-toolbar icon button.
+ *
+ * @param icon the icon to render inside the button
  */
 export function ComposerToolbarButton({
 	icon: Icon,

@@ -3,14 +3,10 @@ import { ClientResponseError } from '@atcute/client';
 import { m } from '#/paraglide/messages';
 
 /**
- * coerces a thrown value into a string suitable for substring matching. plain objects have no useful string
- * form (String() would yield '[object Object]'), so use Error's own toString() (which keeps the name — e.g.
- * "AbortError" — that {@link isNetworkError} matches on) for Error instances, pass strings through, and
- * JSON-serialize the rest. JSON.stringify can return undefined (for undefined / functions / symbols) or throw
- * (circular refs, BigInt), so guard both.
+ * coerces a thrown value into a string suitable for substring matching.
  *
  * @param error the thrown value to stringify
- * @returns a best-effort string representation, never empty-by-accident
+ * @returns a best-effort string representation
  */
 export function errorToString(error: unknown): string {
 	if (error instanceof Error) {
@@ -98,10 +94,10 @@ export function isErrorMaybeAppPasswordPermissions(e: unknown) {
 }
 
 /**
- * Intended to capture "User cancelled" or "Crop cancelled" errors that we often get from expo modules such
- * local image crop tool
+ * checks if an error was caused by the user cancelling an action.
  *
- * The exact name has changed in the past so let's just see if the string contains "cancel"
+ * @param error the error to check
+ * @returns true if the error message indicates cancellation
  */
 export function isCancelledError(e: unknown) {
 	const str = String(e).toLowerCase();

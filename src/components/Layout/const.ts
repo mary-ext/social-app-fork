@@ -1,6 +1,6 @@
 /**
- * Useful for visually aligning icons within header buttons with the elements below them on the screen. Apply
- * positively or negatively depending on side of the screen you're on.
+ * visually aligns icons within header buttons with the elements below them on the screen. apply positively or
+ * negatively depending on the side of the screen.
  */
 export const BUTTON_VISUAL_ALIGNMENT_OFFSET = 3;
 
