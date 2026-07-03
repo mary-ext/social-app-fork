@@ -134,7 +134,7 @@ export function BlockLink({
 			e.preventDefault();
 		}
 	};
-	const onMouseUp = (e: MouseEvent<HTMLElement>) => {
+	const onAuxClick = (e: MouseEvent<HTMLElement>) => {
 		const target = e.target as HTMLElement;
 		if (e.button !== 1 || target.closest('a')) {
 			return;
@@ -158,7 +158,7 @@ export function BlockLink({
 		onClick,
 		onKeyDown: label ? onKeyDown : undefined,
 		onMouseDown,
-		onMouseUp,
+		onAuxClick,
 		onPointerDownCapture,
 		onPointerEnter,
 		onPointerLeave,
