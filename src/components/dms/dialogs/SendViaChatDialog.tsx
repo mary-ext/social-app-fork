@@ -3,6 +3,8 @@ import { type ReactNode, useMemo, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
+import { Autocomplete } from '@base-ui/react/autocomplete';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
@@ -20,7 +22,7 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { SearchInput } from '#/components/web/forms/SearchInput';
+import * as SearchField from '#/components/web/forms/SearchField';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
@@ -42,6 +44,16 @@ type Item = ExistingChatItem | ProfileItem;
 // orders profiles that accept messages ahead of those that don't, preserving each group's relative order
 const byMessageDeclaration = (a: ProfileItem, b: ProfileItem): number =>
 	Number(canBeMessaged(b.profile)) - Number(canBeMessaged(a.profile));
+
+// accessible label / stringified value for an item. objects need this so Base UI can represent them; the input
+// itself stays controlled by our search text (item presses are ignored in onValueChange).
+const itemToStringValue = (item: Item): string => {
+	if (item.type === 'profile') {
+		return item.profile.handle;
+	}
+	const { convo } = item;
+	return convo.kind === 'group' ? convo.details.name : convo.primaryMember.handle;
+};
 
 export function SendViaChatDialog({
 	handle,
@@ -156,49 +168,46 @@ function DialogInner({
 		return list;
 	}, [convos, currentAccount?.did, follows, isError, results, searchText]);
 
-	// drives the empty slot: placeholders until the initial data lands, then a network/search-empty message
-	const listEmpty = ((): ReactNode => {
+	// drives the slot above the list: placeholders until the initial data lands, then a network/search-empty
+	// message. `null` while items are present or a search is still in flight.
+	const status = ((): ReactNode => {
 		if (isError) {
 			return <Empty message={m['components.dialogs.error.network']()} />;
 		}
 		if (!searchText) {
 			return convos && follows ? null : <ProfileCard.LoadingPlaceholder count={10} />;
 		}
-		return isFetching ? null : <Empty message={m['common.search.empty']()} />;
+		return !isFetching && items.length === 0 ? <Empty message={m['common.search.empty']()} /> : null;
 	})();
 
-	const renderItem = (item: Item) => {
-		if (!moderationOpts) {
-			return null;
-		}
-		switch (item.type) {
-			case 'existingChat':
-				return (
-					<ExistingChatCard
-						convo={item.convo}
-						moderationOpts={moderationOpts}
-						onPress={(id) => {
-							handle.close();
-							onSelectChat(id);
-						}}
-					/>
-				);
-			case 'profile':
-				return (
-					<DefaultProfileCard
-						moderationOpts={moderationOpts}
-						onPress={(did) => {
-							handle.close();
-							createChat([did]);
-						}}
-						profile={item.profile}
-					/>
-				);
-		}
+	const onSelectProfile = (did: string) => {
+		handle.close();
+		createChat([did]);
+	};
+
+	const onSelectExistingChat = (convoId: string) => {
+		handle.close();
+		onSelectChat(convoId);
 	};
 
 	return (
-		<>
+		<Autocomplete.Root
+			filter={null}
+			inline
+			items={items}
+			itemToStringValue={itemToStringValue}
+			onValueChange={(value, details) => {
+				// an item press asks Base UI to fill the input with the picked item's label; ignore it so our
+				// search text (and its query) is untouched as the dialog closes. every row's action runs from
+				// its own onClick instead — the robust, touch-safe choke point (item-press only yields a string).
+				if (details.reason === 'item-press') {
+					return;
+				}
+				setSearchText(value);
+			}}
+			open
+			value={searchText}
+		>
 			<div className={css.header}>
 				<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
 					{m['components.dms.share.title']()}
@@ -218,46 +227,77 @@ function DialogInner({
 			</div>
 
 			<div className={css.search}>
-				<SearchInput
-					autoFocus
-					label={m['common.search.action.profiles']()}
-					maxLength={50}
-					onChangeText={setSearchText}
-					onClear={() => setSearchText('')}
-					placeholder={m['common.action.search']()}
-					value={searchText}
-				/>
+				<SearchField.Root>
+					<SearchField.Icon />
+					<Autocomplete.Input
+						render={
+							<SearchField.Input
+								aria-label={m['common.search.action.profiles']()}
+								autoFocus
+								maxLength={50}
+								placeholder={m['common.action.search']()}
+							/>
+						}
+					/>
+					{searchText.length > 0 && (
+						<SearchField.Clear label={m['common.search.action.clear']()} onClick={() => setSearchText('')} />
+					)}
+				</SearchField.Root>
 			</div>
 
-			<Dialog.List
-				className={css.list}
-				data={items}
-				keyExtractor={(item) => item.key}
-				ListEmptyComponent={listEmpty}
-				renderItem={renderItem}
-			/>
-		</>
+			<Dialog.Body className={css.list}>
+				{status}
+				<Autocomplete.List>
+					{(item: Item) => {
+						if (!moderationOpts) {
+							return null;
+						}
+						switch (item.type) {
+							case 'existingChat':
+								return (
+									<ExistingChatCard
+										item={item}
+										key={item.key}
+										moderationOpts={moderationOpts}
+										onSelect={onSelectExistingChat}
+									/>
+								);
+							case 'profile':
+								return (
+									<DefaultProfileCard
+										item={item}
+										key={item.key}
+										moderationOpts={moderationOpts}
+										onSelect={onSelectProfile}
+									/>
+								);
+						}
+					}}
+				</Autocomplete.List>
+			</Dialog.Body>
+		</Autocomplete.Root>
 	);
 }
 
 function DefaultProfileCard({
+	item,
 	moderationOpts,
-	onPress,
-	profile,
+	onSelect,
 }: {
+	item: ProfileItem;
 	moderationOpts: ModerationOptions;
-	onPress: (did: string) => void;
-	profile: AnyProfileView;
+	onSelect: (did: string) => void;
 }) {
+	const { profile } = item;
 	const enabled = canBeMessaged(profile);
 
 	return (
-		<button
+		<Autocomplete.Item
 			aria-label={m['common.chat.action.start']({ handle: profile.handle })}
 			className={css.row}
 			disabled={!enabled}
-			onClick={() => onPress(profile.did)}
-			type="button"
+			onClick={() => onSelect(profile.did)}
+			value={item}
 		>
 			<ProfileCard.Header>
 				<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
@@ -274,29 +314,31 @@ function DefaultProfileCard({
 					</div>
 				)}
 			</ProfileCard.Header>
-		</button>
+		</Autocomplete.Item>
 	);
 }
 
 function ExistingChatCard({
-	convo,
+	item,
 	moderationOpts,
-	onPress,
+	onSelect,
 }: {
-	convo: ConvoWithDetails;
+	item: ExistingChatItem;
 	moderationOpts: ModerationOptions;
-	onPress: (convoId: string) => void;
+	onSelect: (convoId: string) => void;
 }) {
+	const { convo } = item;
+
 	if (convo.kind === 'group') {
 		const enabled = convo.details.lockStatus === 'unlocked';
 
 		return (
-			<button
+			<Autocomplete.Item
 				aria-label={m['components.dialogs.chat.selectA11y']({ name: convo.details.name })}
 				className={css.row}
 				disabled={!enabled}
-				onClick={() => onPress(convo.view.id)}
-				type="button"
+				onClick={() => onSelect(convo.view.id)}
+				value={item}
 			>
 				<ProfileCard.Header>
 					<AvatarBubbles profiles={convo.members} size={40} />
@@ -316,24 +358,24 @@ function ExistingChatCard({
 						)}
 					</div>
 				</ProfileCard.Header>
-			</button>
+			</Autocomplete.Item>
 		);
 	}
 
 	const { primaryMember } = convo;
 
 	return (
-		<button
+		<Autocomplete.Item
 			aria-label={m['common.chat.action.start']({ handle: primaryMember.handle })}
 			className={css.row}
-			onClick={() => onPress(convo.view.id)}
-			type="button"
+			onClick={() => onSelect(convo.view.id)}
+			value={item}
 		>
 			<ProfileCard.Header>
 				<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={primaryMember} />
 				<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={primaryMember} />
 			</ProfileCard.Header>
-		</button>
+		</Autocomplete.Item>
 	);
 }
 

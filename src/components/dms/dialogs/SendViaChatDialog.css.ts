@@ -50,25 +50,17 @@ export const list = style({
 	scrollPaddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 });
 
-/** a full-width, pressable people row that highlights on hover/press/focus and dims when disabled. */
+/** a people row that highlights on hover/keyboard focus and dims when disabled. */
 export const row = style({
-	background: 'none',
-	border: 'none',
 	boxSizing: 'border-box',
-	color: 'inherit',
 	cursor: 'pointer',
-	display: 'block',
-	font: 'inherit',
+	outline: 'none',
 	paddingBlock: ROW_BLOCK_PADDING,
 	paddingInline: DIALOG_PADDING,
-	textAlign: 'start',
-	width: '100%',
 
 	selectors: {
-		'&:not(:disabled):active': { backgroundColor: colors.contrast_25 },
-		'&:not(:disabled):focus-visible': { backgroundColor: colors.contrast_25 },
-		'&:not(:disabled):hover': { backgroundColor: colors.contrast_25 },
-		'&:disabled': { cursor: 'default', opacity: 0.5 },
+		'&[data-disabled]': { cursor: 'default', opacity: 0.5 },
+		'&[data-highlighted]': { backgroundColor: colors.contrast_25 },
 	},
 });
 
