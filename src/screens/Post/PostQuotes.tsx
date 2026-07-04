@@ -6,7 +6,7 @@ import { usePostQuery } from '#/state/queries/post';
 
 import { PostQuotes as PostQuotesComponent } from '#/view/com/post-thread/PostQuotes';
 
-import * as Layout from '#/components/Layout';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 

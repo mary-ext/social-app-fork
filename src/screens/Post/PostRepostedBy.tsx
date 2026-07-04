@@ -6,7 +6,7 @@ import { usePostQuery } from '#/state/queries/post';
 
 import { PostRepostedBy as PostRepostedByComponent } from '#/view/com/post-thread/PostRepostedBy';
 
-import * as Layout from '#/components/Layout';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 

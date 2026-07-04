@@ -54,6 +54,14 @@ export function TitleText({ children }: { children: React.ReactNode }) {
 	);
 }
 
+export function SubtitleText({ children }: { children: React.ReactNode }) {
+	return (
+		<Text size="sm" color="textContrastMedium" numberOfLines={2}>
+			{children}
+		</Text>
+	);
+}
+
 /**
  * header's leading back button. by default pops the navigation stack, falling back to Home at the root.
  *

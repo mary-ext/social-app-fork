@@ -1,8 +1,8 @@
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
-import * as Layout from '#/components/Layout';
 import { LikedByList } from '#/components/LikedByList';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 

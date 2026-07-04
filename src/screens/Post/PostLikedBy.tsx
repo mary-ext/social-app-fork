@@ -4,8 +4,8 @@ import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { usePostQuery } from '#/state/queries/post';
 
-import * as Layout from '#/components/Layout';
 import { LikedByList } from '#/components/LikedByList';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
