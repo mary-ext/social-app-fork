@@ -1,10 +1,11 @@
 import { style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
+import { colorMix } from '#/styles/color-mix';
+import { colors } from '#/styles/colors';
 import { space, zIndex } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
-const SEARCH_NEGATIVE_MARGIN = space.md;
+const SEARCH_NEGATIVE_MARGIN = 51;
 const ROW_BLOCK_PADDING = space.sm;
 
 export const popup = style({
@@ -14,7 +15,7 @@ export const popup = style({
 
 export const header = style({
 	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_0,
+	backgroundColor: colors.contrast_0,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexShrink: 0,
@@ -34,20 +35,43 @@ export const closeButton = style({
 });
 
 export const search = style({
+	backgroundImage: `linear-gradient(${colors.bg} 50%, ${colorMix(colors.bg, '0%')})`,
 	paddingInline: DIALOG_PADDING,
+	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 	marginBottom: -SEARCH_NEGATIVE_MARGIN,
 	zIndex: zIndex.sticky,
 });
 
 export const list = style({
-	paddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
+	paddingTop: SEARCH_NEGATIVE_MARGIN,
+	scrollPaddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
+	scrollPaddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 });
 
-export const row = style({
+// a selectable member row: pressing it toggles membership, so it highlights on hover/keyboard focus.
+export const item = style({
 	boxSizing: 'border-box',
+	cursor: 'pointer',
+	outline: 'none',
 	paddingBlock: ROW_BLOCK_PADDING,
 	paddingInline: DIALOG_PADDING,
+	selectors: {
+		'&[data-highlighted]': { backgroundColor: colors.contrast_25 },
+	},
+});
+
+// fixed-size trailing slot holding the accent checkmark (members) or a spinner (while a toggle is in flight),
+// sized so rows keep a stable height whether or not the checkmark is shown. the accent color tints the
+// checkmark, which draws with `currentColor`.
+export const indicator = style({
+	alignItems: 'center',
+	color: colors.primary_500,
+	display: 'flex',
+	flexShrink: 0,
+	height: 24,
+	justifyContent: 'center',
+	width: 24,
 });
 
 export const empty = style({

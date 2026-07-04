@@ -162,7 +162,6 @@ function ListRow({
 	const { list } = item;
 	const membershipUri = item.listItem?.uri;
 	const { mutate: listMembershipAdd, isPending: isAddingPending } = useListMembershipAddMutation({
-		subject: profile,
 		onSuccess: () => {
 			Toast.show(m['components.dialogs.list.addedToast']());
 			onChange?.('add', list);
@@ -180,7 +179,7 @@ function ListRow({
 
 	const onToggleMembership = () => {
 		if (!membershipUri) {
-			listMembershipAdd({ listUri: list.uri, actorDid: profile.did });
+			listMembershipAdd({ actorDid: profile.did, listUri: list.uri, subject: profile });
 		} else {
 			listMembershipRemove({ listUri: list.uri, actorDid: profile.did, membershipUri });
 		}

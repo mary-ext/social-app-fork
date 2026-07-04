@@ -4,11 +4,17 @@ import type {
 	AppBskyGraphGetListsWithMembership,
 	AppBskyGraphGetStarterPacksWithMembership,
 } from '@atcute/bluesky';
-import { ok } from '@atcute/client';
+import { type Client, ok } from '@atcute/client';
 import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+	type InfiniteData,
+	queryOptions,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from '@tanstack/react-query';
 
 import { createRecord, deleteRecord } from '#/lib/api/records';
 import { accumulate } from '#/lib/async/accumulate';
@@ -25,15 +31,16 @@ const RQKEY_WITH_MEMBERSHIP_ROOT = 'lists-with-membership';
 export const RQKEY_WITH_MEMBERSHIP = (actor?: string) => [RQKEY_WITH_MEMBERSHIP_ROOT, actor];
 
 /** fetches the signed-in user's curate and moderation lists, each annotated with the given actor's membership. */
-export function useListsWithMembershipQuery({
+export function listsWithMembershipQueryOptions({
 	actor,
+	appview,
 	enabled = true,
 }: {
 	actor?: string;
+	appview: Client;
 	enabled?: boolean;
 }) {
-	const { appview } = useClients();
-	return useQuery<ListWithMembership[]>({
+	return queryOptions<ListWithMembership[]>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY_WITH_MEMBERSHIP(actor),
 		queryFn: () =>
@@ -48,20 +55,27 @@ export function useListsWithMembershipQuery({
 	});
 }
 
+export function useListsWithMembershipQuery(params: { actor?: string; enabled?: boolean }) {
+	const { appview } = useClients();
+	return useQuery(listsWithMembershipQueryOptions({ ...params, appview }));
+}
+
 export function useListMembershipAddMutation({
-	subject,
 	onSuccess,
 	onError,
 }: {
-	/** Needed for optimistic update of starter pack query */
-	subject?: AnyProfileView;
 	onSuccess?: (data: { uri: string; cid: string }) => void;
 	onError?: (error: Error) => void;
 } = {}) {
 	const { currentAccount } = useSession();
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<{ uri: string; cid: string }, Error, { listUri: string; actorDid: string }>({
+	// `subject` (the added profile) drives the optimistic membership cache updates in onSuccess below.
+	return useMutation<
+		{ uri: string; cid: string },
+		Error,
+		{ actorDid: string; listUri: string; subject?: AnyProfileView }
+	>({
 		mutationFn: async ({ listUri, actorDid }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
@@ -93,7 +107,7 @@ export function useListMembershipAddMutation({
 
 			// update WITH_MEMBERSHIPS queries
 
-			if (subject) {
+			if (variables.subject) {
 				queryClient.setQueryData<ListWithMembership[]>(RQKEY_WITH_MEMBERSHIP(variables.actorDid), (old) =>
 					old?.map((item) =>
 						item.list.uri === variables.listUri
@@ -101,7 +115,7 @@ export function useListMembershipAddMutation({
 									...item,
 									listItem: {
 										uri: data.uri as ResourceUri,
-										subject: subject as AppBskyActorDefs.ProfileView,
+										subject: variables.subject as AppBskyActorDefs.ProfileView,
 									},
 								}
 							: item,
@@ -130,7 +144,7 @@ export function useListMembershipAddMutation({
 												listItemsSample: [
 													{
 														uri: data.uri,
-														subject: subject as AppBskyActorDefs.ProfileViewBasic,
+														subject: variables.subject as AppBskyActorDefs.ProfileViewBasic,
 													},
 													...(spWithMembership.starterPack.listItemsSample?.filter(
 														(item) => item.subject.did !== variables.actorDid,
@@ -143,7 +157,7 @@ export function useListMembershipAddMutation({
 											},
 											listItem: {
 												uri: data.uri,
-												subject: subject as AppBskyActorDefs.ProfileViewBasic,
+												subject: variables.subject as AppBskyActorDefs.ProfileViewBasic,
 											},
 										};
 									}

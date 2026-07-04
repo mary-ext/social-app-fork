@@ -206,7 +206,6 @@ function StarterPackItem({
 	const isInPack = !!starterPackWithMembership.listItem;
 
 	const { mutate: addMembership, isPending: isPendingAdd } = useListMembershipAddMutation({
-		subject,
 		onSuccess: () => {
 			Toast.show(m['components.dialogs.starterPack.addedToast']());
 		},
@@ -240,7 +239,7 @@ function StarterPackItem({
 		const listUri = starterPack.list.uri;
 
 		if (!isInPack) {
-			addMembership({ actorDid: targetDid, listUri });
+			addMembership({ actorDid: targetDid, listUri, subject });
 		} else {
 			if (!starterPackWithMembership.listItem?.uri) {
 				logger.error('Cannot remove from starter pack: missing membership URI');
