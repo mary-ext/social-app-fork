@@ -5,8 +5,9 @@ import { colors } from '#/styles/colors';
 import { space, zIndex } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
-const SEARCH_NEGATIVE_MARGIN = 42;
 const ROW_BLOCK_PADDING = space.sm;
+const SEARCH_HEIGHT = 42;
+const SEARCH_NEGATIVE_MARGIN = SEARCH_HEIGHT + (DIALOG_PADDING - ROW_BLOCK_PADDING);
 
 export const popup = style({
 	height: 600,
