@@ -50,7 +50,7 @@ export function SuggestedProfileCard({
 	return (
 		<ProfileCard.Default
 			descriptionLines={2}
-			followButtonProps={{ withIcon: false }}
+			followButtonProps={{ variant: 'text-only' }}
 			moderationOpts={moderationOpts}
 			profile={profile}
 			showLabels={false}

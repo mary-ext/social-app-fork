@@ -29,7 +29,7 @@ import { RichText, type RichTextProps } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { PreviewableUserAvatar, UserAvatar } from '#/components/UserAvatar';
-import { Button, type ButtonProps, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Pills from '#/components/web/Pills';
 import * as css from '#/components/web/ProfileCard.css';
 import * as Skeleton from '#/components/web/Skeleton';
@@ -377,13 +377,13 @@ export function Labels({
 	);
 }
 
+export type FollowButtonVariant = 'default' | 'text-only' | 'suggested' | 'subtle';
+
 export type FollowButtonProps = {
-	colorInverted?: boolean;
 	moderationOpts: ModerationOptions;
-	onFollow?: () => void;
 	profile: AnyProfileView;
-	withIcon?: boolean;
-} & Partial<Omit<ButtonProps, 'children' | 'label'>>;
+	variant?: FollowButtonVariant;
+};
 
 /** Follow/unfollow toggle. Renders nothing for the signed-in user's own profile or when signed out. */
 export function FollowButton(props: FollowButtonProps) {
@@ -393,17 +393,17 @@ export function FollowButton(props: FollowButtonProps) {
 }
 
 function FollowButtonInner({
-	colorInverted,
 	moderationOpts,
-	onFollow,
 	profile: profileUnshadowed,
-	withIcon = true,
-	...rest
+	variant = 'default',
 }: FollowButtonProps) {
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = moderateProfile(profile, moderationOpts);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
-	const isRound = rest.shape === 'round';
+
+	const isRound = variant === 'suggested';
+	const followingWithIcon = variant !== 'text-only';
+	const followWithIcon = variant !== 'text-only' && variant !== 'subtle';
 
 	const name = () =>
 		sanitizeDisplayName(
@@ -416,7 +416,6 @@ function FollowButtonInner({
 		try {
 			await queueFollow();
 			Toast.show(m['common.follow.a11y.following']({ name: name() }));
-			onFollow?.();
 		} catch (err) {
 			if (!(err instanceof Error && err.name === 'AbortError')) {
 				Toast.show(m['common.error.generic'](), { type: 'error' });
@@ -448,12 +447,12 @@ function FollowButtonInner({
 		<Button
 			label={unfollowLabel}
 			size="small"
-			variant="solid"
+			variant={variant === 'subtle' ? 'ghost' : 'solid'}
 			color="secondary"
-			{...rest}
+			shape={isRound ? 'round' : 'default'}
 			onClick={(e) => void onPressUnfollow(e)}
 		>
-			{withIcon && <ButtonIcon icon={CheckIcon} />}
+			{followingWithIcon && <ButtonIcon icon={CheckIcon} />}
 			{!isRound && <ButtonText>{unfollowLabel}</ButtonText>}
 		</Button>
 	) : (
@@ -461,11 +460,13 @@ function FollowButtonInner({
 			label={followLabel}
 			size="small"
 			variant="solid"
-			color={colorInverted ? 'secondary_inverted' : 'primary'}
-			{...rest}
+			color={
+				variant === 'suggested' ? 'secondary_inverted' : variant === 'subtle' ? 'primary_subtle' : 'primary'
+			}
+			shape={isRound ? 'round' : 'default'}
 			onClick={(e) => void onPressFollow(e)}
 		>
-			{withIcon && <ButtonIcon icon={PlusIcon} />}
+			{followWithIcon && <ButtonIcon icon={PlusIcon} />}
 			{!isRound && <ButtonText>{followLabel}</ButtonText>}
 		</Button>
 	);

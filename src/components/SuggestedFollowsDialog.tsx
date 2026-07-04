@@ -130,7 +130,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		moderationOpts ? (
 			<ProfileCard.Default
 				descriptionLines={2}
-				followButtonProps={{ colorInverted: true, shape: 'round' }}
+				followButtonProps={{ variant: 'suggested' }}
 				moderationOpts={moderationOpts}
 				onPress={() => handle.close()}
 				profile={profile}

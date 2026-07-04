@@ -797,8 +797,6 @@ function ExpandedAuthorProfileCard({
 	moderationOpts: ModerationOptions;
 	isLast: boolean;
 }) {
-	const profile = useProfileShadow(author.profile);
-	const isFollowing = !!profile.viewer?.following;
 	return (
 		<ProfileCard.Link profile={author.profile} className={isLast ? undefined : css.expandCardGap}>
 			<ProfileCard.Outer>
@@ -808,10 +806,7 @@ function ExpandedAuthorProfileCard({
 					<ProfileCard.FollowButton
 						profile={author.profile}
 						moderationOpts={moderationOpts}
-						size="small"
-						variant={isFollowing ? 'ghost' : 'solid'}
-						color={isFollowing ? 'secondary' : 'primary_subtle'}
-						withIcon={isFollowing}
+						variant="subtle"
 					/>
 				</ProfileCard.Header>
 			</ProfileCard.Outer>

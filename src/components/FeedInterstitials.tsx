@@ -102,7 +102,7 @@ function SuggestedFollowCard({
 						</div>
 					</div>
 				</div>
-				<ProfileCard.FollowButton moderationOpts={moderationOpts} profile={profile} withIcon={false} />
+				<ProfileCard.FollowButton moderationOpts={moderationOpts} profile={profile} variant="text-only" />
 			</div>
 		</BlockLink>
 	);
