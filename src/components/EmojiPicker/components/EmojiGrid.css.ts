@@ -9,6 +9,7 @@ import {
 	HEADER_HEIGHT,
 	PER_LINE,
 	ROW_HEIGHT,
+	SEARCH_INPUT_RADIUS,
 } from '../layout';
 
 export const scroll = style({
@@ -17,7 +18,8 @@ export const scroll = style({
 	overscrollBehavior: 'contain',
 	paddingInline: GRID_PADDING,
 	position: 'relative',
-	scrollPadding: GRID_PADDING,
+	scrollPaddingTop: GRID_PADDING + SEARCH_INPUT_RADIUS,
+	scrollPaddingBottom: GRID_PADDING,
 	userSelect: 'none',
 });
 
