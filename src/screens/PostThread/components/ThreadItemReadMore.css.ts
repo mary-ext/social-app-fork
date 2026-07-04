@@ -3,30 +3,12 @@ import { style } from '@vanilla-extract/css';
 import { LINEAR_AVI_WIDTH, REPLY_LINE_WIDTH, TREE_AVI_WIDTH, TREE_INDENT } from '#/screens/PostThread/const';
 
 import { colors } from '#/styles/colors';
-import { borderRadius } from '#/styles/tokens.css';
+import { borderRadius, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
 	flexDirection: 'row',
 });
-
-// #region tree indent spine
-export const guide = style({
-	borderRightColor: colors.borderContrastLow,
-	borderRightStyle: 'solid',
-	borderRightWidth: REPLY_LINE_WIDTH,
-	// border-box + no-shrink so the indent matches the tree posts above; see ThreadItemTreePost.css
-	boxSizing: 'border-box',
-	flexShrink: 0,
-	left: 1,
-	position: 'relative',
-	width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-});
-
-export const guideSkipped = style({
-	borderRightWidth: 0,
-});
-// #endregion
 
 /** The L-shaped elbow that drops the spine into the "read more" link. */
 export const connectorBase = style({
@@ -51,6 +33,37 @@ export const connectorLinear = style({
 	width: LINEAR_AVI_WIDTH / 2 + 10,
 });
 
-export const underline = style({
-	textDecorationLine: 'underline',
+export const link = style({
+	alignItems: 'center',
+	display: 'flex',
+	flexDirection: 'row',
+	flexGrow: 1,
+	minWidth: 0,
+	gap: space.sm,
+	paddingBottom: space.md,
+	paddingTop: space.sm,
+	textDecorationLine: 'none',
+});
+
+export const icon = style({
+	color: colors.textContrastLow,
+	selectors: {
+		[`${link}:hover &`]: {
+			color: colors.textContrastHigh,
+		},
+		[`${link}:focus-visible &`]: {
+			color: colors.textContrastHigh,
+		},
+	},
+});
+
+export const text = style({
+	selectors: {
+		[`${link}:hover &`]: {
+			textDecorationLine: 'underline',
+		},
+		[`${link}:focus-visible &`]: {
+			textDecorationLine: 'underline',
+		},
+	},
 });

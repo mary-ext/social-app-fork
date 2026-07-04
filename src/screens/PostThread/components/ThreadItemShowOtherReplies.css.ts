@@ -1,29 +1,36 @@
 import { style } from '@vanilla-extract/css';
 
+import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
+
 import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
+export const button = style({
+	backgroundColor: 'transparent',
+	borderInline: 0,
+	borderBottom: 0,
+	paddingBottom: space.lg,
+	paddingTop: space.lg,
+	transition: 'background-color 0.15s ease',
+	width: '100%',
+	selectors: {
+		'&:focus-visible': {
+			outline: `2px solid ${colors.primary_500}`,
+			outlineOffset: -2,
+		},
+	},
+});
+
 export const row = style({
 	alignItems: 'center',
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
-	borderTopWidth: 1,
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'row',
-	gap: space.sm,
-	paddingBottom: space.lg,
-	paddingLeft: space.xl,
-	paddingRight: space.xl,
-	paddingTop: space.lg,
 });
 
-export const rowIdle = style({
-	backgroundColor: colors.bg,
+export const avatarColumn = style({
+	width: LINEAR_AVI_WIDTH,
 });
 
-export const rowActive = style({
-	backgroundColor: colors.contrast_25,
+export const contentColumn = style({
+	paddingBottom: 0,
 });
 
 export const iconCircle = style({
@@ -35,7 +42,6 @@ export const iconCircle = style({
 	display: 'flex',
 	height: 26,
 	justifyContent: 'center',
-	marginRight: 4,
 	width: 26,
 });
 

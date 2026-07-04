@@ -1,9 +1,8 @@
 import { clsx } from 'clsx';
 
-import { atoms as a } from '#/alf';
-
-import { Button } from '#/components/Button';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
+import * as PostLayout from '#/components/PostLayout';
+import { frame as frameRecipe } from '#/components/PostLayout.css';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
@@ -12,25 +11,24 @@ import * as css from './ThreadItemShowOtherReplies.css';
 
 export function ThreadItemShowOtherReplies({ onPress }: { onPress: () => void }) {
 	const label = m['screens.postThread.reply.action.showMore']();
-
 	return (
-		<Button
-			onPress={() => {
-				onPress();
-			}}
-			label={label}
-			style={a.w_full}
+		<button
+			onClick={onPress}
+			aria-label={label}
+			className={clsx(frameRecipe({ hoverable: true, topBorder: true }), css.button)}
 		>
-			{({ hovered, pressed }) => (
-				<div className={clsx(css.row, hovered || pressed ? css.rowActive : css.rowIdle)}>
+			<PostLayout.Row className={css.row}>
+				<PostLayout.AvatarColumn className={css.avatarColumn}>
 					<div className={css.iconCircle}>
 						<EyeSlash size="sm" fill="currentColor" />
 					</div>
+				</PostLayout.AvatarColumn>
+				<PostLayout.ContentColumn className={css.contentColumn}>
 					<Text className={css.label} color="textContrastMedium" numberOfLines={1}>
 						{label}
 					</Text>
-				</div>
-			)}
-		</Button>
+				</PostLayout.ContentColumn>
+			</PostLayout.Row>
+		</button>
 	);
 }

@@ -7,26 +7,48 @@ import { space } from '#/styles/tokens.css';
 
 export const rowTop = style({
 	alignItems: 'center',
-	display: 'flex',
-	flexDirection: 'row',
-	gap: space.md,
 });
 
-export const iconCell = style({
-	alignItems: 'center',
-	display: 'flex',
-	flexDirection: 'column',
+export const iconColumn = style({
 	width: LINEAR_AVI_WIDTH,
 });
 
 /** The short stub of reply line dropping down from the "continue thread" row. */
 export const lineStub = style({
-	backgroundColor: colors.borderContrastLow,
+	backgroundColor: colors.borderContrastMedium,
 	height: OUTER_SPACE / 2,
-	marginTop: space.xs,
 	width: REPLY_LINE_WIDTH,
 });
 
-export const underline = style({
-	textDecorationLine: 'underline',
+export const link = style({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: space.xs,
+	paddingLeft: OUTER_SPACE,
+	paddingRight: OUTER_SPACE,
+	paddingTop: OUTER_SPACE,
+	textDecorationLine: 'none',
+});
+
+export const icon = style({
+	color: colors.textContrastMedium,
+	selectors: {
+		[`${link}:hover &`]: {
+			color: colors.textContrastHigh,
+		},
+		[`${link}:focus-visible &`]: {
+			color: colors.textContrastHigh,
+		},
+	},
+});
+
+export const text = style({
+	selectors: {
+		[`${link}:hover &`]: {
+			textDecorationLine: 'underline',
+		},
+		[`${link}:focus-visible &`]: {
+			textDecorationLine: 'underline',
+		},
+	},
 });

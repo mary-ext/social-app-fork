@@ -2,16 +2,14 @@ import { clsx } from 'clsx';
 
 import type { PostThreadParams, ThreadItem } from '#/state/queries/usePostThread';
 
-import { atoms as a } from '#/alf';
-
 import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlus } from '#/components/icons/CirclePlus';
-import { Link } from '#/components/Link';
 import { Text } from '#/components/Text';
+import { Link } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemReadMore.css';
+import { IndentGuides } from './ThreadLines';
 
 export function ThreadItemReadMore({
 	item,
@@ -23,35 +21,15 @@ export function ThreadItemReadMore({
 	const isTreeView = view === 'tree';
 	const indent = Math.max(0, item.depth - 1);
 
-	const spacers = isTreeView
-		? Array.from(Array(indent)).map((_, n: number) => {
-				const isSkipped = item.skippedIndentIndices.has(n);
-				return (
-					<div key={`${item.key}-padding-${n}`} className={clsx(css.guide, isSkipped && css.guideSkipped)} />
-				);
-			})
-		: null;
-
 	return (
 		<div className={css.outer}>
-			{spacers}
+			{isTreeView && <IndentGuides count={indent} keyPrefix={item.key} skipped={item.skippedIndentIndices} />}
 			<div className={clsx(css.connectorBase, isTreeView ? css.connectorTree : css.connectorLinear)} />
-			<Link
-				label={m['screens.postThread.reply.action.readMore']()}
-				to={item.href}
-				style={[a.pt_sm, a.pb_md, a.gap_xs]}
-			>
-				{({ hovered, pressed }) => {
-					const interacted = hovered || pressed;
-					return (
-						<>
-							<CirclePlus fill={interacted ? colors.textContrastHigh : colors.textContrastLow} size="md" />
-							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
-								{m['screens.postThread.reply.action.readMoreCount']({ count: item.moreReplies })}
-							</Text>
-						</>
-					);
-				}}
+			<Link className={css.link} label={m['screens.postThread.reply.action.readMore']()} to={item.href}>
+				<CirclePlus className={css.icon} fill="currentColor" size="md" />
+				<Text className={css.text} color="textContrastMedium" size="sm">
+					{m['screens.postThread.reply.action.readMoreCount']({ count: item.moreReplies })}
+				</Text>
 			</Link>
 		</div>
 	);

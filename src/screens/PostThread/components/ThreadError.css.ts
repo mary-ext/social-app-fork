@@ -8,9 +8,8 @@ export const outer = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
-	padding: OUTER_SPACE,
-	paddingTop: OUTER_SPACE * 2,
-	width: '100%',
+	paddingInline: OUTER_SPACE,
+	paddingBlock: OUTER_SPACE * 2,
 });
 
 export const inner = style({
@@ -18,7 +17,6 @@ export const inner = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.xl,
-	maxWidth: 260,
 	width: '100%',
 });
 
