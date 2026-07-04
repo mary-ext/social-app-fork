@@ -18,7 +18,6 @@ import { PostMeta } from '#/view/com/util/PostMeta';
 import { TREE_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
-import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -241,7 +240,6 @@ function ThreadItemTreePostInner({
 									)}
 
 									<PostControls post={postShadow} onPressReply={onPressReply} />
-									<DebugFieldDisplay subject={post} />
 								</div>
 							</div>
 						</div>

@@ -18,7 +18,6 @@ import { PostMeta } from '#/view/com/util/PostMeta';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
-import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -247,7 +246,6 @@ function ThreadItemPostInner({
 							</div>
 						)}
 						<PostControls post={postShadow} onPressReply={onPressReply} />
-						<DebugFieldDisplay subject={post} />
 					</PostLayout.ContentColumn>
 				</PostLayout.Row>
 			</PostHider>

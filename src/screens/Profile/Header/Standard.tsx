@@ -7,7 +7,6 @@ import { clsx } from 'clsx';
 
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
-import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/web/KnownFollowers';
 
@@ -69,8 +68,6 @@ function StandardBody() {
 					)}
 				</div>
 			)}
-
-			<DebugFieldDisplay subject={profile} />
 		</div>
 	);
 }

@@ -31,7 +31,6 @@ import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/Th
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { Button } from '#/components/Button';
-import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon } from '#/components/icons/CalendarClock';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed } from '#/components/images/Gallery';
@@ -432,8 +431,6 @@ function ThreadItemAnchorInner({
 								viaRepost={viaRepost}
 							/>
 						</FeedFeedbackProvider>
-
-						<DebugFieldDisplay subject={post} />
 					</div>
 				</PostLayout.Frame>
 			</GalleryBleed>
