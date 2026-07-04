@@ -2,7 +2,7 @@ import { Collapsible } from '@base-ui/react/collapsible';
 
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
 
-import { ProfileGrid } from '#/components/feed-interstitials';
+import { ProfileGrid } from '#/components/FeedInterstitials';
 
 import * as styles from './SuggestedFollows.css';
 

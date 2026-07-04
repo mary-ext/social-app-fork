@@ -1,4 +1,4 @@
-import { ProgressCircle } from '#/components/progress-circle';
+import { ProgressCircle } from '#/components/ProgressCircle';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';

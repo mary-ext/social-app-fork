@@ -11,7 +11,7 @@ import { useGetSuggestedUsersForSeeMoreQuery } from '#/state/queries/trending/us
 import { useSession } from '#/state/session';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import * as css from '#/components/suggested-follows-dialog.css';
+import * as css from '#/components/SuggestedFollowsDialog.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';

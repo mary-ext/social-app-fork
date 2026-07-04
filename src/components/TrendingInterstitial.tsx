@@ -15,7 +15,7 @@ import { m } from '#/paraglide/messages';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 import { colors } from '#/styles/colors';
 
-import * as css from './trending-interstitial.css';
+import * as css from './TrendingInterstitial.css';
 
 const SKELETON_WIDTHS = [80, 50, 120, 30, 180];
 

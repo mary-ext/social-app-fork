@@ -16,11 +16,11 @@ import { useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import { BlockLink } from '#/components/BlockLink';
-import * as css from '#/components/feed-interstitials.css';
+import * as css from '#/components/FeedInterstitials.css';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { SuggestedFollowsDialog } from '#/components/suggested-follows-dialog';
+import { SuggestedFollowsDialog } from '#/components/SuggestedFollowsDialog';
 import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
 import * as ProfileCard from '#/components/web/ProfileCard';

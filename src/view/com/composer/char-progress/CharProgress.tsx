@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 
 import { MAX_GRAPHEME_LENGTH } from '#/lib/constants';
 
-import { ProgressCircle, ProgressPie } from '#/components/progress-circle';
+import { ProgressCircle, ProgressPie } from '#/components/ProgressCircle';
 import { Text } from '#/components/Text';
 
 import { colors } from '#/styles/colors';
