@@ -2,32 +2,17 @@ import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-me
 
 import { logger } from '#/logger';
 
-import * as Dialog from '#/components/Dialog';
 import { SearchablePeopleList } from '#/components/dialogs/SearchablePeopleList';
 import * as Toast from '#/components/Toast';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
 export function SendViaChatDialog({
-	control,
+	handle,
 	onSelectChat,
 }: {
-	control: Dialog.DialogControlProps;
-	onSelectChat: (chatId: string) => void;
-}) {
-	return (
-		<Dialog.Outer control={control} testID="sendViaChatChatDialog">
-			<Dialog.Handle />
-			<SendViaChatDialogInner control={control} onSelectChat={onSelectChat} />
-		</Dialog.Outer>
-	);
-}
-
-function SendViaChatDialogInner({
-	control,
-	onSelectChat,
-}: {
-	control: Dialog.DialogControlProps;
+	handle: Dialog.DialogHandle;
 	onSelectChat: (chatId: string) => void;
 }) {
 	const { mutate: createChat } = useGetConvoForMembers({
@@ -42,26 +27,20 @@ function SendViaChatDialogInner({
 		},
 	});
 
-	const onSelectExistingChat = (chatId: string) => {
-		control.close(() => onSelectChat(chatId));
-	};
-
-	const onCreateChat = (did: string) => {
-		control.close(() => createChat([did]));
-	};
-
 	return (
 		<SearchablePeopleList
-			title={m['components.dms.share.title']()}
+			handle={handle}
 			onSelectChat={(chat) => {
+				handle.close();
 				if (chat.kind === 'user') {
-					onCreateChat(chat.did);
+					createChat([chat.did]);
 				} else {
-					onSelectExistingChat(chat.id);
+					onSelectChat(chat.id);
 				}
 			}}
 			showRecentConvos
 			sortByMessageDeclaration
+			title={m['components.dms.share.title']()}
 		/>
 	);
 }

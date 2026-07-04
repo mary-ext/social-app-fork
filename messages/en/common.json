@@ -85,7 +85,7 @@
 	"common.chat.action.new": "New chat",
 	"common.chat.action.open": "Open chat",
 	"common.chat.action.report": "Report conversation",
-	"common.chat.action.start": "Start chat with {name}",
+	"common.chat.action.start": "Start chat with {handle}",
 	"common.chat.byOwner": "by {#t0}{handle}{/t0}",
 	"common.chat.error.create": "Failed to create conversation",
 	"common.chat.error.full": "This chat is full",

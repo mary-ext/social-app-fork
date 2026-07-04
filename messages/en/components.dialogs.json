@@ -9,7 +9,7 @@
 	"components.dialogs.account.loadError": "Failed to load profiles",
 	"components.dialogs.account.signInAnother": "Sign in to another account",
 	"components.dialogs.action.noThanks": "No thanks",
-	"components.dialogs.chat.cannotMessage": "{handle} can't be messaged",
+	"components.dialogs.chat.cannotMessage": "Can't be messaged",
 	"components.dialogs.chat.groupLocked": "Group is locked",
 	"components.dialogs.chat.selectA11y": "Select chat \"{name}\"",
 	"components.dialogs.error.network": "We're having network issues, try again",

@@ -1,15 +1,7 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { type ReactNode, useMemo, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
-import {
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateProfile,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
-
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
@@ -17,80 +9,65 @@ import { useListConvosQuery } from '#/state/queries/messages/list-conversations'
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
 
-import type { ListMethods } from '#/view/com/util/List';
-
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
+import { AvatarBubbles } from '#/components/AvatarBubbles';
+import * as css from '#/components/dialogs/SearchablePeopleList.css';
 import { canBeMessaged, type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
-import { useInteractionState } from '#/components/hooks/useInteractionState';
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as Search } from '#/components/icons/MagnifyingGlass';
-import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
-import * as ProfileCard from '#/components/ProfileCard';
-import { Text } from '#/components/Typography';
+import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import { Text } from '#/components/Text';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import { SearchInput } from '#/components/web/forms/SearchInput';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
-import { AvatarBubbles } from '../AvatarBubbles';
-import { Error } from '../Error';
-import { ProfileBadges } from '../ProfileBadges';
-
-type WebViewProps = {
-	onMouseEnter?: () => void;
-	onMouseLeave?: () => void;
-};
+type SelectedChat = { did: string; kind: 'user' } | { id: string; kind: 'convo' };
 
 type ProfileItem = {
-	type: 'profile';
 	key: string;
 	profile: AnyProfileView;
+	type: 'profile';
 };
 
 type ExistingChatItem = {
-	type: 'existingChat';
-	key: string;
 	convo: ConvoWithDetails;
-};
-
-type EmptyItem = {
-	type: 'empty';
 	key: string;
-	message: string;
+	type: 'existingChat';
 };
 
-type PlaceholderItem = {
-	type: 'placeholder';
-	key: string;
-};
+type Item = ExistingChatItem | ProfileItem;
 
-type ErrorItem = {
-	type: 'error';
-	key: string;
-};
+// orders profiles that accept messages ahead of those that don't, preserving each group's relative order
+const byMessageDeclaration = (a: ProfileItem, b: ProfileItem): number =>
+	Number(canBeMessaged(b.profile)) - Number(canBeMessaged(a.profile));
 
-type Item = ProfileItem | ExistingChatItem | EmptyItem | PlaceholderItem | ErrorItem;
-
-export function SearchablePeopleList({
-	title,
-	showRecentConvos,
-	sortByMessageDeclaration,
-	onSelectChat,
-}: {
-	title: string;
+type SearchablePeopleListProps = {
+	handle: Dialog.DialogHandle;
+	onSelectChat: (chat: SelectedChat) => void;
 	showRecentConvos?: boolean;
 	sortByMessageDeclaration?: boolean;
-	onSelectChat: (chat: { kind: 'user'; did: string } | { kind: 'convo'; id: string }) => void;
-}) {
-	const t = useTheme();
-	const moderationOpts = useModerationOpts();
-	const control = Dialog.useDialogContext();
-	const [headerHeight, setHeaderHeight] = useState(0);
-	const listRef = useRef<ListMethods>(null);
-	const { currentAccount } = useSession();
-	const inputRef = useRef<TextInput>(null);
+	title: string;
+};
 
+export function SearchablePeopleList({ handle, ...props }: SearchablePeopleListProps) {
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup className={css.popup} label={props.title} scroll="body">
+				<DialogInner handle={handle} {...props} />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+function DialogInner({
+	handle,
+	onSelectChat,
+	showRecentConvos,
+	sortByMessageDeclaration,
+	title,
+}: SearchablePeopleListProps) {
+	const moderationOpts = useModerationOpts();
+	const { currentAccount } = useSession();
 	const [searchText, setSearchText] = useState('');
 
 	const { data: results, isError, isFetching } = useActorAutocompleteQuery(searchText, true, 12);
@@ -101,284 +78,215 @@ export function SearchablePeopleList({
 		status: 'accepted',
 	});
 
-	const items = useMemo(() => {
-		let items: Item[] = [];
-
+	const items = useMemo<Item[]>(() => {
 		if (isError) {
-			items.push({
-				type: 'empty',
-				key: 'empty',
-				message: m['components.dialogs.error.network'](),
-			});
-		} else if (searchText.length) {
-			if (results?.length) {
-				for (const profile of results) {
-					if (profile.did === currentAccount?.did) continue;
-					items.push({
-						type: 'profile',
-						key: profile.did,
-						profile,
-					});
-				}
-
-				if (sortByMessageDeclaration) {
-					items = items.sort((item) => {
-						return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1;
-					});
-				}
-			}
-		} else {
-			const placeholders: Item[] = Array(10)
-				.fill(0)
-				.map((__, i) => ({
-					type: 'placeholder',
-					key: i + '',
-				}));
-
-			if (showRecentConvos) {
-				if (convos && follows) {
-					const usedDids = new Set();
-
-					for (const page of convos.pages) {
-						for (const convoView of page.convos) {
-							const convo = parseConvoView(convoView, currentAccount?.did);
-
-							if (!convo) continue;
-
-							if (convo.kind === 'group') {
-								items.push({
-									type: 'existingChat',
-									key: convo.view.id,
-									convo,
-								});
-							} else {
-								if (convo.primaryMember.handle === 'missing.invalid') continue;
-								if (usedDids.has(convo.primaryMember.did)) continue;
-
-								usedDids.add(convo.primaryMember.did);
-
-								items.push({
-									type: 'existingChat',
-									key: convo.view.id,
-									convo: convo,
-								});
-							}
-						}
-					}
-
-					let followsItems: ProfileItem[] = [];
-
-					for (const page of follows.pages) {
-						for (const profile of page.follows) {
-							if (usedDids.has(profile.did)) continue;
-
-							followsItems.push({
-								type: 'profile',
-								key: profile.did,
-								profile,
-							});
-						}
-					}
-
-					if (sortByMessageDeclaration) {
-						// only sort follows
-						followsItems = followsItems.sort((item) => {
-							return canBeMessaged(item.profile) ? -1 : 1;
-						});
-					}
-
-					// then append
-					items.push(...followsItems);
-				} else {
-					items.push(...placeholders);
-				}
-			} else if (follows) {
-				for (const page of follows.pages) {
-					for (const profile of page.follows) {
-						items.push({
-							type: 'profile',
-							key: profile.did,
-							profile,
-						});
-					}
-				}
-
-				if (sortByMessageDeclaration) {
-					items = items.sort((item) => {
-						return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1;
-					});
-				}
-			} else {
-				items.push(...placeholders);
-			}
+			return [];
 		}
 
-		return items;
+		if (searchText.length) {
+			const profiles: ProfileItem[] = [];
+			for (const profile of results ?? []) {
+				if (profile.did === currentAccount?.did) {
+					continue;
+				}
+				profiles.push({ type: 'profile', key: profile.did, profile });
+			}
+
+			if (sortByMessageDeclaration) {
+				profiles.sort(byMessageDeclaration);
+			}
+
+			return profiles;
+		}
+
+		const list: Item[] = [];
+
+		if (showRecentConvos) {
+			if (convos && follows) {
+				const usedDids = new Set<string>();
+
+				for (const page of convos.pages) {
+					for (const convoView of page.convos) {
+						const convo = parseConvoView(convoView, currentAccount?.did);
+
+						if (!convo) {
+							continue;
+						}
+
+						if (convo.kind === 'group') {
+							list.push({ type: 'existingChat', key: convo.view.id, convo });
+						} else {
+							if (convo.primaryMember.handle === 'missing.invalid') {
+								continue;
+							}
+							if (usedDids.has(convo.primaryMember.did)) {
+								continue;
+							}
+
+							usedDids.add(convo.primaryMember.did);
+							list.push({ type: 'existingChat', key: convo.view.id, convo });
+						}
+					}
+				}
+
+				const followsItems: ProfileItem[] = [];
+				for (const page of follows.pages) {
+					for (const profile of page.follows) {
+						if (usedDids.has(profile.did)) {
+							continue;
+						}
+						followsItems.push({ type: 'profile', key: profile.did, profile });
+					}
+				}
+
+				if (sortByMessageDeclaration) {
+					// only sort the follows, keeping existing chats pinned above them
+					followsItems.sort(byMessageDeclaration);
+				}
+
+				list.push(...followsItems);
+			}
+		} else if (follows) {
+			const followsItems: ProfileItem[] = [];
+			for (const page of follows.pages) {
+				for (const profile of page.follows) {
+					followsItems.push({ type: 'profile', key: profile.did, profile });
+				}
+			}
+
+			if (sortByMessageDeclaration) {
+				followsItems.sort(byMessageDeclaration);
+			}
+
+			list.push(...followsItems);
+		}
+
+		return list;
 	}, [
-		searchText,
-		results,
-		isError,
+		convos,
 		currentAccount?.did,
 		follows,
-		convos,
+		isError,
+		results,
+		searchText,
 		showRecentConvos,
 		sortByMessageDeclaration,
 	]);
 
-	if (searchText && !isFetching && !items.length && !isError) {
-		items.push({ type: 'empty', key: 'empty', message: m['common.search.empty']() });
-	}
+	// drives the empty slot: placeholders until the initial data lands, then a network/search-empty message
+	const listEmpty = ((): ReactNode => {
+		if (isError) {
+			return <Empty message={m['components.dialogs.error.network']()} />;
+		}
+		if (!searchText) {
+			const ready = showRecentConvos ? convos && follows : follows;
+			return ready ? null : <ProfileCard.LoadingPlaceholder count={10} />;
+		}
+		return isFetching ? null : <Empty message={m['common.search.empty']()} />;
+	})();
 
-	const renderItems = ({ item }: { item: Item }) => {
+	const renderItem = (item: Item) => {
+		if (!moderationOpts) {
+			return null;
+		}
 		switch (item.type) {
-			case 'existingChat': {
+			case 'existingChat':
 				return (
 					<ExistingChatCard
-						key={item.key}
 						convo={item.convo}
-						moderationOpts={moderationOpts!}
+						moderationOpts={moderationOpts}
 						onPress={(id) => onSelectChat({ kind: 'convo', id })}
 					/>
 				);
-			}
-			case 'profile': {
+			case 'profile':
 				return (
 					<DefaultProfileCard
-						key={item.key}
-						profile={item.profile}
-						moderationOpts={moderationOpts!}
+						moderationOpts={moderationOpts}
 						onPress={(did) => onSelectChat({ kind: 'user', did })}
+						profile={item.profile}
 					/>
 				);
-			}
-			case 'placeholder': {
-				return <ProfileCardSkeleton key={item.key} />;
-			}
-			case 'empty': {
-				return <Empty key={item.key} message={item.message} />;
-			}
-			case 'error': {
-				return <Error key={item.key} message={m['components.dialogs.account.loadError']()} />;
-			}
-			default:
-				return null;
 		}
 	};
 
-	useLayoutEffect(() => {
-		setTimeout(() => {
-			inputRef?.current?.focus();
-		}, 0);
-	}, []);
-
-	const listHeader = (
-		<View
-			onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}
-			style={[a.relative, a.pt_lg, a.pb_xs, a.px_lg, a.border_b, t.atoms.border_contrast_low, t.atoms.bg]}
-		>
-			<View style={[a.relative, a.justify_center]}>
-				<Text style={[a.z_10, a.text_lg, a.font_bold, a.leading_tight, t.atoms.text_contrast_high]}>
+	return (
+		<>
+			<div className={css.header}>
+				<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
 					{title}
 				</Text>
-				{
-					<Button
-						label={m['common.action.close']()}
-						size="small"
-						shape="round"
-						variant={'ghost'}
-						color="secondary"
-						style={[a.absolute, a.z_20, { right: -4 }]}
-						onPress={() => control.close()}
-					>
-						<ButtonIcon icon={X} size="md" />
-					</Button>
-				}
-			</View>
-			<View style={[a.pt_xs]}>
-				<SearchInput
-					inputRef={inputRef}
-					value={searchText}
-					onChangeText={(text) => {
-						setSearchText(text);
-						listRef.current?.scrollToOffset({ offset: 0, animated: false });
-					}}
-					onEscape={control.close}
-				/>
-			</View>
-		</View>
-	);
 
-	return (
-		<Dialog.InnerFlatList
-			ref={listRef}
-			data={items}
-			renderItem={renderItems}
-			ListHeaderComponent={listHeader}
-			stickyHeaderIndices={[0]}
-			keyExtractor={(item: Item) => item.key}
-			style={[a.py_0, a.h_full_vh, { maxHeight: 600 }, a.px_0]}
-			webInnerContentContainerStyle={a.py_0}
-			webInnerStyle={[a.py_0, { maxWidth: 500, minWidth: 200 }]}
-			scrollIndicatorInsets={{ top: headerHeight }}
-			keyboardDismissMode="on-drag"
-		/>
+				<Button
+					className={css.closeButton}
+					color="secondary"
+					label={m['common.action.close']()}
+					onClick={() => handle.close()}
+					shape="round"
+					size="small"
+					variant="ghost"
+				>
+					<ButtonIcon icon={XIcon} />
+				</Button>
+			</div>
+
+			<div className={css.search}>
+				<SearchInput
+					autoFocus
+					label={m['common.search.action.profiles']()}
+					maxLength={50}
+					onChangeText={setSearchText}
+					onClear={() => setSearchText('')}
+					placeholder={m['common.action.search']()}
+					value={searchText}
+				/>
+			</div>
+
+			<Dialog.List
+				className={css.list}
+				data={items}
+				keyExtractor={(item) => item.key}
+				ListEmptyComponent={listEmpty}
+				renderItem={renderItem}
+			/>
+		</>
 	);
 }
 
 function DefaultProfileCard({
-	profile,
 	moderationOpts,
 	onPress,
+	profile,
 }: {
-	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
 	onPress: (did: string) => void;
+	profile: AnyProfileView;
 }) {
-	const t = useTheme();
 	const enabled = canBeMessaged(profile);
-	const moderation = moderateProfile(profile, moderationOpts);
-	const handle = `@${profile.handle}`;
-	const displayName = createSanitizedDisplayName(
-		profile,
-		true,
-		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-	);
-
-	const handleOnPress = () => {
-		onPress(profile.did);
-	};
 
 	return (
-		<Button
+		<button
+			aria-label={m['common.chat.action.start']({ handle: profile.handle })}
+			className={css.row}
 			disabled={!enabled}
-			label={m['common.chat.action.start']({ name: displayName })}
-			onPress={handleOnPress}
+			onClick={() => onPress(profile.did)}
+			type="button"
 		>
-			{({ hovered, pressed, focused }) => (
-				<View
-					style={[
-						a.flex_1,
-						a.py_sm,
-						a.px_lg,
-						!enabled ? { opacity: 0.5 } : pressed || focused || hovered ? t.atoms.bg_contrast_25 : t.atoms.bg,
-					]}
-				>
-					<ProfileCard.Header>
-						<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
-						<View style={[a.flex_1]}>
-							<ProfileCard.Name profile={profile} moderationOpts={moderationOpts} />
-							{enabled ? (
-								<ProfileCard.Handle profile={profile} />
-							) : (
-								<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-									{m['components.dialogs.chat.cannotMessage']({ handle })}
-								</Text>
-							)}
-						</View>
-					</ProfileCard.Header>
-				</View>
-			)}
-		</Button>
+			<ProfileCard.Header>
+				<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
+
+				{enabled ? (
+					<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
+				) : (
+					<div className={css.column}>
+						<ProfileCard.Handle profile={profile} />
+
+						<Text color="textContrastHigh" numberOfLines={2} size="md_sub">
+							{m['components.dialogs.chat.cannotMessage']()}
+						</Text>
+					</div>
+				)}
+			</ProfileCard.Header>
+		</button>
 	);
 }
 
@@ -391,161 +299,65 @@ function ExistingChatCard({
 	moderationOpts: ModerationOptions;
 	onPress: (convoId: string) => void;
 }) {
-	const t = useTheme();
-	const enabled = convo.kind === 'group' ? convo.details.lockStatus === 'unlocked' : true;
-	const name =
-		convo.kind === 'group'
-			? convo.details.name
-			: createSanitizedDisplayName(
-					convo.primaryMember,
-					true,
-					getDisplayRestrictions(
-						moderateProfile(convo.primaryMember, moderationOpts),
-						DisplayContext.ProfileBio,
-					),
-				);
+	if (convo.kind === 'group') {
+		const enabled = convo.details.lockStatus === 'unlocked';
 
-	const handleOnPress = () => {
-		onPress(convo.view.id);
-	};
+		return (
+			<button
+				aria-label={m['components.dialogs.chat.selectA11y']({ name: convo.details.name })}
+				className={css.row}
+				disabled={!enabled}
+				onClick={() => onPress(convo.view.id)}
+				type="button"
+			>
+				<ProfileCard.Header>
+					<AvatarBubbles profiles={convo.members} size={40} />
+					<div className={css.column}>
+						<Text numberOfLines={1} weight="semiBold">
+							{convo.details.name}
+						</Text>
 
-	return (
-		<Button
-			disabled={!enabled}
-			label={m['components.dialogs.chat.selectA11y']({ name })}
-			onPress={handleOnPress}
-		>
-			{({ hovered, pressed, focused }) => (
-				<View
-					style={[
-						a.flex_1,
-						a.py_sm,
-						a.px_lg,
-						!enabled ? { opacity: 0.5 } : pressed || focused || hovered ? t.atoms.bg_contrast_25 : t.atoms.bg,
-					]}
-				>
-					<ProfileCard.Header>
-						{convo.kind === 'group' ? (
-							<AvatarBubbles profiles={convo.members} size={40} />
+						{enabled ? (
+							<Text color="textContrastMedium" numberOfLines={2} size="md_sub">
+								{m['components.dialogs.list.memberCount']({ count: convo.details.memberCount })}
+							</Text>
 						) : (
-							<ProfileCard.Avatar
-								profile={convo.primaryMember}
-								moderationOpts={moderationOpts}
-								disabledPreview
-							/>
+							<Text color="textContrastHigh" numberOfLines={2} size="md_sub">
+								{m['components.dialogs.chat.groupLocked']()}
+							</Text>
 						)}
-						<View style={[a.flex_1]}>
-							<View style={[a.flex_row, a.align_center, a.max_w_full]}>
-								<Text
-									emoji
-									style={[a.text_md, a.font_semi_bold, a.leading_snug, a.self_start, a.flex_shrink]}
-									numberOfLines={1}
-								>
-									{name}
-								</Text>
-								{convo.kind === 'direct' && (
-									<View style={[a.pl_xs]}>
-										<ProfileBadges profile={convo.primaryMember} size="md" />
-									</View>
-								)}
-							</View>
-							{convo.kind === 'direct' ? (
-								<ProfileCard.Handle profile={convo.primaryMember} />
-							) : (
-								<>
-									{enabled ? (
-										<Text style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={2}>
-											{m['components.dialogs.list.memberCount']({ count: convo.details.memberCount })}
-										</Text>
-									) : (
-										<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-											{m['components.dialogs.chat.groupLocked']()}
-										</Text>
-									)}
-								</>
-							)}
-						</View>
-					</ProfileCard.Header>
-				</View>
-			)}
-		</Button>
-	);
-}
+					</div>
+				</ProfileCard.Header>
+			</button>
+		);
+	}
 
-function ProfileCardSkeleton() {
-	const t = useTheme();
+	const { primaryMember } = convo;
 
 	return (
-		<View style={[a.flex_1, a.py_md, a.px_lg, a.gap_md, a.align_center, a.flex_row]}>
-			<View style={[a.rounded_full, { width: 42, height: 42 }, t.atoms.bg_contrast_25]} />
-
-			<View style={[a.flex_1, a.gap_sm]}>
-				<View style={[a.rounded_xs, { width: 80, height: 14 }, t.atoms.bg_contrast_25]} />
-				<View style={[a.rounded_xs, { width: 120, height: 10 }, t.atoms.bg_contrast_25]} />
-			</View>
-		</View>
+		<button
+			aria-label={m['common.chat.action.start']({ handle: primaryMember.handle })}
+			className={css.row}
+			onClick={() => onPress(convo.view.id)}
+			type="button"
+		>
+			<ProfileCard.Header>
+				<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={primaryMember} />
+				<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={primaryMember} />
+			</ProfileCard.Header>
+		</button>
 	);
 }
 
 function Empty({ message }: { message: string }) {
-	const t = useTheme();
 	return (
-		<View style={[a.p_lg, a.py_xl, a.align_center, a.gap_md]}>
-			<Text style={[a.text_sm, a.italic, t.atoms.text_contrast_high]}>{message}</Text>
-
-			<Text style={[a.text_xs, t.atoms.text_contrast_low]}>(╯°□°)╯︵ ┻━┻</Text>
-		</View>
-	);
-}
-
-function SearchInput({
-	value,
-	onChangeText,
-	onEscape,
-	inputRef,
-}: {
-	value: string;
-	onChangeText: (text: string) => void;
-	onEscape: () => void;
-	inputRef: React.RefObject<TextInput | null>;
-}) {
-	const t = useTheme();
-	const { state: hovered, onIn: onMouseEnter, onOut: onMouseLeave } = useInteractionState();
-	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
-	const interacted = hovered || focused;
-	const webProps: WebViewProps = {
-		onMouseEnter,
-		onMouseLeave,
-	};
-
-	return (
-		<View {...webProps} style={[a.flex_row, a.align_center, a.gap_sm]}>
-			<Search size="lg" fill={interacted ? colors.primary_500 : colors.contrast_300} />
-			<TextInput
-				ref={inputRef}
-				placeholder={m['common.action.search']()}
-				value={value}
-				onChangeText={onChangeText}
-				onFocus={onFocus}
-				onBlur={onBlur}
-				style={[a.flex_1, a.py_md, a.text_md, t.atoms.text]}
-				placeholderTextColor={t.palette.contrast_500}
-				keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-				returnKeyType="search"
-				clearButtonMode="while-editing"
-				maxLength={50}
-				onKeyPress={({ nativeEvent }) => {
-					if (nativeEvent.key === 'Escape') {
-						onEscape();
-					}
-				}}
-				autoCorrect={false}
-				autoComplete="off"
-				autoCapitalize="none"
-				autoFocus
-				accessibilityLabel={m['common.search.action.profiles']()}
-				accessibilityHint={m['common.search.a11y.profiles']()}
-			/>
-		</View>
+		<div className={css.empty}>
+			<Text className={css.emptyMessage} color="textContrastHigh" size="sm">
+				{message}
+			</Text>
+			<Text color="textContrastLow" size="xs">
+				(╯°□°)╯︵ ┻━┻
+			</Text>
+		</div>
 	);
 }

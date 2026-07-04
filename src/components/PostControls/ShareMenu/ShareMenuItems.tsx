@@ -12,13 +12,13 @@ import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useSession } from '#/state/session';
 
-import { useDialogControl } from '#/components/Dialog';
-import { SendViaChatDialog } from '#/components/dms/dialogs/ShareViaChatDialog';
+import { SendViaChatDialog } from '#/components/dms/dialogs/SendViaChatDialog';
 import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/PaperPlane';
 import * as Menu from '#/components/Menu';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { useDevMode } from '#/storage/hooks/dev-mode';
@@ -33,7 +33,7 @@ interface ShareMenuItemsProps {
 function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode {
 	const { hasSession } = useSession();
 	const navigation = useNavigation<NavigationProp>();
-	const sendViaChatControl = useDialogControl();
+	const sendViaChatHandle = Dialog.useDialogHandle();
 	const [devModeEnabled] = useDevMode();
 	const bookmark = useBookmark(post);
 
@@ -88,9 +88,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 				{hasSession && (
 					<Menu.Item
 						label={m['components.postControls.share.sendViaDm']()}
-						onClick={() => {
-							sendViaChatControl.open();
-						}}
+						onClick={() => sendViaChatHandle.open(null)}
 					>
 						<Menu.ItemText>{m['components.postControls.share.sendViaDm']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={Send} position="right" />
@@ -123,7 +121,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 					</>
 				)}
 			</Menu.Popup>
-			<SendViaChatDialog control={sendViaChatControl} onSelectChat={onSelectChatToShareTo} />
+			<SendViaChatDialog handle={sendViaChatHandle} onSelectChat={onSelectChatToShareTo} />
 		</>
 	);
 }

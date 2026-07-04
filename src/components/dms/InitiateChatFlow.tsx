@@ -2,15 +2,9 @@ import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } f
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
 
 import type { AnyProfileView } from '@atcute/bluesky';
-import {
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateProfile,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -720,12 +714,6 @@ function DefaultProfileCard({
 }) {
 	const t = useTheme();
 	const enabled = canBeMessaged(profile);
-	const moderation = moderateProfile(profile, moderationOpts);
-	const handle = `@${profile.handle}`;
-	const displayName = sanitizeDisplayName(
-		profile.displayName || profile.handle,
-		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-	);
 
 	const handleOnPress = useCallback(() => {
 		onPress(profile.did);
@@ -734,7 +722,7 @@ function DefaultProfileCard({
 	return (
 		<Button
 			disabled={!enabled}
-			label={m['common.chat.action.start']({ name: displayName })}
+			label={m['common.chat.action.start']({ handle: profile.handle })}
 			onPress={handleOnPress}
 		>
 			{({ hovered, pressed, focused }) => (
@@ -754,7 +742,7 @@ function DefaultProfileCard({
 								<ProfileCard.Handle profile={profile} />
 							) : (
 								<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
-									{m['components.dialogs.chat.cannotMessage']({ handle })}
+									{m['components.dialogs.chat.cannotMessage']()}
 								</Text>
 							)}
 						</View>
