@@ -37,14 +37,17 @@ export const closeButton = style({
 
 export const search = style({
 	backgroundImage: `linear-gradient(${colors.bg} 50%, ${colorMix(colors.bg, '0%')})`,
-	marginBottom: -SEARCH_NEGATIVE_MARGIN,
 	paddingInline: DIALOG_PADDING,
+	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
+	marginBottom: -SEARCH_NEGATIVE_MARGIN,
 	zIndex: zIndex.sticky,
 });
 
 export const list = style({
 	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
-	paddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
+	paddingTop: SEARCH_NEGATIVE_MARGIN,
+	scrollPaddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
+	scrollPaddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 });
 
 /** a full-width, pressable people row that highlights on hover/press/focus and dims when disabled. */
