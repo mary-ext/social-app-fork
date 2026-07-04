@@ -30,7 +30,6 @@ import { Trans } from '#/locale/Trans';
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
-import { Button } from '#/components/Button';
 import { CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon } from '#/components/icons/CalendarClock';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed } from '#/components/images/Gallery';
@@ -473,24 +472,21 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 
 	return (
 		<>
-			<Button
-				label={m['screens.postThread.archive.label']()}
-				accessibilityHint={m['screens.postThread.dateVerification.createdInfo']()}
-				onPress={(e) => {
+			<button
+				type="button"
+				className={css.archivedPill}
+				aria-label={m['screens.postThread.archive.label']()}
+				onClick={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
 					handle.open(null);
 				}}
 			>
-				{({ hovered, pressed }) => (
-					<div className={clsx(css.archivedPill, (hovered || pressed) && css.archivedPillActive)}>
-						<CalendarClockIcon fill={colors.yellow} size="sm" aria-hidden />
-						<Text size="xs" weight="semiBold" color="textContrastMedium">
-							{m['screens.postThread.archive.from']({ date: createdAt })}
-						</Text>
-					</div>
-				)}
-			</Button>
+				<CalendarClockIcon fill={colors.yellow} size="sm" aria-hidden />
+				<Text size="xs" weight="semiBold" color="textContrastMedium">
+					{m['screens.postThread.archive.from']({ date: createdAt })}
+				</Text>
+			</button>
 
 			<Prompt.Outer handle={handle}>
 				<Prompt.Content>

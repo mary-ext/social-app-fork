@@ -149,18 +149,22 @@ export const expandedDetailsRow = style({
 export const archivedPill = style({
 	alignItems: 'center',
 	backgroundColor: colors.contrast_25,
+	border: 'none',
 	borderRadius: borderRadius.full,
+	cursor: 'pointer',
 	display: 'flex',
+	fontFamily: 'inherit',
 	flexDirection: 'row',
 	gap: 3,
 	paddingBottom: 3,
 	paddingLeft: 6,
 	paddingRight: 6,
 	paddingTop: 3,
-});
-
-export const archivedPillActive = style({
-	backgroundColor: colors.contrast_50,
+	selectors: {
+		'&:hover, &:focus-visible': {
+			backgroundColor: colors.contrast_50,
+		},
+	},
 });
 // #endregion
 
