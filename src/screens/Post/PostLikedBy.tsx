@@ -4,9 +4,8 @@ import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { usePostQuery } from '#/state/queries/post';
 
-import { PostLikedBy as PostLikedByComponent } from '#/view/com/post-thread/PostLikedBy';
-
 import * as Layout from '#/components/Layout';
+import { LikedByList } from '#/components/LikedByList';
 
 import { m } from '#/paraglide/messages';
 
@@ -36,7 +35,7 @@ export const PostLikedByScreen = ({ route }: Props) => {
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<PostLikedByComponent uri={uri} initialCount={likeCount} />
+			<LikedByList uri={uri} initialCount={likeCount} />
 		</Layout.Screen>
 	);
 };

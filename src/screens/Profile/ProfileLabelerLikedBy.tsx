@@ -1,8 +1,6 @@
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
-import { ViewHeader } from '#/view/com/util/ViewHeader';
-
 import * as Layout from '#/components/Layout';
 import { LikedByList } from '#/components/LikedByList';
 
@@ -15,7 +13,13 @@ export function ProfileLabelerLikedByScreen({
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.labeler.service', 'self');
 	return (
 		<Layout.Screen>
-			<ViewHeader title={m['common.like.likedByTitle']()} />
+			<Layout.Header.Outer>
+				<Layout.Header.BackButton />
+				<Layout.Header.Content>
+					<Layout.Header.TitleText>{m['common.like.likedByTitle']()}</Layout.Header.TitleText>
+				</Layout.Header.Content>
+				<Layout.Header.Slot />
+			</Layout.Header.Outer>
 			<LikedByList uri={uri} />
 		</Layout.Screen>
 	);

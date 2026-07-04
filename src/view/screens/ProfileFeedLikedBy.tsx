@@ -1,9 +1,8 @@
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
-import { PostLikedBy as PostLikedByComponent } from '#/view/com/post-thread/PostLikedBy';
-
 import * as Layout from '#/components/Layout';
+import { LikedByList } from '#/components/LikedByList';
 
 import { m } from '#/paraglide/messages';
 
@@ -21,7 +20,7 @@ export const ProfileFeedLikedByScreen = ({ route }: Props) => {
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<PostLikedByComponent uri={uri} />
+			<LikedByList uri={uri} />
 		</Layout.Screen>
 	);
 };

@@ -1,62 +1,33 @@
-import { useState } from 'react';
-
-import type { AppBskyFeedGetLikes as GetLikes } from '@atcute/bluesky';
-
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
 
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useLikedByQuery } from '#/state/queries/post-liked-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 
 import { logger } from '#/logger';
 
-import { ProfileCardWithFollowBtn } from '#/view/com/profile/ProfileCard';
-import { List } from '#/view/com/util/List';
-
+import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-function renderItem({ item, index }: { item: GetLikes.Like; index: number }) {
-	return <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} noBorder={index === 0} />;
-}
+export function LikedByList({ uri, initialCount }: { uri: string; initialCount?: number }) {
+	const moderationOpts = useModerationOpts();
 
-function keyExtractor(item: GetLikes.Like) {
-	return item.actor.did;
-}
-
-export function LikedByList({ uri }: { uri: string }) {
-	const initialNumToRender = useInitialNumToRender();
-	const [isPTRing, setIsPTRing] = useState(false);
-
-	const { data: resolvedUri, error: resolveError, isLoading: isUriLoading } = useResolveUriQuery(uri);
+	const { data: resolvedUri, error: resolveError, isLoading: isLoadingUri } = useResolveUriQuery(uri);
 	const {
 		data,
-		isLoading: isLikedByLoading,
+		isLoading: isLoadingLikes,
 		isFetchingNextPage,
 		hasNextPage,
 		fetchNextPage,
-		error: likedByError,
-		refetch,
+		error,
 	} = useLikedByQuery(resolvedUri?.uri);
 
-	const error = resolveError || likedByError;
-	const isError = !!resolveError || !!likedByError;
+	const isError = Boolean(resolveError || error);
 
-	let likes: GetLikes.Like[] = [];
-	if (data?.pages) {
-		likes = data.pages.flatMap((page) => page.likes);
-	}
-
-	const onRefresh = async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh likes', { message: err });
-		}
-		setIsPTRing(false);
-	};
+	const likes = data?.pages ? data.pages.flatMap((page) => page.likes) : [];
 
 	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
@@ -67,18 +38,21 @@ export function LikedByList({ uri }: { uri: string }) {
 		}
 	};
 
+	if (!moderationOpts || ((isLoadingUri || isLoadingLikes) && likes.length < 1 && !isError)) {
+		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+	}
+
 	if (likes.length < 1) {
 		return (
 			<ListMaybePlaceholder
-				isLoading={isUriLoading || isLikedByLoading}
+				isLoading={false}
 				isError={isError}
 				emptyType="results"
 				emptyTitle={m['common.like.empty']()}
 				emptyMessage={m['common.like.emptyPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
-				onRetry={isError ? refetch : undefined}
-				topBorder={false}
 				sideBorders={false}
+				topBorder={false}
 			/>
 		);
 	}
@@ -86,11 +60,9 @@ export function LikedByList({ uri }: { uri: string }) {
 	return (
 		<List
 			data={likes}
-			renderItem={renderItem}
-			keyExtractor={keyExtractor}
-			refreshing={isPTRing}
-			onRefresh={() => void onRefresh()}
+			keyExtractor={(item) => item.actor.did}
 			onEndReached={() => void onEndReached()}
+			onEndReachedThreshold={2}
 			ListFooterComponent={
 				<ListFooter
 					isFetchingNextPage={isFetchingNextPage}
@@ -98,10 +70,9 @@ export function LikedByList({ uri }: { uri: string }) {
 					onRetry={fetchNextPage}
 				/>
 			}
-			onEndReachedThreshold={3}
-			initialNumToRender={initialNumToRender}
-			windowSize={11}
-			sideBorders={false}
+			renderItem={({ index, item }) => (
+				<ProfileCard.Default moderationOpts={moderationOpts} profile={item.actor} topBorder={index !== 0} />
+			)}
 		/>
 	);
 }
