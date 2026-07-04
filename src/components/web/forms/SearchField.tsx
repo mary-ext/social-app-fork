@@ -1,6 +1,8 @@
-import { type ComponentPropsWithRef, type MouseEvent, type ReactNode, useRef } from 'react';
+import { type ComponentPropsWithRef, type MouseEvent, type ReactNode, type Ref, useRef } from 'react';
 
 import { clsx } from 'clsx';
+
+import { mergeRefs } from '#/lib/merge-refs';
 
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
@@ -16,8 +18,16 @@ const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, [role="button"
  * controls ({@link Clear} and/or a {@link Slot}). clicking anywhere on the box that isn't an interactive
  * control focuses the input.
  */
-export function Root({ children, className }: { children: ReactNode; className?: string }) {
-	const ref = useRef<HTMLDivElement>(null);
+export function Root({
+	children,
+	className,
+	ref,
+}: {
+	children: ReactNode;
+	className?: string;
+	ref?: Ref<HTMLDivElement>;
+}) {
+	const innerRef = useRef<HTMLDivElement>(null);
 	// the input no longer fills the box, so restore "click anywhere to focus" over the padding and the
 	// non-interactive icon. mousedown (not click) so focus lands before a selection can start and without a
 	// flicker; preventDefault keeps the click from moving focus off the input we're about to focus.
@@ -26,11 +36,11 @@ export function Root({ children, className }: { children: ReactNode; className?:
 			return;
 		}
 		event.preventDefault();
-		ref.current?.querySelector<HTMLElement>('input, textarea')?.focus();
+		innerRef.current?.querySelector<HTMLElement>('input, textarea')?.focus();
 	};
 
 	return (
-		<div className={clsx(styles.field, className)} onMouseDown={onMouseDown} ref={ref}>
+		<div className={clsx(styles.field, className)} onMouseDown={onMouseDown} ref={mergeRefs([innerRef, ref])}>
 			{children}
 		</div>
 	);

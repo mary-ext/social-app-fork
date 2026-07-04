@@ -44,9 +44,7 @@ import { useSearchActorAutocompleteQuery } from '#/state/queries/actor-autocompl
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { Button, ButtonIcon } from '#/components/web/Button';
+import * as SearchField from '#/components/web/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
 
@@ -157,15 +155,14 @@ export function SearchAutocomplete({
 	}
 
 	return (
-		<div className={styles.field}>
-			<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="lg" />
-			<input
-				className={styles.input}
+		<SearchField.Root>
+			<SearchField.Icon />
+			<SearchField.Input
 				onFocus={() => setActive(true)}
 				placeholder={placeholder ?? m['common.action.search']()}
 				ref={placeholderRef}
 			/>
-		</div>
+		</SearchField.Root>
 	);
 }
 
@@ -626,10 +623,9 @@ function ActiveSearchAutocomplete({
 			open={open}
 			value={query}
 		>
-			<div className={styles.field} ref={fieldRef}>
-				<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="lg" />
+			<SearchField.Root ref={fieldRef}>
+				<SearchField.Icon />
 				<Autocomplete.Input
-					className={styles.input}
 					onBlur={(event) => {
 						// close on focus-out unless focus moved into the field (e.g. clear) or the popup; Base UI's
 						// own dismiss only covers outside-press/escape, not tabbing or programmatic blur.
@@ -649,25 +645,12 @@ function ActiveSearchAutocomplete({
 					onKeyUp={syncCaret}
 					placeholder={placeholder ?? m['common.action.search']()}
 					ref={inputRef}
+					render={<SearchField.Input />}
 				/>
-				<div className={styles.clear}>
-					<Autocomplete.Clear
-						render={
-							<Button
-								color="secondary"
-								label={m['common.search.action.clear']()}
-								shape="round"
-								size="tiny"
-								variant="ghost"
-							>
-								<ButtonIcon icon={XIcon} size="xs" />
-							</Button>
-						}
-					/>
-				</div>
-			</div>
+				<Autocomplete.Clear render={<SearchField.Clear label={m['common.search.action.clear']()} />} />
+			</SearchField.Root>
 			<Autocomplete.Portal>
-				<Autocomplete.Positioner align="end" className={styles.positioner} sideOffset={6}>
+				<Autocomplete.Positioner align="end" anchor={fieldRef} className={styles.positioner} sideOffset={6}>
 					<Autocomplete.Popup className={styles.popup} ref={popupRef}>
 						<Autocomplete.List
 							className={styles.list}
