@@ -6,13 +6,14 @@ import { useQuery } from '@tanstack/react-query';
 
 import { definite } from '#/lib/functions';
 
+import * as SearchField from '#/components/web/forms/SearchField';
+
 import { m } from '#/paraglide/messages';
 import { type SkinTone, useEmojiSkinTone, useRecentEmojis } from '#/storage/hooks/emoji';
 
 import { CategoryNav } from './components/CategoryNav';
 import { EmojiGrid, type EmojiGridHandle } from './components/EmojiGrid';
 import { PickerPlaceholder } from './components/PickerPlaceholder';
-import { SearchBar } from './components/SearchBar';
 import { SkinToneButton } from './components/SkinToneButton';
 import { type EmojiData, emojiDataQuery } from './data';
 import * as styles from './EmojiPanel.css';
@@ -90,9 +91,20 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 			virtualized
 		>
 			<div className={styles.panel}>
-				<SearchBar>
-					<SkinToneButton onChange={setSkinTone} tone={skinTone} />
-				</SearchBar>
+				<div className={styles.searchRow}>
+					<SearchField.Root className={styles.searchField}>
+						<SearchField.Icon />
+						<Autocomplete.Input
+							render={
+								<SearchField.Input autoFocus placeholder={m['components.emojiPicker.search.placeholder']()} />
+							}
+						/>
+						<SearchField.Slot>
+							<Autocomplete.Clear render={<SearchField.Clear label={m['common.search.action.clear']()} />} />
+							<SkinToneButton onChange={setSkinTone} tone={skinTone} />
+						</SearchField.Slot>
+					</SearchField.Root>
+				</div>
 
 				<Autocomplete.List className={styles.list}>
 					<Autocomplete.Empty>

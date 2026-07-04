@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, ReactNode } from 'react';
+import { type ComponentPropsWithRef, type MouseEvent, type ReactNode, useRef } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -7,12 +7,33 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/forms/SearchField.css';
 
+// clicks landing on one of these are handled by the element itself; the field must not steal them to refocus
+// the input. `input`/`textarea` are listed so a direct click keeps native caret placement.
+const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, [role="button"], [role="link"]';
+
 /**
- * search-field chrome: a container overlaying a leading {@link Icon} and trailing {@link Clear} on the
- * {@link Input}.
+ * search-field chrome: a flex container laying out a leading {@link Icon}, the {@link Input}, and trailing
+ * controls ({@link Clear} and/or a {@link Slot}). clicking anywhere on the box that isn't an interactive
+ * control focuses the input.
  */
 export function Root({ children, className }: { children: ReactNode; className?: string }) {
-	return <div className={clsx(styles.field, className)}>{children}</div>;
+	const ref = useRef<HTMLDivElement>(null);
+	// the input no longer fills the box, so restore "click anywhere to focus" over the padding and the
+	// non-interactive icon. mousedown (not click) so focus lands before a selection can start and without a
+	// flicker; preventDefault keeps the click from moving focus off the input we're about to focus.
+	const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
+		if (event.defaultPrevented || (event.target as HTMLElement).closest(INTERACTIVE_SELECTOR)) {
+			return;
+		}
+		event.preventDefault();
+		ref.current?.querySelector<HTMLElement>('input, textarea')?.focus();
+	};
+
+	return (
+		<div className={clsx(styles.field, className)} onMouseDown={onMouseDown} ref={ref}>
+			{children}
+		</div>
+	);
 }
 
 /** leading, non-interactive magnifying-glass icon. */
@@ -29,23 +50,34 @@ export function Input({ className, ...props }: ComponentPropsWithRef<'input'>) {
 }
 
 /**
- * trailing clear button (×); out of the tab order since keyboard users clear by editing.
+ * trailing clear button (×); out of the tab order since keyboard users clear by editing. usable standalone
+ * (pass `onClick`) or as a Base UI `render` target (e.g. `<Autocomplete.Clear render={<Clear label={…}
+ * />}>`), which injects the press/visibility behavior. `children` is fixed to the × icon.
  *
  * @param label accessible name
  */
-export function Clear({ label, onClick }: { label: string; onClick: () => void }) {
+export function Clear({
+	className,
+	label,
+	...props
+}: { label: string } & Omit<ComponentPropsWithRef<'button'>, 'children' | 'color'>) {
 	return (
 		<Button
-			className={styles.clear}
+			className={clsx(styles.clear, className)}
 			color="secondary"
 			label={label}
-			onClick={onClick}
 			shape="round"
 			size="tiny"
 			tabIndex={-1}
 			variant="ghost"
+			{...props}
 		>
 			<ButtonIcon icon={XIcon} size="xs" />
 		</Button>
 	);
+}
+
+/** trailing container grouping several controls (e.g. a {@link Clear} beside a persistent accessory). */
+export function Slot({ children }: { children: ReactNode }) {
+	return <div className={styles.slot}>{children}</div>;
 }
