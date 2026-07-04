@@ -1,18 +1,12 @@
 import type { FocusEventHandler, KeyboardEventHandler, Ref } from 'react';
 
-import { clsx } from 'clsx';
-
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import * as TextField from '#/components/TextField';
-import { Button, ButtonIcon } from '#/components/web/Button';
-import * as styles from '#/components/web/forms/SearchInput.css';
+import * as SearchField from '#/components/web/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
 
 /**
- * search field with a leading magnifying-glass icon, a {@link TextField.Input}, and a trailing clear button
- * shown when `value` is non-empty and `onClear` is provided.
+ * search field with a leading magnifying-glass icon, a text input, and a trailing clear button shown when
+ * `value` is non-empty and `onClear` is provided.
  */
 export function SearchInput({
 	autoFocus,
@@ -39,36 +33,23 @@ export function SearchInput({
 	placeholder?: string;
 	value: string;
 }) {
-	const showClear = !!onClear && value.length > 0;
-
 	return (
-		<div className={styles.field}>
-			<MagnifyingGlassIcon className={styles.icon} size="lg" fill="currentColor" />
-			<TextField.Input
+		<SearchField.Root>
+			<SearchField.Icon />
+			<SearchField.Input
+				aria-label={label}
 				autoFocus={autoFocus}
-				className={clsx(styles.input, showClear && styles.inputWithClear)}
-				inputRef={inputRef}
-				label={label}
 				maxLength={maxLength}
-				onChangeText={onChangeText}
+				onChange={(e) => onChangeText(e.currentTarget.value)}
 				onFocus={onFocus}
 				onKeyDown={onKeyDown}
 				placeholder={placeholder}
+				ref={inputRef}
 				value={value}
 			/>
-			{showClear && (
-				<Button
-					className={styles.clear}
-					color="secondary"
-					label={m['common.search.action.clear']()}
-					onClick={onClear}
-					shape="round"
-					size="tiny"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} size="xs" />
-				</Button>
+			{onClear && value.length > 0 && (
+				<SearchField.Clear label={m['common.search.action.clear']()} onClick={onClear} />
 			)}
-		</div>
+		</SearchField.Root>
 	);
 }
