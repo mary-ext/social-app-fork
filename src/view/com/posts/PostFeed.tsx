@@ -409,10 +409,12 @@ function PostFeed({
 				});
 			}
 		} else {
-			arr.push({
-				type: 'loading',
-				key: 'loading',
-			});
+			if (enabled !== false) {
+				arr.push({
+					type: 'loading',
+					key: 'loading',
+				});
+			}
 		}
 
 		return arr;
