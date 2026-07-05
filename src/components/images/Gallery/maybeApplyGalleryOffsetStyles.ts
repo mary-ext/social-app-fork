@@ -1,11 +1,11 @@
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import { unwrapEmbed, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
 
 import { unique } from '#/lib/moderation';
 
 import type { AppModerationCause } from '#/components/Pills';
 
-export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 10 };
+export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 8 };
 export const POST_EMBED_NO_CONTENT_OFFSET = { paddingTop: 6 };
 
 export function maybeApplyGalleryOffsetStyles(
@@ -22,40 +22,30 @@ export function maybeApplyGalleryOffsetStyles(
 ) {
 	const record = post.record as AppBskyFeedPost.Main;
 
-	/*
-	 * First check if we even have images
-	 */
-	const embed = record.embed;
-	const isImageEmbed = embed?.$type === 'app.bsky.embed.images';
-	const isGalleryEmbed = embed?.$type === 'app.bsky.embed.gallery';
-	const isRecordWithMedia = embed?.$type === 'app.bsky.embed.recordWithMedia';
-	let hasImages = false;
-	if (isImageEmbed) {
-		// one image, not a gallery
-		if (embed.images.length === 1) return;
-		hasImages = true;
+	if (record.text) {
+		return;
 	}
-	if (isGalleryEmbed) {
-		// single (or empty) gallery - no offset needed
-		if (embed.items.length <= 1) return;
-		hasImages = true;
-	}
-	if (isRecordWithMedia) {
-		if (embed.media.$type === 'app.bsky.embed.images') {
-			// one image, not a gallery
-			if (embed.media.images.length === 1) return;
-		}
-		if (embed.media.$type === 'app.bsky.embed.gallery') {
-			// single (or empty) gallery - no offset needed
-			if (embed.media.items.length <= 1) return;
-		}
-		hasImages = true;
-	}
-	if (!hasImages) return;
 
-	/*
-	 * Then check if we have any text
-	 */
+	const { media } = unwrapEmbed(post.embed);
+
+	let hasImages = false;
+	if (media) {
+		switch (media.$type) {
+			case 'app.bsky.embed.images#view': {
+				hasImages = media.images.length > 1;
+				break;
+			}
+			case 'app.bsky.embed.gallery#view': {
+				hasImages = media.items.length > 1;
+				break;
+			}
+		}
+	}
+
+	if (!hasImages) {
+		return;
+	}
+
 	let hasLabels = false;
 	if (modui.alerts.length > 0) {
 		hasLabels = modui.alerts.filter(unique).length > 0;
@@ -67,14 +57,9 @@ export function maybeApplyGalleryOffsetStyles(
 		hasLabels = true;
 	}
 
-	/*
-	 * If no text or labels, then we need a lil bump
-	 */
-	const shouldApplyOffset = !record.text && !hasLabels;
+	if (hasLabels) {
+		return;
+	}
 
-	return shouldApplyOffset
-		? placement === 'meta'
-			? POST_META_NO_CONTENT_OFFSET
-			: POST_EMBED_NO_CONTENT_OFFSET
-		: {};
+	return placement === 'meta' ? POST_META_NO_CONTENT_OFFSET : POST_EMBED_NO_CONTENT_OFFSET;
 }
