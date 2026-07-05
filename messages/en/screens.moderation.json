@@ -25,7 +25,7 @@
 	"screens.moderation.mute.title": "Muted accounts",
 	"screens.moderation.mutedWord.changeDuration": "Change duration",
 	"screens.moderation.mutedWord.description": "View your muted words",
-	"screens.moderation.mutedWord.empty": "You haven't muted any words or tags yet. Use the + button above to add one.",
+	"screens.moderation.mutedWord.empty": "You haven't muted any words or tags yet.",
 	"screens.moderation.mutedWord.excludesFollowing": "Excludes people you follow",
 	"screens.moderation.mutedWord.expired": "Expired",
 	"screens.moderation.mutedWord.heading": "Your muted words",

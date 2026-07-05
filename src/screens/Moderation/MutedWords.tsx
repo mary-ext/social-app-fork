@@ -12,12 +12,14 @@ import {
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 
+import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag';
+import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
 import { PageText_Stroke2_Corner0_Rounded as PageText } from '#/components/icons/PageText';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
@@ -25,7 +27,6 @@ import * as Menu from '#/components/Menu';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
-import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
@@ -43,6 +44,7 @@ export function MutedWordsScreen(
 	const dialogHandle = Dialog.useDialogHandle();
 	const { data: preferences, error, refetch } = usePreferencesQuery();
 	const mutedWords = preferences?.moderationPrefs.mutedWords;
+	const isEmpty = !error && !!preferences && !mutedWords?.length;
 
 	return (
 		<Layout.Screen>
@@ -53,15 +55,17 @@ export function MutedWordsScreen(
 				</Layout.Header.Content>
 
 				<Layout.Header.Slot>
-					<Button
-						color="secondary"
-						label={m['common.mutedWord.action.add']()}
-						onClick={() => dialogHandle.open(null)}
-						size="small"
-					>
-						<ButtonIcon icon={Plus} />
-						<ButtonText>{m['common.action.add']()}</ButtonText>
-					</Button>
+					{!isEmpty && (
+						<Button
+							color="secondary"
+							label={m['common.mutedWord.action.add']()}
+							onClick={() => dialogHandle.open(null)}
+							size="small"
+						>
+							<ButtonIcon icon={Plus} />
+							<ButtonText>{m['common.action.add']()}</ButtonText>
+						</Button>
+					)}
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 
@@ -70,21 +74,28 @@ export function MutedWordsScreen(
 					<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
 				) : !preferences ? (
 					<CenteredSpinner label={m['screens.moderation.mutedWord.loading']()} fill />
-				) : (
+				) : mutedWords?.length ? (
 					<Settings.List>
-						{mutedWords?.length ? (
-							<Settings.Section
-								bodyText={m['screens.moderation.mutedWord.notificationsHint']()}
-								titleText={m['screens.moderation.mutedWord.heading']()}
-							>
-								{mutedWords.toReversed().map((word, i) => (
-									<MutedWordRow key={word.value + i} word={word} />
-								))}
-							</Settings.Section>
-						) : (
-							<Admonition type="tip">{m['screens.moderation.mutedWord.empty']()}</Admonition>
-						)}
+						<Settings.Section
+							bodyText={m['screens.moderation.mutedWord.notificationsHint']()}
+							titleText={m['screens.moderation.mutedWord.heading']()}
+						>
+							{mutedWords.toReversed().map((word, i) => (
+								<MutedWordRow key={word.value + i} word={word} />
+							))}
+						</Settings.Section>
 					</Settings.List>
+				) : (
+					<EmptyState
+						icon={Mute}
+						message={m['screens.moderation.mutedWord.empty']()}
+						button={{
+							icon: Plus,
+							label: m['common.mutedWord.action.add'](),
+							onPress: () => dialogHandle.open(null),
+							text: m['common.action.add'](),
+						}}
+					/>
 				)}
 			</Layout.Content>
 
