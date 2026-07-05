@@ -1,4 +1,9 @@
-import type { AppBskyActorDefs, AppBskyEmbedRecord, AppBskyFeedDefs } from '@atcute/bluesky';
+import {
+	unwrapRecordEmbed,
+	type AppBskyActorDefs,
+	type AppBskyEmbedRecord,
+	type AppBskyFeedDefs,
+} from '@atcute/bluesky';
 import type { ParsedResourceUri } from '@atcute/lexicons/syntax';
 
 import type { InfiniteData, QueryClient, QueryKey } from '@tanstack/react-query';
@@ -75,14 +80,9 @@ export function didOrHandleUriMatches(
 
 export function getEmbeddedPost(v: unknown): AppBskyEmbedRecord.ViewRecord | undefined {
 	const embed = v as AppBskyFeedDefs.PostView['embed'];
-	if (embed?.$type === 'app.bsky.embed.record#view') {
-		if (embed.record.$type === 'app.bsky.embed.record#viewRecord') {
-			return embed.record;
-		}
-	} else if (embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
-		if (embed.record.record.$type === 'app.bsky.embed.record#viewRecord') {
-			return embed.record.record;
-		}
+	const record = unwrapRecordEmbed(embed);
+	if (record?.$type === 'app.bsky.embed.record#viewRecord') {
+		return record;
 	}
 }
 

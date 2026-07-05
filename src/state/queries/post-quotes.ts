@@ -1,4 +1,9 @@
-import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedGetQuotes } from '@atcute/bluesky';
+import {
+	unwrapRecordEmbed,
+	type AppBskyActorDefs,
+	type AppBskyFeedDefs,
+	type AppBskyFeedGetQuotes,
+} from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
@@ -45,10 +50,9 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
 					return {
 						...page,
 						posts: page.posts.filter((post) => {
-							if (post.embed?.$type === 'app.bsky.embed.record#view') {
-								if (post.embed.record.$type === 'app.bsky.embed.record#viewDetached') {
-									return false;
-								}
+							const record = unwrapRecordEmbed(post.embed);
+							if (record?.$type === 'app.bsky.embed.record#viewDetached') {
+								return false;
 							}
 							return true;
 						}),

@@ -1,8 +1,10 @@
-import type {
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
-	AppBskyFeedDefs,
-	AppBskyFeedPostgate,
+import {
+	unwrapQuoteEmbed,
+	unwrapRecordEmbed,
+	type AppBskyEmbedRecord,
+	type AppBskyEmbedRecordWithMedia,
+	type AppBskyFeedDefs,
+	type AppBskyFeedPostgate,
 } from '@atcute/bluesky';
 import type { $type, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -141,10 +143,14 @@ export function getMaybeDetachedQuoteEmbed({
 	viewerDid: string;
 	post: AppBskyFeedDefs.PostView;
 }) {
-	if (post.embed?.$type === 'app.bsky.embed.record#view') {
-		// detached
-		if (post.embed.record?.$type === 'app.bsky.embed.record#viewDetached') {
-			const uri = post.embed.record.uri;
+	const record = unwrapQuoteEmbed(unwrapRecordEmbed(post.embed));
+	if (!record) {
+		return;
+	}
+
+	switch (record.$type) {
+		case 'app.bsky.embed.record#viewDetached': {
+			const uri = record.uri;
 			return {
 				embed: post.embed,
 				uri,
@@ -152,32 +158,8 @@ export function getMaybeDetachedQuoteEmbed({
 				isDetached: true,
 			};
 		}
-
-		// post
-		if (post.embed.record?.$type === 'app.bsky.embed.record#viewRecord') {
-			const uri = post.embed.record.uri;
-			return {
-				embed: post.embed,
-				uri,
-				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
-				isDetached: false,
-			};
-		}
-	} else if (post.embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
-		// detached
-		if (post.embed.record.record?.$type === 'app.bsky.embed.record#viewDetached') {
-			const uri = post.embed.record.record.uri;
-			return {
-				embed: post.embed,
-				uri,
-				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
-				isDetached: true,
-			};
-		}
-
-		// post
-		if (post.embed.record.record?.$type === 'app.bsky.embed.record#viewRecord') {
-			const uri = post.embed.record.record.uri;
+		case 'app.bsky.embed.record#viewRecord': {
+			const uri = record.uri;
 			return {
 				embed: post.embed,
 				uri,

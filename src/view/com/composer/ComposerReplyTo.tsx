@@ -1,6 +1,12 @@
 import { useState } from 'react';
 
-import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
+import {
+	unwrapMediaEmbed,
+	unwrapQuoteEmbed,
+	unwrapRecordEmbed,
+	type AppBskyEmbedGallery,
+	type AppBskyEmbedImages,
+} from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
@@ -24,42 +30,30 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 		setShowFull((prev) => !prev);
 	};
 
-	let quoteEmbed = null;
-	if (
-		embed?.$type === 'app.bsky.embed.record#view' &&
-		embed.record?.$type === 'app.bsky.embed.record#viewRecord' &&
-		embed.record.value?.$type === 'app.bsky.feed.post'
-	) {
-		quoteEmbed = embed;
-	} else if (
-		embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
-		embed.record.record?.$type === 'app.bsky.embed.record#viewRecord' &&
-		embed.record.record.value?.$type === 'app.bsky.feed.post'
-	) {
-		quoteEmbed = embed.record;
-	}
+	const record = unwrapQuoteEmbed(unwrapRecordEmbed(embed));
+	const quoteEmbed = record?.$type === 'app.bsky.embed.record#viewRecord' ? record : null;
 	const parsedQuoteEmbed = quoteEmbed
 		? parseEmbed({
 				$type: 'app.bsky.embed.record#view',
-				...quoteEmbed,
+				record: quoteEmbed,
 			})
 		: null;
 
+	const media = unwrapMediaEmbed(embed);
 	let images: AppBskyEmbedImages.ViewImage[] = [];
 	let totalNumber = 0;
-	if (embed?.$type === 'app.bsky.embed.images#view') {
-		images = embed.images;
-		totalNumber = embed.images.length;
-	} else if (embed?.$type === 'app.bsky.embed.gallery#view') {
-		images = galleryItemsToImages(embed.items);
-		totalNumber = embed.items.length;
-	} else if (embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
-		if (embed.media?.$type === 'app.bsky.embed.images#view') {
-			images = embed.media.images;
-			totalNumber = embed.media.images.length;
-		} else if (embed.media?.$type === 'app.bsky.embed.gallery#view') {
-			images = galleryItemsToImages(embed.media.items);
-			totalNumber = embed.media.items.length;
+	if (media) {
+		switch (media.$type) {
+			case 'app.bsky.embed.images#view': {
+				images = media.images;
+				totalNumber = media.images.length;
+				break;
+			}
+			case 'app.bsky.embed.gallery#view': {
+				images = galleryItemsToImages(media.items);
+				totalNumber = media.items.length;
+				break;
+			}
 		}
 	}
 

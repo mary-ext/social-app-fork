@@ -1,4 +1,10 @@
-import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import {
+	unwrapQuoteEmbed,
+	unwrapRecordEmbed,
+	type AppBskyActorDefs,
+	type AppBskyFeedDefs,
+	type AppBskyFeedPost,
+} from '@atcute/bluesky';
 
 import { isPostInLanguage } from '../../locale/helpers';
 
@@ -133,10 +139,7 @@ export class FeedViewPostsSlice {
 	}
 
 	get isQuotePost() {
-		const embed = this._feedPost.post.embed;
-		return (
-			embed?.$type === 'app.bsky.embed.record#view' || embed?.$type === 'app.bsky.embed.recordWithMedia#view'
-		);
+		return !!unwrapQuoteEmbed(unwrapRecordEmbed(this._feedPost.post.embed));
 	}
 
 	get isReply() {
