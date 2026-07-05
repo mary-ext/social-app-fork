@@ -10,9 +10,9 @@ import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 
 import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
 
-import { useDialogControl } from '#/components/Dialog';
-import { NewChat } from '#/components/dms/dialogs/NewChatDialog';
+import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { LockScroll } from '#/components/LockScroll';
+import * as Dialog from '#/components/web/Dialog';
 
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
 import { SplitViewProvider } from './context';
@@ -49,7 +49,7 @@ export function MessagesSplitViewLayout({ children, ...props }: LayoutProps) {
 
 function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutProps) {
 	const { centerColumnOffset } = useLayoutBreakpoints();
-	const newChatControl = useDialogControl();
+	const newChatHandle = Dialog.useDialogHandle();
 	const t = useTheme();
 	const isFocused = useIsFocused();
 	const { data: chatStatus } = useChatActorStatusQuery();
@@ -78,11 +78,11 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 			{isFocused && <LockScroll />}
 			<SplitViewProvider side="left">
 				<View style={[a.border_l, t.atoms.border_contrast_low, { width: leftColumnWidth }]}>
-					<ChatListHeader newChatControl={newChatControl} chatStatus={chatStatus} />
+					<ChatListHeader newChatHandle={newChatHandle} chatStatus={chatStatus} />
 					<ScrollProvider onScroll={onLeftColumnScroll}>
-						<ChatList newChatControl={newChatControl} selectedChat={selectedChat} chatStatus={chatStatus} />
+						<ChatList newChatHandle={newChatHandle} selectedChat={selectedChat} chatStatus={chatStatus} />
 					</ScrollProvider>
-					<NewChat onNewChat={onNewChat} control={newChatControl} />
+					<NewChatDialog handle={newChatHandle} onNewChat={onNewChat} />
 				</View>
 			</SplitViewProvider>
 			<SplitViewProvider side="right">

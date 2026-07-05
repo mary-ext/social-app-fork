@@ -22,14 +22,14 @@ import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
+import { FAB } from '#/view/com/util/fab/FAB';
 import { List, type ListMethods } from '#/view/com/util/List';
 import { ChatListLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { type DialogControlProps, useDialogControl } from '#/components/Dialog';
-import { NewChat } from '#/components/dms/dialogs/NewChatDialog';
+import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import { BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon } from '#/components/icons/Bubble';
@@ -47,6 +47,7 @@ import * as Menu from '#/components/Menu';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -89,7 +90,7 @@ export function MessagesScreenInner({ route }: Props) {
 	const { isWithinSplitView } = useIsWithinSplitView();
 	const navigation = useNavigation<NavigationProp>();
 	const t = useTheme();
-	const newChatControl = useDialogControl();
+	const newChatHandle = Dialog.useDialogHandle();
 	const { data: chatStatus } = useChatActorStatusQuery();
 	const pushToConversation = route.params?.pushToConversation;
 
@@ -137,7 +138,7 @@ export function MessagesScreenInner({ route }: Props) {
 							: {
 									label: m['common.chat.action.new'](),
 									text: m['common.chat.action.new'](),
-									onPress: newChatControl.open,
+									onPress: () => newChatHandle.open(null),
 									size: 'small',
 									color: 'primary',
 									icon: MessagePlusIcon,
@@ -145,27 +146,35 @@ export function MessagesScreenInner({ route }: Props) {
 					}
 					className={css.empty}
 				/>
-				<NewChat onNewChat={onNewChat} control={newChatControl} />
+				<NewChatDialog handle={newChatHandle} onNewChat={onNewChat} />
 			</>
 		);
 	}
 
 	return (
 		<Layout.Screen testID="messagesScreen">
-			<Header newChatControl={newChatControl} chatStatus={chatStatus} />
-			<ChatList newChatControl={newChatControl} chatStatus={chatStatus} />
-			<NewChat onNewChat={onNewChat} control={newChatControl} />
+			<Header newChatHandle={newChatHandle} chatStatus={chatStatus} />
+			<ChatList newChatHandle={newChatHandle} chatStatus={chatStatus} />
+			{!chatStatus?.chatDisabled && (
+				<Dialog.Trigger
+					handle={newChatHandle}
+					render={
+						<FAB icon={<NewChatIcon size="xl" fill={colors.white} />} label={m['common.chat.action.new']()} />
+					}
+				/>
+			)}
+			<NewChatDialog handle={newChatHandle} onNewChat={onNewChat} />
 		</Layout.Screen>
 	);
 }
 
 export function ChatList({
 	selectedChat,
-	newChatControl,
+	newChatHandle,
 	chatStatus,
 }: {
 	selectedChat?: string;
-	newChatControl: DialogControlProps;
+	newChatHandle: Dialog.DialogHandle;
 	chatStatus: ChatStatus | undefined;
 }) {
 	const t = useTheme();
@@ -173,8 +182,8 @@ export function ChatList({
 	const { isWithinSplitView } = useIsWithinSplitView();
 
 	const openChatControl = useCallback(() => {
-		newChatControl.open();
-	}, [newChatControl]);
+		newChatHandle.open(null);
+	}, [newChatHandle]);
 
 	const wrappedOpenChatControl = openChatControl;
 
@@ -388,10 +397,10 @@ export function ChatList({
 }
 
 export function Header({
-	newChatControl,
+	newChatHandle,
 	chatStatus,
 }: {
-	newChatControl: DialogControlProps;
+	newChatHandle: Dialog.DialogHandle;
 	chatStatus: ChatStatus | undefined;
 }) {
 	const { gtMobile } = useBreakpoints();
@@ -406,7 +415,7 @@ export function Header({
 	const requestCount = unreadCounts?.unreadRequestConvos ?? 0;
 
 	const wrappedOpenChatControl = () => {
-		newChatControl.open();
+		newChatHandle.open(null);
 	};
 
 	return (
