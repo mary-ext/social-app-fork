@@ -299,7 +299,7 @@ function DefaultProfileCard({
 			onClick={() => onSelect(profile.did)}
 			value={item}
 		>
-			<ProfileCard.Header>
+			<ProfileCard.Header className={!enabled ? css.disabledHeader : undefined}>
 				<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
 
 				{enabled ? (
@@ -340,7 +340,7 @@ function ExistingChatCard({
 				onClick={() => onSelect(convo.view.id)}
 				value={item}
 			>
-				<ProfileCard.Header>
+				<ProfileCard.Header className={!enabled ? css.disabledHeader : undefined}>
 					<AvatarBubbles profiles={convo.members} size={40} />
 					<div className={css.column}>
 						<Text numberOfLines={1} weight="semiBold">

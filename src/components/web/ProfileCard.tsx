@@ -86,8 +86,8 @@ export function Outer({ children, className }: { children: ReactNode; className?
 }
 
 /** Horizontal row laying out an avatar, name/handle, and trailing action. */
-export function Header({ children }: { children: ReactNode }) {
-	return <div className={css.header}>{children}</div>;
+export function Header({ children, className }: { children: ReactNode; className?: string }) {
+	return <div className={clsx(css.header, className)}>{children}</div>;
 }
 
 /** Block link to a profile wrapping a card row; `className` supplies the row layout. */

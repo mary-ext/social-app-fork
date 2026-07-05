@@ -50,7 +50,7 @@ export const list = style({
 	scrollPaddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 });
 
-/** a people row that highlights on hover/keyboard focus and dims when disabled. */
+/** a people row that highlights on hover/keyboard focus. */
 export const row = style({
 	boxSizing: 'border-box',
 	cursor: 'pointer',
@@ -59,7 +59,7 @@ export const row = style({
 	paddingInline: DIALOG_PADDING,
 
 	selectors: {
-		'&[data-disabled]': { cursor: 'default', opacity: 0.5 },
+		'&[data-disabled]': { cursor: 'default' },
 		'&[data-highlighted]': { backgroundColor: colors.contrast_25 },
 	},
 });
@@ -70,6 +70,10 @@ export const column = style({
 	flex: 1,
 	flexDirection: 'column',
 	minWidth: 0,
+});
+
+export const disabledHeader = style({
+	opacity: 0.5,
 });
 
 export const empty = style({
