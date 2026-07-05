@@ -180,9 +180,10 @@ function DialogInner({
 			itemToStringLabel={(profile: AnyProfileView) => profile.handle}
 			multiple
 			onInputValueChange={(value, details) => {
-				// a selection (item press) asks Base UI to clear the query; keep it so several matches from the
-				// same search can be toggled in a row.
-				if (details.reason === 'item-press') {
+				// only reflect real typing. selecting a user while filtering makes Base UI clear the input
+				// (reason `input-clear`, not `item-press`); ignoring every non-typing reason keeps the query put so
+				// several matches from the same search can be toggled in a row.
+				if (details.reason !== 'input-change') {
 					return;
 				}
 				setSearchText(value);
