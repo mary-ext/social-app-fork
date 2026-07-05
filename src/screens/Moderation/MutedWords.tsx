@@ -44,7 +44,6 @@ export function MutedWordsScreen(
 	const dialogHandle = Dialog.useDialogHandle();
 	const { data: preferences, error, refetch } = usePreferencesQuery();
 	const mutedWords = preferences?.moderationPrefs.mutedWords;
-	const isEmpty = !error && !!preferences && !mutedWords?.length;
 
 	return (
 		<Layout.Screen>
@@ -55,17 +54,15 @@ export function MutedWordsScreen(
 				</Layout.Header.Content>
 
 				<Layout.Header.Slot>
-					{!isEmpty && (
-						<Button
-							color="secondary"
-							label={m['common.mutedWord.action.add']()}
-							onClick={() => dialogHandle.open(null)}
-							size="small"
-						>
-							<ButtonIcon icon={Plus} />
-							<ButtonText>{m['common.action.add']()}</ButtonText>
-						</Button>
-					)}
+					<Button
+						color="secondary"
+						label={m['common.mutedWord.action.add']()}
+						onClick={() => dialogHandle.open(null)}
+						size="small"
+					>
+						<ButtonIcon icon={Plus} />
+						<ButtonText>{m['common.action.add']()}</ButtonText>
+					</Button>
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 
@@ -86,16 +83,7 @@ export function MutedWordsScreen(
 						</Settings.Section>
 					</Settings.List>
 				) : (
-					<EmptyState
-						icon={Mute}
-						message={m['screens.moderation.mutedWord.empty']()}
-						button={{
-							icon: Plus,
-							label: m['common.mutedWord.action.add'](),
-							onPress: () => dialogHandle.open(null),
-							text: m['common.action.add'](),
-						}}
-					/>
+					<EmptyState icon={Mute} message={m['screens.moderation.mutedWord.empty']()} />
 				)}
 			</Layout.Content>
 
