@@ -101,7 +101,6 @@ function HomeScreenReady({
 				label: 'Discover',
 				render: (focused) => (
 					<FeedPage
-						testID="customFeedPage"
 						isPageFocused={focused}
 						feed={whatsHotFeed}
 						renderEmptyState={renderCustomFeedEmptyState}
@@ -120,7 +119,6 @@ function HomeScreenReady({
 				render: (focused) =>
 					feed === 'following' ? (
 						<FeedPage
-							testID="followingFeedPage"
 							isPageFocused={focused}
 							feed={feed}
 							renderEmptyState={renderFollowingEmptyState}
@@ -129,7 +127,6 @@ function HomeScreenReady({
 						/>
 					) : (
 						<FeedPage
-							testID="customFeedPage"
 							isPageFocused={focused}
 							feed={feed}
 							renderEmptyState={renderCustomFeedEmptyState}

@@ -1,12 +1,10 @@
 import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { type NavigationProp, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { DISCOVER_FEED_URI } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { getRootNavigation, getTabState, TabState } from '#/lib/routes/helpers';
 import type { AllNavigatorParams } from '#/lib/routes/types';
@@ -31,7 +29,6 @@ import { colors } from '#/styles/colors';
 const POLL_FREQ = 60e3; // 60sec
 
 export function FeedPage({
-	testID,
 	isPageFocused,
 	feed,
 	renderEmptyState,
@@ -39,7 +36,6 @@ export function FeedPage({
 	savedFeedConfig,
 	feedInfo,
 }: {
-	testID?: string;
 	feed: FeedDescriptor;
 	isPageFocused: boolean;
 	renderEmptyState: () => JSX.Element;
@@ -91,13 +87,8 @@ export function FeedPage({
 		setHasNew(false);
 	};
 
-	const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI;
 	return (
-		<View
-			testID={testID}
-			// @ts-expect-error web only -sfn
-			dataSet={{ nosnippet: isDiscoverFeed ? '' : undefined }}
-		>
+		<>
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
 					enabled={isPageFocused}
@@ -126,6 +117,6 @@ export function FeedPage({
 					onClick={onPressCompose}
 				/>
 			)}
-		</View>
+		</>
 	);
 }
