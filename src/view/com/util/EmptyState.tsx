@@ -2,8 +2,6 @@ import { type ComponentProps, type ComponentType, isValidElement, type ReactElem
 
 import { clsx } from 'clsx';
 
-import { useBreakpoints } from '#/alf';
-
 import type { Props as IconProps } from '#/components/icons/common';
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { Text, type TextProps } from '#/components/Text';
@@ -44,8 +42,6 @@ export function EmptyState({
 	button?: EmptyStateButtonProps;
 	className?: string;
 }) {
-	const { gtMobile, gtTablet } = useBreakpoints();
-
 	const renderIcon = () => {
 		if (icon === null) {
 			return null;
@@ -62,22 +58,11 @@ export function EmptyState({
 
 	return (
 		<div className={clsx(css.root, className)}>
-			<div className={clsx(css.iconBox, !isValidElement(icon) && gtTablet && css.iconBoxTablet)}>
-				{renderIcon()}
-			</div>
-			<Text
-				className={clsx(
-					css.message,
-					gtMobile ? css.messageNarrow : css.messageWide,
-					!button && css.messageGap,
-				)}
-				size="md"
-				weight="medium"
-				color={messageColor}
-				align="center"
-			>
+			<div className={css.iconBox}>{renderIcon()}</div>
+			<Text className={clsx(css.message)} size="md" weight="medium" color={messageColor} align="center">
 				{message}
 			</Text>
+
 			{button && (
 				<div className={css.buttonWrap}>
 					<Button
