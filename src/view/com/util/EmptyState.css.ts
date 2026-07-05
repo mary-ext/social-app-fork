@@ -22,8 +22,13 @@ export const iconBox = style({
 
 export const message = style({
 	alignSelf: 'center',
-	maxWidth: '60%',
 	marginTop: 4,
+
+	'@media': {
+		'(min-width: 800px)': {
+			maxWidth: '60%',
+		},
+	},
 });
 
 export const buttonWrap = style({
