@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { type ComponentType, useMemo, useRef, useState } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
@@ -25,6 +25,7 @@ import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
 import { ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlassIcon } from '#/components/icons/ListMagnifyingGlass';
@@ -258,7 +259,14 @@ export function FeedsScreen({}: Props) {
 			case 'error':
 				return <ErrorMessage message={item.error} />;
 			case 'savedFeedsHeader':
-				return <FeedsSavedHeader />;
+				return (
+					<SectionHeader
+						bottomBorder
+						first={index === 0}
+						icon={ListSparkleIcon}
+						title={m['view.feeds.saved.title']()}
+					/>
+				);
 			case 'savedFeedNoResults':
 				return (
 					<div className={css.borderedSection}>
@@ -272,7 +280,11 @@ export function FeedsScreen({}: Props) {
 			case 'popularFeedsHeader':
 				return (
 					<>
-						<FeedsAboutHeader />
+						<SectionHeader
+							first={index === 0}
+							icon={ListMagnifyingGlassIcon}
+							title={m['view.feeds.discover.title']()}
+						/>
 						<div ref={searchAnchorRef} className={css.searchWrapper}>
 							<SearchInput
 								label={m['view.feeds.search.placeholder']()}
@@ -398,34 +410,23 @@ function SavedFeedPlaceholder() {
 	);
 }
 
-function FeedsSavedHeader() {
+function SectionHeader({
+	bottomBorder,
+	first,
+	icon: Icon,
+	title,
+}: {
+	bottomBorder?: boolean;
+	first?: boolean;
+	icon: ComponentType<SVGIconProps>;
+	title: string;
+}) {
 	return (
-		<div className={css.savedHeader}>
-			<div className={css.headerIcon}>
-				<ListSparkleIcon size="xl" fill={colors.primary_500} />
-			</div>
-			<div className={css.headerColumn}>
-				<Text size="_2xl" weight="bold">
-					{m['view.feeds.saved.title']()}
-				</Text>
-				<Text color="textContrastHigh">{m['view.feeds.saved.description']()}</Text>
-			</div>
-		</div>
-	);
-}
-
-function FeedsAboutHeader() {
-	return (
-		<div className={css.aboutHeader}>
-			<div className={css.headerIcon}>
-				<ListMagnifyingGlassIcon size="xl" fill={colors.primary_500} />
-			</div>
-			<div className={css.aboutColumn}>
-				<Text size="_2xl" weight="bold">
-					{m['view.feeds.discover.title']()}
-				</Text>
-				<Text color="textContrastHigh">{m['view.feeds.discover.description']()}</Text>
-			</div>
+		<div className={css.sectionHeader({ bottomBorder, first })}>
+			<Icon className={css.sectionHeaderIcon} size="lg" />
+			<Text className={css.sectionHeaderTitle} size="xl" weight="semiBold">
+				{title}
+			</Text>
 		</div>
 	);
 }

@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { recipe } from '#/styles/recipe';
+import { space } from '#/styles/tokens.css';
 
 /** A saved-feed row in the feeds list; highlights on hover/press, replacing the old pressable's render-prop. */
 export const savedFeedRow = style({
@@ -36,58 +37,42 @@ export const borderedSection = style({
 	borderBottomWidth: 1,
 });
 
-/** "My Feeds" section header — icon + heading column, closed off with a bottom separator. */
-export const savedHeader = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomStyle: 'solid',
-	borderBottomWidth: 1,
-	display: 'flex',
-	flexDirection: 'row',
-	gap: space.md,
-	paddingBlock: space.lg,
-	paddingInline: space.md,
-});
+/** Compact section header — a small primary glyph beside a heading, mirroring the Explore module headers. */
+export const sectionHeader = recipe(
+	{
+		base: {
+			alignItems: 'center',
+			display: 'flex',
+			flexDirection: 'row',
+			gap: space.sm,
+			paddingBottom: space.md,
+			paddingInline: space.lg,
+			paddingTop: space._2xl,
+		},
+		defaultVariants: { bottomBorder: false, first: false },
+		variants: {
+			bottomBorder: {
+				true: { borderBottom: `1px solid ${colors.borderContrastLow}` },
+			},
+			// the leading header sits directly under the nav bar, so it takes a tighter top gap
+			first: {
+				true: { paddingTop: space.lg },
+			},
+		},
+	},
+	{ debugId: 'sectionHeader' },
+);
 
-/** "Discover New Feeds" section header — sits directly above the search field, so no bottom separator. */
-export const aboutHeader = style({
-	display: 'flex',
-	flexDirection: 'row',
-	gap: space.md,
-	paddingBlock: space.lg,
-	paddingInline: space.md,
-});
-
-/**
- * Title + subtitle column of the "My Feeds" header. `minWidth: 0` lets the heading truncate instead of
- * overrunning.
- */
-export const headerColumn = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	gap: space.xs,
-	minWidth: 0,
-});
-
-/** Title + subtitle column of the "Discover" header — slightly looser spacing than {@link headerColumn}. */
-export const aboutColumn = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	gap: space.sm,
-	minWidth: 0,
-});
-
-/** The tinted circle behind a section-header icon (replaces the old `IconCircle` at its `lg` size). */
-export const headerIcon = style({
-	alignItems: 'center',
-	backgroundColor: colors.primary_50,
-	borderRadius: borderRadius.full,
-	display: 'flex',
+/** Nudges the header glyph flush with the content edge and keeps it from shrinking. */
+export const sectionHeaderIcon = style({
 	flexShrink: 0,
-	height: 52,
-	justifyContent: 'center',
-	width: 52,
+	marginLeft: -2,
+});
+
+/** Header heading; `minWidth: 0` lets it truncate instead of overrunning the row. */
+export const sectionHeaderTitle = style({
+	flex: 1,
+	minWidth: 0,
 });
 
 /** The small square badge holding the Following row's timeline glyph. */
@@ -108,7 +93,7 @@ export const followingIcon = style({
  */
 export const searchWrapper = style({
 	paddingBottom: space.xs,
-	paddingInline: space.md,
+	paddingInline: space.lg,
 	scrollMarginTop: 56,
 });
 
