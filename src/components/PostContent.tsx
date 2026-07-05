@@ -4,7 +4,6 @@ import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from 
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
-import { maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
@@ -28,6 +27,7 @@ function PostContent({
 	onOpenEmbed,
 	className,
 	embedClassName,
+	embedStyle,
 }: {
 	post: AppBskyFeedDefs.PostView;
 	richText: Richtext;
@@ -41,6 +41,8 @@ function PostContent({
 	className?: string;
 	/** Forwarded to the embed wrapper (e.g. the feed surface's trailing padding). */
 	embedClassName?: string;
+	/** Style applied to the embed wrapper div. */
+	embedStyle?: React.CSSProperties;
 }): React.ReactNode {
 	const listModui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
 	const bodyModui =
@@ -56,14 +58,7 @@ function PostContent({
 			<PostAlerts additionalCauses={additionalCauses} className={css.alerts} modui={bodyModui} />
 			{richText.text ? <ClampedPostText authorHandle={post.author.handle} richText={richText} /> : undefined}
 			{post.embed ? (
-				<div
-					className={embedClassName}
-					style={maybeApplyGalleryOffsetStyles('embed', {
-						post,
-						modui: listModui,
-						additionalCauses,
-					})}
-				>
+				<div className={embedClassName} style={embedStyle}>
 					<Embed
 						embed={post.embed}
 						moderation={moderation}

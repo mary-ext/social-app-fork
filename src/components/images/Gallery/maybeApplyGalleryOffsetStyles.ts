@@ -8,18 +8,15 @@ import type { AppModerationCause } from '#/components/Pills';
 export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 8 };
 export const POST_EMBED_NO_CONTENT_OFFSET = { paddingTop: 6 };
 
-export function maybeApplyGalleryOffsetStyles(
-	placement: 'meta' | 'embed',
-	{
-		post,
-		modui,
-		additionalCauses,
-	}: {
-		post: AppBskyFeedDefs.PostView;
-		modui: DisplayRestrictions;
-		additionalCauses?: ModerationCause[] | AppModerationCause[];
-	},
-) {
+export function maybeApplyGalleryOffsetStyles({
+	additionalCauses,
+	modui,
+	post,
+}: {
+	additionalCauses?: ModerationCause[] | AppModerationCause[];
+	modui: DisplayRestrictions;
+	post: AppBskyFeedDefs.PostView;
+}) {
 	const record = post.record as AppBskyFeedPost.Main;
 
 	if (record.text) {
@@ -61,5 +58,8 @@ export function maybeApplyGalleryOffsetStyles(
 		return;
 	}
 
-	return placement === 'meta' ? POST_META_NO_CONTENT_OFFSET : POST_EMBED_NO_CONTENT_OFFSET;
+	return {
+		embed: POST_EMBED_NO_CONTENT_OFFSET,
+		meta: POST_META_NO_CONTENT_OFFSET,
+	};
 }

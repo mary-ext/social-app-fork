@@ -247,6 +247,11 @@ function FeedItemInner({
 		}
 	}
 
+	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({
+		additionalCauses: additionalPostAlerts,
+		modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+		post,
+	});
 	return (
 		<GalleryBleed>
 			<BlockLink to={href} onBeforePress={onBeforePress}>
@@ -275,13 +280,7 @@ function FeedItemInner({
 								<PostLayout.Spine className={live ? css.replyLineParentLive : css.replyLineParent} />
 							)}
 						</PostLayout.AvatarColumn>
-						<PostLayout.ContentColumn
-							style={maybeApplyGalleryOffsetStyles('meta', {
-								post,
-								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-								additionalCauses: additionalPostAlerts,
-							})}
-						>
+						<PostLayout.ContentColumn style={galleryOffsetStyles?.meta}>
 							<div className={css.metaSpacing}>
 								<PostMeta
 									author={post.author}
@@ -317,6 +316,7 @@ function FeedItemInner({
 								onOpenEmbed={onOpenEmbed}
 								post={post}
 								richText={richText}
+								embedStyle={galleryOffsetStyles?.embed}
 							/>
 							<PostControls
 								post={post}

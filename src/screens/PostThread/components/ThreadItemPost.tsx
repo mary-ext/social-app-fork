@@ -174,6 +174,11 @@ function ThreadItemPostInner({
 
 	const { isActive: live } = useActorStatus(post.author);
 
+	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({
+		additionalCauses: additionalPostAlerts,
+		modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+		post: post,
+	});
 	return (
 		<ThreadItemPostOuterWrapper item={item} overrides={overrides} hoverable>
 			<PostHider
@@ -204,14 +209,7 @@ function ThreadItemPostInner({
 					</PostLayout.AvatarColumn>
 
 					<PostLayout.ContentColumn>
-						<div
-							className={css.metaSpacing}
-							style={maybeApplyGalleryOffsetStyles('meta', {
-								post: post,
-								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-								additionalCauses: additionalPostAlerts,
-							})}
-						>
+						<div className={css.metaSpacing} style={galleryOffsetStyles?.meta}>
 							<PostMeta
 								author={post.author}
 								moderation={moderation}
@@ -235,13 +233,7 @@ function ThreadItemPostInner({
 							<ClampedPostText authorHandle={post.author.handle} richText={richText} />
 						) : undefined}
 						{post.embed && (
-							<div
-								style={maybeApplyGalleryOffsetStyles('embed', {
-									post: post,
-									modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-									additionalCauses: additionalPostAlerts,
-								})}
-							>
+							<div style={galleryOffsetStyles?.embed}>
 								<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
 							</div>
 						)}

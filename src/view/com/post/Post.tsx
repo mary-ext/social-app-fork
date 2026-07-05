@@ -121,6 +121,11 @@ function PostInner({
 		outerOnBeforePress?.();
 	};
 
+	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({
+		additionalCauses: [],
+		modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+		post,
+	});
 	return (
 		<GalleryBleed>
 			<BlockLink to={itemHref} onBeforePress={onBeforePress}>
@@ -135,13 +140,7 @@ function PostInner({
 								tabIndex={-1}
 							/>
 						</PostLayout.AvatarColumn>
-						<PostLayout.ContentColumn
-							style={maybeApplyGalleryOffsetStyles('meta', {
-								post,
-								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-								additionalCauses: [],
-							})}
-						>
+						<PostLayout.ContentColumn style={galleryOffsetStyles?.meta}>
 							<div className={css.metaSpacing}>
 								<PostMeta
 									author={post.author}
@@ -155,7 +154,13 @@ function PostInner({
 								<PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />
 							)}
 							<LabelsOnMyPost post={post} />
-							<PostContent displayContext="view" moderation={moderation} post={post} richText={richText} />
+							<PostContent
+								displayContext="view"
+								moderation={moderation}
+								post={post}
+								richText={richText}
+								embedStyle={galleryOffsetStyles?.embed}
+							/>
 							<PostControls post={post} onPressReply={onPressReply} />
 						</PostLayout.ContentColumn>
 					</PostLayout.Row>
