@@ -1,13 +1,12 @@
-import type { AppBskyEmbedImages } from '@atcute/bluesky';
+import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 
 import type { LightboxImage } from '@oomfware/lightbox';
 
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { AutoSizedImage } from '#/components/ImageEmbed/AutoSizedImage';
+import { EMPTY_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
 import { Gallery } from '#/components/ImageEmbed/Gallery';
 import { type CommonProps, PostEmbedViewContext } from '#/components/Post/Embed/types';
-
-import type { EmbedType } from '#/types/embed';
 
 import * as styles from './index.css';
 
@@ -30,20 +29,19 @@ export function ImageEmbed({
 	embed,
 	viewContext,
 }: CommonProps & {
-	embed: EmbedType<'images'> | EmbedType<'gallery'>;
+	embed: AppBskyEmbedGallery.View | AppBskyEmbedImages.View;
 }) {
 	const { lightboxHandle } = useGlobalDialogsHandleContext();
-	// Gallery embeds carry the same image data under different field names (`thumbnail` -> `thumb`);
-	// normalize to `ViewImage` so the carousel and lightbox stay shared with the `images` embed.
-	const images: AppBskyEmbedImages.ViewImage[] =
-		embed.type === 'gallery'
-			? embed.view.items.map((item) => ({
-					alt: item.alt,
-					aspectRatio: item.aspectRatio,
-					fullsize: item.fullsize,
-					thumb: item.thumbnail,
-				}))
-			: embed.view.images;
+	// Normalize to the gallery interface so the carousel and lightbox stay shared.
+	const images: AppBskyEmbedGallery.ViewImage[] =
+		'items' in embed
+			? embed.items
+			: embed.images.map((img) => ({
+					alt: img.alt,
+					aspectRatio: img.aspectRatio || EMPTY_ASPECT_RATIO,
+					fullsize: img.fullsize,
+					thumbnail: img.thumb,
+				}));
 
 	if (images.length === 0) {
 		return null;

@@ -11,13 +11,13 @@ import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderati
 
 import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
 
+import { EMPTY_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
 import { QuoteEmbed } from '#/components/Post/Embed';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { m } from '#/paraglide/messages';
-import { parseEmbed } from '#/types/embed';
 
 import * as styles from './ComposerReplyTo.css';
 
@@ -32,25 +32,19 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 
 	const record = unwrapQuoteEmbed(unwrapRecordEmbed(embed));
 	const quoteEmbed = record?.$type === 'app.bsky.embed.record#viewRecord' ? record : null;
-	const parsedQuoteEmbed = quoteEmbed
-		? parseEmbed({
-				$type: 'app.bsky.embed.record#view',
-				record: quoteEmbed,
-			})
-		: null;
 
 	const media = unwrapMediaEmbed(embed);
-	let images: AppBskyEmbedImages.ViewImage[] = [];
+	let images: AppBskyEmbedGallery.ViewImage[] = [];
 	let totalNumber = 0;
 	if (media) {
 		switch (media.$type) {
 			case 'app.bsky.embed.images#view': {
-				images = media.images;
+				images = imagesToGalleryItems(media.images);
 				totalNumber = media.images.length;
 				break;
 			}
 			case 'app.bsky.embed.gallery#view': {
-				images = galleryItemsToImages(media.items);
+				images = media.items;
 				totalNumber = media.items.length;
 				break;
 			}
@@ -99,33 +93,31 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 						) && <ComposerReplyToImages images={images} totalNumber={totalNumber} />}
 				</div>
 
-				{showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
-					<QuoteEmbed embed={parsedQuoteEmbed} linkDisabled />
-				)}
+				{showFull && quoteEmbed && <QuoteEmbed embed={quoteEmbed} linkDisabled />}
 			</div>
 		</div>
 	);
 }
 
-/** Normalize gallery view items (`thumbnail`) to the shared image `ViewImage` shape (`thumb`). */
-function galleryItemsToImages(items: AppBskyEmbedGallery.ViewImage[]): AppBskyEmbedImages.ViewImage[] {
+/** Normalize images view items (`thumb`) to the shared gallery `ViewImage` shape (`thumbnail`). */
+function imagesToGalleryItems(items: AppBskyEmbedImages.ViewImage[]): AppBskyEmbedGallery.ViewImage[] {
 	return items.map((item) => ({
 		alt: item.alt,
-		aspectRatio: item.aspectRatio,
+		aspectRatio: item.aspectRatio || EMPTY_ASPECT_RATIO,
 		fullsize: item.fullsize,
-		thumb: item.thumbnail,
+		thumbnail: item.thumb,
 	}));
 }
 
-function ReplyImage({ image }: { image: AppBskyEmbedImages.ViewImage }) {
-	return <img src={image.thumb} className={styles.image} alt={image.alt || ''} />;
+function ReplyImage({ image }: { image: AppBskyEmbedGallery.ViewImage }) {
+	return <img src={image.thumbnail} className={styles.image} alt={image.alt || ''} />;
 }
 
 function ComposerReplyToImages({
 	images,
 	totalNumber,
 }: {
-	images: AppBskyEmbedImages.ViewImage[];
+	images: AppBskyEmbedGallery.ViewImage[];
 	totalNumber: number;
 }) {
 	if (images.length === 1) {

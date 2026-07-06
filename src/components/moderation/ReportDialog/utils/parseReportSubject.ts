@@ -1,8 +1,6 @@
-import type { AppBskyFeedPost } from '@atcute/bluesky';
+import { unwrapEmbed, type AppBskyFeedPost } from '@atcute/bluesky';
 
 import type { ParsedReportSubject, ReportSubject } from '#/components/moderation/ReportDialog/types';
-
-import { parseEmbed } from '#/types/embed';
 
 export function parseReportSubject(subject: ReportSubject): ParsedReportSubject | undefined {
 	if (!subject) return;
@@ -62,7 +60,7 @@ export function parseReportSubject(subject: ReportSubject): ParsedReportSubject 
 		};
 	} else if (subject?.$type === 'app.bsky.feed.defs#postView') {
 		const record = subject.record as AppBskyFeedPost.Main;
-		const embed = parseEmbed(subject.embed);
+		const { media, record: embedRecord } = unwrapEmbed(subject.embed);
 		return {
 			type: 'post',
 			uri: subject.uri,
@@ -70,13 +68,11 @@ export function parseReportSubject(subject: ReportSubject): ParsedReportSubject 
 			nsid: 'app.bsky.feed.post',
 			attributes: {
 				reply: !!record.reply,
-				image: embed.type === 'images' || (embed.type === 'post_with_media' && embed.media.type === 'images'),
-				video: embed.type === 'video' || (embed.type === 'post_with_media' && embed.media.type === 'video'),
-				link: embed.type === 'link' || (embed.type === 'post_with_media' && embed.media.type === 'link'),
-				quote:
-					embed.type === 'post' ||
-					(embed.type === 'post_with_media' &&
-						(embed.view.type === 'post' || embed.view.type === 'post_with_media')),
+				image:
+					media?.$type === 'app.bsky.embed.images#view' || media?.$type === 'app.bsky.embed.gallery#view',
+				video: media?.$type === 'app.bsky.embed.video#view',
+				link: media?.$type === 'app.bsky.embed.external#view',
+				quote: embedRecord?.$type === 'app.bsky.embed.record#viewRecord',
 			},
 		};
 	}

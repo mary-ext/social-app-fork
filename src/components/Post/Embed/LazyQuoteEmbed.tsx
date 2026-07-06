@@ -13,15 +13,5 @@ export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisable
 		view = createEmbedViewRecordFromPost(data.view);
 	}
 
-	return view ? (
-		<QuoteEmbed
-			embed={{
-				type: 'post',
-				view: view,
-			}}
-			linkDisabled={linkDisabled}
-		/>
-	) : (
-		<div className={css.skeleton} />
-	);
+	return view ? <QuoteEmbed embed={view} linkDisabled={linkDisabled} /> : <div className={css.skeleton} />;
 }

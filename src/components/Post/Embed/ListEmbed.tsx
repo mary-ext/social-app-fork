@@ -1,3 +1,4 @@
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -5,17 +6,15 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import * as ListCard from '#/components/ListCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
 
-import type { EmbedType } from '#/types/embed';
-
 import * as css from './ListEmbed.css';
 import type { CommonProps } from './types';
 
 export function ListEmbed({
 	embed,
 }: CommonProps & {
-	embed: EmbedType<'list'>;
+	embed: AppBskyGraphDefs.ListView;
 }) {
-	const view = embed.view;
+	const view = embed;
 	const moderationOpts = useModerationOpts();
 	const moderation = moderationOpts ? moderateList(view, moderationOpts) : undefined;
 	return (
@@ -39,10 +38,10 @@ export function ListEmbed({
 export function ModeratedListEmbed({
 	embed,
 }: CommonProps & {
-	embed: EmbedType<'list'>;
+	embed: AppBskyGraphDefs.ListView;
 }) {
 	const moderationOpts = useModerationOpts();
-	const moderation = moderationOpts ? moderateList(embed.view, moderationOpts) : undefined;
+	const moderation = moderationOpts ? moderateList(embed, moderationOpts) : undefined;
 	return (
 		<ContentHider
 			modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { AppBskyEmbedImages } from '@atcute/bluesky';
+import type { AppBskyEmbedGallery } from '@atcute/bluesky';
 
 import type { LightboxImage } from '@oomfware/lightbox';
 
@@ -29,7 +29,7 @@ import { m } from '#/paraglide/messages';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export type GalleryProps = {
-	images: AppBskyEmbedImages.ViewImage[];
+	images: AppBskyEmbedGallery.ViewImage[];
 	/**
 	 * Lightbox handle + the full lib image list; each slide is a detached `Dialog.Trigger` opening at its
 	 * index.
@@ -150,7 +150,7 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 			>
 				{images.map((image, index) => (
 					<GalleryImage
-						key={image.thumb + index}
+						key={image.thumbnail + index}
 						image={image}
 						index={index}
 						imageCount={images.length}
@@ -180,7 +180,7 @@ function GalleryImage({
 	lightboxImages,
 	onPressIn,
 }: {
-	image: AppBskyEmbedImages.ViewImage;
+	image: AppBskyEmbedGallery.ViewImage;
 	index: number;
 	imageCount: number;
 	contentHeight: number;
@@ -191,7 +191,7 @@ function GalleryImage({
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 }) {
-	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumb ? 'loading' : 'error');
+	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumbnail ? 'loading' : 'error');
 
 	const measure = useCallback((node: HTMLImageElement | null) => {
 		if (node?.complete) {
@@ -242,7 +242,7 @@ function GalleryImage({
 						isContain && styles.imageContain,
 						status === 'loading' && styles.loading,
 					)}
-					src={image.thumb}
+					src={image.thumbnail}
 					alt={image.alt}
 					loading={index === 0 ? 'eager' : 'lazy'}
 					onError={() => setStatus('error')}

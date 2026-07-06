@@ -14,3 +14,4 @@ export const CAROUSEL_MAX_HEIGHT = 330;
 // Chat bubbles run more compact.
 export const CAROUSEL_CHAT_MIN_HEIGHT = 120;
 export const CAROUSEL_CHAT_MAX_HEIGHT = 180;
+export const EMPTY_ASPECT_RATIO = { height: 0, width: 0 };

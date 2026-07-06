@@ -1,4 +1,9 @@
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import {
+	unwrapEmbed,
+	type AppBskyEmbedRecord,
+	type AppBskyFeedDefs,
+	type AppBskyFeedPost,
+} from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -25,7 +30,6 @@ import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 
 import { m } from '#/paraglide/messages';
-import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 
 import { ChatInviteEmbed } from './ChatInviteEmbed';
 import { ModeratedFeedEmbed } from './FeedEmbed';
@@ -40,48 +44,34 @@ import { VideoEmbed } from './VideoEmbed';
 export { PostEmbedViewContext } from './types';
 
 export function Embed({ embed: rawEmbed, ...rest }: EmbedProps) {
-	const embed = parseEmbed(rawEmbed);
+	const { media, record } = unwrapEmbed(rawEmbed);
 
-	switch (embed.type) {
-		case 'images':
-		case 'gallery':
-		case 'link':
-		case 'video': {
-			return <MediaEmbed embed={embed} {...rest} />;
-		}
-		case 'feed':
-		case 'list':
-		case 'starter_pack':
-		case 'labeler':
-		case 'post':
-		case 'post_not_found':
-		case 'post_blocked':
-		case 'post_detached': {
-			return <RecordEmbed embed={embed} {...rest} />;
-		}
-		case 'post_with_media': {
-			return (
-				<div className={css.postWithMedia}>
-					<MediaEmbed embed={embed.media} {...rest} />
-					<RecordEmbed embed={embed.view} {...rest} />
-				</div>
-			);
-		}
-		default: {
-			return null;
-		}
+	if (media && record) {
+		return (
+			<div className={css.postWithMedia}>
+				<MediaEmbed media={media} {...rest} />
+				<RecordEmbed record={record} {...rest} />
+			</div>
+		);
 	}
+	if (record) {
+		return <RecordEmbed record={record} {...rest} />;
+	}
+	if (media) {
+		return <MediaEmbed media={media} {...rest} />;
+	}
+	return null;
 }
 
 function MediaEmbed({
-	embed,
+	media,
 	...rest
 }: CommonProps & {
-	embed: TEmbed;
+	media: NonNullable<ReturnType<typeof unwrapEmbed>['media']>;
 }) {
-	switch (embed.type) {
-		case 'images':
-		case 'gallery': {
+	switch (media.$type) {
+		case 'app.bsky.embed.images#view':
+		case 'app.bsky.embed.gallery#view': {
 			return (
 				<ContentHider
 					modui={
@@ -89,12 +79,12 @@ function MediaEmbed({
 					}
 					activeClassName={css.activeMargin}
 				>
-					<ImageEmbed embed={embed} {...rest} />
+					<ImageEmbed embed={media} {...rest} />
 				</ContentHider>
 			);
 		}
-		case 'link': {
-			if (isStandardSiteEmbed(embed.view.external)) {
+		case 'app.bsky.embed.external#view': {
+			if (isStandardSiteEmbed(media.external)) {
 				return (
 					<ContentHider
 						modui={
@@ -104,15 +94,11 @@ function MediaEmbed({
 						}
 						activeClassName={css.activeMargin}
 					>
-						<StandardSiteEmbed
-							view={embed.view.external}
-							onOpen={rest.onOpen}
-							className={css.standardSiteGap}
-						/>
+						<StandardSiteEmbed view={media.external} onOpen={rest.onOpen} className={css.standardSiteGap} />
 					</ContentHider>
 				);
 			}
-			const chatInviteCode = getChatInviteCodeFromUrl(embed.view.external.uri);
+			const chatInviteCode = getChatInviteCodeFromUrl(media.external.uri);
 			if (chatInviteCode) {
 				return (
 					<ContentHider
@@ -123,7 +109,7 @@ function MediaEmbed({
 						}
 						activeClassName={css.activeMargin}
 					>
-						<ChatInviteEmbed code={chatInviteCode} link={embed.view.external} onOpen={rest.onOpen} />
+						<ChatInviteEmbed code={chatInviteCode} link={media.external} onOpen={rest.onOpen} />
 					</ContentHider>
 				);
 			}
@@ -134,11 +120,11 @@ function MediaEmbed({
 					}
 					activeClassName={css.activeMargin}
 				>
-					<ExternalEmbed link={embed.view.external} onOpen={rest.onOpen} className={css.externalCardGap} />
+					<ExternalEmbed link={media.external} onOpen={rest.onOpen} className={css.externalCardGap} />
 				</ContentHider>
 			);
 		}
-		case 'video': {
+		case 'app.bsky.embed.video#view': {
 			return (
 				<ContentHider
 					modui={
@@ -146,7 +132,7 @@ function MediaEmbed({
 					}
 					activeClassName={css.activeMargin}
 				>
-					<VideoEmbed embed={embed.view} />
+					<VideoEmbed embed={media} />
 				</ContentHider>
 			);
 		}
@@ -157,38 +143,38 @@ function MediaEmbed({
 }
 
 function RecordEmbed({
-	embed,
+	record,
 	...rest
 }: CommonProps & {
-	embed: TEmbed;
+	record: NonNullable<ReturnType<typeof unwrapEmbed>['record']>;
 }) {
-	switch (embed.type) {
-		case 'feed': {
+	switch (record.$type) {
+		case 'app.bsky.feed.defs#generatorView': {
 			return (
 				<div className={css.recordCardGap}>
-					<ModeratedFeedEmbed embed={embed} {...rest} />
+					<ModeratedFeedEmbed embed={record} {...rest} />
 				</div>
 			);
 		}
-		case 'list': {
+		case 'app.bsky.graph.defs#listView': {
 			return (
 				<div className={css.recordCardGap}>
-					<ModeratedListEmbed embed={embed} />
+					<ModeratedListEmbed embed={record} />
 				</div>
 			);
 		}
-		case 'starter_pack': {
+		case 'app.bsky.graph.defs#starterPackViewBasic': {
 			return (
 				<div className={css.recordCardGap}>
-					<StarterPackCard starterPack={embed.view} />
+					<StarterPackCard starterPack={record} />
 				</div>
 			);
 		}
-		case 'labeler': {
+		case 'app.bsky.labeler.defs#labelerView': {
 			// not implemented
 			return null;
 		}
-		case 'post': {
+		case 'app.bsky.embed.record#viewRecord': {
 			if (rest.isWithinQuote && !rest.allowNestedQuotes) {
 				return null;
 			}
@@ -196,21 +182,21 @@ function RecordEmbed({
 			return (
 				<QuoteEmbed
 					{...rest}
-					embed={embed}
+					embed={record}
 					viewContext={rest.viewContext}
 					isWithinQuote={rest.isWithinQuote}
 					allowNestedQuotes={rest.allowNestedQuotes}
 				/>
 			);
 		}
-		case 'post_not_found': {
+		case 'app.bsky.embed.record#viewNotFound': {
 			return <PostPlaceholderText>{m['components.post.state.deleted']()}</PostPlaceholderText>;
 		}
-		case 'post_blocked': {
+		case 'app.bsky.embed.record#viewBlocked': {
 			return <PostPlaceholderText>{m['components.post.state.blocked']()}</PostPlaceholderText>;
 		}
-		case 'post_detached': {
-			return <PostDetachedEmbed embed={embed} />;
+		case 'app.bsky.embed.record#viewDetached': {
+			return <PostDetachedEmbed embed={record} />;
 		}
 		default: {
 			return null;
@@ -218,9 +204,9 @@ function RecordEmbed({
 	}
 }
 
-export function PostDetachedEmbed({ embed }: { embed: EmbedType<'post_detached'> }) {
+export function PostDetachedEmbed({ embed }: { embed: AppBskyEmbedRecord.ViewDetached }) {
 	const { currentAccount } = useSession();
-	const isViewerOwner = currentAccount?.did ? embed.view.uri.includes(currentAccount.did) : false;
+	const isViewerOwner = currentAccount?.did ? embed.uri.includes(currentAccount.did) : false;
 
 	return (
 		<PostPlaceholderText>
@@ -243,16 +229,16 @@ export function QuoteEmbed({
 	allowNestedQuotes: parentAllowNestedQuotes,
 	viewContext,
 }: Omit<CommonProps, 'viewContext'> & {
-	embed: EmbedType<'post'>;
+	embed: AppBskyEmbedRecord.ViewRecord;
 	viewContext?: PostEmbedViewContext;
 	linkDisabled?: boolean;
 }) {
 	const moderationOpts = useModerationOpts();
 	const quote = {
-		...embed.view,
+		...embed,
 		$type: 'app.bsky.feed.defs#postView',
-		record: embed.view.value,
-		embed: embed.view.embeds?.[0],
+		record: embed.value,
+		embed: embed.embeds?.[0],
 	} as unknown as $type.enforce<AppBskyFeedDefs.PostView>;
 	const moderation = moderationOpts ? moderatePost(quote, moderationOpts) : undefined;
 

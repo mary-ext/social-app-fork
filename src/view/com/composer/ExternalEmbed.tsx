@@ -121,11 +121,8 @@ export const ExternalEmbedLink = ({
 			linkComponent = (
 				<ModeratedFeedEmbed
 					embed={{
-						type: 'feed',
-						view: {
-							$type: 'app.bsky.feed.defs#generatorView',
-							...data.view,
-						},
+						$type: 'app.bsky.feed.defs#generatorView',
+						...data.view,
 					}}
 				/>
 			);
@@ -133,11 +130,8 @@ export const ExternalEmbedLink = ({
 			linkComponent = (
 				<ModeratedListEmbed
 					embed={{
-						type: 'list',
-						view: {
-							$type: 'app.bsky.graph.defs#listView',
-							...data.view,
-						},
+						$type: 'app.bsky.graph.defs#listView',
+						...data.view,
 					}}
 				/>
 			);

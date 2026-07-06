@@ -1,6 +1,6 @@
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
-import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import { unwrapEmbed, type AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { isGifEmbed } from '#/lib/strings/embed-player';
 
@@ -12,7 +12,6 @@ import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
 
 import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';
-import { parseEmbed } from '#/types/embed';
 
 /** Streamlined MediaPreview component which just handles images, gifs, and videos */
 export function Embed({
@@ -22,56 +21,60 @@ export function Embed({
 	embed: AppBskyFeedDefs.PostView['embed'];
 	style?: StyleProp<ViewStyle>;
 }) {
-	const e = parseEmbed(embed);
+	const { media } = unwrapEmbed(embed);
 
-	if (!e) return null;
-
-	if (e.type === 'images') {
-		return (
-			<Outer style={style}>
-				{e.view.images.map((image) => (
-					<ImageItem key={image.thumb} thumbnail={image.thumb} alt={image.alt} />
-				))}
-			</Outer>
-		);
-	} else if (e.type === 'gallery') {
-		// cap at 4 tiles so a large gallery doesn't blow out this narrow inline strip
-		return (
-			<Outer style={style}>
-				{e.view.items.slice(0, 4).map((image) => (
-					<ImageItem key={image.thumbnail} thumbnail={image.thumbnail} alt={image.alt} />
-				))}
-			</Outer>
-		);
-	} else if (e.type === 'link') {
-		if (!e.view.external.thumb) return null;
-		if (!isGifEmbed(e.view.external.uri)) return null;
-		return (
-			<Outer style={style}>
-				<GifItem thumbnail={e.view.external.thumb} alt={e.view.external.title} />
-			</Outer>
-		);
-	} else if (e.type === 'video') {
-		return (
-			<Outer style={style}>
-				{e.view.presentation === 'gif' ? (
-					<GifItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
-				) : (
-					<VideoItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
-				)}
-			</Outer>
-		);
-	} else if (
-		e.type === 'post_with_media' &&
-		// ignore further "nested" RecordWithMedia
-		e.media.type !== 'post_with_media' &&
-		// ignore any unknowns
-		e.media.view !== null
-	) {
-		return <Embed embed={e.media.view as unknown as AppBskyFeedDefs.PostView['embed']} style={style} />;
+	if (!media) {
+		return null;
 	}
 
-	return null;
+	switch (media.$type) {
+		case 'app.bsky.embed.images#view': {
+			return (
+				<Outer style={style}>
+					{media.images.map((image) => (
+						<ImageItem key={image.thumb} thumbnail={image.thumb} alt={image.alt} />
+					))}
+				</Outer>
+			);
+		}
+		case 'app.bsky.embed.gallery#view': {
+			// cap at 4 tiles so a large gallery doesn't blow out this narrow inline strip
+			return (
+				<Outer style={style}>
+					{media.items.slice(0, 4).map((image) => (
+						<ImageItem key={image.thumbnail} thumbnail={image.thumbnail} alt={image.alt} />
+					))}
+				</Outer>
+			);
+		}
+		case 'app.bsky.embed.external#view': {
+			if (!media.external.thumb) {
+				return null;
+			}
+			if (!isGifEmbed(media.external.uri)) {
+				return null;
+			}
+			return (
+				<Outer style={style}>
+					<GifItem thumbnail={media.external.thumb} alt={media.external.title} />
+				</Outer>
+			);
+		}
+		case 'app.bsky.embed.video#view': {
+			return (
+				<Outer style={style}>
+					{media.presentation === 'gif' ? (
+						<GifItem thumbnail={media.thumbnail} alt={media.alt} />
+					) : (
+						<VideoItem thumbnail={media.thumbnail} alt={media.alt} />
+					)}
+				</Outer>
+			);
+		}
+		default: {
+			return null;
+		}
+	}
 }
 
 export function Outer({ children, style }: { children?: React.ReactNode; style?: StyleProp<ViewStyle> }) {

@@ -1,3 +1,4 @@
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -5,17 +6,15 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import * as FeedCard from '#/components/FeedCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
 
-import type { EmbedType } from '#/types/embed';
-
 import * as css from './FeedEmbed.css';
 import type { CommonProps } from './types';
 
 export function FeedEmbed({
 	embed,
 }: CommonProps & {
-	embed: EmbedType<'feed'>;
+	embed: AppBskyFeedDefs.GeneratorView;
 }) {
-	const view = embed.view;
+	const view = embed;
 	return (
 		<FeedCard.Link className={css.card} view={view}>
 			<FeedCard.Outer>
@@ -31,10 +30,10 @@ export function FeedEmbed({
 export function ModeratedFeedEmbed({
 	embed,
 }: CommonProps & {
-	embed: EmbedType<'feed'>;
+	embed: AppBskyFeedDefs.GeneratorView;
 }) {
 	const moderationOpts = useModerationOpts();
-	const moderation = moderationOpts ? moderateFeedGenerator(embed.view, moderationOpts) : undefined;
+	const moderation = moderationOpts ? moderateFeedGenerator(embed, moderationOpts) : undefined;
 	return (
 		<ContentHider
 			modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}

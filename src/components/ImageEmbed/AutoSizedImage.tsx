@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import type { AppBskyEmbedImages } from '@atcute/bluesky';
+import type { AppBskyEmbedGallery } from '@atcute/bluesky';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -15,7 +15,7 @@ import * as Dialog from '#/components/web/Dialog';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export type AutoSizedImageProps = {
-	image: AppBskyEmbedImages.ViewImage;
+	image: AppBskyEmbedGallery.ViewImage;
 	crop?: 'constrained' | 'none' | 'square';
 	/** Lightbox handle + payload; the image renders as a detached `Dialog.Trigger` that opens it. */
 	handle: LightboxHandle;
@@ -36,7 +36,7 @@ export function AutoSizedImage({
 	payload,
 	onPressIn,
 }: AutoSizedImageProps) {
-	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumb ? 'loading' : 'error');
+	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumbnail ? 'loading' : 'error');
 	const [largeAlt] = useLargeAltBadgeEnabled();
 
 	const measure = useCallback((node: HTMLImageElement | null) => {
@@ -75,7 +75,7 @@ export function AutoSizedImage({
 						isContain && styles.imageContain,
 						status === 'loading' && styles.loading,
 					)}
-					src={image.thumb}
+					src={image.thumbnail}
 					alt={image.alt}
 					loading="lazy"
 					onError={() => setStatus('error')}
