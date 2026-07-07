@@ -201,6 +201,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 					failResume();
 				}
 			});
+			diag('resume:subscribed', { hasListeners: sessionDropped.hasListeners() });
 			try {
 				await resumed.validate();
 				diag('resume:validate-resolved');
@@ -226,8 +227,12 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			}
 		};
 
-		void resume();
+		resume().then(
+			() => diag('resume:fn-settled'),
+			(e) => diag('resume:fn-rejected', errInfo(e)),
+		);
 		return () => {
+			diag('resume:effect-cleanup');
 			cancelled = true;
 		};
 	}, [boot, bootAccount]);

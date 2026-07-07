@@ -51,7 +51,7 @@ export function createOAuthFetchHandler(oauthAgent: OAuthUserAgent): FetchHandle
 		// out of it means that refresh failed and the session is unusable.
 		if (!dropped && isInvalidTokenResponse(response)) {
 			dropped = true;
-			diag('net:sessionDropped', { url: diagUrl(url) });
+			diag('net:sessionDropped', { hasListeners: sessionDropped.hasListeners(), url: diagUrl(url) });
 			sessionDropped.emit();
 		}
 		return response;

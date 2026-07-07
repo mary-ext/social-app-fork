@@ -14,6 +14,13 @@ export function diag(event: string, data?: Record<string, unknown>) {
 	buffer.push({ t: Math.round(performance.now()), event, data });
 }
 
+if (typeof window !== 'undefined') {
+	window.addEventListener('unhandledrejection', (ev) =>
+		diag('window:unhandledrejection', errInfo(ev.reason)),
+	);
+	window.addEventListener('error', (ev) => diag('window:error', { message: ev.message }));
+}
+
 export function errInfo(e: unknown): Record<string, unknown> {
 	return e instanceof Error ? { message: e.message, name: e.name } : { value: String(e) };
 }
