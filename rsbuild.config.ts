@@ -90,6 +90,7 @@ export default defineConfig(({ envMode }) => {
 		output: {
 			cleanDistPath: true,
 			distPath: { root: 'web-build' },
+			sourceMap: { js: 'source-map' },
 			minify: {
 				jsOptions: {
 					minimizerOptions: {
