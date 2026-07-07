@@ -22,7 +22,6 @@ import {
 	resumeOAuthSession,
 } from './agent';
 import type { Clients } from './clients';
-import { diag, errInfo } from './diag';
 import { IS_OAUTH_CALLBACK, startOAuthSignIn } from './oauth';
 
 export type { SessionAccount } from '#/state/session/types';
@@ -72,7 +71,6 @@ function dropToGuestSession(
 	setCurrentDid: (did: string | undefined) => void,
 	setStatus: (status: SessionBootStatus) => void,
 ) {
-	diag('dropToGuestSession');
 	writeSession({ accounts, currentAccountDid: undefined });
 	setClients(createGuestClients());
 	setCurrentDid(undefined);
@@ -158,22 +156,17 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		// the next boot doesn't retry it.
 		const failResume = () => {
 			if (settled) {
-				diag('failResume:already-settled');
 				return;
 			}
 			settled = true;
-			diag('failResume:dropping');
 			dropToGuestSession(boot.accounts, setClients, setCurrentDid, setStatus);
 		};
 
 		const resume = async () => {
-			diag('resume:start', { did: bootAccount.did });
 			let resumed: { clients: Clients; validate: () => Promise<SessionAccount> };
 			try {
 				resumed = await optimisticOAuthSession(bootAccount);
-				diag('resume:optimistic-ok');
 			} catch (resumeError) {
-				diag('resume:optimistic-threw', errInfo(resumeError));
 				if (cancelled) {
 					return;
 				}
@@ -191,30 +184,21 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			setClients(resumed.clients);
 			setCurrentDid(bootAccount.did);
 			setStatus('validating');
-			diag('resume:validating');
 
 			// A session dropped by live traffic during validation fails the resume;
 			// the global dropped-session listener stays off until this settles.
 			const unlistenDropped = sessionDropped.subscribe(() => {
-				diag('resume:sessionDropped-during-validate', { cancelled });
 				if (!cancelled) {
 					failResume();
 				}
 			});
-			diag('resume:subscribed', { hasListeners: sessionDropped.hasListeners() });
 			try {
 				await resumed.validate();
-				diag('resume:validate-resolved');
 			} catch (validationError) {
 				// this binding must stay distinctly named from the optimistic catch above (not both
 				// `e`): rspack/swc miscompiles two sibling `catch (e)` blocks in one function, renaming
 				// the second binding but not its body references, which throws `ReferenceError` in the
 				// minified build and silently skips failResume() — the stored session then never drops.
-				diag('resume:validate-threw', {
-					cancelled,
-					fatal: isFatalSessionError(validationError),
-					...errInfo(validationError),
-				});
 				if (cancelled) {
 					return;
 				}
@@ -230,17 +214,12 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			}
 			if (!cancelled && !settled) {
 				settled = true;
-				diag('resume:idle');
 				setStatus('idle');
 			}
 		};
 
-		resume().then(
-			() => diag('resume:fn-settled'),
-			(e) => diag('resume:fn-rejected', errInfo(e)),
-		);
+		void resume();
 		return () => {
-			diag('resume:effect-cleanup');
 			cancelled = true;
 		};
 	}, [boot, bootAccount]);
@@ -273,12 +252,10 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	// "session expired" toast. Held off while the boot resume is still settling,
 	// where it drops the session itself.
 	useEffect(() => {
-		diag('global:listener-effect', { hasCurrentDid: currentDid !== undefined, status });
 		if (currentDid === undefined || status === 'resuming' || status === 'validating') {
 			return;
 		}
 		return sessionDropped.subscribe(() => {
-			diag('global:sessionDropped', { status });
 			dropToGuestSession(accounts, setClients, setCurrentDid, setStatus);
 		});
 	}, [accounts, currentDid, status]);

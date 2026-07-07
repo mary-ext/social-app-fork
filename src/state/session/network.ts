@@ -2,8 +2,6 @@ import type { OAuthUserAgent } from '@atcute/oauth-browser-client';
 
 import { networkConfirmed, networkLost, sessionDropped } from '#/state/events';
 
-import { diag, diagUrl } from './diag';
-
 /**
  * A fetch handler shape compatible with both `@atproto/api`'s session manager and `@atcute/client`'s `Client`
  * — both call it with a URL/pathname and a `RequestInit`.
@@ -43,15 +41,10 @@ export function createOAuthFetchHandler(oauthAgent: OAuthUserAgent): FetchHandle
 	let dropped = false;
 	return withNetworkEvents(async (url: string, init: RequestInit) => {
 		const response = await oauthAgent.handle(url, withReadableStreamDuplex(init));
-		if (response.status === 401) {
-			const auth = response.headers.get('www-authenticate');
-			diag('net:401', { authPrefix: auth?.slice(0, 32), hasWwwAuth: auth != null, url: diagUrl(url) });
-		}
 		// `handle` refreshes tokens on its own; an invalid-token 401 coming back
 		// out of it means that refresh failed and the session is unusable.
 		if (!dropped && isInvalidTokenResponse(response)) {
 			dropped = true;
-			diag('net:sessionDropped', { hasListeners: sessionDropped.hasListeners(), url: diagUrl(url) });
 			sessionDropped.emit();
 		}
 		return response;
