@@ -10,6 +10,7 @@ import {
 import { networkRetry } from '#/lib/async/retry';
 
 import { type Clients, createOAuthClients, createPublicClients } from './clients';
+import { diag, errInfo } from './diag';
 import { configureModerationForAccount, configureModerationForGuest } from './moderation';
 import { configureAppOAuth } from './oauth';
 import type { SessionAccount } from './types';
@@ -140,11 +141,28 @@ export async function optimisticOAuthSession(
  * @throws {TokenRefreshError} if the stored session can no longer be refreshed
  */
 async function validateResumedSession(oauthAgent: OAuthUserAgent, pds: Client): Promise<SessionAccount> {
-	if (tokenExpiringWithin(oauthAgent.session, TOKEN_REFRESH_LEEWAY_MS)) {
+	const expiring = tokenExpiringWithin(oauthAgent.session, TOKEN_REFRESH_LEEWAY_MS);
+	diag('validate:start', { expiresAt: oauthAgent.session.token.expires_at, expiring });
+	if (expiring) {
 		// `noCache` forces the refresh: the leeway window is wider than the
 		// library's own staleness threshold, so a plain getSession() here
 		// would still hand back the soon-to-expire token.
-		await oauthAgent.getSession({ noCache: true });
+		diag('validate:refresh-start');
+		try {
+			await oauthAgent.getSession({ noCache: true });
+			diag('validate:refresh-ok');
+		} catch (e) {
+			diag('validate:refresh-threw', errInfo(e));
+			throw e;
+		}
 	}
-	return refreshSession(pds);
+	diag('validate:getSession-start');
+	try {
+		const account = await refreshSession(pds);
+		diag('validate:getSession-ok');
+		return account;
+	} catch (e) {
+		diag('validate:getSession-threw', errInfo(e));
+		throw e;
+	}
 }
