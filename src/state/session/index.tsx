@@ -172,13 +172,13 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			try {
 				resumed = await optimisticOAuthSession(bootAccount);
 				diag('resume:optimistic-ok');
-			} catch (e) {
-				diag('resume:optimistic-threw', errInfo(e));
+			} catch (resumeError) {
+				diag('resume:optimistic-threw', errInfo(resumeError));
 				if (cancelled) {
 					return;
 				}
-				if (!(e instanceof TokenRefreshError)) {
-					logger.error('session: boot resume failed', { message: errorMessage(e) });
+				if (!(resumeError instanceof TokenRefreshError)) {
+					logger.error('session: boot resume failed', { message: errorMessage(resumeError) });
 				}
 				failResume();
 				return;
@@ -205,17 +205,25 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			try {
 				await resumed.validate();
 				diag('resume:validate-resolved');
-			} catch (e) {
-				diag('resume:validate-threw', { cancelled, fatal: isFatalSessionError(e), ...errInfo(e) });
+			} catch (validationError) {
+				// this binding must stay distinctly named from the optimistic catch above (not both
+				// `e`): rspack/swc miscompiles two sibling `catch (e)` blocks in one function, renaming
+				// the second binding but not its body references, which throws `ReferenceError` in the
+				// minified build and silently skips failResume() — the stored session then never drops.
+				diag('resume:validate-threw', {
+					cancelled,
+					fatal: isFatalSessionError(validationError),
+					...errInfo(validationError),
+				});
 				if (cancelled) {
 					return;
 				}
-				if (isFatalSessionError(e)) {
+				if (isFatalSessionError(validationError)) {
 					failResume();
 				} else {
 					// A transient failure (e.g. network) — keep the optimistic session;
 					// live traffic will surface a genuine failure.
-					logger.error('session: boot validation failed', { message: errorMessage(e) });
+					logger.error('session: boot validation failed', { message: errorMessage(validationError) });
 				}
 			} finally {
 				unlistenDropped();
