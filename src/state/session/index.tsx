@@ -195,10 +195,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			try {
 				await resumed.validate();
 			} catch (validationError) {
-				// this binding must stay distinctly named from the optimistic catch above (not both
-				// `e`): rspack/swc miscompiles two sibling `catch (e)` blocks in one function, renaming
-				// the second binding but not its body references, which throws `ReferenceError` in the
-				// minified build and silently skips failResume() — the stored session then never drops.
+				// these catch bindings must stay distinctly named, SWC React Compiler
+				// seems to have an issue with renaming bindings that shares names.
 				if (cancelled) {
 					return;
 				}
