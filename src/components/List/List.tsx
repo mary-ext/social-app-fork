@@ -1,28 +1,14 @@
-import {
-	createContext,
-	memo,
-	type ReactNode,
-	type Ref,
-	startTransition,
-	use,
-	useEffect,
-	useEffectEvent,
-	useImperativeHandle,
-	useRef,
-} from 'react';
+import { memo, type ReactNode, type Ref, startTransition, use, useImperativeHandle, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
-import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import * as css from '#/components/List/List.css';
 
-/** A post is "seen" once this much of it has been visible for {@link ON_ITEM_SEEN_WAIT_DURATION}. */
-const ON_ITEM_SEEN_INTERSECTION_OPTS = { rootMargin: '-200px 0px -200px 0px' };
-const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3;
+import { ItemSeenContext, ItemSeenObserver } from './ItemSeenObserver';
 
 export type ListRenderItemInfo<ItemT> = {
 	index: number;
@@ -103,10 +89,6 @@ export function List<ItemT>({
 	renderItem,
 	scrollRoot,
 }: ListProps<ItemT>) {
-	const containerRef = useRef<HTMLDivElement>(null);
-
-	useResizeObserver(containerRef, onContentSizeChange);
-
 	useImperativeHandle(
 		ref,
 		() => ({
@@ -165,7 +147,21 @@ export function List<ItemT>({
 
 	return (
 		<div
-			ref={containerRef}
+			ref={(node) => {
+				if (onContentSizeChange === undefined || node === null) {
+					return;
+				}
+
+				const observer = new ResizeObserver((entries) => {
+					const entry = entries[0]!;
+					const rect = entry.contentRect;
+
+					onContentSizeChange(rect.width, rect.height);
+				});
+
+				observer.observe(node);
+				return () => observer.disconnect();
+			}}
 			className={css.container}
 			style={skipOffscreen ? assignInlineVars({ [css.estimateHeightVar]: `${estimateHeight}px` }) : undefined}
 		>
@@ -200,82 +196,6 @@ export function List<ItemT>({
 	);
 }
 
-/** The shared seen-observer handed to rows through context: register a row's element against its item. */
-type SeenObserver = {
-	disconnect(): void;
-	register(node: Element, item: unknown): void;
-	unregister(node: Element): void;
-};
-
-const ItemSeenContext = createContext<SeenObserver | null>(null);
-
-/**
- * owns the single {@link IntersectionObserver} shared by every seen-tracked row and reports each row's item to
- * {@link onItemSeen} once it dwells. mounted only while `onItemSeen` is set, so the observer exists exactly
- * when a row registers with it.
- */
-function ItemSeenObserver<ItemT>({
-	children,
-	onItemSeen,
-	root,
-}: {
-	children: ReactNode;
-	onItemSeen: (item: ItemT) => void;
-	root: React.RefObject<HTMLElement | null> | undefined;
-}) {
-	// Read the latest callback without rebuilding the observer when its identity changes.
-	const reportSeen = useNonReactiveCallback(onItemSeen);
-
-	const seen = useConstant(() => {
-		const rows = new Map<Element, { item: ItemT; timeout?: ReturnType<typeof setTimeout> }>();
-		const observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					const row = rows.get(entry.target);
-					if (!row) {
-						continue;
-					}
-
-					if (entry.isIntersecting) {
-						row.timeout ??= setTimeout(() => {
-							row.timeout = undefined;
-							reportSeen(row.item);
-						}, ON_ITEM_SEEN_WAIT_DURATION);
-					} else if (row.timeout != null) {
-						clearTimeout(row.timeout);
-						row.timeout = undefined;
-					}
-				}
-			},
-			{ ...ON_ITEM_SEEN_INTERSECTION_OPTS, root: root?.current ?? null },
-		);
-
-		return {
-			disconnect() {
-				observer.disconnect();
-				rows.forEach((row) => {
-					if (row.timeout != null) clearTimeout(row.timeout);
-				});
-			},
-			register(node: Element, item: ItemT) {
-				rows.set(node, { item });
-				observer.observe(node);
-			},
-			unregister(node: Element) {
-				const row = rows.get(node);
-				if (row?.timeout != null) clearTimeout(row.timeout);
-				rows.delete(node);
-				observer.unobserve(node);
-			},
-		};
-	});
-
-	useEffect(() => seen.disconnect, [seen]);
-
-	return <ItemSeenContext value={seen}>{children}</ItemSeenContext>;
-}
-
-/** The universal row wrapper: registers its element with the shared {@link ItemSeenObserver} when present. */
 const Row = memo(function Row<ItemT>({
 	index,
 	item,
@@ -313,7 +233,6 @@ const Row = memo(function Row<ItemT>({
 
 const thresholdMargin = (threshold: number | undefined) => `${(threshold ?? 0) * 100}%`;
 
-/** A sentinel that reports when it enters/leaves the expanded viewport. Zero-size unless styled. */
 function Visibility({
 	bottomMargin = '0px',
 	className = css.sentinel,
@@ -329,54 +248,36 @@ function Visibility({
 	style?: React.CSSProperties;
 	topMargin?: string;
 }) {
-	const tailRef = useRef<HTMLDivElement>(null);
-	const isIntersecting = useRef(false);
+	const isIntersecting = useRef<boolean | undefined>(undefined);
 
-	const handleIntersection = useEffectEvent((entries: IntersectionObserverEntry[]) => {
-		batchedUpdates(() => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting !== isIntersecting.current) {
-					isIntersecting.current = entry.isIntersecting;
-					onVisibleChange(entry.isIntersecting);
+	return (
+		<div
+			ref={(node) => {
+				if (node === null) {
+					return;
 				}
-			});
-		});
-	});
 
-	useEffect(() => {
-		const observer = new IntersectionObserver(handleIntersection, {
-			root: root?.current ?? null,
-			rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
-		});
-		const tail = tailRef.current;
-		if (tail) observer.observe(tail);
-		return () => {
-			if (tail) observer.unobserve(tail);
-		};
-	}, [bottomMargin, root, topMargin]);
+				const observer = new IntersectionObserver(
+					(entries) => {
+						const entry = entries[0]!;
+						const next = entry.isIntersecting;
 
-	return <div ref={tailRef} className={className} style={style} />;
-}
+						if (isIntersecting.current !== next) {
+							isIntersecting.current = next;
+							batchedUpdates(() => onVisibleChange(next));
+						}
+					},
+					{
+						root: root?.current ?? null,
+						rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
+					},
+				);
 
-function useResizeObserver(
-	ref: React.RefObject<Element | null>,
-	onResize: undefined | ((width: number, height: number) => void),
-) {
-	const handleResize = useEffectEvent(onResize ?? (() => {}));
-	const isActive = !!onResize;
-	useEffect(() => {
-		if (!isActive) return;
-		const node = ref.current;
-		if (!node) return;
-		const observer = new ResizeObserver((entries) => {
-			batchedUpdates(() => {
-				for (const entry of entries) {
-					const rect = entry.contentRect;
-					handleResize(rect.width, rect.height);
-				}
-			});
-		});
-		observer.observe(node);
-		return () => observer.unobserve(node);
-	}, [isActive, ref]);
+				observer.observe(node);
+				return () => observer.disconnect();
+			}}
+			className={className}
+			style={style}
+		/>
+	);
 }
