@@ -20,7 +20,7 @@ export type TooltipProps = {
 /** A hover/focus hint built on Base UI's Tooltip, wrapping a single ref-forwarding trigger element. */
 export function Tooltip({ children, label, side = 'top' }: TooltipProps) {
 	return (
-		<BaseTooltip.Root>
+		<BaseTooltip.Root disableHoverablePopup>
 			<BaseTooltip.Trigger render={children} />
 			<BaseTooltip.Portal>
 				<BaseTooltip.Positioner className={styles.positioner} side={side} sideOffset={6}>
