@@ -1,12 +1,13 @@
 import {
+	createContext,
 	memo,
 	type ReactNode,
 	type Ref,
 	startTransition,
+	use,
 	useEffect,
 	useEffectEvent,
 	useImperativeHandle,
-	useMemo,
 	useRef,
 	useState,
 } from 'react';
@@ -15,6 +16,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
+import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import * as css from '#/components/List/List.css';
@@ -140,10 +142,26 @@ export function List<ItemT>({
 		startTransition(() => onScrolledDownChange?.(!isAboveTheFold));
 	});
 
-	const seen = useItemSeenObserver(onItemSeen, scrollRoot);
-
 	const isEmpty = !data || data.length === 0;
 	const skipOffscreen = estimateHeight != null;
+
+	let children = ListEmptyComponent;
+
+	if (!isEmpty) {
+		children = data.map((item, index) => {
+			const key = keyExtractor(item, index);
+			const skip = skipOffscreen && !disableSkipOffscreen?.(item, index);
+			return <Row key={key} index={index} item={item} renderItem={renderItem} skip={skip} />;
+		});
+
+		if (onItemSeen !== undefined) {
+			children = (
+				<ItemSeenObserver onItemSeen={onItemSeen} root={scrollRoot}>
+					{children}
+				</ItemSeenObserver>
+			);
+		}
+	}
 
 	return (
 		<div
@@ -154,6 +172,7 @@ export function List<ItemT>({
 			{onScrolledDownChange && (
 				<Visibility className={css.aboveTheFold} onVisibleChange={onAboveTheFoldChange} root={scrollRoot} />
 			)}
+
 			{onStartReached && !isEmpty && (
 				<EdgeVisibility
 					containerRef={containerRef}
@@ -162,16 +181,11 @@ export function List<ItemT>({
 					topMargin={thresholdMargin(onStartReachedThreshold)}
 				/>
 			)}
+
 			{ListHeaderComponent}
-			{isEmpty
-				? ListEmptyComponent
-				: data.map((item, index) => {
-						const key = keyExtractor(item, index);
-						const skip = skipOffscreen && !disableSkipOffscreen?.(item, index);
-						return (
-							<Row key={key} index={index} item={item} renderItem={renderItem} seen={seen} skip={skip} />
-						);
-					})}
+
+			{children}
+
 			{onEndReached && !isEmpty && (
 				<EdgeVisibility
 					bottomMargin={thresholdMargin(onEndReachedThreshold)}
@@ -180,33 +194,41 @@ export function List<ItemT>({
 					root={scrollRoot}
 				/>
 			)}
+
 			{ListFooterComponent}
 		</div>
 	);
 }
 
-/** Tracks per-row "seen" dwell against a single shared {@link IntersectionObserver}. */
-type SeenObserver<ItemT> = {
-	observe: (row: Element, item: ItemT) => void;
-	unobserve: (row: Element) => void;
+/** The shared seen-observer handed to rows through context: register a row's element against its item. */
+type SeenObserver = {
+	disconnect(): void;
+	register(node: Element, item: unknown): void;
+	unregister(node: Element): void;
 };
 
-/**
- * creates a single {@link IntersectionObserver} for the entire list and routes each entry back to its row.
- * returns `null` when disabled.
- */
-function useItemSeenObserver<ItemT>(
-	onItemSeen: ((item: ItemT) => void) | undefined,
-	root: React.RefObject<HTMLElement | null> | undefined,
-): SeenObserver<ItemT> | null {
-	// Read the latest callback without rebuilding the observer when its identity changes.
-	const reportSeen = useNonReactiveCallback(onItemSeen ?? (() => {}));
-	const enabled = !!onItemSeen;
+const ItemSeenContext = createContext<SeenObserver | null>(null);
 
-	const observer = useMemo(() => {
-		if (!enabled) return null;
+/**
+ * owns the single {@link IntersectionObserver} shared by every seen-tracked row and reports each row's item to
+ * {@link onItemSeen} once it dwells. mounted only while `onItemSeen` is set, so the observer exists exactly
+ * when a row registers with it.
+ */
+function ItemSeenObserver<ItemT>({
+	children,
+	onItemSeen,
+	root,
+}: {
+	children: ReactNode;
+	onItemSeen: (item: ItemT) => void;
+	root: React.RefObject<HTMLElement | null> | undefined;
+}) {
+	// Read the latest callback without rebuilding the observer when its identity changes.
+	const reportSeen = useNonReactiveCallback(onItemSeen);
+
+	const seen = useConstant(() => {
 		const rows = new Map<Element, { item: ItemT; timeout?: ReturnType<typeof setTimeout> }>();
-		const io = new IntersectionObserver(
+		const observer = new IntersectionObserver(
 			(entries) => {
 				for (const entry of entries) {
 					const row = rows.get(entry.target);
@@ -227,61 +249,58 @@ function useItemSeenObserver<ItemT>(
 			},
 			{ ...ON_ITEM_SEEN_INTERSECTION_OPTS, root: root?.current ?? null },
 		);
+
 		return {
-			rows,
-			io,
-			observe(row: Element, item: ItemT) {
-				rows.set(row, { item });
-				io.observe(row);
+			disconnect() {
+				observer.disconnect();
+				rows.forEach((row) => {
+					if (row.timeout != null) clearTimeout(row.timeout);
+				});
 			},
-			unobserve(row: Element) {
-				const rec = rows.get(row);
-				if (rec?.timeout != null) clearTimeout(rec.timeout);
-				rows.delete(row);
-				io.unobserve(row);
+			register(node: Element, item: ItemT) {
+				rows.set(node, { item });
+				observer.observe(node);
+			},
+			unregister(node: Element) {
+				const row = rows.get(node);
+				if (row?.timeout != null) clearTimeout(row.timeout);
+				rows.delete(node);
+				observer.unobserve(node);
 			},
 		};
-		// `reportSeen` is stable; rebuild only when toggling the feature on/off.
-	}, [enabled, reportSeen, root]);
+	});
 
-	useEffect(() => {
-		return () => {
-			observer?.io.disconnect();
-			observer?.rows.forEach((rec) => {
-				if (rec.timeout != null) clearTimeout(rec.timeout);
-			});
-		};
-	}, [observer]);
+	useEffect(() => seen.disconnect, [seen]);
 
-	return observer;
+	return <ItemSeenContext value={seen}>{children}</ItemSeenContext>;
 }
 
-/** The universal row wrapper: registers with the shared seen-observer when enabled. */
+/** The universal row wrapper: registers its element with the shared {@link ItemSeenObserver} when present. */
 const Row = memo(function Row<ItemT>({
 	index,
 	item,
 	renderItem,
-	seen,
 	skip,
 }: {
 	index: number;
 	item: ItemT;
 	renderItem: ListRenderItem<ItemT>;
-	seen: SeenObserver<ItemT> | null;
 	skip: boolean;
 }) {
-	const rowRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		if (!seen) return;
-		const row = rowRef.current;
-		if (!row) return;
-		seen.observe(row, item);
-		return () => seen.unobserve(row);
-	}, [seen, item]);
+	const seen = use(ItemSeenContext);
 
 	return (
-		<div ref={rowRef} className={clsx(css.row, skip && css.rowSkip)}>
+		<div
+			ref={(node) => {
+				if (seen === null || node === null) {
+					return;
+				}
+
+				seen.register(node, item);
+				return () => seen.unregister(node);
+			}}
+			className={clsx(css.row, skip && css.rowSkip)}
+		>
 			{renderItem({ index, item })}
 		</div>
 	);
@@ -289,7 +308,6 @@ const Row = memo(function Row<ItemT>({
 	index: number;
 	item: ItemT;
 	renderItem: ListRenderItem<ItemT>;
-	seen: SeenObserver<ItemT> | null;
 	skip: boolean;
 }) => ReactNode;
 
