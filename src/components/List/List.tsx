@@ -9,7 +9,6 @@ import {
 	useEffectEvent,
 	useImperativeHandle,
 	useRef,
-	useState,
 } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
@@ -143,6 +142,7 @@ export function List<ItemT>({
 	});
 
 	const isEmpty = !data || data.length === 0;
+	const itemCount = data?.length ?? 0;
 	const skipOffscreen = estimateHeight != null;
 
 	let children = ListEmptyComponent;
@@ -174,8 +174,8 @@ export function List<ItemT>({
 			)}
 
 			{onStartReached && !isEmpty && (
-				<EdgeVisibility
-					containerRef={containerRef}
+				<Visibility
+					key={itemCount}
 					onVisibleChange={onStartVisibleChange}
 					root={scrollRoot}
 					topMargin={thresholdMargin(onStartReachedThreshold)}
@@ -187,9 +187,9 @@ export function List<ItemT>({
 			{children}
 
 			{onEndReached && !isEmpty && (
-				<EdgeVisibility
+				<Visibility
+					key={itemCount}
 					bottomMargin={thresholdMargin(onEndReachedThreshold)}
-					containerRef={containerRef}
 					onVisibleChange={onEndVisibleChange}
 					root={scrollRoot}
 				/>
@@ -312,33 +312,6 @@ const Row = memo(function Row<ItemT>({
 }) => ReactNode;
 
 const thresholdMargin = (threshold: number | undefined) => `${(threshold ?? 0) * 100}%`;
-
-/** wraps {@link Visibility} to rebuild its observer whenever the content height changes. */
-function EdgeVisibility({
-	bottomMargin,
-	containerRef,
-	onVisibleChange,
-	root,
-	topMargin,
-}: {
-	bottomMargin?: string;
-	containerRef: React.RefObject<Element | null>;
-	onVisibleChange: (isVisible: boolean) => void;
-	root?: React.RefObject<Element | null>;
-	topMargin?: string;
-}) {
-	const [containerHeight, setContainerHeight] = useState(0);
-	useResizeObserver(containerRef, (_width, height) => setContainerHeight(height));
-	return (
-		<Visibility
-			key={containerHeight}
-			bottomMargin={bottomMargin}
-			onVisibleChange={onVisibleChange}
-			root={root}
-			topMargin={topMargin}
-		/>
-	);
-}
 
 /** A sentinel that reports when it enters/leaves the expanded viewport. Zero-size unless styled. */
 function Visibility({
