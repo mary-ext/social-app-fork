@@ -1,7 +1,4 @@
-import { createVar, style } from '@vanilla-extract/css';
-
-/** Off-screen-row placeholder height; set on the container, read by each row's content-visibility hint. */
-export const estimateHeightVar = createVar();
+import { style } from '@vanilla-extract/css';
 
 /** content container. */
 export const container = style({
@@ -12,18 +9,8 @@ export const container = style({
 export const row = style({
 	display: 'flex',
 	flexDirection: 'column',
-});
-
-/**
- * lets the row skip layout/paint while off screen using `content-visibility: auto`, sized by
- * {@link estimateHeightVar} until first rendered.
- *
- * Applied per row so specific rows can opt out to avoid breaking scroll-anchor pins when scrolling into view.
- */
-export const rowSkip = style({
-	// only the block axis is estimated; width stays at the flex-stretched container width.
-	containIntrinsicHeight: `auto ${estimateHeightVar}`,
-	contentVisibility: 'auto',
+	flexShrink: 0,
+	contain: 'content',
 });
 
 /**

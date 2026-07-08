@@ -1,13 +1,6 @@
-import {
-	createContext,
-	useCallback,
-	useContext,
-	useEffect,
-	useId,
-	useRef,
-	useState,
-	useSyncExternalStore,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useId, useRef, useState } from 'react';
+
+import { useWindowHeight } from '#/lib/hooks/use-window-height';
 
 const Context = createContext<{
 	activeViewId: string | null;
@@ -15,15 +8,6 @@ const Context = createContext<{
 	sendViewPosition: (viewId: string, y: number) => void;
 } | null>(null);
 Context.displayName = 'ActiveVideoWebContext';
-
-function subscribeWindowResize(onChange: () => void) {
-	window.addEventListener('resize', onChange);
-	return () => window.removeEventListener('resize', onChange);
-}
-
-function useWindowHeight() {
-	return useSyncExternalStore(subscribeWindowResize, () => window.innerHeight);
-}
 
 export function Provider({ children }: { children: React.ReactNode }) {
 	const [activeViewId, setActiveViewId] = useState<string | null>(null);

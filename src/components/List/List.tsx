@@ -1,14 +1,14 @@
-import { memo, type ReactNode, type Ref, startTransition, use, useImperativeHandle, useRef } from 'react';
-
-import { assignInlineVars } from '@vanilla-extract/dynamic';
-import { clsx } from 'clsx';
+import { type ReactNode, type Ref, startTransition, useImperativeHandle, useRef } from 'react';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
+import { useWindowHeight } from '#/lib/hooks/use-window-height';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import * as css from '#/components/List/List.css';
 
-import { ItemSeenContext, ItemSeenObserver } from './ItemSeenObserver';
+import { ItemSeenObserver } from './ItemSeenObserver';
+import { Row } from './Row';
+import { overscanRatio, VirtualRow, VirtualRowObserver } from './VirtualRow';
 
 export type ListRenderItemInfo<ItemT> = {
 	index: number;
@@ -28,9 +28,10 @@ export type ListRef = React.RefObject<ListMethods | null>;
 export type ListProps<ItemT> = {
 	data: readonly ItemT[] | null | undefined;
 	/**
-	 * opts a row out of off-screen render-skipping (see {@link estimateHeight}).
+	 * opts a row out of virtualization (see {@link estimateHeight}), keeping it mounted at all times.
 	 *
-	 * @param row the row to check.
+	 * @param item the row's item.
+	 * @param index the row's index.
 	 * @returns true if the row's late height realization must not shift surrounding content (e.g. scroll-anchor
 	 *   targets).
 	 */
@@ -42,7 +43,10 @@ export type ListProps<ItemT> = {
 	ListFooterComponent?: ReactNode;
 	/** Rendered before the rows. */
 	ListHeaderComponent?: ReactNode;
-	/** estimated row height in pixels to enable off-screen render-skipping using `content-visibility: auto` */
+	/**
+	 * estimated row height in pixels. when set, off-screen rows are virtualized (their content unmounted),
+	 * using this as the placeholder height until a row has been measured.
+	 */
 	estimateHeight?: number;
 	/** Fires when the rendered content's size changes (via `ResizeObserver`). */
 	onContentSizeChange?: (width: number, height: number) => void;
@@ -67,8 +71,8 @@ export type ListProps<ItemT> = {
 };
 
 /**
- * a non-virtualizing list bound to the document scroll that renders all rows and uses IntersectionObserver
- * for edge detection.
+ * renders `data` as a vertical list, calling the `on*` callbacks as rows approach the scroll edges. set
+ * `estimateHeight` to virtualize off-screen rows.
  */
 export function List<ItemT>({
 	data,
@@ -123,18 +127,48 @@ export function List<ItemT>({
 		startTransition(() => onScrolledDownChange?.(!isAboveTheFold));
 	});
 
+	const windowHeight = useWindowHeight();
+
 	const isEmpty = !data || data.length === 0;
 	const itemCount = data?.length ?? 0;
-	const skipOffscreen = estimateHeight != null;
+	const virtualize = estimateHeight != null;
+	// eager-mount the rows the observer would keep alive around the viewport, so they don't flash blank first.
+	const eagerCount = estimateHeight != null ? Math.ceil((windowHeight * overscanRatio) / estimateHeight) : 0;
 
 	let children = ListEmptyComponent;
 
 	if (!isEmpty) {
-		children = data.map((item, index) => {
-			const key = keyExtractor(item, index);
-			const skip = skipOffscreen && !disableSkipOffscreen?.(item, index);
-			return <Row key={key} index={index} item={item} renderItem={renderItem} skip={skip} />;
-		});
+		if (virtualize) {
+			children = (
+				<VirtualRowObserver root={scrollRoot}>
+					{data.map((item, index) => {
+						const key = keyExtractor(item, index);
+						const virtual = !disableSkipOffscreen?.(item, index);
+
+						if (virtual) {
+							return (
+								<VirtualRow
+									key={key}
+									estimateHeight={estimateHeight}
+									index={index}
+									initialVisible={index < eagerCount}
+									item={item}
+									renderItem={renderItem}
+								/>
+							);
+						} else {
+							return <Row key={key} index={index} item={item} renderItem={renderItem} />;
+						}
+					})}
+				</VirtualRowObserver>
+			);
+		} else {
+			children = data.map((item, index) => {
+				const key = keyExtractor(item, index);
+
+				return <Row key={key} index={index} item={item} renderItem={renderItem} />;
+			});
+		}
 
 		if (onItemSeen !== undefined) {
 			children = (
@@ -163,7 +197,6 @@ export function List<ItemT>({
 				return () => observer.disconnect();
 			}}
 			className={css.container}
-			style={skipOffscreen ? assignInlineVars({ [css.estimateHeightVar]: `${estimateHeight}px` }) : undefined}
 		>
 			{onScrolledDownChange && (
 				<Visibility className={css.aboveTheFold} onVisibleChange={onAboveTheFoldChange} root={scrollRoot} />
@@ -195,41 +228,6 @@ export function List<ItemT>({
 		</div>
 	);
 }
-
-const Row = memo(function Row<ItemT>({
-	index,
-	item,
-	renderItem,
-	skip,
-}: {
-	index: number;
-	item: ItemT;
-	renderItem: ListRenderItem<ItemT>;
-	skip: boolean;
-}) {
-	const seen = use(ItemSeenContext);
-
-	return (
-		<div
-			ref={(node) => {
-				if (seen === null || node === null) {
-					return;
-				}
-
-				seen.register(node, item);
-				return () => seen.unregister(node);
-			}}
-			className={clsx(css.row, skip && css.rowSkip)}
-		>
-			{renderItem({ index, item })}
-		</div>
-	);
-}) as <ItemT>(props: {
-	index: number;
-	item: ItemT;
-	renderItem: ListRenderItem<ItemT>;
-	skip: boolean;
-}) => ReactNode;
 
 const thresholdMargin = (threshold: number | undefined) => `${(threshold ?? 0) * 100}%`;
 
