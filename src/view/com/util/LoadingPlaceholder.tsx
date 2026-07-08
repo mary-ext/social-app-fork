@@ -1,6 +1,5 @@
 import { type DimensionValue, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
-import { useConstant } from '#/lib/hooks/use-constant';
 import { s } from '#/lib/styles';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -112,39 +111,6 @@ export function FeedFeedLoadingPlaceholder() {
 			<FeedLoadingPlaceholder />
 			<FeedLoadingPlaceholder />
 			<FeedLoadingPlaceholder />
-		</>
-	);
-}
-
-export function ChatListItemLoadingPlaceholder({ style }: { style?: StyleProp<ViewStyle> }) {
-	const t = useTheme();
-	const random = useConstant(() => Math.random());
-	return (
-		<View style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, t.atoms.bg, style]}>
-			<LoadingPlaceholder width={52} height={52} style={a.rounded_full} />
-			<View>
-				<LoadingPlaceholder width={140} height={12} style={a.mt_xs} />
-				<LoadingPlaceholder width={120} height={8} style={a.mt_sm} />
-				<LoadingPlaceholder width={80 + random * 100} height={8} style={a.mt_sm} />
-			</View>
-		</View>
-	);
-}
-
-export function ChatListLoadingPlaceholder() {
-	return (
-		<>
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
-			<ChatListItemLoadingPlaceholder />
 		</>
 	);
 }

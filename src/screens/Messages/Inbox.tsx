@@ -21,7 +21,6 @@ import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { List } from '#/view/com/util/List';
-import { ChatListLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -40,6 +39,7 @@ import { Text } from '#/components/Typography';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
+import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
 import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
 import { RequestListItem } from './components/RequestListItem';
 import { useIsWithinSplitView } from './components/splitView/context';

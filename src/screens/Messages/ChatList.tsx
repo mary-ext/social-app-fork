@@ -1,13 +1,12 @@
-import { type ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
+import { type ComponentProps, useCallback, useEffect, useRef } from 'react';
 
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { clsx } from 'clsx';
 
 import { useAppState } from '#/lib/appState';
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import type { MessagesTabNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -23,12 +22,9 @@ import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { FAB } from '#/view/com/util/fab/FAB';
-import { List, type ListMethods } from '#/view/com/util/List';
-import { ChatListLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { useBreakpoints } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
@@ -41,13 +37,14 @@ import {
 	MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon,
 } from '#/components/icons/Message';
 import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
-import * as Layout from '#/components/Layout';
+import { List, type ListMethods } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import * as Menu from '#/components/Menu';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
-import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -55,14 +52,10 @@ import { colors } from '#/styles/colors';
 import * as css from './ChatList.css';
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatListItem } from './components/ChatListItem';
+import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
 import { InboxRequests } from './components/InboxRequests';
 import { useIsWithinSplitView } from './components/splitView/context';
 import { splitViewLeftScroll } from './components/splitView/leftColumnScroll';
-
-type WebScrollStyle = Omit<ViewStyle, 'scrollbarColor' | 'scrollbarWidth'> & {
-	scrollbarColor?: string;
-	scrollbarWidth?: 'thin';
-};
 
 type ListItem = {
 	type: 'CONVERSATION';
@@ -89,7 +82,6 @@ export function MessagesScreen(props: Props) {
 export function MessagesScreenInner({ route }: Props) {
 	const { isWithinSplitView } = useIsWithinSplitView();
 	const navigation = useNavigation<NavigationProp>();
-	const t = useTheme();
 	const newChatHandle = Dialog.useDialogHandle();
 	const { data: chatStatus } = useChatActorStatusQuery();
 	const pushToConversation = route.params?.pushToConversation;
@@ -130,7 +122,7 @@ export function MessagesScreenInner({ route }: Props) {
 					message={m['screens.messages.conversation.sayHi']()}
 					icon={BubbleSmileIcon}
 					messageColor="text"
-					iconColor={t.atoms.text.color}
+					iconColor={colors.text}
 					iconSize="4xl"
 					button={
 						chatStatus?.chatDisabled
@@ -152,7 +144,7 @@ export function MessagesScreenInner({ route }: Props) {
 	}
 
 	return (
-		<Layout.Screen testID="messagesScreen">
+		<Layout.Screen>
 			<Header newChatHandle={newChatHandle} chatStatus={chatStatus} />
 			<ChatList newChatHandle={newChatHandle} chatStatus={chatStatus} />
 			{!chatStatus?.chatDisabled && (
@@ -177,18 +169,13 @@ export function ChatList({
 	newChatHandle: Dialog.DialogHandle;
 	chatStatus: ChatStatus | undefined;
 }) {
-	const t = useTheme();
 	const scrollElRef = useRef<ListMethods | null>(null);
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const { isWithinSplitView } = useIsWithinSplitView();
 
-	const openChatControl = useCallback(() => {
+	const openChatControl = () => {
 		newChatHandle.open(null);
-	}, [newChatHandle]);
-
-	const wrappedOpenChatControl = openChatControl;
-
-	const initialNumToRender = useInitialNumToRender({ minItemHeight: 80 });
-	const [isPTRing, setIsPTRing] = useState(false);
+	};
 
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useListConvosQuery({ status: 'accepted' });
@@ -200,41 +187,28 @@ export function ChatList({
 	useRefreshOnFocus(refetch);
 	useRefreshOnFocus(refetchInbox);
 
-	const conversations = useMemo(() => {
-		if (data?.pages) {
-			const conversations = data.pages.flatMap((page) => page.convos);
+	const conversations: ListItem[] = data?.pages
+		? data.pages
+				.flatMap((page) => page.convos)
+				.map((convo) => ({
+					type: 'CONVERSATION',
+					conversation: convo,
+					selected: convo.id === selectedChat,
+				}))
+		: [];
 
-			return conversations.map(
-				(convo) =>
-					({
-						type: 'CONVERSATION',
-						conversation: convo,
-						selected: convo.id === selectedChat,
-					}) as const,
-			) satisfies ListItem[];
-		}
-		return [];
-	}, [data, selectedChat]);
-
-	const onRefresh = useCallback(async () => {
-		setIsPTRing(true);
-		try {
-			await Promise.all([refetch(), refetchInbox()]);
-		} catch (err) {
-			logger.error('Failed to refresh conversations', { message: err });
-		}
-		setIsPTRing(false);
-	}, [refetch, refetchInbox, setIsPTRing]);
-
-	const onEndReached = useCallback(async () => {
+	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
 		try {
 			await fetchNextPage();
 		} catch (err) {
 			logger.error('Failed to load more conversations', { message: err });
 		}
-	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
+	};
 
+	const restoredRef = useRef(false);
+
+	// kept memoized: consumed in a useEffect dep array below, where identity drives re-subscription
 	const onSoftReset = useCallback(async () => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
@@ -250,24 +224,20 @@ export function ChatList({
 		} catch (err) {
 			logger.error('Failed to refresh conversations', { message: err });
 		}
-	}, [scrollElRef, refetch, isWithinSplitView]);
+	}, [refetch, isWithinSplitView]);
 
-	// Restore the saved scroll offset once the list has rendered enough
-	// content to honor it. Module-level ref survives ChatList re-mounts that
-	// happen on in-splitview navigation (see leftColumnScroll.ts).
-	const restoredRef = useRef(false);
-	const onContentSizeChange = useCallback(
-		(_w: number, h: number) => {
-			if (!isWithinSplitView || restoredRef.current) return;
-			const offset = splitViewLeftScroll.current;
-			if (offset > 0 && h >= offset) {
-				scrollElRef.current?.scrollToOffset({ offset, animated: false });
-				// eslint-disable-next-line react-hooks/immutability -- a set-once flag mutated in an event handler; useRef's .current write is the intended escape hatch here
-				restoredRef.current = true;
-			}
-		},
-		[isWithinSplitView, scrollElRef],
-	);
+	const onContentSizeChange = (_width: number, height: number) => {
+		if (!isWithinSplitView || restoredRef.current) return;
+		const offset = splitViewLeftScroll.current;
+		if (offset > 0 && height >= offset) {
+			scrollElRef.current?.scrollToOffset({ offset, animated: false });
+			restoredRef.current = true;
+		}
+	};
+
+	const onLeftColumnScroll = (e: React.UIEvent<HTMLDivElement>) => {
+		splitViewLeftScroll.current = e.currentTarget.scrollTop;
+	};
 
 	const isScreenFocused = useIsFocused();
 	useEffect(() => {
@@ -279,91 +249,76 @@ export function ChatList({
 
 	if (conversations.length === 0) {
 		return (
-			<Layout.Center style={{ minHeight: '100%' }}>
+			<div>
 				{isLoading ? (
 					<ChatListLoadingPlaceholder />
+				) : isError ? (
+					<div className={css.errorWrap}>
+						<CircleInfoIcon size="4xl" fill={colors.textContrastLow} />
+						<Text size="_2xl" weight="semiBold" className={css.errorTitle}>
+							{m['common.error.whoops']()}
+						</Text>
+						<Text size="md" align="center" color="textContrastMedium" className={css.errorMessage}>
+							{cleanError(error) || m['screens.messages.chats.reload.error']()}
+						</Text>
+						<Button
+							label={m['screens.messages.chats.reload.action']()}
+							size="small"
+							color="secondary_inverted"
+							onClick={() => void refetch()}
+						>
+							<ButtonText>{m['common.action.retry']()}</ButtonText>
+							<ButtonIcon icon={RetryIcon} />
+						</Button>
+					</div>
+				) : isWithinSplitView ? (
+					<EmptyState
+						message={m['screens.messages.chats.inboxEmpty']()}
+						icon={InboxLargeIcon}
+						iconSize="4xl"
+						messageColor="text"
+						iconColor={colors.text}
+						className={css.emptyTall}
+					/>
 				) : (
-					<>
-						{isError ? (
-							<>
-								<View style={[a.pt_3xl, a.align_center]}>
-									<CircleInfoIcon size="4xl" fill={colors.textContrastLow} />
-									<Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
-										{m['common.error.whoops']()}
-									</Text>
-									<Text
-										style={[
-											a.text_md,
-											a.pb_xl,
-											a.text_center,
-											a.leading_snug,
-											t.atoms.text_contrast_medium,
-											{ maxWidth: 360 },
-										]}
-									>
-										{cleanError(error) || m['screens.messages.chats.reload.error']()}
-									</Text>
-
-									<Button
-										label={m['screens.messages.chats.reload.action']()}
-										size="small"
-										color="secondary_inverted"
-										onPress={() => void refetch()}
-									>
-										<ButtonText>{m['common.action.retry']()}</ButtonText>
-										<ButtonIcon icon={RetryIcon} />
-									</Button>
-								</View>
-							</>
-						) : isWithinSplitView ? (
-							<EmptyState
-								message={m['screens.messages.chats.inboxEmpty']()}
-								icon={InboxLargeIcon}
-								iconSize="4xl"
-								messageColor="text"
-								iconColor={t.atoms.text.color}
-								className={css.emptyTall}
-							/>
-						) : (
-							<EmptyState
-								message={m['screens.messages.conversation.sayHi']()}
-								icon={BubbleSmileIcon}
-								iconSize="4xl"
-								messageColor="text"
-								iconColor={t.atoms.text.color}
-								button={
-									chatStatus?.chatDisabled
-										? undefined
-										: {
-												label: m['common.chat.action.new'](),
-												text: m['common.chat.action.new'](),
-												onPress: wrappedOpenChatControl,
-												size: 'small',
-												color: 'primary',
-												icon: MessagePlusIcon,
-											}
-								}
-								className={css.emptyTall}
-							/>
-						)}
-					</>
+					<EmptyState
+						message={m['screens.messages.conversation.sayHi']()}
+						icon={BubbleSmileIcon}
+						iconSize="4xl"
+						messageColor="text"
+						iconColor={colors.text}
+						button={
+							chatStatus?.chatDisabled
+								? undefined
+								: {
+										label: m['common.chat.action.new'](),
+										text: m['common.chat.action.new'](),
+										onPress: openChatControl,
+										size: 'small',
+										color: 'primary',
+										icon: MessagePlusIcon,
+									}
+						}
+						className={css.emptyTall}
+					/>
 				)}
-			</Layout.Center>
+			</div>
 		);
 	}
 
-	return (
+	const list = (
 		<List
 			ref={scrollElRef}
 			data={conversations}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			refreshing={isPTRing}
-			onRefresh={() => void onRefresh()}
 			onEndReached={() => void onEndReached()}
+			onEndReachedThreshold={0}
+			onContentSizeChange={onContentSizeChange}
+			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 			ListHeaderComponent={
 				chatStatus?.chatDisabled ? (
-					<ChatDisabled shape="banner" style={[isWithinSplitView && a.mb_sm]} />
+					<ChatDisabled shape="banner" style={isWithinSplitView ? { marginBottom: 8 } : undefined} />
 				) : undefined
 			}
 			ListFooterComponent={
@@ -375,25 +330,22 @@ export function ChatList({
 					hasNextPage={hasNextPage}
 				/>
 			}
-			onEndReachedThreshold={0}
-			onContentSizeChange={onContentSizeChange}
-			initialNumToRender={initialNumToRender}
-			windowSize={11}
-			desktopFixedHeight
-			sideBorders={false}
-			disableFullWindowScroll={isWithinSplitView}
-			style={
-				isWithinSplitView && [
-					a.w_full,
-					{
-						scrollbarWidth: 'thin',
-						scrollbarColor: `${t.palette.contrast_100} transparent`,
-					} as WebScrollStyle,
-				]
-			}
-			contentContainerStyle={isWithinSplitView && !chatStatus?.chatDisabled && a.py_sm}
 		/>
 	);
+
+	if (isWithinSplitView) {
+		return (
+			<div
+				ref={scrollContainerRef}
+				className={clsx(css.splitScroller, !chatStatus?.chatDisabled && css.splitScrollerPadded)}
+				onScroll={onLeftColumnScroll}
+			>
+				{list}
+			</div>
+		);
+	}
+
+	return list;
 }
 
 export function Header({
@@ -406,15 +358,15 @@ export function Header({
 	const { gtMobile } = useBreakpoints();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
-	// In split view, the left column (and this header) stays mounted while the
-	// right column shows the selected route. Pushing would stack duplicate routes
-	// on repeated clicks, so navigate instead to dedupe by route + params.
+	// In split view, the left column (and this header) stays mounted while the right column shows the selected
+	// route. Pushing would stack duplicate routes on repeated clicks, so navigate instead to dedupe by route +
+	// params.
 	const action = isWithinSplitView ? 'navigate' : 'push';
 
 	const { data: unreadCounts } = useUnreadCountsQuery();
 	const requestCount = unreadCounts?.unreadRequestConvos ?? 0;
 
-	const wrappedOpenChatControl = () => {
+	const openChatControl = () => {
 		newChatHandle.open(null);
 	};
 
@@ -422,23 +374,18 @@ export function Header({
 		<Layout.Header.Outer>
 			{gtMobile ? (
 				<>
-					<Layout.Header.Content align="left">
+					<Layout.Header.Content>
 						<Layout.Header.TitleText>{m['screens.messages.chats.title']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 
-					<View style={[a.flex_row, a.align_center, a.gap_sm]}>
+					<Layout.Header.Slot>
 						<InboxRequests count={requestCount} variant="solid" action={action} />
 						<ChatSettingsMenu
 							action={action}
 							render={
-								<WebButton
-									label={m['common.chat.optionsLabel']()}
-									size="small"
-									color="secondary"
-									shape="round"
-								>
-									<WebButtonIcon icon={SettingsIcon} />
-								</WebButton>
+								<Button label={m['common.chat.optionsLabel']()} size="small" color="secondary" shape="round">
+									<ButtonIcon icon={SettingsIcon} />
+								</Button>
 							}
 						/>
 						{!chatStatus?.chatDisabled && (
@@ -447,33 +394,35 @@ export function Header({
 								color="primary"
 								size="small"
 								shape="round"
-								onPress={wrappedOpenChatControl}
+								onClick={openChatControl}
 							>
 								<ButtonIcon icon={NewChatIcon} />
 							</Button>
 						)}
-					</View>
+					</Layout.Header.Slot>
 				</>
 			) : (
 				<>
 					<Layout.Header.MenuButton />
-					<Layout.Header.Content align="left">
+					<Layout.Header.Content>
 						<Layout.Header.TitleText>{m['screens.messages.chats.title']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
-					<InboxRequests count={requestCount} variant="ghost" />
+
 					<Layout.Header.Slot>
+						<InboxRequests count={requestCount} variant="ghost" />
+
 						<ChatSettingsMenu
 							action={action}
 							render={
-								<WebButton
+								<Button
 									label={m['common.chat.optionsLabel']()}
 									size="small"
 									variant="ghost"
 									color="secondary"
 									shape="round"
 								>
-									<WebButtonIcon icon={SettingsIcon} size="lg" />
-								</WebButton>
+									<ButtonIcon icon={SettingsIcon} size="lg" />
+								</Button>
 							}
 						/>
 					</Layout.Header.Slot>
@@ -504,7 +453,7 @@ function ChatSettingsMenu({
 	return (
 		<Menu.Root>
 			<Menu.Trigger render={render} />
-			<Menu.Popup label={m['common.chat.optionsLabel']()}>
+			<Menu.Popup label={m['common.chat.optionsLabel']()} align="center">
 				<Menu.Group>
 					<Menu.Item
 						label={m['screens.messages.chats.markAllRead.action']()}

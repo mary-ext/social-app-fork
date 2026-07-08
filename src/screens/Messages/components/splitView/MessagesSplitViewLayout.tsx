@@ -1,10 +1,9 @@
-import { type NativeScrollEvent, View } from 'react-native';
+import { View } from 'react-native';
 
 import { type ScreenLayoutArgs, useIsFocused } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import type { FlatNavigatorParams, NativeStackNavigationOptionsWithAuth } from '#/lib/routes/types';
-import { ScrollProvider } from '#/lib/ScrollContext';
 
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 
@@ -17,7 +16,6 @@ import * as Dialog from '#/components/web/Dialog';
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
 import { SplitViewProvider } from './context';
 import { getMessagesSplitViewLayoutDimensions } from './layout-dimensions';
-import { splitViewLeftScroll } from './leftColumnScroll';
 
 type MessageScreens =
 	| 'Messages'
@@ -54,10 +52,6 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 	const isFocused = useIsFocused();
 	const { data: chatStatus } = useChatActorStatusQuery();
 
-	const onLeftColumnScroll = (e: NativeScrollEvent) => {
-		splitViewLeftScroll.current = e.contentOffset.y;
-	};
-
 	const onNewChat = (conversation: string) => navigation.navigate('MessagesConversation', { conversation });
 
 	const selectedChat =
@@ -79,9 +73,7 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 			<SplitViewProvider side="left">
 				<View style={[a.border_l, t.atoms.border_contrast_low, { width: leftColumnWidth }]}>
 					<ChatListHeader newChatHandle={newChatHandle} chatStatus={chatStatus} />
-					<ScrollProvider onScroll={onLeftColumnScroll}>
-						<ChatList newChatHandle={newChatHandle} selectedChat={selectedChat} chatStatus={chatStatus} />
-					</ScrollProvider>
+					<ChatList newChatHandle={newChatHandle} selectedChat={selectedChat} chatStatus={chatStatus} />
 					<NewChatDialog handle={newChatHandle} onNewChat={onNewChat} />
 				</View>
 			</SplitViewProvider>

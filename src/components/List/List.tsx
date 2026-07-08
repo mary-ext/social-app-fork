@@ -71,6 +71,12 @@ export type ListProps<ItemT> = {
 	onStartReachedThreshold?: number;
 	ref?: Ref<ListMethods>;
 	renderItem: ListRenderItem<ItemT>;
+	/**
+	 * The scrolling element the list reads for edge detection and drives for imperative scrolls. Omit to bind
+	 * to the viewport (document scroll); pass a bounded `overflow` container's ref (e.g. a split-view column)
+	 * to scroll within it instead.
+	 */
+	scrollRoot?: React.RefObject<HTMLElement | null>;
 };
 
 /**
@@ -94,6 +100,7 @@ export function List<ItemT>({
 	onStartReachedThreshold,
 	ref,
 	renderItem,
+	scrollRoot,
 }: ListProps<ItemT>) {
 	const containerRef = useRef<HTMLDivElement>(null);
 
@@ -103,20 +110,23 @@ export function List<ItemT>({
 		ref,
 		() => ({
 			scrollToTop() {
-				window.scrollTo({ top: 0 });
+				const root = scrollRoot ? scrollRoot.current! : window;
+				root.scrollTo({ top: 0 });
 			},
 			scrollToOffset({ animated, offset }) {
-				window.scrollTo({ behavior: animated ? 'smooth' : 'instant', left: 0, top: offset });
+				const root = scrollRoot ? scrollRoot.current! : window;
+				root.scrollTo({ behavior: animated ? 'smooth' : 'instant', left: 0, top: offset });
 			},
 			scrollToEnd({ animated = true } = {}) {
-				window.scrollTo({
+				const root = scrollRoot ? scrollRoot.current! : document.documentElement;
+				root.scrollTo({
 					behavior: animated ? 'smooth' : 'instant',
 					left: 0,
-					top: document.documentElement.scrollHeight,
+					top: root.scrollHeight,
 				});
 			},
 		}),
-		[],
+		[scrollRoot],
 	);
 
 	const onStartVisibleChange = useNonReactiveCallback((isVisible: boolean) => {
@@ -130,7 +140,7 @@ export function List<ItemT>({
 		startTransition(() => onScrolledDownChange?.(!isAboveTheFold));
 	});
 
-	const seen = useItemSeenObserver(onItemSeen);
+	const seen = useItemSeenObserver(onItemSeen, scrollRoot);
 
 	const isEmpty = !data || data.length === 0;
 	const skipOffscreen = estimateHeight != null;
@@ -142,12 +152,13 @@ export function List<ItemT>({
 			style={skipOffscreen ? assignInlineVars({ [css.estimateHeightVar]: `${estimateHeight}px` }) : undefined}
 		>
 			{onScrolledDownChange && (
-				<Visibility className={css.aboveTheFold} onVisibleChange={onAboveTheFoldChange} />
+				<Visibility className={css.aboveTheFold} onVisibleChange={onAboveTheFoldChange} root={scrollRoot} />
 			)}
 			{onStartReached && !isEmpty && (
 				<EdgeVisibility
 					containerRef={containerRef}
 					onVisibleChange={onStartVisibleChange}
+					root={scrollRoot}
 					topMargin={thresholdMargin(onStartReachedThreshold)}
 				/>
 			)}
@@ -166,6 +177,7 @@ export function List<ItemT>({
 					bottomMargin={thresholdMargin(onEndReachedThreshold)}
 					containerRef={containerRef}
 					onVisibleChange={onEndVisibleChange}
+					root={scrollRoot}
 				/>
 			)}
 			{ListFooterComponent}
@@ -185,6 +197,7 @@ type SeenObserver<ItemT> = {
  */
 function useItemSeenObserver<ItemT>(
 	onItemSeen: ((item: ItemT) => void) | undefined,
+	root: React.RefObject<HTMLElement | null> | undefined,
 ): SeenObserver<ItemT> | null {
 	// Read the latest callback without rebuilding the observer when its identity changes.
 	const reportSeen = useNonReactiveCallback(onItemSeen ?? (() => {}));
@@ -193,11 +206,14 @@ function useItemSeenObserver<ItemT>(
 	const observer = useMemo(() => {
 		if (!enabled) return null;
 		const rows = new Map<Element, { item: ItemT; timeout?: ReturnType<typeof setTimeout> }>();
-		const io = new IntersectionObserver((entries) => {
-			batchedUpdates(() => {
+		const io = new IntersectionObserver(
+			(entries) => {
 				for (const entry of entries) {
 					const row = rows.get(entry.target);
-					if (!row) continue;
+					if (!row) {
+						continue;
+					}
+
 					if (entry.isIntersecting) {
 						row.timeout ??= setTimeout(() => {
 							row.timeout = undefined;
@@ -208,8 +224,9 @@ function useItemSeenObserver<ItemT>(
 						row.timeout = undefined;
 					}
 				}
-			});
-		}, ON_ITEM_SEEN_INTERSECTION_OPTS);
+			},
+			{ ...ON_ITEM_SEEN_INTERSECTION_OPTS, root: root?.current ?? null },
+		);
 		return {
 			rows,
 			io,
@@ -225,7 +242,7 @@ function useItemSeenObserver<ItemT>(
 			},
 		};
 		// `reportSeen` is stable; rebuild only when toggling the feature on/off.
-	}, [enabled, reportSeen]);
+	}, [enabled, reportSeen, root]);
 
 	useEffect(() => {
 		return () => {
@@ -283,11 +300,13 @@ function EdgeVisibility({
 	bottomMargin,
 	containerRef,
 	onVisibleChange,
+	root,
 	topMargin,
 }: {
 	bottomMargin?: string;
 	containerRef: React.RefObject<Element | null>;
 	onVisibleChange: (isVisible: boolean) => void;
+	root?: React.RefObject<Element | null>;
 	topMargin?: string;
 }) {
 	const [containerHeight, setContainerHeight] = useState(0);
@@ -297,6 +316,7 @@ function EdgeVisibility({
 			key={containerHeight}
 			bottomMargin={bottomMargin}
 			onVisibleChange={onVisibleChange}
+			root={root}
 			topMargin={topMargin}
 		/>
 	);
@@ -307,12 +327,14 @@ function Visibility({
 	bottomMargin = '0px',
 	className = css.sentinel,
 	onVisibleChange,
+	root,
 	style,
 	topMargin = '0px',
 }: {
 	bottomMargin?: string;
 	className?: string;
 	onVisibleChange: (isVisible: boolean) => void;
+	root?: React.RefObject<Element | null>;
 	style?: React.CSSProperties;
 	topMargin?: string;
 }) {
@@ -332,6 +354,7 @@ function Visibility({
 
 	useEffect(() => {
 		const observer = new IntersectionObserver(handleIntersection, {
+			root: root?.current ?? null,
 			rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
 		});
 		const tail = tailRef.current;
@@ -339,7 +362,7 @@ function Visibility({
 		return () => {
 			if (tail) observer.unobserve(tail);
 		};
-	}, [bottomMargin, topMargin]);
+	}, [bottomMargin, root, topMargin]);
 
 	return <div ref={tailRef} className={className} style={style} />;
 }
