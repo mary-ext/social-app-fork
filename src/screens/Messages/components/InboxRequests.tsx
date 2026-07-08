@@ -1,12 +1,12 @@
 import { UNREAD_REQUEST_CAP } from '#/state/queries/messages/get-unread-counts';
 
-import { atoms as a } from '#/alf';
-
-import { ButtonIcon, ButtonText } from '#/components/Button';
 import { Inbox_Stroke2_Corner2_Rounded as InboxIcon } from '#/components/icons/Inbox';
-import { Link } from '#/components/Link';
+import { ButtonIcon, ButtonText } from '#/components/web/Button';
+import { LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+
+import * as css from './InboxRequests.css';
 
 export function InboxRequests({
 	count,
@@ -29,7 +29,7 @@ export function InboxRequests({
 	switch (variant) {
 		case 'ghost': {
 			return (
-				<Link
+				<LinkButton
 					label={label}
 					to="/messages/inbox"
 					action={action}
@@ -37,22 +37,22 @@ export function InboxRequests({
 					variant={unread ? 'solid' : 'ghost'}
 					color={unread ? 'primary_subtle' : 'secondary'}
 					shape={unread ? 'default' : 'round'}
-					style={[a.justify_center, unread && [a.gap_sm, a.pl_lg, a.pr_md]]}
+					className={unread ? css.unreadPill : undefined}
 				>
 					<ButtonIcon icon={InboxIcon} size="lg" />
 					{unread && (
-						<ButtonText style={[a.text_md, a.font_bold]}>
+						<ButtonText size="md">
 							{overflow
 								? m['screens.messages.requests.shortCountOverflow']({ count: UNREAD_REQUEST_CAP - 1 })
 								: count}
 						</ButtonText>
 					)}
-				</Link>
+				</LinkButton>
 			);
 		}
 		case 'solid': {
 			return (
-				<Link
+				<LinkButton
 					label={label}
 					to="/messages/inbox"
 					action={action}
@@ -61,7 +61,7 @@ export function InboxRequests({
 				>
 					<ButtonIcon icon={InboxIcon} />
 					<ButtonText>{label}</ButtonText>
-				</Link>
+				</LinkButton>
 			);
 		}
 	}
