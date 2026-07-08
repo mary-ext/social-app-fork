@@ -249,7 +249,7 @@ export function ChatList({
 
 	if (conversations.length === 0) {
 		return (
-			<div>
+			<>
 				{isLoading ? (
 					<ChatListLoadingPlaceholder />
 				) : isError ? (
@@ -302,7 +302,7 @@ export function ChatList({
 						className={css.emptyTall}
 					/>
 				)}
-			</div>
+			</>
 		);
 	}
 
