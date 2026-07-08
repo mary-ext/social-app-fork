@@ -23,12 +23,10 @@ const searchPostsQueryKey = ({ author, query, sort }: { author?: string; query: 
 
 export function useSearchPostsQuery({
 	author,
-	enabled,
 	query,
 	sort,
 }: {
 	author?: string;
-	enabled?: boolean;
 	query: string;
 	sort?: 'top' | 'latest';
 }) {
@@ -69,7 +67,7 @@ export function useSearchPostsQuery({
 			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		enabled: enabled ?? !!moderationOpts,
+		enabled: !!moderationOpts,
 		select: useCallback(
 			(data: InfiniteData<AppBskyFeedSearchPosts.$output>) => {
 				const { moderationOpts, isSearchingSpecificUser } = selectArgs;

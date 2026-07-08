@@ -43,14 +43,13 @@ const isProfileListSentinel = (item: ProfileListItem): item is ProfileListSentin
 
 interface ProfileListsProps {
 	did: string;
-	enabled?: boolean;
 	/** Known list count, used to size the loading skeleton; falls back to a small default. */
 	listCount?: number;
 }
 
-export function ProfileLists({ did, enabled, listCount }: ProfileListsProps): React.ReactNode {
+export function ProfileLists({ did, listCount }: ProfileListsProps): React.ReactNode {
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
-		useProfileListsQuery(did, { enabled });
+		useProfileListsQuery(did);
 	const isEmpty = !isPending && !data?.pages[0]?.lists.length;
 	const { data: preferences } = usePreferencesQuery();
 	const navigation = useNavigation();

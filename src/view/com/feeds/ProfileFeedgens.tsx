@@ -43,14 +43,13 @@ const isFeedgenSentinel = (item: FeedgenItem): item is FeedgenSentinel => {
 
 interface ProfileFeedgensProps {
 	did: string;
-	enabled?: boolean;
 	/** Known feed-generator count, used to size the loading skeleton; falls back to a small default. */
 	feedCount?: number;
 }
 
-export function ProfileFeedgens({ did, enabled, feedCount }: ProfileFeedgensProps): React.ReactNode {
+export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React.ReactNode {
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
-		useProfileFeedgensQuery(did, { enabled });
+		useProfileFeedgensQuery(did);
 	const isEmpty = !isPending && !data?.pages[0]?.feeds.length;
 	const { data: preferences } = usePreferencesQuery();
 	const navigation = useNavigation();

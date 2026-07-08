@@ -99,16 +99,15 @@ function HomeScreenReady({
 			{
 				id: whatsHotFeed,
 				label: 'Discover',
-				render: (focused) => (
+				children: (
 					<FeedPage
-						isPageFocused={focused}
 						feed={whatsHotFeed}
 						renderEmptyState={renderCustomFeedEmptyState}
 						feedInfo={pinnedFeedInfos[0]!}
 					/>
 				),
 			},
-			{ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', render: () => null },
+			{ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', children: null },
 		];
 	} else {
 		const feedSections: Section<string>[] = pinnedFeedInfos.map((feedInfo) => {
@@ -116,10 +115,9 @@ function HomeScreenReady({
 			return {
 				id: feed,
 				label: feedInfo.displayName,
-				render: (focused) =>
+				children:
 					feed === 'following' ? (
 						<FeedPage
-							isPageFocused={focused}
 							feed={feed}
 							renderEmptyState={renderFollowingEmptyState}
 							renderEndOfFeed={FollowingEndOfFeed}
@@ -127,7 +125,6 @@ function HomeScreenReady({
 						/>
 					) : (
 						<FeedPage
-							isPageFocused={focused}
 							feed={feed}
 							renderEmptyState={renderCustomFeedEmptyState}
 							savedFeedConfig={feedInfo.savedFeed}
@@ -140,7 +137,7 @@ function HomeScreenReady({
 		// nudge feed discovery when the user has only the Following feed pinned
 		const hasPinnedCustom = pinnedFeedInfos.some((f) => f.feedDescriptor !== 'following');
 		if (!hasPinnedCustom) {
-			feedSections.push({ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', render: () => null });
+			feedSections.push({ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', children: null });
 		}
 		sections = feedSections;
 	}

@@ -29,7 +29,6 @@ import { colors } from '#/styles/colors';
 const POLL_FREQ = 60e3; // 60sec
 
 export function FeedPage({
-	isPageFocused,
 	feed,
 	renderEmptyState,
 	renderEndOfFeed,
@@ -37,7 +36,6 @@ export function FeedPage({
 	feedInfo,
 }: {
 	feed: FeedDescriptor;
-	isPageFocused: boolean;
 	renderEmptyState: () => JSX.Element;
 	renderEndOfFeed?: () => JSX.Element;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
@@ -62,20 +60,16 @@ export function FeedPage({
 	const onSoftReset = useCallback(() => {
 		const isScreenFocused =
 			getTabState(getRootNavigation(navigation).getState(), 'Home') === TabState.InsideAtRoot;
-		if (isScreenFocused && isPageFocused) {
+		if (isScreenFocused) {
 			scrollToTop();
 			void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 			setHasNew(false);
 		}
-	}, [navigation, isPageFocused, scrollToTop, queryClient, feed]);
+	}, [navigation, scrollToTop, queryClient, feed]);
 
-	// fires when page within screen is activated/deactivated
 	useEffect(() => {
-		if (!isPageFocused) {
-			return;
-		}
 		return softReset.subscribe(onSoftReset);
-	}, [onSoftReset, isPageFocused]);
+	}, [onSoftReset]);
 
 	const onPressCompose = () => {
 		openComposer({});
@@ -91,10 +85,10 @@ export function FeedPage({
 		<>
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
-					enabled={isPageFocused}
+					enabled
 					feed={feed}
 					pollInterval={POLL_FREQ}
-					disablePoll={hasNew || !isPageFocused}
+					disablePoll={hasNew}
 					scrollElRef={scrollElRef}
 					onScrolledDownChange={setIsScrolledDown}
 					onHasNew={setHasNew}

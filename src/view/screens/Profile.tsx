@@ -223,7 +223,7 @@ function ProfileScreenLoaded({
 		showFiltersTab && {
 			id: 'labels',
 			label: m['common.moderation.labels'](),
-			render: () => (
+			children: (
 				<ProfileLabelsSection
 					labelerInfo={labelerInfo}
 					labelerError={labelerError}
@@ -236,17 +236,14 @@ function ProfileScreenLoaded({
 			hasLabeler && {
 				id: 'lists',
 				label: m['common.list.label'](),
-				render: (isFocused: boolean) => (
-					<ProfileLists did={profile.did} enabled={isFocused} listCount={listCount} />
-				),
+				children: <ProfileLists did={profile.did} listCount={listCount} />,
 			},
 		showPostsTab && {
 			id: 'posts',
 			label: m['common.post.label'](),
-			render: (isFocused: boolean) => (
+			children: (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_and_author_threads`}
-					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.post.empty']()}
 					emptyStateButton={
@@ -266,10 +263,9 @@ function ProfileScreenLoaded({
 		showRepliesTab && {
 			id: 'replies',
 			label: m['common.reply.label'](),
-			render: (isFocused: boolean) => (
+			children: (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_replies`}
-					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.reply.empty']()}
 					emptyStateIcon={MessageIcon}
@@ -279,10 +275,9 @@ function ProfileScreenLoaded({
 		showMediaTab && {
 			id: 'media',
 			label: m['common.media.label'](),
-			render: (isFocused: boolean) => (
+			children: (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_media`}
-					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.media.empty']()}
 					emptyStateButton={
@@ -303,10 +298,9 @@ function ProfileScreenLoaded({
 		showVideosTab && {
 			id: 'videos',
 			label: m['common.video.label'](),
-			render: (isFocused: boolean) => (
+			children: (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_video`}
-					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.video.empty']()}
 					emptyStateButton={
@@ -327,10 +321,9 @@ function ProfileScreenLoaded({
 		showLikesTab && {
 			id: 'likes',
 			label: m['common.like.label'](),
-			render: (isFocused: boolean) => (
+			children: (
 				<ProfileFeedSection
 					feed={`likes|${profile.did}`}
-					isFocused={isFocused}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.like.empty']()}
 					emptyStateIcon={HeartIcon}
@@ -340,18 +333,15 @@ function ProfileScreenLoaded({
 		showFeedsTab && {
 			id: 'feeds',
 			label: m['common.nav.feeds'](),
-			render: (isFocused: boolean) => (
-				<ProfileFeedgens did={profile.did} enabled={isFocused} feedCount={feedGenCount} />
-			),
+			children: <ProfileFeedgens did={profile.did} feedCount={feedGenCount} />,
 		},
 		showStarterPacksTab && {
 			id: 'starterPacks',
 			label: m['common.starterPack.sectionTitle'](),
-			render: (isFocused: boolean) => (
+			children: (
 				<ProfileStarterPacks
 					did={profile.did}
 					isMe={isMe}
-					enabled={isFocused}
 					starterPackCount={starterPackCount}
 					emptyStateMessage={
 						isMe ? m['components.starterPack.list.empty']() : m['common.starterPack.empty']()
@@ -375,9 +365,7 @@ function ProfileScreenLoaded({
 			!hasLabeler && {
 				id: 'lists',
 				label: m['common.list.label'](),
-				render: (isFocused: boolean) => (
-					<ProfileLists did={profile.did} enabled={isFocused} listCount={listCount} />
-				),
+				children: <ProfileLists did={profile.did} listCount={listCount} />,
 			},
 	]);
 

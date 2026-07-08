@@ -49,12 +49,12 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 		{
 			id: 'top',
 			label: m['common.search.top'](),
-			render: (focused) => <TopicScreenTab topic={topic} sort="top" active={focused} />,
+			children: <TopicScreenTab topic={topic} sort="top" />,
 		},
 		{
 			id: 'latest',
 			label: m['common.search.latest'](),
-			render: (focused) => <TopicScreenTab topic={topic} sort="latest" active={focused} />,
+			children: <TopicScreenTab topic={topic} sort="latest" />,
 		},
 	];
 
@@ -91,7 +91,7 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 	);
 }
 
-function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 'latest'; active: boolean }) {
+function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest' }) {
 	const initialNumToRender = useInitialNumToRender();
 	const [isPTR, setIsPTR] = useState(false);
 
@@ -108,7 +108,6 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 	} = useSearchPostsQuery({
 		query: topic,
 		sort,
-		enabled: active,
 	});
 
 	const posts = data?.pages.flatMap((page) => page.posts) || [];

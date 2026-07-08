@@ -2,6 +2,7 @@ import {
 	type ComponentPropsWithoutRef,
 	createContext,
 	type ReactNode,
+	type Ref,
 	type RefObject,
 	use,
 	useEffect,
@@ -14,23 +15,6 @@ import { clsx } from 'clsx';
 import * as styles from '#/components/Tabs.css';
 import { Text } from '#/components/Text';
 
-/**
- * tabbed pager built on Base UI Tabs, exposed as namespace parts. tabs are identified by a stable string id
- * so the active tab survives tab set changes. panels stay mounted while hidden to preserve scroll and query
- * state.
- *
- * ```tsx
- * <Tabs.Root value={tab} onValueChange={setTab}>
- * 	{header}
- * 	<Tabs.List>
- * 		<Tabs.Tab value="posts">Posts</Tabs.Tab>
- * 		<Tabs.Tab value="replies">Replies</Tabs.Tab>
- * 	</Tabs.List>
- * 	<Tabs.Panel value="posts">…</Tabs.Panel>
- * 	<Tabs.Panel value="replies">…</Tabs.Panel>
- * </Tabs.Root>;
- * ```
- */
 const TabsContext = createContext<{ value: string } | null>(null);
 
 /**
@@ -88,14 +72,16 @@ const useDragScroll = (ref: RefObject<HTMLElement | null>) => {
 };
 
 export type RootProps = Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> & {
-	value: string;
 	onValueChange: (value: string) => void;
+	ref?: Ref<HTMLDivElement>;
+	value: string;
 };
 
-export const Root = ({ value, onValueChange, className, children, ...rest }: RootProps) => {
+export const Root = ({ children, className, onValueChange, ref, value, ...rest }: RootProps) => {
 	return (
 		<TabsContext value={{ value }}>
 			<BaseTabs.Root
+				ref={ref}
 				value={value}
 				onValueChange={(next) => onValueChange(next as string)}
 				className={clsx(styles.root, className)}
@@ -167,17 +153,16 @@ export type PanelProps = Omit<ComponentPropsWithoutRef<'div'>, 'value'> & {
 
 export const Panel = ({ value, className, children, ...rest }: PanelProps) => {
 	return (
-		<BaseTabs.Panel value={value} keepMounted className={clsx(styles.panel, className)} {...rest}>
+		<BaseTabs.Panel value={value} className={clsx(styles.panel, className)} {...rest}>
 			{children}
 		</BaseTabs.Panel>
 	);
 };
 
 export type Section<Id extends string> = {
+	children: ReactNode;
 	id: Id;
 	label: string;
-	/** @param isFocused whether the tab is active to gate the feed query so only the visible tab fetches */
-	render: (isFocused: boolean) => ReactNode;
 };
 
 export type TabsProps<Id extends string> = {
@@ -196,7 +181,7 @@ export type TabsProps<Id extends string> = {
 };
 
 /**
- * renders a tabbed interface with a sticky tab bar and persistent panels.
+ * renders a tabbed interface with a sticky tab bar.
  *
  * @param props.sections config array for the tabs and panels
  * @param props.value active tab value
@@ -211,12 +196,34 @@ export const Tabs = <Id extends string>({
 	sections,
 	value,
 }: TabsProps<Id>) => {
+	const rootRef = useRef<HTMLDivElement>(null);
+
 	// a value that no longer matches any section (dynamic tab sets shrink as filters apply) falls back to
 	// the first tab, so the bar and panels stay in sync with what's actually selectable
 	const active = sections.some((section) => section.id === value) ? value : sections[0]?.id;
 
+	// on switching to another tab, scroll up just enough to unstick the tab bar — bringing the scroll-away
+	// header back into view — rather than leaving the bar floating mid-content over a freshly mounted panel
+	const unstickTabBar = () => {
+		const root = rootRef.current;
+		if (!root) {
+			return;
+		}
+		const delta = root.getBoundingClientRect().top - headerOffset;
+		if (delta < 0) {
+			window.scrollBy({ top: delta });
+		}
+	};
+
 	return (
-		<Root value={active ?? ''} onValueChange={(next) => onValueChange(next as Id)}>
+		<Root
+			ref={rootRef}
+			value={active ?? ''}
+			onValueChange={(next) => {
+				onValueChange(next as Id);
+				unstickTabBar();
+			}}
+		>
 			{header}
 			{sections.length > 0 && (
 				<List style={headerOffset ? { top: headerOffset } : undefined}>
@@ -242,7 +249,7 @@ export const Tabs = <Id extends string>({
 			)}
 			{sections.map((section) => (
 				<Panel key={section.id} value={section.id}>
-					{section.render(active === section.id)}
+					{section.children}
 				</Panel>
 			))}
 		</Root>

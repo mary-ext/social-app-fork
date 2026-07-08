@@ -19,7 +19,6 @@ import * as css from './Feed.css';
 
 interface FeedSectionProps {
 	feed: FeedDescriptor;
-	isFocused: boolean;
 	ignoreFilterFor?: string;
 	emptyStateMessage?: string;
 	emptyStateButton?: EmptyStateButtonProps;
@@ -28,7 +27,6 @@ interface FeedSectionProps {
 
 export function ProfileFeedSection({
 	feed,
-	isFocused,
 	ignoreFilterFor,
 	emptyStateMessage,
 	emptyStateButton,
@@ -64,7 +62,7 @@ export function ProfileFeedSection({
 	return (
 		<div>
 			<PostFeed
-				enabled={isFocused}
+				enabled
 				feed={feed}
 				scrollElRef={scrollElRef}
 				onHasNew={setHasNew}

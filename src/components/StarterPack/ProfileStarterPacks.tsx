@@ -48,7 +48,6 @@ const isStarterPackSentinel = (item: StarterPackItem): item is StarterPackSentin
 
 interface ProfileStarterPacksProps {
 	did: string;
-	enabled?: boolean;
 	isMe: boolean;
 	/** Known starter-pack count, used to size the loading skeleton; falls back to a small default. */
 	starterPackCount?: number;
@@ -59,7 +58,6 @@ interface ProfileStarterPacksProps {
 
 export function ProfileStarterPacks({
 	did,
-	enabled,
 	isMe,
 	starterPackCount,
 	emptyStateMessage,
@@ -67,7 +65,7 @@ export function ProfileStarterPacks({
 	emptyStateIcon,
 }: ProfileStarterPacksProps): React.ReactNode {
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
-		useActorStarterPacksQuery({ did, enabled });
+		useActorStarterPacksQuery({ did });
 	const isEmpty = !isPending && !data?.pages[0]?.starterPacks.length;
 	const starterPacks = data?.pages.flatMap((page) => page.starterPacks);
 	const hasStarterPacks = !!starterPacks?.length;

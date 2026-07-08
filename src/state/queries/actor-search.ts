@@ -42,7 +42,7 @@ export function useActorSearch({
 					params: { cursor: pageParam, limit, q: query },
 				}),
 			),
-		enabled: enabled && !!query,
+		enabled: (enabled ?? true) && !!query,
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		placeholderData: maintainData ? keepPreviousData : undefined,

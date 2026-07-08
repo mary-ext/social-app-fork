@@ -71,14 +71,12 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 		{
 			id: 'top',
 			label: m['common.search.top'](),
-			render: (focused) => <HashtagScreenTab fullTag={fullTag} author={author} sort="top" active={focused} />,
+			children: <HashtagScreenTab fullTag={fullTag} author={author} sort="top" />,
 		},
 		{
 			id: 'latest',
 			label: m['common.search.latest'](),
-			render: (focused) => (
-				<HashtagScreenTab fullTag={fullTag} author={author} sort="latest" active={focused} />
-			),
+			children: <HashtagScreenTab fullTag={fullTag} author={author} sort="latest" />,
 		},
 	];
 
@@ -124,12 +122,10 @@ function HashtagScreenTab({
 	fullTag,
 	author,
 	sort,
-	active,
 }: {
 	fullTag: string;
 	author: string | undefined;
 	sort: 'top' | 'latest';
-	active: boolean;
 }) {
 	const initialNumToRender = useInitialNumToRender();
 	const [isPTR, setIsPTR] = useState(false);
@@ -151,7 +147,7 @@ function HashtagScreenTab({
 		refetch,
 		fetchNextPage,
 		hasNextPage,
-	} = useSearchPostsQuery({ author, enabled: active, query: queryParam, sort });
+	} = useSearchPostsQuery({ author, query: queryParam, sort });
 
 	const posts = data?.pages.flatMap((page) => page.posts) || [];
 

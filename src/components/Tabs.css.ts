@@ -90,8 +90,5 @@ export const tabLabel = style({
 export const panel = style(
 	layered(components, {
 		flex: 1,
-		selectors: {
-			'&[hidden]': { display: 'none' },
-		},
 	}),
 );

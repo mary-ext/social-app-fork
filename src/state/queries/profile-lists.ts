@@ -20,9 +20,9 @@ type RQPageParam = string | undefined;
 export const RQKEY_ROOT = 'profile-lists';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
-export function useProfileListsQuery(did: string, opts?: { enabled?: boolean }) {
+export function useProfileListsQuery(did: string) {
 	const moderationOpts = useModerationOpts();
-	const enabled = opts?.enabled !== false && Boolean(moderationOpts);
+	const enabled = Boolean(moderationOpts);
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyGraphGetLists.$output,

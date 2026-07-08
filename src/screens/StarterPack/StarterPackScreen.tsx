@@ -164,17 +164,17 @@ function StarterPackScreenLoaded({
 		showPeopleTab && {
 			id: 'people',
 			label: m['common.people.label'](),
-			render: () => <ProfilesList listUri={starterPack.list!.uri} moderationOpts={moderationOpts} />,
+			children: <ProfilesList listUri={starterPack.list!.uri} moderationOpts={moderationOpts} />,
 		},
 		showFeedsTab && {
 			id: 'feeds',
 			label: m['common.nav.feeds'](),
-			render: () => <FeedsList feeds={starterPack.feeds ?? []} />,
+			children: <FeedsList feeds={starterPack.feeds ?? []} />,
 		},
 		showPostsTab && {
 			id: 'posts',
 			label: m['common.post.label'](),
-			render: () => <PostsList listUri={starterPack.list!.uri} />,
+			children: <PostsList listUri={starterPack.list!.uri} />,
 		},
 	]);
 	const [activeTab, setActiveTab] = useState<'feeds' | 'people' | 'posts'>('people');

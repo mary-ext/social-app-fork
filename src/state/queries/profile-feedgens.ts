@@ -21,9 +21,9 @@ type RQPageParam = string | undefined;
 export const RQKEY_ROOT = 'profile-feedgens';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
-export function useProfileFeedgensQuery(did: string, opts?: { enabled?: boolean }) {
+export function useProfileFeedgensQuery(did: string) {
 	const moderationOpts = useModerationOpts();
-	const enabled = opts?.enabled !== false && Boolean(moderationOpts);
+	const enabled = Boolean(moderationOpts);
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyFeedGetActorFeeds.$output,

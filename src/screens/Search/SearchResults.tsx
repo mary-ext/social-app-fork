@@ -55,22 +55,22 @@ export function SearchResults({
 			{
 				id: 'top',
 				label: m['common.search.top'](),
-				render: (focused) => <PostResults active={focused} query={queryWithParams} sort="top" />,
+				children: <PostResults query={queryWithParams} sort="top" />,
 			},
 			{
 				id: 'latest',
 				label: m['common.search.latest'](),
-				render: (focused) => <PostResults active={focused} query={queryWithParams} sort="latest" />,
+				children: <PostResults query={queryWithParams} sort="latest" />,
 			},
 			noParams && {
 				id: 'people',
 				label: m['common.people.label'](),
-				render: (focused) => <UserResults active={focused} query={query} />,
+				children: <UserResults query={query} />,
 			},
 			noParams && {
 				id: 'feeds',
 				label: m['common.nav.feeds'](),
-				render: (focused) => <FeedsResults active={focused} query={query} />,
+				children: <FeedsResults query={query} />,
 			},
 		]);
 	}
@@ -150,7 +150,7 @@ function NoResultsText({ query }: { query: string }) {
 	);
 }
 
-function PostResults({ active, query, sort }: { active: boolean; query: string; sort?: 'latest' | 'top' }) {
+function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }) {
 	const { currentAccount, hasSession } = useSession();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
@@ -164,7 +164,7 @@ function PostResults({ active, query, sort }: { active: boolean; query: string; 
 		isFetched,
 		isFetching,
 		isFetchingNextPage,
-	} = useSearchPostsQuery({ enabled: active, query: augmentedQuery, sort });
+	} = useSearchPostsQuery({ query: augmentedQuery, sort });
 
 	const posts = results?.pages.flatMap((page) => page.posts) ?? [];
 	const seen = new Set<string>();
@@ -239,7 +239,7 @@ function SearchPost({ position, post }: { position: number; post: AppBskyFeedDef
 	return <Post hideTopBorder={position === 0} post={post} />;
 }
 
-function UserResults({ active, query }: { active: boolean; query: string }) {
+function UserResults({ query }: { query: string }) {
 	const { hasSession } = useSession();
 
 	const {
@@ -250,7 +250,7 @@ function UserResults({ active, query }: { active: boolean; query: string }) {
 		isFetched,
 		isFetching,
 		isFetchingNextPage,
-	} = useActorSearch({ enabled: active, query });
+	} = useActorSearch({ query });
 
 	const profiles = results?.pages.flatMap((page) => page.actors) ?? [];
 
@@ -295,8 +295,8 @@ function SearchProfileCard({ profile, topBorder = true }: { profile: AnyProfileV
 	return <ProfileCard.Default moderationOpts={moderationOpts} profile={profile} topBorder={topBorder} />;
 }
 
-function FeedsResults({ active, query }: { active: boolean; query: string }) {
-	const { data: results, isFetched } = usePopularFeedsSearch({ enabled: active, query });
+function FeedsResults({ query }: { query: string }) {
+	const { data: results, isFetched } = usePopularFeedsSearch({ query });
 
 	if (!isFetched || !results) {
 		return <Pending />;

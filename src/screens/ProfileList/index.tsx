@@ -164,10 +164,10 @@ function ProfileListScreenLoaded({
 			{
 				id: 'posts',
 				label: m['common.post.label'](),
-				render: (focused) => (
+				children: (
 					<FeedSection
 						feed={`list|${uri}`}
-						isFocused={isScreenFocused && focused}
+						isFocused={isScreenFocused}
 						isOwner={isOwner}
 						onPressAddUser={onPressAddUser}
 					/>
@@ -176,7 +176,7 @@ function ProfileListScreenLoaded({
 			{
 				id: 'people',
 				label: m['common.people.label'](),
-				render: () => <AboutSection list={list} onPressAddUser={onPressAddUser} />,
+				children: <AboutSection list={list} onPressAddUser={onPressAddUser} />,
 			},
 		];
 		return (

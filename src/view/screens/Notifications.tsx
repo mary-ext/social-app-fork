@@ -74,10 +74,9 @@ export function NotificationsScreen({}: Props) {
 		{
 			id: 'all',
 			label: m['common.status.all'](),
-			render: (focused) => (
+			children: (
 				<NotificationsTab
 					filter="all"
-					isActive={focused}
 					isLoading={isLoadingAll}
 					hasNew={hasNew}
 					setIsLoadingLatest={setIsLoadingAll}
@@ -88,10 +87,9 @@ export function NotificationsScreen({}: Props) {
 		{
 			id: 'mentions',
 			label: m['common.mention.label'](),
-			render: (focused) => (
+			children: (
 				<NotificationsTab
 					filter="mentions"
-					isActive={focused}
 					isLoading={isLoadingMentions}
 					hasNew={false /* We don't know for sure */}
 					setIsLoadingLatest={setIsLoadingMentions}
@@ -146,14 +144,12 @@ export function NotificationsScreen({}: Props) {
 
 function NotificationsTab({
 	filter,
-	isActive,
 	isLoading,
 	hasNew,
 	checkUnread,
 	setIsLoadingLatest,
 }: {
 	filter: 'all' | 'mentions';
-	isActive: boolean;
 	isLoading: boolean;
 	hasNew: boolean;
 	checkUnread: ({ invalidate }: { invalidate: boolean }) => Promise<void>;
@@ -163,7 +159,6 @@ function NotificationsTab({
 	const scrollElRef = useRef<ListMethods>(null);
 	const queryClient = useQueryClient();
 	const isScreenFocused = useIsFocused();
-	const isFocusedAndActive = isScreenFocused && isActive;
 
 	// event handlers
 	// =
@@ -199,29 +194,29 @@ function NotificationsTab({
 	// =
 	useFocusEffect(
 		useCallback(() => {
-			if (isFocusedAndActive) {
+			if (isScreenFocused) {
 				logger.debug('NotificationsScreen: Focus');
 				onFocusCheckLatest();
 			}
-		}, [onFocusCheckLatest, isFocusedAndActive]),
+		}, [onFocusCheckLatest, isScreenFocused]),
 	);
 
 	useEffect(() => {
-		if (!isFocusedAndActive) {
+		if (!isScreenFocused) {
 			return;
 		}
 		return softReset.subscribe(onPressLoadLatest);
-	}, [onPressLoadLatest, isFocusedAndActive]);
+	}, [onPressLoadLatest, isScreenFocused]);
 
 	return (
 		<>
 			<NotificationFeed
-				enabled={isFocusedAndActive}
+				enabled={isScreenFocused}
 				filter={filter}
 				onScrolledDownChange={setIsScrolledDown}
 				scrollElRef={scrollElRef}
 				ListHeaderComponent={
-					filter === 'mentions' ? <DisabledNotificationsWarning active={isFocusedAndActive} /> : null
+					filter === 'mentions' ? <DisabledNotificationsWarning active={isScreenFocused} /> : null
 				}
 			/>
 			{(isScrolledDown || hasNew) && (
