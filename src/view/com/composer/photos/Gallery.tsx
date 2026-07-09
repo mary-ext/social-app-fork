@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
@@ -89,18 +89,11 @@ const SingleImage = ({
 };
 
 const Carousel = ({ dispatch, images }: GalleryProps) => {
-	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor (the post container) so it
-	// can extend past the text column to the container's edges.
-	const { bleedEl, bleedWidth } = useGalleryBleed();
-	const contentRef = useRef<HTMLDivElement>(null);
-	const [contentDims, setContentDims] = useState<{ width: number; x: number }>();
+	const { bleedStyle, bleedWidth, insetLeft, ref: bleedRef } = useGalleryBleed();
 
-	const width = bleedWidth || Math.min(600, window.innerWidth);
-	const insetLeft = contentDims?.x ?? 0;
-	const insetRight = bleedWidth > 0 ? bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0) : 0;
-	// Width budget for the widest tile: every tile sits `insetLeft` in from the strip's left edge (the text
-	// column); reserve the inter-tile gap plus a sliver of the next so it peeks.
-	const maxItemWidth = Math.max(0, width - insetLeft - ITEM_GAP - CAROUSEL_PEEK);
+	// every tile sits `insetLeft` in from the strip's left edge; reserve the gap plus a sliver of the next so it
+	// peeks.
+	const maxItemWidth = Math.max(0, bleedWidth - insetLeft - ITEM_GAP - CAROUSEL_PEEK);
 	// One shared row height for the whole strip, shrunk so the widest tile fits `maxItemWidth` uncropped.
 	const contentHeight = deriveCarouselHeight({
 		max: CAROUSEL_MAX_HEIGHT,
@@ -108,19 +101,6 @@ const Carousel = ({ dispatch, images }: GalleryProps) => {
 		min: CAROUSEL_MIN_HEIGHT,
 		ratios: images.map((image) => getAspectRatio(image.transformed ?? image.source)),
 	});
-
-	useEffect(() => {
-		const measure = () => {
-			if (contentRef.current && bleedEl) {
-				const c = contentRef.current.getBoundingClientRect();
-				const b = bleedEl.getBoundingClientRect();
-				setContentDims({ width: c.width, x: c.left - b.left });
-			}
-		};
-		measure();
-		window.addEventListener('resize', measure);
-		return () => window.removeEventListener('resize', measure);
-	}, [bleedEl, bleedWidth, contentHeight]);
 
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());
@@ -158,14 +138,14 @@ const Carousel = ({ dispatch, images }: GalleryProps) => {
 	};
 
 	return (
-		<div ref={contentRef} className={styles.root} style={{ height: contentHeight }}>
+		<div ref={bleedRef} className={styles.root} style={{ height: contentHeight }}>
 			<div
 				ref={scrollRef}
 				className={styles.scroll}
 				onFocus={onFocus}
 				role="group"
 				aria-label={m['components.post.image.a11y.gallery']({ count: images.length })}
-				style={{ marginLeft: -insetLeft, paddingLeft: insetLeft, paddingRight: insetRight, width }}
+				style={bleedStyle}
 			>
 				{images.map((image, index) => (
 					<GalleryItem

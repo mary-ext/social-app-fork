@@ -43,19 +43,11 @@ export type GalleryProps = {
 export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext }: GalleryProps) {
 	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
-	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor (by diffing bounding
-	// rects) so it can extend past the post's content column.
-	const { bleedEl, bleedWidth } = useGalleryBleed();
-	const contentRef = useRef<HTMLDivElement>(null);
-	const [contentDims, setContentDims] = useState<{ x: number; width: number }>();
+	const { bleedStyle, bleedWidth, insetLeft, ref: bleedRef } = useGalleryBleed();
 
-	const width = bleedWidth || Math.min(600, window.innerWidth);
-	const insetLeft = contentDims?.x ?? 0;
-	const insetRight = bleedWidth > 0 ? bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0) : 0;
-	// Width budget for the widest tile: every snapped tile sits `insetLeft` in from the strip's left edge (the
-	// text column), so the room to the right viewport edge is `width - insetLeft`; reserve the inter-tile gap
-	// plus a sliver of the next image so it peeks.
-	const maxItemWidth = Math.max(0, width - insetLeft - ITEM_GAP - CAROUSEL_PEEK);
+	// every snapped tile sits `insetLeft` in from the strip's left edge, so the room to the right viewport edge
+	// is `bleedWidth - insetLeft`; reserve the gap plus a sliver of the next image so it peeks.
+	const maxItemWidth = Math.max(0, bleedWidth - insetLeft - ITEM_GAP - CAROUSEL_PEEK);
 
 	// One row height for the whole strip: an orientation base from the first two images (chat bubbles map onto
 	// a more compact range), shrunk so the widest tile fits `maxItemWidth` uncropped and the next peeks. Items
@@ -66,19 +58,6 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 		min: isWithinChat ? CAROUSEL_CHAT_MIN_HEIGHT : CAROUSEL_MIN_HEIGHT,
 		ratios: images.map((image) => getAspectRatio(image.aspectRatio)),
 	});
-
-	useEffect(() => {
-		const measure = () => {
-			if (contentRef.current && bleedEl) {
-				const c = contentRef.current.getBoundingClientRect();
-				const b = bleedEl.getBoundingClientRect();
-				setContentDims({ x: c.left - b.left, width: c.width });
-			}
-		};
-		measure();
-		window.addEventListener('resize', measure);
-		return () => window.removeEventListener('resize', measure);
-	}, [bleedEl, bleedWidth, contentHeight]);
 
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());
@@ -131,19 +110,14 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 	});
 
 	return (
-		<div ref={contentRef} className={styles.root} style={{ height: contentHeight }}>
+		<div ref={bleedRef} className={styles.root} style={{ height: contentHeight }}>
 			<div
 				ref={scrollRef}
 				role="group"
 				aria-roledescription={m['components.post.image.a11y.carousel']()}
 				aria-label={m['components.post.image.a11y.gallery']({ count: images.length })}
 				className={styles.scroll}
-				style={{
-					marginLeft: -insetLeft,
-					paddingLeft: insetLeft,
-					paddingRight: insetRight,
-					width,
-				}}
+				style={bleedStyle}
 			>
 				{images.map((image, index) => (
 					<GalleryImage

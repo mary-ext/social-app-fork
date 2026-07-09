@@ -17,7 +17,7 @@ export const root = style({
 	width: '100%',
 });
 
-/** Horizontal scroll viewport. Width / margin / padding are inline (they depend on the measured bleed). */
+/** Horizontal scroll viewport. Margin / padding are inline (they depend on the measured bleed). */
 export const scroll = style({
 	boxSizing: 'border-box',
 	display: 'flex',
