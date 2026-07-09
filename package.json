@@ -19,7 +19,7 @@
 	},
 	"dependencies": {
 		"@atcute/atproto": "4.0.3",
-		"@atcute/bluesky": "4.0.13",
+		"@atcute/bluesky": "^4.0.14",
 		"@atcute/bluesky-moderation": "^4.2.1",
 		"@atcute/bluesky-richtext-builder": "^4.0.1",
 		"@atcute/bluesky-richtext-parser": "^2.1.2",
@@ -68,7 +68,7 @@
 		"lodash.chunk": "^4.2.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
-		"radix-ui": "^1.6.1",
+		"radix-ui": "^1.6.2",
 		"react": "19.2.7",
 		"react-dom": "19.2.7",
 		"react-hotkeys-hook": "5.3.3",
@@ -76,12 +76,12 @@
 		"react-native": "0.81.5",
 		"react-native-web": "^0.21.2",
 		"react-remove-scroll-bar": "^2.3.8",
-		"tldts": "^7.4.6"
+		"tldts": "^7.4.7"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.39.4",
 		"@inlang/paraglide-js": "2.20.2",
-		"@rsbuild/core": "^2.1.4",
+		"@rsbuild/core": "^2.1.5",
 		"@rsbuild/plugin-react": "^2.1.0",
 		"@rsdoctor/rspack-plugin": "^1.5.17",
 		"@types/lodash.chunk": "^4.2.9",
@@ -101,11 +101,11 @@
 		"eslint-plugin-react-native": "^5.0.0",
 		"eslint-plugin-react-native-a11y": "^3.5.1",
 		"globals": "^17.7.0",
-		"oxfmt": "^0.57.0",
+		"oxfmt": "^0.58.0",
 		"svgo": "^4.0.1",
 		"typescript": "npm:@typescript/typescript6@^6.0.2",
-		"typescript-eslint": "^8.62.1",
-		"wrangler": "^4.107.0"
+		"typescript-eslint": "^8.63.0",
+		"wrangler": "^4.107.1"
 	},
 	"browserslist": {
 		"production": [
