@@ -12,7 +12,7 @@ Vanilla Extract.
 - build with `pnpm build` (rsbuild)
 - format with `pnpm format` (oxfmt)
 - lint with `pnpm lint` (eslint)
-- typecheck with `pnpm typecheck` (tsgo)
+- typecheck with `pnpm typecheck` (tsc)
 - check `pnpm view <package>` before adding a new dependency
 
 ### code writing
