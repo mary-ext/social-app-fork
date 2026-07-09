@@ -2,24 +2,6 @@ export function choose<U, T extends Record<string, U>>(value: keyof T, choices: 
 	return choices[value];
 }
 
-type Falsy = '' | 0 | 0n | false | null | undefined;
-
-/**
- * Filters falsy values out of `items`, narrowing the element type. Useful for arrays assembled with inline
- * conditionals like `cond && value`.
- *
- * @param items the array to compact
- * @returns a new array of the truthy values, typed without the falsy members
- */
-export const definite = <T>(items: ReadonlyArray<T | Falsy>): T[] => {
-	return items.filter(Boolean) as T[];
-};
-
-export function dedupArray<T>(arr: T[]): T[] {
-	const s = new Set(arr);
-	return [...s];
-}
-
 /**
  * returns `a` if `b` is deeply equal, preserving structural sharing between `a` and `b`. supports Date object
  * comparisons.

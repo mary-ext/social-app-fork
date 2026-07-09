@@ -2,8 +2,9 @@ import type { ReactNode } from 'react';
 
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 
+import { definite } from '@mary/array-fns';
+
 import { urls } from '#/lib/constants';
-import { definite } from '#/lib/functions';
 import { cleanError } from '#/lib/strings/errors';
 import { augmentSearchQuery } from '#/lib/strings/helpers';
 

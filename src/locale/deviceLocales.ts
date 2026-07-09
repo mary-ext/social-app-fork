@@ -1,4 +1,4 @@
-import { dedupArray } from '#/lib/functions';
+import { unique } from '@mary/array-fns';
 
 import { getLocales as defaultGetLocales, type Locale } from '#/shims/localization';
 
@@ -65,4 +65,4 @@ export const deviceLocales = getLocales();
  *
  * {@link https://docs.expo.dev/versions/latest/sdk/localization/#locale}
  */
-export const deviceLanguageCodes = dedupArray(deviceLocales.map((l) => l.languageCode));
+export const deviceLanguageCodes = unique(deviceLocales.map((l) => l.languageCode));

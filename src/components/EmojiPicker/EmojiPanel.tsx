@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { definite } from '@mary/array-fns';
+
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import type { Emoji as DataEmoji } from '@emoji-mart/data';
 import { useQuery } from '@tanstack/react-query';
-
-import { definite } from '#/lib/functions';
 
 import * as SearchField from '#/components/web/forms/SearchField';
 

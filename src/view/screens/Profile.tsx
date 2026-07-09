@@ -8,10 +8,11 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
+import { definite } from '@mary/array-fns';
+
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { definite } from '#/lib/functions';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';

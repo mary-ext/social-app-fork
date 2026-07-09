@@ -6,6 +6,8 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { definite } from '@mary/array-fns';
+
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
@@ -13,7 +15,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { HITSLOP_20 } from '#/lib/constants';
-import { definite } from '#/lib/functions';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';

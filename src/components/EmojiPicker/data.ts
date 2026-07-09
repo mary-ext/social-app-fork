@@ -1,7 +1,7 @@
+import { unique } from '@mary/array-fns';
+
 import type { Emoji as DataEmoji, EmojiMartData } from '@emoji-mart/data';
 import { queryOptions } from '@tanstack/react-query';
-
-import { dedupArray } from '#/lib/functions';
 
 import { GCTIME, STALE } from '#/state/queries';
 
@@ -58,5 +58,5 @@ function buildHaystack(emoji: DataEmoji): string {
 		.flatMap((term) => term.toLowerCase().split(/\s+/))
 		.filter(Boolean);
 
-	return `,${dedupArray(terms).join(',')}`;
+	return `,${unique(terms).join(',')}`;
 }
