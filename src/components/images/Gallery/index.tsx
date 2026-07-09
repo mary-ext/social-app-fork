@@ -1,4 +1,4 @@
-import { cloneElement, createContext, isValidElement, useCallback, useContext, useState } from 'react';
+import { cloneElement, createContext, isValidElement, use, useState } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -32,7 +32,7 @@ export function GalleryBleed({ children }: { children: React.ReactNode }) {
 	const [bleedEl, setBleedEl] = useState<HTMLElement | null>(null);
 	const [bleedWidth, setBleedWidth] = useState(0);
 
-	const measureRef = useCallback((el: HTMLElement | null) => {
+	const measureRef = (el: HTMLElement | null) => {
 		if (el === null) {
 			return;
 		}
@@ -51,7 +51,7 @@ export function GalleryBleed({ children }: { children: React.ReactNode }) {
 			observer.disconnect();
 			setBleedEl(null);
 		};
-	}, []);
+	};
 
 	if (!isValidElement(children)) {
 		throw new Error('GalleryBleed children must be a single React element');
@@ -70,5 +70,5 @@ export function GalleryBleed({ children }: { children: React.ReactNode }) {
 }
 
 export function useGalleryBleed() {
-	return useContext(BleedContext);
+	return use(BleedContext);
 }
