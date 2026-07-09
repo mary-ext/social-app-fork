@@ -100,6 +100,9 @@ importers:
       '@mary-ext/simple-event-emitter':
         specifier: ^1.0.2
         version: 1.0.2
+      '@mary/array-fns':
+        specifier: jsr:^0.1.5
+        version: '@jsr/mary__array-fns@0.1.5'
       '@mary/batch-fetch':
         specifier: jsr:^0.1.0
         version: '@jsr/mary__batch-fetch@0.1.0'
@@ -1124,6 +1127,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@jsr/mary__array-fns@0.1.5':
+    resolution: {integrity: sha512-gI4scq/Hh9GtFUJfS8cvZf5nr+cs7udvrEpMv75grws5/0LIwBycKeeJcNi4+xNl6x4CGW6Fp46puhtJiQOpMg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__array-fns/0.1.5.tgz}
 
   '@jsr/mary__batch-fetch@0.1.0':
     resolution: {integrity: sha512-A5SmTfDUMjr+AaJA+wFg4eKKVQm6/51CYTg5ssO+vcnaCJoP1Y0RURG6VkMno9QUholf3AAldfzRgQOXDZbFgg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__batch-fetch/0.1.0.tgz}
@@ -6058,6 +6064,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@jsr/mary__array-fns@0.1.5': {}
 
   '@jsr/mary__batch-fetch@0.1.0': {}
 

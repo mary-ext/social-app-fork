@@ -91,7 +91,7 @@ const SingleImage = ({
 const Carousel = ({ dispatch, images }: GalleryProps) => {
 	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor (the post container) so it
 	// can extend past the text column to the container's edges.
-	const { bleedRef, bleedWidth } = useGalleryBleed();
+	const { bleedEl, bleedWidth } = useGalleryBleed();
 	const contentRef = useRef<HTMLDivElement>(null);
 	const [contentDims, setContentDims] = useState<{ width: number; x: number }>();
 
@@ -109,11 +109,8 @@ const Carousel = ({ dispatch, images }: GalleryProps) => {
 		ratios: images.map((image) => getAspectRatio(image.transformed ?? image.source)),
 	});
 
-	// `useEffect`, not `useLayoutEffect`: the bleed element is an ancestor, so its ref attaches after this
-	// descendant's layout phase. Measuring post-commit (and re-running when `bleedWidth` settles) sees it.
 	useEffect(() => {
 		const measure = () => {
-			const bleedEl = bleedRef.current;
 			if (contentRef.current && bleedEl) {
 				const c = contentRef.current.getBoundingClientRect();
 				const b = bleedEl.getBoundingClientRect();
@@ -123,7 +120,7 @@ const Carousel = ({ dispatch, images }: GalleryProps) => {
 		measure();
 		window.addEventListener('resize', measure);
 		return () => window.removeEventListener('resize', measure);
-	}, [bleedRef, bleedWidth, contentHeight]);
+	}, [bleedEl, bleedWidth, contentHeight]);
 
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());

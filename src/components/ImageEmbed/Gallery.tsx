@@ -45,7 +45,7 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
 	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor (by diffing bounding
 	// rects) so it can extend past the post's content column.
-	const { bleedRef, bleedWidth } = useGalleryBleed();
+	const { bleedEl, bleedWidth } = useGalleryBleed();
 	const contentRef = useRef<HTMLDivElement>(null);
 	const [contentDims, setContentDims] = useState<{ x: number; width: number }>();
 
@@ -67,11 +67,8 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 		ratios: images.map((image) => getAspectRatio(image.aspectRatio)),
 	});
 
-	// `useEffect`, not `useLayoutEffect`: the bleed element is an ancestor, so its ref attaches after this
-	// descendant's layout phase. Measuring post-commit (and re-running when `bleedWidth` settles) sees it.
 	useEffect(() => {
 		const measure = () => {
-			const bleedEl = bleedRef.current;
 			if (contentRef.current && bleedEl) {
 				const c = contentRef.current.getBoundingClientRect();
 				const b = bleedEl.getBoundingClientRect();
@@ -81,7 +78,7 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 		measure();
 		window.addEventListener('resize', measure);
 		return () => window.removeEventListener('resize', measure);
-	}, [bleedRef, bleedWidth, contentHeight]);
+	}, [bleedEl, bleedWidth, contentHeight]);
 
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());

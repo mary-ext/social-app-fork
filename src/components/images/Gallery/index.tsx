@@ -1,12 +1,4 @@
-import {
-	cloneElement,
-	createContext,
-	isValidElement,
-	useCallback,
-	useContext,
-	useRef,
-	useState,
-} from 'react';
+import { cloneElement, createContext, isValidElement, useCallback, useContext, useState } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -16,11 +8,11 @@ import * as css from './index.css';
 
 export * from './maybeApplyGalleryOffsetStyles';
 
-const Context = createContext<{
-	bleedRef: React.RefObject<HTMLElement | null>;
+const BleedContext = createContext<{
+	bleedEl: HTMLElement | null;
 	bleedWidth: number;
 }>({
-	bleedRef: { current: null },
+	bleedEl: null,
 	bleedWidth: 0,
 });
 
@@ -37,22 +29,28 @@ type GalleryBleedChildProps = {
  * @param props.children single child that must be a DOM element.
  */
 export function GalleryBleed({ children }: { children: React.ReactNode }) {
-	const ref = useRef<HTMLElement | null>(null);
-	const observerRef = useRef<ResizeObserver | null>(null);
+	const [bleedEl, setBleedEl] = useState<HTMLElement | null>(null);
 	const [bleedWidth, setBleedWidth] = useState(0);
 
 	const measureRef = useCallback((el: HTMLElement | null) => {
-		ref.current = el;
-		observerRef.current?.disconnect();
-		if (el) {
-			const observer = new ResizeObserver((entries) => {
-				const entry = entries[0];
-				const box = entry?.borderBoxSize?.[0];
-				setBleedWidth(box ? box.inlineSize : (entry?.contentRect.width ?? 0));
-			});
-			observer.observe(el);
-			observerRef.current = observer;
+		if (el === null) {
+			return;
 		}
+
+		const observer = new ResizeObserver((entries) => {
+			const entry = entries[0];
+			const box = entry?.borderBoxSize?.[0];
+
+			setBleedWidth(box ? box.inlineSize : (entry?.contentRect.width ?? 0));
+		});
+
+		setBleedEl(el);
+		observer.observe(el);
+
+		return () => {
+			observer.disconnect();
+			setBleedEl(null);
+		};
 	}, []);
 
 	if (!isValidElement(children)) {
@@ -62,17 +60,15 @@ export function GalleryBleed({ children }: { children: React.ReactNode }) {
 	const node = children as React.ReactElement<GalleryBleedChildProps>;
 
 	return (
-		<Context.Provider value={{ bleedRef: ref, bleedWidth }}>
+		<BleedContext value={{ bleedEl, bleedWidth }}>
 			{cloneElement(node, {
 				className: clsx(node.props.className, css.clip),
-				// mergeRefs returns a ref callback that reads/writes .current only at attach time, not during render.
-				// eslint-disable-next-line react-hooks/refs
 				ref: mergeRefs([measureRef, node.props.ref]),
 			})}
-		</Context.Provider>
+		</BleedContext>
 	);
 }
 
 export function useGalleryBleed() {
-	return useContext(Context);
+	return useContext(BleedContext);
 }
