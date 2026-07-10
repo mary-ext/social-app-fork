@@ -6,7 +6,7 @@ import { definite } from '@mary/array-fns';
 
 import { urls } from '#/lib/constants';
 import { cleanError } from '#/lib/strings/errors';
-import { augmentSearchQuery } from '#/lib/strings/helpers';
+import { normalizeSearchQuery } from '#/lib/strings/helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';
@@ -152,10 +152,10 @@ function NoResultsText({ query }: { query: string }) {
 }
 
 function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }) {
-	const { currentAccount, hasSession } = useSession();
+	const { hasSession } = useSession();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
-	const augmentedQuery = augmentSearchQuery(query || '', { did: currentAccount?.did });
+	const normalizedQuery = normalizeSearchQuery(query);
 
 	const {
 		data: results,
@@ -165,7 +165,7 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 		isFetched,
 		isFetching,
 		isFetchingNextPage,
-	} = useSearchPostsQuery({ query: augmentedQuery, sort });
+	} = useSearchPostsQuery({ query: normalizedQuery, sort });
 
 	const posts = results?.pages.flatMap((page) => page.posts) ?? [];
 	const seen = new Set<string>();

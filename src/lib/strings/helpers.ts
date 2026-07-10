@@ -34,30 +34,13 @@ export function countLines(str: string | undefined): number {
 	return str.match(/\n/g)?.length ?? 0;
 }
 
-// Augments search query with additional syntax like `from:me`
-export function augmentSearchQuery(query: string, { did }: { did?: string }) {
-	// Don't do anything if there's no DID
-	if (!did) {
-		return query;
-	}
-
-	// replace “smart quotes” with normal ones
-	// iOS keyboard will add fancy unicode quotes, but only normal ones work
-	query = query.replaceAll(/[“”]/g, '"');
-
-	// We don't want to replace substrings that are being "quoted" because those
-	// are exact string matches, so what we'll do here is to split them apart
-
-	// Even-indexed strings are unquoted, odd-indexed strings are quoted
-	const splits = query.split(/("(?:[^"\\]|\\.)*")/g);
-
-	return splits
-		.map((str, idx) => {
-			if (idx % 2 === 0) {
-				return str.replaceAll(/(^|\s)from:me(\s|$)/g, `$1${did}$2`);
-			}
-
-			return str;
-		})
-		.join('');
+/**
+ * Normalizes a search query for the search endpoint.
+ *
+ * @param query the raw query as typed by the user
+ * @returns the query with “smart quotes” replaced by normal ones
+ */
+export function normalizeSearchQuery(query: string) {
+	// some keyboards add fancy unicode quotes, but only normal ones work
+	return query.replaceAll(/[“”]/g, '"');
 }
