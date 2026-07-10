@@ -56,6 +56,8 @@ import { InboxRequests } from './components/InboxRequests';
 import { useIsWithinSplitView } from './components/splitView/context';
 import { splitViewLeftScroll } from './components/splitView/leftColumnScroll';
 
+const CHAT_ITEM_HEIGHT_ESTIMATE = 78;
+
 type ListItem = {
 	type: 'CONVERSATION';
 	conversation: ChatBskyConvoDefs.ConvoView;
@@ -303,6 +305,7 @@ export function ChatList({
 		<List
 			ref={scrollElRef}
 			data={conversations}
+			estimateHeight={CHAT_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			onEndReached={() => void onEndReached()}
