@@ -15,6 +15,7 @@ import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -102,8 +103,8 @@ function ChooseAccountScreen({
 	);
 
 	return (
-		<Dialog.Stack gap="lg">
-			<Dialog.Stack gap="xs">
+		<Stack gap="lg">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>
 						{intent === 'switch' ? m['common.account.action.switch']() : m['common.session.action.signIn']()}
@@ -114,7 +115,7 @@ function ChooseAccountScreen({
 				{intent !== 'switch' && (
 					<Text color="textContrastMedium">{m['components.dialogs.account.chooseDescription']()}</Text>
 				)}
-			</Dialog.Stack>
+			</Stack>
 
 			<AccountList
 				onSelectAccount={(account) => void onSelectAccount(account)}
@@ -122,7 +123,7 @@ function ChooseAccountScreen({
 				otherLabel={m['components.dialogs.account.signInAnother']()}
 				pendingDid={pendingDid}
 			/>
-		</Dialog.Stack>
+		</Stack>
 	);
 }
 
@@ -160,15 +161,15 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 	};
 
 	return (
-		<Dialog.Stack gap="xl">
-			<Dialog.Stack gap="xs">
+		<Stack gap="xl">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['common.session.action.signIn']()}</Dialog.Title>
 					<Dialog.Close />
 				</Dialog.TitleRow>
 
 				<Text color="textContrastMedium">{m['components.dialogs.signin.description']()}</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			<TextField.Root isInvalid={!!error}>
 				<TextField.LabelText>{m['components.dialogs.account.handle.label']()}</TextField.LabelText>
@@ -222,6 +223,6 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 					</Button>
 				)}
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }

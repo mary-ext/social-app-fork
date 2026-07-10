@@ -6,7 +6,6 @@ export {
 	Divider,
 	Footer,
 	Popup,
-	Stack,
 	Title,
 	TitleRow,
 	Viewport,

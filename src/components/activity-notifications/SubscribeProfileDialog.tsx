@@ -26,6 +26,7 @@ import { Button, type ButtonProps, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 import * as ProfileCard from '#/components/web/ProfileCard';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -174,8 +175,8 @@ function DialogInner({
 	}
 
 	return (
-		<Dialog.Stack gap="xl">
-			<Dialog.Stack gap="xs">
+		<Stack gap="xl">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['components.activityNotifications.subscribe']()}</Dialog.Title>
 					<Dialog.Close />
@@ -183,7 +184,7 @@ function DialogInner({
 				<Text color="textContrastMedium" size="md">
 					{m['components.activityNotifications.activityHint']()}
 				</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			{includeProfile && (
 				<ProfileCard.Header>
@@ -231,7 +232,7 @@ function DialogInner({
 					{isSaving && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }
 

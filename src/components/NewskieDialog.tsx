@@ -16,6 +16,7 @@ import * as styles from '#/components/NewskieDialog.css';
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -91,7 +92,7 @@ function DialogInner({
 	};
 
 	return (
-		<Dialog.Stack gap="md">
+		<Stack gap="md">
 			<div className={styles.header}>
 				<div className={styles.icon}>
 					<Newskie size="5xl" fill="currentColor" />
@@ -110,6 +111,6 @@ function DialogInner({
 					</div>
 				</StarterPackCard.Link>
 			) : null}
-		</Dialog.Stack>
+		</Stack>
 	);
 }

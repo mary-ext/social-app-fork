@@ -45,6 +45,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -323,7 +324,7 @@ function DialogInner({
 	};
 
 	return (
-		<Dialog.Stack gap="md">
+		<Stack gap="md">
 			<div className={css.dialogHeaderRow}>
 				<UserAvatar type="algo" size={48} avatar={info.avatar} />
 
@@ -435,6 +436,6 @@ function DialogInner({
 					</div>
 				</>
 			)}
-		</Dialog.Stack>
+		</Stack>
 	);
 }

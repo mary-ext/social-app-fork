@@ -18,6 +18,7 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -105,15 +106,15 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 	});
 
 	return (
-		<Dialog.Stack gap="lg">
-			<Dialog.Stack gap="sm">
+		<Stack gap="lg">
+			<Stack gap="sm">
 				<div className={css.header}>
 					<GermLogo size="large" />
 					<Dialog.Title>{m['screens.profile.germDm.linkLabel']()}</Dialog.Title>
 				</div>
 
 				<Text>{m['screens.profile.germDm.info']()}</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			<Dialog.Actions>
 				<Button
@@ -130,7 +131,7 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 					<ButtonText>{m['screens.profile.action.gotIt']()}</ButtonText>
 				</Button>
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }
 

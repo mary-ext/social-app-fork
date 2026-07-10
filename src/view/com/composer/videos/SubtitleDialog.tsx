@@ -20,6 +20,7 @@ import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -108,7 +109,7 @@ function SubtitleDialogInner({
 	});
 
 	return (
-		<Dialog.Stack gap="md">
+		<Stack gap="md">
 			<Text size="xl" weight="semiBold">
 				{m['common.altText.label']()}
 			</Text>
@@ -174,7 +175,7 @@ function SubtitleDialogInner({
 					<ButtonText>{m['common.action.done']()}</ButtonText>
 				</Button>
 			</div>
-		</Dialog.Stack>
+		</Stack>
 	);
 }
 

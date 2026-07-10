@@ -131,19 +131,6 @@ export function Title({ children, className }: { children: ReactNode; className?
 	);
 }
 
-/** Vertical stack for `viewport`-scroll Popup content — the flex column the card body needs. */
-export function Stack({
-	children,
-	gap = 'lg',
-	className,
-}: {
-	children: ReactNode;
-	gap?: '_2xl' | 'lg' | 'md' | 'sm' | 'xl' | 'xs';
-	className?: string;
-}) {
-	return <div className={clsx(styles.stack({ gap }), className)}>{children}</div>;
-}
-
 /**
  * Action/button row. Author children in reading order (secondary → primary); the layout knobs are orthogonal.
  * `direction` sets the axis — `row` (default), `column`, or `responsive` (a column on narrow screens, a row

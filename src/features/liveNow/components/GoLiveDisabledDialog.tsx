@@ -17,6 +17,7 @@ import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 import { m } from '#/paraglide/messages';
@@ -93,17 +94,17 @@ function DialogInner({
 	const onSubmit = () => mutate();
 
 	return (
-		<Dialog.Stack gap="lg">
-			<Dialog.Stack gap="md">
+		<Stack gap="lg">
+			<Stack gap="md">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['features.liveNow.goLive.disabled']()}</Dialog.Title>
 					<Dialog.Close />
 				</Dialog.TitleRow>
 				<Text size="md">{m['features.liveNow.appeal.blocked']()}</Text>
 				<Text size="md">{m['common.appeal.destination']()}</Text>
-			</Dialog.Stack>
+			</Stack>
 
-			<Dialog.Stack gap="lg">
+			<Stack gap="lg">
 				<TextField.Input
 					autoFocus
 					label={m['common.a11y.textInput']()}
@@ -125,7 +126,7 @@ function DialogInner({
 					<ButtonText>{m['common.action.submit']()}</ButtonText>
 					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
-			</Dialog.Stack>
-		</Dialog.Stack>
+			</Stack>
+		</Stack>
 	);
 }

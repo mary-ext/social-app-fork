@@ -147,28 +147,6 @@ export const title = style(
 	}),
 );
 
-export const stack = recipe(
-	{
-		base: {
-			boxSizing: 'border-box',
-			display: 'flex',
-			flexDirection: 'column',
-		},
-		variants: {
-			gap: {
-				_2xl: { gap: space._2xl },
-				lg: { gap: space.lg },
-				md: { gap: space.md },
-				sm: { gap: space.sm },
-				xl: { gap: space.xl },
-				xs: { gap: space.xs },
-			},
-		},
-		defaultVariants: { gap: 'lg' },
-	},
-	{ debugId: 'stack', layer: components },
-);
-
 // action/button row. three orthogonal knobs: `direction` picks the axis (`row`, `column`, or `responsive` =
 // column on narrow / row past 800px); `align` distributes the row (`end` clusters right, `center`, `between`
 // spreads to the edges) and is inert in a column; `reverse` flips the flow so the last (primary) child leads

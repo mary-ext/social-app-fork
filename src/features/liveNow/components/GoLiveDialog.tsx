@@ -19,6 +19,7 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as ProfileCard from '#/components/web/ProfileCard';
+import { Stack } from '#/components/web/Stack';
 
 import {
 	displayDuration,
@@ -93,8 +94,8 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const hasLink = !!debouncedUrl && !isSourceInvalid;
 
 	return (
-		<Dialog.Stack gap="xl">
-			<Dialog.Stack gap="xs">
+		<Stack gap="xl">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['features.liveNow.goLive.confirm']()}</Dialog.Title>
 					<Dialog.Close />
@@ -102,7 +103,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				<Text color="textContrastHigh" size="md">
 					{m['features.liveNow.goLive.description']()}
 				</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			{moderationOpts && (
 				<ProfileCard.Header>
@@ -116,7 +117,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				</ProfileCard.Header>
 			)}
 
-			<Dialog.Stack gap="sm">
+			<Stack gap="sm">
 				<TextField.Root isInvalid={isSourceInvalid}>
 					<TextField.LabelText>{m['features.liveNow.link.label']()}</TextField.LabelText>
 					<TextField.Input
@@ -144,7 +145,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				)}
 
 				<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
-			</Dialog.Stack>
+			</Stack>
 
 			{hasLink && (
 				<div>
@@ -214,6 +215,6 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					</Button>
 				)}
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }

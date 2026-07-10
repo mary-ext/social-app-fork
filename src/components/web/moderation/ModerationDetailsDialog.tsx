@@ -15,6 +15,7 @@ import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -118,13 +119,13 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 	return (
 		<>
 			<div className={styles.main}>
-				<Dialog.Stack gap="xs">
+				<Stack gap="xs">
 					<Dialog.TitleRow>
 						<Dialog.Title>{name}</Dialog.Title>
 						<Dialog.Close />
 					</Dialog.TitleRow>
 					<Text>{description}</Text>
-				</Dialog.Stack>
+				</Stack>
 
 				{desc.isSubjectAccount && (
 					<Admonition className={styles.admonition} type="info">

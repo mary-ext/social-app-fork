@@ -43,6 +43,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -219,7 +220,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 	}
 
 	return (
-		<Dialog.Stack gap="lg">
+		<Stack gap="lg">
 			<Header />
 			<PostInteractionSettingsForm
 				replySettingsDisabled={!isThreadgateOwnedByViewer}
@@ -230,7 +231,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 				threadgateAllowUISettings={allowUIValue}
 				onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
 			/>
-		</Dialog.Stack>
+		</Stack>
 	);
 }
 

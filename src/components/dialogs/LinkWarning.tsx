@@ -9,6 +9,7 @@ import * as css from '#/components/dialogs/LinkWarning.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -45,13 +46,13 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 
 	return (
 		<Dialog.Popup size="narrow">
-			<Dialog.Stack gap="xl">
-				<Dialog.Stack gap="md">
+			<Stack gap="xl">
+				<Stack gap="md">
 					<Dialog.Title>{m['components.dialogs.link.title']()}</Dialog.Title>
 
 					<Text color="textContrastHigh">{m['components.dialogs.link.destination']()}</Text>
 					<LinkBox href={link.href} />
-				</Dialog.Stack>
+				</Stack>
 
 				<Dialog.Actions>
 					<Button color="secondary" label={m['common.action.goBack']()} onClick={close} variant="ghost">
@@ -68,7 +69,7 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 						</ButtonText>
 					</Button>
 				</Dialog.Actions>
-			</Dialog.Stack>
+			</Stack>
 		</Dialog.Popup>
 	);
 }

@@ -13,6 +13,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -76,18 +77,18 @@ function DialogInner({
 	const hasAdultLabel = labels.includes('sexual') || labels.includes('nudity') || labels.includes('porn');
 
 	return (
-		<Dialog.Stack gap="xl">
-			<Dialog.Stack gap="xs">
+		<Stack gap="xl">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['view.composer.contentWarning.add']()}</Dialog.Title>
 					<Dialog.Close />
 				</Dialog.TitleRow>
 
 				<Text color="textContrastMedium">{m['view.composer.contentWarning.hint']()}</Text>
-			</Dialog.Stack>
+			</Stack>
 
-			<Dialog.Stack gap="lg">
-				<Dialog.Stack gap="sm">
+			<Stack gap="lg">
+				<Stack gap="sm">
 					<Text size="lg" weight="semiBold">
 						{m['common.moderation.adultContent']()}
 					</Text>
@@ -126,9 +127,9 @@ function DialogInner({
 									: m['view.composer.contentWarning.sexualContentDesc']()}
 						</Text>
 					)}
-				</Dialog.Stack>
+				</Stack>
 
-				<Dialog.Stack gap="sm">
+				<Stack gap="sm">
 					<Text size="lg" weight="semiBold">
 						{m['common.status.other']()}
 					</Text>
@@ -149,14 +150,14 @@ function DialogInner({
 					{labels.includes('graphic-media') && (
 						<Text color="textContrastMedium">{m['view.composer.contentWarning.disturbingDesc']()}</Text>
 					)}
-				</Dialog.Stack>
-			</Dialog.Stack>
+				</Stack>
+			</Stack>
 
 			<Dialog.Actions>
 				<Button color="primary" label={m['common.action.done']()} onClick={onDone} size="small">
 					<ButtonText>{m['common.action.done']()}</ButtonText>
 				</Button>
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }

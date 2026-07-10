@@ -23,7 +23,7 @@ export const infoRow = style({
 	flexDirection: 'row',
 });
 
-// Dialog.Stack supplies the flex column + gap; only the centering is bespoke here.
+// Stack supplies the flex column + gap; only the centering is bespoke here.
 export const inner = style({
 	alignItems: 'center',
 });

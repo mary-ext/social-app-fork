@@ -39,6 +39,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -77,14 +78,14 @@ export function GroupChatJoinDialog() {
 		<Dialog.Root handle={groupChatJoinHandle}>
 			{({ payload }) => (
 				<Dialog.Popup label={m['components.intents.join.action.join']()} size="narrow">
-					<Dialog.Stack className={css.inner} gap="_2xl">
+					<Stack className={css.inner} gap="_2xl">
 						{/* remount per code so a reopen with a different invite refetches from a clean state */}
 						<GroupChatJoinDialogContent
 							key={payload?.code}
 							handle={groupChatJoinHandle}
 							code={payload?.code}
 						/>
-					</Dialog.Stack>
+					</Stack>
 					<Dialog.Close variant="floating" />
 				</Dialog.Popup>
 			)}

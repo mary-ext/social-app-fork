@@ -16,6 +16,7 @@ import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { ExternalLinkButton } from '#/components/web/Link';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -93,10 +94,10 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 		: m['components.verification.trustedVerifier.userStatus']({ name });
 
 	return (
-		<Dialog.Stack gap="lg">
+		<Stack gap="lg">
 			<VerificationIllustration />
 
-			<Dialog.Stack gap="sm">
+			<Stack gap="sm">
 				<Dialog.Title>{label}</Dialog.Title>
 				<Text size="md">
 					<Trans
@@ -104,7 +105,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						markup={{ t0: () => <VerifierCheck className={css.inlineCheck} width={14} /> }}
 					/>
 				</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			<Dialog.Actions direction="responsive">
 				<ExternalLinkButton
@@ -124,6 +125,6 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					<ButtonText>{m['common.action.close']()}</ButtonText>
 				</Button>
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }

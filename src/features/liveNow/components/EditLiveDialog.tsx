@@ -17,6 +17,7 @@ import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import {
 	displayDuration,
@@ -101,8 +102,8 @@ function DialogInner({
 		isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl || isRemovingLiveStatus;
 
 	return (
-		<Dialog.Stack gap="lg">
-			<Dialog.Stack gap="sm">
+		<Stack gap="lg">
+			<Stack gap="sm">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['features.liveNow.goLive.live']()}</Dialog.Title>
 					<Dialog.Close />
@@ -118,8 +119,8 @@ function DialogInner({
 							: m['features.liveNow.expiry.none']()}
 					</Text>
 				</div>
-			</Dialog.Stack>
-			<Dialog.Stack gap="sm">
+			</Stack>
+			<Stack gap="sm">
 				<TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
 					<TextField.LabelText>{m['features.liveNow.link.label']()}</TextField.LabelText>
 					<TextField.Input
@@ -150,7 +151,7 @@ function DialogInner({
 				)}
 
 				<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
-			</Dialog.Stack>
+			</Stack>
 
 			{goLiveError && <Admonition type="error">{cleanError(goLiveError)}</Admonition>}
 			{removeLiveStatusError && <Admonition type="error">{cleanError(removeLiveStatusError)}</Admonition>}
@@ -191,6 +192,6 @@ function DialogInner({
 					</Button>
 				)}
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }

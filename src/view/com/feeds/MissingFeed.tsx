@@ -16,6 +16,7 @@ import { Text } from '#/components/Text';
 import { Text as LegacyText } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
 import * as ProfileCard from '#/components/web/ProfileCard';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -110,7 +111,7 @@ function DialogInner({
 	const moderationOpts = useModerationOpts();
 
 	return (
-		<Dialog.Stack gap="sm">
+		<Stack gap="sm">
 			<Dialog.TitleRow>
 				<Dialog.Title>
 					{type === 'feed' ? m['view.feeds.feed.error.connectService']() : m['view.feeds.list.deleted']()}
@@ -159,6 +160,6 @@ function DialogInner({
 					</Text>
 				</>
 			)}
-		</Dialog.Stack>
+		</Stack>
 	);
 }

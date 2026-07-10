@@ -8,6 +8,7 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -48,15 +49,15 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 	}
 
 	return (
-		<Dialog.Stack gap="xl">
-			<Dialog.Stack gap="xs">
+		<Stack gap="xl">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['components.starterPack.share.invitePrompt']()}</Dialog.Title>
 					<Dialog.Close />
 				</Dialog.TitleRow>
 
 				<Text color="textContrastMedium">{m['components.starterPack.share.message']()}</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			<img alt="" className={styles.image} src={imageUrl} />
 
@@ -72,6 +73,6 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 					<ButtonText>{m['common.share.action.copyLink']()}</ButtonText>
 				</Button>
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }

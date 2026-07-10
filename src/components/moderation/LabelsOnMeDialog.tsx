@@ -27,6 +27,7 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -61,8 +62,8 @@ function LabelsOnMeDialogInner({ handle, labels, type }: LabelsOnMeDialogProps) 
 	}
 
 	return (
-		<Dialog.Stack gap="lg">
-			<Dialog.Stack gap="xs">
+		<Stack gap="lg">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>
 						{isAccount
@@ -76,9 +77,9 @@ function LabelsOnMeDialogInner({ handle, labels, type }: LabelsOnMeDialogProps) 
 						? m['components.moderation.appeal.nonSelfHint']()
 						: m['components.moderation.appeal.theseLabelsHint']()}
 				</Text>
-			</Dialog.Stack>
+			</Stack>
 
-			<Dialog.Stack gap="md">
+			<Stack gap="md">
 				{labels.map((label) => (
 					<Label
 						key={`${label.val}-${label.src}`}
@@ -88,8 +89,8 @@ function LabelsOnMeDialogInner({ handle, labels, type }: LabelsOnMeDialogProps) 
 						onPressAppeal={setAppealingLabel}
 					/>
 				))}
-			</Dialog.Stack>
-		</Dialog.Stack>
+			</Stack>
+		</Stack>
 	);
 }
 
@@ -219,8 +220,8 @@ function AppealForm({
 	const onSubmit = () => mutate();
 
 	return (
-		<Dialog.Stack gap="xl">
-			<Dialog.Stack gap="xs">
+		<Stack gap="xl">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['components.moderation.appeal.title']({ name: strings.name })}</Dialog.Title>
 					<Dialog.Close />
@@ -244,7 +245,7 @@ function AppealForm({
 						}}
 					/>
 				</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			{error && (
 				<Admonition className={styles.appealError} type="error">
@@ -275,6 +276,6 @@ function AppealForm({
 					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }

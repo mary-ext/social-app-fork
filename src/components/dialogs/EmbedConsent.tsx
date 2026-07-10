@@ -6,6 +6,7 @@ import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -48,15 +49,15 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 	};
 
 	return (
-		<Dialog.Stack gap="xl">
-			<Dialog.Stack gap="xs">
+		<Stack gap="xl">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['components.dialogs.externalMedia.title']()}</Dialog.Title>
 					<Dialog.Close />
 				</Dialog.TitleRow>
 
 				<Text>{m['components.dialogs.externalMedia.prompt']({ source: externalEmbedLabels[source] })}</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			<Admonition type="info">{m['common.externalMedia.hint']()}</Admonition>
 
@@ -89,6 +90,6 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 					<ButtonText>{m['components.dialogs.action.noThanks']()}</ButtonText>
 				</Button>
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }

@@ -15,6 +15,7 @@ import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -62,8 +63,8 @@ export function CreateListFromStarterPackDialog({
 		<>
 			<Dialog.Root handle={handle}>
 				<Dialog.Popup size="narrow">
-					<Dialog.Stack gap="xl">
-						<Dialog.Stack gap="lg">
+					<Stack gap="xl">
+						<Stack gap="lg">
 							<Dialog.TitleRow>
 								<Dialog.Title>{m['components.dialogs.list.createFromStarterPack']()}</Dialog.Title>
 								<Dialog.Close />
@@ -74,7 +75,7 @@ export function CreateListFromStarterPackDialog({
 							</Text>
 
 							<Admonition type="tip">{m['components.dialogs.starterPack.copyNotice']()}</Admonition>
-						</Dialog.Stack>
+						</Stack>
 
 						<Dialog.Actions>
 							<Button
@@ -94,7 +95,7 @@ export function CreateListFromStarterPackDialog({
 								<ButtonText>{m['components.dialogs.list.createTitle']()}</ButtonText>
 							</Button>
 						</Dialog.Actions>
-					</Dialog.Stack>
+					</Stack>
 				</Dialog.Popup>
 			</Dialog.Root>
 			<CreateOrEditListDialog

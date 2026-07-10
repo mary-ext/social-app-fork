@@ -12,6 +12,7 @@ import { PreferenceControls } from '#/screens/Settings/NotificationSettings/comp
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -63,8 +64,8 @@ function Inner({
 	const preference = isChat ? chatQuery.data?.[name] : appQuery.data?.[name];
 
 	return (
-		<Dialog.Stack gap="lg">
-			<Dialog.Stack gap="xs">
+		<Stack gap="lg">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{titleText}</Dialog.Title>
 					<Dialog.Close />
@@ -73,7 +74,7 @@ function Inner({
 				<Text color="textContrastMedium" size="md">
 					{subtitleText}
 				</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			{isError ? (
 				<div className={styles.errorWrap}>
@@ -87,6 +88,6 @@ function Inner({
 					syncOthers={syncOthers}
 				/>
 			)}
-		</Dialog.Stack>
+		</Stack>
 	);
 }

@@ -16,6 +16,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -49,9 +50,9 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 			: m['components.verification.verifications.userTitle']({ name: profile.handle });
 
 	return (
-		<Dialog.Stack gap="xl">
-			<Dialog.Stack gap="lg">
-				<Dialog.Stack gap="xs">
+		<Stack gap="xl">
+			<Stack gap="lg">
+				<Stack gap="xs">
 					<Dialog.TitleRow>
 						<Dialog.Title>{label}</Dialog.Title>
 						<Dialog.Close />
@@ -62,30 +63,30 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 							? m['components.verification.verified.description']()
 							: m['components.verification.verified.notVerified']()}
 					</Text>
-				</Dialog.Stack>
+				</Stack>
 
 				{profile.verification ? (
-					<Dialog.Stack gap="lg">
-						<Dialog.Stack gap="md">
+					<Stack gap="lg">
+						<Stack gap="md">
 							<Text color="textContrastMedium" size="sm" weight="semiBold">
 								{m['components.verification.verifications.verifiedBy']()}
 							</Text>
 
-							<Dialog.Stack gap="lg">
+							<Stack gap="lg">
 								{profile.verification.verifications.map((v) => (
 									<VerifierCard key={v.uri} outerHandle={handle} verification={v} />
 								))}
-							</Dialog.Stack>
-						</Dialog.Stack>
+							</Stack>
+						</Stack>
 
 						{profile.verification.verifications.some((v) => !v.isValid) && isViewer && (
 							<Admonition type="warning">
 								{m['components.verification.verifications.someInvalid']()}
 							</Admonition>
 						)}
-					</Dialog.Stack>
+					</Stack>
 				) : null}
-			</Dialog.Stack>
+			</Stack>
 
 			<Dialog.Actions direction="responsive" reverse>
 				<ExternalLinkButton
@@ -105,7 +106,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					<ButtonText>{m['common.action.close']()}</ButtonText>
 				</Button>
 			</Dialog.Actions>
-		</Dialog.Stack>
+		</Stack>
 	);
 }
 

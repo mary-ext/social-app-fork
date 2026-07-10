@@ -22,6 +22,7 @@ import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/
 import { Text } from '#/components/Text';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -135,13 +136,13 @@ function WhoCanReplyDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup size="narrow">
-				<Dialog.Stack gap="sm">
+				<Stack gap="sm">
 					<Dialog.TitleRow>
 						<Dialog.Title>{m['components.whoCanReply.title']()}</Dialog.Title>
 						<Dialog.Close />
 					</Dialog.TitleRow>
 					<Rules post={post} settings={settings} embeddingDisabled={embeddingDisabled} />
-				</Dialog.Stack>
+				</Stack>
 			</Dialog.Popup>
 		</Dialog.Root>
 	);

@@ -16,6 +16,7 @@ import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -94,8 +95,8 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	};
 
 	return (
-		<Dialog.Stack gap="lg">
-			<Dialog.Stack gap="xs">
+		<Stack gap="lg">
+			<Stack gap="xs">
 				<Dialog.TitleRow>
 					<Dialog.Title>{m['common.mutedWord.action.add']()}</Dialog.Title>
 					<Dialog.Close />
@@ -104,7 +105,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 				<Text size="md_sub" color="textContrastMedium">
 					{m['components.dialogs.mutedWord.description']()}
 				</Text>
-			</Dialog.Stack>
+			</Stack>
 
 			<TextField.Root>
 				<TextField.Input
@@ -173,6 +174,6 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 					</Text>
 				</div>
 			)}
-		</Dialog.Stack>
+		</Stack>
 	);
 }
