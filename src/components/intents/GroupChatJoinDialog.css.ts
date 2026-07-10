@@ -23,11 +23,9 @@ export const infoRow = style({
 	flexDirection: 'row',
 });
 
+// Dialog.Stack supplies the flex column + gap; only the centering is bespoke here.
 export const inner = style({
 	alignItems: 'center',
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space._2xl,
 });
 
 export const loaderBox = style({

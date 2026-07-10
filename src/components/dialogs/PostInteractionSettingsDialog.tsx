@@ -47,6 +47,8 @@ import * as Toggle from '#/components/web/forms/Toggle';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
+import { CenteredSpinner } from '../CenteredSpinner';
+
 export type PostInteractionSettingsFormProps = {
 	canSave?: boolean;
 	onSave: () => void;
@@ -89,8 +91,7 @@ export function PostInteractionSettingsControlledDialog({
 
 function DialogInner(props: PostInteractionSettingsFormProps) {
 	return (
-		<Dialog.Popup label={m['components.dialogs.interaction.editTitle']()} size="narrow">
-			<Dialog.Close />
+		<Dialog.Popup size="narrow">
 			<Header />
 			<PostInteractionSettingsForm {...props} />
 		</Dialog.Popup>
@@ -117,8 +118,7 @@ export type PostInteractionSettingsDialogProps = {
 export function PostInteractionSettingsDialog({ handle, ...props }: PostInteractionSettingsDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.dialogs.interaction.editTitle']()} size="narrow">
-				<Dialog.Close />
+			<Dialog.Popup label={m['components.dialogs.interaction.title']()} size="narrow">
 				<PostInteractionSettingsDialogInner handle={handle} {...props} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -211,15 +211,15 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 
 	if (isLoading) {
 		return (
-			<div className={styles.loading}>
-				<Spinner color="default" label={m['components.dialogs.interaction.loading']()} />
-				<Text className={styles.loadingText}>{m['components.dialogs.interaction.loading']()}</Text>
-			</div>
+			<>
+				<Dialog.Close variant="floating" />
+				<CenteredSpinner label={m['components.dialogs.interaction.loading']()} />
+			</>
 		);
 	}
 
 	return (
-		<>
+		<Dialog.Stack gap="lg">
 			<Header />
 			<PostInteractionSettingsForm
 				replySettingsDisabled={!isThreadgateOwnedByViewer}
@@ -230,7 +230,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 				threadgateAllowUISettings={allowUIValue}
 				onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
 			/>
-		</>
+		</Dialog.Stack>
 	);
 }
 
@@ -503,11 +503,10 @@ export function PostInteractionSettingsForm({
 
 function Header() {
 	return (
-		<div className={styles.header}>
-			<Text size="_2xl" weight="bold">
-				{m['components.dialogs.interaction.title']()}
-			</Text>
-		</div>
+		<Dialog.TitleRow>
+			<Dialog.Title>{m['components.dialogs.interaction.title']()}</Dialog.Title>
+			<Dialog.Close />
+		</Dialog.TitleRow>
 	);
 }
 

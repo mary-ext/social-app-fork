@@ -77,15 +77,15 @@ export function GroupChatJoinDialog() {
 		<Dialog.Root handle={groupChatJoinHandle}>
 			{({ payload }) => (
 				<Dialog.Popup label={m['components.intents.join.action.join']()} size="narrow">
-					<div className={css.inner}>
+					<Dialog.Stack className={css.inner} gap="_2xl">
 						{/* remount per code so a reopen with a different invite refetches from a clean state */}
 						<GroupChatJoinDialogContent
 							key={payload?.code}
 							handle={groupChatJoinHandle}
 							code={payload?.code}
 						/>
-					</div>
-					<Dialog.Close />
+					</Dialog.Stack>
+					<Dialog.Close variant="floating" />
 				</Dialog.Popup>
 			)}
 		</Dialog.Root>

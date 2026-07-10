@@ -24,7 +24,6 @@ export function ShareDialog({ handle, ...props }: Props) {
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup label={m['components.starterPack.share.a11yLabel']()}>
-				<Dialog.Close />
 				<ShareDialogInner handle={handle} {...props} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -49,17 +48,19 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 	}
 
 	return (
-		<div className={styles.content}>
-			<div className={styles.header}>
-				<Text size="_2xl" weight="semiBold">
-					{m['components.starterPack.share.invitePrompt']()}
-				</Text>
-				<Text color="textContrastMedium" size="md">
-					{m['components.starterPack.share.message']()}
-				</Text>
-			</div>
+		<Dialog.Stack gap="xl">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['components.starterPack.share.invitePrompt']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
+				<Text color="textContrastMedium">{m['components.starterPack.share.message']()}</Text>
+			</Dialog.Stack>
+
 			<img alt="" className={styles.image} src={imageUrl} />
-			<div className={styles.actions}>
+
+			<Dialog.Actions align="center" direction="responsive">
 				<Button
 					color="primary_subtle"
 					label={m['common.share.action.copyLink']()}
@@ -70,7 +71,7 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 					<ButtonIcon icon={ChainLinkIcon} />
 					<ButtonText>{m['common.share.action.copyLink']()}</ButtonText>
 				</Button>
-			</div>
-		</div>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }

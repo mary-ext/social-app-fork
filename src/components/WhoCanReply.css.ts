@@ -30,9 +30,3 @@ export const label = style({
 		[`${trigger}:hover &, ${trigger}:focus-visible &`]: { textDecoration: 'underline' },
 	},
 });
-
-export const dialogContent = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.sm,
-});

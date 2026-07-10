@@ -98,9 +98,8 @@ export const reportButton = style({
 	textDecorationColor: vars.palette.contrast_700,
 });
 
-// touch-only live dialog: drop the popup's own padding so the media bleeds to its rounded edges
+// the media bleeds to the popup's rounded corners, so clip it; width and padding come from the Popup
+// `size`/`padding` props.
 export const dialogPopup = style({
-	maxWidth: 420,
 	overflow: 'hidden',
-	padding: 0,
 });

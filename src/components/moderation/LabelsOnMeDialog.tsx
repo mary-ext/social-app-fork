@@ -39,18 +39,10 @@ export interface LabelsOnMeDialogProps {
 }
 
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
-	const isAccount = props.type === 'account';
 	return (
 		<Dialog.Root handle={props.handle}>
-			<Dialog.Popup
-				label={
-					isAccount
-						? m['components.moderation.label.appliedToAccount']()
-						: m['components.moderation.label.appliedToContent']()
-				}
-			>
+			<Dialog.Popup size="wide">
 				<LabelsOnMeDialogInner {...props} />
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -62,37 +54,42 @@ function LabelsOnMeDialogInner({ handle, labels, type }: LabelsOnMeDialogProps) 
 	const isAccount = type === 'account';
 	const containsSelfLabel = labels.some((label) => label.src === currentAccount?.did);
 
+	if (appealingLabel) {
+		return (
+			<AppealForm handle={handle} label={appealingLabel} onPressBack={() => setAppealingLabel(undefined)} />
+		);
+	}
+
 	return (
-		<div className={styles.main}>
-			{appealingLabel ? (
-				<AppealForm handle={handle} label={appealingLabel} onPressBack={() => setAppealingLabel(undefined)} />
-			) : (
-				<>
-					<Text className={styles.title} size="_2xl" weight="bold">
+		<Dialog.Stack gap="lg">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>
 						{isAccount
 							? m['components.moderation.label.titleAccount']()
 							: m['components.moderation.label.titleContent']()}
-					</Text>
-					<Text size="md">
-						{containsSelfLabel
-							? m['components.moderation.appeal.nonSelfHint']()
-							: m['components.moderation.appeal.theseLabelsHint']()}
-					</Text>
+					</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+				<Text color="textContrastMedium">
+					{containsSelfLabel
+						? m['components.moderation.appeal.nonSelfHint']()
+						: m['components.moderation.appeal.theseLabelsHint']()}
+				</Text>
+			</Dialog.Stack>
 
-					<div className={styles.list}>
-						{labels.map((label) => (
-							<Label
-								key={`${label.val}-${label.src}`}
-								handle={handle}
-								isSelfLabel={label.src === currentAccount?.did}
-								label={label}
-								onPressAppeal={setAppealingLabel}
-							/>
-						))}
-					</div>
-				</>
-			)}
-		</div>
+			<Dialog.Stack gap="md">
+				{labels.map((label) => (
+					<Label
+						key={`${label.val}-${label.src}`}
+						handle={handle}
+						isSelfLabel={label.src === currentAccount?.did}
+						label={label}
+						onPressAppeal={setAppealingLabel}
+					/>
+				))}
+			</Dialog.Stack>
+		</Dialog.Stack>
 	);
 }
 
@@ -132,7 +129,9 @@ function Label({
 					</Button>
 				)}
 			</div>
-			<div className={styles.divider} />
+
+			<Dialog.Divider />
+
 			<div className={styles.band}>
 				{isSelfLabel ? (
 					<Text color="textContrastMedium">{m['components.moderation.label.appliedByYou']()}</Text>
@@ -220,12 +219,14 @@ function AppealForm({
 	const onSubmit = () => mutate();
 
 	return (
-		<>
-			<div className={styles.appealHeader}>
-				<Text className={styles.title} size="_2xl" weight="semiBold">
-					{m['components.moderation.appeal.title']({ name: strings.name })}
-				</Text>
-				<Text size="md">
+		<Dialog.Stack gap="xl">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['components.moderation.appeal.title']({ name: strings.name })}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
+				<Text>
 					<Trans
 						message={m['components.moderation.appeal.sentTo']}
 						inputs={{ sourceName }}
@@ -243,47 +244,37 @@ function AppealForm({
 						}}
 					/>
 				</Text>
-			</div>
+			</Dialog.Stack>
+
 			{error && (
 				<Admonition className={styles.appealError} type="error">
 					{error}
 				</Admonition>
 			)}
-			<div className={styles.appealInput}>
-				<TextField.Input
-					autoFocus
-					label={m['common.a11y.textInput']()}
-					maxLength={300}
-					minRows={3}
-					multiline
-					onChangeText={setDetails}
-					placeholder={m['components.moderation.appeal.explainPrompt']({
-						labeler: labeler ? `@${labeler.creator.handle}` : label.src,
-					})}
-					value={details}
-				/>
-			</div>
-			<div className={styles.appealActions}>
-				<Button
-					color="secondary"
-					label={m['common.action.back']()}
-					onClick={onPressBack}
-					size="large"
-					variant="solid"
-				>
+
+			<TextField.Input
+				autoFocus
+				label={m['common.a11y.textInput']()}
+				maxLength={300}
+				minRows={3}
+				multiline
+				onChangeText={setDetails}
+				placeholder={m['components.moderation.appeal.explainPrompt']({
+					labeler: labeler ? `@${labeler.creator.handle}` : label.src,
+				})}
+				value={details}
+			/>
+
+			<Dialog.Actions align="between" direction="responsive" reverse>
+				<Button color="secondary" label={m['common.action.back']()} onClick={onPressBack} variant="solid">
 					<ButtonText>{m['common.action.back']()}</ButtonText>
 				</Button>
-				<Button
-					color="primary"
-					label={m['common.action.submit']()}
-					onClick={onSubmit}
-					size="large"
-					variant="solid"
-				>
+
+				<Button color="primary" label={m['common.action.submit']()} onClick={onSubmit} variant="solid">
 					<ButtonText>{m['common.action.submit']()}</ButtonText>
 					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
-			</div>
-		</>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }

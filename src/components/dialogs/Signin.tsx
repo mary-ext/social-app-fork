@@ -25,9 +25,8 @@ export function SigninDialog() {
 		<Dialog.Root handle={signinDialogHandle}>
 			{({ payload }: { payload: SigninDialogPayload | undefined }) =>
 				payload ? (
-					<Dialog.Popup label={m['components.dialogs.signin.title']()} size="narrow">
+					<Dialog.Popup size="narrow">
 						<SigninDialogInner close={() => signinDialogHandle.close()} payload={payload} />
-						<Dialog.Close />
 					</Dialog.Popup>
 				) : null
 			}
@@ -103,21 +102,19 @@ function ChooseAccountScreen({
 	);
 
 	return (
-		<div className={css.outer}>
-			<div className={css.heading}>
-				{intent === 'switch' ? (
-					<Text size="_2xl" weight="semiBold">
-						{m['common.account.action.switch']()}
-					</Text>
-				) : (
-					<>
-						<Text size="_2xl" weight="semiBold">
-							{m['common.session.action.signIn']()}
-						</Text>
-						<Text color="textContrastHigh">{m['components.dialogs.account.chooseDescription']()}</Text>
-					</>
+		<Dialog.Stack gap="lg">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>
+						{intent === 'switch' ? m['common.account.action.switch']() : m['common.session.action.signIn']()}
+					</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
+				{intent !== 'switch' && (
+					<Text color="textContrastMedium">{m['components.dialogs.account.chooseDescription']()}</Text>
 				)}
-			</div>
+			</Dialog.Stack>
 
 			<AccountList
 				onSelectAccount={(account) => void onSelectAccount(account)}
@@ -125,7 +122,7 @@ function ChooseAccountScreen({
 				otherLabel={m['components.dialogs.account.signInAnother']()}
 				pendingDid={pendingDid}
 			/>
-		</div>
+		</Dialog.Stack>
 	);
 }
 
@@ -163,43 +160,46 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 	};
 
 	return (
-		<div className={css.outer}>
-			<div className={css.heading}>
-				<Text size="_2xl" weight="semiBold">
-					{m['common.session.action.signIn']()}
-				</Text>
-				<Text color="textContrastHigh">{m['components.dialogs.signin.description']()}</Text>
-			</div>
-			<div className={css.form}>
-				<TextField.Root isInvalid={!!error}>
-					<TextField.LabelText>{m['components.dialogs.account.handle.label']()}</TextField.LabelText>
-					<div className={css.field}>
-						<AtIcon className={css.fieldIcon} size="lg" fill={colors.contrast_500} />
-						<TextField.Input
-							autoCapitalize="none"
-							className={css.fieldInput}
-							label={m['components.dialogs.account.handle.label']()}
-							onChangeText={setIdentifier}
-							onKeyDown={onKeyDown}
-							placeholder={m['components.dialogs.account.handle.placeholder']()}
-							value={identifier}
-						/>
-					</div>
+		<Dialog.Stack gap="xl">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['common.session.action.signIn']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
 
-					{error && (
-						<Text className={css.error} color="textContrastMedium" size="sm">
-							{error}
-						</Text>
-					)}
-				</TextField.Root>
+				<Text color="textContrastMedium">{m['components.dialogs.signin.description']()}</Text>
+			</Dialog.Stack>
 
+			<TextField.Root isInvalid={!!error}>
+				<TextField.LabelText>{m['components.dialogs.account.handle.label']()}</TextField.LabelText>
+				<div className={css.field}>
+					<AtIcon className={css.fieldIcon} size="lg" fill={colors.contrast_500} />
+					<TextField.Input
+						autoCapitalize="none"
+						className={css.fieldInput}
+						label={m['components.dialogs.account.handle.label']()}
+						onChangeText={setIdentifier}
+						onKeyDown={onKeyDown}
+						placeholder={m['components.dialogs.account.handle.placeholder']()}
+						value={identifier}
+					/>
+				</div>
+
+				{error && (
+					<Text className={css.error} color="textContrastMedium" size="sm">
+						{error}
+					</Text>
+				)}
+			</TextField.Root>
+
+			<Dialog.Actions direction="column">
 				<Button
 					color="primary"
 					disabled={isSubmitting}
 					label={m['common.session.action.signIn']()}
 					onClick={() => void onSubmit()}
-					size="large"
 					variant="solid"
+					size="large"
 				>
 					{isSubmitting ? (
 						<Spinner color="white" label={m['common.status.loading']()} size="sm" />
@@ -207,20 +207,21 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 						<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
 					)}
 				</Button>
+
 				{onBack && (
 					<Button
 						color="secondary"
 						disabled={isSubmitting}
 						label={m['components.dialogs.account.back']()}
 						onClick={onBack}
-						size="large"
 						variant="ghost"
+						size="large"
 					>
 						<ButtonIcon icon={ChevronLeftIcon} />
 						<ButtonText>{m['components.dialogs.account.back']()}</ButtonText>
 					</Button>
 				)}
-			</div>
-		</div>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }

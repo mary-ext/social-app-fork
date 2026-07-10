@@ -41,9 +41,8 @@ export function EditLiveDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['features.liveNow.goLive.live']()}>
+			<Dialog.Popup size="narrow">
 				<DialogInner embed={embed} handle={handle} status={status} />
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -102,11 +101,12 @@ function DialogInner({
 		isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl || isRemovingLiveStatus;
 
 	return (
-		<div className={styles.container}>
-			<div className={styles.header}>
-				<Text size="_2xl" weight="semiBold">
-					{m['features.liveNow.goLive.live']()}
-				</Text>
+		<Dialog.Stack gap="lg">
+			<Dialog.Stack gap="sm">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['features.liveNow.goLive.live']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
 				<div className={styles.expiryRow}>
 					<ClockIcon fill={colors.textContrastHigh} size="sm" />
 					<Text color="textContrastHigh" size="md">
@@ -118,8 +118,8 @@ function DialogInner({
 							: m['features.liveNow.expiry.none']()}
 					</Text>
 				</div>
-			</div>
-			<div className={styles.fields}>
+			</Dialog.Stack>
+			<Dialog.Stack gap="sm">
 				<TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
 					<TextField.LabelText>{m['features.liveNow.link.label']()}</TextField.LabelText>
 					<TextField.Input
@@ -150,12 +150,23 @@ function DialogInner({
 				)}
 
 				<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
-			</div>
+			</Dialog.Stack>
 
 			{goLiveError && <Admonition type="error">{cleanError(goLiveError)}</Admonition>}
 			{removeLiveStatusError && <Admonition type="error">{cleanError(removeLiveStatusError)}</Admonition>}
 
-			<div className={styles.actions}>
+			<Dialog.Actions>
+				<Button
+					color="negative_subtle"
+					disabled={isRemovingLiveStatus || isGoingLive}
+					label={m['features.liveNow.goLive.remove']()}
+					onClick={() => removeLiveStatus()}
+					size="small"
+					variant="solid"
+				>
+					<ButtonText>{m['features.liveNow.goLive.remove']()}</ButtonText>
+					{isRemovingLiveStatus && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+				</Button>
 				{isDirty ? (
 					<Button
 						color="primary"
@@ -179,18 +190,7 @@ function DialogInner({
 						<ButtonText>{m['common.action.close']()}</ButtonText>
 					</Button>
 				)}
-				<Button
-					color="negative_subtle"
-					disabled={isRemovingLiveStatus || isGoingLive}
-					label={m['features.liveNow.goLive.remove']()}
-					onClick={() => removeLiveStatus()}
-					size="small"
-					variant="solid"
-				>
-					<ButtonText>{m['features.liveNow.goLive.remove']()}</ButtonText>
-					{isRemovingLiveStatus && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
-				</Button>
-			</div>
-		</div>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }

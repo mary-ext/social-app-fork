@@ -37,9 +37,8 @@ import { LinkPreview } from './LinkPreview';
 export function GoLiveDialog({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['features.liveNow.goLive.confirm']()}>
+			<Dialog.Popup size="narrow">
 				<DialogInner handle={handle} profile={profile} />
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -94,15 +93,17 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const hasLink = !!debouncedUrl && !isSourceInvalid;
 
 	return (
-		<div className={styles.container}>
-			<div className={styles.header}>
-				<Text size="_2xl" weight="semiBold">
-					{m['features.liveNow.goLive.confirm']()}
-				</Text>
+		<Dialog.Stack gap="xl">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['features.liveNow.goLive.confirm']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
 				<Text color="textContrastHigh" size="md">
 					{m['features.liveNow.goLive.description']()}
 				</Text>
-			</div>
+			</Dialog.Stack>
+
 			{moderationOpts && (
 				<ProfileCard.Header>
 					<ProfileCard.Avatar
@@ -114,7 +115,8 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 					<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
 				</ProfileCard.Header>
 			)}
-			<div className={styles.fields}>
+
+			<Dialog.Stack gap="sm">
 				<TextField.Root isInvalid={isSourceInvalid}>
 					<TextField.LabelText>{m['features.liveNow.link.label']()}</TextField.LabelText>
 					<TextField.Input
@@ -142,7 +144,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				)}
 
 				<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
-			</div>
+			</Dialog.Stack>
 
 			{hasLink && (
 				<div>
@@ -188,7 +190,16 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 			{goLiveError && <Admonition type="error">{cleanError(goLiveError)}</Admonition>}
 
-			<div className={styles.actions}>
+			<Dialog.Actions>
+				<Button
+					color="secondary"
+					label={m['common.action.cancel']()}
+					onClick={() => handle.close()}
+					size="small"
+					variant="ghost"
+				>
+					<ButtonText>{m['common.action.cancel']()}</ButtonText>
+				</Button>
 				{hasLink && (
 					<Button
 						color="primary"
@@ -202,16 +213,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						{isGoingLive && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 					</Button>
 				)}
-				<Button
-					color="secondary"
-					label={m['common.action.cancel']()}
-					onClick={() => handle.close()}
-					size="small"
-					variant="ghost"
-				>
-					<ButtonText>{m['common.action.cancel']()}</ButtonText>
-				</Button>
-			</div>
-		</div>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }

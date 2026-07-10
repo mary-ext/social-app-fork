@@ -55,6 +55,8 @@ export function LiveStatusDialog({
 			<Dialog.Popup
 				className={css.dialogPopup}
 				label={m['features.liveNow.badge.userIsLive']({ handle: profile.handle })}
+				padding="none"
+				size="narrow"
 			>
 				<LiveStatus
 					embed={embed}
@@ -63,7 +65,7 @@ export function LiveStatusDialog({
 					profile={profile}
 					status={status}
 				/>
-				<Dialog.Close />
+				<Dialog.Close variant="floating" />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);

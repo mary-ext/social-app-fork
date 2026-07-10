@@ -4,6 +4,7 @@ import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
+import { Text } from '#/components/Text';
 import * as styles from '#/components/web/Dialog/Popup.css';
 
 import { m } from '#/paraglide/messages';
@@ -16,18 +17,11 @@ import { m } from '#/paraglide/messages';
 // sitting above the portal on the component tree, and this guard may become unnecessary.
 const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagation();
 
-/** Portalled backdrop + scrollable viewport + themed popup card. Put dialog content inside. */
-export function Popup({
-	children,
-	size = 'default',
-	scroll = 'viewport',
-	fullHeight,
-	outerClose,
-	className,
-	label,
-}: {
+type CardProps = {
 	children: ReactNode;
-	size?: 'default' | 'narrow';
+	size?: 'default' | 'medium' | 'narrow' | 'wide';
+	/** `none` drops the card's own padding, for full-bleed content that reapplies padding per-section. */
+	padding?: 'default' | 'none';
 	/**
 	 * body strategy. `viewport` (default) is a padded card that grows to its content while the viewport
 	 * scrolls. `body` is a height-bounded flex column whose `Body`/`List` child scrolls internally, with pinned
@@ -36,26 +30,61 @@ export function Popup({
 	scroll?: 'body' | 'viewport';
 	/** `body`-scroll only: lock to max height so it doesn't shrink to fit transient loading/empty states. */
 	fullHeight?: boolean;
-	/** Render the close button at the screen corner (outside the popup) — for full-height dialogs. */
-	outerClose?: boolean;
 	className?: string;
-	/** Accessible name for the dialog. */
+	/** Accessible name for the dialog. Redundant when the popup renders a `Title`. */
 	label?: string;
-}) {
+};
+
+/**
+ * Portalled backdrop + scrollable viewport. Wraps a {@link Card}; use this split form (rather than the bundled
+ * {@link Popup}) when you need a viewport-level sibling of the card — e.g. an outer-anchored {@link Close},
+ * which must sit outside the card so the card's scale-in transform doesn't capture its `fixed` positioning.
+ */
+export function Viewport({ children }: { children: ReactNode }) {
 	return (
 		<BaseDialog.Portal>
 			{/* forceRender so a dialog opened inside another dialog (e.g. from the composer) still dims */}
 			<BaseDialog.Backdrop className={styles.backdrop} forceRender onClick={stopPropagation} />
 			<BaseDialog.Viewport className={styles.viewport} onClick={stopPropagation}>
-				{outerClose && <Close outer />}
-				<BaseDialog.Popup
-					aria-label={label}
-					className={clsx(styles.popup({ fullHeight, scroll, size }), className)}
-				>
-					{children}
-				</BaseDialog.Popup>
+				{children}
 			</BaseDialog.Viewport>
 		</BaseDialog.Portal>
+	);
+}
+
+/**
+ * Themed popup card. Put dialog content inside. Wrap in a {@link Viewport}, or use {@link Popup} which bundles
+ * both.
+ */
+export function Card({
+	children,
+	size = 'default',
+	padding = 'default',
+	scroll = 'viewport',
+	fullHeight,
+	className,
+	label,
+}: CardProps) {
+	return (
+		<BaseDialog.Popup
+			aria-label={label}
+			className={clsx(styles.popup({ fullHeight, padding, scroll, size }), className)}
+		>
+			{children}
+		</BaseDialog.Popup>
+	);
+}
+
+/**
+ * Portalled backdrop + scrollable viewport + themed popup card. Put dialog content inside. The common case;
+ * reach for {@link Viewport} + {@link Card} directly when you need a viewport-level sibling like an outer
+ * {@link Close}.
+ */
+export function Popup(props: CardProps) {
+	return (
+		<Viewport>
+			<Card {...props} />
+		</Viewport>
 	);
 }
 
@@ -82,13 +111,73 @@ export function Footer({ children }: { children: ReactNode }) {
 	return <div className={styles.footer}>{children}</div>;
 }
 
-/** Close (×) button. Defaults to the popup's top-right corner; `outer` pins it to the screen corner. */
-export function Close({ outer }: { outer?: boolean } = {}) {
+/**
+ * In-flow header row for a `viewport`-scroll Popup: a {@link Title} beside a trailing {@link Close}. Because
+ * the close lives in the row rather than floating, a long title can never slide under it.
+ */
+export function TitleRow({ children, className }: { children: ReactNode; className?: string }) {
+	return <div className={clsx(styles.titleRow, className)}>{children}</div>;
+}
+
+/**
+ * Dialog heading. Renders the accessible title (so `Popup`'s `label` is redundant when this is present) as
+ * the standard `xl` semiBold `Text`.
+ */
+export function Title({ children, className }: { children: ReactNode; className?: string }) {
 	return (
-		<BaseDialog.Close
-			aria-label={m['common.a11y.closeDialog']()}
-			className={clsx(styles.close, outer && styles.closeOuter)}
-		>
+		<BaseDialog.Title className={clsx(styles.title, className)} render={<Text size="xl" weight="semiBold" />}>
+			{children}
+		</BaseDialog.Title>
+	);
+}
+
+/** Vertical stack for `viewport`-scroll Popup content — the flex column the card body needs. */
+export function Stack({
+	children,
+	gap = 'lg',
+	className,
+}: {
+	children: ReactNode;
+	gap?: '_2xl' | 'lg' | 'md' | 'sm' | 'xl' | 'xs';
+	className?: string;
+}) {
+	return <div className={clsx(styles.stack({ gap }), className)}>{children}</div>;
+}
+
+/**
+ * Action/button row. Author children in reading order (secondary → primary); the layout knobs are orthogonal.
+ * `direction` sets the axis — `row` (default), `column`, or `responsive` (a column on narrow screens, a row
+ * past 800px). `align` distributes the row — `end` (default) clusters right, `center`, or `between` spreads
+ * to the edges — and is inert in a column. `reverse` flips the flow so the last (primary) child leads; on
+ * `responsive` it flips only the narrow column phase, hoisting the primary action to the top on mobile.
+ */
+export function Actions({
+	children,
+	align = 'end',
+	direction = 'row',
+	reverse = false,
+}: {
+	children: ReactNode;
+	align?: 'between' | 'center' | 'end';
+	direction?: 'column' | 'responsive' | 'row';
+	reverse?: boolean;
+}) {
+	return <div className={styles.actions({ align, direction, reverse })}>{children}</div>;
+}
+
+/** Hairline rule between sections. */
+export function Divider() {
+	return <div className={styles.divider} aria-hidden />;
+}
+
+/**
+ * Close (×) button. `default` is static/in-flow — place it in a {@link TitleRow}. `floating` pins it to the
+ * popup's top-right corner (media/full-bleed dialogs with no header row); `outer` pins it to the screen
+ * corner outside the card (full-height dialogs like the GIF picker).
+ */
+export function Close({ variant }: { variant?: 'default' | 'floating' | 'outer' } = {}) {
+	return (
+		<BaseDialog.Close aria-label={m['common.a11y.closeDialog']()} className={styles.close({ variant })}>
 			<TimesIcon size="md" fill="currentColor" />
 		</BaseDialog.Close>
 	);

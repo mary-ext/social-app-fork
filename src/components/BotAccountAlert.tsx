@@ -42,10 +42,11 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 			<Text align="center" className={css.text} color="textContrastHigh" size="md">
 				{description}
 			</Text>
-			<div className={css.actions}>
+			<Dialog.Actions direction="column">
 				<Button color="primary" label={m['common.action.okay']()} onClick={() => handle.close()} size="large">
 					<ButtonText>{m['common.action.okay']()}</ButtonText>
 				</Button>
+
 				{isSelf && (
 					<Button
 						color="secondary"
@@ -59,7 +60,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						<ButtonText>{m['components.botAccountAlert.openSettings']()}</ButtonText>
 					</Button>
 				)}
-			</div>
+			</Dialog.Actions>
 		</div>
 	);
 }

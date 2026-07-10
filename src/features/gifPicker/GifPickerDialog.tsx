@@ -44,13 +44,16 @@ export function GifPickerDialog({
 				}
 			}}
 		>
-			<Dialog.Popup scroll="body" label="GIFs" fullHeight outerClose>
-				<ErrorBoundary
-					renderError={(error) => <GifPickerErrorBoundary handle={handle} details={String(error)} />}
-				>
-					<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
-				</ErrorBoundary>
-			</Dialog.Popup>
+			<Dialog.Viewport>
+				<Dialog.Card scroll="body" label="GIFs" fullHeight>
+					<ErrorBoundary
+						renderError={(error) => <GifPickerErrorBoundary handle={handle} details={String(error)} />}
+					>
+						<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
+					</ErrorBoundary>
+				</Dialog.Card>
+				<Dialog.Close variant="outer" />
+			</Dialog.Viewport>
 		</Dialog.Root>
 	);
 }

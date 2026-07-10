@@ -78,7 +78,7 @@ function GermLink({ url }: { url: string }) {
 }
 
 export function GermLogo({ size }: { size: 'large' | 'small' }) {
-	const px = size === 'large' ? 32 : 16;
+	const px = size === 'large' ? 24 : 16;
 	return <img alt="" className={css.logo} height={px} src={germLogoUrl} width={px} />;
 }
 

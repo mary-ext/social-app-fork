@@ -55,7 +55,7 @@ export function SubtitleDialogBtn(props: Props) {
 			<Dialog.Root handle={handle}>
 				<Dialog.Popup label={m['view.composer.video.settingsTitle']()}>
 					<SubtitleDialogInner handle={handle} {...props} />
-					<Dialog.Close />
+					<Dialog.Close variant="floating" />
 				</Dialog.Popup>
 			</Dialog.Root>
 		</div>
@@ -108,7 +108,7 @@ function SubtitleDialogInner({
 	});
 
 	return (
-		<div className={css.container}>
+		<Dialog.Stack gap="md">
 			<Text size="xl" weight="semiBold">
 				{m['common.altText.label']()}
 			</Text>
@@ -131,7 +131,7 @@ function SubtitleDialogInner({
 				</Text>
 			)}
 
-			<div className={css.divider} />
+			<Dialog.Divider />
 			<Text size="xl" weight="semiBold">
 				{m['view.composer.captions.label']()}
 			</Text>
@@ -174,7 +174,7 @@ function SubtitleDialogInner({
 					<ButtonText>{m['common.action.done']()}</ButtonText>
 				</Button>
 			</div>
-		</div>
+		</Dialog.Stack>
 	);
 }
 

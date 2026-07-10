@@ -1,7 +1,6 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 
 import { urls } from '#/lib/constants';
-import { getUserDisplayName } from '#/lib/getUserDisplayName';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -27,12 +26,10 @@ export function VerificationsDialog({
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 }) {
-	const name = getUserDisplayName(profile);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.verification.verifications.title']({ name })} size="narrow">
+			<Dialog.Popup size="narrow">
 				<DialogInner handle={handle} profile={profile} />
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -43,55 +40,54 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 	const { isVerified } = useSimpleVerificationState({ profile });
 	const isViewer = profile.did === currentAccount?.did;
-	const name = getUserDisplayName(profile);
 	const label = isViewer
 		? isVerified
 			? m['components.verification.verified.youStatus']()
 			: m['components.verification.verifications.yourTitle']()
 		: isVerified
-			? m['components.verification.verified.userStatus']({ name })
-			: m['components.verification.verifications.userTitle']({ name });
+			? m['components.verification.verified.userStatus']({ name: profile.handle })
+			: m['components.verification.verifications.userTitle']({ name: profile.handle });
 
 	return (
-		<>
-			<div className={css.header}>
-				<Text className={css.title} size="_2xl" weight="semiBold">
-					{label}
-				</Text>
-				<Text size="md">
-					{isVerified
-						? m['components.verification.verified.description']()
-						: m['components.verification.verified.notVerified']()}
-				</Text>
-			</div>
-			{profile.verification ? (
-				<div className={css.section}>
-					<Text color="textContrastMedium" size="sm">
-						{m['components.verification.verifications.verifiedBy']()}
+		<Dialog.Stack gap="xl">
+			<Dialog.Stack gap="lg">
+				<Dialog.Stack gap="xs">
+					<Dialog.TitleRow>
+						<Dialog.Title>{label}</Dialog.Title>
+						<Dialog.Close />
+					</Dialog.TitleRow>
+
+					<Text color="textContrastMedium">
+						{isVerified
+							? m['components.verification.verified.description']()
+							: m['components.verification.verified.notVerified']()}
 					</Text>
+				</Dialog.Stack>
 
-					<div className={css.list}>
-						{profile.verification.verifications.map((v) => (
-							<VerifierCard key={v.uri} outerHandle={handle} verification={v} />
-						))}
-					</div>
+				{profile.verification ? (
+					<Dialog.Stack gap="lg">
+						<Dialog.Stack gap="md">
+							<Text color="textContrastMedium" size="sm" weight="semiBold">
+								{m['components.verification.verifications.verifiedBy']()}
+							</Text>
 
-					{profile.verification.verifications.some((v) => !v.isValid) && isViewer && (
-						<Admonition className={css.admonitionSpacing} type="warning">
-							{m['components.verification.verifications.someInvalid']()}
-						</Admonition>
-					)}
-				</div>
-			) : null}
-			<div className={css.actions}>
-				<Button
-					color="primary"
-					label={m['common.a11y.closeDialog']()}
-					onClick={() => handle.close()}
-					size="small"
-				>
-					<ButtonText>{m['common.action.close']()}</ButtonText>
-				</Button>
+							<Dialog.Stack gap="lg">
+								{profile.verification.verifications.map((v) => (
+									<VerifierCard key={v.uri} outerHandle={handle} verification={v} />
+								))}
+							</Dialog.Stack>
+						</Dialog.Stack>
+
+						{profile.verification.verifications.some((v) => !v.isValid) && isViewer && (
+							<Admonition type="warning">
+								{m['components.verification.verifications.someInvalid']()}
+							</Admonition>
+						)}
+					</Dialog.Stack>
+				) : null}
+			</Dialog.Stack>
+
+			<Dialog.Actions direction="responsive" reverse>
 				<ExternalLinkButton
 					color="secondary"
 					label={m['components.verification.learnMore']()}
@@ -100,8 +96,16 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				>
 					<ButtonText>{m['common.action.learnMore']()}</ButtonText>
 				</ExternalLinkButton>
-			</div>
-		</>
+				<Button
+					color="primary"
+					label={m['common.a11y.closeDialog']()}
+					onClick={() => handle.close()}
+					size="small"
+				>
+					<ButtonText>{m['common.action.close']()}</ButtonText>
+				</Button>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }
 
@@ -126,7 +130,8 @@ function VerifierCard({
 								<Text numberOfLines={1} size="md" weight="semiBold">
 									{m['components.verification.trustedVerifier.unknown']()}
 								</Text>
-								<Text color="textContrastMedium" numberOfLines={1}>
+
+								<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 									{verification.issuer}
 								</Text>
 							</div>
@@ -140,9 +145,11 @@ function VerifierCard({
 							profile={profile}
 						>
 							<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
+
 							<div className={css.nameColumn}>
-								<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
-								<Text color="textContrastMedium" numberOfLines={1}>
+								<ProfileCard.Handle profile={profile} />
+
+								<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 									{dateLong.format(new Date(verification.createdAt))}
 								</Text>
 							</div>

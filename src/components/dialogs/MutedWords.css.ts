@@ -2,18 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-export const form = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 16,
-});
-
-export const intro = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 8,
-});
-
 export const addButton = style({ width: '100%' });
 
 export const error = style({

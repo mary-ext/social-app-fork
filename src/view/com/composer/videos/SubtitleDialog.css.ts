@@ -17,20 +17,6 @@ export const buttonRow = style({
 	marginBlock: 4,
 });
 
-// vertical stack for the dialog body; the Popup supplies its own padding.
-export const container = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 12,
-});
-
-export const divider = style({
-	borderTop: `1px solid ${vars.palette.contrast_200}`,
-	marginBlock: 12,
-	width: '100%',
-});
-
 export const errorText = style({
 	color: vars.palette.negative_500,
 	marginTop: 12,

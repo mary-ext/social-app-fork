@@ -17,10 +17,3 @@ export const text = style({
 	maxWidth: 300,
 	paddingBottom: space.xl,
 });
-
-export const actions = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.sm,
-	width: '100%',
-});

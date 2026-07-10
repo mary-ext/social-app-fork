@@ -5,16 +5,6 @@ import { leadingOverrideVar } from '#/components/Text.css';
 import { vars } from '#/styles/contract.css';
 import { lineHeight, space } from '#/styles/tokens.css';
 
-export const dialogPopup = style({
-	maxWidth: 450,
-});
-
-export const dialogBody = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.md,
-});
-
 export const dialogHeaderRow = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -58,10 +48,6 @@ export const dialogReportSection = style({
 	flexDirection: 'column',
 	gap: space.lg,
 	paddingTop: space.xs,
-});
-
-export const dialogDivider = style({
-	borderTop: `1px solid ${vars.palette.contrast_100}`,
 });
 
 export const dialogReportRow = style({

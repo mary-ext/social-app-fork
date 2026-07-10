@@ -24,8 +24,7 @@ const ONE_DAY = 24 * 60 * 60 * 1000;
 export function MutedWordsDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.dialogs.mutedWord.addTitle']()} size="narrow">
-				<Dialog.Close />
+			<Dialog.Popup size="narrow">
 				<DialogInner handle={handle} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -95,15 +94,17 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	};
 
 	return (
-		<div className={styles.form}>
-			<div className={styles.intro}>
-				<Text size="lg" weight="semiBold" color="textContrastHigh">
-					{m['common.mutedWord.action.add']()}
-				</Text>
+		<Dialog.Stack gap="lg">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['common.mutedWord.action.add']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
 				<Text size="md_sub" color="textContrastMedium">
 					{m['components.dialogs.mutedWord.description']()}
 				</Text>
-			</div>
+			</Dialog.Stack>
 
 			<TextField.Root>
 				<TextField.Input
@@ -172,6 +173,6 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 					</Text>
 				</div>
 			)}
-		</div>
+		</Dialog.Stack>
 	);
 }

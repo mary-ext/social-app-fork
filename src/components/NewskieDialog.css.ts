@@ -22,12 +22,6 @@ export const trigger = style({
 	},
 });
 
-export const content = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 12,
-});
-
 export const header = style({
 	alignItems: 'center',
 	display: 'flex',

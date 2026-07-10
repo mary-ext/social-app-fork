@@ -41,28 +41,11 @@ export const radioRow = style({
 	gap: 8,
 });
 
-// vertically centre the row's content within the min height.
 export const persistRow = style({
 	display: 'flex',
 	flexDirection: 'column',
 	justifyContent: 'center',
 	minHeight: 24,
-});
-
-export const header = style({ paddingBottom: 16 });
-
-export const loading = style({
-	alignItems: 'center',
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 12,
-	justifyContent: 'center',
-	paddingBlock: 40,
-});
-
-export const loadingText = style({
-	fontStyle: 'italic',
-	textAlign: 'center',
 });
 
 export const listsCount = style({

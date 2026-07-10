@@ -44,16 +44,16 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 	};
 
 	return (
-		<Dialog.Popup label={m['components.dialogs.link.title']()} size="narrow">
-			<div className={css.outer}>
-				<div className={css.content}>
-					<Text size="_2xl" weight="bold">
-						{m['components.dialogs.link.title']()}
-					</Text>
+		<Dialog.Popup size="narrow">
+			<Dialog.Stack gap="xl">
+				<Dialog.Stack gap="md">
+					<Dialog.Title>{m['components.dialogs.link.title']()}</Dialog.Title>
+
 					<Text color="textContrastHigh">{m['components.dialogs.link.destination']()}</Text>
 					<LinkBox href={link.href} />
-				</div>
-				<div className={css.actions}>
+				</Dialog.Stack>
+
+				<Dialog.Actions>
 					<Button color="secondary" label={m['common.action.goBack']()} onClick={close} variant="ghost">
 						<ButtonText>{m['common.action.goBack']()}</ButtonText>
 					</Button>
@@ -67,8 +67,8 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 							{link.share ? m['components.dialogs.link.share']() : m['components.dialogs.link.visit']()}
 						</ButtonText>
 					</Button>
-				</div>
-			</div>
+				</Dialog.Actions>
+			</Dialog.Stack>
 		</Dialog.Popup>
 	);
 }

@@ -16,12 +16,9 @@ import * as styles from './ActivitySubscriptionDialog.css';
 export function ActivitySubscriptionDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup
-				className={styles.popup}
-				label={m['screens.settings.activitySubscription.allowNotifying']()}
-			>
+			<Dialog.Popup size="narrow" label={m['screens.settings.activitySubscription.allowNotifying']()}>
 				<Inner />
-				<Dialog.Close />
+				<Dialog.Close variant="floating" />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);

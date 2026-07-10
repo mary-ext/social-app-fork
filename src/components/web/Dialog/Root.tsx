@@ -7,7 +7,6 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 
 export const Trigger = BaseDialog.Trigger;
-export const Title = BaseDialog.Title;
 export const Description = BaseDialog.Description;
 
 /** Creates a detached handle to open/close a Dialog imperatively or from a detached Trigger. */

@@ -26,9 +26,9 @@ import * as styles from './ExportCarDialog.css';
 export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['screens.settings.export.action.exportProfile']()}>
+			<Dialog.Popup size="wide" label={m['screens.settings.export.action.exportProfile']()}>
 				<DialogInner />
-				<Dialog.Close />
+				<Dialog.Close variant="floating" />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);

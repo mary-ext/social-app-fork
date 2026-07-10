@@ -23,22 +23,3 @@ export const fieldIcon = style({
 export const fieldInput = style({
 	paddingInlineStart: 40,
 });
-
-export const form = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 16,
-});
-
-// stack the title + subtitle as a column so the two Text spans don't pack onto one line.
-export const heading = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 8,
-});
-
-export const outer = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 16,
-});

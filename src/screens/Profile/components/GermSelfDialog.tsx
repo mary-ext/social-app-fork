@@ -28,7 +28,7 @@ import * as css from './GermSelfDialog.css';
 export function GermSelfDialog({ did, handle }: { did: string; handle: Dialog.DialogHandle }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['screens.profile.germDm.linkLabel']()} size="narrow">
+			<Dialog.Popup size="narrow">
 				<DialogInner did={did} handle={handle} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -105,21 +105,17 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 	});
 
 	return (
-		<>
-			<div className={css.header}>
-				<GermLogo size="large" />
-				<Text size="_2xl" weight="bold">
-					{m['screens.profile.germDm.linkLabel']()}
-				</Text>
-			</div>
+		<Dialog.Stack gap="lg">
+			<Dialog.Stack gap="sm">
+				<div className={css.header}>
+					<GermLogo size="large" />
+					<Dialog.Title>{m['screens.profile.germDm.linkLabel']()}</Dialog.Title>
+				</div>
 
-			<Text className={css.info}>{m['screens.profile.germDm.info']()}</Text>
+				<Text>{m['screens.profile.germDm.info']()}</Text>
+			</Dialog.Stack>
 
-			<div className={css.actions}>
-				<Button color="primary" label={m['screens.profile.action.gotIt']()} onClick={() => handle.close()}>
-					<ButtonText>{m['screens.profile.action.gotIt']()}</ButtonText>
-				</Button>
-
+			<Dialog.Actions>
 				<Button
 					color="secondary"
 					disabled={isPending}
@@ -129,8 +125,12 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 					{isPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 					<ButtonText>{m['screens.profile.germDm.action.disconnect']()}</ButtonText>
 				</Button>
-			</div>
-		</>
+
+				<Button color="primary" label={m['screens.profile.action.gotIt']()} onClick={() => handle.close()}>
+					<ButtonText>{m['screens.profile.action.gotIt']()}</ButtonText>
+				</Button>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }
 

@@ -134,14 +134,14 @@ function WhoCanReplyDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup size="narrow" label={m['components.whoCanReply.a11yLabel']()}>
-				<div className={css.dialogContent}>
-					<Text size="xl" weight="semiBold">
-						{m['components.whoCanReply.title']()}
-					</Text>
+			<Dialog.Popup size="narrow">
+				<Dialog.Stack gap="sm">
+					<Dialog.TitleRow>
+						<Dialog.Title>{m['components.whoCanReply.title']()}</Dialog.Title>
+						<Dialog.Close />
+					</Dialog.TitleRow>
 					<Rules post={post} settings={settings} embeddingDisabled={embeddingDisabled} />
-				</div>
-				<Dialog.Close />
+				</Dialog.Stack>
 			</Dialog.Popup>
 		</Dialog.Root>
 	);

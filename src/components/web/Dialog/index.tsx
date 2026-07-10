@@ -1,4 +1,16 @@
-export { Body, Close, Footer, Popup } from '#/components/web/Dialog/Popup';
+export {
+	Actions,
+	Body,
+	Card,
+	Close,
+	Divider,
+	Footer,
+	Popup,
+	Stack,
+	Title,
+	TitleRow,
+	Viewport,
+} from '#/components/web/Dialog/Popup';
 export {
 	createHandle,
 	Description,
@@ -6,7 +18,6 @@ export {
 	type OpenChangeDetails,
 	Root,
 	type RootProps,
-	Title,
 	Trigger,
 	useDialogHandle,
 } from '#/components/web/Dialog/Root';

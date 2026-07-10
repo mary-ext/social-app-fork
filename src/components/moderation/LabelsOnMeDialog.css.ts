@@ -1,30 +1,21 @@
 import { style } from '@vanilla-extract/css';
 
-import { leadingOverrideVar } from '#/components/Text.css';
-
 import { vars } from '#/styles/contract.css';
-import { lineHeight } from '#/styles/tokens.css';
 
-// the `Text`/`Admonition`/input children are inline or self-contained, so the body restates the column
-// stacking the RN `ScrollableInner` View it stands in for would supply. the Popup keeps its own 24px padding.
 export const main = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
 });
 
-// pins the `_2xl` heading's leading tight (the default paired ratio is body-tuned and runs loose here).
 export const title = style({
 	marginBottom: 4,
-	vars: { [leadingOverrideVar]: String(lineHeight.tight) },
 });
 
-// the label list: bordered cards stacked under the heading, separated by 12px.
 export const list = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 12,
-	paddingBlock: 16,
 });
 
 // a single label: a bordered, rounded card with a top info section and a bottom source band.
@@ -53,11 +44,6 @@ export const cardInfo = style({
 	flexDirection: 'column',
 	gap: 4,
 	minWidth: 0,
-});
-
-export const divider = style({
-	borderTop: `1px solid ${vars.palette.contrast_100}`,
-	width: '100%',
 });
 
 export const band = style({
@@ -97,19 +83,4 @@ export const appealError = style({
 
 export const appealInput = style({
 	marginBlock: 12,
-});
-
-// Back/Submit row: stacked (reversed, so Submit sits on top) on narrow viewports; split across the row past
-// the 800px breakpoint.
-export const appealActions = style({
-	display: 'flex',
-	flexDirection: 'column-reverse',
-	gap: 8,
-	'@media': {
-		'(min-width: 800px)': {
-			flexDirection: 'row',
-			gap: 0,
-			justifyContent: 'space-between',
-		},
-	},
 });

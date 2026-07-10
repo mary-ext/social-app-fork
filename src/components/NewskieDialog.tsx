@@ -45,7 +45,7 @@ export function NewskieDialog({
 			</Dialog.Trigger>
 			<Dialog.Popup size="narrow" label={m['components.newskieDialog.a11y.label']()}>
 				<DialogInner profile={profile} createdAt={createdAt} now={now} onClose={() => handle.close()} />
-				<Dialog.Close />
+				<Dialog.Close variant="floating" />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -91,7 +91,7 @@ function DialogInner({
 	};
 
 	return (
-		<div className={styles.content}>
+		<Dialog.Stack gap="md">
 			<div className={styles.header}>
 				<div className={styles.icon}>
 					<Newskie size="5xl" fill="currentColor" />
@@ -110,6 +110,6 @@ function DialogInner({
 					</div>
 				</StarterPackCard.Link>
 			) : null}
-		</div>
+		</Dialog.Stack>
 	);
 }

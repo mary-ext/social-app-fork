@@ -10,7 +10,6 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import * as css from '#/components/dialogs/lists/CreateListFromStarterPackDialog.css';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
@@ -62,27 +61,22 @@ export function CreateListFromStarterPackDialog({
 	return (
 		<>
 			<Dialog.Root handle={handle}>
-				<Dialog.Popup label={m['components.dialogs.list.createFromStarterPack']()} size="narrow">
-					<div className={css.content}>
-						<Text size="xl" weight="bold">
-							{m['components.dialogs.list.createFromStarterPack']()}
-						</Text>
+				<Dialog.Popup size="narrow">
+					<Dialog.Stack gap="xl">
+						<Dialog.Stack gap="lg">
+							<Dialog.TitleRow>
+								<Dialog.Title>{m['components.dialogs.list.createFromStarterPack']()}</Dialog.Title>
+								<Dialog.Close />
+							</Dialog.TitleRow>
 
-						<Text color="textContrastHigh" size="md">
-							{m['components.dialogs.starterPack.cloneDescription']()}
-						</Text>
+							<Text color="textContrastHigh" size="md">
+								{m['components.dialogs.starterPack.cloneDescription']()}
+							</Text>
 
-						<Admonition type="tip">{m['components.dialogs.starterPack.copyNotice']()}</Admonition>
+							<Admonition type="tip">{m['components.dialogs.starterPack.copyNotice']()}</Admonition>
+						</Dialog.Stack>
 
-						<div className={css.actions}>
-							<Button
-								color="primary"
-								label={m['components.dialogs.list.createTitle']()}
-								onClick={onPressCreate}
-								size="small"
-							>
-								<ButtonText>{m['components.dialogs.list.createTitle']()}</ButtonText>
-							</Button>
+						<Dialog.Actions>
 							<Button
 								color="secondary"
 								label={m['common.action.cancel']()}
@@ -91,9 +85,16 @@ export function CreateListFromStarterPackDialog({
 							>
 								<ButtonText>{m['common.action.cancel']()}</ButtonText>
 							</Button>
-						</div>
-					</div>
-					<Dialog.Close />
+							<Button
+								color="primary"
+								label={m['components.dialogs.list.createTitle']()}
+								onClick={onPressCreate}
+								size="small"
+							>
+								<ButtonText>{m['components.dialogs.list.createTitle']()}</ButtonText>
+							</Button>
+						</Dialog.Actions>
+					</Dialog.Stack>
 				</Dialog.Popup>
 			</Dialog.Root>
 			<CreateOrEditListDialog

@@ -26,10 +26,9 @@ export function VerifierDialog({
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 }) {
-	const name = getUserDisplayName(profile);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.verification.trustedVerifier.title']({ name })} size="narrow">
+			<Dialog.Popup size="narrow">
 				<DialogInner handle={handle} profile={profile} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -94,22 +93,20 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 		: m['components.verification.trustedVerifier.userStatus']({ name });
 
 	return (
-		<div className={css.content}>
+		<Dialog.Stack gap="lg">
 			<VerificationIllustration />
 
-			<div className={css.textBlock}>
-				<Text className={css.title} size="_2xl" weight="semiBold">
-					{label}
-				</Text>
+			<Dialog.Stack gap="sm">
+				<Dialog.Title>{label}</Dialog.Title>
 				<Text size="md">
 					<Trans
 						message={m['components.verification.trustedVerifier.description']}
 						markup={{ t0: () => <VerifierCheck className={css.inlineCheck} width={14} /> }}
 					/>
 				</Text>
-			</div>
+			</Dialog.Stack>
 
-			<div className={css.actions}>
+			<Dialog.Actions direction="responsive">
 				<ExternalLinkButton
 					color="primary"
 					label={m['components.verification.learnMore']()}
@@ -126,7 +123,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				>
 					<ButtonText>{m['common.action.close']()}</ButtonText>
 				</Button>
-			</div>
-		</div>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }

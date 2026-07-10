@@ -36,7 +36,7 @@ export function NotificationSettingsDialog({
 }: NotificationSettingsDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['common.notifications.settingsTitle']()}>
+			<Dialog.Popup size="narrow">
 				<Inner
 					allowDisableInApp={allowDisableInApp}
 					name={name}
@@ -44,7 +44,6 @@ export function NotificationSettingsDialog({
 					syncOthers={syncOthers}
 					titleText={titleText}
 				/>
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -64,15 +63,17 @@ function Inner({
 	const preference = isChat ? chatQuery.data?.[name] : appQuery.data?.[name];
 
 	return (
-		<>
-			<div className={styles.header}>
-				<Text size="lg" weight="semiBold">
-					{titleText}
-				</Text>
+		<Dialog.Stack gap="lg">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{titleText}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
 				<Text color="textContrastMedium" size="md">
 					{subtitleText}
 				</Text>
-			</div>
+			</Dialog.Stack>
 
 			{isError ? (
 				<div className={styles.errorWrap}>
@@ -86,6 +87,6 @@ function Inner({
 					syncOthers={syncOthers}
 				/>
 			)}
-		</>
+		</Dialog.Stack>
 	);
 }

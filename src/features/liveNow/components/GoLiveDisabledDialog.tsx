@@ -21,8 +21,6 @@ import * as Dialog from '#/components/web/Dialog';
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 import { m } from '#/paraglide/messages';
 
-import * as styles from './GoLiveDisabledDialog.css';
-
 export function GoLiveDisabledDialog({
 	handle,
 	status,
@@ -32,9 +30,8 @@ export function GoLiveDisabledDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['features.liveNow.appeal.title']()}>
+			<Dialog.Popup size="narrow">
 				<DialogInner handle={handle} status={status} />
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -96,16 +93,17 @@ function DialogInner({
 	const onSubmit = () => mutate();
 
 	return (
-		<div className={styles.container}>
-			<div className={styles.header}>
-				<Text className={styles.title} size="_2xl" weight="semiBold">
-					{m['features.liveNow.goLive.disabled']()}
-				</Text>
+		<Dialog.Stack gap="lg">
+			<Dialog.Stack gap="md">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['features.liveNow.goLive.disabled']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
 				<Text size="md">{m['features.liveNow.appeal.blocked']()}</Text>
 				<Text size="md">{m['common.appeal.destination']()}</Text>
-			</div>
+			</Dialog.Stack>
 
-			<div className={styles.fields}>
+			<Dialog.Stack gap="lg">
 				<TextField.Input
 					autoFocus
 					label={m['common.a11y.textInput']()}
@@ -127,7 +125,7 @@ function DialogInner({
 					<ButtonText>{m['common.action.submit']()}</ButtonText>
 					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
-			</div>
-		</div>
+			</Dialog.Stack>
+		</Dialog.Stack>
 	);
 }

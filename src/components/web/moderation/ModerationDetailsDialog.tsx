@@ -29,9 +29,8 @@ export interface ModerationDetailsDialogProps {
 export function ModerationDetailsDialog({ handle, modcause }: ModerationDetailsDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={m['common.moderation.detailsTitle']()}>
+			<Dialog.Popup padding="none" size="medium">
 				<ModerationDetailsDialogInner handle={handle} modcause={modcause} />
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -119,10 +118,13 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 	return (
 		<>
 			<div className={styles.main}>
-				<Text className={styles.title} size="_2xl" weight="bold">
-					{name}
-				</Text>
-				<Text size="sm">{description}</Text>
+				<Dialog.Stack gap="xs">
+					<Dialog.TitleRow>
+						<Dialog.Title>{name}</Dialog.Title>
+						<Dialog.Close />
+					</Dialog.TitleRow>
+					<Text>{description}</Text>
+				</Dialog.Stack>
 
 				{desc.isSubjectAccount && (
 					<Admonition className={styles.admonition} type="info">
@@ -130,6 +132,7 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 					</Admonition>
 				)}
 			</div>
+
 			{modcause?.type === ModerationCauseType.Label && (
 				<div className={styles.labelBand}>
 					{modcause.source === null ? (

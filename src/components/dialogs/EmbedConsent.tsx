@@ -9,8 +9,6 @@ import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
-import * as styles from './EmbedConsent.css';
-
 type EmbedConsentDialogProps = {
 	handle: ReturnType<typeof Dialog.createHandle>;
 	source: EmbedPlayerSource;
@@ -20,9 +18,8 @@ type EmbedConsentDialogProps = {
 export function EmbedConsentDialog({ handle, source, onAccept }: EmbedConsentDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup size="narrow" label={m['components.dialogs.externalMedia.title']()}>
+			<Dialog.Popup size="narrow">
 				<DialogInner handle={handle} source={source} onAccept={onAccept} />
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -51,20 +48,19 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 	};
 
 	return (
-		<>
-			<Text size="_2xl" weight="bold">
-				{m['components.dialogs.externalMedia.title']()}
-			</Text>
+		<Dialog.Stack gap="xl">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['components.dialogs.externalMedia.title']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
 
-			<div className={styles.body}>
-				<Text size="md">
-					{m['components.dialogs.externalMedia.prompt']({ source: externalEmbedLabels[source] })}
-				</Text>
+				<Text>{m['components.dialogs.externalMedia.prompt']({ source: externalEmbedLabels[source] })}</Text>
+			</Dialog.Stack>
 
-				<Admonition type="info">{m['common.externalMedia.hint']()}</Admonition>
-			</div>
+			<Admonition type="info">{m['common.externalMedia.hint']()}</Admonition>
 
-			<div className={styles.actions}>
+			<Dialog.Actions direction="column">
 				<Button
 					label={m['components.dialogs.externalMedia.enableTitle']()}
 					onClick={onShowAllPress}
@@ -92,7 +88,7 @@ function DialogInner({ handle, source, onAccept }: EmbedConsentDialogProps) {
 				>
 					<ButtonText>{m['components.dialogs.action.noThanks']()}</ButtonText>
 				</Button>
-			</div>
-		</>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }

@@ -2,21 +2,13 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// the label-source band runs full-bleed to the card edges, so the Popup's own 24px padding is dropped here and
-// reapplied per-section instead.
-export const popup = style({
-	maxWidth: 460,
-	padding: 0,
-});
-
 // the `Text` primitives are inline `<span>`s, so the section restates the column stacking + border-box that the
 // RN `View` it stands in for would supply (cf. `ContentHider.css.ts`).
 export const main = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
-	paddingBlock: '20px 16px',
-	paddingInline: 20,
+	padding: 20,
 });
 
 export const title = style({
@@ -24,7 +16,7 @@ export const title = style({
 });
 
 export const admonition = style({
-	marginTop: 12,
+	marginTop: 16,
 });
 
 // the source attribution for a label cause: a full-bleed band pinned to the card's bottom edge, its corners
@@ -53,4 +45,5 @@ export const sourceText = style({
 export const expires = style({
 	flexShrink: 0,
 	fontStyle: 'italic',
+	marginBlock: (20 - 16) / 2,
 });

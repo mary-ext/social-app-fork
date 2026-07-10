@@ -243,7 +243,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 				)}
 			</Layout.Header.Outer>
 			<Dialog.Root handle={infoHandle}>
-				<Dialog.Popup label={m['screens.profile.feed.a11y.menu']()} className={css.dialogPopup}>
+				<Dialog.Popup label={m['screens.profile.feed.a11y.menu']()} size="medium">
 					<DialogInner
 						info={info}
 						likeUri={likeUri}
@@ -323,7 +323,7 @@ function DialogInner({
 	};
 
 	return (
-		<div className={css.dialogBody}>
+		<Dialog.Stack gap="md">
 			<div className={css.dialogHeaderRow}>
 				<UserAvatar type="algo" size={48} avatar={info.avatar} />
 
@@ -361,7 +361,7 @@ function DialogInner({
 					shape="round"
 					onClick={onPressShare}
 				>
-					<ButtonIcon icon={Share} size="xl" />
+					<ButtonIcon icon={Share} size="lg" />
 				</Button>
 			</div>
 
@@ -405,15 +405,16 @@ function DialogInner({
 							onClick={onTogglePinned}
 							className={css.dialogActionButton}
 						>
+							<ButtonIcon icon={Pin} />
+
 							<ButtonText>
 								{isPinned ? m['common.feeds.action.unpin']() : m['common.feeds.action.pin']()}
 							</ButtonText>
-							<ButtonIcon icon={Pin} />
 						</Button>
 					</div>
 
 					<div className={css.dialogReportSection}>
-						<div className={css.dialogDivider} />
+						<Dialog.Divider />
 
 						<div className={css.dialogReportRow}>
 							<Text size="md_sub" color="textContrastMedium" className={css.dialogWrongText}>
@@ -434,6 +435,6 @@ function DialogInner({
 					</div>
 				</>
 			)}
-		</div>
+		</Dialog.Stack>
 	);
 }

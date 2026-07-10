@@ -10,7 +10,6 @@ import { ok } from '@atcute/client';
 
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { cleanError } from '#/lib/strings/errors';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
@@ -52,20 +51,15 @@ export function SubscribeProfileDialog({
 	moderationOpts: ModerationOptions;
 	includeProfile?: boolean;
 }) {
-	const name = createSanitizedDisplayName(profile, false);
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup
-				className={styles.popup}
-				label={m['components.activityNotifications.newPostsHint']({ name })}
-			>
+			<Dialog.Popup size="narrow">
 				<DialogInner
 					handle={handle}
 					profile={profile}
 					moderationOpts={moderationOpts}
 					includeProfile={includeProfile}
 				/>
-				<Dialog.Close />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -180,15 +174,16 @@ function DialogInner({
 	}
 
 	return (
-		<div className={styles.content}>
-			<div className={styles.header}>
-				<Text size="_2xl" weight="bold">
-					{m['components.activityNotifications.subscribe']()}
-				</Text>
+		<Dialog.Stack gap="xl">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['components.activityNotifications.subscribe']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
 				<Text color="textContrastMedium" size="md">
 					{m['components.activityNotifications.activityHint']()}
 				</Text>
-			</div>
+			</Dialog.Stack>
 
 			{includeProfile && (
 				<ProfileCard.Header>
@@ -230,11 +225,13 @@ function DialogInner({
 				</Admonition>
 			)}
 
-			<Button {...buttonProps} size="large" variant="solid">
-				<ButtonText>{buttonProps.label}</ButtonText>
-				{isSaving && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
-			</Button>
-		</div>
+			<Dialog.Actions>
+				<Button {...buttonProps} variant="solid">
+					<ButtonText>{buttonProps.label}</ButtonText>
+					{isSaving && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+				</Button>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }
 

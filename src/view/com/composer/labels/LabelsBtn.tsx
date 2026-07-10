@@ -6,8 +6,6 @@ import {
 	type SelfLabel,
 } from '#/lib/moderation';
 
-import * as styles from '#/view/com/composer/labels/LabelsBtn.css';
-
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon } from '#/components/icons/Chevron';
 import { Shield_Stroke2_Corner0_Rounded } from '#/components/icons/Shield';
@@ -49,9 +47,9 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 					</Button>
 				}
 			/>
+
 			<Dialog.Root handle={handle}>
-				<Dialog.Popup label={m['view.composer.contentWarning.add']()} size="narrow">
-					<Dialog.Close />
+				<Dialog.Popup size="narrow">
 					<DialogInner
 						labels={labels}
 						updateAdultLabels={updateAdultLabels}
@@ -78,16 +76,18 @@ function DialogInner({
 	const hasAdultLabel = labels.includes('sexual') || labels.includes('nudity') || labels.includes('porn');
 
 	return (
-		<>
-			<div className={styles.header}>
-				<Text size="_2xl" weight="semiBold">
-					{m['view.composer.contentWarning.add']()}
-				</Text>
-				<Text color="textContrastMedium">{m['view.composer.contentWarning.hint']()}</Text>
-			</div>
+		<Dialog.Stack gap="xl">
+			<Dialog.Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['view.composer.contentWarning.add']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
 
-			<div className={styles.sections}>
-				<div className={styles.section}>
+				<Text color="textContrastMedium">{m['view.composer.contentWarning.hint']()}</Text>
+			</Dialog.Stack>
+
+			<Dialog.Stack gap="lg">
+				<Dialog.Stack gap="sm">
 					<Text size="lg" weight="semiBold">
 						{m['common.moderation.adultContent']()}
 					</Text>
@@ -126,9 +126,9 @@ function DialogInner({
 									: m['view.composer.contentWarning.sexualContentDesc']()}
 						</Text>
 					)}
-				</div>
+				</Dialog.Stack>
 
-				<div className={styles.section}>
+				<Dialog.Stack gap="sm">
 					<Text size="lg" weight="semiBold">
 						{m['common.status.other']()}
 					</Text>
@@ -149,14 +149,14 @@ function DialogInner({
 					{labels.includes('graphic-media') && (
 						<Text color="textContrastMedium">{m['view.composer.contentWarning.disturbingDesc']()}</Text>
 					)}
-				</div>
-			</div>
+				</Dialog.Stack>
+			</Dialog.Stack>
 
-			<div className={styles.doneRow}>
+			<Dialog.Actions>
 				<Button color="primary" label={m['common.action.done']()} onClick={onDone} size="small">
 					<ButtonText>{m['common.action.done']()}</ButtonText>
 				</Button>
-			</div>
-		</>
+			</Dialog.Actions>
+		</Dialog.Stack>
 	);
 }

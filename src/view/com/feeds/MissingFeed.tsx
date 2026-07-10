@@ -84,12 +84,8 @@ export function MissingFeed({
 				</View>
 			</Button>
 			<Dialog.Root handle={handle}>
-				<Dialog.Popup
-					className={styles.popup}
-					label={type === 'feed' ? m['view.feeds.feed.unavailable.a11y']() : m['view.feeds.list.deleted']()}
-				>
+				<Dialog.Popup size="wide">
 					<DialogInner handle={handle} uri={uri} type={type} error={error} />
-					<Dialog.Close />
 				</Dialog.Popup>
 			</Dialog.Root>
 		</>
@@ -114,14 +110,17 @@ function DialogInner({
 	const moderationOpts = useModerationOpts();
 
 	return (
-		<div className={styles.content}>
-			<Text size="_2xl" weight="bold">
-				{type === 'feed' ? m['view.feeds.feed.error.connectService']() : m['view.feeds.list.deleted']()}
-			</Text>
+		<Dialog.Stack gap="sm">
+			<Dialog.TitleRow>
+				<Dialog.Title>
+					{type === 'feed' ? m['view.feeds.feed.error.connectService']() : m['view.feeds.list.deleted']()}
+				</Dialog.Title>
+				<Dialog.Close />
+			</Dialog.TitleRow>
 			<Text color="textContrastHigh">
 				{type === 'feed' ? m['view.feeds.feed.unavailable.message']() : m['view.feeds.list.notFound']()}
 			</Text>
-			<div className={styles.divider} />
+			<Dialog.Divider />
 			<Text color="textContrastHigh" weight="semiBold">
 				{type === 'feed' ? m['view.feeds.feed.a11y.creator']() : m['view.feeds.list.a11y.creator']()}
 			</Text>
@@ -160,6 +159,6 @@ function DialogInner({
 					</Text>
 				</>
 			)}
-		</div>
+		</Dialog.Stack>
 	);
 }
