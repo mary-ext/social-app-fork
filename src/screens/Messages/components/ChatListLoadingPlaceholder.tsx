@@ -7,10 +7,12 @@ import * as css from './ChatListLoadingPlaceholder.css';
 const LAST_LINE_WIDTHS = [148, 92, 170, 110, 132, 88, 156, 104, 178, 96, 140];
 
 function ChatListItemPlaceholder({ lastLineWidth }: { lastLineWidth: number }) {
+	// `xs` reproduces the row's per-line spacing, so a placeholder and the row that replaces it are the same
+	// height and the list doesn't jump when it loads.
 	return (
-		<Skeleton.Row className={css.item} gap="md">
-			<Skeleton.Circle size={52} />
-			<Skeleton.Col gap="sm">
+		<Skeleton.Row align="start" className={css.item} gap="md">
+			<Skeleton.Circle size={48} />
+			<Skeleton.Col gap="xs">
 				<Skeleton.Text size="md" width={140} />
 				<Skeleton.Text size="sm" width={120} />
 				<Skeleton.Text size="sm" width={lastLineWidth} />
@@ -19,7 +21,7 @@ function ChatListItemPlaceholder({ lastLineWidth }: { lastLineWidth: number }) {
 	);
 }
 
-/** Placeholder rows shown while the conversation list loads. */
+/** placeholder rows shown while the conversation list loads. */
 export function ChatListLoadingPlaceholder() {
 	return (
 		<>

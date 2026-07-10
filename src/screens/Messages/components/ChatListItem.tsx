@@ -1,77 +1,47 @@
-import { useId, useState } from 'react';
-import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
+import { useId } from 'react';
 
-import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import {
-	type BlockingModerationCause,
 	DisplayContext,
 	getDisplayRestrictions,
 	moderateProfile,
-	ModerationCauseType,
-	type ModerationDecision,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { useQueryClient } from '@tanstack/react-query';
-
-import { GestureActionView } from '#/lib/custom-animations/GestureActionView';
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-
-import { type Shadow, useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
+import { useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { precacheConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
 import { JOIN_REQUESTS_THRESHOLD } from '#/state/queries/messages/list-join-requests';
-import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { TimeElapsed } from '#/view/com/util/TimeElapsed';
-
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-import * as tokens from '#/alf/tokens';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
-import { useDialogControl } from '#/components/Dialog';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';
-import { getMessageInfo } from '#/components/dms/getMessageInfo';
-import { getReactionInfo } from '#/components/dms/getReactionInfo';
-import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
-import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
-import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2';
-import type { Props as SVGIconProps } from '#/components/icons/common';
-import { Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen } from '#/components/icons/EnveopeOpen';
-import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
-import { Trash_Stroke2_Corner0_Rounded } from '#/components/icons/Trash';
-import { Link } from '#/components/Link';
 import * as Menu from '#/components/Menu';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
-import { createPortalGroup } from '#/components/Portal';
-import { ProfileBadges } from '#/components/ProfileBadges';
-import { Text } from '#/components/Typography';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
+import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
-import * as css from './ChatListItem.css';
+import * as ChatRow from './ChatRow';
+import * as css from './ChatRow.css';
+import {
+	getBlockInfo,
+	getLastMessagePreview,
+	hasUnread,
+	isBlockedAccount,
+	isDimmed,
+	usePrecacheConvo,
+} from './ChatRowData';
 import { useIsWithinSplitView } from './splitView/context';
 
-export const ChatListItemPortal = createPortalGroup();
-
-type WebTextStyle = TextStyle & {
-	whiteSpace?: 'preserve nowrap';
-};
-
+/** a conversation row in the chat list, dispatching to the variant for its kind. */
 export function ChatListItem({
 	convo: convoView,
-	showMenu = true,
 	selected = false,
-	children,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
-	showMenu?: boolean;
 	selected?: boolean;
-	children?: React.ReactNode;
 }) {
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
@@ -84,18 +54,10 @@ export function ChatListItem({
 
 	switch (convo?.kind) {
 		case 'direct': {
-			return (
-				<DirectChatItem convo={convo} moderationOpts={moderationOpts} showMenu={showMenu} selected={selected}>
-					{children}
-				</DirectChatItem>
-			);
+			return <DirectChatItem convo={convo} moderationOpts={moderationOpts} selected={selected} />;
 		}
 		case 'group': {
-			return (
-				<GroupChatItem convo={convo} moderationOpts={moderationOpts} showMenu={showMenu} selected={selected}>
-					{children}
-				</GroupChatItem>
-			);
+			return <GroupChatItem convo={convo} moderationOpts={moderationOpts} selected={selected} />;
 		}
 		default: {
 			return null;
@@ -103,521 +65,194 @@ export function ChatListItem({
 	}
 }
 
+/** a one-to-one conversation: the other party's avatar, name, handle, and moderation state. */
 function DirectChatItem({
 	convo,
 	moderationOpts,
-	showMenu,
 	selected,
-	children,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'direct' }>;
 	moderationOpts: ModerationOptions;
-	showMenu?: boolean;
-	selected?: boolean;
-	children?: React.ReactNode;
+	selected: boolean;
 }) {
-	const profile = useProfileShadow(convo.primaryMember);
-	const { isWithinLeftPanel } = useIsWithinSplitView();
-
-	const moderation = moderateProfile(profile, moderationOpts);
-
-	const isDeletedAccount = profile.handle === 'missing.invalid';
-	const displayName = isDeletedAccount
-		? m['common.account.deleted']()
-		: createSanitizedDisplayName(
-				profile,
-				true,
-				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-			);
-
-	return (
-		<BaseChatItem
-			convo={convo}
-			avatar={
-				<PreviewableUserAvatar
-					profile={profile}
-					size={isWithinLeftPanel ? 48 : 52}
-					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-				/>
-			}
-			primaryProfile={profile}
-			primaryProfileModeration={moderation}
-			title={displayName}
-			subtitle={isDeletedAccount ? undefined : `@${profile.handle}`}
-			accessibilityHint={
-				!isDeletedAccount
-					? m['screens.messages.chats.goToConversation']({ handle: profile.handle })
-					: m['screens.messages.deletedAccount.message']()
-			}
-			showMenu={showMenu}
-			selected={selected}
-			isDeletedAccount={isDeletedAccount}
-			isBlockedAccount={moderation.causes.some(
-				(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
-			)}
-			showProfileBadges
-			postAlerts={
-				isWithinLeftPanel ? null : (
-					<PostAlerts
-						className={css.postAlerts}
-						modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-						size="sm"
-					/>
-				)
-			}
-		>
-			{children}
-		</BaseChatItem>
-	);
-}
-
-function GroupChatItem({
-	convo,
-	moderationOpts,
-	showMenu,
-	selected,
-	children,
-}: {
-	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	moderationOpts: ModerationOptions;
-	showMenu?: boolean;
-	selected?: boolean;
-	children?: React.ReactNode;
-}) {
-	const groupOwner = useMaybeProfileShadow(convo.primaryMember);
-	const { isWithinLeftPanel } = useIsWithinSplitView();
-
-	const moderation = groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined;
-
-	const chatName = convo.details.name;
-
-	return (
-		<BaseChatItem
-			convo={convo}
-			avatar={<AvatarBubbles profiles={convo.members} size={isWithinLeftPanel ? 48 : 52} />}
-			title={chatName}
-			accessibilityHint={m['screens.messages.chats.goToGroupChat']({ name: chatName })}
-			primaryProfile={groupOwner}
-			primaryProfileModeration={moderation}
-			isBlockedAccount={false}
-			isDeletedAccount={false}
-			requestInfo={
-				convo.details.unreadJoinRequestCount
-					? convo.details.unreadJoinRequestCount > JOIN_REQUESTS_THRESHOLD
-						? m['screens.messages.requests.newOverThreshold']({ count: JOIN_REQUESTS_THRESHOLD })
-						: m['screens.messages.requests.newCount']({ count: convo.details.unreadJoinRequestCount })
-					: undefined
-			}
-			showProfileBadges={false}
-			selected={selected}
-			showMenu={showMenu}
-		>
-			{children}
-		</BaseChatItem>
-	);
-}
-
-function BaseChatItem({
-	convo,
-	avatar,
-	title,
-	subtitle,
-	requestInfo,
-	accessibilityHint,
-	isDeletedAccount,
-	isBlockedAccount,
-	primaryProfile,
-	primaryProfileModeration,
-	showMenu,
-	selected,
-	showProfileBadges,
-	postAlerts,
-	children,
-}: {
-	convo: ConvoWithDetails;
-	avatar: React.ReactNode;
-	title: string;
-	subtitle?: string;
-	requestInfo?: string;
-	accessibilityHint: string;
-	isDeletedAccount: boolean;
-	isBlockedAccount: boolean;
-	primaryProfile?: Shadow<AnyProfileView>;
-	primaryProfileModeration?: ModerationDecision;
-	showMenu?: boolean;
-	selected?: boolean;
-	showProfileBadges: boolean;
-	postAlerts?: React.ReactNode;
-	children?: React.ReactNode;
-}) {
-	const t = useTheme();
 	const { currentAccount } = useSession();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
+	const profile = useProfileShadow(convo.primaryMember);
+	const status = useActorStatus(profile);
+	const precache = usePrecacheConvo(convo);
+
 	const menuHandle = Menu.useMenuHandle();
 	const menuTriggerId = useId();
-	const [menuOpen, setMenuOpen] = useState(false);
-	const leaveConvoControl = useDialogControl();
-	const { mutate: markAsRead } = useMarkAsReadMutation();
-	const { gtMobile } = useBreakpoints();
-	const { isWithinLeftPanel } = useIsWithinSplitView();
 
-	const queryClient = useQueryClient();
-	const hasUnread =
-		!selected &&
-		!isDeletedAccount &&
-		(convo.view.unreadCount > 0 ||
-			(convo.kind === 'group' && (convo.details.unreadJoinRequestCount ?? 0) > 0)) &&
-		(convo.kind !== 'group' || convo.details.lockStatus === 'unlocked');
+	const moderation = moderateProfile(profile, moderationOpts);
+	const blocked = isBlockedAccount(moderation);
+	const isDeletedAccount = profile.handle === 'missing.invalid';
 
-	let blockInfo: { listBlocks: BlockingModerationCause[]; userBlock: BlockingModerationCause | undefined } = {
-		listBlocks: [],
-		userBlock: undefined,
-	};
-	if (primaryProfileModeration) {
-		const blocks = primaryProfileModeration.causes.filter(
-			(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
-		);
-		blockInfo = {
-			listBlocks: blocks.filter((block) => block.source !== null),
-			userBlock: blocks.find((block) => block.source === null),
-		};
-	}
+	const unread = hasUnread(convo, { isDeletedAccount, selected });
+	const dim = isDimmed(convo, { blocked, isDeletedAccount });
+	const preview = getLastMessagePreview({
+		convo,
+		currentAccountDid: currentAccount?.did,
+		isDeletedAccount,
+		primaryProfile: profile,
+	});
 
-	const isDimStyle =
-		convo.view.muted ||
-		isBlockedAccount ||
-		isDeletedAccount ||
-		(convo.kind === 'group' && convo.details.lockStatus !== 'unlocked');
+	const title = isDeletedAccount ? m['common.account.deleted']() : profile.handle;
 
-	let lastMessage: string = m['screens.messages.conversation.noMessages']();
-
-	let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null;
-
-	let lastMessageSentAt: string | null = null;
-
-	// Deleted message
-	if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#deletedMessageView') {
-		lastMessageSentAt = convo.view.lastMessage.sentAt;
-
-		lastMessage = isDeletedAccount
-			? m['components.dms.delete.conversationDeleted']()
-			: m['components.dms.delete.messageDeleted']();
-	}
-
-	// Message
-	if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView') {
-		const info = getMessageInfo({
-			convo: convo.view,
-			currentAccountDid: currentAccount?.did,
-			primaryProfile,
-		});
-		if (info) {
-			lastMessage = info.isBlockedMessage
-				? m['screens.messages.moderation.messageHidden']()
-				: (info.message ?? lastMessage);
-			lastMessageSentAt = info.sentAt;
-		}
-	}
-
-	// Reaction
-	if (convo.view.lastReaction?.$type === 'chat.bsky.convo.defs#messageAndReactionView') {
-		const info = getReactionInfo({
-			convo: convo.view,
-			currentAccountDid: currentAccount?.did,
-			primaryProfile,
-		});
-		if (
-			info &&
-			!info.isBlocked &&
-			(!lastMessageSentAt || new Date(lastMessageSentAt) < new Date(info.createdAt))
-		) {
-			lastMessage = info.message;
-			lastMessageSentAt = info.createdAt;
-		}
-	}
-
-	// System message
-	if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#systemMessageView') {
-		const info = getSystemMessageInfo(
-			convo.view.lastMessage.data,
-			new Map(convo.view.members.map((m) => [m.did, m])),
-			{ short: true },
-		);
-		if (info) {
-			lastMessage = info.message;
-			LastMessageIcon = info.Icon;
-			lastMessageSentAt = convo.view.lastMessage.sentAt;
-		}
-	}
-
-	if (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked') {
-		lastMessage = m['screens.messages.lock.chatLocked']();
-		LastMessageIcon = LockIcon;
-	}
-
-	const [showActions, setShowActions] = useState(false);
-
-	const onMouseEnter = () => {
-		setShowActions(true);
-	};
-
-	const onMouseLeave = () => {
-		setShowActions(false);
-	};
-
-	const onFocus: React.FocusEventHandler = (e) => {
-		if (e.nativeEvent.relatedTarget == null) return;
-		setShowActions(true);
-	};
-
-	const onPress = (e: GestureResponderEvent) => {
-		for (const member of convo.view.members) {
-			unstableCacheProfileView(queryClient, member);
-		}
-		precacheConvoQuery(queryClient, convo.view);
+	// a deleted account has nowhere to navigate to, so the row opens its menu instead
+	const onPress = () => {
+		precache();
 		if (isDeletedAccount) {
-			e.preventDefault();
-			// the menu (and its trigger) only mounts when `showMenu && primaryProfile`; opening a handle with
-			// no registered trigger throws, so gate on the same condition.
-			if (showMenu && primaryProfile) {
-				menuHandle.open(menuTriggerId);
-			}
+			menuHandle.open(menuTriggerId);
 			return false;
 		}
 	};
 
-	const markReadAction = {
-		threshold: 120,
-		color: t.palette.primary_500,
-		icon: EnvelopeOpen,
-		action: () => {
-			markAsRead({
-				convoId: convo.view.id,
-			});
-		},
-	};
-
-	const deleteAction = {
-		threshold: 225,
-		color: t.palette.negative_500,
-		icon: Trash_Stroke2_Corner0_Rounded,
-		action: () => {
-			leaveConvoControl.open();
-		},
-	};
-
-	const actions = hasUnread
-		? {
-				leftFirst: markReadAction,
-				leftSecond: deleteAction,
-			}
-		: {
-				leftFirst: deleteAction,
-			};
-
-	const avatarSize = isWithinLeftPanel ? 48 : 52;
-	const isGroupConvo = convo.kind === 'group';
-
 	return (
-		<ChatListItemPortal.Provider>
-			<GestureActionView actions={actions}>
-				<View
-					onMouseEnter={onMouseEnter}
-					onMouseLeave={onMouseLeave}
-					// @ts-expect-error web only
-					onFocus={onFocus}
-					onBlur={onMouseLeave}
-					style={[a.relative, t.atoms.bg, isWithinLeftPanel && a.mx_sm]}
-				>
-					<View
-						style={[
-							a.z_10,
-							a.absolute,
-							{ top: tokens.space.md, left: tokens.space.lg },
-							isGroupConvo && a.pointer_events_none,
-						]}
-					>
-						{avatar}
-					</View>
+		<ChatRow.Root tone={selected ? 'selected' : unread ? 'unread' : 'default'}>
+			<ChatRow.Link
+				action={isWithinLeftPanel ? 'navigate' : 'push'}
+				hint={
+					isDeletedAccount
+						? m['screens.messages.deletedAccount.message']()
+						: m['screens.messages.chats.goToConversation']({ handle: profile.handle })
+				}
+				label={title}
+				onPointerDown={precache}
+				onPress={onPress}
+				to={`/messages/${convo.view.id}`}
+			/>
 
-					<Link
-						to={`/messages/${convo.view.id}`}
-						// In split view, this list stays mounted alongside the open convo,
-						// so push would stack duplicate routes on repeated clicks.
-						action={isWithinLeftPanel ? 'navigate' : 'push'}
-						label={title}
-						accessibilityHint={accessibilityHint}
-						onPressIn={() => precacheConvoQuery(queryClient, convo.view)}
-						onPress={onPress}
-					>
-						{({ hovered, pressed, focused }) => (
-							<View
-								style={[
-									a.flex_row,
-									isDeletedAccount || isGroupConvo ? a.align_center : a.align_start,
-									a.flex_1,
-									a.px_lg,
-									a.py_md,
-									a.gap_md,
-									isWithinLeftPanel && a.rounded_sm,
-									{
-										backgroundColor: hasUnread ? t.palette.primary_25 : t.palette.contrast_0,
-									},
-									(hovered || pressed || focused) && t.atoms.bg_contrast_25,
-									selected && t.atoms.bg_contrast_50,
-								]}
-							>
-								{/* Avatar goes here */}
-								<View style={{ width: avatarSize, height: avatarSize }} />
+			<ChatRow.Body>
+				<UserAvatar
+					avatar={profile.avatar}
+					live={status.isActive}
+					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+					size={48}
+					type={profile.associated?.labeler ? 'labeler' : 'user'}
+				/>
 
-								<View style={[a.flex_1, a.justify_center, { paddingRight: 40 }]}>
-									<View style={[a.w_full, a.flex_row, a.align_center, a.pb_2xs]}>
-										<View style={[a.flex_shrink]}>
-											<Text
-												emoji
-												numberOfLines={1}
-												style={[
-													a.text_md,
-													t.atoms.text,
-													a.font_semi_bold,
-													{ lineHeight: 21 },
-													isDimStyle && t.atoms.text_contrast_medium,
-												]}
-											>
-												{title}
-											</Text>
-										</View>
+				<ChatRow.Content>
+					<ChatRow.TitleRow>
+						<ChatRow.Title dim={dim}>{title}</ChatRow.Title>
+						<ChatRow.Badges profile={profile} />
 
-										{showProfileBadges && primaryProfile && (
-											<View style={[a.pl_xs, a.self_center]}>
-												<ProfileBadges profile={primaryProfile} size="sm" />
-											</View>
-										)}
+						{preview.sentAt && <ChatRow.Timestamp sentAt={preview.sentAt} />}
+						{(convo.view.muted || blocked) && <ChatRow.MutedIcon />}
+						{unread && <ChatRow.UnreadDot dim={dim} />}
+					</ChatRow.TitleRow>
 
-										{lastMessageSentAt && (
-											<View style={[a.pl_xs]}>
-												<TimeElapsed timestamp={lastMessageSentAt}>
-													{({ timeElapsed }) => (
-														<Text
-															style={[
-																a.text_sm,
-																{ lineHeight: 21 },
-																t.atoms.text_contrast_medium,
-																{ whiteSpace: 'preserve nowrap' } as WebTextStyle,
-															]}
-														>
-															{timeElapsed}
-														</Text>
-													)}
-												</TimeElapsed>
-											</View>
-										)}
-										{(convo.view.muted || isBlockedAccount) && (
-											<Text
-												style={[
-													a.text_sm,
-													{ lineHeight: 21 },
-													t.atoms.text_contrast_medium,
-													{ whiteSpace: 'preserve nowrap' } as WebTextStyle,
-												]}
-											>
-												{' '}
-												<BellStroke size="xs" fill={colors.textContrastMedium} />
-											</Text>
-										)}
-										{hasUnread && (
-											<View
-												style={[
-													a.rounded_full,
-													{
-														backgroundColor: isDimStyle ? t.palette.contrast_200 : t.palette.primary_500,
-														height: 8,
-														width: 8,
-														marginLeft: 6,
-													},
-												]}
-											/>
-										)}
-									</View>
-
-									{subtitle && (
-										<Text numberOfLines={1} style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]} emoji>
-											{subtitle}
-										</Text>
-									)}
-
-									{postAlerts}
-
-									{requestInfo && (
-										<Text
-											numberOfLines={1}
-											style={[
-												hasUnread ? a.font_medium : t.atoms.text_contrast_high,
-												isDimStyle && t.atoms.text_contrast_medium,
-												a.pb_2xs,
-											]}
-											emoji
-										>
-											{requestInfo}
-										</Text>
-									)}
-
-									<View style={[a.flex_row, a.align_center]}>
-										{LastMessageIcon && (
-											<LastMessageIcon
-												size="xs"
-												fill={hasUnread ? colors.textContrastHigh : colors.textContrastMedium}
-												className={css.lastMessageIcon}
-											/>
-										)}
-										<Text
-											emoji
-											numberOfLines={2}
-											style={[
-												a.text_sm,
-												a.leading_snug,
-												hasUnread ? a.font_medium : t.atoms.text_contrast_high,
-												isDimStyle && t.atoms.text_contrast_medium,
-											]}
-										>
-											{lastMessage}
-										</Text>
-									</View>
-
-									{children}
-								</View>
-							</View>
-						)}
-					</Link>
-
-					<ChatListItemPortal.Outlet />
-
-					{/* TODO: Allow showing menu for groups where the owner has left! */}
-					{showMenu && primaryProfile && (
-						<ConvoMenu
-							convo={convo}
-							profile={primaryProfile}
-							handle={menuHandle}
-							triggerId={menuTriggerId}
-							onOpenChange={setMenuOpen}
-							currentScreen="list"
-							showMarkAsRead={convo.view.unreadCount > 0}
-							blockInfo={blockInfo}
-							style={[
-								a.absolute,
-								a.h_full,
-								a.self_end,
-								a.justify_center,
-								{
-									right: tokens.space.lg,
-									opacity: !gtMobile || showActions || menuOpen ? 1 : 0,
-								},
-							]}
+					{!isWithinLeftPanel && (
+						<PostAlerts
+							className={css.postAlerts}
+							modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
+							size="sm"
 						/>
 					)}
 
-					<LeaveConvoPrompt control={leaveConvoControl} convoId={convo.view.id} currentScreen="list" />
-				</View>
-			</GestureActionView>
-		</ChatListItemPortal.Provider>
+					<ChatRow.LastMessage dim={dim} icon={preview.Icon} unread={unread}>
+						{preview.text}
+					</ChatRow.LastMessage>
+				</ChatRow.Content>
+			</ChatRow.Body>
+
+			<ChatRow.Menu>
+				<ConvoMenu
+					blockInfo={getBlockInfo(moderation)}
+					convo={convo}
+					currentScreen="list"
+					handle={menuHandle}
+					profile={profile}
+					showMarkAsRead={convo.view.unreadCount > 0}
+					triggerId={menuTriggerId}
+				/>
+			</ChatRow.Menu>
+		</ChatRow.Root>
+	);
+}
+
+/** a group conversation: stacked member avatars, the group's name, and its pending join requests. */
+function GroupChatItem({
+	convo,
+	moderationOpts,
+	selected,
+}: {
+	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
+	moderationOpts: ModerationOptions;
+	selected: boolean;
+}) {
+	const { currentAccount } = useSession();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
+	const owner = useMaybeProfileShadow(convo.primaryMember);
+	const precache = usePrecacheConvo(convo);
+
+	const menuHandle = Menu.useMenuHandle();
+	const menuTriggerId = useId();
+
+	const moderation = owner ? moderateProfile(owner, moderationOpts) : undefined;
+
+	const unread = hasUnread(convo, { isDeletedAccount: false, selected });
+	const dim = isDimmed(convo, { blocked: false, isDeletedAccount: false });
+	const preview = getLastMessagePreview({
+		convo,
+		currentAccountDid: currentAccount?.did,
+		isDeletedAccount: false,
+		primaryProfile: owner,
+	});
+
+	const title = convo.details.name;
+	const joinRequests = convo.details.unreadJoinRequestCount ?? 0;
+
+	return (
+		<ChatRow.Root tone={selected ? 'selected' : unread ? 'unread' : 'default'}>
+			<ChatRow.Link
+				action={isWithinLeftPanel ? 'navigate' : 'push'}
+				hint={m['screens.messages.chats.goToGroupChat']({ name: title })}
+				label={title}
+				onPointerDown={precache}
+				onPress={precache}
+				to={`/messages/${convo.view.id}`}
+			/>
+
+			<ChatRow.Body>
+				<AvatarBubbles profiles={convo.members} size={48} />
+
+				<ChatRow.Content>
+					<ChatRow.TitleRow>
+						<ChatRow.Title dim={dim}>{title}</ChatRow.Title>
+						{preview.sentAt && <ChatRow.Timestamp sentAt={preview.sentAt} />}
+						{convo.view.muted && <ChatRow.MutedIcon />}
+						{unread && <ChatRow.UnreadDot dim={dim} />}
+					</ChatRow.TitleRow>
+
+					{joinRequests > 0 && (
+						<ChatRow.RequestInfo dim={dim} unread={unread}>
+							{joinRequests > JOIN_REQUESTS_THRESHOLD
+								? m['screens.messages.requests.newOverThreshold']({ count: JOIN_REQUESTS_THRESHOLD })
+								: m['screens.messages.requests.newCount']({ count: joinRequests })}
+						</ChatRow.RequestInfo>
+					)}
+
+					<ChatRow.LastMessage dim={dim} icon={preview.Icon} unread={unread}>
+						{preview.text}
+					</ChatRow.LastMessage>
+				</ChatRow.Content>
+			</ChatRow.Body>
+
+			{/* TODO: Allow showing menu for groups where the owner has left! */}
+			{owner && (
+				<ChatRow.Menu>
+					<ConvoMenu
+						blockInfo={getBlockInfo(moderation)}
+						convo={convo}
+						currentScreen="list"
+						handle={menuHandle}
+						profile={owner}
+						showMarkAsRead={convo.view.unreadCount > 0}
+						triggerId={menuTriggerId}
+					/>
+				</ChatRow.Menu>
+			)}
+		</ChatRow.Root>
 	);
 }

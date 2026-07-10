@@ -1,90 +1,206 @@
-import { View } from 'react-native';
-
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 
+import { useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { atoms as a, tokens } from '#/alf';
-
-import { parseConvoView } from '#/components/dms/util';
+import { AvatarBubbles } from '#/components/AvatarBubbles';
+import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { KnownFollowers } from '#/components/KnownFollowers';
-import { Text } from '#/components/Typography';
+import { PostAlerts } from '#/components/moderation/PostAlerts';
+import { UserAvatar } from '#/components/UserAvatar';
 
+import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';
 
-import { ChatListItem, ChatListItemPortal } from './ChatListItem';
+import * as ChatRow from './ChatRow';
+import * as css from './ChatRow.css';
+import { getLastMessagePreview, isBlockedAccount, isDimmed, usePrecacheConvo } from './ChatRowData';
 import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons';
+import { useIsWithinSplitView } from './splitView/context';
 
+/** a pending conversation request, dispatching to the variant for its kind. */
 export function RequestListItem({ convo: convoView }: { convo: ChatBskyConvoDefs.ConvoView }) {
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 
-	const convo = parseConvoView(convoView, currentAccount?.did);
-
-	if (!convo || !moderationOpts) {
+	if (!moderationOpts) {
 		return null;
 	}
 
-	const isDeletedAccount = !convo.primaryMember || convo.primaryMember.handle === 'missing.invalid';
+	const convo = parseConvoView(convoView, currentAccount?.did);
 
-	const canAcceptRequest = convo.kind === 'direct' || convo.details.lockStatus === 'unlocked';
+	switch (convo?.kind) {
+		case 'direct': {
+			return <DirectRequestItem convo={convo} moderationOpts={moderationOpts} />;
+		}
+		case 'group': {
+			return <GroupRequestItem convo={convo} moderationOpts={moderationOpts} />;
+		}
+		default: {
+			return null;
+		}
+	}
+}
+
+/** a request from a single user, showing who else follows them so the user can judge it. */
+function DirectRequestItem({
+	convo,
+	moderationOpts,
+}: {
+	convo: Extract<ConvoWithDetails, { kind: 'direct' }>;
+	moderationOpts: ModerationOptions;
+}) {
+	const { currentAccount } = useSession();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
+	const profile = useProfileShadow(convo.primaryMember);
+	const status = useActorStatus(profile);
+	const precache = usePrecacheConvo(convo);
+
+	const moderation = moderateProfile(profile, moderationOpts);
+	const blocked = isBlockedAccount(moderation);
+	const isDeletedAccount = profile.handle === 'missing.invalid';
+
+	const dim = isDimmed(convo, { blocked, isDeletedAccount });
+	const preview = getLastMessagePreview({
+		convo,
+		currentAccountDid: currentAccount?.did,
+		isDeletedAccount,
+		primaryProfile: profile,
+	});
+
+	const title = isDeletedAccount ? m['common.account.deleted']() : profile.handle;
 
 	return (
-		<View style={[a.relative, a.flex_1]}>
-			<ChatListItem convo={convo.view} showMenu={false}>
-				{convo.kind === 'direct' && (
-					<View style={[a.pt_xs, a.pb_2xs]}>
-						<KnownFollowers
-							profile={convo.primaryMember}
-							moderationOpts={moderationOpts}
-							minimal
-							showIfEmpty
-						/>
-					</View>
+		<ChatRow.Root tone="default">
+			<ChatRow.Link
+				action={isWithinLeftPanel ? 'navigate' : 'push'}
+				hint={
+					isDeletedAccount
+						? m['screens.messages.deletedAccount.message']()
+						: m['screens.messages.chats.goToConversation']({ handle: profile.handle })
+				}
+				label={title}
+				onPointerDown={precache}
+				onPress={precache}
+				to={`/messages/${convo.view.id}`}
+			/>
+
+			<ChatRow.Body>
+				<UserAvatar
+					avatar={profile.avatar}
+					live={status.isActive}
+					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+					size={48}
+					type={profile.associated?.labeler ? 'labeler' : 'user'}
+				/>
+
+				<ChatRow.Content>
+					<ChatRow.TitleRow>
+						<ChatRow.Title dim={dim}>{title}</ChatRow.Title>
+						<ChatRow.Badges profile={profile} />
+						{preview.sentAt && <ChatRow.Timestamp sentAt={preview.sentAt} />}
+						{(convo.view.muted || blocked) && <ChatRow.MutedIcon />}
+					</ChatRow.TitleRow>
+
+					<PostAlerts
+						className={css.postAlerts}
+						modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
+						size="sm"
+					/>
+
+					<ChatRow.LastMessage dim={dim} icon={preview.Icon} unread={false}>
+						{preview.text}
+					</ChatRow.LastMessage>
+
+					<KnownFollowers minimal moderationOpts={moderationOpts} profile={profile} showIfEmpty />
+				</ChatRow.Content>
+			</ChatRow.Body>
+
+			<ChatRow.Footer>
+				{isDeletedAccount ? (
+					<DeleteChatButton convo={convo.view} currentScreen="list" />
+				) : (
+					<>
+						<AcceptChatButton convo={convo.view} currentScreen="list" />
+						<RejectMenu convo={convo} currentScreen="list" profile={profile} showDeleteConvo />
+					</>
 				)}
-				{/* spacer, since you can't nest pressables */}
-				<View style={[a.py_lg, a.w_full, { opacity: 0 }]} aria-hidden>
-					{/* Placeholder text so that it responds to the font height */}
-					<Text style={[a.text_xs, a.leading_tight, a.font_semi_bold]}>
-						{m['screens.messages.requests.accept.button']()}
-					</Text>
-				</View>
-				{/* then, this gets absolutely positioned on top of the spacer */}
-				<ChatListItemPortal.Portal>
-					<View
-						style={[
-							a.absolute,
-							a.pr_md,
-							a.w_full,
-							a.flex_row,
-							a.align_center,
-							a.gap_sm,
-							{
-								bottom: tokens.space.md,
-								paddingLeft: tokens.space.lg + 52 + tokens.space.md,
-							},
-						]}
-					>
-						{convo.primaryMember && !isDeletedAccount ? (
-							<>
-								{canAcceptRequest ? <AcceptChatButton convo={convo.view} currentScreen="list" /> : null}
-								<RejectMenu
-									convo={convo}
-									profile={convo.primaryMember}
-									showDeleteConvo
-									currentScreen="list"
-								/>
-							</>
-						) : (
-							<>
-								<DeleteChatButton convo={convo.view} currentScreen="list" />
-								<View style={a.flex_1} />
-							</>
-						)}
-					</View>
-				</ChatListItemPortal.Portal>
-			</ChatListItem>
-		</View>
+			</ChatRow.Footer>
+		</ChatRow.Root>
+	);
+}
+
+/** an invitation to a group chat. a locked group can only be rejected, never accepted. */
+function GroupRequestItem({
+	convo,
+	moderationOpts,
+}: {
+	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
+	moderationOpts: ModerationOptions;
+}) {
+	const { currentAccount } = useSession();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
+	const owner = useMaybeProfileShadow(convo.primaryMember);
+	const precache = usePrecacheConvo(convo);
+
+	const moderation = owner ? moderateProfile(owner, moderationOpts) : undefined;
+	const ownerIsGone = !owner || owner.handle === 'missing.invalid';
+
+	const dim = isDimmed(convo, { blocked: false, isDeletedAccount: ownerIsGone });
+	const preview = getLastMessagePreview({
+		convo,
+		currentAccountDid: currentAccount?.did,
+		isDeletedAccount: ownerIsGone,
+		primaryProfile: owner,
+	});
+
+	const title = convo.details.name;
+	const canAccept = convo.details.lockStatus === 'unlocked';
+
+	return (
+		<ChatRow.Root tone="default">
+			<ChatRow.Link
+				action={isWithinLeftPanel ? 'navigate' : 'push'}
+				hint={m['screens.messages.chats.goToGroupChat']({ name: title })}
+				label={title}
+				onPointerDown={precache}
+				onPress={precache}
+				to={`/messages/${convo.view.id}`}
+			/>
+
+			<ChatRow.Body>
+				<AvatarBubbles profiles={convo.members} size={48} />
+
+				<ChatRow.Content>
+					<ChatRow.TitleRow>
+						<ChatRow.Title dim={dim}>{title}</ChatRow.Title>
+						{preview.sentAt && <ChatRow.Timestamp sentAt={preview.sentAt} />}
+						{convo.view.muted && <ChatRow.MutedIcon />}
+					</ChatRow.TitleRow>
+
+					<ChatRow.LastMessage dim={dim} icon={preview.Icon} unread={false}>
+						{preview.text}
+					</ChatRow.LastMessage>
+				</ChatRow.Content>
+			</ChatRow.Body>
+
+			<ChatRow.Footer>
+				{ownerIsGone || !moderation ? (
+					<DeleteChatButton convo={convo.view} currentScreen="list" />
+				) : (
+					<>
+						{canAccept && <AcceptChatButton convo={convo.view} currentScreen="list" />}
+						<RejectMenu convo={convo} currentScreen="list" profile={owner} showDeleteConvo />
+					</>
+				)}
+			</ChatRow.Footer>
+		</ChatRow.Root>
 	);
 }

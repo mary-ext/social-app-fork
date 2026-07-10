@@ -14,8 +14,6 @@ import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import type { ViewStyleProp } from '#/alf';
-
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
@@ -47,25 +45,20 @@ function ConvoMenu({
 	profile,
 	handle,
 	triggerId,
-	onOpenChange,
 	currentScreen,
 	showMarkAsRead,
 	blockInfo,
-	style,
 }: {
 	convo: ConvoWithDetails;
 	profile: Shadow<AnyProfileView>;
 	handle?: Menu.MenuHandle;
-	/** DOM id of the trigger, so a detached opener (the chat row) can anchor the menu to it. */
 	triggerId?: string;
-	onOpenChange?: (open: boolean) => void;
 	currentScreen: 'list' | 'conversation';
 	showMarkAsRead?: boolean;
 	blockInfo: {
 		listBlocks: BlockingModerationCause[];
 		userBlock?: BlockingModerationCause;
 	};
-	style?: ViewStyleProp['style'];
 }): React.ReactNode {
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
@@ -84,8 +77,8 @@ function ConvoMenu({
 
 	return (
 		<>
-			<Menu.Root handle={handle} onOpenChange={onOpenChange}>
-				<View style={[style]}>
+			<Menu.Root handle={handle}>
+				<View>
 					<Menu.Trigger
 						handle={handle}
 						id={triggerId}

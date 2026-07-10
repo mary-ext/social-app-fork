@@ -4,7 +4,6 @@ import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky'
 
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { clsx } from 'clsx';
 
 import { useAppState } from '#/lib/appState';
 import type { MessagesTabNavigatorParams, NavigationProp } from '#/lib/routes/types';
@@ -86,10 +85,7 @@ export function MessagesScreenInner({ route }: Props) {
 	const { data: chatStatus } = useChatActorStatusQuery();
 	const pushToConversation = route.params?.pushToConversation;
 
-	// Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
-	// this tab. We should immediately push to the conversation after pressing the notification.
-	// After we push, reset with `setParams` so that this effect will fire next time we press a notification, even if
-	// the conversation is the same as before
+	// navigate to a conversation from notification launch parameters, then clear the parameters to allow subsequent launches
 	useEffect(() => {
 		if (pushToConversation) {
 			navigation.navigate('MessagesConversation', {
@@ -99,8 +95,6 @@ export function MessagesScreenInner({ route }: Props) {
 		}
 	}, [navigation, pushToConversation]);
 
-	// Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
-	// but only when the screen is active
 	const messagesBus = useMessagesEventBus();
 	const state = useAppState();
 	const isActive = state === 'active';
@@ -208,7 +202,6 @@ export function ChatList({
 
 	const restoredRef = useRef(false);
 
-	// kept memoized: consumed in a useEffect dep array below, where identity drives re-subscription
 	const onSoftReset = useCallback(async () => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
@@ -318,7 +311,7 @@ export function ChatList({
 			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 			ListHeaderComponent={
 				chatStatus?.chatDisabled ? (
-					<ChatDisabled shape="banner" style={isWithinSplitView ? { marginBottom: 8 } : undefined} />
+					<ChatDisabled shape="banner" className={isWithinSplitView ? css.banner : undefined} />
 				) : undefined
 			}
 			ListFooterComponent={
@@ -335,11 +328,7 @@ export function ChatList({
 
 	if (isWithinSplitView) {
 		return (
-			<div
-				ref={scrollContainerRef}
-				className={clsx(css.splitScroller, !chatStatus?.chatDisabled && css.splitScrollerPadded)}
-				onScroll={onLeftColumnScroll}
-			>
+			<div ref={scrollContainerRef} className={css.splitScroller} onScroll={onLeftColumnScroll}>
 				{list}
 			</div>
 		);
@@ -358,9 +347,7 @@ export function Header({
 	const { gtMobile } = useBreakpoints();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
-	// In split view, the left column (and this header) stays mounted while the right column shows the selected
-	// route. Pushing would stack duplicate routes on repeated clicks, so navigate instead to dedupe by route +
-	// params.
+	// navigate instead of push in split view to avoid stacking duplicate routes on repeated clicks
 	const action = isWithinSplitView ? 'navigate' : 'push';
 
 	const { data: unreadCounts } = useUnreadCountsQuery();

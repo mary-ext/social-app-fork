@@ -8,13 +8,13 @@ export const innerScaleVar = createVar();
 
 export const outer = style({
 	boxSizing: 'border-box',
+	flexShrink: 0,
 	height: containerSizeVar,
 	padding: 2,
 	width: containerSizeVar,
 });
 
-// the layout coordinates are authored in a 120px space and scaled to the requested size; the absolute bubbles
-// anchor to this box, so it must establish a positioning context.
+// scale authored 120px layout coordinates to container size; establishes positioning context for bubbles.
 export const inner = style({
 	marginLeft: innerOffsetVar,
 	marginTop: innerOffsetVar,
@@ -42,7 +42,7 @@ export const bubbleBorder = style({
 	borderWidth: 2,
 });
 
-// entrance animation: an ease-out-back curve that overshoots the final scale, then settles.
+// entrance animation with ease-out-back curve.
 export const bubbleAnimated = style({
 	transitionDelay: bubbleDelayVar,
 	transitionDuration: '250ms',
