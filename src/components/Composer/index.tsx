@@ -295,8 +295,10 @@ export function Composer({
 						if (e.key === 'Enter' && e.keyCode === 229) {
 							return;
 						}
-						// when the popup is open, Base UI consumes Enter to pick the highlighted row.
-						if (e.key === 'Enter' && !e.defaultPrevented) {
+						// when the popup has rows, Base UI consumes Enter to pick the highlighted one; our
+						// handler runs first, so we can't rely on e.defaultPrevented to detect that — gate on the
+						// autocomplete state directly, or a pick would also submit the post/message.
+						if (e.key === 'Enter' && !hasNavigableAutocomplete) {
 							onRequestSubmit?.({
 								platform: 'web',
 								shiftKey: e.shiftKey,
