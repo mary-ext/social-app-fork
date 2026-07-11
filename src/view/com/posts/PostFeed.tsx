@@ -143,12 +143,17 @@ function PostFeed({
 	ListHeaderComponent?: () => React.ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }): React.ReactNode {
+	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
+
 	const queryClient = useQueryClient();
 	const { currentAccount, hasSession } = useSession();
 	const feedFeedback = useFeedFeedbackContext();
-	// oxlint-disable-next-line react/react-compiler -- ref seed only; re-running on render is harmless
-	const lastFetchRef = useRef<number>(Date.now());
-	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
+
+	const lastFetchRef = useRef<number | null>(null);
+	if (lastFetchRef.current === null) {
+		// oxlint-disable-next-line react/react-compiler -- one-time Date.now() seed
+		lastFetchRef.current = Date.now();
+	}
 
 	const showTrendingInterstitial = useShowTrendingInterstitial({
 		enabled: hasSession && feedUriOrActorDid === DISCOVER_FEED_URI,
@@ -223,7 +228,7 @@ function PostFeed({
 
 	useEffect(() => {
 		if (enabled && !disablePoll) {
-			const timeSinceFirstLoad = Date.now() - lastFetchRef.current;
+			const timeSinceFirstLoad = Date.now() - lastFetchRef.current!;
 			if (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) {
 				// check for new on enable (aka on focus)
 				void checkForNew();

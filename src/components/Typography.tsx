@@ -3,7 +3,7 @@ import { Text as RNText, type TextStyle } from 'react-native';
 import { logger } from '#/logger';
 
 import { atoms as a, useAlf, useTheme } from '#/alf';
-import { childHasEmoji, normalizeTextStyles, type TextProps } from '#/alf/typography';
+import { childHasEmoji, normalizeTextStyles, stringChildren, type TextProps } from '#/alf/typography';
 
 export type { TextProps };
 export { Text as Span } from 'react-native';
@@ -33,8 +33,7 @@ export function Text({
 	if (import.meta.env.DEV) {
 		if (!emoji && childHasEmoji(children)) {
 			logger.warn(
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
-				`Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
+				`Text: emoji detected but emoji not enabled: "${stringChildren(children)}"\n\nPlease add <Text emoji />'`,
 			);
 		}
 	}

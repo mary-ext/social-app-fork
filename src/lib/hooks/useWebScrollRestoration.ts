@@ -1,8 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { type EventArg, useNavigation } from '@react-navigation/native';
-
-import { useConstant } from '#/lib/hooks/use-constant';
 
 if ('scrollRestoration' in history) {
 	// Tell the brower not to mess with the scroll.
@@ -23,14 +21,16 @@ type UnsafeActionNavigation = {
 };
 
 export function useWebScrollRestoration() {
-	// A stable, mutable container for per-screen scroll positions and the
-	// currently focused screen. Mutated in place because changes must not
-	// trigger re-renders.
-	const state = useConstant(createInitialScrollState);
 	const navigation = useNavigation();
+
+	const stateRef = useRef<ReturnType<typeof createInitialScrollState> | null>(null);
+	if (stateRef.current === null) {
+		stateRef.current = createInitialScrollState();
+	}
 
 	useEffect(() => {
 		function onDispatch() {
+			const state = stateRef.current!;
 			if (state.focusedKey) {
 				// Remember where we were for later.
 				state.scrollYs.set(state.focusedKey, window.scrollY);
@@ -48,22 +48,22 @@ export function useWebScrollRestoration() {
 		return () => {
 			unsafeNavigation.removeListener('__unsafe_action__', onDispatch);
 		};
-	}, [state, navigation]);
+	}, [navigation]);
 
 	const screenListeners = useMemo(
 		() => ({
 			focus(e: EventArg<'focus', boolean | undefined, unknown>) {
+				const state = stateRef.current!;
 				const scrollY = state.scrollYs.get(e.target) ?? 0;
 				// Deferred so that screens re-mounted by LRU eviction have
 				// time to render their content before we scroll.
 				requestAnimationFrame(() => {
 					window.scrollTo(0, scrollY);
 				});
-				// oxlint-disable-next-line react/react-compiler -- `state` is a stable mutable container held in useConstant by design
 				state.focusedKey = e.target ?? null;
 			},
 		}),
-		[state],
+		[],
 	);
 	return screenListeners;
 }

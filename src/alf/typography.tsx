@@ -57,6 +57,19 @@ export function childHasEmoji(children: React.ReactNode) {
 	return hasEmoji;
 }
 
+/**
+ * Joins the plain-string portions of `children`, discarding element/number nodes. Intended for diagnostics
+ * where a readable rendering of the text is needed without stringifying React elements.
+ *
+ * @param children the nodes to extract text from
+ * @returns the concatenated string children
+ */
+export function stringChildren(children: React.ReactNode): string {
+	return Children.toArray(children)
+		.filter((child): child is string => typeof child === 'string')
+		.join('');
+}
+
 const SINGLE_EMOJI_RE = /^[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]+$/u;
 export function isOnlyEmoji(text: string) {
 	return text.length <= 15 && SINGLE_EMOJI_RE.test(text);

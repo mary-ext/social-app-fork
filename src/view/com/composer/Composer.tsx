@@ -733,7 +733,8 @@ export const ComposePost = ({
 					anchor.value.post.quoteCount !== initQuote.quoteCount
 				) {
 					onPost?.(postUri);
-					// oxlint-disable-next-line react/react-compiler -- hand-tuned deps for this large publish callback; compiler is conservative here
+					// false positive: `postUri`/`postSuccessData` are locals captured by this async closure, misread as deps.
+					// oxlint-disable-next-line react/react-compiler
 					onPostSuccess?.(postSuccessData);
 					return true;
 				}

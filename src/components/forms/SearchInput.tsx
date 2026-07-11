@@ -40,8 +40,7 @@ export function SearchInput({ value, label, onClearText, hotkey, ref, ...rest }:
 			<TextField.Root>
 				<TextField.Icon icon={MagnifyingGlassIcon} />
 				<TextField.Input
-					// mergeRefs returns a ref callback that reads/writes .current only at attach time, not during render.
-					// oxlint-disable-next-line react/react-compiler
+					// oxlint-disable-next-line react/react-compiler -- RC doesn't know this is meant to be a `ref` prop
 					inputRef={mergeRefs([internalRef, ref])}
 					label={label || m['common.action.search']()}
 					value={value}

@@ -152,7 +152,7 @@ export async function upsertThreadgate(
 	},
 	callback: (
 		threadgate: AppBskyFeedThreadgate.Main | null,
-	) => Promise<AppBskyFeedThreadgate.Main | undefined>,
+	) => AppBskyFeedThreadgate.Main | Promise<AppBskyFeedThreadgate.Main | undefined> | undefined,
 ) {
 	const prev = await getThreadgateRecord({
 		appview,
@@ -181,9 +181,7 @@ export function useSetThreadgateAllowMutation() {
 		mutationFn: async ({ postUri, allow }: { postUri: string; allow: ThreadgateAllowUISetting[] }) => {
 			return upsertThreadgate(
 				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri },
-				// async lifts the sync return into the Promise<> that upsertThreadgate's callback param requires.
-				// eslint-disable-next-line @typescript-eslint/require-await -- see comment above
-				async (prev): Promise<AppBskyFeedThreadgate.Main | undefined> => {
+				(prev): AppBskyFeedThreadgate.Main | undefined => {
 					if (prev) {
 						return {
 							...prev,
@@ -256,9 +254,7 @@ export function useToggleReplyVisibilityMutation() {
 
 			await upsertThreadgate(
 				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri },
-				// async lifts the sync return into the Promise<> that upsertThreadgate's callback param requires.
-				// eslint-disable-next-line @typescript-eslint/require-await -- see comment above
-				async (prev): Promise<AppBskyFeedThreadgate.Main | undefined> => {
+				(prev): AppBskyFeedThreadgate.Main | undefined => {
 					if (prev) {
 						if (action === 'hide') {
 							return mergeThreadgateRecords(prev, {

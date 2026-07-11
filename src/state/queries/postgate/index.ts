@@ -116,7 +116,9 @@ export async function upsertPostgate(
 		pds: Client;
 		postUri: string;
 	},
-	callback: (postgate: AppBskyFeedPostgate.Main | undefined) => Promise<AppBskyFeedPostgate.Main | undefined>,
+	callback: (
+		postgate: AppBskyFeedPostgate.Main | undefined,
+	) => AppBskyFeedPostgate.Main | Promise<AppBskyFeedPostgate.Main | undefined> | undefined,
 ) {
 	const prev = await getPostgateRecord({
 		appview,
@@ -199,9 +201,7 @@ export function useToggleQuoteDetachmentMutation() {
 
 			await upsertPostgate(
 				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri: quoteUri },
-				// async lifts the sync return into the Promise<> that upsertPostgate's callback param requires.
-				// eslint-disable-next-line @typescript-eslint/require-await -- see comment above
-				async (prev) => {
+				(prev) => {
 					if (prev) {
 						if (action === 'detach') {
 							return mergePostgateRecords(prev, {

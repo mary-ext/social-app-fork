@@ -5,7 +5,6 @@ import { tokenize } from '@atcute/bluesky-richtext-parser';
 import debounce from 'lodash.debounce';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { useNonReactiveObject } from '#/lib/hooks/useNonReactiveObject';
 import { type Detection, detectLanguagesAsync } from '#/lib/language-detection';
 
 import { logger } from '#/logger';
@@ -85,48 +84,38 @@ export function SuggestedLanguage({
 		setHasInteracted(true);
 	};
 
-	const detectionPropsRef = useNonReactiveObject({
-		currentLanguages,
+	const detect = useNonReactiveCallback(async (text: string) => {
+		try {
+			const verdict = classifyDetection(await detectLanguagesAsync(text));
+			switch (verdict.kind) {
+				case 'confident': {
+					const fresh =
+						!currentLanguages.includes(verdict.language) &&
+						!declinedSuggLangsRef.current.includes(verdict.language);
+					setSuggLang(fresh ? verdict.language : undefined);
+					break;
+				}
+				case 'ambiguous': {
+					if (
+						!currentLanguages.includes(verdict.language) &&
+						!declinedSuggLangsRef.current.includes(verdict.language)
+					) {
+						onNudge?.();
+					}
+					setSuggLang(undefined);
+					break;
+				}
+				case 'none': {
+					setSuggLang(undefined);
+					break;
+				}
+			}
+		} catch (e) {
+			logger.error('Error detecting language', { safeMessage: e });
+		}
 	});
 
-	const handleOnNudge = useNonReactiveCallback(onNudge);
-
-	// oxlint-disable react/react-compiler -- debounce is intentionally stable (empty deps); fresh data is read via refs
-	const detectLanguage = useMemo(() => {
-		return debounce(async (text: string) => {
-			try {
-				const currLangs = detectionPropsRef.current.currentLanguages;
-				const verdict = classifyDetection(await detectLanguagesAsync(text));
-				switch (verdict.kind) {
-					case 'confident': {
-						const fresh =
-							!currLangs.includes(verdict.language) &&
-							!declinedSuggLangsRef.current.includes(verdict.language);
-						setSuggLang(fresh ? verdict.language : undefined);
-						break;
-					}
-					case 'ambiguous': {
-						if (
-							!currLangs.includes(verdict.language) &&
-							!declinedSuggLangsRef.current.includes(verdict.language)
-						) {
-							handleOnNudge();
-						}
-						setSuggLang(undefined);
-						break;
-					}
-					case 'none': {
-						setSuggLang(undefined);
-						break;
-					}
-				}
-			} catch (e) {
-				logger.error('Error detecting language', { safeMessage: e });
-			}
-		}, 500);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	// oxlint-enable react/react-compiler
+	const detectLanguage = useMemo(() => debounce(detect, 500), [detect]);
 
 	if (text.length > 0 && !hasInteracted) {
 		setHasInteracted(true);

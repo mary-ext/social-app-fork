@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useId, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useId, useRef, useState } from 'react';
 
 import { useWindowHeight } from '#/lib/hooks/use-window-height';
 
@@ -21,46 +21,39 @@ export function Provider({ children }: { children: React.ReactNode }) {
 		activeViewIdRef.current = activeViewId;
 	}, [activeViewId]);
 
-	const setActiveView = useCallback(
-		(viewId: string) => {
-			setActiveViewId(viewId);
-			manuallySetRef.current = true;
-			// we don't know the exact position, but it's definitely on screen
-			// so just guess that it's in the middle. Any value is fine
-			// so long as it's not offscreen
-			activeViewLocationRef.current = windowHeight / 2;
-		},
-		[windowHeight],
-	);
+	const setActiveView = (viewId: string) => {
+		setActiveViewId(viewId);
+		manuallySetRef.current = true;
+		// we don't know the exact position, but it's definitely on screen
+		// so just guess that it's in the middle. Any value is fine
+		// so long as it's not offscreen
+		activeViewLocationRef.current = windowHeight / 2;
+	};
 
-	const sendViewPosition = useCallback(
-		(viewId: string, y: number) => {
-			if (viewId === activeViewIdRef.current) {
-				activeViewLocationRef.current = y;
-			} else {
-				// oxlint-disable-next-line react/react-compiler -- callback reads only refs and windowHeight (already a dep)
-				if (distanceToIdealPosition(y) < distanceToIdealPosition(activeViewLocationRef.current)) {
-					// if the old view was manually set, only usurp if the old view is offscreen
-					if (manuallySetRef.current && withinViewport(activeViewLocationRef.current)) {
-						return;
-					}
-
-					setActiveViewId(viewId);
-					activeViewLocationRef.current = y;
-					manuallySetRef.current = false;
+	const sendViewPosition = (viewId: string, y: number) => {
+		if (viewId === activeViewIdRef.current) {
+			activeViewLocationRef.current = y;
+		} else {
+			if (distanceToIdealPosition(y) < distanceToIdealPosition(activeViewLocationRef.current)) {
+				// if the old view was manually set, only usurp if the old view is offscreen
+				if (manuallySetRef.current && withinViewport(activeViewLocationRef.current)) {
+					return;
 				}
-			}
 
-			function distanceToIdealPosition(yPos: number) {
-				return Math.abs(yPos - windowHeight / 2.5);
+				setActiveViewId(viewId);
+				activeViewLocationRef.current = y;
+				manuallySetRef.current = false;
 			}
+		}
 
-			function withinViewport(yPos: number) {
-				return yPos > 0 && yPos < windowHeight;
-			}
-		},
-		[windowHeight],
-	);
+		function distanceToIdealPosition(yPos: number) {
+			return Math.abs(yPos - windowHeight / 2.5);
+		}
+
+		function withinViewport(yPos: number) {
+			return yPos > 0 && yPos < windowHeight;
+		}
+	};
 
 	const value = {
 		activeViewId,

@@ -88,16 +88,8 @@ function DialogInner({
 		error: removeLiveStatusError,
 	} = useRemoveLiveStatusMutation(handle);
 
-	const { minutesUntilExpiry, expiryDateTime } = useMemo(() => {
-		void tick;
-
-		const expiry = new Date(status.expiresAt ?? new Date());
-		return {
-			expiryDateTime: expiry,
-			minutesUntilExpiry: differenceInMinutes(expiry, new Date()),
-		};
-		// oxlint-disable-next-line react/react-compiler -- `void tick` intentionally recomputes every minute
-	}, [tick, status.expiresAt]);
+	const expiryDateTime = new Date(status.expiresAt ?? tick);
+	const minutesUntilExpiry = differenceInMinutes(expiryDateTime, tick);
 
 	const submitDisabled =
 		isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl || isRemovingLiveStatus;

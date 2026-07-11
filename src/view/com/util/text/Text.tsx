@@ -6,7 +6,7 @@ import { type TypographyVariant, useTheme } from '#/lib/ThemeContext';
 import { logger } from '#/logger';
 
 import { applyFonts, useAlf } from '#/alf';
-import { childHasEmoji, type StringChild } from '#/alf/typography';
+import { childHasEmoji, stringChildren, type StringChild } from '#/alf/typography';
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
 	type?: TypographyVariant;
@@ -42,8 +42,7 @@ function Text_DEPRECATED({
 	if (import.meta.env.DEV) {
 		if (!emoji && childHasEmoji(children)) {
 			logger.warn(
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
-				`Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
+				`Text: emoji detected but emoji not enabled: "${stringChildren(children)}"\n\nPlease add <Text emoji />'`,
 			);
 		}
 	}

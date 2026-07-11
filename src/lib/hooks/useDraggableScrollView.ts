@@ -72,8 +72,7 @@ export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
 		};
 	}, [cursor]);
 
-	// mergeRefs returns a ref callback that reads/writes .current at attach time, not during render.
-	// oxlint-disable-next-line react/react-compiler
+	// oxlint-disable-next-line react/react-compiler - RC doesn't know this is heading to the `ref `prop
 	const refs = useMemo(() => mergeRefs(outerRef ? [ref, outerRef] : [ref]), [ref, outerRef]);
 
 	return {

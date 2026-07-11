@@ -92,30 +92,27 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			},
 
 			async checkUnread({ invalidate, isPoll }: { invalidate?: boolean; isPoll?: boolean } = {}) {
-				// single-flight guard: only the call that acquires the lock clears it, so an early-returning
-				// call (e.g. a re-fire triggered by an api-identity change while a fetch is in flight) can't
-				// release another request's lock.
-				let acquired = false;
+				if (!hasSession) return;
+				if (AppState.currentState !== 'active') {
+					return;
+				}
+
+				// reduce polling if unread count is set
+				if (isPoll && cacheRef.current?.unreadCount !== 0) {
+					// if hit 30+ then don't poll, otherwise reduce polling by 50%
+					if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
+						return;
+					}
+				}
+
+				if (isFetchingRef.current) {
+					return;
+				}
+
+				// single-flight guard: taken here past every early return, released on both the success and error
+				// paths below so a re-fire can't clear another request's in-flight lock.
+				isFetchingRef.current = true;
 				try {
-					if (!hasSession) return;
-					if (AppState.currentState !== 'active') {
-						return;
-					}
-
-					// reduce polling if unread count is set
-					if (isPoll && cacheRef.current?.unreadCount !== 0) {
-						// if hit 30+ then don't poll, otherwise reduce polling by 50%
-						if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
-							return;
-						}
-					}
-
-					if (isFetchingRef.current) {
-						return;
-					}
-					isFetchingRef.current = true;
-					acquired = true;
-
 					// count
 					const { page, indexedAt: lastIndexed } = await fetchPage({
 						appview,
@@ -149,11 +146,11 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 						void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'));
 					}
 					broadcast.postMessage({ event: unreadCountStr });
-				} finally {
-					if (acquired) {
-						isFetchingRef.current = false;
-					}
+				} catch (err) {
+					isFetchingRef.current = false;
+					throw err;
 				}
+				isFetchingRef.current = false;
 			},
 
 			getCachedUnreadPage() {
@@ -163,8 +160,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				}
 			},
 		};
-		// oxlint-disable-next-line react/react-compiler -- api identity is deliberately managed (see effect below)
-	}, [setNumUnread, queryClient, moderationOpts, appview, hasSession]);
+	}, [appview, hasSession, moderationOpts, queryClient]);
 
 	// periodic sync. depends on api (not a ref bridge) so a fresh mount with hasSession has the callback in
 	// hand when this effect first runs — effect order is no longer load-bearing.

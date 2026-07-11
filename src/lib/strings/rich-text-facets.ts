@@ -15,7 +15,6 @@ export type Richtext = {
 };
 
 // Collapses runs of 3+ newlines (allowing zero-width separators between them) down to a blank line.
-// eslint-disable-next-line no-misleading-character-class
 const EXCESS_NEWLINES_RE = /[\r\n]([\u00AD\u2060\u200D\u200C\u200B\s]*[\r\n]){2,}/g;
 
 /**

@@ -58,17 +58,11 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const liveNowConfig = useLiveNowConfig();
 	const { formatted: allowedServices } = getLiveServiceNames(liveNowConfig.currentAccountAllowedHosts);
 
-	const time = useCallback(
-		(offset: number) => {
-			void tick;
-
-			const date = new Date();
-			date.setMinutes(date.getMinutes() + offset);
-			return clock.format(date);
-		},
-		// oxlint-disable-next-line react/react-compiler -- `void tick` intentionally recomputes every minute
-		[tick],
-	);
+	const time = (offset: number) => {
+		const date = new Date(tick);
+		date.setMinutes(date.getMinutes() + offset);
+		return clock.format(date);
+	};
 
 	const onChangeDuration = useCallback((newDuration: string) => {
 		setDuration(Number(newDuration));

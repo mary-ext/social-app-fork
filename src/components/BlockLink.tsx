@@ -148,10 +148,7 @@ export function BlockLink({
 
 	const node = children as ReactElement<BlockLinkChildProps>;
 
-	// cloneElement's props include a merged ref (forwarded ref + child's own ref). mergeRefs returns a ref
-	// callback that reads/writes .current only at attach time, not during render — the rule can't prove that,
-	// hence the suppressions on both the call and the ref prop.
-	// oxlint-disable-next-line react/react-compiler
+	// oxlint-disable-next-line react/react-compiler -- RC doesn't know this is meant to be a `ref` prop
 	return cloneElement(node, {
 		'aria-label': label,
 		className: clsx(node.props.className, className),
