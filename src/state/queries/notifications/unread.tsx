@@ -163,6 +163,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				}
 			},
 		};
+		// oxlint-disable-next-line react/react-compiler -- api identity is deliberately managed (see effect below)
 	}, [setNumUnread, queryClient, moderationOpts, appview, hasSession]);
 
 	// periodic sync. depends on api (not a ref bridge) so a fresh mount with hasSession has the callback in

@@ -38,6 +38,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
 			if (viewId === activeViewIdRef.current) {
 				activeViewLocationRef.current = y;
 			} else {
+				// oxlint-disable-next-line react/react-compiler -- callback reads only refs and windowHeight (already a dep)
 				if (distanceToIdealPosition(y) < distanceToIdealPosition(activeViewLocationRef.current)) {
 					// if the old view was manually set, only usurp if the old view is offscreen
 					if (manuallySetRef.current && withinViewport(activeViewLocationRef.current)) {

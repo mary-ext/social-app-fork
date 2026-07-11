@@ -155,7 +155,7 @@ let NotificationFeedItem = ({
 
 	const authors: Author[] = [
 		{
-			profile: item.notification.author as AppBskyActorDefs.ProfileView,
+			profile: item.notification.author,
 			href: makeProfileLink(item.notification.author),
 			moderation: moderateProfile(item.notification.author, moderationOpts),
 		},

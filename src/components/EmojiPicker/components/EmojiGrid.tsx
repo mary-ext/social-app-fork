@@ -63,6 +63,7 @@ export const EmojiGrid = forwardRef<EmojiGridHandle, EmojiGridProps>(function Em
 		if (scrollRef.current) {
 			scrollRef.current.scrollTop = 0;
 		}
+		// oxlint-disable-next-line react/react-compiler -- guarded reset when the layout changes, not a per-render cascade
 		setScrollTop(0);
 	}, [layout]);
 

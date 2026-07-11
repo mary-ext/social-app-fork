@@ -733,6 +733,7 @@ export const ComposePost = ({
 					anchor.value.post.quoteCount !== initQuote.quoteCount
 				) {
 					onPost?.(postUri);
+					// oxlint-disable-next-line react/react-compiler -- hand-tuned deps for this large publish callback; compiler is conservative here
 					onPostSuccess?.(postSuccessData);
 					return true;
 				}

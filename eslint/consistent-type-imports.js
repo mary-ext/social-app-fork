@@ -37,7 +37,6 @@ const specifierText = (specifier, sourceCode) => {
 	return `${imported} as ${specifier.local.name}`;
 };
 
-/** @type {import('eslint').Rule.RuleModule} */
 module.exports = {
 	meta: {
 		type: 'suggestion',

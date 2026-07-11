@@ -66,6 +66,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 			date.setMinutes(date.getMinutes() + offset);
 			return clock.format(date);
 		},
+		// oxlint-disable-next-line react/react-compiler -- `void tick` intentionally recomputes every minute
 		[tick],
 	);
 

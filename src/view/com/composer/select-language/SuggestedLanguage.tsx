@@ -91,8 +91,8 @@ export function SuggestedLanguage({
 
 	const handleOnNudge = useNonReactiveCallback(onNudge);
 
+	// oxlint-disable react/react-compiler -- debounce is intentionally stable (empty deps); fresh data is read via refs
 	const detectLanguage = useMemo(() => {
-		// eslint-disable-next-line react-hooks/refs
 		return debounce(async (text: string) => {
 			try {
 				const currLangs = detectionPropsRef.current.currentLanguages;
@@ -126,6 +126,7 @@ export function SuggestedLanguage({
 		}, 500);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+	// oxlint-enable react/react-compiler
 
 	if (text.length > 0 && !hasInteracted) {
 		setHasInteracted(true);

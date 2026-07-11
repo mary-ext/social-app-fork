@@ -67,7 +67,7 @@ export function VideoEmbedInnerWeb({
 						muted={isGif || !focused}
 						aria-labelledby={embed.alt ? figId : undefined}
 						onTimeUpdate={(e) => {
-							// eslint-disable-next-line react-hooks/immutability -- `lastKnownTime` is a ref prop; writing `.current` is intended
+							// oxlint-disable-next-line react/react-compiler -- `lastKnownTime` is a ref prop; writing `.current` is intended
 							lastKnownTime.current = e.currentTarget.currentTime;
 						}}
 						loop={loop}

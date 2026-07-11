@@ -98,7 +98,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 			// lodash.throttle stores sendToFeedNoDelay without invoking it, so the queue/history refs
 			// below are only read when the throttled function fires from handlers/effects, never during
 			// render. the rule can't prove throttle won't call back synchronously, hence the suppression.
-			// eslint-disable-next-line react-hooks/refs
+			// oxlint-disable-next-line react/react-compiler
 			throttle(sendToFeedNoDelay, 10e3, {
 				leading: false,
 				trailing: true,

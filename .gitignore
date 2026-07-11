@@ -14,7 +14,7 @@ yarn-*.log
 *.local.json
 
 tsconfig.tsbuildinfo
-.eslintcache
+.oxlintcache
 
 .wrangler/
 .dev.vars*

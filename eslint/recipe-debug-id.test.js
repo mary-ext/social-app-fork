@@ -1,16 +1,11 @@
 'use strict';
 
 const { test } = require('node:test');
-const { RuleTester } = require('eslint');
+const { RuleTester } = require('oxlint/plugins-dev');
 const rule = require('./recipe-debug-id');
 
 test('recipe-debug-id', () => {
-	const ruleTester = new RuleTester({
-		languageOptions: {
-			ecmaVersion: 'latest',
-			sourceType: 'module',
-		},
-	});
+	const ruleTester = new RuleTester();
 
 	ruleTester.run('recipe-debug-id', rule, {
 		valid: [

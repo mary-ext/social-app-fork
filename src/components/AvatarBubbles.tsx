@@ -55,7 +55,7 @@ export function AvatarBubbles({
 	const [animatedIn, setAnimatedIn] = useState(false);
 	useEffect(() => {
 		if (animate) {
-			// eslint-disable-next-line react-hooks/set-state-in-effect -- intentional one-shot animation trigger
+			// oxlint-disable-next-line react/react-compiler -- intentional one-shot animation trigger
 			setAnimatedIn(true);
 		}
 	}, [animate]);

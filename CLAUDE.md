@@ -11,7 +11,7 @@ Vanilla Extract.
 - start the dev server with `pnpm dev` (rsbuild)
 - build with `pnpm build` (rsbuild)
 - format with `pnpm format` (oxfmt)
-- lint with `pnpm lint` (eslint)
+- lint with `pnpm lint` (oxlint)
 - typecheck with `pnpm typecheck` (tsc)
 - check `pnpm view <package>` before adding a new dependency
 

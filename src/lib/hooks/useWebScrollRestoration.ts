@@ -59,7 +59,7 @@ export function useWebScrollRestoration() {
 				requestAnimationFrame(() => {
 					window.scrollTo(0, scrollY);
 				});
-				// eslint-disable-next-line react-hooks/immutability -- `state` is a stable mutable container held in useConstant by design
+				// oxlint-disable-next-line react/react-compiler -- `state` is a stable mutable container held in useConstant by design
 				state.focusedKey = e.target ?? null;
 			},
 		}),

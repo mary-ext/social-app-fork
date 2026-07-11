@@ -146,7 +146,7 @@ function PostFeed({
 	const queryClient = useQueryClient();
 	const { currentAccount, hasSession } = useSession();
 	const feedFeedback = useFeedFeedbackContext();
-	// eslint-disable-next-line react-hooks/purity
+	// oxlint-disable-next-line react/react-compiler -- ref seed only; re-running on render is harmless
 	const lastFetchRef = useRef<number>(Date.now());
 	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
 

@@ -96,6 +96,7 @@ function DialogInner({
 			expiryDateTime: expiry,
 			minutesUntilExpiry: differenceInMinutes(expiry, new Date()),
 		};
+		// oxlint-disable-next-line react/react-compiler -- `void tick` intentionally recomputes every minute
 	}, [tick, status.expiresAt]);
 
 	const submitDisabled =
