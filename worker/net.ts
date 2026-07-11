@@ -105,7 +105,8 @@ export const readCapped = async (response: Response, options: ReadCappedOptions)
 		return new Uint8Array(0);
 	}
 
-	const reader = body.getReader();
+	// Response.body is typed as ReadableStream<any>; assert the byte-stream element type
+	const reader = body.getReader() as ReadableStreamDefaultReader<Uint8Array>;
 	const chunks: Uint8Array[] = [];
 	let total = 0;
 	try {
