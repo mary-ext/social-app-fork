@@ -15,13 +15,13 @@ import { logger } from '#/logger';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { Button, ButtonText } from '#/components/Button';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
@@ -51,7 +51,7 @@ export function Member({
 	const [queueFollow] = useProfileFollowMutationQueue(profile);
 	const requireAuth = useRequireAuth();
 
-	const removeMemberPrompt = Prompt.usePromptControl();
+	const removeMemberPrompt = Prompt.usePromptHandle();
 	const { mutate: removeMembers } = useRemoveFromGroupChat(convo.view.id, {
 		onError: (e) => {
 			logger.error('Failed to remove group chat member', { message: e });
@@ -144,14 +144,18 @@ export function Member({
 					</ProfileCard.Outer>
 				</ProfileCard.Link>
 				{showRemoveButton ? (
-					<Button
-						label={m['screens.messages.members.remove.a11y']({ name: displayName })}
-						size="tiny"
-						color="negative_subtle"
-						onPress={() => removeMemberPrompt.open()}
-					>
-						<ButtonText>{m['common.action.remove']()}</ButtonText>
-					</Button>
+					<Prompt.Trigger
+						handle={removeMemberPrompt}
+						render={
+							<Button
+								label={m['screens.messages.members.remove.a11y']({ name: displayName })}
+								size="tiny"
+								color="negative_subtle"
+							>
+								<ButtonText>{m['common.action.remove']()}</ButtonText>
+							</Button>
+						}
+					/>
 				) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
 					<SimpleInlineLinkText
 						label={m['screens.messages.follow.action']({ name: displayName })}
@@ -166,7 +170,7 @@ export function Member({
 			{/* mounted outside the showRemoveButton branch: confirming optimistically drops this row, so
 			    gating the prompt on the button would unmount it mid-close and race the dismiss animation */}
 			<RemoveMemberPrompt
-				control={removeMemberPrompt}
+				handle={removeMemberPrompt}
 				displayName={displayName}
 				onConfirm={() => removeMembers({ members: [profile.did] })}
 			/>

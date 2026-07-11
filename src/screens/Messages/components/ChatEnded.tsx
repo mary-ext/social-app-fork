@@ -14,9 +14,9 @@ import { atoms as a, useTheme } from '#/alf';
 
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { CircleX_Stroke2_Corner0_Rounded as CircleXIcon } from '#/components/icons/CircleX';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
@@ -25,7 +25,7 @@ import { ChatFooter } from './ChatFooter';
 
 export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
 	const t = useTheme();
-	const leaveChatPrompt = Prompt.usePromptControl();
+	const leaveChatPrompt = Prompt.usePromptHandle();
 
 	const navigation = useNavigation<NavigationProp>();
 	const { currentAccount } = useSession();
@@ -53,7 +53,7 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 						accessibilityRole="button"
 						hitSlop={HITSLOP_10}
 						style={[a.mx_md]}
-						onPress={leaveChatPrompt.open}
+						onPress={() => leaveChatPrompt.open(null)}
 					>
 						<Text
 							numberOfLines={1}
@@ -69,7 +69,7 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 							{m['common.chat.action.leave']()}
 						</Text>
 					</Pressable>
-					<LeaveChatPrompt control={leaveChatPrompt} groupName={convo.details.name} onConfirm={leaveConvo} />
+					<LeaveChatPrompt handle={leaveChatPrompt} groupName={convo.details.name} onConfirm={leaveConvo} />
 				</>
 			)}
 		</ChatFooter>

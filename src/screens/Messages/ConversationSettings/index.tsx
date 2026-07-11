@@ -46,11 +46,11 @@ import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Layout from '#/components/Layout';
-import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
@@ -378,10 +378,10 @@ function SettingsHeader({
 	};
 
 	const inviteLinkDialog = useDialogControl();
-	const editNamePrompt = Prompt.usePromptControl();
-	const lockChatPrompt = Prompt.usePromptControl();
-	const leaveChatPrompt = Prompt.usePromptControl();
-	const leaveAndLockChatPrompt = Prompt.usePromptControl();
+	const editNamePrompt = Prompt.usePromptHandle();
+	const lockChatPrompt = Prompt.usePromptHandle();
+	const leaveChatPrompt = Prompt.usePromptHandle();
+	const leaveAndLockChatPrompt = Prompt.usePromptHandle();
 	const reportHandle = Dialog.useDialogHandle();
 	const deleteHandle = Dialog.useDialogHandle();
 
@@ -392,7 +392,7 @@ function SettingsHeader({
 	const handlePromptName = () => {
 		setNewGroupName(groupName);
 		setEditNameInputKey((k) => k + 1);
-		editNamePrompt.open();
+		editNamePrompt.open(null);
 	};
 
 	const handleEditName = () => {
@@ -475,7 +475,7 @@ function SettingsHeader({
 									? m['screens.messages.lock.label']()
 									: m['screens.messages.lock.action.lock']()
 							}
-							onPress={lockStatus === 'locked' ? handleUnlock : lockChatPrompt.open}
+							onPress={lockStatus === 'locked' ? handleUnlock : () => lockChatPrompt.open(null)}
 						/>
 					) : null}
 					{!isOwner && reportSubjectDid ? (
@@ -491,12 +491,12 @@ function SettingsHeader({
 						icon={ArrowBoxLeftIcon}
 						label={m['screens.messages.leave.a11y']()}
 						text={m['common.action.leave']()}
-						onPress={isOwner ? leaveAndLockChatPrompt.open : leaveChatPrompt.open}
+						onPress={isOwner ? () => leaveAndLockChatPrompt.open(null) : () => leaveChatPrompt.open(null)}
 					/>
 				</View>
 			</View>
 			<EditNamePrompt
-				control={editNamePrompt}
+				handle={editNamePrompt}
 				value={newGroupName}
 				inputKey={editNameInputKey}
 				onChangeText={setNewGroupName}
@@ -511,10 +511,10 @@ function SettingsHeader({
 					moderationOpts={moderationOpts}
 				/>
 			)}
-			<LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
-			<LeaveChatPrompt control={leaveChatPrompt} groupName={groupName} onConfirm={leaveConvo} />
+			<LockChatPrompt handle={lockChatPrompt} onConfirm={handleConfirmLock} />
+			<LeaveChatPrompt handle={leaveChatPrompt} groupName={groupName} onConfirm={leaveConvo} />
 			<LeaveAndLockChatPrompt
-				control={leaveAndLockChatPrompt}
+				handle={leaveAndLockChatPrompt}
 				groupName={groupName}
 				onConfirm={() => void leaveAndLockConvo()}
 			/>

@@ -1,84 +1,79 @@
-import { View } from 'react-native';
-
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import type * as Dialog from '#/components/Dialog';
-import * as TextField from '#/components/forms/TextField';
-import * as Prompt from '#/components/Prompt';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
+import * as styles from './prompts.css';
+
 export function EditNamePrompt({
-	control,
+	handle,
 	value,
 	inputKey,
 	onChangeText,
 	onConfirm,
 }: {
-	control: Dialog.DialogOuterProps['control'];
+	handle: Prompt.PromptHandle;
 	value: string;
 	/** key to remount the uncontrolled input and reseed it from `value` when the prompt is opened */
 	inputKey: number;
 	onChangeText: (value: string) => void;
 	onConfirm: () => void;
 }) {
-	const t = useTheme();
 	const nameTooLong = isOverMaxGraphemeCount({
 		text: value,
 		maxCount: MAX_GROUP_NAME_GRAPHEME_LENGTH,
 	});
 
 	return (
-		<Prompt.Outer control={control}>
-			<>
-				<Prompt.Content>
-					<Prompt.TitleText>{m['screens.messages.groupName.edit.action']()}</Prompt.TitleText>
-					<View style={[a.my_sm]}>
-						<TextField.Root isInvalid={nameTooLong}>
-							<TextField.Input
-								key={inputKey}
-								label={m['screens.messages.groupName.edit.action']()}
-								placeholder={m['common.chat.groupName']()}
-								defaultValue={value}
-								onChangeText={onChangeText}
-								returnKeyType="done"
-								autoCapitalize="none"
-								autoComplete="off"
-								autoCorrect={false}
-								autoFocus
-								onSubmitEditing={nameTooLong ? undefined : onConfirm}
-							/>
-						</TextField.Root>
-						{nameTooLong ? (
-							<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-								{m['common.chat.error.groupNameTooLong']({ max: MAX_GROUP_NAME_GRAPHEME_LENGTH })}
-							</Text>
-						) : null}
-					</View>
-				</Prompt.Content>
-				<Prompt.Actions>
-					<Prompt.Action cta={m['common.action.save']()} onPress={onConfirm} disabled={nameTooLong} />
-					<Prompt.Cancel />
-				</Prompt.Actions>
-			</>
+		<Prompt.Outer handle={handle}>
+			<Prompt.Content>
+				<Prompt.TitleText>{m['screens.messages.groupName.edit.action']()}</Prompt.TitleText>
+				<TextField.Root isInvalid={nameTooLong} className={styles.field}>
+					<TextField.Input
+						key={inputKey}
+						label={m['screens.messages.groupName.edit.action']()}
+						placeholder={m['common.chat.groupName']()}
+						defaultValue={value}
+						onChangeText={onChangeText}
+						autoCapitalize="none"
+						autoComplete="off"
+						autoFocus
+						onKeyDown={(e) => {
+							if (e.key === 'Enter' && !nameTooLong) {
+								handle.close();
+								onConfirm();
+							}
+						}}
+					/>
+					{nameTooLong ? (
+						<Text size="sm" weight="medium" color="negative_600" className={styles.errorText}>
+							{m['common.chat.error.groupNameTooLong']({ max: MAX_GROUP_NAME_GRAPHEME_LENGTH })}
+						</Text>
+					) : null}
+				</TextField.Root>
+			</Prompt.Content>
+			<Prompt.Actions>
+				<Prompt.Action cta={m['common.action.save']()} onPress={onConfirm} disabled={nameTooLong} />
+				<Prompt.Cancel />
+			</Prompt.Actions>
 		</Prompt.Outer>
 	);
 }
 
 export function LockChatPrompt({
-	control,
+	handle,
 	onConfirm,
 }: {
-	control: Dialog.DialogOuterProps['control'];
+	handle: Prompt.PromptHandle;
 	onConfirm: () => void;
 }) {
 	return (
 		<Prompt.Basic
-			control={control}
+			handle={handle}
 			title={m['screens.messages.lock.confirm.title']()}
 			description={m['screens.messages.lock.confirm.message']()}
 			confirmButtonCta={m['screens.messages.lock.action.lockGroup']()}
@@ -89,17 +84,17 @@ export function LockChatPrompt({
 }
 
 export function LeaveChatPrompt({
-	control,
+	handle,
 	groupName,
 	onConfirm,
 }: {
-	control: Dialog.DialogOuterProps['control'];
+	handle: Prompt.PromptHandle;
 	groupName: string;
 	onConfirm: () => void;
 }) {
 	return (
 		<Prompt.Basic
-			control={control}
+			handle={handle}
 			title={m['screens.messages.leave.confirm.message']({ name: groupName })}
 			description={m['screens.messages.leave.confirm.rejoinWarning']()}
 			confirmButtonCta={m['screens.messages.leave.action']()}
@@ -111,17 +106,17 @@ export function LeaveChatPrompt({
 }
 
 export function LeaveAndLockChatPrompt({
-	control,
+	handle,
 	groupName,
 	onConfirm,
 }: {
-	control: Dialog.DialogOuterProps['control'];
+	handle: Prompt.PromptHandle;
 	groupName: string;
 	onConfirm: () => void;
 }) {
 	return (
 		<Prompt.Basic
-			control={control}
+			handle={handle}
 			title={m['screens.messages.leave.confirm.message']({ name: groupName })}
 			description={m['screens.messages.leave.confirm.lockWarning']()}
 			confirmButtonCta={m['screens.messages.leave.action']()}
@@ -133,17 +128,17 @@ export function LeaveAndLockChatPrompt({
 }
 
 export function RemoveMemberPrompt({
-	control,
+	handle,
 	displayName,
 	onConfirm,
 }: {
-	control: Dialog.DialogOuterProps['control'];
+	handle: Prompt.PromptHandle;
 	displayName: string;
 	onConfirm: () => void;
 }) {
 	return (
 		<Prompt.Basic
-			control={control}
+			handle={handle}
 			title={m['screens.messages.members.remove.title']({ name: displayName })}
 			description={m['screens.messages.members.remove.warning']()}
 			confirmButtonCta={m['common.action.remove']()}

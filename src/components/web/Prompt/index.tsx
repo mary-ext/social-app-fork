@@ -104,12 +104,14 @@ export function Action({
 	onPress,
 	color = 'primary',
 	cta,
+	disabled = false,
 	icon,
 	shouldCloseOnPress = true,
 }: {
 	onPress: () => void;
 	color?: Color;
 	cta?: string;
+	disabled?: boolean;
 	icon?: ComponentType<IconProps>;
 	shouldCloseOnPress?: boolean;
 }) {
@@ -123,14 +125,14 @@ export function Action({
 
 	if (!shouldCloseOnPress) {
 		return (
-			<button type="button" className={cls} onClick={onPress}>
+			<button type="button" className={cls} disabled={disabled} onClick={onPress}>
 				{content}
 			</button>
 		);
 	}
 
 	return (
-		<AlertDialog.Close className={cls} onClick={onPress}>
+		<AlertDialog.Close className={cls} disabled={disabled} onClick={onPress}>
 			{content}
 		</AlertDialog.Close>
 	);

@@ -34,9 +34,9 @@ import { getReplyPreviewText } from '#/components/dms/replyPreview';
 import { ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
 import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
-import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
@@ -537,7 +537,7 @@ function BlockedPlaceholder({
 	style?: StyleProp<ViewStyle>;
 }) {
 	const t = useTheme();
-	const control = Prompt.usePromptControl();
+	const control = Prompt.usePromptHandle();
 	const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
 
 	return (
@@ -550,7 +550,7 @@ function BlockedPlaceholder({
 						: m['components.dms.block.messageHiddenBlockingYou']()
 				}
 				accessibilityHint={m['components.dms.message.a11y.tapForDetails']()}
-				onPress={() => control.open()}
+				onPress={() => control.open(null)}
 			>
 				<View
 					style={[
@@ -573,7 +573,7 @@ function BlockedPlaceholder({
 					</Text>
 				</View>
 			</Button>
-			<Prompt.Outer control={control}>
+			<Prompt.Outer handle={control}>
 				<Prompt.Content>
 					<Prompt.TitleText>
 						{profile.viewer?.blocking

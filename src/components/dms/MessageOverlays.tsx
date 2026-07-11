@@ -12,10 +12,9 @@ import { useDialogControl } from '#/components/Dialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReactionsDialog } from '#/components/dms/ReactionsDialog';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
-import * as Prompt from '#/components/Prompt';
-import { usePromptControl } from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import * as Dialog from '#/components/web/Dialog';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
@@ -42,7 +41,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const queryClient = useQueryClient();
 	const convo = useConvoActive();
 
-	const deleteControl = usePromptControl();
+	const deleteControl = Prompt.usePromptHandle();
 	const reportHandle = Dialog.useDialogHandle();
 	const afterReportHandle = Dialog.useDialogHandle();
 	const reactionsControl = useDialogControl();
@@ -57,7 +56,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 
 	const openDeleteMessage = (message: ChatBskyConvoDefs.MessageView) => {
 		setDeleteTarget(message);
-		deleteControl.open();
+		deleteControl.open(null);
 	};
 
 	const openReportMessage = (
@@ -164,13 +163,12 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 				/>
 			)}
 			<Prompt.Basic
-				control={deleteControl}
+				handle={deleteControl}
 				title={m['components.dms.delete.action.message']()}
 				description={m['components.dms.delete.messagePrompt']()}
 				confirmButtonCta={m['common.action.delete']()}
 				confirmButtonColor="negative"
 				onConfirm={onConfirmDelete}
-				onClose={() => setDeleteTarget(null)}
 			/>
 		</Context.Provider>
 	);

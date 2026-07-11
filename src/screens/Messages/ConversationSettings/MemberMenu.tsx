@@ -14,6 +14,7 @@ import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 
 import { logger } from '#/logger';
 
+import { useDialogControl } from '#/components/Dialog';
 import { canBeMessaged, type ConvoWithDetails } from '#/components/dms/util';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
@@ -25,9 +26,9 @@ import {
 } from '#/components/icons/Person';
 import * as Menu from '#/components/Menu';
 import { BlockDialog } from '#/components/moderation/BlockDialog';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
@@ -48,8 +49,8 @@ export function MemberMenu({
 	isOwner: boolean;
 }) {
 	const navigation = useNavigation<NavigationProp>();
-	const blockMemberPrompt = Prompt.usePromptControl();
-	const removeMemberPrompt = Prompt.usePromptControl();
+	const blockMemberPrompt = useDialogControl();
+	const removeMemberPrompt = Prompt.usePromptHandle();
 
 	const [menuDidOpen, setMenuDidOpen] = useState(false);
 	const { data: convoAvailability } = useGetConvoAvailabilityQuery(profile.did, {
@@ -197,7 +198,7 @@ export function MemberMenu({
 							<Menu.Item
 								destructive
 								label={m['screens.messages.members.remove.a11y']({ name: displayName })}
-								onClick={() => removeMemberPrompt.open()}
+								onClick={() => removeMemberPrompt.open(null)}
 							>
 								<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 								<Menu.ItemText>{m['screens.messages.members.remove.action']()}</Menu.ItemText>
@@ -213,7 +214,7 @@ export function MemberMenu({
 				currentConvoId={convoId}
 			/>
 			<RemoveMemberPrompt
-				control={removeMemberPrompt}
+				handle={removeMemberPrompt}
 				displayName={displayName}
 				onConfirm={() => removeMembers({ members: [profile.did] })}
 			/>
