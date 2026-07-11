@@ -5,6 +5,7 @@ import { AlertDialog } from '@base-ui/react/alert-dialog';
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import type { Props as IconProps } from '#/components/icons/common';
+import { Text } from '#/components/Text';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as buttonStyles from '#/components/web/Button.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
@@ -63,11 +64,19 @@ export function Content({ children }: { children: ReactNode }) {
 }
 
 export function TitleText({ children }: { children: ReactNode }) {
-	return <AlertDialog.Title className={styles.title}>{children}</AlertDialog.Title>;
+	return (
+		<AlertDialog.Title className={styles.title} render={<Text size="xl" weight="semiBold" />}>
+			{children}
+		</AlertDialog.Title>
+	);
 }
 
 export function DescriptionText({ children }: { children: ReactNode }) {
-	return <AlertDialog.Description className={styles.description}>{children}</AlertDialog.Description>;
+	return (
+		<AlertDialog.Description className={styles.description} render={<Text color="textContrastHigh" />}>
+			{children}
+		</AlertDialog.Description>
+	);
 }
 
 /** A vertical list of icon + text rows explaining what an action does (the "here's what happens" body). */
@@ -80,7 +89,9 @@ export function Row({ children, icon: Icon }: { children: ReactNode; icon: Compo
 	return (
 		<div className={styles.row}>
 			<Icon className={styles.rowIcon} width={22} height={22} fill={colors.contrast_500} />
-			<span className={styles.rowText}>{children}</span>
+			<Text className={styles.rowText} color="textContrastHigh">
+				{children}
+			</Text>
 		</div>
 	);
 }
