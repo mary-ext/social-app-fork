@@ -10,6 +10,7 @@
 		/* Bundler mode */
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
+		"allowJs": true,
 		"resolveJsonModule": true,
 		"verbatimModuleSyntax": true,
 		"moduleDetection": "force",
@@ -21,5 +22,5 @@
 		"noUncheckedIndexedAccess": true,
 		"noFallthroughCasesInSwitch": true
 	},
-	"include": ["lingui.config.ts", "rsbuild.config.ts", "scripts/sw-precache-plugin.ts"]
+	"include": ["eslint", "rsbuild.config.ts", "scripts", "svgo.config.mjs"]
 }
