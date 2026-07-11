@@ -16,11 +16,12 @@ import { UserAvatar } from '#/components/UserAvatar';
 import * as css from './AvatarBubbles.css';
 
 type Layout = {
+	border?: boolean;
+	/** index into `profiles`; slots are authored in paint order, which need not match profile order. */
+	index: number;
 	size: number;
 	x: number;
 	y: number;
-	zIndex?: number;
-	border?: boolean;
 };
 
 type Props = {
@@ -51,47 +52,39 @@ export function AvatarBubbles({
 
 	const bubbleCount = Math.max(profiles.length, count ?? 0);
 
-	const scale = size / 120;
-	const marginOffset = size < 120 ? -2 : 0;
-
-	// Drive the entrance scale from React state so the CSS transition actually re-renders into its end state.
-	// the false->true flip is the animation trigger, so the cascading render is intentional; a CSS keyframe
-	// animation would avoid the extra render but requires reworking the bubbleScaleVar/bubbleAnimated transition
-	// mechanism and can't be visually verified here.
 	const [animatedIn, setAnimatedIn] = useState(false);
 	useEffect(() => {
 		if (animate) {
-			// eslint-disable-next-line react-hooks/set-state-in-effect -- intentional one-shot animation trigger; see comment above
+			// eslint-disable-next-line react-hooks/set-state-in-effect -- intentional one-shot animation trigger
 			setAnimatedIn(true);
 		}
 	}, [animate]);
 
-	const layouts = getLayouts(bubbleCount);
-
 	return (
-		<div className={css.outer} style={assignInlineVars({ [css.containerSizeVar]: `${size}px` })}>
-			<div
-				className={css.inner}
-				style={assignInlineVars({
-					[css.innerOffsetVar]: `${marginOffset}px`,
-					[css.innerScaleVar]: String(scale),
-				})}
-			>
-				{layouts.map((layout, i) => (
-					<AvatarBubble
-						key={i}
-						profile={profiles[i]}
-						scale={animate ? (animatedIn ? 1 : 0) : 1}
-						transitionDelay={animate ? 500 + i * 100 : undefined}
-						size={layout.size}
-						x={layout.x}
-						y={layout.y}
-						zIndex={layout.zIndex}
-						includeProfileBorder={layout.border}
-					/>
-				))}
-			</div>
-		</div>
+		<svg className={css.svg} width={size} height={size} viewBox="0 0 120 120">
+			{getLayouts(bubbleCount).map((layout) => {
+				const profile = profiles[layout.index];
+				const border = layout.border ? 2 : 0;
+
+				return (
+					<foreignObject
+						key={profile?.did ?? layout.index}
+						x={layout.x - border}
+						y={layout.y - border}
+						width={layout.size + border * 2}
+						height={layout.size + border * 2}
+					>
+						<AvatarBubble
+							profile={profile}
+							scale={animate ? (animatedIn ? 1 : 0) : 1}
+							transitionDelay={animate ? 500 + layout.index * 100 : undefined}
+							size={layout.size}
+							includeProfileBorder={layout.border}
+						/>
+					</foreignObject>
+				);
+			})}
+		</svg>
 	);
 }
 
@@ -100,18 +93,12 @@ function AvatarBubble({
 	scale,
 	transitionDelay,
 	size,
-	x,
-	y,
-	zIndex,
 	includeProfileBorder,
 }: {
 	profile?: AnyProfileView;
 	scale: number;
 	transitionDelay?: number;
 	size: number;
-	x: number;
-	y: number;
-	zIndex?: number;
 	includeProfileBorder?: boolean;
 }) {
 	const profile = useMaybeProfileShadow(profileUnshadowed);
@@ -127,9 +114,6 @@ function AvatarBubble({
 			style={assignInlineVars({
 				[css.bubbleDelayVar]: transitionDelay != null ? `${transitionDelay}ms` : '0ms',
 				[css.bubbleScaleVar]: String(scale),
-				[css.bubbleXVar]: `${x}px`,
-				[css.bubbleYVar]: `${y}px`,
-				[css.bubbleZIndexVar]: zIndex != null ? String(zIndex) : 'auto',
 			})}
 		>
 			{profile && moderationOpts ? (
@@ -159,24 +143,25 @@ function AvatarPlaceholder({ size }: { size: number }) {
 	);
 }
 
+/** slots authored back-to-front so array order is the SVG paint order (later draws on top). */
 function getLayouts(count: number): Layout[] {
 	if (count === 3) {
 		return [
-			{ size: 68, x: -2, y: -2 },
-			{ size: 56, x: 38, y: 62 },
-			{ size: 46, x: 71, y: 18 },
+			{ index: 0, size: 68, x: -2, y: -2 },
+			{ index: 1, size: 56, x: 38, y: 62 },
+			{ index: 2, size: 46, x: 71, y: 18 },
 		];
 	}
 	if (count >= 4) {
 		return [
-			{ size: 68, x: -2, y: -2 },
-			{ size: 56, x: 60, y: 49 },
-			{ size: 42, x: 14, y: 74 },
-			{ size: 32, x: 72, y: 9 },
+			{ index: 0, size: 68, x: -2, y: -2 },
+			{ index: 1, size: 56, x: 60, y: 49 },
+			{ index: 2, size: 42, x: 14, y: 74 },
+			{ index: 3, size: 32, x: 72, y: 9 },
 		];
 	}
 	return [
-		{ size: 76, x: -2, y: -2, zIndex: 20, border: true },
-		{ size: 76, x: 42, y: 42, zIndex: 10, border: true },
+		{ border: true, index: 1, size: 76, x: 42, y: 42 },
+		{ border: true, index: 0, size: 76, x: -2, y: -2 },
 	];
 }

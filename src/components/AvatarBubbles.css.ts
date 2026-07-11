@@ -2,37 +2,26 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-export const containerSizeVar = createVar();
-export const innerOffsetVar = createVar();
-export const innerScaleVar = createVar();
-
-export const outer = style({
-	boxSizing: 'border-box',
+export const svg = style({
+	display: 'block',
 	flexShrink: 0,
-	height: containerSizeVar,
-	padding: 2,
-	width: containerSizeVar,
+	// don't clip the top-left bubble, which is authored slightly outside the viewBox.
+	overflow: 'visible',
 });
 
-// scale authored 120px layout coordinates to container size; establishes positioning context for bubbles.
-export const inner = style({
-	marginLeft: innerOffsetVar,
-	marginTop: innerOffsetVar,
-	position: 'relative',
-	transform: `scale(${innerScaleVar})`,
-	transformOrigin: 'top left',
-});
-
-export const bubbleXVar = createVar();
-export const bubbleYVar = createVar();
 export const bubbleScaleVar = createVar();
-export const bubbleZIndexVar = createVar();
 export const bubbleDelayVar = createVar();
 
+// fills the foreignObject, carries the entrance scale, and centers the avatar in the bordered slot.
 export const bubble = style({
-	position: 'absolute',
-	transform: `translate(${bubbleXVar}, ${bubbleYVar}) scale(${bubbleScaleVar})`,
-	zIndex: bubbleZIndexVar,
+	alignItems: 'center',
+	boxSizing: 'border-box',
+	display: 'flex',
+	height: '100%',
+	justifyContent: 'center',
+	transform: `scale(${bubbleScaleVar})`,
+	transformOrigin: 'center',
+	width: '100%',
 });
 
 export const bubbleBorder = style({
