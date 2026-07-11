@@ -1,4 +1,4 @@
-import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
+import { createVar, globalStyle, style, styleVariants } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
@@ -7,14 +7,30 @@ import { borderRadius, space } from '#/styles/tokens.css';
 // width of the avatar column, which the footer indents past to line up with text.
 const AVATAR_COLUMN = 48;
 
+// current row background, exposed as a variable so descendants (menu) can fade into it.
+export const rowBg = createVar();
+
 // row background lives here so highlight covers interactive siblings (menu, footer) too.
 export const root = style({
-	backgroundColor: colors.contrast_0,
+	vars: { [rowBg]: colors.contrast_0 },
+	backgroundColor: rowBg,
 	position: 'relative',
 	selectors: {
-		'&:has(a:active)': { backgroundColor: colors.contrast_25 },
-		'&:has(a:focus-visible)': { backgroundColor: colors.contrast_25 },
-		'&:hover': { backgroundColor: colors.contrast_25 },
+		'&:has(a:active)': {
+			vars: {
+				[rowBg]: colors.contrast_25,
+			},
+		},
+		'&:has(a:focus-visible)': {
+			vars: {
+				[rowBg]: colors.contrast_25,
+			},
+		},
+		'&:hover': {
+			vars: {
+				[rowBg]: colors.contrast_25,
+			},
+		},
 	},
 });
 
@@ -22,14 +38,32 @@ export const root = style({
 export const tone = styleVariants({
 	default: {},
 	selected: {
-		backgroundColor: colors.contrast_50,
+		vars: {
+			[rowBg]: colors.contrast_50,
+		},
 		selectors: {
-			'&:has(a:active)': { backgroundColor: colors.contrast_50 },
-			'&:has(a:focus-visible)': { backgroundColor: colors.contrast_50 },
-			'&:hover': { backgroundColor: colors.contrast_50 },
+			'&:has(a:active)': {
+				vars: {
+					[rowBg]: colors.contrast_50,
+				},
+			},
+			'&:has(a:focus-visible)': {
+				vars: {
+					[rowBg]: colors.contrast_50,
+				},
+			},
+			'&:hover': {
+				vars: {
+					[rowBg]: colors.contrast_50,
+				},
+			},
 		},
 	},
-	unread: { backgroundColor: colors.primary_25 },
+	unread: {
+		vars: {
+			[rowBg]: colors.primary_25,
+		},
+	},
 });
 
 // absolute link overlay covers the whole row. z-index layers ensure the link captures clicks except on interactive siblings.
@@ -112,7 +146,8 @@ export const menu = style({
 	alignItems: 'center',
 	display: 'flex',
 	opacity: 0,
-	paddingInline: space.lg,
+	paddingLeft: space._4xl,
+	paddingRight: space.lg,
 	pointerEvents: 'none',
 	position: 'absolute',
 	top: 0,
@@ -121,7 +156,12 @@ export const menu = style({
 	zIndex: 2,
 
 	'@media': {
-		'(width < 800px)': { opacity: 1 },
+		'(width >= 800px)': {
+			background: `linear-gradient(to left, ${rowBg}, ${rowBg} 50%, transparent)`,
+		},
+		'(width < 800px)': {
+			opacity: 1,
+		},
 	},
 
 	selectors: {
