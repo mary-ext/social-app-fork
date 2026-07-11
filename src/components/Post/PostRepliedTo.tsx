@@ -89,7 +89,13 @@ function ParentAuthorName({ did }: { did: string }) {
 		const name = profile.handle;
 		return (
 			<ProfileHoverCard did={did}>
-				<InlineLinkText color="textContrastMedium" label={name} size="sm" to={makeProfileLink(profile)}>
+				<InlineLinkText
+					size="sm"
+					label={name}
+					weight="medium"
+					color="textContrastMedium"
+					to={makeProfileLink(profile)}
+				>
 					{name}
 				</InlineLinkText>
 			</ProfileHoverCard>
