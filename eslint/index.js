@@ -1,4 +1,7 @@
-'use strict';
+import avoidUnwrappedText from './avoid-unwrapped-text.js';
+import consistentTypeImports from './consistent-type-imports.js';
+import recipeDebugId from './recipe-debug-id.js';
+import usePrefixedImports from './use-prefixed-imports.js';
 
 const plugin = {
 	meta: {
@@ -6,11 +9,11 @@ const plugin = {
 		version: '1.0.0',
 	},
 	rules: {
-		'avoid-unwrapped-text': require('./avoid-unwrapped-text'),
-		'consistent-type-imports': require('./consistent-type-imports'),
-		'recipe-debug-id': require('./recipe-debug-id'),
-		'use-prefixed-imports': require('./use-prefixed-imports'),
+		'avoid-unwrapped-text': avoidUnwrappedText,
+		'consistent-type-imports': consistentTypeImports,
+		'recipe-debug-id': recipeDebugId,
+		'use-prefixed-imports': usePrefixedImports,
 	},
 };
 
-module.exports = plugin;
+export default plugin;

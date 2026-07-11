@@ -1,5 +1,3 @@
-'use strict';
-
 const RECIPE_SOURCE = '#/styles/recipe';
 
 /**
@@ -74,7 +72,7 @@ function isRecipeImport(variable) {
 	});
 }
 
-module.exports = {
+export default {
 	meta: {
 		type: 'problem',
 		docs: {

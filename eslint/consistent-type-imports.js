@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * enforces the type-import convention: - specifiers used only as types are imported via `import type { A, B }
  * from 'm'` - a mix of value and type-only specifiers are imported via `import { Value, type A } from 'm'` -
@@ -37,7 +35,7 @@ const specifierText = (specifier, sourceCode) => {
 	return `${imported} as ${specifier.local.name}`;
 };
 
-module.exports = {
+export default {
 	meta: {
 		type: 'suggestion',
 		docs: {

@@ -1,8 +1,8 @@
-'use strict';
+import { test } from 'node:test';
 
-const { test } = require('node:test');
-const { RuleTester } = require('oxlint/plugins-dev');
-const rule = require('./recipe-debug-id');
+import { RuleTester } from 'oxlint/plugins-dev';
+
+import rule from './recipe-debug-id.js';
 
 test('recipe-debug-id', () => {
 	const ruleTester = new RuleTester();

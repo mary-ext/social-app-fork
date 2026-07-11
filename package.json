@@ -2,6 +2,7 @@
 	"name": "bsky.app",
 	"version": "1.122.0",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"postinstall": "pnpm paraglide:compile && pnpm cf-typegen",
 		"dev": "rsbuild dev",

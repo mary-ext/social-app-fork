@@ -10,7 +10,7 @@ const BANNED_IMPORT_PREFIXES = [
 	'view/',
 ];
 
-module.exports = {
+export default {
 	meta: {
 		type: 'suggestion',
 		docs: {

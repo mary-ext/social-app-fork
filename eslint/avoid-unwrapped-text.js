@@ -1,5 +1,3 @@
-'use strict';
-
 // Partially based on eslint-plugin-react-native.
 // Portions of code by Alex Zhukov, MIT license.
 
@@ -26,7 +24,7 @@ function getTagName(node) {
 	return reversedIdentifiers.reverse().join('.');
 }
 
-module.exports = {
+export default {
 	meta: {
 		type: 'problem',
 		docs: {
