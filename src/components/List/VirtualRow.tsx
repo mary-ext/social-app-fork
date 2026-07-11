@@ -107,9 +107,7 @@ export const VirtualRow = memo(function VirtualRow<ItemT>({
 			if (!next) {
 				// capture the realized height before unmounting so the placeholder holds the row's space.
 				const measured = entry.boundingClientRect.height;
-				if (measured > 0) {
-					setHeight(measured);
-				}
+				setHeight(measured);
 			}
 
 			visibleRef.current = next;
