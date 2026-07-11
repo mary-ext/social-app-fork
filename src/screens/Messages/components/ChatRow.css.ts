@@ -48,7 +48,12 @@ export const content = style({
 	flexDirection: 'column',
 	justifyContent: 'center',
 	minWidth: 0,
-	paddingRight: 33,
+
+	'@media': {
+		'(width < 800px)': {
+			paddingRight: 25 + space.md,
+		},
+	},
 });
 
 export const titleRow = style({
@@ -103,28 +108,34 @@ export const postAlerts = style({
 	paddingBottom: space._2xs,
 });
 
-// menu reveals on hover/focus, and is always visible on touch viewports or when open.
 export const menu = style({
+	alignItems: 'center',
+	display: 'flex',
+	opacity: 0,
+	paddingInline: space.lg,
+	pointerEvents: 'none',
+	position: 'absolute',
+	top: 0,
+	bottom: 0,
+	right: 0,
+	zIndex: 2,
+
 	'@media': {
 		'(width < 800px)': { opacity: 1 },
 	},
-	alignItems: 'center',
-	bottom: 0,
-	display: 'flex',
-	opacity: 0,
-	// pointer events fall through to the link overlay.
-	position: 'absolute',
-	right: space.lg,
+
 	selectors: {
 		'&:has([data-popup-open])': { opacity: 1 },
 		[`${root}:focus-within &`]: { opacity: 1 },
 		[`${root}:hover &`]: { opacity: 1 },
 	},
-	top: 0,
-	zIndex: 2,
 });
 
 globalStyle(`${menu} > *`, { pointerEvents: 'auto' });
+
+export const menuIcon = style({
+	marginRight: -8,
+});
 
 // action bar outside the link to avoid nesting buttons in anchors, stacked above overlay.
 export const footer = style({

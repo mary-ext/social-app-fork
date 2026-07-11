@@ -41,6 +41,7 @@ import { useIsWithinSplitView } from './splitView/context';
 // Base UI's `render` receives the Button element itself and can clone its trigger props onto it.
 const menuTrigger = () => (
 	<Button
+		className={css.menuIcon}
 		label={m['common.chat.settingsLabel']()}
 		size="small"
 		color="secondary"
