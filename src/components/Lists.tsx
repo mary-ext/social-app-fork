@@ -19,6 +19,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 
 export function ListFooter({
+	border = true,
 	className,
 	endMessageText,
 	error,
@@ -28,6 +29,8 @@ export function ListFooter({
 	onRetry,
 	showEndMessage = false,
 }: {
+	/** whether to draw the divider above the footer. */
+	border?: boolean;
 	className?: string;
 	endMessageText?: string;
 	error?: string;
@@ -39,7 +42,7 @@ export function ListFooter({
 }) {
 	return (
 		<div
-			className={clsx(css.footer, className)}
+			className={clsx(css.footer({ border }), className)}
 			style={height != null ? assignInlineVars({ [css.heightVar]: `${height}px` }) : undefined}
 		>
 			{isFetchingNextPage ? (

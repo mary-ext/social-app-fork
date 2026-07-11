@@ -26,8 +26,6 @@ export const errorWrap = style({
 	paddingTop: space._3xl,
 });
 
-export const footer = style({ borderTopColor: 'transparent' });
-
 // scroll container for the split-view left column.
 export const splitScroller = style({
 	flex: 1,

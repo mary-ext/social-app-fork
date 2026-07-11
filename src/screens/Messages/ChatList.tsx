@@ -319,11 +319,11 @@ export function ChatList({
 			}
 			ListFooterComponent={
 				<ListFooter
-					isFetchingNextPage={isFetchingNextPage}
+					border={false}
 					error={cleanError(error)}
-					onRetry={fetchNextPage}
-					className={css.footer}
 					hasNextPage={hasNextPage}
+					isFetchingNextPage={isFetchingNextPage}
+					onRetry={fetchNextPage}
 				/>
 			}
 		/>

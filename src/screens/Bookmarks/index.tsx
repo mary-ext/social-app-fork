@@ -138,10 +138,10 @@ function BookmarksInner() {
 			renderItem={renderItem}
 			ListFooterComponent={
 				<ListFooter
-					isFetchingNextPage={isFetchingNextPage}
+					border={!isEmpty}
 					error={cleanError(error)}
+					isFetchingNextPage={isFetchingNextPage}
 					onRetry={fetchNextPage}
-					className={isEmpty ? css.footerNoBorder : undefined}
 				/>
 			}
 			onEndReached={() => void onEndReached()}

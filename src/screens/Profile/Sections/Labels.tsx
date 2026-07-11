@@ -25,7 +25,6 @@ import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import { ErrorState } from '../ErrorState';
-import * as css from './Labels.css';
 
 interface LabelsSectionProps {
 	isLabelerLoading: boolean;
@@ -81,7 +80,7 @@ export function ProfileLabelsSection({
 						)}
 					</>
 				}
-				ListFooterComponent={<ListFooter className={css.footer} />}
+				ListFooterComponent={<ListFooter border={false} />}
 			/>
 		</View>
 	);

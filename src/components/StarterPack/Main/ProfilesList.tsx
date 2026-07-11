@@ -88,7 +88,7 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 			data={getSortedProfiles()}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			ListFooterComponent={<ListFooter className={css.footer} />}
+			ListFooterComponent={<ListFooter border={false} className={css.footer} />}
 			showsVerticalScrollIndicator={false}
 			desktopFixedHeight
 			initialNumToRender={initialNumToRender}

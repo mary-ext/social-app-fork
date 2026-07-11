@@ -46,7 +46,3 @@ export const deletedMessage = style({
 export const empty = style({
 	paddingTop: 28,
 });
-
-export const footerNoBorder = style({
-	borderTopWidth: 0,
-});
