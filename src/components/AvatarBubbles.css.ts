@@ -5,7 +5,7 @@ import { vars } from '#/styles/contract.css';
 export const svg = style({
 	display: 'block',
 	flexShrink: 0,
-	// don't clip the top-left bubble, which is authored slightly outside the viewBox.
+	// a centered cluster can extend slightly past the viewBox (e.g. the two-avatar variant); don't clip it.
 	overflow: 'visible',
 });
 

@@ -60,17 +60,19 @@ export function AvatarBubbles({
 		}
 	}, [animate]);
 
+	const layouts = getLayouts(bubbleCount);
+
 	return (
-		<svg className={css.svg} width={size} height={size} viewBox="0 0 120 120">
-			{getLayouts(bubbleCount).map((layout) => {
+		<svg className={css.svg} width={size} height={size} viewBox={getViewBox(layouts)}>
+			{layouts.map((layout) => {
 				const profile = profiles[layout.index];
 				const border = layout.border ? 2 : 0;
 
 				return (
 					<foreignObject
 						key={profile?.did ?? layout.index}
-						x={layout.x - border}
-						y={layout.y - border}
+						x={layout.x}
+						y={layout.y}
 						width={layout.size + border * 2}
 						height={layout.size + border * 2}
 					>
@@ -141,6 +143,25 @@ function AvatarPlaceholder({ size }: { size: number }) {
 			<PersonIcon width={size * 0.5} fill="currentColor" />
 		</div>
 	);
+}
+
+// the layouts aren't symmetric about (60, 60), so center the cluster's bounding box in the 120-unit window.
+function getViewBox(layouts: Layout[]): string {
+	let minX = Infinity;
+	let minY = Infinity;
+	let maxX = -Infinity;
+	let maxY = -Infinity;
+	for (const layout of layouts) {
+		// bordered slots draw a 2px ring on every side.
+		const outerSize = layout.size + (layout.border ? 4 : 0);
+		minX = Math.min(minX, layout.x);
+		minY = Math.min(minY, layout.y);
+		maxX = Math.max(maxX, layout.x + outerSize);
+		maxY = Math.max(maxY, layout.y + outerSize);
+	}
+	const offsetX = (minX + maxX) / 2 - 60;
+	const offsetY = (minY + maxY) / 2 - 60;
+	return `${offsetX} ${offsetY} 120 120`;
 }
 
 /** slots authored back-to-front so array order is the SVG paint order (later draws on top). */
