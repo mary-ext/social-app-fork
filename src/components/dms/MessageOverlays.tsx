@@ -44,7 +44,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 
 	const deleteControl = usePromptControl();
 	const reportHandle = Dialog.useDialogHandle();
-	const afterReportControl = usePromptControl();
+	const afterReportHandle = Dialog.useDialogHandle();
 	const reactionsControl = useDialogControl();
 
 	const [deleteTarget, setDeleteTarget] = useState<ChatBskyConvoDefs.MessageView | null>(null);
@@ -83,9 +83,9 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 
 	useEffect(() => {
 		if (afterReportTarget) {
-			afterReportControl.open();
+			afterReportHandle.open(null);
 		}
-	}, [afterReportTarget, afterReportControl]);
+	}, [afterReportTarget, afterReportHandle]);
 
 	const onConfirmDelete = () => {
 		if (!deleteTarget) return;
@@ -146,7 +146,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 			/>
 			{afterReportTarget && (
 				<AfterReportDialog
-					control={afterReportControl}
+					handle={afterReportHandle}
 					currentScreen="conversation"
 					params={{
 						convoId: convo.convo.view.id,

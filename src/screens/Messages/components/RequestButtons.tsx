@@ -13,7 +13,6 @@ import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/
 import { useSession } from '#/state/session';
 
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
@@ -94,7 +93,7 @@ export function RejectMenu({
 	};
 
 	const reportHandle = Dialog.useDialogHandle();
-	const blockOrDeleteControl = useDialogControl();
+	const blockOrDeleteHandle = Dialog.useDialogHandle();
 
 	const reportSubject = getConvoReportSubject(convo, currentAccount?.did);
 	const reportMessage = reportSubject && 'message' in reportSubject ? reportSubject.message : null;
@@ -151,11 +150,11 @@ export function RejectMenu({
 							if (sender) {
 								unstableCacheProfileView(queryClient, sender);
 							}
-							blockOrDeleteControl.open();
+							blockOrDeleteHandle.open(null);
 						}}
 					/>
 					<AfterReportDialog
-						control={blockOrDeleteControl}
+						handle={blockOrDeleteHandle}
 						currentScreen={currentScreen}
 						params={{
 							convoId: convo.view.id,
@@ -169,10 +168,10 @@ export function RejectMenu({
 						handle={reportHandle}
 						convoId={convo.view.id}
 						did={reportDid}
-						onAfterSubmit={blockOrDeleteControl.open}
+						onAfterSubmit={() => blockOrDeleteHandle.open(null)}
 					/>
 					<AfterReportConversationDialog
-						control={blockOrDeleteControl}
+						handle={blockOrDeleteHandle}
 						currentScreen={currentScreen}
 						params={{
 							convoId: convo.view.id,

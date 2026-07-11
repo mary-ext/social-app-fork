@@ -16,9 +16,9 @@ import { atoms as a, useTheme } from '#/alf';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { KnownFollowers } from '#/components/KnownFollowers';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { usePromptControl } from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 import { LinearGradient } from '#/shims/linear-gradient';
@@ -29,7 +29,7 @@ import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons
 export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }) {
 	const t = useTheme();
 	const moderationOpts = useModerationOpts();
-	const leaveConvoControl = usePromptControl();
+	const leaveConvoPromptHandle = Prompt.usePromptHandle();
 
 	const onAcceptChat = () => {
 		convoState.markConvoAccepted();
@@ -75,12 +75,12 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 					size="large"
 					currentScreen="conversation"
 					style={[a.flex_1]}
-					onPress={leaveConvoControl.open}
+					onPress={() => leaveConvoPromptHandle.open(null)}
 				/>
 				<LeaveConvoPrompt
 					convoId={convoState.convo.view.id}
-					control={leaveConvoControl}
 					currentScreen="conversation"
+					handle={leaveConvoPromptHandle}
 					hasMessages={false}
 				/>
 			</View>

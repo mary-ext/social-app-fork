@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { View } from 'react-native';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
@@ -11,14 +10,13 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useProfileBlockMutationQueue, useProfileQuery } from '#/state/queries/profile';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import * as Toggle from '#/components/forms/Toggle';
-import { Spinner } from '#/components/Spinner';
+import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import * as Toggle from '#/components/web/forms/Toggle';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 
@@ -27,88 +25,104 @@ type ReportDialogParams = {
 	did: string;
 };
 
+/** The follow-up actions offered after a report; each maps to a checkbox in {@link DoneStep}. */
+type ReportAction = 'block' | 'leave';
+
+// Toggle.Group hands back the raw checkbox names, so narrow them before they reach `actions`.
+const isReportAction = (value: string): value is ReportAction => value === 'block' || value === 'leave';
+
 /**
  * Dialog shown after a report is submitted, allowing the user to block the reporter and/or leave the
  * conversation.
  */
 export function AfterReportDialog({
-	control,
+	handle,
 	params,
 	currentScreen,
 	onClose,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Dialog.DialogHandle;
 	params: ReportDialogParams;
 	currentScreen: 'list' | 'conversation';
 	onClose?: () => void;
 }): React.ReactNode {
 	return (
-		<Dialog.Outer control={control} onClose={onClose}>
-			<Dialog.Handle />
-			<Dialog.ScrollableInner label={m['components.dms.block.orDelete.prompt']()} style={[{ maxWidth: 400 }]}>
-				<DialogInner params={params} currentScreen={currentScreen} />
-				<Dialog.Close />
-			</Dialog.ScrollableInner>
-		</Dialog.Outer>
+		<Dialog.Root
+			handle={handle}
+			onOpenChange={(open) => {
+				if (!open) {
+					onClose?.();
+				}
+			}}
+		>
+			<Dialog.Popup label={m['components.dms.block.orDelete.prompt']()} size="narrow">
+				<DialogInner handle={handle} params={params} currentScreen={currentScreen} />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
 function DialogInner({
+	handle,
 	params,
 	currentScreen,
 }: {
+	handle: Dialog.DialogHandle;
 	params: ReportDialogParams;
 	currentScreen: 'list' | 'conversation';
 }) {
-	const t = useTheme();
-	const control = Dialog.useDialogContext();
-	const {
-		data: profile,
-		isPending,
-		isError,
-	} = useProfileQuery({
-		did: params.did,
-	});
+	const { data: profile, isPending, isError } = useProfileQuery({ did: params.did });
 
-	return isPending ? (
-		<View style={[a.w_full, a.py_5xl, a.align_center]}>
-			<Spinner color="default" label={m['common.status.loading']()} size="xl" />
-		</View>
-	) : isError || !profile ? (
-		<View style={[a.w_full, a.gap_lg]}>
-			<View style={[a.justify_center, a.gap_sm]}>
-				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.report.submitted']()}</Text>
-				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>{m['components.dms.report.received']()}</Text>
-			</View>
+	if (isPending) {
+		return <CenteredSpinner label={m['common.status.loading']()} size="xl" />;
+	}
 
-			<Button
-				label={m['common.action.close']()}
-				onPress={() => control.close()}
-				size={'large'}
-				color="secondary"
-			>
-				<ButtonText>{m['common.action.close']()}</ButtonText>
-			</Button>
-		</View>
-	) : (
-		<DoneStep convoId={params.convoId} currentScreen={currentScreen} profile={profile} />
+	if (isError || !profile) {
+		return (
+			<Stack gap="lg">
+				<Stack gap="xs">
+					<Dialog.TitleRow>
+						<Dialog.Title>{m['components.dms.report.submitted']()}</Dialog.Title>
+						<Dialog.Close />
+					</Dialog.TitleRow>
+					<Text color="textContrastMedium" size="md">
+						{m['components.dms.report.received']()}
+					</Text>
+				</Stack>
+
+				<Dialog.Actions>
+					<Button
+						color="secondary"
+						label={m['common.action.close']()}
+						onClick={() => handle.close()}
+						size="large"
+						variant="solid"
+					>
+						<ButtonText>{m['common.action.close']()}</ButtonText>
+					</Button>
+				</Dialog.Actions>
+			</Stack>
+		);
+	}
+
+	return (
+		<DoneStep convoId={params.convoId} currentScreen={currentScreen} handle={handle} profile={profile} />
 	);
 }
 
 function DoneStep({
 	convoId,
 	currentScreen,
+	handle,
 	profile,
 }: {
 	convoId: string;
 	currentScreen: 'list' | 'conversation';
+	handle: Dialog.DialogHandle;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const navigation = useNavigation<NavigationProp>();
-	const control = Dialog.useDialogContext();
-	const { gtMobile } = useBreakpoints();
-	const t = useTheme();
-	const [actions, setActions] = useState<string[]>(['block', 'leave']);
+	const [actions, setActions] = useState<ReportAction[]>(['block', 'leave']);
 	const shadow = useProfileShadow(profile);
 	const [queueBlock] = useProfileBlockMutationQueue(shadow);
 
@@ -139,61 +153,75 @@ function DoneStep({
 	}
 
 	const onPressPrimaryAction = () => {
-		control.close(() => {
-			if (actions.includes('block')) {
-				void queueBlock();
-			}
-			if (actions.includes('leave')) {
-				leaveConvo();
-			}
-			if (toastMsg) {
-				Toast.show(toastMsg, {
-					type: 'success',
-				});
-			}
-		});
+		// close first: leaving the convo navigates away from the screen hosting this dialog
+		handle.close();
+
+		if (actions.includes('block')) {
+			void queueBlock();
+		}
+		if (actions.includes('leave')) {
+			leaveConvo();
+		}
+		if (toastMsg) {
+			Toast.show(toastMsg, {
+				type: 'success',
+			});
+		}
 	};
 
 	return (
-		<View style={a.gap_2xl}>
-			<View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-				<Text style={[a.text_2xl, a.font_semi_bold]}>{m['components.dms.report.submitted']()}</Text>
-				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>{m['components.dms.report.received']()}</Text>
-			</View>
-			<Toggle.Group label={m['components.dms.block.orDelete.label']()} values={actions} onChange={setActions}>
-				<View style={[a.gap_md]}>
-					<Toggle.Item name="block" label={m['components.dms.block.action.block']()}>
-						<Toggle.Checkbox />
-						<Toggle.LabelText style={[a.text_md]}>
-							{m['components.dms.block.action.block']()}
-						</Toggle.LabelText>
+		<Stack gap="_2xl">
+			<Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['components.dms.report.submitted']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+				<Text color="textContrastMedium" size="md">
+					{m['components.dms.report.received']()}
+				</Text>
+			</Stack>
+
+			<Toggle.Group
+				label={m['components.dms.block.orDelete.label']()}
+				onChange={(values) => setActions(values.filter(isReportAction))}
+				values={actions}
+			>
+				<Toggle.PanelGroup>
+					<Toggle.Item label={m['components.dms.block.action.block']()} name="block">
+						<Toggle.Panel adjacent="trailing">
+							<Toggle.CheckboxIndicator />
+							<Toggle.PanelText>{m['components.dms.block.action.block']()}</Toggle.PanelText>
+						</Toggle.Panel>
 					</Toggle.Item>
-					<Toggle.Item name="leave" label={m['common.chat.action.deleteConversation']()}>
-						<Toggle.Checkbox />
-						<Toggle.LabelText style={[a.text_md]}>
-							{m['common.chat.action.deleteConversation']()}
-						</Toggle.LabelText>
+					<Toggle.Item label={m['common.chat.action.deleteConversation']()} name="leave">
+						<Toggle.Panel adjacent="leading">
+							<Toggle.CheckboxIndicator />
+							<Toggle.PanelText>{m['common.chat.action.deleteConversation']()}</Toggle.PanelText>
+						</Toggle.Panel>
 					</Toggle.Item>
-				</View>
+				</Toggle.PanelGroup>
 			</Toggle.Group>
-			<View style={[a.gap_sm]}>
+
+			<Dialog.Actions direction="column" reverse>
 				<Button
-					label={btnText}
-					onPress={onPressPrimaryAction}
-					size="large"
-					color={actions.length > 0 ? 'negative' : 'primary'}
-				>
-					<ButtonText>{btnText}</ButtonText>
-				</Button>
-				<Button
-					label={m['common.action.close']()}
-					onPress={() => control.close()}
-					size="large"
 					color="secondary"
+					label={m['common.action.close']()}
+					onClick={() => handle.close()}
+					size="large"
+					variant="solid"
 				>
 					<ButtonText>{m['common.action.close']()}</ButtonText>
 				</Button>
-			</View>
-		</View>
+				<Button
+					color={actions.length > 0 ? 'negative' : 'primary'}
+					label={btnText}
+					onClick={onPressPrimaryAction}
+					size="large"
+					variant="solid"
+				>
+					<ButtonText>{btnText}</ButtonText>
+				</Button>
+			</Dialog.Actions>
+		</Stack>
 	);
 }

@@ -29,6 +29,7 @@ import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
+import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
@@ -137,7 +138,23 @@ function ProfileHeaderReady({
 				</Link>
 			}
 			settings={
-				<ConvoMenu convo={convo} profile={profile} currentScreen="conversation" blockInfo={blockInfo} />
+				<ConvoMenu
+					blockInfo={blockInfo}
+					convo={convo}
+					currentScreen="conversation"
+					profile={profile}
+					render={
+						<WebButton
+							label={m['common.chat.settingsLabel']()}
+							size="small"
+							color="secondary"
+							shape="round"
+							variant="ghost"
+						>
+							<WebButtonIcon icon={DotsHorizontalIcon} size="md" />
+						</WebButton>
+					}
+				/>
 			}
 		/>
 	);

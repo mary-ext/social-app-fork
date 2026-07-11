@@ -383,7 +383,7 @@ function SettingsHeader({
 	const leaveChatPrompt = Prompt.usePromptControl();
 	const leaveAndLockChatPrompt = Prompt.usePromptControl();
 	const reportHandle = Dialog.useDialogHandle();
-	const deleteControl = Prompt.usePromptControl();
+	const deleteHandle = Dialog.useDialogHandle();
 
 	const handleToggleMute = () => {
 		muteConvo({ mute: !convo.view.muted });
@@ -524,10 +524,10 @@ function SettingsHeader({
 						handle={reportHandle}
 						convoId={convo.view.id}
 						did={reportSubjectDid}
-						onAfterSubmit={deleteControl.open}
+						onAfterSubmit={() => deleteHandle.open(null)}
 					/>
 					<AfterReportConversationDialog
-						control={deleteControl}
+						handle={deleteHandle}
 						currentScreen="conversation"
 						params={{ convoId: convo.view.id, did: reportSubjectDid }}
 					/>

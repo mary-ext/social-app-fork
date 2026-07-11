@@ -13,7 +13,6 @@ import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
@@ -22,6 +21,7 @@ import {
 	PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person';
 import { Text } from '#/components/Typography';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -43,8 +43,8 @@ export function MessagesListBlockedFooter({
 	const recipient = useProfileShadow(initialRecipient);
 	const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(recipient);
 
-	const leaveConvoControl = useDialogControl();
-	const blockedByListControl = useDialogControl();
+	const leaveConvoPromptHandle = Prompt.usePromptHandle();
+	const blockedByListPromptHandle = Prompt.usePromptHandle();
 
 	const blocks = moderation.causes.filter(
 		(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
@@ -56,7 +56,7 @@ export function MessagesListBlockedFooter({
 
 	const onUnblockPress = () => {
 		if (listBlocks.length) {
-			blockedByListControl.open();
+			blockedByListPromptHandle.open(null);
 		} else {
 			void queueUnblock();
 		}
@@ -103,13 +103,13 @@ export function MessagesListBlockedFooter({
 					color="secondary_inverted"
 					size="large"
 					style={[a.mt_lg, a.w_full]}
-					onPress={leaveConvoControl.open}
+					onPress={() => leaveConvoPromptHandle.open(null)}
 				>
 					<ButtonIcon icon={LeaveIcon} />
 					<ButtonText>{m['common.chat.action.leave']()}</ButtonText>
 				</Button>
-				<LeaveConvoPrompt control={leaveConvoControl} currentScreen="conversation" convoId={convoId} />
-				<BlockedByListDialog control={blockedByListControl} listBlocks={listBlocks} />
+				<LeaveConvoPrompt handle={leaveConvoPromptHandle} currentScreen="conversation" convoId={convoId} />
+				<BlockedByListDialog handle={blockedByListPromptHandle} listBlocks={listBlocks} />
 			</View>
 		</View>
 	);

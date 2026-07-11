@@ -16,9 +16,11 @@ import { useSession } from '#/state/session';
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
+import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
 import * as Menu from '#/components/Menu';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';
@@ -34,6 +36,20 @@ import {
 	usePrecacheConvo,
 } from './ChatRowData';
 import { useIsWithinSplitView } from './splitView/context';
+
+// the dots button every row hands to its ConvoMenu as the trigger. a factory rather than a component so
+// Base UI's `render` receives the Button element itself and can clone its trigger props onto it.
+const menuTrigger = () => (
+	<Button
+		label={m['common.chat.settingsLabel']()}
+		size="small"
+		color="secondary"
+		shape="round"
+		variant="ghost"
+	>
+		<ButtonIcon icon={DotsHorizontalIcon} size="md" />
+	</Button>
+);
 
 /** a conversation row in the chat list, dispatching to the variant for its kind. */
 export function ChatListItem({
@@ -163,6 +179,7 @@ function DirectChatItem({
 					currentScreen="list"
 					handle={menuHandle}
 					profile={profile}
+					render={menuTrigger()}
 					showMarkAsRead={convo.view.unreadCount > 0}
 					triggerId={menuTriggerId}
 				/>
@@ -248,6 +265,7 @@ function GroupChatItem({
 						currentScreen="list"
 						handle={menuHandle}
 						profile={owner}
+						render={menuTrigger()}
 						showMarkAsRead={convo.view.unreadCount > 0}
 						triggerId={menuTriggerId}
 					/>

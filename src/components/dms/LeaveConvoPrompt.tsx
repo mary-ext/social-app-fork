@@ -7,19 +7,18 @@ import { isNetworkError } from '#/lib/strings/errors';
 
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 
-import type { DialogOuterProps } from '#/components/Dialog';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
 export function LeaveConvoPrompt({
-	control,
+	handle,
 	convoId,
 	currentScreen,
 	hasMessages = true,
 }: {
-	control: DialogOuterProps['control'];
+	handle: Prompt.PromptHandle;
 	convoId: string;
 	currentScreen: 'list' | 'conversation';
 	hasMessages?: boolean;
@@ -47,7 +46,7 @@ export function LeaveConvoPrompt({
 
 	return (
 		<Prompt.Basic
-			control={control}
+			handle={handle}
 			title={m['components.dms.leave.action.conversation']()}
 			description={hasMessages ? m['components.dms.leave.groupPrompt']() : m['components.dms.leave.prompt']()}
 			confirmButtonCta={m['common.action.leave']()}
