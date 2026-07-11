@@ -184,7 +184,7 @@
 			}
 		},
 		{
-			"files": ["**/eslint/**", "**/rsbuild.config.ts", "**/scripts/**", "**/svgo.config.mjs"],
+			"files": ["**/eslint/**", "**/rsbuild.config.ts", "**/scripts/**"],
 			"env": {
 				"browser": false,
 				"node": true

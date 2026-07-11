@@ -22,5 +22,5 @@
 		"noUncheckedIndexedAccess": true,
 		"noFallthroughCasesInSwitch": true
 	},
-	"include": ["eslint", "rsbuild.config.ts", "scripts", "svgo.config.mjs"]
+	"include": ["eslint", "rsbuild.config.ts", "scripts"]
 }
