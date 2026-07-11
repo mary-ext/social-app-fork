@@ -4,7 +4,7 @@ import { RuleTester } from 'oxlint/plugins-dev';
 
 import rule from './recipe-debug-id.js';
 
-test('recipe-debug-id', () => {
+void test('recipe-debug-id', () => {
 	const ruleTester = new RuleTester();
 
 	ruleTester.run('recipe-debug-id', rule, {

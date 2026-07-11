@@ -12,7 +12,7 @@
 		"build": "pnpm paraglide:compile && pnpm typecheck && rsbuild build",
 		"paraglide:compile": "node scripts/compile-i18n.ts",
 		"preview": "rsbuild preview",
-		"lint": "oxlint src",
+		"lint": "oxlint",
 		"format": "oxfmt",
 		"format:check": "oxfmt --check",
 		"typecheck": "tsc -b",

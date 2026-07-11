@@ -67,7 +67,7 @@ export default {
 				}
 			},
 			'Program:exit'() {
-				for (const [source, declarations] of bySource) {
+				for (const declarations of bySource.values()) {
 					// statements made entirely of named specifiers — the only shape we rewrite
 					const namedDecls = declarations.filter(
 						(decl) =>

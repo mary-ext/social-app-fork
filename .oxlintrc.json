@@ -5,8 +5,7 @@
 	},
 	"env": {
 		"browser": true,
-		"es2026": true,
-		"node": true
+		"es2026": true
 	},
 	"ignorePatterns": ["*.html", "*.lock", "patches/**", "src/lib/sw-template.js", "src/paraglide/**"],
 	"jsPlugins": ["eslint-plugin-bsky-internal"],
@@ -172,5 +171,27 @@
 		"typescript/triple-slash-reference": "error",
 		"use-isnan": "error",
 		"valid-typeof": "error"
-	}
+	},
+	"overrides": [
+		{
+			"files": ["**/*.js", "**/*.mjs"],
+			"rules": {
+				"typescript/no-unsafe-argument": "off",
+				"typescript/no-unsafe-assignment": "off",
+				"typescript/no-unsafe-call": "off",
+				"typescript/no-unsafe-member-access": "off",
+				"typescript/no-unsafe-return": "off"
+			}
+		},
+		{
+			"files": ["**/eslint/**", "**/rsbuild.config.ts", "**/scripts/**", "**/svgo.config.mjs"],
+			"env": {
+				"browser": false,
+				"node": true
+			},
+			"rules": {
+				"import/no-nodejs-modules": "off"
+			}
+		}
+	]
 }
