@@ -122,7 +122,7 @@
 	"screens.profile.labeler.error.unavailable": "This moderation service is unavailable. See below for more details. If this issue persists, contact us.",
 	"screens.profile.labeler.labelsHint": "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network.",
 	"screens.profile.labeler.noLabelsDeclared": "This labeler hasn't declared what labels it publishes, and may not be active.",
-	"screens.profile.labeler.subscribePrompt": "Subscribe to @{handle} to use these labels:",
+	"screens.profile.labeler.subscribePrompt": "Subscribe to {handle} to use these labels:",
 	"screens.profile.posts.count": [
 		{
 			"declarations": ["input count", "input formatted", "local cp = count: plural"],

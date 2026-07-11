@@ -1,20 +1,17 @@
-import { View } from 'react-native';
-
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
+import * as css from './ErrorState.css';
+
 export function ErrorState({ error }: { error: string }) {
-	const t = useTheme();
 	const navigation = useNavigation<NavigationProp>();
 
 	const onPressBack = () => {
@@ -26,29 +23,30 @@ export function ErrorState({ error }: { error: string }) {
 	};
 
 	return (
-		<View style={[a.px_xl]}>
+		<div className={css.container}>
 			<CircleInfo size="4xl" fill={colors.textContrastLow} />
-			<Text style={[a.text_xl, a.font_semi_bold, a.pb_md, a.pt_xl]}>
+			<Text className={css.title} size="xl" weight="semiBold">
 				{m['screens.profile.labeler.error.serviceLoad']()}
 			</Text>
-			<Text style={[a.text_md, a.leading_normal, a.pb_md, t.atoms.text_contrast_medium]}>
+			<Text className={css.description} size="md" color="textContrastMedium">
 				{m['screens.profile.labeler.error.unavailable']()}
 			</Text>
-			<View style={[a.relative, a.py_md, a.px_lg, a.rounded_md, a.mb_2xl, t.atoms.bg_contrast_25]}>
-				<Text style={[a.text_md, a.leading_normal]}>{error}</Text>
-			</View>
-			<View style={{ flexDirection: 'row' }}>
+
+			<div className={css.errorBox}>
+				<Text size="md">{error}</Text>
+			</div>
+
+			<div className={css.actions}>
 				<Button
 					size="small"
 					color="secondary"
 					variant="solid"
 					label={m['common.action.goBackTitle']()}
-					accessibilityHint="Returns to previous page"
-					onPress={onPressBack}
+					onClick={onPressBack}
 				>
 					<ButtonText>{m['common.action.goBackTitle']()}</ButtonText>
 				</Button>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
