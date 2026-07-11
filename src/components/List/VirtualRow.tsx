@@ -1,4 +1,13 @@
-import { createContext, memo, type ReactNode, use, useEffect, useRef, useState } from 'react';
+import {
+	createContext,
+	memo,
+	type ReactNode,
+	startTransition,
+	use,
+	useEffect,
+	useRef,
+	useState,
+} from 'react';
 
 import { useIsFocused } from '@react-navigation/native';
 
@@ -104,14 +113,14 @@ export const VirtualRow = memo(function VirtualRow<ItemT>({
 				return;
 			}
 
-			if (!next) {
-				// capture the realized height before unmounting so the placeholder holds the row's space.
-				const measured = entry.boundingClientRect.height;
-				setHeight(measured);
-			}
-
 			visibleRef.current = next;
-			setVisible(next);
+
+			if (next) {
+				setVisible(true);
+			} else {
+				setHeight(entry.boundingClientRect.height);
+				startTransition(() => setVisible(false));
+			}
 		});
 
 		seen?.register(node, item);
