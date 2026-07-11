@@ -7,6 +7,7 @@ export const pills = style({
 	backgroundColor: vars.palette.contrast_0,
 	display: 'flex',
 	flexDirection: 'row',
+	flexShrink: 0,
 	overflowX: 'auto',
 	gap: space.sm,
 	padding: space.sm,

@@ -35,6 +35,7 @@ export const inactivePost = style({
 export const postContainer = style({
 	display: 'flex',
 	flexDirection: 'row',
+	flexShrink: 0,
 	gap: space.md,
 	paddingBottom: space.md,
 	paddingLeft: space.lg,
