@@ -129,6 +129,9 @@ export function Composer({
 	// keep the popup open while results load so the spinner has somewhere to show.
 	const autocompleteOpen =
 		hasQuery && completionKey !== dismissedCompletion && (items.length > 0 || isFetching);
+	// the popup is only navigable when it actually holds rows; a spinner-only popup has nothing for
+	// the arrow keys to move through, so they should still drive the textarea caret.
+	const hasNavigableAutocomplete = autocompleteOpen && items.length > 0;
 
 	const syncSelection = (el: HTMLInputElement | HTMLTextAreaElement) => {
 		setSelection({ start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 });
@@ -263,7 +266,30 @@ export function Composer({
 					onSelect={(e) => syncSelection(e.currentTarget)}
 					onKeyDown={(e) => {
 						if (isComposing.current) {
+							// Base UI's Home/End caret handling runs ahead of its own IME guard, so suppress the
+							// whole combobox handler to keep every key native while composing.
+							e.preventBaseUIHandler();
 							return;
+						}
+						// Base UI's combobox input claims Arrow/Home/End for list navigation — correct for a
+						// single-line <input>, but it preventDefaults them and so breaks caret movement in our
+						// multi-line <textarea>. Hand each key back to native textarea behavior unless Base UI
+						// genuinely needs it to drive the suggestion list.
+						switch (e.key) {
+							case 'End':
+							case 'Home': {
+								// Base UI only ever jumps to the whole value's start/end, never line start/end, so
+								// these should stay native even while the popup is open.
+								e.preventBaseUIHandler();
+								break;
+							}
+							case 'ArrowDown':
+							case 'ArrowUp': {
+								if (!hasNavigableAutocomplete) {
+									e.preventBaseUIHandler();
+								}
+								break;
+							}
 						}
 						// Safari fires a final IME-commit "Enter" with keyCode 229; ignore it.
 						if (e.key === 'Enter' && e.keyCode === 229) {
