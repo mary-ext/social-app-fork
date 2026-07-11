@@ -1,5 +1,4 @@
-import { useCallback, useState } from 'react';
-import { View } from 'react-native';
+import { useCallback } from 'react';
 
 import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDefs } from '@atcute/bluesky';
 
@@ -7,7 +6,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useAppState } from '#/lib/appState';
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -20,21 +18,19 @@ import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
-import { List } from '#/view/com/util/List';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon } from '#/components/icons/Inbox';
-import * as Layout from '#/components/Layout';
+import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -44,6 +40,8 @@ import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
 import { RequestListItem } from './components/RequestListItem';
 import { useIsWithinSplitView } from './components/splitView/context';
 import * as css from './Inbox.css';
+
+const REQUEST_ITEM_HEIGHT_ESTIMATE = 130;
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>;
 
@@ -76,10 +74,10 @@ export function MessagesInboxScreenInner({}: Props) {
 	const hasUnreadConvos = (unreadCounts?.unreadRequestConvos ?? 0) > 0;
 
 	return (
-		<Layout.Screen testID="messagesInboxScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
-				<Layout.Header.Content align="left">
+				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['screens.messages.requests.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				{hasUnreadConvos ? <MarkAsReadHeaderButton /> : <Layout.Header.Slot />}
@@ -96,7 +94,6 @@ function RequestList({
 	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvoRequests.$output>, Error>;
 	conversations: RequestItem[];
 }) {
-	const t = useTheme();
 	const navigation = useNavigation<NavigationProp>();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
@@ -114,23 +111,10 @@ function RequestList({
 		}, [messagesBus, isActive]),
 	);
 
-	const initialNumToRender = useInitialNumToRender({ minItemHeight: 130 });
-	const [isPTRing, setIsPTRing] = useState(false);
-
 	const { isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		listConvosQuery;
 
 	useRefreshOnFocus(refetch);
-
-	const onRefresh = async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh conversations', { message: err });
-		}
-		setIsPTRing(false);
-	};
 
 	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) return;
@@ -142,102 +126,81 @@ function RequestList({
 	};
 
 	if (conversations.length < 1) {
-		return (
-			<Layout.Center style={[a.h_full]}>
-				{isLoading ? (
-					<ChatListLoadingPlaceholder />
-				) : (
-					<>
-						{isError ? (
-							<>
-								<View style={[a.pt_3xl, a.align_center]}>
-									<CircleInfoIcon size="4xl" fill={colors.textContrastLow} />
-									<Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
-										{m['common.error.whoops']()}
-									</Text>
-									<Text
-										style={[
-											a.text_md,
-											a.pb_xl,
-											a.text_center,
-											a.leading_snug,
-											t.atoms.text_contrast_medium,
-											{ maxWidth: 360 },
-										]}
-									>
-										{cleanError(error) || m['screens.messages.chats.reload.error']()}
-									</Text>
+		if (isLoading) {
+			return <ChatListLoadingPlaceholder />;
+		}
 
-									<Button
-										label={m['screens.messages.chats.reload.action']()}
-										size="small"
-										color="secondary_inverted"
-										onPress={() => void refetch()}
-									>
-										<ButtonText>{m['common.action.retry']()}</ButtonText>
-										<ButtonIcon icon={RetryIcon} />
-									</Button>
-								</View>
-							</>
-						) : (
-							<EmptyState
-								message={m['screens.messages.chats.inboxZero']()}
-								icon={InboxLargeIcon}
-								iconSize="4xl"
-								messageColor="text"
-								iconColor={t.atoms.text.color}
-								button={
-									isWithinSplitView
-										? undefined
-										: {
-												label: m['screens.messages.chats.back'](),
-												text: m['common.action.back'](),
-												onPress: () => {
-													if (navigation.canGoBack()) {
-														navigation.goBack();
-													} else {
-														navigation.navigate('Messages', { animation: 'pop' });
-													}
-												},
-												size: 'small',
-												color: 'secondary',
-												icon: ArrowLeftIcon,
-											}
-								}
-								className={css.empty}
-							/>
-						)}
-					</>
-				)}
-			</Layout.Center>
+		if (isError) {
+			return (
+				<div className={css.errorWrap}>
+					<CircleInfoIcon size="4xl" fill={colors.textContrastLow} />
+					<Text size="_2xl" weight="semiBold" className={css.errorTitle}>
+						{m['common.error.whoops']()}
+					</Text>
+					<Text size="md" align="center" color="textContrastMedium" className={css.errorMessage}>
+						{cleanError(error) || m['screens.messages.chats.reload.error']()}
+					</Text>
+					<Button
+						label={m['screens.messages.chats.reload.action']()}
+						size="small"
+						color="secondary_inverted"
+						onClick={() => void refetch()}
+					>
+						<ButtonText>{m['common.action.retry']()}</ButtonText>
+						<ButtonIcon icon={RetryIcon} />
+					</Button>
+				</div>
+			);
+		}
+
+		return (
+			<EmptyState
+				message={m['screens.messages.chats.inboxZero']()}
+				icon={InboxLargeIcon}
+				iconSize="4xl"
+				messageColor="text"
+				iconColor={colors.text}
+				button={
+					isWithinSplitView
+						? undefined
+						: {
+								label: m['screens.messages.chats.back'](),
+								text: m['common.action.back'](),
+								onPress: () => {
+									if (navigation.canGoBack()) {
+										navigation.goBack();
+									} else {
+										navigation.navigate('Messages', { animation: 'pop' });
+									}
+								},
+								size: 'small',
+								color: 'secondary',
+								icon: ArrowLeftIcon,
+							}
+				}
+				className={css.empty}
+			/>
 		);
 	}
 
 	return (
-		<>
-			<List
-				data={conversations}
-				renderItem={renderItem}
-				keyExtractor={keyExtractor}
-				refreshing={isPTRing}
-				onRefresh={() => void onRefresh()}
-				onEndReached={() => void onEndReached()}
-				ListFooterComponent={
-					<ListFooter
-						isFetchingNextPage={isFetchingNextPage}
-						error={cleanError(error)}
-						onRetry={fetchNextPage}
-						className={css.footer}
-						hasNextPage={hasNextPage}
-					/>
-				}
-				onEndReachedThreshold={0}
-				initialNumToRender={initialNumToRender}
-				windowSize={11}
-				desktopFixedHeight
-				sideBorders={false}
-			/>
-		</>
+		<List
+			data={conversations}
+			estimateHeight={REQUEST_ITEM_HEIGHT_ESTIMATE}
+			renderItem={renderItem}
+			keyExtractor={keyExtractor}
+			onEndReached={() => void onEndReached()}
+			onEndReachedThreshold={0}
+			ListFooterComponent={
+				<ListFooter
+					border={false}
+					error={cleanError(error)}
+					hasNextPage={hasNextPage}
+					isFetchingNextPage={isFetchingNextPage}
+					onRetry={fetchNextPage}
+				/>
+			}
+		/>
 	);
 }
 
@@ -271,7 +234,7 @@ function MarkAsReadHeaderButton() {
 			label={m['screens.messages.requests.markAllRead.action']()}
 			size="small"
 			color="secondary"
-			onPress={() => markAllRead()}
+			onClick={() => markAllRead()}
 		>
 			<ButtonIcon icon={CheckIcon} />
 			<ButtonText>{m['screens.messages.requests.markAllRead.action']()}</ButtonText>
