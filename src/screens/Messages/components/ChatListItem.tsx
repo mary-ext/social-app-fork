@@ -145,7 +145,7 @@ function DirectChatItem({
 					avatar={profile.avatar}
 					live={status.isActive}
 					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-					size={48}
+					size={40}
 					type={profile.associated?.labeler ? 'labeler' : 'user'}
 				/>
 
@@ -233,7 +233,7 @@ function GroupChatItem({
 			/>
 
 			<ChatRow.Body>
-				<AvatarBubbles profiles={convo.members} size={48} />
+				<AvatarBubbles profiles={convo.members} size={40} />
 
 				<ChatRow.Content>
 					<ChatRow.TitleRow>
