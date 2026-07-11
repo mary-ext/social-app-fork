@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';
@@ -10,67 +8,30 @@ import { useSession } from '#/state/session';
 
 import { ExportCarDialog } from '#/screens/Settings/components/ExportCarDialog';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Divider } from '#/components/Divider';
 import { resolveAllowGroupInvites } from '#/components/dms/util';
-import * as Toggle from '#/components/forms/Toggle';
 import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
-import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
-import * as Layout from '#/components/Layout';
+import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
+import { Message_Stroke2_Corner0_Rounded as MessageIcon } from '#/components/icons/Message';
+import * as Settings from '#/components/SettingsCards';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
-import * as css from './Settings.css';
-
-type AllowIncoming = 'all' | 'none' | 'following';
+type AllowIncoming = 'all' | 'following' | 'none';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>;
 
-export function MessagesSettingsScreen(props: Props) {
-	return <MessagesSettingsScreenInner {...props} />;
-}
-
-export function MessagesSettingsScreenInner({}: Props) {
-	const t = useTheme();
+export function MessagesSettingsScreen({}: Props) {
 	const { currentAccount } = useSession();
-	const { data: profile } = useProfileQuery({
-		did: currentAccount!.did,
-	});
+	const { data: profile } = useProfileQuery({ did: currentAccount!.did });
 	const exportCarHandle = Dialog.useDialogHandle();
 
-	const allowMessagesFromOptions: { name: AllowIncoming; label: string }[] = [
-		{
-			name: 'all',
-			label: m['screens.settings.audience.everyone'](),
-		},
-		{
-			name: 'following',
-			label: m['screens.settings.audience.peopleIFollow'](),
-		},
-		{
-			name: 'none',
-			label: m['screens.settings.audience.noOne'](),
-		},
-	];
-
-	const allowGroupInvitesFromOptions: { name: AllowIncoming; label: string }[] = [
-		{
-			name: 'all',
-			label: m['screens.settings.audience.everyone'](),
-		},
-		{
-			name: 'following',
-			label: m['screens.settings.audience.peopleIFollow'](),
-		},
-		{
-			name: 'none',
-			label: m['screens.settings.audience.noOne'](),
-		},
+	const audienceItems: { label: string; value: AllowIncoming }[] = [
+		{ label: m['screens.settings.audience.everyone'](), value: 'all' },
+		{ label: m['screens.settings.audience.peopleIFollow'](), value: 'following' },
+		{ label: m['screens.settings.audience.noOne'](), value: 'none' },
 	];
 
 	const { mutate: updateDeclaration } = useUpdateActorDeclaration({
@@ -81,95 +42,55 @@ export function MessagesSettingsScreenInner({}: Props) {
 		},
 	});
 
-	const onSelectMessagesFrom = (keys: string[]) => {
-		const key = keys[0];
-		if (!key) return;
-		updateDeclaration({ allowIncoming: key as AllowIncoming });
-	};
-
-	const onSelectGroupInvitesFrom = (keys: string[]) => {
-		const key = keys[0];
-		if (!key) return;
-		updateDeclaration({ allowGroupInvites: key as AllowIncoming });
-	};
+	const allowIncoming = (profile?.associated?.chat?.allowIncoming as AllowIncoming) ?? 'following';
+	const allowGroupInvites = resolveAllowGroupInvites(profile?.associated?.chat);
 
 	return (
-		<Layout.Screen testID="messagesSettingsScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['screens.messages.chatSettings.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<View style={[a.py_xl, a.gap_md]}>
-					<View style={[a.px_xl]}>
-						<Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
-							{m['screens.messages.dmSettings.label']()}
-						</Text>
-						<Text style={[a.pb_md, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-							{m['screens.messages.dmSettings.hint']()}
-						</Text>
-						<Toggle.Group
+				<Settings.List>
+					<Settings.Section
+						footnoteText={m['screens.messages.dmSettings.hint']()}
+						titleText={m['screens.messages.chatSettings.audienceTitle']()}
+					>
+						<Settings.SelectRow
+							items={audienceItems}
 							label={m['screens.messages.dmSettings.label']()}
-							type="radio"
-							values={[(profile?.associated?.chat?.allowIncoming as AllowIncoming) ?? 'following']}
-							onChange={onSelectMessagesFrom}
+							onValueChange={(value: AllowIncoming) => updateDeclaration({ allowIncoming: value })}
+							value={allowIncoming}
 						>
-							<View>
-								{allowMessagesFromOptions.map((option) => (
-									<Toggle.Item key={option.name} highlightRow name={option.name} label={option.label}>
-										{({ selected }) => <Toggle.RadioWithLabel label={option.label} selected={selected} />}
-									</Toggle.Item>
-								))}
-							</View>
-						</Toggle.Group>
-					</View>
-					<Divider style={{ marginVertical: 10 }} />
-					<View style={[a.px_xl]}>
-						<Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
-							{m['screens.messages.inviteSettings.label']()}
-						</Text>
-						<Text style={[a.pb_md, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-							{m['screens.messages.dmSettings.hint']()}
-						</Text>
-						<Toggle.Group
+							<Settings.Icon icon={MessageIcon} />
+							<Settings.Label titleText={m['screens.messages.dmSettings.label']()} />
+						</Settings.SelectRow>
+						<Settings.SelectRow
+							items={audienceItems}
 							label={m['screens.messages.inviteSettings.label']()}
-							type="radio"
-							values={[resolveAllowGroupInvites(profile?.associated?.chat)]}
-							onChange={onSelectGroupInvitesFrom}
+							onValueChange={(value: AllowIncoming) => updateDeclaration({ allowGroupInvites: value })}
+							value={allowGroupInvites}
 						>
-							<View>
-								{allowGroupInvitesFromOptions.map((option) => (
-									<Toggle.Item key={option.name} highlightRow name={option.name} label={option.label}>
-										{({ selected }) => <Toggle.RadioWithLabel label={option.label} selected={selected} />}
-									</Toggle.Item>
-								))}
-							</View>
-						</Toggle.Group>
-					</View>
-					<Divider style={{ marginVertical: 10 }} />
+							<Settings.Icon icon={GroupIcon} />
+							<Settings.Label titleText={m['screens.messages.inviteSettings.label']()} />
+						</Settings.SelectRow>
+					</Settings.Section>
 
-					<View style={[a.px_xl]}>
-						<Toggle.Item
-							label={m['common.chat.action.export']()}
-							name="exportChatData"
-							style={[a.flex_row, a.align_center, a.justify_between]}
-							onChange={() => {
-								exportCarHandle.open(null);
-							}}
+					<Settings.Section>
+						<Settings.ButtonRow
+							label={m['screens.messages.export.action']()}
+							onPress={() => exportCarHandle.open(null)}
 						>
-							<CarIcon className={css.carIcon} fill={colors.text} size="xl" />
-							<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
-								{m['screens.messages.export.action']()}
-							</Text>
-							<ChevronRightIcon className={css.chevron} fill={colors.text} size="lg" />
-						</Toggle.Item>
-					</View>
-					<Divider style={{ marginVertical: 10 }} />
-				</View>
+							<Settings.Icon icon={CarIcon} />
+							<Settings.Label titleText={m['screens.messages.export.action']()} />
+						</Settings.ButtonRow>
+					</Settings.Section>
+				</Settings.List>
 			</Layout.Content>
+
 			<ExportCarDialog handle={exportCarHandle} />
 		</Layout.Screen>
 	);
