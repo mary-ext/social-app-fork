@@ -3,11 +3,15 @@
 	"components.richTextTag.a11y.cashtag": "Cashtag {tag}",
 	"components.richTextTag.a11y.hashtag": "Hashtag {tag}",
 	"components.richTextTag.mute": "Mute {prefixedTag}",
+	"components.richTextTag.muteConfirm.description": "Posts with this tag will be hidden from your feeds.",
+	"components.richTextTag.muteConfirm.title": "Mute {prefixedTag}?",
 	"components.richTextTag.seePosts.hash": "See #{tag} posts",
 	"components.richTextTag.seePosts.hashByUser": "See #{tag} posts by user",
 	"components.richTextTag.seePosts.prefixed": "See {prefixedTag} posts",
 	"components.richTextTag.seePosts.prefixedByUser": "See {prefixedTag} posts by user",
 	"components.richTextTag.seePosts.tag": "See {tag} posts",
 	"components.richTextTag.seePosts.tagByUser": "See {tag} posts by user",
-	"components.richTextTag.unmute": "Unmute {prefixedTag}"
+	"components.richTextTag.unmute": "Unmute {prefixedTag}",
+	"components.richTextTag.unmuteConfirm.description": "Posts with this tag will no longer be hidden from your feeds.",
+	"components.richTextTag.unmuteConfirm.title": "Unmute {prefixedTag}?"
 }

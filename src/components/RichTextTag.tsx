@@ -23,6 +23,7 @@ import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
 import type { InlineLinkUnderline } from '#/components/web/Link';
 import * as linkStyles from '#/components/web/Link.css';
+import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
@@ -64,6 +65,7 @@ export function RichTextTag({
 		reset: resetRemove,
 	} = useRemoveMutedWordsMutation();
 	const { href } = useLink({ displayText: display, to: { params: { tag }, screen: 'Hashtag' } });
+	const muteConfirmHandle = Prompt.usePromptHandle();
 
 	const isCashtag = tag.startsWith('$');
 	const label = isCashtag
@@ -81,75 +83,100 @@ export function RichTextTag({
 	const removeableMuteWords =
 		preferences?.moderationPrefs.mutedWords?.filter((word) => word.value === tag) ?? [];
 
+	const toggleMute = () => {
+		if (isMuted) {
+			resetUpsert();
+			void removeMutedWords(removeableMuteWords);
+		} else {
+			resetRemove();
+			void upsertMutedWord([{ actorTarget: 'all', targets: ['tag'], value: tag }]);
+		}
+	};
+
 	return (
-		<Menu.Root>
-			<Menu.Trigger
-				aria-label={label}
-				className={clsx(
-					textStyles.text({ color, leading, size }),
-					linkStyles.inlineLink({ underline }),
-					atomicSegment,
-				)}
-				nativeButton={false}
-				// the anchor exists only for its href (hover preview, middle/right-click "open in new tab"); a
-				// plain left-click always opens the menu, so suppress the native navigation it would trigger
-				onClick={preventDefault}
-				render={<a href={href} />}
-			>
-				{display}
-			</Menu.Trigger>
-			<Menu.Popup label={label}>
-				<Menu.Group>
-					<Menu.Item
-						label={m['components.richTextTag.seePosts.prefixed']({ prefixedTag })}
-						onClick={() => navigation.push('Hashtag', { tag })}
-					>
-						<Menu.ItemText>
-							{isCashtag
-								? m['components.richTextTag.seePosts.tag']({ tag })
-								: m['components.richTextTag.seePosts.hash']({ tag })}
-						</Menu.ItemText>
-						<Menu.ItemIcon icon={Search} />
-					</Menu.Item>
-					{authorHandle && !isInvalidHandle(authorHandle) && (
+		<>
+			<Menu.Root>
+				<Menu.Trigger
+					aria-label={label}
+					className={clsx(
+						textStyles.text({ color, leading, size }),
+						linkStyles.inlineLink({ underline }),
+						atomicSegment,
+					)}
+					nativeButton={false}
+					// the anchor exists only for its href (hover preview, middle/right-click "open in new tab"); a
+					// plain left-click always opens the menu, so suppress the native navigation it would trigger
+					onClick={preventDefault}
+					render={<a href={href} />}
+				>
+					{display}
+				</Menu.Trigger>
+				<Menu.Popup label={label}>
+					<Menu.Group>
 						<Menu.Item
-							label={m['components.richTextTag.seePosts.prefixedByUser']({ prefixedTag })}
-							onClick={() => navigation.push('Hashtag', { author: authorHandle, tag })}
+							label={m['components.richTextTag.seePosts.prefixed']({ prefixedTag })}
+							onClick={() => navigation.push('Hashtag', { tag })}
 						>
 							<Menu.ItemText>
 								{isCashtag
-									? m['components.richTextTag.seePosts.tagByUser']({ tag })
-									: m['components.richTextTag.seePosts.hashByUser']({ tag })}
+									? m['components.richTextTag.seePosts.tag']({ tag })
+									: m['components.richTextTag.seePosts.hash']({ tag })}
 							</Menu.ItemText>
-							<Menu.ItemIcon icon={Person} />
+							<Menu.ItemIcon icon={Search} />
 						</Menu.Item>
-					)}
-				</Menu.Group>
-				<Menu.Separator />
-				<Menu.Item
-					label={
-						isMuted
-							? m['components.richTextTag.unmute']({ prefixedTag })
-							: m['components.richTextTag.mute']({ prefixedTag })
-					}
-					onClick={() => {
-						if (isMuted) {
-							resetUpsert();
-							void removeMutedWords(removeableMuteWords);
-						} else {
-							resetRemove();
-							void upsertMutedWord([{ actorTarget: 'all', targets: ['tag'], value: tag }]);
+						{authorHandle && !isInvalidHandle(authorHandle) && (
+							<Menu.Item
+								label={m['components.richTextTag.seePosts.prefixedByUser']({ prefixedTag })}
+								onClick={() => navigation.push('Hashtag', { author: authorHandle, tag })}
+							>
+								<Menu.ItemText>
+									{isCashtag
+										? m['components.richTextTag.seePosts.tagByUser']({ tag })
+										: m['components.richTextTag.seePosts.hashByUser']({ tag })}
+								</Menu.ItemText>
+								<Menu.ItemIcon icon={Person} />
+							</Menu.Item>
+						)}
+					</Menu.Group>
+					<Menu.Separator />
+					<Menu.Item
+						label={
+							isMuted
+								? m['components.richTextTag.unmute']({ prefixedTag })
+								: m['components.richTextTag.mute']({ prefixedTag })
 						}
-					}}
-				>
-					<Menu.ItemText>
-						{isMuted
-							? m['components.richTextTag.unmute']({ prefixedTag })
-							: m['components.richTextTag.mute']({ prefixedTag })}
-					</Menu.ItemText>
-					<Menu.ItemIcon icon={isPreferencesLoading ? MenuSpinner : Mute} />
-				</Menu.Item>
-			</Menu.Popup>
-		</Menu.Root>
+						onClick={() => muteConfirmHandle.open(null)}
+					>
+						<Menu.ItemText>
+							{isMuted
+								? m['components.richTextTag.unmute']({ prefixedTag })
+								: m['components.richTextTag.mute']({ prefixedTag })}
+						</Menu.ItemText>
+						<Menu.ItemIcon icon={isPreferencesLoading ? MenuSpinner : Mute} />
+					</Menu.Item>
+				</Menu.Popup>
+			</Menu.Root>
+
+			<Prompt.Basic
+				handle={muteConfirmHandle}
+				title={
+					isMuted
+						? m['components.richTextTag.unmuteConfirm.title']({ prefixedTag })
+						: m['components.richTextTag.muteConfirm.title']({ prefixedTag })
+				}
+				description={
+					isMuted
+						? m['components.richTextTag.unmuteConfirm.description']()
+						: m['components.richTextTag.muteConfirm.description']()
+				}
+				onConfirm={toggleMute}
+				confirmButtonCta={
+					isMuted
+						? m['components.richTextTag.unmute']({ prefixedTag })
+						: m['components.richTextTag.mute']({ prefixedTag })
+				}
+				confirmButtonColor={isMuted ? 'primary' : 'negative'}
+			/>
+		</>
 	);
 }
