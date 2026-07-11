@@ -1061,7 +1061,7 @@ export const ComposePost = ({
 	);
 };
 
-let ComposerPost = memo(function ComposerPost({
+const ComposerPost = memo(function ComposerPost({
 	post,
 	dispatch,
 	textInputRef,

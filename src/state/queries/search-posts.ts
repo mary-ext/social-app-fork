@@ -83,7 +83,7 @@ export function useSearchPostsQuery({
 
 				// Keep track of the last run and whether we can reuse
 				// some already selected pages from there.
-				let reusedPages: AppBskyFeedSearchPosts.$output[] = [];
+				const reusedPages: AppBskyFeedSearchPosts.$output[] = [];
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;

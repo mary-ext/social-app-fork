@@ -251,7 +251,7 @@ function Inner({
 		}
 	};
 
-	let title = copy.title;
+	const title = copy.title;
 	let onBack: (() => void) | undefined;
 	if (step === 'reasons') {
 		onBack = () => dispatch({ type: 'clearCategory' });

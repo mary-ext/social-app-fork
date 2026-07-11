@@ -61,7 +61,7 @@ export function threadgateAllowUISettingToAllowRecordValue(
 		return undefined;
 	}
 
-	let allow: Exclude<AppBskyFeedThreadgate.Main['allow'], undefined> = [];
+	const allow: Exclude<AppBskyFeedThreadgate.Main['allow'], undefined> = [];
 
 	if (!threadgate.find((v) => v.type === 'nobody')) {
 		for (const rule of threadgate) {

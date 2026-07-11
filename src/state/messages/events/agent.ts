@@ -396,7 +396,7 @@ export class MessagesEventBus {
 		// )
 
 		let needsEmit = false;
-		let batch: ChatBskyConvoGetLog.$output['logs'] = [];
+		const batch: ChatBskyConvoGetLog.$output['logs'] = [];
 
 		try {
 			const data = await networkRetry(2, () => {

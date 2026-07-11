@@ -207,7 +207,7 @@ export function usePostFeedQuery(
 
 				// Keep track of the last run and whether we can reuse
 				// some already selected pages from there.
-				let reusedPages: FeedPage[] = [];
+				const reusedPages: FeedPage[] = [];
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;

@@ -341,7 +341,7 @@ export function SimpleInlineLinkText({
 	const flattenedStyle = flatten(style) || {};
 	const isExternal = isExternalUrl(to);
 
-	let href = to;
+	const href = to;
 
 	const onPress = (e: GestureResponderEvent) => {
 		const exitEarlyIfFalse = outerOnPress?.(e);

@@ -263,10 +263,10 @@ export function AddMembersFlow({
 		}, 0);
 	}, []);
 
-	let buttonLabel = m['components.dms.group.action.continueToName']();
-	let buttonText = m['common.action.next']();
-	let showButton = groupChatProfiles.length > 0;
-	let isButtonDisabled = !showButton;
+	const buttonLabel = m['components.dms.group.action.continueToName']();
+	const buttonText = m['common.action.next']();
+	const showButton = groupChatProfiles.length > 0;
+	const isButtonDisabled = !showButton;
 
 	const showChatProfileTabs = groupChatProfiles.length > 0;
 

@@ -126,7 +126,7 @@ function computeSuggestions<T extends AnyProfileView>({
 	searched?: T[];
 	moderationOpts: ModerationOptions;
 }): T[] {
-	let items: T[] = [];
+	const items: T[] = [];
 	for (const item of searched) {
 		if (!items.find((item2) => item2.handle === item.handle)) {
 			items.push(item);

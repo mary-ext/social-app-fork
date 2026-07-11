@@ -289,7 +289,7 @@ function PostFeed({
 			feedKind = 'profile';
 		}
 
-		let arr: FeedRow[] = [];
+		const arr: FeedRow[] = [];
 		if (KNOWN_SHUTDOWN_FEEDS.includes(feedUriOrActorDid)) {
 			arr.push({
 				type: 'feedShutdownMsg',

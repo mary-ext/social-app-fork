@@ -72,7 +72,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 	const writes: ComAtprotoRepoApplyWrites.$input['writes'] = [];
 	const uris: string[] = [];
 
-	let now = new Date();
+	const now = new Date();
 
 	for (let i = 0; i < thread.posts.length; i++) {
 		const draft = thread.posts[i]!;

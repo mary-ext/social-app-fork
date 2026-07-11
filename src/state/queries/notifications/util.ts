@@ -74,7 +74,7 @@ export async function fetchPage({
 	const notifs = data.notifications.filter((notif) => !shouldFilterNotif(notif, moderationOpts));
 
 	// group notifications which are essentially similar (follows, likes on a post)
-	let notifsGrouped = groupNotifications(notifs);
+	const notifsGrouped = groupNotifications(notifs);
 
 	// we fetch subjects of notifications (usually posts) now instead of lazily
 	// in the UI to avoid relayouts

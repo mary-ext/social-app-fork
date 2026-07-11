@@ -40,7 +40,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>;
 export function ProfileFeedScreen(props: Props) {
 	const { rkey, name: handleOrDid } = props.route.params;
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey);
-	let { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
+	const { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
 
 	if (error && !isRefetching) {
 		return (

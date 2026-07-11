@@ -20,7 +20,7 @@ import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
-export let MessageContextMenu = ({
+export const MessageContextMenu = ({
 	message,
 	senderProfile,
 	moderationOpts: _moderationOpts,

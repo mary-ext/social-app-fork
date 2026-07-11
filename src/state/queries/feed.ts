@@ -431,7 +431,7 @@ export function usePinnedFeedsInfos() {
 				return [PWI_DISCOVER_FEED_STUB];
 			}
 
-			let resolved = new Map<string, FeedSourceInfo>();
+			const resolved = new Map<string, FeedSourceInfo>();
 
 			// Get all feeds. We can do this in a batch.
 			const pinnedFeeds = pinnedItems.filter((feed) => feed.type === 'feed');
@@ -467,7 +467,7 @@ export function usePinnedFeedsInfos() {
 
 			// order the feeds/lists in the order they were pinned
 			const result: SavedFeedSourceInfo[] = [];
-			for (let pinnedItem of pinnedItems) {
+			for (const pinnedItem of pinnedItems) {
 				const feedInfo = resolved.get(pinnedItem.value);
 				if (feedInfo) {
 					result.push({
@@ -584,7 +584,7 @@ export function useSavedFeeds() {
 			});
 
 			const result: SavedFeedItem[] = [];
-			for (let savedItem of savedItems) {
+			for (const savedItem of savedItems) {
 				if (savedItem.type === 'timeline') {
 					result.push({
 						type: 'timeline',

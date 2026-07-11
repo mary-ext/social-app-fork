@@ -87,7 +87,7 @@ export function useAutocomplete({
 		select: useCallback(
 			(items: AutocompleteItem[]) => {
 				const seen = new Set<string>();
-				let results: AutocompleteItem[] = [];
+				const results: AutocompleteItem[] = [];
 
 				for (const item of items) {
 					if (seen.has(item.key)) continue;

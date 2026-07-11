@@ -57,7 +57,7 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
 }
 
 export function getPostLanguage(post: AppBskyFeedDefs.PostView): string | undefined {
-	let candidates: string[] = getPostLanguageTags(post);
+	const candidates: string[] = getPostLanguageTags(post);
 	let postText: string = '';
 	const recordText = (post.record as AppBskyFeedPost.Main).text;
 	if (typeof recordText === 'string') {
