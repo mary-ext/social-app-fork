@@ -41,7 +41,6 @@ export const nameRow = style({
 	width: '100%',
 });
 
-// name shrinks and truncates; the timestamp beside it holds its width.
 export const name = style({
 	flexShrink: 1,
 	minWidth: 0,

@@ -24,7 +24,6 @@ export const image = style({
 	width: '100%',
 });
 
-/** Circular camera badge pinned to the bottom-right of the banner. */
 export const editBadge = style({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,

@@ -10,9 +10,6 @@ export const group = style({
 	gap: space._2xs,
 });
 
-// every row in the group — pinned feeds and "More feeds" — is a Toggle rendering this hug-width pill.
-// the feed toggles render a <button>; More feeds renders an <a> (web Link) to keep anchor semantics, so
-// the resets below cover both element types.
 export const item = style({
 	alignItems: 'center',
 	alignSelf: 'flex-start',
@@ -44,12 +41,10 @@ export const item = style({
 	},
 });
 
-// the label inherits its color (and weight) from the row, so the row's state drives both.
 export const label = style({
 	color: 'inherit',
 });
 
-// fixed-size leading badge shared by the "following" timeline icon and the "More feeds" plus icon.
 const badge = {
 	alignItems: 'center',
 	borderRadius: borderRadius.xs,
@@ -65,7 +60,6 @@ export const followingIcon = style({
 	backgroundColor: colors.primary_500,
 });
 
-// the avatar is a fixed-size leading element; keep it from squashing on a crowded row.
 export const avatar = style({
 	flexShrink: 0,
 });
@@ -78,8 +72,6 @@ export const morePlusBox = style({
 	},
 });
 
-// the skeleton overlays the loaded list: same column gap, and each row carries the item's padding so the
-// placeholder square/bar line up with the avatar/label rather than the raw container edge.
 export const skeleton = style({
 	display: 'flex',
 	flexDirection: 'column',

@@ -28,7 +28,6 @@ export const container = recipe(
 	{ debugId: 'container', layer: components },
 );
 
-/** Icon box edge length in px, wired inline so it scales to the `size` prop. */
 export const iconSizeVar = createVar();
 
 export const icon = style({

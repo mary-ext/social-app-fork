@@ -28,12 +28,10 @@ export const title = style({
 	minWidth: 0,
 });
 
-// pull the ghost close button flush with the dialog edge.
 export const closeButton = style({
 	margin: -space.sm,
 });
 
-// the top border separates rows; suppressed on the first row so it doesn't double up under the header.
 export const item = recipe(
 	{
 		base: {

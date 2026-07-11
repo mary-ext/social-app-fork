@@ -5,7 +5,6 @@ import { bottomBarHeightVar } from '#/components/web/Shell/Shell.css';
 import { colors } from '#/styles/colors';
 import { space, zIndex } from '#/styles/tokens.css';
 
-// sits above the bottom bar on narrow viewports; hidden once the bar gives way to the side rails.
 export const fab = style({
 	alignItems: 'center',
 	backgroundColor: colors.primary_500,

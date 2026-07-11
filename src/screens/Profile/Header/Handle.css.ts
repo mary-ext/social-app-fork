@@ -10,13 +10,10 @@ export const row = style({
 	maxWidth: '100%',
 });
 
-/** Lock out interaction when the handle is a non-interactive preview (e.g. inside the hover card). */
 export const noTaps = style({
 	pointerEvents: 'none',
 });
 
-// flex so the inline Text span doesn't inherit the wrapper's font strut and inflate the line box.
-// `flex-shrink: 0` keeps the label on one line (the handle beside it shrinks instead).
 export const followsYou = style({
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: 4,
@@ -26,7 +23,6 @@ export const followsYou = style({
 	paddingInline: 8,
 });
 
-// break long handles mid-string rather than letting them overflow the row.
 export const handle = style({
 	wordBreak: 'break-all',
 });

@@ -12,7 +12,6 @@ export const outer = style({
 	width: '100%',
 });
 
-/** Block link wrapping a card row; the caller supplies the row layout (direction/alignment/gap). */
 export const link = style({
 	color: 'inherit',
 	cursor: 'pointer',
@@ -20,11 +19,6 @@ export const link = style({
 	textDecoration: 'none',
 });
 
-/**
- * a padded, full-width row that highlights on hover/press.
- *
- * @param topBorder whether to show a hairline top separator. defaults to true.
- */
 export const defaultRow = recipe(
 	{
 		base: {
@@ -49,15 +43,9 @@ export const defaultRow = recipe(
 	{ debugId: 'defaultRow' },
 );
 
-/**
- * A non-interactive loading row: same padding and top separator as {@link defaultRow}, but without the
- * hover/active highlight (a placeholder isn't a press target).
- */
 export const loadingRow = recipe(
 	{
 		base: {
-			// a content-sized flex column (not `flex: 1`): the placeholder renders bare under the screen's flex
-			// column, so a growing row would stretch to fill the viewport instead of sitting on the card rhythm.
 			display: 'flex',
 			flexDirection: 'column',
 			gap: space.md,

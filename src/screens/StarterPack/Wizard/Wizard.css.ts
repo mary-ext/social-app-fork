@@ -3,12 +3,8 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { space, zIndex } from '#/styles/tokens.css';
 
-// matches the web header's min-height (Layout/Header.css `outer`), so the sticky search row pins directly
-// beneath the sticky header rather than under the viewport top.
 const HEADER_HEIGHT = 52;
 
-// #region steps shell
-/** Sticky search row above a step's result list, pinned under the header. */
 export const searchBar = style({
 	backgroundColor: colors.bg,
 	borderBottom: `1px solid ${colors.borderContrastMedium}`,
@@ -21,7 +17,6 @@ export const searchBar = style({
 	zIndex: zIndex.sticky,
 });
 
-/** Centered empty/loading slot shown in place of a step's rows. */
 export const empty = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -33,9 +28,7 @@ export const empty = style({
 export const emptyText = style({
 	marginTop: space.lg,
 });
-// #endregion
 
-// #region details step
 export const details = style({
 	display: 'flex',
 	flexDirection: 'column',
@@ -57,7 +50,6 @@ export const detailsSubtitle = style({
 	paddingInline: space.md,
 });
 
-// fixed-width figures so the running count doesn't jitter as digits change
 export const counter = style({
 	flexShrink: 0,
 	fontVariantNumeric: 'tabular-nums',
@@ -68,13 +60,7 @@ export const detailsNext = style({
 	marginInline: space.xl,
 	marginTop: 35,
 });
-// #endregion
 
-// #region footer
-/**
- * step footer pinned to the viewport bottom. sits at the bottom when the list is short or empty, and sticks
- * to the bottom when the content overflows.
- */
 export const footer = style({
 	alignItems: 'center',
 	backgroundColor: colors.bg,
@@ -103,7 +89,6 @@ export const avatarRow = style({
 	flexDirection: 'row',
 });
 
-/** Per-avatar ring; the overlap/spacing offset is applied inline since it varies by step and index. */
 export const avatarRing = style({
 	borderColor: colors.bg,
 	borderRadius: '50%',
@@ -133,4 +118,3 @@ export const cta = style({
 export const ctaButton = style({
 	width: '100%',
 });
-// #endregion

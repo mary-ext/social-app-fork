@@ -26,7 +26,6 @@ export const errorWrap = style({
 	paddingTop: space._3xl,
 });
 
-// scroll container for the split-view left column.
 export const splitScroller = style({
 	flex: 1,
 	minHeight: 0,

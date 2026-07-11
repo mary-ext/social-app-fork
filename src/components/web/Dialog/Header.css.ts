@@ -16,22 +16,15 @@ export const outer = style({
 	paddingInline: 6,
 });
 
-// declared after `outer` so it wins by source order (both unlayered); for headers whose surface owns its
-// own divider (e.g. the composer's scroll-driven border).
 export const borderless = style({
 	borderBottom: 'none',
 });
 
-// shrink-to-fit so it sits at its natural width when short; the equal-grow slots keep it centered, and
-// `minWidth: 0` lets it shrink past its content (truncating the title) once the slots hit their button floors.
 export const content = style({
 	flex: '0 1 auto',
 	minWidth: 0,
 });
 
-// both slots grow from a zero basis, so they stay equal width regardless of button content and the title
-// lands in the header's true center. they're floored at their button's intrinsic width (no `minWidth: 0`),
-// so a long title shrinks the title rather than clipping a button.
 export const slot = style({
 	alignItems: 'center',
 	display: 'flex',

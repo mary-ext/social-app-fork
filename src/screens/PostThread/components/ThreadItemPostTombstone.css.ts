@@ -18,7 +18,6 @@ export const row = style({
 	alignItems: 'center',
 	backgroundColor: colors.contrast_25,
 	borderRadius: borderRadius.sm,
-	// the icon inherits this via `fill="currentColor"`
 	color: colors.textContrastMedium,
 	display: 'flex',
 	flexDirection: 'row',

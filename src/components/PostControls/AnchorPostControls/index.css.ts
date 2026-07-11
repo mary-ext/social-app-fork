@@ -2,7 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-/** The anchor action bar: reply/repost/like leading, share trailing. */
 export const root = style({
 	height: 52,
 	alignItems: 'center',
@@ -14,10 +13,6 @@ export const root = style({
 
 export const replyDisabled = style({ opacity: 0.6 });
 
-/**
- * the anchor (big) action button chrome. this is independent of the compact {@link PostControlButton} to allow
- * independent tweaking.
- */
 export const button = style({
 	alignItems: 'center',
 	appearance: 'none',
@@ -32,7 +27,6 @@ export const button = style({
 	transitionProperty: 'color',
 	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
 	selectors: {
-		// the icon circle shows the focus ring on the button's behalf
 		'&:focus-visible': { outline: 'none' },
 		'&:disabled': { cursor: 'default', opacity: 0.6 },
 	},
@@ -41,7 +35,6 @@ export const button = style({
 export const ICON_SIZE = 18;
 export const ICON_CIRCLE_SIZE = 32;
 
-/** The hover/focus target behind the icon; only the circle takes the highlight, never anything beside it. */
 export const iconCircle = style({
 	alignItems: 'center',
 	borderRadius: 999,

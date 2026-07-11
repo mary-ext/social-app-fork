@@ -14,10 +14,6 @@ import {
 
 const TIMING = 'cubic-bezier(0.17, 0.73, 0.14, 1)';
 
-// #region nav root
-
-// the rail itself: a fixed-width column. `border-box` keeps the padding inside the declared width so the
-// grid track it sits in matches these widths exactly.
 export const root = style({
 	boxSizing: 'border-box',
 	display: 'flex',
@@ -26,29 +22,20 @@ export const root = style({
 	width: LEFT_NAV_STANDARD_WIDTH,
 });
 
-// the logged-out rail is a touch wider to fit the sign-in card.
 export const rootPwi = style({
 	width: LEFT_NAV_PWI_WIDTH,
 });
 
-// the minimal rail (Messages routes / narrow viewports) collapses to icon-only and centers its column.
 export const rootMinimal = style({
 	alignItems: 'center',
 	overflowX: 'hidden',
 	width: LEFT_NAV_MINIMAL_WIDTH,
 });
 
-// wraps the logged-out sign-in card, spacing it below the top of the rail.
 export const signInWrap = style({
 	paddingTop: space.xl,
 });
 
-// #endregion
-
-// #region profile switcher
-
-// the transform the avatar adopts while the trigger is active; the minimal rail overrides it to scale in place
-// without the sideways slide, since there is no name to reveal beside it.
 const avatarActiveTransform = createVar();
 
 export const profileCard = style({
@@ -57,13 +44,11 @@ export const profileCard = style({
 	paddingBottom: space.md,
 });
 
-// the full-width rail left-aligns the switcher pill and the loading placeholder.
 export const profileCardFull = style({
 	alignItems: 'flex-start',
 	width: '100%',
 });
 
-// stand-in shown while the profile query loads, sized to the resting avatar.
 export const avatarPlaceholder = style({
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: 999,
@@ -71,13 +56,10 @@ export const avatarPlaceholder = style({
 	width: LARGE_ELEMENT_SIZE,
 });
 
-// in the full rail the placeholder lines up with the avatar's resting inset.
 export const avatarPlaceholderInset = style({
 	marginLeft: space.lg,
 });
 
-// the profile switcher: a full-width pill that, while hovered/focused or with its menu open, shrinks the
-// avatar aside to reveal the account name and the overflow affordance.
 export const profileTrigger = style({
 	alignItems: 'center',
 	background: 'transparent',
@@ -114,7 +96,6 @@ export const profileTriggerMinimal = style({
 	width: 'auto',
 });
 
-// the trigger's three active-state selectors, applied to a descendant `child` (`&` for the element itself).
 const active = (child: string) =>
 	`${profileTrigger}:hover ${child}, ${profileTrigger}:focus-visible ${child}, ${profileTrigger}[data-popup-open] ${child}`;
 
@@ -133,8 +114,6 @@ export const avatarWrap = style({
 	},
 });
 
-// name + handle, hidden until the trigger is active; the negative margin tucks it under the resting avatar so
-// it slides out from behind as the avatar shrinks.
 export const identity = style({
 	alignItems: 'start',
 	display: 'flex',
@@ -162,11 +141,6 @@ export const ellipsisIcon = style({
 	},
 });
 
-// #endregion
-
-// #region nav item
-
-// a nav link pill: icon (+ label in the full rail), filling on hover.
 export const navItem = style({
 	alignItems: 'center',
 	borderRadius: 999,
@@ -186,7 +160,6 @@ export const navItem = style({
 	},
 });
 
-// fixed icon slot; the 28px icon overflows it centered. `flex-shrink: 0` keeps it square next to a long label.
 export const iconBox = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -195,18 +168,12 @@ export const iconBox = style({
 	justifyContent: 'center',
 	position: 'relative',
 	width: 24,
-	// sits above the label so the count badge, which reaches into the label, paints over it.
 	zIndex: 1,
 });
 
-// overlaps the icon's top-right.
 export const badge = style([navBadge.badge, { left: 12, top: -6 }]);
 
 export const hasNewDot = style([navBadge.hasNewDot, { right: -2, top: -4 }]);
-
-// #endregion
-
-// #region compose button
 
 export const composeRow = style({
 	display: 'flex',
@@ -220,11 +187,8 @@ export const composeRowMinimal = style({
 	paddingTop: space.lg,
 });
 
-// a square icon-only compose button for the minimal rail.
 export const composeButtonMinimal = style({
 	height: LARGE_ELEMENT_SIZE,
 	padding: 0,
 	width: LARGE_ELEMENT_SIZE,
 });
-
-// #endregion

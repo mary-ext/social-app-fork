@@ -4,7 +4,6 @@ import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-// hairline-bordered, padded, rounded container around the embedded list info.
 export const card = style({
 	backgroundColor: colors.bg,
 	borderColor: colors.borderContrastLow,
@@ -17,7 +16,6 @@ export const card = style({
 	},
 });
 
-// ModeratedListEmbed: lift the revealed card off the blur toggle.
 export const revealedPad = style({
 	paddingTop: 4,
 });

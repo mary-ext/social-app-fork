@@ -3,7 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
-/** Top-bordered container for the desktop reply-composer loading placeholder. */
 export const outer = style({
 	borderTopColor: colors.borderContrastLow,
 	borderTopStyle: 'solid',
@@ -14,7 +13,6 @@ export const outer = style({
 	paddingTop: space.xs,
 });
 
-/** Avatar + display-name placeholder row. */
 export const row = style({
 	alignItems: 'center',
 	display: 'flex',

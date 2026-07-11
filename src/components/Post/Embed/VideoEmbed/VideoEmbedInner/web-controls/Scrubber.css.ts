@@ -2,13 +2,10 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { borderRadius, space } from '#/styles/tokens.css';
 
-/** Progress as a percentage string (e.g. `40%`), driving the fill width and circle offset. */
 export const progressVar = createVar();
-/** Scrubber-handle scale: 0 hidden, 0.6 hover/focus, 1 while seeking. */
 export const scaleVar = createVar();
 
 export const scrubber = style({
-	// border-box so the width:100% + padding doesn't overflow (RN Views default to border-box).
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',

@@ -3,13 +3,10 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
-// an other-account row: the relative container hosting the full-bleed primary switch button and the
-// absolutely-positioned overflow menu button as siblings (never nested interactive controls).
 export const accountRow = style({
 	position: 'relative',
 });
 
-// the current account's stacked name + handle column, taking the row's free space beside the avatar.
 export const identity = style({
 	display: 'flex',
 	flex: 1,
@@ -17,12 +14,10 @@ export const identity = style({
 	minWidth: 0,
 });
 
-// the current account's primary identity line (the handle), truncated to a single line.
 export const primaryText = style({
 	minWidth: 0,
 });
 
-// the current account's name line: handle beside its profile badges.
 export const nameLine = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -30,15 +25,11 @@ export const nameLine = style({
 	minWidth: 0,
 });
 
-// the collapsed switcher's avatar peek: negative block margin keeps the 24px avatars from growing the
-// trigger row past the height of its sibling rows.
 export const avatarStack = style({
 	display: 'flex',
 	marginBlock: -2,
 });
 
-// an other-account avatar: negative block margin keeps the 28px avatar from growing the single-line row
-// past the height of its sibling rows.
 export const accountAvatar = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -46,7 +37,6 @@ export const accountAvatar = style({
 	marginBlock: -4,
 });
 
-// the handle takes the row's free space; the end padding keeps a long handle clear of the overflow button.
 export const handle = style({
 	flex: 1,
 	minWidth: 0,
@@ -73,7 +63,6 @@ export const overflow = style({
 	justifyContent: 'center',
 	padding: space.xs,
 	position: 'absolute',
-	// aligns the dots' center with the trailing chevron icons on the other rows (24px from the card edge).
 	right: space.md,
 	top: '50%',
 	transform: 'translateY(-50%)',

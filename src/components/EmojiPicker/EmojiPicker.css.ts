@@ -6,8 +6,6 @@ export const positioner = style({
 	zIndex: zIndex.menu,
 });
 
-// the Base UI popup is just a positioning shell; the panel below brings its own surface chrome. scale+fade on
-// open/close, keyed off Base UI's starting/ending-style attributes + `--transform-origin`.
 export const popup = style({
 	outline: 0,
 	transformOrigin: 'var(--transform-origin)',

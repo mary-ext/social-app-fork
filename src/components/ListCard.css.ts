@@ -4,7 +4,6 @@ import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
-/** Vertical card link: stacks the header and description. */
 export const link = style({
 	color: 'inherit',
 	cursor: 'pointer',
@@ -13,11 +12,6 @@ export const link = style({
 	textDecoration: 'none',
 });
 
-/**
- * padded, full-width row that highlights on hover/press, with an optional top border.
- *
- * @param topBorder whether to show the top border. defaults to true.
- */
 export const defaultRow = recipe(
 	{
 		base: {
@@ -56,7 +50,6 @@ export const header = style({
 	gap: space.md,
 });
 
-/** Title + byline column; `minWidth: 0` lets the single-line text truncate instead of overrunning the row. */
 export const titleColumn = style({
 	display: 'flex',
 	flex: 1,
@@ -68,10 +61,6 @@ export const italic = style({
 	fontStyle: 'italic',
 });
 
-/**
- * A non-interactive loading row: same padding and top separator as {@link defaultRow}, but without the
- * hover/active highlight (a placeholder isn't a press target).
- */
 export const loadingRow = recipe(
 	{
 		base: {

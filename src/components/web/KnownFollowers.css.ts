@@ -16,7 +16,6 @@ export const link = style({
 	},
 });
 
-// underline is applied to the text on link hover (a flex `<a>` doesn't reliably propagate it to children).
 export const text = style({
 	flexShrink: 1,
 	selectors: {

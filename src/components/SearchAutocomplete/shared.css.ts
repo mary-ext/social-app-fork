@@ -3,7 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
-// shared interactive row: laid out left-to-right, highlighted via Base UI's data attribute.
 export const row = style({
 	backgroundColor: 'transparent',
 	boxSizing: 'border-box',
@@ -32,16 +31,12 @@ export const icon = style({
 	flexShrink: 0,
 });
 
-// let the label shrink within the flex row instead of overflowing.
 export const label = style({
 	minWidth: 0,
 });
 
-// a recent-history row: the base row with trailing room reserved for the floating remove button so long
-// values don't run under it.
 export const recentItem = style([row, { paddingInlineEnd: 44 }]);
 
-// the recent row's positioning context, anchoring its absolutely-placed remove button.
 export const recentRow = style({
 	position: 'relative',
 });

@@ -2,7 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// fixed 300px tall, square-bottomed so it abuts the card body's top border seamlessly.
 export const button = style({
 	appearance: 'none',
 	background: 'transparent',

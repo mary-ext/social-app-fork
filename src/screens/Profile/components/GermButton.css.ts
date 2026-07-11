@@ -3,8 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-// backs both the `GermLink` anchor and the `GermSelfButton` trigger `<button>`, so it resets the native
-// button chrome (appearance/border/font) alongside the shared pill styling.
 export const pill = style({
 	alignItems: 'center',
 	alignSelf: 'flex-start',

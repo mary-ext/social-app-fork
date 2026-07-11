@@ -28,8 +28,6 @@ export const viewport = style(
 		justifyContent: 'center',
 		left: 0,
 		overflowY: 'auto',
-		// mobile-first: top-anchored with a small inset on narrow screens; past the 800px breakpoint the
-		// vertical inset opens up to 10vh so the card floats lower on the screen.
 		paddingBlock: 20,
 		paddingInline: 20,
 		position: 'fixed',
@@ -44,17 +42,6 @@ export const viewport = style(
 	}),
 );
 
-/**
- * popup card.
- *
- * @param size variant that caps width
- * @param padding 'none' drops the card's own padding, for full-bleed content (media, per-section bands) that
- *   reapplies padding itself
- * @param scroll 'body' switches from a padded card that grows with content to a height-bounded flex column
- *   where the body scrolls internally and header/footer stay pinned
- * @param fullHeight locks a 'body'-scroll popup to its max height to prevent shrinking during loading/empty
- *   states
- */
 export const popup = recipe(
 	{
 		base: {
@@ -77,15 +64,11 @@ export const popup = recipe(
 			fullHeight: {
 				true: { height: '80vh' },
 			},
-			// declared after `base` so `none` wins over the base padding by source order.
 			padding: {
 				default: {},
 				none: { padding: 0 },
 			},
 			scroll: {
-				// the `body` strategy (orthogonal to `size`): a height-bounded flex column whose own
-				// `Body`/`List` child scrolls internally while the header/footer slots stay pinned. drops the base
-				// card padding (the slots own their padding). declared after `base` so it wins by source order.
 				body: {
 					display: 'flex',
 					flexDirection: 'column',
@@ -107,7 +90,6 @@ export const popup = recipe(
 	{ debugId: 'popup', layer: components },
 );
 
-/** Scrollable content region of a `body`-scroll popup (below a pinned header, above a pinned footer). */
 export const body = style(
 	layered(components, {
 		flex: 1,
@@ -116,7 +98,6 @@ export const body = style(
 	}),
 );
 
-/** Pinned action bar at the bottom of a `body`-scroll popup. */
 export const footer = style(
 	layered(components, {
 		backgroundColor: vars.palette.contrast_0,
@@ -147,10 +128,6 @@ export const title = style(
 	}),
 );
 
-// action/button row. three orthogonal knobs: `direction` picks the axis (`row`, `column`, or `responsive` =
-// column on narrow / row past 800px); `align` distributes the row (`end` clusters right, `center`, `between`
-// spreads to the edges) and is inert in a column; `reverse` flips the flow so the last (primary) child leads
-// — on `responsive` it flips only the narrow column phase, so the primary rises to the top on mobile.
 export const actions = recipe(
 	{
 		base: {
@@ -179,8 +156,6 @@ export const actions = recipe(
 			},
 		},
 		compoundVariants: [
-			// `reverse` flips the flow direction; on `responsive` only the narrow (column) phase flips, so the
-			// wide row keeps its natural order while the primary still rises to the top when stacked.
 			{ direction: 'column', reverse: true, style: { flexDirection: 'column-reverse' } },
 			{ direction: 'row', reverse: true, style: { flexDirection: 'row-reverse' } },
 			{
@@ -193,8 +168,6 @@ export const actions = recipe(
 					},
 				},
 			},
-			// `align` distributes the main axis of a row — for `responsive` only past the breakpoint, where it
-			// becomes a row.
 			{ align: 'between', direction: 'row', style: { justifyContent: 'space-between' } },
 			{ align: 'center', direction: 'row', style: { justifyContent: 'center' } },
 			{ align: 'end', direction: 'row', style: { justifyContent: 'flex-end' } },
@@ -226,22 +199,11 @@ export const divider = style(
 	}),
 );
 
-/**
- * close (×) button.
- *
- * @param variant `default` is static/in-flow for a `TitleRow` (the negative margin tucks it toward the card
- *   corner); `floating` pins it over the popup's own content (media/no-header dialogs); `outer` pins it to
- *   the screen corner outside the card (full-height dialogs like the GIF picker)
- */
 export const close = recipe(
 	{
-		// appearance only; positioning comes from the variants. `flex-shrink: 0` holds its size beside a
-		// flexing title in a `TitleRow`.
 		base: {
 			alignItems: 'center',
 			appearance: 'none',
-			// solid surface bg: blends into a card, but reads as a circle over a backdrop (e.g. the GIF
-			// picker's outer close).
 			backgroundColor: vars.palette.contrast_0,
 			border: 'none',
 			borderRadius: 999,

@@ -2,8 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// the `Text` primitives are inline `<span>`s, so the section restates the column stacking + border-box that the
-// RN `View` it stands in for would supply (cf. `ContentHider.css.ts`).
 export const main = style({
 	boxSizing: 'border-box',
 	display: 'flex',
@@ -19,8 +17,6 @@ export const admonition = style({
 	marginTop: 16,
 });
 
-// the source attribution for a label cause: a full-bleed band pinned to the card's bottom edge, its corners
-// rounded to sit inside the Popup's 12px radius (less its 1px border).
 export const labelBand = style({
 	backgroundColor: vars.palette.contrast_25,
 	borderBottomLeftRadius: 11,

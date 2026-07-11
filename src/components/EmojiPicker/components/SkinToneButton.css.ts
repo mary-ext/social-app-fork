@@ -22,7 +22,6 @@ export const trigger = style({
 	},
 });
 
-// the `menu` tier so the swatch popup paints over the picker's own dialog/popover surface
 export const positioner = style({
 	zIndex: zIndex.menu,
 });
@@ -30,8 +29,6 @@ export const positioner = style({
 export const menu = style({
 	backgroundColor: vars.palette.contrast_0,
 	borderRadius: 10,
-	// hairline drawn as a box-shadow ring rather than a `border`: Base UI's `alignItemWithTrigger` subtracts
-	// the popup's bottom border width from the placement, nudging the menu 1px up. a zero-width border avoids it.
 	boxShadow: `0 0 0 1px ${vars.palette.contrast_100}, ${vars.shadow.md}`,
 	boxSizing: 'border-box',
 	display: 'flex',
@@ -64,8 +61,6 @@ export const item = style({
 	},
 });
 
-// the trigger Value and each item's ItemText share these metrics so `alignItemWithTrigger` lines up the
-// active swatch over the trigger glyph (it centers the two text rects against each other).
 export const glyph = style({
 	fontSize: 18,
 	lineHeight: 1,

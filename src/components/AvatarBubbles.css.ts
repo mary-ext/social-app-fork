@@ -5,14 +5,12 @@ import { vars } from '#/styles/contract.css';
 export const svg = style({
 	display: 'block',
 	flexShrink: 0,
-	// a centered cluster can extend slightly past the viewBox (e.g. the two-avatar variant); don't clip it.
 	overflow: 'visible',
 });
 
 export const bubbleScaleVar = createVar();
 export const bubbleDelayVar = createVar();
 
-// fills the foreignObject, carries the entrance scale, and centers the avatar in the bordered slot.
 export const bubble = style({
 	alignItems: 'center',
 	boxSizing: 'border-box',
@@ -31,7 +29,6 @@ export const bubbleBorder = style({
 	borderWidth: 2,
 });
 
-// entrance animation with ease-out-back curve.
 export const bubbleAnimated = style({
 	transitionDelay: bubbleDelayVar,
 	transitionDuration: '250ms',

@@ -28,7 +28,6 @@ export const ownerRow = style({
 	gap: 4,
 });
 
-// the byline pieces share the row and ellipsize independently when the name is long.
 export const shrink = style({
 	flexShrink: 1,
 	minWidth: 0,

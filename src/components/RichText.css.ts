@@ -5,22 +5,11 @@ import { fontSizeVar, sizeLeadingVar } from '#/components/Text.css';
 import { recipe } from '#/styles/recipe';
 import { fontSize, lineHeight } from '#/styles/tokens.css';
 
-// mentions and tags render as atomic inline-blocks so they wrap to the next line whole rather than
-// breaking mid-handle at an internal hyphen/dot. a handle wider than the column still wraps within it
-// (capped by max-width) instead of overflowing. links keep the inherited break-anywhere behaviour, since
-// long urls should break.
 export const atomicSegment = style({
 	display: 'inline-block',
 	maxWidth: '100%',
 });
 
-// emoji-only text renders the glyphs enlarged. it overrides the `text` recipe's `fontSizeVar` to `base size
-// × scale`, so the derived line-height follows from `text`'s `base` — carrying both halves as vars lets
-// `scale` flip a multiplier rather than producing a class per (size, multiplier) pair. it also pins the
-// paired leading ratio (`sizeLeadingVar`) tight, since enlarged glyphs want minimal line spacing and the
-// default `md` ratio would over-space them. emitted unlayered (no `layer`) so its var assignments win over
-// the `text` recipe's layered `size` variant. `size` falls back to `sm` for the off-grid sizes RichText
-// never enlarges.
 const sizeVar = createVar();
 const scaleVar = createVar();
 

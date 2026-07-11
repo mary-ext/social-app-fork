@@ -2,8 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// the message-hover trigger button (rendered by ActionsWrapper). opacity is driven inline (message hover /
-// picker open); this supplies the resting chrome + hover fill.
 export const trigger = style({
 	alignItems: 'center',
 	appearance: 'none',
@@ -21,9 +19,6 @@ export const trigger = style({
 	},
 });
 
-// the Base UI popup is just a positioning shell — the quick-reaction pill and the emoji-mart panel each bring
-// their own surface chrome (so the expanded picker isn't trapped in a pill). scale+fade on open/close, keyed
-// off Base UI's starting/ending-style attributes + `--transform-origin`.
 export const popup = style({
 	outline: 0,
 	transformOrigin: 'var(--transform-origin)',
@@ -69,7 +64,6 @@ export const reactionSelected = style({
 	backgroundColor: vars.palette.contrast_100,
 });
 
-// limit reached and not yet a reaction of ours: dimmed and inert-looking (the tap is still a no-op).
 export const reactionDisabled = style({
 	opacity: 0.7,
 	selectors: {

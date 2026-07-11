@@ -59,7 +59,6 @@ export const unsubscribed = style({
 	},
 });
 
-// matches the padding the upstream `Link size="tiny"` gave the "Liked by" link (its text sits inset).
 export const likedBy = style({
 	paddingBlock: 5,
 	paddingInline: 10,

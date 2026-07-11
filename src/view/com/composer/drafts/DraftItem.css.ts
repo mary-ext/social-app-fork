@@ -8,8 +8,6 @@ export const wrapper = style({
 	position: 'relative',
 });
 
-// the whole card is the press target; the menu button + timestamp overlay it as absolute siblings, so the
-// extra top padding reserves room for them.
 export const card = style({
 	appearance: 'none',
 	border: `1px solid ${vars.palette.contrast_100}`,
@@ -71,7 +69,6 @@ export const menuButton = style({
 	position: 'relative',
 	width: 20,
 	selectors: {
-		// the hover halo extends past the small icon box via a negative inset.
 		'&::before': {
 			borderRadius: borderRadius.full,
 			content: '""',
@@ -123,7 +120,6 @@ export const tagWarning = style({
 	},
 });
 
-// inherit the row color set by tagInfo/tagWarning instead of the Text recipe's own color.
 export const tagText = style({
 	color: 'inherit',
 });
@@ -145,7 +141,6 @@ export const imageTile = style({
 	width: '20%',
 });
 
-// gif/video tiles aren't gridded into fifths; they sit at their natural ~100px square.
 export const mediaTile = style({
 	boxSizing: 'border-box',
 	flex: 1,

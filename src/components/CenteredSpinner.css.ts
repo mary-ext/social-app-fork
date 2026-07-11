@@ -9,8 +9,6 @@ export const center = style({
 	padding: space.xl,
 });
 
-// fills the available height of a flex-column parent so the spinner sits in the vertical center of an
-// otherwise-empty region.
 export const fill = style({
 	flex: 1,
 	minHeight: 0,

@@ -22,21 +22,17 @@ export const card = style({
 	},
 });
 
-/** Outer stack width (slightly under full so the trailing count circle peeks in), wired inline. */
 export const stackWidthVar = createVar();
 
 export const stack = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-	// contain the per-cell z-indices (used only to overlap avatars left-over-right) so they don't paint
-	// over the sticky page header
 	isolation: 'isolate',
 	position: 'relative',
 	width: stackWidthVar,
 });
 
-/** Per-cell width (one slot per avatar) and stacking order, wired inline. */
 export const cellWidthVar = createVar();
 export const cellZVar = createVar();
 
@@ -46,7 +42,6 @@ export const cell = style({
 	zIndex: cellZVar,
 });
 
-// the inner box overflows its cell so adjacent avatars overlap
 export const cellInner = style({
 	position: 'relative',
 	width: '120%',

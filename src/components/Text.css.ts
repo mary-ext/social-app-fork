@@ -6,7 +6,6 @@ import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
 import { fontLeading, fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
-/** Turns a token scale into a variant group setting `property` to each token value. */
 const variantsFor = <Scale extends Record<string, number | string>, Property extends string>(
 	scale: Scale,
 	property: Property,
@@ -18,12 +17,6 @@ const variantsFor = <Scale extends Record<string, number | string>, Property ext
 	return out as { [Key in keyof Scale]: Record<Property, Scale[Key]> };
 };
 
-// font-size and the leading ratio are published as vars so the `size`/`leading` variants only assign them
-// and `base` derives the actual `font-size` and pixel-snapped `line-height` from both. `size` publishes its
-// font-size (`fontSizeVar`) and its Tailwind-paired leading ratio (`sizeLeadingVar`); `leading` publishes
-// the final ratio (`leadingOverrideVar`), defaulting (`snug`) to the size's paired ratio. all three are
-// exported so another recipe can retune one alone — override `fontSizeVar` and the paired line-height
-// follows; set `sizeLeadingVar` to re-pair a resized element; set `leadingOverrideVar` to force a ratio.
 export const fontSizeVar = createVar();
 export const sizeLeadingVar = createVar();
 export const leadingOverrideVar = createVar();
@@ -32,7 +25,6 @@ const fontSizeScale = fallbackVar(fontSizeVar, fontSize.md);
 const pairedLeading = fallbackVar(sizeLeadingVar, String(fontLeading.md));
 const leading = fallbackVar(leadingOverrideVar, pairedLeading);
 
-/** `size` variant: each token publishes its font-size and its paired leading ratio. */
 const sizeVariants = (): { [K in keyof typeof fontLeading]: { vars: Record<string, string> } } => {
 	const out: Record<string, { vars: Record<string, string> }> = {};
 	for (const key of Object.keys(fontLeading) as (keyof typeof fontLeading)[]) {
@@ -46,8 +38,6 @@ export const text = recipe(
 		base: {
 			fontFamily: 'inherit',
 			fontSize: fontSizeScale,
-			// snap the derived line-height to a whole CSS pixel — `round(fontSize * leading, 1px)` — so it
-			// lands on the pixel grid rather than a fractional CSS value
 			lineHeight: roundToPx(`calc(${fontSizeScale} * ${leading})`),
 			margin: 0,
 			overflowWrap: 'break-word',
@@ -58,8 +48,6 @@ export const text = recipe(
 		variants: {
 			align: { center: { textAlign: 'center' }, left: { textAlign: 'left' }, right: { textAlign: 'right' } },
 			color: variantsFor(colors, 'color'),
-			// `snug` (default) follows the size's paired ratio; `none` removes leading. a tighter heading sets
-			// `leadingOverrideVar` from its own CSS rather than going through a variant.
 			leading: {
 				none: { vars: { [leadingOverrideVar]: String(lineHeight.none) } },
 				snug: { vars: { [leadingOverrideVar]: pairedLeading } },
@@ -71,7 +59,6 @@ export const text = recipe(
 	{ debugId: 'text', layer: components },
 );
 
-/** Set per-instance via `assignInlineVars` — the only value that can't be known at build time. */
 export const lineClampVar = createVar();
 
 export const clampSingleLine = style({

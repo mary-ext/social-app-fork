@@ -14,13 +14,11 @@ export const form = style({
 	paddingInline: 16,
 });
 
-// fixed-width figures so the running count doesn't jitter as digits change
 export const counter = style({
 	flexShrink: 0,
 	fontVariantNumeric: 'tabular-nums',
 });
 
-// visually hidden but exposed to assistive tech, for the over-limit live region
 export const srOnly = style({
 	border: 0,
 	clip: 'rect(0, 0, 0, 0)',
@@ -33,7 +31,6 @@ export const srOnly = style({
 	width: 1,
 });
 
-// muted Save label while there's nothing to save
 export const inactiveSave = style({
 	color: vars.palette.contrast_400,
 });

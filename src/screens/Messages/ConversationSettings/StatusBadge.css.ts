@@ -11,10 +11,8 @@ const base = style({
 	paddingInline: 6,
 });
 
-/** Static, non-interactive badge (e.g. the self "Admin" label). */
 export const badge = base;
 
-/** Interactive badge that backs a menu trigger; highlights on hover and while its menu is open. */
 export const trigger = style([
 	base,
 	{

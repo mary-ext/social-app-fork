@@ -23,7 +23,6 @@ export const infoRow = style({
 	flexDirection: 'row',
 });
 
-// Stack supplies the flex column + gap; only the centering is bespoke here.
 export const inner = style({
 	alignItems: 'center',
 });
@@ -59,7 +58,6 @@ export const personGroupIcon = style({
 	marginTop: -2,
 });
 
-// the two shrinkable texts in the owner row: each shrinks and truncates rather than overflowing the row.
 export const shrinkText = style({
 	flexShrink: 1,
 	minWidth: 0,

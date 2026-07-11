@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-// the warning red shown once the post exceeds the character limit, shared by the count text and progress pie.
 export const overLimitColor = '#e60000';
 
 export const container = style({

@@ -21,9 +21,6 @@ export const card = style({
 	width: '100%',
 	selectors: {
 		'&:hover': { borderColor: vars.palette.contrast_300 },
-		// the plain card is itself the `<a>`; the player card's `<a>` is the nested body. either way the ring
-		// rides the card's own box, so it follows the card's `border-radius`. inset so the post body's
-		// `GalleryBleed` clip can't trim it.
 		'&:focus-visible, &:has(a:focus-visible)': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: -2,
@@ -40,18 +37,14 @@ export const body = style({
 	paddingTop: space.sm,
 });
 
-/** Anchor reset for the player-card body (the `<a>` is the body itself, not the whole card). */
 export const bodyLink = style({
 	color: 'inherit',
 	textDecoration: 'none',
-	// the card paints the focus ring (via `:has`); the body anchor stays unringed to avoid a doubled,
-	// overflow-clipped outline.
 	selectors: {
 		'&:focus-visible': { outline: 'none' },
 	},
 });
 
-/** Top border separating the body from the thumbnail; tracks the card's hover state. */
 export const bodyWithMedia = style({
 	borderTopColor: vars.palette.contrast_100,
 	borderTopStyle: 'solid',
@@ -89,7 +82,6 @@ export const domainRow = style({
 	flexDirection: 'row',
 	gap: space.xs,
 	paddingBottom: space.sm,
-	// off the divider; a hair more than the symmetric `pb_sm` below it.
 	paddingTop: 6,
 });
 

@@ -5,7 +5,6 @@ import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-/** Vertical card link: stacks the header, description, and like count. */
 export const link = style({
 	color: 'inherit',
 	cursor: 'pointer',
@@ -14,11 +13,6 @@ export const link = style({
 	textDecoration: 'none',
 });
 
-/**
- * a padded, full-width row that highlights on hover/press, with a top border.
- *
- * @param topBorder set to false to omit the top border (e.g. for the first row beneath a header).
- */
 export const defaultRow = recipe(
 	{
 		base: {
@@ -49,7 +43,6 @@ export const outer = style({
 	gap: space.md,
 });
 
-/** a bordered, rounded box with its own background used to embed a feed card inside another surface. */
 export const embedCard = style({
 	backgroundColor: colors.bg,
 	borderColor: colors.borderContrastLow,
@@ -66,7 +59,6 @@ export const header = style({
 	gap: space.md,
 });
 
-/** Title + byline column; `minWidth: 0` lets the single-line text truncate instead of overrunning the row. */
 export const titleColumn = style({
 	display: 'flex',
 	flex: 1,
@@ -74,10 +66,6 @@ export const titleColumn = style({
 	minWidth: 0,
 });
 
-/**
- * Placeholder for the header's "Pin/Unpin feed" pill — matches the web `Button` size="small" pill (height +
- * radius).
- */
 export const saveButtonPlaceholder = style({
 	alignSelf: 'center',
 	backgroundColor: vars.palette.contrast_50,
@@ -87,10 +75,6 @@ export const saveButtonPlaceholder = style({
 	width: 97,
 });
 
-/**
- * A non-interactive loading row: same padding and top separator as {@link defaultRow}, but without the
- * hover/active highlight (a placeholder isn't a press target).
- */
 export const loadingRow = recipe(
 	{
 		base: {

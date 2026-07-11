@@ -2,13 +2,10 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-/** Diameter of the heart and the burst circles, set per render from the icon `size`. */
 export const sizeVar = createVar();
 
 export const root = style({
 	display: 'flex',
-	// an own stacking context keeps the `zIndex: -1` burst circles behind the heart yet in front of the
-	// post, instead of escaping to paint behind it
 	isolation: 'isolate',
 	pointerEvents: 'none',
 	position: 'relative',

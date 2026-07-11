@@ -5,7 +5,6 @@ import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { fontSize, lineHeight } from '#/styles/tokens.css';
 
-/** Absolute overlay that pins the LIVE pill to the bottom-center of its positioned parent. */
 export const container = recipe(
 	{
 		base: {
@@ -30,10 +29,6 @@ export const container = recipe(
 	{ debugId: 'liveIndicatorContainer', layer: components },
 );
 
-// styles the {@link Text} badge itself; emitted unlayered (no `layer`) so the per-size `fontSizeVar` override
-// wins over `Text`'s layered `size` variant, letting `Text` derive the line-height — including the off-grid
-// 7px tiny size that has no font-size token. the compact pill pins the paired leading ratio tight (the
-// default `md` ratio would over-space the single uppercase line).
 export const pill = recipe(
 	{
 		base: {

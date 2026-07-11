@@ -62,8 +62,6 @@ export const dialogWrongText = style({
 	fontStyle: 'italic',
 });
 
-// the feed title/avatar/like-count, which opens the feed info dialog. a full-width pressable that tints on
-// hover, matching the header's other ghost buttons.
 export const infoButton = style({
 	alignItems: 'center',
 	appearance: 'none',

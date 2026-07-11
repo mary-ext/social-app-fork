@@ -18,7 +18,6 @@ export const list = style({
 	gap: 12,
 });
 
-// a single label: a bordered, rounded card with a top info section and a bottom source band.
 export const card = style({
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 8,
@@ -29,7 +28,6 @@ export const card = style({
 });
 
 export const cardTop = style({
-	// top-align so the appeal button keeps its natural height instead of stretching to the text column.
 	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
@@ -37,7 +35,6 @@ export const cardTop = style({
 	padding: 12,
 });
 
-// the name/description column; min-width:0 lets the clamped description ellipsize beside the appeal button.
 export const cardInfo = style({
 	display: 'flex',
 	flex: 1,
@@ -71,7 +68,6 @@ export const expires = style({
 	fontStyle: 'italic',
 });
 
-// the title + "this appeal will be sent to…" subtitle, stacked (they're inline `Text` spans on their own).
 export const appealHeader = style({
 	display: 'flex',
 	flexDirection: 'column',

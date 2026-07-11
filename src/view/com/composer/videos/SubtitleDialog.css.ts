@@ -4,13 +4,10 @@ import { vars } from '#/styles/contract.css';
 
 export const icon = style({ gridArea: 'icon' });
 
-// query container for the caption rows: rows wrap their language picker below the filename once the
-// dialog gets narrow (a phone-width sheet is ~285px vs ~560px on desktop).
 export const captionsList = style({
 	containerType: 'inline-size',
 });
 
-// the button sits in its own row in the composer footer, mirroring the RN flex-row wrapper it replaces.
 export const buttonRow = style({
 	display: 'flex',
 	flexDirection: 'row',
@@ -29,8 +26,6 @@ export const footer = style({
 	marginTop: 16,
 });
 
-// narrow (default): the language picker drops to its own row under the filename, leaving
-// `| icon | file | close |` on top. wide: everything on one row `| icon | file | language | close |`.
 export const row = style({
 	alignItems: 'center',
 	borderRadius: 8,
@@ -59,12 +54,9 @@ export const rowAlt = style({
 export const fileName = style({
 	gridArea: 'file',
 	marginBottom: 2,
-	// let the 1fr track shrink the filename below its content width so it can ellipsize
 	minWidth: 0,
 });
 
-// wraps the Select (whose trigger is `width: 100%`): shares a flexible column with the filename when
-// wide, and spans the full row when wrapped beneath it. minWidth:0 lets the trigger value ellipsize.
 export const language = style({
 	gridArea: 'language',
 	minWidth: 0,

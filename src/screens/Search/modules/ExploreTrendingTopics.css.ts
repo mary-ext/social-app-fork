@@ -112,7 +112,6 @@ export const pill = recipe(
 	{ debugId: 'pill' },
 );
 
-/** Pill label/icon that inherits the pill's color rather than the `text` recipe default. */
 export const pillText = style({
 	color: 'inherit',
 });

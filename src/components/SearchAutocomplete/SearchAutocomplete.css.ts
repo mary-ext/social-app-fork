@@ -4,7 +4,6 @@ import { vars } from '#/styles/contract.css';
 import { borderRadius, space, zIndex } from '#/styles/tokens.css';
 
 export const positioner = style({
-	// don't shrink below a comfortable calendar width on a narrow rail; cap at the viewport when wider.
 	maxWidth: 'var(--available-width)',
 	minWidth: 300,
 	width: 'var(--anchor-width)',

@@ -11,8 +11,6 @@ export const root = style({
 	paddingInline: 8,
 });
 
-// the month nav shares the root's 7-column track: a chevron in each end column and the label spanning
-// the five between them, all sat in the grid's first row above the calendar.
 const navButton = style({
 	justifySelf: 'center',
 	marginBottom: space.xs,
@@ -29,8 +27,6 @@ export const month = style({
 	textAlign: 'center',
 });
 
-// the labels and day cells flow into the shared root grid; this wrapper is only the presentational
-// grouping for the weekday header.
 export const weekdays = style({
 	display: 'contents',
 });
@@ -41,7 +37,6 @@ export const weekday = style({
 	textAlign: 'center',
 });
 
-// the role="row" wrapper survives for grid navigation; its day cells flow into the shared root grid.
 export const week = style({
 	display: 'contents',
 });
@@ -55,7 +50,6 @@ export const day = recipe(
 			display: 'flex',
 			height: 36,
 			justifyContent: 'center',
-			// fixed-size circle centered within its (wider) grid column.
 			justifySelf: 'center',
 			outline: 'none',
 			userSelect: 'none',
@@ -66,7 +60,6 @@ export const day = recipe(
 			},
 		},
 		variants: {
-			// filled accent for the day already entered in the query.
 			selected: {
 				true: {
 					backgroundColor: vars.palette.primary_500,
@@ -75,7 +68,6 @@ export const day = recipe(
 					},
 				},
 			},
-			// ring around the current day.
 			today: {
 				true: {
 					boxShadow: `inset 0 0 0 1px ${vars.palette.contrast_400}`,

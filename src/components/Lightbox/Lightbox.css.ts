@@ -1,7 +1,5 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
-// the lightbox is a fixed, exclusive overlay; it shares the z-layer of the other web dialogs (10) so a
-// Menu opened from inside it (web Menu positioner = 11) still stacks above.
 const Z = 10;
 
 const fadeIn = keyframes({
@@ -9,11 +7,6 @@ const fadeIn = keyframes({
 	to: { opacity: 1 },
 });
 
-// #region shell
-/**
- * The modal backdrop: carries only the open/close fade; the engine's swipe-dismiss fade rides the nested
- * Scrim.
- */
 export const backdrop = style({
 	position: 'fixed',
 	inset: 0,
@@ -25,15 +18,10 @@ export const backdrop = style({
 	},
 });
 
-/** Recolour the lib Scrim's `--lightbox-backdrop`; the Scrim itself fills the backdrop. */
 export const scrim = style({
 	vars: { '--lightbox-backdrop': 'rgba(0, 0, 0, 0.92)' },
 });
 
-/**
- * Fullscreen gesture/chrome surface; subtle scale+fade on open (the lib measures via clientWidth, which
- * ignores transforms, so the scale can't corrupt paging).
- */
 export const popup = style({
 	position: 'fixed',
 	inset: 0,
@@ -45,30 +33,19 @@ export const popup = style({
 	},
 });
 
-/** Positioned ancestor so the absolutely-placed chrome anchors here. */
 export const viewport = style({
 	position: 'relative',
 	cursor: 'default',
 });
-// #endregion
 
-// #region chrome
-/**
- * full-bleed container holding all chrome elements for unified fade animations. transparent to pointer events
- * so taps fall through to the viewport, while interactive controls opt back in.
- */
 export const chrome = style({
 	position: 'absolute',
 	inset: 0,
 	zIndex: 1,
 	pointerEvents: 'none',
-	// `visibility` is transitioned too so it's held `visible` through the opacity fade-out and only flips to
-	// `hidden` once it ends (and back to `visible` instantly on fade-in) — without it the discrete flip lands
-	// at the start and cuts the fade.
 	transition: 'opacity 200ms ease, visibility 200ms ease',
 });
 
-/** Tap-toggled hidden state for {@link chrome}; `visibility` also drops the controls out of the tab order. */
 export const chromeHidden = style({
 	opacity: 0,
 	visibility: 'hidden',
@@ -79,7 +56,6 @@ const blurred = {
 	WebkitBackdropFilter: 'blur(8px)',
 } as const;
 
-/** A round, blurred-glass icon button (menu + close). */
 export const circle = style({
 	display: 'flex',
 	alignItems: 'center',
@@ -103,10 +79,8 @@ export const circle = style({
 export const topLeft = style({ position: 'absolute', top: 20, left: 20, zIndex: 1 });
 export const topRight = style({ position: 'absolute', top: 20, right: 20, zIndex: 1 });
 
-/** Rotates the options-trigger ellipsis icon 90° to vertical. */
 export const rotated = style({ transform: 'rotate(90deg)' });
 
-/** Side paging button: larger blurred-glass round button, shrinks on narrow viewports. */
 export const navButton = style({
 	position: 'absolute',
 	top: '50%',
@@ -136,9 +110,7 @@ export const navButton = style({
 });
 export const navLeft = style({ left: 20 });
 export const navRight = style({ right: 20 });
-// #endregion
 
-// #region alt + pager
 export const altPanel = style({
 	position: 'absolute',
 	left: 0,
@@ -161,7 +133,6 @@ export const altButton = style({
 	pointerEvents: 'auto',
 });
 
-/** Force the alt text white + readable leading over the themed default. */
 export const altText = style({
 	color: '#fff',
 	lineHeight: 1.4,
@@ -195,10 +166,7 @@ export const dotPill = style({
 });
 export const dotActive = style({ ...dotBase, width: 6, height: 6, background: '#fff' });
 export const dotInactive = style({ ...dotBase, width: 4, height: 4, background: 'rgba(255, 255, 255, 0.4)' });
-// #endregion
 
-// #region loading spinner
-/** Centred, non-interactive overlay covering a slide while its full-size image is still loading. */
 export const slideSpinner = style({
 	position: 'absolute',
 	inset: 0,
@@ -207,7 +175,6 @@ export const slideSpinner = style({
 	justifyContent: 'center',
 	pointerEvents: 'none',
 });
-// #endregion
 
 export const srOnly = style({
 	position: 'absolute',

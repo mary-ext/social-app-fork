@@ -8,35 +8,28 @@ import { vars } from '#/styles/contract.css';
 import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-/** Fixed dark scrim the ALT/edit/remove controls float on, independent of the theme. */
 const scrim = 'rgba(0, 0, 0, 0.75)';
 
-/** Measurement anchor at the text-column position: its offset within the bleed drives the overflow inset. */
 export const root = style({
 	overflow: 'visible',
 	width: '100%',
 });
 
-/** Horizontal scroll viewport. Margin / padding are inline (they depend on the measured bleed). */
 export const scroll = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: ITEM_GAP,
-	// prevent horizontal trackpad/wheel swipes from triggering the browser's back/forward overscroll gesture
-	// (chrome/firefox; safari is handled via the wheel listener in carousel/usePointerHandlers.ts)
 	overscrollBehaviorX: 'contain',
 	overflowX: 'scroll',
 	overflowY: 'hidden',
 	position: 'relative',
-	// hide the scrollbar (paging is gesture/keyboard driven)
 	scrollbarWidth: 'none',
 	selectors: {
 		'&::-webkit-scrollbar': { display: 'none' },
 	},
 });
 
-/** A single image tile. Size is inline (derived from the row height and the image's aspect ratio). */
 export const item = style([
 	mediaBorder,
 	{
@@ -48,10 +41,8 @@ export const item = style([
 	},
 ]);
 
-/** Aspect ratio (width / height) of a lone tile, driving its shape and width cap. */
 export const ratioVar = createVar();
 
-/** a lone image tile capped at {@link MAX_MEDIA_HEIGHT} tall, mirroring the read-only single-image embed. */
 export const single = style([
 	mediaBorder,
 	{
@@ -86,7 +77,6 @@ const controlBase = style({
 	},
 });
 
-/** Top-right cluster holding the edit and remove buttons. */
 export const controls = style({
 	display: 'flex',
 	flexDirection: 'row',
@@ -97,7 +87,6 @@ export const controls = style({
 	zIndex: 1,
 });
 
-/** A circular edit/remove button. */
 export const control = style([
 	controlBase,
 	{
@@ -108,7 +97,6 @@ export const control = style([
 	},
 ]);
 
-/** Bottom-left ALT badge — a pill button opening the alt-text dialog. */
 export const altBadge = style([
 	controlBase,
 	{

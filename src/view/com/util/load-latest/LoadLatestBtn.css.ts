@@ -6,15 +6,12 @@ import { vars } from '#/styles/contract.css';
 import { zIndex } from '#/styles/tokens.css';
 
 export const outer = style({
-	// sit clear of the bottom bar — its measured height already carries the safe-area inset — and rest the
-	// same distance from the viewport bottom once the bar gives way to the side rails.
 	bottom: `calc(${fallbackVar(bottomBarHeightVar, '0px')} + 30px)`,
 	left: 18,
 	position: 'fixed',
 	zIndex: zIndex.stickyRaised,
 });
 
-// move the button inline with the feed column once it would otherwise overlap the left nav.
 export const leftInline = style({ left: 'calc(50vw - 282px)' });
 export const leftOutOfLine = style({ left: 'calc(50vw - 382px)' });
 

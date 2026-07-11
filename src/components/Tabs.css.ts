@@ -12,10 +12,6 @@ export const root = style(
 	}),
 );
 
-/**
- * tab bar: a sticky, horizontally-scrollable row of tabs with a hairline bottom border. width comes from the
- * shell's center column, so it needs no width wrapper.
- */
 export const list = style(
 	layered(components, {
 		backgroundColor: vars.palette.contrast_0,
@@ -26,9 +22,7 @@ export const list = style(
 		position: 'sticky',
 		top: 0,
 		zIndex: zIndex.sticky,
-		// dragging the row to scroll it shouldn't select the tab labels
 		userSelect: 'none',
-		// hide the horizontal scrollbar — tabs scroll into view programmatically
 		scrollbarWidth: 'none',
 		selectors: {
 			'&::-webkit-scrollbar': { display: 'none' },
@@ -36,8 +30,6 @@ export const list = style(
 	}),
 );
 
-// the underline lives on the label span, so it's sized to the text; this offset pins it back down to
-// the tab's bottom edge across the vertical padding
 const tabPaddingBlock = 12;
 
 export const tab = style(
@@ -50,7 +42,6 @@ export const tab = style(
 		cursor: 'pointer',
 		display: 'flex',
 		flexGrow: 1,
-		// keep tabs at their content width when the row overflows, so it scrolls instead of squashing
 		flexShrink: 0,
 		fontSize: fontSize.md,
 		fontWeight: 600,
@@ -67,10 +58,6 @@ export const tab = style(
 	}),
 );
 
-/**
- * The label text, carrying the active-tab underline so it tracks the text width (with a 4px overhang each
- * side).
- */
 export const tabLabel = style({
 	position: 'relative',
 	'::after': {

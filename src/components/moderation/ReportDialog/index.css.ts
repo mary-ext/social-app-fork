@@ -2,7 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// a touch narrower than the default dialog so the single-column flow doesn't feel sprawling
 export const popup = style({
 	maxWidth: 500,
 });
@@ -24,7 +23,6 @@ export const options = style({
 	gap: 8,
 });
 
-// a selectable category/reason card: a full-width left-aligned button that reads as a row in the list
 export const card = style({
 	appearance: 'none',
 	backgroundColor: vars.palette.contrast_25,
@@ -45,7 +43,6 @@ export const card = style({
 	},
 });
 
-// the legal/copyright escape hatch — a bordered row linking out, distinct from the report categories above it
 export const legal = style({
 	alignItems: 'center',
 	border: `1px solid ${vars.palette.contrast_100}`,
@@ -63,14 +60,12 @@ export const legal = style({
 	},
 });
 
-// a plain recap of the chosen reason at the head of the form, so the submit screen states what's being reported
 export const summary = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 2,
 });
 
-// inline "Change" link that opens the labeler menu, styled to sit within the recipient sentence
 export const changeLink = style({
 	appearance: 'none',
 	background: 'none',
@@ -89,13 +84,11 @@ export const changeLink = style({
 	},
 });
 
-// fills the remaining row width so a trailing icon (e.g. the legal link's external-link glyph) sits at the edge
 export const grow = style({
 	flex: 1,
 	minWidth: 0,
 });
 
-// a labeler menu item's two-line body (service name over handle), so a long name never reflows the handle inline
 export const labelerOption = style({
 	display: 'flex',
 	flex: 1,
@@ -104,7 +97,6 @@ export const labelerOption = style({
 	minWidth: 0,
 });
 
-// fixed-width figures so the running count doesn't jitter as digits change
 export const counter = style({
 	flexShrink: 0,
 	fontVariantNumeric: 'tabular-nums',
@@ -117,7 +109,6 @@ export const center = style({
 	paddingBlock: 24,
 });
 
-// visually hidden but exposed to assistive tech, for the over-limit live region
 export const srOnly = style({
 	border: 0,
 	clip: 'rect(0, 0, 0, 0)',

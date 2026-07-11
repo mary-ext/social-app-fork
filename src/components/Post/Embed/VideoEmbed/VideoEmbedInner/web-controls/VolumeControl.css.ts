@@ -10,8 +10,6 @@ export const popup = style({
 	display: 'flex',
 	flexDirection: 'column',
 	height: 100,
-	// defeat web's default min-height:auto so the inner box can't grow to the range input's huge
-	// intrinsic vertical height (RN flex items default to min-height:0).
 	minHeight: 0,
 	position: 'absolute',
 	width: '100%',
@@ -33,5 +31,4 @@ export const popupInner = style({
 
 export const slider = style({ height: '100%' });
 
-// ridiculous safari hack for an old version of safari; fixed in the sonoma beta.
 export const sliderSafari = style({ height: 92, minHeight: '100%' });

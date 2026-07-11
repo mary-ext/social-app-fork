@@ -2,8 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// the emoji-picker trigger overlaid on the message input's top-right corner (the input reserves right padding
-// for it). resting at text-contrast-high; turns primary when hovered, focused, or while the picker is open.
 export const emojiButton = style({
 	alignItems: 'center',
 	appearance: 'none',
@@ -28,12 +26,10 @@ export const emojiButton = style({
 	},
 });
 
-// the composer fills the input box so its whole area is the click target.
 export const editor = style({
 	flex: 1,
 });
 
-// nudges the send-button icon (paper plane / spinner) up to sit optically centered.
 export const sendIcon = style({
 	marginBottom: 2,
 });

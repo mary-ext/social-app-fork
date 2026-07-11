@@ -8,7 +8,6 @@ export const scroll = style({
 	overflowY: 'auto',
 });
 
-// responsive horizontal padding matches the header; bottom padding gives the last row breathing room.
 export const content = style({
 	boxSizing: 'border-box',
 	paddingBottom: space.xl,

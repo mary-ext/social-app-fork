@@ -4,14 +4,8 @@ import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
 import { fontLeading, fontSize, space } from '#/styles/tokens.css';
 
-/**
- * the rendered height of a {@link label} title line. matches the `roundToPx(size × leading)` formula for size
- * `md` and its paired leading, including pixel snapping, so trailing content centers on the title line.
- */
 const titleLineHeight = roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`);
 
-// #region layout
-/** The scroll body: a stack of {@link section} cards with vertical rhythm between them. */
 export const list = style({
 	boxSizing: 'border-box',
 	display: 'flex',
@@ -43,7 +37,6 @@ export const sectionFootnote = style({
 
 const cardRadius = 12;
 
-/** The rounded surface that holds a section's rows; clips them to its corners and the hairline dividers. */
 export const card = style({
 	backgroundColor: vars.palette.contrast_25,
 	borderRadius: cardRadius,
@@ -58,9 +51,6 @@ export const divider = style({
 	width: '100%',
 });
 
-// the revealed panel. Base UI tracks the measured content height in `--collapsible-panel-height` (kept current
-// via a ResizeObserver, so async-loaded rows still animate); we transition height between it and the collapsed
-// 0 the starting/ending data-attrs mark, clipping the content during the sweep.
 export const panel = style({
 	boxSizing: 'border-box',
 	height: 'var(--collapsible-panel-height)',
@@ -74,18 +64,7 @@ export const panel = style({
 		},
 	},
 });
-// #endregion
 
-// #region row
-/**
- * a single row inside a {@link card}, laid out as a two-row grid:
- *
- *     icon | title    | trailing
- *          | subtitle (spans title + trailing)
- *
- * the title shares its line with the trailing control/value, while the subtitle flows full-width beneath
- * both. content top-aligns and block padding keeps a single-line row visually centered.
- */
 export const row = style({
 	alignItems: 'start',
 	boxSizing: 'border-box',
@@ -98,10 +77,6 @@ export const row = style({
 	width: '100%',
 });
 
-/**
- * a row's chrome without the {@link row} grid: same padding and size, but a plain centered flex line. used for
- * a row that lays out its own content rather than the icon/title grid.
- */
 export const rowPlain = style({
 	alignItems: 'center',
 	boxSizing: 'border-box',
@@ -113,11 +88,6 @@ export const rowPlain = style({
 	width: '100%',
 });
 
-/**
- * element reset, hover tint, and focus ring for a row acting as an interactive trigger.
- *
- * @param loading greys out the row and removes hover effects when true
- */
 export const rowInteractive = style({
 	appearance: 'none',
 	background: 'transparent',
@@ -126,9 +96,6 @@ export const rowInteractive = style({
 	cursor: 'pointer',
 	font: 'inherit',
 	textDecoration: 'none',
-	// border-radius only changes on a CollapsibleRow trigger as it opens/closes; transitioning it (in sync with
-	// the 300ms panel sweep) rounds/flattens the corner — and its focus ring, which tracks border-radius — rather
-	// than snapping. Other rows never change radius at runtime, so this is inert for them.
 	transitionDuration: '100ms, 100ms, 300ms',
 	transitionProperty: 'background-color, opacity, border-radius',
 	transitionTimingFunction:
@@ -146,10 +113,6 @@ export const rowInteractive = style({
 	},
 });
 
-/**
- * primary-tinted fill that deepens on hover. recolors foreground elements (title, icon, chevron) to primary,
- * while keeping subtitle neutral muted for contrast.
- */
 export const rowPrimarySubtle = style({
 	backgroundColor: vars.palette.primary_50,
 	selectors: {
@@ -159,23 +122,16 @@ export const rowPrimarySubtle = style({
 	},
 });
 
-/**
- * rounds a row's top corners to the card's radius. applied to the first row so its hover tint and focus ring
- * follow the card corner instead of being clipped square by the card's `overflow: hidden`.
- */
 export const rowFirst = style({
 	borderTopLeftRadius: cardRadius,
 	borderTopRightRadius: cardRadius,
 });
 
-/** Rounds a row's bottom corners to the card's radius; applied to the last row. */
 export const rowLast = style({
 	borderBottomLeftRadius: cardRadius,
 	borderBottomRightRadius: cardRadius,
 });
 
-// the gap between the icon and the title lives on the icon (not the grid's `column-gap`) so an
-// iconless row leaves no leading gap — its title sits flush against the row's inline padding.
 export const icon = style({
 	color: vars.palette.contrast_500,
 	display: 'flex',
@@ -189,7 +145,6 @@ export const icon = style({
 	},
 });
 
-/** The row's primary text, sharing its line with the trailing control. */
 export const title = style({
 	gridColumn: 2,
 	gridRow: 1,
@@ -199,14 +154,12 @@ export const title = style({
 	},
 });
 
-/** The row's muted second line; spans the title and trailing columns so it gets the full row width. */
 export const subtitle = style({
 	gridColumn: '2 / 4',
 	gridRow: 2,
 	minWidth: 0,
 });
 
-/** Wraps a trailing value next to its chevron so they stay together, centered on the title's line. */
 export const trailing = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -218,7 +171,6 @@ export const trailing = style({
 	minHeight: titleLineHeight,
 });
 
-/** Clamps the trailing select value's width so a long label can't squeeze the title on narrow rows. */
 export const value = style({
 	maxWidth: 'min(220px, 45vw)',
 });
@@ -231,10 +183,7 @@ export const chevron = style({
 		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
 	},
 });
-// #endregion
 
-// #region switch
-/** The pill track of the row's trailing switch; tints when the nearest switch root is checked. */
 export const switchTrack = style({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_200,
@@ -264,4 +213,3 @@ export const switchThumb = style({
 		'[data-checked] &': { transform: 'translateX(14px)' },
 	},
 });
-// #endregion

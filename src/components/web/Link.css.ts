@@ -1,10 +1,6 @@
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 
-/**
- * anchor styling for an inline text link. controls the underline timing via the `underline` variant (defaults
- * to `hover`).
- */
 export const inlineLink = recipe(
 	{
 		base: {

@@ -3,8 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { fontSize, space, zIndex } from '#/styles/tokens.css';
 
-// the Positioner is the floating wrapper Base UI applies the computed transform to; it must sit on the
-// menu tier so the suggestion popup clears the composer's own dialog.
 export const positioner = style({
 	zIndex: zIndex.menu,
 });
@@ -16,8 +14,6 @@ export const popup = style({
 	boxShadow: vars.shadow.lg,
 	boxSizing: 'border-box',
 	maxHeight: 'var(--available-height)',
-	// a stable width so the list and the (otherwise tiny) loading spinner share one sensible size,
-	// shrinking only when the viewport can't fit it.
 	maxWidth: 'var(--available-width)',
 	overflowX: 'hidden',
 	overflowY: 'auto',
@@ -25,8 +21,6 @@ export const popup = style({
 	width: 320,
 });
 
-// cloned from the search autocomplete's shared row so both pickers look identical: a left-to-right
-// interactive row highlighted via Base UI's data attribute.
 export const row = style({
 	backgroundColor: 'transparent',
 	boxSizing: 'border-box',

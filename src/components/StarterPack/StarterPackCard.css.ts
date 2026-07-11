@@ -28,7 +28,6 @@ export const header = style({
 	width: '100%',
 });
 
-// the name/byline stack; min-width:0 lets the clamped text shrink inside the flex row instead of overflowing.
 export const titleColumn = style({
 	display: 'flex',
 	flex: 1,
@@ -36,8 +35,6 @@ export const titleColumn = style({
 	minWidth: 0,
 });
 
-// the OG-image embed variant's anchor: a bordered card whose border lightens on hover, matching the sibling
-// external-link embed. inset focus ring so the post body's `GalleryBleed` clip can't trim it.
 export const embedCard = style({
 	backgroundColor: colors.bg,
 	borderColor: colors.borderContrastLow,
@@ -63,12 +60,6 @@ export const embedBody = style({
 	width: '100%',
 });
 
-/**
- * list-row starter pack card. full-width padded row that highlights on hover/press.
- *
- * @param topBorder whether to show a hairline top separator. default is true. disable for the first row
- *   beneath a sticky tab bar.
- */
 export const defaultRow = recipe(
 	{
 		base: {
@@ -93,10 +84,6 @@ export const defaultRow = recipe(
 	{ debugId: 'defaultRow' },
 );
 
-/**
- * A non-interactive loading row: same padding and top separator as {@link defaultRow}, but without the
- * hover/active highlight (a placeholder isn't a press target).
- */
 export const loadingRow = recipe(
 	{
 		base: {

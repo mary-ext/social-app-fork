@@ -19,8 +19,6 @@ export const backdrop = style(
 	}),
 );
 
-// vertically centered with symmetric padding (vs the content Dialog's top-anchored 10vh viewport): a
-// confirmation prompt reads as a focal interruption, so it sits in the middle of the screen.
 export const viewport = style(
 	layered(components, {
 		alignItems: 'center',
@@ -57,7 +55,6 @@ export const popup = recipe(
 			},
 		},
 		variants: {
-			// `wide` gives the icon-row explainer enough room to keep each row to one or two lines.
 			size: {
 				default: { maxWidth: 320 },
 				wide: { maxWidth: 420 },

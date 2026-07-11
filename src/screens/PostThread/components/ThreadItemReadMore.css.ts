@@ -10,7 +10,6 @@ export const outer = style({
 	flexDirection: 'row',
 });
 
-/** The L-shaped elbow that drops the spine into the "read more" link. */
 export const connectorBase = style({
 	borderBottomColor: colors.borderContrastLow,
 	borderBottomLeftRadius: borderRadius.sm,
@@ -20,7 +19,7 @@ export const connectorBase = style({
 	borderLeftStyle: 'solid',
 	borderLeftWidth: REPLY_LINE_WIDTH,
 	boxSizing: 'border-box',
-	height: 18, // magic, the Link beside it is 38px tall
+	height: 18,
 });
 
 export const connectorTree = style({

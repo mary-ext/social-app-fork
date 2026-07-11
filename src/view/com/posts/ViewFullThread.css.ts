@@ -4,10 +4,6 @@ import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 
-/**
- * view full thread affordance below a truncated thread slice. `paddingLeft` and the spine slot align the
- * dotted spine with the feed post's reply-line.
- */
 export const link = style({
 	alignItems: 'center',
 	cursor: 'pointer',
@@ -23,7 +19,6 @@ export const link = style({
 	},
 });
 
-/** Fixed-width slot carrying the dashed spine, centered like the avatar column above it. */
 export const spine = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -33,7 +28,6 @@ export const spine = style({
 	width: 36,
 });
 
-/** A solid spine segment; matches the reply-line, which lightens a step in dark/dim. */
 export const segment = style({
 	backgroundColor: vars.palette.contrast_100,
 	height: 9,
@@ -45,7 +39,6 @@ export const segment = style({
 	},
 });
 
-/** A spine dash between the two solid segments. */
 export const dash = style({
 	backgroundColor: vars.palette.contrast_200,
 	height: 2,

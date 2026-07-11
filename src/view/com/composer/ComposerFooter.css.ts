@@ -31,7 +31,6 @@ export const right = style({
 	gap: 4,
 });
 
-// fixed width so the char counter doesn't reflow the toolbar as the number's digit count changes.
 export const charProgress = style({
 	width: 54,
 });

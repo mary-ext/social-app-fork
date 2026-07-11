@@ -50,7 +50,7 @@ export const button = recipe(
 		base: {
 			alignItems: 'center',
 			border: 'none',
-			borderRadius: 9999, // rounded_full
+			borderRadius: 9999,
 			cursor: 'pointer',
 			display: 'flex',
 			flexDirection: 'row',

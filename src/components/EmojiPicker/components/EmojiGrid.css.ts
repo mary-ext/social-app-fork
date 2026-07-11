@@ -24,8 +24,6 @@ export const scroll = style({
 });
 
 export const spacer = style({
-	// the grid is virtualized, so its height is set explicitly rather than driven by flow content;
-	// pad below the last row here so the bottom gap survives scrolling to the end.
 	paddingBottom: GRID_PADDING_BOTTOM,
 	position: 'relative',
 	width: '100%',

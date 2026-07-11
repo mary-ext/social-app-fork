@@ -7,47 +7,38 @@ export const activeMargin = style({
 	marginTop: 8,
 });
 
-// top gap above an embedded record card (feed / list / starter-pack).
 export const recordCardGap = style({
 	marginTop: 8,
 });
 
-// top gap above a standard-site link/publication card.
 export const standardSiteGap = style({
 	marginTop: 8,
 });
 
-// top gap above a plain external link card.
 export const externalCardGap = style({
 	marginTop: 8,
 });
 
-// post-with-media wrapper: stacks the media embed above the quoted record.
 export const postWithMedia = style({
 	display: 'flex',
 	flexDirection: 'column',
 });
 
-// QuoteEmbed bleed host: GalleryBleed measures this and clips the image-carousel bleed to it.
 export const quoteOuter = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
 });
 
-// Top gap above a quote. Omitted in chat, where clustered-message spacing owns the gap.
 export const quoteOuterGap = style({
 	marginTop: 8,
 });
 
-// the quote card body that stacks meta/text/embed; padding drops while the card is revealed.
 export const quoteBody = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
 	selectors: {
-		// `BlockLink` makes this the focusable row; the quote card paints the ring (via `:has`), so suppress
-		// this element's own default outline to avoid a doubled ring.
 		'&:focus-visible': { outline: 'none' },
 	},
 });
@@ -56,7 +47,6 @@ export const quotePad = style({
 	padding: 12,
 });
 
-// non-interactive quote body: the card is shown without a link, so it shouldn't swallow pointer events.
 export const quoteBodyDisabled = style({
 	pointerEvents: 'none',
 });
@@ -65,19 +55,14 @@ export const postAlerts = style({
 	paddingBlock: 4,
 });
 
-// spacing below the quote card's author meta row.
 export const quoteMetaPad = style({
 	paddingBottom: 4,
 });
 
-// QuoteEmbed card chrome — always applied; carries the border + radius.
 export const quoteCard = style({
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 12,
 	selectors: {
-		// `BlockLink` makes the card's direct child the focusable row; ring the card itself so the outline is
-		// concentric with its border. inset so the post body's `GalleryBleed` clip can't trim it. scoped to the
-		// direct child so a focused link inside the quoted post doesn't ring the outer card.
 		'&:has(> [role="link"]:focus-visible)': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: -2,
@@ -85,8 +70,6 @@ export const quoteCard = style({
 	},
 });
 
-// Hover tint for a clickable quote card; sits behind content (clipped to the radius) so the quoted text
-// isn't darkened the way an overlay would.
 export const quoteCardHover = style({
 	cursor: 'pointer',
 	selectors: {
@@ -96,12 +79,10 @@ export const quoteCardHover = style({
 	},
 });
 
-// extra padding once the quote is revealed; the inner content drops its own padding while active.
 export const quoteActive = style({
 	padding: 12,
 });
 
-// the revealed quote body.
 export const quoteRevealed = style({
 	paddingTop: 8,
 });

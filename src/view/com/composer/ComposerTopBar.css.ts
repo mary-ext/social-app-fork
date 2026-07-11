@@ -11,7 +11,6 @@ export const headerScrolled = style({
 	boxShadow: `0 1px 0 0 ${vars.palette.contrast_200}`,
 });
 
-// top-bar right slot: the publishing-stage label sitting beside the spinner.
 export const publishingRow = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -20,7 +19,6 @@ export const publishingRow = style({
 	gap: 12,
 });
 
-// top-bar right slot: the drafts button + publish button cluster.
 export const buttonRow = style({
 	alignItems: 'center',
 	display: 'flex',

@@ -9,8 +9,6 @@ const rotate = keyframes({
 	to: { transform: 'rotate(360deg)' },
 });
 
-// spins the icon in place (sized by the icon itself), unlike the global `.rotate-500ms` helper which is
-// `position:absolute; inset:0` and would stretch across the whole placeholder.
 export const spinner = style({
 	animation: `${rotate} 500ms linear infinite`,
 });

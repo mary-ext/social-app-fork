@@ -3,17 +3,13 @@ import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { fontSize, zIndex } from '#/styles/tokens.css';
 
-/** Icon tint, kept one notch lighter than the item text and overridden for destructive/disabled items. */
 export const iconColor = createVar();
 
-/** Floor on the popup width, wired inline; defaults to fitting the content. */
 export const minWidthVar = createVar();
 
-/** Ceiling on a group label's width, wired inline; defaults to unbounded. */
 export const maxWidthVar = createVar();
 
 export const positioner = style({
-	// sit above the dialog viewport; a menu opened from inside a dialog must overlay it
 	zIndex: zIndex.menu,
 });
 
@@ -53,7 +49,6 @@ export const item = style({
 	outline: 0,
 	paddingBlock: 8,
 	paddingInline: 10,
-	// keep link-rendered items (e.g. an `<a>`) from showing the UA underline
 	textDecoration: 'none',
 	userSelect: 'none',
 	vars: { [iconColor]: vars.palette.contrast_700 },
@@ -67,7 +62,6 @@ export const item = style({
 	},
 });
 
-/** Destructive items tint both their text and their icon with the negative color. */
 export const itemDestructive = style({
 	color: vars.palette.negative_500,
 	vars: { [iconColor]: vars.palette.negative_500 },
@@ -106,7 +100,6 @@ export const separator = style({
 	marginBlock: 4,
 });
 
-// radio indicator placed at the trailing edge of an item (e.g. the current post language).
 export const itemRadio = style({
 	alignItems: 'center',
 	border: `1px solid ${vars.palette.contrast_300}`,

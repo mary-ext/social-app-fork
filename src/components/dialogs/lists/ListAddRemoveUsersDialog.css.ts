@@ -50,7 +50,6 @@ export const list = style({
 	scrollPaddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 });
 
-// a selectable member row: pressing it toggles membership, so it highlights on hover/keyboard focus.
 export const item = style({
 	boxSizing: 'border-box',
 	cursor: 'pointer',
@@ -62,9 +61,6 @@ export const item = style({
 	},
 });
 
-// fixed-size trailing slot holding the accent checkmark (members) or a spinner (while a toggle is in flight),
-// sized so rows keep a stable height whether or not the checkmark is shown. the accent color tints the
-// checkmark, which draws with `currentColor`.
 export const indicator = style({
 	alignItems: 'center',
 	color: colors.primary_500,

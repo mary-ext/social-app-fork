@@ -4,13 +4,10 @@ import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-// width of the avatar column, which the footer indents past to line up with text.
 const AVATAR_COLUMN = 48;
 
-// current row background, exposed as a variable so descendants (menu) can fade into it.
 export const rowBg = createVar();
 
-// row background lives here so highlight covers interactive siblings (menu, footer) too.
 export const root = style({
 	vars: { [rowBg]: colors.contrast_0 },
 	backgroundColor: rowBg,
@@ -34,7 +31,6 @@ export const root = style({
 	},
 });
 
-// mutually exclusive background states; selected preserves highlight on hover.
 export const tone = styleVariants({
 	default: {},
 	selected: {
@@ -66,7 +62,6 @@ export const tone = styleVariants({
 	},
 });
 
-// absolute link overlay covers the whole row. z-index layers ensure the link captures clicks except on interactive siblings.
 export const link = style({ inset: 0, position: 'absolute', zIndex: 1 });
 
 export const body = style({
@@ -136,7 +131,6 @@ export const lastMessageRow = style({ alignItems: 'center', display: 'flex' });
 
 export const lastMessageIcon = style({ flexShrink: 0, marginRight: 2 });
 
-// clip overflow to prevent alerts from widening the row.
 export const postAlerts = style({
 	overflow: 'hidden',
 	paddingBottom: space._2xs,
@@ -177,7 +171,6 @@ export const menuIcon = style({
 	marginRight: -8,
 });
 
-// action bar outside the link to avoid nesting buttons in anchors, stacked above overlay.
 export const footer = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -185,7 +178,6 @@ export const footer = style({
 	paddingBottom: space.md,
 	paddingLeft: space.lg + AVATAR_COLUMN + space.md,
 	paddingRight: space.md,
-	// pointer events fall through to the link overlay.
 	pointerEvents: 'none',
 	position: 'relative',
 	zIndex: 2,

@@ -6,7 +6,6 @@ import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-/** Horizontal padding inside the scroller, wired inline so the caller can match its surrounding gutter. */
 export const gutterVar = createVar();
 
 export const outer = style({
@@ -22,10 +21,8 @@ export const scroller = style({
 	gap: space.sm,
 	overflowX: 'auto',
 	paddingInline: gutterVar,
-	// dragging the row to scroll it shouldn't select the tab labels
 	userSelect: 'none',
 	width: '100%',
-	// hide the horizontal scrollbar — tabs scroll via drag and the edge buttons
 	scrollbarWidth: 'none',
 	selectors: {
 		'&::-webkit-scrollbar': { display: 'none' },
@@ -73,7 +70,6 @@ export const tab = recipe(
 	{ debugId: 'tab', layer: components },
 );
 
-/** Tab label that inherits the button's (hover-driven) color instead of the `text` recipe default. */
 export const tabLabel = style({
 	color: 'inherit',
 });
@@ -108,8 +104,6 @@ export const edgeRight = style([
 	},
 ]);
 
-// the scroll buttons want a subtler border than the `outline` variant's default (contrast_300), matching the
-// row's own hairlines
 export const edgeButton = style({
 	borderColor: colors.borderContrastLow,
 });

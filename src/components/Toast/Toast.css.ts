@@ -4,19 +4,14 @@ import { colorMix } from '#/styles/color-mix';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, fontSize, fontWeight, lineHeight, zIndex } from '#/styles/tokens.css';
 
-// space between stacked toasts, and how far each toast behind the frontmost one peeks out.
 const gap = 8;
 const peek = 8;
 
-// derived per-toast geometry. Base UI sets `--toast-index`, `--toast-offset-y`, `--toast-height`,
-// `--toast-frontmost-height`, and `--toast-swipe-movement-{x,y}` on each Root; these compose them.
 const scaleVar = createVar();
 const shrinkVar = createVar();
 const heightVar = createVar();
 const offsetYVar = createVar();
 
-// the height of the title's first text line, in px. the icon and action are centered on it (rather than
-// on a wrapped block) by absorbing their excess height into negative block margins. tracks the font scale.
 const firstLineVar = createVar();
 
 export const viewport = style({
@@ -26,11 +21,9 @@ export const viewport = style({
 	position: 'fixed',
 	right: 'auto',
 	top: 'auto',
-	// the bounding region; on desktop individual toasts hug their content up to this width.
 	width: 'min(380px, calc(100vw - 40px))',
 	zIndex: zIndex.toast,
 	'@media': {
-		// below the mobile breakpoint, span the screen so toasts read as full-width banners.
 		'(width < 800px)': { width: 'calc(100vw - 40px)' },
 	},
 });
@@ -55,16 +48,12 @@ export const root = style({
 		[heightVar]: 'var(--toast-frontmost-height, var(--toast-height))',
 		[offsetYVar]: `calc(var(--toast-offset-y) * -1 + (var(--toast-index) * ${-gap}px) + var(--toast-swipe-movement-y))`,
 	},
-	// hug content (like the original), left-anchored, capped by the viewport width.
 	width: 'max-content',
 	'@media': {
-		// full-width on mobile, filling the viewport region.
 		'(width < 800px)': { width: '100%' },
 	},
 	zIndex: 'calc(1000 - var(--toast-index))',
-	// collapsed: stack upward from the bottom, each toast scaled and peeking behind the one in front.
 	transform: `translateX(var(--toast-swipe-movement-x)) translateY(calc(var(--toast-swipe-movement-y) - (var(--toast-index) * ${peek}px) - (${shrinkVar} * ${heightVar}))) scale(${scaleVar})`,
-	// a transparent strip below the toast so the hover-to-expand region bridges the inter-toast gap.
 	'::after': {
 		content: '""',
 		height: gap + 1,
@@ -74,7 +63,6 @@ export const root = style({
 		width: '100%',
 	},
 	selectors: {
-		// expanded (viewport hovered/focused): fan out to natural height at the running offset.
 		'&[data-expanded]': {
 			height: 'var(--toast-height)',
 			transform: `translateX(var(--toast-swipe-movement-x)) translateY(${offsetYVar})`,
@@ -93,9 +81,6 @@ export const root = style({
 	},
 });
 
-// per-type surface and foreground colors. `color` drives both the title text and the icon (which paints
-// with `currentColor`). neutral types lean on the auto-inverting contrast palette; success/error pin
-// brand tints and adjust the foreground per theme to keep contrast.
 const neutral = {
 	backgroundColor: vars.palette.contrast_25,
 	borderColor: vars.palette.contrast_100,
@@ -127,7 +112,6 @@ export const rootColor = styleVariants({
 });
 
 export const content = style({
-	// align the row to the start so the icon/action sit on the title's first line, not the block center.
 	alignItems: 'start',
 	boxSizing: 'border-box',
 	display: 'flex',
@@ -139,7 +123,6 @@ export const content = style({
 		[firstLineVar]: `calc(${fontSize.md} * ${lineHeight.snug})`,
 	},
 	selectors: {
-		// toasts behind the frontmost one fade out while collapsed, back in while expanded.
 		'&[data-behind]': { opacity: 0 },
 		'&[data-expanded]': { opacity: 1 },
 	},
@@ -147,7 +130,6 @@ export const content = style({
 
 export const icon = style({
 	flexShrink: 0,
-	// center the 20px icon on the first text line; the negative block margin keeps it from growing the row.
 	marginBlock: `calc((${firstLineVar} - 20px) / 2)`,
 	marginRight: 8,
 });
@@ -173,8 +155,6 @@ export const action = style({
 	fontSize: fontSize.md_sub,
 	fontWeight: fontWeight.semiBold,
 	lineHeight: firstLineVar,
-	// the chip's text line matches the title's; the negative block margin offsets its padding so the chip
-	// centers on the first line without growing the row.
 	marginBlock: -4,
 	marginRight: -6,
 	marginLeft: 8 + 8,

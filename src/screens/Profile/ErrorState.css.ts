@@ -18,7 +18,6 @@ export const description = style({
 	paddingBottom: space.xl,
 });
 
-/** Muted panel holding the raw error string. */
 export const errorBox = style({
 	backgroundColor: vars.palette.contrast_25,
 	borderRadius: borderRadius.md,

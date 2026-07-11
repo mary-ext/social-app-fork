@@ -22,7 +22,6 @@ export const row = style({
 	},
 });
 
-// 48px circle standing in for an avatar on the "other account" row; brightens together with its row on hover.
 export const addAvatar = style({
 	alignItems: 'center',
 	backgroundColor: colors.contrast_25,
@@ -38,13 +37,11 @@ export const addAvatar = style({
 	},
 });
 
-// nudge the badges to optically center against the display name's cap height.
 export const badges = style({
 	flexShrink: 0,
 	marginTop: -2,
 });
 
-// the positive-tinted check marking the currently signed-in account.
 export const check = style({
 	alignItems: 'center',
 	backgroundColor: colors.positive_500,
@@ -69,7 +66,6 @@ export const container = style({
 	overflow: 'hidden',
 });
 
-// the display name + handle column; min-width 0 down the chain so the name truncates.
 export const info = style({
 	display: 'flex',
 	flex: 1,
@@ -90,7 +86,6 @@ export const nameRow = style({
 	minWidth: 0,
 });
 
-// pending highlight (matching the hover surface) shown while an account resumes.
 export const rowActive = style({
 	backgroundColor: colors.contrast_25,
 });

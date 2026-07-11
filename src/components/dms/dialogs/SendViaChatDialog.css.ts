@@ -50,7 +50,6 @@ export const list = style({
 	scrollPaddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 });
 
-/** a people row that highlights on hover/keyboard focus. */
 export const row = style({
 	boxSizing: 'border-box',
 	cursor: 'pointer',
@@ -64,7 +63,6 @@ export const row = style({
 	},
 });
 
-/** name column beside the avatar in a people row. */
 export const column = style({
 	display: 'flex',
 	flex: 1,

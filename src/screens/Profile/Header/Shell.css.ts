@@ -5,7 +5,6 @@ import { borderRadius, space } from '#/styles/tokens.css';
 
 export const frame = style({
 	backgroundColor: colors.bg,
-	// positioning context for the absolutely-placed avatar (RN Views are relative by default).
 	position: 'relative',
 });
 
@@ -14,7 +13,6 @@ export const bannerRegion = style({
 	position: 'relative',
 });
 
-// bare button reset covering the banner; the back button is a sibling (not nested) to keep valid markup.
 export const bannerButton = style({
 	background: 'none',
 	border: 0,
@@ -39,8 +37,6 @@ export const backButton = style({
 	padding: 0,
 	position: 'absolute',
 	top: 10,
-	// a blurred banner's `filter` makes its img a stacking context that paints in the same group as this
-	// auto-z button; without an explicit z-index, tree order wins and the (earlier) button paints under it.
 	zIndex: 1,
 });
 
@@ -81,7 +77,6 @@ export const avatarRing = style({
 	borderStyle: 'solid',
 	borderWidth: 2,
 	boxSizing: 'border-box',
-	// flex so the box honors its width/height (an inline span would ignore them and collapse to a line).
 	display: 'flex',
 	height: 94,
 	position: 'relative',
@@ -97,7 +92,6 @@ export const avatarRingLabeler = style({
 	borderRadius: borderRadius.md,
 });
 
-// positioning context for the live badge, shrink-wrapped to the avatar so the badge centers on it.
 export const avatarInner = style({
 	display: 'flex',
 	position: 'relative',

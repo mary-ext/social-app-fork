@@ -40,7 +40,6 @@ export const body = style({
 	textAlign: 'center',
 });
 
-// pushes the buttons to the bottom of the viewport on narrow (sub-`gtMobile`) screens, matching upstream.
 export const spacer = style({
 	'@media': {
 		'screen and (max-width: 799px)': { flexGrow: 1 },

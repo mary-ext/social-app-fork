@@ -5,8 +5,6 @@ import { vars } from '#/styles/contract.css';
 import { mediaBorder, mediaBorderOpaque, mediaOverlay } from '#/styles/media-border.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-// inset focus ring for the card's nested link regions: an outset ring would be clipped by the card's
-// `overflow: hidden`, while this rides inside the clip — which also rounds its corners to match the card.
 const insetFocusRing = style({
 	selectors: {
 		'&:focus-visible': {
@@ -18,15 +16,6 @@ const insetFocusRing = style({
 
 const gtPhone = 'screen and (min-width: 500px)';
 
-// #region article card
-
-/**
- * represents the main clickable area of the article card, containing the thumbnail, text, and inline
- * metadata.
- *
- * hovering this element triggers the active hover state for the entire card (background tint, footer tint,
- * and border).
- */
 export const bodyLink = style({
 	boxSizing: 'border-box',
 	color: 'inherit',
@@ -38,13 +27,10 @@ export const bodyLink = style({
 	width: '100%',
 	selectors: {
 		'&:hover': { backgroundColor: colors.contrast_25 },
-		// the card paints the focus ring (via `:has`), boxing the whole card rather than just this top region;
-		// suppress this link's own default outline to avoid a doubled ring.
 		'&:focus-visible': { outline: 'none' },
 	},
 });
 
-/** Outer card for the article/link layout: a relative, bordered box. */
 export const card = style({
 	backgroundColor: colors.bg,
 	borderColor: colors.borderContrastLow,
@@ -59,11 +45,6 @@ export const card = style({
 	width: '100%',
 	selectors: {
 		[`&:has(${bodyLink}:hover)`]: { borderColor: colors.borderContrastHigh },
-		// ring the whole card when the article link is focused. an *outset* outline: it sits outside the border
-		// (so the positioned body/footer can't paint over it), the card's own `overflow` can't clip it, and a
-		// positive offset rounds its corners cleanly — unlike an inset ring, which the rounded clip cuts at the
-		// corners. the post body leaves ~16px around the card, so the ancestor `GalleryBleed` clip never reaches
-		// it.
 		[`&:has(${bodyLink}:focus-visible)`]: {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,
@@ -71,7 +52,6 @@ export const card = style({
 	},
 });
 
-/** Suppresses all interaction for the composer preview, where the card is non-navigable. */
 export const previewLock = style({ pointerEvents: 'none' });
 
 export const body = style({
@@ -82,7 +62,6 @@ export const body = style({
 	paddingTop: space.md,
 });
 
-/** Hairline separating the body from the thumbnail; tracks the card's hover state. */
 export const bodyMedia = style({
 	borderTopColor: colors.borderContrastLow,
 	borderTopStyle: 'solid',
@@ -101,7 +80,6 @@ export const textBlock = style({
 	paddingRight: space.md,
 });
 
-/** Date + reading-time row beneath a standard-site article's description. */
 export const metaInline = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -118,11 +96,6 @@ export const readingTime = style({
 	gap: space._2xs,
 });
 
-// #endregion
-
-// #region shared
-
-/** Domain/author meta section shown below the article body when there's no publication footer. */
 export const metaSection = style({ paddingLeft: space.md, paddingRight: space.md });
 
 export const divider = style({
@@ -134,7 +107,6 @@ export const divider = style({
 
 export const metaRowPad = style({ paddingBottom: space.sm, paddingTop: space.sm });
 
-/** Row of `domain • by @handle` meta items. */
 export const metaRow = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -159,13 +131,11 @@ export const identityText = style({
 	minWidth: 0,
 });
 
-/** Per-instance accent fill for the letter fallback, wired in from the site's custom theme. */
 export const accentVar = createVar();
 export const accentForegroundVar = createVar();
 
 export const iconRoot = style({ position: 'relative' });
 
-/** Tiny standard-site badge that overlaps the publication icon's top-left corner. */
 export const standardBadge = style([
 	mediaBorder,
 	{
@@ -186,13 +156,8 @@ export const standardBadge = style([
 
 export const avatarWrap = style({ lineHeight: 0, position: 'relative' });
 
-// unlayered, so it outranks the avatar root's layered `border-radius`, which the inner layers inherit.
 export const publicationAvatar = style({ borderRadius: borderRadius.sm });
 
-/**
- * Opaque hairline as an overlay: the publication avatar's own `filter` rules out a self-border, so the
- * rounded hairline rides on top of it instead.
- */
 export const avatarBorder = style([mediaOverlay, mediaBorderOpaque, { borderRadius: borderRadius.sm }]);
 
 export const letterBox = style([
@@ -212,12 +177,9 @@ export const letterBoxLg = style({ height: 40, width: 40 });
 
 export const letterText = style({ color: accentForegroundVar });
 
-/** Subscribe / view-publication button: full width when stacked, auto when inline. */
 export const subscribe = style({
 	flexShrink: 0,
-	// widen the icon/text gap past the Button's default 5px.
 	gap: space.sm,
-	// re-enable interaction inside the pointer-events-none identity rows.
 	pointerEvents: 'auto',
 	position: 'relative',
 	width: '100%',
@@ -240,11 +202,6 @@ export const hideOnGtPhone = style({
 	},
 });
 
-// #endregion
-
-// #region publication footer
-
-/** Footer beneath an article that belongs to a standard-site publication; tints when the body is hovered. */
 export const footer = style({
 	alignItems: 'center',
 	boxSizing: 'border-box',
@@ -262,10 +219,6 @@ export const footer = style({
 	},
 });
 
-/**
- * absolute-fill link covering the footer that navigates to the publication and underlines its name on hover.
- * intended as a mouse-only affordance (tabIndex -1) and does not receive focus.
- */
 export const footerFill = style({
 	bottom: 0,
 	left: 0,
@@ -296,11 +249,6 @@ export const footerTitle = style({
 	},
 });
 
-// #endregion
-
-// #region publication card
-
-/** Standalone publication card (the embed points at a publication, not a single article). */
 export const pubCard = style({
 	backgroundColor: colors.bg,
 	borderColor: colors.borderContrastLow,
@@ -369,5 +317,3 @@ export const pubSubscribeStacked = style({
 	position: 'relative',
 	zIndex: 1,
 });
-
-// #endregion

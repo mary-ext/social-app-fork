@@ -3,11 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
 
-/**
- * bordered callout box whose accent border tracks its `type`.
- *
- * @param className escape hatch for custom styling
- */
 export const outer = recipe(
 	{
 		base: {

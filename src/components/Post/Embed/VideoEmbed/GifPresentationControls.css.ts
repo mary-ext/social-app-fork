@@ -13,7 +13,6 @@ export const playButton = style({
 	justifyContent: 'center',
 	left: 0,
 	margin: 0,
-	// the embed box paints the focus ring; suppress the button's own (overflow-clipped) outline.
 	outline: 0,
 	padding: 0,
 	position: 'absolute',
@@ -66,7 +65,6 @@ export const altBadge = style([
 	},
 ]);
 
-// video (non-gif) surfaces the badge in the opposite corner from the gif label.
 export const altBadgeTopRight = style({
 	bottom: 'auto',
 	top: 6,

@@ -18,7 +18,6 @@ export const padding = styleVariants({
 	xl: { paddingBottom: space.xl, paddingInline: space.xl },
 });
 
-// the xl card tightens its top padding when media sits directly above the content
 export const xlTop = styleVariants({
 	noThumb: { paddingTop: space._2xl },
 	thumb: { paddingTop: space.lg },
@@ -37,7 +36,6 @@ export const mediaFrame = style({
 	position: 'absolute',
 });
 
-// pin the LIVE pill to the media's top-left instead of its default bottom-center
 export const liveBadge = style({
 	bottom: 'auto',
 	justifyContent: 'flex-start',
@@ -86,20 +84,14 @@ export const beta = style({
 	gap: space.xs,
 });
 
-// a text link that triggers an action rather than navigating, so it can't be an <a>. flex (not the default
-// block) so its height tracks the inner Text rather than the button's own larger line-height strut
 export const reportButton = style({
 	background: 'none',
 	display: 'flex',
 	padding: 0,
 	textDecoration: 'underline',
-	// the label is a child <Text color="textContrastMedium">; pin the underline to the same color so it
-	// doesn't inherit the dialog's default (lighter) text color and mismatch the text it sits under.
 	textDecorationColor: vars.palette.contrast_700,
 });
 
-// the media bleeds to the popup's rounded corners, so clip it; width and padding come from the Popup
-// `size`/`padding` props.
 export const dialogPopup = style({
 	overflow: 'hidden',
 });

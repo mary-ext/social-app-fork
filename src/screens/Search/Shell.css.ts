@@ -9,7 +9,6 @@ export const body = style({
 	flexDirection: 'column',
 });
 
-/** The "Search" heading, shown only on wide viewports (matches the `gtTablet` breakpoint). */
 export const heading = style({
 	borderBottom: `1px solid ${colors.borderContrastLow}`,
 	display: 'none',

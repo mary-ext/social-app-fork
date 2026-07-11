@@ -27,13 +27,10 @@ const itemReset = style(
 	}),
 );
 
-/** A clickable toggle row that stretches to fill its container (checkbox group member or standalone). */
 export const item = style([itemReset, layered(components, { width: '100%' })]);
 
-/** A clickable toggle that shares a flex row evenly with its siblings (the radio pair). */
 export const radioItem = style([itemReset, layered(components, { flex: 1 })]);
 
-/** A vertical stack of panels with the hairline gap that produces the segmented look. */
 export const panelGroup = style(
 	layered(components, {
 		display: 'flex',
@@ -43,14 +40,6 @@ export const panelGroup = style(
 	}),
 );
 
-/**
- * a themed surface inside a toggle.
- *
- * @param adjacent rounds corners by position in the stack (a squared edge sits flush against a neighbor, a
- *   rounded edge caps it)
- * @param active forces the checked tint for panels not nested in a Base UI toggle
- * @param size tightens padding and flattens corners for dense stacks when set to 'small'
- */
 export const panel = recipe(
 	{
 		base: {
@@ -91,8 +80,6 @@ export const panel = recipe(
 			},
 			size: {
 				default: {},
-				// less padding, no min height for dense stacks; inline padding relaxes from 8 to 12 past the
-				// gtMobile breakpoint, and panelText/panelIcon shrink in step.
 				small: {
 					gap: 4,
 					minHeight: 0,
@@ -104,8 +91,6 @@ export const panel = recipe(
 				},
 			},
 		},
-		// `small` flattens corners regardless of adjacency (it replaces the per-corner rounding, not adds to it)
-		// — a compound beats both variant groups on source order so the flat 8px wins.
 		compoundVariants: [
 			{
 				size: 'small',
@@ -159,15 +144,11 @@ export const panelIcon = style(
 		flexShrink: 0,
 		selectors: {
 			'[data-checked] &, [data-active] &': { color: vars.palette.contrast_1000 },
-			// shrink the 20px lg glyph to 16px (the `sm` size) inside a small panel; CSS dimensions
-			// win over the SVG width/height attributes.
 			'[data-size="small"] &': { height: 16, width: 16 },
 		},
 	}),
 );
 
-// #region indicators
-/** Shared 24px frame behind the radio dot and the checkbox glyph; the two diverge only in corner rounding. */
 const indicatorBase = style(
 	layered(components, {
 		alignItems: 'center',
@@ -258,4 +239,3 @@ export const switchThumb = style(
 		},
 	}),
 );
-// #endregion

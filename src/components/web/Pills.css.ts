@@ -3,7 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
 
-/** wrapping flex row of moderation pills, spaced per `size` */
 export const row = recipe(
 	{
 		base: {
@@ -22,11 +21,6 @@ export const row = recipe(
 	{ debugId: 'row' },
 );
 
-/**
- * a single moderation pill that highlights on hover and press.
- *
- * @param noBg whether to disable the default background tint when resting
- */
 export const pill = recipe(
 	{
 		base: {

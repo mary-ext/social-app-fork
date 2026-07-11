@@ -25,8 +25,6 @@ export const loadMoreWrap = style({
 	borderTop: `1px solid ${colors.borderContrastLow}`,
 });
 
-// a flat full-width pressable row (not a pill button), matching the bare pressable + rectangular hover the
-// original used
 export const loadMore = style({
 	alignItems: 'center',
 	appearance: 'none',

@@ -18,22 +18,16 @@ export const panel = style({
 	width: PANEL_WIDTH,
 });
 
-// the band that insets the search field off the panel edges. a flex item of the panel, so `zIndex` lifts it
-// (and its opaque pill) above the grid that slides up underneath.
 export const searchRow = style({
 	paddingInline: space.sm,
 	paddingTop: space.sm,
 	zIndex: 1,
 });
 
-// pull the grid up under the field by the pill's corner radius so the rounded bottom overlaps the scrolling
-// content. assumes the field's border radius equals SEARCH_INPUT_RADIUS.
 export const searchField = style({
 	marginBottom: -SEARCH_INPUT_RADIUS,
 });
 
-// the grid's scroll container reserves a fixed height, so anchor a positioning context to it and
-// overlay the empty state instead of stacking it below (which would make the panel taller).
 export const list = style({
 	position: 'relative',
 });

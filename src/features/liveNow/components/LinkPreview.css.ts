@@ -2,7 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// a horizontal link-meta card: fixed thumbnail on the left, title + domain on the right.
 export const card = style({
 	alignItems: 'stretch',
 	backgroundColor: vars.palette.contrast_0,
@@ -30,7 +29,6 @@ export const body = style({
 	flexDirection: 'column',
 	gap: 4,
 	justifyContent: 'center',
-	// let the clamped title/domain ellipsize instead of forcing the card wider
 	minWidth: 0,
 	paddingBlock: 8,
 	paddingInline: 12,

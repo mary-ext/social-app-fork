@@ -3,7 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { colorMix } from '#/styles/color-mix';
 import { vars } from '#/styles/contract.css';
 
-// thins to a hairline on hi-dpi screens, matching the device pixel grid.
 const hairline = style({
 	borderStyle: 'solid',
 	borderWidth: 1,
@@ -13,10 +12,6 @@ const hairline = style({
 	},
 });
 
-/**
- * themed hairline that separates media from the background. compose onto the rounded media element itself so
- * a focus ring on the same box stays concentric with it.
- */
 export const mediaBorder = style([
 	hairline,
 	{
@@ -29,10 +24,8 @@ export const mediaBorder = style([
 	},
 ]);
 
-/** Opaque hairline variant (where the border abuts other opaque borders, e.g. an avatar inside a card). */
 export const mediaBorderOpaque = style([hairline, { borderColor: vars.palette.contrast_100 }]);
 
-/** absolute-fill positioning for overlaying a hairline border when the image has a blur filter */
 export const mediaOverlay = style({
 	inset: 0,
 	pointerEvents: 'none',

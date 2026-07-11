@@ -9,7 +9,6 @@ export const body = style({
 	paddingTop: space.md,
 });
 
-// the avatar overlaps from the shell, so the button row reserves space on its left.
 export const buttonRow = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -36,8 +35,6 @@ export const nameBlockDefault = style({
 	paddingTop: space._2xs,
 });
 
-// `vertical-align: middle` anchors to baseline + half x-height, which sits ~5px below the name's
-// optical center; lift it back onto the line so it reads centered like the rest of the text.
 export const badges = style({
 	display: 'inline-flex',
 	marginLeft: space.xs,

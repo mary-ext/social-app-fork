@@ -6,12 +6,6 @@ import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { space, zIndex } from '#/styles/tokens.css';
 
-// #region drop overlay
-
-// always mounted and `inert` while hidden, so the fade is a class toggle rather than a mount juggle, and the
-// scrim never captures interaction. portaled to `document.body` — where the composer's Base UI dialog also
-// portals — so the fixed scrim isn't confined to that dialog's stacking context and can overlay it via
-// `zIndex.dialog`.
 export const dropScrim = recipe(
 	{
 		base: {
@@ -62,5 +56,3 @@ export const dropText = style(
 		textAlign: 'center',
 	}),
 );
-
-// #endregion

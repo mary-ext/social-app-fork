@@ -4,7 +4,6 @@ import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
-// wraps the stack of error boxes, owning the shared outer padding + the gap between them.
 export const list = style({
 	display: 'flex',
 	flexDirection: 'column',

@@ -13,7 +13,6 @@ export const iconColumn = style({
 	width: LINEAR_AVI_WIDTH,
 });
 
-/** The short stub of reply line dropping down from the "continue thread" row. */
 export const lineStub = style({
 	backgroundColor: colors.borderContrastMedium,
 	height: OUTER_SPACE / 2,

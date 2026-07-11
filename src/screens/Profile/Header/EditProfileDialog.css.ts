@@ -5,14 +5,12 @@ import { space } from '#/styles/tokens.css';
 
 export const errorText = style({ marginTop: space.xs });
 
-// the Save action reads as inactive (greyed) rather than a faded primary while there's nothing to save.
 export const inactiveSave = style({ color: vars.palette.contrast_400 });
 
 export const bannerWrap = style({
 	position: 'relative',
 });
 
-/** Avatar overlapping the banner; wraps the web-native EditableUserAvatar. */
 export const avatar = style({
 	borderColor: vars.palette.contrast_0,
 	borderRadius: 42,

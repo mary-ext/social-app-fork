@@ -13,7 +13,6 @@ export const root = style({
 	textAlign: 'center',
 });
 
-// the raw error string, kept monospace and scroll-clamped so a long stack doesn't blow out the dialog.
 export const details = style({
 	backgroundColor: vars.palette.contrast_25,
 	borderRadius: borderRadius.sm,

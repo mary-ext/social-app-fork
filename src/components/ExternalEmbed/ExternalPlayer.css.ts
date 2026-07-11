@@ -13,7 +13,6 @@ export const thumb = style({
 	position: 'absolute',
 });
 
-// darkens the thumbnail/placeholder behind the play affordance at 0.3 opacity.
 export const dim = style({
 	bottom: 0,
 	left: 0,

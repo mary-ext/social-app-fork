@@ -4,7 +4,6 @@ import { vars } from '#/styles/contract.css';
 import { zIndex } from '#/styles/tokens.css';
 
 export const positioner = style({
-	// sit above dialogs and menus so a tooltip on a trigger inside either still shows
 	zIndex: zIndex.tooltip,
 });
 

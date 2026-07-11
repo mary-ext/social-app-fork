@@ -5,22 +5,15 @@ import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
 import { borderRadius, fontLeading, fontSize, space } from '#/styles/tokens.css';
 
-// the bar stands in for a line of text: its height tracks the size's font-size (the visible glyph mass) and
-// the box keeps the full line-height, so a column of bars holds the same vertical rhythm as the `Text` it
-// replaces. both are set per `size` variant from the matching `Text` size.
 const fontSizeVar = createVar();
 const lineHeightVar = createVar();
 
-/** Bar width, wired inline; defaults to filling the available width. */
 export const widthVar = createVar();
 
-/** Box edge length in px, wired inline so a circle/square scales to the `size` prop. */
 export const boxSizeVar = createVar();
 
-/** Square corner radius in px, wired inline. */
 export const squareRadiusVar = createVar();
 
-/** loading placeholder for a line of text. */
 export const text = recipe(
 	{
 		base: {
@@ -37,8 +30,6 @@ export const text = recipe(
 				contrast_50: { color: vars.palette.contrast_50 },
 				contrast_100: { color: vars.palette.contrast_100 },
 			},
-			// one variant per `Text` size, each publishing the size's font-size and its pixel-snapped line-height
-			// (`round(font-size × paired ratio)`) so the placeholder tracks the live typography scale.
 			size: Object.fromEntries(
 				(Object.keys(fontLeading) as (keyof typeof fontLeading)[]).map((key) => [
 					key,
@@ -56,8 +47,6 @@ export const text = recipe(
 	{ debugId: 'text' },
 );
 
-// the bar is sized to the font-size and vertically centered by the flex parent, so the leftover line-height
-// splits into equal margins above and below — the same place the glyphs sit within a real line box.
 export const bar = style({
 	backgroundColor: 'currentColor',
 	borderRadius: borderRadius.md,
@@ -110,7 +99,6 @@ export const square = recipe(
 	{ debugId: 'square' },
 );
 
-/** A horizontal flex group of placeholders. Unlayered. */
 export const row = recipe(
 	{
 		base: {
@@ -132,7 +120,6 @@ export const row = recipe(
 	{ debugId: 'row' },
 );
 
-/** A flex-1 vertical flex group of placeholders. Unlayered. */
 export const col = recipe(
 	{
 		base: {

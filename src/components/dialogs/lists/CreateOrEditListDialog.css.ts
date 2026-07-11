@@ -8,7 +8,6 @@ export const fields = style({
 	paddingInline: 20,
 });
 
-/** Left-aligns the avatar editor under its label. */
 export const avatarWrap = style({
 	alignItems: 'flex-start',
 	display: 'flex',

@@ -11,8 +11,6 @@ export const contentHiderChild = style({
 	paddingTop: 8,
 });
 
-// the handle + badges beside the avatar. min-width:0 lets the clamped handle ellipsize instead of
-// pushing the trailing controls off the row.
 export const identity = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -20,7 +18,6 @@ export const identity = style({
 	minWidth: 0,
 });
 
-// the badges keep their intrinsic size; only the handle beside them shrinks.
 export const badges = style({
 	flexShrink: 0,
 	paddingLeft: 6,
@@ -30,8 +27,6 @@ export const badges = style({
 	},
 });
 
-// the handle is the anchor's identity line; it shrinks within the identity row so its clamp ellipsizes
-// instead of shoving the badges out.
 export const handle = style({
 	minWidth: 0,
 });
@@ -44,10 +39,7 @@ export const postAlerts = style({
 	paddingBottom: space.sm,
 });
 
-// #region parent reply line
 export const parentLineRow = style({
-	// border-box so `height` is the outer 16px (12px line + 4px paddingBottom),
-	// matching RN's always-border-box box model. content-box renders it 20px.
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
@@ -61,9 +53,7 @@ export const parentLineColumn = style({
 	flexDirection: 'column',
 	width: LINEAR_AVI_WIDTH,
 });
-// #endregion
 
-// #region header row
 export const avatarRow = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -73,8 +63,6 @@ export const avatarRow = style({
 	paddingBottom: space.md,
 });
 
-// the avatar + identity cluster on the left; min-width:0 lets it shrink so the handle ellipsizes
-// rather than pushing the trailing controls off the row.
 export const primary = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -83,7 +71,6 @@ export const primary = style({
 	minWidth: 0,
 });
 
-// the trailing controls on the right; holds its intrinsic width against the shrinking primary cluster.
 export const secondary = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -96,20 +83,16 @@ export const secondary = style({
 	},
 });
 
-/** The post body below the header row. */
 export const body = style({
 	display: 'flex',
 	flexDirection: 'column',
 });
 
-/** Trailing room around the embed when there's post text above it. */
 export const embedPad = style({
 	paddingBottom: space.xs,
 	paddingTop: space.xs,
 });
-// #endregion
 
-// #region engagement stats
 export const statsRow = style({
 	alignItems: 'center',
 	borderBottomColor: colors.borderContrastLow,
@@ -127,9 +110,7 @@ export const statsRow = style({
 	paddingTop: space.md,
 	rowGap: space.sm,
 });
-// #endregion
 
-// #region expanded details
 export const expandedDetails = style({
 	alignItems: 'flex-start',
 	display: 'flex',
@@ -166,9 +147,7 @@ export const archivedPill = style({
 		},
 	},
 });
-// #endregion
 
-// #region deleted
 export const deletedOuter = style({
 	display: 'flex',
 	flexDirection: 'column',
@@ -199,4 +178,3 @@ export const deletedIcon = style({
 	justifyContent: 'center',
 	width: LINEAR_AVI_WIDTH,
 });
-// #endregion

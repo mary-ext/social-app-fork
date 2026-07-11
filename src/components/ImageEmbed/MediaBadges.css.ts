@@ -25,7 +25,6 @@ const countClusterBase = style({
 	top: 4,
 });
 
-/** The image-count badge sits top-right; the alt/crop cluster sits bottom-right. */
 export const countCluster = styleVariants({
 	regular: [countClusterBase],
 	large: [countClusterBase],
@@ -40,7 +39,6 @@ const boxBase = style({
 	opacity: 0.8,
 });
 
-/** The single-image badge uses a 4px radius; the gallery badge uses 8px. Padding grows for the large badge. */
 export const box = styleVariants({
 	singleRegular: [boxBase, { borderRadius: borderRadius.xs, padding: 3 }],
 	singleLarge: [boxBase, { borderRadius: borderRadius.xs, padding: 5 }],
@@ -48,16 +46,11 @@ export const box = styleVariants({
 	galleryLarge: [boxBase, { borderRadius: borderRadius.sm, padding: 6 }],
 });
 
-/** Fullscreen (cropped) icon; `currentColor` is resolved by the wrapper's `color`. */
 export const icon = style({
 	color: vars.palette.contrast_900,
 	display: 'block',
 });
 
-/**
- * overrides the font size to 8px and pairs it with a snug line height to prevent the badge from retaining a
- * taller line box.
- */
 export const altSmall = style({
 	fontSize: 8,
 	lineHeight: roundToPx('calc(8px * 1.3)'),

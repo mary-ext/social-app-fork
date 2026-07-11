@@ -21,7 +21,6 @@ export const trigger = style({
 	},
 });
 
-/** Circular camera badge pinned to the bottom-right corner of the avatar. */
 export const editBadge = style({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,

@@ -4,7 +4,6 @@ import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
-// inset around the card so a pill can sit flush against the container edges.
 export const outer = style({ padding: space.md });
 
 export const card = recipe(

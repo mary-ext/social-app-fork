@@ -37,7 +37,6 @@ export const iconCircle = style({
 	alignItems: 'center',
 	backgroundColor: colors.contrast_25,
 	borderRadius: 13,
-	// the icon inherits this via `fill="currentColor"`
 	color: colors.textContrastMedium,
 	display: 'flex',
 	height: 26,
@@ -47,6 +46,5 @@ export const iconCircle = style({
 
 export const label = style({
 	flex: 1,
-	// the RNW Button centers its content; keep the row's label text left-aligned.
 	textAlign: 'left',
 });

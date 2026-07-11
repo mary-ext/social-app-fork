@@ -8,7 +8,6 @@ const focusRing = {
 	outlineOffset: 2,
 } as const;
 
-/** warning row shown in place of a blurred post until it's revealed */
 export const row = style(
 	layered(components, {
 		alignItems: 'center',
@@ -25,7 +24,6 @@ export const row = style(
 	}),
 );
 
-/** The circular icon, also the trigger that opens the moderation-details dialog. */
 export const iconButton = style({
 	appearance: 'none',
 	background: 'none',
@@ -41,7 +39,6 @@ export const iconButton = style({
 	},
 });
 
-/** The contrast-filled circle behind the cause icon; sized inline from `iconSize`. */
 export const iconCircle = style({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,
@@ -51,13 +48,11 @@ export const iconCircle = style({
 	justifyContent: 'center',
 });
 
-/** The cause name; takes the remaining width and clamps to one line. */
 export const name = style({
 	flex: 1,
 	minWidth: 0,
 });
 
-/** The reveal toggle ("Show"). */
 export const toggle = style({
 	appearance: 'none',
 	background: 'none',

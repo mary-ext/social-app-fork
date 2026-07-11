@@ -45,15 +45,12 @@ export const icon = style(
 		color: vars.palette.contrast_1000,
 		display: 'flex',
 		flexShrink: 0,
-		// taller than the 12px chevron so the icon (not the text) sets the trigger's content row to 20px,
-		// giving a 38px trigger height. the chevron stays centered at its natural size.
 		height: 20,
 	}),
 );
 
 export const positioner = style(
 	layered(components, {
-		// the `menu` tier so a select opened inside a dialog paints over it, matching menus & autocomplete
 		zIndex: zIndex.menu,
 	}),
 );
@@ -66,7 +63,6 @@ export const popup = recipe(
 			borderRadius: 8,
 			boxShadow: vars.shadow.md,
 			boxSizing: 'border-box',
-			// the list scrolls inside; the popup clips it (rounded corners) and anchors the scroll arrows
 			display: 'flex',
 			flexDirection: 'column',
 			maxHeight: 'var(--available-height)',
@@ -103,7 +99,6 @@ const SCROLL_ARROW_HEIGHT = 24;
 export const list = style(
 	layered(components, {
 		flex: 1,
-		// the scroll container the scroll arrows drive; `minHeight: 0` lets it shrink to scroll inside the flex popup
 		minHeight: 0,
 		overflowY: 'auto',
 		padding: space.xs,
@@ -112,8 +107,6 @@ export const list = style(
 	}),
 );
 
-// the up/down hover-to-scroll affordances, fading the clipped list edge into the popup background.
-// shown only when the list overflows (Base UI mounts them on demand). Base UI sets `position: absolute`.
 const scrollArrow = style(
 	layered(components, {
 		alignItems: 'center',

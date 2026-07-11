@@ -2,7 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// compact low-contrast notice shown in a record-embed slot for a deleted / blocked / removed post.
 export const outer = style({
 	alignItems: 'center',
 	border: `1px solid ${vars.palette.contrast_100}`,
