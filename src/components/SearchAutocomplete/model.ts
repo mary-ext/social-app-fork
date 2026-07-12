@@ -280,12 +280,12 @@ export const buildResult = ({
 					);
 				}
 			}
-			// hero empty-state when nothing actionable precedes the operator options.
 			if (
 				!rows.some(
 					(row) =>
 						row.kind === 'profile' ||
 						row.kind === 'recent-profile' ||
+						row.kind === 'recent-profile-pending' ||
 						row.kind === 'recent-query' ||
 						row.kind === 'search',
 				)
