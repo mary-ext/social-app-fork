@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import { type ScreenLayoutArgs, useIsFocused } from '@react-navigation/native';
+import type { ScreenLayoutArgs } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import type { FlatNavigatorParams, NativeStackNavigationOptionsWithAuth } from '#/lib/routes/types';
@@ -49,7 +49,6 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 	const { centerColumnOffset } = useLayoutBreakpoints();
 	const newChatHandle = Dialog.useDialogHandle();
 	const t = useTheme();
-	const isFocused = useIsFocused();
 	const { data: chatStatus } = useChatActorStatusQuery();
 
 	const onNewChat = (conversation: string) => navigation.navigate('MessagesConversation', { conversation });
@@ -69,7 +68,7 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 		// fill the shell's center cell exactly (it's sized to this width); the grid centers + offsets the whole
 		// column (the minimal nav included), so the split view itself carries no centering or offset.
 		<View style={[a.flex_1, a.flex_row, { width: containerWidth }]}>
-			{isFocused && <LockScroll />}
+			<LockScroll />
 			<SplitViewProvider side="left">
 				<View style={[a.border_l, t.atoms.border_contrast_low, { width: leftColumnWidth }]}>
 					<ChatListHeader newChatHandle={newChatHandle} chatStatus={chatStatus} />
