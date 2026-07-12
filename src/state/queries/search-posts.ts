@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react';
 
-import type { AppBskyFeedDefs, AppBskyFeedSearchPosts } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedSearchPostsV2 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
@@ -40,28 +40,30 @@ export function useSearchPostsQuery({
 		[author, moderationOpts, query],
 	);
 	const lastRun = useRef<{
-		data: InfiniteData<AppBskyFeedSearchPosts.$output>;
+		data: InfiniteData<AppBskyFeedSearchPostsV2.$output>;
 		args: typeof selectArgs;
-		result: InfiniteData<AppBskyFeedSearchPosts.$output>;
+		result: InfiniteData<AppBskyFeedSearchPostsV2.$output>;
 	} | null>(null);
 
 	return useInfiniteQuery<
-		AppBskyFeedSearchPosts.$output,
+		AppBskyFeedSearchPostsV2.$output,
 		Error,
-		InfiniteData<AppBskyFeedSearchPosts.$output>,
+		InfiniteData<AppBskyFeedSearchPostsV2.$output>,
 		QueryKey,
 		string | undefined
 	>({
 		queryKey: searchPostsQueryKey({ author, query, sort }),
 		queryFn: ({ pageParam }) =>
 			ok(
-				appview.get('app.bsky.feed.searchPosts', {
+				appview.get('app.bsky.feed.searchPostsV2', {
 					params: {
-						author: author as ActorIdentifier | undefined,
+						allTime: true,
+						authors: author ? [author as ActorIdentifier] : undefined,
 						cursor: pageParam,
 						limit: 25,
-						q: query,
-						sort,
+						query,
+						// v2 renames the v1 'latest' recency sort to 'recent'.
+						sort: sort === 'latest' ? 'recent' : sort,
 					},
 				}),
 			),
@@ -69,7 +71,7 @@ export function useSearchPostsQuery({
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		enabled: !!moderationOpts,
 		select: useCallback(
-			(data: InfiniteData<AppBskyFeedSearchPosts.$output>) => {
+			(data: InfiniteData<AppBskyFeedSearchPostsV2.$output>) => {
 				const { moderationOpts, isSearchingSpecificUser } = selectArgs;
 
 				/*
@@ -83,7 +85,7 @@ export function useSearchPostsQuery({
 
 				// Keep track of the last run and whether we can reuse
 				// some already selected pages from there.
-				const reusedPages: AppBskyFeedSearchPosts.$output[] = [];
+				const reusedPages: AppBskyFeedSearchPostsV2.$output[] = [];
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;
@@ -135,7 +137,7 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedSearchPosts.$output>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedSearchPostsV2.$output>>({
 		queryKey: [searchPostsQueryKeyRoot],
 	});
 	const atUri = parseResourceUri(uri);
