@@ -94,6 +94,8 @@ export type InputProps = {
 	autoFocus?: boolean;
 	value?: string;
 	defaultValue?: string;
+	disabled?: boolean;
+	readOnly?: boolean;
 	onChangeText?: (value: string) => void;
 	placeholder?: string;
 	isInvalid?: boolean;
@@ -123,6 +125,8 @@ export function Input({
 	autoFocus,
 	value,
 	defaultValue,
+	disabled,
+	readOnly,
 	onChangeText,
 	placeholder,
 	isInvalid,
@@ -155,12 +159,14 @@ export function Input({
 				autoFocus={autoFocus}
 				className={cls}
 				defaultValue={defaultValue}
+				disabled={disabled}
 				id={inputId}
 				maxLength={maxLength}
 				onBlur={onBlur}
 				onChange={onChange}
 				onFocus={onFocus}
 				placeholder={placeholder}
+				readOnly={readOnly}
 				rows={minRows}
 				style={maxRows ? assignInlineVars({ [styles.maxRowsVar]: String(maxRows) }) : undefined}
 				value={value}
@@ -178,6 +184,7 @@ export function Input({
 			autoFocus={autoFocus}
 			className={cls}
 			defaultValue={defaultValue}
+			disabled={disabled}
 			id={inputId}
 			maxLength={maxLength}
 			onBlur={onBlur}
@@ -185,6 +192,7 @@ export function Input({
 			onFocus={onFocus}
 			onKeyDown={onKeyDown}
 			placeholder={placeholder}
+			readOnly={readOnly}
 			ref={inputRef}
 			type="text"
 			value={value}

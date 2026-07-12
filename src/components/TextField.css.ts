@@ -48,6 +48,7 @@ export const input = style(
 		width: '100%',
 		selectors: {
 			'&::placeholder': { color: vars.palette.contrast_500 },
+			'&:disabled': { cursor: 'default', opacity: 0.5 },
 			'&:hover': { borderColor: vars.palette.contrast_100 },
 			'&:focus': { backgroundColor: vars.palette.primary_25, borderColor: vars.palette.primary_500 },
 		},
