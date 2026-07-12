@@ -14,19 +14,36 @@ import * as reasonCss from './PostFeedReason.css';
 // feed avatar size, matching `PostFeedItem`'s `PreviewableUserAvatar size={36}`.
 const AVI_SIZE = 36;
 
-function PostLoadingPlaceholder({
-	embed,
-	lastLineWidth,
-	reasonWidth,
-	textLines,
-	topBorder,
-}: {
+/** A frozen randomized config for one post placeholder row. */
+export type PostRow = {
 	embed: EmbedSkeleton.Shape | null;
 	lastLineWidth: number;
 	reasonWidth: number | null;
 	textLines: number;
-	topBorder: boolean;
-}) {
+};
+
+/**
+ * draws a randomized config for a single post placeholder row. freeze the result (e.g. hold it for the
+ * component's lifetime) so the row doesn't reshuffle on every re-render.
+ *
+ * @param reason whether a row may carry a repost/pin reason line. pass false in contexts that never show one
+ *   (e.g. the notification feed), which forces `reasonWidth` to null. defaults to true.
+ * @returns a post row config
+ */
+export function randomPostRow({ reason = true }: { reason?: boolean } = {}): PostRow {
+	return {
+		embed: EmbedSkeleton.randomShape(),
+		lastLineWidth: triangularRandom(35, 90, 5),
+		// ~30% of rows carry a repost/pin reason line, sized in px to the "Reposted by …" handle's natural
+		// width; null leaves the row empty (just its reserved space)
+		reasonWidth: reason && weightedRandomIndex([7, 3]) === 1 ? triangularRandom(110, 210, 10) : null,
+		// post bodies cluster around a couple of lines; a triangular draw peaks there and tails to 1 and 5
+		textLines: triangularRandom(1, 5),
+	};
+}
+
+export function PostLoadingPlaceholder({ row, topBorder }: { row: PostRow; topBorder: boolean }) {
+	const { embed, lastLineWidth, reasonWidth, textLines } = row;
 	return (
 		<PostLayout.Frame topBorder={topBorder}>
 			{/* the real item always renders this reason row; even empty it reserves the post's top spacing, and
@@ -62,27 +79,12 @@ function PostLoadingPlaceholder({
 
 export function PostFeedLoadingPlaceholder({ topBorder = false }: { topBorder?: boolean }) {
 	// freeze the per-row variety for the component's lifetime so it doesn't reshuffle on every re-render.
-	const rows = Array.from({ length: 9 }, () => ({
-		embed: EmbedSkeleton.randomShape(),
-		lastLineWidth: triangularRandom(35, 90, 5),
-		// ~30% of rows carry a repost/pin reason line, sized in px to the "Reposted by …" handle's natural
-		// width; null leaves the row empty (just its reserved space)
-		reasonWidth: weightedRandomIndex([7, 3]) === 1 ? triangularRandom(110, 210, 10) : null,
-		// post bodies cluster around a couple of lines; a triangular draw peaks there and tails to 1 and 5
-		textLines: triangularRandom(1, 5),
-	}));
+	const rows = Array.from({ length: 9 }, () => randomPostRow());
 
 	return (
 		<>
 			{rows.map((row, i) => (
-				<PostLoadingPlaceholder
-					key={i}
-					embed={row.embed}
-					lastLineWidth={row.lastLineWidth}
-					reasonWidth={row.reasonWidth}
-					textLines={row.textLines}
-					topBorder={topBorder || i !== 0}
-				/>
+				<PostLoadingPlaceholder key={i} row={row} topBorder={topBorder || i !== 0} />
 			))}
 		</>
 	);
