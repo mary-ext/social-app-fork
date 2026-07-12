@@ -28,7 +28,6 @@ import { List } from '#/view/com/util/List';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
@@ -39,6 +38,7 @@ import * as ProfileCard from '#/components/ProfileCard';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -114,7 +114,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	const { currentAccount } = useSession();
 	const navigation = useNavigation<NavigationProp>();
 	const queryClient = useQueryClient();
-	const inviteLinkControl = Dialog.useDialogControl();
+	const inviteLinkHandle = Dialog.useDialogHandle();
 
 	const getRemainingRequestCount = () => {
 		const data = queryClient.getQueryData<InfiniteData<ChatBskyGroupListJoinRequests.$output>>(
@@ -254,15 +254,19 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				},
 			]}
 		>
-			<Button
-				label={m['screens.messages.inviteLink.edit.action']()}
-				size="large"
-				color="primary"
-				onPress={() => inviteLinkControl.open()}
-				style={[a.w_full]}
-			>
-				<ButtonText>{m['screens.messages.inviteLink.edit.action']()}</ButtonText>
-			</Button>
+			<Dialog.Trigger
+				handle={inviteLinkHandle}
+				render={
+					<Button
+						label={m['screens.messages.inviteLink.edit.action']()}
+						size="large"
+						color="primary"
+						style={[a.w_full]}
+					>
+						<ButtonText>{m['screens.messages.inviteLink.edit.action']()}</ButtonText>
+					</Button>
+				}
+			/>
 		</View>
 	);
 
@@ -343,7 +347,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			{owner && moderationOpts && (
 				<InviteLinkDialog
 					convo={convo}
-					control={inviteLinkControl}
+					handle={inviteLinkHandle}
 					owner={owner}
 					isOwner={isOwner}
 					moderationOpts={moderationOpts}

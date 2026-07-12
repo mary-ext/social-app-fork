@@ -1,55 +1,41 @@
-import { View } from 'react-native';
+import type { ReactNode } from 'react';
 
-import { atoms as a, useTheme } from '#/alf';
+import clsx from 'clsx';
 
-import { Button, type ButtonProps } from '#/components/Button';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
-export function EditTextButton({ children, style, onPress, ...props }: ButtonProps & { value: string }) {
-	const t = useTheme();
+import * as css from './EditTextButton.css';
 
+export function EditTextButton({
+	children,
+	className,
+	label,
+	onClick,
+}: {
+	children: ReactNode;
+	className?: string;
+	label: string;
+	onClick?: () => void;
+}) {
 	return (
-		<View style={[a.relative]}>
-			<Button
-				color="secondary"
-				style={[
-					a.flex_1,
-					a.justify_between,
-					a.rounded_full,
-					a.border,
-					t.atoms.bg,
-					t.atoms.border_contrast_low,
-					style,
-				]}
-				onPress={onPress}
-				{...props}
-			>
-				{(context) => (
-					<View
-						style={[
-							a.flex_1,
-							a.flex_row,
-							a.align_center,
-							a.justify_between,
-							a.pl_lg,
-							a.pr_sm,
-							a.py_sm,
-							a.gap_sm,
-						]}
-					>
-						{typeof children === 'function' ? children(context) : children}
-						<View
-							style={[a.rounded_full, t.atoms.bg_contrast_50, { paddingHorizontal: 10, paddingVertical: 8 }]}
-						>
-							<Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
-								{m['common.action.edit']()}
-							</Text>
-						</View>
-					</View>
-				)}
-			</Button>
-		</View>
+		<Button
+			className={clsx(css.button, className)}
+			color="secondary"
+			label={label}
+			size="large"
+			variant="solid"
+			onClick={onClick}
+		>
+			{children}
+
+			<span className={css.editLabel}>
+				<Text color="textContrastMedium" size="sm" weight="medium">
+					{m['common.action.edit']()}
+				</Text>
+			</span>
+		</Button>
 	);
 }

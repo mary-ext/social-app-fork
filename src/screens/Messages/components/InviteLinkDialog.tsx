@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { View } from 'react-native';
+import { type ReactNode, useState } from 'react';
 
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 import {
@@ -18,25 +17,25 @@ import { useDisableJoinLink } from '#/state/queries/messages/disable-join-link';
 import { useEditJoinLink } from '#/state/queries/messages/edit-join-link';
 import { useEnableJoinLink } from '#/state/queries/messages/enable-join-link';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText, StackedButton } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
-import * as Toggle from '#/components/forms/Toggle';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import { ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon } from '#/components/icons/ChainLink';
 import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import * as Toggle from '#/components/web/forms/Toggle';
+import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-import { CopyTextButton } from './CopyTextButton';
+import { CopyLinkField } from './CopyLinkField';
 import { EditTextButton } from './EditTextButton';
+import * as css from './InviteLinkDialog.css';
 
 enum Step {
 	INFO,
@@ -45,20 +44,25 @@ enum Step {
 	CONFIRM_DISABLE,
 }
 
-export function InviteLinkDialog({
-	convo,
-	control,
-	owner,
-	isOwner,
-	moderationOpts,
-}: {
+type DialogInnerProps = {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	control: Dialog.DialogOuterProps['control'];
-	owner: GroupConvoMember;
+	handle: Dialog.DialogHandle;
 	isOwner: boolean;
 	moderationOpts: ModerationOptions;
-}) {
-	const t = useTheme();
+	owner: GroupConvoMember;
+};
+
+export function InviteLinkDialog(props: DialogInnerProps) {
+	return (
+		<Dialog.Root handle={props.handle}>
+			<Dialog.Popup size="narrow">
+				<DialogInner {...props} />
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
+function DialogInner({ convo, handle, isOwner, moderationOpts, owner }: DialogInnerProps) {
 	const ownerName = createSanitizedDisplayName(
 		owner,
 		false,
@@ -67,11 +71,8 @@ export function InviteLinkDialog({
 
 	const { joinLink } = convo.details;
 
-	const defaultStep = joinLink ? Step.MANAGE : Step.INFO;
-	const defaultWhoCanJoin = joinLink ? joinLinkToKey(joinLink) : 'anyone';
-
-	const [step, setStep] = useState(defaultStep);
-	const [whoCanJoin, setWhoCanJoin] = useState(defaultWhoCanJoin);
+	const [step, setStep] = useState(joinLink ? Step.MANAGE : Step.INFO);
+	const [whoCanJoin, setWhoCanJoin] = useState(joinLink ? joinLinkToKey(joinLink) : 'anyone');
 
 	// Resync local state when the server-side join link rules change (mutation
 	// success, refetch, or change from another client). Keyed on the rule string
@@ -121,6 +122,11 @@ export function InviteLinkDialog({
 		},
 	});
 	const isSaving = isCreating || isEditing;
+	const onWhoCanJoinChange = ([value]: string[]) => {
+		if (value) {
+			setWhoCanJoin(value);
+		}
+	};
 
 	const whoCanJoinOptions = [
 		{
@@ -145,123 +151,136 @@ export function InviteLinkDialog({
 		},
 	];
 
-	let content: React.ReactNode = null;
-	let header: string | null = null;
+	if (!isOwner && (!joinLink || joinLink.enabledStatus === 'disabled')) {
+		return (
+			<StepLayout title={m['screens.messages.inviteLink.label']()}>
+				<Text>{m['screens.messages.inviteLink.empty']()}</Text>
+
+				<Button
+					label={m['common.action.close']()}
+					color="primary"
+					size="large"
+					onClick={() => handle.close()}
+					variant="solid"
+				>
+					<ButtonText>{m['common.action.close']()}</ButtonText>
+				</Button>
+			</StepLayout>
+		);
+	}
+
 	switch (step) {
 		case Step.INFO: {
-			header = m['screens.messages.inviteLink.label']();
-			content = (
-				<>
-					<View style={[a.gap_lg]}>
-						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.inviteLink.info']()}</Text>
-						<Text style={[a.text_md, a.leading_snug]}>
+			return (
+				<StepLayout title={m['screens.messages.inviteLink.label']()}>
+					<Stack gap="md">
+						<Text leading="snug" size="md">
+							{m['screens.messages.inviteLink.info']()}
+						</Text>
+						<Text leading="snug" size="md">
 							{m['screens.messages.members.add.limit']({ count: convo.details.memberLimit })}
 						</Text>
-						<Text style={[a.text_md, a.leading_snug]}>{m['screens.messages.inviteLink.privacy']()}</Text>
-					</View>
-					<View style={[a.mt_4xl]}>
-						<Button
-							label={m['screens.messages.conversation.getStarted']()}
-							color="primary"
-							size="large"
-							onPress={() => {
-								setStep(Step.GENERATE);
-							}}
-						>
-							<ButtonText>{m['screens.messages.conversation.getStarted']()}</ButtonText>
-							<ButtonIcon icon={ArrowRightIcon} />
-						</Button>
-					</View>
-				</>
+						<Text leading="snug" size="md">
+							{m['screens.messages.inviteLink.privacy']()}
+						</Text>
+					</Stack>
+
+					<Button
+						label={m['screens.messages.conversation.getStarted']()}
+						color="primary"
+						size="large"
+						onClick={() => {
+							setStep(Step.GENERATE);
+						}}
+						variant="solid"
+					>
+						<ButtonText>{m['screens.messages.conversation.getStarted']()}</ButtonText>
+						<ButtonIcon icon={ArrowRightIcon} />
+					</Button>
+				</StepLayout>
 			);
-			break;
 		}
 		case Step.GENERATE: {
 			const linkEnabled = joinLink?.enabledStatus === 'enabled';
 			const linkHasChanged = linkEnabled && joinLinkRuleKey !== whoCanJoin;
 
-			header = linkEnabled
-				? m['screens.messages.inviteLink.edit.update']()
-				: m['screens.messages.inviteLink.generate.action']();
-			content = (
-				<>
-					<Text style={[a.text_md]}>{m['screens.messages.joinSettings.hint']()}</Text>
-					<View style={[a.mt_lg]}>
-						<Toggle.Group
-							label={m['screens.messages.joinSettings.label']()}
-							type="radio"
-							values={[whoCanJoin]}
-							onChange={([value]) => setWhoCanJoin(value!)}
-						>
-							<View style={[a.gap_xs]}>
-								{whoCanJoinOptions.map((option) => (
-									<Toggle.Item
-										key={option.name}
-										highlightRow
-										label={isOwner ? option.owner : option.member}
-										name={option.name}
-										style={[a.flex_1]}
-									>
-										{({ selected }) => (
-											<Toggle.RadioWithLabel
-												label={isOwner ? option.owner : option.member}
-												selected={selected}
-											/>
-										)}
-									</Toggle.Item>
-								))}
-							</View>
-						</Toggle.Group>
-					</View>
-					<View style={[a.mt_4xl]}>
-						<Button
-							label={
-								linkEnabled
-									? linkHasChanged
-										? m['screens.messages.inviteLink.edit.update']()
-										: m['common.action.back']()
-									: m['screens.messages.inviteLink.generate.action']()
-							}
-							color={linkEnabled && !linkHasChanged ? 'secondary' : 'primary'}
-							size="large"
-							disabled={isSaving}
-							onPress={() => {
-								const { joinRule, requireApproval } = keyToJoinLink(whoCanJoin);
-								if (linkEnabled) {
-									if (!linkHasChanged) {
-										setStep(Step.MANAGE);
-										return;
-									}
-									editJoinLink({
-										joinRule,
-										requireApproval,
-									});
-								} else {
-									createJoinLink({
-										joinRule,
-										requireApproval,
-									});
+			return (
+				<StepLayout
+					title={
+						linkEnabled
+							? m['screens.messages.inviteLink.edit.update']()
+							: m['screens.messages.inviteLink.generate.action']()
+					}
+					subtitle={m['screens.messages.joinSettings.hint']()}
+				>
+					<Toggle.Group
+						label={m['screens.messages.joinSettings.label']()}
+						type="radio"
+						values={[whoCanJoin]}
+						onChange={onWhoCanJoinChange}
+						className={css.radioList}
+					>
+						{whoCanJoinOptions.map((option) => {
+							const label = isOwner ? option.owner : option.member;
+							return (
+								<Toggle.RadioItem key={option.name} label={label} value={option.name}>
+									<Toggle.Panel>
+										<Toggle.RadioIndicator />
+										<Toggle.PanelText>{label}</Toggle.PanelText>
+									</Toggle.Panel>
+								</Toggle.RadioItem>
+							);
+						})}
+					</Toggle.Group>
+
+					<Button
+						label={
+							linkEnabled
+								? linkHasChanged
+									? m['screens.messages.inviteLink.edit.update']()
+									: m['common.action.back']()
+								: m['screens.messages.inviteLink.generate.action']()
+						}
+						color={linkEnabled && !linkHasChanged ? 'secondary' : 'primary'}
+						size="large"
+						disabled={isSaving}
+						onClick={() => {
+							const { joinRule, requireApproval } = keyToJoinLink(whoCanJoin);
+							if (linkEnabled) {
+								if (!linkHasChanged) {
+									setStep(Step.MANAGE);
+									return;
 								}
-							}}
-						>
-							<ButtonText>
-								{linkEnabled
-									? linkHasChanged
-										? m['screens.messages.inviteLink.edit.update']()
-										: m['common.action.back']()
-									: m['screens.messages.inviteLink.generate.action']()}
-							</ButtonText>
-							{linkHasChanged &&
-								(isSaving ? (
-									<Spinner color="white" label={m['common.status.saving']()} size="sm" />
-								) : (
-									<ButtonIcon icon={ArrowRightIcon} />
-								))}
-						</Button>
-					</View>
-				</>
+								editJoinLink({
+									joinRule,
+									requireApproval,
+								});
+							} else {
+								createJoinLink({
+									joinRule,
+									requireApproval,
+								});
+							}
+						}}
+						variant="solid"
+					>
+						<ButtonText>
+							{linkEnabled
+								? linkHasChanged
+									? m['screens.messages.inviteLink.edit.update']()
+									: m['common.action.back']()
+								: m['screens.messages.inviteLink.generate.action']()}
+						</ButtonText>
+						{linkHasChanged ? (
+							isSaving ? (
+								<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+							) : (
+								<ButtonIcon icon={ArrowRightIcon} />
+							)
+						) : null}
+					</Button>
+				</StepLayout>
 			);
-			break;
 		}
 		case Step.MANAGE: {
 			const linkEnabled = joinLink?.enabledStatus === 'enabled';
@@ -273,140 +292,137 @@ export function InviteLinkDialog({
 				whoCanJoinOptions[0]!;
 			const ownerValue = currentOption?.owner ?? whoCanJoinOptions[0]!.owner;
 			const memberValue = currentOption?.member ?? whoCanJoinOptions[0]!.member;
-			header = linkEnabled ? m['screens.messages.inviteLink.label']() : m['common.chat.inviteLinkDisabled']();
-			content = (
-				<>
-					<View style={[a.mt_lg]}>
-						<CopyTextButton
+
+			return (
+				<StepLayout
+					title={
+						linkEnabled ? m['screens.messages.inviteLink.label']() : m['common.chat.inviteLinkDisabled']()
+					}
+				>
+					<Stack gap="sm">
+						<CopyLinkField
 							disabled={linkDisabled || !joinLink?.code}
 							label={m['screens.messages.inviteLink.label']()}
 							value={joinLinkURI}
-						>
-							<Text
-								numberOfLines={1}
-								style={[a.mr_xs, a.text_md, linkDisabled ? t.atoms.text_contrast_low : t.atoms.text]}
-							>
-								{joinLinkURI}
-							</Text>
-						</CopyTextButton>
+						/>
+
 						{createdAt ? (
-							<Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
+							<Text color="textContrastMedium" size="sm">
 								{m['screens.messages.inviteLink.created']({
 									date: createdAt,
 								})}
 							</Text>
 						) : null}
-					</View>
+					</Stack>
+
 					{linkEnabled ? (
 						isOwner ? (
-							<View style={[a.mt_lg]}>
-								<EditTextButton
-									label={m['screens.messages.inviteLink.edit.settings']()}
-									value={ownerValue}
-									onPress={() => setStep(Step.GENERATE)}
-								>
-									<View style={[a.flex_1]}>
-										<Text style={[a.text_sm]}>{ownerValue}</Text>
-									</View>
-								</EditTextButton>
-							</View>
+							<EditTextButton label={ownerValue} onClick={() => setStep(Step.GENERATE)}>
+								<Text size="md_sub">{ownerValue}</Text>
+							</EditTextButton>
 						) : (
-							<Text style={[a.mt_sm, a.mb_sm, a.text_sm]}>{memberValue}</Text>
+							<Text className={css.memberValue} size="sm">
+								{memberValue}
+							</Text>
 						)
 					) : null}
+
 					{linkEnabled ? (
-						<View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
+						<Dialog.Actions align="center">
 							{isOwner ? (
-								<StackedButton
+								<Button
 									label={m['screens.messages.inviteLink.disable.confirm']()}
-									icon={ChainLinkBrokenIcon}
 									color="negative_subtle"
-									style={[a.flex_1, a.rounded_full]}
-									onPress={() => setStep(Step.CONFIRM_DISABLE)}
+									onClick={() => setStep(Step.CONFIRM_DISABLE)}
 								>
-									{m['screens.messages.inviteLink.disable.confirm']()}
-								</StackedButton>
+									<ButtonIcon icon={ChainLinkBrokenIcon} />
+									<ButtonText>{m['screens.messages.inviteLink.disable.confirm']()}</ButtonText>
+								</Button>
 							) : null}
-							<StackedButton
+							<Button
 								disabled={linkDisabled}
 								label={m['screens.messages.composer.embed.postLink']()}
-								icon={EditIcon}
 								color="primary_subtle"
-								style={[a.flex_1, a.rounded_full]}
-								onPress={() => {
-									control.close(() => {
-										openComposer({
-											text: joinLinkURI,
-										});
+								onClick={() => {
+									handle.close();
+									openComposer({
+										text: joinLinkURI,
 									});
 								}}
 							>
-								{m['screens.messages.composer.embed.postLink']()}
-							</StackedButton>
-							<StackedButton
+								<ButtonIcon icon={EditIcon} />
+								<ButtonText>{m['screens.messages.composer.embed.postLink']()}</ButtonText>
+							</Button>
+							<Button
 								disabled={linkDisabled}
 								label={m['common.share.action.share']()}
-								icon={ArrowShareRightIcon}
 								color="primary_subtle"
-								style={[a.flex_1, a.rounded_full]}
-								onPress={() => {
+								onClick={() => {
 									void shareUrl(joinLinkURI);
 								}}
 							>
-								{m['common.share.action.share']()}
-							</StackedButton>
-						</View>
+								<ButtonIcon icon={ArrowShareRightIcon} />
+								<ButtonText>{m['common.share.action.share']()}</ButtonText>
+							</Button>
+						</Dialog.Actions>
 					) : (
-						<View style={[a.gap_md, a.mt_lg]}>
+						<Stack gap="md">
 							<Button
 								disabled={isEnabling || isDisabling}
 								label={m['screens.messages.inviteLink.enable.action']()}
 								color="primary"
 								size="large"
-								onPress={() => {
+								onClick={() => {
 									enableJoinLink();
 								}}
+								variant="solid"
 							>
 								<ButtonText>{m['screens.messages.inviteLink.enable.short']()}</ButtonText>
-								{isEnabling && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+								{isEnabling ? <Spinner color="white" label={m['common.status.saving']()} size="sm" /> : null}
 							</Button>
 							<Button
 								disabled={isEnabling || isDisabling}
 								label={m['screens.messages.inviteLink.generate.new']()}
 								color="secondary"
 								size="large"
-								onPress={() => setStep(Step.GENERATE)}
+								onClick={() => setStep(Step.GENERATE)}
+								variant="solid"
 							>
 								<ButtonText>{m['screens.messages.inviteLink.generate.newShort']()}</ButtonText>
 							</Button>
-						</View>
+						</Stack>
 					)}
-				</>
+				</StepLayout>
 			);
-			break;
 		}
 		case Step.CONFIRM_DISABLE: {
-			content = (
-				<>
-					<View style={[a.align_center, a.justify_center, a.mb_lg]}>
+			return (
+				<Stack gap="xl">
+					<Dialog.Close variant="floating" />
+
+					<div className={css.confirm}>
 						<ChainLinkBrokenIcon fill={colors.negative_500} size="4xl" />
-					</View>
-					<Text style={[a.flex_1, a.pb_sm, a.text_center, a.text_lg, a.font_bold, a.leading_snug]}>
-						{m['screens.messages.inviteLink.disable.title']()}
-					</Text>
-					<Text style={[a.pb_2xl, a.text_center, a.text_sm, a.leading_snug]}>
-						{m['screens.messages.inviteLink.disable.message']()}
-					</Text>
-					<View style={[a.w_full, a.gap_md, a.justify_end]}>
+
+						<Dialog.Title className={css.confirmTitle}>
+							{m['screens.messages.inviteLink.disable.title']()}
+						</Dialog.Title>
+
+						<Text align="center" className={css.confirmMessage} color="textContrastMedium">
+							{m['screens.messages.inviteLink.disable.message']()}
+						</Text>
+					</div>
+
+					<Stack gap="md">
 						<Button
 							color="negative"
 							disabled={isDisabling}
 							size="large"
 							label={m['screens.messages.inviteLink.disable.action']()}
-							onPress={() => {
+							onClick={() => {
 								disableJoinLink();
 								setStep(Step.MANAGE);
 							}}
+							variant="solid"
 						>
 							<ButtonText>{m['screens.messages.inviteLink.disable.action']()}</ButtonText>
 						</Button>
@@ -414,64 +430,42 @@ export function InviteLinkDialog({
 							color="secondary"
 							size="large"
 							label={m['common.action.cancel']()}
-							onPress={() => {
+							onClick={() => {
 								setStep(Step.MANAGE);
 							}}
+							variant="solid"
 						>
 							<ButtonText>{m['common.action.cancel']()}</ButtonText>
 						</Button>
-					</View>
-				</>
+					</Stack>
+				</Stack>
 			);
-			break;
 		}
 	}
+}
 
-	if (!isOwner && (!joinLink || joinLink.enabledStatus === 'disabled')) {
-		header = m['screens.messages.inviteLink.label']();
-		content = (
-			<>
-				<View style={[a.mt_lg]}>
-					<Text style={[a.text_sm]}>{m['screens.messages.inviteLink.empty']()}</Text>
-				</View>
-				<View style={[a.gap_md, a.mt_lg]}>
-					<Button
-						label={m['common.action.close']()}
-						color="primary"
-						size="large"
-						onPress={() => control.close()}
-					>
-						<ButtonText>{m['common.action.close']()}</ButtonText>
-					</Button>
-				</View>
-			</>
-		);
-	}
-
+function StepLayout({
+	title,
+	subtitle,
+	children,
+}: {
+	title: string;
+	subtitle?: string;
+	children: ReactNode;
+}) {
 	return (
-		<Dialog.Outer
-			control={control}
-			onClose={() => {
-				setStep(defaultStep);
-				setWhoCanJoin(defaultWhoCanJoin);
-			}}
-		>
-			<Dialog.Handle />
-			<Dialog.ScrollableInner
-				header={
-					<View>
-						<View style={[a.px_2xl, a.pt_xl]}>
-							<Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{header}</Text>
-						</View>
-						<Dialog.Close />
-					</View>
-				}
-				label={m['screens.messages.inviteLink.a11y']()}
-				style={{ maxWidth: 400 }}
-			>
-				{content}
-			</Dialog.ScrollableInner>
-		</Dialog.Outer>
+		<Stack gap="xl">
+			<Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{title}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
+				{subtitle ? <Text color="textContrastMedium">{subtitle}</Text> : null}
+			</Stack>
+
+			{children}
+		</Stack>
 	);
 }
 

@@ -14,6 +14,7 @@ import { Button } from '#/components/Button';
 import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -28,7 +29,7 @@ export function SystemMessageItem({
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 }) {
 	const t = useTheme();
-	const inviteLinkControl = useInviteLinkDialog();
+	const inviteLinkHandle = useInviteLinkDialog();
 
 	const info = getSystemMessageInfo(item.message.data, relatedProfiles);
 	if (!info) return null;
@@ -65,11 +66,16 @@ export function SystemMessageItem({
 				</Link>
 			);
 		case 'inviteLink':
-			if (!inviteLinkControl) return row;
+			if (!inviteLinkHandle) return row;
 			return (
-				<Button label={text} onPress={inviteLinkControl.open} style={a.w_full}>
-					{row}
-				</Button>
+				<Dialog.Trigger
+					handle={inviteLinkHandle}
+					render={
+						<Button label={text} style={a.w_full}>
+							{row}
+						</Button>
+					}
+				/>
 			);
 		default:
 			return row;

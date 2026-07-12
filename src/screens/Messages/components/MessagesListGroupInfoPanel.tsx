@@ -12,13 +12,14 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
+import * as LegacyDialog from '#/components/Dialog';
 import { AddMembersFlow } from '#/components/dms/AddMembersFlow';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 
@@ -33,8 +34,8 @@ export function MessagesListGroupInfoPanel({
 	const moderationOpts = useModerationOpts();
 	const convoId = convo.view.id;
 
-	const addMembersControl = Dialog.useDialogControl();
-	const inviteLinkControl = Dialog.useDialogControl();
+	const addMembersControl = LegacyDialog.useDialogControl();
+	const inviteLinkHandle = Dialog.useDialogHandle();
 
 	const { currentAccount } = useSession();
 
@@ -110,19 +111,23 @@ export function MessagesListGroupInfoPanel({
 							</Button>
 						) : null}
 						{isJoinLinkEnabled ? (
-							<Button
-								color="secondary"
-								size="small"
-								label={
-									isOwner
-										? m['screens.messages.inviteLink.manage.a11y']()
-										: m['screens.messages.inviteLink.view.a11y']()
+							<Dialog.Trigger
+								handle={inviteLinkHandle}
+								render={
+									<Button
+										color="secondary"
+										size="small"
+										label={
+											isOwner
+												? m['screens.messages.inviteLink.manage.a11y']()
+												: m['screens.messages.inviteLink.view.a11y']()
+										}
+									>
+										<ButtonIcon icon={ChainLinkIcon} />
+										<ButtonText>{m['screens.messages.inviteLink.label']()}</ButtonText>
+									</Button>
 								}
-								onPress={inviteLinkControl.open}
-							>
-								<ButtonIcon icon={ChainLinkIcon} />
-								<ButtonText>{m['screens.messages.inviteLink.label']()}</ButtonText>
-							</Button>
+							/>
 						) : null}
 					</View>
 				) : null}
@@ -133,17 +138,17 @@ export function MessagesListGroupInfoPanel({
 					owner={convo.primaryMember}
 					moderationOpts={moderationOpts}
 					isOwner={isOwner}
-					control={inviteLinkControl}
+					handle={inviteLinkHandle}
 				/>
 			)}
-			<Dialog.Outer control={addMembersControl} testID="addChatMembersDialog">
-				<Dialog.Handle />
+			<LegacyDialog.Outer control={addMembersControl} testID="addChatMembersDialog">
+				<LegacyDialog.Handle />
 				<AddMembersFlow
 					convo={convo}
 					title={m['common.action.addPeople']()}
 					onAddMembers={(members, profiles) => addGroupMembers({ members, profiles })}
 				/>
-			</Dialog.Outer>
+			</LegacyDialog.Outer>
 		</>
 	);
 }

@@ -29,8 +29,6 @@ import { List } from '#/view/com/util/List';
 import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
-import { Button, type ButtonColor, ButtonIcon } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
@@ -41,7 +39,6 @@ import {
 	Bell2Off_Stroke2_Corner0_Rounded as BellOffIcon,
 } from '#/components/icons/Bell2';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
@@ -59,6 +56,7 @@ import { AddMembersLink } from './AddMembersLink';
 import { Member, MemberPlaceholder } from './Member';
 import { MembersAndRequests } from './MembersAndRequests';
 import { EditNamePrompt, LeaveAndLockChatPrompt, LeaveChatPrompt, LockChatPrompt } from './prompts';
+import { SettingsButton } from './SettingsButton';
 
 type Item =
 	| { type: 'MEMBERS_AND_REQUESTS'; key: string }
@@ -377,7 +375,7 @@ function SettingsHeader({
 		leaveConvo();
 	};
 
-	const inviteLinkDialog = useDialogControl();
+	const inviteLinkDialog = Dialog.useDialogHandle();
 	const editNamePrompt = Prompt.usePromptHandle();
 	const lockChatPrompt = Prompt.usePromptHandle();
 	const leaveChatPrompt = Prompt.usePromptHandle();
@@ -436,7 +434,7 @@ function SettingsHeader({
 								: m['screens.messages.mute.action.mute']()
 						}
 						text={convo.view.muted ? m['common.mute.status']() : m['common.mute.action.mute']()}
-						onPress={handleToggleMute}
+						onClick={handleToggleMute}
 					/>
 					{isOwner ? (
 						<SettingsButton
@@ -444,20 +442,24 @@ function SettingsHeader({
 							icon={EditIcon}
 							label={m['screens.messages.groupName.edit.a11y']()}
 							text={m['screens.messages.groupName.edit.short']()}
-							onPress={handlePromptName}
+							onClick={handlePromptName}
 						/>
 					) : null}
 					{isJoinLinkEnabled ? (
-						<SettingsButton
-							disabled={lockStatus !== 'unlocked'}
-							icon={ChainLinkIcon}
-							label={
-								isOwner
-									? m['screens.messages.inviteLink.manage.label']()
-									: m['screens.messages.inviteLink.view.hint']()
+						<Dialog.Trigger
+							handle={inviteLinkDialog}
+							render={
+								<SettingsButton
+									disabled={lockStatus !== 'unlocked'}
+									icon={ChainLinkIcon}
+									label={
+										isOwner
+											? m['screens.messages.inviteLink.manage.label']()
+											: m['screens.messages.inviteLink.view.hint']()
+									}
+									text={m['screens.messages.inviteLink.label']()}
+								/>
 							}
-							text={m['screens.messages.inviteLink.label']()}
-							onPress={inviteLinkDialog.open}
 						/>
 					) : null}
 					{canLockGroupChat ? (
@@ -475,7 +477,7 @@ function SettingsHeader({
 									? m['screens.messages.lock.label']()
 									: m['screens.messages.lock.action.lock']()
 							}
-							onPress={lockStatus === 'locked' ? handleUnlock : () => lockChatPrompt.open(null)}
+							onClick={lockStatus === 'locked' ? handleUnlock : () => lockChatPrompt.open(null)}
 						/>
 					) : null}
 					{!isOwner && reportSubjectDid ? (
@@ -483,7 +485,7 @@ function SettingsHeader({
 							icon={FlagIcon}
 							label={m['screens.messages.report.group']()}
 							text={m['common.action.report']()}
-							onPress={() => reportHandle.open(null)}
+							onClick={() => reportHandle.open(null)}
 						/>
 					) : null}
 					<SettingsButton
@@ -491,7 +493,7 @@ function SettingsHeader({
 						icon={ArrowBoxLeftIcon}
 						label={m['screens.messages.leave.a11y']()}
 						text={m['common.action.leave']()}
-						onPress={isOwner ? () => leaveAndLockChatPrompt.open(null) : () => leaveChatPrompt.open(null)}
+						onClick={isOwner ? () => leaveAndLockChatPrompt.open(null) : () => leaveChatPrompt.open(null)}
 					/>
 				</View>
 			</View>
@@ -506,7 +508,7 @@ function SettingsHeader({
 				<InviteLinkDialog
 					convo={convo}
 					owner={convo.primaryMember}
-					control={inviteLinkDialog}
+					handle={inviteLinkDialog}
 					isOwner={isOwner}
 					moderationOpts={moderationOpts}
 				/>
@@ -534,47 +536,5 @@ function SettingsHeader({
 				</>
 			) : null}
 		</>
-	);
-}
-
-function SettingsButton({
-	color = 'secondary',
-	disabled,
-	icon,
-	label,
-	text,
-	onPress,
-}: {
-	color?: ButtonColor;
-	disabled?: boolean;
-	icon: React.ComponentType<SVGIconProps>;
-	label: string;
-	text: string;
-	onPress: () => void;
-}) {
-	const t = useTheme();
-
-	return (
-		<View style={[a.align_center]}>
-			<Button
-				color={color}
-				disabled={disabled}
-				size="large"
-				shape="round"
-				label={label}
-				onPress={onPress}
-				style={[
-					{
-						width: 48,
-						height: 48,
-					},
-				]}
-			>
-				<ButtonIcon icon={icon} size="md" />
-			</Button>
-			<Text numberOfLines={1} style={[a.text_xs, a.font_medium, a.text_center, a.pt_xs, t.atoms.text]}>
-				{text}
-			</Text>
-		</View>
 	);
 }

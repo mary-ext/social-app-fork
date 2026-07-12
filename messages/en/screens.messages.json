@@ -87,11 +87,10 @@
 	"screens.messages.groupName.edit.error": "Failed to edit group chat name",
 	"screens.messages.groupName.edit.short": "Edit name",
 	"screens.messages.groupName.updatedToast": "Group chat name updated",
-	"screens.messages.inviteLink.a11y": "Group chat invite link dialog",
 	"screens.messages.inviteLink.copiedToast": "Copied!",
 	"screens.messages.inviteLink.created": [
 		{
-			"declarations": ["input date", "local d = date: datetime year=numeric month=long day=numeric"],
+			"declarations": ["input date", "local d = date: datetime dateStyle=long timeStyle=short"],
 			"selectors": [],
 			"match": {
 				"": "Created {d}"
@@ -105,7 +104,6 @@
 	"screens.messages.inviteLink.disable.title": "Disable this invite link?",
 	"screens.messages.inviteLink.edit.action": "Edit invite link",
 	"screens.messages.inviteLink.edit.error": "Failed to edit invite link",
-	"screens.messages.inviteLink.edit.settings": "Edit link settings",
 	"screens.messages.inviteLink.edit.update": "Update invite link",
 	"screens.messages.inviteLink.empty": "There is no invite link for this group chat.",
 	"screens.messages.inviteLink.enable.action": "Re-enable invite link",
