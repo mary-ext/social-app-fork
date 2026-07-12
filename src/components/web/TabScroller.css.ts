@@ -6,6 +6,7 @@ import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
+/** Horizontal inset of the scroller and its edge fades; set per-consumer via `gutterWidth`. */
 export const gutterVar = createVar();
 
 export const outer = style({
@@ -47,6 +48,8 @@ export const tab = recipe(
 			cursor: 'pointer',
 			display: 'flex',
 			flexShrink: 0,
+			// gap only shows through with multiple children (e.g. a label beside a count); single-label pills are unaffected.
+			gap: space.sm,
 			margin: 0,
 			paddingBlock: space.sm,
 			paddingInline: space.lg,

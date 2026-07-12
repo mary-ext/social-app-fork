@@ -88,7 +88,6 @@
 	"components.dms.reaction.a11y.removeReaction": "Tap to remove your {value} reaction",
 	"components.dms.reaction.a11y.show": "Tap to show {value} reactions",
 	"components.dms.reaction.a11y.showAll": "Tap to show all reactions",
-	"components.dms.reaction.a11y.view": "Tap to view reactions",
 	"components.dms.reaction.action.add": "Add emoji reaction",
 	"components.dms.reaction.action.more": "More emojis",
 	"components.dms.reaction.error.add": "Failed to add emoji reaction",
@@ -113,15 +112,6 @@
 			"match": {
 				"cp=one": "{n} person reacted – {values}",
 				"cp=other": "{n} people reacted – {values}"
-			}
-		}
-	],
-	"components.dms.reaction.tabAll": [
-		{
-			"declarations": ["input count", "local n = count: number"],
-			"selectors": [],
-			"match": {
-				"": "All {n}"
 			}
 		}
 	],

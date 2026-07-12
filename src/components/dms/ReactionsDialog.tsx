@@ -1,25 +1,27 @@
-import { useRef, useState } from 'react';
-import { LayoutAnimation, Pressable, type ScrollView, View } from 'react-native';
+import { useState } from 'react';
 
-import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
-
-import { HITSLOP_10 } from '#/lib/constants';
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { type ActiveConvoStates, useConvoActive } from '#/state/messages/convo';
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 import type { SessionAccount } from '#/state/session/types';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import * as Dialog from '#/components/Dialog';
 import { filterBlockedReactions } from '#/components/dms/util';
-import { DraggableScrollView } from '#/components/DraggableScrollView';
+import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import * as ProfileCard from '#/components/web/ProfileCard';
+import * as TabScroller from '#/components/web/TabScroller';
+import { tabLabel } from '#/components/web/TabScroller.css';
 
 import { m } from '#/paraglide/messages';
+import { space } from '#/styles/tokens.css';
+
+import * as css from './ReactionsDialog.css';
 
 type Reaction = {
 	key: string;
@@ -30,124 +32,163 @@ type Reaction = {
 
 type Tab = Omit<Reaction, 'senders'>;
 
-export function ReactionsDialog({
-	control,
-	relatedProfiles,
-	message,
-	onClose,
+export function ReactionsDialog({ handle }: { handle: Dialog.DialogHandle<ChatBskyConvoDefs.MessageView> }) {
+	return (
+		<Dialog.Root handle={handle}>
+			{({ payload }: { payload: ChatBskyConvoDefs.MessageView | undefined }) =>
+				payload ? (
+					<Dialog.Popup size="medium" label={m['components.dms.reaction.title']()} scroll="body">
+						<DialogInner close={() => handle.close()} message={payload} />
+					</Dialog.Popup>
+				) : null
+			}
+		</Dialog.Root>
+	);
+}
+
+function DialogInner({
+	close,
+	message: snapshot,
 }: {
-	control: Dialog.DialogControlProps;
-	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
+	close: () => void;
 	message: ChatBskyConvoDefs.MessageView;
-	onClose?: () => void;
 }) {
 	const { currentAccount } = useSession();
 	const convo = useConvoActive();
+	const moderationOpts = useModerationOpts();
 
 	const [selected, setSelected] = useState('all');
 
-	const reactions = filterBlockedReactions(message.reactions, relatedProfiles);
+	// `snapshot` is frozen from when the dialog opened; read the live message out of the convo items so
+	// optimistic reaction removals (e.g. "Tap to remove") reflect without reopening.
+	let message = snapshot;
+	for (const item of convo.items) {
+		if ((item.type === 'message' || item.type === 'pending-message') && item.message.id === snapshot.id) {
+			message = item.message;
+			break;
+		}
+	}
+
+	const reactions = filterBlockedReactions(message.reactions, convo.relatedProfiles);
 	const groupedReactions = groupReactions(reactions);
 
-	const filteredReactions = reactions.filter((r) => selected === 'all' || r.value === selected);
+	const filteredReactions = reactions
+		.filter((r) => selected === 'all' || r.value === selected)
+		.sort((a, b) => {
+			if (a.sender.did === currentAccount?.did) return -1;
+			if (b.sender.did === currentAccount?.did) return 1;
+			return 0;
+		});
 
-	const header = (
-		<>
-			<View style={[a.px_2xl, a.pt_xl, a.pb_md]}>
-				<Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{m['components.dms.reaction.title']()}</Text>
-			</View>
-			<ReactionTabs
-				groupedReactions={groupedReactions}
-				selected={selected}
-				totalReactions={reactions.length}
-				onFilter={setSelected}
-			/>
-			<Dialog.Close />
-		</>
-	);
+	const tabs: Tab[] = [
+		{ key: 'all', value: m['common.status.all'](), count: reactions.length },
+		...groupedReactions,
+	];
 
 	return (
-		<Dialog.Outer
-			control={control}
-			onClose={() => {
-				setSelected('all');
-				onClose?.();
-			}}
-		>
-			<Dialog.Handle />
-			{null}
-			<Dialog.ScrollableInner
-				label={m['components.dms.reaction.title']()}
-				contentContainerStyle={[a.pt_0]}
-				header={header}
-				style={[{ maxWidth: 400 }]}
-			>
-				{filteredReactions
-					.sort((a, b) => {
-						if (a.sender.did === currentAccount?.did) return -1;
-						if (b.sender.did === currentAccount?.did) return 1;
-						return 0;
-					})
-					.map((reaction) => {
-						const sender = relatedProfiles.get(reaction.sender.did);
-						if (!sender) return null;
-						return (
-							<ReactionRow
-								key={reaction.sender.did + '-' + reaction.value}
-								control={control}
-								convo={convo}
-								currentAccount={currentAccount}
-								message={message}
-								profile={sender}
-								reaction={reaction}
-								allReactions={reactions}
-								selected={selected}
-								setSelected={setSelected}
-							/>
-						);
-					})}
-			</Dialog.ScrollableInner>
-		</Dialog.Outer>
+		<>
+			<div className={css.header}>
+				<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
+					{m['components.dms.reaction.title']()}
+				</Text>
+				<Button
+					className={css.closeButton}
+					color="secondary"
+					label={m['common.action.close']()}
+					onClick={close}
+					shape="round"
+					size="small"
+					variant="ghost"
+				>
+					<ButtonIcon icon={XIcon} />
+				</Button>
+			</div>
+
+			<div className={css.tabs}>
+				<TabScroller.Root activeKey={selected} gutterWidth={space.lg}>
+					{tabs.map((tab) => (
+						<TabScroller.Tab
+							active={selected === tab.key}
+							aria-label={
+								tab.key === 'all'
+									? m['components.dms.reaction.a11y.showAll']()
+									: m['components.dms.reaction.a11y.show']({ value: tab.value })
+							}
+							key={tab.key}
+							onClick={() => setSelected(tab.key)}
+						>
+							<Text className={tabLabel} size="md_sub" weight="medium">
+								{tab.value}
+							</Text>
+							<Text className={tabLabel} size="md_sub" weight="medium">
+								{tab.count}
+							</Text>
+						</TabScroller.Tab>
+					))}
+				</TabScroller.Root>
+			</div>
+
+			<Dialog.List
+				className={css.list}
+				data={filteredReactions}
+				keyExtractor={(reaction) => reaction.sender.did + '-' + reaction.value}
+				renderItem={(reaction) => {
+					const sender = convo.relatedProfiles.get(reaction.sender.did);
+					if (!sender || !moderationOpts) return null;
+					return (
+						<ReactionRow
+							allReactions={reactions}
+							close={close}
+							convo={convo}
+							currentAccount={currentAccount}
+							message={message}
+							moderationOpts={moderationOpts}
+							profile={sender}
+							reaction={reaction}
+							selected={selected}
+							setSelected={setSelected}
+						/>
+					);
+				}}
+			/>
+		</>
 	);
 }
 
 function ReactionRow({
-	control,
+	allReactions,
+	close,
 	convo,
 	currentAccount,
 	message,
+	moderationOpts,
 	profile,
 	reaction,
-	allReactions,
 	selected,
 	setSelected,
 }: {
-	control: Dialog.DialogControlProps;
+	allReactions: ChatBskyConvoDefs.ReactionView[];
+	close: () => void;
 	convo: ActiveConvoStates;
 	currentAccount?: SessionAccount;
 	message: ChatBskyConvoDefs.MessageView;
+	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
 	reaction: ChatBskyConvoDefs.ReactionView;
-	allReactions: ChatBskyConvoDefs.ReactionView[];
 	selected: string;
 	setSelected: React.Dispatch<React.SetStateAction<string>>;
 }) {
-	const t = useTheme();
 	const isFromSelf = currentAccount?.did === profile.did;
 
-	const displayName = createSanitizedDisplayName(profile, true);
-	const handle = `@${profile.handle}`;
-
-	const handleOnPress = () => {
+	const onPress = () => {
 		const remainingReactions = allReactions.filter(
 			(r) => !(r.value === reaction.value && r.sender.did === currentAccount?.did),
 		);
 
 		if (remainingReactions.length === 0) {
-			control.close();
+			close();
 		} else if (selected !== 'all' && !remainingReactions.some((r) => r.value === reaction.value)) {
-			// tab no longer exists
-			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+			// the tab we're viewing no longer exists; fall back to "all"
 			setSelected('all');
 		}
 
@@ -157,182 +198,36 @@ function ReactionRow({
 	};
 
 	const inner = (
-		<>
-			<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-				<UserAvatar avatar={profile.avatar} size={42} type="user" hideLiveBadge />
-				<View>
-					<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-						{displayName}
+		<ProfileCard.Header>
+			<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
+			<div className={css.nameColumn}>
+				<ProfileCard.Handle profile={profile} />
+				{isFromSelf ? (
+					<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
+						{m['components.dms.reaction.a11y.remove']()}
 					</Text>
-					<Text numberOfLines={1} style={[a.text_xs, t.atoms.text_contrast_medium, a.mt_xs]}>
-						{isFromSelf ? m['components.dms.reaction.a11y.remove']() : handle}
-					</Text>
-				</View>
-			</View>
-			<View>
-				<Text style={[a.text_5xl, { includeFontPadding: false }]} emoji>
-					{reaction.value}
-				</Text>
-			</View>
-		</>
+				) : (
+					<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
+				)}
+			</div>
+			<span className={css.emojiGlyph}>{reaction.value}</span>
+		</ProfileCard.Header>
 	);
 
 	if (isFromSelf) {
 		return (
-			<Pressable
-				accessibilityRole="button"
-				accessibilityHint={m['components.dms.reaction.a11y.removeReaction']({ value: reaction.value })}
-				style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between, a.my_sm]}
-				onPress={handleOnPress}
+			<button
+				type="button"
+				aria-label={m['components.dms.reaction.a11y.removeReaction']({ value: reaction.value })}
+				className={css.rowButton}
+				onClick={onPress}
 			>
 				{inner}
-			</Pressable>
+			</button>
 		);
 	}
 
-	return <View style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between, a.my_sm]}>{inner}</View>;
-}
-
-function ReactionTabs({
-	groupedReactions,
-	selected,
-	totalReactions,
-	onFilter,
-}: {
-	groupedReactions?: Reaction[];
-	selected: string;
-	totalReactions: number;
-	onFilter: (value: string) => void;
-}) {
-	const t = useTheme();
-	const scrollViewRef = useRef<ScrollView>(null);
-	const scrollState = useRef({ x: 0, width: 0 });
-	const tabLayouts = useRef<Map<string, { x: number; width: number }>>(new Map());
-
-	const handlePress = (value: string) => {
-		onFilter(value);
-
-		// Scroll a partially-visible tab fully into view.
-		const layout = tabLayouts.current.get(value);
-		if (layout && scrollViewRef.current && scrollState.current.width > 0) {
-			const tabLeft = layout.x;
-			const tabRight = layout.x + layout.width;
-			const viewLeft = scrollState.current.x;
-			const viewRight = viewLeft + scrollState.current.width;
-
-			if (tabLeft < viewLeft) {
-				scrollViewRef.current.scrollTo({
-					x: Math.max(0, tabLeft - 24),
-					animated: true,
-				});
-			} else if (tabRight > viewRight) {
-				scrollViewRef.current.scrollTo({
-					x: tabRight - scrollState.current.width + 24,
-					animated: true,
-				});
-			}
-		}
-	};
-
-	const handleTabLayout = (key: string, layout: { x: number; width: number }) => {
-		tabLayouts.current.set(key, layout);
-	};
-
-	const tabs: Tab[] = [
-		{ key: 'all', value: m['common.status.all'](), count: totalReactions },
-		...(groupedReactions ?? []),
-	];
-
-	return (
-		<View accessibilityRole="tablist" style={[t.atoms.bg]}>
-			<DraggableScrollView
-				ref={scrollViewRef}
-				horizontal={true}
-				scrollEventThrottle={16}
-				showsHorizontalScrollIndicator={false}
-				onScroll={(e) => {
-					scrollState.current = {
-						x: e.nativeEvent.contentOffset.x,
-						width: e.nativeEvent.layoutMeasurement.width,
-					};
-				}}
-				onLayout={(e) => {
-					scrollState.current.width = e.nativeEvent.layout.width;
-				}}
-			>
-				<View style={[a.flex_row, a.flex_grow, a.gap_sm, a.align_center, a.justify_start]}>
-					{tabs.map((tab, index) => (
-						<ReactionTab
-							key={tab.key}
-							index={index}
-							tab={tab}
-							selected={selected}
-							total={tabs.length}
-							onPress={handlePress}
-							onTabLayout={handleTabLayout}
-						/>
-					))}
-				</View>
-			</DraggableScrollView>
-		</View>
-	);
-}
-
-function ReactionTab({
-	index,
-	tab,
-	selected,
-	total,
-	onPress,
-	onTabLayout,
-}: {
-	index: number;
-	tab: Tab;
-	selected: string;
-	total: number;
-	onPress: (value: string) => void;
-	onTabLayout: (key: string, layout: { x: number; width: number }) => void;
-}) {
-	const t = useTheme();
-
-	return (
-		<Pressable
-			accessibilityRole="tab"
-			accessibilityState={{ selected: selected === tab.key }}
-			accessibilityHint={
-				tab.key === 'all'
-					? m['components.dms.reaction.a11y.showAll']()
-					: m['components.dms.reaction.a11y.show']({ value: tab.value })
-			}
-			hitSlop={HITSLOP_10}
-			style={[
-				a.flex_row,
-				a.align_center,
-				a.border,
-				a.justify_center,
-				a.rounded_lg,
-				a.px_md,
-				a.py_sm,
-				a.mb_sm,
-				selected === tab.key ? t.atoms.border_contrast_low : { borderColor: t.palette.contrast_50 },
-				selected === tab.key ? t.atoms.bg_contrast_50 : t.atoms.bg,
-				index === 0 ? a.ml_2xl : index === total - 1 ? a.mr_2xl : null,
-			]}
-			onLayout={(e) => {
-				onTabLayout(tab.key, {
-					x: e.nativeEvent.layout.x,
-					width: e.nativeEvent.layout.width,
-				});
-			}}
-			onPress={() => onPress(tab.key)}
-		>
-			<Text emoji style={[a.text_sm]}>
-				{tab.key === 'all'
-					? m['components.dms.reaction.tabAll']({ count: tab.count })
-					: `${tab.value} ${tab.count}`}
-			</Text>
-		</Pressable>
-	);
+	return <ProfileCard.Outer className={css.row}>{inner}</ProfileCard.Outer>;
 }
 
 export function groupReactions(reactions: ChatBskyConvoDefs.ReactionView[] | undefined): Reaction[] {

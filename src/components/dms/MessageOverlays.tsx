@@ -8,7 +8,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useConvoActive } from '#/state/messages/convo';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
-import { useDialogControl } from '#/components/Dialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReactionsDialog } from '#/components/dms/ReactionsDialog';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
@@ -24,7 +23,8 @@ type MessageDialogsContextType = {
 		message: ChatBskyConvoDefs.MessageView,
 		senderProfile: AnyProfileView | undefined,
 	) => void;
-	openReactions: (message: ChatBskyConvoDefs.MessageView) => void;
+	/** Handle for the reactions dialog, so a detached `Dialog.Trigger` can open it with a message payload. */
+	reactionsHandle: Dialog.DialogHandle<ChatBskyConvoDefs.MessageView>;
 };
 
 const Context = createContext<MessageDialogsContextType | null>(null);
@@ -44,7 +44,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const deleteControl = Prompt.usePromptHandle();
 	const reportHandle = Dialog.useDialogHandle();
 	const afterReportHandle = Dialog.useDialogHandle();
-	const reactionsControl = useDialogControl();
+	const reactionsHandle = Dialog.useDialogHandle<ChatBskyConvoDefs.MessageView>();
 
 	const [deleteTarget, setDeleteTarget] = useState<ChatBskyConvoDefs.MessageView | null>(null);
 	const [reportTarget, setReportTarget] = useState<{
@@ -52,7 +52,6 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 		senderProfile: AnyProfileView | undefined;
 	} | null>(null);
 	const [afterReportTarget, setAfterReportTarget] = useState<ChatBskyConvoDefs.MessageView | null>(null);
-	const [reactionsTarget, setReactionsTarget] = useState<ChatBskyConvoDefs.MessageView | null>(null);
 
 	const openDeleteMessage = (message: ChatBskyConvoDefs.MessageView) => {
 		setDeleteTarget(message);
@@ -67,19 +66,8 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 		reportHandle.open(null);
 	};
 
-	const openReactions = (message: ChatBskyConvoDefs.MessageView) => {
-		setReactionsTarget(message);
-	};
-
-	// These dialogs are conditionally mounted, so we can't open them in the same
-	// tick that we set their targets - the control refs aren't attached yet. Open
-	// in an effect after the dialog has mounted.
-	useEffect(() => {
-		if (reactionsTarget) {
-			reactionsControl.open();
-		}
-	}, [reactionsTarget, reactionsControl]);
-
+	// AfterReportDialog is conditionally mounted, so we can't open it in the same tick that we set its
+	// target - the handle isn't attached yet. Open in an effect after the dialog has mounted.
 	useEffect(() => {
 		if (afterReportTarget) {
 			afterReportHandle.open(null);
@@ -106,25 +94,8 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	const ctx: MessageDialogsContextType = {
 		openDeleteMessage,
 		openReportMessage,
-		openReactions,
+		reactionsHandle,
 	};
-
-	// `reactionsTarget` is a snapshot from when the dialog was opened. Read the
-	// live message out of the convo items so optimistic reaction changes (e.g.
-	// "Tap to remove") are reflected in the dialog without closing it first.
-	let reactionsMessage: ChatBskyConvoDefs.MessageView | null = null;
-	if (reactionsTarget) {
-		reactionsMessage = reactionsTarget;
-		for (const item of convo.items) {
-			if (
-				(item.type === 'message' || item.type === 'pending-message') &&
-				item.message.id === reactionsTarget.id
-			) {
-				reactionsMessage = item.message;
-				break;
-			}
-		}
-	}
 
 	const reportSubject = reportTarget
 		? ({
@@ -154,14 +125,7 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 					onClose={() => setAfterReportTarget(null)}
 				/>
 			)}
-			{reactionsMessage && (
-				<ReactionsDialog
-					control={reactionsControl}
-					relatedProfiles={convo.relatedProfiles}
-					message={reactionsMessage}
-					onClose={() => setReactionsTarget(null)}
-				/>
-			)}
+			<ReactionsDialog handle={reactionsHandle} />
 			<Prompt.Basic
 				handle={deleteControl}
 				title={m['components.dms.delete.action.message']()}

@@ -1,7 +1,6 @@
 import { memo, useEffect, useRef } from 'react';
 import {
 	type GestureResponderEvent,
-	Pressable,
 	type StyleProp,
 	type TextStyle,
 	View,
@@ -11,6 +10,7 @@ import {
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -35,7 +35,9 @@ import { ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIco
 import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import { RichText } from '#/components/RichText';
+import { Text as WebText } from '#/components/Text';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
@@ -118,7 +120,7 @@ let MessageItem = ({
 	const { message } = item;
 	const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did));
 
-	const { openReactions } = useMessageDialogs();
+	const { reactionsHandle } = useMessageDialogs();
 	const { scrollToMessage, highlightedMessage } = useMessageReplies();
 
 	// `replyTo` comes back hydrated as the referenced message, a deleted-message
@@ -273,6 +275,28 @@ let MessageItem = ({
 		});
 	}
 
+	const reactionPillContents = (
+		<>
+			{groupedReactions.slice(0, 10).map((group) => (
+				<WebText key={group.value} size="lg" leading="none">
+					{group.value}
+				</WebText>
+			))}
+			{(groupedReactions.length !== reactions.length || groupedReactions.length > 10) &&
+			reactions.length > 1 ? (
+				<WebText
+					className={css.reactionCount}
+					color={hasSelfReacted ? 'primary_900' : 'textContrastMedium'}
+					leading="none"
+					size="md"
+					weight="semiBold"
+				>
+					{reactions.length}
+				</WebText>
+			) : null}
+		</>
+	);
+
 	const appliedReactions = (
 		<>
 			{hasReactions ? (
@@ -285,51 +309,29 @@ let MessageItem = ({
 						a.z_10,
 					]}
 				>
-					<Pressable
-						accessible={true}
-						accessibilityLabel={reactionsLabel}
-						accessibilityHint={isGroupChat ? m['components.dms.reaction.a11y.view']() : undefined}
-						style={[
-							a.flex_row,
-							a.gap_2xs,
-							isFromSelf ? a.justify_end : a.justify_start,
-							a.rounded_lg,
-							a.border,
-							t.atoms.border_contrast_low,
-							t.atoms.shadow_xs,
-							a.px_sm,
-							hasSelfReacted ? { backgroundColor: t.palette.primary_100 } : t.atoms.bg_contrast_25,
-							{
-								paddingTop: 3,
-								paddingBottom: 3,
-								transform: [{ translateY: -6 }],
-							},
-						]}
-						onPress={isGroupChat ? () => openReactions(message) : undefined}
-					>
-						{groupedReactions.slice(0, 10).map((group) => (
-							<View key={group.value} style={[a.py_2xs]}>
-								<Text emoji style={[a.text_md, { textAlignVertical: 'center', includeFontPadding: false }]}>
-									{group.value}
-								</Text>
-							</View>
-						))}
-						{(groupedReactions.length !== reactions.length || groupedReactions.length > 10) &&
-						reactions.length > 1 ? (
-							<View style={[a.p_2xs, a.pl_0, a.justify_center]}>
-								<Text
-									style={[
-										a.text_sm,
-										a.font_medium,
-										hasSelfReacted ? { color: t.palette.primary_900 } : t.atoms.text_contrast_high,
-										{ textAlignVertical: 'center', includeFontPadding: false },
-									]}
-								>
-									{reactions.length}
-								</Text>
-							</View>
-						) : null}
-					</Pressable>
+					{isGroupChat ? (
+						// detached Trigger: opens the reactions Dialog.Root owned by MessageOverlays, keyed to this message.
+						<Dialog.Trigger
+							handle={reactionsHandle}
+							payload={message}
+							type="button"
+							aria-label={reactionsLabel}
+							className={clsx(
+								css.reactionPill,
+								css.reactionPillButton,
+								hasSelfReacted && css.reactionPillSelected,
+							)}
+						>
+							{reactionPillContents}
+						</Dialog.Trigger>
+					) : (
+						<div
+							aria-label={reactionsLabel}
+							className={clsx(css.reactionPill, hasSelfReacted && css.reactionPillSelected)}
+						>
+							{reactionPillContents}
+						</div>
+					)}
 				</View>
 			) : null}
 		</>
