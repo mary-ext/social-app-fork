@@ -10,7 +10,6 @@ import { useInviteLinkDialog } from '#/screens/Messages/components/InviteLinkDia
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { Button } from '#/components/Button';
 import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
@@ -68,14 +67,9 @@ export function SystemMessageItem({
 		case 'inviteLink':
 			if (!inviteLinkHandle) return row;
 			return (
-				<Dialog.Trigger
-					handle={inviteLinkHandle}
-					render={
-						<Button label={text} style={a.w_full}>
-							{row}
-						</Button>
-					}
-				/>
+				<Dialog.Trigger aria-label={text} className={css.button} handle={inviteLinkHandle} type="button">
+					{row}
+				</Dialog.Trigger>
 			);
 		default:
 			return row;

@@ -38,6 +38,7 @@ import * as ProfileCard from '#/components/ProfileCard';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
@@ -257,14 +258,9 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			<Dialog.Trigger
 				handle={inviteLinkHandle}
 				render={
-					<Button
-						label={m['screens.messages.inviteLink.edit.action']()}
-						size="large"
-						color="primary"
-						style={[a.w_full]}
-					>
-						<ButtonText>{m['screens.messages.inviteLink.edit.action']()}</ButtonText>
-					</Button>
+					<WebButton color="primary" label={m['screens.messages.inviteLink.edit.action']()} size="large">
+						<WebButtonText>{m['screens.messages.inviteLink.edit.action']()}</WebButtonText>
+					</WebButton>
 				}
 			/>
 		</View>
