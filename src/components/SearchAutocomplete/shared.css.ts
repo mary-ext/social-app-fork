@@ -35,7 +35,7 @@ export const label = style({
 	minWidth: 0,
 });
 
-export const recentItem = style([row, { paddingInlineEnd: 44 }]);
+export const recentItem = style([row, { paddingInlineEnd: space.sm * 2 + 25 }]);
 
 export const recentRow = style({
 	position: 'relative',
