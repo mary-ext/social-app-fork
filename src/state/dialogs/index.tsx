@@ -2,11 +2,15 @@ import { createContext, useContext, useRef, useState } from 'react';
 
 import { useHotkeysContext } from '#/lib/hotkeys';
 
-import type { DialogControlRefProps } from '#/components/Dialog';
 import { Provider as GlobalDialogsProvider } from '#/components/dialogs/Context';
 
+/** imperative handle a dialog registers so the registry can close it. */
+export interface DialogControlRefProps {
+	close: () => void;
+}
+
 interface IDialogContext {
-	/** The currently active `useDialogControl` hooks. */
+	/** The currently registered dialogs. */
 	activeDialogs: React.MutableRefObject<Map<string, React.MutableRefObject<DialogControlRefProps>>>;
 	/** The currently open dialogs, referenced by their IDs, generated from `useId`. */
 	openDialogs: React.MutableRefObject<Set<string>>;

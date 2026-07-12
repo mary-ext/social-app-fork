@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 
-import { useDialogStateContext, useDialogStateControlContext } from '#/state/dialogs';
-
-import type { DialogControlRefProps } from '#/components/Dialog';
+import {
+	type DialogControlRefProps,
+	useDialogStateContext,
+	useDialogStateControlContext,
+} from '#/state/dialogs';
 
 /**
  * bridges a dialog into the shared dialog registry to support global closing.
@@ -15,7 +17,7 @@ export function useRegisterDialog(id: string, close: () => void) {
 	const { activeDialogs } = useDialogStateContext();
 	const { setDialogIsOpen } = useDialogStateControlContext();
 
-	const controlRef = useRef<DialogControlRefProps>({ open: () => {}, close });
+	const controlRef = useRef<DialogControlRefProps>({ close });
 	useEffect(() => {
 		controlRef.current.close = close;
 	});

@@ -69,7 +69,6 @@
 		"lodash.chunk": "^4.2.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
-		"radix-ui": "^1.6.2",
 		"react": "19.2.7",
 		"react-dom": "19.2.7",
 		"react-hotkeys-hook": "5.3.3",
