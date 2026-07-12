@@ -62,7 +62,15 @@ export const tone = styleVariants({
 	},
 });
 
-export const link = style({ inset: 0, position: 'absolute', zIndex: 1 });
+export const link = style({
+	inset: 0,
+	position: 'absolute',
+	zIndex: 1,
+	':focus-visible': {
+		outline: `2px solid ${colors.primary_500}`,
+		outlineOffset: -2,
+	},
+});
 
 export const body = style({
 	display: 'flex',
@@ -148,6 +156,7 @@ export const menu = style({
 	bottom: 0,
 	right: 0,
 	zIndex: 2,
+	transition: 'opacity 150ms ease',
 
 	'@media': {
 		'(width >= 800px)': {
@@ -159,9 +168,13 @@ export const menu = style({
 	},
 
 	selectors: {
-		'&:has([data-popup-open])': { opacity: 1 },
-		[`${root}:focus-within &`]: { opacity: 1 },
-		[`${root}:hover &`]: { opacity: 1 },
+		'&:has([data-popup-open], :focus-visible)': {
+			opacity: 1,
+			transition: 'none',
+		},
+		[`${root}:hover &`]: {
+			opacity: 1,
+		},
 	},
 });
 
