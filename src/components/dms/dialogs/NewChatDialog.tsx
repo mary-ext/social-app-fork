@@ -1,11 +1,10 @@
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
-import { Combobox } from '@base-ui/react/combobox';
 import { clsx } from 'clsx';
 
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
@@ -22,16 +21,26 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import * as css from '#/components/dms/dialogs/NewChatDialog.css';
-import { canBeAddedToGroup, canBeMessaged } from '#/components/dms/util';
 import {
-	ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon,
-	ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon,
-} from '#/components/icons/Arrow';
-import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
+	Empty,
+	type EmptyRow,
+	type LabelRow,
+	type PlaceholderRow,
+	ProfileRowContent,
+	type ProfileRow,
+	SearchSlot,
+	searchRows,
+	SectionLabel,
+	SelectMembersStep,
+	StepFooter,
+	StepHeader,
+} from '#/components/dms/dialogs/MemberPicker';
+import * as shared from '#/components/dms/dialogs/MemberPicker.css';
+import * as css from '#/components/dms/dialogs/NewChatDialog.css';
+import { canBeMessaged } from '#/components/dms/util';
+import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/components/icons/Person';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -43,62 +52,27 @@ import * as Prompt from '#/components/web/Prompt';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-// one ordered list model per step drives both what Base UI navigates and what we render: `items` is the
-// interactive subset, and the list children are `rows.map(...)` through a per-kind dispatcher, so chrome
-// (labels, the loading placeholder, empty states) and selectable rows always stay in sync (mirroring how
-// SearchAutocomplete builds its suggestion rows).
-type EmptyRow = { key: string; kind: 'empty'; message: string };
-type LabelRow = { key: string; kind: 'label'; message: string };
 type NewGroupChatRowModel = { key: 'newGroupChat'; kind: 'newGroupChat' };
-type PlaceholderRow = { key: string; kind: 'placeholder' };
-type ProfileRow = { key: string; kind: 'profile'; profile: AnyProfileView };
 
 /** rows for the direct-chat picker (an `Autocomplete`): a group-creation entry point plus profile rows. */
 type ChatListRow = EmptyRow | LabelRow | NewGroupChatRowModel | PlaceholderRow | ProfileRow;
 /** the navigable subset of {@link ChatListRow}. */
 type ChatListItem = NewGroupChatRowModel | ProfileRow;
 
-/** rows for the member picker (a multiselect `Combobox`): profile rows only, no entry point. */
-type MemberListRow = EmptyRow | LabelRow | PlaceholderRow | ProfileRow;
-
 type Step = 'groupName' | 'newChat' | 'newGroupChat';
 
 const isChatListItem = (row: ChatListRow): row is ChatListItem =>
 	row.kind === 'newGroupChat' || row.kind === 'profile';
-
-const isProfileRow = (row: MemberListRow): row is ProfileRow => row.kind === 'profile';
 
 // orders profiles that accept the interaction ahead of those that don't, preserving each group's relative
 // order.
 const byMessageDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
 	Number(canBeMessaged(b)) - Number(canBeMessaged(a));
 
-const byGroupDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
-	Number(canBeAddedToGroup(b)) - Number(canBeAddedToGroup(a));
-
 // accessible label / stringified value for an autocomplete item. objects need this so Base UI can represent
 // them; the input itself stays controlled by our search text (item presses are ignored in onValueChange).
 const chatItemToStringValue = (item: ChatListItem): string =>
 	item.kind === 'newGroupChat' ? m['components.dms.group.title']() : item.profile.handle;
-
-// the profile rows for an active search, shared by both pickers: drop self, order by the picker's declaration,
-// and fall back to an empty state once the query settles with no matches (nothing while still in flight).
-const searchRows = (
-	results: AnyProfileView[] | undefined,
-	currentAccountDid: string | undefined,
-	isFetching: boolean,
-	comparator: (a: AnyProfileView, b: AnyProfileView) => number,
-): (EmptyRow | ProfileRow)[] => {
-	const profiles = (results ?? [])
-		.filter((profile) => profile.did !== currentAccountDid)
-		.slice()
-		.sort(comparator)
-		.map((profile): ProfileRow => ({ key: profile.did, kind: 'profile', profile }));
-	if (!isFetching && profiles.length === 0) {
-		return [{ key: 'empty', kind: 'empty', message: m['common.search.empty']() }];
-	}
-	return profiles;
-};
 
 export function NewChatDialog({
 	handle,
@@ -109,7 +83,7 @@ export function NewChatDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.popup} label={m['common.chat.action.new']()} scroll="body">
+			<Dialog.Popup className={shared.popup} label={m['common.chat.action.new']()} scroll="body">
 				<DialogInner handle={handle} onNewChat={onNewChat} />
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -267,9 +241,21 @@ function DialogInner({
 					members={members}
 					onBack={onBackToChat}
 					onClose={onClose}
-					onContinue={() => setStep('groupName')}
 					onMembersChange={onMembersChange}
 					onRemoveMember={removeMember}
+					primaryButton={
+						<Button
+							color="primary"
+							disabled={members.length === 0}
+							label={m['components.dms.group.action.continueToName']()}
+							onClick={() => setStep('groupName')}
+							size="small"
+						>
+							<ButtonText>{m['common.action.next']()}</ButtonText>
+							<ButtonIcon icon={ArrowRightIcon} />
+						</Button>
+					}
+					title={m['components.dms.group.title']()}
 				/>
 			)}
 
@@ -376,7 +362,7 @@ function SelectChatStep({
 
 			{/* the list is navigable via the input's arrow keys, so opt its scroller out of Chrome's
 			    keyboard-focusable-scrollers tab stop — Tab lands on the footer/next control instead. */}
-			<Dialog.Body className={clsx(css.list, css.listOverlap)} tabIndex={-1}>
+			<Dialog.Body className={clsx(shared.list, shared.listOverlap)} tabIndex={-1}>
 				<Autocomplete.List>
 					{rows.map((row) => (
 						<ChatRow
@@ -425,7 +411,7 @@ function ChatRow({
 			return (
 				<Autocomplete.Item
 					aria-label={m['common.chat.action.start']({ handle: profile.handle })}
-					className={css.row}
+					className={shared.row}
 					disabled={!enabled}
 					onClick={() => onSelectChat(profile.did)}
 					value={row}
@@ -467,223 +453,6 @@ function NewGroupChatRow({
 
 			<ChevronRightIcon fill={colors.textContrastMedium} size="sm" />
 		</Autocomplete.Item>
-	);
-}
-
-// #endregion
-
-// #region newGroupChat step
-
-function SelectMembersStep({
-	memberLimit,
-	members,
-	onBack,
-	onClose,
-	onContinue,
-	onMembersChange,
-	onRemoveMember,
-}: {
-	memberLimit: number | undefined;
-	members: AnyProfileView[];
-	onBack: () => void;
-	onClose: () => void;
-	onContinue: () => void;
-	onMembersChange: (next: AnyProfileView[]) => void;
-	onRemoveMember: (did: string) => void;
-}) {
-	const moderationOpts = useModerationOpts();
-	const currentAccountDid = useSession().currentAccount?.did;
-	const [searchText, setSearchText] = useState('');
-
-	const { data: results, isError, isFetching } = useActorAutocompleteQuery(searchText, true, 12);
-	const { data: follows } = useProfileFollowsQuery(currentAccountDid);
-
-	let rows: MemberListRow[];
-	if (isError) {
-		rows = [{ key: 'error', kind: 'empty', message: m['components.dialogs.error.network']() }];
-	} else if (searchText.length) {
-		rows = searchRows(results, currentAccountDid, isFetching, byGroupDeclaration);
-	} else {
-		const suggested: LabelRow = {
-			key: 'suggested',
-			kind: 'label',
-			message: m['components.dms.search.suggested'](),
-		};
-		if (!follows) {
-			rows = [suggested, { key: 'placeholder', kind: 'placeholder' }];
-		} else {
-			const profiles = follows.pages
-				.flatMap((page) => page.follows)
-				// omit follows that can't be added, matching upstream (rather than listing them disabled).
-				.filter(canBeAddedToGroup)
-				.map((profile): ProfileRow => ({ key: profile.did, kind: 'profile', profile }));
-			rows = profiles.length > 0 ? [suggested, ...profiles] : [];
-		}
-	}
-	const items = rows.filter(isProfileRow).map((row) => row.profile);
-
-	const memberDids = new Set(members.map((profile) => profile.did));
-	const atLimit = memberLimit != null && members.length >= memberLimit;
-	// the chips row sits between the search and the list, so the search can't overlap the list when it shows.
-	const hasChips = members.length > 0 && moderationOpts != null;
-
-	return (
-		<Combobox.Root
-			filter={null}
-			inline
-			inputValue={searchText}
-			isItemEqualToValue={(a: AnyProfileView, b: AnyProfileView) => a.did === b.did}
-			items={items}
-			itemToStringLabel={(profile: AnyProfileView) => profile.handle}
-			multiple
-			onInputValueChange={(value, details) => {
-				// only reflect real typing. selecting a member while filtering makes Base UI clear the input
-				// (reason `input-clear`, not `item-press`); ignoring every non-typing reason keeps the query put so
-				// several matches from the same search can be toggled in a row.
-				if (details.reason !== 'input-change') {
-					return;
-				}
-				setSearchText(value);
-			}}
-			onValueChange={onMembersChange}
-			open
-			value={members}
-		>
-			<StepHeader onClose={onClose} title={m['components.dms.group.title']()} />
-
-			<SearchSlot onClear={() => setSearchText('')} overlap={!hasChips} searchText={searchText}>
-				<Combobox.Input
-					render={
-						<SearchField.Input
-							aria-label={m['common.search.action.profiles']()}
-							autoFocus
-							maxLength={50}
-							placeholder={m['components.dms.search.placeholder']()}
-						/>
-					}
-				/>
-			</SearchSlot>
-
-			{members.length > 0 && moderationOpts && (
-				<MemberChips members={members} moderationOpts={moderationOpts} onRemove={onRemoveMember} />
-			)}
-
-			<Dialog.Body className={clsx(css.list, !hasChips && css.listOverlap)} tabIndex={-1}>
-				<Combobox.List>
-					{rows.map((row) => (
-						<MemberRow
-							atLimit={atLimit}
-							key={row.key}
-							memberDids={memberDids}
-							moderationOpts={moderationOpts}
-							row={row}
-						/>
-					))}
-				</Combobox.List>
-			</Dialog.Body>
-
-			<StepFooter onBack={onBack}>
-				<Button
-					color="primary"
-					disabled={members.length === 0}
-					label={m['components.dms.group.action.continueToName']()}
-					onClick={onContinue}
-					size="small"
-				>
-					<ButtonText>{m['common.action.next']()}</ButtonText>
-					<ButtonIcon icon={ArrowRightIcon} />
-				</Button>
-			</StepFooter>
-		</Combobox.Root>
-	);
-}
-
-function MemberRow({
-	atLimit,
-	memberDids,
-	moderationOpts,
-	row,
-}: {
-	atLimit: boolean;
-	memberDids: ReadonlySet<string>;
-	moderationOpts: ModerationOptions | undefined;
-	row: MemberListRow;
-}) {
-	switch (row.kind) {
-		case 'empty':
-			return <Empty message={row.message} />;
-		case 'label':
-			return <SectionLabel message={row.message} />;
-		case 'placeholder':
-			return <ProfileCard.LoadingPlaceholder count={10} />;
-		case 'profile': {
-			if (!moderationOpts) {
-				return null;
-			}
-			const { profile } = row;
-			const enabled = canBeAddedToGroup(profile);
-			return (
-				<Combobox.Item
-					className={css.row}
-					disabled={(atLimit && !memberDids.has(profile.did)) || !enabled}
-					value={profile}
-				>
-					<ProfileRowContent
-						disabledMessage={m['components.dms.recipient.error.cannotAdd']({ handle: `@${profile.handle}` })}
-						enabled={enabled}
-						moderationOpts={moderationOpts}
-						profile={profile}
-						trailing={
-							enabled ? (
-								<div className={css.indicator}>
-									<Combobox.ItemIndicator>
-										<CheckIcon fill="currentColor" size="sm" />
-									</Combobox.ItemIndicator>
-								</div>
-							) : undefined
-						}
-					/>
-				</Combobox.Item>
-			);
-		}
-	}
-}
-
-function MemberChips({
-	members,
-	moderationOpts,
-	onRemove,
-}: {
-	members: AnyProfileView[];
-	moderationOpts: ModerationOptions;
-	onRemove: (did: string) => void;
-}) {
-	return (
-		<div className={css.chips}>
-			{members.map((profile) => {
-				const handle = profile.handle;
-
-				return (
-					<div className={css.chip} key={profile.did}>
-						<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} size={24} />
-						<Text className={css.chipName} numberOfLines={1} size="sm">
-							{handle}
-						</Text>
-						<Button
-							className={css.chipRemove}
-							color="secondary"
-							label={m['components.dms.group.action.removeMember']({ name: handle })}
-							onClick={() => onRemove(profile.did)}
-							shape="round"
-							size="tiny"
-							variant="ghost"
-						>
-							<ButtonIcon icon={XIcon} size="xs" />
-						</Button>
-					</div>
-				);
-			})}
-		</div>
 	);
 }
 
@@ -757,133 +526,6 @@ function NameGroupStep({
 				</Button>
 			</StepFooter>
 		</>
-	);
-}
-
-// #endregion
-
-// #region shared
-
-function StepHeader({ onClose, title }: { onClose: () => void; title: string }) {
-	return (
-		<div className={css.header}>
-			<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
-				{title}
-			</Text>
-
-			<Button
-				className={css.closeButton}
-				color="secondary"
-				label={m['common.action.close']()}
-				onClick={onClose}
-				shape="round"
-				size="small"
-				variant="ghost"
-			>
-				<ButtonIcon icon={XIcon} />
-			</Button>
-		</div>
-	);
-}
-
-// the sticky search slot shared by both pickers: the field chrome and clear button, wrapping the picker's own
-// `Autocomplete.Input` / `Combobox.Input` (passed as children). `overlap` pulls the list up under the search's
-// fade; disable it when a chips row sits between the search and the list.
-function SearchSlot({
-	children,
-	onClear,
-	overlap,
-	searchText,
-}: {
-	children: ReactNode;
-	onClear: () => void;
-	overlap: boolean;
-	searchText: string;
-}) {
-	return (
-		<div className={clsx(css.search, overlap && css.searchOverlap)}>
-			<SearchField.Root>
-				<SearchField.Icon />
-				{children}
-				{searchText.length > 0 && (
-					<SearchField.Clear label={m['common.search.action.clear']()} onClick={onClear} />
-				)}
-			</SearchField.Root>
-		</div>
-	);
-}
-
-function StepFooter({ children, onBack }: { children: ReactNode; onBack: () => void }) {
-	return (
-		<Dialog.Footer>
-			<div className={css.footerRow}>
-				<Button color="secondary" label={m['common.action.back']()} onClick={onBack} size="small">
-					<ButtonIcon icon={ArrowLeftIcon} />
-					<ButtonText>{m['common.action.back']()}</ButtonText>
-				</Button>
-				{children}
-			</div>
-		</Dialog.Footer>
-	);
-}
-
-// the header + avatar + name/handle block shared by the direct-chat, member-select, and group-name rows. when
-// disabled it swaps the name column for the handle plus a reason (`disabledMessage`); `trailing` slots an
-// accessory (e.g. the member checkmark) after the name.
-function ProfileRowContent({
-	disabledMessage,
-	enabled,
-	moderationOpts,
-	profile,
-	trailing,
-}: {
-	disabledMessage?: string;
-	enabled: boolean;
-	moderationOpts: ModerationOptions;
-	profile: AnyProfileView;
-	trailing?: ReactNode;
-}) {
-	return (
-		<ProfileCard.Header className={!enabled ? css.disabledHeader : undefined}>
-			<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
-
-			{enabled ? (
-				<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
-			) : (
-				<div className={css.column}>
-					<ProfileCard.Handle profile={profile} />
-
-					<Text color="textContrastHigh" numberOfLines={2} size="md_sub">
-						{disabledMessage}
-					</Text>
-				</div>
-			)}
-
-			{trailing}
-		</ProfileCard.Header>
-	);
-}
-
-function SectionLabel({ message }: { message: string }) {
-	return (
-		<div className={css.label}>
-			<Text color="textContrastHigh" size="md_sub" weight="semiBold">
-				{message}
-			</Text>
-		</div>
-	);
-}
-
-function Empty({ message }: { message: string }) {
-	return (
-		<div className={css.empty}>
-			<Text className={css.emptyMessage} color="textContrastHigh" size="sm">
-				{message}
-			</Text>
-			<Text color="textContrastLow" size="xs">
-				(╯°□°)╯︵ ┻━┻
-			</Text>
-		</div>
 	);
 }
 

@@ -1,25 +1,22 @@
-import { View } from 'react-native';
-
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { AddMembersFlow } from '#/components/dms/AddMembersFlow';
+import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
+
+import * as styles from './AddMembersLink.css';
 
 export function AddMembersLink({
 	convo,
@@ -28,35 +25,33 @@ export function AddMembersLink({
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 	disabled?: boolean;
 }) {
-	const t = useTheme();
-
-	const addMembersControl = Dialog.useDialogControl();
+	const addMembersHandle = Dialog.useDialogHandle();
 
 	const convoId = convo.view.id;
 	const { mutate: addGroupMembers, isPending: isAddPending } = useAddGroupMembers(convoId, {
 		onSuccess: (data) => {
-			addMembersControl.close(() => {
-				const members = data.addedMembers ?? [];
+			addMembersHandle.close();
 
-				let names = null;
-				if (members.length === 1) {
-					names = m['screens.messages.addedToChat.one']({ name: createSanitizedDisplayName(members[0]!) });
-				} else if (members.length === 2) {
-					names = m['screens.messages.addedToChat.two']({
-						name: createSanitizedDisplayName(members[0]!),
-						name2: createSanitizedDisplayName(members[1]!),
-					});
-				} else if (members.length > 2) {
-					const memberCount = convo.details.memberCount - 2;
-					names = m['screens.messages.addedToChat.many']({
-						name: createSanitizedDisplayName(members[0]!),
-						name2: createSanitizedDisplayName(members[1]!),
-						count: memberCount,
-					});
-				}
+			const members = data.addedMembers ?? [];
 
-				if (names) Toast.show(names);
-			});
+			let names = null;
+			if (members.length === 1) {
+				names = m['screens.messages.addedToChat.one']({ name: createSanitizedDisplayName(members[0]!) });
+			} else if (members.length === 2) {
+				names = m['screens.messages.addedToChat.two']({
+					name: createSanitizedDisplayName(members[0]!),
+					name2: createSanitizedDisplayName(members[1]!),
+				});
+			} else if (members.length > 2) {
+				const memberCount = convo.details.memberCount - 2;
+				names = m['screens.messages.addedToChat.many']({
+					name: createSanitizedDisplayName(members[0]!),
+					name2: createSanitizedDisplayName(members[1]!),
+					count: memberCount,
+				});
+			}
+
+			if (names) Toast.show(names);
 		},
 		onError: (e) => {
 			logger.error('Failed to add group chat members', { message: e });
@@ -66,62 +61,33 @@ export function AddMembersLink({
 
 	return (
 		<>
-			<Button
+			<Dialog.Trigger
+				aria-label={m['screens.messages.members.add.action']()}
+				className={styles.row}
 				disabled={disabled || isAddPending}
-				label={m['screens.messages.members.add.action']()}
-				onPress={addMembersControl.open}
+				handle={addMembersHandle}
 			>
-				{({ interacting }) => (
-					<View
-						style={[
-							a.w_full,
-							a.flex_row,
-							a.align_center,
-							a.justify_between,
-							a.px_xl,
-							a.py_sm,
-							interacting ? [t.atoms.bg_contrast_25] : [],
-						]}
-					>
-						<View style={[a.flex_row, a.align_center]}>
-							<View
-								style={[
-									a.flex_row,
-									a.align_center,
-									a.justify_center,
-									a.p_lg,
-									a.rounded_full,
-									interacting ? t.atoms.bg_contrast_100 : t.atoms.bg_contrast_50,
-									{
-										height: 48,
-										width: 48,
-									},
-								]}
-							>
-								<PlusIcon fill={colors.textContrastHigh} size="sm" />
-							</View>
-							<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, a.mx_sm, t.atoms.text]}>
-								{m['screens.messages.members.add.action']()}
-							</Text>
-						</View>
-						{isAddPending ? (
-							<Spinner color="default" label={m['common.status.saving']()} size="lg" />
-						) : (
-							<ChevronIcon fill={colors.textContrastMedium} size="lg" />
-						)}
-					</View>
+				<div className={styles.content}>
+					<div className={styles.iconCircle}>
+						<PlusIcon fill={colors.textContrastHigh} size="sm" />
+					</div>
+					<Text className={styles.label} numberOfLines={1} size="md" weight="semiBold">
+						{m['screens.messages.members.add.action']()}
+					</Text>
+				</div>
+				{isAddPending ? (
+					<Spinner color="default" label={m['common.status.saving']()} size="lg" />
+				) : (
+					<ChevronIcon fill={colors.textContrastMedium} size="lg" />
 				)}
-			</Button>
-			<Dialog.Outer control={addMembersControl} testID="addChatMembersDialog">
-				<Dialog.Handle />
-				<AddMembersFlow
-					convo={convo}
-					title={m['screens.messages.members.add.action']()}
-					onAddMembers={(members, profiles) => {
-						addGroupMembers({ members, profiles });
-					}}
-				/>
-			</Dialog.Outer>
+			</Dialog.Trigger>
+			<AddMembersDialog
+				convo={convo}
+				handle={addMembersHandle}
+				isPending={isAddPending}
+				onAddMembers={(members, profiles) => addGroupMembers({ members, profiles })}
+				title={m['screens.messages.members.add.action']()}
+			/>
 		</>
 	);
 }

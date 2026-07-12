@@ -12,8 +12,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as LegacyDialog from '#/components/Dialog';
-import { AddMembersFlow } from '#/components/dms/AddMembersFlow';
+import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
@@ -34,14 +33,14 @@ export function MessagesListGroupInfoPanel({
 	const moderationOpts = useModerationOpts();
 	const convoId = convo.view.id;
 
-	const addMembersControl = LegacyDialog.useDialogControl();
+	const addMembersHandle = Dialog.useDialogHandle();
 	const inviteLinkHandle = Dialog.useDialogHandle();
 
 	const { currentAccount } = useSession();
 
-	const { mutate: addGroupMembers } = useAddGroupMembers(convoId, {
+	const { mutate: addGroupMembers, isPending: isAddPending } = useAddGroupMembers(convoId, {
 		onSuccess: () => {
-			addMembersControl.close();
+			addMembersHandle.close();
 		},
 		onError: (e) => {
 			logger.error('Failed to add group chat members', { message: e });
@@ -100,15 +99,15 @@ export function MessagesListGroupInfoPanel({
 				{showButtons ? (
 					<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm, a.mt_lg, a.mb_4xl]}>
 						{isOwner ? (
-							<Button
-								color="secondary"
-								size="small"
-								label={m['screens.messages.members.add.a11y']()}
-								onPress={() => addMembersControl.open()}
-							>
-								<ButtonIcon icon={PersonPlusIcon} />
-								<ButtonText>{m['common.action.addPeople']()}</ButtonText>
-							</Button>
+							<Dialog.Trigger
+								handle={addMembersHandle}
+								render={
+									<Button color="secondary" size="small" label={m['screens.messages.members.add.a11y']()}>
+										<ButtonIcon icon={PersonPlusIcon} />
+										<ButtonText>{m['common.action.addPeople']()}</ButtonText>
+									</Button>
+								}
+							/>
 						) : null}
 						{isJoinLinkEnabled ? (
 							<Dialog.Trigger
@@ -141,14 +140,13 @@ export function MessagesListGroupInfoPanel({
 					handle={inviteLinkHandle}
 				/>
 			)}
-			<LegacyDialog.Outer control={addMembersControl} testID="addChatMembersDialog">
-				<LegacyDialog.Handle />
-				<AddMembersFlow
-					convo={convo}
-					title={m['common.action.addPeople']()}
-					onAddMembers={(members, profiles) => addGroupMembers({ members, profiles })}
-				/>
-			</LegacyDialog.Outer>
+			<AddMembersDialog
+				convo={convo}
+				handle={addMembersHandle}
+				isPending={isAddPending}
+				onAddMembers={(members, profiles) => addGroupMembers({ members, profiles })}
+				title={m['common.action.addPeople']()}
+			/>
 		</>
 	);
 }
