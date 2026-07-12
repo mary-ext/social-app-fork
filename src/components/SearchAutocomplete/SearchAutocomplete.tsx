@@ -78,6 +78,8 @@ const itemToStringValue = (item: InteractiveItem): string => {
 			return item.path;
 		case 'operator':
 			return item.operator.name;
+		case 'operator-value':
+			return `${item.op}:${item.value}`;
 		case 'profile':
 			return item.profile.handle;
 		case 'recent-profile':
@@ -243,6 +245,11 @@ function ActiveSearchAutocomplete({
 	const active = useMemo(() => findActiveToken(tokens, caret), [tokens, caret]);
 	const mode = useMemo(() => classifyActiveToken(active), [active]);
 	const operatorSuggestions = getOperatorSuggestions(tokens, active);
+	// exclude the token under the caret so a `from:` being typed doesn't count as already set.
+	const fromActive = tokens.some(
+		(token, index) =>
+			index !== active?.tokenIndex && token.type === 'word' && token.value.startsWith('from:'),
+	);
 
 	// the selectable date range for the active `since`/`until` picker (day-granular bounds).
 	const dateConstraints = useMemo(
@@ -322,6 +329,7 @@ function ActiveSearchAutocomplete({
 
 	const result = buildResult({
 		constraints: dateConstraints ?? {},
+		fromActive,
 		history,
 		mode,
 		operators: operatorSuggestions,
@@ -506,6 +514,9 @@ function ActiveSearchAutocomplete({
 				break;
 			case 'operator':
 				replaceToken(`${item.operator.name}:`);
+				break;
+			case 'operator-value':
+				replaceToken(`${item.op}:${item.value} `);
 				break;
 			case 'profile': {
 				if (item.op) {

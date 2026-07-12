@@ -1,4 +1,6 @@
+import type { AppBskyFeedSearchPostsV2 } from '@atcute/bluesky';
 import { type Token, tokenize } from '@atcute/bluesky-search-parser';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { min } from '@mary/date-fns';
@@ -103,30 +105,42 @@ export const parseEndDate = (str: string): Date | null => {
 
 // #region operators
 
-export type SearchOperatorKind = 'actor' | 'date' | 'domain' | 'language';
+export type SearchOperatorKind = 'actor' | 'date' | 'domain' | 'enum' | 'language' | 'url';
 
-export type OperatorName = 'domain' | 'from' | 'lang' | 'mentions' | 'since' | 'to' | 'until';
+export type OperatorName =
+	| 'domain'
+	| 'from'
+	| 'has'
+	| 'lang'
+	| 'mentions'
+	| 'replies'
+	| 'since'
+	| 'until'
+	| 'url';
 
 export interface SearchOperator {
-	/** hide whenever any of these sibling operators is already present. */
-	hideOn?: OperatorName[];
-	/** never offered as a suggestion, but still recognized when typed. */
-	hidden?: boolean;
 	kind: SearchOperatorKind;
+	/** whether the operator accepts multiple values (an array param). */
+	multiple?: boolean;
 	name: OperatorName;
+	/** the values an `enum` operator accepts (e.g. `media`/`video`). */
+	options?: readonly string[];
 	/** sample value shown after the operator name in the options list. */
 	placeholder: string;
 }
 
 /** recognized search operators in display order */
 export const SEARCH_OPERATORS: SearchOperator[] = [
-	{ kind: 'actor', name: 'from', placeholder: '@user' },
-	{ hideOn: ['mentions'], hidden: true, kind: 'actor', name: 'to', placeholder: '@user' },
-	{ hideOn: ['to'], kind: 'actor', name: 'mentions', placeholder: '@user' },
+	{ kind: 'actor', multiple: true, name: 'from', placeholder: '@user' },
+	{ kind: 'actor', multiple: true, name: 'mentions', placeholder: '@user' },
 	{ kind: 'date', name: 'since', placeholder: 'yyyy-mm-dd' },
 	{ kind: 'date', name: 'until', placeholder: 'yyyy-mm-dd' },
-	{ kind: 'language', name: 'lang', placeholder: 'en' },
-	{ kind: 'domain', name: 'domain', placeholder: 'example.com' },
+	{ kind: 'language', multiple: true, name: 'lang', placeholder: 'en' },
+	{ kind: 'domain', multiple: true, name: 'domain', placeholder: 'example.com' },
+	{ kind: 'url', multiple: true, name: 'url', placeholder: 'example.com/page' },
+	// single-choice: video ⊂ media, and none/only are mutually exclusive.
+	{ kind: 'enum', name: 'has', options: ['media', 'video'], placeholder: 'media' },
+	{ kind: 'enum', name: 'replies', options: ['none', 'only'], placeholder: 'none' },
 ];
 
 const MAYBE_HANDLE_RE = /^@?[a-zA-Z0-9-.]*$/;
@@ -176,11 +190,12 @@ export const findActiveToken = (tokens: Token[], caret: number): ActiveToken | u
 export type SuggestionMode =
 	| { kind: 'actor'; op: OperatorName; query: string }
 	| { kind: 'date'; op: OperatorName; query: string }
-	| { kind: 'default' };
+	| { kind: 'default' }
+	| { kind: 'enum'; op: OperatorName; options: readonly string[]; query: string };
 
 /**
- * classifies the active token into a contextual suggestion mode: an actor lookup, a date picker, or the
- * default suggestions.
+ * classifies the active token into a contextual suggestion mode: an actor lookup, a date picker, an
+ * enumerated value picker (`has:`/`replies:`), or the default suggestions.
  *
  * @param active the token under the caret
  * @returns the suggestion mode to render
@@ -213,14 +228,21 @@ export const classifyActiveToken = (active: ActiveToken | undefined): Suggestion
 			}
 			break;
 		}
+		case 'enum': {
+			const options = def.options ?? [];
+			if (!query || options.some((option) => option.startsWith(query))) {
+				return { kind: 'enum', op: def.name, options, query };
+			}
+			break;
+		}
 	}
 
 	return { kind: 'default' };
 };
 
 /**
- * returns the operators worth offering as options for the current query: those not already used, not hidden,
- * not suppressed by a present sibling, and matching whatever the caret token has typed.
+ * returns the operators worth offering as options for the current query: those not already used, and matching
+ * whatever the caret token has typed.
  *
  * @param tokens tokenized query
  * @param active token under the caret
@@ -236,17 +258,17 @@ export const getOperatorSuggestions = (
 	}
 
 	const [, present] = splitFilters(tokens);
+	// `from:following` is a query-wide scope exclusive with specific authors, so it hides `from:`. checked
+	// against tokens directly since the last-wins map can't tell it from a later `from:handle`.
+	const followingSet = tokens.some((t) => t.type === 'word' && t.value === 'from:following');
 
-	return SEARCH_OPERATORS.filter(({ hideOn, hidden, name }) => {
-		if (hidden) {
+	return SEARCH_OPERATORS.filter(({ multiple, name }) => {
+		if (name === 'from' && followingSet) {
 			return false;
 		}
 
-		if (present.has(name)) {
-			return false;
-		}
-
-		if (hideOn?.some((x) => present.has(x))) {
+		// array-param operators can stack more values; scalar/enum ones drop out once set.
+		if (!multiple && present.has(name)) {
 			return false;
 		}
 
@@ -293,6 +315,234 @@ export const getDateConstraints = (tokens: Token[], op: OperatorName, today: Dat
 	}
 
 	return { max: maxDate ? min(maxDate, today) : today, min: minDate };
+};
+
+// #endregion
+
+// #region lifting
+
+/** the filter subset of `app.bsky.feed.searchPostsV2` params (excludes query/cursor/limit/sort/allTime). */
+export type SearchPostsFilters = Pick<
+	AppBskyFeedSearchPostsV2.$params,
+	| 'authors'
+	| 'domains'
+	| 'excludeAuthors'
+	| 'excludeDomains'
+	| 'excludeHashtags'
+	| 'excludeLanguages'
+	| 'excludeMentions'
+	| 'excludeReplies'
+	| 'excludeUrls'
+	| 'following'
+	| 'hasMedia'
+	| 'hasVideo'
+	| 'hashtags'
+	| 'languages'
+	| 'mentions'
+	| 'repliesOnly'
+	| 'since'
+	| 'until'
+	| 'urls'
+>;
+
+export interface LiftedQuery {
+	filters: SearchPostsFilters;
+	/** the free text left after lifting: quotes, OR groups, bare/`-word` negations, unknown operators. */
+	text: string;
+}
+
+// a leading `-` negates the operator (`-from:` → excludeAuthors); `#tag` / `-#tag` are hashtags.
+const LIFT_OPERATOR_RE = /^(-)?([a-z]+):(.*)$/;
+const LIFT_HASHTAG_RE = /^(-)?#([^:]+)$/;
+// only full ISO dates lift; partials stay in the text for the backend to parse.
+const LIFT_DATE_RE = /^\d{4}-\d{2}-\d{2}/;
+
+/**
+ * lifts recognized operators out of a query into structured searchPostsV2 filters, leaving free text (quotes,
+ * OR groups, `-word` negations, unknown operators) in `text`. `from:me`/`mentions:me` resolve against
+ * `viewerDid` and `from:following` sets `following`; with no viewer those stay in `text`.
+ *
+ * @param query the raw query text
+ * @param options.viewerDid the signed-in account's did
+ * @returns the residual free text and lifted filters
+ */
+export const liftSearchQuery = (query: string, options?: { viewerDid?: string }): LiftedQuery => {
+	const viewerDid = options?.viewerDid;
+
+	const kept: string[] = [];
+	const authors: string[] = [];
+	const excludeAuthors: string[] = [];
+	const mentions: string[] = [];
+	const excludeMentions: string[] = [];
+	const domains: string[] = [];
+	const excludeDomains: string[] = [];
+	const urls: string[] = [];
+	const excludeUrls: string[] = [];
+	const hashtags: string[] = [];
+	const excludeHashtags: string[] = [];
+	const languages: string[] = [];
+	const excludeLanguages: string[] = [];
+
+	const filters: SearchPostsFilters = {};
+
+	for (const token of tokenize(query)) {
+		if (token.type === 'whitespace') {
+			continue;
+		}
+		if (token.type === 'quoted') {
+			kept.push(token.value);
+			continue;
+		}
+
+		const value = token.value;
+
+		const hashtag = LIFT_HASHTAG_RE.exec(value);
+		if (hashtag) {
+			(hashtag[1] ? excludeHashtags : hashtags).push(hashtag[2]!);
+			continue;
+		}
+
+		const operator = LIFT_OPERATOR_RE.exec(value);
+		// a valueless operator (`from:`) is still being typed — leave it in the text.
+		if (!operator || operator[3] === '') {
+			kept.push(value);
+			continue;
+		}
+
+		const negated = operator[1] !== undefined;
+		const name = operator[2]!;
+		const arg = operator[3]!;
+
+		let handled = true;
+		switch (name) {
+			case 'from': {
+				if (!negated && arg === 'following') {
+					filters.following = true;
+				} else {
+					const actor = arg === 'me' ? viewerDid : arg;
+					if (actor) {
+						(negated ? excludeAuthors : authors).push(actor);
+					} else {
+						handled = false;
+					}
+				}
+				break;
+			}
+			case 'mentions': {
+				const actor = arg === 'me' ? viewerDid : arg;
+				if (actor) {
+					(negated ? excludeMentions : mentions).push(actor);
+				} else {
+					handled = false;
+				}
+				break;
+			}
+			case 'domain': {
+				(negated ? excludeDomains : domains).push(arg);
+				break;
+			}
+			case 'url': {
+				(negated ? excludeUrls : urls).push(arg);
+				break;
+			}
+			case 'lang': {
+				(negated ? excludeLanguages : languages).push(arg);
+				break;
+			}
+			case 'since': {
+				if (!negated && LIFT_DATE_RE.test(arg)) {
+					filters.since = arg;
+				} else {
+					handled = false;
+				}
+				break;
+			}
+			case 'until': {
+				if (!negated && LIFT_DATE_RE.test(arg)) {
+					filters.until = arg;
+				} else {
+					handled = false;
+				}
+				break;
+			}
+			case 'has': {
+				if (negated) {
+					handled = false;
+				} else if (arg === 'media') {
+					filters.hasMedia = true;
+				} else if (arg === 'video') {
+					filters.hasVideo = true;
+				} else {
+					handled = false;
+				}
+				break;
+			}
+			case 'replies': {
+				if (negated) {
+					handled = false;
+				} else if (arg === 'none') {
+					filters.excludeReplies = true;
+				} else if (arg === 'only') {
+					filters.repliesOnly = true;
+				} else {
+					handled = false;
+				}
+				break;
+			}
+			default: {
+				handled = false;
+			}
+		}
+
+		if (!handled) {
+			kept.push(value);
+		}
+	}
+
+	// excludeReplies/repliesOnly are mutually exclusive server-side; drop both rather than 400 on it.
+	if (filters.excludeReplies && filters.repliesOnly) {
+		delete filters.excludeReplies;
+		delete filters.repliesOnly;
+	}
+
+	if (authors.length) {
+		filters.authors = authors as ActorIdentifier[];
+	}
+	if (excludeAuthors.length) {
+		filters.excludeAuthors = excludeAuthors as ActorIdentifier[];
+	}
+	if (mentions.length) {
+		filters.mentions = mentions as ActorIdentifier[];
+	}
+	if (excludeMentions.length) {
+		filters.excludeMentions = excludeMentions as ActorIdentifier[];
+	}
+	if (domains.length) {
+		filters.domains = domains;
+	}
+	if (excludeDomains.length) {
+		filters.excludeDomains = excludeDomains;
+	}
+	if (urls.length) {
+		filters.urls = urls as SearchPostsFilters['urls'];
+	}
+	if (excludeUrls.length) {
+		filters.excludeUrls = excludeUrls as SearchPostsFilters['excludeUrls'];
+	}
+	if (hashtags.length) {
+		filters.hashtags = hashtags;
+	}
+	if (excludeHashtags.length) {
+		filters.excludeHashtags = excludeHashtags;
+	}
+	if (languages.length) {
+		filters.languages = languages;
+	}
+	if (excludeLanguages.length) {
+		filters.excludeLanguages = excludeLanguages;
+	}
+
+	return { filters, text: kept.join(' ') };
 };
 
 // #endregion

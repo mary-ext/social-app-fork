@@ -8,18 +8,25 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { liftSearchQuery } from '#/lib/bsky/search';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useClients } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
 const searchPostsQueryKeyRoot = 'search-posts';
-const searchPostsQueryKey = ({ author, query, sort }: { author?: string; query: string; sort?: string }) => [
-	searchPostsQueryKeyRoot,
+const searchPostsQueryKey = ({
+	author,
 	query,
 	sort,
-	author,
-];
+	viewerDid,
+}: {
+	author?: string;
+	query: string;
+	sort?: string;
+	viewerDid?: string;
+}) => [searchPostsQueryKeyRoot, query, sort, author, viewerDid];
 
 export function useSearchPostsQuery({
 	author,
@@ -31,13 +38,25 @@ export function useSearchPostsQuery({
 	sort?: 'top' | 'latest';
 }) {
 	const { appview } = useClients();
+	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
+	const viewerDid = currentAccount?.did;
+
+	const lifted = useMemo(() => liftSearchQuery(query, { viewerDid }), [query, viewerDid]);
+	const authors = useMemo(() => {
+		const base = lifted.filters.authors ?? [];
+		if (!author) {
+			return base.length ? base : undefined;
+		}
+		return [...new Set<string>([...base, author])] as ActorIdentifier[];
+	}, [lifted, author]);
+
 	const selectArgs = useMemo(
 		() => ({
-			isSearchingSpecificUser: !!author || /from:(\w+)/.test(query),
+			isSearchingSpecificUser: (authors?.length ?? 0) > 0,
 			moderationOpts,
 		}),
-		[author, moderationOpts, query],
+		[authors, moderationOpts],
 	);
 	const lastRun = useRef<{
 		data: InfiniteData<AppBskyFeedSearchPostsV2.$output>;
@@ -52,16 +71,17 @@ export function useSearchPostsQuery({
 		QueryKey,
 		string | undefined
 	>({
-		queryKey: searchPostsQueryKey({ author, query, sort }),
+		queryKey: searchPostsQueryKey({ author, query, sort, viewerDid }),
 		queryFn: ({ pageParam }) =>
 			ok(
 				appview.get('app.bsky.feed.searchPostsV2', {
 					params: {
+						...lifted.filters,
 						allTime: true,
-						authors: author ? [author as ActorIdentifier] : undefined,
+						authors,
 						cursor: pageParam,
 						limit: 25,
-						query,
+						query: lifted.text || undefined,
 						// v2 renames the v1 'latest' recency sort to 'recent'.
 						sort: sort === 'latest' ? 'recent' : sort,
 					},

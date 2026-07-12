@@ -6,6 +6,7 @@ import { HeroRow } from './HeroRow';
 import { LinkRow } from './LinkRow';
 import type { ListRow } from './model';
 import { OperatorRow } from './OperatorRow';
+import { OperatorValueRow } from './OperatorValueRow';
 import { ProfileRow } from './ProfileRow';
 import { RecentProfilePendingRow } from './RecentProfilePendingRow';
 import { RecentProfileRow } from './RecentProfileRow';
@@ -39,6 +40,8 @@ export function Row({
 			return <LinkRow row={row} />;
 		case 'operator':
 			return <OperatorRow row={row} />;
+		case 'operator-value':
+			return <OperatorValueRow row={row} />;
 		case 'profile':
 			return <ProfileRow row={row} />;
 		case 'recent-profile':

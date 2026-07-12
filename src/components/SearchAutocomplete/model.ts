@@ -46,6 +46,7 @@ export type InteractiveItem =
 	| { key: string; kind: 'goto'; name: string; path: string }
 	| { key: string; kind: 'link'; path: string }
 	| { key: string; kind: 'operator'; operator: SearchOperator }
+	| { key: string; kind: 'operator-value'; op: OperatorName; value: string }
 	| { key: string; kind: 'profile'; op?: OperatorName; profile: AnyProfileView }
 	| { key: string; kind: 'recent-profile'; profile: AnyProfileView }
 	| { key: string; kind: 'recent-query'; query: string }
@@ -66,7 +67,8 @@ export type ListRow = ChromeRow | Exclude<InteractiveItem, { kind: 'date' }>;
 export type AutocompleteResult =
 	| { kind: 'actor'; rows: ListRow[] }
 	| { days: DateItem[]; kind: 'date'; visibleMonth: Date }
-	| { kind: 'default'; rows: ListRow[] };
+	| { kind: 'default'; rows: ListRow[] }
+	| { kind: 'enum'; rows: ListRow[] };
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -129,8 +131,6 @@ const actorSectionLabel = (op: OperatorName): string => {
 	switch (op) {
 		case 'mentions':
 			return m['components.web.search.filter.mention']();
-		case 'to':
-			return m['components.web.search.filter.to']();
 		default:
 			return m['components.web.search.filter.from']();
 	}
@@ -182,10 +182,11 @@ const buildCalendarDays = ({
 
 /**
  * assembles the popup contents for the active mode: the calendar grid for `since`/`until`, a labelled profile
- * list for `from`/`to`/`mentions`, or the default mix of search/navigation shortcuts, profile typeahead, and
- * operator options.
+ * list for `from`/`mentions`, the value picker for `has`/`replies`, or the default mix of search/navigation
+ * shortcuts, profile typeahead, and operator options.
  *
  * @param constraints selectable date range derived from the sibling operator
+ * @param fromActive whether any `from:` filter is already set
  * @param history unified search history, surfaced as recent rows in the empty default state
  * @param mode classified suggestion mode for the caret token
  * @param operators operators to offer under "search options"
@@ -199,6 +200,7 @@ const buildCalendarDays = ({
  */
 export const buildResult = ({
 	constraints,
+	fromActive,
 	history,
 	mode,
 	operators,
@@ -210,6 +212,7 @@ export const buildResult = ({
 	visibleMonth,
 }: {
 	constraints: DateConstraints;
+	fromActive: boolean;
 	history: SearchHistoryEntry[];
 	mode: SuggestionMode;
 	operators: SearchOperator[];
@@ -225,6 +228,11 @@ export const buildResult = ({
 			const rows: ListRow[] = [
 				{ key: 'section-label', kind: 'section-label', label: actorSectionLabel(mode.op) },
 			];
+			// `from:following` belongs in the `from:` picker, not the options list; the prefix test drops it
+			// once the typed value diverges from `following` (e.g. an `@` handle).
+			if (mode.op === 'from' && !fromActive && 'following'.startsWith(mode.query)) {
+				rows.push({ key: 'from-following', kind: 'operator-value', op: 'from', value: 'following' });
+			}
 			for (const profile of profiles) {
 				rows.push({ key: `actor-${profile.did}`, kind: 'profile', op: mode.op, profile });
 			}
@@ -294,6 +302,15 @@ export const buildResult = ({
 				}
 			}
 			return { kind: 'default', rows };
+		}
+		case 'enum': {
+			const rows: ListRow[] = [];
+			for (const option of mode.options) {
+				if (option.startsWith(mode.query)) {
+					rows.push({ key: `enum-${mode.op}-${option}`, kind: 'operator-value', op: mode.op, value: option });
+				}
+			}
+			return { kind: 'enum', rows };
 		}
 	}
 };
