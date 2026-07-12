@@ -177,6 +177,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 					<AtIcon className={css.fieldIcon} size="lg" fill={colors.contrast_500} />
 					<TextField.Input
 						autoCapitalize="none"
+						autoFocus
 						className={css.fieldInput}
 						label={m['components.dialogs.account.handle.label']()}
 						onChangeText={setIdentifier}
