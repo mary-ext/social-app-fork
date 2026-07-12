@@ -29,7 +29,6 @@ import { ThemeProvider as Alf } from '#/alf';
 import { useColorModeTheme } from '#/alf/util/useColorModeTheme';
 
 import { useStarterPackEntry } from '#/components/hooks/useStarterPackEntry';
-import { Provider as PortalProvider } from '#/components/Portal';
 import { Provider as ActiveVideoProvider } from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext';
 import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
 import * as Toast from '#/components/Toast';
@@ -110,11 +109,9 @@ function App() {
 			<PrefsStateProvider>
 				<ShellStateProvider>
 					<DialogStateProvider>
-						<PortalProvider>
-							<StarterPackProvider>
-								<InnerApp />
-							</StarterPackProvider>
-						</PortalProvider>
+						<StarterPackProvider>
+							<InnerApp />
+						</StarterPackProvider>
 					</DialogStateProvider>
 				</ShellStateProvider>
 			</PrefsStateProvider>

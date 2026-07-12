@@ -16,7 +16,6 @@ import { SigninDialog } from '#/components/dialogs/Signin';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import { Lightbox } from '#/components/Lightbox';
 import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
-import { Outlet as PortalOutlet } from '#/components/Portal';
 
 import { FlatNavigator, RoutesContainer } from '#/Navigation';
 
@@ -47,8 +46,6 @@ function ShellInner() {
 			<GroupChatJoinDialog />
 			<Lightbox />
 			<GlobalReportDialog />
-
-			<PortalOutlet />
 		</>
 	);
 }
