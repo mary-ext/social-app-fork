@@ -14,7 +14,6 @@ import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 
 import { logger } from '#/logger';
 
-import { useDialogControl } from '#/components/Dialog';
 import { canBeMessaged, type ConvoWithDetails } from '#/components/dms/util';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
@@ -28,6 +27,7 @@ import * as Menu from '#/components/Menu';
 import { BlockDialog } from '#/components/moderation/BlockDialog';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
@@ -49,7 +49,7 @@ export function MemberMenu({
 	isOwner: boolean;
 }) {
 	const navigation = useNavigation<NavigationProp>();
-	const blockMemberPrompt = useDialogControl();
+	const blockMemberHandle = Dialog.useDialogHandle();
 	const removeMemberPrompt = Prompt.usePromptHandle();
 
 	const [menuDidOpen, setMenuDidOpen] = useState(false);
@@ -183,7 +183,7 @@ export function MemberMenu({
 										: m['screens.messages.block.block']({ name: displayName })
 								}
 								onClick={() =>
-									void (profile.viewer?.blocking ? handleBlockMember() : blockMemberPrompt.open())
+									void (profile.viewer?.blocking ? handleBlockMember() : blockMemberHandle.open(null))
 								}
 							>
 								<Menu.ItemIcon icon={profile.viewer?.blocking ? PersonCheck : PersonXIcon} />
@@ -208,10 +208,10 @@ export function MemberMenu({
 				</Menu.Popup>
 			</Menu.Root>
 			<BlockDialog
-				control={blockMemberPrompt}
-				profile={profile}
-				onBlock={handleBlockMember}
 				currentConvoId={convoId}
+				handle={blockMemberHandle}
+				onBlock={handleBlockMember}
+				profile={profile}
 			/>
 			<RemoveMemberPrompt
 				handle={removeMemberPrompt}

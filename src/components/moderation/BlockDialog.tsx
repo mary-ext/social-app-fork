@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { View } from 'react-native';
 
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
@@ -19,60 +18,54 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
-import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import type { DialogControlProps } from '#/components/Dialog';
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { parseConvoView } from '#/components/dms/util';
 import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
+
+import * as css from './BlockDialog.css';
 
 type Item = ChatBskyConvoDefs.ConvoView;
 
 type BlockDialogProps = {
-	control: DialogControlProps;
+	handle: Dialog.DialogHandle;
 	profile: Shadow<AnyProfileView>;
 	onBlock: () => Promise<void>;
 	currentConvoId?: string;
 };
 
-export function BlockDialog({ control, profile, onBlock, currentConvoId }: BlockDialogProps) {
+export function BlockDialog({ handle, profile, onBlock, currentConvoId }: BlockDialogProps) {
 	return (
-		<Dialog.Outer control={control}>
-			<View style={[a.relative]}>
-				<Dialog.Handle />
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup className={css.popup} scroll="body">
 				<BlockDialogInner
-					control={control}
-					profile={profile}
-					onBlock={onBlock}
 					currentConvoId={currentConvoId}
+					handle={handle}
+					onBlock={onBlock}
+					profile={profile}
 				/>
-				<Dialog.Close />
-			</View>
-		</Dialog.Outer>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
 function BlockDialogInner({
-	control,
-	profile,
-	onBlock,
 	currentConvoId,
+	handle,
+	onBlock,
+	profile,
 }: {
-	control: DialogControlProps;
-	profile: Shadow<AnyProfileView>;
-	onBlock: () => Promise<void>;
 	currentConvoId?: string;
+	handle: Dialog.DialogHandle;
+	onBlock: () => Promise<void>;
+	profile: Shadow<AnyProfileView>;
 }) {
-	const t = useTheme();
-	const [headerHeight, setHeaderHeight] = useState(0);
-	const [footerHeight, setFooterHeight] = useState(0);
-
 	// Optimistically hide convos the viewer has left or removed the profile from, before the query
 	// refetches. We don't expect many items here, so a simple filter is fine.
 	const [removedConvoIds, setRemovedConvoIds] = useState<Set<string>>(() => new Set());
@@ -100,140 +93,108 @@ function BlockDialogInner({
 	);
 	const hasMutualGroupChats = items.length > 0;
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage) return;
-		try {
-			await fetchNextPage();
-		} catch (err) {
+		fetchNextPage().catch((err) => {
 			logger.error('Failed to load more mutual group chats', { message: err });
-		}
+		});
 	};
 
-	const renderItems = ({ item }: { item: Item }) => {
-		return (
-			<MutualGroupChat
-				view={item}
-				profileDid={profile.did}
-				currentConvoId={currentConvoId}
-				onOptimisticallyRemoveConvo={onOptimisticallyRemoveConvo}
-				onRestoreConvo={onRestoreConvo}
-			/>
-		);
-	};
+	const isBlocking = !!profile.viewer?.blocking;
+	const blockActionLabel = isBlocking ? m['common.block.action.unblock']() : m['common.block.action.block']();
 
-	const listHeader = (
-		<View style={[t.atoms.bg]} onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}>
-			<View style={[a.pb_lg, a.gap_sm]}>
-				<Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
-					{profile.viewer?.blocking
-						? m['components.moderation.block.unblockTitle']()
-						: m['components.moderation.block.confirmTitle']()}
-				</Text>
-				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-					{profile.viewer?.blocking
+	return (
+		<>
+			<div className={css.header}>
+				<Dialog.TitleRow>
+					<Dialog.Title>
+						{isBlocking
+							? m['components.moderation.block.unblockTitle']()
+							: m['components.moderation.block.confirmTitle']()}
+					</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
+				<Text color="textContrastMedium">
+					{isBlocking
 						? m['common.block.unblockHint']()
 						: profile.associated?.labeler
 							? m['components.moderation.block.descriptionLabels']()
 							: m['components.moderation.block.description']()}
 				</Text>
-			</View>
-			{hasMutualGroupChats ? (
-				<View style={[a.pt_sm, a.pb_xs, t.atoms.bg]}>
-					<Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_high]}>
-						{m['components.moderation.chat.mutualGroups']()}
-					</Text>
-				</View>
-			) : null}
-		</View>
-	);
+			</div>
 
-	const footer = (
-		<View style={[a.w_full, a.gap_sm, a.justify_end]}>
-			<Button
-				color={profile.viewer?.blocking ? undefined : 'negative'}
-				size="large"
-				label={
-					profile.viewer?.blocking ? m['common.block.action.unblock']() : m['common.block.action.block']()
+			<Dialog.List
+				data={items}
+				keyExtractor={(item) => item.id}
+				renderItem={(item) => (
+					<MutualGroupChat
+						currentConvoId={currentConvoId}
+						onOptimisticallyRemoveConvo={onOptimisticallyRemoveConvo}
+						onRestoreConvo={onRestoreConvo}
+						profileDid={profile.did}
+						view={item}
+					/>
+				)}
+				onEndReached={onEndReached}
+				isFetchingNextPage={isFetchingNextPage}
+				loadingLabel={m['common.status.loading']()}
+				ListHeaderComponent={
+					hasMutualGroupChats ? (
+						<Text className={css.groupsLabel} color="textContrastHigh" size="sm" weight="semiBold">
+							{m['components.moderation.chat.mutualGroups']()}
+						</Text>
+					) : null
 				}
-				onPress={() => control.close(() => void onBlock())}
-			>
-				<ButtonText>
-					{profile.viewer?.blocking ? m['common.block.action.unblock']() : m['common.block.action.block']()}
-				</ButtonText>
-			</Button>
-			<Button
-				color="secondary"
-				size="large"
-				label={m['common.a11y.closeDialog']()}
-				onPress={() => control.close()}
-			>
-				<ButtonText>{m['common.action.cancel']()}</ButtonText>
-			</Button>
-		</View>
-	);
-
-	if (isLoading || !hasMutualGroupChats) {
-		return (
-			<Dialog.ScrollableInner
-				label={
-					profile.viewer?.blocking ? m['common.block.action.unblock']() : m['common.block.action.block']()
+				ListEmptyComponent={
+					isLoading ? (
+						<div className={css.loading}>
+							<CenteredSpinner label={m['common.status.loading']()} size="2xl" />
+						</div>
+					) : null
 				}
-				style={[{ maxWidth: 420 }]}
-			>
-				{listHeader}
-				{isLoading ? (
-					<View style={[a.pb_2xl, a.align_center, a.justify_center]}>
-						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
-					</View>
-				) : null}
-				{footer}
-			</Dialog.ScrollableInner>
-		);
-	}
+			/>
 
-	return (
-		<Dialog.InnerFlatList
-			label={profile.viewer?.blocking ? m['common.block.action.unblock']() : m['common.block.action.block']()}
-			data={items}
-			renderItem={renderItems}
-			ListHeaderComponent={listHeader}
-			stickyHeaderIndices={[0]}
-			ListFooterComponent={
-				isFetchingNextPage ? (
-					<View style={[a.py_lg, a.align_center, a.justify_center]}>
-						<Spinner color="default" label={m['common.status.loading']()} size="xl" />
-					</View>
-				) : null
-			}
-			footer={
-				<Dialog.FlatListFooter onLayout={(evt) => setFooterHeight(evt.nativeEvent.layout.height)}>
-					{footer}
-				</Dialog.FlatListFooter>
-			}
-			contentContainerStyle={[a.gap_0, { paddingBottom: footerHeight }]}
-			scrollIndicatorInsets={{ top: headerHeight, bottom: footerHeight }}
-			onEndReached={() => void onEndReached()}
-			onEndReachedThreshold={0.5}
-			style={[a.h_full_vh, { maxHeight: 600 }]}
-			webInnerStyle={[{ maxWidth: 420 }]}
-		/>
+			<Dialog.Footer>
+				<Dialog.Actions direction="column">
+					<Button
+						color={isBlocking ? 'primary' : 'negative'}
+						label={blockActionLabel}
+						onClick={() => {
+							handle.close();
+							void onBlock();
+						}}
+						size="large"
+					>
+						<ButtonText>{blockActionLabel}</ButtonText>
+					</Button>
+					<Button
+						color="secondary"
+						label={m['common.a11y.closeDialog']()}
+						onClick={() => handle.close()}
+						size="large"
+					>
+						<ButtonText>{m['common.action.cancel']()}</ButtonText>
+					</Button>
+				</Dialog.Actions>
+			</Dialog.Footer>
+		</>
 	);
 }
 
 function MutualGroupChat({
-	view,
-	profileDid,
 	currentConvoId,
 	onOptimisticallyRemoveConvo,
 	onRestoreConvo,
+	profileDid,
+	view,
 }: {
-	view: ChatBskyConvoDefs.ConvoView;
-	profileDid: string;
 	currentConvoId?: string;
 	onOptimisticallyRemoveConvo: (convoId: string) => void;
 	onRestoreConvo: (convoId: string) => void;
+	profileDid: string;
+	view: ChatBskyConvoDefs.ConvoView;
 }) {
-	const t = useTheme();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 
@@ -291,40 +252,40 @@ function MutualGroupChat({
 	const isCurrentConvo = view.id === currentConvoId;
 
 	return (
-		<View style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between, a.py_sm]}>
-			<View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+		<div className={css.row}>
+			<div className={css.rowMain}>
 				<AvatarBubbles profiles={convo.members} size={40} />
-				<View style={[a.flex_1]}>
-					<Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
+				<div className={css.rowText}>
+					<Text numberOfLines={1} size="md" weight="semiBold">
 						{convo.details.name}
 					</Text>
 					{isViewerOwner ? (
-						<Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+						<Text color="textContrastMedium" size="xs">
 							{m['components.moderation.chat.youOwn']()}
 						</Text>
 					) : isProfileOwner ? (
-						<Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+						<Text color="textContrastMedium" size="xs">
 							{m['components.moderation.chat.theyOwn']()}
 						</Text>
 					) : null}
-				</View>
-			</View>
+				</div>
+			</div>
 			{isViewerOwner ? (
 				<Button
 					color="negative_subtle"
 					disabled={isRemovePending}
 					label={m['components.moderation.chat.removeMember']()}
-					size="small"
-					onPress={() => {
+					onClick={() => {
 						onOptimisticallyRemoveConvo(view.id);
 						removeMembers({ members: [profileDid] });
 					}}
+					size="small"
 				>
 					<ButtonText>{m['components.moderation.chat.removeMember']()}</ButtonText>
 					{isRemovePending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			) : isCurrentConvo ? (
-				<Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
+				<Text color="textContrastMedium" size="sm" weight="medium">
 					{m['components.moderation.chat.current']()}
 				</Text>
 			) : (
@@ -332,16 +293,16 @@ function MutualGroupChat({
 					color="secondary"
 					disabled={isLeavePending}
 					label={m['common.chat.action.leave']()}
-					size="small"
-					onPress={() => {
+					onClick={() => {
 						onOptimisticallyRemoveConvo(view.id);
 						leaveConvo();
 					}}
+					size="small"
 				>
 					<ButtonText>{m['common.chat.action.leave']()}</ButtonText>
 					{isLeavePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
 				</Button>
 			)}
-		</View>
+		</div>
 	);
 }
