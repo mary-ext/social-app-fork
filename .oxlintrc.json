@@ -1,7 +1,8 @@
 {
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"categories": {
-		"correctness": "error"
+		"correctness": "error",
+		"suspicious": "error"
 	},
 	"env": {
 		"browser": true,
@@ -44,6 +45,12 @@
 		"import/no-named-as-default": "warn",
 		"import/no-named-as-default-member": "warn",
 		"import/no-nodejs-modules": "error",
+		"import/no-unassigned-import": [
+			"error",
+			{
+				"allow": ["**/*.css"]
+			}
+		],
 		"no-array-constructor": "error",
 		"no-regex-spaces": "error",
 		"no-restricted-imports": [
@@ -58,25 +65,35 @@
 				]
 			}
 		],
-		"no-unexpected-multiline": "error",
+		"no-underscore-dangle": "off",
 		"no-var": "error",
 		"prefer-const": "error",
 		"prefer-spread": "error",
 		"react/display-name": "error",
 		"react/hook-use-state": "warn",
-		"react/jsx-no-comment-textnodes": "error",
 		"react/jsx-no-target-blank": "error",
 		"react/no-unknown-property": "error",
+		"react/no-unstable-nested-components": [
+			"error",
+			{
+				"propNamePattern": "{markup,render*}"
+			}
+		],
 		"react/react-compiler": "error",
+		"react/react-in-jsx-scope": "off",
 		"react/rules-of-hooks": "error",
+		"typescript/consistent-return": "off",
 		"typescript/no-explicit-any": "error",
 		"typescript/no-misused-promises": "warn",
 		"typescript/no-namespace": "error",
 		"typescript/no-unnecessary-type-assertion": "warn",
-		"typescript/no-unnecessary-type-constraint": "error",
 		"typescript/no-unsafe-call": "warn",
 		"typescript/no-unsafe-enum-comparison": "warn",
 		"typescript/no-unsafe-member-access": "warn",
+		// atcute brands handles, DIDs and AT-URIs, so every bare `string` has to be asserted into one.
+		// this is a stopgap: the fix is to validate at the edges (route params, user input, API
+		// responses) so the brand rides on the type instead of being asserted onto it at each use.
+		"typescript/no-unsafe-type-assertion": "off",
 		"typescript/only-throw-error": "error",
 		"typescript/prefer-promise-reject-errors": "warn",
 		"typescript/require-await": "warn",
