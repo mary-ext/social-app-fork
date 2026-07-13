@@ -12,12 +12,6 @@ const root = process.cwd();
 const serverHost = '127.0.0.1';
 const serverPort = 19006;
 
-const transpiledPaths = [
-	path.resolve(root, 'index.tsx'),
-	path.resolve(root, 'node_modules/react-native'),
-	path.resolve(root, 'src'),
-];
-
 export default defineConfig(({ envMode }) => {
 	const oauthScope = process.env.PUBLIC_OAUTH_SCOPE || oauthMetadata.scope;
 	const oauthRedirectPath = new URL(oauthMetadata.redirect_uris[0]!).pathname;
@@ -49,7 +43,6 @@ export default defineConfig(({ envMode }) => {
 			entry: {
 				index: path.resolve(root, 'index.tsx'),
 			},
-			include: transpiledPaths,
 		},
 		html: {
 			favicon: path.resolve(root, 'assets/favicon.png'),
@@ -62,7 +55,6 @@ export default defineConfig(({ envMode }) => {
 				'react-native': 'react-native-web',
 			},
 			aliasStrategy: 'prefer-alias',
-			conditionNames: ['browser', 'import', 'module', 'default'],
 			extensions: [
 				'.web.ts',
 				'.web.tsx',
