@@ -19,9 +19,10 @@ import { ItemSeenContext } from './ItemSeenObserver';
 import type { RowProps } from './Row';
 
 /** fraction of the root height kept mounted beyond the viewport on each side before a row is unmounted. */
-export const overscanRatio = 3;
+export const overscanRatio = 1.75;
 
 type VirtualRowObserverApi = {
+	connect(root: HTMLElement | null): void;
 	disconnect(): void;
 	register(node: Element, onIntersect: (entry: IntersectionObserverEntry) => void): void;
 	unregister(node: Element): void;
@@ -42,35 +43,81 @@ export function VirtualRowObserver({
 }) {
 	const api = useConstant((): VirtualRowObserverApi => {
 		const handlers = new Map<Element, (entry: IntersectionObserverEntry) => void>();
-		const observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					handlers.get(entry.target)?.(entry);
-				}
-			},
-			{
-				root: root?.current ?? null,
-				rootMargin: `${overscanRatio * 100}% 0px`,
-			},
-		);
+
+		let root: HTMLElement | null = null;
+		let observer: IntersectionObserver | null = null;
+		let resize: ResizeObserver | null = null;
+		let rootHeight: number | undefined;
+
+		const rebuild = () => {
+			const height = root ? root.clientHeight : window.innerHeight;
+			if (height === rootHeight) {
+				return;
+			}
+
+			rootHeight = height;
+
+			observer?.disconnect();
+			observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						const handler = handlers.get(entry.target);
+						handler?.(entry);
+					}
+				},
+				{
+					root: root,
+					rootMargin: `${overscanRatio * rootHeight}px 0px`,
+				},
+			);
+
+			for (const node of handlers.keys()) {
+				observer.observe(node);
+			}
+		};
 
 		return {
-			disconnect() {
-				observer.disconnect();
-				handlers.clear();
+			connect(rootEl) {
+				root = rootEl;
+				rebuild();
+
+				if (rootEl !== null) {
+					resize = new ResizeObserver(rebuild);
+					resize.observe(rootEl);
+				} else {
+					window.addEventListener('resize', rebuild);
+				}
 			},
+			disconnect() {
+				observer?.disconnect();
+
+				if (root !== null) {
+					resize?.disconnect();
+				} else {
+					window.removeEventListener('resize', rebuild);
+				}
+
+				observer = null;
+				resize = null;
+				root = null;
+				rootHeight = undefined;
+			},
+
 			register(node, onIntersect) {
 				handlers.set(node, onIntersect);
-				observer.observe(node);
+				observer?.observe(node);
 			},
 			unregister(node) {
 				handlers.delete(node);
-				observer.unobserve(node);
+				observer?.unobserve(node);
 			},
 		};
 	});
 
-	useEffect(() => api.disconnect, [api]);
+	useEffect(() => {
+		api.connect(root?.current ?? null);
+		return api.disconnect;
+	}, [api, root]);
 
 	return <VirtualRowContext value={api}>{children}</VirtualRowContext>;
 }
