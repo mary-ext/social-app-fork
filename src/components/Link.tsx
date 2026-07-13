@@ -30,9 +30,6 @@ type WebTextStyle = TextStyle & {
 };
 
 type LinkWebProps = {
-	dataSet: {
-		noUnderline: '1';
-	};
 	href: string;
 	hrefAttrs: {
 		download?: string;
@@ -68,10 +65,6 @@ const webLinkProps = ({
 			target: download ? undefined : isExternal ? 'blank' : undefined,
 			rel: isExternal ? 'noopener noreferrer' : undefined,
 			download,
-		},
-		dataSet: {
-			// default to no underline, apply this ourselves
-			noUnderline: '1',
 		},
 		onBlur,
 		onFocus,

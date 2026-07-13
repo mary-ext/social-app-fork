@@ -38,14 +38,6 @@ input::-webkit-date-and-time-value {
 	text-align: left;
 }
 
-/* Remove default link styling */
-a[role='link']:hover {
-	text-decoration: underline;
-}
-a[role='link'][data-no-underline='1']:hover {
-	text-decoration: none;
-}
-
 /* Spinner component */
 @keyframes rotate {
 	0% {

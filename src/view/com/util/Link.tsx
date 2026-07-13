@@ -55,7 +55,6 @@ interface Props extends React.ComponentProps<typeof TouchableOpacity> {
 	noFeedback?: boolean;
 	asAnchor?: boolean;
 	dataSet?: DataSet;
-	anchorNoUnderline?: boolean;
 	navigationAction?: 'push' | 'replace' | 'navigate';
 	onPointerEnter?: () => void;
 	onPointerLeave?: () => void;
@@ -72,7 +71,6 @@ export function Link({
 	noFeedback,
 	asAnchor,
 	accessible,
-	anchorNoUnderline,
 	navigationAction,
 	onBeforePress,
 	accessibilityActions,
@@ -97,7 +95,7 @@ export function Link({
 		{ name: 'activate', label: title },
 	];
 
-	const dataSet = compactDataSet(anchorNoUnderline ? { ...dataSetProp, noUnderline: 1 } : dataSetProp);
+	const dataSet = compactDataSet(dataSetProp);
 
 	if (noFeedback) {
 		return (
@@ -165,7 +163,6 @@ export function TextLink({
 	onBeforePress,
 	disableMismatchWarning,
 	navigationAction,
-	anchorNoUnderline,
 	...props
 }: {
 	testID?: string;
@@ -178,7 +175,6 @@ export function TextLink({
 	dataSet?: DataSet;
 	disableMismatchWarning?: boolean;
 	navigationAction?: 'push' | 'replace' | 'navigate';
-	anchorNoUnderline?: boolean;
 	onBeforePress?: () => void;
 } & TextProps) {
 	const navigation = useNavigationDeduped();
@@ -189,7 +185,7 @@ export function TextLink({
 		console.error('Unable to detect mismatching label');
 	}
 
-	const dataSet = compactDataSet(anchorNoUnderline ? { ...dataSetProp, noUnderline: 1 } : dataSetProp);
+	const dataSet = compactDataSet(dataSetProp);
 
 	const onPress = (e?: Event) => {
 		const requiresWarning =
