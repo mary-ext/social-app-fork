@@ -56,11 +56,8 @@ export type CommonNavigatorParams = {
 	Start: { name: string; rkey: string };
 	StarterPack: { name: string; rkey: string; new?: boolean };
 	StarterPackShort: { code: string };
-	StarterPackWizard: {
-		fromDialog?: boolean;
-		targetDid?: string;
-		onSuccess?: () => void;
-	};
+	/** `targetDid` marks a wizard launched from the "add to starter pack" dialog on that profile */
+	StarterPackWizard: { targetDid?: string };
 	StarterPackEdit: { rkey: string };
 	Bookmarks: undefined;
 };

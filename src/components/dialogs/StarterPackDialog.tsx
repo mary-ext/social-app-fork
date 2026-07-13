@@ -4,7 +4,7 @@ import type {
 	AppBskyGraphStarterpack,
 } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
@@ -23,6 +23,10 @@ import { logger } from '#/logger';
 import { AvatarStack } from '#/components/AvatarStack';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
+import {
+	markStarterPackWizardLaunched,
+	useStarterPackDialogReopen,
+} from '#/components/dialogs/starter-pack-dialog-reopen';
 import * as css from '#/components/dialogs/StarterPackDialog.css';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { StarterPack } from '#/components/icons/StarterPack';
@@ -43,6 +47,9 @@ type StarterPackDialogProps = {
 };
 
 export function StarterPackDialog({ handle, targetDid }: StarterPackDialogProps) {
+	// the dialog is where the wizard is launched from, so it is also where the user is brought back to
+	useStarterPackDialogReopen(handle, targetDid);
+
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup className={css.popup} scroll="body" label={m['common.starterPack.action.add']()}>
@@ -60,6 +67,7 @@ function keyExtractor(item: Item): string {
 
 function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 	const navigation = useNavigation<NavigationProp>();
+	const { key: originKey } = useRoute();
 	const { data: subject } = useProfileQuery({ did: targetDid });
 
 	const { data, isError, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
@@ -75,17 +83,8 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 
 	const onStartWizard = () => {
 		handle.close();
-		navigation.navigate('StarterPackWizard', {
-			fromDialog: true,
-			targetDid,
-			onSuccess: () => {
-				setTimeout(() => {
-					if (!handle.isOpen) {
-						handle.open(null);
-					}
-				}, 0);
-			},
-		});
+		markStarterPackWizardLaunched(originKey, targetDid);
+		navigation.navigate('StarterPackWizard', { targetDid });
 	};
 
 	const onEndReached = () => {

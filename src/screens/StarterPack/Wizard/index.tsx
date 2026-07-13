@@ -32,6 +32,7 @@ import { StepFeeds } from '#/screens/StarterPack/Wizard/StepFeeds';
 import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles';
 
 import * as Dialog from '#/components/Dialog';
+import { markStarterPackCreated } from '#/components/dialogs/starter-pack-dialog-reopen';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Spinner } from '#/components/Spinner';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
@@ -52,9 +53,7 @@ export function Wizard({
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackEdit' | 'StarterPackWizard'>) {
 	const params = route.params ?? {};
 	const rkey = 'rkey' in params ? params.rkey : undefined;
-	const fromDialog = 'fromDialog' in params ? params.fromDialog : false;
 	const targetDid = 'targetDid' in params ? params.targetDid : undefined;
-	const onSuccess = 'onSuccess' in params ? params.onSuccess : undefined;
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 	// Use targetDid if provided (from dialog), otherwise use current account
@@ -112,8 +111,7 @@ export function Wizard({
 					currentListItems={listItems}
 					profile={profile}
 					moderationOpts={moderationOpts}
-					fromDialog={fromDialog}
-					onSuccess={onSuccess}
+					fromDialog={targetDid !== undefined}
 				/>
 			</Provider>
 		</Layout.Screen>
@@ -126,14 +124,12 @@ function WizardInner({
 	profile,
 	moderationOpts,
 	fromDialog,
-	onSuccess,
 }: {
 	currentStarterPack?: AppBskyGraphDefs.StarterPackView;
 	currentListItems?: AppBskyGraphDefs.ListItemView[];
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	moderationOpts: ModerationOptions;
-	fromDialog?: boolean;
-	onSuccess?: () => void;
+	fromDialog: boolean;
 }) {
 	const navigation = useNavigation<NavigationProp>();
 	const [state, dispatch] = useWizardState();
@@ -174,16 +170,20 @@ function WizardInner({
 		void Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)]);
 		dispatch({ type: 'SetProcessing', processing: false });
 
-		if (fromDialog) {
+		// hand control back to the dialog that launched us — it reopens itself once its screen is in view
+		// again. a wizard deep-linked with a `targetDid` has no such screen behind it, so it falls through
+		// to the pack that was just created, same as any other wizard.
+		if (fromDialog && navigation.canGoBack()) {
+			markStarterPackCreated();
 			navigation.goBack();
-			onSuccess?.();
-		} else {
-			navigation.replace('StarterPack', {
-				name: profile.did,
-				rkey,
-				new: true,
-			});
+			return;
 		}
+
+		navigation.replace('StarterPack', {
+			name: currentProfile!.did,
+			rkey,
+			new: true,
+		});
 	};
 
 	const onSuccessEdit = () => {
