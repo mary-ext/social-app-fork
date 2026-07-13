@@ -133,7 +133,9 @@ export function List<ItemT>({
 	const itemCount = data?.length ?? 0;
 	const virtualize = estimateHeight != null;
 	// eager-mount the rows the observer would keep alive around the viewport, so they don't flash blank first.
-	const eagerCount = estimateHeight != null ? Math.ceil((windowHeight * overscanRatio) / estimateHeight) : 0;
+	// at rest the observer's live band spans the viewport plus the overscan below it, hence `1 + overscanRatio`.
+	const eagerCount =
+		estimateHeight != null ? Math.ceil((windowHeight * (1 + overscanRatio)) / estimateHeight) : 0;
 
 	let children = ListEmptyComponent;
 

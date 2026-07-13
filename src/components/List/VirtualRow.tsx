@@ -19,7 +19,7 @@ import { ItemSeenContext } from './ItemSeenObserver';
 import type { RowProps } from './Row';
 
 /** fraction of the root height kept mounted beyond the viewport on each side before a row is unmounted. */
-export const overscanRatio = 1.75;
+export const overscanRatio = 0.75;
 
 type VirtualRowObserverApi = {
 	connect(root: HTMLElement | null): void;
