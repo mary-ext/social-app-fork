@@ -12,7 +12,7 @@
 	"options": {
 		"typeAware": true
 	},
-	"plugins": ["import", "react", "typescript"],
+	"plugins": ["import", "oxc", "react", "typescript", "unicorn"],
 	"rules": {
 		"bsky-internal/avoid-unwrapped-text": [
 			"error",
