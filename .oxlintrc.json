@@ -36,8 +36,7 @@
 				],
 				"impliedTextProps": [],
 				"suggestedTextWrappers": {
-					"Button": "ButtonText",
-					"SegmentedControl.Item": "SegmentedControl.ItemText"
+					"Button": "ButtonText"
 				}
 			}
 		],
