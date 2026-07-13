@@ -8,8 +8,7 @@ import { useRegisterDialog } from '#/components/Dialog/registry';
 import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/Prompt/Prompt.css';
 import { Text } from '#/components/Text';
-import { ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as buttonStyles from '#/components/web/Button.css';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -115,36 +114,46 @@ export function Action({
 	icon?: ComponentType<IconProps>;
 	shouldCloseOnPress?: boolean;
 }) {
-	const cls = buttonStyles.button({ color, size: 'large', variant: 'solid' });
+	const label = cta ?? m['common.action.confirm']();
 	const content = (
 		<>
-			<ButtonText>{cta ?? m['common.action.confirm']()}</ButtonText>
+			<ButtonText>{label}</ButtonText>
 			{icon && <ButtonIcon icon={icon} />}
 		</>
 	);
 
 	if (!shouldCloseOnPress) {
 		return (
-			<button type="button" className={cls} disabled={disabled} onClick={onPress}>
+			<Button color={color} disabled={disabled} label={label} onClick={onPress} size="large" variant="solid">
 				{content}
-			</button>
+			</Button>
 		);
 	}
 
 	return (
-		<AlertDialog.Close className={cls} disabled={disabled} onClick={onPress}>
-			{content}
-		</AlertDialog.Close>
+		<AlertDialog.Close
+			disabled={disabled}
+			onClick={onPress}
+			render={
+				<Button color={color} label={label} size="large" variant="solid">
+					{content}
+				</Button>
+			}
+		/>
 	);
 }
 
 export function Cancel({ cta }: { cta?: string }) {
+	const label = cta ?? m['common.action.cancel']();
+
 	return (
 		<AlertDialog.Close
-			className={buttonStyles.button({ color: 'secondary', size: 'large', variant: 'solid' })}
-		>
-			<ButtonText>{cta ?? m['common.action.cancel']()}</ButtonText>
-		</AlertDialog.Close>
+			render={
+				<Button color="secondary" label={label} size="large" variant="solid">
+					<ButtonText>{label}</ButtonText>
+				</Button>
+			}
+		/>
 	);
 }
 
