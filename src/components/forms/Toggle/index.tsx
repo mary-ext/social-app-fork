@@ -51,7 +51,7 @@ export function Group({
 					aria-label={label}
 					className={className}
 					disabled={disabled}
-					onValueChange={(value) => onChange(value ? [String(value)] : [])}
+					onValueChange={(value) => onChange(value ? [value] : [])}
 					value={values[0] ?? ''}
 				>
 					{children}

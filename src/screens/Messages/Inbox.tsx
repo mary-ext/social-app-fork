@@ -85,7 +85,7 @@ function RequestList({
 	listConvosQuery,
 	conversations,
 }: {
-	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvoRequests.$output>, Error>;
+	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvoRequests.$output>>;
 	conversations: RequestItem[];
 }) {
 	const navigation = useNavigation<NavigationProp>();

@@ -52,13 +52,13 @@ export function useUnstablePostSource(key: string) {
 			`consumeUnstablePostSource key should be a URI containing a handle, received ${key} — be sure to use buildPostSourceKey when setting the source`,
 			true,
 		);
-		const source = consumedSources.get(id) || transientSources.get(key);
-		if (source) {
-			logger.debug('consume', { id, key, source });
+		const existing = consumedSources.get(id) || transientSources.get(key);
+		if (existing) {
+			logger.debug('consume', { id, key, source: existing });
 			transientSources.delete(key);
-			consumedSources.set(id, source);
+			consumedSources.set(id, existing);
 		}
-		return source;
+		return existing;
 	});
 
 	useEffect(() => {

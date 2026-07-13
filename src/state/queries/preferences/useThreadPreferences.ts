@@ -14,7 +14,7 @@ import { logger } from '#/logger';
 
 import type { Literal } from '#/types/utils';
 
-export type ThreadSortOption = Literal<AppBskyUnspeccedGetPostThreadV2.$params['sort'], string>;
+export type ThreadSortOption = Literal<AppBskyUnspeccedGetPostThreadV2.$params['sort']>;
 export type ThreadViewOption = 'linear' | 'tree';
 export type ThreadPreferences = {
 	isLoaded: boolean;

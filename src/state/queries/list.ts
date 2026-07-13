@@ -22,9 +22,18 @@ import { RQKEY as PROFILE_LISTS_RQKEY } from './profile-lists';
 export const RQKEY_ROOT = 'list';
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri];
 
+const createDel = (recordUri: string): ComAtprotoRepoApplyWrites.$input['writes'][number] => {
+	const urip = parseCanonicalResourceUri(recordUri);
+	return {
+		$type: 'com.atproto.repo.applyWrites#delete',
+		collection: urip.collection,
+		rkey: urip.rkey,
+	};
+};
+
 export function useListQuery(uri?: string) {
 	const { appview } = useClients();
-	return useQuery<AppBskyGraphDefs.ListView, Error>({
+	return useQuery<AppBskyGraphDefs.ListView>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(uri || ''),
 		queryFn: async () => {
@@ -188,15 +197,7 @@ export function useListDeleteMutation() {
 			}
 
 			// batch delete the list and listitem records
-			const createDel = (uri: string): ComAtprotoRepoApplyWrites.$input['writes'][number] => {
-				const urip = parseCanonicalResourceUri(uri);
-				return {
-					$type: 'com.atproto.repo.applyWrites#delete',
-					collection: urip.collection,
-					rkey: urip.rkey,
-				};
-			};
-			const writes = listitemRecordUris.map((uri) => createDel(uri)).concat([createDel(uri)]);
+			const writes = listitemRecordUris.map((recordUri) => createDel(recordUri)).concat([createDel(uri)]);
 
 			// apply in chunks
 			for (const writesChunk of chunk(writes, 10)) {

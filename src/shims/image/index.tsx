@@ -77,6 +77,7 @@ type ImageComponent = ForwardRefExoticComponent<ImageProps & RefAttributes<Compo
 	clearMemoryCache: () => Promise<boolean>;
 };
 
+// oxlint-disable-next-line no-shadow -- the function expression is named to match the export so it shows up as `Image` in devtools
 export const Image = forwardRef<ComponentRef<typeof RNImage>, ImageProps>(function Image(
 	{
 		cachePolicy,
@@ -110,12 +111,12 @@ export const Image = forwardRef<ComponentRef<typeof RNImage>, ImageProps>(functi
 			resizeMode={resizeModeForContentFit(contentFit) ?? props.resizeMode}
 			style={imageStyle(style, contentFit)}
 			onLoad={(event) => {
-				const source = event.nativeEvent?.source ?? {};
+				const loaded = event.nativeEvent?.source ?? {};
 				onLoad?.({
 					source: {
-						width: source.width ?? 0,
-						height: source.height ?? 0,
-						uri: source.uri,
+						width: loaded.width ?? 0,
+						height: loaded.height ?? 0,
+						uri: loaded.uri,
 					},
 				});
 				onDisplay?.();

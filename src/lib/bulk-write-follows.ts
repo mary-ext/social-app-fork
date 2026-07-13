@@ -35,8 +35,8 @@ export async function bulkWriteFollows(
 	}));
 
 	const chunks = chunk(followWrites, 50);
-	for (const chunk of chunks) {
-		await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes: chunk } }));
+	for (const batch of chunks) {
+		await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes: batch } }));
 	}
 	await whenFollowsIndexed(appview, did, (res) => !!res.follows.length);
 

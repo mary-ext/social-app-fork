@@ -15,6 +15,8 @@ const SETTLE_DURATION = 700;
 const OVERSCROLL_RESISTANCE = 0.4;
 const BOUNCE_DURATION = 700;
 
+const suppressClick = (e: MouseEvent) => e.stopPropagation();
+
 function whichByDistance(
 	itemWidths: Map<number, number>,
 	currentIndex: number,
@@ -186,7 +188,6 @@ export function usePointerHandlers({
 				// within the carousel here. The fallback timeout disarms the listener if the release produced no
 				// click (the post-drag click is dispatched synchronously, before any macrotask, so it can't disarm
 				// a real one early).
-				const suppressClick = (e: MouseEvent) => e.stopPropagation();
 				el.addEventListener('click', suppressClick, { once: true, capture: true });
 				setTimeout(() => el.removeEventListener('click', suppressClick, { capture: true }), 0);
 
@@ -242,8 +243,8 @@ export function usePointerHandlers({
 						to,
 						SETTLE_DURATION,
 					)(
-						(v) => {
-							scrollTo(v);
+						(value) => {
+							scrollTo(value);
 						},
 						() => {
 							stopTween = null;

@@ -193,12 +193,12 @@ export function useEditStarterPackMutation({
 			);
 			if (removedItems.length !== 0) {
 				const chunks = chunk(removedItems, 50);
-				for (const chunk of chunks) {
+				for (const batch of chunks) {
 					await ok(
 						pds!.post('com.atproto.repo.applyWrites', {
 							input: {
 								repo: did,
-								writes: chunk.map((i) => ({
+								writes: batch.map((i) => ({
 									$type: 'com.atproto.repo.applyWrites#delete',
 									collection: 'app.bsky.graph.listitem',
 									rkey: parseCanonicalResourceUri(i.uri).rkey,
@@ -212,12 +212,12 @@ export function useEditStarterPackMutation({
 			const addedProfiles = profiles.filter((p) => !currentListItems.find((i) => i.subject.did === p.did));
 			if (addedProfiles.length > 0) {
 				const chunks = chunk(addedProfiles, 50);
-				for (const chunk of chunks) {
+				for (const batch of chunks) {
 					await ok(
 						pds!.post('com.atproto.repo.applyWrites', {
 							input: {
 								repo: did,
-								writes: chunk.map((p) => ({
+								writes: batch.map((p) => ({
 									$type: 'com.atproto.repo.applyWrites#create',
 									collection: 'app.bsky.graph.listitem',
 									value: {
@@ -315,7 +315,7 @@ export function useDeleteStarterPackMutation({
 
 			if (uri) {
 				await whenAppViewReady(appview, uri, (v) => {
-					return Boolean(v?.starterPack) === false;
+					return !v?.starterPack;
 				});
 			}
 

@@ -9,7 +9,7 @@ import type { Blob as AtpBlob } from '@atcute/lexicons';
  * @param encoding the blob's mime type, sent as a content-type override; defaults to the blob's own type.
  * @returns the resulting blob ref.
  */
-export async function uploadBlob(client: Client, blob: Blob, encoding?: string): Promise<AtpBlob<string>> {
+export async function uploadBlob(client: Client, blob: Blob, encoding?: string): Promise<AtpBlob> {
 	const data = await ok(
 		client.post('com.atproto.repo.uploadBlob', {
 			input: blob,

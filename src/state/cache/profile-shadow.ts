@@ -151,7 +151,7 @@ export function usePostAuthorShadowFilter(data?: FeedPage[]) {
 						const next = new Map(prev);
 						next.set(did, {
 							blocked: Boolean(value.blockingUri ?? prevValue?.blocked ?? false),
-							muted: Boolean(value.muted ?? prevValue?.muted ?? false),
+							muted: value.muted ?? prevValue?.muted ?? false,
 						});
 						return next;
 					});
@@ -204,10 +204,7 @@ export function updateProfileShadow(queryClient: QueryClient, did: string, value
  * @param shadow the shadow profile to merge
  * @returns true if the merge is a no-op
  */
-export function isProfileShadowApplied<TProfileView extends AnyProfileView>(
-	profile: TProfileView,
-	shadow: Partial<ProfileShadow>,
-): boolean {
+export function isProfileShadowApplied(profile: AnyProfileView, shadow: Partial<ProfileShadow>): boolean {
 	if ('followingUri' in shadow) {
 		if (profile.viewer?.following !== shadow.followingUri) return false;
 	}

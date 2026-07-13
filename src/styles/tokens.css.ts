@@ -74,11 +74,11 @@ const scaled = (rem: number) => `calc(${rem}rem * ${fallbackVar(fontScale, '1')}
 
 export const fontSize = createGlobalTheme(
 	':root',
-	Object.fromEntries(Object.entries(type).map(([key, { fontSize }]) => [key, scaled(fontSize)])) as {
+	Object.fromEntries(Object.entries(type).map(([key, { fontSize: size }]) => [key, scaled(size)])) as {
 		[K in keyof typeof type]: string;
 	},
 );
 
 export const fontLeading = Object.fromEntries(
-	Object.entries(type).map(([key, { fontSize, lineHeight }]) => [key, lineHeight / fontSize]),
+	Object.entries(type).map(([key, { fontSize: size, lineHeight: leading }]) => [key, leading / size]),
 ) as { [K in keyof typeof type]: number };

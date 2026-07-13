@@ -168,7 +168,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 			safeMessage: e instanceof Error ? e.message : String(e),
 		});
 		if (isNetworkError(e)) {
-			throw new Error(m['lib.upload.postFailed']());
+			throw new Error(m['lib.upload.postFailed'](), { cause: e });
 		} else {
 			throw e;
 		}

@@ -32,7 +32,7 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 	const load = () => {
 		setIsPlayerActive(true);
 		const image = new window.Image();
-		image.onload = () => setIsPrefetched(true);
+		image.addEventListener('load', () => setIsPrefetched(true), { once: true });
 		image.src = params.playerUri;
 	};
 

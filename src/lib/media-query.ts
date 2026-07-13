@@ -15,11 +15,12 @@ const getStore = (query: string): MediaQueryStore => {
 		const emitter = new SimpleEventEmitter<[]>();
 
 		const mql = window.matchMedia(query);
+		const onChange = () => emitter.emit();
 
 		store = {
 			subscribe(listener) {
 				if (!emitter.hasListeners()) {
-					mql.onchange = () => emitter.emit();
+					mql.addEventListener('change', onChange);
 					cache.set(query, store!);
 				}
 
@@ -29,7 +30,7 @@ const getStore = (query: string): MediaQueryStore => {
 					unsubscribe();
 
 					if (!emitter.hasListeners()) {
-						mql.onchange = null;
+						mql.removeEventListener('change', onChange);
 						cache.delete(query);
 					}
 				};

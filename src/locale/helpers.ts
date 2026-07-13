@@ -30,10 +30,10 @@ const localeDisplayNames = new Intl.DisplayNames([LOCALE], DISPLAY_NAMES_OPTIONS
 const englishDisplayNames =
 	LOCALE === 'en' ? localeDisplayNames : new Intl.DisplayNames(['en'], DISPLAY_NAMES_OPTIONS);
 
-function getLocalizedLanguage(langCode: string, appLang: string): string | undefined {
+function getLocalizedLanguage(code: string, appLang: string): string | undefined {
 	const displayNames = appLang === 'en' ? englishDisplayNames : localeDisplayNames;
 
-	return displayNames.of(langCode);
+	return displayNames.of(code);
 }
 
 export function resolveLanguageName(language: Language, appLang: string): string | undefined {

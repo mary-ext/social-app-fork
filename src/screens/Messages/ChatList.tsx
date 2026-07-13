@@ -70,6 +70,10 @@ function renderItem({ item }: { item: ListItem }) {
 	return <ChatListItem convo={item.conversation} selected={item.selected} />;
 }
 
+function onLeftColumnScroll(e: React.UIEvent<HTMLDivElement>) {
+	splitViewLeftScroll.current = e.currentTarget.scrollTop;
+}
+
 function keyExtractor(item: ListItem) {
 	return item.conversation.id;
 }
@@ -228,10 +232,6 @@ export function ChatList({
 			scrollElRef.current?.scrollToOffset({ offset, animated: false });
 			restoredRef.current = true;
 		}
-	};
-
-	const onLeftColumnScroll = (e: React.UIEvent<HTMLDivElement>) => {
-		splitViewLeftScroll.current = e.currentTarget.scrollTop;
 	};
 
 	const isScreenFocused = useIsFocused();

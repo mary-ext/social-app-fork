@@ -92,6 +92,7 @@ export function useSearchPostsQuery({
 		enabled: !!moderationOpts,
 		select: useCallback(
 			(data: InfiniteData<AppBskyFeedSearchPostsV2.$output>) => {
+				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 				const { moderationOpts, isSearchingSpecificUser } = selectArgs;
 
 				/*

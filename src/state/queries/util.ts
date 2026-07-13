@@ -46,8 +46,8 @@ export function isQueryPersisted(
 	return 'persistedVersion' in record && typeof record.persistedVersion === 'number';
 }
 
-export async function truncateAndInvalidate<T = unknown>(queryClient: QueryClient, queryKey: QueryKey) {
-	queryClient.setQueriesData<InfiniteData<T>>({ queryKey }, (data) => {
+export async function truncateAndInvalidate(queryClient: QueryClient, queryKey: QueryKey) {
+	queryClient.setQueriesData<InfiniteData<unknown>>({ queryKey }, (data) => {
 		if (data) {
 			return {
 				pageParams: data.pageParams.slice(0, 1),

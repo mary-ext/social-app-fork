@@ -18,12 +18,12 @@ export function parseSearchQuery(rawQuery: string) {
 
 	base = base.trim();
 
-	const params = rawParams.reduce((params, param) => {
+	const params = rawParams.reduce((acc, param) => {
 		const [name, ...value] = param.split(/:/);
-		params[name!] = value.join(':').replace(/"/g, ''); // dates can contain additional colons
-		return params;
+		acc[name!] = value.join(':').replace(/"/g, ''); // dates can contain additional colons
+		return acc;
 	}, {} as Params);
-	const literals = rawLiterals.map((l) => String(l).trim());
+	const literals = rawLiterals.map((l) => l.trim());
 
 	return {
 		query: [base, literals.join(' ')].filter(Boolean).join(' '),

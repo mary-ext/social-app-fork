@@ -128,7 +128,7 @@ function matchMutedWord(
 	// handle legacy case where id is not set
 	const legacyMatchByValue = !existingId && existingWord.value === newWord.value;
 
-	return Boolean(matchById || legacyMatchByValue);
+	return matchById || legacyMatchByValue;
 }
 
 /** Transforms the legacy `show` visibility to `ignore`. Read-only; not persisted. */
@@ -280,7 +280,7 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 	// apply the label prefs
 	for (const pref of labelPrefs) {
 		if (pref.labelerDid) {
-			const labeler = prefs.moderationPrefs.labelers.find((labeler) => labeler.did === pref.labelerDid);
+			const labeler = prefs.moderationPrefs.labelers.find((candidate) => candidate.did === pref.labelerDid);
 			if (!labeler) continue;
 			labeler.labels[pref.label] = pref.visibility as LabelVisibility;
 		} else {
@@ -319,6 +319,7 @@ async function updateSavedFeedsV2Preferences(
 		const nextV2: PrefOf<'app.bsky.actor.defs#savedFeedsPrefV2'> = {
 			$type: 'app.bsky.actor.defs#savedFeedsPrefV2',
 			// enforce ordering: pinned first, then saved (preserving order within each group)
+			// oxlint-disable-next-line unicorn/no-array-sort -- sorting our own copy of `newSavedFeeds`
 			items: [...newSavedFeeds].sort((a, b) => (a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1)),
 		};
 
@@ -382,7 +383,7 @@ export async function addSavedFeeds(
 ): Promise<void> {
 	const toSave: AppBskyActorDefs.SavedFeed[] = savedFeeds.map((f) => ({ ...f, id: TID.now() }));
 	toSave.forEach(validateSavedFeed);
-	await updateSavedFeedsV2Preferences(pds, (savedFeeds) => [...savedFeeds, ...toSave]);
+	await updateSavedFeedsV2Preferences(pds, (current) => [...current, ...toSave]);
 }
 
 /**

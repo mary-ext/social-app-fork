@@ -598,7 +598,7 @@ export function createComposerState({
 	const initialText = initText
 		? initText
 		: initMention
-			? insertMentionAt(`@${initMention}`, initMention.length + 1, `${initMention}`)
+			? insertMentionAt(`@${initMention}`, initMention.length + 1, initMention)
 			: '';
 
 	let link: Link | undefined;

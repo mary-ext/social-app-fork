@@ -72,7 +72,7 @@ export function MessageComposer({
 
 	const submitDisabled = loading || (!hasEmbed && text.trim().length === 0);
 
-	const onSubmit = (message: string, replyTo: ChatBskyConvoDefs.MessageView | null) => {
+	const onSubmit = (message: string, replyToMessage: ChatBskyConvoDefs.MessageView | null) => {
 		if (loading) return;
 		if (!hasEmbed && message.trim() === '') return;
 		const graphemeCount = getGraphemeLength(message);
@@ -94,7 +94,10 @@ export function MessageComposer({
 		composerInternalApiRef.current?.input?.focus();
 
 		requestAnimationFrame(() => {
-			onSendMessage(message, replyTo ? { ...replyTo, $type: 'chat.bsky.convo.defs#messageView' } : undefined);
+			onSendMessage(
+				message,
+				replyToMessage ? { ...replyToMessage, $type: 'chat.bsky.convo.defs#messageView' } : undefined,
+			);
 		});
 	};
 

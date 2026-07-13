@@ -160,8 +160,8 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 
 	// Forked from useGetPost. TODO: move into RQ.
-	async function getPost({ uri }: { uri: string }) {
-		const urip = parseResourceUri(uri);
+	async function getPost({ uri: postUri }: { uri: string }) {
+		const urip = parseResourceUri(postUri);
 		let repo: string = urip.repo;
 		if (!repo.startsWith('did:')) {
 			const res = await ok(

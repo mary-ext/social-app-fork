@@ -31,7 +31,7 @@ import { router } from '../../../routes';
 import { PressableWithHover } from './PressableWithHover';
 import { Text } from './text/Text';
 
-type Event = React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent;
+type Event = React.MouseEvent<HTMLAnchorElement> | GestureResponderEvent;
 type DataSet = Record<string, string | number | undefined>;
 
 const compactDataSet = (dataSet: DataSet | undefined): Record<string, string | number> | undefined => {
@@ -86,7 +86,7 @@ export function Link({
 	const onPress = (e?: Event) => {
 		onBeforePress?.();
 		if (typeof href === 'string') {
-			return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => openLink(href), e);
+			return onPressInner(navigation, sanitizeUrl(href), navigationAction, (url) => openLink(url), e);
 		}
 	};
 
@@ -207,7 +207,7 @@ export function TextLink({
 			// @ts-expect-error function signature differs by platform -prf
 			return onPressProp();
 		}
-		return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => openLink(href), e);
+		return onPressInner(navigation, sanitizeUrl(href), navigationAction, (url) => openLink(url), e);
 	};
 	const isExternal = isExternalUrl(href);
 	const hrefAttrs = isExternal

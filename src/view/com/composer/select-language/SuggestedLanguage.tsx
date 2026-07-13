@@ -84,9 +84,9 @@ export function SuggestedLanguage({
 		setHasInteracted(true);
 	};
 
-	const detect = useNonReactiveCallback(async (text: string) => {
+	const detect = useNonReactiveCallback(async (value: string) => {
 		try {
-			const verdict = classifyDetection(await detectLanguagesAsync(text));
+			const verdict = classifyDetection(await detectLanguagesAsync(value));
 			switch (verdict.kind) {
 				case 'confident': {
 					const fresh =

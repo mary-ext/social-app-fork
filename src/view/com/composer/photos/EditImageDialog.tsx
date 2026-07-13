@@ -21,7 +21,7 @@ export type EditImageDialogProps = {
 // an image, so the cropper body loads on first open rather than riding along in every composer/profile-edit
 // chunk that mounts this dialog.
 const EditImageDialogInner = lazy(() =>
-	import('./EditImageDialogInner').then((m) => ({ default: m.EditImageDialogInner })),
+	import('./EditImageDialogInner').then((mod) => ({ default: mod.EditImageDialogInner })),
 );
 
 export function EditImageDialog(props: EditImageDialogProps) {

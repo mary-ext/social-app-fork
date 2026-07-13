@@ -97,11 +97,11 @@ export function ComposerFooter({
 	}
 
 	const onSelectAssets = useCallback<SelectMediaButtonProps['onSelectAssets']>(
-		async ({ type, images, video, errors }) => {
+		async ({ type, images: assetImages, video: assetVideo, errors }) => {
 			setSelectedAssetsType(type);
 
-			if (type === 'image' && images.length) {
-				const results = await Promise.allSettled(images.map((image) => createComposerImage(image)));
+			if (type === 'image' && assetImages.length) {
+				const results = await Promise.allSettled(assetImages.map((image) => createComposerImage(image)));
 
 				const selectedImages: ComposerImage[] = [];
 				let failed = 0;
@@ -111,7 +111,7 @@ export function ComposerFooter({
 						selectedImages.push(result.value);
 					} else {
 						failed++;
-						const file = images[index]!;
+						const file = assetImages[index]!;
 						logger.error(`createComposerImage failed`, {
 							safeMessage: result.reason instanceof Error ? result.reason.message : String(result.reason),
 							mimeType: file.type,
@@ -126,8 +126,8 @@ export function ComposerFooter({
 				if (failed > 0) {
 					onError(m['view.composer.gallery.error.notAdded']({ failed }));
 				}
-			} else if ((type === 'video' || type === 'gif') && video) {
-				onSelectVideo(post.id, video);
+			} else if ((type === 'video' || type === 'gif') && assetVideo) {
+				onSelectVideo(post.id, assetVideo);
 			}
 
 			errors.map((error) => {

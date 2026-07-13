@@ -88,6 +88,13 @@ const SingleImage = ({
 	);
 };
 
+// Tabbing lands on a control button inside a tile; bring the whole tile into view rather than leaving the
+// browser to reveal just the focused corner.
+const onFocus = (evt: React.FocusEvent<HTMLDivElement>) => {
+	const tile = (evt.target as HTMLElement).closest('[data-composer-image]');
+	tile?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+};
+
 const Carousel = ({ dispatch, images }: GalleryProps) => {
 	const { bleedStyle, bleedWidth, insetLeft, ref: bleedRef } = useGalleryBleed();
 
@@ -129,13 +136,6 @@ const Carousel = ({ dispatch, images }: GalleryProps) => {
 		onSettle,
 		scrollTo,
 	});
-
-	// Tabbing lands on a control button inside a tile; bring the whole tile into view rather than leaving the
-	// browser to reveal just the focused corner.
-	const onFocus = (evt: React.FocusEvent<HTMLDivElement>) => {
-		const tile = (evt.target as HTMLElement).closest('[data-composer-image]');
-		tile?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-	};
 
 	return (
 		<div ref={bleedRef} className={styles.root} style={{ height: contentHeight }}>

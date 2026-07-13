@@ -13,11 +13,12 @@ interface PostsListProps {
 	listUri: string;
 }
 
+function renderPostsEmpty() {
+	return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
+}
+
 export function PostsList({ listUri }: PostsListProps) {
 	const feed: FeedDescriptor = `list|${listUri}`;
-	const renderPostsEmpty = () => {
-		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
-	};
 
 	return (
 		<View>

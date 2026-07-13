@@ -45,7 +45,7 @@ export const searchRows = (
 ): (EmptyRow | ProfileRow)[] => {
 	const profiles = (results ?? [])
 		.filter((profile) => profile.did !== currentAccountDid && !excludeDids?.has(profile.did))
-		.slice()
+		// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `filter` just returned
 		.sort(comparator)
 		.map((profile): ProfileRow => ({ key: profile.did, kind: 'profile', profile }));
 	if (!isFetching && profiles.length === 0) {

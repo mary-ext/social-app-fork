@@ -10,13 +10,13 @@ import type { Locale } from '#/paraglide/runtime';
 
 import * as styles from './AppLanguageDropdown.css';
 
-export function AppLanguageDropdown() {
-	const onChangeAppLanguage = (value: string) => {
-		if (value && value !== LOCALE) {
-			setAppLanguage(value as Locale);
-		}
-	};
+const onChangeAppLanguage = (value: string) => {
+	if (value && value !== LOCALE) {
+		setAppLanguage(value as Locale);
+	}
+};
 
+export function AppLanguageDropdown() {
 	const items = APP_LANGUAGES.map((language) => ({
 		label: language.name,
 		value: language.code2,

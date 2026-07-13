@@ -210,7 +210,7 @@ export function useFeedPreviews(
 
 						let rowIndex = 0;
 						for (const item of tuner.tune(page.posts)) {
-							const moderations = item.items.map((item) => moderatePost(item.post, moderationOpts!));
+							const moderations = item.items.map((child) => moderatePost(child.post, moderationOpts!));
 
 							// apply moderation filters
 							item.items = item.items.filter((_, i) => {

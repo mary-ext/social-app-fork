@@ -183,17 +183,18 @@ function GroupSettings({
 	});
 	const requestCount = joinRequestsData?.pages.reduce((sum, page) => sum + page.requests.length, 0) ?? 0;
 
-	const groupMembers = memberListData.filter(isGroupMember).sort((a, b) => {
-		const aIsOwner = a.did === primaryMember?.did;
-		const bIsOwner = b.did === primaryMember?.did;
-		const aIsSelf = a.did === currentAccount?.did;
-		const bIsSelf = b.did === currentAccount?.did;
+	// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `filter` just returned
+	const groupMembers = memberListData.filter(isGroupMember).sort((memberA, memberB) => {
+		const aIsOwner = memberA.did === primaryMember?.did;
+		const bIsOwner = memberB.did === primaryMember?.did;
+		const aIsSelf = memberA.did === currentAccount?.did;
+		const bIsSelf = memberB.did === currentAccount?.did;
 		if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1;
 		if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1;
 		// surface blocked members to the owner so they can be removed
 		if (isOwner) {
-			const aBlocked = !!isBlockedOrBlocking(a);
-			const bBlocked = !!isBlockedOrBlocking(b);
+			const aBlocked = !!isBlockedOrBlocking(memberA);
+			const bBlocked = !!isBlockedOrBlocking(memberB);
 			if (aBlocked !== bBlocked) return aBlocked ? -1 : 1;
 		}
 		return 0;
@@ -233,7 +234,7 @@ function GroupSettings({
 					<MembersAndRequests
 						convo={convo}
 						requestCount={requestCount}
-						hasMoreRequests={!!hasMoreRequests}
+						hasMoreRequests={hasMoreRequests}
 						isOwner={isOwner}
 					/>
 				);

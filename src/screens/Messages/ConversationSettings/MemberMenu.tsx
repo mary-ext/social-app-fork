@@ -57,8 +57,8 @@ export function MemberMenu({
 		enabled: menuDidOpen,
 	});
 	const { mutate: initiateConvo } = useGetConvoForMembers({
-		onSuccess: ({ convo }) => {
-			navigation.navigate('MessagesConversation', { conversation: convo.id });
+		onSuccess: ({ convo: createdConvo }) => {
+			navigation.navigate('MessagesConversation', { conversation: createdConvo.id });
 		},
 		onError: () => {
 			Toast.show(m['common.chat.error.create'](), { type: 'error' });

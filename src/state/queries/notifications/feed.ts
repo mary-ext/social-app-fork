@@ -104,6 +104,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 		enabled,
 		select: useCallback(
 			(data: InfiniteData<FeedPage>) => {
+				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 				const { moderationOpts, hiddenReplyUris } = selectArgs;
 
 				// Keep track of the last run and whether we can reuse

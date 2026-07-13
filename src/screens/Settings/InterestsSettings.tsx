@@ -75,11 +75,11 @@ function Inner({
 	const [interests, setInterests] = useState<string[]>(preselectedInterests);
 
 	const saveInterests = useMemo(() => {
-		return debounce(async (interests: string[]) => {
+		return debounce(async (nextInterests: string[]) => {
 			const noEdits =
-				interests.length === preselectedInterests.length &&
+				nextInterests.length === preselectedInterests.length &&
 				preselectedInterests.every((pre) => {
-					return interests.find((int) => int === pre);
+					return nextInterests.find((int) => int === pre);
 				});
 
 			if (noEdits) return;
@@ -87,10 +87,10 @@ function Inner({
 			setIsSaving(true);
 
 			try {
-				await setInterestsPref(pds!, { tags: interests });
+				await setInterestsPref(pds!, { tags: nextInterests });
 				qc.setQueriesData({ queryKey: preferencesQueryKey }, (old?: UsePreferencesQueryResponse) => {
 					if (!old) return old;
-					old.interests.tags = interests;
+					old.interests.tags = nextInterests;
 					return old;
 				});
 				await Promise.all([
@@ -118,9 +118,9 @@ function Inner({
 		}, 1500);
 	}, [pds, setIsSaving, qc, preselectedInterests]);
 
-	const onChangeInterests = (interests: string[]) => {
-		setInterests(interests);
-		void saveInterests(interests);
+	const onChangeInterests = (nextInterests: string[]) => {
+		setInterests(nextInterests);
+		void saveInterests(nextInterests);
 	};
 
 	return (

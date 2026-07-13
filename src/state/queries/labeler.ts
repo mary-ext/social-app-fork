@@ -87,21 +87,21 @@ export function useLabelerSubscriptionMutation() {
 						params: { actors: labelerDids as ActorIdentifier[] },
 					}),
 				);
-				for (const did of labelerDids) {
-					const exists = profiles.find((p) => p.did === did);
+				for (const labelerDid of labelerDids) {
+					const exists = profiles.find((p) => p.did === labelerDid);
 					if (exists) {
 						// profile came back but it's not a valid labeler
 						if (exists.associated && !exists.associated.labeler) {
-							invalidLabelers.push(did);
+							invalidLabelers.push(labelerDid);
 						}
 					} else {
 						// no response came back, might be deactivated or takendown
-						invalidLabelers.push(did);
+						invalidLabelers.push(labelerDid);
 					}
 				}
 			}
 			if (invalidLabelers.length) {
-				await Promise.all(invalidLabelers.map((did) => removeLabeler(pds!, did)));
+				await Promise.all(invalidLabelers.map((labelerDid) => removeLabeler(pds!, labelerDid)));
 			}
 
 			if (subscribe) {

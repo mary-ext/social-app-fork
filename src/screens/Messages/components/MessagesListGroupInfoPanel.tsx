@@ -144,7 +144,9 @@ export function MessagesListGroupInfoPanel({
 				convo={convo}
 				handle={addMembersHandle}
 				isPending={isAddPending}
-				onAddMembers={(members, profiles) => addGroupMembers({ members, profiles })}
+				onAddMembers={(newMembers, newProfiles) =>
+					addGroupMembers({ members: newMembers, profiles: newProfiles })
+				}
 				title={m['common.action.addPeople']()}
 			/>
 		</>

@@ -17,6 +17,12 @@ import * as Layout from '#/components/web/Layout';
 import { m } from '#/paraglide/messages';
 import type { Locale } from '#/paraglide/runtime';
 
+const onChangeAppLanguage = (value: string) => {
+	if (value && LOCALE !== value) {
+		setAppLanguage(value as Locale);
+	}
+};
+
 export function LanguageSettingsScreen() {
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
@@ -35,12 +41,6 @@ export function LanguageSettingsScreen() {
 	};
 
 	const contentLanguagePrefsHandle = Dialog.useDialogHandle();
-
-	const onChangeAppLanguage = (value: string) => {
-		if (value && LOCALE !== value) {
-			setAppLanguage(value as Locale);
-		}
-	};
 
 	const onChangePrimaryLanguage = (value: string) => {
 		if (!value) {

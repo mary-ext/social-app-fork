@@ -12,6 +12,7 @@ type SeenObserver = {
 
 export const ItemSeenContext = createContext<SeenObserver | null>(null);
 
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- binds `onItemSeen`'s parameter to the list's element type; inlining it to `unknown` would flip the callback's variance
 export function ItemSeenObserver<ItemT>({
 	children,
 	onItemSeen,

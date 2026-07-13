@@ -1,5 +1,6 @@
 import * as ComAtprotoRepoStrongRef from '@atcute/atproto/types/repo/strongRef';
 import * as AppBskyEmbedExternal from '@atcute/bluesky/types/app/embed/external';
+// oxlint-disable-next-line import/no-empty-named-blocks, unicorn/require-module-specifiers -- the empty specifier list is the point: this pulls in atcute's ambient declarations
 import type {} from '@atcute/lexicons/ambient';
 import * as v from '@atcute/lexicons/validations';
 

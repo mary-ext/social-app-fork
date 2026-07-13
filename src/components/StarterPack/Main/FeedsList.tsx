@@ -12,16 +12,16 @@ function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
 }
 
+function renderItem({ item }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) {
+	return <FeedCard.Default view={item} />;
+}
+
 interface FeedsListProps {
 	feeds: AppBskyFeedDefs.GeneratorView[];
 }
 
 export function FeedsList({ feeds }: FeedsListProps) {
 	const bottomBarOffset = useBottomBarOffset(20);
-
-	const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) => {
-		return <FeedCard.Default view={item} />;
-	};
 
 	return (
 		<List

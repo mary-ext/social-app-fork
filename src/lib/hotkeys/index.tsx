@@ -12,7 +12,7 @@ enum Hotkeys {
 	FOCUS_SEARCH = 'slash',
 }
 
-export function Provider({ children }: React.PropsWithChildren<unknown>) {
+export function Provider({ children }: React.PropsWithChildren) {
 	return (
 		<HotkeysProvider initiallyActiveScopes={['global']}>
 			<KeyboardShortcuts>{children}</KeyboardShortcuts>
@@ -22,7 +22,7 @@ export function Provider({ children }: React.PropsWithChildren<unknown>) {
 
 export { useHotkeysContext };
 
-function KeyboardShortcuts({ children }: React.PropsWithChildren<unknown>) {
+function KeyboardShortcuts({ children }: React.PropsWithChildren) {
 	useKeyboardShortcuts();
 	return children;
 }

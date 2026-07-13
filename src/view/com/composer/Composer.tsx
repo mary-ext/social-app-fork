@@ -691,15 +691,15 @@ export const ComposePost = ({
 				});
 			}
 		} catch (e: unknown) {
-			const error = e instanceof Error ? e : new Error(String(e));
-			logger.error(error, {
+			const caught = e instanceof Error ? e : new Error(String(e));
+			logger.error(caught, {
 				message: `Composer: create post failed`,
 				hasImages: filteredThread.posts.some(
 					(p) => p.embed.media?.type === 'images' || p.embed.media?.type === 'gallery',
 				),
 			});
 
-			let err = cleanError(error.message);
+			let err = cleanError(caught.message);
 			if (e instanceof apilib.ReplyDeletedError || err.includes('not locate record')) {
 				err = m['view.composer.reply.deleted']();
 			} else if (e instanceof EmbeddingDisabledError) {
@@ -1184,8 +1184,8 @@ const ComposerPost = memo(function ComposerPost({
 						// To avoid overlap with the close button:
 						hasRightPadding={isPartOfThread}
 						isActive={isActive}
-						setText={(text) => {
-							dispatchPost({ type: 'update_text', text });
+						setText={(nextText) => {
+							dispatchPost({ type: 'update_text', text: nextText });
 						}}
 						onFocus={() => {
 							dispatch({

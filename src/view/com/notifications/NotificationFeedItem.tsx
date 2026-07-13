@@ -85,6 +85,10 @@ interface Author {
 	moderation: ModerationDecision;
 }
 
+const othersCountMarkup = ({ children }: { children?: React.ReactNode }) => (
+	<Text weight="semiBold">{children}</Text>
+);
+
 let NotificationFeedItem = ({
 	item,
 	moderationOpts,
@@ -228,9 +232,6 @@ let NotificationFeedItem = ({
 				</span>
 			</InlineLinkText>
 		</ProfileHoverCard>
-	);
-	const othersCountMarkup = ({ children }: { children?: React.ReactNode }) => (
-		<Text weight="semiBold">{children}</Text>
 	);
 	const ltrFirstAuthorName = forceLTR(firstAuthorName);
 	const additionalAuthorsCount = authors.length - 1;

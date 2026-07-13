@@ -89,7 +89,7 @@ export class Storage<Scopes extends unknown[], Schema> {
 	 *
 	 * `remove([key])` `remove([scope, key])`
 	 */
-	remove<Key extends keyof Schema>(scopes: [...Scopes, Key]) {
+	remove(scopes: [...Scopes, keyof Schema]) {
 		const key = this.scopedKey(scopes);
 		try {
 			this.localStorage?.removeItem(key);
@@ -104,7 +104,7 @@ export class Storage<Scopes extends unknown[], Schema> {
 	 *
 	 * `removeMany([], [key])` `removeMany([scope], [key])`
 	 */
-	removeMany<Key extends keyof Schema>(scopes: [...Scopes], keys: Key[]) {
+	removeMany(scopes: [...Scopes], keys: (keyof Schema)[]) {
 		keys.forEach((key) => this.remove([...scopes, key]));
 	}
 
@@ -135,7 +135,7 @@ export class Storage<Scopes extends unknown[], Schema> {
 	 *
 	 * @returns Listener - call `remove()` to stop listening
 	 */
-	addOnValueChangedListener<Key extends keyof Schema>(scopes: [...Scopes, Key], callback: () => void) {
+	addOnValueChangedListener(scopes: [...Scopes, keyof Schema], callback: () => void) {
 		const key = this.scopedKey(scopes);
 		let emitter = this.emitters.get(key);
 		if (!emitter) {

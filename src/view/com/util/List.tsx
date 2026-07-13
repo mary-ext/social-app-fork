@@ -626,7 +626,7 @@ const MemoizedList = memo(forwardRef(ListImpl));
 export function List<ItemT = unknown>(
 	props: ListProps<ItemT> & { ref?: React.Ref<ListMethods> },
 ): React.ReactElement {
-	return <MemoizedList {...(props as ListProps<unknown>)} />;
+	return <MemoizedList {...(props as ListProps)} />;
 }
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser

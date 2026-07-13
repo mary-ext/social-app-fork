@@ -28,6 +28,7 @@ export function useLanguagePrefsApi() {
 		setPostLanguage(commaSeparatedLangCodes: string) {
 			// canonicalize the code order so set-equal selections (e.g. "en,ja" vs "ja,en") dedupe in history
 			// and compare consistently everywhere downstream
+			// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `toPostLanguages` just returned
 			const postLanguage = toPostLanguages(commaSeparatedLangCodes).sort().join(',');
 			device.set(['languagePrefs'], { ...read(), postLanguage });
 		},

@@ -36,6 +36,7 @@ export function useGifSearchQuery(query: string, options?: { enabled?: boolean }
 	});
 }
 
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- `Input` types the returned function, so callers supply it explicitly (see `searchGifs`)
 function createKlipyApi<Input extends object>(
 	urlFn: (params: string) => string,
 ): (input: Input & { pos?: string }) => Promise<{
@@ -60,6 +61,7 @@ function createKlipyApi<Input extends object>(
 
 		for (const [key, value] of Object.entries(input)) {
 			if (value !== undefined) {
+				// oxlint-disable-next-line typescript/no-unnecessary-type-conversion -- `Object.entries` widens to `any`; coercing arbitrary input values is deliberate
 				params.set(key, String(value));
 			}
 		}

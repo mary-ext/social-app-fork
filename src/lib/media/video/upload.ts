@@ -54,19 +54,27 @@ export async function uploadVideo({
 			const progress = e.loaded / e.total;
 			setProgress(progress);
 		});
-		xhr.onloadend = () => {
-			if (signal.aborted) {
-				reject(new AbortError());
-			} else if (xhr.readyState === 4) {
-				const uploadRes = JSON.parse(xhr.responseText) as AppBskyVideoDefs.JobStatus;
-				resolve(uploadRes);
-			} else {
+		xhr.addEventListener(
+			'loadend',
+			() => {
+				if (signal.aborted) {
+					reject(new AbortError());
+				} else if (xhr.readyState === 4) {
+					const uploadRes = JSON.parse(xhr.responseText) as AppBskyVideoDefs.JobStatus;
+					resolve(uploadRes);
+				} else {
+					reject(new ServerError(m['lib.video.uploadFailed']()));
+				}
+			},
+			{ once: true },
+		);
+		xhr.addEventListener(
+			'error',
+			() => {
 				reject(new ServerError(m['lib.video.uploadFailed']()));
-			}
-		};
-		xhr.onerror = () => {
-			reject(new ServerError(m['lib.video.uploadFailed']()));
-		};
+			},
+			{ once: true },
+		);
 		xhr.open('POST', uri);
 		xhr.setRequestHeader('Content-Type', video.mimeType);
 		xhr.setRequestHeader('Authorization', `Bearer ${token}`);

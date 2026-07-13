@@ -216,20 +216,20 @@ export function Controls({
 	const seekLeft = useCallback(() => {
 		if (!videoRef.current) return;
 
-		const currentTime = videoRef.current.currentTime;
+		const videoTime = videoRef.current.currentTime;
 
-		const duration = videoRef.current.duration || 0;
-		onSeek(clamp(currentTime - 5, 0, duration));
+		const videoDuration = videoRef.current.duration || 0;
+		onSeek(clamp(videoTime - 5, 0, videoDuration));
 	}, [onSeek, videoRef]);
 
 	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
 	const seekRight = useCallback(() => {
 		if (!videoRef.current) return;
 
-		const currentTime = videoRef.current.currentTime;
+		const videoTime = videoRef.current.currentTime;
 
-		const duration = videoRef.current.duration || 0;
-		onSeek(clamp(currentTime + 5, 0, duration));
+		const videoDuration = videoRef.current.duration || 0;
+		onSeek(clamp(videoTime + 5, 0, videoDuration));
 	}, [onSeek, videoRef]);
 
 	const [showCursor, setShowCursor] = useState(true);

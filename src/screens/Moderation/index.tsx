@@ -96,10 +96,9 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 		return !returnedDids.has(branded) && !isAppLabeler(did) && !isNonConfigurableModerationAuthority(did);
 	});
 
-	const adultContentEnabled = !!(
+	const adultContentEnabled =
 		optimisticAdultContent?.enabled ||
-		(!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
-	);
+		(!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled);
 
 	const onToggleAdultContentEnabled = async (selected: boolean) => {
 		try {

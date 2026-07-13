@@ -56,14 +56,14 @@ export function PostThread({ uri }: { uri: string }) {
 	 */
 	const thread = usePostThread({ anchor: uri });
 	const { anchor, hasParents } = (() => {
-		let hasParents = false;
+		let sawParents = false;
 		for (const item of thread.data.items) {
 			if (item.type === 'threadPost' && item.depth === 0) {
-				return { anchor: item, hasParents };
+				return { anchor: item, hasParents: sawParents };
 			}
-			hasParents = true;
+			sawParents = true;
 		}
-		return { hasParents };
+		return { hasParents: sawParents };
 	})();
 
 	const { openComposer } = useOpenComposer();
@@ -146,11 +146,11 @@ export function PostThread({ uri }: { uri: string }) {
 	 */
 	const onContentSizeChangeWebOnly = () => {
 		const list = listRef.current;
-		const anchor = anchorRef.current;
+		const anchorEl = anchorRef.current;
 		const header = headerRef.current;
 
-		if (list && anchor && header && shouldHandleScroll.current) {
-			const anchorOffsetTop = anchor.getBoundingClientRect().top;
+		if (list && anchorEl && header && shouldHandleScroll.current) {
+			const anchorOffsetTop = anchorEl.getBoundingClientRect().top;
 			const headerHeight = header.getBoundingClientRect().height;
 
 			/*

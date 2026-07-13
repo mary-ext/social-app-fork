@@ -538,14 +538,14 @@ function PostFeed({
 }
 export { PostFeed };
 
-export function isThreadParentAt<T>(arr: Array<T>, i: number) {
+export function isThreadParentAt(arr: Array<unknown>, i: number) {
 	if (arr.length === 1) {
 		return false;
 	}
 	return i < arr.length - 1;
 }
 
-export function isThreadChildAt<T>(arr: Array<T>, i: number) {
+export function isThreadChildAt(arr: Array<unknown>, i: number) {
 	if (arr.length === 1) {
 		return false;
 	}

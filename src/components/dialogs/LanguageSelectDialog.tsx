@@ -68,6 +68,15 @@ export function LanguageSelectDialog({
 	);
 }
 
+// NOTE(@elijaharita): Displayed languages are split into 3 lists for
+// ordering.
+function mapCodeList(codeList: string[]) {
+	return codeList.map((code) => LANGUAGES_MAP[code]).filter((lang): lang is Language => Boolean(lang));
+}
+
+// drop languages this engine's CLDR data can't name — they'd render as bare codes
+const isNameable = (lang: Language) => resolveLanguageName(lang, LOCALE) !== undefined;
+
 function DialogInner({
 	titleText,
 	subtitleText,
@@ -93,12 +102,6 @@ function DialogInner({
 		handle.close();
 	};
 
-	// NOTE(@elijaharita): Displayed languages are split into 3 lists for
-	// ordering.
-	function mapCodeList(codeList: string[]) {
-		return codeList.map((code) => LANGUAGES_MAP[code]).filter((lang): lang is Language => Boolean(lang));
-	}
-
 	// NOTE(@elijaharita): Get recent language codes and map them to language
 	// objects. Both the user account's saved language history and the current
 	// checked languages are displayed here.
@@ -113,8 +116,6 @@ function DialogInner({
 		languageName(lang, 'en').toLowerCase().includes(searchLower);
 	const isChecked = (lang: Language) => checkedCodes.includes(langCode(lang));
 	const isInRecents = (lang: Language) => recentCodes.includes(langCode(lang));
-	// drop languages this engine's CLDR data can't name — they'd render as bare codes
-	const isNameable = (lang: Language) => resolveLanguageName(lang, LOCALE) !== undefined;
 
 	const checkedRecent = recentLanguages.filter(isChecked);
 

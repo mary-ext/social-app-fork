@@ -85,6 +85,10 @@ function ProfileFeedScreenIntermediate({ feedUri }: { feedUri: string }) {
 	return <ProfileFeedScreenInner preferences={preferences} feedInfo={info as FeedSourceFeedInfo} />;
 }
 
+function renderPostsEmpty() {
+	return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
+}
+
 export function ProfileFeedScreenInner({
 	feedInfo,
 }: {
@@ -120,10 +124,6 @@ export function ProfileFeedScreenInner({
 		}
 		return softReset.subscribe(onScrollToTop);
 	}, [onScrollToTop, isScreenFocused]);
-
-	const renderPostsEmpty = () => {
-		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
-	};
 
 	return (
 		<>

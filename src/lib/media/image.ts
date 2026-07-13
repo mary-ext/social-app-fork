@@ -320,14 +320,22 @@ export const getImageFromBlob = (blob: Blob): Promise<HTMLImageElement> => {
 		const image = new Image();
 		const blobUrl = URL.createObjectURL(blob);
 
-		image.onload = () => {
-			URL.revokeObjectURL(blobUrl);
-			resolve(image);
-		};
-		image.onerror = () => {
-			URL.revokeObjectURL(blobUrl);
-			reject(new Error('the source image could not be loaded'));
-		};
+		image.addEventListener(
+			'load',
+			() => {
+				URL.revokeObjectURL(blobUrl);
+				resolve(image);
+			},
+			{ once: true },
+		);
+		image.addEventListener(
+			'error',
+			() => {
+				URL.revokeObjectURL(blobUrl);
+				reject(new Error('the source image could not be loaded'));
+			},
+			{ once: true },
+		);
 
 		image.src = blobUrl;
 	});

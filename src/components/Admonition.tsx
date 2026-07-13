@@ -22,7 +22,7 @@ Context.displayName = 'AdmonitionContext';
 export function Icon() {
 	const t = useTheme();
 	const { type } = useContext(Context);
-	const Icon = {
+	const IconComponent = {
 		info: CircleInfoIcon,
 		tip: CircleInfoIcon,
 		warning: WarningIcon,
@@ -36,7 +36,7 @@ export function Icon() {
 		error: t.palette.negative_500,
 		apology: t.atoms.text_contrast_medium.color,
 	}[type];
-	return <Icon fill={fill} size="lg" />;
+	return <IconComponent fill={fill} size="lg" />;
 }
 
 export function Content({

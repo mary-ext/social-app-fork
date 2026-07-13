@@ -44,13 +44,13 @@ export function VirtualRowObserver({
 	const api = useConstant((): VirtualRowObserverApi => {
 		const handlers = new Map<Element, (entry: IntersectionObserverEntry) => void>();
 
-		let root: HTMLElement | null = null;
+		let rootNode: HTMLElement | null = null;
 		let observer: IntersectionObserver | null = null;
 		let resize: ResizeObserver | null = null;
 		let rootHeight: number | undefined;
 
 		const rebuild = () => {
-			const height = root ? root.clientHeight : window.innerHeight;
+			const height = rootNode ? rootNode.clientHeight : window.innerHeight;
 			if (height === rootHeight) {
 				return;
 			}
@@ -66,7 +66,7 @@ export function VirtualRowObserver({
 					}
 				},
 				{
-					root: root,
+					root: rootNode,
 					rootMargin: `${overscanRatio * rootHeight}px 0px`,
 				},
 			);
@@ -78,7 +78,7 @@ export function VirtualRowObserver({
 
 		return {
 			connect(rootEl) {
-				root = rootEl;
+				rootNode = rootEl;
 				rebuild();
 
 				if (rootEl !== null) {
@@ -91,7 +91,7 @@ export function VirtualRowObserver({
 			disconnect() {
 				observer?.disconnect();
 
-				if (root !== null) {
+				if (rootNode !== null) {
 					resize?.disconnect();
 				} else {
 					window.removeEventListener('resize', rebuild);
@@ -99,7 +99,7 @@ export function VirtualRowObserver({
 
 				observer = null;
 				resize = null;
-				root = null;
+				rootNode = null;
 				rootHeight = undefined;
 			},
 

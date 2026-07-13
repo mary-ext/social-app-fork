@@ -201,6 +201,7 @@ export function usePostFeedQuery(
 			(data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
 				// If the selection depends on some data, that data should
 				// be included in the selectArgs object and read here.
+				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 				const { feedTuners, moderationOpts, ignoreFilterFor, isDiscover } = selectArgs;
 
 				const tuner = new FeedTuner(feedTuners);
@@ -549,8 +550,7 @@ function assertSomePostsPassModeration(
 export function resetProfilePostsQueries(queryClient: QueryClient, did: string, timeout = 0) {
 	setTimeout(() => {
 		void queryClient.resetQueries({
-			predicate: (query) =>
-				!!(query.queryKey[0] === RQKEY_ROOT && (query.queryKey[1] as string)?.includes(did)),
+			predicate: (query) => query.queryKey[0] === RQKEY_ROOT && (query.queryKey[1] as string)?.includes(did),
 		});
 	}, timeout);
 }

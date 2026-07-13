@@ -47,6 +47,7 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 			(profile): profile is AppBskyActorDefs.ProfileView =>
 				profile !== undefined && !isBlockedOrBlocking(profile) && !profile.associated?.labeler,
 		)
+		// oxlint-disable-next-line unicorn/no-array-reverse -- reversing the array `filter` just returned
 		.reverse();
 	const isOwn = parseCanonicalResourceUri(listUri).repo === currentAccount?.did;
 

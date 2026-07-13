@@ -88,6 +88,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 				// update & broadcast
 				setNumUnread('');
+				// oxlint-disable-next-line unicorn/require-post-message-target-origin -- BroadcastChannel, not a Window
 				broadcast.postMessage({ event: '' });
 			},
 
@@ -145,6 +146,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 						void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'));
 						void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'));
 					}
+					// oxlint-disable-next-line unicorn/require-post-message-target-origin -- BroadcastChannel, not a Window
 					broadcast.postMessage({ event: unreadCountStr });
 				} catch (err) {
 					isFetchingRef.current = false;

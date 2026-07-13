@@ -53,7 +53,7 @@ export function ProfileLabelsSection({
 		);
 	}
 
-	const isSubscribed = !!isLabelerSubscribed(labelerInfo, moderationOpts);
+	const isSubscribed = isLabelerSubscribed(labelerInfo, moderationOpts);
 	const customDefs = Object.values(interpretLabelerDefinition(labelerInfo));
 	const labelValues = labelerInfo.policies.labelValues
 		.filter((val, i, arr) => arr.indexOf(val) === i) // dedupe

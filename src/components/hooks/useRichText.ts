@@ -21,7 +21,7 @@ export function useRichText(text: string): [Richtext, boolean] {
 	useEffect(() => {
 		let ignore = false;
 		async function resolveRTFacets() {
-			const resolvedRT = await detectFacets(text, async (handle) => {
+			const nextRT = await detectFacets(text, async (handle) => {
 				try {
 					const res = await ok(
 						appview.get('com.atproto.identity.resolveHandle', {
@@ -34,7 +34,7 @@ export function useRichText(text: string): [Richtext, boolean] {
 				}
 			});
 			if (!ignore) {
-				setResolvedRT(resolvedRT);
+				setResolvedRT(nextRT);
 			}
 		}
 		void resolveRTFacets();

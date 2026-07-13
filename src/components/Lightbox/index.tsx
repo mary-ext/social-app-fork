@@ -175,14 +175,15 @@ function useImageLoading(src: string) {
 	const [loading, setLoading] = useState(true);
 	useEffect(() => {
 		const img = new window.Image();
+		const controller = new AbortController();
 		let active = true;
 		const done = () => {
 			if (active) {
 				setLoading(false);
 			}
 		};
-		img.onload = done;
-		img.onerror = done;
+		img.addEventListener('load', done, { signal: controller.signal });
+		img.addEventListener('error', done, { signal: controller.signal });
 		img.src = src;
 		// a cached source can already be complete before the handlers attach
 		if (img.complete) {
@@ -190,8 +191,7 @@ function useImageLoading(src: string) {
 		}
 		return () => {
 			active = false;
-			img.onload = null;
-			img.onerror = null;
+			controller.abort();
 		};
 	}, [src]);
 	return loading;

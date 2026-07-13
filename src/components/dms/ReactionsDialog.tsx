@@ -74,6 +74,7 @@ function DialogInner({
 
 	const filteredReactions = reactions
 		.filter((r) => selected === 'all' || r.value === selected)
+		// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `filter` just returned
 		.sort((a, b) => {
 			if (a.sender.did === currentAccount?.did) return -1;
 			if (b.sender.did === currentAccount?.did) return 1;

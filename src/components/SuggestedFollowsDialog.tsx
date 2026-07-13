@@ -50,7 +50,9 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		() => [
 			FOR_YOU_TAB,
 			...Object.keys(rawInterestsDisplayNames)
+				// oxlint-disable-next-line unicorn/no-array-sort -- our own array of keys, and stable sorts compose:
 				.sort(boostInterests(popularInterests))
+				// oxlint-disable-next-line unicorn/no-array-sort -- personalized boosts outrank popular ones
 				.sort(boostInterests(personalizedInterests)),
 		],
 		[rawInterestsDisplayNames, personalizedInterests],

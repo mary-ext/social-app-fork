@@ -13,7 +13,9 @@ import * as styles from './Composer.css';
 
 // the composer pulls in a large subtree (gif/emoji pickers, reanimated, media metadata, drafts), so it
 // only loads when the dialog is first opened — the `payload && ...` guard already gates mounting.
-const ComposePost = lazy(() => import('../com/composer/Composer').then((m) => ({ default: m.ComposePost })));
+const ComposePost = lazy(() =>
+	import('../com/composer/Composer').then((mod) => ({ default: mod.ComposePost })),
+);
 
 export function ComposerDialog() {
 	const { composerDialogHandle } = useGlobalDialogsHandleContext();

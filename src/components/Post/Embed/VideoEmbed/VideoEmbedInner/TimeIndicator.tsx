@@ -16,7 +16,7 @@ export function TimeIndicator({ time }: { time: number }) {
 	return (
 		<div
 			aria-label={m['components.post.video.a11y.timeRemaining']({
-				time: Number(time) || 0,
+				time: time || 0,
 			})}
 			className={styles.indicator}
 		>

@@ -1,4 +1,5 @@
 // registers `app.bsky.embed.getEmbedExternalView` on the ambient XRPC interface so `.get()` is typed.
+// oxlint-disable-next-line import/no-empty-named-blocks, unicorn/require-module-specifiers -- the empty specifier list is the point
 import type {} from '@atcute/bluesky/types/app/embed/getEmbedExternalView';
 import { Client, ok, simpleFetchHandler } from '@atcute/client';
 import type { GenericUri, ResourceUri } from '@atcute/lexicons';

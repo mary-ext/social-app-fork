@@ -111,8 +111,8 @@ function GroupChatJoinDialogContent({
 	});
 
 	const { mutate: joinGroupChat, isPending: isJoinPending } = useRequestJoinGroupChat({
-		onSuccess: (data) => {
-			switch (data.status) {
+		onSuccess: (result) => {
+			switch (result.status) {
 				case 'pending':
 					// Optimistically mark the link as requested so any invite cards backed by the preview cache
 					// (e.g. the DM embed) flip to "Requested" right away, rather than waiting on a server refetch
@@ -125,28 +125,28 @@ function GroupChatJoinDialogContent({
 					// Membership changed — refetch any cached previews of this link (e.g. a DM embed) so
 					// their viewer state reflects that the viewer is now a member.
 					if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code);
-					if (data.convo && data.convo.id) {
+					if (result.convo && result.convo.id) {
 						handle.close();
 						Toast.show(m['components.intents.join.success']());
 						navigation.navigate('MessagesConversation', {
-							conversation: data.convo.id,
+							conversation: result.convo.id,
 						});
 					} else {
 						logger.warn('Request to join group chat returned no convo ID', {
-							status: data.status,
-							convoId: data.convo?.id,
+							status: result.status,
+							convoId: result.convo?.id,
 						});
 					}
 					break;
 				}
 			}
 		},
-		onError: (error) => {
+		onError: (err) => {
 			let errorMessage = m['components.intents.join.error.failed']();
-			if (isNetworkError(error)) {
+			if (isNetworkError(err)) {
 				errorMessage = m['common.error.connection']();
-			} else if (error instanceof ClientResponseError) {
-				switch (error.error) {
+			} else if (err instanceof ClientResponseError) {
+				switch (err.error) {
 					case 'ConvoLocked':
 						errorMessage = m['components.intents.join.error.conversationLocked']();
 						break;
@@ -179,11 +179,11 @@ function GroupChatJoinDialogContent({
 			handle.close();
 			Toast.show(m['common.requests.rescinded']());
 		},
-		onError: (error) => {
+		onError: (err) => {
 			let errorMessage = m['common.requests.error.rescind']();
-			if (isNetworkError(error)) {
+			if (isNetworkError(err)) {
 				errorMessage = m['common.error.connection']();
-			} else if (error instanceof ClientResponseError && error.error === 'InvalidJoinRequest') {
+			} else if (err instanceof ClientResponseError && err.error === 'InvalidJoinRequest') {
 				errorMessage = m['common.requests.error.invalidRescind']();
 			}
 			Toast.show(errorMessage);

@@ -51,8 +51,8 @@ export function getStarterPackOgCard(didOrStarterPack: AnyStarterPackView | stri
 	if (typeof didOrStarterPack === 'string') {
 		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`;
 	} else {
-		const rkey = parseResourceUri(didOrStarterPack.uri).rkey;
-		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`;
+		const packRkey = parseResourceUri(didOrStarterPack.uri).rkey;
+		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${packRkey}`;
 	}
 }
 

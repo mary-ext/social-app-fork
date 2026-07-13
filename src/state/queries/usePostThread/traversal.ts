@@ -79,14 +79,14 @@ export function sortAndAnnotateThreadItems(
 					const parent = thread[pi]!;
 
 					if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemNoUnauthenticated') {
-						const post = views.threadPostNoUnauthenticated(parent);
-						post.ui = getThreadPostNoUnauthenticatedUI({
+						const parentPost = views.threadPostNoUnauthenticated(parent);
+						parentPost.ui = getThreadPostNoUnauthenticatedUI({
 							depth: parent.depth,
 							// ignore for now
 							// prevItemDepth: thread[pi - 1]?.depth,
 							nextItemDepth: thread[pi + 1]?.depth,
 						});
-						threadItems.unshift(post);
+						threadItems.unshift(parentPost);
 						// for now, break parent traversal at first no-unauthed
 						break parentTraversal;
 					} else if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemNotFound') {

@@ -378,8 +378,8 @@ export function FollowButtonInner({
 			);
 			onPressProp?.(e);
 			onFollow?.();
-		} catch (e) {
-			const err = e as Error;
+		} catch (error) {
+			const err = error as Error;
 			if (err?.name !== 'AbortError') {
 				Toast.show(m['common.error.generic'](), {
 					type: 'error',
@@ -402,8 +402,8 @@ export function FollowButtonInner({
 				}),
 			);
 			onPressProp?.(e);
-		} catch (e) {
-			const err = e as Error;
+		} catch (error) {
+			const err = error as Error;
 			if (err?.name !== 'AbortError') {
 				Toast.show(m['common.error.generic'](), {
 					type: 'error',

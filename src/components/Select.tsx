@@ -178,10 +178,10 @@ export function Item({ children, className, label, value }: ItemProps) {
 }
 
 /** The selection checkmark, absolutely positioned in the item's gutter. */
-export function ItemIndicator({ icon: Icon = CheckIcon }: { icon?: ComponentType<SVGIconProps> }) {
+export function ItemIndicator({ icon: IconComponent = CheckIcon }: { icon?: ComponentType<SVGIconProps> }) {
 	return (
 		<BaseSelect.ItemIndicator className={styles.indicator}>
-			<Icon size="sm" fill="currentColor" />
+			<IconComponent size="sm" fill="currentColor" />
 		</BaseSelect.ItemIndicator>
 	);
 }

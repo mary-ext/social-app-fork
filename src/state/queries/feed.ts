@@ -261,6 +261,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		select: useCallback(
 			(data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.$output>) => {
+				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 				const { savedFeeds, hasSession: hasSessionInner, moderationOpts } = selectArgs;
 				return {
 					...data,

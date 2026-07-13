@@ -29,7 +29,7 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 
-	const profile = convo.members.filter((profile) => profile.did !== currentAccount?.did)[0];
+	const profile = convo.members.filter((member) => member.did !== currentAccount?.did)[0];
 	if (!profile) {
 		return null;
 	}

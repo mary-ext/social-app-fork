@@ -48,6 +48,22 @@ type BlockLinkProps = {
 	onPointerLeave?: () => void;
 };
 
+// middle-click opens a new tab. mirrors WebAuxClickWrapper: swallow the middle-click autoscroll, then
+// synthesise a meta-click so the same `onClick` path takes over (links handle their own middle-click).
+const onMouseDown = (e: MouseEvent<HTMLElement>) => {
+	if (e.button === 1) {
+		e.preventDefault();
+	}
+};
+
+const onAuxClick = (e: MouseEvent<HTMLElement>) => {
+	const target = e.target as HTMLElement;
+	if (e.button !== 1 || target.closest('a')) {
+		return;
+	}
+	target.dispatchEvent(new MouseEvent('click', { bubbles: true, metaKey: true }));
+};
+
 /**
  * navigates to `to` when its child is clicked, while allowing nested interactive elements and portalled
  * popups to behave normally.
@@ -125,21 +141,6 @@ export function BlockLink({
 		if (e.key === 'Enter' && e.target === e.currentTarget) {
 			go();
 		}
-	};
-
-	// middle-click opens a new tab. mirrors WebAuxClickWrapper: swallow the middle-click autoscroll, then
-	// synthesise a meta-click so the same `onClick` path takes over (links handle their own middle-click).
-	const onMouseDown = (e: MouseEvent<HTMLElement>) => {
-		if (e.button === 1) {
-			e.preventDefault();
-		}
-	};
-	const onAuxClick = (e: MouseEvent<HTMLElement>) => {
-		const target = e.target as HTMLElement;
-		if (e.button !== 1 || target.closest('a')) {
-			return;
-		}
-		target.dispatchEvent(new MouseEvent('click', { bubbles: true, metaKey: true }));
 	};
 
 	if (!isValidElement(children)) {

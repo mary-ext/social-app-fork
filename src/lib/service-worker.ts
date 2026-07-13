@@ -129,5 +129,6 @@ export const applyServiceWorkerUpdate = () => {
 		reloaded = true;
 		window.location.reload();
 	});
+	// oxlint-disable-next-line unicorn/require-post-message-target-origin -- ServiceWorker, not a Window: its second argument is a transfer list
 	waiting.postMessage({ type: 'SKIP_WAITING' });
 };

@@ -98,7 +98,7 @@ export function Picker({ keepOpenWhenShiftHeld = true }: PickerProps) {
 					// return focus to the caller's target (e.g. the composer text input) rather than the trigger
 					finalFocus={() => {
 						if (!nextFocusRef) return;
-						const el = nextFocusRef instanceof Function ? nextFocusRef() : nextFocusRef.current;
+						const el = typeof nextFocusRef === 'function' ? nextFocusRef() : nextFocusRef.current;
 						if (el) {
 							el.focus();
 							return false;

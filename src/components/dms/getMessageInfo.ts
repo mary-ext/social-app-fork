@@ -34,7 +34,7 @@ export function isDidBlockedInConvo({
 	if (primaryProfile && primaryProfile.did === did) {
 		return !!isBlockedOrBlocking(primaryProfile);
 	}
-	const member = members.find((m) => m.did === did);
+	const member = members.find((mem) => mem.did === did);
 	return member ? !!isBlockedOrBlocking(member) : false;
 }
 
@@ -54,7 +54,7 @@ export function getMessageInfo({
 	const lastMessage = convo.lastMessage;
 	const isFromMe = lastMessage.sender?.did === currentAccountDid;
 	const senderDid = lastMessage.sender?.did;
-	const sender = convo.members.find((m) => m.did === senderDid);
+	const sender = convo.members.find((mem) => mem.did === senderDid);
 	const name = sender ? createSanitizedDisplayName(sender) : null;
 	const isGroup = convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo';
 

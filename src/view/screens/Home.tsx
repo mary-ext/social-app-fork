@@ -72,6 +72,9 @@ export function HomeScreen(props: Props) {
 	}
 }
 
+const renderFollowingEmptyState = () => <FollowingEmptyState />;
+const renderCustomFeedEmptyState = () => <CustomFeedEmptyState />;
+
 function HomeScreenReady({
 	preferences,
 	pinnedFeedInfos,
@@ -87,9 +90,6 @@ function HomeScreenReady({
 	const selectedFeed = useSelectedFeed() ?? allFeeds[0];
 	const selectedIndex = Math.max(0, allFeeds.indexOf(selectedFeed!));
 	useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName);
-
-	const renderFollowingEmptyState = () => <FollowingEmptyState />;
-	const renderCustomFeedEmptyState = () => <CustomFeedEmptyState />;
 
 	const whatsHotFeed: FeedDescriptor = `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`;
 

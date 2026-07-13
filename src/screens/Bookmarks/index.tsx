@@ -69,6 +69,21 @@ type ListItem =
 // only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const BOOKMARK_ITEM_HEIGHT_ESTIMATE = 300;
 
+function renderItem({ index, item }: ListRenderItemInfo<ListItem>) {
+	switch (item.type) {
+		case 'loading':
+			return <PostFeedLoadingPlaceholder />;
+		case 'empty':
+			return <BookmarksEmpty />;
+		case 'bookmark':
+			return <BookmarkItem item={item} hideTopBorder={index === 0} />;
+		case 'bookmarkNotFound':
+			return <BookmarkNotFound post={item.bookmark.item} hideTopBorder={index === 0} />;
+		default:
+			return null;
+	}
+}
+
 function BookmarksInner() {
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useBookmarksQuery();
 
@@ -112,21 +127,6 @@ function BookmarksInner() {
 	}
 
 	const isEmpty = items.length === 1 && items[0]?.type === 'empty';
-
-	const renderItem = ({ index, item }: ListRenderItemInfo<ListItem>) => {
-		switch (item.type) {
-			case 'loading':
-				return <PostFeedLoadingPlaceholder />;
-			case 'empty':
-				return <BookmarksEmpty />;
-			case 'bookmark':
-				return <BookmarkItem item={item} hideTopBorder={index === 0} />;
-			case 'bookmarkNotFound':
-				return <BookmarkNotFound post={item.bookmark.item} hideTopBorder={index === 0} />;
-			default:
-				return null;
-		}
-	};
 
 	return (
 		<List

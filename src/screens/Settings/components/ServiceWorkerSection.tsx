@@ -18,6 +18,23 @@ import { m } from '#/paraglide/messages';
 
 const HAS_SERVICE_WORKER = 'serviceWorker' in navigator;
 
+// a disabled row with a trailing spinner, shared by first-install and update downloads. the button
+// carries the label, so the spinner is aria-hidden to avoid a redundant announcement.
+const busyRow = (titleText: ReactNode, label: string) => (
+	<button
+		type="button"
+		disabled
+		aria-label={label}
+		className={clsx(cardStyles.row, cardStyles.rowInteractive)}
+	>
+		<Settings.Icon icon={DownloadIcon} />
+		<Settings.Label titleText={titleText} />
+		<span className={cardStyles.trailing}>
+			<Spinner color="default" label={null} size="sm" />
+		</span>
+	</button>
+);
+
 /** settings card for the offline service worker. */
 export function ServiceWorkerSection() {
 	const status = useServiceWorkerStatus();
@@ -25,23 +42,6 @@ export function ServiceWorkerSection() {
 	if (!HAS_SERVICE_WORKER) {
 		return null;
 	}
-
-	// a disabled row with a trailing spinner, shared by first-install and update downloads. the button
-	// carries the label, so the spinner is aria-hidden to avoid a redundant announcement.
-	const busyRow = (titleText: ReactNode, label: string) => (
-		<button
-			type="button"
-			disabled
-			aria-label={label}
-			className={clsx(cardStyles.row, cardStyles.rowInteractive)}
-		>
-			<Settings.Icon icon={DownloadIcon} />
-			<Settings.Label titleText={titleText} />
-			<span className={cardStyles.trailing}>
-				<Spinner color="default" label={null} size="sm" />
-			</span>
-		</button>
-	);
 
 	let row: ReactNode;
 	switch (status) {

@@ -99,6 +99,11 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 						 * keying on the src remounts the iframe for a new embed rather than navigating the existing one.
 						 * `allow="autoplay"` delegates the autoplay policy to the cross-origin frame, otherwise the
 						 * browser ignores the `autoplay=1` in the player URL (default allowlist is `self`).
+						 *
+						 * the players need scripts, and their own origin's cookies/storage for playback and DRM —
+						 * granting both is safe here only because every `playerUri` is cross-origin, so the frame
+						 * cannot reach back in and drop its own sandbox. what stays revoked is what an embed has no
+						 * business doing: navigating the top-level tab away, submitting forms, or downloading.
 						 */}
 						<iframe
 							key={params.playerUri}
@@ -107,6 +112,8 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 							onLoad={() => setIsLoading(false)}
 							allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
 							allowFullScreen
+							// oxlint-disable-next-line react/iframe-missing-sandbox -- see above: the scripts/same-origin pair only defeats the sandbox for a same-origin frame
+							sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation"
 							title={link.title || m['components.post.external.a11y.player']()}
 						/>
 					</div>

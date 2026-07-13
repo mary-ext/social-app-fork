@@ -42,6 +42,7 @@ export class ServiceWorkerPrecachePlugin {
 					}
 					// precache the SPA shell under the canonical `/`, not `/index.html`: a host may
 					// 307-redirect `/index.html` to `/`, and a redirected response can't satisfy a navigation
+					// oxlint-disable-next-line unicorn/no-array-sort -- sorting our own copy of `files`
 					const manifest = ['/', ...[...files].sort().map((file) => `/${file}`)];
 					// the shell is cached under the mutable `/` (not a content-hashed name), so fold the emitted
 					// index.html bytes into the version: a shell-only change must still bump CACHE and the worker

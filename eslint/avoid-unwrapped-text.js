@@ -21,6 +21,7 @@ function getTagName(node) {
 		}
 	}
 
+	// oxlint-disable-next-line unicorn/no-array-reverse -- local array, built just above
 	return reversedIdentifiers.reverse().join('.');
 }
 

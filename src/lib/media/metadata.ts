@@ -31,18 +31,26 @@ export function getVideoMetadata(blob: Blob): Promise<VideoMetadata> {
 		const video = document.createElement('video');
 
 		video.preload = 'metadata';
-		video.onloadedmetadata = () => {
-			URL.revokeObjectURL(url);
-			resolve({
-				width: video.videoWidth,
-				height: video.videoHeight,
-				duration: Number.isFinite(video.duration) ? video.duration * 1000 : null,
-			});
-		};
-		video.onerror = () => {
-			URL.revokeObjectURL(url);
-			reject(new Error('Failed to load video metadata'));
-		};
+		video.addEventListener(
+			'loadedmetadata',
+			() => {
+				URL.revokeObjectURL(url);
+				resolve({
+					width: video.videoWidth,
+					height: video.videoHeight,
+					duration: Number.isFinite(video.duration) ? video.duration * 1000 : null,
+				});
+			},
+			{ once: true },
+		);
+		video.addEventListener(
+			'error',
+			() => {
+				URL.revokeObjectURL(url);
+				reject(new Error('Failed to load video metadata'));
+			},
+			{ once: true },
+		);
 		video.src = url;
 	});
 }
