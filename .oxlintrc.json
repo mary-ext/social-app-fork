@@ -2,6 +2,7 @@
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"categories": {
 		"correctness": "error",
+		"perf": "error",
 		"suspicious": "error"
 	},
 	"env": {
@@ -52,6 +53,9 @@
 			}
 		],
 		"no-array-constructor": "error",
+		// these loops are sequential by construction — cursor pagination, retry/backoff, job polling, stream
+		// reads, chunked writes — and the rule can't see the data dependency that forces the ordering.
+		"no-await-in-loop": "off",
 		"no-regex-spaces": "error",
 		"no-restricted-imports": [
 			"error",
@@ -71,6 +75,9 @@
 		"prefer-spread": "error",
 		"react/display-name": "error",
 		"react/hook-use-state": "warn",
+		// React Compiler already hoists context values into its memo cache, keyed on their dependencies; a
+		// hand-written useMemo would only duplicate what it emits.
+		"react/jsx-no-constructed-context-values": "off",
 		"react/jsx-no-target-blank": "error",
 		"react/no-unknown-property": "error",
 		"react/no-unstable-nested-components": [
