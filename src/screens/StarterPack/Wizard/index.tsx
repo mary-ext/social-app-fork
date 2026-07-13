@@ -338,7 +338,7 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 			<div className={css.avatarRow}>
 				{items.slice(0, 6).map((p, index) => (
 					<div
-						key={index}
+						key={'uri' in p ? p.uri : p.did}
 						className={css.avatarRing}
 						style={
 							state.currentStep === 'Profiles'

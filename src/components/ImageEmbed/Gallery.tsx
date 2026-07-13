@@ -121,6 +121,7 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 			>
 				{images.map((image, index) => (
 					<GalleryImage
+						// oxlint-disable-next-line react/no-array-index-key -- a post's images never reorder
 						key={image.thumbnail + index}
 						image={image}
 						index={index}

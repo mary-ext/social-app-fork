@@ -77,8 +77,8 @@ export function MutedWordsScreen(
 							bodyText={m['screens.moderation.mutedWord.notificationsHint']()}
 							titleText={m['screens.moderation.mutedWord.heading']()}
 						>
-							{mutedWords.toReversed().map((word, i) => (
-								<MutedWordRow key={word.value + i} word={word} />
+							{mutedWords.toReversed().map((word) => (
+								<MutedWordRow key={word.id ?? word.value} word={word} />
 							))}
 						</Settings.Section>
 					</Settings.List>

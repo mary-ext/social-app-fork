@@ -80,6 +80,7 @@ export function createMultiPathSVG({ paths, viewBox }: { paths: string[]; viewBo
 			>
 				{gradient}
 				{paths.map((path, i) => (
+					// oxlint-disable-next-line react/no-array-index-key -- an icon's paths are static
 					<path key={i} fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
 				))}
 			</svg>

@@ -45,11 +45,13 @@ export function PreferenceControls({
 	);
 }
 
+const NO_SYNC_OTHERS: NotificationSettingsPreferenceName[] = [];
+
 export function Inner({
 	allowDisableInApp,
 	name,
 	preference,
-	syncOthers = [],
+	syncOthers = NO_SYNC_OTHERS,
 }: {
 	allowDisableInApp: boolean;
 	name: NotificationSettingsPreferenceName;

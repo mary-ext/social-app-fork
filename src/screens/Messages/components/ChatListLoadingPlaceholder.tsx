@@ -16,6 +16,7 @@ export function ChatListLoadingPlaceholder() {
 	}));
 
 	return rows.map((row, i) => (
+		// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 		<Skeleton.Row key={i} align="start" className={css.item} gap="md">
 			<Skeleton.Circle size={40} />
 			<Skeleton.Col>

@@ -340,7 +340,7 @@ export function MessagesList({
 						}
 						const url = convertBskyAppUrlIfNeeded(token.url);
 						// this might have a handle instead of a DID, so just compare the rkey
-						const rkey = url.split('/').filter(Boolean).at(-1);
+						const rkey = url.split('/').findLast(Boolean);
 						if (rkey && post.uri.endsWith(rkey)) {
 							if (trimmedText.startsWith(token.raw)) {
 								trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());

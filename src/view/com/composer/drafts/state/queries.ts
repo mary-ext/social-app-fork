@@ -55,50 +55,31 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
 		return { loadedMedia };
 	}
 
+	const targets: { errorMessage: string; path: string }[] = [];
 	for (const post of draft.posts) {
-		// Load images
-		if (post.embedImages) {
-			for (const img of post.embedImages) {
-				try {
-					const blob = await storage.loadMediaFromLocal(img.localRef.path);
-					loadedMedia.set(img.localRef.path, blob);
-				} catch (e) {
-					logger.error('Failed to load draft image', {
-						path: img.localRef.path,
-						safeMessage: e instanceof Error ? e.message : String(e),
-					});
-				}
-			}
+		for (const img of post.embedImages ?? []) {
+			targets.push({ errorMessage: 'Failed to load draft image', path: img.localRef.path });
 		}
-		// Load gallery
-		if (post.embedGallery) {
-			for (const item of post.embedGallery.items) {
-				try {
-					const blob = await storage.loadMediaFromLocal(item.localRef.path);
-					loadedMedia.set(item.localRef.path, blob);
-				} catch (e) {
-					logger.error('Failed to load draft gallery image', {
-						path: item.localRef.path,
-						safeMessage: e instanceof Error ? e.message : String(e),
-					});
-				}
-			}
+		for (const item of post.embedGallery?.items ?? []) {
+			targets.push({ errorMessage: 'Failed to load draft gallery image', path: item.localRef.path });
 		}
-		// Load videos
-		if (post.embedVideos) {
-			for (const vid of post.embedVideos) {
-				try {
-					const blob = await storage.loadMediaFromLocal(vid.localRef.path);
-					loadedMedia.set(vid.localRef.path, blob);
-				} catch (e) {
-					logger.error('Failed to load draft video', {
-						path: vid.localRef.path,
-						safeMessage: e instanceof Error ? e.message : String(e),
-					});
-				}
-			}
+		for (const vid of post.embedVideos ?? []) {
+			targets.push({ errorMessage: 'Failed to load draft video', path: vid.localRef.path });
 		}
 	}
+
+	await Promise.all(
+		targets.map(async ({ errorMessage, path }) => {
+			try {
+				loadedMedia.set(path, await storage.loadMediaFromLocal(path));
+			} catch (e) {
+				logger.error(errorMessage, {
+					path,
+					safeMessage: e instanceof Error ? e.message : String(e),
+				});
+			}
+		}),
+	);
 
 	return { loadedMedia };
 }
@@ -170,27 +151,31 @@ export function useSaveDraftMutation() {
 			});
 
 			// Save new/changed media files
-			for (const [localRefPath, blob] of localRefPaths) {
-				// Only save if this media doesn't already exist (reusing localRefPath)
-				if (!storage.mediaExists(localRefPath)) {
+			await Promise.all(
+				[...localRefPaths].map(async ([localRefPath, blob]) => {
+					// Only save if this media doesn't already exist (reusing localRefPath)
+					if (storage.mediaExists(localRefPath)) {
+						logger.debug('skipping existing media file', { localRefPath });
+						return;
+					}
 					logger.debug('saving new media file', { localRefPath });
 					await storage.saveMediaToLocal(localRefPath, blob);
-				} else {
-					logger.debug('skipping existing media file', { localRefPath });
-				}
-			}
+				}),
+			);
 
 			// Delete orphaned media (old refs not in new)
 			if (originalLocalRefs) {
 				const newLocalRefs = new Set(localRefPaths.keys());
-				for (const oldRef of originalLocalRefs) {
-					if (!newLocalRefs.has(oldRef)) {
-						logger.debug('deleting orphaned media file', {
-							localRefPath: oldRef,
-						});
-						await storage.deleteMediaFromLocal(oldRef);
-					}
-				}
+				await Promise.all(
+					[...originalLocalRefs]
+						.filter((oldRef) => !newLocalRefs.has(oldRef))
+						.map((oldRef) => {
+							logger.debug('deleting orphaned media file', {
+								localRefPath: oldRef,
+							});
+							return storage.deleteMediaFromLocal(oldRef);
+						}),
+				);
 			}
 
 			await queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
@@ -221,23 +206,13 @@ export function useDeleteDraftMutation() {
 		},
 		onSuccess: async (_, { draft }) => {
 			// Only delete local media after server deletion succeeds
-			for (const post of draft.posts) {
-				if (post.embedImages) {
-					for (const img of post.embedImages) {
-						await storage.deleteMediaFromLocal(img.localRef.path);
-					}
-				}
-				if (post.embedGallery) {
-					for (const item of post.embedGallery.items) {
-						await storage.deleteMediaFromLocal(item.localRef.path);
-					}
-				}
-				if (post.embedVideos) {
-					for (const vid of post.embedVideos) {
-						await storage.deleteMediaFromLocal(vid.localRef.path);
-					}
-				}
-			}
+			const paths = draft.posts.flatMap((post) => [
+				...(post.embedImages ?? []).map((img) => img.localRef.path),
+				...(post.embedGallery?.items ?? []).map((item) => item.localRef.path),
+				...(post.embedVideos ?? []).map((vid) => vid.localRef.path),
+			]);
+
+			await Promise.all(paths.map((path) => storage.deleteMediaFromLocal(path)));
 			void queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
 		},
 	});
@@ -272,12 +247,14 @@ export function useCleanupPublishedDraftMutation() {
 		},
 		onSuccess: async (_, { originalLocalRefs }) => {
 			// Delete all local media files for this draft
-			for (const localRef of originalLocalRefs) {
-				logger.debug('deleting media file after publish', {
-					localRefPath: localRef,
-				});
-				await storage.deleteMediaFromLocal(localRef);
-			}
+			await Promise.all(
+				[...originalLocalRefs].map((localRef) => {
+					logger.debug('deleting media file after publish', {
+						localRefPath: localRef,
+					});
+					return storage.deleteMediaFromLocal(localRef);
+				}),
+			);
 			void queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
 			logger.debug('cleanup after publish complete');
 		},

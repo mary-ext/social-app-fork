@@ -96,8 +96,10 @@ export function NotificationFeedLoadingPlaceholder() {
 			{rows.map((row, i) => {
 				const topBorder = i !== 0;
 				return row.kind === 'post' ? (
+					// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 					<PostLoadingPlaceholder key={i} row={row.row} topBorder={topBorder} />
 				) : (
+					// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 					<NotificationLoadingPlaceholder key={i} row={row.row} topBorder={topBorder} />
 				);
 			})}

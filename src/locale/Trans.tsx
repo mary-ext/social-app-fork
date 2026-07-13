@@ -70,6 +70,7 @@ const toChildren = (nodes: ReactNode[]): ReactNode => {
 	if (nodes.length === 1) {
 		return nodes[0] ?? null;
 	}
+	// oxlint-disable-next-line react/no-array-index-key -- message segments are positional
 	return nodes.map((node, i) => <Fragment key={i}>{node}</Fragment>);
 };
 

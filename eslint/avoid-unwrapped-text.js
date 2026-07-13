@@ -57,11 +57,11 @@ export default {
 		const impliedTextProps = options.impliedTextProps ?? [];
 		const impliedTextComponents = options.impliedTextComponents ?? [];
 		const suggestedTextWrappers = options.suggestedTextWrappers ?? {};
-		const textProps = [...impliedTextProps];
-		const textComponents = ['Text', ...impliedTextComponents];
+		const textProps = new Set(impliedTextProps);
+		const textComponents = new Set(['Text', ...impliedTextComponents]);
 
 		function isTextComponent(tagName) {
-			return textComponents.includes(tagName) || tagName.endsWith('Text');
+			return textComponents.has(tagName) || tagName.endsWith('Text');
 		}
 
 		return {
@@ -108,11 +108,7 @@ export default {
 					) {
 						const tagName = getTagName(parent.parent.parent);
 						const propName = parent.name.name;
-						if (
-							textProps.includes(tagName + ' ' + propName) ||
-							propName === 'text' ||
-							propName.endsWith('Text')
-						) {
+						if (textProps.has(tagName + ' ' + propName) || propName === 'text' || propName.endsWith('Text')) {
 							// We're good.
 							return;
 						}
@@ -288,11 +284,7 @@ export default {
 					) {
 						const tagName = getTagName(parent.parent.parent);
 						const propName = parent.name.name;
-						if (
-							textProps.includes(tagName + ' ' + propName) ||
-							propName === 'text' ||
-							propName.endsWith('Text')
-						) {
+						if (textProps.has(tagName + ' ' + propName) || propName === 'text' || propName.endsWith('Text')) {
 							// We're good.
 							return;
 						}

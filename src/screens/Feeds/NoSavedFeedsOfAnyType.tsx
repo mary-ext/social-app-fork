@@ -25,6 +25,7 @@ export function NoSavedFeedsOfAnyType({ onAddRecommendedFeeds }: { onAddRecommen
 	const addRecommendedFeeds = async () => {
 		onAddRecommendedFeeds?.();
 		await overwriteSavedFeeds(
+			// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate the shared constant
 			RECOMMENDED_SAVED_FEEDS.map((f) => ({
 				...f,
 				id: TID.now(),

@@ -247,6 +247,7 @@ export function Composer({
 			>
 				<div className={styles.overlay} ref={overlayRef} aria-hidden inert>
 					{spans.map((span, i) => (
+						// oxlint-disable-next-line react/no-array-index-key -- inert highlight overlay, positional
 						<span key={i} className={span.facet ? styles.facet : undefined}>
 							{span.raw}
 						</span>

@@ -5,11 +5,13 @@ type KeyboardStickyViewProps = ViewProps & {
 	offset?: { opened?: number; closed?: number };
 };
 
+const DEFAULT_OFFSET: NonNullable<KeyboardStickyViewProps['offset']> = {};
+
 // Vendored keyboard sticky view, converted to local animation helpers for
 // `minimumOffset` clamping.
 export function KeyboardStickyView({
 	children,
-	offset: { closed = 0 } = {},
+	offset: { closed = 0 } = DEFAULT_OFFSET,
 	style,
 	enabled = true,
 	minimumOffset,

@@ -327,13 +327,15 @@ type FlatScreenLayoutProps<RouteName extends keyof FlatNavigatorParams = keyof F
 
 const MountedRouteKeysContext = createContext<ReadonlySet<string> | undefined>(undefined);
 
+const DEFAULT_ROUTE_FALLBACK = <RouteLoadingScreen />;
+
 function renderRouteScreenLayout(props: FlatScreenLayoutProps) {
 	return <RouteScreenLayout {...props} />;
 }
 
 function RouteScreenLayout({
 	children,
-	fallback = <RouteLoadingScreen />,
+	fallback = DEFAULT_ROUTE_FALLBACK,
 	route,
 }: FlatScreenLayoutProps & { fallback?: React.ReactNode }): React.JSX.Element {
 	const mountedRouteKeys = useContext(MountedRouteKeysContext);

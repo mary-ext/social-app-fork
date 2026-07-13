@@ -146,6 +146,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 					...data,
 					pages: [
 						...reusedPages,
+						// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate react-query's cache
 						...data.pages.slice(reusedPages.length).map((page) => {
 							return {
 								...page,

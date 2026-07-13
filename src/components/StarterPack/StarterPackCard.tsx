@@ -252,6 +252,7 @@ export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNo
 		<>
 			{rows.map((row, i) => (
 				<LoadingRow
+					// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 					key={i}
 					descriptionLines={row.descriptionLines}
 					joinedCount={row.joinedCount}

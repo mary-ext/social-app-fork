@@ -168,18 +168,20 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 
 		async function loadMedia() {
 			if (post.images && post.images.length > 0) {
-				const loaded: LoadedImage[] = [];
-				for (const image of post.images) {
-					try {
-						const blob = await storage.loadMediaFromLocal(image.localPath);
-						const url = URL.createObjectURL(blob);
-						objectUrls.push(url);
-						loaded.push({ url, alt: image.altText || '' });
-					} catch {
-						// image doesn't exist locally, skip it
-					}
-				}
-				setLoadedImages(loaded);
+				const loaded = await Promise.all(
+					post.images.map(async (image) => {
+						try {
+							const blob = await storage.loadMediaFromLocal(image.localPath);
+							const url = URL.createObjectURL(blob);
+							objectUrls.push(url);
+							return { url, alt: image.altText || '' };
+						} catch {
+							// image doesn't exist locally, skip it
+							return undefined;
+						}
+					}),
+				);
+				setLoadedImages(loaded.filter((image) => image !== undefined));
 			}
 
 			// can't generate video thumbnails on web; flag presence so we render a placeholder tile.
@@ -202,8 +204,8 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 
 	return (
 		<div className={styles.mediaRow}>
-			{loadedImages.map((image, i) => (
-				<div key={i} className={styles.imageTile}>
+			{loadedImages.map((image) => (
+				<div key={image.url} className={styles.imageTile}>
 					<MediaTile thumbnail={image.url} alt={image.alt} />
 				</div>
 			))}

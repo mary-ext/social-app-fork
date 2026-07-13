@@ -250,17 +250,17 @@ async function serializeVideo(
 	localRefPaths.set(localRefPath, videoState.video.blob);
 
 	// Read caption file contents as text
-	const captions: AppBskyDraftDefs.DraftEmbedCaption[] = [];
-	for (const caption of videoState.captions) {
-		if (caption.lang) {
-			const content = await caption.file.text();
-			captions.push({
-				$type: 'app.bsky.draft.defs#draftEmbedCaption',
-				lang: caption.lang,
-				content,
-			});
-		}
-	}
+	const captions = await Promise.all(
+		videoState.captions
+			.flatMap((caption) => (caption.lang ? [{ file: caption.file, lang: caption.lang }] : []))
+			.map(
+				async ({ file, lang }): Promise<AppBskyDraftDefs.DraftEmbedCaption> => ({
+					$type: 'app.bsky.draft.defs#draftEmbedCaption',
+					lang,
+					content: await file.text(),
+				}),
+			),
+	);
 
 	return {
 		$type: 'app.bsky.draft.defs#draftEmbedVideo',

@@ -37,6 +37,7 @@ function Inner() {
 		return (
 			<>
 				{Array.from({ length: TOPIC_COUNT }).map((_, i) => (
+					// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 					<TrendingTopicRowSkeleton key={i} />
 				))}
 			</>

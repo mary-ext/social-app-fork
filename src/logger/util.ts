@@ -11,7 +11,9 @@ export const enabledLogLevels: {
 };
 
 export function prepareMetadata(metadata: Metadata): Record<string, Serializable> {
-	return Object.keys(metadata).reduce((acc, key) => {
+	const prepared: Record<string, Serializable> = {};
+
+	for (const key of Object.keys(metadata)) {
 		let value = metadata[key];
 		if (value instanceof Error) {
 			value = value.toString();
@@ -22,8 +24,10 @@ export function prepareMetadata(metadata: Metadata): Record<string, Serializable
 			Object.keys(value).length === 0 &&
 			value.constructor === Object
 		) {
-			return acc;
+			continue;
 		}
-		return { ...acc, [key]: value };
-	}, {});
+		prepared[key] = value as Serializable;
+	}
+
+	return prepared;
 }

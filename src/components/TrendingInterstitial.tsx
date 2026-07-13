@@ -47,6 +47,7 @@ export function TrendingInterstitial() {
 				<TrendingIcon className={css.icon} size="md" fill={colors.primary_600} />
 				{isLoading
 					? SKELETON_WIDTHS.map((width, i) => (
+							// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 							<div key={i} className={css.topic}>
 								<Skeleton.Text size="sm" width={width} />
 							</div>

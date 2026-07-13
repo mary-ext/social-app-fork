@@ -96,6 +96,7 @@ function CarouselStrip({ tiles }: { tiles: number[] }) {
 		<div className={css.carousel} style={{ height }}>
 			{tiles.map((aspect, i) => (
 				<div
+					// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 					key={i}
 					className={css.carouselTile}
 					style={{ width: Math.floor(height * clampAspectRatio(aspect)) }}

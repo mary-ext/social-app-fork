@@ -117,6 +117,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 						<NoSavedFeedsOfAnyType
 							onAddRecommendedFeeds={() =>
 								setCurrentFeeds(
+									// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate the shared constant
 									RECOMMENDED_SAVED_FEEDS.map((f) => ({
 										...f,
 										id: TID.now(),

@@ -291,6 +291,7 @@ export function LoadingPlaceholder({
 	return (
 		<>
 			{rows.map((row, i) => (
+				// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 				<LoadingRow key={i} descriptionLines={row.descriptionLines} topBorder={i === 0 ? topBorder : true} />
 			))}
 		</>

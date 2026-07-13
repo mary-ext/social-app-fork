@@ -173,6 +173,7 @@ function Rules({
 							t0: () => (
 								<>
 									{settings.map((rule, i) => (
+										// oxlint-disable-next-line react/no-array-index-key -- fixed order
 										<Fragment key={`rule-${i}`}>
 											<Rule rule={rule} post={post} lists={post.threadgate!.lists} />
 											<Separator i={i} length={settings.length} />

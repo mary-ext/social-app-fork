@@ -24,14 +24,14 @@ import { hasMutedWord } from '#/lib/moderation/muted-words';
 import { precacheProfile } from '../profile';
 import type { FeedNotification, FeedPage, NotificationType } from './types';
 
-const GROUPABLE_REASONS = [
-	'like',
-	'repost',
+const GROUPABLE_REASONS = new Set([
 	'follow',
+	'like',
 	'like-via-repost',
+	'repost',
 	'repost-via-repost',
 	'subscribed-post',
-];
+]);
 const MS_1HR = 1e3 * 60 * 60;
 const MS_2DAY = MS_1HR * 48;
 
@@ -154,7 +154,7 @@ export function groupNotifications(
 	for (const notif of notifs) {
 		const ts = +new Date(notif.indexedAt);
 		let grouped = false;
-		if (GROUPABLE_REASONS.includes(notif.reason)) {
+		if (GROUPABLE_REASONS.has(notif.reason)) {
 			for (const groupedNotif of groupedNotifs) {
 				const ts2 = +new Date(groupedNotif.notification.indexedAt);
 				if (

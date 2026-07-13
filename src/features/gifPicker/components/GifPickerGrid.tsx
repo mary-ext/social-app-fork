@@ -73,6 +73,7 @@ export function GifPickerGrid({
 			<div className={styles.content}>
 				<div className={styles.columns}>
 					{columns.map((column, i) => (
+						// oxlint-disable-next-line react/no-array-index-key -- fixed column count; gifs keyed by id
 						<div key={i} className={styles.column}>
 							{column.map((gif) => (
 								<GifPickerItem key={gif.id} gif={gif} onSelectGif={onSelectGif} />

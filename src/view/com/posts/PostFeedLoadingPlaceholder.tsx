@@ -84,6 +84,7 @@ export function PostFeedLoadingPlaceholder({ topBorder = false }: { topBorder?: 
 	return (
 		<>
 			{rows.map((row, i) => (
+				// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 				<PostLoadingPlaceholder key={i} row={row} topBorder={topBorder || i !== 0} />
 			))}
 		</>

@@ -20,6 +20,7 @@ export function IndentGuides({
 	skipped: Set<number>;
 }) {
 	return Array.from(Array(count)).map((_, n) => (
+		// oxlint-disable-next-line react/no-array-index-key -- purely positional guides
 		<div key={`${keyPrefix}-padding-${n}`} className={clsx(css.guide, skipped.has(n) && css.guideSkipped)} />
 	));
 }

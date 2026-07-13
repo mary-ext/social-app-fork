@@ -190,6 +190,7 @@ export function ProfileGrid({
 	const content = isLoading
 		? Array(maxLength)
 				.fill(0)
+				// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 				.map((_, i) => <SuggestedFollowPlaceholder key={i} />)
 		: error || !profiles.length
 			? null
