@@ -22,8 +22,8 @@ interface CloseAllDialogsOptions {
 }
 
 interface IDialogControlContext {
-	closeAllDialogs(opts?: CloseAllDialogsOptions): boolean;
-	setDialogIsOpen(id: string, isOpen: boolean): void;
+	closeAllDialogs: (opts?: CloseAllDialogsOptions) => boolean;
+	setDialogIsOpen: (id: string, isOpen: boolean) => void;
 	setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>;
 }
 

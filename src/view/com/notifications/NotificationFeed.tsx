@@ -69,7 +69,7 @@ export function NotificationFeed({
 		if (isEmpty) {
 			items = items.concat([EMPTY_FEED_ITEM]);
 		} else if (data) {
-			for (const page of data?.pages) {
+			for (const page of data.pages) {
 				items = items.concat(page.items);
 			}
 		}

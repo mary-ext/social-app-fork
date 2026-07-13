@@ -1,5 +1,3 @@
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
-
 import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
 
 import { type Alf, useAlf } from '#/alf';
@@ -13,8 +11,7 @@ import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>;
-export function AppearanceSettingsScreen({}: Props) {
+export function AppearanceSettingsScreen() {
 	const { fonts } = useAlf();
 
 	const { colorMode, darkTheme } = useThemePrefs();

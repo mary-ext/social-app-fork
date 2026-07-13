@@ -97,7 +97,7 @@ export class Logger {
 	protected transport({
 		level,
 		message,
-		metadata = {},
+		metadata,
 	}: {
 		level: LogLevel;
 		message: string | Error;

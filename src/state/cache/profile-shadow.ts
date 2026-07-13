@@ -239,7 +239,7 @@ export function mergeShadow<TProfileView extends AnyProfileView>(
 	return castAsShadow({
 		...profile,
 		viewer: {
-			...(profile.viewer || {}),
+			...profile.viewer,
 			following: 'followingUri' in shadow ? shadow.followingUri : profile.viewer?.following,
 			muted: 'muted' in shadow ? shadow.muted : profile.viewer?.muted,
 			blocking: 'blockingUri' in shadow ? shadow.blockingUri : profile.viewer?.blocking,

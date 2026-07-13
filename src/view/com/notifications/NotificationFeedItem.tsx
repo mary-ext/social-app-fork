@@ -181,7 +181,7 @@ let NotificationFeedItem = ({
 				const followedTimestamp = new Date(record.createdAt).getTime() * 1000;
 				isFollowBack = followedTimestamp > followingTimestamp;
 			}
-		} catch (e) {
+		} catch {
 			isFollowBack = false;
 		}
 	}

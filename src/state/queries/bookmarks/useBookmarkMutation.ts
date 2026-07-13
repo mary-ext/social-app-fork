@@ -49,9 +49,9 @@ export function useBookmarkMutation() {
 		},
 		onSuccess(_, args) {
 			if (args.action === 'create') {
-				void optimisticallySaveBookmark(qc, args.post);
+				optimisticallySaveBookmark(qc, args.post);
 			} else if (args.action === 'delete') {
-				void optimisticallyDeleteBookmark(qc, { uri: args.uri });
+				optimisticallyDeleteBookmark(qc, { uri: args.uri });
 			}
 		},
 		onError(e, args) {

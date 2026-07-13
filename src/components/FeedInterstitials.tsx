@@ -167,7 +167,7 @@ export function ProfileGrid({
 	onRequestHide,
 	profiles,
 	totalProfileCount,
-	viewContext = 'feed',
+	viewContext,
 }: {
 	error: Error | null;
 	isSuggestionsLoading: boolean;

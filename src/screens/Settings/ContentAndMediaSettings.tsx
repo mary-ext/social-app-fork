@@ -1,7 +1,3 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-import type { CommonNavigatorParams } from '#/lib/routes/types';
-
 import { usePreferencesQuery, useSetFeedViewPreferencesMutation } from '#/state/queries/preferences';
 import {
 	normalizeSort,
@@ -26,8 +22,7 @@ import { m } from '#/paraglide/messages';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ContentAndMediaSettings'>;
-export function ContentAndMediaSettingsScreen({}: Props) {
+export function ContentAndMediaSettingsScreen() {
 	const [autoplayDisabledPref, setAutoplayDisabledPref] = useAutoplayDisabled();
 	const { enabled: trendingEnabled } = useTrendingConfig();
 	const { trendingDisabled } = useTrendingSettings();

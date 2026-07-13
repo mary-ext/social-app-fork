@@ -16,7 +16,7 @@ export function gifPreviewUrl(gifUrl: string) {
 			return url.href;
 		}
 		return gifUrl;
-	} catch (e) {
+	} catch {
 		logger.debug('invalid url passed to gifPreviewUrl()');
 		return '';
 	}

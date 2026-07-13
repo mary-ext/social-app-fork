@@ -1,4 +1,3 @@
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import {
 	type EmbedPlayerSource,
 	exemptExternalEmbedSources,
@@ -12,8 +11,7 @@ import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesExternalEmbeds'>;
-export function ExternalMediaPreferencesScreen({}: Props) {
+export function ExternalMediaPreferencesScreen() {
 	const sources = useExternalEmbedsPrefs();
 	const setExternalEmbedPref = useSetExternalEmbedPref();
 

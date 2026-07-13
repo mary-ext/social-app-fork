@@ -42,7 +42,7 @@ export function* findAllProfilesInQueryData(
 		if (!queryData?.pages) {
 			continue;
 		}
-		for (const page of queryData?.pages) {
+		for (const page of queryData.pages) {
 			for (const mute of page.mutes) {
 				if (mute.did === did) {
 					yield mute;

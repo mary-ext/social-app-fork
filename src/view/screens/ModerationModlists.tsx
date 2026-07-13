@@ -2,7 +2,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useNavigation } from '@react-navigation/native';
 
-import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { MyLists } from '#/view/com/lists/MyLists';
 
@@ -14,8 +14,7 @@ import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>;
-export function ModerationModlistsScreen({}: Props) {
+export function ModerationModlistsScreen() {
 	const navigation = useNavigation<NavigationProp>();
 	const createListHandle = Dialog.useDialogHandle();
 

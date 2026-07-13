@@ -316,7 +316,7 @@ export function sortAndAnnotateThreadItems(
 						/*
 						 * Copy in the parent's skipped indents
 						 */
-						metadata.skippedIndentIndices = new Set([...metadata.parentMetadata.skippedIndentIndices]);
+						metadata.skippedIndentIndices = new Set(metadata.parentMetadata.skippedIndentIndices);
 
 						/**
 						 * If this is the last sibling, and the parent has no unhydrated replies, then we know we can skip

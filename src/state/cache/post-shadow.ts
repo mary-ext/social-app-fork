@@ -134,7 +134,7 @@ function mergeShadow(
 		replyCount: replyCount,
 		bookmarkCount: bookmarkCount,
 		viewer: {
-			...(post.viewer || {}),
+			...post.viewer,
 			like: 'likeUri' in shadow ? (shadow.likeUri as ResourceUri | undefined) : post.viewer?.like,
 			repost: 'repostUri' in shadow ? (shadow.repostUri as ResourceUri | undefined) : post.viewer?.repost,
 			pinned: 'pinned' in shadow ? shadow.pinned : post.viewer?.pinned,

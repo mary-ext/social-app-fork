@@ -1,9 +1,6 @@
 import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
-
-import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
@@ -29,8 +26,7 @@ import { ExportCarDialog } from './components/ExportCarDialog';
 
 type AllowSubscriptions = AppBskyNotificationDeclaration.Main['allowSubscriptions'];
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>;
-export function AccountSettingsScreen({}: Props) {
+export function AccountSettingsScreen() {
 	const exportCarHandle = Dialog.useDialogHandle();
 	const activityHandle = Dialog.useDialogHandle();
 

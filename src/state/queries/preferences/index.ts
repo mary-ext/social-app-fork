@@ -65,7 +65,7 @@ export function usePreferencesQuery() {
 
 				const labelerDids = res.moderationPrefs.labelers.map((l) => l.did);
 				// save to local storage to ensure there are labels on initial requests
-				void saveLabelers(currentAccount.did, labelerDids);
+				saveLabelers(currentAccount.did, labelerDids);
 				// keep the appview client's labeler header in sync with the freshly fetched prefs, as
 				// `agent.getPreferences()` used to do internally
 				setSubscribedLabelers(labelerDids.filter((did) => !getAppLabelers().includes(did)));
@@ -76,11 +76,11 @@ export function usePreferencesQuery() {
 					/** Special preference, only used for following feed, previously called `home` */
 					feedViewPrefs: {
 						...DEFAULT_HOME_FEED_PREFS,
-						...(res.feedViewPrefs.home || {}),
+						...res.feedViewPrefs.home,
 					},
 					threadViewPrefs: {
 						...DEFAULT_THREAD_VIEW_PREFS,
-						...(res.threadViewPrefs ?? {}),
+						...res.threadViewPrefs,
 					},
 				};
 				return preferences;

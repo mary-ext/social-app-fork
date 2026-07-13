@@ -345,13 +345,13 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 
 function ComposeBtn({ minimal }: { minimal: boolean }) {
 	const { currentAccount } = useSession();
-	const { getState } = useNavigation();
+	const navigation = useNavigation();
 	const { openComposer } = useOpenComposer();
 	const [isFetchingHandle, setIsFetchingHandle] = useState(false);
 	const fetchHandle = useFetchHandle();
 
 	const getProfileHandle = async () => {
-		const routes = getState()?.routes;
+		const routes = navigation.getState()?.routes;
 		const currentRoute = routes?.[routes?.length - 1];
 
 		if (currentRoute?.name === 'Profile') {
@@ -361,7 +361,7 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 				try {
 					setIsFetchingHandle(true);
 					handle = await fetchHandle(handle);
-				} catch (e) {
+				} catch {
 					handle = undefined;
 				} finally {
 					setIsFetchingHandle(false);

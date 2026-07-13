@@ -5,7 +5,6 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import debounce from 'lodash.debounce';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import {
@@ -43,8 +42,6 @@ import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './Feeds.css';
-
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>;
 
 // rough per-row height for the off-screen render-skipping estimate; the browser reuses each row's real size once
 // rendered, so it only governs rows that have never been on screen.
@@ -97,7 +94,7 @@ type FlatlistSlice =
 			key: string;
 	  };
 
-export function FeedsScreen({}: Props) {
+export function FeedsScreen() {
 	const { openComposer } = useOpenComposer();
 	const { hasSession } = useSession();
 	const [query, setQuery] = useState('');

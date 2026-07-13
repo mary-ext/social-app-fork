@@ -100,7 +100,7 @@ export function* findAllPostsInQueryData(
 		if (!queryData?.pages) {
 			continue;
 		}
-		for (const page of queryData?.pages) {
+		for (const page of queryData.pages) {
 			for (const bookmark of page.bookmarks) {
 				if (bookmark.item.$type !== 'app.bsky.feed.defs#postView') continue;
 

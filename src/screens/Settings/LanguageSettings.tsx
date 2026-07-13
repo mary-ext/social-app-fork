@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
-
 import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 
 import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
@@ -19,8 +17,7 @@ import * as Layout from '#/components/web/Layout';
 import { m } from '#/paraglide/messages';
 import type { Locale } from '#/paraglide/runtime';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>;
-export function LanguageSettingsScreen({}: Props) {
+export function LanguageSettingsScreen() {
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
 

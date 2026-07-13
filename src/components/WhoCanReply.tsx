@@ -116,7 +116,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 }
 
 function Icon({ width, settings }: { width?: number; settings: ThreadgateAllowUISetting[] }) {
-	const isEverybody = settings.length === 0 || settings.every((setting) => setting.type === 'everybody');
+	const isEverybody = settings.every((setting) => setting.type === 'everybody');
 	const isNobody = !!settings.find((gate) => gate.type === 'nobody');
 	const IconComponent = isEverybody ? EarthIcon : isNobody ? CircleBanSignIcon : GroupIcon;
 	return <IconComponent fill="currentColor" width={width} />;

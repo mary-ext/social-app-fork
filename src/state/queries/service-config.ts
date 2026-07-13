@@ -29,7 +29,7 @@ export function useServiceConfigQuery() {
 					topicsEnabled: Boolean(data.topicsEnabled),
 					liveNow: data.liveNow ?? [],
 				};
-			} catch (e) {
+			} catch {
 				return {
 					checkEmailConfirmed: false,
 					topicsEnabled: false,

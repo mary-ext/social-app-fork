@@ -84,7 +84,7 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 	useFocusEffect(
 		useCallback(() => {
 			return () => {
-				void savePrefs.flush();
+				savePrefs.flush();
 			};
 		}, [savePrefs]),
 	);

@@ -161,12 +161,12 @@ export function useLink({
 			});
 		} else {
 			if (isExternal) {
-				void openLink(href);
+				openLink(href);
 			} else {
 				const shouldOpenInNewTab = shouldClickOpenNewTab(e);
 
 				if (shouldOpenInNewTab || href.startsWith('http') || href.startsWith('mailto')) {
-					void openLink(href);
+					openLink(href);
 				} else {
 					const [screen, params] = router.matchPath(href) as [
 						screen: keyof AllNavigatorParams,

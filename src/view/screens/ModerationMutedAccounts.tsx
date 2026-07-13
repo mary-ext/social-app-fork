@@ -3,9 +3,6 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -25,8 +22,7 @@ import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationMutedAccounts'>;
-export function ModerationMutedAccounts({}: Props) {
+export function ModerationMutedAccounts() {
 	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 

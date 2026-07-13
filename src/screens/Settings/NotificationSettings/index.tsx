@@ -1,5 +1,3 @@
-import type { AllNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
-
 import {
 	useChatNotificationSettingsQuery,
 	useNotificationSettingsQuery,
@@ -33,8 +31,7 @@ import { ChatNotificationDialogs } from './components/ChatNotificationDialogs';
 import { SettingPreview } from './components/SettingPreview';
 import * as styles from './index.css';
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>;
-export function NotificationSettingsScreen({}: Props) {
+export function NotificationSettingsScreen() {
 	const { data: settings, isError } = useNotificationSettingsQuery();
 	const { data: chatSettings, isError: chatError } = useChatNotificationSettingsQuery();
 

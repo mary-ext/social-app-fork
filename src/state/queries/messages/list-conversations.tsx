@@ -38,7 +38,7 @@ export const RQKEY = (
 	status: 'accepted' | 'request' | 'all',
 	readState: 'all' | 'unread' = 'all',
 	kind: 'all' | 'group' | 'direct' = 'all',
-	lockStatus: 'unlocked' | 'locked' | 'locked-permanently' | undefined = undefined,
+	lockStatus?: 'unlocked' | 'locked' | 'locked-permanently',
 	limit?: number,
 ) => [RQKEY_ROOT, status, readState, kind, lockStatus, limit] as const;
 

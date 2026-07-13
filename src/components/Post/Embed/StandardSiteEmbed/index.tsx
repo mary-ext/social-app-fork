@@ -331,7 +331,7 @@ function PublicationIcon({
 					})}
 				>
 					<Text className={styles.letterText} size="xl" weight="bold">
-						{[...view.source.title][0] ?? ''}
+						{Array.from(view.source.title)[0] ?? ''}
 					</Text>
 				</div>
 			)}

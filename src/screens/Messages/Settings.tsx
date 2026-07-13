@@ -1,7 +1,3 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-import type { CommonNavigatorParams } from '#/lib/routes/types';
-
 import { useUpdateActorDeclaration } from '#/state/queries/messages/actor-declaration';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
@@ -21,9 +17,7 @@ import { m } from '#/paraglide/messages';
 
 type AllowIncoming = 'all' | 'following' | 'none';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>;
-
-export function MessagesSettingsScreen({}: Props) {
+export function MessagesSettingsScreen() {
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount!.did });
 	const exportCarHandle = Dialog.useDialogHandle();

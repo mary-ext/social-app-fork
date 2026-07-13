@@ -31,7 +31,7 @@ export function parseStarterPackUri(uri?: string): {
 				rkey,
 			};
 		}
-	} catch (e) {
+	} catch {
 		return null;
 	}
 }

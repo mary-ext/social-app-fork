@@ -5,7 +5,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import type { NativeStackScreenProps, NotificationsTabNavigatorParams } from '#/lib/routes/types';
 
 import { softReset } from '#/state/events';
 import { RQKEY as NOTIFS_RQKEY } from '#/state/queries/notifications/feed';
@@ -41,8 +40,7 @@ import * as css from './Notifications.css';
 // But let's at least persist it during the sesssion.
 let lastActiveTab: 'all' | 'mentions' = 'all';
 
-type Props = NativeStackScreenProps<NotificationsTabNavigatorParams, 'Notifications'>;
-export function NotificationsScreen({}: Props) {
+export function NotificationsScreen() {
 	const { openComposer } = useOpenComposer();
 	const unreadNotifs = useUnreadNotifications();
 	const hasNew = !!unreadNotifs;

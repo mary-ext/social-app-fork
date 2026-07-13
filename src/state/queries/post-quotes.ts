@@ -74,7 +74,7 @@ export function* findAllProfilesInQueryData(
 		if (!queryData?.pages) {
 			continue;
 		}
-		for (const page of queryData?.pages) {
+		for (const page of queryData.pages) {
 			for (const item of page.posts) {
 				if (item.author.did === did) {
 					yield item.author;
@@ -100,7 +100,7 @@ export function* findAllPostsInQueryData(
 		if (!queryData?.pages) {
 			continue;
 		}
-		for (const page of queryData?.pages) {
+		for (const page of queryData.pages) {
 			for (const post of page.posts) {
 				if (didOrHandleUriMatches(atUri, post)) {
 					yield post;

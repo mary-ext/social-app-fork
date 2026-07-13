@@ -2,12 +2,10 @@ import { useMemo, useState } from 'react';
 
 import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 import debounce from 'lodash.debounce';
 
 import { interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
-import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
 import { setInterestsPref } from '#/state/queries/preferences/agent';
@@ -29,8 +27,7 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './InterestsSettings.css';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'InterestsSettings'>;
-export function InterestsSettingsScreen({}: Props) {
+export function InterestsSettingsScreen() {
 	const { data: preferences } = usePreferencesQuery();
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -111,7 +108,7 @@ function Inner({
 				]);
 
 				Toast.show(m['screens.settings.interests.updatedToast']());
-			} catch (error) {
+			} catch {
 				Toast.show(m['screens.settings.interests.saveError'](), {
 					type: 'error',
 				});
@@ -134,7 +131,7 @@ function Inner({
 			<CheckboxGroup
 				aria-label={m['screens.settings.interests.selectPrompt']()}
 				className={styles.chipWrap}
-				onValueChange={(value) => void onChangeInterests(value)}
+				onValueChange={(value) => onChangeInterests(value)}
 				value={interests}
 			>
 				{allInterests.map((interest) => {

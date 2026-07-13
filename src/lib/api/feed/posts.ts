@@ -24,7 +24,7 @@ export class PostListFeedAPI implements FeedAPI {
 		return this.peek ? Promise.resolve(this.peek) : Promise.reject(new Error('Has not fetched yet'));
 	}
 
-	async fetch({}: {}): Promise<FeedAPIResponse> {
+	async fetch(): Promise<FeedAPIResponse> {
 		const data = await ok(
 			this.appview.get('app.bsky.feed.getPosts', {
 				params: { ...this.params },

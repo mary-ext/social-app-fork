@@ -1,9 +1,6 @@
 import { useState } from 'react';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { clsx } from 'clsx';
-
-import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useSessionApi } from '#/state/session';
 
@@ -29,8 +26,7 @@ import { useDevMode } from '#/storage/hooks/dev-mode';
 import { AccountsSection } from './components/AccountsSection';
 import { ServiceWorkerSection } from './components/ServiceWorkerSection';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>;
-export function SettingsScreen({}: Props) {
+export function SettingsScreen() {
 	const { logoutEveryAccount } = useSessionApi();
 	const signOutPromptHandle = Prompt.usePromptHandle();
 

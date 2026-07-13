@@ -1,7 +1,3 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-import type { CommonNavigatorParams } from '#/lib/routes/types';
-
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { TextSize_Stroke2_Corner0_Rounded as TextSizeIcon } from '#/components/icons/TextSize';
 import * as Settings from '#/components/SettingsCards';
@@ -11,8 +7,7 @@ import { m } from '#/paraglide/messages';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccessibilitySettings'>;
-export function AccessibilitySettingsScreen({}: Props) {
+export function AccessibilitySettingsScreen() {
 	const [requireAltTextEnabled, setRequireAltTextEnabled] = useRequireAltTextEnabled();
 	const [largeAltBadgeEnabled, setLargeAltBadgeEnabled] = useLargeAltBadgeEnabled();
 

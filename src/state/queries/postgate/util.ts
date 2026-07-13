@@ -129,7 +129,7 @@ export function createEmbedRecordWithMediaView({
 }): AppBskyEmbedRecordWithMedia.View | undefined {
 	if (!(post.embed?.$type === 'app.bsky.embed.recordWithMedia#view')) return;
 	return {
-		...(post.embed || {}),
+		...post.embed,
 		record: {
 			record: createEmbedViewRecordFromPost(quote),
 		},

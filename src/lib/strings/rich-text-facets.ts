@@ -15,6 +15,7 @@ export type Richtext = {
 };
 
 // Collapses runs of 3+ newlines (allowing zero-width separators between them) down to a blank line.
+// oxlint-disable-next-line no-misleading-character-class -- the zero-width separators are deliberate
 const EXCESS_NEWLINES_RE = /[\r\n]([\u00AD\u2060\u200D\u200C\u200B\s]*[\r\n]){2,}/g;
 
 /**

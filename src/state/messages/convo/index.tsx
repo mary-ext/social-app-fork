@@ -105,6 +105,7 @@ function ConvoProviderInner({
 			placeholderData: placeholder ? { convo: placeholder } : undefined,
 		});
 	});
+	// oxlint-disable-next-line typescript/unbound-method -- these are bound in the constructor
 	const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot);
 	const { mutate: markAsRead } = useMarkAsReadMutation();
 

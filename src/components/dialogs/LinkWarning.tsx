@@ -39,7 +39,7 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 		if (link.share) {
 			void shareUrl(link.href);
 		} else {
-			void openLink(link.href);
+			openLink(link.href);
 		}
 		close();
 	};

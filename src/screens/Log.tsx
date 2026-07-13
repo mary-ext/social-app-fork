@@ -1,5 +1,3 @@
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
-
 import { type ConsoleTransportEntry, getEntries } from '#/logger/logDump';
 
 import { LogEntry } from '#/view/com/log/LogEntry';
@@ -13,7 +11,7 @@ const keyExtractor = (entry: ConsoleTransportEntry) => entry.id;
 
 const renderItem = ({ item }: ListRenderItemInfo<ConsoleTransportEntry>) => <LogEntry entry={item} />;
 
-export function LogScreen({}: NativeStackScreenProps<CommonNavigatorParams, 'Log'>) {
+export function LogScreen() {
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>

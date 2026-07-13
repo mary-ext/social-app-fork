@@ -5,10 +5,9 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
 
 import { useNavigation } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants';
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { useOverwriteSavedFeedsMutation, usePreferencesQuery } from '#/state/queries/preferences';
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
@@ -44,8 +43,7 @@ import { Text } from '#/components/Typography';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>;
-export function SavedFeeds({}: Props) {
+export function SavedFeeds() {
 	const { data: preferences } = usePreferencesQuery();
 	if (!preferences) {
 		return <View />;

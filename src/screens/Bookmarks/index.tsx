@@ -3,7 +3,7 @@ import type { $type } from '@atcute/lexicons';
 
 import { useNavigation } from '@react-navigation/native';
 
-import type { CommonNavigatorParams, NavigationProp, NativeStackScreenProps } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
@@ -28,9 +28,7 @@ import { colors } from '#/styles/colors';
 
 import * as css from './Bookmarks.css';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>;
-
-export function BookmarksScreen({}: Props) {
+export function BookmarksScreen() {
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>

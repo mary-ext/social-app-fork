@@ -50,7 +50,7 @@ export function* findAllProfilesInQueryData(
 		if (!queryData?.pages) {
 			continue;
 		}
-		for (const page of queryData?.pages) {
+		for (const page of queryData.pages) {
 			for (const follow of page.followers) {
 				if (follow.did === did) {
 					yield follow;

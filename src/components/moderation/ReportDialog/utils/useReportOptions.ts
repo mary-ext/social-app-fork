@@ -244,8 +244,6 @@ export function useReportOptions() {
 
 	return {
 		categories: Object.values(categories),
-		getCategory(reasonName: ReportCategory) {
-			return categories[reasonName];
-		},
+		getCategory: (reasonName: ReportCategory) => categories[reasonName],
 	};
 }

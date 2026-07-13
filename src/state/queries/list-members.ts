@@ -99,7 +99,7 @@ export function* findAllProfilesInQueryData(
 		if (!queryData?.pages) {
 			continue;
 		}
-		for (const page of queryData?.pages) {
+		for (const page of queryData.pages) {
 			if (page.list.creator.did === did) {
 				yield page.list.creator;
 			}

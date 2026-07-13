@@ -570,7 +570,7 @@ function OverflowMenu({
 				)}
 				<Prompt.Actions>
 					<Prompt.Action
-						onPress={() => void onDeleteStarterPack()}
+						onPress={() => onDeleteStarterPack()}
 						color="negative"
 						cta={m['common.action.delete']()}
 						icon={isDeletePending ? PromptSpinner : undefined}

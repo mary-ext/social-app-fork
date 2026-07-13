@@ -111,18 +111,23 @@ export function GifPickerGrid({
  */
 function distributeIntoColumns(items: Gif[], numColumns: number): Gif[][] {
 	const columns: Gif[][] = Array.from({ length: numColumns }, () => []);
-	const heights = new Array(numColumns).fill(0);
+	const heights: number[] = Array.from({ length: numColumns }, () => 0);
 
 	for (const item of items) {
 		const [w, h] = item.media_formats.tinygif.dims;
 		const ratio = w > 0 && h > 0 ? h / w : 1;
 
 		let shortest = 0;
+		let shortestHeight = heights[0]!;
 		for (let i = 1; i < numColumns; i++) {
-			if (heights[i] < heights[shortest]) shortest = i;
+			const height = heights[i]!;
+			if (height < shortestHeight) {
+				shortest = i;
+				shortestHeight = height;
+			}
 		}
 		columns[shortest]!.push(item);
-		heights[shortest] += ratio;
+		heights[shortest] = shortestHeight + ratio;
 	}
 
 	return columns;

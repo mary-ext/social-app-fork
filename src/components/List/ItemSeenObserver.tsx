@@ -90,7 +90,7 @@ export function ItemSeenObserver<ItemT>({
 
 	useEffect(() => {
 		api.connect(root?.current ?? null);
-		return api.disconnect;
+		return () => api.disconnect();
 	}, [api, root]);
 
 	return <ItemSeenContext value={api}>{children}</ItemSeenContext>;

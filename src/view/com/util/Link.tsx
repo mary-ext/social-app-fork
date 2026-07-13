@@ -86,7 +86,7 @@ export function Link({
 	const onPress = (e?: Event) => {
 		onBeforePress?.();
 		if (typeof href === 'string') {
-			return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => void openLink(href), e);
+			return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => openLink(href), e);
 		}
 	};
 
@@ -207,7 +207,7 @@ export function TextLink({
 			// @ts-expect-error function signature differs by platform -prf
 			return onPressProp();
 		}
-		return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => void openLink(href), e);
+		return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => openLink(href), e);
 	};
 	const isExternal = isExternalUrl(href);
 	const hrefAttrs = isExternal

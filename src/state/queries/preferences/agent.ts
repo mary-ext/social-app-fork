@@ -75,10 +75,13 @@ const THREAD_VIEW_PREF_DEFAULTS = {
  * @returns the sanitized value.
  */
 export function sanitizeMutedWordValue(value: string): string {
-	return value
-		.trim()
-		.replace(/^#(?!\ufe0f)/, '')
-		.replace(/[\r\n\u00ad\u2060\u200d\u200c\u200b]+/, '');
+	return (
+		value
+			.trim()
+			.replace(/^#(?!\ufe0f)/, '')
+			// oxlint-disable-next-line no-misleading-character-class -- stripping the zero-width joiners is the point
+			.replace(/[\r\n\u00ad\u2060\u200d\u200c\u200b]+/, '')
+	);
 }
 
 /**

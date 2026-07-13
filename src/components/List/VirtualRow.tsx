@@ -116,7 +116,7 @@ export function VirtualRowObserver({
 
 	useEffect(() => {
 		api.connect(root?.current ?? null);
-		return api.disconnect;
+		return () => api.disconnect();
 	}, [api, root]);
 
 	return <VirtualRowContext value={api}>{children}</VirtualRowContext>;

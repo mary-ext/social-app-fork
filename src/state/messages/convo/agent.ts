@@ -211,6 +211,7 @@ export class Convo {
 			hasAllHistory: this.oldestRev === null,
 		};
 
+		/* oxlint-disable typescript/unbound-method -- these are bound in the constructor */
 		const methods = {
 			deleteMessage: this.deleteMessage,
 			sendMessage: this.sendMessage,
@@ -219,6 +220,7 @@ export class Convo {
 			addReaction: this.addReaction,
 			removeReaction: this.removeReaction,
 		};
+		/* oxlint-enable typescript/unbound-method */
 
 		const emptyMethods = {
 			deleteMessage: undefined,

@@ -42,7 +42,7 @@ export function createCacheMutator({
 	params: Pick<PostThreadParams, 'view'> & { below: number };
 }) {
 	return {
-		insertReplies(parentUri: string, replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]) {
+		insertReplies: (parentUri: string, replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]) => {
 			/*
 			 * Main thread query mutator.
 			 */

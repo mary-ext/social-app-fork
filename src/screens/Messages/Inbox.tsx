@@ -6,7 +6,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useAppState } from '#/lib/appState';
-import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
@@ -43,17 +43,11 @@ import * as css from './Inbox.css';
 
 const REQUEST_ITEM_HEIGHT_ESTIMATE = 130;
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>;
-
-export function MessagesInboxScreen(props: Props) {
-	return <MessagesInboxScreenInner {...props} />;
-}
-
 type RequestItem =
 	| { type: 'incoming'; view: ChatBskyConvoDefs.ConvoView }
 	| { type: 'outgoing'; view: ChatBskyGroupDefs.JoinRequestConvoView };
 
-export function MessagesInboxScreenInner({}: Props) {
+export function MessagesInboxScreen() {
 	const listConvosQuery = useListConvoRequests();
 	const { data } = listConvosQuery;
 
