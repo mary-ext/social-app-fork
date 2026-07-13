@@ -394,7 +394,6 @@ function ProfileScreenLoaded({
 						moderationOpts={moderationOpts}
 						hideBackButton={hideBackButton}
 						isPlaceholderProfile={showPlaceholder}
-						setMinimumHeight={noop}
 					/>
 				}
 			/>
@@ -408,5 +407,3 @@ function ProfileScreenLoaded({
 		</ScreenHider>
 	);
 }
-
-const noop = () => {};

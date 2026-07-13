@@ -14,11 +14,10 @@ interface Props {
 	moderationOpts: ModerationOptions;
 	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;
-	setMinimumHeight: (height: number) => void;
 }
 
-/** Routes to the labeler or standard header variant; `setMinimumHeight` is a no-op on web. */
-export function ProfileHeader({ setMinimumHeight: _setMinimumHeight, ...props }: Props): React.ReactNode {
+/** Routes to the labeler or standard header variant. */
+export function ProfileHeader(props: Props): React.ReactNode {
 	if (props.profile.associated?.labeler) {
 		if (!props.labeler) {
 			return <ProfileHeaderSkeleton />;
