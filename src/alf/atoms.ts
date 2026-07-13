@@ -5,8 +5,6 @@ import { CARD_ASPECT_RATIO } from '#/lib/constants';
 
 import { atoms as baseAtoms } from '#/alf/base';
 
-const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)';
-
 type WebAtomStyle = CSSProperties & ImageStyle & TextStyle & ViewStyle;
 
 const webStyle = (style: CSSProperties): WebAtomStyle => {
@@ -72,27 +70,6 @@ export const atoms = {
 	}),
 	transition_delay_50ms: webStyle({
 		transitionDelay: '50ms',
-	}),
-
-	/*
-	 * Animations
-	 */
-	fade_in: webStyle({
-		animation: 'fadeIn ease-out 0.15s',
-	}),
-	fade_out: webStyle({
-		animation: 'fadeOut ease-out 0.15s',
-		animationFillMode: 'forwards',
-	}),
-	zoom_in: webStyle({
-		animation: 'zoomIn ease-out 0.1s',
-	}),
-	zoom_out: webStyle({
-		animation: 'zoomOut ease-out 0.1s',
-	}),
-	// special composite animation for dialogs
-	zoom_fade_in: webStyle({
-		animation: `zoomIn ${EXP_CURVE} 0.3s, fadeIn ${EXP_CURVE} 0.3s`,
 	}),
 
 	/**

@@ -1,24 +1,5 @@
-/**
- * IMPORTANT
- *
- * Some of these styles are duplicated in `web/index.html`. Depending on what
- * you're updating, you may need to touch both files.
- */
-
-/**
- * BEGIN STYLES
- *
- * HTML & BODY STYLES IN `web/index.html`
- */
-
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/inter/wght-italic.css';
-
-/*
- * The UA-default resets (font/line-height on form controls, link color, focus outline) live in
- * `styles/reset.css.ts`, emitted into the `reset` cascade layer so component styles win over them.
- * The autofill override below stays unlayered: it must win over component input styling, not lose to it.
- */
 
 /* Remove autofill styles on Webkit */
 input:autofill,
@@ -33,53 +14,6 @@ input:-webkit-autofill:active {
 	background: var(--background);
 	color: var(--text);
 }
-/* Force left-align date/time inputs on iOS mobile */
-input::-webkit-date-and-time-value {
-	text-align: left;
-}
-
-/* Spinner component */
-@keyframes rotate {
-	0% {
-		transform: rotate(0deg);
-	}
-	100% {
-		transform: rotate(360deg);
-	}
-}
-.rotate-500ms {
-	position: absolute;
-	inset: 0;
-	animation: rotate 500ms linear infinite;
-}
-
-/* animations for atoms */
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
-@keyframes fadeOut {
-	from {
-		opacity: 1;
-	}
-	to {
-		opacity: 0;
-	}
-}
-
-@keyframes zoomIn {
-	from {
-		transform: scale(0.95);
-	}
-	to {
-		transform: scale(1);
-	}
-}
 
 .force-no-clicks > *,
 .force-no-clicks * {
@@ -89,7 +23,6 @@ input::-webkit-date-and-time-value {
 input[type='range'][orient='vertical'] {
 	writing-mode: vertical-lr;
 	direction: rtl;
-	appearance: slider-vertical;
 	width: 16px;
 	vertical-align: bottom;
 	-webkit-appearance: none;
