@@ -31,10 +31,6 @@ type LayoutProps = ScreenLayoutArgs<
 	NativeStackNavigationOptionsWithAuth,
 	NativeStackNavigationProp<FlatNavigatorParams, MessageScreens, string | undefined>
 >;
-export function renderMessagesSplitViewLayout(props: LayoutProps) {
-	return <MessagesSplitViewLayout {...props} />;
-}
-
 export function MessagesSplitViewLayout({ children, ...props }: LayoutProps) {
 	const { rightNavVisible } = useLayoutBreakpoints();
 

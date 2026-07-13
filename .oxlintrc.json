@@ -18,21 +18,12 @@
 			"error",
 			{
 				"impliedTextComponents": [
-					"H1",
-					"H2",
-					"H3",
-					"H4",
-					"H5",
-					"H6",
-					"P",
 					"Admonition",
 					"Admonition.Admonition",
+					"AgeAssuranceAdmonition",
 					"Prompt.Row",
 					"Toast.Action",
-					"Toggle.Action",
-					"AgeAssuranceAdmonition",
-					"Span",
-					"StackedButton"
+					"Toggle.Action"
 				],
 				"impliedTextProps": [],
 				"suggestedTextWrappers": {

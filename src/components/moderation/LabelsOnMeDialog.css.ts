@@ -2,22 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-export const main = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'column',
-});
-
-export const title = style({
-	marginBottom: 4,
-});
-
-export const list = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 12,
-});
-
 export const card = style({
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 8,
@@ -68,15 +52,6 @@ export const expires = style({
 	fontStyle: 'italic',
 });
 
-export const appealHeader = style({
-	display: 'flex',
-	flexDirection: 'column',
-});
-
 export const appealError = style({
 	marginTop: 8,
-});
-
-export const appealInput = style({
-	marginBlock: 12,
 });

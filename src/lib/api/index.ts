@@ -37,8 +37,6 @@ import { createGIFDescription } from '../gif-alt-text';
 import { serializeRecordCid } from './cid';
 import { uploadBlob } from './upload-blob';
 
-export { uploadBlob };
-
 /** The authenticated clients and repo DID a publish runs against. */
 export interface PostClients {
 	appview: Client;

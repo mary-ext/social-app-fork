@@ -24,7 +24,7 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
+import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
@@ -304,24 +304,6 @@ export function NameAndHandlePlaceholder() {
 	);
 }
 
-export function NamePlaceholder({ style }: ViewStyleProp) {
-	const t = useTheme();
-
-	return (
-		<View
-			style={[
-				a.rounded_xs,
-				t.atoms.bg_contrast_50,
-				{
-					width: '60%',
-					height: 14,
-				},
-				style,
-			]}
-		/>
-	);
-}
-
 export function Description({
 	profile: profileUnshadowed,
 	align,
@@ -349,27 +331,6 @@ export function Description({
 				size={size}
 				value={profile.description}
 			/>
-		</View>
-	);
-}
-
-export function DescriptionPlaceholder({ numberOfLines = 3 }: { numberOfLines?: number }) {
-	const t = useTheme();
-	return (
-		<View style={[a.pt_2xs, { gap: 6 }]}>
-			{Array(numberOfLines)
-				.fill(0)
-				.map((_, i) => (
-					<View
-						key={i}
-						style={[
-							a.rounded_xs,
-							a.w_full,
-							t.atoms.bg_contrast_50,
-							{ height: 12, width: i + 1 === numberOfLines ? '60%' : '100%' },
-						]}
-					/>
-				))}
 		</View>
 	);
 }
@@ -491,24 +452,6 @@ export function FollowButtonInner({
 				</Button>
 			)}
 		</View>
-	);
-}
-
-export function FollowButtonPlaceholder({ style }: ViewStyleProp) {
-	const t = useTheme();
-
-	return (
-		<View
-			style={[
-				a.rounded_sm,
-				t.atoms.bg_contrast_50,
-				a.w_full,
-				{
-					height: 33,
-				},
-				style,
-			]}
-		/>
 	);
 }
 

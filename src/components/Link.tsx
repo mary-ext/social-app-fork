@@ -88,9 +88,6 @@ const underlineStyle = (color: TextStyle['color']): WebTextStyle => {
 	};
 };
 
-/** Only available within a `Link`, since that inherits from `Button`. `InlineLink` provides no context. */
-export { useButtonContext as useLinkContext } from '#/components/Button';
-
 type BaseLinkProps = {
 	testID?: string;
 

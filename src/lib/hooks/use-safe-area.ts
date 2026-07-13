@@ -9,13 +9,6 @@ export type EdgeInsets = {
 	top: number;
 };
 
-export type Frame = {
-	height: number;
-	width: number;
-	x: number;
-	y: number;
-};
-
 const ZERO_INSETS: EdgeInsets = { bottom: 0, left: 0, right: 0, top: 0 };
 
 // #region insets store
@@ -98,41 +91,6 @@ const getInsetsSnapshot = (): EdgeInsets => insets;
 
 // #endregion
 
-// #region frame store
-
-const frameEmitter = new SimpleEventEmitter<[]>();
-
-let frame: Frame = { height: 0, width: 0, x: 0, y: 0 };
-
-const updateFrame = () => {
-	if (frame.width === window.innerWidth && frame.height === window.innerHeight) {
-		return;
-	}
-	frame = { height: window.innerHeight, width: window.innerWidth, x: 0, y: 0 };
-	frameEmitter.emit();
-};
-
-const subscribeFrame = (listener: () => void): (() => void) => {
-	if (!frameEmitter.hasListeners()) {
-		window.addEventListener('resize', updateFrame);
-		window.addEventListener('orientationchange', updateFrame);
-		frame = { height: window.innerHeight, width: window.innerWidth, x: 0, y: 0 };
-	}
-
-	const unsubscribe = frameEmitter.subscribe(listener);
-	return () => {
-		unsubscribe();
-		if (!frameEmitter.hasListeners()) {
-			window.removeEventListener('resize', updateFrame);
-			window.removeEventListener('orientationchange', updateFrame);
-		}
-	};
-};
-
-const getFrameSnapshot = (): Frame => frame;
-
-// #endregion
-
 /**
  * Web-native replacement for `react-native-safe-area-context`'s `useSafeAreaInsets`, reading the
  * `env(safe-area-inset-*)` values for installed-PWA notch handling.
@@ -143,14 +101,3 @@ const getFrameSnapshot = (): Frame => frame;
  */
 export const useSafeAreaInsets = (): EdgeInsets =>
 	useSyncExternalStore(subscribeInsets, getInsetsSnapshot, () => ZERO_INSETS);
-
-/**
- * Web-native replacement for `react-native-safe-area-context`'s `useSafeAreaFrame`, reporting the viewport
- * size.
- *
- * @deprecated transitional shim; prefer reading viewport size from CSS or `window` directly so the
- *   JS hook can eventually be dropped.
- * @returns the current viewport frame
- */
-export const useSafeAreaFrame = (): Frame =>
-	useSyncExternalStore(subscribeFrame, getFrameSnapshot, getFrameSnapshot);

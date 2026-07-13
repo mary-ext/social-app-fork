@@ -97,24 +97,6 @@ export function FeedLoadingPlaceholder({
 	);
 }
 
-export function FeedFeedLoadingPlaceholder() {
-	return (
-		<>
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-			<FeedLoadingPlaceholder />
-		</>
-	);
-}
-
 const styles = StyleSheet.create({
 	loadingPlaceholder: {
 		borderRadius: 6,

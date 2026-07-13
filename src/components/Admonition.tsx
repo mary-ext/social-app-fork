@@ -3,7 +3,6 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
-import { Button as BaseButton, type ButtonProps } from '#/components/Button';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { CircleX_Stroke2_Corner0_Rounded as CircleXIcon } from '#/components/icons/CircleX';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
@@ -60,14 +59,6 @@ export function Text({ children, style, ...rest }: Pick<TextProps, 'children' | 
 		<BaseText {...rest} style={[a.text_sm, a.leading_snug, a.pr_md, style]}>
 			{children}
 		</BaseText>
-	);
-}
-
-export function Button({ children, ...props }: Omit<ButtonProps, 'size' | 'variant'>) {
-	return (
-		<BaseButton size="tiny" {...props}>
-			{children}
-		</BaseButton>
 	);
 }
 

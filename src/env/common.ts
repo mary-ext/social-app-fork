@@ -4,9 +4,6 @@ import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 /** The env the app is running in e.g. development, production */
 export const ENV: string = import.meta.env.PUBLIC_ENV as 'production' | 'development' | (string & {});
 
-/** Indicates whether the app is running in development mode. */
-export const IS_DEV = import.meta.env.DEV;
-
 /** The log level for the app. */
 export const LOG_LEVEL = (import.meta.env.PUBLIC_LOG_LEVEL || 'info') as 'debug' | 'info' | 'warn' | 'error';
 

@@ -9,10 +9,6 @@ export const main = style({
 	padding: 20,
 });
 
-export const title = style({
-	marginBottom: 8,
-});
-
 export const admonition = style({
 	marginTop: 16,
 });

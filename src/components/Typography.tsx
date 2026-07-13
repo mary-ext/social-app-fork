@@ -6,7 +6,6 @@ import { atoms as a, useAlf, useTheme } from '#/alf';
 import { childHasEmoji, normalizeTextStyles, stringChildren, type TextProps } from '#/alf/typography';
 
 export type { TextProps };
-export { Text as Span } from 'react-native';
 
 /** Our main text component. Use this most of the time. */
 export function Text({
@@ -48,28 +47,6 @@ export function Text({
 	};
 
 	return <RNText {...shared}>{children}</RNText>;
-}
-
-function createHeadingElement({ level }: { level: number }) {
-	return function HeadingElement({ style, ...rest }: TextProps) {
-		const attr = {
-			role: 'heading',
-			'aria-level': level,
-		} as unknown as Pick<TextProps, 'role'> & { 'aria-level': number };
-		return <Text {...attr} {...rest} style={style} />;
-	};
-}
-
-/*
- * Use semantic components when it's beneficial to the user or to a web scraper
- */
-export const H1 = createHeadingElement({ level: 1 });
-export const H3 = createHeadingElement({ level: 3 });
-export function P({ style, ...rest }: TextProps) {
-	const attr = {
-		role: 'paragraph',
-	} as unknown as Pick<TextProps, 'role'>;
-	return <Text {...attr} {...rest} style={[a.text_md, a.leading_relaxed, style]} />;
 }
 
 /**

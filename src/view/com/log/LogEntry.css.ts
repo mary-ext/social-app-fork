@@ -52,10 +52,6 @@ export const icon = style({
 	placeSelf: 'center',
 });
 
-export const context = style({
-	gridArea: areas.context,
-});
-
 export const chevron = style({
 	gridArea: areas.chevron,
 	placeSelf: 'center',

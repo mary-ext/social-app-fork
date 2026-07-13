@@ -21,12 +21,6 @@ export const clock = new Intl.DateTimeFormat(LOCALE, { hour: 'numeric', hour12: 
 export const clockNumeric = new Intl.DateTimeFormat(LOCALE, { hour: 'numeric', minute: 'numeric' });
 /** "Jan 5" (no year — pairs with `dateMedium` for the year-bearing variant) */
 export const monthDay = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' });
-/** "January 5, 2026" (month/day/year parts) */
-export const monthDayYear = new Intl.DateTimeFormat(LOCALE, {
-	day: 'numeric',
-	month: 'long',
-	year: 'numeric',
-});
 /** "Mon, January 5" */
 export const weekdayMonthDay = new Intl.DateTimeFormat(LOCALE, {
 	day: 'numeric',

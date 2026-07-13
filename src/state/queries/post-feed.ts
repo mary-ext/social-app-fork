@@ -546,14 +546,6 @@ function assertSomePostsPassModeration(
 	}
 }
 
-export function resetPostsFeedQueries(queryClient: QueryClient, timeout = 0) {
-	setTimeout(() => {
-		void queryClient.resetQueries({
-			predicate: (query) => query.queryKey[0] === RQKEY_ROOT,
-		});
-	}, timeout);
-}
-
 export function resetProfilePostsQueries(queryClient: QueryClient, did: string, timeout = 0) {
 	setTimeout(() => {
 		void queryClient.resetQueries({

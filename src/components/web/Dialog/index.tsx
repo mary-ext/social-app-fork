@@ -12,7 +12,6 @@ export {
 } from '#/components/web/Dialog/Popup';
 export {
 	createHandle,
-	Description,
 	type DialogHandle,
 	type OpenChangeDetails,
 	Root,

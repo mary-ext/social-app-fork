@@ -67,18 +67,6 @@ export const NEW_TO_OLD_REASONS_MAP: Record<
 	[OzoneReason.REASONSELFHARMOTHER]: RootReason.REASONVIOLATION,
 };
 
-/** Set of report reasons that should optionally include additional details from the reporter. */
-export const OTHER_REPORT_REASONS: Set<ToolsOzoneReportDefs.ReasonType> = new Set([
-	OzoneReason.REASONVIOLENCEOTHER,
-	OzoneReason.REASONSEXUALOTHER,
-	OzoneReason.REASONCHILDSAFETYOTHER,
-	OzoneReason.REASONHARASSMENTOTHER,
-	OzoneReason.REASONMISLEADINGOTHER,
-	OzoneReason.REASONRULEOTHER,
-	OzoneReason.REASONSELFHARMOTHER,
-	OzoneReason.REASONOTHER,
-]);
-
 /** Set of report reasons that should only be sent to Bluesky's moderation service. */
 export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<ToolsOzoneReportDefs.ReasonType> = new Set([
 	OzoneReason.REASONCHILDSAFETYCSAM,

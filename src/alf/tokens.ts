@@ -1,11 +1,4 @@
-import { tokens } from '#/alf/base';
-
 export * from '#/alf/base/tokens';
-
-export const color = {
-	temp_purple: tokens.labelerColor.purple,
-	temp_purple_dark: tokens.labelerColor.purple_dark,
-} as const;
 
 export const gradients = {
 	primary: {
