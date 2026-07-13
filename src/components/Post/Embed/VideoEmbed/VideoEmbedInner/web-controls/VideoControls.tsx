@@ -89,9 +89,11 @@ export function Controls({
 
 	useEffect(() => {
 		if (interactingViaKeypress) {
-			document.addEventListener('click', () => setInteractingViaKeypress(false));
+			const onClick = () => setInteractingViaKeypress(false);
+
+			document.addEventListener('click', onClick);
 			return () => {
-				document.removeEventListener('click', () => setInteractingViaKeypress(false));
+				document.removeEventListener('click', onClick);
 			};
 		}
 	}, [interactingViaKeypress]);

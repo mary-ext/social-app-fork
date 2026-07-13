@@ -219,7 +219,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		}
 	}
 
-	if (urlp.hostname === 'music.apple.com' || urlp.hostname === 'music.apple.com') {
+	if (urlp.hostname === 'music.apple.com') {
 		// This should always have: locale, type (playlist or album), name, and id. We won't use spread since we want
 		// to check if the length is correct
 		const pathParams = urlp.pathname.split('/');
