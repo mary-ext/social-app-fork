@@ -579,6 +579,11 @@ export function extractLocalRefs(draft: AppBskyDraftDefs.Draft): Set<string> {
 				refs.add(img.localRef.path);
 			}
 		}
+		if (post.embedGallery) {
+			for (const item of post.embedGallery.items) {
+				refs.add(item.localRef.path);
+			}
+		}
 		if (post.embedVideos) {
 			for (const vid of post.embedVideos) {
 				refs.add(vid.localRef.path);
