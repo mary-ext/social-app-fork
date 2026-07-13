@@ -136,7 +136,7 @@ function SettingsInner({ convoId }: { convoId: string }) {
 					if (navigation.canGoBack()) {
 						navigation.goBack();
 					} else {
-						navigation.replace('Messages', { animation: 'pop' });
+						navigation.replace('Messages');
 					}
 				}}
 			/>
@@ -328,7 +328,7 @@ function SettingsHeader({
 
 	const { mutate: leaveConvo, isPending: isLeaving } = useLeaveConvo(convo.view.id, {
 		onSuccess: () => {
-			navigation.replace('Messages', { animation: 'pop' });
+			navigation.replace('Messages');
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });

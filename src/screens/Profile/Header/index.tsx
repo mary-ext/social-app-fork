@@ -12,7 +12,6 @@ interface Props {
 	labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined;
 	descriptionRT: Richtext | null;
 	moderationOpts: ModerationOptions;
-	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;
 }
 

@@ -2,15 +2,9 @@ import type { Route, RouteBuildParams, RouteParams } from './types';
 
 export class Router<T extends Record<string, unknown>> {
 	routes: [string, Route][] = [];
-	constructor(description: Record<keyof T, string | string[]>) {
-		for (const [screen, pattern] of Object.entries(description)) {
-			if (typeof pattern === 'string') {
-				this.routes.push([screen, createRoute(pattern)]);
-			} else {
-				pattern.forEach((subPattern) => {
-					this.routes.push([screen, createRoute(subPattern)]);
-				});
-			}
+	constructor(description: Record<keyof T, string>) {
+		for (const [screen, pattern] of Object.entries<string>(description)) {
+			this.routes.push([screen, createRoute(pattern)]);
 		}
 	}
 

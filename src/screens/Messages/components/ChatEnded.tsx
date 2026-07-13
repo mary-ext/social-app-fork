@@ -35,7 +35,7 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 
 	const { mutate: leaveConvo } = useLeaveConvo(convo.view.id, {
 		onSuccess: () => {
-			navigation.replace('Messages', { animation: 'pop' });
+			navigation.replace('Messages');
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });

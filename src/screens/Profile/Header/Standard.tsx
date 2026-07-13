@@ -25,7 +25,6 @@ interface Props {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	descriptionRT: Richtext | null;
 	moderationOpts: ModerationOptions;
-	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;
 }
 
@@ -75,7 +74,6 @@ function StandardBody() {
 /** Profile header for a regular (non-labeler) account. */
 export function StandardProfileHeader({
 	descriptionRT,
-	hideBackButton = false,
 	isPlaceholderProfile,
 	moderationOpts,
 	profile,
@@ -86,7 +84,6 @@ export function StandardProfileHeader({
 	return (
 		<ProfileHeaderProvider
 			descriptionRT={descriptionRT}
-			hideBackButton={hideBackButton}
 			isPlaceholderProfile={isPlaceholderProfile}
 			moderationOpts={moderationOpts}
 			onFollowChange={setShowSuggestedFollows}

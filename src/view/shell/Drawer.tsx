@@ -80,7 +80,7 @@ function DrawerContent() {
 	const navigation = useNavigation<NavigationProp>();
 	const setDrawerOpen = useSetDrawerOpen();
 	const { currentAccount, hasSession } = useSession();
-	const { isAtBookmarks, isAtFeeds, isAtHome, isAtMessages, isAtMyProfile, isAtNotifications, isAtSearch } =
+	const { isAtBookmarks, isAtFeeds, isAtHome, isAtMessages, isAtNotifications, isAtSearch } =
 		useNavigationTabState();
 	const numUnreadNotifications = useUnreadNotifications();
 
@@ -174,7 +174,7 @@ function DrawerContent() {
 					<MenuItem
 						activeIcon={UserCircleFilled}
 						inactiveIcon={UserCircle}
-						isActive={isAtMyProfile}
+						isActive={false}
 						label={m['common.nav.profile']()}
 						onPress={onPressProfile}
 					/>

@@ -3,10 +3,9 @@ import { type ComponentProps, useCallback, useEffect, useRef } from 'react';
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useAppState } from '#/lib/appState';
-import type { MessagesTabNavigatorParams, NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { softReset } from '#/state/events';
@@ -78,28 +77,11 @@ function keyExtractor(item: ListItem) {
 	return item.conversation.id;
 }
 
-type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>;
-
-export function MessagesScreen(props: Props) {
-	return <MessagesScreenInner {...props} />;
-}
-
-export function MessagesScreenInner({ route }: Props) {
+export function MessagesScreen() {
 	const { isWithinSplitView } = useIsWithinSplitView();
 	const navigation = useNavigation<NavigationProp>();
 	const newChatHandle = Dialog.useDialogHandle();
 	const { data: chatStatus } = useChatActorStatusQuery();
-	const pushToConversation = route.params?.pushToConversation;
-
-	// navigate to a conversation from notification launch parameters, then clear the parameters to allow subsequent launches
-	useEffect(() => {
-		if (pushToConversation) {
-			navigation.navigate('MessagesConversation', {
-				conversation: pushToConversation,
-			});
-			navigation.setParams({ pushToConversation: undefined });
-		}
-	}, [navigation, pushToConversation]);
 
 	const messagesBus = useMessagesEventBus();
 	const state = useAppState();

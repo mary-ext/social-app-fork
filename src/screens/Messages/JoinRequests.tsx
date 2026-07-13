@@ -98,7 +98,7 @@ function JoinRequestsInner() {
 					if (navigation.canGoBack()) {
 						navigation.goBack();
 					} else {
-						navigation.replace('Messages', { animation: 'pop' });
+						navigation.replace('Messages');
 					}
 				}}
 			/>

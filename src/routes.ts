@@ -22,7 +22,7 @@ export const router = new Router<AllNavigatableRoutes>({
 	ModerationInteractionSettings: '/moderation/interaction-settings',
 	ModerationVerificationSettings: '/moderation/verification-settings',
 	// profiles, threads, lists
-	Profile: ['/profile/:name', '/profile/:name/rss'],
+	Profile: '/profile/:name',
 	ProfileFollowers: '/profile/:name/followers',
 	ProfileFollows: '/profile/:name/follows',
 	ProfileKnownFollowers: '/profile/:name/known-followers',

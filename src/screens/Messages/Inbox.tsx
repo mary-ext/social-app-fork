@@ -164,7 +164,7 @@ function RequestList({
 									if (navigation.canGoBack()) {
 										navigation.goBack();
 									} else {
-										navigation.navigate('Messages', { animation: 'pop' });
+										navigation.navigate('Messages');
 									}
 								},
 								size: 'small',

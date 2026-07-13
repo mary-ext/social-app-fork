@@ -18,7 +18,7 @@ export type CommonNavigatorParams = {
 	ModerationInteractionSettings: undefined;
 	ModerationVerificationSettings: undefined;
 	Settings: undefined;
-	Profile: { name: string; hideBackButton?: boolean };
+	Profile: { name: string };
 	ProfileFollowers: { name: string };
 	ProfileFollows: { name: string };
 	ProfileKnownFollowers: { name: string };
@@ -61,7 +61,7 @@ export type CommonNavigatorParams = {
 		targetDid?: string;
 		onSuccess?: () => void;
 	};
-	StarterPackEdit: { rkey?: string };
+	StarterPackEdit: { rkey: string };
 	Bookmarks: undefined;
 };
 
@@ -78,7 +78,7 @@ export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
 };
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
-	Messages: { pushToConversation?: string; animation?: 'push' | 'pop' };
+	Messages: undefined;
 };
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
@@ -86,7 +86,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
 	Search: { q?: string; tab?: 'user' | 'profile' | 'feed' };
 	Feeds: undefined;
 	Notifications: undefined;
-	Messages: { pushToConversation?: string; animation?: 'push' | 'pop' };
+	Messages: undefined;
 };
 
 export type AllNavigatorParams = CommonNavigatorParams & {
@@ -99,7 +99,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
 	Notifications: undefined;
 	MyProfileTab: undefined;
 	MessagesTab: undefined;
-	Messages: { pushToConversation?: string; animation?: 'push' | 'pop' };
+	Messages: undefined;
 };
 
 // NOTE

@@ -30,7 +30,7 @@ import * as css from './Shell.css';
  */
 export function ProfileHeaderShell({ children }: { children: React.ReactNode }): React.ReactNode {
 	const {
-		meta: { hideBackButton, isMe, isPlaceholderProfile, live },
+		meta: { isMe, isPlaceholderProfile, live },
 		state: { moderation, profile },
 	} = useProfileHeader();
 	const { lightboxHandle } = useGlobalDialogsHandleContext();
@@ -70,18 +70,16 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 		<div className={css.frame}>
 			<div className={css.bannerRegion}>
 				{/* first in source order so it tabs first; its z-index (see css) keeps it painted over the banner */}
-				{!hideBackButton && (
-					<button
-						type="button"
-						className={css.backButton}
-						aria-label={m['common.action.back']()}
-						onClick={onPressBack}
-					>
-						<span className={css.backButtonInner}>
-							<ArrowLeftIcon size="xl" fill="white" />
-						</span>
-					</button>
-				)}
+				<button
+					type="button"
+					className={css.backButton}
+					aria-label={m['common.action.back']()}
+					onClick={onPressBack}
+				>
+					<span className={css.backButtonInner}>
+						<ArrowLeftIcon size="xl" fill="white" />
+					</span>
+				</button>
 				{isPlaceholderProfile ? (
 					<div className={css.bannerPlaceholder} />
 				) : (

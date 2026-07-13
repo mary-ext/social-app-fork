@@ -45,7 +45,6 @@ interface Props {
 	labeler: AppBskyLabelerDefs.LabelerViewDetailed;
 	descriptionRT: Richtext | null;
 	moderationOpts: ModerationOptions;
-	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;
 }
 
@@ -223,7 +222,6 @@ function LabelerBody({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetai
 /** Profile header for a labeler account. */
 export function LabelerProfileHeader({
 	descriptionRT,
-	hideBackButton = false,
 	isPlaceholderProfile,
 	labeler,
 	moderationOpts,
@@ -232,7 +230,6 @@ export function LabelerProfileHeader({
 	return (
 		<ProfileHeaderProvider
 			descriptionRT={descriptionRT}
-			hideBackButton={hideBackButton}
 			isPlaceholderProfile={isPlaceholderProfile}
 			moderationOpts={moderationOpts}
 			profile={profile}

@@ -135,7 +135,6 @@ function ProfileScreenInner({ route }: Props) {
 				profile={profile}
 				moderationOpts={moderationOpts}
 				isPlaceholderProfile={isPlaceholderProfile}
-				hideBackButton={!!route.params.hideBackButton}
 			/>
 		);
 	}
@@ -154,11 +153,9 @@ function ProfileScreenLoaded({
 	profile: profileUnshadowed,
 	isPlaceholderProfile,
 	moderationOpts,
-	hideBackButton,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	moderationOpts: ModerationOptions;
-	hideBackButton: boolean;
 	isPlaceholderProfile: boolean;
 }) {
 	const profile = useProfileShadow(profileUnshadowed);
@@ -392,7 +389,6 @@ function ProfileScreenLoaded({
 						labeler={labelerInfo}
 						descriptionRT={hasDescription ? descriptionRT : null}
 						moderationOpts={moderationOpts}
-						hideBackButton={hideBackButton}
 						isPlaceholderProfile={showPlaceholder}
 					/>
 				}

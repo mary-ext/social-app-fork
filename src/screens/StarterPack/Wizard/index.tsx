@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -146,12 +144,6 @@ function WizardInner({
 		staleTime: 0,
 	});
 	const parsed = parseStarterPackUri(currentStarterPack?.uri);
-
-	useEffect(() => {
-		navigation.setOptions({
-			gestureEnabled: false,
-		});
-	}, [navigation]);
 
 	const getDefaultName = () => {
 		const displayName = createSanitizedDisplayName(currentProfile!, true);

@@ -47,7 +47,6 @@ interface ProfileHeaderActions {
 
 interface ProfileHeaderMeta {
 	hasSession: boolean;
-	hideBackButton: boolean;
 	isMe: boolean;
 	isPlaceholderProfile: boolean;
 	live: ReturnType<typeof useActorStatus>;
@@ -83,7 +82,6 @@ export const useProfileHeader = (): ProfileHeaderContextValue => {
 export function ProfileHeaderProvider({
 	children,
 	descriptionRT,
-	hideBackButton = false,
 	isPlaceholderProfile = false,
 	moderationOpts,
 	onFollowChange,
@@ -91,7 +89,6 @@ export function ProfileHeaderProvider({
 }: {
 	children: React.ReactNode;
 	descriptionRT: Richtext | null;
-	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;
 	moderationOpts: ModerationOptions;
 	/** Called after a successful follow/unfollow with the new following state. */
@@ -182,7 +179,6 @@ export function ProfileHeaderProvider({
 		actions: { follow, unblock, unfollow },
 		meta: {
 			hasSession,
-			hideBackButton,
 			isMe,
 			isPlaceholderProfile,
 			live,
