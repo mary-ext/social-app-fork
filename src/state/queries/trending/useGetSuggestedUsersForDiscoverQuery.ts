@@ -16,7 +16,7 @@ export type QueryProps = {
 	limit?: number;
 };
 
-export const getSuggestedUsersForDiscoverQueryKeyRoot = 'unspecced-suggested-users-for-explore';
+export const getSuggestedUsersForDiscoverQueryKeyRoot = 'unspecced-suggested-users-for-discover';
 export const createGetSuggestedUsersForDiscoverQueryKey = (props: { limit?: number }) => [
 	getSuggestedUsersForDiscoverQueryKeyRoot,
 	props.limit,

@@ -18,7 +18,7 @@ export type QueryProps = {
 	enabled?: boolean;
 };
 
-export const getSuggestedUsersForSeeMoreQueryKeyRoot = 'unspecced-suggested-users-for-explore';
+export const getSuggestedUsersForSeeMoreQueryKeyRoot = 'unspecced-suggested-users-for-see-more';
 export const createGetSuggestedUsersForSeeMoreQueryKey = (props: {
 	category?: string | null;
 	limit?: number;
