@@ -11,11 +11,14 @@ import {
 } from 'react-native';
 
 import { sanitizeUrl } from '@braintree/sanitize-url';
-import { StackActions } from '@react-navigation/native';
 
-import { type DebouncedNavigationProp, useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
-import { getTabState, TabState } from '#/lib/routes/helpers';
+import {
+	type NavigateAction,
+	type NavigateToPath,
+	useActiveMatch,
+	useNavigateToPath,
+} from '#/lib/navigation';
 import { convertBskyAppUrlIfNeeded, isExternalUrl, isMisleadingLink } from '#/lib/strings/url-helpers';
 import type { TypographyVariant } from '#/lib/ThemeContext';
 
@@ -79,14 +82,14 @@ export function Link({
 	...props
 }: Props) {
 	const t = useTheme();
-	const navigation = useNavigationDeduped();
+	const navigate = useLinkNavigate();
 	const anchorHref = asAnchor ? sanitizeUrl(href) : undefined;
 	const openLink = useOpenLink();
 
 	const onPress = (e?: Event) => {
 		onBeforePress?.();
 		if (typeof href === 'string') {
-			return onPressInner(navigation, sanitizeUrl(href), navigationAction, (url) => openLink(url), e);
+			return onPressInner(navigate, sanitizeUrl(href), navigationAction, (url) => openLink(url), e);
 		}
 	};
 
@@ -177,7 +180,7 @@ export function TextLink({
 	navigationAction?: 'push' | 'replace' | 'navigate';
 	onBeforePress?: () => void;
 } & TextProps) {
-	const navigation = useNavigationDeduped();
+	const navigate = useLinkNavigate();
 	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
 	const openLink = useOpenLink();
 
@@ -207,7 +210,7 @@ export function TextLink({
 			// @ts-expect-error function signature differs by platform -prf
 			return onPressProp();
 		}
-		return onPressInner(navigation, sanitizeUrl(href), navigationAction, (url) => openLink(url), e);
+		return onPressInner(navigate, sanitizeUrl(href), navigationAction, (url) => openLink(url), e);
 	};
 	const isExternal = isExternalUrl(href);
 	const hrefAttrs = isExternal
@@ -239,6 +242,24 @@ export function TextLink({
 
 const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/'];
 
+/**
+ * a `navigate` link pointing at the screen the app is already showing scrolls that screen back to the top
+ * instead of navigating to a second copy of it. this is what the nav rails do.
+ */
+function useLinkNavigate(): NavigateToPath {
+	const navigateToPath = useNavigateToPath();
+	const activeMatch = useActiveMatch();
+
+	return (path, action) => {
+		if (action === 'navigate' && router.matchPath(path)[0] === activeMatch.name) {
+			softReset.emit();
+			return;
+		}
+
+		navigateToPath(path, action);
+	};
+}
+
 // NOTE
 // we can't use the onPress given by useLinkProps because it will
 // match most paths to the HomeTab routes while we actually want to
@@ -251,9 +272,9 @@ const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/'];
 // needed customizations
 // -prf
 function onPressInner(
-	navigation: DebouncedNavigationProp,
+	navigate: NavigateToPath,
 	href: string,
-	navigationAction: 'push' | 'replace' | 'navigate' = 'push',
+	navigationAction: NavigateAction = 'push',
 	openLink: (href: string) => void,
 	e?: unknown,
 ) {
@@ -296,27 +317,7 @@ function onPressInner(
 		) {
 			openLink(href);
 		} else {
-			const [routeName, params] = router.matchPath(href);
-			if (navigationAction === 'push') {
-				// @ts-ignore we're not able to type check on this one -prf
-				navigation.dispatch(StackActions.push(routeName, params));
-			} else if (navigationAction === 'replace') {
-				// @ts-ignore we're not able to type check on this one -prf
-				navigation.dispatch(StackActions.replace(routeName, params));
-			} else if (navigationAction === 'navigate') {
-				const state = navigation.getState();
-				const tabState = getTabState(state, routeName);
-				if (tabState === TabState.InsideAtRoot) {
-					softReset.emit();
-				} else {
-					// note: 'navigate' actually acts the same as 'push' nowadays
-					// therefore we need to add 'pop' -sfn
-					// @ts-ignore we're not able to type check on this one -prf
-					navigation.navigate(routeName, params, { pop: true });
-				}
-			} else {
-				throw Error('Unsupported navigator action.');
-			}
+			navigate(href, navigationAction);
 		}
 	}
 }
