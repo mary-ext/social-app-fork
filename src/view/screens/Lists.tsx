@@ -6,10 +6,10 @@ import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } fr
 
 import { MyLists } from '#/view/com/lists/MyLists';
 
+import * as Dialog from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

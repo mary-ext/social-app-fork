@@ -8,12 +8,12 @@ import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
 import { APP_LANGUAGES, LANGUAGES, langCode } from '#/locale/languages';
 
+import * as Dialog from '#/components/Dialog';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { Filter_Stroke2_Corner0_Rounded as FilterIcon } from '#/components/icons/Filter';
 import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { Language_Stroke2_Corner2_Rounded as LanguageIcon } from '#/components/icons/Language';
 import * as Settings from '#/components/SettingsCards';
-import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

@@ -24,6 +24,7 @@ import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
+import { SearchInput } from '#/components/forms/SearchInput';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
@@ -35,7 +36,6 @@ import { List, type ListRenderItemInfo } from '#/components/List/List';
 import * as ListCard from '#/components/ListCard';
 import { Text } from '#/components/Text';
 import { ButtonIcon } from '#/components/web/Button';
-import { SearchInput } from '#/components/web/forms/SearchInput';
 import * as Layout from '#/components/web/Layout';
 import { LinkButton } from '#/components/web/Link';
 

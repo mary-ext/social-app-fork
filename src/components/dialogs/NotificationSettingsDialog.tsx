@@ -9,10 +9,10 @@ import {
 
 import { PreferenceControls } from '#/screens/Settings/NotificationSettings/components/PreferenceControls';
 
+import * as Dialog from '#/components/Dialog';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

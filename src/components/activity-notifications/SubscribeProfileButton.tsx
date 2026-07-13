@@ -4,10 +4,10 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
+import * as Dialog from '#/components/Dialog';
 import { BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon } from '#/components/icons/BellPlus';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

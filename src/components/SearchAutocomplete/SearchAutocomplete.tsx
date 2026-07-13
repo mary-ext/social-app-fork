@@ -44,7 +44,7 @@ import { useSearchActorAutocompleteQuery } from '#/state/queries/actor-autocompl
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import * as SearchField from '#/components/web/forms/SearchField';
+import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
 

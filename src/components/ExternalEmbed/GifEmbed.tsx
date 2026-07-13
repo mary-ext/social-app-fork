@@ -6,9 +6,9 @@ import { clsx } from 'clsx';
 import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
+import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';

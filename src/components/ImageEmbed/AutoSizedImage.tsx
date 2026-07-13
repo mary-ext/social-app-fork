@@ -5,12 +5,12 @@ import type { AppBskyEmbedGallery } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import * as Dialog from '#/components/Dialog';
 import type { LightboxHandle, LightboxPayload } from '#/components/dialogs/Context';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import * as styles from '#/components/ImageEmbed/AutoSizedImage.css';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
-import * as Dialog from '#/components/web/Dialog';
 
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 

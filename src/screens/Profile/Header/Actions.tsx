@@ -1,11 +1,11 @@
 import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
 
 import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
+import * as Dialog from '#/components/Dialog';
 import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
+import * as Prompt from '#/components/Prompt';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

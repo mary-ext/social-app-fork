@@ -18,12 +18,12 @@ import {
 
 import { logger } from '#/logger';
 
+import * as Dialog from '#/components/Dialog';
 import { PostInteractionSettingsControlledDialog } from '#/components/dialogs/PostInteractionSettingsDialog';
 import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon } from '#/components/icons/Chevron';
 import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

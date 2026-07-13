@@ -29,6 +29,7 @@ import { List } from '#/view/com/util/List';
 import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
+import * as Dialog from '#/components/Dialog';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
@@ -43,11 +44,10 @@ import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Layout from '#/components/Layout';
+import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

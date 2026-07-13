@@ -13,7 +13,7 @@ import { Drawer } from '#/view/shell/Drawer';
 
 import { useLayoutBreakpoints } from '#/alf';
 
-import * as styles from '#/components/web/Shell/Shell.css';
+import * as styles from '#/components/Shell/Shell.css';
 
 // the right nav only renders past the right-nav breakpoint and off Messages, so defer its chunk until
 // a layout that actually shows it.

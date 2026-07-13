@@ -6,6 +6,7 @@ import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 
 import type { ComposerImage } from '#/state/gallery';
 
+import * as Dialog from '#/components/Dialog';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Pencil_Stroke2_Corner0_Rounded as PencilIcon } from '#/components/icons/Pencil';
@@ -21,7 +22,6 @@ import { usePointerHandlers } from '#/components/ImageEmbed/carousel/usePointerH
 import { computeDims, deriveCarouselHeight, getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { Text } from '#/components/Text';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

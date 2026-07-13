@@ -1,7 +1,7 @@
 import { useRender } from '@base-ui/react/use-render';
 import { clsx } from 'clsx';
 
-import * as css from '#/components/web/VisuallyHidden.css';
+import * as css from '#/components/VisuallyHidden.css';
 
 /**
  * renders its children so they are hidden from sight but still exposed to assistive technology (screen

@@ -4,12 +4,12 @@ import type { Shadow } from '#/state/cache/types';
 import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
 import { useSession } from '#/state/session';
 
+import * as Dialog from '#/components/Dialog';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
 import * as css from '#/components/verification/VerificationCheckButton.css';
 import { VerificationsDialog } from '#/components/verification/VerificationsDialog';
 import { VerifierDialog } from '#/components/verification/VerifierDialog';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

@@ -3,11 +3,11 @@ import { useTrendingConfig } from '#/state/service-config';
 
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import { useTopic } from '#/components/trending-topics';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
-import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';

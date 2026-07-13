@@ -1,6 +1,6 @@
 import type { FocusEventHandler, KeyboardEventHandler, Ref } from 'react';
 
-import * as SearchField from '#/components/web/forms/SearchField';
+import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
 

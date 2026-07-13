@@ -28,6 +28,7 @@ import { List } from '#/view/com/util/List';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
@@ -39,7 +40,6 @@ import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

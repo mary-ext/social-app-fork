@@ -6,8 +6,8 @@ import type { ComposerOpts } from '#/lib/hooks/useOpenComposer';
 
 import type { SessionAccount } from '#/state/session';
 
+import * as Dialog from '#/components/Dialog';
 import type { ReportSubject } from '#/components/moderation/ReportDialog';
-import * as Dialog from '#/components/web/Dialog';
 
 /** the images and the index to open the global lightbox on. */
 export type LightboxPayload = { images: LightboxImage[]; index: number };

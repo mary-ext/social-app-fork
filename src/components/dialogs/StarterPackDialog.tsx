@@ -20,7 +20,9 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { AvatarStack } from '#/components/AvatarStack';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dialogs/StarterPackDialog.css';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { StarterPack } from '#/components/icons/StarterPack';
@@ -28,9 +30,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { AvatarStack } from '#/components/web/AvatarStack';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

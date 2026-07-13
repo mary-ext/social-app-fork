@@ -11,6 +11,7 @@ import { Logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
+import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon } from '#/components/icons/Chevron';
@@ -24,7 +25,6 @@ import * as TextField from '#/components/TextField';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import { ExternalLink } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';

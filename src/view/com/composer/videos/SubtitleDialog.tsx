@@ -11,16 +11,16 @@ import { resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 import { LANGUAGES, langCode } from '#/locale/languages';
 
+import * as Dialog from '#/components/Dialog';
 import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
 import { PageText_Stroke2_Corner0_Rounded as PageTextIcon } from '#/components/icons/PageText';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Select from '#/components/Select';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

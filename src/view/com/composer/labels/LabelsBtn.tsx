@@ -6,14 +6,14 @@ import {
 	type SelfLabel,
 } from '#/lib/moderation';
 
+import * as Dialog from '#/components/Dialog';
+import * as Toggle from '#/components/forms/Toggle';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon } from '#/components/icons/Chevron';
 import { Shield_Stroke2_Corner0_Rounded } from '#/components/icons/Shield';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Toggle from '#/components/web/forms/Toggle';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

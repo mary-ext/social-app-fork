@@ -4,8 +4,8 @@ import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
 import { useBreakpoints } from '#/alf';
 
+import * as Dialog from '#/components/Dialog';
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
-import * as Dialog from '#/components/web/Dialog';
 
 import {
 	GIF_CATEGORIES,

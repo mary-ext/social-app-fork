@@ -7,8 +7,8 @@ import { isNetworkError } from '#/lib/strings/errors';
 
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 
+import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

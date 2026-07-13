@@ -8,9 +8,9 @@ import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdr
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

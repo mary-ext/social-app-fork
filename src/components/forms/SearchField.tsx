@@ -4,10 +4,10 @@ import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/merge-refs';
 
+import * as styles from '#/components/forms/SearchField.css';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as styles from '#/components/web/forms/SearchField.css';
 
 // clicks landing on one of these are handled by the element itself; the field must not steal them to refocus
 // the input. `input`/`textarea` are listed so a direct click keeps native caret placement.

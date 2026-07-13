@@ -9,14 +9,14 @@ import { Trans } from '#/locale/Trans';
 
 import { Logo } from '#/view/icons/Logo';
 
+import * as Dialog from '#/components/Dialog';
 import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
 import { VerifierCheck } from '#/components/icons/VerifierCheck';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import { ExternalLinkButton } from '#/components/web/Link';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

@@ -65,14 +65,14 @@ import { TextInput } from '#/view/com/composer/text-input/TextInput';
 import { SubtitleDialogBtn } from '#/view/com/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/view/com/composer/videos/VideoPreview';
 
+import * as Dialog from '#/components/Dialog';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
+import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';

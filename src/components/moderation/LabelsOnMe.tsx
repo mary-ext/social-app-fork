@@ -5,10 +5,10 @@ import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
 
+import * as Dialog from '#/components/Dialog';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { LabelsOnMeDialog } from '#/components/moderation/LabelsOnMeDialog';
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

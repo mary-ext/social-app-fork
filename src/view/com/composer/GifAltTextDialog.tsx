@@ -7,11 +7,11 @@ import { type EmbedPlayerParams, parseEmbedPlayerFromUrl } from '#/lib/strings/e
 
 import { useResolveGifQuery } from '#/state/queries/resolve-link';
 
+import * as Dialog from '#/components/Dialog';
 import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import type { Gif } from '#/features/gifPicker/types';
 import { m } from '#/paraglide/messages';

@@ -4,6 +4,7 @@ import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 
 import { logger } from '#/logger';
 
+import * as Dialog from '#/components/Dialog';
 import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
@@ -11,7 +12,6 @@ import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icon
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

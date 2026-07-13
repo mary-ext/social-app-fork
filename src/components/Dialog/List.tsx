@@ -3,7 +3,7 @@ import { Fragment, type ReactNode, useEffect, useLayoutEffect, useRef } from 're
 import { clsx } from 'clsx';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import * as styles from '#/components/web/Dialog/Popup.css';
+import * as styles from '#/components/Dialog/Popup.css';
 
 export type ListProps<ItemT> = {
 	data: readonly ItemT[];

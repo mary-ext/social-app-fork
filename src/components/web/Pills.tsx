@@ -7,11 +7,11 @@ import { clsx } from 'clsx';
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 
+import * as Dialog from '#/components/Dialog';
+import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';
 import type { AppModerationCause } from '#/components/Pills';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
-import * as Dialog from '#/components/web/Dialog';
-import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 import * as styles from '#/components/web/Pills.css';
 
 import { m } from '#/paraglide/messages';

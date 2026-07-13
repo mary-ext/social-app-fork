@@ -11,15 +11,15 @@ import { useTickEveryMinute } from '#/state/shell';
 
 import { clock } from '#/locale/intl/datetime';
 
+import * as Dialog from '#/components/Dialog';
 import * as Select from '#/components/Select';
 import { Spinner } from '#/components/Spinner';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import { Stack } from '#/components/web/Stack';
 
 import {
 	displayDuration,

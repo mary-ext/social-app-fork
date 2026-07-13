@@ -5,7 +5,7 @@ import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/li
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
 
-import { InterestTabs } from '#/components/web/InterestTabs';
+import { InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';

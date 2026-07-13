@@ -2,9 +2,9 @@ import { lazy, Suspense, useRef } from 'react';
 
 import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
 
+import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { Spinner } from '#/components/Spinner';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

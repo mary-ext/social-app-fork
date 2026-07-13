@@ -33,6 +33,7 @@ import { StepDetails } from '#/screens/StarterPack/Wizard/StepDetails';
 import { StepFeeds } from '#/screens/StarterPack/Wizard/StepFeeds';
 import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles';
 
+import * as Dialog from '#/components/Dialog';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Spinner } from '#/components/Spinner';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
@@ -40,7 +41,6 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

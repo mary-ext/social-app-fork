@@ -12,8 +12,8 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { Trans } from '#/locale/Trans';
 
+import { AvatarStack } from '#/components/AvatarStack';
 import { Text } from '#/components/Text';
-import { AvatarStack } from '#/components/web/AvatarStack';
 import * as css from '#/components/web/KnownFollowers.css';
 import { Link } from '#/components/web/Link';
 

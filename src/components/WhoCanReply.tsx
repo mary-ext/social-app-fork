@@ -11,6 +11,7 @@ import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting } from '#
 
 import { Trans } from '#/locale/Trans';
 
+import * as Dialog from '#/components/Dialog';
 import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
@@ -19,10 +20,9 @@ import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon } from
 import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon } from '#/components/icons/CircleBanSign';
 import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
-import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

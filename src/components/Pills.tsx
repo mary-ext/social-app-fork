@@ -8,10 +8,10 @@ import { useModerationCauseDescription } from '#/lib/moderation/useModerationCau
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Button } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
+import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
-import * as Dialog from '#/components/web/Dialog';
-import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

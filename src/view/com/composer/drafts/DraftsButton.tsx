@@ -1,8 +1,8 @@
 import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants';
 
+import * as Dialog from '#/components/Dialog';
+import * as Prompt from '#/components/Prompt';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

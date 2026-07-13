@@ -12,8 +12,8 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon } from '#/components/ico
 import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

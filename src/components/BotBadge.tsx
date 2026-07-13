@@ -2,8 +2,8 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { BotAccountAlert } from '#/components/BotAccountAlert';
 import * as css from '#/components/BotBadge.css';
+import * as Dialog from '#/components/Dialog';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

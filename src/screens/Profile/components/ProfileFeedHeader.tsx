@@ -21,6 +21,7 @@ import { logger } from '#/logger';
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
+import * as Dialog from '#/components/Dialog';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
@@ -38,14 +39,13 @@ import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

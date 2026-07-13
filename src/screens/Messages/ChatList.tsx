@@ -24,6 +24,7 @@ import { FAB } from '#/view/com/util/fab/FAB';
 
 import { useBreakpoints } from '#/alf';
 
+import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
@@ -42,7 +43,6 @@ import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

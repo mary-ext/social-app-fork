@@ -13,10 +13,10 @@ import { useRemoveFeedMutation } from '#/state/queries/preferences';
 import { logger } from '#/logger';
 
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

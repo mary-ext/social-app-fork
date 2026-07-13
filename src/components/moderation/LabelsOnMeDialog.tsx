@@ -19,15 +19,15 @@ import { logger } from '#/logger';
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 import { Trans } from '#/locale/Trans';
 
+import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

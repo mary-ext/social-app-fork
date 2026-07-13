@@ -8,9 +8,9 @@ import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 
 import { type ImageSource, type ImageTransformation, manipulateImage } from '#/state/gallery';
 
+import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

@@ -19,9 +19,9 @@ import { useLabelDefinitions } from '#/state/preferences';
 
 import { LOCALE } from '#/locale/intl/locale';
 
+import * as Dialog from '#/components/Dialog';
+import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Text';
-import * as Dialog from '#/components/web/Dialog';
-import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

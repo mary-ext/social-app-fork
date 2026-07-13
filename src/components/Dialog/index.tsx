@@ -9,7 +9,7 @@ export {
 	Title,
 	TitleRow,
 	Viewport,
-} from '#/components/web/Dialog/Popup';
+} from '#/components/Dialog/Popup';
 export {
 	createHandle,
 	type DialogHandle,
@@ -18,8 +18,8 @@ export {
 	type RootProps,
 	Trigger,
 	useDialogHandle,
-} from '#/components/web/Dialog/Root';
+} from '#/components/Dialog/Root';
 
 /** Sticky header slot for a `body`-scroll Popup: `Outer`/`Content`/`Slot`/`TitleText` (like `Layout.Header`). */
-export * as Header from '#/components/web/Dialog/Header';
-export { List, type ListProps } from '#/components/web/Dialog/List';
+export * as Header from '#/components/Dialog/Header';
+export { List, type ListProps } from '#/components/Dialog/List';

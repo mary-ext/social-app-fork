@@ -18,15 +18,15 @@ import { logger } from '#/logger';
 
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 
+import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/lists/CreateOrEditListDialog.css';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
+import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

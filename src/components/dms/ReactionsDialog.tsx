@@ -8,15 +8,15 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 import type { SessionAccount } from '#/state/session/types';
 
+import * as Dialog from '#/components/Dialog';
 import { filterBlockedReactions } from '#/components/dms/util';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import * as TabScroller from '#/components/TabScroller';
+import { tabLabel } from '#/components/TabScroller.css';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import * as TabScroller from '#/components/web/TabScroller';
-import { tabLabel } from '#/components/web/TabScroller.css';
 
 import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';

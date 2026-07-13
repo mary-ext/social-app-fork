@@ -5,10 +5,10 @@ import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list'
 import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import * as Menu from '#/components/Menu';
+import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

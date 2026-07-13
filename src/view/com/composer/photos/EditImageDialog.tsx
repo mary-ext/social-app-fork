@@ -2,8 +2,8 @@ import { lazy, Suspense } from 'react';
 
 import type { ComposerImage } from '#/state/gallery';
 
+import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

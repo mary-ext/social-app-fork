@@ -18,10 +18,10 @@ import { atoms as a, useTheme } from '#/alf';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
+import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

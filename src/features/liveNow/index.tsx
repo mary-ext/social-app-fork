@@ -30,8 +30,8 @@ import { useTickEveryMinute } from '#/state/shell';
 
 import { logger } from '#/logger';
 
+import type { DialogHandle } from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
-import type { DialogHandle } from '#/components/web/Dialog';
 
 import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
 import { m } from '#/paraglide/messages';

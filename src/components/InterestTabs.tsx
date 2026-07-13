@@ -1,6 +1,6 @@
+import * as TabScroller from '#/components/TabScroller';
+import { tabLabel } from '#/components/TabScroller.css';
 import { Text } from '#/components/Text';
-import * as TabScroller from '#/components/web/TabScroller';
-import { tabLabel } from '#/components/web/TabScroller.css';
 
 import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';

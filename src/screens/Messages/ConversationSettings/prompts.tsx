@@ -1,9 +1,9 @@
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

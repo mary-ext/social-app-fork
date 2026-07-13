@@ -1,6 +1,6 @@
 import type { Ref } from 'react';
 
-import { SearchInput } from '#/components/web/forms/SearchInput';
+import { SearchInput } from '#/components/forms/SearchInput';
 
 import * as styles from '#/features/gifPicker/components/GifPickerHeader.css';
 import { m } from '#/paraglide/messages';

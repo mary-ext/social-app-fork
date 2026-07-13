@@ -16,6 +16,7 @@ import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import * as Dialog from '#/components/Dialog';
 import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag';
@@ -24,13 +25,12 @@ import { PageText_Stroke2_Corner0_Rounded as PageText } from '#/components/icons
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
+import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

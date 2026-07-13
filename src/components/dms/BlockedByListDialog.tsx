@@ -4,9 +4,9 @@ import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
 
 import { listUriToHref } from '#/lib/strings/url-helpers';
 
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

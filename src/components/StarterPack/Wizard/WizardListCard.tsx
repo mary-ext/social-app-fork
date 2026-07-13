@@ -15,10 +15,10 @@ import { useSession } from '#/state/session';
 
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
+import * as Toggle from '#/components/forms/Toggle';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Toggle from '#/components/web/forms/Toggle';
 
 import { m } from '#/paraglide/messages';
 

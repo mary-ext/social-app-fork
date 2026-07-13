@@ -1,6 +1,6 @@
 import { fallbackVar, style } from '@vanilla-extract/css';
 
-import { bottomBarHeightVar } from '#/components/web/Shell/Shell.css';
+import { bottomBarHeightVar } from '#/components/Shell/Shell.css';
 
 export const screen = style({
 	display: 'flex',

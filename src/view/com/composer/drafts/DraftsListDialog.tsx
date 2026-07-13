@@ -4,10 +4,10 @@ import { Keyboard } from 'react-native';
 import { useCallOnce } from '#/lib/once';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import * as Dialog from '#/components/Dialog';
 import { PageX_Stroke2_Corner0_Rounded_Large as PageXIcon } from '#/components/icons/PageX';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

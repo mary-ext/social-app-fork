@@ -27,6 +27,7 @@ import { atoms as a, useTheme, utils } from '#/alf';
 import { isOnlyEmoji } from '#/alf/typography';
 
 import { Button } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
 import { ActionsWrapper } from '#/components/dms/ActionsWrapper';
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
@@ -34,11 +35,10 @@ import { getReplyPreviewText } from '#/components/dms/replyPreview';
 import { ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
 import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
+import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text as WebText } from '#/components/Text';
 import { Text } from '#/components/Typography';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

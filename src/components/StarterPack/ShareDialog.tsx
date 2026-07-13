@@ -3,12 +3,12 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { shareUrl } from '#/lib/sharing';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
+import * as Dialog from '#/components/Dialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Spinner } from '#/components/Spinner';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

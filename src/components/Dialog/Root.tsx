@@ -4,7 +4,7 @@ import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
-import { useRegisterDialog } from '#/components/web/Dialog/registry';
+import { useRegisterDialog } from '#/components/Dialog/registry';
 
 export const Trigger = BaseDialog.Trigger;
 

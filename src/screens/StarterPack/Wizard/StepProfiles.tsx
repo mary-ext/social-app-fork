@@ -9,10 +9,10 @@ import { useActorSearch } from '#/state/queries/actor-search';
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { SearchInput } from '#/components/forms/SearchInput';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Text';
-import { SearchInput } from '#/components/web/forms/SearchInput';
 
 import { m } from '#/paraglide/messages';
 

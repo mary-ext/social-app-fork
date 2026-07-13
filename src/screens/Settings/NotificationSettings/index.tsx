@@ -5,6 +5,7 @@ import {
 	useNotificationSettingsQuery,
 } from '#/state/queries/notifications/settings';
 
+import * as Dialog from '#/components/Dialog';
 import { NotificationSettingsDialog } from '#/components/dialogs/NotificationSettingsDialog';
 import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At';
 import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
@@ -24,7 +25,6 @@ import {
 import { Shapes_Stroke2_Corner0_Rounded as ShapesIcon } from '#/components/icons/Shapes';
 import * as Settings from '#/components/SettingsCards';
 import { Admonition } from '#/components/web/Admonition';
-import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

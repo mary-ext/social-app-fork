@@ -4,12 +4,12 @@ import { AlertDialog } from '@base-ui/react/alert-dialog';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
+import { useRegisterDialog } from '#/components/Dialog/registry';
 import type { Props as IconProps } from '#/components/icons/common';
+import * as styles from '#/components/Prompt/Prompt.css';
 import { Text } from '#/components/Text';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as buttonStyles from '#/components/web/Button.css';
-import { useRegisterDialog } from '#/components/web/Dialog/registry';
-import * as styles from '#/components/web/Prompt/Prompt.css';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

@@ -17,9 +17,9 @@ import { atoms as a, useTheme } from '#/alf';
 
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
+import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

@@ -10,14 +10,14 @@ import { parseLooseUrl } from '#/lib/strings/url-helpers';
 
 import { useTickEveryMinute } from '#/state/shell';
 
+import * as Dialog from '#/components/Dialog';
 import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
 import { Spinner } from '#/components/Spinner';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import {
 	displayDuration,

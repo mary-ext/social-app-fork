@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 
 import { clsx } from 'clsx';
 
+import * as styles from '#/components/Dialog/Header.css';
 import { Text } from '#/components/Text';
-import * as styles from '#/components/web/Dialog/Header.css';
 
 export function Outer({
 	border = true,

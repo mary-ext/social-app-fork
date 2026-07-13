@@ -4,12 +4,12 @@ import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { shareUrl } from '#/lib/sharing';
 import { splitApexDomain } from '#/lib/strings/url-helpers';
 
+import * as Dialog from '#/components/Dialog';
 import { type LinkWarningPayload, useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import * as css from '#/components/dialogs/LinkWarning.css';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

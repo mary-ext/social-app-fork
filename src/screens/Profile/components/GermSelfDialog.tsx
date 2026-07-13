@@ -13,12 +13,12 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

@@ -16,12 +16,12 @@ import { MissingFeed } from '#/view/com/feeds/MissingFeed';
 
 import { BlockLink } from '#/components/BlockLink';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
+import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Prompt from '#/components/web/Prompt';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';

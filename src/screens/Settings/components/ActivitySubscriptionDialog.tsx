@@ -3,11 +3,11 @@ import {
 	useNotificationDeclarationQuery,
 } from '#/state/queries/activity-subscriptions';
 
+import * as Dialog from '#/components/Dialog';
+import * as Toggle from '#/components/forms/Toggle';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
-import * as Dialog from '#/components/web/Dialog';
-import * as Toggle from '#/components/web/forms/Toggle';
 
 import { m } from '#/paraglide/messages';
 

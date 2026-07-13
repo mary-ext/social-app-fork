@@ -9,9 +9,9 @@ import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 
 import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
 
+import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { LockScroll } from '#/components/LockScroll';
-import * as Dialog from '#/components/web/Dialog';
 
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
 import { SplitViewProvider } from './context';

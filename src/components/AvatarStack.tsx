@@ -8,8 +8,8 @@ import {
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import * as css from '#/components/AvatarStack.css';
 import { UserAvatar } from '#/components/UserAvatar';
-import * as css from '#/components/web/AvatarStack.css';
 
 /**
  * a row of overlapping circular avatars, with earlier profiles painted on top and masked to cut a transparent

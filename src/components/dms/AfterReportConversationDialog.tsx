@@ -11,12 +11,12 @@ import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useProfileBlockMutationQueue, useProfileQuery } from '#/state/queries/profile';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import * as Dialog from '#/components/Dialog';
+import * as Toggle from '#/components/forms/Toggle';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Toggle from '#/components/web/forms/Toggle';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

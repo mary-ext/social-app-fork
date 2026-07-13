@@ -11,13 +11,13 @@ import { type Language, LANGUAGES, LANGUAGES_MAP, langCode } from '#/locale/lang
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
+import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/LanguageSelectDialog.css';
+import { SearchInput } from '#/components/forms/SearchInput';
+import * as Toggle from '#/components/forms/Toggle';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { SearchInput } from '#/components/web/forms/SearchInput';
-import * as Toggle from '#/components/web/forms/Toggle';
 
 import { m } from '#/paraglide/messages';
 

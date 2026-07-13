@@ -19,6 +19,7 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import * as Dialog from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
@@ -41,10 +42,9 @@ import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { useActorStatus, useLiveNowConfig } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';

@@ -31,13 +31,13 @@ import { ListHiddenScreen } from '#/screens/List/ListHiddenScreen';
 
 import { atoms as a, useTheme } from '#/alf';
 
+import * as Dialog from '#/components/Dialog';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import * as Layout from '#/components/Layout';
 import * as Hider from '#/components/moderation/Hider';
 import { Spinner } from '#/components/Spinner';
 import { type Section, Tabs } from '#/components/Tabs';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

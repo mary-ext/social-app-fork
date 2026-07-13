@@ -6,7 +6,7 @@ import { Autocomplete } from '@base-ui/react/autocomplete';
 import type { Emoji as DataEmoji } from '@emoji-mart/data';
 import { useQuery } from '@tanstack/react-query';
 
-import * as SearchField from '#/components/web/forms/SearchField';
+import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
 import { type SkinTone, useEmojiSkinTone, useRecentEmojis } from '#/storage/hooks/emoji';

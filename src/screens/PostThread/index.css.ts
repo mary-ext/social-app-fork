@@ -1,6 +1,6 @@
 import { fallbackVar, style } from '@vanilla-extract/css';
 
-import { bottomBarHeightVar } from '#/components/web/Shell/Shell.css';
+import { bottomBarHeightVar } from '#/components/Shell/Shell.css';
 
 import { colors } from '#/styles/colors';
 import { zIndex } from '#/styles/tokens.css';

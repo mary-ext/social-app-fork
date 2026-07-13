@@ -14,8 +14,8 @@ import {
 	ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft,
 	ArrowRight_Stroke2_Corner0_Rounded as ArrowRight,
 } from '#/components/icons/Arrow';
+import * as css from '#/components/TabScroller.css';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as css from '#/components/web/TabScroller.css';
 
 import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';

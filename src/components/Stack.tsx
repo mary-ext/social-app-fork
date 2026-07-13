@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import { clsx } from 'clsx';
 
-import * as css from '#/components/web/Stack.css';
+import * as css from '#/components/Stack.css';
 
 /** stacks its children in a vertical column. */
 export function Stack({

@@ -11,6 +11,7 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
+import * as Dialog from '#/components/Dialog';
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
@@ -19,7 +20,6 @@ import { ContentHider } from '#/components/moderation/ContentHider';
 import { useGlobalReportDialogHandle } from '#/components/moderation/ReportDialog';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 

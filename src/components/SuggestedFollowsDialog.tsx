@@ -10,13 +10,13 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useGetSuggestedUsersForSeeMoreQuery } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
 import { useSession } from '#/state/session';
 
+import * as Dialog from '#/components/Dialog';
+import { SearchInput } from '#/components/forms/SearchInput';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import { InterestTabs } from '#/components/InterestTabs';
 import * as css from '#/components/SuggestedFollowsDialog.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { SearchInput } from '#/components/web/forms/SearchInput';
-import { InterestTabs } from '#/components/web/InterestTabs';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';

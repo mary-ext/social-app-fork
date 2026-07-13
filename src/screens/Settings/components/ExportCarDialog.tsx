@@ -11,12 +11,12 @@ import { logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
+import * as Dialog from '#/components/Dialog';
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';

@@ -16,11 +16,11 @@ import { PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon } from '#/compon
 import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
 import { Window_Stroke2_Corner2_Rounded as WindowIcon } from '#/components/icons/Window';
+import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';

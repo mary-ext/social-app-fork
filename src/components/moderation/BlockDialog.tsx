@@ -20,12 +20,12 @@ import { logger } from '#/logger';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import * as Dialog from '#/components/Dialog';
 import { parseConvoView } from '#/components/dms/util';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

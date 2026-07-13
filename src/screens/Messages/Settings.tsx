@@ -8,13 +8,13 @@ import { useSession } from '#/state/session';
 
 import { ExportCarDialog } from '#/screens/Settings/components/ExportCarDialog';
 
+import * as Dialog from '#/components/Dialog';
 import { resolveAllowGroupInvites } from '#/components/dms/util';
 import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
 import { Message_Stroke2_Corner0_Rounded as MessageIcon } from '#/components/icons/Message';
 import * as Settings from '#/components/SettingsCards';
 import * as Toast from '#/components/Toast';
-import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

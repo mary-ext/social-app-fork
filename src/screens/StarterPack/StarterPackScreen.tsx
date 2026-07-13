@@ -38,6 +38,7 @@ import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
@@ -51,6 +52,7 @@ import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
@@ -61,8 +63,6 @@ import { type Section, Tabs } from '#/components/Tabs';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';

@@ -1,5 +1,5 @@
+import type * as Dialog from '#/components/Dialog';
 import { NotificationSettingsDialog } from '#/components/dialogs/NotificationSettingsDialog';
-import type * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

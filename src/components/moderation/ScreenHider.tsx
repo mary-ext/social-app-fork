@@ -7,10 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import type { NavigationProp } from '#/lib/routes/types';
 
+import * as Dialog from '#/components/Dialog';
+import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
 
 import { m } from '#/paraglide/messages';
 

@@ -13,6 +13,7 @@ import { clsx } from 'clsx';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
 
+import * as Dialog from '#/components/Dialog';
 import { type LightboxPayload, useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon } from '#/components/icons/ArrowOutOfBox';
 import {
@@ -27,7 +28,6 @@ import * as Menu from '#/components/Menu';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

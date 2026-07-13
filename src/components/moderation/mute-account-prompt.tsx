@@ -1,7 +1,7 @@
 import { Bubble_Stroke2_Corner2_Rounded as Bubble } from '#/components/icons/Bubble';
 import { Eye_Stroke2_Corner0_Rounded as Eye } from '#/components/icons/Eye';
 import { Megaphone_Stroke2_Corner0_Rounded as Megaphone } from '#/components/icons/Megaphone';
-import * as Prompt from '#/components/web/Prompt';
+import * as Prompt from '#/components/Prompt';
 
 import { m } from '#/paraglide/messages';
 

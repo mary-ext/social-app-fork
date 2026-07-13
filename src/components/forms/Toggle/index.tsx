@@ -6,9 +6,9 @@ import { Radio } from '@base-ui/react/radio';
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
 import { clsx } from 'clsx';
 
+import * as styles from '#/components/forms/Toggle/Toggle.css';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import type { Props as IconProps } from '#/components/icons/common';
-import * as styles from '#/components/web/forms/Toggle/Toggle.css';
 
 type GroupContextValue = {
 	/** True once a {@link Group}'s `maxSelections` cap is reached; unchecked {@link Item}s read it to disable. */

@@ -2,11 +2,11 @@ import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from 
 
 import { useSetExternalEmbedPref } from '#/state/preferences';
 
+import * as Dialog from '#/components/Dialog';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

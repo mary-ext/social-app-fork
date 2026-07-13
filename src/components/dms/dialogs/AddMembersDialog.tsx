@@ -4,11 +4,11 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { useListConvoMembersQuery } from '#/state/queries/messages/list-convo-members';
 
+import * as Dialog from '#/components/Dialog';
 import { SelectMembersStep } from '#/components/dms/dialogs/MemberPicker';
 import * as css from '#/components/dms/dialogs/MemberPicker.css';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

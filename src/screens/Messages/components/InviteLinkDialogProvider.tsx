@@ -3,8 +3,8 @@ import { createContext, useContext } from 'react';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
+import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
-import * as Dialog from '#/components/web/Dialog';
 
 import { InviteLinkDialog } from './InviteLinkDialog';
 

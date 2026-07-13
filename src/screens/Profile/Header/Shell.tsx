@@ -6,13 +6,13 @@ import { clsx } from 'clsx';
 
 import type { NavigationProp } from '#/lib/routes/types';
 
+import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
 import { UserBanner } from '#/components/UserBanner';
-import * as Dialog from '#/components/web/Dialog';
 
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';

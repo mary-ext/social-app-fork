@@ -3,9 +3,9 @@ import type { ReactNode } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
+import * as styles from '#/components/Dialog/Popup.css';
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
-import * as styles from '#/components/web/Dialog/Popup.css';
 
 import { m } from '#/paraglide/messages';
 

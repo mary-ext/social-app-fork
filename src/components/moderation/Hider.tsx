@@ -7,8 +7,8 @@ import {
 	useModerationCauseDescription,
 } from '#/lib/moderation/useModerationCauseDescription';
 
-import * as Dialog from '#/components/web/Dialog';
-import { ModerationDetailsDialog } from '#/components/web/moderation/ModerationDetailsDialog';
+import * as Dialog from '#/components/Dialog';
+import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';
 
 type Context = {
 	isContentVisible: boolean;

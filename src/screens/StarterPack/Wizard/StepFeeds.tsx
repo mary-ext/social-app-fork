@@ -10,11 +10,11 @@ import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { SearchInput } from '#/components/forms/SearchInput';
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { WizardFeedCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Text';
-import { SearchInput } from '#/components/web/forms/SearchInput';
 
 import { m } from '#/paraglide/messages';
 

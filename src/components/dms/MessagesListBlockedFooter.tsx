@@ -20,8 +20,8 @@ import {
 	PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon,
 	PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person';
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

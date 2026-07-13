@@ -15,12 +15,12 @@ import { type Props as SVGIconProps, sizes as iconSizes } from '#/components/ico
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
+import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { Text, type TextProps } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

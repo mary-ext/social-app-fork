@@ -1,6 +1,6 @@
+import type * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
-import type * as Dialog from '#/components/web/Dialog';
 
 import * as styles from '#/features/gifPicker/components/GifPickerErrorBoundary.css';
 import { m } from '#/paraglide/messages';

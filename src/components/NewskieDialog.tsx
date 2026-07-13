@@ -11,12 +11,12 @@ import { useSession } from '#/state/session';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 
+import * as Dialog from '#/components/Dialog';
 import { Newskie } from '#/components/icons/Newskie';
 import * as styles from '#/components/NewskieDialog.css';
+import { Stack } from '#/components/Stack';
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

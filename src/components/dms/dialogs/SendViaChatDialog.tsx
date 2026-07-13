@@ -15,14 +15,14 @@ import { useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
+import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dms/dialogs/SendViaChatDialog.css';
 import { canBeMessaged, type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
+import * as SearchField from '#/components/forms/SearchField';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as SearchField from '#/components/web/forms/SearchField';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';

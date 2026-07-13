@@ -35,6 +35,7 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 
 import { logger } from '#/logger';
 
+import * as Dialog from '#/components/Dialog';
 import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
@@ -63,10 +64,9 @@ import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

@@ -29,7 +29,9 @@ import { logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
+import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/PostInteractionSettingsDialog.css';
+import * as Toggle from '#/components/forms/Toggle';
 import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
@@ -37,13 +39,11 @@ import {
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon } from '#/components/icons/Quote';
 import { Spinner } from '#/components/Spinner';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Toggle from '#/components/web/forms/Toggle';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

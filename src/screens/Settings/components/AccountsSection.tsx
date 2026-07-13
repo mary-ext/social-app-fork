@@ -19,6 +19,7 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 
+import { AvatarStack } from '#/components/AvatarStack';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
@@ -29,14 +30,13 @@ import {
 } from '#/components/icons/Person';
 import * as Menu from '#/components/Menu';
 import { ProfileBadges } from '#/components/ProfileBadges';
+import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
-import { AvatarStack } from '#/components/web/AvatarStack';
-import * as Prompt from '#/components/web/Prompt';
 import * as Skele from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';

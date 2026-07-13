@@ -8,15 +8,15 @@ import { useSession } from '#/state/session';
 
 import { dateLong } from '#/locale/intl/datetime';
 
+import * as Dialog from '#/components/Dialog';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { useSimpleVerificationState } from '#/components/verification';
 import * as css from '#/components/verification/VerificationsDialog.css';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

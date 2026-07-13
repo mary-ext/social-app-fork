@@ -4,11 +4,11 @@ import { safeUrlParse } from '#/lib/strings/url-helpers';
 
 import { useSession } from '#/state/session';
 
+import * as Dialog from '#/components/Dialog';
 import type { LinkWarningPayload } from '#/components/dialogs/Context';
 import { CustomLinkWarningDialog } from '#/components/dialogs/LinkWarning';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Text as WebText } from '#/components/Text';
-import * as Dialog from '#/components/web/Dialog';
 import { ExternalLink } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';

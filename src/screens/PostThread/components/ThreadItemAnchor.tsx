@@ -44,11 +44,11 @@ import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMe
 import * as PostLayout from '#/components/PostLayout';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
+import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { InlineLinkText } from '#/components/web/Link';
-import * as Prompt from '#/components/web/Prompt';
 import * as Skele from '#/components/web/Skeleton';
 import { WhoCanReply } from '#/components/WhoCanReply';
 

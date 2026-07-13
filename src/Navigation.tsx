@@ -53,7 +53,7 @@ import {
 
 import { type Theme, useTheme } from '#/alf';
 
-import { WebShell } from '#/components/web/Shell';
+import { WebShell } from '#/components/Shell';
 
 import { m } from '#/paraglide/messages';
 import { router } from '#/routes';

@@ -12,14 +12,14 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import * as Dialog from '#/components/Dialog';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Spinner } from '#/components/Spinner';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import { Stack } from '#/components/web/Stack';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 import { m } from '#/paraglide/messages';

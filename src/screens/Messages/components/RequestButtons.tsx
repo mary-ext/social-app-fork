@@ -13,6 +13,7 @@ import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/
 import { useSession } from '#/state/session';
 
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
@@ -32,7 +33,6 @@ import {
 	type ButtonProps as WebButtonProps,
 	ButtonText as WebButtonText,
 } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

@@ -14,10 +14,10 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
+import * as Dialog from '#/components/Dialog';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Text';
 import * as styles from '#/components/UserAvatar.css';
-import * as Dialog from '#/components/web/Dialog';
 import { Link } from '#/components/web/Link';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';

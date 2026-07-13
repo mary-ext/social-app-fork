@@ -3,9 +3,9 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
+import * as Dialog from '#/components/Dialog';
 import { WizardFeedCard, WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

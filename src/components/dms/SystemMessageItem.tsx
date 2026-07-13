@@ -10,10 +10,10 @@ import { useInviteLinkDialog } from '#/screens/Messages/components/InviteLinkDia
 
 import { atoms as a, useTheme } from '#/alf';
 
+import * as Dialog from '#/components/Dialog';
 import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';

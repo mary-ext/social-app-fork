@@ -8,12 +8,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useConvoActive } from '#/state/messages/convo';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
+import * as Dialog from '#/components/Dialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReactionsDialog } from '#/components/dms/ReactionsDialog';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 

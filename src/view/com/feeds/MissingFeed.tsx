@@ -11,12 +11,12 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
+import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Text as LegacyText } from '#/components/Typography';
-import * as Dialog from '#/components/web/Dialog';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import { Stack } from '#/components/web/Stack';
 
 import { m } from '#/paraglide/messages';
 

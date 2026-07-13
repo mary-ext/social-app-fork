@@ -6,6 +6,7 @@ import type { LightboxImage } from '@oomfware/lightbox';
 
 import { clsx } from 'clsx';
 
+import * as Dialog from '#/components/Dialog';
 import type { LightboxHandle } from '#/components/dialogs/Context';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import {
@@ -23,7 +24,6 @@ import * as styles from '#/components/ImageEmbed/Gallery.css';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';

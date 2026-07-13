@@ -5,10 +5,10 @@ import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 
 import type { ComposerImage } from '#/state/gallery';
 
+import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
 
 import { m } from '#/paraglide/messages';
 

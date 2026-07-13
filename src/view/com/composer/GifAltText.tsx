@@ -1,10 +1,10 @@
 import { GifAltTextDialog } from '#/view/com/composer/GifAltTextDialog';
 
+import * as Dialog from '#/components/Dialog';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
-import * as Dialog from '#/components/web/Dialog';
 
 import type { Gif } from '#/features/gifPicker/types';
 import { m } from '#/paraglide/messages';

@@ -15,17 +15,17 @@ import { Trans } from '#/locale/Trans';
 
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 
+import * as Dialog from '#/components/Dialog';
 import { EditableBanner } from '#/components/EditableBanner';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
 import { InlineLinkText } from '#/components/Link';
+import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { useSimpleVerificationState } from '#/components/verification';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Dialog from '#/components/web/Dialog';
-import * as Prompt from '#/components/web/Prompt';
 
 import { m } from '#/paraglide/messages';
 
