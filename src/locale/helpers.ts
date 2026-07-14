@@ -1,7 +1,5 @@
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
-import * as bcp47Match from 'bcp-47-match';
-
 import { detectLanguages } from '#/lib/language-detection';
 
 import { LOCALE } from './intl/locale';
@@ -93,11 +91,29 @@ export function getPostLanguage(post: AppBskyFeedDefs.PostView): string | undefi
 	}
 }
 
+/**
+ * tests whether a BCP-47 language `tag` matches any of the given `ranges` under RFC 4647 Basic Filtering: a
+ * range matches when it is `*`, equals the tag, or is a subtag-boundary prefix of it (e.g. `en` matches
+ * `en-US`), case-insensitively.
+ *
+ * @param tag the language tag to test
+ * @param ranges one or more language ranges to test against
+ * @returns whether the tag matches any range
+ */
+export function matchesLanguage(tag: string, ranges: string | string[]): boolean {
+	const lowerTag = tag.toLowerCase();
+	const rangeList = typeof ranges === 'string' ? [ranges] : ranges;
+	return rangeList.some((r) => {
+		const range = r.toLowerCase();
+		return range === '*' || lowerTag === range || lowerTag.startsWith(range + '-');
+	});
+}
+
 export function isPostInLanguage(post: AppBskyFeedDefs.PostView, targetLangs: string[]): boolean {
 	const lang = getPostLanguage(post);
 	if (!lang) {
 		// the post has no text, so we just say "yes" for now
 		return true;
 	}
-	return bcp47Match.basicFilter(lang, targetLangs).length > 0;
+	return matchesLanguage(lang, targetLangs);
 }

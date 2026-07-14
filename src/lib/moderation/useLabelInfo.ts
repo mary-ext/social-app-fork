@@ -8,12 +8,11 @@ import {
 	type LabelLocale,
 } from '@atcute/bluesky-moderation';
 
-import * as bcp47Match from 'bcp-47-match';
-
 import { type GlobalLabelStrings, useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 
 import { useLabelDefinitions } from '#/state/preferences';
 
+import { matchesLanguage } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 
 export interface LabelInfo {
@@ -74,7 +73,7 @@ export function getLabelStrings(
 		return { lang: locale, name: strings.name, description: strings.description };
 	}
 	// custom labels: try to find a locale match in the definition's own strings
-	const localeMatch = def.locales.find((strings) => bcp47Match.basicFilter(locale, strings.lang).length > 0);
+	const localeMatch = def.locales.find((strings) => matchesLanguage(locale, strings.lang));
 	if (localeMatch) {
 		return localeMatch;
 	}

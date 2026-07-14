@@ -142,9 +142,6 @@ importers:
       '@vanilla-extract/dynamic':
         specifier: ^2.1.5
         version: 2.1.5
-      bcp-47-match:
-        specifier: ^2.0.3
-        version: 2.0.3
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -2096,9 +2093,6 @@ packages:
     resolution: {integrity: sha512-c/jurFrDLyui7o1J86yLkRu4LMsTYcBohveus7/I2Hzdn9KIP2bdJPTue/lR1KH46enoPbD77GKeSYNdyPoD3Q==}
     engines: {node: '>=6.0.0'}
     hasBin: true
-
-  bcp-47-match@2.0.3:
-    resolution: {integrity: sha512-JtTezzbAibu8G0R9op9zb3vcWZd9JF6M0xOYGPn0fNCd7wOpRB1mU2mH9T8gaBGbAAyIIVgB2G7xG0GP98zMAQ==}
 
   big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
@@ -5405,8 +5399,6 @@ snapshots:
   base64id@2.0.0: {}
 
   baseline-browser-mapping@2.10.42: {}
-
-  bcp-47-match@2.0.3: {}
 
   big.js@5.2.2: {}
 
