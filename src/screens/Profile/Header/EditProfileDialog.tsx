@@ -56,7 +56,7 @@ export function EditProfileDialog({
 					}
 				}}
 			>
-				<Dialog.Popup scroll="body" label={m['screens.profile.editProfile.action']()}>
+				<Dialog.Popup scroll="body">
 					<DialogInner
 						profile={profile}
 						handle={handle}

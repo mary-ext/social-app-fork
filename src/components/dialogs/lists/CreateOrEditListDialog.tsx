@@ -81,7 +81,7 @@ export function CreateOrEditListDialog({
 					}
 				}}
 			>
-				<Dialog.Popup scroll="body" label={m['components.dialogs.list.createOrEdit']()}>
+				<Dialog.Popup scroll="body">
 					<DialogInner
 						list={list}
 						purpose={purpose}

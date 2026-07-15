@@ -23,7 +23,7 @@ type Props = {
 export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.ReactNode => {
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
-			<Dialog.Popup scroll="body" label={m['view.composer.altText.action.add']()}>
+			<Dialog.Popup scroll="body">
 				<DialogInner handle={handle} image={image} onChange={onChange} />
 			</Dialog.Popup>
 		</Dialog.Root>

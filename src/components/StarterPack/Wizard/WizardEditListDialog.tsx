@@ -61,7 +61,7 @@ export function WizardEditListDialog({
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" label={title}>
+			<Dialog.Popup scroll="body">
 				<Dialog.Header.Outer>
 					<Dialog.Header.Slot />
 					<Dialog.Header.Content>

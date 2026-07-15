@@ -27,7 +27,7 @@ const EditImageDialogInner = lazy(() =>
 export function EditImageDialog(props: EditImageDialogProps) {
 	return (
 		<Dialog.Root disablePointerDismissal handle={props.handle}>
-			<Dialog.Popup scroll="body" label={m['view.composer.gallery.action.edit']()}>
+			<Dialog.Popup scroll="body">
 				<Suspense
 					fallback={
 						<Dialog.Body>

@@ -28,7 +28,7 @@ type Props = {
 export function GifAltTextDialog({ altText, gif, handle, onSubmit }: Props): React.ReactNode {
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
-			<Dialog.Popup scroll="body" label={m['view.composer.altText.action.add']()}>
+			<Dialog.Popup scroll="body">
 				<DialogInner altText={altText} gif={gif} handle={handle} onSubmit={onSubmit} />
 			</Dialog.Popup>
 		</Dialog.Root>

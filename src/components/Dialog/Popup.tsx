@@ -119,10 +119,7 @@ export function TitleRow({ children, className }: { children: ReactNode; classNa
 	return <div className={clsx(styles.titleRow, className)}>{children}</div>;
 }
 
-/**
- * Dialog heading. Renders the accessible title (so `Popup`'s `label` is redundant when this is present) as
- * the standard `xl` semiBold `Text`.
- */
+/** Dialog heading. */
 export function Title({ children, className }: { children: ReactNode; className?: string }) {
 	return (
 		<BaseDialog.Title className={clsx(styles.title, className)} render={<Text size="xl" weight="semiBold" />}>

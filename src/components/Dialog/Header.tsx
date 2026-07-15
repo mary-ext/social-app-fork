@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/Dialog/Header.css';
@@ -25,10 +26,11 @@ export function Slot({ children }: { children?: ReactNode }) {
 	return <div className={styles.slot}>{children}</div>;
 }
 
+/** Dialog heading for the sticky header slot. */
 export function TitleText({ children }: { children: ReactNode }) {
 	return (
-		<Text size="lg" weight="semiBold" align="center" numberOfLines={1}>
+		<BaseDialog.Title render={<Text size="lg" weight="semiBold" align="center" numberOfLines={1} />}>
 			{children}
-		</Text>
+		</BaseDialog.Title>
 	);
 }

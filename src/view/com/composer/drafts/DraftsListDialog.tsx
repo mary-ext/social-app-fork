@@ -25,7 +25,7 @@ type DraftsListDialogProps = {
 export function DraftsListDialog({ handle, onSelectDraft }: DraftsListDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" label={m['view.composer.drafts.title']()}>
+			<Dialog.Popup scroll="body">
 				<DialogInner handle={handle} onSelectDraft={onSelectDraft} />
 			</Dialog.Popup>
 		</Dialog.Root>

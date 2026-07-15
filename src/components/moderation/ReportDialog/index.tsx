@@ -32,11 +32,7 @@ export function GlobalReportDialog() {
 		<Dialog.Root handle={handle}>
 			{({ payload }: { payload: { subject: ReportSubject } | undefined }) =>
 				payload ? (
-					<Dialog.Popup
-						className={styles.popup}
-						label={m['components.moderation.report.a11yLabel']()}
-						scroll="body"
-					>
+					<Dialog.Popup className={styles.popup} scroll="body">
 						<Suspense fallback={<ContentFallback />}>
 							<Content close={() => handle.close()} subject={payload.subject} />
 						</Suspense>
@@ -67,11 +63,7 @@ export function ReportDialog({
 				}
 			}}
 		>
-			<Dialog.Popup
-				className={styles.popup}
-				label={m['components.moderation.report.a11yLabel']()}
-				scroll="body"
-			>
+			<Dialog.Popup className={styles.popup} scroll="body">
 				<Suspense fallback={<ContentFallback />}>
 					<Content close={() => handle.close()} onAfterSubmit={onAfterSubmit} subject={subject} />
 				</Suspense>
