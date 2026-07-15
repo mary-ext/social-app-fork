@@ -43,8 +43,7 @@ export const index = style({
 });
 
 export const topicLink = style({
-	alignItems: 'center',
-	alignSelf: 'flex-start',
+	alignItems: 'flex-start',
 	display: 'flex',
 	gap: space.xs,
 	textDecoration: 'none',
@@ -52,6 +51,8 @@ export const topicLink = style({
 
 export const topicName = style({
 	color: colors.textContrastMedium,
+	flex: 1,
+	minWidth: 0,
 	selectors: {
 		[`${topicLink}:hover &`]: { color: colors.text, textDecoration: 'underline' },
 	},

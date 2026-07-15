@@ -92,7 +92,7 @@ function TopicLink({ index, topic }: { index: number; topic: TrendingTopic }) {
 			<Text size="sm" className={css.index}>
 				{index + 1}.
 			</Text>
-			<Text size="sm" numberOfLines={1} className={css.topicName}>
+			<Text size="sm" className={css.topicName}>
 				{topic.displayName ?? topic.topic}
 			</Text>
 		</Link>
