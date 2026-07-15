@@ -265,6 +265,7 @@
 	"view.composer.video.error.uploadConnection": "An error occurred while uploading the video. Please check your internet connection and try again.",
 	"view.composer.video.error.waitlist": "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!",
 	"view.composer.video.jobId": "Job ID: {jobId}",
+	"view.composer.video.previewUnavailable": "This video can’t be previewed in your browser. It will still be uploaded.",
 	"view.composer.video.processing": "Processing video...",
 	"view.composer.video.settingsTitle": "Video settings",
 	"view.composer.video.uploaded": "Video uploaded",
