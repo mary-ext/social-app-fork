@@ -11,7 +11,7 @@ import { useCloseAllActiveElements } from '#/state/util';
 import { OAuthCallback } from '#/view/com/auth/OAuthCallback';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
-import { LinkWarningDialog } from '#/components/dialogs/LinkWarning';
+import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
 import { SigninDialog } from '#/components/dialogs/Signin';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import { Lightbox } from '#/components/Lightbox';

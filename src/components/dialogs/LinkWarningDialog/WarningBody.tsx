@@ -5,34 +5,16 @@ import { shareUrl } from '#/lib/sharing';
 import { splitApexDomain } from '#/lib/strings/url-helpers';
 
 import * as Dialog from '#/components/Dialog';
-import { type LinkWarningPayload, useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
-import * as css from '#/components/dialogs/LinkWarning.css';
+import type { LinkWarningPayload } from '#/components/dialogs/Context';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
-export function LinkWarningDialog() {
-	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
-	return <LinkWarningDialogBase handle={linkWarningDialogHandle} />;
-}
+import * as css from './LinkWarningDialog.css';
 
-export function CustomLinkWarningDialog({ handle }: { handle: Dialog.DialogHandle<LinkWarningPayload> }) {
-	return <LinkWarningDialogBase handle={handle} />;
-}
-
-function LinkWarningDialogBase({ handle }: { handle: Dialog.DialogHandle<LinkWarningPayload> }) {
-	return (
-		<Dialog.Root handle={handle}>
-			{({ payload }: { payload: LinkWarningPayload | undefined }) =>
-				payload ? <LinkWarningPopup close={() => handle.close()} link={payload} /> : null
-			}
-		</Dialog.Root>
-	);
-}
-
-function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarningPayload }) {
+export function WarningBody({ close, link }: { close: () => void; link: LinkWarningPayload }) {
 	const openLink = useOpenLink();
 
 	const onPressVisit = () => {
@@ -45,32 +27,30 @@ function LinkWarningPopup({ close, link }: { close: () => void; link: LinkWarnin
 	};
 
 	return (
-		<Dialog.Popup size="narrow">
-			<Stack gap="xl">
-				<Stack gap="md">
-					<Dialog.Title>{m['components.dialogs.link.title']()}</Dialog.Title>
+		<Stack gap="xl">
+			<Stack gap="md">
+				<Dialog.Title>{m['components.dialogs.link.title']()}</Dialog.Title>
 
-					<Text color="textContrastHigh">{m['components.dialogs.link.destination']()}</Text>
-					<LinkBox href={link.href} />
-				</Stack>
-
-				<Dialog.Actions>
-					<Button color="secondary" label={m['common.action.goBack']()} onClick={close} variant="ghost">
-						<ButtonText>{m['common.action.goBack']()}</ButtonText>
-					</Button>
-					<Button
-						color="primary"
-						label={link.share ? m['components.dialogs.link.share']() : m['components.dialogs.link.visit']()}
-						onClick={onPressVisit}
-						variant="solid"
-					>
-						<ButtonText>
-							{link.share ? m['components.dialogs.link.share']() : m['components.dialogs.link.visit']()}
-						</ButtonText>
-					</Button>
-				</Dialog.Actions>
+				<Text color="textContrastHigh">{m['components.dialogs.link.destination']()}</Text>
+				<LinkBox href={link.href} />
 			</Stack>
-		</Dialog.Popup>
+
+			<Dialog.Actions>
+				<Button color="secondary" label={m['common.action.goBack']()} onClick={close} variant="ghost">
+					<ButtonText>{m['common.action.goBack']()}</ButtonText>
+				</Button>
+				<Button
+					color="primary"
+					label={link.share ? m['components.dialogs.link.share']() : m['components.dialogs.link.visit']()}
+					onClick={onPressVisit}
+					variant="solid"
+				>
+					<ButtonText>
+						{link.share ? m['components.dialogs.link.share']() : m['components.dialogs.link.visit']()}
+					</ButtonText>
+				</Button>
+			</Dialog.Actions>
+		</Stack>
 	);
 }
 

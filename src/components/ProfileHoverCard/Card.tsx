@@ -1,5 +1,3 @@
-import { type ReactElement, useRef } from 'react';
-
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -8,7 +6,6 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { PreviewCard } from '@base-ui/react/preview-card';
 import { useNavigation } from '@react-navigation/native';
 
 import { getModerationCauseKey } from '#/lib/moderation';
@@ -17,7 +14,7 @@ import type { NavigationProp } from '#/lib/routes/types';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { usePrefetchProfileQuery, useProfileQuery } from '#/state/queries/profile';
+import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { formatCount } from '#/locale/intl/number';
@@ -30,7 +27,6 @@ import { useRichText } from '#/components/hooks/useRichText';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import * as Pills from '#/components/Pills';
-import * as css from '#/components/ProfileHoverCard.css';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -44,48 +40,9 @@ import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
 import { m } from '#/paraglide/messages';
 
-export type ProfileHoverCardProps = {
-	/**
-	 * trigger element. must forward a ref and spread DOM props onto its host node (used as
-	 * {@link PreviewCard.Trigger}'s `render`).
-	 */
-	children: ReactElement;
-	did: string;
-};
+import * as css from './ProfileHoverCard.css';
 
-/** profile preview shown on hover, built on Base UI's PreviewCard. wraps a single ref-forwarding trigger. */
-export function ProfileHoverCard({ children, did }: ProfileHoverCardProps) {
-	const prefetchProfileQuery = usePrefetchProfileQuery();
-	const prefetched = useRef(false);
-
-	const prefetchIfNeeded = () => {
-		if (!prefetched.current) {
-			prefetched.current = true;
-			void prefetchProfileQuery(did);
-		}
-	};
-
-	return (
-		<PreviewCard.Root>
-			<PreviewCard.Trigger
-				render={children}
-				// closeDelay={HIDE_DELAY}
-				// delay={SHOW_DELAY}
-				// warm the cache as soon as the pointer lands so the card has data before the open delay elapses
-				onPointerMove={prefetchIfNeeded}
-			/>
-			<PreviewCard.Portal>
-				<PreviewCard.Positioner className={css.positioner} collisionPadding={16} sideOffset={4}>
-					<PreviewCard.Popup className={css.popup}>
-						<Card did={did} />
-					</PreviewCard.Popup>
-				</PreviewCard.Positioner>
-			</PreviewCard.Portal>
-		</PreviewCard.Root>
-	);
-}
-
-function Card({ did }: { did: string }) {
+export function Card({ did }: { did: string }) {
 	const navigation = useNavigation<NavigationProp>();
 	const profile = useProfileQuery({ did });
 	const moderationOpts = useModerationOpts();

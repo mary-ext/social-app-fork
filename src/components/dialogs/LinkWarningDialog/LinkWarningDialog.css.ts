@@ -8,3 +8,10 @@ export const linkBox = style({
 	paddingBlock: 10,
 	paddingInline: 12,
 });
+
+export const loadingBox = style({
+	alignItems: 'center',
+	display: 'flex',
+	justifyContent: 'center',
+	minHeight: 188,
+});

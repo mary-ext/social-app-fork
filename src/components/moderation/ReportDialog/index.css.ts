@@ -109,6 +109,13 @@ export const center = style({
 	paddingBlock: 24,
 });
 
+export const loadingFallback = style({
+	alignItems: 'center',
+	display: 'flex',
+	justifyContent: 'center',
+	minHeight: 720,
+});
+
 export const srOnly = style({
 	border: 0,
 	clip: 'rect(0, 0, 0, 0)',

@@ -22,6 +22,16 @@ export const scrim = style({
 	vars: { '--lightbox-backdrop': 'rgba(0, 0, 0, 0.92)' },
 });
 
+export const loadingFallback = style({
+	position: 'fixed',
+	inset: 0,
+	zIndex: Z,
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	background: 'rgba(0, 0, 0, 0.92)',
+});
+
 export const popup = style({
 	position: 'fixed',
 	inset: 0,

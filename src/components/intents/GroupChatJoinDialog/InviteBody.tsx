@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { ClientResponseError } from '@atcute/client';
 
 import { useNavigation } from '@react-navigation/native';
@@ -8,7 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
-import { getChatInviteCodeFromUrl } from '#/lib/strings/url-helpers';
 
 import {
 	invalidateJoinLinkPreviewsForCode,
@@ -24,8 +21,7 @@ import { logger } from '#/logger';
 import { Trans } from '#/locale/Trans';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
-import * as Dialog from '#/components/Dialog';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import type * as Dialog from '#/components/Dialog';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
 import { ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon } from '#/components/icons/ChainLink';
@@ -35,7 +31,6 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Spinner } from '#/components/Spinner';
-import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -46,54 +41,7 @@ import { colors } from '#/styles/colors';
 
 import * as css from './GroupChatJoinDialog.css';
 
-/**
- * the single app-wide group-chat join dialog, opened imperatively from a `bsky.app/chat/<code>` link or
- * invite.
- */
-export function GroupChatJoinDialog() {
-	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
-
-	// a direct load of /chat/<code> renders Home (see routes) — open the join dialog over it. The shell closes
-	// all dialogs on the navigator's initial 'state' settle, so opening on mount would be dismissed at once;
-	// open on the first settle instead, deferred a tick so it runs after the shell's closeAllActiveElements.
-	const navigation = useNavigation<NavigationProp>();
-	useEffect(() => {
-		const code = getChatInviteCodeFromUrl(window.location.pathname);
-		if (!code) {
-			return;
-		}
-		const unsubscribe = navigation.addListener('state', () => {
-			unsubscribe();
-			setTimeout(() => {
-				groupChatJoinHandle.openWithPayload({ code });
-				// swap the now-handled /chat/<code> URL for Home; replaceState doesn't fire a navigator
-				// 'state' event, so it won't trip closeAllActiveElements and dismiss the dialog we just opened.
-				window.history.replaceState(null, '', '/');
-			}, 0);
-		});
-		return unsubscribe;
-	}, [groupChatJoinHandle, navigation]);
-
-	return (
-		<Dialog.Root handle={groupChatJoinHandle}>
-			{({ payload }) => (
-				<Dialog.Popup label={m['components.intents.join.action.join']()} size="narrow">
-					<Stack className={css.inner} gap="_2xl">
-						{/* remount per code so a reopen with a different invite refetches from a clean state */}
-						<GroupChatJoinDialogContent
-							key={payload?.code}
-							handle={groupChatJoinHandle}
-							code={payload?.code}
-						/>
-					</Stack>
-					<Dialog.Close variant="floating" />
-				</Dialog.Popup>
-			)}
-		</Dialog.Root>
-	);
-}
-
-function GroupChatJoinDialogContent({
+export function InviteBody({
 	handle,
 	code,
 }: {
