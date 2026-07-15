@@ -249,6 +249,12 @@ export const button = recipe(
 				bare: { backgroundColor: 'transparent', color: 'inherit' },
 				ghost: {},
 				outline: {},
+				// translucent dark treatment for buttons floating over media (banners, images)
+				scrim: {
+					backgroundColor: 'rgba(0, 0, 0, 0.5)',
+					color: vars.palette.white,
+					selectors: { [HOVER]: { backgroundColor: 'rgba(0, 0, 0, 0.75)' } },
+				},
 				solid: {},
 			},
 		},
