@@ -29,6 +29,27 @@ export const outerStatic = style({
 	position: 'static',
 });
 
+export const bannerOuter = style({
+	position: 'relative',
+});
+
+export const bannerHeader = style({
+	alignItems: 'center',
+	boxSizing: 'border-box',
+	display: 'flex',
+	flexDirection: 'row',
+	gap: space.sm,
+	insetInline: 0,
+	minHeight: 51,
+	paddingBottom: space.xs,
+	paddingInline: space.lg,
+	// inset the header below the notch; the banner behind covers the safe area itself
+	paddingTop: `calc(${space.xs}px + env(safe-area-inset-top, 0px))`,
+	position: 'absolute',
+	top: 0,
+	zIndex: zIndex.sticky,
+});
+
 export const content = style({
 	display: 'flex',
 	flex: '1 1 0%',
