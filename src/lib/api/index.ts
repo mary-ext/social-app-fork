@@ -34,7 +34,6 @@ import type { EmbedDraft, PostDraft, ThreadDraft } from '#/view/com/composer/sta
 import { m } from '#/paraglide/messages';
 
 import { createGIFDescription } from '../gif-alt-text';
-import { serializeRecordCid } from './cid';
 import { uploadBlob } from './upload-blob';
 
 /** The authenticated clients and repo DID a publish runs against. */
@@ -142,15 +141,19 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 			});
 		}
 
-		// Prepare a ref to the current post for the next post in the thread.
-		const ref: ComAtprotoRepoStrongRef.Main = {
-			cid: await serializeRecordCid(record),
-			uri: uri as ResourceUri,
-		};
-		replyPromise = {
-			root: reply?.root ?? ref,
-			parent: ref,
-		};
+		// ref the current post so the next one can reply to it; skip the final post's unused ref. the
+		// lazy import keeps cid.ts and its cbor deps out of the composer chunk until a thread is posted.
+		if (i < thread.posts.length - 1) {
+			const { serializeRecordCid } = await import('./cid');
+			const ref: ComAtprotoRepoStrongRef.Main = {
+				cid: await serializeRecordCid(record),
+				uri: uri as ResourceUri,
+			};
+			replyPromise = {
+				root: reply?.root ?? ref,
+				parent: ref,
+			};
+		}
 	}
 
 	try {
