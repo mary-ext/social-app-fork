@@ -13,6 +13,22 @@ export const admonition = style({
 	marginTop: 16,
 });
 
+export const appealRow = style({
+	alignItems: 'center',
+	borderTop: `1px solid ${vars.palette.contrast_100}`,
+	display: 'flex',
+	flexWrap: 'wrap',
+	gap: 12,
+	justifyContent: 'space-between',
+	marginTop: 16,
+	paddingTop: 16,
+});
+
+export const appealHint = style({
+	flex: 1,
+	minWidth: 180,
+});
+
 export const labelBand = style({
 	backgroundColor: vars.palette.contrast_25,
 	borderBottomLeftRadius: 11,

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -11,10 +13,12 @@ import { relativeMessageParts } from '#/locale/intl/timeAgo';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
+import { AppealForm } from '#/components/moderation/AppealForm';
 import type { AppModerationCause } from '#/components/Pills';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
@@ -41,6 +45,23 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 	const desc = useModerationCauseDescription(modcause);
 	const { currentAccount } = useSession();
 	const now = useConstant(Date.now);
+	const [isAppealing, setIsAppealing] = useState(false);
+
+	// appeal eligibility: a label cause on the current user's own content that they didn't self-apply.
+	const canAppeal =
+		modcause?.type === ModerationCauseType.Label &&
+		!!currentAccount &&
+		modcause.label.src !== currentAccount.did &&
+		(modcause.label.uri === currentAccount.did ||
+			modcause.label.uri.startsWith('at://' + currentAccount.did + '/'));
+
+	if (isAppealing && modcause?.type === ModerationCauseType.Label) {
+		return (
+			<div className={styles.main}>
+				<AppealForm handle={handle} label={modcause.label} onPressBack={() => setIsAppealing(false)} />
+			</div>
+		);
+	}
 
 	let name;
 	let description;
@@ -126,6 +147,23 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 					</Dialog.TitleRow>
 					<Text>{description}</Text>
 				</Stack>
+
+				{canAppeal && (
+					<div className={styles.appealRow}>
+						<Text className={styles.appealHint} color="textContrastMedium" size="sm">
+							{m['components.moderation.appeal.theseLabelsHint']()}
+						</Text>
+						<Button
+							color="primary_subtle"
+							label={m['components.moderation.appeal.action']()}
+							onClick={() => setIsAppealing(true)}
+							size="small"
+							variant="solid"
+						>
+							<ButtonText>{m['components.moderation.appeal.action']()}</ButtonText>
+						</Button>
+					</div>
+				)}
 
 				{desc.isSubjectAccount && (
 					<Admonition className={styles.admonition} type="info">

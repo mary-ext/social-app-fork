@@ -51,7 +51,3 @@ export const expires = style({
 	flexShrink: 0,
 	fontStyle: 'italic',
 });
-
-export const appealError = style({
-	marginTop: 8,
-});
