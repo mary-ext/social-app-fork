@@ -121,7 +121,6 @@ function ProfileListScreenInner(props: Props) {
 }
 
 function ProfileListScreenLoaded({
-	route,
 	uri,
 	list,
 	moderationOpts,
@@ -136,7 +135,6 @@ function ProfileListScreenLoaded({
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
-	const { rkey } = route.params;
 	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
 	const isScreenFocused = useIsFocused();
 	const isHidden = list.labels?.findIndex((l) => l.val === '!hide') !== -1;
@@ -156,7 +154,7 @@ function ProfileListScreenLoaded({
 	};
 
 	const renderHeader = () => {
-		return <Header rkey={rkey} list={list} preferences={preferences} />;
+		return <Header list={list} preferences={preferences} />;
 	};
 
 	if (isCurateList) {

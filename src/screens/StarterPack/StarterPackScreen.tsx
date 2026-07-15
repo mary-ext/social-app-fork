@@ -16,7 +16,7 @@ import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { HITSLOP_20 } from '#/lib/constants';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
-import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
+import { makeStarterPackLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
@@ -33,8 +33,6 @@ import { useSetActiveStarterPack } from '#/state/shell/starter-pack';
 
 import { logger } from '#/logger';
 
-import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
-
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
@@ -47,13 +45,11 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/ico
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
 import { Pencil_Stroke2_Corner0_Rounded as Pencil } from '#/components/icons/Pencil';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
-import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
-import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
@@ -63,10 +59,13 @@ import { type Section, Tabs } from '#/components/Tabs';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
+import * as WebLayout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { Image } from '#/shims/image';
 import { colors } from '#/styles/colors';
+
+import { StarterPackHeader } from './StarterPackHeader';
 
 type StarterPackScreeProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>;
 type StarterPackScreenShortProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPackShort'>;
@@ -237,7 +236,6 @@ function Header({
 	routeParams: StarterPackScreeProps['route']['params'];
 	onOpenShareDialog: () => void;
 }) {
-	const t = useTheme();
 	const { currentAccount, hasSession } = useSession();
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
@@ -328,89 +326,63 @@ function Header({
 		Toast.show(m['screens.starterPack.follow.success']());
 	};
 
-	const richText = record.description
-		? {
-				text: record.description,
-				facets: record.descriptionFacets ?? [],
-			}
-		: undefined;
+	const canGoBack = navigation.canGoBack();
 
 	return (
 		<>
-			<ProfileSubpageHeader
-				isLoading={false}
-				href={makeProfileLink(creator)}
-				title={record.name}
-				isOwner={isOwn}
-				avatar={undefined}
-				creator={creator}
-				purpose="app.bsky.graph.defs#referencelist"
-				avatarType="starter-pack"
-			>
-				{hasSession ? (
-					<View style={[a.flex_row, a.gap_sm, a.align_center]}>
-						{isOwn ? (
-							<Button
-								label={m['screens.starterPack.share.action']()}
-								hitSlop={HITSLOP_20}
-								variant="solid"
-								color="primary"
-								size="small"
-								onPress={onOpenShareDialog}
-							>
-								<ButtonText>{m['common.share.action.share']()}</ButtonText>
-							</Button>
-						) : (
-							<Button
-								label={m['screens.starterPack.follow.action']()}
-								variant="solid"
-								color="primary"
-								size="small"
-								disabled={isProcessing}
-								onPress={() => void onFollowAll()}
-								style={[a.flex_row, a.gap_xs, a.align_center]}
-							>
-								<ButtonText>{m['screens.starterPack.follow.action']()}</ButtonText>
-								{isProcessing && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
-							</Button>
-						)}
-						<OverflowMenu
-							routeParams={routeParams}
-							starterPack={starterPack}
-							onOpenShareDialog={onOpenShareDialog}
-						/>
-					</View>
-				) : null}
-			</ProfileSubpageHeader>
-			{!hasSession || richText || joinedAllTimeCount >= 25 ? (
-				<View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
-					{richText ? <RichText size="md" value={richText} /> : null}
-					{!hasSession ? (
-						<Button
-							label={m['common.session.action.signIn']()}
-							onPress={() => {
-								setActiveStarterPack({
-									uri: starterPack.uri,
-								});
-								signinDialogHandle.openWithPayload({});
-							}}
-							variant="solid"
-							color="primary"
-							size="large"
-						>
-							<ButtonText style={[a.text_lg]}>{m['common.session.action.signIn']()}</ButtonText>
-						</Button>
-					) : null}
-					{joinedAllTimeCount >= 25 ? (
-						<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-							<TrendingIcon size="xs" style={{ color: t.atoms.text_contrast_medium.color }} />
-							<Text style={[a.font_semi_bold, a.text_sm, t.atoms.text_contrast_medium]}>
-								{m['screens.starterPack.joinedCount']({ count: starterPack.joinedAllTimeCount || 0 })}
-							</Text>
+			<WebLayout.Header.Outer noBottomBorder sticky={false}>
+				{canGoBack ? <WebLayout.Header.BackButton /> : <WebLayout.Header.MenuButton />}
+				<WebLayout.Header.Content />
+				<WebLayout.Header.Slot>
+					{hasSession ? (
+						<View style={[a.flex_row, a.gap_sm, a.align_center]}>
+							{isOwn ? (
+								<Button
+									label={m['screens.starterPack.share.action']()}
+									hitSlop={HITSLOP_20}
+									variant="solid"
+									color="primary"
+									size="small"
+									onPress={onOpenShareDialog}
+								>
+									<ButtonText>{m['common.share.action.share']()}</ButtonText>
+								</Button>
+							) : (
+								<Button
+									label={m['screens.starterPack.follow.action']()}
+									variant="solid"
+									color="primary"
+									size="small"
+									disabled={isProcessing}
+									onPress={() => void onFollowAll()}
+									style={[a.flex_row, a.gap_xs, a.align_center]}
+								>
+									<ButtonText>{m['screens.starterPack.follow.action']()}</ButtonText>
+									{isProcessing && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+								</Button>
+							)}
+							<OverflowMenu
+								routeParams={routeParams}
+								starterPack={starterPack}
+								onOpenShareDialog={onOpenShareDialog}
+							/>
 						</View>
 					) : null}
-				</View>
-			) : null}
+				</WebLayout.Header.Slot>
+			</WebLayout.Header.Outer>
+			<StarterPackHeader
+				record={record}
+				creator={creator}
+				isOwn={isOwn}
+				hasSession={hasSession}
+				joinedAllTimeCount={joinedAllTimeCount}
+				onPressSignIn={() => {
+					setActiveStarterPack({
+						uri: starterPack.uri,
+					});
+					signinDialogHandle.openWithPayload({});
+				}}
+			/>
 		</>
 	);
 }

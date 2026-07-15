@@ -1,8 +1,8 @@
-import { View } from 'react-native';
-
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { makeListLink } from '#/lib/routes/links';
+import { useNavigation } from '@react-navigation/native';
+
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
 import {
@@ -14,31 +14,30 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
-
 import { atoms as a } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
-import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
+import { ListHeader } from './ListHeader';
 import { MoreOptionsMenu } from './MoreOptionsMenu';
 import { SubscribeMenu } from './SubscribeMenu';
 
 export function Header({
-	rkey,
 	list,
 	preferences,
 }: {
-	rkey: string;
 	list: AppBskyGraphDefs.ListView;
 	preferences: UsePreferencesQueryResponse;
 }) {
+	const navigation = useNavigation<NavigationProp>();
 	const { currentAccount } = useSession();
+	const canGoBack = navigation.canGoBack();
 	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
 	const isModList = list.purpose === 'app.bsky.graph.defs#modlist';
 	const isBlocking = !!list.viewer?.blocked;
@@ -103,88 +102,73 @@ export function Header({
 		}
 	};
 
-	const descriptionRT = list.description
-		? {
-				text: list.description,
-				facets: list.descriptionFacets ?? [],
-			}
-		: undefined;
-
 	return (
 		<>
-			<ProfileSubpageHeader
-				href={makeListLink(list.creator.did, rkey)}
-				title={list.name}
-				avatar={list.avatar}
-				isOwner={list.creator.did === currentAccount?.did}
-				creator={list.creator}
-				purpose={list.purpose}
-				avatarType="list"
-			>
-				{isCurateList ? (
-					<Button
-						testID={isPinned ? 'unpinBtn' : 'pinBtn'}
-						color={isPinned ? 'secondary' : 'primary_subtle'}
-						label={
-							isPinned
-								? m['screens.profileList.pin.action.unpin']()
-								: m['screens.profileList.pin.action.pinToHome']()
-						}
-						onPress={() => void onTogglePinned()}
-						disabled={isPending}
-						size="small"
-						style={[a.rounded_full]}
-					>
-						{!isPinned &&
-							(isPending ? (
-								<Spinner color="white" label={m['common.status.saving']()} size="sm" />
-							) : (
-								<ButtonIcon icon={PinIcon} />
-							))}
-						<ButtonText>
-							{isPinned
-								? m['screens.profileList.pin.action.unpin']()
-								: m['screens.profileList.pin.action.pinToHome']()}
-						</ButtonText>
-					</Button>
-				) : isModList ? (
-					isBlocking ? (
+			<Layout.Header.Outer noBottomBorder sticky={false}>
+				{canGoBack ? <Layout.Header.BackButton /> : <Layout.Header.MenuButton />}
+				<Layout.Header.Content />
+				<Layout.Header.Slot>
+					{isCurateList ? (
 						<Button
-							testID="unblockBtn"
-							color="secondary"
-							label={m['common.block.action.unblock']()}
-							onPress={() => void onUnsubscribeBlock()}
+							testID={isPinned ? 'unpinBtn' : 'pinBtn'}
+							color={isPinned ? 'secondary' : 'primary_subtle'}
+							label={
+								isPinned
+									? m['screens.profileList.pin.action.unpin']()
+									: m['screens.profileList.pin.action.pinToHome']()
+							}
+							onPress={() => void onTogglePinned()}
+							disabled={isPending}
 							size="small"
 							style={[a.rounded_full]}
-							disabled={isBlockPending}
 						>
-							{isBlockPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
-							<ButtonText>{m['common.block.action.unblock']()}</ButtonText>
+							{!isPinned &&
+								(isPending ? (
+									<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+								) : (
+									<ButtonIcon icon={PinIcon} />
+								))}
+							<ButtonText>
+								{isPinned
+									? m['screens.profileList.pin.action.unpin']()
+									: m['screens.profileList.pin.action.pinToHome']()}
+							</ButtonText>
 						</Button>
-					) : isMuting ? (
-						<Button
-							testID="unmuteBtn"
-							color="secondary"
-							label={m['common.mute.action.unmute']()}
-							onPress={() => void onUnsubscribeMute()}
-							size="small"
-							style={[a.rounded_full]}
-							disabled={isMutePending}
-						>
-							{isMutePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
-							<ButtonText>{m['common.mute.action.unmute']()}</ButtonText>
-						</Button>
-					) : (
-						<SubscribeMenu list={list} />
-					)
-				) : null}
-				<MoreOptionsMenu list={list} />
-			</ProfileSubpageHeader>
-			{descriptionRT ? (
-				<View style={[a.px_lg, a.pt_sm, a.pb_sm, a.gap_md]}>
-					<RichText size="md" value={descriptionRT} />
-				</View>
-			) : null}
+					) : isModList ? (
+						isBlocking ? (
+							<Button
+								testID="unblockBtn"
+								color="secondary"
+								label={m['common.block.action.unblock']()}
+								onPress={() => void onUnsubscribeBlock()}
+								size="small"
+								style={[a.rounded_full]}
+								disabled={isBlockPending}
+							>
+								{isBlockPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+								<ButtonText>{m['common.block.action.unblock']()}</ButtonText>
+							</Button>
+						) : isMuting ? (
+							<Button
+								testID="unmuteBtn"
+								color="secondary"
+								label={m['common.mute.action.unmute']()}
+								onPress={() => void onUnsubscribeMute()}
+								size="small"
+								style={[a.rounded_full]}
+								disabled={isMutePending}
+							>
+								{isMutePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+								<ButtonText>{m['common.mute.action.unmute']()}</ButtonText>
+							</Button>
+						) : (
+							<SubscribeMenu list={list} />
+						)
+					) : null}
+					<MoreOptionsMenu list={list} />
+				</Layout.Header.Slot>
+			</Layout.Header.Outer>
+			<ListHeader list={list} isOwner={list.creator.did === currentAccount?.did} />
 		</>
 	);
 }
