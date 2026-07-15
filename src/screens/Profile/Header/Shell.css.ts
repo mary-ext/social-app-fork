@@ -8,67 +8,43 @@ export const frame = style({
 	position: 'relative',
 });
 
-export const bannerRegion = style({
-	height: 150,
-	position: 'relative',
-});
-
 export const bannerButton = style({
 	background: 'none',
 	border: 0,
 	cursor: 'pointer',
 	display: 'block',
-	height: '100%',
 	padding: 0,
 	width: '100%',
 });
 
 export const bannerPlaceholder = style({
+	aspectRatio: '3 / 1',
 	backgroundColor: colors.contrast_50,
-	height: '100%',
 	width: '100%',
 });
 
-export const backButton = style({
-	background: 'none',
-	border: 0,
-	cursor: 'pointer',
-	left: 18,
-	padding: 0,
-	position: 'absolute',
-	top: 10,
-	zIndex: 1,
-});
-
-export const backButtonInner = style({
-	alignItems: 'center',
-	backgroundColor: 'rgba(0, 0, 0, 0.5)',
-	borderRadius: borderRadius.full,
-	display: 'flex',
-	height: 31,
-	justifyContent: 'center',
-	width: 31,
-	selectors: {
-		[`${backButton}:hover &`]: {
-			backgroundColor: 'rgba(0, 0, 0, 0.75)',
-		},
-	},
-});
-
+// empty marker at the banner's bottom edge; the avatar anchors to it to straddle the banner at any height
 export const avatarAnchor = style({
+	position: 'relative',
+});
+
+export const avatarBox = style({
+	display: 'block',
 	left: 10,
 	position: 'absolute',
-	top: 104,
+	top: -46, // straddle the banner's bottom edge
 });
 
-export const avatarButton = style({
-	background: 'none',
-	border: 0,
-	borderRadius: borderRadius.full,
-	cursor: 'pointer',
-	display: 'block',
-	padding: 0,
-});
+export const avatarButton = style([
+	avatarBox,
+	{
+		background: 'none',
+		border: 0,
+		borderRadius: borderRadius.full,
+		cursor: 'pointer',
+		padding: 0,
+	},
+]);
 
 export const avatarRing = style({
 	backgroundColor: colors.bg,

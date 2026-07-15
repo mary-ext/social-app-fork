@@ -8,22 +8,15 @@ export const frame = style({
 	position: 'relative',
 });
 
-export const bannerRegion = style({
-	height: 150,
-	position: 'relative',
-});
-
+// mirror the loaded header so the skeleton doesn't shift on load
 export const banner = style({
+	aspectRatio: '3 / 1',
 	backgroundColor: colors.contrast_50,
-	borderRadius: 0,
-	height: '100%',
 	width: '100%',
 });
 
 export const avatarAnchor = style({
-	left: 10,
-	position: 'absolute',
-	top: 104,
+	position: 'relative',
 });
 
 export const avatarRing = style({
@@ -35,6 +28,9 @@ export const avatarRing = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	height: 94,
+	left: 10,
+	position: 'absolute',
+	top: -46, // straddle the banner's bottom edge
 	width: 94,
 });
 

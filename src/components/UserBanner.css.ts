@@ -3,9 +3,9 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 
 export const banner = style({
+	aspectRatio: '3 / 1',
 	backgroundColor: colors.contrast_25,
 	display: 'block',
-	height: 150,
 	overflow: 'hidden',
 	width: '100%',
 });

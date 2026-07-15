@@ -13,9 +13,7 @@ export function ProfileHeaderSkeleton(_props: {}): React.ReactNode {
 
 	return (
 		<div className={css.frame}>
-			<div className={css.bannerRegion}>
-				<div className={css.banner} />
-			</div>
+			<div className={css.banner} />
 
 			<div className={css.avatarAnchor}>
 				<div className={css.avatarRing}>
