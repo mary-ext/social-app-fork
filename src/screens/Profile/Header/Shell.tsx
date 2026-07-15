@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 
 import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { preloadLightbox } from '#/components/Lightbox';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -82,6 +83,7 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 							payload={{ images: [{ src: profile.banner }], index: 0 }}
 							className={css.bannerButton}
 							aria-label={m['screens.profile.banner.a11y.view']()}
+							onPointerDown={preloadLightbox}
 						>
 							{bannerImage}
 						</Dialog.Trigger>
@@ -110,6 +112,7 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 						payload={{ images: [{ src: profile.avatar }], index: 0 }}
 						className={css.avatarButton}
 						aria-label={avatarLabel}
+						onPointerDown={preloadLightbox}
 					>
 						{avatarBody}
 					</Dialog.Trigger>

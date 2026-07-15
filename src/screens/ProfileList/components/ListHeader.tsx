@@ -5,6 +5,7 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { Trans } from '#/locale/Trans';
 
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { preloadLightbox } from '#/components/Lightbox';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -57,6 +58,7 @@ export function ListHeader({ isOwner, list }: { isOwner: boolean; list: AppBskyG
 					className={css.avatarButton}
 					aria-label={m['view.profile.action.viewAvatar']()}
 					onClick={onPressAvi}
+					onPointerDown={preloadLightbox}
 				>
 					<UserAvatar type="list" size={56} avatar={list.avatar} />
 				</button>

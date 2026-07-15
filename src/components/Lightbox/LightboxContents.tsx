@@ -23,13 +23,13 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as Menu from '#/components/Menu';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
 import * as styles from './Lightbox.css';
+import { LightboxLoading } from './LightboxLoading';
 
 export function LightboxContents({
 	payload,
@@ -53,6 +53,14 @@ export function LightboxContents({
 			setChromeVisible(true);
 		}
 	}
+
+	// arrow-key paging is bound to the viewport (tabIndex -1); the eager popup no longer hands it
+	// initialFocus, so focus it here on open.
+	useEffect(() => {
+		if (open) {
+			viewportRef.current?.focus({ preventScroll: true });
+		}
+	}, [open]);
 
 	const toggleTimer = useRef<number | null>(null);
 	useEffect(
@@ -83,30 +91,14 @@ export function LightboxContents({
 		}, DOUBLE_TAP_MS);
 	}, []);
 
-	// the lib Provider wraps the whole Portal so both the Scrim (in the Backdrop) and the Viewport/chrome (in the
-	// Popup) get its context; React context flows through portals by tree position, not DOM position. `active`
-	// resets the engine to `defaultIndex` on each open edge; on a reopen the new `payload` (and thus the clicked
-	// image's index) arrives a commit after `open` flips, so it's the lib's re-reset on a `defaultIndex` change
-	// while active that lands the engine on the image just clicked.
 	return (
 		<Lb.Provider active={open} images={payload.images} defaultIndex={payload.index} onDismiss={close}>
-			<BaseDialog.Portal>
-				<BaseDialog.Backdrop className={styles.backdrop}>
-					<Lb.Scrim className={styles.scrim} />
-				</BaseDialog.Backdrop>
-				<BaseDialog.Popup
-					aria-label={m['components.lightbox.a11y.viewer']()}
-					className={styles.popup}
-					initialFocus={viewportRef}
-				>
-					<Lb.Viewport ref={viewportRef} className={styles.viewport} onTap={onTap}>
-						<Lb.Track>{renderSlide}</Lb.Track>
-						<div className={clsx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
-							<Chrome />
-						</div>
-					</Lb.Viewport>
-				</BaseDialog.Popup>
-			</BaseDialog.Portal>
+			<Lb.Viewport ref={viewportRef} className={styles.viewport} onTap={onTap}>
+				<Lb.Track>{renderSlide}</Lb.Track>
+				<div className={clsx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
+					<Chrome />
+				</div>
+			</Lb.Viewport>
 		</Lb.Provider>
 	);
 }
@@ -129,11 +121,7 @@ function Slide({ image, index }: { image: LightboxImage; index: number }) {
 	return (
 		<Lb.Slide index={index}>
 			<Lb.Image index={index} />
-			{loading ? (
-				<div className={styles.slideSpinner}>
-					<Spinner label={m['components.lightbox.a11y.loading']()} color="white" />
-				</div>
-			) : null}
+			{loading ? <LightboxLoading /> : null}
 		</Lb.Slide>
 	);
 }

@@ -11,25 +11,12 @@ export const backdrop = style({
 	position: 'fixed',
 	inset: 0,
 	zIndex: Z,
+	background: 'rgba(0, 0, 0, 0.92)',
 	opacity: 1,
 	transition: 'opacity 200ms ease',
 	selectors: {
 		'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 	},
-});
-
-export const scrim = style({
-	vars: { '--lightbox-backdrop': 'rgba(0, 0, 0, 0.92)' },
-});
-
-export const loadingFallback = style({
-	position: 'fixed',
-	inset: 0,
-	zIndex: Z,
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-	background: 'rgba(0, 0, 0, 0.92)',
 });
 
 export const popup = style({

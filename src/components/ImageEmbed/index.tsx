@@ -6,6 +6,7 @@ import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { AutoSizedImage } from '#/components/ImageEmbed/AutoSizedImage';
 import { EMPTY_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
 import { Gallery } from '#/components/ImageEmbed/Gallery';
+import { preloadLightbox } from '#/components/Lightbox';
 import { type CommonProps, PostEmbedViewContext } from '#/components/Post/Embed/types';
 
 import * as styles from './index.css';
@@ -48,7 +49,10 @@ export function ImageEmbed({
 	}
 
 	const lightboxImages: LightboxImage[] = images.map((img) => ({ alt: img.alt, src: img.fullsize }));
-	const onPressIn = () => prefetch(lightboxImages.map((i) => i.src));
+	const onPressIn = () => {
+		preloadLightbox();
+		prefetch(lightboxImages.map((i) => i.src));
+	};
 
 	return (
 		<div className={styles.wrapper}>
