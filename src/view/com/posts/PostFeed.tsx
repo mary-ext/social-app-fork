@@ -6,7 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { onAppStateChange } from '#/lib/appState';
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
-import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
@@ -149,7 +148,6 @@ function PostFeed({
 	const queryClient = useQueryClient();
 	const { currentAccount, hasSession } = useSession();
 	const feedFeedback = useFeedFeedbackContext();
-	const bottomBarOffset = useBottomBarOffset();
 
 	const lastFetchRef = useRef<number | null>(null);
 	if (lastFetchRef.current === null) {
@@ -512,17 +510,11 @@ function PostFeed({
 	const shouldRenderEndOfFeed = !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed;
 	// keep a spinner pinned to the bottom while more posts can still load; only swap it for the
 	// end-of-feed marker once there's legitimately nothing left to fetch.
-	const feedFooter = (
-		<>
-			{shouldRenderEndOfFeed ? (
-				<div className={css.endOfFeedSlot}>{renderEndOfFeed()}</div>
-			) : hasNextPage && !isError ? (
-				<CenteredSpinner label={m['view.posts.feed.loadingMore']()} size="2xl" />
-			) : null}
-			{/* clear the fixed mobile-web bottom bar so the last row isn't hidden behind it */}
-			{bottomBarOffset > 0 && <div style={{ height: bottomBarOffset }} />}
-		</>
-	);
+	const feedFooter = shouldRenderEndOfFeed ? (
+		<div className={css.endOfFeedSlot}>{renderEndOfFeed()}</div>
+	) : hasNextPage && !isError ? (
+		<CenteredSpinner label={m['view.posts.feed.loadingMore']()} size="2xl" />
+	) : null;
 
 	const onItemSeen = (item: FeedRow) => {
 		feedFeedback.onItemSeen(item);
