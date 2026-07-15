@@ -64,7 +64,7 @@
 		"emoji-regex": "^10.6.0",
 		"fast-deep-equal": "^3.1.3",
 		"hls.js": "^1.6.16",
-		"idb-keyval": "^6.2.6",
+		"idb-keyval": "^6.3.0",
 		"lodash.chunk": "^4.2.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
@@ -74,27 +74,27 @@
 		"react-image-crop": "^11.1.2",
 		"react-native": "0.81.5",
 		"react-native-web": "^0.21.2",
-		"tldts": "^7.4.7"
+		"tldts": "^7.4.8"
 	},
 	"devDependencies": {
-		"@inlang/paraglide-js": "2.20.2",
+		"@inlang/paraglide-js": "2.22.0",
 		"@rsbuild/core": "^2.1.5",
 		"@rsbuild/plugin-react": "^2.1.0",
-		"@rsdoctor/rspack-plugin": "^1.5.17",
+		"@rsdoctor/rspack-plugin": "^1.5.18",
 		"@types/lodash.chunk": "^4.2.9",
 		"@types/lodash.debounce": "^4.0.9",
 		"@types/lodash.throttle": "^4.1.9",
-		"@types/node": "^26.1.0",
+		"@types/node": "^26.1.1",
 		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",
 		"@typescript/native": "npm:typescript@^7.0.2",
 		"@vanilla-extract/webpack-plugin": "^2.3.27",
 		"eslint-plugin-bsky-internal": "link:eslint",
-		"oxfmt": "^0.58.0",
-		"oxlint": "^1.73.0",
+		"oxfmt": "^0.59.0",
+		"oxlint": "^1.74.0",
 		"oxlint-tsgolint": "^0.24.0",
 		"typescript": "npm:@typescript/typescript6@^6.0.2",
-		"wrangler": "^4.107.1"
+		"wrangler": "^4.110.0"
 	},
 	"browserslist": {
 		"production": [
