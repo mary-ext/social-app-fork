@@ -1,5 +1,5 @@
 import { type Client, ok } from '@atcute/client';
-import type { Did as AtcuteDid } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import {
 	finalizeAuthorization,
 	getSession,
@@ -104,7 +104,7 @@ export async function createOAuthSession(params: URLSearchParams) {
  */
 export async function resumeOAuthSession(storedAccount: SessionAccount) {
 	configureAppOAuth();
-	const session = await networkRetry(1, () => getSession(storedAccount.did as AtcuteDid));
+	const session = await networkRetry(1, () => getSession(storedAccount.did as Did));
 	return prepareOAuthSession(session);
 }
 
@@ -119,7 +119,7 @@ export async function optimisticOAuthSession(
 	storedAccount: SessionAccount,
 ): Promise<{ clients: Clients; validate: () => Promise<SessionAccount> }> {
 	configureAppOAuth();
-	const session = await getSession(storedAccount.did as AtcuteDid, { allowStale: true });
+	const session = await getSession(storedAccount.did as Did, { allowStale: true });
 	const oauthAgent = new OAuthUserAgent(session);
 	const clients = createOAuthClients(oauthAgent);
 	configureModerationForAccount(storedAccount);
