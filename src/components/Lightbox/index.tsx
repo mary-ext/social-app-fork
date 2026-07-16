@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useState } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 
@@ -27,7 +27,6 @@ export function Lightbox() {
 	const { lightboxHandle } = useGlobalDialogsHandleContext();
 	const [open, setOpen] = useState(false);
 	const close = useCallback(() => lightboxHandle.close(), [lightboxHandle]);
-	useBackButtonCloses(open, close);
 
 	// backdrop + popup stay eager so the enter transition runs the instant `open` flips; only the heavy
 	// `@oomfware/lightbox` interior loads lazily, behind the Suspense boundary inside the popup.
@@ -58,41 +57,4 @@ export function Lightbox() {
 			}
 		</Dialog.Root>
 	);
-}
-
-/**
- * push a history entry when the lightbox opens so the browser back button closes it instead of navigating
- * away
- */
-function useBackButtonCloses(open: boolean, onClose: () => void) {
-	useEffect(() => {
-		if (!open) {
-			return;
-		}
-		let didPushHistory = false;
-		let closedByPopState = false;
-		const pushHistory = requestAnimationFrame(() => {
-			history.pushState({ lightbox: true }, '');
-			didPushHistory = true;
-		});
-
-		const handlePopState = () => {
-			closedByPopState = true;
-			onClose();
-		};
-		window.addEventListener('popstate', handlePopState);
-
-		return () => {
-			cancelAnimationFrame(pushHistory);
-			window.removeEventListener('popstate', handlePopState);
-			if (!didPushHistory) {
-				return;
-			}
-			// Only pop our entry if it's still the current one; if navigation pushed a new entry on top, leave
-			// the orphan (it shares the same URL, so traversing it is harmless).
-			if (!closedByPopState && (history.state as { lightbox?: boolean })?.lightbox) {
-				history.back();
-			}
-		};
-	}, [open, onClose]);
 }
