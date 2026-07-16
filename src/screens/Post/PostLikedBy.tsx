@@ -10,7 +10,7 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 
 export const PostLikedByScreen = () => {
-	const { name, rkey } = useParams('PostLikedBy');
+	const [{ name, rkey }] = useParams('PostLikedBy');
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 

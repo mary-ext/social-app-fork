@@ -6,7 +6,7 @@ import { useParams } from '#/routes';
 import { SearchScreenShell } from './Shell';
 
 export function SearchScreen() {
-	const { q } = useParams('Search');
+	const [{ q }] = useParams('Search');
 
 	useTitle(q || m['common.action.search']());
 

@@ -33,7 +33,7 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
-import { useParams, useSetParams } from '#/routes';
+import { useParams } from '#/routes';
 
 import * as css from './MessageInputEmbed.css';
 
@@ -44,8 +44,7 @@ import * as css from './MessageInputEmbed.css';
 export type MessageEmbedState = { type: 'post'; uri: string } | { type: 'invite'; code: string };
 
 export function useMessageEmbed() {
-	const setParams = useSetParams();
-	const embedFromParams = useParams('MessagesConversation').embed;
+	const [{ embed: embedFromParams }, setParams] = useParams('MessagesConversation');
 
 	// `setEmbedState` is the raw setter; `setEmbed` below is the wrapped public callback (also a
 	// prop), so the names must differ — the symmetric-pair rule can't apply here

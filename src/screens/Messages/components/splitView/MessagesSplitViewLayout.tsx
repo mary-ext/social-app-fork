@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import { Outlet, useRoute } from '#/lib/router';
+import { Outlet, useRoute } from '@oomfware/stacker';
 
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 

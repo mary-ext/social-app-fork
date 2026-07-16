@@ -11,7 +11,7 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 
 export function NotificationsActivityListScreen() {
-	const { posts } = useParams('NotificationsActivityList');
+	const [{ posts }] = useParams('NotificationsActivityList');
 
 	useTitle(m['common.nav.notifications']());
 

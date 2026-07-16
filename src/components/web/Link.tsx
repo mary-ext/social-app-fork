@@ -1,9 +1,10 @@
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode, Ref } from 'react';
 
+import { useRouter } from '@oomfware/stacker';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { useRouter } from '#/lib/router';
 import {
 	convertBskyAppUrlIfNeeded,
 	getChatInviteCodeFromUrl,

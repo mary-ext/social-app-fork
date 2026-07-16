@@ -7,6 +7,7 @@ import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { definite } from '@mary/array-fns';
+import { useFocusEffect } from '@oomfware/stacker';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -15,7 +16,6 @@ import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { HITSLOP_20 } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
-import { useFocusEffect } from '#/lib/router';
 import { makeStarterPackLink } from '#/lib/routes/links';
 import { cleanError } from '#/lib/strings/errors';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
@@ -70,7 +70,7 @@ import { StarterPackHeader } from './StarterPackHeader';
 type StarterPackRouteParams = { name: string; new?: boolean; rkey: string };
 
 export function StarterPackScreen() {
-	const params = useParams('StarterPack');
+	const [params] = useParams('StarterPack');
 	return (
 		<Layout.Screen>
 			<StarterPackScreenInner routeParams={params} />
@@ -79,7 +79,7 @@ export function StarterPackScreen() {
 }
 
 export function StarterPackScreenShort() {
-	const { code } = useParams('StarterPackShort');
+	const [{ code }] = useParams('StarterPackShort');
 	const {
 		data: resolvedStarterPack,
 		isLoading,

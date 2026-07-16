@@ -11,7 +11,7 @@ import { useParams, useRouter } from '#/routes';
  * the shell's close-all-dialogs subscriber doesn't immediately dismiss it.
  */
 export function GroupChatJoinScreen() {
-	const { code } = useParams('GroupChatJoin');
+	const [{ code }] = useParams('GroupChatJoin');
 	const router = useRouter();
 	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
@@ -25,7 +25,7 @@ export function GroupChatJoinScreen() {
 
 /** `/intent/compose` replaces to Home and opens the composer with the intent payload. */
 export function IntentComposeScreen() {
-	const { text, videoUri } = useParams('IntentCompose');
+	const [{ text, videoUri }] = useParams('IntentCompose');
 	const router = useRouter();
 	const composeIntent = useComposeIntent();
 

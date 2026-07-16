@@ -55,7 +55,7 @@ export function ProfileListScreen() {
 }
 
 function ProfileListScreenInner() {
-	const { name: handle, rkey } = useParams('ProfileList');
+	const [{ name: handle, rkey }] = useParams('ProfileList');
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(
 		`at://${handle}/app.bsky.graph.list/${rkey}`,
 	);

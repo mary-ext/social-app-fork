@@ -14,7 +14,7 @@ import { useParams } from '#/routes';
 // a launch point only: it renders the search header and hands actual queries off to the Search screen, with
 // the profile baked in as a `from:` filter.
 export const ProfileSearchScreen = () => {
-	const { name } = useParams('ProfileSearch');
+	const [{ name }] = useParams('ProfileSearch');
 	const { currentAccount } = useSession();
 
 	const { data: resolvedDid } = useResolveDidQuery(name);

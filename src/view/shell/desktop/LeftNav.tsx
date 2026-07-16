@@ -2,11 +2,12 @@ import { type MouseEvent, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
+import { useRoute } from '@oomfware/stacker';
+
 import { clsx } from 'clsx';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useRoute } from '#/lib/router';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle } from '#/lib/strings/handles';

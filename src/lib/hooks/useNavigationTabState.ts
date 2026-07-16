@@ -1,4 +1,4 @@
-import { useRoute } from '#/lib/router';
+import { useRoute } from '@oomfware/stacker';
 
 export function useNavigationTabState() {
 	const { name } = useRoute();

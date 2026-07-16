@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
-import { useFocusEffect } from '#/lib/router';
+import { useFocusEffect } from '@oomfware/stacker';
+
 import { bskyTitle } from '#/lib/strings/headings';
 
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';

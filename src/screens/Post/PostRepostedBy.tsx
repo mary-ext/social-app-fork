@@ -20,7 +20,7 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 
 export const PostRepostedByScreen = () => {
-	const { name, rkey } = useParams('PostRepostedBy');
+	const [{ name, rkey }] = useParams('PostRepostedBy');
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 

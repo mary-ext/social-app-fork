@@ -1,4 +1,4 @@
-import { useRouter } from '#/lib/router';
+import { useRouter } from '@oomfware/stacker';
 
 /** returns a handler that navigates back, or to Home when there is nothing to go back to. */
 export function useGoBack(onGoBack?: () => unknown) {

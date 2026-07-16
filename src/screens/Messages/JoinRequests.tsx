@@ -49,7 +49,7 @@ import { InviteLinkDialog } from './components/InviteLinkDialog';
 export function MessagesJoinRequestsScreen() {
 	useTitle(m['common.requests.label']());
 
-	const convoId = useParams('MessagesJoinRequests').conversation;
+	const [{ conversation: convoId }] = useParams('MessagesJoinRequests');
 
 	return (
 		<Layout.Screen>

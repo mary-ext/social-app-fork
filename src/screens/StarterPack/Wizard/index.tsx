@@ -2,10 +2,11 @@ import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDef
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { useParams, useRoute } from '@oomfware/stacker';
+
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { useParams, useRoute } from '#/lib/router';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { enforceLen } from '#/lib/strings/helpers';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';

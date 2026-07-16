@@ -72,7 +72,7 @@ type Item =
 	  };
 
 export function MessagesConversationSettingsScreen() {
-	const convoId = useParams('MessagesConversationSettings').conversation;
+	const [{ conversation: convoId }] = useParams('MessagesConversationSettings');
 	const navigate = useNavigate();
 	const router = useRouter();
 

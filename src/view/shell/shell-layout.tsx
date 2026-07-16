@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Outlet, resolveMeta, useRoute, useRouter } from '#/lib/router';
+import { Outlet, resolveMeta, useRoute, useRouter } from '@oomfware/stacker';
 
 import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';

@@ -10,7 +10,7 @@ import { useParams } from '#/routes';
 export const ProfileFeedLikedByScreen = () => {
 	useTitle(m['navigation.likedBy.title']());
 
-	const { name, rkey } = useParams('ProfileFeedLikedBy');
+	const [{ name, rkey }] = useParams('ProfileFeedLikedBy');
 	const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey);
 
 	return (

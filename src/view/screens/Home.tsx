@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
+import { useParams, useRoute } from '@oomfware/stacker';
+
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
-import { useParams, useRoute } from '#/lib/router';
 
 import { softReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';

@@ -20,7 +20,7 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 
 export const ProfileKnownFollowersScreen = () => {
-	const { name } = useParams('ProfileKnownFollowers');
+	const [{ name }] = useParams('ProfileKnownFollowers');
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 

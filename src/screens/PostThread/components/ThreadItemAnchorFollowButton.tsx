@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { useFocusEffect } from '#/lib/router';
+import { useFocusEffect } from '@oomfware/stacker';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';

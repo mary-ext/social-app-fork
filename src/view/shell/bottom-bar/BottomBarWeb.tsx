@@ -1,9 +1,10 @@
 import { type ComponentPropsWithoutRef, type MouseEvent, useRef } from 'react';
 
+import { useRoute } from '@oomfware/stacker';
+
 import { clsx } from 'clsx';
 
 import { useHideBottomBarBorder } from '#/lib/hooks/useHideBottomBarBorder';
-import { useRoute } from '#/lib/router';
 import { makeProfileLink } from '#/lib/routes/links';
 
 import { softReset } from '#/state/events';

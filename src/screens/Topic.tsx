@@ -33,7 +33,7 @@ const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
 };
 
 export default function TopicScreen() {
-	const { topic } = useParams('Topic');
+	const [{ topic }] = useParams('Topic');
 	useTitle(m['navigation.topic.title']());
 	const headerTitle = enforceLen(topic, 24, true, 'middle');
 

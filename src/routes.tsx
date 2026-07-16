@@ -12,7 +12,7 @@ import {
 	route,
 	type RouteName,
 	string,
-} from '#/lib/router';
+} from '@oomfware/stacker';
 
 import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
 
@@ -22,7 +22,7 @@ import {
 } from '#/screens/Messages/components/splitView/messages-route-loading-screen';
 import { searchTabs } from '#/screens/Search/utils';
 
-declare module '#/lib/router' {
+declare module '@oomfware/stacker' {
 	interface RouteMeta {
 		readonly requireAuth?: boolean;
 	}
@@ -557,9 +557,9 @@ export const popToRoute = (name: string, params?: Record<string, unknown>): void
 };
 
 // oxlint-disable-next-line typescript/unbound-method
-export const { useBuild, useLocation, useNavigate, useParams, useRoute, useRouter, useSetParams } =
+export const { useBuild, useLocation, useNavigate, useParams, useRoute, useRouter } =
 	createRouterHooks(routes);
 
-export { useFocusEffect, useIsFocused } from '#/lib/router';
+export { useFocusEffect, useIsFocused } from '@oomfware/stacker';
 
 // #endregion

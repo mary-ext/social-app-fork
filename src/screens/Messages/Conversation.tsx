@@ -38,7 +38,7 @@ export function MessagesConversationScreen() {
 }
 
 export function MessagesConversationScreenInner() {
-	const { conversation: convoId } = useParams('MessagesConversation');
+	const [{ conversation: convoId }] = useParams('MessagesConversation');
 	const { setCurrentConvoId } = useCurrentConvoId();
 
 	useTitle(m['common.chat.label']());
@@ -128,7 +128,7 @@ function InnerReady({
 	isActive: boolean;
 	isDisabled: boolean;
 }) {
-	const { accept } = useParams('MessagesConversation');
+	const [{ accept }] = useParams('MessagesConversation');
 	const navigate = useNavigate();
 	const primaryMember = useMaybeProfileShadow(convo?.primaryMember);
 	const moderationOpts = useModerationOpts();

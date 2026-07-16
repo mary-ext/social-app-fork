@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
-import { useFocusEffect } from '#/lib/router';
+import { useFocusEffect } from '@oomfware/stacker';
 
 import { softReset } from '#/state/events';
 

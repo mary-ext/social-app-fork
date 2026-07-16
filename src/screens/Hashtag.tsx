@@ -44,7 +44,7 @@ const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
 export default function HashtagScreen() {
 	useTitle(m['navigation.hashtag.title']());
 
-	const { tag, author } = useParams('Hashtag');
+	const [{ tag, author }] = useParams('Hashtag');
 	const isCashtag = tag.startsWith('$');
 
 	// Cashtags already include the $ prefix, hashtags need # added

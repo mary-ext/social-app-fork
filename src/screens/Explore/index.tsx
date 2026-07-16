@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 
+import { useFocusEffect } from '@oomfware/stacker';
+
 import { useTitle } from '#/lib/hooks/useTitle';
 import { MagnifyingGlassIcon } from '#/lib/icons';
-import { useFocusEffect } from '#/lib/router';
 
 import { focusSearch, softReset } from '#/state/events';
 import { useSession } from '#/state/session';
@@ -13,7 +14,7 @@ import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useSetParams } from '#/routes';
+import { useParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { Explore } from './Explore';
@@ -21,7 +22,7 @@ import * as css from './index.css';
 
 export function ExploreScreen() {
 	const { hasSession } = useSession();
-	const setParams = useSetParams();
+	const [, setParams] = useParams('Explore');
 
 	useTitle(m['common.nav.explore']());
 

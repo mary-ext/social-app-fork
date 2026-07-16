@@ -8,7 +8,8 @@ import type {
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import type { ParamsOf } from '#/lib/router';
+import type { ParamsOf } from '@oomfware/stacker';
+
 import { makeProfileLink } from '#/lib/routes/links';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';

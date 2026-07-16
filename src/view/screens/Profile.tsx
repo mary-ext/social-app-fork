@@ -66,7 +66,7 @@ function ProfileScreenInner() {
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
-	const params = useParams('Profile');
+	const [params] = useParams('Profile');
 	const name = params.name === 'me' ? currentAccount?.did : params.name;
 	const moderationOpts = useModerationOpts();
 	const {

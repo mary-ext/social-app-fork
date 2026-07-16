@@ -11,7 +11,7 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 
 export function PostThreadScreen() {
-	const { name, rkey } = useParams('PostThread');
+	const [{ name, rkey }] = useParams('PostThread');
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 

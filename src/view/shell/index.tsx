@@ -1,4 +1,4 @@
-import { RouterView } from '#/lib/router';
+import { RouterView } from '@oomfware/stacker';
 
 import { router } from '#/routes';
 
