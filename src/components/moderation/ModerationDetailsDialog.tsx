@@ -150,8 +150,8 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 
 				{canAppeal && (
 					<div className={styles.appealRow}>
-						<Text className={styles.appealHint} color="textContrastMedium" size="sm">
-							{m['components.moderation.appeal.theseLabelsHint']()}
+						<Text className={styles.appealHint} color="textContrastMedium" size="md_sub">
+							{m['components.moderation.appeal.thisLabelHint']()}
 						</Text>
 						<Button
 							color="primary_subtle"

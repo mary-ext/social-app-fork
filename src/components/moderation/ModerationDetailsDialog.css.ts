@@ -26,7 +26,6 @@ export const appealRow = style({
 
 export const appealHint = style({
 	flex: 1,
-	minWidth: 180,
 });
 
 export const labelBand = style({
