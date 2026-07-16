@@ -10,7 +10,7 @@ import { makeSearchQuery, parseSearchQuery, type TabParam } from '#/screens/Sear
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useRoute } from '#/routes';
+import { useNavigate, useParams } from '#/routes';
 
 import { SearchResults, type SearchTabId } from './SearchResults';
 import * as css from './Shell.css';
@@ -32,10 +32,7 @@ function getTabId(tabParam?: TabParam): SearchTabId {
 
 export function SearchScreenShell({ queryParam }: { queryParam: string }) {
 	const navigate = useNavigate();
-	const route = useRoute();
-
-	// Get tab parameter from route params
-	const tabParam = (route.params as { tab?: TabParam }).tab;
+	const [{ tab: tabParam }] = useParams('Search');
 	const [activeTab, setActiveTab] = useState(() => getTabId(tabParam));
 
 	const { params, query } = parseSearchQuery(queryParam || '');
@@ -82,6 +79,7 @@ export function SearchScreenShell({ queryParam }: { queryParam: string }) {
 				}
 				noBottomBorder
 				placeholder={m['screens.search.input.placeholder']()}
+				tab={tabParam}
 			/>
 			<div className={css.body}>
 				<SearchResults

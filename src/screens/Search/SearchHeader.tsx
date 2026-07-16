@@ -8,7 +8,7 @@ import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutoco
 import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
 
-import { useNavigate, useRoute } from '#/routes';
+import { useNavigate } from '#/routes';
 
 /**
  * the search chrome shared by the Explore, Search, and ProfileSearch screens: a sticky header wrapping the
@@ -22,6 +22,8 @@ import { useNavigate, useRoute } from '#/routes';
  * @param navButton the leading navigation button (menu on Explore, back on the results/profile screens)
  * @param noBottomBorder drops the header's bottom border when the content below draws its own
  * @param placeholder input placeholder text
+ * @param tab results tab to land on when the query is submitted; carries the caller's active or pending tab
+ *   over to the Search screen
  */
 export function SearchHeader({
 	fixedParams,
@@ -30,6 +32,7 @@ export function SearchHeader({
 	navButton,
 	noBottomBorder,
 	placeholder,
+	tab,
 }: {
 	fixedParams?: Params;
 	headerRef?: Ref<HTMLDivElement>;
@@ -37,9 +40,9 @@ export function SearchHeader({
 	navButton: ReactNode;
 	noBottomBorder?: boolean;
 	placeholder: string;
+	tab?: TabParam;
 }) {
 	const navigate = useNavigate();
-	const route = useRoute();
 	const navigateToPath = useNavigateToPath();
 
 	const navigateToQuery = (nextQuery: string) => {
@@ -49,7 +52,7 @@ export function SearchHeader({
 		// carries over so a stashed tab lands on the right results.
 		const prefix = fixedParams ? makeSearchQuery('', fixedParams) : '';
 		const q = [prefix, nextQuery].filter(Boolean).join(' ');
-		navigate('Search', { q, tab: (route.params as { tab?: TabParam }).tab });
+		navigate('Search', { q, tab });
 	};
 
 	const navigateToProfile = (profile: AnyProfileView) => {

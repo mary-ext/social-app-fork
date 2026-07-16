@@ -226,7 +226,6 @@ export const routes = defineRoutes({
 			Explore: route({
 				component: ExploreScreen,
 				path: '/search',
-				query: { q: optional(string()), tab: optional(enumOf(searchTabs)) },
 				when: ({ rawSearch }) => !rawSearch.get('q'),
 			}),
 			Search: route({
