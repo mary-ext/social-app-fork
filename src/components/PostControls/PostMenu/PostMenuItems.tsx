@@ -8,8 +8,8 @@ import type {
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import type { ParamsOf } from '#/lib/router';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { CommonNavigatorParams } from '#/lib/routes/types';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 
@@ -66,7 +66,7 @@ import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { type routes, useRouter } from '#/routes';
 
 const MenuSpinner = () => <Spinner color="default" label={m['common.status.loading']()} size="lg" />;
 
@@ -147,7 +147,7 @@ function PostMenuItems({
 
 				const route = router.route;
 				if (route.name === 'PostThread') {
-					const params = route.params as CommonNavigatorParams['PostThread'];
+					const params = route.params as ParamsOf<typeof routes, 'PostThread'>;
 					if (
 						currentAccount &&
 						isAuthor &&
