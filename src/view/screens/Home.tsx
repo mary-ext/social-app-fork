@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
+import type { ActorIdentifier, RecordKey } from '@atcute/lexicons/syntax';
+
 import { useParams, useRoute } from '@oomfware/stacker';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
@@ -43,8 +45,8 @@ export function HomeScreen() {
 	const { data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading } = usePinnedFeedsInfos();
 
 	useEffect(() => {
-		if (currentAccount && routeName === 'Start' && params.name && params.rkey) {
-			navigate('StarterPack', { name: params.name as string, rkey: params.rkey as string });
+		if (currentAccount && routeName === 'Start' && params.actor && params.rkey) {
+			navigate('StarterPack', { actor: params.actor as ActorIdentifier, rkey: params.rkey as RecordKey });
 		}
 	}, [currentAccount, navigate, params, routeName]);
 

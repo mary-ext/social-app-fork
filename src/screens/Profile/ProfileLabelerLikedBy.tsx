@@ -8,7 +8,7 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 
 export function ProfileLabelerLikedByScreen() {
-	const [{ name: handleOrDid }] = useParams('ProfileLabelerLikedBy');
+	const [{ actor: handleOrDid }] = useParams('ProfileLabelerLikedBy');
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.labeler.service', 'self');
 
 	useTitle(m['navigation.likedBy.title']());

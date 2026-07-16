@@ -49,7 +49,7 @@ export function Card({ did }: { did: string }) {
 
 	const onPressOpenProfile = () => {
 		if (!status.isActive || !data) return;
-		navigate('Profile', { name: data.did });
+		navigate('Profile', { actor: data.did });
 	};
 
 	if (data && moderationOpts) {

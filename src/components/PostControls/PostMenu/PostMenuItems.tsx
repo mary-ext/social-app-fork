@@ -152,7 +152,7 @@ function PostMenuItems({
 					if (
 						currentAccount &&
 						isAuthor &&
-						(params.name === currentAccount.handle || params.name === currentAccount.did)
+						(params.actor === currentAccount.handle || params.actor === currentAccount.did)
 					) {
 						const currentHref = makeProfileLink(postAuthor, 'post', params.rkey);
 						if (currentHref === href && router.canGoBack) {

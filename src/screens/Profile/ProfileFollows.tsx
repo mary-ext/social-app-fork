@@ -22,8 +22,8 @@ import { m } from '#/paraglide/messages';
 import { useNavigate, useParams } from '#/routes';
 
 export const ProfileFollowsScreen = () => {
-	const [{ name }] = useParams('ProfileFollows');
-	const { data: resolvedDid } = useResolveDidQuery(name);
+	const [{ actor }] = useParams('ProfileFollows');
+	const { data: resolvedDid } = useResolveDidQuery(actor);
 	const { data: profile } = useProfileQuery({
 		did: resolvedDid,
 	});
@@ -54,7 +54,7 @@ export const ProfileFollowsScreen = () => {
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<ProfileFollows name={name} initialCount={followsCount} />
+			<ProfileFollows name={actor} initialCount={followsCount} />
 		</Layout.Screen>
 	);
 };

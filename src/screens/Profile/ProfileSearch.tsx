@@ -14,10 +14,10 @@ import { useParams } from '#/routes';
 // a launch point only: it renders the search header and hands actual queries off to the Search screen, with
 // the profile baked in as a `from:` filter.
 export const ProfileSearchScreen = () => {
-	const [{ name }] = useParams('ProfileSearch');
+	const [{ actor }] = useParams('ProfileSearch');
 	const { currentAccount } = useSession();
 
-	const { data: resolvedDid } = useResolveDidQuery(name);
+	const { data: resolvedDid } = useResolveDidQuery(actor);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 
 	useTitle(
@@ -35,7 +35,7 @@ export const ProfileSearchScreen = () => {
 	return (
 		<Layout.Screen>
 			<SearchHeader
-				fixedParams={{ from: profile?.handle ?? name }}
+				fixedParams={{ from: profile?.handle ?? actor }}
 				initialQuery=""
 				navButton={<Layout.Header.BackButton />}
 				placeholder={placeholder}

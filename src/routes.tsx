@@ -14,6 +14,8 @@ import {
 	string,
 } from '@oomfware/stacker';
 
+import { actorIdentifier, recordKey } from '#/lib/routes/codecs';
+
 import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
 
 import {
@@ -362,69 +364,69 @@ export const routes = defineRoutes({
 
 			Profile: route({
 				component: ProfileScreen,
-				params: { name: string() },
-				path: '/profile/:name',
+				params: { actor: actorIdentifier() },
+				path: '/profile/:actor',
 			}),
 			ProfileFollowers: route({
 				component: ProfileFollowersScreen,
-				params: { name: string() },
-				path: '/profile/:name/followers',
+				params: { actor: actorIdentifier() },
+				path: '/profile/:actor/followers',
 			}),
 			ProfileFollows: route({
 				component: ProfileFollowsScreen,
-				params: { name: string() },
-				path: '/profile/:name/follows',
+				params: { actor: actorIdentifier() },
+				path: '/profile/:actor/follows',
 			}),
 			ProfileKnownFollowers: route({
 				component: ProfileKnownFollowersScreen,
-				params: { name: string() },
-				path: '/profile/:name/known-followers',
+				params: { actor: actorIdentifier() },
+				path: '/profile/:actor/known-followers',
 			}),
 			ProfileSearch: route({
 				component: ProfileSearchScreen,
-				params: { name: string() },
-				path: '/profile/:name/search',
+				params: { actor: actorIdentifier() },
+				path: '/profile/:actor/search',
 			}),
 			ProfileList: route({
 				component: ProfileListScreen,
 				meta: { requireAuth: true },
-				params: { name: string(), rkey: string() },
-				path: '/profile/:name/lists/:rkey',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/profile/:actor/lists/:rkey',
 			}),
 			PostThread: route({
 				component: PostThreadScreen,
-				params: { name: string(), rkey: string() },
-				path: '/profile/:name/post/:rkey',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/profile/:actor/post/:rkey',
 			}),
 			PostLikedBy: route({
 				component: PostLikedByScreen,
-				params: { name: string(), rkey: string() },
-				path: '/profile/:name/post/:rkey/liked-by',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/profile/:actor/post/:rkey/liked-by',
 			}),
 			PostRepostedBy: route({
 				component: PostRepostedByScreen,
-				params: { name: string(), rkey: string() },
-				path: '/profile/:name/post/:rkey/reposted-by',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/profile/:actor/post/:rkey/reposted-by',
 			}),
 			PostQuotes: route({
 				component: PostQuotesScreen,
-				params: { name: string(), rkey: string() },
-				path: '/profile/:name/post/:rkey/quotes',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/profile/:actor/post/:rkey/quotes',
 			}),
 			ProfileFeed: route({
 				component: ProfileFeedScreen,
-				params: { name: string(), rkey: string() },
-				path: '/profile/:name/feed/:rkey',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/profile/:actor/feed/:rkey',
 			}),
 			ProfileFeedLikedBy: route({
 				component: ProfileFeedLikedByScreen,
-				params: { name: string(), rkey: string() },
-				path: '/profile/:name/feed/:rkey/liked-by',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/profile/:actor/feed/:rkey/liked-by',
 			}),
 			ProfileLabelerLikedBy: route({
 				component: ProfileLabelerLikedByScreen,
-				params: { name: string() },
-				path: '/profile/:name/labeler/liked-by',
+				params: { actor: actorIdentifier() },
+				path: '/profile/:actor/labeler/liked-by',
 			}),
 
 			Hashtag: route({
@@ -488,11 +490,12 @@ export const routes = defineRoutes({
 				},
 			}),
 
-			// StarterPackEdit MUST precede StarterPack, which also matches `/starter-pack/edit/x` as name='edit'.
+			// StarterPackEdit precedes StarterPack for clarity; the `:actor` codec also rejects the literal
+			// `edit` segment, so `/starter-pack/edit/:rkey` can't be mis-captured by StarterPack.
 			StarterPackEdit: route({
 				component: Wizard,
 				meta: { requireAuth: true },
-				params: { rkey: string() },
+				params: { rkey: recordKey() },
 				path: '/starter-pack/edit/:rkey',
 			}),
 			StarterPackWizard: route({
@@ -503,8 +506,8 @@ export const routes = defineRoutes({
 			}),
 			StarterPack: route({
 				component: StarterPackScreen,
-				params: { name: string(), rkey: string() },
-				path: '/starter-pack/:name/:rkey',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/starter-pack/:actor/:rkey',
 				query: { new: optional(boolean()) },
 			}),
 			StarterPackShort: route({
@@ -514,8 +517,8 @@ export const routes = defineRoutes({
 			}),
 			Start: route({
 				component: HomeScreen,
-				params: { name: string(), rkey: string() },
-				path: '/start/:name/:rkey',
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/start/:actor/:rkey',
 			}),
 
 			Bookmarks: route({

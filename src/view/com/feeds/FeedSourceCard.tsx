@@ -143,7 +143,7 @@ export function FeedSourceCardLoaded({
 							})
 				}
 				to={buildPath(feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList', {
-					name: feed.creatorDid,
+					actor: feed.creatorDid,
 					rkey: parseCanonicalResourceUri(feed.uri).rkey,
 				})}
 				style={[a.flex_1, a.p_lg, a.gap_md, !hideTopBorder && a.border_t, t.atoms.border_contrast_low, style]}

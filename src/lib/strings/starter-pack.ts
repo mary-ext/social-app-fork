@@ -2,7 +2,7 @@ import type { AnyStarterPackView } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 export function parseStarterPackUri(uri?: string): {
-	name: string;
+	actor: string;
 	rkey: string;
 } | null {
 	if (!uri) return null;
@@ -13,7 +13,7 @@ export function parseStarterPackUri(uri?: string): {
 			if (atUri.collection !== 'app.bsky.graph.starterpack') return null;
 			if (atUri.rkey) {
 				return {
-					name: atUri.repo,
+					actor: atUri.repo,
 					rkey: atUri.rkey,
 				};
 			}
@@ -21,13 +21,13 @@ export function parseStarterPackUri(uri?: string): {
 		} else {
 			const url = new URL(uri);
 			const parts = url.pathname.split('/');
-			const [__, path, name, rkey] = parts;
+			const [__, path, actor, rkey] = parts;
 
 			if (parts.length !== 4) return null;
 			if (path !== 'starter-pack' && path !== 'start') return null;
-			if (!name || !rkey) return null;
+			if (!actor || !rkey) return null;
 			return {
-				name,
+				actor,
 				rkey,
 			};
 		}
@@ -44,7 +44,7 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 
 	if (httpUri.startsWith('at://')) return httpUri;
 
-	return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`;
+	return `at://${parsed.actor}/app.bsky.graph.starterpack/${parsed.rkey}`;
 }
 
 export function getStarterPackOgCard(didOrStarterPack: AnyStarterPackView | string, rkey?: string) {

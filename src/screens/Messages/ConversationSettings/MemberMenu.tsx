@@ -153,7 +153,7 @@ export function MemberMenu({
 						<Menu.Item
 							label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
 							onClick={() => {
-								navigate('Profile', { name: profile.did });
+								navigate('Profile', { actor: profile.did });
 							}}
 						>
 							<Menu.ItemIcon icon={PersonIcon} />

@@ -141,7 +141,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 		if (!parsed) {
 			throw new Error('Unexpectedly called getStarterPackAsEmbed with a non-starterpack url');
 		}
-		const did = await fetchDid(parsed.name);
+		const did = await fetchDid(parsed.actor);
 		const starterPack = createStarterPackUri({ did, rkey: parsed.rkey });
 		const res = await ok(
 			appview.get('app.bsky.graph.getStarterPack', {

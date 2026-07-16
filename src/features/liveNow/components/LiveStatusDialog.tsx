@@ -46,7 +46,7 @@ export function LiveStatusDialog({
 
 	const onPressOpenProfile = () => {
 		handle.close();
-		navigate('Profile', { name: profile.did });
+		navigate('Profile', { actor: profile.did });
 	};
 
 	return (

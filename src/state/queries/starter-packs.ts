@@ -49,7 +49,7 @@ const RQKEY_ROOT = 'starter-pack';
 const RQKEY = ({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }) => {
 	if (uri?.startsWith('https://') || uri?.startsWith('at://')) {
 		const parsed = parseStarterPackUri(uri);
-		return [RQKEY_ROOT, parsed?.name, parsed?.rkey];
+		return [RQKEY_ROOT, parsed?.actor, parsed?.rkey];
 	} else {
 		return [RQKEY_ROOT, did, rkey];
 	}

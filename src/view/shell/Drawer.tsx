@@ -1,3 +1,5 @@
+import type { ActorIdentifier } from '@atcute/lexicons/syntax';
+
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 
 import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
@@ -87,7 +89,7 @@ function DrawerContent() {
 		setDrawerOpen(false);
 		// MyProfile doesn't exist on the web navigator, so resolve it to the Profile route -ansh
 		if (tab === 'MyProfile') {
-			navigate('Profile', { name: currentAccount!.did });
+			navigate('Profile', { actor: currentAccount!.did as ActorIdentifier });
 		} else {
 			navigate(tab);
 		}

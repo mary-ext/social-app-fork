@@ -756,8 +756,8 @@ export const ComposePost = ({
 						? {
 								label: m['view.composer.publish.action.view'](),
 								onPress: () => {
-									const { repo: name, rkey } = parseCanonicalResourceUri(postUri);
-									navigate('PostThread', { name, rkey });
+									const { repo: actor, rkey } = parseCanonicalResourceUri(postUri);
+									navigate('PostThread', { actor, rkey });
 								},
 							}
 						: undefined,

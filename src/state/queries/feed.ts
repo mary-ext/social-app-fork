@@ -111,7 +111,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		route: {
 			href,
 			name: 'ProfileFeed',
-			params: { name: urip.repo, rkey: urip.rkey },
+			params: { actor: urip.repo, rkey: urip.rkey },
 		},
 		avatar: view.avatar,
 		displayName: view.displayName
@@ -145,7 +145,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		route: {
 			href,
 			name: 'ProfileList',
-			params: { name: urip.repo, rkey: urip.rkey },
+			params: { actor: urip.repo, rkey: urip.rkey },
 		},
 		cid: view.cid,
 		avatar: view.avatar,

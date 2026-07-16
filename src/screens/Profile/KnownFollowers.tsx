@@ -20,8 +20,8 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 
 export const ProfileKnownFollowersScreen = () => {
-	const [{ name }] = useParams('ProfileKnownFollowers');
-	const { data: resolvedDid } = useResolveDidQuery(name);
+	const [{ actor }] = useParams('ProfileKnownFollowers');
+	const { data: resolvedDid } = useResolveDidQuery(actor);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 
 	useTitle(
@@ -39,7 +39,7 @@ export const ProfileKnownFollowersScreen = () => {
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<ProfileKnownFollowers name={name} />
+			<ProfileKnownFollowers name={actor} />
 		</Layout.Screen>
 	);
 };

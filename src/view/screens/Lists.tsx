@@ -27,7 +27,7 @@ export function ListsScreen() {
 		try {
 			const urip = parseCanonicalResourceUri(uri);
 			navigate('ProfileList', {
-				name: urip.repo,
+				actor: urip.repo,
 				rkey: urip.rkey,
 			});
 		} catch {}

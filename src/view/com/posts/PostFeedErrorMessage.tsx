@@ -1,6 +1,6 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type ActorIdentifier, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { cleanError, errorToString } from '#/lib/strings/errors';
 
@@ -110,7 +110,7 @@ function FeedgenErrorMessage({
 	const { mutateAsync: removeFeed } = useRemoveFeedMutation();
 
 	const onViewProfile = () => {
-		navigate('Profile', { name: ownerDid });
+		navigate('Profile', { actor: ownerDid as ActorIdentifier });
 	};
 
 	const onPressRemoveFeed = () => {

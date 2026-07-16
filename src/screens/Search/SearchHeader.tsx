@@ -56,7 +56,7 @@ export function SearchHeader({
 	};
 
 	const navigateToProfile = (profile: AnyProfileView) => {
-		navigate('Profile', { name: profile.did });
+		navigate('Profile', { actor: profile.did });
 	};
 
 	return (

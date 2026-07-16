@@ -63,18 +63,16 @@ export function ProfileScreen() {
 }
 
 function ProfileScreenInner() {
-	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
-	const [params] = useParams('Profile');
-	const name = params.name === 'me' ? currentAccount?.did : params.name;
+	const [{ actor }] = useParams('Profile');
 	const moderationOpts = useModerationOpts();
 	const {
 		data: resolvedDid,
 		error: resolveError,
 		refetch: refetchDid,
 		isPending: isDidPending,
-	} = useResolveDidQuery(name);
+	} = useResolveDidQuery(actor);
 	const {
 		data: profile,
 		error: profileError,
@@ -96,12 +94,12 @@ function ProfileScreenInner() {
 	// Apply hard-coded redirects as need
 	useEffect(() => {
 		if (resolveError) {
-			if (name === 'lulaoficial.bsky.social') {
+			if (actor === 'lulaoficial.bsky.social') {
 				console.log('Applying redirect to lula.com.br');
-				navigate('Profile', { name: 'lula.com.br' });
+				navigate('Profile', { actor: 'lula.com.br' });
 			}
 		}
-	}, [name, navigate, resolveError]);
+	}, [actor, navigate, resolveError]);
 
 	// When we open the profile, we want to reset the posts query if we are blocked.
 	useEffect(() => {

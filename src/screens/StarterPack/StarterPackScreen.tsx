@@ -67,7 +67,7 @@ import { colors } from '#/styles/colors';
 
 import { StarterPackHeader } from './StarterPackHeader';
 
-type StarterPackRouteParams = { name: string; new?: boolean; rkey: string };
+type StarterPackRouteParams = { actor: string; new?: boolean; rkey: string };
 
 export function StarterPackScreen() {
 	const [params] = useParams('StarterPack');
@@ -108,12 +108,12 @@ export function StarterPackScreenShort() {
 }
 
 export function StarterPackScreenInner({ routeParams }: { routeParams: StarterPackRouteParams }) {
-	const { name, rkey } = routeParams;
+	const { actor, rkey } = routeParams;
 	const { currentAccount } = useSession();
 	useTitle(m['common.starterPack.label']());
 
 	const moderationOpts = useModerationOpts();
-	const { data: did, isLoading: isLoadingDid, isError: isErrorDid } = useResolveDidQuery(name);
+	const { data: did, isLoading: isLoadingDid, isError: isErrorDid } = useResolveDidQuery(actor);
 	const {
 		data: starterPack,
 		isLoading: isLoadingStarterPack,

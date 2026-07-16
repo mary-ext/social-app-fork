@@ -201,7 +201,7 @@ function ProfileMenu({
 	};
 
 	const onPressSearch = () => {
-		navigate('ProfileSearch', { name: profile.did });
+		navigate('ProfileSearch', { actor: profile.did });
 	};
 
 	return (

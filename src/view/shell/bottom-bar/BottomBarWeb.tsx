@@ -209,7 +209,7 @@ const NavItem: React.FC<{
 	// profile leaves it inactive and makes a press push a fresh screen; every other tab is an exact name match.
 	const inTab = activeRouteNames ? activeRouteNames.includes(match.name) : match.name === routeName;
 	const onProfileTab = routeName === 'Profile' && match.name === 'Profile';
-	const isOnDifferentProfile = onProfileTab && match.params.name !== currentAccount?.did;
+	const isOnDifferentProfile = onProfileTab && match.params.actor !== currentAccount?.did;
 	const isActive = onProfileTab ? !isOnDifferentProfile : inTab;
 	const atRoot = inTab;
 
@@ -229,7 +229,7 @@ const NavItem: React.FC<{
 		}
 		popToRoute(
 			routeName,
-			routeName === 'Profile' && currentAccount ? { name: currentAccount.did } : undefined,
+			routeName === 'Profile' && currentAccount ? { actor: currentAccount.did } : undefined,
 		);
 		return false;
 	};

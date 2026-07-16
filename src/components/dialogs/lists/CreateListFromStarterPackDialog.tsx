@@ -52,7 +52,7 @@ export function CreateListFromStarterPackDialog({
 
 		const urip = parseCanonicalResourceUri(listUri);
 		navigate('ProfileList', {
-			name: urip.repo,
+			actor: urip.repo,
 			rkey: urip.rkey,
 		});
 	};

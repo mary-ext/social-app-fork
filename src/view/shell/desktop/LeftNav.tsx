@@ -204,7 +204,7 @@ function SwitcherMenuProfileLink() {
 	const { currentAccount } = useSession();
 	const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/';
 	const match = useRoute();
-	const isCurrent = match.name === 'Profile' && match.params.name === currentAccount?.did;
+	const isCurrent = match.name === 'Profile' && match.params.actor === currentAccount?.did;
 
 	const onPress = (e: MouseEvent<HTMLElement>) => {
 		// a modified/middle click opens the profile in a new tab — let the anchor's default handle it
@@ -280,7 +280,7 @@ function NavItem({ activeRouteNames, count, hasNew, href, icons, label, minimal,
 	const match = useRoute();
 	const inTab = activeRouteNames ? activeRouteNames.includes(match.name) : match.name === routeName;
 	// exact name (own profile on DID) bolds the label; a related route group (Profile*) only lights the icon.
-	const isCurrent = inTab && (routeName !== 'Profile' || match.params.name === currentAccount?.did);
+	const isCurrent = inTab && (routeName !== 'Profile' || match.params.actor === currentAccount?.did);
 	const isRelated = activeRouteNames ? inTab : match.name.startsWith(routeName);
 
 	const onPress = (e: MouseEvent<HTMLElement>) => {
@@ -295,7 +295,7 @@ function NavItem({ activeRouteNames, count, hasNew, href, icons, label, minimal,
 		}
 		popToRoute(
 			routeName,
-			routeName === 'Profile' && currentAccount ? { name: currentAccount.did } : undefined,
+			routeName === 'Profile' && currentAccount ? { actor: currentAccount.did } : undefined,
 		);
 		return false;
 	};
@@ -338,7 +338,7 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 
 	const getProfileHandle = async () => {
 		if (match.name === 'Profile') {
-			let handle: string | undefined = match.params.name as string;
+			let handle: string | undefined = match.params.actor as string;
 
 			if (handle.startsWith('did:')) {
 				try {

@@ -35,7 +35,7 @@ import { useIsFocused, useParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
 export function ProfileFeedScreen() {
-	const [{ rkey, name: handleOrDid }] = useParams('ProfileFeed');
+	const [{ rkey, actor: handleOrDid }] = useParams('ProfileFeed');
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey);
 	const { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
 

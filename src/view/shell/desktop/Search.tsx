@@ -12,7 +12,7 @@ export function DesktopSearch() {
 	return (
 		<SearchAutocomplete
 			onNavigate={(path) => navigateToPath(path, 'push')}
-			onNavigateToProfile={(profile: AnyProfileView) => navigate('Profile', { name: profile.did })}
+			onNavigateToProfile={(profile: AnyProfileView) => navigate('Profile', { actor: profile.did })}
 			onSubmit={(query) => navigate('Search', { q: query })}
 		/>
 	);

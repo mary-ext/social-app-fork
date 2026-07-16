@@ -134,7 +134,7 @@ export function ConvoMenuItems({
 							{isGroupConvo ? null : (
 								<Menu.Item
 									label={m['common.profile.a11y.goTo']()}
-									onClick={() => navigate('Profile', { name: profile.did })}
+									onClick={() => navigate('Profile', { actor: profile.did })}
 								>
 									<Menu.ItemIcon icon={Person} />
 									<Menu.ItemText>{m['common.profile.action.goTo']()}</Menu.ItemText>
