@@ -129,7 +129,7 @@ export function BottomBarWeb() {
 							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
 						}}
 					</NavItem>
-					<NavItem routeName="Search" href="/search">
+					<NavItem routeName="Search" activeRouteNames={['Explore', 'Search']} href="/search">
 						{({ isActive }) => {
 							const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass;
 							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
@@ -194,20 +194,23 @@ const NavItem: React.FC<{
 	children: (props: { isActive: boolean }) => React.ReactNode;
 	href: string;
 	routeName: string;
+	/** route names a single tab spans (e.g. Explore + Search); when set, activeness matches any of them. */
+	activeRouteNames?: readonly string[];
 	hasNew?: boolean;
 	notificationCount?: string;
 	onLongPress?: () => void;
-}> = ({ children, href, routeName, hasNew, notificationCount, onLongPress }) => {
+}> = ({ children, href, routeName, activeRouteNames, hasNew, notificationCount, onLongPress }) => {
 	const { currentAccount } = useSession();
 	const match = useRoute();
 	const { consumeLongPress, handlers: longPressHandlers } = useLongPress(onLongPress);
 
 	// the Profile tab is "active" only on your own profile (matched on DID), so viewing someone else's
 	// profile leaves it inactive and makes a press push a fresh screen; every other tab is an exact name match.
+	const inTab = activeRouteNames ? activeRouteNames.includes(match.name) : match.name === routeName;
 	const onProfileTab = routeName === 'Profile' && match.name === 'Profile';
 	const isOnDifferentProfile = onProfileTab && match.params.name !== currentAccount?.did;
-	const isActive = onProfileTab ? !isOnDifferentProfile : match.name === routeName;
-	const atRoot = match.name === routeName;
+	const isActive = onProfileTab ? !isOnDifferentProfile : inTab;
+	const atRoot = inTab;
 
 	// active tab at its root soft-resets the feed; a deeper stack pops back to it; a different profile pushes.
 	const action = isOnDifferentProfile ? 'push' : 'navigate';

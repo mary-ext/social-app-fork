@@ -18,7 +18,7 @@ export function FollowingEndOfFeed() {
 	const navigate = useNavigate();
 
 	const onPressFindAccounts = () => {
-		navigate('Search', {});
+		navigate('Explore', {});
 	};
 
 	const onPressDiscoverFeeds = () => {

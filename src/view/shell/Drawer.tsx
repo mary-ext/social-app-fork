@@ -83,7 +83,7 @@ function DrawerContent() {
 		useNavigationTabState();
 	const numUnreadNotifications = useUnreadNotifications();
 
-	const onPressTab = (tab: 'Home' | 'Messages' | 'MyProfile' | 'Notifications' | 'Search') => {
+	const onPressTab = (tab: 'Explore' | 'Home' | 'Messages' | 'MyProfile' | 'Notifications') => {
 		setDrawerOpen(false);
 		// MyProfile doesn't exist on the web navigator, so resolve it to the Profile route -ansh
 		if (tab === 'MyProfile') {
@@ -119,7 +119,7 @@ function DrawerContent() {
 						inactiveIcon={MagnifyingGlass}
 						isActive={isAtSearch}
 						label={m['common.nav.explore']()}
-						onPress={() => onPressTab('Search')}
+						onPress={() => onPressTab('Explore')}
 					/>
 					<MenuItem
 						activeIcon={HomeFilled}
@@ -205,7 +205,7 @@ function DrawerContent() {
 						inactiveIcon={MagnifyingGlass}
 						isActive={isAtSearch}
 						label={m['common.nav.explore']()}
-						onPress={() => onPressTab('Search')}
+						onPress={() => onPressTab('Explore')}
 					/>
 				</>
 			)}

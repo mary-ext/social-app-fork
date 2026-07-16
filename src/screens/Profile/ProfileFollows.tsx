@@ -69,7 +69,7 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 	const moderationOpts = useModerationOpts();
 
 	const onPressFindAccounts = () => {
-		navigate('Search', {});
+		navigate('Explore', {});
 	};
 
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);

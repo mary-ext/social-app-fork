@@ -260,6 +260,8 @@ function SwitchMenuItem({
 }
 
 interface NavItemProps {
+	/** route names a single tab spans (e.g. Explore + Search); when set, activeness matches any of them. */
+	activeRouteNames?: readonly string[];
 	count?: string;
 	hasNew?: boolean;
 	href: string;
@@ -271,14 +273,14 @@ interface NavItemProps {
 	minimal: boolean;
 	routeName: string;
 }
-function NavItem({ count, hasNew, href, icons, label, minimal, routeName }: NavItemProps) {
+function NavItem({ activeRouteNames, count, hasNew, href, icons, label, minimal, routeName }: NavItemProps) {
 	const { currentAccount } = useSession();
 
 	const match = useRoute();
+	const inTab = activeRouteNames ? activeRouteNames.includes(match.name) : match.name === routeName;
 	// exact name (own profile on DID) bolds the label; a related route group (Profile*) only lights the icon.
-	const isCurrent =
-		match.name === routeName && (routeName !== 'Profile' || match.params.name === currentAccount?.did);
-	const isRelated = match.name.startsWith(routeName);
+	const isCurrent = inTab && (routeName !== 'Profile' || match.params.name === currentAccount?.did);
+	const isRelated = activeRouteNames ? inTab : match.name.startsWith(routeName);
 
 	const onPress = (e: MouseEvent<HTMLElement>) => {
 		// a modified/middle click opens a new tab — let the anchor's default handle it
@@ -414,6 +416,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.nav.home']()}
 					/>
 					<NavItem
+						activeRouteNames={['Explore', 'Search']}
 						href="/search"
 						routeName="Search"
 						minimal={leftNavMinimal}

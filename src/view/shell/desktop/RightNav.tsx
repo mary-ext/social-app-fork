@@ -1,5 +1,3 @@
-import { useRoute } from '#/lib/router';
-
 import { useSession } from '#/state/session';
 
 import { DesktopFeeds } from '#/view/shell/desktop/Feeds';
@@ -18,11 +16,9 @@ import * as css from './RightNav.css';
 
 export function DesktopRightNav({ routeName }: { routeName: string }) {
 	const { hasSession } = useSession();
-	const isSearchScreen = routeName === 'Search';
-	// read the search query off the route so a direct load reflects it, not only after a later navigation.
-	const match = useRoute();
-	const searchQuery = match.name === 'Search' ? (match.params.q as string | undefined) : undefined;
-	const showExploreScreenDuplicatedContent = !isSearchScreen || (isSearchScreen && !!searchQuery);
+	const isExploreScreen = routeName === 'Explore';
+	// both the Explore landing and the Search results screen carry their own search input
+	const isSearchScreen = isExploreScreen || routeName === 'Search';
 	const { leftNavMinimal } = useLayoutBreakpoints();
 
 	return (
@@ -30,7 +26,8 @@ export function DesktopRightNav({ routeName }: { routeName: string }) {
 			{!isSearchScreen && <DesktopSearch />}
 
 			{hasSession && <DesktopFeeds />}
-			{showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
+			{/* the Explore landing already shows trending topics in its main column, so skip the sidebar duplicate */}
+			{!isExploreScreen && <SidebarTrendingTopics />}
 
 			<ExternalInlineLinkText
 				href={SOURCE_CODE_URL}

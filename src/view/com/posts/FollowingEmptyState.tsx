@@ -20,7 +20,7 @@ export function FollowingEmptyState() {
 	const navigate = useNavigate();
 
 	const onPressFindAccounts = () => {
-		navigate('Search', {});
+		navigate('Explore', {});
 	};
 
 	const onPressDiscoverFeeds = () => {

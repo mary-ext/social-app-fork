@@ -38,7 +38,7 @@ export function CustomFeedEmptyState() {
 	const navigate = useNavigate();
 
 	const onPressFindAccounts = () => {
-		navigate('Search', {});
+		navigate('Explore', {});
 	};
 
 	return (

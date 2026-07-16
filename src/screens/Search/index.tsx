@@ -8,7 +8,7 @@ import { SearchScreenShell } from './Shell';
 export function SearchScreen() {
 	const { q } = useParams('Search');
 
-	useTitle(m['common.nav.explore']());
+	useTitle(q || m['common.action.search']());
 
 	return <SearchScreenShell queryParam={q ?? ''} />;
 }

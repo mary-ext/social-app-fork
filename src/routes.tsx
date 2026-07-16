@@ -20,6 +20,7 @@ import {
 	MessagesRouteLoadingScreen,
 	MessagesSplitViewColumnLoadingScreen,
 } from '#/screens/Messages/components/splitView/messages-route-loading-screen';
+import { searchTabs } from '#/screens/Search/utils';
 
 declare module '#/lib/router' {
 	interface RouteMeta {
@@ -48,6 +49,7 @@ const ContentAndMediaSettingsScreen = lazy(() =>
 		default: mod.ContentAndMediaSettingsScreen,
 	})),
 );
+const ExploreScreen = lazy(() => import('#/screens/Explore').then((mod) => ({ default: mod.ExploreScreen })));
 const ExternalMediaPreferencesScreen = lazy(() =>
 	import('#/screens/Settings/ExternalMediaPreferences').then((mod) => ({
 		default: mod.ExternalMediaPreferencesScreen,
@@ -219,10 +221,19 @@ export const routes = defineRoutes({
 				path: '/',
 				type: 'singleton',
 			}),
+			// Explore and Search share the /search path; the query decides which renders. declaration order is
+			// irrelevant since the `when` predicates are mutually exclusive.
+			Explore: route({
+				component: ExploreScreen,
+				path: '/search',
+				query: { q: optional(string()), tab: optional(enumOf(searchTabs)) },
+				when: ({ rawSearch }) => !rawSearch.get('q'),
+			}),
 			Search: route({
 				component: SearchScreen,
 				path: '/search',
-				query: { q: optional(string()), tab: optional(enumOf(['feed', 'latest', 'profile', 'user'])) },
+				query: { q: optional(string()), tab: optional(enumOf(searchTabs)) },
+				when: ({ rawSearch }) => !!rawSearch.get('q'),
 			}),
 			Feeds: route({
 				component: FeedsScreen,
@@ -374,7 +385,6 @@ export const routes = defineRoutes({
 				component: ProfileSearchScreen,
 				params: { name: string() },
 				path: '/profile/:name/search',
-				query: { q: optional(string()) },
 			}),
 			ProfileList: route({
 				component: ProfileListScreen,
