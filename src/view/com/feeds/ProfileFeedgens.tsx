@@ -1,7 +1,5 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { cleanError } from '#/lib/strings/errors';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -20,6 +18,7 @@ import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 // only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const FEEDGEN_ITEM_HEIGHT_ESTIMATE = 120;
@@ -52,7 +51,7 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 		useProfileFeedgensQuery(did);
 	const isEmpty = !isPending && !data?.pages[0]?.feeds.length;
 	const { data: preferences } = usePreferencesQuery();
-	const navigation = useNavigation();
+	const navigate = useNavigate();
 	const { currentAccount } = useSession();
 	const isSelf = currentAccount?.did === did;
 
@@ -113,7 +112,7 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 							? {
 									label: m['view.feeds.discover.browse'](),
 									text: m['view.feeds.discover.browse'](),
-									onPress: () => navigation.navigate('Feeds' as never),
+									onPress: () => navigate('Feeds'),
 									size: 'small',
 									color: 'secondary',
 								}

@@ -1,9 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
-
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-import { getChatInviteCodeFromUrl } from '#/lib/strings/url-helpers';
+import { lazy, Suspense } from 'react';
 
 import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
@@ -17,32 +12,11 @@ import * as css from './GroupChatJoinDialog.css';
 const InviteBody = lazy(() => import('./InviteBody').then((mod) => ({ default: mod.InviteBody })));
 
 /**
- * the single app-wide group-chat join dialog, opened imperatively from a `bsky.app/chat/<code>` link or
- * invite.
+ * the single app-wide group-chat join dialog. opened imperatively by the `/chat/:code` null route (see
+ * `#/view/shell/null-routes`), which decodes the invite code and swaps the URL for Home.
  */
 export function GroupChatJoinDialog() {
 	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
-
-	// a direct load of /chat/<code> renders Home (see routes) — open the join dialog over it. The shell closes
-	// all dialogs on the navigator's initial 'state' settle, so opening on mount would be dismissed at once;
-	// open on the first settle instead, deferred a tick so it runs after the shell's closeAllActiveElements.
-	const navigation = useNavigation<NavigationProp>();
-	useEffect(() => {
-		const code = getChatInviteCodeFromUrl(window.location.pathname);
-		if (!code) {
-			return;
-		}
-		const unsubscribe = navigation.addListener('state', () => {
-			unsubscribe();
-			setTimeout(() => {
-				groupChatJoinHandle.openWithPayload({ code });
-				// swap the now-handled /chat/<code> URL for Home; replaceState doesn't fire a navigator
-				// 'state' event, so it won't trip closeAllActiveElements and dismiss the dialog we just opened.
-				window.history.replaceState(null, '', '/');
-			}, 0);
-		});
-		return unsubscribe;
-	}, [groupChatJoinHandle, navigation]);
 
 	return (
 		<Dialog.Root handle={groupChatJoinHandle}>

@@ -5,6 +5,7 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import debounce from 'lodash.debounce';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import {
@@ -95,6 +96,7 @@ type FlatlistSlice =
 	  };
 
 export function FeedsScreen() {
+	useTitle(m['common.nav.feeds']());
 	const { openComposer } = useOpenComposer();
 	const { hasSession } = useSession();
 	const [query, setQuery] = useState('');

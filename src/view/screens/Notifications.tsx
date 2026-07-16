@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { useTitle } from '#/lib/hooks/useTitle';
 
 import { softReset } from '#/state/events';
 import { RQKEY as NOTIFS_RQKEY } from '#/state/queries/notifications/feed';
@@ -31,6 +31,7 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText, LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import { useFocusEffect, useIsFocused } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './Notifications.css';
@@ -41,6 +42,7 @@ import * as css from './Notifications.css';
 let lastActiveTab: 'all' | 'mentions' = 'all';
 
 export function NotificationsScreen() {
+	useTitle(m['common.nav.notifications']());
 	const { openComposer } = useOpenComposer();
 	const unreadNotifs = useUnreadNotifications();
 	const hasNew = !!unreadNotifs;

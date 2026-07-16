@@ -2,10 +2,7 @@ import { View } from 'react-native';
 
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import type { NavigationProp } from '#/lib/routes/types';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -22,9 +19,10 @@ import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'direct' }> }) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const t = useTheme();
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
@@ -63,7 +61,7 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 					size="small"
 					label={m['common.profile.a11y.goTo']()}
 					onPress={() => {
-						navigation.navigate('Profile', { name: profileLink });
+						navigate('Profile', { name: profileLink });
 					}}
 				>
 					<ButtonIcon icon={PersonIcon} />

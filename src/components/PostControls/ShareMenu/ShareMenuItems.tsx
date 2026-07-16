@@ -1,10 +1,7 @@
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { makeProfileLink } from '#/lib/routes/links';
-import type { NavigationProp } from '#/lib/routes/types';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
@@ -21,6 +18,7 @@ import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/P
 import * as Menu from '#/components/Menu';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 import { useBookmark } from '../useBookmark';
@@ -32,7 +30,7 @@ interface ShareMenuItemsProps {
 
 function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode {
 	const { hasSession } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const sendViaChatHandle = Dialog.useDialogHandle();
 	const [devModeEnabled] = useDevMode();
 	const bookmark = useBookmark(post);
@@ -52,7 +50,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 	};
 
 	const onSelectChatToShareTo = (conversation: string) => {
-		navigation.navigate('MessagesConversation', {
+		navigate('MessagesConversation', {
 			conversation,
 			embed: postUri,
 		});

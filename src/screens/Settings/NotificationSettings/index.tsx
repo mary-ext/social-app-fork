@@ -1,3 +1,5 @@
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import {
 	useChatNotificationSettingsQuery,
 	useNotificationSettingsQuery,
@@ -32,6 +34,7 @@ import { SettingPreview } from './components/SettingPreview';
 import * as styles from './index.css';
 
 export function NotificationSettingsScreen() {
+	useTitle(m['common.notifications.settingsTitle']());
 	const { data: settings, isError } = useNotificationSettingsQuery();
 	const { data: chatSettings, isError: chatError } = useChatNotificationSettingsQuery();
 

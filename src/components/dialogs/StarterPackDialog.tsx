@@ -4,9 +4,6 @@ import type {
 	AppBskyGraphStarterpack,
 } from '@atcute/bluesky';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -37,6 +34,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useLocation, useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
@@ -66,8 +64,9 @@ function keyExtractor(item: Item): string {
 }
 
 function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
-	const navigation = useNavigation<NavigationProp>();
-	const { key: originKey } = useRoute();
+	const navigate = useNavigate();
+	// capture the origin history entry so the reopen coordinator can key the reopen to it.
+	const { key: originKey } = useLocation();
 	const { data: subject } = useProfileQuery({ did: targetDid });
 
 	const { data, isError, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
@@ -84,7 +83,7 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 	const onStartWizard = () => {
 		handle.close();
 		markStarterPackWizardLaunched(originKey, targetDid);
-		navigation.navigate('StarterPackWizard', { targetDid });
+		navigate('StarterPackWizard', { targetDid });
 	};
 
 	const onEndReached = () => {

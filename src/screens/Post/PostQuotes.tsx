@@ -4,8 +4,7 @@ import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { moderatePost } from '@atcute/bluesky-moderation';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
@@ -23,14 +22,16 @@ import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostQuotes'>;
-export const PostQuotesScreen = ({ route }: Props) => {
-	const { name, rkey } = route.params;
+export const PostQuotesScreen = () => {
+	const { name, rkey } = useParams('PostQuotes');
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
-	useSetTitle(post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : undefined);
+	useTitle(
+		post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : m['navigation.post.title'](),
+	);
 
 	let quoteCount;
 	if (post) {

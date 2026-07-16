@@ -4,7 +4,6 @@ import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 
-import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useAppState } from '#/lib/appState';
@@ -27,6 +26,8 @@ import { RQKEY as createProfileQueryKey } from '#/state/queries/profile';
 import { useClients, useSession } from '#/state/session';
 
 import type { GroupConvoMember } from '#/components/dms/util';
+
+import { useFocusEffect } from '#/routes';
 
 export * from '#/state/messages/convo/util';
 

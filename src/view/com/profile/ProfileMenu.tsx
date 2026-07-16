@@ -1,10 +1,8 @@
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import type { NavigationProp } from '#/lib/routes/types';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
@@ -51,6 +49,7 @@ import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { GoLiveDialog } from '#/features/liveNow/components/GoLiveDialog';
 import { GoLiveDisabledDialog } from '#/features/liveNow/components/GoLiveDisabledDialog';
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 const isAbortError = (error: unknown) => {
@@ -66,7 +65,7 @@ function ProfileMenu({
 	const reportDialogHandle = Dialog.useDialogHandle();
 	const addToListsDialogHandle = Dialog.useDialogHandle();
 	const queryClient = useQueryClient();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const isSelf = currentAccount?.did === profile.did;
 	const isFollowing = profile.viewer?.following;
 	const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy;
@@ -202,7 +201,7 @@ function ProfileMenu({
 	};
 
 	const onPressSearch = () => {
-		navigation.navigate('ProfileSearch', { name: profile.did });
+		navigate('ProfileSearch', { name: profile.did });
 	};
 
 	return (

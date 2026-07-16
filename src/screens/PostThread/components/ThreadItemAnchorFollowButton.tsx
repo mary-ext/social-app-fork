@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '#/lib/router';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';
@@ -44,7 +44,6 @@ function PostThreadFollowBtnLoaded({
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const navigation = useNavigation();
 	const { gtMobile } = useBreakpoints();
 	const profile = useProfileShadow(profileUnshadowed);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
@@ -57,22 +56,19 @@ function PostThreadFollowBtnLoaded({
 	// This prevents the button from disappearing as soon as we follow.
 	const showFollowBtn = !isFollowing || !wasFollowing;
 
+	const updateWasFollowing = useCallback(() => {
+		if (wasFollowing !== isFollowing) {
+			setWasFollowing(isFollowing);
+		}
+	}, [isFollowing, wasFollowing]);
+
 	/** updates the following state on focus and blur to control button visibility. */
-	useEffect(() => {
-		const updateWasFollowing = () => {
-			if (wasFollowing !== isFollowing) {
-				setWasFollowing(isFollowing);
-			}
-		};
-
-		const unsubscribeFocus = navigation.addListener('focus', updateWasFollowing);
-		const unsubscribeBlur = navigation.addListener('blur', updateWasFollowing);
-
-		return () => {
-			unsubscribeFocus();
-			unsubscribeBlur();
-		};
-	}, [isFollowing, wasFollowing, navigation]);
+	useFocusEffect(
+		useCallback(() => {
+			updateWasFollowing();
+			return updateWasFollowing;
+		}, [updateWasFollowing]),
+	);
 
 	const onPress = () => {
 		if (!isFollowing) {

@@ -1,3 +1,5 @@
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { TextSize_Stroke2_Corner0_Rounded as TextSizeIcon } from '#/components/icons/TextSize';
 import * as Settings from '#/components/SettingsCards';
@@ -8,6 +10,7 @@ import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export function AccessibilitySettingsScreen() {
+	useTitle(m['navigation.settings.accessibility.title']());
 	const [requireAltTextEnabled, setRequireAltTextEnabled] = useRequireAltTextEnabled();
 	const [largeAltBadgeEnabled, setLargeAltBadgeEnabled] = useLargeAltBadgeEnabled();
 

@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 
+import { useTitle } from '#/lib/hooks/useTitle';
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import {
@@ -38,9 +38,9 @@ import * as styles from './MutedWords.css';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
-export function MutedWordsScreen(
-	_props: NativeStackScreenProps<CommonNavigatorParams, 'ModerationMutedWords'>,
-) {
+export function MutedWordsScreen() {
+	useTitle(m['navigation.mutedWord.title']());
+
 	const dialogHandle = Dialog.useDialogHandle();
 	const { data: preferences, error, refetch } = usePreferencesQuery();
 	const mutedWords = preferences?.moderationPrefs.mutedWords;

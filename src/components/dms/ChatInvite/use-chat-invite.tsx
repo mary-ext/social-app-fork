@@ -1,9 +1,5 @@
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-
 import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useSession } from '#/state/session';
 
@@ -17,6 +13,7 @@ import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/compon
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 export type ChatInvitePreview = ChatBskyGroupDefs.JoinLinkPreviewView;
 
@@ -68,7 +65,7 @@ export function useChatInvite({
 	currentConvoId?: string;
 }): ChatInvite {
 	const { hasSession } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	const { data, error, isPending } = useJoinLinkPreviewsQuery({
@@ -120,7 +117,7 @@ export function useChatInvite({
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
-					navigation.push('MessagesConversation', { conversation: convoId });
+					navigate('MessagesConversation', { conversation: convoId });
 				},
 			};
 		} else {

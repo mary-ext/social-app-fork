@@ -8,11 +8,8 @@ import type {
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useNavigation } from '@react-navigation/native';
-
-import { getCurrentRoute } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 
@@ -69,6 +66,7 @@ import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
+import { useRouter } from '#/routes';
 
 const MenuSpinner = () => <Spinner color="default" label={m['common.status.loading']()} size="lg" />;
 
@@ -94,7 +92,7 @@ function PostMenuItems({
 	const { mutateAsync: pinPostMutate, isPending: isPinPending } = usePinnedPostMutation();
 	const requireSignIn = useRequireAuth();
 	const feedFeedback = useFeedFeedbackContext();
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 	const blockPromptHandle = Prompt.usePromptHandle();
 	const mutePromptHandle = Prompt.usePromptHandle();
 	const reportDialogHandle = Dialog.useDialogHandle();
@@ -147,7 +145,7 @@ function PostMenuItems({
 			() => {
 				Toast.show(m['components.postControls.delete.toast']());
 
-				const route = getCurrentRoute(navigation.getState());
+				const route = router.route;
 				if (route.name === 'PostThread') {
 					const params = route.params as CommonNavigatorParams['PostThread'];
 					if (
@@ -156,8 +154,8 @@ function PostMenuItems({
 						(params.name === currentAccount.handle || params.name === currentAccount.did)
 					) {
 						const currentHref = makeProfileLink(postAuthor, 'post', params.rkey);
-						if (currentHref === href && navigation.canGoBack()) {
-							navigation.goBack();
+						if (currentHref === href && router.canGoBack) {
+							router.back();
 						}
 					}
 				}

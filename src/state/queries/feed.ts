@@ -32,7 +32,6 @@ import { createQueryKey } from '#/state/queries/util';
 import { useClients, useSession } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
-import { router } from '#/routes';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
 import type { FeedDescriptor } from './post-feed';
@@ -97,7 +96,6 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 	const urip = parseCanonicalResourceUri(view.uri);
 	const collection = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists';
 	const href = `/profile/${urip.repo}/${collection}/${urip.rkey}`;
-	const route = router.matchPath(href);
 
 	// specified facets take priority; only detect when none were provided
 	const description: Richtext = view.descriptionFacets
@@ -112,8 +110,8 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		cid: view.cid,
 		route: {
 			href,
-			name: route[0],
-			params: route[1],
+			name: 'ProfileFeed',
+			params: { name: urip.repo, rkey: urip.rkey },
 		},
 		avatar: view.avatar,
 		displayName: view.displayName
@@ -133,7 +131,6 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 	const urip = parseCanonicalResourceUri(view.uri);
 	const collection = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists';
 	const href = `/profile/${urip.repo}/${collection}/${urip.rkey}`;
-	const route = router.matchPath(href);
 
 	// specified facets take priority; only detect when none were provided
 	const description: Richtext = view.descriptionFacets
@@ -147,8 +144,8 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		feedDescriptor: `list|${view.uri}`,
 		route: {
 			href,
-			name: route[0],
-			params: route[1],
+			name: 'ProfileList',
+			params: { name: urip.repo, rkey: urip.rkey },
 		},
 		cid: view.cid,
 		avatar: view.avatar,

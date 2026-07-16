@@ -9,12 +9,10 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -40,6 +38,7 @@ import { Spinner } from '#/components/Spinner';
 import { type Section, Tabs } from '#/components/Tabs';
 
 import { m } from '#/paraglide/messages';
+import { useIsFocused, useParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { AboutSection } from './AboutSection';
@@ -47,17 +46,16 @@ import { ErrorScreen } from './components/ErrorScreen';
 import { Header } from './components/Header';
 import { FeedSection } from './FeedSection';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>;
-export function ProfileListScreen(props: Props) {
+export function ProfileListScreen() {
 	return (
 		<Layout.Screen testID="profileListScreen">
-			<ProfileListScreenInner {...props} />
+			<ProfileListScreenInner />
 		</Layout.Screen>
 	);
 }
 
-function ProfileListScreenInner(props: Props) {
-	const { name: handle, rkey } = props.route.params;
+function ProfileListScreenInner() {
+	const { name: handle, rkey } = useParams('ProfileList');
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(
 		`at://${handle}/app.bsky.graph.list/${rkey}`,
 	);
@@ -100,7 +98,6 @@ function ProfileListScreenInner(props: Props) {
 
 	return resolvedUri && list && moderationOpts && preferences ? (
 		<ProfileListScreenLoaded
-			{...props}
 			uri={resolvedUri.uri}
 			list={list}
 			moderationOpts={moderationOpts}
@@ -125,7 +122,7 @@ function ProfileListScreenLoaded({
 	list,
 	moderationOpts,
 	preferences,
-}: Props & {
+}: {
 	uri: string;
 	list: AppBskyGraphDefs.ListView;
 	moderationOpts: ModerationOptions;
@@ -145,7 +142,7 @@ function ProfileListScreenLoaded({
 
 	const moderation = moderateList(list, moderationOpts);
 
-	useSetTitle(isHidden ? m['screens.profileList.hide.hiddenToast']() : list.name);
+	useTitle(isHidden ? m['screens.profileList.hide.hiddenToast']() : list.name);
 
 	const onChangeMembers = () => {
 		if (isCurateList) {

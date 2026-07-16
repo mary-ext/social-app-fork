@@ -1,9 +1,6 @@
 import type { MouseEvent } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
-
-import type { NavigationProp } from '#/lib/routes/types';
 
 import { useSetDrawerOpen } from '#/state/shell/drawer-open';
 
@@ -16,6 +13,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/Layout/Header.css';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate, useRouter } from '#/routes';
 
 export function Outer({
 	children,
@@ -100,17 +98,18 @@ type BackButtonProps = {
  *   {@link OuterOnBanner})
  */
 export function BackButton({ label, onClick, variant = 'ghost' }: BackButtonProps = {}) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
+	const router = useRouter();
 
 	const handleClick = (evt: MouseEvent<HTMLButtonElement>) => {
 		onClick?.(evt);
 		if (evt.defaultPrevented) {
 			return;
 		}
-		if (navigation.canGoBack()) {
-			navigation.goBack();
+		if (router.canGoBack) {
+			router.back();
 		} else {
-			navigation.navigate('Home');
+			navigate('Home');
 		}
 	};
 

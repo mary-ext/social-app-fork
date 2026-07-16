@@ -1,9 +1,7 @@
 import type { MouseEvent } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
-import type { NavigationProp } from '#/lib/routes/types';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import {
@@ -26,6 +24,7 @@ import type { InlineLinkUnderline } from '#/components/web/Link';
 import * as linkStyles from '#/components/web/Link.css';
 
 import { m } from '#/paraglide/messages';
+import { buildPath, useNavigate } from '#/routes';
 
 const preventDefault = (e: MouseEvent) => e.preventDefault();
 
@@ -52,7 +51,7 @@ export function RichTextTag({
 	tag,
 	underline = 'hover',
 }: RichTextTagProps) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const { isLoading: isPreferencesLoading, data: preferences } = usePreferencesQuery();
 	const {
 		mutateAsync: upsertMutedWord,
@@ -64,7 +63,7 @@ export function RichTextTag({
 		variables: optimisticRemove,
 		reset: resetRemove,
 	} = useRemoveMutedWordsMutation();
-	const { href } = useLink({ displayText: display, to: { params: { tag }, screen: 'Hashtag' } });
+	const { href } = useLink({ displayText: display, to: buildPath('Hashtag', { tag }) });
 	const muteConfirmHandle = Prompt.usePromptHandle();
 
 	const isCashtag = tag.startsWith('$');
@@ -117,7 +116,7 @@ export function RichTextTag({
 					<Menu.Group>
 						<Menu.Item
 							label={m['components.richTextTag.seePosts.prefixed']({ prefixedTag })}
-							onClick={() => navigation.push('Hashtag', { tag })}
+							onClick={() => navigate('Hashtag', { tag })}
 						>
 							<Menu.ItemText>
 								{isCashtag
@@ -129,7 +128,7 @@ export function RichTextTag({
 						{authorHandle && !isInvalidHandle(authorHandle) && (
 							<Menu.Item
 								label={m['components.richTextTag.seePosts.prefixedByUser']({ prefixedTag })}
-								onClick={() => navigation.push('Hashtag', { author: authorHandle, tag })}
+								onClick={() => navigate('Hashtag', { author: authorHandle, tag })}
 							>
 								<Menu.ItemText>
 									{isCashtag

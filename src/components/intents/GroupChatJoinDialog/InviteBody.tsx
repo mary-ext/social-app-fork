@@ -1,10 +1,8 @@
 import { ClientResponseError } from '@atcute/client';
 
-import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import type { NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import {
@@ -37,6 +35,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './GroupChatJoinDialog.css';
@@ -49,7 +48,7 @@ export function InviteBody({
 	code?: string;
 }) {
 	const { hasSession } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const { data, error, isLoading } = useJoinLinkPreviewsQuery({
@@ -76,7 +75,7 @@ export function InviteBody({
 					if (result.convo && result.convo.id) {
 						handle.close();
 						Toast.show(m['components.intents.join.success']());
-						navigation.navigate('MessagesConversation', {
+						navigate('MessagesConversation', {
 							conversation: result.convo.id,
 						});
 					} else {
@@ -308,7 +307,7 @@ export function InviteBody({
 					label={m['components.intents.join.action.open']()}
 					onClick={() => {
 						handle.close();
-						navigation.navigate('MessagesConversation', {
+						navigate('MessagesConversation', {
 							conversation: convoId,
 						});
 					}}

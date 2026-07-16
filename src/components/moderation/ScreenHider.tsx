@@ -2,10 +2,8 @@ import { useState } from 'react';
 
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 
-import { useNavigation } from '@react-navigation/native';
-
+import { useGoBack } from '#/lib/hooks/useGoBack';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
-import type { NavigationProp } from '#/lib/routes/types';
 
 import * as Dialog from '#/components/Dialog';
 import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';
@@ -27,7 +25,7 @@ export function ScreenHider({
 	className?: string;
 }>) {
 	const [override, setOverride] = useState(false);
-	const navigation = useNavigation<NavigationProp>();
+	const onPressBack = useGoBack();
 	const handle = Dialog.useDialogHandle();
 	const blur = modui.blurs[0];
 	const desc = useModerationCauseDescription(blur);
@@ -78,13 +76,7 @@ export function ScreenHider({
 					className={css.pill}
 					color="primary"
 					label={m['common.action.goBack']()}
-					onClick={() => {
-						if (navigation.canGoBack()) {
-							navigation.goBack();
-						} else {
-							navigation.navigate('Home');
-						}
-					}}
+					onClick={onPressBack}
 					size="large"
 					variant="solid"
 				>

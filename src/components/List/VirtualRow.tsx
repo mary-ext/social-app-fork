@@ -9,11 +9,11 @@ import {
 	useState,
 } from 'react';
 
-import { useIsFocused } from '@react-navigation/native';
-
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import * as css from '#/components/List/List.css';
+
+import { useIsFocused } from '#/routes';
 
 import { ItemSeenContext } from './ItemSeenObserver';
 import type { RowProps } from './Row';

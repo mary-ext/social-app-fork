@@ -1,3 +1,5 @@
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import { type ConsoleTransportEntry, getEntries } from '#/logger/logDump';
 
 import { LogEntry } from '#/view/com/log/LogEntry';
@@ -12,6 +14,7 @@ const keyExtractor = (entry: ConsoleTransportEntry) => entry.id;
 const renderItem = ({ item }: ListRenderItemInfo<ConsoleTransportEntry>) => <LogEntry entry={item} />;
 
 export function LogScreen() {
+	useTitle(m['navigation.developer.log.title']());
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>

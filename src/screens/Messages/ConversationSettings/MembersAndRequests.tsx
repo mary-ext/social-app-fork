@@ -1,9 +1,5 @@
 import { View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import type { ConvoWithDetails } from '#/components/dms/util';
@@ -11,6 +7,7 @@ import { createStaticClick, InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 export function MembersAndRequests({
 	convo,
@@ -24,7 +21,7 @@ export function MembersAndRequests({
 	isOwner: boolean;
 }) {
 	const t = useTheme();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	const memberCount = convo.details.memberCount;
 	const memberLimit = convo.details.memberLimit;
@@ -47,7 +44,7 @@ export function MembersAndRequests({
 					label={m['screens.messages.requests.viewIncoming.a11yGroup']()}
 					style={[a.text_sm, a.text_right, a.font_semi_bold]}
 					{...createStaticClick(() => {
-						navigation.navigate('MessagesJoinRequests', {
+						navigate('MessagesJoinRequests', {
 							conversation: convo.view.id,
 						});
 					})}

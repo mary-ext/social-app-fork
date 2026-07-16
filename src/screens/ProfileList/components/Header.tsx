@@ -1,9 +1,5 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-
 import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
 import {
 	useAddSavedFeedsMutation,
@@ -23,6 +19,7 @@ import * as Toast from '#/components/Toast';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useRouter } from '#/routes';
 
 import { ListHeader } from './ListHeader';
 import { MoreOptionsMenu } from './MoreOptionsMenu';
@@ -35,9 +32,9 @@ export function Header({
 	list: AppBskyGraphDefs.ListView;
 	preferences: UsePreferencesQueryResponse;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 	const { currentAccount } = useSession();
-	const canGoBack = navigation.canGoBack();
+	const canGoBack = router.canGoBack;
 	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
 	const isModList = list.purpose === 'app.bsky.graph.defs#modlist';
 	const isBlocking = !!list.viewer?.blocked;

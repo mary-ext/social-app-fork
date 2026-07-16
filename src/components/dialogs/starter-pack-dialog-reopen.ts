@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
-import { useFocusEffect, useRoute } from '@react-navigation/native';
-
 import type { DialogHandle } from '#/components/Dialog';
+
+import { useFocusEffect, useLocation } from '#/routes';
 
 /**
  * the starter pack wizard is a route, not a dialog, so by the time a pack is created the dialog that launched
@@ -46,7 +46,7 @@ export const markStarterPackCreated = (): void => {
  * @param targetDid subject of the dialog
  */
 export const useStarterPackDialogReopen = (handle: DialogHandle, targetDid: string): void => {
-	const { key } = useRoute();
+	const { key } = useLocation();
 
 	useFocusEffect(
 		useCallback(() => {

@@ -1,11 +1,9 @@
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 
-import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import type { NavigationProp } from '#/lib/routes/types';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -26,6 +24,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import * as css from '#/features/liveNow/components/LiveStatusDialog.css';
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 /**
@@ -43,11 +42,11 @@ export function LiveStatusDialog({
 	profile: AnyProfileView;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	const onPressOpenProfile = () => {
 		handle.close();
-		navigation.push('Profile', { name: profile.did });
+		navigate('Profile', { name: profile.did });
 	};
 
 	return (

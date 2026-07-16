@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { HomeTabNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
+import { useParams, useRoute } from '#/lib/router';
 
 import { softReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
@@ -26,39 +24,33 @@ import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
+import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
+
 // the feed-discovery tab nudging the user toward the Feeds screen, shown logged-out and when the only
 // pinned feed is Following; selecting it opens that screen rather than switching feeds, so it has no
 // panel of its own
 const FEEDS_DISCOVERY_TAB = '__feeds__';
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'GroupChatJoin' | 'Home' | 'Start'>;
-export function HomeScreen(props: Props) {
+// registered for both Home and Start (a starter-pack deep link), so it reads the loose params/name.
+export function HomeScreen() {
 	const { data: preferences } = usePreferencesQuery();
 	const { currentAccount } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
+	const { name: routeName } = useRoute();
+	const params = useParams();
 	const { data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading } = usePinnedFeedsInfos();
 
 	useEffect(() => {
-		const params = props.route.params;
-		if (
-			currentAccount &&
-			props.route.name === 'Start' &&
-			params &&
-			'name' in params &&
-			params.name &&
-			params.rkey
-		) {
-			navigation.navigate('StarterPack', {
-				rkey: params.rkey,
-				name: params.name,
-			});
+		if (currentAccount && routeName === 'Start' && params.name && params.rkey) {
+			navigate('StarterPack', { name: params.name as string, rkey: params.rkey as string });
 		}
-	}, [currentAccount, navigation, props.route.name, props.route.params]);
+	}, [currentAccount, navigate, params, routeName]);
 
 	if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
 		return (
 			<Layout.Screen noInsetTop={false}>
-				<HomeScreenReady {...props} preferences={preferences} pinnedFeedInfos={pinnedFeedInfos} />
+				<HomeScreenReady preferences={preferences} pinnedFeedInfos={pinnedFeedInfos} />
 			</Layout.Screen>
 		);
 	} else {
@@ -78,18 +70,18 @@ const renderCustomFeedEmptyState = () => <CustomFeedEmptyState />;
 function HomeScreenReady({
 	preferences,
 	pinnedFeedInfos,
-}: Props & {
+}: {
 	preferences: UsePreferencesQueryResponse;
 	pinnedFeedInfos: SavedFeedSourceInfo[];
 }) {
 	const { hasSession } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const setSelectedFeed = useSetSelectedFeed();
 
 	const allFeeds = pinnedFeedInfos.map((f) => f.feedDescriptor);
 	const selectedFeed = useSelectedFeed() ?? allFeeds[0];
 	const selectedIndex = Math.max(0, allFeeds.indexOf(selectedFeed!));
-	useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName);
+	useTitle(pinnedFeedInfos[selectedIndex]?.displayName ?? m['common.nav.home']());
 
 	const whatsHotFeed: FeedDescriptor = `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`;
 
@@ -144,7 +136,7 @@ function HomeScreenReady({
 
 	const onValueChange = (value: string) => {
 		if (value === FEEDS_DISCOVERY_TAB) {
-			navigation.navigate('Feeds');
+			navigate('Feeds');
 			return;
 		}
 		setSelectedFeed(value as FeedDescriptor);

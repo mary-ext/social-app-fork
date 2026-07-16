@@ -1,9 +1,7 @@
 import type { AppBskyActorDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
+import { useGoBack } from '#/lib/hooks/useGoBack';
 import { shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
@@ -42,7 +40,7 @@ export function MoreOptionsMenu({
 	const editListHandle = Dialog.useDialogHandle();
 	const deleteListPromptHandle = Prompt.usePromptHandle();
 	const reportDialogHandle = Dialog.useDialogHandle();
-	const navigation = useNavigation<NavigationProp>();
+	const goBack = useGoBack();
 
 	const { mutateAsync: removeSavedFeed } = useRemoveFeedMutation();
 	const { mutateAsync: deleteList } = useListDeleteMutation();
@@ -83,11 +81,7 @@ export function MoreOptionsMenu({
 		}
 
 		Toast.show(m['screens.profileList.delete.deletedToast']());
-		if (navigation.canGoBack()) {
-			navigation.goBack();
-		} else {
-			navigation.navigate('Home');
-		}
+		goBack();
 	};
 
 	const onUnpinModList = async () => {

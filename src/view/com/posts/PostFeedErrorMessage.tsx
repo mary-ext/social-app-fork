@@ -2,9 +2,6 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError, errorToString } from '#/lib/strings/errors';
 
 import type { FeedDescriptor } from '#/state/queries/post-feed';
@@ -19,6 +16,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 import { EmptyState } from '../util/EmptyState';
 import { ErrorMessage } from '../util/error/ErrorMessage';
@@ -94,7 +92,7 @@ function FeedgenErrorMessage({
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 	topBorder: boolean;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const msg = {
 		[KnownError.Unknown]: '',
 		[KnownError.Block]: '',
@@ -112,7 +110,7 @@ function FeedgenErrorMessage({
 	const { mutateAsync: removeFeed } = useRemoveFeedMutation();
 
 	const onViewProfile = () => {
-		navigation.navigate('Profile', { name: ownerDid });
+		navigate('Profile', { name: ownerDid });
 	};
 
 	const onPressRemoveFeed = () => {

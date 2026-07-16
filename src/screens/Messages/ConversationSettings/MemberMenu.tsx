@@ -2,10 +2,6 @@ import { useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-
 import type { Shadow } from '#/state/cache/types';
 import { useGetConvoAvailabilityQuery } from '#/state/queries/messages/get-convo-availability';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
@@ -31,6 +27,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 import { RemoveMemberPrompt } from './prompts';
 import { StatusBadge } from './StatusBadge';
@@ -48,7 +45,7 @@ export function MemberMenu({
 	displayName: string;
 	isOwner: boolean;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const blockMemberHandle = Dialog.useDialogHandle();
 	const removeMemberPrompt = Prompt.usePromptHandle();
 
@@ -58,7 +55,7 @@ export function MemberMenu({
 	});
 	const { mutate: initiateConvo } = useGetConvoForMembers({
 		onSuccess: ({ convo: createdConvo }) => {
-			navigation.navigate('MessagesConversation', { conversation: createdConvo.id });
+			navigate('MessagesConversation', { conversation: createdConvo.id });
 		},
 		onError: () => {
 			Toast.show(m['common.chat.error.create'](), { type: 'error' });
@@ -79,7 +76,7 @@ export function MemberMenu({
 		}
 
 		if (convoAvailability.convo) {
-			navigation.navigate('MessagesConversation', {
+			navigate('MessagesConversation', {
 				conversation: convoAvailability.convo.id,
 			});
 		} else {
@@ -156,7 +153,7 @@ export function MemberMenu({
 						<Menu.Item
 							label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
 							onClick={() => {
-								navigation.navigate('Profile', { name: profile.did });
+								navigate('Profile', { name: profile.did });
 							}}
 						>
 							<Menu.ItemIcon icon={PersonIcon} />

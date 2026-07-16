@@ -1,12 +1,3 @@
-import type { NavigationState, PartialState } from '@react-navigation/native';
-import type { NativeStackNavigationOptions, NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-export type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-export type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
-	requireAuth?: boolean;
-};
-
 export type CommonNavigatorParams = {
 	NotFound: undefined;
 	Lists: undefined;
@@ -98,14 +89,6 @@ export type AllNavigatorParams = CommonNavigatorParams & {
 	MessagesTab: undefined;
 	Messages: undefined;
 };
-
-// NOTE
-// this isn't strictly correct but it should be close enough
-// a TS wizard might be able to get this 100%
-// -prf
-export type NavigationProp = NativeStackNavigationProp<AllNavigatorParams>;
-
-export type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
 export type RouteBuildParams = Record<string, unknown>;
 export type MatchResult = { params: RouteParams };

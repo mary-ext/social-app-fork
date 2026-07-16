@@ -1,21 +1,19 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { StackActions, useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-
 import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import { useNavigateToPath } from '#/components/web/Link';
 
+import { useNavigate } from '#/routes';
+
 export function DesktopSearch() {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const navigateToPath = useNavigateToPath();
 
 	return (
 		<SearchAutocomplete
 			onNavigate={(path) => navigateToPath(path, 'push')}
-			onNavigateToProfile={(profile: AnyProfileView) => navigation.navigate('Profile', { name: profile.did })}
-			onSubmit={(query) => navigation.dispatch(StackActions.push('Search', { q: query }))}
+			onNavigateToProfile={(profile: AnyProfileView) => navigate('Profile', { name: profile.did })}
+			onSubmit={(query) => navigate('Search', { q: query })}
 		/>
 	);
 }

@@ -60,5 +60,4 @@ minimumReleaseAgeExclude:
   - typescript@7.0.2
 patchedDependencies:
   '@base-ui/react': patches/@base-ui__react.patch
-  '@react-navigation/native-stack': patches/@react-navigation__native-stack.patch
   '@vanilla-extract/css': patches/@vanilla-extract__css.patch

@@ -1,12 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { DISCOVER_FEED_URI } from '#/lib/constants';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { MagnifyingGlassIcon } from '#/lib/icons';
-import type { NavigationProp } from '#/lib/routes/types';
 import { s } from '#/lib/styles';
 
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -15,6 +12,7 @@ import { useSession } from '#/state/session';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { Button } from '../util/forms/Button';
@@ -37,10 +35,10 @@ export function CustomFeedEmptyState() {
 	}, [feedFeedback.feedSourceInfo, currentAccount?.did]);
 	const pal = usePalette('default');
 	const palInverted = usePalette('inverted');
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	const onPressFindAccounts = () => {
-		navigation.navigate('Search', {});
+		navigate('Search', {});
 	};
 
 	return (

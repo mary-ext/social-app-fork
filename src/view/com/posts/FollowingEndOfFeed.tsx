@@ -1,14 +1,12 @@
 import { Dimensions, StyleSheet, View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { usePalette } from '#/lib/hooks/usePalette';
-import type { NavigationProp } from '#/lib/routes/types';
 import { s } from '#/lib/styles';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { Button } from '../util/forms/Button';
@@ -17,14 +15,14 @@ import { Text } from '../util/text/Text';
 export function FollowingEndOfFeed() {
 	const pal = usePalette('default');
 	const palInverted = usePalette('inverted');
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	const onPressFindAccounts = () => {
-		navigation.navigate('Search', {});
+		navigate('Search', {});
 	};
 
 	const onPressDiscoverFeeds = () => {
-		navigation.navigate('Feeds');
+		navigate('Feeds');
 	};
 
 	return (

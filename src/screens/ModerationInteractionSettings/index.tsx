@@ -4,6 +4,8 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import deepEqual from 'fast-deep-equal';
 
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
@@ -25,6 +27,7 @@ import { m } from '#/paraglide/messages';
 import * as styles from './index.css';
 
 export function Screen() {
+	useTitle(m['common.interaction.settingsTitle']());
 	const { data: preferences } = usePreferencesQuery();
 
 	return (

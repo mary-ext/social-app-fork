@@ -6,11 +6,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { getModerationCauseKey } from '#/lib/moderation';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { NavigationProp } from '#/lib/routes/types';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -39,11 +36,12 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 import * as css from './ProfileHoverCard.css';
 
 export function Card({ did }: { did: string }) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const profile = useProfileQuery({ did });
 	const moderationOpts = useModerationOpts();
 	const data = profile.data;
@@ -51,7 +49,7 @@ export function Card({ did }: { did: string }) {
 
 	const onPressOpenProfile = () => {
 		if (!status.isActive || !data) return;
-		navigation.push('Profile', { name: data.did });
+		navigate('Profile', { name: data.did });
 	};
 
 	if (data && moderationOpts) {

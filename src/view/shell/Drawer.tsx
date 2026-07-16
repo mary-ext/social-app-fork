@@ -1,8 +1,6 @@
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
-import { useNavigation } from '@react-navigation/native';
 
 import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
-import type { NavigationProp } from '#/lib/routes/types';
 
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -49,6 +47,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 const ICON_WIDTH = 26;
 
@@ -77,7 +76,7 @@ export function Drawer() {
 }
 
 function DrawerContent() {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const setDrawerOpen = useSetDrawerOpen();
 	const { currentAccount, hasSession } = useSession();
 	const { isAtBookmarks, isAtFeeds, isAtHome, isAtMessages, isAtNotifications, isAtSearch } =
@@ -88,15 +87,14 @@ function DrawerContent() {
 		setDrawerOpen(false);
 		// MyProfile doesn't exist on the web navigator, so resolve it to the Profile route -ansh
 		if (tab === 'MyProfile') {
-			navigation.navigate('Profile', { name: currentAccount!.did });
+			navigate('Profile', { name: currentAccount!.did });
 		} else {
-			// @ts-expect-error struggles with string unions, apparently
-			navigation.navigate(tab);
+			navigate(tab);
 		}
 	};
 
 	const navigateAndClose = (screen: 'Bookmarks' | 'Feeds' | 'Lists' | 'Settings') => {
-		navigation.navigate(screen);
+		navigate(screen);
 		setDrawerOpen(false);
 	};
 

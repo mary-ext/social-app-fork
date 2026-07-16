@@ -3,17 +3,8 @@ import { type LayoutChangeEvent, View } from 'react-native';
 
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 
-import {
-	type RouteProp,
-	useFocusEffect,
-	useIsFocused,
-	useNavigation,
-	useRoute,
-} from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
+import { useTitle } from '#/lib/hooks/useTitle';
 import { useViewportZoomLock } from '#/lib/hooks/useViewportZoomLock';
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
@@ -36,20 +27,21 @@ import { Error } from '#/components/Error';
 import * as Layout from '#/components/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useFocusEffect, useIsFocused, useNavigate, useParams } from '#/routes';
 
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatEnded } from './components/ChatEnded';
 import { ChatLocked } from './components/ChatLocked';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesConversation'>;
-
-export function MessagesConversationScreen(props: Props) {
-	return <MessagesConversationScreenInner {...props} />;
+export function MessagesConversationScreen() {
+	return <MessagesConversationScreenInner />;
 }
 
-export function MessagesConversationScreenInner({ route }: Props) {
-	const convoId = route.params.conversation;
+export function MessagesConversationScreenInner() {
+	const { conversation: convoId } = useParams('MessagesConversation');
 	const { setCurrentConvoId } = useCurrentConvoId();
+
+	useTitle(m['common.chat.label']());
 
 	useFocusEffect(
 		useCallback(() => {
@@ -136,8 +128,8 @@ function InnerReady({
 	isActive: boolean;
 	isDisabled: boolean;
 }) {
-	const { params } = useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>();
-	const navigation = useNavigation<NavigationProp>();
+	const { accept } = useParams('MessagesConversation');
+	const navigate = useNavigate();
 	const primaryMember = useMaybeProfileShadow(convo?.primaryMember);
 	const moderationOpts = useModerationOpts();
 	let primaryMemberModeration = null;
@@ -197,7 +189,7 @@ function InnerReady({
 					}}
 					onPress={() => {
 						markJoinRequestsRead();
-						navigation.navigate('MessagesJoinRequests', {
+						navigate('MessagesJoinRequests', {
 							conversation: convo.view.id,
 						});
 					}}
@@ -208,7 +200,7 @@ function InnerReady({
 				<MessagesList
 					hasScrolled={hasScrolled}
 					setHasScrolled={setHasScrolled}
-					hasAcceptOverride={!!params.accept}
+					hasAcceptOverride={!!accept}
 					transparentHeaderHeight={0}
 					footer={footer}
 				/>

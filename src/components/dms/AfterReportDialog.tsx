@@ -2,10 +2,6 @@ import { useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { StackActions, useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useProfileBlockMutationQueue, useProfileQuery } from '#/state/queries/profile';
@@ -19,6 +15,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useRouter } from '#/routes';
 
 type ReportDialogParams = {
 	convoId: string;
@@ -121,7 +118,7 @@ function DoneStep({
 	handle: Dialog.DialogHandle;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 	const [actions, setActions] = useState<ReportAction[]>(['block', 'leave']);
 	const shadow = useProfileShadow(profile);
 	const [queueBlock] = useProfileBlockMutationQueue(shadow);
@@ -129,7 +126,7 @@ function DoneStep({
 	const { mutate: leaveConvo } = useLeaveConvo(convoId, {
 		onMutate: () => {
 			if (currentScreen === 'conversation') {
-				navigation.dispatch(StackActions.replace('Messages', {}));
+				router.replace(router.build('Messages'));
 			}
 		},
 		onError: () => {

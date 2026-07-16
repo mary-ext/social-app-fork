@@ -1,6 +1,4 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-import type { AllNavigatorParams } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';
@@ -10,13 +8,13 @@ import * as Layout from '#/components/Layout';
 import { ListFooter } from '#/components/Lists';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationsActivityList'>;
-export function NotificationsActivityListScreen({
-	route: {
-		params: { posts },
-	},
-}: Props) {
+export function NotificationsActivityListScreen() {
+	const { posts } = useParams('NotificationsActivityList');
+
+	useTitle(m['common.nav.notifications']());
+
 	return (
 		<Layout.Screen testID="NotificationsActivityListScreen">
 			<Layout.Header.Outer>

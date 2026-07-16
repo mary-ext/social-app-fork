@@ -7,11 +7,8 @@ import {
 } from 'react-native';
 
 import { sanitizeUrl } from '@braintree/sanitize-url';
-import { type LinkProps as RNLinkProps, StackActions } from '@react-navigation/native';
 
-import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
-import type { AllNavigatorParams, RouteParams } from '#/lib/routes/types';
 import { convertBskyAppUrlIfNeeded, isExternalUrl, isMisleadingLink } from '#/lib/strings/url-helpers';
 
 import { atoms as a, flatten, type TextStyleProp, useTheme } from '#/alf';
@@ -20,7 +17,7 @@ import { Button, type ButtonProps } from '#/components/Button';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Text, type TextProps } from '#/components/Typography';
 
-import { router } from '#/routes';
+import { useRouter } from '#/routes';
 
 import { useGlobalDialogsHandleContext } from './dialogs/Context';
 
@@ -84,9 +81,9 @@ const underlineStyle = (color: TextStyle['color']): WebTextStyle => {
 type BaseLinkProps = {
 	testID?: string;
 
-	to: RNLinkProps<AllNavigatorParams> | string;
+	to: string;
 
-	/** The React Navigation `StackAction` to perform when the link is pressed. */
+	/** how the link navigates when pressed: `replace` swaps the current entry; `push` and `navigate` both push. */
 	action?: 'push' | 'replace' | 'navigate';
 
 	/** warns the user if the link text does not match the href. only works for string children. */
@@ -123,21 +120,8 @@ export function useLink({
 }: BaseLinkProps & {
 	displayText: string;
 }) {
-	const navigation = useNavigationDeduped();
-	const href =
-		typeof to === 'string'
-			? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
-			: to.screen
-				? router.matchName(to.screen)?.build(to.params)
-				: to.href
-					? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
-					: undefined;
-
-	if (!href) {
-		throw new Error(
-			'Could not resolve screen. Link `to` prop must be a string or an object with `screen` and `params` properties',
-		);
-	}
+	const router = useRouter();
+	const href = convertBskyAppUrlIfNeeded(sanitizeUrl(to));
 
 	const isExternal = isExternalUrl(href);
 	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
@@ -167,22 +151,11 @@ export function useLink({
 
 				if (shouldOpenInNewTab || href.startsWith('http') || href.startsWith('mailto')) {
 					openLink(href);
+				} else if (action === 'replace') {
+					router.replace(href);
 				} else {
-					const [screen, params] = router.matchPath(href) as [
-						screen: keyof AllNavigatorParams,
-						params?: RouteParams,
-					];
-
-					if (action === 'push') {
-						navigation.dispatch(StackActions.push(screen, params));
-					} else if (action === 'replace') {
-						navigation.dispatch(StackActions.replace(screen, params));
-					} else if (action === 'navigate') {
-						// @ts-expect-error not typed
-						navigation.navigate(screen, params, { pop: true });
-					} else {
-						throw Error('Unsupported navigator action.');
-					}
+					// push + navigate: stacker pushes the URL; singleton routes dedupe on their own.
+					router.push(href);
 				}
 			}
 		}
@@ -312,7 +285,7 @@ export function InlineLinkText({
 	);
 }
 
-/** A barebones version of `InlineLinkText`, for use outside a `react-navigation` context. */
+/** A barebones version of `InlineLinkText`, for use outside a router context. */
 export function SimpleInlineLinkText({
 	children,
 	to,

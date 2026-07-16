@@ -2,6 +2,8 @@ import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
@@ -27,6 +29,8 @@ import { ExportCarDialog } from './components/ExportCarDialog';
 type AllowSubscriptions = AppBskyNotificationDeclaration.Main['allowSubscriptions'];
 
 export function AccountSettingsScreen() {
+	useTitle(m['common.account.privacy']());
+
 	const exportCarHandle = Dialog.useDialogHandle();
 	const activityHandle = Dialog.useDialogHandle();
 

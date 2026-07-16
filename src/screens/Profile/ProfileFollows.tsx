@@ -1,9 +1,6 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -22,11 +19,10 @@ import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate, useParams } from '#/routes';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollows'>;
-
-export const ProfileFollowsScreen = ({ route }: Props) => {
-	const { name } = route.params;
+export const ProfileFollowsScreen = () => {
+	const { name } = useParams('ProfileFollows');
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({
 		did: resolvedDid,
@@ -34,7 +30,11 @@ export const ProfileFollowsScreen = ({ route }: Props) => {
 
 	const followsCount = profile?.followsCount;
 
-	useSetTitle(profile ? m['screens.profile.follow.following.title']({ handle: profile.handle }) : undefined);
+	useTitle(
+		profile
+			? m['screens.profile.follow.following.title']({ handle: profile.handle })
+			: m['common.follow.action.following'](),
+	);
 
 	return (
 		<Layout.Screen>
@@ -65,11 +65,11 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 
 function ProfileFollows({ name, initialCount }: { name: string; initialCount?: number }) {
 	const { currentAccount } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const moderationOpts = useModerationOpts();
 
 	const onPressFindAccounts = () => {
-		navigation.navigate('Search', {});
+		navigate('Search', {});
 	};
 
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);

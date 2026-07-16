@@ -1,9 +1,5 @@
 import { View } from 'react-native';
 
-import { StackActions, useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
@@ -11,18 +7,18 @@ import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
+import { useRouter } from '#/routes';
 
 export const NotFoundScreen = () => {
 	const t = useTheme();
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 
-	const canGoBack = navigation.canGoBack();
+	const canGoBack = router.canGoBack;
 	const onPressHome = () => {
 		if (canGoBack) {
-			navigation.goBack();
+			router.back();
 		} else {
-			navigation.navigate('HomeTab');
-			navigation.dispatch(StackActions.popToTop());
+			router.popTo('Home');
 		}
 	};
 

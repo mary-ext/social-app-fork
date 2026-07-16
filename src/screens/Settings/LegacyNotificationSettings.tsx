@@ -1,16 +1,19 @@
 import { useCallback } from 'react';
 
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useTitle } from '#/lib/hooks/useTitle';
 
-import type { NavigationProp } from '#/lib/routes/types';
+import { m } from '#/paraglide/messages';
+import { useFocusEffect, useRouter } from '#/routes';
 
 export function LegacyNotificationSettingsScreen() {
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
+
+	useTitle(m['common.notifications.settingsTitle']());
 
 	useFocusEffect(
 		useCallback(() => {
-			navigation.replace('NotificationSettings');
-		}, [navigation]),
+			router.replace(router.build('NotificationSettings'));
+		}, [router]),
 	);
 
 	return null;

@@ -1,8 +1,6 @@
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 
 import { MyLists } from '#/view/com/lists/MyLists';
 
@@ -13,9 +11,12 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 export function ListsScreen() {
-	const navigation = useNavigation<NavigationProp>();
+	useTitle(m['common.list.label']());
+
+	const navigate = useNavigate();
 	const createListHandle = Dialog.useDialogHandle();
 
 	const onPressNewList = () => {
@@ -25,7 +26,7 @@ export function ListsScreen() {
 	const onCreateList = (uri: string) => {
 		try {
 			const urip = parseCanonicalResourceUri(uri);
-			navigation.navigate('ProfileList', {
+			navigate('ProfileList', {
 				name: urip.repo,
 				rkey: urip.rkey,
 			});

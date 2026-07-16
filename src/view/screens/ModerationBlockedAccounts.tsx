@@ -3,6 +3,7 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -23,6 +24,8 @@ import { Text } from '#/components/Typography';
 import { m } from '#/paraglide/messages';
 
 export function ModerationBlockedAccounts() {
+	useTitle(m['common.block.accountsTitle']());
+
 	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 

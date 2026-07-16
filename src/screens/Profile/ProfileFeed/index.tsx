@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useIsFocused } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
@@ -34,11 +31,11 @@ import * as Layout from '#/components/Layout';
 import type { ListMethods } from '#/components/List/List';
 
 import { m } from '#/paraglide/messages';
+import { useIsFocused, useParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>;
-export function ProfileFeedScreen(props: Props) {
-	const { rkey, name: handleOrDid } = props.route.params;
+export function ProfileFeedScreen() {
+	const { rkey, name: handleOrDid } = useParams('ProfileFeed');
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey);
 	const { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
 
@@ -99,7 +96,7 @@ export function ProfileFeedScreenInner({
 	const { openComposer } = useOpenComposer();
 	const isScreenFocused = useIsFocused();
 
-	useSetTitle(feedInfo?.displayName);
+	useTitle(feedInfo.displayName);
 
 	const feed = `feedgen|${feedInfo.uri}` as FeedDescriptor;
 

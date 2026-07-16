@@ -1,9 +1,7 @@
 import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
@@ -24,11 +22,14 @@ import * as Layout from '#/components/web/Layout';
 import * as Skele from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './Bookmarks.css';
 
 export function BookmarksScreen() {
+	useTitle(m['common.savedPosts.title']());
+
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>
@@ -208,7 +209,7 @@ function BookmarkItem({
 }
 
 function BookmarksEmpty() {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	return (
 		<EmptyState
@@ -218,7 +219,7 @@ function BookmarksEmpty() {
 			button={{
 				label: m['screens.bookmarks.backHome'](),
 				text: m['common.action.goHome'](),
-				onPress: () => navigation.navigate('Home' as never),
+				onPress: () => navigate('Home'),
 				size: 'small',
 				color: 'secondary',
 			}}

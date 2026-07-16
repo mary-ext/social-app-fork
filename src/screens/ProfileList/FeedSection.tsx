@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 
-import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { softReset } from '#/state/events';
@@ -19,6 +18,7 @@ import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/componen
 import type { ListMethods } from '#/components/List/List';
 
 import { m } from '#/paraglide/messages';
+import { useIsFocused } from '#/routes';
 
 interface FeedSectionProps {
 	feed: FeedDescriptor;

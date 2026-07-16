@@ -1,5 +1,4 @@
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
@@ -8,16 +7,20 @@ import { useSession } from '#/state/session';
 import { SearchScreenShell } from '#/screens/Search/Shell';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileSearch'>;
-export const ProfileSearchScreen = ({ route }: Props) => {
-	const { name, q: queryParam = '' } = route.params;
+export const ProfileSearchScreen = () => {
+	const { name, q: queryParam = '' } = useParams('ProfileSearch');
 	const { currentAccount } = useSession();
 
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 
-	useSetTitle(profile ? m['screens.profile.search.action.userPosts']({ handle: profile.handle }) : undefined);
+	useTitle(
+		profile
+			? m['screens.profile.search.action.userPosts']({ handle: profile.handle })
+			: m['common.action.search'](),
+	);
 
 	const fixedParams = {
 		from: profile?.handle ?? name,

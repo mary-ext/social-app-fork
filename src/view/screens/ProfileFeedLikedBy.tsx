@@ -1,14 +1,16 @@
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { LikedByList } from '#/components/LikedByList';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeedLikedBy'>;
-export const ProfileFeedLikedByScreen = ({ route }: Props) => {
-	const { name, rkey } = route.params;
+export const ProfileFeedLikedByScreen = () => {
+	useTitle(m['navigation.likedBy.title']());
+
+	const { name, rkey } = useParams('ProfileFeedLikedBy');
 	const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey);
 
 	return (

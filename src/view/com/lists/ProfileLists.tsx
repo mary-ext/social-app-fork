@@ -1,7 +1,5 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { cleanError } from '#/lib/strings/errors';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -20,6 +18,7 @@ import * as ListCard from '#/components/ListCard';
 import { ListFooter } from '#/components/Lists';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 // only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const LIST_ITEM_HEIGHT_ESTIMATE = 120;
@@ -52,7 +51,7 @@ export function ProfileLists({ did, listCount }: ProfileListsProps): React.React
 		useProfileListsQuery(did);
 	const isEmpty = !isPending && !data?.pages[0]?.lists.length;
 	const { data: preferences } = usePreferencesQuery();
-	const navigation = useNavigation();
+	const navigate = useNavigate();
 	const { currentAccount } = useSession();
 	const isSelf = currentAccount?.did === did;
 
@@ -113,7 +112,7 @@ export function ProfileLists({ did, listCount }: ProfileListsProps): React.React
 							? {
 									label: m['common.list.create'](),
 									text: m['common.list.create'](),
-									onPress: () => navigation.navigate('Lists' as never),
+									onPress: () => navigate('Lists'),
 									size: 'small',
 									color: 'primary',
 								}

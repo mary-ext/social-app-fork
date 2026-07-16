@@ -1,7 +1,6 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
@@ -18,16 +17,18 @@ import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>;
-export const PostRepostedByScreen = ({ route }: Props) => {
-	const { name, rkey } = route.params;
+export const PostRepostedByScreen = () => {
+	const { name, rkey } = useParams('PostRepostedBy');
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
 	const quoteCount = post?.repostCount;
 
-	useSetTitle(post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : undefined);
+	useTitle(
+		post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : m['navigation.post.title'](),
+	);
 
 	return (
 		<Layout.Screen>

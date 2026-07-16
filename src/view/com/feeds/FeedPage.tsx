@@ -2,12 +2,9 @@ import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { type NavigationProp, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { getRootNavigation, getTabState, TabState } from '#/lib/routes/helpers';
-import type { AllNavigatorParams } from '#/lib/routes/types';
 
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
@@ -24,6 +21,7 @@ import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/ico
 import type { ListMethods } from '#/components/List/List';
 
 import { m } from '#/paraglide/messages';
+import { useRoute } from '#/routes';
 import { colors } from '#/styles/colors';
 
 const POLL_FREQ = 60e3; // 60sec
@@ -42,7 +40,7 @@ export function FeedPage({
 	feedInfo: FeedSourceInfo;
 }) {
 	const { hasSession } = useSession();
-	const navigation = useNavigation<NavigationProp<AllNavigatorParams>>();
+	const route = useRoute();
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
@@ -58,14 +56,12 @@ export function FeedPage({
 	}, []);
 
 	const onSoftReset = useCallback(() => {
-		const isScreenFocused =
-			getTabState(getRootNavigation(navigation).getState(), 'Home') === TabState.InsideAtRoot;
-		if (isScreenFocused) {
+		if (route.name === 'Home') {
 			scrollToTop();
 			void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 			setHasNew(false);
 		}
-	}, [navigation, scrollToTop, queryClient, feed]);
+	}, [route.name, scrollToTop, queryClient, feed]);
 
 	useEffect(() => {
 		return softReset.subscribe(onSoftReset);

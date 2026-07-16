@@ -2,14 +2,12 @@ import { type MouseEvent, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { getCurrentRoute, isTab } from '#/lib/routes/helpers';
+import { useRoute } from '#/lib/router';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
@@ -72,7 +70,7 @@ import { isModifiedClick, Link, useInternalLink } from '#/components/web/Link';
 
 import { useActorStatus } from '#/features/liveNow';
 import { m } from '#/paraglide/messages';
-import { router } from '#/routes';
+import { popToRoute } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { LARGE_ELEMENT_SIZE, NAV_ICON_WIDTH } from './LeftNav.const';
@@ -204,25 +202,12 @@ function SwitchMenuItems({
 function SwitcherMenuProfileLink() {
 	const { currentAccount } = useSession();
 	const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/';
-	const [pathName] = router.matchPath(profileLink);
-	const currentRouteInfo = useNavigationState((state) => {
-		if (!state) {
-			return { name: 'Home' };
-		}
-		return getCurrentRoute(state);
-	});
-	let isCurrent: boolean;
-	if (currentRouteInfo.name === 'Profile') {
-		isCurrent =
-			isTab(currentRouteInfo.name, pathName) &&
-			(currentRouteInfo.params as CommonNavigatorParams['Profile']).name === currentAccount?.handle;
-	} else {
-		isCurrent = isTab(currentRouteInfo.name, pathName);
-	}
+	const match = useRoute();
+	const isCurrent = match.name === 'Profile' && match.params.name === currentAccount?.did;
 
 	const onPress = (e: MouseEvent<HTMLElement>) => {
 		// a modified/middle click opens the profile in a new tab — let the anchor's default handle it
-		if (e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) {
+		if (isModifiedClick(e)) {
 			return;
 		}
 		// already viewing this profile: soft-reset the screen rather than re-navigate to it
@@ -284,23 +269,16 @@ interface NavItemProps {
 	};
 	label: string;
 	minimal: boolean;
+	routeName: string;
 }
-function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
+function NavItem({ count, hasNew, href, icons, label, minimal, routeName }: NavItemProps) {
 	const { currentAccount } = useSession();
 
-	const [pathName] = router.matchPath(href);
-	const currentRouteInfo = useNavigationState((state) => {
-		if (!state) {
-			return { name: 'Home' };
-		}
-		return getCurrentRoute(state);
-	});
+	const match = useRoute();
+	// exact name (own profile on DID) bolds the label; a related route group (Profile*) only lights the icon.
 	const isCurrent =
-		currentRouteInfo.name === 'Profile'
-			? isTab(currentRouteInfo.name, pathName) &&
-				(currentRouteInfo.params as CommonNavigatorParams['Profile']).name === currentAccount?.did
-			: isTab(currentRouteInfo.name, pathName);
-	const isRelated = currentRouteInfo.name.startsWith(pathName);
+		match.name === routeName && (routeName !== 'Profile' || match.params.name === currentAccount?.did);
+	const isRelated = match.name.startsWith(routeName);
 
 	const onPress = (e: MouseEvent<HTMLElement>) => {
 		// a modified/middle click opens a new tab — let the anchor's default handle it
@@ -312,6 +290,11 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 			softReset.emit();
 			return false;
 		}
+		popToRoute(
+			routeName,
+			routeName === 'Profile' && currentAccount ? { name: currentAccount.did } : undefined,
+		);
+		return false;
 	};
 
 	const Icon = isCurrent || isRelated ? icons.active : icons.inactive;
@@ -345,17 +328,14 @@ function NavItem({ count, hasNew, href, icons, label, minimal }: NavItemProps) {
 
 function ComposeBtn({ minimal }: { minimal: boolean }) {
 	const { currentAccount } = useSession();
-	const navigation = useNavigation();
+	const match = useRoute();
 	const { openComposer } = useOpenComposer();
 	const [isFetchingHandle, setIsFetchingHandle] = useState(false);
 	const fetchHandle = useFetchHandle();
 
 	const getProfileHandle = async () => {
-		const routes = navigation.getState()?.routes;
-		const currentRoute = routes?.[routes?.length - 1];
-
-		if (currentRoute?.name === 'Profile') {
-			let handle: string | undefined = (currentRoute.params as CommonNavigatorParams['Profile']).name;
+		if (match.name === 'Profile') {
+			let handle: string | undefined = match.params.name as string;
 
 			if (handle.startsWith('did:')) {
 				try {
@@ -425,6 +405,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 				<>
 					<NavItem
 						href="/"
+						routeName="Home"
 						minimal={leftNavMinimal}
 						icons={{
 							active: HomeFilledIcon,
@@ -434,6 +415,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						href="/search"
+						routeName="Search"
 						minimal={leftNavMinimal}
 						icons={{
 							active: MagnifyingGlassFilledIcon,
@@ -443,6 +425,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						href="/notifications"
+						routeName="Notifications"
 						minimal={leftNavMinimal}
 						count={numUnreadNotifications}
 						icons={{
@@ -453,6 +436,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						href="/messages"
+						routeName="Messages"
 						minimal={leftNavMinimal}
 						count={numUnreadMessages.numUnread}
 						hasNew={numUnreadMessages.hasNew}
@@ -464,6 +448,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						href="/feeds"
+						routeName="Feeds"
 						minimal={leftNavMinimal}
 						icons={{
 							active: HashtagFilledIcon,
@@ -473,6 +458,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						href="/lists"
+						routeName="Lists"
 						minimal={leftNavMinimal}
 						icons={{
 							active: ListFilledIcon,
@@ -482,6 +468,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						href="/saved"
+						routeName="Bookmarks"
 						minimal={leftNavMinimal}
 						icons={{
 							active: BookmarkFilledIcon,
@@ -491,6 +478,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						href={currentAccount ? makeProfileLink(currentAccount) : '/'}
+						routeName="Profile"
 						minimal={leftNavMinimal}
 						icons={{
 							active: UserCircleFilledIcon,
@@ -500,6 +488,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						href="/settings"
+						routeName="Settings"
 						minimal={leftNavMinimal}
 						icons={{
 							active: SettingsFilledIcon,

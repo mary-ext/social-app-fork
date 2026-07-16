@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-
-import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '#/lib/router';
 
 import { useSession } from '#/state/session';
 
@@ -18,28 +16,12 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './RightNav.css';
 
-function useWebQueryParams() {
-	const navigation = useNavigation();
-	const [params, setParams] = useState<Record<string, string>>({});
-
-	useEffect(() => {
-		return navigation.addListener('state', (e) => {
-			try {
-				const { state } = e.data;
-				const lastRoute = state.routes[state.routes.length - 1]!;
-				setParams(lastRoute.params);
-			} catch {}
-		});
-	}, [navigation, setParams]);
-
-	return params;
-}
-
 export function DesktopRightNav({ routeName }: { routeName: string }) {
 	const { hasSession } = useSession();
 	const isSearchScreen = routeName === 'Search';
-	const webqueryParams = useWebQueryParams();
-	const searchQuery = webqueryParams?.q;
+	// read the search query off the route so a direct load reflects it, not only after a later navigation.
+	const match = useRoute();
+	const searchQuery = match.name === 'Search' ? (match.params.q as string | undefined) : undefined;
 	const showExploreScreenDuplicatedContent = !isSearchScreen || (isSearchScreen && !!searchQuery);
 	const { leftNavMinimal } = useLayoutBreakpoints();
 

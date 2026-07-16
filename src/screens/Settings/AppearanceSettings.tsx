@@ -1,3 +1,5 @@
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
 
 import { type Alf, useAlf } from '#/alf';
@@ -12,6 +14,8 @@ import * as Layout from '#/components/web/Layout';
 import { m } from '#/paraglide/messages';
 
 export function AppearanceSettingsScreen() {
+	useTitle(m['common.appearance.label']());
+
 	const { fonts } = useAlf();
 
 	const { colorMode, darkTheme } = useThemePrefs();

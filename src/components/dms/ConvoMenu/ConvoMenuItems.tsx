@@ -1,10 +1,7 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
 
-import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
-
-import type { NavigationProp } from '#/lib/routes/types';
 
 import type { Shadow } from '#/state/cache/types';
 import { useConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
@@ -35,6 +32,7 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 export type BlockInfo = {
 	listBlocks: BlockingModerationCause[];
@@ -58,7 +56,7 @@ export function ConvoMenuItems({
 	showMarkAsRead?: boolean;
 	blockInfo: BlockInfo;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
 
@@ -136,7 +134,7 @@ export function ConvoMenuItems({
 							{isGroupConvo ? null : (
 								<Menu.Item
 									label={m['common.profile.a11y.goTo']()}
-									onClick={() => navigation.navigate('Profile', { name: profile.did })}
+									onClick={() => navigate('Profile', { name: profile.did })}
 								>
 									<Menu.ItemIcon icon={Person} />
 									<Menu.ItemText>{m['common.profile.action.goTo']()}</Menu.ItemText>

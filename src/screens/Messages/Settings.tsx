@@ -1,3 +1,5 @@
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import { useUpdateActorDeclaration } from '#/state/queries/messages/actor-declaration';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
@@ -18,6 +20,7 @@ import { m } from '#/paraglide/messages';
 type AllowIncoming = 'all' | 'following' | 'none';
 
 export function MessagesSettingsScreen() {
+	useTitle(m['common.chat.settingsLabel']());
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount!.did });
 	const exportCarHandle = Dialog.useDialogHandle();

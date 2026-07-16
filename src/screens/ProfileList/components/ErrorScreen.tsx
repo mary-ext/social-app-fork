@@ -1,8 +1,6 @@
 import { View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
+import { useGoBack } from '#/lib/hooks/useGoBack';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -13,14 +11,7 @@ import { m } from '#/paraglide/messages';
 
 export function ErrorScreen({ error }: { error: React.ReactNode }) {
 	const t = useTheme();
-	const navigation = useNavigation<NavigationProp>();
-	const onPressBack = () => {
-		if (navigation.canGoBack()) {
-			navigation.goBack();
-		} else {
-			navigation.navigate('Home');
-		}
-	};
+	const onPressBack = useGoBack();
 
 	return (
 		<View style={[a.px_xl, a.py_md, a.gap_md]}>

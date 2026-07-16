@@ -1,17 +1,13 @@
-import { useNavigationState } from '@react-navigation/native';
-
-import { getCurrentRoute } from '#/lib/routes/helpers';
+import { useRoute } from '#/lib/router';
 
 export function useNavigationTabState() {
-	return useNavigationState((state) => {
-		const currentRoute = state ? getCurrentRoute(state).name : 'Home';
-		return {
-			isAtHome: currentRoute === 'Home',
-			isAtSearch: currentRoute === 'Search',
-			isAtNotifications: currentRoute === 'Notifications',
-			isAtMessages: currentRoute === 'Messages',
-			isAtFeeds: currentRoute === 'Feeds',
-			isAtBookmarks: currentRoute === 'Bookmarks',
-		};
-	});
+	const { name } = useRoute();
+	return {
+		isAtBookmarks: name === 'Bookmarks',
+		isAtFeeds: name === 'Feeds',
+		isAtHome: name === 'Home',
+		isAtMessages: name === 'Messages',
+		isAtNotifications: name === 'Notifications',
+		isAtSearch: name === 'Search',
+	};
 }

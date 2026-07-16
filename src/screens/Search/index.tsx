@@ -1,9 +1,14 @@
-import type { NativeStackScreenProps, SearchTabNavigatorParams } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
+
+import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
 import { SearchScreenShell } from './Shell';
 
-export function SearchScreen(props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>) {
-	const queryParam = props.route?.params?.q ?? '';
+export function SearchScreen() {
+	const { q } = useParams('Search');
 
-	return <SearchScreenShell queryParam={queryParam} />;
+	useTitle(m['common.nav.explore']());
+
+	return <SearchScreenShell queryParam={q ?? ''} />;
 }

@@ -1,4 +1,5 @@
 import { urls } from '#/lib/constants';
+import { useTitle } from '#/lib/hooks/useTitle';
 
 import {
 	type UsePreferencesQueryResponse,
@@ -20,6 +21,8 @@ import { m } from '#/paraglide/messages';
 import * as styles from './VerificationSettings.css';
 
 export function Screen() {
+	useTitle(m['common.verification.settingsTitle']());
+
 	const { data: preferences } = usePreferencesQuery();
 
 	return (

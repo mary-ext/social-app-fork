@@ -1,16 +1,18 @@
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { LikedByList } from '#/components/LikedByList';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
-export function ProfileLabelerLikedByScreen({
-	route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'ProfileLabelerLikedBy'>) {
-	const { name: handleOrDid } = route.params;
+export function ProfileLabelerLikedByScreen() {
+	const { name: handleOrDid } = useParams('ProfileLabelerLikedBy');
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.labeler.service', 'self');
+
+	useTitle(m['navigation.likedBy.title']());
+
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>

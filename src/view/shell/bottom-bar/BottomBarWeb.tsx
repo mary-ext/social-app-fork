@@ -1,12 +1,10 @@
 import { type ComponentPropsWithoutRef, type MouseEvent, useRef } from 'react';
 
-import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
 import { useHideBottomBarBorder } from '#/lib/hooks/useHideBottomBarBorder';
-import { getCurrentRoute, getTabState, isTab, TabState } from '#/lib/routes/helpers';
+import { useRoute } from '#/lib/router';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 
 import { softReset } from '#/state/events';
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
@@ -37,20 +35,15 @@ import {
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
-import { Link } from '#/components/web/Link';
+import { isModifiedClick, Link } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import { popToRoute } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './BottomBarWeb.css';
 
 const iconWidth = 24;
-
-// a modified/middle click means the user wants a new tab — let the native anchor handle it instead of
-// soft-resetting or navigating in place.
-const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
-	return e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
-};
 
 const LONG_PRESS_MS = 500;
 
@@ -206,25 +199,17 @@ const NavItem: React.FC<{
 	onLongPress?: () => void;
 }> = ({ children, href, routeName, hasNew, notificationCount, onLongPress }) => {
 	const { currentAccount } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const match = useRoute();
 	const { consumeLongPress, handlers: longPressHandlers } = useLongPress(onLongPress);
-	const currentRoute = useNavigationState((state) => {
-		if (!state) {
-			return { name: 'Home' };
-		}
-		return getCurrentRoute(state);
-	});
 
-	// the Profile tab is special: it's only "active" on your *own* profile, so viewing someone else's
-	// profile leaves the tab inactive and makes a press push a fresh screen instead of resetting. Every
-	// other tab is a plain name match (`isTab` also covers the `*Tab`/`*Inner` route aliases).
-	const onProfileTab = routeName === 'Profile' && currentRoute.name === 'Profile';
-	const isOnDifferentProfile =
-		onProfileTab && (currentRoute.params as CommonNavigatorParams['Profile']).name !== currentAccount?.did;
-	const isActive = onProfileTab ? !isOnDifferentProfile : isTab(currentRoute.name, routeName);
+	// the Profile tab is "active" only on your own profile (matched on DID), so viewing someone else's
+	// profile leaves it inactive and makes a press push a fresh screen; every other tab is an exact name match.
+	const onProfileTab = routeName === 'Profile' && match.name === 'Profile';
+	const isOnDifferentProfile = onProfileTab && match.params.name !== currentAccount?.did;
+	const isActive = onProfileTab ? !isOnDifferentProfile : match.name === routeName;
+	const atRoot = match.name === routeName;
 
-	// tapping the active tab at its root soft-resets the feed; a deeper stack pops to root (handled by the
-	// link's `navigate` action). A different profile pushes a fresh screen instead.
+	// active tab at its root soft-resets the feed; a deeper stack pops back to it; a different profile pushes.
 	const action = isOnDifferentProfile ? 'push' : 'navigate';
 	const onPress = (e: MouseEvent<HTMLElement>) => {
 		// a long press already handled this interaction; don't also navigate on the trailing click
@@ -234,10 +219,15 @@ const NavItem: React.FC<{
 		if (action !== 'navigate' || isModifiedClick(e)) {
 			return;
 		}
-		if (getTabState(navigation.getState(), routeName) === TabState.InsideAtRoot) {
+		if (atRoot) {
 			softReset.emit();
 			return false;
 		}
+		popToRoute(
+			routeName,
+			routeName === 'Profile' && currentAccount ? { name: currentAccount.did } : undefined,
+		);
+		return false;
 	};
 
 	return (

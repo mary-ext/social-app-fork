@@ -1,11 +1,9 @@
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode, Ref } from 'react';
 
-import { StackActions } from '@react-navigation/native';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
-import type { AllNavigatorParams, RouteParams } from '#/lib/routes/types';
+import { useRouter } from '#/lib/router';
 import {
 	convertBskyAppUrlIfNeeded,
 	getChatInviteCodeFromUrl,
@@ -19,11 +17,9 @@ import * as textStyles from '#/components/Text.css';
 import { Button, type ButtonProps } from '#/components/web/Button';
 import * as styles from '#/components/web/Link.css';
 
-import { router } from '#/routes';
-
 // #region hooks
 
-/** The React Navigation `StackAction` a link performs when pressed. */
+/** how a link navigates when pressed. `navigate` is a plain push; singleton routes dedupe themselves. */
 type LinkAction = 'navigate' | 'push' | 'replace';
 
 /**
@@ -49,25 +45,14 @@ export const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
 	return e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
 };
 
-/** Returns a function that navigates to an in-app route `path` via the given React Navigation `StackAction`. */
+/** Returns a function that navigates to an in-app route `path` via the given {@link LinkAction}. */
 export const useNavigateToPath = () => {
-	const navigation = useNavigationDeduped();
+	const router = useRouter();
 	return (path: string, action: LinkAction) => {
-		const [screen, params] = router.matchPath(path) as [keyof AllNavigatorParams, RouteParams];
-		switch (action) {
-			case 'navigate': {
-				// @ts-expect-error the deduped navigate signature omits the trailing options arg
-				navigation.navigate(screen, params, { pop: true });
-				break;
-			}
-			case 'push': {
-				navigation.dispatch(StackActions.push(screen, params));
-				break;
-			}
-			case 'replace': {
-				navigation.dispatch(StackActions.replace(screen, params));
-				break;
-			}
+		if (action === 'replace') {
+			router.replace(path);
+		} else {
+			router.push(path);
 		}
 	};
 };
@@ -331,8 +316,8 @@ export type InlineLinkTextProps = InternalNavProps & InlineAnchorProps;
 export type LinkButtonProps = InternalNavProps & ButtonAnchorProps;
 
 /**
- * a block link to an in-app route that navigates using react-navigation on click, falling back to
- * browser-native behavior on modified clicks.
+ * a block link to an in-app route that navigates using the router on click, falling back to browser-native
+ * behavior on modified clicks.
  *
  * @param onPress callback to intercept the navigation; return false to cancel it.
  */

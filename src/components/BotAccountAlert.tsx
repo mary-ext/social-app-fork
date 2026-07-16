@@ -8,8 +8,8 @@ import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
-import { navigate } from '#/Navigation';
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 export function BotAccountAlert({
@@ -30,6 +30,7 @@ export function BotAccountAlert({
 
 function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
 	const { currentAccount } = useSession();
+	const navigate = useNavigate();
 
 	const isSelf = profile.did === currentAccount?.did;
 	const description = isSelf
@@ -53,7 +54,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						label={m['components.botAccountAlert.openSettings']()}
 						onClick={() => {
 							handle.close();
-							void navigate('AccountSettings');
+							navigate('AccountSettings');
 						}}
 						size="large"
 					>

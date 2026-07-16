@@ -1,5 +1,4 @@
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { usePostQuery } from '#/state/queries/post';
@@ -9,14 +8,16 @@ import { PostThread } from '#/screens/PostThread';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>;
-export function PostThreadScreen({ route }: Props) {
-	const { name, rkey } = route.params;
+export function PostThreadScreen() {
+	const { name, rkey } = useParams('PostThread');
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
-	useSetTitle(post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : undefined);
+	useTitle(
+		post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : m['navigation.post.title'](),
+	);
 
 	return (
 		<Layout.Screen>

@@ -1,8 +1,5 @@
 import { ClientResponseError } from '@atcute/client';
 
-import { StackActions, useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
@@ -11,6 +8,7 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
+import { useRouter } from '#/routes';
 
 export function LeaveConvoPrompt({
 	handle,
@@ -23,12 +21,12 @@ export function LeaveConvoPrompt({
 	currentScreen: 'list' | 'conversation';
 	hasMessages?: boolean;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 
 	const { mutate: leaveConvo } = useLeaveConvo(convoId, {
 		onMutate: () => {
 			if (currentScreen === 'conversation') {
-				navigation.dispatch(StackActions.replace('Messages', {}));
+				router.replace(router.build('Messages'));
 			}
 		},
 		onError: (error) => {

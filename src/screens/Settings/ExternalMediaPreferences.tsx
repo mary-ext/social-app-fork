@@ -1,3 +1,4 @@
+import { useTitle } from '#/lib/hooks/useTitle';
 import {
 	type EmbedPlayerSource,
 	exemptExternalEmbedSources,
@@ -12,6 +13,8 @@ import * as Layout from '#/components/web/Layout';
 import { m } from '#/paraglide/messages';
 
 export function ExternalMediaPreferencesScreen() {
+	useTitle(m['common.externalMedia.preferencesTitle']());
+
 	const sources = useExternalEmbedsPrefs();
 	const setExternalEmbedPref = useSetExternalEmbedPref();
 

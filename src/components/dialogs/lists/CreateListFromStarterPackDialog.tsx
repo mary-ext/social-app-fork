@@ -1,10 +1,7 @@
 import type { AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
-
-import type { NavigationProp } from '#/lib/routes/types';
 
 import { useSession } from '#/state/session';
 
@@ -18,6 +15,7 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 import { CreateOrEditListDialog } from './CreateOrEditListDialog';
 
@@ -29,7 +27,7 @@ export function CreateListFromStarterPackDialog({
 	starterPack: AppBskyGraphDefs.StarterPackView;
 }) {
 	const { currentAccount } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const createListHandle = Dialog.useDialogHandle();
 
@@ -53,7 +51,7 @@ export function CreateListFromStarterPackDialog({
 		}
 
 		const urip = parseCanonicalResourceUri(listUri);
-		navigation.navigate('ProfileList', {
+		navigate('ProfileList', {
 			name: urip.repo,
 			rkey: urip.rkey,
 		});

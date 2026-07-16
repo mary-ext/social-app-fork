@@ -20,12 +20,10 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
 import { Collapsible } from '@base-ui/react/collapsible';
-import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { NavigationProp } from '#/lib/routes/types';
 import { forceLTR } from '#/lib/strings/bidi';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
@@ -73,6 +71,7 @@ import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './NotificationFeedItem.css';
@@ -745,7 +744,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 	const { chat } = useClients();
 	const { currentAccount } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const onPressSayHello = async () => {
@@ -757,7 +756,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 					params: { members: [profile.did, currentAccount.did as Did] },
 				}),
 			);
-			navigation.navigate('MessagesConversation', {
+			navigate('MessagesConversation', {
 				conversation: data.convo.id,
 			});
 		} catch (e) {

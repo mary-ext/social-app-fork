@@ -5,11 +5,8 @@ import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-
 import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import {
 	convertBskyAppUrlIfNeeded,
 	getChatInviteCodeFromUrl,
@@ -36,6 +33,7 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
+import { useParams, useSetParams } from '#/routes';
 
 import * as css from './MessageInputEmbed.css';
 
@@ -46,9 +44,8 @@ import * as css from './MessageInputEmbed.css';
 export type MessageEmbedState = { type: 'post'; uri: string } | { type: 'invite'; code: string };
 
 export function useMessageEmbed() {
-	const route = useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>();
-	const navigation = useNavigation<NavigationProp>();
-	const embedFromParams = route.params.embed;
+	const setParams = useSetParams();
+	const embedFromParams = useParams('MessagesConversation').embed;
 
 	// `setEmbedState` is the raw setter; `setEmbed` below is the wrapped public callback (also a
 	// prop), so the names must differ — the symmetric-pair rule can't apply here
@@ -65,9 +62,9 @@ export function useMessageEmbed() {
 		embed,
 		setEmbed: (embedUrl: string | undefined) => {
 			if (!embedUrl) {
-				// Only the post embed is reflected in the route param (used by the share-to-DM intent flow);
-				// invites are local-only.
-				navigation.setParams({ embed: '' });
+				// Only the post embed is reflected in the route param (share-to-DM intent flow); invites are
+				// local-only. clearing it replaces the entry so the shell's entry-key gate keeps the composer open.
+				setParams({ embed: undefined });
 				setEmbedState(undefined);
 				return;
 			}

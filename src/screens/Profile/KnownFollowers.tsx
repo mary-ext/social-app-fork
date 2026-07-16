@@ -1,8 +1,7 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -18,16 +17,17 @@ import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileKnownFollowers'>;
-
-export const ProfileKnownFollowersScreen = ({ route }: Props) => {
-	const { name } = route.params;
+export const ProfileKnownFollowersScreen = () => {
+	const { name } = useParams('ProfileKnownFollowers');
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
 
-	useSetTitle(
-		profile ? m['screens.profile.follow.knownFollowers.title']({ handle: profile.handle }) : undefined,
+	useTitle(
+		profile
+			? m['screens.profile.follow.knownFollowers.title']({ handle: profile.handle })
+			: m['common.follow.followersYouKnow'](),
 	);
 
 	return (

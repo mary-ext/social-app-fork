@@ -32,6 +32,7 @@ import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { buildPath } from '#/routes';
 
 import type { ConvoWithDetails } from './util';
 
@@ -170,16 +171,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 					label={convo.details.name}
 					accessibilityHint={m['components.dms.group.action.openSettings']()}
 					style={[a.flex_row, a.gap_md, a.flex_1, a.justify_start]}
-					to={
-						disabled
-							? '#'
-							: {
-									screen: 'MessagesConversationSettings',
-									params: {
-										conversation: convo.view.id,
-									},
-								}
-					}
+					to={disabled ? '#' : buildPath('MessagesConversationSettings', { conversation: convo.view.id })}
 				>
 					<AvatarBubbles size={40} profiles={convo.members} />
 					<View style={[a.flex_row, a.flex_1, a.align_center]}>
@@ -192,16 +184,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			}
 			settings={
 				<Link
-					to={
-						disabled
-							? '#'
-							: {
-									screen: 'MessagesConversationSettings',
-									params: {
-										conversation: convo.view.id,
-									},
-								}
-					}
+					to={disabled ? '#' : buildPath('MessagesConversationSettings', { conversation: convo.view.id })}
 					label={m['components.dms.group.action.openSettings']()}
 					size="small"
 					color="secondary"

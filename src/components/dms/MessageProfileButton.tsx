@@ -1,9 +1,5 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
-
 import { useGetConvoAvailabilityQuery } from '#/state/queries/messages/get-convo-availability';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
 
@@ -14,10 +10,11 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 /** Round button that opens (or starts) a DM with the profile, when the viewer is allowed to message them. */
 export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.ProfileViewDetailed }) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	const { data: convoAvailability } = useGetConvoAvailabilityQuery(profile.did);
 	const { mutate: initiateConvo } = useGetConvoForMembers({
@@ -25,7 +22,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 			Toast.show(m['common.chat.error.create']());
 		},
 		onSuccess: ({ convo }) => {
-			navigation.navigate('MessagesConversation', { conversation: convo.id });
+			navigate('MessagesConversation', { conversation: convo.id });
 		},
 	});
 
@@ -34,7 +31,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 			return;
 		}
 		if (convoAvailability.convo) {
-			navigation.navigate('MessagesConversation', { conversation: convoAvailability.convo.id });
+			navigate('MessagesConversation', { conversation: convoAvailability.convo.id });
 		} else {
 			initiateConvo([profile.did]);
 		}

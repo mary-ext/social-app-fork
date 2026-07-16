@@ -4,10 +4,8 @@ import { type ScrollView, View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants';
-import type { NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 
 import { useOverwriteSavedFeedsMutation, usePreferencesQuery } from '#/state/queries/preferences';
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
@@ -41,9 +39,11 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 export function SavedFeeds() {
+	useTitle(m['common.feeds.action.edit']());
 	const { data: preferences } = usePreferencesQuery();
 	if (!preferences) {
 		return <View />;
@@ -56,7 +56,8 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 	const { gtMobile } = useBreakpoints();
 	const { mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending } =
 		useOverwriteSavedFeedsMutation();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
+	const router = useRouter();
 	const scrollRef = useRef<ScrollView | null>(null);
 
 	/*
@@ -75,10 +76,10 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 		try {
 			await overwriteSavedFeeds(currentFeeds);
 			Toast.show(m['common.feeds.updatedToast']());
-			if (navigation.canGoBack()) {
-				navigation.goBack();
+			if (router.canGoBack) {
+				router.back();
 			} else {
-				navigation.navigate('Feeds');
+				navigate('Feeds');
 			}
 		} catch (e) {
 			Toast.show(m['common.error.serverContact'](), {

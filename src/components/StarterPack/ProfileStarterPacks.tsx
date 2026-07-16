@@ -1,8 +1,5 @@
 import type { AnyStarterPackView } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
@@ -23,6 +20,7 @@ import {
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 
 import * as css from './ProfileStarterPacks.css';
 
@@ -163,14 +161,14 @@ function keyExtractor(item: StarterPackItem) {
 
 /** A footer row offering the profile owner a shortcut back to the starter-pack wizard. */
 function CreateAnother() {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	return (
 		<div className={css.createAnother}>
 			<Button
 				color="secondary"
 				label={m['common.starterPack.action.create']()}
-				onClick={() => navigation.navigate('StarterPackWizard', {})}
+				onClick={() => navigate('StarterPackWizard', {})}
 				size="small"
 				variant="solid"
 			>

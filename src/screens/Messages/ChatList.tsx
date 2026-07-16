@@ -2,10 +2,8 @@ import { type ComponentProps, useCallback, useEffect, useRef } from 'react';
 
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
-
 import { useAppState } from '#/lib/appState';
-import type { NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { softReset } from '#/state/events';
@@ -45,6 +43,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useFocusEffect, useIsFocused, useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './ChatList.css';
@@ -79,9 +78,11 @@ function keyExtractor(item: ListItem) {
 
 export function MessagesScreen() {
 	const { isWithinSplitView } = useIsWithinSplitView();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const newChatHandle = Dialog.useDialogHandle();
 	const { data: chatStatus } = useChatActorStatusQuery();
+
+	useTitle(m['navigation.chat.title']());
 
 	const messagesBus = useMessagesEventBus();
 	const state = useAppState();
@@ -95,7 +96,7 @@ export function MessagesScreen() {
 		}, [messagesBus, isActive]),
 	);
 
-	const onNewChat = (conversation: string) => navigation.navigate('MessagesConversation', { conversation });
+	const onNewChat = (conversation: string) => navigate('MessagesConversation', { conversation });
 
 	if (isWithinSplitView) {
 		return (
@@ -353,7 +354,6 @@ export function Header({
 					<Layout.Header.Slot>
 						<InboxRequests count={requestCount} variant="solid" action={action} />
 						<ChatSettingsMenu
-							action={action}
 							render={
 								<Button label={m['common.chat.optionsLabel']()} size="small" color="secondary" shape="round">
 									<ButtonIcon icon={SettingsIcon} />
@@ -384,7 +384,6 @@ export function Header({
 						<InboxRequests count={requestCount} variant="ghost" />
 
 						<ChatSettingsMenu
-							action={action}
 							render={
 								<Button
 									label={m['common.chat.optionsLabel']()}
@@ -404,14 +403,8 @@ export function Header({
 	);
 }
 
-function ChatSettingsMenu({
-	action,
-	render,
-}: {
-	action: 'navigate' | 'push';
-	render: ComponentProps<typeof Menu.Trigger>['render'];
-}) {
-	const navigation = useNavigation<NavigationProp>();
+function ChatSettingsMenu({ render }: { render: ComponentProps<typeof Menu.Trigger>['render'] }) {
+	const navigate = useNavigate();
 
 	const { mutate: markAllChatsRead } = useUpdateAllRead('accepted', {
 		onMutate: () => {
@@ -437,11 +430,7 @@ function ChatSettingsMenu({
 					<Menu.Item
 						label={m['common.chat.settingsLabel']()}
 						onClick={() => {
-							if (action === 'navigate') {
-								navigation.navigate('MessagesSettings');
-							} else {
-								navigation.push('MessagesSettings');
-							}
+							navigate('MessagesSettings');
 						}}
 					>
 						<Menu.ItemIcon icon={SettingsIcon} />

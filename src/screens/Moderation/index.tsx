@@ -7,10 +7,10 @@ import {
 
 import { clsx } from 'clsx';
 
+import { useTitle } from '#/lib/hooks/useTitle';
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { makeProfileLink } from '#/lib/routes/links';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
@@ -55,7 +55,9 @@ const ADULT_CONTENT_LABELS = [
 	BUILTIN_LABELS['graphic-media']!,
 ];
 
-export function ModerationScreen(_props: NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>) {
+export function ModerationScreen() {
+	useTitle(m['common.moderation.label']());
+
 	const { data: preferences, error, isLoading } = usePreferencesQuery();
 
 	return (

@@ -1,9 +1,6 @@
 import { View } from 'react-native';
 
-import type { ScreenLayoutArgs } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import type { FlatNavigatorParams, NativeStackNavigationOptionsWithAuth } from '#/lib/routes/types';
+import { Outlet, useRoute } from '#/lib/router';
 
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 
@@ -13,47 +10,37 @@ import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { LockScroll } from '#/components/LockScroll';
 
+import { useNavigate } from '#/routes';
+
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
 import { SplitViewProvider } from './context';
 import { getMessagesSplitViewLayoutDimensions } from './layout-dimensions';
 
-type MessageScreens =
-	| 'Messages'
-	| 'MessagesConversation'
-	| 'MessagesConversationSettings'
-	| 'MessagesInbox'
-	| 'MessagesJoinRequests'
-	| 'MessagesSettings';
-
-type LayoutProps = ScreenLayoutArgs<
-	FlatNavigatorParams,
-	MessageScreens,
-	NativeStackNavigationOptionsWithAuth,
-	NativeStackNavigationProp<FlatNavigatorParams, MessageScreens, string | undefined>
->;
-export function MessagesSplitViewLayout({ children, ...props }: LayoutProps) {
+/** layout shared by every message screen: the persistent chat-list column plus the active conversation. */
+export function MessagesSplitViewLayout() {
 	const { rightNavVisible } = useLayoutBreakpoints();
 
 	if (!rightNavVisible) {
-		return children;
+		return <Outlet />;
 	}
 
-	return <MessagesSplitViewLayoutInner {...props}>{children}</MessagesSplitViewLayoutInner>;
+	return <MessagesSplitViewLayoutInner />;
 }
 
-function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutProps) {
+function MessagesSplitViewLayoutInner() {
 	const { centerColumnOffset } = useLayoutBreakpoints();
 	const newChatHandle = Dialog.useDialogHandle();
 	const t = useTheme();
 	const { data: chatStatus } = useChatActorStatusQuery();
+	const match = useRoute();
+	const navigate = useNavigate();
 
-	const onNewChat = (conversation: string) => navigation.navigate('MessagesConversation', { conversation });
+	const onNewChat = (conversation: string) => navigate('MessagesConversation', { conversation });
 
 	const selectedChat =
-		(route.name === 'MessagesConversation' || route.name === 'MessagesConversationSettings') &&
-		route.params &&
-		'conversation' in route.params
-			? route.params.conversation
+		(match.name === 'MessagesConversation' || match.name === 'MessagesConversationSettings') &&
+		typeof match.params.conversation === 'string'
+			? match.params.conversation
 			: undefined;
 
 	const { centerColumnWidth, containerWidth, leftColumnWidth } = getMessagesSplitViewLayoutDimensions({
@@ -74,7 +61,7 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 			</SplitViewProvider>
 			<SplitViewProvider side="right">
 				<View style={[a.border_x, t.atoms.border_contrast_low, { width: centerColumnWidth }]}>
-					{children}
+					<Outlet />
 				</View>
 			</SplitViewProvider>
 		</View>

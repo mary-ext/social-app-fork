@@ -1,3 +1,5 @@
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import { usePreferencesQuery, useSetFeedViewPreferencesMutation } from '#/state/queries/preferences';
 import {
 	normalizeSort,
@@ -23,6 +25,8 @@ import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 
 export function ContentAndMediaSettingsScreen() {
+	useTitle(m['navigation.settings.contentAndMedia.title']());
+
 	const [autoplayDisabledPref, setAutoplayDisabledPref] = useAutoplayDisabled();
 	const { enabled: trendingEnabled } = useTrendingConfig();
 	const { trendingDisabled } = useTrendingSettings();

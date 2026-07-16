@@ -5,12 +5,10 @@ import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
-import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useConvoQuery } from '#/state/queries/messages/conversation';
@@ -50,6 +48,7 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate, useParams, useRouter } from '#/routes';
 
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { AddMembersLink } from './AddMembersLink';
@@ -72,11 +71,12 @@ type Item =
 			key: string;
 	  };
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesConversationSettings'>;
+export function MessagesConversationSettingsScreen() {
+	const convoId = useParams('MessagesConversationSettings').conversation;
+	const navigate = useNavigate();
+	const router = useRouter();
 
-export function MessagesConversationSettingsScreen({ route }: Props) {
-	const convoId = route.params.conversation;
-	const navigation = useNavigation<NavigationProp>();
+	useTitle(m['common.chat.settingsTitle']());
 
 	return (
 		<Layout.Screen>
@@ -84,9 +84,9 @@ export function MessagesConversationSettingsScreen({ route }: Props) {
 				<Layout.Header.BackButton
 					onPress={(evt) => {
 						// deep-linking straight to settings leaves no back entry; send back to the conversation
-						if (!navigation.canGoBack()) {
+						if (!router.canGoBack) {
 							evt.preventDefault();
-							navigation.navigate('MessagesConversation', { conversation: convoId });
+							navigate('MessagesConversation', { conversation: convoId });
 						}
 					}}
 				/>
@@ -101,7 +101,7 @@ export function MessagesConversationSettingsScreen({ route }: Props) {
 }
 
 function SettingsInner({ convoId }: { convoId: string }) {
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
 	const { data: convoData, error, refetch } = useConvoQuery({ convoId });
@@ -133,10 +133,10 @@ function SettingsInner({ convoId }: { convoId: string }) {
 				title={m['screens.messages.conversation.wrongTypeError']()}
 				message={m['screens.messages.conversation.groupOnlyError']()}
 				onGoBack={() => {
-					if (navigation.canGoBack()) {
-						navigation.goBack();
+					if (router.canGoBack) {
+						router.back();
 					} else {
-						navigation.replace('Messages');
+						router.replace(router.build('Messages'));
 					}
 				}}
 			/>
@@ -288,7 +288,7 @@ function SettingsHeader({
 	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 
 	const groupName = convo.details.name;
 	const [newGroupName, setNewGroupName] = useState(groupName);
@@ -328,7 +328,7 @@ function SettingsHeader({
 
 	const { mutate: leaveConvo, isPending: isLeaving } = useLeaveConvo(convo.view.id, {
 		onSuccess: () => {
-			navigation.replace('Messages');
+			router.replace(router.build('Messages'));
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });

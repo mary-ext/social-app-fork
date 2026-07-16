@@ -3,11 +3,9 @@ import type { ListRenderItemInfo } from 'react-native';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
 import { HITSLOP_10 } from '#/lib/constants';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import type { CommonNavigatorParams } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
 import { enforceLen } from '#/lib/strings/helpers';
@@ -33,6 +31,7 @@ import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
 const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
 	return <Post post={item} />;
@@ -42,8 +41,10 @@ const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
 	return `${item.uri}-${index}`;
 };
 
-export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
-	const { tag, author } = route.params;
+export default function HashtagScreen() {
+	useTitle(m['navigation.hashtag.title']());
+
+	const { tag, author } = useParams('Hashtag');
 	const isCashtag = tag.startsWith('$');
 
 	// Cashtags already include the $ prefix, hashtags need # added

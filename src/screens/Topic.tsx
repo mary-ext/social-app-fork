@@ -3,11 +3,9 @@ import type { ListRenderItemInfo } from 'react-native';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
 import { HITSLOP_10 } from '#/lib/constants';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import type { CommonNavigatorParams } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
 import { enforceLen } from '#/lib/strings/helpers';
@@ -24,6 +22,7 @@ import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { type Section, Tabs } from '#/components/Tabs';
 
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/routes';
 
 const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
 	return <Post post={item} />;
@@ -33,8 +32,9 @@ const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
 	return `${item.uri}-${index}`;
 };
 
-export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavigatorParams, 'Topic'>) {
-	const { topic } = route.params;
+export default function TopicScreen() {
+	const { topic } = useParams('Topic');
+	useTitle(m['navigation.topic.title']());
 	const headerTitle = enforceLen(topic, 24, true, 'middle');
 
 	const onShare = () => {

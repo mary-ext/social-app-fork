@@ -1,9 +1,6 @@
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { StackActions, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
-
-import type { NavigationProp } from '#/lib/routes/types';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useAcceptConversation } from '#/state/queries/messages/accept-conversation';
@@ -35,6 +32,7 @@ import {
 } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate, useRouter } from '#/routes';
 
 export function RejectMenu({
 	convo,
@@ -59,13 +57,13 @@ export function RejectMenu({
 }) {
 	const { currentAccount } = useSession();
 	const shadowedProfile = useProfileShadow(profile);
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const { mutate: leaveConvo } = useLeaveConvo(convo.view.id, {
 		onMutate: () => {
 			if (currentScreen === 'conversation') {
-				navigation.dispatch(StackActions.pop());
+				router.back();
 			}
 		},
 		onError: () => {
@@ -201,14 +199,14 @@ export function AcceptChatButton({
 	currentScreen: 'list' | 'conversation';
 }) {
 	const queryClient = useQueryClient();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	const { mutate: acceptConvo, isPending } = useAcceptConversation(convo.id, {
 		onMutate: () => {
 			onAcceptConvo?.();
 			if (currentScreen === 'list') {
 				precacheConvoQuery(queryClient, { ...convo, status: 'accepted' });
-				navigation.navigate('MessagesConversation', {
+				navigate('MessagesConversation', {
 					conversation: convo.id,
 					accept: true,
 				});
@@ -270,12 +268,12 @@ export function DeleteChatButton({
 	convo: ChatBskyConvoDefs.ConvoView;
 	currentScreen: 'list' | 'conversation';
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 
 	const { mutate: leaveConvo } = useLeaveConvo(convo.id, {
 		onMutate: () => {
 			if (currentScreen === 'conversation') {
-				navigation.dispatch(StackActions.pop());
+				router.back();
 			}
 		},
 		onError: () => {

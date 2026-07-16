@@ -2,11 +2,10 @@ import { useCallback } from 'react';
 
 import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDefs } from '@atcute/bluesky';
 
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useAppState } from '#/lib/appState';
-import type { NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
@@ -33,6 +32,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useFocusEffect, useNavigate, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
@@ -48,6 +48,8 @@ type RequestItem =
 	| { type: 'outgoing'; view: ChatBskyGroupDefs.JoinRequestConvoView };
 
 export function MessagesInboxScreen() {
+	useTitle(m['navigation.chat.requests.title']());
+
 	const listConvosQuery = useListConvoRequests();
 	const { data } = listConvosQuery;
 
@@ -88,7 +90,8 @@ function RequestList({
 	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvoRequests.$output>>;
 	conversations: RequestItem[];
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
+	const router = useRouter();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
 	// Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
@@ -161,10 +164,10 @@ function RequestList({
 								label: m['screens.messages.chats.back'](),
 								text: m['common.action.back'](),
 								onPress: () => {
-									if (navigation.canGoBack()) {
-										navigation.goBack();
+									if (router.canGoBack) {
+										router.back();
 									} else {
-										navigation.navigate('Messages');
+										navigate('Messages');
 									}
 								},
 								size: 'small',

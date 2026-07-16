@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 
-import { useFocusEffect } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
 
 import { useCallOnce } from '#/lib/once';
@@ -12,6 +11,7 @@ import type { ThreadViewPreferences } from '#/state/queries/preferences/types';
 
 import { logger } from '#/logger';
 
+import { useFocusEffect } from '#/routes';
 import type { Literal } from '#/types/utils';
 
 export type ThreadSortOption = Literal<AppBskyUnspeccedGetPostThreadV2.$params['sort']>;

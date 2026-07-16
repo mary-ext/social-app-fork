@@ -8,16 +8,15 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { definite } from '@mary/array-fns';
 
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { HITSLOP_20 } from '#/lib/constants';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
+import { useFocusEffect } from '#/lib/router';
 import { makeStarterPackLink } from '#/lib/routes/links';
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
@@ -62,29 +61,31 @@ import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/w
 import * as WebLayout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate, useParams, useRouter } from '#/routes';
 import { Image } from '#/shims/image';
 import { colors } from '#/styles/colors';
 
 import { StarterPackHeader } from './StarterPackHeader';
 
-type StarterPackScreeProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>;
-type StarterPackScreenShortProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPackShort'>;
+type StarterPackRouteParams = { name: string; new?: boolean; rkey: string };
 
-export function StarterPackScreen({ route }: StarterPackScreeProps) {
+export function StarterPackScreen() {
+	const params = useParams('StarterPack');
 	return (
 		<Layout.Screen>
-			<StarterPackScreenInner routeParams={route.params} />
+			<StarterPackScreenInner routeParams={params} />
 		</Layout.Screen>
 	);
 }
 
-export function StarterPackScreenShort({ route }: StarterPackScreenShortProps) {
+export function StarterPackScreenShort() {
+	const { code } = useParams('StarterPackShort');
 	const {
 		data: resolvedStarterPack,
 		isLoading,
 		isError,
 	} = useResolvedStarterPackShortLink({
-		code: route.params.code,
+		code,
 	});
 
 	if (isLoading || isError || !resolvedStarterPack) {
@@ -106,13 +107,10 @@ export function StarterPackScreenShort({ route }: StarterPackScreenShortProps) {
 	);
 }
 
-export function StarterPackScreenInner({
-	routeParams,
-}: {
-	routeParams: StarterPackScreeProps['route']['params'];
-}) {
+export function StarterPackScreenInner({ routeParams }: { routeParams: StarterPackRouteParams }) {
 	const { name, rkey } = routeParams;
 	const { currentAccount } = useSession();
+	useTitle(m['common.starterPack.label']());
 
 	const moderationOpts = useModerationOpts();
 	const { data: did, isLoading: isLoadingDid, isError: isErrorDid } = useResolveDidQuery(name);
@@ -154,7 +152,7 @@ function StarterPackScreenLoaded({
 	moderationOpts,
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
-	routeParams: StarterPackScreeProps['route']['params'];
+	routeParams: StarterPackRouteParams;
 	moderationOpts: ModerationOptions;
 }) {
 	const showPeopleTab = Boolean(starterPack.list);
@@ -233,7 +231,7 @@ function Header({
 	onOpenShareDialog,
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
-	routeParams: StarterPackScreeProps['route']['params'];
+	routeParams: StarterPackRouteParams;
 	onOpenShareDialog: () => void;
 }) {
 	const { currentAccount, hasSession } = useSession();
@@ -249,28 +247,19 @@ function Header({
 	const isOwn = creator?.did === currentAccount?.did;
 	const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0;
 
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 
-	useEffect(() => {
-		const onFocus = () => {
-			if (hasSession) return;
-			setActiveStarterPack({
-				uri: starterPack.uri,
-			});
-		};
-		const onBeforeRemove = () => {
-			if (hasSession) return;
-			setActiveStarterPack(undefined);
-		};
-
-		navigation.addListener('focus', onFocus);
-		navigation.addListener('beforeRemove', onBeforeRemove);
-
-		return () => {
-			navigation.removeListener('focus', onFocus);
-			navigation.removeListener('beforeRemove', onBeforeRemove);
-		};
-	}, [hasSession, navigation, setActiveStarterPack, starterPack.uri]);
+	// remember this pack as the active referral while a signed-out viewer is on it; drop it on leave. cleanup
+	// runs on blur, but the sign-up flow is a dialog (no blur), so the referral survives it.
+	useFocusEffect(
+		useCallback(() => {
+			if (hasSession) {
+				return;
+			}
+			setActiveStarterPack({ uri: starterPack.uri });
+			return () => setActiveStarterPack(undefined);
+		}, [hasSession, setActiveStarterPack, starterPack.uri]),
+	);
 
 	const onFollowAll = async () => {
 		if (!starterPack.list) return;
@@ -326,7 +315,7 @@ function Header({
 		Toast.show(m['screens.starterPack.follow.success']());
 	};
 
-	const canGoBack = navigation.canGoBack();
+	const canGoBack = router.canGoBack;
 
 	return (
 		<>
@@ -395,7 +384,7 @@ function OverflowMenu({
 	onOpenShareDialog,
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
-	routeParams: StarterPackScreeProps['route']['params'];
+	routeParams: StarterPackRouteParams;
 	onOpenShareDialog: () => void;
 }) {
 	const t = useTheme();
@@ -403,7 +392,8 @@ function OverflowMenu({
 	const reportDialogHandle = Dialog.useDialogHandle();
 	const deleteHandle = Prompt.usePromptHandle();
 	const convertToListHandle = Dialog.useDialogHandle();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
+	const router = useRouter();
 
 	const {
 		mutate: deleteStarterPack,
@@ -412,11 +402,8 @@ function OverflowMenu({
 	} = useDeleteStarterPackMutation({
 		onSuccess: () => {
 			deleteHandle.close();
-			if (navigation.canGoBack()) {
-				navigation.popToTop();
-			} else {
-				navigation.navigate('Home');
-			}
+			// the pack was just deleted; leave for Home.
+			router.popTo('Home');
 		},
 		onError: (e) => {
 			logger.error('Failed to delete starter pack', { safeMessage: e });
@@ -459,9 +446,7 @@ function OverflowMenu({
 							<Menu.Item
 								label={m['screens.starterPack.edit']()}
 								onClick={() => {
-									navigation.navigate('StarterPackEdit', {
-										rkey: routeParams.rkey,
-									});
+									navigate('StarterPackEdit', { rkey: routeParams.rkey });
 								}}
 							>
 								<Menu.ItemText>{m['common.action.edit']()}</Menu.ItemText>
@@ -558,15 +543,15 @@ function OverflowMenu({
 
 function InvalidStarterPack({ rkey }: { rkey: string }) {
 	const t = useTheme();
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 	const { gtMobile } = useBreakpoints();
 	const [isProcessing, setIsProcessing] = useState(false);
 
 	const goBack = () => {
-		if (navigation.canGoBack()) {
-			navigation.goBack();
+		if (router.canGoBack) {
+			router.back();
 		} else {
-			navigation.replace('Home');
+			router.replace('/');
 		}
 	};
 

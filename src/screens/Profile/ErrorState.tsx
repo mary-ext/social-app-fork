@@ -1,6 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
-
-import type { NavigationProp } from '#/lib/routes/types';
+import { useGoBack } from '#/lib/hooks/useGoBack';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Text } from '#/components/Text';
@@ -12,15 +10,7 @@ import { colors } from '#/styles/colors';
 import * as css from './ErrorState.css';
 
 export function ErrorState({ error }: { error: string }) {
-	const navigation = useNavigation<NavigationProp>();
-
-	const onPressBack = () => {
-		if (navigation.canGoBack()) {
-			navigation.goBack();
-		} else {
-			navigation.navigate('Home');
-		}
-	};
+	const onPressBack = useGoBack();
 
 	return (
 		<div className={css.container}>

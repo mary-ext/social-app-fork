@@ -10,12 +10,10 @@ import {
 
 import { definite } from '@mary/array-fns';
 
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { combinedDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 import { isInvalidHandle } from '#/lib/strings/handles';
@@ -50,25 +48,26 @@ import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPack
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
-import { navigate } from '#/Navigation';
 import { m } from '#/paraglide/messages';
+import { useFocusEffect, useNavigate, useParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './Profile.css';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>;
-export function ProfileScreen(props: Props) {
+export function ProfileScreen() {
 	return (
 		<Layout.Screen noInsetTop>
-			<ProfileScreenInner {...props} />
+			<ProfileScreenInner />
 		</Layout.Screen>
 	);
 }
 
-function ProfileScreenInner({ route }: Props) {
+function ProfileScreenInner() {
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
-	const name = route.params.name === 'me' ? currentAccount?.did : route.params.name;
+	const navigate = useNavigate();
+	const params = useParams('Profile');
+	const name = params.name === 'me' ? currentAccount?.did : params.name;
 	const moderationOpts = useModerationOpts();
 	const {
 		data: resolvedDid,
@@ -99,10 +98,10 @@ function ProfileScreenInner({ route }: Props) {
 		if (resolveError) {
 			if (name === 'lulaoficial.bsky.social') {
 				console.log('Applying redirect to lula.com.br');
-				void navigate('Profile', { name: 'lula.com.br' });
+				navigate('Profile', { name: 'lula.com.br' });
 			}
 		}
-	}, [name, resolveError]);
+	}, [name, navigate, resolveError]);
 
 	// When we open the profile, we want to reset the posts query if we are blocked.
 	useEffect(() => {
@@ -161,7 +160,7 @@ function ProfileScreenLoaded({
 	const profile = useProfileShadow(profileUnshadowed);
 	const { hasSession, currentAccount } = useSession();
 	const { openComposer } = useOpenComposer();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 	const {
 		data: labelerInfo,
 		error: labelerError,
@@ -171,7 +170,7 @@ function ProfileScreenLoaded({
 		enabled: !!profile.associated?.labeler,
 	});
 	const [selectedTab, setSelectedTab] = useState<string | null>(null);
-	useSetTitle(combinedDisplayName(profile));
+	useTitle(combinedDisplayName(profile));
 
 	const description = profile.description ?? '';
 	const hasDescription = description !== '';
@@ -208,7 +207,7 @@ function ProfileScreenLoaded({
 	};
 
 	const navToWizard = () => {
-		navigation.navigate('StarterPackWizard', {});
+		navigate('StarterPackWizard', {});
 	};
 
 	// rendering

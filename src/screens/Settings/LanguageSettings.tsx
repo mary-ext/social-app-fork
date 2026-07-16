@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { useTitle } from '#/lib/hooks/useTitle';
+
 import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 
 import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
@@ -26,6 +28,8 @@ const onChangeAppLanguage = (value: string) => {
 export function LanguageSettingsScreen() {
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
+
+	useTitle(m['navigation.settings.language.title']());
 
 	// changing langPrefs causes a slow re-render, so we use a local state copy
 	// and update that first to drive the UI on this screen to keep it snappy

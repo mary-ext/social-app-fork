@@ -4,12 +4,11 @@ import { View } from 'react-native';
 import type { AnyProfileView, ChatBskyGroupListJoinRequests } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 
-import { useNavigation } from '@react-navigation/native';
 import { type InfiniteData, useQueryClient } from '@tanstack/react-query';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { isNetworkError } from '#/lib/hooks/useCleanError';
-import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 
 import { ConvoProvider, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
@@ -42,14 +41,15 @@ import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useParams, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { InviteLinkDialog } from './components/InviteLinkDialog';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesJoinRequests'>;
+export function MessagesJoinRequestsScreen() {
+	useTitle(m['common.requests.label']());
 
-export function MessagesJoinRequestsScreen({ route }: Props) {
-	const convoId = route.params.conversation;
+	const convoId = useParams('MessagesJoinRequests').conversation;
 
 	return (
 		<Layout.Screen>
@@ -62,7 +62,7 @@ export function MessagesJoinRequestsScreen({ route }: Props) {
 
 function JoinRequestsInner() {
 	const convoState = useConvo();
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 
 	if (convoState.status === ConvoStatus.Error) {
 		return (
@@ -95,10 +95,10 @@ function JoinRequestsInner() {
 				title={m['screens.messages.conversation.wrongTypeError']()}
 				message={m['screens.messages.conversation.groupOnlyError']()}
 				onGoBack={() => {
-					if (navigation.canGoBack()) {
-						navigation.goBack();
+					if (router.canGoBack) {
+						router.back();
 					} else {
-						navigation.replace('Messages');
+						router.replace(router.build('Messages'));
 					}
 				}}
 			/>
@@ -113,7 +113,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	const moderationOpts = useModerationOpts();
 	const bottomBarOffset = useBottomBarOffset();
 	const { currentAccount } = useSession();
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 	const queryClient = useQueryClient();
 	const inviteLinkHandle = Dialog.useDialogHandle();
 
@@ -153,9 +153,11 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			onSuccess: () => {
 				Toast.show(m['screens.messages.requests.approvedToast']());
 				if (getRemainingRequestCount() < 1) {
-					navigation.replace('MessagesConversationSettings', {
-						conversation: convo.view.id,
-					});
+					router.replace(
+						router.build('MessagesConversationSettings', {
+							conversation: convo.view.id,
+						}),
+					);
 				}
 			},
 			onError: (error) => {
@@ -187,9 +189,11 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			onSuccess: () => {
 				Toast.show(m['screens.messages.requests.rejectedToast']());
 				if (getRemainingRequestCount() < 1) {
-					navigation.replace('MessagesConversationSettings', {
-						conversation: convo.view.id,
-					});
+					router.replace(
+						router.build('MessagesConversationSettings', {
+							conversation: convo.view.id,
+						}),
+					);
 				}
 			},
 			onError: (error) => {

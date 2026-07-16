@@ -1,9 +1,5 @@
 import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
-import { useNavigation, useNavigationState } from '@react-navigation/native';
-
-import { getCurrentRoute } from '#/lib/routes/helpers';
-import type { NavigationProp } from '#/lib/routes/types';
 
 import { softReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
@@ -18,6 +14,7 @@ import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate, useRoute } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './Feeds.css';
@@ -29,13 +26,8 @@ export function DesktopFeeds() {
 	const { data: pinnedFeedInfos, error, isLoading } = usePinnedFeedsInfos();
 	const selectedFeed = useSelectedFeed();
 	const setSelectedFeed = useSetSelectedFeed();
-	const navigation = useNavigation<NavigationProp>();
-	const route = useNavigationState((state) => {
-		if (!state) {
-			return { name: 'Home' };
-		}
-		return getCurrentRoute(state);
-	});
+	const navigate = useNavigate();
+	const route = useRoute();
 
 	if (isLoading) {
 		return (
@@ -68,7 +60,7 @@ export function DesktopFeeds() {
 		}
 		const reselectedActive = next.length === 0;
 		setSelectedFeed(feed);
-		navigation.navigate('Home');
+		navigate('Home');
 		if (reselectedActive && feed === selectedFeed) {
 			softReset.emit();
 		}

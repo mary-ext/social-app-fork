@@ -2,12 +2,10 @@ import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDef
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
+import { useParams, useRoute } from '#/lib/router';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { enforceLen } from '#/lib/strings/helpers';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';
@@ -43,17 +41,23 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { useRouter } from '#/routes';
 import { Image } from '#/shims/image';
 
 import { Provider } from './State';
 import * as css from './Wizard.css';
 
-export function Wizard({
-	route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackEdit' | 'StarterPackWizard'>) {
-	const params = route.params ?? {};
-	const rkey = 'rkey' in params ? params.rkey : undefined;
-	const targetDid = 'targetDid' in params ? params.targetDid : undefined;
+// registered for both StarterPackEdit (has rkey) and StarterPackWizard (has targetDid).
+export function Wizard() {
+	const { name: routeName } = useRoute();
+	const params = useParams();
+	const rkey = params.rkey as string | undefined;
+	const targetDid = params.targetDid as string | undefined;
+	useTitle(
+		routeName === 'StarterPackEdit'
+			? m['navigation.starterPack.edit.title']()
+			: m['common.starterPack.action.create'](),
+	);
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 	// Use targetDid if provided (from dialog), otherwise use current account
@@ -131,7 +135,7 @@ function WizardInner({
 	moderationOpts: ModerationOptions;
 	fromDialog: boolean;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
 	const [state, dispatch] = useWizardState();
 	const { currentAccount } = useSession();
 
@@ -173,27 +177,20 @@ function WizardInner({
 		// hand control back to the dialog that launched us — it reopens itself once its screen is in view
 		// again. a wizard deep-linked with a `targetDid` has no such screen behind it, so it falls through
 		// to the pack that was just created, same as any other wizard.
-		if (fromDialog && navigation.canGoBack()) {
+		if (fromDialog && router.canGoBack) {
 			markStarterPackCreated();
-			navigation.goBack();
+			router.back();
 			return;
 		}
 
-		navigation.replace('StarterPack', {
-			name: currentProfile!.did,
-			rkey,
-			new: true,
-		});
+		router.replace(router.build('StarterPack', { name: currentProfile!.did, new: true, rkey }));
 	};
 
 	const onSuccessEdit = () => {
-		if (navigation.canGoBack()) {
-			navigation.goBack();
+		if (router.canGoBack) {
+			router.back();
 		} else {
-			navigation.replace('StarterPack', {
-				name: currentAccount!.did,
-				rkey: parsed!.rkey,
-			});
+			router.replace(router.build('StarterPack', { name: currentAccount!.did, rkey: parsed!.rkey }));
 		}
 	};
 

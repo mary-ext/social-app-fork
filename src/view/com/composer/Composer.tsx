@@ -17,7 +17,6 @@ import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { isGraphemeLengthInRange } from '@atcute/util-text';
 
-import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
@@ -40,7 +39,6 @@ import {
 } from '#/lib/hooks/useOpenComposer';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
-import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
@@ -75,6 +73,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate } from '#/routes';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 
 import * as styles from './Composer.css';
@@ -135,7 +134,7 @@ export const ComposePost = ({
 	const { mutate: cleanupPublishedDraft } = useCleanupPublishedDraftMutation();
 	const { closeAllDialogs } = useDialogStateControlContext();
 	const { data: preferences } = usePreferencesQuery();
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
 
 	const [isPublishing, setIsPublishing] = useState(false);
 	const [publishingStage, setPublishingStage] = useState('');
@@ -758,7 +757,7 @@ export const ComposePost = ({
 								label: m['view.composer.publish.action.view'](),
 								onPress: () => {
 									const { repo: name, rkey } = parseCanonicalResourceUri(postUri);
-									navigation.navigate('PostThread', { name, rkey });
+									navigate('PostThread', { name, rkey });
 								},
 							}
 						: undefined,
@@ -778,7 +777,7 @@ export const ComposePost = ({
 		getFilteredThread,
 		initQuote,
 		isPublishing,
-		navigation,
+		navigate,
 		onClose,
 		onPost,
 		onPostSuccess,

@@ -1,9 +1,6 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useNavigation } from '@react-navigation/native';
-
-import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
+import { useTitle } from '#/lib/hooks/useTitle';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -22,11 +19,10 @@ import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+import { useParams, useRouter } from '#/routes';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>;
-
-export const ProfileFollowersScreen = ({ route }: Props) => {
-	const { name } = route.params;
+export const ProfileFollowersScreen = () => {
+	const { name } = useParams('ProfileFollowers');
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({
 		did: resolvedDid,
@@ -34,7 +30,11 @@ export const ProfileFollowersScreen = ({ route }: Props) => {
 
 	const followersCount = profile?.followersCount;
 
-	useSetTitle(profile ? m['screens.profile.follow.followers.title']({ handle: profile.handle }) : undefined);
+	useTitle(
+		profile
+			? m['screens.profile.follow.followers.title']({ handle: profile.handle })
+			: m['navigation.followers.title'](),
+	);
 
 	return (
 		<Layout.Screen>
@@ -64,7 +64,7 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 }
 
 function ProfileFollowers({ name, initialCount }: { name: string; initialCount?: number }) {
-	const navigation = useNavigation();
+	const router = useRouter();
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 
@@ -121,7 +121,7 @@ function ProfileFollowers({ name, initialCount }: { name: string; initialCount?:
 					color: 'secondary',
 					size: 'small',
 					onPress: () => {
-						navigation.goBack();
+						router.back();
 					},
 				}}
 			/>

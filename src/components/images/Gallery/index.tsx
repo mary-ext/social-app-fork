@@ -1,9 +1,10 @@
 import { cloneElement, createContext, isValidElement, use, useState } from 'react';
 
-import { useIsFocused } from '@react-navigation/native';
 import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/merge-refs';
+
+import { useIsFocused } from '#/routes';
 
 import * as css from './index.css';
 

@@ -1,10 +1,7 @@
 import { createContext } from 'react';
 import { type GestureResponderEvent, Keyboard, View, type ViewStyle } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { HITSLOP_30 } from '#/lib/constants';
-import type { NavigationProp } from '#/lib/routes/types';
 
 import { useSetDrawerOpen } from '#/state/shell';
 
@@ -23,6 +20,7 @@ import {
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
+import { useNavigate, useRouter } from '#/routes';
 
 const webViewStyle = (style: unknown): ViewStyle => {
 	return style as ViewStyle;
@@ -88,15 +86,16 @@ export function Slot({ children }: { children?: React.ReactNode }) {
 }
 
 export function BackButton({ onPress, style, ...props }: Partial<ButtonProps>) {
-	const navigation = useNavigation<NavigationProp>();
+	const navigate = useNavigate();
+	const router = useRouter();
 
 	const onPressBack = (evt: GestureResponderEvent) => {
 		onPress?.(evt);
 		if (evt.defaultPrevented) return;
-		if (navigation.canGoBack()) {
-			navigation.goBack();
+		if (router.canGoBack) {
+			router.back();
 		} else {
-			navigation.navigate('Home');
+			navigate('Home');
 		}
 	};
 

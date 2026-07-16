@@ -5,6 +5,7 @@ import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { useQueryClient } from '@tanstack/react-query';
 import debounce from 'lodash.debounce';
 
+import { useTitle } from '#/lib/hooks/useTitle';
 import { interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
 
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
@@ -28,6 +29,7 @@ import { m } from '#/paraglide/messages';
 import * as styles from './InterestsSettings.css';
 
 export function InterestsSettingsScreen() {
+	useTitle(m['common.interest.yourInterests']());
 	const { data: preferences } = usePreferencesQuery();
 	const [isSaving, setIsSaving] = useState(false);
 

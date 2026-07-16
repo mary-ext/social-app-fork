@@ -2,10 +2,8 @@ import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-
 import { MagnifyingGlassIcon } from '#/lib/icons';
-import type { NavigationProp } from '#/lib/routes/types';
+import { useFocusEffect, useRoute } from '#/lib/router';
 
 import { focusSearch, softReset } from '#/state/events';
 import { useSession } from '#/state/session';
@@ -18,6 +16,7 @@ import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import { buildPath, useNavigate, useRouter, useSetParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { Explore } from './Explore';
@@ -52,7 +51,9 @@ export function SearchScreenShell({
 	navButton?: 'back' | 'menu';
 	inputPlaceholder?: string;
 }) {
-	const navigation = useNavigation<NavigationProp>();
+	const router = useRouter();
+	const navigate = useNavigate();
+	const setParams = useSetParams();
 	const route = useRoute();
 	const navigateToPath = useNavigateToPath();
 
@@ -77,12 +78,12 @@ export function SearchScreenShell({
 
 	const navigateToQuery = (nextQuery: string) => {
 		scrollToTopWeb();
-		// @ts-expect-error route params are not typesafe
-		navigation.push(route.name, { ...route.params, q: nextQuery });
+		// dynamic route name (Search or ProfileSearch), so build the URL untyped.
+		router.push(buildPath(route.name, { ...route.params, q: nextQuery }));
 	};
 
 	const navigateToProfile = (profile: AnyProfileView) => {
-		navigation.navigate('Profile', { name: profile.did });
+		navigate('Profile', { name: profile.did });
 	};
 
 	const navigateToExplore = useCallback(() => {
@@ -95,9 +96,8 @@ export function SearchScreenShell({
 		} = (route.params ?? {}) as {
 			[key: string]: string;
 		};
-		// @ts-expect-error route params are not typesafe
-		navigation.push(route.name, parameters);
-	}, [navigation, route.name, route.params]);
+		router.push(buildPath(route.name, parameters));
+	}, [route.name, route.params, router]);
 
 	const onSoftReset = useCallback(() => {
 		if (queryWithParams) {
@@ -120,7 +120,7 @@ export function SearchScreenShell({
 
 		// If a tab is specified, set the tab parameter so a subsequent search lands on it
 		if (tab) {
-			navigation.setParams({ ...route.params, tab });
+			setParams({ tab });
 		}
 	};
 
