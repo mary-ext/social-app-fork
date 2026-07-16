@@ -3,54 +3,77 @@
 // For a full list of overridable settings, and general information on folder-specific settings,
 // see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
-	"languages": {
-		"JSON": {
-			"prettier": {
-				"allowed": false
-			},
-			"formatter": [
-				{
-					"language_server": {
-						"name": "oxfmt"
-					}
+	"lsp": {
+		"oxfmt": {
+			"initialization_options": {
+				"settings": {
+					"fmt.configPath": null,
+					"run": "onSave"
 				}
-			]
+			}
+		},
+		"oxlint": {
+			"initialization_options": {
+				"settings": {
+					"configPath": null,
+					"disableNestedConfig": false,
+					"fixKind": "safe_fix",
+					"run": "onType",
+					"unusedDisableDirectives": "deny"
+				}
+			}
+		}
+	},
+	"languages": {
+		"CSS": {
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"prettier": { "allowed": false }
+		},
+		"HTML": {
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"prettier": { "allowed": false }
 		},
 		"JavaScript": {
-			"prettier": {
-				"allowed": false
-			},
-			"formatter": [
-				{
-					"language_server": {
-						"name": "oxfmt"
-					}
-				}
-			]
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }, { "code_action": "source.fixAll.oxc" }],
+			"prettier": { "allowed": false }
 		},
-		"TypeScript": {
-			"prettier": {
-				"allowed": false
-			},
-			"formatter": [
-				{
-					"language_server": {
-						"name": "oxfmt"
-					}
-				}
-			]
+		"JSON": {
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"prettier": { "allowed": false }
+		},
+		"JSONC": {
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"prettier": { "allowed": false }
+		},
+		"Markdown": {
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"prettier": { "allowed": false }
+		},
+		"TOML": {
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"prettier": { "allowed": false }
 		},
 		"TSX": {
-			"prettier": {
-				"allowed": false
-			},
-			"formatter": [
-				{
-					"language_server": {
-						"name": "oxfmt"
-					}
-				}
-			]
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }, { "code_action": "source.fixAll.oxc" }],
+			"prettier": { "allowed": false }
+		},
+		"TypeScript": {
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }, { "code_action": "source.fixAll.oxc" }],
+			"prettier": { "allowed": false }
+		},
+		"YAML": {
+			"format_on_save": "on",
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"prettier": { "allowed": false }
 		}
 	}
 }
