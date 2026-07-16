@@ -154,7 +154,7 @@ export function useWritePostgateMutation() {
 	return useMutation({
 		mutationFn: async ({ postUri, postgate }: { postUri: string; postgate: AppBskyFeedPostgate.Main }) => {
 			return writePostgateRecord({
-				did: currentAccount!.did as Did,
+				did: currentAccount!.did,
 				pds: pds!,
 				postUri,
 				postgate,
@@ -199,30 +199,27 @@ export function useToggleQuoteDetachmentMutation() {
 				});
 			}
 
-			await upsertPostgate(
-				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri: quoteUri },
-				(prev) => {
-					if (prev) {
-						if (action === 'detach') {
-							return mergePostgateRecords(prev, {
-								detachedEmbeddingUris: [post.uri],
-							});
-						} else if (action === 'reattach') {
-							return {
-								...prev,
-								detachedEmbeddingUris: prev.detachedEmbeddingUris?.filter((uri) => uri !== post.uri) || [],
-							};
-						}
-					} else {
-						if (action === 'detach') {
-							return createPostgateRecord({
-								post: quoteUri as ResourceUri,
-								detachedEmbeddingUris: [post.uri],
-							});
-						}
+			await upsertPostgate({ appview, did: currentAccount!.did, pds: pds!, postUri: quoteUri }, (prev) => {
+				if (prev) {
+					if (action === 'detach') {
+						return mergePostgateRecords(prev, {
+							detachedEmbeddingUris: [post.uri],
+						});
+					} else if (action === 'reattach') {
+						return {
+							...prev,
+							detachedEmbeddingUris: prev.detachedEmbeddingUris?.filter((uri) => uri !== post.uri) || [],
+						};
 					}
-				},
-			);
+				} else {
+					if (action === 'detach') {
+						return createPostgateRecord({
+							post: quoteUri as ResourceUri,
+							detachedEmbeddingUris: [post.uri],
+						});
+					}
+				}
+			});
 		},
 		async onSuccess(_data, { post, quoteUri, action }) {
 			if (action === 'reattach') {

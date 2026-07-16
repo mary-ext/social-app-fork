@@ -1,7 +1,7 @@
 import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
 import type { AppBskyGraphDefs, AppBskyGraphList, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Did, ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -85,7 +85,7 @@ export function useListCreateMutation() {
 			const res = await createRecord(pds!, {
 				collection: 'app.bsky.graph.list',
 				record,
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 			});
 
 			// wait for the appview to update
@@ -185,7 +185,7 @@ export function useListDeleteMutation() {
 					collection: 'app.bsky.graph.listitem',
 					cursor,
 					limit: 100,
-					repo: currentAccount.did as Did,
+					repo: currentAccount.did,
 				});
 				listitemRecordUris = listitemRecordUris.concat(
 					res.records.filter((record) => record.value.list === uri).map((record) => record.uri),
@@ -204,7 +204,7 @@ export function useListDeleteMutation() {
 				await ok(
 					pds!.post('com.atproto.repo.applyWrites', {
 						input: {
-							repo: currentAccount.did as Did,
+							repo: currentAccount.did,
 							writes: writesChunk,
 						},
 					}),
@@ -267,7 +267,7 @@ export function useListBlockMutation() {
 						createdAt: new Date().toISOString(),
 						subject: uri as ResourceUri,
 					},
-					repo: currentAccount.did as Did,
+					repo: currentAccount.did,
 				});
 			} else {
 				const data = await ok(
@@ -279,7 +279,7 @@ export function useListBlockMutation() {
 				if (blocked) {
 					await deleteRecord(pds!, {
 						collection: 'app.bsky.graph.listblock',
-						repo: currentAccount.did as Did,
+						repo: currentAccount.did,
 						rkey: parseCanonicalResourceUri(blocked).rkey,
 					});
 				}

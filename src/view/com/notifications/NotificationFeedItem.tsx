@@ -15,7 +15,6 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
@@ -753,7 +752,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			setIsLoading(true);
 			const data = await ok(
 				chat.get('chat.bsky.convo.getConvoForMembers', {
-					params: { members: [profile.did, currentAccount.did as Did] },
+					params: { members: [profile.did, currentAccount.did] },
 				}),
 			);
 			navigate('MessagesConversation', {

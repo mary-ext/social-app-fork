@@ -13,7 +13,7 @@ import {
 
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
-import type { Did, ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { isGraphemeLengthInRange } from '@atcute/util-text';
 
@@ -639,7 +639,7 @@ export const ComposePost = ({
 		try {
 			logger.info(`composer: posting...`);
 			postUri = (
-				await apilib.post({ appview, did: currentDid as Did, pds: pds! }, queryClient, {
+				await apilib.post({ appview, did: currentDid, pds: pds! }, queryClient, {
 					thread: filteredThread,
 					replyTo: replyTo?.uri,
 					onStateChange: setPublishingStage,

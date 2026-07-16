@@ -1,5 +1,4 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -39,7 +38,7 @@ export function useUpdateActorDeclaration({
 				allowGroupInvites: update.allowGroupInvites ?? current?.associated?.chat?.allowGroupInvites,
 			});
 			await putRecord(pds, {
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 				collection: 'chat.bsky.actor.declaration',
 				rkey: 'self',
 				record: {

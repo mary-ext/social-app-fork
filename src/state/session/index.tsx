@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import type { Did as AtcuteDid } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { deleteStoredSession, OAuthResponseError, TokenRefreshError } from '@atcute/oauth-browser-client';
 
 import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
@@ -68,7 +68,7 @@ function signOut({ accounts, clearDids = [] }: { accounts: SessionAccount[]; cle
 function dropToGuestSession(
 	accounts: SessionAccount[],
 	setClients: (clients: Clients) => void,
-	setCurrentDid: (did: string | undefined) => void,
+	setCurrentDid: (did: Did | undefined) => void,
 	setStatus: (status: SessionBootStatus) => void,
 ) {
 	writeSession({ accounts, currentAccountDid: undefined });
@@ -136,7 +136,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		: boot.accounts.find((a) => a.did === boot.currentAccountDid);
 	const [accounts, setAccounts] = useState<SessionAccount[]>(boot.accounts);
 	const [clients, setClients] = useState<Clients>(createGuestClients);
-	const [currentDid, setCurrentDid] = useState<string | undefined>(undefined);
+	const [currentDid, setCurrentDid] = useState<Did | undefined>(undefined);
 	const [status, setStatus] = useState<SessionBootStatus>(() => (bootAccount ? 'resuming' : 'idle'));
 
 	// Boot: resume the persisted current account exactly once. This is the only
@@ -297,7 +297,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 	const removeAccount = useCallback<SessionApiContext['removeAccount']>(
 		(account) => {
-			deleteStoredSession(account.did as AtcuteDid);
+			deleteStoredSession(account.did);
 			void clearPersistedQueryStorage(account.did);
 			const nextAccounts = accounts.filter((a) => a.did !== account.did);
 			if (account.did === currentDid) {

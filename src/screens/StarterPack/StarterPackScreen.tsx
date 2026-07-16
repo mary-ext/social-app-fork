@@ -3,7 +3,6 @@ import { View } from 'react-native';
 
 import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { definite } from '@mary/array-fns';
@@ -292,7 +291,7 @@ function Header({
 
 		let followUris: Map<string, string>;
 		try {
-			followUris = await bulkWriteFollows({ appview, did: currentAccount!.did as Did, pds: pds! }, dids, {
+			followUris = await bulkWriteFollows({ appview, did: currentAccount!.did, pds: pds! }, dids, {
 				cid: starterPack.cid,
 				uri: starterPack.uri,
 			});

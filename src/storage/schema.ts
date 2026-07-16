@@ -1,3 +1,5 @@
+import type { Did } from '@atcute/lexicons';
+
 import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 
 import type { Gif } from '#/features/gifPicker/types';
@@ -66,10 +68,10 @@ export type Auth = {
 
 export type AuthSession = {
 	accounts: AuthAccount[];
-	currentAccountDid?: string;
+	currentAccountDid?: Did;
 };
 
 export type AuthAccount = {
-	did: string;
+	did: Did;
 	handle: string;
 };

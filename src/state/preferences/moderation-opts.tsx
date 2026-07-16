@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import type { Did } from '@atcute/lexicons';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
@@ -37,7 +36,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 					labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
 				}));
 		return {
-			viewerDid: userDid as Did | undefined,
+			viewerDid: userDid,
 			prefs: toModerationPreferences({ ...moderationPrefs, labelers }),
 			labelDefs,
 		};

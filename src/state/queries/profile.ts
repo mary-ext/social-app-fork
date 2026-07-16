@@ -346,7 +346,7 @@ function useProfileFollowMutation() {
 					createdAt: new Date().toISOString(),
 					subject: did as Did,
 				},
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 			});
 		},
 	});
@@ -359,7 +359,7 @@ function useProfileUnfollowMutation() {
 		mutationFn: async ({ followUri }) => {
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.graph.follow',
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 				rkey: parseCanonicalResourceUri(followUri).rkey,
 			});
 		},
@@ -522,7 +522,7 @@ function useProfileBlockMutation() {
 					createdAt: new Date().toISOString(),
 					subject: did as Did,
 				},
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 			});
 		},
 		onSuccess(_, { did }) {
@@ -543,7 +543,7 @@ function useProfileUnblockMutation() {
 			}
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.graph.block',
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 				rkey: parseCanonicalResourceUri(blockUri).rkey,
 			});
 		},

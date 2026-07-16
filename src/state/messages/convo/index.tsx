@@ -77,7 +77,7 @@ export function ConvoProvider({
 		throw new Error('ConvoProvider must be rendered while signed in');
 	}
 	return (
-		<ConvoProviderInner chat={chat} convoId={convoId} currentDid={currentAccount.did as Did}>
+		<ConvoProviderInner chat={chat} convoId={convoId} currentDid={currentAccount.did}>
 			{children}
 		</ConvoProviderInner>
 	);

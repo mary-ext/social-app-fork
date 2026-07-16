@@ -11,7 +11,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
-import type { $type, Did, GenericUri } from '@atcute/lexicons';
+import type { $type, GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -257,7 +257,7 @@ export function useUpsertLiveStatusMutation(
 			} satisfies AppBskyActorStatus.Main;
 
 			const upsert = async () => {
-				const repo = currentAccount.did as Did;
+				const repo = currentAccount.did;
 				const collection = 'app.bsky.actor.status';
 
 				const existing = await getRecord(pds!, { collection, repo, rkey: 'self' }).catch(() => undefined);
@@ -328,7 +328,7 @@ export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.actor.status',
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 				rkey: 'self',
 			});
 		},

@@ -1,5 +1,5 @@
 import { ok } from '@atcute/client';
-import type { ActorIdentifier, ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -40,7 +40,7 @@ export function usePinnedPostMutation() {
 				if (!currentAccount) throw new Error('Not signed in');
 				const profile = await ok(
 					appview.get('app.bsky.actor.getProfile', {
-						params: { actor: currentAccount.did as ActorIdentifier },
+						params: { actor: currentAccount.did },
 					}),
 				);
 				prevPinnedPost = profile.pinnedPost?.uri;

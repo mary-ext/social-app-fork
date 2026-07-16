@@ -3,7 +3,6 @@ import type {
 	AppBskyNotificationDeclaration,
 	AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
-import type { Did } from '@atcute/lexicons';
 
 import {
 	type InfiniteData,
@@ -33,7 +32,7 @@ export function useNotificationDeclarationQuery() {
 			try {
 				return await getRecord(pds!, {
 					collection: 'app.bsky.notification.declaration',
-					repo: currentAccount!.did as Did,
+					repo: currentAccount!.did,
 					rkey: 'self',
 				});
 			} catch (err) {
@@ -61,7 +60,7 @@ export function useNotificationDeclarationMutation() {
 			return await putRecord(pds!, {
 				collection: 'app.bsky.notification.declaration',
 				record,
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 				rkey: 'self',
 			});
 		},

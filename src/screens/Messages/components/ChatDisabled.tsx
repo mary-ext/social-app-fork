@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { ok } from '@atcute/client';
-import type { Did } from '@atcute/lexicons';
 
 import { useMutation } from '@tanstack/react-query';
 import { clsx } from 'clsx';
@@ -93,7 +92,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 						reasonType: OzoneReason.REASONAPPEAL,
 						subject: {
 							$type: 'com.atproto.admin.defs#repoRef',
-							did: currentAccount.did as Did,
+							did: currentAccount.did,
 						},
 						reason: details,
 					},

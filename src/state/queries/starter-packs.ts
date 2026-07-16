@@ -7,7 +7,7 @@ import type {
 	AppBskyRichtextFacet,
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
+import type { Handle, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -111,7 +111,7 @@ export function useCreateStarterPackMutation({
 
 	return useMutation<{ uri: string; cid: string }, Error, UseCreateStarterPackMutationParams>({
 		mutationFn: async ({ name, description, feeds, profiles }) => {
-			const did = currentAccount!.did as Did;
+			const did = currentAccount!.did;
 			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
 			if (description) {
 				descriptionFacets = await detectDescriptionFacets(appview, description);
@@ -176,7 +176,7 @@ export function useEditStarterPackMutation({
 		}
 	>({
 		mutationFn: async ({ name, description, feeds, profiles, currentStarterPack, currentListItems }) => {
-			const did = currentAccount!.did as Did;
+			const did = currentAccount!.did;
 			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
 			if (description) {
 				descriptionFacets = await detectDescriptionFacets(appview, description);
@@ -297,13 +297,13 @@ export function useDeleteStarterPackMutation({
 			if (listUri) {
 				await deleteRecord(pds!, {
 					collection: 'app.bsky.graph.list',
-					repo: currentAccount.did as Did,
+					repo: currentAccount.did,
 					rkey: parseCanonicalResourceUri(listUri).rkey,
 				});
 			}
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.graph.starterpack',
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 				rkey,
 			});
 		},

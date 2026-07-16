@@ -1,6 +1,6 @@
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { type ActorIdentifier, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useParams, useRoute } from '@oomfware/stacker';
 
@@ -191,9 +191,7 @@ function WizardInner({
 		if (router.canGoBack) {
 			router.back();
 		} else {
-			router.replace(
-				router.build('StarterPack', { actor: currentAccount!.did as ActorIdentifier, rkey: parsed!.rkey }),
-			);
+			router.replace(router.build('StarterPack', { actor: currentAccount!.did, rkey: parsed!.rkey }));
 		}
 	};
 

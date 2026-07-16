@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
+import type { Handle, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -190,7 +190,7 @@ function usePostLikeMutation() {
 					subject: { cid: cid, uri: uri as ResourceUri },
 					via: via && { cid: via.cid, uri: via.uri as ResourceUri },
 				},
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 			});
 		},
 	});
@@ -203,7 +203,7 @@ function usePostUnlikeMutation() {
 		mutationFn: ({ postUri: _postUri, likeUri }) => {
 			return deleteRecord(pds!, {
 				collection: 'app.bsky.feed.like',
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 				rkey: parseCanonicalResourceUri(likeUri).rkey,
 			});
 		},
@@ -285,7 +285,7 @@ function usePostRepostMutation() {
 					subject: { cid: cid, uri: uri as ResourceUri },
 					via: via && { cid: via.cid, uri: via.uri as ResourceUri },
 				},
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 			});
 		},
 	});
@@ -298,7 +298,7 @@ function usePostUnrepostMutation() {
 		mutationFn: ({ postUri: _postUri, repostUri }) => {
 			return deleteRecord(pds!, {
 				collection: 'app.bsky.feed.repost',
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 				rkey: parseCanonicalResourceUri(repostUri).rkey,
 			});
 		},
@@ -313,7 +313,7 @@ export function usePostDeleteMutation() {
 		mutationFn: async ({ uri }) => {
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.feed.post',
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 				rkey: parseCanonicalResourceUri(uri).rkey,
 			});
 		},

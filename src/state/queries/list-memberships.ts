@@ -88,7 +88,7 @@ export function useListMembershipAddMutation({
 					list: listUri as ResourceUri,
 					subject: actorDid as Did,
 				},
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 			});
 			// TODO
 			// we need to wait for appview to update, but there's not an efficient
@@ -194,7 +194,7 @@ export function useListMembershipRemoveMutation({
 			const membershipUrip = parseCanonicalResourceUri(membershipUri);
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.graph.listitem',
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 				rkey: membershipUrip.rkey,
 			});
 			// TODO

@@ -1,4 +1,4 @@
-import type { Did, ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useMutation } from '@tanstack/react-query';
@@ -19,7 +19,7 @@ export function useLikeMutation() {
 					createdAt: new Date().toISOString(),
 					subject: { cid: cid, uri: uri as ResourceUri },
 				},
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 			});
 			return { uri: res.uri };
 		},
@@ -33,7 +33,7 @@ export function useUnlikeMutation() {
 		mutationFn: async ({ uri }: { uri: string }) => {
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.feed.like',
-				repo: currentAccount!.did as Did,
+				repo: currentAccount!.did,
 				rkey: parseCanonicalResourceUri(uri).rkey,
 			});
 		},

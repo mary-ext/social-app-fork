@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { ok } from '@atcute/client';
-import type { Did } from '@atcute/lexicons';
 
 import { saveBytesToDisk } from '#/lib/media/manip';
 
@@ -45,7 +44,7 @@ function DialogInner() {
 		}
 		try {
 			setLoading('repo');
-			const did = currentAccount.did as Did;
+			const did = currentAccount.did;
 			const carData = await ok(pds.get('com.atproto.sync.getRepo', { params: { did }, as: 'bytes' }));
 			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
 			saveBytesToDisk('repo.car', carData as Uint8Array<ArrayBuffer>, 'application/vnd.ipld.car');

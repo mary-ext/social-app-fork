@@ -1,6 +1,5 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
@@ -26,7 +25,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
 				accumulate((cursor) =>
 					ok(
 						appview.get('app.bsky.graph.getLists', {
-							params: { actor: currentAccount!.did as ActorIdentifier, cursor, limit: 50 },
+							params: { actor: currentAccount!.did, cursor, limit: 50 },
 						}),
 					).then((data) => ({ cursor: data.cursor, items: data.lists })),
 				),

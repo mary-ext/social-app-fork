@@ -180,7 +180,7 @@ export function useSetThreadgateAllowMutation() {
 	return useMutation({
 		mutationFn: async ({ postUri, allow }: { postUri: string; allow: ThreadgateAllowUISetting[] }) => {
 			return upsertThreadgate(
-				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri },
+				{ appview, did: currentAccount!.did, pds: pds!, postUri },
 				(prev): AppBskyFeedThreadgate.Main | undefined => {
 					if (prev) {
 						return {
@@ -253,7 +253,7 @@ export function useToggleReplyVisibilityMutation() {
 			}
 
 			await upsertThreadgate(
-				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri },
+				{ appview, did: currentAccount!.did, pds: pds!, postUri },
 				(prev): AppBskyFeedThreadgate.Main | undefined => {
 					if (prev) {
 						if (action === 'hide') {
