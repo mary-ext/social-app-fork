@@ -1,5 +1,5 @@
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
-import type { $type } from '@atcute/lexicons';
+import type { $type, Nsid } from '@atcute/lexicons';
 
 export type ReportSubjectConvoMessage = {
 	view: 'convo' | 'message';
@@ -29,7 +29,7 @@ export type ParsedReportSubject =
 			type: 'post';
 			uri: string;
 			cid: string;
-			nsid: string;
+			nsid: Nsid;
 			attributes: {
 				reply: boolean;
 				image: boolean;
@@ -42,30 +42,30 @@ export type ParsedReportSubject =
 			type: 'status';
 			uri: string;
 			cid: string;
-			nsid: string;
+			nsid: Nsid;
 	  }
 	| {
 			type: 'list';
 			uri: string;
 			cid: string;
-			nsid: string;
+			nsid: Nsid;
 	  }
 	| {
 			type: 'feed';
 			uri: string;
 			cid: string;
-			nsid: string;
+			nsid: Nsid;
 	  }
 	| {
 			type: 'starterPack';
 			uri: string;
 			cid: string;
-			nsid: string;
+			nsid: Nsid;
 	  }
 	| {
 			type: 'account';
 			did: string;
-			nsid: string;
+			nsid: Nsid;
 	  }
 	| ({
 			type: 'convoMessage';
