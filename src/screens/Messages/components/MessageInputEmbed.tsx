@@ -3,12 +3,7 @@ import { LayoutAnimation, View } from 'react-native';
 
 import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
-import {
-	type ActorIdentifier,
-	parseCanonicalResourceUri,
-	type RecordKey,
-	type ResourceUri,
-} from '@atcute/lexicons/syntax';
+import { parseCanonicalResourceUri, type ResourceUri } from '@atcute/lexicons/syntax';
 
 import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -18,6 +13,7 @@ import {
 	isBskyChatInviteUrl,
 	isBskyPostUrl,
 	makeRecordUri,
+	parseBskyRecordUrl,
 } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -85,13 +81,8 @@ export function useMessageEmbed() {
 
 			if (isBskyPostUrl(embedUrl)) {
 				const url = convertBskyAppUrlIfNeeded(embedUrl);
-				const [_0, user, _1, rkey] = url.split('/').filter(Boolean) as [
-					string,
-					ActorIdentifier,
-					string,
-					RecordKey,
-				];
-				const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey);
+				const { actor, rkey } = parseBskyRecordUrl(url);
+				const uri = makeRecordUri(actor, 'app.bsky.feed.post', rkey);
 				setEmbedState({ type: 'post', uri });
 			}
 		},

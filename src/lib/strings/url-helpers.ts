@@ -22,6 +22,26 @@ export function makeRecordUri(didOrName: ActorIdentifier, collection: Nsid, rkey
 	return `at://${didOrName}/${collection}/${rkey}`;
 }
 
+/**
+ * extracts the branded actor and record key from a normalized bsky.app record path of the form
+ * `/profile/{actor}/{collection}/{rkey}`, as produced by {@link convertBskyAppUrlIfNeeded}.
+ *
+ * the two segments are asserted, not runtime-validated: callers must have already matched the path with one
+ * of the `isBsky*Url` guards, whose accepted shape guarantees these positions.
+ *
+ * @param path normalized bsky.app record path
+ * @returns the actor identifier and record key from the path
+ */
+export function parseBskyRecordUrl(path: string): { actor: ActorIdentifier; rkey: RecordKey } {
+	const [_0, actor, _1, rkey] = path.split('/').filter(Boolean) as [
+		string,
+		ActorIdentifier,
+		string,
+		RecordKey,
+	];
+	return { actor, rkey };
+}
+
 export function toNiceDomain(url: string): string {
 	try {
 		const urlp = new URL(url);

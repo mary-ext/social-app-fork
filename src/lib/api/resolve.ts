@@ -1,7 +1,7 @@
 import type { ComAtprotoRepoStrongRef } from '@atcute/atproto';
 import type { AppBskyEmbedExternal, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { ActorIdentifier, Did, RecordKey, ResourceUri } from '@atcute/lexicons';
+import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
@@ -17,6 +17,7 @@ import {
 	isBskyStartUrl,
 	isShortLink,
 	makeRecordUri,
+	parseBskyRecordUrl,
 } from '#/lib/strings/url-helpers';
 
 import { type ComposerImage, createComposerImage } from '#/state/gallery';
@@ -86,13 +87,8 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 	if (isBskyPostUrl(uri)) {
 		uri = convertBskyAppUrlIfNeeded(uri);
-		const [_0, user, _1, rkey] = uri.split('/').filter(Boolean) as [
-			string,
-			ActorIdentifier,
-			string,
-			RecordKey,
-		];
-		const recordUri = makeRecordUri(user, 'app.bsky.feed.post', rkey);
+		const { actor, rkey } = parseBskyRecordUrl(uri);
+		const recordUri = makeRecordUri(actor, 'app.bsky.feed.post', rkey);
 		const post = await getPost({ uri: recordUri });
 		if (post.viewer?.embeddingDisabled) {
 			throw new EmbeddingDisabledError();
@@ -109,13 +105,8 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 	if (isBskyCustomFeedUrl(uri)) {
 		uri = convertBskyAppUrlIfNeeded(uri);
-		const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [
-			string,
-			ActorIdentifier,
-			string,
-			RecordKey,
-		];
-		const did = await fetchDid(handleOrDid);
+		const { actor, rkey } = parseBskyRecordUrl(uri);
+		const did = await fetchDid(actor);
 		const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey);
 		const res = await ok(appview.get('app.bsky.feed.getFeedGenerator', { params: { feed } }));
 		return {
@@ -130,13 +121,8 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 	if (isBskyListUrl(uri)) {
 		uri = convertBskyAppUrlIfNeeded(uri);
-		const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [
-			string,
-			ActorIdentifier,
-			string,
-			RecordKey,
-		];
-		const did = await fetchDid(handleOrDid);
+		const { actor, rkey } = parseBskyRecordUrl(uri);
+		const did = await fetchDid(actor);
 		const list = makeRecordUri(did, 'app.bsky.graph.list', rkey);
 		const res = await ok(appview.get('app.bsky.graph.getList', { params: { list } }));
 		return {
