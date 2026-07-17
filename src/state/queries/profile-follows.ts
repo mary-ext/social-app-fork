@@ -4,6 +4,7 @@ import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { useClients } from '#/state/session';
 
@@ -71,3 +72,7 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});

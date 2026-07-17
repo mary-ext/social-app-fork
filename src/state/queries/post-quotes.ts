@@ -10,6 +10,7 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useClients } from '#/state/session';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
@@ -114,3 +115,8 @@ export function* findAllPostsInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findPosts: findAllPostsInQueryData,
+	findProfiles: findAllProfilesInQueryData,
+});

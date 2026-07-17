@@ -36,6 +36,7 @@ import { DISCOVER_FEED_URI } from '#/lib/constants';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { useClients, useSession } from '#/state/session';
@@ -554,3 +555,8 @@ export function resetProfilePostsQueries(queryClient: QueryClient, did: string, 
 		});
 	}, timeout);
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findPosts: findAllPostsInQueryData,
+	findProfiles: findAllProfilesInQueryData,
+});

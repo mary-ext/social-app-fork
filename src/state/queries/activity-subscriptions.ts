@@ -14,6 +14,7 @@ import {
 
 import { getRecord, putRecord } from '#/lib/api/records';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useClients, useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
@@ -106,3 +107,7 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders('activity-subscriptions', {
+	findProfiles: findAllProfilesInQueryData,
+});

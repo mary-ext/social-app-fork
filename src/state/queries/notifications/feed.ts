@@ -19,6 +19,7 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
 import { useClients } from '#/state/session';
@@ -304,3 +305,8 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findPosts: findAllPostsInQueryData,
+	findProfiles: findAllProfilesInQueryData,
+});

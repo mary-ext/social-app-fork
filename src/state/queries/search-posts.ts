@@ -10,6 +10,7 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 
 import { liftSearchQuery } from '#/lib/bsky/search';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useClients, useSession } from '#/state/session';
 
@@ -182,3 +183,7 @@ export function* findAllPostsInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(searchPostsQueryKeyRoot, {
+	findPosts: findAllPostsInQueryData,
+});

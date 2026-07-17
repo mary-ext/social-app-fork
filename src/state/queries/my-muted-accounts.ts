@@ -3,6 +3,7 @@ import { ok } from '@atcute/client';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useClients } from '#/state/session';
 
 const RQKEY_ROOT = 'my-muted-accounts';
@@ -51,3 +52,7 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});

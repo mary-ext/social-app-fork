@@ -3,6 +3,7 @@ import { ok } from '@atcute/client';
 
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useClients } from '#/state/session';
 
 const DEFAULT_LIMIT = 10;
@@ -110,3 +111,7 @@ export function* findAllProfilesInQueryData(queryClient: QueryClient, did: strin
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});

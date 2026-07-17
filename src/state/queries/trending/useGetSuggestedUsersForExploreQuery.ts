@@ -5,6 +5,7 @@ import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -75,3 +76,7 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(getSuggestedUsersForExploreQueryKeyRoot, {
+	findProfiles: findAllProfilesInQueryData,
+});

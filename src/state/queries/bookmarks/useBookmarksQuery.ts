@@ -5,6 +5,7 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
 import { useClients } from '#/state/session';
 
@@ -116,3 +117,7 @@ export function* findAllPostsInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(bookmarksQueryKeyRoot, {
+	findPosts: findAllPostsInQueryData,
+});

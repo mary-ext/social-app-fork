@@ -8,6 +8,7 @@ import { ok } from '@atcute/client';
 
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { useOnMarkAsRead } from '#/state/queries/messages/list-conversations';
 import { useClients } from '#/state/session';
@@ -184,3 +185,7 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});

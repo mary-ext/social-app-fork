@@ -17,6 +17,7 @@ import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { cleanError } from '#/lib/strings/errors';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import type { FeedPostSlice, FeedPostSliceItem } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -436,3 +437,8 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findPosts: findAllPostsInQueryData,
+	findProfiles: findAllProfilesInQueryData,
+});

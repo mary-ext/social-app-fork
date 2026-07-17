@@ -13,6 +13,7 @@ import {
 } from '@tanstack/react-query';
 import throttle from 'lodash.throttle';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useMessagesEventBus } from '#/state/messages/events';
 import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
@@ -943,3 +944,7 @@ export function* findAllProfilesInQueryData(queryClient: QueryClient, did: strin
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});

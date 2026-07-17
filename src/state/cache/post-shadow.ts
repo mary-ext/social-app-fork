@@ -8,14 +8,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { KeyedEventEmitter } from '#/lib/keyed-event-emitter';
 
-import { findAllPostsInQueryData as findAllPostsInBookmarksQueryData } from '#/state/queries/bookmarks/useBookmarksQuery';
-import { findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData } from '#/state/queries/explore-feed-previews';
-import { findAllPostsInQueryData as findAllPostsInNotifsQueryData } from '#/state/queries/notifications/feed';
-import { findAllPostsInQueryData as findAllPostsInFeedQueryData } from '#/state/queries/post-feed';
-import { findAllPostsInQueryData as findAllPostsInQuoteQueryData } from '#/state/queries/post-quotes';
-import { findAllPostsInQueryData as findAllPostsInSearchQueryData } from '#/state/queries/search-posts';
-import { findAllPostsInQueryData as findAllPostsInThreadV2QueryData } from '#/state/queries/usePostThread/queryCache';
-
+import { getPostFinders } from './registry';
 import { castAsShadow, type Shadow } from './types';
 export type { Shadow } from './types';
 
@@ -154,25 +147,7 @@ export function updatePostShadow(queryClient: QueryClient, uri: string, value: P
 }
 
 function* findPostsInCache(queryClient: QueryClient, uri: string): Generator<AppBskyFeedDefs.PostView, void> {
-	for (const post of findAllPostsInFeedQueryData(queryClient, uri)) {
-		yield post;
-	}
-	for (const post of findAllPostsInNotifsQueryData(queryClient, uri)) {
-		yield post;
-	}
-	for (const post of findAllPostsInThreadV2QueryData(queryClient, uri)) {
-		yield post;
-	}
-	for (const post of findAllPostsInSearchQueryData(queryClient, uri)) {
-		yield post;
-	}
-	for (const post of findAllPostsInQuoteQueryData(queryClient, uri)) {
-		yield post;
-	}
-	for (const post of findAllPostsInExploreFeedPreviewsQueryData(queryClient, uri)) {
-		yield post;
-	}
-	for (const post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
-		yield post;
+	for (const findPosts of getPostFinders()) {
+		yield* findPosts(queryClient, uri);
 	}
 }

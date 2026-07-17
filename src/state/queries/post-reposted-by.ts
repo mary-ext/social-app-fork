@@ -4,6 +4,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { useClients } from '#/state/session';
 
 const PAGE_SIZE = 30;
@@ -59,3 +60,7 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});

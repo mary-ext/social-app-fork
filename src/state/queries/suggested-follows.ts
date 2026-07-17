@@ -8,6 +8,7 @@ import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { useClients } from '#/state/session';
 
@@ -119,3 +120,7 @@ function* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient: QueryCl
 		}
 	}
 }
+
+registerShadowFinders(suggestedFollowsQueryKeyRoot, {
+	findProfiles: findAllProfilesInQueryData,
+});

@@ -11,6 +11,7 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 
 import { dangerousGetPostShadow, updatePostShadow } from '#/state/cache/post-shadow';
+import { registerShadowFinders } from '#/state/cache/registry';
 import { findAllPostsInQueryData as findAllPostsInBookmarksQueryData } from '#/state/queries/bookmarks/useBookmarksQuery';
 import { findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData } from '#/state/queries/explore-feed-previews';
 import { findAllPostsInQueryData as findAllPostsInNotifsQueryData } from '#/state/queries/notifications/feed';
@@ -335,3 +336,8 @@ export function useUpdatePostThreadThreadgateQueryCache() {
 		});
 	};
 }
+
+registerShadowFinders(postThreadQueryKeyRoot, {
+	findPosts: findAllPostsInQueryData,
+	findProfiles: findAllProfilesInQueryData,
+});

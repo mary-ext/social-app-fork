@@ -3,6 +3,7 @@ import { ok } from '@atcute/client';
 
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { createQueryKey } from '#/state/queries/util';
 import { useClients } from '#/state/session';
@@ -62,3 +63,7 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});

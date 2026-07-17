@@ -9,34 +9,9 @@ import type { QueryClient } from '@tanstack/react-query';
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { KeyedEventEmitter } from '#/lib/keyed-event-emitter';
 
-import { findAllProfilesInQueryData as findAllProfilesInActivitySubscriptionsQueryData } from '#/state/queries/activity-subscriptions';
-import { findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData } from '#/state/queries/actor-search';
-import { findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData } from '#/state/queries/explore-feed-previews';
-import { findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData } from '#/state/queries/known-followers';
-import { findAllProfilesInQueryData as findAllProfilesInListMembersQueryData } from '#/state/queries/list-members';
-import { findAllProfilesInQueryData as findAllProfilesInGetConvoQueryData } from '#/state/queries/messages/conversation';
-import { findAllProfilesInQueryData as findAllProfilesInListConvoRequestsQueryData } from '#/state/queries/messages/list-conversation-requests';
-import { findAllProfilesInQueryData as findAllProfilesInListConvosQueryData } from '#/state/queries/messages/list-conversations';
-import { findAllProfilesInQueryData as findAllProfilesInMessagesQueryData } from '#/state/queries/messages/list-convo-members';
-import { findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData } from '#/state/queries/my-blocked-accounts';
-import { findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData } from '#/state/queries/my-muted-accounts';
-import { findAllProfilesInQueryData as findAllProfilesInNotifsQueryData } from '#/state/queries/notifications/feed';
-import {
-	type FeedPage,
-	findAllProfilesInQueryData as findAllProfilesInFeedsQueryData,
-} from '#/state/queries/post-feed';
-import { findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData } from '#/state/queries/post-liked-by';
-import { findAllProfilesInQueryData as findAllProfilesInPostQuotesQueryData } from '#/state/queries/post-quotes';
-import { findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData } from '#/state/queries/post-reposted-by';
-import { findAllProfilesInQueryData as findAllProfilesInProfileQueryData } from '#/state/queries/profile';
-import { findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData } from '#/state/queries/profile-followers';
-import { findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData } from '#/state/queries/profile-follows';
-import { findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData } from '#/state/queries/suggested-follows';
-import { findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForDiscoverQueryData } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
-import { findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForExploreQueryData } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
-import { findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForSeeMoreQueryData } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
-import { findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData } from '#/state/queries/usePostThread/queryCache';
+import type { FeedPage } from '#/state/queries/post-feed';
 
+import { getProfileFinders } from './registry';
 import { castAsShadow, type Shadow } from './types';
 
 export type { Shadow } from './types';
@@ -249,28 +224,7 @@ export function mergeShadow<TProfileView extends AnyProfileView>(
 }
 
 function* findProfilesInCache(queryClient: QueryClient, did: string): Generator<AnyProfileView, void> {
-	yield* findAllProfilesInListMembersQueryData(queryClient, did);
-	yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did);
-	yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did);
-	yield* findAllProfilesInPostLikedByQueryData(queryClient, did);
-	yield* findAllProfilesInPostRepostedByQueryData(queryClient, did);
-	yield* findAllProfilesInPostQuotesQueryData(queryClient, did);
-	yield* findAllProfilesInProfileQueryData(queryClient, did);
-	yield* findAllProfilesInProfileFollowersQueryData(queryClient, did);
-	yield* findAllProfilesInProfileFollowsQueryData(queryClient, did);
-	yield* findAllProfilesInSuggestedUsersForDiscoverQueryData(queryClient, did);
-	yield* findAllProfilesInSuggestedUsersForExploreQueryData(queryClient, did);
-	yield* findAllProfilesInSuggestedUsersForSeeMoreQueryData(queryClient, did);
-	yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did);
-	yield* findAllProfilesInActorSearchQueryData(queryClient, did);
-	yield* findAllProfilesInListConvosQueryData(queryClient, did);
-	yield* findAllProfilesInListConvoRequestsQueryData(queryClient, did);
-	yield* findAllProfilesInFeedsQueryData(queryClient, did);
-	yield* findAllProfilesInPostThreadV2QueryData(queryClient, did);
-	yield* findAllProfilesInKnownFollowersQueryData(queryClient, did);
-	yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did);
-	yield* findAllProfilesInActivitySubscriptionsQueryData(queryClient, did);
-	yield* findAllProfilesInNotifsQueryData(queryClient, did);
-	yield* findAllProfilesInMessagesQueryData(queryClient, did);
-	yield* findAllProfilesInGetConvoQueryData(queryClient, did);
+	for (const findProfiles of getProfileFinders()) {
+		yield* findProfiles(queryClient, did);
+	}
 }

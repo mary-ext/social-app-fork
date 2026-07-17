@@ -9,6 +9,7 @@ import {
 	useInfiniteQuery,
 } from '@tanstack/react-query';
 
+import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { useClients } from '#/state/session';
 
@@ -83,3 +84,7 @@ export function* findAllProfilesInQueryData(queryClient: QueryClient, did: strin
 		}
 	}
 }
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});
