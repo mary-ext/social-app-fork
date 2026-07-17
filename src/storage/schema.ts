@@ -1,4 +1,4 @@
-import type { Did } from '@atcute/lexicons';
+import type { Did, Handle } from '@atcute/lexicons';
 
 import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 
@@ -73,5 +73,5 @@ export type AuthSession = {
 
 export type AuthAccount = {
 	did: Did;
-	handle: string;
+	handle: Handle;
 };

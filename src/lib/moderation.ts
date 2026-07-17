@@ -8,7 +8,7 @@ import {
 	ModerationCauseType,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import type { Did } from '@atcute/lexicons';
+import type { Did, Handle } from '@atcute/lexicons';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -67,7 +67,7 @@ export function labelIsHideableOffense(label: ComAtprotoLabelDefs.Label): boolea
 	return ['!hide', '!takedown'].includes(label.val);
 }
 
-export function getLabelingServiceTitle({ displayName, handle }: { displayName?: string; handle: string }) {
+export function getLabelingServiceTitle({ displayName, handle }: { displayName?: string; handle: Handle }) {
 	return displayName ? sanitizeDisplayName(displayName) : `@${handle}`;
 }
 

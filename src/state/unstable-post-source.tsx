@@ -1,6 +1,7 @@
 import { useEffect, useId } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import type { Handle } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -72,7 +73,7 @@ export function useUnstablePostSource(key: string) {
 }
 
 /** Builds a post source key. This (atm) is a URI where the `host` is the post author's handle, not DID. */
-export function buildPostSourceKey(key: string, handle: string) {
+export function buildPostSourceKey(key: string, handle: Handle) {
 	const urip = parseResourceUri(key);
 	return `at://${handle}/${urip.collection}/${urip.rkey}`;
 }

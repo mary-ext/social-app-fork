@@ -1,4 +1,5 @@
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
+import type { Handle } from '@atcute/lexicons';
 
 // \u2705 = ✅
 // \u2713 = ✓
@@ -27,7 +28,7 @@ export function combinedDisplayName({
 	handle,
 	displayName,
 }: {
-	handle?: string;
+	handle?: Handle;
 	displayName?: string;
 }): string {
 	if (!handle) {
