@@ -1,4 +1,10 @@
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import {
+	type ActorIdentifier,
+	type Nsid,
+	parseResourceUri,
+	type RecordKey,
+	type ResourceUri,
+} from '@atcute/lexicons/syntax';
 
 import { BSKY_SERVICE } from '#/lib/constants';
 import { startUriToStarterPackUri } from '#/lib/strings/starter-pack';
@@ -12,7 +18,7 @@ const BSKY_TRUSTED_HOSTS = new Set([
 	...(import.meta.env.DEV ? ['localhost:19006', 'localhost:8100'] : []),
 ]);
 
-export function makeRecordUri(didOrName: string, collection: string, rkey: string) {
+export function makeRecordUri(didOrName: ActorIdentifier, collection: Nsid, rkey: RecordKey): ResourceUri {
 	return `at://${didOrName}/${collection}/${rkey}`;
 }
 

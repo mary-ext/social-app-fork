@@ -1,8 +1,8 @@
 import type { ComAtprotoRepoStrongRef } from '@atcute/atproto';
 import type { AppBskyEmbedExternal, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Handle, ResourceUri } from '@atcute/lexicons';
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import type { ActorIdentifier, Did, RecordKey, ResourceUri } from '@atcute/lexicons';
+import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
@@ -86,7 +86,12 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 	if (isBskyPostUrl(uri)) {
 		uri = convertBskyAppUrlIfNeeded(uri);
-		const [_0, user, _1, rkey] = uri.split('/').filter(Boolean) as [string, string, string, string];
+		const [_0, user, _1, rkey] = uri.split('/').filter(Boolean) as [
+			string,
+			ActorIdentifier,
+			string,
+			RecordKey,
+		];
 		const recordUri = makeRecordUri(user, 'app.bsky.feed.post', rkey);
 		const post = await getPost({ uri: recordUri });
 		if (post.viewer?.embeddingDisabled) {
@@ -104,12 +109,15 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 	if (isBskyCustomFeedUrl(uri)) {
 		uri = convertBskyAppUrlIfNeeded(uri);
-		const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [string, string, string, string];
+		const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [
+			string,
+			ActorIdentifier,
+			string,
+			RecordKey,
+		];
 		const did = await fetchDid(handleOrDid);
 		const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey);
-		const res = await ok(
-			appview.get('app.bsky.feed.getFeedGenerator', { params: { feed: feed as ResourceUri } }),
-		);
+		const res = await ok(appview.get('app.bsky.feed.getFeedGenerator', { params: { feed } }));
 		return {
 			type: 'record',
 			record: {
@@ -122,10 +130,15 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 	if (isBskyListUrl(uri)) {
 		uri = convertBskyAppUrlIfNeeded(uri);
-		const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [string, string, string, string];
+		const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [
+			string,
+			ActorIdentifier,
+			string,
+			RecordKey,
+		];
 		const did = await fetchDid(handleOrDid);
 		const list = makeRecordUri(did, 'app.bsky.graph.list', rkey);
-		const res = await ok(appview.get('app.bsky.graph.getList', { params: { list: list as ResourceUri } }));
+		const res = await ok(appview.get('app.bsky.graph.getList', { params: { list } }));
 		return {
 			type: 'record',
 			record: {
@@ -145,7 +158,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 		const starterPack = createStarterPackUri({ did, rkey: parsed.rkey });
 		const res = await ok(
 			appview.get('app.bsky.graph.getStarterPack', {
-				params: { starterPack: starterPack as ResourceUri },
+				params: { starterPack },
 			}),
 		);
 		return {
@@ -160,18 +173,12 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 
 	// Forked from useGetPost. TODO: move into RQ.
-	async function getPost({ uri: postUri }: { uri: string }) {
+	async function getPost({ uri: postUri }: { uri: ResourceUri }) {
 		const urip = parseResourceUri(postUri);
-		let repo: string = urip.repo;
-		if (!repo.startsWith('did:')) {
-			const res = await ok(
-				appview.get('com.atproto.identity.resolveHandle', { params: { handle: repo as Handle } }),
-			);
-			repo = res.did;
-		}
+		const repo = await fetchDid(urip.repo);
 		const res = await ok(
 			appview.get('app.bsky.feed.getPosts', {
-				params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}` as ResourceUri] },
+				params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}`] },
 			}),
 		);
 		if (res.posts[0]) {
@@ -181,15 +188,14 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	}
 
 	// Forked from useFetchDid. TODO: move into RQ.
-	async function fetchDid(handleOrDid: string) {
-		let identifier = handleOrDid;
-		if (!identifier.startsWith('did:')) {
-			const res = await ok(
-				appview.get('com.atproto.identity.resolveHandle', { params: { handle: identifier as Handle } }),
-			);
-			identifier = res.did;
+	async function fetchDid(handleOrDid: ActorIdentifier): Promise<Did> {
+		if (isDid(handleOrDid)) {
+			return handleOrDid;
 		}
-		return identifier;
+		const res = await ok(
+			appview.get('com.atproto.identity.resolveHandle', { params: { handle: handleOrDid } }),
+		);
+		return res.did;
 	}
 
 	return resolveExternal(uri);

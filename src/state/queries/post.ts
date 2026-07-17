@@ -20,7 +20,7 @@ import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
 const RQKEY_ROOT = 'post';
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri];
 
-export function usePostQuery(uri: string | undefined) {
+export function usePostQuery(uri: ResourceUri | undefined) {
 	const { appview } = useClients();
 	return useQuery<AppBskyFeedDefs.PostView>({
 		queryKey: RQKEY(uri || ''),
@@ -58,7 +58,7 @@ export function useGetPost() {
 	const queryClient = useQueryClient();
 	const { appview } = useClients();
 	return useCallback(
-		async ({ uri }: { uri: string }) => {
+		async ({ uri }: { uri: ResourceUri }) => {
 			return queryClient.fetchQuery({
 				queryKey: RQKEY(uri || ''),
 				async queryFn() {
@@ -96,13 +96,13 @@ export function useGetPosts() {
 	const queryClient = useQueryClient();
 	const { appview } = useClients();
 	return useCallback(
-		async ({ uris }: { uris: string[] }) => {
+		async ({ uris }: { uris: ResourceUri[] }) => {
 			return queryClient.fetchQuery({
 				queryKey: RQKEY(uris.join(',') || ''),
 				async queryFn() {
 					const { posts } = await ok(
 						appview.get('app.bsky.feed.getPosts', {
-							params: { uris: uris as ResourceUri[] },
+							params: { uris },
 						}),
 					);
 					return posts;
@@ -115,7 +115,7 @@ export function useGetPosts() {
 
 export function usePostLikeMutationQueue(
 	post: Shadow<AppBskyFeedDefs.PostView>,
-	viaRepost: { uri: string; cid: string } | undefined,
+	viaRepost: { uri: ResourceUri; cid: string } | undefined,
 ) {
 	const queryClient = useQueryClient();
 	const postUri = post.uri;
@@ -134,7 +134,7 @@ export function usePostLikeMutationQueue(
 					via: viaRepost,
 				});
 				userActionHistory.like([postUri]);
-				return likeUri as ResourceUri;
+				return likeUri;
 			} else {
 				if (prevLikeUri) {
 					await unlikeMutation.mutateAsync({
@@ -177,9 +177,9 @@ function usePostLikeMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	return useMutation<
-		{ uri: string }, // responds with the uri of the like
+		{ uri: ResourceUri }, // responds with the uri of the like
 		Error,
-		{ uri: string; cid: string; via?: { uri: string; cid: string } } // the post's uri and cid, and the repost uri/cid if present
+		{ uri: ResourceUri; cid: string; via?: { uri: ResourceUri; cid: string } } // the post's uri and cid, and the repost uri/cid if present
 	>({
 		mutationFn: ({ uri, cid, via }) => {
 			return createRecord(pds!, {
@@ -187,8 +187,8 @@ function usePostLikeMutation() {
 				record: {
 					$type: 'app.bsky.feed.like',
 					createdAt: new Date().toISOString(),
-					subject: { cid: cid, uri: uri as ResourceUri },
-					via: via && { cid: via.cid, uri: via.uri as ResourceUri },
+					subject: { cid: cid, uri: uri },
+					via: via && { cid: via.cid, uri: via.uri },
 				},
 				repo: currentAccount!.did,
 			});
@@ -212,7 +212,7 @@ function usePostUnlikeMutation() {
 
 export function usePostRepostMutationQueue(
 	post: Shadow<AppBskyFeedDefs.PostView>,
-	viaRepost: { uri: string; cid: string } | undefined,
+	viaRepost: { uri: ResourceUri; cid: string } | undefined,
 ) {
 	const queryClient = useQueryClient();
 	const postUri = post.uri;
@@ -230,7 +230,7 @@ export function usePostRepostMutationQueue(
 					cid: postCid,
 					via: viaRepost,
 				});
-				return repostUri as ResourceUri;
+				return repostUri;
 			} else {
 				if (prevRepostUri) {
 					await unrepostMutation.mutateAsync({
@@ -272,9 +272,9 @@ function usePostRepostMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	return useMutation<
-		{ uri: string }, // responds with the uri of the repost
+		{ uri: ResourceUri }, // responds with the uri of the repost
 		Error,
-		{ uri: string; cid: string; via?: { uri: string; cid: string } } // the post's uri and cid, and the repost uri/cid if present
+		{ uri: ResourceUri; cid: string; via?: { uri: ResourceUri; cid: string } } // the post's uri and cid, and the repost uri/cid if present
 	>({
 		mutationFn: ({ uri, cid, via }) => {
 			return createRecord(pds!, {
@@ -282,8 +282,8 @@ function usePostRepostMutation() {
 				record: {
 					$type: 'app.bsky.feed.repost',
 					createdAt: new Date().toISOString(),
-					subject: { cid: cid, uri: uri as ResourceUri },
-					via: via && { cid: via.cid, uri: via.uri as ResourceUri },
+					subject: { cid: cid, uri: uri },
+					via: via && { cid: via.cid, uri: via.uri },
 				},
 				repo: currentAccount!.did,
 			});
@@ -323,7 +323,7 @@ export function usePostDeleteMutation() {
 	});
 }
 
-export function useThreadMuteMutationQueue(post: Shadow<AppBskyFeedDefs.PostView>, rootUri: string) {
+export function useThreadMuteMutationQueue(post: Shadow<AppBskyFeedDefs.PostView>, rootUri: ResourceUri) {
 	const threadMuteMutation = useThreadMuteMutation();
 	const threadUnmuteMutation = useThreadUnmuteMutation();
 	const isThreadMuted = useIsThreadMuted(rootUri, post.viewer?.threadMuted);
@@ -370,13 +370,13 @@ function useThreadMuteMutation() {
 	return useMutation<
 		void,
 		Error,
-		{ uri: string } // the root post's uri
+		{ uri: ResourceUri } // the root post's uri
 	>({
 		mutationFn: async ({ uri }) => {
 			await ok(
 				appview.post('app.bsky.graph.muteThread', {
 					as: null,
-					input: { root: uri as ResourceUri },
+					input: { root: uri },
 				}),
 			);
 		},
@@ -385,12 +385,12 @@ function useThreadMuteMutation() {
 
 function useThreadUnmuteMutation() {
 	const { appview } = useClients();
-	return useMutation<void, Error, { uri: string }>({
+	return useMutation<void, Error, { uri: ResourceUri }>({
 		mutationFn: async ({ uri }) => {
 			await ok(
 				appview.post('app.bsky.graph.unmuteThread', {
 					as: null,
-					input: { root: uri as ResourceUri },
+					input: { root: uri },
 				}),
 			);
 		},

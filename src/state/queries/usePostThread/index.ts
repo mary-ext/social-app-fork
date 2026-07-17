@@ -34,7 +34,7 @@ export * from '#/state/queries/usePostThread/context';
 export { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread/queryCache';
 export * from '#/state/queries/usePostThread/types';
 
-export function usePostThread({ anchor }: { anchor?: string }) {
+export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	const qc = useQueryClient();
 	const { appview } = useClients();
 	const { hasSession } = useSession();
@@ -66,7 +66,7 @@ export function usePostThread({ anchor }: { anchor?: string }) {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPostThreadV2', {
 					params: {
-						anchor: anchor! as ResourceUri,
+						anchor: anchor!,
 						branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
 						below,
 						sort,
@@ -153,7 +153,7 @@ export function usePostThread({ anchor }: { anchor?: string }) {
 		async queryFn() {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPostThreadOtherV2', {
-					params: { anchor: anchor! as ResourceUri },
+					params: { anchor: anchor! },
 				}),
 			);
 			return data;

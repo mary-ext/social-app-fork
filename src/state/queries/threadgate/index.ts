@@ -35,7 +35,7 @@ export function useThreadgateViewQuery({
 	postUri,
 	initialData,
 }: {
-	postUri?: string;
+	postUri?: ResourceUri;
 	initialData?: AppBskyFeedDefs.ThreadgateView;
 } = {}) {
 	const getPost = useGetPost();
@@ -59,7 +59,7 @@ export async function getThreadgateRecord({
 }: {
 	appview: Client;
 	pds: Client;
-	postUri: string;
+	postUri: ResourceUri;
 }): Promise<AppBskyFeedThreadgate.Main | null> {
 	const urip = parseResourceUri(postUri);
 
@@ -118,14 +118,14 @@ export async function writeThreadgateRecord({
 }: {
 	did: Did;
 	pds: Client;
-	postUri: string;
+	postUri: ResourceUri;
 	threadgate: AppBskyFeedThreadgate.Main;
 }) {
 	const postUrip = parseResourceUri(postUri);
 	const record = createThreadgateRecord({
 		allow: threadgate.allow, // can/should be undefined!
 		hiddenReplies: threadgate.hiddenReplies || [],
-		post: postUri as ResourceUri,
+		post: postUri,
 	});
 
 	await networkRetry(2, () =>
@@ -148,7 +148,7 @@ export async function upsertThreadgate(
 		appview: Client;
 		did: Did;
 		pds: Client;
-		postUri: string;
+		postUri: ResourceUri;
 	},
 	callback: (
 		threadgate: AppBskyFeedThreadgate.Main | null,
@@ -178,7 +178,7 @@ export function useSetThreadgateAllowMutation() {
 	const updatePostThreadThreadgate = useUpdatePostThreadThreadgateQueryCache();
 
 	return useMutation({
-		mutationFn: async ({ postUri, allow }: { postUri: string; allow: ThreadgateAllowUISetting[] }) => {
+		mutationFn: async ({ postUri, allow }: { postUri: ResourceUri; allow: ThreadgateAllowUISetting[] }) => {
 			return upsertThreadgate(
 				{ appview, did: currentAccount!.did, pds: pds!, postUri },
 				(prev): AppBskyFeedThreadgate.Main | undefined => {
@@ -190,7 +190,7 @@ export function useSetThreadgateAllowMutation() {
 					} else {
 						return createThreadgateRecord({
 							allow: threadgateAllowUISettingToAllowRecordValue(allow),
-							post: postUri as ResourceUri,
+							post: postUri,
 						});
 					}
 				},
@@ -242,8 +242,8 @@ export function useToggleReplyVisibilityMutation() {
 			replyUri,
 			action,
 		}: {
-			postUri: string;
-			replyUri: string;
+			postUri: ResourceUri;
+			replyUri: ResourceUri;
 			action: 'hide' | 'show';
 		}) => {
 			if (action === 'hide') {
@@ -258,7 +258,7 @@ export function useToggleReplyVisibilityMutation() {
 					if (prev) {
 						if (action === 'hide') {
 							return mergeThreadgateRecords(prev, {
-								hiddenReplies: [replyUri as ResourceUri],
+								hiddenReplies: [replyUri],
 							});
 						} else if (action === 'show') {
 							return {
@@ -269,8 +269,8 @@ export function useToggleReplyVisibilityMutation() {
 					} else {
 						if (action === 'hide') {
 							return createThreadgateRecord({
-								hiddenReplies: [replyUri as ResourceUri],
-								post: postUri as ResourceUri,
+								hiddenReplies: [replyUri],
+								post: postUri,
 							});
 						}
 					}

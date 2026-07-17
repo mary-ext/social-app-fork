@@ -20,7 +20,7 @@ type MutationArgs =
 	| {
 			action: 'delete';
 			/** uri of the deleted item */
-			uri: string;
+			uri: ResourceUri;
 	  };
 
 export function useBookmarkMutation() {
@@ -42,7 +42,7 @@ export function useBookmarkMutation() {
 				await ok(
 					appview.post('app.bsky.bookmark.deleteBookmark', {
 						as: null,
-						input: { uri: args.uri as ResourceUri },
+						input: { uri: args.uri },
 					}),
 				);
 			}

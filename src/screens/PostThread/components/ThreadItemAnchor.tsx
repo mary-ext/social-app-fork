@@ -5,6 +5,7 @@ import type {
 	AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
@@ -180,7 +181,7 @@ function ThreadItemAnchorInner({
 	);
 	const showFollowButton = currentAccount?.did !== post.author.did && !onlyFollowersCanReply;
 
-	let viaRepost: { uri: string; cid: string } | undefined;
+	let viaRepost: { uri: ResourceUri; cid: string } | undefined;
 	{
 		const reason = postSource?.post.reason;
 

@@ -2,6 +2,7 @@ import { type ReactNode, useState } from 'react';
 
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { Combobox } from '@base-ui/react/combobox';
 import { useQueries } from '@tanstack/react-query';
@@ -90,7 +91,7 @@ function DialogInner({
 	});
 	// membership record uri per visible profile, `false` once loaded and not a member, or `undefined` while
 	// the profile's membership query is still pending.
-	const membershipByDid = new Map<string, string | false | undefined>();
+	const membershipByDid = new Map<string, ResourceUri | false | undefined>();
 	const memberProfiles: AnyProfileView[] = [];
 	profiles.forEach((profile, index) => {
 		const data = memberships[index]?.data;

@@ -2,7 +2,9 @@ import {
 	type ActorIdentifier,
 	isActorIdentifier,
 	isRecordKey,
+	isResourceUri,
 	type RecordKey,
+	type ResourceUri,
 } from '@atcute/lexicons/syntax';
 
 import type { Codec } from '@oomfware/stacker';
@@ -16,6 +18,11 @@ const ACTOR_IDENTIFIER_CODEC: Codec<ActorIdentifier> = {
 
 const RECORD_KEY_CODEC: Codec<RecordKey> = {
 	decode: (raw) => (isRecordKey(raw) ? raw : undefined),
+	encode: (value) => value,
+};
+
+const RESOURCE_URI_CODEC: Codec<ResourceUri> = {
+	decode: (raw) => (isResourceUri(raw) ? raw : undefined),
 	encode: (value) => value,
 };
 
@@ -34,3 +41,11 @@ export const actorIdentifier = (): Codec<ActorIdentifier> => ACTOR_IDENTIFIER_CO
  * @returns the record key codec
  */
 export const recordKey = (): Codec<RecordKey> => RECORD_KEY_CODEC;
+
+/**
+ * returns a codec for a {@link ResourceUri} segment, i.e. an at-uri. an invalid segment fails to decode,
+ * causing the matcher to skip the route.
+ *
+ * @returns the resource uri codec
+ */
+export const resourceUri = (): Codec<ResourceUri> => RESOURCE_URI_CODEC;

@@ -102,12 +102,12 @@ function DialogInner(props: PostInteractionSettingsFormProps) {
 export type PostInteractionSettingsDialogProps = {
 	handle: Dialog.DialogHandle;
 	/** URI of the post to edit the interaction settings for. Could be a root post or could be a reply. */
-	postUri: string;
+	postUri: ResourceUri;
 	/**
 	 * The URI of the root post in the thread. Used to determine if the viewer owns the threadgate record and
 	 * can therefore edit it.
 	 */
-	rootPostUri: string;
+	rootPostUri: ResourceUri;
 	/**
 	 * Optional initial {@link AppBskyFeedDefs.ThreadgateView} to use if we happen to have one before opening the
 	 * settings dialog.
@@ -150,7 +150,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 	}, [props.rootPostUri, currentAccount?.did]);
 
 	const postgateValue = useMemo(() => {
-		return editedPostgate || postgate || createPostgateRecord({ post: props.postUri as ResourceUri });
+		return editedPostgate || postgate || createPostgateRecord({ post: props.postUri });
 	}, [postgate, editedPostgate, props.postUri]);
 	const allowUIValue = useMemo(() => {
 		return editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView);
@@ -515,8 +515,8 @@ export function usePrefetchPostInteractionSettings({
 	postUri,
 	rootPostUri,
 }: {
-	postUri: string;
-	rootPostUri: string;
+	postUri: ResourceUri;
+	rootPostUri: ResourceUri;
 }) {
 	const queryClient = useQueryClient();
 	const { appview, pds } = useClients();

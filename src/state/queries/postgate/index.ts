@@ -30,7 +30,7 @@ export async function getPostgateRecord({
 }: {
 	appview: Client;
 	pds: Client;
-	postUri: string;
+	postUri: ResourceUri;
 }): Promise<AppBskyFeedPostgate.Main | undefined> {
 	const urip = parseResourceUri(postUri);
 
@@ -89,7 +89,7 @@ export async function writePostgateRecord({
 }: {
 	did: Did;
 	pds: Client;
-	postUri: string;
+	postUri: ResourceUri;
 	postgate: AppBskyFeedPostgate.Main;
 }) {
 	const postUrip = parseResourceUri(postUri);
@@ -114,7 +114,7 @@ export async function upsertPostgate(
 		appview: Client;
 		did: Did;
 		pds: Client;
-		postUri: string;
+		postUri: ResourceUri;
 	},
 	callback: (
 		postgate: AppBskyFeedPostgate.Main | undefined,
@@ -136,7 +136,7 @@ export async function upsertPostgate(
 }
 
 export const createPostgateQueryKey = (postUri: string) => ['postgate-record', postUri];
-export function usePostgateQuery({ postUri }: { postUri: string }) {
+export function usePostgateQuery({ postUri }: { postUri: ResourceUri }) {
 	const { appview, pds } = useClients();
 	return useQuery({
 		staleTime: STALE.SECONDS.THIRTY,
@@ -152,7 +152,13 @@ export function useWritePostgateMutation() {
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: async ({ postUri, postgate }: { postUri: string; postgate: AppBskyFeedPostgate.Main }) => {
+		mutationFn: async ({
+			postUri,
+			postgate,
+		}: {
+			postUri: ResourceUri;
+			postgate: AppBskyFeedPostgate.Main;
+		}) => {
 			return writePostgateRecord({
 				did: currentAccount!.did,
 				pds: pds!,
@@ -182,7 +188,7 @@ export function useToggleQuoteDetachmentMutation() {
 			action,
 		}: {
 			post: AppBskyFeedDefs.PostView;
-			quoteUri: string;
+			quoteUri: ResourceUri;
 			action: 'detach' | 'reattach';
 		}) => {
 			// cache here since post shadow mutates original object
@@ -214,7 +220,7 @@ export function useToggleQuoteDetachmentMutation() {
 				} else {
 					if (action === 'detach') {
 						return createPostgateRecord({
-							post: quoteUri as ResourceUri,
+							post: quoteUri,
 							detachedEmbeddingUris: [post.uri],
 						});
 					}

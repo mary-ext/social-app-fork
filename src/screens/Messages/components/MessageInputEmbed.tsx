@@ -3,7 +3,12 @@ import { LayoutAnimation, View } from 'react-native';
 
 import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import {
+	type ActorIdentifier,
+	parseCanonicalResourceUri,
+	type RecordKey,
+	type ResourceUri,
+} from '@atcute/lexicons/syntax';
 
 import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -41,7 +46,7 @@ import * as css from './MessageInputEmbed.css';
  * The embed staged in the message composer. A message can carry at most one embed: either a quoted post or a
  * group chat invite link.
  */
-export type MessageEmbedState = { type: 'post'; uri: string } | { type: 'invite'; code: string };
+export type MessageEmbedState = { type: 'post'; uri: ResourceUri } | { type: 'invite'; code: string };
 
 export function useMessageEmbed() {
 	const [{ embed: embedFromParams }, setParams] = useParams('MessagesConversation');
@@ -80,7 +85,12 @@ export function useMessageEmbed() {
 
 			if (isBskyPostUrl(embedUrl)) {
 				const url = convertBskyAppUrlIfNeeded(embedUrl);
-				const [_0, user, _1, rkey] = url.split('/').filter(Boolean) as [string, string, string, string];
+				const [_0, user, _1, rkey] = url.split('/').filter(Boolean) as [
+					string,
+					ActorIdentifier,
+					string,
+					RecordKey,
+				];
 				const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey);
 				setEmbedState({ type: 'post', uri });
 			}
@@ -112,7 +122,7 @@ export function MessageInputEmbed({
 	}
 }
 
-function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () => void }) {
+function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: () => void }) {
 	const t = useTheme();
 	const { data: post, status } = usePostQuery(uri);
 

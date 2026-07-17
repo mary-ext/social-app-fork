@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 
@@ -20,7 +21,7 @@ export type PostControlsProps = {
 	reqId?: string | undefined;
 	onPressReply: () => void;
 	onPostReply?: (postUri: string | undefined) => void;
-	viaRepost?: { uri: string; cid: string };
+	viaRepost?: { uri: ResourceUri; cid: string };
 };
 
 /**

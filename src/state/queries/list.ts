@@ -62,7 +62,7 @@ export function useListCreateMutation() {
 	const { currentAccount } = useSession();
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<{ uri: string; cid: string }, Error, ListCreateMutateParams>({
+	return useMutation<{ uri: ResourceUri; cid: string }, Error, ListCreateMutateParams>({
 		async mutationFn({ purpose, name, description, descriptionFacets, avatar }) {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
@@ -104,7 +104,7 @@ export function useListCreateMutation() {
 }
 
 export interface ListMetadataMutateParams {
-	uri: string;
+	uri: ResourceUri;
 	name: string;
 	description: string;
 	descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
@@ -114,7 +114,7 @@ export function useListMetadataMutation() {
 	const { currentAccount } = useSession();
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<{ uri: string; cid: string }, Error, ListMetadataMutateParams>({
+	return useMutation<{ uri: ResourceUri; cid: string }, Error, ListMetadataMutateParams>({
 		async mutationFn({ uri, name, description, descriptionFacets, avatar }) {
 			const { repo, rkey } = parseCanonicalResourceUri(uri);
 			if (!currentAccount) {
@@ -172,7 +172,7 @@ export function useListDeleteMutation() {
 	const { currentAccount } = useSession();
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<void, Error, { uri: string }>({
+	return useMutation<void, Error, { uri: ResourceUri }>({
 		mutationFn: async ({ uri }) => {
 			if (!currentAccount) {
 				return;
@@ -229,12 +229,12 @@ export function useListDeleteMutation() {
 export function useListMuteMutation() {
 	const queryClient = useQueryClient();
 	const { appview } = useClients();
-	return useMutation<void, Error, { uri: string; mute: boolean }>({
+	return useMutation<void, Error, { uri: ResourceUri; mute: boolean }>({
 		mutationFn: async ({ uri, mute }) => {
 			await ok(
 				appview.post(mute ? 'app.bsky.graph.muteActorList' : 'app.bsky.graph.unmuteActorList', {
 					as: null,
-					input: { list: uri as ResourceUri },
+					input: { list: uri },
 				}),
 			);
 
@@ -254,7 +254,7 @@ export function useListBlockMutation() {
 	const { currentAccount } = useSession();
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<void, Error, { uri: string; block: boolean }>({
+	return useMutation<void, Error, { uri: ResourceUri; block: boolean }>({
 		mutationFn: async ({ uri, block }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
@@ -265,14 +265,14 @@ export function useListBlockMutation() {
 					record: {
 						$type: 'app.bsky.graph.listblock',
 						createdAt: new Date().toISOString(),
-						subject: uri as ResourceUri,
+						subject: uri,
 					},
 					repo: currentAccount.did,
 				});
 			} else {
 				const data = await ok(
 					appview.get('app.bsky.graph.getList', {
-						params: { limit: 1, list: uri as ResourceUri },
+						params: { limit: 1, list: uri },
 					}),
 				);
 				const blocked = data.list.viewer?.blocked;
@@ -299,7 +299,7 @@ export function useListBlockMutation() {
 
 async function whenAppViewReady(
 	appview: Client,
-	uri: string,
+	uri: ResourceUri,
 	fn: (v: AppBskyGraphDefs.ListView | undefined) => boolean,
 ) {
 	await until(
@@ -309,7 +309,7 @@ async function whenAppViewReady(
 		async () => {
 			const data = await ok(
 				appview.get('app.bsky.graph.getList', {
-					params: { limit: 1, list: uri as ResourceUri },
+					params: { limit: 1, list: uri },
 				}),
 			);
 			return data.list;

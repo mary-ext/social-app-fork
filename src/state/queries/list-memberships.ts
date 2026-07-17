@@ -64,7 +64,7 @@ export function useListMembershipAddMutation({
 	onSuccess,
 	onError,
 }: {
-	onSuccess?: (data: { uri: string; cid: string }) => void;
+	onSuccess?: (data: { uri: ResourceUri; cid: string }) => void;
 	onError?: (error: Error) => void;
 } = {}) {
 	const { currentAccount } = useSession();
@@ -72,9 +72,9 @@ export function useListMembershipAddMutation({
 	const queryClient = useQueryClient();
 	// `subject` (the added profile) drives the optimistic membership cache updates in onSuccess below.
 	return useMutation<
-		{ uri: string; cid: string },
+		{ uri: ResourceUri; cid: string },
 		Error,
-		{ actorDid: string; listUri: string; subject?: AnyProfileView }
+		{ actorDid: string; listUri: ResourceUri; subject?: AnyProfileView }
 	>({
 		mutationFn: async ({ listUri, actorDid }) => {
 			if (!currentAccount) {
@@ -85,7 +85,7 @@ export function useListMembershipAddMutation({
 				record: {
 					$type: 'app.bsky.graph.listitem',
 					createdAt: new Date().toISOString(),
-					list: listUri as ResourceUri,
+					list: listUri,
 					subject: actorDid as Did,
 				},
 				repo: currentAccount.did,
@@ -114,7 +114,7 @@ export function useListMembershipAddMutation({
 							? {
 									...item,
 									listItem: {
-										uri: data.uri as ResourceUri,
+										uri: data.uri,
 										subject: variables.subject as AppBskyActorDefs.ProfileView,
 									},
 								}
@@ -186,7 +186,7 @@ export function useListMembershipRemoveMutation({
 	const { currentAccount } = useSession();
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<void, Error, { listUri: string; actorDid: string; membershipUri: string }>({
+	return useMutation<void, Error, { listUri: ResourceUri; actorDid: string; membershipUri: ResourceUri }>({
 		mutationFn: async ({ membershipUri }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');

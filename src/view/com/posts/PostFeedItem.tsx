@@ -5,6 +5,7 @@ import type {
 	AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -219,7 +220,7 @@ function FeedItemInner({
 
 	const { isActive: live } = useActorStatus(post.author);
 
-	let viaRepost: { uri: string; cid: string } | undefined;
+	let viaRepost: { uri: ResourceUri; cid: string } | undefined;
 	if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
 		viaRepost = {
 			uri: reason.uri,

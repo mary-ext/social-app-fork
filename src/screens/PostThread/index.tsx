@@ -1,5 +1,7 @@
 import { startTransition, useCallback, useEffect, useRef, useState } from 'react';
 
+import type { ResourceUri } from '@atcute/lexicons';
+
 import { clsx } from 'clsx';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -45,7 +47,7 @@ const FALLBACK_FOOTER_HEIGHT = 180;
 // Measured threads skew toward short text replies (~110px), punctuated by a tall anchor and occasional media.
 const ITEM_HEIGHT_ESTIMATE = 200;
 
-export function PostThread({ uri }: { uri: string }) {
+export function PostThread({ uri }: { uri: ResourceUri }) {
 	const { gtMobile } = useBreakpoints();
 	const { hasSession } = useSession();
 	const anchorPostSource = useUnstablePostSource(uri);

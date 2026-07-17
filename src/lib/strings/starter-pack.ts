@@ -1,9 +1,15 @@
 import type { AnyStarterPackView } from '@atcute/bluesky';
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import {
+	type ActorIdentifier,
+	type CanonicalResourceUri,
+	type Did,
+	parseResourceUri,
+	type RecordKey,
+} from '@atcute/lexicons/syntax';
 
 export function parseStarterPackUri(uri?: string): {
-	actor: string;
-	rkey: string;
+	actor: ActorIdentifier;
+	rkey: RecordKey;
 } | null {
 	if (!uri) return null;
 
@@ -21,7 +27,7 @@ export function parseStarterPackUri(uri?: string): {
 		} else {
 			const url = new URL(uri);
 			const parts = url.pathname.split('/');
-			const [__, path, actor, rkey] = parts;
+			const [__, path, actor, rkey] = parts as [string, string, ActorIdentifier, RecordKey];
 
 			if (parts.length !== 4) return null;
 			if (path !== 'starter-pack' && path !== 'start') return null;
@@ -56,7 +62,7 @@ export function getStarterPackOgCard(didOrStarterPack: AnyStarterPackView | stri
 	}
 }
 
-export function createStarterPackUri({ did, rkey }: { did: string; rkey: string }): string {
+export function createStarterPackUri({ did, rkey }: { did: Did; rkey: RecordKey }): CanonicalResourceUri {
 	return `at://${did}/app.bsky.graph.starterpack/${rkey}`;
 }
 

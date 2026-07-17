@@ -27,7 +27,7 @@ export function usePinnedPostMutation() {
 			postCid,
 			action,
 		}: {
-			postUri: string;
+			postUri: ResourceUri;
 			postCid: string;
 			action: 'pin' | 'unpin';
 		}) => {
@@ -51,7 +51,7 @@ export function usePinnedPostMutation() {
 				await profileUpdateMutate({
 					profile,
 					updates: (existing) => {
-						existing.pinnedPost = pinCurrentPost ? { uri: postUri as ResourceUri, cid: postCid } : undefined;
+						existing.pinnedPost = pinCurrentPost ? { uri: postUri, cid: postCid } : undefined;
 						return existing;
 					},
 					checkCommitted: (res) => (pinCurrentPost ? res.pinnedPost?.uri === postUri : !res.pinnedPost),

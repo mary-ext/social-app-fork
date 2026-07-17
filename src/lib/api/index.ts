@@ -90,7 +90,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 		now.setMilliseconds(now.getMilliseconds() + 1);
 		// @atcute/tid's now() is monotonic — repeated calls in the same ms increment to avoid collision
 		const rkey = TID.now();
-		const uri = `at://${did}/app.bsky.feed.post/${rkey}`;
+		const uri: ResourceUri = `at://${did}/app.bsky.feed.post/${rkey}`;
 		uris.push(uri);
 
 		const rt = await rtPromise;
@@ -122,7 +122,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 				rkey: rkey,
 				value: createThreadgateRecord({
 					allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
-					post: uri as ResourceUri,
+					post: uri,
 				}),
 			});
 		}
@@ -147,7 +147,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 			const { serializeRecordCid } = await import('./cid');
 			const ref: ComAtprotoRepoStrongRef.Main = {
 				cid: await serializeRecordCid(record),
-				uri: uri as ResourceUri,
+				uri: uri,
 			};
 			replyPromise = {
 				root: reply?.root ?? ref,

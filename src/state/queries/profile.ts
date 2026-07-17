@@ -248,7 +248,7 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 					did,
 				});
 				userActionHistory.follow([did]);
-				return uri as ResourceUri;
+				return uri;
 			} else {
 				if (prevFollowingUri) {
 					await unfollowMutation.mutateAsync({
@@ -337,7 +337,7 @@ function useProfileFollowMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 
-	return useMutation<{ uri: string; cid: string }, Error, { did: string }>({
+	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
 			return await createRecord(pds!, {
 				collection: 'app.bsky.graph.follow',
@@ -463,7 +463,7 @@ export function useProfileBlockMutationQueue(profile: Shadow<AnyProfileView>) {
 				const { uri } = await blockMutation.mutateAsync({
 					did,
 				});
-				return uri as ResourceUri;
+				return uri;
 			} else {
 				if (prevBlockUri) {
 					await unblockMutation.mutateAsync({
@@ -510,7 +510,7 @@ function useProfileBlockMutation() {
 	const { currentAccount } = useSession();
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<{ uri: string; cid: string }, Error, { did: string }>({
+	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');

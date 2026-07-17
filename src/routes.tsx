@@ -14,7 +14,7 @@ import {
 	string,
 } from '@oomfware/stacker';
 
-import { actorIdentifier, recordKey } from '#/lib/routes/codecs';
+import { actorIdentifier, recordKey, resourceUri } from '#/lib/routes/codecs';
 
 import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
 
@@ -485,7 +485,7 @@ export const routes = defineRoutes({
 						meta: { requireAuth: true },
 						params: { conversation: string() },
 						path: '/messages/:conversation',
-						query: { accept: optional(boolean()), embed: optional(string()) },
+						query: { accept: optional(boolean()), embed: optional(resourceUri()) },
 					}),
 				},
 			}),
