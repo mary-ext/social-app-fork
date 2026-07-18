@@ -4,16 +4,16 @@ import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
 export const row = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.xs,
+	alignItems: 'center',
 });
 
 export const icon = style({
-	flexShrink: 0,
 	position: 'relative',
 	top: -1,
+	flexShrink: 0,
 });
 
 export const label = style({
@@ -22,12 +22,12 @@ export const label = style({
 });
 
 export const loadingName = style({
-	backgroundColor: vars.palette.contrast_50,
-	borderRadius: 6,
 	display: 'inline-block',
-	height: 8,
-	left: 2,
 	position: 'relative',
 	top: 1,
+	left: 2,
+	borderRadius: 6,
+	backgroundColor: vars.palette.contrast_50,
 	width: 80,
+	height: 8,
 });

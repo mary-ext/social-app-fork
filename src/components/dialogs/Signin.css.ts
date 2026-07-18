@@ -10,11 +10,11 @@ export const field = style({
 
 export const fieldIcon = style({
 	display: 'block',
-	insetInlineStart: 12,
-	pointerEvents: 'none',
 	position: 'absolute',
+	insetInlineStart: 12,
 	top: '50%',
 	transform: 'translateY(-50%)',
+	pointerEvents: 'none',
 });
 
 export const fieldInput = style({

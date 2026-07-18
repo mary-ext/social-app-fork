@@ -10,21 +10,21 @@ export const body = style({
 });
 
 export const heading = style({
-	borderBottom: `1px solid ${colors.borderContrastLow}`,
 	display: 'none',
+	borderBottom: `1px solid ${colors.borderContrastLow}`,
+	paddingTop: space.sm,
 	paddingBottom: space.lg,
 	paddingInline: space.lg,
-	paddingTop: space.sm,
 	'@media': {
 		'(width >= 1300px)': { display: 'flex' },
 	},
 });
 
 export const empty = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.lg,
+	alignItems: 'center',
 	justifyContent: 'center',
 	paddingBlock: space._4xl,
 });

@@ -17,36 +17,36 @@ export const list = style({
 });
 
 export const box = style({
-	backgroundColor: vars.palette.contrast_25,
-	borderRadius: 8,
 	display: 'flex',
 	gap: space.sm,
+	borderRadius: 8,
+	backgroundColor: vars.palette.contrast_25,
 	paddingBlock: space.sm,
 	paddingInline: space.md,
 });
 
 export const column = style({
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'column',
 	flexGrow: 1,
 	gap: 4,
 	minWidth: 0,
-	position: 'relative',
 });
 
 export const icon = style({
-	alignItems: 'center',
-	color: colors.negative_600,
 	display: 'flex',
 	flexShrink: 0,
-	height: 20,
+	alignItems: 'center',
 	justifyContent: 'center',
 	width: 20,
+	height: 20,
+	color: colors.negative_600,
 });
 
 export const dismiss = style({
-	height: 24,
-	width: 24,
 	marginRight: -6,
 	marginBlock: -2,
+	width: 24,
+	height: 24,
 });

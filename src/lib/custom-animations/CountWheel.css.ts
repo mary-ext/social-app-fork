@@ -8,29 +8,29 @@ export const root = style({
 	position: 'relative',
 });
 
-const cell = style({ alignItems: 'center', display: 'flex' });
+const cell = style({ display: 'flex', alignItems: 'center' });
 export const current = cell;
 
 const enterUpFrames = keyframes({
-	from: { opacity: 0, transform: `translateY(${DISTANCE})` },
-	to: { opacity: 1, transform: 'translateY(0)' },
+	from: { transform: `translateY(${DISTANCE})`, opacity: 0 },
+	to: { transform: 'translateY(0)', opacity: 1 },
 });
 const enterDownFrames = keyframes({
-	from: { opacity: 0, transform: `translateY(-${DISTANCE})` },
-	to: { opacity: 1, transform: 'translateY(0)' },
+	from: { transform: `translateY(-${DISTANCE})`, opacity: 0 },
+	to: { transform: 'translateY(0)', opacity: 1 },
 });
 const exitUpFrames = keyframes({
-	from: { opacity: 1, transform: 'translateY(0)' },
-	to: { opacity: 0, transform: `translateY(-${DISTANCE})` },
+	from: { transform: 'translateY(0)', opacity: 1 },
+	to: { transform: `translateY(-${DISTANCE})`, opacity: 0 },
 });
 const exitDownFrames = keyframes({
-	from: { opacity: 1, transform: 'translateY(0)' },
-	to: { opacity: 0, transform: `translateY(${DISTANCE})` },
+	from: { transform: 'translateY(0)', opacity: 1 },
+	to: { transform: `translateY(${DISTANCE})`, opacity: 0 },
 });
 
 export const enterUp = style({ animation: `${enterUpFrames} ${TIMING}` });
 export const enterDown = style({ animation: `${enterDownFrames} ${TIMING}` });
 
-const exiting = style([cell, { left: 0, position: 'absolute', top: 0 }]);
+const exiting = style([cell, { position: 'absolute', top: 0, left: 0 }]);
 export const exitUp = style([exiting, { animation: `${exitUpFrames} ${TIMING}` }]);
 export const exitDown = style([exiting, { animation: `${exitDownFrames} ${TIMING}` }]);

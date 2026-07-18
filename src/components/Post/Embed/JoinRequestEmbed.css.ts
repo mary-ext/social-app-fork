@@ -3,11 +3,11 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 
 export const box = style({
-	borderColor: vars.palette.contrast_100,
-	borderRadius: 8,
-	borderStyle: 'solid',
-	borderWidth: 1,
 	boxSizing: 'border-box',
+	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: 8,
+	borderColor: vars.palette.contrast_100,
 	padding: 12,
 });
 

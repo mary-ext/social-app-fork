@@ -2,21 +2,21 @@ import { style } from '@vanilla-extract/css';
 
 import { space } from '#/styles/tokens.css';
 
-export const empty = style({ height: '100%', justifyContent: 'center', paddingBottom: 40 });
+export const empty = style({ justifyContent: 'center', paddingBottom: 40, height: '100%' });
 
 export const errorMessage = style({
-	maxWidth: 360,
 	paddingBottom: space.xl,
+	maxWidth: 360,
 });
 
 export const errorTitle = style({
-	paddingBottom: space.sm,
 	paddingTop: space.md,
+	paddingBottom: space.sm,
 });
 
 export const errorWrap = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 	paddingTop: space._3xl,
 });

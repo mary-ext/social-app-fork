@@ -12,16 +12,16 @@ export const bannerWrap = style({
 });
 
 export const avatar = style({
-	borderColor: vars.palette.contrast_0,
-	borderRadius: 42,
-	borderStyle: 'solid',
-	borderWidth: 2,
 	boxSizing: 'border-box',
-	height: 84,
-	left: 20,
 	position: 'absolute',
 	top: 80,
+	left: 20,
+	borderWidth: 2,
+	borderStyle: 'solid',
+	borderRadius: 42,
+	borderColor: vars.palette.contrast_0,
 	width: 84,
+	height: 84,
 });
 
 export const fields = style({

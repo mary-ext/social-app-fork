@@ -21,10 +21,10 @@ export const navPrevious = style([navButton, { gridColumnStart: 1 }]);
 export const navNext = style([navButton, { gridColumnEnd: -1 }]);
 
 export const month = style({
-	alignSelf: 'center',
-	color: vars.palette.contrast_1000,
 	gridColumn: '2 / -2',
+	alignSelf: 'center',
 	textAlign: 'center',
+	color: vars.palette.contrast_1000,
 });
 
 export const weekdays = style({
@@ -32,9 +32,9 @@ export const weekdays = style({
 });
 
 export const weekday = style({
-	fontSize: fontSize.xs,
 	paddingBlock: 4,
 	textAlign: 'center',
+	fontSize: fontSize.xs,
 });
 
 export const week = style({
@@ -44,16 +44,16 @@ export const week = style({
 export const day = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			borderRadius: borderRadius.full,
-			cursor: 'default',
 			display: 'flex',
-			height: 36,
+			alignItems: 'center',
 			justifyContent: 'center',
 			justifySelf: 'center',
 			outline: 'none',
-			userSelect: 'none',
+			borderRadius: borderRadius.full,
 			width: 36,
+			height: 36,
+			cursor: 'default',
+			userSelect: 'none',
 			selectors: {
 				'&[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
 				'&[data-disabled]': { pointerEvents: 'none' },

@@ -3,33 +3,33 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 
 export const playButton = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'transparent',
-	border: 0,
-	bottom: 0,
-	cursor: 'pointer',
 	display: 'flex',
-	justifyContent: 'center',
+	position: 'absolute',
+	top: 0,
+	right: 0,
+	bottom: 0,
 	left: 0,
+	alignItems: 'center',
+	justifyContent: 'center',
+	zIndex: 2,
 	margin: 0,
 	outline: 0,
+	border: 0,
+	background: 'transparent',
 	padding: 0,
-	position: 'absolute',
-	right: 0,
-	top: 0,
-	zIndex: 2,
+	cursor: 'pointer',
 });
 
 export const dim = style({
+	position: 'absolute',
+	top: 0,
+	right: 0,
 	bottom: 0,
 	left: 0,
 	opacity: 0.2,
-	pointerEvents: 'none',
-	position: 'absolute',
-	right: 0,
-	top: 0,
 	zIndex: 1,
+	pointerEvents: 'none',
 	selectors: {
 		'.theme--light &': { backgroundColor: vars.palette.contrast_975 },
 		'.theme--dark &, .theme--dim &': { backgroundColor: vars.palette.contrast_0 },
@@ -37,16 +37,16 @@ export const dim = style({
 });
 
 const badge = style({
-	alignItems: 'center',
-	backgroundColor: 'rgba(0, 0, 0, 0.75)',
-	borderRadius: 6,
-	bottom: 6,
 	display: 'flex',
+	position: 'absolute',
+	bottom: 6,
+	alignItems: 'center',
 	justifyContent: 'center',
+	zIndex: 2,
+	borderRadius: 6,
+	backgroundColor: 'rgba(0, 0, 0, 0.75)',
 	paddingBlock: 3,
 	paddingInline: 4,
-	position: 'absolute',
-	zIndex: 2,
 });
 
 export const gifBadge = style([badge, { left: 6 }]);
@@ -55,10 +55,10 @@ export const altBadge = style([
 	badge,
 	{
 		appearance: 'none',
+		right: 6,
+		margin: 0,
 		border: 0,
 		cursor: 'pointer',
-		margin: 0,
-		right: 6,
 		selectors: {
 			'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -2 },
 		},
@@ -66,8 +66,8 @@ export const altBadge = style([
 ]);
 
 export const altBadgeTopRight = style({
-	bottom: 'auto',
 	top: 6,
+	bottom: 'auto',
 });
 
 export const badgeText = style({

@@ -5,20 +5,20 @@ import { space } from '#/styles/tokens.css';
 
 export const dialogBody = style({
 	display: 'flex',
-	flexDirection: 'column',
 	flex: 1,
+	flexDirection: 'column',
 	minHeight: 0,
 	overflow: 'hidden',
 });
 
 export const scrollContainer = style({
 	display: 'flex',
-	flexDirection: 'column',
 	flex: 1,
+	flexDirection: 'column',
 	minHeight: 0,
 	overflowY: 'auto',
-	scrollbarGutter: 'stable',
 	scrollbarColor: `${vars.palette.contrast_200} transparent`,
+	scrollbarGutter: 'stable',
 });
 
 export const stickyFooterWeb = style({
@@ -34,14 +34,14 @@ export const inactivePost = style({
 
 export const postContainer = style({
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'row',
 	flexShrink: 0,
 	gap: space.md,
+	zIndex: 0,
+	paddingRight: space.lg,
 	paddingBottom: space.md,
 	paddingLeft: space.lg,
-	paddingRight: space.lg,
-	position: 'relative',
-	zIndex: 0,
 
 	selectors: {
 		[`${stickyFooterWeb} + &`]: {
@@ -76,8 +76,8 @@ export const linkContainer = style({
 });
 
 export const videoContainer = style({
-	width: '100%',
 	marginTop: space.lg,
+	width: '100%',
 });
 
 export const quoteContainer = style({

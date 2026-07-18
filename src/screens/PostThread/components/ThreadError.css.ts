@@ -5,18 +5,18 @@ import { OUTER_SPACE } from '#/screens/PostThread/const';
 import { space } from '#/styles/tokens.css';
 
 export const outer = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
-	paddingInline: OUTER_SPACE,
+	alignItems: 'center',
 	paddingBlock: OUTER_SPACE * 2,
+	paddingInline: OUTER_SPACE,
 });
 
 export const inner = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.xl,
+	alignItems: 'center',
 	width: '100%',
 });
 

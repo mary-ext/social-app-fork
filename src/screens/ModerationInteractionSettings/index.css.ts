@@ -13,8 +13,8 @@ export const content = style({
 });
 
 export const loaderWrap = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	padding: space.xl,
 });

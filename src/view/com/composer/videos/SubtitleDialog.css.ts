@@ -15,8 +15,8 @@ export const buttonRow = style({
 });
 
 export const errorText = style({
-	color: vars.palette.negative_500,
 	marginTop: 12,
+	color: vars.palette.negative_500,
 });
 
 export const footer = style({
@@ -27,18 +27,18 @@ export const footer = style({
 });
 
 export const row = style({
-	alignItems: 'center',
-	borderRadius: 8,
-	columnGap: 12,
 	display: 'grid',
 	gridTemplateAreas: `
 		"icon file close"
 		". language ."
 	`,
 	gridTemplateColumns: 'auto 1fr auto',
+	rowGap: 8,
+	columnGap: 12,
+	alignItems: 'center',
+	borderRadius: 8,
 	paddingBlock: 12,
 	paddingInline: 16,
-	rowGap: 8,
 	'@container': {
 		'(min-width: 420px)': {
 			gridTemplateAreas: '"icon file language close"',

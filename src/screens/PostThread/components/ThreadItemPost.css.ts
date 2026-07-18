@@ -7,8 +7,8 @@ import { borderRadius, space } from '#/styles/tokens.css';
 
 export const hider = style({
 	backgroundColor: 'transparent',
-	paddingLeft: 0,
 	paddingRight: space._2xs,
+	paddingLeft: 0,
 });
 
 export const hiderIcon = style({
@@ -36,9 +36,9 @@ export const childLine = style({
 });
 
 export const metaSpacing = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	paddingBottom: space.xs,
 });
 
@@ -51,22 +51,22 @@ export const postAlerts = style({
 });
 
 export const deletedRow = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_25,
-	borderRadius: borderRadius.sm,
 	display: 'flex',
 	flexDirection: 'row',
-	paddingBottom: space.md,
+	alignItems: 'center',
+	borderRadius: borderRadius.sm,
+	backgroundColor: colors.contrast_25,
 	paddingTop: space.md,
+	paddingBottom: space.md,
 });
 
 export const deletedIcon = style({
-	alignItems: 'center',
-	color: colors.textContrastMedium,
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	justifyContent: 'center',
 	width: LINEAR_AVI_WIDTH,
+	color: colors.textContrastMedium,
 });
 
 export const deletedSpacer = style({

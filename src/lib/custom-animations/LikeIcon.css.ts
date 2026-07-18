@@ -6,20 +6,20 @@ export const sizeVar = createVar();
 
 export const root = style({
 	display: 'flex',
+	position: 'relative',
 	isolation: 'isolate',
 	pointerEvents: 'none',
-	position: 'relative',
 });
 
 const circle = style({
-	borderRadius: '50%',
-	height: sizeVar,
-	left: 0,
-	opacity: 0,
 	position: 'absolute',
 	top: 0,
-	width: sizeVar,
+	left: 0,
+	opacity: 0,
 	zIndex: -1,
+	borderRadius: '50%',
+	width: sizeVar,
+	height: sizeVar,
 });
 export const circle1 = style([circle, { backgroundColor: vars.palette.pink }]);
 export const circle2 = style([circle, { backgroundColor: vars.palette.contrast_0 }]);

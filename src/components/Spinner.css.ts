@@ -8,8 +8,8 @@ const spin = keyframes({ to: { transform: 'rotate(360deg)' } });
 export const spinner = recipe(
 	{
 		base: {
-			animation: `${spin} 500ms linear infinite`,
 			display: 'inline-flex',
+			animation: `${spin} 500ms linear infinite`,
 		},
 		variants: {
 			color: {

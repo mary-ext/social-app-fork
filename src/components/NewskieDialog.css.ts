@@ -4,15 +4,15 @@ import { vars } from '#/styles/contract.css';
 
 export const trigger = style({
 	appearance: 'none',
-	background: 'none',
-	border: 'none',
-	borderRadius: 999,
-	color: vars.palette.yellow,
-	cursor: 'pointer',
 	display: 'inline-flex',
 	margin: 0,
+	border: 'none',
+	borderRadius: 999,
+	background: 'none',
 	padding: 0,
 	paddingRight: 2,
+	color: vars.palette.yellow,
+	cursor: 'pointer',
 	selectors: {
 		'&:hover, &:active': { opacity: 0.5 },
 		'&:disabled': { cursor: 'default' },
@@ -21,23 +21,23 @@ export const trigger = style({
 });
 
 export const header = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 });
 
 export const icon = style({
-	color: vars.palette.yellow,
+	width: 64,
 	height: 60,
 	overflow: 'hidden',
-	width: 64,
+	color: vars.palette.yellow,
 });
 
 export const starterPack = style({
-	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: 8,
 	boxSizing: 'border-box',
 	marginTop: 8,
+	border: `1px solid ${vars.palette.contrast_100}`,
+	borderRadius: 8,
 	padding: 16,
 	width: '100%',
 });

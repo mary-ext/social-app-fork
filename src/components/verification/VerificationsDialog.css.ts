@@ -10,9 +10,9 @@ export const nameColumn = style({
 });
 
 export const cardRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 });

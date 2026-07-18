@@ -3,15 +3,15 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 
 export const trigger = style({
-	backgroundColor: vars.palette.contrast_25,
-	border: 0,
-	cursor: 'pointer',
 	display: 'block',
-	height: 150,
-	outline: 0,
-	padding: 0,
 	position: 'relative',
+	outline: 0,
+	border: 0,
+	backgroundColor: vars.palette.contrast_25,
+	padding: 0,
 	width: '100%',
+	height: 150,
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -2 },
 	},
@@ -19,23 +19,23 @@ export const trigger = style({
 
 export const image = style({
 	display: 'block',
+	width: '100%',
 	height: 150,
 	objectFit: 'cover',
-	width: '100%',
 });
 
 export const editBadge = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_25,
-	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: 12,
-	bottom: 8,
 	boxSizing: 'border-box',
-	color: vars.palette.contrast_1000,
 	display: 'flex',
-	height: 24,
-	justifyContent: 'center',
 	position: 'absolute',
 	right: 24,
+	bottom: 8,
+	alignItems: 'center',
+	justifyContent: 'center',
+	border: `1px solid ${vars.palette.contrast_100}`,
+	borderRadius: 12,
+	backgroundColor: vars.palette.contrast_25,
 	width: 24,
+	height: 24,
+	color: vars.palette.contrast_1000,
 });

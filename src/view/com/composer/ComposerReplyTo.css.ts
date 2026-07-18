@@ -6,22 +6,22 @@ import { space } from '#/styles/tokens.css';
 export const container = style({
 	display: 'flex',
 	flexDirection: 'row',
-	alignItems: 'flex-start',
 	gap: space.md,
-	paddingBottom: space.lg,
+	alignItems: 'flex-start',
+	marginRight: space.lg,
 	marginBottom: space.lg,
 	marginLeft: space.lg,
-	marginRight: space.lg,
 	borderBottomWidth: 1,
 	borderBottomStyle: 'solid',
 	borderBottomColor: vars.palette.contrast_200,
-	userSelect: 'text',
+	paddingBottom: space.lg,
 	cursor: 'pointer',
+	userSelect: 'text',
 });
 
 export const content = style({
-	flex: 1,
 	display: 'flex',
+	flex: 1,
 	flexDirection: 'column',
 	gap: space._2xs,
 });
@@ -53,54 +53,54 @@ export const flexGrow = style({
 });
 
 export const imagesContainer = style({
-	borderRadius: 4,
-	overflow: 'hidden',
-	height: 64,
-	width: 64,
-	flexShrink: 0,
-	position: 'relative',
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'column',
+	flexShrink: 0,
+	borderRadius: 4,
+	width: 64,
+	height: 64,
+	overflow: 'hidden',
 });
 
 export const image = style({
-	flexGrow: 1,
 	flexBasis: 0,
-	minWidth: 0,
-	minHeight: 0,
+	flexGrow: 1,
 	width: '100%',
+	minWidth: 0,
 	height: '100%',
+	minHeight: 0,
 	objectFit: 'cover',
 });
 
 export const imagesRow = style({
 	display: 'flex',
-	flexDirection: 'row',
-	gap: 2,
-	flexGrow: 1,
 	flexBasis: 0,
+	flexDirection: 'row',
+	flexGrow: 1,
+	gap: 2,
 });
 
 export const imagesCol = style({
 	display: 'flex',
-	flexDirection: 'column',
-	gap: 2,
-	flexGrow: 1,
 	flexBasis: 0,
+	flexDirection: 'column',
+	flexGrow: 1,
+	gap: 2,
 });
 
 export const imageOverlayWrapper = style({
-	flex: 1,
-	flexGrow: 1,
 	display: 'flex',
-	flexDirection: 'column',
 	position: 'relative',
+	flex: 1,
+	flexDirection: 'column',
+	flexGrow: 1,
 });
 
 export const imageOverlay = style({
+	display: 'flex',
 	position: 'absolute',
 	inset: 0,
-	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
 	backgroundColor: 'rgba(0, 0, 0, 0.5)',

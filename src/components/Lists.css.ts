@@ -9,22 +9,22 @@ export const heightVar = createVar();
 export const footer = recipe(
 	{
 		base: {
-			alignItems: 'center',
 			boxSizing: 'border-box',
 			display: 'flex',
 			flexDirection: 'column',
-			height: fallbackVar(heightVar, '180px'),
-			paddingBottom: space.lg,
+			alignItems: 'center',
 			paddingTop: 30,
+			paddingBottom: space.lg,
 			width: '100%',
+			height: fallbackVar(heightVar, '180px'),
 		},
 		variants: {
 			border: {
 				false: {},
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -35,18 +35,18 @@ export const footer = recipe(
 
 export const errorOuter = style({
 	boxSizing: 'border-box',
-	paddingLeft: space.lg,
 	paddingRight: space.lg,
+	paddingLeft: space.lg,
 	width: '100%',
 });
 
 export const errorRow = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_25,
-	borderRadius: borderRadius.sm,
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'center',
+	borderRadius: borderRadius.sm,
+	backgroundColor: colors.contrast_25,
 	padding: space.md,
 });
 

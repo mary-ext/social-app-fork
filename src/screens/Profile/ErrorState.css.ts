@@ -10,8 +10,8 @@ export const container = style({
 });
 
 export const title = style({
-	paddingBottom: space.sm,
 	paddingTop: space.md,
+	paddingBottom: space.sm,
 });
 
 export const description = style({
@@ -19,8 +19,8 @@ export const description = style({
 });
 
 export const errorBox = style({
-	backgroundColor: vars.palette.contrast_25,
 	borderRadius: borderRadius.md,
+	backgroundColor: vars.palette.contrast_25,
 	paddingBlock: space.md,
 	paddingInline: space.lg,
 });

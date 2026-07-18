@@ -10,8 +10,8 @@ export const screen = recipe(
 			display: 'flex',
 			flexDirection: 'column',
 			flexShrink: 0,
-			minHeight: `calc(100dvh - ${fallbackVar(bottomBarHeightVar, '0px')})`,
 			paddingTop: 'env(safe-area-inset-top, 0px)',
+			minHeight: `calc(100dvh - ${fallbackVar(bottomBarHeightVar, '0px')})`,
 		},
 		defaultVariants: {
 			noInsetTop: false,

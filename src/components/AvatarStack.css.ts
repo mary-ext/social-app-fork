@@ -21,9 +21,9 @@ export const stack = style({
 
 export const avatar = style({
 	flexShrink: 0,
-	height: sizeVar,
-	width: sizeVar,
 	zIndex: stackOrder,
+	width: sizeVar,
+	height: sizeVar,
 	selectors: {
 		'&:not(:first-child)': { marginLeft: `calc(${sizeVar} / -5)` },
 		'&:not(:last-child)': { WebkitMaskImage: mask, maskImage: mask },
@@ -31,8 +31,8 @@ export const avatar = style({
 });
 
 export const placeholder = style({
-	backgroundColor: vars.palette.contrast_25,
 	borderRadius: '50%',
-	height: '100%',
+	backgroundColor: vars.palette.contrast_25,
 	width: '100%',
+	height: '100%',
 });

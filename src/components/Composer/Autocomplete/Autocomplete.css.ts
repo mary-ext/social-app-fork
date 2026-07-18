@@ -8,32 +8,32 @@ export const positioner = style({
 });
 
 export const popup = style({
-	backgroundColor: vars.palette.contrast_0,
+	boxSizing: 'border-box',
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 12,
 	boxShadow: vars.shadow.lg,
-	boxSizing: 'border-box',
-	maxHeight: 'var(--available-height)',
-	maxWidth: 'var(--available-width)',
-	overflowX: 'hidden',
-	overflowY: 'auto',
+	backgroundColor: vars.palette.contrast_0,
 	paddingBlock: space.xs,
 	width: 320,
+	maxWidth: 'var(--available-width)',
+	maxHeight: 'var(--available-height)',
+	overflowX: 'hidden',
+	overflowY: 'auto',
 });
 
 export const row = style({
-	backgroundColor: 'transparent',
 	boxSizing: 'border-box',
-	color: vars.palette.contrast_1000,
-	cursor: 'default',
 	display: 'flex',
 	gap: space.sm,
 	outline: 'none',
+	backgroundColor: 'transparent',
 	paddingBlock: 8,
 	paddingInline: space.md,
-	textAlign: 'start',
-	userSelect: 'none',
 	width: '100%',
+	textAlign: 'start',
+	color: vars.palette.contrast_1000,
+	cursor: 'default',
+	userSelect: 'none',
 	selectors: {
 		'&[data-highlighted]': { backgroundColor: vars.palette.contrast_25 },
 	},
@@ -51,6 +51,6 @@ export const text = style({
 });
 
 export const emojiGlyph = style({
-	fontSize: fontSize.xl,
 	lineHeight: 1.15,
+	fontSize: fontSize.xl,
 });

@@ -11,8 +11,8 @@ export const gutterVar = createVar();
 
 export const outer = style({
 	display: 'flex',
-	flexDirection: 'row',
 	position: 'relative',
+	flexDirection: 'row',
 });
 
 export const scroller = style({
@@ -20,40 +20,40 @@ export const scroller = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
-	overflowX: 'auto',
 	paddingInline: gutterVar,
-	userSelect: 'none',
 	width: '100%',
+	overflowX: 'auto',
 	scrollbarWidth: 'none',
+	userSelect: 'none',
 	selectors: {
 		'&::-webkit-scrollbar': { display: 'none' },
 	},
 });
 
 const activeColors = {
-	backgroundColor: colors.contrast_25,
 	borderColor: colors.borderContrastMedium,
+	backgroundColor: colors.contrast_25,
 	color: colors.text,
 };
 
 export const tab = recipe(
 	{
 		base: {
-			alignItems: 'center',
 			appearance: 'none',
-			backgroundColor: colors.bg,
-			border: `1px solid ${colors.borderContrastLow}`,
-			borderRadius: borderRadius.full,
-			color: colors.textContrastMedium,
-			cursor: 'pointer',
 			display: 'flex',
 			flexShrink: 0,
 			// gap only shows through with multiple children (e.g. a label beside a count); single-label pills are unaffected.
 			gap: space.sm,
+			alignItems: 'center',
 			margin: 0,
+			border: `1px solid ${colors.borderContrastLow}`,
+			borderRadius: borderRadius.full,
+			backgroundColor: colors.bg,
 			paddingBlock: space.sm,
 			paddingInline: space.lg,
 			whiteSpace: 'nowrap',
+			color: colors.textContrastMedium,
+			cursor: 'pointer',
 			selectors: {
 				'&:focus-visible': {
 					outline: `2px solid ${colors.primary_500}`,
@@ -78,32 +78,32 @@ export const tabLabel = style({
 });
 
 const edgeBase = style({
-	alignItems: 'center',
-	bottom: 0,
 	display: 'flex',
 	position: 'absolute',
 	top: 0,
+	bottom: 0,
+	alignItems: 'center',
 });
 
 export const edgeLeft = style([
 	edgeBase,
 	{
-		background: `linear-gradient(to right, ${colors.bg} 0%, ${colors.bg} 70%, ${colorMix(colors.bg, '0%')} 100%)`,
-		justifyContent: 'flex-start',
 		left: 0,
-		paddingLeft: gutterVar,
+		justifyContent: 'flex-start',
+		background: `linear-gradient(to right, ${colors.bg} 0%, ${colors.bg} 70%, ${colorMix(colors.bg, '0%')} 100%)`,
 		paddingRight: space.md,
+		paddingLeft: gutterVar,
 	},
 ]);
 
 export const edgeRight = style([
 	edgeBase,
 	{
-		background: `linear-gradient(to left, ${colors.bg} 0%, ${colors.bg} 70%, ${colorMix(colors.bg, '0%')} 100%)`,
-		justifyContent: 'flex-end',
-		paddingLeft: space.md,
-		paddingRight: gutterVar,
 		right: 0,
+		justifyContent: 'flex-end',
+		background: `linear-gradient(to left, ${colors.bg} 0%, ${colors.bg} 70%, ${colorMix(colors.bg, '0%')} 100%)`,
+		paddingRight: gutterVar,
+		paddingLeft: space.md,
 	},
 ]);
 

@@ -3,16 +3,16 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const labelGroup = style({
-	alignItems: 'center',
 	display: 'flex',
 	gap: space.xs,
+	alignItems: 'center',
 });
 
 export const row = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'space-between',
+	paddingTop: space.lg,
 	paddingBottom: space.sm,
 	paddingInline: space.lg,
-	paddingTop: space.lg,
 });

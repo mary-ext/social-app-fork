@@ -12,8 +12,8 @@ export const title = style({
 });
 
 export const heading = style({
-	marginBottom: space.sm,
 	marginTop: space._2xl,
+	marginBottom: space.sm,
 });
 
 export const body = style({

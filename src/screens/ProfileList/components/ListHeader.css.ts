@@ -6,24 +6,24 @@ export const outer = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.lg,
-	paddingInline: space.lg,
 	paddingBottom: space.sm,
+	paddingInline: space.lg,
 });
 
 export const header = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'flex-start',
 });
 
 export const avatarButton = style({
 	appearance: 'none',
-	background: 'none',
-	border: 'none',
-	cursor: 'pointer',
 	display: 'block',
+	border: 'none',
+	background: 'none',
 	padding: 0,
+	cursor: 'pointer',
 });
 
 export const content = style({
@@ -31,6 +31,6 @@ export const content = style({
 	flex: '1 1 0%',
 	flexDirection: 'column',
 	gap: space._2xs,
-	minWidth: 0,
 	paddingBlock: (56 - 50) / 2,
+	minWidth: 0,
 });

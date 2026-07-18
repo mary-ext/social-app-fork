@@ -6,8 +6,8 @@ export const confirm = style({
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',
-	textAlign: 'center',
 	paddingTop: space.lg,
+	textAlign: 'center',
 });
 
 export const confirmTitle = style({

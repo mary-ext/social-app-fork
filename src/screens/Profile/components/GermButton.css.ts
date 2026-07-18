@@ -4,24 +4,24 @@ import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const pill = style({
-	alignItems: 'center',
-	alignSelf: 'flex-start',
 	appearance: 'none',
-	backgroundColor: colors.contrast_50,
-	border: 'none',
-	borderRadius: borderRadius.full,
-	color: colors.text,
-	cursor: 'pointer',
 	display: 'inline-flex',
 	flexDirection: 'row',
-	font: 'inherit',
+	alignItems: 'center',
+	alignSelf: 'flex-start',
+	border: 'none',
+	borderRadius: borderRadius.full,
+	backgroundColor: colors.contrast_50,
 	padding: 6,
 	textDecoration: 'none',
+	color: colors.text,
+	font: 'inherit',
+	cursor: 'pointer',
 });
 
 export const logo = style({
-	borderRadius: borderRadius.full,
 	display: 'block',
+	borderRadius: borderRadius.full,
 	objectFit: 'cover',
 });
 

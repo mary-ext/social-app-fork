@@ -9,11 +9,11 @@ export const outer = style({ padding: space.md });
 export const card = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			backgroundColor: colors.contrast_50,
 			display: 'flex',
 			flexDirection: 'column',
+			alignItems: 'center',
 			justifyContent: 'center',
+			backgroundColor: colors.contrast_50,
 			padding: space.lg,
 		},
 		variants: {

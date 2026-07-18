@@ -13,11 +13,11 @@ export const portal = style(
 
 export const backdrop = style(
 	layered(components, {
-		backgroundColor: 'rgba(0, 0, 0, 0.8)',
-		inset: 0,
 		position: 'fixed',
+		inset: 0,
 		transitionDuration: '150ms',
 		transitionProperty: 'opacity',
+		backgroundColor: 'rgba(0, 0, 0, 0.8)',
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 		},
@@ -26,36 +26,36 @@ export const backdrop = style(
 
 export const viewport = style(
 	layered(components, {
-		alignItems: 'center',
-		bottom: 0,
 		boxSizing: 'border-box',
 		display: 'flex',
-		justifyContent: 'center',
-		left: 0,
-		overflowY: 'auto',
-		padding: 16,
 		position: 'fixed',
-		right: 0,
 		top: 0,
+		right: 0,
+		bottom: 0,
+		left: 0,
+		alignItems: 'center',
+		justifyContent: 'center',
+		padding: 16,
+		overflowY: 'auto',
 	}),
 );
 
 export const popup = recipe(
 	{
 		base: {
-			backgroundColor: vars.palette.contrast_0,
-			border: `1px solid ${vars.palette.contrast_200}`,
-			borderRadius: 20,
-			boxShadow: vars.shadow.lg,
 			boxSizing: 'border-box',
-			padding: 24,
 			position: 'relative',
 			transitionDuration: '200ms',
 			transitionProperty: 'opacity, transform',
 			transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+			border: `1px solid ${vars.palette.contrast_200}`,
+			borderRadius: 20,
+			boxShadow: vars.shadow.lg,
+			backgroundColor: vars.palette.contrast_0,
+			padding: 24,
 			width: '100%',
 			selectors: {
-				'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+				'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
 			},
 		},
 		variants: {
@@ -91,9 +91,9 @@ export const rows = style({
 });
 
 export const row = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	gap: 12,
+	alignItems: 'flex-start',
 });
 
 export const rowIcon = style({

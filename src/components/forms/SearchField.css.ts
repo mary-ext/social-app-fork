@@ -5,25 +5,25 @@ import { roundToPx } from '#/styles/round';
 import { fontLeading, fontSize } from '#/styles/tokens.css';
 
 export const field = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_50,
-	border: '1px solid transparent',
-	borderRadius: 10,
 	boxSizing: 'border-box',
-	cursor: 'text',
 	display: 'flex',
 	gap: 8,
+	alignItems: 'center',
+	border: '1px solid transparent',
+	borderRadius: 10,
+	backgroundColor: vars.palette.contrast_50,
 	paddingInline: 12,
 	width: '100%',
+	cursor: 'text',
 	selectors: {
 		'&:hover': { borderColor: vars.palette.contrast_100 },
-		'&:has(input:focus)': { backgroundColor: vars.palette.primary_25, borderColor: vars.palette.primary_500 },
+		'&:has(input:focus)': { borderColor: vars.palette.primary_500, backgroundColor: vars.palette.primary_25 },
 	},
 });
 
 export const icon = style({
-	color: vars.palette.contrast_500,
 	flexShrink: 0,
+	color: vars.palette.contrast_500,
 	pointerEvents: 'none',
 	selectors: {
 		[`${field}:hover &`]: { color: vars.palette.contrast_800 },
@@ -33,18 +33,18 @@ export const icon = style({
 
 export const input = style({
 	appearance: 'none',
-	backgroundColor: 'transparent',
-	border: 'none',
-	color: vars.palette.contrast_1000,
 	flex: 1,
-	fontFamily: 'inherit',
-	fontSize: fontSize.md,
-	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
 	margin: 0,
-	minWidth: 0,
 	outline: 'none',
+	border: 'none',
+	backgroundColor: 'transparent',
 	paddingBlock: 10,
 	paddingInline: 0,
+	minWidth: 0,
+	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
+	color: vars.palette.contrast_1000,
+	fontFamily: 'inherit',
+	fontSize: fontSize.md,
 	selectors: {
 		'&::placeholder': { color: vars.palette.contrast_500, userSelect: 'none' },
 	},
@@ -58,9 +58,9 @@ export const clear = style({
 });
 
 export const slot = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexShrink: 0,
 	gap: 4,
+	alignItems: 'center',
 	marginInlineEnd: -6,
 });

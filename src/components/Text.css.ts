@@ -36,13 +36,13 @@ const sizeVariants = (): { [K in keyof typeof fontLeading]: { vars: Record<strin
 export const text = recipe(
 	{
 		base: {
+			margin: 0,
+			padding: 0,
+			lineHeight: roundToPx(`calc(${fontSizeScale} * ${leading})`),
+			whiteSpace: 'pre-wrap',
+			overflowWrap: 'break-word',
 			fontFamily: 'inherit',
 			fontSize: fontSizeScale,
-			lineHeight: roundToPx(`calc(${fontSizeScale} * ${leading})`),
-			margin: 0,
-			overflowWrap: 'break-word',
-			padding: 0,
-			whiteSpace: 'pre-wrap',
 		},
 		defaultVariants: { color: 'text', leading: 'snug', size: 'md' },
 		variants: {
@@ -64,8 +64,8 @@ export const lineClampVar = createVar();
 export const clampSingleLine = style({
 	'@layer': {
 		[components]: {
-			maxWidth: '100%',
 			minWidth: 0,
+			maxWidth: '100%',
 			overflow: 'hidden',
 			textOverflow: 'ellipsis',
 			whiteSpace: 'nowrap',

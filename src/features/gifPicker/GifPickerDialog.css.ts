@@ -4,14 +4,14 @@ import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
 export const header = style({
-	backgroundColor: vars.palette.contrast_0,
 	flexShrink: 0,
-	paddingInline: space.xl,
+	backgroundColor: vars.palette.contrast_0,
 	paddingTop: space.xl,
+	paddingInline: space.xl,
 	'@media': {
 		'(min-width: 800px)': {
-			paddingInline: space._2xl,
 			paddingTop: space._2xl,
+			paddingInline: space._2xl,
 		},
 	},
 });
@@ -21,8 +21,8 @@ export const placeholder = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	minHeight: 0,
 	paddingInline: space.xl,
+	minHeight: 0,
 	'@media': {
 		'(min-width: 800px)': {
 			paddingInline: space._2xl,

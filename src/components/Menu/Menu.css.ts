@@ -14,57 +14,57 @@ export const portal = style({
 });
 
 export const popup = style({
-	backgroundColor: vars.palette.contrast_25,
-	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: 8,
-	boxShadow: vars.shadow.md,
 	boxSizing: 'border-box',
-	maxHeight: 'var(--available-height)',
-	maxWidth: 'min(var(--available-width), 320px)',
-	minWidth: fallbackVar(minWidthVar, 'auto'),
-	outline: 0,
-	overflowY: 'auto',
-	padding: 4,
 	transformOrigin: 'var(--transform-origin)',
 	transitionDuration: '150ms',
 	transitionProperty: 'opacity, transform',
 	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+	outline: 0,
+	border: `1px solid ${vars.palette.contrast_100}`,
+	borderRadius: 8,
+	boxShadow: vars.shadow.md,
+	backgroundColor: vars.palette.contrast_25,
+	padding: 4,
+	minWidth: fallbackVar(minWidthVar, 'auto'),
+	maxWidth: 'min(var(--available-width), 320px)',
+	maxHeight: 'var(--available-height)',
+	overflowY: 'auto',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+		'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
 	},
 });
 
 export const item = style({
-	alignItems: 'center',
-	borderRadius: 4,
+	vars: { [iconColor]: vars.palette.contrast_700 },
 	boxSizing: 'border-box',
-	color: vars.palette.contrast_900,
-	cursor: 'pointer',
 	display: 'flex',
-	fontSize: fontSize.sm,
-	fontWeight: 600,
 	gap: 16,
-	lineHeight: 1,
-	minHeight: 32,
+	alignItems: 'center',
 	outline: 0,
+	borderRadius: 4,
 	paddingBlock: 8,
 	paddingInline: 10,
+	minHeight: 32,
 	textDecoration: 'none',
+	lineHeight: 1,
+	color: vars.palette.contrast_900,
+	fontSize: fontSize.sm,
+	fontWeight: 600,
+	cursor: 'pointer',
 	userSelect: 'none',
-	vars: { [iconColor]: vars.palette.contrast_700 },
 	selectors: {
 		'&[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
 		'&[data-disabled]': {
+			vars: { [iconColor]: vars.palette.contrast_400 },
 			color: vars.palette.contrast_400,
 			cursor: 'default',
-			vars: { [iconColor]: vars.palette.contrast_400 },
 		},
 	},
 });
 
 export const itemDestructive = style({
-	color: vars.palette.negative_500,
 	vars: { [iconColor]: vars.palette.negative_500 },
+	color: vars.palette.negative_500,
 });
 
 export const itemText = style({
@@ -77,44 +77,44 @@ export const itemIcon = style({
 });
 
 export const itemIconRight = style({
-	marginLeft: 12,
 	marginRight: -2,
+	marginLeft: 12,
 });
 
 export const groupLabel = style({
 	boxSizing: 'border-box',
+	paddingBlock: 8,
+	paddingInline: 10,
+	maxWidth: fallbackVar(maxWidthVar, 'none'),
+	lineHeight: 1.3,
 	color: vars.palette.contrast_400,
 	fontSize: fontSize.sm,
 	fontWeight: 600,
-	lineHeight: 1.3,
-	maxWidth: fallbackVar(maxWidthVar, 'none'),
-	paddingBlock: 8,
-	paddingInline: 10,
 });
 
 export const separator = style({
-	backgroundColor: vars.palette.contrast_100,
-	border: 0,
 	flexShrink: 0,
-	height: 1,
 	marginBlock: 4,
+	border: 0,
+	backgroundColor: vars.palette.contrast_100,
+	height: 1,
 });
 
 export const itemRadio = style({
-	alignItems: 'center',
-	border: `1px solid ${vars.palette.contrast_300}`,
-	borderRadius: 999,
 	boxSizing: 'border-box',
 	display: 'inline-flex',
 	flexShrink: 0,
-	height: 20,
+	alignItems: 'center',
 	justifyContent: 'center',
+	border: `1px solid ${vars.palette.contrast_300}`,
+	borderRadius: 999,
 	width: 20,
+	height: 20,
 });
 
 export const itemRadioDot = style({
-	backgroundColor: vars.palette.primary_500,
 	borderRadius: 999,
-	height: 14,
+	backgroundColor: vars.palette.primary_500,
 	width: 14,
+	height: 14,
 });

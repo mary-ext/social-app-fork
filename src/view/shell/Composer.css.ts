@@ -1,8 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
 export const placeholder = style({
-	alignItems: 'center',
 	display: 'flex',
-	height: 312,
+	alignItems: 'center',
 	justifyContent: 'center',
+	height: 312,
 });

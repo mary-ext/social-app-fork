@@ -3,19 +3,19 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 
 export const card = style({
-	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: 8,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
+	border: `1px solid ${vars.palette.contrast_100}`,
+	borderRadius: 8,
 	overflow: 'hidden',
 });
 
 export const cardTop = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 8,
+	alignItems: 'flex-start',
 	padding: 12,
 });
 
@@ -28,8 +28,8 @@ export const cardInfo = style({
 });
 
 export const band = style({
-	backgroundColor: vars.palette.contrast_25,
 	boxSizing: 'border-box',
+	backgroundColor: vars.palette.contrast_25,
 	paddingBlock: 8,
 	paddingInline: 12,
 });

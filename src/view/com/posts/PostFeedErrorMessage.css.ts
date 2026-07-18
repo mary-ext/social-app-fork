@@ -7,10 +7,10 @@ import { space } from '#/styles/tokens.css';
 export const container = recipe(
 	{
 		base: {
-			backgroundColor: colors.bg,
 			display: 'flex',
 			flexDirection: 'column',
 			gap: space.md,
+			backgroundColor: colors.bg,
 			paddingBlock: 18,
 			paddingInline: space.xl,
 		},
@@ -26,10 +26,10 @@ export const container = recipe(
 );
 
 export const cta = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 10,
+	alignItems: 'center',
 });
 
 export const empty = style({ paddingBlock: 40 });

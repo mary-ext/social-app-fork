@@ -13,8 +13,8 @@ export const input = style({
 });
 
 export const button = style({
-	insetInlineEnd: 6,
 	position: 'absolute',
+	insetInlineEnd: 6,
 	top: '50%',
 	transform: 'translateY(-50%)',
 });

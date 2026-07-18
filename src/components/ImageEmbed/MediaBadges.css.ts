@@ -5,11 +5,11 @@ import { roundToPx } from '#/styles/round';
 import { borderRadius } from '#/styles/tokens.css';
 
 const clusterBase = style({
-	bottom: 4,
 	display: 'flex',
-	flexDirection: 'row',
 	position: 'absolute',
 	right: 4,
+	bottom: 4,
+	flexDirection: 'row',
 });
 
 export const cluster = styleVariants({
@@ -19,10 +19,10 @@ export const cluster = styleVariants({
 
 const countClusterBase = style({
 	display: 'flex',
-	flexDirection: 'row',
 	position: 'absolute',
-	right: 4,
 	top: 4,
+	right: 4,
+	flexDirection: 'row',
 });
 
 export const countCluster = styleVariants({
@@ -31,12 +31,12 @@ export const countCluster = styleVariants({
 });
 
 const boxBase = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_25,
 	boxSizing: 'border-box',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	opacity: 0.8,
+	backgroundColor: vars.palette.contrast_25,
 });
 
 export const box = styleVariants({
@@ -47,11 +47,11 @@ export const box = styleVariants({
 });
 
 export const icon = style({
-	color: vars.palette.contrast_900,
 	display: 'block',
+	color: vars.palette.contrast_900,
 });
 
 export const altSmall = style({
-	fontSize: 8,
 	lineHeight: roundToPx('calc(8px * 1.3)'),
+	fontSize: 8,
 });

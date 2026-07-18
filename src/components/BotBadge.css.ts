@@ -7,14 +7,14 @@ export const icon = style({
 });
 
 export const button = style({
-	':hover': { transform: 'scale(1.1)' },
+	display: 'inline-flex',
 	alignItems: 'center',
-	background: 'none',
+	justifyContent: 'center',
+	transition: 'transform 0.1s',
 	border: 0,
+	background: 'none',
+	padding: 0,
 	color: colors.textContrastMedium,
 	cursor: 'pointer',
-	display: 'inline-flex',
-	justifyContent: 'center',
-	padding: 0,
-	transition: 'transform 0.1s',
+	':hover': { transform: 'scale(1.1)' },
 });

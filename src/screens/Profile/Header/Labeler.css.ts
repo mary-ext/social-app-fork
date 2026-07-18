@@ -4,16 +4,16 @@ import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
 export const body = style({
+	paddingTop: space.md,
 	paddingBottom: space.sm,
 	paddingInline: space.lg,
-	paddingTop: space.md,
 });
 
 export const buttonRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.xs,
+	alignItems: 'center',
 	justifyContent: 'flex-end',
 	paddingBottom: space.lg,
 });
@@ -22,25 +22,25 @@ export const nameBlock = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space._2xs,
-	paddingBottom: space.md,
 	paddingTop: space._2xs,
+	paddingBottom: space.md,
 });
 
 export const likeRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.xs,
+	alignItems: 'center',
 	paddingTop: space.lg,
 });
 
 export const subscribeButton = style({
-	alignItems: 'center',
-	borderRadius: 6,
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 6,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: 6,
 	paddingBlock: 9,
 	paddingInline: 12,
 });

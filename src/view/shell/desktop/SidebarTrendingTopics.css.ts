@@ -4,19 +4,19 @@ import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const card = style({
-	borderColor: colors.borderContrastLow,
-	borderRadius: borderRadius.md,
-	borderStyle: 'solid',
-	borderWidth: 1,
 	display: 'flex',
 	flexDirection: 'column',
+	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: borderRadius.md,
+	borderColor: colors.borderContrastLow,
 	padding: space.lg,
 });
 
 export const header = style({
-	alignItems: 'center',
 	display: 'flex',
 	gap: space.xs,
+	alignItems: 'center',
 	paddingBottom: space.md,
 });
 
@@ -26,8 +26,8 @@ export const title = style({
 });
 
 export const optionsButton = style({
-	marginRight: -6,
 	marginTop: -6,
+	marginRight: -6,
 });
 
 export const body = style({
@@ -37,23 +37,23 @@ export const body = style({
 });
 
 export const index = style({
-	color: colors.textContrastLow,
 	flexShrink: 0,
 	minWidth: 16,
+	color: colors.textContrastLow,
 });
 
 export const topicLink = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	gap: space.xs,
+	alignItems: 'flex-start',
 	textDecoration: 'none',
 });
 
 export const topicName = style({
-	color: colors.textContrastMedium,
 	flex: 1,
 	minWidth: 0,
+	color: colors.textContrastMedium,
 	selectors: {
-		[`${topicLink}:hover &`]: { color: colors.text, textDecoration: 'underline' },
+		[`${topicLink}:hover &`]: { textDecoration: 'underline', color: colors.text },
 	},
 });

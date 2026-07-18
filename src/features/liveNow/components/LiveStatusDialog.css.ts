@@ -24,24 +24,24 @@ export const xlTop = styleVariants({
 });
 
 export const media = style({
-	aspectRatio: String(CARD_ASPECT_RATIO),
-	backgroundColor: vars.palette.contrast_25,
-	overflow: 'hidden',
 	position: 'relative',
+	backgroundColor: vars.palette.contrast_25,
+	aspectRatio: String(CARD_ASPECT_RATIO),
 	width: '100%',
+	overflow: 'hidden',
 });
 
 export const mediaFrame = style({
-	inset: 0,
 	position: 'absolute',
+	inset: 0,
 });
 
 export const liveBadge = style({
-	bottom: 'auto',
-	justifyContent: 'flex-start',
-	left: space.lg,
-	right: 'auto',
 	top: space.lg,
+	right: 'auto',
+	bottom: 'auto',
+	left: space.lg,
+	justifyContent: 'flex-start',
 });
 
 export const info = style({
@@ -52,10 +52,10 @@ export const info = style({
 });
 
 export const domain = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space._2xs,
+	alignItems: 'center',
 });
 
 export const watchButton = style({
@@ -68,25 +68,25 @@ export const divider = style({
 });
 
 export const betaRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	justifyContent: 'space-between',
 	paddingTop: space.sm,
 	width: '100%',
 });
 
 export const beta = style({
-	alignItems: 'center',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',
 	gap: space.xs,
+	alignItems: 'center',
 });
 
 export const reportButton = style({
-	background: 'none',
 	display: 'flex',
+	background: 'none',
 	padding: 0,
 	textDecoration: 'underline',
 	textDecorationColor: vars.palette.contrast_700,

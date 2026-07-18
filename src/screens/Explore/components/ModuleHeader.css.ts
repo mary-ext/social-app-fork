@@ -8,14 +8,14 @@ import { borderRadius, space } from '#/styles/tokens.css';
 export const container = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			backgroundColor: colors.bg,
 			display: 'flex',
 			flexDirection: 'row',
 			gap: space.sm,
+			alignItems: 'center',
+			backgroundColor: colors.bg,
+			paddingTop: space._2xl,
 			paddingBottom: space.md,
 			paddingInline: space.lg,
-			paddingTop: space._2xl,
 		},
 		defaultVariants: { bottomBorder: false },
 		variants: {
@@ -32,9 +32,9 @@ export const iconSizeVar = createVar();
 
 export const icon = style({
 	flexShrink: 0,
-	height: iconSizeVar,
 	marginLeft: -2,
 	width: iconSizeVar,
+	height: iconSizeVar,
 });
 
 export const titleText = style({
@@ -58,19 +58,19 @@ export const pinButton = style({
 });
 
 export const feedLink = style({
-	alignItems: 'center',
-	borderRadius: borderRadius.md,
 	boxSizing: 'border-box',
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',
 	gap: 10,
+	alignItems: 'center',
 	marginLeft: -6,
-	minWidth: 0,
+	borderRadius: borderRadius.md,
 	padding: space.xs,
+	minWidth: 0,
 	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer',
 	':hover': {
 		backgroundColor: colors.contrast_25,
 	},

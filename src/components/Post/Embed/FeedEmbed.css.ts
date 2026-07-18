@@ -5,11 +5,11 @@ import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const card = style({
-	backgroundColor: colors.bg,
-	borderColor: colors.borderContrastLow,
-	borderRadius: borderRadius.md,
-	borderStyle: 'solid',
 	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: borderRadius.md,
+	borderColor: colors.borderContrastLow,
+	backgroundColor: colors.bg,
 	padding: space.md,
 	selectors: {
 		'&:hover': { borderColor: vars.palette.contrast_300 },

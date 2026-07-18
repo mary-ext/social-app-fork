@@ -17,24 +17,24 @@ export const linkContainer = style([
 ]);
 
 export const contentContainer = style({
-	borderRadius: 8,
-	borderWidth: 1,
-	borderStyle: 'solid',
-	borderColor: vars.palette.contrast_200,
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
-	paddingBlock: space.xl,
+	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: 8,
+	borderColor: vars.palette.contrast_200,
 	backgroundColor: vars.palette.contrast_25,
+	paddingBlock: space.xl,
 });
 
 export const errorContainer = style([
 	contentContainer,
 	{
+		flexDirection: 'column',
+		gap: space.xs,
 		alignItems: 'flex-start',
 		padding: space.md,
-		gap: space.xs,
-		flexDirection: 'column',
 	},
 ]);
 

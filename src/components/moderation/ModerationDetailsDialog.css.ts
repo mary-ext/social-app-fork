@@ -14,13 +14,13 @@ export const admonition = style({
 });
 
 export const appealRow = style({
-	alignItems: 'center',
-	borderTop: `1px solid ${vars.palette.contrast_100}`,
 	display: 'flex',
 	flexWrap: 'wrap',
 	gap: 12,
+	alignItems: 'center',
 	justifyContent: 'space-between',
 	marginTop: 16,
+	borderTop: `1px solid ${vars.palette.contrast_100}`,
 	paddingTop: 16,
 });
 
@@ -29,11 +29,11 @@ export const appealHint = style({
 });
 
 export const labelBand = style({
-	backgroundColor: vars.palette.contrast_25,
+	boxSizing: 'border-box',
+	borderTop: `1px solid ${vars.palette.contrast_100}`,
 	borderBottomLeftRadius: 11,
 	borderBottomRightRadius: 11,
-	borderTop: `1px solid ${vars.palette.contrast_100}`,
-	boxSizing: 'border-box',
+	backgroundColor: vars.palette.contrast_25,
 	paddingBlock: 12,
 	paddingInline: 20,
 });
@@ -51,6 +51,6 @@ export const sourceText = style({
 
 export const expires = style({
 	flexShrink: 0,
-	fontStyle: 'italic',
 	marginBlock: (20 - 16) / 2,
+	fontStyle: 'italic',
 });

@@ -9,20 +9,20 @@ export const outer = style({
 	display: 'flex',
 	flexDirection: 'column',
 	marginBottom: space.xs,
-	paddingLeft: OUTER_SPACE,
-	paddingRight: OUTER_SPACE,
 	paddingTop: OUTER_SPACE / 1.2,
+	paddingRight: OUTER_SPACE,
+	paddingLeft: OUTER_SPACE,
 });
 
 export const row = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_25,
-	borderRadius: borderRadius.sm,
-	color: colors.textContrastMedium,
 	display: 'flex',
 	flexDirection: 'row',
-	paddingBottom: OUTER_SPACE / 1.2,
+	alignItems: 'center',
+	borderRadius: borderRadius.sm,
+	backgroundColor: colors.contrast_25,
 	paddingTop: OUTER_SPACE / 1.2,
+	paddingBottom: OUTER_SPACE / 1.2,
+	color: colors.textContrastMedium,
 });
 
 export const iconCell = style({

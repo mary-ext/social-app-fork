@@ -13,9 +13,9 @@ export const frame = recipe(
 		base: {
 			boxSizing: 'border-box',
 			display: 'flex',
+			position: 'relative',
 			flexDirection: 'column',
 			paddingInline: OUTER_SPACE,
-			position: 'relative',
 		},
 		variants: {
 			hoverable: {
@@ -31,9 +31,9 @@ export const frame = recipe(
 			rootPad: { true: { paddingTop: space.lg } },
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -44,17 +44,17 @@ export const frame = recipe(
 export const row = style({
 	boxSizing: 'border-box',
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'row',
 	gap: space.md,
-	position: 'relative',
 });
 
 export const avatarColumn = style({
-	alignItems: 'center',
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
 	flexShrink: 0,
+	alignItems: 'center',
 });
 
 export const content = style({
@@ -62,14 +62,14 @@ export const content = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	minWidth: 0,
 	paddingBottom: space.md,
+	minWidth: 0,
 });
 
 export const spine = style({
-	backgroundColor: colors.borderContrastLow,
 	flexGrow: 1,
 	marginInline: 'auto',
+	backgroundColor: colors.borderContrastLow,
 	width: REPLY_LINE_WIDTH,
 	selectors: {
 		'.theme--dark &, .theme--dim &': {

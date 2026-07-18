@@ -15,30 +15,30 @@ const areas = {
 };
 
 export const arrow = style({
-	alignItems: 'center',
 	boxSizing: 'border-box',
-	color: colors.textContrastLow,
 	display: 'flex',
 	flexShrink: 0,
+	alignItems: 'center',
 	justifyContent: 'center',
+	color: colors.textContrastLow,
 });
 
 export const label = style({
+	textAlign: 'center',
 	color: colors.textContrastMedium,
 	fontSize: 11,
 	fontWeight: 'bold',
-	textAlign: 'center',
 });
 
 export const logoCircle = style({
-	alignItems: 'center',
-	backgroundColor: colors.primary_500,
-	borderRadius: '50%',
 	boxSizing: 'border-box',
 	display: 'flex',
-	height: 56,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: '50%',
+	backgroundColor: colors.primary_500,
 	width: 56,
+	height: 56,
 });
 
 export const arrow1 = style([
@@ -74,7 +74,6 @@ export const blueskyLabelClass = style([
 ]);
 
 export const illustrationInner = style({
-	alignItems: 'center',
 	boxSizing: 'border-box',
 	display: 'grid',
 	gridTemplateAreas: `
@@ -82,19 +81,20 @@ export const illustrationInner = style({
 		"${areas.blueskyLabel}  .               ${areas.verifierLabel}  .               ${areas.verifiedLabel}"
 	`,
 	gridTemplateColumns: '1fr auto 1fr auto 1fr',
-	justifyContent: 'center',
-	maxWidth: 350,
 	rowGap: space.sm,
+	alignItems: 'center',
+	justifyContent: 'center',
 	width: '100%',
+	maxWidth: 350,
 });
 
 export const imageBox = style({
-	alignItems: 'center',
-	background: colors.contrast_25,
-	borderRadius: borderRadius.md,
 	boxSizing: 'border-box',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: borderRadius.md,
+	background: colors.contrast_25,
 	padding: `${space.xl} ${space.md}`,
 	width: '100%',
 });

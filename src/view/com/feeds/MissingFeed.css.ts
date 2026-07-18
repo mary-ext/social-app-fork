@@ -3,9 +3,9 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const profileRow = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'flex-start',
 	width: '100%',
 });
 
@@ -19,6 +19,6 @@ export const labelSpaced = style({
 
 export const notice = style({
 	display: 'block',
-	fontStyle: 'italic',
 	width: '100%',
+	fontStyle: 'italic',
 });

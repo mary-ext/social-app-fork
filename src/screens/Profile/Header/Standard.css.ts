@@ -3,18 +3,18 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const body = style({
-	overflow: 'hidden',
+	paddingTop: space.md,
 	paddingBottom: space.sm,
 	paddingInline: space.lg,
-	paddingTop: space.md,
+	overflow: 'hidden',
 });
 
 export const buttonRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	flexWrap: 'wrap',
 	gap: space.xs,
+	alignItems: 'center',
 	justifyContent: 'flex-end',
 	paddingBottom: space.sm,
 	paddingLeft: 90,
@@ -37,9 +37,9 @@ export const nameBlockDefault = style({
 
 export const badges = style({
 	display: 'inline-flex',
-	marginLeft: space.xs,
 	position: 'relative',
 	top: -5,
+	marginLeft: space.xs,
 	verticalAlign: 'middle',
 });
 
@@ -50,8 +50,8 @@ export const section = style({
 });
 
 export const knownRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 });

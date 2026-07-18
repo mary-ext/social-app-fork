@@ -26,21 +26,21 @@ export const loadMoreWrap = style({
 });
 
 export const loadMore = style({
-	alignItems: 'center',
 	appearance: 'none',
-	backgroundColor: colors.bg,
-	border: 'none',
 	boxSizing: 'border-box',
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 	justifyContent: 'center',
 	margin: 0,
+	border: 'none',
+	backgroundColor: colors.bg,
 	paddingBlock: space.md,
 	paddingInline: space.lg,
 	width: '100%',
+	color: 'inherit',
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': { backgroundColor: colors.contrast_25 },
 	},
@@ -48,16 +48,16 @@ export const loadMore = style({
 
 export const errorOuter = style({
 	borderTop: `1px solid ${colors.borderContrastLow}`,
-	paddingInline: space.md,
 	paddingTop: space.md,
+	paddingInline: space.md,
 });
 
 export const errorBox = style({
-	backgroundColor: colors.contrast_25,
-	borderRadius: borderRadius.sm,
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	borderRadius: borderRadius.sm,
+	backgroundColor: colors.contrast_25,
 	padding: space.lg,
 });
 

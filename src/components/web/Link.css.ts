@@ -4,8 +4,8 @@ import { recipe } from '#/styles/recipe';
 export const inlineLink = recipe(
 	{
 		base: {
-			cursor: 'pointer',
 			textDecoration: 'none',
+			cursor: 'pointer',
 			selectors: { '&:focus-visible': { outline: 'none' } },
 		},
 		defaultVariants: { underline: 'hover' },

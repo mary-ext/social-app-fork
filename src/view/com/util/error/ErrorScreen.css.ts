@@ -4,24 +4,24 @@ import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const outer = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 	paddingBlock: space._2xl,
 	paddingInline: space.xl,
 	textAlign: 'center',
 });
 
 export const badge = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_950,
-	borderRadius: 9999,
-	color: colors.textInverted,
 	display: 'flex',
-	height: 50,
+	alignItems: 'center',
 	justifyContent: 'center',
 	marginBottom: space.md,
+	borderRadius: 9999,
+	backgroundColor: colors.contrast_950,
 	width: 50,
+	height: 50,
+	color: colors.textInverted,
 });
 
 export const title = style({
@@ -34,11 +34,11 @@ export const message = style({
 
 export const details = style({
 	alignSelf: 'stretch',
-	backgroundColor: colors.contrast_25,
+	marginBottom: space.xl,
 	border: `1px solid ${colors.borderContrastMedium}`,
 	borderRadius: borderRadius.xs,
-	marginBottom: space.xl,
-	overflow: 'hidden',
+	backgroundColor: colors.contrast_25,
 	paddingBlock: space.sm,
 	paddingInline: space.lg,
+	overflow: 'hidden',
 });

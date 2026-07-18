@@ -3,19 +3,19 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const outer = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space._4xl,
-	paddingInline: space.xl,
+	alignItems: 'center',
 	paddingBlock: 150,
+	paddingInline: space.xl,
 });
 
 export const body = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.sm,
+	alignItems: 'center',
 	maxWidth: 294,
 	'@media': {
 		'(width >= 800px)': {

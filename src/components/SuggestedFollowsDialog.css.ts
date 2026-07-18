@@ -9,20 +9,20 @@ const SEARCH_NEGATIVE_MARGIN = 42;
 const ROW_BLOCK_PADDING = space.md;
 
 export const popup = style({
-	height: 600,
 	maxWidth: 500,
+	height: 600,
 });
 
 export const header = style({
-	alignItems: 'center',
-	backgroundColor: colors.bg,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexShrink: 0,
+	alignItems: 'center',
 	justifyContent: 'space-between',
+	backgroundColor: colors.bg,
+	paddingTop: DIALOG_PADDING,
 	paddingBottom: space.md,
 	paddingInline: DIALOG_PADDING,
-	paddingTop: DIALOG_PADDING,
 });
 
 export const title = style({
@@ -35,31 +35,31 @@ export const closeButton = style({
 });
 
 export const search = style({
+	zIndex: zIndex.raised,
+	marginBottom: -SEARCH_NEGATIVE_MARGIN,
 	backgroundColor: 'transparent',
 	backgroundImage: `linear-gradient(${colors.bg} 50%, ${colorMix(colors.bg, '0%')})`,
-	marginBottom: -SEARCH_NEGATIVE_MARGIN,
 	paddingInline: DIALOG_PADDING,
-	zIndex: zIndex.raised,
 });
 
 export const list = style({
-	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 	paddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
+	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 });
 
 export const tabs = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomStyle: 'solid',
 	borderBottomWidth: 1,
-	paddingBottom: DIALOG_PADDING,
+	borderBottomStyle: 'solid',
+	borderBottomColor: colors.borderContrastLow,
 	paddingTop: space.sm,
+	paddingBottom: DIALOG_PADDING,
 });
 
 export const empty = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.md,
+	alignItems: 'center',
 	paddingBlock: 20,
 	paddingInline: DIALOG_PADDING,
 });

@@ -8,14 +8,14 @@ import { fontSize, lineHeight } from '#/styles/tokens.css';
 export const container = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			bottom: -5,
 			display: 'flex',
-			justifyContent: 'center',
-			left: 0,
-			pointerEvents: 'none',
 			position: 'absolute',
 			right: 0,
+			bottom: -5,
+			left: 0,
+			alignItems: 'center',
+			justifyContent: 'center',
+			pointerEvents: 'none',
 		},
 		defaultVariants: { size: 'small' },
 		variants: {
@@ -32,16 +32,16 @@ export const container = recipe(
 export const pill = recipe(
 	{
 		base: {
-			backgroundColor: vars.palette.negative_500,
-			display: 'inline-block',
 			vars: { [sizeLeadingVar]: String(lineHeight.tight) },
+			display: 'inline-block',
+			backgroundColor: vars.palette.negative_500,
 		},
 		defaultVariants: { size: 'small' },
 		variants: {
 			size: {
-				large: { borderRadius: 5, paddingBlock: 2, paddingInline: 4, vars: { [fontSizeVar]: fontSize.xs } },
-				small: { borderRadius: 4, paddingBlock: 1, paddingInline: 3, vars: { [fontSizeVar]: fontSize._2xs } },
-				tiny: { borderRadius: 4, paddingBlock: 1, paddingInline: 3, vars: { [fontSizeVar]: '7px' } },
+				large: { vars: { [fontSizeVar]: fontSize.xs }, borderRadius: 5, paddingBlock: 2, paddingInline: 4 },
+				small: { vars: { [fontSizeVar]: fontSize._2xs }, borderRadius: 4, paddingBlock: 1, paddingInline: 3 },
+				tiny: { vars: { [fontSizeVar]: '7px' }, borderRadius: 4, paddingBlock: 1, paddingInline: 3 },
 			},
 		},
 	},

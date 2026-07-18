@@ -2,19 +2,19 @@ import { style } from '@vanilla-extract/css';
 
 export const root = style({
 	display: 'flex',
+	position: 'relative',
 	flex: 1,
 	overflow: 'hidden',
-	position: 'relative',
 });
 
 export const srOnly = style({
+	position: 'absolute',
+	margin: -1,
 	border: 0,
 	clip: 'rect(0 0 0 0)',
-	height: 1,
-	margin: -1,
-	overflow: 'hidden',
 	padding: 0,
-	position: 'absolute',
-	whiteSpace: 'nowrap',
 	width: 1,
+	height: 1,
+	overflow: 'hidden',
+	whiteSpace: 'nowrap',
 });

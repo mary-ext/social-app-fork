@@ -6,11 +6,11 @@ import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const link = style({
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'column',
 	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer',
 });
 
 export const defaultRow = recipe(
@@ -27,9 +27,9 @@ export const defaultRow = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -44,19 +44,19 @@ export const outer = style({
 });
 
 export const embedCard = style({
-	backgroundColor: colors.bg,
-	borderColor: colors.borderContrastLow,
-	borderRadius: borderRadius.sm,
-	borderStyle: 'solid',
 	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: borderRadius.sm,
+	borderColor: colors.borderContrastLow,
+	backgroundColor: colors.bg,
 	padding: space.md,
 });
 
 export const header = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'center',
 });
 
 export const titleColumn = style({
@@ -67,12 +67,12 @@ export const titleColumn = style({
 });
 
 export const saveButtonPlaceholder = style({
-	alignSelf: 'center',
-	backgroundColor: vars.palette.contrast_50,
-	borderRadius: borderRadius.full,
 	flexShrink: 0,
-	height: 33,
+	alignSelf: 'center',
+	borderRadius: borderRadius.full,
+	backgroundColor: vars.palette.contrast_50,
 	width: 97,
+	height: 33,
 });
 
 export const loadingRow = recipe(
@@ -84,9 +84,9 @@ export const loadingRow = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},

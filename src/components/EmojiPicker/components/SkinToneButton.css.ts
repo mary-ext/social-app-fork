@@ -4,18 +4,18 @@ import { vars } from '#/styles/contract.css';
 import { zIndex } from '#/styles/tokens.css';
 
 export const trigger = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'transparent',
-	border: '1px solid transparent',
-	borderRadius: 8,
-	color: vars.palette.contrast_900,
-	cursor: 'pointer',
 	display: 'flex',
 	flex: '0 0 auto',
-	height: 30,
+	alignItems: 'center',
 	justifyContent: 'center',
+	border: '1px solid transparent',
+	borderRadius: 8,
+	background: 'transparent',
 	width: 30,
+	height: 30,
+	color: vars.palette.contrast_900,
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': { backgroundColor: vars.palette.contrast_100 },
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}` },
@@ -27,34 +27,34 @@ export const positioner = style({
 });
 
 export const menu = style({
-	backgroundColor: vars.palette.contrast_0,
-	borderRadius: 10,
-	boxShadow: `0 0 0 1px ${vars.palette.contrast_100}, ${vars.shadow.md}`,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 2,
-	maxHeight: 'var(--available-height)',
-	outline: 0,
-	overflowY: 'auto',
-	padding: 4,
 	transitionDuration: '150ms',
 	transitionProperty: 'opacity',
+	outline: 0,
+	borderRadius: 10,
+	boxShadow: `0 0 0 1px ${vars.palette.contrast_100}, ${vars.shadow.md}`,
+	backgroundColor: vars.palette.contrast_0,
+	padding: 4,
+	maxHeight: 'var(--available-height)',
+	overflowY: 'auto',
 	selectors: {
 		'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 	},
 });
 
 export const item = style({
-	alignItems: 'center',
-	borderRadius: 8,
-	cursor: 'pointer',
 	display: 'flex',
-	height: 30,
+	alignItems: 'center',
 	justifyContent: 'center',
 	outline: 0,
-	userSelect: 'none',
+	borderRadius: 8,
 	width: 30,
+	height: 30,
+	cursor: 'pointer',
+	userSelect: 'none',
 	selectors: {
 		'&[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
 		'&[data-selected]': { backgroundColor: vars.palette.contrast_100 },
@@ -62,6 +62,6 @@ export const item = style({
 });
 
 export const glyph = style({
-	fontSize: 18,
 	lineHeight: 1,
+	fontSize: 18,
 });

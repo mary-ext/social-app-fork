@@ -6,21 +6,21 @@ import { space, zIndex } from '#/styles/tokens.css';
 const HEADER_HEIGHT = 52;
 
 export const searchBar = style({
-	backgroundColor: colors.bg,
-	borderBottom: `1px solid ${colors.borderContrastMedium}`,
 	boxSizing: 'border-box',
-	height: 60,
-	paddingBlock: space.sm,
-	paddingInline: space.md,
 	position: 'sticky',
 	top: HEADER_HEIGHT,
 	zIndex: zIndex.raised,
+	borderBottom: `1px solid ${colors.borderContrastMedium}`,
+	backgroundColor: colors.bg,
+	paddingBlock: space.sm,
+	paddingInline: space.md,
+	height: 60,
 });
 
 export const empty = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 	marginTop: space.lg,
 	paddingInline: space.lg,
 });
@@ -38,10 +38,10 @@ export const details = style({
 });
 
 export const detailsHeader = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.md,
+	alignItems: 'center',
 	marginBottom: space.md,
 	paddingInline: space.md,
 });
@@ -56,32 +56,32 @@ export const counter = style({
 });
 
 export const detailsNext = style({
+	marginTop: 35,
 	marginBottom: space.lg,
 	marginInline: space.xl,
-	marginTop: 35,
 });
 
 export const footer = style({
-	alignItems: 'center',
-	backgroundColor: colors.bg,
-	borderTop: `1px solid ${colors.borderContrastMedium}`,
-	bottom: 0,
 	boxSizing: 'border-box',
 	display: 'flex',
+	position: 'sticky',
+	bottom: 0,
 	flexDirection: 'column',
 	gap: space.md,
+	alignItems: 'center',
+	zIndex: zIndex.raised,
 	marginTop: 'auto',
+	borderTop: `1px solid ${colors.borderContrastMedium}`,
+	backgroundColor: colors.bg,
+	paddingTop: space.xl,
 	paddingBottom: `calc(${space.lg}px + env(safe-area-inset-bottom, 0px))`,
 	paddingInline: space.lg,
-	paddingTop: space.xl,
-	position: 'sticky',
-	zIndex: zIndex.raised,
 });
 
 export const countBadge = style({
 	position: 'absolute',
-	right: 14,
 	top: 31,
+	right: 14,
 });
 
 export const avatarRow = style({
@@ -90,10 +90,10 @@ export const avatarRow = style({
 });
 
 export const avatarRing = style({
-	borderColor: colors.bg,
-	borderRadius: '50%',
-	borderStyle: 'solid',
 	borderWidth: 0.5,
+	borderStyle: 'solid',
+	borderRadius: '50%',
+	borderColor: colors.bg,
 });
 
 export const helperText = style({
@@ -107,10 +107,10 @@ export const feedsEmptyHelper = style({
 });
 
 export const cta = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space._2xl,
+	alignItems: 'center',
 	marginTop: space.md,
 	width: '100%',
 });

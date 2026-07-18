@@ -7,23 +7,23 @@ import { fontSize, zIndex } from '#/styles/tokens.css';
 export const root = style(
 	layered(components, {
 		display: 'flex',
-		flexDirection: 'column',
 		flex: 1,
+		flexDirection: 'column',
 	}),
 );
 
 export const list = style(
 	layered(components, {
-		backgroundColor: vars.palette.contrast_0,
-		borderBottom: `1px solid ${vars.palette.contrast_100}`,
 		display: 'flex',
-		flexDirection: 'row',
-		overflowX: 'auto',
 		position: 'sticky',
 		top: 0,
+		flexDirection: 'row',
 		zIndex: zIndex.raised,
-		userSelect: 'none',
+		borderBottom: `1px solid ${vars.palette.contrast_100}`,
+		backgroundColor: vars.palette.contrast_0,
+		overflowX: 'auto',
 		scrollbarWidth: 'none',
+		userSelect: 'none',
 		selectors: {
 			'&::-webkit-scrollbar': { display: 'none' },
 		},
@@ -34,22 +34,22 @@ const tabPaddingBlock = 12;
 
 export const tab = style(
 	layered(components, {
-		alignItems: 'center',
 		appearance: 'none',
-		background: 'transparent',
-		border: 'none',
-		color: vars.palette.contrast_700,
-		cursor: 'pointer',
 		display: 'flex',
 		flexGrow: 1,
 		flexShrink: 0,
-		fontSize: fontSize.md,
-		fontWeight: 600,
+		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 0,
+		border: 'none',
+		background: 'transparent',
 		paddingBlock: tabPaddingBlock,
 		paddingInline: 16,
 		whiteSpace: 'nowrap',
+		color: vars.palette.contrast_700,
+		fontSize: fontSize.md,
+		fontWeight: 600,
+		cursor: 'pointer',
 		selectors: {
 			'&:hover': { backgroundColor: vars.palette.contrast_25 },
 			'&[data-active]': { color: vars.palette.contrast_1000 },
@@ -61,13 +61,13 @@ export const tab = style(
 export const tabLabel = style({
 	position: 'relative',
 	'::after': {
-		backgroundColor: 'transparent',
-		bottom: -tabPaddingBlock,
-		content: '""',
-		height: 3,
-		left: -4,
 		position: 'absolute',
 		right: -4,
+		bottom: -tabPaddingBlock,
+		left: -4,
+		backgroundColor: 'transparent',
+		height: 3,
+		content: '""',
 	},
 	selectors: {
 		'[data-active] &::after': { backgroundColor: vars.palette.primary_500 },

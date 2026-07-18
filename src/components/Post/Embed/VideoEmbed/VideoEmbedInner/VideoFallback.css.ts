@@ -7,21 +7,21 @@ import { borderRadius, space } from '#/styles/tokens.css';
 export const container = style([
 	mediaBorder,
 	{
-		alignItems: 'center',
-		backgroundColor: colors.contrast_25,
-		borderRadius: borderRadius.md,
 		display: 'flex',
+		position: 'relative',
 		flex: 1,
 		flexDirection: 'column',
 		gap: space.lg,
+		alignItems: 'center',
 		justifyContent: 'center',
-		overflow: 'hidden',
+		borderRadius: borderRadius.md,
+		backgroundColor: colors.contrast_25,
 		paddingInline: space.lg,
-		position: 'relative',
+		overflow: 'hidden',
 	},
 ]);
 
 export const text = style({
-	color: colors.textContrastHigh,
 	maxWidth: 300,
+	color: colors.textContrastHigh,
 });

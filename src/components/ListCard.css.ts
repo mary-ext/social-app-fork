@@ -5,11 +5,11 @@ import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
 export const link = style({
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'column',
 	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer',
 });
 
 export const defaultRow = recipe(
@@ -26,9 +26,9 @@ export const defaultRow = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -44,10 +44,10 @@ export const outer = style({
 });
 
 export const header = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'center',
 });
 
 export const titleColumn = style({
@@ -70,9 +70,9 @@ export const loadingRow = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},

@@ -6,43 +6,43 @@ import { space } from '#/styles/tokens.css';
 const DIALOG_PADDING = space._2xl;
 
 export const popup = style({
-	height: 600,
 	maxWidth: 420,
+	height: 600,
 });
 
 export const header = style({
-	backgroundColor: colors.bg,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
 	flexShrink: 0,
 	gap: space.xs,
+	backgroundColor: colors.bg,
+	paddingTop: DIALOG_PADDING,
 	paddingBottom: space.lg,
 	paddingInline: DIALOG_PADDING,
-	paddingTop: DIALOG_PADDING,
 });
 
 export const groupsLabel = style({
 	display: 'flex',
 	flexDirection: 'column',
+	paddingTop: space.sm,
 	paddingBottom: space.xs,
 	paddingInline: DIALOG_PADDING,
-	paddingTop: space.sm,
 });
 
 export const loading = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	paddingBottom: space._2xl,
 });
 
 export const row = style({
-	alignItems: 'center',
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 	justifyContent: 'space-between',
 	paddingBlock: space.sm,
 	paddingInline: DIALOG_PADDING,
@@ -50,11 +50,11 @@ export const row = style({
 });
 
 export const rowMain = style({
-	alignItems: 'center',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 	minWidth: 0,
 });
 

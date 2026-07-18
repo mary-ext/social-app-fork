@@ -21,12 +21,12 @@ export const replyBlock = style({
 });
 
 export const disabledNotice = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_25,
-	borderRadius: 8,
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 8,
+	alignItems: 'center',
+	borderRadius: 8,
+	backgroundColor: vars.palette.contrast_25,
 	paddingBlock: 8,
 	paddingInline: 12,
 });
@@ -49,8 +49,8 @@ export const persistRow = style({
 });
 
 export const listsCount = style({
-	fontStyle: 'italic',
 	fontWeight: 400,
+	fontStyle: 'italic',
 });
 
 export const saveButton = style({ width: '100%' });

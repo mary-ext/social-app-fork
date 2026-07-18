@@ -1,18 +1,18 @@
 import { style } from '@vanilla-extract/css';
 
 export const indicator = style({
-	alignItems: 'center',
-	backgroundColor: 'rgba(0, 0, 0, 0.5)',
-	borderRadius: 6,
-	bottom: 6,
 	display: 'flex',
-	justifyContent: 'center',
+	position: 'absolute',
+	bottom: 6,
 	left: 6,
-	minHeight: 21,
+	alignItems: 'center',
+	justifyContent: 'center',
+	borderRadius: 6,
+	backgroundColor: 'rgba(0, 0, 0, 0.5)',
 	paddingBlock: 3,
 	paddingInline: 6,
+	minHeight: 21,
 	pointerEvents: 'none',
-	position: 'absolute',
 });
 
 export const text = style({

@@ -6,11 +6,11 @@ import { recipe } from '#/styles/recipe';
 export const outer = recipe(
 	{
 		base: {
-			backgroundColor: vars.palette.contrast_0,
-			borderRadius: 8,
-			borderStyle: 'solid',
-			borderWidth: 1,
 			boxSizing: 'border-box',
+			borderWidth: 1,
+			borderStyle: 'solid',
+			borderRadius: 8,
+			backgroundColor: vars.palette.contrast_0,
 			padding: 12,
 		},
 		variants: {
@@ -28,10 +28,10 @@ export const outer = recipe(
 );
 
 export const row = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 8,
+	alignItems: 'flex-start',
 });
 
 export const iconWrap = style({
@@ -44,6 +44,6 @@ export const content = style({
 	flexDirection: 'column',
 	gap: 8,
 	justifyContent: 'center',
-	minHeight: 20,
 	paddingRight: 12,
+	minHeight: 20,
 });

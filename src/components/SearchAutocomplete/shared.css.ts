@@ -4,18 +4,18 @@ import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
 export const row = style({
-	backgroundColor: 'transparent',
 	boxSizing: 'border-box',
-	color: vars.palette.contrast_1000,
-	cursor: 'default',
 	display: 'flex',
 	gap: space.sm,
 	outline: 'none',
+	backgroundColor: 'transparent',
 	paddingBlock: 8,
 	paddingInline: space.md,
-	textAlign: 'start',
-	userSelect: 'none',
 	width: '100%',
+	textAlign: 'start',
+	color: vars.palette.contrast_1000,
+	cursor: 'default',
+	userSelect: 'none',
 	selectors: {
 		'&[data-highlighted]': { backgroundColor: vars.palette.contrast_25 },
 	},
@@ -26,9 +26,9 @@ export const avatar = style({
 });
 
 export const icon = style({
-	color: vars.palette.contrast_500,
-	paddingBlock: (20 - 16) / 2,
 	flexShrink: 0,
+	paddingBlock: (20 - 16) / 2,
+	color: vars.palette.contrast_500,
 });
 
 export const label = style({

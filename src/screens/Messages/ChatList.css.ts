@@ -5,24 +5,24 @@ import { space } from '#/styles/tokens.css';
 
 export const banner = style({ marginBottom: space.sm });
 
-export const empty = style({ height: '100%', justifyContent: 'center', paddingBottom: 40 });
+export const empty = style({ justifyContent: 'center', paddingBottom: 40, height: '100%' });
 
-export const emptyTall = style({ height: '100%', justifyContent: 'center', paddingBottom: 120 });
+export const emptyTall = style({ justifyContent: 'center', paddingBottom: 120, height: '100%' });
 
 export const errorMessage = style({
-	maxWidth: 360,
 	paddingBottom: space.xl,
+	maxWidth: 360,
 });
 
 export const errorTitle = style({
-	paddingBottom: space.sm,
 	paddingTop: space.md,
+	paddingBottom: space.sm,
 });
 
 export const errorWrap = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 	paddingTop: space._3xl,
 });
 
@@ -30,6 +30,6 @@ export const splitScroller = style({
 	flex: 1,
 	minHeight: 0,
 	overflowY: 'auto',
-	scrollbarColor: `${vars.palette.contrast_100} transparent`,
 	scrollbarWidth: 'thin',
+	scrollbarColor: `${vars.palette.contrast_100} transparent`,
 });

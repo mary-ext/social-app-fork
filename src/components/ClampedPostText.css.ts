@@ -11,16 +11,16 @@ export const richText = style({
 
 export const showMore = style({
 	alignSelf: 'flex-start',
-	background: 'none',
 	border: 'none',
-	color: vars.palette.primary_500,
-	cursor: 'pointer',
-	fontFamily: 'inherit',
-	fontSize: fontSize.md,
-	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
+	background: 'none',
 	padding: 0,
 	paddingBottom: 5,
 	textDecoration: 'none',
+	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
+	color: vars.palette.primary_500,
+	fontFamily: 'inherit',
+	fontSize: fontSize.md,
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': { outline: 'none', textDecoration: 'underline' },
 		'&:hover': { textDecoration: 'underline' },

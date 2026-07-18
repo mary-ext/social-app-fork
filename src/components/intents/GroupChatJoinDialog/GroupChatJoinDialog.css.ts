@@ -11,16 +11,16 @@ export const badges = style({
 });
 
 export const headerSection = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 	width: '100%',
 });
 
 export const infoRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 });
 
 export const inner = style({
@@ -32,9 +32,9 @@ export const loaderBox = style({
 });
 
 export const metaSection = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 	marginTop: space.lg,
 	width: '100%',
 });
@@ -44,18 +44,18 @@ export const noLongerAvailableText = style({
 });
 
 export const ownerRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.xs,
+	alignItems: 'center',
 	justifyContent: 'center',
 	marginBottom: space.md,
 });
 
 export const personGroupIcon = style({
-	marginLeft: space.md,
-	marginRight: 4,
 	marginTop: -2,
+	marginRight: 4,
+	marginLeft: space.md,
 });
 
 export const shrinkText = style({
@@ -69,10 +69,10 @@ export const titleGroup = style({
 });
 
 export const unavailableSection = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.sm,
-	paddingBottom: space.lg,
+	alignItems: 'center',
 	paddingTop: space._4xl,
+	paddingBottom: space.lg,
 });

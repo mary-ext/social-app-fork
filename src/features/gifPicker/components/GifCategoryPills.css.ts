@@ -4,10 +4,10 @@ import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
 export const row = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_0,
 	display: 'flex',
 	gap: space.xs,
+	alignItems: 'center',
 	justifyContent: 'space-between',
+	backgroundColor: vars.palette.contrast_0,
 	paddingBottom: space.md,
 });

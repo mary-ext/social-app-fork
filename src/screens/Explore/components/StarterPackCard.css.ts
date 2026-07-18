@@ -4,19 +4,19 @@ import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const card = style({
-	border: `1px solid ${colors.borderContrastLow}`,
-	borderRadius: borderRadius.sm,
 	boxSizing: 'border-box',
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'column',
 	gap: space.md,
-	overflow: 'hidden',
+	border: `1px solid ${colors.borderContrastLow}`,
+	borderRadius: borderRadius.sm,
 	padding: space.lg,
-	position: 'relative',
-	textDecoration: 'none',
 	width: '100%',
+	overflow: 'hidden',
+	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer',
 	':hover': {
 		backgroundColor: colors.contrast_25,
 	},
@@ -25,11 +25,11 @@ export const card = style({
 export const stackWidthVar = createVar();
 
 export const stack = style({
-	alignItems: 'center',
 	display: 'flex',
-	flexDirection: 'row',
-	isolation: 'isolate',
 	position: 'relative',
+	flexDirection: 'row',
+	alignItems: 'center',
+	isolation: 'isolate',
 	width: stackWidthVar,
 });
 
@@ -38,8 +38,8 @@ export const cellZVar = createVar();
 
 export const cell = style({
 	position: 'relative',
-	width: cellWidthVar,
 	zIndex: cellZVar,
+	width: cellWidthVar,
 });
 
 export const cellInner = style({
@@ -48,39 +48,39 @@ export const cellInner = style({
 });
 
 export const circle = style({
-	aspectRatio: '1',
-	backgroundColor: colors.contrast_25,
-	borderRadius: borderRadius.full,
 	position: 'relative',
+	borderRadius: borderRadius.full,
+	backgroundColor: colors.contrast_25,
+	aspectRatio: '1',
 	width: '100%',
 });
 
 export const avatarFill = style({
-	inset: 0,
 	position: 'absolute',
+	inset: 0,
 });
 
 export const placeholderBorder = style({
+	position: 'absolute',
+	inset: 0,
 	borderRadius: borderRadius.full,
 	boxShadow: `inset 0 0 0 1px ${colors.borderContrastLow}`,
-	inset: 0,
-	position: 'absolute',
 });
 
 export const totalBox = style({
-	aspectRatio: '1',
 	position: 'relative',
+	aspectRatio: '1',
 	width: '100%',
 });
 
 export const totalInner = style({
-	alignItems: 'center',
-	backgroundColor: colors.textContrastLow,
-	borderRadius: borderRadius.full,
 	display: 'flex',
-	inset: 0,
-	justifyContent: 'center',
 	position: 'absolute',
+	inset: 0,
+	alignItems: 'center',
+	justifyContent: 'center',
+	borderRadius: borderRadius.full,
+	backgroundColor: colors.textContrastLow,
 });
 
 export const totalText = style({
@@ -88,10 +88,10 @@ export const totalText = style({
 });
 
 export const body = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.lg,
+	alignItems: 'center',
 	width: '100%',
 });
 
@@ -103,9 +103,9 @@ export const titleColumn = style({
 });
 
 export const openPackPlaceholder = style({
-	backgroundColor: colors.contrast_50,
-	borderRadius: borderRadius.sm,
 	flexShrink: 0,
-	height: 33,
+	borderRadius: borderRadius.sm,
+	backgroundColor: colors.contrast_50,
 	width: 100,
+	height: 33,
 });

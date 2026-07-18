@@ -13,10 +13,10 @@ export const outer = style({
 });
 
 export const link = style({
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'flex',
 	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer',
 });
 
 export const defaultRow = recipe(
@@ -33,9 +33,9 @@ export const defaultRow = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -55,9 +55,9 @@ export const loadingRow = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -66,10 +66,10 @@ export const loadingRow = recipe(
 );
 
 export const header = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'center',
 });
 
 export const nameAndHandle = style({
@@ -80,15 +80,15 @@ export const nameAndHandle = style({
 });
 
 export const handleRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	maxWidth: '100%',
 });
 
 export const handleText = style({
-	alignSelf: 'flex-start',
 	flexShrink: 1,
+	alignSelf: 'flex-start',
 });
 
 export const badges = style({
@@ -100,10 +100,10 @@ export const badges = style({
 });
 
 export const inlineRow = style({
-	alignItems: 'flex-end',
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 1,
+	alignItems: 'flex-end',
 });
 
 export const inlineName = style({

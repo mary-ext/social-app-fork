@@ -10,8 +10,8 @@ export const linkBox = style({
 });
 
 export const loadingBox = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	minHeight: 188,
 });

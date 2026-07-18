@@ -11,14 +11,14 @@ export const outer = style({
 });
 
 export const connectorBase = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomLeftRadius: borderRadius.sm,
-	borderBottomStyle: 'solid',
-	borderBottomWidth: REPLY_LINE_WIDTH,
-	borderLeftColor: colors.borderContrastLow,
-	borderLeftStyle: 'solid',
-	borderLeftWidth: REPLY_LINE_WIDTH,
 	boxSizing: 'border-box',
+	borderBottomWidth: REPLY_LINE_WIDTH,
+	borderLeftWidth: REPLY_LINE_WIDTH,
+	borderBottomStyle: 'solid',
+	borderLeftStyle: 'solid',
+	borderBottomLeftRadius: borderRadius.sm,
+	borderBottomColor: colors.borderContrastLow,
+	borderLeftColor: colors.borderContrastLow,
 	height: 18,
 });
 
@@ -33,14 +33,14 @@ export const connectorLinear = style({
 });
 
 export const link = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	flexGrow: 1,
-	minWidth: 0,
 	gap: space.sm,
-	paddingBottom: space.md,
+	alignItems: 'center',
 	paddingTop: space.sm,
+	paddingBottom: space.md,
+	minWidth: 0,
 	textDecorationLine: 'none',
 });
 

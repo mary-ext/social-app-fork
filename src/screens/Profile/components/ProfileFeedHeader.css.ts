@@ -6,10 +6,10 @@ import { vars } from '#/styles/contract.css';
 import { lineHeight, space } from '#/styles/tokens.css';
 
 export const dialogHeaderRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'center',
 });
 
 export const dialogNameColumn = style({
@@ -25,17 +25,17 @@ export const dialogTitle = style({
 });
 
 export const dialogLikedByRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 });
 
 export const dialogActionsRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 	paddingTop: space.sm,
 });
 
@@ -51,10 +51,10 @@ export const dialogReportSection = style({
 });
 
 export const dialogReportRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 	justifyContent: 'space-between',
 });
 
@@ -63,19 +63,19 @@ export const dialogWrongText = style({
 });
 
 export const infoButton = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'none',
-	border: 'none',
-	borderRadius: 8,
-	cursor: 'pointer',
 	display: 'flex',
 	flexGrow: 1,
 	gap: space.sm,
-	minWidth: 0,
+	alignItems: 'center',
 	outline: 'none',
+	border: 'none',
+	borderRadius: 8,
+	background: 'none',
 	padding: 0,
+	minWidth: 0,
 	textAlign: 'left',
+	cursor: 'pointer',
 });
 
 export const infoButtonText = style({
@@ -96,23 +96,23 @@ export const infoButtonHandle = style({
 });
 
 export const infoButtonLikes = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 0,
 	gap: 2,
+	alignItems: 'center',
 });
 
 export const infoButtonEllipsis = style({
-	alignItems: 'center',
-	borderRadius: 999,
 	display: 'flex',
-	height: 33,
+	alignItems: 'center',
 	justifyContent: 'center',
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color, color, border-color',
 	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+	borderRadius: 999,
 	width: 33,
+	height: 33,
 
 	selectors: {
 		'&:hover': { backgroundColor: vars.palette.contrast_50 },
@@ -124,18 +124,18 @@ export const infoButtonEllipsis = style({
 });
 
 export const skeletonBar = style({
-	backgroundColor: vars.palette.contrast_25,
 	borderRadius: 8,
-	height: 40,
+	backgroundColor: vars.palette.contrast_25,
 	width: '100%',
+	height: 40,
 });
 
 export const skeletonPin = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_25,
-	borderRadius: 999,
 	display: 'flex',
-	height: 33,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: 999,
+	backgroundColor: vars.palette.contrast_25,
 	width: 33,
+	height: 33,
 });

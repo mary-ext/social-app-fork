@@ -22,12 +22,12 @@ export const root = recipe(
 );
 
 export const card = style({
-	backgroundColor: colors.bg,
-	border: `1px solid ${colors.borderContrastLow}`,
-	borderRadius: borderRadius.sm,
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	border: `1px solid ${colors.borderContrastLow}`,
+	borderRadius: borderRadius.sm,
+	backgroundColor: colors.bg,
 	padding: space.md,
 });
 

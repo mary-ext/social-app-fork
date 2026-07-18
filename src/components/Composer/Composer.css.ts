@@ -24,19 +24,19 @@ const rowsHeight = (rows: string) =>
 	`calc(${lineHeightValue} * ${rows} + ${paddingTopVar} + ${paddingBottomVar})`;
 
 const textMetrics = style({
-	fontFamily: 'inherit',
-	fontSize: fontSizeValue,
-	letterSpacing: 'normal',
 	lineHeight: lineHeightValue,
+	letterSpacing: 'normal',
 	whiteSpace: 'pre-wrap',
 	wordBreak: 'break-word',
+	fontFamily: 'inherit',
+	fontSize: fontSizeValue,
 });
 
 const padding = style({
+	paddingTop: paddingTopVar,
+	paddingRight: paddingRightVar,
 	paddingBottom: paddingBottomVar,
 	paddingLeft: paddingLeftVar,
-	paddingRight: paddingRightVar,
-	paddingTop: paddingTopVar,
 });
 
 export const root = recipe(
@@ -61,23 +61,23 @@ export const root = recipe(
 export const capped = style({
 	maxHeight: rowsHeight(maxRowsVar),
 	overflowY: 'auto',
-	scrollPaddingBottom: paddingBottomVar,
 	scrollPaddingTop: paddingTopVar,
-	scrollbarColor: `${vars.palette.contrast_200} transparent`,
+	scrollPaddingBottom: paddingBottomVar,
 	scrollbarWidth: 'thin',
+	scrollbarColor: `${vars.palette.contrast_200} transparent`,
 });
 
 export const overlay = style([
 	textMetrics,
 	padding,
 	{
-		color: vars.palette.contrast_1000,
-		left: 0,
-		pointerEvents: 'none',
 		position: 'absolute',
-		right: 0,
 		top: 0,
+		right: 0,
+		left: 0,
 		zIndex: 10,
+		color: vars.palette.contrast_1000,
+		pointerEvents: 'none',
 	},
 ]);
 
@@ -90,23 +90,23 @@ export const textarea = style([
 	padding,
 	{
 		appearance: 'none',
-		background: 'transparent',
-		border: 0,
 		boxSizing: 'border-box',
-		caretColor: vars.palette.contrast_1000,
-		color: 'transparent',
 		display: 'block',
-		fieldSizing: 'content',
-		margin: 0,
-		minHeight: rowsHeight(minRowsVar),
-		outline: 'none',
-		overflowY: 'hidden',
 		position: 'relative',
-		resize: 'none',
-		width: '100%',
 		zIndex: 20,
+		margin: 0,
+		outline: 'none',
+		border: 0,
+		background: 'transparent',
+		fieldSizing: 'content',
+		width: '100%',
+		minHeight: rowsHeight(minRowsVar),
+		overflowY: 'hidden',
+		resize: 'none',
+		color: 'transparent',
+		caretColor: vars.palette.contrast_1000,
 		selectors: {
-			'&::placeholder': { color: vars.palette.contrast_500, opacity: 1 },
+			'&::placeholder': { opacity: 1, color: vars.palette.contrast_500 },
 		},
 	},
 ]);

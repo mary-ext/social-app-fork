@@ -8,18 +8,18 @@ import { fontSize } from '#/styles/tokens.css';
 
 const itemReset = style(
 	layered(components, {
-		alignItems: 'center',
 		appearance: 'none',
-		background: 'transparent',
-		border: 'none',
-		color: 'inherit',
-		cursor: 'pointer',
 		display: 'flex',
 		flexDirection: 'row',
 		gap: 8,
+		alignItems: 'center',
 		margin: 0,
+		border: 'none',
+		background: 'transparent',
 		padding: 0,
 		textAlign: 'left',
+		color: 'inherit',
+		cursor: 'pointer',
 		selectors: {
 			'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 			'&[data-disabled]': { cursor: 'default' },
@@ -43,16 +43,16 @@ export const panelGroup = style(
 export const panel = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			backgroundColor: vars.palette.contrast_50,
 			boxSizing: 'border-box',
 			display: 'flex',
 			flexDirection: 'row',
 			gap: 8,
-			minHeight: 48,
+			alignItems: 'center',
+			backgroundColor: vars.palette.contrast_50,
 			paddingBlock: 12,
 			paddingInline: 12,
 			width: '100%',
+			minHeight: 48,
 			selectors: {
 				'[data-checked] &': { backgroundColor: vars.palette.primary_50 },
 			},
@@ -82,9 +82,9 @@ export const panel = recipe(
 				default: {},
 				small: {
 					gap: 4,
-					minHeight: 0,
 					paddingBlock: 8,
 					paddingInline: 8,
+					minHeight: 0,
 					'@media': {
 						'(min-width: 800px)': { paddingInline: 12 },
 					},
@@ -95,10 +95,10 @@ export const panel = recipe(
 			{
 				size: 'small',
 				style: {
-					borderBottomLeftRadius: 8,
-					borderBottomRightRadius: 8,
 					borderTopLeftRadius: 8,
 					borderTopRightRadius: 8,
+					borderBottomLeftRadius: 8,
+					borderBottomRightRadius: 8,
 				},
 			},
 		],
@@ -109,20 +109,20 @@ export const panel = recipe(
 
 export const panelTextWithIcon = style(
 	layered(components, {
-		alignItems: 'center',
 		display: 'flex',
 		flex: 1,
 		flexDirection: 'row',
 		gap: 4,
+		alignItems: 'center',
 	}),
 );
 
 export const panelText = style(
 	layered(components, {
-		color: vars.palette.contrast_700,
 		flex: 1,
-		fontSize: fontSize.md,
 		lineHeight: roundToPx(`calc(${fontSize.md} * 1.3)`),
+		color: vars.palette.contrast_700,
+		fontSize: fontSize.md,
 		selectors: {
 			'[data-checked] &, [data-active] &': {
 				color: vars.palette.contrast_1000,
@@ -131,8 +131,8 @@ export const panelText = style(
 			'[data-disabled] &': { color: vars.palette.contrast_500 },
 			'[data-checked][data-disabled] &': { color: vars.palette.contrast_600 },
 			'[data-size="small"] &': {
-				fontSize: fontSize.md_sub,
 				lineHeight: roundToPx(`calc(${fontSize.md_sub} * 1.3)`),
+				fontSize: fontSize.md_sub,
 			},
 		},
 	}),
@@ -140,40 +140,40 @@ export const panelText = style(
 
 export const panelIcon = style(
 	layered(components, {
-		color: vars.palette.contrast_700,
 		flexShrink: 0,
+		color: vars.palette.contrast_700,
 		selectors: {
 			'[data-checked] &, [data-active] &': { color: vars.palette.contrast_1000 },
-			'[data-size="small"] &': { height: 16, width: 16 },
+			'[data-size="small"] &': { width: 16, height: 16 },
 		},
 	}),
 );
 
 const indicatorBase = style(
 	layered(components, {
-		alignItems: 'center',
-		backgroundColor: vars.palette.contrast_25,
-		border: `1px solid ${vars.palette.contrast_100}`,
 		boxSizing: 'border-box',
 		display: 'flex',
 		flexShrink: 0,
-		height: 24,
+		alignItems: 'center',
 		justifyContent: 'center',
 		transitionDuration: '100ms',
 		transitionProperty: 'background-color, border-color',
+		border: `1px solid ${vars.palette.contrast_100}`,
+		backgroundColor: vars.palette.contrast_25,
 		width: 24,
+		height: 24,
 		selectors: {
 			'[data-checked] &': {
-				backgroundColor: vars.palette.primary_500,
 				borderColor: vars.palette.primary_500,
+				backgroundColor: vars.palette.primary_500,
 			},
 			'[data-disabled] &': {
-				backgroundColor: vars.palette.contrast_100,
 				borderColor: vars.palette.contrast_400,
+				backgroundColor: vars.palette.contrast_100,
 			},
 			'[data-checked][data-disabled] &': {
-				backgroundColor: vars.palette.primary_100,
 				borderColor: vars.palette.contrast_400,
+				backgroundColor: vars.palette.primary_100,
 			},
 		},
 	}),
@@ -183,10 +183,10 @@ export const circle = style([indicatorBase, layered(components, { borderRadius: 
 
 export const dot = style(
 	layered(components, {
-		backgroundColor: vars.palette.white,
 		borderRadius: 999,
-		height: 12,
+		backgroundColor: vars.palette.white,
 		width: 12,
+		height: 12,
 		selectors: {
 			'[data-disabled] &': { backgroundColor: vars.palette.contrast_600 },
 		},
@@ -200,25 +200,25 @@ export const box = style([
 
 export const check = style(
 	layered(components, {
-		alignItems: 'center',
 		display: 'flex',
+		alignItems: 'center',
 		justifyContent: 'center',
 	}),
 );
 
 export const switchTrack = style(
 	layered(components, {
-		alignItems: 'center',
-		backgroundColor: vars.palette.contrast_200,
-		borderRadius: 999,
 		boxSizing: 'border-box',
 		display: 'flex',
 		flexShrink: 0,
-		height: 28,
-		padding: 3,
+		alignItems: 'center',
 		transitionDuration: '100ms',
 		transitionProperty: 'background-color',
+		borderRadius: 999,
+		backgroundColor: vars.palette.contrast_200,
+		padding: 3,
 		width: 48,
+		height: 28,
 		selectors: {
 			'[data-checked] &': { backgroundColor: vars.palette.primary_500 },
 		},
@@ -227,13 +227,13 @@ export const switchTrack = style(
 
 export const switchThumb = style(
 	layered(components, {
-		backgroundColor: vars.palette.white,
-		borderRadius: 999,
-		height: 22,
 		transitionDuration: '100ms',
 		transitionProperty: 'transform',
 		transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+		borderRadius: 999,
+		backgroundColor: vars.palette.white,
 		width: 22,
+		height: 22,
 		selectors: {
 			'[data-checked] &': { transform: 'translateX(20px)' },
 		},

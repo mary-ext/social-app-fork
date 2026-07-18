@@ -13,11 +13,11 @@ export const portal = style(
 
 export const backdrop = style(
 	layered(components, {
-		backgroundColor: 'rgba(0, 0, 0, 0.8)',
-		inset: 0,
 		position: 'fixed',
+		inset: 0,
 		transitionDuration: '150ms',
 		transitionProperty: 'opacity',
+		backgroundColor: 'rgba(0, 0, 0, 0.8)',
 
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
@@ -27,18 +27,18 @@ export const backdrop = style(
 
 export const viewport = style(
 	layered(components, {
-		alignItems: 'flex-start',
-		bottom: 0,
 		boxSizing: 'border-box',
 		display: 'flex',
-		justifyContent: 'center',
+		position: 'fixed',
+		top: 0,
+		right: 0,
+		bottom: 0,
 		left: 0,
-		overflowY: 'auto',
+		alignItems: 'flex-start',
+		justifyContent: 'center',
 		paddingBlock: 20,
 		paddingInline: 20,
-		position: 'fixed',
-		right: 0,
-		top: 0,
+		overflowY: 'auto',
 
 		'@media': {
 			'(min-width: 800px)': {
@@ -51,19 +51,19 @@ export const viewport = style(
 export const popup = recipe(
 	{
 		base: {
-			backgroundColor: vars.palette.contrast_0,
-			border: `1px solid ${vars.palette.contrast_200}`,
-			borderRadius: 12,
-			boxShadow: vars.shadow.dialog,
 			boxSizing: 'border-box',
-			padding: 24,
 			position: 'relative',
 			transitionDuration: '200ms',
 			transitionProperty: 'opacity, transform',
 			transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+			border: `1px solid ${vars.palette.contrast_200}`,
+			borderRadius: 12,
+			boxShadow: vars.shadow.dialog,
+			backgroundColor: vars.palette.contrast_0,
+			padding: 24,
 			width: '100%',
 			selectors: {
-				'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+				'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
 			},
 		},
 		variants: {
@@ -78,9 +78,9 @@ export const popup = recipe(
 				body: {
 					display: 'flex',
 					flexDirection: 'column',
+					padding: 0,
 					maxHeight: '80vh',
 					overflow: 'hidden',
-					padding: 0,
 				},
 				viewport: {},
 			},
@@ -106,10 +106,10 @@ export const body = style(
 
 export const footer = style(
 	layered(components, {
-		backgroundColor: vars.palette.contrast_0,
-		borderTop: `1px solid ${vars.palette.contrast_200}`,
 		boxSizing: 'border-box',
 		flexShrink: 0,
+		borderTop: `1px solid ${vars.palette.contrast_200}`,
+		backgroundColor: vars.palette.contrast_0,
 		paddingBlock: 12,
 		paddingInline: 16,
 	}),
@@ -208,18 +208,18 @@ export const divider = style(
 export const close = recipe(
 	{
 		base: {
-			alignItems: 'center',
 			appearance: 'none',
-			backgroundColor: vars.palette.contrast_0,
-			border: 'none',
-			borderRadius: 999,
-			color: vars.palette.contrast_600,
-			cursor: 'pointer',
 			display: 'inline-flex',
 			flexShrink: 0,
-			height: 32,
+			alignItems: 'center',
 			justifyContent: 'center',
+			border: 'none',
+			borderRadius: 999,
+			backgroundColor: vars.palette.contrast_0,
 			width: 32,
+			height: 32,
+			color: vars.palette.contrast_600,
+			cursor: 'pointer',
 			selectors: {
 				'&:hover': { backgroundColor: vars.palette.contrast_50 },
 				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
@@ -232,14 +232,14 @@ export const close = recipe(
 				},
 				floating: {
 					position: 'absolute',
-					right: 12,
 					top: 12,
+					right: 12,
 					zIndex: zIndex.raised,
 				},
 				outer: {
 					position: 'fixed',
-					right: 12,
 					top: 12,
+					right: 12,
 					transitionDuration: '200ms',
 					transitionProperty: 'opacity',
 					transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',

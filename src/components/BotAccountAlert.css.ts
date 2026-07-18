@@ -14,6 +14,6 @@ export const icon = style({
 
 export const text = style({
 	alignSelf: 'center',
-	maxWidth: 300,
 	paddingBottom: space.xl,
+	maxWidth: 300,
 });

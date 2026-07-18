@@ -5,10 +5,10 @@ import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
 export const savedFeedRow = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomStyle: 'solid',
-	borderBottomWidth: 1,
 	flex: 1,
+	borderBottomWidth: 1,
+	borderBottomStyle: 'solid',
+	borderBottomColor: colors.borderContrastLow,
 	paddingBlock: space.md,
 	paddingInline: space.lg,
 	selectors: {
@@ -18,29 +18,29 @@ export const savedFeedRow = style({
 });
 
 export const plainRow = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomStyle: 'solid',
 	borderBottomWidth: 1,
+	borderBottomStyle: 'solid',
+	borderBottomColor: colors.borderContrastLow,
 	paddingBlock: space.md,
 	paddingInline: space.lg,
 });
 
 export const borderedSection = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomStyle: 'solid',
 	borderBottomWidth: 1,
+	borderBottomStyle: 'solid',
+	borderBottomColor: colors.borderContrastLow,
 });
 
 export const sectionHeader = recipe(
 	{
 		base: {
-			alignItems: 'center',
 			display: 'flex',
 			flexDirection: 'row',
 			gap: space.sm,
+			alignItems: 'center',
+			paddingTop: space._2xl,
 			paddingBottom: space.md,
 			paddingInline: space.lg,
-			paddingTop: space._2xl,
 		},
 		defaultVariants: { bottomBorder: false, first: false },
 		variants: {
@@ -66,14 +66,14 @@ export const sectionHeaderTitle = style({
 });
 
 export const followingIcon = style({
-	alignItems: 'center',
-	backgroundColor: colors.primary_500,
-	borderRadius: 3,
 	display: 'flex',
 	flexShrink: 0,
-	height: 28,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: 3,
+	backgroundColor: colors.primary_500,
 	width: 28,
+	height: 28,
 });
 
 export const searchWrapper = style({
@@ -83,7 +83,7 @@ export const searchWrapper = style({
 });
 
 export const noResults = style({
-	paddingBlock: 10,
 	paddingBottom: space._5xl,
+	paddingBlock: 10,
 	paddingInline: space.lg,
 });

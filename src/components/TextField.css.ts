@@ -23,8 +23,8 @@ export const label = style({
 });
 
 export const labelRow = style({
-	alignItems: 'baseline',
 	display: 'flex',
+	alignItems: 'baseline',
 	justifyContent: 'space-between',
 	marginBottom: 8,
 });
@@ -32,36 +32,36 @@ export const labelRow = style({
 export const input = style(
 	layered(components, {
 		appearance: 'none',
-		backgroundColor: vars.palette.contrast_50,
-		border: `${borderWidth}px solid transparent`,
-		borderRadius: 10,
 		boxSizing: 'border-box',
-		color: vars.palette.contrast_1000,
 		display: 'block',
-		fontFamily: 'inherit',
-		fontSize: fontSize.md,
-		lineHeight,
 		margin: 0,
 		outline: 'none',
+		border: `${borderWidth}px solid transparent`,
+		borderRadius: 10,
+		backgroundColor: vars.palette.contrast_50,
 		paddingBlock,
 		paddingInline: 15,
 		width: '100%',
+		lineHeight,
+		color: vars.palette.contrast_1000,
+		fontFamily: 'inherit',
+		fontSize: fontSize.md,
 		selectors: {
 			'&::placeholder': { color: vars.palette.contrast_500 },
-			'&:disabled': { cursor: 'default', opacity: 0.5 },
+			'&:disabled': { opacity: 0.5, cursor: 'default' },
 			'&:hover': { borderColor: vars.palette.contrast_100 },
-			'&:focus': { backgroundColor: vars.palette.primary_25, borderColor: vars.palette.primary_500 },
+			'&:focus': { borderColor: vars.palette.primary_500, backgroundColor: vars.palette.primary_25 },
 		},
 	}),
 );
 
 export const invalid = style(
 	layered(components, {
-		backgroundColor: vars.palette.negative_25,
 		borderColor: vars.palette.negative_300,
+		backgroundColor: vars.palette.negative_25,
 		selectors: {
 			'&:hover': { borderColor: vars.palette.negative_500 },
-			'&:focus': { backgroundColor: vars.palette.negative_25, borderColor: vars.palette.negative_500 },
+			'&:focus': { borderColor: vars.palette.negative_500, backgroundColor: vars.palette.negative_25 },
 		},
 	}),
 );
@@ -69,10 +69,10 @@ export const invalid = style(
 export const multiline = style(
 	layered(components, {
 		fieldSizing: 'content',
+		minHeight: 80,
 		maxHeight: `calc(${fontSize.md} * ${lineHeight} * ${fallbackVar(maxRowsVar, '9999')} + ${
 			paddingBlock * 2 + borderWidth * 2
 		}px)`,
-		minHeight: 80,
 		resize: 'none',
 		scrollPaddingBlock: paddingBlock,
 	}),

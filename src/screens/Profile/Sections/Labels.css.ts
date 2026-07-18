@@ -10,14 +10,14 @@ export const container = style({
 });
 
 export const statusBlock = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 	paddingBlock: space._4xl,
 });
 
 export const blockHint = style({
-	alignItems: 'center',
 	display: 'flex',
 	gap: space.sm,
+	alignItems: 'center',
 });

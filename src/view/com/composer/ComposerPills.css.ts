@@ -4,13 +4,13 @@ import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
 export const pills = style({
-	backgroundColor: vars.palette.contrast_0,
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 0,
-	overflowX: 'auto',
 	gap: space.sm,
+	backgroundColor: vars.palette.contrast_0,
 	padding: space.sm,
+	overflowX: 'auto',
 
 	scrollbarWidth: 'none',
 	selectors: {

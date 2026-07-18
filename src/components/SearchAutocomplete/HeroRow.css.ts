@@ -4,10 +4,10 @@ import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
 export const hero = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.md,
+	alignItems: 'center',
 	paddingBlock: space._2xl,
 	paddingInline: space.md,
 	textAlign: 'center',

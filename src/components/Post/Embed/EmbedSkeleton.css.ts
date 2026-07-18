@@ -12,22 +12,22 @@ export const single = style({
 });
 
 export const singleTile = style({
-	backgroundColor: vars.palette.contrast_50,
 	borderRadius: borderRadius.md,
+	backgroundColor: vars.palette.contrast_50,
 });
 
 export const carousel = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: ITEM_GAP,
-	marginRight: OUTER_SPACE * -1,
 	marginTop: space.sm,
+	marginRight: OUTER_SPACE * -1,
 	overflow: 'hidden',
 });
 
 export const carouselTile = style({
-	backgroundColor: vars.palette.contrast_50,
-	borderRadius: borderRadius.md,
 	flexShrink: 0,
+	borderRadius: borderRadius.md,
+	backgroundColor: vars.palette.contrast_50,
 	height: '100%',
 });

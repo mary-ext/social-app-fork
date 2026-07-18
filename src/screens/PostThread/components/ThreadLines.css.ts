@@ -8,13 +8,13 @@ import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const guide = style({
-	borderRightColor: colors.borderContrastLow,
-	borderRightStyle: 'solid',
-	borderRightWidth: REPLY_LINE_WIDTH,
 	boxSizing: 'border-box',
-	flexShrink: 0,
-	left: 1,
 	position: 'relative',
+	left: 1,
+	flexShrink: 0,
+	borderRightWidth: REPLY_LINE_WIDTH,
+	borderRightStyle: 'solid',
+	borderRightColor: colors.borderContrastLow,
 	width: TREE_INDENT + TREE_AVI_WIDTH / 2,
 });
 
@@ -23,38 +23,38 @@ export const guideSkipped = style({
 });
 
 export const connector = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomLeftRadius: borderRadius.sm,
-	borderBottomStyle: 'solid',
-	borderBottomWidth: REPLY_LINE_WIDTH,
-	borderLeftColor: colors.borderContrastLow,
-	borderLeftStyle: 'solid',
-	borderLeftWidth: REPLY_LINE_WIDTH,
 	boxSizing: 'border-box',
-	height: TREE_AVI_WIDTH / 2 + REPLY_LINE_WIDTH / 2 + OUTER_SPACE / 2,
-	left: -1,
 	position: 'absolute',
 	top: 0,
+	left: -1,
+	borderBottomWidth: REPLY_LINE_WIDTH,
+	borderLeftWidth: REPLY_LINE_WIDTH,
+	borderBottomStyle: 'solid',
+	borderLeftStyle: 'solid',
+	borderBottomLeftRadius: borderRadius.sm,
+	borderBottomColor: colors.borderContrastLow,
+	borderLeftColor: colors.borderContrastLow,
 	width: OUTER_SPACE,
+	height: TREE_AVI_WIDTH / 2 + REPLY_LINE_WIDTH / 2 + OUTER_SPACE / 2,
 });
 
 export const replyChildLineColumn = style({
 	boxSizing: 'border-box',
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'column',
 	flexShrink: 0,
 	paddingTop: space._2xs,
-	position: 'relative',
 	width: TREE_AVI_WIDTH + space.xs,
 });
 
 export const replyChildLine = style({
-	borderRightColor: colors.borderContrastLow,
-	borderRightStyle: 'solid',
-	borderRightWidth: REPLY_LINE_WIDTH,
 	boxSizing: 'border-box',
-	flex: 1,
-	left: -1,
 	position: 'relative',
+	left: -1,
+	flex: 1,
+	borderRightWidth: REPLY_LINE_WIDTH,
+	borderRightStyle: 'solid',
+	borderRightColor: colors.borderContrastLow,
 	width: '50%',
 });

@@ -17,12 +17,12 @@ export const squareRadiusVar = createVar();
 export const text = recipe(
 	{
 		base: {
-			alignItems: 'center',
 			display: 'flex',
 			flexShrink: 0,
-			height: lineHeightVar,
-			maxWidth: '100%',
+			alignItems: 'center',
 			width: fallbackVar(widthVar, 'auto'),
+			maxWidth: '100%',
+			height: lineHeightVar,
 		},
 		variants: {
 			color: {
@@ -48,23 +48,23 @@ export const text = recipe(
 );
 
 export const bar = style({
-	backgroundColor: 'currentColor',
 	borderRadius: borderRadius.md,
-	height: roundToPx(fontSizeVar),
+	backgroundColor: 'currentColor',
 	width: '100%',
+	height: roundToPx(fontSizeVar),
 });
 
 export const circle = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			backgroundColor: 'currentColor',
-			borderRadius: '50%',
 			display: 'flex',
 			flexShrink: 0,
-			height: boxSizeVar,
+			alignItems: 'center',
 			justifyContent: 'center',
+			borderRadius: '50%',
+			backgroundColor: 'currentColor',
 			width: boxSizeVar,
+			height: boxSizeVar,
 		},
 		variants: {
 			color: {
@@ -81,11 +81,11 @@ export const circle = recipe(
 export const square = recipe(
 	{
 		base: {
-			backgroundColor: 'currentColor',
-			borderRadius: squareRadiusVar,
 			flexShrink: 0,
-			height: boxSizeVar,
+			borderRadius: squareRadiusVar,
+			backgroundColor: 'currentColor',
 			width: boxSizeVar,
+			height: boxSizeVar,
 		},
 		variants: {
 			color: {

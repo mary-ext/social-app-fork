@@ -4,22 +4,22 @@ import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const frame = style({
-	backgroundColor: colors.bg,
 	position: 'relative',
+	backgroundColor: colors.bg,
 });
 
 export const bannerButton = style({
-	background: 'none',
-	border: 0,
-	cursor: 'pointer',
 	display: 'block',
+	border: 0,
+	background: 'none',
 	padding: 0,
 	width: '100%',
+	cursor: 'pointer',
 });
 
 export const bannerPlaceholder = style({
-	aspectRatio: '3 / 1',
 	backgroundColor: colors.contrast_50,
+	aspectRatio: '3 / 1',
 	width: '100%',
 });
 
@@ -30,38 +30,39 @@ export const avatarAnchor = style({
 
 export const avatarBox = style({
 	display: 'block',
-	left: 10,
 	position: 'absolute',
-	top: -46, // straddle the banner's bottom edge
+	// straddle the banner's bottom edge
+	top: -46,
+	left: 10,
 });
 
 export const avatarButton = style([
 	avatarBox,
 	{
-		background: 'none',
 		border: 0,
 		borderRadius: borderRadius.full,
-		cursor: 'pointer',
+		background: 'none',
 		padding: 0,
+		cursor: 'pointer',
 	},
 ]);
 
 export const avatarRing = style({
-	backgroundColor: colors.bg,
-	borderColor: colors.bg,
-	borderRadius: borderRadius.full,
-	borderStyle: 'solid',
-	borderWidth: 2,
 	boxSizing: 'border-box',
 	display: 'flex',
-	height: 94,
 	position: 'relative',
+	borderWidth: 2,
+	borderStyle: 'solid',
+	borderRadius: borderRadius.full,
+	borderColor: colors.bg,
+	backgroundColor: colors.bg,
 	width: 94,
+	height: 94,
 });
 
 export const avatarRingLive = style({
-	borderColor: colors.negative_500,
 	borderWidth: 3,
+	borderColor: colors.negative_500,
 });
 
 export const avatarRingLabeler = style({
@@ -74,7 +75,7 @@ export const avatarInner = style({
 });
 
 export const headerAlerts = style({
+	paddingTop: space.xs,
 	paddingBottom: space.sm,
 	paddingInline: space.lg,
-	paddingTop: space.xs,
 });

@@ -16,8 +16,8 @@ export const radioList = style({
 });
 
 export const loaderWrap = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	paddingBlock: space._2xl,
 });

@@ -14,15 +14,15 @@ export const spinner = style({
 });
 
 export const placeholder = style({
+	boxSizing: 'content-box',
+	display: 'flex',
 	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_0,
+	justifyContent: 'center',
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 12,
 	boxShadow: vars.shadow.lg,
-	boxSizing: 'content-box',
-	color: vars.palette.contrast_900,
-	display: 'flex',
-	height: GRID_HEIGHT + 96,
-	justifyContent: 'center',
+	backgroundColor: vars.palette.contrast_0,
 	width: PANEL_WIDTH,
+	height: GRID_HEIGHT + 96,
+	color: vars.palette.contrast_900,
 });

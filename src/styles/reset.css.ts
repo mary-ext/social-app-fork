@@ -4,12 +4,12 @@ import { reset } from '#/styles/layers.css';
 
 globalStyle('a', {
 	'@layer': {
-		[reset]: { color: 'inherit', textDecoration: 'none' },
+		[reset]: { textDecoration: 'none', color: 'inherit' },
 	},
 });
 
 globalStyle('button, input, textarea', {
-	'@layer': { [reset]: { font: 'inherit', lineHeight: 'inherit' } },
+	'@layer': { [reset]: { lineHeight: 'inherit', font: 'inherit' } },
 });
 
 globalStyle('input:focus, textarea:focus', { '@layer': { [reset]: { outline: 0 } } });

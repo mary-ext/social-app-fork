@@ -12,16 +12,16 @@ export const headerScrolled = style({
 });
 
 export const publishingRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-	paddingRight: 14,
 	gap: 12,
+	alignItems: 'center',
+	paddingRight: 14,
 });
 
 export const buttonRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 4,
+	alignItems: 'center',
 });

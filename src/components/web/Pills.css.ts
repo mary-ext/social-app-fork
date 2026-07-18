@@ -24,18 +24,18 @@ export const row = recipe(
 export const pill = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			background: 'none',
-			border: 'none',
-			borderRadius: 999,
 			boxSizing: 'border-box',
-			color: vars.palette.contrast_700,
-			cursor: 'pointer',
 			display: 'flex',
 			flexDirection: 'row',
 			flexShrink: 0,
-			maxWidth: '100%',
+			alignItems: 'center',
+			border: 'none',
+			borderRadius: 999,
+			background: 'none',
 			minWidth: 0,
+			maxWidth: '100%',
+			color: vars.palette.contrast_700,
+			cursor: 'pointer',
 			selectors: {
 				'&:active': { backgroundColor: vars.palette.contrast_50 },
 				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
@@ -62,11 +62,11 @@ export const pillText = style({
 });
 
 export const followsYou = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_50,
-	borderRadius: 4,
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: 4,
+	backgroundColor: vars.palette.contrast_50,
 	paddingBlock: 3,
 	paddingInline: 6,
 });

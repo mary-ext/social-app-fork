@@ -19,9 +19,9 @@ export const section = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -30,20 +30,20 @@ export const section = recipe(
 );
 
 export const header = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	justifyContent: 'space-between',
-	paddingInline: space.lg,
 	paddingTop: space.md,
+	paddingInline: space.lg,
 });
 
 export const seeMoreTrigger = style({
-	background: 'none',
 	border: 'none',
-	cursor: 'pointer',
-	font: 'inherit',
+	background: 'none',
 	padding: 0,
+	font: 'inherit',
+	cursor: 'pointer',
 });
 
 export const seeMoreText = style({
@@ -57,11 +57,11 @@ export const grid = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: GRID_GAP,
-	overflowX: 'auto',
 	padding: space.lg,
 	paddingTop: space.md,
-	scrollPaddingInline: space.lg,
+	overflowX: 'auto',
 	scrollSnapType: 'x mandatory',
+	scrollPaddingInline: space.lg,
 	scrollbarWidth: 'none',
 	selectors: {
 		'&::-webkit-scrollbar': { display: 'none' },
@@ -82,22 +82,22 @@ globalStyle(`${grid} > *:nth-child(n+4)`, {
 });
 
 export const cardBase = style({
-	backgroundColor: colors.bg,
-	borderColor: colors.borderContrastLow,
-	borderRadius: borderRadius.lg,
-	borderStyle: 'solid',
-	borderWidth: 1,
-	boxShadow: vars.shadow.sm,
 	boxSizing: 'border-box',
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'column',
 	flexShrink: 0,
 	gap: space.xs,
-	minWidth: 0,
+	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: borderRadius.lg,
+	borderColor: colors.borderContrastLow,
+	boxShadow: vars.shadow.sm,
+	backgroundColor: colors.bg,
 	padding: space.md,
-	position: 'relative',
-	scrollSnapAlign: 'start',
 	width: MOBILE_CARD_WIDTH,
+	minWidth: 0,
+	scrollSnapAlign: 'start',
 	'@media': {
 		[WIDE]: {
 			flexBasis: `calc(30% - ${GRID_GAP / 2}px)`,
@@ -108,45 +108,45 @@ export const cardBase = style({
 });
 
 export const cardLink = style({
+	textDecoration: 'none',
 	color: 'inherit',
 	cursor: 'pointer',
-	textDecoration: 'none',
 	selectors: {
 		'&:hover, &:active': { borderColor: colors.borderContrastHigh },
 	},
 });
 
 export const dismiss = style({
+	display: 'flex',
+	position: 'absolute',
+	top: space.sm,
+	right: space.sm,
 	alignItems: 'center',
-	background: 'none',
+	justifyContent: 'center',
+	zIndex: 1,
 	border: 'none',
+	background: 'none',
+	padding: space.xs,
 	color: colors.textContrastMedium,
 	cursor: 'pointer',
-	display: 'flex',
-	justifyContent: 'center',
-	padding: space.xs,
-	position: 'absolute',
-	right: space.sm,
-	top: space.sm,
-	zIndex: 1,
 	selectors: {
 		'&:hover': { color: colors.text },
 	},
 });
 
 export const body = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.sm,
+	alignItems: 'center',
 	marginBottom: 'auto',
 	paddingBottom: space.sm,
 });
 
 export const nameRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	maxWidth: '100%',
 });
 
@@ -160,11 +160,11 @@ export const badges = style({
 });
 
 export const identity = style({
-	alignItems: 'center',
-	alignSelf: 'stretch',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.xs,
+	alignItems: 'center',
+	alignSelf: 'stretch',
 });
 
 export const description = style({
@@ -172,26 +172,26 @@ export const description = style({
 });
 
 export const followPlaceholder = style({
-	backgroundColor: vars.palette.contrast_50,
 	borderRadius: borderRadius.sm,
-	height: 33,
+	backgroundColor: vars.palette.contrast_50,
 	width: '100%',
+	height: 33,
 });
 
 export const seeMoreCard = style({
-	alignItems: 'center',
-	background: 'none',
-	border: 'none',
-	color: colors.text,
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'column',
 	flexShrink: 0,
 	gap: space.sm,
+	alignItems: 'center',
 	justifyContent: 'center',
+	border: 'none',
+	background: 'none',
 	padding: space.md,
-	scrollSnapAlign: 'start',
 	width: FINAL_CARD_WIDTH,
+	scrollSnapAlign: 'start',
+	color: colors.text,
+	cursor: 'pointer',
 	'@media': {
 		[WIDE]: { display: 'none' },
 	},

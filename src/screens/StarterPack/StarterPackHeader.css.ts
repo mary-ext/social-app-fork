@@ -6,15 +6,15 @@ export const outer = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.md,
-	paddingInline: space.lg,
 	paddingBottom: space.sm,
+	paddingInline: space.lg,
 });
 
 export const header = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'flex-start',
 });
 
 export const avatar = style({
@@ -26,13 +26,13 @@ export const content = style({
 	flex: '1 1 0%',
 	flexDirection: 'column',
 	gap: space._2xs,
-	minWidth: 0,
 	paddingBlock: (56 - 50) / 2,
+	minWidth: 0,
 });
 
 export const joinedRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 });

@@ -18,13 +18,13 @@ const gtPhone = 'screen and (min-width: 500px)';
 
 export const bodyLink = style({
 	boxSizing: 'border-box',
+	display: 'flex',
+	position: 'relative',
+	flexDirection: 'column',
+	width: '100%',
+	textDecoration: 'none',
 	color: 'inherit',
 	cursor: 'pointer',
-	display: 'flex',
-	flexDirection: 'column',
-	position: 'relative',
-	textDecoration: 'none',
-	width: '100%',
 	selectors: {
 		'&:hover': { backgroundColor: colors.contrast_25 },
 		'&:focus-visible': { outline: 'none' },
@@ -32,17 +32,17 @@ export const bodyLink = style({
 });
 
 export const card = style({
-	backgroundColor: colors.bg,
-	borderColor: colors.borderContrastLow,
-	borderRadius: borderRadius.lg,
-	borderStyle: 'solid',
-	borderWidth: 1,
 	boxSizing: 'border-box',
 	display: 'flex',
-	flexDirection: 'column',
-	overflow: 'hidden',
 	position: 'relative',
+	flexDirection: 'column',
+	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: borderRadius.lg,
+	borderColor: colors.borderContrastLow,
+	backgroundColor: colors.bg,
 	width: '100%',
+	overflow: 'hidden',
 	selectors: {
 		[`&:has(${bodyLink}:hover)`]: { borderColor: colors.borderContrastHigh },
 		[`&:has(${bodyLink}:focus-visible)`]: {
@@ -63,9 +63,9 @@ export const body = style({
 });
 
 export const bodyMedia = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
 	borderTopWidth: 1,
+	borderTopStyle: 'solid',
+	borderTopColor: colors.borderContrastLow,
 	selectors: {
 		[`${bodyLink}:hover &`]: { borderTopColor: colors.borderContrastHigh },
 	},
@@ -75,59 +75,59 @@ export const textBlock = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 4,
+	paddingRight: space.md,
 	paddingBottom: space.sm,
 	paddingLeft: space.md,
-	paddingRight: space.md,
 });
 
 export const metaInline = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'center',
 	paddingTop: 2,
 });
 
 export const readingTime = style({
-	alignItems: 'center',
-	color: colors.textContrastMedium,
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space._2xs,
+	alignItems: 'center',
+	color: colors.textContrastMedium,
 });
 
-export const metaSection = style({ paddingLeft: space.md, paddingRight: space.md });
+export const metaSection = style({ paddingRight: space.md, paddingLeft: space.md });
 
 export const divider = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
 	borderTopWidth: 1,
+	borderTopStyle: 'solid',
+	borderTopColor: colors.borderContrastLow,
 	width: '100%',
 });
 
-export const metaRowPad = style({ paddingBottom: space.sm, paddingTop: space.sm });
+export const metaRowPad = style({ paddingTop: space.sm, paddingBottom: space.sm });
 
 export const metaRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.xs,
+	alignItems: 'center',
 });
 
 export const metaItem = style({
-	alignItems: 'center',
-	color: colors.textContrastMedium,
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 1,
 	gap: space._2xs,
+	alignItems: 'center',
 	minWidth: 0,
+	color: colors.textContrastMedium,
 });
 
 export const identityText = style({
 	display: 'flex',
-	flexDirection: 'column',
 	flex: 1,
+	flexDirection: 'column',
 	minWidth: 0,
 });
 
@@ -139,22 +139,22 @@ export const iconRoot = style({ position: 'relative' });
 export const standardBadge = style([
 	mediaBorder,
 	{
-		alignItems: 'center',
-		backgroundColor: colors.bg,
-		borderRadius: 999,
-		color: colors.textContrastMedium,
 		display: 'flex',
-		height: 16,
-		justifyContent: 'center',
-		left: -6,
 		position: 'absolute',
 		top: -6,
-		width: 16,
+		left: -6,
+		alignItems: 'center',
+		justifyContent: 'center',
 		zIndex: 1,
+		borderRadius: 999,
+		backgroundColor: colors.bg,
+		width: 16,
+		height: 16,
+		color: colors.textContrastMedium,
 	},
 ]);
 
-export const avatarWrap = style({ lineHeight: 0, position: 'relative' });
+export const avatarWrap = style({ position: 'relative', lineHeight: 0 });
 
 export const publicationAvatar = style({ borderRadius: borderRadius.sm });
 
@@ -163,27 +163,27 @@ export const avatarBorder = style([mediaOverlay, mediaBorderOpaque, { borderRadi
 export const letterBox = style([
 	mediaBorderOpaque,
 	{
-		alignItems: 'center',
-		backgroundColor: accentVar,
-		borderRadius: borderRadius.sm,
 		display: 'flex',
-		justifyContent: 'center',
 		position: 'relative',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderRadius: borderRadius.sm,
+		backgroundColor: accentVar,
 	},
 ]);
 
-export const letterBoxSm = style({ height: 32, width: 32 });
-export const letterBoxLg = style({ height: 40, width: 40 });
+export const letterBoxSm = style({ width: 32, height: 32 });
+export const letterBoxLg = style({ width: 40, height: 40 });
 
 export const letterText = style({ color: accentForegroundVar });
 
 export const subscribe = style({
+	position: 'relative',
 	flexShrink: 0,
 	gap: space.sm,
-	pointerEvents: 'auto',
-	position: 'relative',
-	width: '100%',
 	zIndex: 1,
+	width: '100%',
+	pointerEvents: 'auto',
 	'@media': {
 		[gtPhone]: { width: 'auto' },
 	},
@@ -203,41 +203,41 @@ export const hideOnGtPhone = style({
 });
 
 export const footer = style({
-	alignItems: 'center',
 	boxSizing: 'border-box',
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'column',
 	gap: space.md,
+	alignItems: 'center',
 	justifyContent: 'space-between',
 	padding: space.md,
-	position: 'relative',
-	'@media': {
-		[gtPhone]: { flexDirection: 'row', gap: space.sm },
-	},
 	selectors: {
 		[`${bodyLink}:hover ~ &`]: { backgroundColor: colors.contrast_25 },
+	},
+	'@media': {
+		[gtPhone]: { flexDirection: 'row', gap: space.sm },
 	},
 });
 
 export const footerFill = style({
+	position: 'absolute',
+	top: 0,
+	right: 0,
 	bottom: 0,
 	left: 0,
-	position: 'absolute',
-	right: 0,
-	top: 0,
 	zIndex: 0,
 });
 
 export const footerIdentity = style({
-	alignItems: 'center',
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
+	zIndex: 1,
+	width: '100%',
 	minWidth: 0,
 	pointerEvents: 'none',
-	position: 'relative',
-	width: '100%',
-	zIndex: 1,
 	'@media': {
 		[gtPhone]: { flex: 1, width: 'auto' },
 	},
@@ -250,70 +250,70 @@ export const footerTitle = style({
 });
 
 export const pubCard = style({
-	backgroundColor: colors.bg,
-	borderColor: colors.borderContrastLow,
-	borderRadius: borderRadius.lg,
-	borderStyle: 'solid',
-	borderWidth: 1,
 	boxSizing: 'border-box',
 	display: 'flex',
-	flexDirection: 'column',
-	overflow: 'hidden',
-	padding: space.md,
 	position: 'relative',
+	flexDirection: 'column',
+	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: borderRadius.lg,
+	borderColor: colors.borderContrastLow,
+	backgroundColor: colors.bg,
+	padding: space.md,
 	width: '100%',
+	overflow: 'hidden',
 	selectors: {
-		'&:hover': { backgroundColor: colors.contrast_25, borderColor: colors.borderContrastHigh },
+		'&:hover': { borderColor: colors.borderContrastHigh, backgroundColor: colors.contrast_25 },
 	},
 });
 
 export const pubFill = style([
 	insetFocusRing,
 	{
+		position: 'absolute',
+		top: 0,
+		right: 0,
 		bottom: 0,
 		left: 0,
-		position: 'absolute',
-		right: 0,
-		top: 0,
 		zIndex: 0,
 	},
 ]);
 
 export const pubTopRow = style({
-	alignItems: 'center',
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'column',
 	gap: space.md,
+	alignItems: 'center',
 	justifyContent: 'space-between',
-	pointerEvents: 'none',
-	position: 'relative',
 	zIndex: 1,
+	pointerEvents: 'none',
 	'@media': {
 		[gtPhone]: { flexDirection: 'row', gap: space.sm },
 	},
 });
 
 export const pubIdentity = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
-	minWidth: 0,
+	alignItems: 'center',
 	width: '100%',
+	minWidth: 0,
 	'@media': {
 		[gtPhone]: { flex: 1 },
 	},
 });
 
 export const pubDescription = style({
-	marginTop: space.sm,
-	pointerEvents: 'none',
 	position: 'relative',
 	zIndex: 1,
+	marginTop: space.sm,
+	pointerEvents: 'none',
 });
 
 export const pubSubscribeStacked = style({
-	marginTop: space.sm,
 	position: 'relative',
 	zIndex: 1,
+	marginTop: space.sm,
 });

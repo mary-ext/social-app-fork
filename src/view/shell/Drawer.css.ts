@@ -16,13 +16,13 @@ export const portal = style(
 
 export const backdrop = style(
 	layered(components, {
-		inset: 0,
-		minHeight: '100dvh',
-		opacity: 'calc(1 - var(--drawer-swipe-progress))',
 		position: 'fixed',
+		inset: 0,
 		transitionDuration: '450ms',
 		transitionProperty: 'opacity',
 		transitionTimingFunction: swipeEase,
+		opacity: 'calc(1 - var(--drawer-swipe-progress))',
+		minHeight: '100dvh',
 		selectors: {
 			'.theme--light &': { backgroundColor: 'rgba(0, 57, 117, 0.1)' },
 			'.theme--dark &': { backgroundColor: 'rgba(1, 82, 168, 0.1)' },
@@ -37,8 +37,8 @@ export const backdrop = style(
 export const viewport = style(
 	layered(components, {
 		display: 'flex',
-		inset: 0,
 		position: 'fixed',
+		inset: 0,
 	}),
 );
 
@@ -46,23 +46,23 @@ const bleed = createVar();
 
 export const popup = style(
 	layered(components, {
-		backgroundColor: vars.palette.contrast_0,
-		borderRight: `1px solid ${vars.palette.contrast_100}`,
+		vars: { [bleed]: '48px' },
 		boxSizing: 'border-box',
 		display: 'flex',
 		flexDirection: 'column',
-		height: '100%',
-		marginLeft: `calc(-1 * ${bleed})`,
-		maxWidth: `calc(80% + ${bleed})`,
-		outline: 0,
-		overflowY: 'auto',
-		overscrollBehavior: 'contain',
-		paddingLeft: bleed,
-		touchAction: 'auto',
 		transform: 'translateX(var(--drawer-swipe-movement-x))',
 		transition: `transform 450ms ${swipeEase}`,
-		vars: { [bleed]: '48px' },
+		marginLeft: `calc(-1 * ${bleed})`,
+		outline: 0,
+		borderRight: `1px solid ${vars.palette.contrast_100}`,
+		backgroundColor: vars.palette.contrast_0,
+		paddingLeft: bleed,
 		width: `calc(330px + ${bleed})`,
+		maxWidth: `calc(80% + ${bleed})`,
+		height: '100%',
+		overflowY: 'auto',
+		overscrollBehavior: 'contain',
+		touchAction: 'auto',
 		willChange: 'transform',
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': {
@@ -75,72 +75,72 @@ export const popup = style(
 
 export const content = style(
 	layered(components, {
-		paddingBottom: space.xl,
 		paddingTop: `max(env(safe-area-inset-top), ${space.xl}px)`,
+		paddingBottom: space.xl,
 		width: '100%',
 	}),
 );
 
 export const srOnly = style({
+	position: 'absolute',
+	margin: -1,
 	border: 0,
 	clip: 'rect(0 0 0 0)',
 	clipPath: 'inset(50%)',
-	height: 1,
-	margin: -1,
-	overflow: 'hidden',
 	padding: 0,
-	position: 'absolute',
-	whiteSpace: 'nowrap',
 	width: 1,
+	height: 1,
+	overflow: 'hidden',
+	whiteSpace: 'nowrap',
 });
 
 export const profileCard = style(
 	layered(components, {
 		appearance: 'none',
-		background: 'none',
-		border: 0,
-		color: 'inherit',
-		cursor: 'pointer',
 		display: 'flex',
 		flexDirection: 'column',
 		gap: space.sm,
+		border: 0,
+		background: 'none',
 		paddingBlock: 0,
 		paddingInline: space.xl,
-		textAlign: 'left',
 		width: '100%',
+		textAlign: 'left',
+		color: 'inherit',
+		cursor: 'pointer',
 	}),
 );
 
 export const profileNameRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	gap: space.xs,
+	alignItems: 'center',
 });
 
 export const signInCard = style({ paddingInline: space.xl });
 
 export const dividerTop = style({
-	backgroundColor: vars.palette.contrast_100,
-	height: 1,
+	marginTop: space.xl,
 	marginBottom: space.sm,
 	marginInline: space.xl,
-	marginTop: space.xl,
+	backgroundColor: vars.palette.contrast_100,
+	height: 1,
 });
 
 export const menuItem = style(
 	layered(components, {
-		alignItems: 'center',
 		appearance: 'none',
-		background: 'none',
-		border: 0,
-		color: vars.palette.contrast_1000,
-		cursor: 'pointer',
 		display: 'flex',
 		gap: space.md,
+		alignItems: 'center',
+		border: 0,
+		background: 'none',
 		paddingBlock: space.md,
 		paddingInline: space.xl,
-		textAlign: 'left',
 		width: '100%',
+		textAlign: 'left',
+		color: vars.palette.contrast_1000,
+		cursor: 'pointer',
 		selectors: {
 			'&:hover, &:focus-visible': { backgroundColor: vars.palette.contrast_25 },
 			'&:focus-visible': { outline: 'none' },
@@ -150,4 +150,4 @@ export const menuItem = style(
 
 export const iconWrap = style({ display: 'inline-flex', position: 'relative' });
 
-export const countBadge = style([navBadge.badge, { right: -10, top: -4 }]);
+export const countBadge = style([navBadge.badge, { top: -4, right: -10 }]);

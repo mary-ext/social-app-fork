@@ -6,22 +6,22 @@ import { space } from '#/styles/tokens.css';
 import { PANEL_WIDTH, SEARCH_INPUT_RADIUS } from './layout';
 
 export const panel = style({
-	backgroundColor: vars.palette.contrast_0,
+	boxSizing: 'content-box',
+	display: 'flex',
+	flexDirection: 'column',
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 12,
 	boxShadow: vars.shadow.lg,
-	boxSizing: 'content-box',
-	color: vars.palette.contrast_900,
-	display: 'flex',
-	flexDirection: 'column',
-	overflow: 'hidden',
+	backgroundColor: vars.palette.contrast_0,
 	width: PANEL_WIDTH,
+	overflow: 'hidden',
+	color: vars.palette.contrast_900,
 });
 
 export const searchRow = style({
-	paddingInline: space.sm,
-	paddingTop: space.sm,
 	zIndex: 1,
+	paddingTop: space.sm,
+	paddingInline: space.sm,
 });
 
 export const searchField = style({
@@ -33,12 +33,12 @@ export const list = style({
 });
 
 export const empty = style({
-	alignItems: 'center',
-	color: vars.palette.contrast_500,
 	display: 'flex',
-	fontSize: 14,
-	inset: 0,
-	justifyContent: 'center',
-	pointerEvents: 'none',
 	position: 'absolute',
+	inset: 0,
+	alignItems: 'center',
+	justifyContent: 'center',
+	color: vars.palette.contrast_500,
+	fontSize: 14,
+	pointerEvents: 'none',
 });

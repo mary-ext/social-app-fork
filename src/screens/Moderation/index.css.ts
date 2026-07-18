@@ -21,12 +21,12 @@ export const identity = style({
 });
 
 export const regionalNotice = style({
-	alignItems: 'center',
-	color: vars.palette.contrast_500,
 	display: 'flex',
-	fontStyle: 'italic',
 	gap: space.xs,
+	alignItems: 'center',
 	paddingTop: space._2xs,
+	color: vars.palette.contrast_500,
+	fontStyle: 'italic',
 });
 
 export const cleanup = style({
@@ -40,8 +40,8 @@ export const removeButton = style({
 });
 
 export const status = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	padding: space.xl,
 });

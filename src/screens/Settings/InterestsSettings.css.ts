@@ -12,8 +12,8 @@ export const body = style({
 });
 
 export const loaderWrap = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	padding: space.lg,
 });
@@ -27,14 +27,14 @@ export const chipWrap = style({
 
 export const chip = style({
 	appearance: 'none',
-	backgroundColor: vars.palette.contrast_50,
-	border: 'none',
-	borderRadius: 999,
-	cursor: 'pointer',
-	paddingBlock: space.sm,
-	paddingInline: space.xl,
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color',
+	border: 'none',
+	borderRadius: 999,
+	backgroundColor: vars.palette.contrast_50,
+	paddingBlock: space.sm,
+	paddingInline: space.xl,
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': { backgroundColor: vars.palette.contrast_100 },
 		'&[data-checked]': { backgroundColor: vars.palette.contrast_900 },

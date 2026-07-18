@@ -9,14 +9,14 @@ export const emptyOuter = style({
 });
 
 export const emptyBox = style({
-	backgroundColor: colors.contrast_25,
 	borderRadius: borderRadius.sm,
+	backgroundColor: colors.contrast_25,
 	padding: space.lg,
 });
 
 export const emptyDivider = style({
-	backgroundColor: colorMix(colors.text, '20%'),
-	height: 1,
 	marginBlock: 12,
+	backgroundColor: colorMix(colors.text, '20%'),
 	width: '100%',
+	height: 1,
 });

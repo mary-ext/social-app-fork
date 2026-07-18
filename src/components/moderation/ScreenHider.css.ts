@@ -4,12 +4,12 @@ import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
 export const container = style({
-	backgroundColor: colors.bg,
 	display: 'flex',
 	flexDirection: 'column',
 	flexGrow: 1,
-	paddingBlockEnd: 150,
+	backgroundColor: colors.bg,
 	paddingBlockStart: 100,
+	paddingBlockEnd: 150,
 	paddingInline: space.lg,
 });
 
@@ -20,14 +20,14 @@ export const badgeWrap = style({
 });
 
 export const badge = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_975,
-	borderRadius: 9999,
-	color: colors.bg,
 	display: 'flex',
-	height: 50,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: 9999,
+	backgroundColor: colors.contrast_975,
 	width: 50,
+	height: 50,
+	color: colors.bg,
 });
 
 export const title = style({
@@ -59,10 +59,10 @@ export const pill = style({
 });
 
 export const learnMore = style({
-	background: 'none',
-	border: 'none',
-	cursor: 'pointer',
 	display: 'inline',
-	font: 'inherit',
+	border: 'none',
+	background: 'none',
 	padding: 0,
+	font: 'inherit',
+	cursor: 'pointer',
 });

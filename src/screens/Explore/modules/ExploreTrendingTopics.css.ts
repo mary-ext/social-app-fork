@@ -5,11 +5,11 @@ import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 const rowBase = style({
-	borderBottom: `1px solid ${colors.borderContrastLow}`,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space._2xs,
+	borderBottom: `1px solid ${colors.borderContrastLow}`,
 	paddingBlock: space.lg,
 	paddingInline: space.lg,
 	width: '100%',
@@ -25,9 +25,9 @@ export const skeletonRow = rowBase;
 export const row = style([
 	rowBase,
 	{
+		textDecoration: 'none',
 		color: 'inherit',
 		cursor: 'pointer',
-		textDecoration: 'none',
 		':hover': {
 			backgroundColor: colors.contrast_25,
 		},
@@ -43,9 +43,9 @@ export const main = style({
 });
 
 export const titleRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 });
 
 export const rank = style({
@@ -59,10 +59,10 @@ export const nameText = style({
 });
 
 export const metaRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 	paddingLeft: 20,
 });
 
@@ -73,14 +73,14 @@ export const indicator = style({
 export const pill = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			borderRadius: borderRadius.full,
 			boxSizing: 'border-box',
 			display: 'flex',
 			flexDirection: 'row',
 			gap: space.xs,
-			height: 28,
+			alignItems: 'center',
+			borderRadius: borderRadius.full,
 			paddingInline: 10,
+			height: 28,
 		},
 		variants: {
 			type: {

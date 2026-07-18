@@ -16,10 +16,10 @@ export const channels = style({
 });
 
 export const switchRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'center',
 	paddingBlock: space.xs,
 	width: '100%',
 });
@@ -30,8 +30,8 @@ export const switchLabel = style({
 });
 
 export const divider = style({
-	borderTop: `1px solid ${vars.palette.contrast_100}`,
 	marginBlock: space.sm,
+	borderTop: `1px solid ${vars.palette.contrast_100}`,
 	width: '100%',
 });
 
@@ -42,9 +42,9 @@ export const radioList = style({
 });
 
 export const loaderWrap = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 	paddingTop: space._5xl,
 	width: '100%',
 });

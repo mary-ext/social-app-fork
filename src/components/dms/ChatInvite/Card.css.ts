@@ -1,10 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
 export const row = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 12,
+	alignItems: 'center',
 });
 
 export const body = style({
@@ -15,17 +15,17 @@ export const body = style({
 });
 
 export const metaRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 8,
+	alignItems: 'center',
 });
 
 export const ownerRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 4,
+	alignItems: 'center',
 });
 
 export const shrink = style({

@@ -28,8 +28,8 @@ export const rootPwi = style({
 
 export const rootMinimal = style({
 	alignItems: 'center',
-	overflowX: 'hidden',
 	width: LEFT_NAV_MINIMAL_WIDTH,
+	overflowX: 'hidden',
 });
 
 export const signInWrap = style({
@@ -50,10 +50,10 @@ export const profileCardFull = style({
 });
 
 export const avatarPlaceholder = style({
-	backgroundColor: vars.palette.contrast_50,
 	borderRadius: 999,
-	height: LARGE_ELEMENT_SIZE,
+	backgroundColor: vars.palette.contrast_50,
 	width: LARGE_ELEMENT_SIZE,
+	height: LARGE_ELEMENT_SIZE,
 });
 
 export const avatarPlaceholderInset = style({
@@ -61,38 +61,38 @@ export const avatarPlaceholderInset = style({
 });
 
 export const profileTrigger = style({
-	alignItems: 'center',
-	background: 'transparent',
-	border: 0,
-	borderRadius: 999,
+	vars: { [avatarActiveTransform]: 'scale(0.6667) translateX(-22px)' },
 	boxSizing: 'border-box',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 6,
+	alignItems: 'center',
 	justifyContent: 'space-between',
-	paddingBlock: 0,
-	paddingInlineEnd: space.md,
-	paddingInlineStart: space.lg,
-	textAlign: 'left',
 	transitionDelay: '50ms',
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color',
 	transitionTimingFunction: TIMING,
-	vars: { [avatarActiveTransform]: 'scale(0.6667) translateX(-22px)' },
+	border: 0,
+	borderRadius: 999,
+	background: 'transparent',
+	paddingBlock: 0,
+	paddingInlineStart: space.lg,
+	paddingInlineEnd: space.md,
 	width: '100%',
+	textAlign: 'left',
+	cursor: 'pointer',
 	selectors: {
 		'&:hover, &:focus-visible, &[data-popup-open]': {
-			backgroundColor: vars.palette.contrast_25,
 			transitionDelay: '0ms',
+			backgroundColor: vars.palette.contrast_25,
 		},
 	},
 });
 
 export const profileTriggerMinimal = style({
+	vars: { [avatarActiveTransform]: 'scale(0.8)' },
 	justifyContent: 'center',
 	paddingInline: 0,
-	vars: { [avatarActiveTransform]: 'scale(0.8)' },
 	width: 'auto',
 });
 
@@ -106,54 +106,54 @@ export const avatarWrap = style({
 	transitionProperty: 'transform',
 	transitionTimingFunction: TIMING,
 	zIndex: 10,
-	'@media': {
-		'(prefers-reduced-motion: reduce)': { transition: 'none' },
-	},
 	selectors: {
 		[active('&')]: { transform: avatarActiveTransform, transitionDelay: '0ms' },
+	},
+	'@media': {
+		'(prefers-reduced-motion: reduce)': { transition: 'none' },
 	},
 });
 
 export const identity = style({
-	alignItems: 'start',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	marginLeft: -space.xl,
-	opacity: 0,
+	alignItems: 'start',
 	transitionDelay: '50ms',
 	transitionDuration: '100ms',
 	transitionProperty: 'opacity',
 	transitionTimingFunction: TIMING,
+	opacity: 0,
+	marginLeft: -space.xl,
 	selectors: {
-		[active('&')]: { opacity: 1, transitionDelay: '0ms' },
+		[active('&')]: { transitionDelay: '0ms', opacity: 1 },
 	},
 });
 
 export const ellipsisIcon = style({
 	flexShrink: 0,
-	opacity: 0,
 	transitionDuration: '100ms',
 	transitionProperty: 'opacity',
 	transitionTimingFunction: TIMING,
+	opacity: 0,
 	selectors: {
 		[active('&')]: { opacity: 1 },
 	},
 });
 
 export const navItem = style({
-	alignItems: 'center',
-	borderRadius: 999,
+	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
-	boxSizing: 'border-box',
 	gap: space.sm,
-	outlineOffset: -1,
-	padding: space.md,
-	textDecoration: 'none',
+	alignItems: 'center',
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color, color',
 	transitionTimingFunction: TIMING,
+	outlineOffset: -1,
+	borderRadius: 999,
+	padding: space.md,
+	textDecoration: 'none',
 	selectors: {
 		'&:hover': { backgroundColor: vars.palette.contrast_25 },
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -1 },
@@ -161,25 +161,25 @@ export const navItem = style({
 });
 
 export const iconBox = style({
-	alignItems: 'center',
 	display: 'flex',
-	flexShrink: 0,
-	height: 24,
-	justifyContent: 'center',
 	position: 'relative',
-	width: 24,
+	flexShrink: 0,
+	alignItems: 'center',
+	justifyContent: 'center',
 	zIndex: 1,
+	width: 24,
+	height: 24,
 });
 
-export const badge = style([navBadge.badge, { left: 12, top: -6 }]);
+export const badge = style([navBadge.badge, { top: -6, left: 12 }]);
 
-export const hasNewDot = style([navBadge.hasNewDot, { right: -2, top: -4 }]);
+export const hasNewDot = style([navBadge.hasNewDot, { top: -4, right: -2 }]);
 
 export const composeRow = style({
 	display: 'flex',
 	flexDirection: 'row',
-	paddingLeft: space.md,
 	paddingTop: space.lg,
+	paddingLeft: space.md,
 });
 
 export const composeRowMinimal = style({
@@ -188,7 +188,7 @@ export const composeRowMinimal = style({
 });
 
 export const composeButtonMinimal = style({
-	height: LARGE_ELEMENT_SIZE,
 	padding: 0,
 	width: LARGE_ELEMENT_SIZE,
+	height: LARGE_ELEMENT_SIZE,
 });

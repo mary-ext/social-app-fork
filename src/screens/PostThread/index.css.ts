@@ -6,10 +6,10 @@ import { colors } from '#/styles/colors';
 import { zIndex } from '#/styles/tokens.css';
 
 export const footer = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
-	borderTopWidth: 1,
 	boxSizing: 'border-box',
+	borderTopWidth: 1,
+	borderTopStyle: 'solid',
+	borderTopColor: colors.borderContrastLow,
 });
 
 export const footerNoBorder = style({
@@ -17,9 +17,9 @@ export const footerNoBorder = style({
 });
 
 export const mobileComposePrompt = style({
-	bottom: fallbackVar(bottomBarHeightVar, '0px'),
-	left: 0,
 	position: 'fixed',
 	right: 0,
+	bottom: fallbackVar(bottomBarHeightVar, '0px'),
+	left: 0,
 	zIndex: zIndex.raised,
 });

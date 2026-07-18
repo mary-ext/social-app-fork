@@ -9,8 +9,8 @@ export const fields = style({
 });
 
 export const avatarWrap = style({
-	alignItems: 'flex-start',
 	display: 'flex',
+	alignItems: 'flex-start',
 });
 
 export const errorWrap = style({

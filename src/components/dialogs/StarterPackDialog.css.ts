@@ -8,18 +8,18 @@ import { space } from '#/styles/tokens.css';
 const DIALOG_PADDING = space.lg;
 
 export const popup = style({
-	height: 600,
 	maxWidth: 500,
+	height: 600,
 });
 
 export const header = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_0,
-	borderBottom: `1px solid ${colors.borderContrastLow}`,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexShrink: 0,
+	alignItems: 'center',
 	justifyContent: 'space-between',
+	borderBottom: `1px solid ${colors.borderContrastLow}`,
+	backgroundColor: vars.palette.contrast_0,
 	padding: DIALOG_PADDING,
 });
 
@@ -35,10 +35,10 @@ export const closeButton = style({
 export const item = recipe(
 	{
 		base: {
-			alignItems: 'center',
 			boxSizing: 'border-box',
 			display: 'flex',
 			gap: space.md,
+			alignItems: 'center',
 			justifyContent: 'space-between',
 			paddingBlock: space.md,
 			paddingInline: DIALOG_PADDING,
@@ -60,8 +60,8 @@ export const itemInfo = style({
 });
 
 export const itemMeta = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	marginTop: space.xs,
 });
 
@@ -70,25 +70,25 @@ export const moreCount = style({
 });
 
 export const loading = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	paddingBlock: space._5xl,
 });
 
 export const empty = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.lg,
-	paddingInline: space.xl,
+	alignItems: 'center',
 	paddingTop: space._5xl,
+	paddingInline: space.xl,
 });
 
 export const emptyText = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.sm,
+	alignItems: 'center',
 	maxWidth: 260,
 });

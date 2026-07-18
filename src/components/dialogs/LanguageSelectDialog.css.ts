@@ -7,23 +7,23 @@ export const group = style({
 });
 
 export const header = style({
-	backgroundColor: vars.palette.contrast_0,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
-	gap: 16,
 	flexShrink: 0,
+	gap: 16,
+	backgroundColor: vars.palette.contrast_0,
+	paddingTop: 24,
 	paddingBottom: 4,
 	paddingInline: 24,
-	paddingTop: 24,
 });
 
 export const headerRow = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
-	justifyContent: 'space-between',
 	gap: 8,
+	alignItems: 'flex-start',
+	justifyContent: 'space-between',
 });
 
 export const titleBlock = style({
@@ -39,8 +39,8 @@ export const list = style({
 
 export const sectionHeader = style({
 	display: 'block',
-	paddingBottom: 12,
 	paddingTop: 28,
+	paddingBottom: 12,
 });
 
 export const row = style({

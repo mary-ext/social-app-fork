@@ -3,12 +3,12 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const root = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.lg,
-	overflowX: 'auto',
+	alignItems: 'center',
 	paddingInline: space.lg,
+	overflowX: 'auto',
 	scrollbarWidth: 'none',
 
 	'::-webkit-scrollbar': {

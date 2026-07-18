@@ -31,19 +31,19 @@ export const sectionBody = style({
 });
 
 export const sectionFootnote = style({
-	paddingInline: space.xs,
 	paddingTop: space.sm,
+	paddingInline: space.xs,
 });
 
 const cardRadius = 12;
 
 export const card = style({
-	backgroundColor: vars.palette.contrast_25,
-	borderRadius: cardRadius,
 	display: 'flex',
 	flexDirection: 'column',
-	overflow: 'hidden',
+	borderRadius: cardRadius,
+	backgroundColor: vars.palette.contrast_25,
 	width: '100%',
+	overflow: 'hidden',
 });
 
 export const divider = style({
@@ -53,11 +53,11 @@ export const divider = style({
 
 export const panel = style({
 	boxSizing: 'border-box',
-	height: 'var(--collapsible-panel-height)',
-	overflow: 'hidden',
 	transitionDuration: '300ms',
 	transitionProperty: 'height',
 	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+	height: 'var(--collapsible-panel-height)',
+	overflow: 'hidden',
 	selectors: {
 		'&[data-starting-style], &[data-ending-style]': {
 			height: 0,
@@ -66,40 +66,40 @@ export const panel = style({
 });
 
 export const row = style({
-	alignItems: 'start',
 	boxSizing: 'border-box',
 	display: 'grid',
 	gridTemplateColumns: 'auto minmax(0, 1fr) auto',
+	rowGap: space.xs,
+	alignItems: 'start',
 	paddingBlock: 14,
 	paddingInline: space.lg,
-	rowGap: space.xs,
-	textAlign: 'left',
 	width: '100%',
+	textAlign: 'left',
 });
 
 export const rowPlain = style({
-	alignItems: 'center',
 	boxSizing: 'border-box',
 	display: 'flex',
 	gap: space.md,
+	alignItems: 'center',
 	paddingBlock: 14,
 	paddingInline: space.lg,
-	textAlign: 'left',
 	width: '100%',
+	textAlign: 'left',
 });
 
 export const rowInteractive = style({
 	appearance: 'none',
-	background: 'transparent',
-	border: 'none',
-	color: 'inherit',
-	cursor: 'pointer',
-	font: 'inherit',
-	textDecoration: 'none',
 	transitionDuration: '100ms, 100ms, 300ms',
 	transitionProperty: 'background-color, opacity, border-radius',
 	transitionTimingFunction:
 		'cubic-bezier(0.17, 0.73, 0.14, 1), cubic-bezier(0.17, 0.73, 0.14, 1), cubic-bezier(0.16, 1, 0.3, 1)',
+	border: 'none',
+	background: 'transparent',
+	textDecoration: 'none',
+	color: 'inherit',
+	font: 'inherit',
+	cursor: 'pointer',
 	selectors: {
 		'&:hover:not(:disabled):not([data-disabled])': { backgroundColor: vars.palette.contrast_50 },
 		'&:focus-visible': {
@@ -107,8 +107,8 @@ export const rowInteractive = style({
 			outlineOffset: -2,
 		},
 		'&:disabled, &[data-disabled]': {
-			cursor: 'default',
 			opacity: 0.5,
+			cursor: 'default',
 		},
 	},
 });
@@ -133,21 +133,21 @@ export const rowLast = style({
 });
 
 export const icon = style({
-	color: vars.palette.contrast_500,
 	display: 'flex',
 	flexShrink: 0,
-	gridColumn: 1,
 	gridRow: 1,
-	marginBlock: (20 - 18) / 2,
+	gridColumn: 1,
 	marginRight: space.md,
+	marginBlock: (20 - 18) / 2,
+	color: vars.palette.contrast_500,
 	selectors: {
 		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
 	},
 });
 
 export const title = style({
-	gridColumn: 2,
 	gridRow: 1,
+	gridColumn: 2,
 	minWidth: 0,
 	selectors: {
 		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
@@ -155,18 +155,18 @@ export const title = style({
 });
 
 export const subtitle = style({
-	gridColumn: '2 / 4',
 	gridRow: 2,
+	gridColumn: '2 / 4',
 	minWidth: 0,
 });
 
 export const trailing = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexShrink: 0,
-	gap: space.xs,
-	gridColumn: 3,
 	gridRow: 1,
+	gridColumn: 3,
+	gap: space.xs,
+	alignItems: 'center',
 	marginInlineStart: space.md,
 	minHeight: titleLineHeight,
 });
@@ -176,39 +176,39 @@ export const value = style({
 });
 
 export const chevron = style({
-	color: vars.palette.contrast_500,
 	display: 'flex',
 	flexShrink: 0,
+	color: vars.palette.contrast_500,
 	selectors: {
 		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
 	},
 });
 
 export const switchTrack = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_200,
-	borderRadius: 999,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexShrink: 0,
-	height: 20,
-	padding: 4,
+	alignItems: 'center',
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color',
+	borderRadius: 999,
+	backgroundColor: vars.palette.contrast_200,
+	padding: 4,
 	width: 32,
+	height: 20,
 	selectors: {
 		'[data-checked] &': { backgroundColor: vars.palette.primary_500 },
 	},
 });
 
 export const switchThumb = style({
-	backgroundColor: vars.palette.white,
-	borderRadius: 999,
-	height: 10,
 	transitionDuration: '100ms',
 	transitionProperty: 'transform',
 	transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+	borderRadius: 999,
+	backgroundColor: vars.palette.white,
 	width: 10,
+	height: 10,
 	selectors: {
 		'[data-checked] &': { transform: 'translateX(14px)' },
 	},

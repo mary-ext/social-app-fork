@@ -19,14 +19,14 @@ export const outerRow = style({
 });
 
 export const outerRowBorder = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
 	borderTopWidth: 1,
+	borderTopStyle: 'solid',
+	borderTopColor: colors.borderContrastLow,
 });
 
 export const hiderIcon = style({
-	marginLeft: 2,
 	marginRight: 2,
+	marginLeft: 2,
 });
 
 export const labelsOnMe = style({
@@ -40,12 +40,12 @@ export const postAlerts = style({
 export const innerWrapper = style({
 	boxSizing: 'border-box',
 	display: 'flex',
+	position: 'relative',
 	flex: 1,
 	flexDirection: 'column',
-	minWidth: 0,
 	paddingTop: PADDING_TIGHT,
 	paddingInline: 16,
-	position: 'relative',
+	minWidth: 0,
 });
 
 export const innerWrapperBordered = style({
@@ -54,11 +54,11 @@ export const innerWrapperBordered = style({
 
 export const hoverable = style({
 	boxSizing: 'border-box',
-	cursor: 'pointer',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
 	minWidth: 0,
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': {
 			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
@@ -75,10 +75,10 @@ export const bodyColumn = style({
 });
 
 export const metaRow = style({
-	alignItems: 'center',
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	minWidth: 0,
 });
 
@@ -94,9 +94,9 @@ export const contentColumn = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	minWidth: 0,
-	paddingLeft: space._2xs,
 	paddingBottom: PADDING_TIGHT,
+	paddingLeft: space._2xs,
+	minWidth: 0,
 });
 
 export const contentColumnLastChild = style({
@@ -104,17 +104,17 @@ export const contentColumnLastChild = style({
 });
 
 export const deletedRow = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_25,
-	borderRadius: borderRadius.sm,
 	boxSizing: 'border-box',
-	color: colors.text,
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 6,
-	height: TREE_AVI_WIDTH,
-	paddingLeft: OUTER_SPACE / 2,
+	alignItems: 'center',
+	borderRadius: borderRadius.sm,
+	backgroundColor: colors.contrast_25,
 	paddingRight: OUTER_SPACE / 2,
+	paddingLeft: OUTER_SPACE / 2,
+	height: TREE_AVI_WIDTH,
+	color: colors.text,
 });
 
 export const deletedText = style({
@@ -126,12 +126,12 @@ export const deletedSpacer = style({
 });
 
 export const skeleton = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
-	borderTopWidth: 1,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
-	paddingInline: OUTER_SPACE,
+	borderTopWidth: 1,
+	borderTopStyle: 'solid',
+	borderTopColor: colors.borderContrastLow,
 	paddingTop: PADDING_LOOSE,
+	paddingInline: OUTER_SPACE,
 });

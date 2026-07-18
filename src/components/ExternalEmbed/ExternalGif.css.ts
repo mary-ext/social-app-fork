@@ -4,45 +4,45 @@ import { vars } from '#/styles/contract.css';
 
 export const button = style({
 	appearance: 'none',
-	background: 'transparent',
+	display: 'block',
+	position: 'relative',
+	margin: 0,
 	border: 0,
 	borderBottomLeftRadius: 0,
 	borderBottomRightRadius: 0,
-	cursor: 'pointer',
-	display: 'block',
-	height: 300,
-	margin: 0,
-	overflow: 'hidden',
+	background: 'transparent',
 	padding: 0,
-	position: 'relative',
 	width: '100%',
+	height: 300,
+	overflow: 'hidden',
+	cursor: 'pointer',
 });
 
 export const image = style({
 	display: 'block',
+	width: '100%',
 	height: '100%',
 	objectFit: 'contain',
-	width: '100%',
 });
 
 export const overlay = style({
-	alignItems: 'center',
-	bottom: 0,
 	display: 'flex',
-	justifyContent: 'center',
-	left: 0,
 	position: 'absolute',
-	right: 0,
 	top: 0,
+	right: 0,
+	bottom: 0,
+	left: 0,
+	alignItems: 'center',
+	justifyContent: 'center',
 });
 
 export const dim = style({
+	position: 'absolute',
+	top: 0,
+	right: 0,
 	bottom: 0,
 	left: 0,
 	opacity: 0.3,
-	position: 'absolute',
-	right: 0,
-	top: 0,
 	selectors: {
 		'.theme--light &': { backgroundColor: vars.palette.contrast_975 },
 		'.theme--dark &, .theme--dim &': { backgroundColor: vars.palette.contrast_0 },

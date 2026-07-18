@@ -34,9 +34,9 @@ export const column = style({
 });
 
 export const footer = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.md,
+	alignItems: 'center',
 	paddingBlock: space.xl,
 });

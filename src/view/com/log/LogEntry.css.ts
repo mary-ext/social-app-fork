@@ -20,16 +20,16 @@ const areas = {
 
 export const trigger = style({
 	appearance: 'none',
-	backgroundColor: colors.bg,
-	border: 0,
-	borderBottom: `1px solid ${colors.borderContrastLow}`,
-	columnGap: space.sm,
 	display: 'grid',
 	gridTemplateAreas: `"${areas.icon} ${areas.context} ${areas.chevron} ${areas.timestamp}" ". ${areas.message} ${areas.message} ${areas.message}"`,
 	gridTemplateColumns: `20px minmax(0, 1fr) auto auto`,
+	rowGap: space.xs,
+	columnGap: space.sm,
+	border: 0,
+	borderBottom: `1px solid ${colors.borderContrastLow}`,
+	backgroundColor: colors.bg,
 	paddingBlock: space.md,
 	paddingInline: space.md,
-	rowGap: space.xs,
 	textAlign: 'left',
 
 	selectors: {
@@ -66,12 +66,12 @@ export const message = style({
 });
 
 export const panel = style({
-	backgroundColor: colors.contrast_25,
-	borderBottom: `1px solid ${colors.borderContrastLow}`,
-	borderRadius: 4,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
+	borderBottom: `1px solid ${colors.borderContrastLow}`,
+	borderRadius: 4,
+	backgroundColor: colors.contrast_25,
 	paddingBlock: 12,
 	paddingInline: 16,
 });

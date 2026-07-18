@@ -1,15 +1,15 @@
 import { style } from '@vanilla-extract/css';
 
 export const label = style({
-	bottom: -4,
-	cursor: 'pointer',
-	left: 0,
-	maxWidth: 65,
 	position: 'absolute',
+	bottom: -4,
+	left: 0,
 	zIndex: 1000,
+	maxWidth: 65,
+	cursor: 'pointer',
 });
 
 export const text = style({
-	fontSize: 7,
 	lineHeight: 'normal',
+	fontSize: 7,
 });

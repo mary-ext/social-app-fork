@@ -7,20 +7,20 @@ import { space } from '#/styles/tokens.css';
 export const notFoundRow = recipe(
 	{
 		base: {
-			alignItems: 'flex-start',
 			boxSizing: 'border-box',
 			display: 'flex',
 			flexDirection: 'row',
 			gap: space.lg,
+			alignItems: 'flex-start',
 			paddingBlock: space.md,
 			paddingInline: space.lg,
 		},
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -29,14 +29,14 @@ export const notFoundRow = recipe(
 );
 
 export const deletedAvatar = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_50,
-	borderRadius: '50%',
 	display: 'flex',
 	flexShrink: 0,
-	height: 36,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: '50%',
+	backgroundColor: colors.contrast_50,
 	width: 36,
+	height: 36,
 });
 
 export const deletedMessage = style({

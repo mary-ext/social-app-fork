@@ -4,20 +4,20 @@ import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
 export const row = style({
-	alignItems: 'center',
-	background: 'none',
-	border: 'none',
 	boxSizing: 'border-box',
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
-	font: 'inherit',
 	gap: space.md,
+	alignItems: 'center',
+	border: 'none',
+	background: 'none',
 	paddingBlock: space.md,
 	paddingInline: space.lg,
-	textAlign: 'left',
 	width: '100%',
+	textAlign: 'left',
+	color: 'inherit',
+	font: 'inherit',
+	cursor: 'pointer',
 	selectors: {
 		'&:hover, &:active, &:focus-visible': {
 			backgroundColor: colors.contrast_25,
@@ -33,12 +33,12 @@ export const body = style({
 });
 
 export const nameRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
-	minWidth: 0,
+	alignItems: 'center',
 	width: '100%',
+	minWidth: 0,
 });
 
 export const name = style({

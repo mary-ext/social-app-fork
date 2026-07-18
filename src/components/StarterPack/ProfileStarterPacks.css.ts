@@ -4,11 +4,11 @@ import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
 export const createAnother = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
-	borderTopWidth: 1,
 	display: 'flex',
 	justifyContent: 'center',
-	paddingBottom: space.lg,
+	borderTopWidth: 1,
+	borderTopStyle: 'solid',
+	borderTopColor: colors.borderContrastLow,
 	paddingTop: space.lg,
+	paddingBottom: space.lg,
 });

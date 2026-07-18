@@ -6,12 +6,12 @@ import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
 export const button = style({
-	backgroundColor: 'transparent',
-	borderInline: 0,
-	borderBottom: 0,
-	paddingBottom: space.lg,
-	paddingTop: space.lg,
 	transition: 'background-color 0.15s ease',
+	borderBottom: 0,
+	borderInline: 0,
+	backgroundColor: 'transparent',
+	paddingTop: space.lg,
+	paddingBottom: space.lg,
 	width: '100%',
 	selectors: {
 		'&:focus-visible': {
@@ -34,14 +34,14 @@ export const contentColumn = style({
 });
 
 export const iconCircle = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_25,
-	borderRadius: 13,
-	color: colors.textContrastMedium,
 	display: 'flex',
-	height: 26,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: 13,
+	backgroundColor: colors.contrast_25,
 	width: 26,
+	height: 26,
+	color: colors.textContrastMedium,
 });
 
 export const label = style({

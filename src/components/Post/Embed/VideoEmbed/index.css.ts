@@ -19,32 +19,32 @@ export const viewport = style({
 export const box = style([
 	mediaBorder,
 	{
-		borderRadius: borderRadius.md,
-		overflow: 'hidden',
 		position: 'relative',
+		borderRadius: borderRadius.md,
 		width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${aspectVar}))`,
+		overflow: 'hidden',
 	},
 ]);
 
 export const contents = style({
-	aspectRatio: aspectVar,
+	display: 'flex',
 	backgroundColor: '#000',
 	backgroundImage: thumbVar,
 	backgroundPosition: 'center',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: 'contain',
-	cursor: 'default',
-	display: 'flex',
-	overflow: 'hidden',
+	aspectRatio: aspectVar,
 	width: '100%',
+	overflow: 'hidden',
+	cursor: 'default',
 });
 
 export const observer = style({
-	left: '50%',
-	pointerEvents: 'none',
 	position: 'absolute',
+	left: '50%',
 	width: 1,
+	pointerEvents: 'none',
 });
 
-export const observerInMessage = style({ height: '100%', top: 0 });
-export const observerDefault = style({ height: '100vh', top: 'calc(50% - 50vh)' });
+export const observerInMessage = style({ top: 0, height: '100%' });
+export const observerDefault = style({ top: 'calc(50% - 50vh)', height: '100vh' });

@@ -3,11 +3,11 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const row = style({
-	alignItems: 'center',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',
 	gap: space.xs,
+	alignItems: 'center',
 	minWidth: 0,
 });
 
@@ -22,10 +22,10 @@ export const badges = style({
 });
 
 export const author = style({
-	alignItems: 'flex-end',
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 1,
+	alignItems: 'flex-end',
 	minWidth: 0,
 });
 

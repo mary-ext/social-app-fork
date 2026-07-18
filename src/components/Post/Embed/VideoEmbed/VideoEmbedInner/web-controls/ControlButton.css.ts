@@ -3,17 +3,17 @@ import { style } from '@vanilla-extract/css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const button = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'transparent',
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	transition: 'background-color 0.1s',
+	margin: 0,
 	border: 0,
 	borderRadius: borderRadius.full,
-	cursor: 'pointer',
-	display: 'flex',
-	justifyContent: 'center',
-	margin: 0,
+	background: 'transparent',
 	padding: space.xs,
-	transition: 'background-color 0.1s',
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
 	},

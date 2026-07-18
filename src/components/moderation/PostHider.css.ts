@@ -10,42 +10,42 @@ const focusRing = {
 
 export const row = style(
 	layered(components, {
-		alignItems: 'center',
-		backgroundColor: vars.palette.contrast_0,
 		boxSizing: 'border-box',
 		display: 'flex',
 		flexDirection: 'row',
 		gap: 8,
+		alignItems: 'center',
+		backgroundColor: vars.palette.contrast_0,
+		paddingTop: 12,
+		paddingRight: 18,
 		paddingBottom: 12,
 		paddingLeft: 6,
-		paddingRight: 18,
-		paddingTop: 12,
 		width: '100%',
 	}),
 );
 
 export const iconButton = style({
 	appearance: 'none',
-	background: 'none',
-	border: 0,
-	borderRadius: '50%',
-	cursor: 'pointer',
 	display: 'inline-flex',
 	flexShrink: 0,
 	margin: 0,
+	border: 0,
+	borderRadius: '50%',
+	background: 'none',
 	padding: 0,
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': focusRing,
 	},
 });
 
 export const iconCircle = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_25,
 	boxSizing: 'border-box',
-	color: vars.palette.contrast_700,
 	display: 'inline-flex',
+	alignItems: 'center',
 	justifyContent: 'center',
+	backgroundColor: vars.palette.contrast_25,
+	color: vars.palette.contrast_700,
 });
 
 export const name = style({
@@ -55,12 +55,12 @@ export const name = style({
 
 export const toggle = style({
 	appearance: 'none',
-	background: 'none',
-	border: 0,
-	cursor: 'pointer',
 	flexShrink: 0,
 	margin: 0,
+	border: 0,
+	background: 'none',
 	padding: 0,
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': focusRing,
 	},

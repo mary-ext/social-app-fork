@@ -16,9 +16,9 @@ export const memberRow = style([
 	{
 		selectors: {
 			'&:focus-visible': {
-				backgroundColor: colors.contrast_25,
 				outline: `2px solid ${colors.primary_500}`,
 				outlineOffset: -2,
+				backgroundColor: colors.contrast_25,
 			},
 			'&:hover': { backgroundColor: colors.contrast_25 },
 		},
@@ -28,9 +28,9 @@ export const memberRow = style([
 export const placeholderRow = style([row]);
 
 export const header = style({
-	alignItems: 'start',
 	display: 'flex',
 	gap: space.md,
+	alignItems: 'start',
 });
 
 export const nameColumn = style({

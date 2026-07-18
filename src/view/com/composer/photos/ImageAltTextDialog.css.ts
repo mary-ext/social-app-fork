@@ -3,19 +3,19 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 
 export const imageBox = style({
-	alignItems: 'center',
-	aspectRatio: '1',
-	backgroundColor: vars.palette.contrast_50,
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
-	overflow: 'hidden',
+	backgroundColor: vars.palette.contrast_50,
+	aspectRatio: '1',
 	width: '100%',
+	overflow: 'hidden',
 });
 
 export const image = style({
+	width: '100%',
 	height: '100%',
 	objectFit: 'contain',
-	width: '100%',
 });
 
 export const form = style({
@@ -31,15 +31,15 @@ export const counter = style({
 });
 
 export const srOnly = style({
+	position: 'absolute',
+	margin: -1,
 	border: 0,
 	clip: 'rect(0, 0, 0, 0)',
-	height: 1,
-	margin: -1,
-	overflow: 'hidden',
 	padding: 0,
-	position: 'absolute',
-	whiteSpace: 'nowrap',
 	width: 1,
+	height: 1,
+	overflow: 'hidden',
+	whiteSpace: 'nowrap',
 });
 
 export const inactiveSave = style({

@@ -6,12 +6,12 @@ import { vars } from '#/styles/contract.css';
 // clickable wrapper — the row inside owns all visible layout.
 export const button = style({
 	appearance: 'none',
-	background: 'none',
-	border: 'none',
-	cursor: 'pointer',
-	font: 'inherit',
 	margin: 0,
+	border: 'none',
+	background: 'none',
 	padding: 0,
+	font: 'inherit',
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,

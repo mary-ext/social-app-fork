@@ -12,85 +12,85 @@ export const previewRadiusVar = createVar();
 
 export const root = style(
 	layered(components, {
-		borderRadius: radiusVar,
 		display: 'block',
-		flexShrink: 0,
-		height: sizeVar,
 		position: 'relative',
+		flexShrink: 0,
+		borderRadius: radiusVar,
 		width: sizeVar,
+		height: sizeVar,
 	}),
 );
 
 export const imageClip = style({
-	backgroundColor: vars.palette.contrast_25,
-	borderRadius: 'inherit',
 	display: 'block',
+	borderRadius: 'inherit',
+	backgroundColor: vars.palette.contrast_25,
+	width: '100%',
 	height: '100%',
 	overflow: 'hidden',
-	width: '100%',
 });
 
 export const image = style({
 	display: 'block',
+	width: '100%',
 	height: '100%',
 	objectFit: 'cover',
-	width: '100%',
 });
 
 export const blurred = style({ filter: 'blur(5px)' });
 
 export const fallback = style({
-	borderRadius: 'inherit',
 	display: 'block',
-	height: '100%',
-	left: 0,
-	overflow: 'hidden',
 	position: 'absolute',
 	top: 0,
+	left: 0,
+	borderRadius: 'inherit',
 	width: '100%',
+	height: '100%',
+	overflow: 'hidden',
 });
 
 export const border = style([mediaOverlay, mediaBorder, { borderRadius: 'inherit' }]);
 
 export const liveBorder = style({
-	borderColor: vars.palette.negative_500,
-	borderRadius: 'inherit',
-	borderStyle: 'solid',
-	borderWidth: borderWidthVar,
+	position: 'absolute',
+	top: 0,
+	right: 0,
 	bottom: 0,
 	left: 0,
+	borderWidth: borderWidthVar,
+	borderStyle: 'solid',
+	borderRadius: 'inherit',
+	borderColor: vars.palette.negative_500,
 	pointerEvents: 'none',
-	position: 'absolute',
-	right: 0,
-	top: 0,
 });
 
 export const alert = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.pink,
-	borderRadius: 999,
-	bottom: 0,
 	display: 'flex',
-	height: 16,
-	justifyContent: 'center',
 	position: 'absolute',
 	right: 0,
+	bottom: 0,
+	alignItems: 'center',
+	justifyContent: 'center',
 	transform: `scale(${alertScaleVar})`,
+	borderRadius: 999,
+	backgroundColor: vars.palette.pink,
 	width: 16,
+	height: 16,
 });
 
 export const preview = style({
 	appearance: 'none',
-	background: 'transparent',
-	border: 0,
-	borderRadius: previewRadiusVar,
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'block',
 	flexShrink: 0,
 	outline: 0,
+	border: 0,
+	borderRadius: previewRadiusVar,
+	background: 'transparent',
 	padding: 0,
 	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,

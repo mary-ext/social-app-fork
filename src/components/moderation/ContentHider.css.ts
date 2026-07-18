@@ -18,22 +18,22 @@ export const activeOuter = style({
 export const panel = style(viewBase);
 
 export const blurButton = style({
-	alignItems: 'center',
 	appearance: 'none',
-	backgroundColor: vars.palette.contrast_25,
-	border: 0,
-	borderRadius: 8,
 	boxSizing: 'border-box',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 8,
+	alignItems: 'center',
 	justifyContent: 'flex-start',
 	margin: 0,
+	border: 0,
+	borderRadius: 8,
+	backgroundColor: vars.palette.contrast_25,
 	padding: 12,
 	paddingInline: 13,
-	textAlign: 'left',
 	width: '100%',
+	textAlign: 'left',
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,
@@ -59,19 +59,19 @@ export const toggleText = style({
 
 export const learnMoreButton = style({
 	appearance: 'none',
-	alignItems: 'stretch',
-	backgroundColor: 'transparent',
-	border: 0,
 	boxSizing: 'border-box',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'stretch',
 	margin: 0,
+	border: 0,
+	backgroundColor: 'transparent',
+	paddingTop: 8,
 	paddingBottom: 0,
 	paddingInline: 0,
-	paddingTop: 8,
-	textAlign: 'left',
 	width: '100%',
+	textAlign: 'left',
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': {
 			outline: 'none',

@@ -19,9 +19,9 @@ export const reason = style({
 	display: 'flex',
 	flexDirection: 'column',
 	flexShrink: 1,
-	minWidth: 0,
 	paddingTop: 10,
 	paddingBottom: 2,
+	minWidth: 0,
 });
 
 export const replyLineTop = style({
@@ -37,10 +37,10 @@ export const replyLineParentLive = style({
 });
 
 export const metaSpacing = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.lg,
+	alignItems: 'center',
 	paddingBottom: space.xs,
 });
 

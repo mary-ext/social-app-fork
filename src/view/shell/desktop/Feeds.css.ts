@@ -4,32 +4,32 @@ import { colors } from '#/styles/colors';
 import { borderRadius, fontWeight, space } from '#/styles/tokens.css';
 
 export const group = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space._2xs,
+	alignItems: 'flex-start',
 });
 
 export const item = style({
-	alignItems: 'center',
-	alignSelf: 'flex-start',
 	appearance: 'none',
-	background: 'transparent',
-	border: 'none',
-	borderRadius: borderRadius.sm,
 	boxSizing: 'border-box',
-	color: colors.textContrastMedium,
-	cursor: 'pointer',
 	display: 'flex',
 	gap: space.sm,
+	alignItems: 'center',
+	alignSelf: 'flex-start',
+	transitionDuration: '100ms',
+	transitionProperty: 'background-color, color',
+	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
 	margin: 0,
+	border: 'none',
+	borderRadius: borderRadius.sm,
+	background: 'transparent',
 	paddingBlock: 6,
 	paddingInline: space.sm,
 	textAlign: 'left',
 	textDecoration: 'none',
-	transitionDuration: '100ms',
-	transitionProperty: 'background-color, color',
-	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+	color: colors.textContrastMedium,
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': { color: colors.text },
 		'&[data-pressed]': {
@@ -46,13 +46,13 @@ export const label = style({
 });
 
 const badge = {
-	alignItems: 'center',
-	borderRadius: borderRadius.xs,
 	display: 'flex',
 	flexShrink: 0,
-	height: 20,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: borderRadius.xs,
 	width: 20,
+	height: 20,
 } as const;
 
 export const followingIcon = style({

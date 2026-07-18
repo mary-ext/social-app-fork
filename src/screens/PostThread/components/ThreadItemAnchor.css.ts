@@ -12,9 +12,9 @@ export const contentHiderChild = style({
 });
 
 export const identity = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	minWidth: 0,
 });
 
@@ -43,9 +43,9 @@ export const parentLineRow = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
-	height: space.lg,
 	paddingBottom: space.xs,
 	paddingLeft: space.lg,
+	height: space.lg,
 });
 
 export const parentLineColumn = style({
@@ -55,28 +55,28 @@ export const parentLineColumn = style({
 });
 
 export const avatarRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'center',
 	justifyContent: 'space-between',
 	paddingBottom: space.md,
 });
 
 export const primary = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
+	alignItems: 'center',
 	minWidth: 0,
 });
 
 export const secondary = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 0,
 	gap: space.lg,
+	alignItems: 'center',
 
 	':empty': {
 		display: 'none',
@@ -89,58 +89,58 @@ export const body = style({
 });
 
 export const embedPad = style({
-	paddingBottom: space.xs,
 	paddingTop: space.xs,
+	paddingBottom: space.xs,
 });
 
 export const statsRow = style({
-	alignItems: 'center',
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomStyle: 'solid',
-	borderBottomWidth: 1,
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
-	borderTopWidth: 1,
-	columnGap: space.lg,
 	display: 'flex',
 	flexDirection: 'row',
 	flexWrap: 'wrap',
-	marginTop: space.md,
-	paddingBottom: space.md,
-	paddingTop: space.md,
 	rowGap: space.sm,
+	columnGap: space.lg,
+	alignItems: 'center',
+	marginTop: space.md,
+	borderTopWidth: 1,
+	borderBottomWidth: 1,
+	borderTopStyle: 'solid',
+	borderBottomStyle: 'solid',
+	borderTopColor: colors.borderContrastLow,
+	borderBottomColor: colors.borderContrastLow,
+	paddingTop: space.md,
+	paddingBottom: space.md,
 });
 
 export const expandedDetails = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.md,
+	alignItems: 'flex-start',
 	paddingTop: space.md,
 });
 
 export const expandedDetailsRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	flexWrap: 'wrap',
 	gap: space.sm,
+	alignItems: 'center',
 });
 
 export const archivedPill = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_25,
-	border: 'none',
-	borderRadius: borderRadius.full,
-	cursor: 'pointer',
 	display: 'flex',
-	fontFamily: 'inherit',
 	flexDirection: 'row',
 	gap: 3,
+	alignItems: 'center',
+	border: 'none',
+	borderRadius: borderRadius.full,
+	backgroundColor: colors.contrast_25,
+	paddingTop: 3,
+	paddingRight: 6,
 	paddingBottom: 3,
 	paddingLeft: 6,
-	paddingRight: 6,
-	paddingTop: 3,
+	fontFamily: 'inherit',
+	cursor: 'pointer',
 	selectors: {
 		'&:hover, &:focus-visible': {
 			backgroundColor: colors.contrast_50,
@@ -151,9 +151,9 @@ export const archivedPill = style({
 export const deletedOuter = style({
 	display: 'flex',
 	flexDirection: 'column',
+	paddingRight: OUTER_SPACE,
 	paddingBottom: OUTER_SPACE,
 	paddingLeft: OUTER_SPACE,
-	paddingRight: OUTER_SPACE,
 });
 
 export const deletedOuterRoot = style({
@@ -161,20 +161,20 @@ export const deletedOuterRoot = style({
 });
 
 export const deletedRow = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_25,
-	borderRadius: borderRadius.sm,
 	display: 'flex',
 	flexDirection: 'row',
-	paddingBottom: space.md,
+	alignItems: 'center',
+	borderRadius: borderRadius.sm,
+	backgroundColor: colors.contrast_25,
 	paddingTop: space.md,
+	paddingBottom: space.md,
 });
 
 export const deletedIcon = style({
-	alignItems: 'center',
-	color: colors.textContrastMedium,
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	justifyContent: 'center',
 	width: LINEAR_AVI_WIDTH,
+	color: colors.textContrastMedium,
 });

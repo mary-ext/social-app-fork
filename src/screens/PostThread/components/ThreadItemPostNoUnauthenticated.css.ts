@@ -9,8 +9,8 @@ export const childSpine = style({
 });
 
 export const container = style({
-	paddingLeft: space.lg,
 	paddingRight: space.lg,
+	paddingLeft: space.lg,
 });
 
 export const parentSpine = style({
@@ -30,6 +30,6 @@ export const parentSpineRow = style({
 });
 
 export const text = style({
-	fontStyle: 'italic',
 	marginBlock: (LINEAR_AVI_WIDTH - 20) / 2,
+	fontStyle: 'italic',
 });

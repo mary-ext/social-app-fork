@@ -4,9 +4,9 @@ import { vars } from '#/styles/contract.css';
 import { fontSize } from '#/styles/tokens.css';
 
 export const root = style({
-	pointerEvents: 'none',
 	whiteSpace: 'pre-wrap',
 	wordBreak: 'break-word',
+	pointerEvents: 'none',
 });
 
 export const facet = style({

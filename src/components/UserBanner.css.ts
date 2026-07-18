@@ -3,18 +3,18 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 
 export const banner = style({
-	aspectRatio: '3 / 1',
-	backgroundColor: colors.contrast_25,
 	display: 'block',
-	overflow: 'hidden',
+	backgroundColor: colors.contrast_25,
+	aspectRatio: '3 / 1',
 	width: '100%',
+	overflow: 'hidden',
 });
 
 export const image = style({
 	display: 'block',
+	width: '100%',
 	height: '100%',
 	objectFit: 'cover',
-	width: '100%',
 });
 
 export const blurred = style({

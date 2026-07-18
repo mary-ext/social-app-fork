@@ -10,8 +10,8 @@ export const rowBg = createVar();
 
 export const root = style({
 	vars: { [rowBg]: colors.contrast_0 },
-	backgroundColor: rowBg,
 	position: 'relative',
+	backgroundColor: rowBg,
 	selectors: {
 		'&:has(a:active)': {
 			vars: {
@@ -63,8 +63,8 @@ export const tone = styleVariants({
 });
 
 export const link = style({
-	inset: 0,
 	position: 'absolute',
+	inset: 0,
 	zIndex: 1,
 	':focus-visible': {
 		outline: `2px solid ${colors.primary_500}`,
@@ -94,8 +94,8 @@ export const content = style({
 });
 
 export const titleRow = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 });
 
 export const badges = style({
@@ -119,12 +119,12 @@ export const mutedIcon = style({
 export const unreadDot = recipe(
 	{
 		base: {
-			backgroundColor: colors.primary_500,
-			borderRadius: borderRadius.full,
 			flexShrink: 0,
-			height: 8,
 			marginLeft: 6,
+			borderRadius: borderRadius.full,
+			backgroundColor: colors.primary_500,
 			width: 8,
+			height: 8,
 		},
 		variants: {
 			dim: { true: { backgroundColor: colors.contrast_200 } },
@@ -135,44 +135,44 @@ export const unreadDot = recipe(
 
 export const requestInfo = style({ paddingBottom: space._2xs });
 
-export const lastMessageRow = style({ alignItems: 'center', display: 'flex' });
+export const lastMessageRow = style({ display: 'flex', alignItems: 'center' });
 
 export const lastMessageIcon = style({ flexShrink: 0, marginRight: 2 });
 
 export const postAlerts = style({
-	overflow: 'hidden',
 	paddingBottom: space._2xs,
+	overflow: 'hidden',
 });
 
 export const menu = style({
-	alignItems: 'center',
 	display: 'flex',
-	opacity: 0,
-	paddingLeft: space._4xl,
-	paddingRight: space.lg,
-	pointerEvents: 'none',
 	position: 'absolute',
 	top: 0,
-	bottom: 0,
 	right: 0,
-	zIndex: 2,
+	bottom: 0,
+	alignItems: 'center',
 	transition: 'opacity 150ms ease',
+	opacity: 0,
+	zIndex: 2,
+	paddingRight: space.lg,
+	paddingLeft: space._4xl,
+	pointerEvents: 'none',
+
+	selectors: {
+		'&:has([data-popup-open], :focus-visible)': {
+			transition: 'none',
+			opacity: 1,
+		},
+		[`${root}:hover &`]: {
+			opacity: 1,
+		},
+	},
 
 	'@media': {
 		'(width >= 800px)': {
 			background: `linear-gradient(to left, ${rowBg}, ${rowBg} 50%, transparent)`,
 		},
 		'(width < 800px)': {
-			opacity: 1,
-		},
-	},
-
-	selectors: {
-		'&:has([data-popup-open], :focus-visible)': {
-			opacity: 1,
-			transition: 'none',
-		},
-		[`${root}:hover &`]: {
 			opacity: 1,
 		},
 	},
@@ -185,15 +185,15 @@ export const menuIcon = style({
 });
 
 export const footer = style({
-	alignItems: 'center',
 	display: 'flex',
+	position: 'relative',
 	gap: space.sm,
+	alignItems: 'center',
+	zIndex: 2,
+	paddingRight: space.md,
 	paddingBottom: space.md,
 	paddingLeft: space.lg + AVATAR_COLUMN + space.md,
-	paddingRight: space.md,
 	pointerEvents: 'none',
-	position: 'relative',
-	zIndex: 2,
 });
 
 globalStyle(`${footer} > *`, { pointerEvents: 'auto' });

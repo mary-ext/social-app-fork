@@ -13,8 +13,8 @@ export const root = style({
 	display: 'flex',
 	flexDirection: 'column',
 	flexShrink: 0,
-	minHeight: '100dvh',
 	width: '100%',
+	minHeight: '100dvh',
 });
 
 export const body = style({
@@ -31,14 +31,14 @@ export const body = style({
 });
 
 export const rail = style({
-	alignSelf: 'start',
 	display: 'flex',
+	position: 'sticky',
+	top: 0,
 	flexDirection: 'column',
+	alignSelf: 'start',
 	maxHeight: '100dvh',
 	overflowY: 'auto',
-	position: 'sticky',
 	scrollbarWidth: 'thin',
-	top: 0,
 });
 
 export const railLeft = style({
@@ -51,9 +51,9 @@ export const railRight = style({
 });
 
 export const railRightFluid = style({
-	maxWidth: 300 + 24 * 2,
-	minWidth: 280,
 	width: '100%',
+	minWidth: 280,
+	maxWidth: 300 + 24 * 2,
 });
 
 export const main = style({
@@ -63,17 +63,17 @@ export const main = style({
 	minWidth: 0,
 	'@media': {
 		'screen and (min-width: 800px)': {
-			borderLeft: `1px solid ${vars.palette.contrast_100}`,
 			borderRight: `1px solid ${vars.palette.contrast_100}`,
+			borderLeft: `1px solid ${vars.palette.contrast_100}`,
 		},
 	},
 });
 
 export const bottom = style({
-	bottom: 0,
 	position: 'sticky',
-	width: '100%',
+	bottom: 0,
 	zIndex: zIndex.raised,
+	width: '100%',
 });
 
 export const rootFixed = style({
@@ -107,13 +107,13 @@ export const mainFixed = style({
 export const mainPlain = style({
 	'@media': {
 		'screen and (min-width: 800px)': {
-			borderLeft: 'none',
 			borderRight: 'none',
+			borderLeft: 'none',
 		},
 	},
 });
 
 export const bottomBarPlaceholder = style({
-	height: 51,
 	flexShrink: 0,
+	height: 51,
 });

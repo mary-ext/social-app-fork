@@ -3,39 +3,39 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 
 export const outer = style({
-	backgroundColor: vars.palette.negative_200,
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-	padding: 8,
 	gap: 8,
+	alignItems: 'center',
+	backgroundColor: vars.palette.negative_200,
+	padding: 8,
 });
 
 export const iconBox = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexShrink: 0,
-	height: 24,
+	alignItems: 'center',
 	justifyContent: 'center',
 	width: 24,
+	height: 24,
 });
 
 export const message = style({
 	flex: 1,
-	minWidth: 0,
 	paddingRight: 10,
+	minWidth: 0,
 });
 
 export const retry = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'none',
-	border: 'none',
-	cursor: 'pointer',
 	display: 'flex',
 	flexShrink: 0,
+	alignItems: 'center',
 	justifyContent: 'center',
-	height: 24,
+	border: 'none',
+	background: 'none',
 	padding: 0,
 	width: 24,
+	height: 24,
+	cursor: 'pointer',
 });

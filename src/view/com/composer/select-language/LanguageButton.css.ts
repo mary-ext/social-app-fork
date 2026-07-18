@@ -3,11 +3,11 @@ import { keyframes, style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 
 export const button = style({
+	position: 'relative',
 	isolation: 'isolate',
+	paddingInline: 8,
 	minWidth: 36,
 	overflow: 'hidden',
-	paddingInline: 8,
-	position: 'relative',
 });
 
 export const text = style({
@@ -23,13 +23,13 @@ const pulse = keyframes({
 });
 
 export const pulseOverlay = style({
-	animationDuration: '1600ms',
-	animationName: pulse,
-	animationTimingFunction: 'ease-in-out',
-	backgroundColor: vars.palette.contrast_50,
-	inset: 0,
-	opacity: 0,
-	pointerEvents: 'none',
 	position: 'absolute',
+	inset: 0,
+	animationName: pulse,
+	animationDuration: '1600ms',
+	animationTimingFunction: 'ease-in-out',
+	opacity: 0,
 	zIndex: -1,
+	backgroundColor: vars.palette.contrast_50,
+	pointerEvents: 'none',
 });

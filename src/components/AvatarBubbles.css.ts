@@ -12,21 +12,21 @@ export const bubbleScaleVar = createVar();
 export const bubbleDelayVar = createVar();
 
 export const bubble = style({
-	alignItems: 'center',
 	boxSizing: 'border-box',
 	display: 'flex',
-	height: '100%',
+	alignItems: 'center',
 	justifyContent: 'center',
 	transform: `scale(${bubbleScaleVar})`,
 	transformOrigin: 'center',
 	width: '100%',
+	height: '100%',
 });
 
 export const bubbleBorder = style({
-	borderColor: vars.palette.contrast_0,
-	borderRadius: '50%',
-	borderStyle: 'solid',
 	borderWidth: 2,
+	borderStyle: 'solid',
+	borderRadius: '50%',
+	borderColor: vars.palette.contrast_0,
 });
 
 export const bubbleAnimated = style({
@@ -39,13 +39,13 @@ export const bubbleAnimated = style({
 export const placeholderSizeVar = createVar();
 
 export const placeholder = style({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_200,
-	borderRadius: '50%',
 	boxSizing: 'border-box',
-	color: vars.palette.contrast_0,
 	display: 'flex',
-	height: placeholderSizeVar,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: '50%',
+	backgroundColor: vars.palette.contrast_200,
 	width: placeholderSizeVar,
+	height: placeholderSizeVar,
+	color: vars.palette.contrast_0,
 });

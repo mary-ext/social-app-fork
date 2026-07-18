@@ -19,9 +19,9 @@ export const primaryText = style({
 });
 
 export const nameLine = style({
-	alignItems: 'center',
 	display: 'flex',
 	gap: 6,
+	alignItems: 'center',
 	minWidth: 0,
 });
 
@@ -31,41 +31,41 @@ export const avatarStack = style({
 });
 
 export const accountAvatar = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexShrink: 0,
+	alignItems: 'center',
 	marginBlock: -4,
 });
 
 export const handle = style({
 	flex: 1,
-	minWidth: 0,
 	paddingInlineEnd: space._4xl,
+	minWidth: 0,
 });
 
 export const avatarPlaceholder = style({
-	backgroundColor: vars.palette.contrast_50,
-	borderRadius: 999,
 	flexShrink: 0,
-	height: 28,
+	borderRadius: 999,
+	backgroundColor: vars.palette.contrast_50,
 	width: 28,
+	height: 28,
 });
 
 export const overflow = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'transparent',
+	display: 'flex',
+	position: 'absolute',
+	top: '50%',
+	right: space.md,
+	alignItems: 'center',
+	justifyContent: 'center',
+	transform: 'translateY(-50%)',
 	border: 'none',
 	borderRadius: 999,
+	background: 'transparent',
+	padding: space.xs,
 	color: vars.palette.contrast_500,
 	cursor: 'pointer',
-	display: 'flex',
-	justifyContent: 'center',
-	padding: space.xs,
-	position: 'absolute',
-	right: space.md,
-	top: '50%',
-	transform: 'translateY(-50%)',
 	selectors: {
 		'&:hover': { background: vars.palette.contrast_100 },
 	},

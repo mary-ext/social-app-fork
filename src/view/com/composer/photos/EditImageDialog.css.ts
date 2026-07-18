@@ -5,9 +5,9 @@ export const loadingHeader = style({
 });
 
 export const loadingBody = style({
-	alignItems: 'center',
-	aspectRatio: '1',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
+	aspectRatio: '1',
 	width: '100%',
 });

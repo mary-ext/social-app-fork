@@ -5,12 +5,12 @@ import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const link = style({
-	alignItems: 'flex-start',
-	color: 'inherit',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'flex-start',
 	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer',
 });
 
 export const outer = style({
@@ -21,10 +21,10 @@ export const outer = style({
 });
 
 export const header = style({
-	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
+	alignItems: 'flex-start',
 	width: '100%',
 });
 
@@ -36,15 +36,15 @@ export const titleColumn = style({
 });
 
 export const embedCard = style({
-	backgroundColor: colors.bg,
-	borderColor: colors.borderContrastLow,
-	borderRadius: borderRadius.sm,
-	borderStyle: 'solid',
-	borderWidth: 1,
 	boxSizing: 'border-box',
-	overflow: 'hidden',
 	transitionProperty: 'border-color',
+	borderWidth: 1,
+	borderStyle: 'solid',
+	borderRadius: borderRadius.sm,
+	borderColor: colors.borderContrastLow,
+	backgroundColor: colors.bg,
 	width: '100%',
+	overflow: 'hidden',
 	selectors: {
 		'&:focus-visible': {
 			outline: `2px solid ${colors.primary_500}`,
@@ -74,9 +74,9 @@ export const defaultRow = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},
@@ -93,9 +93,9 @@ export const loadingRow = recipe(
 		variants: {
 			topBorder: {
 				true: {
-					borderTopColor: colors.borderContrastLow,
-					borderTopStyle: 'solid',
 					borderTopWidth: 1,
+					borderTopStyle: 'solid',
+					borderTopColor: colors.borderContrastLow,
 				},
 			},
 		},

@@ -6,20 +6,20 @@ export const container = style({
 
 export const row = style({
 	display: 'flex',
+	contain: 'content',
 	flexDirection: 'column',
 	flexShrink: 0,
-	contain: 'content',
 });
 
 export const aboveTheFold = style({
-	insetInline: 0,
-	pointerEvents: 'none',
 	position: 'absolute',
+	insetInline: 0,
 	top: 0,
 	zIndex: -1,
+	pointerEvents: 'none',
 });
 
 export const sentinel = style({
-	pointerEvents: 'none',
 	zIndex: -1,
+	pointerEvents: 'none',
 });

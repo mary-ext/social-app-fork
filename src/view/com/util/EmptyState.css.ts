@@ -10,14 +10,14 @@ export const root = style({
 });
 
 export const iconBox = style({
-	alignItems: 'center',
-	alignSelf: 'center',
-	borderRadius: 999,
 	display: 'flex',
 	flexDirection: 'row',
-	height: 64,
+	alignItems: 'center',
+	alignSelf: 'center',
 	justifyContent: 'center',
+	borderRadius: 999,
 	width: 64,
+	height: 64,
 });
 
 export const message = style({
@@ -32,8 +32,8 @@ export const message = style({
 });
 
 export const buttonWrap = style({
-	alignSelf: 'center',
 	display: 'flex',
 	flexShrink: 1,
+	alignSelf: 'center',
 	marginTop: 24,
 });

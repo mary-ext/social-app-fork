@@ -13,61 +13,61 @@ import {
 } from '../layout';
 
 export const scroll = style({
+	position: 'relative',
+	paddingInline: GRID_PADDING,
 	height: GRID_HEIGHT,
 	overflowY: 'auto',
 	overscrollBehavior: 'contain',
-	paddingInline: GRID_PADDING,
-	position: 'relative',
 	scrollPaddingTop: GRID_PADDING + SEARCH_INPUT_RADIUS,
 	scrollPaddingBottom: GRID_PADDING,
 	userSelect: 'none',
 });
 
 export const spacer = style({
-	paddingBottom: GRID_PADDING_BOTTOM,
 	position: 'relative',
+	paddingBottom: GRID_PADDING_BOTTOM,
 	width: '100%',
 });
 
 export const header = style({
-	alignItems: 'end',
 	boxSizing: 'border-box',
 	display: 'flex',
-	height: HEADER_HEIGHT,
-	left: 0,
-	paddingBottom: 4,
-	paddingInline: 6,
 	position: 'absolute',
 	right: 0,
+	left: 0,
+	alignItems: 'end',
+	paddingBottom: 4,
+	paddingInline: 6,
+	height: HEADER_HEIGHT,
 });
 
 export const row = style({
 	display: 'grid',
-	gridTemplateColumns: `repeat(${PER_LINE}, 1fr)`,
-	height: ROW_HEIGHT,
-	left: 0,
 	position: 'absolute',
 	right: 0,
+	left: 0,
+	gridTemplateColumns: `repeat(${PER_LINE}, 1fr)`,
+	height: ROW_HEIGHT,
 });
 
 export const cell = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'transparent',
-	border: 'none',
-	borderRadius: 8,
-	cursor: 'pointer',
 	display: 'flex',
-	height: ROW_HEIGHT,
+	alignItems: 'center',
 	justifyContent: 'center',
 	outline: 'none',
+	border: 'none',
+	borderRadius: 8,
+	background: 'transparent',
 	padding: 0,
+	height: ROW_HEIGHT,
+	cursor: 'pointer',
 	selectors: {
 		'&:hover, &[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
 	},
 });
 
 export const glyph = style({
-	fontSize: 20,
 	lineHeight: 1,
+	fontSize: 20,
 });

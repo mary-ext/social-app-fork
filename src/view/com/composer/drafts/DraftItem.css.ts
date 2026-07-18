@@ -10,23 +10,23 @@ export const wrapper = style({
 
 export const card = style({
 	appearance: 'none',
-	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: borderRadius.md,
-	boxShadow: vars.shadow.sm,
 	boxSizing: 'border-box',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.sm,
-	margin: 0,
-	overflow: 'hidden',
-	padding: space.lg,
-	paddingBottom: space.md,
-	paddingTop: 20 + space.md,
-	textAlign: 'left',
 	transitionDuration: '100ms',
 	transitionProperty: 'border-color',
+	margin: 0,
+	border: `1px solid ${vars.palette.contrast_100}`,
+	borderRadius: borderRadius.md,
+	boxShadow: vars.shadow.sm,
+	padding: space.lg,
+	paddingTop: 20 + space.md,
+	paddingBottom: space.md,
 	width: '100%',
+	overflow: 'hidden',
+	textAlign: 'left',
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,
@@ -41,41 +41,41 @@ export const card = style({
 });
 
 export const timestamp = style({
-	left: space.lg,
-	pointerEvents: 'none',
 	position: 'absolute',
 	top: space.md,
+	left: space.lg,
+	pointerEvents: 'none',
 });
 
 export const menuSlot = style({
 	position: 'absolute',
-	right: space.md,
 	top: space.md,
+	right: space.md,
 });
 
 export const menuButton = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'transparent',
-	border: 'none',
-	borderRadius: borderRadius.full,
-	color: vars.palette.contrast_400,
-	cursor: 'pointer',
 	display: 'flex',
-	height: 20,
+	position: 'relative',
+	alignItems: 'center',
 	justifyContent: 'center',
 	margin: 0,
+	border: 'none',
+	borderRadius: borderRadius.full,
+	background: 'transparent',
 	padding: 0,
-	position: 'relative',
 	width: 20,
+	height: 20,
+	color: vars.palette.contrast_400,
+	cursor: 'pointer',
 	selectors: {
 		'&::before': {
-			borderRadius: borderRadius.full,
-			content: '""',
-			inset: -4,
 			position: 'absolute',
+			inset: -4,
 			transitionDuration: '100ms',
 			transitionProperty: 'background-color',
+			borderRadius: borderRadius.full,
+			content: '""',
 		},
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,
@@ -103,10 +103,10 @@ export const metaList = style({
 });
 
 export const tagRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.xs,
+	alignItems: 'center',
 });
 
 export const tagInfo = style({
@@ -144,18 +144,18 @@ export const imageTile = style({
 export const mediaTile = style({
 	boxSizing: 'border-box',
 	flex: 1,
-	maxWidth: 100,
 	padding: space._2xs,
+	maxWidth: 100,
 });
 
 export const square = style([
 	mediaBorder,
 	{
-		aspectRatio: '1',
-		backgroundColor: vars.palette.contrast_25,
-		borderRadius: borderRadius.xs,
-		overflow: 'hidden',
 		position: 'relative',
+		borderRadius: borderRadius.xs,
+		backgroundColor: vars.palette.contrast_25,
+		aspectRatio: '1',
+		overflow: 'hidden',
 	},
 ]);
 
@@ -165,33 +165,33 @@ export const squareEmpty = style({
 
 export const image = style({
 	display: 'block',
+	width: '100%',
 	height: '100%',
 	objectFit: 'cover',
-	width: '100%',
 });
 
 export const overlay = style({
-	alignItems: 'center',
 	display: 'flex',
-	inset: 0,
-	justifyContent: 'center',
 	position: 'absolute',
+	inset: 0,
+	alignItems: 'center',
+	justifyContent: 'center',
 });
 
 export const gifBadge = style({
-	backgroundColor: 'rgba(0, 0, 0, 0.75)',
-	borderRadius: 6,
+	position: 'absolute',
 	bottom: 5,
 	left: 5,
+	zIndex: 2,
+	borderRadius: 6,
+	backgroundColor: 'rgba(0, 0, 0, 0.75)',
 	paddingBlock: 3,
 	paddingInline: 6,
-	position: 'absolute',
-	zIndex: 2,
 });
 
 export const gifBadgeText = style({
+	lineHeight: 1,
 	color: 'white',
 	fontSize: 7,
 	fontWeight: 600,
-	lineHeight: 1,
 });

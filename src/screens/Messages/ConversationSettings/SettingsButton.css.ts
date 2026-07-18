@@ -3,8 +3,8 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const button = style({
-	height: 48,
 	width: 48,
+	height: 48,
 });
 
 export const label = style({
@@ -13,7 +13,7 @@ export const label = style({
 });
 
 export const root = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
 });

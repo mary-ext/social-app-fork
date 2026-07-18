@@ -4,18 +4,18 @@ import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const row = style({
-	alignItems: 'center',
 	appearance: 'none',
-	background: 'none',
-	border: 'none',
-	color: colors.text,
-	cursor: 'pointer',
 	display: 'flex',
-	font: 'inherit',
 	gap: space.sm,
+	alignItems: 'center',
+	border: 'none',
+	background: 'none',
 	padding: space.lg,
-	textAlign: 'start',
 	width: '100%',
+	textAlign: 'start',
+	color: colors.text,
+	font: 'inherit',
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': { backgroundColor: colors.contrast_25 },
 		'&:not(:last-child)': { borderBottom: `1px solid ${colors.borderContrastLow}` },
@@ -23,15 +23,15 @@ export const row = style({
 });
 
 export const addAvatar = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_25,
-	borderRadius: borderRadius.full,
-	color: colors.textContrastLow,
 	display: 'flex',
 	flexShrink: 0,
-	height: 48,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: borderRadius.full,
+	backgroundColor: colors.contrast_25,
 	width: 48,
+	height: 48,
+	color: colors.textContrastLow,
 	selectors: {
 		[`${row}:hover &`]: { backgroundColor: colors.contrast_50 },
 	},
@@ -43,15 +43,15 @@ export const badges = style({
 });
 
 export const check = style({
-	alignItems: 'center',
-	backgroundColor: colors.positive_500,
-	borderRadius: borderRadius.full,
-	color: colors.white,
 	display: 'flex',
 	flexShrink: 0,
-	height: 20,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: borderRadius.full,
+	backgroundColor: colors.positive_500,
 	width: 20,
+	height: 20,
+	color: colors.white,
 });
 
 export const chevron = style({
@@ -59,10 +59,10 @@ export const chevron = style({
 });
 
 export const container = style({
-	border: `1px solid ${colors.borderContrastLow}`,
-	borderRadius: borderRadius.lg,
 	display: 'flex',
 	flexDirection: 'column',
+	border: `1px solid ${colors.borderContrastLow}`,
+	borderRadius: borderRadius.lg,
 	overflow: 'hidden',
 });
 
@@ -71,8 +71,8 @@ export const info = style({
 	flex: 1,
 	flexDirection: 'column',
 	gap: space._2xs,
-	minWidth: 0,
 	paddingInlineEnd: space._2xl,
+	minWidth: 0,
 });
 
 export const name = style({
@@ -80,9 +80,9 @@ export const name = style({
 });
 
 export const nameRow = style({
-	alignItems: 'center',
 	display: 'flex',
 	gap: space.xs,
+	alignItems: 'center',
 	minWidth: 0,
 });
 

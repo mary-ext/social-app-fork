@@ -7,15 +7,15 @@ const DIALOG_PADDING = space.lg;
 const ROW_BLOCK_PADDING = space.md;
 
 export const header = style({
-	alignItems: 'center',
-	backgroundColor: colors.bg,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexShrink: 0,
+	alignItems: 'center',
 	justifyContent: 'space-between',
+	backgroundColor: colors.bg,
+	paddingTop: DIALOG_PADDING,
 	paddingBottom: space.md,
 	paddingInline: DIALOG_PADDING,
-	paddingTop: DIALOG_PADDING,
 });
 
 export const title = style({
@@ -28,9 +28,9 @@ export const closeButton = style({
 });
 
 export const tabs = style({
-	borderBottomColor: colors.borderContrastLow,
-	borderBottomStyle: 'solid',
 	borderBottomWidth: 1,
+	borderBottomStyle: 'solid',
+	borderBottomColor: colors.borderContrastLow,
 	paddingBottom: DIALOG_PADDING,
 });
 
@@ -49,11 +49,11 @@ export const rowButton = style([
 	row,
 	{
 		appearance: 'none',
-		background: 'transparent',
-		border: 'none',
-		cursor: 'pointer',
 		display: 'block',
+		border: 'none',
+		background: 'transparent',
 		textAlign: 'left',
+		cursor: 'pointer',
 		selectors: {
 			'&:hover': { backgroundColor: colors.contrast_25 },
 			'&:focus-visible': { outline: `2px solid ${colors.primary_500}`, outlineOffset: -2 },
@@ -71,6 +71,6 @@ export const nameColumn = style({
 
 export const emojiGlyph = style({
 	flexShrink: 0,
-	fontSize: 24,
 	lineHeight: 1,
+	fontSize: 24,
 });

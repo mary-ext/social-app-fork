@@ -4,9 +4,9 @@ import { space } from '#/styles/tokens.css';
 export const container = recipe(
 	{
 		base: {
-			alignItems: 'center',
 			display: 'flex',
 			flexDirection: 'row',
+			alignItems: 'center',
 		},
 		defaultVariants: { small: false },
 		variants: {

@@ -6,12 +6,12 @@ import { vars } from '#/styles/contract.css';
 
 export const outer = style({
 	boxSizing: 'border-box',
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'column',
-	paddingLeft: 16,
-	paddingRight: 16,
 	paddingTop: 12,
+	paddingRight: 16,
+	paddingLeft: 16,
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': {
 			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
@@ -20,15 +20,15 @@ export const outer = style({
 });
 
 export const outerBorder = style({
-	borderTopColor: colors.borderContrastLow,
-	borderTopStyle: 'solid',
 	borderTopWidth: 1,
+	borderTopStyle: 'solid',
+	borderTopColor: colors.borderContrastLow,
 });
 
 export const metaSpacing = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
+	alignItems: 'center',
 	paddingBottom: 4,
 });
 

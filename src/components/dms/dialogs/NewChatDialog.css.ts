@@ -21,21 +21,21 @@ export const staticRow = style({
 export const newGroupChat = style([
 	row,
 	{
-		alignItems: 'center',
 		display: 'flex',
 		gap: space.md,
+		alignItems: 'center',
 	},
 ]);
 
 export const newGroupChatIcon = style({
-	alignItems: 'center',
-	backgroundColor: colors.contrast_50,
-	borderRadius: borderRadius.full,
 	display: 'flex',
 	flexShrink: 0,
-	height: 40,
+	alignItems: 'center',
 	justifyContent: 'center',
+	borderRadius: borderRadius.full,
+	backgroundColor: colors.contrast_50,
 	width: 40,
+	height: 40,
 });
 
 export const newGroupChatLabel = style({

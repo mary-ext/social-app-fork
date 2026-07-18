@@ -9,14 +9,14 @@ import { space } from '#/styles/tokens.css';
 export const root = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			cursor: 'pointer',
 			display: 'flex',
+			position: 'relative',
 			flexDirection: 'row',
 			gap: space.md,
+			alignItems: 'center',
 			paddingBlock: space.md,
 			paddingInline: space.lg,
-			position: 'relative',
+			cursor: 'pointer',
 
 			':hover': { backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover) },
 		},
@@ -36,14 +36,14 @@ export const root = recipe(
 
 export const cover = style({
 	appearance: 'none',
-	background: 'transparent',
-	border: 'none',
-	cursor: 'pointer',
-	inset: 0,
-	margin: 0,
-	padding: 0,
 	position: 'absolute',
+	inset: 0,
 	zIndex: 1,
+	margin: 0,
+	border: 'none',
+	background: 'transparent',
+	padding: 0,
+	cursor: 'pointer',
 
 	selectors: {
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -2 },
@@ -56,10 +56,10 @@ export const body = style({
 });
 
 export const imageButton = style({
-	color: colors.contrast_500,
-	marginRight: -6,
 	position: 'relative',
 	zIndex: 2,
+	marginRight: -6,
+	color: colors.contrast_500,
 
 	selectors: {
 		'&:active': { color: colors.primary_500 },

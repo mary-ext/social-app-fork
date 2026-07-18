@@ -15,17 +15,17 @@ export const iconColumn = style({
 
 export const lineStub = style({
 	backgroundColor: colors.borderContrastMedium,
-	height: OUTER_SPACE / 2,
 	width: REPLY_LINE_WIDTH,
+	height: OUTER_SPACE / 2,
 });
 
 export const link = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.xs,
-	paddingLeft: OUTER_SPACE,
-	paddingRight: OUTER_SPACE,
 	paddingTop: OUTER_SPACE,
+	paddingRight: OUTER_SPACE,
+	paddingLeft: OUTER_SPACE,
 	textDecorationLine: 'none',
 });
 

@@ -14,36 +14,36 @@ export const list = style({
 });
 
 export const itemWrap = style({
-	paddingInline: space.sm,
 	paddingTop: space.sm,
+	paddingInline: space.sm,
 	'@media': {
 		'(min-width: 500px)': {
-			paddingInline: space.md,
 			paddingTop: space.md,
+			paddingInline: space.md,
 		},
 	},
 });
 
 export const loading = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	paddingBlock: space.xl,
 });
 
 export const empty = style({
-	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.sm,
+	alignItems: 'center',
 	justifyContent: 'center',
-	minHeight: 500,
 	paddingInline: space.xl,
+	minHeight: 500,
 });
 
 export const footerNote = style({
-	alignItems: 'center',
 	display: 'flex',
+	alignItems: 'center',
 	justifyContent: 'center',
 	paddingBlock: space._2xl,
 });
