@@ -47,14 +47,8 @@ export function Popup({
 	sideOffset?: number;
 }) {
 	return (
-		<BaseMenu.Portal>
-			<BaseMenu.Positioner
-				className={styles.positioner}
-				align={align}
-				side={side}
-				sideOffset={sideOffset}
-				collisionPadding={5}
-			>
+		<BaseMenu.Portal className={styles.portal}>
+			<BaseMenu.Positioner align={align} side={side} sideOffset={sideOffset} collisionPadding={5}>
 				<BaseMenu.Popup
 					aria-label={label}
 					className={styles.popup}

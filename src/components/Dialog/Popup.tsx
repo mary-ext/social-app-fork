@@ -42,8 +42,7 @@ type CardProps = {
  */
 export function Viewport({ children }: { children: ReactNode }) {
 	return (
-		<BaseDialog.Portal>
-			{/* forceRender so a dialog opened inside another dialog (e.g. from the composer) still dims */}
+		<BaseDialog.Portal className={styles.portal}>
 			<BaseDialog.Backdrop className={styles.backdrop} forceRender onClick={stopPropagation} />
 			<BaseDialog.Viewport className={styles.viewport} onClick={stopPropagation}>
 				{children}

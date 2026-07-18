@@ -5,6 +5,12 @@ import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { zIndex } from '#/styles/tokens.css';
 
+export const portal = style(
+	layered(components, {
+		zIndex: zIndex.modal,
+	}),
+);
+
 export const backdrop = style(
 	layered(components, {
 		backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -12,7 +18,6 @@ export const backdrop = style(
 		position: 'fixed',
 		transitionDuration: '150ms',
 		transitionProperty: 'opacity',
-		zIndex: zIndex.modal,
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 		},
@@ -32,7 +37,6 @@ export const viewport = style(
 		position: 'fixed',
 		right: 0,
 		top: 0,
-		zIndex: zIndex.modal,
 	}),
 );
 

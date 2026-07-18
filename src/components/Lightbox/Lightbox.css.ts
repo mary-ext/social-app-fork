@@ -7,10 +7,13 @@ const fadeIn = keyframes({
 	to: { opacity: 1 },
 });
 
+export const portal = style({
+	zIndex: zIndex.modal,
+});
+
 export const backdrop = style({
 	position: 'fixed',
 	inset: 0,
-	zIndex: zIndex.modal,
 	background: 'rgba(0, 0, 0, 0.92)',
 	opacity: 1,
 	transition: 'opacity 200ms ease',
@@ -22,7 +25,6 @@ export const backdrop = style({
 export const popup = style({
 	position: 'fixed',
 	inset: 0,
-	zIndex: zIndex.modal,
 	outline: 'none',
 	transition: 'opacity 200ms ease, transform 200ms ease',
 	selectors: {

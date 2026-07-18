@@ -8,6 +8,12 @@ import { space, zIndex } from '#/styles/tokens.css';
 
 const swipeEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
 
+export const portal = style(
+	layered(components, {
+		zIndex: zIndex.modal,
+	}),
+);
+
 export const backdrop = style(
 	layered(components, {
 		inset: 0,
@@ -17,7 +23,6 @@ export const backdrop = style(
 		transitionDuration: '450ms',
 		transitionProperty: 'opacity',
 		transitionTimingFunction: swipeEase,
-		zIndex: zIndex.modal,
 		selectors: {
 			'.theme--light &': { backgroundColor: 'rgba(0, 57, 117, 0.1)' },
 			'.theme--dark &': { backgroundColor: 'rgba(1, 82, 168, 0.1)' },
@@ -34,7 +39,6 @@ export const viewport = style(
 		display: 'flex',
 		inset: 0,
 		position: 'fixed',
-		zIndex: zIndex.modal,
 	}),
 );
 

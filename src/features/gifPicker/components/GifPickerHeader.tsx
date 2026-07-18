@@ -22,6 +22,7 @@ export function GifPickerHeader({
 		<div className={styles.root}>
 			<SearchInput
 				inputRef={inputRef}
+				autoFocus
 				label={m['features.gifPicker.search.a11y']()}
 				maxLength={50}
 				onChangeText={onChangeText}

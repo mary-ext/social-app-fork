@@ -45,6 +45,7 @@ export function GifPickerDialog({
 			}}
 		>
 			<Dialog.Viewport>
+				<Dialog.Close variant="outer" />
 				<Dialog.Card scroll="body" label="GIFs" fullHeight>
 					<ErrorBoundary
 						renderError={(error) => <GifPickerErrorBoundary handle={handle} details={String(error)} />}
@@ -52,7 +53,6 @@ export function GifPickerDialog({
 						<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
 					</ErrorBoundary>
 				</Dialog.Card>
-				<Dialog.Close variant="outer" />
 			</Dialog.Viewport>
 		</Dialog.Root>
 	);

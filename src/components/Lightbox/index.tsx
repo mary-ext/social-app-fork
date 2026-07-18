@@ -45,7 +45,7 @@ export function Lightbox() {
 		<Dialog.Root handle={lightboxHandle} onOpenChange={(next) => setOpen(next)}>
 			{({ payload }: { payload: LightboxPayload | undefined }) =>
 				payload ? (
-					<BaseDialog.Portal>
+					<BaseDialog.Portal className={styles.portal}>
 						<BaseDialog.Backdrop className={styles.backdrop} />
 						<BaseDialog.Popup aria-label={m['components.lightbox.a11y.viewer']()} className={styles.popup}>
 							<Suspense fallback={<LightboxLoading size="xl" />}>

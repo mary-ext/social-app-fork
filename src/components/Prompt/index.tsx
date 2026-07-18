@@ -45,9 +45,7 @@ export function Outer({
 	const registerOpen = useRegisterDialog(id, () => handle.close());
 	return (
 		<AlertDialog.Root handle={handle} onOpenChange={(open) => registerOpen(open)}>
-			<AlertDialog.Portal>
-				{/* a confirmation must always dim its host; Base UI hides nested backdrops by default (e.g. when
-				    the prompt is rendered inside another open dialog like the composer Sheet). */}
+			<AlertDialog.Portal className={styles.portal}>
 				<AlertDialog.Backdrop className={styles.backdrop} forceRender />
 				<AlertDialog.Viewport className={styles.viewport}>
 					<AlertDialog.Popup className={styles.popup({ size })}>{children}</AlertDialog.Popup>

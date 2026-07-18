@@ -9,7 +9,7 @@ export const minWidthVar = createVar();
 
 export const maxWidthVar = createVar();
 
-export const positioner = style({
+export const portal = style({
 	zIndex: zIndex.popover,
 });
 

@@ -58,7 +58,7 @@ export function Drawer() {
 
 	return (
 		<BaseDrawer.Root onOpenChange={setDrawerOpen} open={isOpen} swipeDirection="left">
-			<BaseDrawer.Portal>
+			<BaseDrawer.Portal className={styles.portal}>
 				<BaseDrawer.Backdrop className={styles.backdrop} />
 				<BaseDrawer.Viewport className={styles.viewport}>
 					<BaseDrawer.Popup className={styles.popup}>
