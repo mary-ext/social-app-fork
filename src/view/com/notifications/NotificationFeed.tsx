@@ -9,11 +9,10 @@ import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
 import { Bell_Stroke2_Corner0_Rounded as BellIcon } from '#/components/icons/Bell';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
-import { Spinner } from '#/components/Spinner';
+import { ListFooter } from '#/components/Lists';
 
 import { m } from '#/paraglide/messages';
 
@@ -24,18 +23,13 @@ import { NotificationFeedLoadingPlaceholder } from './NotificationFeedLoadingPla
 const NOTIFICATION_ITEM_HEIGHT_ESTIMATE = 120;
 
 const EMPTY_FEED_ITEM = { _reactKey: '__empty__' } as const;
-const LOAD_MORE_ERROR_ITEM = { _reactKey: '__load_more_error__' } as const;
 const LOADING_ITEM = { _reactKey: '__loading__' } as const;
 
-type NotificationItem =
-	| FeedNotification
-	| typeof EMPTY_FEED_ITEM
-	| typeof LOAD_MORE_ERROR_ITEM
-	| typeof LOADING_ITEM;
+type NotificationItem = FeedNotification | typeof EMPTY_FEED_ITEM | typeof LOADING_ITEM;
 type NotificationSentinel = Exclude<NotificationItem, FeedNotification>;
 
 const isNotificationSentinel = (item: NotificationItem): item is NotificationSentinel => {
-	return item === EMPTY_FEED_ITEM || item === LOAD_MORE_ERROR_ITEM || item === LOADING_ITEM;
+	return item === EMPTY_FEED_ITEM || item === LOADING_ITEM;
 };
 
 export function NotificationFeed({
@@ -73,9 +67,6 @@ export function NotificationFeed({
 				items = items.concat(page.items);
 			}
 		}
-		if (isError && !isEmpty) {
-			items = items.concat([LOAD_MORE_ERROR_ITEM]);
-		}
 	} else {
 		items.push(LOADING_ITEM);
 	}
@@ -90,17 +81,10 @@ export function NotificationFeed({
 		}
 	};
 
-	const onPressRetryLoadMore = () => {
-		void fetchNextPage();
-	};
+	const onPressRetryLoadMore = () => fetchNextPage();
 
 	const renderItem = ({ item, index }: ListRenderItemInfo<NotificationItem>) => {
 		if (isNotificationSentinel(item)) {
-			if (item === LOAD_MORE_ERROR_ITEM) {
-				return (
-					<LoadMoreRetryBtn label={m['view.notifications.fetchError']()} onPress={onPressRetryLoadMore} />
-				);
-			}
 			if (item === LOADING_ITEM) {
 				return <NotificationFeedLoadingPlaceholder />;
 			}
@@ -118,11 +102,14 @@ export function NotificationFeed({
 		);
 	};
 
-	const feedFooter = isFetchingNextPage ? (
-		<div className={css.feedFooter}>
-			<Spinner color="default" label={m['common.status.loading']()} />
-		</div>
-	) : null;
+	const feedFooter = (
+		<ListFooter
+			isFetchingNextPage={isFetchingNextPage}
+			error={isError && !isEmpty ? cleanError(error) : undefined}
+			onRetry={onPressRetryLoadMore}
+			hasNextPage={hasNextPage}
+		/>
+	);
 
 	return (
 		<>
