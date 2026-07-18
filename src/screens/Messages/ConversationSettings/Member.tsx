@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
@@ -8,29 +6,25 @@ import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-di
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
-import { useProfileFollowMutationQueue } from '#/state/queries/profile';
-import { useRequireAuth, useSession } from '#/state/session';
+import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
-import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
-import * as ProfileCard from '#/components/ProfileCard';
+import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
 import * as Prompt from '#/components/Prompt';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as ProfileCard from '#/components/web/ProfileCard';
+import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
 
+import * as css from './Member.css';
 import { MemberMenu } from './MemberMenu';
 import { RemoveMemberPrompt } from './prompts';
 import { StatusBadge } from './StatusBadge';
-import { SubtleHoverWrapper } from './SubtleHoverWrapper';
-
-const outerStyles = [a.px_xl, a.py_sm, a.flex_row, a.align_center, a.gap_sm];
 
 export function Member({
 	convo,
@@ -43,13 +37,9 @@ export function Member({
 	status: 'owner' | 'standard';
 	isOwner: boolean;
 }) {
-	const t = useTheme();
 	const profile = useProfileShadow(profileUnshadowed);
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
-
-	const [queueFollow] = useProfileFollowMutationQueue(profile);
-	const requireAuth = useRequireAuth();
 
 	const removeMemberPrompt = Prompt.usePromptHandle();
 	const { mutate: removeMembers } = useRemoveFromGroupChat(convo.view.id, {
@@ -58,25 +48,6 @@ export function Member({
 			Toast.show(m['screens.messages.members.remove.error'](), { type: 'error' });
 		},
 	});
-
-	const isFollowing = !!profile.viewer?.following;
-
-	const handleFollow = () => {
-		requireAuth(async () => {
-			try {
-				await queueFollow();
-				Toast.show(m['screens.messages.follow.following']({ name: displayName }));
-			} catch (err) {
-				const e = err as Error;
-				if (e?.name !== 'AbortError') {
-					logger.error('Failed to follow', { message: String(e) });
-					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
-						type: 'error',
-					});
-				}
-			}
-		});
-	};
 
 	if (!moderationOpts) {
 		return <MemberPlaceholder />;
@@ -94,16 +65,6 @@ export function Member({
 			);
 	const isProfileOwner = profile.did === convo.primaryMember?.did;
 	const isSelf = currentAccount?.did === profile.did;
-	let statusBadge: React.ReactNode | null = null;
-	if (isSelf) {
-		if (status === 'owner') {
-			statusBadge = <StatusBadge label={m['screens.messages.members.admin']()} />;
-		}
-	} else {
-		statusBadge = (
-			<MemberMenu convo={convo} profile={profile} displayName={displayName} type={status} isOwner={isOwner} />
-		);
-	}
 
 	const joinedReason = profile.kind?.addedBy
 		? m['screens.messages.addedToChat.addedBy']({
@@ -122,71 +83,77 @@ export function Member({
 	const showRemoveButton = isOwner && !isSelf && !!isBlockedOrBlocking(profile);
 
 	return (
-		<SubtleHoverWrapper>
-			<View style={outerStyles}>
-				<ProfileCard.Link profile={profile} style={[a.flex_1]}>
-					<ProfileCard.Outer>
-						<ProfileCard.Header>
-							<ProfileCard.Avatar size={48} profile={profile} moderationOpts={moderationOpts} />
-							<View style={[a.flex_1]}>
-								<ProfileCard.Name profile={profile} moderationOpts={moderationOpts} />
-								<ProfileCard.Handle profile={profile} textStyle={[a.text_xs]} />
-								{!isProfileOwner && (
-									<Text
-										numberOfLines={1}
-										style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium, a.pt_2xs]}
-									>
-										{joinedReason}
-									</Text>
-								)}
-							</View>
-						</ProfileCard.Header>
-					</ProfileCard.Outer>
-				</ProfileCard.Link>
-				{showRemoveButton ? (
-					<Prompt.Trigger
-						handle={removeMemberPrompt}
-						render={
-							<Button
-								label={m['screens.messages.members.remove.a11y']({ name: displayName })}
-								size="tiny"
-								color="negative_subtle"
-							>
-								<ButtonText>{m['common.action.remove']()}</ButtonText>
-							</Button>
-						}
-					/>
-				) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
-					<SimpleInlineLinkText
-						label={m['screens.messages.follow.action']({ name: displayName })}
-						{...createStaticClick(handleFollow)}
-						style={[a.font_medium]}
-					>
-						{m['common.follow.action.follow']()}
-					</SimpleInlineLinkText>
-				)}
-				{statusBadge}
-			</View>
-			{/* mounted outside the showRemoveButton branch: confirming optimistically drops this row, so
-			    gating the prompt on the button would unmount it mid-close and race the dismiss animation */}
+		<ProfileCard.Link className={css.memberRow} profile={profile}>
+			<ProfileCard.Outer>
+				<div className={css.header}>
+					<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} />
+					<div className={css.nameColumn}>
+						<ProfileCard.Handle profile={profile} />
+						<ProfileCard.Name profile={profile} moderationOpts={moderationOpts} />
+
+						{!isProfileOwner && (
+							<Text className={css.joinedReason} color="textContrastMedium" numberOfLines={1} size="sm">
+								{joinedReason}
+							</Text>
+						)}
+					</div>
+
+					{showRemoveButton && (
+						<Prompt.Trigger
+							handle={removeMemberPrompt}
+							render={
+								<Button
+									label={m['screens.messages.members.remove.a11y']({ name: displayName })}
+									size="tiny"
+									color="negative_subtle"
+								>
+									<ButtonText>{m['common.action.remove']()}</ButtonText>
+								</Button>
+							}
+						/>
+					)}
+
+					{status === 'owner' && <StatusBadge label={m['screens.messages.members.admin']()} />}
+
+					{!isSelf && (
+						<MemberMenu
+							convo={convo}
+							profile={profile}
+							displayName={displayName}
+							type={status}
+							isOwner={isOwner}
+							render={
+								<Button
+									className={css.menuButton}
+									label={m['screens.messages.members.options.a11y']({ name: displayName })}
+									size="small"
+									variant="ghost"
+									color="secondary"
+									shape="round"
+								>
+									<ButtonIcon icon={EllipsisIcon} size="md" />
+								</Button>
+							}
+						/>
+					)}
+				</div>
+			</ProfileCard.Outer>
 			<RemoveMemberPrompt
 				handle={removeMemberPrompt}
 				displayName={displayName}
 				onConfirm={() => removeMembers({ members: [profile.did] })}
 			/>
-		</SubtleHoverWrapper>
+		</ProfileCard.Link>
 	);
 }
 
 export function MemberPlaceholder() {
 	return (
-		<View style={outerStyles}>
-			<ProfileCard.Outer>
-				<ProfileCard.Header>
-					<ProfileCard.AvatarPlaceholder size={48} />
-					<ProfileCard.NameAndHandlePlaceholder />
-				</ProfileCard.Header>
-			</ProfileCard.Outer>
-		</View>
+		<div className={css.placeholderRow}>
+			<Skeleton.Row align="center" gap="md">
+				<ProfileCard.AvatarPlaceholder />
+				<ProfileCard.NameAndHandlePlaceholder />
+			</Skeleton.Row>
+		</div>
 	);
 }

@@ -1,12 +1,9 @@
-import { useState } from 'react';
-import { View } from 'react-native';
+import { useRef, useState } from 'react';
 
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
 
-import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 
@@ -21,10 +18,6 @@ import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
-
-import { List } from '#/view/com/util/List';
-
-import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
@@ -41,33 +34,37 @@ import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components
 import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
-import * as Layout from '#/components/Layout';
+import { List } from '#/components/List/List';
+import { ListFooter } from '#/components/Lists';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useNavigate, useParams, useRouter } from '#/routes';
 
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
+import { useIsWithinSplitView } from '../components/splitView/context';
 import { AddMembersLink } from './AddMembersLink';
+import * as css from './index.css';
 import { Member, MemberPlaceholder } from './Member';
 import { MembersAndRequests } from './MembersAndRequests';
 import { EditNamePrompt, LeaveAndLockChatPrompt, LeaveChatPrompt, LockChatPrompt } from './prompts';
 import { SettingsButton } from './SettingsButton';
 
 type Item =
-	| { type: 'MEMBERS_AND_REQUESTS'; key: string }
-	| { type: 'ADD_MEMBERS_LINK'; key: string }
+	| { type: 'membersAndRequests'; key: string }
+	| { type: 'addMembersLink'; key: string }
 	| {
-			type: 'CHAT_MEMBER';
+			type: 'chatMember';
 			key: string;
 			profile: GroupConvoMember;
 			status: 'owner' | 'standard';
 	  }
 	| {
-			type: 'CHAT_MEMBER_PLACEHOLDER';
+			type: 'chatMemberPlaceholder';
 			key: string;
 	  };
 
@@ -82,7 +79,7 @@ export function MessagesConversationSettingsScreen() {
 		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton
-					onPress={(evt) => {
+					onClick={(evt) => {
 						// deep-linking straight to settings leaves no back entry; send back to the conversation
 						if (!router.canGoBack) {
 							evt.preventDefault();
@@ -121,9 +118,9 @@ function SettingsInner({ convoId }: { convoId: string }) {
 
 	if (!convo || !moderationOpts) {
 		return (
-			<View style={[a.flex_1, a.align_center, a.justify_center]}>
+			<div className={css.loading}>
 				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
-			</View>
+			</div>
 		);
 	}
 
@@ -162,17 +159,14 @@ function GroupSettings({
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 	moderationOpts: ModerationOptions;
 }) {
-	const [isPTRing, setIsPTRing] = useState(false);
-
-	const initialNumToRender = useInitialNumToRender({ minItemHeight: 68 });
-	const bottomBarOffset = useBottomBarOffset();
-
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
+	const { isWithinSplitView } = useIsWithinSplitView();
 	const { currentAccount } = useSession();
 
 	const primaryMember = convo.primaryMember;
 	const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did;
 
-	const { data: memberListData = [], refetch } = useListConvoMembersQuery({
+	const { data: memberListData = [] } = useListConvoMembersQuery({
 		convoId: convo.view.id,
 		placeholderData: convo.members,
 	});
@@ -202,17 +196,17 @@ function GroupSettings({
 
 	const items: Item[] = [
 		{
-			type: 'MEMBERS_AND_REQUESTS',
+			type: 'membersAndRequests',
 			key: 'members-and-requests',
 		},
 		...(isOwner && convo.details.lockStatus === 'unlocked'
-			? [{ type: 'ADD_MEMBERS_LINK', key: 'add-members-link' } as const]
+			? [{ type: 'addMembersLink', key: 'add-members-link' } as const]
 			: []),
 	];
 	items.push(
 		...groupMembers.map(
 			(profile): Item => ({
-				type: 'CHAT_MEMBER',
+				type: 'chatMember',
 				key: profile.did,
 				profile,
 				status: primaryMember?.did === profile.did ? 'owner' : 'standard',
@@ -222,14 +216,14 @@ function GroupSettings({
 	const placeholderCount = Math.max(0, convo.details.memberCount - groupMembers.length);
 	for (let i = 0; i < placeholderCount; i++) {
 		items.push({
-			type: 'CHAT_MEMBER_PLACEHOLDER',
+			type: 'chatMemberPlaceholder',
 			key: `chat-member-placeholder-${i}`,
 		});
 	}
 
 	function renderItem({ item }: { item: Item }) {
 		switch (item.type) {
-			case 'MEMBERS_AND_REQUESTS':
+			case 'membersAndRequests':
 				return (
 					<MembersAndRequests
 						convo={convo}
@@ -238,44 +232,38 @@ function GroupSettings({
 						isOwner={isOwner}
 					/>
 				);
-			case 'ADD_MEMBERS_LINK':
+			case 'addMembersLink':
 				return <AddMembersLink convo={convo} />;
-			case 'CHAT_MEMBER':
+			case 'chatMember':
 				return <Member convo={convo} profile={item.profile} status={item.status} isOwner={isOwner} />;
-			case 'CHAT_MEMBER_PLACEHOLDER':
+			case 'chatMemberPlaceholder':
 				return <MemberPlaceholder />;
 			default:
 				return null;
 		}
 	}
 
-	const onRefresh = async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh group chat members', { message: err });
-		}
-		setIsPTRing(false);
-	};
-
-	return (
+	const list = (
 		<List
 			data={items}
-			contentContainerStyle={{
-				paddingBottom: bottomBarOffset + a.pb_xl.paddingBottom,
-			}}
-			desktopFixedHeight
-			initialNumToRender={initialNumToRender}
+			estimateHeight={76}
 			keyExtractor={keyExtractor}
 			ListHeaderComponent={<SettingsHeader convo={convo} isOwner={isOwner} moderationOpts={moderationOpts} />}
+			ListFooterComponent={<ListFooter border={false} />}
 			renderItem={renderItem}
-			sideBorders={false}
-			windowSize={11}
-			refreshing={isPTRing}
-			onRefresh={() => void onRefresh()}
+			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 		/>
 	);
+
+	if (isWithinSplitView) {
+		return (
+			<div className={css.scroller} ref={scrollContainerRef}>
+				{list}
+			</div>
+		);
+	}
+
+	return list;
 }
 
 function SettingsHeader({
@@ -287,7 +275,6 @@ function SettingsHeader({
 	isOwner: boolean;
 	moderationOpts: ModerationOptions;
 }) {
-	const t = useTheme();
 	const router = useRouter();
 
 	const groupName = convo.details.name;
@@ -414,17 +401,19 @@ function SettingsHeader({
 
 	return (
 		<>
-			<View style={[a.px_xl, a.py_4xl, a.border_b, t.atoms.border_contrast_low]}>
-				<View style={[a.align_center, a.justify_center]}>
+			<div className={css.headerBlock}>
+				<div className={css.avatarRow}>
 					<AvatarBubbles profiles={convo.members} />
-				</View>
-				<Text style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>{groupName}</Text>
-				<Text style={[a.text_sm, a.text_center, a.pt_xs, a.px_xl, t.atoms.text_contrast_high]}>
+				</div>
+				<Text align="center" className={css.groupName} size="_2xl" weight="bold">
+					{groupName}
+				</Text>
+				<Text align="center" className={css.createdAt} color="textContrastHigh" size="sm">
 					{m['screens.messages.inviteLink.created']({
 						date: createdAt,
 					})}
 				</Text>
-				<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_2xl, a.pt_2xl, a.flex_wrap]}>
+				<div className={css.buttonRow}>
 					<SettingsButton
 						color={convo.view.muted ? 'negative_subtle' : 'secondary'}
 						disabled={isMuting || lockStatus !== 'unlocked'}
@@ -496,8 +485,8 @@ function SettingsHeader({
 						text={m['common.action.leave']()}
 						onClick={isOwner ? () => leaveAndLockChatPrompt.open(null) : () => leaveChatPrompt.open(null)}
 					/>
-				</View>
-			</View>
+				</div>
+			</div>
 			<EditNamePrompt
 				handle={editNamePrompt}
 				value={newGroupName}

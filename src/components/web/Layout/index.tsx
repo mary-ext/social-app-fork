@@ -2,6 +2,8 @@ import type { ComponentPropsWithoutRef } from 'react';
 
 import { clsx } from 'clsx';
 
+import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
+
 import * as styles from '#/components/web/Layout/Layout.css';
 
 export * as Header from '#/components/web/Layout/Header';
@@ -12,8 +14,13 @@ export type ScreenProps = ComponentPropsWithoutRef<'div'> & {
 
 /** Outermost component of every screen. */
 export const Screen = ({ noInsetTop, className, children, ...rest }: ScreenProps) => {
+	const { isWithinSplitView } = useIsWithinSplitView();
+
 	return (
-		<div className={clsx(styles.screen, noInsetTop && styles.screenNoInset, className)} {...rest}>
+		<div
+			className={clsx(styles.screen({ noInsetTop, withinSplitView: isWithinSplitView }), className)}
+			{...rest}
+		>
 			{children}
 		</div>
 	);

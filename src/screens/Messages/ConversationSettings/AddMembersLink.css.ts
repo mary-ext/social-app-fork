@@ -12,20 +12,26 @@ export const row = style({
 	display: 'flex',
 	justifyContent: 'space-between',
 	outline: 'none',
+	gap: space.md,
 	paddingBlock: space.sm,
-	paddingInline: space.xl,
+	paddingInline: space.lg,
 	textAlign: 'start',
-	width: '100%',
 
 	selectors: {
-		'&:hover:not(:disabled)': { backgroundColor: colors.contrast_25 },
 		'&:disabled': { cursor: 'default' },
+		'&:focus-visible:not(:disabled)': {
+			backgroundColor: colors.contrast_25,
+			outline: `2px solid ${colors.primary_500}`,
+			outlineOffset: -2,
+		},
+		'&:hover:not(:disabled)': { backgroundColor: colors.contrast_25 },
 	},
 });
 
 export const content = style({
 	alignItems: 'center',
 	display: 'flex',
+	gap: space.md,
 });
 
 export const iconCircle = style({
@@ -34,15 +40,12 @@ export const iconCircle = style({
 	borderRadius: borderRadius.full,
 	display: 'flex',
 	flexShrink: 0,
-	height: 48,
+	height: 40,
 	justifyContent: 'center',
-	width: 48,
+	width: 40,
 
 	selectors: {
+		[`${row}:focus-visible:not(:disabled) &`]: { backgroundColor: colors.contrast_100 },
 		[`${row}:hover:not(:disabled) &`]: { backgroundColor: colors.contrast_100 },
 	},
-});
-
-export const label = style({
-	marginInline: space.sm,
 });

@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-const base = style({
+export const badge = style({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: 4,
@@ -10,18 +10,3 @@ const base = style({
 	paddingBlock: 3,
 	paddingInline: 6,
 });
-
-export const badge = base;
-
-export const trigger = style([
-	base,
-	{
-		appearance: 'none',
-		border: 'none',
-		cursor: 'pointer',
-		selectors: {
-			'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
-			'&:hover, &[data-popup-open]': { backgroundColor: vars.palette.contrast_0 },
-		},
-	},
-]);

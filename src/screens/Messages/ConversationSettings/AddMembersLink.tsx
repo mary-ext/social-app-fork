@@ -71,16 +71,17 @@ export function AddMembersLink({
 					<div className={styles.iconCircle}>
 						<PlusIcon fill={colors.textContrastHigh} size="sm" />
 					</div>
-					<Text className={styles.label} numberOfLines={1} size="md" weight="semiBold">
+					<Text numberOfLines={1} weight="medium">
 						{m['screens.messages.members.add.action']()}
 					</Text>
 				</div>
 				{isAddPending ? (
-					<Spinner color="default" label={m['common.status.saving']()} size="lg" />
+					<Spinner color="default" label={m['common.status.saving']()} size="md" />
 				) : (
-					<ChevronIcon fill={colors.textContrastMedium} size="lg" />
+					<ChevronIcon fill={colors.textContrastMedium} size="md" />
 				)}
 			</Dialog.Trigger>
+
 			<AddMembersDialog
 				convo={convo}
 				handle={addMembersHandle}
