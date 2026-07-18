@@ -1,8 +1,6 @@
-import { forwardRef } from 'react';
-
 import { type Props, useCommonSVGProps } from '#/components/icons/common';
 
-export const VerifierCheck = forwardRef<SVGSVGElement, Props>(function VerifierCheckImpl(props, ref) {
+export function VerifierCheck({ ref, ...props }: Props & { ref?: React.Ref<SVGSVGElement> }) {
 	const { fill, size, style, ...rest } = useCommonSVGProps(props);
 
 	return (
@@ -21,4 +19,4 @@ export const VerifierCheck = forwardRef<SVGSVGElement, Props>(function VerifierC
 			/>
 		</svg>
 	);
-});
+}

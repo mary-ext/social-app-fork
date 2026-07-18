@@ -1,7 +1,7 @@
 // adapter: sized <Image> + contentFit→resizeMode mapping, prefetch/cache no-ops, expo-image-shape
 // onLoad event. final state for the fork.
 
-import { type ComponentRef, forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react';
+import type { ComponentRef, RefAttributes } from 'react';
 import { Image as RNImage, type ImageProps as RNImageProps } from 'react-native';
 
 export type Image = ComponentRef<typeof RNImage> & {
@@ -71,31 +71,31 @@ function resizeModeForContentFit(
 	}
 }
 
-type ImageComponent = ForwardRefExoticComponent<ImageProps & RefAttributes<ComponentRef<typeof RNImage>>> & {
+type ImageComponent = ((
+	props: ImageProps & RefAttributes<ComponentRef<typeof RNImage>>,
+) => React.ReactNode) & {
 	prefetch: (url: string | string[], cachePolicy?: unknown) => Promise<boolean>;
 	clearDiskCache: () => Promise<boolean>;
 	clearMemoryCache: () => Promise<boolean>;
 };
 
 // oxlint-disable-next-line no-shadow -- the function expression is named to match the export so it shows up as `Image` in devtools
-export const Image = forwardRef<ComponentRef<typeof RNImage>, ImageProps>(function Image(
-	{
-		cachePolicy,
-		contentFit,
-		onDisplay,
-		placeholder,
-		placeholderContentFit,
-		priority,
-		recyclingKey,
-		source,
-		style,
-		transition,
-		onLoad,
-		onError,
-		...props
-	},
+export const Image = function Image({
+	cachePolicy,
+	contentFit,
+	onDisplay,
+	onError,
+	onLoad,
+	placeholder,
+	placeholderContentFit,
+	priority,
+	recyclingKey,
 	ref,
-) {
+	source,
+	style,
+	transition,
+	...props
+}: ImageProps & { ref?: React.Ref<ComponentRef<typeof RNImage>> }) {
 	void cachePolicy;
 	void placeholder;
 	void placeholderContentFit;
@@ -124,7 +124,7 @@ export const Image = forwardRef<ComponentRef<typeof RNImage>, ImageProps>(functi
 			onError={(event) => onError?.({ error: event.nativeEvent.error })}
 		/>
 	);
-}) as ImageComponent;
+} as ImageComponent;
 
 Image.prefetch = async (url) => {
 	const urls = Array.isArray(url) ? url : [url];

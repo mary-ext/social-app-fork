@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
@@ -24,10 +24,13 @@ type EmojiGridProps = {
 };
 
 /** the virtualized emoji grid, rendering only the rows within the viewport (plus {@link OVERSCAN}). */
-export const EmojiGrid = forwardRef<EmojiGridHandle, EmojiGridProps>(function EmojiGrid(
-	{ cells, layout, onActiveSectionChange, onSelect },
+export function EmojiGrid({
+	cells,
+	layout,
+	onActiveSectionChange,
+	onSelect,
 	ref,
-) {
+}: EmojiGridProps & { ref?: React.Ref<EmojiGridHandle> }) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [scrollTop, setScrollTop] = useState(0);
 
@@ -148,4 +151,4 @@ export const EmojiGrid = forwardRef<EmojiGridHandle, EmojiGridProps>(function Em
 			</div>
 		</div>
 	);
-});
+}

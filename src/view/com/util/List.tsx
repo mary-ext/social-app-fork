@@ -1,5 +1,4 @@
 import {
-	forwardRef,
 	isValidElement,
 	memo,
 	startTransition,
@@ -78,33 +77,31 @@ const ON_ITEM_SEEN_INTERSECTION_OPTS = {
 	rootMargin: '-200px 0px -200px 0px',
 }; // post must be 200px visible to be "seen"
 
-function ListImpl<ItemT>(
-	{
-		ListHeaderComponent,
-		ListFooterComponent,
-		ListEmptyComponent,
-		disableFullWindowScroll: disableFullWindowScrollProp,
-		contentContainerStyle,
-		data,
-		desktopFixedHeight,
-		headerOffset,
-		keyExtractor,
-		refreshing: _unsupportedRefreshing,
-		onStartReached,
-		onStartReachedThreshold = 2,
-		onEndReached,
-		onEndReachedThreshold = 2,
-		onRefresh: _unsupportedOnRefresh,
-		onScrolledDownChange,
-		onContentSizeChange,
-		onItemSeen,
-		renderItem,
-		extraData,
-		style,
-		...props
-	}: ListProps<ItemT>,
-	ref: React.Ref<ListMethods>,
-) {
+export function List<ItemT = unknown>({
+	ListHeaderComponent,
+	ListFooterComponent,
+	ListEmptyComponent,
+	disableFullWindowScroll: disableFullWindowScrollProp,
+	contentContainerStyle,
+	data,
+	desktopFixedHeight,
+	headerOffset,
+	keyExtractor,
+	refreshing: _unsupportedRefreshing,
+	onStartReached,
+	onStartReachedThreshold = 2,
+	onEndReached,
+	onEndReachedThreshold = 2,
+	onRefresh: _unsupportedOnRefresh,
+	onScrolledDownChange,
+	onContentSizeChange,
+	onItemSeen,
+	ref,
+	renderItem,
+	extraData,
+	style,
+	...props
+}: ListProps<ItemT> & { ref?: React.Ref<ListMethods> }): React.ReactElement {
 	const contextScrollHandlers = useScrollHandlers();
 	const { isWithinSplitView } = useIsWithinSplitView();
 	const t = useTheme();
@@ -618,14 +615,6 @@ function Visibility({
 	}, [bottomMargin, root, topMargin]);
 
 	return <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />;
-}
-
-const MemoizedList = forwardRef(ListImpl);
-
-export function List<ItemT = unknown>(
-	props: ListProps<ItemT> & { ref?: React.Ref<ListMethods> },
-): React.ReactElement {
-	return <MemoizedList {...(props as ListProps)} />;
 }
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser

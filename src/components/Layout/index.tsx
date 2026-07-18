@@ -1,4 +1,3 @@
-import { forwardRef } from 'react';
 import {
 	ScrollView,
 	type ScrollViewProps,
@@ -58,10 +57,13 @@ export type ContentProps = ScrollViewProps & {
 };
 
 /** Default scroll view for simple pages */
-export const Content = forwardRef<ScrollView, ContentProps>(function Content(
-	{ children, style, contentContainerStyle, ...props },
+export function Content({
+	children,
+	contentContainerStyle,
 	ref,
-) {
+	style,
+	...props
+}: ContentProps & { ref?: React.Ref<ScrollView> }) {
 	const t = useTheme();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
@@ -88,7 +90,7 @@ export const Content = forwardRef<ScrollView, ContentProps>(function Content(
 			<Center>{children}</Center>
 		</ScrollView>
 	);
-});
+}
 
 /** Utility component to center content within the screen */
 export function Center({ children, style, ...props }: ViewProps) {

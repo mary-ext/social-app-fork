@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import {
 	type AccessibilityProps,
 	type GestureResponderEvent,
@@ -115,434 +115,429 @@ export function useButtonContext() {
 	return useContext(Context);
 }
 
-export const Button = forwardRef<View, ButtonProps>(
-	(
-		{
-			children,
-			variant: variantProp,
-			color,
-			size,
-			shape = 'default',
-			label,
-			disabled = false,
-			style,
-			hoverStyle: hoverStyleProp,
-			PressableComponent = Pressable,
-			onPressIn: onPressInOuter,
-			onPressOut: onPressOutOuter,
-			onHoverIn: onHoverInOuter,
-			onHoverOut: onHoverOutOuter,
-			onFocus: onFocusOuter,
-			onBlur: onBlurOuter,
-			...rest
-		},
-		ref,
-	) => {
-		/**
-		 * @deprecated use `color` instead. if `color` is set, solid button codepaths are used for backwards
-		 *   compatibility.
-		 */
-		const variant = !variantProp && color ? 'solid' : variantProp;
+export function Button({
+	children,
+	variant: variantProp,
+	color,
+	size,
+	shape = 'default',
+	label,
+	disabled = false,
+	style,
+	hoverStyle: hoverStyleProp,
+	PressableComponent = Pressable,
+	onPressIn: onPressInOuter,
+	onPressOut: onPressOutOuter,
+	onHoverIn: onHoverInOuter,
+	onHoverOut: onHoverOutOuter,
+	onFocus: onFocusOuter,
+	onBlur: onBlurOuter,
+	ref,
+	...rest
+}: ButtonProps & { ref?: React.Ref<View> }) {
+	/**
+	 * @deprecated use `color` instead. if `color` is set, solid button codepaths are used for backwards
+	 *   compatibility.
+	 */
+	const variant = !variantProp && color ? 'solid' : variantProp;
 
-		const t = useTheme();
-		const [state, setState] = useState({
+	const t = useTheme();
+	const [state, setState] = useState({
+		pressed: false,
+		hovered: false,
+		focused: false,
+	});
+
+	const onPressIn = (e: GestureResponderEvent) => {
+		setState((s) => ({
+			...s,
+			pressed: true,
+		}));
+		onPressInOuter?.(e);
+	};
+	const onPressOut = (e: GestureResponderEvent) => {
+		setState((s) => ({
+			...s,
 			pressed: false,
+		}));
+		onPressOutOuter?.(e);
+	};
+	const onHoverIn = (e: MouseEvent) => {
+		setState((s) => ({
+			...s,
+			hovered: true,
+		}));
+		onHoverInOuter?.(e);
+	};
+	const onHoverOut = (e: MouseEvent) => {
+		setState((s) => ({
+			...s,
 			hovered: false,
+		}));
+		onHoverOutOuter?.(e);
+	};
+	const onFocus = (e: NativeSyntheticEvent<TargetedEvent>) => {
+		setState((s) => ({
+			...s,
+			focused: true,
+		}));
+		onFocusOuter?.(e);
+	};
+	const onBlur = (e: NativeSyntheticEvent<TargetedEvent>) => {
+		setState((s) => ({
+			...s,
 			focused: false,
-		});
+		}));
+		onBlurOuter?.(e);
+	};
 
-		const onPressIn = (e: GestureResponderEvent) => {
-			setState((s) => ({
-				...s,
-				pressed: true,
-			}));
-			onPressInOuter?.(e);
-		};
-		const onPressOut = (e: GestureResponderEvent) => {
-			setState((s) => ({
-				...s,
-				pressed: false,
-			}));
-			onPressOutOuter?.(e);
-		};
-		const onHoverIn = (e: MouseEvent) => {
-			setState((s) => ({
-				...s,
-				hovered: true,
-			}));
-			onHoverInOuter?.(e);
-		};
-		const onHoverOut = (e: MouseEvent) => {
-			setState((s) => ({
-				...s,
-				hovered: false,
-			}));
-			onHoverOutOuter?.(e);
-		};
-		const onFocus = (e: NativeSyntheticEvent<TargetedEvent>) => {
-			setState((s) => ({
-				...s,
-				focused: true,
-			}));
-			onFocusOuter?.(e);
-		};
-		const onBlur = (e: NativeSyntheticEvent<TargetedEvent>) => {
-			setState((s) => ({
-				...s,
-				focused: false,
-			}));
-			onBlurOuter?.(e);
-		};
+	const baseStyles: ViewStyle[] = [];
+	const hoverStyles: ViewStyle[] = [];
 
-		const baseStyles: ViewStyle[] = [];
-		const hoverStyles: ViewStyle[] = [];
-
-		{
+	{
+		/*
+		 * This is the happy path for new button styles, following the
+		 * deprecation of `variant` prop. This redundant `variant` check is here
+		 * just to make this handling easier to understand.
+		 */
+		if (variant === 'solid') {
+			if (color === 'primary') {
+				if (!disabled) {
+					baseStyles.push({
+						backgroundColor: t.palette.primary_500,
+					});
+					hoverStyles.push({
+						backgroundColor: t.palette.primary_600,
+					});
+				} else {
+					baseStyles.push({
+						backgroundColor: t.palette.primary_200,
+					});
+				}
+			} else if (color === 'secondary') {
+				if (!disabled) {
+					baseStyles.push(t.atoms.bg_contrast_50);
+					hoverStyles.push(t.atoms.bg_contrast_100);
+				} else {
+					baseStyles.push(t.atoms.bg_contrast_50);
+				}
+			} else if (color === 'secondary_inverted') {
+				if (!disabled) {
+					baseStyles.push({
+						backgroundColor: t.palette.contrast_900,
+					});
+					hoverStyles.push({
+						backgroundColor: t.palette.contrast_975,
+					});
+				} else {
+					baseStyles.push({
+						backgroundColor: t.palette.contrast_600,
+					});
+				}
+			} else if (color === 'negative') {
+				if (!disabled) {
+					baseStyles.push({
+						backgroundColor: t.palette.negative_500,
+					});
+					hoverStyles.push({
+						backgroundColor: t.palette.negative_600,
+					});
+				} else {
+					baseStyles.push({
+						backgroundColor: t.palette.negative_700,
+					});
+				}
+			} else if (color === 'primary_subtle') {
+				if (!disabled) {
+					baseStyles.push({
+						backgroundColor: t.palette.primary_50,
+					});
+					hoverStyles.push({
+						backgroundColor: t.palette.primary_100,
+					});
+				} else {
+					baseStyles.push({
+						backgroundColor: t.palette.primary_50,
+					});
+				}
+			} else if (color === 'negative_subtle') {
+				if (!disabled) {
+					baseStyles.push({
+						backgroundColor: t.palette.negative_50,
+					});
+					hoverStyles.push({
+						backgroundColor: t.palette.negative_100,
+					});
+				} else {
+					baseStyles.push({
+						backgroundColor: t.palette.negative_50,
+					});
+				}
+			}
+		} else {
 			/*
-			 * This is the happy path for new button styles, following the
-			 * deprecation of `variant` prop. This redundant `variant` check is here
-			 * just to make this handling easier to understand.
+			 * BEGIN DEPRECATED STYLES
 			 */
-			if (variant === 'solid') {
-				if (color === 'primary') {
+			if (color === 'primary') {
+				if (variant === 'outline') {
+					baseStyles.push(a.border, t.atoms.bg, {
+						borderWidth: 1,
+					});
+
 					if (!disabled) {
-						baseStyles.push({
-							backgroundColor: t.palette.primary_500,
+						baseStyles.push(a.border, {
+							borderColor: t.palette.primary_500,
 						});
-						hoverStyles.push({
-							backgroundColor: t.palette.primary_600,
-						});
-					} else {
-						baseStyles.push({
-							backgroundColor: t.palette.primary_200,
-						});
-					}
-				} else if (color === 'secondary') {
-					if (!disabled) {
-						baseStyles.push(t.atoms.bg_contrast_50);
-						hoverStyles.push(t.atoms.bg_contrast_100);
-					} else {
-						baseStyles.push(t.atoms.bg_contrast_50);
-					}
-				} else if (color === 'secondary_inverted') {
-					if (!disabled) {
-						baseStyles.push({
-							backgroundColor: t.palette.contrast_900,
-						});
-						hoverStyles.push({
-							backgroundColor: t.palette.contrast_975,
-						});
-					} else {
-						baseStyles.push({
-							backgroundColor: t.palette.contrast_600,
-						});
-					}
-				} else if (color === 'negative') {
-					if (!disabled) {
-						baseStyles.push({
-							backgroundColor: t.palette.negative_500,
-						});
-						hoverStyles.push({
-							backgroundColor: t.palette.negative_600,
-						});
-					} else {
-						baseStyles.push({
-							backgroundColor: t.palette.negative_700,
-						});
-					}
-				} else if (color === 'primary_subtle') {
-					if (!disabled) {
-						baseStyles.push({
+						hoverStyles.push(a.border, {
 							backgroundColor: t.palette.primary_50,
 						});
+					} else {
+						baseStyles.push(a.border, {
+							borderColor: t.palette.primary_200,
+						});
+					}
+				} else if (variant === 'ghost') {
+					if (!disabled) {
+						baseStyles.push(t.atoms.bg);
 						hoverStyles.push({
 							backgroundColor: t.palette.primary_100,
 						});
+					}
+				}
+			} else if (color === 'secondary') {
+				if (variant === 'outline') {
+					baseStyles.push(a.border, t.atoms.bg, {
+						borderWidth: 1,
+					});
+
+					if (!disabled) {
+						baseStyles.push(a.border, {
+							borderColor: t.palette.contrast_300,
+						});
+						hoverStyles.push(t.atoms.bg_contrast_50);
 					} else {
-						baseStyles.push({
-							backgroundColor: t.palette.primary_50,
+						baseStyles.push(a.border, {
+							borderColor: t.palette.contrast_200,
 						});
 					}
-				} else if (color === 'negative_subtle') {
+				} else if (variant === 'ghost') {
 					if (!disabled) {
-						baseStyles.push({
+						baseStyles.push(t.atoms.bg);
+						hoverStyles.push({
+							backgroundColor: t.palette.contrast_50,
+						});
+					}
+				}
+			} else if (color === 'secondary_inverted') {
+				if (variant === 'outline') {
+					baseStyles.push(a.border, t.atoms.bg, {
+						borderWidth: 1,
+					});
+
+					if (!disabled) {
+						baseStyles.push(a.border, {
+							borderColor: t.palette.contrast_300,
+						});
+						hoverStyles.push(t.atoms.bg_contrast_50);
+					} else {
+						baseStyles.push(a.border, {
+							borderColor: t.palette.contrast_200,
+						});
+					}
+				} else if (variant === 'ghost') {
+					if (!disabled) {
+						baseStyles.push(t.atoms.bg);
+						hoverStyles.push({
+							backgroundColor: t.palette.contrast_50,
+						});
+					}
+				}
+			} else if (color === 'negative') {
+				if (variant === 'outline') {
+					baseStyles.push(a.border, t.atoms.bg, {
+						borderWidth: 1,
+					});
+
+					if (!disabled) {
+						baseStyles.push(a.border, {
+							borderColor: t.palette.negative_500,
+						});
+						hoverStyles.push(a.border, {
 							backgroundColor: t.palette.negative_50,
 						});
+					} else {
+						baseStyles.push(a.border, {
+							borderColor: t.palette.negative_200,
+						});
+					}
+				} else if (variant === 'ghost') {
+					if (!disabled) {
+						baseStyles.push(t.atoms.bg);
 						hoverStyles.push({
 							backgroundColor: t.palette.negative_100,
 						});
-					} else {
-						baseStyles.push({
+					}
+				}
+			} else if (color === 'negative_subtle') {
+				if (variant === 'outline') {
+					baseStyles.push(a.border, t.atoms.bg, {
+						borderWidth: 1,
+					});
+
+					if (!disabled) {
+						baseStyles.push(a.border, {
+							borderColor: t.palette.negative_500,
+						});
+						hoverStyles.push(a.border, {
 							backgroundColor: t.palette.negative_50,
 						});
+					} else {
+						baseStyles.push(a.border, {
+							borderColor: t.palette.negative_200,
+						});
+					}
+				} else if (variant === 'ghost') {
+					if (!disabled) {
+						baseStyles.push(t.atoms.bg);
+						hoverStyles.push({
+							backgroundColor: t.palette.negative_100,
+						});
 					}
 				}
-			} else {
-				/*
-				 * BEGIN DEPRECATED STYLES
-				 */
-				if (color === 'primary') {
-					if (variant === 'outline') {
-						baseStyles.push(a.border, t.atoms.bg, {
-							borderWidth: 1,
-						});
+			}
+			/*
+			 * END DEPRECATED STYLES
+			 */
+		}
 
-						if (!disabled) {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.primary_500,
-							});
-							hoverStyles.push(a.border, {
-								backgroundColor: t.palette.primary_50,
-							});
-						} else {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.primary_200,
-							});
-						}
-					} else if (variant === 'ghost') {
-						if (!disabled) {
-							baseStyles.push(t.atoms.bg);
-							hoverStyles.push({
-								backgroundColor: t.palette.primary_100,
-							});
-						}
-					}
-				} else if (color === 'secondary') {
-					if (variant === 'outline') {
-						baseStyles.push(a.border, t.atoms.bg, {
-							borderWidth: 1,
-						});
-
-						if (!disabled) {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.contrast_300,
-							});
-							hoverStyles.push(t.atoms.bg_contrast_50);
-						} else {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.contrast_200,
-							});
-						}
-					} else if (variant === 'ghost') {
-						if (!disabled) {
-							baseStyles.push(t.atoms.bg);
-							hoverStyles.push({
-								backgroundColor: t.palette.contrast_50,
-							});
-						}
-					}
-				} else if (color === 'secondary_inverted') {
-					if (variant === 'outline') {
-						baseStyles.push(a.border, t.atoms.bg, {
-							borderWidth: 1,
-						});
-
-						if (!disabled) {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.contrast_300,
-							});
-							hoverStyles.push(t.atoms.bg_contrast_50);
-						} else {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.contrast_200,
-							});
-						}
-					} else if (variant === 'ghost') {
-						if (!disabled) {
-							baseStyles.push(t.atoms.bg);
-							hoverStyles.push({
-								backgroundColor: t.palette.contrast_50,
-							});
-						}
-					}
-				} else if (color === 'negative') {
-					if (variant === 'outline') {
-						baseStyles.push(a.border, t.atoms.bg, {
-							borderWidth: 1,
-						});
-
-						if (!disabled) {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.negative_500,
-							});
-							hoverStyles.push(a.border, {
-								backgroundColor: t.palette.negative_50,
-							});
-						} else {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.negative_200,
-							});
-						}
-					} else if (variant === 'ghost') {
-						if (!disabled) {
-							baseStyles.push(t.atoms.bg);
-							hoverStyles.push({
-								backgroundColor: t.palette.negative_100,
-							});
-						}
-					}
-				} else if (color === 'negative_subtle') {
-					if (variant === 'outline') {
-						baseStyles.push(a.border, t.atoms.bg, {
-							borderWidth: 1,
-						});
-
-						if (!disabled) {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.negative_500,
-							});
-							hoverStyles.push(a.border, {
-								backgroundColor: t.palette.negative_50,
-							});
-						} else {
-							baseStyles.push(a.border, {
-								borderColor: t.palette.negative_200,
-							});
-						}
-					} else if (variant === 'ghost') {
-						if (!disabled) {
-							baseStyles.push(t.atoms.bg);
-							hoverStyles.push({
-								backgroundColor: t.palette.negative_100,
-							});
-						}
-					}
+		if (shape === 'default') {
+			if (size === 'large') {
+				baseStyles.push(a.rounded_full, {
+					paddingVertical: 12,
+					paddingHorizontal: 24,
+					gap: 6,
+				});
+			} else if (size === 'small') {
+				baseStyles.push(a.rounded_full, {
+					paddingVertical: 8,
+					paddingHorizontal: 14,
+					gap: 5,
+				});
+			} else if (size === 'tiny') {
+				baseStyles.push(a.rounded_full, {
+					paddingVertical: 5,
+					paddingHorizontal: 10,
+					gap: 3,
+				});
+			}
+		} else if (shape === 'rectangular') {
+			if (size === 'large') {
+				baseStyles.push({
+					paddingVertical: 12,
+					paddingHorizontal: 25,
+					borderRadius: 10,
+					gap: 3,
+				});
+			} else if (size === 'small') {
+				baseStyles.push({
+					paddingVertical: 8,
+					paddingHorizontal: 13,
+					borderRadius: 8,
+					gap: 3,
+				});
+			} else if (size === 'tiny') {
+				baseStyles.push({
+					paddingVertical: 5,
+					paddingHorizontal: 9,
+					borderRadius: 6,
+					gap: 2,
+				});
+			}
+		} else if (shape === 'round' || shape === 'square') {
+			/*
+			 * These sizes match the actual rendered size on screen, based on
+			 * Chrome's web inspector
+			 */
+			if (size === 'large') {
+				if (shape === 'round') {
+					baseStyles.push({ height: 44, width: 44 });
+				} else {
+					baseStyles.push({ height: 44, width: 44 });
 				}
-				/*
-				 * END DEPRECATED STYLES
-				 */
+			} else if (size === 'small') {
+				if (shape === 'round') {
+					baseStyles.push({ height: 33, width: 33 });
+				} else {
+					baseStyles.push({ height: 33, width: 33 });
+				}
+			} else if (size === 'tiny') {
+				if (shape === 'round') {
+					baseStyles.push({ height: 25, width: 25 });
+				} else {
+					baseStyles.push({ height: 25, width: 25 });
+				}
 			}
 
-			if (shape === 'default') {
-				if (size === 'large') {
-					baseStyles.push(a.rounded_full, {
-						paddingVertical: 12,
-						paddingHorizontal: 24,
-						gap: 6,
-					});
-				} else if (size === 'small') {
-					baseStyles.push(a.rounded_full, {
-						paddingVertical: 8,
-						paddingHorizontal: 14,
-						gap: 5,
-					});
-				} else if (size === 'tiny') {
-					baseStyles.push(a.rounded_full, {
-						paddingVertical: 5,
-						paddingHorizontal: 10,
-						gap: 3,
-					});
-				}
-			} else if (shape === 'rectangular') {
-				if (size === 'large') {
+			if (shape === 'round') {
+				baseStyles.push(a.rounded_full);
+			} else if (shape === 'square') {
+				if (size === 'tiny') {
 					baseStyles.push({
-						paddingVertical: 12,
-						paddingHorizontal: 25,
-						borderRadius: 10,
-						gap: 3,
-					});
-				} else if (size === 'small') {
-					baseStyles.push({
-						paddingVertical: 8,
-						paddingHorizontal: 13,
-						borderRadius: 8,
-						gap: 3,
-					});
-				} else if (size === 'tiny') {
-					baseStyles.push({
-						paddingVertical: 5,
-						paddingHorizontal: 9,
 						borderRadius: 6,
-						gap: 2,
 					});
-				}
-			} else if (shape === 'round' || shape === 'square') {
-				/*
-				 * These sizes match the actual rendered size on screen, based on
-				 * Chrome's web inspector
-				 */
-				if (size === 'large') {
-					if (shape === 'round') {
-						baseStyles.push({ height: 44, width: 44 });
-					} else {
-						baseStyles.push({ height: 44, width: 44 });
-					}
-				} else if (size === 'small') {
-					if (shape === 'round') {
-						baseStyles.push({ height: 33, width: 33 });
-					} else {
-						baseStyles.push({ height: 33, width: 33 });
-					}
-				} else if (size === 'tiny') {
-					if (shape === 'round') {
-						baseStyles.push({ height: 25, width: 25 });
-					} else {
-						baseStyles.push({ height: 25, width: 25 });
-					}
-				}
-
-				if (shape === 'round') {
-					baseStyles.push(a.rounded_full);
-				} else if (shape === 'square') {
-					if (size === 'tiny') {
-						baseStyles.push({
-							borderRadius: 6,
-						});
-					} else {
-						baseStyles.push(a.rounded_sm);
-					}
+				} else {
+					baseStyles.push(a.rounded_sm);
 				}
 			}
 		}
+	}
 
-		const context: ButtonContext = {
-			...state,
-			interacting: state.hovered || state.focused || state.pressed,
-			variant,
-			color,
-			size,
-			shape,
-			disabled: !!disabled,
-		};
+	const context: ButtonContext = {
+		...state,
+		interacting: state.hovered || state.focused || state.pressed,
+		variant,
+		color,
+		size,
+		shape,
+		disabled: !!disabled,
+	};
 
-		return (
-			<PressableComponent
-				role="button"
-				accessibilityHint={undefined} // optional
-				{...rest}
-				// @ts-ignore - this will always be a pressable
-				ref={ref}
-				aria-label={label}
-				aria-pressed={state.pressed}
-				accessibilityLabel={label}
-				disabled={!!disabled}
-				accessibilityState={{
-					disabled: !!disabled,
-				}}
-				style={[
-					a.flex_row,
-					a.align_center,
-					a.justify_center,
-					a.curve_continuous,
-					baseStyles,
-					style,
-					...(state.hovered || state.pressed ? [hoverStyles, hoverStyleProp] : []),
-				]}
-				onPressIn={onPressIn}
-				onPressOut={onPressOut}
-				onHoverIn={onHoverIn}
-				onHoverOut={onHoverOut}
-				onFocus={onFocus}
-				onBlur={onBlur}
-			>
-				<Context.Provider value={context}>
-					{typeof children === 'function' ? children(context) : children}
-				</Context.Provider>
-			</PressableComponent>
-		);
-	},
-);
-Button.displayName = 'Button';
+	return (
+		<PressableComponent
+			role="button"
+			accessibilityHint={undefined} // optional
+			{...rest}
+			// @ts-ignore - this will always be a pressable
+			ref={ref}
+			aria-label={label}
+			aria-pressed={state.pressed}
+			accessibilityLabel={label}
+			disabled={!!disabled}
+			accessibilityState={{
+				disabled: !!disabled,
+			}}
+			style={[
+				a.flex_row,
+				a.align_center,
+				a.justify_center,
+				a.curve_continuous,
+				baseStyles,
+				style,
+				...(state.hovered || state.pressed ? [hoverStyles, hoverStyleProp] : []),
+			]}
+			onPressIn={onPressIn}
+			onPressOut={onPressOut}
+			onHoverIn={onHoverIn}
+			onHoverOut={onHoverOut}
+			onFocus={onFocus}
+			onBlur={onBlur}
+		>
+			<Context.Provider value={context}>
+				{typeof children === 'function' ? children(context) : children}
+			</Context.Provider>
+		</PressableComponent>
+	);
+}
 
 export function useSharedButtonTextStyles() {
 	const t = useTheme();
