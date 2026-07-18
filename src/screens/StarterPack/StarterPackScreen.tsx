@@ -1,22 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
 
 import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { definite } from '@mary/array-fns';
-import { useFocusEffect } from '@oomfware/stacker';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
-import { HITSLOP_20 } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { makeStarterPackLink } from '#/lib/routes/links';
-import { cleanError } from '#/lib/strings/errors';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
@@ -27,46 +23,32 @@ import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useShortenLink } from '#/state/queries/shorten-link';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
 import { useClients, useSession } from '#/state/session';
-import { useSetActiveStarterPack } from '#/state/shell/starter-pack';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
-import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
-import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
-import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
-import { Pencil_Stroke2_Corner0_Rounded as Pencil } from '#/components/icons/Pencil';
-import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
-import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
-import * as Menu from '#/components/Menu';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
-import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
 import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
 import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import { type Section, Tabs } from '#/components/Tabs';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
-import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
-import * as WebLayout from '#/components/web/Layout';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useParams, useRouter } from '#/routes';
+import { useParams, useRouter } from '#/routes';
 import { Image } from '#/shims/image';
-import { colors } from '#/styles/colors';
 
+import { OverflowMenu } from './OverflowMenu';
 import { StarterPackHeader } from './StarterPackHeader';
+import * as css from './StarterPackScreen.css';
 
-type StarterPackRouteParams = { actor: string; new?: boolean; rkey: string };
+export type StarterPackRouteParams = { actor: string; new?: boolean; rkey: string };
 
 export function StarterPackScreen() {
 	const [params] = useParams('StarterPack');
@@ -236,7 +218,6 @@ function Header({
 	const { currentAccount, hasSession } = useSession();
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
-	const setActiveStarterPack = useSetActiveStarterPack();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const [isProcessing, setIsProcessing] = useState(false);
@@ -247,18 +228,6 @@ function Header({
 	const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0;
 
 	const router = useRouter();
-
-	// remember this pack as the active referral while a signed-out viewer is on it; drop it on leave. cleanup
-	// runs on blur, but the sign-up flow is a dialog (no blur), so the referral survives it.
-	useFocusEffect(
-		useCallback(() => {
-			if (hasSession) {
-				return;
-			}
-			setActiveStarterPack({ uri: starterPack.uri });
-			return () => setActiveStarterPack(undefined);
-		}, [hasSession, setActiveStarterPack, starterPack.uri]),
-	);
 
 	const onFollowAll = async () => {
 		if (!starterPack.list) return;
@@ -318,20 +287,19 @@ function Header({
 
 	return (
 		<>
-			<WebLayout.Header.Outer noBottomBorder sticky={false}>
-				{canGoBack ? <WebLayout.Header.BackButton /> : <WebLayout.Header.MenuButton />}
-				<WebLayout.Header.Content />
-				<WebLayout.Header.Slot>
+			<Layout.Header.Outer noBottomBorder sticky={false}>
+				{canGoBack ? <Layout.Header.BackButton /> : <Layout.Header.MenuButton />}
+				<Layout.Header.Content />
+				<Layout.Header.Slot>
 					{hasSession ? (
-						<View style={[a.flex_row, a.gap_sm, a.align_center]}>
+						<>
 							{isOwn ? (
 								<Button
 									label={m['screens.starterPack.share.action']()}
-									hitSlop={HITSLOP_20}
 									variant="solid"
 									color="primary"
 									size="small"
-									onPress={onOpenShareDialog}
+									onClick={onOpenShareDialog}
 								>
 									<ButtonText>{m['common.share.action.share']()}</ButtonText>
 								</Button>
@@ -342,8 +310,7 @@ function Header({
 									color="primary"
 									size="small"
 									disabled={isProcessing}
-									onPress={() => void onFollowAll()}
-									style={[a.flex_row, a.gap_xs, a.align_center]}
+									onClick={() => void onFollowAll()}
 								>
 									<ButtonText>{m['screens.starterPack.follow.action']()}</ButtonText>
 									{isProcessing && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
@@ -354,10 +321,10 @@ function Header({
 								starterPack={starterPack}
 								onOpenShareDialog={onOpenShareDialog}
 							/>
-						</View>
+						</>
 					) : null}
-				</WebLayout.Header.Slot>
-			</WebLayout.Header.Outer>
+				</Layout.Header.Slot>
+			</Layout.Header.Outer>
 			<StarterPackHeader
 				record={record}
 				creator={creator}
@@ -365,9 +332,6 @@ function Header({
 				hasSession={hasSession}
 				joinedAllTimeCount={joinedAllTimeCount}
 				onPressSignIn={() => {
-					setActiveStarterPack({
-						uri: starterPack.uri,
-					});
 					signinDialogHandle.openWithPayload({});
 				}}
 			/>
@@ -375,175 +339,8 @@ function Header({
 	);
 }
 
-const PromptSpinner = () => <Spinner color="white" label={m['common.status.saving']()} size="sm" />;
-
-function OverflowMenu({
-	starterPack,
-	routeParams,
-	onOpenShareDialog,
-}: {
-	starterPack: AppBskyGraphDefs.StarterPackView;
-	routeParams: StarterPackRouteParams;
-	onOpenShareDialog: () => void;
-}) {
-	const t = useTheme();
-	const { currentAccount } = useSession();
-	const reportDialogHandle = Dialog.useDialogHandle();
-	const deleteHandle = Prompt.usePromptHandle();
-	const convertToListHandle = Dialog.useDialogHandle();
-	const navigate = useNavigate();
-	const router = useRouter();
-
-	const {
-		mutate: deleteStarterPack,
-		isPending: isDeletePending,
-		error: deleteError,
-	} = useDeleteStarterPackMutation({
-		onSuccess: () => {
-			deleteHandle.close();
-			// the pack was just deleted; leave for Home.
-			router.popTo('Home');
-		},
-		onError: (e) => {
-			logger.error('Failed to delete starter pack', { safeMessage: e });
-		},
-	});
-
-	const isOwn = starterPack.creator.did === currentAccount?.did;
-
-	const onDeleteStarterPack = () => {
-		if (!starterPack.list) {
-			logger.error(`Unable to delete starterpack because list is missing`);
-			return;
-		}
-
-		deleteStarterPack({
-			rkey: routeParams.rkey,
-			listUri: starterPack.list.uri,
-		});
-	};
-
-	return (
-		<>
-			<Menu.Root>
-				<Menu.Trigger
-					render={
-						<WebButton
-							label={m['screens.starterPack.a11y.openMenu']()}
-							variant="solid"
-							color="secondary"
-							size="small"
-							shape="round"
-						>
-							<WebButtonIcon icon={Ellipsis} />
-						</WebButton>
-					}
-				/>
-				<Menu.Popup label={m['screens.starterPack.a11y.options']()} minWidth={170} align="end">
-					{isOwn ? (
-						<>
-							<Menu.Item
-								label={m['screens.starterPack.edit']()}
-								onClick={() => {
-									navigate('StarterPackEdit', { rkey: routeParams.rkey });
-								}}
-							>
-								<Menu.ItemText>{m['common.action.edit']()}</Menu.ItemText>
-								<Menu.ItemIcon icon={Pencil} position="right" />
-							</Menu.Item>
-							<Menu.Item
-								label={m['screens.starterPack.delete.action']()}
-								onClick={() => deleteHandle.open(null)}
-							>
-								<Menu.ItemText>{m['common.action.delete']()}</Menu.ItemText>
-								<Menu.ItemIcon icon={Trash} position="right" />
-							</Menu.Item>
-							<Menu.Item
-								label={m['screens.starterPack.list.create']()}
-								onClick={() => {
-									convertToListHandle.open(null);
-								}}
-							>
-								<Menu.ItemText>{m['screens.starterPack.list.createFromMembers']()}</Menu.ItemText>
-								<Menu.ItemIcon icon={ListSparkle} position="right" />
-							</Menu.Item>
-						</>
-					) : (
-						<>
-							<Menu.Group>
-								<Menu.Item label={m['screens.starterPack.share.copyLink']()} onClick={onOpenShareDialog}>
-									<Menu.ItemText>{m['common.share.action.copyLink']()}</Menu.ItemText>
-									<Menu.ItemIcon icon={ChainLinkIcon} position="right" />
-								</Menu.Item>
-							</Menu.Group>
-
-							<Menu.Item
-								label={m['screens.starterPack.report']()}
-								onClick={() => reportDialogHandle.open(null)}
-							>
-								<Menu.ItemText>{m['screens.starterPack.report']()}</Menu.ItemText>
-								<Menu.ItemIcon icon={CircleInfo} position="right" />
-							</Menu.Item>
-						</>
-					)}
-				</Menu.Popup>
-			</Menu.Root>
-			{starterPack.list && (
-				<ReportDialog
-					handle={reportDialogHandle}
-					subject={
-						{
-							...starterPack,
-							$type: 'app.bsky.graph.defs#starterPackView',
-						} as unknown as Parameters<typeof ReportDialog>[0]['subject']
-					}
-				/>
-			)}
-			<Prompt.Outer handle={deleteHandle}>
-				<Prompt.Content>
-					<Prompt.TitleText>{m['screens.starterPack.delete.title']()}</Prompt.TitleText>
-					<Prompt.DescriptionText>{m['screens.starterPack.delete.message']()}</Prompt.DescriptionText>
-				</Prompt.Content>
-				{deleteError && (
-					<View
-						style={[
-							a.flex_row,
-							a.gap_sm,
-							a.rounded_sm,
-							a.p_md,
-							a.mb_lg,
-							a.border,
-							t.atoms.border_contrast_medium,
-							t.atoms.bg_contrast_25,
-						]}
-					>
-						<View style={[a.flex_1, a.gap_2xs]}>
-							<Text style={[a.font_semi_bold]}>{m['screens.starterPack.delete.error.unable']()}</Text>
-							<Text style={[a.leading_snug]}>{cleanError(deleteError)}</Text>
-						</View>
-						<CircleInfo size="sm" fill={colors.negative_400} />
-					</View>
-				)}
-				<Prompt.Actions>
-					<Prompt.Action
-						onPress={() => onDeleteStarterPack()}
-						color="negative"
-						cta={m['common.action.delete']()}
-						icon={isDeletePending ? PromptSpinner : undefined}
-						shouldCloseOnPress={false}
-					/>
-					<Prompt.Cancel />
-				</Prompt.Actions>
-			</Prompt.Outer>
-			<CreateListFromStarterPackDialog handle={convertToListHandle} starterPack={starterPack} />
-		</>
-	);
-}
-
 function InvalidStarterPack({ rkey }: { rkey: string }) {
-	const t = useTheme();
 	const router = useRouter();
-	const { gtMobile } = useBreakpoints();
 	const [isProcessing, setIsProcessing] = useState(false);
 
 	const goBack = () => {
@@ -569,31 +366,26 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 	});
 
 	return (
-		<Layout.Content centerContent>
-			<View style={[a.py_4xl, a.px_xl, a.align_center, a.gap_5xl]}>
-				<View style={[a.w_full, a.align_center, a.gap_lg]}>
-					<Text style={[a.font_semi_bold, a.text_3xl]}>{m['screens.starterPack.error.invalid']()}</Text>
-					<Text
-						style={[
-							a.text_md,
-							a.text_center,
-							t.atoms.text_contrast_high,
-							{ lineHeight: 1.4 },
-							gtMobile ? { width: 450 } : [a.w_full, a.px_lg],
-						]}
-					>
+		<Layout.Content>
+			<div className={css.invalidOuter}>
+				<div className={css.invalidHeader}>
+					<Text weight="semiBold" size="_3xl">
+						{m['screens.starterPack.error.invalid']()}
+					</Text>
+					<Text size="md" align="center" color="textContrastHigh" className={css.invalidBody}>
 						{m['screens.starterPack.error.invalidLong']()}
 					</Text>
-				</View>
-				<View style={[a.gap_md, gtMobile ? { width: 350 } : [a.w_full, a.px_lg]]}>
+				</div>
+				<div className={css.invalidActions}>
 					<Button
 						variant="solid"
 						color="primary"
 						label={m['screens.starterPack.delete.action']()}
 						size="large"
-						style={[a.rounded_sm, a.overflow_hidden, { paddingVertical: 10 }]}
+						shape="rectangular"
+						className={css.invalidButton}
 						disabled={isProcessing}
-						onPress={() => {
+						onClick={() => {
 							setIsProcessing(true);
 							deleteStarterPack({ rkey });
 						}}
@@ -606,14 +398,15 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 						color="secondary"
 						label={m['common.action.returnToPreviousPage']()}
 						size="large"
-						style={[a.rounded_sm, a.overflow_hidden, { paddingVertical: 10 }]}
+						shape="rectangular"
+						className={css.invalidButton}
 						disabled={isProcessing}
-						onPress={goBack}
+						onClick={goBack}
 					>
 						<ButtonText>{m['common.action.goBackTitle']()}</ButtonText>
 					</Button>
-				</View>
-			</View>
+				</div>
+			</div>
 		</Layout.Content>
 	);
 }

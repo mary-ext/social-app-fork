@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
@@ -20,9 +18,5 @@ function renderPostsEmpty() {
 export function PostsList({ listUri }: PostsListProps) {
 	const feed: FeedDescriptor = `list|${listUri}`;
 
-	return (
-		<View>
-			<PostFeed enabled feed={feed} pollInterval={60e3} renderEmptyState={renderPostsEmpty} />
-		</View>
-	);
+	return <PostFeed enabled feed={feed} pollInterval={60e3} renderEmptyState={renderPostsEmpty} />;
 }

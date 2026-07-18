@@ -1,27 +1,17 @@
-import { useState } from 'react';
-import { type ListRenderItemInfo, View } from 'react-native';
-
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
-import { List } from '#/view/com/util/List';
-
-import { atoms as a, useTheme } from '#/alf';
-
+import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
-import { Default as ProfileCard } from '#/components/ProfileCard';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
-import * as css from './ProfilesList.css';
-
-function keyExtractor(item: { did: string }, index: number) {
+function keyExtractor(item: AppBskyActorDefs.ProfileView, index: number) {
 	return `${item.did}-${index}`;
 }
 
@@ -31,16 +21,10 @@ interface ProfilesListProps {
 }
 
 export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
-	const t = useTheme();
-	const bottomBarOffset = useBottomBarOffset();
-	const initialNumToRender = useInitialNumToRender();
 	const { currentAccount } = useSession();
 	const { data, refetch, isError } = useAllListMembersQuery(listUri);
 
-	const [isPTRing, setIsPTRing] = useState(false);
-
-	// The server returns these sorted by descending creation date, so we want to invert
-
+	// the server returns these sorted by descending creation date, so we invert to show oldest first
 	const profiles = data
 		?.map((p) => p.subject)
 		.filter(
@@ -62,39 +46,18 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 			: profiles;
 	};
 
-	const onRefresh = async () => {
-		setIsPTRing(true);
-		await refetch();
-		setIsPTRing(false);
-	};
-
-	const renderItem = ({ item }: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
-		return (
-			<View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>
-				<ProfileCard profile={item} moderationOpts={moderationOpts} />
-			</View>
-		);
-	};
-
 	if (!data) {
-		return (
-			<View style={[a.h_full_vh, { marginBottom: bottomBarOffset }]}>
-				<ListMaybePlaceholder isLoading={true} isError={isError} onRetry={refetch} />
-			</View>
-		);
+		return <ListMaybePlaceholder isLoading={true} isError={isError} onRetry={refetch} />;
 	}
 
 	return (
 		<List
 			data={getSortedProfiles()}
-			renderItem={renderItem}
+			renderItem={({ index, item }) => (
+				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
+			)}
 			keyExtractor={keyExtractor}
-			ListFooterComponent={<ListFooter border={false} className={css.footer} />}
-			showsVerticalScrollIndicator={false}
-			desktopFixedHeight
-			initialNumToRender={initialNumToRender}
-			refreshing={isPTRing}
-			onRefresh={() => void onRefresh()}
+			ListFooterComponent={<ListFooter />}
 		/>
 	);
 }

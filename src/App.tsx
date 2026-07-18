@@ -20,7 +20,6 @@ import { Provider as ServiceConfigProvider } from '#/state/service-config';
 import { Provider as SessionProvider, useSession } from '#/state/session';
 import { Provider as ShellStateProvider } from '#/state/shell';
 import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
-import { Provider as StarterPackProvider } from '#/state/shell/starter-pack';
 import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-replies';
 
 import { Shell } from '#/view/shell/index';
@@ -28,7 +27,6 @@ import { Shell } from '#/view/shell/index';
 import { ThemeProvider as Alf } from '#/alf';
 import { useColorModeTheme } from '#/alf/util/useColorModeTheme';
 
-import { useStarterPackEntry } from '#/components/hooks/useStarterPackEntry';
 import { Provider as ActiveVideoProvider } from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext';
 import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
 import * as Toast from '#/components/Toast';
@@ -42,7 +40,6 @@ import { Provider as HideBottomBarBorderProvider } from './lib/hooks/useHideBott
 function InnerApp() {
 	const { currentAccount, isSessionResuming, sessionResumeFailed } = useSession();
 	const theme = useColorModeTheme();
-	const hasCheckedReferrer = useStarterPackEntry();
 
 	useEffect(() => {
 		if (sessionResumeFailed) {
@@ -53,7 +50,7 @@ function InnerApp() {
 	return (
 		<Alf theme={theme}>
 			<ThemeProvider theme={theme}>
-				<Splash isReady={!isSessionResuming && hasCheckedReferrer}>
+				<Splash isReady={!isSessionResuming}>
 					<VideoVolumeProvider>
 						<ActiveVideoProvider>
 							<Fragment
@@ -109,9 +106,7 @@ function App() {
 			<PrefsStateProvider>
 				<ShellStateProvider>
 					<DialogStateProvider>
-						<StarterPackProvider>
-							<InnerApp />
-						</StarterPackProvider>
+						<InnerApp />
 					</DialogStateProvider>
 				</ShellStateProvider>
 			</PrefsStateProvider>

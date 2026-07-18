@@ -1,19 +1,11 @@
-import { type ListRenderItemInfo, View } from 'react-native';
-
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
-
-import { List } from '#/view/com/util/List';
-
 import * as FeedCard from '#/components/FeedCard';
+import { List } from '#/components/List/List';
+import { ListFooter } from '#/components/Lists';
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
-}
-
-function renderItem({ item }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) {
-	return <FeedCard.Default view={item} />;
 }
 
 interface FeedsListProps {
@@ -21,16 +13,12 @@ interface FeedsListProps {
 }
 
 export function FeedsList({ feeds }: FeedsListProps) {
-	const bottomBarOffset = useBottomBarOffset(20);
-
 	return (
 		<List
 			data={feeds}
-			renderItem={renderItem}
+			renderItem={({ index, item }) => <FeedCard.Default view={item} topBorder={index !== 0} />}
 			keyExtractor={keyExtractor}
-			ListFooterComponent={<View style={[{ height: bottomBarOffset }]} />}
-			showsVerticalScrollIndicator={false}
-			desktopFixedHeight={true}
+			ListFooterComponent={<ListFooter />}
 		/>
 	);
 }
