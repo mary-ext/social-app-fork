@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { View } from 'react-native';
 
 import { Logo } from '#/view/icons/Logo';
@@ -13,7 +12,7 @@ import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
 
-const NavSignInCardInner = (): React.ReactNode => {
+export function NavSignInCard(): React.ReactNode {
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const showSignIn = () => {
@@ -46,5 +45,4 @@ const NavSignInCardInner = (): React.ReactNode => {
 			</View>
 		</View>
 	);
-};
-export const NavSignInCard = memo(NavSignInCardInner);
+}

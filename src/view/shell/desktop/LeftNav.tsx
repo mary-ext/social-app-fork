@@ -19,7 +19,7 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 
-import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
+import { NavSignInCard } from '#/view/shell/NavSignInCard';
 
 import { useBreakpoints, useLayoutBreakpoints } from '#/alf';
 

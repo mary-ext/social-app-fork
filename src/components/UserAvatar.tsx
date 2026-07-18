@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, memo, type Ref } from 'react';
+import type { ComponentPropsWithoutRef, Ref } from 'react';
 
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
@@ -124,7 +124,7 @@ const hackModifyThumbnailPath = (uri: string, isEnabled: boolean) =>
 	isEnabled ? convertCdnPreset(uri, 'avatar_thumbnail') : uri;
 
 /** Avatar image with a typed vector fallback, moderation blur/alert, optional live badge, and inset border. */
-export const UserAvatar = memo(function UserAvatar({
+export function UserAvatar({
 	type = 'user',
 	shape,
 	size,
@@ -181,4 +181,4 @@ export const UserAvatar = memo(function UserAvatar({
 			)}
 		</Avatar.Root>
 	);
-});
+}

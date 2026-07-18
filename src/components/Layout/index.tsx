@@ -1,4 +1,4 @@
-import { forwardRef, memo } from 'react';
+import { forwardRef } from 'react';
 import {
 	ScrollView,
 	type ScrollViewProps,
@@ -35,7 +35,7 @@ const webScrollStyle = (style: WebScrollStyle): ViewStyle => {
 };
 
 /** Outermost component of every screen */
-export const Screen = memo(function Screen({ style, noInsetTop, ...props }: ScreenProps) {
+export function Screen({ style, noInsetTop, ...props }: ScreenProps) {
 	const { top } = useSafeAreaInsets();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
@@ -50,7 +50,7 @@ export const Screen = memo(function Screen({ style, noInsetTop, ...props }: Scre
 			{...props}
 		/>
 	);
-});
+}
 
 export type ContentProps = ScrollViewProps & {
 	style?: StyleProp<ViewStyle>;
@@ -58,42 +58,40 @@ export type ContentProps = ScrollViewProps & {
 };
 
 /** Default scroll view for simple pages */
-export const Content = memo(
-	forwardRef<ScrollView, ContentProps>(function Content(
-		{ children, style, contentContainerStyle, ...props },
-		ref,
-	) {
-		const t = useTheme();
-		const { isWithinSplitView } = useIsWithinSplitView();
+export const Content = forwardRef<ScrollView, ContentProps>(function Content(
+	{ children, style, contentContainerStyle, ...props },
+	ref,
+) {
+	const t = useTheme();
+	const { isWithinSplitView } = useIsWithinSplitView();
 
-		return (
-			<ScrollView
-				ref={ref}
-				id="content"
-				automaticallyAdjustsScrollIndicatorInsets={false}
-				indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-				style={[
-					a.w_full,
-					isWithinSplitView &&
-						webScrollStyle({
-							flex: 1,
-							overflowY: 'scroll',
-							scrollbarWidth: 'thin',
-							scrollbarColor: `${t.palette.contrast_100} transparent`,
-						}),
-					style,
-				]}
-				contentContainerStyle={[contentContainerStyle]}
-				{...props}
-			>
-				<Center>{children}</Center>
-			</ScrollView>
-		);
-	}),
-);
+	return (
+		<ScrollView
+			ref={ref}
+			id="content"
+			automaticallyAdjustsScrollIndicatorInsets={false}
+			indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+			style={[
+				a.w_full,
+				isWithinSplitView &&
+					webScrollStyle({
+						flex: 1,
+						overflowY: 'scroll',
+						scrollbarWidth: 'thin',
+						scrollbarColor: `${t.palette.contrast_100} transparent`,
+					}),
+				style,
+			]}
+			contentContainerStyle={[contentContainerStyle]}
+			{...props}
+		>
+			<Center>{children}</Center>
+		</ScrollView>
+	);
+});
 
 /** Utility component to center content within the screen */
-export const Center = memo(function LayoutCenter({ children, style, ...props }: ViewProps) {
+export function Center({ children, style, ...props }: ViewProps) {
 	const { gtMobile } = useBreakpoints();
 	const { isWithinSplitView } = useIsWithinSplitView();
 	return (
@@ -111,4 +109,4 @@ export const Center = memo(function LayoutCenter({ children, style, ...props }: 
 			{children}
 		</View>
 	);
-});
+}

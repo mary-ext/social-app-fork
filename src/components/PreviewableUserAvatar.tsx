@@ -1,5 +1,3 @@
-import { memo } from 'react';
-
 import type { AnyProfileView, AppBskyEmbedExternal } from '@atcute/bluesky';
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
@@ -33,7 +31,7 @@ type PreviewableUserAvatarProps = BaseUserAvatarProps & {
 };
 
 /** {@link UserAvatar} wrapped with a profile hover card and a link/live-status affordance. */
-export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
+export function PreviewableUserAvatar({
 	moderation,
 	profile,
 	disableHoverCard,
@@ -106,4 +104,4 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 			)}
 		</>
 	);
-});
+}

@@ -11,7 +11,7 @@ import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
 import * as styles from '#/view/shell/Drawer.css';
-import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
+import { NavSignInCard } from '#/view/shell/NavSignInCard';
 
 import {
 	Bell_Filled_Corner0_Rounded as BellFilled,

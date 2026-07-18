@@ -574,7 +574,7 @@ Row = memo(Row) as <ItemT>(props: {
 	registerRowNode: (index: number, node: HTMLElement | null) => void;
 }) => React.ReactNode;
 
-let Visibility = ({
+function Visibility({
 	root,
 	topMargin = '0px',
 	bottomMargin = '0px',
@@ -586,7 +586,7 @@ let Visibility = ({
 	bottomMargin?: string;
 	onVisibleChange: (isVisible: boolean) => void;
 	style?: ViewProps['style'];
-}): React.ReactNode => {
+}): React.ReactNode {
 	const tailRef = useRef(null);
 	const isIntersecting = useRef(false);
 
@@ -618,10 +618,9 @@ let Visibility = ({
 	}, [bottomMargin, root, topMargin]);
 
 	return <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />;
-};
-Visibility = memo(Visibility);
+}
 
-const MemoizedList = memo(forwardRef(ListImpl));
+const MemoizedList = forwardRef(ListImpl);
 
 export function List<ItemT = unknown>(
 	props: ListProps<ItemT> & { ref?: React.Ref<ListMethods> },
