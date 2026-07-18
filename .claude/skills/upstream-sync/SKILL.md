@@ -7,10 +7,12 @@ disable-model-invocation: true
 ### 1. Fetch upstream
 
 ```
-git fetch upstream
+git fetch bluesky
 ```
 
-Ensure that upstream is not a shallow clone.
+This remote should be set it to `github:bluesky-social/social-app` if it's not present.
+
+Ensure that it is not a shallow clone.
 
 ### 2. Establish the range
 
