@@ -94,19 +94,15 @@ export function StarterPackScreenInner({ routeParams }: { routeParams: StarterPa
 	useTitle(m['common.starterPack.label']());
 
 	const moderationOpts = useModerationOpts();
-	const { data: did, isLoading: isLoadingDid, isError: isErrorDid } = useResolveDidQuery(actor);
-	const {
-		data: starterPack,
-		isLoading: isLoadingStarterPack,
-		isError: isErrorStarterPack,
-	} = useStarterPackQuery({ did, rkey });
+	const { data: did, isError: isErrorDid } = useResolveDidQuery(actor);
+	const { data: starterPack, isError: isErrorStarterPack } = useStarterPackQuery({ did, rkey });
 
 	const isValid = starterPack && (starterPack.list || starterPack?.creator?.did === currentAccount?.did);
 
 	if (!did || !starterPack || !isValid || !moderationOpts) {
 		return (
 			<ListMaybePlaceholder
-				isLoading={isLoadingDid || isLoadingStarterPack || !moderationOpts}
+				isLoading={!isErrorDid && !isErrorStarterPack && (!did || !starterPack || !moderationOpts)}
 				isError={isErrorDid || isErrorStarterPack || !isValid}
 				errorMessage={m['screens.starterPack.error.notFound']()}
 				emptyMessage={m['screens.starterPack.error.notFound']()}
