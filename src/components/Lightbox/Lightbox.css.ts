@@ -1,6 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
-const Z = 10;
+import { zIndex } from '#/styles/tokens.css';
 
 const fadeIn = keyframes({
 	from: { opacity: 0 },
@@ -10,7 +10,7 @@ const fadeIn = keyframes({
 export const backdrop = style({
 	position: 'fixed',
 	inset: 0,
-	zIndex: Z,
+	zIndex: zIndex.modal,
 	background: 'rgba(0, 0, 0, 0.92)',
 	opacity: 1,
 	transition: 'opacity 200ms ease',
@@ -22,7 +22,7 @@ export const backdrop = style({
 export const popup = style({
 	position: 'fixed',
 	inset: 0,
-	zIndex: Z,
+	zIndex: zIndex.modal,
 	outline: 'none',
 	transition: 'opacity 200ms ease, transform 200ms ease',
 	selectors: {
