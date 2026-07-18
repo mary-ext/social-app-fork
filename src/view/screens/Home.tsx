@@ -20,7 +20,6 @@ import { FeedPage } from '#/view/com/feeds/FeedPage';
 import { HomeHeaderLayout } from '#/view/com/home/HomeHeaderLayout';
 import { CustomFeedEmptyState } from '#/view/com/posts/CustomFeedEmptyState';
 import { FollowingEmptyState } from '#/view/com/posts/FollowingEmptyState';
-import { FollowingEndOfFeed } from '#/view/com/posts/FollowingEndOfFeed';
 
 import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
 
@@ -112,12 +111,7 @@ function HomeScreenReady({
 				label: feedInfo.displayName,
 				children:
 					feed === 'following' ? (
-						<FeedPage
-							feed={feed}
-							renderEmptyState={renderFollowingEmptyState}
-							renderEndOfFeed={FollowingEndOfFeed}
-							feedInfo={feedInfo}
-						/>
+						<FeedPage feed={feed} renderEmptyState={renderFollowingEmptyState} feedInfo={feedInfo} />
 					) : (
 						<FeedPage
 							feed={feed}

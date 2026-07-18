@@ -29,13 +29,11 @@ const POLL_FREQ = 60e3; // 60sec
 export function FeedPage({
 	feed,
 	renderEmptyState,
-	renderEndOfFeed,
 	savedFeedConfig,
 	feedInfo,
 }: {
 	feed: FeedDescriptor;
 	renderEmptyState: () => JSX.Element;
-	renderEndOfFeed?: () => JSX.Element;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 	feedInfo: FeedSourceInfo;
 }) {
@@ -89,7 +87,6 @@ export function FeedPage({
 					onScrolledDownChange={setIsScrolledDown}
 					onHasNew={setHasNew}
 					renderEmptyState={renderEmptyState}
-					renderEndOfFeed={renderEndOfFeed}
 					savedFeedConfig={savedFeedConfig}
 				/>
 			</FeedFeedbackProvider>

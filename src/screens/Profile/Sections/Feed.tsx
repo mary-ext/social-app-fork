@@ -11,7 +11,6 @@ import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
-import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
@@ -68,7 +67,6 @@ export function ProfileFeedSection({
 				onHasNew={setHasNew}
 				onScrolledDownChange={setIsScrolledDown}
 				renderEmptyState={renderPostsEmpty}
-				renderEndOfFeed={ProfileEndOfFeed}
 				ignoreFilterFor={ignoreFilterFor}
 			/>
 			{(isScrolledDown || hasNew) && (
@@ -78,16 +76,6 @@ export function ProfileFeedSection({
 					showIndicator={hasNew}
 				/>
 			)}
-		</div>
-	);
-}
-
-function ProfileEndOfFeed() {
-	return (
-		<div className={css.endOfFeed}>
-			<Text align="center" color="textContrastMedium">
-				{m['screens.profile.feed.endOfFeed']()}
-			</Text>
 		</div>
 	);
 }

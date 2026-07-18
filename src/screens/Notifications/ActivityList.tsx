@@ -5,7 +5,6 @@ import { EmptyState } from '#/view/com/util/EmptyState';
 
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import * as Layout from '#/components/Layout';
-import { ListFooter } from '#/components/Lists';
 
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
@@ -30,7 +29,6 @@ export function NotificationsActivityListScreen() {
 				renderEmptyState={() => (
 					<EmptyState icon={EditIcon} iconSize="2xl" message={m['view.notifications.activity.empty']()} />
 				)}
-				renderEndOfFeed={() => <ListFooter />}
 			/>
 		</Layout.Screen>
 	);

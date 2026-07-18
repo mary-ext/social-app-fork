@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { onAppStateChange } from '#/lib/appState';
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
-import { isNetworkError } from '#/lib/strings/errors';
+import { cleanError, isNetworkError } from '#/lib/strings/errors';
 
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
 import { postCreated } from '#/state/events';
@@ -25,18 +25,14 @@ import { useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
-import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
-import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { SuggestedFollows } from '#/components/FeedInterstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
+import { ListFooter } from '#/components/Lists';
 import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/TrendingInterstitial';
-
-import { m } from '#/paraglide/messages';
 
 import { ComposerPrompt } from '../feeds/ComposerPrompt';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
-import * as css from './PostFeed.css';
 import { PostFeedErrorMessage } from './PostFeedErrorMessage';
 import { PostFeedItem } from './PostFeedItem';
 import { ShowLessFollowup } from './ShowLessFollowup';
@@ -53,10 +49,6 @@ export type FeedRow =
 	  }
 	| {
 			type: 'error';
-			key: string;
-	  }
-	| {
-			type: 'loadMoreError';
 			key: string;
 	  }
 	| {
@@ -126,7 +118,6 @@ function PostFeed({
 	onScrolledDownChange,
 	onHasNew,
 	renderEmptyState,
-	renderEndOfFeed,
 	ListHeaderComponent,
 	savedFeedConfig,
 }: {
@@ -139,7 +130,6 @@ function PostFeed({
 	onHasNew?: (v: boolean) => void;
 	onScrolledDownChange?: (isScrolledDown: boolean) => void;
 	renderEmptyState: () => React.ReactElement;
-	renderEndOfFeed?: () => React.ReactElement;
 	ListHeaderComponent?: () => React.ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }): React.ReactNode {
@@ -168,8 +158,17 @@ function PostFeed({
 	};
 
 	const opts = { enabled, ignoreFilterFor };
-	const { data, isFetching, isFetched, isError, error, refetch, hasNextPage, fetchNextPage } =
-		usePostFeedQuery(feed, opts);
+	const {
+		data,
+		error,
+		fetchNextPage,
+		hasNextPage,
+		isError,
+		isFetched,
+		isFetching,
+		isFetchingNextPage,
+		refetch,
+	} = usePostFeedQuery(feed, opts);
 	const lastFetchedAt = data?.pages[0]?.fetchedAt;
 	const isEmpty = !isFetching && !data?.pages?.some((page) => page.slices.length);
 
@@ -407,12 +406,6 @@ function PostFeed({
 					}
 				}
 			}
-			if (isError && !isEmpty) {
-				arr.push({
-					type: 'loadMoreError',
-					key: 'loadMoreError',
-				});
-			}
 		} else {
 			if (enabled !== false) {
 				arr.push({
@@ -443,9 +436,7 @@ function PostFeed({
 		onHasNew?.(false);
 	};
 
-	const onPressRetryLoadMore = () => {
-		void fetchNextPage();
-	};
+	const onPressRetryLoadMore = () => fetchNextPage();
 
 	// rendering
 	// =
@@ -463,8 +454,6 @@ function PostFeed({
 					topBorder={rowIndex !== 0}
 				/>
 			);
-		} else if (row.type === 'loadMoreError') {
-			return <LoadMoreRetryBtn label={m['common.post.fetchError']()} onPress={onPressRetryLoadMore} />;
 		} else if (row.type === 'loading') {
 			return <PostFeedLoadingPlaceholder topBorder={rowIndex !== 0} />;
 		} else if (row.type === 'feedShutdownMsg') {
@@ -507,15 +496,6 @@ function PostFeed({
 		}
 	};
 
-	const shouldRenderEndOfFeed = !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed;
-	// keep a spinner pinned to the bottom while more posts can still load; only swap it for the
-	// end-of-feed marker once there's legitimately nothing left to fetch.
-	const feedFooter = shouldRenderEndOfFeed ? (
-		<div className={css.endOfFeedSlot}>{renderEndOfFeed()}</div>
-	) : hasNextPage && !isError ? (
-		<CenteredSpinner label={m['view.posts.feed.loadingMore']()} size="2xl" />
-	) : null;
-
 	const onItemSeen = (item: FeedRow) => {
 		feedFeedback.onItemSeen(item);
 	};
@@ -527,7 +507,16 @@ function PostFeed({
 			keyExtractor={(item: FeedRow) => item.key}
 			estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
-			ListFooterComponent={feedFooter}
+			ListFooterComponent={
+				<ListFooter
+					border={!isEmpty}
+					error={isError && !isEmpty ? cleanError(error) : undefined}
+					hasNextPage={hasNextPage}
+					isFetchingNextPage={isFetchingNextPage}
+					onRetry={onPressRetryLoadMore}
+					showEndMessage={!isEmpty && !isFetching}
+				/>
+			}
 			ListHeaderComponent={ListHeaderComponent && <ListHeaderComponent />}
 			onScrolledDownChange={handleScrolledDownChange}
 			onEndReached={() => void onEndReached()}

@@ -43,7 +43,6 @@
 	"screens.profile.feed.action.unpin": "Unpin from home",
 	"screens.profile.feed.action.viewLikes": "View users who like this feed",
 	"screens.profile.feed.byCreator": "by {#t0}{handle}{/t0}",
-	"screens.profile.feed.endOfFeed": "End of feed",
 	"screens.profile.feed.likes.count": [
 		{
 			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
