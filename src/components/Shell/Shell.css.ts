@@ -69,7 +69,7 @@ export const main = style({
 	},
 });
 
-export const bottomBar = style({
+export const bottom = style({
 	bottom: 0,
 	position: 'sticky',
 	width: '100%',
@@ -111,4 +111,9 @@ export const mainPlain = style({
 			borderRight: 'none',
 		},
 	},
+});
+
+export const bottomBarPlaceholder = style({
+	height: 51,
+	flexShrink: 0,
 });

@@ -9,7 +9,7 @@ import { useSession } from '#/state/session';
 
 import { useLayoutBreakpoints } from '#/alf';
 
-import * as styles from '#/components/Shell/Shell.css';
+import * as css from '#/components/Shell/Shell.css';
 
 const DesktopLeftNav = lazy(() =>
 	import('#/view/shell/desktop/LeftNav').then((m) => ({ default: m.DesktopLeftNav })),
@@ -29,7 +29,7 @@ export type WebShellProps = {
 /**
  * app shell that renders a layout with nav rails and an in-flow sticky bottom bar.
  *
- * publishes the bottom bar's measured height as the {@link styles.bottomBarHeightVar} CSS variable for
+ * publishes the bottom bar's measured height as the {@link css.bottomBarHeightVar} CSS variable for
  * positioning screens and overlays.
  */
 export function WebShell({ children, routeName }: WebShellProps) {
@@ -51,11 +51,11 @@ export function WebShell({ children, routeName }: WebShellProps) {
 
 	return (
 		<div
-			className={clsx(styles.root, fixedViewport && styles.rootFixed)}
-			style={assignInlineVars({ [styles.bottomBarHeightVar]: showBottomBar ? `${barHeight}px` : '0px' })}
+			className={clsx(css.root, fixedViewport && css.rootFixed)}
+			style={assignInlineVars({ [css.bottomBarHeightVar]: showBottomBar ? `${barHeight}px` : '0px' })}
 		>
-			<div className={clsx(styles.body, fixedViewport && styles.bodyFixed, isSplitView && styles.bodyWide)}>
-				<div className={`${styles.rail} ${styles.railLeft}`}>
+			<div className={clsx(css.body, fixedViewport && css.bodyFixed, isSplitView && css.bodyWide)}>
+				<div className={`${css.rail} ${css.railLeft}`}>
 					{!showBottomBar && (
 						<Suspense fallback={null}>
 							<DesktopLeftNav routeName={routeName} />
@@ -64,11 +64,11 @@ export function WebShell({ children, routeName }: WebShellProps) {
 				</div>
 				<main
 					role="main"
-					className={clsx(styles.main, fixedViewport && styles.mainFixed, isSplitView && styles.mainPlain)}
+					className={clsx(css.main, fixedViewport && css.mainFixed, isSplitView && css.mainPlain)}
 				>
 					{children}
 				</main>
-				<div className={clsx(styles.rail, styles.railRight, showRightNav && styles.railRightFluid)}>
+				<div className={clsx(css.rail, css.railRight, showRightNav && css.railRightFluid)}>
 					{showRightNav && (
 						<Suspense fallback={null}>
 							<DesktopRightNav routeName={routeName} />
@@ -89,12 +89,14 @@ export function WebShell({ children, routeName }: WebShellProps) {
 							setBarHeight(entry.contentRect.height);
 						});
 
+						setBarHeight(node.offsetHeight);
 						observer.observe(node);
+
 						return () => observer.disconnect();
 					}}
-					className={styles.bottomBar}
+					className={css.bottom}
 				>
-					<Suspense fallback={null}>
+					<Suspense fallback={<div className={css.bottomBarPlaceholder}></div>}>
 						<BottomBar />
 					</Suspense>
 				</div>
