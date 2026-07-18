@@ -19,7 +19,7 @@ export const fab = style({
 	position: 'fixed',
 	right: space._2xl,
 	width: 56,
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 	selectors: {
 		'&:active': { transform: 'scale(0.96)' },
 	},

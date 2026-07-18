@@ -7,7 +7,7 @@ export const positioner = style({
 	maxWidth: 'var(--available-width)',
 	minWidth: 300,
 	width: 'var(--anchor-width)',
-	zIndex: zIndex.menu,
+	zIndex: zIndex.popover,
 });
 
 export const popup = style({

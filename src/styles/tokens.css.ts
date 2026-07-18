@@ -45,10 +45,10 @@ export const fontFamily = fallbackVar(fontFamilyVar, themeFontFamily);
 
 export const zIndex = {
 	base: 0,
-	sticky: 10,
-	stickyRaised: 20,
-	dialog: 100,
-	menu: 110,
+	raised: 10,
+	float: 20,
+	modal: 100,
+	popover: 110,
 	tooltip: 120,
 	toast: 130,
 } as const;

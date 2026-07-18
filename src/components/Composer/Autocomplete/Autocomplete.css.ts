@@ -4,7 +4,7 @@ import { vars } from '#/styles/contract.css';
 import { fontSize, space, zIndex } from '#/styles/tokens.css';
 
 export const positioner = style({
-	zIndex: zIndex.menu,
+	zIndex: zIndex.popover,
 });
 
 export const popup = style({

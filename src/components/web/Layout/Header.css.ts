@@ -18,7 +18,7 @@ export const outer = style({
 	position: 'sticky',
 	top: 0,
 	width: '100%',
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
 
 export const outerNoBorder = style({
@@ -47,7 +47,7 @@ export const bannerHeader = style({
 	paddingTop: `calc(${space.xs}px + env(safe-area-inset-top, 0px))`,
 	position: 'absolute',
 	top: 0,
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
 
 export const content = style({

@@ -39,7 +39,7 @@ export const search = style({
 	backgroundImage: `linear-gradient(${colors.bg} 50%, ${colorMix(colors.bg, '0%')})`,
 	paddingInline: DIALOG_PADDING,
 	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
 
 export const searchOverlap = style({

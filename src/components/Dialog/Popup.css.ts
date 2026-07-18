@@ -12,7 +12,7 @@ export const backdrop = style(
 		position: 'fixed',
 		transitionDuration: '150ms',
 		transitionProperty: 'opacity',
-		zIndex: zIndex.dialog,
+		zIndex: zIndex.modal,
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 		},
@@ -33,7 +33,7 @@ export const viewport = style(
 		position: 'fixed',
 		right: 0,
 		top: 0,
-		zIndex: zIndex.dialog,
+		zIndex: zIndex.modal,
 		'@media': {
 			'(min-width: 800px)': {
 				paddingBlock: '10vh',
@@ -228,7 +228,7 @@ export const close = recipe(
 					position: 'absolute',
 					right: 12,
 					top: 12,
-					zIndex: zIndex.dialog,
+					zIndex: zIndex.modal,
 				},
 				outer: {
 					position: 'fixed',
@@ -237,7 +237,7 @@ export const close = recipe(
 					transitionDuration: '200ms',
 					transitionProperty: 'opacity',
 					transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-					zIndex: zIndex.menu,
+					zIndex: zIndex.popover,
 					selectors: {
 						[`${viewport}[data-starting-style] &, ${viewport}[data-ending-style] &`]: { opacity: 0 },
 					},

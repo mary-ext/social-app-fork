@@ -14,7 +14,7 @@ export const searchBar = style({
 	paddingInline: space.md,
 	position: 'sticky',
 	top: HEADER_HEIGHT,
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
 
 export const empty = style({
@@ -75,7 +75,7 @@ export const footer = style({
 	paddingInline: space.lg,
 	paddingTop: space.xl,
 	position: 'sticky',
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
 
 export const countBadge = style({

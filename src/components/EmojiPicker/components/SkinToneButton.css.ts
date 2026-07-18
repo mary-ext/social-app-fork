@@ -23,7 +23,7 @@ export const trigger = style({
 });
 
 export const positioner = style({
-	zIndex: zIndex.menu,
+	zIndex: zIndex.popover,
 });
 
 export const menu = style({

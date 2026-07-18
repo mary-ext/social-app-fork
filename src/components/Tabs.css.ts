@@ -21,7 +21,7 @@ export const list = style(
 		overflowX: 'auto',
 		position: 'sticky',
 		top: 0,
-		zIndex: zIndex.sticky,
+		zIndex: zIndex.raised,
 		userSelect: 'none',
 		scrollbarWidth: 'none',
 		selectors: {

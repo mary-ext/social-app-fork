@@ -51,7 +51,7 @@ export const icon = style(
 
 export const positioner = style(
 	layered(components, {
-		zIndex: zIndex.menu,
+		zIndex: zIndex.popover,
 	}),
 );
 

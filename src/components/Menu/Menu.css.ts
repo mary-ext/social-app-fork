@@ -10,7 +10,7 @@ export const minWidthVar = createVar();
 export const maxWidthVar = createVar();
 
 export const positioner = style({
-	zIndex: zIndex.menu,
+	zIndex: zIndex.popover,
 });
 
 export const popup = style({

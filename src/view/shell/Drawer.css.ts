@@ -17,7 +17,7 @@ export const backdrop = style(
 		transitionDuration: '450ms',
 		transitionProperty: 'opacity',
 		transitionTimingFunction: swipeEase,
-		zIndex: zIndex.dialog,
+		zIndex: zIndex.modal,
 		selectors: {
 			'.theme--light &': { backgroundColor: 'rgba(0, 57, 117, 0.1)' },
 			'.theme--dark &': { backgroundColor: 'rgba(1, 82, 168, 0.1)' },
@@ -34,7 +34,7 @@ export const viewport = style(
 		display: 'flex',
 		inset: 0,
 		position: 'fixed',
-		zIndex: zIndex.dialog,
+		zIndex: zIndex.modal,
 	}),
 );
 

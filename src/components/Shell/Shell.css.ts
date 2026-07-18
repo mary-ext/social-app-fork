@@ -73,7 +73,7 @@ export const bottom = style({
 	bottom: 0,
 	position: 'sticky',
 	width: '100%',
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
 
 export const rootFixed = style({

@@ -12,7 +12,7 @@ export const backdrop = style(
 		position: 'fixed',
 		transitionDuration: '150ms',
 		transitionProperty: 'opacity',
-		zIndex: zIndex.dialog,
+		zIndex: zIndex.modal,
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 		},
@@ -32,7 +32,7 @@ export const viewport = style(
 		position: 'fixed',
 		right: 0,
 		top: 0,
-		zIndex: zIndex.dialog,
+		zIndex: zIndex.modal,
 	}),
 );
 

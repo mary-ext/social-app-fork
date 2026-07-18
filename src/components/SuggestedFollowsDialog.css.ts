@@ -39,7 +39,7 @@ export const search = style({
 	backgroundImage: `linear-gradient(${colors.bg} 50%, ${colorMix(colors.bg, '0%')})`,
 	marginBottom: -SEARCH_NEGATIVE_MARGIN,
 	paddingInline: DIALOG_PADDING,
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
 
 export const list = style({

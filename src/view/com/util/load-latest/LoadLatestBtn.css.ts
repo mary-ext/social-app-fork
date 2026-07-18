@@ -9,7 +9,7 @@ export const outer = style({
 	bottom: `calc(${fallbackVar(bottomBarHeightVar, '0px')} + 30px)`,
 	left: 18,
 	position: 'fixed',
-	zIndex: zIndex.stickyRaised,
+	zIndex: zIndex.float,
 });
 
 export const leftInline = style({ left: 'calc(50vw - 282px)' });

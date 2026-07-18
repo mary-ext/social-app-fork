@@ -23,7 +23,7 @@ export const dropScrim = recipe(
 			transitionDuration: '150ms',
 			transitionProperty: 'opacity',
 			transitionTimingFunction: 'ease-in-out',
-			zIndex: zIndex.dialog,
+			zIndex: zIndex.modal,
 		},
 		variants: {
 			visible: {

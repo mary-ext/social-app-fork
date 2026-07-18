@@ -40,7 +40,7 @@ export const search = style({
 	paddingInline: DIALOG_PADDING,
 	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 	marginBottom: -SEARCH_NEGATIVE_MARGIN,
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
 
 export const list = style({

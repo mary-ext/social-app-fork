@@ -21,5 +21,5 @@ export const mobileComposePrompt = style({
 	left: 0,
 	position: 'fixed',
 	right: 0,
-	zIndex: zIndex.sticky,
+	zIndex: zIndex.raised,
 });
