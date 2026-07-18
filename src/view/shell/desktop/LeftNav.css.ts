@@ -10,7 +10,7 @@ import {
 	LEFT_NAV_MINIMAL_WIDTH,
 	LEFT_NAV_PWI_WIDTH,
 	LEFT_NAV_STANDARD_WIDTH,
-} from './LeftNav.const';
+} from './constants';
 
 const TIMING = 'cubic-bezier(0.17, 0.73, 0.14, 1)';
 

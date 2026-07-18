@@ -74,10 +74,8 @@ import { m } from '#/paraglide/messages';
 import { popToRoute } from '#/routes';
 import { colors } from '#/styles/colors';
 
-import { LARGE_ELEMENT_SIZE, NAV_ICON_WIDTH } from './LeftNav.const';
+import { LARGE_ELEMENT_SIZE, NAV_ICON_WIDTH } from './constants';
 import * as css from './LeftNav.css';
-
-export { LEFT_NAV_MINIMAL_WIDTH } from './LeftNav.const';
 
 function ProfileCard({ minimal }: { minimal: boolean }) {
 	const { currentAccount, accounts } = useSession();
