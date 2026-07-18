@@ -30,7 +30,7 @@ import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 
 import * as css from './Post.css';
 

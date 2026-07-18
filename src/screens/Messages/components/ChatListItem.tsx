@@ -22,7 +22,7 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as ChatRow from './ChatRow';

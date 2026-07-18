@@ -24,17 +24,18 @@ import { useSession } from '#/state/session';
 import { BlockLink } from '#/components/BlockLink';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText, type RichTextProps } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { PreviewableUserAvatar, UserAvatar } from '#/components/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Pills from '#/components/web/Pills';
 import * as css from '#/components/web/ProfileCard.css';
 import * as Skeleton from '#/components/web/Skeleton';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 /**

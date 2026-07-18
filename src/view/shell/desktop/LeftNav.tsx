@@ -69,7 +69,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link, useInternalLink } from '#/components/web/Link';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { popToRoute } from '#/routes';
 import { colors } from '#/styles/colors';

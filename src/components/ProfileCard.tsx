@@ -31,13 +31,14 @@ import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import * as Pills from '#/components/Pills';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText, type RichTextProps } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { PreviewableUserAvatar, UserAvatar } from '#/components/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 export function Default({

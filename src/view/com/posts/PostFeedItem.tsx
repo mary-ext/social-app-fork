@@ -33,9 +33,9 @@ import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import * as css from './PostFeedItem.css';
 import { PostFeedReason } from './PostFeedReason';

@@ -29,11 +29,11 @@ import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { Text } from '#/components/Text';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import * as Skele from '#/components/web/Skeleton';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import { threadTextShape } from './skeleton-shape';

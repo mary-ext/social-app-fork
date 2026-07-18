@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -7,19 +7,19 @@ import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 
 import { useSession } from '#/state/session';
 
-import { BottomBarWeb } from '#/view/shell/bottom-bar/BottomBarWeb';
-import { DesktopLeftNav } from '#/view/shell/desktop/LeftNav';
-import { Drawer } from '#/view/shell/Drawer';
-
 import { useLayoutBreakpoints } from '#/alf';
 
 import * as styles from '#/components/Shell/Shell.css';
 
-// the right nav only renders past the right-nav breakpoint and off Messages, so defer its chunk until
-// a layout that actually shows it.
+const DesktopLeftNav = lazy(() =>
+	import('#/view/shell/desktop/LeftNav').then((m) => ({ default: m.DesktopLeftNav })),
+);
 const DesktopRightNav = lazy(() =>
 	import('#/view/shell/desktop/RightNav').then((m) => ({ default: m.DesktopRightNav })),
 );
+
+const BottomBar = lazy(() => import('#/view/shell/BottomBar').then((m) => ({ default: m.BottomBar })));
+const Drawer = lazy(() => import('#/view/shell/Drawer').then((m) => ({ default: m.Drawer })));
 
 export type WebShellProps = {
 	children: React.ReactNode;
@@ -47,17 +47,7 @@ export function WebShell({ children, routeName }: WebShellProps) {
 
 	const showRightNav = rightNavVisible && !routeName.startsWith('Messages');
 
-	const barRef = useRef<HTMLDivElement>(null);
 	const [barHeight, setBarHeight] = useState(0);
-	useEffect(() => {
-		const bar = barRef.current;
-		if (!showBottomBar || !bar) {
-			return;
-		}
-		const observer = new ResizeObserver(() => setBarHeight(bar.offsetHeight));
-		observer.observe(bar);
-		return () => observer.disconnect();
-	}, [showBottomBar]);
 
 	return (
 		<div
@@ -66,7 +56,11 @@ export function WebShell({ children, routeName }: WebShellProps) {
 		>
 			<div className={clsx(styles.body, fixedViewport && styles.bodyFixed, isSplitView && styles.bodyWide)}>
 				<div className={`${styles.rail} ${styles.railLeft}`}>
-					{!showBottomBar && <DesktopLeftNav routeName={routeName} />}
+					{!showBottomBar && (
+						<Suspense fallback={null}>
+							<DesktopLeftNav routeName={routeName} />
+						</Suspense>
+					)}
 				</div>
 				<main
 					role="main"
@@ -82,12 +76,35 @@ export function WebShell({ children, routeName }: WebShellProps) {
 					)}
 				</div>
 			</div>
+
 			{showBottomBar && (
-				<div ref={barRef} className={styles.bottomBar}>
-					<BottomBarWeb />
+				<div
+					ref={(node) => {
+						if (!node) {
+							return;
+						}
+
+						const observer = new ResizeObserver((entries) => {
+							const entry = entries[0]!;
+							setBarHeight(entry.contentRect.height);
+						});
+
+						observer.observe(node);
+						return () => observer.disconnect();
+					}}
+					className={styles.bottomBar}
+				>
+					<Suspense fallback={null}>
+						<BottomBar />
+					</Suspense>
 				</div>
 			)}
-			<Drawer />
+
+			{isMobile && (
+				<Suspense fallback={null}>
+					<Drawer />
+				</Suspense>
+			)}
 		</div>
 	);
 }

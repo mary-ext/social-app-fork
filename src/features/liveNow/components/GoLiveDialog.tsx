@@ -25,11 +25,10 @@ import {
 	displayDuration,
 	getLiveLinkFromStatusRecord,
 	getLiveServiceNames,
-	useActorStatus,
 	useLiveLinkMetaQuery,
-	useLiveNowConfig,
 	useUpsertLiveStatusMutation,
 } from '#/features/liveNow';
+import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './GoLiveDialog.css';

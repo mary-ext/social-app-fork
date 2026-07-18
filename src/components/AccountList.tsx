@@ -15,7 +15,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

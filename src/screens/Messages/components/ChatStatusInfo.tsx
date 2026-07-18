@@ -15,10 +15,10 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { KnownFollowers } from '#/components/KnownFollowers';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { m } from '#/paraglide/messages';
 import { LinearGradient } from '#/shims/linear-gradient';

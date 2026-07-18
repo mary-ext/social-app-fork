@@ -43,17 +43,17 @@ import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Skele from '#/components/web/Skeleton';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

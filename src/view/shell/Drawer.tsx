@@ -45,7 +45,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 
@@ -63,7 +63,6 @@ export function Drawer() {
 				<BaseDrawer.Viewport className={styles.viewport}>
 					<BaseDrawer.Popup className={styles.popup}>
 						{/* Drawer.Title is itself the heading text host (an <h2>) */}
-						{}
 						<BaseDrawer.Title className={styles.srOnly}>{m['navigation.drawer.title']()}</BaseDrawer.Title>
 						<BaseDrawer.Content className={styles.content}>
 							<DrawerContent />

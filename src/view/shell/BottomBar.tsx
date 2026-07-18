@@ -42,7 +42,7 @@ import { m } from '#/paraglide/messages';
 import { popToRoute } from '#/routes';
 import { colors } from '#/styles/colors';
 
-import * as css from './BottomBarWeb.css';
+import * as css from './BottomBar.css';
 
 const iconWidth = 24;
 
@@ -102,7 +102,7 @@ const useLongPress = (onLongPress?: () => void) => {
 	return { consumeLongPress, handlers };
 };
 
-export function BottomBarWeb() {
+export function BottomBar() {
 	const { hasSession, currentAccount } = useSession();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 	const hideBorder = useHideBottomBarBorder();

@@ -26,9 +26,9 @@ import { Bell2Off_Filled_Corner0_Rounded as BellOffIcon } from '#/components/ico
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
 import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';

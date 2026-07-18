@@ -33,8 +33,8 @@ import { KnownFollowers, shouldShowKnownFollowers } from '#/components/web/Known
 import { InlineLinkText, Link, LinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 

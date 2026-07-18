@@ -13,9 +13,9 @@ import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
 
 import { EMPTY_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
 import { QuoteEmbed } from '#/components/Post/Embed';
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { m } from '#/paraglide/messages';
 

@@ -21,7 +21,7 @@ import { logger } from '#/logger';
 
 import * as Toast from '#/components/Toast';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 /**

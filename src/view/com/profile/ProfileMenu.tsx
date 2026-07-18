@@ -44,10 +44,10 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
-import { useActorStatus, useLiveNowConfig } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { GoLiveDialog } from '#/features/liveNow/components/GoLiveDialog';
 import { GoLiveDisabledDialog } from '#/features/liveNow/components/GoLiveDisabledDialog';
+import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 import { useDevMode } from '#/storage/hooks/dev-mode';

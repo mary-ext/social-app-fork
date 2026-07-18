@@ -13,14 +13,14 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { niceDate } from '#/locale/intl/datetime';
 
+import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text, type TextProps } from '#/components/Text';
 import { Tooltip } from '#/components/Tooltip';
-import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { InlineLinkText } from '#/components/web/Link';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as css from './PostMeta.css';

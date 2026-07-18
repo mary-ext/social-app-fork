@@ -39,7 +39,7 @@ import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import * as Skele from '#/components/web/Skeleton';
 
-import { useActorStatus } from '#/features/liveNow';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './AccountsSection.css';
