@@ -102,6 +102,22 @@ export default defineConfig(({ envMode }) => {
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());
 
+				// prioritize deduplication in async CSS chunks: hoist any extracted-CSS module shared by
+				// 2+ chunks into its own shared chunk rather than copying it into every route chunk.
+				config.optimization ??= {};
+				if (config.optimization.splitChunks !== false) {
+					config.optimization.splitChunks ??= {};
+					config.optimization.splitChunks.cacheGroups ??= {};
+					config.optimization.splitChunks.cacheGroups.sharedStyles = {
+						chunks: 'all',
+						minChunks: 2,
+						minSize: 0,
+						priority: 20,
+						reuseExistingChunk: true,
+						type: 'css/mini-extract',
+					};
+				}
+
 				// precaching only makes sense against a hashed production build; in dev it would fight
 				// the dev server and HMR, so the service worker is emitted for production builds only.
 				if (envMode === 'production') {
