@@ -2,7 +2,7 @@ import { type DimensionValue, type StyleProp, StyleSheet, View, type ViewStyle }
 
 import { s } from '#/lib/styles';
 
-import { atoms as a, useTheme } from '#/alf';
+import { useTheme } from '#/alf';
 
 export function LoadingPlaceholder({
 	width,
@@ -57,43 +57,6 @@ export function ProfileCardFeedLoadingPlaceholder() {
 			<ProfileCardLoadingPlaceholder />
 			<ProfileCardLoadingPlaceholder />
 		</>
-	);
-}
-
-export function FeedLoadingPlaceholder({
-	style,
-	showLowerPlaceholder = true,
-	showTopBorder = true,
-}: {
-	style?: StyleProp<ViewStyle>;
-	showTopBorder?: boolean;
-	showLowerPlaceholder?: boolean;
-}) {
-	const t = useTheme();
-	return (
-		<View
-			style={[
-				{
-					padding: 16,
-					borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
-				},
-				t.atoms.border_contrast_low,
-				style,
-			]}
-		>
-			<View style={[{ flexDirection: 'row' }]}>
-				<LoadingPlaceholder width={36} height={36} style={[styles.avatar, { borderRadius: 8 }]} />
-				<View style={[a.flex_1]}>
-					<LoadingPlaceholder width={100} height={8} style={[s.mt5, s.mb10]} />
-					<LoadingPlaceholder width={120} height={8} />
-				</View>
-			</View>
-			{showLowerPlaceholder && (
-				<View style={{ marginTop: 12 }}>
-					<LoadingPlaceholder width={120} height={8} />
-				</View>
-			)}
-		</View>
 	);
 }
 

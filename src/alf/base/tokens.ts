@@ -48,8 +48,3 @@ export const fontWeight = {
 	semiBold: '600',
 	bold: '700',
 } as const;
-
-export const labelerColor = {
-	purple: 'rgb(105 0 255)',
-	purple_dark: 'rgb(83 0 202)',
-} as const;

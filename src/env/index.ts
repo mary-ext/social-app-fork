@@ -8,6 +8,3 @@ export const IS_WEB_SAFARI: boolean = /^((?!chrome|android).)*safari/i.test(
 	navigator.userAgent,
 );
 export const IS_WEB_FIREFOX: boolean = /firefox|fxios/i.test(navigator.userAgent);
-
-/** Misc */
-export const IS_HIGH_DPI: boolean = window.matchMedia('(min-resolution: 2dppx)').matches;

@@ -559,8 +559,7 @@ export const popToRoute = (name: string, params?: Record<string, unknown>): void
 };
 
 // oxlint-disable-next-line typescript/unbound-method
-export const { useBuild, useLocation, useNavigate, useParams, useRoute, useRouter } =
-	createRouterHooks(routes);
+export const { useLocation, useNavigate, useParams, useRoute, useRouter } = createRouterHooks(routes);
 
 export { useFocusEffect, useIsFocused } from '@oomfware/stacker';
 

@@ -1,10 +1,4 @@
-import {
-	type GestureResponderEvent,
-	Linking,
-	type NativeSyntheticEvent,
-	type TargetedEvent,
-	type TextStyle,
-} from 'react-native';
+import type { GestureResponderEvent, NativeSyntheticEvent, TargetedEvent, TextStyle } from 'react-native';
 
 import { sanitizeUrl } from '@braintree/sanitize-url';
 
@@ -257,74 +251,6 @@ export function InlineLinkText({
 			]}
 			role="link"
 			onPress={download ? undefined : onPress}
-			accessibilityRole="link"
-			{...webLinkProps({
-				download,
-				href,
-				isExternal,
-				onMouseEnter: () => {
-					rest.onMouseEnter?.();
-					onInteract();
-				},
-				onMouseLeave: () => {
-					rest.onMouseLeave?.();
-					onInteractOut();
-				},
-				onFocus: (e: NativeSyntheticEvent<TargetedEvent>) => {
-					rest.onFocus?.(e);
-					onInteract();
-				},
-				onBlur: (e: NativeSyntheticEvent<TargetedEvent>) => {
-					rest.onBlur?.(e);
-					onInteractOut();
-				},
-			})}
-		>
-			{children}
-		</Text>
-	);
-}
-
-/** A barebones version of `InlineLinkText`, for use outside a router context. */
-export function SimpleInlineLinkText({
-	children,
-	to,
-	style,
-	download,
-	selectable,
-	label,
-	disableUnderline,
-	onPress: outerOnPress,
-	...rest
-}: Omit<InlineLinkProps, 'action' | 'disableMismatchWarning' | 'to'> & {
-	to: string;
-}) {
-	const t = useTheme();
-	const { state: interacted, onIn: onInteract, onOut: onInteractOut } = useInteractionState();
-	const flattenedStyle = flatten(style) || {};
-	const isExternal = isExternalUrl(to);
-
-	const href = to;
-
-	const onPress = (e: GestureResponderEvent) => {
-		const exitEarlyIfFalse = outerOnPress?.(e);
-		if (exitEarlyIfFalse === false) return;
-		void Linking.openURL(href);
-	};
-
-	return (
-		<Text
-			selectable={selectable}
-			accessibilityHint=""
-			accessibilityLabel={label}
-			{...rest}
-			style={[
-				{ color: t.palette.primary_500 },
-				interacted && !disableUnderline && underlineStyle(flattenedStyle.color ?? t.palette.primary_500),
-				flattenedStyle,
-			]}
-			role="link"
-			onPress={onPress}
 			accessibilityRole="link"
 			{...webLinkProps({
 				download,
