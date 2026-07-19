@@ -828,7 +828,7 @@ function AdditionalPostText({ post }: { post?: AppBskyFeedDefs.PostView }) {
 				</Text>
 			)}
 
-			<MediaPreview.Embed embed={post.embed} style={{ marginLeft: 2, marginTop: 5, opacity: 0.8 }} />
+			<MediaPreview.Embed embed={post.embed} className={css.additionalPostEmbed} />
 		</>
 	);
 }

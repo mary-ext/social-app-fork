@@ -195,7 +195,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 								numberOfLines={3}
 							/>
 						)}
-						<MediaPreview.Embed embed={post.embed} style={a.mt_sm} />
+						<MediaPreview.Embed embed={post.embed} className={css.embed} />
 					</ContentHider>
 				</View>
 			);

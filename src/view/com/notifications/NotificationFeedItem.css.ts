@@ -146,6 +146,12 @@ export const additionalWrap = style({
 	paddingTop: 2,
 });
 
+export const additionalPostEmbed = style({
+	marginTop: 5,
+	marginLeft: 2,
+	opacity: 0.8,
+});
+
 export const feedCardWrap = style({
 	paddingTop: 6,
 });
