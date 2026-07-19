@@ -15,6 +15,16 @@ Vanilla Extract.
 - typecheck with `pnpm typecheck` (tsc)
 - check `pnpm view <package>` before adding a new dependency
 
+### browser automation
+
+`mise.toml` preconfigures agent-browser with a single persistent, authenticated browser profile
+shared across browser sessions.
+
+Chrome locks a profile to one browser session at a time, so when a test doesn't require access to an
+account, run one invocation without it:
+
+    env -u AGENT_BROWSER_PROFILE agent-browser open <url>
+
 ### code writing
 
 #### formatting

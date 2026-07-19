@@ -1,3 +1,6 @@
 [tools]
 node = "24"
 pnpm = "11"
+
+[env]
+_.source = 'scripts/agent-browser-env.sh'
