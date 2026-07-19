@@ -1,19 +1,10 @@
-import {
-	ScrollView,
-	type ScrollViewProps,
-	type StyleProp,
-	View,
-	type ViewProps,
-	type ViewStyle,
-} from 'react-native';
+import { ScrollView, type ScrollViewProps, type StyleProp, View, type ViewStyle } from 'react-native';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { CENTER_COLUMN_WIDTH } from '#/components/Layout/const';
+import { atoms as a, useTheme } from '#/alf';
 
 export * from '#/components/Layout/const';
 export * as Header from '#/components/Layout/Header';
@@ -87,28 +78,7 @@ export function Content({
 			contentContainerStyle={[contentContainerStyle]}
 			{...props}
 		>
-			<Center>{children}</Center>
-		</ScrollView>
-	);
-}
-
-/** Utility component to center content within the screen */
-export function Center({ children, style, ...props }: ViewProps) {
-	const { gtMobile } = useBreakpoints();
-	const { isWithinSplitView } = useIsWithinSplitView();
-	return (
-		<View
-			style={[
-				a.w_full,
-				!isWithinSplitView && a.mx_auto,
-				gtMobile && {
-					maxWidth: CENTER_COLUMN_WIDTH,
-				},
-				style,
-			]}
-			{...props}
-		>
 			{children}
-		</View>
+		</ScrollView>
 	);
 }

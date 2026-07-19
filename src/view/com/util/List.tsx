@@ -27,8 +27,6 @@ import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/co
 
 import { useTheme } from '#/alf';
 
-import * as Layout from '#/components/Layout';
-
 export type ListMethods = {
 	scrollToTop: () => void;
 	scrollToOffset: (options: { animated?: boolean; offset: number }) => void;
@@ -373,55 +371,53 @@ export function List<ItemT = unknown>({
 					styles.parentTreeVisibilityDetector
 				}
 			/>
-			<Layout.Center>
-				<View
-					ref={containerRef}
-					style={[
-						contentContainerStyle,
-						desktopFixedHeight && !disableFullWindowScroll ? styles.minHeightViewport : null,
-					]}
-				>
-					<Visibility
+			<View
+				ref={containerRef}
+				style={[
+					contentContainerStyle,
+					desktopFixedHeight && !disableFullWindowScroll ? styles.minHeightViewport : null,
+				]}
+			>
+				<Visibility
+					root={disableFullWindowScroll ? nativeRef : null}
+					onVisibleChange={handleAboveTheFoldVisibleChange}
+					style={[styles.aboveTheFoldDetector, { height: headerOffset }]}
+				/>
+				{onStartReached && !isEmpty && (
+					<EdgeVisibility
 						root={disableFullWindowScroll ? nativeRef : null}
-						onVisibleChange={handleAboveTheFoldVisibleChange}
-						style={[styles.aboveTheFoldDetector, { height: headerOffset }]}
+						onVisibleChange={onHeadVisibilityChange}
+						topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
+						containerRef={containerRef}
 					/>
-					{onStartReached && !isEmpty && (
-						<EdgeVisibility
-							root={disableFullWindowScroll ? nativeRef : null}
-							onVisibleChange={onHeadVisibilityChange}
-							topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
-							containerRef={containerRef}
-						/>
-					)}
-					{headerComponent}
-					{isEmpty
-						? emptyComponent
-						: (data as Array<ItemT>)?.map((item, index) => {
-								const key = keyExtractor!(item, index);
-								return (
-									<Row<ItemT>
-										key={key}
-										item={item}
-										index={index}
-										renderItem={renderItem}
-										extraData={extraData}
-										onItemSeen={onItemSeen}
-										registerRowNode={registerRowNode}
-									/>
-								);
-							})}
-					{onEndReached && !isEmpty && (
-						<EdgeVisibility
-							root={disableFullWindowScroll ? nativeRef : null}
-							onVisibleChange={onTailVisibilityChange}
-							bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-							containerRef={containerRef}
-						/>
-					)}
-					{footerComponent}
-				</View>
-			</Layout.Center>
+				)}
+				{headerComponent}
+				{isEmpty
+					? emptyComponent
+					: (data as Array<ItemT>)?.map((item, index) => {
+							const key = keyExtractor!(item, index);
+							return (
+								<Row<ItemT>
+									key={key}
+									item={item}
+									index={index}
+									renderItem={renderItem}
+									extraData={extraData}
+									onItemSeen={onItemSeen}
+									registerRowNode={registerRowNode}
+								/>
+							);
+						})}
+				{onEndReached && !isEmpty && (
+					<EdgeVisibility
+						root={disableFullWindowScroll ? nativeRef : null}
+						onVisibleChange={onTailVisibilityChange}
+						bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
+						containerRef={containerRef}
+					/>
+				)}
+				{footerComponent}
+			</View>
 		</View>
 	);
 }

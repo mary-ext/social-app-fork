@@ -110,7 +110,7 @@ function ProfileListScreenInner() {
 				<Layout.Header.Content />
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<Layout.Content centerContent contentContainerStyle={[a.mx_auto]}>
+			<Layout.Content centerContent>
 				<Spinner color="default" label={m['common.status.loading']()} size="3xl" />
 			</Layout.Content>
 		</>
@@ -211,7 +211,7 @@ function ProfileListScreenLoaded({
 			</Hider.Mask>
 			<Hider.Content>
 				<View style={[a.util_screen_outer]}>
-					<Layout.Center style={[a.border_b, t.atoms.border_contrast_low]}>{renderHeader()}</Layout.Center>
+					<View style={[a.border_b, t.atoms.border_contrast_low]}>{renderHeader()}</View>
 					<AboutSection list={list} onPressAddUser={onPressAddUser} />
 					<FAB
 						icon={<EditBigIcon size="xl" fill={colors.white} />}

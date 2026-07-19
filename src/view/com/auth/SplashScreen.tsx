@@ -11,7 +11,6 @@ import { atoms as a, useTheme } from '#/alf';
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { Button, ButtonText } from '#/components/Button';
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
-import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
@@ -45,7 +44,7 @@ export const SplashScreen = ({
 					<TimesIcon size="xl" style={t.atoms.text} />
 				</Pressable>
 			)}
-			<Layout.Center style={[a.h_full, a.flex_1]}>
+			<View style={[a.h_full, a.flex_1]}>
 				<View
 					testID="noSessionView"
 					style={[
@@ -92,7 +91,7 @@ export const SplashScreen = ({
 					</ErrorBoundary>
 				</View>
 				<Footer />
-			</Layout.Center>
+			</View>
 		</>
 	);
 };

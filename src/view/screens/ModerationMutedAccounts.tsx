@@ -81,39 +81,37 @@ export function ModerationMutedAccounts() {
 				</Layout.Header.Content>
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<Layout.Center>
-				{isEmpty ? (
-					<View>
-						<Info style={[a.border_b]} />
-						{isError ? (
-							<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
-						) : (
-							<Empty />
-						)}
-					</View>
-				) : (
-					<List
-						data={profiles}
-						keyExtractor={(item) => item.did}
-						refreshing={isPTRing}
-						onRefresh={() => void onRefresh()}
-						onEndReached={() => void onEndReached()}
-						renderItem={renderItem}
-						initialNumToRender={15}
-						// FIXME(dan)
+			{isEmpty ? (
+				<View>
+					<Info style={[a.border_b]} />
+					{isError ? (
+						<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
+					) : (
+						<Empty />
+					)}
+				</View>
+			) : (
+				<List
+					data={profiles}
+					keyExtractor={(item) => item.did}
+					refreshing={isPTRing}
+					onRefresh={() => void onRefresh()}
+					onEndReached={() => void onEndReached()}
+					renderItem={renderItem}
+					initialNumToRender={15}
+					// FIXME(dan)
 
-						ListHeaderComponent={Info}
-						ListFooterComponent={
-							<ListFooter
-								isFetchingNextPage={isFetchingNextPage}
-								hasNextPage={hasNextPage}
-								error={cleanError(error)}
-								onRetry={fetchNextPage}
-							/>
-						}
-					/>
-				)}
-			</Layout.Center>
+					ListHeaderComponent={Info}
+					ListFooterComponent={
+						<ListFooter
+							isFetchingNextPage={isFetchingNextPage}
+							hasNextPage={hasNextPage}
+							error={cleanError(error)}
+							onRetry={fetchNextPage}
+						/>
+					}
+				/>
+			)}
 		</Layout.Screen>
 	);
 }

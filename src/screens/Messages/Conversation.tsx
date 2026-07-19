@@ -87,9 +87,9 @@ function Inner({ convoId }: { convoId: string }) {
 	if (convoState.status === ConvoStatus.Error) {
 		return (
 			<>
-				<Layout.Center style={[a.w_full]}>
+				<View style={[a.w_full]}>
 					<MessagesListHeader convo={convo} />
-				</Layout.Center>
+				</View>
 				<Error
 					title={m['common.error.generic']()}
 					message={m['screens.messages.conversation.loadError']()}
@@ -100,17 +100,15 @@ function Inner({ convoId }: { convoId: string }) {
 	}
 
 	return (
-		<Layout.Center style={[a.flex_1]}>
-			<View style={[a.flex_1]}>
-				<InnerReady
-					convo={convo}
-					hasScrolled={hasScrolled}
-					setHasScrolled={setHasScrolled}
-					isActive={isConvoActive(convoState)}
-					isDisabled={convoState.status === ConvoStatus.Disabled}
-				/>
-			</View>
-		</Layout.Center>
+		<View style={[a.flex_1]}>
+			<InnerReady
+				convo={convo}
+				hasScrolled={hasScrolled}
+				setHasScrolled={setHasScrolled}
+				isActive={isConvoActive(convoState)}
+				isDisabled={convoState.status === ConvoStatus.Disabled}
+			/>
+		</View>
 	);
 }
 

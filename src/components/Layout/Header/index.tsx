@@ -12,11 +12,7 @@ import { atoms as a, type TextStyleProp, useBreakpoints, useGutters, useTheme } 
 import { Button, ButtonIcon, type ButtonProps } from '#/components/Button';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
 import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu';
-import {
-	BUTTON_VISUAL_ALIGNMENT_OFFSET,
-	CENTER_COLUMN_WIDTH,
-	HEADER_SLOT_SIZE,
-} from '#/components/Layout/const';
+import { BUTTON_VISUAL_ALIGNMENT_OFFSET, HEADER_SLOT_SIZE } from '#/components/Layout/const';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
@@ -39,7 +35,6 @@ export function Outer({
 }) {
 	const t = useTheme();
 	const gutters = useGutters([0, 'base']);
-	const { gtMobile } = useBreakpoints();
 	const { isWithinLeftPanel } = useIsWithinSplitView();
 
 	return (
@@ -56,7 +51,6 @@ export function Outer({
 				a.py_xs,
 				{ minHeight: 52 },
 				t.atoms.border_contrast_low,
-				gtMobile && [a.mx_auto, { maxWidth: CENTER_COLUMN_WIDTH }],
 			]}
 		>
 			{children}

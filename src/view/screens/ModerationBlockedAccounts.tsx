@@ -70,46 +70,44 @@ export function ModerationBlockedAccounts() {
 
 	return (
 		<Layout.Screen testID="blockedAccountsScreen">
-			<Layout.Center>
-				<Layout.Header.Outer>
-					<Layout.Header.BackButton />
-					<Layout.Header.Content>
-						<Layout.Header.TitleText>{m['common.block.accountsTitle']()}</Layout.Header.TitleText>
-					</Layout.Header.Content>
-					<Layout.Header.Slot />
-				</Layout.Header.Outer>
-				{isEmpty ? (
-					<View>
-						<Info style={[a.border_b]} />
-						{isError ? (
-							<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
-						) : (
-							<Empty />
-						)}
-					</View>
-				) : (
-					<List
-						data={profiles}
-						keyExtractor={(item: ActorDefs.ProfileView) => item.did}
-						refreshing={isPTRing}
-						onRefresh={() => void onRefresh()}
-						onEndReached={() => void onEndReached()}
-						renderItem={renderItem}
-						initialNumToRender={15}
-						// FIXME(dan)
+			<Layout.Header.Outer>
+				<Layout.Header.BackButton />
+				<Layout.Header.Content>
+					<Layout.Header.TitleText>{m['common.block.accountsTitle']()}</Layout.Header.TitleText>
+				</Layout.Header.Content>
+				<Layout.Header.Slot />
+			</Layout.Header.Outer>
+			{isEmpty ? (
+				<View>
+					<Info style={[a.border_b]} />
+					{isError ? (
+						<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
+					) : (
+						<Empty />
+					)}
+				</View>
+			) : (
+				<List
+					data={profiles}
+					keyExtractor={(item: ActorDefs.ProfileView) => item.did}
+					refreshing={isPTRing}
+					onRefresh={() => void onRefresh()}
+					onEndReached={() => void onEndReached()}
+					renderItem={renderItem}
+					initialNumToRender={15}
+					// FIXME(dan)
 
-						ListHeaderComponent={Info}
-						ListFooterComponent={
-							<ListFooter
-								isFetchingNextPage={isFetchingNextPage}
-								hasNextPage={hasNextPage}
-								error={cleanError(error)}
-								onRetry={fetchNextPage}
-							/>
-						}
-					/>
-				)}
-			</Layout.Center>
+					ListHeaderComponent={Info}
+					ListFooterComponent={
+						<ListFooter
+							isFetchingNextPage={isFetchingNextPage}
+							hasNextPage={hasNextPage}
+							error={cleanError(error)}
+							onRetry={fetchNextPage}
+						/>
+					}
+				/>
+			)}
 		</Layout.Screen>
 	);
 }
