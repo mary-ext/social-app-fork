@@ -4,6 +4,8 @@ import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
+const belowTablet = '(width < 1300px)';
+
 export const heightVar = createVar();
 
 export const footer = recipe(
@@ -54,3 +56,33 @@ export const errorText = style({
 	flex: 1,
 	minWidth: 0,
 });
+
+export const placeholderLoading = recipe(
+	{
+		base: {
+			boxSizing: 'border-box',
+			display: 'flex',
+			flexDirection: 'column',
+			alignItems: 'center',
+			height: '100vh',
+			paddingTop: 175,
+			paddingBottom: 110,
+		},
+		variants: {
+			topBorder: {
+				false: {},
+				true: {
+					'@media': {
+						[belowTablet]: {
+							borderTopWidth: 1,
+							borderTopStyle: 'solid',
+							borderTopColor: colors.borderContrastLow,
+						},
+					},
+				},
+			},
+		},
+		defaultVariants: { topBorder: false },
+	},
+	{ debugId: 'placeholderLoading' },
+);

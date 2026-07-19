@@ -1,14 +1,9 @@
-import { View } from 'react-native';
-
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { cleanError } from '#/lib/strings/errors';
 
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-import { CenteredView } from '#/view/com/util/Views';
-
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Error } from '#/components/Error';
 import * as css from '#/components/Lists.css';
@@ -108,26 +103,11 @@ function ListMaybePlaceholder({
 	emptyStateButton?: EmptyStateButtonProps;
 	useEmptyState?: boolean;
 }): React.ReactNode {
-	const t = useTheme();
-	const { gtMobile, gtTablet } = useBreakpoints();
-
 	if (isLoading) {
 		return (
-			<CenteredView
-				style={[
-					a.h_full_vh,
-					a.align_center,
-					!gtMobile ? a.justify_between : a.gap_5xl,
-					t.atoms.border_contrast_low,
-					{ paddingTop: 175, paddingBottom: 110 },
-				]}
-				sideBorders={sideBorders ?? gtMobile}
-				topBorder={topBorder && !gtTablet}
-			>
-				<View style={[a.w_full, a.align_center, { top: 100 }]}>
-					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
-				</View>
-			</CenteredView>
+			<div className={css.placeholderLoading({ topBorder })}>
+				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+			</div>
 		);
 	}
 
@@ -146,16 +126,14 @@ function ListMaybePlaceholder({
 
 	if (useEmptyState) {
 		return (
-			<CenteredView style={[t.atoms.border_contrast_low]} sideBorders={sideBorders ?? gtMobile}>
-				<EmptyState
-					icon={emptyStateIcon}
-					message={
-						emptyMessage ??
-						(emptyType === 'results' ? m['common.list.noResults']() : m['common.error.pageNotFound']())
-					}
-					button={emptyStateButton}
-				/>
-			</CenteredView>
+			<EmptyState
+				icon={emptyStateIcon}
+				message={
+					emptyMessage ??
+					(emptyType === 'results' ? m['common.list.noResults']() : m['common.error.pageNotFound']())
+				}
+				button={emptyStateButton}
+			/>
 		);
 	}
 
