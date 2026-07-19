@@ -18,8 +18,7 @@ Vanilla Extract.
 ### browser automation
 
 `mise.toml` preconfigures agent-browser with a single persistent, authenticated browser profile
-shared across browser sessions. though if dev server opens on another port than :19006, copy the
-localStorage values from the :19006 origin to the new one.
+shared across browser sessions.
 
 Chrome locks a profile to one browser session at a time. if a test doesn't require access to an
 account, run one invocation without the profile:
@@ -28,6 +27,9 @@ account, run one invocation without the profile:
 
 if the test does need the account, use the profile normally, but if the profile is already locked by
 another session, stop and report to the user rather than waiting or forcing it.
+
+if dev server opens on another port than :19006, copy the localStorage values from the :19006 origin
+to the new one.
 
 ### code writing
 
