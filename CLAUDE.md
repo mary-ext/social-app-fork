@@ -44,7 +44,7 @@ to the new one.
   imports, etc.) alphabetically. reserve other orderings for cases where order carries meaning —
   semantic precedence, an external spec, or similar. if you encounter an unordered list while
   editing nearby code, reorder it as part of the change.
-  - CSS properties is exempted, it should be in concentric order instead.
+  - CSS properties is exempted, it should be in outside-in concentric order instead.
 
 #### control flow and structure
 
