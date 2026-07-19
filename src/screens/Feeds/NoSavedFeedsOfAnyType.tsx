@@ -1,11 +1,5 @@
 import { View } from 'react-native';
 
-import * as TID from '@atcute/tid';
-
-import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
-
-import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
@@ -15,23 +9,21 @@ import { Text } from '#/components/Typography';
 import { m } from '#/paraglide/messages';
 
 /**
- * warns the user that this action will overwrite all saved feeds. present this only if the user has no other
- * saved feeds.
+ * banner shown when the user has no saved feeds of any type, offering to apply the recommended set. present
+ * this only if the user has no other saved feeds.
+ *
+ * @param disabled disables the apply button, e.g. while a save is in flight
+ * @param onAddRecommendedFeeds invoked when the user applies the recommended feeds; the caller decides
+ *   whether that persists immediately or stages into an unsaved draft
  */
-export function NoSavedFeedsOfAnyType({ onAddRecommendedFeeds }: { onAddRecommendedFeeds?: () => void }) {
+export function NoSavedFeedsOfAnyType({
+	disabled,
+	onAddRecommendedFeeds,
+}: {
+	disabled?: boolean;
+	onAddRecommendedFeeds: () => void;
+}) {
 	const t = useTheme();
-	const { isPending, mutateAsync: overwriteSavedFeeds } = useOverwriteSavedFeedsMutation();
-
-	const addRecommendedFeeds = async () => {
-		onAddRecommendedFeeds?.();
-		await overwriteSavedFeeds(
-			// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate the shared constant
-			RECOMMENDED_SAVED_FEEDS.map((f) => ({
-				...f,
-				id: TID.now(),
-			})),
-		);
-	};
 
 	return (
 		<View style={[a.flex_row, a.flex_wrap, a.justify_between, a.p_xl, a.gap_md]}>
@@ -39,11 +31,11 @@ export function NoSavedFeedsOfAnyType({ onAddRecommendedFeeds }: { onAddRecommen
 				{m['screens.feeds.noSaved']()}
 			</Text>
 			<Button
-				disabled={isPending}
+				disabled={disabled}
 				label={m['common.feeds.action.applyRecommended']()}
 				size="small"
 				color="primary_subtle"
-				onPress={() => void addRecommendedFeeds()}
+				onPress={onAddRecommendedFeeds}
 			>
 				<ButtonIcon icon={Plus} />
 				<ButtonText>{m['screens.feeds.action.useRecommended']()}</ButtonText>

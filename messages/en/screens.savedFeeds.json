@@ -4,6 +4,7 @@
 	"screens.savedFeeds.about.guide": "See this guide",
 	"screens.savedFeeds.pinned.empty": "You don't have any pinned feeds.",
 	"screens.savedFeeds.pinned.title": "Pinned feeds",
+	"screens.savedFeeds.reorder.label": "Reorder feed",
 	"screens.savedFeeds.reorder.moveDown": "Move feed down",
 	"screens.savedFeeds.reorder.moveUp": "Move feed up",
 	"screens.savedFeeds.saved.empty": "You don't have any saved feeds.",

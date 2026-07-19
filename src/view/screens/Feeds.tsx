@@ -1,9 +1,11 @@
 import { type ComponentType, useMemo, useRef, useState } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import * as TID from '@atcute/tid';
 
 import debounce from 'lodash.debounce';
 
+import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
@@ -14,6 +16,7 @@ import {
 	useSavedFeeds,
 	useSearchPopularFeedsMutation,
 } from '#/state/queries/feed';
+import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
@@ -122,7 +125,20 @@ export function FeedsScreen() {
 		reset: resetSearch,
 	} = useSearchPopularFeedsMutation();
 
+	const { isPending: isOverwritePending, mutateAsync: overwriteSavedFeeds } =
+		useOverwriteSavedFeedsMutation();
+
 	const searchAnchorRef = useRef<HTMLDivElement>(null);
+
+	const applyRecommendedFeeds = () => {
+		void overwriteSavedFeeds(
+			// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate the shared constant
+			RECOMMENDED_SAVED_FEEDS.map((f) => ({
+				...f,
+				id: TID.now(),
+			})),
+		);
+	};
 
 	/** A search query is present. We may not have search results yet. */
 	const isUserSearching = query.length > 1;
@@ -269,7 +285,10 @@ export function FeedsScreen() {
 			case 'savedFeedNoResults':
 				return (
 					<div className={css.borderedSection}>
-						<NoSavedFeedsOfAnyType />
+						<NoSavedFeedsOfAnyType
+							disabled={isOverwritePending}
+							onAddRecommendedFeeds={applyRecommendedFeeds}
+						/>
 					</div>
 				);
 			case 'savedFeedPlaceholder':
