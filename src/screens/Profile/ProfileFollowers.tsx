@@ -112,7 +112,6 @@ function ProfileFollowers({ name, initialCount }: { name: string; initialCount?:
 				}
 				errorMessage={cleanError(resolveError || error)}
 				onRetry={isError ? refetch : undefined}
-				sideBorders={false}
 				useEmptyState={true}
 				emptyStateIcon={PeopleRemoveIcon}
 				emptyStateButton={{

@@ -127,7 +127,6 @@ function PostQuotes({ uri }: { uri: string }) {
 				emptyTitle={m['screens.postThread.engagement.quote.empty']()}
 				emptyMessage={m['screens.postThread.engagement.quote.emptyPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
-				sideBorders={false}
 			/>
 		);
 	}
@@ -156,7 +155,6 @@ function PostQuotes({ uri }: { uri: string }) {
 			desktopFixedHeight
 			initialNumToRender={initialNumToRender}
 			windowSize={11}
-			sideBorders={false}
 		/>
 	);
 }

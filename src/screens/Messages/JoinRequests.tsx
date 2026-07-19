@@ -72,7 +72,6 @@ function JoinRequestsInner() {
 					title={m['common.error.generic']()}
 					message={m['screens.messages.requests.error.load']()}
 					onRetry={() => convoState.error.retry()}
-					sideBorders={false}
 				/>
 			</>
 		);
@@ -340,7 +339,6 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				onEndReached={() => void onEndReached()}
 				onRefresh={() => void onRefresh()}
 				keyboardDismissMode="on-drag"
-				sideBorders={false}
 				desktopFixedHeight
 			/>
 			{showFooter ? footer : null}

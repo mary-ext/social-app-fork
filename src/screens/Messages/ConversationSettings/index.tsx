@@ -111,7 +111,6 @@ function SettingsInner({ convoId }: { convoId: string }) {
 				title={m['common.error.generic']()}
 				message={m['screens.messages.chatSettings.loadError']()}
 				onRetry={() => refetch()}
-				sideBorders={false}
 			/>
 		);
 	}

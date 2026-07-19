@@ -80,7 +80,6 @@ function ListMaybePlaceholder({
 	onRetry,
 	onGoBack,
 	hideBackButton,
-	sideBorders,
 	topBorder = false,
 	emptyStateIcon,
 	emptyStateButton,
@@ -97,7 +96,6 @@ function ListMaybePlaceholder({
 	onRetry?: () => Promise<unknown>;
 	onGoBack?: () => void;
 	hideBackButton?: boolean;
-	sideBorders?: boolean;
 	topBorder?: boolean;
 	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
 	emptyStateButton?: EmptyStateButtonProps;
@@ -118,7 +116,6 @@ function ListMaybePlaceholder({
 				message={errorMessage ?? m['common.error.generic']()}
 				onRetry={onRetry}
 				onGoBack={onGoBack}
-				sideBorders={sideBorders}
 				hideBackButton={hideBackButton}
 			/>
 		);
@@ -148,7 +145,6 @@ function ListMaybePlaceholder({
 				onRetry={onRetry}
 				onGoBack={onGoBack}
 				hideBackButton={hideBackButton}
-				sideBorders={sideBorders}
 			/>
 		);
 	}

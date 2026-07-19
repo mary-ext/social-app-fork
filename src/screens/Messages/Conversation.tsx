@@ -94,7 +94,6 @@ function Inner({ convoId }: { convoId: string }) {
 					title={m['common.error.generic']()}
 					message={m['screens.messages.conversation.loadError']()}
 					onRetry={() => convoState.error.retry()}
-					sideBorders={false}
 				/>
 			</>
 		);

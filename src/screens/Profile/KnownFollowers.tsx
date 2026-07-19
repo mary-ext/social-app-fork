@@ -90,7 +90,6 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 				errorMessage={cleanError(resolveError || error)}
 				onRetry={isError ? refetch : undefined}
 				topBorder={false}
-				sideBorders={false}
 			/>
 		);
 	}

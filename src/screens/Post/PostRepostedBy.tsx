@@ -94,7 +94,6 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 				emptyTitle={m['screens.postThread.engagement.repost.empty']()}
 				emptyMessage={m['screens.postThread.engagement.repost.emptyPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
-				sideBorders={false}
 			/>
 		);
 	}

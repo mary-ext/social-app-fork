@@ -51,7 +51,6 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 				emptyTitle={m['common.like.empty']()}
 				emptyMessage={m['common.like.emptyPrompt']()}
 				errorMessage={cleanError(resolveError || error)}
-				sideBorders={false}
 				topBorder={false}
 			/>
 		);

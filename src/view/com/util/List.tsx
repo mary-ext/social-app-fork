@@ -67,8 +67,6 @@ export type ListProps<ItemT = unknown> = Omit<
 	desktopFixedHeight?: number | boolean;
 	// Web only prop to contain the scroll to the container rather than the window
 	disableFullWindowScroll?: boolean;
-	/** @deprecated Should be using Layout components */
-	sideBorders?: boolean;
 };
 export type ListRef = React.RefObject<ListMethods | null>;
 

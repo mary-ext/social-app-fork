@@ -494,7 +494,6 @@ export function MessagesList({
 								keyboardShouldPersistTaps="handled"
 								maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
 								removeClippedSubviews={false}
-								sideBorders={false}
 								onContentSizeChange={onContentSizeChange}
 								onStartReached={onStartReached}
 								onScrollToIndexFailed={onScrollToIndexFailed}
