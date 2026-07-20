@@ -200,7 +200,7 @@ const MessagesSplitViewLayout = lazy(() =>
 );
 
 const NotFoundScreen = lazy(() =>
-	import('#/view/screens/NotFound').then((mod) => ({ default: mod.NotFoundScreen })),
+	import('#/screens/NotFound').then((mod) => ({ default: mod.NotFoundScreen })),
 );
 
 // lazy to break the static import cycle with the shell chrome, which imports back from `#/routes`.
@@ -531,6 +531,12 @@ export const routes = defineRoutes({
 				meta: { requireAuth: true },
 				path: '/sys/log',
 			}),
+
+			NotFound: route({
+				component: NotFoundScreen,
+				params: { rest: string() },
+				path: '/*rest',
+			}),
 		},
 	}),
 });
@@ -543,7 +549,6 @@ export const routes = defineRoutes({
 export const router = new Router({
 	defaultFallback: <RouteLoadingScreen />,
 	history: new NavigationHistory(),
-	notFound: NotFoundScreen,
 	pins: ['Home', 'Messages', 'Notifications'],
 	routes,
 });

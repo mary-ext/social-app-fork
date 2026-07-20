@@ -121,8 +121,8 @@ importers:
         specifier: ^0.1.8
         version: 0.1.8(@base-ui/react@1.6.0(patch_hash=5e1a53d17620466ec86d924f87c34acd336985dff55ea0c465442ad013fbcba0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@oomfware/stacker':
-        specifier: ^0.1.0
-        version: 0.1.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@oomfware/tug':
         specifier: ^0.2.0
         version: 0.2.0
@@ -1074,8 +1074,8 @@ packages:
       '@base-ui/react':
         optional: true
 
-  '@oomfware/stacker@0.1.0':
-    resolution: {integrity: sha512-L8QMJxr3+q0NJcuLSxBvD2f5b1ETr7WmyH8AeZNQtAnf21d/eOUQ3BB6Y0Zdj1ximXKCyZpDQyAUI5CItHo9OQ==}
+  '@oomfware/stacker@0.1.1':
+    resolution: {integrity: sha512-B+yXc32YlWRXxqX0OMJLzJ/KcXsDld9FKXUMU51NZNQ+BHnRfUNwHWbNM/Lc0khudbRZMcwhJR0LWeInf0VrqQ==}
     peerDependencies:
       react: '>=19.0.0'
       react-dom: '>=19.0.0'
@@ -4338,7 +4338,7 @@ snapshots:
     optionalDependencies:
       '@base-ui/react': 1.6.0(patch_hash=5e1a53d17620466ec86d924f87c34acd336985dff55ea0c465442ad013fbcba0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
-  '@oomfware/stacker@0.1.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@oomfware/stacker@0.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@mary-ext/simple-event-emitter': 1.0.2
       react: 19.2.7
