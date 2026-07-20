@@ -1,7 +1,6 @@
-import { useWindowDimensions } from 'react-native';
-
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
+import { useViewportSize } from '#/lib/viewport';
 
 const MIN_POST_HEIGHT = 100;
 
@@ -9,7 +8,7 @@ export function useInitialNumToRender({
 	minItemHeight = MIN_POST_HEIGHT,
 	screenHeightOffset = 0,
 }: { minItemHeight?: number; screenHeightOffset?: number } = {}) {
-	const { height: screenHeight } = useWindowDimensions();
+	const { height: screenHeight } = useViewportSize();
 	const { top: topInset } = useSafeAreaInsets();
 	const bottomBarHeight = useBottomBarOffset();
 

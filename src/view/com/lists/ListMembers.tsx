@@ -1,10 +1,11 @@
 import { type JSX, useState } from 'react';
-import { Dimensions, type StyleProp, View, type ViewStyle } from 'react-native';
+import { type StyleProp, View, type ViewStyle } from 'react-native';
 
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { cleanError } from '#/lib/strings/errors';
+import { getViewportSize } from '#/lib/viewport';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useListMembersQuery } from '#/state/queries/list-members';
@@ -184,7 +185,7 @@ export function ListMembers({
 				onRefresh={() => void onRefresh()}
 				headerOffset={headerOffset}
 				contentContainerStyle={{
-					minHeight: Dimensions.get('window').height * 1.5,
+					minHeight: getViewportSize().height * 1.5,
 				}}
 				onScrolledDownChange={onScrolledDownChange}
 				onEndReached={() => void onEndReached()}
