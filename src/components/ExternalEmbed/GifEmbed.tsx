@@ -4,6 +4,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
+import { onVisibilityChange } from '#/lib/visibility';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import * as Prompt from '#/components/Prompt';
@@ -33,14 +34,12 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 
 	// resume playback when the tab returns to the foreground.
 	useEffect(() => {
-		const onVisibilityChange = () => {
+		return onVisibilityChange((visible) => {
 			const video = videoRef.current;
-			if (document.visibilityState === 'visible' && !autoplayDisabled && video?.paused) {
+			if (visible && !autoplayDisabled && video?.paused) {
 				void video.play();
 			}
-		};
-		document.addEventListener('visibilitychange', onVisibilityChange);
-		return () => document.removeEventListener('visibilitychange', onVisibilityChange);
+		});
 	}, [autoplayDisabled]);
 
 	const onPress = () => {

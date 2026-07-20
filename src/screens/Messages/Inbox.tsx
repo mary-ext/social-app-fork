@@ -1,15 +1,10 @@
-import { useCallback } from 'react';
-
 import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDefs } from '@atcute/bluesky';
 
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
-import { useAppState } from '#/lib/appState';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
-import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
-import { useMessagesEventBus } from '#/state/messages/events';
 import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts';
 import { useListConvoRequests } from '#/state/queries/messages/list-conversation-requests';
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
@@ -32,7 +27,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useNavigate, useRouter } from '#/routes';
+import { useNavigate, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
@@ -40,6 +35,7 @@ import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
 import { RequestListItem } from './components/RequestListItem';
 import { useIsWithinSplitView } from './components/splitView/context';
 import * as css from './Inbox.css';
+import { useRequestMessagePollInterval } from './use-request-poll-interval';
 
 const REQUEST_ITEM_HEIGHT_ESTIMATE = 130;
 
@@ -94,19 +90,7 @@ function RequestList({
 	const router = useRouter();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
-	// Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
-	// but only when the screen is active
-	const messagesBus = useMessagesEventBus();
-	const state = useAppState();
-	const isActive = state === 'active';
-	useFocusEffect(
-		useCallback(() => {
-			if (isActive) {
-				const unsub = messagesBus.requestPollInterval(MESSAGE_SCREEN_POLL_INTERVAL);
-				return () => unsub();
-			}
-		}, [messagesBus, isActive]),
-	);
+	useRequestMessagePollInterval();
 
 	const { isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		listConvosQuery;

@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
-import { AppState, type AppStateStatus } from 'react-native';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
@@ -9,6 +8,7 @@ import throttle from 'lodash.throttle';
 
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
 import { useConstant } from '#/lib/hooks/use-constant';
+import { onVisibilityChange } from '#/lib/visibility';
 
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
 import type { FeedDescriptor, FeedPostSliceItem } from '#/state/queries/post-feed';
@@ -110,12 +110,11 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		if (!enabled) {
 			return;
 		}
-		const sub = AppState.addEventListener('change', (state: AppStateStatus) => {
-			if (state === 'background') {
+		return onVisibilityChange((visible) => {
+			if (!visible) {
 				sendToFeed.flush();
 			}
 		});
-		return () => sub.remove();
 	}, [enabled, sendToFeed]);
 
 	const onItemSeen = useCallback(

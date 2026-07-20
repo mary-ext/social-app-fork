@@ -6,8 +6,8 @@ import type { Did } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useAppState } from '#/lib/appState';
 import { useConstant } from '#/lib/hooks/use-constant';
+import { useIsDocumentVisible } from '#/lib/visibility';
 
 import { Convo } from '#/state/messages/convo/agent';
 import type {
@@ -110,11 +110,10 @@ function ConvoProviderInner({
 	const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot);
 	const { mutate: markAsRead } = useMarkAsReadMutation();
 
-	const appState = useAppState();
-	const isActive = appState === 'active';
+	const isVisible = useIsDocumentVisible();
 	useFocusEffect(
 		useCallback(() => {
-			if (isActive) {
+			if (isVisible) {
 				convo.resume();
 				markAsRead({ convoId });
 
@@ -123,7 +122,7 @@ function ConvoProviderInner({
 					markAsRead({ convoId });
 				};
 			}
-		}, [isActive, convo, convoId, markAsRead]),
+		}, [isVisible, convo, convoId, markAsRead]),
 	);
 
 	useEffect(() => {

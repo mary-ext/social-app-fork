@@ -2,13 +2,10 @@ import { type ComponentProps, useCallback, useEffect, useRef } from 'react';
 
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { useAppState } from '#/lib/appState';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { softReset } from '#/state/events';
-import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
-import { useMessagesEventBus } from '#/state/messages/events';
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
@@ -43,7 +40,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useIsFocused, useNavigate } from '#/routes';
+import { useIsFocused, useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './ChatList.css';
@@ -53,6 +50,7 @@ import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlacehol
 import { InboxRequests } from './components/InboxRequests';
 import { useIsWithinSplitView } from './components/splitView/context';
 import { splitViewLeftScroll } from './components/splitView/leftColumnScroll';
+import { useRequestMessagePollInterval } from './use-request-poll-interval';
 
 const CHAT_ITEM_HEIGHT_ESTIMATE = 78;
 
@@ -84,17 +82,7 @@ export function MessagesScreen() {
 
 	useTitle(m['navigation.chat.title']());
 
-	const messagesBus = useMessagesEventBus();
-	const state = useAppState();
-	const isActive = state === 'active';
-	useFocusEffect(
-		useCallback(() => {
-			if (isActive) {
-				const unsub = messagesBus.requestPollInterval(MESSAGE_SCREEN_POLL_INTERVAL);
-				return () => unsub();
-			}
-		}, [messagesBus, isActive]),
-	);
+	useRequestMessagePollInterval();
 
 	const onNewChat = (conversation: string) => navigate('MessagesConversation', { conversation });
 

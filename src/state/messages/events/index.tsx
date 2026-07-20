@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect } from 'react';
-import { AppState } from 'react-native';
 
 import type { Client } from '@atcute/client';
 
 import { useConstant } from '#/lib/hooks/use-constant';
+import { onVisibilityChange } from '#/lib/visibility';
 
 import { MessagesEventBus } from '#/state/messages/events/agent';
 import { useClients, useSession } from '#/state/session';
@@ -42,19 +42,13 @@ function MessagesEventBusProviderInner({ chat, children }: { chat: Client; child
 	}, [bus]);
 
 	useEffect(() => {
-		const handleAppStateChange = (nextAppState: string) => {
-			if (nextAppState === 'active') {
+		return onVisibilityChange((visible) => {
+			if (visible) {
 				bus.resume();
 			} else {
 				bus.background();
 			}
-		};
-
-		const sub = AppState.addEventListener('change', handleAppStateChange);
-
-		return () => {
-			sub.remove();
-		};
+		});
 	}, [bus]);
 
 	return <MessagesEventBusContext.Provider value={bus}>{children}</MessagesEventBusContext.Provider>;

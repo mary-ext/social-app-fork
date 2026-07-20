@@ -1,5 +1,3 @@
-import { AppState } from 'react-native';
-
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { focusManager, onlineManager, QueryClient } from '@tanstack/react-query';
 import {
@@ -10,6 +8,7 @@ import {
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
+import { isDocumentVisible } from '#/lib/visibility';
 
 import { networkConfirmed, networkLost } from '#/state/events';
 import { isQueryPersisted } from '#/state/queries/util';
@@ -77,7 +76,7 @@ function checkIsOnlineIfNeeded() {
 }
 
 setInterval(() => {
-	if (AppState.currentState === 'active') {
+	if (isDocumentVisible()) {
 		if (!onlineManager.isOnline() || isNetworkStateUnclear) {
 			checkIsOnlineIfNeeded();
 		}

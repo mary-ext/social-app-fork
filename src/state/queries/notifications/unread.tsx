@@ -1,13 +1,13 @@
 /** A kind of companion API to ./feed.ts. See that file for more info. */
 
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState } from 'react-native';
 
 import { ok } from '@atcute/client';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import BroadcastChannel from '#/lib/broadcast';
+import { isDocumentVisible } from '#/lib/visibility';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { truncateAndInvalidate } from '#/state/queries/util';
@@ -94,7 +94,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 			async checkUnread({ invalidate, isPoll }: { invalidate?: boolean; isPoll?: boolean } = {}) {
 				if (!hasSession) return;
-				if (AppState.currentState !== 'active') {
+				if (!isDocumentVisible()) {
 					return;
 				}
 

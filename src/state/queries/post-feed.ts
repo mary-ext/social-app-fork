@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { AppState } from 'react-native';
 
 import type {
 	AppBskyActorDefs,
@@ -35,6 +34,7 @@ import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { DISCOVER_FEED_URI } from '#/lib/constants';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
+import { isDocumentVisible } from '#/lib/visibility';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
@@ -377,8 +377,8 @@ export async function pollLatest(page: FeedPage | undefined) {
 	if (!page) {
 		return false;
 	}
-	if (AppState.currentState !== 'active') {
-		return;
+	if (!isDocumentVisible()) {
+		return false;
 	}
 
 	logger.debug('usePostFeedQuery: pollLatest');

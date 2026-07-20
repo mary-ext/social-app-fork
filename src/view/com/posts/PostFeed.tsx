@@ -4,9 +4,9 @@ import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { onAppStateChange } from '#/lib/appState';
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
 import { cleanError, isNetworkError } from '#/lib/strings/errors';
+import { onVisibilityChange } from '#/lib/visibility';
 
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
 import { postCreated } from '#/state/events';
@@ -236,9 +236,9 @@ function PostFeed({
 	}, [disablePoll, enabled, isEmpty]);
 
 	useEffect(() => {
-		const subscription = onAppStateChange((nextAppState) => {
-			// check for new on app foreground
-			if (nextAppState === 'active') {
+		const unsubscribe = onVisibilityChange((visible) => {
+			// check for new when the document becomes visible
+			if (visible) {
 				void checkForNew();
 			}
 		});
@@ -251,7 +251,7 @@ function PostFeed({
 			stopPolling = () => clearInterval(i);
 		}
 		return () => {
-			subscription.remove();
+			unsubscribe();
 			stopPolling?.();
 		};
 	}, [pollInterval]);
