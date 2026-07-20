@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { shareUrl } from '#/lib/sharing';
 import { splitApexDomain } from '#/lib/strings/url-helpers';
 
@@ -15,13 +14,11 @@ import { m } from '#/paraglide/messages';
 import * as css from './LinkWarningDialog.css';
 
 export function WarningBody({ close, link }: { close: () => void; link: LinkWarningPayload }) {
-	const openLink = useOpenLink();
-
 	const onPressVisit = () => {
 		if (link.share) {
 			void shareUrl(link.href);
 		} else {
-			openLink(link.href);
+			window.open(link.href, '_blank', 'noopener');
 		}
 		close();
 	};

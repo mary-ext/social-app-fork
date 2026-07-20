@@ -2,7 +2,6 @@ import type { GestureResponderEvent, NativeSyntheticEvent, TargetedEvent, TextSt
 
 import { sanitizeUrl } from '@braintree/sanitize-url';
 
-import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { convertBskyAppUrlIfNeeded, isExternalUrl, isMisleadingLink } from '#/lib/strings/url-helpers';
 
 import { atoms as a, flatten, type TextStyleProp, useTheme } from '#/alf';
@@ -119,7 +118,6 @@ export function useLink({
 
 	const isExternal = isExternalUrl(href);
 	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
-	const openLink = useOpenLink();
 
 	const onPress = (e: GestureResponderEvent) => {
 		const exitEarlyIfFalse = outerOnPress?.(e);
@@ -139,12 +137,12 @@ export function useLink({
 			});
 		} else {
 			if (isExternal) {
-				openLink(href);
+				window.open(href, '_blank', 'noopener');
 			} else {
 				const shouldOpenInNewTab = shouldClickOpenNewTab(e);
 
 				if (shouldOpenInNewTab || href.startsWith('http') || href.startsWith('mailto')) {
-					openLink(href);
+					window.open(href, '_blank', 'noopener');
 				} else if (action === 'replace') {
 					router.replace(href);
 				} else {
