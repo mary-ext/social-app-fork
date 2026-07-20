@@ -17,19 +17,24 @@ Vanilla Extract.
 
 ### browser automation
 
-`mise.toml` preconfigures agent-browser with a single persistent, authenticated browser profile
-shared across browser sessions.
+`mise.toml` preconfigures /agent-browser skill with a session name and a single persistent browser
+profile, and Chrome locks that profile to one browser session at a time.
 
-Chrome locks a profile to one browser session at a time. if a test doesn't require access to an
-account, run one invocation without the profile:
+unless the work needs the logged-in account, launch without the profile:
 
     env -u AGENT_BROWSER_PROFILE agent-browser open <url>
 
-if the test does need the account, use the profile normally, but if the profile is already locked by
+only the launch command reads the AGENT_BROWSER_PROFILE variable, subsequent commands can be run
+without `env -u`. check `agent-browser session` for the assigned session name and
+`agent-browser session list` to see if the browser is already running or not.
+
+when the work does need the account, launch with the profile as-is. if it is already locked by
 another session, stop and report to the user rather than waiting or forcing it.
 
 if dev server opens on another port than :19006, copy the localStorage values from the :19006 origin
 to the new one.
+
+do not run `agent-browser close --all`.
 
 ### code writing
 
