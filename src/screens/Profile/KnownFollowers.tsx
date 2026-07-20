@@ -1,6 +1,5 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -49,7 +48,6 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 }
 
 function ProfileKnownFollowers({ name }: { name: string }) {
-	const initialNumToRender = useInitialNumToRender();
 	const moderationOpts = useModerationOpts();
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);
 	const {
@@ -77,7 +75,7 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 	};
 
 	if (!moderationOpts || ((isDidLoading || isFollowersLoading) && followers.length < 1 && !isError)) {
-		return <ProfileCard.LoadingPlaceholder count={initialNumToRender} />;
+		return <ProfileCard.LoadingPlaceholder />;
 	}
 
 	if (followers.length < 1) {
