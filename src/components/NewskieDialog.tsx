@@ -1,7 +1,7 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
-import { differenceInSeconds } from 'date-fns';
+import { differenceInSeconds } from '@mary/date-fns';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -30,7 +30,7 @@ export function NewskieDialog({
 	const handle = Dialog.useDialogHandle();
 
 	const createdAt = profile.createdAt;
-	const now = useConstant(Date.now);
+	const now = useConstant(() => new Date());
 	const daysOld = createdAt ? differenceInSeconds(now, new Date(createdAt)) / 86400 : Infinity;
 
 	if (!createdAt || daysOld > 7) return null;
@@ -60,7 +60,7 @@ function DialogInner({
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	createdAt: string;
-	now: number;
+	now: Date;
 	onClose: () => void;
 }) {
 	const moderationOpts = useModerationOpts();

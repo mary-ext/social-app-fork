@@ -1,4 +1,4 @@
-import { differenceInSeconds } from 'date-fns';
+import { differenceInSeconds } from '@mary/date-fns';
 
 import { dateMedium, monthDay } from '#/locale/intl/datetime';
 import { LOCALE } from '#/locale/intl/locale';

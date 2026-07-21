@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 
-import { differenceInMinutes } from 'date-fns';
+import { differenceInMinutes } from '@mary/date-fns';
 
 import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
 import { cleanError } from '#/lib/strings/errors';
@@ -90,7 +90,7 @@ function DialogInner({
 	} = useRemoveLiveStatusMutation(handle);
 
 	const expiryDateTime = new Date(status.expiresAt ?? tick);
-	const minutesUntilExpiry = differenceInMinutes(expiryDateTime, tick);
+	const minutesUntilExpiry = differenceInMinutes(expiryDateTime, new Date(tick));
 
 	const submitDisabled =
 		isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl || isRemovingLiveStatus;

@@ -7,7 +7,7 @@ import {
 } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { isAfter, parseISO } from 'date-fns';
+import { isAfterDate } from '@mary/date-fns';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -136,9 +136,9 @@ export function useActorStatus(actor?: AnyProfileView) {
 export function isStatusStillActive(timeStr: string | undefined) {
 	if (!timeStr) return false;
 	const now = new Date();
-	const expiry = parseISO(timeStr);
+	const expiry = new Date(timeStr);
 
-	return isAfter(expiry, now);
+	return isAfterDate(expiry, now);
 }
 
 /**

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { View } from 'react-native';
 
-import { subDays } from 'date-fns';
+import { addDays } from '@mary/date-fns';
 
 import { clockNumeric, weekdayLong, weekdayMonthDay, weekdayMonthDayYear } from '#/locale/intl/datetime';
 
@@ -21,8 +21,8 @@ let DateDivider = ({ date: dateStr }: { date: string }): React.ReactNode => {
 	const timestamp = new Date(dateStr);
 
 	const today = new Date();
-	const yesterday = subDays(today, 1);
-	const oneWeekAgo = subDays(today, 7);
+	const yesterday = addDays(today, -1);
+	const oneWeekAgo = addDays(today, -7);
 
 	if (localDateString(today) === localDateString(timestamp)) {
 		date = m['components.dms.time.today']();
