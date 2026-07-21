@@ -4,7 +4,8 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Play_Filled_Corner0_Rounded as PlayIcon } from '#/components/icons/Play';
 
-export function PlayButtonIcon({ size = 32 }: { size?: number }) {
+export function PlayButtonIcon() {
+	const size = 32;
 	const t = useTheme();
 	const bg = t.name === 'light' ? t.palette.contrast_25 : t.palette.contrast_975;
 	const fg = t.name === 'light' ? t.palette.contrast_975 : t.palette.contrast_25;

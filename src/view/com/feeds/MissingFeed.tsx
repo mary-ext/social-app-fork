@@ -1,4 +1,4 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { View } from 'react-native';
 
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
@@ -23,12 +23,10 @@ import { m } from '#/paraglide/messages';
 import * as styles from './MissingFeed.css';
 
 export function MissingFeed({
-	style,
 	hideTopBorder,
 	uri,
 	error,
 }: {
-	style?: StyleProp<ViewStyle>;
 	hideTopBorder?: boolean;
 	uri: string;
 	error?: unknown;
@@ -51,7 +49,6 @@ export function MissingFeed({
 					!hideTopBorder && a.border_t,
 					t.atoms.border_contrast_low,
 					a.justify_start,
-					style,
 				]}
 			>
 				<View style={[a.flex_row, a.align_center]}>

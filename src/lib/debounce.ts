@@ -128,20 +128,3 @@ export const debounce = <A extends unknown[]>(
 
 	return debounced;
 };
-
-/**
- * creates a function that invokes `fn` at most once per `wait` ms — {@link debounce} with `maxWait` pinned to
- * `wait` and both edges enabled by default.
- *
- * @param fn the function to throttle
- * @param wait milliseconds between invocations
- * @param options edge behavior
- * @returns the throttled function, with `cancel` and `flush` attached
- */
-export const throttle = <A extends unknown[]>(
-	fn: (...args: A) => unknown,
-	wait: number,
-	{ leading = true, trailing = true }: Omit<DebounceOptions, 'maxWait'> = {},
-): Debounced<A> => {
-	return debounce(fn, wait, { leading, maxWait: wait, trailing });
-};

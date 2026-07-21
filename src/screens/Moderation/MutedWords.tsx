@@ -1,7 +1,5 @@
 import { definite } from '@mary/array-fns';
 
-import { clsx } from 'clsx';
-
 import { useTitle } from '#/lib/hooks/useTitle';
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
 import { cleanError } from '#/lib/strings/errors';
@@ -94,7 +92,7 @@ export function MutedWordsScreen() {
 	);
 }
 
-function MutedWordRow({ className, word }: { className?: string; word: AppBskyActorDefs.MutedWord }) {
+function MutedWordRow({ word }: { word: AppBskyActorDefs.MutedWord }) {
 	const { mutateAsync: removeMutedWord } = useRemoveMutedWordMutation();
 	const { mutateAsync: updateMutedWord } = useUpdateMutedWordMutation();
 	const removeHandle = Prompt.usePromptHandle();
@@ -133,7 +131,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 				confirmButtonColor="negative"
 			/>
 
-			<div className={clsx(cardStyles.row, className)}>
+			<div className={cardStyles.row}>
 				<Settings.Icon icon={isTagOnly ? Hashtag : PageText} />
 				<Text className={cardStyles.title} color="text" numberOfLines={1} size="md" weight="medium">
 					{word.value}

@@ -29,9 +29,9 @@ export function LoadingPlaceholder({
 	);
 }
 
-export function ProfileCardLoadingPlaceholder({ style }: { style?: StyleProp<ViewStyle> }) {
+export function ProfileCardLoadingPlaceholder() {
 	return (
-		<View style={[styles.profileCard, style]}>
+		<View style={styles.profileCard}>
 			<LoadingPlaceholder width={40} height={40} style={styles.profileCardAvi} />
 			<View>
 				<LoadingPlaceholder width={140} height={8} style={[s.mb5]} />

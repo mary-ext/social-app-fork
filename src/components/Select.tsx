@@ -1,11 +1,4 @@
-import {
-	type ComponentType,
-	createContext,
-	Fragment,
-	type ReactElement,
-	type ReactNode,
-	useContext,
-} from 'react';
+import { createContext, Fragment, type ReactElement, type ReactNode, useContext } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
 import { clsx } from 'clsx';
@@ -15,7 +8,6 @@ import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import * as styles from '#/components/Select.css';
 
 export type SelectItem = {
@@ -190,10 +182,10 @@ export function Item({ children, className, label, value }: ItemProps) {
 }
 
 /** The selection checkmark, absolutely positioned in the item's gutter. */
-export function ItemIndicator({ icon: IconComponent = CheckIcon }: { icon?: ComponentType<SVGIconProps> }) {
+export function ItemIndicator() {
 	return (
 		<BaseSelect.ItemIndicator className={styles.indicator}>
-			<IconComponent size="sm" fill="currentColor" />
+			<CheckIcon size="sm" fill="currentColor" />
 		</BaseSelect.ItemIndicator>
 	);
 }

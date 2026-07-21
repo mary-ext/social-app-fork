@@ -18,9 +18,6 @@ import type { AppModerationCause } from '#/components/Pills';
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;
 export const OTHER_SELF_LABELS = ['graphic-media'] as const;
 export const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS] as const;
-
-export type AdultSelfLabel = (typeof ADULT_CONTENT_LABELS)[number];
-export type OtherSelfLabel = (typeof OTHER_SELF_LABELS)[number];
 export type SelfLabel = (typeof SELF_LABELS)[number];
 
 function getModerationCauseSourceKey(cause: ModerationCause | AppModerationCause): string {

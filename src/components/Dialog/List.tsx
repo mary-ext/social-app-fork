@@ -13,8 +13,6 @@ export type ListProps<ItemT> = {
 	className?: string;
 	/** fired when the end of the list scrolls into view to load the next page */
 	onEndReached?: () => void;
-	/** Distance (px) from the bottom edge at which `onEndReached` fires — i.e. the observer's `rootMargin`. */
-	onEndReachedMargin?: number;
 	/** Shown (as a centered spinner) below the items while the next page loads. Needs `loadingLabel`. */
 	isFetchingNextPage?: boolean;
 	/** Accessible label for the next-page spinner; pass it alongside `onEndReached`/`isFetchingNextPage`. */
@@ -42,7 +40,6 @@ export function List<ItemT>({
 	renderItem,
 	className,
 	onEndReached,
-	onEndReachedMargin = 600,
 	isFetchingNextPage,
 	loadingLabel,
 	ListEmptyComponent,
@@ -79,11 +76,11 @@ export function List<ItemT>({
 					onEndReachedRef.current?.();
 				}
 			},
-			{ root, rootMargin: `${onEndReachedMargin}px 0px` },
+			{ root, rootMargin: '600px 0px' },
 		);
 		observer.observe(sentinel);
 		return () => observer.disconnect();
-	}, [isEmpty, onEndReachedMargin, data.length]);
+	}, [isEmpty, data.length]);
 
 	return (
 		<div ref={scrollRef} className={clsx(styles.body, className)}>

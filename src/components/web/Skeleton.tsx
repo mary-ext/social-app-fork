@@ -84,18 +84,10 @@ export function Circle({
  * Loading placeholder for a rounded-square element (e.g. a feed/list avatar), sized to `size` pixels with a
  * `radius` corner (defaults to the small token).
  */
-export function Square({
-	color = 'contrast_50',
-	radius = borderRadius.xs,
-	size,
-}: {
-	color?: RecipeVariants<typeof styles.square>['color'];
-	radius?: number;
-	size: number;
-}) {
+export function Square({ radius = borderRadius.xs, size }: { radius?: number; size: number }) {
 	return (
 		<div
-			className={styles.square({ color })}
+			className={styles.square({ color: 'contrast_50' })}
 			style={assignInlineVars({ [styles.boxSizeVar]: `${size}px`, [styles.squareRadiusVar]: `${radius}px` })}
 		/>
 	);

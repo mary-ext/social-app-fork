@@ -25,16 +25,11 @@ export function useScrollHandlers(): ScrollHandlers {
 	return useContext(ScrollContext);
 }
 
-type ProviderProps = { children: React.ReactNode } & ScrollHandlers;
+type ProviderProps = { children: React.ReactNode } & Pick<ScrollHandlers, 'onScroll'>;
 
 // Note: this completely *overrides* the parent handlers.
 // It's up to you to compose them with the parent ones via useScrollHandlers() if needed.
-export function ScrollProvider({ children, onBeginDrag, onEndDrag, onScroll, onMomentumEnd }: ProviderProps) {
-	const handlers = {
-		onBeginDrag,
-		onEndDrag,
-		onScroll,
-		onMomentumEnd,
-	};
+export function ScrollProvider({ children, onScroll }: ProviderProps) {
+	const handlers = { onScroll };
 	return <ScrollContext.Provider value={handlers}>{children}</ScrollContext.Provider>;
 }

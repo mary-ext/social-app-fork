@@ -27,18 +27,17 @@ import { borderRadius } from '#/styles/tokens.css';
 import * as css from './StarterPackCard.css';
 
 type DefaultProps = {
-	className?: string;
 	starterPack?: AnyStarterPackView;
 	topBorder?: boolean;
 };
 
 /** A list-row starter pack card */
-export function Default({ className, starterPack, topBorder }: DefaultProps) {
+export function Default({ starterPack, topBorder }: DefaultProps) {
 	if (!starterPack) {
 		return null;
 	}
 	return (
-		<Link className={clsx(css.defaultRow({ topBorder }), className)} starterPack={starterPack}>
+		<Link className={css.defaultRow({ topBorder })} starterPack={starterPack}>
 			<Card starterPack={starterPack} />
 		</Link>
 	);

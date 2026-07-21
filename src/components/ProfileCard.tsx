@@ -1,10 +1,4 @@
-import {
-	type GestureResponderEvent,
-	type StyleProp,
-	type TextStyle,
-	View,
-	type ViewStyle,
-} from 'react-native';
+import { type GestureResponderEvent, View } from 'react-native';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
@@ -16,8 +10,6 @@ import {
 
 import { getModerationCauseKey } from '#/lib/moderation';
 import { makeProfileLink } from '#/lib/routes/links';
-import { forceLTR } from '#/lib/strings/bidi';
-import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isAbortError } from '#/lib/strings/errors';
 
@@ -46,15 +38,13 @@ export function Default({
 	profile,
 	moderationOpts,
 	testID,
-	onPress,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
 	testID?: string;
-	onPress?: (e: GestureResponderEvent) => void;
 }) {
 	return (
-		<Link testID={testID} profile={profile} onPress={onPress}>
+		<Link testID={testID} profile={profile}>
 			<Card profile={profile} moderationOpts={moderationOpts} />
 		</Link>
 	);
@@ -120,14 +110,12 @@ export function Avatar({
 	moderationOpts,
 	onPress,
 	disabledPreview,
-	liveOverride,
 	size = 40,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
 	onPress?: () => void;
 	disabledPreview?: boolean;
-	liveOverride?: boolean;
 	size?: number;
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
@@ -140,7 +128,7 @@ export function Avatar({
 			avatar={profile.avatar}
 			type={profile.associated?.labeler ? 'labeler' : 'user'}
 			moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-			live={liveOverride ?? live}
+			live={live}
 		/>
 	) : (
 		<PreviewableUserAvatar
@@ -148,7 +136,7 @@ export function Avatar({
 			profile={profile}
 			moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 			onBeforePress={onPress}
-			live={liveOverride ?? live}
+			live={live}
 		/>
 	);
 }
@@ -172,57 +160,14 @@ export function AvatarPlaceholder({ size = 40 }: { size?: number }) {
 export function NameAndHandle({
 	profile,
 	moderationOpts,
-	inline = false,
-}: {
-	profile: AnyProfileView;
-	moderationOpts: ModerationOptions;
-	inline?: boolean;
-}) {
-	if (inline) {
-		return <InlineNameAndHandle profile={profile} moderationOpts={moderationOpts} />;
-	} else {
-		return (
-			<View style={[a.flex_1]}>
-				<Name profile={profile} moderationOpts={moderationOpts} />
-				<Handle profile={profile} />
-			</View>
-		);
-	}
-}
-
-function InlineNameAndHandle({
-	profile,
-	moderationOpts,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
 }) {
-	const t = useTheme();
-	const moderation = moderateProfile(profile, moderationOpts);
-	const name = sanitizeDisplayName(
-		profile.displayName || profile.handle,
-		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-	);
-	const handle = `@${profile.handle}`;
 	return (
-		<View style={[a.flex_row, a.align_end, a.flex_shrink]}>
-			<Text
-				emoji
-				style={[a.font_semi_bold, a.leading_tight, a.flex_shrink_0, { maxWidth: '70%' }]}
-				numberOfLines={1}
-			>
-				{forceLTR(name)}
-			</Text>
-			<View style={[a.pl_2xs, a.self_center, { marginTop: 0 }]}>
-				<ProfileBadges profile={profile} size="md" />
-			</View>
-			<Text
-				emoji
-				style={[a.leading_tight, t.atoms.text_contrast_medium, { flexShrink: 10 }]}
-				numberOfLines={1}
-			>
-				{NON_BREAKING_SPACE + handle}
-			</Text>
+		<View style={[a.flex_1]}>
+			<Name profile={profile} moderationOpts={moderationOpts} />
+			<Handle profile={profile} />
 		</View>
 	);
 }
@@ -230,13 +175,9 @@ function InlineNameAndHandle({
 export function Name({
 	profile,
 	moderationOpts,
-	style,
-	textStyle,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
-	style?: StyleProp<ViewStyle>;
-	textStyle?: StyleProp<TextStyle>;
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
@@ -244,10 +185,10 @@ export function Name({
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 	return (
-		<View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
+		<View style={[a.flex_row, a.align_center, a.max_w_full]}>
 			<Text
 				emoji
-				style={[a.text_md, a.font_semi_bold, a.leading_snug, a.self_start, a.flex_shrink, textStyle]}
+				style={[a.text_md, a.font_semi_bold, a.leading_snug, a.self_start, a.flex_shrink]}
 				numberOfLines={1}
 			>
 				{name}
@@ -259,50 +200,14 @@ export function Name({
 	);
 }
 
-export function Handle({
-	profile,
-	textStyle,
-}: {
-	profile: AnyProfileView;
-	textStyle?: StyleProp<TextStyle>;
-}) {
+export function Handle({ profile }: { profile: AnyProfileView }) {
 	const t = useTheme();
 	const handle = `@${profile.handle}`;
 
 	return (
-		<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium, textStyle]} numberOfLines={1}>
+		<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
 			{handle}
 		</Text>
-	);
-}
-
-export function NameAndHandlePlaceholder() {
-	const t = useTheme();
-
-	return (
-		<View style={[a.flex_1, a.gap_xs]}>
-			<View
-				style={[
-					a.rounded_xs,
-					t.atoms.bg_contrast_50,
-					{
-						width: '60%',
-						height: 14,
-					},
-				]}
-			/>
-
-			<View
-				style={[
-					a.rounded_xs,
-					t.atoms.bg_contrast_50,
-					{
-						width: '40%',
-						height: 10,
-					},
-				]}
-			/>
-		</View>
 	);
 }
 
@@ -310,11 +215,9 @@ export function Description({
 	profile: profileUnshadowed,
 	align,
 	color,
-	numberOfLines = 3,
 	size,
 }: {
 	profile: AnyProfileView;
-	numberOfLines?: number;
 } & Pick<RichTextProps, 'align' | 'color' | 'size'>) {
 	const profile = useProfileShadow(profileUnshadowed);
 	if (!('description' in profile) || !profile.description) {
@@ -332,7 +235,7 @@ export function Description({
 				align={align}
 				color={color}
 				disableLinks
-				numberOfLines={numberOfLines}
+				numberOfLines={3}
 				size={size}
 				value={profile.description}
 			/>

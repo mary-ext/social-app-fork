@@ -16,7 +16,7 @@ import { Trans } from '#/locale/Trans';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { Link, type LinkProps } from '#/components/Link';
+import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
@@ -37,13 +37,11 @@ export function shouldShowKnownFollowers(knownFollowers?: AppBskyActorDefs.Known
 export function KnownFollowers({
 	profile,
 	moderationOpts,
-	onLinkPress,
 	minimal,
 	showIfEmpty,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
-	onLinkPress?: LinkProps['onPress'];
 	minimal?: boolean;
 	showIfEmpty?: boolean;
 }) {
@@ -69,7 +67,6 @@ export function KnownFollowers({
 				profile={profile}
 				cachedKnownFollowers={cachedKnownFollowers}
 				moderationOpts={moderationOpts}
-				onLinkPress={onLinkPress}
 				minimal={minimal}
 				showIfEmpty={showIfEmpty}
 			/>
@@ -83,14 +80,12 @@ function KnownFollowersInner({
 	profile,
 	moderationOpts,
 	cachedKnownFollowers,
-	onLinkPress,
 	minimal,
 	showIfEmpty,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
 	cachedKnownFollowers: AppBskyActorDefs.KnownFollowers;
-	onLinkPress?: LinkProps['onPress'];
 	minimal?: boolean;
 	showIfEmpty?: boolean;
 }) {
@@ -127,7 +122,6 @@ function KnownFollowersInner({
 	return (
 		<Link
 			label={m['common.follow.a11y.knownFollowers']()}
-			onPress={onLinkPress}
 			to={makeProfileLink(profile, 'known-followers')}
 			style={[
 				a.max_w_full,

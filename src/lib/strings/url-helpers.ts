@@ -89,10 +89,6 @@ export function isBskyAppUrl(url: string): boolean {
 	return url.startsWith('https://bsky.app/');
 }
 
-export function isRelativeUrl(url: string): boolean {
-	return /^\/[^/]/.test(url);
-}
-
 export function isExternalUrl(url: string): boolean {
 	const external = !isBskyAppUrl(url) && url.startsWith('http');
 	return external;

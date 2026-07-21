@@ -25,8 +25,6 @@ function PostContent({
 	additionalCauses,
 	ignoreMute,
 	onOpenEmbed,
-	className,
-	embedClassName,
 	embedStyle,
 }: {
 	post: AppBskyFeedDefs.PostView;
@@ -37,10 +35,6 @@ function PostContent({
 	additionalCauses?: AppModerationCause[];
 	ignoreMute?: boolean;
 	onOpenEmbed?: () => void;
-	/** Forwarded to the `ContentHider` (e.g. the standalone surface's trailing margin). */
-	className?: string;
-	/** Forwarded to the embed wrapper (e.g. the feed surface's trailing padding). */
-	embedClassName?: string;
 	/** Style applied to the embed wrapper div. */
 	embedStyle?: React.CSSProperties;
 }): React.ReactNode {
@@ -49,16 +43,11 @@ function PostContent({
 		displayContext === 'view' ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : listModui;
 
 	return (
-		<ContentHider
-			modui={bodyModui}
-			ignoreMute={ignoreMute}
-			className={className}
-			childContainerClassName={css.childContainer}
-		>
+		<ContentHider modui={bodyModui} ignoreMute={ignoreMute} childContainerClassName={css.childContainer}>
 			<PostAlerts additionalCauses={additionalCauses} className={css.alerts} modui={bodyModui} />
 			{richText.text ? <ClampedPostText authorHandle={post.author.handle} richText={richText} /> : undefined}
 			{post.embed ? (
-				<div className={embedClassName} style={embedStyle}>
+				<div style={embedStyle}>
 					<Embed
 						embed={post.embed}
 						moderation={moderation}

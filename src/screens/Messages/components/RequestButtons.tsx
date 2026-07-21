@@ -186,13 +186,11 @@ export function AcceptChatButton({
 	convo,
 	size = 'small',
 	color = 'primary',
-	label,
 	icon = false,
 	currentScreen,
 	onAcceptConvo,
 	...props
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
-	label?: string;
 	icon?: boolean;
 	convo: ChatBskyConvoDefs.ConvoView;
 	onAcceptConvo?: () => void;
@@ -243,13 +241,13 @@ export function AcceptChatButton({
 	return (
 		<Button
 			{...props}
-			label={label || m['screens.messages.requests.accept.a11y']()}
+			label={m['screens.messages.requests.accept.a11y']()}
 			size={size}
 			color={color}
 			onPress={onPressAccept}
 		>
 			{Icon}
-			<ButtonText>{label || m['screens.messages.requests.accept.action']()}</ButtonText>
+			<ButtonText>{m['screens.messages.requests.accept.action']()}</ButtonText>
 		</Button>
 	);
 }

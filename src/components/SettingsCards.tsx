@@ -129,14 +129,12 @@ export function ButtonRow({
 	children,
 	className,
 	color = 'secondary',
-	disabled,
 	label,
 	onPress,
 }: {
 	children: ReactNode;
 	className?: string;
 	color?: 'primary_subtle' | 'secondary';
-	disabled?: boolean;
 	label: string;
 	onPress: () => void;
 }) {
@@ -144,7 +142,6 @@ export function ButtonRow({
 		<button
 			type="button"
 			aria-label={label}
-			disabled={disabled}
 			onClick={onPress}
 			className={clsx(
 				styles.row,
@@ -337,33 +334,25 @@ export function SwitchRow({
 	);
 }
 
-/**
- * row that opens a dropdown on press, where the whole row acts as the trigger showing the current value.
- *
- * @param loading show a spinner instead of the value while fetching
- */
+/** row that opens a dropdown on press, where the whole row acts as the trigger showing the current value. */
 export function SelectRow<T extends string>({
 	children,
 	className,
-	disabled,
 	items,
 	label,
-	loading,
 	onValueChange,
 	value,
 }: {
 	children: ReactNode;
 	className?: string;
-	disabled?: boolean;
 	items: Select.SelectItem[];
 	label: string;
-	loading?: boolean;
 	onValueChange: (value: T) => void;
 	value: T;
 }) {
 	const selected = items.find((item) => item.value === value);
 	return (
-		<Select.Root items={items} value={value} disabled={disabled || loading} onValueChange={onValueChange}>
+		<Select.Root items={items} value={value} onValueChange={onValueChange}>
 			<Select.Trigger
 				render={
 					<button
@@ -375,19 +364,15 @@ export function SelectRow<T extends string>({
 			>
 				{children}
 				<span className={styles.trailing}>
-					{loading ? (
-						<Spinner color="default" label={label} size="sm" />
-					) : (
-						<Text
-							className={styles.value}
-							size="md_sub"
-							color="textContrastMedium"
-							align="right"
-							numberOfLines={1}
-						>
-							{selected?.label}
-						</Text>
-					)}
+					<Text
+						className={styles.value}
+						size="md_sub"
+						color="textContrastMedium"
+						align="right"
+						numberOfLines={1}
+					>
+						{selected?.label}
+					</Text>
 					<ChevronDownIcon className={styles.chevron} size="sm" fill="currentColor" />
 				</span>
 			</Select.Trigger>

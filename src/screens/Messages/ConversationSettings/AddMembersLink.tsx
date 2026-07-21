@@ -18,13 +18,7 @@ import { colors } from '#/styles/colors';
 
 import * as styles from './AddMembersLink.css';
 
-export function AddMembersLink({
-	convo,
-	disabled,
-}: {
-	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	disabled?: boolean;
-}) {
+export function AddMembersLink({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
 	const addMembersHandle = Dialog.useDialogHandle();
 
 	const convoId = convo.view.id;
@@ -66,7 +60,7 @@ export function AddMembersLink({
 			<Dialog.Trigger
 				aria-label={m['screens.messages.members.add.action']()}
 				className={styles.row}
-				disabled={disabled || isAddPending}
+				disabled={isAddPending}
 				handle={addMembersHandle}
 			>
 				<div className={styles.content}>

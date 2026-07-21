@@ -14,8 +14,6 @@ import { clsx } from 'clsx';
 
 import { getModerationCauseKey } from '#/lib/moderation';
 import { makeProfileLink } from '#/lib/routes/links';
-import { forceLTR } from '#/lib/strings/bidi';
-import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isAbortError } from '#/lib/strings/errors';
 
@@ -50,7 +48,6 @@ import { m } from '#/paraglide/messages';
  * @param topBorder whether the row carries a top divider.
  */
 export function Default({
-	className,
 	descriptionLines = 3,
 	followButtonProps,
 	moderationOpts,
@@ -59,7 +56,6 @@ export function Default({
 	showLabels = true,
 	topBorder,
 }: {
-	className?: string;
 	descriptionLines?: number;
 	followButtonProps?: Partial<Omit<FollowButtonProps, 'moderationOpts' | 'profile'>>;
 	moderationOpts: ModerationOptions;
@@ -69,7 +65,7 @@ export function Default({
 	topBorder?: boolean;
 }) {
 	return (
-		<Link className={clsx(css.defaultRow({ topBorder }), className)} onPress={onPress} profile={profile}>
+		<Link className={css.defaultRow({ topBorder })} onPress={onPress} profile={profile}>
 			<Outer>
 				<Header>
 					<Avatar moderationOpts={moderationOpts} profile={profile} />
@@ -159,51 +155,18 @@ export function Avatar({
 	);
 }
 
-/** Stacked name + handle, or an inline single-line variant when `inline` is set. */
+/** Stacked name + handle. */
 export function NameAndHandle({
-	inline = false,
 	moderationOpts,
 	profile,
 }: {
-	inline?: boolean;
 	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
 }) {
-	if (inline) {
-		return <InlineNameAndHandle moderationOpts={moderationOpts} profile={profile} />;
-	}
 	return (
 		<div className={css.nameAndHandle}>
 			<Handle profile={profile} />
 			<Name moderationOpts={moderationOpts} profile={profile} />
-		</div>
-	);
-}
-
-function InlineNameAndHandle({
-	moderationOpts,
-	profile,
-}: {
-	moderationOpts: ModerationOptions;
-	profile: AnyProfileView;
-}) {
-	const moderation = moderateProfile(profile, moderationOpts);
-	const name = sanitizeDisplayName(
-		profile.displayName || profile.handle,
-		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-	);
-	const handle = `@${profile.handle}`;
-	return (
-		<div className={css.inlineRow}>
-			<Text className={css.inlineName} numberOfLines={1} weight="semiBold">
-				{forceLTR(name)}
-			</Text>
-			<div className={css.inlineBadges}>
-				<ProfileBadges profile={profile} size="md" />
-			</div>
-			<Text className={css.inlineHandle} color="textContrastMedium" numberOfLines={1}>
-				{NON_BREAKING_SPACE + handle}
-			</Text>
 		</div>
 	);
 }
@@ -234,17 +197,11 @@ export function Name({
 	);
 }
 
-export function Handle({
-	profile,
-	weight = 'semiBold',
-}: {
-	profile: AnyProfileView;
-	weight?: 'normal' | 'semiBold';
-}) {
+export function Handle({ profile }: { profile: AnyProfileView }) {
 	const handle = profile.handle;
 	return (
 		<div className={css.handleRow}>
-			<Text className={css.handleText} color="textContrastHigh" weight={weight} numberOfLines={1}>
+			<Text className={css.handleText} color="textContrastHigh" weight="semiBold" numberOfLines={1}>
 				{handle}
 			</Text>
 

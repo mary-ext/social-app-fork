@@ -32,8 +32,6 @@ export type RootProps = {
 	 * only need the text insertion can omit it.
 	 */
 	onEmojiSelect?: (emoji: Emoji) => void;
-	/** Preload emoji data on mount so the picker opens instantly. Defaults to `true`. */
-	preloadOnMount?: boolean;
 	/** Element to return focus to when the picker closes (instead of the trigger). Ref or getter. */
 	nextFocusRef?: NextFocusRef;
 };
@@ -57,8 +55,8 @@ export function useEmojiPickerHandle(): EmojiPickerHandle {
  * emoji picker that opens in a popover. emits an `emojiInserted` event and triggers the optional
  * `onEmojiSelect` callback when an emoji is selected.
  */
-export function Root({ children, handle, onEmojiSelect, preloadOnMount = true, nextFocusRef }: RootProps) {
-	useWebPreloadEmoji({ immediate: preloadOnMount });
+export function Root({ children, handle, onEmojiSelect, nextFocusRef }: RootProps) {
+	useWebPreloadEmoji({ immediate: true });
 	// close via the Root's own actions; `handle.close()` only affects popovers opened through `handle.open()`,
 	// not ones opened by clicking the Trigger.
 	const actionsRef = useRef<{ close: () => void; unmount: () => void }>(null);
@@ -81,13 +79,8 @@ export function Root({ children, handle, onEmojiSelect, preloadOnMount = true, n
 	);
 }
 
-export type PickerProps = {
-	/** Keep the picker open after selecting while Shift is held (multi-select). Defaults to `true`. */
-	keepOpenWhenShiftHeld?: boolean;
-};
-
 /** The picker panel. Must be rendered inside a {@link Root}. */
-export function Picker({ keepOpenWhenShiftHeld = true }: PickerProps) {
+export function Picker() {
 	const { onEmojiSelect, close, nextFocusRef } = useEmojiPickerContext();
 
 	return (
@@ -112,7 +105,7 @@ export function Picker({ keepOpenWhenShiftHeld = true }: PickerProps) {
 					<EmojiPanel
 						onEmojiSelect={(emoji, shiftHeld) => {
 							onEmojiSelect(emoji);
-							if (!keepOpenWhenShiftHeld || !shiftHeld) {
+							if (!shiftHeld) {
 								close();
 							}
 						}}

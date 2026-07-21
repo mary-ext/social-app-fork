@@ -118,7 +118,6 @@ function PostFeed({
 	onScrolledDownChange,
 	onHasNew,
 	renderEmptyState,
-	ListHeaderComponent,
 	savedFeedConfig,
 }: {
 	feed: FeedDescriptor;
@@ -130,7 +129,6 @@ function PostFeed({
 	onHasNew?: (v: boolean) => void;
 	onScrolledDownChange?: (isScrolledDown: boolean) => void;
 	renderEmptyState: () => React.ReactElement;
-	ListHeaderComponent?: () => React.ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }): React.ReactNode {
 	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
@@ -519,7 +517,6 @@ function PostFeed({
 					showEndMessage={!isEmpty && !isFetching}
 				/>
 			}
-			ListHeaderComponent={ListHeaderComponent && <ListHeaderComponent />}
 			onScrolledDownChange={handleScrolledDownChange}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={2}

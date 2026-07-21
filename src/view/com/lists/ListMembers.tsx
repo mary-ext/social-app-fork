@@ -1,5 +1,5 @@
 import { type JSX, useState } from 'react';
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { View } from 'react-native';
 
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -48,25 +48,18 @@ const isListMemberSentinel = (item: ListMemberItem): item is ListMemberSentinel 
 
 export function ListMembers({
 	list,
-	style,
 	scrollElRef,
 	onScrolledDownChange,
-	onPressTryAgain,
 	renderHeader,
 	renderEmptyState,
 	testID,
-	headerOffset = 0,
 }: {
 	list: ResourceUri;
-	style?: StyleProp<ViewStyle>;
 	scrollElRef?: ListRef;
 	onScrolledDownChange: (isScrolledDown: boolean) => void;
-	onPressTryAgain?: () => void;
 	renderHeader: () => JSX.Element;
 	renderEmptyState: () => JSX.Element;
 	testID?: string;
-	headerOffset?: number;
-	desktopFixedHeightOffset?: number;
 }) {
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const { currentAccount } = useSession();
@@ -139,7 +132,7 @@ export function ListMembers({
 	const renderItem = ({ item }: { item: ListMemberItem }) => {
 		if (isListMemberSentinel(item)) {
 			if (item === ERROR_ITEM) {
-				return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;
+				return <ErrorMessage message={cleanError(error)} />;
 			}
 			if (item === LOAD_MORE_ERROR_ITEM) {
 				return (
@@ -173,13 +166,13 @@ export function ListMembers({
 				error={cleanError(error)}
 				isFetchingNextPage={isFetchingNextPage}
 				onRetry={fetchNextPage}
-				height={180 + headerOffset}
+				height={180}
 			/>
 		);
 	};
 
 	return (
-		<View testID={testID} style={style}>
+		<View testID={testID}>
 			<List
 				testID={testID ? `${testID}-flatlist` : undefined}
 				ref={scrollElRef}
@@ -190,7 +183,7 @@ export function ListMembers({
 				ListFooterComponent={renderFooter}
 				refreshing={isRefreshing}
 				onRefresh={() => void onRefresh()}
-				headerOffset={headerOffset}
+				headerOffset={0}
 				contentContainerStyle={{
 					minHeight: getViewportSize().height * 1.5,
 				}}

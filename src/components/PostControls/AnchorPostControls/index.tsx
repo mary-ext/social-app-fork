@@ -30,7 +30,6 @@ type AnchorControlButtonProps = {
 	active?: boolean;
 	/** Color applied when `active`; the icon inherits it via `currentColor`. */
 	activeColor?: string;
-	disabled?: boolean;
 	onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 	ref?: Ref<HTMLButtonElement>;
 };

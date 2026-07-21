@@ -34,8 +34,6 @@ export function Popup({
 	label,
 	align = 'start',
 	minWidth,
-	side = 'bottom',
-	sideOffset = 5,
 }: {
 	children: ReactNode;
 	/** Accessible name for the menu. */
@@ -43,12 +41,10 @@ export function Popup({
 	align?: BaseMenu.Positioner.Props['align'];
 	/** Floor on the popup width, so a short item list still reads as a menu rather than a tooltip. */
 	minWidth?: number;
-	side?: BaseMenu.Positioner.Props['side'];
-	sideOffset?: number;
 }) {
 	return (
 		<BaseMenu.Portal className={styles.portal}>
-			<BaseMenu.Positioner align={align} side={side} sideOffset={sideOffset} collisionPadding={5}>
+			<BaseMenu.Positioner align={align} side="bottom" sideOffset={5} collisionPadding={5}>
 				<BaseMenu.Popup
 					aria-label={label}
 					className={styles.popup}
@@ -68,7 +64,6 @@ export function Item({
 	label,
 	onClick,
 	onMouseEnter,
-	closeOnClick,
 	destructive = false,
 	disabled,
 	render,
@@ -79,7 +74,6 @@ export function Item({
 	onClick?: () => void;
 	/** Hover hook, e.g. to prefetch the data a dialog opened by the item will need. */
 	onMouseEnter?: () => void;
-	closeOnClick?: boolean;
 	destructive?: boolean;
 	disabled?: boolean;
 	/** renders the item as a custom element, keeping menu-item styling, keyboard navigation, and close-on-click */
@@ -91,7 +85,6 @@ export function Item({
 			label={label}
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}
-			closeOnClick={closeOnClick}
 			disabled={disabled}
 			render={render}
 		>

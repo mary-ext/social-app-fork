@@ -15,12 +15,7 @@ import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { atomicSegment, emoji } from '#/components/RichText.css';
 import { RichTextTag } from '#/components/RichTextTag';
 import { Text, type TextProps } from '#/components/Text';
-import {
-	ContentLinkText,
-	InlineLinkText,
-	type InlineLinkTextProps,
-	type InlineLinkUnderline,
-} from '#/components/web/Link';
+import { ContentLinkText, InlineLinkText, type InlineLinkUnderline } from '#/components/web/Link';
 
 type Feature = AppBskyRichtextFacet.Main['features'][number];
 
@@ -41,7 +36,6 @@ export type RichTextProps = Pick<
 	enableTags?: boolean;
 	/** Underline timing for inline links, mentions, and tags; defaults to `hover`. */
 	linkUnderline?: InlineLinkUnderline;
-	onLinkPress?: InlineLinkTextProps['onPress'];
 	/** The body-text sizes RichText renders (a subset of the full scale), each enlarged for emoji-only content. */
 	size?: 'lg' | 'md' | 'sm' | 'xl' | 'xs';
 	value: Richtext | string;
@@ -64,7 +58,6 @@ export function RichText({
 	leading,
 	linkUnderline,
 	numberOfLines,
-	onLinkPress,
 	selectable,
 	size,
 	value,
@@ -113,7 +106,6 @@ export function RichText({
 									href={feature.uri}
 									key={key}
 									leading={leading}
-									onPress={onLinkPress}
 									selectable={selectable}
 									size={size}
 									underline={linkUnderline}
@@ -133,7 +125,6 @@ export function RichText({
 									color={color}
 									key={key}
 									leading={leading}
-									onPress={onLinkPress}
 									selectable={selectable}
 									size={size}
 									to={`/profile/${feature.did}`}

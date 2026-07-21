@@ -151,21 +151,14 @@ export function PanelGroup({ children }: { children: ReactNode }) {
 export function Panel({
 	active,
 	adjacent = 'none',
-	size = 'default',
 	children,
 }: {
 	active?: boolean;
 	adjacent?: 'both' | 'leading' | 'none' | 'trailing';
-	/** `small` tightens padding/height and squares the corners to a flat radius (skips `adjacent`). */
-	size?: 'default' | 'small';
 	children: ReactNode;
 }) {
 	return (
-		<span
-			className={styles.panel({ active, adjacent, size })}
-			data-active={active || undefined}
-			data-size={size}
-		>
+		<span className={styles.panel({ active, adjacent })} data-active={active || undefined}>
 			{children}
 		</span>
 	);

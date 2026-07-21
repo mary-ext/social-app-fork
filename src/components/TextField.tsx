@@ -5,7 +5,6 @@ import {
 	type FocusEventHandler,
 	type KeyboardEventHandler,
 	type ReactNode,
-	type Ref,
 	useContext,
 	useId,
 } from 'react';
@@ -49,7 +48,6 @@ export function Root({
 export function LabelText({
 	accessory,
 	children,
-	htmlFor,
 }: {
 	/**
 	 * Optional content rendered to the trailing edge of the label, as a sibling of the `<label>` so it stays
@@ -57,14 +55,13 @@ export function LabelText({
 	 */
 	accessory?: ReactNode;
 	children: ReactNode;
-	htmlFor?: string;
 }) {
 	const { id } = useContext(FieldContext);
 	const label = (
 		<BaseLabelText
 			className={accessory === undefined ? styles.label : undefined}
 			color="textContrastMedium"
-			htmlFor={htmlFor ?? id}
+			htmlFor={id}
 			size="md_sub"
 			weight="medium"
 		>
@@ -106,8 +103,6 @@ export type InputProps = {
 	minRows?: number;
 	/** Caps the number of characters accepted. */
 	maxLength?: number;
-	/** Ref to the underlying single-line `<input>` (e.g. to focus or clear it imperatively). */
-	inputRef?: Ref<HTMLInputElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	onBlur?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 	onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
@@ -115,7 +110,6 @@ export type InputProps = {
 	autoComplete?: ComponentPropsWithoutRef<'input'>['autoComplete'];
 	/** Auto-capitalization behaviour for the single-line `<input>`. */
 	autoCapitalize?: ComponentPropsWithoutRef<'input'>['autoCapitalize'];
-	id?: string;
 	className?: string;
 };
 
@@ -134,18 +128,16 @@ export function Input({
 	maxRows,
 	minRows,
 	maxLength,
-	inputRef,
 	onKeyDown,
 	onBlur,
 	onFocus,
 	autoComplete,
 	autoCapitalize,
-	id,
 	className,
 }: InputProps) {
 	const { id: ctxId, isInvalid: ctxInvalid } = useContext(FieldContext);
 	const invalid = isInvalid ?? ctxInvalid;
-	const inputId = id ?? ctxId;
+	const inputId = ctxId;
 	const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
 		onChangeText?.(e.currentTarget.value);
 	const cls = clsx(styles.input, multiline && styles.multiline, invalid && styles.invalid, className);
@@ -193,7 +185,6 @@ export function Input({
 			onKeyDown={onKeyDown}
 			placeholder={placeholder}
 			readOnly={readOnly}
-			ref={inputRef}
 			type="text"
 			value={value}
 		/>

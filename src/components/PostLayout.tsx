@@ -15,8 +15,6 @@ type DivProps = HTMLAttributes<HTMLDivElement> & { ref?: Ref<HTMLDivElement> };
 export interface FrameProps extends DivProps {
 	/** Whole-row hover tint. The focused anchor omits it. */
 	hoverable?: boolean;
-	/** Reclaim a hidden top border's hairline as padding (feed's first post). */
-	reclaimBorder?: boolean;
 	/** Extra top room when the post is the thread root. */
 	rootPad?: boolean;
 	/** Hairline separating this post from the one above. */

@@ -1,4 +1,3 @@
-import { createContext } from 'react';
 import { type GestureResponderEvent, Keyboard, View } from 'react-native';
 
 import { HITSLOP_30 } from '#/lib/constants';
@@ -21,12 +20,10 @@ import { useNavigate, useRouter } from '#/routes';
 export function Outer({
 	children,
 	noBottomBorder,
-	headerRef,
 	sticky = true,
 }: {
 	children: React.ReactNode;
 	noBottomBorder?: boolean;
-	headerRef?: React.RefObject<View | null>;
 	sticky?: boolean;
 }) {
 	const t = useTheme();
@@ -35,7 +32,6 @@ export function Outer({
 
 	return (
 		<View
-			ref={headerRef}
 			style={[
 				a.w_full,
 				!noBottomBorder && a.border_b,
@@ -54,21 +50,8 @@ export function Outer({
 	);
 }
 
-const AlignmentContext = createContext<'platform' | 'left'>('platform');
-AlignmentContext.displayName = 'AlignmentContext';
-
-export function Content({
-	children,
-	align = 'platform',
-}: {
-	children?: React.ReactNode;
-	align?: 'platform' | 'left';
-}) {
-	return (
-		<View style={[a.flex_1, a.justify_center, { minHeight: HEADER_SLOT_SIZE }]}>
-			<AlignmentContext.Provider value={align}>{children}</AlignmentContext.Provider>
-		</View>
-	);
+export function Content({ children }: { children?: React.ReactNode }) {
+	return <View style={[a.flex_1, a.justify_center, { minHeight: HEADER_SLOT_SIZE }]}>{children}</View>;
 }
 
 export function Slot({ children }: { children?: React.ReactNode }) {

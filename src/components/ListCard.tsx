@@ -38,20 +38,16 @@ type Props = {
 };
 
 export function Default({
-	className,
-	onPress,
 	topBorder,
 	view,
 }: Props & {
-	className?: string;
-	onPress?: () => void;
 	topBorder?: boolean;
 }) {
 	const moderationOpts = useModerationOpts();
 	const moderation = moderationOpts ? moderateList(view, moderationOpts) : undefined;
 
 	return (
-		<Link className={clsx(css.defaultRow({ topBorder }), className)} onPress={onPress} view={view}>
+		<Link className={css.defaultRow({ topBorder })} view={view}>
 			<Outer>
 				<Header>
 					<Avatar src={view.avatar} />
@@ -98,8 +94,8 @@ export function Outer({ children, className }: { children: ReactNode; className?
 	return <div className={clsx(css.outer, className)}>{children}</div>;
 }
 
-export function Header({ children, className }: { children: ReactNode; className?: string }) {
-	return <div className={clsx(css.header, className)}>{children}</div>;
+export function Header({ children }: { children: ReactNode }) {
+	return <div className={css.header}>{children}</div>;
 }
 
 export type AvatarProps = { size?: number; src: string | undefined };

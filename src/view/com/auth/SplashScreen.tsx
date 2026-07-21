@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 
@@ -10,89 +10,65 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { Button, ButtonText } from '#/components/Button';
-import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-export const SplashScreen = ({
-	onDismiss,
-	onPressSignin,
-}: {
-	onDismiss?: () => void;
-	onPressSignin: () => void;
-}) => {
+export const SplashScreen = ({ onPressSignin }: { onPressSignin: () => void }) => {
 	const t = useTheme();
 	const { isTabletOrMobile: IS_WEB_MOBILE } = useWebMediaQueries();
 
 	return (
-		<>
-			{onDismiss && (
-				<Pressable
-					accessibilityRole="button"
-					style={{
-						position: 'absolute',
-						top: 20,
-						right: 20,
-						padding: 20,
-						zIndex: 100,
-					}}
-					onPress={onDismiss}
-				>
-					<TimesIcon size="xl" style={t.atoms.text} />
-				</Pressable>
-			)}
-			<View style={[a.h_full, a.flex_1]}>
-				<View
-					testID="noSessionView"
-					style={[
-						a.h_full,
-						a.justify_center,
-						// @ts-expect-error web only
-						{ paddingBottom: '20vh' },
-						IS_WEB_MOBILE && a.pb_5xl,
-						t.atoms.border_contrast_medium,
-						a.align_center,
-						a.gap_5xl,
-						a.flex_1,
-					]}
-				>
-					<ErrorBoundary>
-						<View style={[a.justify_center, a.align_center]}>
-							<Logo width={92} fill="sky" />
+		<View style={[a.h_full, a.flex_1]}>
+			<View
+				testID="noSessionView"
+				style={[
+					a.h_full,
+					a.justify_center,
+					// @ts-expect-error web only
+					{ paddingBottom: '20vh' },
+					IS_WEB_MOBILE && a.pb_5xl,
+					t.atoms.border_contrast_medium,
+					a.align_center,
+					a.gap_5xl,
+					a.flex_1,
+				]}
+			>
+				<ErrorBoundary>
+					<View style={[a.justify_center, a.align_center]}>
+						<Logo width={92} fill="sky" />
 
-							<View style={[a.pb_sm, a.pt_5xl]}>
-								<Logotype width={161} fill={colors.text} />
-							</View>
-
-							<Text style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-								{m['common.compose.placeholder']()}
-							</Text>
+						<View style={[a.pb_sm, a.pt_5xl]}>
+							<Logotype width={161} fill={colors.text} />
 						</View>
 
-						<View
-							testID="signinOrCreateAccount"
-							style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, { maxWidth: 320 }]}
+						<Text style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+							{m['common.compose.placeholder']()}
+						</Text>
+					</View>
+
+					<View
+						testID="signinOrCreateAccount"
+						style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, { maxWidth: 320 }]}
+					>
+						<Button
+							testID="signInButton"
+							onPress={onPressSignin}
+							label={m['common.session.action.signIn']()}
+							accessibilityHint={m['view.auth.signIn.a11yHint']()}
+							size="large"
+							variant="solid"
+							color="secondary"
 						>
-							<Button
-								testID="signInButton"
-								onPress={onPressSignin}
-								label={m['common.session.action.signIn']()}
-								accessibilityHint={m['view.auth.signIn.a11yHint']()}
-								size="large"
-								variant="solid"
-								color="secondary"
-							>
-								<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
-							</Button>
-						</View>
-					</ErrorBoundary>
-				</View>
-				<Footer />
+							<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
+						</Button>
+					</View>
+				</ErrorBoundary>
 			</View>
-		</>
+			<Footer />
+		</View>
 	);
 };
 

@@ -10,12 +10,11 @@ import type { Gif } from '#/features/gifPicker/types';
 import { m } from '#/paraglide/messages';
 
 type Props = {
-	onClose?: () => void;
 	onSelectGif: (gif: Gif) => void;
 	disabled?: boolean;
 };
 
-export function SelectGifBtn({ onClose, onSelectGif, disabled }: Props) {
+export function SelectGifBtn({ onSelectGif, disabled }: Props) {
 	const handle = Dialog.useDialogHandle();
 
 	return (
@@ -33,7 +32,7 @@ export function SelectGifBtn({ onClose, onSelectGif, disabled }: Props) {
 					/>
 				}
 			/>
-			<GifPickerDialog handle={handle} onClose={onClose} onSelectGif={onSelectGif} />
+			<GifPickerDialog handle={handle} onSelectGif={onSelectGif} />
 		</>
 	);
 }

@@ -242,14 +242,12 @@ function Visibility({
 	className = css.sentinel,
 	onVisibleChange,
 	root,
-	style,
 	topMargin = '0px',
 }: {
 	bottomMargin?: string;
 	className?: string;
 	onVisibleChange: (isVisible: boolean) => void;
 	root?: React.RefObject<Element | null>;
-	style?: React.CSSProperties;
 	topMargin?: string;
 }) {
 	const isIntersecting = useRef<boolean | undefined>(undefined);
@@ -281,7 +279,6 @@ function Visibility({
 				return () => observer.disconnect();
 			}}
 			className={className}
-			style={style}
 		/>
 	);
 }

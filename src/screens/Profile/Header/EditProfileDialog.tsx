@@ -34,11 +34,9 @@ import * as styles from './EditProfileDialog.css';
 export function EditProfileDialog({
 	profile,
 	handle,
-	onUpdate,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	handle: Dialog.DialogHandle;
-	onUpdate?: () => void;
 }) {
 	const cancelHandle = Prompt.usePromptHandle();
 	const [dirty, setDirty] = useState(false);
@@ -57,13 +55,7 @@ export function EditProfileDialog({
 				}}
 			>
 				<Dialog.Popup scroll="body">
-					<DialogInner
-						profile={profile}
-						handle={handle}
-						onUpdate={onUpdate}
-						cancelHandle={cancelHandle}
-						setDirty={setDirty}
-					/>
+					<DialogInner profile={profile} handle={handle} cancelHandle={cancelHandle} setDirty={setDirty} />
 				</Dialog.Popup>
 			</Dialog.Root>
 			<Prompt.Basic
@@ -81,13 +73,11 @@ export function EditProfileDialog({
 function DialogInner({
 	profile,
 	handle,
-	onUpdate,
 	cancelHandle,
 	setDirty,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	handle: Dialog.DialogHandle;
-	onUpdate?: () => void;
 	cancelHandle: Prompt.PromptHandle;
 	setDirty: (dirty: boolean) => void;
 }) {
@@ -172,7 +162,6 @@ function DialogInner({
 				newUserBanner,
 			});
 			handle.close();
-			onUpdate?.();
 		} catch (e) {
 			logger.error('Failed to update user profile', { message: String(e) });
 		}

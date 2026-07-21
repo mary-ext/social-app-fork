@@ -11,7 +11,6 @@ type PointInput = Point | readonly [number, number];
 
 export type LinearGradientProps = ViewProps & {
 	colors: readonly string[];
-	locations?: readonly number[];
 	start?: PointInput;
 	end?: PointInput;
 };
@@ -32,19 +31,14 @@ function pointToDeg(start?: PointInput, end?: PointInput) {
 	return `${90 + (radians * 180) / Math.PI}deg`;
 }
 
-export function LinearGradient({ colors, end, locations, start, style, ...props }: LinearGradientProps) {
-	const stops = colors.map((color, index) => {
-		const location = locations?.[index];
-		return location == null ? color : `${color} ${location * 100}%`;
-	});
-
+export function LinearGradient({ colors, end, start, style, ...props }: LinearGradientProps) {
 	return (
 		<View
 			{...props}
 			style={[
 				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- RN's `ViewStyle` has no `backgroundImage`; forwarding it is the point of this adapter
 				{
-					backgroundImage: `linear-gradient(${pointToDeg(start, end)}, ${stops.join(', ')})`,
+					backgroundImage: `linear-gradient(${pointToDeg(start, end)}, ${colors.join(', ')})`,
 				} as ViewProps['style'],
 				style,
 			]}

@@ -114,8 +114,8 @@ export function Footer({ children }: { children: ReactNode }) {
  * In-flow header row for a `viewport`-scroll Popup: a {@link Title} beside a trailing {@link Close}. Because
  * the close lives in the row rather than floating, a long title can never slide under it.
  */
-export function TitleRow({ children, className }: { children: ReactNode; className?: string }) {
-	return <div className={clsx(styles.titleRow, className)}>{children}</div>;
+export function TitleRow({ children }: { children: ReactNode }) {
+	return <div className={styles.titleRow}>{children}</div>;
 }
 
 /** Dialog heading. */

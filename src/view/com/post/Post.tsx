@@ -39,13 +39,11 @@ export function Post({
 	post,
 	hideTopBorder,
 	style,
-	onBeforePress,
 }: {
 	post: AppBskyFeedDefs.PostView;
 	hideTopBorder?: boolean;
 	/** Chrome override merged onto the row (e.g. the unread-notification highlight). */
 	style?: CSSProperties;
-	onBeforePress?: () => void;
 }) {
 	const moderationOpts = useModerationOpts();
 	const record = getPostRecord(post);
@@ -69,7 +67,6 @@ export function Post({
 				moderation={moderation}
 				hideTopBorder={hideTopBorder}
 				style={style}
-				onBeforePress={onBeforePress}
 			/>
 		);
 	}
@@ -83,7 +80,6 @@ function PostInner({
 	moderation,
 	hideTopBorder,
 	style,
-	onBeforePress: outerOnBeforePress,
 }: {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	record: AppBskyFeedPost.Main;
@@ -91,7 +87,6 @@ function PostInner({
 	moderation: ModerationDecision;
 	hideTopBorder?: boolean;
 	style?: CSSProperties;
-	onBeforePress?: () => void;
 }) {
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
@@ -117,7 +112,6 @@ function PostInner({
 
 	const onBeforePress = () => {
 		unstableCacheProfileView(queryClient, post.author);
-		outerOnBeforePress?.();
 	};
 
 	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({

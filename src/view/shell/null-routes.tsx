@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useComposeIntent } from '#/lib/hooks/useIntentHandler';
+import { useComposeIntent } from '#/lib/hooks/useComposeIntent';
 
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 

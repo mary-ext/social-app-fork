@@ -1,5 +1,3 @@
-import type { CSSProperties } from 'react';
-
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
 export function MagnifyingGlassIcon({
@@ -7,13 +5,11 @@ export function MagnifyingGlassIcon({
 	color = 'currentColor',
 	size,
 	strokeWidth = 2,
-	style,
 }: {
 	className?: string;
 	color?: string;
 	size?: number | string;
 	strokeWidth?: number;
-	style?: CSSProperties;
 }) {
 	return (
 		<svg
@@ -24,7 +20,6 @@ export function MagnifyingGlassIcon({
 			stroke={color}
 			width={size || 24}
 			height={size || 24}
-			style={style}
 		>
 			<path
 				strokeLinecap="round"

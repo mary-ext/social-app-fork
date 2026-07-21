@@ -1,5 +1,3 @@
-import { clsx } from 'clsx';
-
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import * as css from './JoinButton.css';
@@ -13,11 +11,9 @@ import type { ChatInviteAction } from './use-chat-invite';
 export function JoinButton({
 	action,
 	onPress,
-	className,
 }: {
 	action: ChatInviteAction | undefined;
 	onPress?: () => void;
-	className?: string;
 }) {
 	if (!action) {
 		return null;
@@ -29,7 +25,7 @@ export function JoinButton({
 			color={action.color}
 			disabled={action.disabled}
 			size="small"
-			className={clsx(css.joinButton, className)}
+			className={css.joinButton}
 			onClick={() => {
 				onPress?.();
 				action.onPress();

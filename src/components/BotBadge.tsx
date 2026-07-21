@@ -12,16 +12,8 @@ export function isBotAccount(profile: { did: string; labels?: { src: string; val
 	return profile.labels?.some((l) => l.val === 'bot' && l.src === profile.did) ?? false;
 }
 
-export function BotBadge({
-	alwaysShow = false,
-	profile,
-	width,
-}: {
-	alwaysShow?: boolean;
-	profile: AnyProfileView;
-	width: number;
-}) {
-	if (!isBotAccount(profile) && !alwaysShow) {
+export function BotBadge({ profile, width }: { profile: AnyProfileView; width: number }) {
+	if (!isBotAccount(profile)) {
 		return null;
 	}
 

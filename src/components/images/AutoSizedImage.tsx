@@ -5,11 +5,9 @@ import { atoms as a, useTheme } from '#/alf';
 
 export function ConstrainedImage({
 	aspectRatio,
-	fullBleed,
 	children,
 }: {
 	aspectRatio: number;
-	fullBleed?: boolean;
 	children: React.ReactNode;
 }) {
 	const t = useTheme();
@@ -23,15 +21,7 @@ export function ConstrainedImage({
 		<View style={[a.w_full]}>
 			<View style={[a.overflow_hidden, { paddingTop: outerAspectRatio }]}>
 				<View style={[a.absolute, a.inset_0, a.flex_row]}>
-					<View
-						style={[
-							a.h_full,
-							a.rounded_md,
-							a.overflow_hidden,
-							t.atoms.bg_contrast_25,
-							fullBleed ? a.w_full : { aspectRatio },
-						]}
-					>
+					<View style={[a.h_full, a.rounded_md, a.overflow_hidden, t.atoms.bg_contrast_25, { aspectRatio }]}>
 						{children}
 					</View>
 				</View>

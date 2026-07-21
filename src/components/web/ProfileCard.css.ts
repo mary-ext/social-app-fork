@@ -99,27 +99,6 @@ export const badges = style({
 	},
 });
 
-export const inlineRow = style({
-	display: 'flex',
-	flexDirection: 'row',
-	flexShrink: 1,
-	alignItems: 'flex-end',
-});
-
-export const inlineName = style({
-	flexShrink: 0,
-	maxWidth: '70%',
-});
-
-export const inlineBadges = style({
-	alignSelf: 'center',
-	paddingLeft: space._2xs,
-});
-
-export const inlineHandle = style({
-	flexShrink: 10,
-});
-
 export const labels = style({
 	paddingTop: space.xs,
 });

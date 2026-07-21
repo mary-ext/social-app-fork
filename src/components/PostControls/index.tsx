@@ -1,7 +1,6 @@
 import {
 	type ComponentType,
 	createContext,
-	type CSSProperties,
 	type MouseEvent,
 	type ReactNode,
 	type Ref,
@@ -44,10 +43,7 @@ type PostControlButtonProps = {
 	active?: boolean;
 	/** Color applied when `active`; icon + count inherit it via `currentColor`. */
 	activeColor?: string;
-	disabled?: boolean;
 	onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
-	className?: string;
-	style?: CSSProperties;
 	ref?: Ref<HTMLButtonElement>;
 };
 
@@ -59,10 +55,8 @@ function PostControlButton({
 	active,
 	activeColor,
 	children,
-	className,
 	label,
 	onClick,
-	style,
 	tooltip,
 	...rest
 }: PostControlButtonProps) {
@@ -73,8 +67,8 @@ function PostControlButton({
 		<button
 			type="button"
 			aria-label={label}
-			className={clsx(css.button, className)}
-			style={active && activeColor ? { color: activeColor, ...style } : style}
+			className={css.button}
+			style={active && activeColor ? { color: activeColor } : undefined}
 			onClick={onClick}
 			{...rest}
 		>

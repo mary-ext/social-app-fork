@@ -66,17 +66,9 @@ export function Icon({
 	);
 }
 
-export function TitleText({
-	children,
-	className,
-	size = 'xl',
-}: {
-	children: ReactNode;
-	className?: string;
-	size?: TextProps['size'];
-}) {
+export function TitleText({ children, size = 'xl' }: { children: ReactNode; size?: TextProps['size'] }) {
 	return (
-		<Text className={clsx(css.titleText, className)} size={size} weight="semiBold">
+		<Text className={css.titleText} size={size} weight="semiBold">
 			{children}
 		</Text>
 	);

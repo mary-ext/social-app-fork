@@ -45,22 +45,15 @@ export function SubscribeProfileDialog({
 	handle,
 	profile,
 	moderationOpts,
-	includeProfile,
 }: {
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
-	includeProfile?: boolean;
 }) {
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup size="narrow">
-				<DialogInner
-					handle={handle}
-					profile={profile}
-					moderationOpts={moderationOpts}
-					includeProfile={includeProfile}
-				/>
+				<DialogInner handle={handle} profile={profile} moderationOpts={moderationOpts} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);

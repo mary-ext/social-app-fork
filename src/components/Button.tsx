@@ -21,15 +21,6 @@ import { Text } from '#/components/Typography';
 
 import * as css from './Button.css';
 
-/**
- * props that control the presentation of the Button component, intended to be omitted when extending the
- * component for other compound components.
- *
- * @example
- * 	type MyComponentProps = Omit<ButtonProps, UninheritableButtonProps> & {...}
- */
-export type UninheritableButtonProps = 'variant' | 'color' | 'size' | 'shape';
-
 export type ButtonVariant = 'solid' | 'outline' | 'ghost';
 export type ButtonColor =
 	| 'primary'
@@ -100,7 +91,7 @@ export type ButtonProps = Pick<
 		PressableComponent?: React.ComponentType<PressableProps>;
 	};
 
-export type ButtonTextProps = TextProps & VariantProps & { disabled?: boolean; emoji?: boolean };
+export type ButtonTextProps = TextProps & VariantProps;
 
 const Context = createContext<VariantProps & ButtonState>({
 	hovered: false,

@@ -50,17 +50,16 @@ export function Row({
 export type LabelProps = {
 	cause: AppModerationCause;
 	disableDetailsDialog?: boolean;
-	noBg?: boolean;
 } & CommonProps;
 
-export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelProps) {
+export function Label({ cause, size = 'sm', disableDetailsDialog }: LabelProps) {
 	const t = useTheme();
 	const handle = Dialog.useDialogHandle();
 	const desc = useModerationCauseDescription(cause);
 	const isLabeler = !!(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;
 
-	let outer: (ViewStyle | false)[];
+	let outer: ViewStyle[];
 	let avi: number;
 	let text: TextStyle[];
 	switch (size) {
@@ -80,7 +79,7 @@ export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelP
 		case 'sm':
 		default: {
 			outer = [
-				!noBg && t.atoms.bg_contrast_25,
+				t.atoms.bg_contrast_25,
 				{
 					gap: 3,
 					paddingHorizontal: 3,

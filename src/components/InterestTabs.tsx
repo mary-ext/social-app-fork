@@ -10,25 +10,20 @@ import { space } from '#/styles/tokens.css';
  * picker on the Explore screen and the find-follows flow.
  */
 export function InterestTabs({
-	disabled,
-	gutterWidth = space.lg,
 	interests,
 	interestsDisplayNames,
 	onSelectTab,
 	selectedInterest,
 }: {
-	/** Still allows changing tab, but removes the active state from the selected tab. */
-	disabled?: boolean;
-	gutterWidth?: number;
 	interests: string[];
 	interestsDisplayNames: Record<string, string>;
 	onSelectTab: (tab: string) => void;
 	selectedInterest: string;
 }) {
 	return (
-		<TabScroller.Root activeKey={selectedInterest} gutterWidth={gutterWidth}>
+		<TabScroller.Root activeKey={selectedInterest} gutterWidth={space.lg}>
 			{interests.map((interest) => {
-				const active = interest === selectedInterest && !disabled;
+				const active = interest === selectedInterest;
 				const displayName = interestsDisplayNames[interest]!;
 				return (
 					<TabScroller.Tab

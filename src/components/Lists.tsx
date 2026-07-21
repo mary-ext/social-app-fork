@@ -1,5 +1,4 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import { clsx } from 'clsx';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -15,7 +14,6 @@ import { m } from '#/paraglide/messages';
 
 export function ListFooter({
 	border = true,
-	className,
 	endMessageText,
 	error,
 	hasNextPage,
@@ -26,7 +24,6 @@ export function ListFooter({
 }: {
 	/** whether to draw the divider above the footer. */
 	border?: boolean;
-	className?: string;
 	endMessageText?: string;
 	error?: string;
 	hasNextPage?: boolean;
@@ -37,7 +34,7 @@ export function ListFooter({
 }) {
 	return (
 		<div
-			className={clsx(css.footer({ border }), className)}
+			className={css.footer({ border })}
 			style={height != null ? assignInlineVars({ [css.heightVar]: `${height}px` }) : undefined}
 		>
 			{isFetchingNextPage ? (
@@ -70,32 +67,24 @@ function ListFooterError({ error, onRetry }: { error: string; onRetry?: () => Pr
 
 function ListMaybePlaceholder({
 	isLoading,
-	noEmpty,
 	isError,
 	emptyTitle,
 	emptyMessage,
-	errorTitle,
 	errorMessage,
 	emptyType = 'page',
 	onRetry,
-	onGoBack,
-	hideBackButton,
 	topBorder = false,
 	emptyStateIcon,
 	emptyStateButton,
 	useEmptyState = false,
 }: {
 	isLoading: boolean;
-	noEmpty?: boolean;
 	isError?: boolean;
 	emptyTitle?: string;
 	emptyMessage?: string;
-	errorTitle?: string;
 	errorMessage?: string;
 	emptyType?: 'page' | 'results';
 	onRetry?: () => Promise<unknown>;
-	onGoBack?: () => void;
-	hideBackButton?: boolean;
 	topBorder?: boolean;
 	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
 	emptyStateButton?: EmptyStateButtonProps;
@@ -112,11 +101,9 @@ function ListMaybePlaceholder({
 	if (isError) {
 		return (
 			<Error
-				title={errorTitle ?? m['common.error.oops']()}
+				title={m['common.error.oops']()}
 				message={errorMessage ?? m['common.error.generic']()}
 				onRetry={onRetry}
-				onGoBack={onGoBack}
-				hideBackButton={hideBackButton}
 			/>
 		);
 	}
@@ -134,21 +121,15 @@ function ListMaybePlaceholder({
 		);
 	}
 
-	if (!noEmpty) {
-		return (
-			<Error
-				title={
-					emptyTitle ??
-					(emptyType === 'results' ? m['common.list.noResults']() : m['common.error.pageNotFound']())
-				}
-				message={emptyMessage ?? m['common.error.notFoundDescription']()}
-				onRetry={onRetry}
-				onGoBack={onGoBack}
-				hideBackButton={hideBackButton}
-			/>
-		);
-	}
-
-	return null;
+	return (
+		<Error
+			title={
+				emptyTitle ??
+				(emptyType === 'results' ? m['common.list.noResults']() : m['common.error.pageNotFound']())
+			}
+			message={emptyMessage ?? m['common.error.notFoundDescription']()}
+			onRetry={onRetry}
+		/>
+	);
 }
 export { ListMaybePlaceholder };

@@ -37,13 +37,11 @@ type AuthorLinkProps = Pick<
 	onPress: () => void;
 	/** Forwarded to the host node (`<a>`, or `<span>` when inert) so it can back a headless trigger. */
 	ref?: Ref<HTMLElement>;
-	/** Sets the link's `tabindex`; pass `-1` to keep it clickable but out of the tab order. */
-	tabIndex?: number;
 	to: string;
 };
 
 /** A link in the meta row that collapses to plain {@link Text} when the surrounding row is non-interactive. */
-function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, ...text }: AuthorLinkProps) {
+function AuthorLink({ disabled, label, onPress, ref, to, ...text }: AuthorLinkProps) {
 	// the ref lands on a different element per branch (`<span>` vs `<a>`); Base UI hands us a generic
 	// element ref either way, so narrow it at the boundary.
 	if (disabled) {
@@ -55,7 +53,6 @@ function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, ...text }: Au
 			onPress={onPress}
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `RefObject` is invariant; this branch always renders an `<a>`
 			ref={ref as Ref<HTMLAnchorElement>}
-			tabIndex={tabIndex}
 			to={to}
 			{...text}
 		/>
