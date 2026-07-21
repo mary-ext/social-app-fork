@@ -247,13 +247,26 @@ export function sortAndAnnotateThreadItems(
 				const metadata = metadatas.get(item.uri);
 
 				if (metadata) {
-					if (metadata.parentMetadata) {
-						/*
-						 * Track what's before/after now that we've applied moderation
-						 */
-						if (prevItem?.type === 'threadPost') metadata.prevItemDepth = prevItem?.depth;
-						if (nextItem?.type === 'threadPost') metadata.nextItemDepth = nextItem?.depth;
+					/*
+					 * Track what's before/after now that we've applied moderation. These feed
+					 * both `isLastChild` and the sibling calculations below.
+					 */
+					if (prevItem?.type === 'threadPost') metadata.prevItemDepth = prevItem?.depth;
+					if (nextItem?.type === 'threadPost') metadata.nextItemDepth = nextItem?.depth;
 
+					/*
+					 * Item is the last "child" in a branch if there is no next item, or if the
+					 * next item's depth is less than this item's depth (a sibling of the parent)
+					 * or equal to this item's depth (a sibling of this item). This is purely
+					 * positional, so unlike the sibling state below it does not require
+					 * `parentMetadata`: top-level replies loaded via the "other replies" query
+					 * (`getPostThreadOtherV2`) arrive without their anchor parent in scope, and
+					 * must still resolve last-child correctly to get the loose bottom padding.
+					 */
+					metadata.isLastChild =
+						metadata.nextItemDepth === undefined || metadata.nextItemDepth <= metadata.depth;
+
+					if (metadata.parentMetadata) {
 						/**
 						 * Item is also the last "sibling" if its index matches the total number of replies we're actually
 						 * able to render to the page.
@@ -274,15 +287,6 @@ export function sortAndAnnotateThreadItems(
 						 * Ok now we can set the last sibling state.
 						 */
 						metadata.isLastSibling = isImplicitlyLastSibling || isLastSiblingDueToMissingReplies;
-
-						/*
-						 * Item is the last "child" in a branch if there is no next item,
-						 * or if the next item's depth is less than this item's depth (a
-						 * sibling of the parent) or equal to this item's depth (a sibling
-						 * of this item)
-						 */
-						metadata.isLastChild =
-							metadata.nextItemDepth === undefined || metadata.nextItemDepth <= metadata.depth;
 
 						/*
 						 * If this is the last sibling, it's implicitly part of the last
