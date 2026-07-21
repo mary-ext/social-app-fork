@@ -2,8 +2,9 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH } from '#/lib/constants';
 
+import { deviceLocales } from '#/locale/deviceLocales';
+
 import type { Gif } from '#/features/gifPicker/types';
-import { getLocales } from '#/shims/localization';
 
 export const RQKEY_ROOT = 'klipy-gif-service';
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured'];
@@ -53,7 +54,7 @@ function createKlipyApi<Input extends object>(
 
 		params.set('contentfilter', 'low'); // PG-13 equivalent
 
-		const locale = getLocales?.()?.[0];
+		const locale = deviceLocales[0];
 
 		if (locale?.regionCode) {
 			params.set('locale', locale.regionCode.toLowerCase());

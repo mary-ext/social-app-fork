@@ -1,68 +1,34 @@
-import { unique } from '@mary/array-fns';
+import { mapDefined, unique } from '@mary/array-fns';
 
-import { getLocales as defaultGetLocales, type Locale } from '#/shims/localization';
-
-type LocalWithLanguageCode = Locale & {
+export type Locale = {
 	languageCode: string;
+	regionCode: string | null;
 };
 
-/**
- * Normalized locales
- *
- * Handles legacy migration for Java devices.
- *
- * {@link https://github.com/bluesky-social/social-app/pull/4461}
- * {@link https://xml.coverpages.org/iso639a.html}
- *
- * Convert Chinese language tags for Native.
- *
- * {@link https://datatracker.ietf.org/doc/html/rfc5646#appendix-A}
- * {@link https://developer.apple.com/documentation/packagedescription/languagetag}
- * {@link https://gist.github.com/amake/0ac7724681ac1c178c6f95a5b09f03ce#new-locales-vs-old-locales-chinese}
- */
-export function getLocales() {
-	const locales = defaultGetLocales?.() ?? [];
-	const output: LocalWithLanguageCode[] = [];
+function getLocales(): Locale[] {
+	const locales = mapDefined(navigator.languages, (lang): Locale | undefined => {
+		try {
+			const parsed = new Intl.Locale(lang);
 
-	for (const locale of locales) {
-		if (typeof locale.languageCode === 'string') {
-			if (locale.languageCode === 'in') {
-				// indonesian
-				locale.languageCode = 'id';
-			}
-			if (locale.languageCode === 'iw') {
-				// hebrew
-				locale.languageCode = 'he';
-			}
-			if (locale.languageCode === 'ji') {
-				// yiddish
-				locale.languageCode = 'yi';
-			}
-		}
+			return {
+				languageCode: parsed.language,
+				regionCode: parsed.region ?? null,
+			};
+		} catch {}
+	});
 
-		if (typeof locale.languageTag === 'string') {
-			if (locale.languageTag.startsWith('zh-Hans') || locale.languageTag === 'zh-CN') {
-				// Simplified Chinese to zh-Hans-CN
-				locale.languageTag = 'zh-Hans-CN';
-			}
-			if (locale.languageTag.startsWith('zh-Hant') || locale.languageTag === 'zh-TW') {
-				// Traditional Chinese to zh-Hant-TW
-				locale.languageTag = 'zh-Hant-TW';
-			}
-		}
-
-		// @ts-ignore checked above
-		output.push(locale);
+	if (locales.length === 0) {
+		return [{ languageCode: 'en', regionCode: null }];
 	}
 
-	return output;
+	return locales;
 }
 
+/** The device's preferred locales in priority order, derived from `navigator.languages`. */
 export const deviceLocales = getLocales();
 
 /**
- * BCP-47 language tag without region e.g. array of 2-char lang codes
- *
- * {@link https://docs.expo.dev/versions/latest/sdk/localization/#locale}
+ * BCP-47 language codes without region for the device's preferred locales, e.g. an array of 2-char language
+ * codes.
  */
 export const deviceLanguageCodes = unique(deviceLocales.map((l) => l.languageCode));
