@@ -19,7 +19,7 @@
 		"nuke": "rm -rf ./node_modules ./web-build"
 	},
 	"dependencies": {
-		"@atcute/atproto": "4.0.3",
+		"@atcute/atproto": "^4.0.3",
 		"@atcute/bluesky": "^4.0.14",
 		"@atcute/bluesky-moderation": "^4.2.2",
 		"@atcute/bluesky-richtext-builder": "^4.0.1",
@@ -29,7 +29,7 @@
 		"@atcute/cbor": "^2.3.6",
 		"@atcute/cid": "^2.4.2",
 		"@atcute/client": "^5.1.1",
-		"@atcute/germ": "1.0.2",
+		"@atcute/germ": "^1.0.2",
 		"@atcute/identity-resolver": "^2.0.1",
 		"@atcute/lexicons": "^2.0.3",
 		"@atcute/microcosm": "^2.0.2",
@@ -63,12 +63,12 @@
 		"fast-deep-equal": "^3.1.3",
 		"hls.js": "^1.6.16",
 		"idb-keyval": "^6.3.0",
-		"react": "19.2.7",
-		"react-dom": "19.2.7",
-		"react-hotkeys-hook": "5.3.3",
+		"react": "^19.2.7",
+		"react-dom": "^19.2.7",
+		"react-hotkeys-hook": "^5.3.3",
 		"react-image-crop": "^11.1.2",
-		"react-native": "0.81.5",
-		"react-native-web": "^0.21.2",
+		"react-native": "~0.81.5",
+		"react-native-web": "~0.21.2",
 		"tldts": "^7.4.9"
 	},
 	"devDependencies": {

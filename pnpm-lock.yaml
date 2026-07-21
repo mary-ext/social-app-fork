@@ -22,7 +22,7 @@ importers:
   .:
     dependencies:
       '@atcute/atproto':
-        specifier: 4.0.3
+        specifier: ^4.0.3
         version: 4.0.3(@atcute/lexicons@2.0.3)
       '@atcute/bluesky':
         specifier: ^4.0.14
@@ -52,7 +52,7 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1(@atcute/lexicons@2.0.3)(@typescript/typescript6@6.0.2)
       '@atcute/germ':
-        specifier: 1.0.2
+        specifier: ^1.0.2
         version: 1.0.2(@atcute/lexicons@2.0.3)
       '@atcute/identity-resolver':
         specifier: ^2.0.1
@@ -154,22 +154,22 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0
       react:
-        specifier: 19.2.7
+        specifier: ^19.2.7
         version: 19.2.7
       react-dom:
-        specifier: 19.2.7
+        specifier: ^19.2.7
         version: 19.2.7(react@19.2.7)
       react-hotkeys-hook:
-        specifier: 5.3.3
+        specifier: ^5.3.3
         version: 5.3.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-image-crop:
         specifier: ^11.1.2
         version: 11.1.2(react@19.2.7)
       react-native:
-        specifier: 0.81.5
+        specifier: ~0.81.5
         version: 0.81.5(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7)
       react-native-web:
-        specifier: ^0.21.2
+        specifier: ~0.21.2
         version: 0.21.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       tldts:
         specifier: ^7.4.9
