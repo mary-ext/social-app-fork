@@ -31,8 +31,8 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 
 	const feedConfig = preferences?.savedFeeds?.find((f) => f.value === feedUri && f.pinned);
 	const discoverFeedConfig = preferences?.savedFeeds?.find((f) => f.value === PROD_DEFAULT_FEED('whats-hot'));
-	const hasFeedPinned = Boolean(feedConfig);
-	const hasDiscoverPinned = Boolean(discoverFeedConfig?.pinned);
+	const hasFeedPinned = !!feedConfig;
+	const hasDiscoverPinned = !!discoverFeedConfig?.pinned;
 
 	const onRemoveFeed = async () => {
 		try {

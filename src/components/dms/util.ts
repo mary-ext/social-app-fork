@@ -28,7 +28,7 @@ export function canBeMessaged(profile: AnyProfileView) {
 		// if unset, treat as following
 		case 'following':
 		case undefined:
-			return Boolean(profile.viewer?.followedBy);
+			return !!profile.viewer?.followedBy;
 		// any other values are invalid according to the lexicon, so
 		// let's treat as false to be safe
 		default:
@@ -43,7 +43,7 @@ export function canBeAddedToGroup(profile: AnyProfileView) {
 		case 'all':
 			return true;
 		case 'following':
-			return Boolean(profile.viewer?.followedBy);
+			return !!profile.viewer?.followedBy;
 		case undefined:
 			return canBeMessaged(profile);
 		default:

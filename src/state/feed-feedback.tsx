@@ -61,9 +61,9 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 	const feed = !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo) ? feedSourceInfo : undefined;
 
 	const isDiscover = isDiscoverFeed(feed?.feedDescriptor);
-	const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions);
+	const acceptsInteractions = !!(isDiscover || feed?.acceptsInteractions);
 	const proxyDid = feed?.view?.did;
-	const enabled = Boolean(feed) && Boolean(proxyDid) && acceptsInteractions && hasSession;
+	const enabled = !!feed && !!proxyDid && acceptsInteractions && hasSession;
 
 	const queue = useRef<Set<string>>(new Set());
 	const history = useRef<

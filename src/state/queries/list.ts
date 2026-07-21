@@ -240,7 +240,7 @@ export function useListMuteMutation() {
 			);
 
 			await whenAppViewReady(appview, uri, (v) => {
-				return Boolean(v?.viewer?.muted) === mute;
+				return !!v?.viewer?.muted === mute;
 			});
 		},
 		onSuccess(_data, variables) {

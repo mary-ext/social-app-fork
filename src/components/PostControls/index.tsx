@@ -172,7 +172,7 @@ export function PostControls({
 						isReposted={!!post.viewer?.repost}
 						onRepost={() => void onRepost()}
 						onQuote={onQuote}
-						embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+						embeddingDisabled={!!post.viewer?.embeddingDisabled}
 						tooltip={m['components.postControls.repost.action.repost']()}
 						render={
 							<PostControlButton
@@ -192,7 +192,7 @@ export function PostControls({
 
 				<div className={css.primaryItem}>
 					<PostControlButton
-						active={Boolean(post.viewer?.like)}
+						active={!!post.viewer?.like}
 						activeColor={t.palette.pink}
 						tooltip={m['common.action.like']()}
 						onClick={() => requireAuth(() => onPressToggleLike())}
@@ -203,14 +203,11 @@ export function PostControls({
 						}
 					>
 						<PostControlButtonIconBox>
-							<AnimatedLikeIcon
-								isLiked={Boolean(post.viewer?.like)}
-								hasBeenToggled={hasLikeIconBeenToggled}
-							/>
+							<AnimatedLikeIcon isLiked={!!post.viewer?.like} hasBeenToggled={hasLikeIconBeenToggled} />
 						</PostControlButtonIconBox>
 						<CountWheel
 							count={post.likeCount ?? 0}
-							isToggled={Boolean(post.viewer?.like)}
+							isToggled={!!post.viewer?.like}
 							hasBeenToggled={hasLikeIconBeenToggled}
 							renderCount={({ count }) => (
 								<PostControlButtonText>{formatPostStatCount(count)}</PostControlButtonText>

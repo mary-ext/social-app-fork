@@ -40,7 +40,7 @@ export type LabelProps = {
 export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
 	const handle = Dialog.useDialogHandle();
 	const desc = useModerationCauseDescription(cause);
-	const isLabeler = Boolean(desc.sourceType && desc.sourceDid);
+	const isLabeler = !!(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;
 	const glyphSize = size === 'lg' ? 16 : 12;
 

@@ -103,12 +103,8 @@ export class FeedViewPostsSlice {
 		 */
 		const grandparent = rootIsView && parentRecord.reply?.parent.uri === root.uri ? root : undefined;
 		const grandparentAuthor = reply.grandparentAuthor;
-		const isGrandparentBlocked = Boolean(
-			grandparent && grandparent.$type === 'app.bsky.feed.defs#blockedPost',
-		);
-		const isGrandparentNotFound = Boolean(
-			grandparent && grandparent.$type === 'app.bsky.feed.defs#notFoundPost',
-		);
+		const isGrandparentBlocked = !!(grandparent && grandparent.$type === 'app.bsky.feed.defs#blockedPost');
+		const isGrandparentNotFound = !!(grandparent && grandparent.$type === 'app.bsky.feed.defs#notFoundPost');
 		this.items.unshift({
 			post: parent,
 			record: parentRecord,
@@ -432,5 +428,5 @@ function shouldDisplayReplyInFollowing(authors: AuthorContext, userDid: string):
 }
 
 function isSelfOrFollowing(profile: AppBskyActorDefs.ProfileViewBasic, userDid: string) {
-	return Boolean(profile.did === userDid || profile.viewer?.following);
+	return !!(profile.did === userDid || profile.viewer?.following);
 }

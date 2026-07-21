@@ -74,8 +74,9 @@ export function useOpenComposer() {
 			}
 		}
 		const author = opts.replyTo?.author || opts.quote?.author;
-		const isBlocked = Boolean(
-			author && (author.viewer?.blocking || author.viewer?.blockedBy || author.viewer?.blockingByList),
+		const isBlocked = !!(
+			author &&
+			(author.viewer?.blocking || author.viewer?.blockedBy || author.viewer?.blockingByList)
 		);
 		if (isBlocked) {
 			Toast.show(m['common.block.interactionError'](), {

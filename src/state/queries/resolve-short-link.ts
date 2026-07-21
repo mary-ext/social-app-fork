@@ -19,7 +19,7 @@ export function useResolvedStarterPackShortLink({ code }: { code: string }) {
 			return parseStarterPackUri(res);
 		},
 		retry: 1,
-		enabled: Boolean(code),
+		enabled: !!code,
 		staleTime: STALE.HOURS.ONE,
 	});
 }

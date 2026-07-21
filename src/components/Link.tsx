@@ -124,8 +124,11 @@ export function useLink({
 
 		if (exitEarlyIfFalse === false) return;
 
-		const requiresWarning = Boolean(
-			!disableMismatchWarning && displayText && isExternal && isMisleadingLink(href, displayText),
+		const requiresWarning = !!(
+			!disableMismatchWarning &&
+			displayText &&
+			isExternal &&
+			isMisleadingLink(href, displayText)
 		);
 
 		e.preventDefault();

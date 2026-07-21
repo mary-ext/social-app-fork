@@ -74,7 +74,7 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 			);
 			return data.starterPack;
 		},
-		enabled: Boolean(uri) || Boolean(did && rkey),
+		enabled: !!uri || !!(did && rkey),
 		staleTime: STALE.MINUTES.FIVE,
 	});
 }

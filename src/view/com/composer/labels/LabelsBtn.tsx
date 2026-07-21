@@ -22,13 +22,13 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 	const updateAdultLabels = (newLabels: string[]) => {
 		const newLabel = newLabels[newLabels.length - 1];
 		const filtered = labels.filter((l) => !ADULT_CONTENT_LABELS.some((adult) => adult === l));
-		onChange(unique([...filtered, newLabel]).filter((label): label is SelfLabel => Boolean(label)));
+		onChange(unique([...filtered, newLabel]).filter((label): label is SelfLabel => !!label));
 	};
 
 	const updateOtherLabels = (newLabels: string[]) => {
 		const newLabel = newLabels[newLabels.length - 1];
 		const filtered = labels.filter((l) => !OTHER_SELF_LABELS.some((other) => other === l));
-		onChange(unique([...filtered, newLabel]).filter((label): label is SelfLabel => Boolean(label)));
+		onChange(unique([...filtered, newLabel]).filter((label): label is SelfLabel => !!label));
 	};
 
 	return (

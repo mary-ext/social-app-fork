@@ -124,12 +124,11 @@ function AnchorPostControls({
 			>
 				<AnchorControlButtonIcon icon={Bubble} />
 			</AnchorControlButton>
-
 			<RepostMenu
 				isReposted={!!post.viewer?.repost}
 				onRepost={() => void onRepost()}
 				onQuote={onQuote}
-				embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+				embeddingDisabled={!!post.viewer?.embeddingDisabled}
 				tooltip={m['components.postControls.repost.action.repost']()}
 				render={
 					<AnchorControlButton
@@ -142,9 +141,8 @@ function AnchorPostControls({
 					</AnchorControlButton>
 				}
 			/>
-
 			<AnchorControlButton
-				active={Boolean(post.viewer?.like)}
+				active={!!post.viewer?.like}
 				activeColor={t.palette.pink}
 				tooltip={m['common.action.like']()}
 				onClick={() => requireAuth(() => onPressToggleLike())}
@@ -155,14 +153,9 @@ function AnchorPostControls({
 				}
 			>
 				<AnchorControlButtonIconBox>
-					<AnimatedLikeIcon
-						size={20}
-						isLiked={Boolean(post.viewer?.like)}
-						hasBeenToggled={hasLikeIconBeenToggled}
-					/>
+					<AnimatedLikeIcon size={20} isLiked={!!post.viewer?.like} hasBeenToggled={hasLikeIconBeenToggled} />
 				</AnchorControlButtonIconBox>
 			</AnchorControlButton>
-
 			<ShareMenu
 				post={post}
 				onShare={onShare}

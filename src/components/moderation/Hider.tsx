@@ -49,11 +49,9 @@ export function Outer({
 	const info = useModerationCauseDescription(blur);
 
 	const meta = {
-		isNoPwi: Boolean(
-			modui?.blurs.find(
-				(cause) =>
-					cause.type === ModerationCauseType.Label && cause.labelDef.identifier === '!no-unauthenticated',
-			),
+		isNoPwi: !!modui?.blurs.find(
+			(cause) =>
+				cause.type === ModerationCauseType.Label && cause.labelDef.identifier === '!no-unauthenticated',
 		),
 		allowOverride: allowOverride ?? !modui?.noOverride,
 	};

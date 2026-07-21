@@ -116,7 +116,7 @@ function PostMenuItems({
 	}, [post, currentAccount]);
 
 	const rootUri = record.reply?.root?.uri || postUri;
-	const isReply = Boolean(record.reply);
+	const isReply = !!record.reply;
 	const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(post, rootUri);
 	const isAuthor = postAuthor.did === currentAccount?.did;
 	const isRootPostAuthor = parseCanonicalResourceUri(rootUri).repo === currentAccount?.did;

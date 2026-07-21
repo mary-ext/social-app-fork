@@ -102,7 +102,7 @@ export function isLabelerSubscribed(
 	if (isAppLabeler(did)) {
 		return true;
 	}
-	return Boolean(modOpts.prefs.prefsByLabelers?.[did]);
+	return !!modOpts.prefs.prefsByLabelers?.[did];
 }
 
 export type Subject =

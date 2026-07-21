@@ -22,7 +22,7 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
 export function useProfileListsQuery(did: Did) {
 	const moderationOpts = useModerationOpts();
-	const enabled = Boolean(moderationOpts);
+	const enabled = !!moderationOpts;
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyGraphGetLists.$output,

@@ -83,7 +83,7 @@ export function Wizard() {
 		isError: isErrorProfile,
 	} = useProfileQuery({ did: profileDid });
 
-	const isEdit = Boolean(rkey);
+	const isEdit = !!rkey;
 	const isReady = (!isEdit || (isEdit && starterPack && listItems)) && profile && moderationOpts;
 
 	if (!isReady) {

@@ -57,7 +57,7 @@ export function Label({ cause, size = 'sm', disableDetailsDialog, noBg }: LabelP
 	const t = useTheme();
 	const handle = Dialog.useDialogHandle();
 	const desc = useModerationCauseDescription(cause);
-	const isLabeler = Boolean(desc.sourceType && desc.sourceDid);
+	const isLabeler = !!(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;
 
 	let outer: (ViewStyle | false)[];

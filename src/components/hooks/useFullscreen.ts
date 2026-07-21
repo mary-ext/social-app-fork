@@ -8,7 +8,7 @@ function fullscreenSubscribe(onChange: () => void) {
 }
 
 export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
-	const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () => Boolean(document.fullscreenElement));
+	const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () => !!document.fullscreenElement);
 	const scrollYRef = useRef<null | number>(null);
 	// transition detection for the scroll-restore side effect, not derived render state — keep it in a ref
 	// so the effect can read the previous value without a synchronous setState.

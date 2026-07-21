@@ -51,7 +51,7 @@ export function listsWithMembershipQueryOptions({
 					}),
 				).then((data) => ({ cursor: data.cursor, items: data.listsWithMembership })),
 			),
-		enabled: Boolean(actor) && enabled,
+		enabled: !!actor && enabled,
 	});
 }
 

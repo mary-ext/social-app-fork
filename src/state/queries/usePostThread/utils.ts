@@ -148,6 +148,6 @@ export function getThreadPostNoUnauthenticatedUI({
 }): Extract<ThreadItem, { type: 'threadPostNoUnauthenticated' }>['ui'] {
 	return {
 		showChildReplyLine: depth < 0,
-		showParentReplyLine: Boolean(prevItemDepth && prevItemDepth < depth),
+		showParentReplyLine: !!(prevItemDepth && prevItemDepth < depth),
 	};
 }

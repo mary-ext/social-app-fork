@@ -85,7 +85,7 @@ function PostQuotes({ uri }: { uri: string }) {
 
 	const moderationOpts = useModerationOpts();
 
-	const isError = Boolean(resolveError || error);
+	const isError = !!(resolveError || error);
 
 	const quotes = moderationOpts
 		? (data?.pages.flatMap((page) =>

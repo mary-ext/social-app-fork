@@ -74,12 +74,12 @@ export function RichTextTag({
 		: m['components.richTextTag.a11y.hashtag']({ tag });
 	const prefixedTag = isCashtag ? tag : `#${tag}`;
 
-	const isMuted = Boolean(
+	const isMuted = !!(
 		(preferences?.moderationPrefs.mutedWords?.find(
 			(word) => word.value === tag && word.targets.includes('tag'),
 		) ??
 			optimisticUpsert?.find((word) => word.value === tag && word.targets.includes('tag'))) &&
-		!optimisticRemove?.find((word) => word?.value === tag),
+		!optimisticRemove?.find((word) => word?.value === tag)
 	);
 
 	// mute records that exactly match the tag in question

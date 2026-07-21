@@ -48,7 +48,7 @@ export function Header({
 	const isPending = isAddSavedFeedPending || isUpdatingSavedFeeds;
 
 	const savedFeedConfig = preferences?.savedFeeds?.find((f) => f.value === list.uri);
-	const isPinned = Boolean(savedFeedConfig?.pinned);
+	const isPinned = !!savedFeedConfig?.pinned;
 
 	const onTogglePinned = async () => {
 		try {

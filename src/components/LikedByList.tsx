@@ -25,7 +25,7 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 		error,
 	} = useLikedByQuery(resolvedUri?.uri);
 
-	const isError = Boolean(resolveError || error);
+	const isError = !!(resolveError || error);
 
 	const likes = data?.pages ? data.pages.flatMap((page) => page.likes) : [];
 

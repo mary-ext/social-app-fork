@@ -46,11 +46,11 @@ function useFullVerificationState({ profile }: { profile: AnyProfileView }): Ful
 
 	const verifications = profile.verification?.verifications || [];
 	const wasVerified = profileState.role === 'default' && !profileState.isVerified && verifications.length > 0;
-	const hasIssuedVerification = Boolean(
+	const hasIssuedVerification = !!(
 		viewerState &&
 		viewerState.role === 'verifier' &&
 		profileState.role === 'default' &&
-		verifications.find((v) => v.issuer === currentAccount?.did),
+		verifications.find((v) => v.issuer === currentAccount?.did)
 	);
 
 	return {

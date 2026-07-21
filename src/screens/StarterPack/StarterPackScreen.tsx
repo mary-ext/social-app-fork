@@ -135,9 +135,9 @@ function StarterPackScreenLoaded({
 	routeParams: StarterPackRouteParams;
 	moderationOpts: ModerationOptions;
 }) {
-	const showPeopleTab = Boolean(starterPack.list);
-	const showFeedsTab = Boolean(starterPack.feeds?.length);
-	const showPostsTab = Boolean(starterPack.list);
+	const showPeopleTab = !!starterPack.list;
+	const showFeedsTab = !!starterPack.feeds?.length;
+	const showPostsTab = !!starterPack.list;
 	const sections = definite<Section<'feeds' | 'people' | 'posts'>>([
 		showPeopleTab && {
 			id: 'people',

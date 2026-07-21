@@ -610,7 +610,7 @@ export class Convo {
 				throw new Error('could not find self in convo');
 			}
 
-			const userIsDisabled = Boolean(self.chatDisabled);
+			const userIsDisabled = !!self.chatDisabled;
 
 			if (userIsDisabled) {
 				this.dispatch({ event: ConvoDispatchEvent.Disable });

@@ -61,7 +61,7 @@ export function LabelerLabelRow({
 
 	// does the 'warn' setting make sense for this label?
 	const canWarn = !(labelDefinition.blur === 'none' && labelDefinition.severity === 'none');
-	const adultOnly = Boolean(labelDefinition.flags & LabelFlags.AdultOnly);
+	const adultOnly = !!(labelDefinition.flags & LabelFlags.AdultOnly);
 	const adultDisabled = adultOnly && !preferences?.moderationPrefs.adultContentEnabled;
 	const cantConfigure = isGlobalLabel || adultDisabled;
 

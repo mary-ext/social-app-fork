@@ -185,7 +185,7 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 			}
 
 			// can't generate video thumbnails on web; flag presence so we render a placeholder tile.
-			setHasVideo(Boolean(post.video?.exists && post.video.localPath));
+			setHasVideo(!!(post.video?.exists && post.video.localPath));
 		}
 
 		void loadMedia();

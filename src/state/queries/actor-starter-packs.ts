@@ -21,7 +21,7 @@ export function useActorStarterPacksQuery({ did, enabled = true }: { did?: Did; 
 					params: { actor: did!, cursor: pageParam, limit: 10 },
 				}),
 			),
-		enabled: Boolean(did) && enabled,
+		enabled: !!did && enabled,
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 	});
@@ -44,7 +44,7 @@ export function useActorStarterPacksWithMembershipsQuery({
 					params: { actor: did!, cursor: pageParam, limit: 10 },
 				}),
 			),
-		enabled: Boolean(did) && enabled,
+		enabled: !!did && enabled,
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 	});

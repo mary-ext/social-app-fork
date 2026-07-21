@@ -128,7 +128,7 @@ export function usePostFeedQuery(
 	const moderationOpts = useModerationOpts();
 	const { data: preferences } = usePreferencesQuery();
 	/** awaits Active Assistant (AA) state to prevent flash of unstyled content (FOUC). */
-	const enabled = opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences);
+	const enabled = opts?.enabled !== false && !!moderationOpts && !!preferences;
 	const userInterests = aggregateUserInterests(preferences);
 	const { appview } = useClients();
 	const { hasSession } = useSession();
@@ -278,7 +278,7 @@ export function usePostFeedQuery(
 											likeCount: item.post.likeCount ?? 0,
 											repostCount: item.post.repostCount ?? 0,
 											replyCount: item.post.replyCount ?? 0,
-											isFollowedBy: Boolean(item.post.author.viewer?.followedBy),
+											isFollowedBy: !!item.post.author.viewer?.followedBy,
 											uri: item.post.uri,
 										})),
 									);

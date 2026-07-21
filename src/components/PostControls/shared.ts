@@ -41,8 +41,10 @@ export function usePostControlsActions({
 	const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, viaRepost);
 	const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(post, viaRepost);
 	const requireAuth = useRequireAuth();
-	const isBlocked = Boolean(
-		post.author.viewer?.blocking || post.author.viewer?.blockedBy || post.author.viewer?.blockingByList,
+	const isBlocked = !!(
+		post.author.viewer?.blocking ||
+		post.author.viewer?.blockedBy ||
+		post.author.viewer?.blockingByList
 	);
 	const replyDisabled = post.viewer?.replyDisabled;
 

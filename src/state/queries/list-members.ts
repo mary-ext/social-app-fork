@@ -45,7 +45,7 @@ export function useListMembersQuery(uri?: ResourceUri, limit: number = PAGE_SIZE
 			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		enabled: Boolean(uri),
+		enabled: !!uri,
 	});
 }
 
@@ -55,7 +55,7 @@ export function useAllListMembersQuery(uri?: ResourceUri) {
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY_ALL(uri ?? ''),
 		queryFn: () => getAllListMembers(appview, uri!),
-		enabled: Boolean(uri),
+		enabled: !!uri,
 	});
 }
 
@@ -72,7 +72,7 @@ export async function getAllListMembers(client: Client, uri: ResourceUri) {
 			}),
 		);
 		listItems.push(...data.items);
-		hasMore = Boolean(data.cursor);
+		hasMore = !!data.cursor;
 		cursor = data.cursor;
 		i++;
 	}

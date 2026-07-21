@@ -363,7 +363,7 @@ export function FollowButtonInner({
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = moderateProfile(profile, moderationOpts);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
-	const isRound = Boolean(rest.shape && rest.shape === 'round');
+	const isRound = !!(rest.shape && rest.shape === 'round');
 
 	const onPressFollow = async (e: GestureResponderEvent) => {
 		e.preventDefault();

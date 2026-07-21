@@ -68,7 +68,7 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 		error,
 	} = usePostRepostedByQuery(resolvedUri?.uri);
 
-	const isError = Boolean(resolveError || error);
+	const isError = !!(resolveError || error);
 
 	const repostedBy = data?.pages ? data.pages.flatMap((page) => page.repostedBy) : [];
 

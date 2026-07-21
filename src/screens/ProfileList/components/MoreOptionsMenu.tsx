@@ -51,7 +51,7 @@ export function MoreOptionsMenu({
 	const isModList = list.purpose === 'app.bsky.graph.defs#modlist';
 	const isBlocking = !!list.viewer?.blocked;
 	const isMuting = !!list.viewer?.muted;
-	const isPinned = Boolean(savedFeedConfig?.pinned);
+	const isPinned = !!savedFeedConfig?.pinned;
 	const isOwner = currentAccount?.did === list.creator.did;
 
 	const onPressShare = () => {

@@ -23,7 +23,7 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
 export function useProfileFeedgensQuery(did: Did) {
 	const moderationOpts = useModerationOpts();
-	const enabled = Boolean(moderationOpts);
+	const enabled = !!moderationOpts;
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyFeedGetActorFeeds.$output,

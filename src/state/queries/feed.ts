@@ -239,7 +239,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 	const lastPageCountRef = useRef(0);
 
 	const query = useInfiniteQuery({
-		enabled: Boolean(moderationOpts) && options?.enabled !== false,
+		enabled: !!moderationOpts && options?.enabled !== false,
 		queryKey: createGetPopularFeedsQueryKey(options),
 		queryFn: async ({ pageParam }) => {
 			const data = await ok(
@@ -271,11 +271,9 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 								if (!hasSessionInner && KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)) {
 									return false;
 								}
-								const alreadySaved = Boolean(
-									savedFeeds?.find((f) => {
-										return f.value === feed.uri;
-									}),
-								);
+								const alreadySaved = !!savedFeeds?.find((f) => {
+									return f.value === feed.uri;
+								});
 								const decision = moderateFeedGenerator(feed, moderationOpts!);
 								return (
 									!alreadySaved &&
@@ -345,7 +343,7 @@ export const createPopularFeedsSearchQueryKey = (query: string) => [popularFeeds
 export function usePopularFeedsSearch({ query, enabled }: { query: string; enabled?: boolean }) {
 	const { appview } = useClients();
 	const moderationOpts = useModerationOpts();
-	const enabledInner = enabled ?? Boolean(moderationOpts);
+	const enabledInner = enabled ?? !!moderationOpts;
 
 	return useQuery({
 		enabled: enabledInner,

@@ -125,7 +125,7 @@ export function usePostAuthorShadowFilter(data?: FeedPage[]) {
 						const prevValue = prev.get(did);
 						const next = new Map(prev);
 						next.set(did, {
-							blocked: Boolean(value.blockingUri ?? prevValue?.blocked ?? false),
+							blocked: !!(value.blockingUri ?? prevValue?.blocked ?? false),
 							muted: value.muted ?? prevValue?.muted ?? false,
 						});
 						return next;

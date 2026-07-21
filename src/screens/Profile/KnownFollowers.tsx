@@ -60,7 +60,7 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 		refetch,
 	} = useProfileKnownFollowersQuery(resolvedDid);
 
-	const isError = Boolean(resolveError || error);
+	const isError = !!(resolveError || error);
 	const followers = data?.pages ? data.pages.flatMap((page) => page.followers) : [];
 
 	const onEndReached = async () => {

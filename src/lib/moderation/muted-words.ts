@@ -43,7 +43,7 @@ export const hasMutedWord = ({
 		),
 	];
 
-	const isFollowing = Boolean(actor?.viewer?.following);
+	const isFollowing = !!actor?.viewer?.following;
 	const now = Date.now();
 
 	for (const filter of keywordFilters) {

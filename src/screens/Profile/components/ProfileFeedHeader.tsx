@@ -91,8 +91,8 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 
 	const isFeedStateChangePending = isAddSavedFeedPending || isRemovePending || isUpdateFeedPending;
 	const savedFeedConfig = preferences?.savedFeeds?.find((f) => f.value === info.uri);
-	const isSaved = Boolean(savedFeedConfig);
-	const isPinned = Boolean(savedFeedConfig?.pinned);
+	const isSaved = !!savedFeedConfig;
+	const isPinned = !!savedFeedConfig?.pinned;
 
 	const onToggleSaved = async () => {
 		try {

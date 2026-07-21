@@ -110,7 +110,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 					handle={infoDialogHandle}
 					post={post}
 					settings={settings}
-					embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+					embeddingDisabled={!!post.viewer?.embeddingDisabled}
 				/>
 			)}
 		</>

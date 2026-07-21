@@ -24,9 +24,9 @@ export function useServiceConfigQuery() {
 			try {
 				const data = await ok(appview.get('app.bsky.unspecced.getConfig'));
 				return {
-					checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
+					checkEmailConfirmed: !!data.checkEmailConfirmed,
 					// @ts-expect-error not included in types atm
-					topicsEnabled: Boolean(data.topicsEnabled),
+					topicsEnabled: !!data.topicsEnabled,
 					liveNow: data.liveNow ?? [],
 				};
 			} catch {
