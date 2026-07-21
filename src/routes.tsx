@@ -21,7 +21,7 @@ import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
 import {
 	MessagesRouteLoadingScreen,
 	MessagesSplitViewColumnLoadingScreen,
-} from '#/screens/Messages/components/splitView/messages-route-loading-screen';
+} from '#/screens/Messages/components/splitView/MessagesRouteLoadingScreen';
 import { searchTabs } from '#/screens/Search/utils';
 
 declare module '@oomfware/stacker' {
