@@ -1,5 +1,4 @@
 import { Children, cloneElement, type ComponentType, Fragment, isValidElement, type ReactNode } from 'react';
-import type { GestureResponderEvent } from 'react-native';
 
 import { Collapsible } from '@base-ui/react/collapsible';
 import { Switch } from '@base-ui/react/switch';
@@ -11,11 +10,11 @@ import {
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron';
 import type { Props as IconProps } from '#/components/icons/common';
-import { type LinkProps, useLink } from '#/components/Link';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
+import { type LinkProps, useInternalLink } from '#/components/web/Link';
 import * as Skele from '#/components/web/Skeleton';
 
 /**
@@ -175,15 +174,9 @@ export function LinkRowRaw({
 	label: string;
 	to: LinkProps['to'];
 }) {
-	const { href, onPress } = useLink({ to, displayText: label });
+	const { href, onClick } = useInternalLink({ to });
 	return (
-		<a
-			href={href}
-			aria-label={label}
-			className={clsx(styles.rowInteractive, className)}
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `useLink` only reads DOM mouse event fields
-			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
-		>
+		<a href={href} aria-label={label} className={clsx(styles.rowInteractive, className)} onClick={onClick}>
 			{children}
 		</a>
 	);
