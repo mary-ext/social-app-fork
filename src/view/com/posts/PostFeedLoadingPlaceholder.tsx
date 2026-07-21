@@ -1,4 +1,6 @@
-import { triangularRandom, weightedRandomIndex } from '#/lib/numbers';
+import { weightedIndex } from '@mary/array-fns';
+
+import { triangularRandom } from '#/lib/numbers';
 
 import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
@@ -36,7 +38,7 @@ export function randomPostRow({ reason = true }: { reason?: boolean } = {}): Pos
 		lastLineWidth: triangularRandom(35, 90, 5),
 		// ~30% of rows carry a repost/pin reason line, sized in px to the "Reposted by …" handle's natural
 		// width; null leaves the row empty (just its reserved space)
-		reasonWidth: reason && weightedRandomIndex([7, 3]) === 1 ? triangularRandom(110, 210, 10) : null,
+		reasonWidth: reason && weightedIndex([7, 3]) === 1 ? triangularRandom(110, 210, 10) : null,
 		// post bodies cluster around a couple of lines; a triangular draw peaks there and tails to 1 and 5
 		textLines: triangularRandom(1, 5),
 	};

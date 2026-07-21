@@ -9,6 +9,8 @@ import {
 import type { $type, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { unique, uniqueBy } from '@mary/array-fns';
+
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate';
 
 export function createPostgateRecord(
@@ -29,11 +31,13 @@ export function mergePostgateRecords(
 	prev: AppBskyFeedPostgate.Main,
 	next: Partial<AppBskyFeedPostgate.Main>,
 ) {
-	const detachedEmbeddingUris = Array.from(
-		new Set([...(prev.detachedEmbeddingUris || []), ...(next.detachedEmbeddingUris || [])]),
-	);
-	const embeddingRules = [...(prev.embeddingRules || []), ...(next.embeddingRules || [])].filter(
-		(rule, i, all) => all.findIndex((_rule) => _rule.$type === rule.$type) === i,
+	const detachedEmbeddingUris = unique([
+		...(prev.detachedEmbeddingUris || []),
+		...(next.detachedEmbeddingUris || []),
+	]);
+	const embeddingRules = uniqueBy(
+		[...(prev.embeddingRules || []), ...(next.embeddingRules || [])],
+		(rule) => rule.$type,
 	);
 	return createPostgateRecord({
 		post: prev.post,

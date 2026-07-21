@@ -2,6 +2,8 @@ import type { ReactNode, Ref } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
+import { definite } from '@mary/array-fns';
+
 import { makeSearchQuery, type Params, type TabParam } from '#/screens/Search/utils';
 
 import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
@@ -51,7 +53,7 @@ export function SearchHeader({
 		// off to the Search screen. refining always pushes, so back returns to the previous query; the tab
 		// carries over so a stashed tab lands on the right results.
 		const prefix = fixedParams ? makeSearchQuery('', fixedParams) : '';
-		const q = [prefix, nextQuery].filter(Boolean).join(' ');
+		const q = definite([prefix, nextQuery]).join(' ');
 		navigate('Search', { q, tab });
 	};
 

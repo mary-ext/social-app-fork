@@ -1,3 +1,5 @@
+import { definite } from '@mary/array-fns';
+
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 
 import { device, type LanguagePrefs, useStorage } from '#/storage';
@@ -54,6 +56,5 @@ export function getContentLanguages() {
 }
 
 export function toPostLanguages(postLanguage: string): string[] {
-	// filter out empty strings if exist
-	return postLanguage.split(',').filter(Boolean);
+	return definite(postLanguage.split(','));
 }

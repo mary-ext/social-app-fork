@@ -1,5 +1,7 @@
 import type { ComponentType } from 'react';
 
+import { clsx } from 'clsx';
+
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, type ButtonProps } from '#/components/web/Button';
@@ -27,7 +29,7 @@ export function SettingsButton({
 	return (
 		<div className={styles.root}>
 			<Button
-				className={[styles.button, className].filter(Boolean).join(' ')}
+				className={clsx(styles.button, className)}
 				color={color}
 				shape="round"
 				size="large"

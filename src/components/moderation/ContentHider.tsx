@@ -6,6 +6,8 @@ import {
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
 
+import { unique } from '@mary/array-fns';
+
 import { Collapsible } from '@base-ui/react/collapsible';
 import { clsx } from 'clsx';
 
@@ -140,7 +142,7 @@ function ContentHiderActive({
 		if (selfBlurNames.length === 0) {
 			labelName = desc.name;
 		} else {
-			labelName = [...new Set(selfBlurNames)].join(', ');
+			labelName = unique(selfBlurNames).join(', ');
 		}
 	}
 

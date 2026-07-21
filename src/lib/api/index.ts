@@ -14,6 +14,8 @@ import { type Client, ok } from '@atcute/client';
 import type { $type, Blob as AtpBlob, Did, GenericUri, ResourceUri } from '@atcute/lexicons';
 import * as TID from '@atcute/tid';
 
+import { mapDefined } from '@mary/array-fns';
+
 import type { QueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
@@ -348,11 +350,13 @@ async function resolveMedia(
 	if (embedDraft.media?.type === 'video' && embedDraft.media.video.status === 'done') {
 		const videoDraft = embedDraft.media.video;
 		const captions = await Promise.all(
-			videoDraft.captions
-				.filter((caption) => caption.lang !== '')
-				.map(async (caption) => {
-					return { file: await uploadBlob(pds, caption.file, 'text/vtt'), lang: caption.lang };
-				}),
+			mapDefined(videoDraft.captions, (caption) => {
+				if (caption.lang === '') {
+					return;
+				}
+
+				return uploadBlob(pds, caption.file, 'text/vtt').then((file) => ({ file, lang: caption.lang }));
+			}),
 		);
 
 		// lexicon numbers must be floats

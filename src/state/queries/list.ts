@@ -4,10 +4,9 @@ import { type Client, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { mapDefined } from '@mary/array-fns';
+import { chunked, mapDefined } from '@mary/array-fns';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import chunk from 'lodash.chunk';
 
 import { createRecord, deleteRecord, getRecord, listRecords, putRecord } from '#/lib/api/records';
 import { uploadBlob } from '#/lib/api/upload-blob';
@@ -202,7 +201,7 @@ export function useListDeleteMutation() {
 			const writes = listitemRecordUris.map((recordUri) => createDel(recordUri)).concat([createDel(uri)]);
 
 			// apply in chunks
-			for (const writesChunk of chunk(writes, 10)) {
+			for (const writesChunk of chunked(writes, 10)) {
 				await ok(
 					pds!.post('com.atproto.repo.applyWrites', {
 						input: {

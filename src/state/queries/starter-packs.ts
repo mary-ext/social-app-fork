@@ -9,8 +9,9 @@ import { type Client, ok } from '@atcute/client';
 import type { Cid, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { chunked } from '@mary/array-fns';
+
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import chunk from 'lodash.chunk';
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
 import { createRecord, deleteRecord, putRecord } from '#/lib/api/records';
@@ -191,7 +192,7 @@ export function useEditStarterPackMutation({
 					i.subject.did !== currentAccount?.did && !profiles.find((p) => p.did === i.subject.did && p.did),
 			);
 			if (removedItems.length !== 0) {
-				const chunks = chunk(removedItems, 50);
+				const chunks = chunked(removedItems, 50);
 				for (const batch of chunks) {
 					await ok(
 						pds!.post('com.atproto.repo.applyWrites', {
@@ -210,7 +211,7 @@ export function useEditStarterPackMutation({
 
 			const addedProfiles = profiles.filter((p) => !currentListItems.find((i) => i.subject.did === p.did));
 			if (addedProfiles.length > 0) {
-				const chunks = chunk(addedProfiles, 50);
+				const chunks = chunked(addedProfiles, 50);
 				for (const batch of chunks) {
 					await ok(
 						pds!.post('com.atproto.repo.applyWrites', {

@@ -308,10 +308,10 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 						params: { actor: did },
 					}),
 				).then((data) => {
-					const dids = data.suggestions
-						.filter((a) => !a.viewer?.following)
-						.map((a) => a.did)
-						.slice(0, 8);
+					const dids = mapDefined(data.suggestions, (a) => (a.viewer?.following ? undefined : a.did)).slice(
+						0,
+						8,
+					);
 					userActionHistory.followSuggestion(dids);
 				});
 			}

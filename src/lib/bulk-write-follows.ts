@@ -3,7 +3,7 @@ import { type Client, ok } from '@atcute/client';
 import type { ActorIdentifier, Did } from '@atcute/lexicons';
 import * as TID from '@atcute/tid';
 
-import chunk from 'lodash.chunk';
+import { chunked } from '@mary/array-fns';
 
 import { until } from '#/lib/async/until';
 
@@ -34,7 +34,7 @@ export async function bulkWriteFollows(
 		},
 	}));
 
-	const chunks = chunk(followWrites, 50);
+	const chunks = chunked(followWrites, 50);
 	for (const batch of chunks) {
 		await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes: batch } }));
 	}

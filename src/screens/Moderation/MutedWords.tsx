@@ -1,3 +1,5 @@
+import { definite } from '@mary/array-fns';
+
 import { clsx } from 'clsx';
 
 import { useTitle } from '#/lib/hooks/useTitle';
@@ -102,7 +104,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 	const isExpired = expiryDate ? expiryDate < new Date() : false;
 
 	// scope is carried by the leading icon, so the subtitle only states timing and follow-exclusion
-	const details = [
+	const details = definite([
 		expiryDate
 			? isExpired
 				? m['screens.moderation.mutedWord.expired']()
@@ -111,9 +113,7 @@ function MutedWordRow({ className, word }: { className?: string; word: AppBskyAc
 		word.actorTarget === 'exclude-following'
 			? m['screens.moderation.mutedWord.excludesFollowing']()
 			: undefined,
-	]
-		.filter(Boolean)
-		.join(' · ');
+	]).join(' · ');
 
 	const renew = (days?: number) => {
 		void updateMutedWord({

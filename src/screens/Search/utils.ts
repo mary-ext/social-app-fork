@@ -32,7 +32,7 @@ export function parseSearchQuery(rawQuery: string) {
 	const literals = rawLiterals.map((l) => l.trim());
 
 	return {
-		query: [base, literals.join(' ')].filter(Boolean).join(' '),
+		query: definite([base, literals.join(' ')]).join(' '),
 		params,
 	};
 }

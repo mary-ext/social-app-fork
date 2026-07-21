@@ -1,5 +1,7 @@
 import type { AppBskyActorStatus } from '@atcute/bluesky';
 
+import { unique } from '@mary/array-fns';
+
 import { LOCALE } from '#/locale/intl/locale';
 
 const durationFormat = new Intl.DurationFormat(LOCALE, { style: 'long' });
@@ -103,7 +105,7 @@ export function isLiveNowUrlAllowed(url: string, allowedHosts: Set<string>): boo
  * @returns the deduplicated service names and a comma-joined string of them
  */
 export function getLiveServiceNames(domains: Set<string>) {
-	const names = Array.from(new Set(Array.from(domains.values()).map((d) => serviceUrlToNameMap[d] || d)));
+	const names = unique(Array.from(domains, (d) => serviceUrlToNameMap[d] || d));
 	return {
 		names,
 		formatted: names.join(', '),

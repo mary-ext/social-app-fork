@@ -15,8 +15,9 @@ import {
 import { type Client, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
+import { chunked } from '@mary/array-fns';
+
 import type { QueryClient } from '@tanstack/react-query';
-import chunk from 'lodash.chunk';
 
 import { labelIsHideableOffense } from '#/lib/moderation';
 import { hasMutedWord } from '#/lib/moderation/muted-words';
@@ -216,8 +217,8 @@ async function fetchSubjects(
 			packUris.add(notif.notification.reasonSubject);
 		}
 	}
-	const postUriChunks = chunk(Array.from(postUris), 25);
-	const packUriChunks = chunk(Array.from(packUris), 25);
+	const postUriChunks = chunked(Array.from(postUris), 25);
+	const packUriChunks = chunked(Array.from(packUris), 25);
 	const postsChunks = await Promise.all(
 		postUriChunks.map((uris) =>
 			ok(appview.get('app.bsky.feed.getPosts', { params: { uris } })).then((data) => data.posts),

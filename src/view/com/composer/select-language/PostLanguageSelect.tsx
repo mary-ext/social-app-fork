@@ -1,3 +1,5 @@
+import { unique } from '@mary/array-fns';
+
 import { MAX_POST_LANGUAGES } from '#/lib/constants';
 
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
@@ -31,7 +33,7 @@ export function PostLanguageSelect({
 	const setLangPrefs = useLanguagePrefsApi();
 	const languageDialogHandle = Dialog.useDialogHandle();
 
-	const dedupedHistory = Array.from(new Set([...langPrefs.postLanguageHistory, langPrefs.postLanguage]));
+	const dedupedHistory = unique([...langPrefs.postLanguageHistory, langPrefs.postLanguage]);
 
 	const currentLanguages = currentLanguagesProp ?? toPostLanguages(langPrefs.postLanguage);
 

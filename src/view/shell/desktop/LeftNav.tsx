@@ -2,6 +2,7 @@ import { type MouseEvent, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
+import { mapDefined } from '@mary/array-fns';
 import { useRoute } from '@oomfware/stacker';
 
 import { clsx } from 'clsx';
@@ -86,12 +87,13 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 	const profiles = data?.profiles;
 	const signOutPromptHandle = Prompt.usePromptHandle();
 	const profile = profiles?.find((p) => p.did === currentAccount!.did);
-	const otherAccounts = accounts
-		.filter((acc) => acc.did !== currentAccount!.did)
-		.map((account) => ({
-			account,
-			profile: profiles?.find((p) => p.did === account.did),
-		}));
+	const otherAccounts = mapDefined(accounts, (account) => {
+		if (account.did === currentAccount!.did) {
+			return;
+		}
+
+		return { account, profile: profiles?.find((p) => p.did === account.did) };
+	});
 
 	const { isActive: live } = useActorStatus(profile);
 

@@ -1,4 +1,6 @@
-import { randomInRange, weightedRandomIndex } from '#/lib/numbers';
+import { weightedIndex } from '@mary/array-fns';
+
+import { randomInRange } from '#/lib/numbers';
 
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
 import { clampAspectRatio, deriveCarouselHeight } from '#/components/ImageEmbed/carousel/utils';
@@ -20,7 +22,7 @@ const logAspect = (min: number, max: number) => Math.exp(randomInRange(Math.log(
 // a post image's aspect ratio. mostly moderate, but a tenth of the time it goes wild — real feeds carry the
 // occasional meme banner or full-height screenshot (a 250:37 sliver is a genuine thing people post), and
 // snapping to "known" ratios would hide that chaos.
-const randomAspect = () => (weightedRandomIndex([9, 1]) === 1 ? logAspect(1 / 5, 7) : logAspect(1 / 2, 2));
+const randomAspect = () => (weightedIndex([9, 1]) === 1 ? logAspect(1 / 5, 7) : logAspect(1 / 2, 2));
 
 /**
  * returns a randomly selected embed shape (single-image, carousel, or null) to simulate a realistic feed
@@ -29,7 +31,7 @@ const randomAspect = () => (weightedRandomIndex([9, 1]) === 1 ? logAspect(1 / 5,
  * @returns a shape type, or null approximately 60% of the time.
  */
 export function randomShape(): Shape | null {
-	switch (weightedRandomIndex(EMBED_KIND_WEIGHTS)) {
+	switch (weightedIndex(EMBED_KIND_WEIGHTS)) {
 		case 1:
 			return { aspect: randomAspect(), type: 'single' };
 		case 2:
@@ -37,7 +39,7 @@ export function randomShape(): Shape | null {
 				// draw raw aspects (the tiles clamp their own width): the first two drive the row height, and
 				// real landscape/portrait sets routinely sit past the clamp limits, so drawing within them would
 				// peg every placeholder to the tallest bucket.
-				tiles: Array.from({ length: 2 + weightedRandomIndex(CAROUSEL_COUNT_WEIGHTS) }, randomAspect),
+				tiles: Array.from({ length: 2 + weightedIndex(CAROUSEL_COUNT_WEIGHTS) }, randomAspect),
 				type: 'carousel',
 			};
 		default:

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 
+import { mapDefined } from '@mary/array-fns';
+
 import debounce from 'lodash.debounce';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -140,10 +142,7 @@ export function SuggestedLanguage({
 
 	const hasLanguageSuggestion = suggLang && !currentLanguages.includes(suggLang);
 
-	const replyToLanguage = replyToLanguagesProp
-		.filter(Boolean)
-		.map((lang) => getPrimaryLanguageSubtag(lang))
-		.find((lang) => lang !== undefined);
+	const replyToLanguage = mapDefined(replyToLanguagesProp, getPrimaryLanguageSubtag).at(0);
 	const hasSuggestedReplyLanguage =
 		!hasInteracted && !suggLang && replyToLanguage && !currentLanguages.includes(replyToLanguage);
 

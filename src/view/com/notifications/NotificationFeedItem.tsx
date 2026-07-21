@@ -12,6 +12,8 @@ import { ok } from '@atcute/client';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
+import { uniqueBy } from '@mary/array-fns';
+
 import { Collapsible } from '@base-ui/react/collapsible';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -151,18 +153,21 @@ let NotificationFeedItem = ({
 		unstableCacheProfileView(queryClient, item.notification.author);
 	};
 
-	const authors: Author[] = [
-		{
-			profile: item.notification.author,
-			href: makeProfileLink(item.notification.author),
-			moderation: moderateProfile(item.notification.author, moderationOpts),
-		},
-		...(item.additional?.map(({ author }) => ({
-			profile: author,
-			href: makeProfileLink(author),
-			moderation: moderateProfile(author as AnyProfileView, moderationOpts),
-		})) || []),
-	].filter((author, index, arr) => arr.findIndex((au) => au.profile.did === author.profile.did) === index);
+	const authors: Author[] = uniqueBy(
+		[
+			{
+				profile: item.notification.author,
+				href: makeProfileLink(item.notification.author),
+				moderation: moderateProfile(item.notification.author, moderationOpts),
+			},
+			...(item.additional?.map(({ author }) => ({
+				profile: author,
+				href: makeProfileLink(author),
+				moderation: moderateProfile(author as AnyProfileView, moderationOpts),
+			})) || []),
+		],
+		(author) => author.profile.did,
+	);
 
 	const niceTimestamp = niceDate(item.notification.indexedAt);
 	const firstAuthor = authors[0]!;

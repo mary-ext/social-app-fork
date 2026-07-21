@@ -3,6 +3,8 @@ import { type ComponentType, useMemo, useRef, useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
 
+import { partition } from '@mary/array-fns';
+
 import debounce from 'lodash.debounce';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
@@ -198,23 +200,14 @@ export function FeedsScreen() {
 			} else if (savedFeeds?.feeds?.length) {
 				const noFollowingFeed = savedFeeds.feeds.every((f) => f.type !== 'timeline');
 
+				// pinned feeds list ahead of the rest
+				const [pinned, unpinned] = partition(savedFeeds.feeds, (s) => s.config.pinned);
 				items = items.concat(
-					savedFeeds.feeds
-						.filter((s) => s.config.pinned)
-						.map((s) => ({
-							key: `savedFeed:${s.view?.uri}:${s.config.id}`,
-							savedFeed: s,
-							type: 'savedFeed',
-						})),
-				);
-				items = items.concat(
-					savedFeeds.feeds
-						.filter((s) => !s.config.pinned)
-						.map((s) => ({
-							key: `savedFeed:${s.view?.uri}:${s.config.id}`,
-							savedFeed: s,
-							type: 'savedFeed',
-						})),
+					[...pinned, ...unpinned].map((s) => ({
+						key: `savedFeed:${s.view?.uri}:${s.config.id}`,
+						savedFeed: s,
+						type: 'savedFeed',
+					})),
 				);
 
 				if (noFollowingFeed) {

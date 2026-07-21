@@ -3,10 +3,10 @@ import { type ReactNode, useEffect } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { weightedIndex } from '@mary/array-fns';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
-
-import { weightedRandomIndex } from '#/lib/numbers';
 
 import { precacheFeedFromGeneratorView, useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { useToggleSavedFeed } from '#/state/queries/preferences';
@@ -285,7 +285,7 @@ export function LoadingPlaceholder({
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
 	const rows = Array.from({ length: rowCount }, () => ({
 		// ~5% of feeds carry no description; the rest cluster around 1 line with a long tail.
-		descriptionLines: weightedRandomIndex(DESCRIPTION_LINE_WEIGHTS),
+		descriptionLines: weightedIndex(DESCRIPTION_LINE_WEIGHTS),
 	}));
 
 	return (

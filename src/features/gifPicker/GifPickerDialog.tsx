@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { uniqueBy } from '@mary/array-fns';
+
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
 import { useBreakpoints } from '#/alf';
@@ -97,7 +99,7 @@ function GifPickerBody({
 		refetch,
 	} = useGifPickerData(effectiveSearch, { enabled: !isRecentsActive });
 
-	const networkItems = dedupeById(data?.pages.flatMap((page) => page.results) ?? []);
+	const networkItems = uniqueBy(data?.pages.flatMap((page) => page.results) ?? [], (item) => item.id);
 	const items = isRecentsActive ? getRecents() : networkItems;
 	const hasData = items.length > 0;
 
@@ -181,15 +183,4 @@ function GifPickerBody({
 			)}
 		</>
 	);
-}
-
-function dedupeById(items: Gif[]): Gif[] {
-	const seen = new Set<string>();
-	const out: Gif[] = [];
-	for (const item of items) {
-		if (seen.has(item.id)) continue;
-		seen.add(item.id);
-		out.push(item);
-	}
-	return out;
 }

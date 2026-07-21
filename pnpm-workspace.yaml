@@ -22,6 +22,7 @@ minimumReleaseAgeExclude:
   - '@atcute/*'
   - '@oomfware/*'
   - '@mary-ext/*'
+  - '@jsr/mary__*'
   - '@rsbuild/core@2.1.1'
   - '@rspack/binding-darwin-arm64@2.1.1'
   - '@rspack/binding-darwin-x64@2.1.1'

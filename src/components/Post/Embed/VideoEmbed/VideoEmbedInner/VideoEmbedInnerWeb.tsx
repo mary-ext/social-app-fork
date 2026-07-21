@@ -2,6 +2,8 @@ import { useCallback, useEffect, useEffectEvent, useId, useRef, useState } from 
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
+import { difference } from '@mary/array-fns';
+
 import type * as HlsTypes from 'hls.js';
 
 import { useFullscreen } from '#/components/hooks/useFullscreen';
@@ -238,7 +240,7 @@ function useHLS({
 					flushed.push(lowQualFrag);
 				}
 
-				setLowQualityFragments((prev) => prev.filter((f) => !flushed.includes(f)));
+				setLowQualityFragments((prev) => difference(prev, flushed));
 			}
 		},
 	);

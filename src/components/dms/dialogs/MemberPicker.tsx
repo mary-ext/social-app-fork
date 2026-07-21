@@ -3,6 +3,8 @@ import { type ReactNode, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { Combobox } from '@base-ui/react/combobox';
 import { clsx } from 'clsx';
 
@@ -96,10 +98,14 @@ export function SelectMembersStep({
 		if (!follows) {
 			rows = [suggested, { key: 'placeholder', kind: 'placeholder' }];
 		} else {
-			const profiles = follows.pages
-				.flatMap((page) => page.follows)
-				.filter((profile) => canBeAddedToGroup(profile) && !excludeDids?.has(profile.did))
-				.map((profile): ProfileRow => ({ key: profile.did, kind: 'profile', profile }));
+			const profiles = mapDefined(
+				follows.pages.flatMap((page) => page.follows),
+				(profile): ProfileRow | undefined => {
+					if (canBeAddedToGroup(profile) && !excludeDids?.has(profile.did)) {
+						return { key: profile.did, kind: 'profile', profile };
+					}
+				},
+			);
 			rows = profiles.length > 0 ? [suggested, ...profiles] : [];
 		}
 	}

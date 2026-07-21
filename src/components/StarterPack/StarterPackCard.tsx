@@ -3,11 +3,12 @@ import type { ReactNode } from 'react';
 import type { AnyStarterPackView } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { weightedIndex } from '@mary/array-fns';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
-import { weightedRandomIndex } from '#/lib/numbers';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import { precacheResolvedUri } from '#/state/queries/resolve-uri';
@@ -244,8 +245,8 @@ export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNo
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
 	const rows = Array.from({ length: rowCount }, () => ({
 		// starter pack descriptions are often empty or short; weight toward 0–1 lines with a tail toward 2–3.
-		descriptionLines: weightedRandomIndex(DESCRIPTION_LINE_WEIGHTS),
-		joinedCount: weightedRandomIndex(JOINED_COUNT_WEIGHT) === 1,
+		descriptionLines: weightedIndex(DESCRIPTION_LINE_WEIGHTS),
+		joinedCount: weightedIndex(JOINED_COUNT_WEIGHT) === 1,
 	}));
 
 	return (

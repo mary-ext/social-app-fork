@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 
-import { mapDefined, unique } from '@mary/array-fns';
+import { mapDefined, unique, uniqueBy } from '@mary/array-fns';
 
 import type { ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
 
@@ -97,9 +97,7 @@ export function mergeThreadgateRecords(
 	// can be undefined if everyone can reply!
 	const allow: AppBskyFeedThreadgate.Main['allow'] | undefined =
 		prev.allow || next.allow
-			? [...(prev.allow || []), ...(next.allow || [])].filter(
-					(v, i, a) => a.findIndex((t) => t.$type === v.$type) === i,
-				)
+			? uniqueBy([...(prev.allow || []), ...(next.allow || [])], (v) => v.$type)
 			: undefined;
 	const hiddenReplies = unique([...(prev.hiddenReplies || []), ...(next.hiddenReplies || [])]);
 

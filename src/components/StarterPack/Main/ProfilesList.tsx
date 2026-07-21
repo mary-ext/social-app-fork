@@ -3,6 +3,8 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 
 import { useAllListMembersQuery } from '#/state/queries/list-members';
@@ -26,14 +28,18 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 	const { data, refetch, isError } = useAllListMembersQuery(listUri);
 
 	// the server returns these sorted by descending creation date, so we invert to show oldest first
-	const profiles = data
-		?.map((p) => p.subject)
-		.filter(
-			(profile): profile is AppBskyActorDefs.ProfileView =>
-				profile !== undefined && !isBlockedOrBlocking(profile) && !profile.associated?.labeler,
-		)
-		// oxlint-disable-next-line unicorn/no-array-reverse -- reversing the array `filter` just returned
-		.reverse();
+	const profiles =
+		data &&
+		mapDefined(data, (p) => {
+			const profile = p.subject;
+			if (profile === undefined || isBlockedOrBlocking(profile) || profile.associated?.labeler) {
+				return;
+			}
+
+			return profile;
+		})
+			// oxlint-disable-next-line unicorn/no-array-reverse -- reversing the array `mapDefined` just returned
+			.reverse();
 	const isOwn = parseCanonicalResourceUri(listUri).repo === currentAccount?.did;
 
 	const getSortedProfiles = () => {

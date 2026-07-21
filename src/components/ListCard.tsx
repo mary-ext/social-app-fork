@@ -9,10 +9,10 @@ import {
 } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { weightedIndex } from '@mary/array-fns';
+
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
-
-import { weightedRandomIndex } from '#/lib/numbers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { precacheList } from '#/state/queries/feed';
@@ -210,7 +210,7 @@ export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNo
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
 	const rows = Array.from({ length: rowCount }, () => ({
 		// list descriptions are often empty or short; weight toward 0–1 lines with a tail toward 2–3.
-		descriptionLines: weightedRandomIndex(DESCRIPTION_LINE_WEIGHTS),
+		descriptionLines: weightedIndex(DESCRIPTION_LINE_WEIGHTS),
 	}));
 
 	return (

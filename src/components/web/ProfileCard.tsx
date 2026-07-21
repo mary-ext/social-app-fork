@@ -8,10 +8,11 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
+import { weightedIndex } from '@mary/array-fns';
+
 import { clsx } from 'clsx';
 
 import { getModerationCauseKey } from '#/lib/moderation';
-import { weightedRandomIndex } from '#/lib/numbers';
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
@@ -338,7 +339,7 @@ export function LoadingPlaceholder({
 }): ReactNode {
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
 	const rows = Array.from({ length: rowCount }, () => ({
-		descriptionLines: weightedRandomIndex(DESCRIPTION_LINE_WEIGHTS),
+		descriptionLines: weightedIndex(DESCRIPTION_LINE_WEIGHTS),
 	}));
 
 	return (

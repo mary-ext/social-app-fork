@@ -5,6 +5,8 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { clsx } from 'clsx';
 
@@ -317,11 +319,15 @@ function SelectChatStep({
 		if (!follows) {
 			rows.push(suggested, { key: 'placeholder', kind: 'placeholder' });
 		} else {
-			const profiles = follows.pages
-				.flatMap((page) => page.follows)
-				// omit follows that can't be messaged, matching upstream (rather than listing them disabled).
-				.filter(canBeMessaged)
-				.map((profile): ProfileRow => ({ key: profile.did, kind: 'profile', profile }));
+			// omit follows that can't be messaged, matching upstream (rather than listing them disabled).
+			const profiles = mapDefined(
+				follows.pages.flatMap((page) => page.follows),
+				(profile): ProfileRow | undefined => {
+					if (canBeMessaged(profile)) {
+						return { key: profile.did, kind: 'profile', profile };
+					}
+				},
+			);
 			if (profiles.length > 0) {
 				rows.push(suggested, ...profiles);
 			}

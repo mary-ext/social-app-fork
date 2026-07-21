@@ -1,3 +1,5 @@
+import { definite, unique } from '@mary/array-fns';
+
 /** a search entry: an emoji id plus a comma-delimited, lowercased haystack of its searchable terms. */
 export type SearchEntry = {
 	id: string;
@@ -14,11 +16,14 @@ export type SearchEntry = {
  * @returns the matching emoji ids, best match first
  */
 export function searchEmojiIds(entries: readonly SearchEntry[], query: string, limit: number): string[] {
-	const words = query
-		.toLowerCase()
-		.replace(/(\w)-/, '$1 ')
-		.split(/[\s|,]+/)
-		.filter((word, i, all) => word.trim() && all.indexOf(word) === i);
+	const words = unique(
+		definite(
+			query
+				.toLowerCase()
+				.replace(/(\w)-/, '$1 ')
+				.split(/[\s|,]+/),
+		),
+	);
 	if (!words.length) {
 		return [];
 	}

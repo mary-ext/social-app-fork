@@ -1,6 +1,8 @@
 import type { LabelPreference } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
+import { difference } from '@mary/array-fns';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
@@ -69,7 +71,7 @@ export function usePreferencesQuery() {
 				saveLabelers(currentAccount.did, labelerDids);
 				// keep the appview client's labeler header in sync with the freshly fetched prefs, as
 				// `agent.getPreferences()` used to do internally
-				setSubscribedLabelers(labelerDids.filter((did) => !getAppLabelers().includes(did)));
+				setSubscribedLabelers(difference(labelerDids, getAppLabelers()));
 
 				const preferences: UsePreferencesQueryResponse = {
 					...res,

@@ -1,6 +1,8 @@
+import { weightedIndex } from '@mary/array-fns';
+
 import { clsx } from 'clsx';
 
-import { triangularRandom, weightedRandomIndex } from '#/lib/numbers';
+import { triangularRandom } from '#/lib/numbers';
 
 import {
 	PostLoadingPlaceholder,
@@ -44,9 +46,9 @@ type NotificationRow = {
 
 const randomNotificationRow = (): NotificationRow => ({
 	actionWidth: triangularRandom(40, 75, 5),
-	avatarCount: 1 + weightedRandomIndex(AVATAR_WEIGHTS),
-	galleryCount: weightedRandomIndex(GALLERY_WEIGHTS),
-	subjectLines: 1 + weightedRandomIndex(SUBJECT_LINE_WEIGHTS),
+	avatarCount: 1 + weightedIndex(AVATAR_WEIGHTS),
+	galleryCount: weightedIndex(GALLERY_WEIGHTS),
+	subjectLines: 1 + weightedIndex(SUBJECT_LINE_WEIGHTS),
 	subjectWidth: triangularRandom(55, 95, 5),
 });
 
@@ -86,7 +88,7 @@ type Row = { kind: 'notification'; row: NotificationRow } | { kind: 'post'; row:
 export function NotificationFeedLoadingPlaceholder() {
 	// freeze the per-row variety for the component's lifetime so it doesn't reshuffle on every re-render.
 	const rows: Row[] = Array.from({ length: 11 }, () =>
-		weightedRandomIndex(POST_ROW_WEIGHTS) === 1
+		weightedIndex(POST_ROW_WEIGHTS) === 1
 			? { kind: 'post', row: randomPostRow({ reason: false }) }
 			: { kind: 'notification', row: randomNotificationRow() },
 	);

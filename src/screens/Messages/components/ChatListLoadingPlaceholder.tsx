@@ -1,4 +1,6 @@
-import { triangularRandom, weightedRandomIndex } from '#/lib/numbers';
+import { weightedIndex } from '@mary/array-fns';
+
+import { triangularRandom } from '#/lib/numbers';
 
 import * as Skeleton from '#/components/web/Skeleton';
 
@@ -11,7 +13,7 @@ const MESSAGE_LINE_WEIGHTS = [3, 1];
 export function ChatListLoadingPlaceholder() {
 	const rows = Array.from({ length: 11 }, () => ({
 		messageLastWidth: triangularRandom(35, 90, 5),
-		messageLines: 1 + weightedRandomIndex(MESSAGE_LINE_WEIGHTS),
+		messageLines: 1 + weightedIndex(MESSAGE_LINE_WEIGHTS),
 		titleWidth: triangularRandom(90, 180, 5),
 	}));
 

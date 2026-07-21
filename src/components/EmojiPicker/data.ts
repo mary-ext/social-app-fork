@@ -1,4 +1,4 @@
-import { unique } from '@mary/array-fns';
+import { definite, unique } from '@mary/array-fns';
 
 import type { Emoji as DataEmoji, EmojiMartData } from '@emoji-mart/data';
 import { queryOptions } from '@tanstack/react-query';
@@ -55,9 +55,11 @@ async function loadEmojiData(): Promise<EmojiData> {
 
 /** builds the comma-delimited, lowercased haystack searched by {@link searchEmojiIds}. */
 function buildHaystack(emoji: DataEmoji): string {
-	const terms = [emoji.id, emoji.name, ...emoji.keywords, ...(emoji.emoticons ?? [])]
-		.flatMap((term) => term.toLowerCase().split(/\s+/))
-		.filter(Boolean);
+	const terms = definite(
+		[emoji.id, emoji.name, ...emoji.keywords, ...(emoji.emoticons ?? [])].flatMap((term) =>
+			term.toLowerCase().split(/\s+/),
+		),
+	);
 
 	return `,${unique(terms).join(',')}`;
 }

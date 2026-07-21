@@ -25,19 +25,3 @@ export function triangularRandom(min: number, max: number, step = 1): number {
 export function randomInRange(min: number, max: number): number {
 	return min + Math.random() * (max - min);
 }
-
-/**
- * Picks an index into `weights` at random, each index chosen with probability proportional to its weight.
- *
- * @param weights non-negative weights with at least one positive entry
- * @returns an index in `[0, weights.length)`
- */
-export function weightedRandomIndex(weights: number[]): number {
-	let r = Math.random() * weights.reduce((sum, w) => sum + w, 0);
-	for (const [i, weight] of weights.entries()) {
-		if ((r -= weight) < 0) {
-			return i;
-		}
-	}
-	return weights.length - 1;
-}
