@@ -1,7 +1,4 @@
-import { Children } from 'react';
 import type { StyleProp, TextProps as RNTextProps, TextStyle } from 'react-native';
-
-import createEmojiRegex from 'emoji-regex';
 
 import { type Alf, applyFonts, atoms, flatten } from '#/alf';
 
@@ -37,38 +34,12 @@ export function normalizeTextStyles(
 	return s;
 }
 
-export type StringChild = string | (string | null)[];
 export type TextProps = RNTextProps & {
 	/** Lets the user select text, to use the native copy and paste functionality. */
 	selectable?: boolean;
 	/** Provides `data-*` attributes to the underlying text element on web only. */
 	dataSet?: Record<string, string | number | undefined>;
-	/** Whether the children could possibly contain emoji. */
-	emoji?: boolean;
 };
-
-export function childHasEmoji(children: React.ReactNode) {
-	let hasEmoji = false;
-	Children.forEach(children, (child) => {
-		if (typeof child === 'string' && createEmojiRegex().test(child)) {
-			hasEmoji = true;
-		}
-	});
-	return hasEmoji;
-}
-
-/**
- * Joins the plain-string portions of `children`, discarding element/number nodes. Intended for diagnostics
- * where a readable rendering of the text is needed without stringifying React elements.
- *
- * @param children the nodes to extract text from
- * @returns the concatenated string children
- */
-export function stringChildren(children: React.ReactNode): string {
-	return Children.toArray(children)
-		.filter((child): child is string => typeof child === 'string')
-		.join('');
-}
 
 const SINGLE_EMOJI_RE = /^[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]+$/u;
 export function isOnlyEmoji(text: string) {

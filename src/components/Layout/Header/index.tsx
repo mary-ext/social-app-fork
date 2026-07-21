@@ -132,7 +132,6 @@ export function TitleText({ children, style }: { children: React.ReactNode } & T
 				style,
 			]}
 			numberOfLines={2}
-			emoji
 			maxFontSizeMultiplier={2}
 		>
 			{children}

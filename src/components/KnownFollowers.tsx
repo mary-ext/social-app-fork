@@ -196,16 +196,8 @@ function KnownFollowersInner({
 										name2: slice[1]!.profile.displayName,
 									}}
 									markup={{
-										t0: ({ children }) => (
-											<Text emoji style={textStyle}>
-												{children}
-											</Text>
-										),
-										t1: ({ children }) => (
-											<Text emoji style={textStyle}>
-												{children}
-											</Text>
-										),
+										t0: ({ children }) => <Text style={textStyle}>{children}</Text>,
+										t1: ({ children }) => <Text style={textStyle}>{children}</Text>,
 									}}
 								/>
 							) : (
@@ -216,16 +208,8 @@ function KnownFollowersInner({
 										name2: slice[1]!.profile.displayName,
 									}}
 									markup={{
-										t0: ({ children }) => (
-											<Text emoji style={textStyle}>
-												{children}
-											</Text>
-										),
-										t1: ({ children }) => (
-											<Text emoji style={textStyle}>
-												{children}
-											</Text>
-										),
+										t0: ({ children }) => <Text style={textStyle}>{children}</Text>,
+										t1: ({ children }) => <Text style={textStyle}>{children}</Text>,
 									}}
 								/>
 							)
@@ -238,11 +222,7 @@ function KnownFollowersInner({
 									name: slice[0]!.profile.displayName,
 								}}
 								markup={{
-									t0: ({ children }) => (
-										<Text emoji style={textStyle}>
-											{children}
-										</Text>
-									),
+									t0: ({ children }) => <Text style={textStyle}>{children}</Text>,
 								}}
 							/>
 						) : (
@@ -251,11 +231,7 @@ function KnownFollowersInner({
 								message={m['common.follow.followedBy']}
 								inputs={{ name: slice[0]!.profile.displayName }}
 								markup={{
-									t0: ({ children }) => (
-										<Text emoji style={textStyle}>
-											{children}
-										</Text>
-									),
+									t0: ({ children }) => <Text style={textStyle}>{children}</Text>,
 								}}
 							/>
 						)}

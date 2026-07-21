@@ -51,11 +51,11 @@ export function MessageInputReply() {
 		>
 			<View style={[a.flex_1]}>
 				{displayName && (
-					<Text style={[a.text_xs, t.atoms.text_contrast_high]} emoji numberOfLines={1}>
+					<Text style={[a.text_xs, t.atoms.text_contrast_high]} numberOfLines={1}>
 						{displayName}
 					</Text>
 				)}
-				<Text style={[a.text_sm, subtle && [a.italic, t.atoms.text_contrast_high]]} emoji numberOfLines={2}>
+				<Text style={[a.text_sm, subtle && [a.italic, t.atoms.text_contrast_high]]} numberOfLines={2}>
 					{text}
 				</Text>
 			</View>

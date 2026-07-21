@@ -397,7 +397,6 @@ let MessageItem = ({
 									a.pb_2xs,
 									{ paddingLeft: DISPLAY_NAME_INSET },
 								]}
-								emoji
 							>
 								{displayName}
 							</Text>
@@ -684,7 +683,7 @@ function ReplyCaption({
 			]}
 		>
 			<ArrowCornerDownRightIcon size="xs" style={t.atoms.text_contrast_medium} />
-			<Text style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]} numberOfLines={1} emoji>
+			<Text style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]} numberOfLines={1}>
 				{caption}
 			</Text>
 		</Button>
@@ -764,13 +763,12 @@ function ReplyQuote({
 			]}
 		>
 			{senderName ? (
-				<Text style={[a.text_xs, { color: subtleColor }]} emoji numberOfLines={1}>
+				<Text style={[a.text_xs, { color: subtleColor }]} numberOfLines={1}>
 					{senderName}
 				</Text>
 			) : null}
 			<Text
 				style={[a.text_sm, { color: subtle ? subtleColor : tintColor }, subtle && a.italic]}
-				emoji
 				numberOfLines={2}
 			>
 				{text}

@@ -120,7 +120,6 @@ export function Label({ cause, size = 'sm', disableDetailsDialog }: LabelProps) 
 						)}
 
 						<Text
-							emoji
 							style={[
 								text,
 								a.font_semi_bold,

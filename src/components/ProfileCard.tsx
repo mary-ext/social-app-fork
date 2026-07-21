@@ -187,7 +187,6 @@ export function Name({
 	return (
 		<View style={[a.flex_row, a.align_center, a.max_w_full]}>
 			<Text
-				emoji
 				style={[a.text_md, a.font_semi_bold, a.leading_snug, a.self_start, a.flex_shrink]}
 				numberOfLines={1}
 			>
@@ -205,7 +204,7 @@ export function Handle({ profile }: { profile: AnyProfileView }) {
 	const handle = `@${profile.handle}`;
 
 	return (
-		<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
+		<Text style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
 			{handle}
 		</Text>
 	);

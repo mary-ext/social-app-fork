@@ -1,16 +1,13 @@
 import { Text as RNText, type TextStyle } from 'react-native';
 
-import { logger } from '#/logger';
-
 import { atoms as a, useAlf, useTheme } from '#/alf';
-import { childHasEmoji, normalizeTextStyles, stringChildren, type TextProps } from '#/alf/typography';
+import { normalizeTextStyles, type TextProps } from '#/alf/typography';
 
 export type { TextProps };
 
 /** Our main text component. Use this most of the time. */
 export function Text({
 	children,
-	emoji,
 	style,
 	selectable,
 	dataSet,
@@ -28,14 +25,6 @@ export function Text({
 			flags,
 		},
 	);
-
-	if (import.meta.env.DEV) {
-		if (!emoji && childHasEmoji(children)) {
-			logger.warn(
-				`Text: emoji detected but emoji not enabled: "${stringChildren(children)}"\n\nPlease add <Text emoji />'`,
-			);
-		}
-	}
 
 	const shared = {
 		selectable,

@@ -65,11 +65,7 @@ export function MissingFeed({
 						<WarningIcon size="xl" />
 					</View>
 					<View style={[a.flex_1]}>
-						<LegacyText
-							emoji
-							style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]}
-							numberOfLines={1}
-						>
+						<LegacyText style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]} numberOfLines={1}>
 							{type === 'feed' ? m['view.feeds.feed.unavailable.title']() : m['view.feeds.list.deleted']()}
 						</LegacyText>
 						<LegacyText

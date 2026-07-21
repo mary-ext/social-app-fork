@@ -210,7 +210,7 @@ export function Link({
 export type InlineLinkProps = React.PropsWithChildren<
 	BaseLinkProps &
 		TextStyleProp &
-		Pick<TextProps, 'selectable' | 'numberOfLines' | 'emoji'> &
+		Pick<TextProps, 'selectable' | 'numberOfLines'> &
 		Pick<ButtonProps, 'label' | 'accessibilityHint' | 'onFocus' | 'onBlur'> & {
 			disableUnderline?: boolean;
 		}
