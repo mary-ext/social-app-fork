@@ -27,39 +27,34 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 	const { currentAccount } = useSession();
 	const { data, refetch, isError } = useAllListMembersQuery(listUri);
 
-	// the server returns these sorted by descending creation date, so we invert to show oldest first
-	const profiles =
-		data &&
-		mapDefined(data, (p) => {
-			const profile = p.subject;
-			if (profile === undefined || isBlockedOrBlocking(profile) || profile.associated?.labeler) {
-				return;
-			}
-
-			return profile;
-		})
-			// oxlint-disable-next-line unicorn/no-array-reverse -- reversing the array `mapDefined` just returned
-			.reverse();
-	const isOwn = parseCanonicalResourceUri(listUri).repo === currentAccount?.did;
-
-	const getSortedProfiles = () => {
-		if (!profiles) return;
-		if (!isOwn) return profiles;
-
-		const myIndex = profiles.findIndex((p) => p.did === currentAccount?.did);
-		const myProfile = profiles[myIndex];
-		return myIndex !== -1 && myProfile
-			? [myProfile, ...profiles.slice(0, myIndex), ...profiles.slice(myIndex + 1)]
-			: profiles;
-	};
-
 	if (!data) {
 		return <ListMaybePlaceholder isLoading={true} isError={isError} onRetry={refetch} />;
 	}
 
+	// the server returns these sorted by descending creation date, so we invert to show oldest first
+	let profiles = mapDefined(data, (p) => {
+		const profile = p.subject;
+		if (profile === undefined || isBlockedOrBlocking(profile) || profile.associated?.labeler) {
+			return;
+		}
+
+		return profile;
+	})
+		// oxlint-disable-next-line unicorn/no-array-reverse -- reversing the array `mapDefined` just returned
+		.reverse();
+
+	// on our own list, float ourselves to the top
+	if (parseCanonicalResourceUri(listUri).repo === currentAccount?.did) {
+		const myIndex = profiles.findIndex((p) => p.did === currentAccount?.did);
+		const myProfile = profiles[myIndex];
+		if (myProfile !== undefined) {
+			profiles = [myProfile, ...profiles.slice(0, myIndex), ...profiles.slice(myIndex + 1)];
+		}
+	}
+
 	return (
 		<List
-			data={getSortedProfiles()}
+			data={profiles}
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}

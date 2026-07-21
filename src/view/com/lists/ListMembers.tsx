@@ -84,7 +84,7 @@ export function ListMembers({
 		isFetchingNextPage,
 	} = useListMembersQuery(list);
 	const isEmpty = !isFetching && !data?.pages[0]!.items.length;
-	const isOwner = currentAccount && data?.pages[0]!.list.creator.did === currentAccount.did;
+	const isOwner = currentAccount !== undefined && data?.pages[0]!.list.creator.did === currentAccount.did;
 
 	let items: ListMemberItem[] = [];
 	if (isFetched) {

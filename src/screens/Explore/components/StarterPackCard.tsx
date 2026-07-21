@@ -95,7 +95,7 @@ export function AvatarStack({
 		return () => observer.disconnect();
 	}, []);
 
-	const isPending = (numPending && profiles.length === 0) || !moderationOpts;
+	const isPending = ((numPending ?? 0) > 0 && profiles.length === 0) || !moderationOpts;
 	const items = isPending
 		? Array.from({ length: numPending ?? circlesCount }).map((_, i) => ({
 				key: i,

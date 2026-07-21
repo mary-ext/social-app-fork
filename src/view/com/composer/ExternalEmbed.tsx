@@ -26,15 +26,16 @@ import * as styles from './ExternalEmbed.css';
 export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif: Gif }) => {
 	const { data, error } = useResolveGifQuery(gif);
 	const thumbUrl = useBlobUrl(data?.thumb?.source.blob);
-	const linkInfo =
-		data &&
+	let linkInfo: AppBskyEmbedExternal.ViewExternal | undefined;
+	if (data) {
 		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a tenor url and a `blob:` object url, both absolute
-		({
+		linkInfo = {
 			title: data.title ?? data.uri,
 			uri: data.uri,
 			description: data.description ?? '',
 			thumb: thumbUrl,
-		} as AppBskyEmbedExternal.ViewExternal);
+		} as AppBskyEmbedExternal.ViewExternal;
+	}
 
 	const loadingStyle: React.CSSProperties = {
 		aspectRatio: (() => {

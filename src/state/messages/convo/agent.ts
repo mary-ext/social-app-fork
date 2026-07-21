@@ -882,8 +882,9 @@ export class Convo {
 			 * know what it is.
 			 */
 			if ('rev' in ev && typeof ev.rev === 'string') {
-				const isUninitialized = !this.latestRev;
-				const isNewEvent = this.latestRev && ev.rev > this.latestRev;
+				const latestRev = this.latestRev;
+				const isUninitialized = latestRev === undefined;
+				const isNewEvent = latestRev !== undefined && ev.rev > latestRev;
 
 				/*
 				 * We received an event prior to fetching any history, so we can safely

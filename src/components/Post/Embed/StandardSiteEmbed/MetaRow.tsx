@@ -30,7 +30,7 @@ export function MetaRow({
 	const articleDomain = toNiceDomain(view.uri);
 	const articlePublisher = matchStandardSitePublisherByUri(view.uri);
 	const domainHandleMatch =
-		authorProfile?.handle &&
+		authorProfile !== undefined &&
 		(articleDomain === authorProfile.handle || articleDomain.endsWith(`.${authorProfile.handle}`));
 	const DomainIcon = articlePublisher?.Icon;
 

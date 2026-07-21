@@ -125,10 +125,11 @@ function matchMutedWord(
 ): boolean {
 	// id is undefined in legacy implementation
 	const existingId = existingWord.id;
+	const hasId = Boolean(existingId);
 	// prefer matching based on id
-	const matchById = existingId && existingId === newWord.id;
+	const matchById = hasId && existingId === newWord.id;
 	// handle legacy case where id is not set
-	const legacyMatchByValue = !existingId && existingWord.value === newWord.value;
+	const legacyMatchByValue = !hasId && existingWord.value === newWord.value;
 
 	return matchById || legacyMatchByValue;
 }

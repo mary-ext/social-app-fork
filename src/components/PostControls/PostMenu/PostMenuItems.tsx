@@ -255,7 +255,7 @@ function PostMenuItems({
 	};
 
 	const canHideReplyForEveryone = !isAuthor && isRootPostAuthor && isReply;
-	const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer;
+	const canDetachQuote = quoteEmbed !== undefined && quoteEmbed.isOwnedByViewer;
 
 	const onToggleReplyVisibility = async () => {
 		// TODO no threadgate?

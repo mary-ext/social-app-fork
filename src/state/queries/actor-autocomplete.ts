@@ -137,7 +137,7 @@ function computeSuggestions<T extends AnyProfileView>({
 			moderateProfile(profile, moderationOpts),
 			DisplayContext.ProfileList,
 		);
-		const isExactMatch = q && profile.handle.toLowerCase() === q;
+		const isExactMatch = profile.handle.toLowerCase() === q;
 		return (
 			(isExactMatch && !moduiContainsHideableOffense(modui)) ||
 			modui.filters.length === 0 ||

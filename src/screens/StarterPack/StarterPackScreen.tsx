@@ -98,7 +98,9 @@ export function StarterPackScreenInner({ routeParams }: { routeParams: StarterPa
 	const { data: did, isError: isErrorDid } = useResolveDidQuery(actor);
 	const { data: starterPack, isError: isErrorStarterPack } = useStarterPackQuery({ did, rkey });
 
-	const isValid = starterPack && (starterPack.list || starterPack?.creator?.did === currentAccount?.did);
+	const isValid =
+		starterPack !== undefined &&
+		(starterPack.list !== undefined || starterPack.creator.did === currentAccount?.did);
 
 	if (!did || !starterPack || !isValid || !moderationOpts) {
 		return (

@@ -26,7 +26,7 @@ export function AvatarStack({
 	profiles: AnyProfileView[];
 	size?: number;
 }) {
-	const isPending = (numPending && profiles.length === 0) || !moderationOpts;
+	const isPending = ((numPending ?? 0) > 0 && profiles.length === 0) || !moderationOpts;
 
 	const items = isPending
 		? Array.from({ length: numPending ?? profiles.length }, (_, i) => ({ key: i, profile: null }))

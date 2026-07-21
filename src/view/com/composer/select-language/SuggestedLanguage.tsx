@@ -140,11 +140,14 @@ export function SuggestedLanguage({
 		};
 	}, [textTrimmed, detectLanguage]);
 
-	const hasLanguageSuggestion = suggLang && !currentLanguages.includes(suggLang);
+	const hasLanguageSuggestion = suggLang !== undefined && !currentLanguages.includes(suggLang);
 
 	const replyToLanguage = mapDefined(replyToLanguagesProp, getPrimaryLanguageSubtag).at(0);
 	const hasSuggestedReplyLanguage =
-		!hasInteracted && !suggLang && replyToLanguage && !currentLanguages.includes(replyToLanguage);
+		!hasInteracted &&
+		suggLang === undefined &&
+		replyToLanguage !== undefined &&
+		!currentLanguages.includes(replyToLanguage);
 
 	if (hasLanguageSuggestion) {
 		return <GuessedLanguage language={suggLang} onAccept={onAccept} onDecline={() => onDecline(suggLang)} />;

@@ -145,7 +145,7 @@ function moderateProfileItem({
 		moderateProfile(item.profile, moderationOpts),
 		DisplayContext.ProfileList,
 	);
-	const isExactMatch = query && item.profile.handle.toLowerCase() === query;
+	const isExactMatch = item.profile.handle.toLowerCase() === query;
 
 	if (
 		(isExactMatch && !moduiContainsHideableOffense(modui)) ||
