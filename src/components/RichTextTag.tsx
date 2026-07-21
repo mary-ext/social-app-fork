@@ -15,14 +15,13 @@ import {
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as Search } from '#/components/icons/MagnifyingGlass';
 import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
 import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';
-import { useLink } from '#/components/Link';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { atomicSegment } from '#/components/RichText.css';
 import { Spinner } from '#/components/Spinner';
 import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
-import type { InlineLinkUnderline } from '#/components/web/Link';
+import { type InlineLinkUnderline, useInternalLink } from '#/components/web/Link';
 import * as linkStyles from '#/components/web/Link.css';
 
 import { m } from '#/paraglide/messages';
@@ -65,7 +64,7 @@ export function RichTextTag({
 		variables: optimisticRemove,
 		reset: resetRemove,
 	} = useRemoveMutedWordsMutation();
-	const { href } = useLink({ displayText: display, to: buildPath('Hashtag', { tag }) });
+	const { href } = useInternalLink({ to: buildPath('Hashtag', { tag }) });
 	const muteConfirmHandle = Prompt.usePromptHandle();
 
 	const isCashtag = tag.startsWith('$');
