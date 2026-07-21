@@ -1,9 +1,4 @@
-import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-
-import { isActorIdentifier, isRecordKey } from '@atcute/lexicons/syntax';
-
-import { useParams, useRoute } from '@oomfware/stacker';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
@@ -36,26 +31,9 @@ const FEEDS_DISCOVERY_TAB = '__feeds__';
 
 type HomeTabId = FeedDescriptor | typeof FEEDS_DISCOVERY_TAB;
 
-// registered for both Home and Start (a starter-pack deep link), so it reads the loose params/name.
 export function HomeScreen() {
 	const { data: preferences } = usePreferencesQuery();
-	const { currentAccount } = useSession();
-	const navigate = useNavigate();
-	const { name: routeName } = useRoute();
-	const params = useParams();
 	const { data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading } = usePinnedFeedsInfos();
-
-	useEffect(() => {
-		// the `Start` route only matches when its codecs decode both params, so these guards always pass
-		if (
-			currentAccount &&
-			routeName === 'Start' &&
-			isActorIdentifier(params.actor) &&
-			isRecordKey(params.rkey)
-		) {
-			navigate('StarterPack', { actor: params.actor, rkey: params.rkey });
-		}
-	}, [currentAccount, navigate, params, routeName]);
 
 	if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
 		return (

@@ -36,3 +36,18 @@ export function IntentComposeScreen() {
 
 	return null;
 }
+
+/**
+ * `/start/:actor/:rkey` has no screen: it replaces to the starter pack it points at. the route requires auth,
+ * so a logged-out visitor gets the sign-in screen rather than a blank frame.
+ */
+export function StartScreen() {
+	const [{ actor, rkey }] = useParams('Start');
+	const router = useRouter();
+
+	useEffect(() => {
+		router.replace(router.build('StarterPack', { actor, rkey }));
+	}, [actor, rkey, router]);
+
+	return null;
+}
