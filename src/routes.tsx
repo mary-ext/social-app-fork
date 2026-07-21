@@ -72,11 +72,6 @@ const InterestsSettingsScreen = lazy(() =>
 const LanguageSettingsScreen = lazy(() =>
 	import('#/screens/Settings/LanguageSettings').then((mod) => ({ default: mod.LanguageSettingsScreen })),
 );
-const LegacyNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/LegacyNotificationSettings').then((mod) => ({
-		default: mod.LegacyNotificationSettingsScreen,
-	})),
-);
 const ListsScreen = lazy(() => import('#/view/screens/Lists').then((mod) => ({ default: mod.ListsScreen })));
 const LogScreen = lazy(() => import('#/screens/Log').then((mod) => ({ default: mod.LogScreen })));
 const MessagesConversationScreen = lazy(() =>
@@ -254,11 +249,6 @@ export const routes = defineRoutes({
 				meta: { requireAuth: true },
 				path: '/notifications/activity',
 				query: { posts: string() },
-			}),
-			LegacyNotificationSettings: route({
-				component: LegacyNotificationSettingsScreen,
-				meta: { requireAuth: true },
-				path: '/notifications/settings',
 			}),
 
 			IntentCompose: route({
