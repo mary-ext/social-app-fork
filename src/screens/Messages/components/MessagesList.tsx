@@ -5,7 +5,6 @@ import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } fro
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
 import type { $type } from '@atcute/lexicons';
-import { isHandle } from '@atcute/lexicons/syntax';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -389,9 +388,6 @@ export function MessagesList({
 		// invalid mentions left to strip.
 		const rt = shortenLinks(
 			await detectFacets(trimmedText, async (handle) => {
-				if (!isHandle(handle)) {
-					return undefined;
-				}
 				try {
 					const res = await ok(
 						appview.get('com.atproto.identity.resolveHandle', {

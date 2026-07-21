@@ -1,3 +1,5 @@
+import { definite, mapDefined } from '@mary/array-fns';
+
 export type Params = Record<string, string>;
 
 /** the `tab` query values a search URL can carry, mapped to result tabs by `getTabId`. */
@@ -36,13 +38,8 @@ export function parseSearchQuery(rawQuery: string) {
 }
 
 export function makeSearchQuery(query: string, params: Params) {
-	return [
+	return definite([
 		query,
-		Object.entries(params)
-			.filter(([_, value]) => value)
-			.map(([name, value]) => `${name}:${value}`)
-			.join(' '),
-	]
-		.filter(Boolean)
-		.join(' ');
+		mapDefined(Object.entries(params), ([name, value]) => (value ? `${name}:${value}` : undefined)).join(' '),
+	]).join(' ');
 }

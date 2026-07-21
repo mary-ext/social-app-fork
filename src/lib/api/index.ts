@@ -12,7 +12,6 @@ import type {
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import type { $type, Blob as AtpBlob, Did, GenericUri, ResourceUri } from '@atcute/lexicons';
-import { isHandle } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
 import type { QueryClient } from '@tanstack/react-query';
@@ -194,9 +193,6 @@ async function resolveRT(appview: Client, text: string) {
 	// `detectFacets` only emits mention facets for handles that resolve, so there are no invalid
 	// mentions left to strip.
 	const rt = await detectFacets(trimmedText, async (handle) => {
-		if (!isHandle(handle)) {
-			return undefined;
-		}
 		try {
 			const res = await ok(
 				appview.get('com.atproto.identity.resolveHandle', {

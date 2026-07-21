@@ -3,6 +3,8 @@ import type { AppBskyDraftDefs } from '@atcute/bluesky';
 import type { GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { definite, mapDefined } from '@mary/array-fns';
+
 import { resolveLink } from '#/lib/api/resolve';
 import { getDeviceId } from '#/lib/device-id';
 import { getDeviceName } from '#/lib/deviceName';
@@ -201,7 +203,7 @@ async function restoreDraftImages(
 		};
 	});
 
-	return (await Promise.all(imagePromises)).filter((img): img is ComposerImage => img !== null);
+	return definite(await Promise.all(imagePromises));
 }
 
 function serializeImages(
@@ -252,15 +254,18 @@ async function serializeVideo(
 
 	// Read caption file contents as text
 	const captions = await Promise.all(
-		videoState.captions
-			.flatMap((caption) => (caption.lang ? [{ file: caption.file, lang: caption.lang }] : []))
-			.map(
-				async ({ file, lang }): Promise<AppBskyDraftDefs.DraftEmbedCaption> => ({
-					$type: 'app.bsky.draft.defs#draftEmbedCaption',
-					lang,
-					content: await file.text(),
+		mapDefined(videoState.captions, (caption) => {
+			if (!caption.lang) {
+				return;
+			}
+
+			return caption.file.text().then(
+				(text): AppBskyDraftDefs.DraftEmbedCaption => ({
+					content: text,
+					lang: caption.lang,
 				}),
-			),
+			);
+		}),
 	);
 
 	return {

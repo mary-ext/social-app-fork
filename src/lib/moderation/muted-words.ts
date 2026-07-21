@@ -1,6 +1,8 @@
 import type { AppBskyActorDefs, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type KeywordFilter, KeywordFilterFlags } from '@atcute/bluesky-moderation';
 
+import { mapDefined } from '@mary/array-fns';
+
 /**
  * checks whether text (with optional facets/tags and an author) matches any keyword filter.
  *
@@ -25,12 +27,19 @@ export const hasMutedWord = ({
 	outlineTags?: string[];
 	text: string;
 }): boolean => {
+	if (keywordFilters.length === 0) {
+		return false;
+	}
+
 	const tags = [
 		...(outlineTags ?? []),
-		...(facets ?? []).flatMap((facet) =>
-			facet.features
-				.filter((feature) => feature.$type === 'app.bsky.richtext.facet#tag')
-				.map((feature) => feature.tag),
+		...mapDefined(
+			(facets ?? []).flatMap((facet) => facet.features),
+			(feature) => {
+				if (feature.$type === 'app.bsky.richtext.facet#tag') {
+					return feature.tag;
+				}
+			},
 		),
 	];
 

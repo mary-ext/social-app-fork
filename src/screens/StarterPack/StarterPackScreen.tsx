@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { definite } from '@mary/array-fns';
+import { definite, mapDefined } from '@mary/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -245,15 +245,18 @@ function Header({
 			return;
 		}
 
-		const dids = listItems
-			.filter(
-				(li) =>
-					li.subject.did !== currentAccount?.did &&
-					!isBlockedOrBlocking(li.subject as AnyProfileView) &&
-					!isMuted(li.subject as AnyProfileView) &&
-					!li.subject.viewer?.following,
-			)
-			.map((li) => li.subject.did);
+		const dids = mapDefined(listItems, (li) => {
+			if (
+				li.subject.did === currentAccount?.did ||
+				isBlockedOrBlocking(li.subject) ||
+				isMuted(li.subject) ||
+				li.subject.viewer?.following
+			) {
+				return;
+			}
+
+			return li.subject.did;
+		});
 
 		let followUris: Map<string, string>;
 		try {

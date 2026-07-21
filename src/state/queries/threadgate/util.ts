@@ -1,5 +1,7 @@
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 
+import { mapDefined, unique } from '@mary/array-fns';
+
 import type { ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
 
 export function threadgateViewToAllowUISetting(
@@ -36,21 +38,18 @@ export function threadgateRecordToAllowUISetting(
 		return [{ type: 'nobody' }];
 	}
 
-	const settings: ThreadgateAllowUISetting[] = threadgate.allow
-		.map((allow): ThreadgateAllowUISetting | undefined => {
-			switch (allow.$type) {
-				case 'app.bsky.feed.threadgate#followerRule':
-					return { type: 'followers' };
-				case 'app.bsky.feed.threadgate#followingRule':
-					return { type: 'following' };
-				case 'app.bsky.feed.threadgate#listRule':
-					return { list: allow.list, type: 'list' };
-				case 'app.bsky.feed.threadgate#mentionRule':
-					return { type: 'mention' };
-			}
-		})
-		.filter((n) => !!n);
-	return settings;
+	return mapDefined(threadgate.allow, (allow): ThreadgateAllowUISetting | undefined => {
+		switch (allow.$type) {
+			case 'app.bsky.feed.threadgate#followerRule':
+				return { type: 'followers' };
+			case 'app.bsky.feed.threadgate#followingRule':
+				return { type: 'following' };
+			case 'app.bsky.feed.threadgate#listRule':
+				return { list: allow.list, type: 'list' };
+			case 'app.bsky.feed.threadgate#mentionRule':
+				return { type: 'mention' };
+		}
+	});
 }
 
 /** converts threadgate allow UI settings to the AppBskyFeedThreadgate.Main allow prop */
@@ -102,7 +101,7 @@ export function mergeThreadgateRecords(
 					(v, i, a) => a.findIndex((t) => t.$type === v.$type) === i,
 				)
 			: undefined;
-	const hiddenReplies = Array.from(new Set([...(prev.hiddenReplies || []), ...(next.hiddenReplies || [])]));
+	const hiddenReplies = unique([...(prev.hiddenReplies || []), ...(next.hiddenReplies || [])]);
 
 	return createThreadgateRecord({
 		allow, // can be undefined!

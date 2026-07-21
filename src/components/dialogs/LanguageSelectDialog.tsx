@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { mapDefined, unique } from '@mary/array-fns';
+
 import { clsx } from 'clsx';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
@@ -71,7 +73,7 @@ export function LanguageSelectDialog({
 // NOTE(@elijaharita): Displayed languages are split into 3 lists for
 // ordering.
 function mapCodeList(codeList: string[]) {
-	return codeList.map((code) => LANGUAGES_MAP[code]).filter((lang): lang is Language => Boolean(lang));
+	return mapDefined(codeList, (code) => LANGUAGES_MAP[code]);
 }
 
 // drop languages this engine's CLDR data can't name — they'd render as bare codes
@@ -105,8 +107,7 @@ function DialogInner({
 	// NOTE(@elijaharita): Get recent language codes and map them to language
 	// objects. Both the user account's saved language history and the current
 	// checked languages are displayed here.
-	const recentCodes =
-		Array.from(new Set([...checkedCodes, ...langPrefs.postLanguageHistory])).slice(0, 5) || [];
+	const recentCodes = unique([...checkedCodes, ...langPrefs.postLanguageHistory]).slice(0, 5);
 	const recentLanguages = mapCodeList(recentCodes);
 
 	// NOTE(@elijaharita): helper functions

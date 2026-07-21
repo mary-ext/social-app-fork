@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { definite, mapDefined } from '@mary/array-fns';
+
 import { clsx } from 'clsx';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
@@ -74,22 +76,18 @@ function SubtitleDialogInner({
 
 	const [altText, setAltText] = useState(defaultAltText);
 
-	const languageItems: Select.SelectItem[] = [];
-	for (const language of LANGUAGES) {
+	const languageItems = mapDefined(LANGUAGES, (language): Select.SelectItem | undefined => {
 		const label = resolveLanguageName(language, LOCALE);
 
 		if (!label) {
-			continue;
+			return;
 		}
 
 		const value = langCode(language);
-		languageItems.push({
-			label: `${label} (${value})`,
-			value,
-		});
-	}
+		return { label: `${label} (${value})`, value };
+	});
 
-	const usedLanguageCodes = new Set(captions.map((caption) => caption.lang).filter(Boolean));
+	const usedLanguageCodes = new Set(definite(captions.map((caption) => caption.lang)));
 
 	const handleSelectFile = (file: File) => {
 		setCaptions((subs) => [

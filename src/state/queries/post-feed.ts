@@ -20,6 +20,8 @@ import {
 import type { Client } from '@atcute/client';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { FeedTuner } from '#/lib/api/feed-manip';
@@ -244,72 +246,68 @@ export function usePostFeedQuery(
 							tuner,
 							cursor: page.cursor,
 							fetchedAt: page.fetchedAt,
-							slices: tuner
-								.tune(page.feed)
-								.map((slice) => {
-									const moderations = slice.items.map((item) => moderatePost(item.post, moderationOpts!));
+							slices: mapDefined(tuner.tune(page.feed), (slice) => {
+								const moderations = slice.items.map((item) => moderatePost(item.post, moderationOpts!));
 
-									// apply moderation filter
-									const isProfileFeed = Boolean(ignoreFilterFor);
-									for (let i = 0; i < slice.items.length; i++) {
-										const isProfileOwnerPost = slice.items[i]!.post.author.did === ignoreFilterFor;
+								// apply moderation filter
+								for (let i = 0; i < slice.items.length; i++) {
+									const isProfileOwnerPost = slice.items[i]!.post.author.did === ignoreFilterFor;
 
-										// on a profile, mutes shouldn't hide reposts/replies/likes the account
-										// chose to surface; blocks and labels still apply to non-owner content
-										if (isProfileFeed) {
-											moderations[i]!.causes = moderations[i]!.causes.filter(
-												(cause) =>
-													cause.type !== ModerationCauseType.MutedPermanent &&
-													cause.type !== ModerationCauseType.MutedTemporary,
-											);
-										}
-										if (
-											!isProfileOwnerPost &&
-											getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList).filters.length > 0
-										) {
-											return undefined;
-										}
-									}
-
-									if (isDiscover) {
-										userActionHistory.seen(
-											slice.items.map((item) => ({
-												feedContext: slice.feedContext,
-												reqId: slice.reqId,
-												likeCount: item.post.likeCount ?? 0,
-												repostCount: item.post.repostCount ?? 0,
-												replyCount: item.post.replyCount ?? 0,
-												isFollowedBy: Boolean(item.post.author.viewer?.followedBy),
-												uri: item.post.uri,
-											})),
+									// on a profile, mutes shouldn't hide reposts/replies/likes the account
+									// chose to surface; blocks and labels still apply to non-owner content
+									if (ignoreFilterFor) {
+										moderations[i]!.causes = moderations[i]!.causes.filter(
+											(cause) =>
+												cause.type !== ModerationCauseType.MutedPermanent &&
+												cause.type !== ModerationCauseType.MutedTemporary,
 										);
 									}
+									if (
+										!isProfileOwnerPost &&
+										getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList).filters.length > 0
+									) {
+										return;
+									}
+								}
 
-									const feedPostSlice: FeedPostSlice = {
-										_reactKey: slice._reactKey,
-										_isFeedPostSlice: true,
-										isIncompleteThread: slice.isIncompleteThread,
-										feedContext: slice.feedContext,
-										reqId: slice.reqId,
-										reason: slice.reason,
-										feedPostUri: slice.feedPostUri,
-										items: slice.items.map((item, i) => {
-											const feedPostSliceItem: FeedPostSliceItem = {
-												_reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-												uri: item.post.uri,
-												post: item.post,
-												record: item.record,
-												moderation: moderations[i]!,
-												parentAuthor: item.parentAuthor,
-												isParentBlocked: item.isParentBlocked,
-												isParentNotFound: item.isParentNotFound,
-											};
-											return feedPostSliceItem;
-										}),
-									};
-									return feedPostSlice;
-								})
-								.filter((n): n is FeedPostSlice => !!n),
+								if (isDiscover) {
+									userActionHistory.seen(
+										slice.items.map((item) => ({
+											feedContext: slice.feedContext,
+											reqId: slice.reqId,
+											likeCount: item.post.likeCount ?? 0,
+											repostCount: item.post.repostCount ?? 0,
+											replyCount: item.post.replyCount ?? 0,
+											isFollowedBy: Boolean(item.post.author.viewer?.followedBy),
+											uri: item.post.uri,
+										})),
+									);
+								}
+
+								const feedPostSlice: FeedPostSlice = {
+									_reactKey: slice._reactKey,
+									_isFeedPostSlice: true,
+									isIncompleteThread: slice.isIncompleteThread,
+									feedContext: slice.feedContext,
+									reqId: slice.reqId,
+									reason: slice.reason,
+									feedPostUri: slice.feedPostUri,
+									items: slice.items.map((item, i) => {
+										const feedPostSliceItem: FeedPostSliceItem = {
+											_reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+											uri: item.post.uri,
+											post: item.post,
+											record: item.record,
+											moderation: moderations[i]!,
+											parentAuthor: item.parentAuthor,
+											isParentBlocked: item.isParentBlocked,
+											isParentNotFound: item.isParentNotFound,
+										};
+										return feedPostSliceItem;
+									}),
+								};
+								return feedPostSlice;
+							}),
 						})),
 					],
 				};

@@ -3,6 +3,8 @@ import { useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { DISCOVER_FEED_URI } from '#/lib/constants';
 
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
@@ -30,10 +32,11 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 	const throttledQuery = useThrottledValue(query, 500);
 
 	const { data: savedFeedsAndLists, isFetchedAfterMount: isFetchedSavedFeeds } = useSavedFeeds();
-	const savedFeeds = (savedFeedsAndLists?.feeds ?? [])
-		.filter((f) => f.type === 'feed')
-		.map((f) => f.view)
-		.filter((view) => view.uri !== DISCOVER_FEED_URI);
+	const savedFeeds = mapDefined(savedFeedsAndLists?.feeds ?? [], (f) => {
+		if (f.type === 'feed' && f.view.uri !== DISCOVER_FEED_URI) {
+			return f.view;
+		}
+	});
 
 	const {
 		data: popularFeedsPages,

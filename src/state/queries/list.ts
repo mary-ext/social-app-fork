@@ -4,6 +4,8 @@ import { type Client, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
@@ -188,7 +190,7 @@ export function useListDeleteMutation() {
 					repo: currentAccount.did,
 				});
 				listitemRecordUris = listitemRecordUris.concat(
-					res.records.filter((record) => record.value.list === uri).map((record) => record.uri),
+					mapDefined(res.records, (record) => (record.value.list === uri ? record.uri : undefined)),
 				);
 				cursor = res.cursor;
 				if (!cursor) {

@@ -1,8 +1,11 @@
 import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import RichtextBuilder from '@atcute/bluesky-richtext-builder';
 import { type Token, tokenize } from '@atcute/bluesky-richtext-parser';
-import type { Did, GenericUri } from '@atcute/lexicons';
+import type { Did, GenericUri, Handle } from '@atcute/lexicons';
+import { isHandle } from '@atcute/lexicons/syntax';
 import { getGraphemeLength } from '@atcute/util-text';
+
+import { mapDefined, unique } from '@mary/array-fns';
 
 import { toShortUrl } from './url-helpers';
 
@@ -105,17 +108,23 @@ export function detectFacetsWithoutResolution(text: string): Richtext {
  * not resolve are rendered as plain text.
  *
  * @param text the input text.
- * @param resolve maps a handle to a DID, or undefined when it cannot be resolved.
+ * @param resolve maps a syntactically valid handle to a DID, or undefined when it cannot be resolved.
  * @returns the text and its detected facets.
  */
 export async function detectFacets(
 	text: string,
-	resolve: (handle: string) => Promise<Did | undefined>,
+	resolve: (handle: Handle) => Promise<Did | undefined>,
 ): Promise<Richtext> {
 	const tokens = tokenize(text);
-	const handles = [
-		...new Set(tokens.filter((token) => token.type === 'mention').map((token) => token.handle)),
-	];
+
+	const handles = unique(
+		mapDefined(tokens, (token) => {
+			if (token.type === 'mention' && isHandle(token.handle)) {
+				return token.handle;
+			}
+		}),
+	);
+
 	const resolved = new Map<string, Did | undefined>();
 	await Promise.all(
 		handles.map(async (handle) => {

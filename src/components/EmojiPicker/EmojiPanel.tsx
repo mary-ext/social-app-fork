@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { definite } from '@mary/array-fns';
+import { mapDefined } from '@mary/array-fns';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import type { Emoji as DataEmoji } from '@emoji-mart/data';
@@ -165,5 +165,5 @@ function buildModel(data: EmojiData | undefined, query: string, skinTone: SkinTo
 
 /** maps emoji ids to dataset emoji, dropping any unknown ids. */
 function resolve(data: EmojiData, ids: string[]): DataEmoji[] {
-	return definite(ids.map((id) => data.emojis[id]));
+	return mapDefined(ids, (id) => data.emojis[id]);
 }

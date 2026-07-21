@@ -11,6 +11,7 @@ import {
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
+import { mapDefined } from '@mary/array-fns';
 import {
 	addDays,
 	addMonths,
@@ -184,7 +185,9 @@ function ActiveSearchAutocomplete({
 	const { data: meProfile } = useProfileQuery({ did: currentAccount?.did });
 
 	const { history, record, remove } = useSearchHistory();
-	const recentProfileDids = history.flatMap((entry) => (entry.kind === 'profile' ? [entry.did] : []));
+	const recentProfileDids = mapDefined(history, (entry) =>
+		entry.kind === 'profile' ? entry.did : undefined,
+	);
 	const { data: recentProfileData, isPending: recentProfilesPending } = useProfilesQuery({
 		dids: recentProfileDids,
 	});

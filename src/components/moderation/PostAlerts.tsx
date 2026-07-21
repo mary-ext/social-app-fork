@@ -1,8 +1,10 @@
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
 
+import { uniqueBy } from '@mary/array-fns';
+
 import { clsx } from 'clsx';
 
-import { getModerationCauseKey, unique } from '#/lib/moderation';
+import { getModerationCauseKey } from '#/lib/moderation';
 
 import * as Pills from '#/components/web/Pills';
 
@@ -25,10 +27,10 @@ export function PostAlerts({
 
 	return (
 		<Pills.Row className={clsx(size === 'sm' && styles.smOffset, className)} size={size}>
-			{modui.alerts.filter(unique).map((cause) => (
+			{uniqueBy(modui.alerts, getModerationCauseKey).map((cause) => (
 				<Pills.Label cause={cause} key={getModerationCauseKey(cause)} noBg={size === 'sm'} size={size} />
 			))}
-			{modui.informs.filter(unique).map((cause) => (
+			{uniqueBy(modui.informs, getModerationCauseKey).map((cause) => (
 				<Pills.Label cause={cause} key={getModerationCauseKey(cause)} noBg={size === 'sm'} size={size} />
 			))}
 			{additionalCauses?.map((cause) => (

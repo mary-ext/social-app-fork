@@ -1,8 +1,10 @@
 import { unwrapEmbed, type AppBskyFeedDefs } from '@atcute/bluesky';
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
 
+import { uniqueBy } from '@mary/array-fns';
+
 import { getPostRecord } from '#/lib/api/record-views';
-import { unique } from '#/lib/moderation';
+import { getModerationCauseKey } from '#/lib/moderation';
 
 import type { AppModerationCause } from '#/components/Pills';
 
@@ -46,10 +48,10 @@ export function maybeApplyGalleryOffsetStyles({
 
 	let hasLabels = false;
 	if (modui.alerts.length > 0) {
-		hasLabels = modui.alerts.filter(unique).length > 0;
+		hasLabels = uniqueBy(modui.alerts, getModerationCauseKey).length > 0;
 	}
 	if (modui.informs.length > 0) {
-		hasLabels = hasLabels || modui.informs.filter(unique).length > 0;
+		hasLabels = hasLabels || uniqueBy(modui.informs, getModerationCauseKey).length > 0;
 	}
 	if (additionalCauses?.length) {
 		hasLabels = true;

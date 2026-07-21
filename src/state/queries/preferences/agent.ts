@@ -4,6 +4,8 @@ import type { Did } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
 import type {
 	AppBskyActorDefs as AtpActorDefs,
@@ -493,18 +495,20 @@ export async function upsertMutedWords(
 	pds: Client,
 	mutedWords: Pick<AtpActorDefs.MutedWord, 'actorTarget' | 'expiresAt' | 'targets' | 'value'>[],
 ): Promise<void> {
-	const newWords: AppBskyActorDefs.MutedWord[] = [];
-	for (const mutedWord of mutedWords) {
+	const newWords = mapDefined(mutedWords, (mutedWord): AppBskyActorDefs.MutedWord | undefined => {
 		const sanitizedValue = sanitizeMutedWordValue(mutedWord.value);
-		if (!sanitizedValue) continue;
-		newWords.push({
+		if (!sanitizedValue) {
+			return;
+		}
+
+		return {
 			actorTarget: mutedWord.actorTarget || 'all',
 			expiresAt: mutedWord.expiresAt || undefined,
 			id: TID.now(),
 			targets: mutedWord.targets || [],
 			value: sanitizedValue,
-		});
-	}
+		};
+	});
 
 	if (!newWords.length) return;
 

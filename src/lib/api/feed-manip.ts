@@ -212,9 +212,7 @@ export class FeedTuner {
 			dryRun: false,
 		},
 	): FeedViewPostsSlice[] {
-		let slices: FeedViewPostsSlice[] = feed
-			.map((item) => new FeedViewPostsSlice(item))
-			.filter((s) => s.items.length > 0);
+		let slices = feed.map((item) => new FeedViewPostsSlice(item));
 
 		// run the custom tuners
 		for (const tunerFn of this.tunerFns) {

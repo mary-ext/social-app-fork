@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { ok } from '@atcute/client';
-import { isHandle } from '@atcute/lexicons/syntax';
 
 import { detectFacets, type Richtext } from '#/lib/strings/rich-text-facets';
 
@@ -22,9 +21,6 @@ export function useRichText(text: string): [Richtext, boolean] {
 		let ignore = false;
 		async function resolveRTFacets() {
 			const nextRT = await detectFacets(text, async (handle) => {
-				if (!isHandle(handle)) {
-					return undefined;
-				}
 				try {
 					const res = await ok(
 						appview.get('com.atproto.identity.resolveHandle', {

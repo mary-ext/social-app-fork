@@ -22,12 +22,10 @@ export function MetaRow({
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
 	const highlightedPublisher = !!matchStandardSitePublisher(view);
-	const didsFromRecords =
-		view.associatedRefs
-			?.filter(type === 'document' ? isStandardSiteDocumentUri : isStandardSitePublicationUri)
-			.map((ref) => parseCanonicalResourceUri(ref.uri).repo) || [];
+	const matchesRefType = type === 'document' ? isStandardSiteDocumentUri : isStandardSitePublicationUri;
 	// atm should only be one document
-	const authorDid = didsFromRecords.at(0);
+	const authorRef = view.associatedRefs?.find(matchesRefType);
+	const authorDid = authorRef && parseCanonicalResourceUri(authorRef.uri).repo;
 	const authorProfile = authorDid ? view.associatedProfiles?.find((p) => p.did === authorDid) : undefined;
 	const articleDomain = toNiceDomain(view.uri);
 	const articlePublisher = matchStandardSitePublisherByUri(view.uri);

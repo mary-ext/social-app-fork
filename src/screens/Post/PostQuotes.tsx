@@ -87,18 +87,15 @@ function PostQuotes({ uri }: { uri: string }) {
 
 	const isError = Boolean(resolveError || error);
 
-	const quotes =
-		data?.pages
-			.flatMap((page) =>
-				page.posts.map((post) => {
-					if (!moderationOpts) {
-						return null;
-					}
-					const moderation = moderatePost(post, moderationOpts);
-					return { post, record: getPostRecord(post), moderation };
-				}),
-			)
-			.filter((item) => item !== null) ?? [];
+	const quotes = moderationOpts
+		? (data?.pages.flatMap((page) =>
+				page.posts.map((post) => ({
+					post,
+					record: getPostRecord(post),
+					moderation: moderatePost(post, moderationOpts),
+				})),
+			) ?? [])
+		: [];
 
 	const onRefresh = async () => {
 		setIsPTRing(true);

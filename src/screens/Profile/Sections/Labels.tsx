@@ -1,6 +1,8 @@
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import { interpretLabelerDefinition, LabelFlags, type ModerationOptions } from '@atcute/bluesky-moderation';
 
+import { mapDefined, unique } from '@mary/array-fns';
+
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
@@ -50,11 +52,14 @@ export function ProfileLabelsSection({
 
 	const isSubscribed = isLabelerSubscribed(labelerInfo, moderationOpts);
 	const customDefs = Object.values(interpretLabelerDefinition(labelerInfo));
-	const labelValues = labelerInfo.policies.labelValues
-		.filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
-		.map((val) => lookupLabelValueDefinition(val, customDefs))
-		.filter((def) => def !== undefined)
-		.filter((def) => !(def.flags & LabelFlags.NoConfigurable));
+	const labelValues = mapDefined(unique(labelerInfo.policies.labelValues), (val) => {
+		const def = lookupLabelValueDefinition(val, customDefs);
+		if (def === undefined || def.flags & LabelFlags.NoConfigurable) {
+			return;
+		}
+
+		return def;
+	});
 	const hasValues = labelValues.length > 0;
 
 	return (

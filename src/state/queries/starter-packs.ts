@@ -7,7 +7,7 @@ import type {
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import type { Cid, ResourceUri } from '@atcute/lexicons';
-import { isHandle, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
@@ -33,10 +33,6 @@ async function detectDescriptionFacets(
 	description: string,
 ): Promise<AppBskyRichtextFacet.Main[] | undefined> {
 	const rt = await detectFacets(description, async (handle) => {
-		// mention handles are detected by the tokenizer, so they still need validating before resolution
-		if (!isHandle(handle)) {
-			return undefined;
-		}
 		try {
 			const res = await ok(appview.get('com.atproto.identity.resolveHandle', { params: { handle } }));
 			return res.did;
