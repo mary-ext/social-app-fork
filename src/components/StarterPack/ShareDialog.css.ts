@@ -11,9 +11,8 @@ export const loading = style({
 	minHeight: 424,
 });
 
-export const image = style({
+export const card = style({
 	borderRadius: borderRadius.sm,
 	aspectRatio: String(CARD_ASPECT_RATIO),
 	width: '100%',
-	objectFit: 'cover',
 });

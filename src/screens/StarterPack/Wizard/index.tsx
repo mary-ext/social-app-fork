@@ -6,6 +6,7 @@ import { useParams, useRoute } from '@oomfware/stacker';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
+import { prefetchImage } from '#/lib/media/prefetch';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { enforceLen } from '#/lib/strings/helpers';
@@ -43,7 +44,6 @@ import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { Image } from '#/shims/image';
 
 import { Provider } from './State';
 import * as css from './Wizard.css';
@@ -172,7 +172,7 @@ function WizardInner({
 
 	const onSuccessCreate = (data: { uri: string; cid: string }) => {
 		const rkey = parseCanonicalResourceUri(data.uri).rkey;
-		void Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)]);
+		void prefetchImage(getStarterPackOgCard(currentProfile!.did, rkey));
 		dispatch({ type: 'SetProcessing', processing: false });
 
 		// hand control back to the dialog that launched us — it reopens itself once its screen is in view

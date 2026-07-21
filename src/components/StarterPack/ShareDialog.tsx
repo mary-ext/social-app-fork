@@ -4,6 +4,7 @@ import { shareUrl } from '#/lib/sharing';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import * as Dialog from '#/components/Dialog';
+import { EmbedThumb } from '#/components/EmbedThumb';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
@@ -16,7 +17,6 @@ import * as styles from './ShareDialog.css';
 
 type Props = {
 	handle: Dialog.DialogHandle;
-	imageLoaded?: boolean;
 	link?: string;
 	starterPack: AppBskyGraphDefs.StarterPackView;
 };
@@ -31,7 +31,7 @@ export function ShareDialog({ handle, ...props }: Props) {
 	);
 }
 
-function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
+function ShareDialogInner({ handle, link, starterPack }: Props) {
 	const imageUrl = getStarterPackOgCard(starterPack);
 
 	const onShareLink = () => {
@@ -42,7 +42,7 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 		handle.close();
 	};
 
-	if (!imageLoaded || !link) {
+	if (!link) {
 		return (
 			<div className={styles.loading}>
 				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
@@ -61,7 +61,7 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 				<Text color="textContrastMedium">{m['components.starterPack.share.message']()}</Text>
 			</Stack>
 
-			<img alt="" className={styles.image} src={imageUrl} />
+			<EmbedThumb frameClassName={styles.card} src={imageUrl} />
 
 			<Dialog.Actions align="center" direction="responsive">
 				<Button

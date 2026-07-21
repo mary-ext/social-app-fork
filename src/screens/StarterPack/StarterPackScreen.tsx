@@ -12,6 +12,7 @@ import { getStarterPackRecord } from '#/lib/api/record-views';
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { useTitle } from '#/lib/hooks/useTitle';
+import { prefetchImage } from '#/lib/media/prefetch';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { makeStarterPackLink } from '#/lib/routes/links';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
@@ -43,7 +44,6 @@ import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useParams, useRouter } from '#/routes';
-import { Image } from '#/shims/image';
 
 import { OverflowMenu } from './OverflowMenu';
 import { StarterPackHeader } from './StarterPackHeader';
@@ -161,20 +161,13 @@ function StarterPackScreenLoaded({
 
 	const shortenLink = useShortenLink();
 	const [link, setLink] = useState<string>();
-	const [imageLoaded, setImageLoaded] = useState(false);
 
 	const onOpenShareDialog = useCallback(() => {
 		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
 		void shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then((res) => {
 			setLink(res.url);
 		});
-		Image.prefetch(getStarterPackOgCard(starterPack))
-			.then(() => {
-				setImageLoaded(true);
-			})
-			.catch(() => {
-				setImageLoaded(true);
-			});
+		void prefetchImage(getStarterPackOgCard(starterPack));
 		shareDialogHandle.open(null);
 	}, [shareDialogHandle, shortenLink, starterPack]);
 
@@ -195,12 +188,7 @@ function StarterPackScreenLoaded({
 				}
 			/>
 
-			<ShareDialog
-				handle={shareDialogHandle}
-				starterPack={starterPack}
-				link={link}
-				imageLoaded={imageLoaded}
-			/>
+			<ShareDialog handle={shareDialogHandle} starterPack={starterPack} link={link} />
 		</>
 	);
 }
