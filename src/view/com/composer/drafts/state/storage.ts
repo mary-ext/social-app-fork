@@ -88,7 +88,9 @@ async function populateCacheInternal(): Promise<void> {
 
 /** Ensure the media cache is populated. Call this before checking mediaExists. */
 export async function ensureMediaCachePopulated(): Promise<void> {
-	if (cachePopulated) return;
+	if (cachePopulated) {
+		return;
+	}
 	if (!populateCachePromise) {
 		populateCachePromise = populateCacheInternal();
 	}

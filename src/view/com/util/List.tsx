@@ -155,7 +155,9 @@ export function List<ItemT = unknown>({
 	const getScrollableNode = useCallback(() => {
 		if (disableFullWindowScroll) {
 			const element = nativeRef.current;
-			if (!element) return;
+			if (!element) {
+				return;
+			}
 
 			return {
 				get scrollWidth() {
@@ -284,7 +286,9 @@ export function List<ItemT = unknown>({
 	// --- onScroll ---
 	const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false);
 	const handleScroll = useEffectEvent(() => {
-		if (!isInsideVisibleTree) return;
+		if (!isInsideVisibleTree) {
+			return;
+		}
 
 		const element = getScrollableNode();
 		contextScrollHandlers.onScroll?.(

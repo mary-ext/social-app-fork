@@ -26,8 +26,12 @@ export const createJoinLinkPreviewQueryKey = (args: { codes: string[]; hasSessio
 /** matches a join link preview query key whose `codes` argument contains `code`. */
 const joinLinkPreviewKeyHasCode = (queryKey: QueryKey, code: string) => {
 	const [root, args] = queryKey;
-	if (root !== joinLinkPreviewQueryKeyRoot) return false;
-	if (typeof args !== 'object' || args === null || !('codes' in args)) return false;
+	if (root !== joinLinkPreviewQueryKeyRoot) {
+		return false;
+	}
+	if (typeof args !== 'object' || args === null || !('codes' in args)) {
+		return false;
+	}
 	return Array.isArray(args.codes) && args.codes.includes(code);
 };
 
@@ -50,7 +54,9 @@ export function invalidateJoinLinkPreviewsForConvo(queryClient: QueryClient, con
 	return queryClient.invalidateQueries({
 		predicate: (query) => {
 			const [root] = query.queryKey;
-			if (root !== joinLinkPreviewQueryKeyRoot) return false;
+			if (root !== joinLinkPreviewQueryKeyRoot) {
+				return false;
+			}
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the root check above pins the cache entry
 			const data = query.state.data as ChatBskyGroupGetJoinLinkPreviews.$output | undefined;
 			return (
@@ -64,7 +70,9 @@ export function invalidateJoinLinkPreviewsForConvo(queryClient: QueryClient, con
 }
 
 async function fetchJoinLinkPreviews({ chat, codes }: { chat: Client | null; codes: string[] }) {
-	if (!chat) throw new Error('Not signed in');
+	if (!chat) {
+		throw new Error('Not signed in');
+	}
 	return await ok(chat.get('chat.bsky.group.getJoinLinkPreviews', { params: { codes } }));
 }
 
@@ -88,7 +96,9 @@ export function useJoinLinkPreviewsQuery({
 	return useQuery({
 		queryKey: createJoinLinkPreviewQueryKey({ codes: codes ?? [], hasSession }),
 		queryFn: async () => {
-			if (!codes) throw new Error('No invite code');
+			if (!codes) {
+				throw new Error('No invite code');
+			}
 			try {
 				return await fetchJoinLinkPreviews({ chat, codes });
 			} catch (error) {
@@ -147,7 +157,9 @@ export function setJoinLinkPreviewRequestedForCode(
 			predicate: (query) => joinLinkPreviewKeyHasCode(query.queryKey, code),
 		},
 		(old) => {
-			if (!old) return old;
+			if (!old) {
+				return old;
+			}
 			return {
 				...old,
 				joinLinkPreviews: old.joinLinkPreviews.map((preview) => {

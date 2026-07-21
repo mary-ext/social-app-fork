@@ -96,7 +96,9 @@ export function filterBlockedReactions(
 	reactions: ChatBskyConvoDefs.ReactionView[] | undefined,
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
 ): ChatBskyConvoDefs.ReactionView[] {
-	if (!reactions) return [];
+	if (!reactions) {
+		return [];
+	}
 	return reactions.filter((reaction) => {
 		const profile = relatedProfiles.get(reaction.sender.did);
 		return !profile || !isBlockedOrBlocking(profile);
@@ -150,13 +152,17 @@ export function canReact({
 				(cause) =>
 					cause.type === ModerationCauseType.Blocking || cause.type === ModerationCauseType.BlockedBy,
 			);
-			if (isBlocked) return false;
+			if (isBlocked) {
+				return false;
+			}
 		} else {
 			// in groups, only "we are blocking" the owner hides reactions
 			const isBlockingPrimary = getDisplayRestrictions(moderation, DisplayContext.ProfileView).alerts.some(
 				(cause) => cause.type === ModerationCauseType.Blocking,
 			);
-			if (isBlockingPrimary) return false;
+			if (isBlockingPrimary) {
+				return false;
+			}
 		}
 	}
 

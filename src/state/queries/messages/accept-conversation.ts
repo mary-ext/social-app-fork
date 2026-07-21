@@ -39,7 +39,9 @@ export function useAcceptConversation(
 
 	return useMutation({
 		mutationFn: async () => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(chat.post('chat.bsky.convo.acceptConvo', { input: { convoId } }));
 
 			return data;
@@ -61,9 +63,13 @@ export function useAcceptConversation(
 			for (const [, data] of queryClient.getQueriesData<ConvoListQueryData>({
 				queryKey: CONVO_LIST_PARTIAL_KEY('request'),
 			})) {
-				if (!data) continue;
+				if (!data) {
+					continue;
+				}
 				convoBeingAccepted = getConvoFromQueryData(convoId, data);
-				if (convoBeingAccepted) break;
+				if (convoBeingAccepted) {
+					break;
+				}
 			}
 			queryClient.setQueriesData(
 				{ queryKey: CONVO_LIST_PARTIAL_KEY('request') },
@@ -80,7 +86,9 @@ export function useAcceptConversation(
 						predicate: convoListQueryPredicate(acceptedConvo),
 					},
 					(old?: ConvoListQueryData) => {
-						if (!old) return old;
+						if (!old) {
+							return old;
+						}
 						return {
 							...old,
 							pages: old.pages.map((page, i) => {

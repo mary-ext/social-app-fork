@@ -108,7 +108,9 @@ function PostQuotes({ uri }: { uri: string }) {
 	};
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
 		try {
 			await fetchNextPage();
 		} catch (err) {

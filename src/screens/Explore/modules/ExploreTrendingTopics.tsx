@@ -178,7 +178,9 @@ function TrendingTopicRowSkeleton() {
 function useModerateTrendingActors(actors: AppBskyUnspeccedDefs.TrendView['actors']) {
 	const moderationOpts = useModerationOpts();
 
-	if (!moderationOpts) return [];
+	if (!moderationOpts) {
+		return [];
+	}
 
 	return actors
 		.filter((actor) => {

@@ -87,7 +87,9 @@ export function AvatarStack({
 	const measureRef = useRef<HTMLDivElement | null>(null);
 	useEffect(() => {
 		const el = measureRef.current;
-		if (!el) return;
+		if (!el) {
+			return;
+		}
 		const measure = () => setSize(el.getBoundingClientRect().width);
 		measure();
 		const observer = new ResizeObserver(measure);

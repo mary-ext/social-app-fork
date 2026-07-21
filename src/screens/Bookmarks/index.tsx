@@ -89,7 +89,9 @@ function BookmarksInner() {
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useBookmarksQuery();
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || error) return;
+		if (isFetchingNextPage || !hasNextPage || error) {
+			return;
+		}
 		await fetchNextPage();
 	};
 

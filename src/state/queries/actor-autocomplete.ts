@@ -42,7 +42,9 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(normalizedPrefix || ''),
 		async queryFn() {
-			if (!normalizedPrefix) return [];
+			if (!normalizedPrefix) {
+				return [];
+			}
 			const data = await ok(
 				appview.get('app.bsky.actor.searchActorsTypeahead', {
 					params: { limit: limit || 8, q: normalizedPrefix },

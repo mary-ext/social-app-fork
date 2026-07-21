@@ -76,7 +76,9 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 	// =
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
 
 		try {
 			await fetchNextPage();

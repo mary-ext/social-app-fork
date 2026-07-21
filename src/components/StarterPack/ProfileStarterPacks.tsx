@@ -89,7 +89,9 @@ export function ProfileStarterPacks({
 	// =
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
 
 		try {
 			await fetchNextPage();

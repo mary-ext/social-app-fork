@@ -38,8 +38,12 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
 
 	return useMutation({
 		mutationFn: async ({ member }: { member: Did }) => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const endpoint =
 				action === 'approve' ? 'chat.bsky.group.approveJoinRequest' : 'chat.bsky.group.rejectJoinRequest';
 			const data = await ok(chat.post(endpoint, { input: { convoId, member } }));
@@ -47,7 +51,9 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
 			return data as JoinRequestOutput<A>;
 		},
 		onMutate: ({ member }) => {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 
 			const requestsKey = createListJoinRequestsQueryKey({ convoId });
 			const prevRequests =
@@ -58,7 +64,9 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
 				.find((request) => request.requestedBy.did === member)?.requestedBy;
 
 			queryClient.setQueryData<InfiniteData<ChatBskyGroupListJoinRequests.$output>>(requestsKey, (prev) => {
-				if (!prev?.pages) return prev;
+				if (!prev?.pages) {
+					return prev;
+				}
 				return {
 					...prev,
 					pages: prev.pages.map((page) => ({
@@ -73,8 +81,12 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
 				const membersKey = listConvoMembersQueryKey(convoId);
 				prevMembers = queryClient.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(membersKey);
 				queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(membersKey, (prev) => {
-					if (!prev) return prev;
-					if (prev.some((m) => m.did === member)) return prev;
+					if (!prev) {
+						return prev;
+					}
+					if (prev.some((m) => m.did === member)) {
+						return prev;
+					}
 					return [...prev, requestedByProfile];
 				});
 			}

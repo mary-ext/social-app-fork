@@ -182,13 +182,19 @@ function GroupSettings({
 		const bIsOwner = memberB.did === primaryMember?.did;
 		const aIsSelf = memberA.did === currentAccount?.did;
 		const bIsSelf = memberB.did === currentAccount?.did;
-		if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1;
-		if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1;
+		if (aIsOwner !== bIsOwner) {
+			return aIsOwner ? -1 : 1;
+		}
+		if (aIsSelf !== bIsSelf) {
+			return aIsSelf ? -1 : 1;
+		}
 		// surface blocked members to the owner so they can be removed
 		if (isOwner) {
 			const aBlocked = !!isBlockedOrBlocking(memberA);
 			const bBlocked = !!isBlockedOrBlocking(memberB);
-			if (aBlocked !== bBlocked) return aBlocked ? -1 : 1;
+			if (aBlocked !== bBlocked) {
+				return aBlocked ? -1 : 1;
+			}
 		}
 		return 0;
 	});
@@ -328,8 +334,12 @@ function SettingsHeader({
 		isPending: isLocking,
 	} = useLockConvo(convo.view.id, {
 		onSuccess: (data, { silent }) => {
-			if (data.convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return;
-			if (silent) return;
+			if (data.convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+				return;
+			}
+			if (silent) {
+				return;
+			}
 			if (data.convo.kind.lockStatus === 'locked') {
 				Toast.show(m['screens.messages.lock.lockedToast']());
 			} else {

@@ -127,8 +127,12 @@ export function WizardProfileCard({
 	const displayName = profile.displayName ? sanitizeDisplayName(profile.displayName) : profile.handle;
 
 	const onPress = () => {
-		if (disabled) return;
-		if (profile.did === targetProfileDid) return;
+		if (disabled) {
+			return;
+		}
+		if (profile.did === targetProfileDid) {
+			return;
+		}
 
 		if (!included) {
 			dispatch({ type: 'AddProfile', profile });
@@ -174,7 +178,9 @@ export function WizardFeedCard({
 	);
 
 	const onPress = () => {
-		if (disabled) return;
+		if (disabled) {
+			return;
+		}
 		if (included) {
 			dispatch({ type: 'RemoveFeed', feedUri: generator.uri });
 		} else {

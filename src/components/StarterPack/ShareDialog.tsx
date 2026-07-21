@@ -35,7 +35,9 @@ function ShareDialogInner({ handle, imageLoaded, link, starterPack }: Props) {
 	const imageUrl = getStarterPackOgCard(starterPack);
 
 	const onShareLink = () => {
-		if (!link) return;
+		if (!link) {
+			return;
+		}
 		void shareUrl(link);
 		handle.close();
 	};

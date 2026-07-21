@@ -81,7 +81,9 @@ export function BackButton({ onPress, style, ...props }: Partial<ButtonProps>) {
 
 	const onPressBack = (evt: GestureResponderEvent) => {
 		onPress?.(evt);
-		if (evt.defaultPrevented) return;
+		if (evt.defaultPrevented) {
+			return;
+		}
 		if (router.canGoBack) {
 			router.back();
 		} else {

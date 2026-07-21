@@ -48,7 +48,9 @@ export function ProfileBadges({
 	} = useAlf();
 
 	// if nothing to show, don't render the container at all
-	if (!verification.showBadge && !isBotAccount(shadowed)) return null;
+	if (!verification.showBadge && !isBotAccount(shadowed)) {
+		return null;
+	}
 
 	const isOnTheSmallSide = size === 'sm' || size === 'xs';
 

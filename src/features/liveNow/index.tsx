@@ -30,7 +30,9 @@ export function useLiveLinkMetaQuery(url: string | null) {
 		enabled: !!url,
 		queryKey: ['link-meta', url],
 		queryFn: async () => {
-			if (!url) return undefined;
+			if (!url) {
+				return undefined;
+			}
 			if (!isLiveNowUrlAllowed(url, liveNowConfig.currentAccountAllowedHosts)) {
 				const { formatted } = getLiveServiceNames(liveNowConfig.currentAccountAllowedHosts);
 				throw new Error(m['features.liveNow.service.unsupported']({ formatted }));
@@ -52,7 +54,9 @@ export function useUpsertLiveStatusMutation(
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async () => {
-			if (!currentAccount) throw new Error('Not logged in');
+			if (!currentAccount) {
+				throw new Error('Not logged in');
+			}
 
 			let embed: $type.enforce<AppBskyEmbedExternal.Main> | undefined;
 
@@ -128,7 +132,9 @@ export function useUpsertLiveStatusMutation(
 			Toast.show(m['features.liveNow.goLive.started']());
 			handle.close();
 
-			if (!currentAccount) return;
+			if (!currentAccount) {
+				return;
+			}
 
 			const expiresAt = new Date(record.createdAt);
 			expiresAt.setMinutes(expiresAt.getMinutes() + record.durationMinutes);
@@ -166,7 +172,9 @@ export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async () => {
-			if (!currentAccount) throw new Error('Not logged in');
+			if (!currentAccount) {
+				throw new Error('Not logged in');
+			}
 
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.actor.status',
@@ -183,7 +191,9 @@ export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 			Toast.show(m['features.liveNow.goLive.ended']());
 			handle.close();
 
-			if (!currentAccount) return;
+			if (!currentAccount) {
+				return;
+			}
 
 			updateProfileShadow(queryClient, currentAccount.did, {
 				status: undefined,

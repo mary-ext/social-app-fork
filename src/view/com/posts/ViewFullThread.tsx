@@ -16,7 +16,9 @@ export function ViewFullThread({ uri }: { uri: string }) {
 		itemHref = makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
 	}
 
-	if (!itemHref) return null;
+	if (!itemHref) {
+		return null;
+	}
 
 	return (
 		<Link className={css.link} to={itemHref} label={m['view.posts.thread.viewFull']()}>

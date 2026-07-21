@@ -37,7 +37,9 @@ export function Splash({
 
 	// when ready, we fade/scale out
 	useEffect(() => {
-		if (!isReady) return;
+		if (!isReady) {
+			return;
+		}
 
 		const reduceMotion = getReducedMotion();
 		const node = splashRef.current;

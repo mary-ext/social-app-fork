@@ -61,15 +61,27 @@ export const RQKEY_PARTIAL = (status: 'accepted' | 'request' | 'all', readState?
 export function convoMatchesQueryKey(convo: ConvoListItem, queryKey: QueryKey): boolean {
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- callers pair this with a `RQKEY_PARTIAL` prefix filter
 	const [, status, readState, kind, lockStatus] = queryKey as ReturnType<typeof RQKEY>;
-	if (status !== 'all' && status !== convo.status) return false;
-	if (readState === 'unread' && convo.unreadCount === 0) return false;
+	if (status !== 'all' && status !== convo.status) {
+		return false;
+	}
+	if (readState === 'unread' && convo.unreadCount === 0) {
+		return false;
+	}
 	if (convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
-		if (kind === 'direct') return false;
-		if (lockStatus && convo.kind.lockStatus !== lockStatus) return false;
+		if (kind === 'direct') {
+			return false;
+		}
+		if (lockStatus && convo.kind.lockStatus !== lockStatus) {
+			return false;
+		}
 	} else {
-		if (kind === 'group') return false;
+		if (kind === 'group') {
+			return false;
+		}
 		// direct convos are never locked
-		if (lockStatus && lockStatus !== 'unlocked') return false;
+		if (lockStatus && lockStatus !== 'unlocked') {
+			return false;
+		}
 	}
 	return true;
 }
@@ -82,7 +94,9 @@ export function convoListQueryPredicate(convo: ConvoListItem) {
 	return (query: Query): boolean => {
 		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- callers pair this with a `RQKEY_PARTIAL` prefix filter
 		const data = query.state.data as ConvoListQueryData | undefined;
-		if (data && getConvoFromQueryData(convo.id, data)) return true;
+		if (data && getConvoFromQueryData(convo.id, data)) {
+			return true;
+		}
 		return convoMatchesQueryKey(convo, query.queryKey);
 	};
 }
@@ -110,7 +124,9 @@ export function useListConvosQuery({
 		enabled,
 		queryKey: RQKEY(status ?? 'all', readState, kind, lockStatus, limit),
 		queryFn: async ({ pageParam }) => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.get('chat.bsky.convo.listConvos', {
 					params: {
@@ -171,7 +187,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 	useEffect(() => {
 		const unsub = messagesBus.on(
 			(events) => {
-				if (events.type !== 'logs') return;
+				if (events.type !== 'logs') {
+					return;
+				}
 
 				// Any log batch may change unread state (new message, read, accept,
 				// join request, etc.), so refresh the badge count for all of them.
@@ -184,7 +202,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 					queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
 						listConvoMembersQueryKey(convoId),
 						(old) => {
-							if (!old) return; // query doesn't exist yet, skip
+							if (!old) {
+								return;
+							} // query doesn't exist yet, skip
 							return fn(old);
 						},
 					);
@@ -209,7 +229,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 					rev: string,
 				) {
 					const newMember = relatedProfiles.find((r) => r.did === did);
-					if (!newMember) return;
+					if (!newMember) {
+						return;
+					}
 					// if the optimistic add already added them, skip the memberCount bump to avoid double-counting
 					const alreadyKnownMember =
 						queryClient
@@ -293,7 +315,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							// Check if convo exists in any query
 							let foundConvo: ChatBskyConvoDefs.ConvoView | null = null;
 							for (const [_key, query] of queries) {
-								if (!query) continue;
+								if (!query) {
+									continue;
+								}
 								const convo = getConvoFromQueryData(logRef.convoId, query);
 								if (convo) {
 									foundConvo = convo;
@@ -311,7 +335,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							}
 
 							// Drop stale out-of-order events whose rev isn't newer than what we already have.
-							if (logRef.rev <= foundConvo.rev) break;
+							if (logRef.rev <= foundConvo.rev) {
+								break;
+							}
 
 							const messageIsMessageOrDeleted =
 								logRef.message.$type === 'chat.bsky.convo.defs#messageView' ||
@@ -344,7 +370,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 
 							// Update all matching queries
 							function updateFn(old?: ConvoListQueryData) {
-								if (!old) return old;
+								if (!old) {
+									return old;
+								}
 								return {
 									...old,
 									pages: old.pages.map((page, i) => {
@@ -432,9 +460,13 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							});
 							let foundConvo: ConvoListItem | null = null;
 							for (const [, data] of requestQueries) {
-								if (!data) continue;
+								if (!data) {
+									continue;
+								}
 								foundConvo = getConvoFromQueryData(logRef.convoId, data);
-								if (foundConvo) break;
+								if (foundConvo) {
+									break;
+								}
 							}
 							if (!foundConvo) {
 								// Convo not found, trigger refetch. Use continue (not return) so
@@ -445,7 +477,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								continue;
 							}
 							// Drop stale out-of-order accepts whose rev isn't newer than what we already have.
-							if (logRef.rev <= foundConvo.rev) continue;
+							if (logRef.rev <= foundConvo.rev) {
+								continue;
+							}
 							const acceptedConvo: ConvoListItem = {
 								...foundConvo,
 								status: 'accepted',
@@ -616,7 +650,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						}
 						case 'chat.bsky.convo.defs#logAddReaction': {
 							const logRef: ChatBskyConvoDefs.LogAddReaction = log;
-							if (logRef.message.$type !== 'chat.bsky.convo.defs#messageView') break;
+							if (logRef.message.$type !== 'chat.bsky.convo.defs#messageView') {
+								break;
+							}
 							const message = logRef.message;
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
 								optimisticUpdate(
@@ -782,7 +818,9 @@ export function useOnMarkAsRead() {
 
 	return (chatId: string) => {
 		queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) => {
-			if (!old) return old;
+			if (!old) {
+				return old;
+			}
 			return optimisticUpdate(chatId, old, (convo) => ({
 				...convo,
 				unreadCount: 0,
@@ -807,7 +845,9 @@ function optimisticUpdate(
 	old?: ConvoListQueryData,
 	updateFn?: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
 ) {
-	if (!old || !updateFn) return old;
+	if (!old || !updateFn) {
+		return old;
+	}
 
 	return {
 		...old,
@@ -869,7 +909,9 @@ function removeMemberFromConvoView(
 	alreadyRemovedMember: boolean,
 ): ChatBskyConvoDefs.ConvoView {
 	// member add/remove/join/leave events are only meaningful for group convos
-	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return convo;
+	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+		return convo;
+	}
 	const nextMembers = convo.members.filter((m) => m.did !== did);
 	return {
 		...convo,
@@ -889,7 +931,9 @@ function addMemberToConvoView(
 	alreadyKnownMember: boolean,
 ): ChatBskyConvoDefs.ConvoView {
 	// member add/remove/join/leave events are only meaningful for group convos
-	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return convo;
+	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+		return convo;
+	}
 	const alreadyInCuratedList = convo.members.some((m) => m.did === member.did);
 	const nextMembers = alreadyInCuratedList ? convo.members : convo.members.concat(member);
 	return {
@@ -904,7 +948,9 @@ function addMemberToConvoView(
 }
 
 export function optimisticDelete(chatId: string, old?: ConvoListQueryData) {
-	if (!old) return old;
+	if (!old) {
+		return old;
+	}
 
 	return {
 		...old,

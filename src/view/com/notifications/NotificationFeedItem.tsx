@@ -749,7 +749,9 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const onPressSayHello = async () => {
-		if (!chat || !currentAccount) return;
+		if (!chat || !currentAccount) {
+			return;
+		}
 		try {
 			setIsLoading(true);
 			const data = await ok(

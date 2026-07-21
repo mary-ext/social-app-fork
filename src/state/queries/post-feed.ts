@@ -532,7 +532,9 @@ function assertSomePostsPassModeration(
 	moderationPrefs: BskyPreferences['moderationPrefs'],
 ) {
 	// no posts in this feed
-	if (feed.length === 0) return true;
+	if (feed.length === 0) {
+		return true;
+	}
 
 	// assume false
 	let somePostsPassModeration = false;

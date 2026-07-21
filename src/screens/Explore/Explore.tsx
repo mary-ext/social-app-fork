@@ -179,8 +179,9 @@ export function Explore({
 			isFetchingNextPageFeedPreviews ||
 			!hasNextPageFeedPreviews ||
 			feedPreviewSlicesError
-		)
+		) {
 			return;
+		}
 		try {
 			await fetchNextPageFeedPreviews();
 		} catch (err) {

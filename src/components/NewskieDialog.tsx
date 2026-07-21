@@ -33,7 +33,9 @@ export function NewskieDialog({
 	const now = useConstant(() => new Date());
 	const daysOld = createdAt ? differenceInSeconds(now, new Date(createdAt)) / 86400 : Infinity;
 
-	if (!createdAt || daysOld > 7) return null;
+	if (!createdAt || daysOld > 7) {
+		return null;
+	}
 
 	return (
 		<Dialog.Root handle={handle}>

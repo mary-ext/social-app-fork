@@ -33,7 +33,9 @@ export function useConvoQuery({ convoId }: { convoId: string }) {
 	return useQuery({
 		queryKey: RQKEY(convoId),
 		queryFn: async () => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(chat.get('chat.bsky.convo.getConvo', { params: { convoId } }));
 			return data.convo;
 		},
@@ -52,8 +54,12 @@ export function useMarkAsReadMutation() {
 
 	return useMutation({
 		mutationFn: async ({ convoId, messageId }: { convoId?: string; messageId?: string }) => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 
 			await ok(
 				chat.post('chat.bsky.convo.updateRead', {
@@ -62,7 +68,9 @@ export function useMarkAsReadMutation() {
 			);
 		},
 		onMutate({ convoId }) {
-			if (!convoId) throw new Error('No convoId provided');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
 
 			// snapshot the list caches before the optimistic update so onError can
 			// restore the convo rows alongside the badge count
@@ -75,7 +83,9 @@ export function useMarkAsReadMutation() {
 			// holding the true unread state still drives the decrement
 			let unreadStatus: ChatBskyConvoDefs.ConvoView['status'] | undefined;
 			for (const [, data] of prevListQueries) {
-				if (!data) continue;
+				if (!data) {
+					continue;
+				}
 				const convo = getConvoFromQueryData(convoId, data);
 				if (convo?.unreadCount) {
 					unreadStatus = convo.status;
@@ -94,7 +104,9 @@ export function useMarkAsReadMutation() {
 				queryClient.setQueriesData<ChatBskyConvoGetUnreadCounts.$output>(
 					{ queryKey: UNREAD_COUNTS_PARTIAL_KEY },
 					(old) => {
-						if (!old) return old;
+						if (!old) {
+							return old;
+						}
 						return {
 							...old,
 							...(unreadStatus === 'request'
@@ -129,7 +141,9 @@ export function useMarkAsReadMutation() {
 			}
 		},
 		onSuccess(_, { convoId }) {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 
 			// the optimistic badge arithmetic can drift from the server (e.g. a convo
 			// whose status differs between caches, or a sentinel-capped count).
@@ -138,7 +152,9 @@ export function useMarkAsReadMutation() {
 			void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_PARTIAL_KEY });
 
 			queryClient.setQueriesData({ queryKey: [LIST_CONVOS_KEY] }, (old?: ConvoListQueryData) => {
-				if (!old) return old;
+				if (!old) {
+					return old;
+				}
 
 				const existingConvo = getConvoFromQueryData(convoId, old);
 
@@ -177,7 +193,9 @@ export function* findAllProfilesInQueryData(
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {
-		if (!queryData) continue;
+		if (!queryData) {
+			continue;
+		}
 		for (const member of queryData.members) {
 			if (member.did === did) {
 				yield member;

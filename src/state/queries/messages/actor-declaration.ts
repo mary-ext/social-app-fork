@@ -28,7 +28,9 @@ export function useUpdateActorDeclaration({
 			allowIncoming?: 'all' | 'none' | 'following';
 			allowGroupInvites?: 'all' | 'none' | 'following';
 		}) => {
-			if (!currentAccount || !pds) throw new Error('Not signed in');
+			if (!currentAccount || !pds) {
+				throw new Error('Not signed in');
+			}
 			const current = queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
 				PROFILE_RKEY(currentAccount.did),
 			);
@@ -49,11 +51,15 @@ export function useUpdateActorDeclaration({
 			});
 		},
 		onMutate: (update) => {
-			if (!currentAccount) return;
+			if (!currentAccount) {
+				return;
+			}
 			queryClient.setQueryData(
 				PROFILE_RKEY(currentAccount?.did),
 				(old?: AppBskyActorDefs.ProfileViewDetailed) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 					const allowIncoming = update.allowIncoming ?? old.associated?.chat?.allowIncoming ?? 'following';
 					// resolve the same concrete value the server will receive, so
 					// optimistic cache and persisted record stay aligned

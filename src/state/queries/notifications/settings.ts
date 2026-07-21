@@ -70,7 +70,9 @@ export function useChatNotificationSettingsQuery({ enabled }: { enabled?: boolea
 	return useQuery({
 		queryKey: RQKEY_CHAT,
 		queryFn: async (): Promise<ChatNotificationSettingsPreferences> => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(chat.get('chat.bsky.notification.getPreferences', { params: {} }));
 			return chatPreferencesForSettings(data.preferences);
 		},
@@ -113,14 +115,18 @@ function optimisticUpdateNotificationSettings(queryClient: QueryClient, update: 
 
 	if (hasUpdates(appUpdate)) {
 		queryClient.setQueryData(RQKEY_APP, (old?: AppNotificationSettingsPreferences) => {
-			if (!old) return old;
+			if (!old) {
+				return old;
+			}
 			return { ...old, ...appUpdate };
 		});
 	}
 
 	if (hasUpdates(chatUpdate)) {
 		queryClient.setQueryData(RQKEY_CHAT, (old?: ChatNotificationSettingsPreferences) => {
-			if (!old) return old;
+			if (!old) {
+				return old;
+			}
 			return { ...old, ...chatUpdate };
 		});
 	}

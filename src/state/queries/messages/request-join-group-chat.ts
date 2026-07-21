@@ -21,8 +21,12 @@ export function useRequestJoinGroupChat({
 
 	return useMutation({
 		mutationFn: async ({ code }: { code: string }) => {
-			if (!chat) throw new Error('Must be logged in to join');
-			if (!code) throw new Error('No invite code');
+			if (!chat) {
+				throw new Error('Must be logged in to join');
+			}
+			if (!code) {
+				throw new Error('No invite code');
+			}
 			return await ok(chat.post('chat.bsky.group.requestJoin', { input: { code } }));
 		},
 		onSuccess: (data) => {

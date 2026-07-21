@@ -31,7 +31,9 @@ export function SystemMessageItem({
 	const inviteLinkHandle = useInviteLinkDialog();
 
 	const info = getSystemMessageInfo(item.message.data, relatedProfiles);
-	if (!info) return null;
+	if (!info) {
+		return null;
+	}
 
 	const { Icon, action } = info;
 	const text = info.message;
@@ -65,7 +67,9 @@ export function SystemMessageItem({
 				</Link>
 			);
 		case 'inviteLink':
-			if (!inviteLinkHandle) return row;
+			if (!inviteLinkHandle) {
+				return row;
+			}
 			return (
 				<Dialog.Trigger aria-label={text} className={css.button} handle={inviteLinkHandle} type="button">
 					{row}

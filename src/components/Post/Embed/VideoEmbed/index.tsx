@@ -37,12 +37,18 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 	const active = isGif || activeFromContext;
 
 	useEffect(() => {
-		if (!ref.current) return;
-		if (isFullscreen && !IS_WEB_FIREFOX) return;
+		if (!ref.current) {
+			return;
+		}
+		if (isFullscreen && !IS_WEB_FIREFOX) {
+			return;
+		}
 		const observer = new IntersectionObserver(
 			(entries) => {
 				const entry = entries[0];
-				if (!entry) return;
+				if (!entry) {
+					return;
+				}
 				setOnScreen(entry.isIntersecting);
 				// GIFs don't send position - they don't compete to be the active video
 				if (!isGif) {
@@ -132,12 +138,18 @@ function ViewportObserver({
 	// Send position when scrolling. This is done with an IntersectionObserver
 	// observing a div of 100vh height
 	useEffect(() => {
-		if (!ref.current) return;
-		if (isFullscreen && !IS_WEB_FIREFOX) return;
+		if (!ref.current) {
+			return;
+		}
+		if (isFullscreen && !IS_WEB_FIREFOX) {
+			return;
+		}
 		const observer = new IntersectionObserver(
 			(entries) => {
 				const entry = entries[0];
-				if (!entry) return;
+				if (!entry) {
+					return;
+				}
 				const position = entry.boundingClientRect.y + entry.boundingClientRect.height / 2;
 				sendPosition(position);
 				setNearScreen(entry.isIntersecting);

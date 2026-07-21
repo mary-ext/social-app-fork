@@ -131,7 +131,9 @@ export function createEmbedRecordWithMediaView({
 	post: AppBskyFeedDefs.PostView;
 	quote: AppBskyFeedDefs.PostView;
 }): AppBskyEmbedRecordWithMedia.View | undefined {
-	if (!(post.embed?.$type === 'app.bsky.embed.recordWithMedia#view')) return;
+	if (!(post.embed?.$type === 'app.bsky.embed.recordWithMedia#view')) {
+		return;
+	}
 	return {
 		...post.embed,
 		record: {

@@ -72,7 +72,9 @@ export function NotificationFeed({
 	}
 
 	const onEndReached = async () => {
-		if (isFetching || !hasNextPage || isError) return;
+		if (isFetching || !hasNextPage || isError) {
+			return;
+		}
 
 		try {
 			await fetchNextPage();

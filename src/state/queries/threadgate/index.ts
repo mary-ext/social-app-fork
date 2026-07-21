@@ -160,7 +160,9 @@ export async function upsertThreadgate(
 		postUri,
 	});
 	const next = await callback(prev);
-	if (!next) return;
+	if (!next) {
+		return;
+	}
 	validateThreadgateRecordOrThrow(next);
 	await writeThreadgateRecord({
 		did,
@@ -218,7 +220,9 @@ export function useSetThreadgateAllowMutation() {
 				1e3, // 1s delay between tries
 			).catch(() => {});
 
-			if (data) updatePostThreadThreadgate(data);
+			if (data) {
+				updatePostThreadThreadgate(data);
+			}
 
 			void queryClient.invalidateQueries({
 				queryKey: [threadgateRecordQueryKeyRoot],

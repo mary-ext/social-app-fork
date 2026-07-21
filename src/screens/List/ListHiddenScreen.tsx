@@ -83,7 +83,9 @@ export function ListHiddenScreen({
 	};
 
 	const onRemoveList = async () => {
-		if (!savedFeedConfig) return;
+		if (!savedFeedConfig) {
+			return;
+		}
 		try {
 			await removeSavedFeed(savedFeedConfig);
 			Toast.show(m['screens.list.savedFeeds.removedToast']());

@@ -127,7 +127,9 @@ export function useListMembershipAddMutation({
 				queryClient.setQueryData<InfiniteData<StarterPacksWithMembership>>(
 					STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid),
 					(old) => {
-						if (!old) return old;
+						if (!old) {
+							return old;
+						}
 
 						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- spreading the pages loses the `$type` literals; the values are unchanged
 						return {
@@ -222,7 +224,9 @@ export function useListMembershipRemoveMutation({
 			queryClient.setQueryData<InfiniteData<AppBskyGraphGetStarterPacksWithMembership.$output>>(
 				STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid),
 				(old) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 
 					return {
 						...old,

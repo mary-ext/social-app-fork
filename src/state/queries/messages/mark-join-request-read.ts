@@ -16,16 +16,24 @@ export function useMarkJoinRequestsRead(convoId: string | undefined) {
 
 	return useMutation({
 		mutationFn: async () => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			await ok(chat.post('chat.bsky.group.updateJoinRequestsRead', { input: { convoId } }));
 		},
 		onMutate: () => {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 
 			const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId));
 			queryClient.setQueryData<ChatBskyConvoDefs.ConvoView | undefined>(CONVO_KEY(convoId), (old) => {
-				if (!old || old.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return old;
+				if (!old || old.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+					return old;
+				}
 				return {
 					...old,
 					kind: { ...old.kind, unreadJoinRequestCount: 0 },
@@ -36,7 +44,9 @@ export function useMarkJoinRequestsRead(convoId: string | undefined) {
 				queryKey: [CONVO_LIST_ROOT_KEY],
 			});
 			queryClient.setQueriesData<ConvoListQueryData>({ queryKey: [CONVO_LIST_ROOT_KEY] }, (old) => {
-				if (!old) return old;
+				if (!old) {
+					return old;
+				}
 				return {
 					...old,
 					pages: old.pages.map((page) => ({
@@ -58,7 +68,9 @@ export function useMarkJoinRequestsRead(convoId: string | undefined) {
 		},
 		onError: (error, _, context) => {
 			logger.error('Failed to mark join requests as read', { safeMessage: error });
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 			if (context?.prevConvo) {
 				queryClient.setQueryData(CONVO_KEY(convoId), context.prevConvo);
 			}

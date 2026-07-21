@@ -30,11 +30,15 @@ export function useListJoinRequestsQuery({
 	const isEnabled = enabled !== false && !!convoId;
 
 	useEffect(() => {
-		if (!isEnabled || !convoId) return;
+		if (!isEnabled || !convoId) {
+			return;
+		}
 
 		return messagesBus.on(
 			(event) => {
-				if (event.type !== 'logs') return;
+				if (event.type !== 'logs') {
+					return;
+				}
 				for (const log of event.logs) {
 					if (
 						log.$type === 'chat.bsky.convo.defs#logIncomingJoinRequest' ||
@@ -56,7 +60,9 @@ export function useListJoinRequestsQuery({
 		enabled: isEnabled,
 		queryKey: createListJoinRequestsQueryKey({ convoId: convoId ?? '' }),
 		queryFn: async ({ pageParam }) => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.get('chat.bsky.group.listJoinRequests', {
 					params: { convoId: convoId!, cursor: pageParam, limit: JOIN_REQUESTS_THRESHOLD },

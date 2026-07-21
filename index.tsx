@@ -15,7 +15,9 @@ overwriteGetLocale(() => LOCALE);
 document.documentElement.lang = LOCALE;
 
 const rootEl = document.getElementById('root');
-if (!rootEl) throw new Error('Missing #root element');
+if (!rootEl) {
+	throw new Error('Missing #root element');
+}
 
 if (import.meta.env.DEV && window.location.hostname === 'localhost') {
 	// OAuth loopback clients must use 127.0.0.1, not localhost. Redirect before

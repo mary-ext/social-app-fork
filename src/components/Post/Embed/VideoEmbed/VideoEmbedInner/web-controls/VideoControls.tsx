@@ -123,7 +123,9 @@ export function Controls({
 		if (active) {
 			// GIFs play immediately, videos wait until onScreen
 			if (onScreen || isGif) {
-				if (!autoplayDisabled) play();
+				if (!autoplayDisabled) {
+					play();
+				}
 			} else {
 				pause();
 			}
@@ -132,7 +134,9 @@ export function Controls({
 
 	// use minimal quality when not focused
 	useEffect(() => {
-		if (!hlsRef.current) return;
+		if (!hlsRef.current) {
+			return;
+		}
 		if (focused) {
 			// allow 30s of buffering
 			// `hlsRef` is a ref prop; mutating the hls.js instance config is intended
@@ -144,7 +148,9 @@ export function Controls({
 	}, [hlsRef, focused]);
 
 	useEffect(() => {
-		if (!hlsRef.current) return;
+		if (!hlsRef.current) {
+			return;
+		}
 		if (hasSubtitleTrack && subtitlesEnabled && canPlay) {
 			hlsRef.current.subtitleTrack = 0;
 		} else {
@@ -163,7 +169,9 @@ export function Controls({
 	const onPressEmptySpace = () => {
 		if (!focused) {
 			drawFocus();
-			if (autoplayDisabled) play();
+			if (autoplayDisabled) {
+				play();
+			}
 		} else {
 			togglePlayPause();
 		}
@@ -187,7 +195,9 @@ export function Controls({
 	// kept memoized: seekLeft/seekRight depend on it and are themselves read from Scrubber's effect.
 	const onSeek = useCallback(
 		(time: number) => {
-			if (!videoRef.current) return;
+			if (!videoRef.current) {
+				return;
+			}
 			if (videoRef.current.fastSeek) {
 				videoRef.current.fastSeek(time);
 			} else {
@@ -214,7 +224,9 @@ export function Controls({
 
 	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
 	const seekLeft = useCallback(() => {
-		if (!videoRef.current) return;
+		if (!videoRef.current) {
+			return;
+		}
 
 		const videoTime = videoRef.current.currentTime;
 
@@ -224,7 +236,9 @@ export function Controls({
 
 	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
 	const seekRight = useCallback(() => {
-		if (!videoRef.current) return;
+		if (!videoRef.current) {
+			return;
+		}
 
 		const videoTime = videoRef.current.currentTime;
 

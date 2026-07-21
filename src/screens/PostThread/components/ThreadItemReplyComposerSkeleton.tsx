@@ -7,7 +7,9 @@ import * as css from './ThreadItemReplyComposerSkeleton.css';
 export function ThreadItemReplyComposerSkeleton() {
 	const { gtMobile } = useBreakpoints();
 
-	if (!gtMobile) return null;
+	if (!gtMobile) {
+		return null;
+	}
 
 	return (
 		<div className={css.outer}>

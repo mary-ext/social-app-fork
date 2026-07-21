@@ -26,7 +26,9 @@ export function useUnreadCountsQuery() {
 	return useQuery({
 		queryKey: RQKEY(includeGroupChats),
 		queryFn: async () => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.get('chat.bsky.convo.getUnreadCounts', {
 					params: { includeGroupChats },

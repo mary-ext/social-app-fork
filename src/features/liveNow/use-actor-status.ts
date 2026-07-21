@@ -80,8 +80,12 @@ function computeStatusModeration(
 	actor: AnyProfileView | undefined,
 	moderationOpts: ModerationOptions | undefined,
 ) {
-	if (!actor || !('status' in actor && actor.status)) return undefined;
-	if (!moderationOpts) return undefined;
+	if (!actor || !('status' in actor && actor.status)) {
+		return undefined;
+	}
+	if (!moderationOpts) {
+		return undefined;
+	}
 	return moderateStatus(actor, moderationOpts);
 }
 
@@ -134,7 +138,9 @@ export function useActorStatus(actor?: AnyProfileView) {
 }
 
 export function isStatusStillActive(timeStr: string | undefined) {
-	if (!timeStr) return false;
+	if (!timeStr) {
+		return false;
+	}
 	const now = new Date();
 	const expiry = new Date(timeStr);
 
@@ -146,8 +152,12 @@ export function isStatusStillActive(timeStr: string | undefined) {
  * for the acting user.
  */
 export function isStatusValidForViewers(status: AppBskyActorDefs.StatusView, config: LiveNowConfig) {
-	if (status.status !== 'app.bsky.actor.status#live') return false;
-	if (!status.uri) return false; // should not happen, just backwards compat
+	if (status.status !== 'app.bsky.actor.status#live') {
+		return false;
+	}
+	if (!status.uri) {
+		return false;
+	} // should not happen, just backwards compat
 	try {
 		const { repo: liveDid } = parseCanonicalResourceUri(status.uri);
 		if (status.embed?.$type === 'app.bsky.embed.external#view') {

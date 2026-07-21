@@ -49,7 +49,9 @@ export function Card({ did }: { did: Did }) {
 	const status = useActorStatus(data);
 
 	const onPressOpenProfile = () => {
-		if (!status.isActive || !data) return;
+		if (!status.isActive || !data) {
+			return;
+		}
 		navigate('Profile', { actor: data.did });
 	};
 

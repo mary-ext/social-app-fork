@@ -22,7 +22,9 @@ export function useCreateGroupChat({
 
 	return useMutation({
 		mutationFn: async ({ name, members }: { name: string; members: Did[] }) => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.post('chat.bsky.group.createGroup', {
 					input: { name, members },

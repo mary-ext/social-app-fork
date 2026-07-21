@@ -36,7 +36,9 @@ function getProfileAction(
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
 ): Extract<SystemMessageAction, { kind: 'profile' }> | null {
 	const profile = relatedProfiles.get(user.did);
-	if (!profile) return null;
+	if (!profile) {
+		return null;
+	}
 	return {
 		kind: 'profile',
 		profile,

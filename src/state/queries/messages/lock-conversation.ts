@@ -25,8 +25,12 @@ export function useLockConvo(
 
 	return useMutation({
 		mutationFn: async ({ lock }: { lock: boolean; silent?: boolean }) => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			if (lock) {
 				const data = await ok(
 					chat.post('chat.bsky.convo.lockConvo', {
@@ -44,9 +48,13 @@ export function useLockConvo(
 			}
 		},
 		onMutate: ({ lock }) => {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 			return updateConvoOptimistic(queryClient, convoId, (prev) => {
-				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return undefined;
+				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+					return undefined;
+				}
 				return {
 					...prev,
 					kind: {

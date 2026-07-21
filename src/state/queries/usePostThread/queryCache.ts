@@ -48,7 +48,9 @@ export function createCacheMutator({
 			 * Main thread query mutator.
 			 */
 			queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.$output>(postThreadQueryKey, (data) => {
-				if (!data) return;
+				if (!data) {
+					return;
+				}
 				return {
 					...data,
 					thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([...data.thread]),
@@ -61,7 +63,9 @@ export function createCacheMutator({
 			queryClient.setQueryData<AppBskyUnspeccedGetPostThreadOtherV2.$output>(
 				postThreadOtherQueryKey,
 				(data) => {
-					if (!data) return;
+					if (!data) {
+						return;
+					}
 					return {
 						...data,
 						thread: mutator<AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem>([...data.thread]),
@@ -73,8 +77,12 @@ export function createCacheMutator({
 				for (let i = 0; i < thread.length; i++) {
 					const parent = thread[i]!;
 
-					if (parent.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') continue;
-					if (parent.uri !== parentUri) continue;
+					if (parent.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') {
+						continue;
+					}
+					if (parent.uri !== parentUri) {
+						continue;
+					}
 
 					/*
 					 * Update parent data
@@ -148,13 +156,17 @@ export function createCacheMutator({
 		/** Unused atm, post shadow does the trick, but it would be nice to clean up the whole sub-tree on deletes. */
 		deletePost(post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {
 			queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.$output>(postThreadQueryKey, (queryData) => {
-				if (!queryData) return;
+				if (!queryData) {
+					return;
+				}
 
 				const thread = [...queryData.thread];
 
 				for (let i = 0; i < thread.length; i++) {
 					const existingPost = thread[i]!;
-					if (post.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') continue;
+					if (post.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') {
+						continue;
+					}
 
 					if (existingPost.uri === post.uri) {
 						const branch = getBranch(thread, i, existingPost.depth);
@@ -251,7 +263,9 @@ export function* findAllPostsInQueryData(
 	});
 
 	for (const [_queryKey, queryData] of queryDatas) {
-		if (!queryData) continue;
+		if (!queryData) {
+			continue;
+		}
 
 		const { thread } = queryData;
 
@@ -279,7 +293,9 @@ export function* findAllProfilesInQueryData(
 	});
 
 	for (const [_queryKey, queryData] of queryDatas) {
-		if (!queryData) continue;
+		if (!queryData) {
+			continue;
+		}
 
 		const { thread } = queryData;
 
@@ -303,13 +319,17 @@ export function useUpdatePostThreadThreadgateQueryCache() {
 	const context = usePostThreadContext();
 
 	return (threadgate: AppBskyFeedDefs.ThreadgateView) => {
-		if (!context) return;
+		if (!context) {
+			return;
+		}
 
 		function mutator<T>(thread: ApiThreadItem[]): T[] {
 			for (let i = 0; i < thread.length; i++) {
 				const item = thread[i]!;
 
-				if (item.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') continue;
+				if (item.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') {
+					continue;
+				}
 
 				if (item.depth === 0) {
 					thread.splice(i, 1, {
@@ -330,7 +350,9 @@ export function useUpdatePostThreadThreadgateQueryCache() {
 		}
 
 		qc.setQueryData<AppBskyUnspeccedGetPostThreadV2.$output>(context.postThreadQueryKey, (data) => {
-			if (!data) return;
+			if (!data) {
+				return;
+			}
 			return {
 				...data,
 				thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([...data.thread]),

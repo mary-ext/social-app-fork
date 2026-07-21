@@ -25,8 +25,12 @@ export function useWithdrawJoinGroupChatRequest({
 
 	return useMutation({
 		mutationFn: async ({ convoId }: { convoId: string }) => {
-			if (!chat) throw new Error('Must be logged in to withdraw a join request');
-			if (!convoId) throw new Error('No convoId provided');
+			if (!chat) {
+				throw new Error('Must be logged in to withdraw a join request');
+			}
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
 			return await ok(chat.post('chat.bsky.group.withdrawJoinRequest', { input: { convoId } }));
 		},
 		onMutate: ({ convoId }) => {

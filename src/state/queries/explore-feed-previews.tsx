@@ -164,7 +164,9 @@ export function useFeedPreviews(
 		data: useMemo<FeedPreviewItem[]>(() => {
 			const items: FeedPreviewItem[] = [];
 
-			if (!enabled) return items;
+			if (!enabled) {
+				return items;
+			}
 
 			// scope the cache to the current moderationOpts; dropping entries built under stale opts so we
 			// don't serve items filtered/hidden under outdated moderation settings.

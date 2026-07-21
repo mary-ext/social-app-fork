@@ -73,7 +73,9 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 	const repostedBy = data?.pages ? data.pages.flatMap((page) => page.repostedBy) : [];
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
 		try {
 			await fetchNextPage();
 		} catch (err) {

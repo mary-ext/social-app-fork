@@ -286,7 +286,9 @@ export async function getPreferences(pds: Client, appLabelers: readonly Did[]): 
 	for (const pref of labelPrefs) {
 		if (pref.labelerDid) {
 			const labeler = prefs.moderationPrefs.labelers.find((candidate) => candidate.did === pref.labelerDid);
-			if (!labeler) continue;
+			if (!labeler) {
+				continue;
+			}
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above
 			labeler.labels[pref.label] = pref.visibility as LabelVisibility;
 		} else {
@@ -511,7 +513,9 @@ export async function upsertMutedWords(
 		};
 	});
 
-	if (!newWords.length) return;
+	if (!newWords.length) {
+		return;
+	}
 
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isMutedWordsPref);
@@ -533,7 +537,9 @@ export async function upsertMutedWords(
 export async function updateMutedWord(pds: Client, mutedWord: AtpActorDefs.MutedWord): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isMutedWordsPref);
-		if (!existing) return prefs;
+		if (!existing) {
+			return prefs;
+		}
 
 		const updatedItems = existing.items.map((existingItem) => {
 			if (!matchMutedWord(existingItem, mutedWord)) {
@@ -576,7 +582,9 @@ export async function removeMutedWord(pds: Client, mutedWord: AtpActorDefs.Muted
 export async function removeMutedWords(pds: Client, mutedWords: AtpActorDefs.MutedWord[]): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isMutedWordsPref);
-		if (!existing) return prefs;
+		if (!existing) {
+			return prefs;
+		}
 
 		// each removal target removes a single matching stored item: for legacy (no-id) words that
 		// match by value, this avoids dropping other entries that happen to share the same value

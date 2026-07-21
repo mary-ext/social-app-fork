@@ -51,7 +51,9 @@ export function AddMembersLink({
 				});
 			}
 
-			if (names) Toast.show(names);
+			if (names) {
+				Toast.show(names);
+			}
 		},
 		onError: (e) => {
 			logger.error('Failed to add group chat members', { message: e });

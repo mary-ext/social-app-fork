@@ -16,7 +16,9 @@ export function useChatActorStatusQuery() {
 		staleTime: STALE.SECONDS.FIFTEEN,
 		queryKey: chatActorStatusQueryKey(),
 		queryFn: async () => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			return await ok(chat.get('chat.bsky.actor.getStatus', {}));
 		},
 	});

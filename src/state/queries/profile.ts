@@ -99,7 +99,9 @@ export function useProfileQuery({
 						}),
 					),
 		placeholderData: () => {
-			if (!did) return;
+			if (!did) {
+				return;
+			}
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- placeholder only; the detailed-only fields stay absent until the query resolves
 			return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed;
 		},
@@ -273,11 +275,15 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 			if (currentAccount?.did) {
 				type FollowsQueryData = InfiniteData<AppBskyGraphGetFollows.$output>;
 				queryClient.setQueryData<FollowsQueryData>(PROFILE_FOLLOWS_RQKEY(currentAccount.did), (old) => {
-					if (!old?.pages?.[0]) return old;
+					if (!old?.pages?.[0]) {
+						return old;
+					}
 					if (finalFollowingUri) {
 						// Add the followed profile to the beginning
 						const alreadyExists = old.pages[0].follows.some((f) => f.did === profile.did);
-						if (alreadyExists) return old;
+						if (alreadyExists) {
+							return old;
+						}
 						return {
 							...old,
 							pages: [

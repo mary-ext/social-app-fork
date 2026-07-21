@@ -82,16 +82,22 @@ export function useMaybeProfileShadow<TProfileView extends AnyProfileView>(
 	}
 
 	useEffect(() => {
-		if (!profile) return;
+		if (!profile) {
+			return;
+		}
 		function onUpdate() {
-			if (!profile) return;
+			if (!profile) {
+				return;
+			}
 			setShadow(shadows.get(profile));
 		}
 		return emitter.subscribe(profile.did, onUpdate);
 	}, [profile]);
 
 	return useMemo(() => {
-		if (!profile) return undefined;
+		if (!profile) {
+			return undefined;
+		}
 		if (shadow) {
 			return mergeShadow(profile, shadow);
 		} else {
@@ -118,7 +124,9 @@ export function usePostAuthorShadowFilter(data?: FeedPage[]) {
 		for (const slice of data?.flatMap((page) => page.slices) ?? []) {
 			for (const item of slice.items) {
 				const did = item.post.author.did;
-				if (subscribed.has(did)) continue;
+				if (subscribed.has(did)) {
+					continue;
+				}
 
 				function onUpdate(value: Partial<ProfileShadow>) {
 					setAuthors((prev) => {
@@ -181,13 +189,19 @@ export function updateProfileShadow(queryClient: QueryClient, did: string, value
  */
 export function isProfileShadowApplied(profile: AnyProfileView, shadow: Partial<ProfileShadow>): boolean {
 	if ('followingUri' in shadow) {
-		if (profile.viewer?.following !== shadow.followingUri) return false;
+		if (profile.viewer?.following !== shadow.followingUri) {
+			return false;
+		}
 	}
 	if ('muted' in shadow) {
-		if (profile.viewer?.muted !== shadow.muted) return false;
+		if (profile.viewer?.muted !== shadow.muted) {
+			return false;
+		}
 	}
 	if ('blockingUri' in shadow) {
-		if (profile.viewer?.blocking !== shadow.blockingUri) return false;
+		if (profile.viewer?.blocking !== shadow.blockingUri) {
+			return false;
+		}
 	}
 	if ('activitySubscription' in shadow) {
 		if (profile.viewer?.activitySubscription !== shadow.activitySubscription) {
@@ -195,11 +209,15 @@ export function isProfileShadowApplied(profile: AnyProfileView, shadow: Partial<
 		}
 	}
 	if ('verification' in shadow) {
-		if (profile.verification !== shadow.verification) return false;
+		if (profile.verification !== shadow.verification) {
+			return false;
+		}
 	}
 	if ('status' in shadow) {
 		const current = 'status' in profile ? profile.status : undefined;
-		if (current !== shadow.status) return false;
+		if (current !== shadow.status) {
+			return false;
+		}
 	}
 	return true;
 }

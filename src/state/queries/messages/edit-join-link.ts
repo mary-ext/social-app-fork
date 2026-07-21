@@ -30,8 +30,12 @@ export function useEditJoinLink(
 			joinRule: ChatBskyGroupDefs.JoinRule;
 			requireApproval: boolean;
 		}) => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.post('chat.bsky.group.editJoinLink', {
 					input: { convoId, joinRule, requireApproval },
@@ -40,7 +44,9 @@ export function useEditJoinLink(
 			return data;
 		},
 		onMutate: ({ joinRule, requireApproval }) => {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 			return updateConvoOptimistic(queryClient, convoId, (prev) => {
 				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo' || !prev.kind.joinLink) {
 					return undefined;
@@ -57,7 +63,9 @@ export function useEditJoinLink(
 		onSuccess: (data) => {
 			if (convoId) {
 				updateConvoOptimistic(queryClient, convoId, (prev) => {
-					if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return undefined;
+					if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+						return undefined;
+					}
 					return {
 						...prev,
 						kind: { ...prev.kind, joinLink: data.joinLink },

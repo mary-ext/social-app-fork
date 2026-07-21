@@ -76,8 +76,12 @@ function DialogInner({
 		.filter((r) => selected === 'all' || r.value === selected)
 		// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `filter` just returned
 		.sort((a, b) => {
-			if (a.sender.did === currentAccount?.did) return -1;
-			if (b.sender.did === currentAccount?.did) return 1;
+			if (a.sender.did === currentAccount?.did) {
+				return -1;
+			}
+			if (b.sender.did === currentAccount?.did) {
+				return 1;
+			}
 			return 0;
 		});
 
@@ -135,7 +139,9 @@ function DialogInner({
 				keyExtractor={(reaction) => reaction.sender.did + '-' + reaction.value}
 				renderItem={(reaction) => {
 					const sender = convo.relatedProfiles.get(reaction.sender.did);
-					if (!sender || !moderationOpts) return null;
+					if (!sender || !moderationOpts) {
+						return null;
+					}
 					return (
 						<ReactionRow
 							allReactions={reactions}
@@ -234,7 +240,9 @@ function ReactionRow({
 export function groupReactions(reactions: ChatBskyConvoDefs.ReactionView[] | undefined): Reaction[] {
 	const grouped = new Map<string, Reaction>();
 	for (const reaction of reactions ?? []) {
-		if (!reaction) continue;
+		if (!reaction) {
+			continue;
+		}
 		const existing = grouped.get(reaction.value);
 		if (existing) {
 			existing.senders.push(reaction.sender);

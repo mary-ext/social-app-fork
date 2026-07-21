@@ -160,7 +160,9 @@ function HashtagScreenTab({
 	};
 
 	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || error) return;
+		if (isFetchingNextPage || !hasNextPage || error) {
+			return;
+		}
 		void fetchNextPage();
 	};
 

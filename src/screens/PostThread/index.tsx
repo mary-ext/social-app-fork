@@ -197,7 +197,9 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 			 * so that subsequent size changes unrelated to a params change (like
 			 * pagination) do not affect scroll.
 			 */
-			if (offset > 0 || isRoot) shouldHandleScroll.current = false;
+			if (offset > 0 || isRoot) {
+				shouldHandleScroll.current = false;
+			}
 		}
 	};
 
@@ -240,20 +242,32 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 	}
 
 	const onStartReached = () => {
-		if (thread.state.isFetching) return;
+		if (thread.state.isFetching) {
+			return;
+		}
 		// can be true after `prepareForParamsUpdate` is called
-		if (deferParents) return;
+		if (deferParents) {
+			return;
+		}
 		// prevent any state mutations if we know we're done
-		if (maxParentCount >= totalParents) return;
+		if (maxParentCount >= totalParents) {
+			return;
+		}
 		setMaxParentCount((n) => n + PARENT_CHUNK_SIZE);
 	};
 
 	const onEndReached = () => {
-		if (thread.state.isFetching) return;
+		if (thread.state.isFetching) {
+			return;
+		}
 		// can be true after `prepareForParamsUpdate` is called
-		if (deferParents) return;
+		if (deferParents) {
+			return;
+		}
 		// prevent any state mutations if we know we're done
-		if (maxChildrenCount >= totalChildren) return;
+		if (maxChildrenCount >= totalChildren) {
+			return;
+		}
 		setMaxChildrenCount((prev) => prev + CHILDREN_CHUNK_SIZE);
 	};
 
@@ -292,9 +306,13 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 				}
 			} else {
 				// ignore any parent items
-				if (item.type === 'readMoreUp' || (hasDepth && item.depth < 0)) continue;
+				if (item.type === 'readMoreUp' || (hasDepth && item.depth < 0)) {
+					continue;
+				}
 				// can exit early if we've reached the max children count
-				if (childrenCount > maxChildrenCount) break;
+				if (childrenCount > maxChildrenCount) {
+					break;
+				}
 
 				slices.push(item);
 				childrenCount++;

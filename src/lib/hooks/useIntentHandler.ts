@@ -27,7 +27,9 @@ export function useIntentHandler() {
 			const isIntent = intent === 'intent';
 			const params = urlp.searchParams;
 
-			if (!isIntent) return;
+			if (!isIntent) {
+				return;
+			}
 
 			switch (intentType) {
 				case 'compose': {
@@ -60,7 +62,9 @@ export function useComposeIntent() {
 
 	return useCallback(
 		({ text, videoUri }: { text: string | null; videoUri: string | null }) => {
-			if (!hasSession) return;
+			if (!hasSession) {
+				return;
+			}
 			closeAllActiveElements();
 
 			// Whenever a video URI is present, we don't support adding images right now.

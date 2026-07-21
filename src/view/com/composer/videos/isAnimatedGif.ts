@@ -12,7 +12,9 @@ export function isAnimatedGif(buffer: ArrayBuffer): {
 	const bytes = new Uint8Array(buffer);
 	// Verify GIF signature
 	const sig = String.fromCharCode(...bytes.slice(0, 6));
-	if (!sig.startsWith('GIF')) return { isGif: false, isAnimated: false, frames: 0 };
+	if (!sig.startsWith('GIF')) {
+		return { isGif: false, isAnimated: false, frames: 0 };
+	}
 
 	let i = 13; // Skip header + logical screen descriptor
 
@@ -42,12 +44,16 @@ export function isAnimatedGif(buffer: ArrayBuffer): {
 			}
 			// Skip image data blocks
 			i++; // LZW minimum code size
-			while (bytes[i]) i += bytes[i]! + 1;
+			while (bytes[i]) {
+				i += bytes[i]! + 1;
+			}
 			i++;
 		} else if (block === 0x21) {
 			// Extension
 			i++; // Extension type
-			while (bytes[i]) i += bytes[i]! + 1;
+			while (bytes[i]) {
+				i += bytes[i]! + 1;
+			}
 			i++;
 		} else if (block === 0x3b) {
 			// Trailer

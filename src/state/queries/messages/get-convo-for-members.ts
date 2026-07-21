@@ -22,7 +22,9 @@ export function useGetConvoForMembers({
 
 	return useMutation({
 		mutationFn: async (members: Did[]) => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.get('chat.bsky.convo.getConvoForMembers', {
 					params: { members },

@@ -444,8 +444,12 @@ function FollowButtonInner({
 		? m['common.follow.action.followBack']()
 		: m['common.follow.action.follow']();
 
-	if (!profile.viewer) return null;
-	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) return null;
+	if (!profile.viewer) {
+		return null;
+	}
+	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) {
+		return null;
+	}
 
 	return profile.viewer.following ? (
 		<Button

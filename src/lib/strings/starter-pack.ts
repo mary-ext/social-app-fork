@@ -13,12 +13,16 @@ export function parseStarterPackUri(uri?: string): {
 	actor: ActorIdentifier;
 	rkey: RecordKey;
 } | null {
-	if (!uri) return null;
+	if (!uri) {
+		return null;
+	}
 
 	try {
 		if (uri.startsWith('at://')) {
 			const atUri = parseResourceUri(uri);
-			if (atUri.collection !== 'app.bsky.graph.starterpack') return null;
+			if (atUri.collection !== 'app.bsky.graph.starterpack') {
+				return null;
+			}
 			if (atUri.rkey) {
 				return {
 					actor: atUri.repo,
@@ -29,11 +33,17 @@ export function parseStarterPackUri(uri?: string): {
 		} else {
 			const url = new URL(uri);
 			const parts = url.pathname.split('/');
-			if (parts.length !== 4) return null;
+			if (parts.length !== 4) {
+				return null;
+			}
 
 			const [__, path, actor, rkey] = parts;
-			if (path !== 'starter-pack' && path !== 'start') return null;
-			if (!isActorIdentifier(actor) || !isRecordKey(rkey)) return null;
+			if (path !== 'starter-pack' && path !== 'start') {
+				return null;
+			}
+			if (!isActorIdentifier(actor) || !isRecordKey(rkey)) {
+				return null;
+			}
 			return {
 				actor,
 				rkey,
@@ -45,12 +55,18 @@ export function parseStarterPackUri(uri?: string): {
 }
 
 export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
-	if (!httpUri) return null;
+	if (!httpUri) {
+		return null;
+	}
 
 	const parsed = parseStarterPackUri(httpUri);
-	if (!parsed) return null;
+	if (!parsed) {
+		return null;
+	}
 
-	if (httpUri.startsWith('at://')) return httpUri;
+	if (httpUri.startsWith('at://')) {
+		return httpUri;
+	}
 
 	return `at://${parsed.actor}/app.bsky.graph.starterpack/${parsed.rkey}`;
 }

@@ -122,7 +122,9 @@ function FeedgenErrorMessage({
 
 	const onRemoveFeed = async () => {
 		try {
-			if (!savedFeedConfig) return;
+			if (!savedFeedConfig) {
+				return;
+			}
 			await removeFeed(savedFeedConfig);
 		} catch (err) {
 			Toast.show(m['view.posts.feed.remove.error'](), { type: 'warning' });

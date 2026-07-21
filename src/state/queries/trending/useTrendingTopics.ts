@@ -24,7 +24,9 @@ export const DEFAULT_LIMIT = 14;
 function dedup(topics: TrendingTopic[]): TrendingTopic[] {
 	const seen = new Set<string>();
 	return topics.filter((t) => {
-		if (seen.has(t.link)) return false;
+		if (seen.has(t.link)) {
+			return false;
+		}
 		seen.add(t.link);
 		return true;
 	});

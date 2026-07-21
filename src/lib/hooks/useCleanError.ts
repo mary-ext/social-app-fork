@@ -9,11 +9,12 @@ type CleanedError = {
 
 export function useCleanError() {
 	return useCallback<(error?: unknown) => CleanedError>((error) => {
-		if (!error)
+		if (!error) {
 			return {
 				raw: undefined,
 				clean: undefined,
 			};
+		}
 
 		let raw =
 			error instanceof Error ? error.message : typeof error === 'string' ? error : JSON.stringify(error);

@@ -39,7 +39,9 @@ export function optimisticallySaveBookmark(qc: QueryClient, post: AppBskyFeedDef
 			queryKey: [bookmarksQueryKeyRoot],
 		},
 		(data) => {
-			if (!data) return data;
+			if (!data) {
+				return data;
+			}
 			return {
 				...data,
 				pages: data.pages.map((page, index) => {
@@ -72,7 +74,9 @@ export function optimisticallyDeleteBookmark(qc: QueryClient, { uri }: { uri: st
 			queryKey: [bookmarksQueryKeyRoot],
 		},
 		(data) => {
-			if (!data) return data;
+			if (!data) {
+				return data;
+			}
 			return {
 				...data,
 				pages: data.pages.map((page) => {
@@ -101,7 +105,9 @@ export function* findAllPostsInQueryData(
 		}
 		for (const page of queryData.pages) {
 			for (const bookmark of page.bookmarks) {
-				if (bookmark.item.$type !== 'app.bsky.feed.defs#postView') continue;
+				if (bookmark.item.$type !== 'app.bsky.feed.defs#postView') {
+					continue;
+				}
 
 				if (didOrHandleUriMatches(atUri, bookmark.item)) {
 					yield bookmark.item;

@@ -19,7 +19,9 @@ export function JoinButton({
 	onPress?: () => void;
 	className?: string;
 }) {
-	if (!action) return null;
+	if (!action) {
+		return null;
+	}
 
 	return (
 		<Button

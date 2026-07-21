@@ -190,7 +190,9 @@ function useHLS({
 			// magic numbers: cue position, % from top of video
 			const line = controlsVisibleRef.current ? 70 : 85;
 			const video = videoRef.current;
-			if (!video) return;
+			if (!video) {
+				return;
+			}
 			for (let i = 0; i < video.textTracks.length; i++) {
 				const track = video.textTracks[i]!;
 				if (track.cues) {
@@ -217,8 +219,12 @@ function useHLS({
 	// purge low quality segments from buffer on next frag change
 	const handleFragChange = useEffectEvent(
 		(_event: HlsTypes.Events.FRAG_CHANGED, { frag }: HlsTypes.FragChangedData) => {
-			if (!Hls) return;
-			if (!hlsRef.current) return;
+			if (!Hls) {
+				return;
+			}
+			if (!hlsRef.current) {
+				return;
+			}
 			const hls = hlsRef.current;
 
 			// if the current quality level goes above 0, flush the low quality segments
@@ -246,8 +252,12 @@ function useHLS({
 	);
 
 	useEffect(() => {
-		if (!videoRef.current) return;
-		if (!Hls) return;
+		if (!videoRef.current) {
+			return;
+		}
+		if (!Hls) {
+			return;
+		}
 		if (!Hls.isSupported() || !canPlayBskyVideoCodecs()) {
 			throw new HLSUnsupportedError();
 		}
@@ -313,8 +323,12 @@ function useHLS({
 	}, [Hls, playlist, setError, setHasSubtitleTrack, updateCuePositions, videoRef]);
 
 	const flushOnLoop = useEffectEvent(() => {
-		if (!Hls) return;
-		if (!hlsRef.current) return;
+		if (!Hls) {
+			return;
+		}
+		if (!hlsRef.current) {
+			return;
+		}
 		const hls = hlsRef.current;
 		// `handleFragChange` will catch most stale frags, but there's a corner case -
 		// if there's only one segment in the video, it won't get flushed because it avoids
@@ -334,11 +348,15 @@ function useHLS({
 	// manually loop, so if we've flushed the first buffer it doesn't get confused
 	const hasLowQualityFragmentAtStart = lowQualityFragments.some((frag) => frag.start === 0);
 	useEffect(() => {
-		if (!videoRef.current) return;
+		if (!videoRef.current) {
+			return;
+		}
 
 		// use `loop` prop on `<video>` element if the starting frag is high quality.
 		// otherwise, we need to do it with an event listener as we may need to manually flush the frag
-		if (!hasLowQualityFragmentAtStart) return;
+		if (!hasLowQualityFragmentAtStart) {
+			return;
+		}
 
 		const abortController = new AbortController();
 		const { signal } = abortController;

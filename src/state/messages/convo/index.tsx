@@ -26,7 +26,9 @@ function membersChanged(
 	a: ChatBskyConvoDefs.ConvoView['members'],
 	b: ChatBskyConvoDefs.ConvoView['members'],
 ) {
-	if (a.length !== b.length) return true;
+	if (a.length !== b.length) {
+		return true;
+	}
 	const aDids = new Set(a.map((m) => m.did));
 	return b.some((m) => !aDids.has(m.did));
 }
@@ -137,7 +139,9 @@ function ConvoProviderInner({
 			// during its render (React Query builds the query in `getOptimisticResult`),
 			// and committing to the convo store then would set state on this provider
 			// mid-render of that component.
-			if (event.type !== 'updated') return;
+			if (event.type !== 'updated') {
+				return;
+			}
 			const queryKey: unknown[] = event.query.queryKey;
 			if (queryKey[0] === root && queryKey[1] === id) {
 				const data = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(getConvoKey(convoId));

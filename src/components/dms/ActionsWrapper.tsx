@@ -61,7 +61,9 @@ export function ActionsWrapper({
 	// We need to handle the `onFocus` separately because we want to know if there is a related target (the element
 	// that is losing focus). If there isn't that means the focus is coming from a dropdown that is now closed.
 	const onFocus: React.FocusEventHandler = (e) => {
-		if (e.nativeEvent.relatedTarget == null) return;
+		if (e.nativeEvent.relatedTarget == null) {
+			return;
+		}
 		setShowActions(true);
 	};
 

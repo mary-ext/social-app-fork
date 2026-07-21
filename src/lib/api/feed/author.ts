@@ -45,8 +45,12 @@ export class AuthorFeedAPI implements FeedAPI {
 				const isReply = post.reply;
 				const isRepost = post.reason?.$type === 'app.bsky.feed.defs#reasonRepost';
 				const isPin = post.reason?.$type === 'app.bsky.feed.defs#reasonPin';
-				if (!isReply) return true;
-				if (isRepost || isPin) return true;
+				if (!isReply) {
+					return true;
+				}
+				if (isRepost || isPin) {
+					return true;
+				}
 				return isReply && isAuthorReplyChain(this.params.actor, post, feed);
 			});
 		}
@@ -61,13 +65,17 @@ function isAuthorReplyChain(
 	posts: AppBskyFeedDefs.FeedViewPost[],
 ): boolean {
 	// current post is by a different user (shouldn't happen)
-	if (post.post.author.did !== actor) return false;
+	if (post.post.author.did !== actor) {
+		return false;
+	}
 
 	const replyParent = post.reply?.parent;
 
 	if (replyParent?.$type === 'app.bsky.feed.defs#postView') {
 		// reply parent is by a different user
-		if (replyParent.author.did !== actor) return false;
+		if (replyParent.author.did !== actor) {
+			return false;
+		}
 
 		// A top-level post that matches the parent of the current post.
 		const parentPost = posts.find((p) => p.post.uri === replyParent.uri);
@@ -77,7 +85,9 @@ function isAuthorReplyChain(
 		 * record we have is on feedItem.reply.parent, which we've already checked
 		 * above.
 		 */
-		if (!parentPost) return true;
+		if (!parentPost) {
+			return true;
+		}
 
 		// Walk up to parent
 		return isAuthorReplyChain(actor, parentPost, posts);

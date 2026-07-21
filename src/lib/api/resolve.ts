@@ -202,8 +202,12 @@ export async function resolveGif(gif: Gif): Promise<ResolvedExternalLink> {
 		if (url.hostname === 'static.klipy.com') {
 			const mp4Slug = getFileSlug(gif.media_formats.mp4?.url);
 			const webmSlug = getFileSlug(gif.media_formats.webm?.url);
-			if (mp4Slug) params.set('mp4', mp4Slug);
-			if (webmSlug) params.set('webm', webmSlug);
+			if (mp4Slug) {
+				params.set('mp4', mp4Slug);
+			}
+			if (webmSlug) {
+				params.set('webm', webmSlug);
+			}
 		}
 	} catch {}
 
@@ -219,9 +223,13 @@ export async function resolveGif(gif: Gif): Promise<ResolvedExternalLink> {
 }
 
 function getFileSlug(url: string | undefined): string | undefined {
-	if (!url) return undefined;
+	if (!url) {
+		return undefined;
+	}
 	const filename = url.split('/').pop();
-	if (!filename) return undefined;
+	if (!filename) {
+		return undefined;
+	}
 	const dotIndex = filename.lastIndexOf('.');
 	return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined;
 }

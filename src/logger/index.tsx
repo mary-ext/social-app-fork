@@ -108,8 +108,9 @@ export class Logger {
 			!!this.contextFilter &&
 			!!this.context &&
 			!this.debugContextRegexes.find((reg) => reg.test(this.context!))
-		)
+		) {
 			return;
+		}
 
 		const timestamp = Date.now();
 		const meta: Metadata = {
@@ -127,7 +128,9 @@ export class Logger {
 			metadata: meta,
 		});
 
-		if (!enabledLogLevels[this.level].includes(level)) return;
+		if (!enabledLogLevels[this.level].includes(level)) {
+			return;
+		}
 
 		for (const transport of this.transports) {
 			transport(level, this.context, message, meta, timestamp);

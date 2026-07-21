@@ -16,7 +16,9 @@ export function useGetConvoAvailabilityQuery(did: Did, { enabled = true }: { ena
 	return useQuery({
 		queryKey: RQKEY(did),
 		queryFn: async () => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.get('chat.bsky.convo.getConvoAvailability', {
 					params: { members: [did] },

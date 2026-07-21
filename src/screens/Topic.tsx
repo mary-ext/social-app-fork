@@ -119,7 +119,9 @@ function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest'
 	};
 
 	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || error) return;
+		if (isFetchingNextPage || !hasNextPage || error) {
+			return;
+		}
 		void fetchNextPage();
 	};
 

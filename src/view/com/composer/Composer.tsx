@@ -215,7 +215,9 @@ export const ComposePost = ({
 					abortController,
 				},
 			});
-			if (!pds || !pdsUrl) return;
+			if (!pds || !pdsUrl) {
+				return;
+			}
 			void processVideo(
 				asset,
 				(videoAction) => {
@@ -329,7 +331,9 @@ export const ComposePost = ({
 				}
 
 				// Start video compression and upload
-				if (!pds || !pdsUrl) return;
+				if (!pds || !pdsUrl) {
+					return;
+				}
 				void processVideo(
 					asset,
 					(videoAction) => {
@@ -476,17 +480,27 @@ export const ComposePost = ({
 	// Check if composer is empty (no content to save)
 	const isComposerEmpty = useMemo(() => {
 		// Has multiple posts means it's not empty
-		if (thread.posts.length > 1) return false;
+		if (thread.posts.length > 1) {
+			return false;
+		}
 
 		const firstPost = thread.posts[0]!;
 		// Has text
-		if (firstPost.text.trim().length > 0) return false;
+		if (firstPost.text.trim().length > 0) {
+			return false;
+		}
 		// Has media
-		if (firstPost.embed.media) return false;
+		if (firstPost.embed.media) {
+			return false;
+		}
 		// Has quote
-		if (firstPost.embed.quote) return false;
+		if (firstPost.embed.quote) {
+			return false;
+		}
 		// Has link
-		if (firstPost.embed.link) return false;
+		if (firstPost.embed.link) {
+			return false;
+		}
 
 		return true;
 	}, [thread.posts]);
@@ -800,8 +814,12 @@ export const ComposePost = ({
 	const queuedVideoUploadStatus = useMemo((): 'blocked' | 'complete' | 'uploading' => {
 		let hasUploadingVideo = false;
 		for (const post of thread.posts) {
-			if (isEmptyPost(post)) continue;
-			if (post.embed.media?.type !== 'video') continue;
+			if (isEmptyPost(post)) {
+				continue;
+			}
+			if (post.embed.media?.type !== 'video') {
+				continue;
+			}
 			switch (post.embed.media.video.status) {
 				case 'done': {
 					break;

@@ -26,7 +26,9 @@ export function useListConvoMembersQuery({
 	return useQuery({
 		queryKey: listConvoMembersQueryKey(convoId),
 		queryFn: async () => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const members: ChatBskyActorDefs.ProfileViewBasic[] = [];
 			let cursor: string | undefined;
 
@@ -55,7 +57,9 @@ export function* findAllProfilesInQueryData(
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {
-		if (!queryData) continue;
+		if (!queryData) {
+			continue;
+		}
 		for (const member of queryData) {
 			if (member.did === did) {
 				yield member;

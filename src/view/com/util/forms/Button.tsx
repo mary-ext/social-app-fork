@@ -145,9 +145,13 @@ export function Button({
 	const onPressWrapped = async (event: GestureResponderEvent) => {
 		event.stopPropagation();
 		event.preventDefault();
-		if (withLoading) setIsLoading(true);
+		if (withLoading) {
+			setIsLoading(true);
+		}
 		await onPress?.(event);
-		if (withLoading) setIsLoading(false);
+		if (withLoading) {
+			setIsLoading(false);
+		}
 	};
 
 	const getStyle = (state: PressableStateCallbackType) => {

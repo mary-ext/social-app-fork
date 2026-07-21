@@ -43,7 +43,9 @@ export function SearchScreenShell({ queryParam }: { queryParam: string }) {
 	const headerRef = useRef<HTMLDivElement | null>(null);
 	useLayoutEffect(() => {
 		const el = headerRef.current;
-		if (!el) return;
+		if (!el) {
+			return;
+		}
 		const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
 		measure();
 		const observer = new ResizeObserver(measure);

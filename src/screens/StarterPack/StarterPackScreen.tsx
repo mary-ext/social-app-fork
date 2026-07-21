@@ -229,7 +229,9 @@ function Header({
 	const router = useRouter();
 
 	const onFollowAll = async () => {
-		if (!starterPack.list) return;
+		if (!starterPack.list) {
+			return;
+		}
 
 		setIsProcessing(true);
 

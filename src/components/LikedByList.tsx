@@ -30,7 +30,9 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 	const likes = data?.pages ? data.pages.flatMap((page) => page.likes) : [];
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
 		try {
 			await fetchNextPage();
 		} catch (err) {

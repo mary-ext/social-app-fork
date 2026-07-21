@@ -232,7 +232,9 @@ function NotificationsTab({
 function DisabledNotificationsWarning({ active }: { active: boolean }) {
 	const { data } = useNotificationSettingsQuery({ enabled: active });
 
-	if (!data) return null;
+	if (!data) {
+		return null;
+	}
 
 	if (!data.reply.list && !data.quote.list && !data.mention.list) {
 		// mention tab notifications are disabled

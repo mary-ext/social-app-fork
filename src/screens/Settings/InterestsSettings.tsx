@@ -84,14 +84,18 @@ function Inner({
 					return nextInterests.find((int) => int === pre);
 				});
 
-			if (noEdits) return;
+			if (noEdits) {
+				return;
+			}
 
 			setIsSaving(true);
 
 			try {
 				await setInterestsPref(pds!, { tags: nextInterests });
 				qc.setQueriesData({ queryKey: preferencesQueryKey }, (old?: UsePreferencesQueryResponse) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 					old.interests.tags = nextInterests;
 					return old;
 				});
@@ -138,7 +142,9 @@ function Inner({
 			>
 				{allInterests.map((interest) => {
 					const name = interestsDisplayNames[interest];
-					if (!name) return null;
+					if (!name) {
+						return null;
+					}
 					return (
 						<Checkbox.Root aria-label={name} className={styles.chip} key={interest} name={interest}>
 							<Text className={styles.chipText} selectable={false} size="md_sub" weight="semiBold">

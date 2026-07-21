@@ -63,7 +63,9 @@ export function useAutocomplete({
 		async queryFn() {
 			if (type === 'profile') {
 				// TODO return recents
-				if (!q) return [];
+				if (!q) {
+					return [];
+				}
 
 				// Going from "foo" to "foo." should not clear matches.
 				const data = await ok(
@@ -90,7 +92,9 @@ export function useAutocomplete({
 				const results: AutocompleteItem[] = [];
 
 				for (const item of items) {
-					if (seen.has(item.key)) continue;
+					if (seen.has(item.key)) {
+						continue;
+					}
 					seen.add(item.key);
 
 					if (item.type === 'profile') {
@@ -99,7 +103,9 @@ export function useAutocomplete({
 							item,
 							moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
 						});
-						if (moderated) results.push(moderated);
+						if (moderated) {
+							results.push(moderated);
+						}
 					} else {
 						results.push(item);
 					}

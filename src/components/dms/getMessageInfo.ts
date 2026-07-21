@@ -30,7 +30,9 @@ export function isDidBlockedInConvo({
 	members: ChatBskyActorDefs.ProfileViewBasic[];
 	primaryProfile?: AnyProfileView;
 }): boolean {
-	if (!did) return false;
+	if (!did) {
+		return false;
+	}
 	if (primaryProfile && primaryProfile.did === did) {
 		return !!isBlockedOrBlocking(primaryProfile);
 	}

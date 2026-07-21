@@ -31,7 +31,9 @@ export function ThreadItemAnchorFollowButtonInner({ did, enabled = true }: { did
 
 	// We will never hit this - the profile will always be cached or loaded above
 	// but it keeps the typechecker happy
-	if (!enabled || isLoading || !profile) return null;
+	if (!enabled || isLoading || !profile) {
+		return null;
+	}
 
 	return <PostThreadFollowBtnLoaded profile={profile} />;
 }
@@ -97,7 +99,9 @@ function PostThreadFollowBtnLoaded({
 		}
 	};
 
-	if (!showFollowBtn) return null;
+	if (!showFollowBtn) {
+		return null;
+	}
 
 	return (
 		<Button

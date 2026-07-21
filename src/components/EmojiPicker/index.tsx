@@ -97,7 +97,9 @@ export function Picker({ keepOpenWhenShiftHeld = true }: PickerProps) {
 					className={styles.popup}
 					// return focus to the caller's target (e.g. the composer text input) rather than the trigger
 					finalFocus={() => {
-						if (!nextFocusRef) return;
+						if (!nextFocusRef) {
+							return;
+						}
 						const el = typeof nextFocusRef === 'function' ? nextFocusRef() : nextFocusRef.current;
 						if (el) {
 							el.focus();
@@ -123,6 +125,8 @@ export function Picker({ keepOpenWhenShiftHeld = true }: PickerProps) {
 
 function useEmojiPickerContext() {
 	const ctx = useContext(EmojiPickerContext);
-	if (!ctx) throw new Error('EmojiPicker.Picker must be used within an EmojiPicker.Root component');
+	if (!ctx) {
+		throw new Error('EmojiPicker.Picker must be used within an EmojiPicker.Root component');
+	}
 	return ctx;
 }

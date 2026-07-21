@@ -118,7 +118,9 @@ function KnownFollowersInner({
 	 * We check above too, but here for clarity and a reminder to _check for
 	 * valid indices_
 	 */
-	if (slice.length === 0) return <EmptyFallback show={showIfEmpty} />;
+	if (slice.length === 0) {
+		return <EmptyFallback show={showIfEmpty} />;
+	}
 
 	const SIZE = minimal ? AVI_SIZE_SMALL : AVI_SIZE;
 
@@ -273,7 +275,9 @@ function KnownFollowersInner({
 function EmptyFallback({ show }: { show?: boolean }) {
 	const t = useTheme();
 
-	if (!show) return null;
+	if (!show) {
+		return null;
+	}
 
 	return (
 		<Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>

@@ -61,7 +61,9 @@ export function MoreOptionsMenu({
 	};
 
 	const onRemoveFromSavedFeeds = async () => {
-		if (!savedFeedConfig) return;
+		if (!savedFeedConfig) {
+			return;
+		}
 		try {
 			await removeSavedFeed(savedFeedConfig);
 			Toast.show(m['common.feeds.removedToast']());
@@ -86,7 +88,9 @@ export function MoreOptionsMenu({
 
 	const onUnpinModList = async () => {
 		try {
-			if (!savedFeedConfig) return;
+			if (!savedFeedConfig) {
+				return;
+			}
 			await removeSavedFeed(savedFeedConfig);
 			Toast.show(m['screens.profileList.pin.unpinnedListToast']());
 		} catch {

@@ -471,7 +471,9 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	// backdated if createdAt is 24 hours or more before indexedAt
 	const isBackdated = indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000;
 
-	if (!isBackdated) return null;
+	if (!isBackdated) {
+		return null;
+	}
 
 	return (
 		<>

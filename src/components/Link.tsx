@@ -122,7 +122,9 @@ export function useLink({
 	const onPress = (e: GestureResponderEvent) => {
 		const exitEarlyIfFalse = outerOnPress?.(e);
 
-		if (exitEarlyIfFalse === false) return;
+		if (exitEarlyIfFalse === false) {
+			return;
+		}
 
 		const requiresWarning = !!(
 			!disableMismatchWarning &&

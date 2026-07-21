@@ -48,7 +48,9 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: async () => {
-			if (!pds) throw new Error('Not logged in');
+			if (!pds) {
+				throw new Error('Not logged in');
+			}
 			// the appeal is funnelled to the labeler that applied the label
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `AtprotoAudience` pins the DID method; the lexicon doesn't
 			const reportClient = pds.clone({ proxy: `${label.src}#atproto_labeler` as AtprotoAudience });

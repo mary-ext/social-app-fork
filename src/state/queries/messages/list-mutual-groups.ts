@@ -29,7 +29,9 @@ export function useListMutualGroupsQuery({
 		enabled: isEnabled,
 		queryKey: createListMutualGroupsQueryKey({ subject: subject ?? '' }),
 		queryFn: async ({ pageParam }) => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.get('chat.bsky.group.listMutualGroups', {
 					params: { subject: subject!, cursor: pageParam, limit },

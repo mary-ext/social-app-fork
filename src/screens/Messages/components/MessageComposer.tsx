@@ -66,15 +66,21 @@ export function MessageComposer({
 	const prevLength = useRef(text.length);
 
 	useEffect(() => {
-		if (!replyTo) return;
+		if (!replyTo) {
+			return;
+		}
 		composerInternalApiRef.current?.input?.focus();
 	}, [replyTo, composerInternalApiRef]);
 
 	const submitDisabled = loading || (!hasEmbed && text.trim().length === 0);
 
 	const onSubmit = (message: string, replyToMessage: ChatBskyConvoDefs.MessageView | null) => {
-		if (loading) return;
-		if (!hasEmbed && message.trim() === '') return;
+		if (loading) {
+			return;
+		}
+		if (!hasEmbed && message.trim() === '') {
+			return;
+		}
 		const graphemeCount = getGraphemeLength(message);
 		if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
 			Toast.show(
@@ -187,7 +193,9 @@ export function MessageComposer({
 							}}
 							onChange={handleChange}
 							onRequestSubmit={(req) => {
-								if (req.shiftKey) return;
+								if (req.shiftKey) {
+									return;
+								}
 								req.nativeEvent.preventDefault();
 								handleSubmit();
 							}}

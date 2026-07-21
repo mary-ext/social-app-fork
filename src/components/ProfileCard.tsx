@@ -317,12 +317,15 @@ export function Description({
 	numberOfLines?: number;
 } & Pick<RichTextProps, 'align' | 'color' | 'size'>) {
 	const profile = useProfileShadow(profileUnshadowed);
-	if (!('description' in profile) || !profile.description) return null;
+	if (!('description' in profile) || !profile.description) {
+		return null;
+	}
 	if (
 		profile.viewer &&
 		(profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList)
-	)
+	) {
 		return null;
+	}
 	return (
 		<View style={[a.pt_xs]}>
 			<RichText
@@ -417,8 +420,12 @@ export function FollowButtonInner({
 		? m['common.follow.action.followBack']()
 		: m['common.follow.action.follow']();
 
-	if (!profile.viewer) return null;
-	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) return null;
+	if (!profile.viewer) {
+		return null;
+	}
+	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) {
+		return null;
+	}
 
 	return (
 		<View>

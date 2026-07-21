@@ -62,7 +62,9 @@ export function MessageRepliesProvider({
 
 	const scrollToMessage = (messageId: string) => {
 		const didScroll = scrollToMessageRaw(messageId);
-		if (!didScroll) return;
+		if (!didScroll) {
+			return;
+		}
 
 		highlightKey.current += 1;
 		setHighlightedMessage({ id: messageId, key: highlightKey.current });

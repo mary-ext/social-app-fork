@@ -104,8 +104,12 @@ function GifPickerBody({
 	const hasData = items.length > 0;
 
 	const onEndReached = () => {
-		if (isRecentsActive) return;
-		if (isFetchingNextPage || !hasNextPage || error) return;
+		if (isRecentsActive) {
+			return;
+		}
+		if (isFetchingNextPage || !hasNextPage || error) {
+			return;
+		}
 		void fetchNextPage();
 	};
 

@@ -27,7 +27,9 @@ const resolvedDidQueryOptions = (
 				throw new Error('resolved-did: query ran without an identifier');
 			}
 			// Just return the did if it's already one
-			if (isDid(didOrHandle)) return didOrHandle;
+			if (isDid(didOrHandle)) {
+				return didOrHandle;
+			}
 
 			const res = await ok(
 				appview.get('com.atproto.identity.resolveHandle', {
@@ -39,7 +41,9 @@ const resolvedDidQueryOptions = (
 		},
 		initialData: () => {
 			// Return undefined if no did or handle
-			if (!didOrHandle) return;
+			if (!didOrHandle) {
+				return;
+			}
 			const profile = getUnstableProfile(didOrHandle);
 			return profile?.did;
 		},

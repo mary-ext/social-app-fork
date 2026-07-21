@@ -18,8 +18,12 @@ export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 		if (isFullscreen) {
 			void document.exitFullscreen();
 		} else {
-			if (!ref) throw new Error('No ref provided');
-			if (!ref.current) return;
+			if (!ref) {
+				throw new Error('No ref provided');
+			}
+			if (!ref.current) {
+				return;
+			}
 			scrollYRef.current = window.scrollY;
 			void ref.current.requestFullscreen();
 		}
@@ -27,7 +31,9 @@ export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 
 	useEffect(() => {
 		const prevIsFullscreen = prevIsFullscreenRef.current;
-		if (prevIsFullscreen === isFullscreen) return;
+		if (prevIsFullscreen === isFullscreen) {
+			return;
+		}
 		prevIsFullscreenRef.current = isFullscreen;
 
 		// Chrome has an issue where it doesn't scroll back to the top after exiting fullscreen

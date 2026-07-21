@@ -62,7 +62,9 @@ function DialogInner({ did, handle }: { did: Did; handle: Dialog.DialogHandle })
 		},
 		onSuccess: (previousRecord) => {
 			async function undo() {
-				if (!previousRecord) return;
+				if (!previousRecord) {
+					return;
+				}
 				try {
 					await putRecord(pds!, {
 						collection: 'com.germnetwork.declaration',

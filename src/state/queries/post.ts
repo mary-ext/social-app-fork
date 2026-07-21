@@ -25,7 +25,9 @@ export function usePostQuery(uri: ResourceUri | undefined) {
 	return useQuery<AppBskyFeedDefs.PostView>({
 		queryKey: RQKEY(uri || ''),
 		queryFn: async () => {
-			if (!uri) throw new Error('[unreachable] No URI provided');
+			if (!uri) {
+				throw new Error('[unreachable] No URI provided');
+			}
 
 			const urip = parseResourceUri(uri);
 

@@ -43,7 +43,9 @@ export function Scrubber({
 	const circleRef = useRef<HTMLDivElement>(null);
 
 	const seek = (evt: React.PointerEvent<HTMLDivElement>) => {
-		if (!barRef.current) return;
+		if (!barRef.current) {
+			return;
+		}
 		const { left, width } = barRef.current.getBoundingClientRect();
 		const x = evt.clientX;
 		const percent = clamp((x - left) / width, 0, 1) * duration;
@@ -96,7 +98,9 @@ export function Scrubber({
 	}, [scrubberActive, onSeekEnd]);
 
 	useEffect(() => {
-		if (!circleRef.current) return;
+		if (!circleRef.current) {
+			return;
+		}
 		if (focused) {
 			const abortController = new AbortController();
 			const { signal } = abortController;
@@ -132,7 +136,9 @@ export function Scrubber({
 	const progressPercent = (progress / duration) * 100;
 	const circleScale = hovered || scrubberActive || focused ? (scrubberActive ? 1 : 0.6) : 0;
 
-	if (duration < 3) return null;
+	if (duration < 3) {
+		return null;
+	}
 
 	return (
 		<div

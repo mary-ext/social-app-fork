@@ -25,8 +25,12 @@ export function useEnableJoinLink(
 
 	return useMutation({
 		mutationFn: async () => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.post('chat.bsky.group.enableJoinLink', {
 					input: { convoId },
@@ -35,7 +39,9 @@ export function useEnableJoinLink(
 			return data;
 		},
 		onMutate: () => {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 			return updateConvoOptimistic(queryClient, convoId, (prev) => {
 				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo' || !prev.kind.joinLink) {
 					return undefined;
@@ -52,7 +58,9 @@ export function useEnableJoinLink(
 		onSuccess: (data) => {
 			if (convoId) {
 				updateConvoOptimistic(queryClient, convoId, (prev) => {
-					if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return undefined;
+					if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+						return undefined;
+					}
 					return {
 						...prev,
 						kind: { ...prev.kind, joinLink: data.joinLink },

@@ -104,7 +104,9 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 			return result as UsePostThreadQueryResult;
 		},
 		placeholderData() {
-			if (!anchor) return;
+			if (!anchor) {
+				return;
+			}
 			const placeholder = getThreadPlaceholder(qc, anchor);
 			/*
 			 * Always return something here, even empty data, so that
@@ -161,7 +163,9 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 		},
 	});
 	const serverOtherThreadItems: ThreadItem[] = useMemo(() => {
-		if (!additionalQueryEnabled) return [];
+		if (!additionalQueryEnabled) {
+			return [];
+		}
 		if (additionalItemsQuery.isLoading) {
 			return Array.from({ length: 2 }).map((_, i) =>
 				views.skeleton({

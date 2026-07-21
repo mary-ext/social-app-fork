@@ -64,14 +64,18 @@ export function InviteBody({
 					// Optimistically mark the link as requested so any invite cards backed by the preview cache
 					// (e.g. the DM embed) flip to "Requested" right away, rather than waiting on a server refetch
 					// that can lag behind the write.
-					if (code) setJoinLinkPreviewRequestedForCode(queryClient, code, true);
+					if (code) {
+						setJoinLinkPreviewRequestedForCode(queryClient, code, true);
+					}
 					handle.close();
 					Toast.show(m['components.intents.accessRequest.success']());
 					break;
 				case 'joined': {
 					// Membership changed — refetch any cached previews of this link (e.g. a DM embed) so
 					// their viewer state reflects that the viewer is now a member.
-					if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code);
+					if (code) {
+						void invalidateJoinLinkPreviewsForCode(queryClient, code);
+					}
 					if (result.convo && result.convo.id) {
 						handle.close();
 						Toast.show(m['components.intents.join.success']());
@@ -122,7 +126,9 @@ export function InviteBody({
 		onSuccess: () => {
 			// Optimistically clear the requested state so invite cards backed by the preview cache flip back to
 			// "Request to join" right away.
-			if (code) setJoinLinkPreviewRequestedForCode(queryClient, code, false);
+			if (code) {
+				setJoinLinkPreviewRequestedForCode(queryClient, code, false);
+			}
 			handle.close();
 			Toast.show(m['common.requests.rescinded']());
 		},
@@ -138,12 +144,16 @@ export function InviteBody({
 	});
 
 	const handleJoin = () => {
-		if (!code) return;
+		if (!code) {
+			return;
+		}
 		joinGroupChat({ code });
 	};
 
 	const handleWithdraw = () => {
-		if (!convoId) return;
+		if (!convoId) {
+			return;
+		}
 		withdrawRequest({ convoId });
 	};
 

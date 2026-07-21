@@ -61,8 +61,12 @@ export function Inner({
 	const { mutate } = useNotificationSettingsUpdateMutation();
 
 	const channels = [];
-	if ('list' in preference && preference.list) channels.push('list');
-	if (preference.push) channels.push('push');
+	if ('list' in preference && preference.list) {
+		channels.push('list');
+	}
+	if (preference.push) {
+		channels.push('push');
+	}
 
 	const onChangeChannels = (change: string[]) => {
 		const newPreference = {
@@ -78,7 +82,9 @@ export function Inner({
 	};
 
 	const onChangeFilter = ([change]: string[]) => {
-		if (change !== 'all' && change !== 'follows') throw new Error('Invalid filter');
+		if (change !== 'all' && change !== 'follows') {
+			throw new Error('Invalid filter');
+		}
 
 		const newPreference = {
 			...preference,

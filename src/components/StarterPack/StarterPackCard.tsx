@@ -34,7 +34,9 @@ type DefaultProps = {
 
 /** A list-row starter pack card */
 export function Default({ className, starterPack, topBorder }: DefaultProps) {
-	if (!starterPack) return null;
+	if (!starterPack) {
+		return null;
+	}
 	return (
 		<Link className={clsx(css.defaultRow({ topBorder }), className)} starterPack={starterPack}>
 			<Card starterPack={starterPack} />
@@ -44,7 +46,9 @@ export function Default({ className, starterPack, topBorder }: DefaultProps) {
 
 /** A compact starter pack card for notifications. */
 export function Notification({ starterPack }: { starterPack?: AnyStarterPackView }) {
-	if (!starterPack) return null;
+	if (!starterPack) {
+		return null;
+	}
 	return (
 		<Outer>
 			<Header>
@@ -102,7 +106,9 @@ function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {
 
 function Description({ starterPack }: { starterPack: AnyStarterPackView }) {
 	const record = getStarterPackRecord(starterPack);
-	if (!record.description) return null;
+	if (!record.description) {
+		return null;
+	}
 	return (
 		<Text size="md_sub" numberOfLines={3}>
 			{record.description}
@@ -112,7 +118,9 @@ function Description({ starterPack }: { starterPack: AnyStarterPackView }) {
 
 function JoinedCount({ starterPack }: { starterPack: AnyStarterPackView }) {
 	const { joinedAllTimeCount } = starterPack;
-	if (!joinedAllTimeCount || joinedAllTimeCount < 50) return null;
+	if (!joinedAllTimeCount || joinedAllTimeCount < 50) {
+		return null;
+	}
 	return (
 		<Text size="md_sub" weight="semiBold" color="textContrastMedium">
 			{m['components.starterPack.card.joinedCount']({ count: joinedAllTimeCount })}

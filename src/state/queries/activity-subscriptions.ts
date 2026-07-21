@@ -69,7 +69,9 @@ export function useNotificationDeclarationMutation() {
 			queryClient.setQueryData(
 				RQKEY_getNotificationDeclaration,
 				(old?: { uri: string; cid: string; value: AppBskyNotificationDeclaration.Main }) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 					return {
 						value,
 					};

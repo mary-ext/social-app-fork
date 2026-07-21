@@ -77,7 +77,9 @@ export function OutgoingRequestListItem({
 				description={m['screens.messages.requests.rescind.confirm']({ name: convoView.name })}
 				confirmButtonCta={m['common.requests.action.rescind']()}
 				onConfirm={() => {
-					if (isWithdrawPending) return;
+					if (isWithdrawPending) {
+						return;
+					}
 					withdrawRequest({ convoId: convoView.convoId });
 				}}
 			/>

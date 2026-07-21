@@ -117,10 +117,14 @@ export function List<ItemT>({
 	);
 
 	const onStartVisibleChange = useNonReactiveCallback((isVisible: boolean) => {
-		if (isVisible) onStartReached?.();
+		if (isVisible) {
+			onStartReached?.();
+		}
 	});
 	const onEndVisibleChange = useNonReactiveCallback((isVisible: boolean) => {
-		if (isVisible) onEndReached?.();
+		if (isVisible) {
+			onEndReached?.();
+		}
 	});
 	const onAboveTheFoldChange = useNonReactiveCallback((isAboveTheFold: boolean) => {
 		// `startTransition` keeps the dependent UI (e.g. a "load new posts" button) off the scroll path.

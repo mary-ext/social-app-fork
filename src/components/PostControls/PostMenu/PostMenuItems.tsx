@@ -108,7 +108,9 @@ function PostMenuItems({
 	const postCid = post.cid;
 	const postAuthor = useProfileShadow(post.author as AnyProfileView);
 	const quoteEmbed = useMemo(() => {
-		if (!currentAccount || !post.embed) return;
+		if (!currentAccount || !post.embed) {
+			return;
+		}
 		return getMaybeDetachedQuoteEmbed({
 			viewerDid: currentAccount.did,
 			post,
@@ -230,7 +232,9 @@ function PostMenuItems({
 	};
 
 	const onToggleQuotePostAttachment = async () => {
-		if (!quoteEmbed) return;
+		if (!quoteEmbed) {
+			return;
+		}
 
 		const action = quoteEmbed.isDetached ? 'reattach' : 'detach';
 		const isDetach = action === 'detach';
@@ -259,7 +263,9 @@ function PostMenuItems({
 
 	const onToggleReplyVisibility = async () => {
 		// TODO no threadgate?
-		if (!canHideReplyForEveryone) return;
+		if (!canHideReplyForEveryone) {
+			return;
+		}
 
 		const action = isReplyHiddenByThreadgate ? 'show' : 'hide';
 		const isHide = action === 'hide';

@@ -217,7 +217,9 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	const isMutating = isApprovePending || isRejectPending;
 
 	const renderItem = ({ item }: { item: AnyProfileView }) => {
-		if (!moderationOpts) return null;
+		if (!moderationOpts) {
+			return null;
+		}
 		return (
 			<View style={[a.relative, a.flex_1, a.p_lg]}>
 				<View style={[a.flex_row, a.align_start, a.gap_md]}>
@@ -270,7 +272,9 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	);
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
 		try {
 			await fetchNextPage();
 		} catch (err) {

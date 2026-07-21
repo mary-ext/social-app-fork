@@ -61,7 +61,9 @@ export function Outer({
 	};
 
 	const onSetContentVisible = (show: boolean) => {
-		if (!meta.allowOverride) return;
+		if (!meta.allowOverride) {
+			return;
+		}
 		setIsContentVisible(show);
 	};
 

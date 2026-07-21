@@ -93,7 +93,9 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			},
 
 			async checkUnread({ invalidate, isPoll }: { invalidate?: boolean; isPoll?: boolean } = {}) {
-				if (!hasSession) return;
+				if (!hasSession) {
+					return;
+				}
 				if (!isDocumentVisible()) {
 					return;
 				}

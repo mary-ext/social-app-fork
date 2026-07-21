@@ -201,7 +201,9 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 }
 
 function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
-	if (!view.source) return null;
+	if (!view.source) {
+		return null;
+	}
 	const themeColors = themeColorsFor(view);
 	const open = () => onOpen?.();
 
@@ -258,7 +260,9 @@ function PublicationFooter({
 	onOpen?: () => void;
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
-	if (!view.source) return null;
+	if (!view.source) {
+		return null;
+	}
 	const themeColors = themeColorsFor(view);
 	const open = () => onOpen?.();
 
@@ -302,7 +306,9 @@ function PublicationIcon({
 	themeColors: ThemeColors;
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
-	if (!view.source) return null;
+	if (!view.source) {
+		return null;
+	}
 	const px = size === 'lg' ? 40 : 32;
 
 	return (
@@ -349,7 +355,9 @@ function SubscribeButton({
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
 	const highlightedPublisher = matchStandardSitePublisher(view);
-	if (!view.source) return null;
+	if (!view.source) {
+		return null;
+	}
 
 	const publicationTitle = view.source.title;
 	const label = highlightedPublisher

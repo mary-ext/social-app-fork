@@ -38,8 +38,12 @@ export function useLeaveConvo(
 	return useMutation({
 		mutationKey: RQKEY(convoId),
 		mutationFn: async () => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 
 			const data = await ok(
 				chat.post('chat.bsky.convo.leaveConvo', {
@@ -54,7 +58,9 @@ export function useLeaveConvo(
 				queryKey: [CONVO_LIST_KEY],
 			});
 			queryClient.setQueriesData<ConvoListQueryData>({ queryKey: [CONVO_LIST_KEY] }, (old) => {
-				if (!old) return old;
+				if (!old) {
+					return old;
+				}
 				return {
 					...old,
 					pages: old.pages.map((page) => ({

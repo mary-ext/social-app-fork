@@ -37,11 +37,19 @@ export function createQueryKey<T extends Record<string, unknown>>(
 export function isQueryPersisted(
 	queryKey: QueryKey,
 ): queryKey is StructuredQueryKey<Record<string, unknown>> {
-	if (!Array.isArray(queryKey) || queryKey.length !== 3) return false;
-	if (typeof queryKey[0] !== 'string') return false;
-	if (typeof queryKey[1] !== 'object' || queryKey[1] === null) return false;
+	if (!Array.isArray(queryKey) || queryKey.length !== 3) {
+		return false;
+	}
+	if (typeof queryKey[0] !== 'string') {
+		return false;
+	}
+	if (typeof queryKey[1] !== 'object' || queryKey[1] === null) {
+		return false;
+	}
 	const options: unknown = queryKey[2];
-	if (typeof options !== 'object' || options === null) return false;
+	if (typeof options !== 'object' || options === null) {
+		return false;
+	}
 	return 'persistedVersion' in options && typeof options.persistedVersion === 'number';
 }
 

@@ -75,7 +75,9 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	}, [afterReportTarget, afterReportHandle]);
 
 	const onConfirmDelete = () => {
-		if (!deleteTarget) return;
+		if (!deleteTarget) {
+			return;
+		}
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		convo
 			.deleteMessage(deleteTarget.id)
@@ -84,7 +86,9 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 	};
 
 	const onAfterReportSubmit = () => {
-		if (!reportTarget) return;
+		if (!reportTarget) {
+			return;
+		}
 		if (reportTarget.senderProfile) {
 			unstableCacheProfileView(queryClient, reportTarget.senderProfile);
 		}

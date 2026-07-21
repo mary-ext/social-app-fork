@@ -37,7 +37,9 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
 	let runAnchor: string | null = null;
 
 	const flush = () => {
-		if (run.length === 0) return;
+		if (run.length === 0) {
+			return;
+		}
 
 		const firstSentAt = run[0]!.message.sentAt;
 		const hasLargeGap =
@@ -53,7 +55,9 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
 		}
 
 		if (run.length < 4) {
-			for (const item of run) result.push(item);
+			for (const item of run) {
+				result.push(item);
+			}
 		} else {
 			// Key off the first member's id so the key stays stable when a new
 			// system message arrives at the end of the run (the common case).
@@ -86,7 +90,9 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
 		}
 
 		const sentAt = getSentAt(item);
-		if (sentAt) lastSentAt = sentAt;
+		if (sentAt) {
+			lastSentAt = sentAt;
+		}
 	}
 	flush();
 

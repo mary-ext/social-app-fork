@@ -95,7 +95,9 @@ function BlockDialogInner({
 	const hasMutualGroupChats = items.length > 0;
 
 	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage) return;
+		if (isFetchingNextPage || !hasNextPage) {
+			return;
+		}
 		fetchNextPage().catch((err) => {
 			logger.error('Failed to load more mutual group chats', { message: err });
 		});
@@ -245,7 +247,9 @@ function MutualGroupChat({
 		},
 	});
 
-	if (!convo || convo.kind !== 'group') return null;
+	if (!convo || convo.kind !== 'group') {
+		return null;
+	}
 
 	const owner = convo.primaryMember;
 	const isViewerOwner = owner?.did != null && owner.did === currentAccount?.did;

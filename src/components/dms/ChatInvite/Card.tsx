@@ -17,7 +17,9 @@ import type { ChatInvitePreview } from './use-chat-invite';
  * without a preview.
  */
 export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
-	if (!preview) return null;
+	if (!preview) {
+		return null;
+	}
 
 	const ownerHandle = preview.owner.handle;
 	const avatarProfiles = preview.convo?.members ?? [preview.owner];

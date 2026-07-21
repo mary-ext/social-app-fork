@@ -16,6 +16,7 @@
 	},
 	"plugins": ["import", "oxc", "react", "typescript", "unicorn"],
 	"rules": {
+		"curly": "warn",
 		"no-array-constructor": "error",
 		// these loops are sequential by construction — cursor pagination, retry/backoff, job polling, stream
 		// reads, chunked writes — and the rule can't see the data dependency that forces the ordering.

@@ -61,7 +61,9 @@ export function useSuggestedFollowsByActorWithDismiss({
 
 	const onDismiss = (dismissedDid: string) => {
 		queryClient.setQueryData(suggestedFollowsByActorQueryKey(did), (previous: typeof data) => {
-			if (!previous) return previous;
+			if (!previous) {
+				return previous;
+			}
 			return {
 				...previous,
 				suggestions: previous.suggestions.filter((s) => s.did !== dismissedDid),

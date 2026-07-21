@@ -46,7 +46,9 @@ export function ModerationBlockedAccounts() {
 	};
 
 	const onEndReached = async () => {
-		if (isFetching || !hasNextPage || isError) return;
+		if (isFetching || !hasNextPage || isError) {
+			return;
+		}
 
 		try {
 			await fetchNextPage();
@@ -56,7 +58,9 @@ export function ModerationBlockedAccounts() {
 	};
 
 	const renderItem = ({ item, index }: { item: ActorDefs.ProfileView; index: number }) => {
-		if (!moderationOpts) return null;
+		if (!moderationOpts) {
+			return null;
+		}
 		return (
 			<View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]} key={item.did}>
 				<ProfileCard.Default

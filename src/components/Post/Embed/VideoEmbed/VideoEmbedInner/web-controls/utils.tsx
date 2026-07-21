@@ -18,13 +18,17 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	const playWhenReadyRef = useRef(false);
 
 	useEffect(() => {
-		if (!ref.current) return;
+		if (!ref.current) {
+			return;
+		}
 		// `ref` is a ref param; mutating the element it points at is intended
 		ref.current.volume = volume;
 	}, [ref, volume]);
 
 	useEffect(() => {
-		if (!ref.current) return;
+		if (!ref.current) {
+			return;
+		}
 
 		let bufferingTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -40,18 +44,24 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		setVolume(ref.current.volume);
 
 		const handleTimeUpdate = () => {
-			if (!ref.current) return;
+			if (!ref.current) {
+				return;
+			}
 			setCurrentTime(round(ref.current.currentTime) || 0);
 			// HACK: Safari randomly fires `stalled` events when changing between segments
 			// let's just clear the buffering state if the video is still progressing -sfn
 			if (IS_WEB_SAFARI) {
-				if (bufferingTimeout) clearTimeout(bufferingTimeout);
+				if (bufferingTimeout) {
+					clearTimeout(bufferingTimeout);
+				}
 				setBuffering(false);
 			}
 		};
 
 		const handleDurationChange = () => {
-			if (!ref.current) return;
+			if (!ref.current) {
+				return;
+			}
 			setDuration(round(ref.current.duration) || 0);
 		};
 
@@ -64,7 +74,9 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		};
 
 		const handleVolumeChange = () => {
-			if (!ref.current) return;
+			if (!ref.current) {
+				return;
+			}
 			setMuted(ref.current.muted);
 		};
 
@@ -73,11 +85,15 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		};
 
 		const handleCanPlay = async () => {
-			if (bufferingTimeout) clearTimeout(bufferingTimeout);
+			if (bufferingTimeout) {
+				clearTimeout(bufferingTimeout);
+			}
 			setBuffering(false);
 			setCanPlay(true);
 
-			if (!ref.current) return;
+			if (!ref.current) {
+				return;
+			}
 			if (playWhenReadyRef.current) {
 				try {
 					await ref.current.play();
@@ -95,25 +111,33 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		};
 
 		const handleCanPlayThrough = () => {
-			if (bufferingTimeout) clearTimeout(bufferingTimeout);
+			if (bufferingTimeout) {
+				clearTimeout(bufferingTimeout);
+			}
 			setBuffering(false);
 		};
 
 		const handleWaiting = () => {
-			if (bufferingTimeout) clearTimeout(bufferingTimeout);
+			if (bufferingTimeout) {
+				clearTimeout(bufferingTimeout);
+			}
 			bufferingTimeout = setTimeout(() => {
 				setBuffering(true);
 			}, 500); // Delay to avoid frequent buffering state changes
 		};
 
 		const handlePlaying = () => {
-			if (bufferingTimeout) clearTimeout(bufferingTimeout);
+			if (bufferingTimeout) {
+				clearTimeout(bufferingTimeout);
+			}
 			setBuffering(false);
 			setError(false);
 		};
 
 		const handleStalled = () => {
-			if (bufferingTimeout) clearTimeout(bufferingTimeout);
+			if (bufferingTimeout) {
+				clearTimeout(bufferingTimeout);
+			}
 			bufferingTimeout = setTimeout(() => {
 				setBuffering(true);
 			}, 500); // Delay to avoid frequent buffering state changes
@@ -171,7 +195,9 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	}, [ref, setVolume]);
 
 	const play = useCallback(() => {
-		if (!ref.current) return;
+		if (!ref.current) {
+			return;
+		}
 
 		if (ref.current.ended) {
 			ref.current.currentTime = 0;
@@ -197,14 +223,18 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	}, [ref]);
 
 	const pause = useCallback(() => {
-		if (!ref.current) return;
+		if (!ref.current) {
+			return;
+		}
 
 		ref.current.pause();
 		playWhenReadyRef.current = false;
 	}, [ref]);
 
 	const togglePlayPause = useCallback(() => {
-		if (!ref.current) return;
+		if (!ref.current) {
+			return;
+		}
 
 		if (ref.current.paused) {
 			play();
@@ -215,7 +245,9 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 
 	const changeMuted = useCallback(
 		(newMuted: boolean | ((prev: boolean) => boolean)) => {
-			if (!ref.current) return;
+			if (!ref.current) {
+				return;
+			}
 
 			const value = typeof newMuted === 'function' ? newMuted(ref.current.muted) : newMuted;
 			ref.current.muted = value;

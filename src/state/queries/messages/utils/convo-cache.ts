@@ -29,7 +29,9 @@ export function updateConvoOptimistic(
 	});
 
 	queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId), (prev) => {
-		if (!prev) return;
+		if (!prev) {
+			return;
+		}
 		const next = updater(prev);
 		return next ?? prev;
 	});
@@ -37,13 +39,17 @@ export function updateConvoOptimistic(
 	queryClient.setQueriesData<InfiniteData<ChatBskyConvoListConvos.$output>>(
 		{ queryKey: [CONVO_LIST_KEY] },
 		(prev) => {
-			if (!prev?.pages) return;
+			if (!prev?.pages) {
+				return;
+			}
 			return {
 				...prev,
 				pages: prev.pages.map((page) => ({
 					...page,
 					convos: page.convos.map((convo) => {
-						if (convo.id !== convoId) return convo;
+						if (convo.id !== convoId) {
+							return convo;
+						}
 						const next = updater(convo);
 						return next ?? convo;
 					}),

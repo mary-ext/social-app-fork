@@ -266,8 +266,12 @@ export function sortAndAnnotateThreadItems(
 					 * Track what's before/after now that we've applied moderation. These feed
 					 * both `isLastChild` and the sibling calculations below.
 					 */
-					if (prevItem?.type === 'threadPost') metadata.prevItemDepth = prevItem?.depth;
-					if (nextItem?.type === 'threadPost') metadata.nextItemDepth = nextItem?.depth;
+					if (prevItem?.type === 'threadPost') {
+						metadata.prevItemDepth = prevItem?.depth;
+					}
+					if (nextItem?.type === 'threadPost') {
+						metadata.nextItemDepth = nextItem?.depth;
+					}
 
 					/*
 					 * Item is the last "child" in a branch if there is no next item, or if the

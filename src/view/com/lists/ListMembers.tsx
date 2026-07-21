@@ -119,7 +119,9 @@ export function ListMembers({
 	};
 
 	const onEndReached = async () => {
-		if (isFetching || !hasNextPage || isError) return;
+		if (isFetching || !hasNextPage || isError) {
+			return;
+		}
 		try {
 			await fetchNextPage();
 		} catch (err) {
@@ -154,13 +156,17 @@ export function ListMembers({
 		}
 
 		const profile = item.subject as AnyProfileView;
-		if (!moderationOpts) return null;
+		if (!moderationOpts) {
+			return null;
+		}
 
 		return <ListMember profile={profile} moderationOpts={moderationOpts} isOwner={isOwner} list={list} />;
 	};
 
 	const renderFooter = () => {
-		if (isEmpty) return null;
+		if (isEmpty) {
+			return null;
+		}
 		return (
 			<ListFooter
 				hasNextPage={hasNextPage}

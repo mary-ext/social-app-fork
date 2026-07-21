@@ -76,7 +76,9 @@ export function ProfileLists({ did, listCount }: ProfileListsProps): React.React
 	// =
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
 
 		try {
 			await fetchNextPage();

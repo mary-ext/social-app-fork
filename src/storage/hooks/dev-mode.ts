@@ -12,7 +12,9 @@ let cachedIsDevMode: boolean | undefined;
  * toggling.
  */
 export function isDevMode() {
-	if (import.meta.env.DEV) return true;
+	if (import.meta.env.DEV) {
+		return true;
+	}
 	if (cachedIsDevMode === undefined) {
 		cachedIsDevMode = device.get(['devMode']) ?? false;
 	}

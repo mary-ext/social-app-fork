@@ -11,11 +11,17 @@ const ZOOM_LOCKED_VIEWPORT =
  */
 export function useViewportZoomLock({ enabled } = { enabled: true }) {
 	useEffect(() => {
-		if (!IS_WEB_MOBILE_IOS) return;
-		if (!enabled) return;
+		if (!IS_WEB_MOBILE_IOS) {
+			return;
+		}
+		if (!enabled) {
+			return;
+		}
 
 		const meta = document.querySelector('meta[name="viewport"]');
-		if (!(meta instanceof HTMLMetaElement)) return;
+		if (!(meta instanceof HTMLMetaElement)) {
+			return;
+		}
 
 		const originalContent = meta.content;
 
@@ -56,9 +62,15 @@ const NON_TEXT_INPUT_TYPES = new Set([
 ]);
 
 function isTextInput(target: EventTarget | null): boolean {
-	if (!(target instanceof HTMLElement)) return false;
-	if (target.isContentEditable) return true;
-	if (target instanceof HTMLTextAreaElement) return true;
+	if (!(target instanceof HTMLElement)) {
+		return false;
+	}
+	if (target.isContentEditable) {
+		return true;
+	}
+	if (target instanceof HTMLTextAreaElement) {
+		return true;
+	}
 	if (target instanceof HTMLInputElement) {
 		return !NON_TEXT_INPUT_TYPES.has(target.type);
 	}

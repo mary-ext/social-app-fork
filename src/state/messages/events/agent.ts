@@ -369,20 +369,28 @@ export class MessagesEventBus {
 	}
 
 	private startPoll({ immediate }: { immediate: boolean }) {
-		if (immediate && !this.isPolling) void this.poll();
+		if (immediate && !this.isPolling) {
+			void this.poll();
+		}
 
 		this.pollIntervalRef = setInterval(() => {
-			if (this.isPolling) return;
+			if (this.isPolling) {
+				return;
+			}
 			void this.poll();
 		}, this.pollInterval);
 	}
 
 	private stopPoll() {
-		if (this.pollIntervalRef) clearInterval(this.pollIntervalRef);
+		if (this.pollIntervalRef) {
+			clearInterval(this.pollIntervalRef);
+		}
 	}
 
 	private async poll() {
-		if (this.isPolling) return;
+		if (this.isPolling) {
+			return;
+		}
 
 		this.isPolling = true;
 

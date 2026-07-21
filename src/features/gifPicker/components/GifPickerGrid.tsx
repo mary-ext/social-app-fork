@@ -52,7 +52,9 @@ export function GifPickerGrid({
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
 		const root = scrollRef.current;
-		if (!sentinel || !root) return;
+		if (!sentinel || !root) {
+			return;
+		}
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries.some((entry) => entry.isIntersecting)) {

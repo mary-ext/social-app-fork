@@ -86,7 +86,9 @@ function keyExtractor(item: RenderItem) {
 
 function getNeighborMessage(items: RenderItem[], index: number): MessageItemNeighbor {
 	const neighbor = items[index];
-	if (!neighbor) return null;
+	if (!neighbor) {
+		return null;
+	}
 	if (
 		neighbor.type === 'message' ||
 		neighbor.type === 'pending-message' ||
@@ -434,7 +436,9 @@ export function MessagesList({
 				(item.type === 'message' || item.type === 'pending-message' || item.type === 'deleted-message') &&
 				item.message.id === messageId,
 		);
-		if (index === -1) return false;
+		if (index === -1) {
+			return false;
+		}
 
 		flatListRef.current?.scrollToIndex({ index, viewPosition: 0.3, animated: true });
 		return true;

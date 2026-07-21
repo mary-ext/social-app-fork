@@ -32,8 +32,12 @@ export function useRemoveFromGroupChat(
 
 	return useMutation({
 		mutationFn: async ({ members }: { members: Did[] }) => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.post('chat.bsky.group.removeMembers', {
 					input: { convoId, members },
@@ -42,7 +46,9 @@ export function useRemoveFromGroupChat(
 			return data;
 		},
 		onMutate: ({ members }) => {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 
 			const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId));
 			const prevListEntries = queryClient.getQueriesData<InfiniteData<ChatBskyConvoListConvos.$output>>({
@@ -53,7 +59,9 @@ export function useRemoveFromGroupChat(
 			);
 
 			queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId), (prev) => {
-				if (!prev) return;
+				if (!prev) {
+					return;
+				}
 				const nextMembers = prev.members.filter((m) => !members.includes(m.did));
 				const removed = prev.members.length - nextMembers.length;
 				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
@@ -72,13 +80,17 @@ export function useRemoveFromGroupChat(
 			queryClient.setQueriesData<InfiniteData<ChatBskyConvoListConvos.$output>>(
 				{ queryKey: [CONVO_LIST_KEY] },
 				(prev) => {
-					if (!prev?.pages) return;
+					if (!prev?.pages) {
+						return;
+					}
 					return {
 						...prev,
 						pages: prev.pages.map((page) => ({
 							...page,
 							convos: page.convos.map((convo) => {
-								if (convo.id !== convoId) return convo;
+								if (convo.id !== convoId) {
+									return convo;
+								}
 								const nextMembers = convo.members.filter((m) => !members.includes(m.did));
 								const removed = convo.members.length - nextMembers.length;
 								if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
@@ -101,7 +113,9 @@ export function useRemoveFromGroupChat(
 			queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
 				listConvoMembersQueryKey(convoId),
 				(prev) => {
-					if (!prev) return;
+					if (!prev) {
+						return;
+					}
 					return prev.filter((m) => !members.includes(m.did));
 				},
 			);

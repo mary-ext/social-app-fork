@@ -69,7 +69,9 @@ export function useMessageEmbed() {
 				return;
 			}
 
-			if (embedFromParams) return;
+			if (embedFromParams) {
+				return;
+			}
 
 			if (isBskyChatInviteUrl(embedUrl)) {
 				const code = getChatInviteCodeFromUrl(embedUrl);

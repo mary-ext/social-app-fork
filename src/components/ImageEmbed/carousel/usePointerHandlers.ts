@@ -63,10 +63,14 @@ export function usePointerHandlers({
 	imageCount: number;
 }) {
 	useEffect(() => {
-		if (imageCount <= 1) return;
+		if (imageCount <= 1) {
+			return;
+		}
 
 		const el = getScrollEl();
-		if (!el) return;
+		if (!el) {
+			return;
+		}
 
 		let isDragging = false;
 		let isMouseDown = false;
@@ -109,12 +113,16 @@ export function usePointerHandlers({
 		};
 
 		const onMouseMove = (e: MouseEvent) => {
-			if (!isMouseDown) return;
+			if (!isMouseDown) {
+				return;
+			}
 
 			const x = e.pageX - startX;
 
 			// Require minimum movement before starting drag
-			if (!isDragging && Math.abs(x) < DRAG_THRESHOLD) return;
+			if (!isDragging && Math.abs(x) < DRAG_THRESHOLD) {
+				return;
+			}
 
 			if (!isDragging) {
 				isDragging = true;
@@ -153,7 +161,9 @@ export function usePointerHandlers({
 			} else {
 				// Normal scroll range
 				scrollTo(desiredScroll);
-				if (overscrollX !== 0) clearOverscroll();
+				if (overscrollX !== 0) {
+					clearOverscroll();
+				}
 			}
 
 			// Update local index from scroll position (only in normal range)
@@ -167,13 +177,17 @@ export function usePointerHandlers({
 						break;
 					}
 					accumulated += w;
-					if (i === imageCount - 1) localIndex = i;
+					if (i === imageCount - 1) {
+						localIndex = i;
+					}
 				}
 			}
 		};
 
 		const onMouseUp = () => {
-			if (!isMouseDown) return;
+			if (!isMouseDown) {
+				return;
+			}
 
 			const wasDragging = isDragging;
 			isMouseDown = false;
@@ -266,10 +280,14 @@ export function usePointerHandlers({
 		 * Listener must be non-passive so preventDefault is honored.
 		 */
 		const onWheel = (e: WheelEvent) => {
-			if (!IS_WEB_SAFARI) return;
+			if (!IS_WEB_SAFARI) {
+				return;
+			}
 			// Only act on predominantly-horizontal scrolls. Vertical-dominant events are page scroll and
 			// must not be swallowed.
-			if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+			if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) {
+				return;
+			}
 
 			e.preventDefault();
 
@@ -278,7 +296,9 @@ export function usePointerHandlers({
 				stopTween();
 				stopTween = null;
 			}
-			if (overscrollX !== 0) clearOverscroll();
+			if (overscrollX !== 0) {
+				clearOverscroll();
+			}
 
 			const maxScroll = el.scrollWidth - el.clientWidth;
 			const next = Math.max(0, Math.min(el.scrollLeft + e.deltaX, maxScroll));
@@ -295,7 +315,9 @@ export function usePointerHandlers({
 					break;
 				}
 				accumulated += w;
-				if (i === imageCount - 1) index = i;
+				if (i === imageCount - 1) {
+					index = i;
+				}
 			}
 			if (index !== localIndex) {
 				localIndex = index;
@@ -313,7 +335,9 @@ export function usePointerHandlers({
 			el.removeEventListener('wheel', onWheel);
 			window.removeEventListener('mousemove', onMouseMove);
 			window.removeEventListener('mouseup', onMouseUp);
-			if (stopTween) stopTween();
+			if (stopTween) {
+				stopTween();
+			}
 			clearOverscroll();
 			el.style.cursor = '';
 			el.style.userSelect = '';

@@ -20,7 +20,9 @@ export const createStarterPackList = async ({
 	did: Did;
 	pds: Client;
 }): Promise<{ cid: Cid; uri: ResourceUri }> => {
-	if (profiles.length === 0) throw new Error('No profiles given');
+	if (profiles.length === 0) {
+		throw new Error('No profiles given');
+	}
 
 	const list = await createRecord(pds, {
 		collection: 'app.bsky.graph.list',
@@ -35,7 +37,9 @@ export const createStarterPackList = async ({
 		},
 		repo: did,
 	});
-	if (!list) throw new Error('List creation failed');
+	if (!list) {
+		throw new Error('List creation failed');
+	}
 	await ok(
 		pds.post('com.atproto.repo.applyWrites', {
 			input: {

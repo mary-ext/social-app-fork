@@ -169,7 +169,9 @@ export function ChatList({
 		: [];
 
 	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || isError) return;
+		if (isFetchingNextPage || !hasNextPage || isError) {
+			return;
+		}
 		try {
 			await fetchNextPage();
 		} catch (err) {
@@ -197,7 +199,9 @@ export function ChatList({
 	}, [refetch, isWithinSplitView]);
 
 	const onContentSizeChange = (_width: number, height: number) => {
-		if (!isWithinSplitView || restoredRef.current) return;
+		if (!isWithinSplitView || restoredRef.current) {
+			return;
+		}
 		const offset = splitViewLeftScroll.current;
 		if (offset > 0 && height >= offset) {
 			scrollElRef.current?.scrollToOffset({ offset, animated: false });

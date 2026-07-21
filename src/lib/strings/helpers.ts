@@ -30,7 +30,9 @@ export function isOverMaxGraphemeCount({ text, maxCount }: { text: string; maxCo
 }
 
 export function countLines(str: string | undefined): number {
-	if (!str) return 0;
+	if (!str) {
+		return 0;
+	}
 	return str.match(/\n/g)?.length ?? 0;
 }
 

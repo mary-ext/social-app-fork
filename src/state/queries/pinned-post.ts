@@ -37,7 +37,9 @@ export function usePinnedPostMutation() {
 				updatePostShadow(queryClient, postUri, { pinned: pinCurrentPost });
 
 				// get the currently pinned post so we can optimistically remove the pin from it
-				if (!currentAccount) throw new Error('Not signed in');
+				if (!currentAccount) {
+					throw new Error('Not signed in');
+				}
 				const profile = await ok(
 					appview.get('app.bsky.actor.getProfile', {
 						params: { actor: currentAccount.did },

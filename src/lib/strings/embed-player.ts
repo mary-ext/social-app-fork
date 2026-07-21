@@ -494,7 +494,9 @@ export function getPlayerAspect({
 	hasThumb: boolean;
 	width: number;
 }): { aspectRatio?: number; height?: number } {
-	if (!hasThumb) return { aspectRatio: 16 / 9 };
+	if (!hasThumb) {
+		return { aspectRatio: 16 / 9 };
+	}
 
 	switch (type) {
 		case 'youtube_video':

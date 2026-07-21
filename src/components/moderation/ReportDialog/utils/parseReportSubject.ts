@@ -5,7 +5,9 @@ import { getPostRecord } from '#/lib/api/record-views';
 import type { ParsedReportSubject, ReportSubject } from '#/components/moderation/ReportDialog/types';
 
 export function parseReportSubject(subject: ReportSubject): ParsedReportSubject | undefined {
-	if (!subject) return;
+	if (!subject) {
+		return;
+	}
 
 	if ('convoId' in subject) {
 		if ('message' in subject) {
@@ -32,7 +34,9 @@ export function parseReportSubject(subject: ReportSubject): ParsedReportSubject 
 			nsid: 'app.bsky.actor.profile',
 		};
 	} else if (subject?.$type === 'app.bsky.actor.defs#statusView') {
-		if (!subject.uri || !subject.cid) return;
+		if (!subject.uri || !subject.cid) {
+			return;
+		}
 		return {
 			type: 'status',
 			uri: subject.uri,

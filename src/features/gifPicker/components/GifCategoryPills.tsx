@@ -82,7 +82,9 @@ export function GifCategoryPills({
 	return (
 		<div className={styles.row}>
 			{GIF_CATEGORIES.map((category) => {
-				if (category.id === 'recents' && !hasRecents) return null;
+				if (category.id === 'recents' && !hasRecents) {
+					return null;
+				}
 				const isActive = category.id === activeId;
 				return (
 					<Button

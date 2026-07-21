@@ -17,7 +17,9 @@ export function tween(start: number, end: number, duration: number) {
 
 		frame = (function tick(last: number) {
 			return requestAnimationFrame((t) => {
-				if (!ts) ts = t;
+				if (!ts) {
+					ts = t;
+				}
 				const te = t - ts;
 				const next = Math.round(ease(te, start, end - start, duration));
 				if ((end > start ? next < end && last <= end : next > end && last >= end) && te <= duration) {

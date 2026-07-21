@@ -127,7 +127,9 @@ export async function upsertPostgate(
 		postUri,
 	});
 	const next = await callback(prev);
-	if (!next) return;
+	if (!next) {
+		return;
+	}
 	await writePostgateRecord({
 		did,
 		pds,

@@ -83,7 +83,9 @@ export const useInternalLink = ({
 			e.preventDefault();
 			return;
 		}
-		if (isModifiedClick(e)) return;
+		if (isModifiedClick(e)) {
+			return;
+		}
 		e.preventDefault();
 		navigateToPath(to, action);
 	};

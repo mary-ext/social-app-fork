@@ -74,7 +74,9 @@ export class Storage<Scopes extends unknown[], Schema> {
 		} catch {
 			return undefined;
 		}
-		if (!res) return undefined;
+		if (!res) {
+			return undefined;
+		}
 		// parsed from storage structure `{ data: <value> }`
 		try {
 			const parsed: { data: Schema[Key] } = JSON.parse(res);
@@ -111,7 +113,9 @@ export class Storage<Scopes extends unknown[], Schema> {
 	/** For debugging purposes */
 	removeAll() {
 		const storage = this.localStorage;
-		if (!storage) return;
+		if (!storage) {
+			return;
+		}
 		const prefix = `${this.id}${this.sep}`;
 		const keys: string[] = [];
 		try {

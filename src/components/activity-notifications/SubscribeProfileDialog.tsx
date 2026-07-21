@@ -131,7 +131,9 @@ function DialogInner({
 				queryClient.setQueryData(
 					RQKEY_getActivitySubscriptions,
 					(old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.$output>) => {
-						if (!old) return old;
+						if (!old) {
+							return old;
+						}
 						return {
 							...old,
 							pages: old.pages.map((page) => ({
@@ -247,7 +249,9 @@ function DialogInner({
 function parseActivitySubscription(
 	sub?: AppBskyNotificationDefs.ActivitySubscription,
 ): Omit<AppBskyNotificationDefs.ActivitySubscription, '$type'> {
-	if (!sub) return { post: false, reply: false };
+	if (!sub) {
+		return { post: false, reply: false };
+	}
 	const { post, reply } = sub;
 	return { post, reply };
 }

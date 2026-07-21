@@ -26,14 +26,18 @@ export function useKeyboardHandlers({
 	imageCount: number;
 }) {
 	useEffect(() => {
-		if (imageCount <= 1) return;
+		if (imageCount <= 1) {
+			return;
+		}
 
 		let stopTween: (() => void) | null = null;
 		let pendingIndex: number | null = null;
 
 		const onKeyDown = (e: KeyboardEvent) => {
 			const el = getScrollEl();
-			if (!el || !el.contains(document.activeElement)) return;
+			if (!el || !el.contains(document.activeElement)) {
+				return;
+			}
 
 			const current = pendingIndex ?? currentIndexRef.current;
 			let targetIndex: number | undefined;
@@ -81,7 +85,9 @@ export function useKeyboardHandlers({
 		window.addEventListener('keydown', onKeyDown);
 		return () => {
 			window.removeEventListener('keydown', onKeyDown);
-			if (stopTween) stopTween();
+			if (stopTween) {
+				stopTween();
+			}
 		};
 	}, [getScrollEl, itemWidthsRef, currentIndexRef, scrollTo, onSettle, imageCount]);
 }

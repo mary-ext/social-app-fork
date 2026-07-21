@@ -22,8 +22,12 @@ export function useMuteConvo(
 
 	return useMutation({
 		mutationFn: async ({ mute }: { mute: boolean }) => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			if (mute) {
 				const data = await ok(
 					chat.post('chat.bsky.convo.muteConvo', {
@@ -41,7 +45,9 @@ export function useMuteConvo(
 			}
 		},
 		onMutate: ({ mute }) => {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 			return updateConvoOptimistic(queryClient, convoId, (prev) => ({
 				...prev,
 				muted: mute,

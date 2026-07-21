@@ -21,12 +21,16 @@ export function useRecentGifs() {
 	const did = currentAccount?.did;
 
 	const getRecents = (): Gif[] => {
-		if (!did) return [];
+		if (!did) {
+			return [];
+		}
 		return readValid(did);
 	};
 
 	const addRecent = (gif: Gif) => {
-		if (!did) return;
+		if (!did) {
+			return;
+		}
 		const existing = readValid(did);
 		const deduped = existing.filter((g) => g.id !== gif.id);
 		const updated = [gif, ...deduped].slice(0, MAX_RECENT_GIFS);

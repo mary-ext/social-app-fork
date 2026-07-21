@@ -85,7 +85,9 @@ function isWithinClusterBoundary({
 	if (messageIsReply(direction === 'prev' ? message : adjacentMessage)) {
 		return true;
 	}
-	if (!isFromSameSender) return true;
+	if (!isFromSameSender) {
+		return true;
+	}
 	if (adjacentMessage?.$type === 'chat.bsky.convo.defs#messageView') {
 		const currentSentAt = message.sentAt;
 		const thisDate = new Date(currentSentAt);
@@ -93,7 +95,9 @@ function isWithinClusterBoundary({
 		const diff =
 			direction === 'next' ? adjDate.getTime() - thisDate.getTime() : thisDate.getTime() - adjDate.getTime();
 		const isOutsideThreshold = diff > CLUSTERED_MESSAGE_THRESHOLD_MS;
-		if (isPending) return isOutsideThreshold;
+		if (isPending) {
+			return isOutsideThreshold;
+		}
 		return isOutsideThreshold;
 	}
 	return true;
@@ -211,7 +215,9 @@ let MessageItem = ({
 	const highlightKey = isHighlighted ? highlightedMessage.key : null;
 	const flashRef = useRef<View | null>(null);
 	useEffect(() => {
-		if (highlightKey === null) return;
+		if (highlightKey === null) {
+			return;
+		}
 		// The fork's reanimated shim can't drive imperative shared-value animations,
 		// so flash the always-mounted overlay via the Web Animations API instead.
 		const node = flashRef.current;

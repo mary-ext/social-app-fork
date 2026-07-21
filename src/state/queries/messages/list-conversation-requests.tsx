@@ -21,7 +21,9 @@ export function useListConvoRequests({
 		enabled,
 		queryKey: RQKEY(limit),
 		queryFn: async ({ pageParam }) => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.get('chat.bsky.convo.listConvoRequests', {
 					params: { limit, cursor: pageParam },
@@ -41,7 +43,9 @@ export type ConvoRequestListQueryData = InfiniteData<ChatBskyConvoListConvoReque
  * rejecting it removes the row before the query refetches.
  */
 export function optimisticDelete(convoId: string, old: ConvoRequestListQueryData | undefined) {
-	if (!old) return old;
+	if (!old) {
+		return old;
+	}
 	return {
 		...old,
 		pages: old.pages.map((page) => ({
@@ -55,7 +59,9 @@ export function optimisticDelete(convoId: string, old: ConvoRequestListQueryData
 
 /** optimistically zeroes the unread count on every incoming conversation request in the request-list cache */
 export function markAllRead(old: ConvoRequestListQueryData | undefined) {
-	if (!old) return old;
+	if (!old) {
+		return old;
+	}
 	return {
 		...old,
 		pages: old.pages.map((page) => ({
@@ -72,7 +78,9 @@ export function markAllRead(old: ConvoRequestListQueryData | undefined) {
  * the row before the query refetches.
  */
 export function optimisticDeleteJoinRequest(convoId: string, old: ConvoRequestListQueryData | undefined) {
-	if (!old) return old;
+	if (!old) {
+		return old;
+	}
 	return {
 		...old,
 		pages: old.pages.map((page) => ({
@@ -93,7 +101,9 @@ export function* findAllProfilesInQueryData(queryClient: QueryClient, did: strin
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [, queryData] of queryDatas) {
-		if (!queryData?.pages) continue;
+		if (!queryData?.pages) {
+			continue;
+		}
 		for (const page of queryData.pages) {
 			for (const item of page.requests) {
 				if (item.$type === 'chat.bsky.convo.defs#convoView') {

@@ -40,9 +40,15 @@ export type ImageProps = Omit<RNImageProps, 'source' | 'onLoad' | 'onError'> & E
 
 function normalizeSource(source: ExtraImageProps['source']): RNImageProps['source'] {
 	const value = Array.isArray(source) ? source[0] : source;
-	if (typeof value === 'string') return { uri: value };
-	if (value == null) return undefined;
-	if (typeof value === 'number') return value;
+	if (typeof value === 'string') {
+		return { uri: value };
+	}
+	if (value == null) {
+		return undefined;
+	}
+	if (typeof value === 'number') {
+		return value;
+	}
 	// expo-image allows a null `uri`; RN's `ImageURISource` only knows about it being absent
 	return { height: value.height, uri: value.uri ?? undefined, width: value.width };
 }
@@ -51,7 +57,9 @@ function imageStyle(
 	style: RNImageProps['style'],
 	contentFit: ExtraImageProps['contentFit'],
 ): RNImageProps['style'] {
-	if (!contentFit) return style;
+	if (!contentFit) {
+		return style;
+	}
 	return [style, { objectFit: contentFit }] as RNImageProps['style'];
 }
 

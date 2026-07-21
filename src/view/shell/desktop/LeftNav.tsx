@@ -351,7 +351,9 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 				}
 			}
 
-			if (!handle || handle === currentAccount?.handle || isInvalidHandle(handle)) return undefined;
+			if (!handle || handle === currentAccount?.handle || isInvalidHandle(handle)) {
+				return undefined;
+			}
 
 			return handle;
 		}

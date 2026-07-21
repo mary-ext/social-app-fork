@@ -49,7 +49,9 @@ import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 const logger = Logger.create(Logger.Context.ConversationAgent);
 
 export function isConvoItemMessage(item: ConvoItem): item is ConvoItem & { type: 'message' } {
-	if (!item) return false;
+	if (!item) {
+		return false;
+	}
 	return item.type === 'message' || item.type === 'deleted-message' || item.type === 'pending-message';
 }
 
@@ -199,7 +201,9 @@ export class Convo {
 	private cleanupProfileShadowListener: (() => void) | undefined;
 
 	getSnapshot(): ConvoState {
-		if (!this.snapshot) this.snapshot = this.generateSnapshot();
+		if (!this.snapshot) {
+			this.snapshot = this.generateSnapshot();
+		}
 		// logger.debug('snapshotted', {})
 		return this.snapshot;
 	}
@@ -260,7 +264,9 @@ export class Convo {
 				return stillInitializing();
 			}
 			case ConvoStatus.Disabled: {
-				if (!convo) return stillInitializing();
+				if (!convo) {
+					return stillInitializing();
+				}
 				return {
 					status: ConvoStatus.Disabled,
 					items: this.getItems(),
@@ -272,7 +278,9 @@ export class Convo {
 				};
 			}
 			case ConvoStatus.Suspended: {
-				if (!convo) return stillInitializing();
+				if (!convo) {
+					return stillInitializing();
+				}
 				return {
 					status: ConvoStatus.Suspended,
 					items: this.getItems(),
@@ -284,7 +292,9 @@ export class Convo {
 				};
 			}
 			case ConvoStatus.Backgrounded: {
-				if (!convo) return stillInitializing();
+				if (!convo) {
+					return stillInitializing();
+				}
 				return {
 					status: ConvoStatus.Backgrounded,
 					items: this.getItems(),
@@ -296,7 +306,9 @@ export class Convo {
 				};
 			}
 			case ConvoStatus.Ready: {
-				if (!convo) return stillInitializing();
+				if (!convo) {
+					return stillInitializing();
+				}
 				return {
 					status: ConvoStatus.Ready,
 					items: this.getItems(),
@@ -662,7 +674,9 @@ export class Convo {
 		this.lastActiveTimestamp = Date.now();
 	}
 	private wasChatInactive() {
-		if (!this.lastActiveTimestamp) return true;
+		if (!this.lastActiveTimestamp) {
+			return true;
+		}
 		return Date.now() - this.lastActiveTimestamp > INACTIVE_TIMEOUT;
 	}
 
@@ -679,7 +693,9 @@ export class Convo {
 
 	private pendingFetchConvo: Promise<{ convo: ChatBskyConvoDefs.ConvoView }> | undefined;
 	async fetchConvo() {
-		if (this.pendingFetchConvo) return this.pendingFetchConvo;
+		if (this.pendingFetchConvo) {
+			return this.pendingFetchConvo;
+		}
 
 		// non-blocking
 		void this.fetchMemberList();
@@ -753,18 +769,24 @@ export class Convo {
 		 * If oldestRev is null, we've fetched all history.
 		 * Needs to explicitly check for `null` since this is initially `undefined`.
 		 */
-		if (this.oldestRev === null) return;
+		if (this.oldestRev === null) {
+			return;
+		}
 
 		/*
 		 * Don't fetch again if a fetch is already in progress
 		 */
-		if (this.isFetchingHistory) return;
+		if (this.isFetchingHistory) {
+			return;
+		}
 
 		/*
 		 * If we've rendered a retry state for history fetching, exit. Upon retry,
 		 * this will be removed and we'll try again.
 		 */
-		if (this.fetchMessageHistoryError) return;
+		if (this.fetchMessageHistoryError) {
+			return;
+		}
 
 		try {
 			this.isFetchingHistory = true;
@@ -994,7 +1016,9 @@ export class Convo {
 		optimisticReplyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>,
 	) {
 		// Ignore empty messages for now since they have no other purpose atm
-		if (!message.text.trim() && !message.embed) return;
+		if (!message.text.trim() && !message.embed) {
+			return;
+		}
 
 		logger.debug('send message', {});
 
@@ -1194,10 +1218,14 @@ export class Convo {
 	}
 
 	async batchRetryPendingMessages() {
-		if (this.pendingMessageFailure === null) return;
+		if (this.pendingMessageFailure === null) {
+			return;
+		}
 
 		const messageArray = Array.from(this.pendingMessages.values());
-		if (messageArray.length === 0) return;
+		if (messageArray.length === 0) {
+			return;
+		}
 
 		this.pendingMessageFailure = null;
 		this.commit();
@@ -1426,8 +1454,9 @@ export class Convo {
 				prevMessage?.$type === 'chat.bsky.convo.defs#messageView' &&
 				!prevMessage.reactions?.find((reaction) => reaction.value === emoji)
 			) {
-				if (prevMessage.reactions && prevMessage.reactions.length >= 5)
+				if (prevMessage.reactions && prevMessage.reactions.length >= 5) {
 					throw new Error('Maximum reactions reached');
+				}
 				this.newMessages.set(messageId, {
 					...prevMessage,
 					reactions: [...(prevMessage.reactions ?? []), optimisticReaction],
@@ -1457,7 +1486,9 @@ export class Convo {
 				}
 			}
 		} catch (error) {
-			if (restore) restore();
+			if (restore) {
+				restore();
+			}
 			throw error;
 		}
 	}
@@ -1510,7 +1541,9 @@ export class Convo {
 				}),
 			);
 		} catch (error) {
-			if (restore) restore();
+			if (restore) {
+				restore();
+			}
 			throw error;
 		}
 	}
@@ -1568,9 +1601,13 @@ function applyShadowToConvo(
 	shadow: Partial<ProfileShadow>,
 ): ConvoWithDetails | null {
 	const i = convo.members.findIndex((m) => m.did === did);
-	if (i === -1) return null;
+	if (i === -1) {
+		return null;
+	}
 	const current = convo.members[i];
-	if (!current || isProfileShadowApplied(current, shadow)) return null;
+	if (!current || isProfileShadowApplied(current, shadow)) {
+		return null;
+	}
 
 	// The branches are identical, but narrowing the union is what lets the
 	// member arrays keep their per-kind types.

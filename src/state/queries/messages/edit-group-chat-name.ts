@@ -24,8 +24,12 @@ export function useEditGroupChatName(
 
 	return useMutation({
 		mutationFn: async ({ name: groupName }: { name: string }) => {
-			if (!convoId) throw new Error('No convoId provided');
-			if (!chat) throw new Error('Not signed in');
+			if (!convoId) {
+				throw new Error('No convoId provided');
+			}
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.post('chat.bsky.group.editGroup', {
 					input: { convoId, name: groupName },
@@ -34,9 +38,13 @@ export function useEditGroupChatName(
 			return data;
 		},
 		onMutate: ({ name: groupName }) => {
-			if (!convoId) return;
+			if (!convoId) {
+				return;
+			}
 			return updateConvoOptimistic(queryClient, convoId, (prev) => {
-				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return undefined;
+				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+					return undefined;
+				}
 				return {
 					...prev,
 					kind: { ...prev.kind, name: groupName },

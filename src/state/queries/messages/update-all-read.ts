@@ -36,7 +36,9 @@ export function useUpdateAllRead(
 
 	return useMutation({
 		mutationFn: async () => {
-			if (!chat) throw new Error('Not signed in');
+			if (!chat) {
+				throw new Error('Not signed in');
+			}
 			const data = await ok(
 				chat.post('chat.bsky.convo.updateAllRead', {
 					input: { status },
@@ -61,7 +63,9 @@ export function useUpdateAllRead(
 				);
 			}
 			queryClient.setQueriesData({ queryKey: CONVO_LIST_PARTIAL_KEY(status) }, (old?: ConvoListQueryData) => {
-				if (!old) return old;
+				if (!old) {
+					return old;
+				}
 				return {
 					...old,
 					pages: old.pages.map((page) => ({
@@ -77,7 +81,9 @@ export function useUpdateAllRead(
 			queryClient.setQueriesData(
 				{ queryKey: CONVO_LIST_PARTIAL_KEY('all', 'unread') },
 				(old?: ConvoListQueryData) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 					return {
 						...old,
 						pages: old.pages.map((page) => ({
@@ -95,7 +101,9 @@ export function useUpdateAllRead(
 			queryClient.setQueriesData<ChatBskyConvoGetUnreadCounts.$output>(
 				{ queryKey: UNREAD_COUNTS_PARTIAL_KEY },
 				(old) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 					return {
 						...old,
 						...(status === 'accepted' ? { unreadAcceptedConvos: 0 } : { unreadRequestConvos: 0 }),

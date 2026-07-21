@@ -83,8 +83,12 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: async () => {
-			if (!currentAccount) throw new Error('No current account, should be unreachable');
-			if (!pds) throw new Error('Not logged in');
+			if (!currentAccount) {
+				throw new Error('No current account, should be unreachable');
+			}
+			if (!pds) {
+				throw new Error('Not logged in');
+			}
 			// appeals to the default Bluesky labeler funnel through the atproto-proxy header
 			await ok(
 				pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('com.atproto.moderation.createReport', {

@@ -33,7 +33,9 @@ export function hostMatches(host: string, target: string): boolean {
 }
 
 function matchByHost(host: string | null): StandardSitePublisher | null {
-	if (!host) return null;
+	if (!host) {
+		return null;
+	}
 	return STANDARD_SITE_PUBLISHERS.find((p) => hostMatches(host, p.host)) ?? null;
 }
 
