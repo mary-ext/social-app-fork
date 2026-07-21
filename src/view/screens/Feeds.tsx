@@ -1,13 +1,12 @@
-import { type ComponentType, useMemo, useRef, useState } from 'react';
+import { type ComponentType, useRef, useState } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
 
 import { partition } from '@mary/array-fns';
 
-import debounce from 'lodash.debounce';
-
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
+import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
@@ -144,7 +143,7 @@ export function FeedsScreen() {
 
 	/** A search query is present. We may not have search results yet. */
 	const isUserSearching = query.length > 1;
-	const debouncedSearch = useMemo(() => debounce((q: string) => search(q), 500), [search]);
+	const debouncedSearch = useDebouncedCallback((q: string) => search(q), 500);
 
 	const onChangeQuery = (text: string) => {
 		setQuery(text);

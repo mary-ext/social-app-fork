@@ -4,10 +4,9 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import throttle from 'lodash.throttle';
-
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
 import { useConstant } from '#/lib/hooks/use-constant';
+import { useThrottledCallback } from '#/lib/hooks/use-debounced-callback';
 import { onVisibilityChange } from '#/lib/visibility';
 
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
@@ -94,18 +93,11 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		).catch(() => {}); // ignore upstream errors
 	}, [appview, proxyDid, enabled, feed]);
 
-	const sendToFeed = useMemo(
-		() =>
-			// lodash.throttle stores sendToFeedNoDelay without invoking it, so the queue/history refs
-			// below are only read when the throttled function fires from handlers/effects, never during
-			// render. the rule can't prove throttle won't call back synchronously, hence the suppression.
-			// oxlint-disable-next-line react/react-compiler
-			throttle(sendToFeedNoDelay, 10e3, {
-				leading: false,
-				trailing: true,
-			}),
-		[sendToFeedNoDelay],
-	);
+	// queued interactions are still worth reporting after teardown
+	const sendToFeed = useThrottledCallback(sendToFeedNoDelay, 10e3, {
+		leading: false,
+		onUnmount: 'flush',
+	});
 
 	useEffect(() => {
 		if (!enabled) {

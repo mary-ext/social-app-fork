@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 
-import debounce from 'lodash.debounce';
-
+import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
 import { useCallOnce } from '#/lib/once';
 
 import { usePreferencesQuery, useSetThreadViewPreferencesMutation } from '#/state/queries/preferences';
@@ -70,15 +69,13 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 			});
 		},
 	});
-	const savePrefs = useMemo(() => {
-		return debounce(
-			(prefs: ThreadViewPreferences) => {
-				mutate(prefs);
-			},
-			2e3,
-			{ leading: true, trailing: true },
-		);
-	}, [mutate]);
+	const savePrefs = useDebouncedCallback(
+		(prefs: ThreadViewPreferences) => {
+			mutate(prefs);
+		},
+		2e3,
+		{ leading: true, onUnmount: 'flush' },
+	);
 
 	// flush on leave screen
 	useFocusEffect(

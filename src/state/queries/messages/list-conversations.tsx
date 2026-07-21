@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import type { ChatBskyActorDefs, ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
@@ -11,7 +11,8 @@ import {
 	useInfiniteQuery,
 	useQueryClient,
 } from '@tanstack/react-query';
-import throttle from 'lodash.throttle';
+
+import { useThrottledCallback } from '#/lib/hooks/use-debounced-callback';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
@@ -162,27 +163,15 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 	const { currentConvoId } = useCurrentConvoId();
 	const { currentAccount } = useSession();
 
-	const debouncedRefetch = useMemo(() => {
-		const refetchAndInvalidate = () => {
-			void queryClient.invalidateQueries({ queryKey: [RQKEY_ROOT] });
-		};
-		return throttle(refetchAndInvalidate, 500, {
-			leading: true,
-			trailing: true,
-		});
-	}, [queryClient]);
+	const debouncedRefetch = useThrottledCallback(() => {
+		void queryClient.invalidateQueries({ queryKey: [RQKEY_ROOT] });
+	}, 500);
 
 	// The unread badge count is derived from chat.bsky.convo.getUnreadCounts.
 	// Any chat log can change it, so refresh it (throttled) on every batch.
-	const debouncedInvalidateUnreadCounts = useMemo(() => {
-		return throttle(
-			() => {
-				void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_RQKEY_PARTIAL });
-			},
-			500,
-			{ leading: true, trailing: true },
-		);
-	}, [queryClient]);
+	const debouncedInvalidateUnreadCounts = useThrottledCallback(() => {
+		void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_RQKEY_PARTIAL });
+	}, 500);
 
 	useEffect(() => {
 		const unsub = messagesBus.on(

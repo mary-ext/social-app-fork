@@ -3,8 +3,8 @@ import { useMemo, useState } from 'react';
 import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { useQueryClient } from '@tanstack/react-query';
-import debounce from 'lodash.debounce';
 
+import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
 
@@ -76,8 +76,9 @@ function Inner({
 	const preselectedInterests = useMemo(() => preferences.interests.tags || [], [preferences.interests.tags]);
 	const [interests, setInterests] = useState<string[]>(preselectedInterests);
 
-	const saveInterests = useMemo(() => {
-		return debounce(async (nextInterests: string[]) => {
+	// persist the edit even if the user leaves before the window closes
+	const saveInterests = useDebouncedCallback(
+		async (nextInterests: string[]) => {
 			const noEdits =
 				nextInterests.length === preselectedInterests.length &&
 				preselectedInterests.every((pre) => {
@@ -121,12 +122,14 @@ function Inner({
 			} finally {
 				setIsSaving(false);
 			}
-		}, 1500);
-	}, [pds, setIsSaving, qc, preselectedInterests]);
+		},
+		1500,
+		{ onUnmount: 'flush' },
+	);
 
 	const onChangeInterests = (nextInterests: string[]) => {
 		setInterests(nextInterests);
-		void saveInterests(nextInterests);
+		saveInterests(nextInterests);
 	};
 
 	return (

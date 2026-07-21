@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 
 import { mapDefined } from '@mary/array-fns';
 
-import debounce from 'lodash.debounce';
-
+import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { type Detection, detectLanguagesAsync } from '#/lib/language-detection';
 
@@ -117,7 +116,7 @@ export function SuggestedLanguage({
 		}
 	});
 
-	const detectLanguage = useMemo(() => debounce(detect, 500), [detect]);
+	const detectLanguage = useDebouncedCallback(detect, 500);
 
 	if (text.length > 0 && !hasInteracted) {
 		setHasInteracted(true);
@@ -133,7 +132,7 @@ export function SuggestedLanguage({
 			return;
 		}
 
-		void detectLanguage(textTrimmed);
+		detectLanguage(textTrimmed);
 
 		return () => {
 			detectLanguage.cancel();
