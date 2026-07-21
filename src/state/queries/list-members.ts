@@ -22,7 +22,7 @@ const RQKEY_ROOT_ALL = 'list-members-all';
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri];
 export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri];
 
-export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
+export function useListMembersQuery(uri?: ResourceUri, limit: number = PAGE_SIZE) {
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyGraphGetList.$output,
@@ -39,7 +39,7 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
 					params: {
 						cursor: pageParam,
 						limit,
-						list: uri! as ResourceUri, // the enabled flag will prevent this from running until uri is set
+						list: uri!,
 					},
 				}),
 			),
@@ -49,7 +49,7 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
 	});
 }
 
-export function useAllListMembersQuery(uri?: string) {
+export function useAllListMembersQuery(uri?: ResourceUri) {
 	const { appview } = useClients();
 	return useQuery({
 		staleTime: STALE.MINUTES.ONE,
@@ -59,7 +59,7 @@ export function useAllListMembersQuery(uri?: string) {
 	});
 }
 
-export async function getAllListMembers(client: Client, uri: string) {
+export async function getAllListMembers(client: Client, uri: ResourceUri) {
 	let hasMore = true;
 	let cursor: string | undefined;
 	const listItems: AppBskyGraphDefs.ListItemView[] = [];
@@ -68,7 +68,7 @@ export async function getAllListMembers(client: Client, uri: string) {
 	while (hasMore && i < 6) {
 		const data = await ok(
 			client.get('app.bsky.graph.getList', {
-				params: { cursor, limit: 50, list: uri as ResourceUri },
+				params: { cursor, limit: 50, list: uri },
 			}),
 		);
 		listItems.push(...data.items);

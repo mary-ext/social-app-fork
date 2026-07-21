@@ -1,5 +1,7 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
+import { isAbortError } from '#/lib/strings/errors';
+
 import type { Shadow } from '#/state/cache/types';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useRequireAuth } from '#/state/session';
@@ -20,7 +22,7 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 				await queueFollow();
 			} catch (e) {
 				logger.error(`useFollowMethods: failed to follow`, { message: String(e) });
-				if (!(e instanceof Error && e.name === 'AbortError')) {
+				if (!isAbortError(e)) {
 					Toast.show(m['common.error.generic'](), {
 						type: 'error',
 					});
@@ -37,7 +39,7 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 				logger.error(`useFollowMethods: failed to unfollow`, {
 					message: String(e),
 				});
-				if (!(e instanceof Error && e.name === 'AbortError')) {
+				if (!isAbortError(e)) {
 					Toast.show(m['common.error.generic'](), {
 						type: 'error',
 					});

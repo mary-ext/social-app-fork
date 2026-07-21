@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { moderatePost } from '@atcute/bluesky-moderation';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
@@ -94,7 +95,7 @@ function PostQuotes({ uri }: { uri: string }) {
 						return null;
 					}
 					const moderation = moderatePost(post, moderationOpts);
-					return { post, record: post.record as AppBskyFeedPost.Main, moderation };
+					return { post, record: getPostRecord(post), moderation };
 				}),
 			)
 			.filter((item) => item !== null) ?? [];

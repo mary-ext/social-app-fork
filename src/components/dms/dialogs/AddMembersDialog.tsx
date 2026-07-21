@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { useListConvoMembersQuery } from '#/state/queries/messages/list-convo-members';
 
@@ -22,7 +23,7 @@ export function AddMembersDialog({
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 	handle: Dialog.DialogHandle;
 	isPending: boolean;
-	onAddMembers: (dids: string[], profiles: AnyProfileView[]) => void;
+	onAddMembers: (dids: Did[], profiles: AnyProfileView[]) => void;
 	title: string;
 }) {
 	return (
@@ -50,7 +51,7 @@ function DialogInner({
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 	handle: Dialog.DialogHandle;
 	isPending: boolean;
-	onAddMembers: (dids: string[], profiles: AnyProfileView[]) => void;
+	onAddMembers: (dids: Did[], profiles: AnyProfileView[]) => void;
 	title: string;
 }) {
 	const { data: existingMembers = convo.members } = useListConvoMembersQuery({

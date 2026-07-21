@@ -6,6 +6,7 @@ import type {
 	ChatBskyGroupAddMembers,
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -34,12 +35,12 @@ export function useAddGroupMembers(
 	const { data: myProfile } = useProfileQuery({ did: currentAccount?.did });
 
 	return useMutation({
-		mutationFn: async ({ members }: { members: string[]; profiles: AnyProfileView[] }) => {
+		mutationFn: async ({ members }: { members: Did[]; profiles: AnyProfileView[] }) => {
 			if (!convoId) throw new Error('No convoId provided');
 			if (!chat) throw new Error('Not signed in');
 			const data = await ok(
 				chat.post('chat.bsky.group.addMembers', {
-					input: { convoId, members: members as ChatBskyGroupAddMembers.$input['members'] },
+					input: { convoId, members },
 				}),
 			);
 			return data;

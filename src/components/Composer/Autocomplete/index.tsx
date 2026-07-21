@@ -33,7 +33,8 @@ export function Autocomplete({
 	placement?: Placement;
 	onSelect: (item: AutocompleteItem) => void;
 }) {
-	const [side, align = 'start'] = placement.split('-') as ['top' | 'bottom', 'start' | 'end' | undefined];
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `Placement` is a fixed `side` or `side-align` union
+	const [side, align = 'start'] = placement.split('-') as ['bottom' | 'top', 'end' | 'start' | undefined];
 
 	return (
 		<BaseAutocomplete.Portal>

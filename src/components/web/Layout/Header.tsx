@@ -134,7 +134,9 @@ export function MenuButton() {
 	const setDrawerOpen = useSetDrawerOpen();
 
 	const onClick = () => {
-		(document.activeElement as HTMLElement | null)?.blur();
+		if (document.activeElement instanceof HTMLElement) {
+			document.activeElement.blur();
+		}
 		setDrawerOpen(true);
 	};
 

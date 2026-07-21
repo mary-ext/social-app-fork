@@ -51,7 +51,7 @@ enum SelectedAssetError {
 const SUPPORTED_VIDEO_MIME_TYPES = ['video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'] as const;
 type SupportedVideoMimeType = (typeof SUPPORTED_VIDEO_MIME_TYPES)[number];
 function isSupportedVideoMimeType(mimeType: string): mimeType is SupportedVideoMimeType {
-	return SUPPORTED_VIDEO_MIME_TYPES.includes(mimeType as SupportedVideoMimeType);
+	return SUPPORTED_VIDEO_MIME_TYPES.some((supported) => supported === mimeType);
 }
 
 const SUPPORTED_IMAGE_MIME_TYPES = [
@@ -64,7 +64,7 @@ const SUPPORTED_IMAGE_MIME_TYPES = [
 ] as const;
 type SupportedImageMimeType = (typeof SUPPORTED_IMAGE_MIME_TYPES)[number];
 function isSupportedImageMimeType(mimeType: string): mimeType is SupportedImageMimeType {
-	return SUPPORTED_IMAGE_MIME_TYPES.includes(mimeType as SupportedImageMimeType);
+	return SUPPORTED_IMAGE_MIME_TYPES.some((supported) => supported === mimeType);
 }
 
 /** Fallback mime types inferred from a file extension, for files the browser left untyped. */

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { clsx } from 'clsx';
@@ -189,7 +190,7 @@ function DialogInner({
 
 	const onClose = () => handle.close();
 
-	const onSelectChat = (did: string) => {
+	const onSelectChat = (did: Did) => {
 		handle.close();
 		createChat([did]);
 	};
@@ -290,7 +291,7 @@ function SelectChatStep({
 }: {
 	canCreateGroups: boolean;
 	onClose: () => void;
-	onSelectChat: (did: string) => void;
+	onSelectChat: (did: Did) => void;
 	onStartGroup: () => void;
 }) {
 	const moderationOpts = useModerationOpts();
@@ -389,7 +390,7 @@ function ChatRow({
 }: {
 	canCreateGroups: boolean;
 	moderationOpts: ModerationOptions | undefined;
-	onSelectChat: (did: string) => void;
+	onSelectChat: (did: Did) => void;
 	onStartGroup: () => void;
 	row: ChatListRow;
 }) {

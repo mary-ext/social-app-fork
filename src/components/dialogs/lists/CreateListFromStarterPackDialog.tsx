@@ -1,7 +1,9 @@
-import type { AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
+
+import { getStarterPackRecord } from '#/lib/api/record-views';
 
 import { useSession } from '#/state/session';
 
@@ -31,7 +33,7 @@ export function CreateListFromStarterPackDialog({
 	const queryClient = useQueryClient();
 	const createListHandle = Dialog.useDialogHandle();
 
-	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	const record = getStarterPackRecord(starterPack);
 
 	const onPressCreate = () => {
 		handle.close();

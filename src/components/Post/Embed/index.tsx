@@ -1,9 +1,4 @@
-import {
-	unwrapEmbed,
-	type AppBskyEmbedRecord,
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-} from '@atcute/bluesky';
+import { unwrapEmbed, type AppBskyEmbedRecord, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -11,6 +6,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { makeProfileLink } from '#/lib/routes/links';
 import { getChatInviteCodeFromUrl } from '#/lib/strings/url-helpers';
 
@@ -234,12 +230,21 @@ export function QuoteEmbed({
 	linkDisabled?: boolean;
 }) {
 	const moderationOpts = useModerationOpts();
-	const quote = {
-		...embed,
+	// a quoted record is a post view under different field names; reshape it to reuse the post path
+	const quote: $type.enforce<AppBskyFeedDefs.PostView> = {
 		$type: 'app.bsky.feed.defs#postView',
-		record: embed.value,
+		author: embed.author,
+		cid: embed.cid,
 		embed: embed.embeds?.[0],
-	} as unknown as $type.enforce<AppBskyFeedDefs.PostView>;
+		indexedAt: embed.indexedAt,
+		labels: embed.labels,
+		likeCount: embed.likeCount,
+		quoteCount: embed.quoteCount,
+		record: embed.value,
+		replyCount: embed.replyCount,
+		repostCount: embed.repostCount,
+		uri: embed.uri,
+	};
 	const moderation = moderationOpts ? moderatePost(quote, moderationOpts) : undefined;
 
 	const queryClient = useQueryClient();
@@ -247,7 +252,7 @@ export function QuoteEmbed({
 	const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey);
 	const itemTitle = `Post by ${quote.author.handle}`;
 
-	const { text, facets } = quote.record as AppBskyFeedPost.Main;
+	const { text, facets } = getPostRecord(quote);
 	const richText = text.trim() ? { text, facets } : undefined;
 
 	const onBeforePress = () => {

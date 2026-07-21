@@ -53,6 +53,7 @@ function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, ...text }: Au
 		<InlineLinkText
 			label={label}
 			onPress={onPress}
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `RefObject` is invariant; this branch always renders an `<a>`
 			ref={ref as Ref<HTMLAnchorElement>}
 			tabIndex={tabIndex}
 			to={to}

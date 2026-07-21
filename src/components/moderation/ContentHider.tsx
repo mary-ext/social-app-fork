@@ -9,7 +9,7 @@ import {
 import { Collapsible } from '@base-ui/react/collapsible';
 import { clsx } from 'clsx';
 
-import { ADULT_CONTENT_LABELS, type AdultSelfLabel, isJustAMute } from '#/lib/moderation';
+import { ADULT_CONTENT_LABELS, isJustAMute } from '#/lib/moderation';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { getDefinition, getLabelStrings } from '#/lib/moderation/useLabelInfo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
@@ -27,6 +27,9 @@ import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as styles from './ContentHider.css';
+
+const isAdultLabel = (cause: LabelModerationCause) =>
+	ADULT_CONTENT_LABELS.some((label) => label === cause.label.val);
 
 type ContentHiderProps = {
 	modui: DisplayRestrictions | undefined;
@@ -113,16 +116,10 @@ function ContentHiderActive({
 		});
 		// keep only the first adult-content self-label; later ones are dropped so the UI doesn't
 		// stack duplicate "Adult Content" entries.
-		const firstAdultIdx = selfBlurCauses.findIndex((cause) =>
-			ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel),
-		);
+		const firstAdultIdx = selfBlurCauses.findIndex(isAdultLabel);
 		const selfBlurNames = selfBlurCauses
 			.filter((cause, i) => {
-				if (
-					firstAdultIdx !== -1 &&
-					ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel) &&
-					i !== firstAdultIdx
-				) {
+				if (firstAdultIdx !== -1 && isAdultLabel(cause) && i !== firstAdultIdx) {
 					return false;
 				}
 				return true;

@@ -1,7 +1,7 @@
 import type { AppBskyFeedSearchPostsV2 } from '@atcute/bluesky';
 import { type Token, tokenize } from '@atcute/bluesky-search-parser';
-import type { ActorIdentifier } from '@atcute/lexicons';
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import type { ActorIdentifier, Did, GenericUri } from '@atcute/lexicons';
+import { isActorIdentifier, isGenericUri, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { min } from '@mary/date-fns';
 
@@ -366,18 +366,18 @@ const LIFT_DATE_RE = /^\d{4}-\d{2}-\d{2}/;
  * @param options.viewerDid the signed-in account's did
  * @returns the residual free text and lifted filters
  */
-export const liftSearchQuery = (query: string, options?: { viewerDid?: string }): LiftedQuery => {
+export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): LiftedQuery => {
 	const viewerDid = options?.viewerDid;
 
 	const kept: string[] = [];
-	const authors: string[] = [];
-	const excludeAuthors: string[] = [];
-	const mentions: string[] = [];
-	const excludeMentions: string[] = [];
+	const authors: ActorIdentifier[] = [];
+	const excludeAuthors: ActorIdentifier[] = [];
+	const mentions: ActorIdentifier[] = [];
+	const excludeMentions: ActorIdentifier[] = [];
 	const domains: string[] = [];
 	const excludeDomains: string[] = [];
-	const urls: string[] = [];
-	const excludeUrls: string[] = [];
+	const urls: GenericUri[] = [];
+	const excludeUrls: GenericUri[] = [];
 	const hashtags: string[] = [];
 	const excludeHashtags: string[] = [];
 	const languages: string[] = [];
@@ -420,7 +420,7 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: string })
 					filters.following = true;
 				} else {
 					const actor = arg === 'me' ? viewerDid : arg;
-					if (actor) {
+					if (actor && isActorIdentifier(actor)) {
 						(negated ? excludeAuthors : authors).push(actor);
 					} else {
 						handled = false;
@@ -430,7 +430,7 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: string })
 			}
 			case 'mentions': {
 				const actor = arg === 'me' ? viewerDid : arg;
-				if (actor) {
+				if (actor && isActorIdentifier(actor)) {
 					(negated ? excludeMentions : mentions).push(actor);
 				} else {
 					handled = false;
@@ -442,7 +442,12 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: string })
 				break;
 			}
 			case 'url': {
-				(negated ? excludeUrls : urls).push(arg);
+				// a bare host isn't a uri; `domain:` is the operator for that, so leave it in the text
+				if (isGenericUri(arg)) {
+					(negated ? excludeUrls : urls).push(arg);
+				} else {
+					handled = false;
+				}
 				break;
 			}
 			case 'lang': {
@@ -506,16 +511,16 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: string })
 	}
 
 	if (authors.length) {
-		filters.authors = authors as ActorIdentifier[];
+		filters.authors = authors;
 	}
 	if (excludeAuthors.length) {
-		filters.excludeAuthors = excludeAuthors as ActorIdentifier[];
+		filters.excludeAuthors = excludeAuthors;
 	}
 	if (mentions.length) {
-		filters.mentions = mentions as ActorIdentifier[];
+		filters.mentions = mentions;
 	}
 	if (excludeMentions.length) {
-		filters.excludeMentions = excludeMentions as ActorIdentifier[];
+		filters.excludeMentions = excludeMentions;
 	}
 	if (domains.length) {
 		filters.domains = domains;
@@ -524,10 +529,10 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: string })
 		filters.excludeDomains = excludeDomains;
 	}
 	if (urls.length) {
-		filters.urls = urls as SearchPostsFilters['urls'];
+		filters.urls = urls;
 	}
 	if (excludeUrls.length) {
-		filters.excludeUrls = excludeUrls as SearchPostsFilters['excludeUrls'];
+		filters.excludeUrls = excludeUrls;
 	}
 	if (hashtags.length) {
 		filters.hashtags = hashtags;

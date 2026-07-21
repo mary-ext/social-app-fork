@@ -32,6 +32,7 @@ export function getValidLiveStatusRecord(statusRecord: unknown): AppBskyActorSta
 	if ((statusRecord as { $type?: string }).$type !== 'app.bsky.actor.status') {
 		return null;
 	}
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `$type` check above pins the collection
 	return statusRecord as AppBskyActorStatus.Main;
 }
 

@@ -33,7 +33,7 @@ export class Logger {
 
 	static create(context?: LogContext, metadata: Record<string, unknown> = {}) {
 		const logger = new Logger({
-			level: LOG_LEVEL as LogLevel,
+			level: LOG_LEVEL,
 			context,
 			contextFilter: LOG_DEBUG,
 			metadata,

@@ -1,8 +1,11 @@
 import { useCallback, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { useFocusEffect } from '@oomfware/stacker';
+
+import { isAbortError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';
@@ -19,17 +22,11 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
-export function ThreadItemAnchorFollowButton({ did, enabled = true }: { did: string; enabled?: boolean }) {
+export function ThreadItemAnchorFollowButton({ did, enabled = true }: { did: Did; enabled?: boolean }) {
 	return <ThreadItemAnchorFollowButtonInner did={did} enabled={enabled} />;
 }
 
-export function ThreadItemAnchorFollowButtonInner({
-	did,
-	enabled = true,
-}: {
-	did: string;
-	enabled?: boolean;
-}) {
+export function ThreadItemAnchorFollowButtonInner({ did, enabled = true }: { did: Did; enabled?: boolean }) {
 	const { data: profile, isLoading } = useProfileQuery({ did });
 
 	// We will never hit this - the profile will always be cached or loaded above
@@ -76,7 +73,7 @@ function PostThreadFollowBtnLoaded({
 				try {
 					await queueFollow();
 				} catch (e) {
-					if (!(e instanceof Error && e.name === 'AbortError')) {
+					if (!isAbortError(e)) {
 						logger.error('Failed to follow', { message: String(e) });
 						Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 							type: 'error',
@@ -89,7 +86,7 @@ function PostThreadFollowBtnLoaded({
 				try {
 					await queueUnfollow();
 				} catch (e) {
-					if (!(e instanceof Error && e.name === 'AbortError')) {
+					if (!isAbortError(e)) {
 						logger.error('Failed to unfollow', { message: String(e) });
 						Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 							type: 'error',

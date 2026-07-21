@@ -1,6 +1,6 @@
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier, Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -18,23 +18,24 @@ export const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, di
 const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
 	createQueryKey('labelers-detailed-info', { dids }, { persistedVersion: 1 });
 
-export function useLabelerInfoQuery({ did, enabled }: { did?: string; enabled?: boolean }) {
+export function useLabelerInfoQuery({ did, enabled }: { did?: Did; enabled?: boolean }) {
 	const { appview } = useClients();
 	return useQuery({
 		enabled: !!did && enabled !== false,
-		queryKey: labelerInfoQueryKey(did as string),
+		queryKey: labelerInfoQueryKey(did ?? ''),
 		queryFn: async () => {
 			const data = await ok(
 				appview.get('app.bsky.labeler.getServices', {
-					params: { detailed: true, dids: [did! as Did] },
+					params: { detailed: true, dids: [did!] },
 				}),
 			);
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `detailed: true` makes the service views detailed
 			return data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed;
 		},
 	});
 }
 
-export function useLabelersDetailedInfoQuery({ dids }: { dids: string[] }) {
+export function useLabelersDetailedInfoQuery({ dids }: { dids: Did[] }) {
 	const { appview } = useClients();
 	return useQuery({
 		enabled: !!dids.length,
@@ -44,9 +45,10 @@ export function useLabelersDetailedInfoQuery({ dids }: { dids: string[] }) {
 		queryFn: async () => {
 			const data = await ok(
 				appview.get('app.bsky.labeler.getServices', {
-					params: { detailed: true, dids: dids as Did[] },
+					params: { detailed: true, dids },
 				}),
 			);
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `detailed: true` makes the service views detailed
 			return data.views as AppBskyLabelerDefs.LabelerViewDetailed[];
 		},
 	});
@@ -57,7 +59,7 @@ export function useRemoveLabelersMutation() {
 	const { pds } = useClients();
 
 	return useMutation({
-		async mutationFn({ dids }: { dids: string[] }) {
+		async mutationFn({ dids }: { dids: Did[] }) {
 			await Promise.all(dids.map((did) => removeLabeler(pds!, did)));
 		},
 		async onSuccess() {
@@ -74,17 +76,17 @@ export function useLabelerSubscriptionMutation() {
 	const preferences = usePreferencesQuery();
 
 	return useMutation({
-		async mutationFn({ did, subscribe }: { did: string; subscribe: boolean }) {
+		async mutationFn({ did, subscribe }: { did: Did; subscribe: boolean }) {
 			/**
 			 * filters out invalid, taken down, or deactivated labelers, ensuring the total count does not exceed
 			 * {@link MAX_LABELERS}
 			 */
 			const labelerDids = (preferences.data?.moderationPrefs?.labelers ?? []).map((l) => l.did);
-			const invalidLabelers: string[] = [];
+			const invalidLabelers: Did[] = [];
 			if (labelerDids.length) {
 				const { profiles } = await ok(
 					appview.get('app.bsky.actor.getProfiles', {
-						params: { actors: labelerDids as ActorIdentifier[] },
+						params: { actors: labelerDids },
 					}),
 				);
 				for (const labelerDid of labelerDids) {

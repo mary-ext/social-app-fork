@@ -3,6 +3,7 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/strings/errors';
 import { getViewportSize } from '#/lib/viewport';
@@ -56,7 +57,7 @@ export function ListMembers({
 	testID,
 	headerOffset = 0,
 }: {
-	list: string;
+	list: ResourceUri;
 	style?: StyleProp<ViewStyle>;
 	scrollElRef?: ListRef;
 	onScrolledDownChange: (isScrolledDown: boolean) => void;

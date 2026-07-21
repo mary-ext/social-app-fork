@@ -1,4 +1,5 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 /**
  * the fork-owned shape of the preferences aggregate the preferences cache derives, and the moderation
@@ -13,7 +14,7 @@ export type LabelVisibility = 'hide' | 'ignore' | 'warn';
 
 /** A subscribed labeler and the per-label visibility the user has chosen for it. */
 export interface LabelerPreference {
-	did: string;
+	did: Did;
 	labels: Record<string, LabelVisibility>;
 }
 

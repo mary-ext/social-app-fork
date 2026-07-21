@@ -4,6 +4,7 @@ import {
 	LabelFlags,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
@@ -38,7 +39,7 @@ export function LabelerLabelRow({
 	className?: string;
 	disabled?: boolean;
 	labelDefinition: InterpretedLabelDefinition;
-	labelerDid?: string;
+	labelerDid?: Did;
 }) {
 	const { identifier } = labelDefinition;
 	// a global label is one backed by a built-in definition (porn, sexual, …); those are configured once in

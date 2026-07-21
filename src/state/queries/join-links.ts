@@ -1,9 +1,9 @@
 import type { ChatBskyGroupGetJoinLinkPreviews } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 
-import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, type QueryKey, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { createQueryKey, type StructuredQueryKey } from '#/state/queries/util';
+import { createQueryKey } from '#/state/queries/util';
 import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
@@ -23,6 +23,14 @@ export const createJoinLinkPreviewQueryKey = (args: { codes: string[]; hasSessio
 		persistedVersion: 1,
 	});
 
+/** matches a join link preview query key whose `codes` argument contains `code`. */
+const joinLinkPreviewKeyHasCode = (queryKey: QueryKey, code: string) => {
+	const [root, args] = queryKey;
+	if (root !== joinLinkPreviewQueryKeyRoot) return false;
+	if (typeof args !== 'object' || args === null || !('codes' in args)) return false;
+	return Array.isArray(args.codes) && args.codes.includes(code);
+};
+
 /**
  * invalidate join link preview queries whose `codes` include the given code when a link's state changes.
  *
@@ -30,10 +38,7 @@ export const createJoinLinkPreviewQueryKey = (args: { codes: string[]; hasSessio
  */
 export function invalidateJoinLinkPreviewsForCode(queryClient: QueryClient, code: string) {
 	return queryClient.invalidateQueries({
-		predicate: (query) => {
-			const [root, args] = query.queryKey as Partial<StructuredQueryKey<{ codes?: string[] }>>;
-			return root === joinLinkPreviewQueryKeyRoot && Array.isArray(args?.codes) && args.codes.includes(code);
-		},
+		predicate: (query) => joinLinkPreviewKeyHasCode(query.queryKey, code),
 	});
 }
 
@@ -46,6 +51,7 @@ export function invalidateJoinLinkPreviewsForConvo(queryClient: QueryClient, con
 		predicate: (query) => {
 			const [root] = query.queryKey;
 			if (root !== joinLinkPreviewQueryKeyRoot) return false;
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the root check above pins the cache entry
 			const data = query.state.data as ChatBskyGroupGetJoinLinkPreviews.$output | undefined;
 			return (
 				data?.joinLinkPreviews.some(
@@ -138,12 +144,7 @@ export function setJoinLinkPreviewRequestedForCode(
 ) {
 	queryClient.setQueriesData<ChatBskyGroupGetJoinLinkPreviews.$output>(
 		{
-			predicate: (query) => {
-				const [root, args] = query.queryKey as Partial<StructuredQueryKey<{ codes?: string[] }>>;
-				return (
-					root === joinLinkPreviewQueryKeyRoot && Array.isArray(args?.codes) && args.codes.includes(code)
-				);
-			},
+			predicate: (query) => joinLinkPreviewKeyHasCode(query.queryKey, code),
 		},
 		(old) => {
 			if (!old) return old;

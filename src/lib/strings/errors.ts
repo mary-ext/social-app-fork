@@ -3,6 +3,18 @@ import { ClientResponseError } from '@atcute/client';
 import { m } from '#/paraglide/messages';
 
 /**
+ * extracts an error's message, falling back to stringifying non-`Error` throws.
+ *
+ * prefer this over {@link errorToString} for anything a person reads: it omits the `Error: ` prefix.
+ *
+ * @param error the thrown value to describe
+ * @returns the message, or a best-effort string representation
+ */
+export function errorMessage(error: unknown): string {
+	return error instanceof Error ? error.message : String(error);
+}
+
+/**
  * coerces a thrown value into a string suitable for substring matching.
  *
  * @param error the thrown value to stringify
@@ -91,6 +103,19 @@ export function isErrorMaybeAppPasswordPermissions(e: unknown) {
 	}
 	const str = String(e);
 	return str.includes('Bad token scope') || str.includes('Bad token method');
+}
+
+/**
+ * checks if an error was raised by aborting an in-flight action.
+ *
+ * matches on `name` because aborts arrive from several sources — `AbortController`, the toggle mutation
+ * queue, `#/lib/async/cancelable` — with no common class.
+ *
+ * @param e the thrown value to check
+ * @returns true if the value is an abort error
+ */
+export function isAbortError(e: unknown) {
+	return e instanceof Error && e.name === 'AbortError';
 }
 
 /**

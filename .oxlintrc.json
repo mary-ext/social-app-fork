@@ -97,10 +97,6 @@
 		"typescript/no-unsafe-call": "warn",
 		"typescript/no-unsafe-enum-comparison": "warn",
 		"typescript/no-unsafe-member-access": "warn",
-		// atcute brands handles, DIDs and AT-URIs, so every bare `string` has to be asserted into one.
-		// this is a stopgap: the fix is to validate at the edges (route params, user input, API
-		// responses) so the brand rides on the type instead of being asserted onto it at each use.
-		"typescript/no-unsafe-type-assertion": "off",
 		"typescript/only-throw-error": "error",
 		"typescript/prefer-promise-reject-errors": "warn",
 		"typescript/require-await": "warn",

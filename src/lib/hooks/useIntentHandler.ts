@@ -65,7 +65,7 @@ export function useComposeIntent() {
 
 			// Whenever a video URI is present, we don't support adding images right now.
 			if (videoUri) {
-				const [uri] = videoUri.split('|') as [string];
+				const uri = videoUri.split('|')[0]!;
 				void (async () => {
 					try {
 						const blob = await fetch(uri).then((res) => res.blob());

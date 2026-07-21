@@ -1,8 +1,11 @@
+import type { ResourceUri } from '@atcute/lexicons';
+import { isResourceUri } from '@atcute/lexicons/syntax';
+
 import { decodeHtmlEntities } from './html-entities';
 
 export interface LinkMetaResult {
 	/** at-uris of the standard.site atmosphere records the page advertises via `<link rel>` discovery tags. */
-	associatedUris?: string[];
+	associatedUris?: ResourceUri[];
 	description?: string;
 	image?: string;
 	title?: string;
@@ -34,7 +37,7 @@ const STANDARD_SITE_RELS = new Set(['site.standard.document', 'site.standard.pub
  */
 export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> => {
 	const meta: Record<string, string> = {};
-	const associatedUris: string[] = [];
+	const associatedUris: ResourceUri[] = [];
 	let titleText = '';
 
 	const rewriter = new HTMLRewriter()
@@ -47,7 +50,8 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 			element(element) {
 				const rel = element.getAttribute('rel');
 				const href = element.getAttribute('href');
-				if (!rel || !href || !href.startsWith('at://') || associatedUris.includes(href)) {
+				// a malformed at-uri would only make the appview reject the whole hydration batch, so drop it here
+				if (!rel || !href || !isResourceUri(href) || associatedUris.includes(href)) {
 					return;
 				}
 				// rel may carry several space-separated tokens, e.g. `site.standard.document external`.

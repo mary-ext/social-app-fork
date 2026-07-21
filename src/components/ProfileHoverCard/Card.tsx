@@ -1,10 +1,11 @@
-import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
 
 import { getModerationCauseKey } from '#/lib/moderation';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -40,7 +41,7 @@ import { useNavigate } from '#/routes';
 
 import * as css from './ProfileHoverCard.css';
 
-export function Card({ did }: { did: string }) {
+export function Card({ did }: { did: Did }) {
 	const navigate = useNavigate();
 	const profile = useProfileQuery({ did });
 	const moderationOpts = useModerationOpts();
@@ -53,11 +54,11 @@ export function Card({ did }: { did: string }) {
 	};
 
 	if (data && moderationOpts) {
-		if (status.isActive) {
+		if (status.isActive && status.embed) {
 			return (
 				<div className={css.liveCard}>
 					<LiveStatus
-						embed={status.embed as AppBskyEmbedExternal.View}
+						embed={status.embed}
 						onPressOpenProfile={onPressOpenProfile}
 						padding="lg"
 						profile={data}

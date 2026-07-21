@@ -34,6 +34,7 @@ export function ToastViewport({ manager }: { manager: ToastManager<ToastData> })
 function ToastList() {
 	const { toasts } = BaseToast.useToastManager<ToastData>();
 	return toasts.map((toast) => {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `show` is the only producer, and it always passes a `ToastType`
 		const type = (toast.type as ToastType | undefined) ?? 'default';
 		const Icon = toast.data?.icon ?? ICONS[type];
 		return (

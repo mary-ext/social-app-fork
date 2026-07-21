@@ -17,10 +17,10 @@ import { until } from '#/lib/async/until';
  */
 export async function bulkWriteFollows(
 	{ appview, did, pds }: { appview: Client; did: Did; pds: Client },
-	dids: string[],
+	dids: Did[],
 	via?: ComAtprotoRepoStrongRef.Main,
 ) {
-	const items = dids.map((d) => ({ did: d as Did, rkey: TID.now() }));
+	const items = dids.map((d) => ({ did: d, rkey: TID.now() }));
 
 	const followWrites: ComAtprotoRepoApplyWrites.$input['writes'] = items.map((item) => ({
 		$type: 'com.atproto.repo.applyWrites#create',
@@ -49,13 +49,13 @@ export async function bulkWriteFollows(
 
 async function whenFollowsIndexed(
 	appview: Client,
-	actor: string,
+	actor: ActorIdentifier,
 	fn: (res: { follows: unknown[] }) => boolean,
 ) {
 	await until(5, 1e3, fn, () =>
 		ok(
 			appview.get('app.bsky.graph.getFollows', {
-				params: { actor: actor as ActorIdentifier, limit: 1 },
+				params: { actor, limit: 1 },
 			}),
 		),
 	);

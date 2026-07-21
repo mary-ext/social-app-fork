@@ -3,16 +3,16 @@ import type {
 	AppBskyFeedDefs,
 	AppBskyGraphDefs,
 	AppBskyGraphGetStarterPack,
-	AppBskyGraphStarterpack,
 	AppBskyRichtextFacet,
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Handle, ResourceUri } from '@atcute/lexicons';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import type { Cid, ResourceUri } from '@atcute/lexicons';
+import { isHandle, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
+import { getStarterPackRecord } from '#/lib/api/record-views';
 import { createRecord, deleteRecord, putRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 import { createStarterPackList } from '#/lib/generate-starterpack';
@@ -33,10 +33,12 @@ async function detectDescriptionFacets(
 	description: string,
 ): Promise<AppBskyRichtextFacet.Main[] | undefined> {
 	const rt = await detectFacets(description, async (handle) => {
+		// mention handles are detected by the tokenizer, so they still need validating before resolution
+		if (!isHandle(handle)) {
+			return undefined;
+		}
 		try {
-			const res = await ok(
-				appview.get('com.atproto.identity.resolveHandle', { params: { handle: handle as Handle } }),
-			);
+			const res = await ok(appview.get('com.atproto.identity.resolveHandle', { params: { handle } }));
 			return res.did;
 		} catch {
 			return undefined;
@@ -65,10 +67,11 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 				? `at://${did}/app.bsky.graph.starterpack/${rkey}`
 				: uri.startsWith('at://')
 					? uri
-					: (httpStarterPackUriToAtUri(uri) as string);
+					: httpStarterPackUriToAtUri(uri);
 
 			const data = await ok(
 				appview.get('app.bsky.graph.getStarterPack', {
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- built from the route params `enabled` gates this query on
 					params: { starterPack: resolvedUri as ResourceUri },
 				}),
 			);
@@ -102,14 +105,14 @@ export function useCreateStarterPackMutation({
 	onSuccess,
 	onError,
 }: {
-	onSuccess: (data: { uri: string; cid: string }) => void;
+	onSuccess: (data: { cid: Cid; uri: ResourceUri }) => void;
 	onError: (e: Error) => void;
 }) {
 	const queryClient = useQueryClient();
 	const { appview, pds } = useClients();
 	const { currentAccount } = useSession();
 
-	return useMutation<{ uri: string; cid: string }, Error, UseCreateStarterPackMutationParams>({
+	return useMutation<{ cid: Cid; uri: ResourceUri }, Error, UseCreateStarterPackMutationParams>({
 		mutationFn: async ({ name, description, feeds, profiles }) => {
 			const did = currentAccount!.did;
 			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
@@ -134,7 +137,7 @@ export function useCreateStarterPackMutation({
 					description,
 					descriptionFacets,
 					feeds: feeds?.map((f) => ({ uri: f.uri })),
-					list: listRes.uri as ResourceUri,
+					list: listRes.uri,
 					name,
 				},
 				repo: did,
@@ -182,7 +185,7 @@ export function useEditStarterPackMutation({
 				descriptionFacets = await detectDescriptionFacets(appview, description);
 			}
 
-			const spRecord = currentStarterPack.record as AppBskyGraphStarterpack.Main;
+			const spRecord = getStarterPackRecord(currentStarterPack);
 			if (spRecord.$type !== 'app.bsky.graph.starterpack') {
 				throw new Error('Invalid starter pack');
 			}
@@ -341,14 +344,14 @@ export function useDeleteStarterPackMutation({
 
 async function whenAppViewReady(
 	appview: Client,
-	uri: string,
+	uri: ResourceUri,
 	fn: (res?: AppBskyGraphGetStarterPack.$output) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() => ok(appview.get('app.bsky.graph.getStarterPack', { params: { starterPack: uri as ResourceUri } })),
+		() => ok(appview.get('app.bsky.graph.getStarterPack', { params: { starterPack: uri } })),
 	);
 }
 
@@ -356,7 +359,7 @@ export function precacheStarterPack(
 	queryClient: QueryClient,
 	starterPack: AppBskyGraphDefs.StarterPackViewBasic | AppBskyGraphDefs.StarterPackView,
 ) {
-	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	const record = getStarterPackRecord(starterPack);
 	if (record.$type !== 'app.bsky.graph.starterpack') {
 		return;
 	}
@@ -367,6 +370,7 @@ export function precacheStarterPack(
 	} else if (starterPack.$type === 'app.bsky.graph.defs#starterPackViewBasic') {
 		// note: the field claims to be `FeedItem`, but the appview returns un$typed `GeneratorView`
 		// objects here -sfn
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the wire shape disagrees with the lexicon, see above
 		const feeds = record.feeds as unknown as AppBskyFeedDefs.GeneratorView[] | undefined;
 
 		const listView: AppBskyGraphDefs.ListViewBasic = {

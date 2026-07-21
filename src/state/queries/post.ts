@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { Handle, ResourceUri } from '@atcute/lexicons';
-import { parseCanonicalResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
+import type { ActorIdentifier, ResourceUri } from '@atcute/lexicons';
+import { isDid, parseCanonicalResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -29,11 +29,11 @@ export function usePostQuery(uri: ResourceUri | undefined) {
 
 			const urip = parseResourceUri(uri);
 
-			let repo: string = urip.repo;
-			if (!repo.startsWith('did:')) {
+			let repo: ActorIdentifier = urip.repo;
+			if (!isDid(repo)) {
 				const resolved = await ok(
 					appview.get('com.atproto.identity.resolveHandle', {
-						params: { handle: repo as Handle },
+						params: { handle: repo },
 					}),
 				);
 				repo = resolved.did;
@@ -41,7 +41,7 @@ export function usePostQuery(uri: ResourceUri | undefined) {
 
 			const { posts } = await ok(
 				appview.get('app.bsky.feed.getPosts', {
-					params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}` as ResourceUri] },
+					params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}`] },
 				}),
 			);
 			if (posts[0]) {
@@ -64,11 +64,11 @@ export function useGetPost() {
 				async queryFn() {
 					const urip = parseResourceUri(uri);
 
-					let repo: string = urip.repo;
-					if (!repo.startsWith('did:')) {
+					let repo: ActorIdentifier = urip.repo;
+					if (!isDid(repo)) {
 						const resolved = await ok(
 							appview.get('com.atproto.identity.resolveHandle', {
-								params: { handle: repo as Handle },
+								params: { handle: repo },
 							}),
 						);
 						repo = resolved.did;
@@ -76,7 +76,7 @@ export function useGetPost() {
 
 					const { posts } = await ok(
 						appview.get('app.bsky.feed.getPosts', {
-							params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}` as ResourceUri] },
+							params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}`] },
 						}),
 					);
 

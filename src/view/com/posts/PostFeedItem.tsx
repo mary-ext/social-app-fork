@@ -10,6 +10,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -42,7 +43,7 @@ import { PostFeedReason } from './PostFeedReason';
 
 interface FeedItemProps {
 	record: AppBskyFeedPost.Main;
-	reason: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | undefined;
+	reason: AppBskyFeedDefs.FeedViewPost['reason'] | undefined;
 	moderation: ModerationDecision;
 	parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 	showReplyTo: boolean;
@@ -201,9 +202,7 @@ function FeedItemInner({
 			feedSourceInfo,
 			post: {
 				post,
-				reason: (reason?.$type === 'app.bsky.feed.defs#reasonRepost'
-					? reason
-					: undefined) as AppBskyFeedDefs.FeedViewPost['reason'],
+				reason: reason?.$type === 'app.bsky.feed.defs#reasonRepost' ? reason : undefined,
 				feedContext,
 				reqId,
 			},
@@ -215,7 +214,8 @@ function FeedItemInner({
 	 * record to reference
 	 */
 	const threadgateRecord = rootPost.threadgate
-		? (rootPost.threadgate.record as AppBskyFeedThreadgate.Main)
+		? // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- view defs type `record` as `unknown`; the collection is fixed by the view type
+			(rootPost.threadgate.record as AppBskyFeedThreadgate.Main)
 		: undefined;
 
 	const { isActive: live } = useActorStatus(post.author);
@@ -234,7 +234,7 @@ function FeedItemInner({
 	let additionalPostAlerts: AppModerationCause[] = [];
 	{
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
-		const rootPostUri = (post.record as AppBskyFeedPost.Main).reply?.root?.uri || post.uri;
+		const rootPostUri = getPostRecord(post).reply?.root?.uri || post.uri;
 		const isControlledByViewer =
 			rootPostUri && parseCanonicalResourceUri(rootPostUri).repo === currentAccount?.did;
 		if (isControlledByViewer && isPostHiddenByThreadgate) {

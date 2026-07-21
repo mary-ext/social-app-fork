@@ -1,6 +1,7 @@
 import { type KeyboardEvent, useState } from 'react';
 
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
+import { errorMessage } from '#/lib/strings/errors';
 
 import { useUpsertMutedWordsMutation } from '#/state/queries/preferences';
 import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
@@ -53,9 +54,8 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 
 	const submit = async () => {
 		const sanitizedValue = sanitizeMutedWordValue(field);
-		const surfaces = ['tag', target === 'content' && 'content'].filter(
-			Boolean,
-		) as AppBskyActorDefs.MutedWord['targets'];
+		const surfaces: AppBskyActorDefs.MutedWord['targets'] =
+			target === 'content' ? ['tag', 'content'] : ['tag'];
 		const actorTarget = excludeFollowing ? 'exclude-following' : 'all';
 
 		const now = Date.now();
@@ -81,7 +81,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			Toast.show(m['common.mute.status'](), { type: 'success' });
 			handle.close();
 		} catch (e) {
-			const message = e instanceof Error ? e.message : String(e);
+			const message = errorMessage(e);
 			logger.error(`Failed to save muted word`, { message });
 			setError(message);
 		}

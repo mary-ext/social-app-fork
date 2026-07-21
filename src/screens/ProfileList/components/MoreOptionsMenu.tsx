@@ -225,12 +225,10 @@ export function MoreOptionsMenu({
 			/>
 			<ReportDialog
 				handle={reportDialogHandle}
-				subject={
-					{
-						...list,
-						$type: 'app.bsky.graph.defs#listView',
-					} as unknown as Parameters<typeof ReportDialog>[0]['subject']
-				}
+				subject={{
+					...list,
+					$type: 'app.bsky.graph.defs#listView',
+				}}
 			/>
 		</>
 	);

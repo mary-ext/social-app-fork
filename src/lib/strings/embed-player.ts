@@ -112,7 +112,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 
 		const isShorts = page === 'shorts';
 		const isLive = page === 'live';
-		const videoId = isShorts || isLive ? shortOrLiveVideoId : (urlp.searchParams.get('v') as string);
+		const videoId = isShorts || isLive ? shortOrLiveVideoId : urlp.searchParams.get('v');
 		const t = urlp.searchParams.get('t') ?? '0';
 		const seek = encodeURIComponent(t.replace(/s$/, ''));
 
@@ -419,7 +419,11 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 	// link shortened flickr path
 	if (urlp.hostname === 'flic.kr') {
 		const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
-		const [__, type, idBase58Enc] = urlp.pathname.split('/') as [string, string, string];
+		const [__, type, idBase58Enc] = urlp.pathname.split('/');
+		if (!idBase58Enc) {
+			// no id to decode, ergo not a valid link to embed
+			return undefined;
+		}
 		let id = 0n;
 		for (const char of idBase58Enc) {
 			const nextIdx = b58alph.indexOf(char);

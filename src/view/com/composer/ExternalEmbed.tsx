@@ -28,6 +28,7 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 	const thumbUrl = useBlobUrl(data?.thumb?.source.blob);
 	const linkInfo =
 		data &&
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a tenor url and a `blob:` object url, both absolute
 		({
 			title: data.title ?? data.uri,
 			uri: data.uri,
@@ -91,6 +92,7 @@ export const ExternalEmbedLink = ({
 					<StandardSiteEmbed
 						preview
 						view={
+							// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a resolved http(s) link and a `blob:` object url, both absolute
 							{
 								...external,
 								title: external.title || data.title || uri,
@@ -106,6 +108,7 @@ export const ExternalEmbedLink = ({
 				linkComponent = (
 					<ExternalEmbed
 						link={
+							// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a resolved http(s) link and a `blob:` object url, both absolute
 							{
 								title: data.title || uri,
 								uri,

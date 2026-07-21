@@ -1,4 +1,5 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { safeUrlParse } from '#/lib/strings/url-helpers';
 
@@ -82,7 +83,7 @@ export function GermLogo({ size }: { size: 'large' | 'small' }) {
 	return <img alt="" className={css.logo} height={px} src={germLogoUrl} width={px} />;
 }
 
-function GermSelfButton({ did }: { did: string }) {
+function GermSelfButton({ did }: { did: Did }) {
 	const selfExplanationHandle = Dialog.useDialogHandle();
 
 	return (

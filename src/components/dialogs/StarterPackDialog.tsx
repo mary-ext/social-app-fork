@@ -1,9 +1,7 @@
-import type {
-	AnyProfileView,
-	AppBskyGraphGetStarterPacksWithMembership,
-	AppBskyGraphStarterpack,
-} from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyGraphGetStarterPacksWithMembership } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
+import { getStarterPackRecord } from '#/lib/api/record-views';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -41,7 +39,7 @@ type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.Start
 
 type StarterPackDialogProps = {
 	handle: Dialog.DialogHandle;
-	targetDid: string;
+	targetDid: Did;
 };
 
 export function StarterPackDialog({ handle, targetDid }: StarterPackDialogProps) {
@@ -193,7 +191,7 @@ function StarterPackItem({
 }: {
 	starterPackWithMembership: StarterPackWithMembership;
 	subject?: AnyProfileView;
-	targetDid: string;
+	targetDid: Did;
 	topBorder: boolean;
 }) {
 	const { currentAccount } = useSession();
@@ -251,7 +249,7 @@ function StarterPackItem({
 		}
 	};
 
-	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	const record = getStarterPackRecord(starterPack);
 	const sample = starterPack.listItemsSample ?? [];
 	const listItemCount = starterPack.list?.listItemCount ?? 0;
 

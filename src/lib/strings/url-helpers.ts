@@ -1,5 +1,6 @@
 import {
 	type ActorIdentifier,
+	type Did,
 	type Nsid,
 	parseResourceUri,
 	type RecordKey,
@@ -33,6 +34,7 @@ export function makeRecordUri(didOrName: ActorIdentifier, collection: Nsid, rkey
  * @returns the actor identifier and record key from the path
  */
 export function parseBskyRecordUrl(path: string): { actor: ActorIdentifier; rkey: RecordKey } {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the caller's `isBsky*Url` guard fixes the segment layout
 	const [_0, actor, _1, rkey] = path.split('/').filter(Boolean) as [
 		string,
 		ActorIdentifier,
@@ -318,7 +320,7 @@ function getHostnameFromUrl(url: string | URL): string | null {
 	return urlp.hostname;
 }
 
-export function getServiceAuthAudFromUrl(url: string | URL): string | null {
+export function getServiceAuthAudFromUrl(url: string | URL): Did | null {
 	const hostname = getHostnameFromUrl(url);
 	if (!hostname) {
 		return null;

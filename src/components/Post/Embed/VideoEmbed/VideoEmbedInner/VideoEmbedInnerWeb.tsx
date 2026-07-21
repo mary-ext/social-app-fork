@@ -133,14 +133,14 @@ export class VideoNotFoundError extends Error {
 	}
 }
 
-type CachedPromise<T> = Promise<T> & { value: undefined | T };
 const promiseForHls = import(
 	// @ts-ignore
 	'hls.js/dist/hls.min'
-).then((mod: { default: typeof HlsTypes.default }) => mod.default) as CachedPromise<typeof HlsTypes.default>;
-promiseForHls.value = undefined;
+).then((mod: { default: typeof HlsTypes.default }) => mod.default);
+// once resolved, keep the constructor around so remounts can seed their state synchronously
+let cachedHls: typeof HlsTypes.default | undefined;
 void promiseForHls.then((Hls) => {
-	promiseForHls.value = Hls;
+	cachedHls = Hls;
 });
 
 function useHLS({
@@ -160,7 +160,7 @@ function useHLS({
 	// as `Hls.Events.*`, `new Hls(...)`, `Hls.isSupported()` — an uppercase name is correct for a
 	// constructor. react/hook-use-state enforces a lowercase-start value name and can't fit this shape.
 	// eslint-disable-next-line react/hook-use-state
-	const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(() => promiseForHls.value);
+	const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(() => cachedHls);
 	useEffect(() => {
 		if (!Hls) {
 			setHlsLoading(true);
@@ -193,10 +193,12 @@ function useHLS({
 				const track = video.textTracks[i]!;
 				if (track.cues) {
 					for (let j = 0; j < track.cues.length; j++) {
-						const cue = track.cues[j] as VTTCue;
-						// mutating live DOM VTTCue objects read off the video element
-						cue.snapToLines = false;
-						cue.line = line;
+						const cue = track.cues[j];
+						if (cue instanceof VTTCue) {
+							// mutating live DOM VTTCue objects read off the video element
+							cue.snapToLines = false;
+							cue.line = line;
+						}
 					}
 				}
 				// toggle track mode to force the browser to re-render active cues

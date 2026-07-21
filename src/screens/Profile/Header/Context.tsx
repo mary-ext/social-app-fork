@@ -10,6 +10,7 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { isAbortError } from '#/lib/strings/errors';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -129,10 +130,9 @@ export function ProfileHeaderProvider({
 					}),
 				);
 			} catch (err) {
-				const e = err as Error;
-				if (e?.name !== 'AbortError') {
-					logger.error('Failed to follow', { message: String(e) });
-					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), { type: 'error' });
+				if (!isAbortError(err)) {
+					logger.error('Failed to follow', { message: String(err) });
+					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), { type: 'error' });
 				}
 			}
 		});
@@ -153,10 +153,9 @@ export function ProfileHeaderProvider({
 					{ type: 'default' },
 				);
 			} catch (err) {
-				const e = err as Error;
-				if (e?.name !== 'AbortError') {
-					logger.error('Failed to unfollow', { message: String(e) });
-					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), { type: 'error' });
+				if (!isAbortError(err)) {
+					logger.error('Failed to unfollow', { message: String(err) });
+					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), { type: 'error' });
 				}
 			}
 		});
@@ -167,10 +166,9 @@ export function ProfileHeaderProvider({
 			await queueUnblock();
 			Toast.show(m['common.block.unblockedToast']());
 		} catch (err) {
-			const e = err as Error;
-			if (e?.name !== 'AbortError') {
-				logger.error('Failed to unblock account', { message: e });
-				Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), { type: 'error' });
+			if (!isAbortError(err)) {
+				logger.error('Failed to unblock account', { message: err });
+				Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), { type: 'error' });
 			}
 		}
 	};

@@ -1,5 +1,6 @@
 import type { ChatBskyGroupCreateGroup } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -20,11 +21,11 @@ export function useCreateGroupChat({
 	const { chat } = useClients();
 
 	return useMutation({
-		mutationFn: async ({ name, members }: { name: string; members: string[] }) => {
+		mutationFn: async ({ name, members }: { name: string; members: Did[] }) => {
 			if (!chat) throw new Error('Not signed in');
 			const data = await ok(
 				chat.post('chat.bsky.group.createGroup', {
-					input: { name, members: members as ChatBskyGroupCreateGroup.$input['members'] },
+					input: { name, members },
 				}),
 			);
 

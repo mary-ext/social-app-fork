@@ -14,7 +14,7 @@ type RQPageParam = string | undefined;
 const RQKEY_ROOT = 'post-reposted-by';
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri];
 
-export function usePostRepostedByQuery(resolvedUri: string | undefined) {
+export function usePostRepostedByQuery(resolvedUri: ResourceUri | undefined) {
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyFeedGetRepostedBy.$output,
@@ -30,7 +30,7 @@ export function usePostRepostedByQuery(resolvedUri: string | undefined) {
 					params: {
 						cursor: pageParam,
 						limit: PAGE_SIZE,
-						uri: (resolvedUri || '') as ResourceUri,
+						uri: resolvedUri!,
 					},
 				}),
 			),

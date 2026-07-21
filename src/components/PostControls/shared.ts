@@ -4,6 +4,7 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { isAbortError } from '#/lib/strings/errors';
 
 import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -69,9 +70,8 @@ export function usePostControlsActions({
 				await queueUnlike();
 			}
 		} catch (err) {
-			const e = err as Error;
-			if (e?.name !== 'AbortError') {
-				throw e;
+			if (!isAbortError(err)) {
+				throw err;
 			}
 		}
 	};
@@ -97,9 +97,8 @@ export function usePostControlsActions({
 				await queueUnrepost();
 			}
 		} catch (err) {
-			const e = err as Error;
-			if (e?.name !== 'AbortError') {
-				throw e;
+			if (!isAbortError(err)) {
+				throw err;
 			}
 		}
 	};

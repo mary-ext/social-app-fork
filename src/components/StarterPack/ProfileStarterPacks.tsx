@@ -1,4 +1,5 @@
 import type { AnyStarterPackView } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -45,7 +46,7 @@ const isStarterPackSentinel = (item: StarterPackItem): item is StarterPackSentin
 };
 
 interface ProfileStarterPacksProps {
-	did: string;
+	did: Did;
 	isMe: boolean;
 	/** Known starter-pack count, used to size the loading skeleton; falls back to a small default. */
 	starterPackCount?: number;

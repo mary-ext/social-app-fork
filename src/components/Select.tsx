@@ -28,24 +28,35 @@ export type SelectItem = {
 const SelectedValueContext = createContext<string | null>(null);
 SelectedValueContext.displayName = 'SelectSelectedValueContext';
 
-export type RootProps = {
+export type RootProps<Value extends string = string> = {
 	children: ReactNode;
-	value: string;
-	onValueChange: (value: string) => void;
+	value: Value;
+	onValueChange: (value: Value) => void;
 	disabled?: boolean;
 	/** The option list. Required for `Value` to auto-render the selected item's label. */
 	items?: SelectItem[];
 };
 
 /** Groups the parts of a single-select dropdown built on Base UI's Select. */
-export function Root({ children, disabled, items, onValueChange, value }: RootProps) {
+export function Root<Value extends string = string>({
+	children,
+	disabled,
+	items,
+	onValueChange,
+	value,
+}: RootProps<Value>) {
 	return (
 		<SelectedValueContext.Provider value={value}>
 			<BaseSelect.Root
 				items={items}
 				value={value}
 				disabled={disabled}
-				onValueChange={(next) => onValueChange(next as string)}
+				onValueChange={(next) => {
+					// Base UI reports `null` when the selection is cleared; this wrapper is always controlled by `value`
+					if (next !== null) {
+						onValueChange(next);
+					}
+				}}
 			>
 				{children}
 			</BaseSelect.Root>
@@ -157,6 +168,7 @@ export function Content<T>({
 }
 
 function defaultValueExtractor(item: unknown) {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- other item shapes must supply `valueExtractor`
 	return (item as { value: string }).value;
 }
 

@@ -29,7 +29,7 @@ async function checkIsOnline(): Promise<boolean> {
 			cache: 'no-store',
 			signal: controller.signal,
 		});
-		const json = (await res.json()) as { version?: unknown };
+		const json: { version?: unknown } = await res.json();
 		if (json.version) {
 			return true;
 		} else {

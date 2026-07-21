@@ -40,6 +40,7 @@ export function LinearGradient({ colors, end, locations, start, style, ...props 
 		<View
 			{...props}
 			style={[
+				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- RN's `ViewStyle` has no `backgroundImage`; forwarding it is the point of this adapter
 				{
 					backgroundImage: `linear-gradient(${pointToDeg(start, end)}, ${stops.join(', ')})`,
 				} as ViewProps['style'],

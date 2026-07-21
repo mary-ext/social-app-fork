@@ -1,6 +1,5 @@
 import type { AppBskyBookmarkGetBookmarks, AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { $type } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
@@ -45,7 +44,6 @@ export function optimisticallySaveBookmark(qc: QueryClient, post: AppBskyFeedDef
 				...data,
 				pages: data.pages.map((page, index) => {
 					if (index === 0) {
-						post.$type = 'app.bsky.feed.defs#postView';
 						return {
 							...page,
 							bookmarks: [
@@ -55,7 +53,7 @@ export function optimisticallySaveBookmark(qc: QueryClient, post: AppBskyFeedDef
 										uri: post.uri,
 										cid: post.cid,
 									},
-									item: post as $type.enforce<AppBskyFeedDefs.PostView>,
+									item: { ...post, $type: 'app.bsky.feed.defs#postView' },
 								},
 								...page.bookmarks,
 							],

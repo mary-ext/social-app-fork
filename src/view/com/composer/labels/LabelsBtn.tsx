@@ -1,10 +1,4 @@
-import {
-	ADULT_CONTENT_LABELS,
-	type AdultSelfLabel,
-	OTHER_SELF_LABELS,
-	type OtherSelfLabel,
-	type SelfLabel,
-} from '#/lib/moderation';
+import { ADULT_CONTENT_LABELS, OTHER_SELF_LABELS, type SelfLabel } from '#/lib/moderation';
 
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';
@@ -22,15 +16,16 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 
 	const hasLabel = labels.length > 0;
 
-	const updateAdultLabels = (newLabels: AdultSelfLabel[]) => {
+	// the toggle group hands back plain strings; the trailing predicate keeps only known self labels
+	const updateAdultLabels = (newLabels: string[]) => {
 		const newLabel = newLabels[newLabels.length - 1];
-		const filtered = labels.filter((l) => !ADULT_CONTENT_LABELS.includes(l as AdultSelfLabel));
+		const filtered = labels.filter((l) => !ADULT_CONTENT_LABELS.some((adult) => adult === l));
 		onChange([...new Set([...filtered, newLabel])].filter((label): label is SelfLabel => Boolean(label)));
 	};
 
-	const updateOtherLabels = (newLabels: OtherSelfLabel[]) => {
+	const updateOtherLabels = (newLabels: string[]) => {
 		const newLabel = newLabels[newLabels.length - 1];
-		const filtered = labels.filter((l) => !OTHER_SELF_LABELS.includes(l as OtherSelfLabel));
+		const filtered = labels.filter((l) => !OTHER_SELF_LABELS.some((other) => other === l));
 		onChange([...new Set([...filtered, newLabel])].filter((label): label is SelfLabel => Boolean(label)));
 	};
 
@@ -71,8 +66,8 @@ function DialogInner({
 }: {
 	labels: string[];
 	onDone: () => void;
-	updateAdultLabels: (labels: AdultSelfLabel[]) => void;
-	updateOtherLabels: (labels: OtherSelfLabel[]) => void;
+	updateAdultLabels: (labels: string[]) => void;
+	updateOtherLabels: (labels: string[]) => void;
 }) {
 	const hasAdultLabel = labels.includes('sexual') || labels.includes('nudity') || labels.includes('porn');
 
@@ -94,7 +89,7 @@ function DialogInner({
 					</Text>
 					<Toggle.Group
 						label={m['view.composer.contentWarning.adultLabels']()}
-						onChange={(values) => updateAdultLabels(values as AdultSelfLabel[])}
+						onChange={updateAdultLabels}
 						values={labels}
 					>
 						<Toggle.PanelGroup>
@@ -135,7 +130,7 @@ function DialogInner({
 					</Text>
 					<Toggle.Group
 						label={m['view.composer.contentWarning.otherLabels']()}
-						onChange={(values) => updateOtherLabels(values as OtherSelfLabel[])}
+						onChange={updateOtherLabels}
 						values={labels}
 					>
 						<Toggle.PanelGroup>

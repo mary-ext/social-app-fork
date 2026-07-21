@@ -3,7 +3,6 @@ import { ToggleGroup } from '@base-ui/react/toggle-group';
 
 import { softReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
-import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed';
 
 import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
@@ -54,7 +53,10 @@ export function DesktopFeeds() {
 	const onValueChange = (next: string[]) => {
 		// More feeds is an <a> that navigates itself, so it never reports here. single-select: clicking another
 		// feed yields `[feed]`, re-clicking the active one yields `[]`.
-		const feed = (next[0] ?? activeFeed) as FeedDescriptor | undefined;
+		const nextValue = next[0];
+		const feed = nextValue
+			? pinnedFeedInfos.find((info) => info.feedDescriptor === nextValue)?.feedDescriptor
+			: activeFeed;
 		if (!feed) {
 			return;
 		}

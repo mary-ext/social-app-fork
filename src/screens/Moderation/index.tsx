@@ -11,6 +11,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { makeProfileLink } from '#/lib/routes/links';
+import { errorMessage } from '#/lib/strings/errors';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
@@ -92,11 +93,10 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 		usePreferencesSetAdultContentMutation();
 
 	const subscribedDids = preferences.moderationPrefs.labelers.map((labeler) => labeler.did);
-	const returnedDids = new Set(labelers?.map((labeler) => labeler.creator.did));
-	const unavailableDids = subscribedDids.filter((did) => {
-		const branded = did as `did:${string}:${string}`;
-		return !returnedDids.has(branded) && !isAppLabeler(did) && !isNonConfigurableModerationAuthority(did);
-	});
+	const returnedDids = new Set<string>(labelers?.map((labeler) => labeler.creator.did));
+	const unavailableDids = subscribedDids.filter(
+		(did) => !returnedDids.has(did) && !isAppLabeler(did) && !isNonConfigurableModerationAuthority(did),
+	);
 
 	const adultContentEnabled =
 		optimisticAdultContent?.enabled ||
@@ -107,7 +107,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 			await setAdultContentPref({ enabled: selected });
 		} catch (e) {
 			logger.error(`Failed to set adult content pref`, {
-				message: e instanceof Error ? e.message : String(e),
+				message: errorMessage(e),
 			});
 		}
 	};
@@ -118,7 +118,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 			Toast.show(m['screens.moderation.labeler.removeUnavailable.toast'](), { type: 'success' });
 		} catch (e) {
 			logger.error('Failed to remove unavailable labelers', {
-				safeMessage: e instanceof Error ? e.message : String(e),
+				safeMessage: errorMessage(e),
 			});
 		}
 	};

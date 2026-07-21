@@ -42,7 +42,9 @@ function normalizeSource(source: ExtraImageProps['source']): RNImageProps['sourc
 	const value = Array.isArray(source) ? source[0] : source;
 	if (typeof value === 'string') return { uri: value };
 	if (value == null) return undefined;
-	return value as RNImageProps['source'];
+	if (typeof value === 'number') return value;
+	// expo-image allows a null `uri`; RN's `ImageURISource` only knows about it being absent
+	return { height: value.height, uri: value.uri ?? undefined, width: value.width };
 }
 
 function imageStyle(
@@ -79,7 +81,8 @@ type ImageComponent = ((
 	clearMemoryCache: () => Promise<boolean>;
 };
 
-// oxlint-disable-next-line no-shadow -- the function expression is named to match the export so it shows up as `Image` in devtools
+// the component only matches `ImageComponent` once the statics below are attached
+// oxlint-disable-next-line no-shadow, typescript/no-unsafe-type-assertion -- named to match the export for devtools; the assertion covers the statics
 export const Image = function Image({
 	cachePolicy,
 	contentFit,

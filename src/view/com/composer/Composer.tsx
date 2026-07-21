@@ -24,12 +24,7 @@ import * as apilib from '#/lib/api/index';
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
-import {
-	MAX_DRAFT_GRAPHEME_LENGTH,
-	MAX_GRAPHEME_LENGTH,
-	SUPPORTED_MIME_TYPES,
-	type SupportedMimeTypes,
-} from '#/lib/constants';
+import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_GRAPHEME_LENGTH, SUPPORTED_MIME_TYPES } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import {
 	COMPOSER_DIALOG_ID,
@@ -39,7 +34,7 @@ import {
 } from '#/lib/hooks/useOpenComposer';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError, errorMessage } from '#/lib/strings/errors';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
 import { postCreated } from '#/state/events';
@@ -634,7 +629,7 @@ export const ComposePost = ({
 		setError('');
 		setIsPublishing(true);
 
-		let postUri: string | undefined;
+		let postUri: ResourceUri | undefined;
 		let postSuccessData: OnPostSuccessData;
 		try {
 			logger.info(`composer: posting...`);
@@ -662,7 +657,7 @@ export const ComposePost = ({
 							const data = await ok(
 								appview.get('app.bsky.unspecced.getPostThreadV2', {
 									params: {
-										anchor: postUri! as ResourceUri,
+										anchor: postUri!,
 										above: false,
 										below: filteredThread.posts.length - 1,
 										branchingFactor: 1,
@@ -1132,7 +1127,7 @@ const ComposerPost = memo(function ComposerPost({
 		async (blob: Blob) => {
 			const mimeType = blob.type;
 			if (mimeType.startsWith('video/') || mimeType === 'image/gif') {
-				if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
+				if (!SUPPORTED_MIME_TYPES.some((supported) => supported === mimeType)) {
 					Toast.show(m['view.composer.video.error.unsupportedType']({ mimeType }), {
 						type: 'error',
 					});
@@ -1151,7 +1146,7 @@ const ComposerPost = memo(function ComposerPost({
 					image = await createComposerImage(blob);
 				} catch (e) {
 					logger.error(`createComposerImage failed`, {
-						safeMessage: e instanceof Error ? e.message : String(e),
+						safeMessage: errorMessage(e),
 						mimeType: blob.type,
 						size: blob.size,
 					});
@@ -1423,7 +1418,7 @@ function useScrollTracker({
 
 async function whenAppViewReady(
 	appview: Client,
-	uri: string,
+	uri: ResourceUri,
 	fn: (res: AppBskyUnspeccedGetPostThreadV2.$output) => boolean,
 ) {
 	await until(
@@ -1434,7 +1429,7 @@ async function whenAppViewReady(
 			ok(
 				appview.get('app.bsky.unspecced.getPostThreadV2', {
 					params: {
-						anchor: uri as ResourceUri,
+						anchor: uri,
 						above: false,
 						below: 0,
 						branchingFactor: 0,

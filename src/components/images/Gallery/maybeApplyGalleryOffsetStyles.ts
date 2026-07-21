@@ -1,6 +1,7 @@
-import { unwrapEmbed, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import { unwrapEmbed, type AppBskyFeedDefs } from '@atcute/bluesky';
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { unique } from '#/lib/moderation';
 
 import type { AppModerationCause } from '#/components/Pills';
@@ -17,7 +18,7 @@ export function maybeApplyGalleryOffsetStyles({
 	modui: DisplayRestrictions;
 	post: AppBskyFeedDefs.PostView;
 }) {
-	const record = post.record as AppBskyFeedPost.Main;
+	const record = getPostRecord(post);
 
 	if (record.text) {
 		return;

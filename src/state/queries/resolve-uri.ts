@@ -1,6 +1,7 @@
+import type { AnyProfileView } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Handle } from '@atcute/lexicons';
-import { isResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
+import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
+import { isDid, isResourceUri, type ParsedResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query';
 
@@ -14,19 +15,23 @@ export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle];
 
 const resolvedDidQueryOptions = (
 	appview: Client,
-	getUnstableProfile: (did: string) => { did: string } | undefined,
+	getUnstableProfile: (didOrHandle: string) => AnyProfileView | undefined,
 	didOrHandle: string | undefined,
 ) =>
 	queryOptions({
 		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY(didOrHandle ?? ''),
-		queryFn: async () => {
-			if (!didOrHandle) return '';
+		queryFn: async (): Promise<Did> => {
+			// `enabled` gates the query on `didOrHandle`, so this only fires if that gate is ever removed
+			if (!didOrHandle) {
+				throw new Error('resolved-did: query ran without an identifier');
+			}
 			// Just return the did if it's already one
-			if (didOrHandle.startsWith('did:')) return didOrHandle;
+			if (isDid(didOrHandle)) return didOrHandle;
 
 			const res = await ok(
 				appview.get('com.atproto.identity.resolveHandle', {
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `did:` check above leaves the handle branch; the appview rejects bad handles
 					params: { handle: didOrHandle as Handle },
 				}),
 			);
@@ -41,6 +46,17 @@ const resolvedDidQueryOptions = (
 		enabled: !!didOrHandle,
 	});
 
+/** rebuilds a parsed at-uri against the repo's did, keeping whichever segments the original carried. */
+const canonicalize = (did: Did, urip: ParsedResourceUri): ResourceUri => {
+	if (urip.collection === undefined) {
+		return `at://${did}`;
+	}
+	if (urip.rkey === undefined) {
+		return `at://${did}/${urip.collection}`;
+	}
+	return `at://${did}/${urip.collection}/${urip.rkey}`;
+};
+
 export function useResolveUriQuery(uri: string | undefined) {
 	const urip = uri && isResourceUri(uri) ? parseResourceUri(uri) : undefined;
 	const host = urip?.repo;
@@ -52,7 +68,7 @@ export function useResolveUriQuery(uri: string | undefined) {
 		...resolvedDidQueryOptions(appview, getUnstableProfile, host),
 		select: (did) => ({
 			did,
-			uri: urip ? `at://${did}/${urip.collection}/${urip.rkey}` : '',
+			uri: urip && canonicalize(did, urip),
 		}),
 	});
 }

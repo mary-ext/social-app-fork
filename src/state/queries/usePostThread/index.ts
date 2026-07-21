@@ -100,6 +100,7 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 				result.threadgate.record = record;
 			}
 
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `record` was replaced with the parsed record above
 			return result as UsePostThreadQueryResult;
 		},
 		placeholderData() {

@@ -56,8 +56,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 	// listen for broadcasts
 	useEffect(() => {
-		const listener = ({ data }: MessageEvent) => {
-			const event = (data as { event: string }).event;
+		const listener = ({ data }: MessageEvent<{ event: string }>) => {
+			const { event } = data;
 			cacheRef.current = {
 				usableInFeed: false,
 				syncedAt: new Date(),

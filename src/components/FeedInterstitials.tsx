@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
@@ -110,19 +112,17 @@ function SuggestedFollowCard({
 
 export function SuggestedFollows({ feed }: { feed: FeedDescriptor }) {
 	const { currentAccount } = useSession();
-	const [feedType, feedUriOrDid] = feed.split('|') as [string, string];
-	if (feedType === 'author') {
+	const [feedType, feedUriOrDid] = feed.split('|');
+	if (feedType === 'author' && isDid(feedUriOrDid)) {
 		if (currentAccount?.did === feedUriOrDid) {
 			return null;
-		} else {
-			return <SuggestedFollowsProfile did={feedUriOrDid} />;
 		}
-	} else {
-		return <SuggestedFollowsHome />;
+		return <SuggestedFollowsProfile did={feedUriOrDid} />;
 	}
+	return <SuggestedFollowsHome />;
 }
 
-export function SuggestedFollowsProfile({ did }: { did: string }) {
+export function SuggestedFollowsProfile({ did }: { did: Did }) {
 	const { profiles, onDismiss, isLoading, error } = useSuggestedFollowsByActorWithDismiss({ did });
 
 	return (

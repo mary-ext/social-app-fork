@@ -10,9 +10,9 @@ import type { Locale } from '#/paraglide/runtime';
 
 import * as styles from './AppLanguageDropdown.css';
 
-const onChangeAppLanguage = (value: string) => {
-	if (value && value !== LOCALE) {
-		setAppLanguage(value as Locale);
+const onChangeAppLanguage = (value: Locale) => {
+	if (value !== LOCALE) {
+		setAppLanguage(value);
 	}
 };
 

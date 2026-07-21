@@ -31,12 +31,12 @@ export function useRemoveFromGroupChat(
 	const { chat } = useClients();
 
 	return useMutation({
-		mutationFn: async ({ members }: { members: string[] }) => {
+		mutationFn: async ({ members }: { members: Did[] }) => {
 			if (!convoId) throw new Error('No convoId provided');
 			if (!chat) throw new Error('Not signed in');
 			const data = await ok(
 				chat.post('chat.bsky.group.removeMembers', {
-					input: { convoId, members: members as Did[] },
+					input: { convoId, members },
 				}),
 			);
 			return data;

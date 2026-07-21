@@ -24,6 +24,9 @@ import type { Gif } from '#/features/gifPicker/types';
 
 import { createVideoState, type VideoAction, videoReducer, type VideoState } from './video';
 
+/** the gated post doesn't exist until publish; `src/lib/api` swaps in the real at-uri then. */
+const PLACEHOLDER_POST_URI: ResourceUri = 'at://placeholder.invalid';
+
 type ImagesMedia = {
 	type: 'images';
 	images: ComposerImage[];
@@ -280,15 +283,10 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				thread: {
 					posts,
 					postgate: createPostgateRecord({
-						post: '' as ResourceUri,
+						post: PLACEHOLDER_POST_URI,
 						embeddingRules: postgateEmbeddingRules,
 					}),
-					threadgate: threadgateRecordToAllowUISetting({
-						$type: 'app.bsky.feed.threadgate',
-						post: '' as ResourceUri,
-						createdAt: new Date().toString(),
-						allow: threadgateAllow,
-					}),
+					threadgate: threadgateRecordToAllowUISetting({ allow: threadgateAllow }),
 				},
 			};
 		}
@@ -660,13 +658,10 @@ export function createComposerState({
 				},
 			],
 			postgate: createPostgateRecord({
-				post: '' as ResourceUri,
+				post: PLACEHOLDER_POST_URI,
 				embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
 			}),
 			threadgate: threadgateRecordToAllowUISetting({
-				$type: 'app.bsky.feed.threadgate',
-				post: '' as ResourceUri,
-				createdAt: new Date().toString(),
 				allow: initInteractionSettings?.threadgateAllowRules,
 			}),
 		},

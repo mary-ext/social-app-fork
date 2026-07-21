@@ -11,24 +11,28 @@ import {
 	ModerationCauseType,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import type { $type } from '@atcute/lexicons';
+import type { $type, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeProfileLink } from '#/lib/routes/links';
 
-import type { ApiThreadItem, ThreadItem, TraversalMetadata } from '#/state/queries/usePostThread/types';
+import type { ThreadItem, TraversalMetadata } from '#/state/queries/usePostThread/types';
 
 export function threadPostNoUnauthenticated({
 	uri,
 	depth,
 	value,
-}: ApiThreadItem): Extract<ThreadItem, { type: 'threadPostNoUnauthenticated' }> {
+}: {
+	uri: ResourceUri;
+	depth: number;
+	value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated>;
+}): Extract<ThreadItem, { type: 'threadPostNoUnauthenticated' }> {
 	return {
 		type: 'threadPostNoUnauthenticated',
 		key: uri,
 		uri,
 		depth,
-		value: value as AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated,
+		value,
 		// @ts-ignore populated by the traversal
 		ui: {},
 	};
@@ -38,13 +42,17 @@ export function threadPostNotFound({
 	uri,
 	depth,
 	value,
-}: ApiThreadItem): Extract<ThreadItem, { type: 'threadPostNotFound' }> {
+}: {
+	uri: ResourceUri;
+	depth: number;
+	value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemNotFound>;
+}): Extract<ThreadItem, { type: 'threadPostNotFound' }> {
 	return {
 		type: 'threadPostNotFound',
 		key: uri,
 		uri,
 		depth,
-		value: value as AppBskyUnspeccedDefs.ThreadItemNotFound,
+		value,
 	};
 }
 
@@ -52,13 +60,17 @@ export function threadPostBlocked({
 	uri,
 	depth,
 	value,
-}: ApiThreadItem): Extract<ThreadItem, { type: 'threadPostBlocked' }> {
+}: {
+	uri: ResourceUri;
+	depth: number;
+	value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemBlocked>;
+}): Extract<ThreadItem, { type: 'threadPostBlocked' }> {
 	return {
 		type: 'threadPostBlocked',
 		key: uri,
 		uri,
 		depth,
-		value: value as AppBskyUnspeccedDefs.ThreadItemBlocked,
+		value,
 	};
 }
 
@@ -69,7 +81,7 @@ export function threadPost({
 	moderationOpts,
 	threadgateHiddenReplies,
 }: {
-	uri: string;
+	uri: ResourceUri;
 	depth: number;
 	value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemPost>;
 	moderationOpts: ModerationOptions;
@@ -93,6 +105,7 @@ export function threadPost({
 			 * Do not spread anything here, load bearing for post shadow strict
 			 * equality reference checks.
 			 */
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- view defs type `record` as `unknown`; the collection is fixed by the view type
 			post: value.post as Omit<AppBskyFeedDefs.PostView, 'record'> & {
 				record: AppBskyFeedPost.Main;
 			},

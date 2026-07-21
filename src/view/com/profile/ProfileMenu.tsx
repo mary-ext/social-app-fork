@@ -1,9 +1,10 @@
-import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { shareText, shareUrl } from '#/lib/sharing';
+import { isAbortError } from '#/lib/strings/errors';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
 import type { Shadow } from '#/state/cache/types';
@@ -51,10 +52,6 @@ import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-s
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 import { useDevMode } from '#/storage/hooks/dev-mode';
-
-const isAbortError = (error: unknown) => {
-	return error instanceof Error && error.name === 'AbortError';
-};
 
 function ProfileMenu({
 	profile,
@@ -375,12 +372,10 @@ function ProfileMenu({
 			/>
 			<ReportDialog
 				handle={reportDialogHandle}
-				subject={
-					{
-						...profile,
-						$type: 'app.bsky.actor.defs#profileViewDetailed',
-					} as unknown as Parameters<typeof ReportDialog>[0]['subject']
-				}
+				subject={{
+					...profile,
+					$type: 'app.bsky.actor.defs#profileViewDetailed',
+				}}
 			/>
 			<BlockAccountPrompt
 				handle={blockPromptHandle}
@@ -402,12 +397,8 @@ function ProfileMenu({
 			/>
 			{status.isDisabled ? (
 				<GoLiveDisabledDialog handle={goLiveDisabledDialogHandle} status={status} />
-			) : status.isActive ? (
-				<EditLiveDialog
-					embed={status.embed as AppBskyEmbedExternal.View}
-					handle={goLiveDialogHandle}
-					status={status}
-				/>
+			) : status.isActive && status.embed ? (
+				<EditLiveDialog embed={status.embed} handle={goLiveDialogHandle} status={status} />
 			) : (
 				<GoLiveDialog handle={goLiveDialogHandle} profile={profile} />
 			)}

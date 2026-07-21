@@ -1,3 +1,5 @@
+import type { ActorIdentifier } from '@atcute/lexicons';
+
 import type { AuthAccount } from '#/storage';
 
 export type SessionAccount = AuthAccount;
@@ -14,7 +16,7 @@ export type SessionStateContext = {
 
 export type SessionApiContext = {
 	completeOAuthCallback: (params: URLSearchParams) => Promise<void>;
-	login: (props: { identifier: string }) => Promise<void>;
+	login: (props: { identifier: ActorIdentifier }) => Promise<void>;
 	logoutCurrentAccount: () => void;
 	logoutEveryAccount: () => void;
 	removeAccount: (account: SessionAccount) => void;

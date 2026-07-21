@@ -31,7 +31,7 @@ const createDel = (recordUri: string): ComAtprotoRepoApplyWrites.$input['writes'
 	};
 };
 
-export function useListQuery(uri?: string) {
+export function useListQuery(uri?: ResourceUri) {
 	const { appview } = useClients();
 	return useQuery<AppBskyGraphDefs.ListView>({
 		staleTime: STALE.MINUTES.ONE,
@@ -42,7 +42,7 @@ export function useListQuery(uri?: string) {
 			}
 			const data = await ok(
 				appview.get('app.bsky.graph.getList', {
-					params: { limit: 1, list: uri as ResourceUri },
+					params: { limit: 1, list: uri },
 				}),
 			);
 			return data.list;

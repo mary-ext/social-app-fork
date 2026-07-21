@@ -1,7 +1,7 @@
 import { Select } from '@base-ui/react/select';
 
 import { m } from '#/paraglide/messages';
-import type { SkinTone } from '#/storage/hooks/emoji';
+import type { SkinTone } from '#/storage/schema';
 
 import * as styles from './SkinToneButton.css';
 

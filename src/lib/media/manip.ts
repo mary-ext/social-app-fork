@@ -15,8 +15,12 @@ export function saveImageToMediaLibrary({ uri }: { uri: string }): Promise<void>
 	});
 }
 
-export function saveBytesToDisk(filename: string, bytes: Uint8Array<ArrayBuffer>, type: string) {
-	const blob = new Blob([bytes], { type });
+export function saveBytesToDisk(filename: string, bytes: Uint8Array, type: string) {
+	// `Blob` only accepts `ArrayBuffer`-backed views; re-view rather than `slice()` so exporting a repo
+	// CAR doesn't double its memory
+	const { buffer, byteLength, byteOffset } = bytes;
+	const part = buffer instanceof ArrayBuffer ? new Uint8Array(buffer, byteOffset, byteLength) : bytes.slice();
+	const blob = new Blob([part], { type });
 	const url = URL.createObjectURL(blob);
 	downloadUrl(url, filename);
 	// Firefox requires a small delay

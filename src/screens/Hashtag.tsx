@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ListRenderItemInfo } from 'react-native';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
@@ -125,7 +126,7 @@ function HashtagScreenTab({
 	sort,
 }: {
 	fullTag: string;
-	author: string | undefined;
+	author: ActorIdentifier | undefined;
 	sort: 'top' | 'latest';
 }) {
 	const initialNumToRender = useInitialNumToRender();

@@ -320,7 +320,7 @@ export async function processVideo(
 			pollFailures = 0;
 
 			if (status.state === 'JOB_STATE_COMPLETED') {
-				// The video service returns a modern blob ref; legacy blobs don't occur here.
+				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the video service returns a modern blob ref; legacy blobs don't occur here
 				blob = status.blob as AtpBlob | undefined;
 				if (!blob) {
 					throw new Error('Job completed, but did not return a blob');

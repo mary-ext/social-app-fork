@@ -144,12 +144,10 @@ export function OverflowMenu({
 			{starterPack.list && (
 				<ReportDialog
 					handle={reportDialogHandle}
-					subject={
-						{
-							...starterPack,
-							$type: 'app.bsky.graph.defs#starterPackView',
-						} as unknown as Parameters<typeof ReportDialog>[0]['subject']
-					}
+					subject={{
+						...starterPack,
+						$type: 'app.bsky.graph.defs#starterPackView',
+					}}
 				/>
 			)}
 			<Prompt.Outer handle={deleteHandle}>

@@ -335,8 +335,8 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 	const fetchHandle = useFetchHandle();
 
 	const getProfileHandle = async () => {
-		if (match.name === 'Profile') {
-			let handle: string | undefined = match.params.actor as string;
+		if (match.name === 'Profile' && typeof match.params.actor === 'string') {
+			let handle: string | undefined = match.params.actor;
 
 			if (handle.startsWith('did:')) {
 				try {

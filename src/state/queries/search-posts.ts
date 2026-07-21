@@ -9,6 +9,7 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { liftSearchQuery } from '#/lib/bsky/search';
+import { typedKeys } from '#/lib/functions';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -34,7 +35,7 @@ export function useSearchPostsQuery({
 	query,
 	sort,
 }: {
-	author?: string;
+	author?: ActorIdentifier;
 	query: string;
 	sort?: 'top' | 'latest';
 }) {
@@ -49,7 +50,7 @@ export function useSearchPostsQuery({
 		if (!author) {
 			return base.length ? base : undefined;
 		}
-		return [...new Set<string>([...base, author])] as ActorIdentifier[];
+		return [...new Set<ActorIdentifier>([...base, author])];
 	}, [lifted, author]);
 
 	const selectArgs = useMemo(
@@ -111,7 +112,7 @@ export function useSearchPostsQuery({
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;
-					for (const key of Object.keys(selectArgs) as (keyof typeof selectArgs)[]) {
+					for (const key of typedKeys(selectArgs)) {
 						if (selectArgs[key] !== lastArgs[key]) {
 							// Can't do reuse anything if any input has changed.
 							canReuse = false;

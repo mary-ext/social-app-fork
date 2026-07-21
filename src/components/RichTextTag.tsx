@@ -1,5 +1,7 @@
 import type { MouseEvent } from 'react';
 
+import type { Handle } from '@atcute/lexicons';
+
 import { clsx } from 'clsx';
 
 import { isInvalidHandle } from '#/lib/strings/handles';
@@ -29,7 +31,7 @@ import { buildPath, useNavigate } from '#/routes';
 const preventDefault = (e: MouseEvent) => e.preventDefault();
 
 export type RichTextTagProps = Pick<TextProps, 'color' | 'leading' | 'size'> & {
-	authorHandle?: string;
+	authorHandle?: Handle;
 	display: string;
 	tag: string;
 	underline?: InlineLinkUnderline;

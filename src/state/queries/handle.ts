@@ -1,5 +1,5 @@
 import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -14,14 +14,14 @@ export function useFetchHandle() {
 	const { appview } = useClients();
 
 	return async (handleOrDid: string) => {
-		if (handleOrDid.startsWith('did:')) {
+		if (isDid(handleOrDid)) {
 			const res = await queryClient.fetchQuery({
 				staleTime: STALE.MINUTES.FIVE,
 				queryKey: fetchHandleQueryKey(handleOrDid),
 				queryFn: () =>
 					ok(
 						appview.get('app.bsky.actor.getProfile', {
-							params: { actor: handleOrDid as ActorIdentifier },
+							params: { actor: handleOrDid },
 						}),
 					),
 			});

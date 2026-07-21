@@ -75,9 +75,10 @@ export function mediaExists(localRefPath: string): boolean {
 
 async function populateCacheInternal(): Promise<void> {
 	try {
-		const allKeys = await keys(store);
+		// every key in this store is a `localRefPath` written by `saveMediaToLocal`
+		const allKeys = await keys<string>(store);
 		for (const key of allKeys) {
-			mediaExistsCache.set(key as string, true);
+			mediaExistsCache.set(key, true);
 		}
 		cachePopulated = true;
 	} catch (e) {

@@ -305,6 +305,7 @@ export const stripExif = async (blob: Blob): Promise<Blob> => {
 	if (stripped === null) {
 		return blob;
 	}
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `remove` allocates the returned buffer itself, so it is never shared
 	return new Blob([stripped as Uint8Array<ArrayBuffer>], { type: blob.type });
 };
 

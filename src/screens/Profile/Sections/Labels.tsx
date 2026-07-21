@@ -1,10 +1,5 @@
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
-import {
-	type InterpretedLabelDefinition,
-	interpretLabelerDefinition,
-	LabelFlags,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
+import { interpretLabelerDefinition, LabelFlags, type ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
 
@@ -58,7 +53,8 @@ export function ProfileLabelsSection({
 	const labelValues = labelerInfo.policies.labelValues
 		.filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
 		.map((val) => lookupLabelValueDefinition(val, customDefs))
-		.filter((def) => def && !(def.flags & LabelFlags.NoConfigurable)) as InterpretedLabelDefinition[];
+		.filter((def) => def !== undefined)
+		.filter((def) => !(def.flags & LabelFlags.NoConfigurable));
 	const hasValues = labelValues.length > 0;
 
 	return (

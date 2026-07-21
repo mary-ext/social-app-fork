@@ -1,10 +1,11 @@
 import { Fragment, useRef } from 'react';
 
-import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { makeListLink, makeProfileLink } from '#/lib/routes/links';
 
 import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting } from '#/state/queries/threadgate';
@@ -41,7 +42,8 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	 * `WhoCanReply` is only used for root posts atm, in case this changes
 	 * unexpectedly, we should check to make sure it's for sure the root URI.
 	 */
-	const rootUri = (post.record as AppBskyFeedPost.Main).reply?.root?.uri ?? post.uri;
+	const record = getPostRecord(post);
+	const rootUri = record.reply?.root?.uri ?? post.uri;
 	const settings = threadgateViewToAllowUISetting(post.threadgate);
 
 	const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({

@@ -1,4 +1,5 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -41,7 +42,7 @@ const isFeedgenSentinel = (item: FeedgenItem): item is FeedgenSentinel => {
 };
 
 interface ProfileFeedgensProps {
-	did: string;
+	did: Did;
 	/** Known feed-generator count, used to size the loading skeleton; falls back to a small default. */
 	feedCount?: number;
 }

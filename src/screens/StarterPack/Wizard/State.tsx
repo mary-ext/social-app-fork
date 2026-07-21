@@ -1,12 +1,8 @@
 import { createContext, useContext, useReducer } from 'react';
 
-import type {
-	AnyProfileView,
-	AppBskyFeedDefs,
-	AppBskyGraphDefs,
-	AppBskyGraphStarterpack,
-} from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 
+import { getStarterPackRecord } from '#/lib/api/record-views';
 import { STARTER_PACK_MAX_FEEDS, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 
 import * as Toast from '#/components/Toast';
@@ -44,9 +40,17 @@ interface State {
 
 type TStateContext = [State, (action: Action) => void];
 
-const StateContext = createContext<TStateContext>([{} as State, (_: Action) => {}]);
+const StateContext = createContext<TStateContext | null>(null);
 StateContext.displayName = 'StarterPackWizardStateContext';
-export const useWizardState = () => useContext(StateContext);
+
+/** reads the starter pack wizard state and its dispatch. throws when used outside a {@link Provider}. */
+export const useWizardState = (): TStateContext => {
+	const ctx = useContext(StateContext);
+	if (!ctx) {
+		throw new Error('useWizardState must be used within a starter pack wizard Provider');
+	}
+	return ctx;
+};
 
 function reducer(state: State, action: Action): State {
 	let updatedState = state;
@@ -127,13 +131,13 @@ export function Provider({
 		const targetDid = targetProfile?.did;
 
 		if (starterPack) {
-			const record = starterPack.record as AppBskyGraphStarterpack.Main;
+			const record = getStarterPackRecord(starterPack);
 			return {
 				canNext: true,
 				currentStep: 'Details',
 				name: record.name,
 				description: record.description,
-				profiles: (listItems?.map((i) => i.subject) as AnyProfileView[]) ?? [],
+				profiles: listItems?.map((i) => i.subject) ?? [],
 				feeds: starterPack.feeds ?? [],
 				processing: false,
 				transitionDirection: 'Forward',

@@ -1,4 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import {
 	addDays,
@@ -56,7 +57,7 @@ export type InteractiveItem =
 export type ChromeRow =
 	| { key: string; kind: 'divider' }
 	| { key: string; kind: 'hero' }
-	| { did: string; key: string; kind: 'recent-profile-pending' }
+	| { did: Did; key: string; kind: 'recent-profile-pending' }
 	| { key: string; kind: 'section-label'; label: string };
 
 export type DateItem = Extract<InteractiveItem, { kind: 'date' }>;

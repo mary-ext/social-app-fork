@@ -1,3 +1,5 @@
+import type { Did } from '@atcute/lexicons';
+
 import { Collapsible } from '@base-ui/react/collapsible';
 
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
@@ -12,7 +14,7 @@ export function ProfileHeaderSuggestedFollows({
 	onRequestHide,
 }: {
 	isExpanded: boolean;
-	actorDid: string;
+	actorDid: Did;
 	onRequestHide: () => void;
 }) {
 	const { profiles, onDismiss, isLoading, error } = useSuggestedFollowsByActorWithDismiss({ did: actorDid });

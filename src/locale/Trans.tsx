@@ -136,8 +136,10 @@ export const Trans = <M extends Message>(props: TransProps<NoInfer<M>> & { messa
 	const { message } = props;
 	const inputs = 'inputs' in props ? props.inputs : undefined;
 	if (typeof message.parts !== 'function') {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `TransProps` already checked `inputs` against this message's metadata
 		return message(inputs as never);
 	}
 	const markup = ('markup' in props ? props.markup : undefined) as Record<string, AnyRenderer> | undefined;
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `TransProps` already checked `inputs` against this message's metadata
 	return renderParts(message.parts(inputs as never), markup ?? {});
 };

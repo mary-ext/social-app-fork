@@ -3,6 +3,8 @@ import {
 	type ActorIdentifier,
 	type CanonicalResourceUri,
 	type Did,
+	isActorIdentifier,
+	isRecordKey,
 	parseResourceUri,
 	type RecordKey,
 } from '@atcute/lexicons/syntax';
@@ -27,11 +29,11 @@ export function parseStarterPackUri(uri?: string): {
 		} else {
 			const url = new URL(uri);
 			const parts = url.pathname.split('/');
-			const [__, path, actor, rkey] = parts as [string, string, ActorIdentifier, RecordKey];
-
 			if (parts.length !== 4) return null;
+
+			const [__, path, actor, rkey] = parts;
 			if (path !== 'starter-pack' && path !== 'start') return null;
-			if (!actor || !rkey) return null;
+			if (!isActorIdentifier(actor) || !isRecordKey(rkey)) return null;
 			return {
 				actor,
 				rkey,

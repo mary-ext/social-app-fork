@@ -10,22 +10,13 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { useIsDocumentVisible } from '#/lib/visibility';
 
 import { Convo } from '#/state/messages/convo/agent';
-import type {
-	ConvoParams,
-	ConvoState,
-	ConvoStateBackgrounded,
-	ConvoStateDisabled,
-	ConvoStateReady,
-	ConvoStateSuspended,
-} from '#/state/messages/convo/types';
+import type { ConvoParams, ConvoState } from '#/state/messages/convo/types';
 import { isConvoActive } from '#/state/messages/convo/util';
 import { useMessagesEventBus } from '#/state/messages/events';
 import { RQKEY as getConvoKey, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
 import { RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations';
 import { RQKEY as createProfileQueryKey } from '#/state/queries/profile';
 import { useClients, useSession } from '#/state/session';
-
-import type { GroupConvoMember } from '#/components/dms/util';
 
 import { useFocusEffect } from '#/routes';
 
@@ -53,11 +44,7 @@ export function useConvo() {
 
 /** use only when the Convo is active (loaded and ready) or suspended/backgrounded (ready for resumption) */
 export function useConvoActive() {
-	const ctx = useContext(ChatContext) as
-		| ConvoStateReady
-		| ConvoStateBackgrounded
-		| ConvoStateSuspended
-		| ConvoStateDisabled;
+	const ctx = useContext(ChatContext);
 	if (!ctx) {
 		throw new Error('useConvo must be used within a ConvoProvider');
 	}
@@ -151,9 +138,9 @@ function ConvoProviderInner({
 			// and committing to the convo store then would set state on this provider
 			// mid-render of that component.
 			if (event.type !== 'updated') return;
-			const queryKey = event.query.queryKey as string[];
+			const queryKey: unknown[] = event.query.queryKey;
 			if (queryKey[0] === root && queryKey[1] === id) {
-				const data = event.query.state.data as ChatBskyConvoDefs.ConvoView | undefined;
+				const data = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(getConvoKey(convoId));
 				if (data && convo.convo && data.muted !== convo.convo.view.muted) {
 					convo.updateMuted(data.muted);
 				}
@@ -178,7 +165,7 @@ function ConvoProviderInner({
 					(membersChanged(data.members, convo.convo.members) ||
 						data.kind.memberCount !== convo.convo.details.memberCount)
 				) {
-					convo.updateGroupMembers(data.members as GroupConvoMember[], data.kind.memberCount);
+					convo.updateGroupMembers(data.members, data.kind.memberCount);
 				}
 			}
 		});

@@ -141,6 +141,7 @@ export function createCacheMutator({
 					}
 				}
 
+				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the caller pins `T` to the query's thread-item variant
 				return thread as T[];
 			}
 		},
@@ -324,6 +325,7 @@ export function useUpdatePostThreadThreadgateQueryCache() {
 				}
 			}
 
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the caller pins `T` to the query's thread-item variant
 			return thread as T[];
 		}
 

@@ -29,7 +29,7 @@ export async function getServiceAuthToken({
 	pds: Client;
 	dispatchUrl: string;
 	aud?: Did;
-	lxm: string;
+	lxm: Nsid;
 	exp?: number;
 }) {
 	const pdsAud = getServiceAuthAudFromUrl(dispatchUrl);
@@ -38,7 +38,7 @@ export async function getServiceAuthToken({
 	}
 	const { token } = await ok(
 		pds.get('com.atproto.server.getServiceAuth', {
-			params: { aud: aud ?? (pdsAud as Did), exp, lxm: lxm as Nsid },
+			params: { aud: aud ?? pdsAud, exp, lxm },
 		}),
 	);
 	return token;

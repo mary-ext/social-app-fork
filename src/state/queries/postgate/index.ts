@@ -2,13 +2,14 @@ import { useRef } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import type { Did, ResourceUri } from '@atcute/lexicons';
+import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getRecord, putRecord } from '#/lib/api/records';
 import { networkRetry, retry } from '#/lib/async/retry';
+import { errorMessage } from '#/lib/strings/errors';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import { STALE } from '#/state/queries';
@@ -34,15 +35,15 @@ export async function getPostgateRecord({
 }): Promise<AppBskyFeedPostgate.Main | undefined> {
 	const urip = parseResourceUri(postUri);
 
-	let repo: string = urip.repo;
-	if (!repo.startsWith('did:')) {
-		const resolved = await ok(
-			appview.get('com.atproto.identity.resolveHandle', {
-				params: { handle: repo as Handle },
-			}),
-		);
-		repo = resolved.did;
-	}
+	const repo = isDid(urip.repo)
+		? urip.repo
+		: (
+				await ok(
+					appview.get('com.atproto.identity.resolveHandle', {
+						params: { handle: urip.repo },
+					}),
+				)
+			).did;
 
 	try {
 		const data = await retry(
@@ -61,7 +62,7 @@ export async function getPostgateRecord({
 			() =>
 				getRecord(pds, {
 					collection: POSTGATE_COLLECTION,
-					repo: repo as Did,
+					repo,
 					rkey: urip.rkey!,
 				}),
 		);
@@ -242,7 +243,7 @@ export function useToggleQuoteDetachmentMutation() {
 				} catch (e) {
 					// ok if this fails, it's just optimistic UI
 					logger.error(`Postgate: failed to get quote post for re-attachment`, {
-						safeMessage: e instanceof Error ? e.message : String(e),
+						safeMessage: errorMessage(e),
 					});
 				}
 			}

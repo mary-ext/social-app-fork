@@ -59,6 +59,7 @@ export const RQKEY_PARTIAL = (status: 'accepted' | 'request' | 'all', readState?
 
 /** returns whether a convo satisfies the filters encoded in a convo-list query key. */
 export function convoMatchesQueryKey(convo: ConvoListItem, queryKey: QueryKey): boolean {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- callers pair this with a `RQKEY_PARTIAL` prefix filter
 	const [, status, readState, kind, lockStatus] = queryKey as ReturnType<typeof RQKEY>;
 	if (status !== 'all' && status !== convo.status) return false;
 	if (readState === 'unread' && convo.unreadCount === 0) return false;
@@ -79,6 +80,7 @@ export function convoMatchesQueryKey(convo: ConvoListItem, queryKey: QueryKey): 
  */
 export function convoListQueryPredicate(convo: ConvoListItem) {
 	return (query: Query): boolean => {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- callers pair this with a `RQKEY_PARTIAL` prefix filter
 		const data = query.state.data as ConvoListQueryData | undefined;
 		if (data && getConvoFromQueryData(convo.id, data)) return true;
 		return convoMatchesQueryKey(convo, query.queryKey);

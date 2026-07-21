@@ -87,6 +87,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		// Send to the feed
 		ok(
 			appview.post('app.bsky.feed.sendInteractions', {
+				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `uri` widens to `string` only for the Following pseudo-feed
 				input: { interactions: interactionsToSend, feed: feed?.uri as ResourceUri | undefined },
 				headers: { 'atproto-proxy': `${proxyDid}#bsky_fg` },
 			}),
@@ -128,7 +129,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 					history.current.add(postItem);
 					queue.current.add(
 						toString({
-							item: postItem.uri as ResourceUri,
+							item: postItem.post.uri,
 							event: 'app.bsky.feed.defs#interactionSeen',
 							feedContext,
 							reqId,
@@ -207,5 +208,6 @@ function toString(interaction: AppBskyFeedDefs.Interaction): string {
 
 function toInteraction(str: string): AppBskyFeedDefs.Interaction {
 	const [item, event, feedContext, reqId] = str.split('|');
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every queued string comes from `toString`, so the fields round-trip
 	return { item, event, feedContext, reqId } as AppBskyFeedDefs.Interaction;
 }

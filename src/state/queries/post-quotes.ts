@@ -21,7 +21,7 @@ type RQPageParam = string | undefined;
 const RQKEY_ROOT = 'post-quotes';
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri];
 
-export function usePostQuotesQuery(resolvedUri: string | undefined) {
+export function usePostQuotesQuery(resolvedUri: ResourceUri | undefined) {
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyFeedGetQuotes.$output,
@@ -35,7 +35,7 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
 			ok(
 				appview.get('app.bsky.feed.getQuotes', {
 					params: {
-						uri: (resolvedUri || '') as ResourceUri,
+						uri: resolvedUri!,
 						limit: PAGE_SIZE,
 						cursor: pageParam,
 					},

@@ -1,5 +1,7 @@
 import { createVar, fallbackVar, style, styleVariants } from '@vanilla-extract/css';
 
+import { typedKeys } from '#/lib/functions';
+
 import { colors } from '#/styles/colors';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
@@ -10,10 +12,11 @@ const variantsFor = <Scale extends Record<string, number | string>, Property ext
 	scale: Scale,
 	property: Property,
 ): { [Key in keyof Scale]: Record<Property, Scale[Key]> } => {
-	const out: Record<string, Record<Property, number | string>> = {};
+	const out: Record<string, Record<string, number | string>> = {};
 	for (const [key, value] of Object.entries(scale)) {
-		out[key] = { [property]: value } as Record<Property, number | string>;
+		out[key] = { [property]: value };
 	}
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- one entry per `scale` key; computed keys widen to an index signature
 	return out as { [Key in keyof Scale]: Record<Property, Scale[Key]> };
 };
 
@@ -27,9 +30,10 @@ const leading = fallbackVar(leadingOverrideVar, pairedLeading);
 
 const sizeVariants = (): { [K in keyof typeof fontLeading]: { vars: Record<string, string> } } => {
 	const out: Record<string, { vars: Record<string, string> }> = {};
-	for (const key of Object.keys(fontLeading) as (keyof typeof fontLeading)[]) {
+	for (const key of typedKeys(fontLeading)) {
 		out[key] = { vars: { [fontSizeVar]: fontSize[key], [sizeLeadingVar]: String(fontLeading[key]) } };
 	}
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the loop writes one entry per `fontLeading` key
 	return out as { [K in keyof typeof fontLeading]: { vars: Record<string, string> } };
 };
 

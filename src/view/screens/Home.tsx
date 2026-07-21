@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import type { ActorIdentifier, RecordKey } from '@atcute/lexicons/syntax';
+import { isActorIdentifier, isRecordKey } from '@atcute/lexicons/syntax';
 
 import { useParams, useRoute } from '@oomfware/stacker';
 
@@ -34,6 +34,8 @@ import { useNavigate } from '#/routes';
 // panel of its own
 const FEEDS_DISCOVERY_TAB = '__feeds__';
 
+type HomeTabId = FeedDescriptor | typeof FEEDS_DISCOVERY_TAB;
+
 // registered for both Home and Start (a starter-pack deep link), so it reads the loose params/name.
 export function HomeScreen() {
 	const { data: preferences } = usePreferencesQuery();
@@ -44,8 +46,14 @@ export function HomeScreen() {
 	const { data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading } = usePinnedFeedsInfos();
 
 	useEffect(() => {
-		if (currentAccount && routeName === 'Start' && params.actor && params.rkey) {
-			navigate('StarterPack', { actor: params.actor as ActorIdentifier, rkey: params.rkey as RecordKey });
+		// the `Start` route only matches when its codecs decode both params, so these guards always pass
+		if (
+			currentAccount &&
+			routeName === 'Start' &&
+			isActorIdentifier(params.actor) &&
+			isRecordKey(params.rkey)
+		) {
+			navigate('StarterPack', { actor: params.actor, rkey: params.rkey });
 		}
 	}, [currentAccount, navigate, params, routeName]);
 
@@ -87,7 +95,7 @@ function HomeScreenReady({
 
 	const whatsHotFeed: FeedDescriptor = `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`;
 
-	let sections: Section<string>[];
+	let sections: Section<HomeTabId>[];
 	if (!hasSession) {
 		sections = [
 			{
@@ -104,7 +112,7 @@ function HomeScreenReady({
 			{ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', children: null },
 		];
 	} else {
-		const feedSections: Section<string>[] = pinnedFeedInfos.map((feedInfo) => {
+		const feedSections: Section<HomeTabId>[] = pinnedFeedInfos.map((feedInfo) => {
 			const feed = feedInfo.feedDescriptor;
 			return {
 				id: feed,
@@ -131,12 +139,12 @@ function HomeScreenReady({
 		sections = feedSections;
 	}
 
-	const onValueChange = (value: string) => {
+	const onValueChange = (value: HomeTabId) => {
 		if (value === FEEDS_DISCOVERY_TAB) {
 			navigate('Feeds');
 			return;
 		}
-		setSelectedFeed(value as FeedDescriptor);
+		setSelectedFeed(value);
 	};
 
 	if (hasSession && pinnedFeedInfos.length === 0) {
@@ -151,7 +159,7 @@ function HomeScreenReady({
 	return (
 		<Tabs
 			sections={sections}
-			value={selectedFeed ?? sections[0]?.id ?? ''}
+			value={selectedFeed ?? sections[0]?.id ?? FEEDS_DISCOVERY_TAB}
 			onValueChange={onValueChange}
 			onTabReselect={() => softReset.emit()}
 			header={<HomeHeaderLayout />}

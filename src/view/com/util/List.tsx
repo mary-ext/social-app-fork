@@ -53,10 +53,12 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 
 export type ListProps<ItemT = unknown> = Omit<
 	FlatListProps<ItemT>,
+	| 'data' // This implementation iterates the items directly, so it needs a real array.
 	| 'onScroll' // Use ScrollContext instead.
 	| 'refreshControl' // Pass refreshing and/or onRefresh instead.
 	| 'contentOffset' // Pass headerOffset instead.
 > & {
+	data: readonly ItemT[] | undefined;
 	onScrolledDownChange?: (isScrolledDown: boolean) => void;
 	headerOffset?: number;
 	refreshing?: boolean;
@@ -67,6 +69,13 @@ export type ListProps<ItemT = unknown> = Omit<
 	disableFullWindowScroll?: boolean;
 };
 export type ListRef = React.RefObject<ListMethods | null>;
+
+/** this list has no separators, but `renderItem` receives the react-native info object either way. */
+const NOOP_SEPARATORS: ListRenderItemInfo<unknown>['separators'] = {
+	highlight: () => {},
+	unhighlight: () => {},
+	updateProps: () => {},
+};
 
 const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3; // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
@@ -279,6 +288,7 @@ export function List<ItemT = unknown>({
 
 		const element = getScrollableNode();
 		contextScrollHandlers.onScroll?.(
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- shim: only the envelope fields the handlers actually read
 			{
 				contentOffset: {
 					x: Math.max(0, element?.scrollX ?? 0),
@@ -361,6 +371,7 @@ export function List<ItemT = unknown>({
 						overflowY: isWithinSplitView ? 'auto' : 'scroll',
 					}),
 			]}
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- RNW's `View` renders a `div` and forwards this ref to it
 			ref={nativeRef as unknown as React.RefObject<View>}
 		>
 			<Visibility
@@ -394,7 +405,7 @@ export function List<ItemT = unknown>({
 				{headerComponent}
 				{isEmpty
 					? emptyComponent
-					: (data as Array<ItemT>)?.map((item, index) => {
+					: data?.map((item, index) => {
 							const key = keyExtractor!(item, index);
 							return (
 								<Row<ItemT>
@@ -551,11 +562,12 @@ let Row = function RowImpl<ItemT>({
 			{renderItem({
 				item,
 				index,
-				separators: null as unknown as ListRenderItemInfo<ItemT>['separators'],
+				separators: NOOP_SEPARATORS,
 			})}
 		</View>
 	);
 };
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `memo` erases the type parameter
 Row = memo(Row) as <ItemT>(props: {
 	item: ItemT;
 	index: number;

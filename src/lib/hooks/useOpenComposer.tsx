@@ -1,5 +1,6 @@
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -15,7 +16,7 @@ import * as Toast from '#/components/Toast';
 import { m } from '#/paraglide/messages';
 
 export interface ComposerOptsPostRef {
-	uri: string;
+	uri: ResourceUri;
 	cid: string;
 	text: string;
 	langs?: string[];

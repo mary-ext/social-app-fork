@@ -30,9 +30,10 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 	const throttledQuery = useThrottledValue(query, 500);
 
 	const { data: savedFeedsAndLists, isFetchedAfterMount: isFetchedSavedFeeds } = useSavedFeeds();
-	const savedFeeds = savedFeedsAndLists?.feeds
-		.filter((f) => f.type === 'feed' && f.view.uri !== DISCOVER_FEED_URI)
-		.map((f) => f.view) as AppBskyFeedDefs.GeneratorView[];
+	const savedFeeds = (savedFeedsAndLists?.feeds ?? [])
+		.filter((f) => f.type === 'feed')
+		.map((f) => f.view)
+		.filter((view) => view.uri !== DISCOVER_FEED_URI);
 
 	const {
 		data: popularFeedsPages,
@@ -46,10 +47,8 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 	// If we have saved feeds already loaded, display them immediately
 	// Then, when popular feeds have loaded we can concat them to the saved feeds
 	const suggestedFeeds: AppBskyFeedDefs.GeneratorView[] | undefined =
-		savedFeeds || isFetchedSavedFeeds
-			? popularFeeds
-				? savedFeeds.concat(popularFeeds.filter((f) => !savedFeeds.some((sf) => sf.uri === f.uri)))
-				: savedFeeds
+		savedFeedsAndLists || isFetchedSavedFeeds
+			? savedFeeds.concat(popularFeeds.filter((f) => !savedFeeds.some((sf) => sf.uri === f.uri)))
 			: undefined;
 
 	const { data: searchedFeeds, isFetching: isFetchingSearchedFeeds } = usePopularFeedsSearch({

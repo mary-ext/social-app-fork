@@ -1,5 +1,4 @@
 import { interpretMutedWordPreference, type ModerationPreferences } from '@atcute/bluesky-moderation';
-import type { Did } from '@atcute/lexicons';
 
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 
@@ -17,7 +16,7 @@ export const toModerationPreferences = (
 	globalLabelPrefs: moderationPrefs.labels,
 	keywordFilters: moderationPrefs.mutedWords.map((word) => interpretMutedWordPreference(word)),
 	prefsByLabelers: Object.fromEntries(
-		moderationPrefs.labelers.map((labeler) => [labeler.did as Did, { labelPrefs: labeler.labels }]),
+		moderationPrefs.labelers.map((labeler) => [labeler.did, { labelPrefs: labeler.labels }]),
 	),
 	temporaryMutes: [],
 });

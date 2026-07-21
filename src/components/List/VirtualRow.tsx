@@ -133,6 +133,7 @@ export type VirtualRowProps<ItemT> = RowProps<ItemT> & {
  * otherwise, trading a possible one-frame blank on scroll-in for not paying the mount cost of off-screen
  * rows.
  */
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `memo` erases the type parameter
 export const VirtualRow = memo(function VirtualRow<ItemT>({
 	estimateHeight,
 	index,

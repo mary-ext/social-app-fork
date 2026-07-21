@@ -1,4 +1,5 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -41,7 +42,7 @@ const isProfileListSentinel = (item: ProfileListItem): item is ProfileListSentin
 };
 
 interface ProfileListsProps {
-	did: string;
+	did: Did;
 	/** Known list count, used to size the loading skeleton; falls back to a small default. */
 	listCount?: number;
 }

@@ -125,6 +125,7 @@ export function shouldFilterNotif(
 		return false;
 	}
 	if (notif.reason === 'subscribed-post') {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `subscribed-post` reason fixes the collection
 		const record = notif.record as AppBskyFeedPost.Main;
 		if (
 			hasMutedWord({
@@ -206,8 +207,8 @@ async function fetchSubjects(
 	posts: Map<string, AppBskyFeedDefs.PostView>;
 	starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>;
 }> {
-	const postUris = new Set<string>();
-	const packUris = new Set<string>();
+	const postUris = new Set<ResourceUri>();
+	const packUris = new Set<ResourceUri>();
 	for (const notif of groupedNotifs) {
 		if (notif.subjectUri?.includes('app.bsky.feed.post')) {
 			postUris.add(notif.subjectUri);
@@ -219,14 +220,12 @@ async function fetchSubjects(
 	const packUriChunks = chunk(Array.from(packUris), 25);
 	const postsChunks = await Promise.all(
 		postUriChunks.map((uris) =>
-			ok(appview.get('app.bsky.feed.getPosts', { params: { uris: uris as ResourceUri[] } })).then(
-				(data) => data.posts,
-			),
+			ok(appview.get('app.bsky.feed.getPosts', { params: { uris } })).then((data) => data.posts),
 		),
 	);
 	const packsChunks = await Promise.all(
 		packUriChunks.map((uris) =>
-			ok(appview.get('app.bsky.graph.getStarterPacks', { params: { uris: uris as ResourceUri[] } })).then(
+			ok(appview.get('app.bsky.graph.getStarterPacks', { params: { uris } })).then(
 				(data) => data.starterPacks,
 			),
 		),
@@ -266,6 +265,7 @@ function toKnownType(notif: AppBskyNotificationListNotifications.Notification): 
 		notif.reason === 'subscribed-post' ||
 		notif.reason === 'contact-match'
 	) {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- open string union; every literal the chain above matches is a `NotificationType`
 		return notif.reason as NotificationType;
 	}
 	return 'unknown';
@@ -274,7 +274,7 @@ function toKnownType(notif: AppBskyNotificationListNotifications.Notification): 
 function getSubjectUri(
 	type: NotificationType,
 	notif: AppBskyNotificationListNotifications.Notification,
-): string | undefined {
+): ResourceUri | undefined {
 	if (type === 'reply' || type === 'quote' || type === 'mention' || type === 'subscribed-post') {
 		return notif.uri;
 	} else if (
@@ -283,6 +283,7 @@ function getSubjectUri(
 		type === 'like-via-repost' ||
 		type === 'repost-via-repost'
 	) {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the like/repost reasons fix the collection
 		const record = notif.record as AppBskyFeedLike.Main | AppBskyFeedRepost.Main;
 		return typeof record.subject?.uri === 'string' ? record.subject.uri : undefined;
 	} else if (type === 'feedgen-like') {

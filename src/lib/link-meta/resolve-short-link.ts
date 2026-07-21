@@ -16,7 +16,7 @@ export async function resolveShortLink(shortLink: string) {
 			logger.error('Failed to resolve short link', { status: res.status });
 			return shortLink;
 		}
-		const json = (await res.json()) as { url: string };
+		const json: { url: string } = await res.json();
 		return json.url;
 	} catch (e: unknown) {
 		logger.error('Failed to resolve short link', { safeMessage: e });

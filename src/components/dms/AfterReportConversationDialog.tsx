@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
@@ -19,7 +20,7 @@ import { useRouter } from '#/routes';
 
 type ReportDialogParams = {
 	convoId: string;
-	did: string;
+	did: Did;
 };
 
 /** The follow-up actions offered after a report; each maps to a checkbox in {@link DoneStep}. */

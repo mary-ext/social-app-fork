@@ -5,7 +5,6 @@ import {
 	type KeyboardEvent,
 	type MouseEvent,
 	type PointerEvent,
-	type ReactElement,
 	type ReactNode,
 	type Ref,
 	useRef,
@@ -57,8 +56,8 @@ const onMouseDown = (e: MouseEvent<HTMLElement>) => {
 };
 
 const onAuxClick = (e: MouseEvent<HTMLElement>) => {
-	const target = e.target as HTMLElement;
-	if (e.button !== 1 || target.closest('a')) {
+	const target = e.target;
+	if (e.button !== 1 || !(target instanceof Element) || target.closest('a')) {
 		return;
 	}
 	target.dispatchEvent(new MouseEvent('click', { bubbles: true, metaKey: true }));
@@ -84,7 +83,7 @@ export function BlockLink({
 	const navigateToPath = useNavigateToPath();
 	// where the pointer last went down within the row; read back on click to gate navigation on the press
 	// origin rather than the release target
-	const pressOriginRef = useRef<HTMLElement | null>(null);
+	const pressOriginRef = useRef<Element | null>(null);
 
 	if (import.meta.env.DEV && (!to.startsWith('/') || to.startsWith('//'))) {
 		throw new Error(
@@ -106,13 +105,13 @@ export function BlockLink({
 	// record where the pointer went down so onClick can consult the press origin. capture phase so a child
 	// can't stop it from reaching us first
 	const onPointerDownCapture = (e: PointerEvent<HTMLElement>) => {
-		pressOriginRef.current = e.target as HTMLElement;
+		pressOriginRef.current = e.target instanceof Element ? e.target : null;
 	};
 
 	const onClick = (e: MouseEvent<HTMLElement>) => {
-		const target = e.target as HTMLElement;
+		const target = e.target;
 		// a portalled popup's click bubbles up the component tree but its DOM node lives elsewhere
-		if (!e.currentTarget.contains(target)) {
+		if (!(target instanceof Element) || !e.currentTarget.contains(target)) {
 			return;
 		}
 		// the browser fires `click` on the nearest common ancestor of the press and release nodes, so a drag
@@ -143,11 +142,11 @@ export function BlockLink({
 		}
 	};
 
-	if (!isValidElement(children)) {
+	if (!isValidElement<BlockLinkChildProps>(children)) {
 		throw new Error('BlockLink children must be a single React element');
 	}
 
-	const node = children as ReactElement<BlockLinkChildProps>;
+	const node = children;
 
 	// oxlint-disable-next-line react/react-compiler -- RC doesn't know this is meant to be a `ref` prop
 	return cloneElement(node, {

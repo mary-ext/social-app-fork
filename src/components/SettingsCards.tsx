@@ -184,7 +184,7 @@ export function LinkRowRaw({
 			href={href}
 			aria-label={label}
 			className={clsx(styles.rowInteractive, className)}
-			// useLink resolves navigation off a DOM-shaped MouseEvent; the RN type is nominal only here
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `useLink` only reads DOM mouse event fields
 			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
 		>
 			{children}
@@ -363,12 +363,7 @@ export function SelectRow<T extends string>({
 }) {
 	const selected = items.find((item) => item.value === value);
 	return (
-		<Select.Root
-			items={items}
-			value={value}
-			disabled={disabled || loading}
-			onValueChange={(next) => onValueChange(next as T)}
-		>
+		<Select.Root items={items} value={value} disabled={disabled || loading} onValueChange={onValueChange}>
 			<Select.Trigger
 				render={
 					<button

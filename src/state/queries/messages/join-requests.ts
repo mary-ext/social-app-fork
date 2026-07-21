@@ -37,12 +37,13 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
 	const { chat } = useClients();
 
 	return useMutation({
-		mutationFn: async ({ member }: { member: string }) => {
+		mutationFn: async ({ member }: { member: Did }) => {
 			if (!convoId) throw new Error('No convoId provided');
 			if (!chat) throw new Error('Not signed in');
 			const endpoint =
 				action === 'approve' ? 'chat.bsky.group.approveJoinRequest' : 'chat.bsky.group.rejectJoinRequest';
-			const data = await ok(chat.post(endpoint, { input: { convoId, member: member as Did } }));
+			const data = await ok(chat.post(endpoint, { input: { convoId, member } }));
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the conditional type can't follow the runtime branch that picked `endpoint`
 			return data as JoinRequestOutput<A>;
 		},
 		onMutate: ({ member }) => {

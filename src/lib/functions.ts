@@ -104,3 +104,17 @@ export function isPlainObject(o: unknown): o is PlainObject {
 function hasObjectPrototype(o: unknown): o is PlainObject {
 	return Object.prototype.toString.call(o) === '[object Object]';
 }
+
+/**
+ * `Object.keys` that keeps the key type.
+ *
+ * only call this on objects you own — a local literal or a fixed token map — where no wider value can
+ * structurally carry extra keys.
+ *
+ * @param obj the object to read keys from
+ * @returns the object's own enumerable keys
+ */
+export function typedKeys<T extends object>(obj: T): (keyof T)[] {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above
+	return Object.keys(obj) as (keyof T)[];
+}

@@ -44,7 +44,8 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
 		style.fontFamily += `, ${WEB_FONT_FAMILIES}`;
 		style.fontVariant = (style.fontVariant || []).concat(
 			'no-contextual',
-			'unicode' as FontVariant, // web supports 'unicode' as a valid value for fontVariant
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- web-only `font-variant` value missing from RN's union
+			'unicode' as FontVariant,
 		);
 	} else {
 		style.fontFamily = style.fontFamily || WEB_FONT_FAMILIES;

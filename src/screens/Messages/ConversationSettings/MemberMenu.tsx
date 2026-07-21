@@ -2,6 +2,8 @@ import type { ReactElement } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
+import { isAbortError } from '#/lib/strings/errors';
+
 import type { Shadow } from '#/state/cache/types';
 import { useGetConvoAvailabilityQuery } from '#/state/queries/messages/get-convo-availability';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
@@ -63,10 +65,9 @@ export function MemberMenu({
 				await queueUnblock();
 				Toast.show(m['common.block.unblockedToast']());
 			} catch (err) {
-				const e = err as Error;
-				if (e?.name !== 'AbortError') {
-					logger.error('Failed to unblock account', { message: e });
-					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
+				if (!isAbortError(err)) {
+					logger.error('Failed to unblock account', { message: err });
+					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 						type: 'error',
 					});
 				}
@@ -76,10 +77,9 @@ export function MemberMenu({
 				await queueBlock();
 				Toast.show(m['common.block.blockedToast']());
 			} catch (err) {
-				const e = err as Error;
-				if (e?.name !== 'AbortError') {
-					logger.error('Failed to block account', { message: e });
-					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
+				if (!isAbortError(err)) {
+					logger.error('Failed to block account', { message: err });
+					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 						type: 'error',
 					});
 				}

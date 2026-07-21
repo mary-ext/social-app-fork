@@ -13,6 +13,7 @@ export const atoms = {
 	 * Positioning
 	 */
 	fixed: {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- web-only CSS value the RNW renderer forwards
 		position: 'fixed' as ViewStyle['position'],
 	},
 	absolute: {
@@ -25,6 +26,7 @@ export const atoms = {
 		position: 'static',
 	},
 	sticky: {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- web-only CSS value the RNW renderer forwards
 		position: 'sticky' as ViewStyle['position'],
 	},
 	inset_0: {
@@ -188,6 +190,7 @@ export const atoms = {
 		flexWrap: 'nowrap',
 	},
 	flex_0: {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- RN types `flex` as a number; RNW takes the CSS shorthand
 		flex: '0 0 auto' as unknown as ViewStyle['flex'],
 	},
 	flex_1: {
@@ -1038,9 +1041,11 @@ export const atoms = {
 	contents: {
 		display: 'contents',
 	},
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- RN only knows `flex`/`none`; RNW forwards any CSS display
 	inline: {
 		display: 'inline',
 	} as unknown as Pick<ViewStyle, 'display'>,
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- RN only knows `flex`/`none`; RNW forwards any CSS display
 	block: {
 		display: 'block',
 	} as unknown as Pick<ViewStyle, 'display'>,

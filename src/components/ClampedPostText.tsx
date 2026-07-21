@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import type { Handle } from '@atcute/lexicons';
+
 import { MAX_POST_LINES } from '#/lib/constants';
 import { countLines } from '#/lib/strings/helpers';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -11,7 +13,7 @@ import { m } from '#/paraglide/messages';
 import * as css from './ClampedPostText.css';
 
 /** post rich text that clamps to {@link MAX_POST_LINES} and reveals the rest behind a show-more button */
-export function ClampedPostText({ authorHandle, richText }: { authorHandle: string; richText: Richtext }) {
+export function ClampedPostText({ authorHandle, richText }: { authorHandle: Handle; richText: Richtext }) {
 	const [limitLines, setLimitLines] = useState(() => countLines(richText.text) >= MAX_POST_LINES);
 
 	// a flex wrapper around RichText for spacing, not a text leaf — the *Text-returns-<Text> rule doesn't apply

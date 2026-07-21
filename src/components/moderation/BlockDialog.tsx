@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -192,7 +193,7 @@ function MutualGroupChat({
 	currentConvoId?: string;
 	onOptimisticallyRemoveConvo: (convoId: string) => void;
 	onRestoreConvo: (convoId: string) => void;
-	profileDid: string;
+	profileDid: Did;
 	view: ChatBskyConvoDefs.ConvoView;
 }) {
 	const { currentAccount } = useSession();

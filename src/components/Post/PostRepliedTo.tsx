@@ -1,4 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
@@ -26,7 +27,7 @@ export function PostRepliedTo({
 	isParentNotFound,
 	className,
 }: {
-	parentAuthor: string | AnyProfileView | undefined;
+	parentAuthor: Did | AnyProfileView | undefined;
 	isParentBlocked?: boolean;
 	isParentNotFound?: boolean;
 	/** Spacing escape hatch for the row's host; callers own the rhythm around it. */
@@ -73,7 +74,7 @@ export function PostRepliedTo({
  * the replied-to author's handle as an inline profile link wrapped in a hover card, falling back to a shimmer
  * while loading and to plain text on error
  */
-function ParentAuthorName({ did }: { did: string }) {
+function ParentAuthorName({ did }: { did: Did }) {
 	// a feed of replies mounts many of these at once, so coalesce the author fetches into one request.
 	const { data: profile, isError } = useProfileQuery({ batch: true, did, staleTime: STALE.INFINITY });
 

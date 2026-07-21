@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { type GestureResponderEvent, Keyboard, View, type ViewStyle } from 'react-native';
+import { type GestureResponderEvent, Keyboard, View } from 'react-native';
 
 import { HITSLOP_30 } from '#/lib/constants';
 
@@ -17,10 +17,6 @@ import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
 import { useNavigate, useRouter } from '#/routes';
-
-const webViewStyle = (style: unknown): ViewStyle => {
-	return style as ViewStyle;
-};
 
 export function Outer({
 	children,
@@ -46,7 +42,7 @@ export function Outer({
 				a.flex_row,
 				a.align_center,
 				a.gap_sm,
-				sticky && [webViewStyle(a.sticky), { top: 0 }, a.z_10, t.atoms.bg],
+				sticky && [a.sticky, { top: 0 }, a.z_10, t.atoms.bg],
 				isWithinLeftPanel ? a.px_lg : gutters,
 				a.py_xs,
 				{ minHeight: 52 },

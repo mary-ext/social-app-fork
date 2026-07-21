@@ -19,9 +19,9 @@ import * as Layout from '#/components/web/Layout';
 import { m } from '#/paraglide/messages';
 import type { Locale } from '#/paraglide/runtime';
 
-const onChangeAppLanguage = (value: string) => {
+const onChangeAppLanguage = (value: Locale) => {
 	if (value && LOCALE !== value) {
-		setAppLanguage(value as Locale);
+		setAppLanguage(value);
 	}
 };
 

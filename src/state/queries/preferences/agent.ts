@@ -212,7 +212,7 @@ async function updatePreferences(
  * @param appLabelers the app-level labeler DIDs to seed `moderationPrefs.labelers` with.
  * @returns the derived, `@atproto`-shaped preferences.
  */
-export async function getPreferences(pds: Client, appLabelers: readonly string[]): Promise<BskyPreferences> {
+export async function getPreferences(pds: Client, appLabelers: readonly Did[]): Promise<BskyPreferences> {
 	const prefs: BskyPreferences = {
 		feedViewPrefs: {
 			home: { ...FEED_VIEW_PREF_DEFAULTS },
@@ -278,12 +278,16 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 	}
 
 	// apply the label prefs
+	// the lexicon leaves `visibility` open, but the PDS only stores the three `LabelVisibility` values,
+	// and `adjustLegacyContentLabelPref` already folded the legacy `show` into `ignore`
 	for (const pref of labelPrefs) {
 		if (pref.labelerDid) {
 			const labeler = prefs.moderationPrefs.labelers.find((candidate) => candidate.did === pref.labelerDid);
 			if (!labeler) continue;
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above
 			labeler.labels[pref.label] = pref.visibility as LabelVisibility;
 		} else {
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above
 			prefs.moderationPrefs.labels[pref.label] = pref.visibility as LabelVisibility;
 		}
 	}
@@ -430,13 +434,13 @@ export async function setContentLabelPref(
 	pds: Client,
 	key: string,
 	value: LabelVisibility,
-	labelerDid?: string,
+	labelerDid?: Did,
 ): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const labelPref: PrefOf<'app.bsky.actor.defs#contentLabelPref'> = {
 			$type: 'app.bsky.actor.defs#contentLabelPref',
 			label: key,
-			labelerDid: labelerDid as Did | undefined,
+			labelerDid,
 			visibility: value,
 		};
 
@@ -597,12 +601,12 @@ export async function removeMutedWords(pds: Client, mutedWords: AtpActorDefs.Mut
  * @param pds the PDS client.
  * @param did the labeler DID to subscribe to.
  */
-export async function addLabeler(pds: Client, did: string): Promise<void> {
+export async function addLabeler(pds: Client, did: Did): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isLabelersPref)?.labelers ?? [];
 		const next: PrefOf<'app.bsky.actor.defs#labelersPref'> = {
 			$type: 'app.bsky.actor.defs#labelersPref',
-			labelers: [...existing.filter((labeler) => labeler.did !== did), { did: did as Did }],
+			labelers: [...existing.filter((labeler) => labeler.did !== did), { did }],
 		};
 		return upsertPref(prefs, isLabelersPref, next);
 	});
@@ -614,7 +618,7 @@ export async function addLabeler(pds: Client, did: string): Promise<void> {
  * @param pds the PDS client.
  * @param did the labeler DID to unsubscribe from.
  */
-export async function removeLabeler(pds: Client, did: string): Promise<void> {
+export async function removeLabeler(pds: Client, did: Did): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isLabelersPref)?.labelers ?? [];
 		const next: PrefOf<'app.bsky.actor.defs#labelersPref'> = {

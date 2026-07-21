@@ -6,7 +6,7 @@ import {
 	ModerationCauseType,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import type { $type } from '@atcute/lexicons';
+import type { $type, Did } from '@atcute/lexicons';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
@@ -59,8 +59,9 @@ export function canBeAddedToGroup(profile: AnyProfileView) {
  */
 export function resolveAllowGroupInvites(
 	chat: { allowIncoming?: string; allowGroupInvites?: string } | undefined,
-): 'all' | 'none' | 'following' {
-	return (chat?.allowGroupInvites ?? chat?.allowIncoming ?? 'following') as 'all' | 'none' | 'following';
+): 'all' | 'following' | 'none' {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the lexicon leaves `allow*` open; we only read and write these three
+	return (chat?.allowGroupInvites ?? chat?.allowIncoming ?? 'following') as 'all' | 'following' | 'none';
 }
 
 export function localDateString(date: Date) {
@@ -200,9 +201,8 @@ export function parseConvoView(
 		for (const member of convoView.members) {
 			if (member.kind?.$type === 'chat.bsky.actor.defs#groupConvoMember') {
 				if (member.kind.role === 'owner') {
-					// have to do a type assertion here
-					// this works: {...member, kind: member.kind}
-					// however that's creating a new object for no good reason
+					// narrowing `member.kind` doesn't re-type `member`, and respreading it would allocate for nothing
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the check above pins `member.kind`
 					owner = member as GroupConvoMember;
 				}
 			} else {
@@ -216,6 +216,7 @@ export function parseConvoView(
 			kind: 'group',
 			details: convoView.kind,
 			primaryMember: owner,
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the loop above bails unless every member is a `groupConvoMember`
 			members: convoView.members as Array<GroupConvoMember>,
 		};
 	} else if (convoView.kind?.$type === 'chat.bsky.convo.defs#directConvo') {
@@ -230,7 +231,9 @@ export function parseConvoView(
 			view: convoView,
 			kind: 'direct',
 			details: convoView.kind,
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a `directConvo` only holds `directConvoMember` entries
 			primaryMember: otherUser as DirectConvoMember,
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a `directConvo` only holds `directConvoMember` entries
 			members: convoView.members as Array<DirectConvoMember>,
 		};
 	} else {
@@ -240,7 +243,7 @@ export function parseConvoView(
 }
 
 export type ReportSubject =
-	| { convoId: string; did: string }
+	| { convoId: string; did: Did }
 	| { convoId: string; message: ChatBskyConvoDefs.MessageView; view: 'convo' };
 
 /**
@@ -253,7 +256,7 @@ export type ReportSubject =
  */
 export function getConvoReportSubject(
 	convo: ConvoWithDetails,
-	ownDid: string | undefined,
+	ownDid: Did | undefined,
 ): ReportSubject | null {
 	if (convo.kind === 'group') {
 		if (!convo.primaryMember) {

@@ -1,32 +1,22 @@
-import type { CSSProperties, SVGProps } from 'react';
-import type { TextProps } from 'react-native';
+import type { SVGProps } from 'react';
 
-import { flatten, useTheme } from '#/alf';
+import { useTheme } from '#/alf';
 
 const ratio = 57 / 64;
 
 type Props = {
 	fill?: string;
-	style?: TextProps['style'];
-} & Omit<SVGProps<SVGSVGElement>, 'fill' | 'style'>;
+} & Omit<SVGProps<SVGSVGElement>, 'fill'>;
 
 export function Logo(props: Props) {
 	const t = useTheme();
 	const { fill, style, ...rest } = props;
 	const gradient = fill === 'sky';
-	const styles = flatten(style);
-	const _fill = gradient
-		? 'url(#sky)'
-		: fill || (styles?.color as string | undefined) || t.palette.primary_500;
+	const _fill = gradient ? 'url(#sky)' : fill || style?.color || t.palette.primary_500;
 	const size = parseInt(String(rest.width || 32), 10);
 
 	return (
-		<svg
-			fill="none"
-			viewBox="0 0 64 57"
-			{...rest}
-			style={flatten([{ width: size, height: size * ratio }, styles]) as CSSProperties}
-		>
+		<svg fill="none" viewBox="0 0 64 57" {...rest} style={{ width: size, height: size * ratio, ...style }}>
 			{gradient && (
 				<defs>
 					<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">

@@ -13,7 +13,7 @@ import type { $type, Did } from '@atcute/lexicons';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { networkRetry } from '#/lib/async/retry';
-import { isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
+import { errorMessage, isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
 
 import {
 	isProfileShadowApplied,
@@ -44,7 +44,7 @@ import type { MessagesEventBusError } from '#/state/messages/events/types';
 
 import { Logger } from '#/logger';
 
-import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
+import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 
 const logger = Logger.create(Logger.Context.ConversationAgent);
 
@@ -617,18 +617,17 @@ export class Convo {
 			} else {
 				this.dispatch({ event: ConvoDispatchEvent.Ready });
 			}
-		} catch (err) {
-			const e = err as Error;
+		} catch (e) {
 			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
 				logger.error('setup failed', {
-					safeMessage: e.message,
+					safeMessage: errorMessage(e),
 				});
 			}
 
 			this.dispatch({
 				event: ConvoDispatchEvent.Error,
 				payload: {
-					exception: e,
+					exception: e instanceof Error ? e : new Error(String(e)),
 					code: ConvoErrorCode.InitFailed,
 					retry: () => {
 						this.reset();
@@ -714,11 +713,10 @@ export class Convo {
 			const { convo } = await this.fetchConvo();
 			// throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
 			this.setConvo(convo);
-		} catch (err) {
-			const e = err as Error;
+		} catch (e) {
 			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
 				logger.error(`failed to refresh convo`, {
-					safeMessage: e.message,
+					safeMessage: errorMessage(e),
 				});
 			}
 		}
@@ -814,11 +812,10 @@ export class Convo {
 					this.pastMessages.set(message.id, message);
 				}
 			}
-		} catch (err) {
-			const e = err as Error;
+		} catch (e) {
 			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
 				logger.error('failed to fetch message history', {
-					safeMessage: e.message,
+					safeMessage: errorMessage(e),
 				});
 			}
 
@@ -1052,7 +1049,7 @@ export class Convo {
 		this.commit();
 	}
 
-	updateGroupMembers(members: GroupConvoMember[], memberCount: number) {
+	updateGroupMembers(members: ChatBskyConvoDefs.ConvoView['members'], memberCount: number) {
 		if (this.convo?.kind !== 'group') {
 			throw new Error('updateGroupMembers can only be called on group convo');
 		}
@@ -1139,14 +1136,13 @@ export class Convo {
 
 			// continue queue processing
 			await this.processPendingMessages();
-		} catch (err) {
-			const e = err as Error;
+		} catch (e) {
 			this.handleSendMessageFailure(e);
 			this.isProcessingPendingMessages = false;
 		}
 	}
 
-	private handleSendMessageFailure(e: Error | ClientResponseError) {
+	private handleSendMessageFailure(e: unknown) {
 		if (e instanceof ClientResponseError) {
 			if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
 				this.pendingMessageFailure = 'recoverable';
@@ -1188,7 +1184,7 @@ export class Convo {
 
 			if (!isErrorMaybeAppPasswordPermissions(e)) {
 				logger.error(`handleSendMessageFailure received unknown error`, {
-					safeMessage: e.message,
+					safeMessage: errorMessage(e),
 				});
 			}
 		}
@@ -1238,8 +1234,7 @@ export class Convo {
 			this.commit();
 
 			logger.debug(`sent ${this.pendingMessages.size} pending messages`, {});
-		} catch (err) {
-			const e = err as Error;
+		} catch (e) {
 			this.handleSendMessageFailure(e);
 		}
 	}
@@ -1258,11 +1253,10 @@ export class Convo {
 					}),
 				);
 			});
-		} catch (err) {
-			const e = err as Error;
+		} catch (e) {
 			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
 				logger.error(`failed to delete message`, {
-					safeMessage: e.message,
+					safeMessage: errorMessage(e),
 				});
 			}
 			this.deletedMessages.delete(messageId);

@@ -19,6 +19,7 @@ function getInitialFeed(did?: string): FeedDescriptor | null {
 		const feedFromUrl = params.get('feed');
 		if (feedFromUrl) {
 			// If explicitly booted from a link like /?feed=..., prefer that.
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- arbitrary user input; `Home` falls back when it matches no feed
 			return feedFromUrl as FeedDescriptor;
 		}
 	}
@@ -26,6 +27,7 @@ function getInitialFeed(did?: string): FeedDescriptor | null {
 	const feedFromSession = sessionStorage.getItem('lastSelectedHomeFeed');
 	if (feedFromSession) {
 		// Fall back to a previously chosen feed for this browser tab.
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `saveState` only writes a `FeedDescriptor` under this key
 		return feedFromSession as FeedDescriptor;
 	}
 
@@ -33,7 +35,7 @@ function getInitialFeed(did?: string): FeedDescriptor | null {
 		const feedFromStorage = account.get([did, 'lastSelectedHomeFeed']);
 		if (feedFromStorage) {
 			// Fall back to the last chosen one across all tabs.
-			return feedFromStorage as FeedDescriptor;
+			return feedFromStorage;
 		}
 	}
 

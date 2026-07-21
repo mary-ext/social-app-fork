@@ -11,12 +11,14 @@ import type {
 	AppBskyFeedPost,
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { $type, Blob as AtpBlob, Did, GenericUri, Handle, ResourceUri } from '@atcute/lexicons';
+import type { $type, Blob as AtpBlob, Did, GenericUri, ResourceUri } from '@atcute/lexicons';
+import { isHandle } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import { isNetworkError } from '#/lib/strings/errors';
+import { getPostRecord } from '#/lib/api/record-views';
+import { errorMessage, isNetworkError } from '#/lib/strings/errors';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
@@ -45,7 +47,7 @@ export interface PostClients {
 
 interface PostOpts {
 	thread: ThreadDraft;
-	replyTo?: string;
+	replyTo?: ResourceUri;
 	onStateChange?: (state: string) => void;
 	langs?: string[];
 }
@@ -67,7 +69,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 	}
 
 	const writes: ComAtprotoRepoApplyWrites.$input['writes'] = [];
-	const uris: string[] = [];
+	const uris: ResourceUri[] = [];
 
 	const now = new Date();
 
@@ -168,7 +170,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 		);
 	} catch (e) {
 		logger.error(`Failed to create post`, {
-			safeMessage: e instanceof Error ? e.message : String(e),
+			safeMessage: errorMessage(e),
 		});
 		if (isNetworkError(e)) {
 			throw new Error(m['lib.upload.postFailed'](), { cause: e });
@@ -192,10 +194,13 @@ async function resolveRT(appview: Client, text: string) {
 	// `detectFacets` only emits mention facets for handles that resolve, so there are no invalid
 	// mentions left to strip.
 	const rt = await detectFacets(trimmedText, async (handle) => {
+		if (!isHandle(handle)) {
+			return undefined;
+		}
 		try {
 			const res = await ok(
 				appview.get('com.atproto.identity.resolveHandle', {
-					params: { handle: handle as Handle },
+					params: { handle },
 				}),
 			);
 			return res.did;
@@ -213,10 +218,10 @@ export class ReplyDeletedError extends Error {
 	}
 }
 
-async function resolveReply(appview: Client, replyTo: string): Promise<AppBskyFeedPost.Main['reply']> {
+async function resolveReply(appview: Client, replyTo: ResourceUri): Promise<AppBskyFeedPost.Main['reply']> {
 	const data = await ok(
 		appview.get('app.bsky.feed.getPosts', {
-			params: { uris: [replyTo as ResourceUri] },
+			params: { uris: [replyTo] },
 		}),
 	);
 	const parentPost = data.posts[0];
@@ -230,7 +235,7 @@ async function resolveReply(appview: Client, replyTo: string): Promise<AppBskyFe
 	};
 	let rootRef = parentRef;
 
-	const parentRecord = parentPost.record as AppBskyFeedPost.Main;
+	const parentRecord = getPostRecord(parentPost);
 	if (parentRecord.reply) {
 		rootRef = parentRecord.reply.root;
 	}
@@ -391,6 +396,7 @@ async function resolveMedia(
 				description: createGIFDescription(resolvedGif.title, gifDraft.alt),
 				thumb: blob,
 				title: resolvedGif.title,
+				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `resolveGif` builds this from the provider's absolute url
 				uri: resolvedGif.uri as GenericUri,
 			},
 		};
@@ -410,6 +416,7 @@ async function resolveMedia(
 					description: resolvedLink.description,
 					thumb: blob,
 					title: resolvedLink.title,
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- link cards are only offered for `http(s)://` autolinks
 					uri: resolvedLink.uri as GenericUri,
 				},
 			};

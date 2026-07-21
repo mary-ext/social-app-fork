@@ -246,6 +246,7 @@ function ComposerContainer({ children }: { children: React.ReactNode }) {
 					a.pb_lg,
 					// prevent overlap with the scrollbar, which looks ugly
 					a.pr_sm, // sm + sm = lg
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `DimensionValue` has no `calc()` case; RNW forwards it to the style attribute
 					{ width: `calc(100% - ${tokens.space.sm}px)` as '100%' },
 				]}
 				key={t.name} // android does not update when you change the colors. sigh.

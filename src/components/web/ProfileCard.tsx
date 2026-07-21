@@ -16,6 +16,7 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { isAbortError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
@@ -419,7 +420,7 @@ function FollowButtonInner({
 			await queueFollow();
 			Toast.show(m['common.follow.a11y.following']({ name: name() }));
 		} catch (err) {
-			if (!(err instanceof Error && err.name === 'AbortError')) {
+			if (!isAbortError(err)) {
 				Toast.show(m['common.error.generic'](), { type: 'error' });
 			}
 		}
@@ -431,7 +432,7 @@ function FollowButtonInner({
 			await queueUnfollow();
 			Toast.show(m['common.follow.noLongerFollowing']({ name: name() }));
 		} catch (err) {
-			if (!(err instanceof Error && err.name === 'AbortError')) {
+			if (!isAbortError(err)) {
 				Toast.show(m['common.error.generic'](), { type: 'error' });
 			}
 		}

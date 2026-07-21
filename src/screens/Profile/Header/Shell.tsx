@@ -1,4 +1,3 @@
-import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
@@ -128,19 +127,11 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} />
 				))}
 			{live.isActive &&
+				live.embed?.$type === 'app.bsky.embed.external#view' &&
 				(isMe ? (
-					<EditLiveDialog
-						embed={live.embed as AppBskyEmbedExternal.View}
-						handle={liveStatusHandle}
-						status={live}
-					/>
+					<EditLiveDialog embed={live.embed} handle={liveStatusHandle} status={live} />
 				) : (
-					<LiveStatusDialog
-						embed={live.embed as AppBskyEmbedExternal.View}
-						handle={liveStatusHandle}
-						status={live}
-						profile={profile}
-					/>
+					<LiveStatusDialog embed={live.embed} handle={liveStatusHandle} status={live} profile={profile} />
 				))}
 		</div>
 	);

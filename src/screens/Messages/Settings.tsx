@@ -19,6 +19,18 @@ import { m } from '#/paraglide/messages';
 
 type AllowIncoming = 'all' | 'following' | 'none';
 
+// the lexicon leaves `allowIncoming` open-ended; unknown values fall back to the default
+const resolveAllowIncoming = (allowIncoming: string | undefined): AllowIncoming => {
+	switch (allowIncoming) {
+		case 'all':
+		case 'following':
+		case 'none':
+			return allowIncoming;
+		default:
+			return 'following';
+	}
+};
+
 export function MessagesSettingsScreen() {
 	useTitle(m['common.chat.settingsLabel']());
 	const { currentAccount } = useSession();
@@ -39,7 +51,7 @@ export function MessagesSettingsScreen() {
 		},
 	});
 
-	const allowIncoming = (profile?.associated?.chat?.allowIncoming as AllowIncoming) ?? 'following';
+	const allowIncoming = resolveAllowIncoming(profile?.associated?.chat?.allowIncoming);
 	const allowGroupInvites = resolveAllowGroupInvites(profile?.associated?.chat);
 
 	return (

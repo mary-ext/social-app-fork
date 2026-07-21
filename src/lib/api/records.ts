@@ -106,7 +106,8 @@ export const getRecord = async <K extends RecordType>(
 		}),
 	);
 
-	return data as unknown as GetRecordOutput<InferInput<Records[K]>>;
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the requested collection pins `value`, which the wire type leaves `unknown`
+	return data as GetRecordOutput<InferInput<Records[K]>>;
 };
 
 export interface ListRecordsOptions<K extends RecordType> {
@@ -145,5 +146,6 @@ export const listRecords = async <K extends RecordType>(
 		}),
 	);
 
-	return data as unknown as ListRecordsOutput<InferInput<Records[K]>>;
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the requested collection pins each `value`, which the wire type leaves `unknown`
+	return data as ListRecordsOutput<InferInput<Records[K]>>;
 };

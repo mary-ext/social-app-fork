@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import type { AppBskyActorDefs, AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { differenceInMinutes } from 'date-fns';
 
@@ -21,6 +21,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 
 import {
 	displayDuration,
+	getValidLiveStatusRecord,
 	useLiveLinkMetaQuery,
 	useRemoveLiveStatusMutation,
 	useUpsertLiveStatusMutation,
@@ -74,7 +75,7 @@ function DialogInner({
 		error: linkMetaError,
 	} = useLiveLinkMetaQuery(debouncedUrl);
 
-	const record = useMemo(() => status.record as AppBskyActorStatus.Main, [status]);
+	const record = useMemo(() => getValidLiveStatusRecord(status.record), [status]);
 
 	const {
 		mutate: goLive,

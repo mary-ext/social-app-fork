@@ -19,6 +19,7 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { isAbortError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
@@ -379,9 +380,8 @@ export function FollowButtonInner({
 			);
 			onPressProp?.(e);
 			onFollow?.();
-		} catch (error) {
-			const err = error as Error;
-			if (err?.name !== 'AbortError') {
+		} catch (err) {
+			if (!isAbortError(err)) {
 				Toast.show(m['common.error.generic'](), {
 					type: 'error',
 				});
@@ -403,9 +403,8 @@ export function FollowButtonInner({
 				}),
 			);
 			onPressProp?.(e);
-		} catch (error) {
-			const err = error as Error;
-			if (err?.name !== 'AbortError') {
+		} catch (err) {
+			if (!isAbortError(err)) {
 				Toast.show(m['common.error.generic'](), {
 					type: 'error',
 				});

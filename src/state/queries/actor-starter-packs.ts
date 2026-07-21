@@ -1,5 +1,5 @@
 import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
@@ -10,7 +10,7 @@ export const RQKEY_WITH_MEMBERSHIP_ROOT = 'actor-starter-packs-with-membership';
 export const RQKEY = (did?: string) => [RQKEY_ROOT, did];
 export const RQKEY_WITH_MEMBERSHIP = (did?: string) => [RQKEY_WITH_MEMBERSHIP_ROOT, did];
 
-export function useActorStarterPacksQuery({ did, enabled = true }: { did?: string; enabled?: boolean }) {
+export function useActorStarterPacksQuery({ did, enabled = true }: { did?: Did; enabled?: boolean }) {
 	const { appview } = useClients();
 
 	return useInfiniteQuery({
@@ -18,7 +18,7 @@ export function useActorStarterPacksQuery({ did, enabled = true }: { did?: strin
 		queryFn: ({ pageParam }: { pageParam?: string }) =>
 			ok(
 				appview.get('app.bsky.graph.getActorStarterPacks', {
-					params: { actor: did! as ActorIdentifier, cursor: pageParam, limit: 10 },
+					params: { actor: did!, cursor: pageParam, limit: 10 },
 				}),
 			),
 		enabled: Boolean(did) && enabled,
@@ -31,7 +31,7 @@ export function useActorStarterPacksWithMembershipsQuery({
 	did,
 	enabled = true,
 }: {
-	did?: string;
+	did?: Did;
 	enabled?: boolean;
 }) {
 	const { appview } = useClients();
@@ -41,7 +41,7 @@ export function useActorStarterPacksWithMembershipsQuery({
 		queryFn: ({ pageParam }: { pageParam?: string }) =>
 			ok(
 				appview.get('app.bsky.graph.getStarterPacksWithMembership', {
-					params: { actor: did! as ActorIdentifier, cursor: pageParam, limit: 10 },
+					params: { actor: did!, cursor: pageParam, limit: 10 },
 				}),
 			),
 		enabled: Boolean(did) && enabled,

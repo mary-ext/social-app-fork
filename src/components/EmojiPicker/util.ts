@@ -1,6 +1,6 @@
 import type { Emoji as DataEmoji } from '@emoji-mart/data';
 
-import type { SkinTone } from '#/storage/hooks/emoji';
+import type { SkinTone } from '#/storage/schema';
 
 import type { Emoji } from './types';
 

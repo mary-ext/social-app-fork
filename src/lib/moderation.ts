@@ -86,7 +86,7 @@ export function lookupLabelValueDefinition(
 }
 
 export function isAppLabeler(
-	labeler: string | AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed,
+	labeler: Did | AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed,
 ): boolean {
 	if (typeof labeler === 'string') {
 		return getAppLabelers().includes(labeler);
@@ -95,14 +95,14 @@ export function isAppLabeler(
 }
 
 export function isLabelerSubscribed(
-	labeler: string | AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed,
+	labeler: AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed | Did,
 	modOpts: ModerationOptions,
 ) {
-	labeler = typeof labeler === 'string' ? labeler : labeler.creator.did;
-	if (isAppLabeler(labeler)) {
+	const did = typeof labeler === 'string' ? labeler : labeler.creator.did;
+	if (isAppLabeler(did)) {
 		return true;
 	}
-	return Boolean(modOpts.prefs.prefsByLabelers?.[labeler as Did]);
+	return Boolean(modOpts.prefs.prefsByLabelers?.[did]);
 }
 
 export type Subject =

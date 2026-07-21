@@ -1,7 +1,7 @@
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import type { Did, ResourceUri } from '@atcute/lexicons';
+import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -63,15 +63,15 @@ export async function getThreadgateRecord({
 }): Promise<AppBskyFeedThreadgate.Main | null> {
 	const urip = parseResourceUri(postUri);
 
-	let repo: string = urip.repo;
-	if (!repo.startsWith('did:')) {
-		const resolved = await ok(
-			appview.get('com.atproto.identity.resolveHandle', {
-				params: { handle: repo as Handle },
-			}),
-		);
-		repo = resolved.did;
-	}
+	const repo = isDid(urip.repo)
+		? urip.repo
+		: (
+				await ok(
+					appview.get('com.atproto.identity.resolveHandle', {
+						params: { handle: urip.repo },
+					}),
+				)
+			).did;
 
 	try {
 		const data = await retry(
@@ -90,7 +90,7 @@ export async function getThreadgateRecord({
 			() =>
 				getRecord(pds, {
 					collection: 'app.bsky.feed.threadgate',
-					repo: repo as Did,
+					repo,
 					rkey: urip.rkey!,
 				}),
 		);

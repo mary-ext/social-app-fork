@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs, AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import type { $type, GenericUri } from '@atcute/lexicons';
 
@@ -80,6 +80,7 @@ export function useUpsertLiveStatusMutation(
 						$type: 'app.bsky.embed.external#external',
 						title: linkMeta.title ?? '',
 						description: linkMeta.description ?? '',
+						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `LinkMeta.url` always carries a scheme
 						uri: linkMeta.url as GenericUri,
 						thumb,
 					},
@@ -140,14 +141,17 @@ export function useUpsertLiveStatusMutation(
 					expiresAt: expiresAt.toISOString(),
 					embed:
 						record.embed && image
-							? ({
+							? {
 									$type: 'app.bsky.embed.external#view',
 									external: {
-										...record.embed.external,
 										$type: 'app.bsky.embed.external#viewExternal',
-										thumb: image,
+										description: record.embed.external.description,
+										// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the resolver hands back an absolute thumbnail url
+										thumb: image as GenericUri,
+										title: record.embed.external.title,
+										uri: record.embed.external.uri,
 									},
-								} as AppBskyActorDefs.StatusView['embed'])
+								}
 							: undefined,
 					record,
 				},

@@ -724,6 +724,13 @@ export function ButtonText({ children, style, ...rest }: ButtonTextProps) {
 	);
 }
 
+/** Pre-set icon sizes for different button sizes */
+const ICON_SIZE_SHORTHANDS: Record<ButtonSize, Exclude<SVGIconProps['size'], undefined>> = {
+	large: 'md',
+	small: 'sm',
+	tiny: 'xs',
+};
+
 export function ButtonIcon({
 	icon: Comp,
 	size,
@@ -735,14 +742,7 @@ export function ButtonIcon({
 }) {
 	const { size: buttonSize, shape: buttonShape } = useButtonContext();
 	const textStyles = useSharedButtonTextStyles();
-	/** Pre-set icon sizes for different button sizes */
-	const iconSizeShorthand =
-		size ??
-		(({
-			large: 'md',
-			small: 'sm',
-			tiny: 'xs',
-		}[buttonSize || 'small'] || 'sm') as Exclude<SVGIconProps['size'], undefined>);
+	const iconSizeShorthand = size ?? ICON_SIZE_SHORTHANDS[buttonSize || 'small'];
 
 	/*
 	 * The mid-to-large tokens intentionally diverge from icons/common.tsx (lg is 24 here, 20
@@ -816,7 +816,11 @@ export function ButtonIcon({
 					},
 				]}
 			>
-				<Comp width={iconSize} fill={textStyles.color as string} className={css.icon} />
+				<Comp
+					width={iconSize}
+					fill={typeof textStyles.color === 'string' ? textStyles.color : undefined}
+					className={css.icon}
+				/>
 			</View>
 		</View>
 	);

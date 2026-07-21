@@ -261,12 +261,10 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 			{hasSession && info.view && (
 				<ReportDialog
 					handle={reportDialogHandle}
-					subject={
-						{
-							...info.view,
-							$type: 'app.bsky.feed.defs#generatorView',
-						} as unknown as React.ComponentProps<typeof ReportDialog>['subject']
-					}
+					subject={{
+						...info.view,
+						$type: 'app.bsky.feed.defs#generatorView',
+					}}
 				/>
 			)}
 		</>

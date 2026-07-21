@@ -1,4 +1,4 @@
-import type { AnyProfileView, AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -94,13 +94,8 @@ export function PreviewableUserAvatar({
 	return (
 		<>
 			{disableHoverCard ? trigger : <ProfileHoverCard did={profile.did}>{trigger}</ProfileHoverCard>}
-			{!disableNavigation && isTouchLive && (
-				<LiveStatusDialog
-					embed={status.embed as AppBskyEmbedExternal.View}
-					handle={liveHandle}
-					profile={profile}
-					status={status}
-				/>
+			{!disableNavigation && isTouchLive && status.embed && (
+				<LiveStatusDialog embed={status.embed} handle={liveHandle} profile={profile} status={status} />
 			)}
 		</>
 	);

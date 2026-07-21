@@ -1,7 +1,5 @@
 import { useCallback, useInsertionEffect, useRef } from 'react';
 
-const noop = () => {};
-
 /**
  * returns a non-reactive version of the provided function.
  *
@@ -12,15 +10,18 @@ const noop = () => {};
 type AnyFn = (...args: never[]) => unknown;
 
 export function useNonReactiveCallback<T extends AnyFn = () => void>(fn?: T): T {
-	const ref = useRef<T>((fn ?? noop) as T);
+	const ref = useRef(fn);
 	useInsertionEffect(() => {
-		ref.current = (fn ?? noop) as T;
+		ref.current = fn;
 	}, [fn]);
-	return useCallback(
+	const stable = useCallback(
 		(...args: Parameters<T>): ReturnType<T> => {
 			const latestFn = ref.current;
-			return latestFn(...args) as ReturnType<T>;
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `T`'s constraint returns `unknown`, erasing `ReturnType<T>`
+			return latestFn?.(...args) as ReturnType<T>;
 		},
 		[ref],
-	) as unknown as T;
+	);
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- restores the caller's own `T`
+	return stable as unknown as T;
 }

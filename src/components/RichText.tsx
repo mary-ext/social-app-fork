@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
+import type { Handle } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
@@ -27,7 +28,7 @@ export type RichTextProps = Pick<
 	TextProps,
 	'align' | 'color' | 'leading' | 'numberOfLines' | 'selectable' | 'weight'
 > & {
-	authorHandle?: string;
+	authorHandle?: Handle;
 	className?: string;
 	/**
 	 * Render mentions as plain links without their profile hover card — set when RichText is itself inside a

@@ -122,8 +122,9 @@ export function usePointerHandlers({
 				el.style.userSelect = 'none';
 
 				// Blur focused element within the gallery
-				if (el.contains(document.activeElement)) {
-					(document.activeElement as HTMLElement)?.blur?.();
+				const focused = document.activeElement;
+				if (focused instanceof HTMLElement && el.contains(focused)) {
+					focused.blur();
 				}
 			}
 

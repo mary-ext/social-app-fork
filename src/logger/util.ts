@@ -1,4 +1,4 @@
-import { LogLevel, type Metadata, type Serializable } from '#/logger/types';
+import { LogLevel, type Metadata } from '#/logger/types';
 
 export const enabledLogLevels: {
 	[key in LogLevel]: LogLevel[];
@@ -10,8 +10,9 @@ export const enabledLogLevels: {
 	[LogLevel.Error]: [LogLevel.Error],
 };
 
-export function prepareMetadata(metadata: Metadata): Record<string, Serializable> {
-	const prepared: Record<string, Serializable> = {};
+// nothing narrows `Metadata` values to `Serializable`, so leave serialization to the transport
+export function prepareMetadata(metadata: Metadata): Record<string, unknown> {
+	const prepared: Record<string, unknown> = {};
 
 	for (const key of Object.keys(metadata)) {
 		let value = metadata[key];
@@ -26,7 +27,7 @@ export function prepareMetadata(metadata: Metadata): Record<string, Serializable
 		) {
 			continue;
 		}
-		prepared[key] = value as Serializable;
+		prepared[key] = value;
 	}
 
 	return prepared;

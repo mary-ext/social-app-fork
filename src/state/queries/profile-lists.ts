@@ -6,7 +6,7 @@ import {
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
@@ -20,7 +20,7 @@ type RQPageParam = string | undefined;
 export const RQKEY_ROOT = 'profile-lists';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
-export function useProfileListsQuery(did: string) {
+export function useProfileListsQuery(did: Did) {
 	const moderationOpts = useModerationOpts();
 	const enabled = Boolean(moderationOpts);
 	const { appview } = useClients();
@@ -35,7 +35,7 @@ export function useProfileListsQuery(did: string) {
 		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
 			ok(
 				appview.get('app.bsky.graph.getLists', {
-					params: { actor: did as ActorIdentifier, cursor: pageParam, limit: PAGE_SIZE },
+					params: { actor: did, cursor: pageParam, limit: PAGE_SIZE },
 				}),
 			),
 		initialPageParam: undefined,

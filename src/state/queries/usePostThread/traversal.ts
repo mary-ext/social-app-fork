@@ -1,5 +1,7 @@
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
+import { getPostRecord } from '#/lib/api/record-views';
+
 import type {
 	ApiThreadItem,
 	PostThreadParams,
@@ -7,7 +9,6 @@ import type {
 	TraversalMetadata,
 } from '#/state/queries/usePostThread/types';
 import {
-	getPostRecord,
 	getThreadPostNoUnauthenticatedUI,
 	getThreadPostUI,
 	getTraversalMetadata,
@@ -60,11 +61,17 @@ export function sortAndAnnotateThreadItems(
 			 */
 		} else if (item.depth === 0) {
 			if (item.value.$type === 'app.bsky.unspecced.defs#threadItemNoUnauthenticated') {
-				threadItems.push(views.threadPostNoUnauthenticated(item));
+				threadItems.push(
+					views.threadPostNoUnauthenticated({
+						uri: item.uri,
+						depth: item.depth,
+						value: item.value,
+					}),
+				);
 			} else if (item.value.$type === 'app.bsky.unspecced.defs#threadItemNotFound') {
-				threadItems.push(views.threadPostNotFound(item));
+				threadItems.push(views.threadPostNotFound({ uri: item.uri, depth: item.depth, value: item.value }));
 			} else if (item.value.$type === 'app.bsky.unspecced.defs#threadItemBlocked') {
-				threadItems.push(views.threadPostBlocked(item));
+				threadItems.push(views.threadPostBlocked({ uri: item.uri, depth: item.depth, value: item.value }));
 			} else if (item.value.$type === 'app.bsky.unspecced.defs#threadItemPost') {
 				const post = views.threadPost({
 					uri: item.uri,
@@ -79,7 +86,11 @@ export function sortAndAnnotateThreadItems(
 					const parent = thread[pi]!;
 
 					if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemNoUnauthenticated') {
-						const parentPost = views.threadPostNoUnauthenticated(parent);
+						const parentPost = views.threadPostNoUnauthenticated({
+							uri: parent.uri,
+							depth: parent.depth,
+							value: parent.value,
+						});
 						parentPost.ui = getThreadPostNoUnauthenticatedUI({
 							depth: parent.depth,
 							// ignore for now
@@ -90,10 +101,14 @@ export function sortAndAnnotateThreadItems(
 						// for now, break parent traversal at first no-unauthed
 						break parentTraversal;
 					} else if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemNotFound') {
-						threadItems.unshift(views.threadPostNotFound(parent));
+						threadItems.unshift(
+							views.threadPostNotFound({ uri: parent.uri, depth: parent.depth, value: parent.value }),
+						);
 						break parentTraversal;
 					} else if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemBlocked') {
-						threadItems.unshift(views.threadPostBlocked(parent));
+						threadItems.unshift(
+							views.threadPostBlocked({ uri: parent.uri, depth: parent.depth, value: parent.value }),
+						);
 						break parentTraversal;
 					} else if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemPost') {
 						threadItems.unshift(

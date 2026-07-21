@@ -1,7 +1,5 @@
 import { device, useStorage } from '#/storage';
-
-/** emoji skin tone: 1 = default/yellow, 2–6 = the five Fitzpatrick tones. */
-export type SkinTone = 1 | 2 | 3 | 4 | 5 | 6;
+import type { SkinTone } from '#/storage/schema';
 
 /** cap for the picker's recently-used list. */
 const RECENTS_LIMIT = 36;
@@ -13,7 +11,7 @@ const RECENTS_LIMIT = 36;
  */
 export function useEmojiSkinTone() {
 	const [tone = 1, setTone] = useStorage(device, ['emojiSkinTone']);
-	return [tone as SkinTone, (next: SkinTone) => setTone(next)] as const;
+	return [tone, (next: SkinTone) => setTone(next)] as const;
 }
 
 /**

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { Handle } from '@atcute/lexicons';
+import { isHandle } from '@atcute/lexicons/syntax';
 
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
@@ -212,10 +212,13 @@ function DialogInner({
 			// mentions left to strip.
 			const richText = shortenLinks(
 				await detectFacets(cleanNewlines(descriptionText.trimEnd()), async (h) => {
+					if (!isHandle(h)) {
+						return undefined;
+					}
 					try {
 						const res = await ok(
 							appview.get('com.atproto.identity.resolveHandle', {
-								params: { handle: h as Handle },
+								params: { handle: h },
 							}),
 						);
 						return res.did;

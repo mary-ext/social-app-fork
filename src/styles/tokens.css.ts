@@ -74,11 +74,13 @@ const scaled = (rem: number) => `calc(${rem}rem * ${fallbackVar(fontScale, '1')}
 
 export const fontSize = createGlobalTheme(
 	':root',
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every entry comes from `type`, so the key set is exactly its keys
 	Object.fromEntries(Object.entries(type).map(([key, { fontSize: size }]) => [key, scaled(size)])) as {
 		[K in keyof typeof type]: string;
 	},
 );
 
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every entry comes from `type`, so the key set is exactly its keys
 export const fontLeading = Object.fromEntries(
 	Object.entries(type).map(([key, { fontSize: size, lineHeight: leading }]) => [key, leading / size]),
 ) as { [K in keyof typeof type]: number };

@@ -32,7 +32,8 @@ export function Root({
 	// non-interactive icon. mousedown (not click) so focus lands before a selection can start and without a
 	// flicker; preventDefault keeps the click from moving focus off the input we're about to focus.
 	const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
-		if (event.defaultPrevented || (event.target as HTMLElement).closest(INTERACTIVE_SELECTOR)) {
+		const target = event.target;
+		if (event.defaultPrevented || !(target instanceof Element) || target.closest(INTERACTIVE_SELECTOR)) {
 			return;
 		}
 		event.preventDefault();

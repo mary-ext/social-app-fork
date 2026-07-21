@@ -83,7 +83,8 @@ export const Root = ({ children, className, onValueChange, ref, value, ...rest }
 			<BaseTabs.Root
 				ref={ref}
 				value={value}
-				onValueChange={(next) => onValueChange(next as string)}
+				// Base UI types a tab value as `any`; this wrapper only ever keys its tabs by string
+				onValueChange={(next: string) => onValueChange(next)}
 				className={clsx(styles.root, className)}
 				{...rest}
 			>
@@ -220,7 +221,11 @@ export const Tabs = <Id extends string>({
 			ref={rootRef}
 			value={active ?? ''}
 			onValueChange={(next) => {
-				onValueChange(next as Id);
+				// `Root` is keyed by plain strings; map back to the section that owns the value
+				const section = sections.find(({ id }) => id === next);
+				if (section) {
+					onValueChange(section.id);
+				}
 				unstickTabBar();
 			}}
 		>

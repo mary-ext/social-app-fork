@@ -16,7 +16,7 @@ export function useListMutualGroupsQuery({
 	enabled,
 	limit = 20,
 }: {
-	subject: string | undefined;
+	subject: Did | undefined;
 	enabled?: boolean;
 	limit?: number;
 }) {
@@ -32,7 +32,7 @@ export function useListMutualGroupsQuery({
 			if (!chat) throw new Error('Not signed in');
 			const data = await ok(
 				chat.get('chat.bsky.group.listMutualGroups', {
-					params: { subject: subject! as Did, cursor: pageParam, limit },
+					params: { subject: subject!, cursor: pageParam, limit },
 				}),
 			);
 			return data;

@@ -10,17 +10,17 @@ declare module 'react-native-web' {
 declare const _WORKLET: boolean | undefined;
 
 interface ImportMetaEnv {
-	PUBLIC_APPVIEW_PROXY_AUDIENCE: string;
-	PUBLIC_BSKY_LABELER_PROXY_AUDIENCE: string;
-	PUBLIC_CHAT_PROXY_AUDIENCE: string;
-	PUBLIC_ENV?: string;
+	PUBLIC_APPVIEW_PROXY_AUDIENCE: import('@atcute/lexicons/syntax').AtprotoAudience;
+	PUBLIC_BSKY_LABELER_PROXY_AUDIENCE: import('@atcute/lexicons/syntax').AtprotoAudience;
+	PUBLIC_CHAT_PROXY_AUDIENCE: import('@atcute/lexicons/syntax').AtprotoAudience;
+	PUBLIC_ENV: string;
 	PUBLIC_GIT_COMMIT_HASH?: string;
 	PUBLIC_LOG_DEBUG?: string;
-	PUBLIC_LOG_LEVEL?: string;
+	PUBLIC_LOG_LEVEL?: import('#/logger/types').LogLevel;
 	PUBLIC_OAUTH_CLIENT_ID?: string;
 	PUBLIC_OAUTH_REDIRECT_URI?: string;
 	PUBLIC_OAUTH_SCOPE?: string;
 	PUBLIC_SLINGSHOT_SERVICE_URL: string;
 	PUBLIC_SOURCE_CODE_URL: string;
-	PUBLIC_VIDEO_PROXY_DID: string;
+	PUBLIC_VIDEO_PROXY_DID: import('@atcute/lexicons').Did;
 }

@@ -7,7 +7,10 @@ import { atoms as baseAtoms } from '#/alf/base';
 
 type WebAtomStyle = CSSProperties & ImageStyle & TextStyle & ViewStyle;
 
+// atoms are typed as RN styles for components that still take `StyleProp`, so web-only rules have to be
+// re-branded on the way in; the RNW renderer forwards whatever CSS it is given
 const webStyle = (style: CSSProperties): WebAtomStyle => {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above
 	return style as unknown as WebAtomStyle;
 };
 

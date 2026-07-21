@@ -1,12 +1,6 @@
 import { memo, type MouseEvent, useState } from 'react';
 
-import type {
-	AnyProfileView,
-	AppBskyActorDefs,
-	AppBskyFeedDefs,
-	AppBskyFeedPost,
-	AppBskyGraphFollow,
-} from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphFollow } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -21,10 +15,12 @@ import * as TID from '@atcute/tid';
 import { Collapsible } from '@base-ui/react/collapsible';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { MAX_POST_LINES } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { isAbortError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { FeedNotification } from '#/state/queries/notifications/feed';
@@ -175,6 +171,7 @@ let NotificationFeedItem = ({
 	// Calculate if this is a follow-back notification
 	let isFollowBack = false;
 	if (item.type === 'follow' && item.notification.author.viewer?.following) {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `follow` item type fixes the collection
 		const record = item.notification.record as AppBskyGraphFollow.Main;
 		try {
 			const rkey = parseCanonicalResourceUri(item.notification.author.viewer.following).rkey;
@@ -591,7 +588,7 @@ function AuthorsList({
 						: m['view.notifications.a11y.expandUsers']()
 				}
 				onClick={(event) => {
-					const interactive = (event.target as HTMLElement).closest('a, button');
+					const interactive = event.target instanceof Element ? event.target.closest('a, button') : null;
 					if (interactive && interactive !== event.currentTarget) {
 						event.preventBaseUIHandler();
 					}
@@ -668,7 +665,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 				}),
 			);
 		} catch (err) {
-			if (!(err instanceof Error && err.name === 'AbortError')) {
+			if (!isAbortError(err)) {
 				Toast.show(m['common.error.generic'](), {
 					type: 'error',
 				});
@@ -687,7 +684,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 				}),
 			);
 		} catch (err) {
-			if (!(err instanceof Error && err.name === 'AbortError')) {
+			if (!isAbortError(err)) {
 				Toast.show(m['common.error.generic'](), {
 					type: 'error',
 				});
@@ -817,7 +814,7 @@ function AdditionalPostText({ post }: { post?: AppBskyFeedDefs.PostView }) {
 	if (!post) {
 		return null;
 	}
-	const record = post.record as AppBskyFeedPost.Main;
+	const record = getPostRecord(post);
 	const text = record.text;
 
 	return (

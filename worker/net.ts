@@ -100,13 +100,13 @@ export const readCapped = async (response: Response, options: ReadCappedOptions)
 		throw new InvalidRequestError({ message: 'upstream resource too large' });
 	}
 
-	const body = response.body;
+	// `Response.body` is `ReadableStream<any>`; pin the element type so the reader yields `Uint8Array`
+	const body: ReadableStream<Uint8Array> | null = response.body;
 	if (!body) {
 		return new Uint8Array(0);
 	}
 
-	// Response.body is typed as ReadableStream<any>; assert the byte-stream element type
-	const reader = body.getReader() as ReadableStreamDefaultReader<Uint8Array>;
+	const reader = body.getReader();
 	const chunks: Uint8Array[] = [];
 	let total = 0;
 	try {

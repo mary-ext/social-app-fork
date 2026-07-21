@@ -1,4 +1,5 @@
 import type { LabelPreference } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -98,7 +99,7 @@ export function usePreferencesSetContentLabelMutation() {
 	return useMutation<
 		void,
 		unknown,
-		{ label: string; visibility: LabelPreference; labelerDid: string | undefined }
+		{ label: string; visibility: LabelPreference; labelerDid: Did | undefined }
 	>({
 		mutationFn: async ({ label, visibility, labelerDid }) => {
 			await setContentLabelPref(pds!, label, visibility, labelerDid);

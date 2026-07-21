@@ -2,6 +2,7 @@ import { type ReactNode, useMemo, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
@@ -180,7 +181,7 @@ function DialogInner({
 		return !isFetching && items.length === 0 ? <Empty message={m['common.search.empty']()} /> : null;
 	})();
 
-	const onSelectProfile = (did: string) => {
+	const onSelectProfile = (did: Did) => {
 		handle.close();
 		createChat([did]);
 	};
@@ -286,7 +287,7 @@ function DefaultProfileCard({
 }: {
 	item: ProfileItem;
 	moderationOpts: ModerationOptions;
-	onSelect: (did: string) => void;
+	onSelect: (did: Did) => void;
 }) {
 	const { profile } = item;
 	const enabled = canBeMessaged(profile);

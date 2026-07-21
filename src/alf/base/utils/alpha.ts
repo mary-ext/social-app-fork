@@ -11,7 +11,9 @@ export function alpha(color: string, opacity: number) {
 			return color.slice(0, 7) + alphaHex.padStart(2, alphaHex);
 		} else if (color.length === 4) {
 			// convert to 6-digit hex before adding opacity
-			const [r, g, b] = color.slice(1).split('') as [string, string, string];
+			const r = color.slice(1, 2);
+			const g = color.slice(2, 3);
+			const b = color.slice(3, 4);
 			const alphaHex = Math.round(opacity * 255).toString(16);
 			return `#${r.repeat(2)}${g.repeat(2)}${b.repeat(2)}${alphaHex.padStart(2, alphaHex)}`;
 		}

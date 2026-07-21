@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
@@ -8,6 +8,7 @@ import { definite } from '@mary/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { getStarterPackRecord } from '#/lib/api/record-views';
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { useTitle } from '#/lib/hooks/useTitle';
@@ -219,7 +220,7 @@ function Header({
 	const [isProcessing, setIsProcessing] = useState(false);
 
 	const { creator } = starterPack;
-	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	const record = getStarterPackRecord(starterPack);
 	const isOwn = creator?.did === currentAccount?.did;
 	const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0;
 

@@ -55,11 +55,11 @@ export function configureAppOAuth() {
 	configured = true;
 }
 
-export async function startOAuthSignIn({ identifier }: { identifier: string }) {
+export async function startOAuthSignIn({ identifier }: { identifier: ActorIdentifier }) {
 	configureAppOAuth();
 
 	const authUrl = await createAuthorizationUrl({
-		target: { type: 'account', identifier: identifier as ActorIdentifier },
+		target: { type: 'account', identifier },
 		scope: OAUTH_SCOPE,
 	});
 

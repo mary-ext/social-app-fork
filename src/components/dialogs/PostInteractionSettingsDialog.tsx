@@ -2,9 +2,11 @@ import { useCallback, useMemo, useState } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { isResourceUri, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
+
+import { errorMessage } from '#/lib/strings/errors';
 
 import { STALE } from '#/state/queries';
 import { useMyListsQuery } from '#/state/queries/my-lists';
@@ -191,7 +193,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 		} catch (e) {
 			logger.error(`Failed to save post interaction settings`, {
 				source: 'PostInteractionSettingsDialogInner',
-				safeMessage: e instanceof Error ? e.message : String(e),
+				safeMessage: errorMessage(e),
 			});
 			Toast.show(m['common.error.issueConnection'](), {
 				type: 'error',
@@ -259,14 +261,10 @@ export function PostInteractionSettingsForm({
 
 	const onChangeQuotesEnabled = (enabled: boolean) => {
 		setQuotesEnabled(enabled);
-		onChangePostgate(
-			createPostgateRecord({
-				...postgate,
-				embeddingRules: (enabled
-					? []
-					: [embeddingRules.disableRule]) as AppBskyFeedPostgate.Main['embeddingRules'],
-			}),
-		);
+		const nextEmbeddingRules: AppBskyFeedPostgate.Main['embeddingRules'] = enabled
+			? []
+			: [embeddingRules.disableRule];
+		onChangePostgate(createPostgateRecord({ ...postgate, embeddingRules: nextEmbeddingRules }));
 	};
 
 	const noOneCanReply = !!threadgateAllowUISettings.find((v) => v.type === 'nobody');
@@ -308,10 +306,13 @@ export function PostInteractionSettingsForm({
 		} else {
 			for (const value of values) {
 				if (value.startsWith('list:')) {
-					const listId = value.slice('list:'.length);
-					settings.push({ type: 'list', list: listId });
-				} else {
-					settings.push({ type: value as 'followers' | 'following' | 'mention' });
+					// the toggle group hands back plain strings; re-narrow the at-uri serialized above
+					const listUri = value.slice('list:'.length);
+					if (isResourceUri(listUri)) {
+						settings.push({ type: 'list', list: listUri });
+					}
+				} else if (value === 'followers' || value === 'following' || value === 'mention') {
+					settings.push({ type: value });
 				}
 			}
 		}
@@ -541,7 +542,7 @@ export function usePrefetchPostInteractionSettings({
 			]);
 		} catch (e) {
 			logger.error(`Failed to prefetch post interaction settings`, {
-				safeMessage: e instanceof Error ? e.message : String(e),
+				safeMessage: errorMessage(e),
 			});
 		}
 	};

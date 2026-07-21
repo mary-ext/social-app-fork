@@ -214,11 +214,14 @@ let MessageItem = ({
 		if (highlightKey === null) return;
 		// The fork's reanimated shim can't drive imperative shared-value animations,
 		// so flash the always-mounted overlay via the Web Animations API instead.
-		const node = flashRef.current as unknown as HTMLElement | null;
-		const animation = node?.animate(
-			[{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }],
-			{ duration: 1000, easing: 'ease' },
-		);
+		const node = flashRef.current;
+		const animation =
+			node instanceof HTMLElement
+				? node.animate(
+						[{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }],
+						{ duration: 1000, easing: 'ease' },
+					)
+				: undefined;
 		return () => animation?.cancel();
 	}, [highlightKey]);
 

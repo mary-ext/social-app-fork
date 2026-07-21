@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
-import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
+
+import { getStarterPackRecord } from '#/lib/api/record-views';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
@@ -25,7 +27,7 @@ import * as css from './StarterPackCard.css';
 export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackView }) {
 	const { gtPhone } = useBreakpoints();
 	const link = useStarterPackLink({ view });
-	const record = view.record as AppBskyGraphStarterpack.Main;
+	const record = getStarterPackRecord(view);
 
 	const profileCount = gtPhone ? 11 : 8;
 	const profiles = view.listItemsSample?.slice(0, profileCount).map((item) => item.subject);

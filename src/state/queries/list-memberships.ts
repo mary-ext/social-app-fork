@@ -5,7 +5,7 @@ import type {
 	AppBskyGraphGetStarterPacksWithMembership,
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import {
@@ -28,7 +28,7 @@ import { RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY } from './
 export type ListWithMembership = AppBskyGraphGetListsWithMembership.ListWithMembership;
 
 const RQKEY_WITH_MEMBERSHIP_ROOT = 'lists-with-membership';
-export const RQKEY_WITH_MEMBERSHIP = (actor?: string) => [RQKEY_WITH_MEMBERSHIP_ROOT, actor];
+export const RQKEY_WITH_MEMBERSHIP = (actor?: Did) => [RQKEY_WITH_MEMBERSHIP_ROOT, actor];
 
 /** fetches the signed-in user's curate and moderation lists, each annotated with the given actor's membership. */
 export function listsWithMembershipQueryOptions({
@@ -36,7 +36,7 @@ export function listsWithMembershipQueryOptions({
 	appview,
 	enabled = true,
 }: {
-	actor?: string;
+	actor?: Did;
 	appview: Client;
 	enabled?: boolean;
 }) {
@@ -47,7 +47,7 @@ export function listsWithMembershipQueryOptions({
 			accumulate((cursor) =>
 				ok(
 					appview.get('app.bsky.graph.getListsWithMembership', {
-						params: { actor: actor! as ActorIdentifier, cursor, limit: 50 },
+						params: { actor: actor!, cursor, limit: 50 },
 					}),
 				).then((data) => ({ cursor: data.cursor, items: data.listsWithMembership })),
 			),
@@ -55,7 +55,7 @@ export function listsWithMembershipQueryOptions({
 	});
 }
 
-export function useListsWithMembershipQuery(params: { actor?: string; enabled?: boolean }) {
+export function useListsWithMembershipQuery(params: { actor?: Did; enabled?: boolean }) {
 	const { appview } = useClients();
 	return useQuery(listsWithMembershipQueryOptions({ ...params, appview }));
 }
@@ -74,7 +74,7 @@ export function useListMembershipAddMutation({
 	return useMutation<
 		{ uri: ResourceUri; cid: string },
 		Error,
-		{ actorDid: string; listUri: ResourceUri; subject?: AnyProfileView }
+		{ actorDid: Did; listUri: ResourceUri; subject?: AnyProfileView }
 	>({
 		mutationFn: async ({ listUri, actorDid }) => {
 			if (!currentAccount) {
@@ -86,7 +86,7 @@ export function useListMembershipAddMutation({
 					$type: 'app.bsky.graph.listitem',
 					createdAt: new Date().toISOString(),
 					list: listUri,
-					subject: actorDid as Did,
+					subject: actorDid,
 				},
 				repo: currentAccount.did,
 			});
@@ -115,6 +115,7 @@ export function useListMembershipAddMutation({
 									...item,
 									listItem: {
 										uri: data.uri,
+										// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every `AnyProfileView` member carries these fields; only `$type` differs
 										subject: variables.subject as AppBskyActorDefs.ProfileView,
 									},
 								}
@@ -128,6 +129,7 @@ export function useListMembershipAddMutation({
 					(old) => {
 						if (!old) return old;
 
+						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- spreading the pages loses the `$type` literals; the values are unchanged
 						return {
 							...old,
 							pages: old.pages.map((page) => ({
@@ -144,6 +146,7 @@ export function useListMembershipAddMutation({
 												listItemsSample: [
 													{
 														uri: data.uri,
+														// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every `AnyProfileView` member carries these fields; only `$type` differs
 														subject: variables.subject as AppBskyActorDefs.ProfileViewBasic,
 													},
 													...(spWithMembership.starterPack.listItemsSample?.filter(
@@ -157,6 +160,7 @@ export function useListMembershipAddMutation({
 											},
 											listItem: {
 												uri: data.uri,
+												// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every `AnyProfileView` member carries these fields; only `$type` differs
 												subject: variables.subject as AppBskyActorDefs.ProfileViewBasic,
 											},
 										};
@@ -186,7 +190,7 @@ export function useListMembershipRemoveMutation({
 	const { currentAccount } = useSession();
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<void, Error, { listUri: ResourceUri; actorDid: string; membershipUri: ResourceUri }>({
+	return useMutation<void, Error, { listUri: ResourceUri; actorDid: Did; membershipUri: ResourceUri }>({
 		mutationFn: async ({ membershipUri }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');

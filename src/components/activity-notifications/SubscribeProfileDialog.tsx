@@ -85,7 +85,15 @@ function DialogInner({
 	const selected: SubscriptionChoice = state.post ? (state.reply ? 'all' : 'posts') : 'off';
 
 	const onSelect = ([value]: string[]) => {
-		setState(CHOICE_STATES[value as SubscriptionChoice]);
+		// the group is a radio set over `CHOICE_STATES`, but `Toggle.Group` reports a bare `string[]`
+		switch (value) {
+			case 'all':
+			case 'off':
+			case 'posts': {
+				setState(CHOICE_STATES[value]);
+				break;
+			}
+		}
 	};
 
 	const {

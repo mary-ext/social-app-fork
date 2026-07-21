@@ -568,7 +568,8 @@ function ActiveSearchAutocomplete({
 		if (event.pointerType === 'mouse') {
 			return;
 		}
-		const pressed = (event.target as HTMLElement).closest('[role="option"], [role="gridcell"]');
+		const target = event.target;
+		const pressed = target instanceof Element ? target.closest('[role="option"], [role="gridcell"]') : null;
 		if (!pressed) {
 			return;
 		}

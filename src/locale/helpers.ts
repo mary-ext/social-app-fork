@@ -1,5 +1,6 @@
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { detectLanguages } from '#/lib/language-detection';
 
 import { LOCALE } from './intl/locale';
@@ -41,7 +42,7 @@ export function resolveLanguageName(language: Language, appLang: string): string
 }
 
 export function getPostLanguageTags(post: AppBskyFeedDefs.PostView) {
-	const langs = (post.record as AppBskyFeedPost.Main).langs;
+	const langs = getPostRecord(post).langs;
 	return Array.isArray(langs) ? langs : [];
 }
 
@@ -57,7 +58,7 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
 export function getPostLanguage(post: AppBskyFeedDefs.PostView): string | undefined {
 	const candidates: string[] = getPostLanguageTags(post);
 	let postText: string = '';
-	const recordText = (post.record as AppBskyFeedPost.Main).text;
+	const recordText = getPostRecord(post).text;
 	if (typeof recordText === 'string') {
 		postText = recordText;
 	}

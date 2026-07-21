@@ -1,6 +1,6 @@
 import type { AppBskyActorDefs, AppBskyGraphGetKnownFollowers } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
@@ -13,7 +13,7 @@ type RQPageParam = string | undefined;
 const RQKEY_ROOT = 'profile-known-followers';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
-export function useProfileKnownFollowersQuery(did: string | undefined) {
+export function useProfileKnownFollowersQuery(did: Did | undefined) {
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyGraphGetKnownFollowers.$output,
@@ -27,7 +27,7 @@ export function useProfileKnownFollowersQuery(did: string | undefined) {
 			return await ok(
 				appview.get('app.bsky.graph.getKnownFollowers', {
 					params: {
-						actor: did! as ActorIdentifier,
+						actor: did!,
 						cursor: pageParam,
 						limit: PAGE_SIZE,
 					},

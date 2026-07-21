@@ -136,7 +136,7 @@ const cacheThumbnail = async ({
  * @returns the appview's refs and view, or an empty object when nothing resolved
  */
 const hydrateStandardSite = async (
-	uris: string[],
+	uris: ResourceUri[],
 	url: string,
 	signal: AbortSignal,
 ): Promise<{ associatedRefs?: StrongRef[]; view?: unknown }> => {
@@ -144,7 +144,8 @@ const hydrateStandardSite = async (
 		const data = await ok(
 			appview.get('app.bsky.embed.getEmbedExternalView', {
 				params: {
-					uris: uris.slice(0, MAX_ASSOCIATED_URIS) as ResourceUri[],
+					uris: uris.slice(0, MAX_ASSOCIATED_URIS),
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `url` is a `URL.href`, which always carries a scheme
 					url: url as GenericUri,
 				},
 				signal,

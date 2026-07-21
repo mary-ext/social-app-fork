@@ -19,6 +19,8 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
+import { typedKeys } from '#/lib/functions';
+
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
@@ -114,7 +116,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;
-					for (const key of Object.keys(selectArgs) as (keyof typeof selectArgs)[]) {
+					for (const key of typedKeys(selectArgs)) {
 						if (selectArgs[key] !== lastArgs[key]) {
 							// Can't do reuse anything if any input has changed.
 							canReuse = false;
@@ -164,8 +166,10 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 											 * a `$type` field on the `subject`. But if the nested
 											 * `record` is a post, we know it's a post view.
 											 */
+											// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- view defs type `record` as `unknown`; the `$type` check below confirms it
 											const record = item.subject?.record as AppBskyFeedPost.Main | undefined;
 											if (record?.$type === 'app.bsky.feed.post') {
+												// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above: a post record on the subject means the subject is a post view
 												const mod = moderatePost(item.subject as AppBskyFeedDefs.PostView, moderationOpts!);
 												if (getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length > 0) {
 													return false;

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import type { ResourceUri } from '@atcute/lexicons';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
@@ -9,7 +11,7 @@ import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
-import { type FeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
+import { type FeedSourceFeedInfo, isFeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
@@ -38,6 +40,7 @@ export function ProfileFeedScreen() {
 	const [{ rkey, actor: handleOrDid }] = useParams('ProfileFeed');
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey);
 	const { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
+	const feedUri = resolvedUri?.uri;
 
 	if (error && !isRefetching) {
 		return (
@@ -52,9 +55,9 @@ export function ProfileFeedScreen() {
 		);
 	}
 
-	return resolvedUri ? (
+	return feedUri ? (
 		<Layout.Screen testID="profileFeedScreen">
-			<ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+			<ProfileFeedScreenIntermediate feedUri={feedUri} />
 		</Layout.Screen>
 	) : (
 		<Layout.Screen testID="profileFeedScreen">
@@ -66,11 +69,11 @@ export function ProfileFeedScreen() {
 	);
 }
 
-function ProfileFeedScreenIntermediate({ feedUri }: { feedUri: string }) {
+function ProfileFeedScreenIntermediate({ feedUri }: { feedUri: ResourceUri }) {
 	const { data: preferences } = usePreferencesQuery();
 	const { data: info } = useFeedSourceInfoQuery({ uri: feedUri });
 
-	if (!preferences || !info) {
+	if (!preferences || !info || !isFeedSourceFeedInfo(info)) {
 		return (
 			<Layout.Content>
 				<ProfileFeedHeaderSkeleton />
@@ -79,7 +82,7 @@ function ProfileFeedScreenIntermediate({ feedUri }: { feedUri: string }) {
 		);
 	}
 
-	return <ProfileFeedScreenInner preferences={preferences} feedInfo={info as FeedSourceFeedInfo} />;
+	return <ProfileFeedScreenInner preferences={preferences} feedInfo={info} />;
 }
 
 function renderPostsEmpty() {

@@ -42,7 +42,6 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 	const { labeler, strings } = useLabelInfo(label);
 	const [details, setDetails] = useState('');
 	const { subject } = useLabelSubject({ label });
-	const isAccountReport = 'did' in subject;
 	const { pds } = useClients();
 	const sourceName = labeler ? `@${labeler.creator.handle}` : label.src;
 	const [error, setError] = useState<string | null>(null);
@@ -50,19 +49,22 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 	const { mutate, isPending } = useMutation({
 		mutationFn: async () => {
 			if (!pds) throw new Error('Not logged in');
-			const $type = !isAccountReport ? 'com.atproto.repo.strongRef' : 'com.atproto.admin.defs#repoRef';
 			// the appeal is funnelled to the labeler that applied the label
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `AtprotoAudience` pins the DID method; the lexicon doesn't
 			const reportClient = pds.clone({ proxy: `${label.src}#atproto_labeler` as AtprotoAudience });
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `useLabelSubject` already split this into a repo ref or a strong ref
+			const ref = (
+				'did' in subject
+					? { $type: 'com.atproto.admin.defs#repoRef', ...subject }
+					: { $type: 'com.atproto.repo.strongRef', ...subject }
+			) as ComAtprotoModerationCreateReport.$input['subject'];
 			await ok(
 				reportClient.post('com.atproto.moderation.createReport', {
 					input: {
 						reasonType: OzoneReason.REASONAPPEAL,
-						subject: {
-							$type,
-							...subject,
-						},
+						subject: ref,
 						reason: details,
-					} as ComAtprotoModerationCreateReport.$input,
+					},
 				}),
 			);
 		},

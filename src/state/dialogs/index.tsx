@@ -27,10 +27,17 @@ interface IDialogControlContext {
 	setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const DialogContext = createContext<IDialogContext>({} as IDialogContext);
+const DialogContext = createContext<IDialogContext>({
+	activeDialogs: { current: new Map() },
+	openDialogs: { current: new Set() },
+});
 DialogContext.displayName = 'DialogContext';
 
-const DialogControlContext = createContext<IDialogControlContext>({} as IDialogControlContext);
+const DialogControlContext = createContext<IDialogControlContext>({
+	closeAllDialogs: () => false,
+	setDialogIsOpen: () => {},
+	setFullyExpandedCount: () => {},
+});
 DialogControlContext.displayName = 'DialogControlContext';
 
 /**

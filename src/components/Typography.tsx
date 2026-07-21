@@ -55,6 +55,7 @@ export function Text({
  *
  * @see https://github.com/necolas/react-native-web/pull/2836
  */
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- web-only CSS the RNW renderer forwards
 const numberOfLinesClippingFix = {
 	overflowY: 'visible',
 	overflowX: 'clip',

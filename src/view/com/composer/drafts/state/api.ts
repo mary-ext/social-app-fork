@@ -145,6 +145,7 @@ async function postDraftToServerPost(
 		draftPost.embedExternals = [
 			{
 				$type: 'app.bsky.draft.defs#draftEmbedExternal',
+				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a composer link embed only holds a uri detected in the post text
 				uri: post.embed.link.uri as GenericUri,
 			},
 		];
@@ -302,6 +303,7 @@ function serializeGif(gifMedia: {
 
 	return {
 		$type: 'app.bsky.draft.defs#draftEmbedExternal',
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `URL.toString()` always serializes an absolute url
 		uri: url.toString() as GenericUri,
 	};
 }
@@ -557,6 +559,7 @@ export async function draftToComposerPosts(
 				}
 			}
 
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- restoring self-label values verbatim keeps the draft round-trip lossless
 			return {
 				id: `draft-post-${index}`,
 				text,

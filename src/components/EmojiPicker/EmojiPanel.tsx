@@ -9,7 +9,8 @@ import { useQuery } from '@tanstack/react-query';
 import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
-import { type SkinTone, useEmojiSkinTone, useRecentEmojis } from '#/storage/hooks/emoji';
+import { useEmojiSkinTone, useRecentEmojis } from '#/storage/hooks/emoji';
+import type { SkinTone } from '#/storage/schema';
 
 import { CategoryNav } from './components/CategoryNav';
 import { EmojiGrid, type EmojiGridHandle } from './components/EmojiGrid';

@@ -1,5 +1,7 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
+import { typedKeys } from '#/lib/functions';
+
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
@@ -13,6 +15,20 @@ export const widthVar = createVar();
 export const boxSizeVar = createVar();
 
 export const squareRadiusVar = createVar();
+
+const sizeVariants = (): { [K in keyof typeof fontLeading]: { vars: Record<string, string> } } => {
+	const out: Record<string, { vars: Record<string, string> }> = {};
+	for (const key of typedKeys(fontLeading)) {
+		out[key] = {
+			vars: {
+				[fontSizeVar]: fontSize[key],
+				[lineHeightVar]: roundToPx(`calc(${fontSize[key]} * ${fontLeading[key]})`),
+			},
+		};
+	}
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the loop writes one entry per `fontLeading` key
+	return out as { [K in keyof typeof fontLeading]: { vars: Record<string, string> } };
+};
 
 export const text = recipe(
 	{
@@ -30,17 +46,7 @@ export const text = recipe(
 				contrast_50: { color: vars.palette.contrast_50 },
 				contrast_100: { color: vars.palette.contrast_100 },
 			},
-			size: Object.fromEntries(
-				(Object.keys(fontLeading) as (keyof typeof fontLeading)[]).map((key) => [
-					key,
-					{
-						vars: {
-							[fontSizeVar]: fontSize[key],
-							[lineHeightVar]: roundToPx(`calc(${fontSize[key]} * ${fontLeading[key]})`),
-						},
-					},
-				]),
-			) as { [K in keyof typeof fontLeading]: { vars: Record<string, string> } },
+			size: sizeVariants(),
 		},
 		defaultVariants: { color: 'contrast_50', size: 'md' },
 	},

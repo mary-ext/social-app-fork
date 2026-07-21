@@ -140,11 +140,10 @@ export function SuggestedLanguage({
 
 	const hasLanguageSuggestion = suggLang && !currentLanguages.includes(suggLang);
 
-	const replyToLanguages = replyToLanguagesProp
+	const replyToLanguage = replyToLanguagesProp
 		.filter(Boolean)
 		.map((lang) => getPrimaryLanguageSubtag(lang))
-		.filter(Boolean) as string[];
-	const [replyToLanguage] = replyToLanguages;
+		.find((lang) => lang !== undefined);
 	const hasSuggestedReplyLanguage =
 		!hasInteracted && !suggLang && replyToLanguage && !currentLanguages.includes(replyToLanguage);
 

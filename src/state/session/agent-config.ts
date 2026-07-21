@@ -1,10 +1,12 @@
+import type { Did } from '@atcute/lexicons';
+
 const PREFIX = 'agent-labelers';
 
 function key(did: string) {
 	return `${PREFIX}:${did}`;
 }
 
-export function saveLabelers(did: string, value: string[]) {
+export function saveLabelers(did: Did, value: Did[]) {
 	try {
 		localStorage.setItem(key(did), JSON.stringify(value));
 	} catch {
@@ -12,7 +14,7 @@ export function saveLabelers(did: string, value: string[]) {
 	}
 }
 
-export function readLabelers(did: string): string[] | undefined {
+export function readLabelers(did: Did): Did[] | undefined {
 	try {
 		const rawData = localStorage.getItem(key(did));
 		return rawData ? JSON.parse(rawData) : undefined;

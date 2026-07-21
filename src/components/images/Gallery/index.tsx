@@ -27,11 +27,11 @@ type GalleryBleedChildProps = {
 export function GalleryBleed({ children }: { children: React.ReactNode }) {
 	const [bleedEl, setBleedEl] = useState<HTMLElement | null>(null);
 
-	if (!isValidElement(children)) {
+	if (!isValidElement<GalleryBleedChildProps>(children)) {
 		throw new Error('GalleryBleed children must be a single React element');
 	}
 
-	const node = children as React.ReactElement<GalleryBleedChildProps>;
+	const node = children;
 
 	return (
 		<BleedContext value={bleedEl}>

@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 
-import type { AnyStarterPackView, AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { AnyStarterPackView } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import { getStarterPackRecord } from '#/lib/api/record-views';
 import { weightedRandomIndex } from '#/lib/numbers';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
@@ -82,7 +83,7 @@ function Icon() {
 function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {
 	const { currentAccount } = useSession();
 	const { creator } = starterPack;
-	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	const record = getStarterPackRecord(starterPack);
 
 	return (
 		<div className={css.titleColumn}>
@@ -99,7 +100,7 @@ function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {
 }
 
 function Description({ starterPack }: { starterPack: AnyStarterPackView }) {
-	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	const record = getStarterPackRecord(starterPack);
 	if (!record.description) return null;
 	return (
 		<Text size="md_sub" numberOfLines={3}>
@@ -126,6 +127,7 @@ export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 	const qc = useQueryClient();
 	const rkey = parseCanonicalResourceUri(view.uri).rkey;
 	const did = view.creator.did;
+	const record = getStarterPackRecord(view);
 	const precache = () => {
 		precacheResolvedUri(qc, view.creator.handle, view.creator.did);
 		precacheStarterPack(qc, view);
@@ -133,9 +135,7 @@ export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 
 	return {
 		to: `/starter-pack/${did}/${rkey}`,
-		label: m['components.starterPack.card.navigate']({
-			name: (view.record as AppBskyGraphStarterpack.Main).name,
-		}),
+		label: m['components.starterPack.card.navigate']({ name: record.name }),
 		precache,
 	};
 }
@@ -153,7 +153,7 @@ export function Link({
 	onPress?: () => void;
 }) {
 	const queryClient = useQueryClient();
-	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	const record = getStarterPackRecord(starterPack);
 	const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
 	const did = starterPack.creator.did;
 

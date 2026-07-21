@@ -1,5 +1,4 @@
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
-import type { ResourceUri } from '@atcute/lexicons';
 
 import type { ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
 
@@ -9,17 +8,18 @@ export function threadgateViewToAllowUISetting(
 	const record = threadgateView?.record;
 	const threadgate =
 		record && (record as { $type?: string }).$type === 'app.bsky.feed.threadgate'
-			? (record as AppBskyFeedThreadgate.Main)
+			? // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- view defs type `record` as `unknown`; the `$type` check above pins it to the threadgate record
+				(record as AppBskyFeedThreadgate.Main)
 			: undefined;
 	return threadgateRecordToAllowUISetting(threadgate);
 }
 
 /**
- * Converts a full {@link AppBskyFeedThreadgate.Main} to a list of {@link ThreadgateAllowUISetting}, for use by
- * app UI.
+ * Converts the `allow` rules of an {@link AppBskyFeedThreadgate.Main} to a list of
+ * {@link ThreadgateAllowUISetting}, for use by app UI.
  */
 export function threadgateRecordToAllowUISetting(
-	threadgate: AppBskyFeedThreadgate.Main | undefined,
+	threadgate: Pick<AppBskyFeedThreadgate.Main, 'allow'> | undefined,
 ): ThreadgateAllowUISetting[] {
 	/*
 	 * If `threadgate` doesn't exist (default), or if `threadgate.allow === undefined`, it means
@@ -74,7 +74,7 @@ export function threadgateAllowUISettingToAllowRecordValue(
 			} else if (rule.type === 'list') {
 				allow.push({
 					$type: 'app.bsky.feed.threadgate#listRule',
-					list: rule.list as ResourceUri,
+					list: rule.list,
 				});
 			}
 		}

@@ -4,7 +4,7 @@ import type {
 	AppBskyGraphGetSuggestedFollowsByActor,
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -22,7 +22,7 @@ export function useSuggestedFollowsByActorQuery({
 	enabled,
 	staleTime = STALE.MINUTES.FIVE,
 }: {
-	did: string;
+	did: Did;
 	enabled?: boolean;
 	staleTime?: number;
 }) {
@@ -33,7 +33,7 @@ export function useSuggestedFollowsByActorQuery({
 		queryFn: async () => {
 			const data = await ok(
 				appview.get('app.bsky.graph.getSuggestedFollowsByActor', {
-					params: { actor: did as ActorIdentifier },
+					params: { actor: did },
 				}),
 			);
 			const suggestions = data.suggestions.filter((profile) => !profile.viewer?.following);
@@ -48,7 +48,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 	enabled,
 	staleTime,
 }: {
-	did: string;
+	did: Did;
 	enabled?: boolean;
 	staleTime?: number;
 }) {

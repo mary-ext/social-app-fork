@@ -17,6 +17,7 @@ export function useLikeMutation() {
 				record: {
 					$type: 'app.bsky.feed.like',
 					createdAt: new Date().toISOString(),
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `FeedSourceInfo.uri` widens to `string`; a likeable feed always has an at-uri
 					subject: { cid: cid, uri: uri as ResourceUri },
 				},
 				repo: currentAccount!.did,

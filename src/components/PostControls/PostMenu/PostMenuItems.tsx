@@ -11,6 +11,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import type { ParamsOf } from '@oomfware/stacker';
 
 import { makeProfileLink } from '#/lib/routes/links';
+import { errorMessage, isAbortError } from '#/lib/strings/errors';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 
@@ -148,6 +149,7 @@ function PostMenuItems({
 
 				const route = router.route;
 				if (route.name === 'PostThread') {
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `route.name` check above pins the param shape
 					const params = route.params as ParamsOf<typeof routes, 'PostThread'>;
 					if (
 						currentAccount &&
@@ -180,9 +182,8 @@ function PostMenuItems({
 				Toast.show(m['components.postControls.thread.unmute.toast']());
 			}
 		} catch (err) {
-			const e = err as Error;
-			if (e?.name !== 'AbortError') {
-				logger.error('Failed to toggle thread mute', { message: e });
+			if (!isAbortError(err)) {
+				logger.error('Failed to toggle thread mute', { message: err });
 				Toast.show(m['components.postControls.thread.muteError'](), {
 					type: 'error',
 				});
@@ -246,9 +247,10 @@ function PostMenuItems({
 					: m['components.postControls.quote.reattach.toast'](),
 			);
 		} catch (err) {
-			const e = err as Error;
 			Toast.show(m['components.postControls.quote.updateError']());
-			logger.error(`Failed to ${action} quote`, { safeMessage: e.message });
+			logger.error(`Failed to ${action} quote`, {
+				safeMessage: errorMessage(err),
+			});
 		}
 	};
 
@@ -279,14 +281,15 @@ function PostMenuItems({
 					: m['components.postControls.replyVisibility.updatedToast'](),
 			);
 		} catch (err) {
-			const e = err as Error;
-			if (e instanceof MaxHiddenRepliesError) {
+			if (err instanceof MaxHiddenRepliesError) {
 				Toast.show(m['components.postControls.replyVisibility.maxHidden']({ limit: MAX_HIDDEN_REPLIES }));
-			} else if (e instanceof InvalidInteractionSettingsError) {
+			} else if (err instanceof InvalidInteractionSettingsError) {
 				Toast.show(m['components.postControls.interaction.error']());
 			} else {
 				Toast.show(m['components.postControls.replyVisibility.updateError']());
-				logger.error(`Failed to ${action} reply`, { safeMessage: e.message });
+				logger.error(`Failed to ${action} reply`, {
+					safeMessage: errorMessage(err),
+				});
 			}
 		}
 	};
@@ -304,10 +307,9 @@ function PostMenuItems({
 			await queueBlock();
 			Toast.show(m['common.block.blockedToast']());
 		} catch (err) {
-			const e = err as Error;
-			if (e?.name !== 'AbortError') {
-				logger.error('Failed to block account', { message: e });
-				Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
+			if (!isAbortError(err)) {
+				logger.error('Failed to block account', { message: err });
+				Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 					type: 'error',
 				});
 			}
@@ -321,10 +323,9 @@ function PostMenuItems({
 				await queueUnmute();
 				Toast.show(m['common.mute.unmutedToast']());
 			} catch (err) {
-				const e = err as Error;
-				if (e?.name !== 'AbortError') {
-					logger.error('Failed to unmute account', { message: e });
-					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
+				if (!isAbortError(err)) {
+					logger.error('Failed to unmute account', { message: err });
+					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 						type: 'error',
 					});
 				}
@@ -335,10 +336,9 @@ function PostMenuItems({
 				await queueMute();
 				Toast.show(m['common.mute.mutedToast']());
 			} catch (err) {
-				const e = err as Error;
-				if (e?.name !== 'AbortError') {
-					logger.error('Failed to mute account', { message: e });
-					Toast.show(m['common.error.issueWithDetail']({ error: e.toString() }), {
+				if (!isAbortError(err)) {
+					logger.error('Failed to mute account', { message: err });
+					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 						type: 'error',
 					});
 				}

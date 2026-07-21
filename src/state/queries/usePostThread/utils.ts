@@ -1,10 +1,11 @@
 import type {
 	AppBskyFeedDefs,
-	AppBskyFeedPost,
 	AppBskyFeedThreadgate,
 	AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
+import { getPostRecord } from '#/lib/api/record-views';
 
 import type { ApiThreadItem, ThreadItem, TraversalMetadata } from '#/state/queries/usePostThread/types';
 
@@ -13,11 +14,12 @@ import { isDevMode } from '#/storage/hooks/dev-mode';
 export function getThreadgateRecord(
 	view: AppBskyUnspeccedGetPostThreadV2.$output['threadgate'],
 ): AppBskyFeedThreadgate.Main | undefined {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- view defs type `record` as `unknown`; the collection is fixed by the view type
 	return view?.record as AppBskyFeedThreadgate.Main | undefined;
 }
 
 export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
-	const record = post.record as AppBskyFeedPost.Main;
+	const record = getPostRecord(post);
 	/** If the record has no `reply` field, it is a root post. */
 	if (!record.reply) {
 		return parseCanonicalResourceUri(post.uri);
@@ -25,10 +27,6 @@ export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
 	if (record.reply?.root?.uri) {
 		return parseCanonicalResourceUri(record.reply.root.uri);
 	}
-}
-
-export function getPostRecord(post: AppBskyFeedDefs.PostView) {
-	return post.record as AppBskyFeedPost.Main;
 }
 
 export function getTraversalMetadata({

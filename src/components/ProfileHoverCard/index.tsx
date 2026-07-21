@@ -1,5 +1,7 @@
 import { lazy, type ReactElement, Suspense, useRef } from 'react';
 
+import type { Did } from '@atcute/lexicons';
+
 import { PreviewCard } from '@base-ui/react/preview-card';
 
 import { usePrefetchProfileQuery } from '#/state/queries/profile';
@@ -18,7 +20,7 @@ export type ProfileHoverCardProps = {
 	 * {@link PreviewCard.Trigger}'s `render`).
 	 */
 	children: ReactElement;
-	did: string;
+	did: Did;
 };
 
 /** profile preview shown on hover, built on Base UI's PreviewCard. wraps a single ref-forwarding trigger. */

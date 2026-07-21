@@ -296,20 +296,24 @@ export function createStaticClick(onPressHandler: Exclude<BaseLinkProps['onPress
 	};
 }
 
+const asMouseEvent = (e: GestureResponderEvent) => {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- RNW forwards the underlying DOM mouse event
+	return e as unknown as MouseEvent;
+};
+
 /**
  * Determines if the click event has a meta key pressed, indicating the user intends to deviate from default
  * behavior.
  */
 export function isClickEventWithMetaKey(e: GestureResponderEvent) {
-	const event = e as unknown as MouseEvent;
+	const event = asMouseEvent(e);
 	return event.metaKey || event.altKey || event.ctrlKey || event.shiftKey;
 }
 
 /** Determines if the web click target is anything other than `_self` */
 export function isClickTargetExternal(e: GestureResponderEvent) {
-	const event = e as unknown as MouseEvent;
-	const el = event.currentTarget as HTMLAnchorElement;
-	return el && el.target && el.target !== '_self';
+	const el = asMouseEvent(e).currentTarget;
+	return el instanceof HTMLAnchorElement && !!el.target && el.target !== '_self';
 }
 
 /**
@@ -317,7 +321,6 @@ export function isClickTargetExternal(e: GestureResponderEvent) {
  * a new tab. {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
  */
 export function shouldClickOpenNewTab(e: GestureResponderEvent) {
-	const event = e as unknown as MouseEvent;
-	const isMiddleClick = event.button === 1;
+	const isMiddleClick = asMouseEvent(e).button === 1;
 	return isClickEventWithMetaKey(e) || isClickTargetExternal(e) || isMiddleClick;
 }

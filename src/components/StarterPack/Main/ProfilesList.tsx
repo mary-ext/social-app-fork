@@ -1,5 +1,6 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
@@ -16,7 +17,7 @@ function keyExtractor(item: AppBskyActorDefs.ProfileView, index: number) {
 }
 
 interface ProfilesListProps {
-	listUri: string;
+	listUri: ResourceUri;
 	moderationOpts: ModerationOptions;
 }
 

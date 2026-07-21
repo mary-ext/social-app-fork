@@ -433,7 +433,7 @@ export const routes = defineRoutes({
 				component: HashtagScreen,
 				params: { tag: string() },
 				path: '/hashtag/:tag',
-				query: { author: optional(string()) },
+				query: { author: optional(actorIdentifier()) },
 			}),
 			Topic: route({
 				component: TopicScreen,
@@ -555,11 +555,13 @@ export const router = new Router({
 
 /** untyped {@link Router.build} for call sites that carry a dynamic route name. */
 export const buildPath = (name: string, params?: Record<string, unknown>): string => {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- deliberate escape hatch; the router resolves the name at runtime
 	return router.build(name as RouteName<typeof routes>, params);
 };
 
 /** untyped {@link Router.popTo} for the nav rails, whose route name is carried as a prop. */
 export const popToRoute = (name: string, params?: Record<string, unknown>): void => {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- deliberate escape hatch; the router resolves the name at runtime
 	router.popTo(name as RouteName<typeof routes>, params);
 };
 

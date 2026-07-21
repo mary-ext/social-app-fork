@@ -81,6 +81,7 @@ export const recipe = <Variants extends VariantGroups>(
 	options: RecipeOptions = {},
 ): RecipeRuntimeFn<Variants> => {
 	const { debugId, layer } = options;
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- an omitted `variants` means no variant groups, i.e. the empty object
 	const { base, compoundVariants = [], defaultVariants = {}, variants = {} as Variants } = definition;
 
 	const layered = (rule: ComplexStyleRule): ComplexStyleRule => {
@@ -102,6 +103,7 @@ export const recipe = <Variants extends VariantGroups>(
 	const compounds = compoundVariants.map(
 		({ style: rule, ...check }, index): [Record<string, VariantValue | VariantValue[]>, string] => {
 			return [
+				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- everything left after `style` is a variant selection
 				check as Record<string, VariantValue | VariantValue[]>,
 				style(layered(rule), debugId ? `${debugId}_compound_${index}` : undefined),
 			];
@@ -115,6 +117,7 @@ export const recipe = <Variants extends VariantGroups>(
 		variantClassNames,
 	};
 
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the serializer erases the variant-typed signature to `RecipeFn`
 	return addFunctionSerializer<RecipeFn>(createRuntimeFn(config), {
 		args: [config],
 		importName: 'createRuntimeFn',

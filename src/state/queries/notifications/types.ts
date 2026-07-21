@@ -3,6 +3,7 @@ import type {
 	AppBskyGraphDefs,
 	AppBskyNotificationListNotifications,
 } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 
 export type NotificationType = StarterPackNotificationType | OtherNotificationType;
 
@@ -52,6 +53,6 @@ type FeedNotificationBase = {
 	_reactKey: string;
 	notification: AppBskyNotificationListNotifications.Notification;
 	additional?: AppBskyNotificationListNotifications.Notification[];
-	subjectUri?: string;
+	subjectUri?: ResourceUri;
 	subject?: AppBskyFeedDefs.PostView | AppBskyGraphDefs.StarterPackViewBasic;
 };

@@ -10,7 +10,7 @@ import { STALE } from '..';
 const RQKEY_ROOT = 'convo-availability';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
-export function useGetConvoAvailabilityQuery(did: string, { enabled = true }: { enabled?: boolean } = {}) {
+export function useGetConvoAvailabilityQuery(did: Did, { enabled = true }: { enabled?: boolean } = {}) {
 	const { chat } = useClients();
 
 	return useQuery({
@@ -19,7 +19,7 @@ export function useGetConvoAvailabilityQuery(did: string, { enabled = true }: { 
 			if (!chat) throw new Error('Not signed in');
 			const data = await ok(
 				chat.get('chat.bsky.convo.getConvoAvailability', {
-					params: { members: [did as Did] },
+					params: { members: [did] },
 				}),
 			);
 

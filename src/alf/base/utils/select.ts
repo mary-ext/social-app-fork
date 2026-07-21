@@ -6,14 +6,10 @@ export function select<T>(
 		| (Record<ThemeName, T> & { default?: undefined })
 		| (Partial<Record<ThemeName, T>> & { default: T }),
 ): T {
-	switch (name) {
-		case 'light':
-			return options.light as T;
-		case 'dark':
-			return options.dark as T;
-		case 'dim':
-			return options.dim as T;
-		default:
-			return options.default as T;
+	const selected = options[name];
+	if (selected !== undefined) {
+		return selected;
 	}
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the union arm with a missing key requires `default` to be a `T`
+	return options.default as T;
 }

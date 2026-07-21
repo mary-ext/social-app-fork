@@ -54,13 +54,13 @@ export const precacheProfile = unstableCacheProfileView;
 const RQKEY_ROOT = 'profile';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
-const fetchProfile = createBatchedFetch<string, AppBskyActorDefs.ProfileViewDetailed>({
+const fetchProfile = createBatchedFetch<Did, AppBskyActorDefs.ProfileViewDetailed>({
 	limit: 25, // getProfiles caps `actors` at 25
 	fetch: async (dids, signal) => {
 		const { appview } = getClients();
 		const { profiles } = await ok(
 			appview.get('app.bsky.actor.getProfiles', {
-				params: { actors: dids as ActorIdentifier[] },
+				params: { actors: dids },
 				signal,
 			}),
 		);
@@ -75,7 +75,7 @@ export function useProfileQuery({
 	staleTime = STALE.SECONDS.FIFTEEN,
 }: {
 	batch?: boolean;
-	did: string | undefined;
+	did: Did | undefined;
 	staleTime?: number;
 }) {
 	const { appview } = useClients();
@@ -90,15 +90,16 @@ export function useProfileQuery({
 		queryKey: RQKEY(did ?? ''),
 		queryFn: ({ signal }) =>
 			batch
-				? fetchProfile(did ?? '', signal)
+				? fetchProfile(did!, signal)
 				: ok(
 						appview.get('app.bsky.actor.getProfile', {
-							params: { actor: (did ?? '') as ActorIdentifier },
+							params: { actor: did! },
 							signal,
 						}),
 					),
 		placeholderData: () => {
 			if (!did) return;
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- placeholder only; the detailed-only fields stay absent until the query resolves
 			return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed;
 		},
 		enabled: !!did,
@@ -112,7 +113,7 @@ const combineProfiles = (results: UseQueryResult<AppBskyActorDefs.ProfileViewDet
 	isPending: results.some((r) => r.isPending),
 });
 
-export function useProfilesQuery({ dids }: { dids: string[] }) {
+export function useProfilesQuery({ dids }: { dids: Did[] }) {
 	return useQueries({
 		queries: dids.map((did) => ({
 			enabled: !!did,
@@ -128,7 +129,7 @@ export function useProfilesQuery({ dids }: { dids: string[] }) {
 export function usePrefetchProfileQuery() {
 	const queryClient = useQueryClient();
 	const prefetchProfileQuery = useCallback(
-		async (did: string) => {
+		async (did: Did) => {
 			await queryClient.prefetchQuery({
 				staleTime: STALE.SECONDS.THIRTY,
 				queryKey: RQKEY(did),
@@ -281,6 +282,7 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 							pages: [
 								{
 									...old.pages[0],
+									// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every `AnyProfileView` member carries these fields; only `$type` differs
 									follows: [profile as AppBskyActorDefs.ProfileView, ...old.pages[0].follows],
 								},
 								...old.pages.slice(1),
@@ -338,14 +340,14 @@ function useProfileFollowMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 
-	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: string }>({
+	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: Did }>({
 		mutationFn: async ({ did }) => {
 			return await createRecord(pds!, {
 				collection: 'app.bsky.graph.follow',
 				record: {
 					$type: 'app.bsky.graph.follow',
 					createdAt: new Date().toISOString(),
-					subject: did as Did,
+					subject: did,
 				},
 				repo: currentAccount!.did,
 			});
@@ -356,7 +358,7 @@ function useProfileFollowMutation() {
 function useProfileUnfollowMutation() {
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
-	return useMutation<void, Error, { did: string; followUri: string }>({
+	return useMutation<void, Error, { did: Did; followUri: string }>({
 		mutationFn: async ({ followUri }) => {
 			await deleteRecord(pds!, {
 				collection: 'app.bsky.graph.follow',
@@ -417,12 +419,12 @@ export function useProfileMuteMutationQueue(profile: Shadow<AnyProfileView>) {
 function useProfileMuteMutation() {
 	const queryClient = useQueryClient();
 	const { appview } = useClients();
-	return useMutation<void, Error, { did: string }>({
+	return useMutation<void, Error, { did: Did }>({
 		mutationFn: async ({ did }) => {
 			await ok(
 				appview.post('app.bsky.graph.muteActor', {
 					as: null,
-					input: { actor: did as ActorIdentifier },
+					input: { actor: did },
 				}),
 			);
 		},
@@ -435,12 +437,12 @@ function useProfileMuteMutation() {
 function useProfileUnmuteMutation() {
 	const queryClient = useQueryClient();
 	const { appview } = useClients();
-	return useMutation<void, Error, { did: string }>({
+	return useMutation<void, Error, { did: Did }>({
 		mutationFn: async ({ did }) => {
 			await ok(
 				appview.post('app.bsky.graph.unmuteActor', {
 					as: null,
-					input: { actor: did as ActorIdentifier },
+					input: { actor: did },
 				}),
 			);
 		},
@@ -511,7 +513,7 @@ function useProfileBlockMutation() {
 	const { currentAccount } = useSession();
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: string }>({
+	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: Did }>({
 		mutationFn: async ({ did }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
@@ -521,7 +523,7 @@ function useProfileBlockMutation() {
 				record: {
 					$type: 'app.bsky.graph.block',
 					createdAt: new Date().toISOString(),
-					subject: did as Did,
+					subject: did,
 				},
 				repo: currentAccount.did,
 			});
@@ -537,7 +539,7 @@ function useProfileUnblockMutation() {
 	const { currentAccount } = useSession();
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
-	return useMutation<void, Error, { did: string; blockUri: string }>({
+	return useMutation<void, Error, { did: Did; blockUri: string }>({
 		mutationFn: async ({ blockUri }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
@@ -598,14 +600,14 @@ async function upsertProfile(
 
 async function whenAppViewReady(
 	appview: Client,
-	actor: string,
+	actor: ActorIdentifier,
 	fn: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor: actor as ActorIdentifier } })),
+		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor } })),
 	);
 }
 

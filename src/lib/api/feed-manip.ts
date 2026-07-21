@@ -6,6 +6,8 @@ import {
 	type AppBskyFeedPost,
 } from '@atcute/bluesky';
 
+import { getPostRecord } from '#/lib/api/record-views';
+
 import { isPostInLanguage } from '../../locale/helpers';
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost;
@@ -57,7 +59,7 @@ export class FeedViewPostsSlice {
 		this._reactKey = `slice-${post.uri}-${
 			feedPost.reason && 'indexedAt' in feedPost.reason ? feedPost.reason.indexedAt : post.indexedAt
 		}`;
-		const record = post.record as AppBskyFeedPost.Main;
+		const record = getPostRecord(post);
 		const parent = reply?.parent;
 		const isParentBlocked = parent?.$type === 'app.bsky.feed.defs#blockedPost';
 		const isParentNotFound = parent?.$type === 'app.bsky.feed.defs#notFoundPost';
@@ -87,7 +89,7 @@ export class FeedViewPostsSlice {
 			this.isOrphan = true;
 			return;
 		}
-		const parentRecord = parent.record as AppBskyFeedPost.Main;
+		const parentRecord = getPostRecord(parent);
 		const root = reply.root;
 		const rootIsView =
 			root?.$type === 'app.bsky.feed.defs#postView' ||
@@ -128,7 +130,7 @@ export class FeedViewPostsSlice {
 		}
 		this.items.unshift({
 			post: root,
-			record: root.record as AppBskyFeedPost.Main,
+			record: getPostRecord(root),
 			isParentBlocked: false,
 			isParentNotFound: false,
 			parentAuthor: undefined,
@@ -143,7 +145,7 @@ export class FeedViewPostsSlice {
 	}
 
 	get isReply() {
-		return !!(this._feedPost.post.record as AppBskyFeedPost.Main).reply;
+		return !!getPostRecord(this._feedPost.post).reply;
 	}
 
 	get reason() {

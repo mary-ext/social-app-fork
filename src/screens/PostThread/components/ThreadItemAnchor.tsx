@@ -10,6 +10,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { triangularRandom } from '#/lib/numbers';
@@ -464,7 +465,8 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	const handle = Prompt.usePromptHandle();
 
 	const indexedAt = new Date(post.indexedAt);
-	const createdAt = new Date((post.record as AppBskyFeedPost.Main).createdAt);
+	const record = getPostRecord(post);
+	const createdAt = new Date(record.createdAt);
 
 	// backdated if createdAt is 24 hours or more before indexedAt
 	const isBackdated = indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000;

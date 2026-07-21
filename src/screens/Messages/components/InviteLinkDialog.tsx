@@ -476,8 +476,8 @@ function joinLinkToKey(joinLink: ChatBskyGroupDefs.JoinLinkView): string {
 function keyToJoinLink(key: string): Pick<ChatBskyGroupDefs.JoinLinkView, 'joinRule' | 'requireApproval'> {
 	const [joinRule, requireApproval] = key.split(':');
 	return {
-		// the key is built from our own `whoCanJoinOptions` names, so its rule segment is always valid
-		joinRule: joinRule as ChatBskyGroupDefs.JoinRule,
+		// the key is built from our own `whoCanJoinOptions` names, so its rule segment is always one of these
+		joinRule: joinRule === 'followedByOwner' ? 'followedByOwner' : 'anyone',
 		requireApproval: requireApproval === 'requireApproval',
 	};
 }

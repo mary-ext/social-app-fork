@@ -6,7 +6,7 @@ import {
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
@@ -21,7 +21,7 @@ type RQPageParam = string | undefined;
 export const RQKEY_ROOT = 'profile-feedgens';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
-export function useProfileFeedgensQuery(did: string) {
+export function useProfileFeedgensQuery(did: Did) {
 	const moderationOpts = useModerationOpts();
 	const enabled = Boolean(moderationOpts);
 	const { appview } = useClients();
@@ -36,7 +36,7 @@ export function useProfileFeedgensQuery(did: string) {
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
 			const data = await ok(
 				appview.get('app.bsky.feed.getActorFeeds', {
-					params: { actor: did as ActorIdentifier, cursor: pageParam, limit: PAGE_SIZE },
+					params: { actor: did, cursor: pageParam, limit: PAGE_SIZE },
 				}),
 			);
 			data.feeds.sort((a, b) => {

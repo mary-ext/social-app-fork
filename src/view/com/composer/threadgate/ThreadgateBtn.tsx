@@ -1,14 +1,12 @@
 import { useState } from 'react';
 
 import type { AppBskyFeedPostgate } from '@atcute/bluesky';
-import type { ResourceUri } from '@atcute/lexicons';
 
 import deepEqual from 'fast-deep-equal';
 
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
-import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import {
 	type ThreadgateAllowUISetting,
@@ -45,20 +43,14 @@ export function ThreadgateBtn({
 	const [persist, setPersist] = useState(false);
 
 	const prefThreadgateAllowUISettings = threadgateRecordToAllowUISetting({
-		$type: 'app.bsky.feed.threadgate',
-		post: '' as ResourceUri,
-		createdAt: new Date().toISOString(),
 		allow: preferences?.postInteractionSettings.threadgateAllowRules,
 	});
-	const prefPostgate = createPostgateRecord({
-		post: '' as ResourceUri,
-		embeddingRules: preferences?.postInteractionSettings?.postgateEmbeddingRules || [],
-	});
+	const prefEmbeddingRules = preferences?.postInteractionSettings?.postgateEmbeddingRules || [];
 
 	const everybody = [{ type: 'everybody' }];
 	const isDirty =
 		!deepEqual(threadgateAllowUISettings, prefThreadgateAllowUISettings ?? everybody) ||
-		!deepEqual(postgate.embeddingRules, prefPostgate?.embeddingRules ?? []);
+		!deepEqual(postgate.embeddingRules, prefEmbeddingRules);
 
 	const { mutate: persistChanges, isPending: isSaving } = usePostInteractionSettingsMutation({
 		onError: (err) => {

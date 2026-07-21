@@ -14,7 +14,7 @@ type RQPageParam = string | undefined;
 const RQKEY_ROOT = 'liked-by';
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri];
 
-export function useLikedByQuery(resolvedUri: string | undefined) {
+export function useLikedByQuery(resolvedUri: ResourceUri | undefined) {
 	const { appview } = useClients();
 	return useInfiniteQuery<
 		AppBskyFeedGetLikes.$output,
@@ -30,7 +30,7 @@ export function useLikedByQuery(resolvedUri: string | undefined) {
 					params: {
 						cursor: pageParam,
 						limit: PAGE_SIZE,
-						uri: (resolvedUri || '') as ResourceUri,
+						uri: resolvedUri!,
 					},
 				}),
 			),

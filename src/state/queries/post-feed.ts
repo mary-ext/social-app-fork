@@ -32,6 +32,7 @@ import { PostListFeedAPI } from '#/lib/api/feed/posts';
 import type { FeedAPI } from '#/lib/api/feed/types';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { DISCOVER_FEED_URI } from '#/lib/constants';
+import { typedKeys } from '#/lib/functions';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 import { isDocumentVisible } from '#/lib/visibility';
@@ -96,7 +97,7 @@ export interface FeedPostSlice {
 	feedContext: string | undefined;
 	reqId: string | undefined;
 	feedPostUri: string;
-	reason?: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin;
+	reason?: AppBskyFeedDefs.FeedViewPost['reason'];
 }
 
 export interface FeedPageUnselected {
@@ -213,7 +214,7 @@ export function usePostFeedQuery(
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;
-					for (const key of Object.keys(selectArgs) as (keyof typeof selectArgs)[]) {
+					for (const key of typedKeys(selectArgs)) {
 						if (selectArgs[key] !== lastArgs[key]) {
 							// Can't do reuse anything if any input has changed.
 							canReuse = false;
@@ -404,29 +405,36 @@ function createApi({
 	userInterests?: string;
 	appview: Client;
 }) {
+	// the `FeedDescriptor` template types fix what each `|`-separated segment holds, but `String.split`
+	// only yields plain strings, so the branches below re-assert them
 	if (feedDesc === 'following') {
 		return new FollowingFeedAPI({ appview });
 	} else if (feedDesc.startsWith('author')) {
-		const [__, actor, filter] = feedDesc.split('|') as [string, string, string];
+		const [__, actor, filter] = feedDesc.split('|');
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `author|${ActorDid}|${AuthorFilter}`, see above
 		return new AuthorFeedAPI({ appview, feedParams: { actor, filter } as AppBskyFeedGetAuthorFeed.$params });
 	} else if (feedDesc.startsWith('likes')) {
-		const [__, actor] = feedDesc.split('|') as [string, string];
+		const [__, actor] = feedDesc.split('|');
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `likes|${ActorDid}`, see above
 		return new LikesFeedAPI({ appview, feedParams: { actor } as AppBskyFeedGetActorLikes.$params });
 	} else if (feedDesc.startsWith('feedgen')) {
-		const [__, feed] = feedDesc.split('|') as [string, string];
+		const [__, feed] = feedDesc.split('|');
 		return new CustomFeedAPI({
 			appview,
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `feedgen|${FeedUri}`, see above
 			feedParams: { feed } as AppBskyFeedGetFeed.$params,
 			userInterests,
 		});
 	} else if (feedDesc.startsWith('list')) {
-		const [__, list] = feedDesc.split('|') as [string, string];
+		const [__, list] = feedDesc.split('|');
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `list|${ListUri}`, see above
 		return new ListFeedAPI({ appview, feedParams: { list } as AppBskyFeedGetListFeed.$params });
 	} else if (feedDesc.startsWith('posts')) {
-		const [__, uriList] = feedDesc.split('|') as [string, string];
+		const [__, uriList] = feedDesc.split('|');
 		return new PostListFeedAPI({
 			appview,
-			feedParams: { uris: uriList.split(',') } as AppBskyFeedGetPosts.$params,
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `posts|${PostsUriList}`, see above
+			feedParams: { uris: uriList!.split(',') } as AppBskyFeedGetPosts.$params,
 		});
 	} else {
 		// shouldnt happen
@@ -551,7 +559,10 @@ function assertSomePostsPassModeration(
 export function resetProfilePostsQueries(queryClient: QueryClient, did: string, timeout = 0) {
 	setTimeout(() => {
 		void queryClient.resetQueries({
-			predicate: (query) => query.queryKey[0] === RQKEY_ROOT && (query.queryKey[1] as string)?.includes(did),
+			predicate: (query) => {
+				const feedDesc = query.queryKey[1];
+				return query.queryKey[0] === RQKEY_ROOT && typeof feedDesc === 'string' && feedDesc.includes(did);
+			},
 		});
 	}, timeout);
 }

@@ -1,7 +1,7 @@
 import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
 import type { AnyProfileView, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Did } from '@atcute/lexicons';
+import type { Cid, Did, ResourceUri } from '@atcute/lexicons';
 
 import { createRecord } from '#/lib/api/records';
 
@@ -19,7 +19,7 @@ export const createStarterPackList = async ({
 	profiles: AnyProfileView[];
 	did: Did;
 	pds: Client;
-}): Promise<{ uri: string; cid: string }> => {
+}): Promise<{ cid: Cid; uri: ResourceUri }> => {
 	if (profiles.length === 0) throw new Error('No profiles given');
 
 	const list = await createRecord(pds, {

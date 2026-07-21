@@ -12,6 +12,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -47,7 +48,7 @@ export function Post({
 	onBeforePress?: () => void;
 }) {
 	const moderationOpts = useModerationOpts();
-	const record = post.record as AppBskyFeedPost.Main;
+	const record = getPostRecord(post);
 	const postShadowed = usePostShadow(post);
 	const richText = record
 		? {
@@ -96,11 +97,9 @@ function PostInner({
 	const { openComposer } = useOpenComposer();
 	const itemUrip = parseCanonicalResourceUri(post.uri);
 	const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
-	let replyAuthorDid = '';
-	if (record.reply) {
-		const urip = parseCanonicalResourceUri(record.reply.parent?.uri || record.reply.root.uri);
-		replyAuthorDid = urip.repo;
-	}
+	const replyAuthorDid = record.reply
+		? parseCanonicalResourceUri(record.reply.parent?.uri || record.reply.root.uri).repo
+		: undefined;
 
 	const onPressReply = () => {
 		openComposer({
@@ -150,9 +149,7 @@ function PostInner({
 								/>
 								<PostOverflowMenuButton post={post} record={record} richText={richText} />
 							</div>
-							{replyAuthorDid !== '' && (
-								<PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />
-							)}
+							{replyAuthorDid && <PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />}
 							<LabelsOnMyPost post={post} />
 							<PostContent
 								displayContext="view"

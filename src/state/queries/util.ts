@@ -40,10 +40,9 @@ export function isQueryPersisted(
 	if (!Array.isArray(queryKey) || queryKey.length !== 3) return false;
 	if (typeof queryKey[0] !== 'string') return false;
 	if (typeof queryKey[1] !== 'object' || queryKey[1] === null) return false;
-	const options = queryKey[2];
+	const options: unknown = queryKey[2];
 	if (typeof options !== 'object' || options === null) return false;
-	const record = options as Record<string, unknown>;
-	return 'persistedVersion' in record && typeof record.persistedVersion === 'number';
+	return 'persistedVersion' in options && typeof options.persistedVersion === 'number';
 }
 
 export async function truncateAndInvalidate(queryClient: QueryClient, queryKey: QueryKey) {
@@ -78,8 +77,9 @@ export function didOrHandleUriMatches(
 	return atUri.repo === record.author.handle && record.uri.endsWith(atUri.rkey);
 }
 
-export function getEmbeddedPost(v: unknown): AppBskyEmbedRecord.ViewRecord | undefined {
-	const embed = v as AppBskyFeedDefs.PostView['embed'];
+export function getEmbeddedPost(
+	embed: AppBskyFeedDefs.PostView['embed'],
+): AppBskyEmbedRecord.ViewRecord | undefined {
 	const record = unwrapRecordEmbed(embed);
 	if (record?.$type === 'app.bsky.embed.record#viewRecord') {
 		return record;

@@ -7,6 +7,7 @@ import type {
 	AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 
 export type ApiThreadItem =
 	| AppBskyUnspeccedGetPostThreadV2.ThreadItem
@@ -39,7 +40,7 @@ export type ThreadItem =
 	| {
 			type: 'threadPost';
 			key: string;
-			uri: string;
+			uri: ResourceUri;
 			depth: number;
 			value: Omit<AppBskyUnspeccedDefs.ThreadItemPost, 'post'> & {
 				post: Omit<AppBskyFeedDefs.PostView, 'record'> & {
@@ -61,7 +62,7 @@ export type ThreadItem =
 	| {
 			type: 'threadPostNoUnauthenticated';
 			key: string;
-			uri: string;
+			uri: ResourceUri;
 			depth: number;
 			value: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated;
 			ui: {
@@ -72,14 +73,14 @@ export type ThreadItem =
 	| {
 			type: 'threadPostNotFound';
 			key: string;
-			uri: string;
+			uri: ResourceUri;
 			depth: number;
 			value: AppBskyUnspeccedDefs.ThreadItemNotFound;
 	  }
 	| {
 			type: 'threadPostBlocked';
 			key: string;
-			uri: string;
+			uri: ResourceUri;
 			depth: number;
 			value: AppBskyUnspeccedDefs.ThreadItemBlocked;
 	  }

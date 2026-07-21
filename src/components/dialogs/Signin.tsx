@@ -1,5 +1,9 @@
 import { type KeyboardEvent, useCallback, useState } from 'react';
 
+import { isActorIdentifier } from '@atcute/lexicons/syntax';
+
+import { errorMessage } from '#/lib/strings/errors';
+
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 
 import { logger } from '#/logger';
@@ -92,7 +96,7 @@ function ChooseAccountScreen({
 				await switchAccount(account);
 			} catch (e) {
 				logger.error('sign in dialog: resume account failed', {
-					message: e instanceof Error ? e.message : String(e),
+					message: errorMessage(e),
 				});
 				await login({ identifier: account.did });
 			} finally {
@@ -134,8 +138,9 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 	const [error, setError] = useState('');
 
 	const onSubmit = async () => {
-		const trimmed = identifier.trim();
-		if (!trimmed) {
+		// people habitually type the leading `@`, and the field renders one as a prefix icon
+		const trimmed = identifier.trim().replace(/^@/, '');
+		if (!isActorIdentifier(trimmed)) {
 			setError(m['components.dialogs.account.handle.description']());
 			return;
 		}
@@ -146,7 +151,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 			await login({ identifier: trimmed });
 		} catch (e) {
 			logger.error('sign in dialog: OAuth start failed', {
-				message: e instanceof Error ? e.message : String(e),
+				message: errorMessage(e),
 			});
 			setError(m['components.dialogs.signin.startError']());
 			setIsSubmitting(false);

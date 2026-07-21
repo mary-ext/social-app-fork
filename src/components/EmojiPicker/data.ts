@@ -39,6 +39,7 @@ export function emojiDataQuery() {
 async function loadEmojiData(): Promise<EmojiData> {
 	// ~400 KB dataset
 	const mod = await import('@emoji-mart/data');
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the package's runtime module is the JSON dataset, not its declarations
 	const data = (mod.default ?? mod) as unknown as EmojiMartData;
 	const entries: SearchEntry[] = Object.values(data.emojis).map((emoji) => ({
 		haystack: buildHaystack(emoji),

@@ -1,7 +1,6 @@
 import type { ComAtprotoModerationCreateReport } from '@atcute/atproto';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { Did, ResourceUri } from '@atcute/lexicons';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 import type { ToolsOzoneReportDefs } from '@atcute/ozone';
 
@@ -60,7 +59,7 @@ export function useSubmitReportMutation() {
 						reason: details,
 						subject: {
 							$type: 'com.atproto.admin.defs#repoRef',
-							did: subject.did as Did,
+							did: subject.did,
 						},
 					};
 					break;
@@ -75,7 +74,7 @@ export function useSubmitReportMutation() {
 						reason: details,
 						subject: {
 							$type: 'com.atproto.repo.strongRef',
-							uri: subject.uri as ResourceUri,
+							uri: subject.uri,
 							cid: subject.cid,
 						},
 					};
@@ -85,8 +84,7 @@ export function useSubmitReportMutation() {
 					report = {
 						reasonType,
 						reason: details,
-						// chat.bsky.convo.defs#messageRef is not in the createReport lexicon's
-						// subject union, but the chat moderation service accepts it
+						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- outside the createReport lexicon's subject union; chat moderation accepts it
 						subject: {
 							$type: 'chat.bsky.convo.defs#messageRef',
 							messageId: subject.message.id,
@@ -100,8 +98,7 @@ export function useSubmitReportMutation() {
 					report = {
 						reasonType,
 						reason: details,
-						// chat.bsky.convo.defs#convoRef is not in the createReport lexicon's
-						// subject union, but the chat moderation service accepts it
+						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- outside the createReport lexicon's subject union; chat moderation accepts it
 						subject: {
 							$type: 'chat.bsky.convo.defs#convoRef',
 							convoId: subject.convoId,
@@ -122,6 +119,7 @@ export function useSubmitReportMutation() {
 			} else {
 				// the report is funnelled to the selected labeler via the atproto-proxy header
 				const reportClient = pds.clone({
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `AtprotoAudience` pins the DID method; the lexicon doesn't
 					proxy: `${labeler.creator.did}#atproto_labeler` as AtprotoAudience,
 				});
 				await ok(reportClient.post('com.atproto.moderation.createReport', { input: report }));

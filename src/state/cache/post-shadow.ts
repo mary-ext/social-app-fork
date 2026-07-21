@@ -13,8 +13,10 @@ import { castAsShadow, type Shadow } from './types';
 export type { Shadow } from './types';
 
 export interface PostShadow {
-	likeUri: string | undefined;
-	repostUri: string | undefined;
+	/** the record uri, or `'pending'` while the write is in flight */
+	likeUri: 'pending' | ResourceUri | undefined;
+	/** the record uri, or `'pending'` while the write is in flight */
+	repostUri: 'pending' | ResourceUri | undefined;
 	isDeleted: boolean;
 	embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined;
 	pinned: boolean;
@@ -115,6 +117,7 @@ function mergeShadow(
 			(post.embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
 				shadow.embed?.$type === 'app.bsky.embed.recordWithMedia#view')
 		) {
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `$type` checks above pin both embeds to the same view
 			embed = shadow.embed as typeof post.embed;
 		}
 	}
@@ -128,7 +131,9 @@ function mergeShadow(
 		bookmarkCount: bookmarkCount,
 		viewer: {
 			...post.viewer,
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `likeUri` carries the `'pending'` sentinel mid-write; readers only test truthiness
 			like: 'likeUri' in shadow ? (shadow.likeUri as ResourceUri | undefined) : post.viewer?.like,
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `repostUri` carries the `'pending'` sentinel mid-write; readers only test truthiness
 			repost: 'repostUri' in shadow ? (shadow.repostUri as ResourceUri | undefined) : post.viewer?.repost,
 			pinned: 'pinned' in shadow ? shadow.pinned : post.viewer?.pinned,
 			bookmarked: 'bookmarked' in shadow ? shadow.bookmarked : post.viewer?.bookmarked,

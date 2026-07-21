@@ -5,6 +5,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 import deepEqual from 'fast-deep-equal';
 
 import { useTitle } from '#/lib/hooks/useTitle';
+import { errorMessage } from '#/lib/strings/errors';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
@@ -59,13 +60,11 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const [error, setError] = useState<string | undefined>(undefined);
 
 	const allowUI = threadgateRecordToAllowUISetting({
-		$type: 'app.bsky.feed.threadgate',
 		allow: preferences.postInteractionSettings.threadgateAllowRules,
-		createdAt: new Date().toISOString(),
-		post: '' as ResourceUri,
 	});
 	const postgate = createPostgateRecord({
 		embeddingRules: preferences.postInteractionSettings.postgateEmbeddingRules,
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- placeholder defaults; only `embeddingRules` is read back, never written
 		post: '' as ResourceUri,
 	});
 
@@ -87,7 +86,7 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 			Toast.show(m['screens.moderation.interaction.savedToast']());
 		} catch (e) {
 			logger.error(`Failed to save post interaction settings`, {
-				safeMessage: e instanceof Error ? e.message : String(e),
+				safeMessage: errorMessage(e),
 				source: 'ModerationInteractionSettingsScreen',
 			});
 			setError(m['screens.moderation.interaction.saveError']());

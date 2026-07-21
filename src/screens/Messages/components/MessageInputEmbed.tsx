@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
 
-import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri, type ResourceUri } from '@atcute/lexicons/syntax';
 
+import { getPostRecord } from '#/lib/api/record-views';
 import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
 import {
@@ -122,7 +122,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 
 	const { rt, record } = (() => {
 		if (post) {
-			const postRecord = post.record as AppBskyFeedPost.Main;
+			const postRecord = getPostRecord(post);
 			return {
 				rt: { text: postRecord.text, facets: postRecord.facets ?? [] },
 				record: postRecord,

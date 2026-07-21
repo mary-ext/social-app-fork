@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
-import { isNetworkError } from '#/lib/strings/errors';
+import { errorMessage, isNetworkError } from '#/lib/strings/errors';
 
 import { RQKEY } from '#/state/queries/profile';
 import { useClients } from '#/state/session';
@@ -26,7 +26,7 @@ import { GermLogo } from './GermButton';
 import * as css from './GermSelfDialog.css';
 
 /** Explains the viewer's own Germ DM link and lets them disconnect it. Opened from `GermSelfButton`. */
-export function GermSelfDialog({ did, handle }: { did: string; handle: Dialog.DialogHandle }) {
+export function GermSelfDialog({ did, handle }: { did: Did; handle: Dialog.DialogHandle }) {
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup size="narrow">
@@ -36,7 +36,7 @@ export function GermSelfDialog({ did, handle }: { did: string; handle: Dialog.Di
 	);
 }
 
-function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle }) {
+function DialogInner({ did, handle }: { did: Did; handle: Dialog.DialogHandle }) {
 	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
 
@@ -44,7 +44,7 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 		mutationFn: async () => {
 			const previousRecord = await getRecord(pds!, {
 				collection: 'com.germnetwork.declaration',
-				repo: did as Did,
+				repo: did,
 				rkey: 'self',
 			})
 				.then((res) => res.value)
@@ -52,7 +52,7 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 
 			await deleteRecord(pds!, {
 				collection: 'com.germnetwork.declaration',
-				repo: did as Did,
+				repo: did,
 				rkey: 'self',
 			});
 
@@ -67,7 +67,7 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 					await putRecord(pds!, {
 						collection: 'com.germnetwork.declaration',
 						record: previousRecord,
-						repo: did as Did,
+						repo: did,
 						rkey: 'self',
 					});
 					await whenAppViewReady(appview, did, (res) => !!res.associated?.germ);
@@ -75,7 +75,7 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 
 					Toast.show(m['screens.profile.germDm.reconnectedToast']());
 				} catch (e) {
-					const message = e instanceof Error ? e.message : String(e);
+					const message = errorMessage(e);
 					Toast.show(m['screens.profile.germDm.error.reconnect']({ message }), {
 						type: 'error',
 					});
@@ -137,13 +137,13 @@ function DialogInner({ did, handle }: { did: string; handle: Dialog.DialogHandle
 
 async function whenAppViewReady(
 	appview: Client,
-	actor: string,
+	actor: ActorIdentifier,
 	fn: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor: actor as ActorIdentifier } })),
+		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor } })),
 	);
 }

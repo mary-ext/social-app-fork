@@ -8,6 +8,7 @@ import {
 	moderateList,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -60,7 +61,8 @@ function ProfileListScreenInner() {
 		`at://${handle}/app.bsky.graph.list/${rkey}`,
 	);
 	const { data: preferences } = usePreferencesQuery();
-	const { data: list, error: listError } = useListQuery(resolvedUri?.uri);
+	const listUri = resolvedUri?.uri;
+	const { data: list, error: listError } = useListQuery(listUri);
 	const moderationOpts = useModerationOpts();
 
 	if (resolveError) {
@@ -96,9 +98,9 @@ function ProfileListScreenInner() {
 		);
 	}
 
-	return resolvedUri && list && moderationOpts && preferences ? (
+	return listUri && list && moderationOpts && preferences ? (
 		<ProfileListScreenLoaded
-			uri={resolvedUri.uri}
+			uri={listUri}
 			list={list}
 			moderationOpts={moderationOpts}
 			preferences={preferences}
@@ -123,7 +125,7 @@ function ProfileListScreenLoaded({
 	moderationOpts,
 	preferences,
 }: {
-	uri: string;
+	uri: ResourceUri;
 	list: AppBskyGraphDefs.ListView;
 	moderationOpts: ModerationOptions;
 	preferences: UsePreferencesQueryResponse;

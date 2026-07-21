@@ -75,6 +75,7 @@ function appendToken(
 			builder.addTag(token.raw, token.name);
 			break;
 		case 'autolink':
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the parser only emits `autolink` for `http(s)://` runs
 			builder.addLink(token.raw, token.url as GenericUri);
 			break;
 		default:
@@ -93,6 +94,7 @@ function appendToken(
 export function detectFacetsWithoutResolution(text: string): Richtext {
 	const builder = new RichtextBuilder();
 	for (const token of tokenize(text)) {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- display-only pass; consumers won't link a mention without a `did:`
 		appendToken(builder, token, (handle) => handle as Did);
 	}
 	return builder.build();

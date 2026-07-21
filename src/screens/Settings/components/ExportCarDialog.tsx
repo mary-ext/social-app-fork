@@ -47,7 +47,7 @@ function DialogInner() {
 			const did = currentAccount.did;
 			const carData = await ok(pds.get('com.atproto.sync.getRepo', { params: { did }, as: 'bytes' }));
 			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
-			saveBytesToDisk('repo.car', carData as Uint8Array<ArrayBuffer>, 'application/vnd.ipld.car');
+			saveBytesToDisk('repo.car', carData, 'application/vnd.ipld.car');
 
 			Toast.show(m['screens.settings.export.savedToast']());
 		} catch (e) {
@@ -66,7 +66,7 @@ function DialogInner() {
 			setLoading('chat');
 			const res = await ok(chat.get('chat.bsky.actor.exportAccountData', { as: 'bytes' }));
 			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
-			saveBytesToDisk('chat.jsonl', res as Uint8Array<ArrayBuffer>, 'application/jsonl');
+			saveBytesToDisk('chat.jsonl', res, 'application/jsonl');
 
 			Toast.show(m['screens.settings.export.savedToast']());
 		} catch (e) {

@@ -254,10 +254,8 @@ export function Composer({
 					))}
 				</div>
 				<BaseAutocomplete.Input
-					// `rows` is textarea-only, so it rides on the render element, not the input-typed props.
-					render={<textarea rows={1} />}
-					// Base UI types Input for `<input>`; we render a `<textarea>`, so the ref is really a textarea.
-					ref={textareaRef as unknown as Ref<HTMLInputElement>}
+					// `rows` and the ref are textarea-only, so they ride on the render element; Base UI merges refs
+					render={<textarea rows={1} ref={textareaRef} />}
 					className={styles.textarea}
 					placeholder={placeholder}
 					disabled={disabled}

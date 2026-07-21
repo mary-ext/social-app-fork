@@ -60,7 +60,7 @@ export async function uploadVideo({
 				if (signal.aborted) {
 					reject(new AbortError());
 				} else if (xhr.readyState === 4) {
-					const uploadRes = JSON.parse(xhr.responseText) as AppBskyVideoDefs.JobStatus;
+					const uploadRes: AppBskyVideoDefs.JobStatus = JSON.parse(xhr.responseText);
 					resolve(uploadRes);
 				} else {
 					reject(new ServerError(m['lib.video.uploadFailed']()));

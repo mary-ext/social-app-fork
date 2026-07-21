@@ -21,10 +21,17 @@ type Context = {
 	};
 };
 
-const Context = createContext<Context>({} as Context);
+const Context = createContext<Context | null>(null);
 Context.displayName = 'HiderContext';
 
-export const useHider = () => useContext(Context);
+/** reads the enclosing {@link Outer}'s state. only valid below one. */
+export const useHider = () => {
+	const ctx = useContext(Context);
+	if (!ctx) {
+		throw new Error('useHider must be used within a Hider.Outer');
+	}
+	return ctx;
+};
 
 export function Outer({
 	modui,

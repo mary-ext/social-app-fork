@@ -1,6 +1,7 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import { type ActorIdentifier, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import type { Did } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { cleanError, errorToString } from '#/lib/strings/errors';
 
@@ -105,12 +106,14 @@ function FeedgenErrorMessage({
 		[KnownError.FeedTooManyRequests]: m['view.posts.feed.error.highTraffic'](),
 	}[knownError];
 	const [__, uri] = feedDesc.split('|');
-	const [ownerDid] = safeParseFeedgenUri(uri!);
+	const ownerDid = safeParseFeedgenOwnerDid(uri!);
 	const removePromptHandle = Prompt.usePromptHandle();
 	const { mutateAsync: removeFeed } = useRemoveFeedMutation();
 
 	const onViewProfile = () => {
-		navigate('Profile', { actor: ownerDid as ActorIdentifier });
+		if (ownerDid) {
+			navigate('Profile', { actor: ownerDid });
+		}
 	};
 
 	const onPressRemoveFeed = () => {
@@ -183,12 +186,11 @@ function FeedgenErrorMessage({
 	);
 }
 
-function safeParseFeedgenUri(uri: string): [string, string] {
+function safeParseFeedgenOwnerDid(uri: string): Did | undefined {
 	try {
-		const urip = parseCanonicalResourceUri(uri);
-		return [urip.repo, urip.rkey];
+		return parseCanonicalResourceUri(uri).repo;
 	} catch {
-		return ['', ''];
+		return undefined;
 	}
 }
 

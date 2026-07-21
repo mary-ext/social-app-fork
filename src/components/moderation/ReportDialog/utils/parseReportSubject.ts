@@ -1,4 +1,6 @@
-import { unwrapEmbed, type AppBskyFeedPost } from '@atcute/bluesky';
+import { unwrapEmbed } from '@atcute/bluesky';
+
+import { getPostRecord } from '#/lib/api/record-views';
 
 import type { ParsedReportSubject, ReportSubject } from '#/components/moderation/ReportDialog/types';
 
@@ -59,7 +61,7 @@ export function parseReportSubject(subject: ReportSubject): ParsedReportSubject 
 			nsid: 'app.bsky.graph.starterPack',
 		};
 	} else if (subject?.$type === 'app.bsky.feed.defs#postView') {
-		const record = subject.record as AppBskyFeedPost.Main;
+		const record = getPostRecord(subject);
 		const { media, record: embedRecord } = unwrapEmbed(subject.embed);
 		return {
 			type: 'post',

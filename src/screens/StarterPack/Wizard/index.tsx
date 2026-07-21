@@ -1,6 +1,6 @@
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { isDid, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useParams, useRoute } from '@oomfware/stacker';
 
@@ -52,8 +52,8 @@ import * as css from './Wizard.css';
 export function Wizard() {
 	const { name: routeName } = useRoute();
 	const params = useParams();
-	const rkey = params.rkey as string | undefined;
-	const targetDid = params.targetDid as string | undefined;
+	const rkey = typeof params.rkey === 'string' ? params.rkey : undefined;
+	const targetDid = isDid(params.targetDid) ? params.targetDid : undefined;
 	useTitle(
 		routeName === 'StarterPackEdit'
 			? m['navigation.starterPack.edit.title']()
