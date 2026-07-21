@@ -16,6 +16,27 @@
 	},
 	"plugins": ["import", "oxc", "react", "typescript", "unicorn"],
 	"rules": {
+		"no-array-constructor": "error",
+		// these loops are sequential by construction — cursor pagination, retry/backoff, job polling, stream
+		// reads, chunked writes — and the rule can't see the data dependency that forces the ordering.
+		"no-await-in-loop": "off",
+		"no-regex-spaces": "error",
+		"no-restricted-imports": [
+			"error",
+			{
+				"paths": [
+					{
+						"name": "react",
+						"importNames": ["React", "default"],
+						"message": "React is already in the global type namespace. Use named imports for runtime modules."
+					}
+				]
+			}
+		],
+		"no-underscore-dangle": "off",
+		"no-var": "error",
+		"prefer-const": "error",
+		"prefer-spread": "error",
 		"bsky-internal/avoid-unwrapped-text": [
 			"error",
 			{
@@ -52,27 +73,6 @@
 				"allow": ["**/*.css"]
 			}
 		],
-		"no-array-constructor": "error",
-		// these loops are sequential by construction — cursor pagination, retry/backoff, job polling, stream
-		// reads, chunked writes — and the rule can't see the data dependency that forces the ordering.
-		"no-await-in-loop": "off",
-		"no-regex-spaces": "error",
-		"no-restricted-imports": [
-			"error",
-			{
-				"paths": [
-					{
-						"name": "react",
-						"importNames": ["React", "default"],
-						"message": "React is already in the global type namespace. Use named imports for runtime modules."
-					}
-				]
-			}
-		],
-		"no-underscore-dangle": "off",
-		"no-var": "error",
-		"prefer-const": "error",
-		"prefer-spread": "error",
 		"react/display-name": "error",
 		"react/hook-use-state": "warn",
 		// React Compiler already hoists context values into its memo cache, keyed on their dependencies; a
