@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import type { AppBskyFeedPostgate } from '@atcute/bluesky';
 
-import deepEqual from 'fast-deep-equal';
+import { dequal } from 'dequal/lite';
 
 import { isNetworkError } from '#/lib/strings/errors';
 
@@ -49,8 +49,8 @@ export function ThreadgateBtn({
 
 	const everybody = [{ type: 'everybody' }];
 	const isDirty =
-		!deepEqual(threadgateAllowUISettings, prefThreadgateAllowUISettings ?? everybody) ||
-		!deepEqual(postgate.embeddingRules, prefEmbeddingRules);
+		!dequal(threadgateAllowUISettings, prefThreadgateAllowUISettings ?? everybody) ||
+		!dequal(postgate.embeddingRules, prefEmbeddingRules);
 
 	const { mutate: persistChanges, isPending: isSaving } = usePostInteractionSettingsMutation({
 		onError: (err) => {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import type { ResourceUri } from '@atcute/lexicons';
 
-import deepEqual from 'fast-deep-equal';
+import { dequal } from 'dequal/lite';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 import { errorMessage } from '#/lib/strings/errors';
@@ -72,8 +72,8 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const [maybeEditedPostgate, setMaybeEditedPostgate] = useState(postgate);
 
 	const wasEdited =
-		!deepEqual(allowUI, maybeEditedAllowUI) ||
-		!deepEqual(postgate.embeddingRules, maybeEditedPostgate.embeddingRules);
+		!dequal(allowUI, maybeEditedAllowUI) ||
+		!dequal(postgate.embeddingRules, maybeEditedPostgate.embeddingRules);
 
 	const onSave = async () => {
 		setError('');
