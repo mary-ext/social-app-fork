@@ -14,11 +14,11 @@ import { Trans } from '#/locale/Trans';
 import { atoms as a, useTheme } from '#/alf';
 
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
-import { KnownFollowers } from '#/components/KnownFollowers';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
+import { KnownFollowers } from '#/components/web/KnownFollowers';
 
 import { m } from '#/paraglide/messages';
 import { LinearGradient } from '#/shims/linear-gradient';
@@ -52,7 +52,7 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 			/>
 			{otherUser && <InviterHeader profile={otherUser} moderationOpts={moderationOpts} />}
 			{otherUser && (
-				<KnownFollowers profile={otherUser} moderationOpts={moderationOpts} minimal showIfEmpty />
+				<KnownFollowers moderationOpts={moderationOpts} profile={otherUser} showIfEmpty variant="compact" />
 			)}
 			<View style={[a.flex_row, a.gap_md, a.w_full, otherUser && a.pt_sm]}>
 				{otherUser && (

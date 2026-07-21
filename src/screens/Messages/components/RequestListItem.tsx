@@ -12,9 +12,9 @@ import { useSession } from '#/state/session';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
-import { KnownFollowers } from '#/components/KnownFollowers';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
+import { KnownFollowers } from '#/components/web/KnownFollowers';
 
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
@@ -119,7 +119,7 @@ function DirectRequestItem({
 						{preview.text}
 					</ChatRow.LastMessage>
 
-					<KnownFollowers minimal moderationOpts={moderationOpts} profile={profile} showIfEmpty />
+					<KnownFollowers moderationOpts={moderationOpts} profile={profile} showIfEmpty variant="compact" />
 				</ChatRow.Content>
 			</ChatRow.Body>
 

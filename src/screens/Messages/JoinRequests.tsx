@@ -32,13 +32,13 @@ import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo';
-import { KnownFollowers } from '#/components/KnownFollowers';
 import * as Layout from '#/components/Layout';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
+import { KnownFollowers } from '#/components/web/KnownFollowers';
 
 import { m } from '#/paraglide/messages';
 import { useParams, useRouter } from '#/routes';
@@ -230,7 +230,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 						<ProfileCard.Name profile={item} moderationOpts={moderationOpts} />
 						<ProfileCard.Handle profile={item} />
 						<View style={[a.mt_xs]}>
-							<KnownFollowers profile={item} moderationOpts={moderationOpts} minimal showIfEmpty />
+							<KnownFollowers moderationOpts={moderationOpts} profile={item} showIfEmpty variant="compact" />
 						</View>
 						<View style={[a.flex_row, a.align_center, a.gap_sm, a.mt_md]}>
 							<AcceptButton disabled={isMutating} onPress={() => approveJoinRequest({ member: item.did })} />
