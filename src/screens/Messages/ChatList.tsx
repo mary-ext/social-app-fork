@@ -1,4 +1,4 @@
-import { type ComponentProps, useCallback, useEffect, useRef } from 'react';
+import { type ComponentProps, useRef } from 'react';
 
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -40,7 +40,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useIsFocused, useNavigate } from '#/routes';
+import { useFocusEffect, useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './ChatList.css';
@@ -49,7 +49,6 @@ import { ChatListItem } from './components/ChatListItem';
 import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
 import { InboxRequests } from './components/InboxRequests';
 import { useIsWithinSplitView } from './components/splitView/context';
-import { splitViewLeftScroll } from './components/splitView/leftColumnScroll';
 import { useRequestMessagePollInterval } from './use-request-poll-interval';
 
 const CHAT_ITEM_HEIGHT_ESTIMATE = 78;
@@ -64,10 +63,6 @@ type ChatStatus = ChatBskyActorGetStatus.$output;
 
 function renderItem({ item }: { item: ListItem }) {
 	return <ChatListItem convo={item.conversation} selected={item.selected} />;
-}
-
-function onLeftColumnScroll(e: React.UIEvent<HTMLDivElement>) {
-	splitViewLeftScroll.current = e.currentTarget.scrollTop;
 }
 
 function keyExtractor(item: ListItem) {
@@ -179,43 +174,20 @@ export function ChatList({
 		}
 	};
 
-	const restoredRef = useRef(false);
+	useFocusEffect(() => {
+		return softReset.subscribe(async () => {
+			scrollElRef.current?.scrollToOffset({
+				animated: false,
+				offset: 0,
+			});
 
-	const onSoftReset = useCallback(async () => {
-		scrollElRef.current?.scrollToOffset({
-			animated: false,
-			offset: 0,
+			try {
+				await refetch();
+			} catch (err) {
+				logger.error('Failed to refresh conversations', { message: err });
+			}
 		});
-		if (isWithinSplitView) {
-			// module-level singleton persists scroll across remounts by design
-			splitViewLeftScroll.current = 0;
-			restoredRef.current = true;
-		}
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh conversations', { message: err });
-		}
-	}, [refetch, isWithinSplitView]);
-
-	const onContentSizeChange = (_width: number, height: number) => {
-		if (!isWithinSplitView || restoredRef.current) {
-			return;
-		}
-		const offset = splitViewLeftScroll.current;
-		if (offset > 0 && height >= offset) {
-			scrollElRef.current?.scrollToOffset({ offset, animated: false });
-			restoredRef.current = true;
-		}
-	};
-
-	const isScreenFocused = useIsFocused();
-	useEffect(() => {
-		if (!isScreenFocused) {
-			return;
-		}
-		return softReset.subscribe(() => void onSoftReset());
-	}, [onSoftReset, isScreenFocused]);
+	});
 
 	if (conversations.length === 0) {
 		return (
@@ -285,7 +257,6 @@ export function ChatList({
 			keyExtractor={keyExtractor}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={0}
-			onContentSizeChange={onContentSizeChange}
 			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 			ListHeaderComponent={
 				chatStatus?.chatDisabled ? (
@@ -306,7 +277,7 @@ export function ChatList({
 
 	if (isWithinSplitView) {
 		return (
-			<div ref={scrollContainerRef} className={css.splitScroller} onScroll={onLeftColumnScroll}>
+			<div ref={scrollContainerRef} className={css.splitScroller}>
 				{list}
 			</div>
 		);
