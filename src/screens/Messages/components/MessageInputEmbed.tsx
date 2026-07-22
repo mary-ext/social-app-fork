@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { LayoutAnimation, View } from 'react-native';
 
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri, type ResourceUri } from '@atcute/lexicons/syntax';
 
+import { clsx } from 'clsx';
+
 import { getPostRecord } from '#/lib/api/record-views';
-import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
 import {
 	convertBskyAppUrlIfNeeded,
@@ -21,9 +21,6 @@ import { usePostQuery } from '#/state/queries/post';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
 import * as ChatInvite from '#/components/dms/ChatInvite';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as MediaPreview from '#/components/MediaPreview';
@@ -31,12 +28,26 @@ import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
+import { colors } from '#/styles/colors';
 
 import * as css from './MessageInputEmbed.css';
+
+function RemoveButton({ floating, onRemove }: { floating?: boolean; onRemove: () => void }) {
+	return (
+		<button
+			aria-label={m['screens.messages.composer.embed.remove']()}
+			className={clsx(css.removeButton, floating && css.removeButtonFloating)}
+			onClick={onRemove}
+			type="button"
+		>
+			<XIcon fill={colors.textContrastHigh} size="xs" />
+		</button>
+	);
+}
 
 /**
  * The embed staged in the message composer. A message can carry at most one embed: either a quoted post or a
@@ -99,7 +110,6 @@ export function MessageInputEmbed({
 	setEmbed: (embedUrl: string | undefined) => void;
 }) {
 	const onRemove = () => {
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		setEmbed(undefined);
 	};
 
@@ -116,7 +126,6 @@ export function MessageInputEmbed({
 }
 
 function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: () => void }) {
-	const t = useTheme();
 	const { data: post, status } = usePostQuery(uri);
 
 	const moderationOpts = useModerationOpts();
@@ -144,7 +153,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 		case 'error':
 			return (
 				<SimpleContainer onRemove={onRemove}>
-					<Text style={[a.text_center, t.atoms.text_contrast_medium, a.italic]}>
+					<Text align="center" className={css.italic} color="textContrastMedium">
 						{m['screens.messages.composer.embed.fetchError']()}
 					</Text>
 				</SimpleContainer>
@@ -158,29 +167,20 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 			}
 
 			return (
-				<View
-					style={[a.flex_1, t.atoms.border_contrast_high, a.rounded_md, a.border, a.p_sm, a.mt_sm, a.mx_sm]}
-				>
-					<View style={[a.flex_1, a.flex_row, a.gap_sm]}>
-						<View style={[a.flex_1, a.pb_xs]}>
+				<div className={css.container}>
+					<div className={css.metaRow}>
+						<div className={css.metaColumn}>
 							<PostMeta
-								showAvatar
 								author={post.author}
-								moderation={moderation}
-								timestamp={post.indexedAt}
-								postHref={itemHref}
 								linkDisabled
+								moderation={moderation}
+								postHref={itemHref}
+								showAvatar
+								timestamp={post.indexedAt}
 							/>
-						</View>
-						<Button
-							label={m['screens.messages.composer.embed.remove']()}
-							onPress={onRemove}
-							style={[a.px_2xs, { transform: [{ translateY: -2 }] }]}
-							hitSlop={HITSLOP_20}
-						>
-							<XIcon size="xs" style={t.atoms.text_contrast_high} />
-						</Button>
-					</View>
+						</div>
+						<RemoveButton onRemove={onRemove} />
+					</div>
 					<ContentHider modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}>
 						<PostAlerts
 							className={css.postAlerts}
@@ -197,29 +197,21 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 								numberOfLines={3}
 							/>
 						)}
-						<MediaPreview.Embed embed={post.embed} className={css.embed} />
+						<MediaPreview.Embed className={css.embed} embed={post.embed} />
 					</ContentHider>
-				</View>
+				</div>
 			);
 	}
 }
 
 function MessageInputInviteEmbed({ code, onRemove }: { code: string; onRemove: () => void }) {
-	const t = useTheme();
 	const { status, preview } = ChatInvite.useChatInvite({ code });
 
 	return (
-		<View style={[a.flex_1, t.atoms.border_contrast_high, a.rounded_md, a.border, a.p_sm, a.mt_sm, a.mx_sm]}>
-			<MessageInputInviteEmbedBody status={status} preview={preview} />
-			<Button
-				label={m['screens.messages.composer.embed.remove']()}
-				onPress={onRemove}
-				style={[a.absolute, { top: 10, right: 8 }, a.px_2xs, { transform: [{ translateY: -2 }] }]}
-				hitSlop={HITSLOP_20}
-			>
-				<XIcon size="xs" style={t.atoms.text_contrast_high} />
-			</Button>
-		</View>
+		<div className={css.container}>
+			<MessageInputInviteEmbedBody preview={preview} status={status} />
+			<RemoveButton floating onRemove={onRemove} />
+		</div>
 	);
 }
 
@@ -242,32 +234,10 @@ function MessageInputInviteEmbedBody({
 }
 
 function SimpleContainer({ children, onRemove }: { children: React.ReactNode; onRemove?: () => void }) {
-	const t = useTheme();
 	return (
-		<View
-			style={[
-				a.flex_1,
-				{ minHeight: 80 },
-				a.justify_center,
-				a.align_center,
-				t.atoms.border_contrast_high,
-				a.rounded_md,
-				a.border,
-				a.mt_sm,
-				a.mx_sm,
-			]}
-		>
+		<div className={css.simpleContainer}>
 			{children}
-			{onRemove && (
-				<Button
-					label={m['screens.messages.composer.embed.remove']()}
-					onPress={onRemove}
-					style={[a.absolute, { top: 10, right: 8 }, a.px_2xs, { transform: [{ translateY: -2 }] }]}
-					hitSlop={HITSLOP_20}
-				>
-					<XIcon size="xs" style={t.atoms.text_contrast_high} />
-				</Button>
-			)}
-		</View>
+			{onRemove && <RemoveButton floating onRemove={onRemove} />}
+		</div>
 	);
 }

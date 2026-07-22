@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { LayoutAnimation } from 'react-native';
 
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -78,7 +77,6 @@ export function MessageOverlays({ children }: { children: React.ReactNode }) {
 		if (!deleteTarget) {
 			return;
 		}
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		convo
 			.deleteMessage(deleteTarget.id)
 			.then(() => Toast.show(m['components.dms.delete.messageDeleted']()))
