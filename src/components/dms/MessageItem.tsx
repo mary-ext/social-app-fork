@@ -1,11 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
-import {
-	type GestureResponderEvent,
-	type StyleProp,
-	type TextStyle,
-	View,
-	type ViewStyle,
-} from 'react-native';
+import { type CSSProperties, memo, type MouseEvent, useEffect, useRef } from 'react';
 
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -23,24 +16,22 @@ import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme, utils } from '#/alf';
 import { isOnlyEmoji } from '#/alf/typography';
 
-import { Button } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { ActionsWrapper } from '#/components/dms/ActionsWrapper';
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import { getReplyPreviewText } from '#/components/dms/replyPreview';
 import { ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
-import { InlineLinkText } from '#/components/Link';
-import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
-import { Text as WebText } from '#/components/Text';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { InlineButton } from '#/components/web/Link';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+import { colors } from '#/styles/colors';
 
 import { DateDivider } from './DateDivider';
 import * as css from './MessageItem.css';
@@ -53,7 +44,6 @@ const AVATAR_SIZE = 28;
 const CLUSTERED_MESSAGE_GAP = 2;
 const BORDER_RADIUS = 20;
 const SQUARED_BORDER_RADIUS = 4;
-const DISPLAY_NAME_INSET = 22;
 
 export type MessageItemNeighbor = ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | null;
 
@@ -116,7 +106,6 @@ let MessageItem = ({
 	nextMessage: MessageItemNeighbor;
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 }): React.ReactNode => {
-	const t = useTheme();
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 	const queryClient = useQueryClient();
@@ -193,7 +182,7 @@ let MessageItem = ({
 	const squaredTopCorner =
 		!prevHasReactions && !isPrevEmojiOnly && isInCluster && (isInMiddleOfCluster || isLastInCluster);
 
-	const pendingColor = t.palette.primary_300;
+	const pendingColor = colors.primary_300;
 
 	const rt = { text: message.text, facets: message.facets ?? [] };
 
@@ -213,25 +202,21 @@ let MessageItem = ({
 	// so re-tapping the same message re-triggers the flash.
 	const isHighlighted = highlightedMessage?.id === message.id;
 	const highlightKey = isHighlighted ? highlightedMessage.key : null;
-	const flashRef = useRef<View | null>(null);
+	const flashRef = useRef<HTMLDivElement | null>(null);
 	useEffect(() => {
 		if (highlightKey === null) {
 			return;
 		}
-		// The fork's reanimated shim can't drive imperative shared-value animations,
-		// so flash the always-mounted overlay via the Web Animations API instead.
+		// flash the always-mounted overlay via the Web Animations API.
 		const node = flashRef.current;
-		const animation =
-			node instanceof HTMLElement
-				? node.animate(
-						[{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }],
-						{ duration: 1000, easing: 'ease' },
-					)
-				: undefined;
+		const animation = node?.animate(
+			[{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }],
+			{ duration: 1000, easing: 'ease' },
+		);
 		return () => animation?.cancel();
 	}, [highlightKey]);
 
-	const borderRadiusStyle = isFromSelf
+	const borderRadiusStyle: CSSProperties = isFromSelf
 		? {
 				borderBottomRightRadius: targetBottomRadius,
 				borderTopRightRadius: targetTopRadius,
@@ -287,13 +272,13 @@ let MessageItem = ({
 	const reactionPillContents = (
 		<>
 			{groupedReactions.slice(0, 10).map((group) => (
-				<WebText key={group.value} size="lg" leading="none">
+				<Text key={group.value} leading="none" size="lg">
 					{group.value}
-				</WebText>
+				</Text>
 			))}
 			{(groupedReactions.length !== reactions.length || groupedReactions.length > 10) &&
 			reactions.length > 1 ? (
-				<WebText
+				<Text
 					className={css.reactionCount}
 					color={hasSelfReacted ? 'primary_900' : 'textContrastMedium'}
 					leading="none"
@@ -301,7 +286,7 @@ let MessageItem = ({
 					weight="semiBold"
 				>
 					{reactions.length}
-				</WebText>
+				</Text>
 			) : null}
 		</>
 	);
@@ -309,15 +294,7 @@ let MessageItem = ({
 	const appliedReactions = (
 		<>
 			{hasReactions ? (
-				<View
-					style={[
-						a.absolute,
-						{ top: '100%' },
-						isFromSelf ? [a.right_0] : [a.left_0, isGroupChat && a.ml_sm],
-						a.px_sm,
-						a.z_10,
-					]}
-				>
+				<div className={css.reactionsWrap({ fromSelf: isFromSelf, groupIndent: !isFromSelf && isGroupChat })}>
 					{isGroupChat ? (
 						// detached Trigger: opens the reactions Dialog.Root owned by MessageOverlays, keyed to this message.
 						<Dialog.Trigger
@@ -341,75 +318,45 @@ let MessageItem = ({
 							{reactionPillContents}
 						</div>
 					)}
-				</View>
+				</div>
 			) : null}
 		</>
 	);
 
-	const messageInset = a.mx_lg;
-	// Negative of `messageInset` so the flash bleeds past the row's horizontal
-	// margin to the screen edges.
-	const flashBleed = -a.mx_lg.marginLeft;
+	const isEmojiOnly = isOnlyEmoji(message.text);
+	const bubbleBackground = isFromSelf ? (isPending ? pendingColor : colors.primary_500) : colors.contrast_50;
 
 	return (
 		<>
 			{hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
-			<View
-				style={[
-					messageInset,
-					isFirstInCluster ? a.mt_md : { marginTop: CLUSTERED_MESSAGE_GAP },
-					hasReactions && { paddingBottom: 26 },
-				]}
-			>
-				<View
-					ref={flashRef}
-					pointerEvents="none"
-					style={[
-						a.absolute,
-						{
-							top: -CLUSTERED_MESSAGE_GAP,
-							bottom: -CLUSTERED_MESSAGE_GAP,
-							left: flashBleed,
-							right: flashBleed,
-							backgroundColor: t.palette.primary_100,
-							opacity: 0,
-						},
-					]}
-				/>
-				<View style={[a.relative]}>
-					{showAvatar ? <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View> : null}
-					<View style={[a.relative, a.flex_grow, !isFromSelf && isGroupChat && { paddingLeft: AVATAR_SIZE }]}>
+			<div className={css.row({ firstInCluster: isFirstInCluster, hasReactions })}>
+				<div className={css.flash} ref={flashRef} />
+				<div className={css.relative}>
+					{showAvatar ? <div className={css.avatarSlot}>{avatar}</div> : null}
+					<div className={css.col({ avatarGutter: !isFromSelf && isGroupChat })}>
 						{replyTo ? (
 							<ReplyCaption
-								replyTo={replyTo}
 								isFromSelf={isFromSelf}
 								isGroupChat={isGroupChat}
-								replierDisplayName={displayName}
-								relatedProfiles={relatedProfiles}
 								onPress={onPressReplyTo}
+								relatedProfiles={relatedProfiles}
+								replierDisplayName={displayName}
+								replyTo={replyTo}
 							/>
 						) : displayName && showDisplayName ? (
-							<Text
-								style={[
-									a.text_xs,
-									t.atoms.text_contrast_medium,
-									a.pt_xs,
-									a.pb_2xs,
-									{ paddingLeft: DISPLAY_NAME_INSET },
-								]}
-							>
+							<Text className={css.displayName} color="textContrastMedium" size="xs">
 								{displayName}
 							</Text>
 						) : null}
 						{profile && isBlockedOrBlocking(profile) && isGroupChat ? (
-							<BlockedPlaceholder profile={profile} style={borderRadiusStyle} />
+							<BlockedPlaceholder profile={profile} radiusStyle={borderRadiusStyle} />
 						) : (
-							<View style={[a.relative]}>
+							<div className={css.relative}>
 								<ActionsWrapper
 									isFromSelf={isFromSelf}
 									message={message}
-									senderProfile={profile}
 									moderationOpts={moderationOpts}
+									senderProfile={profile}
 								>
 									{message.embed?.$type === 'app.bsky.embed.record#view' && (
 										<MessageItemEmbed
@@ -430,62 +377,52 @@ let MessageItem = ({
 										/>
 									)}
 									{rt.text.length > 0 && (
-										<View
-											accessibilityHint={m['components.dms.reaction.hint']()}
-											style={[
-												!isFromSelf && isGroupChat && a.ml_sm,
-												!isOnlyEmoji(message.text) && [
-													a.rounded_xl,
-													a.py_sm,
-													a.px_md,
-													a.max_w_full,
-													{
-														marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
-														backgroundColor: isFromSelf
-															? isPending
-																? pendingColor
-																: t.palette.primary_500
-															: t.palette.contrast_50,
-													},
-													isFromSelf ? a.self_end : a.self_start,
-													borderRadiusStyle,
-												],
-											]}
+										<div
+											className={clsx(
+												!isFromSelf && isGroupChat && css.bubbleIndent,
+												!isEmojiOnly && css.bubbleStyled,
+												!isEmojiOnly && (isFromSelf ? css.bubbleSelf : css.bubbleOther),
+											)}
+											style={
+												isEmojiOnly
+													? undefined
+													: {
+															marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
+															backgroundColor: bubbleBackground,
+															...borderRadiusStyle,
+														}
+											}
 										>
-											{replyTo && !isOnlyEmoji(message.text) ? (
+											{replyTo && !isEmojiOnly ? (
 												<ReplyQuote
-													replyTo={replyTo}
 													isFromSelf={isFromSelf}
-													relatedProfiles={relatedProfiles}
 													onPress={onPressReplyTo}
+													relatedProfiles={relatedProfiles}
+													replyTo={replyTo}
 												/>
 											) : null}
 											<RichText
 												// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
 												// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
-												className={
-													isOnlyEmoji(message.text) && !isFromSelf ? css.emojiBaselineNudge : undefined
-												}
+												className={isEmojiOnly && !isFromSelf ? css.emojiBaselineNudge : undefined}
 												color={isFromSelf ? 'white' : undefined}
 												emojiScale="large"
 												enableTags
-												leading={isOnlyEmoji(message.text) ? 'none' : undefined}
+												leading={isEmojiOnly ? 'none' : undefined}
 												linkUnderline="always"
 												size="md"
 												value={rt}
 											/>
-										</View>
+										</div>
 									)}
 								</ActionsWrapper>
 								{appliedReactions}
-							</View>
+							</div>
 						)}
-					</View>
-				</View>
-				{isLastInCluster && (
-					<MessageItemMetadata item={item} style={[isFromSelf ? a.text_right : a.text_left]} />
-				)}
-			</View>
+					</div>
+				</div>
+				{isLastInCluster && <MessageItemMetadata align={isFromSelf ? 'right' : 'left'} item={item} />}
+			</div>
 		</>
 	);
 };
@@ -494,40 +431,36 @@ export { MessageItem };
 
 function MessageItemMetadata({
 	item,
-	style,
+	align,
 }: {
 	item: ConvoItem & { type: 'message' | 'pending-message' };
-	style: StyleProp<TextStyle>;
+	align: 'left' | 'right';
 }): React.ReactNode {
-	const t = useTheme();
-	const handleRetry = (e: GestureResponderEvent) => {
+	const handleRetry = (e: MouseEvent) => {
 		if (item.type === 'pending-message' && item.retry) {
 			e.preventDefault();
 			item.retry();
-			return false;
 		}
 	};
-
-	const errorColor = t.palette.negative_400;
 
 	switch (item.type) {
 		case 'pending-message':
 			return item.failed ? (
-				<Text style={[a.text_xs, a.my_2xs, { color: errorColor }, style]}>
-					<Text style={[a.text_xs, { color: errorColor }]}>
+				<Text align={align} className={css.meta} color="negative_400" size="xs">
+					<Text color="negative_400" size="xs">
 						{m['components.dms.message.error.sendFailed']()}
 					</Text>
 					{item.retry && (
 						<>
 							{' '}
-							<InlineLinkText
+							<InlineButton
+								color="negative_400"
 								label={m['components.dms.message.action.retry']()}
-								to="#"
-								onPress={handleRetry}
-								style={[a.text_xs, { color: errorColor }]}
+								onClick={handleRetry}
+								size="xs"
 							>
 								{m['components.dms.message.a11y.retry']()}
-							</InlineLinkText>
+							</InlineButton>
 							.
 						</>
 					)}
@@ -541,48 +474,32 @@ export { MessageItemMetadata };
 
 function BlockedPlaceholder({
 	profile,
-	style,
+	radiusStyle,
 }: {
 	profile: Shadow<ChatBskyActorDefs.ProfileViewBasic>;
-	style?: StyleProp<ViewStyle>;
+	radiusStyle?: CSSProperties;
 }) {
-	const t = useTheme();
 	const control = Prompt.usePromptHandle();
 	const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
 
+	const label = profile.viewer?.blocking
+		? m['components.dms.block.messageHiddenYouBlocking']()
+		: m['components.dms.block.messageHiddenBlockingYou']();
+
 	return (
 		<>
-			<Button
-				style={[{ maxWidth: '80%' }, a.self_start]}
-				label={
-					profile.viewer?.blocking
-						? m['components.dms.block.messageHiddenYouBlocking']()
-						: m['components.dms.block.messageHiddenBlockingYou']()
-				}
-				accessibilityHint={m['components.dms.message.a11y.tapForDetails']()}
-				onPress={() => control.open(null)}
+			<button
+				aria-label={label}
+				className={css.blockedButton}
+				onClick={() => control.open(null)}
+				type="button"
 			>
-				<View
-					style={[
-						a.ml_sm,
-						a.rounded_xl,
-						a.py_sm,
-						a.px_md,
-						t.atoms.bg,
-						a.self_start,
-						a.border,
-						t.atoms.border_contrast_high,
-						a.flex_shrink,
-						style,
-					]}
-				>
-					<Text style={[a.text_sm, a.leading_snug, a.italic, t.atoms.text_contrast_medium]}>
-						{profile.viewer?.blocking
-							? m['components.dms.block.messageHiddenYouBlocking']()
-							: m['components.dms.block.messageHiddenBlockingYou']()}
+				<div className={css.blockedBubble} style={radiusStyle}>
+					<Text className={css.italic} color="textContrastMedium" size="sm">
+						{label}
 					</Text>
-				</View>
-			</Button>
+				</div>
+			</button>
 			<Prompt.Outer handle={control}>
 				<Prompt.Content>
 					<Prompt.TitleText>
@@ -634,7 +551,6 @@ function ReplyCaption({
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 	onPress?: () => void;
 }) {
-	const t = useTheme();
 	const { currentAccount } = useSession();
 
 	// The before-joined placeholder carries no sender, so fall back to a generic caption.
@@ -663,30 +579,23 @@ function ReplyCaption({
 					: m['components.dms.reply.replied']({ replier: replierDisplayName ?? '' });
 	}
 
+	const captionAlign = isFromSelf ? 'self' : isGroupChat ? 'otherGroup' : 'otherPlain';
+
 	return (
-		<Button
-			label={
+		<button
+			aria-label={
 				onPress ? m['components.dms.reply.a11y.scrollTo']() : m['components.dms.reply.a11y.beforeJoined']()
 			}
+			className={css.replyCaption({ align: captionAlign })}
 			disabled={!onPress}
-			onPress={onPress}
-			style={[
-				a.w_full,
-				a.flex_row,
-				a.align_center,
-				a.gap_2xs,
-				a.pb_2xs,
-				a.pt_xs,
-				isFromSelf
-					? [a.justify_end, a.pr_md]
-					: [a.justify_start, isGroupChat ? { paddingLeft: DISPLAY_NAME_INSET } : a.pl_md],
-			]}
+			onClick={onPress}
+			type="button"
 		>
-			<ArrowCornerDownRightIcon size="xs" style={t.atoms.text_contrast_medium} />
-			<Text style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]} numberOfLines={1}>
+			<ArrowCornerDownRightIcon fill={colors.textContrastMedium} size="xs" />
+			<Text className={css.replyCaptionText} color="textContrastMedium" numberOfLines={1} size="xs">
 				{caption}
 			</Text>
-		</Button>
+		</button>
 	);
 }
 
@@ -708,7 +617,6 @@ function ReplyQuote({
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 	onPress?: () => void;
 }) {
-	const t = useTheme();
 	const senderDid =
 		replyTo.$type === 'chat.bsky.convo.defs#messageView' ||
 		replyTo.$type === 'chat.bsky.convo.defs#deletedMessageView'
@@ -720,11 +628,9 @@ function ReplyQuote({
 	const isBlocked = senderProfile ? isBlockedOrBlocking(senderProfile) : false;
 	const senderName = senderProfile && !isBlocked ? createSanitizedDisplayName(senderProfile) : null;
 
-	const tintColor = isFromSelf ? t.palette.white : t.atoms.text.color;
-	const subtleColor = isFromSelf ? t.palette.white : t.atoms.text_contrast_high.color;
-	const borderColor = isFromSelf
-		? utils.alpha(t.palette.white, 0.5)
-		: t.atoms.border_contrast_high.borderColor;
+	const tintColor = isFromSelf ? 'white' : 'text';
+	const subtleColor = isFromSelf ? 'white' : 'textContrastHigh';
+	const borderColor = isFromSelf ? 'rgba(255, 255, 255, 0.5)' : colors.borderContrastHigh;
 
 	let text: string;
 	let subtle = false;
@@ -742,37 +648,33 @@ function ReplyQuote({
 	}
 
 	return (
-		<Button
-			label={
+		<button
+			aria-label={
 				!onPress
 					? m['components.dms.reply.a11y.repliedToBeforeJoined']()
 					: senderName
 						? m['components.dms.reply.a11y.repliedToFrom']({ name: senderName })
 						: m['components.dms.reply.a11y.repliedTo']()
 			}
+			className={css.replyQuote}
 			disabled={!onPress}
-			onPress={onPress}
-			style={[
-				a.mb_xs,
-				a.rounded_md,
-				a.p_sm,
-				a.flex_col,
-				a.align_start,
-				a.border,
-				{ borderColor, marginHorizontal: -4 },
-			]}
+			onClick={onPress}
+			style={{ borderColor }}
+			type="button"
 		>
 			{senderName ? (
-				<Text style={[a.text_xs, { color: subtleColor }]} numberOfLines={1}>
+				<Text color={subtleColor} numberOfLines={1} size="xs">
 					{senderName}
 				</Text>
 			) : null}
 			<Text
-				style={[a.text_sm, { color: subtle ? subtleColor : tintColor }, subtle && a.italic]}
+				className={clsx(subtle && css.italic)}
+				color={subtle ? subtleColor : tintColor}
 				numberOfLines={2}
+				size="sm"
 			>
 				{text}
 			</Text>
-		</Button>
+		</button>
 	);
 }
