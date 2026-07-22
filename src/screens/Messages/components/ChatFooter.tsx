@@ -1,9 +1,5 @@
-import { View } from 'react-native';
-
-import { atoms as a, useTheme } from '#/alf';
-
 import type { Props as SVGIconProps } from '#/components/icons/common';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
 import { colors } from '#/styles/colors';
 
@@ -19,44 +15,24 @@ export function ChatFooter({
 	subheading?: string;
 	icon: React.ComponentType<SVGIconProps>;
 }>) {
-	const t = useTheme();
-
 	return (
-		<View style={[a.p_lg]}>
-			<View
-				style={[
-					a.flex_row,
-					a.align_center,
-					a.justify_between,
-					a.p_md,
-					a.rounded_full,
-					t.atoms.bg_contrast_50,
-				]}
-			>
-				<View
-					style={[
-						a.flex_row,
-						a.align_center,
-						a.flex_1,
-						{
-							minHeight: 32,
-						},
-					]}
-				>
-					<Icon size="lg" fill={colors.textContrastMedium} className={css.icon} />
-					<View style={[a.flex_1]}>
-						<Text numberOfLines={1} style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+		<div className={css.outer}>
+			<div className={css.pill}>
+				<div className={css.inner}>
+					<Icon className={css.icon} fill={colors.textContrastMedium} size="lg" />
+					<div className={css.textColumn}>
+						<Text color="textContrastMedium" numberOfLines={1} size="sm" weight="semiBold">
 							{heading}
 						</Text>
 						{subheading ? (
-							<Text numberOfLines={2} style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+							<Text color="textContrastMedium" numberOfLines={2} size="xs">
 								{subheading}
 							</Text>
 						) : null}
-					</View>
-				</View>
+					</div>
+				</div>
 				{children}
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }

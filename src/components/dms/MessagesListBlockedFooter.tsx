@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
 	type BlockingModerationCause,
@@ -10,9 +8,6 @@ import {
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
@@ -21,7 +16,8 @@ import {
 	PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person';
 import * as Prompt from '#/components/Prompt';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -39,7 +35,6 @@ export function MessagesListBlockedFooter({
 	moderation: ModerationDecision;
 	isGroup: boolean;
 }) {
-	const t = useTheme();
 	const recipient = useProfileShadow(initialRecipient);
 	const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(recipient);
 
@@ -63,54 +58,44 @@ export function MessagesListBlockedFooter({
 	};
 
 	return (
-		<View style={[a.p_md]}>
-			<View
-				style={[
-					a.align_center,
-					a.justify_center,
-					a.p_lg,
-					t.atoms.bg_contrast_50,
-					{
-						borderRadius: 40,
-					},
-				]}
-			>
-				<PersonXIcon fill={colors.text} size="xl" className={css.icon} />
-				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
+		<div className={css.outer}>
+			<div className={css.card}>
+				<PersonXIcon className={css.icon} fill={colors.text} size="xl" />
+				<Text align="center" className={css.heading} color="text" size="md" weight="semiBold">
 					{isGroup
 						? m['components.dms.block.youAreBlockingOwner']()
 						: isBlocking
 							? m['components.dms.block.youAreBlockingPerson']()
 							: m['components.dms.block.personBlockingYou']()}
 				</Text>
-				<Text style={[a.text_center, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+				<Text align="center" color="textContrastHigh" size="sm">
 					{m['components.dms.chat.readOnlyHint']()}
 				</Text>
 				{isBlocking ? (
 					<Button
-						label={m['common.block.action.unblock']()}
+						className={css.button}
 						color="secondary_inverted"
+						label={m['common.block.action.unblock']()}
+						onClick={onUnblockPress}
 						size="large"
-						style={[a.mt_lg, a.w_full]}
-						onPress={onUnblockPress}
 					>
 						<ButtonIcon icon={PersonCheckIcon} />
 						<ButtonText>{m['common.block.action.unblock']()}</ButtonText>
 					</Button>
 				) : null}
 				<Button
-					label={m['common.chat.action.leave']()}
+					className={css.button}
 					color="secondary_inverted"
+					label={m['common.chat.action.leave']()}
+					onClick={() => leaveConvoPromptHandle.open(null)}
 					size="large"
-					style={[a.mt_lg, a.w_full]}
-					onPress={() => leaveConvoPromptHandle.open(null)}
 				>
 					<ButtonIcon icon={LeaveIcon} />
 					<ButtonText>{m['common.chat.action.leave']()}</ButtonText>
 				</Button>
-				<LeaveConvoPrompt handle={leaveConvoPromptHandle} currentScreen="conversation" convoId={convoId} />
+				<LeaveConvoPrompt convoId={convoId} currentScreen="conversation" handle={leaveConvoPromptHandle} />
 				<BlockedByListDialog handle={blockedByListPromptHandle} listBlocks={listBlocks} />
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }

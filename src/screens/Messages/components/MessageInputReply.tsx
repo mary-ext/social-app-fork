@@ -1,26 +1,24 @@
-import { View } from 'react-native';
+import { clsx } from 'clsx';
 
-import { HITSLOP_20 } from '#/lib/constants';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
 import { useConvoActive } from '#/state/messages/convo';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import { getReplyPreviewText } from '#/components/dms/replyPreview';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
+import { colors } from '#/styles/colors';
+
+import * as css from './MessageInputReply.css';
 
 /**
  * The reply staged in the message composer. Renders a preview of the message being replied to, with a button
  * to cancel the reply.
  */
 export function MessageInputReply() {
-	const t = useTheme();
 	const convo = useConvoActive();
 	const { replyTo, clearReply } = useMessageReplies();
 
@@ -34,39 +32,30 @@ export function MessageInputReply() {
 	const { subtle, text } = getReplyPreviewText(replyTo);
 
 	return (
-		<View
-			style={[
-				a.flex_1,
-				a.flex_row,
-				a.gap_sm,
-				a.align_start,
-				t.atoms.border_contrast_high,
-				a.rounded_md,
-				a.border,
-				a.p_sm,
-				a.mt_sm,
-				a.mx_sm,
-				a.gap_2xs,
-			]}
-		>
-			<View style={[a.flex_1]}>
+		<div className={css.root}>
+			<div className={css.textColumn}>
 				{displayName && (
-					<Text style={[a.text_xs, t.atoms.text_contrast_high]} numberOfLines={1}>
+					<Text color="textContrastHigh" numberOfLines={1} size="xs">
 						{displayName}
 					</Text>
 				)}
-				<Text style={[a.text_sm, subtle && [a.italic, t.atoms.text_contrast_high]]} numberOfLines={2}>
+				<Text
+					className={clsx(subtle && css.italic)}
+					color={subtle ? 'textContrastHigh' : undefined}
+					numberOfLines={2}
+					size="sm"
+				>
 					{text}
 				</Text>
-			</View>
-			<Button
-				label={m['screens.messages.composer.cancelReply']()}
-				onPress={clearReply}
-				style={[a.px_2xs]}
-				hitSlop={HITSLOP_20}
+			</div>
+			<button
+				aria-label={m['screens.messages.composer.cancelReply']()}
+				className={css.cancel}
+				onClick={clearReply}
+				type="button"
 			>
-				<XIcon size="xs" style={t.atoms.text_contrast_high} />
-			</Button>
-		</View>
+				<XIcon fill={colors.textContrastHigh} size="xs" />
+			</button>
+		</div>
 	);
 }

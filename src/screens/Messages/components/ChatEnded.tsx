@@ -1,28 +1,22 @@
-import { Pressable } from 'react-native';
-
-import { HITSLOP_10 } from '#/lib/constants';
-
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { CircleX_Stroke2_Corner0_Rounded as CircleXIcon } from '#/components/icons/CircleX';
 import * as Prompt from '#/components/Prompt';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 
 import { LeaveChatPrompt } from '../ConversationSettings/prompts';
 import { ChatFooter } from './ChatFooter';
+import * as css from './ChatFooter.css';
 
 export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
-	const t = useTheme();
 	const leaveChatPrompt = Prompt.usePromptHandle();
 
 	const router = useRouter();
@@ -47,27 +41,12 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		<ChatFooter heading={m['screens.messages.connection.ended']()} icon={CircleXIcon}>
 			{isOwner ? null : (
 				<>
-					<Pressable
-						accessibilityRole="button"
-						hitSlop={HITSLOP_10}
-						style={[a.mx_md]}
-						onPress={() => leaveChatPrompt.open(null)}
-					>
-						<Text
-							numberOfLines={1}
-							style={[
-								a.text_sm,
-								a.font_semi_bold,
-								a.leading_snug,
-								{
-									color: t.palette.negative_500,
-								},
-							]}
-						>
+					<button className={css.action} onClick={() => leaveChatPrompt.open(null)} type="button">
+						<Text color="negative_500" numberOfLines={1} size="sm" weight="semiBold">
 							{m['common.chat.action.leave']()}
 						</Text>
-					</Pressable>
-					<LeaveChatPrompt handle={leaveChatPrompt} groupName={convo.details.name} onConfirm={leaveConvo} />
+					</button>
+					<LeaveChatPrompt groupName={convo.details.name} handle={leaveChatPrompt} onConfirm={leaveConvo} />
 				</>
 			)}
 		</ChatFooter>

@@ -1,18 +1,15 @@
-import { View } from 'react-native';
-
 import { type ConvoItem, ConvoItemError } from '#/state/messages/convo/types';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { createStaticClick, InlineLinkText } from '#/components/Link';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { InlineButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
+import * as css from './MessageListError.css';
+
 export function MessageListError({ item }: { item: ConvoItem & { type: 'error' } }) {
-	const t = useTheme();
 	const { description, help, cta } = {
 		[ConvoItemError.FirehoseFailed]: {
 			description: m['screens.messages.connection.disconnected'](),
@@ -27,28 +24,23 @@ export function MessageListError({ item }: { item: ConvoItem & { type: 'error' }
 	}[item.code];
 
 	return (
-		<View style={[a.my_md, a.w_full, a.flex_row, a.justify_center]}>
-			<View style={[a.flex_1, a.flex_row, a.align_center, a.justify_center, a.gap_sm, { maxWidth: 400 }]}>
-				<CircleInfo size="sm" fill={colors.negative_400} />
+		<div className={css.outer}>
+			<div className={css.inner}>
+				<CircleInfo fill={colors.negative_400} size="sm" />
 
-				<Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+				<Text color="textContrastMedium">
 					{description}
 					{item.retry && (
 						<>
 							{' '}
 							&middot;{' '}
-							<InlineLinkText
-								label={help}
-								{...createStaticClick(() => {
-									item.retry?.();
-								})}
-							>
+							<InlineButton label={help} onClick={() => item.retry?.()}>
 								{cta}
-							</InlineLinkText>
+							</InlineButton>
 						</>
 					)}
 				</Text>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
