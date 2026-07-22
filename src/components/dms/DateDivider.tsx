@@ -1,20 +1,17 @@
 import { memo } from 'react';
-import { View } from 'react-native';
 
 import { addDays } from '@mary/date-fns';
 
 import { clockNumeric, weekdayLong, weekdayMonthDay, weekdayMonthDayYear } from '#/locale/intl/datetime';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
+import * as css from './DateDivider.css';
 import { localDateString } from './util';
 
 let DateDivider = ({ date: dateStr }: { date: string }): React.ReactNode => {
-	const t = useTheme();
 	let date: string;
 	const time = clockNumeric.format(new Date(dateStr));
 
@@ -41,11 +38,11 @@ let DateDivider = ({ date: dateStr }: { date: string }): React.ReactNode => {
 	}
 
 	return (
-		<View style={[a.w_full, a.mt_md]}>
-			<Text style={[a.text_xs, a.text_center, t.atoms.text_contrast_medium, a.px_md]}>
+		<div className={css.root}>
+			<Text color="textContrastMedium" size="xs">
 				{m['components.dms.time.dateAtTime']({ date, time })}
 			</Text>
-		</View>
+		</div>
 	);
 };
 DateDivider = memo(DateDivider);

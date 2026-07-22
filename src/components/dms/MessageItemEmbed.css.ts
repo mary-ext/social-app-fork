@@ -1,5 +1,3 @@
-import { style } from '@vanilla-extract/css';
-
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
@@ -19,11 +17,8 @@ export const outer = recipe({
 
 export const inner = recipe({
 	base: {
-		display: 'flex',
-		flexDirection: 'column',
-		gap: space.md,
-		padding: space.md,
 		overflow: 'hidden',
+		border: 'none',
 	},
 	variants: {
 		fromSelf: {
@@ -31,12 +26,4 @@ export const inner = recipe({
 			false: { background: colors.contrast_50 },
 		},
 	},
-});
-
-export const loadingPad = style({
-	paddingBlock: 16,
-});
-
-export const errorPad = style({
-	paddingBlock: 8,
 });

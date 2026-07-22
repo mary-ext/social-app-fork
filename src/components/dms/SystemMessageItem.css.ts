@@ -1,6 +1,21 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { space } from '#/styles/tokens.css';
+
+export const link = style({
+	display: 'block',
+	width: '100%',
+});
+
+export const row = style({
+	display: 'flex',
+	flexDirection: 'row',
+	alignItems: 'center',
+	justifyContent: 'center',
+	marginTop: space.md,
+	paddingInline: space.md,
+});
 
 // resets the native <button> that backs the invite-link Dialog.Trigger to an invisible, full-width
 // clickable wrapper — the row inside owns all visible layout.

@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -8,14 +6,11 @@ import type { ConvoItem } from '#/state/messages/convo/types';
 
 import { useInviteLinkDialog } from '#/screens/Messages/components/InviteLinkDialogProvider';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import * as Dialog from '#/components/Dialog';
 import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
-import { Link } from '#/components/Link';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Link } from '#/components/web/Link';
 
-import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as css from './SystemMessageItem.css';
@@ -27,7 +22,6 @@ export function SystemMessageItem({
 	item: ConvoItem & { type: 'system-message' };
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 }) {
-	const t = useTheme();
 	const inviteLinkHandle = useInviteLinkDialog();
 
 	const info = getSystemMessageInfo(item.message.data, relatedProfiles);
@@ -39,30 +33,18 @@ export function SystemMessageItem({
 	const text = info.message;
 
 	const row = (
-		<View style={[a.w_full, a.flex_row, a.align_center, a.justify_center, a.px_md, a.mt_md]}>
-			<Icon size="xs" fill={colors.textContrastMedium} className={css.icon} />
-			<Text
-				style={[
-					a.text_xs,
-					a.text_center,
-					t.atoms.text_contrast_medium,
-					{ includeFontPadding: false, textAlignVertical: 'center' },
-				]}
-			>
+		<div className={css.row}>
+			<Icon className={css.icon} fill={colors.textContrastMedium} size="xs" />
+			<Text align="center" color="textContrastMedium" size="xs">
 				{text}
 			</Text>
-		</View>
+		</div>
 	);
 
 	switch (action?.kind) {
 		case 'profile':
 			return (
-				<Link
-					to={makeProfileLink(action.profile)}
-					label={text}
-					accessibilityHint={m['components.dms.message.a11y.opensProfile']()}
-					style={a.w_full}
-				>
+				<Link className={css.link} label={text} to={makeProfileLink(action.profile)}>
 					{row}
 				</Link>
 			);

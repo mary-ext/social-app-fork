@@ -1,19 +1,13 @@
-import { View } from 'react-native';
-
 import type { ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
 import { useConvoActive } from '#/state/messages/convo';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import * as ChatInvite from '#/components/dms/ChatInvite';
 
 import { MessageContextProvider } from './MessageContext';
+import { cornerRadii } from './MessageItemEmbed';
 import * as css from './MessageItemInviteEmbed.css';
-
-const BORDER_RADIUS = 20;
-const SQUARED_BORDER_RADIUS = 4;
 
 function MessageItemInviteEmbed({
 	embed,
@@ -28,7 +22,6 @@ function MessageItemInviteEmbed({
 	squaredTopCorner: boolean;
 	squaredBottomCorner: boolean;
 }): React.ReactNode {
-	const t = useTheme();
 	const convo = useConvoActive();
 	const { status, preview, action } = ChatInvite.useChatInvite({
 		code: embed.joinLinkPreview.code,
@@ -38,41 +31,14 @@ function MessageItemInviteEmbed({
 
 	return (
 		<MessageContextProvider>
-			<View
-				style={[
-					!isFromSelf && isGroupChat && a.ml_sm,
-					{
-						width: '100%',
-						minWidth: 280,
-						maxWidth: 360,
-					},
-				]}
-			>
-				<View
-					style={[
-						a.p_md,
-						a.gap_md,
-						a.overflow_hidden,
-						isFromSelf
-							? {
-									backgroundColor: t.palette.primary_50,
-									borderBottomRightRadius: squaredBottomCorner ? SQUARED_BORDER_RADIUS : BORDER_RADIUS,
-									borderTopRightRadius: squaredTopCorner ? SQUARED_BORDER_RADIUS : BORDER_RADIUS,
-									borderBottomLeftRadius: BORDER_RADIUS,
-									borderTopLeftRadius: BORDER_RADIUS,
-								}
-							: {
-									backgroundColor: t.palette.contrast_50,
-									borderBottomLeftRadius: squaredBottomCorner ? SQUARED_BORDER_RADIUS : BORDER_RADIUS,
-									borderTopLeftRadius: squaredTopCorner ? SQUARED_BORDER_RADIUS : BORDER_RADIUS,
-									borderBottomRightRadius: BORDER_RADIUS,
-									borderTopRightRadius: BORDER_RADIUS,
-								},
-					]}
+			<div className={css.outer({ indent: !isFromSelf && isGroupChat })}>
+				<div
+					className={css.inner({ fromSelf: isFromSelf })}
+					style={cornerRadii({ isFromSelf, squaredBottomCorner, squaredTopCorner })}
 				>
-					<MessageItemInviteEmbedBody status={status} preview={preview} action={action} />
-				</View>
-			</View>
+					<MessageItemInviteEmbedBody action={action} preview={preview} status={status} />
+				</div>
+			</div>
 		</MessageContextProvider>
 	);
 }
