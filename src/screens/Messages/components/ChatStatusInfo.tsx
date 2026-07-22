@@ -1,7 +1,7 @@
-import { View } from 'react-native';
-
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
+
+import { clsx } from 'clsx';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
@@ -11,23 +11,19 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { Trans } from '#/locale/Trans';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { KnownFollowers } from '#/components/web/KnownFollowers';
 
 import { m } from '#/paraglide/messages';
-import { LinearGradient } from '#/shims/linear-gradient';
 
 import * as styles from './ChatStatusInfo.css';
 import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons';
 
 export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }) {
-	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 	const leaveConvoPromptHandle = Prompt.usePromptHandle();
 
@@ -44,38 +40,34 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 	}
 
 	return (
-		<View style={[a.gap_md, a.p_2xl, t.atoms.bg]}>
-			<LinearGradient
-				colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.08)']}
-				style={[a.absolute, { top: -16, left: 0, right: 0, height: 16 }]}
-				pointerEvents="none"
-			/>
-			{otherUser && <InviterHeader profile={otherUser} moderationOpts={moderationOpts} />}
+		<div className={styles.root}>
+			<div className={styles.gradient} />
+			{otherUser && <InviterHeader moderationOpts={moderationOpts} profile={otherUser} />}
 			{otherUser && (
 				<KnownFollowers moderationOpts={moderationOpts} profile={otherUser} showIfEmpty variant="compact" />
 			)}
-			<View style={[a.flex_row, a.gap_md, a.w_full, otherUser && a.pt_sm]}>
+			<div className={clsx(styles.actionRow, otherUser && styles.actionRowTopPad)}>
 				{otherUser && (
 					<RejectMenu
-						label={m['screens.messages.block.orReport']()}
-						icon={true}
-						convo={convoState.convo}
-						profile={otherUser}
+						className={styles.grow}
 						color="negative_subtle"
-						size="large"
+						convo={convoState.convo}
 						currentScreen="conversation"
-						className={styles.rejectButton}
+						icon={true}
+						label={m['screens.messages.block.orReport']()}
+						profile={otherUser}
+						size="large"
 					/>
 				)}
 				<DeleteChatButton
-					label={m['common.action.leave']()}
-					icon={true}
-					convo={convoState.convo.view}
+					className={styles.grow}
 					color="secondary"
-					size="large"
+					convo={convoState.convo.view}
 					currentScreen="conversation"
-					style={[a.flex_1]}
-					onPress={() => leaveConvoPromptHandle.open(null)}
+					icon={true}
+					label={m['common.action.leave']()}
+					onClick={() => leaveConvoPromptHandle.open(null)}
+					size="large"
 				/>
 				<LeaveConvoPrompt
 					convoId={convoState.convo.view.id}
@@ -83,19 +75,19 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 					handle={leaveConvoPromptHandle}
 					hasMessages={false}
 				/>
-			</View>
-			<View style={[a.w_full, a.flex_row]}>
+			</div>
+			<div className={styles.acceptRow}>
 				<AcceptChatButton
+					className={styles.grow}
+					color="primary"
+					convo={convoState.convo.view}
+					currentScreen="conversation"
 					icon={true}
 					onAcceptConvo={onAcceptChat}
-					convo={convoState.convo.view}
-					color="primary"
 					size="large"
-					currentScreen="conversation"
-					style={[a.flex_1]}
 				/>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 
@@ -106,7 +98,6 @@ function InviterHeader({
 	profile: AnyProfileView;
 	moderationOpts: NonNullable<ReturnType<typeof useModerationOpts>>;
 }) {
-	const t = useTheme();
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = moderateProfile(profile, moderationOpts);
 	const displayName = createSanitizedDisplayName(
@@ -116,35 +107,35 @@ function InviterHeader({
 	);
 
 	return (
-		<View style={[a.flex_row, a.align_center, a.gap_sm]}>
+		<div className={styles.inviterRow}>
 			<PreviewableUserAvatar
+				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 				profile={profile}
 				size={42}
-				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 			/>
-			<View style={[a.flex_1]}>
-				<Text style={[a.flex_row, a.align_center]}>
+			<div className={styles.inviterColumn}>
+				<div className={styles.inviterName}>
 					<Trans
-						message={m['screens.messages.addedToChat.addedYou']}
 						inputs={{ name: displayName }}
 						markup={{
 							t0: ({ children }) => (
-								<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
+								<Text color="text" numberOfLines={1} size="md" weight="semiBold">
 									{children}
 								</Text>
 							),
-							t1: ({ children }) => <View style={[a.pl_xs]}>{children}</View>,
+							t1: ({ children }) => <span className={styles.badgePad}>{children}</span>,
 							t2: () => <ProfileBadges profile={profile} size="sm" />,
 							t3: ({ children }) => (
-								<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
+								<Text color="text" numberOfLines={1} size="md" weight="semiBold">
 									{children}
 								</Text>
 							),
 						}}
+						message={m['screens.messages.addedToChat.addedYou']}
 					/>
-				</Text>
-				<Text style={[a.pt_xs, a.text_sm, t.atoms.text_contrast_high]}>{`@${profile.handle}`}</Text>
-			</View>
-		</View>
+				</div>
+				<Text className={styles.handle} color="textContrastHigh" size="sm">{`@${profile.handle}`}</Text>
+			</div>
+		</div>
 	);
 }

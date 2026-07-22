@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { clsx } from 'clsx';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
@@ -8,28 +8,26 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
 import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
 import { InviteLinkDialog } from './InviteLinkDialog';
+import * as css from './MessagesListGroupInfoPanel.css';
 
 export function MessagesListGroupInfoPanel({
 	convo,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 }) {
-	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 	const convoId = convo.view.id;
 
@@ -77,32 +75,30 @@ export function MessagesListGroupInfoPanel({
 
 	return (
 		<>
-			<View style={[a.align_center, a.justify_center]}>
+			<div className={css.root}>
 				<AvatarBubbles animate={true} profiles={convo.members} />
 				{convo.details.name ? (
-					<Text style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_lg, t.atoms.text]}>{convo.details.name}</Text>
+					<Text className={css.name} color="text" size="_2xl" weight="bold">
+						{convo.details.name}
+					</Text>
 				) : null}
 				{names ? (
 					<Text
-						style={[
-							a.px_lg,
-							a.mt_xs,
-							a.text_center,
-							a.text_sm,
-							t.atoms.text_contrast_high,
-							showButtons ? null : a.mb_4xl,
-						]}
+						align="center"
+						className={clsx(css.names, !showButtons && css.namesBottom)}
+						color="textContrastHigh"
+						size="sm"
 					>
 						{names}
 					</Text>
 				) : null}
 				{showButtons ? (
-					<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm, a.mt_lg, a.mb_4xl]}>
+					<div className={css.buttonRow}>
 						{isOwner ? (
 							<Dialog.Trigger
 								handle={addMembersHandle}
 								render={
-									<Button color="secondary" size="small" label={m['screens.messages.members.add.a11y']()}>
+									<Button color="secondary" label={m['screens.messages.members.add.a11y']()} size="small">
 										<ButtonIcon icon={PersonPlusIcon} />
 										<ButtonText>{m['common.action.addPeople']()}</ButtonText>
 									</Button>
@@ -115,12 +111,12 @@ export function MessagesListGroupInfoPanel({
 								render={
 									<Button
 										color="secondary"
-										size="small"
 										label={
 											isOwner
 												? m['screens.messages.inviteLink.manage.a11y']()
 												: m['screens.messages.inviteLink.view.a11y']()
 										}
+										size="small"
 									>
 										<ButtonIcon icon={ChainLinkIcon} />
 										<ButtonText>{m['screens.messages.inviteLink.label']()}</ButtonText>
@@ -128,9 +124,9 @@ export function MessagesListGroupInfoPanel({
 								}
 							/>
 						) : null}
-					</View>
+					</div>
 				) : null}
-			</View>
+			</div>
 			{convo.primaryMember && moderationOpts && (
 				<InviteLinkDialog
 					convo={convo}

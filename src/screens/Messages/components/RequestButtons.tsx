@@ -9,7 +9,6 @@ import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
@@ -190,7 +189,7 @@ export function AcceptChatButton({
 	currentScreen,
 	onAcceptConvo,
 	...props
-}: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
+}: Omit<WebButtonProps, 'children' | 'label' | 'onClick'> & {
 	icon?: boolean;
 	convo: ChatBskyConvoDefs.ConvoView;
 	onAcceptConvo?: () => void;
@@ -235,20 +234,20 @@ export function AcceptChatButton({
 			/>
 		);
 	} else if (icon) {
-		Icon = <ButtonIcon icon={CheckIcon} />;
+		Icon = <WebButtonIcon icon={CheckIcon} />;
 	}
 
 	return (
-		<Button
+		<WebButton
 			{...props}
-			label={m['screens.messages.requests.accept.a11y']()}
-			size={size}
 			color={color}
-			onPress={onPressAccept}
+			label={m['screens.messages.requests.accept.a11y']()}
+			onClick={onPressAccept}
+			size={size}
 		>
 			{Icon}
-			<ButtonText>{m['screens.messages.requests.accept.action']()}</ButtonText>
-		</Button>
+			<WebButtonText>{m['screens.messages.requests.accept.action']()}</WebButtonText>
+		</WebButton>
 	);
 }
 
@@ -260,7 +259,7 @@ export function DeleteChatButton({
 	icon = false,
 	currentScreen,
 	...props
-}: Omit<ButtonProps, 'children' | 'label'> & {
+}: Omit<WebButtonProps, 'children' | 'label'> & {
 	label?: string;
 	icon?: boolean;
 	convo: ChatBskyConvoDefs.ConvoView;
@@ -289,15 +288,15 @@ export function DeleteChatButton({
 	};
 
 	return (
-		<Button
-			label={label || m['screens.messages.deleteChat.action']()}
-			size={size}
+		<WebButton
 			color={color}
-			onPress={onPressDelete}
+			label={label || m['screens.messages.deleteChat.action']()}
+			onClick={onPressDelete}
+			size={size}
 			{...props}
 		>
-			{icon ? <ButtonIcon icon={LeaveIcon} /> : null}
-			<ButtonText>{label || m['screens.messages.deleteChat.action']()}</ButtonText>
-		</Button>
+			{icon ? <WebButtonIcon icon={LeaveIcon} /> : null}
+			<WebButtonText>{label || m['screens.messages.deleteChat.action']()}</WebButtonText>
+		</WebButton>
 	);
 }

@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -8,22 +6,21 @@ import { isInvalidHandle } from '#/lib/strings/handles';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import * as ProfileCard from '#/components/ProfileCard';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 
+import * as css from './MessagesListInfoPanel.css';
+
 export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'direct' }> }) {
 	const navigate = useNavigate();
-	const t = useTheme();
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 
@@ -43,31 +40,35 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 	const profileLink = profile.handle && !isInvalidHandle(profile.handle) ? profile.handle : profile.did;
 
 	return (
-		<View style={[a.align_center, a.justify_center]}>
-			<UserAvatar type="user" size={88} avatar={profile.avatar} />
-			<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_xs, a.mt_lg]}>
-				<Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>{displayName}</Text>
+		<div className={css.root}>
+			<UserAvatar avatar={profile.avatar} size={88} type="user" />
+			<div className={css.nameRow}>
+				<Text color="text" size="_2xl" weight="bold">
+					{displayName}
+				</Text>
 				<ProfileBadges profile={profile} size="lg" />
-			</View>
-			<Text style={[a.text_sm, a.mt_xs, t.atoms.text_contrast_high]}>{handle}</Text>
+			</div>
+			<Text className={css.handle} color="textContrastHigh" size="sm">
+				{handle}
+			</Text>
 			{moderationOpts ? (
-				<View style={[a.mt_xs]}>
-					<ProfileCard.Labels profile={profile} moderationOpts={moderationOpts} />
-				</View>
+				<div className={css.labels}>
+					<ProfileCard.Labels moderationOpts={moderationOpts} profile={profile} />
+				</div>
 			) : null}
-			<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm, a.mt_lg, a.mb_4xl]}>
+			<div className={css.buttonRow}>
 				<Button
 					color="secondary"
-					size="small"
 					label={m['common.profile.a11y.goTo']()}
-					onPress={() => {
+					onClick={() => {
 						navigate('Profile', { actor: profileLink });
 					}}
+					size="small"
 				>
 					<ButtonIcon icon={PersonIcon} />
 					<ButtonText>{m['common.profile.action.goTo']()}</ButtonText>
 				</Button>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
