@@ -1,6 +1,6 @@
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 
-import type { SystemMessageGroupItem } from '#/screens/Messages/components/groupSystemMessages';
+import type { SystemMessageGroupItem } from '#/screens/Messages/components/message-timeline';
 
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown } from '#/components/icons/Chevron';

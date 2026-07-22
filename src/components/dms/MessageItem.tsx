@@ -38,73 +38,32 @@ import * as css from './MessageItem.css';
 import { MessageItemEmbed } from './MessageItemEmbed';
 import { MessageItemInviteEmbed } from './MessageItemInviteEmbed';
 import { groupReactions } from './ReactionsDialog';
-import { CLUSTERED_MESSAGE_THRESHOLD_MS, filterBlockedReactions, MESSAGE_GAP_THRESHOLD_MS } from './util';
+import { filterBlockedReactions } from './util';
 
 const AVATAR_SIZE = 28;
 const CLUSTERED_MESSAGE_GAP = 2;
 const BORDER_RADIUS = 20;
 const SQUARED_BORDER_RADIUS = 4;
 
-export type MessageItemNeighbor = ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | null;
-
-function messageIsReply(message: MessageItemNeighbor): boolean {
-	return (
-		message?.$type === 'chat.bsky.convo.defs#messageView' &&
-		(message.replyTo?.$type === 'chat.bsky.convo.defs#messageView' ||
-			message.replyTo?.$type === 'chat.bsky.convo.defs#deletedMessageView' ||
-			message.replyTo?.$type === 'chat.bsky.convo.defs#messageBeforeUserJoinedGroupView')
-	);
-}
-
-function isWithinClusterBoundary({
-	isPending,
-	message,
-	adjacentMessage,
-	isFromSameSender,
-	direction,
-}: {
-	isPending: boolean;
-	message: ChatBskyConvoDefs.MessageView;
-	adjacentMessage: MessageItemNeighbor;
-	isFromSameSender: boolean;
-	direction: 'prev' | 'next';
-}): boolean {
-	// A reply always starts its own cluster, breaking grouping with the message
-	// above it. Looking back, that's a boundary if this message is a reply;
-	// looking forward, it's a boundary if the next message is a reply.
-	if (messageIsReply(direction === 'prev' ? message : adjacentMessage)) {
-		return true;
-	}
-	if (!isFromSameSender) {
-		return true;
-	}
-	if (adjacentMessage?.$type === 'chat.bsky.convo.defs#messageView') {
-		const currentSentAt = message.sentAt;
-		const thisDate = new Date(currentSentAt);
-		const adjDate = new Date(adjacentMessage.sentAt);
-		const diff =
-			direction === 'next' ? adjDate.getTime() - thisDate.getTime() : thisDate.getTime() - adjDate.getTime();
-		const isOutsideThreshold = diff > CLUSTERED_MESSAGE_THRESHOLD_MS;
-		if (isPending) {
-			return isOutsideThreshold;
-		}
-		return isOutsideThreshold;
-	}
-	return true;
-}
-
 let MessageItem = ({
-	item,
+	hasLargeGapFromPrev,
+	isFirstInCluster,
 	isGroupChat = false,
-	prevMessage,
-	nextMessage,
+	isLastInCluster,
+	item,
 	relatedProfiles,
+	squaredBottomCorner,
+	squaredTopCorner,
 }: {
-	item: ConvoItem & { type: 'message' | 'pending-message' };
+	/** whether a date divider precedes this row (first of a new day/gap). */
+	hasLargeGapFromPrev: boolean;
+	isFirstInCluster: boolean;
 	isGroupChat?: boolean;
-	prevMessage: MessageItemNeighbor;
-	nextMessage: MessageItemNeighbor;
+	isLastInCluster: boolean;
+	item: ConvoItem & { type: 'message' | 'pending-message' };
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
+	squaredBottomCorner: boolean;
+	squaredTopCorner: boolean;
 }): React.ReactNode => {
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
@@ -139,48 +98,8 @@ let MessageItem = ({
 
 	const isFromSelf = message.sender?.did != null && message.sender.did === currentAccount?.did;
 
-	const prevIsMessage = prevMessage?.$type === 'chat.bsky.convo.defs#messageView';
-	const nextIsMessage = nextMessage?.$type === 'chat.bsky.convo.defs#messageView';
-
-	const isPrevFromSameSender =
-		prevIsMessage && prevMessage.sender?.did === message.sender?.did && message.sender?.did != null;
-	const isNextFromSameSender =
-		nextIsMessage && nextMessage.sender?.did === message.sender?.did && message.sender?.did != null;
-
-	const isFirstInCluster = isWithinClusterBoundary({
-		isPending,
-		message,
-		adjacentMessage: prevMessage,
-		isFromSameSender: isPrevFromSameSender,
-		direction: 'prev',
-	});
-
-	const isLastInCluster = isWithinClusterBoundary({
-		isPending,
-		message,
-		adjacentMessage: nextMessage,
-		isFromSameSender: isNextFromSameSender,
-		direction: 'next',
-	});
-
-	const hasLargeGapFromPrev =
-		prevMessage?.$type !== 'chat.bsky.convo.defs#messageView' ||
-		new Date(message.sentAt).getTime() - new Date(prevMessage.sentAt).getTime() > MESSAGE_GAP_THRESHOLD_MS;
-
-	const isInCluster = !(isFirstInCluster && isLastInCluster);
-	const isInMiddleOfCluster = isInCluster && !isFirstInCluster && !isLastInCluster;
-
 	const visibleReactions = filterBlockedReactions(message.reactions, relatedProfiles);
-
 	const hasReactions = visibleReactions.length > 0;
-	const prevHasReactions =
-		prevIsMessage && filterBlockedReactions(prevMessage.reactions, relatedProfiles).length > 0;
-	const isNextEmojiOnly = nextIsMessage && isOnlyEmoji(nextMessage.text);
-	const isPrevEmojiOnly = prevIsMessage && isOnlyEmoji(prevMessage.text);
-	const squaredBottomCorner =
-		!hasReactions && !isNextEmojiOnly && isInCluster && (isInMiddleOfCluster || isFirstInCluster);
-	const squaredTopCorner =
-		!prevHasReactions && !isPrevEmojiOnly && isInCluster && (isInMiddleOfCluster || isLastInCluster);
 
 	const pendingColor = colors.primary_300;
 

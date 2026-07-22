@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
@@ -28,7 +28,7 @@ import { MessageComposer } from '#/screens/Messages/components/MessageComposer';
 import { MessageListError } from '#/screens/Messages/components/MessageListError';
 
 import { DateDivider } from '#/components/dms/DateDivider';
-import { MessageItem, type MessageItemNeighbor } from '#/components/dms/MessageItem';
+import { MessageItem } from '#/components/dms/MessageItem';
 import { MessageOverlays } from '#/components/dms/MessageOverlays';
 import { MessageRepliesProvider } from '#/components/dms/MessageReplies';
 import { NewMessagesPill } from '#/components/dms/NewMessagesPill';
@@ -42,8 +42,8 @@ import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';
 
 import { ChatStatusInfo } from './ChatStatusInfo';
-import { groupSystemMessages, type RenderItem } from './groupSystemMessages';
 import { InviteLinkDialogProvider } from './InviteLinkDialogProvider';
+import { buildMessageTimeline, type RenderItem } from './message-timeline';
 import { MessageInputEmbed, useMessageEmbed } from './MessageInputEmbed';
 import { MessageInputReply } from './MessageInputReply';
 import * as css from './MessagesList.css';
@@ -60,26 +60,6 @@ function MaybeLoader({ isLoading }: { isLoading: boolean }) {
 
 function keyExtractor(item: RenderItem) {
 	return item.key;
-}
-
-function getNeighborMessage(items: RenderItem[], index: number): MessageItemNeighbor {
-	const neighbor = items[index];
-	if (!neighbor) {
-		return null;
-	}
-	if (
-		neighbor.type === 'message' ||
-		neighbor.type === 'pending-message' ||
-		neighbor.type === 'deleted-message'
-	) {
-		if (
-			neighbor.message.$type === 'chat.bsky.convo.defs#messageView' ||
-			neighbor.message.$type === 'chat.bsky.convo.defs#deletedMessageView'
-		) {
-			return neighbor.message;
-		}
-	}
-	return null;
 }
 
 export function MessagesList({
@@ -116,7 +96,10 @@ export function MessagesList({
 		});
 	};
 
-	const renderItems = groupSystemMessages(convoState.items);
+	const renderItems = useMemo(
+		() => buildMessageTimeline(convoState.items, convoState.relatedProfiles),
+		[convoState.items, convoState.relatedProfiles],
+	);
 
 	const [newMessagesPill, setNewMessagesPill] = useState({
 		show: false,
@@ -425,15 +408,18 @@ export function MessagesList({
 		return true;
 	});
 
-	const renderItem = ({ item, index }: { item: RenderItem; index: number }) => {
+	const renderItem = ({ item }: { item: RenderItem }) => {
 		if (item.type === 'message' || item.type === 'pending-message') {
 			return (
 				<MessageItem
-					item={item}
+					hasLargeGapFromPrev={item.hasLargeGapFromPrev}
+					isFirstInCluster={item.isFirstInCluster}
 					isGroupChat={convoState.convo.kind === 'group'}
-					prevMessage={getNeighborMessage(renderItems, index - 1)}
-					nextMessage={getNeighborMessage(renderItems, index + 1)}
+					isLastInCluster={item.isLastInCluster}
+					item={item.convoItem}
 					relatedProfiles={convoState.relatedProfiles}
+					squaredBottomCorner={item.squaredBottomCorner}
+					squaredTopCorner={item.squaredTopCorner}
 				/>
 			);
 		} else if (item.type === 'deleted-message') {
