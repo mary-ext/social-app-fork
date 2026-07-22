@@ -175,17 +175,15 @@ export function ChatList({
 	};
 
 	useFocusEffect(() => {
-		return softReset.subscribe(async () => {
+		return softReset.subscribe(() => {
 			scrollElRef.current?.scrollToOffset({
 				animated: false,
 				offset: 0,
 			});
 
-			try {
-				await refetch();
-			} catch (err) {
+			refetch().catch((err) => {
 				logger.error('Failed to refresh conversations', { message: err });
-			}
+			});
 		});
 	});
 
