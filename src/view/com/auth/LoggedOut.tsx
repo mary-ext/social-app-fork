@@ -9,6 +9,7 @@ import { Logotype } from '#/view/icons/Logotype';
 
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { SigninDialog } from '#/components/dialogs/Signin';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
@@ -68,6 +69,8 @@ export function LoggedOut() {
 				<div className={css.footerSpacer} />
 				<AppLanguageDropdown />
 			</div>
+
+			<SigninDialog />
 		</div>
 	);
 }
