@@ -1,6 +1,3 @@
-import { useState } from 'react';
-import { View } from 'react-native';
-
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
@@ -12,15 +9,15 @@ import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useConvoActive } from '#/state/messages/convo';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { MessageContextMenu } from '#/components/dms/MessageContextMenu';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
 import { EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
+import { colors } from '#/styles/colors';
 
+import * as css from './ActionsWrapper.css';
 import { EmojiReactionPicker } from './EmojiReactionPicker';
 import * as reactionStyles from './EmojiReactionPicker.css';
 import { canReact, hasReachedReactionLimit } from './util';
@@ -38,7 +35,6 @@ export function ActionsWrapper({
 	moderationOpts: ModerationOptions | undefined;
 	children: React.ReactNode;
 }) {
-	const t = useTheme();
 	const convo = useConvoActive();
 	const { currentAccount } = useSession();
 	const primaryMember = useMaybeProfileShadow(convo.convo.primaryMember);
@@ -47,25 +43,6 @@ export function ActionsWrapper({
 		primaryMember,
 		moderationOpts,
 	});
-
-	const [showActions, setShowActions] = useState(false);
-
-	const onMouseEnter = () => {
-		setShowActions(true);
-	};
-
-	const onMouseLeave = () => {
-		setShowActions(false);
-	};
-
-	// We need to handle the `onFocus` separately because we want to know if there is a related target (the element
-	// that is losing focus). If there isn't that means the focus is coming from a dropdown that is now closed.
-	const onFocus: React.FocusEventHandler = (e) => {
-		if (e.nativeEvent.relatedTarget == null) {
-			return;
-		}
-		setShowActions(true);
-	};
 
 	const onEmojiSelect = (emoji: string) => {
 		if (
@@ -92,59 +69,41 @@ export function ActionsWrapper({
 	};
 
 	return (
-		<View
-			onMouseEnter={onMouseEnter}
-			onMouseLeave={onMouseLeave}
-			// @ts-expect-error web only
-			onFocus={onFocus}
-			onBlur={onMouseLeave}
-			style={[a.flex_1, isFromSelf ? a.flex_row : a.flex_row_reverse]}
-		>
-			<View
-				style={[
-					a.justify_center,
-					a.flex_row,
-					a.align_center,
-					isFromSelf
-						? [a.mr_xs, { marginLeft: 'auto' }, a.flex_row_reverse]
-						: [a.ml_xs, { marginRight: 'auto' }],
-				]}
-			>
+		<div className={css.root({ fromSelf: isFromSelf })}>
+			<div className={css.actions({ fromSelf: isFromSelf })}>
 				{reactionsAvailable && (
 					<EmojiReactionPicker
 						message={message}
 						onEmojiSelect={onEmojiSelect}
-						render={(props, state) => (
+						render={(props) => (
 							<button
 								{...props}
-								type="button"
 								aria-label={m['components.dms.reaction.action.add']()}
 								className={clsx(props.className, reactionStyles.trigger)}
-								style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
+								type="button"
 							>
-								<EmojiSmileIcon size="lg" style={t.atoms.text_contrast_medium} />
+								<EmojiSmileIcon fill={colors.textContrastMedium} size="lg" />
 							</button>
 						)}
 					/>
 				)}
 				<MessageContextMenu
 					message={message}
-					senderProfile={senderProfile}
 					moderationOpts={moderationOpts}
-					render={(props, state) => (
+					render={(props) => (
 						<button
 							{...props}
-							type="button"
 							aria-label={m['components.dms.message.a11y.options']()}
 							className={clsx(props.className, reactionStyles.trigger)}
-							style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
+							type="button"
 						>
-							<DotsHorizontalIcon size="lg" style={t.atoms.text_contrast_medium} />
+							<DotsHorizontalIcon fill={colors.textContrastMedium} size="lg" />
 						</button>
 					)}
+					senderProfile={senderProfile}
 				/>
-			</View>
-			<View style={[{ maxWidth: '80%' }, isFromSelf ? a.align_end : a.align_start]}>{children}</View>
-		</View>
+			</div>
+			<div className={css.content({ fromSelf: isFromSelf })}>{children}</div>
+		</div>
 	);
 }

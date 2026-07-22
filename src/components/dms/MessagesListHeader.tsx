@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import {
 	type BlockingModerationCause,
 	DisplayContext,
@@ -9,6 +7,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
+import { clsx } from 'clsx';
+
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
 
@@ -17,39 +17,37 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
-import { ButtonIcon } from '#/components/Button';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';
 import { Bell2Off_Filled_Corner0_Rounded as BellOffIcon } from '#/components/icons/Bell2';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
-import * as Layout from '#/components/Layout';
-import { Link } from '#/components/Link';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { Text } from '#/components/Typography';
-import { Button as WebButton, ButtonIcon as WebButtonIcon } from '#/components/web/Button';
+import { Text } from '#/components/Text';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Layout from '#/components/web/Layout';
+import { Link, LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 import { buildPath } from '#/routes';
+import { colors } from '#/styles/colors';
 
+import * as css from './MessagesListHeader.css';
 import type { ConvoWithDetails } from './util';
 
 const PFP_SIZE = 40;
 
 export function MessagesListHeader({ convo }: { convo?: ConvoWithDetails | null }) {
-	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
 	return (
 		<Layout.Header.Outer noBottomBorder={false}>
-			<View style={[a.w_full, a.flex_row, a.gap_xs, a.align_start]}>
+			<div className={css.outerRow}>
 				{!isWithinSplitView && (
-					<View style={[{ minHeight: PFP_SIZE }, a.justify_center]}>
+					<div className={css.backSlot}>
 						<Layout.Header.BackButton />
-					</View>
+					</div>
 				)}
 				{convo && moderationOpts ? (
 					convo.kind === 'direct' ? (
@@ -59,17 +57,17 @@ export function MessagesListHeader({ convo }: { convo?: ConvoWithDetails | null 
 					)
 				) : (
 					<>
-						<View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
-							<View style={[{ width: PFP_SIZE, height: PFP_SIZE }, a.rounded_full, t.atoms.bg_contrast_25]} />
-							<View style={a.gap_xs}>
-								<View style={[{ width: 150, height: 16 }, a.rounded_xs, t.atoms.bg_contrast_25, a.mt_xs]} />
-							</View>
-						</View>
+						<div className={css.placeholderRow}>
+							<div className={css.placeholderAvatar} />
+							<div>
+								<div className={css.placeholderLine} />
+							</div>
+						</div>
 
 						<Layout.Header.Slot />
 					</>
 				)}
-			</View>
+			</div>
 		</Layout.Header.Outer>
 	);
 }
@@ -81,7 +79,6 @@ function ProfileHeaderReady({
 	convo: Extract<ConvoWithDetails, { kind: 'direct' }>;
 	moderationOpts: ModerationOptions;
 }) {
-	const t = useTheme();
 	const profile = useProfileShadow(convo.primaryMember);
 
 	const moderation = moderateProfile(profile, moderationOpts);
@@ -107,36 +104,41 @@ function ProfileHeaderReady({
 	return (
 		<Wrapper
 			heading={
-				<Link
-					label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
-					style={[a.flex_row, a.gap_md, a.flex_1]}
-					to={makeProfileLink(profile)}
-				>
-					<PreviewableUserAvatar
-						size={PFP_SIZE}
-						profile={profile}
-						moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-						disableHoverCard={moderation.causes.some(
-							(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
-						)}
-					/>
-					<View style={[a.flex_1]}>
-						<View style={[a.flex_row, a.align_center, a.flex_1, a.mb_2xs]}>
-							<Text style={[a.text_lg, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
+				<div className={css.headingRow}>
+					<Link
+						className={css.headingOverlay}
+						label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
+						to={makeProfileLink(profile)}
+					>
+						{null}
+					</Link>
+					<div className={css.avatarLayer}>
+						<PreviewableUserAvatar
+							disableHoverCard={moderation.causes.some(
+								(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
+							)}
+							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+							profile={profile}
+							size={PFP_SIZE}
+						/>
+					</div>
+					<div className={css.headingColumn}>
+						<div className={clsx(css.nameRow, css.nameRowSpaced)}>
+							<Text className={css.name} numberOfLines={1} size="lg" weight="semiBold">
 								{displayName}
 							</Text>
-							<View style={[a.pl_xs]}>
+							<div className={css.badgePad}>
 								<ProfileBadges profile={profile} size="md" />
-							</View>
+							</div>
 							<MuteStatus muted={convo.view.muted} />
-						</View>
+						</div>
 						{handle ? (
-							<Text style={[a.text_xs, t.atoms.text_contrast_high]} numberOfLines={1}>
+							<Text color="textContrastHigh" numberOfLines={1} size="xs">
 								{handle}
 							</Text>
 						) : null}
-					</View>
-				</Link>
+					</div>
+				</div>
 			}
 			settings={
 				<ConvoMenu
@@ -145,15 +147,15 @@ function ProfileHeaderReady({
 					currentScreen="conversation"
 					profile={profile}
 					render={
-						<WebButton
-							label={m['common.chat.settingsLabel']()}
-							size="small"
+						<Button
 							color="secondary"
+							label={m['common.chat.settingsLabel']()}
 							shape="round"
+							size="small"
 							variant="ghost"
 						>
-							<WebButtonIcon icon={DotsHorizontalIcon} size="md" />
-						</WebButton>
+							<ButtonIcon icon={DotsHorizontalIcon} size="md" />
+						</Button>
 					}
 				/>
 			}
@@ -162,38 +164,57 @@ function ProfileHeaderReady({
 }
 
 function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
+	// a permanently locked group has no settings screen to open, so the header is inert.
 	const disabled = convo.details.lockStatus === 'locked-permanently';
+	const settingsTo = buildPath('MessagesConversationSettings', { conversation: convo.view.id });
+
+	const nameBlock = (
+		<>
+			<AvatarBubbles profiles={convo.members} size={40} />
+			<div className={css.nameRow}>
+				<Text className={css.name} numberOfLines={1} size="lg" weight="semiBold">
+					{convo.details.name}
+				</Text>
+				<MuteStatus muted={convo.view.muted} />
+			</div>
+		</>
+	);
 
 	return (
 		<Wrapper
 			heading={
-				<Link
-					label={convo.details.name}
-					accessibilityHint={m['components.dms.group.action.openSettings']()}
-					style={[a.flex_row, a.gap_md, a.flex_1, a.justify_start]}
-					to={disabled ? '#' : buildPath('MessagesConversationSettings', { conversation: convo.view.id })}
-				>
-					<AvatarBubbles size={40} profiles={convo.members} />
-					<View style={[a.flex_row, a.flex_1, a.align_center]}>
-						<Text style={[a.text_lg, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
-							{convo.details.name}
-						</Text>
-						<MuteStatus muted={convo.view.muted} />
-					</View>
-				</Link>
+				disabled ? (
+					<div className={css.headingLink}>{nameBlock}</div>
+				) : (
+					<Link className={css.headingLink} label={convo.details.name} to={settingsTo}>
+						{nameBlock}
+					</Link>
+				)
 			}
 			settings={
-				<Link
-					to={disabled ? '#' : buildPath('MessagesConversationSettings', { conversation: convo.view.id })}
-					label={m['components.dms.group.action.openSettings']()}
-					size="small"
-					color="secondary"
-					shape="round"
-					variant="ghost"
-					style={[a.bg_transparent, a.justify_center]}
-				>
-					<ButtonIcon icon={DotsHorizontalIcon} size="md" />
-				</Link>
+				disabled ? (
+					<Button
+						color="secondary"
+						disabled
+						label={m['components.dms.group.action.openSettings']()}
+						shape="round"
+						size="small"
+						variant="ghost"
+					>
+						<ButtonIcon icon={DotsHorizontalIcon} size="md" />
+					</Button>
+				) : (
+					<LinkButton
+						color="secondary"
+						label={m['components.dms.group.action.openSettings']()}
+						shape="round"
+						size="small"
+						to={settingsTo}
+						variant="ghost"
+					>
+						<ButtonIcon icon={DotsHorizontalIcon} size="md" />
+					</LinkButton>
+				)
 			}
 		/>
 	);
@@ -201,25 +222,21 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 
 function Wrapper({ heading, settings }: { heading: React.ReactNode; settings: React.ReactNode }) {
 	return (
-		<View style={[a.flex_1]}>
-			<View style={[a.w_full, a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
-				<View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>{heading}</View>
+		<div className={css.wrapper}>
+			<div className={css.wrapperRow}>
+				<div className={css.headingWrap}>{heading}</div>
 
-				<View style={[{ minHeight: PFP_SIZE }, a.justify_center, a.flex_shrink_0]}>
-					<Layout.Header.Slot>{settings}</Layout.Header.Slot>
-				</View>
-			</View>
-		</View>
+				<Layout.Header.Slot>{settings}</Layout.Header.Slot>
+			</div>
+		</div>
 	);
 }
 
 function MuteStatus({ muted }: { muted: boolean }) {
-	const t = useTheme();
-
 	return muted ? (
 		<>
-			<Text style={[a.text_md, t.atoms.text_contrast_medium]}> &middot; </Text>
-			<BellOffIcon size="sm" style={t.atoms.text_contrast_medium} />
+			<Text color="textContrastMedium"> &middot; </Text>
+			<BellOffIcon fill={colors.textContrastMedium} size="sm" />
 		</>
 	) : undefined;
 }
