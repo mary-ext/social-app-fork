@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
@@ -16,7 +16,7 @@ import {
 } from '#/lib/strings/url-helpers';
 
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
-import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
+import type { ConvoState } from '#/state/messages/convo/types';
 import { useGetJoinLinkPreview } from '#/state/queries/join-links';
 import { useGetPost } from '#/state/queries/post';
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
@@ -34,7 +34,6 @@ import { MessageRepliesProvider } from '#/components/dms/MessageReplies';
 import { NewMessagesPill } from '#/components/dms/NewMessagesPill';
 import { SystemMessageGroup } from '#/components/dms/SystemMessageGroup';
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
-import { List, type ListMethods } from '#/components/List/List';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
@@ -50,6 +49,12 @@ import * as css from './MessagesList.css';
 import { MessagesListGroupInfoPanel } from './MessagesListGroupInfoPanel';
 import { MessagesListInfoPanel } from './MessagesListInfoPanel';
 
+// bottom is scrollTop 0 in the column-reverse scroller; treat anything within this many pixels of it
+// as "at bottom" for the new-messages pill.
+const NEAR_BOTTOM_PX = 100;
+// how far ahead of the top edge (in viewport heights) to begin loading older history.
+const HISTORY_LOOKAHEAD = '200% 0px 0px 0px';
+
 function MaybeLoader({ isLoading }: { isLoading: boolean }) {
 	return (
 		<div className={css.loader}>
@@ -58,18 +63,52 @@ function MaybeLoader({ isLoading }: { isLoading: boolean }) {
 	);
 }
 
-function keyExtractor(item: RenderItem) {
-	return item.key;
+/**
+ * a zero-height marker that reports when it enters or leaves the scroll viewport, used to drive history
+ * loading (top) and at-bottom detection (bottom) without reading scroll offsets.
+ */
+function IntersectionSentinel({
+	onChange,
+	root,
+	rootMargin,
+}: {
+	onChange: (isIntersecting: boolean) => void;
+	root: React.RefObject<HTMLElement | null>;
+	rootMargin?: string;
+}) {
+	const nodeRef = useRef<HTMLDivElement | null>(null);
+	const stableOnChange = useNonReactiveCallback(onChange);
+
+	useEffect(() => {
+		const node = nodeRef.current;
+		if (!node) {
+			return;
+		}
+		const observer = new IntersectionObserver((entries) => stableOnChange(entries[0]!.isIntersecting), {
+			root: root.current ?? null,
+			rootMargin: rootMargin ?? '0px',
+		});
+		observer.observe(node);
+		return () => observer.disconnect();
+	}, [root, rootMargin, stableOnChange]);
+
+	return <div ref={nodeRef} />;
+}
+
+function getLastMessageKey(items: RenderItem[]): string | undefined {
+	for (let i = items.length - 1; i >= 0; i--) {
+		const item = items[i]!;
+		if (item.type === 'message' || item.type === 'pending-message') {
+			return item.key;
+		}
+	}
+	return undefined;
 }
 
 export function MessagesList({
-	hasScrolled,
-	setHasScrolled,
 	footer,
 	hasAcceptOverride,
 }: {
-	hasScrolled: boolean;
-	setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>;
 	footer?: React.ReactNode;
 	hasAcceptOverride?: boolean;
 }) {
@@ -80,7 +119,6 @@ export function MessagesList({
 	const getJoinLinkPreview = useGetJoinLinkPreview();
 	const { embed: messageEmbed, setEmbed } = useMessageEmbed();
 
-	const flatListRef = useRef<ListMethods | null>(null);
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => new Set());
@@ -101,12 +139,10 @@ export function MessagesList({
 		[convoState.items, convoState.relatedProfiles],
 	);
 
-	const [newMessagesPill, setNewMessagesPill] = useState({
-		show: false,
-		startContentOffset: 0,
-	});
+	const [showPill, setShowPill] = useState(false);
 
-	// the composer/footer floats over the bottom of the list; measure it to reserve trailing space.
+	// the composer floats over the bottom of the list; measure it to reserve trailing space so the
+	// newest message clears it.
 	const [inputHeightJS, setInputHeightJS] = useState(0);
 	const inputObserver = useRef<ResizeObserver | null>(null);
 	const inputRef = (node: HTMLDivElement | null) => {
@@ -119,158 +155,71 @@ export function MessagesList({
 		}
 	};
 
-	// We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
-	// are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
-	// the bottom.
+	// The column-reverse scroller pins to the bottom (scrollTop 0) on its own, so we only track whether
+	// the user is near the bottom (to keep the pill in sync) and back up the scroll offset across
+	// history prepends in case the browser drops its anchoring.
 	const isAtBottom = useRef(true);
+	const prevScrollTop = useRef(0);
+	const prevOldestKey = useRef<string | undefined>(undefined);
+	const prevLastKey = useRef<string | undefined>(undefined);
 
-	// This will be used on web to assist in determining if we need to maintain the content offset
-	const isAtTop = useRef(true);
+	const scrollToBottom = (animated: boolean) => {
+		scrollContainerRef.current?.scrollTo({ top: 0, behavior: animated ? 'smooth' : 'instant' });
+	};
 
-	// Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
-	// onStartReached to fire.
-	const prevContentHeight = useRef(0);
-	const prevItemCount = useRef(0);
-
-	// Tracks whether the initial scroll-to-bottom has been triggered. Separated from isAtBottom so that contentInset
-	// (which causes an early onScroll with negative offset) can't prevent the first scroll.
-	// Reset when hasScrolled goes back to false (e.g. convo re-initialization after backgrounding).
-	const hasInitiallyScrolled = useRef(false);
-	const prevHasScrolled = useRef(hasScrolled);
+	// Restore the saved offset after older history is prepended, as a backstop to the browser's own
+	// scroll anchoring (which the column-reverse scroller usually preserves on its own).
 	useLayoutEffect(() => {
-		if (prevHasScrolled.current && !hasScrolled) {
-			hasInitiallyScrolled.current = false;
-		}
-		prevHasScrolled.current = hasScrolled;
-	}, [hasScrolled]);
-
-	// -- Keep track of background state and positioning for new pill
-	const layoutHeight = useRef(0);
-	const didBackground = useRef(false);
-	useEffect(() => {
-		if (convoState.status === ConvoStatus.Backgrounded) {
-			didBackground.current = true;
-		}
-	}, [convoState.status]);
-
-	// -- Scroll handling
-
-	// Every time the content size changes, that means one of two things is happening:
-	// 1. New messages are being added from the log or from a message you have sent
-	// 2. Old messages are being prepended to the top
-	//
-	// The first time that the content size changes is when the initial items are rendered. Because we cannot rely on
-	// `initialScrollIndex`, we need to immediately scroll to the bottom of the list. That scroll will not be animated.
-	//
-	// Subsequent resizes will only scroll to the bottom if the user is at the bottom of the list (within 100 pixels of
-	// the bottom). Therefore, any new messages that come in or are sent will result in an animated scroll to end. However
-	// we will not scroll whenever new items get prepended to the top.
-	const onContentSizeChange = (_: number, height: number) => {
-		// Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
-		// previous off whenever we add new content to the previous offset whenever we add new content to the list.
-		if (isAtTop.current && hasScrolled) {
-			flatListRef.current?.scrollToOffset({
-				offset: height - prevContentHeight.current,
-				animated: false,
-			});
-		}
-
-		// Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
-		// can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
-		// Revealing the list (setHasScrolled) is handled by a separate effect, not here: this callback runs from a
-		// ResizeObserver whose closure can lag behind the latest render, so the readiness it observes is unreliable.
-		if (!hasInitiallyScrolled.current && (renderItems.length > 0 || !convoState.isFetchingHistory)) {
-			hasInitiallyScrolled.current = true;
-			flatListRef.current?.scrollToOffset({ offset: height, animated: false });
-			prevContentHeight.current = height;
-			prevItemCount.current = renderItems.length;
-			return;
-		}
-
-		// Subsequent: auto-scroll only if user is at the bottom
-		if (isAtBottom.current) {
-			// If the size of the content is changing by more than the height of the screen, then we don't
-			// want to scroll further than the start of all the new content. Since we are storing the previous offset,
-			// we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
-			// that can be pressed to immediately scroll to the end.
-			if (
-				didBackground.current &&
-				hasScrolled &&
-				height - prevContentHeight.current > layoutHeight.current - 50 &&
-				renderItems.length - prevItemCount.current > 1
-			) {
-				flatListRef.current?.scrollToOffset({
-					offset: prevContentHeight.current - 65,
-					animated: true,
-				});
-				setNewMessagesPill({
-					show: true,
-					startContentOffset: prevContentHeight.current - 65,
-				});
-			} else {
-				flatListRef.current?.scrollToOffset({
-					offset: height,
-					// only animate when new items were appended — pure layout growth
-					// (e.g. the composer spacer getting its height on web) should
-					// snap instantly rather than visibly scrolling
-					animated:
-						hasScrolled && height > prevContentHeight.current && renderItems.length > prevItemCount.current,
-				});
-			}
-		}
-
-		prevContentHeight.current = height;
-		prevItemCount.current = renderItems.length;
-		didBackground.current = false;
-	};
-
-	// Reveal the list once the initial history has loaded. This is deliberately driven by render state
-	// rather than onContentSizeChange: that callback fires from a ResizeObserver whose closure can lag a
-	// render behind, so it can observe `isFetchingHistory` as still true after the messages have arrived
-	// and never flip `hasScrolled` — leaving the list hidden and inert (pointerEvents: none) forever.
-	// The scroll-to-bottom itself is handled by onContentSizeChange; here we just settle and reveal.
-	useEffect(() => {
-		if (hasScrolled || convoState.isFetchingHistory) {
-			return;
-		}
-		hasInitiallyScrolled.current = true;
-		const raf = requestAnimationFrame(() => {
-			flatListRef.current?.scrollToEnd({ animated: false });
-			setHasScrolled(true);
-		});
-		return () => cancelAnimationFrame(raf);
-	}, [convoState.isFetchingHistory, hasScrolled, setHasScrolled]);
-
-	const onStartReached = () => {
-		void convoState.fetchMessageHistory();
-	};
-
-	const onScroll = () => {
 		const el = scrollContainerRef.current;
 		if (!el) {
 			return;
 		}
-		layoutHeight.current = el.clientHeight;
-		const bottomOffset = el.scrollTop + el.clientHeight;
+		const oldestKey = renderItems[0]?.key;
+		if (prevOldestKey.current !== undefined && oldestKey !== prevOldestKey.current && !isAtBottom.current) {
+			el.scrollTop = prevScrollTop.current;
+		}
+		prevOldestKey.current = oldestKey;
+	}, [renderItems]);
 
-		// Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
-		// when a new message is added, hence the 100 pixel offset
-		isAtBottom.current = el.scrollHeight - 100 < bottomOffset;
-		isAtTop.current = el.scrollTop <= 1;
+	// When a newer message arrives while the user is away from the bottom, surface the pill instead of
+	// yanking them down (the column-reverse scroller leaves their position untouched on its own).
+	useEffect(() => {
+		const lastKey = getLastMessageKey(renderItems);
+		const isNewMessage = prevLastKey.current !== undefined && lastKey !== prevLastKey.current;
+		prevLastKey.current = lastKey;
+		if (!isNewMessage || (isAtBottom.current && document.hasFocus())) {
+			return;
+		}
+		setShowPill(true);
+		// If we're pinned at the bottom but unfocused, nudge off zero so further messages don't drag the
+		// view down while the user is away.
+		const el = scrollContainerRef.current;
+		if (el && el.scrollTop === 0) {
+			el.scrollTop = -1;
+		}
+	}, [renderItems]);
 
-		if (
-			newMessagesPill.show &&
-			(el.scrollTop > newMessagesPill.startContentOffset + 200 || isAtBottom.current)
-		) {
-			setNewMessagesPill({
-				show: false,
-				startContentOffset: 0,
-			});
+	const onScroll = () => {
+		const el = scrollContainerRef.current;
+		if (el) {
+			prevScrollTop.current = el.scrollTop;
+		}
+	};
+
+	const onAtBottomChange = (atBottom: boolean) => {
+		isAtBottom.current = atBottom;
+		if (atBottom) {
+			setShowPill(false);
+		}
+	};
+
+	const onTopSentinel = (isIntersecting: boolean) => {
+		if (isIntersecting && !convoState.isFetchingHistory && !convoState.hasAllHistory) {
+			void convoState.fetchMessageHistory();
 		}
 	};
 
 	// -- Keyboard animation handling
-
 	const { bottom: bottomInset } = useSafeAreaInsets();
 
 	// -- Message sending
@@ -369,10 +318,6 @@ export function MessagesList({
 			}),
 		);
 
-		if (!hasScrolled) {
-			setHasScrolled(true);
-		}
-
 		convoState.sendMessage(
 			{
 				text: rt.text,
@@ -383,13 +328,14 @@ export function MessagesList({
 			embedView,
 			reply,
 		);
+
+		// Jump to the bottom so the sender sees their own message even if they were scrolled up.
+		scrollToBottom(false);
 	};
 
 	const scrollToEndOnPress = () => {
-		flatListRef.current?.scrollToOffset({
-			offset: prevContentHeight.current,
-			animated: true,
-		});
+		setShowPill(false);
+		scrollToBottom(true);
 	};
 
 	// Scroll to a message by id, if it's currently loaded in the list. Per the
@@ -408,7 +354,7 @@ export function MessagesList({
 		return true;
 	});
 
-	const renderItem = ({ item }: { item: RenderItem }) => {
+	const renderItem = (item: RenderItem): React.ReactNode => {
 		if (item.type === 'message' || item.type === 'pending-message') {
 			return (
 				<MessageItem
@@ -449,36 +395,37 @@ export function MessagesList({
 			<MessageRepliesProvider scrollToMessage={scrollToMessage}>
 				<MessageOverlays>
 					<div className={css.root}>
-						<div
-							className={css.scroller}
-							onScroll={onScroll}
-							ref={scrollContainerRef}
-							// hide the list until the initial scroll-to-bottom settles, matching native
-							style={hasScrolled ? undefined : { pointerEvents: 'none' }}
-						>
-							<List
-								ref={flatListRef}
-								data={renderItems}
-								renderItem={renderItem}
-								keyExtractor={keyExtractor}
-								onContentSizeChange={onContentSizeChange}
-								onStartReached={onStartReached}
-								onStartReachedThreshold={2}
-								scrollRoot={scrollContainerRef}
-								ListHeaderComponent={
-									<>
-										<MaybeLoader isLoading={convoState.isFetchingHistory} />
-										{convoState.hasAllHistory ? (
-											convoState.convo?.kind === 'group' ? (
-												<MessagesListGroupInfoPanel convo={convoState.convo} />
-											) : convoState.convo?.kind === 'direct' ? (
-												<MessagesListInfoPanel convo={convoState.convo} />
-											) : null
-										) : null}
-									</>
-								}
-								ListFooterComponent={<div style={{ height: space.md + inputHeightJS }} />}
-							/>
+						<div className={css.scroller} onScroll={onScroll} ref={scrollContainerRef}>
+							<div className={css.timeline}>
+								{!convoState.hasAllHistory ? (
+									// re-key on item count so the observer re-arms after each page: an already-visible
+									// sentinel that never leaves the viewport wouldn't fire a fresh intersection otherwise.
+									<IntersectionSentinel
+										key={renderItems.length}
+										onChange={onTopSentinel}
+										root={scrollContainerRef}
+										rootMargin={HISTORY_LOOKAHEAD}
+									/>
+								) : null}
+								<MaybeLoader isLoading={convoState.isFetchingHistory} />
+								{convoState.hasAllHistory ? (
+									convoState.convo?.kind === 'group' ? (
+										<MessagesListGroupInfoPanel convo={convoState.convo} />
+									) : convoState.convo?.kind === 'direct' ? (
+										<MessagesListInfoPanel convo={convoState.convo} />
+									) : null
+								) : null}
+								{renderItems.map((item) => (
+									<Fragment key={item.key}>{renderItem(item)}</Fragment>
+								))}
+								{/* trailing space so the newest message clears the floating composer */}
+								<div style={{ height: space.md + inputHeightJS }} />
+								<IntersectionSentinel
+									onChange={onAtBottomChange}
+									root={scrollContainerRef}
+									rootMargin={`0px 0px ${NEAR_BOTTOM_PX}px 0px`}
+								/>
+							</div>
 						</div>
 						<div
 							className={css.inputWrap}
@@ -501,8 +448,8 @@ export function MessagesList({
 								</ConversationFooter>
 							)}
 						</div>
+						{showPill && <NewMessagesPill onPress={scrollToEndOnPress} />}
 					</div>
-					{newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
 				</MessageOverlays>
 			</MessageRepliesProvider>
 		</InviteLinkDialogProvider>

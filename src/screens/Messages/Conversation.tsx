@@ -70,18 +70,6 @@ function Inner({ convoId }: { convoId: string }) {
 
 	const convo = convoData ? parseConvoView(convoData, currentAccount?.did) : null;
 
-	const [hasScrolled, setHasScrolled] = useState(false);
-
-	// Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
-	// state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
-	const [prevState, setPrevState] = useState(convoState.status);
-	if (prevState !== convoState.status) {
-		setPrevState(convoState.status);
-		if (convoState.status === ConvoStatus.Initializing) {
-			setHasScrolled(false);
-		}
-	}
-
 	if (convoState.status === ConvoStatus.Error) {
 		return (
 			<>
@@ -101,24 +89,18 @@ function Inner({ convoId }: { convoId: string }) {
 		<div className={css.inner}>
 			<InnerReady
 				convo={convo}
-				hasScrolled={hasScrolled}
 				isActive={isConvoActive(convoState)}
 				isDisabled={convoState.status === ConvoStatus.Disabled}
-				setHasScrolled={setHasScrolled}
 			/>
 		</div>
 	);
 }
 
 function InnerReady({
-	hasScrolled,
-	setHasScrolled,
 	convo,
 	isActive,
 	isDisabled,
 }: {
-	hasScrolled: boolean;
-	setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>;
 	convo: ConvoWithDetails | null;
 	isActive: boolean;
 	isDisabled: boolean;
@@ -200,14 +182,7 @@ function InnerReady({
 				/>
 			) : null}
 
-			{isActive && (
-				<MessagesList
-					hasScrolled={hasScrolled}
-					setHasScrolled={setHasScrolled}
-					hasAcceptOverride={!!accept}
-					footer={footer}
-				/>
-			)}
+			{isActive && <MessagesList hasAcceptOverride={!!accept} footer={footer} />}
 		</>
 	);
 }
