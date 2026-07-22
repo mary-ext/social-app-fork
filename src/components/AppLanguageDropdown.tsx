@@ -23,30 +23,30 @@ export function AppLanguageDropdown() {
 	}));
 
 	return (
-		<Select.Root items={items} value={LOCALE} onValueChange={onChangeAppLanguage}>
+		<Select.Root items={items} onValueChange={onChangeAppLanguage} value={LOCALE}>
 			<Select.Trigger
 				render={
 					<Button
-						label={m['components.appLanguageDropdown.a11y.change']()}
-						variant="ghost"
-						color="secondary"
-						size="tiny"
-						shape="rectangular"
 						className={styles.trigger}
+						color="secondary"
+						label={m['components.appLanguageDropdown.a11y.change']()}
+						shape="rectangular"
+						size="tiny"
+						variant="ghost"
 					/>
 				}
 			>
-				<ButtonIcon icon={EarthIcon} />
+				<ButtonIcon icon={EarthIcon} size="sm" />
 				<Select.Value
-					placeholder={m['components.appLanguageDropdown.a11y.select']()}
 					className={styles.value}
+					placeholder={m['components.appLanguageDropdown.a11y.select']()}
 				/>
 				<Select.Icon className={styles.icon} />
 			</Select.Trigger>
 			<Select.Content
 				items={items}
 				renderItem={({ label, value }) => (
-					<Select.Item value={value} label={label}>
+					<Select.Item label={label} value={value}>
 						<Select.ItemIndicator />
 						<Select.ItemText>{label}</Select.ItemText>
 					</Select.Item>

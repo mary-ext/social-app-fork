@@ -1,22 +1,23 @@
 import { useEffect } from 'react';
-import { View } from 'react-native';
-
-import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 
 import { usePrefetchProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
+import { Logo } from '#/view/icons/Logo';
+import { Logotype } from '#/view/icons/Logotype';
 
-import { atoms as a, useTheme } from '#/alf';
-
+import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { Text } from '#/components/Text';
+import { Button, ButtonText } from '#/components/web/Button';
 
-import { SplashScreen } from './SplashScreen';
+import { m } from '#/paraglide/messages';
+import { colors } from '#/styles/colors';
+
+import * as css from './LoggedOut.css';
 
 export function LoggedOut() {
-	const t = useTheme();
-	const insets = useSafeAreaInsets();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const { accounts } = useSession();
@@ -34,13 +35,39 @@ export function LoggedOut() {
 	};
 
 	return (
-		<View
-			testID="noSessionView"
-			style={[a.util_screen_outer, t.atoms.bg, { paddingTop: insets.top, paddingBottom: insets.bottom }]}
-		>
-			<ErrorBoundary>
-				<SplashScreen onPressSignin={showSignIn} />
-			</ErrorBoundary>
-		</View>
+		<div className={css.container}>
+			<div className={css.content}>
+				<ErrorBoundary>
+					<div className={css.brand}>
+						<Logo fill="sky" width={92} />
+
+						<div className={css.logotypeWrap}>
+							<Logotype fill={colors.text} width={161} />
+						</div>
+
+						<Text color="textContrastMedium" size="md" weight="semiBold">
+							{m['common.compose.placeholder']()}
+						</Text>
+					</div>
+
+					<div className={css.actions}>
+						<Button
+							color="primary"
+							label={m['common.session.action.signIn']()}
+							onClick={showSignIn}
+							size="large"
+							variant="solid"
+						>
+							<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
+						</Button>
+					</div>
+				</ErrorBoundary>
+			</div>
+
+			<div className={css.footer}>
+				<div className={css.footerSpacer} />
+				<AppLanguageDropdown />
+			</div>
+		</div>
 	);
 }
