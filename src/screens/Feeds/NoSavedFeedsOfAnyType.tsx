@@ -1,12 +1,10 @@
-import { View } from 'react-native';
-
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
+
+import * as css from './NoSavedFeedsOfAnyType.css';
 
 /**
  * banner shown when the user has no saved feeds of any type, offering to apply the recommended set. present
@@ -23,23 +21,22 @@ export function NoSavedFeedsOfAnyType({
 	disabled?: boolean;
 	onAddRecommendedFeeds: () => void;
 }) {
-	const t = useTheme();
-
 	return (
-		<View style={[a.flex_row, a.flex_wrap, a.justify_between, a.p_xl, a.gap_md]}>
-			<Text style={[a.leading_snug, t.atoms.text_contrast_medium, { maxWidth: 310 }]}>
+		<div className={css.container}>
+			<Text className={css.text} color="textContrastMedium" leading="snug">
 				{m['screens.feeds.noSaved']()}
 			</Text>
 			<Button
+				color="primary"
 				disabled={disabled}
 				label={m['common.feeds.action.applyRecommended']()}
+				onClick={onAddRecommendedFeeds}
 				size="small"
-				color="primary_subtle"
-				onPress={onAddRecommendedFeeds}
+				variant="outline"
 			>
 				<ButtonIcon icon={Plus} />
 				<ButtonText>{m['screens.feeds.action.useRecommended']()}</ButtonText>
 			</Button>
-		</View>
+		</div>
 	);
 }

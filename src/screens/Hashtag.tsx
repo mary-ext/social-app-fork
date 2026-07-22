@@ -1,11 +1,7 @@
 import { useState } from 'react';
-import type { ListRenderItemInfo } from 'react-native';
 
-import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ActorIdentifier } from '@atcute/lexicons';
 
-import { HITSLOP_10 } from '#/lib/constants';
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
@@ -17,30 +13,20 @@ import { useSession } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import { Post } from '#/view/com/post/Post';
-import { List } from '#/view/com/util/List';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon } from '#/components/Button';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
-import * as Layout from '#/components/Layout';
-import { InlineLinkText } from '#/components/Link';
+import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { SearchError } from '#/components/SearchError';
 import { type Section, Tabs } from '#/components/Tabs';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Layout from '#/components/web/Layout';
+import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
-
-const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
-	return <Post post={item} />;
-};
-
-const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
-	return `${item.uri}-${index}`;
-};
 
 export default function HashtagScreen() {
 	useTitle(m['navigation.hashtag.title']());
@@ -73,12 +59,12 @@ export default function HashtagScreen() {
 		{
 			id: 'top',
 			label: m['common.search.top'](),
-			children: <HashtagScreenTab fullTag={fullTag} author={author} sort="top" />,
+			children: <HashtagScreenTab author={author} fullTag={fullTag} sort="top" />,
 		},
 		{
 			id: 'latest',
 			label: m['common.search.latest'](),
-			children: <HashtagScreenTab fullTag={fullTag} author={author} sort="latest" />,
+			children: <HashtagScreenTab author={author} fullTag={fullTag} sort="latest" />,
 		},
 	];
 
@@ -101,16 +87,14 @@ export default function HashtagScreen() {
 						</Layout.Header.Content>
 						<Layout.Header.Slot>
 							<Button
+								color="primary"
 								label={m['common.share.action.share']()}
+								onClick={onShare}
+								shape="round"
 								size="small"
 								variant="ghost"
-								color="primary"
-								shape="round"
-								onPress={onShare}
-								hitSlop={HITSLOP_10}
-								style={[{ right: -3 }]}
 							>
-								<ButtonIcon icon={Share} size="md" />
+								<ButtonIcon icon={Share} />
 							</Button>
 						</Layout.Header.Slot>
 					</Layout.Header.Outer>
@@ -121,17 +105,14 @@ export default function HashtagScreen() {
 }
 
 function HashtagScreenTab({
-	fullTag,
 	author,
+	fullTag,
 	sort,
 }: {
-	fullTag: string;
 	author: ActorIdentifier | undefined;
+	fullTag: string;
 	sort: 'top' | 'latest';
 }) {
-	const initialNumToRender = useInitialNumToRender();
-	const [isPTR, setIsPTR] = useState(false);
-	const t = useTheme();
 	const { hasSession } = useSession();
 
 	const isCashtag = fullTag.startsWith('$');
@@ -153,12 +134,6 @@ function HashtagScreenTab({
 
 	const posts = data?.pages.flatMap((page) => page.posts) || [];
 
-	const onRefresh = async () => {
-		setIsPTR(true);
-		await refetch();
-		setIsPTR(false);
-	};
-
 	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || error) {
 			return;
@@ -175,7 +150,7 @@ function HashtagScreenTab({
 	if (!hasSession) {
 		return (
 			<SearchError title={m['common.search.loggedOutError']()}>
-				<Text style={[a.text_md, a.text_center, a.leading_snug]}>
+				<Text align="center" leading="snug" size="md">
 					<Trans
 						message={m['common.search.signInPrompt']}
 						markup={{
@@ -185,7 +160,7 @@ function HashtagScreenTab({
 								</InlineLinkText>
 							),
 							t1: ({ children }) => <Text>{children}</Text>,
-							t2: ({ children }) => <Text style={t.atoms.text_contrast_medium}>{children}</Text>,
+							t2: ({ children }) => <Text color="textContrastMedium">{children}</Text>,
 						}}
 					/>
 				</Text>
@@ -206,14 +181,10 @@ function HashtagScreenTab({
 			) : (
 				<List
 					data={posts}
-					renderItem={renderItem}
-					keyExtractor={keyExtractor}
-					refreshing={isPTR}
-					onRefresh={() => void onRefresh()}
+					keyExtractor={(item, index) => `${item.uri}-${index}`}
+					renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
 					onEndReached={onEndReached}
 					onEndReachedThreshold={4}
-					// @ts-ignore web only -prf
-					desktopFixedHeight
 					ListFooterComponent={
 						<ListFooter
 							isFetchingNextPage={isFetchingNextPage}
@@ -221,8 +192,6 @@ function HashtagScreenTab({
 							onRetry={fetchNextPage}
 						/>
 					}
-					initialNumToRender={initialNumToRender}
-					windowSize={11}
 				/>
 			)}
 		</>

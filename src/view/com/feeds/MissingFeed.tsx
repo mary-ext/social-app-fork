@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -8,14 +6,10 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { getFeedTypeFromUri } from '#/state/queries/feed';
 import { useProfileQuery } from '#/state/queries/profile';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
-import { Text as LegacyText } from '#/components/Typography';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
@@ -23,63 +17,40 @@ import { m } from '#/paraglide/messages';
 import * as styles from './MissingFeed.css';
 
 export function MissingFeed({
+	error,
 	hideTopBorder,
 	uri,
-	error,
 }: {
+	error?: unknown;
 	hideTopBorder?: boolean;
 	uri: string;
-	error?: unknown;
 }) {
-	const t = useTheme();
 	const handle = Dialog.useDialogHandle();
-
 	const type = getFeedTypeFromUri(uri);
 
 	return (
 		<>
-			<Button
-				label={type === 'feed' ? m['view.feeds.feed.error.connect']() : m['view.feeds.list.deleted']()}
-				accessibilityHint={m['view.feeds.a11y.tapForInfo']()}
-				onPress={() => handle.open(null)}
-				style={[
-					a.flex_1,
-					a.p_lg,
-					a.gap_md,
-					!hideTopBorder && a.border_t,
-					t.atoms.border_contrast_low,
-					a.justify_start,
-				]}
+			<button
+				type="button"
+				aria-label={type === 'feed' ? m['view.feeds.feed.error.connect']() : m['view.feeds.list.deleted']()}
+				className={styles.button({ borderTop: !hideTopBorder })}
+				onClick={() => handle.open(null)}
 			>
-				<View style={[a.flex_row, a.align_center]}>
-					<View
-						style={[
-							{ width: 36, height: 36 },
-							t.atoms.bg_contrast_25,
-							a.rounded_sm,
-							a.mr_md,
-							a.align_center,
-							a.justify_center,
-						]}
-					>
-						<WarningIcon size="xl" />
-					</View>
-					<View style={[a.flex_1]}>
-						<LegacyText style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]} numberOfLines={1}>
-							{type === 'feed' ? m['view.feeds.feed.unavailable.title']() : m['view.feeds.list.deleted']()}
-						</LegacyText>
-						<LegacyText
-							style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug, a.italic]}
-							numberOfLines={1}
-						>
-							{m['view.feeds.a11y.clickForInfo']()}
-						</LegacyText>
-					</View>
-				</View>
-			</Button>
+				<div className={styles.iconBox}>
+					<WarningIcon size="xl" />
+				</div>
+				<div className={styles.textContent}>
+					<Text className={styles.titleText} leading="snug" size="sm" weight="semiBold">
+						{type === 'feed' ? m['view.feeds.feed.unavailable.title']() : m['view.feeds.list.deleted']()}
+					</Text>
+					<Text className={styles.italic} color="textContrastMedium" leading="snug" size="sm">
+						{m['view.feeds.a11y.clickForInfo']()}
+					</Text>
+				</div>
+			</button>
 			<Dialog.Root handle={handle}>
 				<Dialog.Popup size="wide">
-					<DialogInner handle={handle} uri={uri} type={type} error={error} />
+					<DialogInner error={error} handle={handle} type={type} uri={uri} />
 				</Dialog.Popup>
 			</Dialog.Root>
 		</>
@@ -87,15 +58,15 @@ export function MissingFeed({
 }
 
 function DialogInner({
-	handle,
-	uri,
-	type,
 	error,
+	handle,
+	type,
+	uri,
 }: {
-	handle: Dialog.DialogHandle;
-	uri: string;
-	type: 'feed' | 'list';
 	error: unknown;
+	handle: Dialog.DialogHandle;
+	type: 'feed' | 'list';
+	uri: string;
 }) {
 	const atUri = parseCanonicalResourceUri(uri);
 	const { data: profile, isError: isProfileError } = useProfileQuery({
@@ -122,14 +93,14 @@ function DialogInner({
 				<div className={styles.profileRow}>
 					<ProfileCard.Link profile={profile} onPress={() => handle.close()}>
 						<ProfileCard.Header>
-							<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
-							<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
+							<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
+							<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
 						</ProfileCard.Header>
 					</ProfileCard.Link>
 				</div>
 			)}
 			{isProfileError && (
-				<Text className={styles.notice} color="textContrastHigh" align="center">
+				<Text align="center" className={styles.notice} color="textContrastHigh">
 					{m['view.feeds.profile.notFound']()}
 				</Text>
 			)}

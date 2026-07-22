@@ -240,6 +240,48 @@ type InlineAnchorProps = Pick<
 		underline?: InlineLinkUnderline;
 	};
 
+// resolves the className + inline-var style shared by inline elements styled through the text recipe with the
+// inline-link treatment (an `<a>` or a `<button>`).
+const inlineTextStyle = ({
+	align,
+	className,
+	color,
+	leading,
+	numberOfLines,
+	selectable,
+	size,
+	underline,
+	weight,
+}: Pick<
+	InlineAnchorProps,
+	| 'align'
+	| 'className'
+	| 'color'
+	| 'leading'
+	| 'numberOfLines'
+	| 'selectable'
+	| 'size'
+	| 'underline'
+	| 'weight'
+>) => {
+	const clamped = numberOfLines != null;
+	const singleLine = numberOfLines === 1;
+	return {
+		className: clsx(
+			textStyles.text({ align, color, leading, size, weight }),
+			styles.inlineLink({ underline }),
+			clamped && (singleLine ? textStyles.clampSingleLine : textStyles.clampMultiLine),
+			selectable === true && textStyles.userSelect.text,
+			selectable === false && textStyles.userSelect.none,
+			className,
+		),
+		style:
+			clamped && !singleLine
+				? assignInlineVars({ [textStyles.lineClampVar]: String(numberOfLines) })
+				: undefined,
+	};
+};
+
 // an inline text `<a>` styled through the text recipe, defaulting to the primary color with an underline on
 // hover/focus.
 const InlineAnchor = ({
@@ -257,29 +299,27 @@ const InlineAnchor = ({
 	weight,
 	...rest
 }: { bindings: LinkBindings } & InlineAnchorProps) => {
-	const clamped = numberOfLines != null;
-	const singleLine = numberOfLines === 1;
+	const styled = inlineTextStyle({
+		align,
+		className,
+		color,
+		leading,
+		numberOfLines,
+		selectable,
+		size,
+		underline,
+		weight,
+	});
 
 	return (
 		<a
 			{...rest}
 			aria-label={label}
-			className={clsx(
-				textStyles.text({ align, color, leading, size, weight }),
-				styles.inlineLink({ underline }),
-				clamped && (singleLine ? textStyles.clampSingleLine : textStyles.clampMultiLine),
-				selectable === true && textStyles.userSelect.text,
-				selectable === false && textStyles.userSelect.none,
-				className,
-			)}
+			className={styled.className}
 			href={bindings.href}
 			onClick={bindings.onClick}
 			rel={bindings.rel}
-			style={
-				clamped && !singleLine
-					? assignInlineVars({ [textStyles.lineClampVar]: String(numberOfLines) })
-					: undefined
-			}
+			style={styled.style}
 			target={bindings.target}
 		>
 			{children}
@@ -393,6 +433,47 @@ export const ContentLinkText = ({ action, href, onPress, ...rest }: ContentLinkT
 		onPress,
 	});
 	return <InlineAnchor bindings={bindings} {...rest} />;
+};
+
+// #endregion
+
+// #region inline button — an in-place action styled like inline link text
+
+export type InlineButtonProps = Pick<TextProps, 'align' | 'color' | 'leading' | 'size' | 'weight'> &
+	Omit<ComponentPropsWithoutRef<'button'>, 'color' | 'style'> & {
+		children: ReactNode;
+		/** Accessible name; becomes the button's `aria-label`. */
+		label?: string;
+		/** Forwarded to the `<button>` so it can back a headless trigger (e.g. a Base UI dialog). */
+		ref?: Ref<HTMLButtonElement>;
+		/** Underline timing; defaults to `hover`. */
+		underline?: InlineLinkUnderline;
+	};
+
+/**
+ * a web-native `<button>` styled identically to {@link InlineLinkText}, for in-place actions that sit inline
+ * in text flow (e.g. an "add feeds" action inside a sentence). use this instead of a dummy-target link for
+ * actions that do not navigate.
+ */
+export const InlineButton = ({
+	align,
+	children,
+	className,
+	color = 'primary_500',
+	label,
+	leading,
+	size,
+	type = 'button',
+	underline = 'hover',
+	weight,
+	...rest
+}: InlineButtonProps) => {
+	const styled = inlineTextStyle({ align, className, color, leading, size, underline, weight });
+	return (
+		<button {...rest} aria-label={label} className={styled.className} style={styled.style} type={type}>
+			{children}
+		</button>
+	);
 };
 
 // #endregion

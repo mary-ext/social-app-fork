@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import type { ListRenderItemInfo } from 'react-native';
 
-import type { AppBskyFeedDefs } from '@atcute/bluesky';
-
-import { HITSLOP_10 } from '#/lib/constants';
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
@@ -13,24 +8,16 @@ import { enforceLen } from '#/lib/strings/helpers';
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 
 import { Post } from '#/view/com/post/Post';
-import { List } from '#/view/com/util/List';
 
-import { Button, ButtonIcon } from '#/components/Button';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
-import * as Layout from '#/components/Layout';
+import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { type Section, Tabs } from '#/components/Tabs';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
-
-const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
-	return <Post post={item} />;
-};
-
-const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
-	return `${item.uri}-${index}`;
-};
 
 export default function TopicScreen() {
 	const [{ topic }] = useParams('Topic');
@@ -72,16 +59,14 @@ export default function TopicScreen() {
 						</Layout.Header.Content>
 						<Layout.Header.Slot>
 							<Button
+								color="primary"
 								label={m['common.share.action.share']()}
+								onClick={onShare}
+								shape="round"
 								size="small"
 								variant="ghost"
-								color="primary"
-								shape="round"
-								onPress={onShare}
-								hitSlop={HITSLOP_10}
-								style={[{ right: -3 }]}
 							>
-								<ButtonIcon icon={Share} size="md" />
+								<ButtonIcon icon={Share} />
 							</Button>
 						</Layout.Header.Slot>
 					</Layout.Header.Outer>
@@ -92,9 +77,6 @@ export default function TopicScreen() {
 }
 
 function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest' }) {
-	const initialNumToRender = useInitialNumToRender();
-	const [isPTR, setIsPTR] = useState(false);
-
 	const {
 		data,
 		isFetched,
@@ -111,12 +93,6 @@ function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest'
 	});
 
 	const posts = data?.pages.flatMap((page) => page.posts) || [];
-
-	const onRefresh = async () => {
-		setIsPTR(true);
-		await refetch();
-		setIsPTR(false);
-	};
 
 	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || error) {
@@ -138,14 +114,10 @@ function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest'
 			) : (
 				<List
 					data={posts}
-					renderItem={renderItem}
-					keyExtractor={keyExtractor}
-					refreshing={isPTR}
-					onRefresh={() => void onRefresh()}
+					keyExtractor={(item, index) => `${item.uri}-${index}`}
+					renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
 					onEndReached={onEndReached}
 					onEndReachedThreshold={4}
-					// @ts-ignore web only -prf
-					desktopFixedHeight
 					ListFooterComponent={
 						<ListFooter
 							isFetchingNextPage={isFetchingNextPage}
@@ -153,8 +125,6 @@ function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest'
 							onRetry={fetchNextPage}
 						/>
 					}
-					initialNumToRender={initialNumToRender}
-					windowSize={11}
 				/>
 			)}
 		</>
