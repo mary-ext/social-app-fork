@@ -52,7 +52,6 @@ import { MessageInputEmbed, useMessageEmbed } from './MessageInputEmbed';
 import { MessageInputReply } from './MessageInputReply';
 import { MessagesListGroupInfoPanel } from './MessagesListGroupInfoPanel';
 import { MessagesListInfoPanel } from './MessagesListInfoPanel';
-import { KeyboardStickyView } from './vendor/KeyboardStickyView';
 
 type WebViewStyle = ViewStyle & {
 	scrollbarColor?: string;
@@ -529,14 +528,15 @@ export function MessagesList({
 								scrollIndicatorInsets={{ top: transparentHeaderHeight }}
 							/>
 						</ScrollProvider>
-						<KeyboardStickyView
-							style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
+						<View
+							style={[
+								a.absolute,
+								a.bottom_0,
+								a.left_0,
+								a.right_0,
+								bottomInset > 0 && { transform: [{ translateY: -bottomInset }] },
+							]}
 							onLayout={onInputLayout}
-							minimumOffset={bottomInset}
-							offset={{
-								closed: 0,
-								opened: 0,
-							}}
 						>
 							{footer ?? (
 								<ConversationFooter convoState={convoState} hasAcceptOverride={hasAcceptOverride}>
@@ -553,7 +553,7 @@ export function MessagesList({
 									)}
 								</ConversationFooter>
 							)}
-						</KeyboardStickyView>
+						</View>
 					</View>
 					{newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
 				</MessageOverlays>
