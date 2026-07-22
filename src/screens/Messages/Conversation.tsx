@@ -1,5 +1,4 @@
-import { useCallback, useState } from 'react';
-import { type LayoutChangeEvent, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 
@@ -18,13 +17,11 @@ import { useSession } from '#/state/session';
 import { MessagesList } from '#/screens/Messages/components/MessagesList';
 import { RequestStatus } from '#/screens/Messages/components/RequestStatus';
 
-import { atoms as a } from '#/alf';
-
 import { MessagesListBlockedFooter } from '#/components/dms/MessagesListBlockedFooter';
 import { MessagesListHeader } from '#/components/dms/MessagesListHeader';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { Error } from '#/components/Error';
-import * as Layout from '#/components/Layout';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useIsFocused, useNavigate, useParams } from '#/routes';
@@ -32,6 +29,7 @@ import { useFocusEffect, useIsFocused, useNavigate, useParams } from '#/routes';
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatEnded } from './components/ChatEnded';
 import { ChatLocked } from './components/ChatLocked';
+import * as css from './Conversation.css';
 
 export function MessagesConversationScreen() {
 	return <MessagesConversationScreenInner />;
@@ -54,7 +52,7 @@ export function MessagesConversationScreenInner() {
 	);
 
 	return (
-		<Layout.Screen testID="convoScreen" noInsetTop={false} style={[{ minHeight: 0 }, a.flex_1]}>
+		<Layout.Screen className={css.screen} noInsetTop={false}>
 			<ConvoProvider key={convoId} convoId={convoId}>
 				<Inner convoId={convoId} />
 			</ConvoProvider>
@@ -87,28 +85,28 @@ function Inner({ convoId }: { convoId: string }) {
 	if (convoState.status === ConvoStatus.Error) {
 		return (
 			<>
-				<View style={[a.w_full]}>
+				<div className={css.full}>
 					<MessagesListHeader convo={convo} />
-				</View>
+				</div>
 				<Error
-					title={m['common.error.generic']()}
 					message={m['screens.messages.conversation.loadError']()}
 					onRetry={() => convoState.error.retry()}
+					title={m['common.error.generic']()}
 				/>
 			</>
 		);
 	}
 
 	return (
-		<View style={[a.flex_1]}>
+		<div className={css.inner}>
 			<InnerReady
 				convo={convo}
 				hasScrolled={hasScrolled}
-				setHasScrolled={setHasScrolled}
 				isActive={isConvoActive(convoState)}
 				isDisabled={convoState.status === ConvoStatus.Disabled}
+				setHasScrolled={setHasScrolled}
 			/>
-		</View>
+		</div>
 	);
 }
 
@@ -134,15 +132,24 @@ function InnerReady({
 		primaryMemberModeration = moderateProfile(primaryMember, moderationOpts);
 	}
 
+	// the request banner floats below the header, so track the header's height to position it.
 	const [headerHeight, setHeaderHeight] = useState(0);
-	const onHeaderLayout = (e: LayoutChangeEvent) => {
-		setHeaderHeight(e.nativeEvent.layout.height);
-	};
+	const headerRef = useRef<HTMLDivElement | null>(null);
+	useEffect(() => {
+		const node = headerRef.current;
+		if (!node) {
+			return;
+		}
+		const observer = new ResizeObserver(() => setHeaderHeight(node.offsetHeight));
+		observer.observe(node);
+		setHeaderHeight(node.offsetHeight);
+		return () => observer.disconnect();
+	}, []);
 
 	const unreadRequestCount = convo?.kind === 'group' ? (convo.details.unreadJoinRequestCount ?? 0) : 0;
 	const { mutate: markJoinRequestsRead } = useMarkJoinRequestsRead(convo?.view.id);
 
-	const header = <MessagesListHeader convo={convo} />;
+	const header = <MessagesListHeader convo={convo} ref={headerRef} />;
 
 	let footer: React.ReactNode = null;
 	if (isDisabled) {
@@ -175,7 +182,7 @@ function InnerReady({
 
 	return (
 		<>
-			<View onLayout={onHeaderLayout}>{header}</View>
+			{header}
 
 			{isActive && convo?.kind === 'group' && unreadRequestCount > 0 ? (
 				<RequestStatus

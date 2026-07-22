@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { View } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
 
 import type { AnyProfileView, ChatBskyGroupListJoinRequests } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
@@ -24,27 +23,25 @@ import { logger } from '#/logger';
 
 import { List } from '#/view/com/util/List';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo';
-import * as Layout from '#/components/Layout';
-import * as ProfileCard from '#/components/ProfileCard';
 import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
-import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { KnownFollowers } from '#/components/web/KnownFollowers';
+import * as Layout from '#/components/web/Layout';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 import { useParams, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { InviteLinkDialog } from './components/InviteLinkDialog';
+import * as css from './JoinRequests.css';
 
 export function MessagesJoinRequestsScreen() {
 	useTitle(m['common.requests.label']());
@@ -81,9 +78,9 @@ function JoinRequestsInner() {
 		return (
 			<>
 				<Header />
-				<View style={[a.flex_1, a.align_center, a.justify_center]}>
+				<div className={css.loadingFill}>
 					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
-				</View>
+				</div>
 			</>
 		);
 	}
@@ -108,7 +105,6 @@ function JoinRequestsInner() {
 }
 
 function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
-	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 	const bottomBarOffset = useBottomBarOffset();
 	const { currentAccount } = useSession();
@@ -124,7 +120,18 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	};
 
 	const [isPTRing, setIsPTRing] = useState(false);
+	// the footer floats over the bottom of the list; measure it so the list can reserve space below.
 	const [footerHeight, setFooterHeight] = useState(0);
+	const footerObserver = useRef<ResizeObserver | null>(null);
+	const footerRef = useCallback((node: HTMLDivElement | null) => {
+		footerObserver.current?.disconnect();
+		if (node) {
+			const observer = new ResizeObserver(() => setFooterHeight(node.offsetHeight));
+			observer.observe(node);
+			footerObserver.current = observer;
+			setFooterHeight(node.offsetHeight);
+		}
+	}, []);
 
 	const owner = convo.primaryMember;
 	const isOwner = !!owner && owner.did === currentAccount?.did;
@@ -221,54 +228,42 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			return null;
 		}
 		return (
-			<View style={[a.relative, a.flex_1, a.p_lg]}>
-				<View style={[a.flex_row, a.align_start, a.gap_md]}>
+			<div className={css.item}>
+				<div className={css.itemRow}>
 					<ProfileCard.Link profile={item}>
-						<ProfileCard.Avatar profile={item} moderationOpts={moderationOpts} size={44} disabledPreview />
+						<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={item} size={44} />
 					</ProfileCard.Link>
-					<View>
-						<ProfileCard.Name profile={item} moderationOpts={moderationOpts} />
+					<div>
+						<ProfileCard.Name moderationOpts={moderationOpts} profile={item} />
 						<ProfileCard.Handle profile={item} />
-						<View style={[a.mt_xs]}>
+						<div className={css.knownFollowers}>
 							<KnownFollowers moderationOpts={moderationOpts} profile={item} showIfEmpty variant="compact" />
-						</View>
-						<View style={[a.flex_row, a.align_center, a.gap_sm, a.mt_md]}>
+						</div>
+						<div className={css.actions}>
 							<AcceptButton disabled={isMutating} onPress={() => approveJoinRequest({ member: item.did })} />
 							<RejectButton disabled={isMutating} onPress={() => rejectJoinRequest({ member: item.did })} />
-						</View>
-					</View>
-				</View>
-			</View>
+						</div>
+					</div>
+				</div>
+			</div>
 		);
 	};
 
 	const footer = (
-		<View
-			onLayout={(evt) => setFooterHeight(evt.nativeEvent.layout.height)}
-			style={[
-				a.absolute,
-				a.left_0,
-				a.right_0,
-				{ bottom: 0 },
-				a.px_xl,
-				a.border_t,
-				t.atoms.bg,
-				t.atoms.border_contrast_low,
-				{
-					paddingTop: a.py_lg.paddingTop,
-					paddingBottom: a.py_lg.paddingBottom + bottomBarOffset,
-				},
-			]}
+		<div
+			className={css.footer}
+			ref={footerRef}
+			style={{ paddingTop: 16, paddingBottom: 16 + bottomBarOffset }}
 		>
 			<Dialog.Trigger
 				handle={inviteLinkHandle}
 				render={
-					<WebButton color="primary" label={m['screens.messages.inviteLink.edit.action']()} size="large">
-						<WebButtonText>{m['screens.messages.inviteLink.edit.action']()}</WebButtonText>
-					</WebButton>
+					<Button color="primary" label={m['screens.messages.inviteLink.edit.action']()} size="large">
+						<ButtonText>{m['screens.messages.inviteLink.edit.action']()}</ButtonText>
+					</Button>
 				}
 			/>
-		</View>
+		</div>
 	);
 
 	const onEndReached = async () => {
@@ -296,18 +291,18 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		return (
 			<>
 				<Header count={requestCount} hasMoreRequests={hasNextPage} />
-				<View style={[a.flex_1, a.align_center, a.justify_center, a.gap_sm, a.p_lg]}>
-					<ErrorIcon size="4xl" fill={colors.textContrastHigh} />
-					<Text style={[a.leading_snug, a.text_center, a.px_lg, a.text_md, t.atoms.text_contrast_high]}>
+				<div className={css.errorFill}>
+					<ErrorIcon fill={colors.textContrastHigh} size="4xl" />
+					<Text align="center" className={css.errorText} color="textContrastHigh" size="md">
 						{m['screens.messages.requests.error.fetch']()}
 					</Text>
 					<Button
+						className={css.errorButton}
 						color="primary"
-						label={m['common.a11y.pressToRetry']()}
-						onPress={() => void onRefresh()}
 						disabled={isPTRing}
+						label={m['common.a11y.pressToRetry']()}
+						onClick={() => void onRefresh()}
 						size="large"
-						style={[a.mt_md]}
 					>
 						<ButtonText>{m['common.action.retry']()}</ButtonText>
 						{isPTRing ? (
@@ -316,7 +311,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 							<ButtonIcon icon={RetryIcon} />
 						)}
 					</Button>
-				</View>
+				</div>
 			</>
 		);
 	}
@@ -332,9 +327,9 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				renderItem={renderItem}
 				ListEmptyComponent={
 					isPending ? (
-						<View style={[a.flex_1, a.align_center, a.justify_center, a.py_4xl]}>
+						<div className={css.emptyFill}>
 							<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
-						</View>
+						</div>
 					) : null
 				}
 				contentContainerStyle={showFooter ? { paddingBottom: footerHeight } : undefined}
@@ -380,11 +375,11 @@ function Header({ count, hasMoreRequests }: { count?: number; hasMoreRequests?: 
 function AcceptButton({ disabled, onPress }: { disabled?: boolean; onPress: () => void }) {
 	return (
 		<Button
-			label={m['screens.messages.requests.acceptJoin.a11y']()}
-			size="small"
 			color="primary"
 			disabled={disabled}
-			onPress={onPress}
+			label={m['screens.messages.requests.acceptJoin.a11y']()}
+			onClick={onPress}
+			size="small"
 		>
 			<ButtonText>{m['screens.messages.requests.accept.action']()}</ButtonText>
 		</Button>
@@ -394,11 +389,11 @@ function AcceptButton({ disabled, onPress }: { disabled?: boolean; onPress: () =
 function RejectButton({ disabled, onPress }: { disabled?: boolean; onPress: () => void }) {
 	return (
 		<Button
-			label={m['screens.messages.requests.rejectJoin.a11y']()}
-			size="small"
 			color="secondary"
 			disabled={disabled}
-			onPress={onPress}
+			label={m['screens.messages.requests.rejectJoin.a11y']()}
+			onClick={onPress}
+			size="small"
 		>
 			<ButtonText>{m['screens.messages.requests.reject.action']()}</ButtonText>
 		</Button>

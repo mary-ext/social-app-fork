@@ -37,12 +37,18 @@ import type { ConvoWithDetails } from './util';
 
 const PFP_SIZE = 40;
 
-export function MessagesListHeader({ convo }: { convo?: ConvoWithDetails | null }) {
+export function MessagesListHeader({
+	convo,
+	ref,
+}: {
+	convo?: ConvoWithDetails | null;
+	ref?: React.Ref<HTMLDivElement>;
+}) {
 	const moderationOpts = useModerationOpts();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
 	return (
-		<Layout.Header.Outer noBottomBorder={false}>
+		<Layout.Header.Outer noBottomBorder={false} ref={ref}>
 			<div className={css.outerRow}>
 				{!isWithinSplitView && (
 					<div className={css.backSlot}>
