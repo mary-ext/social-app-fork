@@ -14,68 +14,74 @@ import * as css from './EmptyState.css';
 type ButtonColor = NonNullable<ComponentProps<typeof Button>['color']>;
 type ButtonSize = NonNullable<ComponentProps<typeof Button>['size']>;
 
-export type EmptyStateIcon = ComponentType<IconProps>;
-
 export type EmptyStateButtonProps = {
 	color?: ButtonColor;
 	icon?: EmptyStateIcon;
+	iconPosition?: 'left' | 'right';
 	label: string;
 	onPress: () => void;
 	size?: ButtonSize;
 	text: string;
 };
 
+export type EmptyStateIcon = ComponentType<IconProps>;
+
 export function EmptyState({
-	icon,
-	iconSize = '3xl',
-	iconColor,
-	message,
-	messageColor = 'textContrastHigh',
 	button,
 	className,
+	icon,
+	iconColor,
+	iconSize = '3xl',
+	message,
+	messageColor = 'textContrastHigh',
 }: {
-	icon?: EmptyStateIcon | ReactElement | null;
-	iconSize?: IconProps['size'];
-	iconColor?: string;
-	message: string;
-	messageColor?: TextProps['color'];
 	button?: EmptyStateButtonProps;
 	className?: string;
+	icon?: EmptyStateIcon | ReactElement | null;
+	iconColor?: string;
+	iconSize?: IconProps['size'];
+	message: string;
+	messageColor?: TextProps['color'];
 }) {
 	const renderIcon = () => {
 		if (icon === null) {
 			return null;
 		}
 		if (!icon) {
-			return <EditIcon size="3xl" fill={colors.textContrastMedium} />;
+			return <EditIcon fill={colors.textContrastMedium} size="3xl" />;
 		}
 		if (isValidElement(icon)) {
 			return icon;
 		}
 		const IconComponent = icon;
-		return <IconComponent size={iconSize} fill={iconColor ?? colors.textContrastLow} />;
+		return <IconComponent fill={iconColor ?? colors.textContrastLow} size={iconSize} />;
+	};
+
+	const renderButton = () => {
+		if (!button) {
+			return null;
+		}
+		const { color, icon: buttonIcon, iconPosition = 'left', label, onPress, size = 'small', text } = button;
+
+		return (
+			<div className={css.buttonWrap}>
+				<Button color={color} label={label} onClick={onPress} size={size}>
+					{buttonIcon && iconPosition === 'left' && <ButtonIcon icon={buttonIcon} />}
+					<ButtonText>{text}</ButtonText>
+					{buttonIcon && iconPosition === 'right' && <ButtonIcon icon={buttonIcon} />}
+				</Button>
+			</div>
+		);
 	};
 
 	return (
 		<div className={clsx(css.root, className)}>
 			<div className={css.iconBox}>{renderIcon()}</div>
-			<Text className={clsx(css.message)} size="md" weight="medium" color={messageColor} align="center">
+			<Text align="center" className={css.message} color={messageColor} size="md" weight="medium">
 				{message}
 			</Text>
 
-			{button && (
-				<div className={css.buttonWrap}>
-					<Button
-						label={button.label}
-						onClick={button.onPress}
-						size={button.size ?? 'small'}
-						color={button.color}
-					>
-						{button.icon && <ButtonIcon icon={button.icon} />}
-						<ButtonText>{button.text}</ButtonText>
-					</Button>
-				</div>
-			)}
+			{renderButton()}
 		</div>
 	);
 }

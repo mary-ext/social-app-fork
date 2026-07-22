@@ -1,26 +1,21 @@
-import { View } from 'react-native';
-
 import * as TID from '@atcute/tid';
 
 import { DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED } from '#/lib/constants';
 
 import {
-	useOverwriteSavedFeedsMutation,
 	type UsePreferencesQueryResponse,
+	useOverwriteSavedFeedsMutation,
 } from '#/state/queries/preferences';
-
-import { CenteredView } from '#/view/com/util/Views';
-
-import { atoms as a } from '#/alf';
 
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 
+import * as css from './NoFeedsPinned.css';
 export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { isPending, mutateAsync: overwriteSavedFeeds } = useOverwriteSavedFeedsMutation();
 
@@ -43,13 +38,13 @@ export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQuer
 		const toSave = [
 			{
 				...DISCOVER_SAVED_FEED,
-				pinned: true,
 				id: TID.now(),
+				pinned: true,
 			},
 			{
 				...TIMELINE_SAVED_FEED,
-				pinned: true,
 				id: TID.now(),
+				pinned: true,
 			},
 			...remainingSavedFeeds,
 		];
@@ -58,40 +53,40 @@ export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQuer
 	};
 
 	return (
-		<CenteredView sideBorders style={[a.h_full_vh]}>
-			<View style={[a.align_center, a.h_full_vh, a.py_3xl, a.px_xl]}>
-				<View style={[a.align_center, a.gap_sm, a.pb_xl]}>
-					<Text style={[a.text_xl, a.font_semi_bold]}>{m['common.error.whoops']()}</Text>
-					<Text style={[a.text_md, a.text_center, a.leading_snug, { maxWidth: 340 }]}>
-						{m['screens.home.empty']()}
-					</Text>
-				</View>
+		<div className={css.container}>
+			<div className={css.header}>
+				<Text size="xl" weight="semiBold">
+					{m['common.error.whoops']()}
+				</Text>
+				<Text align="center" className={css.description}>
+					{m['screens.home.empty']()}
+				</Text>
+			</div>
 
-				<View style={[a.flex_row, a.gap_md, a.justify_center, a.flex_wrap]}>
-					<Button
-						disabled={isPending}
-						label={m['common.feeds.action.applyRecommended']()}
-						size="large"
-						variant="solid"
-						color="primary"
-						onClick={() => void addRecommendedFeeds()}
-					>
-						<ButtonIcon icon={Plus} />
-						<ButtonText>{m['screens.home.action.addRecommendedFeeds']()}</ButtonText>
-					</Button>
+			<div className={css.actions}>
+				<Button
+					color="primary"
+					disabled={isPending}
+					label={m['common.feeds.action.applyRecommended']()}
+					onClick={() => void addRecommendedFeeds()}
+					size="large"
+					variant="solid"
+				>
+					<ButtonIcon icon={Plus} />
+					<ButtonText>{m['screens.home.action.addRecommendedFeeds']()}</ButtonText>
+				</Button>
 
-					<LinkButton
-						label={m['screens.home.action.browseOtherFeeds']()}
-						to="/feeds"
-						size="large"
-						variant="solid"
-						color="secondary"
-					>
-						<ButtonIcon icon={ListSparkle} />
-						<ButtonText>{m['screens.home.action.browseOtherFeeds']()}</ButtonText>
-					</LinkButton>
-				</View>
-			</View>
-		</CenteredView>
+				<LinkButton
+					color="secondary"
+					label={m['screens.home.action.browseOtherFeeds']()}
+					size="large"
+					to="/feeds"
+					variant="solid"
+				>
+					<ButtonIcon icon={ListSparkle} />
+					<ButtonText>{m['screens.home.action.browseOtherFeeds']()}</ButtonText>
+				</LinkButton>
+			</div>
+		</div>
 	);
 }

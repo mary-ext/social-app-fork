@@ -1,12 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
-export const root = style({
-	boxSizing: 'border-box',
+export const buttonWrap = style({
 	display: 'flex',
-	flexDirection: 'column',
-	paddingBlock: 50,
-	paddingInline: 24,
-	width: '100%',
+	alignSelf: 'center',
+	flexShrink: 1,
+	marginTop: 24,
 });
 
 export const iconBox = style({
@@ -15,25 +13,20 @@ export const iconBox = style({
 	alignItems: 'center',
 	alignSelf: 'center',
 	justifyContent: 'center',
-	borderRadius: 999,
 	width: 64,
 	height: 64,
+	borderRadius: 999,
 });
 
 export const message = style({
 	alignSelf: 'center',
 	marginTop: 4,
-
-	'@media': {
-		'(min-width: 800px)': {
-			maxWidth: '60%',
-		},
-	},
 });
 
-export const buttonWrap = style({
+export const root = style({
 	display: 'flex',
-	flexShrink: 1,
-	alignSelf: 'center',
-	marginTop: 24,
+	flexDirection: 'column',
+	boxSizing: 'border-box',
+	paddingBlock: 50,
+	paddingInline: 24,
 });

@@ -10,7 +10,6 @@ export const screen = recipe(
 			display: 'flex',
 			flexDirection: 'column',
 			flexShrink: 0,
-			paddingTop: 'env(safe-area-inset-top, 0px)',
 			minHeight: `calc(100dvh - ${fallbackVar(bottomBarHeightVar, '0px')})`,
 		},
 		defaultVariants: {
@@ -19,7 +18,7 @@ export const screen = recipe(
 		},
 		variants: {
 			noInsetTop: {
-				false: {},
+				false: { paddingTop: 'env(safe-area-inset-top, 0px)' },
 				true: { paddingTop: 0 },
 			},
 			// within the messages split view the screen fills a height-bounded column, so cap it instead of

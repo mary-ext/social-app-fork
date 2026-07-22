@@ -1,83 +1,47 @@
-import { StyleSheet, View } from 'react-native';
-
-import { usePalette } from '#/lib/hooks/usePalette';
-import { MagnifyingGlassIcon } from '#/lib/icons';
-import { s } from '#/lib/styles';
+import { clsx } from 'clsx';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
+import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
+import { Text } from '#/components/Text';
+import { ButtonIcon, ButtonText } from '#/components/web/Button';
+import { LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';
 
-import { Button } from '../util/forms/Button';
-import { Text } from '../util/text/Text';
 import * as css from './FollowingEmptyState.css';
 
 export function FollowingEmptyState() {
-	const pal = usePalette('default');
-	const palInverted = usePalette('inverted');
-	const navigate = useNavigate();
-
-	const onPressFindAccounts = () => {
-		navigate('Explore', {});
-	};
-
-	const onPressDiscoverFeeds = () => {
-		navigate('Feeds');
-	};
-
 	return (
-		<View style={styles.container}>
-			<View style={styles.inner}>
-				<View style={styles.iconContainer}>
-					<MagnifyingGlassIcon color={colors.text} className={css.icon} size={62} />
-				</View>
-				<Text type="xl-medium" style={[s.textCenter, pal.text]}>
-					{m['view.posts.feed.followingEmpty']()}
-				</Text>
-				<Button type="inverted" style={styles.emptyBtn} onPress={onPressFindAccounts}>
-					<Text type="lg-medium" style={palInverted.text}>
-						{m['view.posts.follow.findAccounts']()}
-					</Text>
-					<ChevronRightIcon width={14} fill={colors.textInverted} />
-				</Button>
+		<div className={css.container}>
+			<div className={css.iconBox}>
+				<MagnifyingGlassIcon fill={colors.textContrastLow} size="3xl" />
+			</div>
+			<Text align="center" className={css.message} color="textContrastHigh" size="md" weight="medium">
+				{m['view.posts.feed.followingEmpty']()}
+			</Text>
+			<div className={css.buttonWrap}>
+				<LinkButton color="secondary" label={m['view.posts.follow.findAccounts']()} size="large" to="/search">
+					<ButtonText>{m['view.posts.follow.findAccounts']()}</ButtonText>
+					<ButtonIcon icon={ChevronRightIcon} />
+				</LinkButton>
+			</div>
 
-				<Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
-					{m['view.posts.discover.hint']()}
-				</Text>
-				<Button type="inverted" style={[styles.emptyBtn, s.mt10]} onPress={onPressDiscoverFeeds}>
-					<Text type="lg-medium" style={palInverted.text}>
-						{m['view.posts.discover.findFeeds']()}
-					</Text>
-					<ChevronRightIcon width={14} fill={colors.textInverted} />
-				</Button>
-			</View>
-		</View>
+			<Text
+				align="center"
+				className={clsx(css.message, css.sectionText)}
+				color="textContrastHigh"
+				size="md"
+				weight="medium"
+			>
+				{m['view.posts.discover.hint']()}
+			</Text>
+			<div className={css.buttonWrap}>
+				<LinkButton color="secondary" label={m['view.posts.discover.findFeeds']()} size="large" to="/feeds">
+					<ButtonText>{m['view.posts.discover.findFeeds']()}</ButtonText>
+					<ButtonIcon icon={ChevronRightIcon} />
+				</LinkButton>
+			</div>
+		</div>
 	);
 }
-const styles = StyleSheet.create({
-	container: {
-		height: '100%',
-		flexDirection: 'row',
-		justifyContent: 'center',
-		paddingVertical: 40,
-		paddingHorizontal: 30,
-	},
-	inner: {
-		width: '100%',
-		maxWidth: 460,
-	},
-	iconContainer: {
-		marginBottom: 16,
-	},
-	emptyBtn: {
-		marginVertical: 20,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		paddingVertical: 18,
-		paddingHorizontal: 24,
-		borderRadius: 30,
-	},
-});

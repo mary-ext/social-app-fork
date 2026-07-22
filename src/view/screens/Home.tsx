@@ -1,5 +1,3 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
 
@@ -18,49 +16,45 @@ import { FollowingEmptyState } from '#/view/com/posts/FollowingEmptyState';
 
 import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
 
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 
-// the feed-discovery tab nudging the user toward the Feeds screen, shown logged-out and when the only
-// pinned feed is Following; selecting it opens that screen rather than switching feeds, so it has no
-// panel of its own
 const FEEDS_DISCOVERY_TAB = '__feeds__';
 
 type HomeTabId = FeedDescriptor | typeof FEEDS_DISCOVERY_TAB;
 
 export function HomeScreen() {
 	const { data: preferences } = usePreferencesQuery();
-	const { data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading } = usePinnedFeedsInfos();
+	const { data: pinnedFeedInfos } = usePinnedFeedsInfos();
 
-	if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
-		return (
-			<Layout.Screen noInsetTop={false}>
-				<HomeScreenReady preferences={preferences} pinnedFeedInfos={pinnedFeedInfos} />
-			</Layout.Screen>
-		);
-	} else {
+	if (!preferences || !pinnedFeedInfos) {
 		return (
 			<Layout.Screen>
-				<View style={styles.loading}>
-					<ActivityIndicator size="large" />
-				</View>
+				<CenteredSpinner fill label={m['common.status.loading']()} size="2xl" />
 			</Layout.Screen>
 		);
 	}
+
+	return (
+		<Layout.Screen>
+			<HomeScreenReady pinnedFeedInfos={pinnedFeedInfos} preferences={preferences} />
+		</Layout.Screen>
+	);
 }
 
 const renderFollowingEmptyState = () => <FollowingEmptyState />;
 const renderCustomFeedEmptyState = () => <CustomFeedEmptyState />;
 
 function HomeScreenReady({
-	preferences,
 	pinnedFeedInfos,
+	preferences,
 }: {
-	preferences: UsePreferencesQueryResponse;
 	pinnedFeedInfos: SavedFeedSourceInfo[];
+	preferences: UsePreferencesQueryResponse;
 }) {
 	const { hasSession } = useSession();
 	const navigate = useNavigate();
@@ -82,8 +76,8 @@ function HomeScreenReady({
 				children: (
 					<FeedPage
 						feed={whatsHotFeed}
-						renderEmptyState={renderCustomFeedEmptyState}
 						feedInfo={pinnedFeedInfos[0]!}
+						renderEmptyState={renderCustomFeedEmptyState}
 					/>
 				),
 			},
@@ -97,13 +91,13 @@ function HomeScreenReady({
 				label: feedInfo.displayName,
 				children:
 					feed === 'following' ? (
-						<FeedPage feed={feed} renderEmptyState={renderFollowingEmptyState} feedInfo={feedInfo} />
+						<FeedPage feed={feed} feedInfo={feedInfo} renderEmptyState={renderFollowingEmptyState} />
 					) : (
 						<FeedPage
 							feed={feed}
+							feedInfo={feedInfo}
 							renderEmptyState={renderCustomFeedEmptyState}
 							savedFeedConfig={feedInfo.savedFeed}
-							feedInfo={feedInfo}
 						/>
 					),
 			};
@@ -136,20 +130,11 @@ function HomeScreenReady({
 
 	return (
 		<Tabs
+			header={<HomeHeaderLayout />}
+			onTabReselect={() => softReset.emit()}
+			onValueChange={onValueChange}
 			sections={sections}
 			value={selectedFeed ?? sections[0]?.id ?? FEEDS_DISCOVERY_TAB}
-			onValueChange={onValueChange}
-			onTabReselect={() => softReset.emit()}
-			header={<HomeHeaderLayout />}
 		/>
 	);
 }
-
-const styles = StyleSheet.create({
-	loading: {
-		alignItems: 'center',
-		flex: 1,
-		justifyContent: 'center',
-		paddingBottom: 100,
-	},
-});
