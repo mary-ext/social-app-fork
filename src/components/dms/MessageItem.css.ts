@@ -13,22 +13,25 @@ const FLASH_BLEED = -space.lg;
 
 export const emojiBaselineNudge = style({ marginBottom: -space.sm });
 
-export const row = recipe({
-	base: {
-		display: 'flex',
-		flexDirection: 'column',
-		marginInline: space.lg,
-	},
-	variants: {
-		firstInCluster: {
-			true: { marginTop: space.md },
-			false: { marginTop: CLUSTERED_MESSAGE_GAP },
+export const row = recipe(
+	{
+		base: {
+			display: 'flex',
+			flexDirection: 'column',
+			marginInline: space.lg,
 		},
-		hasReactions: {
-			true: { paddingBottom: 26 },
+		variants: {
+			firstInCluster: {
+				true: { marginTop: space.md },
+				false: { marginTop: CLUSTERED_MESSAGE_GAP },
+			},
+			hasReactions: {
+				true: { paddingBottom: 26 },
+			},
 		},
 	},
-});
+	{ debugId: 'messageItemRow' },
+);
 
 export const flash = style({
 	position: 'absolute',
@@ -51,17 +54,20 @@ export const avatarSlot = style({
 	zIndex: 50,
 });
 
-export const col = recipe({
-	base: {
-		position: 'relative',
-		flexGrow: 1,
-	},
-	variants: {
-		avatarGutter: {
-			true: { paddingLeft: AVATAR_SIZE },
+export const col = recipe(
+	{
+		base: {
+			position: 'relative',
+			flexGrow: 1,
+		},
+		variants: {
+			avatarGutter: {
+				true: { paddingLeft: AVATAR_SIZE },
+			},
 		},
 	},
-});
+	{ debugId: 'messageItemCol' },
+);
 
 export const displayName = style({
 	paddingTop: space.xs,
@@ -92,23 +98,26 @@ export const bubbleOther = style({
 	alignSelf: 'flex-start',
 });
 
-export const reactionsWrap = recipe({
-	base: {
-		position: 'absolute',
-		top: '100%',
-		paddingInline: space.sm,
-		zIndex: 10,
-	},
-	variants: {
-		fromSelf: {
-			true: { right: 0 },
-			false: { left: 0 },
+export const reactionsWrap = recipe(
+	{
+		base: {
+			position: 'absolute',
+			top: '100%',
+			paddingInline: space.sm,
+			zIndex: 10,
 		},
-		groupIndent: {
-			true: { marginLeft: space.sm },
+		variants: {
+			fromSelf: {
+				true: { right: 0 },
+				false: { left: 0 },
+			},
+			groupIndent: {
+				true: { marginLeft: space.sm },
+			},
 		},
 	},
-});
+	{ debugId: 'messageItemReactions' },
+);
 
 export const meta = style({
 	marginBlock: space._2xs,
@@ -136,31 +145,34 @@ export const blockedBubble = style({
 	background: colors.bg,
 });
 
-export const replyCaption = recipe({
-	base: {
-		appearance: 'none',
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: space._2xs,
-		width: '100%',
-		paddingTop: space.xs,
-		paddingBottom: space._2xs,
-		border: 'none',
-		background: 'none',
-		cursor: 'pointer',
-		selectors: {
-			'&:disabled': { cursor: 'default' },
+export const replyCaption = recipe(
+	{
+		base: {
+			appearance: 'none',
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			gap: space._2xs,
+			width: '100%',
+			paddingTop: space.xs,
+			paddingBottom: space._2xs,
+			border: 'none',
+			background: 'none',
+			cursor: 'pointer',
+			selectors: {
+				'&:disabled': { cursor: 'default' },
+			},
+		},
+		variants: {
+			align: {
+				self: { justifyContent: 'flex-end', paddingRight: space.md },
+				otherGroup: { justifyContent: 'flex-start', paddingLeft: DISPLAY_NAME_INSET },
+				otherPlain: { justifyContent: 'flex-start', paddingLeft: space.md },
+			},
 		},
 	},
-	variants: {
-		align: {
-			self: { justifyContent: 'flex-end', paddingRight: space.md },
-			otherGroup: { justifyContent: 'flex-start', paddingLeft: DISPLAY_NAME_INSET },
-			otherPlain: { justifyContent: 'flex-start', paddingLeft: space.md },
-		},
-	},
-});
+	{ debugId: 'messageItemReplyCaption' },
+);
 
 export const replyCaptionText = style({
 	flexShrink: 1,

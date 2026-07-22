@@ -205,7 +205,6 @@ function InnerReady({
 					hasScrolled={hasScrolled}
 					setHasScrolled={setHasScrolled}
 					hasAcceptOverride={!!accept}
-					transparentHeaderHeight={0}
 					footer={footer}
 				/>
 			)}

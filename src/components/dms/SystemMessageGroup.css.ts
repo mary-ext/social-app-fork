@@ -16,14 +16,17 @@ export const toggle = style({
 	cursor: 'pointer',
 });
 
-export const chevron = recipe({
-	base: {
-		display: 'inline-flex',
-		marginLeft: space._2xs,
-	},
-	variants: {
-		expanded: {
-			true: { transform: 'rotate(-180deg)' },
+export const chevron = recipe(
+	{
+		base: {
+			display: 'inline-flex',
+			marginLeft: space._2xs,
+		},
+		variants: {
+			expanded: {
+				true: { transform: 'rotate(-180deg)' },
+			},
 		},
 	},
-});
+	{ debugId: 'systemMessageGroupChevron' },
+);

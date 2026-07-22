@@ -329,7 +329,10 @@ let MessageItem = ({
 	return (
 		<>
 			{hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
-			<div className={css.row({ firstInCluster: isFirstInCluster, hasReactions })}>
+			<div
+				className={css.row({ firstInCluster: isFirstInCluster, hasReactions })}
+				data-message-id={message.id}
+			>
 				<div className={css.flash} ref={flashRef} />
 				<div className={css.relative}>
 					{showAvatar ? <div className={css.avatarSlot}>{avatar}</div> : null}

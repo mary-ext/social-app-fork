@@ -114,7 +114,7 @@ function InviterHeader({
 				size={42}
 			/>
 			<div className={styles.inviterColumn}>
-				<div className={styles.inviterName}>
+				<Text className={styles.inviterName}>
 					<Trans
 						inputs={{ name: displayName }}
 						markup={{
@@ -133,7 +133,7 @@ function InviterHeader({
 						}}
 						message={m['screens.messages.addedToChat.addedYou']}
 					/>
-				</div>
+				</Text>
 				<Text className={styles.handle} color="textContrastHigh" size="sm">{`@${profile.handle}`}</Text>
 			</div>
 		</div>

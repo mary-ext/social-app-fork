@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { type LayoutChangeEvent, type NativeScrollEvent, View, type ViewStyle } from 'react-native';
 
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
@@ -8,7 +7,6 @@ import type { $type } from '@atcute/lexicons';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { ScrollProvider } from '#/lib/ScrollContext';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 import {
@@ -26,12 +24,8 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { List, type ListMethods } from '#/view/com/util/List';
-
 import { MessageComposer } from '#/screens/Messages/components/MessageComposer';
 import { MessageListError } from '#/screens/Messages/components/MessageListError';
-
-import { atoms as a, tokens, useTheme } from '#/alf';
 
 import { DateDivider } from '#/components/dms/DateDivider';
 import { MessageItem, type MessageItemNeighbor } from '#/components/dms/MessageItem';
@@ -40,42 +34,27 @@ import { MessageRepliesProvider } from '#/components/dms/MessageReplies';
 import { NewMessagesPill } from '#/components/dms/NewMessagesPill';
 import { SystemMessageGroup } from '#/components/dms/SystemMessageGroup';
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
+import { List, type ListMethods } from '#/components/List/List';
 import { Spinner } from '#/components/Spinner';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
+import { space } from '#/styles/tokens.css';
 
 import { ChatStatusInfo } from './ChatStatusInfo';
 import { groupSystemMessages, type RenderItem } from './groupSystemMessages';
 import { InviteLinkDialogProvider } from './InviteLinkDialogProvider';
 import { MessageInputEmbed, useMessageEmbed } from './MessageInputEmbed';
 import { MessageInputReply } from './MessageInputReply';
+import * as css from './MessagesList.css';
 import { MessagesListGroupInfoPanel } from './MessagesListGroupInfoPanel';
 import { MessagesListInfoPanel } from './MessagesListInfoPanel';
 
-type WebViewStyle = ViewStyle & {
-	scrollbarColor?: string;
-	scrollbarGutter?: 'stable';
-	scrollbarWidth?: 'thin';
-	transition?: string;
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style;
-};
-
 function MaybeLoader({ isLoading }: { isLoading: boolean }) {
 	return (
-		<View
-			style={{
-				height: 50,
-				width: '100%',
-				alignItems: 'center',
-				justifyContent: 'center',
-			}}
-		>
+		<div className={css.loader}>
 			{isLoading && <Spinner color="default" label={m['common.status.loading']()} size="2xl" />}
-		</View>
+		</div>
 	);
 }
 
@@ -103,22 +82,16 @@ function getNeighborMessage(items: RenderItem[], index: number): MessageItemNeig
 	return null;
 }
 
-function onScrollToIndexFailed() {
-	// Placeholder function. You have to give FlatList something or else it will error.
-}
-
 export function MessagesList({
 	hasScrolled,
 	setHasScrolled,
 	footer,
 	hasAcceptOverride,
-	transparentHeaderHeight,
 }: {
 	hasScrolled: boolean;
 	setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>;
 	footer?: React.ReactNode;
 	hasAcceptOverride?: boolean;
-	transparentHeaderHeight?: number;
 }) {
 	const convoState = useConvoActive();
 	const { appview } = useClients();
@@ -126,9 +99,9 @@ export function MessagesList({
 	const getPost = useGetPost();
 	const getJoinLinkPreview = useGetJoinLinkPreview();
 	const { embed: messageEmbed, setEmbed } = useMessageEmbed();
-	const t = useTheme();
 
 	const flatListRef = useRef<ListMethods | null>(null);
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => new Set());
 	const onToggleGroup = (key: string) => {
@@ -150,10 +123,17 @@ export function MessagesList({
 		startContentOffset: 0,
 	});
 
+	// the composer/footer floats over the bottom of the list; measure it to reserve trailing space.
 	const [inputHeightJS, setInputHeightJS] = useState(0);
-
-	const onInputLayout = (event: LayoutChangeEvent) => {
-		setInputHeightJS(event.nativeEvent.layout.height);
+	const inputObserver = useRef<ResizeObserver | null>(null);
+	const inputRef = (node: HTMLDivElement | null) => {
+		inputObserver.current?.disconnect();
+		if (node) {
+			const observer = new ResizeObserver(() => setInputHeightJS(node.offsetHeight));
+			observer.observe(node);
+			inputObserver.current = observer;
+			setInputHeightJS(node.offsetHeight);
+		}
 	};
 
 	// We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
@@ -282,18 +262,22 @@ export function MessagesList({
 		void convoState.fetchMessageHistory();
 	};
 
-	const onScroll = (e: NativeScrollEvent) => {
-		layoutHeight.current = e.layoutMeasurement.height;
-		const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height;
+	const onScroll = () => {
+		const el = scrollContainerRef.current;
+		if (!el) {
+			return;
+		}
+		layoutHeight.current = el.clientHeight;
+		const bottomOffset = el.scrollTop + el.clientHeight;
 
 		// Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
 		// when a new message is added, hence the 100 pixel offset
-		isAtBottom.current = e.contentSize.height - 100 < bottomOffset;
-		isAtTop.current = e.contentOffset.y <= 1;
+		isAtBottom.current = el.scrollHeight - 100 < bottomOffset;
+		isAtTop.current = el.scrollTop <= 1;
 
 		if (
 			newMessagesPill.show &&
-			(e.contentOffset.y > newMessagesPill.startContentOffset + 200 || isAtBottom.current)
+			(el.scrollTop > newMessagesPill.startContentOffset + 200 || isAtBottom.current)
 		) {
 			setNewMessagesPill({
 				show: false,
@@ -428,18 +412,16 @@ export function MessagesList({
 	// Scroll to a message by id, if it's currently loaded in the list. Per the
 	// feature scope, we don't fetch history to find unloaded messages - tapping a
 	// reply to an out-of-window message is a no-op. Returns whether the message
-	// was found, so the caller knows whether to flash it.
+	// was found, so the caller knows whether to flash it. The list is not
+	// virtualized, so every loaded message is in the DOM and can be located by its
+	// `data-message-id` anchor.
 	const scrollToMessage = useNonReactiveCallback((messageId: string) => {
-		const index = renderItems.findIndex(
-			(item) =>
-				(item.type === 'message' || item.type === 'pending-message' || item.type === 'deleted-message') &&
-				item.message.id === messageId,
-		);
-		if (index === -1) {
+		const node = scrollContainerRef.current?.querySelector(`[data-message-id="${CSS.escape(messageId)}"]`);
+		if (!node) {
 			return false;
 		}
 
-		flatListRef.current?.scrollToIndex({ index, viewPosition: 0.3, animated: true });
+		node.scrollIntoView({ block: 'center', behavior: 'smooth' });
 		return true;
 	});
 
@@ -480,28 +462,23 @@ export function MessagesList({
 		<InviteLinkDialogProvider convo={convoState.convo}>
 			<MessageRepliesProvider scrollToMessage={scrollToMessage}>
 				<MessageOverlays>
-					<View style={[a.flex_1]}>
-						{/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-						<ScrollProvider onScroll={onScroll}>
+					<div className={css.root}>
+						<div
+							className={css.scroller}
+							onScroll={onScroll}
+							ref={scrollContainerRef}
+							// hide the list until the initial scroll-to-bottom settles, matching native
+							style={hasScrolled ? undefined : { pointerEvents: 'none' }}
+						>
 							<List
 								ref={flatListRef}
 								data={renderItems}
 								renderItem={renderItem}
 								keyExtractor={keyExtractor}
-								disableFullWindowScroll={true}
-								disableVirtualization={true}
-								// The extra two items account for the header and the footer components
-								initialNumToRender={62}
-								maxToRenderPerBatch={32}
-								keyboardDismissMode="interactive"
-								keyboardShouldPersistTaps="handled"
-								maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
-								removeClippedSubviews={false}
 								onContentSizeChange={onContentSizeChange}
 								onStartReached={onStartReached}
-								onScrollToIndexFailed={onScrollToIndexFailed}
-								showsVerticalScrollIndicator={true}
-								scrollEventThrottle={100}
+								onStartReachedThreshold={2}
+								scrollRoot={scrollContainerRef}
 								ListHeaderComponent={
 									<>
 										<MaybeLoader isLoading={convoState.isFetchingHistory} />
@@ -514,38 +491,22 @@ export function MessagesList({
 										) : null}
 									</>
 								}
-								contentContainerStyle={{
-									paddingBottom: 0,
-								}}
-								ListFooterComponent={<View style={{ height: tokens.space.md + inputHeightJS }} />}
-								style={webViewStyle({
-									scrollbarWidth: 'thin',
-									scrollbarColor: `${t.palette.contrast_100} transparent`,
-									scrollbarGutter: 'stable',
-								})}
-								pointerEvents={hasScrolled ? 'auto' : 'none'}
-								contentInset={{ top: transparentHeaderHeight }}
-								scrollIndicatorInsets={{ top: transparentHeaderHeight }}
+								ListFooterComponent={<div style={{ height: space.md + inputHeightJS }} />}
 							/>
-						</ScrollProvider>
-						<View
-							style={[
-								a.absolute,
-								a.bottom_0,
-								a.left_0,
-								a.right_0,
-								bottomInset > 0 && { transform: [{ translateY: -bottomInset }] },
-							]}
-							onLayout={onInputLayout}
+						</div>
+						<div
+							className={css.inputWrap}
+							ref={inputRef}
+							style={bottomInset > 0 ? { transform: `translateY(${-bottomInset}px)` } : undefined}
 						>
 							{footer ?? (
 								<ConversationFooter convoState={convoState} hasAcceptOverride={hasAcceptOverride}>
 									{({ loading }) => (
 										<MessageComposer
-											onSendMessage={(message, replyTo) => void onSendMessage(message, replyTo)}
 											hasEmbed={!!messageEmbed}
-											setEmbed={setEmbed}
 											loading={loading}
+											onSendMessage={(message, replyTo) => void onSendMessage(message, replyTo)}
+											setEmbed={setEmbed}
 										>
 											<MessageInputReply />
 											<MessageInputEmbed embed={messageEmbed} setEmbed={setEmbed} />
@@ -553,8 +514,8 @@ export function MessagesList({
 									)}
 								</ConversationFooter>
 							)}
-						</View>
-					</View>
+						</div>
+					</div>
 					{newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
 				</MessageOverlays>
 			</MessageRepliesProvider>

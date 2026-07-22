@@ -1,18 +1,21 @@
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
-export const root = recipe({
-	base: {
-		display: 'flex',
-		flex: '1 1 0',
-	},
-	variants: {
-		fromSelf: {
-			true: { flexDirection: 'row' },
-			false: { flexDirection: 'row-reverse' },
+export const root = recipe(
+	{
+		base: {
+			display: 'flex',
+			flex: '1 1 0',
+		},
+		variants: {
+			fromSelf: {
+				true: { flexDirection: 'row' },
+				false: { flexDirection: 'row-reverse' },
+			},
 		},
 	},
-});
+	{ debugId: 'actionsWrapperRoot' },
+);
 
 // the emoji + options rail; `auto` margin pushes it to the far edge of the row.
 export const actions = recipe(
@@ -40,18 +43,22 @@ export const actions = recipe(
 			},
 		},
 	},
-});
+	{ debugId: 'actionsWrapperActions' },
+);
 
-export const content = recipe({
-	base: {
-		display: 'flex',
-		flexDirection: 'column',
-		maxWidth: '80%',
-	},
-	variants: {
-		fromSelf: {
-			true: { alignItems: 'flex-end' },
-			false: { alignItems: 'flex-start' },
+export const content = recipe(
+	{
+		base: {
+			display: 'flex',
+			flexDirection: 'column',
+			maxWidth: '80%',
+		},
+		variants: {
+			fromSelf: {
+				true: { alignItems: 'flex-end' },
+				false: { alignItems: 'flex-start' },
+			},
 		},
 	},
-});
+	{ debugId: 'actionsWrapperContent' },
+);

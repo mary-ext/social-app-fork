@@ -40,24 +40,27 @@ export const inputInner = style({
 	flex: 1,
 });
 
-export const submit = recipe({
-	base: {
-		appearance: 'none',
-		display: 'inline-flex',
-		alignItems: 'center',
-		justifyContent: 'center',
-		width: MIN_HEIGHT,
-		height: MIN_HEIGHT,
-		border: 'none',
-		borderRadius: borderRadius.full,
-	},
-	variants: {
-		disabled: {
-			true: { background: colors.contrast_100, cursor: 'default' },
-			false: { background: colors.primary_500, cursor: 'pointer' },
+export const submit = recipe(
+	{
+		base: {
+			appearance: 'none',
+			display: 'inline-flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			width: MIN_HEIGHT,
+			height: MIN_HEIGHT,
+			border: 'none',
+			borderRadius: borderRadius.full,
+		},
+		variants: {
+			disabled: {
+				true: { background: colors.contrast_100, cursor: 'default' },
+				false: { background: colors.primary_500, cursor: 'pointer' },
+			},
 		},
 	},
-});
+	{ debugId: 'messageComposerSubmit' },
+);
 
 export const emojiButton = style({
 	appearance: 'none',
