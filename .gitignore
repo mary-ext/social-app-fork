@@ -12,6 +12,7 @@ yarn-*.log
 
 *.local
 *.local.json
+.DS_Store
 
 /.claude/agent-browser/
 
