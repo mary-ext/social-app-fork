@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -10,15 +9,15 @@ import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
-import { atoms as a } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import type { ListMethods } from '#/components/List/List';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { useIsFocused } from '#/routes';
+
+import * as css from './FeedSection.css';
 
 interface FeedSectionProps {
 	feed: FeedDescriptor;
@@ -49,44 +48,44 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 		return softReset.subscribe(onScrollToTop);
 	}, [onScrollToTop, isScreenFocused]);
 
-	const renderPostsEmpty = () => {
+	const renderPostsEmpty = useCallback(() => {
 		return (
-			<View style={[a.gap_xl, a.align_center]}>
+			<div className={css.emptyState}>
 				<EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />
 				{isOwner && (
 					<Button
-						label={m['screens.profileList.members.startAdding']()}
-						onPress={onPressAddUser}
 						color="primary"
+						label={m['screens.profileList.members.startAdding']()}
+						onClick={onPressAddUser}
 						size="small"
 					>
 						<ButtonIcon icon={PersonPlusIcon} />
 						<ButtonText>{m['screens.profileList.members.startAddingCta']()}</ButtonText>
 					</Button>
 				)}
-			</View>
+			</div>
 		);
-	};
+	}, [isOwner, onPressAddUser]);
 
 	return (
-		<View>
+		<div>
 			<PostFeed
+				disablePoll={hasNew}
 				enabled={isFocused}
 				feed={feed}
-				pollInterval={60e3}
-				disablePoll={hasNew}
-				scrollElRef={scrollElRef}
 				onHasNew={setHasNew}
 				onScrolledDownChange={setIsScrolledDown}
+				pollInterval={60e3}
 				renderEmptyState={renderPostsEmpty}
+				scrollElRef={scrollElRef}
 			/>
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn
-					onPress={onScrollToTop}
 					label={m['common.feeds.action.loadNew']()}
+					onPress={onScrollToTop}
 					showIndicator={hasNew}
 				/>
 			)}
-		</View>
+		</div>
 	);
 }

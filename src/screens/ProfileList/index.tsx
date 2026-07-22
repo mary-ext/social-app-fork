@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { View } from 'react-native';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import {
@@ -28,15 +27,13 @@ import { FAB } from '#/view/com/util/fab/FAB';
 
 import { ListHiddenScreen } from '#/screens/List/ListHiddenScreen';
 
-import { atoms as a, useTheme } from '#/alf';
-
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
-import * as Layout from '#/components/Layout';
 import * as Hider from '#/components/moderation/Hider';
-import { Spinner } from '#/components/Spinner';
 import { type Section, Tabs } from '#/components/Tabs';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useIsFocused, useParams } from '#/routes';
@@ -49,7 +46,7 @@ import { FeedSection } from './FeedSection';
 
 export function ProfileListScreen() {
 	return (
-		<Layout.Screen testID="profileListScreen">
+		<Layout.Screen>
 			<ProfileListScreenInner />
 		</Layout.Screen>
 	);
@@ -75,7 +72,7 @@ function ProfileListScreenInner() {
 					</Layout.Header.Content>
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
-				<Layout.Content centerContent>
+				<Layout.Content>
 					<ErrorScreen error={m['screens.profileList.error.resolveFailed']({ handle })} />
 				</Layout.Content>
 			</>
@@ -91,7 +88,7 @@ function ProfileListScreenInner() {
 					</Layout.Header.Content>
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
-				<Layout.Content centerContent>
+				<Layout.Content>
 					<ErrorScreen error={cleanError(listError)} />
 				</Layout.Content>
 			</>
@@ -100,10 +97,10 @@ function ProfileListScreenInner() {
 
 	return listUri && list && moderationOpts && preferences ? (
 		<ProfileListScreenLoaded
-			uri={listUri}
 			list={list}
 			moderationOpts={moderationOpts}
 			preferences={preferences}
+			uri={listUri}
 		/>
 	) : (
 		<>
@@ -112,31 +109,30 @@ function ProfileListScreenInner() {
 				<Layout.Header.Content />
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
-			<Layout.Content centerContent>
-				<Spinner color="default" label={m['common.status.loading']()} size="3xl" />
+			<Layout.Content>
+				<CenteredSpinner fill label={m['common.status.loading']()} size="3xl" />
 			</Layout.Content>
 		</>
 	);
 }
 
 function ProfileListScreenLoaded({
-	uri,
 	list,
 	moderationOpts,
 	preferences,
+	uri,
 }: {
-	uri: ResourceUri;
 	list: AppBskyGraphDefs.ListView;
 	moderationOpts: ModerationOptions;
 	preferences: UsePreferencesQueryResponse;
+	uri: ResourceUri;
 }) {
-	const t = useTheme();
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
 	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
 	const isScreenFocused = useIsFocused();
-	const isHidden = list.labels?.findIndex((l) => l.val === '!hide') !== -1;
+	const isHidden = list.labels?.some((l) => l.val === '!hide') ?? false;
 	const isOwner = currentAccount?.did === list.creator.did;
 	const addUserDialogHandle = Dialog.useDialogHandle();
 	const onPressAddUser = () => addUserDialogHandle.open(null);
@@ -152,9 +148,7 @@ function ProfileListScreenLoaded({
 		}
 	};
 
-	const renderHeader = () => {
-		return <Header list={list} preferences={preferences} />;
-	};
+	const header = <Header list={list} preferences={preferences} />;
 
 	if (isCurateList) {
 		const sections: Section<'people' | 'posts'>[] = [
@@ -176,51 +170,47 @@ function ProfileListScreenLoaded({
 				children: <AboutSection list={list} onPressAddUser={onPressAddUser} />,
 			},
 		];
+
 		return (
 			<Hider.Outer
-				modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 				allowOverride={isOwner}
+				modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 			>
 				<Hider.Mask>
 					<ListHiddenScreen list={list} preferences={preferences} />
 				</Hider.Mask>
 				<Hider.Content>
-					<View style={[a.util_screen_outer]}>
-						<Tabs
-							sections={sections}
-							value={activeTab}
-							onValueChange={setActiveTab}
-							header={renderHeader()}
-						/>
-						<FAB
-							icon={<EditBigIcon size="xl" fill={colors.white} />}
-							label={m['common.compose.action.new']()}
-							onClick={() => openComposer({})}
-						/>
-					</View>
-					<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} onChange={onChangeMembers} />
-				</Hider.Content>
-			</Hider.Outer>
-		);
-	}
-	return (
-		<Hider.Outer
-			modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
-			allowOverride={isOwner}
-		>
-			<Hider.Mask>
-				<ListHiddenScreen list={list} preferences={preferences} />
-			</Hider.Mask>
-			<Hider.Content>
-				<View style={[a.util_screen_outer]}>
-					<View style={[a.border_b, t.atoms.border_contrast_low]}>{renderHeader()}</View>
-					<AboutSection list={list} onPressAddUser={onPressAddUser} />
+					<Tabs header={header} onValueChange={setActiveTab} sections={sections} value={activeTab} />
+
 					<FAB
 						icon={<EditBigIcon size="xl" fill={colors.white} />}
 						label={m['common.compose.action.new']()}
 						onClick={() => openComposer({})}
 					/>
-				</View>
+					<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} onChange={onChangeMembers} />
+				</Hider.Content>
+			</Hider.Outer>
+		);
+	}
+
+	return (
+		<Hider.Outer
+			allowOverride={isOwner}
+			modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+		>
+			<Hider.Mask>
+				<ListHiddenScreen list={list} preferences={preferences} />
+			</Hider.Mask>
+			<Hider.Content>
+				{header}
+
+				<AboutSection list={list} onPressAddUser={onPressAddUser} />
+
+				<FAB
+					icon={<EditBigIcon size="xl" fill={colors.white} />}
+					label={m['common.compose.action.new']()}
+					onClick={() => openComposer({})}
+				/>
 				<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} onChange={onChangeMembers} />
 			</Hider.Content>
 		</Hider.Outer>

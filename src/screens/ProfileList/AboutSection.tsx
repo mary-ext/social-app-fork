@@ -1,22 +1,29 @@
 import { useRef, useState } from 'react';
-import { View } from 'react-native';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
+import { cleanError } from '#/lib/strings/errors';
+
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
-import { ListMembers } from '#/view/com/lists/ListMembers';
+import { logger } from '#/logger';
+
 import { EmptyState } from '#/view/com/util/EmptyState';
-import type { ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
-import { atoms as a, useBreakpoints } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
+import { List, type ListMethods } from '#/components/List/List';
+import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+
+import * as css from './AboutSection.css';
+import { ListMember } from './components/ListMember';
 
 interface AboutSectionProps {
 	list: AppBskyGraphDefs.ListView;
@@ -25,10 +32,36 @@ interface AboutSectionProps {
 
 export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	const { currentAccount } = useSession();
-	const { gtMobile } = useBreakpoints();
+	const moderationOpts = useModerationOpts();
 	const scrollElRef = useRef<ListMethods | null>(null);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const isOwner = list.creator.did === currentAccount?.did;
+
+	const {
+		data,
+		error,
+		fetchNextPage,
+		hasNextPage,
+		isError,
+		isFetched,
+		isFetching,
+		isFetchingNextPage,
+		refetch,
+	} = useListMembersQuery(list.uri);
+
+	const items = data?.pages ? data.pages.flatMap((page) => page.items) : [];
+	const isEmpty = !isFetching && isFetched && items.length === 0;
+
+	const onEndReached = async () => {
+		if (isFetching || !hasNextPage || isError) {
+			return;
+		}
+		try {
+			await fetchNextPage();
+		} catch (err) {
+			logger.error('Failed to load more list members', { message: err });
+		}
+	};
 
 	const onScrollToTop = () => {
 		scrollElRef.current?.scrollToOffset({
@@ -37,83 +70,90 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 		});
 	};
 
-	const renderHeader = () => {
-		if (!isOwner) {
-			return <View />;
-		}
-		if (!gtMobile) {
-			return (
-				<View style={[a.px_sm, a.py_sm]}>
-					<Button
-						testID="addUserBtn"
-						label={m['screens.profileList.members.add']()}
-						onPress={onPressAddUser}
-						color="primary"
-						size="small"
-						variant="outline"
-						style={[a.py_md]}
-					>
-						<ButtonIcon icon={PersonPlusIcon} />
-						<ButtonText>{m['common.action.addPeople']()}</ButtonText>
-					</Button>
-				</View>
-			);
-		}
-		return (
-			<View style={[a.px_lg, a.py_md, a.flex_row_reverse]}>
-				<Button
-					testID="addUserBtn"
-					label={m['screens.profileList.members.add']()}
-					onPress={onPressAddUser}
-					color="primary"
-					size="small"
-					variant="ghost"
-					style={[a.py_sm]}
-				>
-					<ButtonIcon icon={PersonPlusIcon} />
-					<ButtonText>{m['common.action.addPeople']()}</ButtonText>
-				</Button>
-			</View>
-		);
-	};
+	if (!moderationOpts || ((isFetching || !isFetched) && items.length === 0 && !isError)) {
+		return <ProfileCard.LoadingPlaceholder />;
+	}
 
-	const renderEmptyState = () => {
+	if (isEmpty && isError) {
 		return (
-			<View style={[a.gap_xl, a.align_center]}>
+			<ListMaybePlaceholder
+				errorMessage={cleanError(error)}
+				isError={true}
+				isLoading={false}
+				onRetry={refetch}
+			/>
+		);
+	}
+
+	if (isEmpty) {
+		return (
+			<div className={css.emptyState}>
 				<EmptyState icon={ListIcon} message={m['screens.profileList.members.empty']()} />
 				{isOwner && (
 					<Button
-						testID="emptyStateAddUserBtn"
-						label={m['screens.profileList.members.startAdding']()}
-						onPress={onPressAddUser}
 						color="primary"
+						label={m['screens.profileList.members.startAdding']()}
+						onClick={onPressAddUser}
 						size="small"
 					>
 						<ButtonIcon icon={PersonPlusIcon} />
 						<ButtonText>{m['screens.profileList.members.startAddingCta']()}</ButtonText>
 					</Button>
 				)}
-			</View>
+			</div>
 		);
-	};
+	}
+
+	const header = isOwner ? (
+		<div className={css.header}>
+			<Button
+				color="primary"
+				label={m['screens.profileList.members.add']()}
+				onClick={onPressAddUser}
+				size="small"
+				variant="ghost"
+			>
+				<ButtonIcon icon={PersonPlusIcon} />
+				<ButtonText>{m['common.action.addPeople']()}</ButtonText>
+			</Button>
+		</div>
+	) : undefined;
 
 	return (
-		<View>
-			<ListMembers
-				testID="listItems"
-				list={list.uri}
-				scrollElRef={scrollElRef}
-				renderHeader={renderHeader}
-				renderEmptyState={renderEmptyState}
+		<div>
+			<List
+				data={items}
+				keyExtractor={(item) => item.subject.did}
+				ListFooterComponent={
+					<ListFooter
+						error={cleanError(error)}
+						isFetchingNextPage={isFetchingNextPage}
+						onRetry={fetchNextPage}
+					/>
+				}
+				ListHeaderComponent={header}
+				onEndReached={() => void onEndReached()}
+				onEndReachedThreshold={2}
 				onScrolledDownChange={setIsScrolledDown}
+				ref={scrollElRef}
+				renderItem={({ index, item }) => (
+					<ListMember
+						index={index}
+						isOwner={isOwner}
+						list={list.uri}
+						membershipUri={item.uri}
+						moderationOpts={moderationOpts}
+						profile={item.subject}
+					/>
+				)}
 			/>
 			{isScrolledDown && (
 				<LoadLatestBtn
-					onPress={onScrollToTop}
 					label={m['screens.profileList.a11y.scrollToTop']()}
+					onPress={onScrollToTop}
 					showIndicator={false}
 				/>
 			)}
-		</View>
+		</div>
 	);
 }
