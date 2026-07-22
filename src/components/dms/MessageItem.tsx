@@ -244,18 +244,16 @@ let MessageItem = ({
 
 	const isEmojiOnly = isOnlyEmoji(message.text);
 	const bubbleBackground = isFromSelf ? (isPending ? pendingColor : colors.primary_500) : colors.contrast_50;
+	const isBlocked = !!profile && isGroupChat && isBlockedOrBlocking(profile);
 
 	return (
 		<>
 			{hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
-			<div
-				className={css.row({ firstInCluster: isFirstInCluster, hasReactions })}
-				data-message-id={message.id}
-			>
+			<div className={css.row({ firstInCluster: isFirstInCluster })} data-message-id={message.id}>
 				<div className={css.flash} ref={flashRef} />
-				<div className={css.relative}>
-					{showAvatar ? <div className={css.avatarSlot}>{avatar}</div> : null}
-					<div className={css.col({ avatarGutter: !isFromSelf && isGroupChat })}>
+				<div className={css.body({ avatarGutter: !isFromSelf && isGroupChat })}>
+					{!isFromSelf && isGroupChat ? <div className={css.avatar}>{showAvatar ? avatar : null}</div> : null}
+					<div className={css.content}>
 						{replyTo ? (
 							<ReplyCaption
 								isFromSelf={isFromSelf}
@@ -270,78 +268,76 @@ let MessageItem = ({
 								{displayName}
 							</Text>
 						) : null}
-						{profile && isBlockedOrBlocking(profile) && isGroupChat ? (
+						{isBlocked ? (
 							<BlockedPlaceholder profile={profile} radiusStyle={borderRadiusStyle} />
 						) : (
-							<div className={css.relative}>
-								<ActionsWrapper
-									isFromSelf={isFromSelf}
-									message={message}
-									moderationOpts={moderationOpts}
-									senderProfile={profile}
-								>
-									{message.embed?.$type === 'app.bsky.embed.record#view' && (
-										<MessageItemEmbed
-											embed={message.embed}
-											isFromSelf={isFromSelf}
-											isGroupChat={isGroupChat}
-											squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-											squaredTopCorner={squaredTopCorner}
-										/>
-									)}
-									{message.embed?.$type === 'chat.bsky.embed.joinLink#view' && (
-										<MessageItemInviteEmbed
-											embed={message.embed}
-											isFromSelf={isFromSelf}
-											isGroupChat={isGroupChat}
-											squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-											squaredTopCorner={squaredTopCorner}
-										/>
-									)}
-									{rt.text.length > 0 && (
-										<div
-											className={clsx(
-												!isFromSelf && isGroupChat && css.bubbleIndent,
-												!isEmojiOnly && css.bubbleStyled,
-												!isEmojiOnly && (isFromSelf ? css.bubbleSelf : css.bubbleOther),
-											)}
-											style={
-												isEmojiOnly
-													? undefined
-													: {
-															marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
-															backgroundColor: bubbleBackground,
-															...borderRadiusStyle,
-														}
-											}
-										>
-											{replyTo && !isEmojiOnly ? (
-												<ReplyQuote
-													isFromSelf={isFromSelf}
-													onPress={onPressReplyTo}
-													relatedProfiles={relatedProfiles}
-													replyTo={replyTo}
-												/>
-											) : null}
-											<RichText
-												// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
-												// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
-												className={isEmojiOnly && !isFromSelf ? css.emojiBaselineNudge : undefined}
-												color={isFromSelf ? 'white' : undefined}
-												emojiScale="large"
-												enableTags
-												leading={isEmojiOnly ? 'none' : undefined}
-												linkUnderline="always"
-												size="md"
-												value={rt}
+							<ActionsWrapper
+								isFromSelf={isFromSelf}
+								message={message}
+								moderationOpts={moderationOpts}
+								senderProfile={profile}
+							>
+								{message.embed?.$type === 'app.bsky.embed.record#view' && (
+									<MessageItemEmbed
+										embed={message.embed}
+										isFromSelf={isFromSelf}
+										isGroupChat={isGroupChat}
+										squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+										squaredTopCorner={squaredTopCorner}
+									/>
+								)}
+								{message.embed?.$type === 'chat.bsky.embed.joinLink#view' && (
+									<MessageItemInviteEmbed
+										embed={message.embed}
+										isFromSelf={isFromSelf}
+										isGroupChat={isGroupChat}
+										squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+										squaredTopCorner={squaredTopCorner}
+									/>
+								)}
+								{rt.text.length > 0 && (
+									<div
+										className={clsx(
+											!isFromSelf && isGroupChat && css.bubbleIndent,
+											!isEmojiOnly && css.bubbleStyled,
+											!isEmojiOnly && (isFromSelf ? css.bubbleSelf : css.bubbleOther),
+										)}
+										style={
+											isEmojiOnly
+												? undefined
+												: {
+														marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
+														backgroundColor: bubbleBackground,
+														...borderRadiusStyle,
+													}
+										}
+									>
+										{replyTo && !isEmojiOnly ? (
+											<ReplyQuote
+												isFromSelf={isFromSelf}
+												onPress={onPressReplyTo}
+												relatedProfiles={relatedProfiles}
+												replyTo={replyTo}
 											/>
-										</div>
-									)}
-								</ActionsWrapper>
-								{appliedReactions}
-							</div>
+										) : null}
+										<RichText
+											// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
+											// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
+											className={isEmojiOnly && !isFromSelf ? css.emojiBaselineNudge : undefined}
+											color={isFromSelf ? 'white' : undefined}
+											emojiScale="large"
+											enableTags
+											leading={isEmojiOnly ? 'none' : undefined}
+											linkUnderline="always"
+											size="md"
+											value={rt}
+										/>
+									</div>
+								)}
+							</ActionsWrapper>
 						)}
 					</div>
+					{!isBlocked ? appliedReactions : null}
 				</div>
 				{isLastInCluster && <MessageItemMetadata align={isFromSelf ? 'right' : 'left'} item={item} />}
 			</div>

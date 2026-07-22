@@ -16,6 +16,7 @@ export const emojiBaselineNudge = style({ marginBottom: -space.sm });
 export const row = recipe(
 	{
 		base: {
+			position: 'relative',
 			display: 'flex',
 			flexDirection: 'column',
 			marginInline: space.lg,
@@ -24,9 +25,6 @@ export const row = recipe(
 			firstInCluster: {
 				true: { marginTop: space.md },
 				false: { marginTop: CLUSTERED_MESSAGE_GAP },
-			},
-			hasReactions: {
-				true: { paddingBottom: 26 },
 			},
 		},
 	},
@@ -44,30 +42,39 @@ export const flash = style({
 	pointerEvents: 'none',
 });
 
-export const relative = style({
-	position: 'relative',
-});
-
-export const avatarSlot = style({
-	position: 'absolute',
-	bottom: 0,
-	zIndex: 50,
-});
-
-export const col = recipe(
+// the avatar + content two-column grid. the avatar column is a fixed gutter (empty for non-tail
+// messages in a cluster); self and 1:1 rows collapse to a single content column. reactions occupy a
+// second row under the content so they don't stretch the avatar's row past the bubble.
+export const body = recipe(
 	{
 		base: {
 			position: 'relative',
-			flexGrow: 1,
+			display: 'grid',
 		},
 		variants: {
 			avatarGutter: {
-				true: { paddingLeft: AVATAR_SIZE },
+				true: { gridTemplateColumns: `[avatar] ${AVATAR_SIZE}px [content] minmax(0, 1fr)` },
+				false: { gridTemplateColumns: '[content] minmax(0, 1fr)' },
 			},
 		},
 	},
-	{ debugId: 'messageItemCol' },
+	{ debugId: 'messageItemBody' },
 );
+
+// bottom-aligned within the bubble row so a cluster's single avatar sits beside its last message.
+export const avatar = style({
+	gridColumn: 'avatar',
+	gridRow: 1,
+	alignSelf: 'end',
+});
+
+export const content = style({
+	gridColumn: 'content',
+	gridRow: 1,
+	display: 'flex',
+	flexDirection: 'column',
+	minWidth: 0,
+});
 
 export const displayName = style({
 	paddingTop: space.xs,
@@ -101,15 +108,17 @@ export const bubbleOther = style({
 export const reactionsWrap = recipe(
 	{
 		base: {
-			position: 'absolute',
-			top: '100%',
+			gridColumn: 'content',
+			gridRow: 2,
+			display: 'flex',
+			// pull the pill up so it overlaps the bubble's bottom edge, matching the floating look.
+			marginTop: -6,
 			paddingInline: space.sm,
-			zIndex: 10,
 		},
 		variants: {
 			fromSelf: {
-				true: { right: 0 },
-				false: { left: 0 },
+				true: { justifyContent: 'flex-end' },
+				false: { justifyContent: 'flex-start' },
 			},
 			groupIndent: {
 				true: { marginLeft: space.sm },
@@ -209,7 +218,6 @@ export const reactionPill = style({
 	flexDirection: 'row',
 	gap: space._2xs,
 	alignItems: 'center',
-	transform: 'translateY(-6px)',
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: borderRadius.lg,
 	boxShadow: vars.shadow.xs,
