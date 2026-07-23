@@ -1,4 +1,4 @@
-import { useBreakpoints } from '#/alf';
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import * as Skele from '#/components/web/Skeleton';
 

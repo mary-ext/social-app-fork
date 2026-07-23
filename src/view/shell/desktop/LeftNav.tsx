@@ -7,6 +7,7 @@ import { useRoute } from '@oomfware/stacker';
 
 import { clsx } from 'clsx';
 
+import { useBreakpoints, useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -21,8 +22,6 @@ import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 
 import { NavSignInCard } from '#/view/shell/NavSignInCard';
-
-import { useBreakpoints, useLayoutBreakpoints } from '#/alf';
 
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';

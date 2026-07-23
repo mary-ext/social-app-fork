@@ -1,9 +1,8 @@
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useHideBottomBarBorderForScreen } from '#/lib/hooks/useHideBottomBarBorder';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
-
-import { useBreakpoints } from '#/alf';
 
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';

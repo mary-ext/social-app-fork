@@ -5,6 +5,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { useFocusEffect } from '@oomfware/stacker';
 
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { isAbortError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -12,8 +13,6 @@ import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/
 import { useRequireAuth } from '#/state/session';
 
 import { logger } from '#/logger';
-
-import { useBreakpoints } from '#/alf';
 
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';

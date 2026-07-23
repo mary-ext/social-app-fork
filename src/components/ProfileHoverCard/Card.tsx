@@ -24,7 +24,6 @@ import { useFollowMethods } from '#/components/hooks/useFollowMethods';
 import { useRichText } from '#/components/hooks/useRichText';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import * as Pills from '#/components/Pills';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -32,6 +31,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/web/KnownFollowers';
 import { InlineLinkText, Link, LinkButton } from '#/components/web/Link';
+import * as Pills from '#/components/web/Pills';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';

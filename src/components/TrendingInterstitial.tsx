@@ -1,7 +1,7 @@
+import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
+
 import { type TrendingTopic, useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
-
-import { useLayoutBreakpoints } from '#/alf';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';

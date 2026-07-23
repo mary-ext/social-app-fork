@@ -1,5 +1,3 @@
-export * from '#/alf/base/tokens';
-
 export const gradients = {
 	primary: {
 		values: [

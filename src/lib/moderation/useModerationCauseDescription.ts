@@ -1,6 +1,7 @@
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
+import type { AppModerationCause } from '#/lib/moderation/types';
 
 import { useLabelDefinitions } from '#/state/preferences';
 import { useSession } from '#/state/session';
@@ -12,7 +13,6 @@ import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/i
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
 import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
-import type { AppModerationCause } from '#/components/Pills';
 
 import { m } from '#/paraglide/messages';
 

@@ -1,12 +1,12 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
+import type { AppModerationCause } from '#/lib/moderation/types';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
-import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 
 import * as css from './PostContent.css';

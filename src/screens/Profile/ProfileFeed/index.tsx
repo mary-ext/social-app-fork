@@ -29,8 +29,8 @@ import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/
 
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
-import * as Layout from '#/components/Layout';
 import type { ListMethods } from '#/components/List/List';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useIsFocused, useParams } from '#/routes';
@@ -44,7 +44,7 @@ export function ProfileFeedScreen() {
 
 	if (error && !isRefetching) {
 		return (
-			<Layout.Screen testID="profileFeedScreenError">
+			<Layout.Screen>
 				<ErrorScreen
 					showHeader
 					title={m['screens.profile.feed.loadError']()}
@@ -56,11 +56,11 @@ export function ProfileFeedScreen() {
 	}
 
 	return feedUri ? (
-		<Layout.Screen testID="profileFeedScreen">
+		<Layout.Screen>
 			<ProfileFeedScreenIntermediate feedUri={feedUri} />
 		</Layout.Screen>
 	) : (
-		<Layout.Screen testID="profileFeedScreen">
+		<Layout.Screen>
 			<ProfileFeedHeaderSkeleton />
 			<Layout.Content>
 				<PostFeedLoadingPlaceholder />

@@ -10,12 +10,10 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
@@ -107,17 +105,15 @@ export function Header({
 				<Layout.Header.Slot>
 					{isCurateList ? (
 						<Button
-							testID={isPinned ? 'unpinBtn' : 'pinBtn'}
 							color={isPinned ? 'secondary' : 'primary_subtle'}
 							label={
 								isPinned
 									? m['screens.profileList.pin.action.unpin']()
 									: m['screens.profileList.pin.action.pinToHome']()
 							}
-							onPress={() => void onTogglePinned()}
+							onClick={() => void onTogglePinned()}
 							disabled={isPending}
 							size="small"
-							style={[a.rounded_full]}
 						>
 							{!isPinned &&
 								(isPending ? (
@@ -134,12 +130,10 @@ export function Header({
 					) : isModList ? (
 						isBlocking ? (
 							<Button
-								testID="unblockBtn"
 								color="secondary"
 								label={m['common.block.action.unblock']()}
-								onPress={() => void onUnsubscribeBlock()}
+								onClick={() => void onUnsubscribeBlock()}
 								size="small"
-								style={[a.rounded_full]}
 								disabled={isBlockPending}
 							>
 								{isBlockPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
@@ -147,12 +141,10 @@ export function Header({
 							</Button>
 						) : isMuting ? (
 							<Button
-								testID="unmuteBtn"
 								color="secondary"
 								label={m['common.mute.action.unmute']()}
-								onPress={() => void onUnsubscribeMute()}
+								onClick={() => void onUnsubscribeMute()}
 								size="small"
-								style={[a.rounded_full]}
 								disabled={isMutePending}
 							>
 								{isMutePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}

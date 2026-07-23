@@ -38,8 +38,6 @@ import { Trans } from '#/locale/Trans';
 import { Post } from '#/view/com/post/Post';
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 
-import { useTheme } from '#/alf';
-
 import { BlockLink } from '#/components/BlockLink';
 import * as FeedCard from '#/components/FeedCard';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
@@ -97,7 +95,6 @@ let NotificationFeedItem = ({
 	hideTopBorder?: boolean;
 }): React.ReactNode => {
 	const queryClient = useQueryClient();
-	const t = useTheme();
 	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
 	let itemHref = '';
 	switch (item.type) {
@@ -206,8 +203,8 @@ let NotificationFeedItem = ({
 				style={
 					isHighlighted
 						? {
-								backgroundColor: t.palette.primary_25,
-								borderColor: t.palette.primary_100,
+								backgroundColor: colors.primary_25,
+								borderColor: colors.primary_100,
 							}
 						: undefined
 				}

@@ -11,6 +11,8 @@ export const root = style({
 	height: 52,
 });
 
+export const pointerEventsNone = style({ pointerEvents: 'none' });
+
 export const replyDisabled = style({ opacity: 0.6 });
 
 export const button = style({

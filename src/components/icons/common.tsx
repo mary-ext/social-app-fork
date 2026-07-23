@@ -1,10 +1,11 @@
 import type { CSSProperties, ReactNode, SVGProps } from 'react';
 
-import { tokens, useTheme } from '#/alf';
+import { colors } from '#/styles/colors';
+import { gradients } from '#/styles/gradients';
 
 export type Props = {
 	fill?: string;
-	gradient?: keyof typeof tokens.gradients;
+	gradient?: keyof typeof gradients;
 	size?: keyof typeof sizes;
 	style?: CSSProperties;
 } & Omit<SVGProps<SVGSVGElement>, 'fill' | 'style'>;
@@ -23,15 +24,14 @@ export const sizes = {
 } as const;
 
 export function useCommonSVGProps(props: Props) {
-	const t = useTheme();
 	const { fill, gradient, size, style, width, ...rest } = props;
 	const _size = Number(size ? sizes[size] : width || sizes.lg);
-	let _fill = fill || style?.color || t.palette.primary_500;
+	let _fill = fill || style?.color || colors.primary_500;
 	let gradientDef: ReactNode = null;
 
-	if (gradient && tokens.gradients[gradient]) {
+	if (gradient && gradients[gradient]) {
 		const id = gradient + '_' + crypto.randomUUID();
-		const config = tokens.gradients[gradient];
+		const config = gradients[gradient];
 		_fill = `url(#${id})`;
 		gradientDef = (
 			<defs>

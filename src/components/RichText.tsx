@@ -6,10 +6,9 @@ import type { Handle } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
+import { isOnlyEmoji } from '#/lib/strings/emoji';
 import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
 import { parseLinkableUrl, toShortUrl } from '#/lib/strings/url-helpers';
-
-import { isOnlyEmoji } from '#/alf/typography';
 
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { atomicSegment, emoji } from '#/components/RichText.css';

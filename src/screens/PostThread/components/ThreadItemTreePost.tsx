@@ -5,6 +5,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { clsx } from 'clsx';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
+import type { AppModerationCause } from '#/lib/moderation/types';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
@@ -23,7 +24,6 @@ import { GalleryBleed } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { PostHider } from '#/components/moderation/PostHider';
-import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';

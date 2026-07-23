@@ -1,8 +1,6 @@
 import { useTitle } from '#/lib/hooks/useTitle';
 
-import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
-
-import { type Alf, useAlf } from '#/alf';
+import { useAppearance } from '#/state/shell';
 
 import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moon';
 import { Phone_Stroke2_Corner0_Rounded as PhoneIcon } from '#/components/icons/Phone';
@@ -16,10 +14,16 @@ import { m } from '#/paraglide/messages';
 export function AppearanceSettingsScreen() {
 	useTitle(m['common.appearance.label']());
 
-	const { fonts } = useAlf();
-
-	const { colorMode, darkTheme } = useThemePrefs();
-	const { setColorMode, setDarkTheme } = useSetThemePrefs();
+	const {
+		colorMode,
+		darkTheme,
+		fontFamily,
+		fontScale,
+		setColorMode,
+		setDarkTheme,
+		setFontFamily,
+		setFontScale,
+	} = useAppearance();
 
 	const onChangeAppearance = (value: 'dark' | 'light' | 'system') => {
 		setColorMode(value);
@@ -29,8 +33,8 @@ export function AppearanceSettingsScreen() {
 		setDarkTheme(value);
 	};
 
-	const onChangeFontScale = (value: Alf['fonts']['scale']) => {
-		fonts.setFontScale(value);
+	const onChangeFontScale = (value: Parameters<typeof setFontScale>[0]) => {
+		setFontScale(value);
 	};
 
 	return (
@@ -77,8 +81,8 @@ export function AppearanceSettingsScreen() {
 					<Settings.Section titleText={m['screens.settings.appearance.font']()}>
 						<Settings.SwitchRow
 							label={m['screens.settings.appearance.useThemeFont']()}
-							value={fonts.family === 'theme'}
-							onChange={(checked) => fonts.setFontFamily(checked ? 'theme' : 'system')}
+							value={fontFamily === 'theme'}
+							onChange={(checked) => setFontFamily(checked ? 'theme' : 'system')}
 						>
 							<Settings.Icon icon={Aa} />
 							<Settings.Label
@@ -89,7 +93,7 @@ export function AppearanceSettingsScreen() {
 
 						<Settings.SelectRow
 							label={m['screens.settings.appearance.fontSize']()}
-							value={fonts.scale}
+							value={fontScale}
 							onValueChange={onChangeFontScale}
 							items={[
 								{ label: m['screens.settings.appearance.smaller'](), value: '-1' },

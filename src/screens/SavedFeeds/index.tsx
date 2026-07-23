@@ -6,6 +6,7 @@ import { createDnd, type DndChannel } from '@oomfware/tug';
 import { extractClosestEdge } from '@oomfware/tug/hitbox';
 
 import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants';
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useTitle } from '#/lib/hooks/useTitle';
 
@@ -20,8 +21,6 @@ import { EmptyState, type EmptyStateIcon } from '#/view/com/util/EmptyState';
 
 import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
 import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
-
-import { useBreakpoints } from '#/alf';
 
 import { FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon } from '#/components/icons/FloppyDisk';
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkleIcon } from '#/components/icons/ListSparkle';

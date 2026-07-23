@@ -5,10 +5,9 @@ import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 
 import { clsx } from 'clsx';
 
+import { isOnlyEmoji } from '#/lib/strings/emoji';
 import { detectFacetsWithoutResolution } from '#/lib/strings/rich-text-facets';
 import { toShortUrl } from '#/lib/strings/url-helpers';
-
-import { isOnlyEmoji } from '#/alf/typography';
 
 import { Text } from '#/components/Text';
 

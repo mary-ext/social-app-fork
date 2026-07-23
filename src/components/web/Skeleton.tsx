@@ -8,6 +8,8 @@ import * as styles from '#/components/web/Skeleton.css';
 import type { RecipeVariants } from '#/styles/recipe';
 import { borderRadius } from '#/styles/tokens.css';
 
+const GOLDEN_RATIO = 1.618;
+
 /** Loading placeholder for a line of {@link Text}: a rounded bar sized to the matching `size`'s line box. */
 export function Text({
 	color = 'contrast_50',
@@ -65,18 +67,49 @@ export function Col({
 
 /** Loading placeholder for a circular element (e.g. a user avatar), sized to `size` pixels. */
 export function Circle({
+	blend,
 	children,
 	color = 'contrast_50',
 	size,
 }: {
+	/** When true, lowers the placeholder's opacity so it recedes behind foreground content. */
+	blend?: boolean;
 	children?: ReactNode;
 	color?: RecipeVariants<typeof styles.circle>['color'];
 	size: number;
 }) {
 	return (
-		<div className={styles.circle({ color })} style={assignInlineVars({ [styles.boxSizeVar]: `${size}px` })}>
+		<div
+			className={styles.circle({ blend, color })}
+			style={assignInlineVars({ [styles.boxSizeVar]: `${size}px` })}
+		>
 			{children}
 		</div>
+	);
+}
+
+/**
+ * Loading placeholder for a pill-shaped element (e.g. a stat/count bar): a rounded-full bar `size` pixels
+ * tall, with a fixed height-to-width ratio.
+ */
+export function Pill({
+	blend,
+	color = 'contrast_50',
+	size,
+}: {
+	/** When true, lowers the placeholder's opacity so it recedes behind foreground content. */
+	blend?: boolean;
+	color?: RecipeVariants<typeof styles.pill>['color'];
+	size: number;
+}) {
+	return (
+		<div
+			className={styles.pill({ blend, color })}
+			style={assignInlineVars({
+				[styles.boxSizeVar]: `${size}px`,
+				[styles.pillWidthVar]: `${size * GOLDEN_RATIO}px`,
+			})}
+		/>
 	);
 }
 

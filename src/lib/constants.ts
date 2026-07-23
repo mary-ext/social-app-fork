@@ -1,5 +1,3 @@
-import type { Insets } from 'react-native';
-
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583';
@@ -41,16 +39,6 @@ export const STAGING_FEEDS = [
 	`feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ];
 
-// Hitslop constants
-export const createHitslop = (size: number): Insets => ({
-	top: size,
-	left: size,
-	bottom: size,
-	right: size,
-});
-export const HITSLOP_10 = createHitslop(10);
-export const HITSLOP_20 = createHitslop(20);
-export const HITSLOP_30 = createHitslop(30);
 export const MAX_POST_LINES = 25;
 
 const BSKY_APP_ACCOUNT_DID = 'did:plc:z72i7hdynmk6r22z27h6tvur';

@@ -3,11 +3,9 @@ import { lazy, Suspense, useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
+import { useBreakpoints, useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useSession } from '#/state/session';
-
-import { useLayoutBreakpoints } from '#/alf';
 
 import * as css from '#/components/Shell/Shell.css';
 
@@ -34,10 +32,10 @@ export type WebShellProps = {
  */
 export function WebShell({ children, routeName }: WebShellProps) {
 	const { hasSession } = useSession();
-	const { isMobile } = useWebMediaQueries();
+	const { gtMobile } = useBreakpoints();
 	const { leftNavMinimal, rightNavVisible } = useLayoutBreakpoints();
 
-	const showBottomBar = hasSession ? isMobile : leftNavMinimal;
+	const showBottomBar = hasSession ? !gtMobile : leftNavMinimal;
 
 	// chat is a fixed-viewport layout (inner columns scroll). The wide split view (messages screens past the
 	// right-nav breakpoint) also widens the center track to fit the chat-list + conversation columns; below it,
@@ -102,7 +100,7 @@ export function WebShell({ children, routeName }: WebShellProps) {
 				</div>
 			)}
 
-			{isMobile && (
+			{!gtMobile && (
 				<Suspense fallback={null}>
 					<Drawer />
 				</Suspense>

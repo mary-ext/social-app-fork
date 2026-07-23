@@ -81,3 +81,5 @@ export const text = style({
 	whiteSpace: 'nowrap',
 	color: 'inherit',
 });
+
+export const pointerEventsNone = style({ pointerEvents: 'none' });

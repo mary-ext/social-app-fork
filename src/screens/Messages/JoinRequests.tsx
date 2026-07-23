@@ -21,13 +21,12 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { List } from '#/view/com/util/List';
-
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo';
+import { List } from '#/components/List/List';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -332,13 +331,8 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 						</div>
 					) : null
 				}
-				contentContainerStyle={showFooter ? { paddingBottom: footerHeight } : undefined}
-				scrollIndicatorInsets={showFooter ? { bottom: footerHeight } : undefined}
-				refreshing={isPTRing}
+				ListFooterComponent={showFooter ? <div style={{ height: footerHeight }} /> : undefined}
 				onEndReached={() => void onEndReached()}
-				onRefresh={() => void onRefresh()}
-				keyboardDismissMode="on-drag"
-				desktopFixedHeight
 			/>
 			{showFooter ? footer : null}
 			{owner && moderationOpts && (

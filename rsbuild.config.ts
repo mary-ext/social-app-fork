@@ -52,22 +52,9 @@ export default defineConfig(({ envMode }) => {
 		resolve: {
 			alias: {
 				'#': path.resolve(root, 'src'),
-				'react-native': 'react-native-web',
 			},
 			aliasStrategy: 'prefer-alias',
-			extensions: [
-				'.web.ts',
-				'.web.tsx',
-				'.web.mjs',
-				'.web.js',
-				'.web.jsx',
-				'.ts',
-				'.tsx',
-				'.mjs',
-				'.js',
-				'.jsx',
-				'.json',
-			],
+			extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.json'],
 		},
 		server: {
 			host: serverHost,

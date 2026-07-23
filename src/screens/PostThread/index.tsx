@@ -4,6 +4,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 
@@ -30,8 +31,6 @@ import {
 	ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost';
 import * as css from '#/screens/PostThread/index.css';
-
-import { useBreakpoints } from '#/alf';
 
 import { List, type ListMethods } from '#/components/List/List';
 import * as Layout from '#/components/web/Layout';

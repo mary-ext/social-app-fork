@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useMediaQuery } from '#/lib/media-query';
 
 import { ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon } from '#/components/icons/Arrow';
@@ -18,7 +18,7 @@ export function LoadLatestBtn({
 	label: string;
 	showIndicator: boolean;
 }) {
-	const { isDesktop, isTablet } = useWebMediaQueries();
+	const { gtMobile, gtTablet } = useBreakpoints();
 
 	// move button inline if it starts overlapping the left nav
 	const isTallViewport = useMediaQuery('(height >= 700px)');
@@ -27,8 +27,8 @@ export function LoadLatestBtn({
 		<div
 			className={clsx(
 				css.outer,
-				isDesktop && (isTallViewport ? css.leftOutOfLine : css.leftInline),
-				isTablet && css.leftInline,
+				gtTablet && (isTallViewport ? css.leftOutOfLine : css.leftInline),
+				gtMobile && !gtTablet && css.leftInline,
 			)}
 		>
 			<button

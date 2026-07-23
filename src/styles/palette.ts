@@ -1,7 +1,3 @@
-// intentionally duplicated from `#/alf/base/palette` rather than imported: the vanilla-extract layer is
-// the eventual replacement for ALF, so it owns its own copy of the design data and must not depend on
-// the layer it supersedes. keep the values in sync by hand until ALF is retired.
-
 export type Palette = {
 	white: string;
 	black: string;

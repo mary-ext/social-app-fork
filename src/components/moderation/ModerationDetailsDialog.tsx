@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import { useConstant } from '#/lib/hooks/use-constant';
+import type { AppModerationCause } from '#/lib/moderation/types';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { makeProfileLink } from '#/lib/routes/links';
 import { listUriToHref } from '#/lib/strings/url-helpers';
@@ -14,7 +15,6 @@ import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
 import { AppealForm } from '#/components/moderation/AppealForm';
-import type { AppModerationCause } from '#/components/Pills';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';

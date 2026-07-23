@@ -1,10 +1,7 @@
-import { useState } from 'react';
-
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { moderatePost } from '@atcute/bluesky-moderation';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
@@ -17,8 +14,8 @@ import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { logger } from '#/logger';
 
 import { Post } from '#/view/com/post/Post';
-import { List } from '#/view/com/util/List';
 
+import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import * as Layout from '#/components/web/Layout';
 
@@ -68,9 +65,6 @@ function keyExtractor(item: { post: AppBskyFeedDefs.PostView }) {
 }
 
 function PostQuotes({ uri }: { uri: string }) {
-	const initialNumToRender = useInitialNumToRender();
-	const [isPTRing, setIsPTRing] = useState(false);
-
 	const { data: resolvedUri, error: resolveError, isLoading: isLoadingUri } = useResolveUriQuery(uri);
 	const {
 		data,
@@ -79,7 +73,6 @@ function PostQuotes({ uri }: { uri: string }) {
 		hasNextPage,
 		fetchNextPage,
 		error,
-		refetch,
 	} = usePostQuotesQuery(resolvedUri?.uri);
 
 	const moderationOpts = useModerationOpts();
@@ -95,16 +88,6 @@ function PostQuotes({ uri }: { uri: string }) {
 				})),
 			) ?? [])
 		: [];
-
-	const onRefresh = async () => {
-		setIsPTRing(true);
-		try {
-			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh quotes', { message: err });
-		}
-		setIsPTRing(false);
-	};
 
 	const onEndReached = async () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
@@ -137,8 +120,6 @@ function PostQuotes({ uri }: { uri: string }) {
 			data={quotes}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			refreshing={isPTRing}
-			onRefresh={() => void onRefresh()}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={4}
 			ListFooterComponent={
@@ -150,10 +131,6 @@ function PostQuotes({ uri }: { uri: string }) {
 					endMessageText={m['screens.postThread.engagement.quote.endOfFeed']()}
 				/>
 			}
-			// @ts-ignore our .web version only -prf
-			desktopFixedHeight
-			initialNumToRender={initialNumToRender}
-			windowSize={11}
 		/>
 	);
 }

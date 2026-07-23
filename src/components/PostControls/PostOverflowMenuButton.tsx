@@ -4,8 +4,6 @@ import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 
-import { atoms as a } from '#/alf';
-
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 
 import { m } from '#/paraglide/messages';
@@ -49,7 +47,7 @@ export function PostOverflowMenuButton({
 			render={
 				<button type="button" aria-label={m['components.postControls.options.a11y']()} className={css.button}>
 					<span className={css.iconCircle}>
-						<DotsHorizontal size="md" fill="currentColor" style={a.pointer_events_none} />
+						<DotsHorizontal size="md" fill="currentColor" className={css.pointerEventsNone} />
 					</span>
 				</button>
 			}

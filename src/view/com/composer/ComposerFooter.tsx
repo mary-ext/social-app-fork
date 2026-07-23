@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import type { VideoAsset } from '#/lib/media/video/types';
 
 import { type ComposerImage, createComposerImage } from '#/state/gallery';
@@ -7,8 +8,6 @@ import { type ComposerImage, createComposerImage } from '#/state/gallery';
 import { logger } from '#/logger';
 
 import { CharProgress } from '#/view/com/composer/char-progress/CharProgress';
-
-import { useBreakpoints } from '#/alf';
 
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';

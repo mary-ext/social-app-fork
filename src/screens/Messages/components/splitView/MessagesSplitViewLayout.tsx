@@ -1,8 +1,8 @@
 import { Outlet, useRoute } from '@oomfware/stacker';
 
-import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
+import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useLayoutBreakpoints } from '#/alf';
+import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';

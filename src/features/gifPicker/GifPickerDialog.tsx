@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import { uniqueBy } from '@mary/array-fns';
 
-import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useBreakpoints } from '#/alf';
+import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
 import * as Dialog from '#/components/Dialog';
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';

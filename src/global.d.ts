@@ -3,12 +3,6 @@
 // TS6.0 enables noUncheckedSideEffectImports
 declare module '*.css';
 
-declare module 'react-native-web' {
-	export function unstable_createElement(type: string, props: Record<string, unknown>): React.ReactElement;
-}
-
-declare const _WORKLET: boolean | undefined;
-
 interface ImportMetaEnv {
 	PUBLIC_APPVIEW_PROXY_AUDIENCE: import('@atcute/lexicons/syntax').AtprotoAudience;
 	PUBLIC_BSKY_LABELER_PROXY_AUDIENCE: import('@atcute/lexicons/syntax').AtprotoAudience;

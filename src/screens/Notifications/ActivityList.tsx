@@ -4,7 +4,7 @@ import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';
 
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
-import * as Layout from '#/components/Layout';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
@@ -15,7 +15,7 @@ export function NotificationsActivityListScreen() {
 	useTitle(m['common.nav.notifications']());
 
 	return (
-		<Layout.Screen testID="NotificationsActivityListScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>

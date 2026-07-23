@@ -1,9 +1,9 @@
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
-import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { clamp } from '#/lib/numbers';
 
 export function useBottomBarOffset(modifier: number = 0) {
-	const { isTabletOrDesktop } = useWebMediaQueries();
+	const { gtMobile } = useBreakpoints();
 	const { bottom: bottomInset } = useSafeAreaInsets();
-	return (isTabletOrDesktop ? 0 : clamp(60 + bottomInset, 60, 75)) + modifier;
+	return (gtMobile ? 0 : clamp(60 + bottomInset, 60, 75)) + modifier;
 }

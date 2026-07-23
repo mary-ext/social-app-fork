@@ -1,6 +1,6 @@
-import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
+import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useLayoutBreakpoints } from '#/alf';
+import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 

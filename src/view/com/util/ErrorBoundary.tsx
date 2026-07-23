@@ -1,17 +1,15 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
 
 import { logger } from '#/logger';
 
 import { m } from '#/paraglide/messages';
 
 import { ErrorScreen } from './error/ErrorScreen';
-import { CenteredView } from './Views';
+import * as css from './ErrorBoundary.css';
 
 interface Props {
 	children?: ReactNode;
 	renderError?: (error: unknown) => ReactNode;
-	style?: StyleProp<ViewStyle>;
 }
 
 interface State {
@@ -40,9 +38,9 @@ export class ErrorBoundary extends Component<Props, State> {
 			}
 
 			return (
-				<CenteredView style={[{ height: '100%', flex: 1 }, this.props.style]}>
+				<div className={css.fill}>
 					<TranslatedErrorScreen details={String(this.state.error)} />
-				</CenteredView>
+				</div>
 			);
 		}
 

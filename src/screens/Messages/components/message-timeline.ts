@@ -1,8 +1,8 @@
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import type { ConvoItem } from '#/state/messages/convo/types';
+import { isOnlyEmoji } from '#/lib/strings/emoji';
 
-import { isOnlyEmoji } from '#/alf/typography';
+import type { ConvoItem } from '#/state/messages/convo/types';
 
 import {
 	CLUSTERED_MESSAGE_THRESHOLD_MS,

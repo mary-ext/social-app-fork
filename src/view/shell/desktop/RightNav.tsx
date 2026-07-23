@@ -1,10 +1,10 @@
+import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
+
 import { useSession } from '#/state/session';
 
 import { DesktopFeeds } from '#/view/shell/desktop/Feeds';
 import { DesktopSearch } from '#/view/shell/desktop/Search';
 import { SidebarTrendingTopics } from '#/view/shell/desktop/SidebarTrendingTopics';
-
-import { useLayoutBreakpoints } from '#/alf';
 
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { ExternalInlineLinkText } from '#/components/web/Link';

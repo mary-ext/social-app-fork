@@ -14,6 +14,8 @@ export const widthVar = createVar();
 
 export const boxSizeVar = createVar();
 
+export const pillWidthVar = createVar();
+
 export const squareRadiusVar = createVar();
 
 const sizeVariants = (): { [K in keyof typeof fontLeading]: { vars: Record<string, string> } } => {
@@ -73,6 +75,7 @@ export const circle = recipe(
 			height: boxSizeVar,
 		},
 		variants: {
+			blend: { true: { opacity: 0.6 } },
 			color: {
 				contrast_25: { color: vars.palette.contrast_25 },
 				contrast_50: { color: vars.palette.contrast_50 },
@@ -82,6 +85,28 @@ export const circle = recipe(
 		defaultVariants: { color: 'contrast_50' },
 	},
 	{ debugId: 'circle' },
+);
+
+export const pill = recipe(
+	{
+		base: {
+			flexShrink: 0,
+			borderRadius: borderRadius.full,
+			backgroundColor: 'currentColor',
+			width: pillWidthVar,
+			height: boxSizeVar,
+		},
+		variants: {
+			blend: { true: { opacity: 0.6 } },
+			color: {
+				contrast_25: { color: vars.palette.contrast_25 },
+				contrast_50: { color: vars.palette.contrast_50 },
+				contrast_100: { color: vars.palette.contrast_100 },
+			},
+		},
+		defaultVariants: { color: 'contrast_50' },
+	},
+	{ debugId: 'pill' },
 );
 
 export const square = recipe(

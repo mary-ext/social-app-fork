@@ -11,9 +11,8 @@ import {
 import type { Did, Handle } from '@atcute/lexicons';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
+import type { AppModerationCause } from '#/lib/moderation/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-
-import type { AppModerationCause } from '#/components/Pills';
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;
 export const OTHER_SELF_LABELS = ['graphic-media'] as const;

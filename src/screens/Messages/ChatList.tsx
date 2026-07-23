@@ -2,6 +2,7 @@ import { type ComponentProps, useRef } from 'react';
 
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -15,8 +16,6 @@ import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { FAB } from '#/view/com/util/fab/FAB';
-
-import { useBreakpoints } from '#/alf';
 
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';

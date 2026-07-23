@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
 
-import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useCallOnce } from '#/lib/once';
 
 import { useSessionApi } from '#/state/session';
@@ -9,19 +7,16 @@ import { InactiveAccountError } from '#/state/session/agent';
 
 import { logger } from '#/logger';
 
+import * as css from '#/view/com/auth/OAuthCallback.css';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 
 import { m } from '#/paraglide/messages';
 
 export function OAuthCallback() {
-	const t = useTheme();
-	const insets = useSafeAreaInsets();
 	const { completeOAuthCallback } = useSessionApi();
 	const [error, setError] = useState('');
 	const runOnce = useCallOnce();
@@ -50,26 +45,21 @@ export function OAuthCallback() {
 	}, [runOnce, completeOAuthCallback]);
 
 	return (
-		<View
-			style={[
-				a.util_screen_outer,
-				a.align_center,
-				a.justify_center,
-				a.gap_md,
-				t.atoms.bg,
-				{ paddingTop: insets.top, paddingBottom: insets.bottom },
-			]}
-		>
+		<div className={css.container}>
 			<ErrorBoundary>
 				{error ? (
-					<Text style={[a.text_md, t.atoms.text_contrast_high]}>{error}</Text>
+					<Text color="textContrastHigh" size="md">
+						{error}
+					</Text>
 				) : (
 					<>
 						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
-						<Text style={[a.text_md, t.atoms.text_contrast_high]}>{m['view.auth.signIn.inProgress']()}</Text>
+						<Text color="textContrastHigh" size="md">
+							{m['view.auth.signIn.inProgress']()}
+						</Text>
 					</>
 				)}
 			</ErrorBoundary>
-		</View>
+		</div>
 	);
 }

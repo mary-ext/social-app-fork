@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 
-import { useTheme } from '#/alf';
+import { colors } from '#/styles/colors';
 
 const ratio = 57 / 64;
 
@@ -9,10 +9,9 @@ type Props = {
 } & Omit<SVGProps<SVGSVGElement>, 'fill'>;
 
 export function Logo(props: Props) {
-	const t = useTheme();
 	const { fill, style, ...rest } = props;
 	const gradient = fill === 'sky';
-	const _fill = gradient ? 'url(#sky)' : fill || style?.color || t.palette.primary_500;
+	const _fill = gradient ? 'url(#sky)' : fill || style?.color || colors.primary_500;
 	const size = parseInt(String(rest.width || 32), 10);
 
 	return (

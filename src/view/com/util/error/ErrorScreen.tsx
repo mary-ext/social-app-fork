@@ -1,8 +1,8 @@
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon } from '#/components/icons/ArrowRotate';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 

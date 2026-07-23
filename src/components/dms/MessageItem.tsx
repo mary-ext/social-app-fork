@@ -7,6 +7,7 @@ import { clsx } from 'clsx';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { isOnlyEmoji } from '#/lib/strings/emoji';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import type { Shadow } from '#/state/cache/types';
@@ -15,8 +16,6 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 import { useSession } from '#/state/session';
-
-import { isOnlyEmoji } from '#/alf/typography';
 
 import * as Dialog from '#/components/Dialog';
 import { MessageActions } from '#/components/dms/MessageActions';

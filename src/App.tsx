@@ -7,7 +7,6 @@ import { Fragment, useEffect } from 'react';
 import { Provider as HotkeysProvider } from '#/lib/hotkeys';
 import { initializeLanguageDetection } from '#/lib/language-detection';
 import { QueryProvider } from '#/lib/react-query';
-import { ThemeProvider } from '#/lib/ThemeContext';
 
 import { Provider as MutedThreadsProvider } from '#/state/cache/thread-mutes';
 import { Provider as DialogStateProvider } from '#/state/dialogs';
@@ -24,9 +23,6 @@ import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-rep
 
 import { Shell } from '#/view/shell/index';
 
-import { ThemeProvider as Alf } from '#/alf';
-import { useColorModeTheme } from '#/alf/util/useColorModeTheme';
-
 import { Provider as ActiveVideoProvider } from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext';
 import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
 import * as Toast from '#/components/Toast';
@@ -39,7 +35,6 @@ import { Provider as HideBottomBarBorderProvider } from './lib/hooks/useHideBott
 
 function InnerApp() {
 	const { currentAccount, isSessionResuming, sessionResumeFailed } = useSession();
-	const theme = useColorModeTheme();
 
 	useEffect(() => {
 		if (sessionResumeFailed) {
@@ -48,46 +43,42 @@ function InnerApp() {
 	}, [sessionResumeFailed]);
 
 	return (
-		<Alf theme={theme}>
-			<ThemeProvider theme={theme}>
-				<Splash isReady={!isSessionResuming}>
-					<VideoVolumeProvider>
-						<ActiveVideoProvider>
-							<Fragment
-								// Resets the entire tree below when it changes:
-								key={currentAccount?.did}
-							>
-								<QueryProvider currentDid={currentAccount?.did}>
-									<MessagesProvider>
-										{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-										<LabelDefsProvider>
-											<ModerationOptsProvider>
-												<SelectedFeedProvider>
-													<HiddenRepliesProvider>
-														<UnreadNotifsProvider>
-															<MutedThreadsProvider>
-																<ServiceConfigProvider>
-																	<HideBottomBarBorderProvider>
-																		<HotkeysProvider>
-																			<Shell />
-																			<ToastOutlet />
-																		</HotkeysProvider>
-																	</HideBottomBarBorderProvider>
-																</ServiceConfigProvider>
-															</MutedThreadsProvider>
-														</UnreadNotifsProvider>
-													</HiddenRepliesProvider>
-												</SelectedFeedProvider>
-											</ModerationOptsProvider>
-										</LabelDefsProvider>
-									</MessagesProvider>
-								</QueryProvider>
-							</Fragment>
-						</ActiveVideoProvider>
-					</VideoVolumeProvider>
-				</Splash>
-			</ThemeProvider>
-		</Alf>
+		<Splash isReady={!isSessionResuming}>
+			<VideoVolumeProvider>
+				<ActiveVideoProvider>
+					<Fragment
+						// Resets the entire tree below when it changes:
+						key={currentAccount?.did}
+					>
+						<QueryProvider currentDid={currentAccount?.did}>
+							<MessagesProvider>
+								{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+								<LabelDefsProvider>
+									<ModerationOptsProvider>
+										<SelectedFeedProvider>
+											<HiddenRepliesProvider>
+												<UnreadNotifsProvider>
+													<MutedThreadsProvider>
+														<ServiceConfigProvider>
+															<HideBottomBarBorderProvider>
+																<HotkeysProvider>
+																	<Shell />
+																	<ToastOutlet />
+																</HotkeysProvider>
+															</HideBottomBarBorderProvider>
+														</ServiceConfigProvider>
+													</MutedThreadsProvider>
+												</UnreadNotifsProvider>
+											</HiddenRepliesProvider>
+										</SelectedFeedProvider>
+									</ModerationOptsProvider>
+								</LabelDefsProvider>
+							</MessagesProvider>
+						</QueryProvider>
+					</Fragment>
+				</ActiveVideoProvider>
+			</VideoVolumeProvider>
+		</Splash>
 	);
 }
 

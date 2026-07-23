@@ -3,8 +3,7 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-
-import { useAlf } from '#/alf';
+import { useAppearance } from '#/state/shell';
 
 import { BotBadge, BotBadgeButton, isBotAccount } from '#/components/BotBadge';
 import * as css from '#/components/ProfileBadges.css';
@@ -43,9 +42,7 @@ export function ProfileBadges({
 }) {
 	const shadowed = useProfileShadow(profile);
 	const verification = useSimpleVerificationState({ profile });
-	const {
-		fonts: { scaleMultiplier },
-	} = useAlf();
+	const { fontScaleMultiplier: scaleMultiplier } = useAppearance();
 
 	// if nothing to show, don't render the container at all
 	if (!verification.showBadge && !isBotAccount(shadowed)) {

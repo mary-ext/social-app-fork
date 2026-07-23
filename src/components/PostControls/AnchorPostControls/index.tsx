@@ -4,16 +4,15 @@ import { clsx } from 'clsx';
 
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import type { Props as IconProps } from '#/components/icons/common';
 import { Reply as Bubble } from '#/components/icons/Reply';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
-import * as Skele from '#/components/Skeleton';
 import { Tooltip } from '#/components/Tooltip';
+import * as Skele from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
+import { colors } from '#/styles/colors';
 
 import { RepostMenu } from '../RepostMenu';
 import { type PostControlsProps, usePostControlsActions } from '../shared';
@@ -75,7 +74,7 @@ function AnchorControlButtonIconBox({ children }: { children: ReactNode }) {
 function AnchorControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
 	return (
 		<AnchorControlButtonIconBox>
-			<Icon size="lg" fill="currentColor" style={a.pointer_events_none} />
+			<Icon size="lg" fill="currentColor" className={css.pointerEventsNone} />
 		</AnchorControlButtonIconBox>
 	);
 }
@@ -94,8 +93,6 @@ function AnchorPostControls({
 	onPostReply,
 	viaRepost,
 }: PostControlsProps): React.ReactNode {
-	const t = useTheme();
-
 	const {
 		hasLikeIconBeenToggled,
 		onPressToggleLike,
@@ -134,7 +131,7 @@ function AnchorPostControls({
 						label={m['components.postControls.repost.a11y']()}
 						tooltip={null}
 						active={!!post.viewer?.repost}
-						activeColor={t.palette.positive_500}
+						activeColor={colors.positive_500}
 					>
 						<AnchorControlButtonIcon icon={Repost} />
 					</AnchorControlButton>
@@ -142,7 +139,7 @@ function AnchorPostControls({
 			/>
 			<AnchorControlButton
 				active={!!post.viewer?.like}
-				activeColor={t.palette.pink}
+				activeColor={colors.pink}
 				tooltip={m['common.action.like']()}
 				onClick={() => requireAuth(() => onPressToggleLike())}
 				label={
