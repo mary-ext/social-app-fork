@@ -1,5 +1,3 @@
-import { Keyboard } from 'react-native';
-
 import { ComposerToolbarButton } from '#/view/com/composer/ComposerToolbarButton';
 
 import * as Dialog from '#/components/Dialog';
@@ -24,8 +22,6 @@ export function SelectGifBtn({ onSelectGif, disabled }: Props) {
 				render={
 					<ComposerToolbarButton
 						icon={GifIcon}
-						// the dialog open is owned by the Trigger; dismiss the soft keyboard alongside it.
-						onClick={() => Keyboard.dismiss()}
 						label={m['view.composer.gif.a11y.select']()}
 						aria-description={m['view.composer.gif.a11y.opensPicker']()}
 						disabled={disabled}

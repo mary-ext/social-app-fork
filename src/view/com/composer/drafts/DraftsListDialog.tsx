@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Keyboard } from 'react-native';
 
 import { useCallOnce } from '#/lib/once';
 
@@ -49,11 +48,6 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 	}, [onDraftListOpen, isDataReady, draftCount]);
 
 	const handleSelectDraft = (summary: DraftSummary) => {
-		// Dismiss keyboard immediately to prevent flicker. Without this,
-		// the text input regains focus (showing the keyboard) after the
-		// drafts sheet closes, then loses it again when the post component
-		// remounts with the draft content, causing a show-hide-show cycle -sfn
-		Keyboard.dismiss();
 		handle.close();
 		onSelectDraft(summary);
 	};
