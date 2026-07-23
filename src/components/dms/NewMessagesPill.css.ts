@@ -2,16 +2,14 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { borderRadius, zIndex } from '#/styles/tokens.css';
+import { borderRadius, space, zIndex } from '#/styles/tokens.css';
 
-// the container spans the width but lets scroll events pass through — only the pill itself is
-// interactive.
 export const root = style({
-	position: 'absolute',
 	display: 'flex',
 	alignItems: 'center',
-	width: '100%',
 	zIndex: zIndex.raised,
+	paddingBottom: space.md,
+	paddingLeft: space.lg,
 	pointerEvents: 'none',
 });
 

@@ -141,20 +141,6 @@ export function MessagesList({
 
 	const [showPill, setShowPill] = useState(false);
 
-	// the composer floats over the bottom of the list; measure it to reserve trailing space so the
-	// newest message clears it.
-	const [inputHeightJS, setInputHeightJS] = useState(0);
-	const inputObserver = useRef<ResizeObserver | null>(null);
-	const inputRef = (node: HTMLDivElement | null) => {
-		inputObserver.current?.disconnect();
-		if (node) {
-			const observer = new ResizeObserver(() => setInputHeightJS(node.offsetHeight));
-			observer.observe(node);
-			inputObserver.current = observer;
-			setInputHeightJS(node.offsetHeight);
-		}
-	};
-
 	// The column-reverse scroller pins to the bottom (scrollTop 0) on its own, so we only track whether
 	// the user is near the bottom (to keep the pill in sync) and back up the scroll offset across
 	// history prepends in case the browser drops its anchoring.
@@ -396,6 +382,28 @@ export function MessagesList({
 				<MessageOverlays>
 					<div className={css.root}>
 						<div className={css.scroller} onScroll={onScroll} ref={scrollContainerRef}>
+							{/* first child sits at the visual bottom of the column-reverse scroller, where it sticks */}
+							<div
+								className={css.inputWrap}
+								style={bottomInset > 0 ? { transform: `translateY(${-bottomInset}px)` } : undefined}
+							>
+								{showPill && <NewMessagesPill onPress={scrollToEndOnPress} />}
+								{footer ?? (
+									<ConversationFooter convoState={convoState} hasAcceptOverride={hasAcceptOverride}>
+										{({ loading }) => (
+											<MessageComposer
+												hasEmbed={!!messageEmbed}
+												loading={loading}
+												onSendMessage={(message, replyTo) => void onSendMessage(message, replyTo)}
+												setEmbed={setEmbed}
+											>
+												<MessageInputReply />
+												<MessageInputEmbed embed={messageEmbed} setEmbed={setEmbed} />
+											</MessageComposer>
+										)}
+									</ConversationFooter>
+								)}
+							</div>
 							<div className={css.timeline}>
 								{!convoState.hasAllHistory ? (
 									// re-key on item count so the observer re-arms after each page: an already-visible
@@ -418,8 +426,8 @@ export function MessagesList({
 								{renderItems.map((item) => (
 									<Fragment key={item.key}>{renderItem(item)}</Fragment>
 								))}
-								{/* trailing space so the newest message clears the floating composer */}
-								<div style={{ height: space.md + inputHeightJS }} />
+								{/* breathing room between the newest message and the sticky composer below it */}
+								<div style={{ height: space.md }} />
 								<IntersectionSentinel
 									onChange={onAtBottomChange}
 									root={scrollContainerRef}
@@ -427,28 +435,6 @@ export function MessagesList({
 								/>
 							</div>
 						</div>
-						<div
-							className={css.inputWrap}
-							ref={inputRef}
-							style={bottomInset > 0 ? { transform: `translateY(${-bottomInset}px)` } : undefined}
-						>
-							{footer ?? (
-								<ConversationFooter convoState={convoState} hasAcceptOverride={hasAcceptOverride}>
-									{({ loading }) => (
-										<MessageComposer
-											hasEmbed={!!messageEmbed}
-											loading={loading}
-											onSendMessage={(message, replyTo) => void onSendMessage(message, replyTo)}
-											setEmbed={setEmbed}
-										>
-											<MessageInputReply />
-											<MessageInputEmbed embed={messageEmbed} setEmbed={setEmbed} />
-										</MessageComposer>
-									)}
-								</ConversationFooter>
-							)}
-						</div>
-						{showPill && <NewMessagesPill onPress={scrollToEndOnPress} />}
 					</div>
 				</MessageOverlays>
 			</MessageRepliesProvider>

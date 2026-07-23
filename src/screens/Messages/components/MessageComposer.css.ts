@@ -8,12 +8,8 @@ import { borderRadius, space } from '#/styles/tokens.css';
 const MIN_HEIGHT = 40;
 
 export const container = style({
-	boxSizing: 'border-box',
-	width: `calc(100% - ${space.sm}px)`,
-	paddingTop: space.xs,
-	paddingRight: space.sm,
+	paddingInline: space.lg,
 	paddingBottom: space.lg,
-	paddingLeft: space.lg,
 	backgroundImage: `linear-gradient(to bottom, transparent, color-mix(in srgb, ${colors.bg} 80%, transparent) 80%, ${colors.bg})`,
 });
 

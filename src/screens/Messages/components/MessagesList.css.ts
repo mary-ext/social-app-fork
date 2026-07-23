@@ -41,8 +41,7 @@ export const loader = style({
 });
 
 export const inputWrap = style({
-	position: 'absolute',
+	position: 'sticky',
 	bottom: 0,
-	left: 0,
-	right: 0,
+	zIndex: 1,
 });
