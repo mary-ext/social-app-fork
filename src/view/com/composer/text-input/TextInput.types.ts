@@ -1,5 +1,3 @@
-import type { TextInput } from 'react-native';
-
 export type TextInputRef = {
 	focus: () => void;
 	blur: () => void;
@@ -25,7 +23,8 @@ export type TextInputProps = {
 	onNewLink: (uri: string) => void;
 	onError: (err: string) => void;
 	onFocus: () => void;
-} & Pick<
-	React.ComponentProps<typeof TextInput>,
-	'placeholder' | 'autoFocus' | 'style' | 'accessible' | 'accessibilityLabel' | 'accessibilityHint'
->;
+	placeholder?: string;
+	autoFocus?: boolean;
+	accessibilityLabel?: string;
+	accessibilityHint?: string;
+};

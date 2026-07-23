@@ -1209,7 +1209,6 @@ const ComposerPost = memo(function ComposerPost({
 						onNewLink={onNewLink}
 						onError={onError}
 						onPressPublish={onPublish}
-						accessible={true}
 						accessibilityLabel={m['common.compose.action.write']()}
 						accessibilityHint={m['view.composer.text.maxLengthHint']({ count: MAX_GRAPHEME_LENGTH || 0 })}
 					/>
