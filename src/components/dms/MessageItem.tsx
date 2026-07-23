@@ -1,4 +1,4 @@
-import { type CSSProperties, memo, type MouseEvent, useEffect, useRef } from 'react';
+import { memo, type MouseEvent, useEffect, useRef } from 'react';
 
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -39,11 +39,6 @@ import { MessageItemEmbed } from './MessageItemEmbed';
 import { MessageItemInviteEmbed } from './MessageItemInviteEmbed';
 import { groupReactions } from './ReactionsDialog';
 import { filterBlockedReactions } from './util';
-
-const AVATAR_SIZE = 28;
-const CLUSTERED_MESSAGE_GAP = 2;
-const BORDER_RADIUS = 20;
-const SQUARED_BORDER_RADIUS = 4;
 
 let MessageItem = ({
 	hasLargeGapFromPrev,
@@ -110,8 +105,8 @@ let MessageItem = ({
 		message.embed?.$type === 'chat.bsky.embed.joinLink#view';
 	const hasEmbedAndText = hasEmbed && rt.text.length > 0;
 
-	const targetBottomRadius = squaredBottomCorner ? SQUARED_BORDER_RADIUS : BORDER_RADIUS;
-	const targetTopRadius = squaredTopCorner || hasEmbedAndText ? SQUARED_BORDER_RADIUS : BORDER_RADIUS;
+	// an embed sitting above the text squares the bubble's top so the two butt together.
+	const squaredTop = squaredTopCorner || hasEmbedAndText;
 
 	const showDisplayName = isGroupChat && !isFromSelf && isFirstInCluster && !isOnlyEmoji(message.text);
 	const showAvatar = isGroupChat && !isFromSelf && isLastInCluster;
@@ -126,7 +121,6 @@ let MessageItem = ({
 		if (highlightKey === null) {
 			return;
 		}
-		// flash the always-mounted overlay via the Web Animations API.
 		const node = flashRef.current;
 		const animation = node?.animate(
 			[{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }],
@@ -135,26 +129,16 @@ let MessageItem = ({
 		return () => animation?.cancel();
 	}, [highlightKey]);
 
-	const borderRadiusStyle: CSSProperties = isFromSelf
-		? {
-				borderBottomRightRadius: targetBottomRadius,
-				borderTopRightRadius: targetTopRadius,
-			}
-		: {
-				borderBottomLeftRadius: targetBottomRadius,
-				borderTopLeftRadius: targetTopRadius,
-			};
-
 	const avatar =
 		profile && moderationOpts ? (
 			<ProfileCard.Avatar
 				profile={profile}
-				size={AVATAR_SIZE}
+				size={css.AVATAR_SIZE}
 				moderationOpts={moderationOpts}
 				onPress={() => unstableCacheProfileView(queryClient, profile)}
 			/>
 		) : (
-			<ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
+			<ProfileCard.AvatarPlaceholder size={css.AVATAR_SIZE} />
 		);
 
 	const groupedReactions = groupReactions(visibleReactions);
@@ -270,7 +254,12 @@ let MessageItem = ({
 					</Text>
 				) : null}
 				{isBlocked ? (
-					<BlockedPlaceholder profile={profile} radiusStyle={borderRadiusStyle} />
+					<BlockedPlaceholder
+						isFromSelf={isFromSelf}
+						profile={profile}
+						squaredBottomCorner={squaredBottomCorner}
+						squaredTopCorner={squaredTop}
+					/>
 				) : (
 					<div className={css.bubbleRow({ fromSelf: isFromSelf })}>
 						<div className={css.bubble({ fromSelf: isFromSelf })}>
@@ -294,15 +283,19 @@ let MessageItem = ({
 								<div
 									className={clsx(
 										!isEmojiOnly && css.bubbleStyled,
-										!isEmojiOnly && (isFromSelf ? css.bubbleSelf : css.bubbleOther),
+										!isEmojiOnly &&
+											css.bubbleCorners({
+												fromSelf: isFromSelf,
+												squaredBottom: squaredBottomCorner,
+												squaredTop,
+											}),
 									)}
 									style={
 										isEmojiOnly
 											? undefined
 											: {
-													marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
+													marginTop: hasEmbedAndText ? css.CLUSTERED_MESSAGE_GAP : 0,
 													backgroundColor: bubbleBackground,
-													...borderRadiusStyle,
 												}
 									}
 								>
@@ -387,11 +380,15 @@ function MessageItemMetadata({
 export { MessageItemMetadata };
 
 function BlockedPlaceholder({
+	isFromSelf,
 	profile,
-	radiusStyle,
+	squaredBottomCorner,
+	squaredTopCorner,
 }: {
+	isFromSelf: boolean;
 	profile: Shadow<ChatBskyActorDefs.ProfileViewBasic>;
-	radiusStyle?: CSSProperties;
+	squaredBottomCorner: boolean;
+	squaredTopCorner: boolean;
 }) {
 	const control = Prompt.usePromptHandle();
 	const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
@@ -408,7 +405,16 @@ function BlockedPlaceholder({
 				onClick={() => control.open(null)}
 				type="button"
 			>
-				<div className={css.blockedBubble} style={radiusStyle}>
+				<div
+					className={clsx(
+						css.blockedBubble,
+						css.bubbleCorners({
+							fromSelf: isFromSelf,
+							squaredBottom: squaredBottomCorner,
+							squaredTop: squaredTopCorner,
+						}),
+					)}
+				>
 					<Text className={css.italic} color="textContrastMedium" size="sm">
 						{label}
 					</Text>

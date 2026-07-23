@@ -1,14 +1,11 @@
 import { style } from '@vanilla-extract/css';
 
-import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
-export const outer = style({
-	width: '100%',
-	minWidth: 280,
-	maxWidth: 360,
-});
+import { bubbleCorners, fromSelfBackground, outer } from './MessageItemEmbed.css';
+
+export { bubbleCorners, outer };
 
 export const inner = recipe(
 	{
@@ -20,10 +17,7 @@ export const inner = recipe(
 			overflow: 'hidden',
 		},
 		variants: {
-			fromSelf: {
-				true: { background: colors.primary_50 },
-				false: { background: colors.contrast_50 },
-			},
+			fromSelf: fromSelfBackground,
 		},
 	},
 	{ debugId: 'messageInviteEmbedInner' },

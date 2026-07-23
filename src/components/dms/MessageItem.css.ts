@@ -5,8 +5,8 @@ import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-const AVATAR_SIZE = 28;
-const CLUSTERED_MESSAGE_GAP = 2;
+export const AVATAR_SIZE = 28;
+export const CLUSTERED_MESSAGE_GAP = 2;
 
 const DISPLAY_NAME_INSET = space.md;
 
@@ -143,16 +143,30 @@ export const bubbleStyled = style({
 	maxWidth: '100%',
 	paddingBlock: space.sm,
 	paddingInline: space.md,
-	borderRadius: borderRadius.xl,
 });
 
-export const bubbleSelf = style({
-	alignSelf: 'flex-end',
-});
-
-export const bubbleOther = style({
-	alignSelf: 'flex-start',
-});
+/**
+ * rounds a message bubble, squaring off the corners on the side it's anchored to (right for self, left for
+ * others) when it clusters against a neighbor. shared by the text bubble, its embeds, and the blocked
+ * placeholder so they round in lockstep.
+ */
+export const bubbleCorners = recipe(
+	{
+		base: { borderRadius: borderRadius.xl },
+		variants: {
+			fromSelf: { false: {}, true: {} },
+			squaredBottom: { false: {}, true: {} },
+			squaredTop: { false: {}, true: {} },
+		},
+		compoundVariants: [
+			{ fromSelf: false, squaredBottom: true, style: { borderBottomLeftRadius: borderRadius.xs } },
+			{ fromSelf: false, squaredTop: true, style: { borderTopLeftRadius: borderRadius.xs } },
+			{ fromSelf: true, squaredBottom: true, style: { borderBottomRightRadius: borderRadius.xs } },
+			{ fromSelf: true, squaredTop: true, style: { borderTopRightRadius: borderRadius.xs } },
+		],
+	},
+	{ debugId: 'messageItemBubbleCorners' },
+);
 
 export const reactionsWrap = recipe(
 	{
@@ -195,7 +209,6 @@ export const blockedBubble = style({
 	paddingBlock: space.sm,
 	paddingInline: space.md,
 	border: `1px solid ${colors.borderContrastHigh}`,
-	borderRadius: borderRadius.xl,
 	background: colors.bg,
 });
 

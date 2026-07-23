@@ -1,12 +1,13 @@
 import type { ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
+import { clsx } from 'clsx';
+
 import { useConvoActive } from '#/state/messages/convo';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';
 
 import { MessageContextProvider } from './MessageContext';
-import { cornerRadii } from './MessageItemEmbed';
 import * as css from './MessageItemInviteEmbed.css';
 
 function MessageItemInviteEmbed({
@@ -31,8 +32,14 @@ function MessageItemInviteEmbed({
 		<MessageContextProvider>
 			<div className={css.outer}>
 				<div
-					className={css.inner({ fromSelf: isFromSelf })}
-					style={cornerRadii({ isFromSelf, squaredBottomCorner, squaredTopCorner })}
+					className={clsx(
+						css.inner({ fromSelf: isFromSelf }),
+						css.bubbleCorners({
+							fromSelf: isFromSelf,
+							squaredBottom: squaredBottomCorner,
+							squaredTop: squaredTopCorner,
+						}),
+					)}
 				>
 					<MessageItemInviteEmbedBody action={action} preview={preview} status={status} />
 				</div>
