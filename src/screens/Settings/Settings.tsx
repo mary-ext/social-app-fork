@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 
-import { useSessionApi } from '#/state/session';
+import { logoutEveryAccount } from '#/state/session';
 
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
 import { Bell_Stroke2_Corner0_Rounded as NotificationIcon } from '#/components/icons/Bell';
@@ -31,7 +31,6 @@ import { ServiceWorkerSection } from './components/ServiceWorkerSection';
 export function SettingsScreen() {
 	useTitle(m['common.nav.settings']());
 
-	const { logoutEveryAccount } = useSessionApi();
 	const signOutPromptHandle = Prompt.usePromptHandle();
 
 	return (

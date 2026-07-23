@@ -6,7 +6,7 @@ import { type QueryClient, useQuery } from '@tanstack/react-query';
 import { accumulate } from '#/lib/async/accumulate';
 
 import { STALE } from '#/state/queries';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 export type MyListsFilter = 'all' | 'curate' | 'mod' | 'all-including-subscribed';
 
@@ -15,7 +15,7 @@ export const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter];
 
 export function useMyListsQuery(filter: MyListsFilter) {
 	const { currentAccount } = useSession();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery<AppBskyGraphDefs.ListView[]>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(filter),

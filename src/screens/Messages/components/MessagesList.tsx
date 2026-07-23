@@ -20,7 +20,7 @@ import type { ConvoState } from '#/state/messages/convo/types';
 import { useGetJoinLinkPreview } from '#/state/queries/join-links';
 import { useGetPost } from '#/state/queries/post';
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -113,7 +113,7 @@ export function MessagesList({
 	hasAcceptOverride?: boolean;
 }) {
 	const convoState = useConvoActive();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { hasSession } = useSession();
 	const getPost = useGetPost();
 	const getJoinLinkPreview = useGetJoinLinkPreview();

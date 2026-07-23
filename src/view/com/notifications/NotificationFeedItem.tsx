@@ -28,7 +28,7 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { FeedNotification } from '#/state/queries/notifications/feed';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -740,7 +740,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 }
 
 function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 	const { currentAccount } = useSession();
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);

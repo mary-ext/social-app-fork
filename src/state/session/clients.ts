@@ -1,5 +1,4 @@
 import { Client, simpleFetchHandler } from '@atcute/client';
-import type { OAuthUserAgent } from '@atcute/oauth-browser-client';
 
 import { PUBLIC_BSKY_SERVICE } from '#/lib/constants';
 
@@ -7,6 +6,7 @@ import { APPVIEW_PROXY_AUDIENCE, CHAT_PROXY_AUDIENCE } from '#/env';
 
 import { acceptLabelersHeaderValue } from './labelers';
 import { createOAuthFetchHandler, type FetchHandler, withNetworkEvents } from './network';
+import type { OAuthUserAgent } from './oauth';
 
 /**
  * xrpc clients backing every network call.

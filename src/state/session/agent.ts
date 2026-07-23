@@ -1,16 +1,10 @@
 import { type Client, ok } from '@atcute/client';
-import {
-	finalizeAuthorization,
-	getSession,
-	OAuthUserAgent,
-	type Session,
-} from '@atcute/oauth-browser-client';
 
 import { networkRetry } from '#/lib/async/retry';
 
 import { type Clients, createOAuthClients, createPublicClients } from './clients';
 import { configureModerationForAccount, configureModerationForGuest } from './moderation';
-import { configureAppOAuth } from './oauth';
+import { finalizeAuthorization, getSession, OAuthUserAgent, type Session } from './oauth';
 import type { SessionAccount } from './types';
 
 export class InactiveAccountError extends Error {
@@ -90,7 +84,6 @@ async function prepareOAuthSession(session: Session): Promise<{ account: Session
  * @returns the signed-in account and its client set.
  */
 export async function createOAuthSession(params: URLSearchParams) {
-	configureAppOAuth();
 	const { session } = await finalizeAuthorization(params);
 	return prepareOAuthSession(session);
 }
@@ -102,7 +95,6 @@ export async function createOAuthSession(params: URLSearchParams) {
  * @returns the account and its client set.
  */
 export async function resumeOAuthSession(storedAccount: SessionAccount) {
-	configureAppOAuth();
 	const session = await networkRetry(1, () => getSession(storedAccount.did));
 	return prepareOAuthSession(session);
 }
@@ -117,7 +109,6 @@ export async function resumeOAuthSession(storedAccount: SessionAccount) {
 export async function optimisticOAuthSession(
 	storedAccount: SessionAccount,
 ): Promise<{ clients: Clients; validate: () => Promise<SessionAccount> }> {
-	configureAppOAuth();
 	const session = await getSession(storedAccount.did, { allowStale: true });
 	const oauthAgent = new OAuthUserAgent(session);
 	const clients = createOAuthClients(oauthAgent);

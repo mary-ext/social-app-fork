@@ -24,7 +24,7 @@ import { typedKeys } from '#/lib/functions';
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 import { useThreadgateHiddenReplyUris } from '#/state/threadgate-hidden-replies';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
@@ -44,7 +44,7 @@ export function RQKEY(filter: 'all' | 'mentions') {
 }
 
 export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all' | 'mentions' }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
 	const unreads = useUnreadNotificationsApi();

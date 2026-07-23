@@ -16,7 +16,7 @@ import { Logger } from '#/logger';
 
 import * as PostFeed from '#/view/com/posts/PostFeed';
 
-import { useClients } from './session';
+import { getClients } from './session';
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS];
 
@@ -55,7 +55,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 	// create once per mount: Logger.create returns a fresh instance each call, so a render-time call would
 	// both allocate per render and make any callback depending on it change identity every render.
 	const logger = useConstant(() => Logger.create(Logger.Context.FeedFeedback));
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	const feed = !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo) ? feedSourceInfo : undefined;
 

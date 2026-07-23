@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { putRecord } from '#/lib/api/records';
 
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -21,7 +21,7 @@ export function useUpdateActorDeclaration({
 }) {
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation({
 		mutationFn: async (update: {

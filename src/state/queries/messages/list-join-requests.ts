@@ -6,7 +6,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useMessagesEventBus } from '#/state/messages/events';
 import { createQueryKey } from '#/state/queries/util';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { STALE } from '..';
 
@@ -24,7 +24,7 @@ export function useListJoinRequestsQuery({
 	convoId: string | undefined;
 	enabled?: boolean;
 }) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 	const queryClient = useQueryClient();
 	const messagesBus = useMessagesEventBus();
 	const isEnabled = enabled !== false && !!convoId;

@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 
 import { OzoneReason } from '#/lib/moderation/report-reasons';
 
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -78,7 +78,7 @@ function AppealDialog() {
 
 function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const [details, setDetails] = useState('');
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 
 	const { mutate, isPending } = useMutation({

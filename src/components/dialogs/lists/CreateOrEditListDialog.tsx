@@ -11,7 +11,7 @@ import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
 import type { ImageMeta } from '#/state/gallery';
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -123,7 +123,7 @@ function DialogInner({
 }) {
 	const activePurpose = list?.purpose || purpose || 'app.bsky.graph.defs#curatelist';
 	const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist';
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const {
 		mutateAsync: createListMutation,
 		error: createListError,

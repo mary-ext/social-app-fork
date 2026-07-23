@@ -3,7 +3,7 @@ import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 type ServiceConfig = {
 	checkEmailConfirmed: boolean;
@@ -15,7 +15,7 @@ type ServiceConfig = {
 };
 
 export function useServiceConfigQuery() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery<ServiceConfig>({
 		refetchOnWindowFocus: true,
 		staleTime: STALE.MINUTES.FIVE,

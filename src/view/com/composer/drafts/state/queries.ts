@@ -6,7 +6,7 @@ import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-q
 import { getDeviceId } from '#/lib/device-id';
 import { isNetworkError } from '#/lib/strings/errors';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import type { ComposerState } from '#/view/com/composer/state/composer';
 
@@ -18,7 +18,7 @@ const DRAFTS_QUERY_KEY = ['drafts'];
 
 /** Hook to list all drafts for the current account */
 export function useDraftsQuery() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useInfiniteQuery({
 		queryKey: DRAFTS_QUERY_KEY,
@@ -86,7 +86,7 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
 
 /** hook to save a draft */
 export function useSaveDraftMutation() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const queryClient = useQueryClient();
 
 	return useMutation({
@@ -196,7 +196,7 @@ export function useSaveDraftMutation() {
 
 /** Hook to delete a draft. Takes the full draft data to avoid re-fetching for media cleanup. */
 export function useDeleteDraftMutation() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const queryClient = useQueryClient();
 
 	return useMutation({
@@ -226,7 +226,7 @@ export function useDeleteDraftMutation() {
  * @param originalLocalRefs local media references associated with the draft
  */
 export function useCleanupPublishedDraftMutation() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const queryClient = useQueryClient();
 
 	return useMutation({

@@ -34,7 +34,7 @@ import {
 } from '#/state/queries/preferences/const';
 import type { ThreadViewPreferences, UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { createQueryKey } from '#/state/queries/util';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 import { saveLabelers } from '#/state/session/agent-config';
 import { setSubscribedLabelers } from '#/state/session/labelers';
 
@@ -51,7 +51,7 @@ export * from '#/state/queries/preferences/types';
 export const preferencesQueryKey = createQueryKey('getPreferences', {}, { persistedVersion: 1 });
 
 export function usePreferencesQuery() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 
 	const query = useQuery({
@@ -95,7 +95,7 @@ export function usePreferencesQuery() {
 }
 
 export function usePreferencesSetContentLabelMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const queryClient = useQueryClient();
 
 	return useMutation<
@@ -115,7 +115,7 @@ export function usePreferencesSetContentLabelMutation() {
 
 export function usePreferencesSetAdultContentMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation<void, unknown, { enabled: boolean }>({
 		mutationFn: async ({ enabled }) => {
@@ -130,7 +130,7 @@ export function usePreferencesSetAdultContentMutation() {
 
 export function useSetFeedViewPreferencesMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
 		mutationFn: async (prefs) => {
@@ -155,7 +155,7 @@ export function useSetThreadViewPreferencesMutation({
 	onError?: (error: unknown) => void;
 }) {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation<void, unknown, Partial<ThreadViewPreferences>>({
 		mutationFn: async (prefs) => {
@@ -172,7 +172,7 @@ export function useSetThreadViewPreferencesMutation({
 
 export function useOverwriteSavedFeedsMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
 		mutationFn: async (savedFeeds) => {
@@ -187,7 +187,7 @@ export function useOverwriteSavedFeedsMutation() {
 
 export function useAddSavedFeedsMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]>({
 		mutationFn: async (savedFeeds) => {
@@ -202,7 +202,7 @@ export function useAddSavedFeedsMutation() {
 
 export function useRemoveFeedMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
 		mutationFn: async (savedFeed) => {
@@ -266,7 +266,7 @@ export function useToggleSavedFeed({
 
 export function useReplaceForYouWithDiscoverFeedMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation({
 		mutationFn: async ({
@@ -305,7 +305,7 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
 
 export function useUpdateSavedFeedsMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
 		mutationFn: async (feeds) => {
@@ -321,7 +321,7 @@ export function useUpdateSavedFeedsMutation() {
 
 export function useUpsertMutedWordsMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation({
 		mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
@@ -336,7 +336,7 @@ export function useUpsertMutedWordsMutation() {
 
 export function useUpdateMutedWordMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation({
 		mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
@@ -351,7 +351,7 @@ export function useUpdateMutedWordMutation() {
 
 export function useRemoveMutedWordMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation({
 		mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
@@ -366,7 +366,7 @@ export function useRemoveMutedWordMutation() {
 
 export function useRemoveMutedWordsMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation({
 		mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
@@ -381,7 +381,7 @@ export function useRemoveMutedWordsMutation() {
 
 export function useSetVerificationPrefsMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation<void, unknown, AppBskyActorDefs.VerificationPrefs>({
 		mutationFn: async (prefs) => {

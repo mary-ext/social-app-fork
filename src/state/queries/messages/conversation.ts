@@ -11,7 +11,7 @@ import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tansta
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { useOnMarkAsRead } from '#/state/queries/messages/list-conversations';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import {
 	RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY,
@@ -28,7 +28,7 @@ export const RQKEY_ROOT = 'convo';
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId];
 
 export function useConvoQuery({ convoId }: { convoId: string }) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useQuery({
 		queryKey: RQKEY(convoId),
@@ -50,7 +50,7 @@ export function precacheConvoQuery(queryClient: QueryClient, convo: ChatBskyConv
 export function useMarkAsReadMutation() {
 	const optimisticUpdate = useOnMarkAsRead();
 	const queryClient = useQueryClient();
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useMutation({
 		mutationFn: async ({ convoId, messageId }: { convoId?: string; messageId?: string }) => {

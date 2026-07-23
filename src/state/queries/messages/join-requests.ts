@@ -9,7 +9,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -34,7 +34,7 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
 	},
 ) {
 	const queryClient = useQueryClient();
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useMutation({
 		mutationFn: async ({ member }: { member: Did }) => {

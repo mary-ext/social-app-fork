@@ -6,7 +6,7 @@ import type { ToolsOzoneReportDefs } from '@atcute/ozone';
 
 import { useMutation } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -16,7 +16,7 @@ import { NEW_TO_OLD_REASONS_MAP } from './const';
 import type { ParsedReportSubject } from './types';
 
 export function useSubmitReportMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation({
 		async mutationFn({

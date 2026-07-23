@@ -4,10 +4,10 @@ import { ok } from '@atcute/client';
 
 import { detectFacets, type Richtext } from '#/lib/strings/rich-text-facets';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export function useRichText(text: string): [Richtext, boolean] {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const [prevText, setPrevText] = useState(text);
 	const [rawRT, setRawRT] = useState<Richtext>(() => ({ text, facets: [] }));
 	const [resolvedRT, setResolvedRT] = useState<Richtext | null>(null);

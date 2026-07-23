@@ -6,7 +6,7 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { onVisibilityChange } from '#/lib/visibility';
 
 import { MessagesEventBus } from '#/state/messages/events/agent';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 const MessagesEventBusContext = createContext<MessagesEventBus | null>(null);
 MessagesEventBusContext.displayName = 'MessagesEventBusContext';
@@ -21,7 +21,7 @@ export function useMessagesEventBus() {
 
 export function MessagesEventBusProvider({ children }: { children: React.ReactNode }) {
 	const { currentAccount } = useSession();
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	if (!currentAccount || !chat) {
 		return <MessagesEventBusContext.Provider value={null}>{children}</MessagesEventBusContext.Provider>;

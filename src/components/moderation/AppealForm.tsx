@@ -11,7 +11,7 @@ import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
 import { makeProfileLink } from '#/lib/routes/links';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -42,7 +42,7 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 	const { labeler, strings } = useLabelInfo(label);
 	const [details, setDetails] = useState('');
 	const { subject } = useLabelSubject({ label });
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const sourceName = labeler ? `@${labeler.creator.handle}` : label.src;
 	const [error, setError] = useState<string | null>(null);
 

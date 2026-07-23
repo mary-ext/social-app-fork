@@ -25,7 +25,7 @@ import {
 	useSetThreadgateAllowMutation,
 	useThreadgateViewQuery,
 } from '#/state/queries/threadgate';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -520,7 +520,7 @@ export function usePrefetchPostInteractionSettings({
 	rootPostUri: ResourceUri;
 }) {
 	const queryClient = useQueryClient();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const getPost = useGetPost();
 
 	return async () => {

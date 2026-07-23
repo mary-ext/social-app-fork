@@ -14,7 +14,7 @@ import { until } from '#/lib/async/until';
 
 import type { ImageMeta } from '#/state/gallery';
 import { STALE } from '#/state/queries';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { FEED_INFO_RQKEY_ROOT } from './feed';
 import { invalidate as invalidateMyLists } from './my-lists';
@@ -33,7 +33,7 @@ const createDel = (recordUri: string): ComAtprotoRepoApplyWrites.$input['writes'
 };
 
 export function useListQuery(uri?: ResourceUri) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery<AppBskyGraphDefs.ListView>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(uri || ''),
@@ -61,7 +61,7 @@ export interface ListCreateMutateParams {
 }
 export function useListCreateMutation() {
 	const { currentAccount } = useSession();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation<{ uri: ResourceUri; cid: string }, Error, ListCreateMutateParams>({
 		async mutationFn({ purpose, name, description, descriptionFacets, avatar }) {
@@ -113,7 +113,7 @@ export interface ListMetadataMutateParams {
 }
 export function useListMetadataMutation() {
 	const { currentAccount } = useSession();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation<{ uri: ResourceUri; cid: string }, Error, ListMetadataMutateParams>({
 		async mutationFn({ uri, name, description, descriptionFacets, avatar }) {
@@ -171,7 +171,7 @@ export function useListMetadataMutation() {
 
 export function useListDeleteMutation() {
 	const { currentAccount } = useSession();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation<void, Error, { uri: ResourceUri }>({
 		mutationFn: async ({ uri }) => {
@@ -229,7 +229,7 @@ export function useListDeleteMutation() {
 
 export function useListMuteMutation() {
 	const queryClient = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useMutation<void, Error, { uri: ResourceUri; mute: boolean }>({
 		mutationFn: async ({ uri, mute }) => {
 			await ok(
@@ -253,7 +253,7 @@ export function useListMuteMutation() {
 
 export function useListBlockMutation() {
 	const { currentAccount } = useSession();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation<void, Error, { uri: ResourceUri; block: boolean }>({
 		mutationFn: async ({ uri, block }) => {

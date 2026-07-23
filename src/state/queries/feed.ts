@@ -29,7 +29,7 @@ import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { createQueryKey } from '#/state/queries/util';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
 
@@ -166,7 +166,7 @@ export function getFeedTypeFromUri(uri: string) {
 
 export function useFeedSourceInfoQuery({ uri }: { uri: string }) {
 	const type = getFeedTypeFromUri(uri);
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useQuery({
 		staleTime: STALE.INFINITY,
@@ -221,7 +221,7 @@ export function createGetPopularFeedsQueryKey(options?: GetPopularFeedsOptions) 
 
 export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 	const { hasSession } = useSession();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const limit = options?.limit || 10;
 	const { data: preferences } = usePreferencesQuery();
 	const queryClient = useQueryClient();
@@ -314,7 +314,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 }
 
 export function useSearchPopularFeedsMutation() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const moderationOpts = useModerationOpts();
 
 	return useMutation({
@@ -341,7 +341,7 @@ const popularFeedsSearchQueryKeyRoot = 'popularFeedsSearch';
 export const createPopularFeedsSearchQueryKey = (query: string) => [popularFeedsSearchQueryKeyRoot, query];
 
 export function usePopularFeedsSearch({ query, enabled }: { query: string; enabled?: boolean }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const moderationOpts = useModerationOpts();
 	const enabledInner = enabled ?? !!moderationOpts;
 
@@ -412,7 +412,7 @@ const createPinnedFeedInfosQueryKey = (kind: 'pinned' | 'saved', feedUris: strin
 
 export function usePinnedFeedsInfos() {
 	const { hasSession } = useSession();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { data: preferences, isLoading: isLoadingPrefs } = usePreferencesQuery();
 	const pinnedItems = preferences?.savedFeeds.filter((feed) => feed.pinned) ?? [];
 
@@ -520,7 +520,7 @@ export type SavedFeedItem =
 	  };
 
 export function useSavedFeeds() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { data: preferences, isLoading: isLoadingPrefs } = usePreferencesQuery();
 	const savedItems = preferences?.savedFeeds ?? [];
 	const queryClient = useQueryClient();

@@ -4,7 +4,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -18,7 +18,7 @@ export function useGetConvoForMembers({
 	onError?: (error: Error) => void;
 }) {
 	const queryClient = useQueryClient();
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useMutation({
 		mutationFn: async (members: Did[]) => {

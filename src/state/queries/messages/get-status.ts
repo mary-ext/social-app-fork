@@ -4,12 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
 import { createQueryKey } from '#/state/queries/util';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const chatActorStatusQueryKey = () => createQueryKey('chat-actor-status', {}, { persistedVersion: 1 });
 
 export function useChatActorStatusQuery() {
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useQuery({
 		gcTime: STALE.INFINITY,

@@ -6,7 +6,7 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
@@ -25,7 +25,7 @@ export function useProfileFollowsQuery(
 		limit: PAGE_SIZE,
 	},
 ) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useInfiniteQuery<
 		AppBskyGraphGetFollows.$output,
 		Error,

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { type SessionAccount, useSessionApi } from '#/state/session';
+import { switchAccount, type SessionAccount } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -11,7 +11,6 @@ import { m } from '#/paraglide/messages';
 
 export function useAccountSwitcher() {
 	const [pendingDid, setPendingDid] = useState<string | null>(null);
-	const { switchAccount } = useSessionApi();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const onPressSwitchAccount = useCallback(
@@ -35,7 +34,7 @@ export function useAccountSwitcher() {
 				setPendingDid(null);
 			}
 		},
-		[switchAccount, signinDialogHandle, pendingDid],
+		[pendingDid, signinDialogHandle],
 	);
 
 	return { onPressSwitchAccount, pendingDid };

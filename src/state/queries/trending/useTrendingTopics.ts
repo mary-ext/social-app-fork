@@ -10,7 +10,7 @@ import { hasMutedWord } from '#/lib/moderation/muted-words';
 
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic;
 
@@ -35,7 +35,7 @@ function dedup(topics: TrendingTopic[]): TrendingTopic[] {
 export const trendingTopicsQueryKey = ['trending-topics'];
 
 export function useTrendingTopics({ enabled = true }: { enabled?: boolean } = {}) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 	const keywordFilters = useMemo(
 		() => (preferences?.moderationPrefs?.mutedWords ?? []).map((word) => interpretMutedWordPreference(word)),

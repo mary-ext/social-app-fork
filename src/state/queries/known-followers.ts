@@ -5,7 +5,7 @@ import type { Did } from '@atcute/lexicons';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { registerShadowFinders } from '#/state/cache/registry';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const PAGE_SIZE = 50;
 type RQPageParam = string | undefined;
@@ -14,7 +14,7 @@ const RQKEY_ROOT = 'profile-known-followers';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
 export function useProfileKnownFollowersQuery(did: Did | undefined) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useInfiniteQuery<
 		AppBskyGraphGetKnownFollowers.$output,
 		Error,

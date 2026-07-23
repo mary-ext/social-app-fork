@@ -11,7 +11,7 @@ import { retry } from '#/lib/async/retry';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -50,7 +50,7 @@ export function useUpsertLiveStatusMutation(
 	createdAt?: string,
 ) {
 	const { currentAccount } = useSession();
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async () => {
@@ -168,7 +168,7 @@ export function useUpsertLiveStatusMutation(
 
 export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 	const { currentAccount } = useSession();
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async () => {

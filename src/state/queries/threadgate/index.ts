@@ -18,7 +18,7 @@ import {
 	threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate/util';
 import { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 import { useThreadgateHiddenReplyUrisAPI } from '#/state/threadgate-hidden-replies';
 
 export * from '#/state/queries/threadgate/types';
@@ -173,7 +173,7 @@ export async function upsertThreadgate(
 }
 
 export function useSetThreadgateAllowMutation() {
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const getPost = useGetPost();
@@ -235,7 +235,7 @@ export function useSetThreadgateAllowMutation() {
 }
 
 export function useToggleReplyVisibilityMutation() {
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const hiddenReplies = useThreadgateHiddenReplyUrisAPI();

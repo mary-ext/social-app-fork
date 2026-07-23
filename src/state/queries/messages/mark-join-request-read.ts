@@ -3,7 +3,7 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -12,7 +12,7 @@ import { type ConvoListQueryData, RQKEY_ROOT as CONVO_LIST_ROOT_KEY } from './li
 
 export function useMarkJoinRequestsRead(convoId: string | undefined) {
 	const queryClient = useQueryClient();
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useMutation({
 		mutationFn: async () => {

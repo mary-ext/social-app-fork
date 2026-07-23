@@ -1,3 +1,5 @@
+export * from '@atcute/oauth-browser-client';
+
 import { Client, ok, simpleFetchHandler } from '@atcute/client';
 import type { ActorResolver } from '@atcute/identity-resolver';
 import type { ActorIdentifier } from '@atcute/lexicons';
@@ -19,10 +21,6 @@ const IS_CONFIDENTIAL_CLIENT = !OAUTH_CLIENT_ID.startsWith('http://localhost');
 
 const CLIENT_ASSERTION_ENDPOINT = `${new URL(OAUTH_CLIENT_ID).origin}/xrpc/internal.app.getClientAssertion`;
 
-/**
- * fetches a DPoP-bound client assertion from the worker's client-assertion backend to authenticate the SPA as
- * a confidential client.
- */
 const fetchClientAssertion: ClientAssertionFetcher = async ({ aud, createDpopProof }) => {
 	const { client_assertion } = await ok(
 		internalClient.post('internal.app.getClientAssertion', {
@@ -36,36 +34,6 @@ const fetchClientAssertion: ClientAssertionFetcher = async ({ aud, createDpopPro
 		client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
 	};
 };
-
-let configured = false;
-
-export function configureAppOAuth() {
-	if (configured) {
-		return;
-	}
-
-	configureOAuth({
-		fetchClientAssertion: IS_CONFIDENTIAL_CLIENT ? fetchClientAssertion : undefined,
-		identityResolver: new SlingshotActorResolver(),
-		metadata: {
-			client_id: OAUTH_CLIENT_ID,
-			redirect_uri: OAUTH_REDIRECT_URI,
-		},
-	});
-	configured = true;
-}
-
-export async function startOAuthSignIn({ identifier }: { identifier: ActorIdentifier }) {
-	configureAppOAuth();
-
-	const authUrl = await createAuthorizationUrl({
-		target: { type: 'account', identifier },
-		scope: OAUTH_SCOPE,
-	});
-
-	await timeout(200);
-	window.location.assign(authUrl);
-}
 
 class SlingshotActorResolver implements ActorResolver {
 	private client = new Client({
@@ -88,4 +56,23 @@ class SlingshotActorResolver implements ActorResolver {
 			pds: new URL(resolved.pds).href,
 		};
 	}
+}
+
+configureOAuth({
+	fetchClientAssertion: IS_CONFIDENTIAL_CLIENT ? fetchClientAssertion : undefined,
+	identityResolver: new SlingshotActorResolver(),
+	metadata: {
+		client_id: OAUTH_CLIENT_ID,
+		redirect_uri: OAUTH_REDIRECT_URI,
+	},
+});
+
+export async function startOAuthSignIn({ identifier }: { identifier: ActorIdentifier }) {
+	const authUrl = await createAuthorizationUrl({
+		target: { type: 'account', identifier },
+		scope: OAUTH_SCOPE,
+	});
+
+	await timeout(200);
+	window.location.assign(authUrl);
 }

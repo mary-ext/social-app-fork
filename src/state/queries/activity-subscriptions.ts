@@ -15,7 +15,7 @@ import {
 import { getRecord, putRecord } from '#/lib/api/records';
 
 import { registerShadowFinders } from '#/state/cache/registry';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
 
@@ -25,7 +25,7 @@ export const RQKEY_getActivitySubscriptions = ['activity-subscriptions'];
 export const RQKEY_getNotificationDeclaration = ['notification-declaration'];
 
 export function useNotificationDeclarationQuery() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useQuery({
 		queryKey: RQKEY_getNotificationDeclaration,
@@ -53,7 +53,7 @@ export function useNotificationDeclarationQuery() {
 }
 
 export function useNotificationDeclarationMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	return useMutation({

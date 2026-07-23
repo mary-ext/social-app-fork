@@ -16,7 +16,7 @@ import { useMessagesEventBus } from '#/state/messages/events';
 import { RQKEY as getConvoKey, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
 import { RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations';
 import { RQKEY as createProfileQueryKey } from '#/state/queries/profile';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { useFocusEffect } from '#/routes';
 
@@ -60,7 +60,7 @@ export function ConvoProvider({
 	children,
 	convoId,
 }: Pick<ConvoParams, 'convoId'> & { children: React.ReactNode }) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 	const { currentAccount } = useSession();
 	if (!chat || !currentAccount) {
 		throw new Error('ConvoProvider must be rendered while signed in');

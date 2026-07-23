@@ -17,7 +17,7 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
-import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
+import { removeAccount, type SessionAccount, useSession } from '#/state/session';
 
 import { AvatarStack } from '#/components/AvatarStack';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
@@ -213,7 +213,6 @@ function OtherAccountRow({
 	profile?: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const removePromptHandle = Prompt.usePromptHandle();
-	const { removeAccount } = useSessionApi();
 	const { isActive: live } = useActorStatus(profile);
 
 	return (

@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { OzoneReason } from '#/lib/moderation/report-reasons';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -45,7 +45,7 @@ function DialogInner({
 	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const [details, setDetails] = useState('');
 
 	const { mutate, isPending } = useMutation({

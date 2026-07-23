@@ -16,7 +16,7 @@ import { createGetSuggestedUsersForDiscoverQueryKey } from '#/state/queries/tren
 import { createGetSuggestedUsersForExploreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
 import { createGetSuggestedUsersForSeeMoreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
 import { createSuggestedStarterPacksQueryKey } from '#/state/queries/useSuggestedStarterPacksQuery';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -72,7 +72,7 @@ function Inner({
 	preferences: UsePreferencesQueryResponse;
 	setIsSaving: (isSaving: boolean) => void;
 }) {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const qc = useQueryClient();
 	const interestsDisplayNames = useInterestsDisplayNames();
 	const preselectedInterests = useMemo(() => preferences.interests.tags || [], [preferences.interests.tags]);

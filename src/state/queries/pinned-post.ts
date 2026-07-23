@@ -12,12 +12,12 @@ import * as Toast from '#/components/Toast';
 import { m } from '#/paraglide/messages';
 
 import { updatePostShadow } from '../cache/post-shadow';
-import { useClients, useSession } from '../session';
+import { getClients, useSession } from '../session';
 import { useProfileUpdateMutation } from './profile';
 
 export function usePinnedPostMutation() {
 	const { currentAccount } = useSession();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const queryClient = useQueryClient();
 	const { mutateAsync: profileUpdateMutate } = useProfileUpdateMutation();
 

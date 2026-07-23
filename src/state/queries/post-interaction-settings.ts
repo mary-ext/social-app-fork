@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { preferencesQueryKey } from '#/state/queries/preferences';
 import { setPostInteractionSettings } from '#/state/queries/preferences/agent';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export function usePostInteractionSettingsMutation({
 	onError,
@@ -14,7 +14,7 @@ export function usePostInteractionSettingsMutation({
 	onSettled?: () => void;
 } = {}) {
 	const qc = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 	return useMutation({
 		async mutationFn(props: AppBskyActorDefs.PostInteractionSettingsPref) {
 			await setPostInteractionSettings(pds!, props);

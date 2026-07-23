@@ -4,7 +4,7 @@ import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -33,7 +33,7 @@ export function useLeaveConvo(
 	},
 ) {
 	const queryClient = useQueryClient();
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useMutation({
 		mutationKey: RQKEY(convoId),

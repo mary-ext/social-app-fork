@@ -27,7 +27,7 @@ import {
 } from '#/state/queries/usePostThread/types';
 import { getThreadgateRecord } from '#/state/queries/usePostThread/utils';
 import * as views from '#/state/queries/usePostThread/views';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 import { useMergeThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
 export * from '#/state/queries/usePostThread/context';
@@ -36,7 +36,7 @@ export * from '#/state/queries/usePostThread/types';
 
 export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	const qc = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { hasSession } = useSession();
 	const { gtPhone } = useBreakpoints();
 	const moderationOpts = useModerationOpts();

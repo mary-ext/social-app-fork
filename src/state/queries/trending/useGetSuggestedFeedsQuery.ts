@@ -7,14 +7,14 @@ import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/u
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export const DEFAULT_LIMIT = 15;
 
 export const createGetSuggestedFeedsQueryKey = () => ['suggested-feeds'];
 
 export function useGetSuggestedFeedsQuery({ enabled }: { enabled?: boolean }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 	const savedFeeds = preferences?.savedFeeds;
 

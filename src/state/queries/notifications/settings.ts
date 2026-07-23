@@ -3,7 +3,7 @@ import { ok } from '@atcute/client';
 
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -52,7 +52,7 @@ type AppNotificationSettingsUpdate = Partial<Omit<AppBskyNotificationDefs.Prefer
 type ChatNotificationSettingsUpdate = Partial<ChatNotificationSettingsPreferences>;
 
 export function useNotificationSettingsQuery({ enabled }: { enabled?: boolean } = {}) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useQuery({
 		queryKey: RQKEY_APP,
@@ -65,7 +65,7 @@ export function useNotificationSettingsQuery({ enabled }: { enabled?: boolean } 
 }
 
 export function useChatNotificationSettingsQuery({ enabled }: { enabled?: boolean } = {}) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useQuery({
 		queryKey: RQKEY_CHAT,
@@ -81,7 +81,7 @@ export function useChatNotificationSettingsQuery({ enabled }: { enabled?: boolea
 }
 
 export function useNotificationSettingsUpdateMutation() {
-	const { appview, chat } = useClients();
+	const { appview, chat } = getClients();
 	const queryClient = useQueryClient();
 
 	return useMutation({

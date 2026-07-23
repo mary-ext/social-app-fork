@@ -42,7 +42,7 @@ import { isDocumentVisible } from '#/lib/visibility';
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import { logger } from '#/logger';
@@ -130,7 +130,7 @@ export function usePostFeedQuery(
 	/** awaits Active Assistant (AA) state to prevent flash of unstyled content (FOUC). */
 	const enabled = opts?.enabled !== false && !!moderationOpts && !!preferences;
 	const userInterests = aggregateUserInterests(preferences);
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { hasSession } = useSession();
 	const lastRun = useRef<{
 		data: InfiniteData<FeedPageUnselected>;

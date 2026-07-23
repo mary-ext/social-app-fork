@@ -20,7 +20,7 @@ import {
 	mergePostgateRecords,
 	POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -140,7 +140,7 @@ export async function upsertPostgate(
 
 export const createPostgateQueryKey = (postUri: string) => ['postgate-record', postUri];
 export function usePostgateQuery({ postUri }: { postUri: ResourceUri }) {
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	return useQuery({
 		staleTime: STALE.SECONDS.THIRTY,
 		queryKey: createPostgateQueryKey(postUri),
@@ -151,7 +151,7 @@ export function usePostgateQuery({ postUri }: { postUri: ResourceUri }) {
 }
 
 export function useWritePostgateMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	return useMutation({
@@ -178,7 +178,7 @@ export function useWritePostgateMutation() {
 }
 
 export function useToggleQuoteDetachmentMutation() {
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const getPosts = useGetPosts();

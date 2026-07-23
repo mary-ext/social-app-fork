@@ -4,7 +4,7 @@ import { type Client, ok } from '@atcute/client';
 import { type QueryClient, type QueryKey, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { createQueryKey } from '#/state/queries/util';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -91,7 +91,7 @@ export function useJoinLinkPreviewsQuery({
 	 */
 	initialData?: ChatBskyGroupGetJoinLinkPreviews.$output;
 }) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useQuery({
 		queryKey: createJoinLinkPreviewQueryKey({ codes: codes ?? [], hasSession }),
@@ -119,7 +119,7 @@ export function useJoinLinkPreviewsQuery({
  * @returns the preview, or undefined if it cannot be resolved
  */
 export function useGetJoinLinkPreview() {
-	const { chat } = useClients();
+	const { chat } = getClients();
 	const queryClient = useQueryClient();
 
 	return async ({

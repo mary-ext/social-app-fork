@@ -5,10 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord } from '#/lib/api/records';
 
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 export function useLikeMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useMutation({
 		mutationFn: async ({ uri, cid }: { uri: string; cid: string }) => {
@@ -28,7 +28,7 @@ export function useLikeMutation() {
 }
 
 export function useUnlikeMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useMutation({
 		mutationFn: async ({ uri }: { uri: string }) => {

@@ -6,14 +6,14 @@ import { ok } from '@atcute/client';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
 /** fetches a fresh verification state from the app view and updates the profile cache. */
 export function useUpdateProfileVerificationCache() {
 	const qc = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useCallback(
 		async ({ profile }: { profile: AnyProfileView }) => {

@@ -6,7 +6,7 @@ import { type QueryClient, useQuery } from '@tanstack/react-query';
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { createQueryKey } from '#/state/queries/util';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const RQKEY_ROOT = 'listConvoMembers';
 export const listConvoMembersQueryKey = (convoId: string) => createQueryKey(RQKEY_ROOT, { convoId });
@@ -21,7 +21,7 @@ export function useListConvoMembersQuery({
 	convoId: string;
 	placeholderData?: ChatBskyActorDefs.ProfileViewBasic[];
 }) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useQuery({
 		queryKey: listConvoMembersQueryKey(convoId),

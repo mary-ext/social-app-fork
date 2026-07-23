@@ -24,7 +24,7 @@ import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-l
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useShortenLink } from '#/state/queries/shorten-link';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -203,7 +203,7 @@ function Header({
 	onOpenShareDialog: () => void;
 }) {
 	const { currentAccount, hasSession } = useSession();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 

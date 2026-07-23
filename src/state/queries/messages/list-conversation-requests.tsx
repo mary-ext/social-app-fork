@@ -4,7 +4,7 @@ import { ok } from '@atcute/client';
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
 import { registerShadowFinders } from '#/state/cache/registry';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const DEFAULT_LIMIT = 10;
 
@@ -15,7 +15,7 @@ export function useListConvoRequests({
 	enabled = true,
 	limit = DEFAULT_LIMIT,
 }: { enabled?: boolean; limit?: number } = {}) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useInfiniteQuery({
 		enabled,

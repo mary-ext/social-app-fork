@@ -27,7 +27,7 @@ import {
 import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 import { STALE } from '#/state/queries/index';
 import { invalidateListMembersQuery } from '#/state/queries/list-members';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 async function detectDescriptionFacets(
 	appview: Client,
@@ -55,7 +55,7 @@ const RQKEY = ({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }
 };
 
 export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useQuery<AppBskyGraphDefs.StarterPackView>({
 		queryKey: RQKEY(uri ? { uri } : { did, rkey }),
@@ -106,7 +106,7 @@ export function useCreateStarterPackMutation({
 	onError: (e: Error) => void;
 }) {
 	const queryClient = useQueryClient();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
 
 	return useMutation<{ cid: Cid; uri: ResourceUri }, Error, UseCreateStarterPackMutationParams>({
@@ -164,7 +164,7 @@ export function useEditStarterPackMutation({
 	onError: (error: Error) => void;
 }) {
 	const queryClient = useQueryClient();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
 
 	return useMutation<
@@ -284,7 +284,7 @@ export function useDeleteStarterPackMutation({
 	onSuccess: () => void;
 	onError: (error: Error) => void;
 }) {
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 

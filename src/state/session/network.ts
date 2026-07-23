@@ -1,6 +1,6 @@
-import type { OAuthUserAgent } from '@atcute/oauth-browser-client';
-
 import { networkConfirmed, networkLost, sessionDropped } from '#/state/events';
+
+import type { OAuthUserAgent } from './oauth';
 
 /**
  * A fetch handler shape compatible with both `@atproto/api`'s session manager and `@atcute/client`'s `Client`

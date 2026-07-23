@@ -5,7 +5,7 @@ import { type QueryClient, useQuery } from '@tanstack/react-query';
 import { type ResolvedLink, resolveGif, resolveLink } from '#/lib/api/resolve';
 
 import { STALE } from '#/state/queries/index';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import type { Gif } from '#/features/gifPicker/types';
 
@@ -16,7 +16,7 @@ export const RQKEY_GIF_ROOT = 'resolve-gif';
 export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url];
 
 export function useResolveLinkQuery(url: string) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useQuery({
 		staleTime: STALE.HOURS.ONE,

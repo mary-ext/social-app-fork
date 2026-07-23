@@ -41,7 +41,7 @@ import {
 	useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
-import { getClients, useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations';
@@ -79,7 +79,7 @@ export function useProfileQuery({
 	did: Did | undefined;
 	staleTime?: number;
 }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 	return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
 		// WARNING
@@ -161,7 +161,7 @@ interface ProfileUpdateParams {
 }
 export function useProfileUpdateMutation() {
 	const queryClient = useQueryClient();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const updateProfileVerificationCache = useUpdateProfileVerificationCache();
 	return useMutation<void, Error, ProfileUpdateParams>({
 		mutationFn: async ({ profile, updates, newUserAvatar, newUserBanner, checkCommitted }) => {
@@ -237,7 +237,7 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
 	const did = profile.did;
@@ -344,7 +344,7 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 }
 
 function useProfileFollowMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 
 	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: Did }>({
@@ -363,7 +363,7 @@ function useProfileFollowMutation() {
 }
 
 function useProfileUnfollowMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useMutation<void, Error, { did: Did; followUri: string }>({
 		mutationFn: async ({ followUri }) => {
@@ -425,7 +425,7 @@ export function useProfileMuteMutationQueue(profile: Shadow<AnyProfileView>) {
 
 function useProfileMuteMutation() {
 	const queryClient = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useMutation<void, Error, { did: Did }>({
 		mutationFn: async ({ did }) => {
 			await ok(
@@ -443,7 +443,7 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
 	const queryClient = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useMutation<void, Error, { did: Did }>({
 		mutationFn: async ({ did }) => {
 			await ok(
@@ -518,7 +518,7 @@ export function useProfileBlockMutationQueue(profile: Shadow<AnyProfileView>) {
 
 function useProfileBlockMutation() {
 	const { currentAccount } = useSession();
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: Did }>({
 		mutationFn: async ({ did }) => {
@@ -544,7 +544,7 @@ function useProfileBlockMutation() {
 
 function useProfileUnblockMutation() {
 	const { currentAccount } = useSession();
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation<void, Error, { did: Did; blockUri: string }>({
 		mutationFn: async ({ blockUri }) => {

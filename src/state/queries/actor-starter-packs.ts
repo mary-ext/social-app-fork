@@ -3,7 +3,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export const RQKEY_ROOT = 'actor-starter-packs';
 export const RQKEY_WITH_MEMBERSHIP_ROOT = 'actor-starter-packs-with-membership';
@@ -11,7 +11,7 @@ export const RQKEY = (did?: string) => [RQKEY_ROOT, did];
 export const RQKEY_WITH_MEMBERSHIP = (did?: string) => [RQKEY_WITH_MEMBERSHIP_ROOT, did];
 
 export function useActorStarterPacksQuery({ did, enabled = true }: { did?: Did; enabled?: boolean }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useInfiniteQuery({
 		queryKey: RQKEY(did),
@@ -34,7 +34,7 @@ export function useActorStarterPacksWithMembershipsQuery({
 	did?: Did;
 	enabled?: boolean;
 }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useInfiniteQuery({
 		queryKey: RQKEY_WITH_MEMBERSHIP(did),

@@ -11,7 +11,7 @@ import {
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export const RQKEY_ROOT = 'actor-search';
 export const RQKEY = (query: string, limit?: number) => [RQKEY_ROOT, query, limit];
@@ -27,7 +27,7 @@ export function useActorSearch({
 	maintainData?: boolean;
 	limit?: number;
 }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useInfiniteQuery<
 		AppBskyActorSearchActors.$output,
 		Error,

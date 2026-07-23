@@ -3,7 +3,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { STALE } from '..';
 
@@ -11,7 +11,7 @@ const RQKEY_ROOT = 'convo-availability';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 
 export function useGetConvoAvailabilityQuery(did: Did, { enabled = true }: { enabled?: boolean } = {}) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useQuery({
 		queryKey: RQKEY(did),

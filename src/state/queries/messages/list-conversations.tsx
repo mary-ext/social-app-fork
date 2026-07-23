@@ -18,7 +18,7 @@ import { registerShadowFinders } from '#/state/cache/registry';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useMessagesEventBus } from '#/state/messages/events';
 import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { RQKEY as CONVO_KEY } from './conversation';
 import {
@@ -119,7 +119,7 @@ export function useListConvosQuery({
 	limit?: number;
 	lockStatus?: 'unlocked' | 'locked' | 'locked-permanently';
 } = {}) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useInfiniteQuery({
 		enabled,

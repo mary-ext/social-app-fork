@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useCallOnce } from '#/lib/once';
 
-import { useSessionApi } from '#/state/session';
+import { completeOAuthCallback } from '#/state/session';
 import { InactiveAccountError } from '#/state/session/agent';
 
 import { logger } from '#/logger';
@@ -17,7 +17,6 @@ import * as Toast from '#/components/Toast';
 import { m } from '#/paraglide/messages';
 
 export function OAuthCallback() {
-	const { completeOAuthCallback } = useSessionApi();
 	const [error, setError] = useState('');
 	const runOnce = useCallOnce();
 
@@ -42,7 +41,7 @@ export function OAuthCallback() {
 					}
 				});
 		});
-	}, [runOnce, completeOAuthCallback]);
+	}, [runOnce]);
 
 	return (
 		<div className={css.container}>

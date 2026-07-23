@@ -9,7 +9,7 @@ import { registerShadowFinders } from '#/state/cache/registry';
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -24,7 +24,7 @@ export const createGetSuggestedUsersForDiscoverQueryKey = (props: { limit?: numb
 ];
 
 export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 
 	return useQuery({

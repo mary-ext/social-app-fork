@@ -11,7 +11,7 @@ import {
 	optimisticallyDeleteBookmark,
 	optimisticallySaveBookmark,
 } from '#/state/queries/bookmarks/useBookmarksQuery';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -25,7 +25,7 @@ type MutationArgs =
 
 export function useBookmarkMutation() {
 	const qc = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useMutation({
 		async mutationFn(args: MutationArgs) {

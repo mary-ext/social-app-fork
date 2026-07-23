@@ -4,7 +4,7 @@ import type { Did } from '@atcute/lexicons';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { createQueryKey } from '#/state/queries/util';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const listMutualGroupsQueryKeyRoot = 'list-mutual-groups';
 
@@ -20,7 +20,7 @@ export function useListMutualGroupsQuery({
 	enabled?: boolean;
 	limit?: number;
 }) {
-	const { chat } = useClients();
+	const { chat } = getClients();
 	const isEnabled = enabled !== false && !!subject;
 
 	return useInfiniteQuery({

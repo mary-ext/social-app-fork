@@ -16,7 +16,7 @@ import { toModerationPreferences } from '#/lib/moderation/prefs';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import type {
 	AutocompleteApi,
@@ -43,7 +43,7 @@ export function useAutocomplete({
 	limit?: number;
 	showSearchFallback?: boolean;
 }): AutocompleteApi {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const moderationOpts = useModerationOpts();
 	const emojiSearch = useEmojiSearch();
 

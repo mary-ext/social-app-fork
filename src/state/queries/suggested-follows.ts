@@ -10,7 +10,7 @@ import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows';
 
@@ -26,7 +26,7 @@ export function useSuggestedFollowsByActorQuery({
 	enabled?: boolean;
 	staleTime?: number;
 }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery({
 		staleTime,
 		queryKey: suggestedFollowsByActorQueryKey(did),

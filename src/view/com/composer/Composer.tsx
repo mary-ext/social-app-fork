@@ -42,7 +42,7 @@ import { type ComposerImage, createComposerImage } from '#/state/gallery';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -114,7 +114,7 @@ export const ComposePost = ({
 	cancelRef?: React.RefObject<CancelRef | null>;
 }) => {
 	const { currentAccount } = useSession();
-	const { appview, pds, pdsUrl } = useClients();
+	const { appview, pds, pdsUrl } = getClients();
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
 	const { closeComposer } = useComposerControls();

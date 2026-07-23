@@ -9,7 +9,7 @@ import { until } from '#/lib/async/until';
 import { errorMessage, isNetworkError } from '#/lib/strings/errors';
 
 import { RQKEY } from '#/state/queries/profile';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -37,7 +37,7 @@ export function GermSelfDialog({ did, handle }: { did: Did; handle: Dialog.Dialo
 }
 
 function DialogInner({ did, handle }: { did: Did; handle: Dialog.DialogHandle }) {
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
 
 	const { mutate: deleteDeclaration, isPending } = useMutation({

@@ -4,7 +4,7 @@ import { ok } from '@atcute/client';
 
 import { saveBytesToDisk } from '#/lib/media/manip';
 
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -34,7 +34,7 @@ export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 }
 
 function DialogInner() {
-	const { chat, pds } = useClients();
+	const { chat, pds } = getClients();
 	const { currentAccount } = useSession();
 	const [loading, setLoading] = useState<'chat' | 'repo' | false>(false);
 

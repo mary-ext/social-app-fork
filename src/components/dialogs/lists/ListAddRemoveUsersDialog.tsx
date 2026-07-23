@@ -17,7 +17,7 @@ import {
 	useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dialogs/lists/ListAddRemoveUsersDialog.css';
@@ -60,7 +60,7 @@ function DialogInner({
 	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void;
 }) {
 	const { currentAccount } = useSession();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const moderationOpts = useModerationOpts();
 	const [searchText, setSearchText] = useState('');
 	// dids whose add/remove mutation is in flight, so the row shows a spinner in place of the checkmark until

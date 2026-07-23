@@ -12,7 +12,7 @@ import {
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
@@ -23,7 +23,7 @@ export const RQKEY = (uri: string) => [RQKEY_ROOT, uri];
 export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri];
 
 export function useListMembersQuery(uri?: ResourceUri, limit: number = PAGE_SIZE) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useInfiniteQuery<
 		AppBskyGraphGetList.$output,
 		Error,
@@ -50,7 +50,7 @@ export function useListMembersQuery(uri?: ResourceUri, limit: number = PAGE_SIZE
 }
 
 export function useAllListMembersQuery(uri?: ResourceUri) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY_ALL(uri ?? ''),

@@ -19,7 +19,7 @@ import { useFetchHandle } from '#/state/queries/handle';
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
-import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
+import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/session';
 
 import { NavSignInCard } from '#/view/shell/NavSignInCard';
 
@@ -79,7 +79,6 @@ import * as css from './LeftNav.css';
 
 function ProfileCard({ minimal }: { minimal: boolean }) {
 	const { currentAccount, accounts } = useSession();
-	const { logoutEveryAccount } = useSessionApi();
 	const { isLoading, data } = useProfilesQuery({
 		dids: accounts.map((acc) => acc.did),
 	});

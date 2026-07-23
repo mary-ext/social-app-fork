@@ -11,7 +11,7 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { registerShadowFinders } from '#/state/cache/registry';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
@@ -22,7 +22,7 @@ const RQKEY_ROOT = 'post-quotes';
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri];
 
 export function usePostQuotesQuery(resolvedUri: ResourceUri | undefined) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useInfiniteQuery<
 		AppBskyFeedGetQuotes.$output,
 		Error,

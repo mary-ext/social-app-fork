@@ -15,7 +15,7 @@ import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from './preferences';
@@ -30,7 +30,7 @@ export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix];
 
 export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean, limit?: number) {
 	const moderationOpts = useModerationOpts();
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	let normalizedPrefix = prefix.toLowerCase().trim();
 	if (normalizedPrefix.endsWith('.')) {
@@ -84,7 +84,7 @@ export function useSearchActorAutocompleteQuery({
 	self: AnyProfileView | undefined;
 }) {
 	const moderationOpts = useModerationOpts();
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	let normalizedPrefix = query.toLowerCase().trim();
 	if (normalizedPrefix.endsWith('.')) {

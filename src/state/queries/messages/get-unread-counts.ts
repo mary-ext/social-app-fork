@@ -2,7 +2,7 @@ import { ok } from '@atcute/client';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { STALE } from '..';
 
@@ -19,7 +19,7 @@ export const UNREAD_REQUEST_CAP = 100;
 
 export function useUnreadCountsQuery() {
 	const { hasSession } = useSession();
-	const { chat } = useClients();
+	const { chat } = getClients();
 	// no age assurance in this fork, so group chats are always counted
 	const includeGroupChats = true;
 

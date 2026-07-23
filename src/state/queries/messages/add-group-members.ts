@@ -11,7 +11,7 @@ import type { Did } from '@atcute/lexicons';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useProfileQuery } from '#/state/queries/profile';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -30,7 +30,7 @@ export function useAddGroupMembers(
 	},
 ) {
 	const queryClient = useQueryClient();
-	const { chat } = useClients();
+	const { chat } = getClients();
 	const { currentAccount } = useSession();
 	const { data: myProfile } = useProfileQuery({ did: currentAccount?.did });
 

@@ -13,7 +13,7 @@ import { typedKeys } from '#/lib/functions';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
@@ -39,7 +39,7 @@ export function useSearchPostsQuery({
 	query: string;
 	sort?: 'top' | 'latest';
 }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 	const viewerDid = currentAccount?.did;

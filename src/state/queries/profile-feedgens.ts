@@ -10,7 +10,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
 
@@ -24,7 +24,7 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 export function useProfileFeedgensQuery(did: Did) {
 	const moderationOpts = useModerationOpts();
 	const enabled = !!moderationOpts;
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useInfiniteQuery<
 		AppBskyFeedGetActorFeeds.$output,
 		Error,

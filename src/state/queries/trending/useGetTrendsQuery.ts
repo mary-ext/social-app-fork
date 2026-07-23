@@ -12,14 +12,14 @@ import { hasMutedWord } from '#/lib/moderation/muted-words';
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export const DEFAULT_LIMIT = 5;
 
 export const createGetTrendsQueryKey = () => ['trends'];
 
 export function useGetTrendsQuery() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 	const keywordFilters = useMemo(() => {
 		return (preferences?.moderationPrefs?.mutedWords || []).map((word) => interpretMutedWordPreference(word));

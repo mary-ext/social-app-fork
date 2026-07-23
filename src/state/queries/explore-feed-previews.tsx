@@ -22,7 +22,7 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import type { FeedPostSlice, FeedPostSliceItem } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
 
@@ -113,7 +113,7 @@ export function useFeedPreviews(
 	);
 
 	const uris = feeds.map((feed) => feed.uri);
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 	const userInterests = aggregateUserInterests(preferences);
 	const moderationOpts = useModerationOpts();

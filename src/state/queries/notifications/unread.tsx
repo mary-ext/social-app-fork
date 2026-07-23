@@ -11,7 +11,7 @@ import { isDocumentVisible } from '#/lib/visibility';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { truncateAndInvalidate } from '#/state/queries/util';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { RQKEY as RQKEY_NOTIFS } from './feed';
 import type { CachedFeedPage, FeedPage } from './types';
@@ -41,7 +41,7 @@ apiContext.displayName = 'NotificationsUnreadApiContext';
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const { hasSession } = useSession();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
 

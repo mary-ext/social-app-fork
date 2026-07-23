@@ -14,7 +14,7 @@ import { cleanError } from '#/lib/strings/errors';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -70,7 +70,7 @@ function DialogInner({
 	moderationOpts: ModerationOptions;
 	includeProfile?: boolean;
 }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const queryClient = useQueryClient();
 	const initialState = parseActivitySubscription(profile.viewer?.activitySubscription);
 	const [state, setState] = useState(initialState);

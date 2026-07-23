@@ -21,7 +21,7 @@ import { accumulate } from '#/lib/async/accumulate';
 
 import { STALE } from '#/state/queries';
 import { RQKEY as LIST_MEMBERS_RQKEY } from '#/state/queries/list-members';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import { RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY } from './actor-starter-packs';
 
@@ -56,7 +56,7 @@ export function listsWithMembershipQueryOptions({
 }
 
 export function useListsWithMembershipQuery(params: { actor?: Did; enabled?: boolean }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery(listsWithMembershipQueryOptions({ ...params, appview }));
 }
 
@@ -68,7 +68,7 @@ export function useListMembershipAddMutation({
 	onError?: (error: Error) => void;
 } = {}) {
 	const { currentAccount } = useSession();
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const queryClient = useQueryClient();
 	// `subject` (the added profile) drives the optimistic membership cache updates in onSuccess below.
 	return useMutation<
@@ -190,7 +190,7 @@ export function useListMembershipRemoveMutation({
 	onError?: (error: Error) => void;
 } = {}) {
 	const { currentAccount } = useSession();
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const queryClient = useQueryClient();
 	return useMutation<void, Error, { listUri: ResourceUri; actorDid: Did; membershipUri: ResourceUri }>({
 		mutationFn: async ({ membershipUri }) => {

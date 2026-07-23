@@ -7,7 +7,7 @@ import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/u
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export const createSuggestedStarterPacksQueryKey = (interests?: string[]) => [
 	'suggested-starter-packs',
@@ -21,7 +21,7 @@ export function useSuggestedStarterPacksQuery({
 	enabled?: boolean;
 	overrideInterests?: string[];
 }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 	const contentLangs = getContentLanguages().join(',');
 

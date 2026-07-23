@@ -10,7 +10,7 @@ import { GCTIME, STALE } from '#/state/queries';
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
 import { addLabeler, removeLabeler } from '#/state/queries/preferences/agent';
 import { createQueryKey } from '#/state/queries/util';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const labelerInfoQueryKeyRoot = 'labeler-info';
 export const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did];
@@ -19,7 +19,7 @@ const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
 	createQueryKey('labelers-detailed-info', { dids }, { persistedVersion: 1 });
 
 export function useLabelerInfoQuery({ did, enabled }: { did?: Did; enabled?: boolean }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery({
 		enabled: !!did && enabled !== false,
 		queryKey: labelerInfoQueryKey(did ?? ''),
@@ -36,7 +36,7 @@ export function useLabelerInfoQuery({ did, enabled }: { did?: Did; enabled?: boo
 }
 
 export function useLabelersDetailedInfoQuery({ dids }: { dids: Did[] }) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery({
 		enabled: !!dids.length,
 		queryKey: createLabelersDetailedInfoQueryKey(dids),
@@ -56,7 +56,7 @@ export function useLabelersDetailedInfoQuery({ dids }: { dids: Did[] }) {
 
 export function useRemoveLabelersMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 
 	return useMutation({
 		async mutationFn({ dids }: { dids: Did[] }) {
@@ -72,7 +72,7 @@ export function useRemoveLabelersMutation() {
 
 export function useLabelerSubscriptionMutation() {
 	const queryClient = useQueryClient();
-	const { appview, pds } = useClients();
+	const { appview, pds } = getClients();
 	const preferences = usePreferencesQuery();
 
 	return useMutation({

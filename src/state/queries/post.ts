@@ -12,7 +12,7 @@ import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import type { Shadow } from '#/state/cache/types';
-import { useClients, useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
@@ -21,7 +21,7 @@ const RQKEY_ROOT = 'post';
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri];
 
 export function usePostQuery(uri: ResourceUri | undefined) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useQuery<AppBskyFeedDefs.PostView>({
 		queryKey: RQKEY(uri || ''),
 		queryFn: async () => {
@@ -58,7 +58,7 @@ export function usePostQuery(uri: ResourceUri | undefined) {
 
 export function useGetPost() {
 	const queryClient = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useCallback(
 		async ({ uri }: { uri: ResourceUri }) => {
 			return queryClient.fetchQuery({
@@ -96,7 +96,7 @@ export function useGetPost() {
 
 export function useGetPosts() {
 	const queryClient = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useCallback(
 		async ({ uris }: { uris: ResourceUri[] }) => {
 			return queryClient.fetchQuery({
@@ -176,7 +176,7 @@ export function usePostLikeMutationQueue(
 }
 
 function usePostLikeMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useMutation<
 		{ uri: ResourceUri }, // responds with the uri of the like
@@ -199,7 +199,7 @@ function usePostLikeMutation() {
 }
 
 function usePostUnlikeMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useMutation<void, Error, { postUri: string; likeUri: string }>({
 		mutationFn: ({ postUri: _postUri, likeUri }) => {
@@ -271,7 +271,7 @@ export function usePostRepostMutationQueue(
 }
 
 function usePostRepostMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useMutation<
 		{ uri: ResourceUri }, // responds with the uri of the repost
@@ -294,7 +294,7 @@ function usePostRepostMutation() {
 }
 
 function usePostUnrepostMutation() {
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useMutation<void, Error, { postUri: string; repostUri: string }>({
 		mutationFn: ({ postUri: _postUri, repostUri }) => {
@@ -309,7 +309,7 @@ function usePostUnrepostMutation() {
 
 export function usePostDeleteMutation() {
 	const queryClient = useQueryClient();
-	const { pds } = useClients();
+	const { pds } = getClients();
 	const { currentAccount } = useSession();
 	return useMutation<void, Error, { uri: string }>({
 		mutationFn: async ({ uri }) => {
@@ -368,7 +368,7 @@ export function useThreadMuteMutationQueue(post: Shadow<AppBskyFeedDefs.PostView
 }
 
 function useThreadMuteMutation() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useMutation<
 		void,
 		Error,
@@ -386,7 +386,7 @@ function useThreadMuteMutation() {
 }
 
 function useThreadUnmuteMutation() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	return useMutation<void, Error, { uri: ResourceUri }>({
 		mutationFn: async ({ uri }) => {
 			await ok(

@@ -6,13 +6,13 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 export const bookmarksQueryKeyRoot = 'bookmarks';
 export const createBookmarksQueryKey = () => [bookmarksQueryKeyRoot];
 
 export function useBookmarksQuery() {
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return useInfiniteQuery<
 		AppBskyBookmarkGetBookmarks.$output,

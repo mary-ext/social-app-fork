@@ -4,14 +4,14 @@ import { isDid } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 const handleQueryKeyRoot = 'handle';
 const fetchHandleQueryKey = (handleOrDid: string) => [handleQueryKeyRoot, handleOrDid];
 
 export function useFetchHandle() {
 	const queryClient = useQueryClient();
-	const { appview } = useClients();
+	const { appview } = getClients();
 
 	return async (handleOrDid: string) => {
 		if (isDid(handleOrDid)) {

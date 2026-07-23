@@ -3,7 +3,7 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
@@ -18,7 +18,7 @@ export function useMuteConvo(
 	},
 ) {
 	const queryClient = useQueryClient();
-	const { chat } = useClients();
+	const { chat } = getClients();
 
 	return useMutation({
 		mutationFn: async ({ mute }: { mute: boolean }) => {

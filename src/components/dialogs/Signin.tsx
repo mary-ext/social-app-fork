@@ -4,7 +4,7 @@ import { isActorIdentifier } from '@atcute/lexicons/syntax';
 
 import { errorMessage } from '#/lib/strings/errors';
 
-import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
+import { login, type SessionAccount, switchAccount, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -78,7 +78,6 @@ function ChooseAccountScreen({
 	onSelectOther: () => void;
 }) {
 	const { currentAccount } = useSession();
-	const { login, switchAccount } = useSessionApi();
 	const [pendingDid, setPendingDid] = useState<string | null>(null);
 
 	const onSelectAccount = useCallback(
@@ -103,7 +102,7 @@ function ChooseAccountScreen({
 				setPendingDid(null);
 			}
 		},
-		[close, currentAccount?.did, login, pendingDid, switchAccount],
+		[close, currentAccount?.did, pendingDid],
 	);
 
 	return (
@@ -132,7 +131,6 @@ function ChooseAccountScreen({
 }
 
 function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; onBack?: () => void }) {
-	const { login } = useSessionApi();
 	const [identifier, setIdentifier] = useState(initialHandle);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState('');

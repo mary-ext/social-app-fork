@@ -6,7 +6,7 @@ import { isDid, isResourceUri, type ParsedResourceUri, parseResourceUri } from '
 import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
-import { useClients } from '#/state/session';
+import { getClients } from '#/state/session';
 
 import { useUnstableProfileViewCache } from './profile';
 
@@ -65,7 +65,7 @@ export function useResolveUriQuery(uri: string | undefined) {
 	const urip = uri && isResourceUri(uri) ? parseResourceUri(uri) : undefined;
 	const host = urip?.repo;
 
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 
 	return useQuery({
@@ -78,7 +78,7 @@ export function useResolveUriQuery(uri: string | undefined) {
 }
 
 export function useResolveDidQuery(didOrHandle: string | undefined) {
-	const { appview } = useClients();
+	const { appview } = getClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 
 	return useQuery(resolvedDidQueryOptions(appview, getUnstableProfile, didOrHandle));
