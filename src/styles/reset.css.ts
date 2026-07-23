@@ -2,6 +2,14 @@ import { globalStyle } from '@vanilla-extract/css';
 
 import { reset } from '#/styles/layers.css';
 
+globalStyle('*', {
+	'@layer': {
+		[reset]: {
+			WebkitTapHighlightColor: 'transparent',
+		},
+	},
+});
+
 globalStyle('a', {
 	'@layer': {
 		[reset]: { textDecoration: 'none', color: 'inherit' },
