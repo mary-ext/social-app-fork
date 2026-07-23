@@ -58,6 +58,7 @@ export type LanguagePrefs = {
 export type SearchHistoryEntry = { did: Did; kind: 'profile' } | { kind: 'query'; query: string };
 
 export type Account = {
+	labelers?: Did[];
 	lastSelectedHomeFeed?: FeedDescriptor;
 
 	/** Recently selected GIFs in the GIF picker. Most recent first, capped at 20. */

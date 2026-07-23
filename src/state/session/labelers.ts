@@ -4,7 +4,8 @@ import { difference } from '@mary/array-fns';
 
 import { APP_LABELERS, BSKY_LABELER_DID } from '#/lib/moderation/const';
 
-import { readLabelers } from './agent-config';
+import { account as accountStore } from '#/storage';
+
 import type { SessionAccount } from './types';
 
 let subscribedLabelers: Did[] = [];
@@ -29,7 +30,7 @@ export function configureModerationForGuest(): void {
  * @param account session account info.
  */
 export function configureModerationForAccount(account: SessionAccount): void {
-	const labelerDids = readLabelers(account.did);
+	const labelerDids = accountStore.get([account.did, 'labelers']);
 	setSubscribedLabelers(labelerDids ?? []);
 }
 
