@@ -89,10 +89,10 @@ export function Scrubber({
 		// pointer. Firefox clicks on the element the mouse is over, so we have
 		// to make everything unclickable while seeking -sfn
 		if (IS_WEB_FIREFOX && scrubberActive) {
-			document.body.classList.add('force-no-clicks');
+			document.body.classList.add(styles.forceNoClicks);
 
 			return () => {
-				document.body.classList.remove('force-no-clicks');
+				document.body.classList.remove(styles.forceNoClicks);
 			};
 		}
 	}, [scrubberActive, onSeekEnd]);

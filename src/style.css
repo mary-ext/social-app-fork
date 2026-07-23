@@ -15,11 +15,6 @@ input:-webkit-autofill:active {
 	color: var(--text);
 }
 
-.force-no-clicks > *,
-.force-no-clicks * {
-	pointer-events: none !important;
-}
-
 input[type='range'][orient='vertical'] {
 	writing-mode: vertical-lr;
 	direction: rtl;
