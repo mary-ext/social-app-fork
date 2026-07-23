@@ -2,7 +2,7 @@ import './style.css';
 import '#/styles/reset.css';
 import '#/styles/theme.css';
 
-import { Fragment, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { Provider as HotkeysProvider } from '#/lib/hotkeys';
 import { initializeLanguageDetection } from '#/lib/language-detection';
@@ -46,36 +46,32 @@ function InnerApp() {
 		<Splash isReady={!isSessionResuming}>
 			<VideoVolumeProvider>
 				<ActiveVideoProvider>
-					<Fragment
-						// Resets the entire tree below when it changes:
-						key={currentAccount?.did}
-					>
-						<QueryProvider currentDid={currentAccount?.did}>
-							<MessagesProvider>
-								{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-								<LabelDefsProvider>
-									<ModerationOptsProvider>
-										<SelectedFeedProvider>
-											<HiddenRepliesProvider>
-												<UnreadNotifsProvider>
-													<MutedThreadsProvider>
-														<ServiceConfigProvider>
-															<HideBottomBarBorderProvider>
-																<HotkeysProvider>
-																	<Shell />
-																	<ToastOutlet />
-																</HotkeysProvider>
-															</HideBottomBarBorderProvider>
-														</ServiceConfigProvider>
-													</MutedThreadsProvider>
-												</UnreadNotifsProvider>
-											</HiddenRepliesProvider>
-										</SelectedFeedProvider>
-									</ModerationOptsProvider>
-								</LabelDefsProvider>
-							</MessagesProvider>
-						</QueryProvider>
-					</Fragment>
+					{/* QueryProvider resets children on currentDid changes */}
+					<QueryProvider currentDid={currentAccount?.did}>
+						<MessagesProvider>
+							{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+							<LabelDefsProvider>
+								<ModerationOptsProvider>
+									<SelectedFeedProvider>
+										<HiddenRepliesProvider>
+											<UnreadNotifsProvider>
+												<MutedThreadsProvider>
+													<ServiceConfigProvider>
+														<HideBottomBarBorderProvider>
+															<HotkeysProvider>
+																<Shell />
+																<ToastOutlet />
+															</HotkeysProvider>
+														</HideBottomBarBorderProvider>
+													</ServiceConfigProvider>
+												</MutedThreadsProvider>
+											</UnreadNotifsProvider>
+										</HiddenRepliesProvider>
+									</SelectedFeedProvider>
+								</ModerationOptsProvider>
+							</LabelDefsProvider>
+						</MessagesProvider>
+					</QueryProvider>
 				</ActiveVideoProvider>
 			</VideoVolumeProvider>
 		</Splash>
