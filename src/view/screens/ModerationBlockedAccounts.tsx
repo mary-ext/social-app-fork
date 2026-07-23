@@ -79,7 +79,6 @@ export function ModerationBlockedAccounts() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.block.accountsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			{isEmpty ? (
 				<View>

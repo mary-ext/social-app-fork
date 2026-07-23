@@ -34,7 +34,6 @@ export const PostLikedByScreen = () => {
 						</>
 					)}
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<LikedByList uri={uri} initialCount={likeCount} />
 		</Layout.Screen>

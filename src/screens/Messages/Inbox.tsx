@@ -72,7 +72,12 @@ export function MessagesInboxScreen() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['screens.messages.requests.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				{hasUnreadConvos ? <MarkAsReadHeaderButton /> : <Layout.Header.Slot />}
+
+				{hasUnreadConvos && (
+					<Layout.Header.Slot>
+						<MarkAsReadHeaderButton />
+					</Layout.Header.Slot>
+				)}
 			</Layout.Header.Outer>
 			<RequestList listConvosQuery={listConvosQuery} conversations={conversations} />
 		</Layout.Screen>

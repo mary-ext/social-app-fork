@@ -367,7 +367,6 @@ function Header({ count, hasMoreRequests }: { count?: number; hasMoreRequests?: 
 							: m['screens.messages.requests.toJoinCount']({ count })}
 				</Layout.Header.TitleText>
 			</Layout.Header.Content>
-			<Layout.Header.Slot />
 		</Layout.Header.Outer>
 	);
 }

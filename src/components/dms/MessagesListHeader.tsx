@@ -62,16 +62,12 @@ export function MessagesListHeader({
 						<GroupHeaderReady convo={convo} />
 					)
 				) : (
-					<>
-						<div className={css.placeholderRow}>
-							<div className={css.placeholderAvatar} />
-							<div>
-								<div className={css.placeholderLine} />
-							</div>
+					<div className={css.placeholderRow}>
+						<div className={css.placeholderAvatar} />
+						<div>
+							<div className={css.placeholderLine} />
 						</div>
-
-						<Layout.Header.Slot />
-					</>
+					</div>
 				)}
 			</div>
 		</Layout.Header.Outer>

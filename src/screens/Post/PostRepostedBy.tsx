@@ -44,7 +44,6 @@ export const PostRepostedByScreen = () => {
 						</>
 					)}
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<PostRepostedBy uri={uri} initialCount={quoteCount} />
 		</Layout.Screen>

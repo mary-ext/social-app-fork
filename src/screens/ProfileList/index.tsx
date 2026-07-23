@@ -66,7 +66,6 @@ function ProfileListScreenInner() {
 					<Layout.Header.Content>
 						<Layout.Header.TitleText>{m['screens.profileList.error.loadFailed']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
-					<Layout.Header.Slot />
 				</Layout.Header.Outer>
 				<Layout.Content>
 					<ErrorScreen error={m['screens.profileList.error.resolveFailed']({ handle: actor })} />
@@ -83,7 +82,6 @@ function ProfileListScreenInner() {
 					<Layout.Header.Content>
 						<Layout.Header.TitleText>{m['screens.profileList.error.loadFailed']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
-					<Layout.Header.Slot />
 				</Layout.Header.Outer>
 				<Layout.Content>
 					<ErrorScreen error={cleanError(listError)} />
@@ -98,7 +96,6 @@ function ProfileListScreenInner() {
 				<Layout.Header.Outer>
 					<Layout.Header.BackButton />
 					<Layout.Header.Content />
-					<Layout.Header.Slot />
 				</Layout.Header.Outer>
 				<Layout.Content>
 					<CenteredSpinner fill label={m['common.status.loading']()} size="3xl" />

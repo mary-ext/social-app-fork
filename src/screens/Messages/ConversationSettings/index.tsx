@@ -90,7 +90,6 @@ export function MessagesConversationSettingsScreen() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.chat.settingsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<SettingsInner convoId={convoId} />
 		</Layout.Screen>

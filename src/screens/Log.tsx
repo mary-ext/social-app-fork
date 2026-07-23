@@ -22,7 +22,6 @@ export function LogScreen() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.developer.systemLog']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<List data={getEntries()} keyExtractor={keyExtractor} renderItem={renderItem} />
 		</Layout.Screen>

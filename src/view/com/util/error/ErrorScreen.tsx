@@ -29,7 +29,6 @@ export function ErrorScreen({
 					<Layout.Header.Content>
 						<Layout.Header.TitleText>{m['common.error.heading']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
-					<Layout.Header.Slot />
 				</Layout.Header.Outer>
 			)}
 			<div className={css.outer}>

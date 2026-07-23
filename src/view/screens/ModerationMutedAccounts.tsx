@@ -83,7 +83,6 @@ export function ModerationMutedAccounts() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.mute.accountsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			{isEmpty ? (
 				<View>

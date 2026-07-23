@@ -36,7 +36,6 @@ export const ProfileKnownFollowersScreen = () => {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.follow.followersYouKnow']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<ProfileKnownFollowers name={actor} />
 		</Layout.Screen>

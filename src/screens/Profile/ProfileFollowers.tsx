@@ -52,7 +52,6 @@ export const ProfileFollowersScreen = () => {
 						</>
 					)}
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<ProfileFollowers name={actor} initialCount={followersCount} />
 		</Layout.Screen>

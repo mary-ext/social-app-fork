@@ -21,7 +21,6 @@ export function NotificationsActivityListScreen() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.nav.notifications']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<PostFeed
 				feed={`posts|${posts}`}

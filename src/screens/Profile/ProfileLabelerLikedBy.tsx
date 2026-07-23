@@ -20,7 +20,6 @@ export function ProfileLabelerLikedByScreen() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.like.likedByTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<LikedByList uri={uri} />
 		</Layout.Screen>

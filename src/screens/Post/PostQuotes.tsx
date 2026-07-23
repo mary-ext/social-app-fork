@@ -53,7 +53,6 @@ export const PostQuotesScreen = () => {
 						</>
 					)}
 				</Layout.Header.Content>
-				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<PostQuotes uri={uri} />
 		</Layout.Screen>
