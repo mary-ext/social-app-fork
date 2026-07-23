@@ -77,13 +77,11 @@ function messageIsReply(message: NeighborMessage): boolean {
 }
 
 function isWithinClusterBoundary({
-	isPending,
 	message,
 	adjacentMessage,
 	isFromSameSender,
 	direction,
 }: {
-	isPending: boolean;
 	message: ChatBskyConvoDefs.MessageView;
 	adjacentMessage: NeighborMessage;
 	isFromSameSender: boolean;
@@ -104,11 +102,7 @@ function isWithinClusterBoundary({
 		const adjDate = new Date(adjacentMessage.sentAt);
 		const diff =
 			direction === 'next' ? adjDate.getTime() - thisDate.getTime() : thisDate.getTime() - adjDate.getTime();
-		const isOutsideThreshold = diff > CLUSTERED_MESSAGE_THRESHOLD_MS;
-		if (isPending) {
-			return isOutsideThreshold;
-		}
-		return isOutsideThreshold;
+		return diff > CLUSTERED_MESSAGE_THRESHOLD_MS;
 	}
 	return true;
 }
@@ -228,7 +222,6 @@ export function buildMessageTimeline(
 		}
 
 		const message = entry.message;
-		const isPending = entry.type === 'pending-message';
 		const prevMessage = neighborMessage(base, i - 1);
 		const nextMessage = neighborMessage(base, i + 1);
 
@@ -241,14 +234,12 @@ export function buildMessageTimeline(
 			nextIsMessage && nextMessage.sender?.did === message.sender?.did && message.sender?.did != null;
 
 		const isFirstInCluster = isWithinClusterBoundary({
-			isPending,
 			message,
 			adjacentMessage: prevMessage,
 			isFromSameSender: isPrevFromSameSender,
 			direction: 'prev',
 		});
 		const isLastInCluster = isWithinClusterBoundary({
-			isPending,
 			message,
 			adjacentMessage: nextMessage,
 			isFromSameSender: isNextFromSameSender,
