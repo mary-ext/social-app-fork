@@ -1,5 +1,3 @@
-import type { StyleProp, ViewStyle } from 'react-native';
-
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
 
@@ -13,7 +11,6 @@ export enum PostEmbedViewContext {
 export type CommonProps = {
 	moderation?: ModerationDecision;
 	onOpen?: () => void;
-	style?: StyleProp<ViewStyle>;
 	viewContext?: PostEmbedViewContext;
 	isWithinQuote?: boolean;
 	allowNestedQuotes?: boolean;
