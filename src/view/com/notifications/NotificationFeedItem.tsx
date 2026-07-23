@@ -1,4 +1,4 @@
-import { memo, type MouseEvent, useState } from 'react';
+import { memo, useState } from 'react';
 
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphFollow } from '@atcute/bluesky';
 import {
@@ -656,9 +656,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 		return null;
 	}
 
-	const onPressFollow = async (e: MouseEvent<HTMLButtonElement>) => {
-		e.stopPropagation();
-
+	const onPressFollow = async () => {
 		try {
 			await queueFollow();
 			Toast.show(
@@ -675,9 +673,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 		}
 	};
 
-	const onPressUnfollow = async (e: MouseEvent<HTMLButtonElement>) => {
-		e.stopPropagation();
-
+	const onPressUnfollow = async () => {
 		try {
 			await queueUnfollow();
 			Toast.show(
@@ -713,12 +709,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 	return (
 		<div className={css.followBtnWrap}>
 			{isFollowing ? (
-				<Button
-					label={followingLabel}
-					color="secondary"
-					size="small"
-					onClick={(e) => void onPressUnfollow(e)}
-				>
+				<Button label={followingLabel} color="secondary" size="small" onClick={() => void onPressUnfollow()}>
 					<ButtonIcon icon={CheckIcon} />
 					<ButtonText>{m['common.follow.action.following']()}</ButtonText>
 				</Button>
@@ -727,7 +718,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 					label={isFollowedBy ? m['common.follow.action.followBack']() : m['common.follow.action.follow']()}
 					color="primary"
 					size="small"
-					onClick={(e) => void onPressFollow(e)}
+					onClick={() => void onPressFollow()}
 				>
 					<ButtonIcon icon={PlusIcon} />
 					<ButtonText>

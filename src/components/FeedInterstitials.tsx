@@ -69,10 +69,7 @@ function SuggestedFollowCard({
 					<button
 						aria-label={m['components.feedInterstitials.action.dismiss']()}
 						className={css.dismiss}
-						onClick={(e) => {
-							e.stopPropagation();
-							onDismiss(profile.did);
-						}}
+						onClick={() => onDismiss(profile.did)}
 						type="button"
 					>
 						<XIcon fill="currentColor" size="xs" />

@@ -6,6 +6,10 @@ export const label = style({
 	left: 0,
 	zIndex: 1000,
 	maxWidth: 65,
+	padding: 0,
+	appearance: 'none',
+	border: 0,
+	background: 'none',
 	cursor: 'pointer',
 });
 

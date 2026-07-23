@@ -29,12 +29,7 @@ export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; wi
 
 	return (
 		<>
-			<Dialog.Trigger
-				aria-label={m['common.account.automated']()}
-				className={css.button}
-				handle={handle}
-				onClick={(e) => e.stopPropagation()}
-			>
+			<Dialog.Trigger aria-label={m['common.account.automated']()} className={css.button} handle={handle}>
 				<RobotIcon width={width} fill="currentColor" />
 			</Dialog.Trigger>
 			<BotAccountAlert handle={handle} profile={profile} />

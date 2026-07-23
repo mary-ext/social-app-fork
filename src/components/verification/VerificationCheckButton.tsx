@@ -153,7 +153,6 @@ function Badge({
 				}
 				className={css.button}
 				handle={handle}
-				onClick={(e) => e.stopPropagation()}
 			>
 				<VerificationCheck fill={fill} verifier={isVerifier} width={width} />
 			</Dialog.Trigger>

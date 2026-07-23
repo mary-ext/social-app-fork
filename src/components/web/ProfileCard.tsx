@@ -1,4 +1,4 @@
-import type { MouseEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
@@ -372,8 +372,7 @@ function FollowButtonInner({
 			getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 		);
 
-	const onPressFollow = async (e: MouseEvent<HTMLButtonElement>) => {
-		e.stopPropagation();
+	const onPressFollow = async () => {
 		try {
 			await queueFollow();
 			Toast.show(m['common.follow.a11y.following']({ name: name() }));
@@ -384,8 +383,7 @@ function FollowButtonInner({
 		}
 	};
 
-	const onPressUnfollow = async (e: MouseEvent<HTMLButtonElement>) => {
-		e.stopPropagation();
+	const onPressUnfollow = async () => {
 		try {
 			await queueUnfollow();
 			Toast.show(m['common.follow.noLongerFollowing']({ name: name() }));
@@ -415,7 +413,7 @@ function FollowButtonInner({
 			variant={variant === 'subtle' ? 'ghost' : 'solid'}
 			color="secondary"
 			shape={isRound ? 'round' : 'default'}
-			onClick={(e) => void onPressUnfollow(e)}
+			onClick={() => void onPressUnfollow()}
 		>
 			{followingWithIcon && <ButtonIcon icon={CheckIcon} />}
 			{!isRound && <ButtonText>{unfollowLabel}</ButtonText>}
@@ -429,7 +427,7 @@ function FollowButtonInner({
 				variant === 'suggested' ? 'secondary_inverted' : variant === 'subtle' ? 'primary_subtle' : 'primary'
 			}
 			shape={isRound ? 'round' : 'default'}
-			onClick={(e) => void onPressFollow(e)}
+			onClick={() => void onPressFollow()}
 		>
 			{followWithIcon && <ButtonIcon icon={PlusIcon} />}
 			{!isRound && <ButtonText>{followLabel}</ButtonText>}

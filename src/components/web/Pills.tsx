@@ -74,13 +74,7 @@ export function Label({ cause, disableDetailsDialog, noBg, size = 'sm' }: LabelP
 
 	return (
 		<>
-			<Dialog.Trigger
-				aria-label={desc.name}
-				className={styles.pill({ bg: !noBg, size })}
-				handle={handle}
-				// the pill lives inside a navigable post; keep its click from bubbling to the row's nav handler.
-				onClick={(e) => e.stopPropagation()}
-			>
+			<Dialog.Trigger aria-label={desc.name} className={styles.pill({ bg: !noBg, size })} handle={handle}>
 				{inner}
 			</Dialog.Trigger>
 			<ModerationDetailsDialog handle={handle} modcause={cause} />

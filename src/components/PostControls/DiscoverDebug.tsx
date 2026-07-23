@@ -14,20 +14,19 @@ export function DiscoverDebug({ feedContext }: { feedContext: string | undefined
 	}
 
 	return (
-		// stopPropagation exempts the click from BlockLink's row navigation (it handles the press on an
-		// ancestor); aria-hidden keeps this debug-only affordance out of the accessibility tree
-		<div
+		// aria-hidden keeps this debug-only affordance out of the accessibility tree
+		<button
 			aria-hidden
 			className={css.label}
-			onClick={(e) => {
-				e.stopPropagation();
+			onClick={() => {
 				void navigator.clipboard.writeText(feedContext);
 				Toast.show(m['common.share.copiedToast']());
 			}}
+			type="button"
 		>
 			<Text className={css.text} color="contrast_400" numberOfLines={1}>
 				{feedContext}
 			</Text>
-		</div>
+		</button>
 	);
 }
