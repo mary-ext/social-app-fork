@@ -83,6 +83,7 @@
 		"oxfmt": "^0.59.0",
 		"oxlint": "^1.74.0",
 		"oxlint-tsgolint": "^0.25.0",
+		"type-fest": "^5.8.0",
 		"typescript": "npm:@typescript/typescript6@^6.0.2",
 		"wrangler": "^4.112.0"
 	},

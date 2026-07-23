@@ -236,7 +236,7 @@ export function getClients() {
 	}
 }
 
-auth.addOnValueChangedListener(['session'], () => {
+auth.onScopeChange(['session'], () => {
 	if (isWritingSession) {
 		return;
 	}
