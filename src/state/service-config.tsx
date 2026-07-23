@@ -14,8 +14,6 @@ const TrendingContext = createContext<TrendingContext>({
 });
 TrendingContext.displayName = 'TrendingContext';
 
-const CheckEmailConfirmedContext = createContext<boolean | null>(null);
-
 export function Provider({ children }: { children: React.ReactNode }) {
 	const langPrefs = useLanguagePrefs();
 	const { data: config, isLoading: isInitialLoad } = useServiceConfigQuery();
@@ -47,17 +45,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
 		return { enabled };
 	}, [isInitialLoad, config, langPrefs.contentLanguages]);
 
-	// probably true, so default to true when loading
-	// if the call fails, the query will set it to false for us
-	const checkEmailConfirmed = config?.checkEmailConfirmed ?? true;
-
-	return (
-		<TrendingContext.Provider value={trending}>
-			<CheckEmailConfirmedContext.Provider value={checkEmailConfirmed}>
-				{children}
-			</CheckEmailConfirmedContext.Provider>
-		</TrendingContext.Provider>
-	);
+	return <TrendingContext.Provider value={trending}>{children}</TrendingContext.Provider>;
 }
 
 export function useTrendingConfig() {

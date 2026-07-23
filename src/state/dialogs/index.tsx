@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState } from 'react';
+import { createContext, useContext, useRef } from 'react';
 
 import { useHotkeysContext } from '#/lib/hotkeys';
 
@@ -24,7 +24,6 @@ interface CloseAllDialogsOptions {
 interface IDialogControlContext {
 	closeAllDialogs: (opts?: CloseAllDialogsOptions) => boolean;
 	setDialogIsOpen: (id: string, isOpen: boolean) => void;
-	setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const DialogContext = createContext<IDialogContext>({
@@ -36,16 +35,8 @@ DialogContext.displayName = 'DialogContext';
 const DialogControlContext = createContext<IDialogControlContext>({
 	closeAllDialogs: () => false,
 	setDialogIsOpen: () => {},
-	setFullyExpandedCount: () => {},
 });
 DialogControlContext.displayName = 'DialogControlContext';
-
-/**
- * The number of dialogs that are fully expanded. This is used to determine the background color of the status
- * bar on iOS.
- */
-const DialogFullyExpandedCountContext = createContext<number>(0);
-DialogFullyExpandedCountContext.displayName = 'DialogFullyExpandedCountContext';
 
 export function useDialogStateContext() {
 	return useContext(DialogContext);
@@ -56,7 +47,6 @@ export function useDialogStateControlContext() {
 }
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
-	const [fullyExpandedCount, setFullyExpandedCount] = useState(0);
 	const { disableScope, enableScope } = useHotkeysContext();
 
 	const activeDialogs = useRef<Map<string, React.MutableRefObject<DialogControlRefProps>>>(new Map());
@@ -94,15 +84,12 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const controls = {
 		closeAllDialogs,
 		setDialogIsOpen,
-		setFullyExpandedCount,
 	};
 
 	return (
 		<DialogContext.Provider value={context}>
 			<DialogControlContext.Provider value={controls}>
-				<DialogFullyExpandedCountContext.Provider value={fullyExpandedCount}>
-					<GlobalDialogsProvider>{children}</GlobalDialogsProvider>
-				</DialogFullyExpandedCountContext.Provider>
+				<GlobalDialogsProvider>{children}</GlobalDialogsProvider>
 			</DialogControlContext.Provider>
 		</DialogContext.Provider>
 	);

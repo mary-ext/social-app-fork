@@ -1,21 +1,15 @@
 import { createContext, useContext, useState } from 'react';
 
 const Context = createContext<{
-	muted: boolean;
-	setMuted: React.Dispatch<React.SetStateAction<boolean>>;
-	// web
 	volume: number;
 	setVolume: React.Dispatch<React.SetStateAction<number>>;
 } | null>(null);
 Context.displayName = 'VideoVolumeContext';
 
 export function Provider({ children }: { children: React.ReactNode }) {
-	const [muted, setMuted] = useState(true);
 	const [volume, setVolume] = useState(1);
 
 	const value = {
-		muted,
-		setMuted,
 		volume,
 		setVolume,
 	};
