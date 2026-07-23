@@ -17,23 +17,22 @@ import * as Toast from '#/components/Toast';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-import * as css from './ActionsWrapper.css';
 import { EmojiReactionPicker } from './EmojiReactionPicker';
 import * as reactionStyles from './EmojiReactionPicker.css';
 import { canReact, hasReachedReactionLimit } from './util';
 
-export function ActionsWrapper({
+/**
+ * The hover-revealed action rail for a message: an add-reaction picker followed by the context menu.
+ * Placement beside the bubble (which side, when it reveals) is owned by the caller's layout.
+ */
+export function MessageActions({
 	message,
-	isFromSelf,
-	senderProfile,
 	moderationOpts,
-	children,
+	senderProfile,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
-	isFromSelf: boolean;
-	senderProfile?: AnyProfileView;
 	moderationOpts: ModerationOptions | undefined;
-	children: React.ReactNode;
+	senderProfile?: AnyProfileView;
 }) {
 	const convo = useConvoActive();
 	const { currentAccount } = useSession();
@@ -69,41 +68,38 @@ export function ActionsWrapper({
 	};
 
 	return (
-		<div className={css.root({ fromSelf: isFromSelf })}>
-			<div className={css.actions({ fromSelf: isFromSelf })}>
-				{reactionsAvailable && (
-					<EmojiReactionPicker
-						message={message}
-						onEmojiSelect={onEmojiSelect}
-						render={(props) => (
-							<button
-								{...props}
-								aria-label={m['components.dms.reaction.action.add']()}
-								className={clsx(props.className, reactionStyles.trigger)}
-								type="button"
-							>
-								<EmojiSmileIcon fill={colors.textContrastMedium} size="lg" />
-							</button>
-						)}
-					/>
-				)}
-				<MessageContextMenu
+		<>
+			{reactionsAvailable && (
+				<EmojiReactionPicker
 					message={message}
-					moderationOpts={moderationOpts}
+					onEmojiSelect={onEmojiSelect}
 					render={(props) => (
 						<button
 							{...props}
-							aria-label={m['components.dms.message.a11y.options']()}
+							aria-label={m['components.dms.reaction.action.add']()}
 							className={clsx(props.className, reactionStyles.trigger)}
 							type="button"
 						>
-							<DotsHorizontalIcon fill={colors.textContrastMedium} size="lg" />
+							<EmojiSmileIcon fill={colors.textContrastMedium} size="lg" />
 						</button>
 					)}
-					senderProfile={senderProfile}
 				/>
-			</div>
-			<div className={css.content({ fromSelf: isFromSelf })}>{children}</div>
-		</div>
+			)}
+			<MessageContextMenu
+				message={message}
+				moderationOpts={moderationOpts}
+				render={(props) => (
+					<button
+						{...props}
+						aria-label={m['components.dms.message.a11y.options']()}
+						className={clsx(props.className, reactionStyles.trigger)}
+						type="button"
+					>
+						<DotsHorizontalIcon fill={colors.textContrastMedium} size="lg" />
+					</button>
+				)}
+				senderProfile={senderProfile}
+			/>
+		</>
 	);
 }

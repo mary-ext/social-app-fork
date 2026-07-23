@@ -19,7 +19,7 @@ import { useSession } from '#/state/session';
 import { isOnlyEmoji } from '#/alf/typography';
 
 import * as Dialog from '#/components/Dialog';
-import { ActionsWrapper } from '#/components/dms/ActionsWrapper';
+import { MessageActions } from '#/components/dms/MessageActions';
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import { getReplyPreviewText } from '#/components/dms/replyPreview';
@@ -213,7 +213,7 @@ let MessageItem = ({
 	const appliedReactions = (
 		<>
 			{hasReactions ? (
-				<div className={css.reactionsWrap({ fromSelf: isFromSelf, groupIndent: !isFromSelf && isGroupChat })}>
+				<div className={css.reactionsWrap({ fromSelf: isFromSelf })}>
 					{isGroupChat ? (
 						// detached Trigger: opens the reactions Dialog.Root owned by MessageOverlays, keyed to this message.
 						<Dialog.Trigger
@@ -249,96 +249,92 @@ let MessageItem = ({
 	return (
 		<>
 			{hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
-			<div className={css.row({ firstInCluster: isFirstInCluster })} data-message-id={message.id}>
+			<div
+				className={css.row({ avatarGutter: !isFromSelf && isGroupChat, firstInCluster: isFirstInCluster })}
+				data-message-id={message.id}
+			>
 				<div className={css.flash} ref={flashRef} />
-				<div className={css.body({ avatarGutter: !isFromSelf && isGroupChat })}>
-					{!isFromSelf && isGroupChat ? <div className={css.avatar}>{showAvatar ? avatar : null}</div> : null}
-					<div className={css.content}>
-						{replyTo ? (
-							<ReplyCaption
-								isFromSelf={isFromSelf}
-								isGroupChat={isGroupChat}
-								onPress={onPressReplyTo}
-								relatedProfiles={relatedProfiles}
-								replierDisplayName={displayName}
-								replyTo={replyTo}
-							/>
-						) : displayName && showDisplayName ? (
-							<Text className={css.displayName} color="textContrastMedium" size="xs">
-								{displayName}
-							</Text>
-						) : null}
-						{isBlocked ? (
-							<BlockedPlaceholder profile={profile} radiusStyle={borderRadiusStyle} />
-						) : (
-							<ActionsWrapper
-								isFromSelf={isFromSelf}
-								message={message}
-								moderationOpts={moderationOpts}
-								senderProfile={profile}
-							>
-								{message.embed?.$type === 'app.bsky.embed.record#view' && (
-									<MessageItemEmbed
-										embed={message.embed}
-										isFromSelf={isFromSelf}
-										isGroupChat={isGroupChat}
-										squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-										squaredTopCorner={squaredTopCorner}
-									/>
-								)}
-								{message.embed?.$type === 'chat.bsky.embed.joinLink#view' && (
-									<MessageItemInviteEmbed
-										embed={message.embed}
-										isFromSelf={isFromSelf}
-										isGroupChat={isGroupChat}
-										squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-										squaredTopCorner={squaredTopCorner}
-									/>
-								)}
-								{rt.text.length > 0 && (
-									<div
-										className={clsx(
-											!isFromSelf && isGroupChat && css.bubbleIndent,
-											!isEmojiOnly && css.bubbleStyled,
-											!isEmojiOnly && (isFromSelf ? css.bubbleSelf : css.bubbleOther),
-										)}
-										style={
-											isEmojiOnly
-												? undefined
-												: {
-														marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
-														backgroundColor: bubbleBackground,
-														...borderRadiusStyle,
-													}
-										}
-									>
-										{replyTo && !isEmojiOnly ? (
-											<ReplyQuote
-												isFromSelf={isFromSelf}
-												onPress={onPressReplyTo}
-												relatedProfiles={relatedProfiles}
-												replyTo={replyTo}
-											/>
-										) : null}
-										<RichText
-											// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
-											// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
-											className={isEmojiOnly && !isFromSelf ? css.emojiBaselineNudge : undefined}
-											color={isFromSelf ? 'white' : undefined}
-											emojiScale="large"
-											enableTags
-											leading={isEmojiOnly ? 'none' : undefined}
-											linkUnderline="always"
-											size="md"
-											value={rt}
+				{!isFromSelf && isGroupChat ? <div className={css.avatar}>{showAvatar ? avatar : null}</div> : null}
+				{replyTo ? (
+					<ReplyCaption
+						isFromSelf={isFromSelf}
+						isGroupChat={isGroupChat}
+						onPress={onPressReplyTo}
+						relatedProfiles={relatedProfiles}
+						replierDisplayName={displayName}
+						replyTo={replyTo}
+					/>
+				) : displayName && showDisplayName ? (
+					<Text className={css.displayName} color="textContrastMedium" size="xs">
+						{displayName}
+					</Text>
+				) : null}
+				{isBlocked ? (
+					<BlockedPlaceholder profile={profile} radiusStyle={borderRadiusStyle} />
+				) : (
+					<div className={css.bubbleRow({ fromSelf: isFromSelf })}>
+						<div className={css.bubble({ fromSelf: isFromSelf })}>
+							{message.embed?.$type === 'app.bsky.embed.record#view' && (
+								<MessageItemEmbed
+									embed={message.embed}
+									isFromSelf={isFromSelf}
+									squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+									squaredTopCorner={squaredTopCorner}
+								/>
+							)}
+							{message.embed?.$type === 'chat.bsky.embed.joinLink#view' && (
+								<MessageItemInviteEmbed
+									embed={message.embed}
+									isFromSelf={isFromSelf}
+									squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+									squaredTopCorner={squaredTopCorner}
+								/>
+							)}
+							{rt.text.length > 0 && (
+								<div
+									className={clsx(
+										!isEmojiOnly && css.bubbleStyled,
+										!isEmojiOnly && (isFromSelf ? css.bubbleSelf : css.bubbleOther),
+									)}
+									style={
+										isEmojiOnly
+											? undefined
+											: {
+													marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
+													backgroundColor: bubbleBackground,
+													...borderRadiusStyle,
+												}
+									}
+								>
+									{replyTo && !isEmojiOnly ? (
+										<ReplyQuote
+											isFromSelf={isFromSelf}
+											onPress={onPressReplyTo}
+											relatedProfiles={relatedProfiles}
+											replyTo={replyTo}
 										/>
-									</div>
-								)}
-							</ActionsWrapper>
-						)}
+									) : null}
+									<RichText
+										// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
+										// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
+										className={isEmojiOnly && !isFromSelf ? css.emojiBaselineNudge : undefined}
+										color={isFromSelf ? 'white' : undefined}
+										emojiScale="large"
+										enableTags
+										leading={isEmojiOnly ? 'none' : undefined}
+										linkUnderline="always"
+										size="md"
+										value={rt}
+									/>
+								</div>
+							)}
+						</div>
+						<div className={css.actions({ fromSelf: isFromSelf })}>
+							<MessageActions message={message} moderationOpts={moderationOpts} senderProfile={profile} />
+						</div>
 					</div>
-					{!isBlocked ? appliedReactions : null}
-				</div>
+				)}
+				{!isBlocked ? appliedReactions : null}
 				{isLastInCluster && <MessageItemMetadata align={isFromSelf ? 'right' : 'left'} item={item} />}
 			</div>
 		</>

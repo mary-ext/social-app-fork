@@ -43,19 +43,17 @@ export function cornerRadii({
 function MessageItemEmbed({
 	embed,
 	isFromSelf,
-	isGroupChat,
 	squaredTopCorner,
 	squaredBottomCorner,
 }: {
 	embed: $type.enforce<AppBskyEmbedRecord.View>;
 	isFromSelf: boolean;
-	isGroupChat: boolean;
 	squaredTopCorner: boolean;
 	squaredBottomCorner: boolean;
 }): React.ReactNode {
 	return (
 		<MessageContextProvider>
-			<div className={css.outer({ indent: !isFromSelf && isGroupChat })}>
+			<div className={css.outer}>
 				<div
 					className={css.inner({ fromSelf: isFromSelf })}
 					style={cornerRadii({ isFromSelf, squaredBottomCorner, squaredTopCorner })}

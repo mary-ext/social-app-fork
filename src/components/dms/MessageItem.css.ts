@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { generateIdentifier, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
@@ -7,21 +7,38 @@ import { borderRadius, space } from '#/styles/tokens.css';
 
 const AVATAR_SIZE = 28;
 const CLUSTERED_MESSAGE_GAP = 2;
-const DISPLAY_NAME_INSET = 22;
-// the row's horizontal margin, negated so the highlight flash bleeds to the screen edges.
-const FLASH_BLEED = -space.lg;
+
+const DISPLAY_NAME_INSET = space.md;
 
 export const emojiBaselineNudge = style({ marginBottom: -space.sm });
+
+const areas = {
+	author: generateIdentifier('areas_author'),
+	avatar: generateIdentifier('areas_avatar'),
+	content: generateIdentifier('areas_content'),
+	meta: generateIdentifier('areas_meta'),
+	reactions: generateIdentifier('areas_reactions'),
+};
 
 export const row = recipe(
 	{
 		base: {
 			position: 'relative',
-			display: 'flex',
-			flexDirection: 'column',
-			marginInline: space.lg,
+			display: 'grid',
+			paddingInline: space.lg,
 		},
 		variants: {
+			avatarGutter: {
+				true: {
+					columnGap: space.sm,
+					gridTemplateAreas: `". ${areas.author}" "${areas.avatar} ${areas.content}" ". ${areas.reactions}" "${areas.meta} ${areas.meta}"`,
+					gridTemplateColumns: `[${areas.avatar}] ${AVATAR_SIZE}px [${areas.content}] minmax(0, 1fr)`,
+				},
+				false: {
+					gridTemplateAreas: `"${areas.author}" "${areas.content}" "${areas.reactions}" "${areas.meta}"`,
+					gridTemplateColumns: `[${areas.content}] minmax(0, 1fr)`,
+				},
+			},
 			firstInCluster: {
 				true: { marginTop: space.md },
 				false: { marginTop: CLUSTERED_MESSAGE_GAP },
@@ -33,61 +50,93 @@ export const row = recipe(
 
 export const flash = style({
 	position: 'absolute',
+	zIndex: -1,
 	top: -CLUSTERED_MESSAGE_GAP,
 	bottom: -CLUSTERED_MESSAGE_GAP,
-	left: FLASH_BLEED,
-	right: FLASH_BLEED,
+	left: 0,
+	right: 0,
 	background: colors.primary_100,
 	opacity: 0,
 	pointerEvents: 'none',
 });
 
-// the avatar + content two-column grid. the avatar column is a fixed gutter (empty for non-tail
-// messages in a cluster); self and 1:1 rows collapse to a single content column. reactions occupy a
-// second row under the content so they don't stretch the avatar's row past the bubble.
-export const body = recipe(
-	{
-		base: {
-			position: 'relative',
-			display: 'grid',
-		},
-		variants: {
-			avatarGutter: {
-				true: { gridTemplateColumns: `[avatar] ${AVATAR_SIZE}px [content] minmax(0, 1fr)` },
-				false: { gridTemplateColumns: '[content] minmax(0, 1fr)' },
-			},
-		},
-	},
-	{ debugId: 'messageItemBody' },
-);
-
-// bottom-aligned within the bubble row so a cluster's single avatar sits beside its last message.
 export const avatar = style({
-	gridColumn: 'avatar',
-	gridRow: 1,
+	gridArea: areas.avatar,
 	alignSelf: 'end',
 });
 
-export const content = style({
-	gridColumn: 'content',
-	gridRow: 1,
-	display: 'flex',
-	flexDirection: 'column',
-	minWidth: 0,
-});
+export const bubbleRow = recipe(
+	{
+		base: {
+			gridArea: areas.content,
+			display: 'flex',
+			alignItems: 'center',
+			columnGap: space.xs,
+		},
+		variants: {
+			fromSelf: {
+				true: { flexDirection: 'row-reverse' },
+				false: { flexDirection: 'row' },
+			},
+		},
+	},
+	{ debugId: 'messageItemBubbleRow' },
+);
+
+export const bubble = recipe(
+	{
+		base: {
+			display: 'flex',
+			flexDirection: 'column',
+			minWidth: 0,
+			maxWidth: '80%',
+		},
+		variants: {
+			fromSelf: {
+				true: { alignItems: 'flex-end' },
+				false: { alignItems: 'flex-start' },
+			},
+		},
+	},
+	{ debugId: 'messageItemBubble' },
+);
+
+export const actions = recipe(
+	{
+		base: {
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			transition: 'opacity 150ms ease',
+			opacity: 0,
+			selectors: {
+				'&:has([data-popup-open], :focus-visible)': {
+					transition: 'none',
+					opacity: 1,
+				},
+				'div:hover > &': {
+					opacity: 1,
+				},
+			},
+		},
+		variants: {
+			fromSelf: {
+				true: { flexDirection: 'row-reverse' },
+				false: { flexDirection: 'row' },
+			},
+		},
+	},
+	{ debugId: 'messageItemActions' },
+);
 
 export const displayName = style({
+	gridArea: areas.author,
 	paddingTop: space.xs,
 	paddingBottom: space._2xs,
 	paddingLeft: DISPLAY_NAME_INSET,
 });
 
-export const bubbleIndent = style({
-	marginLeft: space.sm,
-});
-
 export const bubbleStyled = style({
-	// a flex column (like the RN View) so a reply quote stretches to the bubble's full width.
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
@@ -108,10 +157,8 @@ export const bubbleOther = style({
 export const reactionsWrap = recipe(
 	{
 		base: {
-			gridColumn: 'content',
-			gridRow: 2,
+			gridArea: areas.reactions,
 			display: 'flex',
-			// pull the pill up so it overlaps the bubble's bottom edge, matching the floating look.
 			marginTop: -6,
 			paddingInline: space.sm,
 		},
@@ -120,22 +167,21 @@ export const reactionsWrap = recipe(
 				true: { justifyContent: 'flex-end' },
 				false: { justifyContent: 'flex-start' },
 			},
-			groupIndent: {
-				true: { marginLeft: space.sm },
-			},
 		},
 	},
 	{ debugId: 'messageItemReactions' },
 );
 
 export const meta = style({
+	gridArea: areas.meta,
 	marginBlock: space._2xs,
 });
 
 export const blockedButton = style({
+	gridArea: areas.content,
+	justifySelf: 'start',
 	appearance: 'none',
 	maxWidth: '80%',
-	alignSelf: 'flex-start',
 	padding: 0,
 	border: 'none',
 	background: 'none',
@@ -146,7 +192,6 @@ export const blockedButton = style({
 export const blockedBubble = style({
 	alignSelf: 'flex-start',
 	flexShrink: 1,
-	marginLeft: space.sm,
 	paddingBlock: space.sm,
 	paddingInline: space.md,
 	border: `1px solid ${colors.borderContrastHigh}`,
@@ -157,6 +202,7 @@ export const blockedBubble = style({
 export const replyCaption = recipe(
 	{
 		base: {
+			gridArea: areas.author,
 			appearance: 'none',
 			display: 'flex',
 			flexDirection: 'row',
@@ -189,7 +235,6 @@ export const replyCaptionText = style({
 
 export const replyQuote = style({
 	appearance: 'none',
-	// stretched to the bubble width by its flex-column parent; border-box keeps padding + border inside.
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',

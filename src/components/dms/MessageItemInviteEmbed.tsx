@@ -12,13 +12,11 @@ import * as css from './MessageItemInviteEmbed.css';
 function MessageItemInviteEmbed({
 	embed,
 	isFromSelf,
-	isGroupChat,
 	squaredTopCorner,
 	squaredBottomCorner,
 }: {
 	embed: $type.enforce<ChatBskyEmbedJoinLink.View>;
 	isFromSelf: boolean;
-	isGroupChat: boolean;
 	squaredTopCorner: boolean;
 	squaredBottomCorner: boolean;
 }): React.ReactNode {
@@ -31,7 +29,7 @@ function MessageItemInviteEmbed({
 
 	return (
 		<MessageContextProvider>
-			<div className={css.outer({ indent: !isFromSelf && isGroupChat })}>
+			<div className={css.outer}>
 				<div
 					className={css.inner({ fromSelf: isFromSelf })}
 					style={cornerRadii({ isFromSelf, squaredBottomCorner, squaredTopCorner })}

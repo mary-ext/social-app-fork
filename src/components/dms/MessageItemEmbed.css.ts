@@ -1,22 +1,13 @@
+import { style } from '@vanilla-extract/css';
+
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
-import { space } from '#/styles/tokens.css';
 
-export const outer = recipe(
-	{
-		base: {
-			width: '100%',
-			minWidth: 280,
-			maxWidth: 360,
-		},
-		variants: {
-			indent: {
-				true: { marginLeft: space.sm },
-			},
-		},
-	},
-	{ debugId: 'messageItemEmbedOuter' },
-);
+export const outer = style({
+	width: '100%',
+	minWidth: 280,
+	maxWidth: 360,
+});
 
 export const inner = recipe(
 	{
