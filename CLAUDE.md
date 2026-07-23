@@ -38,7 +38,7 @@ do not run `agent-browser close --all`.
 
 #### formatting
 
-- name new files in kebab-case
+- name new files in pascal-case for components and kebab-case for others.
 - indent with tabs (spaces allowed for diagrams in comments)
 - use single quotes for strings; reserve template literals for localization (user-facing strings,
   error messages)
