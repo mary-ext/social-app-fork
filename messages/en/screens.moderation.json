@@ -1,7 +1,6 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"screens.moderation.adultContent.enable": "Enable adult content",
-	"screens.moderation.adultContent.requiredInRegion": "Required in your region",
 	"screens.moderation.adultContent.title": "Content filters",
 	"screens.moderation.adultContent.toggleA11y": "Toggle to enable or disable adult content",
 	"screens.moderation.advanced": "Advanced",

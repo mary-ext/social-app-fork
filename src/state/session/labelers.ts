@@ -1,39 +1,42 @@
 import type { Did } from '@atcute/lexicons';
 
-import { BSKY_LABELER_DID } from '#/lib/moderation/const';
+import { difference } from '@mary/array-fns';
 
-/**
- * labelers the AppView and chat clients advertise via the `atproto-accept-labelers` header. kept as mutable
- * state so subscription changes are reflected on the next request.
- */
+import { APP_LABELERS, BSKY_LABELER_DID } from '#/lib/moderation/const';
 
-// App labelers are sent with `;redact`; subscribed labelers are sent plain.
-let appLabelers: Did[] = [BSKY_LABELER_DID];
+import { readLabelers } from './agent-config';
+import type { SessionAccount } from './types';
+
 let subscribedLabelers: Did[] = [];
 
 /**
- * Sets the app-level labelers, sent with the `;redact` directive.
- *
- * @param dids the app labeler DIDs.
- */
-export function setAppLabelers(dids: Did[]): void {
-	appLabelers = dids;
-}
-
-/**
- * Sets the user's subscribed labelers, sent without a directive.
+ * Sets the user's subscribed labelers.
  *
  * @param dids the subscribed labeler DIDs.
  */
 export function setSubscribedLabelers(dids: Did[]): void {
-	subscribedLabelers = dids;
+	subscribedLabelers = difference(dids, APP_LABELERS);
+}
+
+/** Configures moderation labelers for a guest session. */
+export function configureModerationForGuest(): void {
+	setSubscribedLabelers([]);
 }
 
 /**
- * Builds the current `atproto-accept-labelers` header value from the configured labelers.
+ * Configures moderation labelers for an account session.
  *
- * @returns the comma-separated header value.
+ * @param account session account info.
  */
+export function configureModerationForAccount(account: SessionAccount): void {
+	const labelerDids = readLabelers(account.did);
+	setSubscribedLabelers(labelerDids ?? []);
+}
+
 export function acceptLabelersHeaderValue(): string {
-	return [...appLabelers.map((did) => `${did};redact`), ...subscribedLabelers].join(', ');
+	if (subscribedLabelers.length === 0) {
+		return `${BSKY_LABELER_DID};redact`;
+	}
+
+	return `${BSKY_LABELER_DID};redact, ${subscribedLabelers.join(', ')}`;
 }

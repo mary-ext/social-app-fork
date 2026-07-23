@@ -1,13 +1,11 @@
 import type { LabelPreference } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
-import { difference } from '@mary/array-fns';
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { replaceEqualDeep } from '#/lib/functions';
-import { getAppLabelers } from '#/lib/moderation/app-labelers';
+import { APP_LABELERS } from '#/lib/moderation/const';
 import type { AppBskyActorDefs, BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
 
 import { GCTIME, STALE } from '#/state/queries';
@@ -64,14 +62,14 @@ export function usePreferencesQuery() {
 			if (!pds || !currentAccount) {
 				return DEFAULT_LOGGED_OUT_PREFERENCES;
 			} else {
-				const res = await getPreferences(pds, getAppLabelers());
+				const res = await getPreferences(pds, APP_LABELERS);
 
 				const labelerDids = res.moderationPrefs.labelers.map((l) => l.did);
 				// save to local storage to ensure there are labels on initial requests
 				saveLabelers(currentAccount.did, labelerDids);
 				// keep the appview client's labeler header in sync with the freshly fetched prefs, as
 				// `agent.getPreferences()` used to do internally
-				setSubscribedLabelers(difference(labelerDids, getAppLabelers()));
+				setSubscribedLabelers(labelerDids);
 
 				const preferences: UsePreferencesQueryResponse = {
 					...res,

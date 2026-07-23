@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { getAppLabelers } from '#/lib/moderation/app-labelers';
+import { APP_LABELERS } from '#/lib/moderation/const';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { useLabelDefinitions } from '#/state/preferences';
@@ -31,7 +31,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		}
 		const labelers = moderationPrefs.labelers.length
 			? moderationPrefs.labelers
-			: getAppLabelers().map((did) => ({
+			: APP_LABELERS.map((did) => ({
 					did,
 					labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
 				}));

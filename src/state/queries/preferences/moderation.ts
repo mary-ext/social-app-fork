@@ -1,9 +1,6 @@
 import { interpretLabelerDefinition } from '@atcute/bluesky-moderation';
 
-import { getAppLabelers } from '#/lib/moderation/app-labelers';
-import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
-
-import { isNonConfigurableModerationAuthority } from '#/state/session/additional-moderation-authorities';
+import { APP_LABELERS, DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
 
 import { useLabelersDetailedInfoQuery } from '../labeler';
 import { usePreferencesQuery } from './index';
@@ -13,18 +10,11 @@ export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS
 	Object.entries(DEFAULT_LABEL_SETTINGS).map(([key, _pref]) => [key, 'hide']),
 );
 
-export function useMyLabelersQuery({
-	excludeNonConfigurableLabelers = false,
-}: {
-	excludeNonConfigurableLabelers?: boolean;
-} = {}) {
+export function useMyLabelersQuery() {
 	const prefs = usePreferencesQuery();
-	let dids = Array.from(
-		new Set(getAppLabelers().concat(prefs.data?.moderationPrefs.labelers.map((l) => l.did) || [])),
+	const dids = Array.from(
+		new Set(APP_LABELERS.concat(prefs.data?.moderationPrefs.labelers.map((l) => l.did) || [])),
 	);
-	if (excludeNonConfigurableLabelers) {
-		dids = dids.filter((did) => !isNonConfigurableModerationAuthority(did));
-	}
 	const labelers = useLabelersDetailedInfoQuery({ dids });
 	const isLoading = prefs.isLoading || labelers.isLoading;
 	const error = prefs.error || labelers.error;

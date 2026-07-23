@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
 export const labelerAvatar = style({
@@ -18,15 +17,6 @@ export const identity = style({
 	flexDirection: 'column',
 	gap: space._2xs,
 	minWidth: 0,
-});
-
-export const regionalNotice = style({
-	display: 'flex',
-	gap: space.xs,
-	alignItems: 'center',
-	paddingTop: space._2xs,
-	color: vars.palette.contrast_500,
-	fontStyle: 'italic',
 });
 
 export const cleanup = style({

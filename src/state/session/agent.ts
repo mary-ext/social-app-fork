@@ -3,7 +3,7 @@ import { type Client, ok } from '@atcute/client';
 import { networkRetry } from '#/lib/async/retry';
 
 import { type Clients, createOAuthClients, createPublicClients } from './clients';
-import { configureModerationForAccount, configureModerationForGuest } from './moderation';
+import { configureModerationForAccount, configureModerationForGuest } from './labelers';
 import { finalizeAuthorization, getSession, OAuthUserAgent, type Session } from './oauth';
 import type { SessionAccount } from './types';
 

@@ -10,7 +10,7 @@ import {
 } from '@atcute/bluesky-moderation';
 import type { Did, Handle } from '@atcute/lexicons';
 
-import { getAppLabelers } from '#/lib/moderation/app-labelers';
+import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import type { AppModerationCause } from '#/lib/moderation/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
@@ -84,10 +84,8 @@ export function lookupLabelValueDefinition(
 export function isAppLabeler(
 	labeler: Did | AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed,
 ): boolean {
-	if (typeof labeler === 'string') {
-		return getAppLabelers().includes(labeler);
-	}
-	return getAppLabelers().includes(labeler.creator.did);
+	const did = typeof labeler === 'string' ? labeler : labeler.creator.did;
+	return did === BSKY_LABELER_DID;
 }
 
 export function isLabelerSubscribed(

@@ -94,9 +94,7 @@ function Inner({
 		error: labelersError,
 		isLoading: labelersLoading,
 		refetch,
-	} = useMyLabelersQuery({
-		excludeNonConfigurableLabelers: true,
-	});
+	} = useMyLabelersQuery();
 	const copy = useCopyForSubject(subject);
 	const { categories, getCategory } = useReportOptions();
 	const [state, dispatch] = useReducer(reducer, initialState);

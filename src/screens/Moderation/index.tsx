@@ -21,7 +21,6 @@ import {
 	usePreferencesSetAdultContentMutation,
 	usePreferencesSetContentLabelMutation,
 } from '#/state/queries/preferences';
-import { isNonConfigurableModerationAuthority } from '#/state/session/additional-moderation-authorities';
 
 import { logger } from '#/logger';
 
@@ -30,7 +29,6 @@ import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/compon
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
 import { EditBig_Stroke2_Corner2_Rounded as EditBig } from '#/components/icons/EditBig';
 import { Filter_Stroke2_Corner0_Rounded as Filter } from '#/components/icons/Filter';
-import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag';
 import { Group3_Stroke2_Corner0_Rounded as Group } from '#/components/icons/Group';
 import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';
 import * as Settings from '#/components/SettingsCards';
@@ -94,9 +92,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 	const subscribedDids = preferences.moderationPrefs.labelers.map((labeler) => labeler.did);
 	const returnedDids = new Set<string>(labelers?.map((labeler) => labeler.creator.did));
-	const unavailableDids = subscribedDids.filter(
-		(did) => !returnedDids.has(did) && !isAppLabeler(did) && !isNonConfigurableModerationAuthority(did),
-	);
+	const unavailableDids = subscribedDids.filter((did) => !returnedDids.has(did) && !isAppLabeler(did));
 
 	const adultContentEnabled =
 		optimisticAdultContent?.enabled ||
@@ -278,12 +274,6 @@ function LabelerRow({
 					<Text color="textContrastMedium" size="md_sub">
 						{m['screens.moderation.labeler.byCreator']({ handle: creator.handle })}
 					</Text>
-				)}
-				{isNonConfigurableModerationAuthority(creator.did) && (
-					<span className={styles.regionalNotice}>
-						<Flag fill="currentColor" size="sm" />
-						<Text size="sm">{m['screens.moderation.adultContent.requiredInRegion']()}</Text>
-					</span>
 				)}
 			</div>
 			<span className={clsx(cardStyles.chevron, styles.labelerChevron)}>
