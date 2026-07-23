@@ -87,9 +87,6 @@ importers:
       '@base-ui/utils':
         specifier: ^0.3.1
         version: 0.3.1(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@braintree/sanitize-url':
-        specifier: ^7.1.2
-        version: 7.1.2
       '@emoji-mart/data':
         specifier: ^1.2.1
         version: 1.2.1
@@ -530,9 +527,6 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
-
-  '@braintree/sanitize-url@7.1.2':
-    resolution: {integrity: sha512-jigsZK+sMF/cuiB7sERuo9V7N9jx+dhmHHnQyDSVdpZwVutaBu7WvNYqMDLSgFgfB30n452TP3vjDAvFC973mA==}
 
   '@cloudflare/kv-asset-handler@0.5.0':
     resolution: {integrity: sha512-jxQYkj8dSIzc0cD6cMMNdOc1UVjqSqu8BZdor5s8cGjW2I8BjODt/kWPVdY+u9zj3ms75Q5qaZgnxUad83+eAg==}
@@ -3872,8 +3866,6 @@ snapshots:
       use-sync-external-store: 1.6.0(react@19.2.7)
     optionalDependencies:
       '@types/react': 19.2.17
-
-  '@braintree/sanitize-url@7.1.2': {}
 
   '@cloudflare/kv-asset-handler@0.5.0': {}
 
