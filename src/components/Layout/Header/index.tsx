@@ -1,4 +1,4 @@
-import { type GestureResponderEvent, Keyboard, View } from 'react-native';
+import { type GestureResponderEvent, View } from 'react-native';
 
 import { HITSLOP_30 } from '#/lib/constants';
 
@@ -98,7 +98,6 @@ export function MenuButton() {
 	const { gtMobile } = useBreakpoints();
 
 	const onPress = () => {
-		Keyboard.dismiss();
 		setDrawerOpen(true);
 	};
 
