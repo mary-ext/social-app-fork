@@ -18,7 +18,6 @@ export function DraftsButton({
 	isDirty,
 	isEditingDraft,
 	canSaveDraft,
-	textLength: _textLength,
 }: {
 	onSelectDraft: (draft: DraftSummary) => void;
 	onSaveDraft: () => Promise<{ success: boolean }>;
@@ -27,7 +26,6 @@ export function DraftsButton({
 	isDirty: boolean;
 	isEditingDraft: boolean;
 	canSaveDraft: boolean;
-	textLength: number;
 }) {
 	const draftsDialogHandle = Dialog.useDialogHandle();
 	const savePromptHandle = Prompt.usePromptHandle();

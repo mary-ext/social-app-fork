@@ -13,7 +13,6 @@ import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import type { Shadow } from '#/state/cache/types';
 import { getClients, useSession } from '#/state/session';
-import * as userActionHistory from '#/state/userActionHistory';
 
 import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
 
@@ -135,7 +134,6 @@ export function usePostLikeMutationQueue(
 					cid: postCid,
 					via: viaRepost,
 				});
-				userActionHistory.like([postUri]);
 				return likeUri;
 			} else {
 				if (prevLikeUri) {
@@ -143,7 +141,6 @@ export function usePostLikeMutationQueue(
 						postUri: postUri,
 						likeUri: prevLikeUri,
 					});
-					userActionHistory.unlike([postUri]);
 				}
 				return undefined;
 			}

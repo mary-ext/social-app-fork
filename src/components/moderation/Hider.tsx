@@ -1,24 +1,10 @@
 import { createContext, useContext, useState } from 'react';
 
-import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
-
-import {
-	type ModerationCauseDescription,
-	useModerationCauseDescription,
-} from '#/lib/moderation/useModerationCauseDescription';
-
-import * as Dialog from '#/components/Dialog';
-import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';
+import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
 type Context = {
 	isContentVisible: boolean;
 	setIsContentVisible: (show: boolean) => void;
-	info: ModerationCauseDescription;
-	showInfoDialog: () => void;
-	meta: {
-		isNoPwi: boolean;
-		allowOverride: boolean;
-	};
 };
 
 const Context = createContext<Context | null>(null);
@@ -43,25 +29,12 @@ export function Outer({
 	allowOverride?: boolean;
 	modui: DisplayRestrictions | undefined;
 }>) {
-	const handle = Dialog.useDialogHandle();
 	const blur = modui?.blurs[0];
 	const [isContentVisible, setIsContentVisible] = useState(isContentVisibleInitialState || !blur);
-	const info = useModerationCauseDescription(blur);
-
-	const meta = {
-		isNoPwi: !!modui?.blurs.find(
-			(cause) =>
-				cause.type === ModerationCauseType.Label && cause.labelDef.identifier === '!no-unauthenticated',
-		),
-		allowOverride: allowOverride ?? !modui?.noOverride,
-	};
-
-	const showInfoDialog = () => {
-		handle.open(null);
-	};
+	const canOverride = allowOverride ?? !modui?.noOverride;
 
 	const onSetContentVisible = (show: boolean) => {
-		if (!meta.allowOverride) {
+		if (!canOverride) {
 			return;
 		}
 		setIsContentVisible(show);
@@ -70,17 +43,9 @@ export function Outer({
 	const ctx = {
 		isContentVisible,
 		setIsContentVisible: onSetContentVisible,
-		showInfoDialog,
-		info,
-		meta,
 	};
 
-	return (
-		<Context.Provider value={ctx}>
-			{children}
-			<ModerationDetailsDialog handle={handle} modcause={blur} />
-		</Context.Provider>
-	);
+	return <Context.Provider value={ctx}>{children}</Context.Provider>;
 }
 
 export function Content({ children }: { children: React.ReactNode }) {

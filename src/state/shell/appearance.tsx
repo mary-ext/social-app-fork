@@ -26,7 +26,7 @@ const fontScaleMultipliers: Record<Device['fontScale'], number> = {
 	'2': 1 + factor * 1, // unused
 };
 
-export function computeFontScaleMultiplier(scale: Device['fontScale']) {
+function computeFontScaleMultiplier(scale: Device['fontScale']) {
 	return fontScaleMultipliers[scale];
 }
 
@@ -36,7 +36,6 @@ type AppearanceContext = {
 	fontFamily: Exclude<Device['fontFamily'], undefined>;
 	fontScale: Exclude<Device['fontScale'], undefined>;
 	fontScaleMultiplier: number;
-	theme: ThemeName;
 	setColorMode: (colorMode: Exclude<Device['colorMode'], undefined>) => void;
 	setDarkTheme: (darkTheme: Exclude<Device['darkTheme'], undefined>) => void;
 	setFontFamily: (fontFamily: Exclude<Device['fontFamily'], undefined>) => void;
@@ -49,7 +48,6 @@ const AppearanceContext = createContext<AppearanceContext>({
 	fontFamily: 'theme',
 	fontScale: '0',
 	fontScaleMultiplier: 1,
-	theme: 'light',
 	setColorMode: () => {},
 	setDarkTheme: () => {},
 	setFontFamily: () => {},
@@ -93,7 +91,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		fontFamily,
 		fontScale,
 		fontScaleMultiplier,
-		theme,
 		setColorMode,
 		setDarkTheme,
 		setFontFamily,

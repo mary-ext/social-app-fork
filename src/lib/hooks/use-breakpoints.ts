@@ -2,22 +2,11 @@ import { useMediaQuery } from '#/lib/media-query';
 
 export type Breakpoint = 'gtPhone' | 'gtMobile' | 'gtTablet';
 
-export function useBreakpoints(): Record<Breakpoint, boolean> & {
-	activeBreakpoint: Breakpoint | undefined;
-} {
+export function useBreakpoints(): Record<Breakpoint, boolean> {
 	const gtPhone = useMediaQuery('(width >= 500px)');
 	const gtMobile = useMediaQuery('(width >= 800px)');
 	const gtTablet = useMediaQuery('(width >= 1300px)');
-	let active: Breakpoint | undefined;
-	if (gtTablet) {
-		active = 'gtTablet';
-	} else if (gtMobile) {
-		active = 'gtMobile';
-	} else if (gtPhone) {
-		active = 'gtPhone';
-	}
 	return {
-		activeBreakpoint: active,
 		gtPhone,
 		gtMobile,
 		gtTablet,

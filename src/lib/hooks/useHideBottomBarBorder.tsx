@@ -9,7 +9,7 @@ HideBottomBarBorderContext.displayName = 'HideBottomBarBorderContext';
 const HideBottomBarBorderSetterContext = createContext<HideBottomBarBorderSetter | null>(null);
 HideBottomBarBorderSetterContext.displayName = 'HideBottomBarBorderSetterContext';
 
-export function useHideBottomBarBorderSetter() {
+function useHideBottomBarBorderSetter() {
 	const hideBottomBarBorder = useContext(HideBottomBarBorderSetterContext);
 	if (!hideBottomBarBorder) {
 		throw new Error('useHideBottomBarBorderSetter must be used within a HideBottomBarBorderProvider');

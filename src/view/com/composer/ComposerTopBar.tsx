@@ -29,7 +29,6 @@ export function ComposerTopBar({
 	isDirty,
 	isEditingDraft,
 	canSaveDraft,
-	textLength,
 }: {
 	border?: boolean;
 	isPublishing: boolean;
@@ -47,7 +46,6 @@ export function ComposerTopBar({
 	isDirty: boolean;
 	isEditingDraft: boolean;
 	canSaveDraft: boolean;
-	textLength: number;
 }) {
 	return (
 		<Dialog.Header.Outer border={false} className={clsx(styles.header, border && styles.headerScrolled)}>
@@ -81,7 +79,6 @@ export function ComposerTopBar({
 								isDirty={isDirty}
 								isEditingDraft={isEditingDraft}
 								canSaveDraft={canSaveDraft}
-								textLength={textLength}
 							/>
 						)}
 

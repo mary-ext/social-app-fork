@@ -42,7 +42,6 @@ import {
 } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { getClients, useSession } from '#/state/session';
-import * as userActionHistory from '#/state/userActionHistory';
 
 import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations';
 import { RQKEY as RQKEY_MY_BLOCKED } from './my-blocked-accounts';
@@ -237,7 +236,6 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
-	const { appview } = getClients();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
 	const did = profile.did;
@@ -252,7 +250,6 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 				const { uri } = await followMutation.mutateAsync({
 					did,
 				});
-				userActionHistory.follow([did]);
 				return uri;
 			} else {
 				if (prevFollowingUri) {
@@ -260,7 +257,6 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 						did,
 						followUri: prevFollowingUri,
 					});
-					userActionHistory.unfollow([did]);
 				}
 				return undefined;
 			}
@@ -305,20 +301,6 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 							})),
 						};
 					}
-				});
-			}
-
-			if (finalFollowingUri) {
-				void ok(
-					appview.get('app.bsky.graph.getSuggestedFollowsByActor', {
-						params: { actor: did },
-					}),
-				).then((data) => {
-					const dids = mapDefined(data.suggestions, (a) => (a.viewer?.following ? undefined : a.did)).slice(
-						0,
-						8,
-					);
-					userActionHistory.followSuggestion(dids);
 				});
 			}
 		},

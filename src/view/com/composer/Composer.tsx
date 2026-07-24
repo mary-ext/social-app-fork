@@ -125,7 +125,7 @@ export const ComposePost = ({
 	const discardPromptHandle = Prompt.usePromptHandle();
 	const emptyPostsPromptHandle = Prompt.usePromptHandle();
 	const skipEmptyConfirmedRef = useRef(false);
-	const { mutateAsync: saveDraft, isPending: _isSavingDraft } = useSaveDraftMutation();
+	const { mutateAsync: saveDraft } = useSaveDraftMutation();
 	const { mutate: cleanupPublishedDraft } = useCleanupPublishedDraftMutation();
 	const { closeAllDialogs } = useDialogStateControlContext();
 	const { data: preferences } = usePreferencesQuery();
@@ -970,7 +970,6 @@ export const ComposePost = ({
 				isDirty={composerState.isDirty}
 				isEditingDraft={!!composerState.draftId}
 				canSaveDraft={allPostsWithinLimit}
-				textLength={thread.posts[0]!.text.length}
 			/>
 			{/* The composer owns its own scrolling (the `Dialog.Body` / `scrollContainer` below) */}
 			<Dialog.Body className={styles.dialogBody}>

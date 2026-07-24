@@ -185,7 +185,7 @@ const GalleryItem = ({
 	onWidthChange,
 }: GalleryItemProps) => {
 	const aspectRatio = getAspectRatio(image.transformed ?? image.source);
-	const { isCropped: _isCropped, ...dims } = computeDims({ aspectRatio, height: contentHeight });
+	const dims = computeDims({ aspectRatio, height: contentHeight });
 
 	useEffect(() => {
 		onWidthChange(index, dims.width);

@@ -1,7 +1,3 @@
-export function choose<U, T extends Record<string, U>>(value: keyof T, choices: T): U {
-	return choices[value];
-}
-
 /**
  * returns `a` if `b` is deeply equal, preserving structural sharing between `a` and `b`. supports Date object
  * comparisons.

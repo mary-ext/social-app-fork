@@ -33,7 +33,6 @@ import { ListFeedAPI } from '#/lib/api/feed/list';
 import { PostListFeedAPI } from '#/lib/api/feed/posts';
 import type { FeedAPI } from '#/lib/api/feed/types';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
-import { DISCOVER_FEED_URI } from '#/lib/constants';
 import { typedKeys } from '#/lib/functions';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
@@ -43,7 +42,6 @@ import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';
-import * as userActionHistory from '#/state/userActionHistory';
 
 import { logger } from '#/logger';
 
@@ -137,7 +135,6 @@ export function usePostFeedQuery(
 		args: typeof selectArgs;
 		result: InfiniteData<FeedPage>;
 	} | null>(null);
-	const isDiscover = feedDesc.includes(DISCOVER_FEED_URI);
 
 	/** number of posts to fetch in a single request */
 	const fetchLimit = MIN_POSTS;
@@ -148,9 +145,8 @@ export function usePostFeedQuery(
 			feedTuners,
 			moderationOpts,
 			ignoreFilterFor: opts?.ignoreFilterFor,
-			isDiscover,
 		}),
-		[feedTuners, moderationOpts, opts?.ignoreFilterFor, isDiscover],
+		[feedTuners, moderationOpts, opts?.ignoreFilterFor],
 	);
 
 	const query = useInfiniteQuery<FeedPageUnselected, Error, InfiniteData<FeedPage>, QueryKey, RQPageParam>({
@@ -206,7 +202,7 @@ export function usePostFeedQuery(
 				// If the selection depends on some data, that data should
 				// be included in the selectArgs object and read here.
 				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
-				const { feedTuners, moderationOpts, ignoreFilterFor, isDiscover } = selectArgs;
+				const { feedTuners, moderationOpts, ignoreFilterFor } = selectArgs;
 
 				const tuner = new FeedTuner(feedTuners);
 
@@ -268,20 +264,6 @@ export function usePostFeedQuery(
 									) {
 										return;
 									}
-								}
-
-								if (isDiscover) {
-									userActionHistory.seen(
-										slice.items.map((item) => ({
-											feedContext: slice.feedContext,
-											reqId: slice.reqId,
-											likeCount: item.post.likeCount ?? 0,
-											repostCount: item.post.repostCount ?? 0,
-											replyCount: item.post.replyCount ?? 0,
-											isFollowedBy: !!item.post.author.viewer?.followedBy,
-											uri: item.post.uri,
-										})),
-									);
 								}
 
 								const feedPostSlice: FeedPostSlice = {

@@ -161,14 +161,6 @@ export class FeedViewPostsSlice {
 		return reason?.$type === 'app.bsky.feed.defs#reasonRepost';
 	}
 
-	get likeCount() {
-		return this._feedPost.post.likeCount ?? 0;
-	}
-
-	containsUri(uri: string) {
-		return !!this.items.find((item) => item.post.uri === uri);
-	}
-
 	getAuthors(): AuthorContext {
 		const feedPost = this._feedPost;
 		const author: AppBskyActorDefs.ProfileViewBasic = feedPost.post.author;

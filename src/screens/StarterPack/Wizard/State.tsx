@@ -34,7 +34,6 @@ interface State {
 	feeds: AppBskyFeedDefs.GeneratorView[];
 	processing: boolean;
 	error?: string;
-	transitionDirection: 'Backward' | 'Forward';
 	targetDid?: string;
 }
 
@@ -61,13 +60,11 @@ function reducer(state: State, action: Action): State {
 		updatedState = {
 			...state,
 			currentStep: steps[currentIndex + 1]!,
-			transitionDirection: 'Forward',
 		};
 	} else if (action.type === 'Back' && state.currentStep !== 'Details') {
 		updatedState = {
 			...state,
 			currentStep: steps[currentIndex - 1]!,
-			transitionDirection: 'Backward',
 		};
 	}
 
@@ -140,7 +137,6 @@ export function Provider({
 				profiles: listItems?.map((i) => i.subject) ?? [],
 				feeds: starterPack.feeds ?? [],
 				processing: false,
-				transitionDirection: 'Forward',
 				targetDid,
 			};
 		}
@@ -151,7 +147,6 @@ export function Provider({
 			profiles: [targetProfile],
 			feeds: [],
 			processing: false,
-			transitionDirection: 'Forward',
 			targetDid,
 		};
 	};
