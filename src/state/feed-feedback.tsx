@@ -38,7 +38,6 @@ export type StateContext = {
 	enabled: boolean;
 	onItemSeen: (item: PostFeed.FeedRow) => void;
 	sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void;
-	feedDescriptor: FeedDescriptor | undefined;
 	feedSourceInfo: FeedSourceInfo | undefined;
 };
 
@@ -46,7 +45,6 @@ const stateContext = createContext<StateContext>({
 	enabled: false,
 	onItemSeen: (_item: PostFeed.FeedRow) => {},
 	sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
-	feedDescriptor: undefined,
 	feedSourceInfo: undefined,
 });
 stateContext.displayName = 'FeedFeedbackContext';
@@ -159,7 +157,6 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 			// call on various events
 			// queues the event to be sent with the throttled sendToFeed call
 			sendInteraction,
-			feedDescriptor: feed?.feedDescriptor,
 			feedSourceInfo: typeof feed === 'object' ? feed : undefined,
 		};
 	}, [enabled, onItemSeen, sendInteraction, feed]);

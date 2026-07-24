@@ -12,8 +12,6 @@ export interface DialogControlRefProps {
 interface IDialogContext {
 	/** The currently registered dialogs. */
 	activeDialogs: React.MutableRefObject<Map<string, React.MutableRefObject<DialogControlRefProps>>>;
-	/** The currently open dialogs, referenced by their IDs, generated from `useId`. */
-	openDialogs: React.MutableRefObject<Set<string>>;
 }
 
 interface CloseAllDialogsOptions {
@@ -28,7 +26,6 @@ interface IDialogControlContext {
 
 const DialogContext = createContext<IDialogContext>({
 	activeDialogs: { current: new Map() },
-	openDialogs: { current: new Set() },
 });
 DialogContext.displayName = 'DialogContext';
 
@@ -79,7 +76,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 	const context: IDialogContext = {
 		activeDialogs,
-		openDialogs,
 	};
 	const controls = {
 		closeAllDialogs,
