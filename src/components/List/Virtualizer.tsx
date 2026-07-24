@@ -202,21 +202,19 @@ const readViewport = ({
 	scrollRoot: React.RefObject<HTMLElement | null> | undefined;
 }): Viewport => {
 	const containerRect = container.getBoundingClientRect();
-	const root = scrollRoot?.current;
+	const root = scrollRoot?.current ?? null;
+	const viewportTop = getViewportTop(root);
+	const viewportBottom = viewportTop + (root ? root.clientHeight : window.innerHeight);
 
-	if (root) {
-		const viewportTop = getViewportTop(root);
-		const offset = Math.max(0, viewportTop - containerRect.top);
-		return {
-			offset,
-			size: Math.max(0, viewportTop + root.clientHeight - containerRect.top - offset),
-		};
-	}
-
-	const offset = Math.max(0, -containerRect.top);
+	// size is the height of the viewport∩container intersection: a list scrolled entirely past the viewport (or
+	// one shorter than the viewport) reports 0/partial visible height, not a full viewport. that keeps getRange
+	// from rendering a tail of off-screen rows and disables prepend anchoring while the list is out of view.
 	return {
-		offset,
-		size: Math.max(0, window.innerHeight - containerRect.top - offset),
+		offset: Math.max(0, viewportTop - containerRect.top),
+		size: Math.max(
+			0,
+			Math.min(viewportBottom, containerRect.bottom) - Math.max(viewportTop, containerRect.top),
+		),
 	};
 };
 
