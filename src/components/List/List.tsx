@@ -207,7 +207,7 @@ export function List<ItemT>({
 
 			{onStartReached && !isEmpty && (
 				<Visibility
-					key={itemCount}
+					key={`start-${itemCount}`}
 					enabled={isFocused}
 					onVisibleChange={onStartVisibleChange}
 					root={scrollRoot}
@@ -221,7 +221,7 @@ export function List<ItemT>({
 
 			{onEndReached && !isEmpty && (
 				<Visibility
-					key={itemCount}
+					key={`end-${itemCount}`}
 					bottomMargin={thresholdMargin(onEndReachedThreshold)}
 					enabled={isFocused}
 					onVisibleChange={onEndVisibleChange}
