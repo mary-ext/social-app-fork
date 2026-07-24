@@ -259,19 +259,24 @@ const scrollBy = ({
 };
 
 class VirtualizerStore<ItemT> {
-	#container: HTMLElement | null = null;
+	#options: VirtualizerOptions<ItemT>;
+	#sourceOptions: VirtualizerOptions<ItemT>;
+
 	#emitter = new SimpleEventEmitter<[]>();
 	#layout: Layout;
+	#snapshot: VirtualizerSnapshot<ItemT>;
+	#viewport: Viewport;
+
 	#measurements = new Map<string, number>();
-	#lastContentWidth = 0;
-	#options: VirtualizerOptions<ItemT>;
+	#pendingMountMeasurements: { key: string; size: number }[] = [];
+
+	#flushScheduled = false;
 	#pendingScrollAdjustment = 0;
-	#pendingScrollAdjustmentScheduled = false;
+
+	#container: HTMLElement | null = null;
+	#lastContentWidth = 0;
 	#rowKeys = new WeakMap<Element, string>();
 	#rowResizeObserver: ResizeObserver | null = null;
-	#snapshot: VirtualizerSnapshot<ItemT>;
-	#sourceOptions: VirtualizerOptions<ItemT>;
-	#viewport: Viewport;
 
 	constructor(options: VirtualizerOptions<ItemT>) {
 		this.#options = options;
@@ -329,7 +334,7 @@ class VirtualizerStore<ItemT> {
 					// prepended rows are still estimate-sized here; defer the scroll to a microtask so it runs
 					// after their real heights fold in, scrolling the reconciled total once.
 					this.#pendingScrollAdjustment += scrollAdjustment;
-					this.#schedulePendingScrollAdjustment();
+					this.#scheduleFlush();
 				}
 				this.#viewport = { offset: nextOffset, size: previousViewport.size };
 			}
@@ -345,8 +350,7 @@ class VirtualizerStore<ItemT> {
 			return;
 		}
 
-		this.#flushPendingScrollAdjustment();
-		this.#syncViewport();
+		this.#drainAndApply();
 	}
 
 	setContainer = (container: HTMLElement | null): void => {
@@ -429,7 +433,10 @@ class VirtualizerStore<ItemT> {
 			this.#measureRows(rows);
 		});
 		this.#rowResizeObserver.observe(node);
-		this.#measureRows([{ key, size: node.getBoundingClientRect().height }]);
+		// buffer rather than measure now: sibling rows mounting this commit batch into one recompute, and on a
+		// prepend their real heights fold into the queued anchor scroll before it drains.
+		this.#pendingMountMeasurements.push({ key, size: node.getBoundingClientRect().height });
+		this.#scheduleFlush();
 
 		return () => {
 			this.#rowKeys.delete(node);
@@ -490,7 +497,7 @@ class VirtualizerStore<ItemT> {
 		this.#publish(true);
 	}
 
-	// applies and clears the queued prepend scroll; zeroed before scrolling so a re-entrant event cannot replay it.
+	// applies and clears the queued scroll compensation; zeroed before scrolling so a re-entrant event cannot replay it.
 	#flushPendingScrollAdjustment(): void {
 		const scrollAdjustment = this.#pendingScrollAdjustment;
 		this.#pendingScrollAdjustment = 0;
@@ -502,18 +509,44 @@ class VirtualizerStore<ItemT> {
 		scrollBy({ offset: scrollAdjustment, scrollRoot: this.#options.scrollRoot });
 	}
 
-	// drains the pending scroll on a microtask, after React's commit has folded the prepended rows' real heights
-	// into the total — unlike commit(), which bails once a measurement publish moves the snapshot.
-	#schedulePendingScrollAdjustment(): void {
-		if (this.#pendingScrollAdjustmentScheduled) {
+	// fold into the pending total while a flush is scheduled — scrolling now against a not-yet-applied position gets
+	// clamped away — otherwise scroll immediately.
+	#applyScrollAdjustment(offset: number): void {
+		if (this.#flushScheduled) {
+			this.#pendingScrollAdjustment += offset;
+		} else {
+			scrollBy({ offset, scrollRoot: this.#options.scrollRoot });
+		}
+	}
+
+	// shared by commit() and the microtask fallback; both are idempotent, so whichever drains a batch first wins.
+	#drainAndApply(): void {
+		this.#drainPendingMountMeasurements();
+		this.#flushPendingScrollAdjustment();
+		this.#syncViewport();
+	}
+
+	#drainPendingMountMeasurements(): void {
+		if (this.#pendingMountMeasurements.length === 0) {
 			return;
 		}
 
-		this.#pendingScrollAdjustmentScheduled = true;
+		const rows = this.#pendingMountMeasurements;
+		this.#pendingMountMeasurements = [];
+		this.#measureRows(rows);
+	}
+
+	// microtask fallback (still before paint) for when commit() bails on a snapshot a measurement publish already
+	// moved. the flag clears only after the drain, so scrolls measured mid-drain fold into the same batch.
+	#scheduleFlush(): void {
+		if (this.#flushScheduled) {
+			return;
+		}
+
+		this.#flushScheduled = true;
 		queueMicrotask(() => {
-			this.#pendingScrollAdjustmentScheduled = false;
-			this.#flushPendingScrollAdjustment();
-			this.#syncViewport();
+			this.#drainAndApply();
+			this.#flushScheduled = false;
 		});
 	}
 
@@ -627,13 +660,7 @@ class VirtualizerStore<ItemT> {
 		}
 
 		if (scrollAdjustment !== 0) {
-			// while a prepend drain is queued, fold this delta into it: scrolling now against the not-yet-applied
-			// prepend position gets clamped away, so let the microtask apply the total once.
-			if (this.#pendingScrollAdjustmentScheduled) {
-				this.#pendingScrollAdjustment += scrollAdjustment;
-			} else {
-				scrollBy({ offset: scrollAdjustment, scrollRoot: this.#options.scrollRoot });
-			}
+			this.#applyScrollAdjustment(scrollAdjustment);
 			this.#viewport = {
 				offset: Math.max(0, this.#viewport.offset + scrollAdjustment),
 				size: this.#viewport.size,
