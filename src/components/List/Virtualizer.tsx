@@ -53,6 +53,7 @@ type VirtualizerProps<ItemT> = VirtualizerOptions<ItemT> & {
 
 export type VirtualizerMethods = {
 	scrollToIndex: (options: { index: number; offset?: number }) => boolean;
+	syncViewportAfterScroll: () => void;
 };
 
 type VirtualizerSnapshot<ItemT> = {
@@ -318,8 +319,14 @@ class VirtualizerStore<ItemT> {
 		const nextLayout = this.#buildLayout();
 
 		// only anchor when the list occupies the viewport; with size 0 there is no visible row to preserve and
-		// compensating would scroll the page while the user looks at content outside the list.
-		if (previousViewport.size > 0 && !haveSameKeys(previousLayout.keys, nextLayout.keys)) {
+		// compensating would scroll the page while the user looks at content outside the list. skip it at the
+		// very top too (matching native scroll-anchoring), so a prepend pushes content down while the user stays
+		// pinned to the top.
+		if (
+			previousViewport.size > 0 &&
+			previousViewport.offset > 0.5 &&
+			!haveSameKeys(previousLayout.keys, nextLayout.keys)
+		) {
 			const previousAnchorIndex = findIndexAtOffset(previousLayout, previousViewport.offset);
 			const anchorKey = previousLayout.keys[previousAnchorIndex];
 			const nextAnchorIndex = anchorKey === undefined ? undefined : nextLayout.indexByKey.get(anchorKey);
@@ -466,6 +473,14 @@ class VirtualizerStore<ItemT> {
 		this.#viewport = { offset: Math.max(0, nextOffset - offset), size: viewport.size };
 		this.#publish(true);
 		return true;
+	};
+
+	// the list drove an absolute scroll; the scroll event that refreshes the viewport is async, so read the new
+	// position now, before a data change can anchor against the stale offset, and drop any queued prepend
+	// adjustment that would replay against the pre-scroll position.
+	syncViewportAfterScroll = (): void => {
+		this.#pendingScrollAdjustment = 0;
+		this.#syncViewport();
 	};
 
 	#syncViewport(): void {
@@ -717,7 +732,11 @@ export function Virtualizer<ItemT>({
 	);
 	const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
 
-	useImperativeHandle(ref, () => ({ scrollToIndex: store.scrollToIndex }), [store]);
+	useImperativeHandle(
+		ref,
+		() => ({ scrollToIndex: store.scrollToIndex, syncViewportAfterScroll: store.syncViewportAfterScroll }),
+		[store],
+	);
 
 	useLayoutEffect(() => {
 		store.setOptions({ data, enabled, estimateHeight, keyExtractor, overscanCount, scrollRoot });

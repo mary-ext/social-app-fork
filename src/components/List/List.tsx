@@ -103,10 +103,16 @@ export function List<ItemT>({
 			scrollToTop() {
 				const root = scrollRoot ? scrollRoot.current! : window;
 				root.scrollTo({ top: 0 });
+				virtualizerRef.current?.syncViewportAfterScroll();
 			},
 			scrollToOffset({ animated, offset }) {
 				const root = scrollRoot ? scrollRoot.current! : window;
 				root.scrollTo({ behavior: animated ? 'smooth' : 'instant', left: 0, top: offset });
+				// a smooth scroll settles over later frames, so the sync would read a stale position; the scroll
+				// listener picks it up instead.
+				if (!animated) {
+					virtualizerRef.current?.syncViewportAfterScroll();
+				}
 			},
 			scrollToEnd({ animated = true } = {}) {
 				const root = scrollRoot ? scrollRoot.current! : document.documentElement;
@@ -115,6 +121,9 @@ export function List<ItemT>({
 					left: 0,
 					top: root.scrollHeight,
 				});
+				if (!animated) {
+					virtualizerRef.current?.syncViewportAfterScroll();
+				}
 			},
 			scrollToIndex(options) {
 				return virtualizerRef.current?.scrollToIndex(options) ?? false;
