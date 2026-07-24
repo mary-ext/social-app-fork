@@ -15,10 +15,12 @@ export const ItemSeenContext = createContext<SeenObserver | null>(null);
 // oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- binds `onItemSeen`'s parameter to the list's element type; inlining it to `unknown` would flip the callback's variance
 export function ItemSeenObserver<ItemT>({
 	children,
+	enabled,
 	onItemSeen,
 	root,
 }: {
 	children: ReactNode;
+	enabled: boolean;
 	onItemSeen: (item: ItemT) => void;
 	root: React.RefObject<HTMLElement | null> | undefined;
 }) {
@@ -90,9 +92,12 @@ export function ItemSeenObserver<ItemT>({
 	});
 
 	useEffect(() => {
+		if (!enabled) {
+			return;
+		}
 		api.connect(root?.current ?? null);
 		return () => api.disconnect();
-	}, [api, root]);
+	}, [api, enabled, root]);
 
 	return <ItemSeenContext value={api}>{children}</ItemSeenContext>;
 }

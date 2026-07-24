@@ -11,7 +11,7 @@ export type RowProps<ItemT> = {
 	renderItem: ListRenderItem<ItemT>;
 };
 
-/** a list row that renders its content unconditionally; the non-virtualized counterpart to VirtualRow. */
+/** a list row that renders its content unconditionally. */
 // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `memo` erases the type parameter
 export const Row = memo(function Row<ItemT>({ index, item, renderItem }: RowProps<ItemT>) {
 	const seen = use(ItemSeenContext);

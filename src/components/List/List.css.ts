@@ -1,7 +1,25 @@
 import { style } from '@vanilla-extract/css';
 
-export const container = style({
-	position: 'relative',
+import { recipe } from '#/styles/recipe';
+
+export const container = recipe(
+	{
+		base: {
+			position: 'relative',
+		},
+		variants: {
+			virtualized: {
+				true: {
+					overflowAnchor: 'none',
+				},
+			},
+		},
+	},
+	{ debugId: 'container' },
+);
+
+export const virtualizer = style({
+	contain: 'layout style',
 });
 
 export const row = style({
@@ -9,6 +27,11 @@ export const row = style({
 	contain: 'content',
 	flexDirection: 'column',
 	flexShrink: 0,
+});
+
+export const spacer = style({
+	flexShrink: 0,
+	pointerEvents: 'none',
 });
 
 export const aboveTheFold = style({

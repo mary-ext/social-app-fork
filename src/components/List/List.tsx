@@ -1,14 +1,15 @@
-import { type ReactNode, type Ref, startTransition, useImperativeHandle, useRef } from 'react';
+import { type ReactNode, type Ref, startTransition, useEffect, useImperativeHandle, useRef } from 'react';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
-import { useWindowHeight } from '#/lib/hooks/use-window-height';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import * as css from '#/components/List/List.css';
 
+import { useIsFocused } from '#/routes';
+
 import { ItemSeenObserver } from './ItemSeenObserver';
 import { Row } from './Row';
-import { overscanRatio, VirtualRow, VirtualRowObserver } from './VirtualRow';
+import { Virtualizer, type VirtualizerMethods } from './Virtualizer';
 
 export type ListRenderItemInfo<ItemT> = {
 	index: number;
@@ -19,6 +20,13 @@ export type ListRenderItem<ItemT> = (info: ListRenderItemInfo<ItemT>) => ReactNo
 
 export type ListMethods = {
 	scrollToEnd: (options?: { animated?: boolean }) => void;
+	/**
+	 * scrolls the indexed row to the start of the list's visible viewport.
+	 *
+	 * @param options target index and optional pixels to leave before the row
+	 * @returns whether a virtualized row was available to scroll to
+	 */
+	scrollToIndex: (options: { index: number; offset?: number }) => boolean;
 	scrollToOffset: (options: { animated?: boolean; offset: number }) => void;
 	scrollToTop: () => void;
 };
@@ -27,15 +35,6 @@ export type ListRef = React.RefObject<ListMethods | null>;
 
 export type ListProps<ItemT> = {
 	data: readonly ItemT[] | null | undefined;
-	/**
-	 * opts a row out of virtualization (see {@link estimateHeight}), keeping it mounted at all times.
-	 *
-	 * @param item the row's item.
-	 * @param index the row's index.
-	 * @returns true if the row's late height realization must not shift surrounding content (e.g. scroll-anchor
-	 *   targets).
-	 */
-	disableSkipOffscreen?: (item: ItemT, index: number) => boolean;
 	keyExtractor: (item: ItemT, index: number) => string;
 	/** Shown in place of the rows when `data` is empty. */
 	ListEmptyComponent?: ReactNode;
@@ -60,6 +59,8 @@ export type ListProps<ItemT> = {
 	onStartReached?: () => void;
 	/** Lookahead before the start, in multiples of the viewport height. */
 	onStartReachedThreshold?: number;
+	/** number of extra rows rendered before and after the visible range. */
+	overscanCount?: number;
 	ref?: Ref<ListMethods>;
 	renderItem: ListRenderItem<ItemT>;
 	/**
@@ -76,7 +77,6 @@ export type ListProps<ItemT> = {
  */
 export function List<ItemT>({
 	data,
-	disableSkipOffscreen,
 	keyExtractor,
 	ListEmptyComponent,
 	ListFooterComponent,
@@ -89,10 +89,14 @@ export function List<ItemT>({
 	onScrolledDownChange,
 	onStartReached,
 	onStartReachedThreshold,
+	overscanCount = 3,
 	ref,
 	renderItem,
 	scrollRoot,
 }: ListProps<ItemT>) {
+	const isFocused = useIsFocused();
+	const virtualizerRef = useRef<VirtualizerMethods>(null);
+
 	useImperativeHandle(
 		ref,
 		() => ({
@@ -111,6 +115,9 @@ export function List<ItemT>({
 					left: 0,
 					top: root.scrollHeight,
 				});
+			},
+			scrollToIndex(options) {
+				return virtualizerRef.current?.scrollToIndex(options) ?? false;
 			},
 		}),
 		[scrollRoot],
@@ -131,45 +138,30 @@ export function List<ItemT>({
 		startTransition(() => onScrolledDownChange?.(!isAboveTheFold));
 	});
 
-	const windowHeight = useWindowHeight();
-
-	const isEmpty = !data || data.length === 0;
-	const itemCount = data?.length ?? 0;
+	const rows = data ?? [];
+	const isEmpty = rows.length === 0;
+	const itemCount = rows.length;
 	const virtualize = estimateHeight != null;
-	// eager-mount the rows the observer would keep alive around the viewport, so they don't flash blank first.
-	// at rest the observer's live band spans the viewport plus the overscan below it, hence `1 + overscanRatio`.
-	const eagerCount =
-		estimateHeight != null ? Math.ceil((windowHeight * (1 + overscanRatio)) / estimateHeight) : 0;
+	const renderRows = !isEmpty || (virtualize && !isFocused);
 
 	let children = ListEmptyComponent;
 
-	if (!isEmpty) {
+	if (renderRows) {
 		if (virtualize) {
 			children = (
-				<VirtualRowObserver root={scrollRoot}>
-					{data.map((item, index) => {
-						const key = keyExtractor(item, index);
-						const virtual = !disableSkipOffscreen?.(item, index);
-
-						if (virtual) {
-							return (
-								<VirtualRow
-									key={key}
-									estimateHeight={estimateHeight}
-									index={index}
-									initialVisible={index < eagerCount}
-									item={item}
-									renderItem={renderItem}
-								/>
-							);
-						} else {
-							return <Row key={key} index={index} item={item} renderItem={renderItem} />;
-						}
-					})}
-				</VirtualRowObserver>
+				<Virtualizer
+					data={rows}
+					enabled={isFocused}
+					estimateHeight={estimateHeight}
+					keyExtractor={keyExtractor}
+					overscanCount={overscanCount}
+					ref={virtualizerRef}
+					renderItem={renderItem}
+					scrollRoot={scrollRoot}
+				/>
 			);
 		} else {
-			children = data.map((item, index) => {
+			children = rows.map((item, index) => {
 				const key = keyExtractor(item, index);
 
 				return <Row key={key} index={index} item={item} renderItem={renderItem} />;
@@ -178,7 +170,7 @@ export function List<ItemT>({
 
 		if (onItemSeen !== undefined) {
 			children = (
-				<ItemSeenObserver onItemSeen={onItemSeen} root={scrollRoot}>
+				<ItemSeenObserver enabled={isFocused} onItemSeen={onItemSeen} root={scrollRoot}>
 					{children}
 				</ItemSeenObserver>
 			);
@@ -188,7 +180,7 @@ export function List<ItemT>({
 	return (
 		<div
 			ref={(node) => {
-				if (onContentSizeChange === undefined || node === null) {
+				if (!isFocused || onContentSizeChange === undefined || node === null) {
 					return;
 				}
 
@@ -202,15 +194,21 @@ export function List<ItemT>({
 				observer.observe(node);
 				return () => observer.disconnect();
 			}}
-			className={css.container}
+			className={css.container({ virtualized: virtualize })}
 		>
 			{onScrolledDownChange && (
-				<Visibility className={css.aboveTheFold} onVisibleChange={onAboveTheFoldChange} root={scrollRoot} />
+				<Visibility
+					className={css.aboveTheFold}
+					enabled={isFocused}
+					onVisibleChange={onAboveTheFoldChange}
+					root={scrollRoot}
+				/>
 			)}
 
 			{onStartReached && !isEmpty && (
 				<Visibility
 					key={itemCount}
+					enabled={isFocused}
 					onVisibleChange={onStartVisibleChange}
 					root={scrollRoot}
 					topMargin={thresholdMargin(onStartReachedThreshold)}
@@ -225,6 +223,7 @@ export function List<ItemT>({
 				<Visibility
 					key={itemCount}
 					bottomMargin={thresholdMargin(onEndReachedThreshold)}
+					enabled={isFocused}
 					onVisibleChange={onEndVisibleChange}
 					root={scrollRoot}
 				/>
@@ -240,45 +239,49 @@ const thresholdMargin = (threshold: number | undefined) => `${(threshold ?? 0) *
 function Visibility({
 	bottomMargin = '0px',
 	className = css.sentinel,
+	enabled,
 	onVisibleChange,
 	root,
 	topMargin = '0px',
 }: {
 	bottomMargin?: string;
 	className?: string;
+	enabled: boolean;
 	onVisibleChange: (isVisible: boolean) => void;
 	root?: React.RefObject<Element | null>;
 	topMargin?: string;
 }) {
 	const isIntersecting = useRef<boolean | undefined>(undefined);
+	const nodeRef = useRef<HTMLDivElement | null>(null);
 
-	return (
-		<div
-			ref={(node) => {
-				if (node === null) {
-					return;
+	// observe in a passive effect, not the callback ref: a custom `root` is an ancestor whose ref is still
+	// null during the child-first commit, so the ref would fall back to the viewport and apply the margins
+	// against the wrong bounds.
+	useEffect(() => {
+		const node = nodeRef.current;
+		if (!enabled || node === null) {
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const entry = entries[0]!;
+				const next = entry.isIntersecting;
+
+				if (isIntersecting.current !== next) {
+					isIntersecting.current = next;
+					batchedUpdates(() => onVisibleChange(next));
 				}
+			},
+			{
+				root: root?.current ?? null,
+				rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
+			},
+		);
 
-				const observer = new IntersectionObserver(
-					(entries) => {
-						const entry = entries[0]!;
-						const next = entry.isIntersecting;
+		observer.observe(node);
+		return () => observer.disconnect();
+	}, [bottomMargin, enabled, onVisibleChange, root, topMargin]);
 
-						if (isIntersecting.current !== next) {
-							isIntersecting.current = next;
-							batchedUpdates(() => onVisibleChange(next));
-						}
-					},
-					{
-						root: root?.current ?? null,
-						rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
-					},
-				);
-
-				observer.observe(node);
-				return () => observer.disconnect();
-			}}
-			className={className}
-		/>
-	);
+	return <div ref={nodeRef} className={className} />;
 }
