@@ -95,8 +95,7 @@ const createLayout = <ItemT,>({
 	};
 };
 
-// rebuilds the offsets from `fromIndex` onward, reusing the unchanged prefix — a measurement change at index
-// k leaves offsets[0..k] untouched and only shifts offsets[k+1..N]. keys and the index map are shared as-is.
+// rebuilds offsets from `fromIndex` onward, reusing the unchanged prefix; keys and the index map are shared.
 const recomputeOffsets = (
 	layout: Layout,
 	measurements: Map<string, number>,
@@ -206,9 +205,8 @@ const readViewport = ({
 	const viewportTop = getViewportTop(root);
 	const viewportBottom = viewportTop + (root ? root.clientHeight : window.innerHeight);
 
-	// size is the height of the viewport∩container intersection: a list scrolled entirely past the viewport (or
-	// one shorter than the viewport) reports 0/partial visible height, not a full viewport. that keeps getRange
-	// from rendering a tail of off-screen rows and disables prepend anchoring while the list is out of view.
+	// size is the viewport∩container intersection, so an off-screen list reports 0/partial height: this stops
+	// getRange from rendering off-screen rows and disables prepend anchoring while the list is out of view.
 	return {
 		offset: Math.max(0, viewportTop - containerRect.top),
 		size: Math.max(
@@ -218,8 +216,7 @@ const readViewport = ({
 	};
 };
 
-// the observer entry already carries the measured border-box height (matching getBoundingClientRect().height for
-// untransformed rows); read it directly instead of forcing a synchronous layout on the hot measurement path.
+// read the height off the entry rather than forcing a synchronous layout on the hot measurement path.
 const readBorderBoxHeight = (entry: ResizeObserverEntry): number => {
 	const borderBox = entry.borderBoxSize?.[0];
 	return borderBox !== undefined ? borderBox.blockSize : entry.target.getBoundingClientRect().height;
@@ -284,8 +281,8 @@ class VirtualizerStore<ItemT> {
 		this.#sourceOptions = options;
 
 		if (!options.enabled) {
-			// keep #options (and thus the frozen layout/viewport) pinned to the last enabled render; only
-			// #sourceOptions advances so the next real change is still detected once focus returns.
+			// keep #options (and its frozen layout/viewport) on the last enabled render; only #sourceOptions
+			// advances, so the next real change is still detected once focus returns.
 			if (this.#snapshot.enabled) {
 				this.#publish(false);
 			}
@@ -297,8 +294,8 @@ class VirtualizerStore<ItemT> {
 		this.#options = options;
 		const nextLayout = this.#buildLayout();
 
-		// only anchor when the list occupies the viewport; with size 0 there is no visible row to preserve
-		// and compensating would scroll the page while the user is looking at content outside the list.
+		// only anchor when the list occupies the viewport; with size 0 there is no visible row to preserve and
+		// compensating would scroll the page while the user looks at content outside the list.
 		if (previousViewport.size > 0 && !haveSameKeys(previousLayout.keys, nextLayout.keys)) {
 			const previousAnchorIndex = findIndexAtOffset(previousLayout, previousViewport.offset);
 			const anchorKey = previousLayout.keys[previousAnchorIndex];
@@ -309,8 +306,8 @@ class VirtualizerStore<ItemT> {
 				const nextOffset = nextLayout.offsets[nextAnchorIndex]! + offsetWithinAnchor;
 				const scrollAdjustment = nextOffset - previousViewport.offset;
 				if (scrollAdjustment !== 0) {
-					// prepended rows are still estimate-sized here; defer the scroll to a microtask so it runs after
-					// their real heights fold in, scrolling the reconciled total once instead of over-scrolling.
+					// prepended rows are still estimate-sized here; defer the scroll to a microtask so it runs
+					// after their real heights fold in, scrolling the reconciled total once.
 					this.#pendingScrollAdjustment += scrollAdjustment;
 					this.#schedulePendingScrollAdjustment();
 				}
@@ -359,9 +356,8 @@ class VirtualizerStore<ItemT> {
 		window.addEventListener('resize', scheduleSync);
 
 		const resizeObserver = new ResizeObserver((entries) => {
-			// a container content-width change re-lays out every row; mounted rows self-refresh through their own
-			// observers, but offscreen rows keep stale wrong-width heights. read the width off the entry (no forced
-			// layout) and invalidate those stale offscreen measurements when it changes.
+			// a content-width change re-lays out every row; mounted rows self-refresh through their own observers,
+			// but offscreen rows keep stale wrong-width heights, so invalidate those when the width changes.
 			for (const entry of entries) {
 				if (entry.target === container) {
 					const width = entry.contentBoxSize?.[0]?.inlineSize ?? container.clientWidth;
@@ -426,8 +422,8 @@ class VirtualizerStore<ItemT> {
 			return false;
 		}
 
-		// this absolute scroll defines the position outright, so drop any queued relative prepend adjustment
-		// that would otherwise replay on top of it.
+		// this absolute scroll sets the position outright; drop any queued prepend adjustment that would replay
+		// on top.
 		this.#pendingScrollAdjustment = 0;
 
 		const viewport = readViewport({
@@ -463,8 +459,8 @@ class VirtualizerStore<ItemT> {
 
 		this.#viewport = next;
 
-		// a scroll that stays within the current window advances the viewport but renders the identical row range
-		// and spacers; keep the viewport fresh for anchoring but skip the publish (and thus the React render).
+		// a scroll within the current window renders the identical range and spacers; keep the viewport fresh for
+		// anchoring but skip the publish (and the React render).
 		const range = this.#computeRange();
 		if (range.startIndex === this.#renderRange.startIndex && range.endIndex === this.#renderRange.endIndex) {
 			return;
@@ -473,8 +469,7 @@ class VirtualizerStore<ItemT> {
 		this.#publish(true);
 	}
 
-	// applies and clears the queued prepend scroll; the accumulator is zeroed before scrolling so a
-	// re-entrant scroll event cannot replay it.
+	// applies and clears the queued prepend scroll; zeroed before scrolling so a re-entrant event cannot replay it.
 	#flushPendingScrollAdjustment(): void {
 		const scrollAdjustment = this.#pendingScrollAdjustment;
 		this.#pendingScrollAdjustment = 0;
@@ -486,8 +481,8 @@ class VirtualizerStore<ItemT> {
 		scrollBy({ offset: scrollAdjustment, scrollRoot: this.#options.scrollRoot });
 	}
 
-	// drains the pending scroll on a microtask, after React's commit stack has folded the prepended rows'
-	// real heights into the total — unlike commit(), which bails once a measurement publish moves the snapshot.
+	// drains the pending scroll on a microtask, after React's commit has folded the prepended rows' real heights
+	// into the total — unlike commit(), which bails once a measurement publish moves the snapshot.
 	#schedulePendingScrollAdjustment(): void {
 		if (this.#pendingScrollAdjustmentScheduled) {
 			return;
@@ -523,9 +518,9 @@ class VirtualizerStore<ItemT> {
 			return;
 		}
 
-		// keep measurements for the currently-mounted rows: they re-measure through their own observers (which
-		// fire before this one on the same resize), so preserving them sidesteps that ordering race. drop every
-		// other key so its stale wrong-width height no longer feeds offsets, totalSize, or scrollToIndex.
+		// keep measurements for mounted rows: they re-measure through their own observers (which fire before this
+		// one on the same resize), sidestepping that ordering race. drop every other key so its stale wrong-width
+		// height no longer feeds offsets, totalSize, or scrollToIndex.
 		const range = this.#computeRange();
 		const mounted = new Set(this.#layout.keys.slice(range.startIndex, range.endIndex + 1));
 		let dropped = false;
@@ -540,7 +535,7 @@ class VirtualizerStore<ItemT> {
 		}
 
 		// dropped rows above the viewport revert to estimate and shift the prefix, so re-anchor on the first
-		// visible row to keep the content under the viewport top from jumping.
+		// visible row to keep content under the viewport top from jumping.
 		const anchorIndex = findIndexAtOffset(this.#layout, this.#viewport.offset);
 		const offsetWithinAnchor = this.#viewport.offset - this.#layout.offsets[anchorIndex]!;
 		this.#layout = recomputeOffsets(this.#layout, this.#measurements, this.#options.estimateHeight);
@@ -587,8 +582,7 @@ class VirtualizerStore<ItemT> {
 
 			const delta = size - previousSize;
 			// compensate for any row starting above the viewport top, including one straddling it: its growth
-			// pushes the anchor down by the full delta. testing the row's end instead would skip the straddling
-			// row and let the anchor drift by that row's estimate-vs-measured difference.
+			// pushes the anchor down by the full delta. testing the row's end would skip the straddling row.
 			if (this.#layout.offsets[index]! < this.#viewport.offset) {
 				scrollAdjustment += delta;
 			}
@@ -604,8 +598,8 @@ class VirtualizerStore<ItemT> {
 		}
 
 		if (scrollAdjustment !== 0) {
-			// while a prepend drain is queued, fold this delta into the pending total: scrolling now against the
-			// not-yet-applied prepend position gets clamped away, so let the microtask apply the total once.
+			// while a prepend drain is queued, fold this delta into it: scrolling now against the not-yet-applied
+			// prepend position gets clamped away, so let the microtask apply the total once.
 			if (this.#pendingScrollAdjustmentScheduled) {
 				this.#pendingScrollAdjustment += scrollAdjustment;
 			} else {
