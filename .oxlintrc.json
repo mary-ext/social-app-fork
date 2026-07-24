@@ -12,7 +12,8 @@
 	"ignorePatterns": ["*.html", "*.lock", "patches/**", "src/lib/sw-template.js", "src/paraglide/**"],
 	"jsPlugins": ["eslint-plugin-bsky-internal"],
 	"options": {
-		"typeAware": true
+		"typeAware": true,
+		"typeCheck": true
 	},
 	"plugins": ["import", "oxc", "react", "typescript", "unicorn"],
 	"rules": {

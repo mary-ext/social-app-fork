@@ -11,8 +11,7 @@ this project uses React Compiler.
 - start the dev server with `pnpm dev` (rsbuild)
 - build with `pnpm build` (rsbuild)
 - format with `pnpm format` (oxfmt)
-- lint with `pnpm lint` (oxlint)
-- typecheck with `pnpm typecheck` (tsc)
+- lint and typecheck with `pnpm lint` (oxlint)
 - check `pnpm view <package>` before adding a new dependency
 
 ### browser automation
