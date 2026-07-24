@@ -41,11 +41,11 @@ type VirtualizerOptions<ItemT> = {
 	enabled: boolean;
 	estimateHeight: number;
 	keyExtractor: (item: ItemT, index: number) => string;
+	overscanCount: number;
 	scrollRoot: React.RefObject<HTMLElement | null> | undefined;
 };
 
 type VirtualizerProps<ItemT> = VirtualizerOptions<ItemT> & {
-	overscanCount: number;
 	ref?: Ref<VirtualizerMethods>;
 	renderItem: ListRenderItem<ItemT>;
 };
@@ -95,17 +95,20 @@ const createLayout = <ItemT,>({
 	};
 };
 
-// rebuilds only the offsets, for when measurements change but the key sequence does not.
+// rebuilds the offsets from `fromIndex` onward, reusing the unchanged prefix — a measurement change at index
+// k leaves offsets[0..k] untouched and only shifts offsets[k+1..N]. keys and the index map are shared as-is.
 const recomputeOffsets = (
 	layout: Layout,
 	measurements: Map<string, number>,
 	estimateHeight: number,
+	fromIndex = 0,
 ): Layout => {
-	const offsets = [0];
-	let offset = 0;
+	const { keys } = layout;
+	const offsets = layout.offsets.slice(0, fromIndex + 1);
+	let offset = offsets[fromIndex]!;
 
-	for (const key of layout.keys) {
-		offset += measurements.get(key) ?? estimateHeight;
+	for (let index = fromIndex; index < keys.length; index++) {
+		offset += measurements.get(keys[index]!) ?? estimateHeight;
 		offsets.push(offset);
 	}
 
@@ -183,6 +186,7 @@ const haveSameOptions = <ItemT,>(
 		left.enabled === right.enabled &&
 		left.estimateHeight === right.estimateHeight &&
 		left.keyExtractor === right.keyExtractor &&
+		left.overscanCount === right.overscanCount &&
 		left.scrollRoot === right.scrollRoot
 	);
 };
@@ -216,6 +220,13 @@ const readViewport = ({
 	};
 };
 
+// the observer entry already carries the measured border-box height (matching getBoundingClientRect().height for
+// untransformed rows); read it directly instead of forcing a synchronous layout on the hot measurement path.
+const readBorderBoxHeight = (entry: ResizeObserverEntry): number => {
+	const borderBox = entry.borderBoxSize?.[0];
+	return borderBox !== undefined ? borderBox.blockSize : entry.target.getBoundingClientRect().height;
+};
+
 const scrollBy = ({
 	offset,
 	scrollRoot,
@@ -240,6 +251,7 @@ class VirtualizerStore<ItemT> {
 	#options: VirtualizerOptions<ItemT>;
 	#pendingScrollAdjustment = 0;
 	#pendingScrollAdjustmentScheduled = false;
+	#renderRange: Range;
 	#rowKeys = new WeakMap<Element, string>();
 	#rowResizeObserver: ResizeObserver | null = null;
 	#snapshot: VirtualizerSnapshot<ItemT>;
@@ -254,6 +266,7 @@ class VirtualizerStore<ItemT> {
 			size: typeof window === 'undefined' ? 0 : window.innerHeight,
 		};
 		this.#layout = this.#buildLayout();
+		this.#renderRange = this.#computeRange();
 		this.#snapshot = this.#createSnapshot(options.enabled);
 	}
 
@@ -317,7 +330,7 @@ class VirtualizerStore<ItemT> {
 		}
 
 		this.#flushPendingScrollAdjustment();
-		this.syncViewport();
+		this.#syncViewport();
 	}
 
 	setContainer = (container: HTMLElement | null): void => {
@@ -337,7 +350,7 @@ class VirtualizerStore<ItemT> {
 			}
 			animationFrame = requestAnimationFrame(() => {
 				animationFrame = undefined;
-				this.syncViewport();
+				this.#syncViewport();
 			});
 		};
 
@@ -359,7 +372,7 @@ class VirtualizerStore<ItemT> {
 			resizeObserver.observe(root);
 		}
 
-		this.syncViewport();
+		this.#syncViewport();
 
 		return () => {
 			if (animationFrame !== undefined) {
@@ -380,7 +393,7 @@ class VirtualizerStore<ItemT> {
 				if (rowKey !== undefined && entry.target.isConnected) {
 					rows.push({
 						key: rowKey,
-						size: entry.target.getBoundingClientRect().height,
+						size: readBorderBoxHeight(entry),
 					});
 				}
 			}
@@ -419,7 +432,7 @@ class VirtualizerStore<ItemT> {
 		return true;
 	};
 
-	syncViewport(): void {
+	#syncViewport(): void {
 		if (!this.#snapshot.enabled || !this.#container) {
 			return;
 		}
@@ -436,6 +449,14 @@ class VirtualizerStore<ItemT> {
 		}
 
 		this.#viewport = next;
+
+		// a scroll that stays within the current window advances the viewport but renders the identical row range
+		// and spacers; keep the viewport fresh for anchoring but skip the publish (and thus the React render).
+		const range = this.#computeRange();
+		if (range.startIndex === this.#renderRange.startIndex && range.endIndex === this.#renderRange.endIndex) {
+			return;
+		}
+
 		this.#publish(true);
 	}
 
@@ -463,7 +484,7 @@ class VirtualizerStore<ItemT> {
 		queueMicrotask(() => {
 			this.#pendingScrollAdjustmentScheduled = false;
 			this.#flushPendingScrollAdjustment();
-			this.syncViewport();
+			this.#syncViewport();
 		});
 	}
 
@@ -473,6 +494,14 @@ class VirtualizerStore<ItemT> {
 			estimateHeight: this.#options.estimateHeight,
 			keyExtractor: this.#options.keyExtractor,
 			measurements: this.#measurements,
+		});
+	}
+
+	#computeRange(): Range {
+		return getRange({
+			layout: this.#layout,
+			overscanCount: this.#options.overscanCount,
+			viewport: this.#viewport,
 		});
 	}
 
@@ -490,8 +519,8 @@ class VirtualizerStore<ItemT> {
 			return;
 		}
 
+		let minChangedIndex = Infinity;
 		let scrollAdjustment = 0;
-		let updated = false;
 
 		for (const { key, size } of rows) {
 			if (size < 0) {
@@ -517,10 +546,12 @@ class VirtualizerStore<ItemT> {
 			}
 
 			this.#measurements.set(key, size);
-			updated = true;
+			if (index < minChangedIndex) {
+				minChangedIndex = index;
+			}
 		}
 
-		if (!updated) {
+		if (minChangedIndex === Infinity) {
 			return;
 		}
 
@@ -538,7 +569,12 @@ class VirtualizerStore<ItemT> {
 			};
 		}
 
-		this.#layout = recomputeOffsets(this.#layout, this.#measurements, this.#options.estimateHeight);
+		this.#layout = recomputeOffsets(
+			this.#layout,
+			this.#measurements,
+			this.#options.estimateHeight,
+			minChangedIndex,
+		);
 		this.#publish(true);
 	}
 
@@ -556,6 +592,7 @@ class VirtualizerStore<ItemT> {
 	}
 
 	#publish(enabled: boolean): void {
+		this.#renderRange = this.#computeRange();
 		this.#snapshot = this.#createSnapshot(enabled);
 		this.#emitter.emit();
 	}
@@ -579,15 +616,15 @@ export function Virtualizer<ItemT>({
 	scrollRoot,
 }: VirtualizerProps<ItemT>) {
 	const store = useConstant(
-		() => new VirtualizerStore({ data, enabled, estimateHeight, keyExtractor, scrollRoot }),
+		() => new VirtualizerStore({ data, enabled, estimateHeight, keyExtractor, overscanCount, scrollRoot }),
 	);
 	const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
 
 	useImperativeHandle(ref, () => ({ scrollToIndex: store.scrollToIndex }), [store]);
 
 	useLayoutEffect(() => {
-		store.setOptions({ data, enabled, estimateHeight, keyExtractor, scrollRoot });
-	}, [data, enabled, estimateHeight, keyExtractor, scrollRoot, store]);
+		store.setOptions({ data, enabled, estimateHeight, keyExtractor, overscanCount, scrollRoot });
+	}, [data, enabled, estimateHeight, keyExtractor, overscanCount, scrollRoot, store]);
 
 	useLayoutEffect(() => {
 		store.commit(snapshot);
