@@ -9,6 +9,7 @@ import {
 	useSyncExternalStore,
 } from 'react';
 
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import { definite, type FalsyValue } from '@mary/array-fns';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -233,8 +234,8 @@ const scrollBy = ({
 
 class VirtualizerStore<ItemT> {
 	#container: HTMLElement | null = null;
+	#emitter = new SimpleEventEmitter<[]>();
 	#layout: Layout;
-	#listeners = new Set<() => void>();
 	#measurements = new Map<string, number>();
 	#options: VirtualizerOptions<ItemT>;
 	#pendingScrollAdjustment = 0;
@@ -261,11 +262,10 @@ class VirtualizerStore<ItemT> {
 	};
 
 	subscribe = (listener: () => void): (() => void) => {
-		this.#listeners.add(listener);
-		return () => this.#listeners.delete(listener);
+		return this.#emitter.subscribe(listener);
 	};
 
-	setOptions = (options: VirtualizerOptions<ItemT>): void => {
+	setOptions(options: VirtualizerOptions<ItemT>): void {
 		if (haveSameOptions(this.#sourceOptions, options)) {
 			return;
 		}
@@ -309,24 +309,22 @@ class VirtualizerStore<ItemT> {
 		this.#layout = nextLayout;
 		this.#pruneMeasurements();
 		this.#publish(true);
-	};
+	}
 
-	commit = (snapshot: VirtualizerSnapshot<ItemT>): void => {
+	commit(snapshot: VirtualizerSnapshot<ItemT>): void {
 		if (snapshot !== this.#snapshot || !snapshot.enabled) {
 			return;
 		}
 
 		this.#flushPendingScrollAdjustment();
 		this.syncViewport();
-	};
+	}
 
 	setContainer = (container: HTMLElement | null): void => {
 		this.#container = container;
 	};
 
-	// must run from a passive effect, not the container ref or a layout effect: those commit child-first, so
-	// an ancestor scroll root's ref is still null then and `scrollRoot.current` would resolve to `window`.
-	connect = (): (() => void) => {
+	connect(): () => void {
 		const container = this.#container;
 		if (!container) {
 			return () => {};
@@ -371,7 +369,7 @@ class VirtualizerStore<ItemT> {
 			scrollTarget.removeEventListener('scroll', scheduleSync);
 			window.removeEventListener('resize', scheduleSync);
 		};
-	};
+	}
 
 	observeRow = (node: HTMLElement, key: string): (() => void) => {
 		this.#rowKeys.set(node, key);
@@ -559,9 +557,7 @@ class VirtualizerStore<ItemT> {
 
 	#publish(enabled: boolean): void {
 		this.#snapshot = this.#createSnapshot(enabled);
-		for (const listener of this.#listeners) {
-			listener();
-		}
+		this.#emitter.emit();
 	}
 }
 
