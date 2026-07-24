@@ -246,6 +246,7 @@ class VirtualizerStore<ItemT> {
 	#emitter = new SimpleEventEmitter<[]>();
 	#layout: Layout;
 	#measurements = new Map<string, number>();
+	#lastContentWidth = 0;
 	#options: VirtualizerOptions<ItemT>;
 	#pendingScrollAdjustment = 0;
 	#pendingScrollAdjustmentScheduled = false;
@@ -357,7 +358,21 @@ class VirtualizerStore<ItemT> {
 		scrollTarget.addEventListener('scroll', scheduleSync, { passive: true });
 		window.addEventListener('resize', scheduleSync);
 
-		const resizeObserver = new ResizeObserver(scheduleSync);
+		const resizeObserver = new ResizeObserver((entries) => {
+			// a container content-width change re-lays out every row; mounted rows self-refresh through their own
+			// observers, but offscreen rows keep stale wrong-width heights. read the width off the entry (no forced
+			// layout) and invalidate those stale offscreen measurements when it changes.
+			for (const entry of entries) {
+				if (entry.target === container) {
+					const width = entry.contentBoxSize?.[0]?.inlineSize ?? container.clientWidth;
+					if (this.#lastContentWidth !== 0 && Math.abs(width - this.#lastContentWidth) >= 0.5) {
+						this.#invalidateOffscreenMeasurements();
+					}
+					this.#lastContentWidth = width;
+				}
+			}
+			scheduleSync();
+		});
 		let ancestor: HTMLElement | null = container;
 		while (ancestor) {
 			resizeObserver.observe(ancestor);
@@ -501,6 +516,41 @@ class VirtualizerStore<ItemT> {
 			overscanCount: this.#options.overscanCount,
 			viewport: this.#viewport,
 		});
+	}
+
+	#invalidateOffscreenMeasurements(): void {
+		if (!this.#snapshot.enabled || this.#layout.keys.length === 0) {
+			return;
+		}
+
+		// keep measurements for the currently-mounted rows: they re-measure through their own observers (which
+		// fire before this one on the same resize), so preserving them sidesteps that ordering race. drop every
+		// other key so its stale wrong-width height no longer feeds offsets, totalSize, or scrollToIndex.
+		const range = this.#computeRange();
+		const mounted = new Set(this.#layout.keys.slice(range.startIndex, range.endIndex + 1));
+		let dropped = false;
+		for (const key of this.#measurements.keys()) {
+			if (!mounted.has(key)) {
+				this.#measurements.delete(key);
+				dropped = true;
+			}
+		}
+		if (!dropped) {
+			return;
+		}
+
+		// dropped rows above the viewport revert to estimate and shift the prefix, so re-anchor on the first
+		// visible row to keep the content under the viewport top from jumping.
+		const anchorIndex = findIndexAtOffset(this.#layout, this.#viewport.offset);
+		const offsetWithinAnchor = this.#viewport.offset - this.#layout.offsets[anchorIndex]!;
+		this.#layout = recomputeOffsets(this.#layout, this.#measurements, this.#options.estimateHeight);
+		const nextOffset = Math.max(0, this.#layout.offsets[anchorIndex]! + offsetWithinAnchor);
+		const scrollAdjustment = nextOffset - this.#viewport.offset;
+		if (scrollAdjustment !== 0) {
+			scrollBy({ offset: scrollAdjustment, scrollRoot: this.#options.scrollRoot });
+		}
+		this.#viewport = { offset: nextOffset, size: this.#viewport.size };
+		this.#publish(true);
 	}
 
 	#createSnapshot(enabled: boolean): VirtualizerSnapshot<ItemT> {
