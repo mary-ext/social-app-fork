@@ -496,7 +496,7 @@ class VirtualizerStore<ItemT> {
 		let updated = false;
 
 		for (const { key, size } of rows) {
-			if (size <= 0) {
+			if (size < 0) {
 				continue;
 			}
 
