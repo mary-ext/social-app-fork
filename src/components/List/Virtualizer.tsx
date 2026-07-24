@@ -603,7 +603,7 @@ class VirtualizerStore<ItemT> {
 			viewportOffset: this.#viewport.offset,
 		});
 		if (scrollAdjustment !== 0) {
-			scrollBy({ offset: scrollAdjustment, scrollRoot: this.#options.scrollRoot });
+			this.#applyScrollAdjustment(scrollAdjustment);
 		}
 		this.#viewport = { offset: nextOffset, size: this.#viewport.size };
 		this.#publish(true);
