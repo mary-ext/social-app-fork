@@ -23,8 +23,7 @@ export const Row = memo(function Row<ItemT>({ index, item, renderItem }: RowProp
 					return;
 				}
 
-				seen.register(node, item);
-				return () => seen.unregister(node);
+				return seen.register(node, item);
 			}}
 			className={css.row}
 		>

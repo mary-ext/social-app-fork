@@ -4,10 +4,8 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 type SeenObserver = {
-	connect(root: HTMLElement | null): void;
-	disconnect(): void;
-	register(node: Element, item: unknown): void;
-	unregister(node: Element): void;
+	connect(root: HTMLElement | null): () => void;
+	register(node: Element, item: unknown): () => void;
 };
 
 export const ItemSeenContext = createContext<SeenObserver | null>(null);
@@ -61,32 +59,33 @@ export function ItemSeenObserver<ItemT>({
 				for (const node of rows.keys()) {
 					observer.observe(node);
 				}
-			},
-			disconnect() {
-				observer?.disconnect();
-				observer = null;
 
-				for (const row of rows.values()) {
-					if (row.timeout != null) {
-						clearTimeout(row.timeout);
-						row.timeout = undefined;
+				return () => {
+					observer?.disconnect();
+					observer = null;
+
+					for (const row of rows.values()) {
+						if (row.timeout != null) {
+							clearTimeout(row.timeout);
+							row.timeout = undefined;
+						}
 					}
-				}
+				};
 			},
 
 			register(node: Element, item: ItemT) {
 				rows.set(node, { item });
-
 				observer?.observe(node);
-			},
-			unregister(node: Element) {
-				const row = rows.get(node);
-				if (row !== undefined) {
-					clearTimeout(row.timeout);
-					rows.delete(node);
-				}
 
-				observer?.unobserve(node);
+				return () => {
+					const row = rows.get(node);
+					if (row !== undefined) {
+						clearTimeout(row.timeout);
+						rows.delete(node);
+					}
+
+					observer?.unobserve(node);
+				};
 			},
 		};
 	});
@@ -95,8 +94,8 @@ export function ItemSeenObserver<ItemT>({
 		if (!enabled) {
 			return;
 		}
-		api.connect(root?.current ?? null);
-		return () => api.disconnect();
+
+		return api.connect(root?.current ?? null);
 	}, [api, enabled, root]);
 
 	return <ItemSeenContext value={api}>{children}</ItemSeenContext>;

@@ -9,6 +9,8 @@ import {
 	useSyncExternalStore,
 } from 'react';
 
+import { definite, type FalsyValue } from '@mary/array-fns';
+
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import * as css from '#/components/List/List.css';
@@ -661,13 +663,7 @@ const VirtualRow = memo(function VirtualRow<ItemT>({
 			return;
 		}
 
-		const unobserve = observeRow(node, itemKey);
-		seen?.register(node, item);
-
-		return () => {
-			unobserve();
-			seen?.unregister(node);
-		};
+		return unregister([observeRow(node, itemKey), seen?.register(node, item)]);
 	};
 
 	return (
@@ -676,3 +672,25 @@ const VirtualRow = memo(function VirtualRow<ItemT>({
 		</div>
 	);
 }) as <ItemT>(props: VirtualRowProps<ItemT>) => ReactNode;
+
+const noop = () => {};
+
+const cleanup = (fns: Array<() => void>) => {
+	for (let idx = 0, len = fns.length; idx < len; idx++) {
+		const fn = fns[idx]!;
+		fn();
+	}
+};
+
+const unregister = (fns: Array<(() => void) | FalsyValue>): (() => void) => {
+	const cleanups = definite(fns);
+
+	if (cleanups.length === 0) {
+		return noop;
+	}
+	if (cleanups.length === 1) {
+		return cleanups[0]!;
+	}
+
+	return cleanup.bind(null, cleanups);
+};
