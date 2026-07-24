@@ -3,6 +3,8 @@ use React Native.
 
 ## development notes
 
+this project uses React Compiler.
+
 ### project management
 
 - Node.js and pnpm are managed by mise
