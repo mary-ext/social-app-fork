@@ -9,7 +9,7 @@
 		"dev:worker": "wrangler dev",
 		"deploy": "wrangler deploy",
 		"cf-typegen": "wrangler types",
-		"build": "pnpm paraglide:compile && pnpm typecheck && rsbuild build",
+		"build": "pnpm paraglide:compile && pnpm lint && rsbuild build",
 		"paraglide:compile": "node scripts/compile-i18n.ts",
 		"preview": "rsbuild preview",
 		"lint": "oxlint",
