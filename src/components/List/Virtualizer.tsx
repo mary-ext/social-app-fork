@@ -419,7 +419,7 @@ class VirtualizerStore<ItemT> {
 		return true;
 	};
 
-	syncViewport = (): void => {
+	syncViewport(): void {
 		if (!this.#snapshot.enabled || !this.#container) {
 			return;
 		}
@@ -437,7 +437,7 @@ class VirtualizerStore<ItemT> {
 
 		this.#viewport = next;
 		this.#publish(true);
-	};
+	}
 
 	// applies and clears the queued prepend scroll; the accumulator is zeroed before scrolling so a
 	// re-entrant scroll event cannot replay it.
