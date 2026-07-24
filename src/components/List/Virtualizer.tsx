@@ -13,6 +13,7 @@ import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import { definite, type FalsyValue } from '@mary/array-fns';
 
 import { useConstant } from '#/lib/hooks/use-constant';
+import { clamp } from '#/lib/numbers';
 
 import * as css from '#/components/List/List.css';
 
@@ -58,6 +59,7 @@ type VirtualizerSnapshot<ItemT> = {
 	data: readonly ItemT[];
 	enabled: boolean;
 	layout: Layout;
+	range: Range;
 	viewport: Viewport;
 };
 
@@ -95,13 +97,18 @@ const createLayout = <ItemT,>({
 	};
 };
 
-// rebuilds offsets from `fromIndex` onward, reusing the unchanged prefix; keys and the index map are shared.
-const recomputeOffsets = (
-	layout: Layout,
-	measurements: Map<string, number>,
-	estimateHeight: number,
+// reuses the unchanged offset prefix before `fromIndex`; the returned layout aliases the same keys and index map.
+const recomputeOffsets = ({
+	estimateHeight,
 	fromIndex = 0,
-): Layout => {
+	layout,
+	measurements,
+}: {
+	estimateHeight: number;
+	fromIndex?: number;
+	layout: Layout;
+	measurements: Map<string, number>;
+}): Layout => {
 	const { keys } = layout;
 	const offsets = layout.offsets.slice(0, fromIndex + 1);
 	let offset = offsets[fromIndex]!;
@@ -151,15 +158,28 @@ const getRange = ({
 
 	const overscan = Math.max(0, Math.floor(overscanCount));
 	const visibleStart = findIndexAtOffset(layout, Math.max(0, viewport.offset));
-	const visibleEnd = findIndexAtOffset(
-		layout,
-		Math.max(0, Math.min(layout.totalSize, viewport.offset + viewport.size)),
-	);
+	const visibleEnd = findIndexAtOffset(layout, clamp(viewport.offset + viewport.size, 0, layout.totalSize));
 
 	return {
 		endIndex: Math.min(layout.keys.length - 1, visibleEnd + overscan),
 		startIndex: Math.max(0, visibleStart - overscan),
 	};
+};
+
+// preserves the anchored row's on-screen position across a layout change: from its offset before and after,
+// returns where the viewport must land and how far to scroll to land there.
+const computeAnchorShift = ({
+	nextAnchorOffset,
+	previousAnchorOffset,
+	viewportOffset,
+}: {
+	nextAnchorOffset: number;
+	previousAnchorOffset: number;
+	viewportOffset: number;
+}): { nextOffset: number; scrollAdjustment: number } => {
+	const offsetWithinAnchor = viewportOffset - previousAnchorOffset;
+	const nextOffset = Math.max(0, nextAnchorOffset + offsetWithinAnchor);
+	return { nextOffset, scrollAdjustment: nextOffset - viewportOffset };
 };
 
 const haveSameKeys = (left: readonly string[], right: readonly string[]): boolean => {
@@ -247,7 +267,6 @@ class VirtualizerStore<ItemT> {
 	#options: VirtualizerOptions<ItemT>;
 	#pendingScrollAdjustment = 0;
 	#pendingScrollAdjustmentScheduled = false;
-	#renderRange: Range;
 	#rowKeys = new WeakMap<Element, string>();
 	#rowResizeObserver: ResizeObserver | null = null;
 	#snapshot: VirtualizerSnapshot<ItemT>;
@@ -262,7 +281,6 @@ class VirtualizerStore<ItemT> {
 			size: typeof window === 'undefined' ? 0 : window.innerHeight,
 		};
 		this.#layout = this.#buildLayout();
-		this.#renderRange = this.#computeRange();
 		this.#snapshot = this.#createSnapshot(options.enabled);
 	}
 
@@ -302,9 +320,11 @@ class VirtualizerStore<ItemT> {
 			const nextAnchorIndex = anchorKey === undefined ? undefined : nextLayout.indexByKey.get(anchorKey);
 
 			if (nextAnchorIndex !== undefined) {
-				const offsetWithinAnchor = previousViewport.offset - previousLayout.offsets[previousAnchorIndex]!;
-				const nextOffset = nextLayout.offsets[nextAnchorIndex]! + offsetWithinAnchor;
-				const scrollAdjustment = nextOffset - previousViewport.offset;
+				const { nextOffset, scrollAdjustment } = computeAnchorShift({
+					nextAnchorOffset: nextLayout.offsets[nextAnchorIndex]!,
+					previousAnchorOffset: previousLayout.offsets[previousAnchorIndex]!,
+					viewportOffset: previousViewport.offset,
+				});
 				if (scrollAdjustment !== 0) {
 					// prepended rows are still estimate-sized here; defer the scroll to a microtask so it runs
 					// after their real heights fold in, scrolling the reconciled total once.
@@ -462,7 +482,8 @@ class VirtualizerStore<ItemT> {
 		// a scroll within the current window renders the identical range and spacers; keep the viewport fresh for
 		// anchoring but skip the publish (and the React render).
 		const range = this.#computeRange();
-		if (range.startIndex === this.#renderRange.startIndex && range.endIndex === this.#renderRange.endIndex) {
+		const rendered = this.#snapshot.range;
+		if (range.startIndex === rendered.startIndex && range.endIndex === rendered.endIndex) {
 			return;
 		}
 
@@ -537,10 +558,17 @@ class VirtualizerStore<ItemT> {
 		// dropped rows above the viewport revert to estimate and shift the prefix, so re-anchor on the first
 		// visible row to keep content under the viewport top from jumping.
 		const anchorIndex = findIndexAtOffset(this.#layout, this.#viewport.offset);
-		const offsetWithinAnchor = this.#viewport.offset - this.#layout.offsets[anchorIndex]!;
-		this.#layout = recomputeOffsets(this.#layout, this.#measurements, this.#options.estimateHeight);
-		const nextOffset = Math.max(0, this.#layout.offsets[anchorIndex]! + offsetWithinAnchor);
-		const scrollAdjustment = nextOffset - this.#viewport.offset;
+		const previousAnchorOffset = this.#layout.offsets[anchorIndex]!;
+		this.#layout = recomputeOffsets({
+			estimateHeight: this.#options.estimateHeight,
+			layout: this.#layout,
+			measurements: this.#measurements,
+		});
+		const { nextOffset, scrollAdjustment } = computeAnchorShift({
+			nextAnchorOffset: this.#layout.offsets[anchorIndex]!,
+			previousAnchorOffset,
+			viewportOffset: this.#viewport.offset,
+		});
 		if (scrollAdjustment !== 0) {
 			scrollBy({ offset: scrollAdjustment, scrollRoot: this.#options.scrollRoot });
 		}
@@ -553,6 +581,7 @@ class VirtualizerStore<ItemT> {
 			data: this.#options.data,
 			enabled,
 			layout: this.#layout,
+			range: this.#computeRange(),
 			viewport: this.#viewport,
 		};
 	}
@@ -611,12 +640,12 @@ class VirtualizerStore<ItemT> {
 			};
 		}
 
-		this.#layout = recomputeOffsets(
-			this.#layout,
-			this.#measurements,
-			this.#options.estimateHeight,
-			minChangedIndex,
-		);
+		this.#layout = recomputeOffsets({
+			estimateHeight: this.#options.estimateHeight,
+			fromIndex: minChangedIndex,
+			layout: this.#layout,
+			measurements: this.#measurements,
+		});
 		this.#publish(true);
 	}
 
@@ -634,7 +663,6 @@ class VirtualizerStore<ItemT> {
 	}
 
 	#publish(enabled: boolean): void {
-		this.#renderRange = this.#computeRange();
 		this.#snapshot = this.#createSnapshot(enabled);
 		this.#emitter.emit();
 	}
@@ -679,7 +707,7 @@ export function Virtualizer<ItemT>({
 		return store.connect();
 	}, [enabled, scrollRoot, store]);
 
-	const range = getRange({ layout: snapshot.layout, overscanCount, viewport: snapshot.viewport });
+	const range = snapshot.range;
 	const rows: ReactNode[] = [];
 
 	for (let index = range.startIndex; index <= range.endIndex; index++) {
