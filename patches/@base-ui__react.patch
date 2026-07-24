@@ -57,6 +57,169 @@ index e05fa9fcb6a4a3315def8cf7f48c11e273441f96..bd080834a1115a889908fb380df23de3
    useIsoLayoutEffect(function syncSelectedIndex() {
      if (open || selectionMode === 'none') {
        return;
+diff --git a/dialog/root/useRenderDialogRoot.mjs b/dialog/root/useRenderDialogRoot.mjs
+index 4578c1c630cd419fca5b770fed071bb3c0571db4..bd27e9758f5721f455d6a194a33fbb17e600ea85 100644
+--- a/dialog/root/useRenderDialogRoot.mjs
++++ b/dialog/root/useRenderDialogRoot.mjs
+@@ -1,10 +1,15 @@
+ 'use client';
+ 
+ import * as React from 'react';
++import { addEventListener } from '@base-ui/utils/addEventListener';
++import { ownerWindow } from '@base-ui/utils/owner';
++import { platform } from '@base-ui/utils/platform';
+ import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
+ import { DialogInteractions, useDialogRoot } from "./useDialogRoot.mjs";
+ import { DialogRootContext, IsDrawerContext, useDialogRootContext } from "./DialogRootContext.mjs";
+ import { DialogStore } from "../store/DialogStore.mjs";
++import { createChangeEventDetails } from "../../internals/createBaseUIEventDetails.mjs";
++import { REASONS } from "../../internals/reasons.mjs";
+ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+ export function useRenderDialogRoot(props, mode = 'dialog') {
+   const {
+@@ -65,10 +70,37 @@ export function useRenderDialogRoot(props, mode = 'dialog') {
+   const open = store.useState('open');
+   const mounted = store.useState('mounted');
+   const payload = store.useState('payload');
++  const popupElement = store.useState('popupElement');
++  const nestedOpenDialogCount = store.useState('nestedOpenDialogCount');
++  const isTopmost = nestedOpenDialogCount === 0;
+   useDialogRoot({
+     store,
+     actionsRef
+   });
++  React.useEffect(() => {
++    // CloseWatcher enables the Android back gesture (Chromium-only).
++    // Keep this Android-only for now to avoid interfering with Escape/nesting semantics on desktop due to `useDismiss`.
++    if (!open || !isTopmost || !platform.os.android) {
++      return undefined;
++    }
++    const win = ownerWindow(popupElement);
++    const CloseWatcherCtor = win.CloseWatcher;
++    if (!CloseWatcherCtor) {
++      return undefined;
++    }
++    function handleCloseWatcher(event) {
++      if (!store.select('open')) {
++        return;
++      }
++      store.setOpen(false, createChangeEventDetails(REASONS.closeWatcher, event));
++    }
++    const closeWatcher = new CloseWatcherCtor();
++    const unsubscribe = addEventListener(closeWatcher, 'close', handleCloseWatcher);
++    return () => {
++      unsubscribe();
++      closeWatcher.destroy();
++    };
++  }, [store, isTopmost, open, popupElement]);
+   const shouldRenderInteractions = open || mounted;
+   const contextValue = React.useMemo(() => ({
+     store
+diff --git a/drawer/root/DrawerRoot.mjs b/drawer/root/DrawerRoot.mjs
+index 7f4559b75769ed9bf4f1bde29fd061755a09735d..34bf5f429b610652ddb7dbc36342290b19602ad8 100644
+--- a/drawer/root/DrawerRoot.mjs
++++ b/drawer/root/DrawerRoot.mjs
+@@ -2,11 +2,8 @@
+ 
+ var _DrawerProviderReport, _DrawerProviderReport2;
+ import * as React from 'react';
+-import { addEventListener } from '@base-ui/utils/addEventListener';
+ import { useControlled } from '@base-ui/utils/useControlled';
+ import { useStableCallback } from '@base-ui/utils/useStableCallback';
+-import { ownerWindow } from '@base-ui/utils/owner';
+-import { platform } from '@base-ui/utils/platform';
+ import { useId } from '@base-ui/utils/useId';
+ import { DrawerRootContext, useDrawerRootContext } from "./DrawerRootContext.mjs";
+ import { Dialog } from "../../dialog/index.mjs";
+@@ -193,9 +190,6 @@ function DrawerProviderReporter() {
+     store
+   } = useDialogRootContext(false);
+   const open = store.useState('open');
+-  const nestedOpenDialogCount = store.useState('nestedOpenDialogCount');
+-  const popupElement = store.useState('popupElement');
+-  const isTopmost = nestedOpenDialogCount === 0;
+   React.useEffect(() => {
+     if (!providerContext || drawerId == null) {
+       return undefined;
+@@ -210,29 +204,5 @@ function DrawerProviderReporter() {
+     }
+     providerContext?.setDrawerOpen(drawerId, open);
+   }, [drawerId, open, providerContext]);
+-  React.useEffect(() => {
+-    // CloseWatcher enables the Android back gesture (Chromium-only).
+-    // Keep this Android-only for now to avoid interfering with Escape/nesting semantics on desktop due to `useDismiss`.
+-    if (!open || !isTopmost || !platform.os.android) {
+-      return undefined;
+-    }
+-    const win = ownerWindow(popupElement);
+-    const CloseWatcherCtor = win.CloseWatcher;
+-    if (!CloseWatcherCtor) {
+-      return undefined;
+-    }
+-    function handleCloseWatcher(event) {
+-      if (!store.select('open')) {
+-        return;
+-      }
+-      store.setOpen(false, createChangeEventDetails(REASONS.closeWatcher, event));
+-    }
+-    const closeWatcher = new CloseWatcherCtor();
+-    const unsubscribe = addEventListener(closeWatcher, 'close', handleCloseWatcher);
+-    return () => {
+-      unsubscribe();
+-      closeWatcher.destroy();
+-    };
+-  }, [store, isTopmost, open, popupElement]);
+   return null;
+ }
+\ No newline at end of file
+diff --git a/popover/root/PopoverRoot.mjs b/popover/root/PopoverRoot.mjs
+index b08725a5171a602851f805efeadfd1c6eee46df8..dca12d19e87792bb2e1008be69901a1aaf46ceb8 100644
+--- a/popover/root/PopoverRoot.mjs
++++ b/popover/root/PopoverRoot.mjs
+@@ -1,7 +1,10 @@
+ 'use client';
+ 
+ import * as React from 'react';
++import { addEventListener } from '@base-ui/utils/addEventListener';
+ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
++import { ownerWindow } from '@base-ui/utils/owner';
++import { platform } from '@base-ui/utils/platform';
+ import { useDismiss, FloatingTree, useFloatingParentNodeId } from "../../floating-ui-react/index.mjs";
+ import { PopoverRootContext, usePopoverRootContext } from "./PopoverRootContext.mjs";
+ import { PopoverStore } from "../store/PopoverStore.mjs";
+@@ -59,6 +62,32 @@ function PopoverRootComponent({
+       store.context.stickIfOpenTimeout.clear();
+     }
+   }, [store, open]);
++  const popupElement = store.useState('popupElement');
++  React.useEffect(() => {
++    // CloseWatcher enables the Android back gesture (Chromium-only).
++    // Keep this Android-only for now to avoid interfering with Escape/nesting semantics on desktop due to `useDismiss`.
++    // Only the root popover registers; a nested popover leaves the back gesture to its ancestor.
++    if (!open || nested || !platform.os.android) {
++      return undefined;
++    }
++    const win = ownerWindow(popupElement);
++    const CloseWatcherCtor = win.CloseWatcher;
++    if (!CloseWatcherCtor) {
++      return undefined;
++    }
++    function handleCloseWatcher(event) {
++      if (!store.select('open')) {
++        return;
++      }
++      store.setOpen(false, createChangeEventDetails(REASONS.closeWatcher, event));
++    }
++    const closeWatcher = new CloseWatcherCtor();
++    const unsubscribe = addEventListener(closeWatcher, 'close', handleCloseWatcher);
++    return () => {
++      unsubscribe();
++      closeWatcher.destroy();
++    };
++  }, [store, nested, open, popupElement]);
+   const handleImperativeClose = React.useCallback(() => {
+     store.setOpen(false, createChangeEventDetails(REASONS.imperativeAction));
+   }, [store]);
 diff --git a/utils/InternalBackdrop.mjs b/utils/InternalBackdrop.mjs
 index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1558641ce 100644
 --- a/utils/InternalBackdrop.mjs

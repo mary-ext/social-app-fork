@@ -44,6 +44,20 @@ edges via sentinel cells. the store already has `setIndices`; this just surfaces
 `actionsRef` the consumer already passes. re-check on upgrade — if upstream adds a first-class
 highlighted-index API, drop this hunk for it.
 
+## `dialog/root/useRenderDialogRoot.mjs` + `popover/root/PopoverRoot.mjs` + `drawer/root/DrawerRoot.mjs` — `CloseWatcher` for the Android back gesture
+
+registers a `CloseWatcher` on the topmost open dialog/alert-dialog/popover/drawer so the Android
+back gesture (Chromium-only) closes it, calling `store.setOpen(false, …)` with the `close-watcher`
+reason. Android-only (`platform.os.android`) to avoid clashing with the desktop Escape/nesting that
+`useDismiss` owns.
+
+upstream shipped this only in the drawer (`DrawerProviderReporter`); we moved it to
+`useRenderDialogRoot` — the shared path for `Dialog.Root`, `AlertDialog.Root`, and `Drawer.Root` —
+and deleted the drawer's copy. topmost is `nestedOpenDialogCount === 0`. popovers have no
+nested-open count, so `PopoverRoot` gates on `!nested` (only a root popover registers). no `.d.mts`
+changes. re-check on upgrade — if upstream generalizes the drawer's `CloseWatcher` to the other
+roots, drop these hunks.
+
 ## `combobox/root/AriaCombobox.mjs` + `combobox/root/AriaCombobox.d.mts` — add an `autoUnmount` opt-out
 
 changes the `useOpenChangeComplete` gate from `enabled: !props.actionsRef` to
