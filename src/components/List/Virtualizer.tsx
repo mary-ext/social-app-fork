@@ -273,6 +273,7 @@ class VirtualizerStore<ItemT> {
 
 	#flushScheduled = false;
 	#pendingScrollAdjustment = 0;
+	#pinnedToRow = false;
 
 	#container: HTMLElement | null = null;
 	#lastContentWidth = 0;
@@ -321,10 +322,11 @@ class VirtualizerStore<ItemT> {
 		// only anchor when the list occupies the viewport; with size 0 there is no visible row to preserve and
 		// compensating would scroll the page while the user looks at content outside the list. skip it at the
 		// very top too (matching native scroll-anchoring), so a prepend pushes content down while the user stays
-		// pinned to the top.
+		// pinned to the top — unless a `scrollToIndex` put us there, which asks for that row to be preserved
+		// wherever it landed.
 		if (
 			previousViewport.size > 0 &&
-			previousViewport.offset > 0.5 &&
+			(this.#pinnedToRow || previousViewport.offset > 0.5) &&
 			!haveSameKeys(previousLayout.keys, nextLayout.keys)
 		) {
 			const previousAnchorIndex = findIndexAtOffset(previousLayout, previousViewport.offset);
@@ -459,6 +461,7 @@ class VirtualizerStore<ItemT> {
 		// this absolute scroll sets the position outright; drop any queued prepend adjustment that would replay
 		// on top.
 		this.#pendingScrollAdjustment = 0;
+		this.#pinnedToRow = true;
 
 		const viewport = readViewport({
 			container: this.#container,
@@ -480,6 +483,7 @@ class VirtualizerStore<ItemT> {
 	// adjustment that would replay against the pre-scroll position.
 	syncViewportAfterScroll = (): void => {
 		this.#pendingScrollAdjustment = 0;
+		this.#pinnedToRow = false;
 		this.#syncViewport();
 	};
 
@@ -500,6 +504,9 @@ class VirtualizerStore<ItemT> {
 		}
 
 		this.#viewport = next;
+		if (next.offset > 0.5) {
+			this.#pinnedToRow = false;
+		}
 
 		// a scroll within the current window renders the identical range and spacers; keep the viewport fresh for
 		// anchoring but skip the publish (and the React render).
