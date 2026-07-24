@@ -118,8 +118,16 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 	// view/sort changes.
 	const [deferParents, setDeferParents] = useState(true);
 
+	// gates pagination until the initial anchor sequence finishes, so an early edge hit can't grow the list
+	// while the viewport is still settling onto the anchor.
+	const [initialAnchorSettled, setInitialAnchorSettled] = useState(false);
+
+	// a view/sort change releases parents synchronously here; the initial mount uses the scroll-before-prepend
+	// pass in the effect below instead, so this stays disarmed for it.
+	const releaseParentsOnAnchorMount = useRef(false);
 	const setAnchorNode = (node: HTMLDivElement | null) => {
-		if (node) {
+		if (node && releaseParentsOnAnchorMount.current) {
+			releaseParentsOnAnchorMount.current = false;
 			setDeferParents(false);
 		}
 	};
@@ -127,9 +135,11 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 	/** prepares the UI to maintain the scroll position at the anchor post when thread parameters change. */
 	const prepareForParamsUpdate = () => {
 		needsInitialAnchor.current = true;
+		releaseParentsOnAnchorMount.current = true;
 
 		// make the anchor the first item again so the virtualizer can preserve it when the new parents return.
 		setDeferParents(true);
+		setInitialAnchorSettled(false);
 		// reset this to a lower value for faster re-render
 		setMaxChildrenCount(CHILDREN_CHUNK_SIZE);
 	};
@@ -163,8 +173,8 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 		if (thread.state.isFetching) {
 			return;
 		}
-		// can be true after `prepareForParamsUpdate` is called
-		if (deferParents) {
+		// gated until the initial anchor sequence settles
+		if (!initialAnchorSettled) {
 			return;
 		}
 		// prevent any state mutations if we know we're done
@@ -178,8 +188,8 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 		if (thread.state.isFetching) {
 			return;
 		}
-		// can be true after `prepareForParamsUpdate` is called
-		if (deferParents) {
+		// gated until the initial anchor sequence settles
+		if (!initialAnchorSettled) {
 			return;
 		}
 		// prevent any state mutations if we know we're done
@@ -253,20 +263,33 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 		: slices.filter((item) => !(item.type === 'skeleton' && item.item === 'reply'));
 	const anchorIndex = deferredSlices.findIndex((item) => 'depth' in item && item.depth === 0);
 
+	// pass 1 scrolls the anchor-only list to the anchor before parents exist, then releases them; pass 2 does
+	// the final correction. pinning the viewport to the anchor first is what stops prepend anchoring from
+	// preserving a child instead — screens share the window scroll, and the router restores it only after this
+	// commit, so a fresh mount would otherwise anchor against the outgoing thread's stale scroll offset.
 	useEffect(() => {
-		if (!isFocused || deferParents || anchorIndex === -1 || !needsInitialAnchor.current) {
+		if (!isFocused || anchorIndex === -1 || !needsInitialAnchor.current) {
 			return;
 		}
 
 		const animationFrame = requestAnimationFrame(() => {
-			if (
+			const didScroll =
 				listRef.current?.scrollToIndex({
 					index: anchorIndex,
 					offset: headerRef.current?.getBoundingClientRect().bottom,
-				})
-			) {
-				needsInitialAnchor.current = false;
+				}) ?? false;
+			if (!didScroll) {
+				return;
 			}
+
+			if (deferParents) {
+				// anchor is pinned; safe to prepend parents around it now
+				setDeferParents(false);
+				return;
+			}
+
+			needsInitialAnchor.current = false;
+			setInitialAnchorSettled(true);
 		});
 		return () => cancelAnimationFrame(animationFrame);
 	}, [anchorIndex, deferParents, isFocused]);
@@ -295,12 +318,9 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 				return (
 					<div>
 						{/*
-						 * IMPORTANT: this is a load-bearing key. We want the anchor marker
-						 * to remount any time the thread params change so that `deferParents`
-						 * is always reset to `false` once the anchor post is rendered.
-						 *
-						 * If we ever add additional thread params to this screen, they will
-						 * need to be added here.
+						 * load-bearing key: remounting on any thread param change fires `setAnchorNode`, which
+						 * releases withheld parents during that commit. keep new params in the key. nested so the
+						 * virtualizer row keeps its stable uri key.
 						 */}
 						<div key={item.uri + thread.state.view + thread.state.sort} ref={setAnchorNode} />
 						<ThreadItemAnchor
@@ -399,9 +419,9 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}
 					estimateHeight={ITEM_HEIGHT_ESTIMATE}
-					onStartReached={onStartReached}
+					onStartReached={initialAnchorSettled ? onStartReached : undefined}
 					onStartReachedThreshold={1}
-					onEndReached={onEndReached}
+					onEndReached={initialAnchorSettled ? onEndReached : undefined}
 					onEndReachedThreshold={4}
 					ListFooterComponent={
 						<div
