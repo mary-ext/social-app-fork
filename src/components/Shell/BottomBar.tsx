@@ -1,11 +1,8 @@
 import { type ComponentPropsWithoutRef, type MouseEvent, useRef } from 'react';
 
-import { useRoute } from '@oomfware/stacker';
-
 import { clsx } from 'clsx';
 
 import { useHideBottomBarBorder } from '#/lib/hooks/useHideBottomBarBorder';
-import type { RouteTarget } from '#/lib/routes/target';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { softReset } from '#/state/events';
@@ -39,7 +36,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { popToTarget } from '#/routes';
+import { type RouteTarget, useRouter, useTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './BottomBar.css';
@@ -200,14 +197,15 @@ const NavItem: React.FC<{
 }> = ({ activeRouteNames, children, hasNew, notificationCount, onLongPress, to }) => {
 	const { currentAccount } = useSession();
 	const routeName = to.name;
-	const match = useRoute();
+	const router = useRouter();
+	const target = useTarget();
 	const { consumeLongPress, handlers: longPressHandlers } = useLongPress(onLongPress);
 
 	// the Profile tab is "active" only on your own profile (matched on DID), so viewing someone else's
 	// profile leaves it inactive and makes a press push a fresh screen; every other tab is an exact name match.
-	const inTab = activeRouteNames ? activeRouteNames.includes(match.name) : match.name === routeName;
-	const onProfileTab = routeName === 'Profile' && match.name === 'Profile';
-	const isOnDifferentProfile = onProfileTab && match.params.actor !== currentAccount?.did;
+	const inTab = activeRouteNames ? activeRouteNames.includes(target.name) : target.name === routeName;
+	const onProfileTab = routeName === 'Profile' && target.name === 'Profile';
+	const isOnDifferentProfile = onProfileTab && target.actor !== currentAccount?.did;
 	const isActive = onProfileTab ? !isOnDifferentProfile : inTab;
 	const atRoot = inTab;
 
@@ -225,7 +223,7 @@ const NavItem: React.FC<{
 			softReset.emit();
 			return false;
 		}
-		popToTarget(to);
+		router.popTo(to);
 		return false;
 	};
 

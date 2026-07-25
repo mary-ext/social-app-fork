@@ -3,6 +3,7 @@ import { ClientResponseError } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { profileTarget } from '#/lib/routes/targets';
 import { cleanError, errorToString } from '#/lib/strings/errors';
 
 import type { FeedDescriptor } from '#/state/queries/post-feed';
@@ -19,7 +20,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 import * as css from './PostFeedErrorMessage.css';
 
@@ -93,7 +94,7 @@ function FeedgenErrorMessage({
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 	topBorder: boolean;
 }) {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const msg = {
 		[KnownError.Unknown]: '',
 		[KnownError.Block]: '',
@@ -112,7 +113,7 @@ function FeedgenErrorMessage({
 
 	const onViewProfile = () => {
 		if (ownerDid) {
-			navigate('Profile', { actor: ownerDid });
+			router.navigate({ to: profileTarget(ownerDid) });
 		}
 	};
 

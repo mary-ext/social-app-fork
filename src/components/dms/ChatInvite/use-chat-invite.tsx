@@ -1,6 +1,7 @@
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 
 import { targetToShareUrl } from '#/lib/routes/app-links';
+import { conversationTarget } from '#/lib/routes/targets';
 
 import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useSession } from '#/state/session';
@@ -15,7 +16,7 @@ import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/compon
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 export type ChatInvitePreview = ChatBskyGroupDefs.JoinLinkPreviewView;
 
@@ -67,7 +68,7 @@ export function useChatInvite({
 	currentConvoId?: string;
 }): ChatInvite {
 	const { hasSession } = useSession();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	const { data, error, isPending } = useJoinLinkPreviewsQuery({
@@ -107,9 +108,7 @@ export function useChatInvite({
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
-					void navigator.clipboard.writeText(
-						targetToShareUrl({ name: 'GroupChatJoin', params: { code: preview.code } }),
-					);
+					void navigator.clipboard.writeText(targetToShareUrl({ code: preview.code, name: 'GroupChatJoin' }));
 					Toast.show(m['common.share.copiedToast'](), { type: 'success' });
 				},
 			};
@@ -121,7 +120,7 @@ export function useChatInvite({
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
-					navigate('MessagesConversation', { conversation: convoId });
+					router.navigate({ to: conversationTarget(convoId) });
 				},
 			};
 		} else {

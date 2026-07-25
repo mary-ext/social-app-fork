@@ -10,7 +10,7 @@ import { makeSearchQuery, parseSearchQuery, type TabParam } from '#/screens/Sear
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useParams } from '#/routes';
+import { useParams, useRouter } from '#/routes';
 
 import { SearchResults, type SearchTabId } from './SearchResults';
 import * as css from './Shell.css';
@@ -33,7 +33,7 @@ function getTabId(tabParam?: TabParam): SearchTabId {
 }
 
 export function SearchScreenShell({ queryParam }: { queryParam: string }) {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const [{ tab: tabParam }] = useParams('Search');
 	const [activeTab, setActiveTab] = useState(() => getTabId(tabParam));
 
@@ -57,8 +57,8 @@ export function SearchScreenShell({ queryParam }: { queryParam: string }) {
 
 	const navigateToExplore = useCallback(() => {
 		// drop back to the explore page: clear the query and tab
-		navigate('Explore', {});
-	}, [navigate]);
+		router.navigate({ to: { name: 'Explore' } });
+	}, [router]);
 
 	useFocusEffect(
 		useCallback(() => {

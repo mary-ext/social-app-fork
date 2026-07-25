@@ -13,7 +13,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/Layout/Header.css';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useRouter } from '#/routes';
+import { useRouter } from '#/routes';
 
 export function Outer({
 	children,
@@ -98,7 +98,6 @@ type BackButtonProps = {
  *   {@link OuterOnBanner})
  */
 export function BackButton({ label, onClick, variant = 'ghost' }: BackButtonProps = {}) {
-	const navigate = useNavigate();
 	const router = useRouter();
 
 	const handleClick = (evt: MouseEvent<HTMLButtonElement>) => {
@@ -109,7 +108,7 @@ export function BackButton({ label, onClick, variant = 'ghost' }: BackButtonProp
 		if (router.canGoBack) {
 			router.back();
 		} else {
-			navigate('Home');
+			router.navigate({ to: { name: 'Home' } });
 		}
 	};
 

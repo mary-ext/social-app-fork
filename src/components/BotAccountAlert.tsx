@@ -9,7 +9,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 export function BotAccountAlert({
@@ -30,7 +30,7 @@ export function BotAccountAlert({
 
 function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
 	const { currentAccount } = useSession();
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	const isSelf = profile.did === currentAccount?.did;
 	const description = isSelf
@@ -54,7 +54,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						label={m['components.botAccountAlert.openSettings']()}
 						onClick={() => {
 							handle.close();
-							navigate('AccountSettings');
+							router.navigate({ to: { name: 'AccountSettings' } });
 						}}
 						size="large"
 					>

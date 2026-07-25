@@ -15,7 +15,6 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
 import { triangularRandom } from '#/lib/numbers';
-import type { RouteTarget } from '#/lib/routes/target';
 import { profileTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
@@ -58,6 +57,7 @@ import * as Skele from '#/components/web/Skeleton';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
 import { m } from '#/paraglide/messages';
+import type { RouteTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemAnchor.css';
@@ -159,9 +159,9 @@ function ThreadItemAnchorInner({
 
 	// the three engagement screens key on the same post, differing only in which interaction they list
 	const engagement = { actor: post.author.did, rkey: parseCanonicalResourceUri(post.uri).rkey };
-	const likesTarget: RouteTarget = { name: 'PostLikedBy', params: engagement };
-	const quotesTarget: RouteTarget = { name: 'PostQuotes', params: engagement };
-	const repostsTarget: RouteTarget = { name: 'PostRepostedBy', params: engagement };
+	const likesTarget: RouteTarget = { ...engagement, name: 'PostLikedBy' };
+	const quotesTarget: RouteTarget = { ...engagement, name: 'PostQuotes' };
+	const repostsTarget: RouteTarget = { ...engagement, name: 'PostRepostedBy' };
 
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,

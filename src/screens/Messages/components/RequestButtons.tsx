@@ -31,7 +31,7 @@ import {
 } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useRouter } from '#/routes';
+import { useRouter } from '#/routes';
 
 export function RejectMenu({
 	convo,
@@ -196,17 +196,14 @@ export function AcceptChatButton({
 	currentScreen: 'list' | 'conversation';
 }) {
 	const queryClient = useQueryClient();
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	const { mutate: acceptConvo, isPending } = useAcceptConversation(convo.id, {
 		onMutate: () => {
 			onAcceptConvo?.();
 			if (currentScreen === 'list') {
 				precacheConvoQuery(queryClient, { ...convo, status: 'accepted' });
-				navigate('MessagesConversation', {
-					conversation: convo.id,
-					accept: true,
-				});
+				router.navigate({ to: { accept: true, conversation: convo.id, name: 'MessagesConversation' } });
 			}
 		},
 		onError: () => {

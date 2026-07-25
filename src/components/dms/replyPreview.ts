@@ -26,7 +26,7 @@ export function getReplyPreviewText(message: ChatBskyConvoDefs.MessageView): {
 			case 'chat.bsky.group.defs#joinLinkPreviewView':
 				return {
 					subtle: true,
-					text: targetToShareUrl({ name: 'GroupChatJoin', params: { code: joinLinkPreview.code } }),
+					text: targetToShareUrl({ code: joinLinkPreview.code, name: 'GroupChatJoin' }),
 				};
 			case 'chat.bsky.group.defs#disabledJoinLinkPreviewView':
 				return { subtle: true, text: m['common.chat.inviteLinkDisabled']() };

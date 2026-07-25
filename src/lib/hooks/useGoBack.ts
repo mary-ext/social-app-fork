@@ -1,4 +1,4 @@
-import { useRouter } from '@oomfware/stacker';
+import { useRouter } from '#/routes';
 
 /** returns a handler that navigates back, or to Home when there is nothing to go back to. */
 export function useGoBack(onGoBack?: () => unknown) {
@@ -8,7 +8,7 @@ export function useGoBack(onGoBack?: () => unknown) {
 		if (router.canGoBack) {
 			router.back();
 		} else {
-			router.push('/');
+			router.navigate({ to: { name: 'Home' } });
 		}
 	};
 }

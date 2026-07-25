@@ -21,7 +21,7 @@ import * as Layout from '#/components/web/Layout';
 import * as Skele from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './Bookmarks.css';
@@ -210,7 +210,7 @@ function BookmarkItem({
 }
 
 function BookmarksEmpty() {
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	return (
 		<EmptyState
@@ -220,7 +220,7 @@ function BookmarksEmpty() {
 			button={{
 				label: m['screens.bookmarks.backHome'](),
 				text: m['common.action.goHome'](),
-				onPress: () => navigate('Home'),
+				onPress: () => router.navigate({ to: { name: 'Home' } }),
 				size: 'small',
 				color: 'secondary',
 			}}

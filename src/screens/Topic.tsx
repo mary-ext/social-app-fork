@@ -25,7 +25,7 @@ export default function TopicScreen() {
 	const headerTitle = enforceLen(topic, 24, true, 'middle');
 
 	const onShare = () => {
-		void shareUrl(targetToShareUrl({ name: 'Topic', params: { topic } }));
+		void shareUrl(targetToShareUrl({ name: 'Topic', topic }));
 	};
 
 	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');

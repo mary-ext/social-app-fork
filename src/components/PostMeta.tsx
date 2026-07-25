@@ -6,7 +6,6 @@ import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from 
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import type { RouteTarget } from '#/lib/routes/target';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -24,6 +23,7 @@ import { Tooltip } from '#/components/Tooltip';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import type { RouteTarget } from '#/routes';
 
 import * as css from './PostMeta.css';
 import { TimeElapsed } from './TimeElapsed';

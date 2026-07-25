@@ -97,7 +97,7 @@ function JoinRequestsInner() {
 					if (router.canGoBack) {
 						router.back();
 					} else {
-						router.replace(router.build('Messages'));
+						router.navigate({ replace: true, to: { name: 'Messages' } });
 					}
 				}}
 			/>
@@ -164,11 +164,10 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			onSuccess: () => {
 				Toast.show(m['screens.messages.requests.approvedToast']());
 				if (getRemainingRequestCount() < 1) {
-					router.replace(
-						router.build('MessagesConversationSettings', {
-							conversation: convo.view.id,
-						}),
-					);
+					router.navigate({
+						replace: true,
+						to: { conversation: convo.view.id, name: 'MessagesConversationSettings' },
+					});
 				}
 			},
 			onError: (error) => {
@@ -200,11 +199,10 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			onSuccess: () => {
 				Toast.show(m['screens.messages.requests.rejectedToast']());
 				if (getRemainingRequestCount() < 1) {
-					router.replace(
-						router.build('MessagesConversationSettings', {
-							conversation: convo.view.id,
-						}),
-					);
+					router.navigate({
+						replace: true,
+						to: { conversation: convo.view.id, name: 'MessagesConversationSettings' },
+					});
 				}
 			},
 			onError: (error) => {

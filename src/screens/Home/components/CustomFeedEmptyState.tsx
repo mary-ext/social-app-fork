@@ -3,10 +3,10 @@ import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/comp
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 export function CustomFeedEmptyState() {
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	return (
 		<EmptyState
@@ -16,7 +16,7 @@ export function CustomFeedEmptyState() {
 				iconPosition: 'right',
 				label: m['view.posts.follow.findAccounts'](),
 				onPress: () => {
-					navigate('Explore', {});
+					router.navigate({ to: { name: 'Explore' } });
 				},
 				size: 'large',
 				text: m['view.posts.follow.findAccounts'](),

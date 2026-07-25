@@ -26,7 +26,6 @@ import {
 } from '@tanstack/react-query';
 
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
-import type { RouteTarget } from '#/lib/routes/target';
 import { feedTarget, listTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
@@ -38,6 +37,7 @@ import { createQueryKey } from '#/state/queries/util';
 import { getClients, useSession } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
+import type { RouteTarget } from '#/routes';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
 import type { FeedDescriptor } from './post-feed';

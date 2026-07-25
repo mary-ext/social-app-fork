@@ -1,12 +1,12 @@
 import { isCanonicalResourceUri, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import type { RouteTarget } from '#/lib/routes/target';
 import { postTarget } from '#/lib/routes/targets';
 
 import { Text } from '#/components/Text';
 import { Link } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import type { RouteTarget } from '#/routes';
 
 import * as css from './ViewFullThread.css';
 

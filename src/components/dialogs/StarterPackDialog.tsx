@@ -32,7 +32,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useLocation, useNavigate } from '#/routes';
+import { useLocation, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
@@ -62,7 +62,7 @@ function keyExtractor(item: Item): string {
 }
 
 function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
-	const navigate = useNavigate();
+	const router = useRouter();
 	// capture the origin history entry so the reopen coordinator can key the reopen to it.
 	const { key: originKey } = useLocation();
 	const { data: subject } = useProfileQuery({ did: targetDid });
@@ -81,7 +81,7 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 	const onStartWizard = () => {
 		handle.close();
 		markStarterPackWizardLaunched(originKey, targetDid);
-		navigate('StarterPackWizard', { targetDid });
+		router.navigate({ to: { name: 'StarterPackWizard', targetDid } });
 	};
 
 	const onEndReached = () => {

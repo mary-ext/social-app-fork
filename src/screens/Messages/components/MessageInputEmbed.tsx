@@ -49,7 +49,7 @@ function RemoveButton({ floating, onRemove }: { floating?: boolean; onRemove: ()
 export type MessageEmbedState = { type: 'post'; uri: ResourceUri } | { type: 'invite'; code: string };
 
 export function useMessageEmbed() {
-	const [{ embed: embedFromParams }, setParams] = useParams('MessagesConversation');
+	const [{ embed: embedFromParams }, replace] = useParams('MessagesConversation');
 
 	// `setEmbedState` is the raw setter; `setEmbed` below is the wrapped public callback (also a
 	// prop), so the names must differ — the symmetric-pair rule can't apply here
@@ -68,7 +68,7 @@ export function useMessageEmbed() {
 			if (!embedUrl) {
 				// Only the post embed is reflected in the route param (share-to-DM intent flow); invites are
 				// local-only. clearing it replaces the entry so the shell's entry-key gate keeps the composer open.
-				setParams({ embed: undefined });
+				replace({ embed: undefined });
 				setEmbedState(undefined);
 				return;
 			}

@@ -1,12 +1,9 @@
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode, Ref } from 'react';
 
-import { useRouter } from '@oomfware/stacker';
-
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { resolveUrl } from '#/lib/routes/app-links';
-import type { RouteTarget } from '#/lib/routes/target';
 import { isMisleadingLink, safeUrlParse } from '#/lib/strings/url-helpers';
 
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
@@ -15,7 +12,9 @@ import * as textStyles from '#/components/Text.css';
 import { Button, type ButtonProps } from '#/components/web/Button';
 import * as styles from '#/components/web/Link.css';
 
-import { buildTarget } from '#/routes';
+import { type RouteTarget, useRouter } from '#/routes';
+
+type AppRouter = ReturnType<typeof useRouter>;
 
 // #region hooks
 
@@ -45,16 +44,21 @@ export const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
 	return e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
 };
 
+/**
+ * navigates to an in-app route `path` via the given {@link LinkAction}.
+ *
+ * @param router the router to navigate
+ * @param path the in-app path
+ * @param action how the destination enters history
+ */
+export const navigateTo = (router: AppRouter, path: string, action: LinkAction): void => {
+	router.navigate({ replace: action === 'replace', to: path });
+};
+
 /** Returns a function that navigates to an in-app route `path` via the given {@link LinkAction}. */
 export const useNavigateToPath = () => {
 	const router = useRouter();
-	return (path: string, action: LinkAction) => {
-		if (action === 'replace') {
-			router.replace(path);
-		} else {
-			router.push(path);
-		}
-	};
+	return (path: string, action: LinkAction) => navigateTo(router, path, action);
 };
 
 /**
@@ -71,8 +75,8 @@ export const useInternalLink = ({
 	onPress?: LinkOnPress;
 	to: RouteTarget;
 }): LinkBindings => {
-	const path = buildTarget(to);
-	const navigateToPath = useNavigateToPath();
+	const router = useRouter();
+	const path = router.href(to);
 	const onClick = (e: MouseEvent<HTMLElement>) => {
 		if (onPress?.(e) === false) {
 			e.preventDefault();
@@ -82,7 +86,7 @@ export const useInternalLink = ({
 			return;
 		}
 		e.preventDefault();
-		navigateToPath(path, action);
+		navigateTo(router, path, action);
 	};
 	return { href: path, onClick };
 };
@@ -344,7 +348,7 @@ type InternalNavProps = {
 	/** How the link navigates when pressed. */
 	action?: LinkAction;
 	onPress?: LinkOnPress;
-	/** The in-app destination, e.g. `{ name: 'Profile', params: { actor } }`. */
+	/** The in-app destination, e.g. `{ actor, name: 'Profile' }`. */
 	to: RouteTarget;
 };
 

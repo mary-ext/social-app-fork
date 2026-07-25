@@ -27,7 +27,7 @@ export function ProfileHeaderMetrics() {
 					count: followersCount,
 					formatted: formatCount(followersCount),
 				})}
-				to={{ name: 'ProfileFollowers', params: { actor: profile.did } }}
+				to={{ actor: profile.did, name: 'ProfileFollowers' }}
 			>
 				<Text color="textContrastMedium" size="md">
 					<Trans
@@ -46,7 +46,7 @@ export function ProfileHeaderMetrics() {
 			<InlineLinkText
 				color="text"
 				label={m['screens.profile.follow.following.countLabel']({ count: followsCount })}
-				to={{ name: 'ProfileFollows', params: { actor: profile.did } }}
+				to={{ actor: profile.did, name: 'ProfileFollows' }}
 			>
 				<Text color="textContrastMedium" size="md">
 					<Trans

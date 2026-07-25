@@ -19,7 +19,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
 import { MAX_POST_LINES } from '#/lib/constants';
-import type { RouteTarget } from '#/lib/routes/target';
 import { feedTarget, postUriToTarget, profileTarget, starterPackTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isAbortError } from '#/lib/strings/errors';
@@ -65,7 +64,7 @@ import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { type RouteTarget, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './NotificationFeedItem.css';
@@ -139,7 +138,7 @@ let NotificationFeedItem = ({
 				posts.push(post.uri);
 			}
 			// the activity screen takes the subject posts as a comma-joined query parameter, capped at 25.
-			itemTarget = { name: 'NotificationsActivityList', params: { posts: posts.slice(0, 25).join(',') } };
+			itemTarget = { name: 'NotificationsActivityList', posts: posts.slice(0, 25).join(',') };
 			break;
 		}
 	}
@@ -731,7 +730,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 	const { chat } = getClients();
 	const { currentAccount } = useSession();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const onPressSayHello = async () => {
@@ -745,9 +744,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 					params: { members: [profile.did, currentAccount.did] },
 				}),
 			);
-			navigate('MessagesConversation', {
-				conversation: data.convo.id,
-			});
+			router.navigate({ to: { conversation: data.convo.id, name: 'MessagesConversation' } });
 		} catch (e) {
 			logger.error('Failed to get conversation', { safeMessage: e });
 		} finally {

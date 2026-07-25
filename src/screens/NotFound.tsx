@@ -13,7 +13,7 @@ export const NotFoundScreen = () => {
 		if (canGoBack) {
 			router.back();
 		} else {
-			router.popTo('Home');
+			router.popTo({ name: 'Home' });
 		}
 	};
 

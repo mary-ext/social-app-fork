@@ -1,6 +1,8 @@
+import type { Did } from '@atcute/lexicons';
 import {
 	type ActorIdentifier,
 	isActorIdentifier,
+	isDid,
 	isRecordKey,
 	isResourceUri,
 	isTid,
@@ -12,6 +14,11 @@ import {
 import type { Codec } from '@oomfware/stacker';
 
 // the codecs are stateless and immutable, so a single shared instance backs every route definition.
+
+const DID_CODEC: Codec<Did> = {
+	decode: (raw) => (isDid(raw) ? raw : undefined),
+	encode: (value) => value,
+};
 
 const ACTOR_IDENTIFIER_CODEC: Codec<ActorIdentifier> = {
 	decode: (raw) => (isActorIdentifier(raw) ? raw : undefined),
@@ -40,6 +47,14 @@ const TID_CODEC: Codec<Tid> = {
  * @returns the actor identifier codec
  */
 export const actorIdentifier = (): Codec<ActorIdentifier> => ACTOR_IDENTIFIER_CODEC;
+
+/**
+ * returns a codec for a {@link Did} segment. an invalid segment fails to decode, causing the matcher to skip
+ * the route.
+ *
+ * @returns the did codec
+ */
+export const did = (): Codec<Did> => DID_CODEC;
 
 /**
  * returns a codec for a {@link RecordKey} path segment. an invalid segment fails to decode, causing the

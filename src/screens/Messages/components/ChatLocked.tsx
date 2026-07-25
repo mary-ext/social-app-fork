@@ -46,7 +46,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 
 	const { mutate: leaveConvo } = useLeaveConvo(convo.view.id, {
 		onSuccess: () => {
-			router.replace(router.build('Messages'));
+			router.navigate({ replace: true, to: { name: 'Messages' } });
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });

@@ -14,7 +14,6 @@ import {
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { isGraphemeLengthInRange } from '@atcute/util-text';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -34,6 +33,7 @@ import {
 } from '#/lib/hooks/useOpenComposer';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
+import { postUriToTarget } from '#/lib/routes/targets';
 import { cleanError, errorMessage } from '#/lib/strings/errors';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
@@ -68,7 +68,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 
 import * as styles from './Composer.css';
@@ -129,7 +129,7 @@ export const ComposePost = ({
 	const { mutate: cleanupPublishedDraft } = useCleanupPublishedDraftMutation();
 	const { closeAllDialogs } = useDialogStateControlContext();
 	const { data: preferences } = usePreferencesQuery();
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	const [isPublishing, setIsPublishing] = useState(false);
 	const [publishingStage, setPublishingStage] = useState('');
@@ -765,8 +765,7 @@ export const ComposePost = ({
 						? {
 								label: m['view.composer.publish.action.view'](),
 								onPress: () => {
-									const { repo: actor, rkey } = parseCanonicalResourceUri(postUri);
-									navigate('PostThread', { actor, rkey });
+									router.navigate({ to: postUriToTarget(postUri) });
 								},
 							}
 						: undefined,
@@ -786,7 +785,7 @@ export const ComposePost = ({
 		getFilteredThread,
 		initQuote,
 		isPublishing,
-		navigate,
+		router,
 		onClose,
 		onPost,
 		onPostSuccess,

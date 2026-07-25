@@ -1,6 +1,7 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { profileTarget } from '#/lib/routes/targets';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -15,12 +16,12 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 import * as css from './MessagesListInfoPanel.css';
 
 export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'direct' }> }) {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 
@@ -61,7 +62,7 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 					color="secondary"
 					label={m['common.profile.a11y.goTo']()}
 					onClick={() => {
-						navigate('Profile', { actor: profileLink });
+						router.navigate({ to: profileTarget(profileLink) });
 					}}
 					size="small"
 				>

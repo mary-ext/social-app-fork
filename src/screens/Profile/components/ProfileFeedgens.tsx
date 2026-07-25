@@ -18,7 +18,7 @@ import { ListFooter } from '#/components/Lists';
 import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 // only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const FEEDGEN_ITEM_HEIGHT_ESTIMATE = 120;
@@ -51,7 +51,7 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 		useProfileFeedgensQuery(did);
 	const isEmpty = !isPending && !data?.pages[0]?.feeds.length;
 	const { data: preferences } = usePreferencesQuery();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const { currentAccount } = useSession();
 	const isSelf = currentAccount?.did === did;
 
@@ -114,7 +114,7 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 							? {
 									label: m['view.feeds.discover.browse'](),
 									text: m['view.feeds.discover.browse'](),
-									onPress: () => navigate('Feeds'),
+									onPress: () => router.navigate({ to: { name: 'Feeds' } }),
 									size: 'small',
 									color: 'secondary',
 								}

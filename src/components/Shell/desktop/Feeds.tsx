@@ -13,7 +13,7 @@ import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useRoute } from '#/routes';
+import { useRouter, useTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './Feeds.css';
@@ -25,8 +25,8 @@ export function DesktopFeeds() {
 	const { data: pinnedFeedInfos, error, isLoading } = usePinnedFeedsInfos();
 	const selectedFeed = useSelectedFeed();
 	const setSelectedFeed = useSetSelectedFeed();
-	const navigate = useNavigate();
-	const route = useRoute();
+	const router = useRouter();
+	const target = useTarget();
 
 	if (isLoading) {
 		return (
@@ -47,8 +47,9 @@ export function DesktopFeeds() {
 
 	// the active feed is selected only on Home; with no explicit selection the first pinned feed leads. on the
 	// Feeds screen the sentinel "More feeds" entry is the selected one instead.
-	const activeFeed = route.name === 'Home' ? (selectedFeed ?? pinnedFeedInfos[0]?.feedDescriptor) : undefined;
-	const activeValue = activeFeed ?? (route.name === 'Feeds' ? MORE_FEEDS : undefined);
+	const activeFeed =
+		target.name === 'Home' ? (selectedFeed ?? pinnedFeedInfos[0]?.feedDescriptor) : undefined;
+	const activeValue = activeFeed ?? (target.name === 'Feeds' ? MORE_FEEDS : undefined);
 
 	const onValueChange = (next: string[]) => {
 		// More feeds is an <a> that navigates itself, so it never reports here. single-select: clicking another
@@ -62,7 +63,7 @@ export function DesktopFeeds() {
 		}
 		const reselectedActive = next.length === 0;
 		setSelectedFeed(feed);
-		navigate('Home');
+		router.navigate({ to: { name: 'Home' } });
 		if (reselectedActive && feed === selectedFeed) {
 			softReset.emit();
 		}

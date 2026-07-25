@@ -28,7 +28,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useRouter } from '#/routes';
+import { useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
@@ -93,7 +93,6 @@ function RequestList({
 	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvoRequests.$output>>;
 	conversations: RequestItem[];
 }) {
-	const navigate = useNavigate();
 	const router = useRouter();
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const { isWithinSplitView } = useIsWithinSplitView();
@@ -161,7 +160,7 @@ function RequestList({
 									if (router.canGoBack) {
 										router.back();
 									} else {
-										navigate('Messages');
+										router.navigate({ to: { name: 'Messages' } });
 									}
 								},
 								size: 'small',

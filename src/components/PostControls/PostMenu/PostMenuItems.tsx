@@ -8,8 +8,6 @@ import type {
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import type { ParamsOf } from '@oomfware/stacker';
-
 import { errorMessage, isAbortError } from '#/lib/strings/errors';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
@@ -67,7 +65,7 @@ import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
-import { type routes, useRouter } from '#/routes';
+import { useRouter } from '#/routes';
 
 const MenuSpinner = () => <Spinner color="default" label={m['common.status.loading']()} size="lg" />;
 
@@ -143,16 +141,14 @@ function PostMenuItems({
 			() => {
 				Toast.show(m['components.postControls.delete.toast']());
 
-				const route = router.route;
-				if (route.name === 'PostThread') {
-					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `route.name` check above pins the param shape
-					const params = route.params as ParamsOf<typeof routes, 'PostThread'>;
+				const target = router.target;
+				if (target.name === 'PostThread') {
 					// the open thread is the deleted post's own, so there is nothing left to return to
 					const isViewingDeletedPost =
 						currentAccount &&
 						isAuthor &&
-						(params.actor === currentAccount.handle || params.actor === currentAccount.did) &&
-						params.rkey === parseCanonicalResourceUri(postUri).rkey;
+						(target.actor === currentAccount.handle || target.actor === currentAccount.did) &&
+						target.rkey === parseCanonicalResourceUri(postUri).rkey;
 					if (isViewingDeletedPost && router.canGoBack) {
 						router.back();
 					}

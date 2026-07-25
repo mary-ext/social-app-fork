@@ -1,7 +1,7 @@
-import { useRoute } from '@oomfware/stacker';
+import { useTarget } from '#/routes';
 
 export function useNavigationTabState() {
-	const { name } = useRoute();
+	const { name } = useTarget();
 	return {
 		isAtBookmarks: name === 'Bookmarks',
 		isAtFeeds: name === 'Feeds',

@@ -4,6 +4,7 @@ import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import { profileTarget } from '#/lib/routes/targets';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -25,7 +26,7 @@ import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 /**
@@ -43,11 +44,11 @@ export function LiveStatusDialog({
 	profile: AnyProfileView;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	const onPressOpenProfile = () => {
 		handle.close();
-		navigate('Profile', { actor: profile.did });
+		router.navigate({ to: profileTarget(profile.did) });
 	};
 
 	return (

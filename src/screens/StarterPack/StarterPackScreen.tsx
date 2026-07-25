@@ -329,7 +329,7 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 		if (router.canGoBack) {
 			router.back();
 		} else {
-			router.replace('/');
+			router.navigate({ replace: true, to: { name: 'Home' } });
 		}
 	};
 

@@ -10,7 +10,6 @@ import {
 import { clsx } from 'clsx';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import type { RouteTarget } from '#/lib/routes/target';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -30,6 +29,7 @@ import * as Layout from '#/components/web/Layout';
 import { Link, LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import type { RouteTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './MessagesListHeader.css';
@@ -169,8 +169,8 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	// a permanently locked group has no settings screen to open, so the header is inert.
 	const disabled = convo.details.lockStatus === 'locked-permanently';
 	const settingsTo: RouteTarget = {
+		conversation: convo.view.id,
 		name: 'MessagesConversationSettings',
-		params: { conversation: convo.view.id },
 	};
 
 	const nameBlock = (

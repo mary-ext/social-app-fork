@@ -6,7 +6,7 @@ import {
 	type Tid,
 } from '@atcute/lexicons/syntax';
 
-import type { RouteTarget } from '#/lib/routes/target';
+import type { RouteTarget } from '#/routes';
 
 // #region record targets
 
@@ -16,10 +16,9 @@ import type { RouteTarget } from '#/lib/routes/target';
  * @param conversation the conversation's id
  * @returns the conversation route target
  */
-export const conversationTarget = (conversation: Tid): RouteTarget => ({
-	name: 'MessagesConversation',
-	params: { conversation },
-});
+export const conversationTarget = (conversation: Tid): RouteTarget => {
+	return { conversation, name: 'MessagesConversation' };
+};
 
 /**
  * the destination for a feed.
@@ -28,10 +27,9 @@ export const conversationTarget = (conversation: Tid): RouteTarget => ({
  * @param rkey the feed generator's record key
  * @returns the feed route target
  */
-export const feedTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => ({
-	name: 'ProfileFeed',
-	params: { actor, rkey },
-});
+export const feedTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
+	return { actor, name: 'ProfileFeed', rkey };
+};
 
 /**
  * the destination for a list.
@@ -40,10 +38,9 @@ export const feedTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget
  * @param rkey the list's record key
  * @returns the list route target
  */
-export const listTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => ({
-	name: 'ProfileList',
-	params: { actor, rkey },
-});
+export const listTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
+	return { actor, name: 'ProfileList', rkey };
+};
 
 /**
  * the destination for a post's thread.
@@ -52,10 +49,9 @@ export const listTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget
  * @param rkey the post's record key
  * @returns the thread route target
  */
-export const postTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => ({
-	name: 'PostThread',
-	params: { actor, rkey },
-});
+export const postTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
+	return { actor, name: 'PostThread', rkey };
+};
 
 /**
  * the destination for an actor's profile.
@@ -63,10 +59,9 @@ export const postTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget
  * @param actor the actor's did or handle
  * @returns the profile route target
  */
-export const profileTarget = (actor: ActorIdentifier): RouteTarget => ({
-	name: 'Profile',
-	params: { actor },
-});
+export const profileTarget = (actor: ActorIdentifier): RouteTarget => {
+	return { actor, name: 'Profile' };
+};
 
 /**
  * the destination for a starter pack.
@@ -75,10 +70,9 @@ export const profileTarget = (actor: ActorIdentifier): RouteTarget => ({
  * @param rkey the starter pack's record key
  * @returns the starter pack route target
  */
-export const starterPackTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => ({
-	name: 'StarterPack',
-	params: { actor, rkey },
-});
+export const starterPackTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
+	return { actor, name: 'StarterPack', rkey };
+};
 
 // #endregion
 

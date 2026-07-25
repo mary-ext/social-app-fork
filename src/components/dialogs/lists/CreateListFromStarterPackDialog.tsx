@@ -4,6 +4,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
+import { listTarget } from '#/lib/routes/targets';
 
 import { useSession } from '#/state/session';
 
@@ -17,7 +18,7 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 import { CreateOrEditListDialog } from './CreateOrEditListDialog';
 
@@ -29,7 +30,7 @@ export function CreateListFromStarterPackDialog({
 	starterPack: AppBskyGraphDefs.StarterPackView;
 }) {
 	const { currentAccount } = useSession();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const queryClient = useQueryClient();
 	const createListHandle = Dialog.useDialogHandle();
 
@@ -53,10 +54,7 @@ export function CreateListFromStarterPackDialog({
 		}
 
 		const urip = parseCanonicalResourceUri(listUri);
-		navigate('ProfileList', {
-			actor: urip.repo,
-			rkey: urip.rkey,
-		});
+		router.navigate({ to: listTarget(urip.repo, urip.rkey) });
 	};
 
 	return (

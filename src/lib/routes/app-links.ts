@@ -1,5 +1,4 @@
 import { type AppLink, describeUrl } from '#/lib/links/app-url';
-import type { RouteTarget } from '#/lib/routes/target';
 import {
 	feedTarget,
 	listTarget,
@@ -9,7 +8,7 @@ import {
 	starterPackTarget,
 } from '#/lib/routes/targets';
 
-import { buildTarget } from '#/routes';
+import { type RouteTarget, router } from '#/routes';
 
 /** maps a link parsed out of a client's URL onto the route that renders it here. */
 const appLinkToTarget = (link: AppLink): RouteTarget => {
@@ -17,11 +16,11 @@ const appLinkToTarget = (link: AppLink): RouteTarget => {
 		// a chat invite has a route so the link keeps anchor semantics (opening in a new tab lands on the join
 		// screen), but a plain click is intercepted into the join dialog instead.
 		case 'chat-invite':
-			return { name: 'GroupChatJoin', params: { code: link.code } };
+			return { code: link.code, name: 'GroupChatJoin' };
 		case 'feed':
 			return feedTarget(link.actor, link.rkey);
 		case 'hashtag':
-			return { name: 'Hashtag', params: { author: link.author, tag: link.tag } };
+			return { author: link.author, name: 'Hashtag', tag: link.tag };
 		case 'list':
 			return listTarget(link.actor, link.rkey);
 		case 'post':
@@ -29,11 +28,11 @@ const appLinkToTarget = (link: AppLink): RouteTarget => {
 		case 'profile':
 			return profileTarget(link.actor);
 		case 'search':
-			return { name: 'Search', params: { q: link.query } };
+			return { name: 'Search', q: link.query };
 		case 'starter-pack':
 			return starterPackTarget(link.actor, link.rkey);
 		case 'topic':
-			return { name: 'Topic', params: { topic: link.topic } };
+			return { name: 'Topic', topic: link.topic };
 	}
 };
 
@@ -59,7 +58,7 @@ export const resolveUrl = (url: string): ResolvedUrl | undefined => {
 	const target = describeUrl(url);
 	switch (target?.kind) {
 		case 'client':
-			return { link: target.link, path: buildTarget(appLinkToTarget(target.link)) };
+			return { link: target.link, path: router.href(appLinkToTarget(target.link)) };
 		case 'own':
 			return { link: target.link, path: target.path };
 		default:
@@ -78,7 +77,7 @@ export const resolveUrl = (url: string): ResolvedUrl | undefined => {
  * @returns the absolute URL on this app's own origin
  */
 export const targetToShareUrl = (target: RouteTarget): string => {
-	return new URL(buildTarget(target), location.origin).toString();
+	return new URL(router.href(target), location.origin).toString();
 };
 
 /**

@@ -20,7 +20,7 @@ import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 
 import { m } from '#/paraglide/messages';
-import { useRoute } from '#/routes';
+import { useTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 const POLL_FREQ = 60e3; // 60sec
@@ -37,7 +37,7 @@ export function FeedPage({
 	feedInfo: FeedSourceInfo;
 }) {
 	const { hasSession } = useSession();
-	const route = useRoute();
+	const target = useTarget();
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
@@ -53,12 +53,12 @@ export function FeedPage({
 	}, []);
 
 	const onSoftReset = useCallback(() => {
-		if (route.name === 'Home') {
+		if (target.name === 'Home') {
 			scrollToTop();
 			void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 			setHasNew(false);
 		}
-	}, [route.name, scrollToTop, queryClient, feed]);
+	}, [target.name, scrollToTop, queryClient, feed]);
 
 	useEffect(() => {
 		return softReset.subscribe(onSoftReset);

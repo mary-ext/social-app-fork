@@ -33,7 +33,7 @@ import * as Layout from '#/components/web/Layout';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useRouter } from '#/routes';
+import { useRouter } from '#/routes';
 
 import { FeedRow } from './components/FeedRow';
 import { moveWithinSection, removeFeed, reorderSavedFeeds, togglePin } from './operations';
@@ -63,7 +63,6 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 	const { gtMobile } = useBreakpoints();
 	const { mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending } =
 		useOverwriteSavedFeedsMutation();
-	const navigate = useNavigate();
 	const router = useRouter();
 
 	// local draft seeded from preferences; the user edits it here and commits on save.
@@ -104,7 +103,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 			if (router.canGoBack) {
 				router.back();
 			} else {
-				navigate('Feeds');
+				router.navigate({ to: { name: 'Feeds' } });
 			}
 		} catch (e) {
 			Toast.show(m['common.error.serverContact'](), {

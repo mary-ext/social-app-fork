@@ -19,7 +19,7 @@ import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useParams } from '#/routes';
+import { useParams, useRouter } from '#/routes';
 
 export const ProfileFollowsScreen = () => {
 	const [{ actor }] = useParams('ProfileFollows');
@@ -66,11 +66,11 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 
 function ProfileFollows({ name, initialCount }: { name: string; initialCount?: number }) {
 	const { currentAccount } = useSession();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const moderationOpts = useModerationOpts();
 
 	const onPressFindAccounts = () => {
-		navigate('Explore', {});
+		router.navigate({ to: { name: 'Explore' } });
 	};
 
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);

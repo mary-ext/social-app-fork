@@ -3,14 +3,12 @@ import { type MouseEvent, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { mapDefined } from '@mary/array-fns';
-import { useRoute } from '@oomfware/stacker';
 
 import { clsx } from 'clsx';
 
 import { useBreakpoints, useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import type { RouteTarget } from '#/lib/routes/target';
 import { profileTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle } from '#/lib/strings/handles';
@@ -72,7 +70,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link, useInternalLink } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { popToTarget } from '#/routes';
+import { type RouteTarget, useRouter, useTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { LARGE_ELEMENT_SIZE, NAV_ICON_WIDTH } from './constants';
@@ -202,8 +200,8 @@ function SwitchMenuItems({
 function SwitcherMenuProfileLink() {
 	const { currentAccount } = useSession();
 	const target: RouteTarget = currentAccount ? profileTarget(currentAccount.did) : { name: 'Home' };
-	const match = useRoute();
-	const isCurrent = match.name === 'Profile' && match.params.actor === currentAccount?.did;
+	const active = useTarget();
+	const isCurrent = active.name === 'Profile' && active.actor === currentAccount?.did;
 
 	const onPress = (e: MouseEvent<HTMLElement>) => {
 		// a modified/middle click opens the profile in a new tab — let the anchor's default handle it
@@ -276,11 +274,13 @@ function NavItem({ activeRouteNames, count, hasNew, icons, label, minimal, to }:
 	const { currentAccount } = useSession();
 	const routeName = to.name;
 
-	const match = useRoute();
-	const inTab = activeRouteNames ? activeRouteNames.includes(match.name) : match.name === routeName;
+	const active = useTarget();
+	const router = useRouter();
+	const inTab = activeRouteNames ? activeRouteNames.includes(active.name) : active.name === routeName;
+	const onOwnProfile = active.name === 'Profile' && active.actor === currentAccount?.did;
 	// exact name (own profile on DID) bolds the label; a related route group (Profile*) only lights the icon.
-	const isCurrent = inTab && (routeName !== 'Profile' || match.params.actor === currentAccount?.did);
-	const isRelated = activeRouteNames ? inTab : match.name.startsWith(routeName);
+	const isCurrent = inTab && (routeName !== 'Profile' || onOwnProfile);
+	const isRelated = activeRouteNames ? inTab : active.name.startsWith(routeName);
 
 	const onPress = (e: MouseEvent<HTMLElement>) => {
 		// a modified/middle click opens a new tab — let the anchor's default handle it
@@ -292,7 +292,7 @@ function NavItem({ activeRouteNames, count, hasNew, icons, label, minimal, to }:
 			softReset.emit();
 			return false;
 		}
-		popToTarget(to);
+		router.popTo(to);
 		return false;
 	};
 
@@ -327,14 +327,15 @@ function NavItem({ activeRouteNames, count, hasNew, icons, label, minimal, to }:
 
 function ComposeBtn({ minimal }: { minimal: boolean }) {
 	const { currentAccount } = useSession();
-	const match = useRoute();
+	const router = useRouter();
 	const { openComposer } = useOpenComposer();
 	const [isFetchingHandle, setIsFetchingHandle] = useState(false);
 	const fetchHandle = useFetchHandle();
 
 	const getProfileHandle = async () => {
-		if (match.name === 'Profile' && typeof match.params.actor === 'string') {
-			let handle: string | undefined = match.params.actor;
+		const active = router.target;
+		if (active.name === 'Profile') {
+			let handle: string | undefined = active.actor;
 
 			if (handle.startsWith('did:')) {
 				try {

@@ -20,7 +20,7 @@ import {
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 import * as css from './ProfileStarterPacks.css';
 
@@ -163,14 +163,14 @@ function keyExtractor(item: StarterPackItem) {
 
 /** A footer row offering the profile owner a shortcut back to the starter-pack wizard. */
 function CreateAnother() {
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	return (
 		<div className={css.createAnother}>
 			<Button
 				color="secondary"
 				label={m['common.starterPack.action.create']()}
-				onClick={() => navigate('StarterPackWizard', {})}
+				onClick={() => router.navigate({ to: { name: 'StarterPackWizard' } })}
 				size="small"
 				variant="solid"
 			>

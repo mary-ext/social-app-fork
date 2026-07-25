@@ -22,11 +22,10 @@ import {
 	type SuggestionMode,
 } from '#/lib/bsky/search';
 import { resolveUrl } from '#/lib/routes/app-links';
-import type { RouteTarget } from '#/lib/routes/target';
 import { profileTarget, recordUriToTarget } from '#/lib/routes/targets';
 
 import { m } from '#/paraglide/messages';
-import { buildTarget } from '#/routes';
+import { type RouteTarget, router } from '#/routes';
 import type { SearchHistoryEntry } from '#/storage';
 
 /**
@@ -40,7 +39,7 @@ const resolveInAppUrl = (query: string): string | null => {
 
 	if (trimmed.startsWith('at://')) {
 		const target = recordUriToTarget(trimmed);
-		return target ? buildTarget(target) : null;
+		return target ? router.href(target) : null;
 	}
 
 	return resolveUrl(trimmed)?.path ?? null;

@@ -35,7 +35,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './GroupChatJoinDialog.css';
@@ -48,7 +48,7 @@ export function InviteBody({
 	code?: string;
 }) {
 	const { hasSession } = useSession();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const { data, error, isLoading } = useJoinLinkPreviewsQuery({
@@ -79,9 +79,7 @@ export function InviteBody({
 					if (result.convo && result.convo.id) {
 						handle.close();
 						Toast.show(m['components.intents.join.success']());
-						navigate('MessagesConversation', {
-							conversation: result.convo.id,
-						});
+						router.navigate({ to: { conversation: result.convo.id, name: 'MessagesConversation' } });
 					} else {
 						logger.warn('Request to join group chat returned no convo ID', {
 							status: result.status,
@@ -317,9 +315,7 @@ export function InviteBody({
 					label={m['components.intents.join.action.open']()}
 					onClick={() => {
 						handle.close();
-						navigate('MessagesConversation', {
-							conversation: convoId,
-						});
+						router.navigate({ to: { conversation: convoId, name: 'MessagesConversation' } });
 					}}
 					size="large"
 				>

@@ -8,6 +8,7 @@ import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { starterPackTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { enforceLen } from '#/lib/strings/helpers';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';
@@ -48,7 +49,9 @@ import { useRouter } from '#/routes';
 import { Provider } from './State';
 import * as css from './Wizard.css';
 
-// registered for both StarterPackEdit (has rkey) and StarterPackWizard (has targetDid).
+// registered for both StarterPackEdit (has rkey) and StarterPackWizard (has targetDid). the branch's own
+// params are read through the loose `useParams`, not `useTarget`: this screen stays mounted behind whatever
+// replaced it, and the active target would blank its params out from under it.
 export function Wizard() {
 	const { name: routeName } = useRoute();
 	const params = useParams();
@@ -184,14 +187,20 @@ function WizardInner({
 			return;
 		}
 
-		router.replace(router.build('StarterPack', { actor: currentProfile!.did, new: true, rkey }));
+		router.navigate({
+			replace: true,
+			to: { actor: currentProfile!.did, name: 'StarterPack', new: true, rkey },
+		});
 	};
 
 	const onSuccessEdit = () => {
 		if (router.canGoBack) {
 			router.back();
 		} else {
-			router.replace(router.build('StarterPack', { actor: currentAccount!.did, rkey: parsed!.rkey }));
+			router.navigate({
+				replace: true,
+				to: starterPackTarget(currentAccount!.did, parsed!.rkey),
+			});
 		}
 	};
 

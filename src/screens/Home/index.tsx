@@ -20,7 +20,7 @@ import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 const FEEDS_DISCOVERY_TAB = '__feeds__';
 
@@ -56,7 +56,7 @@ function HomeScreenReady({
 	preferences: UsePreferencesQueryResponse;
 }) {
 	const { hasSession } = useSession();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const setSelectedFeed = useSetSelectedFeed();
 
 	const allFeeds = pinnedFeedInfos.map((f) => f.feedDescriptor);
@@ -112,7 +112,7 @@ function HomeScreenReady({
 
 	const onValueChange = (value: HomeTabId) => {
 		if (value === FEEDS_DISCOVERY_TAB) {
-			navigate('Feeds');
+			router.navigate({ to: { name: 'Feeds' } });
 			return;
 		}
 		setSelectedFeed(value);

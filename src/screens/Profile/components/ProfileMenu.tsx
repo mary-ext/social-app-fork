@@ -51,7 +51,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 function ProfileMenu({
@@ -63,7 +63,7 @@ function ProfileMenu({
 	const reportDialogHandle = Dialog.useDialogHandle();
 	const addToListsDialogHandle = Dialog.useDialogHandle();
 	const queryClient = useQueryClient();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const isSelf = currentAccount?.did === profile.did;
 	const isFollowing = profile.viewer?.following;
 	const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy;
@@ -199,7 +199,7 @@ function ProfileMenu({
 	};
 
 	const onPressSearch = () => {
-		navigate('ProfileSearch', { actor: profile.did });
+		router.navigate({ to: { actor: profile.did, name: 'ProfileSearch' } });
 	};
 
 	return (

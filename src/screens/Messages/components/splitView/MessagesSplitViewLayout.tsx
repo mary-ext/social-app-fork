@@ -1,6 +1,7 @@
-import { Outlet, useRoute } from '@oomfware/stacker';
+import { Outlet } from '@oomfware/stacker';
 
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
+import { conversationTarget } from '#/lib/routes/targets';
 
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 
@@ -8,7 +9,7 @@ import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { LockScroll } from '#/components/LockScroll';
 
-import { useNavigate } from '#/routes';
+import { useRouter, useTarget } from '#/routes';
 
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
 import { SplitViewProvider } from './context';
@@ -28,15 +29,14 @@ export function MessagesSplitViewLayout() {
 function MessagesSplitViewLayoutInner() {
 	const newChatHandle = Dialog.useDialogHandle();
 	const { data: chatStatus } = useChatActorStatusQuery();
-	const match = useRoute();
-	const navigate = useNavigate();
+	const target = useTarget();
+	const router = useRouter();
 
-	const onNewChat = (conversation: string) => navigate('MessagesConversation', { conversation });
+	const onNewChat = (conversation: string) => router.navigate({ to: conversationTarget(conversation) });
 
 	const selectedChat =
-		(match.name === 'MessagesConversation' || match.name === 'MessagesConversationSettings') &&
-		typeof match.params.conversation === 'string'
-			? match.params.conversation
+		target.name === 'MessagesConversation' || target.name === 'MessagesConversationSettings'
+			? target.conversation
 			: undefined;
 
 	return (

@@ -1,6 +1,7 @@
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 
 import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -47,7 +48,7 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 const ICON_WIDTH = 26;
 
@@ -75,7 +76,7 @@ export function Drawer() {
 }
 
 function DrawerContent() {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const setDrawerOpen = useSetDrawerOpen();
 	const { currentAccount, hasSession } = useSession();
 	const { isAtBookmarks, isAtFeeds, isAtHome, isAtMessages, isAtNotifications, isAtSearch } =
@@ -86,14 +87,14 @@ function DrawerContent() {
 		setDrawerOpen(false);
 		// MyProfile doesn't exist on the web navigator, so resolve it to the Profile route -ansh
 		if (tab === 'MyProfile') {
-			navigate('Profile', { actor: currentAccount!.did });
+			router.navigate({ to: profileTarget(currentAccount!.did) });
 		} else {
-			navigate(tab);
+			router.navigate({ to: { name: tab } });
 		}
 	};
 
 	const navigateAndClose = (screen: 'Bookmarks' | 'Feeds' | 'Lists' | 'Settings') => {
-		navigate(screen);
+		router.navigate({ to: { name: screen } });
 		setDrawerOpen(false);
 	};
 

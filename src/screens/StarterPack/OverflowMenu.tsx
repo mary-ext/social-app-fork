@@ -23,7 +23,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { type RouteParams, useNavigate, useRouter } from '#/routes';
+import { type RouteParams, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './StarterPackScreen.css';
@@ -43,7 +43,6 @@ export function OverflowMenu({
 	const reportDialogHandle = Dialog.useDialogHandle();
 	const deleteHandle = Prompt.usePromptHandle();
 	const convertToListHandle = Dialog.useDialogHandle();
-	const navigate = useNavigate();
 	const router = useRouter();
 
 	const {
@@ -54,7 +53,7 @@ export function OverflowMenu({
 		onSuccess: () => {
 			deleteHandle.close();
 			// the pack was just deleted; leave for Home.
-			router.popTo('Home');
+			router.popTo({ name: 'Home' });
 		},
 		onError: (e) => {
 			logger.error('Failed to delete starter pack', { safeMessage: e });
@@ -97,9 +96,8 @@ export function OverflowMenu({
 							<Menu.Item
 								label={m['screens.starterPack.edit']()}
 								onClick={() => {
-									navigate('StarterPackEdit', {
-										actor: routeParams.actor,
-										rkey: routeParams.rkey,
+									router.navigate({
+										to: { actor: routeParams.actor, name: 'StarterPackEdit', rkey: routeParams.rkey },
 									});
 								}}
 							>

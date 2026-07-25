@@ -24,7 +24,7 @@ import { Error } from '#/components/Error';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useIsFocused, useNavigate, useParams } from '#/routes';
+import { useFocusEffect, useIsFocused, useParams, useRouter } from '#/routes';
 
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatEnded } from './components/ChatEnded';
@@ -106,7 +106,7 @@ function InnerReady({
 	isDisabled: boolean;
 }) {
 	const [{ accept }] = useParams('MessagesConversation');
-	const navigate = useNavigate();
+	const router = useRouter();
 	const primaryMember = useMaybeProfileShadow(convo?.primaryMember);
 	const moderationOpts = useModerationOpts();
 	let primaryMemberModeration = null;
@@ -175,9 +175,7 @@ function InnerReady({
 					}}
 					onPress={() => {
 						markJoinRequestsRead();
-						navigate('MessagesJoinRequests', {
-							conversation: convo.view.id,
-						});
+						router.navigate({ to: { conversation: convo.view.id, name: 'MessagesJoinRequests' } });
 					}}
 				/>
 			) : null}

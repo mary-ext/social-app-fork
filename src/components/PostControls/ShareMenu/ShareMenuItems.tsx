@@ -17,7 +17,7 @@ import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/P
 import * as Menu from '#/components/Menu';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 import { useBookmark } from '../useBookmark';
@@ -29,7 +29,7 @@ interface ShareMenuItemsProps {
 
 function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode {
 	const { hasSession } = useSession();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const sendViaChatHandle = Dialog.useDialogHandle();
 	const [devModeEnabled] = useDevMode();
 	const bookmark = useBookmark(post);
@@ -47,10 +47,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 	};
 
 	const onSelectChatToShareTo = (conversation: string) => {
-		navigate('MessagesConversation', {
-			conversation,
-			embed: postUri,
-		});
+		router.navigate({ to: { conversation, embed: postUri, name: 'MessagesConversation' } });
 	};
 
 	const onShareATURI = () => {

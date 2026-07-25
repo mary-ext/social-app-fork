@@ -38,12 +38,12 @@ import * as Pills from '#/components/web/Pills';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 import * as css from './ProfileHoverCard.css';
 
 export function Card({ did }: { did: Did }) {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const profile = useProfileQuery({ did });
 	const moderationOpts = useModerationOpts();
 	const data = profile.data;
@@ -53,7 +53,7 @@ export function Card({ did }: { did: Did }) {
 		if (!status.isActive || !data) {
 			return;
 		}
-		navigate('Profile', { actor: data.did });
+		router.navigate({ to: profileTarget(data.did) });
 	};
 
 	if (data && moderationOpts) {
@@ -169,7 +169,7 @@ function Inner({
 								count: followersCount,
 								formatted: formatCount(followersCount),
 							})}
-							to={{ name: 'ProfileFollowers', params: { actor: profile.did } }}
+							to={{ actor: profile.did, name: 'ProfileFollowers' }}
 						>
 							<Text color="textContrastMedium" size="md">
 								<Trans
@@ -188,7 +188,7 @@ function Inner({
 						<InlineLinkText
 							color="text"
 							label={m['common.follow.followingCount']({ formatted: formatCount(followsCount) })}
-							to={{ name: 'ProfileFollows', params: { actor: profile.did } }}
+							to={{ actor: profile.did, name: 'ProfileFollows' }}
 						>
 							<Text color="textContrastMedium" size="md">
 								<Trans

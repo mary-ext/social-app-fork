@@ -4,8 +4,6 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
-import type { RouteTarget } from '#/lib/routes/target';
-
 import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { ProfileBadges } from '#/components/ProfileBadges';
@@ -13,6 +11,7 @@ import { Text } from '#/components/Text';
 import { TimeElapsed } from '#/components/TimeElapsed';
 import { Link as WebLink } from '#/components/web/Link';
 
+import type { RouteTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './ChatRow.css';

@@ -25,7 +25,7 @@ import { type InlineLinkUnderline, useInternalLink } from '#/components/web/Link
 import * as linkStyles from '#/components/web/Link.css';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 const preventDefault = (e: MouseEvent) => e.preventDefault();
 
@@ -52,7 +52,7 @@ export function RichTextTag({
 	tag,
 	underline = 'hover',
 }: RichTextTagProps) {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const { isLoading: isPreferencesLoading, data: preferences } = usePreferencesQuery();
 	const {
 		mutateAsync: upsertMutedWord,
@@ -64,7 +64,7 @@ export function RichTextTag({
 		variables: optimisticRemove,
 		reset: resetRemove,
 	} = useRemoveMutedWordsMutation();
-	const { href } = useInternalLink({ to: { name: 'Hashtag', params: { tag } } });
+	const { href } = useInternalLink({ to: { name: 'Hashtag', tag } });
 	const muteConfirmHandle = Prompt.usePromptHandle();
 
 	const isCashtag = tag.startsWith('$');
@@ -117,7 +117,7 @@ export function RichTextTag({
 					<Menu.Group>
 						<Menu.Item
 							label={m['components.richTextTag.seePosts.prefixed']({ prefixedTag })}
-							onClick={() => navigate('Hashtag', { tag })}
+							onClick={() => router.navigate({ to: { name: 'Hashtag', tag } })}
 						>
 							<Menu.ItemText>
 								{isCashtag
@@ -129,7 +129,7 @@ export function RichTextTag({
 						{authorHandle && !isInvalidHandle(authorHandle) && (
 							<Menu.Item
 								label={m['components.richTextTag.seePosts.prefixedByUser']({ prefixedTag })}
-								onClick={() => navigate('Hashtag', { author: authorHandle, tag })}
+								onClick={() => router.navigate({ to: { author: authorHandle, name: 'Hashtag', tag } })}
 							>
 								<Menu.ItemText>
 									{isCashtag

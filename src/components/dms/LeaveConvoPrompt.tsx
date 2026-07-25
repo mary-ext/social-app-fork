@@ -26,7 +26,7 @@ export function LeaveConvoPrompt({
 	const { mutate: leaveConvo } = useLeaveConvo(convoId, {
 		onMutate: () => {
 			if (currentScreen === 'conversation') {
-				router.replace(router.build('Messages'));
+				router.navigate({ replace: true, to: { name: 'Messages' } });
 			}
 		},
 		onError: (error) => {

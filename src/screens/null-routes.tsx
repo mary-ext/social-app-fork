@@ -16,7 +16,7 @@ export function GroupChatJoinScreen() {
 	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	useEffect(() => {
-		router.replace('/');
+		router.navigate({ replace: true, to: { name: 'Home' } });
 		groupChatJoinHandle.openWithPayload({ code });
 	}, [code, groupChatJoinHandle, router]);
 
@@ -30,7 +30,7 @@ export function IntentComposeScreen() {
 	const composeIntent = useComposeIntent();
 
 	useEffect(() => {
-		router.replace('/');
+		router.navigate({ replace: true, to: { name: 'Home' } });
 		composeIntent({ text: text ?? null, videoUri: videoUri ?? null });
 	}, [composeIntent, router, text, videoUri]);
 

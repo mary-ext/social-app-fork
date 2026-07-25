@@ -1,6 +1,7 @@
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useTitle } from '#/lib/hooks/useTitle';
+import { listTarget } from '#/lib/routes/targets';
 
 import * as Dialog from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
@@ -10,12 +11,12 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 export function ModerationModlistsScreen() {
 	useTitle(m['common.moderation.listsTitle']());
 
-	const navigate = useNavigate();
+	const router = useRouter();
 	const createListHandle = Dialog.useDialogHandle();
 
 	const onPressNewList = () => {
@@ -25,10 +26,7 @@ export function ModerationModlistsScreen() {
 	const onCreateList = (uri: string) => {
 		try {
 			const urip = parseCanonicalResourceUri(uri);
-			navigate('ProfileList', {
-				actor: urip.repo,
-				rkey: urip.rkey,
-			});
+			router.navigate({ to: listTarget(urip.repo, urip.rkey) });
 		} catch {}
 	};
 

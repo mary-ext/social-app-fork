@@ -14,6 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useTitle } from '#/lib/hooks/useTitle';
+import { profileTarget } from '#/lib/routes/targets';
 import { combinedDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 import { isInvalidHandle } from '#/lib/strings/handles';
@@ -48,7 +49,7 @@ import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useNavigate, useParams } from '#/routes';
+import { useFocusEffect, useParams, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './index.css';
@@ -63,7 +64,7 @@ export function ProfileScreen() {
 
 function ProfileScreenInner() {
 	const queryClient = useQueryClient();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const [{ actor }] = useParams('Profile');
 	const moderationOpts = useModerationOpts();
 	const {
@@ -95,10 +96,10 @@ function ProfileScreenInner() {
 		if (resolveError) {
 			if (actor === 'lulaoficial.bsky.social') {
 				console.log('Applying redirect to lula.com.br');
-				navigate('Profile', { actor: 'lula.com.br' });
+				router.navigate({ to: profileTarget('lula.com.br') });
 			}
 		}
-	}, [actor, navigate, resolveError]);
+	}, [actor, resolveError, router]);
 
 	// When we open the profile, we want to reset the posts query if we are blocked.
 	useEffect(() => {
@@ -157,7 +158,7 @@ function ProfileScreenLoaded({
 	const profile = useProfileShadow(profileUnshadowed);
 	const { hasSession, currentAccount } = useSession();
 	const { openComposer } = useOpenComposer();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const {
 		data: labelerInfo,
 		error: labelerError,
@@ -204,7 +205,7 @@ function ProfileScreenLoaded({
 	};
 
 	const navToWizard = () => {
-		navigate('StarterPackWizard', {});
+		router.navigate({ to: { name: 'StarterPackWizard' } });
 	};
 
 	// rendering

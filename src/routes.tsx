@@ -12,11 +12,11 @@ import {
 	Router,
 	route,
 	type RouteName,
+	type RouteTarget as StackerRouteTarget,
 	string,
 } from '@oomfware/stacker';
 
-import { actorIdentifier, recordKey, resourceUri, tid } from '#/lib/routes/codecs';
-import type { RouteTarget } from '#/lib/routes/target';
+import { actorIdentifier, did, recordKey, resourceUri, tid } from '#/lib/routes/codecs';
 
 import {
 	MessagesRouteLoadingScreen,
@@ -457,7 +457,6 @@ export const routes = defineRoutes({
 				component: MessagesSplitViewLayout,
 				fallback: <MessagesRouteLoadingScreen />,
 				children: {
-					// literal paths MUST precede MessagesConversation, which also matches `/messages/:conversation`.
 					MessagesSettings: route({
 						component: MessagesSettingsScreen,
 						fallback: <MessagesSplitViewColumnLoadingScreen />,
@@ -506,7 +505,7 @@ export const routes = defineRoutes({
 				component: Wizard,
 				meta: { requireAuth: true },
 				path: '/packs/new',
-				query: { targetDid: optional(string()) },
+				query: { targetDid: optional(did()) },
 			}),
 			StarterPackShort: route({
 				component: StarterPackScreenShort,
@@ -546,41 +545,15 @@ export const router = new Router({
 	routes,
 });
 
-// a target's `name` and `params` are correlated by construction, but TypeScript checks the two independently
-// and so rejects the call: for a union-typed target it must assume any member's params could accompany any
-// other member's name. the correlation is re-established by routing every call through this one untyped view
-// of the router, which keeps the public helpers below fully typed.
-const untypedRouter: {
-	build: (name: string, params?: Record<string, unknown>) => string;
-	popTo: (name: string, params?: Record<string, unknown>) => void;
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above
-} = router as never;
-
-/**
- * builds the in-app path for a route target.
- *
- * @param target the destination route and its parameters
- * @returns the path, including a query string when the target carries query parameters
- */
-export const buildTarget = (target: RouteTarget): string => {
-	return untypedRouter.build(target.name, target.params);
-};
-
-/**
- * returns to the nearest existing history entry for a target, or pushes a new one if there is none.
- *
- * @param target the destination route and its parameters
- */
-export const popToTarget = (target: RouteTarget): void => {
-	untypedRouter.popTo(target.name, target.params);
-};
+/** an in-app navigation destination: a route name plus the parameters that route needs. */
+export type RouteTarget = StackerRouteTarget<typeof routes>;
 
 /** the decoded path and query parameters a route receives, keyed by route name. */
 export type RouteParams<K extends RouteName<typeof routes>> = ParamsOf<typeof routes, K>;
 
 // oxlint-disable-next-line typescript/unbound-method
-export const { useLocation, useNavigate, useParams, useRoute, useRouter } = createRouterHooks(routes);
+export const { useParams, useRouter, useTarget } = createRouterHooks(routes);
 
-export { useFocusEffect, useIsFocused } from '@oomfware/stacker';
+export { useFocusEffect, useIsFocused, useLocation } from '@oomfware/stacker';
 
 // #endregion

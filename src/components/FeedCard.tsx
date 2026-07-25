@@ -8,7 +8,6 @@ import { weightedIndex } from '@mary/array-fns';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import type { RouteTarget } from '#/lib/routes/target';
 import { feedTarget } from '#/lib/routes/targets';
 
 import { precacheFeedFromGeneratorView, useFeedSourceInfoQuery } from '#/state/queries/feed';
@@ -27,6 +26,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
+import type { RouteTarget } from '#/routes';
 import { borderRadius } from '#/styles/tokens.css';
 
 import * as css from './FeedCard.css';

@@ -13,11 +13,10 @@ import {
 import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/merge-refs';
-import type { RouteTarget } from '#/lib/routes/target';
 
-import { isModifiedClick, useNavigateToPath } from '#/components/web/Link';
+import { isModifiedClick, navigateTo } from '#/components/web/Link';
 
-import { buildTarget } from '#/routes';
+import { type RouteTarget, useRouter } from '#/routes';
 
 // elements that handle their own press, plus regions that opt out via {@link noRowLink}; a click landing
 // on one must not also navigate the row
@@ -36,7 +35,7 @@ type BlockLinkChildProps = HTMLAttributes<HTMLElement> & {
 type BlockLinkProps = {
 	/** The single host element to make clickable; its own box becomes the row. */
 	children: ReactNode;
-	/** The in-app destination, e.g. `{ name: 'PostThread', params: { actor, rkey } }`. */
+	/** The in-app destination, e.g. `{ actor, name: 'PostThread', rkey }`. */
 	to: RouteTarget;
 	/**
 	 * makes the row a focusable link with the specified accessible name, activated by Enter. omit if inner
@@ -83,7 +82,7 @@ export function BlockLink({
 	onPointerEnter,
 	onPointerLeave,
 }: BlockLinkProps) {
-	const navigateToPath = useNavigateToPath();
+	const router = useRouter();
 	// where the pointer last went down within the row; read back on click to gate navigation on the press
 	// origin rather than the release target
 	const pressOriginRef = useRef<Element | null>(null);
@@ -91,14 +90,14 @@ export function BlockLink({
 	const go = (e?: MouseEvent<HTMLElement>) => {
 		onBeforePress?.();
 		// the row renders no anchor, so the path is only ever needed once a press actually lands
-		const path = buildTarget(to);
+		const path = router.href(to);
 		// a modified/middle click opens the route in a new same-origin tab (no native `<a>` to fall through to);
 		// a plain click navigates in place
 		if (e && isModifiedClick(e)) {
 			window.open(path, '_blank');
 			return;
 		}
-		navigateToPath(path, 'push');
+		navigateTo(router, path, 'push');
 	};
 
 	// record where the pointer went down so onClick can consult the press origin. capture phase so a child

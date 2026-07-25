@@ -4,13 +4,15 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { definite } from '@mary/array-fns';
 
+import { profileTarget } from '#/lib/routes/targets';
+
 import { makeSearchQuery, type Params, type TabParam } from '#/screens/Search/utils';
 
 import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
 
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 /**
  * the search chrome shared by the Explore, Search, and ProfileSearch screens: a sticky header wrapping the
@@ -44,7 +46,7 @@ export function SearchHeader({
 	placeholder: string;
 	tab?: TabParam;
 }) {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const navigateToPath = useNavigateToPath();
 
 	const navigateToQuery = (nextQuery: string) => {
@@ -54,11 +56,11 @@ export function SearchHeader({
 		// carries over so a stashed tab lands on the right results.
 		const prefix = fixedParams ? makeSearchQuery('', fixedParams) : '';
 		const q = definite([prefix, nextQuery]).join(' ');
-		navigate('Search', { q, tab });
+		router.navigate({ to: { name: 'Search', q, tab } });
 	};
 
 	const navigateToProfile = (profile: AnyProfileView) => {
-		navigate('Profile', { actor: profile.did });
+		router.navigate({ to: profileTarget(profile.did) });
 	};
 
 	return (

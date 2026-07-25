@@ -1,10 +1,10 @@
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { isActorIdentifier } from '@atcute/lexicons/syntax';
 
-import type { RouteTarget } from '#/lib/routes/target';
 import { starterPackTarget } from '#/lib/routes/targets';
 
 import { m } from '#/paraglide/messages';
+import type { RouteTarget } from '#/routes';
 
 type ParsedTrendingTopic = {
 	label: string;
@@ -31,14 +31,14 @@ export function useTopic(raw: AppBskyUnspeccedDefs.TrendView): ParsedTrendingTop
 			return {
 				label: m['components.trendingTopics.a11y.browseAbout']({ name: displayName }),
 				// Explore and Search share `/search`; an empty query is Explore's, not a search for nothing.
-				target: q ? { name: 'Search', params: { q } } : { name: 'Explore' },
+				target: q ? { name: 'Search', q } : { name: 'Explore' },
 			};
 		}
 		case 'hashtag': {
 			const tag = segments[1];
 			return {
 				label: m['components.trendingTopics.a11y.browseTag']({ name: displayName }),
-				target: tag ? { name: 'Hashtag', params: { tag } } : undefined,
+				target: tag ? { name: 'Hashtag', tag } : undefined,
 			};
 		}
 		case 'starter-pack': {
@@ -52,7 +52,7 @@ export function useTopic(raw: AppBskyUnspeccedDefs.TrendView): ParsedTrendingTop
 			const topic = segments[1];
 			return {
 				label: m['components.trendingTopics.a11y.browseTopic']({ name: displayName }),
-				target: topic ? { name: 'Topic', params: { topic } } : undefined,
+				target: topic ? { name: 'Topic', topic } : undefined,
 			};
 		}
 	}

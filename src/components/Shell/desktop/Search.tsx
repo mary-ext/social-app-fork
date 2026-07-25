@@ -1,19 +1,21 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
+import { profileTarget } from '#/lib/routes/targets';
+
 import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import { useNavigateToPath } from '#/components/web/Link';
 
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 export function DesktopSearch() {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const navigateToPath = useNavigateToPath();
 
 	return (
 		<SearchAutocomplete
 			onNavigate={(path) => navigateToPath(path, 'push')}
-			onNavigateToProfile={(profile: AnyProfileView) => navigate('Profile', { actor: profile.did })}
-			onSubmit={(query) => navigate('Search', { q: query })}
+			onNavigateToProfile={(profile: AnyProfileView) => router.navigate({ to: profileTarget(profile.did) })}
+			onSubmit={(query) => router.navigate({ to: { name: 'Search', q: query } })}
 		/>
 	);
 }

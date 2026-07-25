@@ -6,6 +6,7 @@ import { ClientResponseError } from '@atcute/client';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
+import { conversationTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useConvoQuery } from '#/state/queries/messages/conversation';
@@ -43,7 +44,7 @@ import * as Toast from '#/components/Toast';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useParams, useRouter } from '#/routes';
+import { useParams, useRouter } from '#/routes';
 
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { useIsWithinSplitView } from '../components/splitView/context';
@@ -71,7 +72,6 @@ type Item =
 
 export function MessagesConversationSettingsScreen() {
 	const [{ conversation: convoId }] = useParams('MessagesConversationSettings');
-	const navigate = useNavigate();
 	const router = useRouter();
 
 	useTitle(m['common.chat.settingsTitle']());
@@ -84,7 +84,7 @@ export function MessagesConversationSettingsScreen() {
 						// deep-linking straight to settings leaves no back entry; send back to the conversation
 						if (!router.canGoBack) {
 							evt.preventDefault();
-							navigate('MessagesConversation', { conversation: convoId });
+							router.navigate({ to: conversationTarget(convoId) });
 						}
 					}}
 				/>
@@ -132,7 +132,7 @@ function SettingsInner({ convoId }: { convoId: string }) {
 					if (router.canGoBack) {
 						router.back();
 					} else {
-						router.replace(router.build('Messages'));
+						router.navigate({ replace: true, to: { name: 'Messages' } });
 					}
 				}}
 			/>
@@ -320,7 +320,7 @@ function SettingsHeader({
 
 	const { mutate: leaveConvo, isPending: isLeaving } = useLeaveConvo(convo.view.id, {
 		onSuccess: () => {
-			router.replace(router.build('Messages'));
+			router.navigate({ replace: true, to: { name: 'Messages' } });
 		},
 		onError: (e) => {
 			logger.error('Failed to leave group chat', { message: e });

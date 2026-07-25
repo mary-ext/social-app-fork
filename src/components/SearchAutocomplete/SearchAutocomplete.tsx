@@ -48,7 +48,7 @@ import { useSession } from '#/state/session';
 import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
-import { buildTarget } from '#/routes';
+import { router } from '#/routes';
 
 import { CalendarBody } from './CalendarBody';
 import { buildResult, CALENDAR_DAY_COUNT, type InteractiveItem, interactiveItems } from './model';
@@ -513,7 +513,7 @@ function ActiveSearchAutocomplete({
 				replaceToken(`${item.op}:${item.iso} `);
 				break;
 			case 'goto':
-				navigate(buildTarget(item.target));
+				navigate(router.href(item.target));
 				break;
 			case 'link':
 				navigate(item.path);

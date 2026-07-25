@@ -4,6 +4,7 @@ import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky'
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useTitle } from '#/lib/hooks/useTitle';
+import { conversationTarget } from '#/lib/routes/targets';
 import { cleanError } from '#/lib/strings/errors';
 
 import { softReset } from '#/state/events';
@@ -41,7 +42,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useNavigate } from '#/routes';
+import { useFocusEffect, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './ChatList.css';
@@ -73,7 +74,7 @@ function keyExtractor(item: ListItem) {
 
 export function MessagesScreen() {
 	const { isWithinSplitView } = useIsWithinSplitView();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const newChatHandle = Dialog.useDialogHandle();
 	const { data: chatStatus } = useChatActorStatusQuery();
 
@@ -81,7 +82,7 @@ export function MessagesScreen() {
 
 	useRequestMessagePollInterval();
 
-	const onNewChat = (conversation: string) => navigate('MessagesConversation', { conversation });
+	const onNewChat = (conversation: string) => router.navigate({ to: conversationTarget(conversation) });
 
 	if (isWithinSplitView) {
 		return (
@@ -367,7 +368,7 @@ export function Header({
 }
 
 function ChatSettingsMenu({ render }: { render: ComponentProps<typeof Menu.Trigger>['render'] }) {
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	const { mutate: markAllChatsRead } = useUpdateAllRead('accepted', {
 		onMutate: () => {
@@ -409,7 +410,7 @@ function ChatSettingsMenu({ render }: { render: ComponentProps<typeof Menu.Trigg
 					<Menu.Item
 						label={m['common.chat.settingsLabel']()}
 						onClick={() => {
-							navigate('MessagesSettings');
+							router.navigate({ to: { name: 'MessagesSettings' } });
 						}}
 					>
 						<Menu.ItemIcon icon={SettingsIcon} />

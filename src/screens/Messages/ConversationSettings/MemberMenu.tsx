@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
+import { profileTarget } from '#/lib/routes/targets';
 import { isAbortError } from '#/lib/strings/errors';
 
 import type { Shadow } from '#/state/cache/types';
@@ -27,7 +28,7 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { useRouter } from '#/routes';
 
 import { RemoveMemberPrompt } from './prompts';
 
@@ -136,12 +137,12 @@ function MemberMenuItems({
 	blockMemberHandle: ReturnType<typeof Dialog.useDialogHandle>;
 	removeMemberPrompt: ReturnType<typeof Prompt.usePromptHandle>;
 }) {
-	const navigate = useNavigate();
+	const router = useRouter();
 
 	const { data: convoAvailability } = useGetConvoAvailabilityQuery(profile.did);
 	const { mutate: initiateConvo } = useGetConvoForMembers({
 		onSuccess: ({ convo: createdConvo }) => {
-			navigate('MessagesConversation', { conversation: createdConvo.id });
+			router.navigate({ to: { conversation: createdConvo.id, name: 'MessagesConversation' } });
 		},
 		onError: () => {
 			Toast.show(m['common.chat.error.create'](), { type: 'error' });
@@ -154,9 +155,7 @@ function MemberMenuItems({
 		}
 
 		if (convoAvailability.convo) {
-			navigate('MessagesConversation', {
-				conversation: convoAvailability.convo.id,
-			});
+			router.navigate({ to: { conversation: convoAvailability.convo.id, name: 'MessagesConversation' } });
 		} else {
 			initiateConvo([profile.did]);
 		}
@@ -172,7 +171,7 @@ function MemberMenuItems({
 				<Menu.Item
 					label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
 					onClick={() => {
-						navigate('Profile', { actor: profile.did });
+						router.navigate({ to: profileTarget(profile.did) });
 					}}
 				>
 					<Menu.ItemIcon icon={PersonIcon} />

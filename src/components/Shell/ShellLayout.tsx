@@ -26,7 +26,7 @@ export function ShellLayout() {
 	const { hasSession } = useSession();
 	const closeAllActiveElements = useCloseAllActiveElements();
 
-	// close dialogs/menus/lightbox when the history entry changes, but NOT on an in-place setParams (which
+	// close dialogs/menus/lightbox when the history entry changes, but NOT on an in-place replace (which
 	// also fires subscribe) — gate on the entry key so clearing a one-shot param can't dismiss the composer.
 	useEffect(() => {
 		let prevKey = router.location.key;

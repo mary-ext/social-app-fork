@@ -38,7 +38,7 @@ export function MembersAndRequests({
 					align="right"
 					label={m['screens.messages.requests.viewIncoming.a11yGroup']()}
 					size="sm"
-					to={{ name: 'MessagesJoinRequests', params: { conversation: convo.view.id } }}
+					to={{ conversation: convo.view.id, name: 'MessagesJoinRequests' }}
 					weight="semiBold"
 				>
 					{hasMoreRequests
