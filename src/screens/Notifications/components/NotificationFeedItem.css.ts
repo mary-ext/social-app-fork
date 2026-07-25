@@ -120,6 +120,13 @@ export const notifText = style({
 	paddingTop: 6,
 });
 
+// pins the display name to LTR so an RTL name can't reorder the sentence around it. CSS does this without
+// injecting U+202A/U+202C into the text, which would otherwise ride along into anything copied out.
+export const authorName = style({
+	direction: 'ltr',
+	unicodeBidi: 'isolate',
+});
+
 export const badgeWrap = style({
 	display: 'inline-flex',
 	position: 'relative',
