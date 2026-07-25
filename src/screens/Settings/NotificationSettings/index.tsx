@@ -44,7 +44,6 @@ export function NotificationSettingsScreen() {
 	const mentionHandle = Dialog.useDialogHandle();
 	const quoteHandle = Dialog.useDialogHandle();
 	const repostHandle = Dialog.useDialogHandle();
-	const activityHandle = Dialog.useDialogHandle();
 	const likeRepostHandle = Dialog.useDialogHandle();
 	const repostRepostHandle = Dialog.useDialogHandle();
 	const chatHandle = Dialog.useDialogHandle();
@@ -195,9 +194,9 @@ export function NotificationSettingsScreen() {
 						</Settings.ButtonRow>
 					</Settings.Section>
 					<Settings.Section titleText={m['screens.settings.notifications.other.title']()}>
-						<Settings.ButtonRow
+						<Settings.LinkRow
 							label={m['screens.settings.notifications.activity.title']()}
-							onPress={() => activityHandle.open(null)}
+							to="/settings/notifications/activity"
 						>
 							<Settings.Icon icon={BellRingingIcon} />
 							<Settings.Label
@@ -205,7 +204,7 @@ export function NotificationSettingsScreen() {
 								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
 								titleText={m['screens.settings.notifications.activity.label']()}
 							/>
-						</Settings.ButtonRow>
+						</Settings.LinkRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.everythingElse.title']()}
 							onPress={() => miscHandle.open(null)}
@@ -257,13 +256,6 @@ export function NotificationSettingsScreen() {
 				name="repost"
 				subtitleText={m['screens.settings.notifications.repost.description']()}
 				titleText={m['screens.settings.notifications.repost.label']()}
-			/>
-			<NotificationSettingsDialog
-				allowDisableInApp={false}
-				handle={activityHandle}
-				name="subscribedPost"
-				subtitleText={m['screens.settings.notifications.subscribed.description']()}
-				titleText={m['screens.settings.notifications.activity.label']()}
 			/>
 			<NotificationSettingsDialog
 				handle={likeRepostHandle}

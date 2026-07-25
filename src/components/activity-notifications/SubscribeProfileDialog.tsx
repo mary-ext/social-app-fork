@@ -45,15 +45,23 @@ export function SubscribeProfileDialog({
 	handle,
 	profile,
 	moderationOpts,
+	includeProfile,
 }: {
 	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
+	/** shows whose notifications are being edited. for callers opening this away from the profile itself. */
+	includeProfile?: boolean;
 }) {
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup size="narrow">
-				<DialogInner handle={handle} profile={profile} moderationOpts={moderationOpts} />
+				<DialogInner
+					handle={handle}
+					profile={profile}
+					moderationOpts={moderationOpts}
+					includeProfile={includeProfile}
+				/>
 			</Dialog.Popup>
 		</Dialog.Root>
 	);

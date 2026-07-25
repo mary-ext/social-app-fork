@@ -117,6 +117,11 @@ const ModerationScreen = lazy(() =>
 const ModerationVerificationSettings = lazy(() =>
 	import('#/screens/Moderation/VerificationSettings').then((mod) => ({ default: mod.Screen })),
 );
+const ActivityNotificationSettingsScreen = lazy(() =>
+	import('#/screens/Settings/NotificationSettings/ActivityNotificationSettings').then((mod) => ({
+		default: mod.ActivityNotificationSettingsScreen,
+	})),
+);
 const NotificationSettingsScreen = lazy(() =>
 	import('#/screens/Settings/NotificationSettings').then((mod) => ({
 		default: mod.NotificationSettingsScreen,
@@ -302,6 +307,11 @@ export const routes = defineRoutes({
 				component: InterestsSettingsScreen,
 				meta: { requireAuth: true },
 				path: '/settings/interests',
+			}),
+			ActivityNotificationSettings: route({
+				component: ActivityNotificationSettingsScreen,
+				meta: { requireAuth: true },
+				path: '/settings/notifications/activity',
 			}),
 			NotificationSettings: route({
 				component: NotificationSettingsScreen,
