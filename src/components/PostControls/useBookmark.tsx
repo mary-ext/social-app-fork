@@ -26,18 +26,13 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 
 	const undoLabel = m['common.action.undo']();
 
-	const save = async ({ disableUndo }: { disableUndo?: boolean } = {}) => {
+	// saving is confirmed by the button's own filled state, so it stays quiet; only removal toasts, because
+	// there the post leaves the list and an undo is worth offering.
+	const save = async () => {
 		try {
 			await bookmark({
 				action: 'create',
 				post,
-			});
-
-			toast.show(m['components.postControls.save.toast'](), {
-				action: disableUndo
-					? undefined
-					: { label: undoLabel, onPress: () => void remove({ disableUndo: true }) },
-				type: 'success',
 			});
 		} catch (e) {
 			const { raw, clean } = cleanError(e);
@@ -47,7 +42,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 		}
 	};
 
-	const remove = async ({ disableUndo }: { disableUndo?: boolean } = {}) => {
+	const remove = async () => {
 		try {
 			await bookmark({
 				action: 'delete',
@@ -55,9 +50,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 			});
 
 			toast.show(m['common.savedPosts.removedToast'](), {
-				action: disableUndo
-					? undefined
-					: { label: undoLabel, onPress: () => void save({ disableUndo: true }) },
+				action: { label: undoLabel, onPress: () => void save() },
 				icon: TrashIcon,
 			});
 		} catch (e) {
