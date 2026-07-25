@@ -6,7 +6,6 @@ import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 import * as Dialog from '#/components/Dialog';
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -17,7 +16,7 @@ import * as styles from './ShareDialog.css';
 
 type Props = {
 	handle: Dialog.DialogHandle;
-	link?: string;
+	link: string;
 	starterPack: AppBskyGraphDefs.StarterPackView;
 };
 
@@ -35,20 +34,9 @@ function ShareDialogInner({ handle, link, starterPack }: Props) {
 	const imageUrl = getStarterPackOgCard(starterPack);
 
 	const onShareLink = () => {
-		if (!link) {
-			return;
-		}
 		void shareUrl(link);
 		handle.close();
 	};
-
-	if (!link) {
-		return (
-			<div className={styles.loading}>
-				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
-			</div>
-		);
-	}
 
 	return (
 		<Stack gap="xl">

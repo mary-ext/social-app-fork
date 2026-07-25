@@ -23,10 +23,9 @@ import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate, useRouter } from '#/routes';
+import { type RouteParams, useNavigate, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
-import type { StarterPackRouteParams } from './StarterPackScreen';
 import * as css from './StarterPackScreen.css';
 
 const PromptSpinner = () => <Spinner color="white" label={m['common.status.saving']()} size="sm" />;
@@ -37,7 +36,7 @@ export function OverflowMenu({
 	onOpenShareDialog,
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
-	routeParams: StarterPackRouteParams;
+	routeParams: RouteParams<'StarterPack'>;
 	onOpenShareDialog: () => void;
 }) {
 	const { currentAccount } = useSession();

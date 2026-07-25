@@ -8,8 +8,10 @@ import {
 	layout,
 	NavigationHistory,
 	optional,
+	type ParamsOf,
 	Router,
 	route,
+	type RouteName,
 	string,
 } from '@oomfware/stacker';
 
@@ -574,6 +576,9 @@ export const buildTarget = (target: RouteTarget): string => {
 export const popToTarget = (target: RouteTarget): void => {
 	untypedRouter.popTo(target.name, target.params);
 };
+
+/** the decoded path and query parameters a route receives, keyed by route name. */
+export type RouteParams<K extends RouteName<typeof routes>> = ParamsOf<typeof routes, K>;
 
 // oxlint-disable-next-line typescript/unbound-method
 export const { useLocation, useNavigate, useParams, useRoute, useRouter } = createRouterHooks(routes);

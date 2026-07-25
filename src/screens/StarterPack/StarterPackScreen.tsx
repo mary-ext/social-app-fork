@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { definite, mapDefined } from '@mary/array-fns';
 
@@ -22,7 +21,6 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { getAllListMembers } from '#/state/queries/list-members';
 import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-link';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
-import { useShortenLink } from '#/state/queries/shorten-link';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
 import { getClients, useSession } from '#/state/session';
 
@@ -43,13 +41,11 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useParams, useRouter } from '#/routes';
+import { type RouteParams, useParams, useRouter } from '#/routes';
 
 import { OverflowMenu } from './OverflowMenu';
 import { StarterPackHeader } from './StarterPackHeader';
 import * as css from './StarterPackScreen.css';
-
-export type StarterPackRouteParams = { actor: string; new?: boolean; rkey: string };
 
 export function StarterPackScreen() {
 	const [params] = useParams('StarterPack');
@@ -89,7 +85,7 @@ export function StarterPackScreenShort() {
 	);
 }
 
-export function StarterPackScreenInner({ routeParams }: { routeParams: StarterPackRouteParams }) {
+export function StarterPackScreenInner({ routeParams }: { routeParams: RouteParams<'StarterPack'> }) {
 	const { actor, rkey } = routeParams;
 	const { currentAccount } = useSession();
 	useTitle(m['common.starterPack.label']());
@@ -132,7 +128,7 @@ function StarterPackScreenLoaded({
 	moderationOpts,
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
-	routeParams: StarterPackRouteParams;
+	routeParams: RouteParams<'StarterPack'>;
 	moderationOpts: ModerationOptions;
 }) {
 	const showPeopleTab = !!starterPack.list;
@@ -159,17 +155,12 @@ function StarterPackScreenLoaded({
 
 	const shareDialogHandle = Dialog.useDialogHandle();
 
-	const shortenLink = useShortenLink();
-	const [link, setLink] = useState<string>();
+	const link = targetToShareUrl(starterPackTarget(starterPack.creator.did, routeParams.rkey));
 
 	const onOpenShareDialog = useCallback(() => {
-		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
-		void shortenLink(targetToShareUrl(starterPackTarget(starterPack.creator.did, rkey))).then((res) => {
-			setLink(res.url);
-		});
 		void prefetchImage(getStarterPackOgCard(starterPack));
 		shareDialogHandle.open(null);
-	}, [shareDialogHandle, shortenLink, starterPack]);
+	}, [shareDialogHandle, starterPack]);
 
 	useEffect(() => {
 		if (routeParams.new) {
@@ -188,7 +179,7 @@ function StarterPackScreenLoaded({
 				}
 			/>
 
-			<ShareDialog handle={shareDialogHandle} starterPack={starterPack} link={link} />
+			<ShareDialog handle={shareDialogHandle} link={link} starterPack={starterPack} />
 		</>
 	);
 }
@@ -199,7 +190,7 @@ function Header({
 	onOpenShareDialog,
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
-	routeParams: StarterPackRouteParams;
+	routeParams: RouteParams<'StarterPack'>;
 	onOpenShareDialog: () => void;
 }) {
 	const { currentAccount, hasSession } = useSession();
