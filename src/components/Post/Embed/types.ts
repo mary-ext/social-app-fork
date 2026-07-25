@@ -2,18 +2,17 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
 
 export enum PostEmbedViewContext {
-	ThreadHighlighted = 'ThreadHighlighted',
-	Feed = 'Feed',
-	FeedEmbedRecordWithMedia = 'FeedEmbedRecordWithMedia',
 	ChatMessage = 'ChatMessage',
+	Feed = 'Feed',
+	ThreadHighlighted = 'ThreadHighlighted',
 }
 
 export type CommonProps = {
+	allowNestedQuotes?: boolean;
+	isWithinQuote?: boolean;
 	moderation?: ModerationDecision;
 	onOpen?: () => void;
 	viewContext?: PostEmbedViewContext;
-	isWithinQuote?: boolean;
-	allowNestedQuotes?: boolean;
 };
 
 export type EmbedProps = CommonProps & {

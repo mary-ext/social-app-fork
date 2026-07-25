@@ -59,13 +59,7 @@ export function ImageEmbed({
 			{images.length === 1 ? (
 				<AutoSizedImage
 					image={images[0]!}
-					crop={
-						viewContext === PostEmbedViewContext.ThreadHighlighted
-							? 'none'
-							: viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-								? 'square'
-								: 'constrained'
-					}
+					crop={viewContext === PostEmbedViewContext.ThreadHighlighted ? 'none' : 'constrained'}
 					handle={lightboxHandle}
 					payload={{ images: lightboxImages, index: 0 }}
 					onPressIn={onPressIn}

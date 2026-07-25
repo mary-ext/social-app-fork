@@ -36,8 +36,6 @@ export const constrained = style([
 
 export const uncapped = style([base, { aspectRatio: ratioVar, width: '100%' }]);
 
-export const square = style([base, { aspectRatio: '1', width: '100%' }]);
-
 export const image = style({
 	display: 'block',
 	width: '100%',
