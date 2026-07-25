@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
 import { cleanError, isNetworkError } from '#/lib/strings/errors';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { onVisibilityChange } from '#/lib/visibility';
 
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
@@ -28,10 +29,12 @@ import { SuggestedFollows } from '#/components/FeedInterstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
+import { RichText } from '#/components/RichText';
 import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/TrendingInterstitial';
 
 import { ComposerPrompt } from './ComposerPrompt';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
+import * as css from './PostFeed.css';
 import { PostFeedErrorMessage } from './PostFeedErrorMessage';
 import { PostFeedItem } from './PostFeedItem';
 import { ShowLessFollowup } from './ShowLessFollowup';
@@ -81,6 +84,11 @@ export type FeedRow =
 	| {
 			type: 'composerPrompt';
 			key: string;
+	  }
+	| {
+			type: 'description';
+			key: string;
+			value: Richtext;
 	  };
 
 export function getItemsForFeedback(feedRow: FeedRow): {
@@ -109,6 +117,7 @@ const FEED_ITEM_HEIGHT_ESTIMATE = 300;
 
 function PostFeed({
 	feed,
+	description,
 	ignoreFilterFor,
 	enabled,
 	pollInterval,
@@ -120,6 +129,8 @@ function PostFeed({
 	savedFeedConfig,
 }: {
 	feed: FeedDescriptor;
+	/** shown as the first row, above the posts. for feeds whose description is part of the surface. */
+	description?: Richtext;
 	ignoreFilterFor?: string;
 	enabled?: boolean;
 	pollInterval?: number;
@@ -412,6 +423,16 @@ function PostFeed({
 			}
 		}
 
+		// unshifted so it sits above every state, loading and error included — it describes the feed itself
+		// rather than the posts, so it shouldn't pop in only once they arrive.
+		if (description?.text) {
+			arr.unshift({
+				type: 'description',
+				key: 'description',
+				value: description,
+			});
+		}
+
 		return arr;
 	})();
 
@@ -463,6 +484,12 @@ function PostFeed({
 			return <TrendingInterstitial />;
 		} else if (row.type === 'composerPrompt') {
 			return <ComposerPrompt topBorder={rowIndex !== 0} />;
+		} else if (row.type === 'description') {
+			return (
+				<div className={css.description}>
+					<RichText color="textContrastHigh" size="md" value={row.value} />
+				</div>
+			);
 		} else if (row.type === 'sliceItem') {
 			const slice = row.slice;
 			const indexInSlice = row.indexInSlice;

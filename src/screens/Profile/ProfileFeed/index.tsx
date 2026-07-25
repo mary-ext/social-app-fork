@@ -4,6 +4,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { TRENDING_DID } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
@@ -124,12 +125,15 @@ export function ProfileFeedScreenInner({
 		return softReset.subscribe(onScrollToTop);
 	}, [onScrollToTop, isScreenFocused]);
 
+	const isTrending = feedInfo.creatorDid === TRENDING_DID;
+
 	return (
 		<>
-			<ProfileFeedHeader info={feedInfo} />
+			<ProfileFeedHeader info={feedInfo} isTrending={isTrending} />
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
 					enabled
+					description={isTrending ? feedInfo.description : undefined}
 					feed={feed}
 					pollInterval={60e3}
 					disablePoll={hasNew}

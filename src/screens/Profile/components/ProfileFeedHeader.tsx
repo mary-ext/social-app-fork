@@ -68,7 +68,7 @@ export function ProfileFeedHeaderSkeleton() {
 	);
 }
 
-export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
+export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedInfo; isTrending: boolean }) {
 	const { hasSession } = useSession();
 	const infoHandle = Dialog.useDialogHandle();
 	const reportDialogHandle = Dialog.useDialogHandle();
@@ -156,38 +156,58 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<button
-						className={css.infoButton}
-						aria-label={m['screens.profile.feed.a11y.openInfo']()}
-						onClick={() => infoHandle.open(null)}
-					>
-						{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
-
-						<span className={css.infoButtonText}>
-							<Text weight="bold" size="lg" numberOfLines={2}>
+					{isTrending ? (
+						<div className={css.trendingRow}>
+							<Text weight="bold" size="lg" numberOfLines={2} className={css.trendingTitle}>
 								{info.displayName}
 							</Text>
-							<span className={css.infoButtonMeta}>
-								<Text size="sm" color="textContrastMedium" numberOfLines={1} className={css.infoButtonHandle}>
-									{info.creatorHandle}
-								</Text>
+							<Button
+								label={m['screens.profile.feed.a11y.openInfo']()}
+								size="small"
+								variant="ghost"
+								shape="round"
+								color="secondary"
+								onClick={() => infoHandle.open(null)}
+							>
+								<ButtonIcon icon={Ellipsis} size="lg" />
+							</Button>
+						</div>
+					) : (
+						<button
+							className={css.infoButton}
+							aria-label={m['screens.profile.feed.a11y.openInfo']()}
+							onClick={() => infoHandle.open(null)}
+						>
+							{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
 
-								<span className={css.infoButtonLikes}>
-									<HeartFilled size="xs" fill={likeUri ? colors.pink : colors.textContrastLow} />
-									<Text size="sm" color="textContrastMedium" numberOfLines={1}>
-										{formatCount(likeCount)}
+							<span className={css.infoButtonText}>
+								<Text weight="bold" size="lg" numberOfLines={2}>
+									{info.displayName}
+								</Text>
+								<span className={css.infoButtonMeta}>
+									<Text size="sm" color="textContrastHigh" numberOfLines={1} className={css.infoButtonHandle}>
+										{info.creatorHandle}
 									</Text>
+
+									{likeCount > 0 && (
+										<span className={css.infoButtonLikes}>
+											<HeartFilled size="xs" fill={likeUri ? colors.pink : colors.textContrastLow} />
+											<Text size="sm" color="textContrastHigh" numberOfLines={1}>
+												{formatCount(likeCount)}
+											</Text>
+										</span>
+									)}
 								</span>
 							</span>
-						</span>
 
-						<div className={css.infoButtonEllipsis}>
-							<Ellipsis size="lg" fill={colors.contrast_600} />
-						</div>
-					</button>
+							<div className={css.infoButtonEllipsis}>
+								<Ellipsis size="lg" fill={colors.textContrastHigh} />
+							</div>
+						</button>
+					)}
 				</Layout.Header.Content>
 
-				{hasSession && (
+				{!isTrending && hasSession && (
 					<Layout.Header.Slot>
 						{isPinned ? (
 							<Menu.Root>
@@ -251,6 +271,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 						setLikeUri={setLikeUri}
 						likeCount={likeCount}
 						isPinned={isPinned}
+						isTrending={isTrending}
 						onTogglePinned={() => void onTogglePinned()}
 						isFeedStateChangePending={isFeedStateChangePending}
 						closeDialog={() => infoHandle.close()}
@@ -277,6 +298,7 @@ function DialogInner({
 	setLikeUri,
 	likeCount,
 	isPinned,
+	isTrending,
 	onTogglePinned,
 	isFeedStateChangePending,
 	closeDialog,
@@ -287,6 +309,7 @@ function DialogInner({
 	setLikeUri: (uri: string) => void;
 	likeCount: number;
 	isPinned: boolean;
+	isTrending: boolean;
 	onTogglePinned: () => void;
 	isFeedStateChangePending: boolean;
 	closeDialog: () => void;
@@ -366,8 +389,8 @@ function DialogInner({
 
 			<RichText size="md" value={info.description} />
 
-			<div className={css.dialogLikedByRow}>
-				{typeof likeCount === 'number' && (
+			{likeCount > 0 && (
+				<div className={css.dialogLikedByRow}>
 					<InlineLinkText
 						label={m['screens.profile.feed.action.viewLikes']()}
 						to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
@@ -377,40 +400,42 @@ function DialogInner({
 					>
 						{m['screens.profile.feed.likes.count']({ count: likeCount })}
 					</InlineLinkText>
-				)}
-			</div>
+				</div>
+			)}
 			{hasSession && (
 				<>
-					<div className={css.dialogActionsRow}>
-						<Button
-							disabled={isLikePending || isUnlikePending}
-							label={m['screens.profile.feed.action.like']()}
-							size="small"
-							color="secondary"
-							onClick={() => void onToggleLiked()}
-							className={css.dialogActionButton}
-						>
-							{isLiked ? <HeartFilled size="sm" fill={colors.pink} /> : <ButtonIcon icon={Heart} />}
+					{!isTrending && (
+						<div className={css.dialogActionsRow}>
+							<Button
+								disabled={isLikePending || isUnlikePending}
+								label={m['screens.profile.feed.action.like']()}
+								size="small"
+								color="secondary"
+								onClick={() => void onToggleLiked()}
+								className={css.dialogActionButton}
+							>
+								{isLiked ? <HeartFilled size="sm" fill={colors.pink} /> : <ButtonIcon icon={Heart} />}
 
-							<ButtonText>
-								{isLiked ? m['screens.profile.action.unlike']() : m['common.action.like']()}
-							</ButtonText>
-						</Button>
-						<Button
-							disabled={isFeedStateChangePending}
-							label={isPinned ? m['common.feeds.action.unpin']() : m['common.feeds.action.pin']()}
-							size="small"
-							color={isPinned ? 'secondary' : 'primary'}
-							onClick={onTogglePinned}
-							className={css.dialogActionButton}
-						>
-							<ButtonIcon icon={Pin} />
+								<ButtonText>
+									{isLiked ? m['screens.profile.action.unlike']() : m['common.action.like']()}
+								</ButtonText>
+							</Button>
+							<Button
+								disabled={isFeedStateChangePending}
+								label={isPinned ? m['common.feeds.action.unpin']() : m['common.feeds.action.pin']()}
+								size="small"
+								color={isPinned ? 'secondary' : 'primary'}
+								onClick={onTogglePinned}
+								className={css.dialogActionButton}
+							>
+								<ButtonIcon icon={Pin} />
 
-							<ButtonText>
-								{isPinned ? m['common.feeds.action.unpin']() : m['common.feeds.action.pin']()}
-							</ButtonText>
-						</Button>
-					</div>
+								<ButtonText>
+									{isPinned ? m['common.feeds.action.unpin']() : m['common.feeds.action.pin']()}
+								</ButtonText>
+							</Button>
+						</div>
+					)}
 
 					<div className={css.dialogReportSection}>
 						<Dialog.Divider />

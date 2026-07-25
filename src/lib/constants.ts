@@ -49,6 +49,12 @@ export const BSKY_FEED_OWNER_DIDS = [
 	'did:plc:q6gjnaw2blty4crticxkmujt',
 ];
 
+// bluesky's own trending feeds. these are presented as first-party surfaces rather than as someone's custom
+// feed: no author, no like or pin controls, and the feed's description shown inline above the posts.
+// matched on did only — upstream also compares the handle, but a handle is reassignable and the did already
+// identifies the account.
+export const TRENDING_DID = 'did:plc:qrz3lhbyuxbeilrc6nekdqme';
+
 export const DISCOVER_FEED_URI = 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot';
 export const DISCOVER_SAVED_FEED = {
 	type: 'feed',

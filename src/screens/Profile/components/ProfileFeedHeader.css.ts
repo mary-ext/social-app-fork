@@ -78,6 +78,21 @@ export const infoButton = style({
 	cursor: 'pointer',
 });
 
+// the trending header has no author or like count to show, so the title sits alone and the info affordance
+// becomes its own button rather than the whole row being pressable.
+export const trendingRow = style({
+	display: 'flex',
+	flexGrow: 1,
+	gap: space.sm,
+	alignItems: 'center',
+	minWidth: 0,
+});
+
+export const trendingTitle = style({
+	flexGrow: 1,
+	minWidth: 0,
+});
+
 export const infoButtonText = style({
 	flexGrow: 1,
 	minWidth: 0,
