@@ -6,7 +6,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import { makeListLink, makeProfileLink } from '#/lib/routes/links';
+import { listTarget, profileTarget } from '#/lib/routes/targets';
 
 import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting } from '#/state/queries/threadgate';
 
@@ -211,7 +211,11 @@ function Rule({
 				inputs={{ handle: post.author.handle }}
 				markup={{
 					t0: ({ children }) => (
-						<InlineLinkText label={`@${post.author.handle}`} size="md_sub" to={makeProfileLink(post.author)}>
+						<InlineLinkText
+							label={`@${post.author.handle}`}
+							size="md_sub"
+							to={profileTarget(post.author.did)}
+						>
 							{children}
 						</InlineLinkText>
 					),
@@ -226,7 +230,11 @@ function Rule({
 				inputs={{ handle: post.author.handle }}
 				markup={{
 					t0: ({ children }) => (
-						<InlineLinkText label={`@${post.author.handle}`} size="md_sub" to={makeProfileLink(post.author)}>
+						<InlineLinkText
+							label={`@${post.author.handle}`}
+							size="md_sub"
+							to={profileTarget(post.author.did)}
+						>
 							{children}
 						</InlineLinkText>
 					),
@@ -244,7 +252,7 @@ function Rule({
 					inputs={{ name: list.name }}
 					markup={{
 						t0: ({ children }) => (
-							<InlineLinkText label={list.name} size="md_sub" to={makeListLink(listUrip.repo, listUrip.rkey)}>
+							<InlineLinkText label={list.name} size="md_sub" to={listTarget(listUrip.repo, listUrip.rkey)}>
 								{children}
 							</InlineLinkText>
 						),

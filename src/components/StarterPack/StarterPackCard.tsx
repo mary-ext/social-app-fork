@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
+import { starterPackTarget } from '#/lib/routes/targets';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import { precacheResolvedUri } from '#/state/queries/resolve-uri';
@@ -142,7 +143,7 @@ export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 	};
 
 	return {
-		to: `/starter-pack/${did}/${rkey}`,
+		to: starterPackTarget(did, rkey),
 		label: m['components.starterPack.card.navigate']({ name: record.name }),
 		precache,
 	};
@@ -167,7 +168,7 @@ export function Link({
 
 	return (
 		<WebLink
-			to={`/starter-pack/${did}/${rkey}`}
+			to={starterPackTarget(did, rkey)}
 			label={m['components.starterPack.card.navigate']({ name: record.name })}
 			className={clsx(css.link, className)}
 			onPress={() => {

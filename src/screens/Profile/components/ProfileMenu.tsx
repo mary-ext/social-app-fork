@@ -2,7 +2,7 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { isAbortError } from '#/lib/strings/errors';
 import { toShareUrl } from '#/lib/strings/url-helpers';
@@ -51,7 +51,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { buildTarget, useNavigate } from '#/routes';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 function ProfileMenu({
@@ -99,7 +99,7 @@ function ProfileMenu({
 	};
 
 	const onPressShare = () => {
-		void shareUrl(toShareUrl(makeProfileLink(profile)));
+		void shareUrl(toShareUrl(buildTarget(profileTarget(profile.did))));
 	};
 
 	const onPressMuteAccount = async () => {

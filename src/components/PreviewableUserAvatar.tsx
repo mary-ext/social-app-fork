@@ -4,7 +4,7 @@ import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useQueryClient } from '@tanstack/react-query';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
@@ -86,7 +86,7 @@ export function PreviewableUserAvatar({
 			}}
 			style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
 			tabIndex={tabIndex}
-			to={makeProfileLink({ did: profile.did })}
+			to={profileTarget(profile.did)}
 		>
 			{avatarEl}
 		</Link>

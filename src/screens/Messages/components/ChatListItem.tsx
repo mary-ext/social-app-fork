@@ -8,6 +8,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
+import { conversationTarget } from '#/lib/routes/targets';
+
 import { useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { JOIN_REQUESTS_THRESHOLD } from '#/state/queries/messages/list-join-requests';
@@ -138,7 +140,7 @@ function DirectChatItem({
 				label={title}
 				onPointerDown={precache}
 				onPress={onPress}
-				to={`/messages/${convo.view.id}`}
+				to={conversationTarget(convo.view.id)}
 			/>
 
 			<ChatRow.Body>
@@ -230,7 +232,7 @@ function GroupChatItem({
 				label={title}
 				onPointerDown={precache}
 				onPress={precache}
-				to={`/messages/${convo.view.id}`}
+				to={conversationTarget(convo.view.id)}
 			/>
 
 			<ChatRow.Body>

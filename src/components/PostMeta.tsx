@@ -6,7 +6,8 @@ import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from 
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import type { RouteTarget } from '#/lib/routes/target';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { unstableCacheProfileView } from '#/state/queries/profile';
@@ -38,7 +39,7 @@ type AuthorLinkProps = Pick<
 	onPress: () => void;
 	/** Forwarded to the host node (`<a>`, or `<span>` when inert) so it can back a headless trigger. */
 	ref?: Ref<HTMLElement>;
-	to: string;
+	to: RouteTarget;
 };
 
 /** A link in the meta row that collapses to plain {@link Text} when the surrounding row is non-interactive. */
@@ -64,7 +65,7 @@ interface PostMetaOpts {
 	author: AnyProfileView;
 	className?: string;
 	moderation: ModerationDecision | undefined;
-	postHref: string;
+	postTarget: RouteTarget;
 	timestamp: string;
 	linkDisabled?: boolean;
 	showAvatar?: boolean;
@@ -75,7 +76,7 @@ interface PostMetaOpts {
 function PostMeta(opts: PostMetaOpts): ReactNode {
 	const author = useProfileShadow(opts.author);
 	const handle = author.handle;
-	const profileLink = makeProfileLink(author);
+	const authorTarget = profileTarget(author.did);
 	const queryClient = useQueryClient();
 	const onOpenAuthor = opts.onOpenAuthor;
 	const onBeforePressAuthor = () => {
@@ -120,7 +121,7 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 						numberOfLines={1}
 						onPress={onBeforePressAuthor}
 						size="md"
-						to={profileLink}
+						to={authorTarget}
 					>
 						{handle}
 					</AuthorLink>
@@ -143,7 +144,7 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 									label={timestampLabel}
 									onPress={onBeforePressPost}
 									size="md"
-									to={opts.postHref}
+									to={opts.postTarget}
 								>
 									{timeElapsed}
 								</AuthorLink>

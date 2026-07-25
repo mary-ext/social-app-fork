@@ -2,11 +2,9 @@ import { Fragment } from 'react';
 
 import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
 
-import { listUriToHref } from '#/lib/strings/url-helpers';
-
+import { ModerationListLink } from '#/components/moderation/ModerationListLink';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
-import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 
@@ -28,14 +26,9 @@ export function BlockedByListDialog({
 						block.source ? (
 							<Fragment key={block.source.uri}>
 								{i === 0 ? null : ', '}
-								<InlineLinkText
-									label={block.source.name}
-									leading="snug"
-									size="md"
-									to={listUriToHref(block.source.uri)}
-								>
+								<ModerationListLink leading="snug" list={block.source} size="md">
 									{block.source.name}
-								</InlineLinkText>
+								</ModerationListLink>
 							</Fragment>
 						) : null,
 					)}

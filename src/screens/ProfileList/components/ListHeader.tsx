@@ -1,6 +1,6 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { Trans } from '#/locale/Trans';
 
@@ -35,7 +35,7 @@ export function ListHeader({ isOwner, list }: { isOwner: boolean; list: AppBskyG
 
 	const creatorLink = () => (
 		<InlineLinkText
-			to={makeProfileLink(list.creator)}
+			to={profileTarget(list.creator.did)}
 			label={m['screens.profile.avatar.a11y.viewProfile']({ handle: list.creator.handle })}
 			color="textContrastMedium"
 		>

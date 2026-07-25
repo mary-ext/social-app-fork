@@ -1,6 +1,6 @@
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import type { ConvoItem } from '#/state/messages/convo/types';
 
@@ -44,7 +44,7 @@ export function SystemMessageItem({
 	switch (action?.kind) {
 		case 'profile':
 			return (
-				<Link className={css.link} label={text} to={makeProfileLink(action.profile)}>
+				<Link className={css.link} label={text} to={profileTarget(action.profile.did)}>
 					{row}
 				</Link>
 			);

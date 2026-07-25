@@ -1,4 +1,4 @@
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { Trans } from '#/locale/Trans';
 
@@ -52,7 +52,7 @@ export function Card({ preview }: { preview: ChatInvitePreview | undefined }) {
 							markup={{
 								t0: ({ children }) => (
 									<InlineLinkText
-										to={makeProfileLink(preview.owner)}
+										to={profileTarget(preview.owner.did)}
 										label={ownerHandle}
 										size="md_sub"
 										color="text"

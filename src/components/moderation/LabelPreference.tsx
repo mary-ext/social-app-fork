@@ -104,7 +104,7 @@ export function LabelerLabelRow({
 											t0: ({ children }) => (
 												<InlineLinkText
 													label={m['components.moderation.moderationSettings.label']()}
-													to="/moderation"
+													to={{ name: 'Moderation' }}
 												>
 													{children}
 												</InlineLinkText>

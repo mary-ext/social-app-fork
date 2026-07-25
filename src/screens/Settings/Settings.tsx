@@ -46,34 +46,43 @@ export function SettingsScreen() {
 					<AccountsSection />
 
 					<Settings.Section titleText={m['screens.settings.preferences.title']()}>
-						<Settings.LinkRow label={m['screens.settings.account.privacyTitle']()} to="/settings/account">
+						<Settings.LinkRow
+							label={m['screens.settings.account.privacyTitle']()}
+							to={{ name: 'AccountSettings' }}
+						>
 							<Settings.Icon icon={PersonIcon} />
 							<Settings.Label titleText={m['common.account.privacy']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['screens.settings.moderation.title']()} to="/moderation">
+						<Settings.LinkRow label={m['screens.settings.moderation.title']()} to={{ name: 'Moderation' }}>
 							<Settings.Icon icon={HandIcon} />
 							<Settings.Label titleText={m['screens.settings.moderation.title']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['common.nav.notifications']()} to="/settings/notifications">
+						<Settings.LinkRow label={m['common.nav.notifications']()} to={{ name: 'NotificationSettings' }}>
 							<Settings.Icon icon={NotificationIcon} />
 							<Settings.Label titleText={m['common.nav.notifications']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['screens.settings.media.title']()} to="/settings/content-and-media">
+						<Settings.LinkRow
+							label={m['screens.settings.media.title']()}
+							to={{ name: 'ContentAndMediaSettings' }}
+						>
 							<Settings.Icon icon={WindowIcon} />
 							<Settings.Label titleText={m['screens.settings.media.title']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['common.appearance.label']()} to="/settings/appearance">
+						<Settings.LinkRow label={m['common.appearance.label']()} to={{ name: 'AppearanceSettings' }}>
 							<Settings.Icon icon={PaintRollerIcon} />
 							<Settings.Label titleText={m['common.appearance.label']()} />
 						</Settings.LinkRow>
 						<Settings.LinkRow
 							label={m['screens.settings.accessibility.title']()}
-							to="/settings/accessibility"
+							to={{ name: 'AccessibilitySettings' }}
 						>
 							<Settings.Icon icon={AccessibilityIcon} />
 							<Settings.Label titleText={m['screens.settings.accessibility.title']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['screens.settings.language.title']()} to="/settings/language">
+						<Settings.LinkRow
+							label={m['screens.settings.language.title']()}
+							to={{ name: 'LanguageSettings' }}
+						>
 							<Settings.Icon icon={EarthIcon} />
 							<Settings.Label titleText={m['screens.settings.language.title']()} />
 						</Settings.LinkRow>
@@ -96,7 +105,7 @@ export function SettingsScreen() {
 					</Settings.Section>
 
 					<Settings.Section>
-						<Settings.LinkRow label={m['common.developer.systemLog']()} to="/sys/log">
+						<Settings.LinkRow label={m['common.developer.systemLog']()} to={{ name: 'Log' }}>
 							<Settings.Icon icon={CodeLinesIcon} />
 							<Settings.Label titleText={m['common.developer.systemLog']()} />
 						</Settings.LinkRow>

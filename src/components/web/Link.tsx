@@ -5,6 +5,7 @@ import { useRouter } from '@oomfware/stacker';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import type { RouteTarget } from '#/lib/routes/target';
 import {
 	convertBskyAppUrlIfNeeded,
 	getChatInviteCodeFromUrl,
@@ -17,6 +18,8 @@ import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
 import { Button, type ButtonProps } from '#/components/web/Button';
 import * as styles from '#/components/web/Link.css';
+
+import { buildTarget } from '#/routes';
 
 // #region hooks
 
@@ -70,13 +73,9 @@ export const useInternalLink = ({
 }: {
 	action?: LinkAction;
 	onPress?: LinkOnPress;
-	to: string;
+	to: RouteTarget;
 }): LinkBindings => {
-	if (import.meta.env.DEV && (!to.startsWith('/') || to.startsWith('//'))) {
-		throw new Error(
-			`Internal link \`to\` must be an app route path starting with a single '/'; got ${JSON.stringify(to)}. Use an External* link for raw URLs.`,
-		);
-	}
+	const path = buildTarget(to);
 	const navigateToPath = useNavigateToPath();
 	const onClick = (e: MouseEvent<HTMLElement>) => {
 		if (onPress?.(e) === false) {
@@ -87,9 +86,9 @@ export const useInternalLink = ({
 			return;
 		}
 		e.preventDefault();
-		navigateToPath(to, action);
+		navigateToPath(path, action);
 	};
-	return { href: to, onClick };
+	return { href: path, onClick };
 };
 
 // shared core for raw-URL links: resolves the anchor href (a bsky.app URL collapses to an in-app route) and
@@ -347,11 +346,11 @@ const ButtonAnchor = ({ bindings, children, ...rest }: { bindings: LinkBindings 
 // #region internal links — `to` is an in-app route path
 
 type InternalNavProps = {
-	/** The React Navigation `StackAction` to perform when the link is pressed. */
+	/** How the link navigates when pressed. */
 	action?: LinkAction;
 	onPress?: LinkOnPress;
-	/** An in-app route path, e.g. `/profile/alice`. Must start with a single `/`. */
-	to: string;
+	/** The in-app destination, e.g. `{ name: 'Profile', params: { actor } }`. */
+	to: RouteTarget;
 };
 
 export type LinkProps = InternalNavProps & BlockAnchorProps;
@@ -386,7 +385,7 @@ export const LinkButton = ({ action, onPress, to, ...rest }: LinkButtonProps) =>
 // #region external links — `href` is a raw URL
 
 type ExternalNavProps = {
-	/** The React Navigation `StackAction` to perform when an `href` that resolves in-app is pressed. */
+	/** How the link navigates when an `href` that resolves in-app is pressed. */
 	action?: LinkAction;
 	/** A raw URL. A `bsky.app` URL is collapsed to its in-app route; anything else opens in a new tab. */
 	href: string;

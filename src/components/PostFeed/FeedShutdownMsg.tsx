@@ -1,5 +1,7 @@
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+
 import { DISCOVER_FEED_URI, PROD_DEFAULT_FEED } from '#/lib/constants';
-import { feedUriToHref } from '#/lib/strings/url-helpers';
+import { feedTarget } from '#/lib/routes/targets';
 
 import {
 	usePreferencesQuery,
@@ -21,6 +23,9 @@ import { InlineLinkText } from '#/components/web/Link';
 import { m } from '#/paraglide/messages';
 
 import * as css from './FeedShutdownMsg.css';
+
+const DISCOVER_URIP = parseCanonicalResourceUri(DISCOVER_FEED_URI);
+const DISCOVER_TARGET = feedTarget(DISCOVER_URIP.repo, DISCOVER_URIP.rkey);
 
 export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: string; topBorder?: boolean }) {
 	const setSelectedFeed = useSetSelectedFeed();
@@ -78,11 +83,7 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 					message={m['view.posts.feed.offlineFallback']}
 					markup={{
 						t0: ({ children }) => (
-							<InlineLinkText
-								label={m['view.posts.discover.feedName']()}
-								size="md"
-								to={feedUriToHref(DISCOVER_FEED_URI)}
-							>
+							<InlineLinkText label={m['view.posts.discover.feedName']()} size="md" to={DISCOVER_TARGET}>
 								{children}
 							</InlineLinkText>
 						),

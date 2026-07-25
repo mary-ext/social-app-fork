@@ -5,7 +5,8 @@ import { useRoute } from '@oomfware/stacker';
 import { clsx } from 'clsx';
 
 import { useHideBottomBarBorder } from '#/lib/hooks/useHideBottomBarBorder';
-import { makeProfileLink } from '#/lib/routes/links';
+import type { RouteTarget } from '#/lib/routes/target';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { softReset } from '#/state/events';
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
@@ -38,7 +39,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { popToRoute } from '#/routes';
+import { popToTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './BottomBar.css';
@@ -123,21 +124,20 @@ export function BottomBar() {
 		<nav className={clsx(css.bottomBar, hideBorder && css.bottomBarHideBorder)}>
 			{hasSession ? (
 				<>
-					<NavItem routeName="Home" href="/">
+					<NavItem to={{ name: 'Home' }}>
 						{({ isActive }) => {
 							const Icon = isActive ? HomeFilled : Home;
 							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
 						}}
 					</NavItem>
-					<NavItem routeName="Search" activeRouteNames={['Explore', 'Search']} href="/search">
+					<NavItem to={{ name: 'Search' }} activeRouteNames={['Explore', 'Search']}>
 						{({ isActive }) => {
 							const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass;
 							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
 						}}
 					</NavItem>
 					<NavItem
-						routeName="Messages"
-						href="/messages"
+						to={{ name: 'Messages' }}
 						notificationCount={unreadMessageCount.numUnread}
 						hasNew={unreadMessageCount.hasNew}
 					>
@@ -146,15 +146,14 @@ export function BottomBar() {
 							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
 						}}
 					</NavItem>
-					<NavItem routeName="Notifications" href="/notifications" notificationCount={notificationCountStr}>
+					<NavItem to={{ name: 'Notifications' }} notificationCount={notificationCountStr}>
 						{({ isActive }) => {
 							const Icon = isActive ? BellFilled : Bell;
 							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
 						}}
 					</NavItem>
 					<NavItem
-						routeName="Profile"
-						href={currentAccount ? makeProfileLink({ did: currentAccount.did }) : '/'}
+						to={currentAccount ? profileTarget(currentAccount.did) : { name: 'Home' }}
 						onLongPress={onLongPressProfile}
 					>
 						{({ isActive }) => (
@@ -191,16 +190,16 @@ export function BottomBar() {
 }
 
 const NavItem: React.FC<{
-	children: (props: { isActive: boolean }) => React.ReactNode;
-	href: string;
-	routeName: string;
 	/** route names a single tab spans (e.g. Explore + Search); when set, activeness matches any of them. */
 	activeRouteNames?: readonly string[];
+	children: (props: { isActive: boolean }) => React.ReactNode;
 	hasNew?: boolean;
 	notificationCount?: string;
 	onLongPress?: () => void;
-}> = ({ children, href, routeName, activeRouteNames, hasNew, notificationCount, onLongPress }) => {
+	to: RouteTarget;
+}> = ({ activeRouteNames, children, hasNew, notificationCount, onLongPress, to }) => {
 	const { currentAccount } = useSession();
+	const routeName = to.name;
 	const match = useRoute();
 	const { consumeLongPress, handlers: longPressHandlers } = useLongPress(onLongPress);
 
@@ -226,16 +225,13 @@ const NavItem: React.FC<{
 			softReset.emit();
 			return false;
 		}
-		popToRoute(
-			routeName,
-			routeName === 'Profile' && currentAccount ? { actor: currentAccount.did } : undefined,
-		);
+		popToTarget(to);
 		return false;
 	};
 
 	return (
 		<Link
-			to={href}
+			to={to}
 			action={action}
 			onPress={onPress}
 			label={routeName}

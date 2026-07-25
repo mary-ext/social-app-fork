@@ -6,7 +6,7 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { clsx } from 'clsx';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -87,7 +87,7 @@ function CurrentAccountRow({
 		<Settings.LinkRowRaw
 			className={clsx(cardStyles.rowPlain, className)}
 			label={m['screens.settings.account.viewProfile']()}
-			to={makeProfileLink(profile)}
+			to={profileTarget(profile.did)}
 		>
 			<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={shadow} />
 			<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={shadow} />

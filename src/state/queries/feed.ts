@@ -9,7 +9,11 @@ import type {
 import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import {
+	type Did,
+	type ParsedCanonicalResourceUri,
+	parseCanonicalResourceUri,
+} from '@atcute/lexicons/syntax';
 
 import {
 	type InfiniteData,
@@ -22,6 +26,8 @@ import {
 } from '@tanstack/react-query';
 
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
+import type { RouteTarget } from '#/lib/routes/target';
+import { feedTarget, listTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
 
@@ -42,16 +48,13 @@ export type FeedSourceFeedInfo = {
 	view?: AppBskyFeedDefs.GeneratorView;
 	uri: string;
 	feedDescriptor: FeedDescriptor;
-	route: {
-		href: string;
-		name: string;
-		params: Record<string, string>;
-	};
+	target: RouteTarget;
 	cid: string;
 	avatar: string | undefined;
 	displayName: string;
 	description: Richtext;
-	creatorDid: string;
+	/** undefined on the pseudo-feeds (Following, the logged-out Discover stub), which have no creator. */
+	creatorDid: Did | undefined;
 	creatorHandle: string;
 	likeCount: number | undefined;
 	acceptsInteractions?: boolean;
@@ -64,16 +67,13 @@ export type FeedSourceListInfo = {
 	view?: AppBskyGraphDefs.ListView;
 	uri: string;
 	feedDescriptor: FeedDescriptor;
-	route: {
-		href: string;
-		name: string;
-		params: Record<string, string>;
-	};
+	target: RouteTarget;
 	cid: string;
 	avatar: string | undefined;
 	displayName: string;
 	description: Richtext;
-	creatorDid: string;
+	/** undefined on the pseudo-feeds (Following, the logged-out Discover stub), which have no creator. */
+	creatorDid: Did | undefined;
 	creatorHandle: string;
 	contentMode: undefined;
 };
@@ -92,10 +92,14 @@ const feedSourceNSIDs = {
 	list: 'app.bsky.graph.list',
 };
 
+// both hydrators accept either kind of uri, and the collection decides which screen the source opens.
+const recordTarget = (urip: ParsedCanonicalResourceUri): RouteTarget =>
+	urip.collection === 'app.bsky.feed.generator'
+		? feedTarget(urip.repo, urip.rkey)
+		: listTarget(urip.repo, urip.rkey);
+
 export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedSourceInfo {
 	const urip = parseCanonicalResourceUri(view.uri);
-	const collection = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists';
-	const href = `/profile/${urip.repo}/${collection}/${urip.rkey}`;
 
 	// specified facets take priority; only detect when none were provided
 	const description: Richtext = view.descriptionFacets
@@ -108,11 +112,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		uri: view.uri,
 		feedDescriptor: `feedgen|${view.uri}`,
 		cid: view.cid,
-		route: {
-			href,
-			name: 'ProfileFeed',
-			params: { actor: urip.repo, rkey: urip.rkey },
-		},
+		target: recordTarget(urip),
 		avatar: view.avatar,
 		displayName: view.displayName
 			? sanitizeDisplayName(view.displayName)
@@ -129,8 +129,6 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 
 export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 	const urip = parseCanonicalResourceUri(view.uri);
-	const collection = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists';
-	const href = `/profile/${urip.repo}/${collection}/${urip.rkey}`;
 
 	// specified facets take priority; only detect when none were provided
 	const description: Richtext = view.descriptionFacets
@@ -142,11 +140,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		view,
 		uri: view.uri,
 		feedDescriptor: `list|${view.uri}`,
-		route: {
-			href,
-			name: 'ProfileList',
-			params: { actor: urip.repo, rkey: urip.rkey },
-		},
+		target: recordTarget(urip),
 		cid: view.cid,
 		avatar: view.avatar,
 		description,
@@ -376,15 +370,11 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
 	displayName: 'Discover',
 	uri: DISCOVER_FEED_URI,
 	feedDescriptor: `feedgen|${DISCOVER_FEED_URI}`,
-	route: {
-		href: '/',
-		name: 'Home',
-		params: {},
-	},
+	target: { name: 'Home' },
 	cid: '',
 	avatar: '',
 	description: { text: '', facets: [] },
-	creatorDid: '',
+	creatorDid: undefined,
 	creatorHandle: '',
 	likeCount: 0,
 	likeUri: '',
@@ -480,15 +470,11 @@ export function usePinnedFeedsInfos() {
 						displayName: 'Following',
 						uri: pinnedItem.value,
 						feedDescriptor: 'following',
-						route: {
-							href: '/',
-							name: 'Home',
-							params: {},
-						},
+						target: { name: 'Home' },
 						cid: '',
 						avatar: '',
 						description: { text: '', facets: [] },
-						creatorDid: '',
+						creatorDid: undefined,
 						creatorHandle: '',
 						likeCount: 0,
 						likeUri: '',
@@ -624,7 +610,10 @@ export function useSavedFeeds() {
 }
 
 function precacheFeed(queryClient: QueryClient, hydratedFeed: FeedSourceInfo) {
-	precacheResolvedUri(queryClient, hydratedFeed.creatorHandle, hydratedFeed.creatorDid);
+	// a pseudo-feed has no creator to seed the handle/did cache with
+	if (hydratedFeed.creatorDid) {
+		precacheResolvedUri(queryClient, hydratedFeed.creatorHandle, hydratedFeed.creatorDid);
+	}
 	queryClient.setQueryData<FeedSourceInfo>(feedSourceInfoQueryKey({ uri: hydratedFeed.uri }), hydratedFeed);
 }
 

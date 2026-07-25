@@ -25,7 +25,7 @@ import { type InlineLinkUnderline, useInternalLink } from '#/components/web/Link
 import * as linkStyles from '#/components/web/Link.css';
 
 import { m } from '#/paraglide/messages';
-import { buildPath, useNavigate } from '#/routes';
+import { useNavigate } from '#/routes';
 
 const preventDefault = (e: MouseEvent) => e.preventDefault();
 
@@ -64,7 +64,7 @@ export function RichTextTag({
 		variables: optimisticRemove,
 		reset: resetRemove,
 	} = useRemoveMutedWordsMutation();
-	const { href } = useInternalLink({ to: buildPath('Hashtag', { tag }) });
+	const { href } = useInternalLink({ to: { name: 'Hashtag', params: { tag } } });
 	const muteConfirmHandle = Prompt.usePromptHandle();
 
 	const isCashtag = tag.startsWith('$');

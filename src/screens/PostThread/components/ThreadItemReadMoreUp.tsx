@@ -11,7 +11,7 @@ import * as css from './ThreadItemReadMoreUp.css';
 
 export function ThreadItemReadMoreUp({ item }: { item: Extract<ThreadItem, { type: 'readMoreUp' }> }) {
 	return (
-		<Link className={css.link} label={m['screens.postThread.reply.action.continueThread']()} to={item.href}>
+		<Link className={css.link} label={m['screens.postThread.reply.action.continueThread']()} to={item.target}>
 			<PostLayout.Row className={css.rowTop}>
 				<PostLayout.AvatarColumn className={css.iconColumn}>
 					<UpIcon className={css.icon} fill="currentColor" size="lg" />

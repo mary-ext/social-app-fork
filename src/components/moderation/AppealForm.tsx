@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useLabelSubject } from '#/lib/moderation';
 import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { getClients } from '#/state/session';
 
@@ -104,7 +104,7 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 									label={sourceName}
 									onPress={() => handle.close()}
 									size="md"
-									to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
+									to={profileTarget(labeler ? labeler.creator.did : label.src)}
 								>
 									{children}
 								</InlineLinkText>

@@ -14,7 +14,7 @@ import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { makeProfileLink } from '#/lib/routes/links';
+import { postUriToTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -89,8 +89,7 @@ function PostInner({
 }) {
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
-	const itemUrip = parseCanonicalResourceUri(post.uri);
-	const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
+	const itemTarget = postUriToTarget(post.uri);
 	const replyAuthorDid = record.reply
 		? parseCanonicalResourceUri(record.reply.parent?.uri || record.reply.root.uri).repo
 		: undefined;
@@ -120,7 +119,7 @@ function PostInner({
 	});
 	return (
 		<GalleryBleed>
-			<BlockLink to={itemHref} onBeforePress={onBeforePress}>
+			<BlockLink to={itemTarget} onBeforePress={onBeforePress}>
 				<article className={clsx(css.outer, !hideTopBorder && css.outerBorder)} style={style}>
 					<PostLayout.Row>
 						<PostLayout.AvatarColumn>
@@ -138,7 +137,7 @@ function PostInner({
 									author={post.author}
 									moderation={moderation}
 									timestamp={post.indexedAt}
-									postHref={itemHref}
+									postTarget={itemTarget}
 								/>
 								<PostOverflowMenuButton post={post} record={record} richText={richText} />
 							</div>

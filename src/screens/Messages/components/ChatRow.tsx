@@ -4,6 +4,8 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
+import type { RouteTarget } from '#/lib/routes/target';
+
 import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { ProfileBadges } from '#/components/ProfileBadges';
@@ -52,7 +54,7 @@ export function Link({
 	onPointerDown?: () => void;
 	/** return `false` to cancel navigation. */
 	onPress?: (e: MouseEvent<HTMLElement>) => false | void;
-	to: string;
+	to: RouteTarget;
 }) {
 	return (
 		<WebLink

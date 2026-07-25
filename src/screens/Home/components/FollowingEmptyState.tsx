@@ -21,7 +21,12 @@ export function FollowingEmptyState() {
 				{m['view.posts.feed.followingEmpty']()}
 			</Text>
 			<div className={css.buttonWrap}>
-				<LinkButton color="secondary" label={m['view.posts.follow.findAccounts']()} size="large" to="/search">
+				<LinkButton
+					color="secondary"
+					label={m['view.posts.follow.findAccounts']()}
+					size="large"
+					to={{ name: 'Explore' }}
+				>
 					<ButtonText>{m['view.posts.follow.findAccounts']()}</ButtonText>
 					<ButtonIcon icon={ChevronRightIcon} />
 				</LinkButton>
@@ -37,7 +42,12 @@ export function FollowingEmptyState() {
 				{m['view.posts.discover.hint']()}
 			</Text>
 			<div className={css.buttonWrap}>
-				<LinkButton color="secondary" label={m['view.posts.discover.findFeeds']()} size="large" to="/feeds">
+				<LinkButton
+					color="secondary"
+					label={m['view.posts.discover.findFeeds']()}
+					size="large"
+					to={{ name: 'Feeds' }}
+				>
 					<ButtonText>{m['view.posts.discover.findFeeds']()}</ButtonText>
 					<ButtonIcon icon={ChevronRightIcon} />
 				</LinkButton>

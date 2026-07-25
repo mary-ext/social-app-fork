@@ -9,6 +9,8 @@ import type {
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
 import type { ResourceUri } from '@atcute/lexicons';
 
+import type { RouteTarget } from '#/lib/routes/target';
+
 export type ApiThreadItem =
 	| AppBskyUnspeccedGetPostThreadV2.ThreadItem
 	| AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem;
@@ -100,7 +102,7 @@ export type ThreadItem =
 			type: 'readMore';
 			key: string;
 			depth: number;
-			href: string;
+			target: RouteTarget;
 			moreReplies: number;
 			skippedIndentIndices: Set<number>;
 	  }
@@ -110,7 +112,7 @@ export type ThreadItem =
 			 */
 			type: 'readMoreUp';
 			key: string;
-			href: string;
+			target: RouteTarget;
 	  }
 	| {
 			type: 'skeleton';

@@ -5,8 +5,7 @@ import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moder
 import { useConstant } from '#/lib/hooks/use-constant';
 import type { AppModerationCause } from '#/lib/moderation/types';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
-import { makeProfileLink } from '#/lib/routes/links';
-import { listUriToHref } from '#/lib/strings/url-helpers';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useSession } from '#/state/session';
 
@@ -15,6 +14,7 @@ import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
 import { AppealForm } from '#/components/moderation/AppealForm';
+import { ModerationListLink } from '#/components/moderation/ModerationListLink';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
@@ -82,9 +82,9 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 					inputs={{ name: list.name }}
 					markup={{
 						t0: ({ children }) => (
-							<InlineLinkText label={list.name} size="sm" to={listUriToHref(list.uri)}>
+							<ModerationListLink list={list} size="sm">
 								{children}
-							</InlineLinkText>
+							</ModerationListLink>
 						),
 					}}
 				/>
@@ -106,9 +106,9 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 					inputs={{ name: list.name }}
 					markup={{
 						t0: ({ children }) => (
-							<InlineLinkText label={list.name} size="sm" to={listUriToHref(list.uri)}>
+							<ModerationListLink list={list} size="sm">
 								{children}
-							</InlineLinkText>
+							</ModerationListLink>
 						),
 					}}
 				/>
@@ -187,7 +187,7 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 											<InlineLinkText
 												label={sourceName}
 												onPress={() => handle.close()}
-												to={makeProfileLink({ did: modcause.label.src })}
+												to={profileTarget(modcause.label.src)}
 											>
 												{children}
 											</InlineLinkText>

@@ -149,7 +149,7 @@ function EmptyHint() {
 						t0: ({ children }) => (
 							<InlineLinkText
 								label={m['screens.settings.account.privacyLink']()}
-								to="/settings/account"
+								to={{ name: 'AccountSettings' }}
 								weight="semiBold"
 							>
 								{children}

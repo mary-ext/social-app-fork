@@ -7,7 +7,6 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { useConstant } from '#/lib/hooks/use-constant';
-import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { Trans } from '#/locale/Trans';
@@ -113,7 +112,7 @@ function KnownFollowersInner({
 		<Link
 			className={css.link({ variant })}
 			label={m['common.follow.a11y.knownFollowers']()}
-			to={makeProfileLink(profile, 'known-followers')}
+			to={{ name: 'ProfileKnownFollowers', params: { actor: profile.did } }}
 		>
 			<AvatarStack
 				moderationOpts={moderationOpts}

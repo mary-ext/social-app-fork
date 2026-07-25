@@ -1,13 +1,12 @@
 import { unwrapEmbed, type AppBskyEmbedRecord, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import { makeProfileLink } from '#/lib/routes/links';
+import { postUriToTarget } from '#/lib/routes/targets';
 import { getChatInviteCodeFromUrl } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -247,8 +246,7 @@ export function QuoteEmbed({
 	const moderation = moderationOpts ? moderatePost(quote, moderationOpts) : undefined;
 
 	const queryClient = useQueryClient();
-	const itemUrip = parseCanonicalResourceUri(quote.uri);
-	const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey);
+	const itemTarget = postUriToTarget(quote.uri);
 	const itemTitle = `Post by ${quote.author.handle}`;
 
 	const { text, facets } = getPostRecord(quote);
@@ -266,7 +264,7 @@ export function QuoteEmbed({
 				className={css.quoteMetaPad}
 				moderation={moderation}
 				showAvatar
-				postHref={itemHref}
+				postTarget={itemTarget}
 				timestamp={quote.indexedAt}
 				linkDisabled
 			/>
@@ -310,7 +308,7 @@ export function QuoteEmbed({
 								{contents}
 							</div>
 						) : (
-							<BlockLink to={itemHref} label={itemTitle} onBeforePress={onBeforePress}>
+							<BlockLink to={itemTarget} label={itemTitle} onBeforePress={onBeforePress}>
 								<div className={clsx(css.quoteBody, !active && css.quotePad)}>{contents}</div>
 							</BlockLink>
 						)

@@ -19,7 +19,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
 import { MAX_POST_LINES } from '#/lib/constants';
-import { makeProfileLink } from '#/lib/routes/links';
+import type { RouteTarget } from '#/lib/routes/target';
+import { feedTarget, postUriToTarget, profileTarget, starterPackTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isAbortError } from '#/lib/strings/errors';
 
@@ -73,7 +74,7 @@ const MAX_AUTHORS = 5;
 
 interface Author {
 	profile: AppBskyActorDefs.ProfileView;
-	href: string;
+	target: RouteTarget;
 	moderation: ModerationDecision;
 }
 
@@ -94,15 +95,14 @@ let NotificationFeedItem = ({
 }): React.ReactNode => {
 	const queryClient = useQueryClient();
 	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
-	let itemHref = '';
+	let itemTarget: RouteTarget | undefined;
 	switch (item.type) {
 		case 'post-like':
 		case 'repost':
 		case 'like-via-repost':
 		case 'repost-via-repost': {
 			if (item.subjectUri) {
-				const urip = parseCanonicalResourceUri(item.subjectUri);
-				itemHref = `/profile/${urip.repo}/post/${urip.rkey}`;
+				itemTarget = postUriToTarget(item.subjectUri);
 			}
 			break;
 		}
@@ -110,27 +110,26 @@ let NotificationFeedItem = ({
 		case 'contact-match':
 		case 'verified':
 		case 'unverified': {
-			itemHref = makeProfileLink(item.notification.author);
+			itemTarget = profileTarget(item.notification.author.did);
 			break;
 		}
 		case 'reply':
 		case 'mention':
 		case 'quote': {
-			const uripReply = parseCanonicalResourceUri(item.notification.uri);
-			itemHref = `/profile/${uripReply.repo}/post/${uripReply.rkey}`;
+			itemTarget = postUriToTarget(item.notification.uri);
 			break;
 		}
 		case 'feedgen-like': {
 			if (item.subjectUri) {
 				const urip = parseCanonicalResourceUri(item.subjectUri);
-				itemHref = `/profile/${urip.repo}/feed/${urip.rkey}`;
+				itemTarget = feedTarget(urip.repo, urip.rkey);
 			}
 			break;
 		}
 		case 'starterpack-joined': {
 			if (item.subjectUri) {
 				const urip = parseCanonicalResourceUri(item.subjectUri);
-				itemHref = `/starter-pack/${urip.repo}/${urip.rkey}`;
+				itemTarget = starterPackTarget(urip.repo, urip.rkey);
 			}
 			break;
 		}
@@ -139,7 +138,8 @@ let NotificationFeedItem = ({
 			for (const post of [item.notification, ...(item.additional ?? [])]) {
 				posts.push(post.uri);
 			}
-			itemHref = `/notifications/activity?posts=${encodeURIComponent(posts.slice(0, 25).join(','))}`;
+			// the activity screen takes the subject posts as a comma-joined query parameter, capped at 25.
+			itemTarget = { name: 'NotificationsActivityList', params: { posts: posts.slice(0, 25).join(',') } };
 			break;
 		}
 	}
@@ -152,12 +152,12 @@ let NotificationFeedItem = ({
 		[
 			{
 				profile: item.notification.author,
-				href: makeProfileLink(item.notification.author),
+				target: profileTarget(item.notification.author.did),
 				moderation: moderateProfile(item.notification.author, moderationOpts),
 			},
 			...(item.additional?.map(({ author }) => ({
 				profile: author,
-				href: makeProfileLink(author),
+				target: profileTarget(author.did),
 				moderation: moderateProfile(author as AnyProfileView, moderationOpts),
 			})) || []),
 		],
@@ -214,8 +214,8 @@ let NotificationFeedItem = ({
 	const authorLinkMarkup = ({ children }: { children?: React.ReactNode }) => (
 		<ProfileHoverCard did={firstAuthor.profile.did}>
 			<InlineLinkText
-				key={firstAuthor.href}
-				to={firstAuthor.href}
+				key={firstAuthor.profile.did}
+				to={firstAuthor.target}
 				label={m['view.notifications.a11y.goToProfile']({ name: firstAuthorName })}
 				className={css.authorName}
 				color="text"
@@ -531,12 +531,12 @@ let NotificationFeedItem = ({
 		</div>
 	);
 
-	if (!itemHref) {
+	if (!itemTarget) {
 		return card;
 	}
 
 	return (
-		<BlockLink to={itemHref} label={a11yLabel} onBeforePress={onBeforePress}>
+		<BlockLink to={itemTarget} label={a11yLabel} onBeforePress={onBeforePress}>
 			{card}
 		</BlockLink>
 	);
@@ -607,7 +607,7 @@ function AuthorsList({
 					<>
 						{authors.slice(0, MAX_AUTHORS).map((author) => (
 							<PreviewableUserAvatar
-								key={author.href}
+								key={author.profile.did}
 								size={css.NOTIF_AVI_SIZE}
 								profile={author.profile}
 								moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}

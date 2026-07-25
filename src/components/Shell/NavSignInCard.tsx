@@ -19,7 +19,7 @@ export function NavSignInCard(): React.ReactNode {
 
 	return (
 		<div className={styles.root}>
-			<Link label="Bluesky - Home" to="/">
+			<Link label="Bluesky - Home" to={{ name: 'Home' }}>
 				<Logo width={32} />
 			</Link>
 			<div className={styles.titleWrap}>

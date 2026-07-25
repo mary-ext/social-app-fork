@@ -13,7 +13,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getPostRecord } from '#/lib/api/record-views';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
-import { makeProfileLink } from '#/lib/routes/links';
+import { postUriToTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -138,8 +138,7 @@ function FeedItemInner({
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
 
-	const urip = parseCanonicalResourceUri(post.uri);
-	const href = makeProfileLink(post.author, 'post', urip.rkey);
+	const target = postUriToTarget(post.uri);
 	const { sendInteraction, feedSourceInfo } = useFeedFeedbackContext();
 
 	const onPressReply = () => {
@@ -254,7 +253,7 @@ function FeedItemInner({
 	});
 	return (
 		<GalleryBleed>
-			<BlockLink to={href} onBeforePress={onBeforePress}>
+			<BlockLink to={target} onBeforePress={onBeforePress}>
 				<PostLayout.Frame hoverable topBorder={!(hideTopBorder || isThreadChild)}>
 					<div className={css.reasonRow}>
 						<div className={css.spineSlot}>
@@ -286,7 +285,7 @@ function FeedItemInner({
 									author={post.author}
 									moderation={moderation}
 									timestamp={post.indexedAt}
-									postHref={href}
+									postTarget={target}
 									onOpenAuthor={onOpenAuthor}
 								/>
 								<PostOverflowMenuButton

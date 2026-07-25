@@ -7,7 +7,7 @@ import { isDid } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
@@ -62,7 +62,7 @@ function SuggestedFollowCard({
 			label={m['common.profile.a11y.viewNamed']({
 				name: profile.displayName || profile.handle,
 			})}
-			to={makeProfileLink({ did: profile.did })}
+			to={profileTarget(profile.did)}
 		>
 			<div>
 				{onDismiss && (

@@ -51,11 +51,11 @@ export function ContentAndMediaSettingsScreen() {
 			<Layout.Content>
 				<Settings.List>
 					<Settings.Section>
-						<Settings.LinkRow label={m['screens.settings.feeds.manageSaved']()} to="/settings/saved-feeds">
+						<Settings.LinkRow label={m['screens.settings.feeds.manageSaved']()} to={{ name: 'SavedFeeds' }}>
 							<Settings.Icon icon={HashtagIcon} />
 							<Settings.Label titleText={m['screens.settings.feeds.manageSaved']()} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={m['common.interest.yourInterests']()} to="/settings/interests">
+						<Settings.LinkRow label={m['common.interest.yourInterests']()} to={{ name: 'InterestsSettings' }}>
 							<Settings.Icon icon={CircleInfo} />
 							<Settings.Label titleText={m['common.interest.yourInterests']()} />
 						</Settings.LinkRow>
@@ -64,7 +64,7 @@ export function ContentAndMediaSettingsScreen() {
 					<Settings.Section titleText={m['common.media.label']()}>
 						<Settings.LinkRow
 							label={m['screens.settings.media.externalTitle']()}
-							to="/settings/external-embeds"
+							to={{ name: 'PreferencesExternalEmbeds' }}
 						>
 							<Settings.Icon icon={MacintoshIcon} />
 							<Settings.Label titleText={m['screens.settings.media.externalTitle']()} />

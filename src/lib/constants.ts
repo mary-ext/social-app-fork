@@ -1,4 +1,5 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { CanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583';
 export const BSKY_SERVICE = 'https://bsky.social';
@@ -55,7 +56,8 @@ export const BSKY_FEED_OWNER_DIDS = [
 // identifies the account.
 export const TRENDING_DID = 'did:plc:qrz3lhbyuxbeilrc6nekdqme';
 
-export const DISCOVER_FEED_URI = 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot';
+export const DISCOVER_FEED_URI: CanonicalResourceUri =
+	'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot';
 export const DISCOVER_SAVED_FEED = {
 	type: 'feed',
 	value: DISCOVER_FEED_URI,

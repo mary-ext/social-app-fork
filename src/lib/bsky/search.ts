@@ -1,11 +1,9 @@
 import type { AppBskyFeedSearchPostsV2 } from '@atcute/bluesky';
 import { type Token, tokenize } from '@atcute/bluesky-search-parser';
-import type { ActorIdentifier, Did, GenericUri } from '@atcute/lexicons';
-import { isActorIdentifier, isGenericUri, parseResourceUri } from '@atcute/lexicons/syntax';
+import type { ActorIdentifier, Did, GenericUri, Handle } from '@atcute/lexicons';
+import { isActorIdentifier, isDid, isGenericUri, isHandle } from '@atcute/lexicons/syntax';
 
 import { min } from '@mary/date-fns';
-
-import { convertBskyAppUrlIfNeeded, isBskyAppUrl, safeUrlParse } from '#/lib/strings/url-helpers';
 
 // #region filters
 
@@ -571,7 +569,10 @@ const LIKELY_DID_RE = /\bdid:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]\b/;
  * @param query the raw search query
  * @returns the matched handle, or `null` when none is present
  */
-export const matchHandle = (query: string): string | null => LIKELY_HANDLE_RE.exec(query)?.[0] ?? null;
+export const matchHandle = (query: string): Handle | null => {
+	const match = LIKELY_HANDLE_RE.exec(query)?.[0];
+	return match !== undefined && isHandle(match) ? match : null;
+};
 
 /**
  * finds a DID-shaped substring in the query, for a "go to profile" shortcut.
@@ -579,59 +580,9 @@ export const matchHandle = (query: string): string | null => LIKELY_HANDLE_RE.ex
  * @param query the raw search query
  * @returns the matched DID, or `null` when none is present
  */
-export const matchDid = (query: string): string | null => LIKELY_DID_RE.exec(query)?.[0] ?? null;
-
-/** maps a record's `at://` URI to the in-app route that renders it, or `null` for an unhandled collection. */
-const atUriToPath = (uri: string): string | null => {
-	let parsed;
-	try {
-		parsed = parseResourceUri(uri);
-	} catch {
-		return null;
-	}
-
-	const { collection, repo, rkey } = parsed;
-	if (!collection) {
-		return `/profile/${repo}`;
-	}
-	if (!rkey) {
-		return null;
-	}
-
-	switch (collection) {
-		case 'app.bsky.feed.generator':
-			return `/profile/${repo}/feed/${rkey}`;
-		case 'app.bsky.feed.post':
-			return `/profile/${repo}/post/${rkey}`;
-		case 'app.bsky.graph.list':
-			return `/profile/${repo}/lists/${rkey}`;
-		case 'app.bsky.graph.starterpack':
-			return `/starter-pack/${repo}/${rkey}`;
-		default:
-			return null;
-	}
-};
-
-/**
- * resolves a `bsky.app` URL or `at://` URI to its corresponding in-app route.
- *
- * @param query raw search query
- * @returns in-app route path, or null if not navigable
- */
-export const resolveInAppUrl = (query: string): string | null => {
-	const trimmed = query.trim();
-
-	if (trimmed.startsWith('at://')) {
-		return atUriToPath(trimmed);
-	}
-
-	const url = safeUrlParse(trimmed);
-	if (url && isBskyAppUrl(url.href)) {
-		const path = convertBskyAppUrlIfNeeded(url.href);
-		return path.startsWith('/') ? path : null;
-	}
-
-	return null;
+export const matchDid = (query: string): Did | null => {
+	const match = LIKELY_DID_RE.exec(query)?.[0];
+	return match !== undefined && isDid(match) ? match : null;
 };
 
 // #endregion

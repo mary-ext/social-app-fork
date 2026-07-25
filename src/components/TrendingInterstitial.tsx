@@ -8,6 +8,7 @@ import { useTrendingConfig } from '#/state/service-config';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import * as Prompt from '#/components/Prompt';
+import { Text } from '#/components/Text';
 import { useTopic } from '#/components/trending-topics';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
@@ -93,11 +94,19 @@ export function TrendingInterstitial() {
 }
 
 function TopicLink({ topic }: { topic: AppBskyUnspeccedDefs.TrendView }) {
-	const { label, url } = useTopic(topic);
+	const { label, target } = useTopic(topic);
+
+	if (!target) {
+		return (
+			<Text className={css.topic} color="textContrastMedium" size="sm" weight="semiBold">
+				{topic.topic}
+			</Text>
+		);
+	}
 
 	return (
 		<InlineLinkText
-			to={url}
+			to={target}
 			label={label}
 			size="sm"
 			weight="semiBold"

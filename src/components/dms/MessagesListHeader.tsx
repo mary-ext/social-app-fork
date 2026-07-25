@@ -10,7 +10,8 @@ import {
 import { clsx } from 'clsx';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { makeProfileLink } from '#/lib/routes/links';
+import type { RouteTarget } from '#/lib/routes/target';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -29,7 +30,6 @@ import * as Layout from '#/components/web/Layout';
 import { Link, LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { buildPath } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './MessagesListHeader.css';
@@ -110,7 +110,7 @@ function ProfileHeaderReady({
 					<Link
 						className={css.headingOverlay}
 						label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
-						to={makeProfileLink(profile)}
+						to={profileTarget(profile.did)}
 					>
 						{null}
 					</Link>
@@ -168,7 +168,10 @@ function ProfileHeaderReady({
 function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
 	// a permanently locked group has no settings screen to open, so the header is inert.
 	const disabled = convo.details.lockStatus === 'locked-permanently';
-	const settingsTo = buildPath('MessagesConversationSettings', { conversation: convo.view.id });
+	const settingsTo: RouteTarget = {
+		name: 'MessagesConversationSettings',
+		params: { conversation: convo.view.id },
+	};
 
 	const nameBlock = (
 		<>

@@ -25,7 +25,7 @@ export function ThreadItemReadMore({
 		<div className={css.outer}>
 			{isTreeView && <IndentGuides count={indent} keyPrefix={item.key} skipped={item.skippedIndentIndices} />}
 			<div className={clsx(css.connectorBase, isTreeView ? css.connectorTree : css.connectorLinear)} />
-			<Link className={css.link} label={m['screens.postThread.reply.action.readMore']()} to={item.href}>
+			<Link className={css.link} label={m['screens.postThread.reply.action.readMore']()} to={item.target}>
 				<CirclePlus className={css.icon} fill="currentColor" size="md" />
 				<Text className={css.text} color="textContrastMedium" size="sm">
 					{m['screens.postThread.reply.action.readMoreCount']({ count: item.moreReplies })}

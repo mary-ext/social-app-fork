@@ -116,7 +116,7 @@ export function NotificationsScreen() {
 
 						<Layout.Header.Slot>
 							<LinkButton
-								to="/settings/notifications"
+								to={{ name: 'NotificationSettings' }}
 								label={m['common.notifications.settingsTitle']()}
 								size="small"
 								variant="ghost"
@@ -245,7 +245,10 @@ function DisabledNotificationsWarning({ active }: { active: boolean }) {
 						message={m['view.notifications.settings.disabledHint']}
 						markup={{
 							t0: ({ children }) => (
-								<InlineLinkText label={m['view.notifications.settings.visit']()} to="/settings/notifications">
+								<InlineLinkText
+									label={m['view.notifications.settings.visit']()}
+									to={{ name: 'NotificationSettings' }}
+								>
 									{children}
 								</InlineLinkText>
 							),

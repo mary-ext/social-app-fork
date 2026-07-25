@@ -14,6 +14,9 @@ import { weightedIndex } from '@mary/array-fns';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import type { RouteTarget } from '#/lib/routes/target';
+import { listTarget } from '#/lib/routes/targets';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { precacheList } from '#/state/queries/feed';
 import { useSession } from '#/state/session';
@@ -77,14 +80,14 @@ export function Link({
 }) {
 	const queryClient = useQueryClient();
 
-	const href = createProfileListHref({ list: view });
+	const target = createProfileListTarget({ list: view });
 
 	useEffect(() => {
 		precacheList(queryClient, view);
 	}, [queryClient, view]);
 
 	return (
-		<BlockLink className={clsx(css.link, className)} label={view.name} onBeforePress={onPress} to={href}>
+		<BlockLink className={clsx(css.link, className)} label={view.name} onBeforePress={onPress} to={target}>
 			<div>{children}</div>
 		</BlockLink>
 	);
@@ -219,7 +222,7 @@ export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNo
 	);
 }
 
-export function createProfileListHref({ list }: { list: AppBskyGraphDefs.ListView }) {
+function createProfileListTarget({ list }: { list: AppBskyGraphDefs.ListView }): RouteTarget {
 	const urip = parseCanonicalResourceUri(list.uri);
-	return `/profile/${list.creator.did}/lists/${urip.rkey}`;
+	return listTarget(list.creator.did, urip.rkey);
 }

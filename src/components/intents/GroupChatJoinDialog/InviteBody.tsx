@@ -2,7 +2,7 @@ import { ClientResponseError } from '@atcute/client';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import {
@@ -280,7 +280,7 @@ export function InviteBody({
 											color="textContrastMedium"
 											label={ownerHandle}
 											size="sm"
-											to={makeProfileLink(joinLinkPreview.owner)}
+											to={profileTarget(joinLinkPreview.owner.did)}
 											weight="semiBold"
 										>
 											{children}

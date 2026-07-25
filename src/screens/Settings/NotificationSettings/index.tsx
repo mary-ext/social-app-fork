@@ -196,7 +196,7 @@ export function NotificationSettingsScreen() {
 					<Settings.Section titleText={m['screens.settings.notifications.other.title']()}>
 						<Settings.LinkRow
 							label={m['screens.settings.notifications.activity.title']()}
-							to="/settings/notifications/activity"
+							to={{ name: 'ActivityNotificationSettings' }}
 						>
 							<Settings.Icon icon={BellRingingIcon} />
 							<Settings.Label

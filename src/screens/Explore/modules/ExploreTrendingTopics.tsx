@@ -13,6 +13,7 @@ import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Flame_Stroke2_Corner1_Rounded as FlameIcon } from '#/components/icons/Flame';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import { Text } from '#/components/Text';
+import { useTopic } from '#/components/trending-topics';
 import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
@@ -67,13 +68,14 @@ function TrendRow({ rank, trend }: { rank: number; trend: AppBskyUnspeccedDefs.T
 	const badgeType = trend.status === 'hot' ? 'hot' : age < 2 ? 'new' : age;
 
 	const actors = useModerateTrendingActors(trend.actors);
+	const { label, target } = useTopic(trend);
+
+	if (!target) {
+		return null;
+	}
 
 	return (
-		<Link
-			className={css.row}
-			label={m['components.trendingTopics.a11y.browseTopic']({ name: trend.displayName })}
-			to={trend.link}
-		>
+		<Link className={css.row} label={label} to={target}>
 			<div className={css.main}>
 				<div className={css.titleRow}>
 					<Text className={css.rank} size="md" weight="semiBold">

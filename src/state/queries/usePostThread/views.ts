@@ -12,9 +12,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import type { $type, ResourceUri } from '@atcute/lexicons';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { postUriToTarget } from '#/lib/routes/targets';
 
 import type { ThreadItem, TraversalMetadata } from '#/state/queries/usePostThread/types';
 
@@ -123,12 +122,11 @@ export function readMore({
 	skippedIndentIndices,
 	postData,
 }: TraversalMetadata): Extract<ThreadItem, { type: 'readMore' }> {
-	const urip = parseCanonicalResourceUri(postData.uri);
-	const href = makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
+	const target = postUriToTarget(postData.uri);
 	return {
 		type: 'readMore' as const,
 		key: `readMore:${postData.uri}`,
-		href,
+		target,
 		moreReplies: repliesUnhydrated,
 		depth,
 		skippedIndentIndices,
@@ -136,12 +134,11 @@ export function readMore({
 }
 
 export function readMoreUp({ postData }: TraversalMetadata): Extract<ThreadItem, { type: 'readMoreUp' }> {
-	const urip = parseCanonicalResourceUri(postData.uri);
-	const href = makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
+	const target = postUriToTarget(postData.uri);
 	return {
 		type: 'readMoreUp' as const,
 		key: `readMoreUp:${postData.uri}`,
-		href,
+		target,
 	};
 }
 

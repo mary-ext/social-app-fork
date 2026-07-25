@@ -43,7 +43,7 @@ export function HomeHeaderLayout() {
 						label={m['view.feeds.explore.a11y']()}
 						shape="round"
 						size="small"
-						to="/feeds"
+						to={{ name: 'Feeds' }}
 						variant="ghost"
 					>
 						<ButtonIcon icon={FeedsIcon} size="lg" />

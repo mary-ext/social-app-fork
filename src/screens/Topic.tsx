@@ -4,6 +4,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
 import { enforceLen } from '#/lib/strings/helpers';
+import { toBskyAppUrl } from '#/lib/strings/url-helpers';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 
@@ -16,7 +17,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { buildTarget, useParams } from '#/routes';
 
 export default function TopicScreen() {
 	const [{ topic }] = useParams('Topic');
@@ -24,9 +25,7 @@ export default function TopicScreen() {
 	const headerTitle = enforceLen(topic, 24, true, 'middle');
 
 	const onShare = () => {
-		const url = new URL('https://bsky.app');
-		url.pathname = `/topic/${topic}`;
-		void shareUrl(url.toString());
+		void shareUrl(toBskyAppUrl(buildTarget({ name: 'Topic', params: { topic } })));
 	};
 
 	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');

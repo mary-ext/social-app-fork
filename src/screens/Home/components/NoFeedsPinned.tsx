@@ -80,7 +80,7 @@ export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQuer
 					color="secondary"
 					label={m['screens.home.action.browseOtherFeeds']()}
 					size="large"
-					to="/feeds"
+					to={{ name: 'Feeds' }}
 					variant="solid"
 				>
 					<ButtonIcon icon={ListSparkle} />

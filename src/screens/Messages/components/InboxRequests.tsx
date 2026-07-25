@@ -31,7 +31,7 @@ export function InboxRequests({
 			return (
 				<LinkButton
 					label={label}
-					to="/messages/inbox"
+					to={{ name: 'MessagesInbox' }}
 					action={action}
 					size="small"
 					variant={unread ? 'solid' : 'ghost'}
@@ -54,7 +54,7 @@ export function InboxRequests({
 			return (
 				<LinkButton
 					label={label}
-					to="/messages/inbox"
+					to={{ name: 'MessagesInbox' }}
 					action={action}
 					color={unread ? 'primary_subtle' : 'secondary'}
 					size="small"

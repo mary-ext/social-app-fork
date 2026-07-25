@@ -6,6 +6,7 @@ import type { Handle } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
+import { profileTarget } from '#/lib/routes/targets';
 import { isOnlyEmoji } from '#/lib/strings/emoji';
 import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
 import { parseLinkableUrl, toShortUrl } from '#/lib/strings/url-helpers';
@@ -126,7 +127,7 @@ export function RichText({
 									leading={leading}
 									selectable={selectable}
 									size={size}
-									to={`/profile/${feature.did}`}
+									to={profileTarget(feature.did)}
 									underline={linkUnderline}
 									weight={weight}
 								>

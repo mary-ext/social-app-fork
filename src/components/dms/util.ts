@@ -7,6 +7,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import type { $type, Did } from '@atcute/lexicons';
+import { isTid, type Tid } from '@atcute/lexicons/syntax';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
@@ -178,7 +179,10 @@ export type DirectConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
 	kind: $type.enforce<ChatBskyActorDefs.DirectConvoMember>;
 };
 
-export type ConvoWithDetails = { view: ChatBskyConvoDefs.ConvoView } & (
+// the conversation routes key on a `Tid`, which is what a convo id is; the lexicon types it as a plain string.
+type IdentifiedConvoView = ChatBskyConvoDefs.ConvoView & { id: Tid };
+
+export type ConvoWithDetails = { view: IdentifiedConvoView } & (
 	| {
 			kind: 'group';
 			details: $type.enforce<ChatBskyConvoDefs.GroupConvo>;
@@ -198,9 +202,19 @@ export type ConvoWithDetails = { view: ChatBskyConvoDefs.ConvoView } & (
  * type for convo members.
  */
 export function parseConvoView(
-	convoView: ChatBskyConvoDefs.ConvoView,
+	rawConvoView: ChatBskyConvoDefs.ConvoView,
 	ownDid: string | undefined,
 ): ConvoWithDetails | null {
+	// `Tid` is a plain string alias, so this only pays off at runtime: it applies the same validation the
+	// conversation routes' `tid` codec does, so a convo that can't be linked to never reaches the UI.
+	if (!isTid(rawConvoView.id)) {
+		logger.warn('Convo id is not a TID', { id: rawConvoView.id });
+		return null;
+	}
+	// narrowing `rawConvoView.id` doesn't re-type the view around it, and respreading it would allocate for nothing
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the guard above pins `id`
+	const convoView = rawConvoView as IdentifiedConvoView;
+
 	if (convoView.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
 		let owner: GroupConvoMember | undefined = undefined;
 

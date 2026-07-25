@@ -6,7 +6,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { makeCustomFeedLink } from '#/lib/routes/links';
+import { feedTarget } from '#/lib/routes/targets';
 
 import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
@@ -41,7 +41,7 @@ export function Container({
 export function FeedLink({ children, feed }: { children?: ReactNode; feed: AppBskyFeedDefs.GeneratorView }) {
 	const { repo: did, rkey } = parseCanonicalResourceUri(feed.uri);
 	return (
-		<Link className={css.feedLink} label={feed.displayName} to={makeCustomFeedLink(did, rkey)}>
+		<Link className={css.feedLink} label={feed.displayName} to={feedTarget(did, rkey)}>
 			{children}
 		</Link>
 	);

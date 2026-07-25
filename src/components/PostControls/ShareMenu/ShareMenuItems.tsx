@@ -1,7 +1,6 @@
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { postUriToTarget } from '#/lib/routes/targets';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
@@ -18,7 +17,7 @@ import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/P
 import * as Menu from '#/components/Menu';
 
 import { m } from '#/paraglide/messages';
-import { useNavigate } from '#/routes';
+import { buildTarget, useNavigate } from '#/routes';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 import { useBookmark } from '../useBookmark';
@@ -38,13 +37,12 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 	const postUri = post.uri;
 	const postAuthor = useProfileShadow(post.author as AnyProfileView);
 
-	const urip = parseCanonicalResourceUri(postUri);
-	const href = makeProfileLink(postAuthor, 'post', urip.rkey);
+	const target = postUriToTarget(postUri);
 
 	const hideInPWI = !!postAuthor.labels?.find((label) => label.val === '!no-unauthenticated');
 
 	const onCopyLink = () => {
-		const url = toShareUrl(href);
+		const url = toShareUrl(buildTarget(target));
 		void shareUrl(url);
 		onShareProp();
 	};

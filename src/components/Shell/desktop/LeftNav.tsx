@@ -10,7 +10,8 @@ import { clsx } from 'clsx';
 import { useBreakpoints, useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { makeProfileLink } from '#/lib/routes/links';
+import type { RouteTarget } from '#/lib/routes/target';
+import { profileTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
@@ -71,7 +72,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link, useInternalLink } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { popToRoute } from '#/routes';
+import { popToTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { LARGE_ELEMENT_SIZE, NAV_ICON_WIDTH } from './constants';
@@ -200,7 +201,7 @@ function SwitchMenuItems({
 
 function SwitcherMenuProfileLink() {
 	const { currentAccount } = useSession();
-	const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/';
+	const target: RouteTarget = currentAccount ? profileTarget(currentAccount.did) : { name: 'Home' };
 	const match = useRoute();
 	const isCurrent = match.name === 'Profile' && match.params.actor === currentAccount?.did;
 
@@ -215,7 +216,7 @@ function SwitcherMenuProfileLink() {
 			return false;
 		}
 	};
-	const bindings = useInternalLink({ action: 'navigate', onPress, to: profileLink });
+	const bindings = useInternalLink({ action: 'navigate', onPress, to: target });
 
 	return (
 		<Menu.Item
@@ -263,17 +264,17 @@ interface NavItemProps {
 	activeRouteNames?: readonly string[];
 	count?: string;
 	hasNew?: boolean;
-	href: string;
 	icons: {
 		active: React.ComponentType<SVGIconProps>;
 		inactive: React.ComponentType<SVGIconProps>;
 	};
 	label: string;
 	minimal: boolean;
-	routeName: string;
+	to: RouteTarget;
 }
-function NavItem({ activeRouteNames, count, hasNew, href, icons, label, minimal, routeName }: NavItemProps) {
+function NavItem({ activeRouteNames, count, hasNew, icons, label, minimal, to }: NavItemProps) {
 	const { currentAccount } = useSession();
+	const routeName = to.name;
 
 	const match = useRoute();
 	const inTab = activeRouteNames ? activeRouteNames.includes(match.name) : match.name === routeName;
@@ -291,17 +292,14 @@ function NavItem({ activeRouteNames, count, hasNew, href, icons, label, minimal,
 			softReset.emit();
 			return false;
 		}
-		popToRoute(
-			routeName,
-			routeName === 'Profile' && currentAccount ? { actor: currentAccount.did } : undefined,
-		);
+		popToTarget(to);
 		return false;
 	};
 
 	const Icon = isCurrent || isRelated ? icons.active : icons.inactive;
 
 	return (
-		<Link to={href} action="navigate" onPress={onPress} label={label} className={css.navItem}>
+		<Link to={to} action="navigate" onPress={onPress} label={label} className={css.navItem}>
 			<div className={css.iconBox}>
 				<Icon aria-hidden={true} width={NAV_ICON_WIDTH} fill={colors.text} />
 				{typeof count === 'string' && count ? (
@@ -407,8 +405,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 			{hasSession && (
 				<>
 					<NavItem
-						href="/"
-						routeName="Home"
+						to={{ name: 'Home' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: HomeFilledIcon,
@@ -418,8 +415,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						activeRouteNames={['Explore', 'Search']}
-						href="/search"
-						routeName="Search"
+						to={{ name: 'Search' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: MagnifyingGlassFilledIcon,
@@ -428,8 +424,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.nav.explore']()}
 					/>
 					<NavItem
-						href="/notifications"
-						routeName="Notifications"
+						to={{ name: 'Notifications' }}
 						minimal={leftNavMinimal}
 						count={numUnreadNotifications}
 						icons={{
@@ -439,8 +434,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.nav.notifications']()}
 					/>
 					<NavItem
-						href="/messages"
-						routeName="Messages"
+						to={{ name: 'Messages' }}
 						minimal={leftNavMinimal}
 						count={numUnreadMessages.numUnread}
 						hasNew={numUnreadMessages.hasNew}
@@ -451,8 +445,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.chat.label']()}
 					/>
 					<NavItem
-						href="/feeds"
-						routeName="Feeds"
+						to={{ name: 'Feeds' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: HashtagFilledIcon,
@@ -461,8 +454,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.nav.feeds']()}
 					/>
 					<NavItem
-						href="/lists"
-						routeName="Lists"
+						to={{ name: 'Lists' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: ListFilledIcon,
@@ -471,8 +463,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.list.label']()}
 					/>
 					<NavItem
-						href="/saved"
-						routeName="Bookmarks"
+						to={{ name: 'Bookmarks' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: BookmarkFilledIcon,
@@ -481,8 +472,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.nav.saved']()}
 					/>
 					<NavItem
-						href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-						routeName="Profile"
+						to={currentAccount ? profileTarget(currentAccount.did) : { name: 'Home' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: UserCircleFilledIcon,
@@ -491,8 +481,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.nav.profile']()}
 					/>
 					<NavItem
-						href="/settings"
-						routeName="Settings"
+						to={{ name: 'Settings' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: SettingsFilledIcon,

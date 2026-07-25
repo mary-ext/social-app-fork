@@ -10,7 +10,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import type { ParamsOf } from '@oomfware/stacker';
 
-import { makeProfileLink } from '#/lib/routes/links';
 import { errorMessage, isAbortError } from '#/lib/strings/errors';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
@@ -139,11 +138,6 @@ function PostMenuItems({
 		rootPostUri: rootUri,
 	});
 
-	const href = useMemo(() => {
-		const urip = parseCanonicalResourceUri(postUri);
-		return makeProfileLink(postAuthor, 'post', urip.rkey);
-	}, [postUri, postAuthor]);
-
 	const onDeletePost = () => {
 		deletePostMutate({ uri: postUri }).then(
 			() => {
@@ -153,15 +147,14 @@ function PostMenuItems({
 				if (route.name === 'PostThread') {
 					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `route.name` check above pins the param shape
 					const params = route.params as ParamsOf<typeof routes, 'PostThread'>;
-					if (
+					// the open thread is the deleted post's own, so there is nothing left to return to
+					const isViewingDeletedPost =
 						currentAccount &&
 						isAuthor &&
-						(params.actor === currentAccount.handle || params.actor === currentAccount.did)
-					) {
-						const currentHref = makeProfileLink(postAuthor, 'post', params.rkey);
-						if (currentHref === href && router.canGoBack) {
-							router.back();
-						}
+						(params.actor === currentAccount.handle || params.actor === currentAccount.did) &&
+						params.rkey === parseCanonicalResourceUri(postUri).rkey;
+					if (isViewingDeletedPost && router.canGoBack) {
+						router.back();
 					}
 				}
 			},

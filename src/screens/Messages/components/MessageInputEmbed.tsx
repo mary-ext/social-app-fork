@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
-import { parseCanonicalResourceUri, type ResourceUri } from '@atcute/lexicons/syntax';
+import type { ResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import { makeProfileLink } from '#/lib/routes/links';
+import { postUriToTarget } from '#/lib/routes/targets';
 import {
 	convertBskyAppUrlIfNeeded,
 	getChatInviteCodeFromUrl,
@@ -158,8 +158,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 				</SimpleContainer>
 			);
 		case 'success':
-			const itemUrip = parseCanonicalResourceUri(post.uri);
-			const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
+			const itemTarget = postUriToTarget(post.uri);
 
 			if (!post || !moderation || !rt || !record) {
 				return null;
@@ -173,7 +172,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 								author={post.author}
 								linkDisabled
 								moderation={moderation}
-								postHref={itemHref}
+								postTarget={itemTarget}
 								showAvatar
 								timestamp={post.indexedAt}
 							/>

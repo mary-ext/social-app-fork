@@ -206,24 +206,6 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
 	return url;
 }
 
-export function listUriToHref(url: string): string {
-	try {
-		const { repo, rkey } = parseResourceUri(url);
-		return `/profile/${repo}/lists/${rkey}`;
-	} catch {
-		return '';
-	}
-}
-
-export function feedUriToHref(url: string): string {
-	try {
-		const { repo, rkey } = parseResourceUri(url);
-		return `/profile/${repo}/feed/${rkey}`;
-	} catch {
-		return '';
-	}
-}
-
 export function postUriToRelativePath(uri: string): string | undefined {
 	try {
 		const { repo, rkey } = parseResourceUri(uri);

@@ -18,13 +18,40 @@ import {
 	matchDid,
 	matchHandle,
 	type OperatorName,
-	resolveInAppUrl,
 	type SearchOperator,
 	type SuggestionMode,
 } from '#/lib/bsky/search';
+import type { RouteTarget } from '#/lib/routes/target';
+import { profileTarget, recordUriToTarget } from '#/lib/routes/targets';
+import { convertBskyAppUrlIfNeeded, isBskyAppUrl, safeUrlParse } from '#/lib/strings/url-helpers';
 
 import { m } from '#/paraglide/messages';
+import { buildTarget } from '#/routes';
 import type { SearchHistoryEntry } from '#/storage';
+
+/**
+ * resolves a pasted `bsky.app` URL or `at://` uri to the in-app path that renders it. the result is a path
+ * rather than a target because a `bsky.app` URL can only be resolved by matching at runtime.
+ *
+ * @param query raw search query
+ * @returns the in-app path, or null when the query names nothing this app routes
+ */
+const resolveInAppUrl = (query: string): string | null => {
+	const trimmed = query.trim();
+
+	if (trimmed.startsWith('at://')) {
+		const target = recordUriToTarget(trimmed);
+		return target ? buildTarget(target) : null;
+	}
+
+	const url = safeUrlParse(trimmed);
+	if (url && isBskyAppUrl(url.href)) {
+		const path = convertBskyAppUrlIfNeeded(url.href);
+		return path.startsWith('/') ? path : null;
+	}
+
+	return null;
+};
 
 /**
  * a selectable row in the autocomplete list that can be navigated and activated.
@@ -44,7 +71,7 @@ export type InteractiveItem =
 			selected: boolean;
 			today: boolean;
 	  }
-	| { key: string; kind: 'goto'; name: string; path: string }
+	| { key: string; kind: 'goto'; name: string; target: RouteTarget }
 	| { key: string; kind: 'link'; path: string }
 	| { key: string; kind: 'operator'; operator: SearchOperator }
 	| { key: string; kind: 'operator-value'; op: OperatorName; value: string }
@@ -258,11 +285,11 @@ export const buildResult = ({
 				rows.push({ key: 'search', kind: 'search', query });
 				const handle = matchHandle(query);
 				if (handle) {
-					rows.push({ key: 'goto-handle', kind: 'goto', name: handle, path: `/profile/${handle}` });
+					rows.push({ key: 'goto-handle', kind: 'goto', name: handle, target: profileTarget(handle) });
 				}
 				const did = matchDid(query);
 				if (did) {
-					rows.push({ key: 'goto-did', kind: 'goto', name: did, path: `/profile/${did}` });
+					rows.push({ key: 'goto-did', kind: 'goto', name: did, target: profileTarget(did) });
 				}
 				const url = resolveInAppUrl(query);
 				if (url) {

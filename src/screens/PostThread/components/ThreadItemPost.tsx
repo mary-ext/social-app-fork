@@ -6,7 +6,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
-import { makeProfileLink } from '#/lib/routes/links';
+import { postUriToTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -137,8 +137,7 @@ function ThreadItemPostInner({
 		facets: record.facets,
 	};
 	const threadRootUri = record.reply?.root?.uri || post.uri;
-	const urip = parseCanonicalResourceUri(post.uri);
-	const postHref = makeProfileLink(post.author, 'post', urip.rkey);
+	const threadTarget = postUriToTarget(post.uri);
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,
 	});
@@ -182,7 +181,7 @@ function ThreadItemPostInner({
 	return (
 		<ThreadItemPostOuterWrapper item={item} overrides={overrides} hoverable>
 			<PostHider
-				to={postHref}
+				to={threadTarget}
 				disabled={overrides?.moderation === true}
 				modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 				hiderClassName={css.hider}
@@ -214,7 +213,7 @@ function ThreadItemPostInner({
 								author={post.author}
 								moderation={moderation}
 								timestamp={post.indexedAt}
-								postHref={postHref}
+								postTarget={threadTarget}
 							/>
 							<PostOverflowMenuButton
 								post={postShadow}

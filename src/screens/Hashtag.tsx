@@ -6,6 +6,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
 import { enforceLen } from '#/lib/strings/helpers';
+import { toBskyAppUrl } from '#/lib/strings/url-helpers';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
@@ -22,10 +23,10 @@ import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
-import { InlineLinkText } from '#/components/web/Link';
+import { InlineButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { buildTarget, useParams } from '#/routes';
 
 export default function HashtagScreen() {
 	useTitle(m['navigation.hashtag.title']());
@@ -44,12 +45,7 @@ export default function HashtagScreen() {
 	const sanitizedAuthor = author ? (author.startsWith('did:') ? author : `@${author}`) : '';
 
 	const onShare = () => {
-		const url = new URL('https://bsky.app');
-		url.pathname = `/hashtag/${tag}`;
-		if (author) {
-			url.searchParams.set('author', author);
-		}
-		void shareUrl(url.toString());
+		void shareUrl(toBskyAppUrl(buildTarget({ name: 'Hashtag', params: { author, tag } })));
 	};
 
 	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');
@@ -156,9 +152,9 @@ function HashtagScreenTab({
 						message={m['common.search.signInPrompt']}
 						markup={{
 							t0: ({ children }) => (
-								<InlineLinkText label={m['common.session.action.signIn']()} to={'#'} onPress={showSignIn}>
+								<InlineButton label={m['common.session.action.signIn']()} onClick={showSignIn}>
 									{children}
-								</InlineLinkText>
+								</InlineButton>
 							),
 							t1: ({ children }) => <Text>{children}</Text>,
 							t2: ({ children }) => <Text color="textContrastMedium">{children}</Text>,

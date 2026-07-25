@@ -215,7 +215,7 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 										signinDialogHandle.openWithPayload({});
 										return false;
 									}}
-									to="/search"
+									to={{ name: 'Explore' }}
 								>
 									{children}
 								</InlineLinkText>

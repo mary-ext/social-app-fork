@@ -13,7 +13,7 @@ import { weightedIndex } from '@mary/array-fns';
 import { clsx } from 'clsx';
 
 import { getModerationCauseKey } from '#/lib/moderation';
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isAbortError } from '#/lib/strings/errors';
 
@@ -111,7 +111,7 @@ export function Link({
 				name: profile.displayName || profile.handle,
 			})}
 			onBeforePress={onPress}
-			to={makeProfileLink({ did: profile.did })}
+			to={profileTarget(profile.did)}
 		>
 			<div>{children}</div>
 		</BlockLink>

@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useSession } from '#/state/session';
 
@@ -42,7 +42,7 @@ export function PostFeedReason({
 					<InlineLinkText
 						{...reasonText}
 						onPress={onOpenReposter}
-						to={makeProfileLink(by)}
+						to={profileTarget(by.did)}
 						label={isOwner ? m['view.posts.repost.byYou']() : m['view.posts.repost.by']({ reposter })}
 					>
 						{isOwner ? m['view.posts.repost.byYou']() : m['view.posts.repost.by']({ reposter })}

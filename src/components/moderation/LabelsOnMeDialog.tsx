@@ -4,7 +4,7 @@ import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useSession } from '#/state/session';
 
@@ -136,7 +136,7 @@ function Label({
 										<InlineLinkText
 											label={sourceName}
 											onPress={() => handle.close()}
-											to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
+											to={profileTarget(labeler ? labeler.creator.did : label.src)}
 										>
 											{children}
 										</InlineLinkText>

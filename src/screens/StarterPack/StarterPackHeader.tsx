@@ -1,6 +1,6 @@
 import type { AppBskyActorDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { Trans } from '#/locale/Trans';
 
@@ -63,7 +63,7 @@ export function StarterPackHeader({
 								markup={{
 									t0: () => (
 										<InlineLinkText
-											to={makeProfileLink(creator)}
+											to={profileTarget(creator.did)}
 											label={m['screens.profile.avatar.a11y.viewProfile']({ handle: creator.handle })}
 											color="textContrastMedium"
 										>

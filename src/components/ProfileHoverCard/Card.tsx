@@ -8,7 +8,7 @@ import {
 import type { Did } from '@atcute/lexicons';
 
 import { getModerationCauseKey } from '#/lib/moderation';
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -98,7 +98,7 @@ function Inner({
 		profile.viewer?.blocking || profile.viewer?.blockedBy || profile.viewer?.blockingByList;
 	const followsCount = profile.followsCount || 0;
 	const followersCount = profile.followersCount || 0;
-	const profileURL = makeProfileLink({ did: profile.did });
+	const target = profileTarget(profile.did);
 	const isMe = currentAccount?.did === profile.did;
 	const isLabeler = profile.associated?.labeler;
 	const isFollowing = profileShadow.viewer?.following;
@@ -106,7 +106,7 @@ function Inner({
 	return (
 		<div className={css.profileCard}>
 			<div className={css.headerRow}>
-				<Link className={css.avatarLink} label={m['common.profile.action.view']()} to={profileURL}>
+				<Link className={css.avatarLink} label={m['common.profile.action.view']()} to={target}>
 					<UserAvatar
 						avatar={profile.avatar}
 						moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
@@ -122,7 +122,7 @@ function Inner({
 							color="secondary"
 							label={m['common.profile.a11y.viewBlocked']()}
 							size="small"
-							to={profileURL}
+							to={target}
 							variant="solid"
 						>
 							<ButtonText>{m['common.profile.action.view']()}</ButtonText>
@@ -143,7 +143,7 @@ function Inner({
 					))}
 			</div>
 
-			<Link className={css.nameLink} label={m['common.profile.action.view']()} to={profileURL}>
+			<Link className={css.nameLink} label={m['common.profile.action.view']()} to={target}>
 				<ProfileCard.Name
 					moderationOpts={moderationOpts}
 					profile={profile}
@@ -169,7 +169,7 @@ function Inner({
 								count: followersCount,
 								formatted: formatCount(followersCount),
 							})}
-							to={makeProfileLink(profile, 'followers')}
+							to={{ name: 'ProfileFollowers', params: { actor: profile.did } }}
 						>
 							<Text color="textContrastMedium" size="md">
 								<Trans
@@ -188,7 +188,7 @@ function Inner({
 						<InlineLinkText
 							color="text"
 							label={m['common.follow.followingCount']({ formatted: formatCount(followsCount) })}
-							to={makeProfileLink(profile, 'follows')}
+							to={{ name: 'ProfileFollows', params: { actor: profile.did } }}
 						>
 							<Text color="textContrastMedium" size="md">
 								<Trans

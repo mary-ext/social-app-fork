@@ -10,11 +10,11 @@ import {
 	optional,
 	Router,
 	route,
-	type RouteName,
 	string,
 } from '@oomfware/stacker';
 
 import { actorIdentifier, recordKey, resourceUri, tid } from '#/lib/routes/codecs';
+import type { RouteTarget } from '#/lib/routes/target';
 
 import {
 	MessagesRouteLoadingScreen,
@@ -546,16 +546,33 @@ export const router = new Router({
 	routes,
 });
 
-/** untyped {@link Router.build} for call sites that carry a dynamic route name. */
-export const buildPath = (name: string, params?: Record<string, unknown>): string => {
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- deliberate escape hatch; the router resolves the name at runtime
-	return router.build(name as RouteName<typeof routes>, params);
+// a target's `name` and `params` are correlated by construction, but TypeScript checks the two independently
+// and so rejects the call: for a union-typed target it must assume any member's params could accompany any
+// other member's name. the correlation is re-established by routing every call through this one untyped view
+// of the router, which keeps the public helpers below fully typed.
+const untypedRouter: {
+	build: (name: string, params?: Record<string, unknown>) => string;
+	popTo: (name: string, params?: Record<string, unknown>) => void;
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above
+} = router as never;
+
+/**
+ * builds the in-app path for a route target.
+ *
+ * @param target the destination route and its parameters
+ * @returns the path, including a query string when the target carries query parameters
+ */
+export const buildTarget = (target: RouteTarget): string => {
+	return untypedRouter.build(target.name, target.params);
 };
 
-/** untyped {@link Router.popTo} for the nav rails, whose route name is carried as a prop. */
-export const popToRoute = (name: string, params?: Record<string, unknown>): void => {
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- deliberate escape hatch; the router resolves the name at runtime
-	router.popTo(name as RouteName<typeof routes>, params);
+/**
+ * returns to the nearest existing history entry for a target, or pushes a new one if there is none.
+ *
+ * @param target the destination route and its parameters
+ */
+export const popToTarget = (target: RouteTarget): void => {
+	untypedRouter.popTo(target.name, target.params);
 };
 
 // oxlint-disable-next-line typescript/unbound-method

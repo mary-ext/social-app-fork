@@ -13,8 +13,11 @@ import {
 import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/merge-refs';
+import type { RouteTarget } from '#/lib/routes/target';
 
 import { isModifiedClick, useNavigateToPath } from '#/components/web/Link';
+
+import { buildTarget } from '#/routes';
 
 // elements that handle their own press, plus regions that opt out via {@link noRowLink}; a click landing
 // on one must not also navigate the row
@@ -33,8 +36,8 @@ type BlockLinkChildProps = HTMLAttributes<HTMLElement> & {
 type BlockLinkProps = {
 	/** The single host element to make clickable; its own box becomes the row. */
 	children: ReactNode;
-	/** An in-app route path, e.g. `/profile/alice/post/abc`. Must start with a single `/`. */
-	to: string;
+	/** The in-app destination, e.g. `{ name: 'PostThread', params: { actor, rkey } }`. */
+	to: RouteTarget;
 	/**
 	 * makes the row a focusable link with the specified accessible name, activated by Enter. omit if inner
 	 * links already provide keyboard/AT access to avoid redundant tab stops.
@@ -85,21 +88,17 @@ export function BlockLink({
 	// origin rather than the release target
 	const pressOriginRef = useRef<Element | null>(null);
 
-	if (import.meta.env.DEV && (!to.startsWith('/') || to.startsWith('//'))) {
-		throw new Error(
-			`BlockLink \`to\` must be an app route path starting with a single '/'; got ${JSON.stringify(to)}.`,
-		);
-	}
-
 	const go = (e?: MouseEvent<HTMLElement>) => {
 		onBeforePress?.();
+		// the row renders no anchor, so the path is only ever needed once a press actually lands
+		const path = buildTarget(to);
 		// a modified/middle click opens the route in a new same-origin tab (no native `<a>` to fall through to);
 		// a plain click navigates in place
 		if (e && isModifiedClick(e)) {
-			window.open(to, '_blank');
+			window.open(path, '_blank');
 			return;
 		}
-		navigateToPath(to, 'push');
+		navigateToPath(path, 'push');
 	};
 
 	// record where the pointer went down so onClick can consult the press origin. capture phase so a child

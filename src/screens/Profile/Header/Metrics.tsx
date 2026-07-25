@@ -1,5 +1,3 @@
-import { makeProfileLink } from '#/lib/routes/links';
-
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
@@ -29,7 +27,7 @@ export function ProfileHeaderMetrics() {
 					count: followersCount,
 					formatted: formatCount(followersCount),
 				})}
-				to={makeProfileLink(profile, 'followers')}
+				to={{ name: 'ProfileFollowers', params: { actor: profile.did } }}
 			>
 				<Text color="textContrastMedium" size="md">
 					<Trans
@@ -48,7 +46,7 @@ export function ProfileHeaderMetrics() {
 			<InlineLinkText
 				color="text"
 				label={m['screens.profile.follow.following.countLabel']({ count: followsCount })}
-				to={makeProfileLink(profile, 'follows')}
+				to={{ name: 'ProfileFollows', params: { actor: profile.did } }}
 			>
 				<Text color="textContrastMedium" size="md">
 					<Trans

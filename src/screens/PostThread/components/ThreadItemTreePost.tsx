@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
-import { makeProfileLink } from '#/lib/routes/links';
+import { postUriToTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -152,8 +152,7 @@ function ThreadItemTreePostInner({
 		facets: record.facets,
 	};
 	const threadRootUri = record.reply?.root?.uri || post.uri;
-	const urip = parseCanonicalResourceUri(post.uri);
-	const postHref = makeProfileLink(post.author, 'post', urip.rkey);
+	const threadTarget = postUriToTarget(post.uri);
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,
 	});
@@ -191,7 +190,7 @@ function ThreadItemTreePostInner({
 		<ThreadItemTreePostOuterWrapper item={item}>
 			<div className={css.hoverable}>
 				<PostHider
-					to={postHref}
+					to={threadTarget}
 					disabled={overrides?.moderation === true}
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 					iconSize={42}
@@ -206,7 +205,7 @@ function ThreadItemTreePostInner({
 									author={post.author}
 									moderation={moderation}
 									timestamp={post.indexedAt}
-									postHref={postHref}
+									postTarget={threadTarget}
 									avatarSize={TREE_AVI_WIDTH}
 									showAvatar
 								/>

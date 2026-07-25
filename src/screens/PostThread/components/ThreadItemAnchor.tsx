@@ -15,7 +15,8 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
 import { triangularRandom } from '#/lib/numbers';
-import { makeProfileLink } from '#/lib/routes/links';
+import type { RouteTarget } from '#/lib/routes/target';
+import { profileTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -153,13 +154,14 @@ function ThreadItemAnchorInner({
 	};
 
 	const threadRootUri = record.reply?.root?.uri || post.uri;
-	const authorHref = makeProfileLink(post.author);
+	const authorTarget = profileTarget(post.author.did);
 	const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did;
 
-	const urip = parseCanonicalResourceUri(post.uri);
-	const likesHref = makeProfileLink(post.author, 'post', urip.rkey, 'liked-by');
-	const repostsHref = makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by');
-	const quotesHref = makeProfileLink(post.author, 'post', urip.rkey, 'quotes');
+	// the three engagement screens key on the same post, differing only in which interaction they list
+	const engagement = { actor: post.author.did, rkey: parseCanonicalResourceUri(post.uri).rkey };
+	const likesTarget: RouteTarget = { name: 'PostLikedBy', params: engagement };
+	const quotesTarget: RouteTarget = { name: 'PostQuotes', params: engagement };
+	const repostsTarget: RouteTarget = { name: 'PostRepostedBy', params: engagement };
 
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,
@@ -267,7 +269,7 @@ function ThreadItemAnchorInner({
 										numberOfLines={1}
 										onPress={onOpenAuthor}
 										size="md"
-										to={authorHref}
+										to={authorTarget}
 										weight="semiBold"
 									>
 										{post.author.handle}
@@ -337,7 +339,7 @@ function ThreadItemAnchorInner({
 										data-testid="repostCount-expanded"
 										label={m['screens.postThread.engagement.repost.title']()}
 										size="md"
-										to={repostsHref}
+										to={repostsTarget}
 									>
 										<Trans
 											message={m['screens.postThread.engagement.repost.count']}
@@ -361,7 +363,7 @@ function ThreadItemAnchorInner({
 										data-testid="quoteCount-expanded"
 										label={m['screens.postThread.engagement.quote.title']()}
 										size="md"
-										to={quotesHref}
+										to={quotesTarget}
 									>
 										<Trans
 											message={m['screens.postThread.engagement.quote.count']}
@@ -385,7 +387,7 @@ function ThreadItemAnchorInner({
 										data-testid="likeCount-expanded"
 										label={m['screens.postThread.engagement.like.title']()}
 										size="md"
-										to={likesHref}
+										to={likesTarget}
 									>
 										<Trans
 											message={m['screens.postThread.engagement.like.count']}

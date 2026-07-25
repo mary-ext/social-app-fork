@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { makeCustomFeedLink, makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 import { shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
@@ -48,6 +48,7 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import { buildTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './ProfileFeedHeader.css';
@@ -321,6 +322,7 @@ function DialogInner({
 
 	const isLiked = !!likeUri;
 	const feedRkey = parseCanonicalResourceUri(info.uri).rkey;
+	const creatorDid = info.creatorDid;
 
 	const onToggleLiked = async () => {
 		try {
@@ -340,7 +342,7 @@ function DialogInner({
 	};
 
 	const onPressShare = () => {
-		const url = toShareUrl(info.route.href);
+		const url = toShareUrl(buildTarget(info.target));
 		void shareUrl(url);
 	};
 
@@ -358,18 +360,21 @@ function DialogInner({
 							message={m['screens.profile.feed.byCreator']}
 							inputs={{ handle: info.creatorHandle }}
 							markup={{
-								t0: ({ children }) => (
-									<InlineLinkText
-										label={m['screens.profile.avatar.a11y.viewProfile']({ handle: info.creatorHandle })}
-										to={makeProfileLink({ did: info.creatorDid })}
-										size="sm"
-										color="textContrastMedium"
-										numberOfLines={1}
-										onPress={closeDialog}
-									>
-										{children}
-									</InlineLinkText>
-								),
+								t0: ({ children }) =>
+									creatorDid ? (
+										<InlineLinkText
+											label={m['screens.profile.avatar.a11y.viewProfile']({ handle: info.creatorHandle })}
+											to={profileTarget(creatorDid)}
+											size="sm"
+											color="textContrastMedium"
+											numberOfLines={1}
+											onPress={closeDialog}
+										>
+											{children}
+										</InlineLinkText>
+									) : (
+										children
+									),
 							}}
 						/>
 					</Text>
@@ -389,11 +394,11 @@ function DialogInner({
 
 			<RichText size="md" value={info.description} />
 
-			{likeCount > 0 && (
+			{likeCount > 0 && creatorDid && (
 				<div className={css.dialogLikedByRow}>
 					<InlineLinkText
 						label={m['screens.profile.feed.action.viewLikes']()}
-						to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
+						to={{ name: 'ProfileFeedLikedBy', params: { actor: creatorDid, rkey: feedRkey } }}
 						size="md_sub"
 						color="textContrastMedium"
 						onPress={closeDialog}

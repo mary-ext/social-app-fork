@@ -10,7 +10,7 @@ import { clsx } from 'clsx';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 import { errorMessage } from '#/lib/strings/errors';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
@@ -124,7 +124,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 			<Settings.Section titleText={m['screens.moderation.title']()}>
 				<Settings.LinkRow
 					label={m['screens.moderation.interaction.description']()}
-					to="/moderation/interaction-settings"
+					to={{ name: 'ModerationInteractionSettings' }}
 				>
 					<Settings.Icon icon={EditBig} />
 					<Settings.Label titleText={m['screens.moderation.interaction.title']()} />
@@ -132,7 +132,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 				<Settings.LinkRow
 					label={m['screens.moderation.mutedWord.description']()}
-					to="/moderation/muted-words"
+					to={{ name: 'ModerationMutedWords' }}
 				>
 					<Settings.Icon icon={Filter} />
 					<Settings.Label titleText={m['screens.moderation.mutedWord.title']()} />
@@ -140,20 +140,23 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 				<Settings.LinkRow
 					label={m['screens.moderation.moderationList.description']()}
-					to="/moderation/modlists"
+					to={{ name: 'ModerationModlists' }}
 				>
 					<Settings.Icon icon={Group} />
 					<Settings.Label titleText={m['common.moderation.listsLabel']()} />
 				</Settings.LinkRow>
 
-				<Settings.LinkRow label={m['screens.moderation.mute.description']()} to="/moderation/muted-accounts">
+				<Settings.LinkRow
+					label={m['screens.moderation.mute.description']()}
+					to={{ name: 'ModerationMutedAccounts' }}
+				>
 					<Settings.Icon icon={Person} />
 					<Settings.Label titleText={m['screens.moderation.mute.title']()} />
 				</Settings.LinkRow>
 
 				<Settings.LinkRow
 					label={m['screens.moderation.block.description']()}
-					to="/moderation/blocked-accounts"
+					to={{ name: 'ModerationBlockedAccounts' }}
 				>
 					<Settings.Icon icon={CircleBanSign} />
 					<Settings.Label titleText={m['screens.moderation.block.title']()} />
@@ -161,7 +164,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 
 				<Settings.LinkRow
 					label={m['screens.moderation.verification.manage']()}
-					to="/moderation/verification-settings"
+					to={{ name: 'ModerationVerificationSettings' }}
 				>
 					<Settings.Icon icon={CircleCheck} />
 					<Settings.Label titleText={m['screens.moderation.verification.title']()} />
@@ -259,7 +262,7 @@ function LabelerRow({
 		<Settings.LinkRowRaw
 			className={clsx(cardStyles.rowPlain, className)}
 			label={m['screens.moderation.labeler.viewA11y']({ handle: creator.handle })}
-			to={makeProfileLink({ did: creator.did })}
+			to={profileTarget(creator.did)}
 		>
 			<UserAvatar avatar={creator.avatar} className={styles.labelerAvatar} size={40} type="labeler" />
 			<div className={styles.identity}>

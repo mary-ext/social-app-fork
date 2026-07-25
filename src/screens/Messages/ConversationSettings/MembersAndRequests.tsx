@@ -3,7 +3,6 @@ import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
 
 import * as css from './MembersAndRequests.css';
 
@@ -18,8 +17,6 @@ export function MembersAndRequests({
 	hasMoreRequests: boolean;
 	isOwner: boolean;
 }) {
-	const router = useRouter();
-
 	const memberCount = convo.details.memberCount;
 	const memberLimit = convo.details.memberLimit;
 
@@ -41,7 +38,7 @@ export function MembersAndRequests({
 					align="right"
 					label={m['screens.messages.requests.viewIncoming.a11yGroup']()}
 					size="sm"
-					to={router.build('MessagesJoinRequests', { conversation: convo.view.id })}
+					to={{ name: 'MessagesJoinRequests', params: { conversation: convo.view.id } }}
 					weight="semiBold"
 				>
 					{hasMoreRequests

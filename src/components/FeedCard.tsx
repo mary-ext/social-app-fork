@@ -8,6 +8,9 @@ import { weightedIndex } from '@mary/array-fns';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import type { RouteTarget } from '#/lib/routes/target';
+import { feedTarget } from '#/lib/routes/targets';
+
 import { precacheFeedFromGeneratorView, useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
@@ -107,7 +110,7 @@ export function Link({
 }) {
 	const queryClient = useQueryClient();
 
-	const href = createProfileFeedHref({ feed: view });
+	const target = createProfileFeedTarget({ feed: view });
 
 	useEffect(() => {
 		precacheFeedFromGeneratorView(queryClient, view);
@@ -118,7 +121,7 @@ export function Link({
 			className={clsx(css.link, className)}
 			label={view.displayName}
 			onBeforePress={onPress}
-			to={href}
+			to={target}
 		>
 			<div>{children}</div>
 		</BlockLink>
@@ -238,9 +241,9 @@ function SaveButtonInner({ pin, view }: { pin?: boolean; view: AppBskyFeedDefs.G
 	);
 }
 
-export function createProfileFeedHref({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
+function createProfileFeedTarget({ feed }: { feed: AppBskyFeedDefs.GeneratorView }): RouteTarget {
 	const urip = parseCanonicalResourceUri(feed.uri);
-	return `/profile/${feed.creator.did}/feed/${urip.rkey}`;
+	return feedTarget(feed.creator.did, urip.rkey);
 }
 
 // weighted description-line counts: most feed descriptions are short (1 line) or empty, with a long

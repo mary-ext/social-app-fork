@@ -18,8 +18,8 @@ import { colors } from '#/styles/colors';
 
 import * as css from './Feeds.css';
 
-// sentinel group value for the "More feeds" entry — a route path, never a real feed descriptor.
-const MORE_FEEDS = '/feeds';
+// sentinel group value for the "More feeds" entry — never a real feed descriptor.
+const MORE_FEEDS = 'more-feeds';
 
 export function DesktopFeeds() {
 	const { data: pinnedFeedInfos, error, isLoading } = usePinnedFeedsInfos();
@@ -82,7 +82,7 @@ export function DesktopFeeds() {
 				value={MORE_FEEDS}
 				nativeButton={false}
 				render={
-					<Link to={MORE_FEEDS} label={m['view.feeds.feed.more']()} className={css.item}>
+					<Link to={{ name: 'Feeds' }} label={m['view.feeds.feed.more']()} className={css.item}>
 						<span className={css.morePlusBox}>
 							<Plus size="sm" fill="currentColor" />
 						</span>

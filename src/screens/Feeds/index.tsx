@@ -340,7 +340,7 @@ export function FeedsScreen() {
 						label={m['common.feeds.action.edit']()}
 						shape="round"
 						size="small"
-						to="/settings/saved-feeds"
+						to={{ name: 'SavedFeeds' }}
 						variant="ghost"
 					>
 						<ButtonIcon icon={Gear} size="lg" />

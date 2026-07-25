@@ -3,7 +3,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
-import { makeProfileLink } from '#/lib/routes/links';
+import { profileTarget } from '#/lib/routes/targets';
 
 import { STALE } from '#/state/queries';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -95,7 +95,7 @@ function ParentAuthorName({ did }: { did: Did }) {
 					label={name}
 					weight="medium"
 					color="textContrastMedium"
-					to={makeProfileLink(profile)}
+					to={profileTarget(profile.did)}
 				>
 					{name}
 				</InlineLinkText>

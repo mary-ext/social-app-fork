@@ -88,9 +88,12 @@ function Inner() {
 }
 
 function TopicLink({ index, topic }: { index: number; topic: AppBskyUnspeccedDefs.TrendView }) {
-	const { label, url } = useTopic(topic);
+	const { label, target } = useTopic(topic);
+	if (!target) {
+		return null;
+	}
 	return (
-		<Link to={url} label={label} className={css.topicLink}>
+		<Link to={target} label={label} className={css.topicLink}>
 			<Text size="sm" className={css.index}>
 				{index + 1}.
 			</Text>
