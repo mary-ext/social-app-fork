@@ -7,13 +7,12 @@ import { type ComposerImage, createComposerImage } from '#/state/gallery';
 
 import { logger } from '#/logger';
 
-import { CharProgress } from '#/view/com/composer/char-progress/CharProgress';
-
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Toast from '#/components/Toast';
 
+import { CharProgress } from '#/features/composer/char-progress/CharProgress';
 import type { Gif } from '#/features/gifPicker/types';
 import { m } from '#/paraglide/messages';
 

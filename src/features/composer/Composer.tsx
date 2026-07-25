@@ -46,18 +46,6 @@ import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { ComposerReplyTo } from '#/view/com/composer/ComposerReplyTo';
-import { ExternalEmbedGif, ExternalEmbedLink } from '#/view/com/composer/ExternalEmbed';
-import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn';
-import { GifAltText } from '#/view/com/composer/GifAltText';
-import { Gallery } from '#/view/com/composer/photos/Gallery';
-import { SuggestedLanguage } from '#/view/com/composer/select-language/SuggestedLanguage';
-// TODO: Prevent naming components that coincide with RN primitives
-// due to linting false positives
-import { TextInput } from '#/view/com/composer/text-input/TextInput';
-import { SubtitleDialogBtn } from '#/view/com/composer/videos/SubtitleDialog';
-import { VideoPreview } from '#/view/com/composer/videos/VideoPreview';
-
 import * as Dialog from '#/components/Dialog';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { GalleryBleed } from '#/components/images/Gallery';
@@ -67,6 +55,17 @@ import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import { ComposerReplyTo } from '#/features/composer/ComposerReplyTo';
+import { ExternalEmbedGif, ExternalEmbedLink } from '#/features/composer/ExternalEmbed';
+import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
+import { GifAltText } from '#/features/composer/GifAltText';
+import { Gallery } from '#/features/composer/photos/Gallery';
+import { SuggestedLanguage } from '#/features/composer/select-language/SuggestedLanguage';
+// TODO: Prevent naming components that coincide with RN primitives
+// due to linting false positives
+import { TextInput } from '#/features/composer/text-input/TextInput';
+import { SubtitleDialogBtn } from '#/features/composer/videos/SubtitleDialog';
+import { VideoPreview } from '#/features/composer/videos/VideoPreview';
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';

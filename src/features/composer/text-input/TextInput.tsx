@@ -2,14 +2,8 @@ import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'r
 
 import { createPortal } from 'react-dom';
 
+import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link-detection';
 import { isUriImage } from '#/lib/media/util';
-
-import {
-	detectLinks,
-	type LinkFacetMatch,
-	suggestLinkCardUri,
-} from '#/view/com/composer/text-input/text-input-util';
-import { emojiInserted } from '#/view/com/composer/text-input/textInputWebEmitter';
 
 import {
 	Composer as TapperComposer,
@@ -17,6 +11,7 @@ import {
 	useComposerInternalApiRef,
 } from '#/components/Composer';
 import type { Emoji } from '#/components/EmojiPicker';
+import { emojiInserted } from '#/components/EmojiPicker/emoji-inserted';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';

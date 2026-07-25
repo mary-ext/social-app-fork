@@ -8,7 +8,7 @@ import { isNetworkError } from '#/lib/strings/errors';
 
 import { getClients } from '#/state/session';
 
-import type { ComposerState } from '#/view/com/composer/state/composer';
+import type { ComposerState } from '#/features/composer/state/composer';
 
 import { composerStateToDraft, draftViewToSummary } from './api';
 import { logger } from './logger';

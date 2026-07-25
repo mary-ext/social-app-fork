@@ -1,4 +1,4 @@
-import { LabelsBtn } from '#/view/com/composer/labels/LabelsBtn';
+import { LabelsBtn } from '#/features/composer/labels/LabelsBtn';
 
 import * as styles from './ComposerPills.css';
 import type { ComposerAction, PostDraft, ThreadDraft } from './state/composer';

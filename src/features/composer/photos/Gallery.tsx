@@ -7,6 +7,7 @@ import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import type { ComposerImage } from '#/state/gallery';
 
 import * as Dialog from '#/components/Dialog';
+import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Pencil_Stroke2_Corner0_Rounded as PencilIcon } from '#/components/icons/Pencil';
@@ -27,7 +28,6 @@ import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import type { PostAction } from '../state/composer';
-import { EditImageDialog } from './EditImageDialog';
 import * as styles from './Gallery.css';
 import { ImageAltTextDialog } from './ImageAltTextDialog';
 

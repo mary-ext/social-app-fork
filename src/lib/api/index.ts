@@ -32,8 +32,7 @@ import {
 
 import { logger } from '#/logger';
 
-import type { EmbedDraft, PostDraft, ThreadDraft } from '#/view/com/composer/state/composer';
-
+import type { EmbedDraft, PostDraft, ThreadDraft } from '#/features/composer/state/composer';
 import { m } from '#/paraglide/messages';
 
 import { createGIFDescription } from '../gif-alt-text';

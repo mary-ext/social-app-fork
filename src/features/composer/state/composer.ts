@@ -1,6 +1,7 @@
 import type { AppBskyDraftDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
+import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link-detection';
 import type { VideoAsset } from '#/lib/media/video/types';
 import type { SelfLabel } from '#/lib/moderation';
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
@@ -13,12 +14,6 @@ import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting, type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 
 import { logger } from '#/logger';
-
-import {
-	detectLinks,
-	type LinkFacetMatch,
-	suggestLinkCardUri,
-} from '#/view/com/composer/text-input/text-input-util';
 
 import type { Gif } from '#/features/gifPicker/types';
 

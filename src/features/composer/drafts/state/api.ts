@@ -16,9 +16,8 @@ import type { ComposerImage } from '#/state/gallery';
 import { threadgateAllowUISettingToAllowRecordValue } from '#/state/queries/threadgate/util';
 import { getClients } from '#/state/session';
 
-import type { ComposerState, EmbedDraft, PostDraft } from '#/view/com/composer/state/composer';
-import type { VideoState } from '#/view/com/composer/state/video';
-
+import type { ComposerState, EmbedDraft, PostDraft } from '#/features/composer/state/composer';
+import type { VideoState } from '#/features/composer/state/video';
 import type { Gif } from '#/features/gifPicker/types';
 
 import { logger } from './logger';

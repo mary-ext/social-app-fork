@@ -7,11 +7,10 @@ import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 
 import { logger } from '#/logger';
 
-import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn';
-
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Text } from '#/components/Text';
 
+import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
 import { m } from '#/paraglide/messages';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 

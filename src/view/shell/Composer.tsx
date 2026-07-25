@@ -6,15 +6,15 @@ import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { Spinner } from '#/components/Spinner';
 
+import type { CancelRef } from '#/features/composer/Composer';
 import { m } from '#/paraglide/messages';
 
-import type { CancelRef } from '../com/composer/Composer';
 import * as styles from './Composer.css';
 
 // the composer pulls in a large subtree (gif/emoji pickers, reanimated, media metadata, drafts), so it
 // only loads when the dialog is first opened — the `payload && ...` guard already gates mounting.
 const ComposePost = lazy(() =>
-	import('../com/composer/Composer').then((mod) => ({ default: mod.ComposePost })),
+	import('#/features/composer/Composer').then((mod) => ({ default: mod.ComposePost })),
 );
 
 export function ComposerDialog() {

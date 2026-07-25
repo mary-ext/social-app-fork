@@ -4,8 +4,7 @@ import { Popover } from '@base-ui/react/popover';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
-import { emojiInserted } from '#/view/com/composer/text-input/textInputWebEmitter';
-
+import { emojiInserted } from '#/components/EmojiPicker/emoji-inserted';
 import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
 import type { Emoji } from '#/components/EmojiPicker/types';
 

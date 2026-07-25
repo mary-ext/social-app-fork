@@ -7,8 +7,6 @@ import { cleanError } from '#/lib/strings/errors';
 
 import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve-link';
 
-import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn';
-
 import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
@@ -18,6 +16,7 @@ import { Spinner } from '#/components/Spinner';
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 
+import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
 import type { Gif } from '#/features/gifPicker/types';
 import { m } from '#/paraglide/messages';
 

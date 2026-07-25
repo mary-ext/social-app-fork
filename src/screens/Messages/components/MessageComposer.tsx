@@ -5,15 +5,10 @@ import type { $type } from '@atcute/lexicons';
 import { getGraphemeLength } from '@atcute/util-text';
 
 import { MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants';
+import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link-detection';
 import { isBskyChatInviteUrl, isBskyPostUrl } from '#/lib/strings/url-helpers';
 
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
-
-import {
-	detectLinks,
-	type LinkFacetMatch,
-	suggestLinkCardUri,
-} from '#/view/com/composer/text-input/text-input-util';
 
 import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 import { useMessageReplies } from '#/components/dms/MessageReplies';

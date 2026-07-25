@@ -14,10 +14,9 @@ import {
 
 import { logger } from '#/logger';
 
-import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog';
-
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/EditableUserAvatar.css';
+import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
 import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/components/icons/Camera';
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
