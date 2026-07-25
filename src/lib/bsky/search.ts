@@ -357,6 +357,11 @@ const LIFT_HASHTAG_RE = /^(-)?#([^:]+)$/;
 // only full ISO dates lift; partials stay in the text for the backend to parse.
 const LIFT_DATE_RE = /^\d{4}-\d{2}-\d{2}/;
 
+// a leading `@` is not part of a handle, and `isActorIdentifier` rejects it — without this, `from:@alice.test`
+// would fall through to the free text and search for the literal string. the suggestion list offers `@user` as
+// the placeholder for these operators, so typing the marker is the expected path, not a mistake.
+const stripHandleMarker = (value: string): string => (value.startsWith('@') ? value.slice(1) : value);
+
 /**
  * lifts recognized operators out of a query into structured searchPostsV2 filters, leaving free text (quotes,
  * OR groups, `-word` negations, unknown operators) in `text`. `from:me`/`mentions:me` resolve against
@@ -419,7 +424,7 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): L
 				if (!negated && arg === 'following') {
 					filters.following = true;
 				} else {
-					const actor = arg === 'me' ? viewerDid : arg;
+					const actor = arg === 'me' ? viewerDid : stripHandleMarker(arg);
 					if (actor && isActorIdentifier(actor)) {
 						(negated ? excludeAuthors : authors).push(actor);
 					} else {
@@ -429,7 +434,7 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): L
 				break;
 			}
 			case 'mentions': {
-				const actor = arg === 'me' ? viewerDid : arg;
+				const actor = arg === 'me' ? viewerDid : stripHandleMarker(arg);
 				if (actor && isActorIdentifier(actor)) {
 					(negated ? excludeMentions : mentions).push(actor);
 				} else {
