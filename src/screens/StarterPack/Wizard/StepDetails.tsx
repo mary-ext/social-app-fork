@@ -1,10 +1,10 @@
 import { useId } from 'react';
 
+import { STALE } from '#/state/queries';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
-import { STALE } from '#/state/queries';
 
 import { StarterPack } from '#/components/icons/StarterPack';
 import { Text } from '#/components/Text';
