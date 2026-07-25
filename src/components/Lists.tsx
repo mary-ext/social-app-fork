@@ -2,8 +2,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { cleanError } from '#/lib/strings/errors';
 
-import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-
+import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
 import { Error } from '#/components/Error';
 import * as css from '#/components/Lists.css';
 import { Spinner } from '#/components/Spinner';

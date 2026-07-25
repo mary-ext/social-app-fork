@@ -4,12 +4,11 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
-import { TimeElapsed } from '#/view/com/util/TimeElapsed';
-
 import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
+import { TimeElapsed } from '#/components/TimeElapsed';
 import { Link as WebLink } from '#/components/web/Link';
 
 import { colors } from '#/styles/colors';

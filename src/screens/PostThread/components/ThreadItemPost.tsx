@@ -14,8 +14,6 @@ import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
-import { PostMeta } from '#/view/com/util/PostMeta';
-
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
@@ -29,6 +27,7 @@ import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
+import { PostMeta } from '#/components/PostMeta';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { Text } from '#/components/Text';
 import * as Skele from '#/components/web/Skeleton';

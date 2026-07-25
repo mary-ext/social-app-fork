@@ -4,8 +4,8 @@ import { logger } from '#/logger';
 
 import { m } from '#/paraglide/messages';
 
-import { ErrorScreen } from './error/ErrorScreen';
 import * as css from './ErrorBoundary.css';
+import { ErrorScreen } from './ErrorScreen';
 
 interface Props {
 	children?: ReactNode;

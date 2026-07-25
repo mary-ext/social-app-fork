@@ -1,8 +1,8 @@
 import { useTitle } from '#/lib/hooks/useTitle';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
-import { EmptyState } from '#/view/com/util/EmptyState';
 
+import { EmptyState } from '#/components/EmptyState';
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import * as Layout from '#/components/web/Layout';
 

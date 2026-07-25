@@ -29,13 +29,13 @@ import { useSession } from '#/state/session';
 
 import { ProfileFeedgens } from '#/view/com/feeds/ProfileFeedgens';
 import { ProfileLists } from '#/view/com/lists/ProfileLists';
-import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
-import { FAB } from '#/view/com/util/fab/FAB';
 
 import { ProfileHeader, ProfileHeaderSkeleton } from '#/screens/Profile/Header';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 import { ProfileLabelsSection } from '#/screens/Profile/Sections/Labels';
 
+import { ErrorScreen } from '#/components/ErrorScreen';
+import { FAB } from '#/components/FAB';
 import { useRichText } from '#/components/hooks/useRichText';
 import { Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon } from '#/components/icons/CircleAndSquare';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';

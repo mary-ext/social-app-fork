@@ -23,8 +23,6 @@ import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post-source';
 
-import { PostMeta } from '#/view/com/util/PostMeta';
-
 import { BlockLink } from '#/components/BlockLink';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -34,6 +32,7 @@ import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
+import { PostMeta } from '#/components/PostMeta';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 
 import { useActorStatus } from '#/features/liveNow/use-actor-status';

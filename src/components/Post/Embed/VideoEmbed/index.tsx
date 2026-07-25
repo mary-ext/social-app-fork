@@ -5,10 +5,9 @@ import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
-
 import { noRowLink } from '#/components/BlockLink';
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
+import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { useFullscreen } from '#/components/hooks/useFullscreen';
 import {
 	HLSUnsupportedError,

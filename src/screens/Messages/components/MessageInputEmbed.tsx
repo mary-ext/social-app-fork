@@ -19,13 +19,12 @@ import {
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';
 
-import { PostMeta } from '#/view/com/util/PostMeta';
-
 import * as ChatInvite from '#/components/dms/ChatInvite';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as MediaPreview from '#/components/MediaPreview';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
+import { PostMeta } from '#/components/PostMeta';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';

@@ -8,8 +8,7 @@ import { useMyBlockedAccountsQuery } from '#/state/queries/my-blocked-accounts';
 
 import { logger } from '#/logger';
 
-import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
-
+import { ErrorScreen } from '#/components/ErrorScreen';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { Text } from '#/components/Text';

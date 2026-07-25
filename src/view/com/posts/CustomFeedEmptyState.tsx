@@ -1,5 +1,4 @@
-import { EmptyState } from '#/view/com/util/EmptyState';
-
+import { EmptyState } from '#/components/EmptyState';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 

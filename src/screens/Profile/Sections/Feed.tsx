@@ -6,11 +6,11 @@ import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-f
 import { truncateAndInvalidate } from '#/state/queries/util';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
-import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
+import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
+import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 
 import { m } from '#/paraglide/messages';
 

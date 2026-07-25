@@ -21,8 +21,6 @@ import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-s
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 
-import { PostMeta } from '#/view/com/util/PostMeta';
-
 import { BlockLink } from '#/components/BlockLink';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -31,6 +29,7 @@ import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
+import { PostMeta } from '#/components/PostMeta';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 
 import * as css from './Post.css';

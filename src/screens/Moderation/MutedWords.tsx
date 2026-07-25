@@ -12,12 +12,11 @@ import {
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 
-import { EmptyState } from '#/view/com/util/EmptyState';
-import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
-
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
+import { EmptyState } from '#/components/EmptyState';
+import { ErrorScreen } from '#/components/ErrorScreen';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag';
 import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';

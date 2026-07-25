@@ -20,13 +20,12 @@ import {
 import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { FAB } from '#/view/com/util/fab/FAB';
-
 import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
 import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { ErrorMessage } from '#/components/ErrorMessage';
+import { FAB } from '#/components/FAB';
 import * as FeedCard from '#/components/FeedCard';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';

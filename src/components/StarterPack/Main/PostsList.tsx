@@ -1,8 +1,8 @@
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
-import { EmptyState } from '#/view/com/util/EmptyState';
 
+import { EmptyState } from '#/components/EmptyState';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 
 import { m } from '#/paraglide/messages';

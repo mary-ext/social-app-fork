@@ -1,5 +1,4 @@
-import { EmptyState } from '#/view/com/util/EmptyState';
-
+import { EmptyState } from '#/components/EmptyState';
 import { PageCrossText_Stroke2_Corner0_Rounded as PageCrossTextIcon } from '#/components/icons/PageCrossText';
 import * as Layout from '#/components/web/Layout';
 

@@ -6,10 +6,10 @@ import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
 import { LoggedOut } from '#/view/com/auth/LoggedOut';
-import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
 import { SigninDialog } from '#/components/dialogs/Signin';
+import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import { Lightbox } from '#/components/Lightbox';
 import { GlobalReportDialog } from '#/components/moderation/ReportDialog';

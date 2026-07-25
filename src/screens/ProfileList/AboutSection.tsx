@@ -10,13 +10,12 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { EmptyState } from '#/view/com/util/EmptyState';
-import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
-
+import { EmptyState } from '#/components/EmptyState';
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import { List, type ListMethods } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 

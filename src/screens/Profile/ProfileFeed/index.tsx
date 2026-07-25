@@ -20,16 +20,16 @@ import { useSession } from '#/state/session';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
-import { EmptyState } from '#/view/com/util/EmptyState';
-import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
-import { FAB } from '#/view/com/util/fab/FAB';
-import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/components/ProfileFeedHeader';
 
+import { EmptyState } from '#/components/EmptyState';
+import { ErrorScreen } from '#/components/ErrorScreen';
+import { FAB } from '#/components/FAB';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import type { ListMethods } from '#/components/List/List';
+import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

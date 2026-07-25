@@ -4,9 +4,8 @@ import { uniqueBy } from '@mary/array-fns';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
-
 import * as Dialog from '#/components/Dialog';
+import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
 
 import {

@@ -10,11 +10,10 @@ import { languageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 import { type Language, LANGUAGES, LANGUAGES_MAP, langCode } from '#/locale/languages';
 
-import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
-import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
-
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/LanguageSelectDialog.css';
+import { ErrorBoundary } from '#/components/ErrorBoundary';
+import { ErrorScreen } from '#/components/ErrorScreen';
 import { SearchInput } from '#/components/forms/SearchInput';
 import * as Toggle from '#/components/forms/Toggle';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';

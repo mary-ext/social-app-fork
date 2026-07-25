@@ -11,8 +11,7 @@ import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
 import { logger } from '#/logger';
 
-import { EmptyState } from '#/view/com/util/EmptyState';
-
+import { EmptyState } from '#/components/EmptyState';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';

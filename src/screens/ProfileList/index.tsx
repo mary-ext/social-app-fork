@@ -17,11 +17,10 @@ import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
-import { FAB } from '#/view/com/util/fab/FAB';
-
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
+import { FAB } from '#/components/FAB';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import * as Hider from '#/components/moderation/Hider';
 import { Tabs } from '#/components/Tabs';

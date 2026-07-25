@@ -7,9 +7,8 @@ import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries
 
 import { logger } from '#/logger';
 
-import { EmptyState } from '#/view/com/util/EmptyState';
-import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-
+import { EmptyState } from '#/components/EmptyState';
+import { ErrorMessage } from '#/components/ErrorMessage';
 import { Bell_Stroke2_Corner0_Rounded as BellIcon } from '#/components/icons/Bell';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';

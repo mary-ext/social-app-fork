@@ -8,8 +8,8 @@ import { InactiveAccountError } from '#/state/session/agent';
 import { logger } from '#/logger';
 
 import * as css from '#/view/com/auth/OAuthCallback.css';
-import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
+import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';

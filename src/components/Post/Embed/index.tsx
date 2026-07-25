@@ -14,14 +14,13 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { PostMeta } from '#/view/com/util/PostMeta';
-
 import { BlockLink } from '#/components/BlockLink';
 import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { ImageEmbed } from '#/components/ImageEmbed';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
+import { PostMeta } from '#/components/PostMeta';
 import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 

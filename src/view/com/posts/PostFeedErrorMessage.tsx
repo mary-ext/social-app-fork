@@ -10,6 +10,8 @@ import { useRemoveFeedMutation } from '#/state/queries/preferences';
 
 import { logger } from '#/logger';
 
+import { EmptyState } from '#/components/EmptyState';
+import { ErrorMessage } from '#/components/ErrorMessage';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
@@ -19,8 +21,6 @@ import { Button, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 
-import { EmptyState } from '../util/EmptyState';
-import { ErrorMessage } from '../util/error/ErrorMessage';
 import * as css from './PostFeedErrorMessage.css';
 
 export enum KnownError {

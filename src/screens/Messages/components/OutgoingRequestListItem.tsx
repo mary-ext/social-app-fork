@@ -5,11 +5,10 @@ import { isNetworkError } from '#/lib/strings/errors';
 
 import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdraw-join-group-chat';
 
-import { TimeElapsed } from '#/view/com/util/TimeElapsed';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
+import { TimeElapsed } from '#/components/TimeElapsed';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';

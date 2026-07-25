@@ -7,13 +7,12 @@ import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 
 import { logger } from '#/logger';
 
-import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
-
+import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
+import { ErrorMessage } from '#/components/ErrorMessage';
 import { PlusSmall_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
+import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
 import {
 	Default as StarterPackCard,
 	LoadingPlaceholder as StarterPackLoadingPlaceholder,

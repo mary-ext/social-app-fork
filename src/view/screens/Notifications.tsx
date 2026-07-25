@@ -17,12 +17,12 @@ import { logger } from '#/logger';
 import { Trans } from '#/locale/Trans';
 
 import { NotificationFeed } from '#/view/com/notifications/NotificationFeed';
-import { FAB } from '#/view/com/util/fab/FAB';
-import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
+import { FAB } from '#/components/FAB';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
 import type { ListMethods } from '#/components/List/List';
+import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { Spinner } from '#/components/Spinner';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Admonition } from '#/components/web/Admonition';

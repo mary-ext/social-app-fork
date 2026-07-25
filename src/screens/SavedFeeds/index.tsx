@@ -17,11 +17,10 @@ import { logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
-import { EmptyState, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-
 import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
 import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 
+import { EmptyState, type EmptyStateIcon } from '#/components/EmptyState';
 import { FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon } from '#/components/icons/FloppyDisk';
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkleIcon } from '#/components/icons/ListSparkle';
 import { Pin_Filled_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';

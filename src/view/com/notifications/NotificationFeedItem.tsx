@@ -36,7 +36,6 @@ import { niceDate } from '#/locale/intl/datetime';
 import { Trans } from '#/locale/Trans';
 
 import { Post } from '#/view/com/post/Post';
-import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 
 import { BlockLink } from '#/components/BlockLink';
 import * as FeedCard from '#/components/FeedCard';
@@ -59,6 +58,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Notification as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
+import { TimeElapsed } from '#/components/TimeElapsed';
 import * as Toast from '#/components/Toast';
 import { Tooltip } from '#/components/Tooltip';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';

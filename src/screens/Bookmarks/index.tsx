@@ -9,8 +9,8 @@ import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
 
 import { Post } from '#/view/com/post/Post';
 import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
-import { EmptyState } from '#/view/com/util/EmptyState';
 
+import { EmptyState } from '#/components/EmptyState';
 import { BookmarkDeleteLarge, BookmarkFilled } from '#/components/icons/Bookmark';
 import { CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon } from '#/components/icons/CircleQuestion';
 import { List, type ListRenderItemInfo } from '#/components/List/List';

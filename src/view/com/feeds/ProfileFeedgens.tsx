@@ -9,14 +9,13 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { EmptyState } from '#/view/com/util/EmptyState';
-import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
-
+import { EmptyState } from '#/components/EmptyState';
+import { ErrorMessage } from '#/components/ErrorMessage';
 import * as FeedCard from '#/components/FeedCard';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
+import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
 
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';

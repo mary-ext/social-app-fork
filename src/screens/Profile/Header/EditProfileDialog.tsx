@@ -13,11 +13,10 @@ import { logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
-import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-
 import * as Dialog from '#/components/Dialog';
 import { EditableBanner } from '#/components/EditableBanner';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
+import { ErrorMessage } from '#/components/ErrorMessage';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';

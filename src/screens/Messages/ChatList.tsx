@@ -14,11 +14,10 @@ import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
 import { logger } from '#/logger';
 
-import { EmptyState } from '#/view/com/util/EmptyState';
-import { FAB } from '#/view/com/util/fab/FAB';
-
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
+import { EmptyState } from '#/components/EmptyState';
+import { FAB } from '#/components/FAB';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import { BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon } from '#/components/icons/Bubble';

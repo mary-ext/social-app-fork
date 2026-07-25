@@ -4,8 +4,6 @@ import { clsx } from 'clsx';
 
 import * as device from '#/lib/deviceName';
 
-import { TimeElapsed } from '#/view/com/util/TimeElapsed';
-
 import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlusIcon } from '#/components/icons/CirclePlus';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon } from '#/components/icons/DotGrid';
@@ -14,6 +12,7 @@ import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/ico
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
+import { TimeElapsed } from '#/components/TimeElapsed';
 
 import { m } from '#/paraglide/messages';
 
