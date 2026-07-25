@@ -2,11 +2,10 @@ import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useSession } from '#/state/session';
 
-import { DesktopFeeds } from '#/view/shell/desktop/Feeds';
-import { DesktopSearch } from '#/view/shell/desktop/Search';
-import { SidebarTrendingTopics } from '#/view/shell/desktop/SidebarTrendingTopics';
-
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
+import { DesktopFeeds } from '#/components/Shell/desktop/Feeds';
+import { DesktopSearch } from '#/components/Shell/desktop/Search';
+import { SidebarTrendingTopics } from '#/components/Shell/desktop/SidebarTrendingTopics';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import { SOURCE_CODE_URL } from '#/env/common';

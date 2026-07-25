@@ -4,6 +4,8 @@ import '#/styles/theme.css';
 
 import { useEffect } from 'react';
 
+import { RouterView } from '@oomfware/stacker';
+
 import { Provider as HotkeysProvider } from '#/lib/hotkeys';
 import { initializeLanguageDetection } from '#/lib/language-detection';
 import { QueryProvider } from '#/lib/react-query';
@@ -21,14 +23,13 @@ import { Provider as ShellStateProvider } from '#/state/shell';
 import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
 import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-replies';
 
-import { Shell } from '#/view/shell/index';
-
 import { Provider as ActiveVideoProvider } from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext';
 import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
 import * as Toast from '#/components/Toast';
 import { ToastOutlet } from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
+import { router } from '#/routes';
 import { Splash } from '#/Splash';
 
 import { Provider as HideBottomBarBorderProvider } from './lib/hooks/useHideBottomBarBorder';
@@ -59,7 +60,7 @@ function InnerApp() {
 													<ServiceConfigProvider>
 														<HideBottomBarBorderProvider>
 															<HotkeysProvider>
-																<Shell />
+																<RouterView router={router} />
 																<ToastOutlet />
 															</HotkeysProvider>
 														</HideBottomBarBorderProvider>

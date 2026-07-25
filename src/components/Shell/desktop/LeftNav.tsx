@@ -21,8 +21,6 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/session';
 
-import { NavSignInCard } from '#/view/shell/NavSignInCard';
-
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
 import {
@@ -64,6 +62,7 @@ import {
 } from '#/components/icons/UserCircle';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
+import { NavSignInCard } from '#/components/Shell/NavSignInCard';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';

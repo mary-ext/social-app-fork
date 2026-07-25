@@ -13,9 +13,9 @@ import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import { Lightbox } from '#/components/Lightbox';
 import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
-import { WebShell } from '#/components/Shell';
+import { Shell } from '#/components/Shell/Shell';
 
-import { ComposerDialog } from './Composer';
+import { ComposerDialog } from './ComposerDialog';
 
 /**
  * the shell layout wrapping every in-app route. global overlays live inside here (not as siblings of the
@@ -45,7 +45,7 @@ export function ShellLayout() {
 	}
 
 	return (
-		<WebShell routeName={match.name}>
+		<Shell routeName={match.name}>
 			<ErrorBoundary>
 				<Outlet />
 			</ErrorBoundary>
@@ -55,6 +55,6 @@ export function ShellLayout() {
 			<GroupChatJoinDialog />
 			<Lightbox />
 			<GlobalReportDialog />
-		</WebShell>
+		</Shell>
 	);
 }

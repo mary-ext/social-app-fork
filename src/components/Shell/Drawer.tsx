@@ -10,9 +10,6 @@ import { useIsDrawerOpen, useSetDrawerOpen } from '#/state/shell';
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
-import * as styles from '#/view/shell/Drawer.css';
-import { NavSignInCard } from '#/view/shell/NavSignInCard';
-
 import {
 	Bell_Filled_Corner0_Rounded as BellFilled,
 	Bell_Stroke2_Corner0_Rounded as Bell,
@@ -42,6 +39,8 @@ import {
 	UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle';
 import { ProfileBadges } from '#/components/ProfileBadges';
+import * as styles from '#/components/Shell/Drawer.css';
+import { NavSignInCard } from '#/components/Shell/NavSignInCard';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 

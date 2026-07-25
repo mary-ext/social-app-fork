@@ -16,13 +16,13 @@ import {
 
 import { actorIdentifier, recordKey, resourceUri } from '#/lib/routes/codecs';
 
-import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
-
 import {
 	MessagesRouteLoadingScreen,
 	MessagesSplitViewColumnLoadingScreen,
 } from '#/screens/Messages/components/splitView/MessagesRouteLoadingScreen';
 import { searchTabs } from '#/screens/Search/utils';
+
+import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
 
 declare module '@oomfware/stacker' {
 	interface RouteMeta {
@@ -59,12 +59,12 @@ const ExternalMediaPreferencesScreen = lazy(() =>
 );
 const FeedsScreen = lazy(() => import('#/view/screens/Feeds').then((mod) => ({ default: mod.FeedsScreen })));
 const GroupChatJoinScreen = lazy(() =>
-	import('#/view/shell/null-routes').then((mod) => ({ default: mod.GroupChatJoinScreen })),
+	import('#/screens/null-routes').then((mod) => ({ default: mod.GroupChatJoinScreen })),
 );
 const HashtagScreen = lazy(() => import('#/screens/Hashtag').then((mod) => ({ default: mod.default })));
 const HomeScreen = lazy(() => import('#/view/screens/Home').then((mod) => ({ default: mod.HomeScreen })));
 const IntentComposeScreen = lazy(() =>
-	import('#/view/shell/null-routes').then((mod) => ({ default: mod.IntentComposeScreen })),
+	import('#/screens/null-routes').then((mod) => ({ default: mod.IntentComposeScreen })),
 );
 const InterestsSettingsScreen = lazy(() =>
 	import('#/screens/Settings/InterestsSettings').then((mod) => ({ default: mod.InterestsSettingsScreen })),
@@ -179,9 +179,7 @@ const SearchScreen = lazy(() => import('#/screens/Search').then((mod) => ({ defa
 const SettingsScreen = lazy(() =>
 	import('#/screens/Settings/Settings').then((mod) => ({ default: mod.SettingsScreen })),
 );
-const StartScreen = lazy(() =>
-	import('#/view/shell/null-routes').then((mod) => ({ default: mod.StartScreen })),
-);
+const StartScreen = lazy(() => import('#/screens/null-routes').then((mod) => ({ default: mod.StartScreen })));
 const StarterPackScreen = lazy(() =>
 	import('#/screens/StarterPack/StarterPackScreen').then((mod) => ({ default: mod.StarterPackScreen })),
 );
@@ -203,7 +201,7 @@ const NotFoundScreen = lazy(() =>
 
 // lazy to break the static import cycle with the shell chrome, which imports back from `#/routes`.
 const ShellLayout = lazy(() =>
-	import('#/view/shell/shell-layout').then((mod) => ({ default: mod.ShellLayout })),
+	import('#/components/Shell/ShellLayout').then((mod) => ({ default: mod.ShellLayout })),
 );
 
 // #endregion

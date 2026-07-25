@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { LEFT_NAV_MINIMAL_WIDTH } from '#/view/shell/desktop/constants';
-
+import { LEFT_NAV_MINIMAL_WIDTH } from '#/components/Shell/desktop/constants';
 import { CENTER_COLUMN_WIDTH } from '#/components/web/Layout/const';
 
 import { colors } from '#/styles/colors';

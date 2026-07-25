@@ -10,16 +10,16 @@ import { useSession } from '#/state/session';
 import * as css from '#/components/Shell/Shell.css';
 
 const DesktopLeftNav = lazy(() =>
-	import('#/view/shell/desktop/LeftNav').then((m) => ({ default: m.DesktopLeftNav })),
+	import('#/components/Shell/desktop/LeftNav').then((m) => ({ default: m.DesktopLeftNav })),
 );
 const DesktopRightNav = lazy(() =>
-	import('#/view/shell/desktop/RightNav').then((m) => ({ default: m.DesktopRightNav })),
+	import('#/components/Shell/desktop/RightNav').then((m) => ({ default: m.DesktopRightNav })),
 );
 
-const BottomBar = lazy(() => import('#/view/shell/BottomBar').then((m) => ({ default: m.BottomBar })));
-const Drawer = lazy(() => import('#/view/shell/Drawer').then((m) => ({ default: m.Drawer })));
+const BottomBar = lazy(() => import('#/components/Shell/BottomBar').then((m) => ({ default: m.BottomBar })));
+const Drawer = lazy(() => import('#/components/Shell/Drawer').then((m) => ({ default: m.Drawer })));
 
-export type WebShellProps = {
+export type ShellProps = {
 	children: React.ReactNode;
 	routeName: string;
 };
@@ -30,7 +30,7 @@ export type WebShellProps = {
  * publishes the bottom bar's measured height as the {@link css.bottomBarHeightVar} CSS variable for
  * positioning screens and overlays.
  */
-export function WebShell({ children, routeName }: WebShellProps) {
+export function Shell({ children, routeName }: ShellProps) {
 	const { hasSession } = useSession();
 	const { gtMobile } = useBreakpoints();
 	const { leftNavMinimal, rightNavVisible } = useLayoutBreakpoints();

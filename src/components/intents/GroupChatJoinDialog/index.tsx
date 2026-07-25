@@ -13,7 +13,7 @@ const InviteBody = lazy(() => import('./InviteBody').then((mod) => ({ default: m
 
 /**
  * the single app-wide group-chat join dialog. opened imperatively by the `/chat/:code` null route (see
- * `#/view/shell/null-routes`), which decodes the invite code and swaps the URL for Home.
+ * `#/screens/null-routes`), which decodes the invite code and swaps the URL for Home.
  */
 export function GroupChatJoinDialog() {
 	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();

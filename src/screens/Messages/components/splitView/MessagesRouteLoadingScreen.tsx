@@ -1,8 +1,7 @@
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
-
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
 
 import { m } from '#/paraglide/messages';
 

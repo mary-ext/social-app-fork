@@ -1,6 +1,6 @@
 import { createVar, style } from '@vanilla-extract/css';
 
-import * as navBadge from '#/view/shell/nav-badge.css';
+import * as navBadge from '#/components/Shell/nav-badge.css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';

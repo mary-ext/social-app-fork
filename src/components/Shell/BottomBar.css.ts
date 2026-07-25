@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import * as navBadge from '#/view/shell/nav-badge.css';
+import * as navBadge from '#/components/Shell/nav-badge.css';
 
 import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
