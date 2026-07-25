@@ -97,6 +97,22 @@ export function isNetworkError(e: unknown) {
 	return false;
 }
 
+// rate limits, timeouts, and transient upstream failures — the request stands a chance next time. anything
+// else (a 400 on a malformed query, a 404 on a missing record) fails again identically.
+const RETRYABLE_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504, 522, 524]);
+
+/**
+ * checks whether an error is likely to clear on its own, so callers can decide whether to suggest retrying.
+ *
+ * network failures are not covered here — pair this with {@link isNetworkError} when both should count.
+ *
+ * @param e the thrown value to check
+ * @returns true if the request is worth retrying
+ */
+export function shouldRetryError(e: unknown) {
+	return e instanceof ClientResponseError && RETRYABLE_STATUSES.has(e.status);
+}
+
 export function isErrorMaybeAppPasswordPermissions(e: unknown) {
 	if (e instanceof ClientResponseError && e.error === 'TokenInvalid') {
 		return true;

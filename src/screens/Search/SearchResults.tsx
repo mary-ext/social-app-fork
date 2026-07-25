@@ -5,7 +5,7 @@ import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { definite } from '@mary/array-fns';
 
 import { urls } from '#/lib/constants';
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError, isNetworkError, shouldRetryError } from '#/lib/strings/errors';
 import { normalizeSearchQuery } from '#/lib/strings/helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -89,6 +89,14 @@ function Pending() {
 			<CenteredSpinner label={m['screens.search.results.loading']()} size="2xl" />
 		</Layout.Content>
 	);
+}
+
+// only promise a retry when one could plausibly help; a rejected query would fail again the same way, and
+// telling someone to wait a few minutes for it just wastes their time.
+function searchErrorText(error: unknown) {
+	return shouldRetryError(error) || isNetworkError(error)
+		? m['screens.search.results.error.failedRetryable']()
+		: m['screens.search.results.error.failed']();
 }
 
 function EmptyState({
@@ -215,7 +223,7 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 	}
 
 	if (error) {
-		return <EmptyState error={cleanError(error)} messageText={m['screens.search.results.error.failed']()} />;
+		return <EmptyState error={cleanError(error)} messageText={searchErrorText(error)} />;
 	}
 
 	if (!isFetched) {
@@ -266,7 +274,7 @@ function UserResults({ query }: { query: string }) {
 	};
 
 	if (error) {
-		return <EmptyState error={error.toString()} messageText={m['screens.search.results.error.failed']()} />;
+		return <EmptyState error={error.toString()} messageText={searchErrorText(error)} />;
 	}
 
 	if (!isFetched) {
