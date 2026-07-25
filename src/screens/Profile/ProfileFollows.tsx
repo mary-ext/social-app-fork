@@ -58,6 +58,8 @@ export const ProfileFollowsScreen = () => {
 	);
 };
 
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+
 function keyExtractor(item: ActorDefs.ProfileView) {
 	return item.did;
 }
@@ -131,6 +133,7 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 	return (
 		<List
 			data={follows}
+			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={2}

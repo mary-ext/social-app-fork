@@ -4,6 +4,8 @@ import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 
+const FEED_ITEM_HEIGHT_ESTIMATE = 164;
+
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
 }
@@ -16,6 +18,7 @@ export function FeedsList({ feeds }: FeedsListProps) {
 	return (
 		<List
 			data={feeds}
+			estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 			renderItem={({ index, item }) => <FeedCard.Default view={item} topBorder={index !== 0} />}
 			keyExtractor={keyExtractor}
 			ListFooterComponent={<ListFooter />}

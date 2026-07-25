@@ -55,6 +55,8 @@ export const PostQuotesScreen = () => {
 	);
 };
 
+const POST_ITEM_HEIGHT_ESTIMATE = 300;
+
 function renderItem({ item, index }: { item: { post: AppBskyFeedDefs.PostView }; index: number }) {
 	return <Post post={item.post} hideTopBorder={index === 0} />;
 }
@@ -117,6 +119,7 @@ function PostQuotes({ uri }: { uri: string }) {
 	return (
 		<List
 			data={quotes}
+			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			onEndReached={() => void onEndReached()}

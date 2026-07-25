@@ -80,6 +80,9 @@ export function SearchResults({
 	);
 }
 
+const POST_ITEM_HEIGHT_ESTIMATE = 300;
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+
 function Pending() {
 	return (
 		<Layout.Content>
@@ -226,6 +229,7 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 	return (
 		<List
 			data={items}
+			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.uri}
 			ListFooterComponent={<ListFooter hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} />}
 			onEndReached={onEndReached}
@@ -276,6 +280,7 @@ function UserResults({ query }: { query: string }) {
 	return (
 		<List
 			data={profiles}
+			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.did}
 			ListFooterComponent={
 				<ListFooter hasNextPage={hasNextPage && hasSession} isFetchingNextPage={isFetchingNextPage} />

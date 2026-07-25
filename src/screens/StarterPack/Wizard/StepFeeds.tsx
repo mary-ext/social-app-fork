@@ -22,6 +22,8 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './Wizard.css';
 
+const WIZARD_ITEM_HEIGHT_ESTIMATE = 70;
+
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
 }
@@ -85,6 +87,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 			</div>
 			<List
 				data={query ? searchedFeeds : suggestedFeeds}
+				estimateHeight={WIZARD_ITEM_HEIGHT_ESTIMATE}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
 				onEndReached={!query ? () => void fetchNextPage() : undefined}

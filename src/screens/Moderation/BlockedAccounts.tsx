@@ -19,6 +19,8 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './BlockedAccounts.css';
 
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+
 export function ModerationBlockedAccounts() {
 	useTitle(m['common.block.accountsTitle']());
 
@@ -59,6 +61,7 @@ export function ModerationBlockedAccounts() {
 			) : (
 				<List
 					data={profiles}
+					estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item: ActorDefs.ProfileView) => item.did}
 					onEndReached={() => void onEndReached()}
 					renderItem={({ item, index }) => <BlockedRow index={index} profile={item} />}

@@ -18,6 +18,8 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './Wizard.css';
 
+const WIZARD_ITEM_HEIGHT_ESTIMATE = 70;
+
 function keyExtractor(item: AnyProfileView) {
 	return item?.did ?? '';
 }
@@ -69,6 +71,7 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 			</div>
 			<List
 				data={query ? results : topFollowers}
+				estimateHeight={WIZARD_ITEM_HEIGHT_ESTIMATE}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
 				onEndReached={!query ? () => void fetchNextPage() : undefined}

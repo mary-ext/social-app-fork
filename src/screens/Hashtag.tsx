@@ -103,6 +103,8 @@ export default function HashtagScreen() {
 	);
 }
 
+const POST_ITEM_HEIGHT_ESTIMATE = 300;
+
 function HashtagScreenTab({
 	author,
 	fullTag,
@@ -180,6 +182,7 @@ function HashtagScreenTab({
 			) : (
 				<List
 					data={posts}
+					estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item, index) => `${item.uri}-${index}`}
 					renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
 					onEndReached={onEndReached}

@@ -42,6 +42,8 @@ export const ProfileKnownFollowersScreen = () => {
 	);
 };
 
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+
 function keyExtractor(item: ActorDefs.ProfileView) {
 	return item.did;
 }
@@ -94,6 +96,7 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 	return (
 		<List
 			data={followers}
+			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={2}

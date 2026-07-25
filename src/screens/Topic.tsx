@@ -75,6 +75,8 @@ export default function TopicScreen() {
 	);
 }
 
+const POST_ITEM_HEIGHT_ESTIMATE = 300;
+
 function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest' }) {
 	const {
 		data,
@@ -113,6 +115,7 @@ function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest'
 			) : (
 				<List
 					data={posts}
+					estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item, index) => `${item.uri}-${index}`}
 					renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
 					onEndReached={onEndReached}

@@ -14,6 +14,8 @@ import { ListFooter } from '#/components/Lists';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
+const LIST_ITEM_HEIGHT_ESTIMATE = 120;
+
 const LOADING = { _reactKey: '__loading__' } as const;
 const EMPTY = { _reactKey: '__empty__' } as const;
 const ERROR_ITEM = { _reactKey: '__error__' } as const;
@@ -72,6 +74,7 @@ export function MyLists({ filter }: { filter: MyListsFilter }): React.ReactNode 
 	return (
 		<List
 			data={items}
+			estimateHeight={LIST_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
 			renderItem={renderItem}
 			ListFooterComponent={isEmpty ? null : <ListFooter />}

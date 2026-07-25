@@ -12,6 +12,8 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+
 export function LikedByList({ uri, initialCount }: { uri: string; initialCount?: number }) {
 	const moderationOpts = useModerationOpts();
 
@@ -61,6 +63,7 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 	return (
 		<List
 			data={likes}
+			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.actor.did}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={2}

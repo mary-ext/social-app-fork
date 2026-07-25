@@ -14,6 +14,8 @@ import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+
 function keyExtractor(item: AppBskyActorDefs.ProfileView, index: number) {
 	return `${item.did}-${index}`;
 }
@@ -55,6 +57,7 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 	return (
 		<List
 			data={profiles}
+			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}

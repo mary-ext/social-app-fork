@@ -20,6 +20,8 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './MutedAccounts.css';
 
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+
 export function ModerationMutedAccounts() {
 	useTitle(m['common.mute.accountsTitle']());
 
@@ -60,6 +62,7 @@ export function ModerationMutedAccounts() {
 			) : (
 				<List
 					data={profiles}
+					estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item) => item.did}
 					onEndReached={() => void onEndReached()}
 					renderItem={({ item, index }) => <MutedRow index={index} profile={item} />}

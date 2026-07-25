@@ -50,6 +50,8 @@ export const PostRepostedByScreen = () => {
 	);
 };
 
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+
 function keyExtractor(item: ActorDefs.ProfileView) {
 	return item.did;
 }
@@ -102,6 +104,7 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 	return (
 		<List
 			data={repostedBy}
+			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={2}

@@ -29,6 +29,8 @@ interface AboutSectionProps {
 	onPressAddUser: () => void;
 }
 
+const MEMBER_ITEM_HEIGHT_ESTIMATE = 130;
+
 export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
@@ -122,6 +124,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 		<div>
 			<List
 				data={items}
+				estimateHeight={MEMBER_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(item) => item.subject.did}
 				ListFooterComponent={
 					<ListFooter
