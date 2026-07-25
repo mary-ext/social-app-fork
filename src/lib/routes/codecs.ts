@@ -3,8 +3,10 @@ import {
 	isActorIdentifier,
 	isRecordKey,
 	isResourceUri,
+	isTid,
 	type RecordKey,
 	type ResourceUri,
+	type Tid,
 } from '@atcute/lexicons/syntax';
 
 import type { Codec } from '@oomfware/stacker';
@@ -23,6 +25,11 @@ const RECORD_KEY_CODEC: Codec<RecordKey> = {
 
 const RESOURCE_URI_CODEC: Codec<ResourceUri> = {
 	decode: (raw) => (isResourceUri(raw) ? raw : undefined),
+	encode: (value) => value,
+};
+
+const TID_CODEC: Codec<Tid> = {
+	decode: (raw) => (isTid(raw) ? raw : undefined),
 	encode: (value) => value,
 };
 
@@ -49,3 +56,10 @@ export const recordKey = (): Codec<RecordKey> => RECORD_KEY_CODEC;
  * @returns the resource uri codec
  */
 export const resourceUri = (): Codec<ResourceUri> => RESOURCE_URI_CODEC;
+/**
+ * returns a codec for a {@link Tid} path segment. an invalid segment fails to decode, causing the matcher to
+ * skip the route.
+ *
+ * @returns the tid codec
+ */
+export const tid = (): Codec<Tid> => TID_CODEC;

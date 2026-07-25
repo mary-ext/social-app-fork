@@ -14,7 +14,7 @@ import {
 	string,
 } from '@oomfware/stacker';
 
-import { actorIdentifier, recordKey, resourceUri } from '#/lib/routes/codecs';
+import { actorIdentifier, recordKey, resourceUri, tid } from '#/lib/routes/codecs';
 
 import {
 	MessagesRouteLoadingScreen,
@@ -468,21 +468,21 @@ export const routes = defineRoutes({
 						component: MessagesConversationSettingsScreen,
 						fallback: <MessagesSplitViewColumnLoadingScreen />,
 						meta: { requireAuth: true },
-						params: { conversation: string() },
+						params: { conversation: tid() },
 						path: '/messages/:conversation/settings',
 					}),
 					MessagesJoinRequests: route({
 						component: MessagesJoinRequestsScreen,
 						fallback: <MessagesSplitViewColumnLoadingScreen />,
 						meta: { requireAuth: true },
-						params: { conversation: string() },
+						params: { conversation: tid() },
 						path: '/messages/:conversation/requests',
 					}),
 					MessagesConversation: route({
 						component: MessagesConversationScreen,
 						fallback: <MessagesSplitViewColumnLoadingScreen />,
 						meta: { requireAuth: true },
-						params: { conversation: string() },
+						params: { conversation: tid() },
 						path: '/messages/:conversation',
 						query: { accept: optional(boolean()), embed: optional(resourceUri()) },
 					}),
