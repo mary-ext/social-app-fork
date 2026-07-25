@@ -13,9 +13,6 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { Logo } from '#/view/icons/Logo';
-import { Logotype } from '#/view/icons/Logotype';
-
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import {
 	Bell_Stroke2_Corner0_Rounded as Bell,
@@ -25,6 +22,8 @@ import {
 	HomeOpen_Stoke2_Corner0_Rounded as Home,
 	HomeOpen_Filled_Corner0_Rounded as HomeFilled,
 } from '#/components/icons/HomeOpen';
+import { Logo } from '#/components/icons/Logo';
+import { Logotype } from '#/components/icons/Logotype';
 import {
 	MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
 	MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,

@@ -2,6 +2,10 @@ import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderati
 
 import { clsx } from 'clsx';
 
+import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
+import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
+import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
+
 import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { preloadLightbox } from '#/components/Lightbox';
@@ -11,9 +15,6 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { UserBanner } from '#/components/UserBanner';
 import * as Layout from '#/components/web/Layout';
 
-import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
-import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
-import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
 import { m } from '#/paraglide/messages';
 
 import { useProfileHeader } from './Context';

@@ -7,14 +7,14 @@ import { InactiveAccountError } from '#/state/session/agent';
 
 import { logger } from '#/logger';
 
-import * as css from '#/view/com/auth/OAuthCallback.css';
-
 import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
+
+import * as css from './OAuthCallback.css';
 
 export function OAuthCallback() {
 	const [error, setError] = useState('');

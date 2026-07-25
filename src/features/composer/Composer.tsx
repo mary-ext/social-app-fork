@@ -46,15 +46,6 @@ import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import * as Dialog from '#/components/Dialog';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { GalleryBleed } from '#/components/images/Gallery';
-import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
-import * as Prompt from '#/components/Prompt';
-import * as Toast from '#/components/Toast';
-import { UserAvatar } from '#/components/UserAvatar';
-import { Button, ButtonIcon } from '#/components/web/Button';
-
 import { ComposerReplyTo } from '#/features/composer/ComposerReplyTo';
 import { ExternalEmbedGif, ExternalEmbedLink } from '#/features/composer/ExternalEmbed';
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
@@ -66,6 +57,16 @@ import { SuggestedLanguage } from '#/features/composer/select-language/Suggested
 import { TextInput } from '#/features/composer/text-input/TextInput';
 import { SubtitleDialogBtn } from '#/features/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/features/composer/videos/VideoPreview';
+
+import * as Dialog from '#/components/Dialog';
+import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import { GalleryBleed } from '#/components/images/Gallery';
+import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
+import * as Prompt from '#/components/Prompt';
+import * as Toast from '#/components/Toast';
+import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon } from '#/components/web/Button';
+
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';

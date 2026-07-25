@@ -5,6 +5,7 @@ import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 
 import type { Gif } from '#/features/gifPicker/types';
+
 import type { Locale } from '#/paraglide/runtime';
 
 /** emoji skin tone: 1 = default/yellow, 2–6 = the five Fitzpatrick tones. */

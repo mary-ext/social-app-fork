@@ -13,6 +13,8 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { JOIN_REQUESTS_THRESHOLD } from '#/state/queries/messages/list-join-requests';
 import { useSession } from '#/state/session';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
@@ -22,7 +24,6 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as ChatRow from './ChatRow';

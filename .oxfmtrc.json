@@ -29,7 +29,7 @@
 			"logger",
 			"platform",
 			"locale",
-			"view",
+			"features",
 			"screens",
 			"alf",
 			"components",
@@ -86,8 +86,8 @@
 				"elementNamePattern": ["#/locale", "#/locale/**"]
 			},
 			{
-				"groupName": "view",
-				"elementNamePattern": ["#/view", "#/view/**"]
+				"groupName": "features",
+				"elementNamePattern": ["#/features", "#/features/**"]
 			},
 			{
 				"groupName": "screens",

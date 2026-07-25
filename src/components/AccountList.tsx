@@ -7,6 +7,8 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import * as css from '#/components/AccountList.css';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
@@ -15,7 +17,6 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

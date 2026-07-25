@@ -2,11 +2,12 @@ import { lazy, Suspense, useRef } from 'react';
 
 import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
 
+import type { CancelRef } from '#/features/composer/Composer';
+
 import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { Spinner } from '#/components/Spinner';
 
-import type { CancelRef } from '#/features/composer/Composer';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ComposerDialog.css';

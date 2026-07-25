@@ -9,6 +9,9 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
+import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import * as Dialog from '#/components/Dialog';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { type BaseUserAvatarProps, UserAvatar } from '#/components/UserAvatar';
@@ -16,8 +19,6 @@ import * as styles from '#/components/UserAvatar.css';
 import { Link } from '#/components/web/Link';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
-import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 type PreviewableUserAvatarProps = BaseUserAvatarProps & {

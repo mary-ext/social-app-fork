@@ -9,6 +9,9 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
+import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
+import * as css from '#/features/liveNow/components/LiveStatusDialog.css';
+
 import * as Dialog from '#/components/Dialog';
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
@@ -21,8 +24,6 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
-import * as css from '#/features/liveNow/components/LiveStatusDialog.css';
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 import { colors } from '#/styles/colors';

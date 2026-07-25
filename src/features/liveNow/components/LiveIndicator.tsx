@@ -1,8 +1,9 @@
 import { clsx } from 'clsx';
 
+import * as styles from '#/features/liveNow/components/LiveIndicator.css';
+
 import { Text } from '#/components/Text';
 
-import * as styles from '#/features/liveNow/components/LiveIndicator.css';
 import { m } from '#/paraglide/messages';
 
 export function LiveIndicator({

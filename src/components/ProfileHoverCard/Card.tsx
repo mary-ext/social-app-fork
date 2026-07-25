@@ -18,6 +18,9 @@ import { useSession } from '#/state/session';
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
+import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import { ProfileHeaderHandle } from '#/screens/Profile/Header/Handle';
 
 import { useFollowMethods } from '#/components/hooks/useFollowMethods';
@@ -34,8 +37,6 @@ import { InlineLinkText, Link, LinkButton } from '#/components/web/Link';
 import * as Pills from '#/components/web/Pills';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 

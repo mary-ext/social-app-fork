@@ -10,6 +10,8 @@ import { useIsDrawerOpen, useSetDrawerOpen } from '#/state/shell';
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import {
 	Bell_Filled_Corner0_Rounded as BellFilled,
 	Bell_Stroke2_Corner0_Rounded as Bell,
@@ -44,7 +46,6 @@ import { NavSignInCard } from '#/components/Shell/NavSignInCard';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { useNavigate } from '#/routes';
 

@@ -2,12 +2,12 @@ import { useTitle } from '#/lib/hooks/useTitle';
 
 import { type ConsoleTransportEntry, getEntries } from '#/logger/logDump';
 
-import { LogEntry } from '#/view/com/log/LogEntry';
-
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+
+import { LogEntry } from './LogEntry';
 
 const keyExtractor = (entry: ConsoleTransportEntry) => entry.id;
 

@@ -1,8 +1,9 @@
+import * as styles from '#/features/gifPicker/components/GifPickerErrorBoundary.css';
+
 import type * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
-import * as styles from '#/features/gifPicker/components/GifPickerErrorBoundary.css';
 import { m } from '#/paraglide/messages';
 
 export function GifPickerErrorBoundary({

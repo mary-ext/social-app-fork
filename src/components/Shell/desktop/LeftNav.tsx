@@ -21,6 +21,8 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/session';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
 import {
@@ -68,7 +70,6 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link, useInternalLink } from '#/components/web/Link';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { popToRoute } from '#/routes';
 import { colors } from '#/styles/colors';

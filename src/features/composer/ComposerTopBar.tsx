@@ -1,11 +1,12 @@
 import { clsx } from 'clsx';
 
+import { DraftsButton } from '#/features/composer/drafts/DraftsButton';
+
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Button from '#/components/web/Button';
 
-import { DraftsButton } from '#/features/composer/drafts/DraftsButton';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ComposerTopBar.css';

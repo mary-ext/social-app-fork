@@ -30,6 +30,8 @@ import { niceDate } from '#/locale/intl/datetime';
 import { formatPostStatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
@@ -54,7 +56,6 @@ import { InlineLinkText } from '#/components/web/Link';
 import * as Skele from '#/components/web/Skeleton';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

@@ -1,8 +1,9 @@
+import * as styles from '#/features/gifPicker/components/GifPickerPlaceholder.css';
+
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
-import * as styles from '#/features/gifPicker/components/GifPickerPlaceholder.css';
 import { m } from '#/paraglide/messages';
 
 export function GifPickerPlaceholder({

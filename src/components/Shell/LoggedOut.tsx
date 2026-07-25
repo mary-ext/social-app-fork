@@ -3,13 +3,12 @@ import { useEffect } from 'react';
 import { usePrefetchProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { Logo } from '#/view/icons/Logo';
-import { Logotype } from '#/view/icons/Logotype';
-
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { SigninDialog } from '#/components/dialogs/Signin';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
+import { Logo } from '#/components/icons/Logo';
+import { Logotype } from '#/components/icons/Logotype';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 

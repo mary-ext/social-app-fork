@@ -19,6 +19,8 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { removeAccount, type SessionAccount, useSession } from '#/state/session';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import { AvatarStack } from '#/components/AvatarStack';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
@@ -39,7 +41,6 @@ import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import * as Skele from '#/components/web/Skeleton';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './AccountsSection.css';

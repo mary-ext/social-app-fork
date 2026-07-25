@@ -10,13 +10,14 @@ import { useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-s
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
 import { KnownFollowers } from '#/components/web/KnownFollowers';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as ChatRow from './ChatRow';

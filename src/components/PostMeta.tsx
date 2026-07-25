@@ -13,6 +13,8 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { niceDate } from '#/locale/intl/datetime';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
@@ -20,7 +22,6 @@ import { Text, type TextProps } from '#/components/Text';
 import { Tooltip } from '#/components/Tooltip';
 import { InlineLinkText } from '#/components/web/Link';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as css from './PostMeta.css';

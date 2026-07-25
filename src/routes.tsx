@@ -131,7 +131,7 @@ const NotificationsScreen = lazy(() =>
 	import('#/screens/Notifications').then((mod) => ({ default: mod.NotificationsScreen })),
 );
 const OAuthCallbackScreen = lazy(() =>
-	import('#/view/com/auth/OAuthCallback').then((mod) => ({ default: mod.OAuthCallback })),
+	import('#/screens/OAuthCallback').then((mod) => ({ default: mod.OAuthCallback })),
 );
 const PostLikedByScreen = lazy(() =>
 	import('#/screens/Post/PostLikedBy').then((mod) => ({ default: mod.PostLikedByScreen })),

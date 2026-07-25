@@ -1,7 +1,6 @@
-import { Logo } from '#/view/icons/Logo';
-
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { Logo } from '#/components/icons/Logo';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';

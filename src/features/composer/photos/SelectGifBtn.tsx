@@ -1,9 +1,10 @@
-import * as Dialog from '#/components/Dialog';
-import { GifSquare_Stroke2_Corner0_Rounded as GifIcon } from '#/components/icons/Gif';
-
 import { ComposerToolbarButton } from '#/features/composer/ComposerToolbarButton';
 import { GifPickerDialog } from '#/features/gifPicker/GifPickerDialog';
 import type { Gif } from '#/features/gifPicker/types';
+
+import * as Dialog from '#/components/Dialog';
+import { GifSquare_Stroke2_Corner0_Rounded as GifIcon } from '#/components/icons/Gif';
+
 import { m } from '#/paraglide/messages';
 
 type Props = {

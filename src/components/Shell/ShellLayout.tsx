@@ -5,14 +5,13 @@ import { Outlet, resolveMeta, useRoute, useRouter } from '@oomfware/stacker';
 import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
-import { LoggedOut } from '#/view/com/auth/LoggedOut';
-
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
 import { SigninDialog } from '#/components/dialogs/Signin';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import { Lightbox } from '#/components/Lightbox';
 import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
+import { LoggedOut } from '#/components/Shell/LoggedOut';
 import { Shell } from '#/components/Shell/Shell';
 
 import { ComposerDialog } from './ComposerDialog';

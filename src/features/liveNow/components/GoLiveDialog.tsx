@@ -11,6 +11,15 @@ import { useTickEveryMinute } from '#/state/shell';
 
 import { clock } from '#/locale/intl/datetime';
 
+import {
+	displayDuration,
+	getLiveLinkFromStatusRecord,
+	getLiveServiceNames,
+	useLiveLinkMetaQuery,
+	useUpsertLiveStatusMutation,
+} from '#/features/liveNow';
+import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-status';
+
 import * as Dialog from '#/components/Dialog';
 import * as Select from '#/components/Select';
 import { Spinner } from '#/components/Spinner';
@@ -21,14 +30,6 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import {
-	displayDuration,
-	getLiveLinkFromStatusRecord,
-	getLiveServiceNames,
-	useLiveLinkMetaQuery,
-	useUpsertLiveStatusMutation,
-} from '#/features/liveNow';
-import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './GoLiveDialog.css';

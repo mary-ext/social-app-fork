@@ -15,11 +15,12 @@ import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { useLiveNowConfig } from '#/features/liveNow/use-actor-status';
+import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
+
 import type { DialogHandle } from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 
-import { useLiveNowConfig } from '#/features/liveNow/use-actor-status';
-import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
 import { m } from '#/paraglide/messages';
 
 export * from '#/features/liveNow/utils';

@@ -2,9 +2,8 @@ import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useSession } from '#/state/session';
 
-import { Logo } from '#/view/icons/Logo';
-
 import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag';
+import { Logo } from '#/components/icons/Logo';
 import { ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { LinkButton } from '#/components/web/Link';

@@ -5,9 +5,10 @@ import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { openMediaPicker } from '#/lib/media/picker';
 import type { VideoAsset } from '#/lib/media/video/types';
 
+import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
+
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 
-import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
 import { m } from '#/paraglide/messages';
 
 import { ComposerToolbarButton } from './ComposerToolbarButton';

@@ -1,3 +1,5 @@
+import * as styles from '#/features/gifPicker/components/GifCategoryPills.css';
+
 import { Celebrate_Stroke2_Corner0_Rounded as Celebrate } from '#/components/icons/Celebrate';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import type { Props as SVGIconProps } from '#/components/icons/common';
@@ -10,7 +12,6 @@ import { Shaka_Stroke2_Corner0_Rounded as Shaka } from '#/components/icons/Shaka
 import { Trending3_Stroke2_Corner1_Rounded as Trending } from '#/components/icons/Trending';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
-import * as styles from '#/features/gifPicker/components/GifCategoryPills.css';
 import { m } from '#/paraglide/messages';
 
 export type GifCategory = {

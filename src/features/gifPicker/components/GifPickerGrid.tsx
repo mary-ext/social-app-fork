@@ -2,13 +2,14 @@ import { type Ref, useEffect, useImperativeHandle, useLayoutEffect, useRef } fro
 
 import { cleanError } from '#/lib/strings/errors';
 
+import * as styles from '#/features/gifPicker/components/GifPickerGrid.css';
+import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
+import type { Gif } from '#/features/gifPicker/types';
+
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
-import * as styles from '#/features/gifPicker/components/GifPickerGrid.css';
-import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
-import type { Gif } from '#/features/gifPicker/types';
 import { m } from '#/paraglide/messages';
 
 export type GifPickerGridHandle = {

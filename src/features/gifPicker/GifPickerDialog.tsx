@@ -4,10 +4,6 @@ import { uniqueBy } from '@mary/array-fns';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import * as Dialog from '#/components/Dialog';
-import { ErrorBoundary } from '#/components/ErrorBoundary';
-import { useThrottledValue } from '#/components/hooks/useThrottledValue';
-
 import {
 	GIF_CATEGORIES,
 	type GifCategory,
@@ -21,6 +17,10 @@ import * as styles from '#/features/gifPicker/GifPickerDialog.css';
 import { useGifPickerData } from '#/features/gifPicker/hooks/useGifPickerData';
 import { useRecentGifs } from '#/features/gifPicker/hooks/useRecentGifs';
 import type { Gif } from '#/features/gifPicker/types';
+
+import * as Dialog from '#/components/Dialog';
+import { ErrorBoundary } from '#/components/ErrorBoundary';
+import { useThrottledValue } from '#/components/hooks/useThrottledValue';
 
 export function GifPickerDialog({
 	handle,

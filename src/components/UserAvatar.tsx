@@ -8,10 +8,10 @@ import { clsx } from 'clsx';
 
 import { convertCdnPreset } from '#/lib/media/util';
 
+import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
+
 import { Text } from '#/components/Text';
 import * as styles from '#/components/UserAvatar.css';
-
-import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 
 export type UserAvatarType = 'algo' | 'labeler' | 'list' | 'user';
 

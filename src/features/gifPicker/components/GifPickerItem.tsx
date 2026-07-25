@@ -1,6 +1,7 @@
 import * as styles from '#/features/gifPicker/components/GifPickerItem.css';
 import type { Gif } from '#/features/gifPicker/types';
 import { gifPreviewUrl } from '#/features/gifPicker/utils';
+
 import { m } from '#/paraglide/messages';
 
 export function GifPickerItem({ gif, onSelectGif }: { gif: Gif; onSelectGif: (gif: Gif) => void }) {

@@ -14,6 +14,8 @@ import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
@@ -32,7 +34,6 @@ import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { Text } from '#/components/Text';
 import * as Skele from '#/components/web/Skeleton';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 import { threadTextShape } from './skeleton-shape';

@@ -7,9 +7,8 @@ import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
-import { Logo } from '#/view/icons/Logo';
-
 import * as Dialog from '#/components/Dialog';
+import { Logo } from '#/components/icons/Logo';
 import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
 import { VerifierCheck } from '#/components/icons/VerifierCheck';
 import { Stack } from '#/components/Stack';

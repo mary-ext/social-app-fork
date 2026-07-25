@@ -20,9 +20,10 @@ import { useRequireAuth, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { useActorStatus } from '#/features/liveNow/use-actor-status';
+
 import * as Toast from '#/components/Toast';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { m } from '#/paraglide/messages';
 
 /**
