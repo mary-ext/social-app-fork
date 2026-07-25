@@ -182,7 +182,6 @@ const SearchScreen = lazy(() => import('#/screens/Search').then((mod) => ({ defa
 const SettingsScreen = lazy(() =>
 	import('#/screens/Settings/Settings').then((mod) => ({ default: mod.SettingsScreen })),
 );
-const StartScreen = lazy(() => import('#/screens/null-routes').then((mod) => ({ default: mod.StartScreen })));
 const StarterPackScreen = lazy(() =>
 	import('#/screens/StarterPack/StarterPackScreen').then((mod) => ({ default: mod.StarterPackScreen })),
 );
@@ -513,12 +512,6 @@ export const routes = defineRoutes({
 				component: StarterPackScreenShort,
 				params: { code: string() },
 				path: '/starter-pack-short/:code',
-			}),
-			Start: route({
-				component: StartScreen,
-				meta: { requireAuth: true },
-				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/start/:actor/:rkey',
 			}),
 
 			Bookmarks: route({
