@@ -4,7 +4,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useMyMutedAccountsQuery } from '#/state/queries/my-muted-accounts';
+import { useMyBlockedAccountsQuery } from '#/state/queries/my-blocked-accounts';
 
 import { logger } from '#/logger';
 
@@ -14,19 +14,18 @@ import { ListFooter } from '#/components/Lists';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import * as profileCardCss from '#/components/web/ProfileCard.css';
 
 import { m } from '#/paraglide/messages';
 
-import * as styles from './ModerationMutedAccounts.css';
+import * as styles from './BlockedAccounts.css';
 
-export function ModerationMutedAccounts() {
-	useTitle(m['common.mute.accountsTitle']());
+export function ModerationBlockedAccounts() {
+	useTitle(m['common.block.accountsTitle']());
 
 	const { data, isFetching, isError, error, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
-		useMyMutedAccountsQuery();
-	const isEmpty = !isFetching && !data?.pages[0]?.mutes.length;
-	const profiles = data?.pages ? data.pages.flatMap((page) => page.mutes) : [];
+		useMyBlockedAccountsQuery();
+	const isEmpty = !isFetching && !data?.pages[0]?.blocks.length;
+	const profiles = data?.pages ? data.pages.flatMap((page) => page.blocks) : [];
 
 	const onEndReached = async () => {
 		if (isFetching || !hasNextPage || isError) {
@@ -36,7 +35,7 @@ export function ModerationMutedAccounts() {
 		try {
 			await fetchNextPage();
 		} catch (err) {
-			logger.error('Failed to load more of my muted accounts', { message: err });
+			logger.error('Failed to load more of my blocked accounts', { message: err });
 		}
 	};
 
@@ -45,7 +44,7 @@ export function ModerationMutedAccounts() {
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.mute.accountsTitle']()}</Layout.Header.TitleText>
+					<Layout.Header.TitleText>{m['common.block.accountsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 			</Layout.Header.Outer>
 			{isEmpty ? (
@@ -60,9 +59,9 @@ export function ModerationMutedAccounts() {
 			) : (
 				<List
 					data={profiles}
-					keyExtractor={(item) => item.did}
+					keyExtractor={(item: ActorDefs.ProfileView) => item.did}
 					onEndReached={() => void onEndReached()}
-					renderItem={({ item, index }) => <MutedRow index={index} profile={item} />}
+					renderItem={({ item, index }) => <BlockedRow index={index} profile={item} />}
 					ListHeaderComponent={<Info />}
 					ListFooterComponent={
 						<ListFooter
@@ -78,23 +77,12 @@ export function ModerationMutedAccounts() {
 	);
 }
 
-function MutedRow({ index, profile }: { index: number; profile: ActorDefs.ProfileView }) {
+function BlockedRow({ index, profile }: { index: number; profile: ActorDefs.ProfileView }) {
 	const moderationOpts = useModerationOpts();
 	if (!moderationOpts) {
 		return null;
 	}
-	return (
-		<ProfileCard.Link className={profileCardCss.defaultRow({ topBorder: index !== 0 })} profile={profile}>
-			<ProfileCard.Outer>
-				<ProfileCard.Header>
-					<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} />
-					<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
-				</ProfileCard.Header>
-				<ProfileCard.Labels profile={profile} moderationOpts={moderationOpts} />
-				<ProfileCard.Description profile={profile} />
-			</ProfileCard.Outer>
-		</ProfileCard.Link>
-	);
+	return <ProfileCard.Default moderationOpts={moderationOpts} profile={profile} topBorder={index !== 0} />;
 }
 
 function Empty() {
@@ -102,7 +90,7 @@ function Empty() {
 		<div className={styles.emptyContainer}>
 			<div className={styles.emptyBox}>
 				<Text align="center" color="textContrastHigh" size="sm">
-					{m['common.mute.empty']()}
+					{m['common.block.empty']()}
 				</Text>
 			</div>
 		</div>
@@ -113,7 +101,7 @@ function Info() {
 	return (
 		<div className={styles.info}>
 			<Text align="center" color="textContrastHigh" size="md_sub">
-				{m['screens.moderation.mute.hint']()}
+				{m['screens.moderation.block.hint']()}
 			</Text>
 		</div>
 	);

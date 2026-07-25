@@ -51,7 +51,7 @@ import { m } from '#/paraglide/messages';
 import { useFocusEffect, useNavigate, useParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
-import * as css from './Profile.css';
+import * as css from './index.css';
 
 export function ProfileScreen() {
 	return (

@@ -34,7 +34,7 @@ import { m } from '#/paraglide/messages';
 import { useFocusEffect, useIsFocused } from '#/routes';
 import { colors } from '#/styles/colors';
 
-import * as css from './Notifications.css';
+import * as css from './index.css';
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.

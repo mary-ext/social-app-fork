@@ -57,12 +57,12 @@ const ExternalMediaPreferencesScreen = lazy(() =>
 		default: mod.ExternalMediaPreferencesScreen,
 	})),
 );
-const FeedsScreen = lazy(() => import('#/view/screens/Feeds').then((mod) => ({ default: mod.FeedsScreen })));
+const FeedsScreen = lazy(() => import('#/screens/Feeds').then((mod) => ({ default: mod.FeedsScreen })));
 const GroupChatJoinScreen = lazy(() =>
 	import('#/screens/null-routes').then((mod) => ({ default: mod.GroupChatJoinScreen })),
 );
 const HashtagScreen = lazy(() => import('#/screens/Hashtag').then((mod) => ({ default: mod.default })));
-const HomeScreen = lazy(() => import('#/view/screens/Home').then((mod) => ({ default: mod.HomeScreen })));
+const HomeScreen = lazy(() => import('#/screens/Home').then((mod) => ({ default: mod.HomeScreen })));
 const IntentComposeScreen = lazy(() =>
 	import('#/screens/null-routes').then((mod) => ({ default: mod.IntentComposeScreen })),
 );
@@ -72,7 +72,7 @@ const InterestsSettingsScreen = lazy(() =>
 const LanguageSettingsScreen = lazy(() =>
 	import('#/screens/Settings/LanguageSettings').then((mod) => ({ default: mod.LanguageSettingsScreen })),
 );
-const ListsScreen = lazy(() => import('#/view/screens/Lists').then((mod) => ({ default: mod.ListsScreen })));
+const ListsScreen = lazy(() => import('#/screens/Lists').then((mod) => ({ default: mod.ListsScreen })));
 const LogScreen = lazy(() => import('#/screens/Log').then((mod) => ({ default: mod.LogScreen })));
 const MessagesConversationScreen = lazy(() =>
 	import('#/screens/Messages/Conversation').then((mod) => ({ default: mod.MessagesConversationScreen })),
@@ -95,7 +95,7 @@ const MessagesSettingsScreen = lazy(() =>
 	import('#/screens/Messages/Settings').then((mod) => ({ default: mod.MessagesSettingsScreen })),
 );
 const ModerationBlockedAccounts = lazy(() =>
-	import('#/view/screens/ModerationBlockedAccounts').then((mod) => ({
+	import('#/screens/Moderation/BlockedAccounts').then((mod) => ({
 		default: mod.ModerationBlockedAccounts,
 	})),
 );
@@ -103,10 +103,10 @@ const ModerationInteractionSettings = lazy(() =>
 	import('#/screens/ModerationInteractionSettings').then((mod) => ({ default: mod.Screen })),
 );
 const ModerationModlistsScreen = lazy(() =>
-	import('#/view/screens/ModerationModlists').then((mod) => ({ default: mod.ModerationModlistsScreen })),
+	import('#/screens/Moderation/Modlists').then((mod) => ({ default: mod.ModerationModlistsScreen })),
 );
 const ModerationMutedAccounts = lazy(() =>
-	import('#/view/screens/ModerationMutedAccounts').then((mod) => ({ default: mod.ModerationMutedAccounts })),
+	import('#/screens/Moderation/MutedAccounts').then((mod) => ({ default: mod.ModerationMutedAccounts })),
 );
 const ModerationMutedWords = lazy(() =>
 	import('#/screens/Moderation/MutedWords').then((mod) => ({ default: mod.MutedWordsScreen })),
@@ -128,7 +128,7 @@ const NotificationsActivityListScreen = lazy(() =>
 	})),
 );
 const NotificationsScreen = lazy(() =>
-	import('#/view/screens/Notifications').then((mod) => ({ default: mod.NotificationsScreen })),
+	import('#/screens/Notifications').then((mod) => ({ default: mod.NotificationsScreen })),
 );
 const OAuthCallbackScreen = lazy(() =>
 	import('#/view/com/auth/OAuthCallback').then((mod) => ({ default: mod.OAuthCallback })),
@@ -143,10 +143,10 @@ const PostRepostedByScreen = lazy(() =>
 	import('#/screens/Post/PostRepostedBy').then((mod) => ({ default: mod.PostRepostedByScreen })),
 );
 const PostThreadScreen = lazy(() =>
-	import('#/view/screens/PostThread').then((mod) => ({ default: mod.PostThreadScreen })),
+	import('#/screens/PostThread').then((mod) => ({ default: mod.PostThreadScreen })),
 );
 const ProfileFeedLikedByScreen = lazy(() =>
-	import('#/view/screens/ProfileFeedLikedBy').then((mod) => ({ default: mod.ProfileFeedLikedByScreen })),
+	import('#/screens/Profile/ProfileFeedLikedBy').then((mod) => ({ default: mod.ProfileFeedLikedByScreen })),
 );
 const ProfileFeedScreen = lazy(() =>
 	import('#/screens/Profile/ProfileFeed').then((mod) => ({ default: mod.ProfileFeedScreen })),
@@ -168,9 +168,7 @@ const ProfileLabelerLikedByScreen = lazy(() =>
 const ProfileListScreen = lazy(() =>
 	import('#/screens/ProfileList').then((mod) => ({ default: mod.ProfileListScreen })),
 );
-const ProfileScreen = lazy(() =>
-	import('#/view/screens/Profile').then((mod) => ({ default: mod.ProfileScreen })),
-);
+const ProfileScreen = lazy(() => import('#/screens/Profile').then((mod) => ({ default: mod.ProfileScreen })));
 const ProfileSearchScreen = lazy(() =>
 	import('#/screens/Profile/ProfileSearch').then((mod) => ({ default: mod.ProfileSearchScreen })),
 );

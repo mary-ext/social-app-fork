@@ -45,7 +45,7 @@ import { LinkButton } from '#/components/web/Link';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-import * as css from './Feeds.css';
+import * as css from './index.css';
 
 // rough per-row height for the off-screen render-skipping estimate; the browser reuses each row's real size once
 // rendered, so it only governs rows that have never been on screen.
