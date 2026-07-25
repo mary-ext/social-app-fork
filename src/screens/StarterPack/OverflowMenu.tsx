@@ -97,7 +97,10 @@ export function OverflowMenu({
 							<Menu.Item
 								label={m['screens.starterPack.edit']()}
 								onClick={() => {
-									navigate('StarterPackEdit', { rkey: routeParams.rkey });
+									navigate('StarterPackEdit', {
+										actor: routeParams.actor,
+										rkey: routeParams.rkey,
+									});
 								}}
 							>
 								<Menu.ItemText>{m['common.action.edit']()}</Menu.ItemText>

@@ -1,6 +1,7 @@
 import type { ActorIdentifier, RecordKey } from '@atcute/lexicons/syntax';
 
 import { parseBlueskyPath } from '#/lib/links/schemes/bluesky';
+import { parseOwnPath } from '#/lib/links/schemes/own';
 import { safeUrlParse } from '#/lib/strings/url-helpers';
 
 /**
@@ -69,10 +70,9 @@ export const describeUrl = (url: string): UrlTarget | undefined => {
 	}
 
 	if (isOwnUrl(parsed)) {
-		// our paths are bsky.app's today, so its reader also describes ours.
 		return {
 			kind: 'own',
-			link: parseBlueskyPath(parsed),
+			link: parseOwnPath(parsed),
 			path: parsed.pathname + parsed.search + parsed.hash,
 		};
 	}

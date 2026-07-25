@@ -365,68 +365,80 @@ export const routes = defineRoutes({
 			Profile: route({
 				component: ProfileScreen,
 				params: { actor: actorIdentifier() },
-				path: '/profile/:actor',
+				path: '/:actor',
 			}),
 			ProfileFollowers: route({
 				component: ProfileFollowersScreen,
 				params: { actor: actorIdentifier() },
-				path: '/profile/:actor/followers',
+				path: '/:actor/followers',
 			}),
 			ProfileFollows: route({
 				component: ProfileFollowsScreen,
 				params: { actor: actorIdentifier() },
-				path: '/profile/:actor/follows',
+				path: '/:actor/follows',
 			}),
 			ProfileKnownFollowers: route({
 				component: ProfileKnownFollowersScreen,
 				params: { actor: actorIdentifier() },
-				path: '/profile/:actor/known-followers',
+				path: '/:actor/known-followers',
+			}),
+			ProfileLabelerLikedBy: route({
+				component: ProfileLabelerLikedByScreen,
+				params: { actor: actorIdentifier() },
+				path: '/:actor/likes',
 			}),
 			ProfileSearch: route({
 				component: ProfileSearchScreen,
 				params: { actor: actorIdentifier() },
-				path: '/profile/:actor/search',
+				path: '/:actor/search',
+			}),
+			ProfileFeed: route({
+				component: ProfileFeedScreen,
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/:actor/feed/:rkey',
+			}),
+			ProfileFeedLikedBy: route({
+				component: ProfileFeedLikedByScreen,
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/:actor/feed/:rkey/likes',
 			}),
 			ProfileList: route({
 				component: ProfileListScreen,
 				meta: { requireAuth: true },
 				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/profile/:actor/lists/:rkey',
+				path: '/:actor/list/:rkey',
+			}),
+			StarterPack: route({
+				component: StarterPackScreen,
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/:actor/pack/:rkey',
+				query: { new: optional(boolean()) },
+			}),
+			StarterPackEdit: route({
+				component: Wizard,
+				meta: { requireAuth: true },
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/:actor/pack/:rkey/edit',
 			}),
 			PostThread: route({
 				component: PostThreadScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/profile/:actor/post/:rkey',
+				path: '/:actor/:rkey',
 			}),
 			PostLikedBy: route({
 				component: PostLikedByScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/profile/:actor/post/:rkey/liked-by',
-			}),
-			PostRepostedBy: route({
-				component: PostRepostedByScreen,
-				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/profile/:actor/post/:rkey/reposted-by',
+				path: '/:actor/:rkey/likes',
 			}),
 			PostQuotes: route({
 				component: PostQuotesScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/profile/:actor/post/:rkey/quotes',
+				path: '/:actor/:rkey/quotes',
 			}),
-			ProfileFeed: route({
-				component: ProfileFeedScreen,
+			PostRepostedBy: route({
+				component: PostRepostedByScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/profile/:actor/feed/:rkey',
-			}),
-			ProfileFeedLikedBy: route({
-				component: ProfileFeedLikedByScreen,
-				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/profile/:actor/feed/:rkey/liked-by',
-			}),
-			ProfileLabelerLikedBy: route({
-				component: ProfileLabelerLikedByScreen,
-				params: { actor: actorIdentifier() },
-				path: '/profile/:actor/labeler/liked-by',
+				path: '/:actor/:rkey/reposts',
 			}),
 
 			Hashtag: route({
@@ -490,30 +502,16 @@ export const routes = defineRoutes({
 				},
 			}),
 
-			// StarterPackEdit precedes StarterPack for clarity; the `:actor` codec also rejects the literal
-			// `edit` segment, so `/starter-pack/edit/:rkey` can't be mis-captured by StarterPack.
-			StarterPackEdit: route({
-				component: Wizard,
-				meta: { requireAuth: true },
-				params: { rkey: recordKey() },
-				path: '/starter-pack/edit/:rkey',
-			}),
 			StarterPackWizard: route({
 				component: Wizard,
 				meta: { requireAuth: true },
-				path: '/starter-pack/create',
+				path: '/packs/new',
 				query: { targetDid: optional(string()) },
-			}),
-			StarterPack: route({
-				component: StarterPackScreen,
-				params: { actor: actorIdentifier(), rkey: recordKey() },
-				path: '/starter-pack/:actor/:rkey',
-				query: { new: optional(boolean()) },
 			}),
 			StarterPackShort: route({
 				component: StarterPackScreenShort,
 				params: { code: string() },
-				path: '/starter-pack-short/:code',
+				path: '/start/:code',
 			}),
 
 			Bookmarks: route({
