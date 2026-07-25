@@ -3,7 +3,7 @@ import { definite, mapDefined } from '@mary/array-fns';
 export type Params = Record<string, string>;
 
 /** the `tab` query values a search URL can carry, mapped to result tabs by `getTabId`. */
-export const searchTabs = ['feed', 'latest', 'profile', 'user'] as const;
+export const searchTabs = ['feed', 'latest', 'profile', 'starterpack', 'user'] as const;
 export type TabParam = (typeof searchTabs)[number];
 
 export function parseSearchQuery(rawQuery: string) {

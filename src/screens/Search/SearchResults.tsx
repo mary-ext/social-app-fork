@@ -12,6 +12,7 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';
 import { usePopularFeedsSearch } from '#/state/queries/feed';
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
+import { useStarterPackSearch } from '#/state/queries/starter-pack-search';
 import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
@@ -23,6 +24,7 @@ import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { Post } from '#/components/Post/Post';
 import { SearchError } from '#/components/SearchError';
+import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
@@ -33,7 +35,7 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './SearchResults.css';
 
-export type SearchTabId = 'feeds' | 'latest' | 'people' | 'top';
+export type SearchTabId = 'feeds' | 'latest' | 'people' | 'starterPacks' | 'top';
 
 export function SearchResults({
 	activeTab,
@@ -72,6 +74,11 @@ export function SearchResults({
 				label: m['common.nav.feeds'](),
 				children: <FeedsResults query={query} />,
 			},
+			noParams && {
+				id: 'starterPacks',
+				label: m['common.starterPack.sectionTitle'](),
+				children: <StarterPackResults query={query} />,
+			},
 		]);
 	}
 
@@ -82,6 +89,7 @@ export function SearchResults({
 
 const POST_ITEM_HEIGHT_ESTIMATE = 300;
 const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+const STARTER_PACK_ITEM_HEIGHT_ESTIMATE = 120;
 
 function Pending() {
 	return (
@@ -306,6 +314,51 @@ function SearchProfileCard({ profile, topBorder = true }: { profile: AnyProfileV
 		return null;
 	}
 	return <ProfileCard.Default moderationOpts={moderationOpts} profile={profile} topBorder={topBorder} />;
+}
+
+function StarterPackResults({ query }: { query: string }) {
+	const {
+		data: results,
+		error,
+		fetchNextPage,
+		hasNextPage,
+		isFetched,
+		isFetching,
+		isFetchingNextPage,
+	} = useStarterPackSearch({ query });
+
+	const starterPacks = results?.pages.flatMap((page) => page.starterPacks) ?? [];
+
+	const onEndReached = () => {
+		if (isFetching || !hasNextPage || error) {
+			return;
+		}
+		void fetchNextPage();
+	};
+
+	if (error) {
+		return <EmptyState error={cleanError(error)} messageText={searchErrorText(error)} />;
+	}
+
+	if (!isFetched) {
+		return <Pending />;
+	}
+
+	if (!starterPacks.length) {
+		return <EmptyState messageText={<NoResultsText query={query} />} />;
+	}
+
+	return (
+		<List
+			data={starterPacks}
+			estimateHeight={STARTER_PACK_ITEM_HEIGHT_ESTIMATE}
+			keyExtractor={(item) => item.uri}
+			ListFooterComponent={<ListFooter hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} />}
+			onEndReached={onEndReached}
+			// the sticky tab bar already draws the divider above the first row
+			renderItem={({ index, item }) => <StarterPackCard.Default starterPack={item} topBorder={index !== 0} />}
+		/>
+	);
 }
 
 function FeedsResults({ query }: { query: string }) {

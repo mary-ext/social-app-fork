@@ -25,6 +25,8 @@ function getTabId(tabParam?: TabParam): SearchTabId {
 		case 'profile':
 		case 'user':
 			return 'people';
+		case 'starterpack':
+			return 'starterPacks';
 		default:
 			return 'top';
 	}
