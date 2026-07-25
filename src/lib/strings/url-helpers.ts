@@ -1,7 +1,6 @@
 import type { ActorIdentifier, Did, Nsid, RecordKey, ResourceUri } from '@atcute/lexicons/syntax';
 
 import { BSKY_SERVICE } from '#/lib/constants';
-import { startUriToStarterPackUri } from '#/lib/strings/starter-pack';
 
 const BSKY_TRUSTED_HOSTS = new Set([
 	'blueskyweb.xyz',
@@ -13,27 +12,6 @@ const BSKY_TRUSTED_HOSTS = new Set([
 
 export function makeRecordUri(didOrName: ActorIdentifier, collection: Nsid, rkey: RecordKey): ResourceUri {
 	return `at://${didOrName}/${collection}/${rkey}`;
-}
-
-/**
- * extracts the branded actor and record key from a normalized bsky.app record path of the form
- * `/profile/{actor}/{collection}/{rkey}`, as produced by {@link convertBskyAppUrlIfNeeded}.
- *
- * the two segments are asserted, not runtime-validated: callers must have already matched the path with one
- * of the `isBsky*Url` guards, whose accepted shape guarantees these positions.
- *
- * @param path normalized bsky.app record path
- * @returns the actor identifier and record key from the path
- */
-export function parseBskyRecordUrl(path: string): { actor: ActorIdentifier; rkey: RecordKey } {
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the caller's `isBsky*Url` guard fixes the segment layout
-	const [_0, actor, _1, rkey] = path.split('/').filter(Boolean) as [
-		string,
-		ActorIdentifier,
-		string,
-		RecordKey,
-	];
-	return { actor, rkey };
 }
 
 export function toNiceDomain(url: string): string {
@@ -64,15 +42,6 @@ export function toShortUrl(url: string): string {
 	}
 }
 
-export function isBskyAppUrl(url: string): boolean {
-	return url.startsWith('https://bsky.app/');
-}
-
-export function isExternalUrl(url: string): boolean {
-	const external = !isBskyAppUrl(url) && url.startsWith('http');
-	return external;
-}
-
 /**
  * whether a link target is trusted, i.e. safe to navigate to without a leaving-the-app warning. relative
  * paths and in-app anchors are trusted; an absolute URL is trusted only when its host matches an entry in
@@ -87,102 +56,6 @@ function isTrustedUrl(url: string): boolean {
 	}
 	const parsed = safeUrlParse(url);
 	return parsed !== null && BSKY_TRUSTED_HOSTS.has(parsed.host);
-}
-
-export function isBskyPostUrl(url: string): boolean {
-	if (isBskyAppUrl(url)) {
-		try {
-			const urlp = new URL(url);
-			return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(urlp.pathname);
-		} catch {}
-	}
-	return false;
-}
-
-export function isBskyCustomFeedUrl(url: string): boolean {
-	if (isBskyAppUrl(url)) {
-		try {
-			const urlp = new URL(url);
-			return /profile\/(?<name>[^/]+)\/feed\/(?<rkey>[^/]+)/i.test(urlp.pathname);
-		} catch {}
-	}
-	return false;
-}
-
-export function isBskyListUrl(url: string): boolean {
-	if (isBskyAppUrl(url)) {
-		try {
-			const urlp = new URL(url);
-			return /profile\/(?<name>[^/]+)\/lists\/(?<rkey>[^/]+)/i.test(urlp.pathname);
-		} catch {
-			console.error('Unexpected error in isBskyListUrl()', url);
-		}
-	}
-	return false;
-}
-
-export function isBskyStartUrl(url: string): boolean {
-	if (isBskyAppUrl(url)) {
-		try {
-			const urlp = new URL(url);
-			return /start\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname);
-		} catch {
-			console.error('Unexpected error in isBskyStartUrl()', url);
-		}
-	}
-	return false;
-}
-
-export function isBskyStarterPackUrl(url: string): boolean {
-	if (isBskyAppUrl(url)) {
-		try {
-			const urlp = new URL(url);
-			return /starter-pack\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname);
-		} catch {
-			console.error('Unexpected error in isBskyStarterPackUrl()', url);
-		}
-	}
-	return false;
-}
-
-// Invite codes are 7 alphanumeric characters long, supporting up to 10 here to future-proof.
-const CHAT_INVITE_CODE_REGEX = /^\/chat\/([a-zA-Z0-9]{7,10})$/;
-
-export function getChatInviteCodeFromUrl(url: string): string | undefined {
-	let pathname: string;
-	if (isBskyAppUrl(url)) {
-		try {
-			pathname = new URL(url).pathname;
-		} catch {
-			return undefined;
-		}
-	} else if (url.startsWith('/')) {
-		pathname = url.split('?')[0]!.split('#')[0]!;
-	} else {
-		return undefined;
-	}
-	return pathname.match(CHAT_INVITE_CODE_REGEX)?.[1];
-}
-
-export function isBskyChatInviteUrl(url: string): boolean {
-	return getChatInviteCodeFromUrl(url) !== undefined;
-}
-
-export function convertBskyAppUrlIfNeeded(url: string): string {
-	if (isBskyAppUrl(url)) {
-		try {
-			const urlp = new URL(url);
-
-			if (isBskyStartUrl(url)) {
-				return startUriToStarterPackUri(urlp.pathname);
-			}
-
-			return urlp.pathname + urlp.search;
-		} catch (e) {
-			console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e);
-		}
-	}
-	return url;
 }
 
 const TRIM_HOST_RE = /^www\./;

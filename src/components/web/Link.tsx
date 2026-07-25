@@ -5,13 +5,9 @@ import { useRouter } from '@oomfware/stacker';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import { resolveUrl } from '#/lib/routes/app-links';
 import type { RouteTarget } from '#/lib/routes/target';
-import {
-	convertBskyAppUrlIfNeeded,
-	getChatInviteCodeFromUrl,
-	isMisleadingLink,
-	safeUrlParse,
-} from '#/lib/strings/url-helpers';
+import { isMisleadingLink, safeUrlParse } from '#/lib/strings/url-helpers';
 
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import type { TextProps } from '#/components/Text';
@@ -91,17 +87,16 @@ export const useInternalLink = ({
 	return { href: path, onClick };
 };
 
-// shared core for raw-URL links: resolves the anchor href (a bsky.app URL collapses to an in-app route) and
-// returns `navigate`, which performs a plain click's default action — in-app navigation for a resolved
-// internal href, and nothing for a genuinely external or modified click (the native anchor opens those).
+// shared core for raw-URL links. `navigate` handles a plain click on a resolved internal href, and leaves an
+// external or modified click to the native anchor.
 const useExternalNav = (rawHref: string, action: LinkAction) => {
 	const navigateToPath = useNavigateToPath();
 	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
-	const parsed = safeUrlParse(rawHref);
-	const href = parsed ? convertBskyAppUrlIfNeeded(parsed.href) : undefined;
+	const resolved = resolveUrl(rawHref);
+	const href = resolved ? resolved.path : safeUrlParse(rawHref)?.href;
 
-	const isExternal = !href?.startsWith('/');
+	const isExternal = resolved === undefined;
 
 	const navigate = (e: MouseEvent<HTMLElement>) => {
 		if (!href || isExternal || isModifiedClick(e)) {
@@ -111,9 +106,9 @@ const useExternalNav = (rawHref: string, action: LinkAction) => {
 		e.preventDefault();
 
 		// a group-chat invite opens the join dialog in place rather than navigating to /chat/<code>.
-		const chatInviteCode = getChatInviteCodeFromUrl(href);
-		if (chatInviteCode) {
-			groupChatJoinHandle.openWithPayload({ code: chatInviteCode });
+		const link = resolved?.link;
+		if (link?.kind === 'chat-invite') {
+			groupChatJoinHandle.openWithPayload({ code: link.code });
 			return;
 		}
 
@@ -387,7 +382,7 @@ export const LinkButton = ({ action, onPress, to, ...rest }: LinkButtonProps) =>
 type ExternalNavProps = {
 	/** How the link navigates when an `href` that resolves in-app is pressed. */
 	action?: LinkAction;
-	/** A raw URL. A `bsky.app` URL is collapsed to its in-app route; anything else opens in a new tab. */
+	/** A raw URL. A known client's URL is collapsed to an in-app path; anything else opens in a new tab. */
 	href: string;
 	onPress?: LinkOnPress;
 };

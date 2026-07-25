@@ -6,8 +6,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
+import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';
-import { getChatInviteCodeFromUrl } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
@@ -92,7 +92,8 @@ function MediaEmbed({
 					</ContentHider>
 				);
 			}
-			const chatInviteCode = getChatInviteCodeFromUrl(media.external.uri);
+			const externalLink = resolveUrlToLink(media.external.uri);
+			const chatInviteCode = externalLink?.kind === 'chat-invite' ? externalLink.code : undefined;
 			if (chatInviteCode) {
 				return (
 					<ContentHider

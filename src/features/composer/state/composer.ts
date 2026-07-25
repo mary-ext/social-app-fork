@@ -2,13 +2,13 @@ import type { AppBskyDraftDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link-detection';
+import { resolveUrlToLink } from '#/lib/links/app-url';
 import type { VideoAsset } from '#/lib/media/video/types';
 import type { SelfLabel } from '#/lib/moderation';
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 import { insertMentionAt } from '#/lib/strings/mention-manip';
 import { getShortenedLength } from '#/lib/strings/rich-text-facets';
-import { isBskyPostUrl } from '#/lib/strings/url-helpers';
 
 import type { ComposerImage } from '#/state/gallery';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
@@ -468,7 +468,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 			const prevLink = state.embed.link;
 			let nextQuote = prevQuote;
 			let nextLink = prevLink;
-			if (isBskyPostUrl(action.uri)) {
+			if (resolveUrlToLink(action.uri)?.kind === 'post') {
 				if (!prevQuote) {
 					nextQuote = {
 						type: 'link',
@@ -606,7 +606,7 @@ export function createComposerState({
 		const detectedExtUris = new Map<string, LinkFacetMatch>();
 		const detectedPostUris = new Map<string, LinkFacetMatch>();
 		for (const [uri, match] of detectLinks(initialText)) {
-			if (isBskyPostUrl(uri)) {
+			if (resolveUrlToLink(uri)?.kind === 'post') {
 				detectedPostUris.set(uri, match);
 			} else {
 				detectedExtUris.set(uri, match);

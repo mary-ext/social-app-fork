@@ -21,17 +21,16 @@ import {
 	type SearchOperator,
 	type SuggestionMode,
 } from '#/lib/bsky/search';
+import { resolveUrl } from '#/lib/routes/app-links';
 import type { RouteTarget } from '#/lib/routes/target';
 import { profileTarget, recordUriToTarget } from '#/lib/routes/targets';
-import { convertBskyAppUrlIfNeeded, isBskyAppUrl, safeUrlParse } from '#/lib/strings/url-helpers';
 
 import { m } from '#/paraglide/messages';
 import { buildTarget } from '#/routes';
 import type { SearchHistoryEntry } from '#/storage';
 
 /**
- * resolves a pasted `bsky.app` URL or `at://` uri to the in-app path that renders it. the result is a path
- * rather than a target because a `bsky.app` URL can only be resolved by matching at runtime.
+ * resolves a pasted client URL or `at://` uri to the in-app path that renders it.
  *
  * @param query raw search query
  * @returns the in-app path, or null when the query names nothing this app routes
@@ -44,13 +43,7 @@ const resolveInAppUrl = (query: string): string | null => {
 		return target ? buildTarget(target) : null;
 	}
 
-	const url = safeUrlParse(trimmed);
-	if (url && isBskyAppUrl(url.href)) {
-		const path = convertBskyAppUrlIfNeeded(url.href);
-		return path.startsWith('/') ? path : null;
-	}
-
-	return null;
+	return resolveUrl(trimmed)?.path ?? null;
 };
 
 /**
@@ -291,9 +284,9 @@ export const buildResult = ({
 				if (did) {
 					rows.push({ key: 'goto-did', kind: 'goto', name: did, target: profileTarget(did) });
 				}
-				const url = resolveInAppUrl(query);
-				if (url) {
-					rows.push({ key: 'open-url', kind: 'link', path: url });
+				const path = resolveInAppUrl(query);
+				if (path) {
+					rows.push({ key: 'open-url', kind: 'link', path });
 				}
 				for (const profile of profiles) {
 					rows.push({ key: `profile-${profile.did}`, kind: 'profile', profile });

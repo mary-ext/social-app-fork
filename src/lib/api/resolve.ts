@@ -6,19 +6,10 @@ import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
+import { resolveUrlToLink } from '#/lib/links/app-url';
 import { compressLinkThumbImage } from '#/lib/media/image';
-import { createStarterPackUri, parseStarterPackUri } from '#/lib/strings/starter-pack';
-import {
-	convertBskyAppUrlIfNeeded,
-	isBskyCustomFeedUrl,
-	isBskyListUrl,
-	isBskyPostUrl,
-	isBskyStarterPackUrl,
-	isBskyStartUrl,
-	isShortLink,
-	makeRecordUri,
-	parseBskyRecordUrl,
-} from '#/lib/strings/url-helpers';
+import { createStarterPackUri } from '#/lib/strings/starter-pack';
+import { isShortLink, makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { type ComposerImage, createComposerImage } from '#/state/gallery';
 
@@ -85,77 +76,70 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 	if (isShortLink(uri)) {
 		uri = await resolveShortLink(uri);
 	}
-	if (isBskyPostUrl(uri)) {
-		uri = convertBskyAppUrlIfNeeded(uri);
-		const { actor, rkey } = parseBskyRecordUrl(uri);
-		const recordUri = makeRecordUri(actor, 'app.bsky.feed.post', rkey);
-		const post = await getPost({ uri: recordUri });
-		if (post.viewer?.embeddingDisabled) {
-			throw new EmbeddingDisabledError();
+	const link = resolveUrlToLink(uri);
+	switch (link?.kind) {
+		case 'feed': {
+			const did = await fetchDid(link.actor);
+			const feed = makeRecordUri(did, 'app.bsky.feed.generator', link.rkey);
+			const res = await ok(appview.get('app.bsky.feed.getFeedGenerator', { params: { feed } }));
+			return {
+				type: 'record',
+				record: {
+					uri: res.view.uri,
+					cid: res.view.cid,
+				},
+				kind: 'feed',
+				view: res.view,
+			};
 		}
-		return {
-			type: 'record',
-			record: {
-				cid: post.cid,
-				uri: post.uri,
-			},
-			kind: 'post',
-			view: post,
-		};
-	}
-	if (isBskyCustomFeedUrl(uri)) {
-		uri = convertBskyAppUrlIfNeeded(uri);
-		const { actor, rkey } = parseBskyRecordUrl(uri);
-		const did = await fetchDid(actor);
-		const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey);
-		const res = await ok(appview.get('app.bsky.feed.getFeedGenerator', { params: { feed } }));
-		return {
-			type: 'record',
-			record: {
-				uri: res.view.uri,
-				cid: res.view.cid,
-			},
-			kind: 'feed',
-			view: res.view,
-		};
-	}
-	if (isBskyListUrl(uri)) {
-		uri = convertBskyAppUrlIfNeeded(uri);
-		const { actor, rkey } = parseBskyRecordUrl(uri);
-		const did = await fetchDid(actor);
-		const list = makeRecordUri(did, 'app.bsky.graph.list', rkey);
-		const res = await ok(appview.get('app.bsky.graph.getList', { params: { list } }));
-		return {
-			type: 'record',
-			record: {
-				uri: res.list.uri,
-				cid: res.list.cid,
-			},
-			kind: 'list',
-			view: res.list,
-		};
-	}
-	if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
-		const parsed = parseStarterPackUri(uri);
-		if (!parsed) {
-			throw new Error('Unexpectedly called getStarterPackAsEmbed with a non-starterpack url');
+		case 'list': {
+			const did = await fetchDid(link.actor);
+			const list = makeRecordUri(did, 'app.bsky.graph.list', link.rkey);
+			const res = await ok(appview.get('app.bsky.graph.getList', { params: { list } }));
+			return {
+				type: 'record',
+				record: {
+					uri: res.list.uri,
+					cid: res.list.cid,
+				},
+				kind: 'list',
+				view: res.list,
+			};
 		}
-		const did = await fetchDid(parsed.actor);
-		const starterPack = createStarterPackUri({ did, rkey: parsed.rkey });
-		const res = await ok(
-			appview.get('app.bsky.graph.getStarterPack', {
-				params: { starterPack },
-			}),
-		);
-		return {
-			type: 'record',
-			record: {
-				uri: res.starterPack.uri,
-				cid: res.starterPack.cid,
-			},
-			kind: 'starter-pack',
-			view: res.starterPack,
-		};
+		case 'post': {
+			const recordUri = makeRecordUri(link.actor, 'app.bsky.feed.post', link.rkey);
+			const post = await getPost({ uri: recordUri });
+			if (post.viewer?.embeddingDisabled) {
+				throw new EmbeddingDisabledError();
+			}
+			return {
+				type: 'record',
+				record: {
+					cid: post.cid,
+					uri: post.uri,
+				},
+				kind: 'post',
+				view: post,
+			};
+		}
+		case 'starter-pack': {
+			const did = await fetchDid(link.actor);
+			const starterPack = createStarterPackUri({ did, rkey: link.rkey });
+			const res = await ok(
+				appview.get('app.bsky.graph.getStarterPack', {
+					params: { starterPack },
+				}),
+			);
+			return {
+				type: 'record',
+				record: {
+					uri: res.starterPack.uri,
+					cid: res.starterPack.cid,
+				},
+				kind: 'starter-pack',
+				view: res.starterPack,
+			};
+		}
 	}
 
 	// Forked from useGetPost. TODO: move into RQ.

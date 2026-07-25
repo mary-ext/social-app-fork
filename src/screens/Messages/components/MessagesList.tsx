@@ -7,13 +7,9 @@ import type { $type } from '@atcute/lexicons';
 
 import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { resolveUrlToLink } from '#/lib/links/app-url';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
-import {
-	convertBskyAppUrlIfNeeded,
-	getChatInviteCodeFromUrl,
-	isBskyPostUrl,
-} from '#/lib/strings/url-helpers';
 
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
 import type { ConvoState } from '#/state/messages/convo/types';
@@ -238,13 +234,12 @@ export function MessagesList({
 					// If the embedded post's own link sits at the start or end of the message text,
 					// strip it — it shows as the quote embed instead.
 					for (const token of tokenize(trimmedText)) {
-						if (token.type !== 'autolink' || !isBskyPostUrl(token.url)) {
+						if (token.type !== 'autolink') {
 							continue;
 						}
-						const url = convertBskyAppUrlIfNeeded(token.url);
+						const link = resolveUrlToLink(token.url);
 						// this might have a handle instead of a DID, so just compare the rkey
-						const rkey = url.split('/').findLast(Boolean);
-						if (rkey && post.uri.endsWith(rkey)) {
+						if (link?.kind === 'post' && post.uri.endsWith(link.rkey)) {
 							if (trimmedText.startsWith(token.raw)) {
 								trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
 							} else if (trimmedText.endsWith(token.raw)) {
@@ -275,7 +270,11 @@ export function MessagesList({
 			// If the invite link sits at the start or end of the message text, strip it — it shows as the
 			// invite card instead.
 			for (const token of tokenize(trimmedText)) {
-				if (token.type !== 'autolink' || getChatInviteCodeFromUrl(token.url) !== code) {
+				if (token.type !== 'autolink') {
+					continue;
+				}
+				const link = resolveUrlToLink(token.url);
+				if (link?.kind !== 'chat-invite' || link.code !== code) {
 					continue;
 				}
 				if (trimmedText.startsWith(token.raw)) {

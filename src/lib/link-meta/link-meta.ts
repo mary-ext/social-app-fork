@@ -2,10 +2,8 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 
 import { internalClient } from '#/lib/api/internal-client';
+import { isClientUrl, resolveUrlToLink } from '#/lib/links/app-url';
 import { getGiphyMetaUri } from '#/lib/strings/embed-player';
-import { parseStarterPackUri } from '#/lib/strings/starter-pack';
-
-import { isBskyAppUrl } from '../strings/url-helpers';
 
 export interface LinkMeta {
 	/**
@@ -22,7 +20,8 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta> {
-	if (isBskyAppUrl(url) && !parseStarterPackUri(url)) {
+	// a client's pages have no card worth scraping, except a starter pack's og image.
+	if (isClientUrl(url) && resolveUrlToLink(url)?.kind !== 'starter-pack') {
 		return { url };
 	}
 

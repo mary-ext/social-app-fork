@@ -83,7 +83,3 @@ export function getStarterPackOgCard(didOrStarterPack: AnyStarterPackView | stri
 export function createStarterPackUri({ did, rkey }: { did: Did; rkey: RecordKey }): CanonicalResourceUri {
 	return `at://${did}/app.bsky.graph.starterpack/${rkey}`;
 }
-
-export function startUriToStarterPackUri(uri: string) {
-	return uri.replace('/start/', '/starter-pack/');
-}

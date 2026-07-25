@@ -6,7 +6,7 @@ import { getGraphemeLength } from '@atcute/util-text';
 
 import { MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants';
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link-detection';
-import { isBskyChatInviteUrl, isBskyPostUrl } from '#/lib/strings/url-helpers';
+import { resolveUrlToLink } from '#/lib/links/app-url';
 
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
 
@@ -112,7 +112,8 @@ export function MessageComposer({
 		// never shadows an embeddable one in the same message.
 		const nextDetectedUris = new Map<string, LinkFacetMatch>();
 		for (const [uri, match] of detectLinks(nextText)) {
-			if (isBskyChatInviteUrl(uri) || isBskyPostUrl(uri)) {
+			const kind = resolveUrlToLink(uri)?.kind;
+			if (kind === 'chat-invite' || kind === 'post') {
 				nextDetectedUris.set(uri, match);
 			}
 		}

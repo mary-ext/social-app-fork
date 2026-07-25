@@ -6,15 +6,9 @@ import type { ResourceUri } from '@atcute/lexicons/syntax';
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
+import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';
-import {
-	convertBskyAppUrlIfNeeded,
-	getChatInviteCodeFromUrl,
-	isBskyChatInviteUrl,
-	isBskyPostUrl,
-	makeRecordUri,
-	parseBskyRecordUrl,
-} from '#/lib/strings/url-helpers';
+import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';
@@ -83,19 +77,17 @@ export function useMessageEmbed() {
 				return;
 			}
 
-			if (isBskyChatInviteUrl(embedUrl)) {
-				const code = getChatInviteCodeFromUrl(embedUrl);
-				if (code) {
-					setEmbedState({ type: 'invite', code });
+			const link = resolveUrlToLink(embedUrl);
+			switch (link?.kind) {
+				case 'chat-invite': {
+					setEmbedState({ type: 'invite', code: link.code });
+					break;
 				}
-				return;
-			}
-
-			if (isBskyPostUrl(embedUrl)) {
-				const url = convertBskyAppUrlIfNeeded(embedUrl);
-				const { actor, rkey } = parseBskyRecordUrl(url);
-				const uri = makeRecordUri(actor, 'app.bsky.feed.post', rkey);
-				setEmbedState({ type: 'post', uri });
+				case 'post': {
+					const uri = makeRecordUri(link.actor, 'app.bsky.feed.post', link.rkey);
+					setEmbedState({ type: 'post', uri });
+					break;
+				}
 			}
 		},
 	};
