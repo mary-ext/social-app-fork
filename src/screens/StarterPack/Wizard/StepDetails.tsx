@@ -4,6 +4,7 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
+import { STALE } from '#/state/queries';
 
 import { StarterPack } from '#/components/icons/StarterPack';
 import { Text } from '#/components/Text';
@@ -22,7 +23,7 @@ export function StepDetails() {
 	const { currentAccount } = useSession();
 	const { data: currentProfile } = useProfileQuery({
 		did: currentAccount?.did,
-		staleTime: Infinity,
+		staleTime: STALE.INFINITY,
 	});
 
 	const name = currentProfile?.displayName || currentProfile?.handle;

@@ -1,6 +1,6 @@
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 
-import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
+import { useCurrentAccountProfile } from '#/state/queries/profile';
 
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { Text } from '#/components/Text';

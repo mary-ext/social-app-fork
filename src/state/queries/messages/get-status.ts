@@ -2,7 +2,7 @@ import { ok } from '@atcute/client';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { STALE } from '#/state/queries';
+import { GCTIME, STALE } from '#/state/queries';
 import { createQueryKey } from '#/state/queries/util';
 import { getClients } from '#/state/session';
 
@@ -12,7 +12,7 @@ export function useChatActorStatusQuery() {
 	const { chat } = getClients();
 
 	return useQuery({
-		gcTime: STALE.INFINITY,
+		gcTime: GCTIME.INFINITY,
 		staleTime: STALE.SECONDS.FIFTEEN,
 		queryKey: chatActorStatusQueryKey(),
 		queryFn: async () => {

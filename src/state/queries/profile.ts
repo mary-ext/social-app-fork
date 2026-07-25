@@ -29,7 +29,7 @@ import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
-import { updateProfileShadow } from '#/state/cache/profile-shadow';
+import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { registerShadowFinders } from '#/state/cache/registry';
 import type { Shadow } from '#/state/cache/types';
 import type { ImageMeta } from '#/state/gallery';
@@ -106,6 +106,11 @@ export function useProfileQuery({
 		},
 		enabled: !!did,
 	});
+}
+export function useCurrentAccountProfile() {
+	const { currentAccount } = useSession();
+	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
+	return useMaybeProfileShadow(profile);
 }
 
 // hoisted for a stable reference so react-query memoizes the combined result across renders.

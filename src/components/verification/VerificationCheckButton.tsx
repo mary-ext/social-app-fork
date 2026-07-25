@@ -1,7 +1,7 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import type { Shadow } from '#/state/cache/types';
-import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
+import { useCurrentAccountProfile } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
