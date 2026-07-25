@@ -62,7 +62,7 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	const query = useQuery<UsePostThreadQueryResult>({
 		enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
 		queryKey: postThreadQueryKey,
-		async queryFn(ctx) {
+		async queryFn() {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPostThreadV2', {
 					params: {
@@ -74,25 +74,12 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 				}),
 			);
 
-			/*
-			 * Initialize `ctx.meta` to track if we know we have additional replies
-			 * we could fetch once we hit the end.
-			 */
-			ctx.meta = ctx.meta || {
-				hasOtherReplies: false,
-			};
-
-			/*
-			 * If we know we have additional replies, we'll set this to true.
-			 */
-			if (data.hasOtherReplies) {
-				ctx.meta.hasOtherReplies = true;
-			}
-
 			const result = {
 				thread: data.thread || [],
 				threadgate: data.threadgate,
-				hasOtherReplies: !!ctx.meta.hasOtherReplies,
+				// this used to accumulate onto a `meta` scratch object, but nothing ever seeded one, so the
+				// flag only ever reflected the response being handled right here.
+				hasOtherReplies: data.hasOtherReplies,
 			};
 
 			const record = getThreadgateRecord(result.threadgate);
