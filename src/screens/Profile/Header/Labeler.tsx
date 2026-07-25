@@ -18,6 +18,7 @@ import { logger } from '#/logger';
 
 import { ProfileMenu } from '#/screens/Profile/components/ProfileMenu';
 
+import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
 import {
 	Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
 	Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -119,12 +120,13 @@ function SubscribeLabelerButton() {
 
 function LabelerActions() {
 	const {
-		meta: { isMe },
+		meta: { hasSession, isMe, relationship },
 		state: { profile },
 	} = useProfileHeader();
 
 	return (
 		<>
+			{hasSession && relationship === 'default' && <MessageProfileButton profile={profile} />}
 			{isMe ? <EditProfileButton /> : !isAppLabeler(profile.did) ? <SubscribeLabelerButton /> : null}
 			<ProfileMenu profile={profile} />
 		</>
