@@ -432,7 +432,7 @@ function Recipient({
 								className={styles.changeLink}
 								type="button"
 							>
-								<Text color="primary_500">{m['components.moderation.service.change.label']()}</Text>
+								<Text color="textLink">{m['components.moderation.service.change.label']()}</Text>
 							</button>
 						}
 					/>

@@ -29,7 +29,7 @@ export function ViewFullThread({ uri }: { uri: string }) {
 				<div className={css.dash} />
 				<div className={css.segment} />
 			</div>
-			<Text color="primary_500" weight="medium">
+			<Text color="textLink" weight="medium">
 				{m['view.posts.thread.viewFull']()}
 			</Text>
 		</Link>

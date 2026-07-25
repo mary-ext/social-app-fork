@@ -45,7 +45,7 @@ const MenuSpinner = () => <Spinner color="default" label={m['common.status.loadi
 
 export function RichTextTag({
 	authorHandle,
-	color = 'primary_500',
+	color = 'textLink',
 	display,
 	leading,
 	size,

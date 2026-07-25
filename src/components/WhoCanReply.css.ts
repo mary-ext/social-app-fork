@@ -19,7 +19,7 @@ export const trigger = style({
 });
 
 export const triggerAuthor = style({
-	color: colors.primary_500,
+	color: colors.textLink,
 });
 
 export const label = style({

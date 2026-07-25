@@ -17,7 +17,7 @@ export const showMore = style({
 	paddingBottom: 5,
 	textDecoration: 'none',
 	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
-	color: vars.palette.primary_500,
+	color: vars.text.link,
 	fontFamily: 'inherit',
 	fontSize: fontSize.md,
 	cursor: 'pointer',

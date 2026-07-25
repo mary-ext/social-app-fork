@@ -97,7 +97,7 @@ export function PostHider({
 						setOverride(true);
 					}}
 				>
-					<Text color="primary_500">{m['common.action.show']()}</Text>
+					<Text color="textLink">{m['common.action.show']()}</Text>
 				</button>
 			)}
 		</div>

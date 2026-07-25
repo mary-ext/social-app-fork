@@ -82,7 +82,7 @@ export const overlay = style([
 ]);
 
 export const facet = style({
-	color: vars.palette.primary_500,
+	color: vars.text.link,
 });
 
 export const textarea = style([

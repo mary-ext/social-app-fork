@@ -6,4 +6,5 @@ export const vars = createThemeContract({
 	palette: DEFAULT_PALETTE,
 	shadow: { dialog: null, lg: null, md: null, sm: null, xs: null },
 	opacity: { hover: null },
+	text: { link: null },
 });

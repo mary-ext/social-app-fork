@@ -71,7 +71,7 @@ export const changeLink = style({
 	border: 'none',
 	background: 'none',
 	padding: 0,
-	color: vars.palette.primary_500,
+	color: vars.text.link,
 	font: 'inherit',
 	cursor: 'pointer',
 	selectors: {

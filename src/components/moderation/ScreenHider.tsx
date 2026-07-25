@@ -63,7 +63,7 @@ export function ScreenHider({
 						className={css.learnMore}
 						handle={handle}
 					>
-						<Text color="primary_500" size="lg">
+						<Text color="textLink" size="lg">
 							{m['components.moderation.label.learnMore.label']()}
 						</Text>
 					</Dialog.Trigger>

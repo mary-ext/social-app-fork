@@ -89,11 +89,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 				onMouseEnter={isThreadAuthor ? prefetch : undefined}
 			>
 				<Icon width={16} settings={settings} />
-				<Text
-					className={css.label}
-					size="md_sub"
-					color={isThreadAuthor ? 'primary_500' : 'textContrastMedium'}
-				>
+				<Text className={css.label} size="md_sub" color={isThreadAuthor ? 'textLink' : 'textContrastMedium'}>
 					{description}
 				</Text>
 				{isThreadAuthor && <TinyChevronDownIcon size="2xs" fill="currentColor" />}

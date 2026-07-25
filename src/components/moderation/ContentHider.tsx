@@ -193,7 +193,7 @@ function ContentHiderActive({
 						{desc.sourceType === 'user'
 							? m['components.moderation.label.labeledByAuthor']()
 							: m['components.moderation.label.labeledBy']({ source: sanitizeDisplayName(desc.source) })}{' '}
-						<Text size="md_sub" color="primary_500" className={styles.learnMoreLink}>
+						<Text size="md_sub" color="textLink" className={styles.learnMoreLink}>
 							{m['components.moderation.label.learnMore.dot']()}
 						</Text>
 					</Text>
