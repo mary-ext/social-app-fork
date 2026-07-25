@@ -16,13 +16,12 @@ import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
-import { Post } from '#/view/com/post/Post';
-
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
+import { Post } from '#/components/Post/Post';
 import { SearchError } from '#/components/SearchError';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';

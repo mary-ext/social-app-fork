@@ -35,8 +35,6 @@ import { logger } from '#/logger';
 import { niceDate } from '#/locale/intl/datetime';
 import { Trans } from '#/locale/Trans';
 
-import { Post } from '#/view/com/post/Post';
-
 import { BlockLink } from '#/components/BlockLink';
 import * as FeedCard from '#/components/FeedCard';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
@@ -53,6 +51,7 @@ import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons
 import { StarterPack } from '#/components/icons/StarterPack';
 import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
 import * as MediaPreview from '#/components/MediaPreview';
+import { Post } from '#/components/Post/Post';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';

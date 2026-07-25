@@ -14,7 +14,7 @@ import type { FeedDescriptor, FeedPostSliceItem } from '#/state/queries/post-fee
 
 import { Logger } from '#/logger';
 
-import * as PostFeed from '#/view/com/posts/PostFeed';
+import * as PostFeed from '#/components/PostFeed/PostFeed';
 
 import { getClients } from './session';
 

@@ -5,12 +5,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 
-import { PostFeed } from '#/view/com/posts/PostFeed';
-
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
+import { PostFeed } from '#/components/PostFeed/PostFeed';
 
 import { m } from '#/paraglide/messages';
 

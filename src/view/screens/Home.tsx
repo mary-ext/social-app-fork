@@ -9,12 +9,11 @@ import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/ty
 import { useSession } from '#/state/session';
 import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed';
 
-import { FeedPage } from '#/view/com/feeds/FeedPage';
-import { HomeHeaderLayout } from '#/view/com/home/HomeHeaderLayout';
-import { CustomFeedEmptyState } from '#/view/com/posts/CustomFeedEmptyState';
-import { FollowingEmptyState } from '#/view/com/posts/FollowingEmptyState';
-
-import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
+import { CustomFeedEmptyState } from '#/screens/Home/components/CustomFeedEmptyState';
+import { FeedPage } from '#/screens/Home/components/FeedPage';
+import { FollowingEmptyState } from '#/screens/Home/components/FollowingEmptyState';
+import { HomeHeaderLayout } from '#/screens/Home/components/HomeHeaderLayout';
+import { NoFeedsPinned } from '#/screens/Home/components/NoFeedsPinned';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { type Section, Tabs } from '#/components/Tabs';

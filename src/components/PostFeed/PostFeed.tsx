@@ -24,14 +24,13 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
-
 import { SuggestedFollows } from '#/components/FeedInterstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
+import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/TrendingInterstitial';
 
-import { ComposerPrompt } from '../feeds/ComposerPrompt';
+import { ComposerPrompt } from './ComposerPrompt';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
 import { PostFeedErrorMessage } from './PostFeedErrorMessage';
 import { PostFeedItem } from './PostFeedItem';

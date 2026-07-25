@@ -2,11 +2,10 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 
-import { MyLists } from '#/view/com/lists/MyLists';
-
 import * as Dialog from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
+import { MyLists } from '#/components/MyLists';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 

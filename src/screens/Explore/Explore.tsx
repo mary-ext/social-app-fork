@@ -14,10 +14,6 @@ import { useSuggestedStarterPacksQuery } from '#/state/queries/useSuggestedStart
 
 import { logger } from '#/logger';
 
-import { isThreadChildAt, isThreadParentAt } from '#/view/com/posts/PostFeed';
-import { PostFeedItem } from '#/view/com/posts/PostFeedItem';
-import { ViewFullThread } from '#/view/com/posts/ViewFullThread';
-
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
@@ -28,6 +24,9 @@ import { StarterPack } from '#/components/icons/StarterPack';
 import { UserCircle_Stroke2_Corner0_Rounded as Person } from '#/components/icons/UserCircle';
 import { List } from '#/components/List/List';
 import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
+import { isThreadChildAt, isThreadParentAt } from '#/components/PostFeed/PostFeed';
+import { PostFeedItem } from '#/components/PostFeed/PostFeedItem';
+import { ViewFullThread } from '#/components/PostFeed/ViewFullThread';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as ProfileCard from '#/components/web/ProfileCard';

@@ -12,12 +12,11 @@ import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
-import { Post } from '#/view/com/post/Post';
-
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { Post } from '#/components/Post/Post';
 import { SearchError } from '#/components/SearchError';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';

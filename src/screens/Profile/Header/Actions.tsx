@@ -1,4 +1,4 @@
-import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
+import { ProfileMenu } from '#/screens/Profile/components/ProfileMenu';
 
 import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
 import * as Dialog from '#/components/Dialog';

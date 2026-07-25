@@ -16,7 +16,7 @@ import { logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
-import { NotificationFeed } from '#/view/com/notifications/NotificationFeed';
+import { NotificationFeed } from '#/screens/Notifications/components/NotificationFeed';
 
 import { FAB } from '#/components/FAB';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';

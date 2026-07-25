@@ -7,14 +7,13 @@ import { cleanError } from '#/lib/strings/errors';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
 
-import { Post } from '#/view/com/post/Post';
-import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
-
 import { EmptyState } from '#/components/EmptyState';
 import { BookmarkDeleteLarge, BookmarkFilled } from '#/components/icons/Bookmark';
 import { CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon } from '#/components/icons/CircleQuestion';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
+import { Post } from '#/components/Post/Post';
+import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { Text } from '#/components/Text';
 import * as toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';

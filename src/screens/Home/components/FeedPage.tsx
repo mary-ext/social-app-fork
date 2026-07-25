@@ -13,12 +13,11 @@ import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-f
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
-import { PostFeed } from '#/view/com/posts/PostFeed';
-
 import { FAB } from '#/components/FAB';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
+import { PostFeed } from '#/components/PostFeed/PostFeed';
 
 import { m } from '#/paraglide/messages';
 import { useRoute } from '#/routes';

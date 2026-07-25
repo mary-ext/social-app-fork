@@ -18,9 +18,6 @@ import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
-import { PostFeed } from '#/view/com/posts/PostFeed';
-import { PostFeedLoadingPlaceholder } from '#/view/com/posts/PostFeedLoadingPlaceholder';
-
 import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/components/ProfileFeedHeader';
 
 import { EmptyState } from '#/components/EmptyState';
@@ -30,6 +27,8 @@ import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/ico
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
+import { PostFeed } from '#/components/PostFeed/PostFeed';
+import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

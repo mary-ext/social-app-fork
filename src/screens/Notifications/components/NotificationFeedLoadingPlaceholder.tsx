@@ -4,13 +4,12 @@ import { clsx } from 'clsx';
 
 import { triangularRandom } from '#/lib/numbers';
 
+import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled } from '#/components/icons/Heart2';
 import {
 	PostLoadingPlaceholder,
 	type PostRow,
 	randomPostRow,
-} from '#/view/com/posts/PostFeedLoadingPlaceholder';
-
-import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled } from '#/components/icons/Heart2';
+} from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import * as Skele from '#/components/web/Skeleton';
 
 import { colors } from '#/styles/colors';

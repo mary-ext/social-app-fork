@@ -14,7 +14,7 @@ import { Text } from '#/components/Text';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-import { ErrorState } from '../ErrorState';
+import { ErrorState } from '../components/ErrorState';
 import * as css from './Labels.css';
 
 interface LabelsSectionProps {

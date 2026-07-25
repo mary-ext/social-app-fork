@@ -12,10 +12,9 @@ import { precacheFeedFromGeneratorView, useFeedSourceInfoQuery } from '#/state/q
 import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { MissingFeed } from '#/view/com/feeds/MissingFeed';
-
 import { BlockLink } from '#/components/BlockLink';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
+import { MissingFeed } from '#/components/MissingFeed';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';

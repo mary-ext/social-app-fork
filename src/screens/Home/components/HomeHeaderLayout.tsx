@@ -2,7 +2,6 @@ import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useSession } from '#/state/session';
 
-import * as styles from '#/view/com/home/HomeHeaderLayout.css';
 import { Logo } from '#/view/icons/Logo';
 
 import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag';
@@ -11,6 +10,8 @@ import * as Layout from '#/components/web/Layout';
 import { LinkButton } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+
+import * as styles from './HomeHeaderLayout.css';
 
 /** The home screen's scroll-away header above the feed tabs: a centered logo and a feeds-discovery link. */
 export function HomeHeaderLayout() {

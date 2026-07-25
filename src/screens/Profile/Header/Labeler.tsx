@@ -16,7 +16,7 @@ import { useRequireAuth } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
+import { ProfileMenu } from '#/screens/Profile/components/ProfileMenu';
 
 import {
 	Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,

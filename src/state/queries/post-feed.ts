@@ -45,7 +45,7 @@ import { getClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { KnownError } from '#/view/com/posts/PostFeedErrorMessage';
+import { KnownError } from '#/components/PostFeed/PostFeedErrorMessage';
 
 import { useFeedTuners } from '../preferences/feed-tuners';
 import { useModerationOpts } from '../preferences/moderation-opts';

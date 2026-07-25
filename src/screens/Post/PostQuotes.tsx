@@ -13,10 +13,9 @@ import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 
 import { logger } from '#/logger';
 
-import { Post } from '#/view/com/post/Post';
-
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { Post } from '#/components/Post/Post';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

@@ -5,13 +5,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { softReset } from '#/state/events';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 
-import { PostFeed } from '#/view/com/posts/PostFeed';
-
 import { EmptyState } from '#/components/EmptyState';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
+import { PostFeed } from '#/components/PostFeed/PostFeed';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';

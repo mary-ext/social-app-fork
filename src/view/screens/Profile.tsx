@@ -27,9 +27,8 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
 
-import { ProfileFeedgens } from '#/view/com/feeds/ProfileFeedgens';
-import { ProfileLists } from '#/view/com/lists/ProfileLists';
-
+import { ProfileFeedgens } from '#/screens/Profile/components/ProfileFeedgens';
+import { ProfileLists } from '#/screens/Profile/components/ProfileLists';
 import { ProfileHeader, ProfileHeaderSkeleton } from '#/screens/Profile/Header';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 import { ProfileLabelsSection } from '#/screens/Profile/Sections/Labels';
