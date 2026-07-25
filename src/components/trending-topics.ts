@@ -1,7 +1,8 @@
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
-import { isActorIdentifier } from '@atcute/lexicons/syntax';
 
-import { starterPackTarget } from '#/lib/routes/targets';
+import type { AppLink } from '#/lib/links/app-url';
+import { parseBlueskyPath } from '#/lib/links/schemes/bluesky';
+import { appLinkToTarget } from '#/lib/routes/app-links';
 
 import { m } from '#/paraglide/messages';
 import type { RouteTarget } from '#/routes';
@@ -12,6 +13,19 @@ type ParsedTrendingTopic = {
 	target: RouteTarget | undefined;
 };
 
+const labelFor = (link: AppLink | undefined, name: string): string => {
+	switch (link?.kind) {
+		case 'hashtag':
+			return m['components.trendingTopics.a11y.browseTag']({ name });
+		case 'search':
+			return m['components.trendingTopics.a11y.browseAbout']({ name });
+		case 'starter-pack':
+			return m['components.trendingTopics.a11y.browseStarterPack']({ name });
+		default:
+			return m['components.trendingTopics.a11y.browseTopic']({ name });
+	}
+};
+
 /**
  * classifies a trend by the in-app path the API hands back, resolving it to a route target.
  *
@@ -19,46 +33,15 @@ type ParsedTrendingTopic = {
  * @returns the trend's accessible label and its destination
  */
 export function useTopic(raw: AppBskyUnspeccedDefs.TrendView): ParsedTrendingTopic {
-	const { topic: displayName, link } = raw;
+	const { displayName, link } = raw;
 
-	// `link` is a path, so parsing it needs a base; only the path and query are read back out.
+	// the appview writes trend links in bsky.app's scheme, as a path against an implied host; parsing one needs
+	// a base, and only its path and query are read back out.
 	const url = URL.parse(link, 'https://bsky.app');
-	const segments = url?.pathname.split('/').filter(Boolean) ?? [];
-
-	switch (segments[0]) {
-		case 'search': {
-			const q = url?.searchParams.get('q');
-			return {
-				label: m['components.trendingTopics.a11y.browseAbout']({ name: displayName }),
-				// Explore and Search share `/search`; an empty query is Explore's, not a search for nothing.
-				target: q ? { name: 'Search', q } : { name: 'Explore' },
-			};
-		}
-		case 'hashtag': {
-			const tag = segments[1];
-			return {
-				label: m['components.trendingTopics.a11y.browseTag']({ name: displayName }),
-				target: tag ? { name: 'Hashtag', tag } : undefined,
-			};
-		}
-		case 'starter-pack': {
-			const [, actor, rkey] = segments;
-			return {
-				label: m['components.trendingTopics.a11y.browseStarterPack']({ name: displayName }),
-				target: isActorIdentifier(actor) && rkey ? starterPackTarget(actor, rkey) : undefined,
-			};
-		}
-		case 'topic': {
-			const topic = segments[1];
-			return {
-				label: m['components.trendingTopics.a11y.browseTopic']({ name: displayName }),
-				target: topic ? { name: 'Topic', topic } : undefined,
-			};
-		}
-	}
+	const parsed = url !== null ? parseBlueskyPath(url) : undefined;
 
 	return {
-		label: m['components.trendingTopics.a11y.browseTopic']({ name: displayName }),
-		target: undefined,
+		label: labelFor(parsed, displayName),
+		target: parsed && appLinkToTarget(parsed),
 	};
 }

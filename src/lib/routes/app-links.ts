@@ -10,8 +10,13 @@ import {
 
 import { type RouteTarget, router } from '#/routes';
 
-/** maps a link parsed out of a client's URL onto the route that renders it here. */
-const appLinkToTarget = (link: AppLink): RouteTarget => {
+/**
+ * maps a link parsed out of a client's URL onto the route that renders it here.
+ *
+ * @param link what the URL names
+ * @returns the destination that renders it
+ */
+export const appLinkToTarget = (link: AppLink): RouteTarget => {
 	switch (link.kind) {
 		// a chat invite has a route so the link keeps anchor semantics (opening in a new tab lands on the join
 		// screen), but a plain click is intercepted into the join dialog instead.
