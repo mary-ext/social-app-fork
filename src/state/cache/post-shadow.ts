@@ -5,7 +5,6 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import { batchedUpdates } from '#/lib/batchedUpdates';
 import { KeyedEventEmitter } from '#/lib/keyed-event-emitter';
 
 import { getPostFinders } from './registry';
@@ -146,9 +145,7 @@ export function updatePostShadow(queryClient: QueryClient, uri: string, value: P
 	for (const post of cachedPosts) {
 		shadows.set(post, { ...shadows.get(post), ...value });
 	}
-	batchedUpdates(() => {
-		emitter.emit(uri);
-	});
+	emitter.emit(uri);
 }
 
 function* findPostsInCache(queryClient: QueryClient, uri: string): Generator<AppBskyFeedDefs.PostView, void> {

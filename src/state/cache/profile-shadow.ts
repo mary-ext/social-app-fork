@@ -6,7 +6,6 @@ import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import { batchedUpdates } from '#/lib/batchedUpdates';
 import { KeyedEventEmitter } from '#/lib/keyed-event-emitter';
 
 import type { FeedPage } from '#/state/queries/post-feed';
@@ -172,10 +171,8 @@ export function updateProfileShadow(queryClient: QueryClient, did: string, value
 	for (const profile of cachedProfiles) {
 		shadows.set(profile, { ...shadows.get(profile), ...value });
 	}
-	batchedUpdates(() => {
-		emitter.emit(did, value);
-		globalEmitter.emit({ did, shadow: value });
-	});
+	emitter.emit(did, value);
+	globalEmitter.emit({ did, shadow: value });
 }
 
 /**

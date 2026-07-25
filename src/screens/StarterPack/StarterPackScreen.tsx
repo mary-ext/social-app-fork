@@ -9,7 +9,6 @@ import { definite, mapDefined } from '@mary/array-fns';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
-import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { prefetchImage } from '#/lib/media/prefetch';
@@ -266,13 +265,11 @@ function Header({
 		}
 
 		setIsProcessing(false);
-		batchedUpdates(() => {
-			for (const did of dids) {
-				updateProfileShadow(queryClient, did, {
-					followingUri: followUris.get(did),
-				});
-			}
-		});
+		for (const did of dids) {
+			updateProfileShadow(queryClient, did, {
+				followingUri: followUris.get(did),
+			});
+		}
 		Toast.show(m['screens.starterPack.follow.success']());
 	};
 

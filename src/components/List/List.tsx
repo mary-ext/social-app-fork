@@ -1,6 +1,5 @@
 import { type ReactNode, type Ref, startTransition, useEffect, useImperativeHandle, useRef } from 'react';
 
-import { batchedUpdates } from '#/lib/batchedUpdates';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import * as css from '#/components/List/List.css';
@@ -279,7 +278,7 @@ function Visibility({
 
 				if (isIntersecting.current !== next) {
 					isIntersecting.current = next;
-					batchedUpdates(() => onVisibleChange(next));
+					onVisibleChange(next);
 				}
 			},
 			{
