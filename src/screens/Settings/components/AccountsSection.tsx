@@ -1,25 +1,17 @@
 import { useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import {
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateProfile,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { removeAccount, type SessionAccount, useSession } from '#/state/session';
-
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { AvatarStack } from '#/components/AvatarStack';
 import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
@@ -31,15 +23,13 @@ import {
 	PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person';
 import * as Menu from '#/components/Menu';
-import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { UserAvatar } from '#/components/UserAvatar';
-import * as Skele from '#/components/web/Skeleton';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
@@ -92,13 +82,6 @@ function CurrentAccountRow({
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const shadow = useProfileShadow(profile);
-	const { isActive: live } = useActorStatus(profile);
-
-	const moderation = moderateProfile(profile, moderationOpts);
-	const displayName = sanitizeDisplayName(
-		profile.displayName || profile.handle,
-		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-	);
 
 	return (
 		<Settings.LinkRowRaw
@@ -106,30 +89,8 @@ function CurrentAccountRow({
 			label={m['screens.settings.account.viewProfile']()}
 			to={makeProfileLink(profile)}
 		>
-			<UserAvatar
-				avatar={shadow.avatar}
-				live={live}
-				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-				size={40}
-				type={shadow.associated?.labeler ? 'labeler' : 'user'}
-			/>
-			<div className={styles.identity}>
-				<span className={styles.nameLine}>
-					<Text
-						className={styles.primaryText}
-						color="textContrastHigh"
-						numberOfLines={1}
-						size="md"
-						weight="semiBold"
-					>
-						{profile.handle}
-					</Text>
-					<ProfileBadges profile={shadow} size="sm" />
-				</span>
-				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{displayName}
-				</Text>
-			</div>
+			<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={shadow} />
+			<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={shadow} />
 			<ChevronRightIcon className={cardStyles.chevron} fill="currentColor" size="sm" />
 		</Settings.LinkRowRaw>
 	);
@@ -138,11 +99,8 @@ function CurrentAccountRow({
 function CurrentAccountRowSkeleton({ className }: { className?: string }) {
 	return (
 		<div className={clsx(cardStyles.rowPlain, className)}>
-			<Skele.Circle color="contrast_100" size={40} />
-			<div className={styles.identity}>
-				<Skele.Text color="contrast_100" size="md" width={90} />
-				<Skele.Text color="contrast_100" size="md_sub" width={140} />
-			</div>
+			<ProfileCard.AvatarPlaceholder color="contrast_100" />
+			<ProfileCard.NameAndHandlePlaceholder color="contrast_100" />
 		</div>
 	);
 }
@@ -214,7 +172,8 @@ function OtherAccountRow({
 	profile?: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const removePromptHandle = Prompt.usePromptHandle();
-	const { isActive: live } = useActorStatus(profile);
+
+	const profileView = profile ?? account;
 
 	return (
 		<div className={styles.accountRow}>
@@ -229,25 +188,19 @@ function OtherAccountRow({
 				type="button"
 			>
 				<span className={styles.accountAvatar}>
-					{moderationOpts && profile ? (
-						<UserAvatar
-							avatar={profile.avatar}
+					{moderationOpts ? (
+						<ProfileCard.Avatar
+							disabledPreview
 							hideLiveBadge
-							live={live}
-							moderation={getDisplayRestrictions(
-								moderateProfile(profile, moderationOpts),
-								DisplayContext.ProfileMedia,
-							)}
+							moderationOpts={moderationOpts}
+							profile={profileView}
 							size={28}
-							type={profile.associated?.labeler ? 'labeler' : 'user'}
 						/>
 					) : (
-						<div className={styles.avatarPlaceholder} />
+						<ProfileCard.AvatarPlaceholder size={28} />
 					)}
 				</span>
-				<Text className={styles.handle} numberOfLines={1} size="md" weight="medium">
-					{account.handle}
-				</Text>
+				<ProfileCard.Handle className={styles.handle} profile={profileView} />
 
 				{pendingDid === account.did && (
 					<Spinner color="default" label={m['screens.settings.account.switching']()} size="sm" />

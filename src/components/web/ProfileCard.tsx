@@ -121,6 +121,7 @@ export function Link({
 /** A profile avatar; previewable on hover unless `disabledPreview` is set. */
 export function Avatar({
 	disabledPreview,
+	hideLiveBadge,
 	liveOverride,
 	moderationOpts,
 	onPress,
@@ -128,6 +129,7 @@ export function Avatar({
 	size = 40,
 }: {
 	disabledPreview?: boolean;
+	hideLiveBadge?: boolean;
 	liveOverride?: boolean;
 	moderationOpts: ModerationOptions;
 	onPress?: () => void;
@@ -140,6 +142,7 @@ export function Avatar({
 	return disabledPreview ? (
 		<UserAvatar
 			avatar={profile.avatar}
+			hideLiveBadge={hideLiveBadge}
 			live={liveOverride ?? live}
 			moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 			size={size}
@@ -147,6 +150,7 @@ export function Avatar({
 		/>
 	) : (
 		<PreviewableUserAvatar
+			hideLiveBadge={hideLiveBadge}
 			live={liveOverride ?? live}
 			moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 			onBeforePress={onPress}
@@ -165,10 +169,10 @@ export function NameAndHandle({
 	profile: AnyProfileView;
 }) {
 	return (
-		<div className={css.nameAndHandle}>
+		<span className={css.nameAndHandle}>
 			<Handle profile={profile} />
 			<Name moderationOpts={moderationOpts} profile={profile} />
-		</div>
+		</span>
 	);
 }
 
@@ -198,32 +202,40 @@ export function Name({
 	);
 }
 
-export function Handle({ profile }: { profile: AnyProfileView }) {
+export function Handle({ className, profile }: { className?: string; profile: AnyProfileView }) {
 	const handle = profile.handle;
 	return (
-		<div className={css.handleRow}>
+		<span className={clsx(css.handleRow, className)}>
 			<Text className={css.handleText} color="textContrastHigh" weight="semiBold" numberOfLines={1}>
 				{handle}
 			</Text>
 
-			<div className={css.badges}>
+			<span className={css.badges}>
 				<ProfileBadges profile={profile} size="md" />
-			</div>
-		</div>
+			</span>
+		</span>
 	);
 }
 
-/** Skeleton circle standing in for an avatar while a profile loads. */
-export function AvatarPlaceholder({ size = 40 }: { size?: number }) {
-	return <Skeleton.Circle size={size} />;
+/**
+ * Skeleton circle standing in for an avatar while a profile loads.
+ *
+ * @param color contrast level of the placeholder; raise it on tinted surfaces.
+ */
+export function AvatarPlaceholder({ color, size = 40 }: { color?: Skeleton.Color; size?: number }) {
+	return <Skeleton.Circle color={color} size={size} />;
 }
 
-/** Skeleton bars standing in for the name column while a profile loads */
-export function NameAndHandlePlaceholder() {
+/**
+ * Skeleton bars standing in for the name column while a profile loads
+ *
+ * @param color contrast level of the placeholders; raise it on tinted surfaces.
+ */
+export function NameAndHandlePlaceholder({ color }: { color?: Skeleton.Color }) {
 	return (
 		<Skeleton.Col>
-			<Skeleton.Text size="md" width="20%" />
-			<Skeleton.Text size="md_sub" width="25%" />
+			<Skeleton.Text color={color} size="md" width="20%" />
+			<Skeleton.Text color={color} size="md_sub" width="25%" />
 		</Skeleton.Col>
 	);
 }

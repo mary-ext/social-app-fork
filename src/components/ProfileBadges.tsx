@@ -55,7 +55,7 @@ export function ProfileBadges({
 	const botIconWidth = botIconSizes[size] * scaleMultiplier;
 
 	return (
-		<div className={clsx(css.container({ small: isOnTheSmallSide }), className)}>
+		<span className={clsx(css.container({ small: isOnTheSmallSide }), className)}>
 			{interactive ? (
 				<>
 					<VerificationCheckButton profile={shadowed} width={verificationIconWidth} />
@@ -69,6 +69,6 @@ export function ProfileBadges({
 					<BotBadge profile={shadowed} width={botIconWidth} />
 				</>
 			)}
-		</div>
+		</span>
 	);
 }

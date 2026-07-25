@@ -3,22 +3,30 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
+const avatarSize = 40;
+
 export const row = style({
-	appearance: 'none',
+	boxSizing: 'border-box',
 	display: 'flex',
-	gap: space.sm,
+	gap: space.md,
 	alignItems: 'center',
-	border: 'none',
-	background: 'none',
 	padding: space.lg,
 	width: '100%',
 	textAlign: 'start',
+	selectors: {
+		'&:not(:last-child)': { borderBottom: `1px solid ${colors.borderContrastLow}` },
+	},
+});
+
+export const rowInteractive = style({
+	appearance: 'none',
+	border: 'none',
+	background: 'none',
 	color: colors.text,
 	font: 'inherit',
 	cursor: 'pointer',
 	selectors: {
 		'&:hover': { backgroundColor: colors.contrast_25 },
-		'&:not(:last-child)': { borderBottom: `1px solid ${colors.borderContrastLow}` },
 	},
 });
 
@@ -29,17 +37,17 @@ export const addAvatar = style({
 	justifyContent: 'center',
 	borderRadius: borderRadius.full,
 	backgroundColor: colors.contrast_25,
-	width: 48,
-	height: 48,
+	width: avatarSize,
+	height: avatarSize,
 	color: colors.textContrastLow,
 	selectors: {
-		[`${row}:hover &`]: { backgroundColor: colors.contrast_50 },
+		[`${rowInteractive}:hover &`]: { backgroundColor: colors.contrast_50 },
 	},
 });
 
-export const badges = style({
-	flexShrink: 0,
-	marginTop: -2,
+export const addLabel = style({
+	flex: 1,
+	minWidth: 0,
 });
 
 export const check = style({
@@ -64,26 +72,6 @@ export const container = style({
 	border: `1px solid ${colors.borderContrastLow}`,
 	borderRadius: borderRadius.lg,
 	overflow: 'hidden',
-});
-
-export const info = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	gap: space._2xs,
-	paddingInlineEnd: space._2xl,
-	minWidth: 0,
-});
-
-export const name = style({
-	minWidth: 0,
-});
-
-export const nameRow = style({
-	display: 'flex',
-	gap: space.xs,
-	alignItems: 'center',
-	minWidth: 0,
 });
 
 export const rowActive = style({

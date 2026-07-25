@@ -10,6 +10,9 @@ import { borderRadius } from '#/styles/tokens.css';
 
 const GOLDEN_RATIO = 1.618;
 
+/** Contrast level of a placeholder, so a group of them can be tuned to the surface they sit on. */
+export type Color = RecipeVariants<typeof styles.text>['color'];
+
 /** Loading placeholder for a line of {@link Text}: a rounded bar sized to the matching `size`'s line box. */
 export function Text({
 	color = 'contrast_50',
@@ -17,7 +20,7 @@ export function Text({
 	width,
 }: {
 	/** The color level of this line placeholder. */
-	color?: RecipeVariants<typeof styles.text>['color'];
+	color?: Color;
 	/** The `Text` size the line will render at, so the placeholder matches its height. */
 	size?: RecipeVariants<typeof styles.text>['size'];
 	/** Bar width; capped to the container. Omit to fill the available width. */
@@ -75,7 +78,7 @@ export function Circle({
 	/** When true, lowers the placeholder's opacity so it recedes behind foreground content. */
 	blend?: boolean;
 	children?: ReactNode;
-	color?: RecipeVariants<typeof styles.circle>['color'];
+	color?: Color;
 	size: number;
 }) {
 	return (
@@ -99,7 +102,7 @@ export function Pill({
 }: {
 	/** When true, lowers the placeholder's opacity so it recedes behind foreground content. */
 	blend?: boolean;
-	color?: RecipeVariants<typeof styles.pill>['color'];
+	color?: Color;
 	size: number;
 }) {
 	return (
@@ -134,7 +137,7 @@ export function Lines({
 	size = 'md',
 }: {
 	/** The color level of the lines. Defaults to contrast_25. */
-	color?: RecipeVariants<typeof styles.text>['color'];
+	color?: Color;
 	/** Number of lines to render. */
 	count: number;
 	/** Width of the final, partial line, as a percentage. */

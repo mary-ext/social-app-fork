@@ -7,24 +7,6 @@ export const accountRow = style({
 	position: 'relative',
 });
 
-export const identity = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	minWidth: 0,
-});
-
-export const primaryText = style({
-	minWidth: 0,
-});
-
-export const nameLine = style({
-	display: 'flex',
-	gap: 6,
-	alignItems: 'center',
-	minWidth: 0,
-});
-
 export const avatarStack = style({
 	display: 'flex',
 	marginBlock: -2,
@@ -41,14 +23,6 @@ export const handle = style({
 	flex: 1,
 	paddingInlineEnd: space._4xl,
 	minWidth: 0,
-});
-
-export const avatarPlaceholder = style({
-	flexShrink: 0,
-	borderRadius: 999,
-	backgroundColor: vars.palette.contrast_50,
-	width: 28,
-	height: 28,
 });
 
 export const overflow = style({

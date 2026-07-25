@@ -2,20 +2,16 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
-
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import * as css from '#/components/AccountList.css';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
-import { UserAvatar } from '#/components/UserAvatar';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
@@ -52,14 +48,14 @@ export function AccountList({
 			{onSelectOther && (
 				<button
 					aria-label={m['components.accountList.a11y.signInOther']()}
-					className={css.row}
+					className={clsx(css.row, css.rowInteractive)}
 					onClick={onSelectOther}
 					type="button"
 				>
 					<span className={css.addAvatar}>
 						<PlusIcon size="lg" fill="currentColor" />
 					</span>
-					<Text className={css.info} size="md" weight="medium">
+					<Text className={css.addLabel} size="md" weight="medium">
 						{otherLabel ?? m['components.accountList.other']()}
 					</Text>
 					<ChevronIcon className={css.chevron} size="lg" fill={colors.textContrastLow} />
@@ -82,7 +78,22 @@ function AccountItem({
 	onSelect: (account: SessionAccount) => void;
 	profile?: AppBskyActorDefs.ProfileViewDetailed;
 }) {
-	const { isActive: live } = useActorStatus(profile);
+	const moderationOpts = useModerationOpts();
+
+	if (!moderationOpts) {
+		return (
+			<div className={css.row}>
+				<ProfileCard.AvatarPlaceholder />
+				<ProfileCard.NameAndHandlePlaceholder />
+			</div>
+		);
+	}
+
+	const profileView = profile ?? account;
+
+	// every row is one of the viewer's own accounts, so moderate each as its own viewer. this dialog also
+	// opens signed out, where an absent viewer would otherwise let `!no-unauthenticated` blank the row out.
+	const rowModerationOpts = { ...moderationOpts, viewerDid: account.did };
 
 	return (
 		<button
@@ -91,32 +102,17 @@ function AccountItem({
 					? m['components.accountList.a11y.continueAs']({ handle: account.handle })
 					: m['components.accountList.a11y.signInAs']({ handle: account.handle })
 			}
-			className={clsx(css.row, isPendingAccount && css.rowActive)}
+			className={clsx(css.row, css.rowInteractive, isPendingAccount && css.rowActive)}
 			onClick={() => onSelect(account)}
 			type="button"
 		>
-			<UserAvatar
-				avatar={profile?.avatar}
+			<ProfileCard.Avatar
+				disabledPreview
 				hideLiveBadge
-				live={live}
-				size={48}
-				type={profile?.associated?.labeler ? 'labeler' : 'user'}
+				moderationOpts={rowModerationOpts}
+				profile={profileView}
 			/>
-			<span className={css.info}>
-				<span className={css.nameRow}>
-					<Text className={css.name} numberOfLines={1} size="md" weight="medium">
-						{sanitizeDisplayName(profile?.displayName || profile?.handle || account.handle)}
-					</Text>
-					{profile && (
-						<span className={css.badges}>
-							<ProfileBadges profile={profile} size="sm" />
-						</span>
-					)}
-				</span>
-				<Text color="textContrastMedium" size="sm">
-					{`@${account.handle}`}
-				</Text>
-			</span>
+			<ProfileCard.NameAndHandle moderationOpts={rowModerationOpts} profile={profileView} />
 			{isCurrentAccount ? (
 				<span className={css.check}>
 					<CheckIcon size="xs" fill="currentColor" />
