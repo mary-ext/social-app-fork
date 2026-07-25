@@ -73,6 +73,7 @@ export function useNotificationDeclarationMutation() {
 						return old;
 					}
 					return {
+						...old,
 						value,
 					};
 				},
