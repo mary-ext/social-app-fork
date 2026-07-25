@@ -1,6 +1,8 @@
+import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
+
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { type TrendingTopic, useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
+import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 import { useTrendingConfig } from '#/state/service-config';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
@@ -19,6 +21,10 @@ import * as css from './TrendingInterstitial.css';
 
 const SKELETON_WIDTHS = [80, 50, 120, 30, 180];
 
+// the pill row wraps, so it can carry more topics than the sidebar's ranked list. shared by both hooks below
+// so they land on one query rather than fetching the same trends twice under different keys.
+const TRENDING_LIMIT = 14;
+
 export function useShowTrendingInterstitial({ enabled }: { enabled: boolean }): boolean {
 	const { enabled: trendingEnabled } = useTrendingConfig();
 	const { trendingDisabled } = useTrendingSettings();
@@ -26,8 +32,12 @@ export function useShowTrendingInterstitial({ enabled }: { enabled: boolean }): 
 
 	const eligible = enabled && trendingEnabled && !trendingDisabled && !rightNavVisible;
 
-	const { data: trending, error, isLoading } = useTrendingTopics({ enabled: eligible });
-	const noTopics = !isLoading && !error && !trending?.topics?.length;
+	const {
+		data: trending,
+		error,
+		isLoading,
+	} = useGetTrendsQuery({ enabled: eligible, limit: TRENDING_LIMIT, refetchOnWindowFocus: true });
+	const noTopics = !isLoading && !error && !trending?.trends?.length;
 
 	return eligible && !error && !noTopics;
 }
@@ -35,7 +45,10 @@ export function useShowTrendingInterstitial({ enabled }: { enabled: boolean }): 
 export function TrendingInterstitial() {
 	const trendingPrompt = Prompt.usePromptHandle();
 	const { setTrendingDisabled } = useTrendingSettingsApi();
-	const { data: trending, isLoading } = useTrendingTopics();
+	const { data: trending, isLoading } = useGetTrendsQuery({
+		limit: TRENDING_LIMIT,
+		refetchOnWindowFocus: true,
+	});
 
 	const onConfirmHide = () => {
 		setTrendingDisabled(true);
@@ -52,7 +65,7 @@ export function TrendingInterstitial() {
 								<Skeleton.Text size="sm" width={width} />
 							</div>
 						))
-					: trending?.topics?.map((topic) => <TopicLink key={topic.link} topic={topic} />)}
+					: trending?.trends.map((topic) => <TopicLink key={topic.link} topic={topic} />)}
 				{!isLoading && (
 					<Button
 						variant="ghost"
@@ -79,7 +92,7 @@ export function TrendingInterstitial() {
 	);
 }
 
-function TopicLink({ topic }: { topic: TrendingTopic }) {
+function TopicLink({ topic }: { topic: AppBskyUnspeccedDefs.TrendView }) {
 	const { label, url } = useTopic(topic);
 
 	return (

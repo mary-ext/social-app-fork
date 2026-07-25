@@ -1,6 +1,5 @@
+import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import type { ParsedCanonicalResourceUri } from '@atcute/lexicons/syntax';
-
-import type { TrendingTopic } from '#/state/queries/trending/useTrendingTopics';
 
 import { m } from '#/paraglide/messages';
 
@@ -20,7 +19,7 @@ type ParsedTrendingTopic =
 			uri: ParsedCanonicalResourceUri;
 	  };
 
-export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
+export function useTopic(raw: AppBskyUnspeccedDefs.TrendView): ParsedTrendingTopic {
 	const { topic: displayName, link } = raw;
 
 	if (link.startsWith('/search')) {

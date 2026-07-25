@@ -1,4 +1,6 @@
-import { type TrendingTopic, useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
+import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
+
+import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 import { useTrendingConfig } from '#/state/service-config';
 
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
@@ -27,8 +29,8 @@ export function SidebarTrendingTopics() {
 function Inner() {
 	const trendingPrompt = Prompt.usePromptHandle();
 	const { setTrendingDisabled } = useTrendingSettingsApi();
-	const { data: trending, error, isLoading } = useTrendingTopics();
-	const noTopics = !isLoading && !error && !trending?.topics?.length;
+	const { data: trending, error, isLoading } = useGetTrendsQuery({ refetchOnWindowFocus: true });
+	const noTopics = !isLoading && !error && !trending?.trends?.length;
 
 	const onConfirmHide = () => {
 		setTrendingDisabled(true);
@@ -69,8 +71,8 @@ function Inner() {
 									<Skeleton.Text size="sm" width={i % 2 === 0 ? 80 : 100} />
 								</Skeleton.Row>
 							))
-						: trending?.topics
-								?.slice(0, TRENDING_LIMIT)
+						: trending?.trends
+								.slice(0, TRENDING_LIMIT)
 								.map((topic, i) => <TopicLink key={topic.link} index={i} topic={topic} />)}
 				</div>
 			</div>
@@ -85,7 +87,7 @@ function Inner() {
 	);
 }
 
-function TopicLink({ index, topic }: { index: number; topic: TrendingTopic }) {
+function TopicLink({ index, topic }: { index: number; topic: AppBskyUnspeccedDefs.TrendView }) {
 	const { label, url } = useTopic(topic);
 	return (
 		<Link to={url} label={label} className={css.topicLink}>
@@ -93,7 +95,7 @@ function TopicLink({ index, topic }: { index: number; topic: TrendingTopic }) {
 				{index + 1}.
 			</Text>
 			<Text size="sm" className={css.topicName}>
-				{topic.displayName ?? topic.topic}
+				{topic.displayName}
 			</Text>
 		</Link>
 	);

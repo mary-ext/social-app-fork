@@ -16,9 +16,36 @@ import { getClients } from '#/state/session';
 
 export const DEFAULT_LIMIT = 5;
 
-export const createGetTrendsQueryKey = () => ['trends'];
+interface QueryProps {
+	enabled?: boolean;
+	limit?: number;
+	refetchOnWindowFocus?: boolean;
+}
 
-export function useGetTrendsQuery() {
+// the appview can repeat a topic across trends; two rows linking to the same search read as a glitch.
+const dedupeByLink = <T extends { link: string }>(trends: T[]): T[] => {
+	const seen = new Set<string>();
+	return trends.filter((trend) => {
+		if (seen.has(trend.link)) {
+			return false;
+		}
+		seen.add(trend.link);
+		return true;
+	});
+};
+
+// the limit belongs in the key: callers asking for different counts get different lists back, and a shorter
+// one must not satisfy a caller that wanted more.
+export const createGetTrendsQueryKey = ({ limit = DEFAULT_LIMIT }: Pick<QueryProps, 'limit'> = {}) => [
+	'trends',
+	limit,
+];
+
+export function useGetTrendsQuery({
+	enabled = true,
+	limit = DEFAULT_LIMIT,
+	refetchOnWindowFocus,
+}: QueryProps = {}) {
 	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 	const keywordFilters = useMemo(() => {
@@ -26,14 +53,15 @@ export function useGetTrendsQuery() {
 	}, [preferences?.moderationPrefs]);
 
 	return useQuery({
-		enabled: !!preferences,
+		enabled: enabled && !!preferences,
+		refetchOnWindowFocus,
 		staleTime: STALE.MINUTES.THREE,
-		queryKey: createGetTrendsQueryKey(),
+		queryKey: createGetTrendsQueryKey({ limit }),
 		queryFn: () => {
 			const contentLangs = getContentLanguages().join(',');
 			return ok(
 				appview.get('app.bsky.unspecced.getTrends', {
-					params: { limit: DEFAULT_LIMIT },
+					params: { limit },
 					headers: {
 						...createBskyTopicsHeader(aggregateUserInterests(preferences)),
 						'Accept-Language': contentLangs,
@@ -44,12 +72,14 @@ export function useGetTrendsQuery() {
 		select: useCallback(
 			(data: AppBskyUnspeccedGetTrends.$output) => {
 				return {
-					trends: (data.trends ?? []).filter((t) => {
-						return !hasMutedWord({
-							keywordFilters,
-							text: t.topic + ' ' + t.displayName + ' ' + t.category,
-						});
-					}),
+					trends: dedupeByLink(
+						(data.trends ?? []).filter((t) => {
+							return !hasMutedWord({
+								keywordFilters,
+								text: t.topic + ' ' + t.displayName + ' ' + t.category,
+							});
+						}),
+					),
 				};
 			},
 			[keywordFilters],
