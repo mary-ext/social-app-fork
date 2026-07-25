@@ -127,7 +127,7 @@ export function BottomBar() {
 							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
 						}}
 					</NavItem>
-					<NavItem to={{ name: 'Search' }} activeRouteNames={['Explore', 'Search']}>
+					<NavItem to={{ name: 'Explore' }} activeRouteNames={['Explore', 'Search']}>
 						{({ isActive }) => {
 							const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass;
 							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;

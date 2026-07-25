@@ -416,7 +416,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 					/>
 					<NavItem
 						activeRouteNames={['Explore', 'Search']}
-						to={{ name: 'Search' }}
+						to={{ name: 'Explore' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: MagnifyingGlassFilledIcon,

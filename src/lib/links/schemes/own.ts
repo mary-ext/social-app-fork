@@ -30,8 +30,7 @@ export const parseOwnPath = (url: URL): AppLink | undefined => {
 			return { actor: target.actor, kind: 'list', rkey: target.rkey };
 		}
 		case 'Search': {
-			// `q` is declared optional, though the route's `when` guard only matches a URL that carries it
-			return target.q !== undefined ? { kind: 'search', query: target.q } : undefined;
+			return { kind: 'search', query: target.q };
 		}
 		case 'StarterPack': {
 			return { actor: target.actor, kind: 'starter-pack', rkey: target.rkey };

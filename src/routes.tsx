@@ -7,6 +7,7 @@ import {
 	enumOf,
 	layout,
 	NavigationHistory,
+	nonEmpty,
 	optional,
 	type ParamsOf,
 	Router,
@@ -223,18 +224,16 @@ export const routes = defineRoutes({
 				path: '/',
 				type: 'singleton',
 			}),
-			// Explore and Search share the /search path; the query decides which renders. declaration order is
-			// irrelevant since the `when` predicates are mutually exclusive.
-			Explore: route({
-				component: ExploreScreen,
-				path: '/search',
-				when: ({ rawSearch }) => !rawSearch.get('q'),
-			}),
+			// Explore and Search share the /search path, and a non-empty `q` is what tells them apart. Search
+			// is declared first so the matcher tries the narrower one before falling through to the landing.
 			Search: route({
 				component: SearchScreen,
 				path: '/search',
-				query: { q: optional(string()), tab: optional(enumOf(searchTabs)) },
-				when: ({ rawSearch }) => !!rawSearch.get('q'),
+				query: { q: nonEmpty(), tab: optional(enumOf(searchTabs)) },
+			}),
+			Explore: route({
+				component: ExploreScreen,
+				path: '/search',
 			}),
 			Feeds: route({
 				component: FeedsScreen,
