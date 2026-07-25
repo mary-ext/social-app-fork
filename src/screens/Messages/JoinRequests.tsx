@@ -40,7 +40,11 @@ import { useParams, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { InviteLinkDialog } from './components/InviteLinkDialog';
+import { useIsWithinSplitView } from './components/splitView/context';
+import * as splitViewCss from './components/splitView/MessagesSplitViewLayout.css';
 import * as css from './JoinRequests.css';
+
+const REQUEST_ITEM_HEIGHT_ESTIMATE = 142;
 
 export function MessagesJoinRequestsScreen() {
 	useTitle(m['common.requests.label']());
@@ -110,6 +114,8 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const inviteLinkHandle = Dialog.useDialogHandle();
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
+	const { isWithinSplitView } = useIsWithinSplitView();
 
 	const getRemainingRequestCount = () => {
 		const data = queryClient.getQueryData<InfiniteData<ChatBskyGroupListJoinRequests.$output>>(
@@ -317,23 +323,35 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 
 	const showFooter = isOwner;
 
+	const list = (
+		<List
+			data={items}
+			estimateHeight={REQUEST_ITEM_HEIGHT_ESTIMATE}
+			keyExtractor={(item: AnyProfileView) => item.did}
+			renderItem={renderItem}
+			ListEmptyComponent={
+				isPending ? (
+					<div className={css.emptyFill}>
+						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+					</div>
+				) : null
+			}
+			ListFooterComponent={showFooter ? <div style={{ height: footerHeight }} /> : undefined}
+			onEndReached={() => void onEndReached()}
+			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
+		/>
+	);
+
 	return (
 		<>
 			<Header count={requestCount} hasMoreRequests={hasNextPage} />
-			<List
-				data={items}
-				keyExtractor={(item: AnyProfileView) => item.did}
-				renderItem={renderItem}
-				ListEmptyComponent={
-					isPending ? (
-						<div className={css.emptyFill}>
-							<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
-						</div>
-					) : null
-				}
-				ListFooterComponent={showFooter ? <div style={{ height: footerHeight }} /> : undefined}
-				onEndReached={() => void onEndReached()}
-			/>
+			{isWithinSplitView ? (
+				<div ref={scrollContainerRef} className={splitViewCss.splitScroller}>
+					{list}
+				</div>
+			) : (
+				list
+			)}
 			{showFooter ? footer : null}
 			{owner && moderationOpts && (
 				<InviteLinkDialog

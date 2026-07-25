@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDefs } from '@atcute/bluesky';
 
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
@@ -33,6 +35,7 @@ import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlacehol
 import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
 import { RequestListItem } from './components/RequestListItem';
 import { useIsWithinSplitView } from './components/splitView/context';
+import * as splitViewCss from './components/splitView/MessagesSplitViewLayout.css';
 import * as css from './Inbox.css';
 import { useRequestMessagePollInterval } from './use-request-poll-interval';
 
@@ -92,6 +95,7 @@ function RequestList({
 }) {
 	const navigate = useNavigate();
 	const router = useRouter();
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const { isWithinSplitView } = useIsWithinSplitView();
 
 	useRequestMessagePollInterval();
@@ -170,7 +174,7 @@ function RequestList({
 		);
 	}
 
-	return (
+	const list = (
 		<List
 			data={conversations}
 			estimateHeight={REQUEST_ITEM_HEIGHT_ESTIMATE}
@@ -178,6 +182,7 @@ function RequestList({
 			keyExtractor={keyExtractor}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={0}
+			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 			ListFooterComponent={
 				<ListFooter
 					border={false}
@@ -189,6 +194,16 @@ function RequestList({
 			}
 		/>
 	);
+
+	if (isWithinSplitView) {
+		return (
+			<div ref={scrollContainerRef} className={splitViewCss.splitScroller}>
+				{list}
+			</div>
+		);
+	}
+
+	return list;
 }
 
 function keyExtractor(item: RequestItem) {
