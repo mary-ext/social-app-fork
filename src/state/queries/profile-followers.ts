@@ -7,13 +7,22 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { getClients } from '#/state/session';
 
+const DEFAULT_SORT = 'latest';
 const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
 
 const RQKEY_ROOT = 'profile-followers';
-export const RQKEY = (did: string) => [RQKEY_ROOT, did];
+// the sort is part of the key: the two orderings are different lists and must not share pages.
+export const RQKEY = (did: string, sort: 'latest' | 'top' = DEFAULT_SORT) => [RQKEY_ROOT, did, sort];
 
-export function useProfileFollowersQuery(did: Did | undefined) {
+export function useProfileFollowersQuery(
+	did: Did | undefined,
+	{
+		sort = DEFAULT_SORT,
+	}: {
+		sort?: 'latest' | 'top';
+	} = {},
+) {
 	const { appview } = getClients();
 	return useInfiniteQuery<
 		AppBskyGraphGetFollowers.$output,
@@ -22,7 +31,7 @@ export function useProfileFollowersQuery(did: Did | undefined) {
 		QueryKey,
 		RQPageParam
 	>({
-		queryKey: RQKEY(did || ''),
+		queryKey: RQKEY(did || '', sort),
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
 			return await ok(
 				appview.get('app.bsky.graph.getFollowers', {
@@ -30,6 +39,7 @@ export function useProfileFollowersQuery(did: Did | undefined) {
 						actor: did!,
 						cursor: pageParam,
 						limit: PAGE_SIZE,
+						sort,
 					},
 				}),
 			);

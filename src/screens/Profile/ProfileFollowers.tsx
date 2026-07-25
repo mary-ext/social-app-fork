@@ -70,6 +70,10 @@ function ProfileFollowers({ name, initialCount }: { name: string; initialCount?:
 	const moderationOpts = useModerationOpts();
 
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);
+	const isMe = resolvedDid === currentAccount?.did;
+	// your own followers read as a log of who arrived, so keep them chronological; on someone else's profile
+	// the interesting question is who matters, which is what `top` answers.
+	const sort = isMe ? 'latest' : 'top';
 	const {
 		data,
 		isLoading: isFollowersLoading,
@@ -78,10 +82,9 @@ function ProfileFollowers({ name, initialCount }: { name: string; initialCount?:
 		fetchNextPage,
 		error,
 		refetch,
-	} = useProfileFollowersQuery(resolvedDid);
+	} = useProfileFollowersQuery(resolvedDid, { sort });
 
 	const isError = !!resolveError || !!error;
-	const isMe = resolvedDid === currentAccount?.did;
 
 	const followers = data?.pages ? data.pages.flatMap((page) => page.followers) : [];
 

@@ -74,6 +74,10 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 	};
 
 	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);
+	const isMe = resolvedDid === currentAccount?.did;
+	// your own following list is one you curated in order, so keep it chronological; on someone else's profile
+	// the interesting question is who matters, which is what `top` answers.
+	const sort = isMe ? 'latest' : 'top';
 	const {
 		data,
 		isLoading: isFollowsLoading,
@@ -82,10 +86,9 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 		fetchNextPage,
 		error,
 		refetch,
-	} = useProfileFollowsQuery(resolvedDid);
+	} = useProfileFollowsQuery(resolvedDid, { sort });
 
 	const isError = !!resolveError || !!error;
-	const isMe = resolvedDid === currentAccount?.did;
 
 	const follows = data?.pages ? data.pages.flatMap((page) => page.follows) : [];
 
