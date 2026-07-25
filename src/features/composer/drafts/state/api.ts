@@ -1,7 +1,6 @@
 /** Type converters for Draft API - convert between ComposerState and server Draft types. */
 import type { AppBskyDraftDefs } from '@atcute/bluesky';
 import type { GenericUri } from '@atcute/lexicons';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { definite, mapDefined } from '@mary/array-fns';
 
@@ -10,6 +9,7 @@ import { getDeviceId } from '#/lib/device-id';
 import { getDeviceName } from '#/lib/deviceName';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/util';
+import { recordUriToShareUrl } from '#/lib/routes/app-links';
 import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 
 import type { ComposerImage } from '#/state/gallery';
@@ -539,9 +539,10 @@ export async function draftToComposerPosts(
 			// Restore quote embed
 			if (post.embedRecords && post.embedRecords.length > 0) {
 				const record = post.embedRecords[0]!;
-				const urip = parseCanonicalResourceUri(record.record.uri);
-				const url = `https://bsky.app/profile/${urip.repo}/post/${urip.rkey}`;
-				embed.quote = { type: 'link', uri: url };
+				const url = recordUriToShareUrl(record.record.uri);
+				if (url) {
+					embed.quote = { type: 'link', uri: url };
+				}
 			}
 
 			// Restore link embed (only if not a GIF)

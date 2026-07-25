@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { targetToShareUrl } from '#/lib/routes/app-links';
 import { profileTarget } from '#/lib/routes/targets';
 import { shareUrl } from '#/lib/sharing';
-import { toShareUrl } from '#/lib/strings/url-helpers';
 
 import type { FeedSourceFeedInfo } from '#/state/queries/feed';
 import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
@@ -48,7 +48,6 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import { buildTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './ProfileFeedHeader.css';
@@ -342,8 +341,7 @@ function DialogInner({
 	};
 
 	const onPressShare = () => {
-		const url = toShareUrl(buildTarget(info.target));
-		void shareUrl(url);
+		void shareUrl(targetToShareUrl(info.target));
 	};
 
 	return (

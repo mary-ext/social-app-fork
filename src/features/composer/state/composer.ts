@@ -5,9 +5,10 @@ import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link
 import type { VideoAsset } from '#/lib/media/video/types';
 import type { SelfLabel } from '#/lib/moderation';
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
+import { recordUriToShareUrl } from '#/lib/routes/app-links';
 import { insertMentionAt } from '#/lib/strings/mention-manip';
 import { getShortenedLength } from '#/lib/strings/rich-text-facets';
-import { isBskyPostUrl, postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
+import { isBskyPostUrl } from '#/lib/strings/url-helpers';
 
 import type { ComposerImage } from '#/state/gallery';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
@@ -580,11 +581,11 @@ export function createComposerState({
 	let quote: Link | undefined;
 	if (initQuoteUri) {
 		// TODO: Consider passing the app url directly.
-		const path = postUriToRelativePath(initQuoteUri);
-		if (path) {
+		const uri = recordUriToShareUrl(initQuoteUri);
+		if (uri) {
 			quote = {
 				type: 'link',
-				uri: toBskyAppUrl(path),
+				uri,
 			};
 		}
 	}

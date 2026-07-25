@@ -1,16 +1,8 @@
-import {
-	type ActorIdentifier,
-	type Did,
-	type Nsid,
-	parseResourceUri,
-	type RecordKey,
-	type ResourceUri,
-} from '@atcute/lexicons/syntax';
+import type { ActorIdentifier, Did, Nsid, RecordKey, ResourceUri } from '@atcute/lexicons/syntax';
 
 import { BSKY_SERVICE } from '#/lib/constants';
 import { startUriToStarterPackUri } from '#/lib/strings/starter-pack';
 
-const BSKY_APP_HOST = 'https://bsky.app';
 const BSKY_TRUSTED_HOSTS = new Set([
 	'blueskyweb.xyz',
 	'blueskyweb.zendesk.com',
@@ -70,19 +62,6 @@ export function toShortUrl(url: string): string {
 	} catch {
 		return url;
 	}
-}
-
-export function toShareUrl(url: string): string {
-	if (!url.startsWith('https')) {
-		const urlp = new URL('https://bsky.app');
-		urlp.pathname = url;
-		url = urlp.toString();
-	}
-	return url;
-}
-
-export function toBskyAppUrl(url: string): string {
-	return new URL(url, BSKY_APP_HOST).toString();
 }
 
 export function isBskyAppUrl(url: string): boolean {
@@ -204,15 +183,6 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
 		}
 	}
 	return url;
-}
-
-export function postUriToRelativePath(uri: string): string | undefined {
-	try {
-		const { repo, rkey } = parseResourceUri(uri);
-		return `/profile/${repo}/post/${rkey}`;
-	} catch {
-		return undefined;
-	}
 }
 
 const TRIM_HOST_RE = /^www\./;

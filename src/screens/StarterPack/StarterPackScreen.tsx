@@ -13,7 +13,9 @@ import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
-import { getStarterPackOgCard, getStarterPackShareUrl } from '#/lib/strings/starter-pack';
+import { targetToShareUrl } from '#/lib/routes/app-links';
+import { starterPackTarget } from '#/lib/routes/targets';
+import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -162,7 +164,7 @@ function StarterPackScreenLoaded({
 
 	const onOpenShareDialog = useCallback(() => {
 		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
-		void shortenLink(getStarterPackShareUrl({ did: starterPack.creator.did, rkey })).then((res) => {
+		void shortenLink(targetToShareUrl(starterPackTarget(starterPack.creator.did, rkey))).then((res) => {
 			setLink(res.url);
 		});
 		void prefetchImage(getStarterPackOgCard(starterPack));

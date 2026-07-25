@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import type { VideoAsset } from '#/lib/media/video/types';
-import { postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
+import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
 import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
 
@@ -59,9 +59,8 @@ export function useOpenComposer() {
 
 	const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
 		if (opts.quote) {
-			const path = postUriToRelativePath(opts.quote.uri);
-			if (path) {
-				const appUrl = toBskyAppUrl(path);
+			const appUrl = recordUriToShareUrl(opts.quote.uri);
+			if (appUrl) {
 				precacheResolveLinkQuery(queryClient, appUrl, {
 					type: 'record',
 					kind: 'post',

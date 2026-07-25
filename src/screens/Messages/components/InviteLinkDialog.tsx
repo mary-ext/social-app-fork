@@ -10,6 +10,7 @@ import {
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { targetToShareUrl } from '#/lib/routes/app-links';
 import { shareUrl } from '#/lib/sharing';
 
 import { useCreateJoinLink } from '#/state/queries/messages/create-join-link';
@@ -285,7 +286,10 @@ function DialogInner({ convo, handle, isOwner, moderationOpts, owner }: DialogIn
 		case Step.MANAGE: {
 			const linkEnabled = joinLink?.enabledStatus === 'enabled';
 			const linkDisabled = joinLink?.enabledStatus === 'disabled';
-			const joinLinkURI = joinLink?.code ? `https://bsky.app/chat/${joinLink.code}` : 'https://bsky.app/chat';
+			// without a code the field is disabled, so the bare path stands in as placeholder text.
+			const joinLinkURI = joinLink?.code
+				? targetToShareUrl({ name: 'GroupChatJoin', params: { code: joinLink.code } })
+				: new URL('/chat', location.origin).toString();
 			const createdAt = joinLink ? new Date(joinLink.createdAt) : null;
 			const currentOption =
 				whoCanJoinOptions.find((o) => o.name === (joinLink ? joinLinkToKey(joinLink) : null)) ??

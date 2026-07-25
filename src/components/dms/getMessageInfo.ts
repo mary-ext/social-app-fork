@@ -2,7 +2,8 @@ import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcu
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { postUriToRelativePath, toBskyAppUrl, toShortUrl } from '#/lib/strings/url-helpers';
+import { recordUriToShareUrl } from '#/lib/routes/app-links';
+import { toShortUrl } from '#/lib/strings/url-helpers';
 
 import { m } from '#/paraglide/messages';
 
@@ -88,8 +89,7 @@ export function getMessageInfo({
 
 			if (embed.record.$type === 'app.bsky.embed.record#viewRecord') {
 				const record = embed.record;
-				const path = postUriToRelativePath(record.uri);
-				const href = path ? toBskyAppUrl(path) : undefined;
+				const href = recordUriToShareUrl(record.uri);
 				const short = href ? toShortUrl(href) : defaultEmbeddedContentMessage;
 				message = prefix(short);
 			} else {

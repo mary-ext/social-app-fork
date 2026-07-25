@@ -1,5 +1,7 @@
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 
+import { targetToShareUrl } from '#/lib/routes/app-links';
+
 import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useSession } from '#/state/session';
 
@@ -105,7 +107,9 @@ export function useChatInvite({
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
-					void navigator.clipboard.writeText(`https://bsky.app/chat/${preview.code}`);
+					void navigator.clipboard.writeText(
+						targetToShareUrl({ name: 'GroupChatJoin', params: { code: preview.code } }),
+					);
 					Toast.show(m['common.share.copiedToast'](), { type: 'success' });
 				},
 			};

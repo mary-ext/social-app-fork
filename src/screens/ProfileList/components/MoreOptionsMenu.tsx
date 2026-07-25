@@ -2,9 +2,9 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useGoBack } from '#/lib/hooks/useGoBack';
+import { targetToShareUrl } from '#/lib/routes/app-links';
 import { listTarget } from '#/lib/routes/targets';
 import { shareUrl } from '#/lib/sharing';
-import { toShareUrl } from '#/lib/strings/url-helpers';
 
 import { useListBlockMutation, useListDeleteMutation, useListMuteMutation } from '#/state/queries/list';
 import { useSession } from '#/state/session';
@@ -25,7 +25,6 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { buildTarget } from '#/routes';
 
 export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 	const { currentAccount } = useSession();
@@ -45,7 +44,7 @@ export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 
 	const onPressShare = () => {
 		const { rkey } = parseCanonicalResourceUri(list.uri);
-		void shareUrl(toShareUrl(buildTarget(listTarget(list.creator.did, rkey))));
+		void shareUrl(targetToShareUrl(listTarget(list.creator.did, rkey)));
 	};
 
 	const onPressDelete = async () => {

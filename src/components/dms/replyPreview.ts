@@ -1,5 +1,6 @@
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 
+import { targetToShareUrl } from '#/lib/routes/app-links';
 import { toShortUrl } from '#/lib/strings/url-helpers';
 
 import { m } from '#/paraglide/messages';
@@ -23,7 +24,10 @@ export function getReplyPreviewText(message: ChatBskyConvoDefs.MessageView): {
 		const { joinLinkPreview } = message.embed;
 		switch (joinLinkPreview.$type) {
 			case 'chat.bsky.group.defs#joinLinkPreviewView':
-				return { subtle: true, text: 'https://bsky.app/chat/' + joinLinkPreview.code };
+				return {
+					subtle: true,
+					text: targetToShareUrl({ name: 'GroupChatJoin', params: { code: joinLinkPreview.code } }),
+				};
 			case 'chat.bsky.group.defs#disabledJoinLinkPreviewView':
 				return { subtle: true, text: m['common.chat.inviteLinkDisabled']() };
 			case 'chat.bsky.group.defs#invalidJoinLinkPreviewView':

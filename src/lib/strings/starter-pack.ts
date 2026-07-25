@@ -71,18 +71,6 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 	return `at://${parsed.actor}/app.bsky.graph.starterpack/${parsed.rkey}`;
 }
 
-/**
- * builds the public bsky.app URL for a starter pack, for sharing outside the app. bsky.app's canonical form
- * is `/start/`, which this app maps back onto its own starter pack route on the way in.
- *
- * @param did the pack creator's did
- * @param rkey the starter pack's record key
- * @returns the absolute share URL
- */
-export function getStarterPackShareUrl({ did, rkey }: { did: Did; rkey: RecordKey }): string {
-	return `https://bsky.app/start/${did}/${rkey}`;
-}
-
 export function getStarterPackOgCard(didOrStarterPack: AnyStarterPackView | string, rkey?: string) {
 	if (typeof didOrStarterPack === 'string') {
 		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`;
