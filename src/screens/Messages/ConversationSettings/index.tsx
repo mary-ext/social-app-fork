@@ -47,6 +47,7 @@ import { useNavigate, useParams, useRouter } from '#/routes';
 
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { useIsWithinSplitView } from '../components/splitView/context';
+import * as splitViewCss from '../components/splitView/MessagesSplitViewLayout.css';
 import { AddMembersLink } from './AddMembersLink';
 import * as css from './index.css';
 import { Member, MemberPlaceholder } from './Member';
@@ -261,7 +262,7 @@ function GroupSettings({
 
 	if (isWithinSplitView) {
 		return (
-			<div className={css.scroller} ref={scrollContainerRef}>
+			<div className={splitViewCss.splitScroller} ref={scrollContainerRef}>
 				{list}
 			</div>
 		);

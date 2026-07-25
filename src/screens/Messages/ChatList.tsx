@@ -47,6 +47,7 @@ import { ChatListItem } from './components/ChatListItem';
 import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
 import { InboxRequests } from './components/InboxRequests';
 import { useIsWithinSplitView } from './components/splitView/context';
+import * as splitViewCss from './components/splitView/MessagesSplitViewLayout.css';
 import { useRequestMessagePollInterval } from './use-request-poll-interval';
 
 const CHAT_ITEM_HEIGHT_ESTIMATE = 78;
@@ -273,7 +274,7 @@ export function ChatList({
 
 	if (isWithinSplitView) {
 		return (
-			<div ref={scrollContainerRef} className={css.splitScroller}>
+			<div ref={scrollContainerRef} className={splitViewCss.splitScroller}>
 				{list}
 			</div>
 		);

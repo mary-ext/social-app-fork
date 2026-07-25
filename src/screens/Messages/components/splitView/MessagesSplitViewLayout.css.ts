@@ -40,3 +40,15 @@ export const centerColumn = style({
 		[OFFSET_MEDIA]: { width: CENTER_COLUMN_WIDTH - CENTER_COLUMN_OFFSET },
 	},
 });
+
+/**
+ * scroll container for a list rendered inside a split-view column. the layout locks the document scroll, so a
+ * screen that owns a `List` must supply this element and pass it as the list's `scrollRoot`.
+ */
+export const splitScroller = style({
+	flex: 1,
+	minHeight: 0,
+	overflowY: 'auto',
+	scrollbarWidth: 'thin',
+	scrollbarColor: `${colors.contrast_100} transparent`,
+});

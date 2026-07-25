@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
 export const banner = style({ marginBottom: space.sm });
@@ -24,12 +23,4 @@ export const errorWrap = style({
 	flexDirection: 'column',
 	alignItems: 'center',
 	paddingTop: space._3xl,
-});
-
-export const splitScroller = style({
-	flex: 1,
-	minHeight: 0,
-	overflowY: 'auto',
-	scrollbarWidth: 'thin',
-	scrollbarColor: `${vars.palette.contrast_100} transparent`,
 });

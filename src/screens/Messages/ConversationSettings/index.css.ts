@@ -43,11 +43,3 @@ export const loading = style({
 	alignItems: 'center',
 	justifyContent: 'center',
 });
-
-export const scroller = style({
-	flex: 1,
-	minHeight: 0,
-	overflowY: 'auto',
-	scrollbarWidth: 'thin',
-	scrollbarColor: `${colors.contrast_100} transparent`,
-});
