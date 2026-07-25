@@ -23,7 +23,10 @@ import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from
 import { BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon } from '#/components/icons/Bubble';
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon } from '#/components/icons/CircleCheck';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon } from '#/components/icons/Inbox';
+import {
+	Inbox_Stroke2_Corner2_Rounded as InboxIcon,
+	Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon,
+} from '#/components/icons/Inbox';
 import {
 	MessagePlus_Stroke2_Corner0_Rounded as MessagePlusIcon,
 	MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon,
@@ -375,6 +378,15 @@ function ChatSettingsMenu({ render }: { render: ComponentProps<typeof Menu.Trigg
 		},
 	});
 
+	const { mutate: markAllRequestsRead } = useUpdateAllRead('request', {
+		onMutate: () => {
+			Toast.show(m['screens.messages.requests.markAllRead.toast'](), { type: 'success' });
+		},
+		onError: () => {
+			Toast.show(m['screens.messages.requests.markAllRead.error'](), { type: 'error' });
+		},
+	});
+
 	return (
 		<Menu.Root>
 			<Menu.Trigger render={render} />
@@ -386,6 +398,13 @@ function ChatSettingsMenu({ render }: { render: ComponentProps<typeof Menu.Trigg
 					>
 						<Menu.ItemIcon icon={CircleCheckIcon} />
 						<Menu.ItemText>{m['screens.messages.chats.markAllRead.action']()}</Menu.ItemText>
+					</Menu.Item>
+					<Menu.Item
+						label={m['screens.messages.requests.markAllRead.action']()}
+						onClick={() => markAllRequestsRead()}
+					>
+						<Menu.ItemIcon icon={InboxIcon} />
+						<Menu.ItemText>{m['screens.messages.requests.markAllRead.action']()}</Menu.ItemText>
 					</Menu.Item>
 					<Menu.Item
 						label={m['common.chat.settingsLabel']()}
