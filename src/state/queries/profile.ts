@@ -60,8 +60,8 @@ const fetchProfile = createBatchedFetch<Did, AppBskyActorDefs.ProfileViewDetaile
 		const { appview } = getClients();
 		const { profiles } = await ok(
 			appview.get('app.bsky.actor.getProfiles', {
-				params: { actors: dids },
 				signal,
+				params: { actors: dids },
 			}),
 		);
 		return profiles;
@@ -81,20 +81,21 @@ export function useProfileQuery({
 	const { appview } = getClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 	return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
+		queryKey: RQKEY(did ?? ''),
+		enabled: !!did,
 		// WARNING
 		// this staleTime is load-bearing
 		// if you remove it, the UI infinite-loops
 		// -prf
 		staleTime,
 		refetchOnWindowFocus: true,
-		queryKey: RQKEY(did ?? ''),
 		queryFn: ({ signal }) =>
 			batch
 				? fetchProfile(did!, signal)
 				: ok(
 						appview.get('app.bsky.actor.getProfile', {
-							params: { actor: did! },
 							signal,
+							params: { actor: did! },
 						}),
 					),
 		placeholderData: () => {
@@ -104,7 +105,6 @@ export function useProfileQuery({
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- placeholder only; the detailed-only fields stay absent until the query resolves
 			return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed;
 		},
-		enabled: !!did,
 	});
 }
 export function useCurrentAccountProfile() {

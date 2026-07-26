@@ -35,8 +35,9 @@ const createDel = (recordUri: string): ComAtprotoRepoApplyWrites.$input['writes'
 export function useListQuery(uri?: ResourceUri) {
 	const { appview } = getClients();
 	return useQuery<AppBskyGraphDefs.ListView>({
-		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(uri || ''),
+		enabled: !!uri,
+		staleTime: STALE.MINUTES.ONE,
 		queryFn: async () => {
 			if (!uri) {
 				throw new Error('URI not provided');
@@ -48,7 +49,6 @@ export function useListQuery(uri?: ResourceUri) {
 			);
 			return data.list;
 		},
-		enabled: !!uri,
 	});
 }
 

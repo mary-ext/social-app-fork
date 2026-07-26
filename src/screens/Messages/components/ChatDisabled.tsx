@@ -103,15 +103,15 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 				}),
 			);
 		},
+		onSuccess: () => {
+			handle.close();
+			Toast.show(m['common.appeal.submittedToast']());
+		},
 		onError: (err) => {
 			logger.error('Failed to submit chat appeal', { message: err });
 			Toast.show(m['common.appeal.submitError'](), {
 				type: 'error',
 			});
-		},
-		onSuccess: () => {
-			handle.close();
-			Toast.show(m['common.appeal.submittedToast']());
 		},
 	});
 

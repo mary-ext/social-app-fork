@@ -53,11 +53,10 @@ export function usePreferencesQuery() {
 	const { currentAccount } = useSession();
 
 	const query = useQuery({
-		staleTime: STALE.SECONDS.FIFTEEN,
-		structuralSharing: replaceEqualDeep,
-		refetchOnWindowFocus: true,
 		queryKey: preferencesQueryKey,
+		staleTime: STALE.SECONDS.FIFTEEN,
 		gcTime: GCTIME.INFINITY,
+		refetchOnWindowFocus: true,
 		queryFn: async () => {
 			if (!pds || !currentAccount) {
 				return DEFAULT_LOGGED_OUT_PREFERENCES;
@@ -87,6 +86,7 @@ export function usePreferencesQuery() {
 				return preferences;
 			}
 		},
+		structuralSharing: replaceEqualDeep,
 	});
 
 	return query;

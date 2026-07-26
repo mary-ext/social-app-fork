@@ -56,11 +56,11 @@ export function useNotificationSettingsQuery({ enabled }: { enabled?: boolean } 
 
 	return useQuery({
 		queryKey: RQKEY_APP,
+		enabled,
 		queryFn: async (): Promise<AppNotificationSettingsPreferences> => {
 			const data = await ok(appview.get('app.bsky.notification.getPreferences', { params: {} }));
 			return appPreferencesWithoutChat(data.preferences);
 		},
-		enabled,
 	});
 }
 
@@ -69,6 +69,7 @@ export function useChatNotificationSettingsQuery({ enabled }: { enabled?: boolea
 
 	return useQuery({
 		queryKey: RQKEY_CHAT,
+		enabled,
 		queryFn: async (): Promise<ChatNotificationSettingsPreferences> => {
 			if (!chat) {
 				throw new Error('Not signed in');
@@ -76,7 +77,6 @@ export function useChatNotificationSettingsQuery({ enabled }: { enabled?: boolea
 			const data = await ok(chat.get('chat.bsky.notification.getPreferences', { params: {} }));
 			return chatPreferencesForSettings(data.preferences);
 		},
-		enabled,
 	});
 }
 

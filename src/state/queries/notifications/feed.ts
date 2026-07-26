@@ -65,8 +65,9 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 	} | null>(null);
 
 	const query = useInfiniteQuery<FeedPage, Error, InfiniteData<FeedPage>, QueryKey, RQPageParam>({
-		staleTime: STALE.INFINITY,
 		queryKey: RQKEY(filter),
+		enabled,
+		staleTime: STALE.INFINITY,
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
 			let page;
 			if (filter === 'all' && !pageParam) {
@@ -104,7 +105,6 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 		},
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		enabled,
 		select: useCallback(
 			(data: InfiniteData<FeedPage>) => {
 				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`

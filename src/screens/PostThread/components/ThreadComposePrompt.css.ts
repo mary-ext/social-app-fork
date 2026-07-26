@@ -15,6 +15,9 @@ export const outer = recipe(
 			paddingRight: space.sm,
 			paddingLeft: space.sm,
 		},
+		defaultVariants: {
+			isDesktop: false,
+		},
 		variants: {
 			isDesktop: {
 				true: {
@@ -29,9 +32,6 @@ export const outer = recipe(
 					paddingBottom: space._2xs,
 				},
 			},
-		},
-		defaultVariants: {
-			isDesktop: false,
 		},
 	},
 	{ debugId: 'outer' },
@@ -59,6 +59,9 @@ export const button = recipe(
 			width: '100%',
 			cursor: 'pointer',
 		},
+		defaultVariants: {
+			isDesktop: false,
+		},
 		variants: {
 			isDesktop: {
 				true: {
@@ -84,9 +87,6 @@ export const button = recipe(
 					},
 				},
 			},
-		},
-		defaultVariants: {
-			isDesktop: false,
 		},
 	},
 	{ debugId: 'button' },

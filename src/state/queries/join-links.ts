@@ -95,6 +95,8 @@ export function useJoinLinkPreviewsQuery({
 
 	return useQuery({
 		queryKey: createJoinLinkPreviewQueryKey({ codes: codes ?? [], hasSession }),
+		enabled: codes != null && codes.length > 0,
+		staleTime,
 		queryFn: async () => {
 			if (!codes) {
 				throw new Error('No invite code');
@@ -106,8 +108,6 @@ export function useJoinLinkPreviewsQuery({
 				throw error;
 			}
 		},
-		enabled: codes != null && codes.length > 0,
-		staleTime,
 		initialData,
 	});
 }

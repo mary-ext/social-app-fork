@@ -28,19 +28,19 @@ export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
 	const { data: preferences } = usePreferencesQuery();
 
 	return useQuery({
-		staleTime: STALE.MINUTES.THREE,
 		queryKey: createGetSuggestedUsersForDiscoverQueryKey({ limit: props.limit }),
+		staleTime: STALE.MINUTES.THREE,
 		queryFn: async () => {
 			const contentLangs = getContentLanguages().join(',');
 			const userInterests = aggregateUserInterests(preferences);
 
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getSuggestedUsersForDiscover', {
-					params: { limit: props.limit || 10 },
 					headers: {
 						...createBskyTopicsHeader(userInterests),
 						'Accept-Language': contentLangs,
 					},
+					params: { limit: props.limit || 10 },
 				}),
 			);
 			if (!data.recIdStr) {

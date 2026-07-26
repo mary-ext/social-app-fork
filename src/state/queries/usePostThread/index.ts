@@ -60,8 +60,8 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	});
 
 	const query = useQuery<UsePostThreadQueryResult>({
-		enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
 		queryKey: postThreadQueryKey,
+		enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
 		async queryFn() {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPostThreadV2', {
@@ -138,8 +138,8 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	 */
 	const additionalQueryEnabled = hasOtherThreadItems && otherItemsVisible;
 	const additionalItemsQuery = useQuery({
-		enabled: additionalQueryEnabled,
 		queryKey: postThreadOtherQueryKey,
+		enabled: additionalQueryEnabled,
 		async queryFn() {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPostThreadOtherV2', {

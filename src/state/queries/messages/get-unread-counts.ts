@@ -25,6 +25,8 @@ export function useUnreadCountsQuery() {
 
 	return useQuery({
 		queryKey: RQKEY(includeGroupChats),
+		enabled: hasSession,
+		staleTime: STALE.SECONDS.FIFTEEN,
 		queryFn: async () => {
 			if (!chat) {
 				throw new Error('Not signed in');
@@ -36,7 +38,5 @@ export function useUnreadCountsQuery() {
 			);
 			return data;
 		},
-		staleTime: STALE.SECONDS.FIFTEEN,
-		enabled: hasSession,
 	});
 }

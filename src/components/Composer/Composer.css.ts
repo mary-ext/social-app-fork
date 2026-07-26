@@ -45,14 +45,14 @@ export const root = recipe(
 			position: 'relative',
 			zIndex: 0,
 		},
+		defaultVariants: {
+			fontSize: 'lg',
+		},
 		variants: {
 			fontSize: {
 				lg: { vars: { [fontSizeVar]: fontSize.lg, [leadingVar]: String(fontLeading.lg) } },
 				md: { vars: { [fontSizeVar]: fontSize.md, [leadingVar]: String(fontLeading.md) } },
 			},
-		},
-		defaultVariants: {
-			fontSize: 'lg',
 		},
 	},
 	{ debugId: 'root' },

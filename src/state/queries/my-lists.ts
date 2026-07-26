@@ -17,8 +17,9 @@ export function useMyListsQuery(filter: MyListsFilter) {
 	const { currentAccount } = useSession();
 	const { appview } = getClients();
 	return useQuery<AppBskyGraphDefs.ListView[]>({
-		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(filter),
+		enabled: !!currentAccount,
+		staleTime: STALE.MINUTES.ONE,
 		async queryFn() {
 			const lists: AppBskyGraphDefs.ListView[] = [];
 			const promises: Promise<AppBskyGraphDefs.ListView[]>[] = [
@@ -65,7 +66,6 @@ export function useMyListsQuery(filter: MyListsFilter) {
 			}
 			return lists;
 		},
-		enabled: !!currentAccount,
 	});
 }
 

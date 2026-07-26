@@ -45,7 +45,7 @@ function DialogInner() {
 		try {
 			setLoading('repo');
 			const did = currentAccount.did;
-			const carData = await ok(pds.get('com.atproto.sync.getRepo', { params: { did }, as: 'bytes' }));
+			const carData = await ok(pds.get('com.atproto.sync.getRepo', { as: 'bytes', params: { did } }));
 			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
 			saveBytesToDisk('repo.car', carData, 'application/vnd.ipld.car');
 

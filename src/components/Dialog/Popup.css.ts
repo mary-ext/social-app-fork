@@ -66,6 +66,7 @@ export const popup = recipe(
 				'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
 			},
 		},
+		defaultVariants: { fullHeight: false, padding: 'default', scroll: 'viewport', size: 'default' },
 		variants: {
 			fullHeight: {
 				true: { height: '80vh' },
@@ -91,7 +92,6 @@ export const popup = recipe(
 				wide: { maxWidth: 520 },
 			},
 		},
-		defaultVariants: { fullHeight: false, padding: 'default', scroll: 'viewport', size: 'default' },
 	},
 	{ debugId: 'popup', layer: components },
 );
@@ -140,6 +140,7 @@ export const actions = recipe(
 			display: 'flex',
 			gap: space.sm,
 		},
+		defaultVariants: { align: 'end', direction: 'row', reverse: false },
 		variants: {
 			align: {
 				between: {},
@@ -193,7 +194,6 @@ export const actions = recipe(
 				style: { '@media': { '(min-width: 800px)': { justifyContent: 'flex-end' } } },
 			},
 		],
-		defaultVariants: { align: 'end', direction: 'row', reverse: false },
 	},
 	{ debugId: 'actions', layer: components },
 );
@@ -225,6 +225,7 @@ export const close = recipe(
 				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 			},
 		},
+		defaultVariants: { variant: 'default' },
 		variants: {
 			variant: {
 				default: {
@@ -250,7 +251,6 @@ export const close = recipe(
 				},
 			},
 		},
-		defaultVariants: { variant: 'default' },
 	},
 	{ debugId: 'close', layer: components },
 );

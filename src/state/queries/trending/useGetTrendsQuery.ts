@@ -53,19 +53,19 @@ export function useGetTrendsQuery({
 	}, [preferences?.moderationPrefs]);
 
 	return useQuery({
-		enabled: enabled && !!preferences,
-		refetchOnWindowFocus,
-		staleTime: STALE.MINUTES.THREE,
 		queryKey: createGetTrendsQueryKey({ limit }),
+		enabled: enabled && !!preferences,
+		staleTime: STALE.MINUTES.THREE,
+		refetchOnWindowFocus,
 		queryFn: () => {
 			const contentLangs = getContentLanguages().join(',');
 			return ok(
 				appview.get('app.bsky.unspecced.getTrends', {
-					params: { limit },
 					headers: {
 						...createBskyTopicsHeader(aggregateUserInterests(preferences)),
 						'Accept-Language': contentLangs,
 					},
+					params: { limit },
 				}),
 			);
 		},

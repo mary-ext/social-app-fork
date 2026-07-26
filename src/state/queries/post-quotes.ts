@@ -31,6 +31,7 @@ export function usePostQuotesQuery(resolvedUri: ResourceUri | undefined) {
 		RQPageParam
 	>({
 		queryKey: RQKEY(resolvedUri || ''),
+		enabled: !!resolvedUri,
 		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
 			ok(
 				appview.get('app.bsky.feed.getQuotes', {
@@ -43,7 +44,6 @@ export function usePostQuotesQuery(resolvedUri: ResourceUri | undefined) {
 			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		enabled: !!resolvedUri,
 		select: (data) => {
 			return {
 				...data,

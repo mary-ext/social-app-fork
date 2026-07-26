@@ -122,8 +122,8 @@ export function useListConvosQuery({
 	const { chat } = getClients();
 
 	return useInfiniteQuery({
-		enabled,
 		queryKey: RQKEY(status ?? 'all', readState, kind, lockStatus, limit),
+		enabled,
 		queryFn: async ({ pageParam }) => {
 			if (!chat) {
 				throw new Error('Not signed in');

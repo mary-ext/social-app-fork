@@ -81,8 +81,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				// update server
 				await ok(
 					appview.post('app.bsky.notification.updateSeen', {
-						input: { seenAt: cacheRef.current.syncedAt.toISOString() },
 						as: null,
+						input: { seenAt: cacheRef.current.syncedAt.toISOString() },
 					}),
 				);
 

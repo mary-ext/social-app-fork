@@ -21,8 +21,8 @@ const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
 export function useLabelerInfoQuery({ did, enabled }: { did?: Did; enabled?: boolean }) {
 	const { appview } = getClients();
 	return useQuery({
-		enabled: !!did && enabled !== false,
 		queryKey: labelerInfoQueryKey(did ?? ''),
+		enabled: !!did && enabled !== false,
 		queryFn: async () => {
 			const data = await ok(
 				appview.get('app.bsky.labeler.getServices', {
@@ -38,10 +38,10 @@ export function useLabelerInfoQuery({ did, enabled }: { did?: Did; enabled?: boo
 export function useLabelersDetailedInfoQuery({ dids }: { dids: Did[] }) {
 	const { appview } = getClients();
 	return useQuery({
-		enabled: !!dids.length,
 		queryKey: createLabelersDetailedInfoQueryKey(dids),
-		gcTime: GCTIME.INFINITY,
+		enabled: !!dids.length,
 		staleTime: STALE.MINUTES.ONE,
+		gcTime: GCTIME.INFINITY,
 		queryFn: async () => {
 			const data = await ok(
 				appview.get('app.bsky.labeler.getServices', {

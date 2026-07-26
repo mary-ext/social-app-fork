@@ -35,15 +35,15 @@ export function useActorSearch({
 		QueryKey,
 		string | undefined
 	>({
-		staleTime: STALE.MINUTES.FIVE,
 		queryKey: RQKEY(query, limit),
+		enabled: (enabled ?? true) && !!query,
+		staleTime: STALE.MINUTES.FIVE,
 		queryFn: ({ pageParam }) =>
 			ok(
 				appview.get('app.bsky.actor.searchActors', {
 					params: { cursor: pageParam, limit, q: query },
 				}),
 			),
-		enabled: (enabled ?? true) && !!query,
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		placeholderData: maintainData ? keepPreviousData : undefined,

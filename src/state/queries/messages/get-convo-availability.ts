@@ -15,6 +15,8 @@ export function useGetConvoAvailabilityQuery(did: Did, { enabled = true }: { ena
 
 	return useQuery({
 		queryKey: RQKEY(did),
+		enabled,
+		staleTime: STALE.INFINITY,
 		queryFn: async () => {
 			if (!chat) {
 				throw new Error('Not signed in');
@@ -27,7 +29,5 @@ export function useGetConvoAvailabilityQuery(did: Did, { enabled = true }: { ena
 
 			return data;
 		},
-		staleTime: STALE.INFINITY,
-		enabled,
 	});
 }

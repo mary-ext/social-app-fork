@@ -29,8 +29,8 @@ export class CustomFeedAPI implements FeedAPI {
 		const contentLangs = getContentLanguages().join(',');
 		const data = await ok(
 			this.appview.get('app.bsky.feed.getFeed', {
-				params: { ...this.params, limit: 1 },
 				headers: { 'Accept-Language': contentLangs },
+				params: { ...this.params, limit: 1 },
 			}),
 		);
 		return data.feed[0]!;
@@ -41,11 +41,11 @@ export class CustomFeedAPI implements FeedAPI {
 		const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed);
 		const data = await ok(
 			this.appview.get('app.bsky.feed.getFeed', {
-				params: { ...this.params, cursor, limit },
 				headers: {
 					...(isBlueskyOwned ? createBskyTopicsHeader(this.userInterests) : {}),
 					'Accept-Language': contentLangs,
 				},
+				params: { ...this.params, cursor, limit },
 			}),
 		);
 		let feed = data.feed;

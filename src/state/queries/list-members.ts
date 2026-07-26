@@ -31,8 +31,9 @@ export function useListMembersQuery(uri?: ResourceUri, limit: number = PAGE_SIZE
 		QueryKey,
 		RQPageParam
 	>({
-		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(uri ?? ''),
+		enabled: !!uri,
+		staleTime: STALE.MINUTES.ONE,
 		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
 			ok(
 				appview.get('app.bsky.graph.getList', {
@@ -45,17 +46,16 @@ export function useListMembersQuery(uri?: ResourceUri, limit: number = PAGE_SIZE
 			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		enabled: !!uri,
 	});
 }
 
 export function useAllListMembersQuery(uri?: ResourceUri) {
 	const { appview } = getClients();
 	return useQuery({
-		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY_ALL(uri ?? ''),
-		queryFn: () => getAllListMembers(appview, uri!),
 		enabled: !!uri,
+		staleTime: STALE.MINUTES.ONE,
+		queryFn: () => getAllListMembers(appview, uri!),
 	});
 }
 

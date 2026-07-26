@@ -16,24 +16,24 @@ const searchGifs = createKlipyApi<{ q: string }>(GIF_KLIPY_SEARCH);
 export function useFeaturedGifsQuery(options?: { enabled?: boolean }) {
 	return useInfiniteQuery({
 		queryKey: RQKEY_FEATURED,
-		queryFn: ({ pageParam }) => getTrendingGifs({ pos: pageParam }),
-		initialPageParam: undefined as string | undefined,
-		getNextPageParam: (lastPage) => lastPage.next,
 		enabled: options?.enabled,
 		// Klipy serves time-of-day-sensitive trending; drop cache as soon as the
 		// picker closes so every reopen issues a fresh request instead of showing
 		// stale results while a background refetch runs.
 		gcTime: 0,
+		queryFn: ({ pageParam }) => getTrendingGifs({ pos: pageParam }),
+		initialPageParam: undefined as string | undefined,
+		getNextPageParam: (lastPage) => lastPage.next,
 	});
 }
 
 export function useGifSearchQuery(query: string, options?: { enabled?: boolean }) {
 	return useInfiniteQuery({
 		queryKey: RQKEY_SEARCH(query),
+		enabled: !!query && options?.enabled !== false,
 		queryFn: ({ pageParam }) => searchGifs({ q: query, pos: pageParam }),
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (lastPage) => lastPage.next,
-		enabled: !!query && options?.enabled !== false,
 	});
 }
 

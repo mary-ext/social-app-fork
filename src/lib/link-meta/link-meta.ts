@@ -43,8 +43,8 @@ export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta
 	try {
 		const data = await ok(
 			internalClient.get('internal.app.extractLinkMeta', {
-				params: { url },
 				signal: AbortSignal.timeout(timeout),
+				params: { url },
 			}),
 		);
 

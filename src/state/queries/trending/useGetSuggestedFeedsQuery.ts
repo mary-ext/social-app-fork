@@ -19,18 +19,18 @@ export function useGetSuggestedFeedsQuery({ enabled }: { enabled?: boolean }) {
 	const savedFeeds = preferences?.savedFeeds;
 
 	return useQuery({
+		queryKey: createGetSuggestedFeedsQueryKey(),
 		enabled: !!preferences && enabled !== false,
 		staleTime: STALE.MINUTES.THREE,
-		queryKey: createGetSuggestedFeedsQueryKey(),
 		queryFn: async () => {
 			const contentLangs = getContentLanguages().join(',');
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getSuggestedFeeds', {
-					params: { limit: DEFAULT_LIMIT },
 					headers: {
 						...createBskyTopicsHeader(aggregateUserInterests(preferences)),
 						'Accept-Language': contentLangs,
 					},
+					params: { limit: DEFAULT_LIMIT },
 				}),
 			);
 

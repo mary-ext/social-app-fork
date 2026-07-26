@@ -57,8 +57,9 @@ export function useListJoinRequestsQuery({
 	}, [isEnabled, convoId, messagesBus, queryClient]);
 
 	return useInfiniteQuery({
-		enabled: isEnabled,
 		queryKey: createListJoinRequestsQueryKey({ convoId: convoId ?? '' }),
+		enabled: isEnabled,
+		staleTime: STALE.MINUTES.ONE,
 		queryFn: async ({ pageParam }) => {
 			if (!chat) {
 				throw new Error('Not signed in');
@@ -72,6 +73,5 @@ export function useListJoinRequestsQuery({
 		},
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (page) => page.cursor,
-		staleTime: STALE.MINUTES.ONE,
 	});
 }

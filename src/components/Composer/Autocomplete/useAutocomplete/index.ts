@@ -52,7 +52,6 @@ export function useAutocomplete({
 	const profileQuery = q.toLowerCase().trim().replace(/\.$/, '');
 
 	const query = useQuery({
-		staleTime: STALE.MINUTES.ONE,
 		queryKey: [
 			'autocomplete',
 			{
@@ -60,6 +59,7 @@ export function useAutocomplete({
 				query: q,
 			},
 		],
+		staleTime: STALE.MINUTES.ONE,
 		async queryFn() {
 			if (type === 'profile') {
 				// TODO return recents
@@ -86,6 +86,7 @@ export function useAutocomplete({
 
 			return [];
 		},
+		placeholderData: keepPreviousData,
 		select: useCallback(
 			(items: AutocompleteItem[]) => {
 				const seen = new Set<string>();
@@ -115,7 +116,6 @@ export function useAutocomplete({
 			},
 			[profileQuery, moderationOpts],
 		),
-		placeholderData: keepPreviousData,
 	});
 
 	let items: AutocompleteItem[] = [];

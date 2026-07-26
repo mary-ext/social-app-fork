@@ -39,8 +39,8 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 	}
 
 	return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
-		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(normalizedPrefix || ''),
+		staleTime: STALE.MINUTES.ONE,
 		async queryFn() {
 			if (!normalizedPrefix) {
 				return [];
@@ -52,6 +52,7 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 			);
 			return data.actors;
 		},
+		placeholderData: maintainData ? keepPreviousData : undefined,
 		select: useCallback(
 			(data: AppBskyActorDefs.ProfileViewBasic[]) => {
 				return computeSuggestions({
@@ -62,7 +63,6 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 			},
 			[normalizedPrefix, moderationOpts],
 		),
-		placeholderData: maintainData ? keepPreviousData : undefined,
 	});
 }
 
@@ -93,8 +93,8 @@ export function useSearchActorAutocompleteQuery({
 	}
 
 	return useQuery<AnyProfileView[]>({
-		staleTime: STALE.MINUTES.ONE,
 		queryKey: [RQKEY_ROOT, 'search', self?.did ?? null, normalizedPrefix],
+		staleTime: STALE.MINUTES.ONE,
 		async queryFn() {
 			if (!normalizedPrefix) {
 				return self ? [self] : [];
@@ -106,6 +106,7 @@ export function useSearchActorAutocompleteQuery({
 			);
 			return data.actors;
 		},
+		placeholderData: keepPreviousData,
 		select: useCallback(
 			(data: AnyProfileView[]) =>
 				computeSuggestions({
@@ -115,7 +116,6 @@ export function useSearchActorAutocompleteQuery({
 				}),
 			[normalizedPrefix, moderationOpts],
 		),
-		placeholderData: keepPreviousData,
 	});
 }
 

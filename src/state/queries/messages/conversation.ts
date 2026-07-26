@@ -32,6 +32,7 @@ export function useConvoQuery({ convoId }: { convoId: string }) {
 
 	return useQuery({
 		queryKey: RQKEY(convoId),
+		staleTime: STALE.INFINITY,
 		queryFn: async () => {
 			if (!chat) {
 				throw new Error('Not signed in');
@@ -39,7 +40,6 @@ export function useConvoQuery({ convoId }: { convoId: string }) {
 			const data = await ok(chat.get('chat.bsky.convo.getConvo', { params: { convoId } }));
 			return data.convo;
 		},
-		staleTime: STALE.INFINITY,
 	});
 }
 
@@ -128,18 +128,6 @@ export function useMarkAsReadMutation() {
 			}
 			return { prevListQueries, prevUnreadCountsQueries };
 		},
-		onError(_, __, context) {
-			if (context?.prevListQueries) {
-				for (const [queryKey, prevData] of context.prevListQueries) {
-					queryClient.setQueryData(queryKey, prevData);
-				}
-			}
-			if (context?.prevUnreadCountsQueries) {
-				for (const [queryKey, prevData] of context.prevUnreadCountsQueries) {
-					queryClient.setQueryData(queryKey, prevData);
-				}
-			}
-		},
 		onSuccess(_, { convoId }) {
 			if (!convoId) {
 				return;
@@ -181,6 +169,18 @@ export function useMarkAsReadMutation() {
 					// list, then we don't need to do anything.
 				}
 			});
+		},
+		onError(_, __, context) {
+			if (context?.prevListQueries) {
+				for (const [queryKey, prevData] of context.prevListQueries) {
+					queryClient.setQueryData(queryKey, prevData);
+				}
+			}
+			if (context?.prevUnreadCountsQueries) {
+				for (const [queryKey, prevData] of context.prevUnreadCountsQueries) {
+					queryClient.setQueryData(queryKey, prevData);
+				}
+			}
 		},
 	});
 }

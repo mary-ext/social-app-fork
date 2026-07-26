@@ -19,8 +19,8 @@ export function useResolveLinkQuery(url: string) {
 	const { appview } = getClients();
 
 	return useQuery({
-		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY_LINK(url),
+		staleTime: STALE.HOURS.ONE,
 		queryFn: async () => {
 			return await resolveLink(appview, url);
 		},
@@ -41,8 +41,8 @@ export function precacheResolveLinkQuery(queryClient: QueryClient, url: string, 
 
 export function useResolveGifQuery(gif: Gif) {
 	return useQuery({
-		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY_GIF(gif.url),
+		staleTime: STALE.HOURS.ONE,
 		queryFn: async () => {
 			return await resolveGif(gif);
 		},

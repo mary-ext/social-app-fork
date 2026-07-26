@@ -150,9 +150,9 @@ export function usePostFeedQuery(
 	);
 
 	const query = useInfiniteQuery<FeedPageUnselected, Error, InfiniteData<FeedPage>, QueryKey, RQPageParam>({
+		queryKey: RQKEY(feedDesc),
 		enabled,
 		staleTime: STALE.INFINITY,
-		queryKey: RQKEY(feedDesc),
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
 			logger.debug('usePostFeedQuery', { feedDesc, cursor: pageParam?.cursor });
 			const { api, cursor } = pageParam

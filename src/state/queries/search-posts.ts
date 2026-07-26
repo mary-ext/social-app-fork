@@ -74,6 +74,7 @@ export function useSearchPostsQuery({
 		string | undefined
 	>({
 		queryKey: searchPostsQueryKey({ author, query, sort, viewerDid }),
+		enabled: !!moderationOpts,
 		queryFn: ({ pageParam }) =>
 			ok(
 				appview.get('app.bsky.feed.searchPostsV2', {
@@ -91,7 +92,6 @@ export function useSearchPostsQuery({
 			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		enabled: !!moderationOpts,
 		select: useCallback(
 			(data: InfiniteData<AppBskyFeedSearchPostsV2.$output>) => {
 				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`

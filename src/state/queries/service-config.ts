@@ -17,9 +17,9 @@ type ServiceConfig = {
 export function useServiceConfigQuery() {
 	const { appview } = getClients();
 	return useQuery<ServiceConfig>({
-		refetchOnWindowFocus: true,
-		staleTime: STALE.MINUTES.FIVE,
 		queryKey: ['service-config'],
+		staleTime: STALE.MINUTES.FIVE,
+		refetchOnWindowFocus: true,
 		queryFn: async () => {
 			try {
 				const data = await ok(appview.get('app.bsky.unspecced.getConfig'));

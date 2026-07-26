@@ -12,9 +12,9 @@ export function useChatActorStatusQuery() {
 	const { chat } = getClients();
 
 	return useQuery({
-		gcTime: GCTIME.INFINITY,
-		staleTime: STALE.SECONDS.FIFTEEN,
 		queryKey: chatActorStatusQueryKey(),
+		staleTime: STALE.SECONDS.FIFTEEN,
+		gcTime: GCTIME.INFINITY,
 		queryFn: async () => {
 			if (!chat) {
 				throw new Error('Not signed in');

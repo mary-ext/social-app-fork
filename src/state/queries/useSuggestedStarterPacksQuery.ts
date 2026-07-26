@@ -26,19 +26,19 @@ export function useSuggestedStarterPacksQuery({
 	const contentLangs = getContentLanguages().join(',');
 
 	return useQuery({
+		queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
 		enabled: !!preferences && enabled !== false,
 		staleTime: STALE.MINUTES.THREE,
-		queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
 		queryFn: () =>
 			ok(
 				appview.get('app.bsky.unspecced.getSuggestedStarterPacks', {
-					params: {},
 					headers: {
 						...createBskyTopicsHeader(
 							overrideInterests ? overrideInterests.join(',') : aggregateUserInterests(preferences),
 						),
 						'Accept-Language': contentLangs,
 					},
+					params: {},
 				}),
 			),
 	});

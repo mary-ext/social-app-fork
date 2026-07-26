@@ -11,6 +11,9 @@ export const spinner = recipe(
 			display: 'inline-flex',
 			animation: `${spin} 500ms linear infinite`,
 		},
+		defaultVariants: {
+			color: 'white',
+		},
 		variants: {
 			color: {
 				default: {
@@ -20,9 +23,6 @@ export const spinner = recipe(
 					color: '#fff',
 				},
 			},
-		},
-		defaultVariants: {
-			color: 'white',
 		},
 	},
 	{ debugId: 'spinner' },

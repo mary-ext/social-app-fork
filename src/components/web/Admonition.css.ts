@@ -13,6 +13,7 @@ export const outer = recipe(
 			backgroundColor: vars.palette.contrast_0,
 			padding: 12,
 		},
+		defaultVariants: { type: 'info' },
 		variants: {
 			type: {
 				apology: { borderColor: vars.palette.contrast_300 },
@@ -22,7 +23,6 @@ export const outer = recipe(
 				warning: { borderColor: vars.palette.yellow },
 			},
 		},
-		defaultVariants: { type: 'info' },
 	},
 	{ debugId: 'outer' },
 );

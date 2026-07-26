@@ -28,8 +28,8 @@ export * from '#/features/liveNow/utils';
 export function useLiveLinkMetaQuery(url: string | null) {
 	const liveNowConfig = useLiveNowConfig();
 	return useQuery({
-		enabled: !!url,
 		queryKey: ['link-meta', url],
+		enabled: !!url,
 		queryFn: async () => {
 			if (!url) {
 				return undefined;
@@ -122,13 +122,6 @@ export function useUpsertLiveStatusMutation(
 				image: linkMeta?.image,
 			};
 		},
-		onError: (e) => {
-			logger.error(`Failed to upsert live status`, {
-				url: linkMeta?.url,
-				image: linkMeta?.image,
-				safeMessage: e,
-			});
-		},
 		onSuccess: ({ record, image }) => {
 			Toast.show(m['features.liveNow.goLive.started']());
 			handle.close();
@@ -164,6 +157,13 @@ export function useUpsertLiveStatusMutation(
 				},
 			});
 		},
+		onError: (e) => {
+			logger.error(`Failed to upsert live status`, {
+				url: linkMeta?.url,
+				image: linkMeta?.image,
+				safeMessage: e,
+			});
+		},
 	});
 }
 
@@ -183,11 +183,6 @@ export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 				rkey: 'self',
 			});
 		},
-		onError: (e) => {
-			logger.error(`Failed to remove live status`, {
-				safeMessage: e,
-			});
-		},
 		onSuccess: () => {
 			Toast.show(m['features.liveNow.goLive.ended']());
 			handle.close();
@@ -198,6 +193,11 @@ export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 
 			updateProfileShadow(queryClient, currentAccount.did, {
 				status: undefined,
+			});
+		},
+		onError: (e) => {
+			logger.error(`Failed to remove live status`, {
+				safeMessage: e,
 			});
 		},
 	});

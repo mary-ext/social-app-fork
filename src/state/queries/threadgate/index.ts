@@ -41,14 +41,14 @@ export function useThreadgateViewQuery({
 	const getPost = useGetPost();
 
 	return useQuery({
-		enabled: !!postUri,
 		queryKey: createThreadgateViewQueryKey(postUri || ''),
-		placeholderData: initialData,
+		enabled: !!postUri,
 		staleTime: STALE.MINUTES.ONE,
 		async queryFn() {
 			const post = await getPost({ uri: postUri! });
 			return post.threadgate ?? null;
 		},
+		placeholderData: initialData,
 	});
 }
 

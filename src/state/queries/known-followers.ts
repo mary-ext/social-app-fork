@@ -23,6 +23,7 @@ export function useProfileKnownFollowersQuery(did: Did | undefined) {
 		RQPageParam
 	>({
 		queryKey: RQKEY(did || ''),
+		enabled: !!did,
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
 			return await ok(
 				appview.get('app.bsky.graph.getKnownFollowers', {
@@ -36,7 +37,6 @@ export function useProfileKnownFollowersQuery(did: Did | undefined) {
 		},
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		enabled: !!did,
 	});
 }
 

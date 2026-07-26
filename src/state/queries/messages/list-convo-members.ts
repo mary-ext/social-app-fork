@@ -25,6 +25,7 @@ export function useListConvoMembersQuery({
 
 	return useQuery({
 		queryKey: listConvoMembersQueryKey(convoId),
+		staleTime: STALE.MINUTES.THIRTY,
 		queryFn: async () => {
 			if (!chat) {
 				throw new Error('Not signed in');
@@ -44,7 +45,6 @@ export function useListConvoMembersQuery({
 
 			return members;
 		},
-		staleTime: STALE.MINUTES.THIRTY,
 		placeholderData,
 	});
 }

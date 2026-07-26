@@ -57,6 +57,7 @@ export const panel = recipe(
 				'[data-checked] &': { backgroundColor: vars.palette.primary_50 },
 			},
 		},
+		defaultVariants: { active: false, adjacent: 'none', size: 'default' },
 		variants: {
 			active: {
 				false: {},
@@ -102,7 +103,6 @@ export const panel = recipe(
 				},
 			},
 		],
-		defaultVariants: { active: false, adjacent: 'none', size: 'default' },
 	},
 	{ debugId: 'panel', layer: components },
 );

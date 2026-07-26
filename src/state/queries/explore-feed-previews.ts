@@ -138,8 +138,8 @@ export function useFeedPreviews(
 	);
 
 	const query = useInfiniteQuery({
-		enabled,
 		queryKey: RQKEY(uris),
+		enabled,
 		queryFn: async ({ pageParam }) => {
 			const feed = feeds[pageParam]!;
 			const api = new CustomFeedAPI({

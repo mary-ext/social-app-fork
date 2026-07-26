@@ -20,6 +20,7 @@ export const footer = recipe(
 			width: '100%',
 			height: fallbackVar(heightVar, '180px'),
 		},
+		defaultVariants: { border: true },
 		variants: {
 			border: {
 				false: {},
@@ -30,7 +31,6 @@ export const footer = recipe(
 				},
 			},
 		},
-		defaultVariants: { border: true },
 	},
 	{ debugId: 'footer' },
 );
@@ -68,6 +68,7 @@ export const placeholderLoading = recipe(
 			paddingTop: 175,
 			paddingBottom: 110,
 		},
+		defaultVariants: { topBorder: false },
 		variants: {
 			topBorder: {
 				false: {},
@@ -82,7 +83,6 @@ export const placeholderLoading = recipe(
 				},
 			},
 		},
-		defaultVariants: { topBorder: false },
 	},
 	{ debugId: 'placeholderLoading' },
 );

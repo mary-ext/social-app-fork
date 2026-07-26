@@ -84,9 +84,9 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		// Send to the feed
 		ok(
 			appview.post('app.bsky.feed.sendInteractions', {
+				headers: { 'atproto-proxy': `${proxyDid}#bsky_fg` },
 				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `uri` widens to `string` only for the Following pseudo-feed
 				input: { interactions: interactionsToSend, feed: feed?.uri as ResourceUri | undefined },
-				headers: { 'atproto-proxy': `${proxyDid}#bsky_fg` },
 			}),
 		).catch(() => {}); // ignore upstream errors
 	}, [appview, proxyDid, enabled, feed]);

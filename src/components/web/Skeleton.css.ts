@@ -42,6 +42,7 @@ export const text = recipe(
 			maxWidth: '100%',
 			height: lineHeightVar,
 		},
+		defaultVariants: { color: 'contrast_50', size: 'md' },
 		variants: {
 			color: {
 				contrast_25: { color: vars.palette.contrast_25 },
@@ -50,7 +51,6 @@ export const text = recipe(
 			},
 			size: sizeVariants(),
 		},
-		defaultVariants: { color: 'contrast_50', size: 'md' },
 	},
 	{ debugId: 'text' },
 );
@@ -74,6 +74,7 @@ export const circle = recipe(
 			width: boxSizeVar,
 			height: boxSizeVar,
 		},
+		defaultVariants: { color: 'contrast_50' },
 		variants: {
 			blend: { true: { opacity: 0.6 } },
 			color: {
@@ -82,7 +83,6 @@ export const circle = recipe(
 				contrast_100: { color: vars.palette.contrast_100 },
 			},
 		},
-		defaultVariants: { color: 'contrast_50' },
 	},
 	{ debugId: 'circle' },
 );
@@ -96,6 +96,7 @@ export const pill = recipe(
 			width: pillWidthVar,
 			height: boxSizeVar,
 		},
+		defaultVariants: { color: 'contrast_50' },
 		variants: {
 			blend: { true: { opacity: 0.6 } },
 			color: {
@@ -104,7 +105,6 @@ export const pill = recipe(
 				contrast_100: { color: vars.palette.contrast_100 },
 			},
 		},
-		defaultVariants: { color: 'contrast_50' },
 	},
 	{ debugId: 'pill' },
 );
@@ -118,6 +118,7 @@ export const square = recipe(
 			width: boxSizeVar,
 			height: boxSizeVar,
 		},
+		defaultVariants: { color: 'contrast_50' },
 		variants: {
 			color: {
 				contrast_25: { color: vars.palette.contrast_25 },
@@ -125,7 +126,6 @@ export const square = recipe(
 				contrast_100: { color: vars.palette.contrast_100 },
 			},
 		},
-		defaultVariants: { color: 'contrast_50' },
 	},
 	{ debugId: 'square' },
 );

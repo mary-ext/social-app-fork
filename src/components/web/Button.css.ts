@@ -38,197 +38,6 @@ export const button = recipe(
 				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 			},
 		},
-		compoundVariants: [
-			{
-				color: 'negative',
-				style: {
-					backgroundColor: vars.palette.negative_500,
-					color: vars.palette.white,
-					selectors: {
-						[HOVER]: { backgroundColor: vars.palette.negative_600 },
-						'&:disabled': {
-							opacity: 1,
-							backgroundColor: vars.palette.negative_700,
-							color: vars.palette.negative_300,
-						},
-					},
-				},
-				variant: 'solid',
-			},
-			{
-				color: 'primary',
-				style: {
-					backgroundColor: vars.palette.primary_500,
-					color: vars.palette.white,
-					selectors: {
-						[HOVER]: { backgroundColor: vars.palette.primary_600 },
-						'&:disabled': {
-							opacity: 1,
-							backgroundColor: vars.palette.primary_200,
-							color: vars.palette.contrast_0,
-						},
-					},
-				},
-				variant: 'solid',
-			},
-			{
-				color: 'secondary',
-				style: {
-					backgroundColor: vars.palette.contrast_50,
-					color: vars.palette.contrast_700,
-					selectors: {
-						[HOVER]: { backgroundColor: vars.palette.contrast_100 },
-						'&:disabled': { opacity: 1, color: vars.palette.contrast_300 },
-					},
-				},
-				variant: 'solid',
-			},
-			{
-				color: 'secondary_inverted',
-				style: {
-					backgroundColor: vars.palette.contrast_900,
-					color: vars.palette.contrast_0,
-					selectors: {
-						[HOVER]: { backgroundColor: vars.palette.contrast_975 },
-						'&:disabled': {
-							opacity: 1,
-							backgroundColor: vars.palette.contrast_600,
-							color: vars.palette.contrast_300,
-						},
-					},
-				},
-				variant: 'solid',
-			},
-			{
-				color: 'negative_subtle',
-				style: {
-					backgroundColor: vars.palette.negative_50,
-					color: vars.palette.negative_600,
-					selectors: {
-						[HOVER]: { backgroundColor: vars.palette.negative_100 },
-						'&:disabled': { opacity: 1, color: vars.palette.negative_200 },
-					},
-				},
-				variant: 'solid',
-			},
-			{
-				color: 'primary_subtle',
-				style: {
-					backgroundColor: vars.palette.primary_50,
-					color: vars.palette.primary_600,
-					selectors: {
-						[HOVER]: { backgroundColor: vars.palette.primary_100 },
-						'&:disabled': { opacity: 1, color: vars.palette.primary_200 },
-					},
-				},
-				variant: 'solid',
-			},
-			{
-				color: 'negative',
-				style: {
-					backgroundColor: 'transparent',
-					color: vars.palette.negative_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_100 } },
-				},
-				variant: 'ghost',
-			},
-			{
-				color: 'primary',
-				style: {
-					backgroundColor: 'transparent',
-					color: vars.palette.primary_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_100 } },
-				},
-				variant: 'ghost',
-			},
-			{
-				color: 'secondary',
-				style: {
-					backgroundColor: 'transparent',
-					color: vars.palette.contrast_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
-				},
-				variant: 'ghost',
-			},
-			{
-				color: 'negative',
-				style: {
-					border: `1px solid ${vars.palette.negative_500}`,
-					backgroundColor: vars.palette.contrast_0,
-					color: vars.palette.negative_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_50 } },
-				},
-				variant: 'outline',
-			},
-			{
-				color: 'negative_subtle',
-				style: {
-					border: `1px solid ${vars.palette.negative_500}`,
-					backgroundColor: vars.palette.contrast_0,
-					color: vars.palette.negative_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_50 } },
-				},
-				variant: 'outline',
-			},
-			{
-				color: 'primary',
-				style: {
-					border: `1px solid ${vars.palette.primary_500}`,
-					backgroundColor: vars.palette.contrast_0,
-					color: vars.palette.primary_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_50 } },
-				},
-				variant: 'outline',
-			},
-			{
-				color: 'primary_subtle',
-				style: {
-					border: `1px solid ${vars.palette.primary_500}`,
-					backgroundColor: vars.palette.contrast_0,
-					color: vars.palette.primary_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_50 } },
-				},
-				variant: 'outline',
-			},
-			{
-				color: 'secondary',
-				style: {
-					border: `1px solid ${vars.palette.contrast_300}`,
-					backgroundColor: vars.palette.contrast_0,
-					color: vars.palette.contrast_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
-				},
-				variant: 'outline',
-			},
-			{
-				color: 'secondary_inverted',
-				style: {
-					border: `1px solid ${vars.palette.contrast_300}`,
-					backgroundColor: vars.palette.contrast_0,
-					color: vars.palette.contrast_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
-				},
-				variant: 'outline',
-			},
-			{ shape: 'round', size: 'large', style: { padding: 0, width: 44, height: 44 } },
-			{ shape: 'round', size: 'small', style: { padding: 0, width: 33, height: 33 } },
-			{ shape: 'round', size: 'tiny', style: { padding: 0, width: 25, height: 25 } },
-			{
-				shape: 'rectangular',
-				size: 'large',
-				style: { gap: 3, borderRadius: 10, paddingBlock: 12, paddingInline: 25 },
-			},
-			{
-				shape: 'rectangular',
-				size: 'small',
-				style: { gap: 3, borderRadius: 8, paddingBlock: 8, paddingInline: 13 },
-			},
-			{
-				shape: 'rectangular',
-				size: 'tiny',
-				style: { gap: 2, borderRadius: 6, paddingBlock: 5, paddingInline: 9 },
-			},
-		],
 		defaultVariants: { color: 'primary', shape: 'default', size: 'small', variant: 'solid' },
 		variants: {
 			color: {
@@ -258,6 +67,197 @@ export const button = recipe(
 				solid: {},
 			},
 		},
+		compoundVariants: [
+			{
+				color: 'negative',
+				variant: 'solid',
+				style: {
+					backgroundColor: vars.palette.negative_500,
+					color: vars.palette.white,
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.negative_600 },
+						'&:disabled': {
+							opacity: 1,
+							backgroundColor: vars.palette.negative_700,
+							color: vars.palette.negative_300,
+						},
+					},
+				},
+			},
+			{
+				color: 'primary',
+				variant: 'solid',
+				style: {
+					backgroundColor: vars.palette.primary_500,
+					color: vars.palette.white,
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.primary_600 },
+						'&:disabled': {
+							opacity: 1,
+							backgroundColor: vars.palette.primary_200,
+							color: vars.palette.contrast_0,
+						},
+					},
+				},
+			},
+			{
+				color: 'secondary',
+				variant: 'solid',
+				style: {
+					backgroundColor: vars.palette.contrast_50,
+					color: vars.palette.contrast_700,
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.contrast_100 },
+						'&:disabled': { opacity: 1, color: vars.palette.contrast_300 },
+					},
+				},
+			},
+			{
+				color: 'secondary_inverted',
+				variant: 'solid',
+				style: {
+					backgroundColor: vars.palette.contrast_900,
+					color: vars.palette.contrast_0,
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.contrast_975 },
+						'&:disabled': {
+							opacity: 1,
+							backgroundColor: vars.palette.contrast_600,
+							color: vars.palette.contrast_300,
+						},
+					},
+				},
+			},
+			{
+				color: 'negative_subtle',
+				variant: 'solid',
+				style: {
+					backgroundColor: vars.palette.negative_50,
+					color: vars.palette.negative_600,
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.negative_100 },
+						'&:disabled': { opacity: 1, color: vars.palette.negative_200 },
+					},
+				},
+			},
+			{
+				color: 'primary_subtle',
+				variant: 'solid',
+				style: {
+					backgroundColor: vars.palette.primary_50,
+					color: vars.palette.primary_600,
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.primary_100 },
+						'&:disabled': { opacity: 1, color: vars.palette.primary_200 },
+					},
+				},
+			},
+			{
+				color: 'negative',
+				variant: 'ghost',
+				style: {
+					backgroundColor: 'transparent',
+					color: vars.palette.negative_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_100 } },
+				},
+			},
+			{
+				color: 'primary',
+				variant: 'ghost',
+				style: {
+					backgroundColor: 'transparent',
+					color: vars.palette.primary_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_100 } },
+				},
+			},
+			{
+				color: 'secondary',
+				variant: 'ghost',
+				style: {
+					backgroundColor: 'transparent',
+					color: vars.palette.contrast_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
+				},
+			},
+			{
+				color: 'negative',
+				variant: 'outline',
+				style: {
+					border: `1px solid ${vars.palette.negative_500}`,
+					backgroundColor: vars.palette.contrast_0,
+					color: vars.palette.negative_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_50 } },
+				},
+			},
+			{
+				color: 'negative_subtle',
+				variant: 'outline',
+				style: {
+					border: `1px solid ${vars.palette.negative_500}`,
+					backgroundColor: vars.palette.contrast_0,
+					color: vars.palette.negative_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_50 } },
+				},
+			},
+			{
+				color: 'primary',
+				variant: 'outline',
+				style: {
+					border: `1px solid ${vars.palette.primary_500}`,
+					backgroundColor: vars.palette.contrast_0,
+					color: vars.palette.primary_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_50 } },
+				},
+			},
+			{
+				color: 'primary_subtle',
+				variant: 'outline',
+				style: {
+					border: `1px solid ${vars.palette.primary_500}`,
+					backgroundColor: vars.palette.contrast_0,
+					color: vars.palette.primary_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_50 } },
+				},
+			},
+			{
+				color: 'secondary',
+				variant: 'outline',
+				style: {
+					border: `1px solid ${vars.palette.contrast_300}`,
+					backgroundColor: vars.palette.contrast_0,
+					color: vars.palette.contrast_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
+				},
+			},
+			{
+				color: 'secondary_inverted',
+				variant: 'outline',
+				style: {
+					border: `1px solid ${vars.palette.contrast_300}`,
+					backgroundColor: vars.palette.contrast_0,
+					color: vars.palette.contrast_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
+				},
+			},
+			{ shape: 'round', size: 'large', style: { padding: 0, width: 44, height: 44 } },
+			{ shape: 'round', size: 'small', style: { padding: 0, width: 33, height: 33 } },
+			{ shape: 'round', size: 'tiny', style: { padding: 0, width: 25, height: 25 } },
+			{
+				shape: 'rectangular',
+				size: 'large',
+				style: { gap: 3, borderRadius: 10, paddingBlock: 12, paddingInline: 25 },
+			},
+			{
+				shape: 'rectangular',
+				size: 'small',
+				style: { gap: 3, borderRadius: 8, paddingBlock: 8, paddingInline: 13 },
+			},
+			{
+				shape: 'rectangular',
+				size: 'tiny',
+				style: { gap: 2, borderRadius: 6, paddingBlock: 5, paddingInline: 9 },
+			},
+		],
 	},
 	{ debugId: 'button', layer: components },
 );
@@ -272,10 +272,6 @@ export const iconBox = recipe(
 			display: 'inline-grid',
 			placeContent: 'center',
 		},
-		compoundVariants: [
-			{ narrow: true, size: 'large', style: { width: 10 } },
-			{ narrow: true, size: 'small', style: { width: 10 } },
-		],
 		variants: {
 			narrow: { false: {}, true: {} },
 			pull: { false: {}, true: { marginInline: -2 } },
@@ -285,6 +281,10 @@ export const iconBox = recipe(
 				tiny: { width: 15, height: 15 },
 			},
 		},
+		compoundVariants: [
+			{ narrow: true, size: 'large', style: { width: 10 } },
+			{ narrow: true, size: 'small', style: { width: 10 } },
+		],
 	},
 	{ debugId: 'buttonIcon', layer: components },
 );

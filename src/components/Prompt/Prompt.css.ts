@@ -58,13 +58,13 @@ export const popup = recipe(
 				'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
 			},
 		},
+		defaultVariants: { size: 'default' },
 		variants: {
 			size: {
 				default: { maxWidth: 320 },
 				wide: { maxWidth: 420 },
 			},
 		},
-		defaultVariants: { size: 'default' },
 	},
 	{ debugId: 'promptPopup', layer: components },
 );

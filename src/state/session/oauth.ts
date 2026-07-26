@@ -43,10 +43,10 @@ class SlingshotActorResolver implements ActorResolver {
 	async resolve(actor: ActorIdentifier, options?: { signal?: AbortSignal }) {
 		const resolved = await ok(
 			this.client.get('blue.microcosm.identity.resolveMiniDoc', {
+				signal: options?.signal,
 				params: {
 					identifier: actor,
 				},
-				signal: options?.signal,
 			}),
 		);
 

@@ -12,8 +12,8 @@ import type { Blob as AtpBlob } from '@atcute/lexicons';
 export async function uploadBlob(client: Client, blob: Blob, encoding?: string): Promise<AtpBlob> {
 	const data = await ok(
 		client.post('com.atproto.repo.uploadBlob', {
-			input: blob,
 			headers: encoding ? { 'content-type': encoding } : undefined,
+			input: blob,
 		}),
 	);
 	return data.blob;

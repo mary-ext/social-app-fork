@@ -70,6 +70,10 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 				}),
 			);
 		},
+		onSuccess: () => {
+			handle.close();
+			Toast.show(m['common.appeal.submittedToast']());
+		},
 		onError: (err) => {
 			if (err instanceof ClientResponseError && err.error === 'AlreadyAppealed') {
 				setError(m['components.moderation.appeal.alreadyAppealed']());
@@ -77,10 +81,6 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 				setError(m['common.appeal.submitError']());
 			}
 			logger.error('Failed to submit label appeal', { message: err });
-		},
-		onSuccess: () => {
-			handle.close();
-			Toast.show(m['common.appeal.submittedToast']());
 		},
 	});
 

@@ -59,6 +59,8 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 
 	return useQuery<AppBskyGraphDefs.StarterPackView>({
 		queryKey: RQKEY(uri ? { uri } : { did, rkey }),
+		enabled: !!uri || !!(did && rkey),
+		staleTime: STALE.MINUTES.FIVE,
 		queryFn: async () => {
 			const resolvedUri = !uri
 				? `at://${did}/app.bsky.graph.starterpack/${rkey}`
@@ -74,8 +76,6 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 			);
 			return data.starterPack;
 		},
-		enabled: !!uri || !!(did && rkey),
-		staleTime: STALE.MINUTES.FIVE,
 	});
 }
 

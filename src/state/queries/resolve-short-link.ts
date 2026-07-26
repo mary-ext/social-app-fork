@@ -13,13 +13,13 @@ export const RQKEY = (code: string) => [RQKEY_ROOT, code];
 export function useResolvedStarterPackShortLink({ code }: { code: string }) {
 	return useQuery({
 		queryKey: RQKEY(code),
+		enabled: !!code,
+		staleTime: STALE.HOURS.ONE,
+		retry: 1,
 		queryFn: async () => {
 			const uri = `${ROOT_URI}${code}`;
 			const res = await resolveShortLink(uri);
 			return parseStarterPackUri(res);
 		},
-		retry: 1,
-		enabled: !!code,
-		staleTime: STALE.HOURS.ONE,
 	});
 }

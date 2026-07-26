@@ -9,6 +9,7 @@ export const root = recipe(
 			display: 'flex',
 			flexDirection: 'column',
 		},
+		defaultVariants: { gap: 'lg' },
 		variants: {
 			gap: {
 				_2xl: { gap: space._2xl },
@@ -19,7 +20,6 @@ export const root = recipe(
 				xs: { gap: space.xs },
 			},
 		},
-		defaultVariants: { gap: 'lg' },
 	},
 	{ debugId: 'stack', layer: components },
 );

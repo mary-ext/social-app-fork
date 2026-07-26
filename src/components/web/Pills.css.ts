@@ -10,13 +10,13 @@ export const row = recipe(
 			flexDirection: 'row',
 			flexWrap: 'wrap',
 		},
+		defaultVariants: { size: 'sm' },
 		variants: {
 			size: {
 				lg: { gap: 5 },
 				sm: { gap: 3 },
 			},
 		},
-		defaultVariants: { size: 'sm' },
 	},
 	{ debugId: 'row' },
 );
@@ -42,6 +42,7 @@ export const pill = recipe(
 				'&:hover': { backgroundColor: vars.palette.contrast_50 },
 			},
 		},
+		defaultVariants: { bg: true, size: 'sm' },
 		variants: {
 			bg: {
 				false: {},
@@ -52,7 +53,6 @@ export const pill = recipe(
 				sm: { gap: 3, padding: 3 },
 			},
 		},
-		defaultVariants: { bg: true, size: 'sm' },
 	},
 	{ debugId: 'pill' },
 );

@@ -163,8 +163,8 @@ export function useFeedSourceInfoQuery({ uri }: { uri: string }) {
 	const { appview } = getClients();
 
 	return useQuery({
-		staleTime: STALE.INFINITY,
 		queryKey: feedSourceInfoQueryKey({ uri }),
+		staleTime: STALE.INFINITY,
 		queryFn: async () => {
 			let view: FeedSourceInfo;
 
@@ -233,8 +233,8 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 	const lastPageCountRef = useRef(0);
 
 	const query = useInfiniteQuery({
-		enabled: !!moderationOpts && options?.enabled !== false,
 		queryKey: createGetPopularFeedsQueryKey(options),
+		enabled: !!moderationOpts && options?.enabled !== false,
 		queryFn: async ({ pageParam }) => {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPopularFeedGenerators', {
@@ -340,8 +340,8 @@ export function usePopularFeedsSearch({ query, enabled }: { query: string; enabl
 	const enabledInner = enabled ?? !!moderationOpts;
 
 	return useQuery({
-		enabled: enabledInner,
 		queryKey: createPopularFeedsSearchQueryKey(query),
+		enabled: enabledInner,
 		queryFn: async () => {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPopularFeedGenerators', {
@@ -411,9 +411,9 @@ export function usePinnedFeedsInfos() {
 			'pinned',
 			pinnedItems.map((f) => f.value),
 		),
-		gcTime: GCTIME.INFINITY,
-		staleTime: STALE.MINUTES.FIFTEEN,
 		enabled: !isLoadingPrefs,
+		staleTime: STALE.MINUTES.FIFTEEN,
+		gcTime: GCTIME.INFINITY,
 		queryFn: async () => {
 			if (!hasSession) {
 				return [PWI_DISCOVER_FEED_STUB];
@@ -516,18 +516,9 @@ export function useSavedFeeds() {
 			'saved',
 			savedItems.map((f) => f.value),
 		),
-		gcTime: GCTIME.INFINITY,
-		staleTime: STALE.INFINITY,
 		enabled: !isLoadingPrefs,
-		placeholderData: (previousData) => {
-			return (
-				previousData || {
-					// The likely count before we try to resolve them.
-					count: savedItems.length,
-					feeds: [],
-				}
-			);
-		},
+		staleTime: STALE.INFINITY,
+		gcTime: GCTIME.INFINITY,
 		queryFn: async () => {
 			const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>();
 			const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>();
@@ -605,6 +596,15 @@ export function useSavedFeeds() {
 				count: result.length,
 				feeds: result,
 			};
+		},
+		placeholderData: (previousData) => {
+			return (
+				previousData || {
+					// The likely count before we try to resolve them.
+					count: savedItems.length,
+					feeds: [],
+				}
+			);
 		},
 	});
 }

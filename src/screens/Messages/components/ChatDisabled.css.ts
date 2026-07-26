@@ -16,13 +16,13 @@ export const card = recipe(
 			backgroundColor: colors.contrast_50,
 			padding: space.lg,
 		},
+		defaultVariants: { shape: 'pill' },
 		variants: {
 			shape: {
 				banner: {},
 				pill: { borderRadius: 40 },
 			},
 		},
-		defaultVariants: { shape: 'pill' },
 	},
 	{ debugId: 'chat-disabled-card' },
 );

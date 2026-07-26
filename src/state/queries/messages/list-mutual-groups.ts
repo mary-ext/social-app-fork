@@ -24,10 +24,10 @@ export function useListMutualGroupsQuery({
 	const isEnabled = enabled !== false && !!subject;
 
 	return useInfiniteQuery({
-		gcTime: 0,
-		staleTime: 0,
-		enabled: isEnabled,
 		queryKey: createListMutualGroupsQueryKey({ subject: subject ?? '' }),
+		enabled: isEnabled,
+		staleTime: 0,
+		gcTime: 0,
 		queryFn: async ({ pageParam }) => {
 			if (!chat) {
 				throw new Error('Not signed in');

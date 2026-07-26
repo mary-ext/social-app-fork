@@ -24,6 +24,7 @@ export function usePostRepostedByQuery(resolvedUri: ResourceUri | undefined) {
 		RQPageParam
 	>({
 		queryKey: RQKEY(resolvedUri || ''),
+		enabled: !!resolvedUri,
 		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
 			ok(
 				appview.get('app.bsky.feed.getRepostedBy', {
@@ -36,7 +37,6 @@ export function usePostRepostedByQuery(resolvedUri: ResourceUri | undefined) {
 			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		enabled: !!resolvedUri,
 	});
 }
 

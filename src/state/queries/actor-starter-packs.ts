@@ -15,13 +15,13 @@ export function useActorStarterPacksQuery({ did, enabled = true }: { did?: Did; 
 
 	return useInfiniteQuery({
 		queryKey: RQKEY(did),
+		enabled: !!did && enabled,
 		queryFn: ({ pageParam }: { pageParam?: string }) =>
 			ok(
 				appview.get('app.bsky.graph.getActorStarterPacks', {
 					params: { actor: did!, cursor: pageParam, limit: 10 },
 				}),
 			),
-		enabled: !!did && enabled,
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 	});
@@ -38,13 +38,13 @@ export function useActorStarterPacksWithMembershipsQuery({
 
 	return useInfiniteQuery({
 		queryKey: RQKEY_WITH_MEMBERSHIP(did),
+		enabled: !!did && enabled,
 		queryFn: ({ pageParam }: { pageParam?: string }) =>
 			ok(
 				appview.get('app.bsky.graph.getStarterPacksWithMembership', {
 					params: { actor: did!, cursor: pageParam, limit: 10 },
 				}),
 			),
-		enabled: !!did && enabled,
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 	});

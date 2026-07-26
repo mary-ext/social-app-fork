@@ -28,8 +28,9 @@ export function useSuggestedFollowsByActorQuery({
 }) {
 	const { appview } = getClients();
 	return useQuery({
-		staleTime,
 		queryKey: suggestedFollowsByActorQueryKey(did),
+		enabled,
+		staleTime,
 		queryFn: async () => {
 			const data = await ok(
 				appview.get('app.bsky.graph.getSuggestedFollowsByActor', {
@@ -39,7 +40,6 @@ export function useSuggestedFollowsByActorQuery({
 			const suggestions = data.suggestions.filter((profile) => !profile.viewer?.following);
 			return { suggestions };
 		},
-		enabled,
 	});
 }
 

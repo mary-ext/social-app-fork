@@ -142,8 +142,8 @@ export const createPostgateQueryKey = (postUri: string) => ['postgate-record', p
 export function usePostgateQuery({ postUri }: { postUri: ResourceUri }) {
 	const { appview, pds } = getClients();
 	return useQuery({
-		staleTime: STALE.SECONDS.THIRTY,
 		queryKey: createPostgateQueryKey(postUri),
+		staleTime: STALE.SECONDS.THIRTY,
 		async queryFn() {
 			return await getPostgateRecord({ appview, pds: pds!, postUri }).then((res) => res ?? null);
 		},

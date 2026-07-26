@@ -78,15 +78,15 @@ function DialogInner({
 				);
 			}
 		},
-		onError: () => {
-			Toast.show(m['common.appeal.submitError'](), {
-				type: 'error',
-			});
-		},
 		onSuccess: () => {
 			handle.close();
 			Toast.show(m['common.appeal.submittedToast'](), {
 				type: 'success',
+			});
+		},
+		onError: () => {
+			Toast.show(m['common.appeal.submitError'](), {
+				type: 'error',
 			});
 		},
 	});
