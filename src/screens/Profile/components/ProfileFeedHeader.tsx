@@ -161,7 +161,7 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 						{!isTrending && info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
 
 						<span className={css.infoText}>
-							<Text weight="bold" size="lg" numberOfLines={1}>
+							<Text weight="semiBold" size="lg" numberOfLines={1}>
 								{info.displayName}
 							</Text>
 
