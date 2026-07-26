@@ -61,8 +61,8 @@ export async function getPostgateRecord({
 			},
 			() =>
 				getRecord(pds, {
-					collection: POSTGATE_COLLECTION,
 					repo,
+					collection: POSTGATE_COLLECTION,
 					rkey: urip.rkey!,
 				}),
 		);
@@ -97,10 +97,10 @@ export async function writePostgateRecord({
 
 	await networkRetry(2, () =>
 		putRecord(pds, {
-			collection: POSTGATE_COLLECTION,
-			record: postgate,
 			repo: did,
+			collection: POSTGATE_COLLECTION,
 			rkey: postUrip.rkey!,
+			record: postgate,
 		}),
 	);
 }

@@ -13,6 +13,7 @@ export function useLikeMutation() {
 	return useMutation({
 		mutationFn: async ({ uri, cid }: { uri: string; cid: string }) => {
 			const res = await createRecord(pds!, {
+				repo: currentAccount!.did,
 				collection: 'app.bsky.feed.like',
 				record: {
 					$type: 'app.bsky.feed.like',
@@ -20,7 +21,6 @@ export function useLikeMutation() {
 					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `FeedSourceInfo.uri` widens to `string`; a likeable feed always has an at-uri
 					subject: { cid: cid, uri: uri as ResourceUri },
 				},
-				repo: currentAccount!.did,
 			});
 			return { uri: res.uri };
 		},
@@ -33,8 +33,8 @@ export function useUnlikeMutation() {
 	return useMutation({
 		mutationFn: async ({ uri }: { uri: string }) => {
 			await deleteRecord(pds!, {
-				collection: 'app.bsky.feed.like',
 				repo: currentAccount!.did,
+				collection: 'app.bsky.feed.like',
 				rkey: parseCanonicalResourceUri(uri).rkey,
 			});
 		},

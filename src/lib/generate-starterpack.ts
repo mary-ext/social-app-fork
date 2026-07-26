@@ -25,6 +25,7 @@ export const createStarterPackList = async ({
 	}
 
 	const list = await createRecord(pds, {
+		repo: did,
 		collection: 'app.bsky.graph.list',
 		record: {
 			$type: 'app.bsky.graph.list',
@@ -35,7 +36,6 @@ export const createStarterPackList = async ({
 			name,
 			purpose: 'app.bsky.graph.defs#referencelist',
 		},
-		repo: did,
 	});
 	if (!list) {
 		throw new Error('List creation failed');

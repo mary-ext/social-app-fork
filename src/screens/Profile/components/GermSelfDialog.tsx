@@ -43,16 +43,16 @@ function DialogInner({ did, handle }: { did: Did; handle: Dialog.DialogHandle })
 	const { mutate: deleteDeclaration, isPending } = useMutation({
 		mutationFn: async () => {
 			const previousRecord = await getRecord(pds!, {
-				collection: 'com.germnetwork.declaration',
 				repo: did,
+				collection: 'com.germnetwork.declaration',
 				rkey: 'self',
 			})
 				.then((res) => res.value)
 				.catch(() => null);
 
 			await deleteRecord(pds!, {
-				collection: 'com.germnetwork.declaration',
 				repo: did,
+				collection: 'com.germnetwork.declaration',
 				rkey: 'self',
 			});
 
@@ -67,10 +67,10 @@ function DialogInner({ did, handle }: { did: Did; handle: Dialog.DialogHandle })
 				}
 				try {
 					await putRecord(pds!, {
-						collection: 'com.germnetwork.declaration',
-						record: previousRecord,
 						repo: did,
+						collection: 'com.germnetwork.declaration',
 						rkey: 'self',
+						record: previousRecord,
 					});
 					await whenAppViewReady(appview, did, (res) => !!res.associated?.germ);
 					await queryClient.refetchQueries({ queryKey: RQKEY(did) });

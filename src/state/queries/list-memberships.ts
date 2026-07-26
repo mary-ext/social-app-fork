@@ -81,6 +81,7 @@ export function useListMembershipAddMutation({
 				throw new Error('Not signed in');
 			}
 			const res = await createRecord(pds!, {
+				repo: currentAccount.did,
 				collection: 'app.bsky.graph.listitem',
 				record: {
 					$type: 'app.bsky.graph.listitem',
@@ -88,7 +89,6 @@ export function useListMembershipAddMutation({
 					list: listUri,
 					subject: actorDid,
 				},
-				repo: currentAccount.did,
 			});
 			// TODO
 			// we need to wait for appview to update, but there's not an efficient
@@ -199,8 +199,8 @@ export function useListMembershipRemoveMutation({
 			}
 			const membershipUrip = parseCanonicalResourceUri(membershipUri);
 			await deleteRecord(pds!, {
-				collection: 'app.bsky.graph.listitem',
 				repo: currentAccount.did,
+				collection: 'app.bsky.graph.listitem',
 				rkey: membershipUrip.rkey,
 			});
 			// TODO

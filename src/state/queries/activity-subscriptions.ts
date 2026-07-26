@@ -63,8 +63,8 @@ export function useNotificationDeclarationQuery() {
 		queryFn: async () => {
 			try {
 				return await getRecord(pds!, {
-					collection: 'app.bsky.notification.declaration',
 					repo: currentAccount!.did,
+					collection: 'app.bsky.notification.declaration',
 					rkey: 'self',
 				});
 			} catch (err) {
@@ -90,10 +90,10 @@ export function useNotificationDeclarationMutation() {
 	return useMutation({
 		mutationFn: async (record: AppBskyNotificationDeclaration.Main) => {
 			return await putRecord(pds!, {
-				collection: 'app.bsky.notification.declaration',
-				record,
 				repo: currentAccount!.did,
+				collection: 'app.bsky.notification.declaration',
 				rkey: 'self',
+				record,
 			});
 		},
 		onMutate: (value) => {

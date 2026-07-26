@@ -127,6 +127,7 @@ export function useCreateStarterPackMutation({
 			});
 
 			return await createRecord(pds!, {
+				repo: did,
 				collection: 'app.bsky.graph.starterpack',
 				record: {
 					$type: 'app.bsky.graph.starterpack',
@@ -137,7 +138,6 @@ export function useCreateStarterPackMutation({
 					list: listRes.uri,
 					name,
 				},
-				repo: did,
 			});
 		},
 		onSuccess: async (data) => {
@@ -235,7 +235,9 @@ export function useEditStarterPackMutation({
 
 			const rkey = parseStarterPackUri(currentStarterPack.uri)!.rkey;
 			await putRecord(pds!, {
+				repo: did,
 				collection: 'app.bsky.graph.starterpack',
+				rkey,
 				record: {
 					$type: 'app.bsky.graph.starterpack',
 					createdAt: spRecord.createdAt,
@@ -245,8 +247,6 @@ export function useEditStarterPackMutation({
 					list: currentStarterPack.list!.uri,
 					name,
 				},
-				repo: did,
-				rkey,
 			});
 		},
 		onSuccess: async (_, { currentStarterPack }) => {
@@ -296,14 +296,14 @@ export function useDeleteStarterPackMutation({
 
 			if (listUri) {
 				await deleteRecord(pds!, {
-					collection: 'app.bsky.graph.list',
 					repo: currentAccount.did,
+					collection: 'app.bsky.graph.list',
 					rkey: parseCanonicalResourceUri(listUri).rkey,
 				});
 			}
 			await deleteRecord(pds!, {
-				collection: 'app.bsky.graph.starterpack',
 				repo: currentAccount.did,
+				collection: 'app.bsky.graph.starterpack',
 				rkey,
 			});
 		},

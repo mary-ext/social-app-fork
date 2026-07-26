@@ -104,13 +104,13 @@ export function useUpsertLiveStatusMutation(
 				const repo = currentAccount.did;
 				const collection = 'app.bsky.actor.status';
 
-				const existing = await getRecord(pds!, { collection, repo, rkey: 'self' }).catch(() => undefined);
+				const existing = await getRecord(pds!, { repo, collection, rkey: 'self' }).catch(() => undefined);
 
 				await putRecord(pds!, {
-					collection,
-					record,
 					repo,
+					collection,
 					rkey: 'self',
+					record,
 					swapRecord: existing?.cid ?? null,
 				});
 			};
@@ -178,8 +178,8 @@ export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 			}
 
 			await deleteRecord(pds!, {
-				collection: 'app.bsky.actor.status',
 				repo: currentAccount.did,
+				collection: 'app.bsky.actor.status',
 				rkey: 'self',
 			});
 		},

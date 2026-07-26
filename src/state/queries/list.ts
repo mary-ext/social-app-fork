@@ -84,9 +84,9 @@ export function useListCreateMutation() {
 				record.avatar = await uploadBlob(pds!, avatar.blob);
 			}
 			const res = await createRecord(pds!, {
+				repo: currentAccount.did,
 				collection: 'app.bsky.graph.list',
 				record,
-				repo: currentAccount.did,
 			});
 
 			// wait for the appview to update
@@ -127,8 +127,8 @@ export function useListMetadataMutation() {
 
 			// get the current record
 			const { value: record } = await getRecord(pds!, {
-				collection: 'app.bsky.graph.list',
 				repo: currentAccount.did,
+				collection: 'app.bsky.graph.list',
 				rkey,
 			});
 
@@ -142,10 +142,10 @@ export function useListMetadataMutation() {
 				record.avatar = undefined;
 			}
 			const res = await putRecord(pds!, {
-				collection: 'app.bsky.graph.list',
-				record,
 				repo: currentAccount.did,
+				collection: 'app.bsky.graph.list',
 				rkey,
+				record,
 			});
 
 			// wait for the appview to update
@@ -183,10 +183,10 @@ export function useListDeleteMutation() {
 			let listitemRecordUris: string[] = [];
 			for (let i = 0; i < 100; i++) {
 				const res = await listRecords(pds!, {
+					repo: currentAccount.did,
 					collection: 'app.bsky.graph.listitem',
 					cursor,
 					limit: 100,
-					repo: currentAccount.did,
 				});
 				listitemRecordUris = listitemRecordUris.concat(
 					mapDefined(res.records, (record) => (record.value.list === uri ? record.uri : undefined)),
@@ -262,13 +262,13 @@ export function useListBlockMutation() {
 			}
 			if (block) {
 				await createRecord(pds!, {
+					repo: currentAccount.did,
 					collection: 'app.bsky.graph.listblock',
 					record: {
 						$type: 'app.bsky.graph.listblock',
 						createdAt: new Date().toISOString(),
 						subject: uri,
 					},
-					repo: currentAccount.did,
 				});
 			} else {
 				const data = await ok(
@@ -279,8 +279,8 @@ export function useListBlockMutation() {
 				const blocked = data.list.viewer?.blocked;
 				if (blocked) {
 					await deleteRecord(pds!, {
-						collection: 'app.bsky.graph.listblock',
 						repo: currentAccount.did,
+						collection: 'app.bsky.graph.listblock',
 						rkey: parseCanonicalResourceUri(blocked).rkey,
 					});
 				}

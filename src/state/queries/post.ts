@@ -182,6 +182,7 @@ function usePostLikeMutation() {
 	>({
 		mutationFn: ({ uri, cid, via }) => {
 			return createRecord(pds!, {
+				repo: currentAccount!.did,
 				collection: 'app.bsky.feed.like',
 				record: {
 					$type: 'app.bsky.feed.like',
@@ -189,7 +190,6 @@ function usePostLikeMutation() {
 					subject: { cid: cid, uri: uri },
 					via: via && { cid: via.cid, uri: via.uri },
 				},
-				repo: currentAccount!.did,
 			});
 		},
 	});
@@ -201,8 +201,8 @@ function usePostUnlikeMutation() {
 	return useMutation<void, Error, { postUri: string; likeUri: string }>({
 		mutationFn: ({ postUri: _postUri, likeUri }) => {
 			return deleteRecord(pds!, {
-				collection: 'app.bsky.feed.like',
 				repo: currentAccount!.did,
+				collection: 'app.bsky.feed.like',
 				rkey: parseCanonicalResourceUri(likeUri).rkey,
 			});
 		},
@@ -277,6 +277,7 @@ function usePostRepostMutation() {
 	>({
 		mutationFn: ({ uri, cid, via }) => {
 			return createRecord(pds!, {
+				repo: currentAccount!.did,
 				collection: 'app.bsky.feed.repost',
 				record: {
 					$type: 'app.bsky.feed.repost',
@@ -284,7 +285,6 @@ function usePostRepostMutation() {
 					subject: { cid: cid, uri: uri },
 					via: via && { cid: via.cid, uri: via.uri },
 				},
-				repo: currentAccount!.did,
 			});
 		},
 	});
@@ -296,8 +296,8 @@ function usePostUnrepostMutation() {
 	return useMutation<void, Error, { postUri: string; repostUri: string }>({
 		mutationFn: ({ postUri: _postUri, repostUri }) => {
 			return deleteRecord(pds!, {
-				collection: 'app.bsky.feed.repost',
 				repo: currentAccount!.did,
+				collection: 'app.bsky.feed.repost',
 				rkey: parseCanonicalResourceUri(repostUri).rkey,
 			});
 		},
@@ -311,8 +311,8 @@ export function usePostDeleteMutation() {
 	return useMutation<void, Error, { uri: string }>({
 		mutationFn: async ({ uri }) => {
 			await deleteRecord(pds!, {
-				collection: 'app.bsky.feed.post',
 				repo: currentAccount!.did,
+				collection: 'app.bsky.feed.post',
 				rkey: parseCanonicalResourceUri(uri).rkey,
 			});
 		},

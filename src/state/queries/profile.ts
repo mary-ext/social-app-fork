@@ -337,13 +337,13 @@ function useProfileFollowMutation() {
 	return useMutation<{ uri: ResourceUri; cid: string }, Error, { did: Did }>({
 		mutationFn: async ({ did }) => {
 			return await createRecord(pds!, {
+				repo: currentAccount!.did,
 				collection: 'app.bsky.graph.follow',
 				record: {
 					$type: 'app.bsky.graph.follow',
 					createdAt: new Date().toISOString(),
 					subject: did,
 				},
-				repo: currentAccount!.did,
 			});
 		},
 	});
@@ -355,8 +355,8 @@ function useProfileUnfollowMutation() {
 	return useMutation<void, Error, { did: Did; followUri: string }>({
 		mutationFn: async ({ followUri }) => {
 			await deleteRecord(pds!, {
-				collection: 'app.bsky.graph.follow',
 				repo: currentAccount!.did,
+				collection: 'app.bsky.graph.follow',
 				rkey: parseCanonicalResourceUri(followUri).rkey,
 			});
 		},
@@ -513,13 +513,13 @@ function useProfileBlockMutation() {
 				throw new Error('Not signed in');
 			}
 			return await createRecord(pds!, {
+				repo: currentAccount.did,
 				collection: 'app.bsky.graph.block',
 				record: {
 					$type: 'app.bsky.graph.block',
 					createdAt: new Date().toISOString(),
 					subject: did,
 				},
-				repo: currentAccount.did,
 			});
 		},
 		onSuccess(_, { did }) {
@@ -539,8 +539,8 @@ function useProfileUnblockMutation() {
 				throw new Error('Not signed in');
 			}
 			await deleteRecord(pds!, {
-				collection: 'app.bsky.graph.block',
 				repo: currentAccount.did,
+				collection: 'app.bsky.graph.block',
 				rkey: parseCanonicalResourceUri(blockUri).rkey,
 			});
 		},
@@ -568,8 +568,8 @@ async function upsertProfile(
 		(e) => e instanceof ClientResponseError && e.error === 'InvalidSwap',
 		async () => {
 			const existing = await getRecord(pds, {
-				collection: 'app.bsky.actor.profile',
 				repo: did,
+				collection: 'app.bsky.actor.profile',
 				rkey: 'self',
 			}).catch((e) => {
 				// a missing record means a brand-new profile; anything else should propagate
@@ -582,10 +582,10 @@ async function upsertProfile(
 			const updated = await updateFn(existing?.value);
 
 			await putRecord(pds, {
-				collection: 'app.bsky.actor.profile',
-				record: { ...updated, $type: 'app.bsky.actor.profile' },
 				repo: did,
+				collection: 'app.bsky.actor.profile',
 				rkey: 'self',
+				record: { ...updated, $type: 'app.bsky.actor.profile' },
 				swapRecord: existing?.cid ?? null,
 			});
 		},

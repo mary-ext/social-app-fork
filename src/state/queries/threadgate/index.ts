@@ -89,8 +89,8 @@ export async function getThreadgateRecord({
 			},
 			() =>
 				getRecord(pds, {
-					collection: 'app.bsky.feed.threadgate',
 					repo,
+					collection: 'app.bsky.feed.threadgate',
 					rkey: urip.rkey!,
 				}),
 		);
@@ -130,10 +130,10 @@ export async function writeThreadgateRecord({
 
 	await networkRetry(2, () =>
 		putRecord(pds, {
-			collection: 'app.bsky.feed.threadgate',
-			record,
 			repo: did,
+			collection: 'app.bsky.feed.threadgate',
 			rkey: postUrip.rkey!,
+			record,
 		}),
 	);
 }

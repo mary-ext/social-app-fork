@@ -108,7 +108,7 @@ export const recordUriToTarget = (uri: string): RouteTarget | undefined => {
 		return undefined;
 	}
 
-	const { collection, repo, rkey } = parsed;
+	const { repo, collection, rkey } = parsed;
 	if (!collection) {
 		return profileTarget(repo);
 	}

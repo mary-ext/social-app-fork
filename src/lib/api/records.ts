@@ -15,9 +15,9 @@ import type { Records } from '@atcute/lexicons/ambient';
 type RecordType = keyof Records;
 
 export interface CreateRecordOptions<K extends RecordType> {
+	repo: Did;
 	collection: K;
 	record: InferInput<Records[K]>;
-	repo: Did;
 	rkey?: string;
 	swapCommit?: string;
 	validate?: boolean;
@@ -35,10 +35,10 @@ export const createRecord = async <K extends RecordType>(client: Client, options
 };
 
 export interface PutRecordOptions<K extends RecordType> {
-	collection: K;
-	record: InferInput<Records[K]>;
 	repo: Did;
+	collection: K;
 	rkey: string;
+	record: InferInput<Records[K]>;
 	swapCommit?: string;
 	swapRecord?: Cid | null;
 	validate?: boolean;
@@ -56,8 +56,8 @@ export const putRecord = async <K extends RecordType>(client: Client, options: P
 };
 
 export interface DeleteRecordOptions<K extends RecordType> {
-	collection: K;
 	repo: Did;
+	collection: K;
 	rkey: string;
 	swapCommit?: string;
 	swapRecord?: string;
@@ -74,10 +74,10 @@ export const deleteRecord = async <K extends RecordType>(client: Client, options
 };
 
 export interface GetRecordOptions<K extends RecordType> {
-	cid?: string;
-	collection: K;
 	repo: Did;
+	collection: K;
 	rkey: string;
+	cid?: string;
 	signal?: AbortSignal;
 }
 
@@ -98,10 +98,10 @@ export const getRecord = async <K extends RecordType>(
 		client.get('com.atproto.repo.getRecord', {
 			signal: options.signal,
 			params: {
-				cid: options.cid,
-				collection: options.collection,
 				repo: options.repo,
+				collection: options.collection,
 				rkey: options.rkey,
+				cid: options.cid,
 			},
 		}),
 	);
@@ -111,10 +111,10 @@ export const getRecord = async <K extends RecordType>(
 };
 
 export interface ListRecordsOptions<K extends RecordType> {
+	repo: Did;
 	collection: K;
 	cursor?: string;
 	limit?: number;
-	repo: Did;
 	signal?: AbortSignal;
 }
 
@@ -138,10 +138,10 @@ export const listRecords = async <K extends RecordType>(
 		client.get('com.atproto.repo.listRecords', {
 			signal: options.signal,
 			params: {
+				repo: options.repo,
 				collection: options.collection,
 				cursor: options.cursor,
 				limit: options.limit,
-				repo: options.repo,
 			},
 		}),
 	);
