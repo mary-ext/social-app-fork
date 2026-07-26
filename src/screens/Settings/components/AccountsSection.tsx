@@ -14,7 +14,7 @@ import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { removeAccount, type SessionAccount, useSession } from '#/state/session';
 
 import { AvatarStack } from '#/components/AvatarStack';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import {
@@ -239,17 +239,11 @@ function OtherAccountRow({
 }
 
 function AddAccountRow({ className }: { className?: string }) {
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
-
-	const onAddAnotherAccount = () => {
-		signinDialogHandle.openWithPayload({ showStoredAccounts: false });
-	};
-
 	return (
 		<button
 			aria-label={m['common.account.action.addAnother']()}
 			className={clsx(cardStyles.row, cardStyles.rowInteractive, className)}
-			onClick={onAddAnotherAccount}
+			onClick={() => signinDialogHandle.openWithPayload({ showStoredAccounts: false })}
 			type="button"
 		>
 			<Settings.Icon icon={PersonPlusIcon} />

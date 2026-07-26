@@ -4,7 +4,7 @@ import { usePrefetchProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import { SigninDialog } from '#/components/dialogs/Signin';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { Logo } from '#/components/icons/Logo';
@@ -18,8 +18,6 @@ import { colors } from '#/styles/colors';
 import * as css from './LoggedOut.css';
 
 export function LoggedOut() {
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
-
 	const { accounts } = useSession();
 	const prefetchProfileQuery = usePrefetchProfileQuery();
 	useEffect(() => {
@@ -29,10 +27,6 @@ export function LoggedOut() {
 			void prefetchProfileQuery(acc.did);
 		}
 	}, [accounts, prefetchProfileQuery]);
-
-	const showSignIn = () => {
-		signinDialogHandle.openWithPayload({});
-	};
 
 	return (
 		<div className={css.container}>
@@ -54,7 +48,7 @@ export function LoggedOut() {
 						<Button
 							color="primary"
 							label={m['common.session.action.signIn']()}
-							onClick={showSignIn}
+							onClick={() => signinDialogHandle.openWithPayload({})}
 							size="large"
 							variant="solid"
 						>

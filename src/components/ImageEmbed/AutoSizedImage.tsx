@@ -6,7 +6,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import * as Dialog from '#/components/Dialog';
-import type { LightboxHandle, LightboxPayload } from '#/components/dialogs/Context';
+import { lightboxHandle, type LightboxPayload } from '#/components/dialogs/handles';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import * as styles from '#/components/ImageEmbed/AutoSizedImage.css';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
@@ -17,8 +17,7 @@ import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 export type AutoSizedImageProps = {
 	image: AppBskyEmbedGallery.ViewImage;
 	crop?: 'constrained' | 'none';
-	/** Lightbox handle + payload; the image renders as a detached `Dialog.Trigger` that opens it. */
-	handle: LightboxHandle;
+	/** What the lightbox opens with; the image renders as a detached `Dialog.Trigger`. */
 	payload: LightboxPayload;
 	onPressIn?: () => void;
 };
@@ -29,13 +28,7 @@ export type AutoSizedImageProps = {
  * @param ratio determines the layout constraint: 'constrained' caps the height, 'none' does not cap the
  *   height.
  */
-export function AutoSizedImage({
-	image,
-	crop = 'constrained',
-	handle,
-	payload,
-	onPressIn,
-}: AutoSizedImageProps) {
+export function AutoSizedImage({ image, crop = 'constrained', payload, onPressIn }: AutoSizedImageProps) {
 	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumbnail ? 'loading' : 'error');
 	const [largeAlt] = useLargeAltBadgeEnabled();
 
@@ -55,7 +48,7 @@ export function AutoSizedImage({
 
 	return (
 		<Dialog.Trigger
-			handle={handle}
+			handle={lightboxHandle}
 			payload={payload}
 			type="button"
 			className={className}

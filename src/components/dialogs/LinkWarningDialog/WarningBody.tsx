@@ -4,7 +4,7 @@ import { shareUrl } from '#/lib/sharing';
 import { splitApexDomain } from '#/lib/strings/url-helpers';
 
 import * as Dialog from '#/components/Dialog';
-import type { LinkWarningPayload } from '#/components/dialogs/Context';
+import type { LinkWarningPayload } from '#/components/dialogs/handles';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';

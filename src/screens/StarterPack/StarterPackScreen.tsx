@@ -27,7 +27,7 @@ import { getClients, useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import * as Dialog from '#/components/Dialog';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Spinner } from '#/components/Spinner';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
@@ -196,7 +196,6 @@ function Header({
 	const { currentAccount, hasSession } = useSession();
 	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const [isProcessing, setIsProcessing] = useState(false);
 

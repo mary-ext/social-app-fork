@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExte
 import { sessionDropped } from '#/state/events';
 import type { SessionStateContext } from '#/state/session/types';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 
 import { dropToGuest, getSnapshot, subscribe } from './store';
 
@@ -71,7 +71,6 @@ export function useSession() {
 
 export function useRequireAuth() {
 	const { hasSession } = useSession();
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	return useCallback(
 		(fn: () => unknown) => {
@@ -81,6 +80,6 @@ export function useRequireAuth() {
 				signinDialogHandle.openWithPayload({});
 			}
 		},
-		[hasSession, signinDialogHandle],
+		[hasSession],
 	);
 }

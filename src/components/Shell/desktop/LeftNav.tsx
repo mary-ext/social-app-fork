@@ -22,7 +22,7 @@ import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/ses
 
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
 import {
 	Bell_Filled_Corner0_Rounded as BellFilledIcon,
@@ -165,12 +165,6 @@ function SwitchMenuItems({
 		| undefined;
 	signOutPromptHandle: Prompt.PromptHandle;
 }) {
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
-
-	const onAddAnotherAccount = () => {
-		signinDialogHandle.openWithPayload({ showStoredAccounts: false });
-	};
-
 	return (
 		<Menu.Popup label={m['common.account.switcher.label']()} minWidth={150}>
 			{accounts && accounts.length > 0 && (
@@ -185,7 +179,10 @@ function SwitchMenuItems({
 				</>
 			)}
 			<SwitcherMenuProfileLink />
-			<Menu.Item label={m['common.account.action.addAnother']()} onClick={onAddAnotherAccount}>
+			<Menu.Item
+				label={m['common.account.action.addAnother']()}
+				onClick={() => signinDialogHandle.openWithPayload({ showStoredAccounts: false })}
+			>
 				<Menu.ItemIcon icon={PlusIcon} />
 				<Menu.ItemText>{m['common.account.action.addAnother']()}</Menu.ItemText>
 			</Menu.Item>

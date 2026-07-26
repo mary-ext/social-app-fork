@@ -4,14 +4,13 @@ import { switchAccount, type SessionAccount } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
 export function useAccountSwitcher() {
 	const [pendingDid, setPendingDid] = useState<string | null>(null);
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const onPressSwitchAccount = useCallback(
 		async (account: SessionAccount) => {
@@ -34,7 +33,7 @@ export function useAccountSwitcher() {
 				setPendingDid(null);
 			}
 		},
-		[pendingDid, signinDialogHandle],
+		[pendingDid],
 	);
 
 	return { onPressSwitchAccount, pendingDid };

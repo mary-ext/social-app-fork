@@ -9,7 +9,6 @@ import { RouterView } from '@oomfware/stacker';
 import { initializeLanguageDetection } from '#/lib/language-detection';
 import { QueryProvider } from '#/lib/react-query';
 
-import { Provider as DialogStateProvider } from '#/state/dialogs';
 import { MessagesProvider } from '#/state/messages';
 import { Provider as LabelDefsProvider } from '#/state/preferences/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/preferences/moderation-opts';
@@ -64,9 +63,7 @@ function App() {
 	 */
 	return (
 		<SessionProvider>
-			<DialogStateProvider>
-				<InnerApp />
-			</DialogStateProvider>
+			<InnerApp />
 		</SessionProvider>
 	);
 }

@@ -1,17 +1,10 @@
-import { useComposerControls } from '#/lib/hooks/useOpenComposer';
-
-import { useDialogStateControlContext } from '#/state/dialogs';
+import { closeAllDialogs } from '#/components/Dialog/registry';
 
 import { setDrawerOpen } from './shell/drawer-open';
 
 /** used to clear out any modals, eg for a navigation */
-export function useCloseAllActiveElements() {
-	const { closeComposer } = useComposerControls();
-	// The lightbox is a registered web dialog now, so `closeAllDialogs` covers it alongside the rest.
-	const { closeAllDialogs: closeAlfDialogs } = useDialogStateControlContext();
-	return () => {
-		closeComposer();
-		closeAlfDialogs();
-		setDrawerOpen(false);
-	};
+export function closeAllActiveElements() {
+	// the composer and the lightbox are both registered dialogs, so `closeAllDialogs` reaches them too
+	closeAllDialogs();
+	setDrawerOpen(false);
 }

@@ -13,7 +13,7 @@ import { clsx } from 'clsx';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
 
-import type { LightboxPayload } from '#/components/dialogs/Context';
+import type { LightboxPayload } from '#/components/dialogs/handles';
 import { ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon } from '#/components/icons/ArrowOutOfBox';
 import {
 	ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,

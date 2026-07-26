@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 import { resolveUrl } from '#/lib/routes/app-links';
 import { isMisleadingLink, safeUrlParse } from '#/lib/strings/url-helpers';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { groupChatJoinHandle, linkWarningDialogHandle } from '#/components/dialogs/handles';
 import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
 import { Button, type ButtonProps } from '#/components/web/Button';
@@ -95,7 +95,6 @@ export const useInternalLink = ({
 // external or modified click to the native anchor.
 const useExternalNav = (rawHref: string, action: LinkAction) => {
 	const navigateToPath = useNavigateToPath();
-	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	const resolved = resolveUrl(rawHref);
 	const href = resolved ? resolved.path : safeUrlParse(rawHref)?.href;
@@ -162,7 +161,6 @@ const useContentLink = ({
 	onPress?: LinkOnPress;
 }): LinkBindings => {
 	const { href, isExternal, navigate } = useExternalNav(rawHref, action);
-	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
 	const onClick = (e: MouseEvent<HTMLElement>) => {
 		if (onPress?.(e) === false) {
 			e.preventDefault();

@@ -5,7 +5,7 @@ import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
 import type { CancelRef } from '#/features/composer/Composer';
 
 import * as Dialog from '#/components/Dialog';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { composerDialogHandle } from '#/components/dialogs/handles';
 import { Spinner } from '#/components/Spinner';
 
 import { m } from '#/paraglide/messages';
@@ -19,7 +19,6 @@ const ComposePost = lazy(() =>
 );
 
 export function ComposerDialog() {
-	const { composerDialogHandle } = useGlobalDialogsHandleContext();
 	const cancelRef = useRef<CancelRef>(null);
 
 	return (

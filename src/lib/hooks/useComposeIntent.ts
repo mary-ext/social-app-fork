@@ -4,10 +4,9 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { getVideoMetadata } from '#/lib/media/metadata';
 
 import { useSession } from '#/state/session';
-import { useCloseAllActiveElements } from '#/state/util';
+import { closeAllActiveElements } from '#/state/util';
 
 export function useComposeIntent() {
-	const closeAllActiveElements = useCloseAllActiveElements();
 	const { openComposer } = useOpenComposer();
 	const { hasSession } = useSession();
 
@@ -46,6 +45,6 @@ export function useComposeIntent() {
 				});
 			}, 500);
 		},
-		[hasSession, closeAllActiveElements, openComposer],
+		[hasSession, openComposer],
 	);
 }

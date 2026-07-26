@@ -2,7 +2,6 @@ import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 
 import type { LightboxImage } from '@oomfware/lightbox';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
 import { AutoSizedImage } from '#/components/ImageEmbed/AutoSizedImage';
 import { EMPTY_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
 import { Gallery } from '#/components/ImageEmbed/Gallery';
@@ -32,7 +31,6 @@ export function ImageEmbed({
 }: CommonProps & {
 	embed: AppBskyEmbedGallery.View | AppBskyEmbedImages.View;
 }) {
-	const { lightboxHandle } = useGlobalDialogsHandleContext();
 	// Normalize to the gallery interface so the carousel and lightbox stay shared.
 	const images: AppBskyEmbedGallery.ViewImage[] =
 		'items' in embed
@@ -60,14 +58,12 @@ export function ImageEmbed({
 				<AutoSizedImage
 					image={images[0]!}
 					crop={viewContext === PostEmbedViewContext.ThreadHighlighted ? 'none' : 'constrained'}
-					handle={lightboxHandle}
 					payload={{ images: lightboxImages, index: 0 }}
 					onPressIn={onPressIn}
 				/>
 			) : (
 				<Gallery
 					images={images}
-					handle={lightboxHandle}
 					lightboxImages={lightboxImages}
 					onPressIn={onPressIn}
 					viewContext={viewContext}

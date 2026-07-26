@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 
 import * as Dialog from '#/components/Dialog';
-import { type LinkWarningPayload, useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { linkWarningDialogHandle, type LinkWarningPayload } from '#/components/dialogs/handles';
 import { Spinner } from '#/components/Spinner';
 
 import { m } from '#/paraglide/messages';
@@ -11,7 +11,6 @@ import * as css from './LinkWarningDialog.css';
 const WarningBody = lazy(() => import('./WarningBody').then((mod) => ({ default: mod.WarningBody })));
 
 export function LinkWarningDialog() {
-	const { linkWarningDialogHandle } = useGlobalDialogsHandleContext();
 	return <LinkWarningDialogBase handle={linkWarningDialogHandle} />;
 }
 

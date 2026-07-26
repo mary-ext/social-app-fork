@@ -6,7 +6,7 @@ import { conversationTarget } from '#/lib/routes/targets';
 import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useSession } from '#/state/session';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { groupChatJoinHandle } from '#/components/dialogs/handles';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
 import { ChainLink_Stroke2_Corner0_Rounded as LinkIcon } from '#/components/icons/ChainLink';
@@ -69,7 +69,6 @@ export function useChatInvite({
 }): ChatInvite {
 	const { hasSession } = useSession();
 	const router = useRouter();
-	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	const { data, error, isPending } = useJoinLinkPreviewsQuery({
 		codes: [code],

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useComposeIntent } from '#/lib/hooks/useComposeIntent';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { groupChatJoinHandle } from '#/components/dialogs/handles';
 
 import { useParams, useRouter } from '#/routes';
 
@@ -13,12 +13,11 @@ import { useParams, useRouter } from '#/routes';
 export function GroupChatJoinScreen() {
 	const [{ code }] = useParams('GroupChatJoin');
 	const router = useRouter();
-	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
 
 	useEffect(() => {
 		router.navigate({ replace: true, to: { name: 'Home' } });
 		groupChatJoinHandle.openWithPayload({ code });
-	}, [code, groupChatJoinHandle, router]);
+	}, [code, router]);
 
 	return null;
 }

@@ -26,17 +26,16 @@ import { until } from '#/lib/async/until';
 import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_GRAPHEME_LENGTH, SUPPORTED_MIME_TYPES } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import {
+	closeComposer,
 	COMPOSER_DIALOG_ID,
 	type ComposerOpts,
 	type OnPostSuccessData,
-	useComposerControls,
 } from '#/lib/hooks/useOpenComposer';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { cleanError, errorMessage } from '#/lib/strings/errors';
 
-import { useDialogStateControlContext } from '#/state/dialogs';
 import { postCreated } from '#/state/events';
 import { type ComposerImage, createComposerImage } from '#/state/gallery';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
@@ -59,6 +58,7 @@ import { SubtitleDialogBtn } from '#/features/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/features/composer/videos/VideoPreview';
 
 import * as Dialog from '#/components/Dialog';
+import { closeAllDialogs } from '#/components/Dialog/registry';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
@@ -117,7 +117,6 @@ export const ComposePost = ({
 	const { appview, pds, pdsUrl } = getClients();
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
-	const { closeComposer } = useComposerControls();
 	const [requireAltTextEnabled] = useRequireAltTextEnabled();
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
@@ -127,7 +126,6 @@ export const ComposePost = ({
 	const skipEmptyConfirmedRef = useRef(false);
 	const { mutateAsync: saveDraft } = useSaveDraftMutation();
 	const { mutate: cleanupPublishedDraft } = useCleanupPublishedDraftMutation();
-	const { closeAllDialogs } = useDialogStateControlContext();
 	const { data: preferences } = usePreferencesQuery();
 	const router = useRouter();
 
@@ -410,10 +408,6 @@ export const ComposePost = ({
 	const [uploadCompletionPublishRequest, setUploadCompletionPublishRequest] = useState(0);
 	const handledUploadCompletionPublishRequestRef = useRef(0);
 
-	const onClose = useCallback(() => {
-		closeComposer();
-	}, [closeComposer]);
-
 	const getDraftSaveError = useCallback((e: unknown): string => {
 		if (e instanceof ClientResponseError && e.error === 'DraftLimitReached') {
 			return m['view.composer.drafts.error.max']();
@@ -444,12 +438,12 @@ export const ComposePost = ({
 			});
 			composerDispatch({ type: 'mark_saved', draftId: result.draftId });
 
-			onClose();
+			closeComposer();
 		} catch (e) {
 			logger.error('Failed to save draft', { error: e });
 			setError(getDraftSaveError(e));
 		}
-	}, [saveDraft, composerState, composerDispatch, onClose, validateDraftTextOrError, getDraftSaveError]);
+	}, [saveDraft, composerState, composerDispatch, validateDraftTextOrError, getDraftSaveError]);
 
 	// Save without closing - for use by DraftsButton
 	const saveCurrentDraft = useCallback(async (): Promise<{
@@ -471,11 +465,6 @@ export const ComposePost = ({
 			return { success: false };
 		}
 	}, [saveDraft, composerState, composerDispatch, validateDraftTextOrError, getDraftSaveError]);
-
-	// Handle discard action and close the composer.
-	const handleDiscard = useCallback(() => {
-		onClose();
-	}, [onClose]);
 
 	// Check if composer is empty (no content to save)
 	const isComposerEmpty = useMemo(() => {
@@ -542,16 +531,16 @@ export const ComposePost = ({
 			return true;
 		}
 		return false;
-	}, [thread, composerState.draftId, composerState.isDirty, closeAllDialogs, discardPromptHandle]);
+	}, [thread, composerState.draftId, composerState.isDirty, discardPromptHandle]);
 
 	useImperativeHandle(cancelRef, () => ({ onPressCancel }));
 
 	// The Cancel button drives the close itself (the dialog's `onOpenChange` does it for Escape/backdrop).
 	const onRequestClose = useCallback(() => {
 		if (!onPressCancel()) {
-			onClose();
+			closeComposer();
 		}
-	}, [onPressCancel, onClose]);
+	}, [onPressCancel]);
 
 	const missingAltError = ((): string | undefined => {
 		if (!requireAltTextEnabled) {
@@ -752,7 +741,7 @@ export const ComposePost = ({
 			onPost?.(postUri);
 			onPostSuccess?.(postSuccessData);
 		}
-		onClose();
+		closeComposer();
 		setTimeout(() => {
 			Toast.show(
 				filteredThread.posts.length > 1
@@ -786,7 +775,6 @@ export const ComposePost = ({
 		initQuote,
 		isPublishing,
 		router,
-		onClose,
 		onPost,
 		onPostSuccess,
 		pds,
@@ -1017,7 +1005,7 @@ export const ComposePost = ({
 					title={m['view.composer.drafts.discard.title']()}
 					confirmButtonCta={m['common.action.discard']()}
 					confirmButtonColor="negative"
-					onConfirm={handleDiscard}
+					onConfirm={closeComposer}
 				/>
 			) : (
 				<Prompt.Outer handle={discardPromptHandle}>
@@ -1051,7 +1039,7 @@ export const ComposePost = ({
 						)}
 						<Prompt.Action
 							cta={m['common.action.discard']()}
-							onPress={handleDiscard}
+							onPress={closeComposer}
 							color="negative_subtle"
 						/>
 						<Prompt.Cancel cta={m['view.composer.discard.keepEditing']()} />

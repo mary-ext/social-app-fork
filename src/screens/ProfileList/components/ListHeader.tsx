@@ -4,7 +4,7 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { Trans } from '#/locale/Trans';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { lightboxHandle } from '#/components/dialogs/handles';
 import { preloadLightbox } from '#/components/Lightbox';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
@@ -20,8 +20,6 @@ import * as css from './ListHeader.css';
  * description.
  */
 export function ListHeader({ isOwner, list }: { isOwner: boolean; list: AppBskyGraphDefs.ListView }) {
-	const { lightboxHandle } = useGlobalDialogsHandleContext();
-
 	const onPressAvi = () => {
 		if (
 			list.avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)

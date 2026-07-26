@@ -11,7 +11,7 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import {
 	Bell_Stroke2_Corner0_Rounded as Bell,
 	Bell_Filled_Corner0_Rounded as BellFilled,
@@ -101,21 +101,12 @@ const useLongPress = (onLongPress?: () => void) => {
 
 export function BottomBar() {
 	const { hasSession, currentAccount } = useSession();
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 	const hideBorder = useIsBottomBarBorderHidden();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 	const isLabeler = profile?.associated?.labeler;
 
 	const unreadMessageCount = useUnreadMessageCount();
 	const notificationCountStr = useUnreadNotifications();
-
-	const showSignIn = () => {
-		signinDialogHandle.openWithPayload({});
-	};
-
-	const onLongPressProfile = () => {
-		signinDialogHandle.openWithPayload({ intent: 'switch' });
-	};
 
 	return (
 		<nav className={clsx(css.bottomBar, hideBorder && css.bottomBarHideBorder)}>
@@ -151,7 +142,7 @@ export function BottomBar() {
 					</NavItem>
 					<NavItem
 						to={currentAccount ? profileTarget(currentAccount.did) : { name: 'Home' }}
-						onLongPress={onLongPressProfile}
+						onLongPress={() => signinDialogHandle.openWithPayload({ intent: 'switch' })}
 					>
 						{({ isActive }) => (
 							<UserAvatar
@@ -172,7 +163,7 @@ export function BottomBar() {
 						</div>
 					</div>
 					<Button
-						onClick={showSignIn}
+						onClick={() => signinDialogHandle.openWithPayload({})}
 						label={m['common.session.action.signIn']()}
 						size="small"
 						variant="solid"

@@ -7,7 +7,7 @@ import type { LightboxImage } from '@oomfware/lightbox';
 import { clsx } from 'clsx';
 
 import * as Dialog from '#/components/Dialog';
-import type { LightboxHandle } from '#/components/dialogs/Context';
+import { lightboxHandle } from '#/components/dialogs/handles';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import {
 	CAROUSEL_CHAT_MAX_HEIGHT,
@@ -30,17 +30,12 @@ import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export type GalleryProps = {
 	images: AppBskyEmbedGallery.ViewImage[];
-	/**
-	 * Lightbox handle + the full lib image list; each slide is a detached `Dialog.Trigger` opening at its
-	 * index.
-	 */
-	handle: LightboxHandle;
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 	viewContext?: PostEmbedViewContext;
 };
 
-export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext }: GalleryProps) {
+export function Gallery({ images, lightboxImages, onPressIn, viewContext }: GalleryProps) {
 	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
 	const { bleedStyle, bleedWidth, insetLeft, ref: bleedRef } = useGalleryBleed();
@@ -130,7 +125,6 @@ export function Gallery({ images, handle, lightboxImages, onPressIn, viewContext
 						largeAltBadge={largeAltBadge}
 						onWidthChange={onWidthChange}
 						setItemRef={setItemRef}
-						handle={handle}
 						lightboxImages={lightboxImages}
 						onPressIn={onPressIn}
 					/>
@@ -148,7 +142,6 @@ function GalleryImage({
 	largeAltBadge,
 	onWidthChange,
 	setItemRef,
-	handle,
 	lightboxImages,
 	onPressIn,
 }: {
@@ -159,7 +152,6 @@ function GalleryImage({
 	largeAltBadge: boolean;
 	onWidthChange: (index: number, width: number) => void;
 	setItemRef: (index: number, node: HTMLElement | null) => void;
-	handle: LightboxHandle;
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 }) {
@@ -187,7 +179,7 @@ function GalleryImage({
 
 	return (
 		<Dialog.Trigger
-			handle={handle}
+			handle={lightboxHandle}
 			payload={{ images: lightboxImages, index }}
 			type="button"
 			ref={(node: HTMLElement | null) => setItemRef(index, node)}

@@ -10,7 +10,7 @@ import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
 import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { composerDialogHandle } from '#/components/dialogs/handles';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -51,10 +51,10 @@ export const COMPOSER_DIALOG_ID = 'composer';
 
 /**
  * thin imperative API over the global composer dialog (see `composerDialogHandle` in
- * `#/components/dialogs/Context`).
+ * `#/components/dialogs/handles`). a hook rather than a plain function because precaching the quoted post
+ * needs the active account's query client.
  */
 export function useOpenComposer() {
-	const { composerDialogHandle } = useGlobalDialogsHandleContext();
 	const queryClient = useQueryClient();
 
 	const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
@@ -93,16 +93,9 @@ export function useOpenComposer() {
 	return { openComposer };
 }
 
-export function useComposerControls() {
-	const { composerDialogHandle } = useGlobalDialogsHandleContext();
-
-	const closeComposer = useNonReactiveCallback(() => {
-		const wasOpen = composerDialogHandle.isOpen;
-		if (wasOpen) {
-			composerDialogHandle.close();
-		}
-		return wasOpen;
-	});
-
-	return { closeComposer };
+/** closes the global composer without raising its discard prompt. */
+export function closeComposer(): void {
+	if (composerDialogHandle.isOpen) {
+		composerDialogHandle.close();
+	}
 }

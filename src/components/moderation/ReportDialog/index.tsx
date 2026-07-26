@@ -1,15 +1,13 @@
 import { lazy, Suspense } from 'react';
 
 import * as Dialog from '#/components/Dialog';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { reportDialogHandle } from '#/components/dialogs/handles';
 import { Spinner } from '#/components/Spinner';
 
 import { m } from '#/paraglide/messages';
 
 import * as styles from './index.css';
 import type { ReportSubject } from './types';
-
-export { type ReportSubject } from './types';
 
 const Content = lazy(() => import('./ReportDialogContent').then((mod) => ({ default: mod.Content })));
 
@@ -21,20 +19,15 @@ function ContentFallback() {
 	);
 }
 
-export function useGlobalReportDialogHandle() {
-	return useGlobalDialogsHandleContext().reportDialogHandle;
-}
-
-/** the app-wide report dialog, opened imperatively with `reportDialogHandle.openWithPayload({ subject })`. */
+/** the app-wide report dialog. */
 export function GlobalReportDialog() {
-	const handle = useGlobalReportDialogHandle();
 	return (
-		<Dialog.Root handle={handle}>
+		<Dialog.Root handle={reportDialogHandle}>
 			{({ payload }: { payload: { subject: ReportSubject } | undefined }) =>
 				payload ? (
 					<Dialog.Popup className={styles.popup} scroll="body">
 						<Suspense fallback={<ContentFallback />}>
-							<Content close={() => handle.close()} subject={payload.subject} />
+							<Content close={() => reportDialogHandle.close()} subject={payload.subject} />
 						</Suspense>
 					</Dialog.Popup>
 				) : null

@@ -7,7 +7,7 @@ import { useKeybind } from '#/lib/keybinds';
 
 import { focusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
-import { useCloseAllActiveElements } from '#/state/util';
+import { closeAllActiveElements } from '#/state/util';
 
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
 import { SigninDialog } from '#/components/dialogs/Signin';
@@ -30,7 +30,6 @@ export function ShellLayout() {
 	const match = useRoute();
 	const router = useRouter();
 	const { hasSession } = useSession();
-	const closeAllActiveElements = useCloseAllActiveElements();
 	const { openComposer } = useOpenComposer();
 
 	useKeybind({
@@ -63,7 +62,7 @@ export function ShellLayout() {
 				closeAllActiveElements();
 			}
 		});
-	}, [closeAllActiveElements, router]);
+	}, [router]);
 
 	if (!hasSession && resolveMeta(match, 'requireAuth')) {
 		return <LoggedOut />;

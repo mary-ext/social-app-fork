@@ -18,7 +18,7 @@ import { useSession } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
@@ -171,7 +171,6 @@ function NoResultsText({ query }: { query: string }) {
 
 function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }) {
 	const { hasSession } = useSession();
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 
 	const normalizedQuery = normalizeSearchQuery(query);
 

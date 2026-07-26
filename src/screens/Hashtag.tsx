@@ -13,7 +13,7 @@ import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
@@ -138,12 +138,6 @@ function HashtagScreenTab({
 		void fetchNextPage();
 	};
 
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
-
-	const showSignIn = () => {
-		signinDialogHandle.openWithPayload({});
-	};
-
 	if (!hasSession) {
 		return (
 			<SearchError title={m['common.search.loggedOutError']()}>
@@ -152,7 +146,10 @@ function HashtagScreenTab({
 						message={m['common.search.signInPrompt']}
 						markup={{
 							t0: ({ children }) => (
-								<InlineButton label={m['common.session.action.signIn']()} onClick={showSignIn}>
+								<InlineButton
+									label={m['common.session.action.signIn']()}
+									onClick={() => signinDialogHandle.openWithPayload({})}
+								>
 									{children}
 								</InlineButton>
 							),

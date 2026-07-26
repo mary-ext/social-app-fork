@@ -1,5 +1,5 @@
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import { Logo } from '#/components/icons/Logo';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
@@ -11,12 +11,6 @@ import * as styles from './NavSignInCard.css';
 
 /** Card shown in the left navigation sidebar and drawer when the user is signed out. */
 export function NavSignInCard(): React.ReactNode {
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
-
-	const showSignIn = () => {
-		signinDialogHandle.openWithPayload({});
-	};
-
 	return (
 		<div className={styles.root}>
 			<Link label="Bluesky - Home" to={{ name: 'Home' }}>
@@ -31,7 +25,7 @@ export function NavSignInCard(): React.ReactNode {
 				<Button
 					color="primary"
 					label={m['common.session.action.signIn']()}
-					onClick={showSignIn}
+					onClick={() => signinDialogHandle.openWithPayload({})}
 					size="small"
 					variant="solid"
 				>

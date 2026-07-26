@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 
 import * as Dialog from '#/components/Dialog';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { groupChatJoinHandle } from '#/components/dialogs/handles';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 
@@ -16,8 +16,6 @@ const InviteBody = lazy(() => import('./InviteBody').then((mod) => ({ default: m
  * `#/screens/null-routes`), which decodes the invite code and swaps the URL for Home.
  */
 export function GroupChatJoinDialog() {
-	const { groupChatJoinHandle } = useGlobalDialogsHandleContext();
-
 	return (
 		<Dialog.Root handle={groupChatJoinHandle}>
 			{({ payload }) => (

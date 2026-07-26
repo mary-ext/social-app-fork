@@ -14,12 +14,12 @@ import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import * as css from '#/features/liveNow/components/LiveStatusDialog.css';
 
 import * as Dialog from '#/components/Dialog';
+import { reportDialogHandle } from '#/components/dialogs/handles';
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
 import { ContentHider } from '#/components/moderation/ContentHider';
-import { useGlobalReportDialogHandle } from '#/components/moderation/ReportDialog';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLinkButton } from '#/components/web/Link';
@@ -94,7 +94,6 @@ export function LiveStatus({
 }) {
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
-	const reportDialogHandle = useGlobalReportDialogHandle();
 
 	const statusModeration = moderationOpts ? moderateStatus(profile, moderationOpts) : undefined;
 

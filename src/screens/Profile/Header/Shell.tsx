@@ -7,7 +7,7 @@ import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
 
 import * as Dialog from '#/components/Dialog';
-import { useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { lightboxHandle } from '#/components/dialogs/handles';
 import { preloadLightbox } from '#/components/Lightbox';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
@@ -31,7 +31,6 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 		meta: { isMe, isPlaceholderProfile, live },
 		state: { moderation, profile },
 	} = useProfileHeader();
-	const { lightboxHandle } = useGlobalDialogsHandleContext();
 	const liveStatusHandle = Dialog.useDialogHandle();
 
 	const mediaModeration = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);

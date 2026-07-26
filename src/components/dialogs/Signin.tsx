@@ -10,7 +10,7 @@ import { logger } from '#/logger';
 
 import { AccountList } from '#/components/AccountList';
 import * as Dialog from '#/components/Dialog';
-import { type SigninDialogPayload, useGlobalDialogsHandleContext } from '#/components/dialogs/Context';
+import { signinDialogHandle, type SigninDialogPayload } from '#/components/dialogs/handles';
 import * as css from '#/components/dialogs/Signin.css';
 import { At_Stroke2_Corner0_Rounded as AtIcon } from '#/components/icons/At';
 import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon } from '#/components/icons/Chevron';
@@ -25,7 +25,6 @@ import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 export function SigninDialog() {
-	const { signinDialogHandle } = useGlobalDialogsHandleContext();
 	return (
 		<Dialog.Root handle={signinDialogHandle}>
 			{({ payload }: { payload: SigninDialogPayload | undefined }) =>

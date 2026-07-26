@@ -65,8 +65,10 @@ export function Root<Payload = unknown>({
 			handle={handle}
 			modal={modal}
 			onOpenChange={(next, details) => {
-				registerOpen(next);
 				onOpenChange?.(next, details);
+				if (!details.isCanceled) {
+					registerOpen(next);
+				}
 			}}
 			open={open}
 		>
