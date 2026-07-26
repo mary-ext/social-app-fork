@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { useFocusEffect } from '@oomfware/stacker';
 
 import { bskyTitle } from '#/lib/strings/headings';
@@ -10,9 +8,7 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 export function useTitle(title: string) {
 	const numUnread = useUnreadNotifications();
 
-	useFocusEffect(
-		useCallback(() => {
-			document.title = bskyTitle(title, numUnread);
-		}, [numUnread, title]),
-	);
+	useFocusEffect(() => {
+		document.title = bskyTitle(title, numUnread);
+	});
 }

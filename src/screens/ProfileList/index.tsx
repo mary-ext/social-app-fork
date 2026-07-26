@@ -27,7 +27,7 @@ import { Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useIsFocused, useParams } from '#/routes';
+import { useParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import { AboutSection } from './AboutSection';
@@ -135,7 +135,6 @@ function CuratedProfileList({
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
-	const isScreenFocused = useIsFocused();
 	const isHidden = list.labels?.some((l) => l.val === '!hide') ?? false;
 	const isOwner = currentAccount?.did === list.creator.did;
 	const addUserDialogHandle = Dialog.useDialogHandle();
@@ -158,12 +157,7 @@ function CuratedProfileList({
 				sections={[
 					{
 						children: (
-							<FeedSection
-								feed={`list|${list.uri}`}
-								isFocused={isScreenFocused}
-								isOwner={isOwner}
-								onPressAddUser={onPressAddUser}
-							/>
+							<FeedSection feed={`list|${list.uri}`} isOwner={isOwner} onPressAddUser={onPressAddUser} />
 						),
 						id: 'posts',
 						label: m['common.post.label'](),

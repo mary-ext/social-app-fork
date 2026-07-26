@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import { useFocusEffect } from '@oomfware/stacker';
 
@@ -32,12 +32,8 @@ export function ExploreScreen() {
 		focusSearch.emit();
 	};
 
-	useFocusEffect(
-		useCallback(() => {
-			// already on the explore page — a soft reset just focuses the search field
-			return softReset.subscribe(() => focusSearch.emit());
-		}, []),
-	);
+	// already on the explore page — a soft reset just focuses the search field
+	useFocusEffect(() => softReset.subscribe(() => focusSearch.emit()));
 
 	return (
 		<Layout.Screen>

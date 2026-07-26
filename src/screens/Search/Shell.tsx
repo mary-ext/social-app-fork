@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 import { useFocusEffect } from '@oomfware/stacker';
 
@@ -55,16 +55,12 @@ export function SearchScreenShell({ queryParam }: { queryParam: string }) {
 		return () => observer.disconnect();
 	}, []);
 
-	const navigateToExplore = useCallback(() => {
+	const navigateToExplore = () => {
 		// drop back to the explore page: clear the query and tab
 		router.navigate({ to: { name: 'Explore' } });
-	}, [router]);
+	};
 
-	useFocusEffect(
-		useCallback(() => {
-			return softReset.subscribe(navigateToExplore);
-		}, [navigateToExplore]),
-	);
+	useFocusEffect(() => softReset.subscribe(navigateToExplore));
 
 	return (
 		<Layout.Screen>

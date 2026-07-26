@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -30,7 +30,7 @@ import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadin
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useIsFocused, useParams } from '#/routes';
+import { useFocusEffect, useParams } from '#/routes';
 import { colors } from '#/styles/colors';
 
 export function ProfileFeedScreen() {
@@ -76,7 +76,6 @@ function renderPostsEmpty() {
 function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {
 	const { hasSession } = useSession();
 	const { openComposer } = useOpenComposer();
-	const isScreenFocused = useIsFocused();
 
 	useTitle(feedInfo.displayName);
 
@@ -88,21 +87,16 @@ function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) 
 	const feedFeedback = useFeedFeedback(feedInfo, hasSession);
 	const scrollElRef = useRef<ListMethods | null>(null);
 
-	const onScrollToTop = useCallback(() => {
+	const onScrollToTop = () => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
 			offset: 0, // -headerHeight,
 		});
 		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 		setHasNew(false);
-	}, [scrollElRef, queryClient, feed, setHasNew]);
+	};
 
-	useEffect(() => {
-		if (!isScreenFocused) {
-			return;
-		}
-		return softReset.subscribe(onScrollToTop);
-	}, [onScrollToTop, isScreenFocused]);
+	useFocusEffect(() => softReset.subscribe(onScrollToTop));
 
 	const isTrending = feedInfo.creatorDid === TRENDING_DID;
 

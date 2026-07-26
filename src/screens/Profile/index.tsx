@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
@@ -367,7 +367,7 @@ function ProfileScreenLoaded({
 	// the selected tab, falling back to the first section until the user picks one (`showPostsTab` is
 	// always true, so the list is never empty)
 	// the profile is window-scrolled, so soft-reset just returns the page to the top
-	useFocusEffect(useCallback(() => softReset.subscribe(() => window.scrollTo(0, 0)), []));
+	useFocusEffect(() => softReset.subscribe(() => window.scrollTo(0, 0)));
 
 	return (
 		<ScreenHider

@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useTitle } from '#/lib/hooks/useTitle';
 
@@ -162,12 +161,8 @@ function NotificationsTab({
 
 	// event handlers
 	// =
-	const scrollToTop = useCallback(() => {
+	const onPressLoadLatest = () => {
 		scrollElRef.current?.scrollToOffset({ animated: false, offset: 0 });
-	}, [scrollElRef]);
-
-	const onPressLoadLatest = useCallback(() => {
-		scrollToTop();
 		if (hasNew) {
 			// render what we have now
 			void truncateAndInvalidate(queryClient, NOTIFS_RQKEY(filter));
@@ -178,9 +173,12 @@ function NotificationsTab({
 				.catch(() => undefined)
 				.then(() => setIsLoadingLatest(false));
 		}
-	}, [scrollToTop, queryClient, checkUnread, hasNew, isLoading, setIsLoadingLatest, filter]);
+	};
 
-	const onFocusCheckLatest = useNonReactiveCallback(() => {
+	// on-visible setup
+	// =
+	useFocusEffect(() => {
+		logger.debug('NotificationsScreen: Focus');
 		// on focus, check for latest, but only invalidate if the user
 		// isnt scrolled down to avoid moving content underneath them.
 		// On the web, this isn't always updated in time so
@@ -189,23 +187,7 @@ function NotificationsTab({
 		void checkUnread({ invalidate: !currentIsScrolledDown });
 	});
 
-	// on-visible setup
-	// =
-	useFocusEffect(
-		useCallback(() => {
-			if (isScreenFocused) {
-				logger.debug('NotificationsScreen: Focus');
-				onFocusCheckLatest();
-			}
-		}, [onFocusCheckLatest, isScreenFocused]),
-	);
-
-	useEffect(() => {
-		if (!isScreenFocused) {
-			return;
-		}
-		return softReset.subscribe(onPressLoadLatest);
-	}, [onPressLoadLatest, isScreenFocused]);
+	useFocusEffect(() => softReset.subscribe(onPressLoadLatest));
 
 	return (
 		<>

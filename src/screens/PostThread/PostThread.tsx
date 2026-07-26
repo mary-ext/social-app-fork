@@ -36,7 +36,7 @@ import { List, type ListMethods } from '#/components/List/List';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useIsFocused } from '#/routes';
+import { useFocusEffect } from '#/routes';
 
 const PARENT_CHUNK_SIZE = 20;
 const CHILDREN_CHUNK_SIZE = 50;
@@ -51,7 +51,6 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 	const { gtMobile } = useBreakpoints();
 	const { hasSession } = useSession();
 	const headerRef = useRef<HTMLDivElement>(null);
-	const isFocused = useIsFocused();
 	const listRef = useRef<ListMethods>(null);
 	const needsInitialAnchor = useRef(true);
 	const anchorPostSource = useUnstablePostSource(uri);
@@ -267,8 +266,8 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 	// the final correction. pinning the viewport to the anchor first is what stops prepend anchoring from
 	// preserving a child instead — screens share the window scroll, and the router restores it only after this
 	// commit, so a fresh mount would otherwise anchor against the outgoing thread's stale scroll offset.
-	useEffect(() => {
-		if (!isFocused || anchorIndex === -1 || !needsInitialAnchor.current) {
+	useFocusEffect(() => {
+		if (anchorIndex === -1 || !needsInitialAnchor.current) {
 			return;
 		}
 
@@ -292,7 +291,7 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 			setInitialAnchorSettled(true);
 		});
 		return () => cancelAnimationFrame(animationFrame);
-	}, [anchorIndex, deferParents, isFocused]);
+	});
 
 	let isTombstoneView = false;
 	if (deferredSlices.length <= 1) {

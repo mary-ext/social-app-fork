@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 
@@ -78,13 +78,7 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 	);
 
 	// flush on leave screen
-	useFocusEffect(
-		useCallback(() => {
-			return () => {
-				savePrefs.flush();
-			};
-		}, [savePrefs]),
-	);
+	useFocusEffect(() => () => savePrefs.flush());
 
 	// persist a pending user change after commit. the latch is set in the setters and read + cleared
 	// here, off the render path, so the save always observes what the setters wrote. deps include

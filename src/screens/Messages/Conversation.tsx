@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 
@@ -41,15 +41,13 @@ export function MessagesConversationScreenInner() {
 
 	useTitle(m['common.chat.label']());
 
-	useFocusEffect(
-		useCallback(() => {
-			setCurrentConvoId(convoId);
+	useFocusEffect(() => {
+		setCurrentConvoId(convoId);
 
-			return () => {
-				setCurrentConvoId(undefined);
-			};
-		}, [convoId, setCurrentConvoId]),
-	);
+		return () => {
+			setCurrentConvoId(undefined);
+		};
+	});
 
 	return (
 		<Layout.Screen className={css.screen} noInsetTop={false}>

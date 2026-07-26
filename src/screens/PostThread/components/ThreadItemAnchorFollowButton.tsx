@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
@@ -54,19 +54,17 @@ function PostThreadFollowBtnLoaded({
 	// This prevents the button from disappearing as soon as we follow.
 	const showFollowBtn = !isFollowing || !wasFollowing;
 
-	const updateWasFollowing = useCallback(() => {
-		if (wasFollowing !== isFollowing) {
-			setWasFollowing(isFollowing);
-		}
-	}, [isFollowing, wasFollowing]);
-
 	/** updates the following state on focus and blur to control button visibility. */
-	useFocusEffect(
-		useCallback(() => {
-			updateWasFollowing();
-			return updateWasFollowing;
-		}, [updateWasFollowing]),
-	);
+	useFocusEffect(() => {
+		const updateWasFollowing = () => {
+			if (wasFollowing !== isFollowing) {
+				setWasFollowing(isFollowing);
+			}
+		};
+
+		updateWasFollowing();
+		return updateWasFollowing;
+	});
 
 	const onPress = () => {
 		if (!isFollowing) {

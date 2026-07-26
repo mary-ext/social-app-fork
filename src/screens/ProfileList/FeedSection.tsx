@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -14,38 +14,32 @@ import { PostFeed } from '#/components/PostFeed/PostFeed';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useIsFocused } from '#/routes';
+import { useFocusEffect, useIsFocused } from '#/routes';
 
 import * as css from './FeedSection.css';
 
 interface FeedSectionProps {
 	feed: FeedDescriptor;
-	isFocused: boolean;
 	isOwner: boolean;
 	onPressAddUser: () => void;
 }
 
-export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSectionProps) {
+export function FeedSection({ feed, isOwner, onPressAddUser }: FeedSectionProps) {
 	const queryClient = useQueryClient();
 	const scrollElRef = useRef<ListMethods | null>(null);
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const isScreenFocused = useIsFocused();
-	const onScrollToTop = useCallback(() => {
+	const onScrollToTop = () => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
 			offset: 0,
 		});
 		void queryClient.resetQueries({ queryKey: FEED_RQKEY(feed) });
 		setHasNew(false);
-	}, [queryClient, feed, setHasNew]);
+	};
 
-	useEffect(() => {
-		if (!isScreenFocused) {
-			return;
-		}
-		return softReset.subscribe(onScrollToTop);
-	}, [onScrollToTop, isScreenFocused]);
+	useFocusEffect(() => softReset.subscribe(onScrollToTop));
 
 	const renderPostsEmpty = useCallback(() => {
 		return (
@@ -70,7 +64,7 @@ export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSe
 		<div>
 			<PostFeed
 				disablePoll={hasNew}
-				enabled={isFocused}
+				enabled={isScreenFocused}
 				feed={feed}
 				onHasNew={setHasNew}
 				onScrolledDownChange={setIsScrolledDown}

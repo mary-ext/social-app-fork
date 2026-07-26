@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from 'react';
+import { createContext, useContext, useEffect, useSyncExternalStore } from 'react';
 
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
@@ -100,19 +100,17 @@ function ConvoProviderInner({
 	const { mutate: markAsRead } = useMarkAsReadMutation();
 
 	const isVisible = useIsDocumentVisible();
-	useFocusEffect(
-		useCallback(() => {
-			if (isVisible) {
-				convo.resume();
-				markAsRead({ convoId });
+	useFocusEffect(() => {
+		if (isVisible) {
+			convo.resume();
+			markAsRead({ convoId });
 
-				return () => {
-					convo.background();
-					markAsRead({ convoId });
-				};
-			}
-		}, [isVisible, convo, convoId, markAsRead]),
-	);
+			return () => {
+				convo.background();
+				markAsRead({ convoId });
+			};
+		}
+	});
 
 	useEffect(() => {
 		return convo.on((event) => {

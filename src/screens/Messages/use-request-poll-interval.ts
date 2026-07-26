@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { useIsDocumentVisible } from '#/lib/visibility';
 
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
@@ -14,12 +12,9 @@ import { useFocusEffect } from '#/routes';
 export function useRequestMessagePollInterval() {
 	const messagesBus = useMessagesEventBus();
 	const isVisible = useIsDocumentVisible();
-	useFocusEffect(
-		useCallback(() => {
-			if (isVisible) {
-				const unsub = messagesBus.requestPollInterval(MESSAGE_SCREEN_POLL_INTERVAL);
-				return () => unsub();
-			}
-		}, [messagesBus, isVisible]),
-	);
+	useFocusEffect(() => {
+		if (isVisible) {
+			return messagesBus.requestPollInterval(MESSAGE_SCREEN_POLL_INTERVAL);
+		}
+	});
 }

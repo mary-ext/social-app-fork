@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import type { DialogHandle } from '#/components/Dialog';
 
 import { useFocusEffect, useLocation } from '#/routes';
@@ -48,17 +46,15 @@ export const markStarterPackCreated = (): void => {
 export const useStarterPackDialogReopen = (handle: DialogHandle, targetDid: string): void => {
 	const { key } = useLocation();
 
-	useFocusEffect(
-		useCallback(() => {
-			if (!launch?.packCreated || launch.originKey !== key || launch.targetDid !== targetDid) {
-				return;
-			}
-			launch = undefined;
+	useFocusEffect(() => {
+		if (!launch?.packCreated || launch.originKey !== key || launch.targetDid !== targetDid) {
+			return;
+		}
+		launch = undefined;
 
-			// the shell closes every dialog whenever the navigation state changes, and that listener sits
-			// above the navigator — so it runs *after* this focus effect, on the very navigation that
-			// brought us back here. reopen once the effect flush (and with it the close) is done.
-			queueMicrotask(() => handle.open(null));
-		}, [handle, key, targetDid]),
-	);
+		// the shell closes every dialog whenever the navigation state changes, and that listener sits
+		// above the navigator — so it runs *after* this focus effect, on the very navigation that
+		// brought us back here. reopen once the effect flush (and with it the close) is done.
+		queueMicrotask(() => handle.open(null));
+	});
 };

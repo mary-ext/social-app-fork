@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
+import { type JSX, useRef, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
@@ -20,7 +20,7 @@ import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 
 import { m } from '#/paraglide/messages';
-import { useTarget } from '#/routes';
+import { useFocusEffect } from '#/routes';
 import { colors } from '#/styles/colors';
 
 const POLL_FREQ = 60e3; // 60sec
@@ -37,7 +37,6 @@ export function FeedPage({
 	feedInfo: FeedSourceInfo;
 }) {
 	const { hasSession } = useSession();
-	const target = useTarget();
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
@@ -45,34 +44,20 @@ export function FeedPage({
 	const scrollElRef = useRef<ListMethods>(null);
 	const [hasNew, setHasNew] = useState(false);
 
-	const scrollToTop = useCallback(() => {
-		scrollElRef.current?.scrollToOffset({
-			animated: false,
-			offset: 0,
-		});
-	}, []);
-
-	const onSoftReset = useCallback(() => {
-		if (target.name === 'Home') {
-			scrollToTop();
-			void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
-			setHasNew(false);
-		}
-	}, [target.name, scrollToTop, queryClient, feed]);
-
-	useEffect(() => {
-		return softReset.subscribe(onSoftReset);
-	}, [onSoftReset]);
-
 	const onPressCompose = () => {
 		openComposer({});
 	};
 
 	const onPressLoadLatest = () => {
-		scrollToTop();
+		scrollElRef.current?.scrollToOffset({
+			animated: false,
+			offset: 0,
+		});
 		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 		setHasNew(false);
 	};
+
+	useFocusEffect(() => softReset.subscribe(onPressLoadLatest));
 
 	return (
 		<>
