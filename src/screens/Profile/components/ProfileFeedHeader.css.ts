@@ -62,80 +62,35 @@ export const dialogWrongText = style({
 	fontStyle: 'italic',
 });
 
-export const infoButton = style({
-	appearance: 'none',
+export const info = style({
 	display: 'flex',
-	flexGrow: 1,
-	gap: space.sm,
-	alignItems: 'center',
-	outline: 'none',
-	border: 'none',
-	borderRadius: 8,
-	background: 'none',
-	padding: 0,
-	minWidth: 0,
-	textAlign: 'left',
-	cursor: 'pointer',
-});
-
-// the trending header has no author or like count to show, so the title sits alone and the info affordance
-// becomes its own button rather than the whole row being pressable.
-export const trendingRow = style({
-	display: 'flex',
-	flexGrow: 1,
 	gap: space.sm,
 	alignItems: 'center',
 	minWidth: 0,
 });
 
-export const trendingTitle = style({
+export const infoText = style({
 	flexGrow: 1,
 	minWidth: 0,
 });
 
-export const infoButtonText = style({
-	flexGrow: 1,
-	minWidth: 0,
-});
-
-export const infoButtonMeta = style({
+export const infoMeta = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
 });
 
-export const infoButtonHandle = style({
+export const infoHandle = style({
 	flexShrink: 1,
 	minWidth: 0,
-	textAlign: 'left',
 });
 
-export const infoButtonLikes = style({
+export const infoLikes = style({
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 0,
 	gap: 2,
 	alignItems: 'center',
-});
-
-export const infoButtonEllipsis = style({
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-	transitionDuration: '100ms',
-	transitionProperty: 'background-color, color, border-color',
-	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
-	borderRadius: 999,
-	width: 33,
-	height: 33,
-
-	selectors: {
-		'&:hover': { backgroundColor: vars.palette.contrast_50 },
-		[`${infoButton}:focus-visible &`]: {
-			outline: `2px solid ${vars.palette.primary_500}`,
-			outlineOffset: 2,
-		},
-	},
 });
 
 export const skeletonBar = style({

@@ -156,41 +156,23 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					{isTrending ? (
-						<div className={css.trendingRow}>
-							<Text weight="bold" size="lg" numberOfLines={2} className={css.trendingTitle}>
+					<div className={css.info}>
+						{/* a trending feed is a first-party surface, so it shows neither its author nor its like count */}
+						{!isTrending && info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
+
+						<span className={css.infoText}>
+							<Text weight="bold" size="lg" numberOfLines={1}>
 								{info.displayName}
 							</Text>
-							<Button
-								label={m['screens.profile.feed.a11y.openInfo']()}
-								size="small"
-								variant="ghost"
-								shape="round"
-								color="secondary"
-								onClick={() => infoHandle.open(null)}
-							>
-								<ButtonIcon icon={Ellipsis} size="lg" />
-							</Button>
-						</div>
-					) : (
-						<button
-							className={css.infoButton}
-							aria-label={m['screens.profile.feed.a11y.openInfo']()}
-							onClick={() => infoHandle.open(null)}
-						>
-							{info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}
 
-							<span className={css.infoButtonText}>
-								<Text weight="bold" size="lg" numberOfLines={2}>
-									{info.displayName}
-								</Text>
-								<span className={css.infoButtonMeta}>
-									<Text size="sm" color="textContrastHigh" numberOfLines={1} className={css.infoButtonHandle}>
+							{!isTrending && (
+								<span className={css.infoMeta}>
+									<Text size="sm" color="textContrastHigh" numberOfLines={1} className={css.infoHandle}>
 										{info.creatorHandle}
 									</Text>
 
 									{likeCount > 0 && (
-										<span className={css.infoButtonLikes}>
+										<span className={css.infoLikes}>
 											<HeartFilled size="xs" fill={likeUri ? colors.pink : colors.textContrastLow} />
 											<Text size="sm" color="textContrastHigh" numberOfLines={1}>
 												{formatCount(likeCount)}
@@ -198,18 +180,15 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 										</span>
 									)}
 								</span>
-							</span>
-
-							<div className={css.infoButtonEllipsis}>
-								<Ellipsis size="lg" fill={colors.textContrastHigh} />
-							</div>
-						</button>
-					)}
+							)}
+						</span>
+					</div>
 				</Layout.Header.Content>
 
-				{!isTrending && hasSession && (
-					<Layout.Header.Slot>
-						{isPinned ? (
+				<Layout.Header.Slot>
+					{!isTrending &&
+						hasSession &&
+						(isPinned ? (
 							<Menu.Root>
 								<Menu.Trigger
 									render={
@@ -259,9 +238,19 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 							>
 								<ButtonIcon icon={Pin} size="lg" />
 							</Button>
-						)}
-					</Layout.Header.Slot>
-				)}
+						))}
+
+					<Button
+						label={m['screens.profile.feed.a11y.openInfo']()}
+						size="small"
+						variant="ghost"
+						shape="round"
+						color="secondary"
+						onClick={() => infoHandle.open(null)}
+					>
+						<ButtonIcon icon={Ellipsis} size="lg" />
+					</Button>
+				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 			<Dialog.Root handle={infoHandle}>
 				<Dialog.Popup label={m['screens.profile.feed.a11y.menu']()} size="medium">
