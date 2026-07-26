@@ -93,6 +93,11 @@ function toDeletedMessageView(
 	};
 }
 
+type MessageLikeView =
+	| ChatBskyConvoDefs.DeletedMessageView
+	| ChatBskyConvoDefs.MessageView
+	| ChatBskyConvoDefs.SystemMessageView;
+
 export class Convo {
 	private id: string;
 
@@ -106,14 +111,8 @@ export class Convo {
 	private isFetchingHistory = false;
 	private latestRev: string | undefined = undefined;
 
-	private pastMessages: Map<
-		string,
-		ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | ChatBskyConvoDefs.SystemMessageView
-	> = new Map();
-	private newMessages: Map<
-		string,
-		ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | ChatBskyConvoDefs.SystemMessageView
-	> = new Map();
+	private pastMessages: Map<string, MessageLikeView> = new Map();
+	private newMessages: Map<string, MessageLikeView> = new Map();
 	private pendingMessages: Map<
 		string,
 		{
@@ -123,6 +122,7 @@ export class Convo {
 				| $type.enforce<AppBskyEmbedRecord.View>
 				| $type.enforce<ChatBskyEmbedJoinLink.View>;
 			optimisticReplyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>;
+			sentAt: string;
 		}
 	> = new Map();
 	private deletedMessages: Set<string> = new Set();
@@ -551,6 +551,7 @@ export class Convo {
 		this.newMessages = new Map();
 		this.pendingMessages = new Map();
 		this.deletedMessages = new Set();
+		this.itemCache = new Map();
 		this.relatedProfiles = new Map();
 		// Shadow updates fired while suspended are missed, so the overlay may be
 		// stale — drop it and trust the from-scratch refetch.
@@ -1004,7 +1005,7 @@ export class Convo {
 						 */
 						this.pastMessages.delete(ev.message.id);
 						this.newMessages.delete(ev.message.id);
-						this.deletedMessages.add(ev.message.id);
+						this.setMessageDeleted(ev.message.id, true);
 						needsCommit = true;
 					} else if (
 						(ev.$type === 'chat.bsky.convo.defs#logAddReaction' ||
@@ -1065,6 +1066,8 @@ export class Convo {
 			message,
 			optimisticEmbedView,
 			optimisticReplyTo,
+			// stamped once, else the sender watches the timestamp creep forward on every snapshot
+			sentAt: new Date().toISOString(),
 		});
 		if (this.convo?.view.status === 'request') {
 			this.updateConvo({
@@ -1306,7 +1309,7 @@ export class Convo {
 	async deleteMessage(messageId: string) {
 		logger.debug('delete message', {});
 
-		this.deletedMessages.add(messageId);
+		this.setMessageDeleted(messageId, true);
 		this.commit();
 
 		try {
@@ -1323,7 +1326,7 @@ export class Convo {
 					safeMessage: errorMessage(e),
 				});
 			}
-			this.deletedMessages.delete(messageId);
+			this.setMessageDeleted(messageId, false);
 			this.commit();
 			throw e;
 		}
@@ -1338,6 +1341,19 @@ export class Convo {
 	}
 
 	/**
+	 * records (or un-records) a message as deleted. deletions go through here so the item cache is dropped
+	 * alongside: they change what {@link tombstoneDeletedReplyTo} produces for messages replying to them.
+	 */
+	private setMessageDeleted(messageId: string, deleted: boolean) {
+		if (deleted) {
+			this.deletedMessages.add(messageId);
+		} else {
+			this.deletedMessages.delete(messageId);
+		}
+		this.itemCache.clear();
+	}
+
+	/**
 	 * swaps the `replyTo` field of replying messages with a deleted-message tombstone when a message is deleted
 	 * locally
 	 */
@@ -1349,6 +1365,34 @@ export class Convo {
 		return { ...m, replyTo: toDeletedMessageView(replyTo) };
 	}
 
+	// a snapshot is rebuilt on every commit, and a fresh wrapper each time would defeat the row `memo`
+	private itemCache: Map<string, { item: ConvoItem; source: MessageLikeView }> = new Map();
+
+	private toItem(source: MessageLikeView): ConvoItem | null {
+		const cached = this.itemCache.get(source.id);
+		if (cached && cached.source === source) {
+			return cached.item;
+		}
+
+		let item: ConvoItem;
+		switch (source.$type) {
+			case 'chat.bsky.convo.defs#messageView':
+				item = { type: 'message', key: source.id, message: this.tombstoneDeletedReplyTo(source) };
+				break;
+			case 'chat.bsky.convo.defs#deletedMessageView':
+				item = { type: 'deleted-message', key: source.id, message: source };
+				break;
+			case 'chat.bsky.convo.defs#systemMessageView':
+				item = { type: 'system-message', key: source.id, message: source };
+				break;
+			default:
+				return null;
+		}
+
+		this.itemCache.set(source.id, { item, source });
+		return item;
+	}
+
 	/*
 	 * Items in reverse order, since FlatList inverts
 	 */
@@ -1356,16 +1400,9 @@ export class Convo {
 		const items: ConvoItem[] = [];
 
 		this.pastMessages.forEach((m) => {
-			switch (m.$type) {
-				case 'chat.bsky.convo.defs#messageView':
-					items.unshift({ type: 'message', key: m.id, message: this.tombstoneDeletedReplyTo(m) });
-					break;
-				case 'chat.bsky.convo.defs#deletedMessageView':
-					items.unshift({ type: 'deleted-message', key: m.id, message: m });
-					break;
-				case 'chat.bsky.convo.defs#systemMessageView':
-					items.unshift({ type: 'system-message', key: m.id, message: m });
-					break;
+			const item = this.toItem(m);
+			if (item) {
+				items.unshift(item);
 			}
 		});
 
@@ -1381,16 +1418,9 @@ export class Convo {
 		}
 
 		this.newMessages.forEach((m) => {
-			switch (m.$type) {
-				case 'chat.bsky.convo.defs#messageView':
-					items.push({ type: 'message', key: m.id, message: this.tombstoneDeletedReplyTo(m) });
-					break;
-				case 'chat.bsky.convo.defs#deletedMessageView':
-					items.push({ type: 'deleted-message', key: m.id, message: m });
-					break;
-				case 'chat.bsky.convo.defs#systemMessageView':
-					items.push({ type: 'system-message', key: m.id, message: m });
-					break;
+			const item = this.toItem(m);
+			if (item) {
+				items.push(item);
 			}
 		});
 
@@ -1407,9 +1437,9 @@ export class Convo {
 					embed: m.optimisticEmbedView,
 					replyTo: optimisticReplyTo,
 					$type: 'chat.bsky.convo.defs#messageView',
-					id: crypto.randomUUID(),
+					id: m.id,
 					rev: '__fake__',
-					sentAt: new Date().toISOString(),
+					sentAt: m.sentAt,
 					sender: {
 						$type: 'chat.bsky.convo.defs#messageViewSender',
 						did: this.senderUserDid,
