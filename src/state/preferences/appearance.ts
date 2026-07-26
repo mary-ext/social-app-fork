@@ -10,7 +10,7 @@ import {
 	themeFontFamily,
 } from '#/styles/tokens.css';
 
-/** specific theme name, including low-contrast variants */
+/** theme name, including low-contrast variants. */
 export type ThemeName = 'light' | 'dark' | 'dim';
 
 type ColorMode = NonNullable<Device['colorMode']>;
@@ -69,6 +69,7 @@ const applyFont = () => {
 	});
 };
 
+/** initializes appearance preferences and attaches storage listeners. */
 export const initAppearance = () => {
 	prefersDark.addEventListener('change', applyTheme);
 	device.onScopeChange(['colorMode'], applyTheme);
@@ -84,38 +85,83 @@ export const initAppearance = () => {
 
 // #region preferences
 
+/**
+ * returns the color mode preference.
+ *
+ * @returns color mode preference
+ */
 export const useColorMode = (): ColorMode => {
 	return useStorageValue(device, ['colorMode']) ?? 'system';
 };
 
+/**
+ * returns the dark theme preference.
+ *
+ * @returns dark theme preference
+ */
 export const useDarkTheme = (): DarkTheme => {
 	return useStorageValue(device, ['darkTheme']) ?? 'dim';
 };
 
+/**
+ * returns the font family preference.
+ *
+ * @returns font family preference
+ */
 export const useFontFamily = (): FontFamily => {
 	return useStorageValue(device, ['fontFamily']) ?? 'theme';
 };
 
+/**
+ * returns the font scale preference.
+ *
+ * @returns font scale preference
+ */
 export const useFontScale = (): FontScale => {
 	return useStorageValue(device, ['fontScale']) ?? '0';
 };
 
+/**
+ * returns the font scale multiplier for the current font scale.
+ *
+ * @returns font scale multiplier
+ */
 export const useFontScaleMultiplier = (): number => {
 	return fontScaleMultipliers[useFontScale()];
 };
 
+/**
+ * sets the color mode preference.
+ *
+ * @param colorMode color mode preference
+ */
 export const setColorMode = (colorMode: ColorMode) => {
 	device.set(['colorMode'], colorMode);
 };
 
+/**
+ * sets the dark theme preference.
+ *
+ * @param darkTheme dark theme preference
+ */
 export const setDarkTheme = (darkTheme: DarkTheme) => {
 	device.set(['darkTheme'], darkTheme);
 };
 
+/**
+ * sets the font family preference.
+ *
+ * @param fontFamily font family preference
+ */
 export const setFontFamily = (fontFamily: FontFamily) => {
 	device.set(['fontFamily'], fontFamily);
 };
 
+/**
+ * sets the font scale preference.
+ *
+ * @param fontScale font scale preference
+ */
 export const setFontScale = (fontScale: FontScale) => {
 	device.set(['fontScale'], fontScale);
 };

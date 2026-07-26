@@ -2,24 +2,27 @@ import { getCurrentDid } from '#/state/session';
 
 import { account, type SearchHistoryEntry, useStorageValue } from '#/storage';
 
-/** the most recent entries to retain; older ones drop off as new searches arrive. */
+// max entries to retain
 const MAX_ENTRIES = 20;
 
-/** a stable identity per entry, so re-searching the same thing moves it to the front instead of duplicating. */
+// stable identity per entry
 const entryKey = (entry: SearchHistoryEntry): string =>
 	entry.kind === 'profile' ? `profile:${entry.did}` : `query:${entry.query}`;
 
-/** the signed-in account's unified search history of queries and visited profiles, most recent first. */
+/**
+ * returns the search history for the signed-in user.
+ *
+ * @returns array of search history entries
+ */
 export function useSearchHistory() {
 	const did = getCurrentDid() ?? 'pwi';
 	return useStorageValue(account, [did, 'searchHistory']) ?? [];
 }
 
 /**
- * records a search entry, moving it to the front of the list, deduping, and capping the length. does nothing
- * when signed out.
+ * records a search entry in history.
  *
- * @param entry entry to record
+ * @param entry search entry to record
  */
 export function addSearchHistoryEntry(entry: SearchHistoryEntry) {
 	const did = getCurrentDid();
@@ -36,9 +39,9 @@ export function addSearchHistoryEntry(entry: SearchHistoryEntry) {
 }
 
 /**
- * drops a search entry from the history. does nothing when signed out.
+ * removes a search entry from history.
  *
- * @param entry entry to remove
+ * @param entry search entry to remove
  */
 export function removeSearchHistoryEntry(entry: SearchHistoryEntry) {
 	const did = getCurrentDid();

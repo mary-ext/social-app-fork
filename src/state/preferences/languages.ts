@@ -4,7 +4,7 @@ import { deviceLanguageCodes } from '#/locale/deviceLocales';
 
 import { device, type LanguagePrefs, useStorageValue } from '#/storage';
 
-/** cap for the composer's post language history. */
+// cap for the composer's post language history.
 const HISTORY_LIMIT = 6;
 
 const defaults: LanguagePrefs = {
@@ -16,15 +16,16 @@ const defaults: LanguagePrefs = {
 
 const read = (): LanguagePrefs => device.get(['languagePrefs']) ?? defaults;
 
-/** the persisted language preferences, falling back to ones derived from the device locales. */
+/**
+ * returns persisted language preferences, falling back to device locales.
+ *
+ * @returns current language preferences
+ */
 export function useLanguagePrefs() {
 	return useStorageValue(device, ['languagePrefs']) ?? defaults;
 }
 
-/**
- * saves whatever language codes are currently selected into a history array, which is then used to populate
- * the language selector menu.
- */
+/** saves the current post language to history. */
 export function savePostLanguageToHistory() {
 	const prefs = read();
 	device.set(['languagePrefs'], {
@@ -39,16 +40,16 @@ export function savePostLanguageToHistory() {
 /**
  * sets the languages the user can read.
  *
- * @param code2s BCP-47 2-letter language codes
+ * @param code2s BCP-47 language codes
  */
 export function setContentLanguages(code2s: string[]) {
 	device.set(['languagePrefs'], { ...read(), contentLanguages: code2s });
 }
 
 /**
- * sets the language(s) the user is currently posting in.
+ * sets the language(s) the user is posting in.
  *
- * @param commaSeparatedLangCodes comma-separated BCP-47 2-letter language codes
+ * @param commaSeparatedLangCodes comma-separated BCP-47 language codes
  */
 export function setPostLanguage(commaSeparatedLangCodes: string) {
 	// canonicalize the code order so set-equal selections (e.g. "en,ja" vs "ja,en") dedupe in history
@@ -61,22 +62,26 @@ export function setPostLanguage(commaSeparatedLangCodes: string) {
 /**
  * sets the language posts are translated into.
  *
- * @param code2 BCP-47 2-letter language code
+ * @param code2 BCP-47 language code
  */
 export function setPrimaryLanguage(code2: string) {
 	device.set(['languagePrefs'], { ...read(), primaryLanguage: code2 });
 }
 
-/** reads the languages the user can read outside of React. */
+/**
+ * returns the languages the user can read outside React.
+ *
+ * @returns array of BCP-47 language codes
+ */
 export function getContentLanguages() {
 	return read().contentLanguages;
 }
 
 /**
- * splits a stored `postLanguage` value into individual language codes.
+ * splits a stored post language string into individual language codes.
  *
- * @param postLanguage comma-separated BCP-47 2-letter language codes
- * @returns the individual codes
+ * @param postLanguage comma-separated BCP-47 language codes
+ * @returns array of language codes
  */
 export function toPostLanguages(postLanguage: string): string[] {
 	return definite(postLanguage.split(','));

@@ -2,16 +2,20 @@ import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 
 import { device, useStorageValue } from '#/storage';
 
-/** the consent state recorded for each external embed source. */
+/**
+ * returns consent preferences for external embed sources.
+ *
+ * @returns consent preferences by source
+ */
 export function useExternalEmbedsPrefs() {
 	return useStorageValue(device, ['externalEmbeds']) ?? {};
 }
 
 /**
- * Sets the consent state for a single external embed source, leaving the other sources untouched.
+ * sets consent preference for an external embed source.
  *
- * @param source embed source to change
- * @param value consent state, or `undefined` to reset it back to unasked
+ * @param source embed source to update
+ * @param value consent preference, or `undefined` to reset
  */
 export function setExternalEmbedPref(source: EmbedPlayerSource, value: 'hide' | 'show' | undefined) {
 	device.set(['externalEmbeds'], { ...device.get(['externalEmbeds']), [source]: value });

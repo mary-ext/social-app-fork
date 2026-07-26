@@ -1,10 +1,19 @@
 import { device, useStorageValue } from '#/storage';
 
-/** whether image embeds draw their alt-text badge at the larger size. */
+/**
+ * returns whether large alt-text badges are enabled.
+ *
+ * @returns `true` if large alt-text badges are enabled
+ */
 export function useLargeAltBadgeEnabled() {
 	return useStorageValue(device, ['largeAltBadgeEnabled']) ?? false;
 }
 
+/**
+ * sets whether large alt-text badges are enabled.
+ *
+ * @param value whether to enable large alt-text badges
+ */
 export function setLargeAltBadgeEnabled(value: boolean) {
 	device.set(['largeAltBadgeEnabled'], value);
 }

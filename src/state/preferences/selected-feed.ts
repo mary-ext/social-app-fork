@@ -23,7 +23,11 @@ const getSelectedFeed = (): FeedDescriptor | null => {
 	return selected;
 };
 
-/** sets the feed the home screen shows. */
+/**
+ * sets the currently selected feed.
+ *
+ * @param feed descriptor of feed to select
+ */
 export const setSelectedFeed = (feed: FeedDescriptor) => {
 	if (selected === feed) {
 		return;
@@ -39,5 +43,9 @@ export const setSelectedFeed = (feed: FeedDescriptor) => {
 	emitter.emit();
 };
 
-/** the feed the home screen shows. */
+/**
+ * returns the currently selected feed.
+ *
+ * @returns descriptor of selected feed, or `null`
+ */
 export const useSelectedFeed = () => useSyncExternalStore(subscribe, getSelectedFeed);

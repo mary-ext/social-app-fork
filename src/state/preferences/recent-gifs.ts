@@ -4,19 +4,23 @@ import type { Gif } from '#/features/gifPicker/types';
 
 import { account, useStorageValue } from '#/storage';
 
-/** cap for the picker's recents list. */
+// cap for the picker's recents list.
 const RECENTS_LIMIT = 20;
 
-/** get recently picked gifs. */
+/**
+ * returns recently picked GIFs.
+ *
+ * @returns array of recent GIFs
+ */
 export function useRecentGifs() {
 	const did = getCurrentDid() ?? 'pwi';
 	return useStorageValue(account, [did, 'recentGifs']) ?? [];
 }
 
 /**
- * records a gif as recently picked.
+ * records a GIF as recently picked.
  *
- * @param gif gif to record
+ * @param gif GIF to record
  */
 export function addRecentGif(gif: Gif) {
 	const did = getCurrentDid();
