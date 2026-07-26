@@ -79,7 +79,7 @@ export function InviteBody({
 					if (result.convo && result.convo.id) {
 						handle.close();
 						Toast.show(m['components.intents.join.success']());
-						router.navigate({ to: { conversation: result.convo.id, name: 'MessagesConversation' } });
+						router.navigate({ to: { name: 'MessagesConversation', conversation: result.convo.id } });
 					} else {
 						logger.warn('Request to join group chat returned no convo ID', {
 							status: result.status,
@@ -315,7 +315,7 @@ export function InviteBody({
 					label={m['components.intents.join.action.open']()}
 					onClick={() => {
 						handle.close();
-						router.navigate({ to: { conversation: convoId, name: 'MessagesConversation' } });
+						router.navigate({ to: { name: 'MessagesConversation', conversation: convoId } });
 					}}
 					size="large"
 				>

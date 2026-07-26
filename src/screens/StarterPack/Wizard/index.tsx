@@ -189,7 +189,7 @@ function WizardInner({
 
 		router.navigate({
 			replace: true,
-			to: { actor: currentProfile!.did, name: 'StarterPack', new: true, rkey },
+			to: { name: 'StarterPack', actor: currentProfile!.did, new: true, rkey },
 		});
 	};
 

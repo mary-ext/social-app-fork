@@ -21,11 +21,11 @@ export const appLinkToTarget = (link: AppLink): RouteTarget => {
 		// a chat invite has a route so the link keeps anchor semantics (opening in a new tab lands on the join
 		// screen), but a plain click is intercepted into the join dialog instead.
 		case 'chat-invite':
-			return { code: link.code, name: 'GroupChatJoin' };
+			return { name: 'GroupChatJoin', code: link.code };
 		case 'feed':
 			return feedTarget(link.actor, link.rkey);
 		case 'hashtag':
-			return { author: link.author, name: 'Hashtag', tag: link.tag };
+			return { name: 'Hashtag', author: link.author, tag: link.tag };
 		case 'list':
 			return listTarget(link.actor, link.rkey);
 		case 'post':

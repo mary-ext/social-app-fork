@@ -142,7 +142,7 @@ function MemberMenuItems({
 	const { data: convoAvailability } = useGetConvoAvailabilityQuery(profile.did);
 	const { mutate: initiateConvo } = useGetConvoForMembers({
 		onSuccess: ({ convo: createdConvo }) => {
-			router.navigate({ to: { conversation: createdConvo.id, name: 'MessagesConversation' } });
+			router.navigate({ to: { name: 'MessagesConversation', conversation: createdConvo.id } });
 		},
 		onError: () => {
 			Toast.show(m['common.chat.error.create'](), { type: 'error' });
@@ -155,7 +155,7 @@ function MemberMenuItems({
 		}
 
 		if (convoAvailability.convo) {
-			router.navigate({ to: { conversation: convoAvailability.convo.id, name: 'MessagesConversation' } });
+			router.navigate({ to: { name: 'MessagesConversation', conversation: convoAvailability.convo.id } });
 		} else {
 			initiateConvo([profile.did]);
 		}

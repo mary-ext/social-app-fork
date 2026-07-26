@@ -35,7 +35,7 @@ type BlockLinkChildProps = HTMLAttributes<HTMLElement> & {
 type BlockLinkProps = {
 	/** The single host element to make clickable; its own box becomes the row. */
 	children: ReactNode;
-	/** The in-app destination, e.g. `{ actor, name: 'PostThread', rkey }`. */
+	/** The in-app destination, e.g. `{ name: 'PostThread', actor, rkey }`. */
 	to: RouteTarget;
 	/**
 	 * makes the row a focusable link with the specified accessible name, activated by Enter. omit if inner

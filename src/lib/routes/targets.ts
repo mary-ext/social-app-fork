@@ -17,7 +17,7 @@ import type { RouteTarget } from '#/routes';
  * @returns the conversation route target
  */
 export const conversationTarget = (conversation: Tid): RouteTarget => {
-	return { conversation, name: 'MessagesConversation' };
+	return { name: 'MessagesConversation', conversation };
 };
 
 /**
@@ -28,7 +28,7 @@ export const conversationTarget = (conversation: Tid): RouteTarget => {
  * @returns the feed route target
  */
 export const feedTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
-	return { actor, name: 'ProfileFeed', rkey };
+	return { name: 'ProfileFeed', actor, rkey };
 };
 
 /**
@@ -39,7 +39,7 @@ export const feedTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget
  * @returns the list route target
  */
 export const listTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
-	return { actor, name: 'ProfileList', rkey };
+	return { name: 'ProfileList', actor, rkey };
 };
 
 /**
@@ -50,7 +50,7 @@ export const listTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget
  * @returns the thread route target
  */
 export const postTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
-	return { actor, name: 'PostThread', rkey };
+	return { name: 'PostThread', actor, rkey };
 };
 
 /**
@@ -60,7 +60,7 @@ export const postTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget
  * @returns the profile route target
  */
 export const profileTarget = (actor: ActorIdentifier): RouteTarget => {
-	return { actor, name: 'Profile' };
+	return { name: 'Profile', actor };
 };
 
 /**
@@ -71,7 +71,7 @@ export const profileTarget = (actor: ActorIdentifier): RouteTarget => {
  * @returns the starter pack route target
  */
 export const starterPackTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
-	return { actor, name: 'StarterPack', rkey };
+	return { name: 'StarterPack', actor, rkey };
 };
 
 // #endregion

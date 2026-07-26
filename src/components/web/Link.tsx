@@ -348,7 +348,7 @@ type InternalNavProps = {
 	/** How the link navigates when pressed. */
 	action?: LinkAction;
 	onPress?: LinkOnPress;
-	/** The in-app destination, e.g. `{ actor, name: 'Profile' }`. */
+	/** The in-app destination, e.g. `{ name: 'Profile', actor }`. */
 	to: RouteTarget;
 };
 

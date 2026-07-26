@@ -175,7 +175,7 @@ function InnerReady({
 					}}
 					onPress={() => {
 						markJoinRequestsRead();
-						router.navigate({ to: { conversation: convo.view.id, name: 'MessagesJoinRequests' } });
+						router.navigate({ to: { name: 'MessagesJoinRequests', conversation: convo.view.id } });
 					}}
 				/>
 			) : null}

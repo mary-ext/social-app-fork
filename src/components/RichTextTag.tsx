@@ -129,7 +129,7 @@ export function RichTextTag({
 						{authorHandle && !isInvalidHandle(authorHandle) && (
 							<Menu.Item
 								label={m['components.richTextTag.seePosts.prefixedByUser']({ prefixedTag })}
-								onClick={() => router.navigate({ to: { author: authorHandle, name: 'Hashtag', tag } })}
+								onClick={() => router.navigate({ to: { name: 'Hashtag', author: authorHandle, tag } })}
 							>
 								<Menu.ItemText>
 									{isCashtag

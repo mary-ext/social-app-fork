@@ -97,7 +97,7 @@ export function OverflowMenu({
 								label={m['screens.starterPack.edit']()}
 								onClick={() => {
 									router.navigate({
-										to: { actor: routeParams.actor, name: 'StarterPackEdit', rkey: routeParams.rkey },
+										to: { name: 'StarterPackEdit', actor: routeParams.actor, rkey: routeParams.rkey },
 									});
 								}}
 							>

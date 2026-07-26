@@ -199,7 +199,7 @@ function ProfileMenu({
 	};
 
 	const onPressSearch = () => {
-		router.navigate({ to: { actor: profile.did, name: 'ProfileSearch' } });
+		router.navigate({ to: { name: 'ProfileSearch', actor: profile.did } });
 	};
 
 	return (

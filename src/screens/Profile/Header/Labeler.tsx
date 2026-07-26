@@ -182,7 +182,7 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 				color="textContrastMedium"
 				label={m['screens.profile.feed.likes.count']({ count: likeCount })}
 				size="sm"
-				to={{ actor: labeler.creator.did, name: 'ProfileLabelerLikedBy' }}
+				to={{ name: 'ProfileLabelerLikedBy', actor: labeler.creator.did }}
 				weight="semiBold"
 			>
 				{m['screens.profile.feed.likes.count']({ count: likeCount })}

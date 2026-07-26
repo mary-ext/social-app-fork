@@ -45,7 +45,7 @@ export default function HashtagScreen() {
 	const sanitizedAuthor = author ? (author.startsWith('did:') ? author : `@${author}`) : '';
 
 	const onShare = () => {
-		void shareUrl(targetToShareUrl({ author, name: 'Hashtag', tag }));
+		void shareUrl(targetToShareUrl({ name: 'Hashtag', author, tag }));
 	};
 
 	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');

@@ -169,8 +169,8 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	// a permanently locked group has no settings screen to open, so the header is inert.
 	const disabled = convo.details.lockStatus === 'locked-permanently';
 	const settingsTo: RouteTarget = {
-		conversation: convo.view.id,
 		name: 'MessagesConversationSettings',
+		conversation: convo.view.id,
 	};
 
 	const nameBlock = (

@@ -108,7 +108,7 @@ export function useChatInvite({
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
-					void navigator.clipboard.writeText(targetToShareUrl({ code: preview.code, name: 'GroupChatJoin' }));
+					void navigator.clipboard.writeText(targetToShareUrl({ name: 'GroupChatJoin', code: preview.code }));
 					Toast.show(m['common.share.copiedToast'](), { type: 'success' });
 				},
 			};

@@ -203,7 +203,7 @@ export function AcceptChatButton({
 			onAcceptConvo?.();
 			if (currentScreen === 'list') {
 				precacheConvoQuery(queryClient, { ...convo, status: 'accepted' });
-				router.navigate({ to: { accept: true, conversation: convo.id, name: 'MessagesConversation' } });
+				router.navigate({ to: { name: 'MessagesConversation', accept: true, conversation: convo.id } });
 			}
 		},
 		onError: () => {

@@ -166,7 +166,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				if (getRemainingRequestCount() < 1) {
 					router.navigate({
 						replace: true,
-						to: { conversation: convo.view.id, name: 'MessagesConversationSettings' },
+						to: { name: 'MessagesConversationSettings', conversation: convo.view.id },
 					});
 				}
 			},
@@ -201,7 +201,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				if (getRemainingRequestCount() < 1) {
 					router.navigate({
 						replace: true,
-						to: { conversation: convo.view.id, name: 'MessagesConversationSettings' },
+						to: { name: 'MessagesConversationSettings', conversation: convo.view.id },
 					});
 				}
 			},

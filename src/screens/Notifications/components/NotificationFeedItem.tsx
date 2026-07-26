@@ -744,7 +744,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 					params: { members: [profile.did, currentAccount.did] },
 				}),
 			);
-			router.navigate({ to: { conversation: data.convo.id, name: 'MessagesConversation' } });
+			router.navigate({ to: { name: 'MessagesConversation', conversation: data.convo.id } });
 		} catch (e) {
 			logger.error('Failed to get conversation', { safeMessage: e });
 		} finally {

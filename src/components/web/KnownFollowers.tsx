@@ -112,7 +112,7 @@ function KnownFollowersInner({
 		<Link
 			className={css.link({ variant })}
 			label={m['common.follow.a11y.knownFollowers']()}
-			to={{ actor: profile.did, name: 'ProfileKnownFollowers' }}
+			to={{ name: 'ProfileKnownFollowers', actor: profile.did }}
 		>
 			<AvatarStack
 				moderationOpts={moderationOpts}

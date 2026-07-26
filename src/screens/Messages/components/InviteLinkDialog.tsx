@@ -288,7 +288,7 @@ function DialogInner({ convo, handle, isOwner, moderationOpts, owner }: DialogIn
 			const linkDisabled = joinLink?.enabledStatus === 'disabled';
 			// without a code the field is disabled, so the bare path stands in as placeholder text.
 			const joinLinkURI = joinLink?.code
-				? targetToShareUrl({ code: joinLink.code, name: 'GroupChatJoin' })
+				? targetToShareUrl({ name: 'GroupChatJoin', code: joinLink.code })
 				: new URL('/chat', location.origin).toString();
 			const createdAt = joinLink ? new Date(joinLink.createdAt) : null;
 			const currentOption =

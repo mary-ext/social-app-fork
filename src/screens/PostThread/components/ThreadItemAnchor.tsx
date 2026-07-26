@@ -159,9 +159,9 @@ function ThreadItemAnchorInner({
 
 	// the three engagement screens key on the same post, differing only in which interaction they list
 	const engagement = { actor: post.author.did, rkey: parseCanonicalResourceUri(post.uri).rkey };
-	const likesTarget: RouteTarget = { ...engagement, name: 'PostLikedBy' };
-	const quotesTarget: RouteTarget = { ...engagement, name: 'PostQuotes' };
-	const repostsTarget: RouteTarget = { ...engagement, name: 'PostRepostedBy' };
+	const likesTarget: RouteTarget = { name: 'PostLikedBy', ...engagement };
+	const quotesTarget: RouteTarget = { name: 'PostQuotes', ...engagement };
+	const repostsTarget: RouteTarget = { name: 'PostRepostedBy', ...engagement };
 
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,

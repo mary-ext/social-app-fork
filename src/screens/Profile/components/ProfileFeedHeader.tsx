@@ -396,7 +396,7 @@ function DialogInner({
 				<div className={css.dialogLikedByRow}>
 					<InlineLinkText
 						label={m['screens.profile.feed.action.viewLikes']()}
-						to={{ actor: creatorDid, name: 'ProfileFeedLikedBy', rkey: feedRkey }}
+						to={{ name: 'ProfileFeedLikedBy', actor: creatorDid, rkey: feedRkey }}
 						size="md_sub"
 						color="textContrastMedium"
 						onPress={closeDialog}

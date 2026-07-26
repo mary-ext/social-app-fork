@@ -118,9 +118,9 @@ export type OperatorName =
 
 export interface SearchOperator {
 	kind: SearchOperatorKind;
+	name: OperatorName;
 	/** whether the operator accepts multiple values (an array param). */
 	multiple?: boolean;
-	name: OperatorName;
 	/** the values an `enum` operator accepts (e.g. `media`/`video`). */
 	options?: readonly string[];
 	/** sample value shown after the operator name in the options list. */
@@ -129,13 +129,13 @@ export interface SearchOperator {
 
 /** recognized search operators in display order */
 export const SEARCH_OPERATORS: SearchOperator[] = [
-	{ kind: 'actor', multiple: true, name: 'from', placeholder: '@user' },
-	{ kind: 'actor', multiple: true, name: 'mentions', placeholder: '@user' },
+	{ kind: 'actor', name: 'from', multiple: true, placeholder: '@user' },
+	{ kind: 'actor', name: 'mentions', multiple: true, placeholder: '@user' },
 	{ kind: 'date', name: 'since', placeholder: 'yyyy-mm-dd' },
 	{ kind: 'date', name: 'until', placeholder: 'yyyy-mm-dd' },
-	{ kind: 'language', multiple: true, name: 'lang', placeholder: 'en' },
-	{ kind: 'domain', multiple: true, name: 'domain', placeholder: 'example.com' },
-	{ kind: 'url', multiple: true, name: 'url', placeholder: 'example.com/page' },
+	{ kind: 'language', name: 'lang', multiple: true, placeholder: 'en' },
+	{ kind: 'domain', name: 'domain', multiple: true, placeholder: 'example.com' },
+	{ kind: 'url', name: 'url', multiple: true, placeholder: 'example.com/page' },
 	// single-choice: video ⊂ media, and none/only are mutually exclusive.
 	{ kind: 'enum', name: 'has', options: ['media', 'video'], placeholder: 'media' },
 	{ kind: 'enum', name: 'replies', options: ['none', 'only'], placeholder: 'none' },

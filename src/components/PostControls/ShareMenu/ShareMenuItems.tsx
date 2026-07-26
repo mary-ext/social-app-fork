@@ -47,7 +47,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 	};
 
 	const onSelectChatToShareTo = (conversation: string) => {
-		router.navigate({ to: { conversation, embed: postUri, name: 'MessagesConversation' } });
+		router.navigate({ to: { name: 'MessagesConversation', conversation, embed: postUri } });
 	};
 
 	const onShareATURI = () => {
