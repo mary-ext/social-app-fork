@@ -8,7 +8,7 @@ import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
 import { cleanError } from '#/lib/strings/errors';
 import { parseLooseUrl } from '#/lib/strings/url-helpers';
 
-import { useTickEveryMinute } from '#/state/shell';
+import { useTick } from '#/state/tick';
 
 import {
 	displayDuration,
@@ -62,7 +62,7 @@ function DialogInner({
 }) {
 	const [liveLink, setLiveLink] = useState<string>(embed.external.uri);
 	const [liveLinkError, setLiveLinkError] = useState('');
-	const tick = useTickEveryMinute();
+	const tick = useTick();
 
 	const liveLinkUrl = parseLooseUrl(liveLink);
 	const debouncedUrl = useDebouncedValue(liveLinkUrl, 500);

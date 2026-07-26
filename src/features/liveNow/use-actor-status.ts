@@ -12,7 +12,7 @@ import { isAfterDate } from '@mary/date-fns';
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
-import { useTickEveryMinute } from '#/state/shell';
+import { useTick } from '#/state/tick';
 
 import { isLiveNowUrlAllowed } from '#/features/liveNow/utils';
 
@@ -91,13 +91,13 @@ function computeStatusModeration(
 
 export function useActorStatus(actor?: AnyProfileView) {
 	const shadowed = useMaybeProfileShadow(actor);
-	const tick = useTickEveryMinute();
+	const tick = useTick();
 	const config = useLiveNowConfig();
 	const moderationOpts = useModerationOpts();
 
 	const moderation = computeStatusModeration(actor, moderationOpts);
 
-	void tick; // revalidate every minute
+	void tick; // revalidate as time passes
 
 	/*
 	 * Do not even allow Live Now to show if filtered for `contentList`.

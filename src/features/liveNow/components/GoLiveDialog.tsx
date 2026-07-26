@@ -7,7 +7,7 @@ import { cleanError } from '#/lib/strings/errors';
 import { parseLooseUrl } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useTickEveryMinute } from '#/state/shell';
+import { useTick } from '#/state/tick';
 
 import { clock } from '#/locale/intl/datetime';
 
@@ -54,7 +54,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const [liveLinkError, setLiveLinkError] = useState('');
 	const [duration, setDuration] = useState(60);
 	const moderationOpts = useModerationOpts();
-	const tick = useTickEveryMinute();
+	const tick = useTick();
 	const liveNowConfig = useLiveNowConfig();
 	const { formatted: allowedServices } = getLiveServiceNames(liveNowConfig.currentAccountAllowedHosts);
 

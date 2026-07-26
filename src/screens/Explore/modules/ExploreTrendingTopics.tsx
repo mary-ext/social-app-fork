@@ -5,7 +5,7 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
-import { useTickEveryMinute } from '#/state/shell';
+import { useTick } from '#/state/tick';
 
 import { AvatarStack } from '#/components/AvatarStack';
 import type { Props as SVGIconProps } from '#/components/icons/common';
@@ -58,8 +58,8 @@ function Inner() {
 
 function TrendRow({ rank, trend }: { rank: number; trend: AppBskyUnspeccedDefs.TrendView }) {
 	const moderationOpts = useModerationOpts();
-	// refresh the freshness badge each minute instead of calling Date.now() during render.
-	const tick = useTickEveryMinute();
+	// keeps the freshness badge up to date instead of calling Date.now() during render.
+	const tick = useTick();
 
 	const category = useCategoryDisplayName(trend?.category || 'other');
 	const age = Math.floor((tick - new Date(trend.startedAt || tick).getTime()) / (1000 * 60 * 60));
