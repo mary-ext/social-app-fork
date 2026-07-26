@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 
-import { Outlet, resolveMeta, useRoute, useRouter } from '@oomfware/stacker';
+import { Outlet, resolveMeta, useRoute } from '@oomfware/stacker';
 
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { useKeybind } from '#/lib/keybinds';
+
+import { focusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
@@ -14,6 +18,8 @@ import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
 import { LoggedOut } from '#/components/Shell/LoggedOut';
 import { Shell } from '#/components/Shell/Shell';
 
+import { useRouter } from '#/routes';
+
 import { ComposerDialog } from './ComposerDialog';
 
 /**
@@ -25,6 +31,26 @@ export function ShellLayout() {
 	const router = useRouter();
 	const { hasSession } = useSession();
 	const closeAllActiveElements = useCloseAllActiveElements();
+	const { openComposer } = useOpenComposer();
+
+	useKeybind({
+		scope: 'app',
+		keybind: 'n',
+		enabled: hasSession,
+		handle() {
+			openComposer({});
+		},
+	});
+
+	useKeybind({
+		scope: 'app',
+		keybind: '/',
+		handle() {
+			if (!focusSearch.emit()) {
+				router.navigate({ to: { name: 'Explore' } });
+			}
+		},
+	});
 
 	// close dialogs/menus/lightbox when the history entry changes, but NOT on an in-place replace (which
 	// also fires subscribe) — gate on the entry key so clearing a one-shot param can't dismiss the composer.

@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 
 import { RouterView } from '@oomfware/stacker';
 
-import { Provider as HotkeysProvider } from '#/lib/hotkeys';
 import { initializeLanguageDetection } from '#/lib/language-detection';
 import { QueryProvider } from '#/lib/react-query';
 
@@ -55,10 +54,8 @@ function InnerApp() {
 										<MutedThreadsProvider>
 											<ServiceConfigProvider>
 												<HideBottomBarBorderProvider>
-													<HotkeysProvider>
-														<RouterView router={router} />
-														<ToastOutlet />
-													</HotkeysProvider>
+													<RouterView router={router} />
+													<ToastOutlet />
 												</HideBottomBarBorderProvider>
 											</ServiceConfigProvider>
 										</MutedThreadsProvider>

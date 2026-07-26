@@ -44,7 +44,6 @@
 	"lib.moderation.signedInOnly": "This user has requested that their content only be shown to signed-in users.",
 	"lib.moderation.youMuted": "You have muted this user",
 	"lib.profile.notFound": "Profile not found",
-	"lib.search.focusSearch": "Focus the search field",
 	"lib.time.dateTime": "{time} · {date}",
 	"lib.time.now": "now",
 	"lib.upload.images": "Uploading images...",

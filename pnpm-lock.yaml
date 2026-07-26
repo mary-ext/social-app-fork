@@ -105,6 +105,9 @@ importers:
       '@mary/exif-rm':
         specifier: jsr:^0.2.2
         version: '@jsr/mary__exif-rm@0.2.2'
+      '@mary/keybinds':
+        specifier: jsr:^0.1.2
+        version: '@jsr/mary__keybinds@0.1.2'
       '@oomfware/lang-detect':
         specifier: ^0.2.1
         version: 0.2.1
@@ -150,9 +153,6 @@ importers:
       react-dom:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
-      react-hotkeys-hook:
-        specifier: ^5.3.3
-        version: 5.3.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-image-crop:
         specifier: ^11.1.2
         version: 11.1.2(react@19.2.8)
@@ -887,6 +887,9 @@ packages:
 
   '@jsr/mary__exif-rm@0.2.2':
     resolution: {integrity: sha512-+ZpLaC+1CyqWhH608Sqd6/yTG0pOlokn2tCXha7s1SMQ+GLKo4Nn/PskTeeP9Pt+6gNYSu6ednoSlRvXb2ZGxg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__exif-rm/0.2.2.tgz}
+
+  '@jsr/mary__keybinds@0.1.2':
+    resolution: {integrity: sha512-IGRtExxYepo5OEgyKLrdkteQy6pt71YoTb/7yJwGPfKb1gGzfz/GLjIXXZpdNjM0K9PucYaixB+irNik3H4Uag==, tarball: https://npm.jsr.io/~/11/@jsr/mary__keybinds/0.1.2.tgz}
 
   '@lix-js/sdk@0.4.10':
     resolution: {integrity: sha512-0dMInAJK/67guTG5rRZaCEhvzC5cCXENOjaePA5AqMXrCE97kaY7SRor9e2vnoGsFIiGqXKlT0MCIoZj36G0gg==}
@@ -2209,12 +2212,6 @@ packages:
     peerDependencies:
       react: ^19.2.8
 
-  react-hotkeys-hook@5.3.3:
-    resolution: {integrity: sha512-aswgyWUnE25hmhzHTfKDmKzsaSE5DJ4LKaU/o6rQSXkDd/1Bh9TfAFQbHkf6fLy11HvlYkp+cDDarGdhmCDhoQ==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-
   react-image-crop@11.1.2:
     resolution: {integrity: sha512-+0Pc2fxpwKL4u4oLmdKBw8XSwUceFbXbKEHvFOlsl/MGB1OVNic4uBlAPmEHGXYgoJIq+b63xHbc/aJMG0AVkA==}
     peerDependencies:
@@ -3141,6 +3138,8 @@ snapshots:
   '@jsr/mary__date-fns@0.1.4': {}
 
   '@jsr/mary__exif-rm@0.2.2': {}
+
+  '@jsr/mary__keybinds@0.1.2': {}
 
   '@lix-js/sdk@0.4.10':
     dependencies:
@@ -4326,11 +4325,6 @@ snapshots:
     dependencies:
       react: 19.2.8
       scheduler: 0.27.0
-
-  react-hotkeys-hook@5.3.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
-    dependencies:
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
 
   react-image-crop@11.1.2(react@19.2.8):
     dependencies:

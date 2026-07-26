@@ -48,6 +48,7 @@
 		"@mary/color-fns": "jsr:^0.1.3",
 		"@mary/date-fns": "jsr:^0.1.4",
 		"@mary/exif-rm": "jsr:^0.2.2",
+		"@mary/keybinds": "jsr:^0.1.2",
 		"@oomfware/lang-detect": "^0.2.1",
 		"@oomfware/lightbox": "^0.1.8",
 		"@oomfware/stacker": "^0.2.0",
@@ -63,7 +64,6 @@
 		"idb-keyval": "^6.3.0",
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
-		"react-hotkeys-hook": "^5.3.3",
 		"react-image-crop": "^11.1.2",
 		"tldts": "^7.4.9"
 	},

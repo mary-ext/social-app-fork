@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 
-import { useHotkeysContext } from '#/lib/hotkeys';
+import { setKeybindScopeActive } from '#/lib/keybinds';
 
 type StateContext = boolean;
 type SetContext = (v: boolean) => void;
@@ -12,14 +12,9 @@ setContext.displayName = 'DrawerOpenSetContext';
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const [state, setState] = useState(false);
-	const { disableScope, enableScope } = useHotkeysContext();
 
 	const setDrawerOpen = (open: boolean) => {
-		if (open) {
-			disableScope('global');
-		} else {
-			enableScope('global');
-		}
+		setKeybindScopeActive('drawer', open);
 		setState(open);
 	};
 

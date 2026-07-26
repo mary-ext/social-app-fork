@@ -1,6 +1,6 @@
 import { createContext, useContext, useRef } from 'react';
 
-import { useHotkeysContext } from '#/lib/hotkeys';
+import { setKeybindScopeActive } from '#/lib/keybinds';
 
 import { Provider as GlobalDialogsProvider } from '#/components/dialogs/Context';
 
@@ -44,8 +44,6 @@ export function useDialogStateControlContext() {
 }
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
-	const { disableScope, enableScope } = useHotkeysContext();
-
 	const activeDialogs = useRef<Map<string, React.MutableRefObject<DialogControlRefProps>>>(new Map());
 	const openDialogs = useRef<Set<string>>(new Set());
 
@@ -67,11 +65,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		} else {
 			openDialogs.current.delete(id);
 		}
-		if (openDialogs.current.size > 0) {
-			disableScope('global');
-		} else {
-			enableScope('global');
-		}
+		setKeybindScopeActive('dialog', openDialogs.current.size > 0);
 	};
 
 	const context: IDialogContext = {
