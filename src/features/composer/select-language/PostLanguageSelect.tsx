@@ -2,7 +2,7 @@ import { unique } from '@mary/array-fns';
 
 import { MAX_POST_LANGUAGES } from '#/lib/constants';
 
-import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
+import { setPostLanguage, toPostLanguages, useLanguagePrefs } from '#/state/preferences/languages';
 
 import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
@@ -30,7 +30,6 @@ export function PostLanguageSelect({
 	nudgeAt?: number;
 }) {
 	const langPrefs = useLanguagePrefs();
-	const setLangPrefs = useLanguagePrefsApi();
 	const languageDialogHandle = Dialog.useDialogHandle();
 
 	const dedupedHistory = unique([...langPrefs.postLanguageHistory, langPrefs.postLanguage]);
@@ -42,7 +41,7 @@ export function PostLanguageSelect({
 		if (!langsString) {
 			langsString = langPrefs.primaryLanguage;
 		}
-		setLangPrefs.setPostLanguage(langsString);
+		setPostLanguage(langsString);
 		onSelectLanguage?.(langsString);
 	};
 
@@ -98,7 +97,7 @@ export function PostLanguageSelect({
 									key={historyItem}
 									label={m['view.composer.language.a11y.select']({ language: langName })}
 									onClick={() => {
-										setLangPrefs.setPostLanguage(historyItem);
+										setPostLanguage(historyItem);
 										onSelectLanguage?.(historyItem);
 									}}
 								>

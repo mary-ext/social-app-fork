@@ -2,7 +2,11 @@ import { useState } from 'react';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 
-import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
+import {
+	setContentLanguages as persistContentLanguages,
+	setPrimaryLanguage,
+	useLanguagePrefs,
+} from '#/state/preferences/languages';
 
 import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
@@ -27,20 +31,16 @@ const onChangeAppLanguage = (value: Locale) => {
 
 export function LanguageSettingsScreen() {
 	const langPrefs = useLanguagePrefs();
-	const setLangPrefs = useLanguagePrefsApi();
 
 	useTitle(m['navigation.settings.language.title']());
 
 	// changing langPrefs causes a slow re-render, so we use a local state copy
 	// and update that first to drive the UI on this screen to keep it snappy
-	// the raw setter is `_setContentLanguages`; `setContentLanguages` below wraps it and also
-	// persists to langPrefs, so the names must differ — the symmetric-pair rule can't apply here
-	// eslint-disable-next-line react/hook-use-state
-	const [contentLanguages, _setContentLanguages] = useState(langPrefs.contentLanguages);
-	const setContentLanguages = (languages: string[]) => {
-		_setContentLanguages(languages);
+	const [contentLanguages, setContentLanguages] = useState(langPrefs.contentLanguages);
+	const onChangeContentLanguages = (languages: string[]) => {
+		setContentLanguages(languages);
 		requestAnimationFrame(() => {
-			setLangPrefs.setContentLanguages(languages);
+			persistContentLanguages(languages);
 		});
 	};
 
@@ -52,7 +52,7 @@ export function LanguageSettingsScreen() {
 		}
 
 		if (langPrefs.primaryLanguage !== value) {
-			setLangPrefs.setPrimaryLanguage(value);
+			setPrimaryLanguage(value);
 		}
 	};
 
@@ -120,7 +120,7 @@ export function LanguageSettingsScreen() {
 					titleText={m['screens.settings.language.content.select']()}
 					subtitleText={m['screens.settings.language.noneSelectedHint']()}
 					currentLanguages={contentLanguages}
-					onSelectLanguages={setContentLanguages}
+					onSelectLanguages={onChangeContentLanguages}
 				/>
 			</Layout.Content>
 		</Layout.Screen>

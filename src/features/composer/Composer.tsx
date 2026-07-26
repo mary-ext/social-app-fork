@@ -39,7 +39,7 @@ import { cleanError, errorMessage } from '#/lib/strings/errors';
 
 import { postCreated } from '#/state/events';
 import { useRequireAltTextEnabled } from '#/state/preferences/alt-text';
-import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
+import { savePostLanguageToHistory, toPostLanguages, useLanguagePrefs } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
 import { getClients, useSession } from '#/state/session';
@@ -119,7 +119,6 @@ export const ComposePost = ({
 	const currentDid = currentAccount!.did;
 	const requireAltTextEnabled = useRequireAltTextEnabled();
 	const langPrefs = useLanguagePrefs();
-	const setLangPrefs = useLanguagePrefsApi();
 	const textInputRef = useRef<TextInputRef>(null);
 	const discardPromptHandle = Prompt.usePromptHandle();
 	const emptyPostsPromptHandle = Prompt.usePromptHandle();
@@ -720,7 +719,7 @@ export const ComposePost = ({
 				originalLocalRefs: composerState.originalLocalRefs,
 			});
 		}
-		setLangPrefs.savePostLanguageToHistory();
+		savePostLanguageToHistory();
 		if (initQuote) {
 			// We want to wait for the quote count to update before we call `onPost`, which will refetch data
 			void whenAppViewReady(appview, initQuote.uri, (res) => {
@@ -780,7 +779,6 @@ export const ComposePost = ({
 		pds,
 		queryClient,
 		replyTo,
-		setLangPrefs,
 	]);
 
 	const handleConfirmSkipEmpty = () => {
