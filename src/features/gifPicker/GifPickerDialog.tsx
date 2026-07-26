@@ -4,7 +4,7 @@ import { uniqueBy } from '@mary/array-fns';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useRecentGifs } from '#/state/preferences/recent-gifs';
+import { addRecentGif, useRecentGifs } from '#/state/preferences/recent-gifs';
 
 import {
 	GIF_CATEGORIES,
@@ -73,7 +73,7 @@ function GifPickerBody({
 	const [rawSearch, setRawSearch] = useState('');
 	const [activeCategory, setActiveCategory] = useState<string>('trending');
 	const search = useThrottledValue(rawSearch, 750);
-	const { getRecents, addRecent, hasRecents } = useRecentGifs();
+	const recentGifs = useRecentGifs();
 
 	// Determine the effective search query:
 	// - If user is typing, use the throttled text
@@ -100,7 +100,7 @@ function GifPickerBody({
 	} = useGifPickerData(effectiveSearch, { enabled: !isRecentsActive });
 
 	const networkItems = uniqueBy(data?.pages.flatMap((page) => page.results) ?? [], (item) => item.id);
-	const items = isRecentsActive ? getRecents() : networkItems;
+	const items = isRecentsActive ? recentGifs : networkItems;
 	const hasData = items.length > 0;
 
 	const onEndReached = () => {
@@ -141,7 +141,7 @@ function GifPickerBody({
 	};
 
 	const handleSelectGif = (gif: Gif) => {
-		addRecent(gif);
+		addRecentGif(gif);
 		onSelectGif(gif);
 	};
 
@@ -158,7 +158,11 @@ function GifPickerBody({
 					onEscape={() => handle.close()}
 				/>
 				{showPills && (
-					<GifCategoryPills activeId={activeCategory} onSelect={onSelectCategory} hasRecents={hasRecents} />
+					<GifCategoryPills
+						activeId={activeCategory}
+						onSelect={onSelectCategory}
+						hasRecents={recentGifs.length > 0}
+					/>
 				)}
 			</div>
 			{hasData ? (
