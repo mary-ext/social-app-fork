@@ -1153,8 +1153,8 @@ export class Convo {
 			 * we get an event log back, we can replace in situ.
 			 */
 			this.newMessages.set(res.id, {
-				...res,
 				$type: 'chat.bsky.convo.defs#messageView',
+				...res,
 			});
 			// render new message state, prior to firehose
 			this.commit();
@@ -1251,8 +1251,8 @@ export class Convo {
 			 */
 			for (const item of items) {
 				this.newMessages.set(item.id, {
-					...item,
 					$type: 'chat.bsky.convo.defs#messageView',
+					...item,
 				});
 			}
 

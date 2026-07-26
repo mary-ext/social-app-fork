@@ -55,7 +55,7 @@ export function optimisticallySaveBookmark(qc: QueryClient, post: AppBskyFeedDef
 										uri: post.uri,
 										cid: post.cid,
 									},
-									item: { ...post, $type: 'app.bsky.feed.defs#postView' },
+									item: { $type: 'app.bsky.feed.defs#postView', ...post },
 								},
 								...page.bookmarks,
 							],

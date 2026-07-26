@@ -283,8 +283,8 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 				<ReportDialog
 					handle={reportDialogHandle}
 					subject={{
-						...info.view,
 						$type: 'app.bsky.feed.defs#generatorView',
+						...info.view,
 					}}
 				/>
 			)}

@@ -98,8 +98,8 @@ function DialogInner({
 	const { data: results, isError, isFetching } = useActorAutocompleteQuery(searchText, true, 12);
 	const { data: follows } = useProfileFollowsQuery(currentAccount?.did);
 	const { data: convos } = useListConvosQuery({
-		lockStatus: 'unlocked',
 		status: 'accepted',
+		lockStatus: 'unlocked',
 	});
 
 	const items = useMemo<Item[]>(() => {

@@ -374,8 +374,8 @@ function ProfileMenu({
 			<ReportDialog
 				handle={reportDialogHandle}
 				subject={{
-					...profile,
 					$type: 'app.bsky.actor.defs#profileViewDetailed',
+					...profile,
 				}}
 			/>
 			<BlockAccountPrompt

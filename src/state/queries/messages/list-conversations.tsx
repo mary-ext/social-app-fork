@@ -470,8 +470,8 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								continue;
 							}
 							const acceptedConvo: ConvoListItem = {
-								...foundConvo,
 								status: 'accepted',
+								...foundConvo,
 								rev: logRef.rev,
 							};
 							queryClient.setQueriesData({ queryKey: RQKEY_PARTIAL('request') }, (old?: ConvoListQueryData) =>

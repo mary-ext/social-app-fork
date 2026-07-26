@@ -661,10 +661,10 @@ export async function setFeedViewPrefs(
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.filter(isFeedViewPref).findLast((p) => p.feed === feed);
 		const next: PrefOf<'app.bsky.actor.defs#feedViewPref'> = {
-			...existing,
-			...(pref as Partial<AppBskyActorDefs.FeedViewPref>),
 			$type: 'app.bsky.actor.defs#feedViewPref',
 			feed,
+			...existing,
+			...(pref as Partial<AppBskyActorDefs.FeedViewPref>),
 		};
 		return upsertPref(prefs, (p) => isFeedViewPref(p) && p.feed === feed, next);
 	});
@@ -683,9 +683,9 @@ export async function setThreadViewPrefs(
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isThreadViewPref);
 		const next: PrefOf<'app.bsky.actor.defs#threadViewPref'> = {
+			$type: 'app.bsky.actor.defs#threadViewPref',
 			...existing,
 			...(pref as Partial<AppBskyActorDefs.ThreadViewPref>),
-			$type: 'app.bsky.actor.defs#threadViewPref',
 		};
 		return upsertPref(prefs, isThreadViewPref, next);
 	});
@@ -721,9 +721,8 @@ export async function setPostInteractionSettings(
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isPostInteractionSettingsPref);
 		const next: PrefOf<'app.bsky.actor.defs#postInteractionSettingsPref'> = {
-			...existing,
 			$type: 'app.bsky.actor.defs#postInteractionSettingsPref',
-			// Matches handling of `threadgate.allow` where `undefined` means "everyone"
+			...existing,
 			postgateEmbeddingRules: settings.postgateEmbeddingRules,
 			threadgateAllowRules: settings.threadgateAllowRules,
 		};

@@ -92,7 +92,7 @@ export function MessageComposer({
 		requestAnimationFrame(() => {
 			onSendMessage(
 				message,
-				replyToMessage ? { ...replyToMessage, $type: 'chat.bsky.convo.defs#messageView' } : undefined,
+				replyToMessage ? { $type: 'chat.bsky.convo.defs#messageView', ...replyToMessage } : undefined,
 			);
 		});
 	};

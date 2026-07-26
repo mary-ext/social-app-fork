@@ -20,9 +20,9 @@ export function code3ToCode2(lang: string): string {
 }
 
 const DISPLAY_NAMES_OPTIONS: Intl.DisplayNamesOptions = {
+	type: 'language',
 	fallback: 'none',
 	languageDisplay: 'standard',
-	type: 'language',
 };
 
 const localeDisplayNames = new Intl.DisplayNames([LOCALE], DISPLAY_NAMES_OPTIONS);

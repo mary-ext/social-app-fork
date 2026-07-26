@@ -232,8 +232,8 @@ export function parseConvoView(
 		}
 
 		return {
-			view: convoView,
 			kind: 'group',
+			view: convoView,
 			details: convoView.kind,
 			primaryMember: owner,
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the loop above bails unless every member is a `groupConvoMember`
@@ -248,8 +248,8 @@ export function parseConvoView(
 		}
 
 		return {
-			view: convoView,
 			kind: 'direct',
+			view: convoView,
 			details: convoView.kind,
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a `directConvo` only holds `directConvoMember` entries
 			primaryMember: otherUser as DirectConvoMember,

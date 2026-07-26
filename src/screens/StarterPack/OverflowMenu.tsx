@@ -145,8 +145,8 @@ export function OverflowMenu({
 				<ReportDialog
 					handle={reportDialogHandle}
 					subject={{
-						...starterPack,
 						$type: 'app.bsky.graph.defs#starterPackView',
+						...starterPack,
 					}}
 				/>
 			)}

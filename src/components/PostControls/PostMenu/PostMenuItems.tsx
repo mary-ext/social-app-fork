@@ -555,8 +555,8 @@ function PostMenuItems({
 			<ReportDialog
 				handle={reportDialogHandle}
 				subject={{
-					...post,
 					$type: 'app.bsky.feed.defs#postView',
+					...post,
 				}}
 				onAfterSubmit={() => {}}
 			/>

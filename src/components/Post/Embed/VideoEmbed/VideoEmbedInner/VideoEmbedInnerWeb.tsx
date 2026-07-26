@@ -238,9 +238,9 @@ function useHLS({
 					}
 
 					hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+						type: 'video',
 						startOffset: lowQualFrag.start,
 						endOffset: lowQualFrag.end,
-						type: 'video',
 					});
 
 					flushed.push(lowQualFrag);
@@ -337,9 +337,9 @@ function useHLS({
 			const lowQualFrag = lowQualityFragments[0]!;
 
 			hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+				type: 'video',
 				startOffset: lowQualFrag.start,
 				endOffset: lowQualFrag.end,
-				type: 'video',
 			});
 			setLowQualityFragments([]);
 		}

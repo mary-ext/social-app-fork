@@ -147,9 +147,9 @@ function groupSystemMessages(items: ConvoItem[]): BaseItem[] {
 
 		if (hasLargeGap) {
 			result.push({
+				type: 'system-message-date-divider',
 				key: `system-message-date-divider:${run[0]!.key}`,
 				sentAt: firstSentAt,
-				type: 'system-message-date-divider',
 			});
 		}
 
@@ -164,9 +164,9 @@ function groupSystemMessages(items: ConvoItem[]): BaseItem[] {
 			// that extends the run backward, the first member changes and this
 			// group collapses.
 			result.push({
-				items: run,
-				key: `system-message-group:${run[0]!.key}`,
 				type: 'system-message-group',
+				key: `system-message-group:${run[0]!.key}`,
+				items: run,
 			});
 		}
 		run = [];
@@ -265,14 +265,14 @@ export function buildMessageTimeline(
 			new Date(message.sentAt).getTime() - new Date(prevMessage.sentAt).getTime() > MESSAGE_GAP_THRESHOLD_MS;
 
 		result.push({
+			type: entry.type,
+			key: entry.key,
 			convoItem: entry,
 			hasLargeGapFromPrev,
 			isFirstInCluster,
 			isLastInCluster,
-			key: entry.key,
 			squaredBottomCorner,
 			squaredTopCorner,
-			type: entry.type,
 		});
 	}
 

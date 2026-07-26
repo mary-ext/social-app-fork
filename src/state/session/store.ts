@@ -32,11 +32,11 @@ import {
 export type SessionBootStatus = 'failed' | 'idle' | 'resuming' | 'validating';
 
 export type SessionSnapshot = {
+	status: SessionBootStatus;
 	accounts: readonly SessionAccount[];
 	clients: Clients;
 	currentAccountDid: Did | undefined;
 	currentDid: Did | undefined;
-	status: SessionBootStatus;
 };
 
 let isWritingSession = false;
@@ -107,10 +107,10 @@ export function signOut({
 
 export function dropToGuest(): void {
 	persistSnapshot({
+		status: 'failed',
 		clients: createGuestClients(),
 		currentAccountDid: undefined,
 		currentDid: undefined,
-		status: 'failed',
 	});
 }
 
@@ -175,11 +175,11 @@ export function getClients() {
 		: persisted?.accounts.find((a) => a.did === persisted.currentAccountDid);
 
 	snapshot = {
+		status: bootAccount ? 'resuming' : 'idle',
 		accounts: persisted ? persisted.accounts : [],
 		clients: createGuestClients(),
 		currentAccountDid: persisted?.currentAccountDid,
 		currentDid: undefined,
-		status: bootAccount ? 'resuming' : 'idle',
 	};
 
 	if (bootAccount) {
@@ -208,7 +208,7 @@ export function getClients() {
 			}
 			// The agent is usable from the stored token — render now and validate the session against the server
 			// in the background.
-			setSnapshot({ clients: resumed.clients, currentDid: account.did, status: 'validating' });
+			setSnapshot({ status: 'validating', clients: resumed.clients, currentDid: account.did });
 
 			// A session dropped by live traffic during validation fails the resume; the global dropped-session
 			// listener stays off until this settles.

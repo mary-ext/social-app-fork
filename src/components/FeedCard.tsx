@@ -200,7 +200,7 @@ export function SaveButton({ pin, view }: { pin?: boolean; view: AppBskyFeedDefs
 
 function SaveButtonInner({ pin, view }: { pin?: boolean; view: AppBskyFeedDefs.GeneratorView }) {
 	const removePromptHandle = Prompt.usePromptHandle();
-	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ pin, type: 'feed', uri: view.uri });
+	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ type: 'feed', uri: view.uri, pin });
 
 	return (
 		<>

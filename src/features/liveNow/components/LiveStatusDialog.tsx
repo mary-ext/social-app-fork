@@ -102,8 +102,8 @@ export function LiveStatus({
 		onRequestClose?.();
 		reportDialogHandle.openWithPayload({
 			subject: {
-				...status,
 				$type: 'app.bsky.actor.defs#statusView',
+				...status,
 			},
 		});
 	};

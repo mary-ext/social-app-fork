@@ -74,33 +74,32 @@ export interface CompressResult {
 
 export const compressPostImage = (blob: Blob): Promise<CompressResult> => {
 	return compressImage(blob, {
-		maxBytes: POST_MAX_BYTES,
-		maxWidth: POST_MAX_DIM,
-		maxHeight: POST_MAX_DIM,
 		type: 'image/webp',
+		maxBytes: POST_MAX_BYTES,
+		maxHeight: POST_MAX_DIM,
+		maxWidth: POST_MAX_DIM,
 		crop: Crop.CONTAIN,
 	});
 };
 
 export const compressLinkThumbImage = (blob: Blob): Promise<CompressResult> => {
 	return compressImage(blob, {
-		maxBytes: DEFAULT_MAX_BYTES,
-		maxWidth: LINK_THUMB_MAX_DIM,
-		maxHeight: LINK_THUMB_MAX_DIM,
 		type: 'image/webp',
+		maxBytes: DEFAULT_MAX_BYTES,
+		maxHeight: LINK_THUMB_MAX_DIM,
+		maxWidth: LINK_THUMB_MAX_DIM,
 		crop: Crop.CONTAIN,
 	});
 };
 
 export const compressProfileImage = (blob: Blob, maxW: number, maxH: number): Promise<CompressResult> => {
 	return compressImage(blob, {
-		maxBytes: DEFAULT_MAX_BYTES,
-		maxWidth: maxW,
-		maxHeight: maxH,
-		// profile avatars and banners only accept JPEG and PNG
 		type: 'image/jpeg',
-		crop: Crop.COVER,
+		maxBytes: DEFAULT_MAX_BYTES,
+		maxHeight: maxH,
+		maxWidth: maxW,
 		acceptedSourceTypes: ['image/jpeg', 'image/png'],
+		crop: Crop.COVER,
 	});
 };
 

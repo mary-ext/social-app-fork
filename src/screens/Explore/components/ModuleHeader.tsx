@@ -108,7 +108,7 @@ export function PinButton({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 
 function PinButtonInner({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 	const removePromptHandle = Prompt.usePromptHandle();
-	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ pin: true, type: 'feed', uri: feed.uri });
+	const { isPending, isSaved, toggleSave } = useToggleSavedFeed({ type: 'feed', uri: feed.uri, pin: true });
 
 	return (
 		<div className={css.pinButton}>

@@ -585,7 +585,7 @@ async function upsertProfile(
 				repo: did,
 				collection: 'app.bsky.actor.profile',
 				rkey: 'self',
-				record: { ...updated, $type: 'app.bsky.actor.profile' },
+				record: { $type: 'app.bsky.actor.profile', ...updated },
 				swapRecord: existing?.cid ?? null,
 			});
 		},

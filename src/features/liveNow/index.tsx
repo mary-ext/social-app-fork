@@ -94,8 +94,8 @@ export function useUpsertLiveStatusMutation(
 
 			const record = {
 				$type: 'app.bsky.actor.status',
-				createdAt: createdAt ?? new Date().toISOString(),
 				status: 'app.bsky.actor.status#live',
+				createdAt: createdAt ?? new Date().toISOString(),
 				durationMinutes: duration,
 				embed,
 			} satisfies AppBskyActorStatus.Main;

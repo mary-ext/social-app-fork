@@ -112,24 +112,24 @@ export function useActorStatus(actor?: AnyProfileView) {
 		const isActive = isStatusStillActive(shadowed.status.expiresAt);
 		if (isValid && !isDisabled && isActive) {
 			return {
-				uri: shadowed.status.uri,
-				cid: shadowed.status.cid,
-				isDisabled: false,
-				isActive: true,
 				status: 'app.bsky.actor.status#live',
+				cid: shadowed.status.cid,
+				uri: shadowed.status.uri,
 				embed: shadowed.status.embed, // temp_isStatusValid asserts this
 				expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+				isActive: true,
+				isDisabled: false,
 				record: shadowed.status.record,
 			} satisfies AppBskyActorDefs.StatusView;
 		}
 		return {
-			uri: shadowed.status.uri,
-			cid: shadowed.status.cid,
-			isDisabled,
-			isActive: false,
 			status: 'app.bsky.actor.status#live',
+			cid: shadowed.status.cid,
+			uri: shadowed.status.uri,
 			embed: shadowed.status.embed, // temp_isStatusValid asserts this
 			expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+			isActive: false,
+			isDisabled,
 			record: shadowed.status.record,
 		} satisfies AppBskyActorDefs.StatusView;
 	} else {

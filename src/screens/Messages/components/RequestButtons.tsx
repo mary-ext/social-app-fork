@@ -202,7 +202,7 @@ export function AcceptChatButton({
 		onMutate: () => {
 			onAcceptConvo?.();
 			if (currentScreen === 'list') {
-				precacheConvoQuery(queryClient, { ...convo, status: 'accepted' });
+				precacheConvoQuery(queryClient, { status: 'accepted', ...convo });
 				router.navigate({ to: { name: 'MessagesConversation', accept: true, conversation: convo.id } });
 			}
 		},

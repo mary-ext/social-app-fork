@@ -160,8 +160,8 @@ export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 			<ReportDialog
 				handle={reportDialogHandle}
 				subject={{
-					...list,
 					$type: 'app.bsky.graph.defs#listView',
+					...list,
 				}}
 			/>
 		</>

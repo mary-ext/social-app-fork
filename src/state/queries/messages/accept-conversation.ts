@@ -77,8 +77,8 @@ export function useAcceptConversation(
 			);
 			if (convoBeingAccepted) {
 				const acceptedConvo: ConvoListItem = {
-					...convoBeingAccepted,
 					status: 'accepted',
+					...convoBeingAccepted,
 				};
 				queryClient.setQueriesData(
 					{
