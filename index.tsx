@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 
 import { initServiceWorker } from '#/lib/service-worker';
 
+import { initAppearance } from '#/state/shell/appearance';
+
 import { LOCALE } from '#/locale/intl/locale';
 
 import App from '#/App';
@@ -13,6 +15,8 @@ import { overwriteGetLocale } from '#/paraglide/runtime';
 // resolved LOCALE and stamp the document language once, up front.
 overwriteGetLocale(() => LOCALE);
 document.documentElement.lang = LOCALE;
+
+initAppearance();
 
 const rootEl = document.getElementById('root');
 if (!rootEl) {

@@ -1,6 +1,15 @@
 import { useTitle } from '#/lib/hooks/useTitle';
 
-import { useAppearance } from '#/state/shell';
+import {
+	setColorMode,
+	setDarkTheme,
+	setFontFamily,
+	setFontScale,
+	useColorMode,
+	useDarkTheme,
+	useFontFamily,
+	useFontScale,
+} from '#/state/shell/appearance';
 
 import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moon';
 import { Phone_Stroke2_Corner0_Rounded as PhoneIcon } from '#/components/icons/Phone';
@@ -14,28 +23,10 @@ import { m } from '#/paraglide/messages';
 export function AppearanceSettingsScreen() {
 	useTitle(m['common.appearance.label']());
 
-	const {
-		colorMode,
-		darkTheme,
-		fontFamily,
-		fontScale,
-		setColorMode,
-		setDarkTheme,
-		setFontFamily,
-		setFontScale,
-	} = useAppearance();
-
-	const onChangeAppearance = (value: 'dark' | 'light' | 'system') => {
-		setColorMode(value);
-	};
-
-	const onChangeDarkTheme = (value: 'dark' | 'dim') => {
-		setDarkTheme(value);
-	};
-
-	const onChangeFontScale = (value: Parameters<typeof setFontScale>[0]) => {
-		setFontScale(value);
-	};
+	const colorMode = useColorMode();
+	const darkTheme = useDarkTheme();
+	const fontFamily = useFontFamily();
+	const fontScale = useFontScale();
 
 	return (
 		<Layout.Screen>
@@ -51,7 +42,7 @@ export function AppearanceSettingsScreen() {
 						<Settings.SelectRow
 							label={m['screens.settings.appearance.colorMode']()}
 							value={colorMode}
-							onValueChange={onChangeAppearance}
+							onValueChange={setColorMode}
 							items={[
 								{ label: m['screens.settings.appearance.system'](), value: 'system' },
 								{ label: m['screens.settings.appearance.light'](), value: 'light' },
@@ -65,8 +56,8 @@ export function AppearanceSettingsScreen() {
 						{colorMode !== 'light' && (
 							<Settings.SelectRow
 								label={m['screens.settings.appearance.darkTheme']()}
-								value={darkTheme ?? 'dim'}
-								onValueChange={onChangeDarkTheme}
+								value={darkTheme}
+								onValueChange={setDarkTheme}
 								items={[
 									{ label: m['screens.settings.appearance.dim'](), value: 'dim' },
 									{ label: m['screens.settings.appearance.dark'](), value: 'dark' },
@@ -94,7 +85,7 @@ export function AppearanceSettingsScreen() {
 						<Settings.SelectRow
 							label={m['screens.settings.appearance.fontSize']()}
 							value={fontScale}
-							onValueChange={onChangeFontScale}
+							onValueChange={setFontScale}
 							items={[
 								{ label: m['screens.settings.appearance.smaller'](), value: '-1' },
 								{ label: m['screens.settings.audience.default'](), value: '0' },

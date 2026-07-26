@@ -15,7 +15,7 @@ import { Provider as LabelDefsProvider } from '#/state/preferences/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/preferences/moderation-opts';
 import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
 import { Provider as SessionProvider, useSession } from '#/state/session';
-import { Provider as ShellStateProvider } from '#/state/shell';
+import { Provider as DrawerOpenProvider } from '#/state/shell/drawer-open';
 
 import * as Toast from '#/components/Toast';
 import { ToastOutlet } from '#/components/Toast';
@@ -65,11 +65,11 @@ function App() {
 	 */
 	return (
 		<SessionProvider>
-			<ShellStateProvider>
+			<DrawerOpenProvider>
 				<DialogStateProvider>
 					<InnerApp />
 				</DialogStateProvider>
-			</ShellStateProvider>
+			</DrawerOpenProvider>
 		</SessionProvider>
 	);
 }
