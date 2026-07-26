@@ -2,39 +2,63 @@ import { definite } from '@mary/array-fns';
 
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 
-import { device, type LanguagePrefs, useStorageValue } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
 // cap for the composer's post language history.
 const HISTORY_LIMIT = 6;
 
-const defaults: LanguagePrefs = {
-	contentLanguages: deviceLanguageCodes,
-	postLanguage: deviceLanguageCodes[0] || 'en',
-	postLanguageHistory: deviceLanguageCodes.concat(['en', 'ja', 'pt', 'de']).slice(0, HISTORY_LIMIT),
-	primaryLanguage: deviceLanguageCodes[0] || 'en',
-};
-
-const read = (): LanguagePrefs => device.get(['languagePrefs']) ?? defaults;
+const defaultContentLanguages = deviceLanguageCodes;
+const defaultLanguage = deviceLanguageCodes[0] || 'en';
+const defaultPostLanguageHistory = deviceLanguageCodes
+	.concat(['en', 'ja', 'pt', 'de'])
+	.slice(0, HISTORY_LIMIT);
 
 /**
- * returns persisted language preferences, falling back to device locales.
+ * returns the languages the user can read.
  *
- * @returns current language preferences
+ * @returns array of BCP-47 language codes
  */
-export function useLanguagePrefs() {
-	return useStorageValue(device, ['languagePrefs']) ?? defaults;
+export function useContentLanguages() {
+	return useStorageValue(device, ['contentLanguages']) ?? defaultContentLanguages;
+}
+
+/**
+ * returns the language(s) the user is posting in.
+ *
+ * @returns comma-separated BCP-47 language codes
+ */
+export function usePostLanguage() {
+	return useStorageValue(device, ['postLanguage']) ?? defaultLanguage;
+}
+
+/**
+ * returns previously used post languages, most recent first.
+ *
+ * @returns array of comma-separated BCP-47 language codes
+ */
+export function usePostLanguageHistory() {
+	return useStorageValue(device, ['postLanguageHistory']) ?? defaultPostLanguageHistory;
+}
+
+/**
+ * returns the language posts are translated into.
+ *
+ * @returns BCP-47 language code
+ */
+export function usePrimaryLanguage() {
+	return useStorageValue(device, ['primaryLanguage']) ?? defaultLanguage;
 }
 
 /** saves the current post language to history. */
 export function savePostLanguageToHistory() {
-	const prefs = read();
-	device.set(['languagePrefs'], {
-		...prefs,
+	const postLanguage = device.get(['postLanguage']) ?? defaultLanguage;
+	const history = device.get(['postLanguageHistory']) ?? defaultPostLanguageHistory;
+
+	device.set(
+		['postLanguageHistory'],
 		// filter out duplicate `postLanguage` if it exists, and prepend it to the start of the array
-		postLanguageHistory: [prefs.postLanguage]
-			.concat(prefs.postLanguageHistory.filter((langs) => langs !== prefs.postLanguage))
-			.slice(0, HISTORY_LIMIT),
-	});
+		[postLanguage].concat(history.filter((langs) => langs !== postLanguage)).slice(0, HISTORY_LIMIT),
+	);
 }
 
 /**
@@ -43,7 +67,7 @@ export function savePostLanguageToHistory() {
  * @param code2s BCP-47 language codes
  */
 export function setContentLanguages(code2s: string[]) {
-	device.set(['languagePrefs'], { ...read(), contentLanguages: code2s });
+	device.set(['contentLanguages'], code2s);
 }
 
 /**
@@ -56,7 +80,7 @@ export function setPostLanguage(commaSeparatedLangCodes: string) {
 	// and compare consistently everywhere downstream
 	// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `toPostLanguages` just returned
 	const postLanguage = toPostLanguages(commaSeparatedLangCodes).sort().join(',');
-	device.set(['languagePrefs'], { ...read(), postLanguage });
+	device.set(['postLanguage'], postLanguage);
 }
 
 /**
@@ -65,7 +89,7 @@ export function setPostLanguage(commaSeparatedLangCodes: string) {
  * @param code2 BCP-47 language code
  */
 export function setPrimaryLanguage(code2: string) {
-	device.set(['languagePrefs'], { ...read(), primaryLanguage: code2 });
+	device.set(['primaryLanguage'], code2);
 }
 
 /**
@@ -74,7 +98,7 @@ export function setPrimaryLanguage(code2: string) {
  * @returns array of BCP-47 language codes
  */
 export function getContentLanguages() {
-	return read().contentLanguages;
+	return device.get(['contentLanguages']) ?? defaultContentLanguages;
 }
 
 /**

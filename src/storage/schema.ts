@@ -16,6 +16,8 @@ export type Device = {
 	/** The paraglide locale for UI translations. Resolved once into `LOCALE`; changing it reloads. */
 	appLanguage?: Locale;
 	colorMode?: 'dark' | 'light' | 'system';
+	/** BCP-47 2-letter language codes the user can read, passed to feeds. */
+	contentLanguages?: string[];
 	darkTheme?: 'dark' | 'dim';
 	debugFeedContextEnabled?: boolean;
 	/**
@@ -30,25 +32,19 @@ export type Device = {
 	externalEmbeds?: Partial<Record<EmbedPlayerSource, 'hide' | 'show'>>;
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
-	languagePrefs?: LanguagePrefs;
 	largeAltBadgeEnabled?: boolean;
 	pdsAddressHistory?: string[];
+	/** Comma-separated BCP-47 2-letter language code(s) the user is currently posting in. */
+	postLanguage?: string;
+	/** Previously used {@link Device.postLanguage} values, used to pre-populate the composer selector. */
+	postLanguageHistory?: string[];
+	/** BCP-47 2-letter language code to translate posts into. */
+	primaryLanguage?: string;
 	/** recently picked emoji ids, most recent first. */
 	recentEmojis?: string[];
 	requireAltTextEnabled?: boolean;
 	subtitlesEnabled?: boolean;
 	trendingEnabled?: boolean;
-};
-
-export type LanguagePrefs = {
-	/** BCP-47 2-letter language codes the user can read, passed to feeds. */
-	contentLanguages: string[];
-	/** Comma-separated BCP-47 2-letter language code(s) the user is currently posting in. */
-	postLanguage: string;
-	/** Previously used {@link LanguagePrefs.postLanguage} values, used to pre-populate the composer selector. */
-	postLanguageHistory: string[];
-	/** BCP-47 2-letter language code to translate posts into. */
-	primaryLanguage: string;
 };
 
 /**

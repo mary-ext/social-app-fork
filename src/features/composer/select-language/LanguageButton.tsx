@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import { toPostLanguages, useLanguagePrefs } from '#/state/preferences/languages';
+import { toPostLanguages, usePostLanguage } from '#/state/preferences/languages';
 
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { Text } from '#/components/Text';
@@ -22,8 +22,8 @@ export function LanguageButton({
 	/** Timestamp (ms) of the last honored language-detection nudge; each change replays the pulse. */
 	nudgeAt?: number;
 }) {
-	const langPrefs = useLanguagePrefs();
-	const languages = currentLanguages ?? toPostLanguages(langPrefs.postLanguage);
+	const postLanguage = usePostLanguage();
+	const languages = currentLanguages ?? toPostLanguages(postLanguage);
 
 	return (
 		<Button variant="ghost" size="small" className={clsx(css.button, className)} {...props}>

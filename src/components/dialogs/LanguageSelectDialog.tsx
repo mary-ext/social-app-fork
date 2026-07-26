@@ -4,7 +4,7 @@ import { mapDefined, unique } from '@mary/array-fns';
 
 import { clsx } from 'clsx';
 
-import { useLanguagePrefs } from '#/state/preferences/languages';
+import { usePostLanguageHistory, usePrimaryLanguage } from '#/state/preferences/languages';
 
 import { languageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
@@ -35,7 +35,7 @@ type ListEntry =
 export function LanguageSelectDialog({
 	titleText,
 	subtitleText,
-	/** Optionally can be passed to show different values than what is saved in langPrefs. */
+	/** Optionally can be passed to show different values than the persisted language preferences. */
 	currentLanguages,
 	onSelectLanguages,
 	maxLanguages,
@@ -93,9 +93,10 @@ function DialogInner({
 	onSelectLanguages?: (languages: string[]) => void;
 	maxLanguages?: number;
 }) {
-	const langPrefs = useLanguagePrefs();
+	const postLanguageHistory = usePostLanguageHistory();
+	const primaryLanguage = usePrimaryLanguage();
 
-	const [checkedCodes, setCheckedCodes] = useState<string[]>(currentLanguages || [langPrefs.primaryLanguage]);
+	const [checkedCodes, setCheckedCodes] = useState<string[]>(currentLanguages || [primaryLanguage]);
 	const [search, setSearch] = useState('');
 
 	const handleClose = () => {
@@ -106,7 +107,7 @@ function DialogInner({
 	// NOTE(@elijaharita): Get recent language codes and map them to language
 	// objects. Both the user account's saved language history and the current
 	// checked languages are displayed here.
-	const recentCodes = unique([...checkedCodes, ...langPrefs.postLanguageHistory]).slice(0, 5);
+	const recentCodes = unique([...checkedCodes, ...postLanguageHistory]).slice(0, 5);
 	const recentLanguages = mapCodeList(recentCodes);
 
 	// NOTE(@elijaharita): helper functions

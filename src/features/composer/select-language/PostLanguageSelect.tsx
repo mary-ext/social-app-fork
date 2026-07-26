@@ -2,7 +2,13 @@ import { unique } from '@mary/array-fns';
 
 import { MAX_POST_LANGUAGES } from '#/lib/constants';
 
-import { setPostLanguage, toPostLanguages, useLanguagePrefs } from '#/state/preferences/languages';
+import {
+	setPostLanguage,
+	toPostLanguages,
+	usePostLanguage,
+	usePostLanguageHistory,
+	usePrimaryLanguage,
+} from '#/state/preferences/languages';
 
 import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
@@ -29,17 +35,19 @@ export function PostLanguageSelect({
 	 */
 	nudgeAt?: number;
 }) {
-	const langPrefs = useLanguagePrefs();
+	const postLanguage = usePostLanguage();
+	const postLanguageHistory = usePostLanguageHistory();
+	const primaryLanguage = usePrimaryLanguage();
 	const languageDialogHandle = Dialog.useDialogHandle();
 
-	const dedupedHistory = unique([...langPrefs.postLanguageHistory, langPrefs.postLanguage]);
+	const dedupedHistory = unique([...postLanguageHistory, postLanguage]);
 
-	const currentLanguages = currentLanguagesProp ?? toPostLanguages(langPrefs.postLanguage);
+	const currentLanguages = currentLanguagesProp ?? toPostLanguages(postLanguage);
 
 	const onSelectLanguages = (languages: string[]) => {
 		let langsString = languages.join(',');
 		if (!langsString) {
-			langsString = langPrefs.primaryLanguage;
+			langsString = primaryLanguage;
 		}
 		setPostLanguage(langsString);
 		onSelectLanguage?.(langsString);

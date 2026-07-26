@@ -39,7 +39,7 @@ import { cleanError, errorMessage } from '#/lib/strings/errors';
 
 import { postCreated } from '#/state/events';
 import { useRequireAltTextEnabled } from '#/state/preferences/alt-text';
-import { savePostLanguageToHistory, toPostLanguages, useLanguagePrefs } from '#/state/preferences/languages';
+import { savePostLanguageToHistory, toPostLanguages, usePostLanguage } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
 import { getClients, useSession } from '#/state/session';
@@ -118,7 +118,7 @@ export const ComposePost = ({
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
 	const requireAltTextEnabled = useRequireAltTextEnabled();
-	const langPrefs = useLanguagePrefs();
+	const postLanguage = usePostLanguage();
 	const textInputRef = useRef<TextInputRef>(null);
 	const discardPromptHandle = Prompt.usePromptHandle();
 	const emptyPostsPromptHandle = Prompt.usePromptHandle();
@@ -146,9 +146,8 @@ export const ComposePost = ({
 	 * prefs, if available.
 	 */
 	const currentLanguages = useMemo(
-		() =>
-			acceptedLanguageSuggestion ? [acceptedLanguageSuggestion] : toPostLanguages(langPrefs.postLanguage),
-		[acceptedLanguageSuggestion, langPrefs.postLanguage],
+		() => (acceptedLanguageSuggestion ? [acceptedLanguageSuggestion] : toPostLanguages(postLanguage)),
+		[acceptedLanguageSuggestion, postLanguage],
 	);
 
 	/**

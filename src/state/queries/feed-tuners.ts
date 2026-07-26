@@ -1,12 +1,12 @@
 import { FeedTuner } from '#/lib/api/feed-manip';
 
-import { useLanguagePrefs } from '../preferences/languages';
+import { useContentLanguages } from '../preferences/languages';
 import { useSession } from '../session';
 import type { FeedDescriptor } from './post-feed';
 import { usePreferencesQuery } from './preferences';
 
 export function useFeedTuners(feedDesc: FeedDescriptor) {
-	const langPrefs = useLanguagePrefs();
+	const contentLanguages = useContentLanguages();
 	const { data: preferences } = usePreferencesQuery();
 	const { currentAccount } = useSession();
 
@@ -17,7 +17,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
 		}
 	}
 	if (feedDesc.startsWith('feedgen')) {
-		return [FeedTuner.preferredLangOnly(langPrefs.contentLanguages), FeedTuner.removeMutedThreads];
+		return [FeedTuner.preferredLangOnly(contentLanguages), FeedTuner.removeMutedThreads];
 	}
 	if (feedDesc === 'following' || feedDesc.startsWith('list')) {
 		const feedTuners = [FeedTuner.removeOrphans];

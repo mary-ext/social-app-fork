@@ -6,7 +6,8 @@ import { setAppLanguage } from '#/state/preferences/app-language';
 import {
 	setContentLanguages as persistContentLanguages,
 	setPrimaryLanguage,
-	useLanguagePrefs,
+	useContentLanguages,
+	usePrimaryLanguage,
 } from '#/state/preferences/languages';
 
 import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
@@ -31,13 +32,14 @@ const onChangeAppLanguage = (value: Locale) => {
 };
 
 export function LanguageSettingsScreen() {
-	const langPrefs = useLanguagePrefs();
+	const persistedContentLanguages = useContentLanguages();
+	const primaryLanguage = usePrimaryLanguage();
 
 	useTitle(m['navigation.settings.language.title']());
 
-	// changing langPrefs causes a slow re-render, so we use a local state copy
+	// changing the content languages causes a slow re-render, so we use a local state copy
 	// and update that first to drive the UI on this screen to keep it snappy
-	const [contentLanguages, setContentLanguages] = useState(langPrefs.contentLanguages);
+	const [contentLanguages, setContentLanguages] = useState(persistedContentLanguages);
 	const onChangeContentLanguages = (languages: string[]) => {
 		setContentLanguages(languages);
 		requestAnimationFrame(() => {
@@ -52,7 +54,7 @@ export function LanguageSettingsScreen() {
 			return;
 		}
 
-		if (langPrefs.primaryLanguage !== value) {
+		if (primaryLanguage !== value) {
 			setPrimaryLanguage(value);
 		}
 	};
@@ -98,7 +100,7 @@ export function LanguageSettingsScreen() {
 							items={primaryLanguageItems}
 							label={m['screens.settings.language.primary.select']()}
 							onValueChange={onChangePrimaryLanguage}
-							value={langPrefs.primaryLanguage}
+							value={primaryLanguage}
 						>
 							<Settings.Icon icon={LanguageIcon} />
 							<Settings.Label titleText={m['screens.settings.language.primary.label']()} />

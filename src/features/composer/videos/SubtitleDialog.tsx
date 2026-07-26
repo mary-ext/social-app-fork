@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
-import { useLanguagePrefs } from '#/state/preferences/languages';
+import { usePrimaryLanguage } from '#/state/preferences/languages';
 
 import { resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
@@ -72,7 +72,7 @@ function SubtitleDialogInner({
 	saveAltText,
 	setCaptions,
 }: Props & { handle: Dialog.DialogHandle }) {
-	const { primaryLanguage } = useLanguagePrefs();
+	const primaryLanguage = usePrimaryLanguage();
 
 	const [altText, setAltText] = useState(defaultAltText);
 
