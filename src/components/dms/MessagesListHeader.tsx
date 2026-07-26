@@ -7,9 +7,6 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { clsx } from 'clsx';
-
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -27,6 +24,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { Link, LinkButton } from '#/components/web/Link';
+import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
 import type { RouteTarget } from '#/routes';
@@ -35,7 +33,7 @@ import { colors } from '#/styles/colors';
 import * as css from './MessagesListHeader.css';
 import type { ConvoWithDetails } from './util';
 
-const PFP_SIZE = 40;
+const PFP_SIZE = 36;
 
 export function MessagesListHeader({
 	convo,
@@ -49,27 +47,20 @@ export function MessagesListHeader({
 
 	return (
 		<Layout.Header.Outer noBottomBorder={false} ref={ref}>
-			<div className={css.outerRow}>
-				{!isWithinSplitView && (
-					<div className={css.backSlot}>
-						<Layout.Header.BackButton />
-					</div>
-				)}
-				{convo && moderationOpts ? (
-					convo.kind === 'direct' ? (
-						<ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />
-					) : (
-						<GroupHeaderReady convo={convo} />
-					)
+			{!isWithinSplitView && <Layout.Header.BackButton />}
+
+			{convo && moderationOpts ? (
+				convo.kind === 'direct' ? (
+					<ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />
 				) : (
-					<div className={css.placeholderRow}>
-						<div className={css.placeholderAvatar} />
-						<div>
-							<div className={css.placeholderLine} />
-						</div>
-					</div>
-				)}
-			</div>
+					<GroupHeaderReady convo={convo} />
+				)
+			) : (
+				<Skeleton.Row align="center" gap="sm">
+					<Skeleton.Circle color="contrast_25" size={PFP_SIZE} />
+					<Skeleton.Text color="contrast_25" size="lg" width={150} />
+				</Skeleton.Row>
+			)}
 		</Layout.Header.Outer>
 	);
 }
@@ -94,55 +85,40 @@ function ProfileHeaderReady({
 	};
 
 	const isDeletedAccount = profile?.handle === 'missing.invalid';
-	const displayName = isDeletedAccount
-		? m['common.account.deleted']()
-		: createSanitizedDisplayName(
-				profile,
-				true,
-				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-			);
-	const handle = isDeletedAccount ? null : `@${profile.handle}`;
+	const displayName = isDeletedAccount ? m['common.account.deleted']() : profile.handle;
 
 	return (
-		<Wrapper
-			heading={
-				<div className={css.headingRow}>
-					<Link
-						className={css.headingOverlay}
-						label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
-						to={profileTarget(profile.did)}
-					>
-						{null}
-					</Link>
-					<div className={css.avatarLayer}>
-						<PreviewableUserAvatar
-							disableHoverCard={moderation.causes.some(
-								(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
-							)}
-							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-							profile={profile}
-							size={PFP_SIZE}
-						/>
-					</div>
-					<div className={css.headingColumn}>
-						<div className={clsx(css.nameRow, css.nameRowSpaced)}>
-							<Text className={css.name} numberOfLines={1} size="lg" weight="semiBold">
-								{displayName}
-							</Text>
-							<div className={css.badgePad}>
-								<ProfileBadges profile={profile} size="md" />
-							</div>
-							<MuteStatus muted={convo.view.muted} />
-						</div>
-						{handle ? (
-							<Text color="textContrastHigh" numberOfLines={1} size="xs">
-								{handle}
-							</Text>
-						) : null}
-					</div>
+		<>
+			<div className={css.headingRow}>
+				<Link
+					className={css.headingOverlay}
+					label={m['common.profile.a11y.viewDisplayName']({ name: displayName })}
+					to={profileTarget(profile.did)}
+				>
+					{null}
+				</Link>
+				<div className={css.avatarLayer}>
+					<PreviewableUserAvatar
+						disableHoverCard={moderation.causes.some(
+							(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
+						)}
+						moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+						profile={profile}
+						size={PFP_SIZE}
+					/>
 				</div>
-			}
-			settings={
+				<div className={css.nameRow}>
+					<Text className={css.name} numberOfLines={1} size="lg" weight="semiBold">
+						{displayName}
+					</Text>
+					<div className={css.badgePad}>
+						<ProfileBadges profile={profile} size="md" />
+					</div>
+					<MuteStatus muted={convo.view.muted} />
+				</div>
+			</div>
+
+			<Layout.Header.Slot>
 				<ConvoMenu
 					blockInfo={blockInfo}
 					convo={convo}
@@ -160,8 +136,8 @@ function ProfileHeaderReady({
 						</Button>
 					}
 				/>
-			}
-		/>
+			</Layout.Header.Slot>
+		</>
 	);
 }
 
@@ -175,7 +151,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 
 	const nameBlock = (
 		<>
-			<AvatarBubbles profiles={convo.members} size={40} />
+			<AvatarBubbles profiles={convo.members} size={PFP_SIZE} />
 			<div className={css.nameRow}>
 				<Text className={css.name} numberOfLines={1} size="lg" weight="semiBold">
 					{convo.details.name}
@@ -186,18 +162,17 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	);
 
 	return (
-		<Wrapper
-			heading={
-				disabled ? (
-					<div className={css.headingLink}>{nameBlock}</div>
-				) : (
-					<Link className={css.headingLink} label={convo.details.name} to={settingsTo}>
-						{nameBlock}
-					</Link>
-				)
-			}
-			settings={
-				disabled ? (
+		<>
+			{disabled ? (
+				<div className={css.headingLink}>{nameBlock}</div>
+			) : (
+				<Link className={css.headingLink} label={convo.details.name} to={settingsTo}>
+					{nameBlock}
+				</Link>
+			)}
+
+			<Layout.Header.Slot>
+				{disabled ? (
 					<Button
 						color="secondary"
 						disabled
@@ -219,21 +194,9 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 					>
 						<ButtonIcon icon={DotsHorizontalIcon} size="md" />
 					</LinkButton>
-				)
-			}
-		/>
-	);
-}
-
-function Wrapper({ heading, settings }: { heading: React.ReactNode; settings: React.ReactNode }) {
-	return (
-		<div className={css.wrapper}>
-			<div className={css.wrapperRow}>
-				<div className={css.headingWrap}>{heading}</div>
-
-				<Layout.Header.Slot>{settings}</Layout.Header.Slot>
-			</div>
-		</div>
+				)}
+			</Layout.Header.Slot>
+		</>
 	);
 }
 
