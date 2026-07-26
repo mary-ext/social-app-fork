@@ -1,5 +1,7 @@
 import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from '#/lib/strings/embed-player';
 
+import { setExternalEmbedPref } from '#/state/preferences/external-embeds';
+
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -7,7 +9,6 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { setExternalEmbedPref } from '#/storage/hooks/external-embeds';
 
 type EmbedConsentDialogProps = {
 	handle: ReturnType<typeof Dialog.createHandle>;

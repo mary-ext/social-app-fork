@@ -5,6 +5,8 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 
+import { useAutoplayDisabled } from '#/state/preferences/autoplay';
+
 import { logger } from '#/logger';
 
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
@@ -13,7 +15,6 @@ import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
-import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 
 import * as css from './VideoPreview.css';
 

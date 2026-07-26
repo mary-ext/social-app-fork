@@ -6,6 +6,7 @@ import { shareText, shareUrl } from '#/lib/sharing';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
+import { useDevMode } from '#/state/preferences/dev-mode';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -18,7 +19,6 @@ import * as Menu from '#/components/Menu';
 
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { useDevMode } from '#/storage/hooks/dev-mode';
 
 import { useBookmark } from '../useBookmark';
 

@@ -38,6 +38,7 @@ import { cleanError, errorMessage } from '#/lib/strings/errors';
 
 import { postCreated } from '#/state/events';
 import { type ComposerImage, createComposerImage } from '#/state/gallery';
+import { useRequireAltTextEnabled } from '#/state/preferences/alt-text';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -69,7 +70,6 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 
 import * as styles from './Composer.css';
 import * as ComposerError from './ComposerError';

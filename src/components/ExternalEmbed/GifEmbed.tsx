@@ -6,13 +6,14 @@ import { clsx } from 'clsx';
 import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
 import { onVisibilityChange } from '#/lib/visibility';
 
+import { useAutoplayDisabled } from '#/state/preferences/autoplay';
+
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
-import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 
 import * as styles from './GifEmbed.css';
 

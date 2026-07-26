@@ -8,6 +8,7 @@ import { shareText, shareUrl } from '#/lib/sharing';
 import { isAbortError } from '#/lib/strings/errors';
 
 import type { Shadow } from '#/state/cache/types';
+import { useDevMode } from '#/state/preferences/dev-mode';
 import {
 	RQKEY as profileQueryKey,
 	useProfileBlockMutationQueue,
@@ -52,7 +53,6 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { useDevMode } from '#/storage/hooks/dev-mode';
 
 function ProfileMenu({
 	profile,

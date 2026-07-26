@@ -43,6 +43,7 @@ import { isInvalidHandle } from '#/lib/strings/handles';
 import { focusSearch } from '#/state/events';
 import { useSearchActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
+import { useSearchHistory } from '#/state/search-history';
 import { useSession } from '#/state/session';
 
 import * as SearchField from '#/components/forms/SearchField';
@@ -53,7 +54,6 @@ import { router } from '#/routes';
 import { CalendarBody } from './CalendarBody';
 import { buildResult, CALENDAR_DAY_COUNT, type InteractiveItem, interactiveItems } from './model';
 import { Row } from './Row';
-import { useSearchHistory } from './search-history';
 import * as styles from './SearchAutocomplete.css';
 
 /** query for default-mode profile typeahead: the free text, or empty once any operator filter is present */

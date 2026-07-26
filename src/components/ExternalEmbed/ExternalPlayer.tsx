@@ -4,6 +4,8 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { type EmbedPlayerParams, getPlayerAspect } from '#/lib/strings/embed-player';
 
+import { useExternalEmbedsPrefs } from '#/state/preferences/external-embeds';
+
 import { noRowLink } from '#/components/BlockLink';
 import * as Dialog from '#/components/Dialog';
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
@@ -12,7 +14,6 @@ import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
 
 import { m } from '#/paraglide/messages';
-import { useExternalEmbedsPrefs } from '#/storage/hooks/external-embeds';
 
 import * as styles from './ExternalPlayer.css';
 

@@ -4,6 +4,7 @@ import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 import { useTick } from '#/state/tick';
 
@@ -17,7 +18,6 @@ import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import { useIsTrendingEnabled } from '#/storage/hooks/trending';
 
 import * as css from './ExploreTrendingTopics.css';
 

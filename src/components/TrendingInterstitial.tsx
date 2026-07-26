@@ -2,6 +2,7 @@ import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
+import { useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
@@ -14,7 +15,6 @@ import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
 import { device } from '#/storage';
-import { useIsTrendingEnabled } from '#/storage/hooks/trending';
 import { colors } from '#/styles/colors';
 
 import * as css from './TrendingInterstitial.css';

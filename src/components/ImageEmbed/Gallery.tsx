@@ -6,6 +6,8 @@ import type { LightboxImage } from '@oomfware/lightbox';
 
 import { clsx } from 'clsx';
 
+import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
+
 import * as Dialog from '#/components/Dialog';
 import { lightboxHandle } from '#/components/dialogs/handles';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
@@ -26,7 +28,6 @@ import { useGalleryBleed } from '#/components/images/Gallery';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 
 import { m } from '#/paraglide/messages';
-import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export type GalleryProps = {
 	images: AppBskyEmbedGallery.ViewImage[];

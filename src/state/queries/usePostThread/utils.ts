@@ -7,9 +7,8 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { getPostRecord } from '#/lib/api/record-views';
 
+import { isDevMode } from '#/state/preferences/dev-mode';
 import type { ApiThreadItem, ThreadItem, TraversalMetadata } from '#/state/queries/usePostThread/types';
-
-import { isDevMode } from '#/storage/hooks/dev-mode';
 
 export function getThreadgateRecord(
 	view: AppBskyUnspeccedGetPostThreadV2.$output['threadgate'],

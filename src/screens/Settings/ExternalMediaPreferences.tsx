@@ -5,11 +5,12 @@ import {
 	externalEmbedLabels,
 } from '#/lib/strings/embed-player';
 
+import { setExternalEmbedPref, useExternalEmbedsPrefs } from '#/state/preferences/external-embeds';
+
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { setExternalEmbedPref, useExternalEmbedsPrefs } from '#/storage/hooks/external-embeds';
 
 // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `externalEmbedLabels` is a literal, so its key set is exactly `EmbedPlayerSource`
 const embedLabelEntries = Object.entries(externalEmbedLabels) as [EmbedPlayerSource, string][];

@@ -1,5 +1,7 @@
 import { useTitle } from '#/lib/hooks/useTitle';
 
+import { setAutoplayDisabled, useAutoplayDisabled } from '#/state/preferences/autoplay';
+import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
 import { usePreferencesQuery, useSetFeedViewPreferencesMutation } from '#/state/queries/preferences';
 import {
 	normalizeSort,
@@ -20,8 +22,6 @@ import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { setAutoplayDisabled, useAutoplayDisabled } from '#/storage/hooks/autoplay';
-import { setTrendingEnabled, useIsTrendingEnabled } from '#/storage/hooks/trending';
 
 export function ContentAndMediaSettingsScreen() {
 	useTitle(m['navigation.settings.contentAndMedia.title']());

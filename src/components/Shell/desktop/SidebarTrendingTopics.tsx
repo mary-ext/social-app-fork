@@ -1,5 +1,6 @@
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 
+import { useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
@@ -13,7 +14,6 @@ import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
 import { device } from '#/storage';
-import { useIsTrendingEnabled } from '#/storage/hooks/trending';
 import { colors } from '#/styles/colors';
 
 import * as css from './SidebarTrendingTopics.css';

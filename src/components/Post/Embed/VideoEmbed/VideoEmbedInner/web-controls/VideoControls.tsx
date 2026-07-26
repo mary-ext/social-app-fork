@@ -4,6 +4,9 @@ import type Hls from 'hls.js';
 
 import { clamp } from '#/lib/numbers';
 
+import { useAutoplayDisabled } from '#/state/preferences/autoplay';
+import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/subtitles';
+
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
 import { useFullscreen } from '#/components/hooks/useFullscreen';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
@@ -22,8 +25,6 @@ import { Text } from '#/components/Text';
 
 import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
 import { m } from '#/paraglide/messages';
-import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
-import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/storage/hooks/subtitles';
 
 import { GifPresentationControls } from '../../GifPresentationControls';
 import { TimeIndicator } from '../TimeIndicator';

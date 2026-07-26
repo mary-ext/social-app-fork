@@ -4,6 +4,11 @@ import { clsx } from 'clsx';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 
+import {
+	setDebugFeedContextEnabled,
+	useDebugFeedContextEnabled,
+} from '#/state/preferences/debug-feed-context';
+import { setDevMode, useDevMode } from '#/state/preferences/dev-mode';
 import { logoutEveryAccount } from '#/state/session';
 
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
@@ -22,8 +27,6 @@ import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { setDebugFeedContextEnabled, useDebugFeedContextEnabled } from '#/storage/hooks/debug';
-import { setDevMode, useDevMode } from '#/storage/hooks/dev-mode';
 
 import { AccountsSection } from './components/AccountsSection';
 import { ServiceWorkerSection } from './components/ServiceWorkerSection';

@@ -1,8 +1,9 @@
+import { useDebugFeedContextEnabled } from '#/state/preferences/debug-feed-context';
+
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
-import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
 import * as css from './DiscoverDebug.css';
 

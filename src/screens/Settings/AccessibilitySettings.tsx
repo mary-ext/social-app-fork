@@ -1,13 +1,14 @@
 import { useTitle } from '#/lib/hooks/useTitle';
 
+import { setRequireAltTextEnabled, useRequireAltTextEnabled } from '#/state/preferences/alt-text';
+import { setLargeAltBadgeEnabled, useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
+
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { TextSize_Stroke2_Corner0_Rounded as TextSizeIcon } from '#/components/icons/TextSize';
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { setRequireAltTextEnabled, useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
-import { setLargeAltBadgeEnabled, useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export function AccessibilitySettingsScreen() {
 	useTitle(m['navigation.settings.accessibility.title']());
