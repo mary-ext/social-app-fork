@@ -60,7 +60,6 @@ export function ProfileFeedSection({
 	return (
 		<div>
 			<PostFeed
-				enabled
 				feed={feed}
 				scrollElRef={scrollElRef}
 				onHasNew={setHasNew}

@@ -1,10 +1,11 @@
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { cleanError, isNetworkError } from '#/lib/strings/errors';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { onVisibilityChange } from '#/lib/visibility';
@@ -31,6 +32,8 @@ import { ListFooter } from '#/components/Lists';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { RichText } from '#/components/RichText';
 import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/TrendingInterstitial';
+
+import { useFocusEffect, useIsFocused } from '#/routes';
 
 import { ComposerPrompt } from './ComposerPrompt';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
@@ -119,7 +122,6 @@ function PostFeed({
 	feed,
 	description,
 	ignoreFilterFor,
-	enabled,
 	pollInterval,
 	disablePoll,
 	scrollElRef,
@@ -132,7 +134,6 @@ function PostFeed({
 	/** shown as the first row, above the posts. for feeds whose description is part of the surface. */
 	description?: Richtext;
 	ignoreFilterFor?: string;
-	enabled?: boolean;
 	pollInterval?: number;
 	disablePoll?: boolean;
 	scrollElRef?: ListRef;
@@ -146,6 +147,7 @@ function PostFeed({
 	const queryClient = useQueryClient();
 	const { currentAccount, hasSession } = useSession();
 	const feedFeedback = useFeedFeedbackContext();
+	const isFocused = useIsFocused();
 
 	const lastFetchRef = useRef<number | null>(null);
 	if (lastFetchRef.current === null) {
@@ -165,7 +167,7 @@ function PostFeed({
 		}
 	};
 
-	const opts = { enabled, ignoreFilterFor };
+	const opts = { enabled: isFocused, ignoreFilterFor };
 	const {
 		data,
 		error,
@@ -186,8 +188,8 @@ function PostFeed({
 		}
 	}, [lastFetchedAt]);
 
-	const checkForNew = useEffectEvent(async () => {
-		if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
+	const checkForNew = useNonReactiveCallback(async () => {
+		if (!data?.pages[0] || isFetching || !onHasNew || !isFocused || disablePoll) {
 			return;
 		}
 
@@ -218,7 +220,7 @@ function PostFeed({
 	};
 
 	const myDid = currentAccount?.did || '';
-	useEffect(() => {
+	useFocusEffect(() => {
 		return postCreated.subscribe(() => {
 			// NOTE
 			// only invalidate if at the top of the feed
@@ -231,19 +233,18 @@ function PostFeed({
 				void queryClient.invalidateQueries({ queryKey: RQKEY(feed) });
 			}
 		});
-	}, [queryClient, feed, myDid]);
+	});
 
-	useEffect(() => {
-		if (enabled && !disablePoll) {
+	useFocusEffect(() => {
+		if (!disablePoll) {
 			const timeSinceFirstLoad = Date.now() - lastFetchRef.current!;
 			if (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) {
-				// check for new on enable (aka on focus)
 				void checkForNew();
 			}
 		}
-	}, [disablePoll, enabled, isEmpty]);
+	});
 
-	useEffect(() => {
+	useFocusEffect(() => {
 		const unsubscribe = onVisibilityChange((visible) => {
 			// check for new when the document becomes visible
 			if (visible) {
@@ -262,7 +263,7 @@ function PostFeed({
 			unsubscribe();
 			stopPolling?.();
 		};
-	}, [pollInterval]);
+	});
 
 	const blockedOrMutedAuthors = usePostAuthorShadowFilter(
 		// author feeds have their own handling
@@ -415,7 +416,7 @@ function PostFeed({
 				}
 			}
 		} else {
-			if (enabled !== false) {
+			if (isFocused) {
 				arr.push({
 					type: 'loading',
 					key: 'loading',

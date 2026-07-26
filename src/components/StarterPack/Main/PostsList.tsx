@@ -17,5 +17,5 @@ function renderPostsEmpty() {
 export function PostsList({ listUri }: PostsListProps) {
 	const feed: FeedDescriptor = `list|${listUri}`;
 
-	return <PostFeed enabled feed={feed} pollInterval={60e3} renderEmptyState={renderPostsEmpty} />;
+	return <PostFeed feed={feed} pollInterval={60e3} renderEmptyState={renderPostsEmpty} />;
 }

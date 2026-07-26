@@ -63,7 +63,6 @@ export function FeedPage({
 		<>
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
-					enabled
 					feed={feed}
 					pollInterval={POLL_FREQ}
 					disablePoll={hasNew}

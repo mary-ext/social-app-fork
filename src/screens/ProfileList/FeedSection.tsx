@@ -14,7 +14,7 @@ import { PostFeed } from '#/components/PostFeed/PostFeed';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useIsFocused } from '#/routes';
+import { useFocusEffect } from '#/routes';
 
 import * as css from './FeedSection.css';
 
@@ -29,7 +29,6 @@ export function FeedSection({ feed, isOwner, onPressAddUser }: FeedSectionProps)
 	const scrollElRef = useRef<ListMethods | null>(null);
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
-	const isScreenFocused = useIsFocused();
 	const onScrollToTop = () => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
@@ -64,7 +63,6 @@ export function FeedSection({ feed, isOwner, onPressAddUser }: FeedSectionProps)
 		<div>
 			<PostFeed
 				disablePoll={hasNew}
-				enabled={isScreenFocused}
 				feed={feed}
 				onHasNew={setHasNew}
 				onScrolledDownChange={setIsScrolledDown}

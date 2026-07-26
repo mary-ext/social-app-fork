@@ -105,7 +105,6 @@ function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) 
 			<ProfileFeedHeader info={feedInfo} isTrending={isTrending} />
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
-					enabled
 					description={isTrending ? feedInfo.description : undefined}
 					feed={feed}
 					pollInterval={60e3}
