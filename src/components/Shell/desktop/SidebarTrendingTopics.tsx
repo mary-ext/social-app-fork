@@ -1,6 +1,6 @@
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 
-import { useIsTrendingEnabled } from '#/state/preferences/trending';
+import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
@@ -13,7 +13,6 @@ import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import { device } from '#/storage';
 import { colors } from '#/styles/colors';
 
 import * as css from './SidebarTrendingTopics.css';
@@ -75,7 +74,7 @@ function Inner() {
 				title={m['components.trendingTopics.hide.title']()}
 				description={m['components.trendingTopics.hide.message']()}
 				confirmButtonCta={m['common.action.hide']()}
-				onConfirm={() => device.set(['trendingEnabled'], false)}
+				onConfirm={() => setTrendingEnabled(false)}
 			/>
 		</>
 	);

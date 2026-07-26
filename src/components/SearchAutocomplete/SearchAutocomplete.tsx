@@ -41,9 +41,9 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { focusSearch } from '#/state/events';
+import { useSearchHistory } from '#/state/preferences/search-history';
 import { useSearchActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
-import { useSearchHistory } from '#/state/search-history';
 import { useSession } from '#/state/session';
 
 import * as SearchField from '#/components/forms/SearchField';

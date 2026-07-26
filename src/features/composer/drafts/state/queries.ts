@@ -3,9 +3,9 @@ import { ClientResponseError, ok } from '@atcute/client';
 
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { getDeviceId } from '#/lib/device-id';
 import { isNetworkError } from '#/lib/strings/errors';
 
+import { getDeviceId } from '#/state/preferences/device-id';
 import { getClients } from '#/state/session';
 
 import type { ComposerState } from '#/features/composer/state/composer';

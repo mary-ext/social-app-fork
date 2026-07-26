@@ -33,14 +33,13 @@ import {
 import type { ThreadViewPreferences, UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { createQueryKey } from '#/state/queries/util';
 import { getClients, useSession } from '#/state/session';
-import { setSubscribedLabelers } from '#/state/session/labelers';
+import { saveSubscribedLabelers } from '#/state/session/labelers';
 
 import { logger } from '#/logger';
 
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
-import { account } from '#/storage';
 
 export * from '#/state/queries/preferences/const';
 export * from '#/state/queries/preferences/moderation';
@@ -63,12 +62,10 @@ export function usePreferencesQuery() {
 			} else {
 				const res = await getPreferences(pds, APP_LABELERS);
 
-				const labelerDids = res.moderationPrefs.labelers.map((l) => l.did);
-				// save to local storage to ensure there are labels on initial requests
-				account.set([currentAccount.did, 'labelers'], labelerDids);
-				// keep the appview client's labeler header in sync with the freshly fetched prefs, as
-				// `agent.getPreferences()` used to do internally
-				setSubscribedLabelers(labelerDids);
+				saveSubscribedLabelers(
+					currentAccount.did,
+					res.moderationPrefs.labelers.map((l) => l.did),
+				);
 
 				const preferences: UsePreferencesQueryResponse = {
 					...res,

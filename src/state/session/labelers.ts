@@ -10,12 +10,7 @@ import type { SessionAccount } from './types';
 
 let subscribedLabelers: Did[] = [];
 
-/**
- * Sets the user's subscribed labelers.
- *
- * @param dids the subscribed labeler DIDs.
- */
-export function setSubscribedLabelers(dids: Did[]): void {
+function setSubscribedLabelers(dids: Did[]): void {
 	subscribedLabelers = difference(dids, APP_LABELERS);
 }
 
@@ -32,6 +27,21 @@ export function configureModerationForGuest(): void {
 export function configureModerationForAccount(account: SessionAccount): void {
 	const labelerDids = accountStore.get([account.did, 'labelers']);
 	setSubscribedLabelers(labelerDids ?? []);
+}
+
+/**
+ * persists an account's subscribed labelers and applies them to the current session.
+ *
+ * @param did the account the labelers belong to
+ * @param dids the subscribed labeler DIDs
+ */
+export function saveSubscribedLabelers(did: Did, dids: Did[]): void {
+	// persisted so a later session already has labelers on its initial requests, before the
+	// preferences query gets a chance to refetch them
+	accountStore.set([did, 'labelers'], dids);
+	// keep the appview client's labeler header in sync with the freshly fetched prefs, as
+	// `agent.getPreferences()` used to do internally
+	setSubscribedLabelers(dids);
 }
 
 export function acceptLabelersHeaderValue(): string {

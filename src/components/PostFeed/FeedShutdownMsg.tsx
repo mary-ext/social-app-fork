@@ -3,12 +3,12 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { DISCOVER_FEED_URI, PROD_DEFAULT_FEED } from '#/lib/constants';
 import { feedTarget } from '#/lib/routes/targets';
 
+import { setSelectedFeed } from '#/state/preferences/selected-feed';
 import {
 	usePreferencesQuery,
 	useRemoveFeedMutation,
 	useReplaceForYouWithDiscoverFeedMutation,
 } from '#/state/queries/preferences';
-import { setSelectedFeed } from '#/state/selected-feed';
 
 import { logger } from '#/logger';
 

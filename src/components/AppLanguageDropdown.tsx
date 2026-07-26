@@ -1,4 +1,6 @@
-import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
+import { setAppLanguage } from '#/state/preferences/app-language';
+
+import { LOCALE } from '#/locale/intl/locale';
 import { APP_LANGUAGES } from '#/locale/languages';
 
 import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';

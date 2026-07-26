@@ -2,8 +2,8 @@ import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
 
 import { softReset } from '#/state/events';
+import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
-import { setSelectedFeed, useSelectedFeed } from '#/state/selected-feed';
 
 import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';

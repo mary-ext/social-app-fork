@@ -2,7 +2,7 @@ import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useIsTrendingEnabled } from '#/state/preferences/trending';
+import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
@@ -14,7 +14,6 @@ import { InlineLinkText } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import { device } from '#/storage';
 import { colors } from '#/styles/colors';
 
 import * as css from './TrendingInterstitial.css';
@@ -80,7 +79,7 @@ export function TrendingInterstitial() {
 				title={m['components.trendingTopics.hide.title']()}
 				description={m['components.trendingTopics.hide.message']()}
 				confirmButtonCta={m['common.action.hide']()}
-				onConfirm={() => device.set(['trendingEnabled'], false)}
+				onConfirm={() => setTrendingEnabled(false)}
 			/>
 		</>
 	);

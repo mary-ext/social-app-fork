@@ -4,6 +4,8 @@ import { uniqueBy } from '@mary/array-fns';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
+import { useRecentGifs } from '#/state/preferences/recent-gifs';
+
 import {
 	GIF_CATEGORIES,
 	type GifCategory,
@@ -15,7 +17,6 @@ import { GifPickerHeader } from '#/features/gifPicker/components/GifPickerHeader
 import { GifPickerPlaceholder } from '#/features/gifPicker/components/GifPickerPlaceholder';
 import * as styles from '#/features/gifPicker/GifPickerDialog.css';
 import { useGifPickerData } from '#/features/gifPicker/hooks/useGifPickerData';
-import { useRecentGifs } from '#/features/gifPicker/hooks/useRecentGifs';
 import type { Gif } from '#/features/gifPicker/types';
 
 import * as Dialog from '#/components/Dialog';

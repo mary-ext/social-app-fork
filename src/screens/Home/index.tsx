@@ -2,11 +2,11 @@ import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
 
 import { softReset } from '#/state/events';
+import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
-import { setSelectedFeed, useSelectedFeed } from '#/state/selected-feed';
 import { useSession } from '#/state/session';
 
 import { CustomFeedEmptyState } from '#/screens/Home/components/CustomFeedEmptyState';

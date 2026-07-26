@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 
+import { setAppLanguage } from '#/state/preferences/app-language';
 import {
 	setContentLanguages as persistContentLanguages,
 	setPrimaryLanguage,
@@ -9,7 +10,7 @@ import {
 } from '#/state/preferences/languages';
 
 import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
-import { LOCALE, setAppLanguage } from '#/locale/intl/locale';
+import { LOCALE } from '#/locale/intl/locale';
 import { APP_LANGUAGES, LANGUAGES, langCode } from '#/locale/languages';
 
 import * as Dialog from '#/components/Dialog';
