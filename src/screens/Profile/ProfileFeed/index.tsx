@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { ResourceUri } from '@atcute/lexicons';
-
 import { useQueryClient } from '@tanstack/react-query';
 
 import { TRENDING_DID } from '#/lib/constants';
@@ -14,7 +12,6 @@ import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { type FeedSourceFeedInfo, isFeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
-import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
@@ -39,8 +36,9 @@ import { colors } from '#/styles/colors';
 export function ProfileFeedScreen() {
 	const [{ rkey, actor: handleOrDid }] = useParams('ProfileFeed');
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey);
+	// the appview looks feed generators up by their canonical at-uri, so a handle-based one won't match
 	const { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
-	const feedUri = resolvedUri?.uri;
+	const { data: info } = useFeedSourceInfoQuery({ uri: resolvedUri?.uri });
 
 	if (error && !isRefetching) {
 		return (
@@ -55,46 +53,27 @@ export function ProfileFeedScreen() {
 		);
 	}
 
-	return feedUri ? (
+	return (
 		<Layout.Screen>
-			<ProfileFeedScreenIntermediate feedUri={feedUri} />
-		</Layout.Screen>
-	) : (
-		<Layout.Screen>
-			<ProfileFeedHeaderSkeleton />
-			<Layout.Content>
-				<PostFeedLoadingPlaceholder />
-			</Layout.Content>
+			{info && isFeedSourceFeedInfo(info) ? (
+				<ProfileFeedScreenInner feedInfo={info} />
+			) : (
+				<>
+					<ProfileFeedHeaderSkeleton />
+					<Layout.Content>
+						<PostFeedLoadingPlaceholder />
+					</Layout.Content>
+				</>
+			)}
 		</Layout.Screen>
 	);
-}
-
-function ProfileFeedScreenIntermediate({ feedUri }: { feedUri: ResourceUri }) {
-	const { data: preferences } = usePreferencesQuery();
-	const { data: info } = useFeedSourceInfoQuery({ uri: feedUri });
-
-	if (!preferences || !info || !isFeedSourceFeedInfo(info)) {
-		return (
-			<Layout.Content>
-				<ProfileFeedHeaderSkeleton />
-				<PostFeedLoadingPlaceholder />
-			</Layout.Content>
-		);
-	}
-
-	return <ProfileFeedScreenInner preferences={preferences} feedInfo={info} />;
 }
 
 function renderPostsEmpty() {
 	return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
 }
 
-export function ProfileFeedScreenInner({
-	feedInfo,
-}: {
-	preferences: UsePreferencesQueryResponse;
-	feedInfo: FeedSourceFeedInfo;
-}) {
+function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {
 	const { hasSession } = useSession();
 	const { openComposer } = useOpenComposer();
 	const isScreenFocused = useIsFocused();

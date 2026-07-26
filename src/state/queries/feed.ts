@@ -158,17 +158,22 @@ export function getFeedTypeFromUri(uri: string) {
 	return collection === feedSourceNSIDs.feed ? 'feed' : 'list';
 }
 
-export function useFeedSourceInfoQuery({ uri }: { uri: string }) {
-	const type = getFeedTypeFromUri(uri);
+export function useFeedSourceInfoQuery({ uri }: { uri: string | undefined }) {
 	const { appview } = getClients();
 
 	return useQuery({
-		queryKey: feedSourceInfoQueryKey({ uri }),
+		queryKey: feedSourceInfoQueryKey({ uri: uri ?? '' }),
 		staleTime: STALE.INFINITY,
+		enabled: !!uri,
 		queryFn: async () => {
+			// `enabled` gates the query on `uri`, so this only fires if that gate is ever removed
+			if (!uri) {
+				throw new Error('getFeedSourceInfo: query ran without a uri');
+			}
+
 			let view: FeedSourceInfo;
 
-			if (type === 'feed') {
+			if (getFeedTypeFromUri(uri) === 'feed') {
 				const data = await ok(
 					appview.get('app.bsky.feed.getFeedGenerator', {
 						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `FeedSourceInfo.uri` widens to `string` only for the Following pseudo-feed
