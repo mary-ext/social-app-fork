@@ -20,7 +20,7 @@ import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-s
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
-import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
+import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post-source';
 
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
@@ -226,12 +226,9 @@ function FeedItemInner({
 		};
 	}
 
-	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
-		threadgateRecord,
-	});
+	const isPostHiddenByThreadgate = useIsReplyHidden(post.uri, threadgateRecord);
 	let additionalPostAlerts: AppModerationCause[] = [];
 	{
-		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
 		const rootPostUri = getPostRecord(post).reply?.root?.uri || post.uri;
 		const isControlledByViewer =
 			rootPostUri && parseCanonicalResourceUri(rootPostUri).repo === currentAccount?.did;

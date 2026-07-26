@@ -1,4 +1,5 @@
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { getPostRecord } from '#/lib/api/record-views';
 
@@ -24,7 +25,7 @@ export function sortAndAnnotateThreadItems(
 		view,
 		skipModerationHandling,
 	}: {
-		threadgateHiddenReplies: Set<string>;
+		threadgateHiddenReplies: ReadonlySet<ResourceUri>;
 		moderationOpts: ModerationOptions;
 		view: PostThreadParams['view'];
 		/**

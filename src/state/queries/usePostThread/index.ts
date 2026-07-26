@@ -28,7 +28,7 @@ import {
 import { getThreadgateRecord } from '#/state/queries/usePostThread/utils';
 import * as views from '#/state/queries/usePostThread/views';
 import { getClients, useSession } from '#/state/session';
-import { useMergeThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
+import { useHiddenReplyUris } from '#/state/threadgate-hidden-replies';
 
 export * from '#/state/queries/usePostThread/context';
 export { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread/queryCache';
@@ -40,7 +40,6 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	const { hasSession } = useSession();
 	const { gtPhone } = useBreakpoints();
 	const moderationOpts = useModerationOpts();
-	const mergeThreadgateHiddenReplies = useMergeThreadgateHiddenReplies();
 	const {
 		isLoaded: isThreadPreferencesLoaded,
 		sort,
@@ -114,6 +113,7 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 
 	const thread = useMemo(() => query.data?.thread || [], [query.data?.thread]);
 	const threadgate = query.data?.threadgate;
+	const threadgateHiddenReplies = useHiddenReplyUris(threadgate?.record);
 	const hasOtherThreadItems = !!query.data?.hasOtherReplies;
 	const [otherItemsVisible, setOtherItemsVisible] = useState(false);
 
@@ -171,21 +171,14 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 			const { threadItems } = sortAndAnnotateThreadItems(additionalItemsQuery.data.thread, {
 				view,
 				skipModerationHandling: true,
-				threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
+				threadgateHiddenReplies,
 				moderationOpts: moderationOpts!,
 			});
 			return threadItems;
 		} else {
 			return [];
 		}
-	}, [
-		view,
-		additionalQueryEnabled,
-		additionalItemsQuery,
-		mergeThreadgateHiddenReplies,
-		moderationOpts,
-		threadgate?.record,
-	]);
+	}, [view, additionalQueryEnabled, additionalItemsQuery, threadgateHiddenReplies, moderationOpts]);
 
 	/** Sets the sort order for the thread and resets the additional thread items */
 	const setSort: typeof baseSetSort = (nextSort) => {
@@ -206,10 +199,10 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	const { threadItems, otherThreadItems } = useMemo(() => {
 		return sortAndAnnotateThreadItems(thread, {
 			view: view,
-			threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
+			threadgateHiddenReplies,
 			moderationOpts: moderationOpts!,
 		});
-	}, [thread, threadgate?.record, mergeThreadgateHiddenReplies, moderationOpts, view]);
+	}, [thread, threadgateHiddenReplies, moderationOpts, view]);
 
 	/*
 	 * Take all three sets of thread items and combine them into a single thread,

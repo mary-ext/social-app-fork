@@ -18,7 +18,6 @@ import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/
 import { Provider as SessionProvider, useSession } from '#/state/session';
 import { Provider as ShellStateProvider } from '#/state/shell';
 import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
-import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-replies';
 
 import * as Toast from '#/components/Toast';
 import { ToastOutlet } from '#/components/Toast';
@@ -45,12 +44,10 @@ function InnerApp() {
 					<LabelDefsProvider>
 						<ModerationOptsProvider>
 							<SelectedFeedProvider>
-								<HiddenRepliesProvider>
-									<UnreadNotifsProvider>
-										<RouterView router={router} />
-										<ToastOutlet />
-									</UnreadNotifsProvider>
-								</HiddenRepliesProvider>
+								<UnreadNotifsProvider>
+									<RouterView router={router} />
+									<ToastOutlet />
+								</UnreadNotifsProvider>
 							</SelectedFeedProvider>
 						</ModerationOptsProvider>
 					</LabelDefsProvider>

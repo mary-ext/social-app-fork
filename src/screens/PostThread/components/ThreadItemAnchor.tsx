@@ -23,7 +23,7 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
-import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
+import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 import type { PostSource } from '#/state/unstable-post-source';
 
 import { niceDate } from '#/locale/intl/datetime';
@@ -163,12 +163,9 @@ function ThreadItemAnchorInner({
 	const quotesTarget: RouteTarget = { name: 'PostQuotes', ...engagement };
 	const repostsTarget: RouteTarget = { name: 'PostRepostedBy', ...engagement };
 
-	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
-		threadgateRecord,
-	});
+	const isPostHiddenByThreadgate = useIsReplyHidden(post.uri, threadgateRecord);
 	let additionalPostAlerts: AppModerationCause[] = [];
 	{
-		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
 		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
 		if (isControlledByViewer && isPostHiddenByThreadgate) {
 			additionalPostAlerts = [

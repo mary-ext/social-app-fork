@@ -19,7 +19,7 @@ import {
 } from '#/state/queries/threadgate/util';
 import { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread';
 import { getClients, useSession } from '#/state/session';
-import { useThreadgateHiddenReplyUrisAPI } from '#/state/threadgate-hidden-replies';
+import { setReplyHidden } from '#/state/threadgate-hidden-replies';
 
 export * from '#/state/queries/threadgate/types';
 export * from '#/state/queries/threadgate/util';
@@ -238,7 +238,6 @@ export function useToggleReplyVisibilityMutation() {
 	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
-	const hiddenReplies = useThreadgateHiddenReplyUrisAPI();
 
 	return useMutation({
 		mutationFn: async ({
@@ -250,11 +249,7 @@ export function useToggleReplyVisibilityMutation() {
 			replyUri: ResourceUri;
 			action: 'hide' | 'show';
 		}) => {
-			if (action === 'hide') {
-				hiddenReplies.addHiddenReplyUri(replyUri);
-			} else if (action === 'show') {
-				hiddenReplies.removeHiddenReplyUri(replyUri);
-			}
+			setReplyHidden(replyUri, action === 'hide');
 
 			await upsertThreadgate(
 				{ appview, did: currentAccount!.did, pds: pds!, postUri },
@@ -287,11 +282,8 @@ export function useToggleReplyVisibilityMutation() {
 			});
 		},
 		onError(_, { replyUri, action }) {
-			if (action === 'hide') {
-				hiddenReplies.removeHiddenReplyUri(replyUri);
-			} else if (action === 'show') {
-				hiddenReplies.addHiddenReplyUri(replyUri);
-			}
+			// roll the optimistic toggle back
+			setReplyHidden(replyUri, action !== 'hide');
 		},
 	});
 }

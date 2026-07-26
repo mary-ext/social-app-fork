@@ -27,7 +27,7 @@ import {
 	useToggleReplyVisibilityMutation,
 } from '#/state/queries/threadgate';
 import { useRequireAuth, useSession } from '#/state/session';
-import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
+import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 
 import { logger } from '#/logger';
 
@@ -119,10 +119,7 @@ function PostMenuItems({
 	const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(post, rootUri);
 	const isAuthor = postAuthor.did === currentAccount?.did;
 	const isRootPostAuthor = parseCanonicalResourceUri(rootUri).repo === currentAccount?.did;
-	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
-		threadgateRecord,
-	});
-	const isReplyHiddenByThreadgate = threadgateHiddenReplies.has(postUri);
+	const isReplyHiddenByThreadgate = useIsReplyHidden(postUri, threadgateRecord);
 	const isPinned = post.viewer?.pinned;
 
 	const { mutateAsync: toggleQuoteDetachment, isPending: isDetachPending } =

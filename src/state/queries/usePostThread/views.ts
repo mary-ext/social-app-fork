@@ -84,7 +84,7 @@ export function threadPost({
 	depth: number;
 	value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemPost>;
 	moderationOpts: ModerationOptions;
-	threadgateHiddenReplies: Set<string>;
+	threadgateHiddenReplies: ReadonlySet<ResourceUri>;
 }): Extract<ThreadItem, { type: 'threadPost' }> {
 	const moderation = moderatePost(value.post, moderationOpts);
 	const modui = getDisplayRestrictions(moderation, DisplayContext.ContentList);

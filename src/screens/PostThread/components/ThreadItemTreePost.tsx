@@ -12,7 +12,7 @@ import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
-import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
+import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 
 import { TREE_AVI_WIDTH } from '#/screens/PostThread/const';
 
@@ -153,12 +153,9 @@ function ThreadItemTreePostInner({
 	};
 	const threadRootUri = record.reply?.root?.uri || post.uri;
 	const threadTarget = postUriToTarget(post.uri);
-	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
-		threadgateRecord,
-	});
+	const isPostHiddenByThreadgate = useIsReplyHidden(post.uri, threadgateRecord);
 	let additionalPostAlerts: AppModerationCause[] = [];
 	{
-		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
 		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
 		if (isControlledByViewer && isPostHiddenByThreadgate) {
 			additionalPostAlerts = [

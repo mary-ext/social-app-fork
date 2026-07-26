@@ -25,7 +25,7 @@ import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';
-import { useThreadgateHiddenReplyUris } from '#/state/threadgate-hidden-replies';
+import { useHiddenReplyUris } from '#/state/threadgate-hidden-replies';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
 import type { FeedPage } from './types';
@@ -50,7 +50,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 	const unreads = useUnreadNotificationsApi();
 	const enabled = opts.enabled !== false;
 	const filter = opts.filter;
-	const { uris: hiddenReplyUris } = useThreadgateHiddenReplyUris();
+	const hiddenReplyUris = useHiddenReplyUris();
 
 	const selectArgs = useMemo(() => {
 		return {
