@@ -43,8 +43,15 @@ export function useConvoQuery({ convoId }: { convoId: string }) {
 	});
 }
 
+/** seeds the single-conversation cache. a view no newer than the cached one is ignored. */
 export function precacheConvoQuery(queryClient: QueryClient, convo: ChatBskyConvoDefs.ConvoView) {
-	queryClient.setQueryData(RQKEY(convo.id), convo);
+	queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(RQKEY(convo.id), (old) => {
+		// `<=` because the cached copy may carry an optimistic update on top of the same server state
+		if (old && convo.rev <= old.rev) {
+			return old;
+		}
+		return convo;
+	});
 }
 
 export function useMarkAsReadMutation() {

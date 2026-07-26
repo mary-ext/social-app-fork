@@ -13,7 +13,11 @@ import { Convo } from '#/state/messages/convo/agent';
 import type { ConvoParams, ConvoState } from '#/state/messages/convo/types';
 import { isConvoActive } from '#/state/messages/convo/util';
 import { useMessagesEventBus } from '#/state/messages/events';
-import { RQKEY as getConvoKey, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
+import {
+	precacheConvoQuery,
+	RQKEY as getConvoKey,
+	useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation';
 import { RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations';
 import { RQKEY as createProfileQueryKey } from '#/state/queries/profile';
 import { getClients, useSession } from '#/state/session';
@@ -119,6 +123,11 @@ function ConvoProviderInner({
 	useEffect(() => {
 		return convo.on((event) => {
 			switch (event.type) {
+				case 'convo-fetched': {
+					// a deep-linked convo is fetched by the agent alone, leaving consumers to repeat it
+					precacheConvoQuery(queryClient, event.convo);
+					break;
+				}
 				case 'invalidate-block-state': {
 					for (const did of event.accountDids) {
 						void queryClient.invalidateQueries({
@@ -128,6 +137,7 @@ function ConvoProviderInner({
 					void queryClient.invalidateQueries({
 						queryKey: [ListConvosQueryKeyRoot],
 					});
+					break;
 				}
 			}
 		});

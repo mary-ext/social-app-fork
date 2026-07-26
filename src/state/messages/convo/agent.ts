@@ -620,6 +620,14 @@ export class Convo {
 		return !!parsed;
 	}
 
+	private applyFetchedConvo(convo: ChatBskyConvoDefs.ConvoView) {
+		const applied = this.setConvo(convo);
+		if (applied) {
+			this.emitter.emit({ type: 'convo-fetched', convo });
+		}
+		return applied;
+	}
+
 	private updateConvo(convo: Partial<ChatBskyConvoDefs.ConvoView>) {
 		if (this.convo) {
 			this.convo = parseConvoView({ ...this.convo.view, ...convo }, this.senderUserDid) ?? this.convo;
@@ -682,7 +690,7 @@ export class Convo {
 
 		// unlike a failed fetch, the server contradicting the placeholder means the placeholder is wrong,
 		// and leaving it up would show a working conversation we can't send to
-		if (!this.setConvo(convo) || !this.convo) {
+		if (!this.applyFetchedConvo(convo) || !this.convo) {
 			this.failSetup(new Error('could not find convo'));
 			return;
 		}
@@ -778,7 +786,7 @@ export class Convo {
 		try {
 			const { convo } = await this.fetchConvo();
 			// throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
-			this.setConvo(convo);
+			this.applyFetchedConvo(convo);
 		} catch (e) {
 			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
 				logger.error(`failed to refresh convo`, {

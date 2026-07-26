@@ -223,7 +223,12 @@ export type ConvoState =
 	| ConvoStateError
 	| ConvoStateDisabled;
 
-export type ConvoEvent = {
-	type: 'invalidate-block-state';
-	accountDids: string[];
-};
+export type ConvoEvent =
+	| {
+			type: 'convo-fetched';
+			convo: ChatBskyConvoDefs.ConvoView;
+	  }
+	| {
+			type: 'invalidate-block-state';
+			accountDids: string[];
+	  };
